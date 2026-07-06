@@ -38,7 +38,7 @@
   ],
   "commonLayouts": [
     {
-      "label": "Header (헤더 영역)",
+      "label": "Header (헤더 + 사이드 드로어)",
       "status": "대기중",
       "version": "미배포"
     },
