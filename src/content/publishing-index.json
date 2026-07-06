@@ -2,7 +2,7 @@
   "//": "퍼블리싱 인덱스 데이터 — 이 파일만 수정하면 화면에 반영된다. status 는 types.ts 의 STATUS_VALUES 중 하나, note 는 issue|info. 상태 색·아이콘 매핑은 컴포넌트가 담당한다.",
   "//screenId": "screenId 는 화면정의서 화면 ID 규칙: 업무약어(대문자 3자) + 대분류(2자리) + 일련(2자리), 예 LGN0101.",
   "//assetVersions": "프론트엔드 개발자가 화면 구성 시 의존하는 산출물. version 은 여기 적지 않는다 — path 를 기준으로 scripts/compute-asset-versions.mjs 가 git 히스토리에서 자동 계산해 asset-versions.generated.json 에 쓴다(직접 수정 금지). kind 는 단일 파일이면 file, 디렉터리면 folder.",
-  "//commonLayouts": "개별 UI 조각이 아니라 '화면을 찍어내는 틀' 단위의 공통 레이아웃(내부 콘텐츠만 바뀌는 틀). 현재 메인 홈 레이아웃(Header+Content+Footer), 서브페이지 레이아웃(Header+서브비주얼+브레드크럼+Content+Footer) 2개만 운영한다. 독립 화면이 아니라 screenId 가 없고, 별도 표로 렌더링된다. version 은 leaf.version 과 동일한 규칙(수동 기입, 미배포/현재 HEAD 버전과 같으면 하이라이트).",
+  "//commonLayouts": "화면이 아니라 여러 화면이 공유하는 공통 요소 — 개별 조각(Header·Footer)과 '화면을 찍어내는 틀' 단위 레이아웃(메인 홈 레이아웃·서브페이지 레이아웃, 내부 콘텐츠만 바뀌는 틀)을 함께 담는다. 독립 화면이 아니라 screenId 가 없고, 별도 표로 렌더링된다. version 은 leaf.version 과 동일한 규칙(수동 기입, 미배포/현재 HEAD 버전과 같으면 하이라이트).",
   "//structureGroups": "구조는 뎁스 제한 없는 트리다. 노드에 children 배열이 있으면 하위 메뉴(branch), 없으면 실제 화면 1건(leaf, screenId·status·version 필수)이다. 뎁스가 깊어지면 children 안에 children 을 계속 중첩하면 된다. leaf.version 은 이 화면이 마지막으로 반영된 릴리스 버전(수동 기입) — 아직 작업 전이면 '미배포'. 현재 HEAD 버전과 같으면 화면에서 자동으로 하이라이트된다.",
   "assetVersions": [
     {
@@ -37,6 +37,16 @@
     }
   ],
   "commonLayouts": [
+    {
+      "label": "Header (헤더 영역)",
+      "status": "대기중",
+      "version": "미배포"
+    },
+    {
+      "label": "Footer (푸터 영역)",
+      "status": "대기중",
+      "version": "미배포"
+    },
     {
       "label": "메인 홈 레이아웃 (Header + Content + Footer)",
       "status": "대기중",
