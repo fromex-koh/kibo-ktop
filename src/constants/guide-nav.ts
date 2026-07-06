@@ -2,7 +2,8 @@
 // 사이드바 레이아웃을 쓰는 가이드 페이지와 레이아웃 데모가 같은 목차를 공유하도록 한 곳에 둔다.
 // 섹션을 추가·리네임하면 여기 href(#s-*)와 페이지의 aria-labelledby id 를 함께 맞춘다.
 
-export type GuideNavItem = { label: string; href: string };
+// external: true 면 새 창(target=_blank)으로 여는 링크(사이드바 콘텐츠 밖에서 봐야 하는 독립 화면).
+export type GuideNavItem = { label: string; href: string; external?: boolean };
 export type GuideNavSection = { title: string; items: GuideNavItem[] };
 
 export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
@@ -17,7 +18,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
     title: '레이아웃',
     items: [
       { label: '브레이크포인트', href: '/component-guide/breakpoint' },
-      { label: '레이아웃 그리드', href: '/component-guide/grid' },
+      { label: '레이아웃 그리드', href: '/publishing/grid', external: true },
       { label: '사이드 메뉴 레이아웃', href: '/component-guide/sidebar-layout' },
       { label: '간격 (Spacing)', href: '/component-guide/spacing' },
       { label: '레이어 (Z-index)', href: '/component-guide/z-index' },

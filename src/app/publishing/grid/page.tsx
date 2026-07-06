@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import ActiveBreakpointTag from '@/components/active-breakpoint-tag';
-import GuidePage from '@/components/guide-page';
+import ThemeToggle from '@/components/theme-toggle';
 import tokens from '../../../../tokens.json';
 
-export const metadata: Metadata = { title: '레이아웃 그리드' };
+export const metadata: Metadata = { title: '레이아웃 그리드 미리보기' };
 
 // 그리드 데모: 현재 브레이크포인트에서 실제 노출되는 컬럼 수만큼만 보이도록 매핑한다.
 // 프리픽스는 Tailwind 정적 분석을 위해 리터럴로 고정 — 새 브레이크포인트 추가 시 함께 갱신.
@@ -18,31 +18,26 @@ const getGridRevealClass = (index: number) => {
   return 'hidden pc:flex';
 };
 
-// 레이아웃 그리드 — 브레이크포인트별 컬럼·거터·마진, .grid-layout 하나로 캡슐화.
-// 미리보기(.grid-layout)는 GuidePage 의 좌우 패딩·폭 제한 밖으로 빼서 콘텐츠 영역(main) 전체 폭을
-// 그대로 쓴다 — 그래야 .grid-layout 이 스스로 적용하는 해상도별 실제 값(모바일 328 / 태블릿 792 /
-// 데스크톱 1200)이 이중 컨테이너에 눌리지 않고 그대로 보인다.
-const GridGuidePage = () => (
-  <>
-    <GuidePage
-      title="레이아웃 그리드 (Grid)"
-      description={
-        <>
-          브레이크포인트별 컬럼 수·거터(칸 간격)·마진(가장자리 여백)을 정의합니다. 전체 폭 상한은{' '}
-          <code>max-w-content</code>({tokens.container.content}px)를 공유하며,{' '}
-          <code>.grid-layout</code> 클래스 하나로 컬럼 그리드·거터·마진·폭 상한을 함께 적용합니다.
-        </>
-      }
-    >
-      <p className="typo-caption text-foreground-muted">
-        브라우저 폭을 조절하면(또는 기기 회전) 실제로 보이는 칸 수가 4 → 8 → 12 로 바뀝니다. 아래
-        미리보기는 콘텐츠 영역 전체 폭을 그대로 써서 해상도별 실제 그리드(가장자리 여백·거터 포함)를
-        보여줍니다.
+// 레이아웃 그리드 미리보기 — 사이드바 없는 독립 전체화면. .grid-layout 이 뷰포트 전체 폭을 그대로
+// 써서 해상도별 실제 그리드(모바일 328 / 태블릿 792 / 데스크톱 1200)를 정확히 확인할 수 있다.
+// (컴포넌트 가이드 사이드 레이아웃 안에 넣으면 pc 에서 사이드바 폭만큼 좁아져 값이 어긋난다.)
+const GridPreviewPage = () => (
+  <main className="bg-background text-foreground wide:py-16 flex min-h-screen flex-col gap-10 py-12">
+    {/* 제목·설명 + 테마 토글 (읽기 좋은 폭으로 제한) */}
+    <div className="max-w-content mx-auto flex w-full flex-col gap-2 px-6">
+      <div className="flex items-start justify-between gap-4">
+        <h1 className="typo-heading-xl">레이아웃 그리드 미리보기</h1>
+        <ThemeToggle />
+      </div>
+      <p className="typo-body-sm text-foreground-muted">
+        브라우저 폭을 조절하면(또는 기기 회전) 실제 컬럼 수가 4 → 8 → 12 로 바뀝니다. 이 화면은
+        사이드바 없이 뷰포트 전체 폭을 그대로 써서, 해상도별 실제 그리드(가장자리 여백·거터 포함)를
+        정확히 보여줍니다.
       </p>
-    </GuidePage>
+    </div>
 
-    {/* 미리보기 — GuidePage 밖의 full-width. 감싸지 않아야 실제 해상도별 그리드가 그대로 나온다. */}
-    <div className="grid-layout wide:mb-16 mb-12">
+    {/* 미리보기 — 뷰포트 전체 폭. .grid-layout 이 스스로 max-w-content + 가장자리 여백으로 제어한다. */}
+    <div className="grid-layout">
       {Array.from({ length: GRID_MAX_COLUMNS }).map((_, i) => (
         <span
           key={i}
@@ -56,8 +51,8 @@ const GridGuidePage = () => (
       ))}
     </div>
 
-    {/* 표 — 다시 읽기 좋은 폭으로 제한 */}
-    <div className="max-w-content wide:pb-16 mx-auto flex w-full flex-col gap-4 px-6 pb-12">
+    {/* 표 — 읽기 좋은 폭으로 제한 */}
+    <div className="max-w-content mx-auto w-full px-6">
       <div className="border-border overflow-x-auto rounded-xl border">
         <table className="w-full text-left">
           <caption className="sr-only">브레이크포인트별 그리드 columns·gutter·margin</caption>
@@ -107,7 +102,7 @@ const GridGuidePage = () => (
         </table>
       </div>
     </div>
-  </>
+  </main>
 );
 
-export default GridGuidePage;
+export default GridPreviewPage;

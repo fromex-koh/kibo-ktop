@@ -10,7 +10,7 @@ import {
 } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Menu, PanelLeft, X } from 'lucide-react';
+import { ArrowUpRight, Home, Menu, PanelLeft, X } from 'lucide-react';
 import type { GuideNavSection } from '@/constants/guide-nav';
 import SkipNav, { type SkipLinkItem } from '@/components/skip-nav';
 import ThemeToggle from '@/components/theme-toggle';
@@ -164,21 +164,28 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
               </p>
               <ul className="flex flex-col gap-0.5">
                 {section.items.map((item) => {
-                  // 현재 라우트면 활성 표시(색만이 아니라 aria-current 로도 알림). [KWCAG 5.3.1]
-                  const isActive = pathname === item.href;
+                  // external 은 새 창 링크(현재 라우트 개념 없음). 그 외엔 현재 라우트면 활성 표시. [KWCAG 5.3.1]
+                  const isActive = !item.external && pathname === item.href;
                   return (
                     <li key={item.href}>
                       <Link
                         href={item.href}
                         onClick={closeDrawer}
+                        {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                         aria-current={isActive ? 'page' : undefined}
-                        className={`focus-visible:ring-brand focus-visible:ring-offset-background typo-body-sm block rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                        className={`focus-visible:ring-brand focus-visible:ring-offset-background typo-body-sm flex items-center justify-between gap-1.5 rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                           isActive
                             ? 'bg-brand/10 text-foreground font-semibold'
                             : 'text-foreground-muted hover:bg-gray-10 hover:text-foreground'
                         }`}
                       >
                         {item.label}
+                        {item.external && (
+                          <>
+                            <ArrowUpRight aria-hidden="true" className="size-3.5 shrink-0" />
+                            <span className="sr-only"> (새 창에서 열림)</span>
+                          </>
+                        )}
                       </Link>
                     </li>
                   );

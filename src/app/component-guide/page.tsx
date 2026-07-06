@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { GUIDE_NAV_SECTIONS } from '@/constants/guide-nav';
 import GuidePage from '@/components/guide-page';
 
@@ -25,13 +25,24 @@ const ComponentGuidePage = () => (
               <li key={item.href}>
                 <Link
                   href={item.href}
+                  {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                   className="border-border bg-surface hover:bg-gray-10 focus-visible:ring-brand focus-visible:ring-offset-background flex items-center justify-between gap-3 rounded-xl border px-4 py-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                 >
-                  <span className="typo-body-md font-medium">{item.label}</span>
-                  <ArrowRight
-                    aria-hidden="true"
-                    className="text-foreground-muted size-4 shrink-0"
-                  />
+                  <span className="typo-body-md font-medium">
+                    {item.label}
+                    {item.external && <span className="sr-only"> (새 창에서 열림)</span>}
+                  </span>
+                  {item.external ? (
+                    <ArrowUpRight
+                      aria-hidden="true"
+                      className="text-foreground-muted size-4 shrink-0"
+                    />
+                  ) : (
+                    <ArrowRight
+                      aria-hidden="true"
+                      className="text-foreground-muted size-4 shrink-0"
+                    />
+                  )}
                 </Link>
               </li>
             ))}
