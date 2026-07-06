@@ -1,0 +1,408 @@
+/* 자동 생성 파일 — tokens.json 에서 생성됨. 직접 수정 금지. (yarn tokens) */
+
+:root {
+  color-scheme: light;
+
+  /* raw gray */
+  --raw-gray-0: #ffffff;
+  --raw-gray-10: #e6e8ea;
+  --raw-gray-30: #b1b8be;
+  --raw-gray-50: #6d7882;
+  --raw-gray-70: #464c53;
+  --raw-gray-90: #1e2124;
+  --raw-gray-100: #0a0a0a;
+  /* raw red */
+  --raw-red-0: #fffdfd;
+  --raw-red-10: #fcdfd9;
+  --raw-red-30: #f48771;
+  --raw-red-50: #de3412;
+  --raw-red-70: #8a240f;
+  --raw-red-90: #390d05;
+  --raw-red-100: #030100;
+  /* raw amber */
+  --raw-amber-0: #fffefb;
+  --raw-amber-10: #ffe0a3;
+  --raw-amber-30: #ffb114;
+  --raw-amber-50: #9e6a00;
+  --raw-amber-70: #614100;
+  --raw-amber-90: #2e1f00;
+  --raw-amber-100: #020200;
+  /* raw green */
+  --raw-green-0: #fdfefd;
+  --raw-green-10: #d8eedd;
+  --raw-green-30: #7ec88e;
+  --raw-green-50: #228738;
+  --raw-green-70: #285d33;
+  --raw-green-90: #122b18;
+  --raw-green-100: #010201;
+  /* raw blue */
+  --raw-blue-0: #fdfeff;
+  --raw-blue-10: #d8e5fd;
+  --raw-blue-30: #86aff9;
+  --raw-blue-50: #256ef4;
+  --raw-blue-70: #083891;
+  --raw-blue-90: #03163a;
+  --raw-blue-100: #000103;
+
+  /* raw white alpha */
+  --raw-white-a5: rgba(255, 255, 255, 0.05);
+  --raw-white-a10: rgba(255, 255, 255, 0.1);
+  --raw-white-a15: rgba(255, 255, 255, 0.15);
+  --raw-white-a20: rgba(255, 255, 255, 0.2);
+  --raw-white-a30: rgba(255, 255, 255, 0.3);
+
+  /* raw black alpha */
+  --raw-black-a5: rgba(0, 0, 0, 0.05);
+  --raw-black-a10: rgba(0, 0, 0, 0.1);
+  --raw-black-a15: rgba(0, 0, 0, 0.15);
+  --raw-black-a20: rgba(0, 0, 0, 0.2);
+
+  /* scale (라이트 = raw identity) */
+  --ds-gray-0: var(--raw-gray-0);
+  --ds-gray-10: var(--raw-gray-10);
+  --ds-gray-30: var(--raw-gray-30);
+  --ds-gray-50: var(--raw-gray-50);
+  --ds-gray-70: var(--raw-gray-70);
+  --ds-gray-90: var(--raw-gray-90);
+  --ds-gray-100: var(--raw-gray-100);
+  --ds-red-0: var(--raw-red-0);
+  --ds-red-10: var(--raw-red-10);
+  --ds-red-30: var(--raw-red-30);
+  --ds-red-50: var(--raw-red-50);
+  --ds-red-70: var(--raw-red-70);
+  --ds-red-90: var(--raw-red-90);
+  --ds-red-100: var(--raw-red-100);
+  --ds-amber-0: var(--raw-amber-0);
+  --ds-amber-10: var(--raw-amber-10);
+  --ds-amber-30: var(--raw-amber-30);
+  --ds-amber-50: var(--raw-amber-50);
+  --ds-amber-70: var(--raw-amber-70);
+  --ds-amber-90: var(--raw-amber-90);
+  --ds-amber-100: var(--raw-amber-100);
+  --ds-green-0: var(--raw-green-0);
+  --ds-green-10: var(--raw-green-10);
+  --ds-green-30: var(--raw-green-30);
+  --ds-green-50: var(--raw-green-50);
+  --ds-green-70: var(--raw-green-70);
+  --ds-green-90: var(--raw-green-90);
+  --ds-green-100: var(--raw-green-100);
+  --ds-blue-0: var(--raw-blue-0);
+  --ds-blue-10: var(--raw-blue-10);
+  --ds-blue-30: var(--raw-blue-30);
+  --ds-blue-50: var(--raw-blue-50);
+  --ds-blue-70: var(--raw-blue-70);
+  --ds-blue-90: var(--raw-blue-90);
+  --ds-blue-100: var(--raw-blue-100);
+
+  /* purpose */
+  --ds-background: var(--raw-gray-0);
+  --ds-foreground: var(--ds-gray-90);
+  --ds-foreground-muted: var(--ds-gray-70);
+  --ds-border: var(--ds-gray-30);
+  --ds-surface: var(--ds-gray-0);
+  --ds-brand: var(--ds-blue-50);
+  --ds-brand-foreground: var(--ds-blue-70);
+  --ds-danger: var(--raw-red-50);
+  --ds-danger-surface: var(--ds-red-10);
+  --ds-warning: var(--raw-amber-50);
+  --ds-warning-surface: var(--ds-amber-10);
+  --ds-success: var(--raw-green-50);
+  --ds-success-surface: var(--ds-green-10);
+  --ds-info: var(--raw-blue-50);
+  --ds-info-surface: var(--ds-blue-10);
+  --ds-scroll-thumb: var(--ds-gray-30);
+  --ds-scroll-track: var(--ds-gray-10);
+
+  /* overlay (라이트 = 검정 alpha, primitive 참조) */
+  --ds-overlay-sm: var(--raw-black-a5);
+  --ds-overlay-md: var(--raw-black-a10);
+  --ds-overlay-lg: var(--raw-black-a20);
+}
+
+.dark {
+  color-scheme: dark;
+
+  /* scale (다크 = 반사 u↔100−u) */
+  --ds-gray-0: var(--raw-gray-100);
+  --ds-gray-10: var(--raw-gray-90);
+  --ds-gray-30: var(--raw-gray-70);
+  --ds-gray-50: var(--raw-gray-50);
+  --ds-gray-70: var(--raw-gray-30);
+  --ds-gray-90: var(--raw-gray-10);
+  --ds-gray-100: var(--raw-gray-0);
+  --ds-red-0: var(--raw-red-100);
+  --ds-red-10: var(--raw-red-90);
+  --ds-red-30: var(--raw-red-70);
+  --ds-red-50: var(--raw-red-50);
+  --ds-red-70: var(--raw-red-30);
+  --ds-red-90: var(--raw-red-10);
+  --ds-red-100: var(--raw-red-0);
+  --ds-amber-0: var(--raw-amber-100);
+  --ds-amber-10: var(--raw-amber-90);
+  --ds-amber-30: var(--raw-amber-70);
+  --ds-amber-50: var(--raw-amber-50);
+  --ds-amber-70: var(--raw-amber-30);
+  --ds-amber-90: var(--raw-amber-10);
+  --ds-amber-100: var(--raw-amber-0);
+  --ds-green-0: var(--raw-green-100);
+  --ds-green-10: var(--raw-green-90);
+  --ds-green-30: var(--raw-green-70);
+  --ds-green-50: var(--raw-green-50);
+  --ds-green-70: var(--raw-green-30);
+  --ds-green-90: var(--raw-green-10);
+  --ds-green-100: var(--raw-green-0);
+  --ds-blue-0: var(--raw-blue-100);
+  --ds-blue-10: var(--raw-blue-90);
+  --ds-blue-30: var(--raw-blue-70);
+  --ds-blue-50: var(--raw-blue-50);
+  --ds-blue-70: var(--raw-blue-30);
+  --ds-blue-90: var(--raw-blue-10);
+  --ds-blue-100: var(--raw-blue-0);
+
+  /* purpose override (수동 지정) */
+  --ds-background: var(--raw-gray-100);
+  --ds-danger: var(--raw-red-30);
+  --ds-warning: var(--raw-amber-30);
+  --ds-success: var(--raw-green-30);
+  --ds-info: var(--raw-blue-30);
+
+  /* overlay override (다크 = 흰색 alpha, primitive 참조) */
+  --ds-overlay-sm: var(--raw-white-a5);
+  --ds-overlay-md: var(--raw-white-a10);
+  --ds-overlay-lg: var(--raw-white-a20);
+}
+
+@theme inline {
+  --color-background: var(--ds-background);
+  --color-foreground: var(--ds-foreground);
+  --color-foreground-muted: var(--ds-foreground-muted);
+  --color-border: var(--ds-border);
+  --color-surface: var(--ds-surface);
+  --color-brand: var(--ds-brand);
+  --color-brand-foreground: var(--ds-brand-foreground);
+  --color-danger: var(--ds-danger);
+  --color-danger-surface: var(--ds-danger-surface);
+  --color-warning: var(--ds-warning);
+  --color-warning-surface: var(--ds-warning-surface);
+  --color-success: var(--ds-success);
+  --color-success-surface: var(--ds-success-surface);
+  --color-info: var(--ds-info);
+  --color-info-surface: var(--ds-info-surface);
+  --color-scroll-thumb: var(--ds-scroll-thumb);
+  --color-scroll-track: var(--ds-scroll-track);
+  --color-overlay-sm: var(--ds-overlay-sm);
+  --color-overlay-md: var(--ds-overlay-md);
+  --color-overlay-lg: var(--ds-overlay-lg);
+
+  --color-gray-0: var(--ds-gray-0);
+  --color-gray-10: var(--ds-gray-10);
+  --color-gray-30: var(--ds-gray-30);
+  --color-gray-50: var(--ds-gray-50);
+  --color-gray-70: var(--ds-gray-70);
+  --color-gray-90: var(--ds-gray-90);
+  --color-gray-100: var(--ds-gray-100);
+  --color-red-0: var(--ds-red-0);
+  --color-red-10: var(--ds-red-10);
+  --color-red-30: var(--ds-red-30);
+  --color-red-50: var(--ds-red-50);
+  --color-red-70: var(--ds-red-70);
+  --color-red-90: var(--ds-red-90);
+  --color-red-100: var(--ds-red-100);
+  --color-amber-0: var(--ds-amber-0);
+  --color-amber-10: var(--ds-amber-10);
+  --color-amber-30: var(--ds-amber-30);
+  --color-amber-50: var(--ds-amber-50);
+  --color-amber-70: var(--ds-amber-70);
+  --color-amber-90: var(--ds-amber-90);
+  --color-amber-100: var(--ds-amber-100);
+  --color-green-0: var(--ds-green-0);
+  --color-green-10: var(--ds-green-10);
+  --color-green-30: var(--ds-green-30);
+  --color-green-50: var(--ds-green-50);
+  --color-green-70: var(--ds-green-70);
+  --color-green-90: var(--ds-green-90);
+  --color-green-100: var(--ds-green-100);
+  --color-blue-0: var(--ds-blue-0);
+  --color-blue-10: var(--ds-blue-10);
+  --color-blue-30: var(--ds-blue-30);
+  --color-blue-50: var(--ds-blue-50);
+  --color-blue-70: var(--ds-blue-70);
+  --color-blue-90: var(--ds-blue-90);
+  --color-blue-100: var(--ds-blue-100);
+}
+
+:root {
+  /* fixed size (명명) → size-* w-* h-* */
+  --ds-spacing-icon-sm: 1rem;
+  --ds-spacing-icon-md: 1.25rem;
+  --ds-spacing-icon-lg: 1.5rem;
+  --ds-spacing-control-h-sm: 2.25rem;
+  --ds-spacing-control-h-md: 2.5rem;
+  --ds-spacing-control-h-lg: 3rem;
+  --ds-spacing-scrollbar-w: 0.375rem;
+  --ds-spacing-header-h: 4rem;
+  --ds-spacing-header-top: var(--ds-spacing-header-h);
+  --ds-spacing-sidebar-w: 16rem;
+  --ds-spacing-sidebar-pl: var(--ds-spacing-sidebar-w);
+  /* radius */
+  --ds-radius-none: 0;
+  --ds-radius-sm: 0.375rem;
+  --ds-radius-md: 0.5rem;
+  --ds-radius-lg: 0.625rem;
+  --ds-radius-xl: 0.75rem;
+  --ds-radius-2xl: 1rem;
+  --ds-radius-full: 9999px;
+  /* shadow (라이트) — px 입력 → rem, 색은 primitive 참조 */
+  --ds-shadow-1: 0 0.0625rem 0.1875rem 0 var(--raw-black-a10);
+  --ds-shadow-2: 0 0.25rem 0.5rem 0 var(--raw-black-a10);
+  --ds-shadow-3: 0 0.5rem 1rem 0 var(--raw-black-a15);
+  /* blur */
+  --ds-blur-sm: 0.375rem;
+  --ds-blur-md: 0.75rem;
+  --ds-blur-lg: 1.25rem;
+  /* grid (모바일 기본) — columns/gutter/margin, 상위 구간은 아래 @media 참고 */
+  --ds-grid-columns: 4;
+  --ds-grid-gutter: 1rem;
+  --ds-grid-margin: 1rem;
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --ds-grid-columns: 8;
+    --ds-grid-gutter: 1.25rem;
+    --ds-grid-margin: 1.5rem;
+  }
+}
+
+@media (min-width: 80rem) {
+  :root {
+    --ds-grid-columns: 12;
+    --ds-grid-gutter: 1.5rem;
+    --ds-grid-margin: 2rem;
+  }
+}
+
+.dark {
+  /* shadow (다크 = 흰색 primitive) */
+  --ds-shadow-1: 0 0.0625rem 0.1875rem 0 var(--raw-white-a15);
+  --ds-shadow-2: 0 0.25rem 0.5rem 0 var(--raw-white-a20);
+  --ds-shadow-3: 0 0.5rem 1rem 0 var(--raw-white-a30);
+}
+
+@theme {
+  --spacing: 0.25rem;
+
+  /* breakpoint — 기본 sm/md/lg/xl/2xl 제거, 정의 키만 (모바일 = 기본) */
+  --breakpoint-*: initial;
+  --breakpoint-wide: 48rem;
+  --breakpoint-pc: 80rem;
+
+  /* container(max-width) — 기본 스케일 제거, 정의 키만 */
+  --container-*: initial;
+  --container-content: 80rem;
+}
+
+@theme inline {
+  --spacing-icon-sm: var(--ds-spacing-icon-sm);
+  --spacing-icon-md: var(--ds-spacing-icon-md);
+  --spacing-icon-lg: var(--ds-spacing-icon-lg);
+  --spacing-control-h-sm: var(--ds-spacing-control-h-sm);
+  --spacing-control-h-md: var(--ds-spacing-control-h-md);
+  --spacing-control-h-lg: var(--ds-spacing-control-h-lg);
+  --spacing-scrollbar-w: var(--ds-spacing-scrollbar-w);
+  --spacing-header-h: var(--ds-spacing-header-h);
+  --spacing-header-top: var(--ds-spacing-header-top);
+  --spacing-sidebar-w: var(--ds-spacing-sidebar-w);
+  --spacing-sidebar-pl: var(--ds-spacing-sidebar-pl);
+  --radius-none: var(--ds-radius-none);
+  --radius-sm: var(--ds-radius-sm);
+  --radius-md: var(--ds-radius-md);
+  --radius-lg: var(--ds-radius-lg);
+  --radius-xl: var(--ds-radius-xl);
+  --radius-2xl: var(--ds-radius-2xl);
+  --radius-full: var(--ds-radius-full);
+  --shadow-1: var(--ds-shadow-1);
+  --shadow-2: var(--ds-shadow-2);
+  --shadow-3: var(--ds-shadow-3);
+  --blur-sm: var(--ds-blur-sm);
+  --blur-md: var(--ds-blur-md);
+  --blur-lg: var(--ds-blur-lg);
+}
+
+/* typography → .typo-* (모바일 기본, 768px↑ = PC) */
+.typo-heading-xl {
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+.typo-heading-lg {
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+.typo-heading-md {
+  font-size: 1.25rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+.typo-heading-sm {
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+.typo-body-lg {
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+.typo-body-md {
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.6;
+  letter-spacing: 0;
+}
+.typo-body-sm {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+.typo-label {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+.typo-caption {
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0;
+}
+@media (min-width: 768px) {
+  .typo-heading-xl { font-size: 2.25rem; }
+  .typo-heading-lg { font-size: 1.875rem; }
+  .typo-heading-md { font-size: 1.5rem; }
+  .typo-heading-sm { font-size: 1.25rem; }
+  .typo-body-lg { font-size: 1.125rem; }
+  .typo-body-md { font-size: 1rem; }
+  .typo-body-sm { font-size: 0.875rem; }
+  .typo-label { font-size: 0.875rem; }
+  .typo-caption { font-size: 0.75rem; }
+}
+
+/* .grid-layout — tokens.json grid 기반 반응형 컬럼 그리드 */
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));
+  gap: var(--ds-grid-gutter);
+  width: 100%;
+  padding-inline: var(--ds-grid-margin);
+  max-width: var(--container-content);
+  margin-inline: auto;
+}

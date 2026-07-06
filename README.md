@@ -1,0 +1,160 @@
+# kibo-ktop — 퍼블리싱 가이드
+
+이 프로젝트는 **프론트엔드 퍼블리싱 가이드 프로젝트**다.
+Next.js · TypeScript · TailwindCSS 환경에서 **웹 접근성(KWCAG 2.1)** 을 준수하는
+마크업·스타일·컴포넌트 작성 기준을 코드와 문서로 정의하고, 실제 예시로 보여준다.
+
+> 목적: 팀이 일관된 규칙으로 접근성 있는 화면을 퍼블리싱하도록 기준(코딩 규칙·린트·체크리스트)을 제공한다.
+
+## 기술 스택
+
+| 구분         | 사용 기술                                         |
+| ------------ | ------------------------------------------------- |
+| 프레임워크   | Next.js 16 (App Router)                           |
+| 언어         | TypeScript 5 (strict)                             |
+| 패키지매니저 | Yarn 1.x                                          |
+| 스타일       | TailwindCSS 4                                     |
+| 아이콘       | lucide-react                                      |
+| 린트         | ESLint 9 (flat config) + `eslint-plugin-jsx-a11y` |
+| 포맷터       | Prettier (+ `prettier-plugin-tailwindcss`)        |
+| 폰트         | Pretendard (로컬 가변 폰트, `next/font/local`)    |
+
+## 시작하기
+
+```bash
+yarn install                # 의존성 설치
+cp .env.example .env.local  # 환경변수 템플릿 복사 → 값 입력 (아래 "환경 변수" 참고)
+yarn dev                    # 개발 서버 (http://localhost:3000)
+```
+
+시작점: `src/app/page.tsx`
+
+## 스크립트
+
+| 명령          | 설명                      |
+| ------------- | ------------------------- |
+| `yarn dev`    | 개발 서버 실행            |
+| `yarn build`  | 프로덕션 빌드             |
+| `yarn start`  | 빌드 결과 실행            |
+| `yarn lint`   | ESLint 검사 (접근성 포함) |
+| `yarn format` | Prettier 포맷 적용        |
+
+## 환경 변수
+
+실제 값이 담긴 `.env.local` 은 **git에 커밋되지 않는다**(`.gitignore`). 필요한 변수 목록은
+**`.env.example` 에 커밋되어 함께 전달**되므로, 이를 복사해 값을 채운다.
+
+```bash
+cp .env.example .env.local   # 복사 후 실제 값 입력
+```
+
+| 변수                   | 필수    | 설명                                                                                                                   |
+| ---------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_SITE_URL` | 배포 시 | 사이트 절대 URL. 메타데이터(OG)·`robots.txt`·canonical 의 절대경로 생성에 사용. 미설정 시 `http://localhost:3000` 폴백 |
+
+> 변수를 추가·변경하면 **반드시 `.env.example` 에도 반영**한다(개발팀 공유 소스). 실제 값은 각자 `.env.local`·배포 환경에 설정한다.
+
+## 프로젝트 구조
+
+```
+src/app/          # App Router (layout, page, globals.css)
+  └─ fonts/       # 로컬 폰트 파일 (PretendardVariable.woff2)
+public/           # 정적 에셋
+docs/
+  ├─ ACCESSIBILITY.md    # KWCAG 2.1 코딩 규칙 (24개 검사항목) — 퍼블리싱 핵심 기준
+  └─ CODE_CONVENTION.md  # 프론트엔드 표준 코드 컨벤션 (ST/NA/NC/MD/CD)
+eslint.config.mjs # 린트 설정
+.prettierrc.json  # Prettier 포맷 규칙
+```
+
+## 문서
+
+프로젝트의 기준은 `docs/` 에 정의되어 있으며, 작업 시 항상 준수한다.
+**우선순위: 코드 컨벤션(개발 표준) > 접근성 > 퍼블리싱 컨벤션** (충돌 시 위쪽을 따른다).
+
+- **[docs/CODE_CONVENTION.md](docs/CODE_CONVENTION.md)** — 프론트엔드 표준 코드 컨벤션(개발자 기준, **최우선**).
+  `any`/`as` 금지·네이밍·Arrow Function·시맨틱 색상 토큰 등 ST/NA/NC/MD/CD 규칙과 PR 체크리스트.
+- **[docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md)** — 웹 접근성(KWCAG 2.1) 코딩 규칙.
+  4원칙·13지침·24검사항목을 마크업/스타일 관점으로 정리한 규칙·예시·PR 체크리스트.
+- **[docs/PUBLISHING_CONVENTION.md](docs/PUBLISHING_CONVENTION.md)** — 퍼블리싱/디자인 토큰 컨벤션.
+  색상·타이포(`typo-*`)·간격·라운드·그림자·브레이크포인트·레이아웃 그리드·스크롤바 토큰 사용 규칙(PB-01~16)과 PR 체크리스트.
+
+> 위 문서들은 `CLAUDE.md`(→ `AGENTS.md` 경유)로 로드되어 작업 시 자동 적용된다.
+
+## 디자인 토큰
+
+색상·타이포·간격·라운드·그림자는 **`tokens.json` 단일 소스**에서 생성한다(px 입력 → rem 출력).
+
+```bash
+yarn tokens   # tokens.json(px) 수정 후 실행 (yarn dev/build 시 자동)
+```
+
+- 생성물 `src/app/tokens.css`(자동)를 `globals.css` 가 `@import` → 색상 `bg-*`·타이포 `typo-*`·간격 `p-*`/`gap-*`·`rounded-*`·`shadow-*` 로 사용. 전체 목록은 가이드 화면 `/component-guide` 에서 확인.
+- **⚠️ 현재 spacing·radius·size·shadow·typography 값은 디자인 확정 전 임시(placeholder)** 다. 확정되면 `tokens.json` 을 실제 값으로 교체한다(불규칙 스케일도 그대로 정의 가능).
+- **간격**은 `spacingBase`(현재 4px)의 **정수 배수**로 제어한다 — `p-4`(16px)·`gap-6`(24px) 등, **base 하나만 바꾸면 전체 간격이 비율대로 조정**된다. **라운드·크기·그림자는 정의된 토큰 키만** 쓴다(미정의는 Tailwind 기본이 나감). (규칙: [docs/PUBLISHING_CONVENTION.md](docs/PUBLISHING_CONVENTION.md) `PB-13`)
+- **브레이크포인트**도 `tokens.json`(`breakpoint`/`container`)에서 관리한다 — **모바일 0–767(기본) · `wide:` 768 이상 · `pc:` 1280 이상** 3단계(모바일 퍼스트). `wide:` 는 태블릿(가로)·노트북이 함께 걸치는 구간이라 특정 기기명 대신 **기기 중립적인 "넓은 화면"** 을 이름으로 썼다. Tailwind 기본 `sm:`/`md:` 등은 **비활성화**되어 정의된 프리픽스만 동작하고, 콘텐츠 영역은 고정폭 대신 **`max-w-content`**(1280px)로 제한한다. (규칙: `PB-14`)
+- **레이아웃 그리드**(컬럼 수·거터·마진)도 `tokens.json`(`grid`, 브레이크포인트별)에서 관리하며, `.grid-layout` 클래스 하나로 적용한다(모바일 4열 → `wide` 8열 → `pc` 12열). `grid` 키는 `breakpoint`와 1:1 대응해야 하며 어긋나면 빌드가 실패한다. (규칙: `PB-15`)
+- **스크롤바**(두께·색)도 토큰 기반이다 — 두께 `size.scrollbar-w`(6px), 색 `semantic.scroll-thumb`/`scroll-track`(gray 스케일 참조라 다크 자동 반사). `html`에 `scrollbar-gutter: stable` 로 레이아웃 시프트를 방지한다. (규칙: `PB-16`, `system-guide` 프로젝트와 동일 구조)
+
+## 폰트
+
+- **Pretendard** 를 로컬 가변 폰트로 사용한다 (CDN 미사용).
+- 폰트 파일: `src/app/fonts/PretendardVariable.woff2` — **서브셋** (한글 완성형 전체 + Latin + 문서용 기호, weight 100~900). 원본 2.1MB → **약 1.7MB**.
+
+### 적용 방식
+
+1. `next/font/local` 로 폰트를 로드하고 CSS 변수 `--font-pretendard` 로 노출한다. ([layout.tsx](src/app/layout.tsx))
+   ```tsx
+   const pretendard = localFont({
+     src: './fonts/PretendardVariable.woff2',
+     display: 'swap',
+     weight: '100 900',
+     variable: '--font-pretendard',
+   });
+   ```
+2. `globals.css` 의 `--font-sans` 에 위 변수 + 한글 폴백을 연결한다. → Tailwind `font-sans` 유틸리티가 이를 사용.
+3. `<body>` 에 `font-sans` 적용 → 전역 기본 서체가 된다.
+
+- 폴백: `Apple SD Gothic Neo`, `Malgun Gothic`, `system-ui`.
+
+> 서브셋 재생성: `pyftsubset` 로 유니코드 범위를 지정해 다시 만들 수 있다(한글 완성형 `U+AC00-D7A3` 유지 권장).
+
+## 퍼블리싱 기준
+
+이 프로젝트가 정의하는 퍼블리싱 규칙은 다음과 같이 구성된다.
+
+- **웹 접근성 (KWCAG 2.1)** — 4원칙·13지침·24검사항목 전체를 코딩 규칙으로 정리.
+  규칙·예시·PR 체크리스트는 [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) 참고.
+
+  > **기준: KWCAG 2.1** — 공공기관 프로젝트로, 국내 웹 접근성 의무의 기술 기준은
+  > 국제 표준(WCAG)이 아니라 **국가표준 KWCAG**다. 본 프로젝트는 요구 기준에 따라 **2.1**(2015)을 적용한다.
+  > 「디지털포용법」(2026.1.22 시행)·「장애인차별금지법」 등에 따라 공공기관은 준수 의무가 있다.
+
+- **마크업** — 시맨틱 태그 우선, 논리적 헤딩 계층, 랜드마크(`header`/`nav`/`main`/`footer`) 사용.
+- **스타일** — TailwindCSS 유틸리티 기반, 명도 대비·포커스 표시 등 접근성 스타일 준수.
+- **자동 검사** — `yarn lint`가 대체 텍스트, 레이블 연결, 키보드 대응 등 접근성 위반 상당수를 검출.
+
+### 근거
+
+- [KWCAG 2.1 지침 (한국형 웹 콘텐츠 접근성 지침 2.1)](https://websoul.co.kr/accessibility/WA_guide21.asp)
+- [디지털포용법 (국가법령정보센터) — 웹 접근성 품질인증의 현행 법적 근거(제21조)](https://www.law.go.kr/법령/디지털포용법)
+- [장애인차별금지 및 권리구제 등에 관한 법률 (국가법령정보센터)](https://www.law.go.kr/법령/장애인차별금지및권리구제등에관한법률)
+- [웹 접근성 품질마크(인증) 제도 안내 (문화체육관광부)](https://www.mcst.go.kr/site/s_etc/webAccess/accessibility.jsp)
+
+## 한계 (자동 검사로 못 잡는 항목)
+
+정적 분석은 접근성 문제의 일부만 잡는다. 아래는 **수동 점검**이 필요하다.
+
+- 명도 대비(색상값), 실제 대체 텍스트의 적절성, 실제 자막 유무
+- CSS/Tailwind 스타일 오류(ESLint는 CSS를 검사하지 않음)
+- 키보드 전체 흐름, 스크린리더 확인
+
+## 검색 노출 차단 (내부용)
+
+내부 전용 서비스이므로 검색엔진 색인을 차단한다.
+
+- `noindex, nofollow` 메타 태그 + `X-Robots-Tag` 응답 헤더 (전 경로) — [layout.tsx](src/app/layout.tsx) · [next.config.ts](next.config.ts)
+- `robots.txt` 전면 차단(`Disallow: /`), sitemap 미제공 — [robots.ts](src/app/robots.ts)
+
+> ⚠️ 위는 **규칙을 지키는 검색엔진**의 색인만 막을 뿐, **접근 자체를 차단하지는 않는다.**
+> 외부 노출이 없어야 한다면 사내망/VPN·IP 허용목록·인증 게이트 등 **접근 제어**를 별도로 적용해야 한다.

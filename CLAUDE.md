@@ -1,0 +1,7 @@
+@AGENTS.md
+
+<!-- 컨벤션 우선순위: CODE_CONVENTION(개발 표준·최우선) > ACCESSIBILITY(KWCAG) > PUBLISHING(퍼블리싱/토큰) -->
+
+@docs/CODE_CONVENTION.md
+@docs/ACCESSIBILITY.md
+@docs/PUBLISHING_CONVENTION.md

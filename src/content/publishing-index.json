@@ -1,0 +1,175 @@
+{
+  "//": "퍼블리싱 인덱스 데이터 — 이 파일만 수정하면 화면에 반영된다. status 는 types.ts 의 STATUS_VALUES 중 하나, note 는 issue|info. 상태 색·아이콘 매핑은 컴포넌트가 담당한다.",
+  "//screenId": "screenId 는 화면정의서 화면 ID 규칙: 업무약어(대문자 3자) + 대분류(2자리) + 일련(2자리), 예 LGN0101. 독립 화면이 아닌 공통 컴포넌트는 '-' 로 둔다.",
+  "//assetVersions": "프론트엔드 개발자가 화면 구성 시 의존하는 산출물의 버전. 값이 오르면 해당 산출물이 갱신됐다는 뜻이므로 최신본을 반영해 코드를 맞춘다. (작업 전이라 현재는 모두 '-') kind 는 단일 파일이면 file, 디렉터리면 folder.",
+  "//structureGroups": "구조는 뎁스 제한 없는 트리다. 노드에 children 배열이 있으면 하위 메뉴(branch), 없으면 실제 화면 1건(leaf, screenId·status·version 필수)이다. 뎁스가 깊어지면 children 안에 children 을 계속 중첩하면 된다.",
+  "assetVersions": [
+    { "name": "tokens.css", "version": "-", "kind": "file" },
+    { "name": "globals.css", "version": "-", "kind": "file" },
+    { "name": "fonts", "version": "-", "kind": "folder" },
+    { "name": "public", "version": "-", "kind": "folder" },
+    { "name": "component-guide", "version": "-", "kind": "folder" },
+    { "name": "docs (컨벤션)", "version": "-", "kind": "folder" }
+  ],
+  "structureGroups": [
+    {
+      "name": "Component",
+      "depth1": false,
+      "children": [
+        { "label": "layout (공통 레이아웃)", "screenId": "-", "status": "대기중", "version": "-" },
+        { "label": "Header (헤더 영역)", "screenId": "-", "status": "대기중", "version": "-" },
+        { "label": "LNB (좌측 메뉴 영역)", "screenId": "-", "status": "대기중", "version": "-" }
+      ]
+    },
+    {
+      "name": "홈",
+      "depth1": true,
+      "children": [{ "label": "홈", "screenId": "HOM0101", "status": "대기중", "version": "-" }]
+    },
+    {
+      "name": "전체메뉴",
+      "depth1": true,
+      "children": [
+        { "label": "전체메뉴", "screenId": "ALL0101", "status": "대기중", "version": "-" }
+      ]
+    },
+    {
+      "name": "로그인",
+      "depth1": true,
+      "children": [{ "label": "로그인", "screenId": "LGN0101", "status": "대기중", "version": "-" }]
+    },
+    {
+      "name": "회원가입",
+      "depth1": true,
+      "children": [
+        { "label": "회원가입", "screenId": "JOI0101", "status": "대기중", "version": "-" }
+      ]
+    },
+    {
+      "name": "이용안내",
+      "depth1": true,
+      "children": [
+        { "label": "이용안내", "screenId": "GID0101", "status": "대기중", "version": "-" }
+      ]
+    },
+    {
+      "name": "가격 정책",
+      "depth1": true,
+      "children": [
+        { "label": "가격 정책", "screenId": "PRC0101", "status": "대기중", "version": "-" }
+      ]
+    },
+    {
+      "name": "플랫폼 소개",
+      "depth1": true,
+      "children": [
+        { "label": "오픈 플랫폼 소개", "screenId": "PLT0101", "status": "대기중", "version": "-" },
+        { "label": "KTRS-FM 소개", "screenId": "PLT0102", "status": "대기중", "version": "-" },
+        { "label": "Tech-Index 소개", "screenId": "PLT0103", "status": "대기중", "version": "-" },
+        { "label": "투자모형 소개", "screenId": "PLT0104", "status": "대기중", "version": "-" },
+        { "label": "특허등급평가 소개", "screenId": "PLT0105", "status": "대기중", "version": "-" },
+        { "label": "BIGx 소개", "screenId": "PLT0106", "status": "대기중", "version": "-" },
+        { "label": "탄소 플랫폼 소개", "screenId": "PLT0107", "status": "대기중", "version": "-" }
+      ]
+    },
+    {
+      "name": "자가진단",
+      "depth1": true,
+      "children": [
+        {
+          "label": "자가진단 신청",
+          "children": [
+            {
+              "label": "평가모형 선택",
+              "children": [
+                {
+                  "label": "(1) 고객정보활용동의",
+                  "children": [
+                    {
+                      "label": "상세보기",
+                      "screenId": "DIA0101",
+                      "status": "대기중",
+                      "version": "-"
+                    },
+                    {
+                      "label": "전자서명",
+                      "screenId": "DIA0102",
+                      "status": "대기중",
+                      "version": "-"
+                    }
+                  ]
+                },
+                {
+                  "label": "(2) 기업·기술정보 입력",
+                  "screenId": "DIA0103",
+                  "status": "대기중",
+                  "version": "-"
+                },
+                {
+                  "label": "(3) 체크리스트 입력",
+                  "screenId": "DIA0104",
+                  "status": "대기중",
+                  "version": "-"
+                },
+                {
+                  "label": "(4) 최종 확인",
+                  "screenId": "DIA0105",
+                  "status": "대기중",
+                  "version": "-"
+                },
+                {
+                  "label": "(5) 완료 화면",
+                  "screenId": "DIA0106",
+                  "status": "대기중",
+                  "version": "-"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "전문가 평가",
+      "depth1": true,
+      "children": [
+        { "label": "전문가 평가", "screenId": "EXP0101", "status": "대기중", "version": "-" }
+      ]
+    },
+    {
+      "name": "특허등급평가",
+      "depth1": true,
+      "children": [
+        { "label": "특허등급평가", "screenId": "PAT0101", "status": "대기중", "version": "-" }
+      ]
+    },
+    {
+      "name": "K-BIGx 보고서",
+      "depth1": true,
+      "children": [
+        { "label": "K-BIGx 보고서", "screenId": "KBX0101", "status": "대기중", "version": "-" }
+      ]
+    },
+    {
+      "name": "탄소중립",
+      "depth1": true,
+      "children": [
+        { "label": "탄소중립", "screenId": "CNU0101", "status": "대기중", "version": "-" }
+      ]
+    },
+    {
+      "name": "마이페이지",
+      "depth1": true,
+      "children": [
+        { "label": "마이페이지", "screenId": "MYP0101", "status": "대기중", "version": "-" }
+      ]
+    },
+    {
+      "name": "알림마당",
+      "depth1": true,
+      "children": [
+        { "label": "알림마당", "screenId": "NTF0101", "status": "대기중", "version": "-" }
+      ]
+    }
+  ]
+}
