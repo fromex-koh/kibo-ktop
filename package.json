@@ -12,7 +12,11 @@
     "start": "next start",
     "lint": "eslint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "check:conventions": "node scripts/check-conventions.mjs",
+    "typecheck": "tsc --noEmit",
+    "verify": "yarn tokens && yarn lint && yarn format:check && yarn check:conventions && yarn typecheck",
+    "prepare": "husky"
   },
   "dependencies": {
     "lucide-react": "^1.23.0",
@@ -29,6 +33,7 @@
     "eslint-config-next": "16.2.9",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-jsx-a11y": "^6.10.2",
+    "husky": "^9.1.7",
     "prettier": "^3.9.4",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "tailwindcss": "^4",

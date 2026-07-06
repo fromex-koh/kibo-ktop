@@ -13,9 +13,10 @@ const GuideIcon = ICON_REGISTRY[guide.icon];
 
 const CARD_CLASS = 'bg-gray-10/25 flex flex-col gap-3 rounded-xl p-6';
 
-// 현재 버전·빌드 시각 — TODO: 빌드 시 자동 주입 예정. 지금은 위치만 잡는 placeholder 텍스트.
-const BUILD_VERSION = 'v1.4.9';
-const BUILD_TIME = '2025. 10. 16. (목) 16:00';
+// 현재 버전·빌드 시각 — next.config.ts 가 빌드 시점의 git 버전·시각을 주입한다.
+// 로컬 개발 등 값이 없을 때만 폴백을 쓴다. (MD-003)
+const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev';
+const BUILD_TIME = process.env.NEXT_PUBLIC_BUILD_TIME ?? '로컬 개발';
 
 const Home = () => {
   return (

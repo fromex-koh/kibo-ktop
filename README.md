@@ -61,8 +61,10 @@ src/app/          # App Router (layout, page, globals.css)
   └─ fonts/       # 로컬 폰트 파일 (PretendardVariable.woff2)
 public/           # 정적 에셋
 docs/
-  ├─ ACCESSIBILITY.md    # KWCAG 2.1 코딩 규칙 (24개 검사항목) — 퍼블리싱 핵심 기준
-  └─ CODE_CONVENTION.md  # 프론트엔드 표준 코드 컨벤션 (ST/NA/NC/MD/CD)
+  ├─ ACCESSIBILITY.md          # KWCAG 2.1 코딩 규칙 (24개 검사항목) — 퍼블리싱 핵심 기준
+  ├─ CODE_CONVENTION.md        # 프론트엔드 표준 코드 컨벤션 (ST/NA/NC/MD/CD)
+  ├─ PUBLISHING_CONVENTION.md  # 퍼블리싱/디자인 토큰 컨벤션 (PB-01~16)
+  └─ GIT_CONVENTION.md         # Git 브랜치 전략 & 커밋 메시지 컨벤션
 eslint.config.mjs # 린트 설정
 .prettierrc.json  # Prettier 포맷 규칙
 ```
@@ -78,6 +80,8 @@ eslint.config.mjs # 린트 설정
   4원칙·13지침·24검사항목을 마크업/스타일 관점으로 정리한 규칙·예시·PR 체크리스트.
 - **[docs/PUBLISHING_CONVENTION.md](docs/PUBLISHING_CONVENTION.md)** — 퍼블리싱/디자인 토큰 컨벤션.
   색상·타이포(`typo-*`)·간격·라운드·그림자·브레이크포인트·레이아웃 그리드·스크롤바 토큰 사용 규칙(PB-01~16)과 PR 체크리스트.
+- **[docs/GIT_CONVENTION.md](docs/GIT_CONVENTION.md)** — Git 브랜치 전략 & 커밋 메시지 컨벤션.
+  현재(1인 작업)와 향후(팀 합류 시) 브랜치 전략, Conventional Commits 기반 커밋 메시지 포맷·예시.
 
 > 위 문서들은 `CLAUDE.md`(→ `AGENTS.md` 경유)로 로드되어 작업 시 자동 적용된다.
 
