@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowUpRight } from 'lucide-react';
+import { GUIDE_NAV_SECTIONS } from '@/constants/guide-nav';
 import ActiveBreakpointTag from '@/components/active-breakpoint-tag';
+import SidebarLayout from '@/components/sidebar-layout';
 import tokens from '../../../tokens.json';
 import sampleCatImg from '../../../public/sample-cat.jpg';
 
@@ -25,7 +27,11 @@ const getGridRevealClass = (index: number) => {
 
 const ComponentGuidePage = () => {
   return (
-    <main className="bg-background text-foreground min-h-screen">
+    <SidebarLayout
+      title="컴포넌트 가이드"
+      navSections={GUIDE_NAV_SECTIONS}
+      navLabel="컴포넌트 가이드 내비게이션"
+    >
       <div className="max-w-content mx-auto flex w-full flex-col gap-14 px-6 py-16">
         <header className="flex flex-col gap-2">
           <h1 className="typo-heading-xl">컴포넌트 가이드</h1>
@@ -423,7 +429,7 @@ const ComponentGuidePage = () => {
           </ul>
         </section>
       </div>
-    </main>
+    </SidebarLayout>
   );
 };
 
