@@ -234,6 +234,11 @@
         },
         {
           "label": "자가진단 결과조회",
+          "screen": {
+            "screenId": "DIA0113",
+            "status": "대기중",
+            "version": "미배포"
+          },
           "children": [
             {
               "label": "분석정보",
@@ -277,9 +282,25 @@
             },
             {
               "label": "(1) 고객정보활용동의",
-              "screenId": "EXP0102",
-              "status": "대기중",
-              "version": "미배포"
+              "screen": {
+                "screenId": "EXP0102",
+                "status": "대기중",
+                "version": "미배포"
+              },
+              "children": [
+                {
+                  "label": "상세보기",
+                  "screenId": "EXP0111",
+                  "status": "대기중",
+                  "version": "미배포"
+                },
+                {
+                  "label": "전자서명",
+                  "screenId": "EXP0112",
+                  "status": "대기중",
+                  "version": "미배포"
+                }
+              ]
             },
             {
               "label": "(2) 기업·기술정보 입력",
@@ -300,7 +321,12 @@
               "version": "미배포"
             },
             {
-              "label": "(5) 완료 화면",
+              "label": "완료 화면",
+              "screen": {
+                "screenId": "EXP0113",
+                "status": "대기중",
+                "version": "미배포"
+              },
               "children": [
                 {
                   "label": "보증신청 안내",
@@ -314,6 +340,11 @@
         },
         {
           "label": "전문가 평가 결과 조회",
+          "screen": {
+            "screenId": "EXP0114",
+            "status": "대기중",
+            "version": "미배포"
+          },
           "children": [
             {
               "label": "분석정보",
@@ -348,9 +379,19 @@
       "children": [
         {
           "label": "특허등급평가 조회",
+          "screen": {
+            "screenId": "PAT0102",
+            "status": "대기중",
+            "version": "미배포"
+          },
           "children": [
             {
               "label": "특허등급평가 결과",
+              "screen": {
+                "screenId": "PAT0103",
+                "status": "대기중",
+                "version": "미배포"
+              },
               "children": [
                 {
                   "label": "보고서",
@@ -369,6 +410,11 @@
       "children": [
         {
           "label": "기업혁신성장보고서 조회",
+          "screen": {
+            "screenId": "KBX0114",
+            "status": "대기중",
+            "version": "미배포"
+          },
           "children": [
             {
               "label": "정보 이용 동의",
