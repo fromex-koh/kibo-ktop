@@ -19,7 +19,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
     items: [
       { label: '브레이크포인트', href: '/component-guide/breakpoint' },
       { label: '레이아웃 그리드', href: '/publishing/grid', external: true },
-      { label: '사이드 메뉴 레이아웃', href: '/component-guide/sidebar-layout' },
+      { label: '사이드 메뉴 레이아웃', href: '/publishing/sidebar-layout', external: true },
       { label: '간격 (Spacing)', href: '/component-guide/spacing' },
       { label: '레이어 (Z-index)', href: '/component-guide/z-index' },
     ],
