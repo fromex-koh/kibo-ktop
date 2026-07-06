@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import CopyChip from '@/components/copy-chip';
 import GuidePage from '@/components/guide-page';
 import tokens from '../../../../tokens.json';
 
@@ -122,7 +123,8 @@ const TypographyGuidePage = () => (
         </h2>
         <p className="typo-body-sm text-foreground-muted">
           용도별 <code>typo-*</code> <strong>유틸리티 클래스</strong> 목록입니다. 각 클래스가 한
-          번에 묶어 적용하는 값(크기·굵기·행간·자간 <strong>토큰</strong>)은 아래와 같습니다.
+          번에 묶어 적용하는 값(크기·굵기·행간·자간 <strong>토큰</strong>)은 아래와 같습니다. 클래스
+          칩을 클릭하면 이름이 복사됩니다.
         </p>
       </div>
       <div className="border-border overflow-x-auto rounded-xl border">
@@ -154,9 +156,7 @@ const TypographyGuidePage = () => (
             {Object.entries(tokens.typography).map(([name, t]) => (
               <tr key={name} className="border-border border-b last:border-b-0">
                 <th scope="row" className="px-4 py-3 text-left font-normal">
-                  <code className="typo-caption bg-gray-10 text-brand-foreground rounded-md px-2 py-1 font-mono">
-                    typo-{name}
-                  </code>
+                  <CopyChip value={`typo-${name}`} />
                 </th>
                 <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
                   {t.size.mobile}px
