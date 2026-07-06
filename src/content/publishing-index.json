@@ -81,49 +81,50 @@
           "children": [
             {
               "label": "평가모형 선택",
+              "screenId": "DIA0101",
+              "status": "대기중",
+              "version": "-"
+            },
+            {
+              "label": "(1) 고객정보활용동의",
               "children": [
                 {
-                  "label": "(1) 고객정보활용동의",
-                  "children": [
-                    {
-                      "label": "상세보기",
-                      "screenId": "DIA0101",
-                      "status": "대기중",
-                      "version": "-"
-                    },
-                    {
-                      "label": "전자서명",
-                      "screenId": "DIA0102",
-                      "status": "대기중",
-                      "version": "-"
-                    }
-                  ]
+                  "label": "상세보기",
+                  "screenId": "DIA0102",
+                  "status": "대기중",
+                  "version": "-"
                 },
                 {
-                  "label": "(2) 기업·기술정보 입력",
+                  "label": "전자서명",
                   "screenId": "DIA0103",
-                  "status": "대기중",
-                  "version": "-"
-                },
-                {
-                  "label": "(3) 체크리스트 입력",
-                  "screenId": "DIA0104",
-                  "status": "대기중",
-                  "version": "-"
-                },
-                {
-                  "label": "(4) 최종 확인",
-                  "screenId": "DIA0105",
-                  "status": "대기중",
-                  "version": "-"
-                },
-                {
-                  "label": "(5) 완료 화면",
-                  "screenId": "DIA0106",
                   "status": "대기중",
                   "version": "-"
                 }
               ]
+            },
+            {
+              "label": "(2) 기업·기술정보 입력",
+              "screenId": "DIA0104",
+              "status": "대기중",
+              "version": "-"
+            },
+            {
+              "label": "(3) 체크리스트 입력",
+              "screenId": "DIA0105",
+              "status": "대기중",
+              "version": "-"
+            },
+            {
+              "label": "(4) 최종 확인",
+              "screenId": "DIA0106",
+              "status": "대기중",
+              "version": "-"
+            },
+            {
+              "label": "(5) 완료 화면",
+              "screenId": "DIA0107",
+              "status": "대기중",
+              "version": "-"
             }
           ]
         }
