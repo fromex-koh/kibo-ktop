@@ -48,7 +48,22 @@
       "version": "미배포"
     },
     {
+      "label": "Footer (푸터 영역)",
+      "status": "대기중",
+      "version": "미배포"
+    },
+    {
       "label": "LNB (좌측 메뉴 영역)",
+      "status": "대기중",
+      "version": "미배포"
+    },
+    {
+      "label": "서브비주얼 (페이지 타이틀 배너)",
+      "status": "대기중",
+      "version": "미배포"
+    },
+    {
+      "label": "브레드크럼 (탐색 경로 표시)",
       "status": "대기중",
       "version": "미배포"
     }
