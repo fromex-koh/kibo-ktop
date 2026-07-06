@@ -76,11 +76,14 @@ export type StructureLeaf = {
 };
 
 // 화면(leaf)의 상세 정보 — StructureLeaf 와 StructureBranch.screen 이 공유하는 형태.
+// label 은 branch.screen(하이브리드) 전용 — branch 자신의 화면을 하위 뎁스 칸에 어떤 이름으로
+// 보여줄지 정한다(예: 결과조회 branch 의 자기 화면은 '목록'). 없으면 빈 칸이 '-' 로 남는다.
 export type ScreenInfo = {
   screenId: string;
   status: Status;
   version: string;
   note?: StructureNote;
+  label?: string;
 };
 
 export type StructureBranch = {

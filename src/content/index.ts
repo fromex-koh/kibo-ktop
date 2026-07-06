@@ -92,7 +92,14 @@ const parseStructureNode = (value: unknown, path: string): StructureNode => {
       if (!isRecord(value.screen)) {
         throw new Error(`[content] ${where} > screen: 객체여야 합니다.`);
       }
-      const screen = parseScreenInfo(value.screen, `${where} > screen`);
+      const screenBase = parseScreenInfo(value.screen, `${where} > screen`);
+      // label 은 하이브리드 branch 의 자기 화면을 하위 뎁스 칸에 표시할 이름(예: '목록').
+      const screenLabel = value.screen.label;
+      if (screenLabel !== undefined && typeof screenLabel !== 'string') {
+        throw new Error(`[content] ${where} > screen > label: 문자열이어야 합니다.`);
+      }
+      const screen: ScreenInfo =
+        screenLabel !== undefined ? { ...screenBase, label: screenLabel } : screenBase;
       return { label, children, screen };
     }
     return { label, children };

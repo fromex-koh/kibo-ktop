@@ -189,7 +189,8 @@
               "screen": {
                 "screenId": "DIA0112",
                 "status": "대기중",
-                "version": "미배포"
+                "version": "미배포",
+                "label": "동의"
               },
               "children": [
                 {
@@ -237,7 +238,8 @@
           "screen": {
             "screenId": "DIA0113",
             "status": "대기중",
-            "version": "미배포"
+            "version": "미배포",
+            "label": "목록"
           },
           "children": [
             {
@@ -285,7 +287,8 @@
               "screen": {
                 "screenId": "EXP0102",
                 "status": "대기중",
-                "version": "미배포"
+                "version": "미배포",
+                "label": "동의"
               },
               "children": [
                 {
@@ -325,7 +328,8 @@
               "screen": {
                 "screenId": "EXP0113",
                 "status": "대기중",
-                "version": "미배포"
+                "version": "미배포",
+                "label": "완료"
               },
               "children": [
                 {
@@ -343,7 +347,8 @@
           "screen": {
             "screenId": "EXP0114",
             "status": "대기중",
-            "version": "미배포"
+            "version": "미배포",
+            "label": "목록"
           },
           "children": [
             {
@@ -382,7 +387,8 @@
           "screen": {
             "screenId": "PAT0102",
             "status": "대기중",
-            "version": "미배포"
+            "version": "미배포",
+            "label": "목록"
           },
           "children": [
             {
@@ -390,7 +396,8 @@
               "screen": {
                 "screenId": "PAT0103",
                 "status": "대기중",
-                "version": "미배포"
+                "version": "미배포",
+                "label": "상세"
               },
               "children": [
                 {
@@ -413,7 +420,8 @@
           "screen": {
             "screenId": "KBX0114",
             "status": "대기중",
-            "version": "미배포"
+            "version": "미배포",
+            "label": "목록"
           },
           "children": [
             {
