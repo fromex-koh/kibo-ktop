@@ -9,12 +9,26 @@ const run = (command) =>
     .toString()
     .trim();
 
-// 현재 HEAD 의 버전 — 태그가 있으면 최신 태그(vX.Y.Z), 없으면 short commit SHA.
+// 현재 HEAD 의 버전 — 커밋 SHA 는 섞지 않고 태그명만 보여준다(--abbrev=0).
+// 태그 이후 커밋이 더 있어도(아직 다음 릴리스 전) 마지막 태그를 그대로 보여준다 —
+// resolvePathVersion 이 반환하는 '깨끗한 태그명'과 형식이 같아야 isCurrent 비교가 맞아떨어진다.
 export const resolveHeadVersion = () => {
   try {
-    return run('git describe --tags --always');
+    return run('git describe --tags --abbrev=0');
   } catch {
-    return 'unknown';
+    return '미배포'; // 태그가 하나도 없음
+  }
+};
+
+// HEAD 가 태그가 찍힌 바로 그 커밋인지(= 방금 그 버전으로 공유된 시점인지).
+// resolveHeadVersion 은 태그 이후 커밋이 더 있어도 마지막 태그명을 그대로 보여주므로,
+// 이 값 없이 버전 문자열만 비교하면 '아직 배포 안 한 work 작업 중'에도 예전 태그와
+// 우연히 같아 보여 자산이 잘못 하이라이트될 수 있다 — isCurrent 계산에 반드시 같이 쓴다.
+export const isHeadAtTag = () => {
+  try {
+    return !/-\d+-g[0-9a-f]+$/.test(run('git describe --tags --always'));
+  } catch {
+    return false;
   }
 };
 
