@@ -16,6 +16,7 @@ const radius = tokens.radius ?? {};
 const size = tokens.size ?? {};
 const effect = tokens.effect ?? {};
 const overlay = tokens.overlay ?? {}; // 반투명 오버레이 (모드별 alpha)
+const z = tokens.z ?? {}; // z-index 레이어 순서 (정수, rem 변환 안 함) → z-* 유틸
 const typography = tokens.typography ?? {};
 const breakpoint = tokens.breakpoint ?? {}; // 반응형 브레이크포인트(px) → wide:/pc: 프리픽스
 const container = tokens.container ?? {}; // 콘텐츠 최대 폭(px) → max-w-* 유틸
@@ -79,6 +80,9 @@ for (const [k, v] of Object.entries(size)) {
 }
 for (const [k, v] of Object.entries(effect.blur ?? {}))
   if (!numOrStr(v)) errors.push(`effect.blur.${k} 는 숫자(px) 또는 문자열이어야 함`);
+// z-index: 정수(레이어 순서). 값이 아니라 순서라 음수 허용(예: 배경 뒤로 보내기).
+for (const [k, v] of Object.entries(z))
+  if (!Number.isInteger(v)) errors.push(`z.${k} 는 정수(z-index)여야 함`);
 // breakpoint·container: px 숫자. typographyBreakpoint 는 breakpoint 키(또는 px 숫자)
 for (const [group, obj] of Object.entries({ breakpoint, container })) {
   for (const [k, v] of Object.entries(obj))
@@ -299,6 +303,10 @@ if (Object.keys(blur).length) {
   L.push('  /* blur */');
   for (const [k, v] of Object.entries(blur)) L.push(`  --ds-blur-${k}: ${toRem(v)};`);
 }
+if (Object.keys(z).length) {
+  L.push('  /* z-index (레이어 순서) — 정수, rem 변환 안 함 */');
+  for (const [k, v] of Object.entries(z)) L.push(`  --ds-z-${k}: ${v};`);
+}
 if (grid.mobile) {
   L.push('  /* grid (모바일 기본) — columns/gutter/margin, 상위 구간은 아래 @media 참고 */');
   L.push(`  --ds-grid-columns: ${grid.mobile.columns};`);
@@ -385,6 +393,14 @@ if (Object.keys(grid).length) {
   L.push('}', '');
 }
 
+// z-index → z-* 유틸. Tailwind v4 엔 z-index 테마 네임스페이스가 없어 @utility 로 만든다
+// (@utility 라 focus:/hover: 등 variant 도 자동 지원). z-[숫자] 하드코딩 대신 z-modal 처럼 쓴다. [CD-002]
+if (Object.keys(z).length) {
+  L.push('/* z-index → z-* 유틸 (@utility 라 focus: 등 variant 지원) */');
+  for (const k of Object.keys(z)) L.push(`@utility z-${k} {`, `  z-index: var(--ds-z-${k});`, '}');
+  L.push('');
+}
+
 writeFileSync(OUT, L.join('\n'));
 console.log(
   `✅ tokens.css 생성 — color(hue ${hues.length}·semantic ${Object.keys(semantic).length}·alpha ${Object.keys(alpha).length}), ` +
@@ -392,5 +408,5 @@ console.log(
     `size ${Object.keys(size).length}, shadow ${Object.keys(effect.shadow ?? {}).length}, ` +
     `blur ${Object.keys(effect.blur ?? {}).length}, overlay ${Object.keys(overlay).length}, ` +
     `breakpoint ${Object.keys(breakpoint).length}, container ${Object.keys(container).length}, ` +
-    `grid ${Object.keys(grid).length}, typography ${typoNames.length}`,
+    `grid ${Object.keys(grid).length}, z ${Object.keys(z).length}, typography ${typoNames.length}`,
 );
