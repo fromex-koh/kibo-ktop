@@ -19,22 +19,30 @@ const getGridRevealClass = (index: number) => {
 };
 
 // 레이아웃 그리드 — 브레이크포인트별 컬럼·거터·마진, .grid-layout 하나로 캡슐화.
+// 미리보기(.grid-layout)는 GuidePage 의 좌우 패딩·폭 제한 밖으로 빼서 콘텐츠 영역(main) 전체 폭을
+// 그대로 쓴다 — 그래야 .grid-layout 이 스스로 적용하는 해상도별 실제 값(모바일 328 / 태블릿 792 /
+// 데스크톱 1200)이 이중 컨테이너에 눌리지 않고 그대로 보인다.
 const GridGuidePage = () => (
-  <GuidePage
-    title="레이아웃 그리드 (Grid)"
-    description={
-      <>
-        브레이크포인트별 컬럼 수·거터(칸 간격)·마진(가장자리 여백)을 정의합니다. 전체 폭 상한은{' '}
-        <code>max-w-content</code>({tokens.container.content}px)를 공유하며,{' '}
-        <code>.grid-layout</code> 클래스 하나로 컬럼 그리드·거터·마진·폭 상한을 함께 적용합니다.
-      </>
-    }
-  >
-    <p className="typo-caption text-foreground-muted">
-      브라우저 폭을 조절하면(또는 기기 회전) 실제로 보이는 칸 수가 4 → 8 → 12 로 바뀝니다 — 각
-      브레이크포인트에서 실제 사용하는 컬럼 수만 표시합니다.
-    </p>
-    <div className="grid-layout">
+  <>
+    <GuidePage
+      title="레이아웃 그리드 (Grid)"
+      description={
+        <>
+          브레이크포인트별 컬럼 수·거터(칸 간격)·마진(가장자리 여백)을 정의합니다. 전체 폭 상한은{' '}
+          <code>max-w-content</code>({tokens.container.content}px)를 공유하며,{' '}
+          <code>.grid-layout</code> 클래스 하나로 컬럼 그리드·거터·마진·폭 상한을 함께 적용합니다.
+        </>
+      }
+    >
+      <p className="typo-caption text-foreground-muted">
+        브라우저 폭을 조절하면(또는 기기 회전) 실제로 보이는 칸 수가 4 → 8 → 12 로 바뀝니다. 아래
+        미리보기는 콘텐츠 영역 전체 폭을 그대로 써서 해상도별 실제 그리드(가장자리 여백·거터 포함)를
+        보여줍니다.
+      </p>
+    </GuidePage>
+
+    {/* 미리보기 — GuidePage 밖의 full-width. 감싸지 않아야 실제 해상도별 그리드가 그대로 나온다. */}
+    <div className="grid-layout wide:mb-16 mb-12">
       {Array.from({ length: GRID_MAX_COLUMNS }).map((_, i) => (
         <span
           key={i}
@@ -47,55 +55,59 @@ const GridGuidePage = () => (
         </span>
       ))}
     </div>
-    <div className="border-border overflow-x-auto rounded-xl border">
-      <table className="w-full text-left">
-        <caption className="sr-only">브레이크포인트별 그리드 columns·gutter·margin</caption>
-        <thead>
-          <tr className="border-border bg-surface border-b">
-            <th scope="col" className="typo-label px-4 py-3">
-              구간
-            </th>
-            <th scope="col" className="typo-label px-4 py-3">
-              columns
-            </th>
-            <th scope="col" className="typo-label px-4 py-3">
-              gutter
-            </th>
-            <th scope="col" className="typo-label px-4 py-3">
-              margin
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {(() => {
-            const order = ['mobile', ...Object.keys(tokens.breakpoint)];
-            const rows = Object.entries(tokens.grid).sort(
-              ([a], [b]) => order.indexOf(a) - order.indexOf(b),
-            );
-            return rows.map(([key, g]) => (
-              <tr key={key} className="border-border border-b last:border-b-0">
-                <td className="typo-body-sm px-4 py-3">
-                  <span className="inline-flex items-center gap-2">
-                    {key === 'mobile' ? '모바일 (기본)' : key}
-                    <ActiveBreakpointTag targetKey={key} />
-                  </span>
-                </td>
-                <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
-                  {g.columns}
-                </td>
-                <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
-                  {g.gutter}px
-                </td>
-                <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
-                  {g.margin}px
-                </td>
-              </tr>
-            ));
-          })()}
-        </tbody>
-      </table>
+
+    {/* 표 — 다시 읽기 좋은 폭으로 제한 */}
+    <div className="max-w-content wide:pb-16 mx-auto flex w-full flex-col gap-4 px-6 pb-12">
+      <div className="border-border overflow-x-auto rounded-xl border">
+        <table className="w-full text-left">
+          <caption className="sr-only">브레이크포인트별 그리드 columns·gutter·margin</caption>
+          <thead>
+            <tr className="border-border bg-surface border-b">
+              <th scope="col" className="typo-label px-4 py-3">
+                구간
+              </th>
+              <th scope="col" className="typo-label px-4 py-3">
+                columns
+              </th>
+              <th scope="col" className="typo-label px-4 py-3">
+                gutter
+              </th>
+              <th scope="col" className="typo-label px-4 py-3">
+                margin
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {(() => {
+              const order = ['mobile', ...Object.keys(tokens.breakpoint)];
+              const rows = Object.entries(tokens.grid).sort(
+                ([a], [b]) => order.indexOf(a) - order.indexOf(b),
+              );
+              return rows.map(([key, g]) => (
+                <tr key={key} className="border-border border-b last:border-b-0">
+                  <td className="typo-body-sm px-4 py-3">
+                    <span className="inline-flex items-center gap-2">
+                      {key === 'mobile' ? '모바일 (기본)' : key}
+                      <ActiveBreakpointTag targetKey={key} />
+                    </span>
+                  </td>
+                  <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
+                    {g.columns}
+                  </td>
+                  <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
+                    {g.gutter}px
+                  </td>
+                  <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
+                    {g.margin}px
+                  </td>
+                </tr>
+              ));
+            })()}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </GuidePage>
+  </>
 );
 
 export default GridGuidePage;
