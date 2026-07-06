@@ -186,6 +186,11 @@
             },
             {
               "label": "(1) 고객정보활용동의",
+              "screen": {
+                "screenId": "DIA0112",
+                "status": "대기중",
+                "version": "미배포"
+              },
               "children": [
                 {
                   "label": "상세보기",

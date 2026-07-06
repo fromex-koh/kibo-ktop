@@ -16,6 +16,7 @@ import {
   type CommonLayout,
   type HomeContent,
   type PublishingIndexContent,
+  type ScreenInfo,
   type StructureNode,
   type StructureNote,
 } from './types';
@@ -51,22 +52,8 @@ const parseNote = (value: unknown, path: string): StructureNote | undefined => {
   return value;
 };
 
-// 사이트 구조는 뎁스 제한 없는 트리 — children 이 있으면 branch(재귀), 없으면 leaf(실제 화면 1건)로 검증한다.
-const parseStructureNode = (value: unknown, path: string): StructureNode => {
-  if (!isRecord(value) || typeof value.label !== 'string') {
-    throw new Error(`[content] ${path}: label 이 있는 객체가 아닙니다.`);
-  }
-  const label = value.label;
-  const where = `${path} > ${label}`;
-
-  if ('children' in value) {
-    if (!Array.isArray(value.children)) {
-      throw new Error(`[content] ${where}: children 은 배열이어야 합니다.`);
-    }
-    const children = value.children.map((child, i) => parseStructureNode(child, `${where}[${i}]`));
-    return { label, children };
-  }
-
+// leaf 든, branch 의 screen 필드든, '화면 1건'의 형태는 동일하다 — 한 곳에서 검증한다.
+const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenInfo => {
   if (typeof value.screenId !== 'string') {
     throw new Error(`[content] ${where}: screenId 가 필요합니다.`);
   }
@@ -80,12 +67,38 @@ const parseStructureNode = (value: unknown, path: string): StructureNode => {
   }
   const note = parseNote(value.note, `${where} > note`);
   return {
-    label,
     screenId: value.screenId,
     status: value.status,
     version: value.version,
     ...(note !== undefined ? { note } : {}),
   };
+};
+
+// 사이트 구조는 뎁스 제한 없는 트리 — children 이 있으면 branch(재귀), 없으면 leaf(실제 화면 1건)로 검증한다.
+// branch 에 screen 이 있으면 그 branch 자신도 독립된 화면이다(예: '(1) 고객정보활용동의').
+const parseStructureNode = (value: unknown, path: string): StructureNode => {
+  if (!isRecord(value) || typeof value.label !== 'string') {
+    throw new Error(`[content] ${path}: label 이 있는 객체가 아닙니다.`);
+  }
+  const label = value.label;
+  const where = `${path} > ${label}`;
+
+  if ('children' in value) {
+    if (!Array.isArray(value.children)) {
+      throw new Error(`[content] ${where}: children 은 배열이어야 합니다.`);
+    }
+    const children = value.children.map((child, i) => parseStructureNode(child, `${where}[${i}]`));
+    if (value.screen !== undefined) {
+      if (!isRecord(value.screen)) {
+        throw new Error(`[content] ${where} > screen: 객체여야 합니다.`);
+      }
+      const screen = parseScreenInfo(value.screen, `${where} > screen`);
+      return { label, children, screen };
+    }
+    return { label, children };
+  }
+
+  return { label, ...parseScreenInfo(value, where) };
 };
 
 const parseHomeContent = (raw: typeof homeJson): HomeContent => ({

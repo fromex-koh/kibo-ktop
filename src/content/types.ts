@@ -75,9 +75,20 @@ export type StructureLeaf = {
   note?: StructureNote;
 };
 
+// 화면(leaf)의 상세 정보 — StructureLeaf 와 StructureBranch.screen 이 공유하는 형태.
+export type ScreenInfo = {
+  screenId: string;
+  status: Status;
+  version: string;
+  note?: StructureNote;
+};
+
 export type StructureBranch = {
   label: string;
   children: StructureNode[];
+  // branch 자신도 독립된 화면인 경우 채운다(예: '(1) 고객정보활용동의' 자체가 화면이면서
+  // 하위에 상세보기·전자서명을 더 갖는 경우). 없으면 순수 메뉴 그룹(화면이 아님).
+  screen?: ScreenInfo;
 };
 
 export type StructureNode = StructureLeaf | StructureBranch;
