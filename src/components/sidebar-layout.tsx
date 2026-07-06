@@ -190,8 +190,13 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
         {/* 본문 — 드로어가 열리면 배경으로서 inert(뒤 콘텐츠와 상호작용 차단 → 모달 성격).
             내부 컨테이너(폭 상한·패딩·그리드)는 children 쪽에서 정한다. */}
         {/* id·tabIndex=-1 로 '본문 바로가기' 스킵 링크의 포커스 대상이 된다(포커스 후 다음 Tab 은
-            본문으로 이어짐). 포커스 표시는 제거하지 않는다(포커스가 본문으로 옮겨졌음을 드러냄). */}
-        <main id="main" tabIndex={-1} inert={isDrawerActive || undefined}>
+            본문으로 이어짐). 브라우저 기본 아웃라인 대신 내비와 같은 브랜드 링으로 통일한다. */}
+        <main
+          id="main"
+          tabIndex={-1}
+          inert={isDrawerActive || undefined}
+          className="focus-visible:ring-brand focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
+        >
           {children}
         </main>
       </div>
