@@ -13,7 +13,7 @@ import {
   isStructureNote,
   type AssetKind,
   type AssetVersion,
-  type CommonComponent,
+  type CommonLayout,
   type HomeContent,
   type PublishingIndexContent,
   type StructureNode,
@@ -111,10 +111,10 @@ const findGeneratedVersion = (name: string): { version: string; isCurrent: boole
   return { version: found?.version ?? '-', isCurrent: found?.isCurrent ?? false };
 };
 
-const parseCommonComponent = (
-  raw: (typeof publishingIndexJson)['commonComponents'][number],
-): CommonComponent => {
-  const where = `publishing-index.json > commonComponents > ${raw.label}`;
+const parseCommonLayout = (
+  raw: (typeof publishingIndexJson)['commonLayouts'][number],
+): CommonLayout => {
+  const where = `publishing-index.json > commonLayouts > ${raw.label}`;
   if (!isStatus(raw.status)) {
     throw new Error(`[content] ${where}: status "${raw.status}" 이(가) 유효하지 않습니다.`);
   }
@@ -140,7 +140,7 @@ const parsePublishingIndexContent = (raw: typeof publishingIndexJson): Publishin
       isCurrent,
     };
   }),
-  commonComponents: raw.commonComponents.map(parseCommonComponent),
+  commonLayouts: raw.commonLayouts.map(parseCommonLayout),
   structureGroups: raw.structureGroups.map((group) => ({
     name: group.name,
     children: group.children.map((child, i) =>
@@ -155,10 +155,4 @@ export const PUBLISHING_INDEX_CONTENT: PublishingIndexContent =
   parsePublishingIndexContent(publishingIndexJson);
 
 export { isStructureBranch, STATUS_VALUES } from './types';
-export type {
-  CommonComponent,
-  Status,
-  StructureGroup,
-  StructureNode,
-  StructureNote,
-} from './types';
+export type { CommonLayout, Status, StructureGroup, StructureNode, StructureNote } from './types';

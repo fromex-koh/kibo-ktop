@@ -90,8 +90,8 @@ export type StructureGroup = {
   children: StructureNode[];
 };
 
-// 여러 화면이 공유하는 공통 UI(레이아웃·헤더·LNB 등) — 독립 화면이 아니라 screenId 가 없다.
-export type CommonComponent = {
+// 화면을 찍어내는 틀(내부 콘텐츠만 바뀌는 공통 레이아웃) — 독립 화면이 아니라 screenId 가 없다.
+export type CommonLayout = {
   label: string;
   status: Status;
   version: string;
@@ -100,6 +100,6 @@ export type CommonComponent = {
 
 export type PublishingIndexContent = {
   assetVersions: AssetVersion[];
-  commonComponents: CommonComponent[];
+  commonLayouts: CommonLayout[];
   structureGroups: StructureGroup[];
 };
