@@ -102,7 +102,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
           aria-label={isDrawerOpen ? '사이드 메뉴 닫기' : '사이드 메뉴 열기'}
           aria-expanded={isDrawerOpen}
           aria-controls="sidebar-layout-nav"
-          className="bg-gray-10 text-foreground-muted hover:text-foreground focus-visible:ring-brand focus-visible:ring-offset-background pc:hidden inline-flex min-h-11 min-w-11 items-center justify-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="bg-gray-10 text-foreground-muted hover:text-foreground focus-visible:ring-brand focus-visible:ring-offset-background pc:hidden inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           {isDrawerOpen ? (
             <X aria-hidden="true" className="size-icon-sm" />

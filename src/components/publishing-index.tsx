@@ -436,7 +436,7 @@ const PublishingIndex = () => {
                 tabIndex={selected ? 0 : -1}
                 onClick={() => setFilter(f)}
                 onKeyDown={(e) => onTabKeyDown(e, i)}
-                className={`typo-label focus-visible:ring-brand inline-flex min-h-11 items-center gap-1.5 rounded-md px-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                className={`typo-label focus-visible:ring-brand inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-md px-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                   selected ? 'bg-background text-foreground shadow-1' : 'text-foreground-muted'
                 }`}
               >
