@@ -281,8 +281,8 @@
 @media (min-width: 48rem) {
   :root {
     --ds-grid-columns: 8;
-    --ds-grid-gutter: 1.25rem;
-    --ds-grid-margin: 1.5rem;
+    --ds-grid-gutter: 1.5rem;
+    --ds-grid-margin: 12.75rem;
   }
 }
 
@@ -290,7 +290,7 @@
   :root {
     --ds-grid-columns: 12;
     --ds-grid-gutter: 1.5rem;
-    --ds-grid-margin: 2rem;
+    --ds-grid-margin: 0;
   }
 }
 
@@ -311,7 +311,7 @@
 
   /* container(max-width) — 기본 스케일 제거, 정의 키만 */
   --container-*: initial;
-  --container-content: 80rem;
+  --container-content: 75rem;
 }
 
 @theme inline {

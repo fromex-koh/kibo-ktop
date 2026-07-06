@@ -71,7 +71,7 @@ tokens.json (px 숫자) → yarn tokens → src/app/tokens.css (자동) → Tail
   - 3단계: **모바일 0–767px(기본, 프리픽스 없음) · `wide:` 768px 이상 · `pc:` 1280px 이상**. 기본 유틸로 모바일을 만들고 상위 구간만 프리픽스로 덮어쓴다.
   - `wide:` 는 특정 기기 하나를 가리키지 않는다 — **768~1279px 구간은 태블릿(가로)·노트북이 함께 걸치는 폭**이라 `tablet:`처럼 기기명을 쓰면 부정확하다. 그래서 기기 중립적으로 "넓어진 화면"을 뜻하는 `wide`를 쓴다.
   - Tailwind 기본 `sm:`/`md:`/`lg:`/`xl:`/`2xl:` 는 **생성기가 제거해 동작하지 않는다** — 정의된 프리픽스(`wide:`/`pc:`)만 쓴다.
-  - 콘텐츠 영역은 고정폭 대신 **`max-w-content`**(1280px) + `mx-auto` 로 제한한다(ST-004 연계). `max-w-4xl` 등 기본 스케일도 제거됨.
+  - 콘텐츠 영역은 고정폭 대신 **`max-w-content`**(1200px) + `mx-auto` 로 제한한다(ST-004 연계). `max-w-4xl` 등 기본 스케일도 제거됨.
   - 값 변경은 `tokens.json` 의 `breakpoint`/`container` 수정 → `yarn tokens`. 타이포 모바일→PC 전환점(`typographyBreakpoint`)도 breakpoint 키 참조("wide")로 연동된다.
 - **[PB-15] 레이아웃 그리드는 `.grid-layout` 하나로 (MUST)** — 컬럼 수·거터(칸 간격)·마진(가장자리 여백)은 `tokens.json`의 `grid`(브레이크포인트별)에서 온다. 컬럼 그리드가 필요한 곳엔 `grid-cols-*`/`gap-*`/`px-*` 를 직접 조합하지 않고 **`.grid-layout`** 클래스를 쓴다 — 내부적으로 `--ds-grid-columns`/`--ds-grid-gutter`/`--ds-grid-margin` 과 공용 `max-w-content` 폭 상한을 함께 캡슐화한다.
   - `grid` 의 키는 `breakpoint`(+`mobile`)와 **정확히 1:1 대응**해야 하며, 어긋나면(키 누락·불일치) 빌드가 실패한다. 브레이크포인트를 리네임·추가하면 `grid` 도 함께 갱신한다.
