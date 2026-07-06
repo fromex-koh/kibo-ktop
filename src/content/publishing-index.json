@@ -294,6 +294,105 @@
           "version": "미배포"
         }
       ]
+    },
+    {
+      "name": "결제완료",
+      "children": [
+        {
+          "label": "결제완료",
+          "screenId": "PAY0101",
+          "status": "대기중",
+          "version": "미배포"
+        }
+      ]
+    },
+    {
+      "name": "404 에러화면",
+      "children": [
+        {
+          "label": "404 에러화면",
+          "screenId": "ERR0101",
+          "status": "대기중",
+          "version": "미배포"
+        }
+      ]
+    },
+    {
+      "name": "505 에러화면",
+      "children": [
+        {
+          "label": "505 에러화면",
+          "screenId": "ERR0102",
+          "status": "대기중",
+          "version": "미배포"
+        }
+      ]
+    },
+    {
+      "name": "정기점검 화면",
+      "children": [
+        {
+          "label": "정기점검 화면",
+          "screenId": "ERR0103",
+          "status": "대기중",
+          "version": "미배포"
+        }
+      ]
+    },
+    {
+      "name": "이용약관",
+      "children": [
+        {
+          "label": "이용약관",
+          "screenId": "TRM0101",
+          "status": "대기중",
+          "version": "미배포"
+        }
+      ]
+    },
+    {
+      "name": "개인정보 처리방침",
+      "children": [
+        {
+          "label": "개인정보 처리방침",
+          "screenId": "PRV0101",
+          "status": "대기중",
+          "version": "미배포"
+        }
+      ]
+    },
+    {
+      "name": "알기 쉬운 개인처리 방침",
+      "children": [
+        {
+          "label": "알기 쉬운 개인처리 방침",
+          "screenId": "PRV0102",
+          "status": "대기중",
+          "version": "미배포"
+        }
+      ]
+    },
+    {
+      "name": "로그인 연장",
+      "children": [
+        {
+          "label": "로그인 연장",
+          "screenId": "LGN0102",
+          "status": "대기중",
+          "version": "미배포"
+        }
+      ]
+    },
+    {
+      "name": "로그아웃 종료",
+      "children": [
+        {
+          "label": "로그아웃 종료",
+          "screenId": "LGO0101",
+          "status": "대기중",
+          "version": "미배포"
+        }
+      ]
     }
   ]
 }
