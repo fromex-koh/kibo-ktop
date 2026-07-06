@@ -106,6 +106,9 @@ if (Object.keys(grid).length) {
       errors.push(`grid.${k}.columns 는 1 이상의 정수여야 함`);
     if (!numOrStr(v.gutter)) errors.push(`grid.${k}.gutter 는 숫자(px) 또는 문자열이어야 함`);
     if (!numOrStr(v.margin)) errors.push(`grid.${k}.margin 는 숫자(px) 또는 문자열이어야 함`);
+    // container: 콘텐츠 고정 폭(px 숫자) 또는 유동 상한 문자열("100%" = 상한 없음).
+    if (!numOrStr(v.container))
+      errors.push(`grid.${k}.container 는 숫자(px) 또는 문자열("100%")이어야 함`);
   }
 }
 // alpha 프리미티브: white/black 만, 스텝은 1~100 숫자 배열
@@ -308,10 +311,13 @@ if (Object.keys(z).length) {
   for (const [k, v] of Object.entries(z)) L.push(`  --ds-z-${k}: ${v};`);
 }
 if (grid.mobile) {
-  L.push('  /* grid (모바일 기본) — columns/gutter/margin, 상위 구간은 아래 @media 참고 */');
+  L.push(
+    '  /* grid (모바일 기본) — columns/gutter/margin(최소여백)/container(고정폭), 상위 구간은 아래 @media */',
+  );
   L.push(`  --ds-grid-columns: ${grid.mobile.columns};`);
   L.push(`  --ds-grid-gutter: ${toRem(grid.mobile.gutter)};`);
   L.push(`  --ds-grid-margin: ${toRem(grid.mobile.margin)};`);
+  L.push(`  --ds-grid-container: ${toRem(grid.mobile.container)};`);
 }
 L.push('}', '');
 
@@ -324,6 +330,7 @@ for (const [key, px] of gridEntries) {
   L.push(`    --ds-grid-columns: ${g.columns};`);
   L.push(`    --ds-grid-gutter: ${toRem(g.gutter)};`);
   L.push(`    --ds-grid-margin: ${toRem(g.margin)};`);
+  L.push(`    --ds-grid-container: ${toRem(g.container)};`);
   L.push('  }', '}', '');
 }
 
@@ -377,24 +384,24 @@ if (typoNames.length) {
   L.push('}', '');
 }
 
-// .grid-layout — grid(columns/gutter/margin) + 공용 container 폭 상한을 한 클래스로 캡슐화
+// .grid-layout — grid(columns/gutter/margin/container)를 한 클래스로 캡슐화.
+// width = min(100% − 2×margin, container) + margin-inline:auto:
+//  · 넓은 화면: container 고정폭으로 캡핑되고 남는 공간이 자동 여백(중앙정렬) → 스펙의 큰 여백(204/360)이 자동
+//  · 좁은 화면: container 에 못 미치면 최소 margin 만 남기고 폭이 유동으로 줄어듦(컬럼이 과하게 안 좁아짐)
 if (Object.keys(grid).length) {
   L.push('/* .grid-layout — tokens.json grid 기반 반응형 컬럼 그리드.');
-  L.push('   grid.margin(가장자리 여백)은 CSS margin 이 아니라 padding-inline 으로 넣는다:');
-  L.push('   CSS margin 은 아래 margin-inline:auto(중앙정렬)에 쓰이고, "가장자리 여백"은 콘텐츠를');
   L.push(
-    '   컨테이너 안쪽으로 들이는 개념이라 padding 이 맞다(box-sizing:border-box 라 width 안에서 줄어듦). */',
+    '   width = min(100% − 2×margin, container): 넓으면 container 고정폭 중앙정렬(남는 공간=자동 여백),',
+  );
+  L.push(
+    '   좁으면 최소 margin 만 남기고 폭이 줄어든다. margin=가장자리 최소 여백, container=콘텐츠 고정 폭. */',
   );
   L.push('.grid-layout {');
   L.push('  display: grid;');
   L.push('  grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));');
   L.push('  gap: var(--ds-grid-gutter);');
-  L.push('  width: 100%;');
-  L.push('  padding-inline: var(--ds-grid-margin); /* = grid.margin (가장자리 여백) */');
-  if (container.content !== undefined) {
-    L.push('  max-width: var(--container-content);');
-    L.push('  margin-inline: auto;');
-  }
+  L.push('  width: min(100% - 2 * var(--ds-grid-margin), var(--ds-grid-container));');
+  L.push('  margin-inline: auto;');
   L.push('}', '');
 }
 

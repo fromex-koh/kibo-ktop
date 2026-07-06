@@ -36,7 +36,7 @@ const GridPreviewPage = () => (
       </p>
     </div>
 
-    {/* 미리보기 — 뷰포트 전체 폭. .grid-layout 이 스스로 max-w-content + 가장자리 여백으로 제어한다. */}
+    {/* 미리보기 — 뷰포트 전체 폭. .grid-layout 이 스스로 container 고정폭 + 최소 여백으로 제어한다. */}
     <div className="grid-layout">
       {Array.from({ length: GRID_MAX_COLUMNS }).map((_, i) => (
         <span
@@ -55,7 +55,9 @@ const GridPreviewPage = () => (
     <div className="max-w-content mx-auto w-full px-6">
       <div className="border-border overflow-x-auto rounded-xl border">
         <table className="w-full text-left">
-          <caption className="sr-only">브레이크포인트별 그리드 columns·gutter·margin</caption>
+          <caption className="sr-only">
+            브레이크포인트별 그리드 columns·gutter·container·margin
+          </caption>
           <thead>
             <tr className="border-border bg-surface border-b">
               <th scope="col" className="typo-label px-4 py-3">
@@ -68,7 +70,10 @@ const GridPreviewPage = () => (
                 gutter
               </th>
               <th scope="col" className="typo-label px-4 py-3">
-                margin
+                container
+              </th>
+              <th scope="col" className="typo-label px-4 py-3">
+                margin (최소)
               </th>
             </tr>
           </thead>
@@ -91,6 +96,9 @@ const GridPreviewPage = () => (
                   </td>
                   <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
                     {g.gutter}px
+                  </td>
+                  <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
+                    {typeof g.container === 'number' ? `${g.container}px` : g.container}
                   </td>
                   <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
                     {g.margin}px

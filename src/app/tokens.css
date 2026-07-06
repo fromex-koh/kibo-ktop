@@ -272,17 +272,19 @@
   --ds-z-toast: 1700;
   --ds-z-tooltip: 1800;
   --ds-z-skiplink: 1900;
-  /* grid (모바일 기본) — columns/gutter/margin, 상위 구간은 아래 @media 참고 */
+  /* grid (모바일 기본) — columns/gutter/margin(최소여백)/container(고정폭), 상위 구간은 아래 @media */
   --ds-grid-columns: 4;
   --ds-grid-gutter: 1rem;
   --ds-grid-margin: 1rem;
+  --ds-grid-container: 100%;
 }
 
 @media (min-width: 48rem) {
   :root {
     --ds-grid-columns: 8;
     --ds-grid-gutter: 1.5rem;
-    --ds-grid-margin: 12.75rem;
+    --ds-grid-margin: 1.5rem;
+    --ds-grid-container: 49.5rem;
   }
 }
 
@@ -290,7 +292,8 @@
   :root {
     --ds-grid-columns: 12;
     --ds-grid-gutter: 1.5rem;
-    --ds-grid-margin: 0;
+    --ds-grid-margin: 1.5rem;
+    --ds-grid-container: 75rem;
   }
 }
 
@@ -409,16 +412,13 @@
 }
 
 /* .grid-layout — tokens.json grid 기반 반응형 컬럼 그리드.
-   grid.margin(가장자리 여백)은 CSS margin 이 아니라 padding-inline 으로 넣는다:
-   CSS margin 은 아래 margin-inline:auto(중앙정렬)에 쓰이고, "가장자리 여백"은 콘텐츠를
-   컨테이너 안쪽으로 들이는 개념이라 padding 이 맞다(box-sizing:border-box 라 width 안에서 줄어듦). */
+   width = min(100% − 2×margin, container): 넓으면 container 고정폭 중앙정렬(남는 공간=자동 여백),
+   좁으면 최소 margin 만 남기고 폭이 줄어든다. margin=가장자리 최소 여백, container=콘텐츠 고정 폭. */
 .grid-layout {
   display: grid;
   grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));
   gap: var(--ds-grid-gutter);
-  width: 100%;
-  padding-inline: var(--ds-grid-margin); /* = grid.margin (가장자리 여백) */
-  max-width: var(--container-content);
+  width: min(100% - 2 * var(--ds-grid-margin), var(--ds-grid-container));
   margin-inline: auto;
 }
 
