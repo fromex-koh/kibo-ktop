@@ -1,10 +1,18 @@
 'use client';
 
-import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type MouseEvent,
+  type ReactNode,
+} from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Menu, PanelLeft, X } from 'lucide-react';
 import type { GuideNavSection } from '@/constants/guide-nav';
+import SkipNav, { type SkipLinkItem } from '@/components/skip-nav';
 import tokens from '../../tokens.json';
 
 // works/system-guide 프로젝트의 사이드 내비게이션 구조를 이 프로젝트 브레이크포인트(wide/pc)·색상·
@@ -66,8 +74,22 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
     };
   }, [isDrawerActive]);
 
+  // '주메뉴 바로가기' — pc 미만(드로어 모드)에선 내비가 닫혀 inert 라 바로 포커스가 안 간다.
+  // 이때는 기본 앵커 이동을 막고 드로어를 열면, isDrawerActive 효과가 내비로 포커스를 옮긴다.
+  const skipToMenu = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (isDrawerMode) {
+      event.preventDefault();
+      setIsDrawerOpen(true);
+    }
+  };
+  const skipLinks: readonly SkipLinkItem[] = [
+    { href: '#main', label: '본문 바로가기' },
+    { href: '#sidebar-layout-nav', label: '주메뉴 바로가기', onSelect: skipToMenu },
+  ];
+
   return (
     <div className="bg-background text-foreground min-h-screen">
+      <SkipNav links={skipLinks} />
       <header className="border-border bg-background wide:px-6 h-header-h sticky top-0 flex items-center gap-3 border-b px-4">
         {/* 햄버거 — pc 미만에서만. pc 는 상시 레일이라 토글이 불필요해 숨긴다.
             터치 타깃은 44px(min-h-11/min-w-11) 유지(KWCAG 6.1.3), 아이콘만 한 단계 작게(icon-sm)
@@ -167,7 +189,11 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
 
         {/* 본문 — 드로어가 열리면 배경으로서 inert(뒤 콘텐츠와 상호작용 차단 → 모달 성격).
             내부 컨테이너(폭 상한·패딩·그리드)는 children 쪽에서 정한다. */}
-        <main inert={isDrawerActive || undefined}>{children}</main>
+        {/* id·tabIndex=-1 로 '본문 바로가기' 스킵 링크의 포커스 대상이 된다(포커스 후 다음 Tab 은
+            본문으로 이어짐). 포커스 표시는 제거하지 않는다(포커스가 본문으로 옮겨졌음을 드러냄). */}
+        <main id="main" tabIndex={-1} inert={isDrawerActive || undefined}>
+          {children}
+        </main>
       </div>
     </div>
   );
