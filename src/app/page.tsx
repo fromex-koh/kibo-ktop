@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { ArrowUpRight, GitBranch } from 'lucide-react';
 import PublishingIndex from '@/components/publishing-index';
+import ThemeToggle from '@/components/theme-toggle';
 import { ICON_REGISTRY } from '@/components/icon-registry';
 import { HOME_CONTENT } from '@/content';
 import { REPOSITORY_URL, SITE_NAME } from '@/constants/site';
@@ -25,6 +26,10 @@ const Home = () => {
   return (
     <main className="bg-background text-foreground min-h-screen">
       <div className="max-w-content mx-auto flex w-full flex-col gap-12 px-6 py-16">
+        {/* 홈은 헤더가 없어, 라이트/다크 토글을 콘텐츠 우상단에 둔다(헤더가 있는 화면은 헤더 우측). */}
+        <div className="flex justify-end">
+          <ThemeToggle />
+        </div>
         <header className="flex flex-col items-center gap-3 text-center">
           <code className="border-border text-foreground-muted rounded-md border px-2 py-1 font-mono text-sm">
             {badge}

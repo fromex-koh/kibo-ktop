@@ -13,6 +13,7 @@ import { usePathname } from 'next/navigation';
 import { Home, Menu, PanelLeft, X } from 'lucide-react';
 import type { GuideNavSection } from '@/constants/guide-nav';
 import SkipNav, { type SkipLinkItem } from '@/components/skip-nav';
+import ThemeToggle from '@/components/theme-toggle';
 import tokens from '../../tokens.json';
 
 // works/system-guide 프로젝트의 사이드 내비게이션 구조를 이 프로젝트 브레이크포인트(wide/pc)·색상·
@@ -122,11 +123,11 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
           <PanelLeft aria-hidden="true" className="text-brand-foreground size-icon-md shrink-0" />
           <p className="typo-heading-sm truncate">{title}</p>
         </div>
-        {/* 좌측 아이콘 그룹과 동일한 폭의 빈 자리 — 타이틀이 시각적으로 정확히 중앙에 오도록 균형을 맞춤.
-            pc 에서는 햄버거가 숨어(pc:hidden) 좌측 그룹이 홈 버튼 하나뿐이므로, 이 자리도 하나만 남긴다. */}
-        <div aria-hidden="true" className="flex gap-3">
-          <span className="pc:hidden min-h-11 min-w-11" />
-          <span className="min-h-11 min-w-11" />
+        {/* 우측: 라이트/다크 토글. 좌측 아이콘 그룹과 균형을 맞춰 타이틀이 중앙에 오도록,
+            pc 미만에선(좌측이 햄버거+홈 2개) 빈 자리 하나를 더 둔다(pc 에선 좌측이 홈 하나라 숨김). */}
+        <div className="flex items-center gap-3">
+          <span aria-hidden="true" className="pc:hidden min-h-11 min-w-11" />
+          <ThemeToggle />
         </div>
       </header>
 
