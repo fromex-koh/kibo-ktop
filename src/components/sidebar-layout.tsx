@@ -152,7 +152,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
           tabIndex={-1}
           inert={isNavOffCanvas || undefined}
           aria-label={navLabel}
-          className={`border-border bg-background wide:px-6 top-header-top pc:translate-x-0 pc:py-8 w-sidebar-w fixed bottom-0 left-0 flex flex-col gap-6 overflow-y-auto border-r p-4 transition-transform duration-200 ease-out outline-none motion-reduce:transition-none ${
+          className={`border-border bg-background wide:px-6 top-header-top pc:translate-x-0 pc:py-8 w-sidebar-w focus-visible:ring-brand fixed bottom-0 left-0 flex flex-col gap-6 overflow-y-auto border-r p-4 transition-transform duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-inset motion-reduce:transition-none ${
             isDrawerOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
