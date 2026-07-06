@@ -49,7 +49,7 @@ const ThemeToggle = () => {
       onClick={toggleTheme}
       aria-label={label}
       title={label}
-      className="bg-gray-10 text-foreground-muted hover:text-foreground focus-visible:ring-brand focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 items-center justify-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+      className="bg-gray-10 text-foreground-muted hover:text-foreground focus-visible:ring-brand focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
     >
       {theme === 'dark' ? (
         <Sun aria-hidden="true" className="size-icon-sm" />
