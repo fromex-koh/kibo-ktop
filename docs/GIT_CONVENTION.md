@@ -21,35 +21,48 @@
 
 ## 브랜치 전략
 
-### 현재 (퍼블리싱 작업자 1인)
+### 현재 (퍼블리셔 1인 + 개발자에게 단방향 공유)
 
-- **`main` 브랜치 하나로 작업, 직접 커밋한다.** PR·리뷰 절차 없음.
-- 필요하면 `feature/<kebab-case>` 브랜치를 짧게 쓸 수 있지만 선택 사항이다 — 혼자 작업할 땐 `main`에 바로 커밋해도 무방하다.
+작업(WIP)과 공유(안정)를 **두 브랜치로 분리**한다. 개발자가 언제 `main` 을 받아도 안정적이도록 하고, 공유 시점을 이력으로 남기기 위해서다.
 
-### 전환 시점: 프론트엔드 개발자가 합류하면
+| 브랜치 | 역할                                                              | 커밋                                       |
+| ------ | ----------------------------------------------------------------- | ------------------------------------------ |
+| `main` | 개발자에게 공유하는 **안정 브랜치**. 개발자가 pull/clone 하는 곳. | 직접 커밋하지 않는다(`work` 머지로만 갱신) |
+| `work` | 퍼블리셔 **작업 브랜치**. 일상 작업·커밋은 여기서 한다.           | 직접 커밋                                  |
 
-그 시점에 아래 구조(Git Flow 경량화 버전)를 도입한다. **미리 만들어두지 않는다** — 혼자인 지금 `develop`을 만들면 `main`과의 동기화만 신경 쓰는 불필요한 관리 부담이 된다.
+#### 공유 흐름
 
-| 브랜치                 | 역할                                     | 원본      | 병합 대상             |
-| ---------------------- | ---------------------------------------- | --------- | --------------------- |
-| `main`                 | 배포 가능한 안정 버전 (protected)        | —         | —                     |
-| `develop`              | 통합 개발 브랜치 (기본 브랜치)           | `main`    | `main` (release 경유) |
-| `feature/<kebab-case>` | 기능/화면 단위 작업                      | `develop` | `develop`             |
-| `release/<version>`    | 릴리스 준비(문서·버전 고정, 버그만 수정) | `develop` | `main` + `develop`    |
-| `hotfix/<kebab-case>`  | 운영 중 긴급 수정                        | `main`    | `main` + `develop`    |
+1. `work` 에서 작업하고 커밋·push 한다(자동 게이트가 push 를 검증).
+2. 개발자에게 넘길 만한 지점이 되면 `work` 를 `main` 에 머지한다.
+3. 머지 커밋에 버전 태그(`vX.Y.Z`)를 붙인다 — 이 **머지 커밋 + 태그가 "언제 무엇을 공유했는지" 이력**이다.
 
-전환하면서 함께 할 것:
+```bash
+git switch work && git push               # 평소 작업
+# 공유할 때:
+git switch main
+git merge --no-ff work -m "chore: v0.2.0 공유 (화면 세트 …)"
+git tag -a v0.2.0 -m "v0.2.0 - <요약>"
+git push origin main --follow-tags
+git switch work                            # 다시 작업 브랜치로 복귀
+```
 
-- GitHub 브랜치 보호 규칙 설정(`main`·`develop` 직접 push 금지, PR 필수)
-- `.github/PULL_REQUEST_TEMPLATE.md` 작성 — [CODE_CONVENTION.md](CODE_CONVENTION.md)·[ACCESSIBILITY.md](ACCESSIBILITY.md)·[PUBLISHING_CONVENTION.md](PUBLISHING_CONVENTION.md) 각 문서 하단의 PR 체크리스트를 템플릿에 반영
+- **`--no-ff` 필수**: fast-forward 하면 머지 커밋이 안 생겨 "공유 지점"이 히스토리에서 흐려진다. 항상 머지 커밋을 남긴다.
+- 개발자에겐 **`main` 만 받으면 된다**고 안내한다(`work` 는 진행 중이라 불안정).
+
+### 전환 시점: 개발자가 이 저장소에 직접 커밋을 시작하면
+
+양방향 협업(개발자도 커밋)이 되면 `work` 를 팀 공용 통합 브랜치로 승격하고 아래를 도입한다.
+
+- `feature/<kebab-case>` 브랜치 + PR 리뷰
+- GitHub 브랜치 보호 규칙(`main` 직접 push 금지, PR 필수)
+- `.github/PULL_REQUEST_TEMPLATE.md` — [CODE_CONVENTION.md](CODE_CONVENTION.md)·[ACCESSIBILITY.md](ACCESSIBILITY.md)·[PUBLISHING_CONVENTION.md](PUBLISHING_CONVENTION.md) 각 문서 하단의 PR 체크리스트를 반영
 
 ### 브랜치 명명 (MUST)
 
-파일명과 동일하게 **kebab-case**를 쓴다([CODE_CONVENTION.md](CODE_CONVENTION.md) `NC-001` 연계).
+작업용 보조 브랜치를 추가로 만들 땐 파일명과 동일하게 **kebab-case**를 쓴다([CODE_CONVENTION.md](CODE_CONVENTION.md) `NC-001` 연계).
 
 ```
 feature/screen-id-depth3
-release/1.5.0
 hotfix/table-header-contrast
 ```
 
