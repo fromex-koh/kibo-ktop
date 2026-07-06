@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useSyncExternalStore, type ReactNode } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Home, Menu, PanelLeft, X } from 'lucide-react';
 import type { GuideNavSection } from '@/constants/guide-nav';
 import tokens from '../../tokens.json';
@@ -31,6 +32,7 @@ type SidebarLayoutProps = {
 const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayoutProps) => {
   // pc 미만에서 드로어 열림 상태(기본 닫힘 → 콘텐츠가 바로 보임). pc 는 CSS 로 상시 레일이라 이 값과 무관.
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const pathname = usePathname();
   const isPc = useSyncExternalStore(subscribePc, getPcSnapshot, getPcServerSnapshot);
   const toggleRef = useRef<HTMLButtonElement>(null);
   const navRef = useRef<HTMLElement>(null);
@@ -138,17 +140,26 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
                 {section.title}
               </p>
               <ul className="flex flex-col gap-0.5">
-                {section.items.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      onClick={closeDrawer}
-                      className="text-foreground-muted hover:bg-gray-10 hover:text-foreground focus-visible:ring-brand focus-visible:ring-offset-background typo-body-sm block rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                    >
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
+                {section.items.map((item) => {
+                  // 현재 라우트면 활성 표시(색만이 아니라 aria-current 로도 알림). [KWCAG 5.3.1]
+                  const isActive = pathname === item.href;
+                  return (
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        onClick={closeDrawer}
+                        aria-current={isActive ? 'page' : undefined}
+                        className={`focus-visible:ring-brand focus-visible:ring-offset-background typo-body-sm block rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                          isActive
+                            ? 'bg-brand/10 text-foreground font-semibold'
+                            : 'text-foreground-muted hover:bg-gray-10 hover:text-foreground'
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </div>
           ))}

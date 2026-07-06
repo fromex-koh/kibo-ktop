@@ -9,26 +9,26 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
   {
     title: '색상 · 타이포',
     items: [
-      { label: '색상 (Primitive)', href: '/component-guide#s-color' },
-      { label: '타이포그래피', href: '/component-guide#s-typo' },
+      { label: '색상 (Color)', href: '/component-guide/color' },
+      { label: '타이포그래피', href: '/component-guide/typography' },
     ],
   },
   {
     title: '레이아웃',
     items: [
-      { label: '브레이크포인트', href: '/component-guide#s-breakpoint' },
-      { label: '레이아웃 그리드', href: '/component-guide#s-grid' },
-      { label: '사이드 메뉴 레이아웃', href: '/component-guide#s-sidebar-layout' },
-      { label: '간격 (Spacing)', href: '/component-guide#s-space' },
+      { label: '브레이크포인트', href: '/component-guide/breakpoint' },
+      { label: '레이아웃 그리드', href: '/component-guide/grid' },
+      { label: '사이드 메뉴 레이아웃', href: '/component-guide/sidebar-layout' },
+      { label: '간격 (Spacing)', href: '/component-guide/spacing' },
     ],
   },
   {
     title: '효과',
     items: [
-      { label: '라운드', href: '/component-guide#s-radius' },
-      { label: '그림자', href: '/component-guide#s-shadow' },
-      { label: '흐림', href: '/component-guide#s-blur' },
-      { label: '오버레이', href: '/component-guide#s-overlay' },
+      { label: '라운드', href: '/component-guide/radius' },
+      { label: '그림자', href: '/component-guide/shadow' },
+      { label: '흐림', href: '/component-guide/blur' },
+      { label: '오버레이', href: '/component-guide/overlay' },
     ],
   },
 ];
