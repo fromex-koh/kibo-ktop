@@ -87,11 +87,19 @@ export const isStructureBranch = (node: StructureNode): node is StructureBranch 
 
 export type StructureGroup = {
   name: string;
-  depth1: boolean;
   children: StructureNode[];
+};
+
+// 여러 화면이 공유하는 공통 UI(레이아웃·헤더·LNB 등) — 독립 화면이 아니라 screenId 가 없다.
+export type CommonComponent = {
+  label: string;
+  status: Status;
+  version: string;
+  note?: StructureNote;
 };
 
 export type PublishingIndexContent = {
   assetVersions: AssetVersion[];
+  commonComponents: CommonComponent[];
   structureGroups: StructureGroup[];
 };
