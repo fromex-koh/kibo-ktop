@@ -4,6 +4,7 @@
 // (tokens.json 을 build-tokens 가 검증해 빌드를 실패시키는 것과 같은 철학)
 
 import { isIconName, type IconName } from '@/components/icon-registry';
+import assetVersionsGenerated from './asset-versions.generated.json';
 import homeJson from './home.json';
 import publishingIndexJson from './publishing-index.json';
 import {
@@ -11,6 +12,7 @@ import {
   isStatus,
   isStructureNote,
   type AssetKind,
+  type AssetVersion,
   type HomeContent,
   type PublishingIndexContent,
   type StructureNode,
@@ -101,15 +103,26 @@ const parseHomeContent = (raw: typeof homeJson): HomeContent => ({
   },
 });
 
+// version·isCurrent 는 publishing-index.json 이 아니라 자동 생성된
+// asset-versions.generated.json(scripts/compute-asset-versions.mjs)에서 가져온다. [MD-003]
+const findGeneratedVersion = (name: string): { version: string; isCurrent: boolean } => {
+  const found = assetVersionsGenerated.find((a) => a.name === name);
+  return { version: found?.version ?? '-', isCurrent: found?.isCurrent ?? false };
+};
+
 const parsePublishingIndexContent = (raw: typeof publishingIndexJson): PublishingIndexContent => ({
-  assetVersions: raw.assetVersions.map((asset) => ({
-    name: asset.name,
-    version: asset.version,
-    kind: parseAssetKind(
-      asset.kind,
-      `publishing-index.json > assetVersions > ${asset.name} > kind`,
-    ),
-  })),
+  assetVersions: raw.assetVersions.map((asset): AssetVersion => {
+    const { version, isCurrent } = findGeneratedVersion(asset.name);
+    return {
+      name: asset.name,
+      kind: parseAssetKind(
+        asset.kind,
+        `publishing-index.json > assetVersions > ${asset.name} > kind`,
+      ),
+      version,
+      isCurrent,
+    };
+  }),
   structureGroups: raw.structureGroups.map((group) => ({
     name: group.name,
     depth1: group.depth1,

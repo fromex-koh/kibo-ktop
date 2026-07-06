@@ -50,9 +50,18 @@ export type HomeContent = {
 };
 
 // ── 퍼블리싱 인덱스 ──
+// 화면에 최종적으로 쓰이는 형태 — version·isCurrent 는 asset-versions.generated.json(자동 계산)에서 온다.
 export type AssetVersion = {
   name: string;
+  kind: AssetKind;
   version: string;
+  isCurrent: boolean; // 이번 릴리스(최신 버전)에서 바뀐 자산이면 true — 하이라이트 표시에 쓰인다.
+};
+
+// publishing-index.json 원본의 assetVersions 항목 형태 — path 는 버전 계산용이라 화면엔 노출하지 않는다.
+export type AssetVersionSource = {
+  name: string;
+  path: string;
   kind: AssetKind;
 };
 

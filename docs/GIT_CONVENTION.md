@@ -184,6 +184,20 @@ git push origin v1.0.0
 
 배포는 별도 담당이 수행한다. 이 저장소는 **빌드 시점에 버전을 자동 주입**하는 데까지만 책임진다(배포 파이프라인·CI 미구성). 따라서 화면 버전은 "누군가 이 커밋/태그를 빌드한 시점" 기준으로 박힌다.
 
+### 퍼블리싱 인덱스의 자산별 버전 — git 히스토리에서 자동 계산
+
+`퍼블리싱 인덱스` 표의 `tokens.css`·`globals.css`·`fonts`·`public`·`component-guide`·`docs` 버전은 **손으로 적지 않는다.** `publishing-index.json` 의 `assetVersions[].path` 를 기준으로 `scripts/compute-asset-versions.mjs` 가 아래 규칙으로 계산해 `src/content/asset-versions.generated.json`(생성 파일, git 미추적)에 쓴다.
+
+- 그 경로가 **마지막으로 바뀐 커밋**을 찾고, **그 변경을 포함하는 가장 가까운 태그**를 버전으로 표시한다.
+- 아직 어떤 태그에도 포함되지 않았으면(직전 릴리스 이후 변경, 미공유) `미배포` 로 표시한다.
+- 계산된 버전이 **현재 HEAD 버전과 같으면**(`isCurrent: true`) 표에서 하이라이트(배경색 + 아이콘 + `sr-only` 텍스트)된다 — 즉 **이번 공유(머지+태그)에서 실제로 바뀐 자산만 강조**되어 보인다.
+
+새 자산을 표에 추가하려면 `publishing-index.json` 에 `{ name, path, kind }` 만 추가하면 된다(버전은 자동).
+
+```bash
+yarn asset-versions   # predev/prebuild/verify 에 이미 포함 — 수동 실행은 확인용
+```
+
 ---
 
 ## 자동 게이트 — 컨벤션 위반 시 push 차단
