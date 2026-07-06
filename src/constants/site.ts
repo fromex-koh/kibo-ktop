@@ -5,7 +5,7 @@ export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:30
 
 // 저장소(GitHub 등) URL — 홈 화면 '저장소' 링크에 사용. 외부 URL 이므로 환경변수로 관리. [NA-001]
 export const REPOSITORY_URL =
-  process.env.NEXT_PUBLIC_REPOSITORY_URL ?? 'https://github.com/your-org/kibo-ktop';
+  process.env.NEXT_PUBLIC_REPOSITORY_URL ?? 'https://github.com/fromex-koh/kibo-ktop';
 
 export const SITE_NAME = '기술평가 통합 플랫폼 (채널계) 퍼블리싱 가이드';
 

@@ -90,7 +90,6 @@ const parseHomeContent = (raw: typeof homeJson): HomeContent => ({
   projectInfo: {
     icon: assertIconName(raw.projectInfo.icon, 'home.json > projectInfo.icon'),
     title: raw.projectInfo.title,
-    repositoryLabel: raw.projectInfo.repositoryLabel,
     author: raw.projectInfo.author,
   },
   guide: {

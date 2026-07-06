@@ -13,6 +13,9 @@ const GuideIcon = ICON_REGISTRY[guide.icon];
 
 const CARD_CLASS = 'bg-gray-10/25 flex flex-col gap-3 rounded-xl p-6';
 
+// 저장소 링크에 URL 자체를 노출해 보는 사람이 주소를 확인할 수 있게 한다(스킴은 생략해 간결하게).
+const REPOSITORY_URL_LABEL = REPOSITORY_URL.replace(/^https?:\/\//, '');
+
 // 현재 버전·빌드 시각 — next.config.ts 가 빌드 시점의 git 버전·시각을 주입한다.
 // 로컬 개발 등 값이 없을 때만 폴백을 쓴다. (MD-003)
 const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev';
@@ -51,10 +54,11 @@ const Home = () => {
                     href={REPOSITORY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-brand-foreground focus-visible:ring-brand focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="text-brand-foreground focus-visible:ring-brand focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium break-all hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                   >
-                    <GitBranch aria-hidden="true" className="size-4" />
-                    {projectInfo.repositoryLabel}
+                    <GitBranch aria-hidden="true" className="size-4 shrink-0" />
+                    {REPOSITORY_URL_LABEL}
+                    <span className="sr-only"> (새 창에서 열림)</span>
                   </a>
                 </dd>
               </div>

@@ -44,7 +44,6 @@ export type HomeContent = {
   projectInfo: {
     icon: IconName;
     title: string;
-    repositoryLabel: string;
     author: string;
   };
   guide: HomeCard;
