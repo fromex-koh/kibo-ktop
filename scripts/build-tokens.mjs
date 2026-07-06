@@ -379,13 +379,18 @@ if (typoNames.length) {
 
 // .grid-layout — grid(columns/gutter/margin) + 공용 container 폭 상한을 한 클래스로 캡슐화
 if (Object.keys(grid).length) {
-  L.push('/* .grid-layout — tokens.json grid 기반 반응형 컬럼 그리드 */');
+  L.push('/* .grid-layout — tokens.json grid 기반 반응형 컬럼 그리드.');
+  L.push('   grid.margin(가장자리 여백)은 CSS margin 이 아니라 padding-inline 으로 넣는다:');
+  L.push('   CSS margin 은 아래 margin-inline:auto(중앙정렬)에 쓰이고, "가장자리 여백"은 콘텐츠를');
+  L.push(
+    '   컨테이너 안쪽으로 들이는 개념이라 padding 이 맞다(box-sizing:border-box 라 width 안에서 줄어듦). */',
+  );
   L.push('.grid-layout {');
   L.push('  display: grid;');
   L.push('  grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));');
   L.push('  gap: var(--ds-grid-gutter);');
   L.push('  width: 100%;');
-  L.push('  padding-inline: var(--ds-grid-margin);');
+  L.push('  padding-inline: var(--ds-grid-margin); /* = grid.margin (가장자리 여백) */');
   if (container.content !== undefined) {
     L.push('  max-width: var(--container-content);');
     L.push('  margin-inline: auto;');
