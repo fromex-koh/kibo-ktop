@@ -4,11 +4,11 @@ import tokens from '../../../../tokens.json';
 
 export const metadata: Metadata = { title: '오버레이' };
 
-// 오버레이 — 반투명 토큰(라이트=검정 / 다크=흰색 alpha). 드로어 백드롭 등에 쓴다.
+// 오버레이 — 반투명 토큰(라이트=검정 / 다크=흰색 alpha)을 bg-overlay-* 유틸리티로 적용. 드로어 백드롭 등.
 const OverlayGuidePage = () => (
   <GuidePage
     title="오버레이 (Overlay)"
-    description="반투명 토큰입니다. 라이트는 검정 alpha, 다크는 흰색 alpha 로 자동 전환되어 아래 콘텐츠를 어둡히거나 밝힙니다(드로어 백드롭·모달 배경 등)."
+    description="반투명 토큰입니다. bg-overlay-* 유틸리티로 적용하며, 라이트는 검정 alpha·다크는 흰색 alpha 로 자동 전환되어 아래 콘텐츠를 어둡히거나 밝힙니다(드로어 백드롭·모달 배경 등)."
   >
     <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
       {Object.entries(tokens.overlay).map(([k, ref]) => {

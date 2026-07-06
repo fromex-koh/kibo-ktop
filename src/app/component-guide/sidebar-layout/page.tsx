@@ -19,7 +19,7 @@ const SidebarLayoutGuidePage = () => (
   >
     <p className="typo-body-sm text-foreground-muted">
       works/system-guide 프로젝트의 사이드 내비게이션 구조를 이 프로젝트의 브레이크포인트(
-      <code>wide</code>/<code>pc</code>)·색상·<code>.grid-layout</code> 토큰으로 재구성한
+      <code>wide</code>/<code>pc</code>)·색상 토큰·<code>.grid-layout</code> 유틸리티로 재구성한
       벤치마킹입니다. 위 미니 데모들과 달리 실제 페이지 크기로 봐야 하는 큰 레이아웃이라, 콘텐츠
       없이 레이아웃만 담은 별도 페이지로도 확인할 수 있습니다.
     </p>

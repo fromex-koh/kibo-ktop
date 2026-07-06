@@ -4,7 +4,7 @@ import tokens from '../../../../tokens.json';
 
 export const metadata: Metadata = { title: '라운드' };
 
-// 라운드 — 모서리 반경 토큰(rounded-*). 정의된 키만 사용한다.
+// 라운드 — 반경 토큰(--ds-radius-*)을 rounded-* 유틸리티로 적용. 정의된 키만 사용한다.
 const RadiusGuidePage = () => (
   <GuidePage
     title="라운드 (Radius)"

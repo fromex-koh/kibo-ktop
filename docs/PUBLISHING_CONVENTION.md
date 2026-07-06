@@ -17,6 +17,21 @@
 tokens.json (px 숫자) → yarn tokens → src/app/tokens.css (자동) → Tailwind 유틸 / .typo-*
 ```
 
+## 용어 — 토큰 vs 유틸리티 클래스
+
+이 둘을 섞어 쓰면 문서·리뷰가 혼란해진다. 아래로 고정한다.
+
+- **토큰(Design Token)** — 디자인 **결정값**("무엇"). **소스**는 `tokens.json`(px 숫자), **런타임 표현**은 `src/app/tokens.css`의 **CSS 변수**다. 즉 "토큰 = CSS 변수"가 맞되, 그 원천이 `tokens.json`이다. `var(--…)` 로 참조한다.
+- **유틸리티 클래스(Utility Class)** — 그 토큰을 요소에 **적용하는 API**("어떻게"). `className` 에 쓴다. Tailwind가 생성한 것(`bg-brand`·`rounded-md`·`p-4`)과 프로젝트 **복합 유틸리티**(`typo-*`·`.grid-layout`, 여러 토큰을 한 번에 적용)로 나뉜다.
+
+> **판별 한 줄** — `className` 에 쓰면 **유틸리티 클래스**, `var(--…)`/`tokens.json` 에 있으면 **토큰**. 예: `rounded-md`(유틸) 가 적용하는 `--ds-radius-md`(토큰).
+
+| 계층                | 예                                            | 실체      | 사용                     |
+| ------------------- | --------------------------------------------- | --------- | ------------------------ |
+| **Primitive 토큰**  | `--raw-blue-50` (`blue.50`)                   | CSS 변수  | 직접 X — semantic이 참조 |
+| **Semantic 토큰**   | `--ds-brand` · `--ds-radius-md`               | CSS 변수  | `var()` / `@theme` 등록  |
+| **유틸리티 클래스** | `bg-brand` · `rounded-md` · `typo-heading-lg` | className | JSX `className`          |
+
 ---
 
 ## 토큰 사용

@@ -42,7 +42,7 @@ const SANS_STACK = [
   },
 ];
 
-// 타이포그래피 — typo-* 복합 클래스. 위엔 토큰 데이터 테이블, 아래엔 실제 렌더 미리보기.
+// 타이포그래피 — typo-* 복합 유틸리티. 위엔 유틸리티가 묶어 적용하는 값(토큰) 테이블, 아래엔 실제 렌더 미리보기.
 const TypographyGuidePage = () => (
   <GuidePage
     title="타이포그래피 (Typography)"
@@ -114,11 +114,17 @@ const TypographyGuidePage = () => (
       </p>
     </section>
 
-    {/* 타이포그래피 토큰 — 데이터 테이블(위) */}
+    {/* 타이포그래피 스케일 — typo-* 유틸리티가 묶어 적용하는 값(토큰) 데이터 테이블(위) */}
     <section aria-labelledby="typo-tokens" className="flex flex-col gap-4">
-      <h2 id="typo-tokens" className="typo-heading-md">
-        타이포그래피 토큰
-      </h2>
+      <div className="flex flex-col gap-1">
+        <h2 id="typo-tokens" className="typo-heading-md">
+          타이포그래피 스케일
+        </h2>
+        <p className="typo-body-sm text-foreground-muted">
+          용도별 <code>typo-*</code> <strong>유틸리티 클래스</strong> 목록입니다. 각 클래스가 한
+          번에 묶어 적용하는 값(크기·굵기·행간·자간 <strong>토큰</strong>)은 아래와 같습니다.
+        </p>
+      </div>
       <div className="border-border overflow-x-auto rounded-xl border">
         <table className="w-full text-left">
           <caption className="sr-only">typo-* 클래스별 크기·굵기·행간·자간</caption>
