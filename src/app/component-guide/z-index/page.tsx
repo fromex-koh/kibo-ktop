@@ -9,7 +9,8 @@ export const metadata: Metadata = { title: '레이어 (Z-index)' };
 const Z_USAGE: Record<string, string> = {
   base: '기본 흐름 — 별도 레이어 없음(0).',
   dropdown: '드롭다운·셀렉트 메뉴.',
-  sticky: '스크롤에 고정되는 헤더·툴바.',
+  sticky: '일반 고정 요소 — 툴바·섹션 헤더 등.',
+  header: '앱 상단 헤더(sticky 상단 바).',
   'drawer-backdrop': '드로어·모달 뒤 반투명 배경(백드롭).',
   drawer: '오프캔버스 사이드 드로어.',
   modal: '모달 다이얼로그.',

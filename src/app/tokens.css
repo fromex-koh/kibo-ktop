@@ -264,13 +264,14 @@
   --ds-z-base: 0;
   --ds-z-dropdown: 1000;
   --ds-z-sticky: 1100;
-  --ds-z-drawer-backdrop: 1200;
-  --ds-z-drawer: 1300;
-  --ds-z-modal: 1400;
-  --ds-z-popover: 1500;
-  --ds-z-toast: 1600;
-  --ds-z-tooltip: 1700;
-  --ds-z-skiplink: 1800;
+  --ds-z-header: 1200;
+  --ds-z-drawer-backdrop: 1300;
+  --ds-z-drawer: 1400;
+  --ds-z-modal: 1500;
+  --ds-z-popover: 1600;
+  --ds-z-toast: 1700;
+  --ds-z-tooltip: 1800;
+  --ds-z-skiplink: 1900;
   /* grid (모바일 기본) — columns/gutter/margin, 상위 구간은 아래 @media 참고 */
   --ds-grid-columns: 4;
   --ds-grid-gutter: 1rem;
@@ -427,6 +428,9 @@
 }
 @utility z-sticky {
   z-index: var(--ds-z-sticky);
+}
+@utility z-header {
+  z-index: var(--ds-z-header);
 }
 @utility z-drawer-backdrop {
   z-index: var(--ds-z-drawer-backdrop);

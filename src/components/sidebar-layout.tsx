@@ -91,7 +91,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
   return (
     <div className="bg-background text-foreground min-h-screen">
       <SkipNav links={skipLinks} />
-      <header className="border-border bg-background wide:px-6 h-header-h sticky top-0 flex items-center gap-3 border-b px-4">
+      <header className="border-border bg-background wide:px-6 h-header-h z-header sticky top-0 flex items-center gap-3 border-b px-4">
         {/* 햄버거 — pc 미만에서만. pc 는 상시 레일이라 토글이 불필요해 숨긴다.
             터치 타깃은 44px(min-h-11/min-w-11) 유지(KWCAG 6.1.3), 아이콘만 한 단계 작게(icon-sm)
             해서 은은한 모노톤 원형으로 보이게 한다. */}
