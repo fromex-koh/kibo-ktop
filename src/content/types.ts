@@ -24,6 +24,16 @@ export type StructureNote = 'issue' | 'info';
 export const isStructureNote = (value: string): value is StructureNote =>
   value === 'issue' || value === 'info';
 
+// ── 사용자 유형(화면을 볼 수 있는 대상) ──
+// 없으면 공통(기업·기관 둘 다 노출). 그룹·브랜치에 지정하면 하위 화면이 상속하고,
+// 하위에서 다시 지정하면 그 값이 우선한다. 화면 필터(전체/기업/기관)의 기준이 된다.
+export type Audience = '기업' | '기관';
+
+export const AUDIENCE_VALUES: readonly Audience[] = ['기업', '기관'];
+
+export const isAudience = (value: string): value is Audience =>
+  AUDIENCE_VALUES.some((audience) => audience === value);
+
 // 자산이 단일 파일인지 디렉터리인지 — 컬럼 헤더에 파일/폴더 아이콘으로 표시한다.
 export type AssetKind = 'file' | 'folder';
 
@@ -73,6 +83,7 @@ export type StructureLeaf = {
   status: Status;
   version: string;
   note?: StructureNote;
+  audience?: Audience; // 없으면 상위에서 상속(최종적으로 없으면 공통).
 };
 
 // 화면(leaf)의 상세 정보 — StructureLeaf 와 StructureBranch.screen 이 공유하는 형태.
@@ -84,6 +95,7 @@ export type ScreenInfo = {
   version: string;
   note?: StructureNote;
   label?: string;
+  audience?: Audience;
 };
 
 export type StructureBranch = {
@@ -92,6 +104,7 @@ export type StructureBranch = {
   // branch 자신도 독립된 화면인 경우 채운다(예: '(1) 고객정보활용동의' 자체가 화면이면서
   // 하위에 상세보기·전자서명을 더 갖는 경우). 없으면 순수 메뉴 그룹(화면이 아님).
   screen?: ScreenInfo;
+  audience?: Audience; // 지정하면 이 branch 아래 모든 화면이 상속(하위에서 재지정 가능).
 };
 
 export type StructureNode = StructureLeaf | StructureBranch;
@@ -102,6 +115,7 @@ export const isStructureBranch = (node: StructureNode): node is StructureBranch 
 export type StructureGroup = {
   name: string;
   children: StructureNode[];
+  audience?: Audience; // 지정하면 이 그룹(1뎁스) 아래 모든 화면이 상속(하위에서 재지정 가능).
 };
 
 // 화면을 찍어내는 틀(내부 콘텐츠만 바뀌는 공통 레이아웃) — 독립 화면이 아니라 screenId 가 없다.

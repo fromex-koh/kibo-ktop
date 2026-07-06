@@ -9,10 +9,12 @@ import homeJson from './home.json';
 import publishingIndexJson from './publishing-index.json';
 import {
   isAssetKind,
+  isAudience,
   isStatus,
   isStructureNote,
   type AssetKind,
   type AssetVersion,
+  type Audience,
   type CommonLayout,
   type HomeContent,
   type PublishingIndexContent,
@@ -52,6 +54,19 @@ const parseNote = (value: unknown, path: string): StructureNote | undefined => {
   return value;
 };
 
+// audience 는 그룹·브랜치·화면 어디에나 올 수 있는 선택 값 — 한 곳에서 검증한다.
+const parseAudience = (value: unknown, where: string): Audience | undefined => {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (typeof value !== 'string' || !isAudience(value)) {
+    throw new Error(
+      `[content] ${where}: audience "${String(value)}" 은(는) 기업|기관 이어야 합니다.`,
+    );
+  }
+  return value;
+};
+
 // leaf 든, branch 의 screen 필드든, '화면 1건'의 형태는 동일하다 — 한 곳에서 검증한다.
 const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenInfo => {
   if (typeof value.screenId !== 'string') {
@@ -66,11 +81,13 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
     throw new Error(`[content] ${where}: version 이 필요합니다.`);
   }
   const note = parseNote(value.note, `${where} > note`);
+  const audience = parseAudience(value.audience, `${where} > audience`);
   return {
     screenId: value.screenId,
     status: value.status,
     version: value.version,
     ...(note !== undefined ? { note } : {}),
+    ...(audience !== undefined ? { audience } : {}),
   };
 };
 
@@ -88,6 +105,7 @@ const parseStructureNode = (value: unknown, path: string): StructureNode => {
       throw new Error(`[content] ${where}: children 은 배열이어야 합니다.`);
     }
     const children = value.children.map((child, i) => parseStructureNode(child, `${where}[${i}]`));
+    const audience = parseAudience(value.audience, `${where} > audience`);
     if (value.screen !== undefined) {
       if (!isRecord(value.screen)) {
         throw new Error(`[content] ${where} > screen: 객체여야 합니다.`);
@@ -100,9 +118,9 @@ const parseStructureNode = (value: unknown, path: string): StructureNode => {
       }
       const screen: ScreenInfo =
         screenLabel !== undefined ? { ...screenBase, label: screenLabel } : screenBase;
-      return { label, children, screen };
+      return { label, children, screen, ...(audience !== undefined ? { audience } : {}) };
     }
-    return { label, children };
+    return { label, children, ...(audience !== undefined ? { audience } : {}) };
   }
 
   return { label, ...parseScreenInfo(value, where) };
@@ -161,12 +179,19 @@ const parsePublishingIndexContent = (raw: typeof publishingIndexJson): Publishin
     };
   }),
   commonLayouts: raw.commonLayouts.map(parseCommonLayout),
-  structureGroups: raw.structureGroups.map((group) => ({
-    name: group.name,
-    children: group.children.map((child, i) =>
-      parseStructureNode(child, `publishing-index.json > ${group.name}[${i}]`),
-    ),
-  })),
+  structureGroups: raw.structureGroups.map((group) => {
+    const audience = parseAudience(
+      'audience' in group ? group.audience : undefined,
+      `publishing-index.json > ${group.name} > audience`,
+    );
+    return {
+      name: group.name,
+      children: group.children.map((child, i) =>
+        parseStructureNode(child, `publishing-index.json > ${group.name}[${i}]`),
+      ),
+      ...(audience !== undefined ? { audience } : {}),
+    };
+  }),
 });
 
 export const HOME_CONTENT: HomeContent = parseHomeContent(homeJson);
@@ -174,5 +199,12 @@ export const HOME_CONTENT: HomeContent = parseHomeContent(homeJson);
 export const PUBLISHING_INDEX_CONTENT: PublishingIndexContent =
   parsePublishingIndexContent(publishingIndexJson);
 
-export { isStructureBranch, STATUS_VALUES } from './types';
-export type { CommonLayout, Status, StructureGroup, StructureNode, StructureNote } from './types';
+export { AUDIENCE_VALUES, isStructureBranch, STATUS_VALUES } from './types';
+export type {
+  Audience,
+  CommonLayout,
+  Status,
+  StructureGroup,
+  StructureNode,
+  StructureNote,
+} from './types';
