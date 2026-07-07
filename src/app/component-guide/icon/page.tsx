@@ -212,6 +212,10 @@ const IconGuidePage = () => (
         </p>
       </div>
 
+      {/* Outline·Solid 는 같은 "슬롯 크기"(size-icon-xl·32px)를 공유한다.
+          - Outline: span 없이 아이콘만 슬롯 크기로 둔다.
+          - Solid: span(배지)이 슬롯 크기를 차지하고, 그 안의 아이콘은 여백을 두고 작게(size-icon-md)
+            넣는다 — 배지 총 크기 = Outline 아이콘 크기라, 둘의 겉넓이가 같아 보인다. */}
       <div className="flex flex-col gap-3">
         <h3 className="typo-body-l-medium text-foreground">Outline</h3>
         <ul className="wide:grid-cols-4 pc:grid-cols-6 grid grid-cols-3 gap-3">
@@ -236,7 +240,7 @@ const IconGuidePage = () => (
               className="border-gray-subtle-2 flex flex-col items-center gap-3 rounded-md border p-4"
             >
               <span className="bg-info-surface text-info-text size-icon-xl flex items-center justify-center rounded-full">
-                <Icon aria-hidden="true" className="size-icon-xl" />
+                <Icon aria-hidden="true" className="size-icon-md" />
               </span>
               <CopyChip value={name} />
             </li>
