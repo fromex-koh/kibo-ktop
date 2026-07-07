@@ -102,8 +102,13 @@ const CURATED_ICONS = [
 // 안내의 info 두 가지만 큐레이션한다. info 는 lucide 에 채운(solid) 글리프가 없어, 배지 안에
 // 텍스트 'i' 를 넣어 만든다(글리프 조합).
 const SOLID_ICONS = [
-  { name: 'X', kind: 'icon' as const, Glyph: X },
-  { name: 'Info', kind: 'text' as const, char: 'i' },
+  { name: 'X', kind: 'icon' as const, Glyph: X, markup: '<Icon icon={X} variant="solid" />' },
+  {
+    name: 'Info',
+    kind: 'text' as const,
+    char: 'i',
+    markup: '<Icon icon={Info} variant="solid" />',
+  },
 ] as const;
 
 const IconGuidePage = () => (
@@ -279,7 +284,7 @@ const IconGuidePage = () => (
                   </span>
                 )}
               </span>
-              <span className="typo-caption-regular text-subtle">{item.name}</span>
+              <CopyChip value={item.markup} label={item.name} />
             </li>
           ))}
         </ul>
