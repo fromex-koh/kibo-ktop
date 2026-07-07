@@ -107,12 +107,17 @@ const TypographyScaleTable = ({
 
 // 실제 글꼴 체계는 src/app/globals.css 의 @theme(--font-sans / --font-mono) + layout.tsx 의
 // Pretendard 로컬 폰트(next/font/local)에서 온다. 아래는 그 값을 그대로 문서화한 것.
+// Pretendard 의 version 은 현재 번들된 src/app/fonts/PretendardVariable.woff2 의 name 테이블에서
+// 직접 추출한 값(fonttools 로 확인: nameID 5 "Version 1.309;..."). 폰트 파일을 교체하면 함께 갱신한다.
 const SANS_STACK = [
   {
     name: 'Pretendard',
     role: '기본',
     desc: '가변 폰트(weight 100–900). 자체 호스팅 — next/font/local · 변수 --font-pretendard.',
     isPrimary: true,
+    version: '1.309',
+    repoUrl: 'https://github.com/orioncactus/pretendard',
+    license: 'SIL Open Font License 1.1 — 상업적 사용 가능(무료)',
   },
   {
     name: 'Apple SD Gothic Neo',
@@ -183,6 +188,25 @@ const TypographyGuidePage = () => (
                 </span>
               </span>
               <span className="typo-caption-regular text-subtle">{font.desc}</span>
+              {font.version && (
+                <span className="typo-caption-regular text-subtle">
+                  v{font.version} · {font.license}
+                  {font.repoUrl && (
+                    <>
+                      {' · '}
+                      <a
+                        href={font.repoUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary focus-visible:ring-focus focus-visible:ring-offset-background rounded-sm underline decoration-1 underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                      >
+                        저장소
+                        <span className="sr-only"> (새 창에서 열림)</span>
+                      </a>
+                    </>
+                  )}
+                </span>
+              )}
             </div>
           </li>
         ))}
@@ -224,6 +248,12 @@ const TypographyGuidePage = () => (
           클래스를 바로 적용해 렌더하므로, 클래스를 쓰면 어떻게 나오는지 크기·굵기·행간·자간{' '}
           <strong>토큰</strong> 값 옆에서 바로 확인할 수 있습니다. 클래스 칩을 클릭하면 이름이
           복사됩니다.
+        </p>
+        <p className="typo-body-l-regular text-subtle">
+          현재는 <strong>크기 (모바일)</strong>과 <strong>크기 (PC)</strong> 값이 모든 토큰에서
+          동일합니다. Figma 디자인이 해상도별 폰트 크기 변화를 두지 않았기 때문이며, 모바일/PC 분기
+          구조 자체는 나중에 반응형 크기가 필요해질 경우를 대비해 그대로 남겨뒀습니다(값만 다르게
+          채우면 바로 반응형으로 전환됩니다).
         </p>
       </div>
       <div className="flex flex-col gap-6">
