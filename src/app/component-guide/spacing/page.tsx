@@ -23,7 +23,7 @@ const SpacingGuidePage = () => (
             className="bg-element-primary h-3 shrink-0 rounded-sm"
             style={{ width: `calc(var(--spacing) * ${n})` }}
           />
-          <span className="typo-caption text-subtle font-mono">
+          <span className="typo-caption-regular text-subtle font-mono">
             {n} · {n * tokens.spacingBase}px
           </span>
         </li>

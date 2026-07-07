@@ -121,7 +121,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
             남는 공간을 차지해 좌측 아이콘 그룹 폭과 무관하게 중앙에 가깝게 위치 */}
         <div className="flex flex-1 items-center justify-center gap-2 truncate">
           <PanelLeft aria-hidden="true" className="text-primary size-icon-md shrink-0" />
-          <p className="typo-heading-sm truncate">{title}</p>
+          <p className="typo-title-l-bold truncate">{title}</p>
         </div>
         {/* 우측: 라이트/다크 토글. 좌측 아이콘 그룹과 균형을 맞춰 타이틀이 중앙에 오도록,
             pc 미만에선(좌측이 햄버거+홈 2개) 빈 자리 하나를 더 둔다(pc 에선 좌측이 홈 하나라 숨김). */}
@@ -160,7 +160,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
         >
           {navSections.map((section) => (
             <div key={section.title} className="flex flex-col gap-2">
-              <p className="typo-caption text-subtle px-1 font-semibold uppercase">
+              <p className="typo-caption-regular text-subtle px-1 font-semibold uppercase">
                 {section.title}
               </p>
               <ul className="flex flex-col gap-0.5">
@@ -174,7 +174,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
                         onClick={closeDrawer}
                         {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                         aria-current={isActive ? 'page' : undefined}
-                        className={`focus-visible:ring-focus focus-visible:ring-offset-background typo-body-sm flex items-center justify-between gap-1.5 rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                        className={`focus-visible:ring-focus focus-visible:ring-offset-background typo-body-l-regular flex items-center justify-between gap-1.5 rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                           isActive
                             ? 'bg-element-primary/10 text-bolder font-semibold'
                             : 'text-subtle hover:text-bolder hover:bg-gray-100'

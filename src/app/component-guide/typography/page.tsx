@@ -52,10 +52,10 @@ const TypographyGuidePage = () => (
     {/* 글꼴 체계 (Font Family) */}
     <section aria-labelledby="typo-font" className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <h2 id="typo-font" className="typo-heading-md">
+        <h2 id="typo-font" className="typo-heading-h4-bold">
           글꼴 (Font Family)
         </h2>
-        <p className="typo-body-sm text-subtle">
+        <p className="typo-body-l-regular text-subtle">
           본문·제목은 <code>font-sans</code>(<code>--font-sans</code>) 하나로 통일합니다. Pretendard
           를 1순위로 쓰고, 로드 실패·미지원 글리프는 아래 순서로 폴백합니다. 코드·수치 등 고정폭이
           필요한 곳은 <code>font-mono</code> 를 씁니다.
@@ -66,7 +66,7 @@ const TypographyGuidePage = () => (
           <li key={font.name} className="flex items-start gap-3 px-4 py-3">
             <span
               aria-hidden="true"
-              className={`typo-caption flex size-6 shrink-0 items-center justify-center rounded-full font-mono font-bold ${
+              className={`typo-caption-regular flex size-6 shrink-0 items-center justify-center rounded-full font-mono font-bold ${
                 font.isPrimary ? 'bg-element-primary/80 text-background' : 'text-subtle bg-gray-100'
               }`}
             >
@@ -74,9 +74,9 @@ const TypographyGuidePage = () => (
             </span>
             <div className="flex flex-col gap-0.5">
               <span className="inline-flex flex-wrap items-center gap-2">
-                <span className="typo-body-sm text-bolder font-semibold">{font.name}</span>
+                <span className="typo-body-l-regular text-bolder font-semibold">{font.name}</span>
                 <span
-                  className={`typo-caption rounded-full px-2 py-0.5 font-semibold ${
+                  className={`typo-caption-regular rounded-full px-2 py-0.5 font-semibold ${
                     font.isPrimary
                       ? 'bg-element-primary/10 text-primary'
                       : 'text-subtle bg-gray-100'
@@ -85,12 +85,12 @@ const TypographyGuidePage = () => (
                   {font.role}
                 </span>
               </span>
-              <span className="typo-caption text-subtle">{font.desc}</span>
+              <span className="typo-caption-regular text-subtle">{font.desc}</span>
             </div>
           </li>
         ))}
       </ol>
-      <p className="typo-caption text-subtle">
+      <p className="typo-caption-regular text-subtle">
         고정폭(<code>font-mono</code>): <code>ui-monospace</code> · <code>SFMono-Regular</code> ·{' '}
         <code>Menlo</code> · <code>Consolas</code> · <code>monospace</code> 순으로 폴백합니다.
       </p>
@@ -101,27 +101,27 @@ const TypographyGuidePage = () => (
       aria-labelledby="typo-rem"
       className="border-gray-subtle-2 bg-surface flex flex-col gap-1 rounded-xl border p-4"
     >
-      <h2 id="typo-rem" className="typo-label">
+      <h2 id="typo-rem" className="typo-body-l-medium">
         크기 단위 — px 입력, rem 출력
       </h2>
-      <p className="typo-body-sm text-subtle">
+      <p className="typo-body-l-regular text-subtle">
         토큰 크기는 인지 기준인 <strong>px</strong> 로 <code>tokens.json</code> 에 쓰고, 생성기가{' '}
         <strong>rem</strong>(÷ remBase {tokens.remBase})으로 변환해 내보냅니다. 아래 표는 이해를
         돕기 위해 px 로 표기하지만, 실제 출력은 rem 입니다(예: PC{' '}
-        {tokens.typography['heading-xl'].size.pc}
-        px → {tokens.typography['heading-xl'].size.pc / tokens.remBase}rem). 글자 크기를 rem 으로
-        두면 사용자가 브라우저 기본 글꼴 크기를 키웠을 때 본문도 비례해 커져 <strong>접근성</strong>
-        에 유리합니다. (px→rem 변환은 간격·크기 등 전 토큰 공통 원칙입니다.)
+        {tokens.typography['display-m-bold'].size.pc}
+        px → {tokens.typography['display-m-bold'].size.pc / tokens.remBase}rem). 글자 크기를 rem
+        으로 두면 사용자가 브라우저 기본 글꼴 크기를 키웠을 때 본문도 비례해 커져{' '}
+        <strong>접근성</strong>에 유리합니다. (px→rem 변환은 간격·크기 등 전 토큰 공통 원칙입니다.)
       </p>
     </section>
 
     {/* 타이포그래피 스케일 — typo-* 유틸리티가 묶어 적용하는 값(토큰) 데이터 테이블(위) */}
     <section aria-labelledby="typo-tokens" className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <h2 id="typo-tokens" className="typo-heading-md">
+        <h2 id="typo-tokens" className="typo-heading-h4-bold">
           타이포그래피 스케일
         </h2>
-        <p className="typo-body-sm text-subtle">
+        <p className="typo-body-l-regular text-subtle">
           용도별 <code>typo-*</code> <strong>유틸리티 클래스</strong> 목록입니다. 각 클래스가 한
           번에 묶어 적용하는 값(크기·굵기·행간·자간 <strong>토큰</strong>)은 아래와 같습니다. 클래스
           칩을 클릭하면 이름이 복사됩니다.
@@ -132,22 +132,22 @@ const TypographyGuidePage = () => (
           <caption className="sr-only">typo-* 클래스별 크기·굵기·행간·자간</caption>
           <thead>
             <tr className="border-gray-subtle-2 bg-surface border-b">
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 클래스
               </th>
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 크기 (모바일)
               </th>
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 크기 (PC)
               </th>
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 굵기
               </th>
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 행간
               </th>
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 자간
               </th>
             </tr>
@@ -158,11 +158,19 @@ const TypographyGuidePage = () => (
                 <th scope="row" className="px-4 py-3 text-left font-normal">
                   <CopyChip value={`typo-${name}`} />
                 </th>
-                <td className="typo-caption text-subtle px-4 py-3 font-mono">{t.size.mobile}px</td>
-                <td className="typo-caption text-subtle px-4 py-3 font-mono">{t.size.pc}px</td>
-                <td className="typo-caption text-subtle px-4 py-3 font-mono">{t.weight}</td>
-                <td className="typo-caption text-subtle px-4 py-3 font-mono">{t.lineHeight}</td>
-                <td className="typo-caption text-subtle px-4 py-3 font-mono">{t.letterSpacing}</td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                  {t.size.mobile}px
+                </td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                  {t.size.pc}px
+                </td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">{t.weight}</td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                  {t.lineHeight}
+                </td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                  {t.letterSpacing}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -172,13 +180,13 @@ const TypographyGuidePage = () => (
 
     {/* 미리보기 — 실제 렌더(아래) */}
     <section aria-labelledby="typo-preview" className="flex flex-col gap-4">
-      <h2 id="typo-preview" className="typo-heading-md">
+      <h2 id="typo-preview" className="typo-heading-h4-bold">
         미리보기 (Preview)
       </h2>
       <ul className="border-gray-subtle-2 divide-gray-subtle-2 divide-y rounded-xl border">
         {Object.entries(tokens.typography).map(([name, t]) => (
           <li key={name} className="flex flex-col gap-2 px-4 py-5">
-            <span className="typo-caption text-subtle font-mono">
+            <span className="typo-caption-regular text-subtle font-mono">
               typo-{name} · {t.size.mobile}→{t.size.pc}px · w{t.weight}
             </span>
             <p className={`typo-${name}`}>{SAMPLE_TEXT}</p>

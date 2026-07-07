@@ -33,15 +33,15 @@ type SwatchRow = { name: string; cssVar: string; value: string };
 // 그룹 하나 = 독립 테이블. 제목(h2) + 이름/값 표. 투명 값도 보이도록 스와치 뒤 체커보드.
 const ColorTable = ({ title, rows }: { title: ReactNode; rows: SwatchRow[] }) => (
   <section className="flex flex-col gap-2">
-    <h2 className="typo-label">{title}</h2>
+    <h2 className="typo-body-l-medium">{title}</h2>
     <div className="overflow-x-auto">
       <table className="w-full border-collapse text-left">
         <thead>
           <tr className="border-gray-subtle-2 border-b">
-            <th scope="col" className="typo-label text-subtle px-3 py-3 whitespace-nowrap">
+            <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
               이름
             </th>
-            <th scope="col" className="typo-label text-subtle px-3 py-3 whitespace-nowrap">
+            <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
               값
             </th>
           </tr>
@@ -54,7 +54,7 @@ const ColorTable = ({ title, rows }: { title: ReactNode; rows: SwatchRow[] }) =>
             >
               <th
                 scope="row"
-                className="typo-caption text-bolder w-1/3 px-3 py-3 font-mono font-normal"
+                className="typo-caption-regular text-bolder w-1/3 px-3 py-3 font-mono font-normal"
               >
                 {row.name}
               </th>
@@ -67,7 +67,7 @@ const ColorTable = ({ title, rows }: { title: ReactNode; rows: SwatchRow[] }) =>
                   >
                     <span className="absolute inset-0" style={{ background: row.cssVar }} />
                   </span>
-                  <span className="typo-caption text-subtle font-mono whitespace-nowrap">
+                  <span className="typo-caption-regular text-subtle font-mono whitespace-nowrap">
                     {row.value}
                   </span>
                 </span>

@@ -34,9 +34,9 @@ const Home = () => {
           <code className="border-gray-subtle-2 text-subtle rounded-md border px-2 py-1 font-mono text-sm">
             {badge}
           </code>
-          <h1 className="typo-heading-xl">{SITE_NAME}</h1>
+          <h1 className="typo-display-m-bold">{SITE_NAME}</h1>
           {/* 현재 버전·빌드 시각 (자리만 잡은 placeholder — 위 BUILD_VERSION/BUILD_TIME 참조) */}
-          <p className="typo-body-sm text-subtle">
+          <p className="typo-body-l-regular text-subtle">
             현재 버전: <span className="text-bolder font-semibold">{BUILD_VERSION}</span> /{' '}
             {BUILD_TIME}
           </p>
@@ -47,7 +47,7 @@ const Home = () => {
           <section aria-labelledby="section-project" className={CARD_CLASS}>
             <div className="flex items-center gap-2">
               <ProjectInfoIcon aria-hidden="true" className="text-primary size-6" />
-              <h2 id="section-project" className="typo-heading-sm">
+              <h2 id="section-project" className="typo-title-l-bold">
                 {projectInfo.title}
               </h2>
             </div>
@@ -79,7 +79,7 @@ const Home = () => {
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-2">
                 <GuideIcon aria-hidden="true" className="text-primary size-6 shrink-0" />
-                <h2 id="section-guide" className="typo-heading-sm">
+                <h2 id="section-guide" className="typo-title-l-bold">
                   {guide.title}
                 </h2>
               </div>
@@ -94,7 +94,7 @@ const Home = () => {
                 />
               </Link>
             </div>
-            <p className="typo-body-sm text-subtle">{guide.description}</p>
+            <p className="typo-body-l-regular text-subtle">{guide.description}</p>
           </section>
         </div>
 

@@ -45,10 +45,10 @@ const ZIndexGuidePage = () => (
     {/* 겹침 시연 — 값이 큰 카드가 위에 그려진다 */}
     <section aria-labelledby="z-demo" className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <h2 id="z-demo" className="typo-heading-md">
+        <h2 id="z-demo" className="typo-heading-h4-bold">
           쌓임 순서 미리보기
         </h2>
-        <p className="typo-body-sm text-subtle">
+        <p className="typo-body-l-regular text-subtle">
           아래 카드는 값이 큰 순서대로 위에 겹칩니다 — 토큰 값이 곧 우선순위입니다.
         </p>
       </div>
@@ -59,8 +59,8 @@ const ZIndexGuidePage = () => (
             key={card.z}
             className={`${card.z} ${card.pos} border-gray-subtle-2 bg-surface shadow-2 absolute flex w-36 flex-col gap-1 rounded-lg border p-3`}
           >
-            <span className="typo-label">{card.label}</span>
-            <span className="typo-caption text-subtle font-mono">
+            <span className="typo-body-l-medium">{card.label}</span>
+            <span className="typo-caption-regular text-subtle font-mono">
               {card.z} · {card.value}
             </span>
           </div>
@@ -71,10 +71,10 @@ const ZIndexGuidePage = () => (
     {/* 전체 토큰 레퍼런스 */}
     <section aria-labelledby="z-tokens" className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
-        <h2 id="z-tokens" className="typo-heading-md">
+        <h2 id="z-tokens" className="typo-heading-h4-bold">
           레이어 토큰
         </h2>
-        <p className="typo-body-sm text-subtle">
+        <p className="typo-body-l-regular text-subtle">
           정수라 rem 변환하지 않습니다. 클래스 칩을 클릭하면 이름이 복사됩니다.
         </p>
       </div>
@@ -83,13 +83,13 @@ const ZIndexGuidePage = () => (
           <caption className="sr-only">z-* 레이어 토큰의 값과 용도</caption>
           <thead>
             <tr className="border-gray-subtle-2 bg-surface border-b">
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 클래스
               </th>
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 값
               </th>
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 용도
               </th>
             </tr>
@@ -100,8 +100,10 @@ const ZIndexGuidePage = () => (
                 <th scope="row" className="px-4 py-3 text-left font-normal">
                   <CopyChip value={`z-${name}`} />
                 </th>
-                <td className="typo-caption text-subtle px-4 py-3 font-mono">{value}</td>
-                <td className="typo-body-sm text-subtle px-4 py-3">{Z_USAGE[name] ?? '—'}</td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">{value}</td>
+                <td className="typo-body-l-regular text-subtle px-4 py-3">
+                  {Z_USAGE[name] ?? '—'}
+                </td>
               </tr>
             ))}
           </tbody>

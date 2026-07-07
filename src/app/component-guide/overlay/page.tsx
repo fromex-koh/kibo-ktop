@@ -33,9 +33,9 @@ const OverlayGuidePage = () => (
               />
             </div>
             <div className="border-gray-subtle-2 flex flex-col gap-1 border-t px-4 py-3">
-              <span className="typo-label">overlay-{k}</span>
-              <span className="typo-caption text-subtle font-mono">--ds-overlay-{k}</span>
-              <span className="typo-caption text-subtle font-mono">
+              <span className="typo-body-l-medium">overlay-{k}</span>
+              <span className="typo-caption-regular text-subtle font-mono">--ds-overlay-{k}</span>
+              <span className="typo-caption-regular text-subtle font-mono">
                 ↳ {rawVar(ref.light)} / {rawVar(ref.dark)}
               </span>
             </div>

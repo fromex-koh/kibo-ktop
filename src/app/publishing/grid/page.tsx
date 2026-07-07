@@ -26,10 +26,10 @@ const GridPreviewPage = () => (
     {/* 제목·설명 + 테마 토글 (읽기 좋은 폭으로 제한) */}
     <div className="max-w-content mx-auto flex w-full flex-col gap-2 px-6">
       <div className="flex items-start justify-between gap-4">
-        <h1 className="typo-heading-xl">레이아웃 그리드 미리보기</h1>
+        <h1 className="typo-display-m-bold">레이아웃 그리드 미리보기</h1>
         <ThemeToggle />
       </div>
-      <p className="typo-body-sm text-subtle">
+      <p className="typo-body-l-regular text-subtle">
         브라우저 폭을 조절하면(또는 기기 회전) 실제 컬럼 수가 4 → 8 → 12 로 바뀝니다. 이 화면은
         사이드바 없이 뷰포트 전체 폭을 그대로 써서, 해상도별 실제 그리드(가장자리 여백·거터 포함)를
         정확히 보여줍니다.
@@ -44,7 +44,7 @@ const GridPreviewPage = () => (
           aria-hidden="true"
           className={`${getGridRevealClass(i)} bg-error-base/15 border-error-base/40 h-20 items-center justify-center rounded-md border`}
         >
-          <span className="bg-surface border-error-base text-error-text typo-caption flex size-7 items-center justify-center rounded-full border-2">
+          <span className="bg-surface border-error-base text-error-text typo-caption-regular flex size-7 items-center justify-center rounded-full border-2">
             {i + 1}
           </span>
         </span>
@@ -60,19 +60,19 @@ const GridPreviewPage = () => (
           </caption>
           <thead>
             <tr className="border-gray-subtle-2 bg-surface border-b">
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 구간
               </th>
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 columns
               </th>
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 gutter
               </th>
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 container
               </th>
-              <th scope="col" className="typo-label px-4 py-3">
+              <th scope="col" className="typo-body-l-medium px-4 py-3">
                 margin (최소)
               </th>
             </tr>
@@ -85,18 +85,24 @@ const GridPreviewPage = () => (
               );
               return rows.map(([key, g]) => (
                 <tr key={key} className="border-gray-subtle-2 border-b last:border-b-0">
-                  <td className="typo-body-sm px-4 py-3">
+                  <td className="typo-body-l-regular px-4 py-3">
                     <span className="inline-flex items-center gap-2">
                       {key === 'mobile' ? '모바일 (기본)' : key}
                       <ActiveBreakpointTag targetKey={key} />
                     </span>
                   </td>
-                  <td className="typo-caption text-subtle px-4 py-3 font-mono">{g.columns}</td>
-                  <td className="typo-caption text-subtle px-4 py-3 font-mono">{g.gutter}px</td>
-                  <td className="typo-caption text-subtle px-4 py-3 font-mono">
+                  <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                    {g.columns}
+                  </td>
+                  <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                    {g.gutter}px
+                  </td>
+                  <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
                     {typeof g.container === 'number' ? `${g.container}px` : g.container}
                   </td>
-                  <td className="typo-caption text-subtle px-4 py-3 font-mono">{g.margin}px</td>
+                  <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                    {g.margin}px
+                  </td>
                 </tr>
               ));
             })()}

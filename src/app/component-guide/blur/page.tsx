@@ -26,8 +26,8 @@ const BlurGuidePage = () => (
             />
           </div>
           <div className="border-gray-subtle-2 flex flex-col gap-1 border-t px-4 py-3">
-            <span className="typo-label">blur-{k}</span>
-            <span className="typo-caption text-subtle font-mono">
+            <span className="typo-body-l-medium">blur-{k}</span>
+            <span className="typo-caption-regular text-subtle font-mono">
               --ds-blur-{k} · {px}px
             </span>
           </div>

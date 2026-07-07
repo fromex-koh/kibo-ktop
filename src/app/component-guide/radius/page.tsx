@@ -17,7 +17,7 @@ const RadiusGuidePage = () => (
             className="bg-surface border-gray-subtle-2 size-16 border"
             style={{ borderRadius: `var(--ds-radius-${k})` }}
           />
-          <span className="typo-caption text-subtle font-mono">
+          <span className="typo-caption-regular text-subtle font-mono">
             {k} · {typeof px === 'number' ? `${px}px` : px}
           </span>
         </li>

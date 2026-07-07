@@ -18,7 +18,7 @@ const BreakpointGuidePage = () => (
       </>
     }
   >
-    <p className="typo-caption text-subtle">
+    <p className="typo-caption-regular text-subtle">
       구간명은 특정 기기 하나를 뜻하지 않는다. <code>wide</code> 는 태블릿(세로·가로)과 노트북이
       함께 걸치는 폭 구간이라 기기 중립적으로 이름 붙였다(단, 12.9형급 대형 태블릿을 가로로 눕히면{' '}
       <code>pc</code> 구간으로 넘어갈 수 있다).
@@ -28,16 +28,16 @@ const BreakpointGuidePage = () => (
         <caption className="sr-only">브레이크포인트 구간과 프리픽스, 포함 기기</caption>
         <thead>
           <tr className="border-gray-subtle-2 bg-surface border-b">
-            <th scope="col" className="typo-label px-4 py-3">
+            <th scope="col" className="typo-body-l-medium px-4 py-3">
               구간
             </th>
-            <th scope="col" className="typo-label px-4 py-3">
+            <th scope="col" className="typo-body-l-medium px-4 py-3">
               범위
             </th>
-            <th scope="col" className="typo-label px-4 py-3">
+            <th scope="col" className="typo-body-l-medium px-4 py-3">
               프리픽스
             </th>
-            <th scope="col" className="typo-label px-4 py-3">
+            <th scope="col" className="typo-body-l-medium px-4 py-3">
               포함 기기
             </th>
           </tr>
@@ -70,15 +70,15 @@ const BreakpointGuidePage = () => (
             ];
             return rows.map((r) => (
               <tr key={r.name} className="border-gray-subtle-2 border-b last:border-b-0">
-                <td className="typo-body-sm px-4 py-3">
+                <td className="typo-body-l-regular px-4 py-3">
                   <span className="inline-flex items-center gap-2">
                     {r.name}
                     <ActiveBreakpointTag targetKey={r.key} />
                   </span>
                 </td>
-                <td className="typo-caption text-subtle px-4 py-3 font-mono">{r.range}</td>
-                <td className="typo-caption text-subtle px-4 py-3 font-mono">{r.prefix}</td>
-                <td className="typo-body-sm text-subtle px-4 py-3">{r.device}</td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">{r.range}</td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">{r.prefix}</td>
+                <td className="typo-body-l-regular text-subtle px-4 py-3">{r.device}</td>
               </tr>
             ));
           })()}
