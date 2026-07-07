@@ -91,6 +91,14 @@ const CURATED_ICONS = [
   { name: 'Calendar', Icon: Calendar },
 ] as const;
 
+// Solid(원형 배지) 스타일은 강조·알림 배지 용도라 실제로 몇 개만 의미가 있다 — 닫기/오류의 X,
+// 안내의 info 두 가지만 큐레이션한다. info 는 lucide 에 채운(solid) 글리프가 없어, 배지 안에
+// 텍스트 'i' 를 넣어 만든다(글리프 조합).
+const SOLID_ICONS = [
+  { name: 'X', kind: 'icon' as const, Glyph: X },
+  { name: 'Info', kind: 'text' as const, char: 'i' },
+] as const;
+
 const IconGuidePage = () => (
   <GuidePage
     title="아이콘 (Icon)"
@@ -221,9 +229,10 @@ const IconGuidePage = () => (
           아이콘 목록
         </h2>
         <p className="typo-body-l-regular text-subtle">
-          {CURATED_ICONS.length}개 아이콘 — 칩을 클릭하면 컴포넌트 이름이 복사됩니다. lucide-react
-          는 획(Outline) 스타일 단일 세트라, 배지·알림처럼 강조가 필요한 곳엔 아이콘을 원형 배경에
-          채운 Solid 스타일을 조합해 씁니다.
+          Outline 은 {CURATED_ICONS.length}개 아이콘 — 칩을 클릭하면 컴포넌트 이름이 복사됩니다.
+          lucide-react 는 획(Outline) 스타일 단일 세트라, 배지·알림처럼 강조가 필요한 곳엔 아이콘을
+          원형 배경에 채운 Solid 스타일을 조합해 씁니다. Solid 는 실제로 배지가 어울리는 X(닫기)·
+          info(안내) 두 가지만 큐레이션했습니다.
         </p>
       </div>
 
@@ -249,15 +258,21 @@ const IconGuidePage = () => (
       <div className="flex flex-col gap-3">
         <h3 className="typo-body-l-medium text-foreground">Solid</h3>
         <ul className="wide:grid-cols-4 pc:grid-cols-6 grid grid-cols-3 gap-3">
-          {CURATED_ICONS.map(({ name, Icon }) => (
+          {SOLID_ICONS.map((item) => (
             <li
-              key={name}
+              key={item.name}
               className="border-gray-subtle-2 flex flex-col items-center gap-3 rounded-md border p-4"
             >
               <span className="bg-info-surface text-info-text size-icon-xl flex items-center justify-center rounded-full">
-                <Icon aria-hidden="true" className="size-icon-md" />
+                {item.kind === 'icon' ? (
+                  <item.Glyph aria-hidden="true" className="size-icon-md" />
+                ) : (
+                  <span aria-hidden="true" className="typo-title-l-bold">
+                    {item.char}
+                  </span>
+                )}
               </span>
-              <CopyChip value={name} />
+              <span className="typo-caption-regular text-subtle">{item.name}</span>
             </li>
           ))}
         </ul>
