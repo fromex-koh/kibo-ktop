@@ -42,15 +42,15 @@ const ICON_SIZES = [
   { key: 'icon-2xl', class: 'size-icon-2xl' },
 ] as const;
 
-// 참고 이미지의 두 톤(중립 회색 배지·짙은 배지)을 재현한다. 페이지 라이트/다크 모드와 무관하게
-// 항상 같은 색으로 보여야 크기 비교가 정확해서(코드블럭이 항상 어두운 배경을 쓰는 것과 같은 이유),
-// 테마에 따라 자동 반전되는 시맨틱 토큰 대신 고정 raw 값을 쓴다(PB-12 — 토큰 뷰어 예외).
+// 두 톤(중립 회색 배지·강조 배지)으로 Solid 배지를 시연한다. 배지 색은 시맨틱 토큰이라 라이트/다크
+// 모드에서 자동 반전돼 어느 테마에서도 페이지 배경과 대비되어 보인다(bg-bolder 는 라이트에서 어둡고
+// 다크에서 밝다). 글리프 색은 배지의 text-* 를 currentColor 로 상속받는다.
 // glyphScale = 배지(원) 대비 아이콘 크기. lucide 아이콘마다 자체 뷰박스 안에서 차지하는 비율이
 // 달라(X 는 획이 굵고 뷰박스의 ~50%만 채우지만 시각적 무게가 커 커 보이고, Info 는 얇은 원이라
 // 가벼워 보임) 같은 크기로 두면 X 가 더 커 보인다. 그래서 X 는 더 줄여 두 아이콘의 체감 크기를 맞춘다.
 const SOLID_SWATCHES = [
-  { label: '중립', Icon: X, bg: 'var(--raw-gray-400)', glyphScale: 0.55 },
-  { label: '강조', Icon: Info, bg: 'var(--raw-common-black)', glyphScale: 0.85 },
+  { label: '중립', Icon: X, badgeClass: 'bg-gray-400 text-white', glyphScale: 0.55 },
+  { label: '강조', Icon: Info, badgeClass: 'bg-bolder text-background', glyphScale: 0.85 },
 ] as const;
 
 // 아이콘 큐레이션 — 실제 화면에서 자주 쓰는 lucide-react 아이콘([NA-008] 표준 단일 아이콘
@@ -158,30 +158,15 @@ const IconGuidePage = () => (
             {ICON_SIZES.map(({ key, class: sizeClass }) => (
               <tr key={key} className="border-gray-subtle-2 bg-background border-b last:border-b-0">
                 <td className="px-4 py-3">
-                  {/* 배지를 고정 흰 배경 위에 둔다 — '강조' 배지 색(raw-common-black)이 다크
-                      페이지 배경과 같아 배지 원이 안 보이면 X(회색)만 채워진 원으로 보여 크기가
-                      어긋나 보인다. 밝은 바탕에서 두 배지 모두 같은 크기의 채워진 원으로 보인다
-                      (참고 이미지 재현 · PB-12 토큰 뷰어 예외). */}
-                  <div
-                    className="inline-flex items-center gap-3 rounded-md p-2"
-                    style={{ backgroundColor: 'var(--raw-common-white)' }}
-                  >
-                    {SOLID_SWATCHES.map(({ label, Icon, bg, glyphScale }) => {
+                  <div className="flex items-center gap-3">
+                    {SOLID_SWATCHES.map(({ label, Icon, badgeClass, glyphScale }) => {
                       const glyphPx = tokens.size[key] * glyphScale;
                       return (
                         <span
                           key={label}
-                          className={`${sizeClass} flex shrink-0 items-center justify-center rounded-full`}
-                          style={{ backgroundColor: bg }}
+                          className={`${sizeClass} ${badgeClass} flex shrink-0 items-center justify-center rounded-full`}
                         >
-                          <Icon
-                            aria-hidden="true"
-                            style={{
-                              width: glyphPx,
-                              height: glyphPx,
-                              color: 'var(--raw-common-white)',
-                            }}
-                          />
+                          <Icon aria-hidden="true" style={{ width: glyphPx, height: glyphPx }} />
                         </span>
                       );
                     })}
