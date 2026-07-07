@@ -24,24 +24,18 @@ import { Icon } from '@/components/icon';
 import { GUIDE_NAV_SECTIONS } from '@/constants/guide-nav';
 import tokens from '@tokens';
 
-export const metadata: Metadata = { title: '아이콘' };
+export const metadata: Metadata = { title: 'Icon' };
 
-// Icon 컴포넌트 사용법 스니펫 — CopyChip 로 '복사' 노출, 클립보드엔 전체 복사.
-// 아이콘은 장식용(aria-hidden)이라 별도 접근성 prop 이 없다. 클릭 가능한 아이콘 버튼은 <button>
-// 으로 감싸고 그 버튼에 aria-label 을 준다([5.1.1]).
-const COMPONENT_USAGE = `import { X } from 'lucide-react';
+// Icon 컴포넌트 사용법 스니펫 — variant 별로 코드블럭을 나눠 보여준다.
+const USAGE_OUTLINE = `import { X } from 'lucide-react';
 import { Icon } from '@/components/icon';
 
-// outline(기본) — 아이콘만 렌더
-<Icon icon={X} className="size-icon-lg" />
+<Icon icon={X} className="size-icon-lg" />`;
 
-// solid — 원형 배지 안에 아이콘
-<Icon icon={X} variant="solid" className="size-icon-2xl" />
+const USAGE_SOLID = `import { X } from 'lucide-react';
+import { Icon } from '@/components/icon';
 
-// 클릭 가능한 아이콘 버튼 — 버튼에 aria-label, 아이콘은 장식용
-<button type="button" aria-label="닫기">
-  <Icon icon={X} />
-</button>`;
+<Icon icon={X} variant="solid" className="size-icon-2xl" />`;
 
 // package.json 의 lucide-react 버전과 라이선스. 패키지를 올리면 함께 갱신한다.
 const LUCIDE_VERSION = '1.23.0';
@@ -113,8 +107,8 @@ const SOLID_ICONS = [
 
 const IconGuidePage = () => (
   <GuidePage
-    title="아이콘 (Icon)"
-    category={GUIDE_NAV_SECTIONS[1].title}
+    title="Icon"
+    category={GUIDE_NAV_SECTIONS[2].title}
     description="lucide-react 아이콘 중 실제 화면에서 쓰는 것들을 큐레이션했습니다."
   >
     <section aria-labelledby="icon-library" className="flex flex-col gap-4">
@@ -314,6 +308,7 @@ const IconGuidePage = () => (
           <Icon icon={X} className="size-icon-lg text-bolder" />
           <Icon icon={Info} className="size-icon-lg text-bolder" />
         </div>
+        <CodeBlock code={USAGE_OUTLINE} language="tsx" copyLabel="복사" />
       </div>
 
       <div className="flex flex-col gap-4">
@@ -333,7 +328,7 @@ const IconGuidePage = () => (
             </span>
           </span>
         </div>
-        <CodeBlock code={COMPONENT_USAGE} language="tsx" copyLabel="복사" />
+        <CodeBlock code={USAGE_SOLID} language="tsx" copyLabel="복사" />
       </div>
     </section>
 

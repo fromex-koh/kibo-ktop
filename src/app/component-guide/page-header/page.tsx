@@ -27,7 +27,7 @@ const PageHeaderGuidePage = () => (
   <GuidePage
     title="PageHeader"
     description="페이지·섹션 최상단의 제목+설명 묶음 컴포넌트입니다."
-    category={GUIDE_NAV_SECTIONS[3].title}
+    category={GUIDE_NAV_SECTIONS[2].title}
   >
     <section aria-labelledby="ph-variant" className="flex flex-col gap-6">
       <div>
