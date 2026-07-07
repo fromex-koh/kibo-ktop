@@ -286,18 +286,16 @@ const IconGuidePage = () => (
       </div>
     </section>
 
-    <section aria-labelledby="icon-component" className="flex flex-col gap-6">
+    <section aria-labelledby="icon-variant" className="flex flex-col gap-6">
       <div>
-        <h2 id="icon-component" className="typo-heading-h4-bold">
-          컴포넌트 (Icon)
+        <h2 id="icon-variant" className="typo-heading-h4-bold">
+          Variant
         </h2>
         <p className="typo-body-l-regular text-subtle">
-          위 두 스타일을 <code>variant</code> 로 구분하는 <code>Icon</code> 컴포넌트입니다. lucide
-          글리프를 <code>icon</code> prop 으로 넘깁니다.
+          용도에 맞춰 선택하는 아이콘 스타일 2가지입니다.
         </p>
       </div>
 
-      {/* 미리보기 */}
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
           <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
