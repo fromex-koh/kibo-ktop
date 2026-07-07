@@ -102,7 +102,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
           aria-label={isDrawerOpen ? '사이드 메뉴 닫기' : '사이드 메뉴 열기'}
           aria-expanded={isDrawerOpen}
           aria-controls="sidebar-layout-nav"
-          className="bg-gray-10 text-foreground-muted hover:text-foreground focus-visible:ring-brand focus-visible:ring-offset-background pc:hidden inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="text-foreground-muted hover:text-foreground focus-visible:ring-brand focus-visible:ring-offset-background pc:hidden inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           {isDrawerOpen ? (
             <X aria-hidden="true" className="size-icon-sm" />
@@ -113,7 +113,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
         <Link
           href="/"
           aria-label="홈으로"
-          className="bg-gray-10 text-foreground-muted hover:text-foreground focus-visible:ring-brand focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 items-center justify-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="text-foreground-muted hover:text-foreground focus-visible:ring-brand focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           <Home aria-hidden="true" className="size-icon-sm" />
         </Link>
@@ -176,7 +176,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
                         className={`focus-visible:ring-brand focus-visible:ring-offset-background typo-body-sm flex items-center justify-between gap-1.5 rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                           isActive
                             ? 'bg-brand/10 text-foreground font-semibold'
-                            : 'text-foreground-muted hover:bg-gray-10 hover:text-foreground'
+                            : 'text-foreground-muted hover:text-foreground hover:bg-gray-100'
                         }`}
                       >
                         {item.label}

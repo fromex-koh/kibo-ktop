@@ -66,7 +66,7 @@ const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev';
 // 상태별 색상 — 이 프로젝트에 이미 정의된 시맨틱 토큰(danger/warning/info/success)만 재사용.
 // 색만으로 구분하지 않도록 상태명을 항상 함께 표기한다. [KWCAG 5.3.1]
 const STATUS_STYLES: Record<Status, string> = {
-  대기중: 'bg-gray-10 text-foreground-muted',
+  대기중: 'bg-gray-100 text-foreground-muted',
   진행중: 'bg-info-surface text-info',
   수정요청: 'bg-danger-surface text-danger',
   보완: 'bg-warning-surface text-warning',
@@ -308,7 +308,7 @@ const PublishingIndex = () => {
         <table className="w-full text-left">
           <caption className="sr-only">자산별 버전 예시</caption>
           <thead>
-            <tr className="bg-gray-10/25 border-border border-b">
+            <tr className="border-border border-b bg-gray-100/25">
               {assetVersions.map((a) => (
                 <th key={a.name} scope="col" className="typo-label px-4 py-3 text-center">
                   <span className="inline-flex items-center justify-center gap-1.5">
@@ -355,7 +355,7 @@ const PublishingIndex = () => {
         <table className="w-full text-left">
           <caption className="sr-only">공통 레이아웃 상태·버전</caption>
           <thead>
-            <tr className="bg-gray-10/25 border-border border-b">
+            <tr className="border-border border-b bg-gray-100/25">
               <th scope="col" className="typo-label px-4 py-3">
                 공통 레이아웃
               </th>
@@ -418,7 +418,7 @@ const PublishingIndex = () => {
         <div
           role="tablist"
           aria-label="사용자 유형별 화면"
-          className="bg-gray-10/50 inline-flex w-fit gap-1 rounded-lg p-1"
+          className="inline-flex w-fit gap-1 rounded-lg bg-gray-100/50 p-1"
         >
           {USER_TYPE_FILTERS.map((f, i) => {
             const selected = f === filter;
@@ -467,7 +467,7 @@ const PublishingIndex = () => {
         <table className="w-full text-left">
           <caption className="sr-only">사이트 구조별 화면 ID·상태·버전 예시</caption>
           <thead>
-            <tr className="bg-gray-10/25 border-border border-b">
+            <tr className="border-border border-b bg-gray-100/25">
               {depthHeaders.map((header) => (
                 <th key={header} scope="col" className="typo-label px-4 py-3">
                   {header}

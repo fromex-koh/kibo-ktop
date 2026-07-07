@@ -23,7 +23,7 @@ const OverlayGuidePage = () => (
               className="relative aspect-[16/10]"
               style={{
                 background:
-                  'repeating-conic-gradient(var(--ds-gray-30) 0% 25%, var(--ds-gray-10) 0% 50%) 0 0 / 20px 20px',
+                  'repeating-conic-gradient(var(--ds-gray-200) 0% 25%, var(--ds-gray-100) 0% 50%) 0 0 / 20px 20px',
               }}
             >
               <span

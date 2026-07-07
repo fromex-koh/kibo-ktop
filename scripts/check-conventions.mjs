@@ -36,8 +36,11 @@ const RULES = [
   },
   {
     id: 'PB-05',
-    desc: 'Tailwind 기본 팔레트 키 사용 금지 — 프로젝트 팔레트(0·10·30·50·70·90·100)/시맨틱 토큰을 쓰세요',
-    re: /-(?:gray|zinc|slate|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(?:200|300|400|500|600|700|800|900|950)\b/,
+    // 프로젝트 소유 8색(blue·green·orange·gray·success·warning·error·info)은 50~900 스케일로 허용.
+    // 스케일이 Tailwind 기본(50~950)과 이름이 겹치므로, 소유하지 않은 기본 팔레트 휴(slate·red·amber 등)와
+    // 소유 휴의 950 스텝(프로젝트 최대 900 → 950 은 기본 팔레트 누수)만 차단한다.
+    desc: 'Tailwind 기본 팔레트 키 사용 금지 — 프로젝트 팔레트(8색·50~900)/시맨틱 토큰을 쓰세요',
+    re: /-(?:zinc|slate|neutral|stone|red|amber|yellow|lime|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950)\b|-(?:gray|blue|green|orange)-950\b/,
   },
   {
     id: 'NA-005',

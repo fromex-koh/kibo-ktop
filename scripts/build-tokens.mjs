@@ -7,6 +7,7 @@ const ROOT = process.cwd();
 const OUT = resolve(ROOT, 'src/app/tokens.css');
 const tokens = JSON.parse(readFileSync(resolve(ROOT, 'tokens.json'), 'utf8'));
 const { scale, primitive, semantic } = tokens;
+const common = tokens.common ?? {}; // 스케일 밖 단일값 앵커 (white/black) → --raw-common-white 등
 const alpha = tokens.alpha ?? {}; // 반투명 프리미티브 (white/black × alpha% → --raw-white-a5 등)
 
 // 디자인 토큰 (px 숫자로 입력 → rem 출력)
@@ -31,13 +32,14 @@ const toRem = (v) =>
 
 const errors = [];
 const HEX = /^#[0-9a-fA-F]{6}$/;
-const mirror = (s) => 100 - s;
+// 다크 반사 = 위치 기반(스케일 배열에서 대칭 위치): 50↔900·100↔800…400↔500.
+// 스케일이 비대칭(50~900)이라 산술 100−s 를 못 쓴다. 짝수 길이여야 자기 자신에 매핑되는 스텝이 없다.
+const mirror = (s) => scale[scale.length - 1 - scale.indexOf(s)];
 const hues = Object.keys(primitive);
 
 // ── 1) 색상 구조 검증 ──
-for (const s of scale) {
-  if (!scale.includes(mirror(s))) errors.push(`scale ${s} 의 대칭값 ${mirror(s)} 없음 (반사 불가)`);
-}
+if (scale.length % 2 !== 0)
+  errors.push(`scale 길이(${scale.length})가 홀수 — 위치 반사 시 가운데 스텝이 자기 자신에 매핑됨`);
 for (const hue of hues) {
   for (const s of scale) {
     const v = primitive[hue][String(s)];
@@ -45,8 +47,16 @@ for (const hue of hues) {
     else if (!HEX.test(v)) errors.push(`primitive.${hue}.${s}="${v}" 는 #RRGGBB 형식 아님`);
   }
 }
+// common: 스케일 밖 단일값(앵커) — hex 만 검증. semantic 은 {light,dark} 에서만 참조한다(반사 대상 아님).
+for (const [k, v] of Object.entries(common))
+  if (!HEX.test(v)) errors.push(`common.${k}="${v}" 는 #RRGGBB 형식 아님`);
+// 참조 파싱: primitive("gray.900") 는 [hue, 숫자스텝], common("common.white") 은 [hue, 문자키].
 const parseRef = (ref) => {
   const [hue, step] = String(ref).split('.');
+  if (hue === 'common') {
+    if (!common[step]) errors.push(`참조 "${ref}" — common '${step}' 없음`);
+    return [hue, step];
+  }
   if (!primitive[hue]) errors.push(`참조 "${ref}" — 색상 '${hue}' 없음`);
   else if (!scale.includes(Number(step))) errors.push(`참조 "${ref}" — 스케일 '${step}' 없음`);
   return [hue, Number(step)];
@@ -164,7 +174,7 @@ if (errors.length) {
 }
 
 // ── 2) 대비(WCAG) 검증 — 텍스트 4.5:1 / 큰텍스트·아이콘·그래픽 3:1 ──
-const rawHex = (hue, step) => primitive[hue][String(step)];
+const rawHex = (hue, step) => (hue === 'common' ? common[step] : primitive[hue][String(step)]);
 const resolveHex = (name, mode) => {
   const val = semantic[name];
   if (typeof val === 'string') {
@@ -226,6 +236,11 @@ for (const [name, steps] of Object.entries(alpha)) {
   L.push('', `  /* raw ${name} alpha */`);
   for (const s of steps) L.push(`  --raw-${name}-a${s}: rgba(${alphaRgb[name]}, ${s / 100});`);
 }
+// raw common (스케일 밖 단일값 앵커 — 모드 무관 고정) → --raw-common-white 등
+if (Object.keys(common).length) {
+  L.push('', '  /* raw common (스케일 밖 단일값 — white/black 앵커) */');
+  for (const [k, v] of Object.entries(common)) L.push(`  --raw-common-${k}: ${v};`);
+}
 // alpha 참조("black.5") → var(--raw-black-a5)
 const resolveAlpha = (ref) => {
   const [name, step] = String(ref).split('.');
@@ -253,7 +268,7 @@ L.push('}', '');
 
 // 색상 .dark
 L.push('.dark {', '  color-scheme: dark;', '');
-L.push('  /* scale (다크 = 반사 u↔100−u) */');
+L.push('  /* scale (다크 = 위치 반사: 50↔900·100↔800…400↔500) */');
 for (const hue of hues)
   for (const s of scale) L.push(`  --ds-${hue}-${s}: var(--raw-${hue}-${mirror(s)});`);
 const overrides = Object.entries(semantic).filter(([, v]) => typeof v !== 'string');
@@ -272,7 +287,14 @@ if (Object.keys(overlay).length) {
 L.push('}', '');
 
 // @theme inline — 색상 브리지 (런타임 --ds 참조)
+// Tailwind 기본 색 팔레트(red/slate/… 50~950)를 제거 → 프로젝트 8색·시맨틱만 유효(오사용은 무효 유틸이 되어 드러남).
+// breakpoint·container 를 initial 로 지우는 것과 같은 방식. 단 구조 키워드(투명/현재색/상속)는 되살린다.
 L.push('@theme inline {');
+L.push('  --color-*: initial;');
+L.push('  --color-transparent: transparent;');
+L.push('  --color-current: currentColor;');
+L.push('  --color-inherit: inherit;');
+L.push('');
 for (const name of Object.keys(semantic)) L.push(`  --color-${name}: var(--ds-${name});`);
 for (const k of Object.keys(overlay)) L.push(`  --color-overlay-${k}: var(--ds-overlay-${k});`);
 L.push('');

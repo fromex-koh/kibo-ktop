@@ -26,7 +26,7 @@ const ComponentGuidePage = () => (
                 <Link
                   href={item.href}
                   {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  className="border-border bg-surface hover:bg-gray-10 focus-visible:ring-brand focus-visible:ring-offset-background flex items-center justify-between gap-3 rounded-xl border px-4 py-4 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                  className="border-border bg-surface focus-visible:ring-brand focus-visible:ring-offset-background flex items-center justify-between gap-3 rounded-xl border px-4 py-4 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                 >
                   <span className="typo-body-md font-medium">
                     {item.label}

@@ -12,7 +12,7 @@ const { badge, projectInfo, guide } = HOME_CONTENT;
 const ProjectInfoIcon = ICON_REGISTRY[projectInfo.icon];
 const GuideIcon = ICON_REGISTRY[guide.icon];
 
-const CARD_CLASS = 'bg-gray-10/25 flex flex-col gap-3 rounded-xl p-6';
+const CARD_CLASS = 'bg-gray-100/25 flex flex-col gap-3 rounded-xl p-6';
 
 // 저장소 링크에 URL 자체를 노출해 보는 사람이 주소를 확인할 수 있게 한다(스킴은 생략해 간결하게).
 const REPOSITORY_URL_LABEL = REPOSITORY_URL.replace(/^https?:\/\//, '');

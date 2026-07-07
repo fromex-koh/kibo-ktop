@@ -43,7 +43,7 @@ tokens.json (px 숫자) → yarn tokens → src/app/tokens.css (자동) → Tail
 ## 색상
 
 - **[PB-04] 시맨틱 용도 토큰 우선 (MUST)** — `bg-background` · `text-foreground` · `text-foreground-muted` · `border-border` · `bg-surface` · `bg-brand` · `text-brand-foreground` · `text-danger`/`success`/`warning`/`info` 등.
-- **[PB-05] Tailwind 기본 팔레트 키 직접 사용 지양 (MUST)** — 팔레트 스케일(`bg-gray-50`·`text-blue-70`)은 보조로만. **`bg-red-500` 같은 Tailwind 기본 키(200~950)를 쓰지 않는다** — 프로젝트 팔레트(0·10·30·50·70·90·100)와 섞여 혼란.
+- **[PB-05] 팔레트 스케일 직접 사용 지양, 시맨틱 우선 (MUST)** — 프로젝트 팔레트는 Figma 원본대로 **50~900 스케일**(`50·100·200·…·900`), 휴는 `blue·green·orange·gray·success·warning·error·info` 8색이다. 생성기가 **Tailwind 기본 색 팔레트(`red`·`slate`·`amber` 등 50~950)를 제거**(`--color-*: initial`)하므로 이 8색·정의된 스텝만 유효하다 — `bg-red-500`·`bg-slate-500`·`blue-950` 처럼 없는 키는 무효 유틸이 되어 아무 색도 안 나온다(오사용이 화면에서 바로 드러남). 구조 키워드 `transparent`·`current`·`inherit` 는 유지된다. `bg-gray-100`·`text-blue-700` 같은 팔레트 키는 보조로만 쓰고, 색은 시맨틱 토큰(`bg-brand`·`text-danger` 등)을 우선한다.
 - **[PB-06] 라이트/다크를 요소에서 분기하지 않음 (MUST)** — 시맨틱 토큰이 `.dark`에서 자동 반사되므로 `dark:bg-…` 로 색을 수동 분기하지 않는다. 예외적 재매핑이 필요하면 `tokens.json`의 semantic에 `{ "light": …, "dark": … }` 로 지정.
 
 ## 타이포그래피
