@@ -214,10 +214,10 @@ const CHECKS = [
   { fg: 'bolder', bg: 'background', min: TEXT, kind: '본문 텍스트' },
   { fg: 'subtle', bg: 'background', min: TEXT, kind: '보조 텍스트' },
   { fg: 'primary', bg: 'surface', min: TEXT, kind: '링크 텍스트' },
-  { fg: 'danger', bg: 'danger-surface', min: NONTEXT, kind: '상태 아이콘' },
-  { fg: 'warning', bg: 'warning-surface', min: NONTEXT, kind: '상태 아이콘' },
-  { fg: 'success', bg: 'success-surface', min: NONTEXT, kind: '상태 아이콘' },
-  { fg: 'info', bg: 'info-surface', min: NONTEXT, kind: '상태 아이콘' },
+  { fg: 'error-text', bg: 'error-surface', min: NONTEXT, kind: '상태 텍스트' },
+  { fg: 'warning-text', bg: 'warning-surface', min: NONTEXT, kind: '상태 텍스트' },
+  { fg: 'success-text', bg: 'success-surface', min: NONTEXT, kind: '상태 텍스트' },
+  { fg: 'info-text', bg: 'info-surface', min: NONTEXT, kind: '상태 텍스트' },
 ];
 for (const { fg, bg, min, kind } of CHECKS) {
   for (const mode of ['light', 'dark']) {

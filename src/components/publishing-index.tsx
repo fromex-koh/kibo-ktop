@@ -43,13 +43,13 @@ const NoteCell = ({ note }: { note?: StructureNote }) => (
   <>
     {note === 'issue' && (
       <span className="inline-flex items-center">
-        <AlertTriangle aria-hidden="true" className="text-danger size-4" />
+        <AlertTriangle aria-hidden="true" className="text-error-text size-4" />
         <span className="sr-only">이슈 있음</span>
       </span>
     )}
     {note === 'info' && (
       <span className="inline-flex items-center">
-        <Info aria-hidden="true" className="text-info size-4" />
+        <Info aria-hidden="true" className="text-info-text size-4" />
         <span className="sr-only">추가 정보 있음</span>
       </span>
     )}
@@ -67,11 +67,11 @@ const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev';
 // 색만으로 구분하지 않도록 상태명을 항상 함께 표기한다. [KWCAG 5.3.1]
 const STATUS_STYLES: Record<Status, string> = {
   대기중: 'bg-gray-100 text-subtle',
-  진행중: 'bg-info-surface text-info',
-  수정요청: 'bg-danger-surface text-danger',
-  보완: 'bg-warning-surface text-warning',
-  완료: 'bg-success-surface text-success',
-  최종완료: 'bg-success-surface text-success',
+  진행중: 'bg-info-surface text-info-text',
+  수정요청: 'bg-error-surface text-error-text',
+  보완: 'bg-warning-surface text-warning-text',
+  완료: 'bg-success-surface text-success-text',
+  최종완료: 'bg-success-surface text-success-text',
 };
 
 const StatusTag = ({ status }: { status: Status }) => (
@@ -293,11 +293,11 @@ const PublishingIndex = () => {
             <StatusTag status={status} />
           </li>
         ))}
-        <li className="text-danger typo-caption inline-flex items-center gap-1 font-semibold">
+        <li className="text-error-text typo-caption inline-flex items-center gap-1 font-semibold">
           <AlertTriangle aria-hidden="true" className="size-3.5" />
           이슈
         </li>
-        <li className="text-info typo-caption inline-flex items-center gap-1 font-semibold">
+        <li className="text-info-text typo-caption inline-flex items-center gap-1 font-semibold">
           <Info aria-hidden="true" className="size-3.5" />
           정보
         </li>

@@ -35,7 +35,7 @@ const CopyChip = ({ value }: { value: string }) => {
     >
       {value}
       {isCopied ? (
-        <Check aria-hidden="true" className="text-success size-3.5 shrink-0" />
+        <Check aria-hidden="true" className="text-success-text size-3.5 shrink-0" />
       ) : (
         <Copy aria-hidden="true" className="size-3.5 shrink-0 opacity-60" />
       )}
