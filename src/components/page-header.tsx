@@ -7,18 +7,49 @@ const PageHeader = ({ className = '', ...props }: ComponentPropsWithoutRef<'head
   <header className={`flex flex-col gap-2 ${className}`.trim()} {...props} />
 );
 
+// default — 일반 페이지: Display/L/bold + Title/L/Regular.
+// compact — 콘텐츠 밀도가 높은 페이지(폼 요소가 많은 페이지 등): Display/M/bold +
+// Title/L/Regular(desktop·wide) / Heading/H4/bold + Body/XL/Regular(mobile). 반응형 전환은
+// globals.css 의 typo-page-header-title-compact·typo-page-header-description-compact
+// 합성 유틸이 담당한다(typo-* 는 순수 CSS 클래스라 wide: 프리픽스를 받지 못해, 이름이 다른 두
+// typo 조합 사이의 브레이크포인트 전환은 그 전용 유틸로 뺐다).
+type PageHeaderVariant = 'default' | 'compact';
+
+const TITLE_VARIANT_CLASS: Record<PageHeaderVariant, string> = {
+  default: 'typo-display-l-bold',
+  compact: 'typo-page-header-title-compact',
+};
+
+const DESCRIPTION_VARIANT_CLASS: Record<PageHeaderVariant, string> = {
+  default: 'typo-title-l-regular',
+  compact: 'typo-page-header-description-compact',
+};
+
+type PageHeaderTitleProps = ComponentPropsWithoutRef<'h1'> & { variant?: PageHeaderVariant };
+
 const PageHeaderTitle = ({
+  variant = 'default',
   className = '',
   children,
   ...props
-}: ComponentPropsWithoutRef<'h1'>) => (
-  <h1 className={`typo-display-m-bold ${className}`.trim()} {...props}>
+}: PageHeaderTitleProps) => (
+  <h1 className={`${TITLE_VARIANT_CLASS[variant]} ${className}`.trim()} {...props}>
     {children}
   </h1>
 );
 
-const PageHeaderDescription = ({ className = '', ...props }: ComponentPropsWithoutRef<'p'>) => (
-  <p className={`typo-body-l-regular text-subtle ${className}`.trim()} {...props} />
+type PageHeaderDescriptionProps = ComponentPropsWithoutRef<'p'> & { variant?: PageHeaderVariant };
+
+const PageHeaderDescription = ({
+  variant = 'default',
+  className = '',
+  ...props
+}: PageHeaderDescriptionProps) => (
+  <p
+    className={`${DESCRIPTION_VARIANT_CLASS[variant]} text-subtle ${className}`.trim()}
+    {...props}
+  />
 );
 
 export { PageHeader, PageHeaderTitle, PageHeaderDescription };
+export type { PageHeaderVariant };

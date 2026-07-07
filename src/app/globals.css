@@ -46,3 +46,33 @@ html {
   border-radius: var(--ds-radius-sm);
   background-color: var(--ds-scroll-track);
 }
+
+/* PageHeader "compact" variant(콘텐츠 밀도가 높은 페이지) 전용 — 모바일 Heading/H4/bold ↔ wide
+   이상 Display/M/bold 처럼 서로 다른 typo-* 조합 사이를 브레이크포인트로 전환해야 한다. 토큰
+   생성기(tokens.css)는 "같은 이름의 크기만 mobile/pc 로 분기"만 표현하므로, 이런 이름이 다른
+   두 조합 간 전환은 생성기 범위 밖이라 여기 손으로 추가한다. 값은 typo-heading-h4-bold /
+   typo-display-m-bold / typo-body-xl-regular / typo-title-l-regular 와 동일하게 맞춘다 —
+   tokens.json 의 해당 값이 바뀌면 함께 갱신할 것. */
+.typo-page-header-title-compact {
+  font-size: 1.5rem; /* typo-heading-h4-bold */
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+@media (min-width: 768px) {
+  .typo-page-header-title-compact {
+    font-size: 2.25rem; /* typo-display-m-bold */
+  }
+}
+
+.typo-page-header-description-compact {
+  font-size: 1rem; /* typo-body-xl-regular */
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+@media (min-width: 768px) {
+  .typo-page-header-description-compact {
+    font-size: 1.25rem; /* typo-title-l-regular */
+  }
+}
