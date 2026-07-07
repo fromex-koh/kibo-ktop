@@ -102,7 +102,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
           aria-label={isDrawerOpen ? '사이드 메뉴 닫기' : '사이드 메뉴 열기'}
           aria-expanded={isDrawerOpen}
           aria-controls="sidebar-layout-nav"
-          className="text-subtle hover:text-bolder focus-visible:ring-brand focus-visible:ring-offset-background pc:hidden inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="text-subtle hover:text-bolder focus-visible:ring-focus focus-visible:ring-offset-background pc:hidden inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           {isDrawerOpen ? (
             <X aria-hidden="true" className="size-icon-sm" />
@@ -113,7 +113,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
         <Link
           href="/"
           aria-label="홈으로"
-          className="text-subtle hover:text-bolder focus-visible:ring-brand focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="text-subtle hover:text-bolder focus-visible:ring-focus focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           <Home aria-hidden="true" className="size-icon-sm" />
         </Link>
@@ -154,7 +154,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
           tabIndex={-1}
           inert={isNavOffCanvas || undefined}
           aria-label={navLabel}
-          className={`border-gray-subtle-2 bg-background wide:px-6 top-header-top z-drawer pc:translate-x-0 pc:py-8 w-sidebar-w focus-visible:ring-brand fixed bottom-0 left-0 flex flex-col gap-6 overflow-y-auto border-r p-4 transition-transform duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-inset motion-reduce:transition-none ${
+          className={`border-gray-subtle-2 bg-background wide:px-6 top-header-top z-drawer pc:translate-x-0 pc:py-8 w-sidebar-w focus-visible:ring-focus fixed bottom-0 left-0 flex flex-col gap-6 overflow-y-auto border-r p-4 transition-transform duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-inset motion-reduce:transition-none ${
             isDrawerOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
@@ -174,9 +174,9 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
                         onClick={closeDrawer}
                         {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
                         aria-current={isActive ? 'page' : undefined}
-                        className={`focus-visible:ring-brand focus-visible:ring-offset-background typo-body-sm flex items-center justify-between gap-1.5 rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                        className={`focus-visible:ring-focus focus-visible:ring-offset-background typo-body-sm flex items-center justify-between gap-1.5 rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                           isActive
-                            ? 'bg-brand/10 text-bolder font-semibold'
+                            ? 'bg-element-primary/10 text-bolder font-semibold'
                             : 'text-subtle hover:text-bolder hover:bg-gray-100'
                         }`}
                       >
@@ -204,7 +204,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
           id="main"
           tabIndex={-1}
           inert={isDrawerActive || undefined}
-          className="focus-visible:ring-brand focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
+          className="focus-visible:ring-focus focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
         >
           {children}
         </main>

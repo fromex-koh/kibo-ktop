@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 const ComponentGuidePage = () => (
   <GuidePage
     title="컴포넌트 가이드"
-    description="이 플랫폼의 디자인 토큰(색상·타이포그래피·간격·라운드·그림자·흐림·오버레이)과 레이아웃 기준을 섹션별로 정리했습니다. 토큰은 값(tokens.json → CSS 변수)이고, 유틸리티 클래스(bg-brand·rounded-md·typo-* 등)는 그 토큰을 요소에 적용하는 className입니다. 왼쪽 메뉴 또는 아래 카드에서 항목을 선택하세요. 헤더 오른쪽 토글로 라이트/다크를 확인할 수 있습니다."
+    description="이 플랫폼의 디자인 토큰(색상·타이포그래피·간격·라운드·그림자·흐림·오버레이)과 레이아웃 기준을 섹션별로 정리했습니다. 토큰은 값(tokens.json → CSS 변수)이고, 유틸리티 클래스(bg-element-primary·rounded-md·typo-* 등)는 그 토큰을 요소에 적용하는 className입니다. 왼쪽 메뉴 또는 아래 카드에서 항목을 선택하세요. 헤더 오른쪽 토글로 라이트/다크를 확인할 수 있습니다."
   >
     <div className="flex flex-col gap-8">
       {GUIDE_NAV_SECTIONS.map((section) => (
@@ -26,7 +26,7 @@ const ComponentGuidePage = () => (
                 <Link
                   href={item.href}
                   {...(item.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-                  className="border-gray-subtle-2 bg-surface focus-visible:ring-brand focus-visible:ring-offset-background flex items-center justify-between gap-3 rounded-xl border px-4 py-4 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                  className="border-gray-subtle-2 bg-surface focus-visible:ring-focus focus-visible:ring-offset-background flex items-center justify-between gap-3 rounded-xl border px-4 py-4 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                 >
                   <span className="typo-body-md font-medium">
                     {item.label}

@@ -67,7 +67,7 @@ const TypographyGuidePage = () => (
             <span
               aria-hidden="true"
               className={`typo-caption flex size-6 shrink-0 items-center justify-center rounded-full font-mono font-bold ${
-                font.isPrimary ? 'bg-brand/80 text-background' : 'text-subtle bg-gray-100'
+                font.isPrimary ? 'bg-element-primary/80 text-background' : 'text-subtle bg-gray-100'
               }`}
             >
               {i + 1}
@@ -77,7 +77,9 @@ const TypographyGuidePage = () => (
                 <span className="typo-body-sm text-bolder font-semibold">{font.name}</span>
                 <span
                   className={`typo-caption rounded-full px-2 py-0.5 font-semibold ${
-                    font.isPrimary ? 'bg-brand/10 text-primary' : 'text-subtle bg-gray-100'
+                    font.isPrimary
+                      ? 'bg-element-primary/10 text-primary'
+                      : 'text-subtle bg-gray-100'
                   }`}
                 >
                   {font.role}

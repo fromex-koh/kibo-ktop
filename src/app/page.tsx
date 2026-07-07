@@ -59,7 +59,7 @@ const Home = () => {
                     href={REPOSITORY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary focus-visible:ring-brand focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium break-all hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="text-primary focus-visible:ring-focus focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium break-all hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                   >
                     <GitBranch aria-hidden="true" className="size-4 shrink-0" />
                     {REPOSITORY_URL_LABEL}
@@ -86,7 +86,7 @@ const Home = () => {
               <Link
                 href={guide.href}
                 aria-label={guide.linkLabel}
-                className="group bg-brand focus-visible:ring-brand focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                className="group bg-element-primary focus-visible:ring-focus focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
               >
                 <ArrowUpRight
                   aria-hidden="true"

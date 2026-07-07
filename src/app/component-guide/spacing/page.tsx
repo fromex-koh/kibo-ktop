@@ -20,7 +20,7 @@ const SpacingGuidePage = () => (
       {[1, 2, 3, 4, 6, 8, 12, 16, 24, 32].map((n) => (
         <li key={n} className="flex items-center gap-3">
           <span
-            className="bg-brand h-3 shrink-0 rounded-sm"
+            className="bg-element-primary h-3 shrink-0 rounded-sm"
             style={{ width: `calc(var(--spacing) * ${n})` }}
           />
           <span className="typo-caption text-subtle font-mono">

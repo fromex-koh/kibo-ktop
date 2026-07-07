@@ -195,10 +195,10 @@ const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
 // 하드코딩 없음). text-bolder 하나로 통일해도 이 네 단계 전부 라이트·다크 모드 모두
 // 4.5:1 이상 대비를 유지한다(실측 확인). 뎁스가 이 배열보다 깊어지면 마지막 스타일을 그대로 쓴다.
 const DEPTH_BADGE_STYLES = [
-  'bg-brand/20 text-bolder',
-  'bg-brand/40 text-bolder',
-  'bg-brand/60 text-bolder',
-  'bg-brand/80 text-bolder',
+  'bg-element-primary/20 text-bolder',
+  'bg-element-primary/40 text-bolder',
+  'bg-element-primary/60 text-bolder',
+  'bg-element-primary/80 text-bolder',
 ];
 const depthBadgeClass = (depth: number): string =>
   DEPTH_BADGE_STYLES[Math.min(depth, DEPTH_BADGE_STYLES.length - 1)];
@@ -330,7 +330,7 @@ const PublishingIndex = () => {
                 <td
                   key={a.name}
                   className={`typo-body-sm px-4 py-3 text-center font-mono ${
-                    a.isCurrent ? 'bg-brand/10 text-primary font-semibold' : 'text-subtle'
+                    a.isCurrent ? 'bg-element-primary/10 text-primary font-semibold' : 'text-subtle'
                   }`}
                 >
                   <VersionCell version={a.version} isCurrent={a.isCurrent} />
@@ -369,7 +369,7 @@ const PublishingIndex = () => {
                 <tr
                   key={layout.label}
                   className={`border-gray-subtle-2 border-b last:border-b-0 ${
-                    isCurrent ? 'bg-brand/10' : 'bg-background'
+                    isCurrent ? 'bg-element-primary/10' : 'bg-background'
                   }`}
                 >
                   <th
@@ -425,7 +425,7 @@ const PublishingIndex = () => {
                 tabIndex={selected ? 0 : -1}
                 onClick={() => setFilter(f)}
                 onKeyDown={(e) => onTabKeyDown(e, i)}
-                className={`typo-label focus-visible:ring-brand inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-md px-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                className={`typo-label focus-visible:ring-focus inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-md px-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                   selected ? 'bg-background text-bolder shadow-1' : 'text-subtle'
                 }`}
               >
@@ -483,7 +483,7 @@ const PublishingIndex = () => {
                 <tr
                   key={leaf.key}
                   className={`border-gray-subtle-2 border-b last:border-b-0 ${
-                    isCurrent ? 'bg-brand/10' : 'bg-background'
+                    isCurrent ? 'bg-element-primary/10' : 'bg-background'
                   }`}
                 >
                   {depthCells[i].map((cell, depth) => {

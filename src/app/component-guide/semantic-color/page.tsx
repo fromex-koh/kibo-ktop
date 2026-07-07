@@ -212,7 +212,7 @@ const SemanticTable = ({ title, tokens }: { title: string; tokens: SemanticEntry
 const SemanticColorGuidePage = () => (
   <GuidePage
     title="02 Semantic Color"
-    description="앱이 실제로 쓰는 시맨틱 색상 토큰을 Figma 02 Semantic 그룹별 표로 나눴습니다. '클래스' 칸은 실제 사용하는 유틸리티 클래스(bg-brand·text-bolder 등)이며 클릭하면 복사돼 바로 붙여넣을 수 있습니다. 라이트 값은 Figma 정의에 맞췄고, 다크는 primitive 위치반사/명시로 도출합니다(Figma Dark 미완성이라 이 방식). 맨 앞 '현재' 칸은 실제 토큰을 현재 테마로 렌더한 것이라, 헤더의 다크모드 토글을 누르면 이 칸이 실제로 바뀝니다(토큰 파이프라인 작동 검증)."
+    description="앱이 실제로 쓰는 시맨틱 색상 토큰을 Figma 02 Semantic 그룹별 표로 나눴습니다. '클래스' 칸은 실제 사용하는 유틸리티 클래스(bg-element-primary·text-bolder 등)이며 클릭하면 복사돼 바로 붙여넣을 수 있습니다. 라이트 값은 Figma 정의에 맞췄고, 다크는 primitive 위치반사/명시로 도출합니다(Figma Dark 미완성이라 이 방식). 맨 앞 '현재' 칸은 실제 토큰을 현재 테마로 렌더한 것이라, 헤더의 다크모드 토글을 누르면 이 칸이 실제로 바뀝니다(토큰 파이프라인 작동 검증)."
   >
     <div className="flex flex-col gap-8">
       {GROUPED.map((group) => (
