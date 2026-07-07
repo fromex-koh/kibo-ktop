@@ -14,7 +14,7 @@ const BlurGuidePage = () => (
   >
     <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
       {Object.entries(tokens.effect.blur).map(([k, px]) => (
-        <li key={k} className="border-border overflow-hidden rounded-xl border">
+        <li key={k} className="border-gray-subtle-2 overflow-hidden rounded-xl border">
           <div className="relative aspect-[16/10] overflow-hidden">
             <Image
               src={sampleCatImg}
@@ -25,9 +25,9 @@ const BlurGuidePage = () => (
               style={{ filter: `blur(var(--ds-blur-${k}))` }}
             />
           </div>
-          <div className="border-border flex flex-col gap-1 border-t px-4 py-3">
+          <div className="border-gray-subtle-2 flex flex-col gap-1 border-t px-4 py-3">
             <span className="typo-label">blur-{k}</span>
-            <span className="typo-caption text-foreground-muted font-mono">
+            <span className="typo-caption text-subtle font-mono">
               --ds-blur-{k} · {px}px
             </span>
           </div>

@@ -12,7 +12,7 @@ const GuidePage = ({ title, description, children }: GuidePageProps) => (
   <div className="max-w-content wide:py-16 mx-auto flex w-full flex-col gap-10 px-6 py-12">
     <header className="flex flex-col gap-2">
       <h1 className="typo-heading-xl">{title}</h1>
-      <p className="typo-body-sm text-foreground-muted">{description}</p>
+      <p className="typo-body-sm text-subtle">{description}</p>
     </header>
     {children}
   </div>

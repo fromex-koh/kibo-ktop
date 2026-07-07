@@ -21,23 +21,17 @@ const groupOf = (hue: string): string =>
 const ColorGuidePage = () => (
   <GuidePage
     title="01 Primitive"
-    description="Figma(Mode 1) 의 프리미티브 팔레트입니다. brand·system 그룹의 8색을 50~900 스케일로 정의하며, 값은 Figma 원본대로 rgba 로 표기합니다(저장은 hex). 시맨틱 토큰(background·brand·danger 등)이 이 값을 참조하므로, 직접 사용은 지양하고 시맨틱 토큰을 우선하세요."
+    description="Figma(Mode 1) 의 프리미티브 팔레트입니다. brand·system 그룹의 8색을 50~900 스케일로 정의하고, 스케일 밖 앵커인 common(white·black)을 함께 둡니다. 값은 Figma 원본대로 rgba 로 표기합니다(저장은 hex). 시맨틱 토큰(background·brand·danger 등)이 이 값을 참조하므로, 직접 사용은 지양하고 시맨틱 토큰을 우선하세요."
   >
     <div className="overflow-x-auto">
       <table className="w-full border-collapse text-left">
         <caption className="sr-only">프리미티브 색상 팔레트 — 이름과 rgba 값</caption>
         <thead>
-          <tr className="border-border border-b">
-            <th
-              scope="col"
-              className="typo-label text-foreground-muted px-3 py-3 whitespace-nowrap"
-            >
+          <tr className="border-gray-subtle-2 border-b">
+            <th scope="col" className="typo-label text-subtle px-3 py-3 whitespace-nowrap">
               이름
             </th>
-            <th
-              scope="col"
-              className="typo-label text-foreground-muted px-3 py-3 whitespace-nowrap"
-            >
+            <th scope="col" className="typo-label text-subtle px-3 py-3 whitespace-nowrap">
               값
             </th>
           </tr>
@@ -45,24 +39,24 @@ const ColorGuidePage = () => (
         <tbody>
           {Object.entries(tokens.primitive).map(([hue, steps]) => (
             <Fragment key={hue}>
-              <tr className="bg-surface border-border border-b">
+              <tr className="bg-surface border-gray-subtle-2 border-b">
                 <th
                   scope="colgroup"
                   colSpan={2}
                   className="typo-label px-3 py-3 text-left font-normal"
                 >
-                  <span className="text-foreground-muted">{groupOf(hue)} / </span>
-                  <span className="text-foreground font-semibold">{hue}</span>
+                  <span className="text-subtle">{groupOf(hue)} / </span>
+                  <span className="text-bolder font-semibold">{hue}</span>
                 </th>
               </tr>
               {Object.entries(steps).map(([step, hex]) => (
                 <tr
                   key={step}
-                  className="border-border hover:bg-surface border-b transition-colors"
+                  className="border-gray-subtle-2 hover:bg-surface border-b transition-colors"
                 >
                   <th
                     scope="row"
-                    className="typo-caption text-foreground w-1/3 px-3 py-3 font-mono font-normal"
+                    className="typo-caption text-bolder w-1/3 px-3 py-3 font-mono font-normal"
                   >
                     {step}
                   </th>
@@ -70,10 +64,10 @@ const ColorGuidePage = () => (
                     <span className="flex items-center gap-3">
                       <span
                         aria-hidden="true"
-                        className="border-border size-icon-md shrink-0 rounded border"
+                        className="border-gray-subtle-2 size-icon-md shrink-0 rounded border"
                         style={{ background: `var(--raw-${hue}-${step})` }}
                       />
-                      <span className="typo-caption text-foreground-muted font-mono whitespace-nowrap">
+                      <span className="typo-caption text-subtle font-mono whitespace-nowrap">
                         {hexToRgba(hex)}
                       </span>
                     </span>
@@ -82,6 +76,42 @@ const ColorGuidePage = () => (
               ))}
             </Fragment>
           ))}
+          <Fragment key="common">
+            <tr className="bg-surface border-gray-subtle-2 border-b">
+              <th
+                scope="colgroup"
+                colSpan={2}
+                className="typo-label text-bolder px-3 py-3 text-left font-semibold"
+              >
+                common
+              </th>
+            </tr>
+            {Object.entries(tokens.common).map(([name, hex]) => (
+              <tr
+                key={name}
+                className="border-gray-subtle-2 hover:bg-surface border-b transition-colors"
+              >
+                <th
+                  scope="row"
+                  className="typo-caption text-bolder w-1/3 px-3 py-3 font-mono font-normal"
+                >
+                  {name}
+                </th>
+                <td className="px-3 py-3">
+                  <span className="flex items-center gap-3">
+                    <span
+                      aria-hidden="true"
+                      className="border-gray-subtle-2 size-icon-md shrink-0 rounded border"
+                      style={{ background: `var(--raw-common-${name})` }}
+                    />
+                    <span className="typo-caption text-subtle font-mono whitespace-nowrap">
+                      {hexToRgba(hex)}
+                    </span>
+                  </span>
+                </td>
+              </tr>
+            ))}
+          </Fragment>
         </tbody>
       </table>
     </div>

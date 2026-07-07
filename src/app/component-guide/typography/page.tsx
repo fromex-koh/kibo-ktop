@@ -55,42 +55,40 @@ const TypographyGuidePage = () => (
         <h2 id="typo-font" className="typo-heading-md">
           글꼴 (Font Family)
         </h2>
-        <p className="typo-body-sm text-foreground-muted">
+        <p className="typo-body-sm text-subtle">
           본문·제목은 <code>font-sans</code>(<code>--font-sans</code>) 하나로 통일합니다. Pretendard
           를 1순위로 쓰고, 로드 실패·미지원 글리프는 아래 순서로 폴백합니다. 코드·수치 등 고정폭이
           필요한 곳은 <code>font-mono</code> 를 씁니다.
         </p>
       </div>
-      <ol className="border-border divide-border divide-y rounded-xl border">
+      <ol className="border-gray-subtle-2 divide-gray-subtle-2 divide-y rounded-xl border">
         {SANS_STACK.map((font, i) => (
           <li key={font.name} className="flex items-start gap-3 px-4 py-3">
             <span
               aria-hidden="true"
               className={`typo-caption flex size-6 shrink-0 items-center justify-center rounded-full font-mono font-bold ${
-                font.isPrimary ? 'bg-brand/80 text-background' : 'text-foreground-muted bg-gray-100'
+                font.isPrimary ? 'bg-brand/80 text-background' : 'text-subtle bg-gray-100'
               }`}
             >
               {i + 1}
             </span>
             <div className="flex flex-col gap-0.5">
               <span className="inline-flex flex-wrap items-center gap-2">
-                <span className="typo-body-sm text-foreground font-semibold">{font.name}</span>
+                <span className="typo-body-sm text-bolder font-semibold">{font.name}</span>
                 <span
                   className={`typo-caption rounded-full px-2 py-0.5 font-semibold ${
-                    font.isPrimary
-                      ? 'bg-brand/10 text-brand-foreground'
-                      : 'text-foreground-muted bg-gray-100'
+                    font.isPrimary ? 'bg-brand/10 text-primary' : 'text-subtle bg-gray-100'
                   }`}
                 >
                   {font.role}
                 </span>
               </span>
-              <span className="typo-caption text-foreground-muted">{font.desc}</span>
+              <span className="typo-caption text-subtle">{font.desc}</span>
             </div>
           </li>
         ))}
       </ol>
-      <p className="typo-caption text-foreground-muted">
+      <p className="typo-caption text-subtle">
         고정폭(<code>font-mono</code>): <code>ui-monospace</code> · <code>SFMono-Regular</code> ·{' '}
         <code>Menlo</code> · <code>Consolas</code> · <code>monospace</code> 순으로 폴백합니다.
       </p>
@@ -99,12 +97,12 @@ const TypographyGuidePage = () => (
     {/* 크기 단위 안내 — px 입력, rem 출력(접근성) */}
     <section
       aria-labelledby="typo-rem"
-      className="border-border bg-surface flex flex-col gap-1 rounded-xl border p-4"
+      className="border-gray-subtle-2 bg-surface flex flex-col gap-1 rounded-xl border p-4"
     >
       <h2 id="typo-rem" className="typo-label">
         크기 단위 — px 입력, rem 출력
       </h2>
-      <p className="typo-body-sm text-foreground-muted">
+      <p className="typo-body-sm text-subtle">
         토큰 크기는 인지 기준인 <strong>px</strong> 로 <code>tokens.json</code> 에 쓰고, 생성기가{' '}
         <strong>rem</strong>(÷ remBase {tokens.remBase})으로 변환해 내보냅니다. 아래 표는 이해를
         돕기 위해 px 로 표기하지만, 실제 출력은 rem 입니다(예: PC{' '}
@@ -121,17 +119,17 @@ const TypographyGuidePage = () => (
         <h2 id="typo-tokens" className="typo-heading-md">
           타이포그래피 스케일
         </h2>
-        <p className="typo-body-sm text-foreground-muted">
+        <p className="typo-body-sm text-subtle">
           용도별 <code>typo-*</code> <strong>유틸리티 클래스</strong> 목록입니다. 각 클래스가 한
           번에 묶어 적용하는 값(크기·굵기·행간·자간 <strong>토큰</strong>)은 아래와 같습니다. 클래스
           칩을 클릭하면 이름이 복사됩니다.
         </p>
       </div>
-      <div className="border-border overflow-x-auto rounded-xl border">
+      <div className="border-gray-subtle-2 overflow-x-auto rounded-xl border">
         <table className="w-full text-left">
           <caption className="sr-only">typo-* 클래스별 크기·굵기·행간·자간</caption>
           <thead>
-            <tr className="border-border bg-surface border-b">
+            <tr className="border-gray-subtle-2 bg-surface border-b">
               <th scope="col" className="typo-label px-4 py-3">
                 클래스
               </th>
@@ -154,25 +152,15 @@ const TypographyGuidePage = () => (
           </thead>
           <tbody>
             {Object.entries(tokens.typography).map(([name, t]) => (
-              <tr key={name} className="border-border border-b last:border-b-0">
+              <tr key={name} className="border-gray-subtle-2 border-b last:border-b-0">
                 <th scope="row" className="px-4 py-3 text-left font-normal">
                   <CopyChip value={`typo-${name}`} />
                 </th>
-                <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
-                  {t.size.mobile}px
-                </td>
-                <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
-                  {t.size.pc}px
-                </td>
-                <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
-                  {t.weight}
-                </td>
-                <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
-                  {t.lineHeight}
-                </td>
-                <td className="typo-caption text-foreground-muted px-4 py-3 font-mono">
-                  {t.letterSpacing}
-                </td>
+                <td className="typo-caption text-subtle px-4 py-3 font-mono">{t.size.mobile}px</td>
+                <td className="typo-caption text-subtle px-4 py-3 font-mono">{t.size.pc}px</td>
+                <td className="typo-caption text-subtle px-4 py-3 font-mono">{t.weight}</td>
+                <td className="typo-caption text-subtle px-4 py-3 font-mono">{t.lineHeight}</td>
+                <td className="typo-caption text-subtle px-4 py-3 font-mono">{t.letterSpacing}</td>
               </tr>
             ))}
           </tbody>
@@ -185,10 +173,10 @@ const TypographyGuidePage = () => (
       <h2 id="typo-preview" className="typo-heading-md">
         미리보기 (Preview)
       </h2>
-      <ul className="border-border divide-border divide-y rounded-xl border">
+      <ul className="border-gray-subtle-2 divide-gray-subtle-2 divide-y rounded-xl border">
         {Object.entries(tokens.typography).map(([name, t]) => (
           <li key={name} className="flex flex-col gap-2 px-4 py-5">
-            <span className="typo-caption text-foreground-muted font-mono">
+            <span className="typo-caption text-subtle font-mono">
               typo-{name} · {t.size.mobile}→{t.size.pc}px · w{t.weight}
             </span>
             <p className={`typo-${name}`}>{SAMPLE_TEXT}</p>

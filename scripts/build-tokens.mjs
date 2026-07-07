@@ -52,9 +52,19 @@ for (const [k, v] of Object.entries(common))
   if (!HEX.test(v)) errors.push(`common.${k}="${v}" 는 #RRGGBB 형식 아님`);
 // 참조 파싱: primitive("gray.900") 는 [hue, 숫자스텝], common("common.white") 은 [hue, 문자키].
 const parseRef = (ref) => {
+  // 구조 키워드(투명/현재색) — 팔레트 밖 리터럴이라 검증/참조 대상이 아니다(예: 고스트 버튼 fill).
+  if (ref === 'transparent' || ref === 'currentColor') return [ref, null];
   const [hue, step] = String(ref).split('.');
   if (hue === 'common') {
     if (!common[step]) errors.push(`참조 "${ref}" — common '${step}' 없음`);
+    return [hue, step];
+  }
+  // alpha 참조("black.75"·"white.50") — 반투명 시맨틱(스크림 등)에서 primitive 대신 alpha 를 가리킨다.
+  if (hue === 'black' || hue === 'white') {
+    if (!Array.isArray(alpha[hue]) || !alpha[hue].includes(Number(step)))
+      errors.push(
+        `참조 "${ref}" — alpha ${hue}.${step} 없음 (tokens.json alpha 에 스텝 추가 필요)`,
+      );
     return [hue, step];
   }
   if (!primitive[hue]) errors.push(`참조 "${ref}" — 색상 '${hue}' 없음`);
@@ -200,9 +210,9 @@ const ratio = (a, b) => {
 const TEXT = 4.5;
 const NONTEXT = 3;
 const CHECKS = [
-  { fg: 'foreground', bg: 'background', min: TEXT, kind: '본문 텍스트' },
-  { fg: 'foreground-muted', bg: 'background', min: TEXT, kind: '보조 텍스트' },
-  { fg: 'brand-foreground', bg: 'surface', min: TEXT, kind: '링크 텍스트' },
+  { fg: 'bolder', bg: 'background', min: TEXT, kind: '본문 텍스트' },
+  { fg: 'subtle', bg: 'background', min: TEXT, kind: '보조 텍스트' },
+  { fg: 'primary', bg: 'surface', min: TEXT, kind: '링크 텍스트' },
   { fg: 'danger', bg: 'danger-surface', min: NONTEXT, kind: '상태 아이콘' },
   { fg: 'warning', bg: 'warning-surface', min: NONTEXT, kind: '상태 아이콘' },
   { fg: 'success', bg: 'success-surface', min: NONTEXT, kind: '상태 아이콘' },
@@ -246,6 +256,14 @@ const resolveAlpha = (ref) => {
   const [name, step] = String(ref).split('.');
   return `var(--raw-${name}-a${step})`;
 };
+// semantic {light,dark} 값 → raw var. black/white 는 alpha(반투명), 그 외는 primitive/common.
+const rawVarRef = (ref) => {
+  if (ref === 'transparent' || ref === 'currentColor') return ref;
+  const [hue] = String(ref).split('.');
+  return hue === 'black' || hue === 'white'
+    ? resolveAlpha(ref)
+    : `var(--raw-${ref.replace('.', '-')})`;
+};
 L.push('', '  /* scale (라이트 = raw identity) */');
 for (const hue of hues)
   for (const s of scale) L.push(`  --ds-${hue}-${s}: var(--raw-${hue}-${s});`);
@@ -255,8 +273,7 @@ for (const [name, val] of Object.entries(semantic)) {
     const [hue, step] = val.split('.');
     L.push(`  --ds-${name}: var(--ds-${hue}-${step});`);
   } else {
-    const [hue, step] = val.light.split('.');
-    L.push(`  --ds-${name}: var(--raw-${hue}-${step});`);
+    L.push(`  --ds-${name}: ${rawVarRef(val.light)};`);
   }
 }
 if (Object.keys(overlay).length) {
@@ -275,8 +292,7 @@ const overrides = Object.entries(semantic).filter(([, v]) => typeof v !== 'strin
 if (overrides.length) {
   L.push('', '  /* purpose override (수동 지정) */');
   for (const [name, val] of overrides) {
-    const [hue, step] = val.dark.split('.');
-    L.push(`  --ds-${name}: var(--raw-${hue}-${step});`);
+    L.push(`  --ds-${name}: ${rawVarRef(val.dark)};`);
   }
 }
 if (Object.keys(overlay).length) {

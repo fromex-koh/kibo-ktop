@@ -24,20 +24,20 @@ const BUILD_TIME = process.env.NEXT_PUBLIC_BUILD_TIME ?? '로컬 개발';
 
 const Home = () => {
   return (
-    <main className="bg-background text-foreground min-h-screen">
+    <main className="bg-background text-bolder min-h-screen">
       <div className="max-w-content mx-auto flex w-full flex-col gap-12 px-6 py-16">
         {/* 홈은 헤더가 없어, 라이트/다크 토글을 콘텐츠 우상단에 둔다(헤더가 있는 화면은 헤더 우측). */}
         <div className="flex justify-end">
           <ThemeToggle />
         </div>
         <header className="flex flex-col items-center gap-3 text-center">
-          <code className="border-border text-foreground-muted rounded-md border px-2 py-1 font-mono text-sm">
+          <code className="border-gray-subtle-2 text-subtle rounded-md border px-2 py-1 font-mono text-sm">
             {badge}
           </code>
           <h1 className="typo-heading-xl">{SITE_NAME}</h1>
           {/* 현재 버전·빌드 시각 (자리만 잡은 placeholder — 위 BUILD_VERSION/BUILD_TIME 참조) */}
-          <p className="typo-body-sm text-foreground-muted">
-            현재 버전: <span className="text-foreground font-semibold">{BUILD_VERSION}</span> /{' '}
+          <p className="typo-body-sm text-subtle">
+            현재 버전: <span className="text-bolder font-semibold">{BUILD_VERSION}</span> /{' '}
             {BUILD_TIME}
           </p>
         </header>
@@ -46,20 +46,20 @@ const Home = () => {
           {/* 프로젝트 정보 */}
           <section aria-labelledby="section-project" className={CARD_CLASS}>
             <div className="flex items-center gap-2">
-              <ProjectInfoIcon aria-hidden="true" className="text-brand-foreground size-6" />
+              <ProjectInfoIcon aria-hidden="true" className="text-primary size-6" />
               <h2 id="section-project" className="typo-heading-sm">
                 {projectInfo.title}
               </h2>
             </div>
             <dl className="flex flex-col gap-3 text-sm">
               <div className="flex items-center gap-3">
-                <dt className="text-foreground-muted w-16 shrink-0">저장소</dt>
+                <dt className="text-subtle w-16 shrink-0">저장소</dt>
                 <dd>
                   <a
                     href={REPOSITORY_URL}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-brand-foreground focus-visible:ring-brand focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium break-all hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="text-primary focus-visible:ring-brand focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium break-all hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                   >
                     <GitBranch aria-hidden="true" className="size-4 shrink-0" />
                     {REPOSITORY_URL_LABEL}
@@ -68,7 +68,7 @@ const Home = () => {
                 </dd>
               </div>
               <div className="flex items-center gap-3">
-                <dt className="text-foreground-muted w-16 shrink-0">작업자</dt>
+                <dt className="text-subtle w-16 shrink-0">작업자</dt>
                 <dd>{projectInfo.author}</dd>
               </div>
             </dl>
@@ -78,7 +78,7 @@ const Home = () => {
           <section aria-labelledby="section-guide" className={CARD_CLASS}>
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-center gap-2">
-                <GuideIcon aria-hidden="true" className="text-brand-foreground size-6 shrink-0" />
+                <GuideIcon aria-hidden="true" className="text-primary size-6 shrink-0" />
                 <h2 id="section-guide" className="typo-heading-sm">
                   {guide.title}
                 </h2>
@@ -94,7 +94,7 @@ const Home = () => {
                 />
               </Link>
             </div>
-            <p className="typo-body-sm text-foreground-muted">{guide.description}</p>
+            <p className="typo-body-sm text-subtle">{guide.description}</p>
           </section>
         </div>
 

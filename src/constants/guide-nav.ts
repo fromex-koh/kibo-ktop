@@ -11,6 +11,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
     title: '색상 · 타이포',
     items: [
       { label: '색상 (Primitive)', href: '/component-guide/color' },
+      { label: '색상 (Semantic)', href: '/component-guide/semantic-color' },
       { label: '타이포그래피', href: '/component-guide/typography' },
     ],
   },

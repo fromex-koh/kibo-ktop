@@ -18,7 +18,7 @@ const OverlayGuidePage = () => (
           return `--raw-${name}-a${step}`;
         };
         return (
-          <li key={k} className="border-border overflow-hidden rounded-xl border">
+          <li key={k} className="border-gray-subtle-2 overflow-hidden rounded-xl border">
             <div
               className="relative aspect-[16/10]"
               style={{
@@ -32,10 +32,10 @@ const OverlayGuidePage = () => (
                 style={{ background: `var(--ds-overlay-${k})` }}
               />
             </div>
-            <div className="border-border flex flex-col gap-1 border-t px-4 py-3">
+            <div className="border-gray-subtle-2 flex flex-col gap-1 border-t px-4 py-3">
               <span className="typo-label">overlay-{k}</span>
-              <span className="typo-caption text-foreground-muted font-mono">--ds-overlay-{k}</span>
-              <span className="typo-caption text-foreground-muted font-mono">
+              <span className="typo-caption text-subtle font-mono">--ds-overlay-{k}</span>
+              <span className="typo-caption text-subtle font-mono">
                 ↳ {rawVar(ref.light)} / {rawVar(ref.dark)}
               </span>
             </div>

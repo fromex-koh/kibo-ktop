@@ -33,7 +33,7 @@ const ActiveBreakpointTag = ({ targetKey }: { targetKey: string }) => {
   if (current !== targetKey) return null;
 
   return (
-    <span className="bg-brand/10 text-brand-foreground typo-caption rounded-full px-2 py-0.5 font-semibold">
+    <span className="bg-brand/10 text-primary typo-caption rounded-full px-2 py-0.5 font-semibold">
       active
     </span>
   );

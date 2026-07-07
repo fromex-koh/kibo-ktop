@@ -18,7 +18,7 @@ const SkipNav = ({ links }: { links: readonly SkipLinkItem[] }) => (
         key={link.href}
         href={link.href}
         onClick={link.onSelect}
-        className="bg-foreground text-background focus-visible:ring-brand focus-visible:ring-offset-background z-skiplink fixed top-3 left-3 -translate-y-20 rounded-md px-4 py-2 font-semibold transition-transform duration-200 ease-out focus:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 motion-reduce:transition-none"
+        className="bg-bolder text-background focus-visible:ring-brand focus-visible:ring-offset-background z-skiplink fixed top-3 left-3 -translate-y-20 rounded-md px-4 py-2 font-semibold transition-transform duration-200 ease-out focus:translate-y-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 motion-reduce:transition-none"
       >
         {link.label}
       </a>

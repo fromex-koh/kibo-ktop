@@ -89,9 +89,9 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
   ];
 
   return (
-    <div className="bg-background text-foreground min-h-screen">
+    <div className="bg-background text-bolder min-h-screen">
       <SkipNav links={skipLinks} />
-      <header className="border-border bg-background wide:px-6 h-header-h z-header sticky top-0 flex items-center gap-3 border-b px-4">
+      <header className="border-gray-subtle-2 bg-background wide:px-6 h-header-h z-header sticky top-0 flex items-center gap-3 border-b px-4">
         {/* 햄버거 — pc 미만에서만. pc 는 상시 레일이라 토글이 불필요해 숨긴다.
             터치 타깃은 44px(min-h-11/min-w-11) 유지(KWCAG 6.1.3), 아이콘만 한 단계 작게(icon-sm)
             해서 은은한 모노톤 원형으로 보이게 한다. */}
@@ -102,7 +102,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
           aria-label={isDrawerOpen ? '사이드 메뉴 닫기' : '사이드 메뉴 열기'}
           aria-expanded={isDrawerOpen}
           aria-controls="sidebar-layout-nav"
-          className="text-foreground-muted hover:text-foreground focus-visible:ring-brand focus-visible:ring-offset-background pc:hidden inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="text-subtle hover:text-bolder focus-visible:ring-brand focus-visible:ring-offset-background pc:hidden inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           {isDrawerOpen ? (
             <X aria-hidden="true" className="size-icon-sm" />
@@ -113,14 +113,14 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
         <Link
           href="/"
           aria-label="홈으로"
-          className="text-foreground-muted hover:text-foreground focus-visible:ring-brand focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+          className="text-subtle hover:text-bolder focus-visible:ring-brand focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
           <Home aria-hidden="true" className="size-icon-sm" />
         </Link>
         {/* 헤더 중앙 타이틀 — 로고 아이콘 + 큰 글자로 "이 페이지의 타이틀"임을 드러냄.
             남는 공간을 차지해 좌측 아이콘 그룹 폭과 무관하게 중앙에 가깝게 위치 */}
         <div className="flex flex-1 items-center justify-center gap-2 truncate">
-          <PanelLeft aria-hidden="true" className="text-brand-foreground size-icon-md shrink-0" />
+          <PanelLeft aria-hidden="true" className="text-primary size-icon-md shrink-0" />
           <p className="typo-heading-sm truncate">{title}</p>
         </div>
         {/* 우측: 라이트/다크 토글. 좌측 아이콘 그룹과 균형을 맞춰 타이틀이 중앙에 오도록,
@@ -153,13 +153,13 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
           tabIndex={-1}
           inert={isNavOffCanvas || undefined}
           aria-label={navLabel}
-          className={`border-border bg-background wide:px-6 top-header-top pc:translate-x-0 pc:py-8 w-sidebar-w focus-visible:ring-brand fixed bottom-0 left-0 flex flex-col gap-6 overflow-y-auto border-r p-4 transition-transform duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-inset motion-reduce:transition-none ${
+          className={`border-gray-subtle-2 bg-background wide:px-6 top-header-top pc:translate-x-0 pc:py-8 w-sidebar-w focus-visible:ring-brand fixed bottom-0 left-0 flex flex-col gap-6 overflow-y-auto border-r p-4 transition-transform duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-inset motion-reduce:transition-none ${
             isDrawerOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
           {navSections.map((section) => (
             <div key={section.title} className="flex flex-col gap-2">
-              <p className="typo-caption text-foreground-muted px-1 font-semibold uppercase">
+              <p className="typo-caption text-subtle px-1 font-semibold uppercase">
                 {section.title}
               </p>
               <ul className="flex flex-col gap-0.5">
@@ -175,8 +175,8 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
                         aria-current={isActive ? 'page' : undefined}
                         className={`focus-visible:ring-brand focus-visible:ring-offset-background typo-body-sm flex items-center justify-between gap-1.5 rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                           isActive
-                            ? 'bg-brand/10 text-foreground font-semibold'
-                            : 'text-foreground-muted hover:text-foreground hover:bg-gray-100'
+                            ? 'bg-brand/10 text-bolder font-semibold'
+                            : 'text-subtle hover:text-bolder hover:bg-gray-100'
                         }`}
                       >
                         {item.label}

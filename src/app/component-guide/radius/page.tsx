@@ -14,10 +14,10 @@ const RadiusGuidePage = () => (
       {Object.entries(tokens.radius).map(([k, px]) => (
         <li key={k} className="flex flex-col items-center gap-2">
           <span
-            className="bg-surface border-border size-16 border"
+            className="bg-surface border-gray-subtle-2 size-16 border"
             style={{ borderRadius: `var(--ds-radius-${k})` }}
           />
-          <span className="typo-caption text-foreground-muted font-mono">
+          <span className="typo-caption text-subtle font-mono">
             {k} · {typeof px === 'number' ? `${px}px` : px}
           </span>
         </li>

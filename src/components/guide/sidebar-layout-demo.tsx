@@ -18,19 +18,19 @@ const SidebarLayoutDemo = () => {
               실제 페이지가 아니라 레이아웃 확인용 데모라 링크 기능 없이 텍스트로만 표시.
               마지막 항목만 aria-current(현재 위치). */}
           <nav aria-label="브레드크럼">
-            <ol className="typo-caption text-foreground-muted flex flex-wrap items-center gap-1.5">
+            <ol className="typo-caption text-subtle flex flex-wrap items-center gap-1.5">
               {/* GUIDE_NAV_SECTIONS[1] = "레이아웃" — 이 데모가 속한 사이드 메뉴 카테고리 */}
               <li>{GUIDE_NAV_SECTIONS[1].title}</li>
               <li aria-hidden="true">
                 <ChevronRight className="size-3.5" />
               </li>
-              <li aria-current="page" className="text-foreground font-semibold">
+              <li aria-current="page" className="text-bolder font-semibold">
                 사이드 메뉴 레이아웃
               </li>
             </ol>
           </nav>
           <h1 className="typo-heading-lg">사이드 메뉴 레이아웃</h1>
-          <p className="typo-body-sm text-foreground-muted w-full">
+          <p className="typo-body-sm text-subtle w-full">
             works/system-guide 프로젝트의 사이드 내비게이션 구조를 이 프로젝트의 브레이크포인트(
             <code>wide</code>/<code>pc</code>)·색상 토큰·<code>.grid-layout</code> 유틸리티로
             재구성한 벤치마킹 데모입니다.
@@ -43,9 +43,9 @@ const SidebarLayoutDemo = () => {
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="border-border bg-surface col-span-4 flex aspect-video items-center justify-center rounded-xl border"
+            className="border-gray-subtle-2 bg-surface col-span-4 flex aspect-video items-center justify-center rounded-xl border"
           >
-            <span className="typo-caption text-foreground-muted">콘텐츠 블록 {i + 1}</span>
+            <span className="typo-caption text-subtle">콘텐츠 블록 {i + 1}</span>
           </div>
         ))}
       </div>

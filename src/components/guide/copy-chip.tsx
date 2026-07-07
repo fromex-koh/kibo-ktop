@@ -31,7 +31,7 @@ const CopyChip = ({ value }: { value: string }) => {
       onClick={handleCopy}
       title={isCopied ? '복사됨' : `${value} 복사`}
       aria-label={`${value} 클래스 복사`}
-      className="text-brand-foreground focus-visible:ring-brand focus-visible:ring-offset-background typo-caption inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-gray-100 px-2.5 py-1.5 font-mono transition-colors hover:bg-gray-200/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+      className="text-primary focus-visible:ring-brand focus-visible:ring-offset-background typo-caption inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-gray-100 px-2.5 py-1.5 font-mono transition-colors hover:bg-gray-200/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
     >
       {value}
       {isCopied ? (
