@@ -155,7 +155,14 @@ const IconGuidePage = () => (
             {ICON_SIZES.map(({ key, class: sizeClass }) => (
               <tr key={key} className="border-gray-subtle-2 bg-background border-b last:border-b-0">
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
+                  {/* 배지를 고정 흰 배경 위에 둔다 — '강조' 배지 색(raw-common-black)이 다크
+                      페이지 배경과 같아 배지 원이 안 보이면 X(회색)만 채워진 원으로 보여 크기가
+                      어긋나 보인다. 밝은 바탕에서 두 배지 모두 같은 크기의 채워진 원으로 보인다
+                      (참고 이미지 재현 · PB-12 토큰 뷰어 예외). */}
+                  <div
+                    className="inline-flex items-center gap-3 rounded-md p-2"
+                    style={{ backgroundColor: 'var(--raw-common-white)' }}
+                  >
                     {SOLID_SWATCHES.map(({ label, Icon, bg }) => (
                       <span
                         key={label}
