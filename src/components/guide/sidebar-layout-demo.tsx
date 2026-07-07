@@ -22,11 +22,10 @@ const SidebarLayoutDemo = () => {
           <>
             works/system-guide 프로젝트의 사이드 내비게이션 구조를 이 프로젝트의 브레이크포인트(
             <code>wide</code>/<code>pc</code>)·색상 토큰·<code>.grid-layout</code> 유틸리티로
-            재구성한 벤치마킹 데모입니다. <code>pc</code>(1280px) 이상은 사이드바가 상시 고정
-            레일로 보이고 본문이 그 폭(<code>size.sidebar-w</code>, 256px)만큼 밀립니다.{' '}
-            <code>pc</code> 미만에서는 헤더의 메뉴 버튼으로 여닫는{' '}
-            <strong>오버레이 드로어</strong>가 되어, 본문을 아래로 밀지 않고 필요할 때만 위에
-            겹쳐 보여줍니다.
+            재구성한 벤치마킹 데모입니다. <code>pc</code>(1280px) 이상은 사이드바가 상시 고정 레일로
+            보이고 본문이 그 폭(<code>size.sidebar-w</code>, 256px)만큼 밀립니다. <code>pc</code>{' '}
+            미만에서는 헤더의 메뉴 버튼으로 여닫는 <strong>오버레이 드로어</strong>가 되어, 본문을
+            아래로 밀지 않고 필요할 때만 위에 겹쳐 보여줍니다.
           </>
         }
       >

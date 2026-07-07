@@ -8,10 +8,7 @@ export const metadata: Metadata = { title: '라운드' };
 // 라운드 — Figma '05 Radius' 정의를 반경 토큰(--ds-radius-*)으로 반영. rounded-* 유틸로 쓰며
 // 정의된 키(xs·sm·md·lg·xl·2xl·full)만 사용한다. '클래스' 칩을 클릭하면 이름이 복사된다.
 const RadiusGuidePage = () => (
-  <GuidePage
-    title="라운드 (Radius)"
-    description="rounded-* 유틸로 쓰는 모서리 반경 토큰입니다."
-  >
+  <GuidePage title="라운드 (Radius)" description="rounded-* 유틸로 쓰는 모서리 반경 토큰입니다.">
     <div className="overflow-x-auto">
       <table className="w-full border-collapse text-left">
         <thead>

@@ -6,10 +6,7 @@ export const metadata: Metadata = { title: '그림자' };
 
 // 그림자 — primitive alpha 참조(라이트=검정 / 다크=흰색)라 배경에 관계없이 보인다.
 const ShadowGuidePage = () => (
-  <GuidePage
-    title="그림자 (Shadow)"
-    description="shadow-* 유틸로 쓰는 그림자 토큰입니다."
-  >
+  <GuidePage title="그림자 (Shadow)" description="shadow-* 유틸로 쓰는 그림자 토큰입니다.">
     <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
       {Object.entries(tokens.effect.shadow).map(([k, val]) => {
         // color 참조 "black.10" → "--raw-black-a10" (primitive → semantic 매핑 표시)

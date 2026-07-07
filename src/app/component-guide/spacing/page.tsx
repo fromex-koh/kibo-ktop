@@ -20,11 +20,7 @@ const SPACING_GROUPS = [
 const SpacingGuidePage = () => (
   <GuidePage
     title="간격 (Spacing)"
-    description={
-      <>
-        base {tokens.spacingBase}px × N 스케일의 간격 토큰입니다.
-      </>
-    }
+    description={<>base {tokens.spacingBase}px × N 스케일의 간격 토큰입니다.</>}
   >
     <div className="overflow-x-auto">
       <table className="w-full border-collapse text-left">
@@ -54,7 +50,7 @@ const SpacingGuidePage = () => (
                   style={{ width: `calc(var(--spacing) * ${n})` }}
                 />
               </td>
-              <th scope="row" className="px-3 py-3 text-left font-normal align-top">
+              <th scope="row" className="px-3 py-3 text-left align-top font-normal">
                 <div className="flex flex-col gap-2">
                   {SPACING_GROUPS.map((group) => (
                     <div key={group.label} className="flex flex-wrap items-center gap-2">

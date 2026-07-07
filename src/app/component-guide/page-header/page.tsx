@@ -41,12 +41,10 @@ const PageHeaderGuidePage = () => (
 
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs text-primary">
+          <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
             variant
           </span>
-          <h3 className="typo-body-l-medium text-foreground">
-            default — 일반 페이지
-          </h3>
+          <h3 className="typo-body-l-medium text-foreground">default — 일반 페이지</h3>
         </div>
         <div className="border-gray-subtle-2 rounded-md border p-6">
           <PageHeader>
@@ -61,7 +59,7 @@ const PageHeaderGuidePage = () => (
 
       <div className="flex flex-col gap-4">
         <div className="flex items-center gap-2">
-          <span className="inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs text-primary">
+          <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
             variant
           </span>
           <h3 className="typo-body-l-medium text-foreground">
@@ -89,7 +87,7 @@ const PageHeaderGuidePage = () => (
         <h2 id="ph-composition" className="typo-heading-h4-bold">
           Composition
         </h2>
-        <p className="text-sm text-foreground-muted">
+        <p className="text-foreground-muted text-sm">
           이 컴포넌트 내부에 들어갈 수 있는 요소들입니다.
         </p>
       </div>
@@ -110,7 +108,7 @@ const PageHeaderGuidePage = () => (
             <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
               <th
                 scope="row"
-                className="typo-body-l-regular border-gray-subtle-2 border-r px-4 py-3 align-top font-mono font-normal text-primary"
+                className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
               >
                 PageHeaderTitle
               </th>
@@ -121,7 +119,7 @@ const PageHeaderGuidePage = () => (
             <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
               <th
                 scope="row"
-                className="typo-body-l-regular border-gray-subtle-2 border-r px-4 py-3 align-top font-mono font-normal text-primary"
+                className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
               >
                 PageHeaderDescription
               </th>
@@ -139,9 +137,7 @@ const PageHeaderGuidePage = () => (
         <h2 id="ph-props" className="typo-heading-h4-bold">
           Props
         </h2>
-        <p className="text-sm text-foreground-muted">
-          커스터마이징 가능한 속성들입니다.
-        </p>
+        <p className="text-foreground-muted text-sm">커스터마이징 가능한 속성들입니다.</p>
       </div>
 
       {/* BASIC */}
@@ -170,7 +166,7 @@ const PageHeaderGuidePage = () => (
               <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
                 <th
                   scope="row"
-                  className="typo-body-l-regular border-gray-subtle-2 border-r px-4 py-3 align-top font-mono font-normal text-primary"
+                  className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
                 >
                   variant
                 </th>
@@ -180,7 +176,7 @@ const PageHeaderGuidePage = () => (
                       PageHeaderTitle·PageHeaderDescription 각각에 적용하는 타이포그래피 조합.
                       페이지 성격에 맞춰 선택한다.
                     </p>
-                    <span className="inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs text-primary">
+                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
                       &apos;default&apos; | &apos;compact&apos;
                     </span>
                   </div>
@@ -190,10 +186,10 @@ const PageHeaderGuidePage = () => (
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex flex-wrap gap-1">
-                    <span className="inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs text-primary">
+                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
                       default
                     </span>
-                    <span className="inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs text-primary">
+                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
                       compact
                     </span>
                   </div>
@@ -202,14 +198,14 @@ const PageHeaderGuidePage = () => (
               <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
                 <th
                   scope="row"
-                  className="typo-body-l-regular border-gray-subtle-2 border-r px-4 py-3 align-top font-mono font-normal text-primary"
+                  className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
                 >
                   className
                 </th>
                 <td className="px-4 py-3">
                   <div className="flex flex-col gap-2">
                     <p className="typo-body-l-regular text-subtle">추가 클래스명으로 스타일 확장</p>
-                    <span className="inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs text-primary">
+                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
                       string
                     </span>
                   </div>

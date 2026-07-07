@@ -8,10 +8,7 @@ export const metadata: Metadata = { title: '흐림' };
 
 // 흐림 — 흐림 토큰(--ds-blur-*)을 blur-* 유틸리티로 적용. 실제 사진으로 강도를 시각화한다.
 const BlurGuidePage = () => (
-  <GuidePage
-    title="흐림 (Blur)"
-    description="blur-* 유틸리티로 적용하는 흐림 토큰입니다."
-  >
+  <GuidePage title="흐림 (Blur)" description="blur-* 유틸리티로 적용하는 흐림 토큰입니다.">
     <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
       {Object.entries(tokens.effect.blur).map(([k, px]) => (
         <li key={k} className="border-gray-subtle-2 overflow-hidden rounded-xl border">
