@@ -7,10 +7,15 @@ export const metadata: Metadata = { title: '간격' };
 
 // 간격 — base(4px) × N 무한 스케일. Figma '04 Spacing' 이 보여준 최소(4px)~최대(80px) 구간을
 // base 배수(N=1~20)로 빠짐없이 큐레이션한다(Figma 표본값 4·8·12·16·20·24·32·40·48·64·80 포함).
-// p-*·m-*·gap-* 어디에나 같은 N 이 적용되므로 셋 다 클래스 칸에 노출한다(패딩만 있던 것을 보완).
+// padding·margin·gap 어디에나 같은 N 이 적용되므로, 축약형(p-*/m-*/gap-*)뿐 아니라 방향별
+// 클래스(px-*·py-*·pt-*·pr-*·pb-*·pl-* 등)도 개발자가 바로 찾아 복사할 수 있게 그룹으로 나눠 노출한다.
 const MAX_MULTIPLE = 20;
 const multiples = Array.from({ length: MAX_MULTIPLE }, (_, i) => i + 1);
-const SPACING_PREFIXES = ['p', 'm', 'gap'];
+const SPACING_GROUPS = [
+  { label: 'Padding', prefixes: ['p', 'px', 'py', 'pt', 'pr', 'pb', 'pl'] },
+  { label: 'Margin', prefixes: ['m', 'mx', 'my', 'mt', 'mr', 'mb', 'ml'] },
+  { label: 'Gap', prefixes: ['gap', 'gap-x', 'gap-y'] },
+];
 
 const SpacingGuidePage = () => (
   <GuidePage
@@ -49,12 +54,19 @@ const SpacingGuidePage = () => (
                   style={{ width: `calc(var(--spacing) * ${n})` }}
                 />
               </td>
-              <th scope="row" className="px-3 py-3 text-left font-normal">
-                <span className="flex flex-wrap gap-2">
-                  {SPACING_PREFIXES.map((prefix) => (
-                    <CopyChip key={prefix} value={`${prefix}-${n}`} />
+              <th scope="row" className="px-3 py-3 text-left font-normal align-top">
+                <div className="flex flex-col gap-2">
+                  {SPACING_GROUPS.map((group) => (
+                    <div key={group.label} className="flex flex-wrap items-center gap-2">
+                      <span className="typo-caption-regular text-subtle w-14 shrink-0">
+                        {group.label}
+                      </span>
+                      {group.prefixes.map((prefix) => (
+                        <CopyChip key={prefix} value={`${prefix}-${n}`} />
+                      ))}
+                    </div>
                   ))}
-                </span>
+                </div>
               </th>
               <td className="typo-caption-regular text-subtle px-3 py-3 font-mono whitespace-nowrap">
                 {n * tokens.spacingBase}px
