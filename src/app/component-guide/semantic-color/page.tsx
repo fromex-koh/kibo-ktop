@@ -39,6 +39,7 @@ const utilClass = (name: string): string => {
   if (BORDER_TOKENS.has(name)) return `border-${name}`;
   if (TEXT_TOKENS.has(name)) return `text-${name}`;
   if (name.startsWith('icon-')) return `text-${name}`; // 아이콘은 currentColor(text-)로 색을 준다
+  if (name.endsWith('-text')) return `text-${name}`; // primary/secondary 의 text 멤버
   if (name.includes('border')) return `border-${name}`;
   return `bg-${name}`;
 };
