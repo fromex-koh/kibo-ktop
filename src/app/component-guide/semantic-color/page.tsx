@@ -28,10 +28,6 @@ const TEXT_TOKENS = new Set([
   'primary',
   'secondary',
   'tertiary',
-  'danger',
-  'warning',
-  'success',
-  'info',
 ]);
 // 모든 색 토큰은 --color-* 브리지로 유틸이 생기므로 대표 유틸 클래스를 돌려준다.
 // (scroll-thumb·track 은 실제론 스크롤바 CSS 변수로 쓰지만 bg-* 유틸도 유효해 복사용으로 노출.)
@@ -126,18 +122,41 @@ const ModeSwatch = ({ color }: { color: string }) => (
   </span>
 );
 
-// 색상(Semantic) — 앱이 실제로 쓰는 시맨틱 토큰(--ds). primitive 를 용도별로 매핑한 층.
-const SemanticColorGuidePage = () => (
-  <GuidePage
-    title="02 Semantic Color"
-    description="앱이 실제로 쓰는 시맨틱 색상 토큰입니다. '클래스' 칸은 실제 사용하는 유틸리티 클래스(bg-brand·text-bolder 등)이며 클릭하면 복사돼 바로 붙여넣을 수 있습니다. 라이트 값은 Figma 02 Semantic Color 정의에 맞췄고, 다크는 primitive 위치반사/명시로 도출합니다(Figma Dark 미완성이라 이 방식). 맨 앞 '현재' 칸은 실제 토큰을 현재 테마로 렌더한 것이라, 헤더의 다크모드 토글을 누르면 이 칸이 실제로 바뀝니다(토큰 파이프라인 작동 검증)."
-  >
+type SemanticEntry = [string, string | { light: string; dark: string }];
+
+// 그룹 판별 — 순서대로 첫 매칭. border·text 는 무접두사라 집합으로, 나머지는 접두사로.
+const SEMANTIC_GROUPS: { name: string; match: (n: string) => boolean }[] = [
+  { name: 'background', match: (n) => n === 'background' || n.startsWith('background-') },
+  { name: 'surface', match: (n) => n === 'surface' || n.startsWith('surface-') },
+  { name: 'border', match: (n) => BORDER_TOKENS.has(n) },
+  { name: 'text', match: (n) => TEXT_TOKENS.has(n) },
+  { name: 'button', match: (n) => n.startsWith('button-') },
+  { name: 'input', match: (n) => n.startsWith('input-') },
+  { name: 'icon', match: (n) => n.startsWith('icon-') },
+  { name: 'element', match: (n) => n.startsWith('element-') },
+  { name: 'primary', match: (n) => n.startsWith('primary-') },
+  { name: 'secondary', match: (n) => n.startsWith('secondary-') },
+  { name: 'success', match: (n) => n.startsWith('success-') },
+  { name: 'warning', match: (n) => n.startsWith('warning-') },
+  { name: 'error', match: (n) => n.startsWith('error-') },
+  { name: 'info', match: (n) => n.startsWith('info-') },
+  { name: '기타', match: () => true },
+];
+const groupNameOf = (name: string): string =>
+  SEMANTIC_GROUPS.find((group) => group.match(name))?.name ?? '기타';
+
+// tokens.json 순서를 유지한 채 그룹으로 묶는다(각 토큰은 첫 매칭 그룹 하나에만 속함).
+const GROUPED = SEMANTIC_GROUPS.map((group) => ({
+  name: group.name,
+  tokens: Object.entries(semantic).filter(([name]) => groupNameOf(name) === group.name),
+})).filter((group) => group.tokens.length > 0);
+
+// 그룹 하나 = 독립 테이블. 현재(라이브)·클래스(클릭 복사)·라이트·다크·참조 primitive.
+const SemanticTable = ({ title, tokens }: { title: string; tokens: SemanticEntry[] }) => (
+  <section className="flex flex-col gap-2">
+    <h2 className="typo-label text-bolder font-semibold">{title}</h2>
     <div className="overflow-x-auto">
       <table className="w-full border-collapse text-left">
-        <caption className="sr-only">
-          시맨틱 토큰 — 현재 테마 적용값(라이브), 유틸리티 클래스(클릭 복사), 라이트/다크 해석값,
-          참조 primitive
-        </caption>
         <thead>
           <tr className="border-gray-subtle-2 border-b">
             <th scope="col" className="typo-label text-subtle px-3 py-3 whitespace-nowrap">
@@ -158,9 +177,8 @@ const SemanticColorGuidePage = () => (
           </tr>
         </thead>
         <tbody>
-          {Object.entries(semantic).map(([name, val]) => {
+          {tokens.map(([name, val]) => {
             const modes = resolveModes(val);
-            const util = utilClass(name);
             return (
               <tr
                 key={name}
@@ -170,7 +188,7 @@ const SemanticColorGuidePage = () => (
                   <LiveSwatch name={name} />
                 </td>
                 <th scope="row" className="px-3 py-3 text-left">
-                  <CopyChip value={util} />
+                  <CopyChip value={utilClass(name)} />
                 </th>
                 <td className="px-3 py-3">
                   <ModeSwatch color={modes.light} />
@@ -186,6 +204,20 @@ const SemanticColorGuidePage = () => (
           })}
         </tbody>
       </table>
+    </div>
+  </section>
+);
+
+// 색상(Semantic) — 앱이 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
+const SemanticColorGuidePage = () => (
+  <GuidePage
+    title="02 Semantic Color"
+    description="앱이 실제로 쓰는 시맨틱 색상 토큰을 Figma 02 Semantic 그룹별 표로 나눴습니다. '클래스' 칸은 실제 사용하는 유틸리티 클래스(bg-brand·text-bolder 등)이며 클릭하면 복사돼 바로 붙여넣을 수 있습니다. 라이트 값은 Figma 정의에 맞췄고, 다크는 primitive 위치반사/명시로 도출합니다(Figma Dark 미완성이라 이 방식). 맨 앞 '현재' 칸은 실제 토큰을 현재 테마로 렌더한 것이라, 헤더의 다크모드 토글을 누르면 이 칸이 실제로 바뀝니다(토큰 파이프라인 작동 검증)."
+  >
+    <div className="flex flex-col gap-8">
+      {GROUPED.map((group) => (
+        <SemanticTable key={group.name} title={group.name} tokens={group.tokens} />
+      ))}
     </div>
   </GuidePage>
 );
