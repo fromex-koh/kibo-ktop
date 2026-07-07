@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import ActiveBreakpointTag from '@/components/guide/active-breakpoint-tag';
+import CopyChip from '@/components/guide/copy-chip';
 import GuidePage from '@/components/guide/guide-page';
 import tokens from '@tokens';
 
@@ -47,7 +48,7 @@ const BreakpointGuidePage = () => (
             // 구간명은 기기 하나를 가리키지 않으므로(예: wide = 태블릿·노트북 공유 폭),
             // 실제 포함 기기는 여기서 별도 안내한다. 새 브레이크포인트 키 추가 시 함께 갱신.
             const DEVICE_HINT: Record<string, string> = {
-              모바일: '폰',
+              mobile: '모바일',
               wide: '태블릿·노트북',
               pc: '데스크톱',
             };
@@ -55,10 +56,10 @@ const BreakpointGuidePage = () => (
             const rows = [
               {
                 key: 'mobile',
-                name: '모바일 (기본)',
+                name: 'mobile (기본)',
                 range: `0 ~ ${entries[0][1] - 1}px`,
-                prefix: '없음',
-                device: DEVICE_HINT['모바일'],
+                prefix: null,
+                device: DEVICE_HINT['mobile'],
               },
               ...entries.map(([k, v], i) => ({
                 key: k,
@@ -77,7 +78,13 @@ const BreakpointGuidePage = () => (
                   </span>
                 </td>
                 <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">{r.range}</td>
-                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">{r.prefix}</td>
+                <td className="px-4 py-3">
+                  {r.prefix ? (
+                    <CopyChip value={r.prefix} />
+                  ) : (
+                    <span className="typo-caption-regular text-subtle font-mono">없음</span>
+                  )}
+                </td>
                 <td className="typo-body-l-regular text-subtle px-4 py-3">{r.device}</td>
               </tr>
             ));

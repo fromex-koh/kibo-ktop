@@ -87,7 +87,7 @@ const GridPreviewPage = () => (
                 <tr key={key} className="border-gray-subtle-2 border-b last:border-b-0">
                   <td className="typo-body-l-regular px-4 py-3">
                     <span className="inline-flex items-center gap-2">
-                      {key === 'mobile' ? '모바일 (기본)' : key}
+                      {key === 'mobile' ? 'mobile (기본)' : key}
                       <ActiveBreakpointTag targetKey={key} />
                     </span>
                   </td>
