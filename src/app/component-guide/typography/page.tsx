@@ -8,6 +8,94 @@ export const metadata: Metadata = { title: '타이포그래피' };
 // 한글·영문·숫자·기호가 모두 섞인 미리보기 문장(글꼴 렌더링 확인용).
 const SAMPLE_TEXT = '다람쥐 헌 쳇바퀴에 타고파 ABC xyz 123 !?@#';
 
+type TypographyToken = {
+  size: { mobile: number; pc: number };
+  weight: number;
+  lineHeight: number;
+  letterSpacing: string;
+};
+type TypographyEntry = [string, TypographyToken];
+
+// 타이포그래피 스케일 그룹 — Figma '크기(font-size)' 프레임의 분류(Display·Heading·Title·Body·
+// Caption·Micro) 순서 그대로 표를 나눈다. tokens.json 순서를 유지한 채 첫 매칭 그룹에 담는다.
+const TYPOGRAPHY_GROUPS: { name: string; match: (n: string) => boolean }[] = [
+  { name: 'Display', match: (n) => n.startsWith('display-') },
+  { name: 'Heading', match: (n) => n.startsWith('heading-') },
+  { name: 'Title', match: (n) => n.startsWith('title-') },
+  { name: 'Body', match: (n) => n.startsWith('body-') },
+  { name: 'Caption', match: (n) => n.startsWith('caption-') },
+  { name: 'Micro', match: (n) => n.startsWith('micro-') },
+];
+const groupNameOfTypo = (name: string): string =>
+  TYPOGRAPHY_GROUPS.find((group) => group.match(name))?.name ?? '기타';
+const TYPOGRAPHY_ENTRIES: TypographyEntry[] = Object.entries(tokens.typography);
+const TYPOGRAPHY_GROUPED = TYPOGRAPHY_GROUPS.map((group) => ({
+  name: group.name,
+  tokens: TYPOGRAPHY_ENTRIES.filter(([name]) => groupNameOfTypo(name) === group.name),
+})).filter((group) => group.tokens.length > 0);
+
+// 그룹 하나 = 독립 테이블(클래스·크기·굵기·행간·자간). 클래스 칩을 클릭하면 이름이 복사된다.
+const TypographyScaleTable = ({
+  title,
+  entries,
+}: {
+  title: string;
+  entries: TypographyEntry[];
+}) => (
+  <div className="flex flex-col gap-2">
+    <h3 className="typo-body-l-medium text-bolder font-semibold">{title}</h3>
+    <div className="border-gray-subtle-2 overflow-x-auto rounded-xl border">
+      <table className="w-full text-left">
+        <caption className="sr-only">{title} typo-* 클래스별 크기·굵기·행간·자간</caption>
+        <thead>
+          <tr className="border-gray-subtle-2 bg-surface border-b">
+            <th scope="col" className="typo-body-l-medium px-4 py-3">
+              클래스
+            </th>
+            <th scope="col" className="typo-body-l-medium px-4 py-3">
+              크기 (모바일)
+            </th>
+            <th scope="col" className="typo-body-l-medium px-4 py-3">
+              크기 (PC)
+            </th>
+            <th scope="col" className="typo-body-l-medium px-4 py-3">
+              굵기
+            </th>
+            <th scope="col" className="typo-body-l-medium px-4 py-3">
+              행간
+            </th>
+            <th scope="col" className="typo-body-l-medium px-4 py-3">
+              자간
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {entries.map(([name, t]) => (
+            <tr key={name} className="border-gray-subtle-2 border-b last:border-b-0">
+              <th scope="row" className="px-4 py-3 text-left font-normal">
+                <CopyChip value={`typo-${name}`} />
+              </th>
+              <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                {t.size.mobile}px
+              </td>
+              <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                {t.size.pc}px
+              </td>
+              <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">{t.weight}</td>
+              <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                {t.lineHeight}
+              </td>
+              <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                {t.letterSpacing}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+);
+
 // 실제 글꼴 체계는 src/app/globals.css 의 @theme(--font-sans / --font-mono) + layout.tsx 의
 // Pretendard 로컬 폰트(next/font/local)에서 온다. 아래는 그 값을 그대로 문서화한 것.
 const SANS_STACK = [
@@ -115,66 +203,23 @@ const TypographyGuidePage = () => (
       </p>
     </section>
 
-    {/* 타이포그래피 스케일 — typo-* 유틸리티가 묶어 적용하는 값(토큰) 데이터 테이블(위) */}
+    {/* 타이포그래피 스케일 — typo-* 유틸리티가 묶어 적용하는 값(토큰)을 Figma 분류별 표로 나눈다 */}
     <section aria-labelledby="typo-tokens" className="flex flex-col gap-4">
       <div className="flex flex-col gap-1">
         <h2 id="typo-tokens" className="typo-heading-h4-bold">
           타이포그래피 스케일
         </h2>
         <p className="typo-body-l-regular text-subtle">
-          용도별 <code>typo-*</code> <strong>유틸리티 클래스</strong> 목록입니다. 각 클래스가 한
-          번에 묶어 적용하는 값(크기·굵기·행간·자간 <strong>토큰</strong>)은 아래와 같습니다. 클래스
-          칩을 클릭하면 이름이 복사됩니다.
+          용도별 <code>typo-*</code> <strong>유틸리티 클래스</strong> 목록을 Figma 분류(Display·
+          Heading·Title·Body·Caption·Micro)별 표로 나눴습니다. 각 클래스가 한 번에 묶어 적용하는
+          값(크기·굵기·행간·자간 <strong>토큰</strong>)은 아래와 같습니다. 클래스 칩을 클릭하면
+          이름이 복사됩니다.
         </p>
       </div>
-      <div className="border-gray-subtle-2 overflow-x-auto rounded-xl border">
-        <table className="w-full text-left">
-          <caption className="sr-only">typo-* 클래스별 크기·굵기·행간·자간</caption>
-          <thead>
-            <tr className="border-gray-subtle-2 bg-surface border-b">
-              <th scope="col" className="typo-body-l-medium px-4 py-3">
-                클래스
-              </th>
-              <th scope="col" className="typo-body-l-medium px-4 py-3">
-                크기 (모바일)
-              </th>
-              <th scope="col" className="typo-body-l-medium px-4 py-3">
-                크기 (PC)
-              </th>
-              <th scope="col" className="typo-body-l-medium px-4 py-3">
-                굵기
-              </th>
-              <th scope="col" className="typo-body-l-medium px-4 py-3">
-                행간
-              </th>
-              <th scope="col" className="typo-body-l-medium px-4 py-3">
-                자간
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(tokens.typography).map(([name, t]) => (
-              <tr key={name} className="border-gray-subtle-2 border-b last:border-b-0">
-                <th scope="row" className="px-4 py-3 text-left font-normal">
-                  <CopyChip value={`typo-${name}`} />
-                </th>
-                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
-                  {t.size.mobile}px
-                </td>
-                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
-                  {t.size.pc}px
-                </td>
-                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">{t.weight}</td>
-                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
-                  {t.lineHeight}
-                </td>
-                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
-                  {t.letterSpacing}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="flex flex-col gap-6">
+        {TYPOGRAPHY_GROUPED.map((group) => (
+          <TypographyScaleTable key={group.name} title={group.name} entries={group.tokens} />
+        ))}
       </div>
     </section>
 

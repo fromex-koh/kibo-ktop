@@ -1,28 +1,56 @@
 import type { Metadata } from 'next';
+import CopyChip from '@/components/guide/copy-chip';
 import GuidePage from '@/components/guide/guide-page';
 import tokens from '@tokens';
 
 export const metadata: Metadata = { title: '라운드' };
 
-// 라운드 — 반경 토큰(--ds-radius-*)을 rounded-* 유틸리티로 적용. 정의된 키만 사용한다.
+// 라운드 — Figma '05 Radius' 정의를 반경 토큰(--ds-radius-*)으로 반영. rounded-* 유틸로 쓰며
+// 정의된 키(xs·sm·md·lg·xl·2xl·full)만 사용한다. '클래스' 칩을 클릭하면 이름이 복사된다.
 const RadiusGuidePage = () => (
   <GuidePage
     title="라운드 (Radius)"
-    description="모서리 반경 토큰입니다. rounded-* 유틸로 쓰며, 정의된 키(sm·md·lg·xl·2xl·full)만 사용합니다. 임의값(rounded-[7px])은 지양합니다."
+    description="모서리 반경 토큰입니다. rounded-* 유틸로 쓰며, 정의된 키(xs·sm·md·lg·xl·2xl·full)만 사용합니다. 임의값(rounded-[7px])은 지양합니다. '클래스' 칩을 클릭하면 이름이 복사돼 바로 붙여넣을 수 있습니다."
   >
-    <ul className="flex flex-wrap gap-5">
-      {Object.entries(tokens.radius).map(([k, px]) => (
-        <li key={k} className="flex flex-col items-center gap-2">
-          <span
-            className="bg-surface border-gray-subtle-2 size-16 border"
-            style={{ borderRadius: `var(--ds-radius-${k})` }}
-          />
-          <span className="typo-caption-regular text-subtle font-mono">
-            {k} · {typeof px === 'number' ? `${px}px` : px}
-          </span>
-        </li>
-      ))}
-    </ul>
+    <div className="overflow-x-auto">
+      <table className="w-full border-collapse text-left">
+        <thead>
+          <tr className="border-gray-subtle-2 border-b">
+            <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+              미리보기
+            </th>
+            <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+              클래스 (클릭 복사)
+            </th>
+            <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+              값
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {Object.entries(tokens.radius).map(([k, px]) => (
+            <tr
+              key={k}
+              className="border-gray-subtle-2 hover:bg-surface border-b transition-colors"
+            >
+              <td className="px-3 py-3">
+                <span
+                  aria-hidden="true"
+                  className="bg-surface border-gray-subtle-2 block size-16 border"
+                  style={{ borderRadius: `var(--ds-radius-${k})` }}
+                />
+              </td>
+              <th scope="row" className="px-3 py-3 text-left font-normal">
+                <CopyChip value={`rounded-${k}`} />
+              </th>
+              <td className="typo-caption-regular text-subtle px-3 py-3 font-mono whitespace-nowrap">
+                {typeof px === 'number' ? `${px}px` : px}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
   </GuidePage>
 );
 
