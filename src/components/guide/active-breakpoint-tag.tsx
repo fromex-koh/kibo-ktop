@@ -1,7 +1,7 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
-import tokens from '../../tokens.json';
+import tokens from '../../../tokens.json';
 
 // 브레이크포인트 오름차순 정렬 — 예: [['wide', 768], ['pc', 1280]]
 const ENTRIES = Object.entries(tokens.breakpoint).sort((a, b) => a[1] - b[1]);

@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import GuidePage from '@/components/guide-page';
+import GuidePage from '@/components/guide/guide-page';
 import tokens from '../../../../tokens.json';
 
 export const metadata: Metadata = { title: '라운드' };

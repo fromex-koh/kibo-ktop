@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import CopyChip from '@/components/copy-chip';
-import GuidePage from '@/components/guide-page';
+import CopyChip from '@/components/guide/copy-chip';
+import GuidePage from '@/components/guide/guide-page';
 import tokens from '../../../../tokens.json';
 
 export const metadata: Metadata = { title: '타이포그래피' };

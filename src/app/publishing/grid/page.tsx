@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import ActiveBreakpointTag from '@/components/active-breakpoint-tag';
+import ActiveBreakpointTag from '@/components/guide/active-breakpoint-tag';
 import ThemeToggle from '@/components/theme-toggle';
 import tokens from '../../../../tokens.json';
 

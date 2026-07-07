@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { GUIDE_NAV_SECTIONS } from '@/constants/guide-nav';
-import GuidePage from '@/components/guide-page';
+import GuidePage from '@/components/guide/guide-page';
 
 export const metadata: Metadata = {
   // layout 의 template('%s · 컴포넌트 가이드')과 겹치지 않도록 개요는 단독 제목을 쓴다.

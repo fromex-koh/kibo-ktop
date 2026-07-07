@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
-import GuidePage from '@/components/guide-page';
+import GuidePage from '@/components/guide/guide-page';
 import tokens from '../../../../tokens.json';
 import sampleCatImg from '../../../../public/sample-cat.jpg';
 
