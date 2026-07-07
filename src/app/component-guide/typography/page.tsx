@@ -162,6 +162,11 @@ const TypographyGuidePage = () => (
           를 1순위로 쓰고, 로드 실패·미지원 글리프는 아래 순서로 폴백합니다. 코드·수치 등 고정폭이
           필요한 곳은 <code>font-mono</code> 를 씁니다.
         </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="typo-caption-regular text-subtle">유틸리티 클래스 (클릭 복사)</span>
+          <CopyChip value="font-sans" />
+          <CopyChip value="font-mono" />
+        </div>
       </div>
       <ol className="border-gray-subtle-2 divide-gray-subtle-2 divide-y rounded-xl border">
         {SANS_STACK.map((font, i) => (
