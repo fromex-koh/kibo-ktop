@@ -27,38 +27,59 @@ const PageHeaderGuidePage = () => (
     title="페이지 헤더 (PageHeader)"
     description="페이지·섹션 최상단의 제목+설명 묶음 컴포넌트입니다."
   >
-    <section aria-labelledby="ph-default" className="flex flex-col gap-4">
-      <h2 id="ph-default" className="typo-heading-h4-bold">
-        default — 일반 페이지
-      </h2>
-      <div className="border-gray-subtle-2 rounded-md border p-6">
-        <PageHeader>
-          <PageHeaderTitle>내 정보 확인</PageHeaderTitle>
-          <PageHeaderDescription>
-            KIBGx AI가 기술·시장·특허 데이터를 분석해 드립니다.
-          </PageHeaderDescription>
-        </PageHeader>
+    <section aria-labelledby="ph-variant" className="flex flex-col gap-6">
+      <div>
+        <h2 id="ph-variant" className="typo-heading-h4-bold">
+          Variant
+        </h2>
+        <p className="typo-body-l-regular text-subtle">
+          페이지 성격에 맞춰 선택하는 타이포그래피 조합 2가지입니다.
+        </p>
       </div>
-      <CodeBlock code={USAGE_CODE_DEFAULT} language="tsx" copyLabel="복사" />
-    </section>
 
-    <section aria-labelledby="ph-compact" className="flex flex-col gap-4">
-      <h2 id="ph-compact" className="typo-heading-h4-bold">
-        compact — 콘텐츠 밀도가 높은 페이지
-      </h2>
-      <div className="border-gray-subtle-2 rounded-md border p-6">
-        <PageHeader>
-          <PageHeaderTitle variant="compact">사업자 정보 입력</PageHeaderTitle>
-          <PageHeaderDescription variant="compact">
-            기업 평가에 필요한 기본 정보를 입력해 주세요.
-          </PageHeaderDescription>
-        </PageHeader>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-2">
+          <span className="inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs text-primary">
+            variant
+          </span>
+          <h3 className="typo-body-l-medium text-foreground">
+            default — 일반 페이지
+          </h3>
+        </div>
+        <div className="border-gray-subtle-2 rounded-md border p-6">
+          <PageHeader>
+            <PageHeaderTitle>내 정보 확인</PageHeaderTitle>
+            <PageHeaderDescription>
+              KIBGx AI가 기술·시장·특허 데이터를 분석해 드립니다.
+            </PageHeaderDescription>
+          </PageHeader>
+        </div>
+        <CodeBlock code={USAGE_CODE_DEFAULT} language="tsx" copyLabel="복사" />
       </div>
-      <p className="typo-body-l-regular text-subtle">
-        모바일에서는 Heading/H4/bold + Body/XL/Regular, wide 이상에서는 Display/M/bold +
-        Title/L/Regular 로 전환됩니다. 화면 폭을 줄여 확인해 보세요.
-      </p>
-      <CodeBlock code={USAGE_CODE_COMPACT} language="tsx" copyLabel="복사" />
+
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-2">
+          <span className="inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs text-primary">
+            variant
+          </span>
+          <h3 className="typo-body-l-medium text-foreground">
+            compact — 콘텐츠 밀도가 높은 페이지
+          </h3>
+        </div>
+        <div className="border-gray-subtle-2 rounded-md border p-6">
+          <PageHeader>
+            <PageHeaderTitle variant="compact">사업자 정보 입력</PageHeaderTitle>
+            <PageHeaderDescription variant="compact">
+              기업 평가에 필요한 기본 정보를 입력해 주세요.
+            </PageHeaderDescription>
+          </PageHeader>
+        </div>
+        <p className="typo-body-l-regular text-subtle">
+          모바일에서는 Heading/H4/bold + Body/XL/Regular, wide 이상에서는 Display/M/bold +
+          Title/L/Regular 로 전환됩니다. 화면 폭을 줄여 확인해 보세요.
+        </p>
+        <CodeBlock code={USAGE_CODE_COMPACT} language="tsx" copyLabel="복사" />
+      </div>
     </section>
 
     <section aria-labelledby="ph-composition" className="flex flex-col gap-4">
