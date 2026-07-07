@@ -33,13 +33,24 @@ const LUCIDE_ICON_COUNT_LABEL = '2,000개 이상';
 // 아이콘 크기 — size.icon-* 토큰(size-icon-* 유틸)만 사용한다. 클래스명은 Tailwind 정적 분석을
 // 위해 리터럴로 고정 — 템플릿 문자열(`size-${key}`)로 조합하면 스캐너가 인식하지 못해 스타일이
 // 안 나온다(z-index 가이드와 같은 이유). 새 크기를 추가하면 tokens.json 의 size.icon-* 와 함께 갱신.
+// glyphClass = Solid 배지 안에 들어가는 아이콘 크기. 원(circle) 대비 글리프 50% 비율을 목표로 하되,
+// 12px 아래 토큰이 없어 lg(24) 미만 원에서는 최소 단위(xs·12px)로 바닥을 찍는다 — 그만큼 작은
+// 원에서는 글리프가 원을 거의 꽉 채우게 되는데, 이는 의도한 결과가 아니라 토큰 한계다(아래 관찰 참고).
 const ICON_SIZES = [
-  { key: 'icon-xs', class: 'size-icon-xs' },
-  { key: 'icon-sm', class: 'size-icon-sm' },
-  { key: 'icon-md', class: 'size-icon-md' },
-  { key: 'icon-lg', class: 'size-icon-lg' },
-  { key: 'icon-xl', class: 'size-icon-xl' },
-  { key: 'icon-2xl', class: 'size-icon-2xl' },
+  { key: 'icon-xs', class: 'size-icon-xs', glyphClass: 'size-icon-xs' },
+  { key: 'icon-sm', class: 'size-icon-sm', glyphClass: 'size-icon-xs' },
+  { key: 'icon-md', class: 'size-icon-md', glyphClass: 'size-icon-xs' },
+  { key: 'icon-lg', class: 'size-icon-lg', glyphClass: 'size-icon-xs' },
+  { key: 'icon-xl', class: 'size-icon-xl', glyphClass: 'size-icon-sm' },
+  { key: 'icon-2xl', class: 'size-icon-2xl', glyphClass: 'size-icon-md' },
+] as const;
+
+// 참고 이미지의 두 톤(중립 회색 배지·짙은 배지)을 재현한다. 페이지 라이트/다크 모드와 무관하게
+// 항상 같은 색으로 보여야 크기 비교가 정확해서(코드블럭이 항상 어두운 배경을 쓰는 것과 같은 이유),
+// 테마에 따라 자동 반전되는 시맨틱 토큰 대신 고정 raw 값을 쓴다(PB-12 — 토큰 뷰어 예외).
+const SOLID_SWATCHES = [
+  { label: '중립', Icon: X, bg: 'var(--raw-gray-400)' },
+  { label: '강조', Icon: Info, bg: 'var(--raw-common-black)' },
 ] as const;
 
 // 아이콘 큐레이션 — 실제 화면에서 자주 쓰는 lucide-react 아이콘([NA-008] 표준 단일 아이콘
@@ -144,10 +155,24 @@ const IconGuidePage = () => (
             </tr>
           </thead>
           <tbody>
-            {ICON_SIZES.map(({ key, class: sizeClass }) => (
+            {ICON_SIZES.map(({ key, class: sizeClass, glyphClass }) => (
               <tr key={key} className="border-gray-subtle-2 bg-background border-b last:border-b-0">
                 <td className="px-4 py-3">
-                  <Home aria-hidden="true" className={`${sizeClass} text-subtle`} />
+                  <div className="flex items-center gap-3">
+                    {SOLID_SWATCHES.map(({ label, Icon, bg }) => (
+                      <span
+                        key={label}
+                        className={`${sizeClass} flex shrink-0 items-center justify-center rounded-full`}
+                        style={{ backgroundColor: bg }}
+                      >
+                        <Icon
+                          aria-hidden="true"
+                          className={glyphClass}
+                          style={{ color: 'var(--raw-common-white)' }}
+                        />
+                      </span>
+                    ))}
+                  </div>
                 </td>
                 <th scope="row" className="px-4 py-3 text-left font-normal">
                   <CopyChip value={sizeClass} />
