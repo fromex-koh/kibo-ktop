@@ -134,13 +134,14 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
       {/* pc 는 상시 레일이라 본문을 사이드바 폭만큼 항상 밀어둔다(pc 미만은 드로어가 오버레이라 안 밈). */}
       <div className="pc:pl-sidebar-pl">
         {/* 백드롭(반투명 배경) — pc 미만에서 드로어가 열렸을 때만. 눌러서 닫기(마우스 편의, 키보드는 Esc/X).
-            static 인 main 위에 뜨도록 positioned(fixed) 로만 쌓아 z-index 하드코딩을 피한다. [CD-002] */}
+            드로어 레이어 z 토큰(z-drawer-backdrop)으로 본문 위에 확실히 올린다 — 본문의 positioned
+            요소(색상 스와치 등)가 위로 새는 것을 막는다. z-[숫자] 하드코딩이 아닌 토큰이라 [CD-002] 준수. */}
         <button
           type="button"
           onClick={closeDrawer}
           aria-hidden="true"
           tabIndex={-1}
-          className={`bg-overlay-lg top-header-top pc:hidden fixed inset-x-0 bottom-0 transition-opacity duration-200 motion-reduce:transition-none ${
+          className={`bg-overlay-lg top-header-top z-drawer-backdrop pc:hidden fixed inset-x-0 bottom-0 transition-opacity duration-200 motion-reduce:transition-none ${
             isDrawerActive ? 'opacity-100' : 'pointer-events-none opacity-0'
           }`}
         />
@@ -153,7 +154,7 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
           tabIndex={-1}
           inert={isNavOffCanvas || undefined}
           aria-label={navLabel}
-          className={`border-gray-subtle-2 bg-background wide:px-6 top-header-top pc:translate-x-0 pc:py-8 w-sidebar-w focus-visible:ring-brand fixed bottom-0 left-0 flex flex-col gap-6 overflow-y-auto border-r p-4 transition-transform duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-inset motion-reduce:transition-none ${
+          className={`border-gray-subtle-2 bg-background wide:px-6 top-header-top z-drawer pc:translate-x-0 pc:py-8 w-sidebar-w focus-visible:ring-brand fixed bottom-0 left-0 flex flex-col gap-6 overflow-y-auto border-r p-4 transition-transform duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-inset motion-reduce:transition-none ${
             isDrawerOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >
