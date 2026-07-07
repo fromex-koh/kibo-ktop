@@ -88,10 +88,7 @@ const IconGuidePage = () => (
           </thead>
           <tbody>
             {ICON_SIZES.map(({ key, class: sizeClass }) => (
-              <tr
-                key={key}
-                className="border-gray-subtle-2 bg-background border-b last:border-b-0"
-              >
+              <tr key={key} className="border-gray-subtle-2 bg-background border-b last:border-b-0">
                 <td className="px-4 py-3">
                   <Home aria-hidden="true" className={`${sizeClass} text-subtle`} />
                 </td>
@@ -143,7 +140,7 @@ const IconGuidePage = () => (
               key={name}
               className="border-gray-subtle-2 flex flex-col items-center gap-3 rounded-md border p-4"
             >
-              <span className="bg-info-surface text-info-text flex size-icon-2xl items-center justify-center rounded-full">
+              <span className="bg-info-surface text-info-text size-icon-2xl flex items-center justify-center rounded-full">
                 <Icon aria-hidden="true" className="size-icon-md" />
               </span>
               <CopyChip value={name} />
