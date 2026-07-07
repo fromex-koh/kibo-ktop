@@ -17,12 +17,24 @@ import {
   Upload,
   X,
 } from 'lucide-react';
+import CodeBlock from '@/components/guide/code-block';
 import CopyChip from '@/components/guide/copy-chip';
 import GuidePage from '@/components/guide/guide-page';
+import { Icon } from '@/components/icon';
 import { GUIDE_NAV_SECTIONS } from '@/constants/guide-nav';
 import tokens from '@tokens';
 
 export const metadata: Metadata = { title: '아이콘' };
+
+// Icon 컴포넌트 사용법 스니펫 — CopyChip 로 '복사' 노출, 클립보드엔 전체 복사.
+const COMPONENT_USAGE = `import { Home } from 'lucide-react';
+import { Icon } from '@/components/icon';
+
+// outline(기본) — 아이콘만 렌더
+<Icon icon={Home} label="홈" className="size-icon-lg" />
+
+// solid — 원형 배지 안에 아이콘
+<Icon icon={Home} variant="solid" label="홈" className="size-icon-2xl" />`;
 
 // package.json 의 lucide-react 버전과 라이선스. 패키지를 올리면 함께 갱신한다.
 const LUCIDE_VERSION = '1.23.0';
@@ -249,6 +261,176 @@ const IconGuidePage = () => (
             </li>
           ))}
         </ul>
+      </div>
+    </section>
+
+    <section aria-labelledby="icon-component" className="flex flex-col gap-6">
+      <div>
+        <h2 id="icon-component" className="typo-heading-h4-bold">
+          컴포넌트 (Icon)
+        </h2>
+        <p className="typo-body-l-regular text-subtle">
+          위 두 스타일을 <code>variant</code> 로 구분하는 <code>Icon</code> 컴포넌트입니다. lucide
+          글리프를 <code>icon</code> prop 으로 넘깁니다.
+        </p>
+      </div>
+
+      {/* 미리보기 */}
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-2">
+          <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+            variant
+          </span>
+          <h3 className="typo-body-l-medium text-foreground">outline — 아이콘만 (기본)</h3>
+        </div>
+        <div className="border-gray-subtle-2 flex items-center gap-4 rounded-md border p-6">
+          <Icon icon={Home} label="홈" className="size-icon-lg text-bolder" />
+          <Icon icon={Info} label="정보" className="size-icon-lg text-bolder" />
+        </div>
+      </div>
+
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-2">
+          <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+            variant
+          </span>
+          <h3 className="typo-body-l-medium text-foreground">solid — 원형 배지 안에 아이콘</h3>
+        </div>
+        <div className="border-gray-subtle-2 flex items-center gap-4 rounded-md border p-6">
+          <Icon icon={Home} variant="solid" label="홈" className="size-icon-2xl" />
+          <Icon icon={Info} variant="solid" label="정보" className="size-icon-2xl" />
+        </div>
+        <CodeBlock code={COMPONENT_USAGE} language="tsx" copyLabel="복사" />
+      </div>
+    </section>
+
+    <section aria-labelledby="icon-props" className="flex flex-col gap-4">
+      <div>
+        <h2 id="icon-props" className="typo-heading-h4-bold">
+          Props
+        </h2>
+        <p className="typo-body-l-regular text-subtle">커스터마이징 가능한 속성들입니다.</p>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <h3 className="typo-body-l-medium text-foreground">BASIC</h3>
+        <div className="bg-background border-gray-subtle-2 overflow-x-auto rounded-md border">
+          <table className="w-full text-left">
+            <caption className="sr-only">Icon Props 목록</caption>
+            <thead>
+              <tr className="border-gray-subtle-2 border-b bg-gray-100/25">
+                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                  Name
+                </th>
+                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                  Description
+                </th>
+                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                  Default
+                </th>
+                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                  Control
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                <th
+                  scope="row"
+                  className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                >
+                  icon
+                </th>
+                <td className="px-4 py-3">
+                  <div className="flex flex-col gap-2">
+                    <p className="typo-body-l-regular text-subtle">
+                      표시할 lucide 아이콘 컴포넌트(필수).
+                    </p>
+                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                      LucideIcon
+                    </span>
+                  </div>
+                </td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">-</td>
+                <td className="typo-body-l-regular text-subtle px-4 py-3">-</td>
+              </tr>
+              <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                <th
+                  scope="row"
+                  className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                >
+                  variant
+                </th>
+                <td className="px-4 py-3">
+                  <div className="flex flex-col gap-2">
+                    <p className="typo-body-l-regular text-subtle">
+                      아이콘 스타일. outline 은 글리프만, solid 는 원형 배지 안에 담아 강조한다.
+                    </p>
+                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                      &apos;outline&apos; | &apos;solid&apos;
+                    </span>
+                  </div>
+                </td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                  &apos;outline&apos;
+                </td>
+                <td className="px-4 py-3">
+                  <div className="flex flex-wrap gap-1">
+                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                      outline
+                    </span>
+                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                      solid
+                    </span>
+                  </div>
+                </td>
+              </tr>
+              <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                <th
+                  scope="row"
+                  className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                >
+                  label
+                </th>
+                <td className="px-4 py-3">
+                  <div className="flex flex-col gap-2">
+                    <p className="typo-body-l-regular text-subtle">
+                      접근성 이름. 의미 있는 아이콘이면 지정(role=&quot;img&quot;). 생략하면 장식용
+                      으로 보고 aria-hidden 처리한다.
+                    </p>
+                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                      string
+                    </span>
+                  </div>
+                </td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">-</td>
+                <td className="typo-body-l-regular text-subtle px-4 py-3">-</td>
+              </tr>
+              <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                <th
+                  scope="row"
+                  className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                >
+                  className
+                </th>
+                <td className="px-4 py-3">
+                  <div className="flex flex-col gap-2">
+                    <p className="typo-body-l-regular text-subtle">
+                      크기·색 확장. outline 은 아이콘에, solid 는 배지에 적용된다(예: size-icon-*).
+                    </p>
+                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                      string
+                    </span>
+                  </div>
+                </td>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                  &quot;&quot;
+                </td>
+                <td className="typo-body-l-regular text-subtle px-4 py-3">-</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </section>
   </GuidePage>
