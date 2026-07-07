@@ -325,7 +325,13 @@ const IconGuidePage = () => (
         </div>
         <div className="border-gray-subtle-2 flex items-center gap-4 rounded-md border p-6">
           <Icon icon={X} variant="solid" className="size-icon-2xl" />
-          <Icon icon={Info} variant="solid" className="size-icon-2xl" />
+          {/* solid info 는 lucide 에 채운 글리프가 없어 배지 안에 텍스트 'i' 를 넣어 만든다
+              (아이콘 목록 Solid 큐레이션과 동일). */}
+          <span className="bg-info-surface text-info-text size-icon-2xl flex items-center justify-center rounded-full">
+            <span aria-hidden="true" className="typo-heading-h4-bold">
+              i
+            </span>
+          </span>
         </div>
         <CodeBlock code={COMPONENT_USAGE} language="tsx" copyLabel="복사" />
       </div>
