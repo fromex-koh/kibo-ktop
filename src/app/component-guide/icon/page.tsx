@@ -10,6 +10,7 @@ import {
   ChevronsRight,
   ChevronUp,
   Download,
+  GitBranch,
   Home,
   Info,
   Lock,
@@ -22,6 +23,12 @@ import { GUIDE_NAV_SECTIONS } from '@/constants/guide-nav';
 import tokens from '@tokens';
 
 export const metadata: Metadata = { title: '아이콘' };
+
+// package.json 의 lucide-react 버전과 라이선스. 패키지를 올리면 함께 갱신한다.
+const LUCIDE_VERSION = '1.23.0';
+const LUCIDE_REPO_URL = 'https://github.com/lucide-icons/lucide';
+// 정확한 아이콘 총 개수는 릴리스마다 계속 늘어나(deprecated 별칭 포함 약 2,000개), 대략치로 안내.
+const LUCIDE_ICON_COUNT_LABEL = '2,000개 이상';
 
 // 아이콘 크기 — size.icon-* 토큰(size-icon-* 유틸)만 사용한다. 클래스명은 Tailwind 정적 분석을
 // 위해 리터럴로 고정 — 템플릿 문자열(`size-${key}`)로 조합하면 스캐너가 인식하지 못해 스타일이
@@ -61,6 +68,56 @@ const IconGuidePage = () => (
     category={GUIDE_NAV_SECTIONS[1].title}
     description="lucide-react 아이콘 중 실제 화면에서 쓰는 것들을 큐레이션했습니다."
   >
+    <section aria-labelledby="icon-library" className="flex flex-col gap-4">
+      <div>
+        <h2 id="icon-library" className="typo-heading-h4-bold">
+          라이브러리
+        </h2>
+        <p className="typo-body-l-regular text-subtle">
+          아이콘은 이 프로젝트의 표준 라이브러리인 lucide-react 하나만 사용합니다([NA-008]).
+        </p>
+      </div>
+      <div className="border-gray-subtle-2 flex flex-col gap-4 rounded-md border p-4">
+        <dl className="typo-body-l-regular flex flex-col gap-3">
+          <div className="flex items-center gap-3">
+            <dt className="text-subtle w-20 shrink-0">패키지</dt>
+            <dd className="font-mono">lucide-react</dd>
+          </div>
+          <div className="flex items-center gap-3">
+            <dt className="text-subtle w-20 shrink-0">버전</dt>
+            <dd className="font-mono">v{LUCIDE_VERSION}</dd>
+          </div>
+          <div className="flex items-center gap-3">
+            <dt className="text-subtle w-20 shrink-0">라이선스</dt>
+            <dd>ISC — 상업적 사용 가능(무료)</dd>
+          </div>
+          <div className="flex items-center gap-3">
+            <dt className="text-subtle w-20 shrink-0">아이콘 수</dt>
+            <dd>{LUCIDE_ICON_COUNT_LABEL}</dd>
+          </div>
+          <div className="flex items-center gap-3">
+            <dt className="text-subtle w-20 shrink-0">저장소</dt>
+            <dd>
+              <a
+                href={LUCIDE_REPO_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary focus-visible:ring-focus focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+              >
+                <GitBranch aria-hidden="true" className="size-4 shrink-0" />
+                lucide-icons/lucide
+                <span className="sr-only"> (새 창에서 열림)</span>
+              </a>
+            </dd>
+          </div>
+        </dl>
+        <div className="flex flex-wrap gap-2">
+          <CopyChip value="yarn add lucide-react" label="설치" />
+          <CopyChip value="import { Home } from 'lucide-react';" label="사용법" />
+        </div>
+      </div>
+    </section>
+
     <section aria-labelledby="icon-size" className="flex flex-col gap-4">
       <div>
         <h2 id="icon-size" className="typo-heading-h4-bold">
