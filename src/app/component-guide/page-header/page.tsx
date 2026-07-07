@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import CodeBlock from '@/components/guide/code-block';
 import GuidePage from '@/components/guide/guide-page';
+import { GUIDE_NAV_SECTIONS } from '@/constants/guide-nav';
 import { PageHeader, PageHeaderDescription, PageHeaderTitle } from '@/components/page-header';
 
 export const metadata: Metadata = { title: '페이지 헤더' };
@@ -26,6 +27,7 @@ const PageHeaderGuidePage = () => (
   <GuidePage
     title="페이지 헤더 (PageHeader)"
     description="페이지·섹션 최상단의 제목+설명 묶음 컴포넌트입니다."
+    category={GUIDE_NAV_SECTIONS[2].title}
   >
     <section aria-labelledby="ph-variant" className="flex flex-col gap-6">
       <div>
