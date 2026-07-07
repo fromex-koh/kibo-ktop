@@ -152,45 +152,33 @@ const IconGuidePage = () => (
             </tr>
           </thead>
           <tbody>
-            {ICON_SIZES.map(({ key, class: sizeClass }) => {
-              // 배지 원 대비 글리프 50% 비율(참고 이미지 기준). xs~md(12·16·20px) 원은 절반 값이
-              // 정의된 토큰(최소 12px)보다 작아 size-icon-* 로 표현이 안 되므로, 이 표에서만
-              // 정확한 비율 검증을 위해 계산된 px 를 인라인으로 준다(PB-12 — 토큰 뷰어 예외).
-              const glyphPx = tokens.size[key] / 2;
-              return (
-                <tr
-                  key={key}
-                  className="border-gray-subtle-2 bg-background border-b last:border-b-0"
-                >
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      {SOLID_SWATCHES.map(({ label, Icon, bg }) => (
-                        <span
-                          key={label}
-                          className={`${sizeClass} flex shrink-0 items-center justify-center rounded-full`}
-                          style={{ backgroundColor: bg }}
-                        >
-                          <Icon
-                            aria-hidden="true"
-                            style={{
-                              width: glyphPx,
-                              height: glyphPx,
-                              color: 'var(--raw-common-white)',
-                            }}
-                          />
-                        </span>
-                      ))}
-                    </div>
-                  </td>
-                  <th scope="row" className="px-4 py-3 text-left font-normal">
-                    <CopyChip value={sizeClass} />
-                  </th>
-                  <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
-                    {tokens.size[key]}px
-                  </td>
-                </tr>
-              );
-            })}
+            {ICON_SIZES.map(({ key, class: sizeClass }) => (
+              <tr key={key} className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-3">
+                    {SOLID_SWATCHES.map(({ label, Icon, bg }) => (
+                      <span
+                        key={label}
+                        className={`${sizeClass} flex shrink-0 items-center justify-center rounded-full`}
+                        style={{ backgroundColor: bg }}
+                      >
+                        <Icon
+                          aria-hidden="true"
+                          className={sizeClass}
+                          style={{ color: 'var(--raw-common-white)' }}
+                        />
+                      </span>
+                    ))}
+                  </div>
+                </td>
+                <th scope="row" className="px-4 py-3 text-left font-normal">
+                  <CopyChip value={sizeClass} />
+                </th>
+                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                  {tokens.size[key]}px
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
@@ -231,8 +219,8 @@ const IconGuidePage = () => (
               key={name}
               className="border-gray-subtle-2 flex flex-col items-center gap-3 rounded-md border p-4"
             >
-              <span className="bg-info-surface text-info-text size-icon-2xl flex items-center justify-center rounded-full">
-                <Icon aria-hidden="true" className="size-icon-md" />
+              <span className="bg-info-surface text-info-text size-icon-xl flex items-center justify-center rounded-full">
+                <Icon aria-hidden="true" className="size-icon-xl" />
               </span>
               <CopyChip value={name} />
             </li>
