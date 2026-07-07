@@ -33,9 +33,9 @@ const TEXT_TOKENS = new Set([
   'success',
   'info',
 ]);
-// 스크롤바 토큰은 ::-webkit-scrollbar 전용이라 Tailwind 유틸이 없다(null → 클래스 대신 토큰명 표기).
-const utilClass = (name: string): string | null => {
-  if (name.startsWith('scroll-')) return null;
+// 모든 색 토큰은 --color-* 브리지로 유틸이 생기므로 대표 유틸 클래스를 돌려준다.
+// (scroll-thumb·track 은 실제론 스크롤바 CSS 변수로 쓰지만 bg-* 유틸도 유효해 복사용으로 노출.)
+const utilClass = (name: string): string => {
   if (BORDER_TOKENS.has(name)) return `border-${name}`;
   if (TEXT_TOKENS.has(name)) return `text-${name}`;
   if (name.startsWith('icon-')) return `text-${name}`; // 아이콘은 currentColor(text-)로 색을 준다
@@ -169,13 +169,7 @@ const SemanticColorGuidePage = () => (
                   <LiveSwatch name={name} />
                 </td>
                 <th scope="row" className="px-3 py-3 text-left">
-                  {util ? (
-                    <CopyChip value={util} />
-                  ) : (
-                    <span className="typo-caption text-bolder font-mono whitespace-nowrap">
-                      {name}
-                    </span>
-                  )}
+                  <CopyChip value={util} />
                 </th>
                 <td className="px-3 py-3">
                   <ModeSwatch color={modes.light} />

@@ -49,7 +49,8 @@ for (const hue of hues) {
 }
 // common: 스케일 밖 단일값(앵커) — hex 만 검증. semantic 은 {light,dark} 에서만 참조한다(반사 대상 아님).
 for (const [k, v] of Object.entries(common))
-  if (!HEX.test(v)) errors.push(`common.${k}="${v}" 는 #RRGGBB 형식 아님`);
+  if (!HEX.test(v) && v !== 'transparent' && v !== 'currentColor')
+    errors.push(`common.${k}="${v}" 는 #RRGGBB 또는 transparent/currentColor 여야 함`);
 // 참조 파싱: primitive("gray.900") 는 [hue, 숫자스텝], common("common.white") 은 [hue, 문자키].
 const parseRef = (ref) => {
   // 구조 키워드(투명/현재색) — 팔레트 밖 리터럴이라 검증/참조 대상이 아니다(예: 고스트 버튼 fill).
@@ -134,8 +135,8 @@ if (Object.keys(grid).length) {
 // alpha 프리미티브: white/black 만, 스텝은 1~100 숫자 배열
 for (const [name, steps] of Object.entries(alpha)) {
   if (name !== 'white' && name !== 'black') errors.push(`alpha.${name} — white/black 만 지원`);
-  if (!Array.isArray(steps) || steps.some((s) => typeof s !== 'number' || s < 1 || s > 100))
-    errors.push(`alpha.${name} 는 1~100 숫자 배열이어야 함`);
+  if (!Array.isArray(steps) || steps.some((s) => typeof s !== 'number' || s < 0 || s > 100))
+    errors.push(`alpha.${name} 는 0~100 숫자 배열이어야 함`);
 }
 // overlay: {light,dark} 각각 alpha 프리미티브 참조("black.5" → --raw-black-a5)
 const alphaHas = (ref) => {

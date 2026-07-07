@@ -93,22 +93,25 @@
   --raw-info-900: #17315c;
 
   /* raw white alpha */
-  --raw-white-a5: rgba(255, 255, 255, 0.05);
+  --raw-white-a0: rgba(255, 255, 255, 0);
   --raw-white-a10: rgba(255, 255, 255, 0.1);
-  --raw-white-a15: rgba(255, 255, 255, 0.15);
-  --raw-white-a20: rgba(255, 255, 255, 0.2);
-  --raw-white-a30: rgba(255, 255, 255, 0.3);
+  --raw-white-a25: rgba(255, 255, 255, 0.25);
+  --raw-white-a50: rgba(255, 255, 255, 0.5);
+  --raw-white-a75: rgba(255, 255, 255, 0.75);
+  --raw-white-a100: rgba(255, 255, 255, 1);
 
   /* raw black alpha */
-  --raw-black-a5: rgba(0, 0, 0, 0.05);
+  --raw-black-a0: rgba(0, 0, 0, 0);
   --raw-black-a10: rgba(0, 0, 0, 0.1);
-  --raw-black-a15: rgba(0, 0, 0, 0.15);
-  --raw-black-a20: rgba(0, 0, 0, 0.2);
+  --raw-black-a25: rgba(0, 0, 0, 0.25);
+  --raw-black-a50: rgba(0, 0, 0, 0.5);
   --raw-black-a75: rgba(0, 0, 0, 0.75);
+  --raw-black-a100: rgba(0, 0, 0, 1);
 
   /* raw common (스케일 밖 단일값 — white/black 앵커) */
   --raw-common-white: #ffffff;
   --raw-common-black: #1d2023;
+  --raw-common-transparent: transparent;
 
   /* scale (라이트 = raw identity) */
   --ds-blue-50: var(--raw-blue-50);
@@ -272,9 +275,9 @@
   --ds-scroll-track: var(--ds-gray-100);
 
   /* overlay (라이트 = 검정 alpha, primitive 참조) */
-  --ds-overlay-sm: var(--raw-black-a5);
-  --ds-overlay-md: var(--raw-black-a10);
-  --ds-overlay-lg: var(--raw-black-a20);
+  --ds-overlay-sm: var(--raw-black-a10);
+  --ds-overlay-md: var(--raw-black-a25);
+  --ds-overlay-lg: var(--raw-black-a50);
 }
 
 .dark {
@@ -383,9 +386,9 @@
   --ds-info: var(--raw-info-300);
 
   /* overlay override (다크 = 흰색 alpha, primitive 참조) */
-  --ds-overlay-sm: var(--raw-white-a5);
-  --ds-overlay-md: var(--raw-white-a10);
-  --ds-overlay-lg: var(--raw-white-a20);
+  --ds-overlay-sm: var(--raw-white-a10);
+  --ds-overlay-md: var(--raw-white-a25);
+  --ds-overlay-lg: var(--raw-white-a50);
 }
 
 @theme inline {
@@ -581,7 +584,7 @@
   /* shadow (라이트) — px 입력 → rem, 색은 primitive 참조 */
   --ds-shadow-1: 0 0.0625rem 0.1875rem 0 var(--raw-black-a10);
   --ds-shadow-2: 0 0.25rem 0.5rem 0 var(--raw-black-a10);
-  --ds-shadow-3: 0 0.5rem 1rem 0 var(--raw-black-a15);
+  --ds-shadow-3: 0 0.5rem 1rem 0 var(--raw-black-a25);
   /* blur */
   --ds-blur-sm: 0.375rem;
   --ds-blur-md: 0.75rem;
@@ -625,9 +628,9 @@
 
 .dark {
   /* shadow (다크 = 흰색 primitive) */
-  --ds-shadow-1: 0 0.0625rem 0.1875rem 0 var(--raw-white-a15);
-  --ds-shadow-2: 0 0.25rem 0.5rem 0 var(--raw-white-a20);
-  --ds-shadow-3: 0 0.5rem 1rem 0 var(--raw-white-a30);
+  --ds-shadow-1: 0 0.0625rem 0.1875rem 0 var(--raw-white-a10);
+  --ds-shadow-2: 0 0.25rem 0.5rem 0 var(--raw-white-a25);
+  --ds-shadow-3: 0 0.5rem 1rem 0 var(--raw-white-a50);
 }
 
 @theme {

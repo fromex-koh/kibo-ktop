@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import type { ReactNode } from 'react';
 import type { Metadata } from 'next';
 import GuidePage from '@/components/guide/guide-page';
 import tokens from '@tokens';
@@ -13,19 +13,29 @@ const hexToRgba = (hex: string): string => {
   return `rgba(${r}, ${g}, ${b}, 1)`;
 };
 
+// 표시값 — hex 는 rgba 로 변환, 그 외(transparent 등)는 그대로.
+const display = (v: string): string => (v.startsWith('#') ? hexToRgba(v) : v);
+
+// alpha 스텝(0~100) → rgba 문자열.
+const alphaRgba = (color: string, step: number): string =>
+  `rgba(${color === 'black' ? '0, 0, 0' : '255, 255, 255'}, ${step / 100})`;
+
+// 투명 값(common transparent·alpha) 뒤에 깔 체커보드 — --raw-* 는 모드 무관 고정.
+const CHECKERBOARD =
+  'repeating-conic-gradient(var(--raw-gray-300) 0% 25%, var(--raw-common-white) 0% 50%) 0 0 / 8px 8px';
+
 // 휴가 속한 그룹(brand/system) 라벨 — Figma 의 "brand / blue" 표기를 재현한다. 미정의면 휴명으로 대체.
 const groupOf = (hue: string): string =>
   Object.entries(tokens.primitiveGroups).find(([, hues]) => hues.includes(hue))?.[0] ?? hue;
 
-// 색상 — Tier 1 프리미티브 팔레트. Figma(Mode 1) 의 "01 Primitive" 정의를 이름/값 표로 그대로 옮긴다.
-const ColorGuidePage = () => (
-  <GuidePage
-    title="01 Primitive"
-    description="Figma(Mode 1) 의 프리미티브 팔레트입니다. brand·system 그룹의 8색을 50~900 스케일로 정의하고, 스케일 밖 앵커인 common(white·black)을 함께 둡니다. 값은 Figma 원본대로 rgba 로 표기합니다(저장은 hex). 시맨틱 토큰(background·brand·danger 등)이 이 값을 참조하므로, 직접 사용은 지양하고 시맨틱 토큰을 우선하세요."
-  >
+type SwatchRow = { name: string; cssVar: string; value: string };
+
+// 그룹 하나 = 독립 테이블. 제목(h2) + 이름/값 표. 투명 값도 보이도록 스와치 뒤 체커보드.
+const ColorTable = ({ title, rows }: { title: ReactNode; rows: SwatchRow[] }) => (
+  <section className="flex flex-col gap-2">
+    <h2 className="typo-label">{title}</h2>
     <div className="overflow-x-auto">
       <table className="w-full border-collapse text-left">
-        <caption className="sr-only">프리미티브 색상 팔레트 — 이름과 rgba 값</caption>
         <thead>
           <tr className="border-gray-subtle-2 border-b">
             <th scope="col" className="typo-label text-subtle px-3 py-3 whitespace-nowrap">
@@ -37,83 +47,80 @@ const ColorGuidePage = () => (
           </tr>
         </thead>
         <tbody>
-          {Object.entries(tokens.primitive).map(([hue, steps]) => (
-            <Fragment key={hue}>
-              <tr className="bg-surface border-gray-subtle-2 border-b">
-                <th
-                  scope="colgroup"
-                  colSpan={2}
-                  className="typo-label px-3 py-3 text-left font-normal"
-                >
-                  <span className="text-subtle">{groupOf(hue)} / </span>
-                  <span className="text-bolder font-semibold">{hue}</span>
-                </th>
-              </tr>
-              {Object.entries(steps).map(([step, hex]) => (
-                <tr
-                  key={step}
-                  className="border-gray-subtle-2 hover:bg-surface border-b transition-colors"
-                >
-                  <th
-                    scope="row"
-                    className="typo-caption text-bolder w-1/3 px-3 py-3 font-mono font-normal"
-                  >
-                    {step}
-                  </th>
-                  <td className="px-3 py-3">
-                    <span className="flex items-center gap-3">
-                      <span
-                        aria-hidden="true"
-                        className="border-gray-subtle-2 size-icon-md shrink-0 rounded border"
-                        style={{ background: `var(--raw-${hue}-${step})` }}
-                      />
-                      <span className="typo-caption text-subtle font-mono whitespace-nowrap">
-                        {hexToRgba(hex)}
-                      </span>
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </Fragment>
-          ))}
-          <Fragment key="common">
-            <tr className="bg-surface border-gray-subtle-2 border-b">
+          {rows.map((row) => (
+            <tr
+              key={row.name}
+              className="border-gray-subtle-2 hover:bg-surface border-b transition-colors"
+            >
               <th
-                scope="colgroup"
-                colSpan={2}
-                className="typo-label text-bolder px-3 py-3 text-left font-semibold"
+                scope="row"
+                className="typo-caption text-bolder w-1/3 px-3 py-3 font-mono font-normal"
               >
-                common
+                {row.name}
               </th>
-            </tr>
-            {Object.entries(tokens.common).map(([name, hex]) => (
-              <tr
-                key={name}
-                className="border-gray-subtle-2 hover:bg-surface border-b transition-colors"
-              >
-                <th
-                  scope="row"
-                  className="typo-caption text-bolder w-1/3 px-3 py-3 font-mono font-normal"
-                >
-                  {name}
-                </th>
-                <td className="px-3 py-3">
-                  <span className="flex items-center gap-3">
-                    <span
-                      aria-hidden="true"
-                      className="border-gray-subtle-2 size-icon-md shrink-0 rounded border"
-                      style={{ background: `var(--raw-common-${name})` }}
-                    />
-                    <span className="typo-caption text-subtle font-mono whitespace-nowrap">
-                      {hexToRgba(hex)}
-                    </span>
+              <td className="px-3 py-3">
+                <span className="flex items-center gap-3">
+                  <span
+                    aria-hidden="true"
+                    className="border-gray-subtle-2 size-icon-md relative shrink-0 overflow-hidden rounded border"
+                    style={{ background: CHECKERBOARD }}
+                  >
+                    <span className="absolute inset-0" style={{ background: row.cssVar }} />
                   </span>
-                </td>
-              </tr>
-            ))}
-          </Fragment>
+                  <span className="typo-caption text-subtle font-mono whitespace-nowrap">
+                    {row.value}
+                  </span>
+                </span>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
+    </div>
+  </section>
+);
+
+// 색상 — Tier 1 프리미티브 팔레트. Figma(Mode 1) 의 "01 Primitive" 정의를 그룹별 표로 옮긴다.
+const ColorGuidePage = () => (
+  <GuidePage
+    title="01 Primitive"
+    description="Figma(Mode 1) 의 프리미티브 팔레트입니다. brand·system 그룹의 8색을 50~900 스케일로 정의하고, 스케일 밖 앵커인 common(white·black·transparent)과 반투명 alpha(black·white 0~100)를 함께 둡니다. 값은 Figma 원본대로 rgba 로 표기합니다(저장은 hex). 시맨틱 토큰(background·brand·danger 등)이 이 값을 참조하므로, 직접 사용은 지양하고 시맨틱 토큰을 우선하세요."
+  >
+    <div className="flex flex-col gap-8">
+      {Object.entries(tokens.primitive).map(([hue, steps]) => (
+        <ColorTable
+          key={hue}
+          title={
+            <>
+              <span className="text-subtle">{groupOf(hue)} / </span>
+              <span className="text-bolder font-semibold">{hue}</span>
+            </>
+          }
+          rows={Object.entries(steps).map(([step, hex]) => ({
+            name: step,
+            cssVar: `var(--raw-${hue}-${step})`,
+            value: hexToRgba(hex),
+          }))}
+        />
+      ))}
+      <ColorTable
+        title={<span className="text-bolder font-semibold">common</span>}
+        rows={Object.entries(tokens.common).map(([name, value]) => ({
+          name,
+          cssVar: `var(--raw-common-${name})`,
+          value: display(value),
+        }))}
+      />
+      <ColorTable
+        title={<span className="text-bolder font-semibold">alpha</span>}
+        rows={Object.entries(tokens.alpha).flatMap(([color, steps]) =>
+          steps.map((step) => ({
+            name: `${color}${step}`,
+            cssVar: `var(--raw-${color}-a${step})`,
+            value: alphaRgba(color, step),
+          })),
+        )}
+      />
     </div>
   </GuidePage>
 );
