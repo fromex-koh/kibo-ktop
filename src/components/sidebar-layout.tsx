@@ -160,9 +160,9 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
         >
           {navSections.map((section) => (
             <div key={section.title} className="flex flex-col gap-2">
-              <p className="typo-caption-regular text-subtle px-1 font-semibold uppercase">
+              <h2 className="typo-caption-regular text-subtle px-1 font-semibold uppercase">
                 {section.title}
-              </p>
+              </h2>
               <ul className="flex flex-col gap-0.5">
                 {section.items.map((item) => {
                   // external 은 새 창 링크(현재 라우트 개념 없음). 그 외엔 현재 라우트면 활성 표시. [KWCAG 5.3.1]
