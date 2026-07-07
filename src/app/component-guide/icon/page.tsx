@@ -27,14 +27,21 @@ import tokens from '@tokens';
 export const metadata: Metadata = { title: '아이콘' };
 
 // Icon 컴포넌트 사용법 스니펫 — CopyChip 로 '복사' 노출, 클립보드엔 전체 복사.
-const COMPONENT_USAGE = `import { Home } from 'lucide-react';
+// 아이콘은 장식용(aria-hidden)이라 별도 접근성 prop 이 없다. 클릭 가능한 아이콘 버튼은 <button>
+// 으로 감싸고 그 버튼에 aria-label 을 준다([5.1.1]).
+const COMPONENT_USAGE = `import { X } from 'lucide-react';
 import { Icon } from '@/components/icon';
 
 // outline(기본) — 아이콘만 렌더
-<Icon icon={Home} label="홈" className="size-icon-lg" />
+<Icon icon={X} className="size-icon-lg" />
 
 // solid — 원형 배지 안에 아이콘
-<Icon icon={Home} variant="solid" label="홈" className="size-icon-2xl" />`;
+<Icon icon={X} variant="solid" className="size-icon-2xl" />
+
+// 클릭 가능한 아이콘 버튼 — 버튼에 aria-label, 아이콘은 장식용
+<button type="button" aria-label="닫기">
+  <Icon icon={X} />
+</button>`;
 
 // package.json 의 lucide-react 버전과 라이선스. 패키지를 올리면 함께 갱신한다.
 const LUCIDE_VERSION = '1.23.0';
@@ -299,8 +306,8 @@ const IconGuidePage = () => (
           <h3 className="typo-body-l-medium text-foreground">outline — 아이콘만 (기본)</h3>
         </div>
         <div className="border-gray-subtle-2 flex items-center gap-4 rounded-md border p-6">
-          <Icon icon={Home} label="홈" className="size-icon-lg text-bolder" />
-          <Icon icon={Info} label="정보" className="size-icon-lg text-bolder" />
+          <Icon icon={X} className="size-icon-lg text-bolder" />
+          <Icon icon={Info} className="size-icon-lg text-bolder" />
         </div>
       </div>
 
@@ -312,8 +319,8 @@ const IconGuidePage = () => (
           <h3 className="typo-body-l-medium text-foreground">solid — 원형 배지 안에 아이콘</h3>
         </div>
         <div className="border-gray-subtle-2 flex items-center gap-4 rounded-md border p-6">
-          <Icon icon={Home} variant="solid" label="홈" className="size-icon-2xl" />
-          <Icon icon={Info} variant="solid" label="정보" className="size-icon-2xl" />
+          <Icon icon={X} variant="solid" className="size-icon-2xl" />
+          <Icon icon={Info} variant="solid" className="size-icon-2xl" />
         </div>
         <CodeBlock code={COMPONENT_USAGE} language="tsx" copyLabel="복사" />
       </div>
@@ -399,27 +406,6 @@ const IconGuidePage = () => (
                     </span>
                   </div>
                 </td>
-              </tr>
-              <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
-                <th
-                  scope="row"
-                  className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                >
-                  label
-                </th>
-                <td className="px-4 py-3">
-                  <div className="flex flex-col gap-2">
-                    <p className="typo-body-l-regular text-subtle">
-                      접근성 이름. 의미 있는 아이콘이면 지정(role=&quot;img&quot;). 생략하면 장식용
-                      으로 보고 aria-hidden 처리한다.
-                    </p>
-                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
-                      string
-                    </span>
-                  </div>
-                </td>
-                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">-</td>
-                <td className="typo-body-l-regular text-subtle px-4 py-3">-</td>
               </tr>
               <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
                 <th
