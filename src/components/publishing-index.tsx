@@ -15,11 +15,11 @@ import {
 } from 'lucide-react';
 import { useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import {
-  AUDIENCE_VALUES,
+  USER_TYPE_VALUES,
   isStructureBranch,
   PUBLISHING_INDEX_CONTENT,
   STATUS_VALUES,
-  type Audience,
+  type UserType,
   type Status,
   type StructureGroup,
   type StructureNode,
@@ -93,18 +93,18 @@ type FlatLeaf = {
   status: Status;
   version: string;
   note?: StructureNote;
-  audience?: Audience; // 상위에서 상속된 최종 사용자 유형. 없으면 공통(기업·기관 둘 다).
+  userType?: UserType; // 상위에서 상속된 최종 사용자 유형. 없으면 공통(기업·기관 둘 다).
 };
 
 const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
-  // inherited = 상위(그룹·브랜치)에서 내려온 audience. 노드에 자체 audience 가 있으면 그것이 우선한다.
-  const walk = (node: StructureNode, path: string[], inherited?: Audience): FlatLeaf[] => {
+  // inherited = 상위(그룹·브랜치)에서 내려온 userType. 노드에 자체 userType 가 있으면 그것이 우선한다.
+  const walk = (node: StructureNode, path: string[], inherited?: UserType): FlatLeaf[] => {
     // 라벨이 바로 위 뎁스와 같으면(예: '홈' 그룹의 유일한 화면도 라벨이 '홈') 실질적으로
     // 추가 뎁스가 아니므로 경로에 다시 넣지 않는다 — 컬럼마다 같은 텍스트가 반복되지 않는다.
     const last = path[path.length - 1];
     const nextPath = node.label === last ? path : [...path, node.label];
     if (isStructureBranch(node)) {
-      const branchAudience = node.audience ?? inherited;
+      const branchUserType = node.userType ?? inherited;
       // branch 자신도 독립된 화면(screen)일 수 있다 — 예: '(1) 고객정보활용동의' 자체가
       // 화면이면서 하위에 상세보기·전자서명을 더 갖는 경우. 있으면 그 행을 먼저 넣는다.
       // screen.label 이 있으면(예: '목록') 자기 화면을 한 뎁스 더 내려간 항목으로 취급해,
@@ -119,13 +119,13 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
               status: node.screen.status,
               version: node.screen.version,
               note: node.screen.note,
-              audience: node.screen.audience ?? branchAudience,
+              userType: node.screen.userType ?? branchUserType,
             },
           ]
         : [];
       return [
         ...ownScreen,
-        ...node.children.flatMap((child) => walk(child, nextPath, branchAudience)),
+        ...node.children.flatMap((child) => walk(child, nextPath, branchUserType)),
       ];
     }
     return [
@@ -136,11 +136,11 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
         status: node.status,
         version: node.version,
         note: node.note,
-        audience: node.audience ?? inherited,
+        userType: node.userType ?? inherited,
       },
     ];
   };
-  return group.children.flatMap((child) => walk(child, [group.name], group.audience));
+  return group.children.flatMap((child) => walk(child, [group.name], group.userType));
 };
 
 // depth 컬럼에서 두 leaf 를 "같은 상위 아래" 로 볼지 판단하는 키. depth 가 leaf 의 실제 경로보다
@@ -203,17 +203,17 @@ const DEPTH_BADGE_STYLES = [
 const depthBadgeClass = (depth: number): string =>
   DEPTH_BADGE_STYLES[Math.min(depth, DEPTH_BADGE_STYLES.length - 1)];
 
-// 사용자 유형 필터 — '전체' + 실제 audience 값(기업·기관). 화면(leaf)에 audience 가 없으면
+// 사용자 유형 필터 — '전체' + 실제 userType 값(기업·기관). 화면(leaf)에 userType 가 없으면
 // 공통이라 기업·기관 어느 탭에서나 보인다. '전체'는 프로젝트 전체 화면·진척률 기준.
-type AudienceFilter = '전체' | Audience;
-const AUDIENCE_FILTERS: readonly AudienceFilter[] = ['전체', ...AUDIENCE_VALUES];
+type UserTypeFilter = '전체' | UserType;
+const USER_TYPE_FILTERS: readonly UserTypeFilter[] = ['전체', ...USER_TYPE_VALUES];
 // id 는 ASCII 로 — 한글 id 는 aria 연결·CSS 선택자에서 문제가 될 수 있어 슬러그로 매핑한다.
-const FILTER_ID: Record<AudienceFilter, string> = { 전체: 'all', 기업: 'corp', 기관: 'org' };
+const FILTER_ID: Record<UserTypeFilter, string> = { 전체: 'all', 기업: 'corp', 기관: 'org' };
 
-const matchesAudience = (leaf: FlatLeaf, filter: AudienceFilter): boolean =>
-  filter === '전체' || leaf.audience === undefined || leaf.audience === filter;
+const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean =>
+  filter === '전체' || leaf.userType === undefined || leaf.userType === filter;
 
-const FilterIcon = ({ filter }: { filter: AudienceFilter }) => {
+const FilterIcon = ({ filter }: { filter: UserTypeFilter }) => {
   if (filter === '기업') return <Building2 aria-hidden="true" className="size-4 shrink-0" />;
   if (filter === '기관') return <Landmark aria-hidden="true" className="size-4 shrink-0" />;
   return <LayoutList aria-hidden="true" className="size-4 shrink-0" />;
@@ -225,12 +225,12 @@ const { assetVersions, commonLayouts, structureGroups } = PUBLISHING_INDEX_CONTE
 const ALL_LEAVES = structureGroups.flatMap(collectLeaves);
 
 const PublishingIndex = () => {
-  const [filter, setFilter] = useState<AudienceFilter>('전체');
+  const [filter, setFilter] = useState<UserTypeFilter>('전체');
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   // 선택된 사용자 유형에 맞는 화면만 남기고, 그 부분집합으로 뎁스 컬럼·rowSpan·카운트를 다시 계산한다.
   const leaves = useMemo(
-    () => ALL_LEAVES.filter((leaf) => matchesAudience(leaf, filter)),
+    () => ALL_LEAVES.filter((leaf) => matchesUserType(leaf, filter)),
     [filter],
   );
   const maxDepth = useMemo(
@@ -253,9 +253,9 @@ const PublishingIndex = () => {
 
   // 탭(tablist) 키보드 이동 — 좌우/상하 화살표로 이동+선택, Home/End 로 처음/끝. [KWCAG 6.1.1]
   const moveTab = (index: number) => {
-    const count = AUDIENCE_FILTERS.length;
+    const count = USER_TYPE_FILTERS.length;
     const next = ((index % count) + count) % count;
-    setFilter(AUDIENCE_FILTERS[next]);
+    setFilter(USER_TYPE_FILTERS[next]);
     tabRefs.current[next]?.focus();
   };
   const onTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
@@ -270,7 +270,7 @@ const PublishingIndex = () => {
       moveTab(0);
     } else if (event.key === 'End') {
       event.preventDefault();
-      moveTab(AUDIENCE_FILTERS.length - 1);
+      moveTab(USER_TYPE_FILTERS.length - 1);
     }
   };
 
@@ -420,7 +420,7 @@ const PublishingIndex = () => {
           aria-label="사용자 유형별 화면"
           className="bg-gray-10/50 inline-flex w-fit gap-1 rounded-lg p-1"
         >
-          {AUDIENCE_FILTERS.map((f, i) => {
+          {USER_TYPE_FILTERS.map((f, i) => {
             const selected = f === filter;
             return (
               <button
@@ -430,7 +430,7 @@ const PublishingIndex = () => {
                 }}
                 type="button"
                 role="tab"
-                id={`audience-tab-${FILTER_ID[f]}`}
+                id={`userType-tab-${FILTER_ID[f]}`}
                 aria-selected={selected}
                 aria-controls="screen-structure-panel"
                 tabIndex={selected ? 0 : -1}
@@ -461,7 +461,7 @@ const PublishingIndex = () => {
       <div
         id="screen-structure-panel"
         role="tabpanel"
-        aria-labelledby={`audience-tab-${FILTER_ID[filter]}`}
+        aria-labelledby={`userType-tab-${FILTER_ID[filter]}`}
         className="bg-background border-border overflow-x-auto rounded-xl border"
       >
         <table className="w-full text-left">

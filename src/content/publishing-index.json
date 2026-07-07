@@ -4,7 +4,7 @@
   "//assetVersions": "프론트엔드 개발자가 화면 구성 시 의존하는 산출물. version 은 여기 적지 않는다 — path 를 기준으로 scripts/compute-asset-versions.mjs 가 git 히스토리에서 자동 계산해 asset-versions.generated.json 에 쓴다(직접 수정 금지). kind 는 단일 파일이면 file, 디렉터리면 folder.",
   "//commonLayouts": "화면이 아니라 여러 화면이 공유하는 공통 요소 — 개별 조각(Header·Footer)과 '화면을 찍어내는 틀' 단위 레이아웃(메인 홈 레이아웃·서브페이지 레이아웃, 내부 콘텐츠만 바뀌는 틀)을 함께 담는다. 독립 화면이 아니라 screenId 가 없고, 별도 표로 렌더링된다. version 은 leaf.version 과 동일한 규칙(수동 기입, 미배포/현재 HEAD 버전과 같으면 하이라이트).",
   "//structureGroups": "구조는 뎁스 제한 없는 트리다. 노드에 children 배열이 있으면 하위 메뉴(branch), 없으면 실제 화면 1건(leaf, screenId·status·version 필수)이다. 뎁스가 깊어지면 children 안에 children 을 계속 중첩하면 된다. leaf.version 은 이 화면이 마지막으로 반영된 릴리스 버전(수동 기입) — 아직 작업 전이면 '미배포'. 현재 HEAD 버전과 같으면 화면에서 자동으로 하이라이트된다.",
-  "//audience": "화면을 볼 수 있는 사용자 유형: '기업'|'기관'. 없으면 공통(둘 다 노출). 그룹(name)·브랜치·화면 어디에나 달 수 있고 하위가 상속하며, 하위에서 다시 지정하면 그 값이 우선한다. 예: 자가진단 그룹에 '기업' 한 번이면 하위 전부 기업. 화면 표 위의 전체/기업/기관 탭이 이 값으로 필터한다.",
+  "//userType": "화면을 볼 수 있는 사용자 유형: '기업'|'기관'. 없으면 공통(둘 다 노출). 그룹(name)·브랜치·화면 어디에나 달 수 있고 하위가 상속하며, 하위에서 다시 지정하면 그 값이 우선한다. 예: 자가진단 그룹에 '기업' 한 번이면 하위 전부 기업. 화면 표 위의 전체/기업/기관 탭이 이 값으로 필터한다.",
   "assetVersions": [
     {
       "name": "tokens.css",
@@ -158,7 +158,7 @@
           "screenId": "PLT0105",
           "status": "대기중",
           "version": "미배포",
-          "audience": "기업"
+          "userType": "기업"
         },
         {
           "label": "BIGx 소개",
@@ -176,7 +176,7 @@
     },
     {
       "name": "자가진단",
-      "audience": "기업",
+      "userType": "기업",
       "children": [
         {
           "label": "자가진단 신청",
@@ -275,7 +275,7 @@
     },
     {
       "name": "전문가 평가",
-      "audience": "기업",
+      "userType": "기업",
       "children": [
         {
           "label": "전문가 평가 신청",
@@ -385,7 +385,7 @@
     },
     {
       "name": "특허등급평가",
-      "audience": "기업",
+      "userType": "기업",
       "children": [
         {
           "label": "특허등급평가 조회",
@@ -419,7 +419,7 @@
     },
     {
       "name": "K-BIGx 보고서",
-      "audience": "기업",
+      "userType": "기업",
       "children": [
         {
           "label": "기업혁신성장보고서 조회",
@@ -519,7 +519,7 @@
     },
     {
       "name": "개별평가",
-      "audience": "기관",
+      "userType": "기관",
       "children": [
         {
           "label": "개별평가 신청",
@@ -572,7 +572,7 @@
     },
     {
       "name": "일괄평가",
-      "audience": "기관",
+      "userType": "기관",
       "children": [
         {
           "label": "일괄평가 신청",
@@ -601,7 +601,7 @@
     },
     {
       "name": "대량정보조회",
-      "audience": "기관",
+      "userType": "기관",
       "children": [
         {
           "label": "대량정보 신청",
@@ -630,7 +630,7 @@
     },
     {
       "name": "평가검증",
-      "audience": "기관",
+      "userType": "기관",
       "children": [
         {
           "label": "결과조회",
@@ -671,7 +671,7 @@
     },
     {
       "name": "BIGx",
-      "audience": "기관",
+      "userType": "기관",
       "children": [
         {
           "label": "기업 검색 및 분석",
@@ -819,14 +819,14 @@
           "screenId": "MYP0103",
           "status": "대기중",
           "version": "미배포",
-          "audience": "기업"
+          "userType": "기업"
         },
         {
           "label": "K-BIGx 보고서 관리",
           "screenId": "MYP0104",
           "status": "대기중",
           "version": "미배포",
-          "audience": "기업"
+          "userType": "기업"
         },
         {
           "label": "유료 서비스 관리",
@@ -868,25 +868,25 @@
           "screenId": "MYP0110",
           "status": "대기중",
           "version": "미배포",
-          "audience": "기업"
+          "userType": "기업"
         },
         {
           "label": "진행현황 조회",
           "screenId": "MYP0111",
           "status": "대기중",
           "version": "미배포",
-          "audience": "기관"
+          "userType": "기관"
         },
         {
           "label": "기업평가 결과조회",
           "screenId": "MYP0112",
           "status": "대기중",
           "version": "미배포",
-          "audience": "기관"
+          "userType": "기관"
         },
         {
           "label": "BIGx 보고서 이력",
-          "audience": "기관",
+          "userType": "기관",
           "children": [
             {
               "label": "목록",
@@ -919,25 +919,25 @@
           "screenId": "MYP0117",
           "status": "대기중",
           "version": "미배포",
-          "audience": "기관"
+          "userType": "기관"
         },
         {
           "label": "하위 계정 진행 현황",
           "screenId": "MYP0118",
           "status": "대기중",
           "version": "미배포",
-          "audience": "기관"
+          "userType": "기관"
         },
         {
           "label": "1:1 문의 내역",
           "screenId": "MYP0119",
           "status": "대기중",
           "version": "미배포",
-          "audience": "기관"
+          "userType": "기관"
         },
         {
           "label": "하위 계정 관리",
-          "audience": "기관",
+          "userType": "기관",
           "children": [
             {
               "label": "목록",
@@ -960,7 +960,7 @@
       "children": [
         {
           "label": "공지사항",
-          "audience": "기업",
+          "userType": "기업",
           "children": [
             {
               "label": "목록",
@@ -981,11 +981,11 @@
           "screenId": "NTF0103",
           "status": "대기중",
           "version": "미배포",
-          "audience": "기업"
+          "userType": "기업"
         },
         {
           "label": "공지사항/FAQ",
-          "audience": "기관",
+          "userType": "기관",
           "children": [
             {
               "label": "목록",
@@ -1009,7 +1009,7 @@
               "screenId": "NTF0109",
               "status": "대기중",
               "version": "미배포",
-              "audience": "기관"
+              "userType": "기관"
             },
             {
               "label": "문의 완료",
@@ -1035,7 +1035,7 @@
     },
     {
       "name": "결제완료",
-      "audience": "기업",
+      "userType": "기업",
       "children": [
         {
           "label": "결제완료",
@@ -1113,7 +1113,7 @@
     },
     {
       "name": "우편번호 검색",
-      "audience": "기관",
+      "userType": "기관",
       "children": [
         {
           "label": "우편번호 검색",
@@ -1125,7 +1125,7 @@
     },
     {
       "name": "분기별 비밀번호 변경",
-      "audience": "기관",
+      "userType": "기관",
       "children": [
         {
           "label": "분기별 비밀번호 변경",
@@ -1137,7 +1137,7 @@
     },
     {
       "name": "최초 비밀번호 변경",
-      "audience": "기관",
+      "userType": "기관",
       "children": [
         {
           "label": "최초 비밀번호 변경",

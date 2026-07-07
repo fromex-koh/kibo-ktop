@@ -9,12 +9,12 @@ import homeJson from './home.json';
 import publishingIndexJson from './publishing-index.json';
 import {
   isAssetKind,
-  isAudience,
+  isUserType,
   isStatus,
   isStructureNote,
   type AssetKind,
   type AssetVersion,
-  type Audience,
+  type UserType,
   type CommonLayout,
   type HomeContent,
   type PublishingIndexContent,
@@ -54,14 +54,14 @@ const parseNote = (value: unknown, path: string): StructureNote | undefined => {
   return value;
 };
 
-// audience 는 그룹·브랜치·화면 어디에나 올 수 있는 선택 값 — 한 곳에서 검증한다.
-const parseAudience = (value: unknown, where: string): Audience | undefined => {
+// userType 는 그룹·브랜치·화면 어디에나 올 수 있는 선택 값 — 한 곳에서 검증한다.
+const parseUserType = (value: unknown, where: string): UserType | undefined => {
   if (value === undefined) {
     return undefined;
   }
-  if (typeof value !== 'string' || !isAudience(value)) {
+  if (typeof value !== 'string' || !isUserType(value)) {
     throw new Error(
-      `[content] ${where}: audience "${String(value)}" 은(는) 기업|기관 이어야 합니다.`,
+      `[content] ${where}: userType "${String(value)}" 은(는) 기업|기관 이어야 합니다.`,
     );
   }
   return value;
@@ -81,13 +81,13 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
     throw new Error(`[content] ${where}: version 이 필요합니다.`);
   }
   const note = parseNote(value.note, `${where} > note`);
-  const audience = parseAudience(value.audience, `${where} > audience`);
+  const userType = parseUserType(value.userType, `${where} > userType`);
   return {
     screenId: value.screenId,
     status: value.status,
     version: value.version,
     ...(note !== undefined ? { note } : {}),
-    ...(audience !== undefined ? { audience } : {}),
+    ...(userType !== undefined ? { userType } : {}),
   };
 };
 
@@ -105,7 +105,7 @@ const parseStructureNode = (value: unknown, path: string): StructureNode => {
       throw new Error(`[content] ${where}: children 은 배열이어야 합니다.`);
     }
     const children = value.children.map((child, i) => parseStructureNode(child, `${where}[${i}]`));
-    const audience = parseAudience(value.audience, `${where} > audience`);
+    const userType = parseUserType(value.userType, `${where} > userType`);
     if (value.screen !== undefined) {
       if (!isRecord(value.screen)) {
         throw new Error(`[content] ${where} > screen: 객체여야 합니다.`);
@@ -118,9 +118,9 @@ const parseStructureNode = (value: unknown, path: string): StructureNode => {
       }
       const screen: ScreenInfo =
         screenLabel !== undefined ? { ...screenBase, label: screenLabel } : screenBase;
-      return { label, children, screen, ...(audience !== undefined ? { audience } : {}) };
+      return { label, children, screen, ...(userType !== undefined ? { userType } : {}) };
     }
-    return { label, children, ...(audience !== undefined ? { audience } : {}) };
+    return { label, children, ...(userType !== undefined ? { userType } : {}) };
   }
 
   return { label, ...parseScreenInfo(value, where) };
@@ -180,16 +180,16 @@ const parsePublishingIndexContent = (raw: typeof publishingIndexJson): Publishin
   }),
   commonLayouts: raw.commonLayouts.map(parseCommonLayout),
   structureGroups: raw.structureGroups.map((group) => {
-    const audience = parseAudience(
-      'audience' in group ? group.audience : undefined,
-      `publishing-index.json > ${group.name} > audience`,
+    const userType = parseUserType(
+      'userType' in group ? group.userType : undefined,
+      `publishing-index.json > ${group.name} > userType`,
     );
     return {
       name: group.name,
       children: group.children.map((child, i) =>
         parseStructureNode(child, `publishing-index.json > ${group.name}[${i}]`),
       ),
-      ...(audience !== undefined ? { audience } : {}),
+      ...(userType !== undefined ? { userType } : {}),
     };
   }),
 });
@@ -199,9 +199,9 @@ export const HOME_CONTENT: HomeContent = parseHomeContent(homeJson);
 export const PUBLISHING_INDEX_CONTENT: PublishingIndexContent =
   parsePublishingIndexContent(publishingIndexJson);
 
-export { AUDIENCE_VALUES, isStructureBranch, STATUS_VALUES } from './types';
+export { USER_TYPE_VALUES, isStructureBranch, STATUS_VALUES } from './types';
 export type {
-  Audience,
+  UserType,
   CommonLayout,
   Status,
   StructureGroup,
