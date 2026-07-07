@@ -117,11 +117,18 @@ const SidebarLayout = ({ title, navSections, navLabel, children }: SidebarLayout
         >
           <Home aria-hidden="true" className="size-icon-sm" />
         </Link>
-        {/* 헤더 중앙 타이틀 — 로고 아이콘 + 큰 글자로 "이 페이지의 타이틀"임을 드러냄.
-            남는 공간을 차지해 좌측 아이콘 그룹 폭과 무관하게 중앙에 가깝게 위치 */}
+        {/* 헤더 중앙 타이틀 — 로고 아이콘 + 큰 글자로 "이 앱/섹션 이름"을 시각적으로 드러내는
+            장식용 앱바 타이틀이다(모바일 앱의 상단 타이틀 바와 같은 성격). 실제 콘텐츠의 진짜
+            제목은 본문 <h1>(PageHeaderTitle)이 따로 담당하며, 이 텍스트는 그걸 그대로 반복하거나
+            (사이드 메뉴 레이아웃 데모) 고정 브랜드명만 보여준다(컴포넌트 가이드). heading 태그로
+            바꾸면 페이지마다 다른 실제 h1 과 충돌·중복되므로, 시각적으로만 보여주고 스크린
+            리더에서는 제외해 "제목처럼 보이지만 heading이 아니다"라는 WAVE 경고의 근거 자체를
+            없앤다(중복 정보라 스크린리더 사용자는 본문의 진짜 h1 을 그대로 듣는다). */}
         <div className="flex flex-1 items-center justify-center gap-2 truncate">
           <PanelLeft aria-hidden="true" className="text-primary size-icon-md shrink-0" />
-          <p className="typo-title-l-bold truncate">{title}</p>
+          <p aria-hidden="true" className="typo-title-l-bold truncate">
+            {title}
+          </p>
         </div>
         {/* 우측: 라이트/다크 토글. 좌측 아이콘 그룹과 균형을 맞춰 타이틀이 중앙에 오도록,
             pc 미만에선(좌측이 햄버거+홈 2개) 빈 자리 하나를 더 둔다(pc 에선 좌측이 홈 하나라 숨김). */}
