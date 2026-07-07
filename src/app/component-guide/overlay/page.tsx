@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: '오버레이' };
 const OverlayGuidePage = () => (
   <GuidePage
     title="오버레이 (Overlay)"
-    description="반투명 토큰입니다. bg-overlay-* 유틸리티로 적용하며, 라이트는 검정 alpha·다크는 흰색 alpha 로 자동 전환되어 아래 콘텐츠를 어둡히거나 밝힙니다(드로어 백드롭·모달 배경 등)."
+    description="bg-overlay-* 유틸리티로 적용하는 반투명 오버레이 토큰입니다."
   >
     <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
       {Object.entries(tokens.overlay).map(([k, ref]) => {

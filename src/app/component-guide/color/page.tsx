@@ -84,7 +84,7 @@ const ColorTable = ({ title, rows }: { title: ReactNode; rows: SwatchRow[] }) =>
 const ColorGuidePage = () => (
   <GuidePage
     title="01 Primitive"
-    description="Figma(Mode 1) 의 프리미티브 팔레트입니다. brand·system 그룹의 8색을 50~900 스케일로 정의하고, 스케일 밖 앵커인 common(white·black·transparent)과 반투명 alpha(black·white 0~100)를 함께 둡니다. 값은 Figma 원본대로 rgba 로 표기합니다(저장은 hex). 시맨틱 토큰(background·brand·danger 등)이 이 값을 참조하므로, 직접 사용은 지양하고 시맨틱 토큰을 우선하세요."
+    description="프리미티브 색상 팔레트입니다. 직접 쓰지 말고 시맨틱 토큰을 우선하세요."
   >
     <div className="flex flex-col gap-8">
       {Object.entries(tokens.primitive).map(([hue, steps]) => (

@@ -154,7 +154,7 @@ const SANS_STACK = [
 const TypographyGuidePage = () => (
   <GuidePage
     title="타이포그래피 (Typography)"
-    description="제목·본문·라벨·캡션용 복합 클래스(typo-*)입니다. 크기·굵기·행간·자간과 모바일→PC 반응형이 한 묶음으로 적용되므로, 한 요소엔 typo-* 하나만 쓰고 text-*·font-* 와 섞지 않습니다."
+    description="제목·본문·라벨·캡션에 쓰는 타이포그래피 복합 클래스(typo-*)입니다."
   >
     {/* 글꼴 체계 (Font Family) */}
     <section aria-labelledby="typo-font" className="flex flex-col gap-4">

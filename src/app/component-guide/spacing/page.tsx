@@ -17,12 +17,7 @@ const SpacingGuidePage = () => (
     title="간격 (Spacing)"
     description={
       <>
-        base {tokens.spacingBase}px × N 스케일입니다. 예: <code>p-4</code> ={' '}
-        {tokens.spacingBase * 4}px. base 값 하나만 바꾸면 전체 간격이 비율대로 조정됩니다. 아래는
-        최소~최대(N=1~{MAX_MULTIPLE}, {tokens.spacingBase}~{tokens.spacingBase * MAX_MULTIPLE}px)
-        구간을 빠짐없이 나열한 것으로, 패딩(<code>p-*</code>)뿐 아니라 마진(<code>m-*</code>)·간격(
-        <code>gap-*</code>)에도 같은 N 이 그대로 적용되므로 클래스 칸에 셋 다 노출합니다. 임의값(
-        <code>p-[13px]</code>)·반단위는 지양합니다. 칩을 클릭하면 이름이 복사됩니다.
+        base {tokens.spacingBase}px × N 스케일의 간격 토큰입니다.
       </>
     }
   >

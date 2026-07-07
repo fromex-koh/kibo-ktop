@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: '흐림' };
 const BlurGuidePage = () => (
   <GuidePage
     title="흐림 (Blur)"
-    description="흐림 토큰입니다. blur-* 유틸리티로 적용하며(배경 흐림·오버레이 뒤 흐림 등), 아래는 실제 사진에 단계별로 적용한 예시입니다."
+    description="blur-* 유틸리티로 적용하는 흐림 토큰입니다."
   >
     <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
       {Object.entries(tokens.effect.blur).map(([k, px]) => (

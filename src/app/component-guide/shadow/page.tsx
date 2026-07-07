@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: '그림자' };
 const ShadowGuidePage = () => (
   <GuidePage
     title="그림자 (Shadow)"
-    description="그림자 색상은 primitive alpha 를 참조합니다. 라이트는 검정 alpha, 다크는 흰색 alpha 로 자동 전환되어 배경에 관계없이 보입니다."
+    description="shadow-* 유틸로 쓰는 그림자 토큰입니다."
   >
     <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
       {Object.entries(tokens.effect.shadow).map(([k, val]) => {

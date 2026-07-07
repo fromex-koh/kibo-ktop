@@ -35,10 +35,7 @@ const ZIndexGuidePage = () => (
     title="레이어 (Z-index)"
     description={
       <>
-        겹치는 UI의 <strong>쌓임 순서</strong>를 정하는 토큰입니다. 값이 클수록 위에 옵니다.{' '}
-        <code>z-[숫자]</code> 하드코딩 대신 용도 이름(<code>z-modal</code> 등)을 써서 레이어 충돌을
-        막습니다. 헤더·드로어·FAB 는 아직 DOM 순서로 쌓이며(CD-002), 이 토큰은 스킵 링크·모달처럼
-        명시적 레이어가 필요한 곳에 씁니다.
+        겹치는 UI의 <strong>쌓임 순서</strong>를 정하는 z-index 토큰입니다.
       </>
     }
   >

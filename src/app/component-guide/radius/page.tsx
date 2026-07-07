@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: '라운드' };
 const RadiusGuidePage = () => (
   <GuidePage
     title="라운드 (Radius)"
-    description="모서리 반경 토큰입니다. rounded-* 유틸로 쓰며, 정의된 키(xs·sm·md·lg·xl·2xl·full)만 사용합니다. 임의값(rounded-[7px])은 지양합니다. '클래스' 칩을 클릭하면 이름이 복사돼 바로 붙여넣을 수 있습니다."
+    description="rounded-* 유틸로 쓰는 모서리 반경 토큰입니다."
   >
     <div className="overflow-x-auto">
       <table className="w-full border-collapse text-left">

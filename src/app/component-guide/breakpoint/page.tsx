@@ -12,10 +12,7 @@ const BreakpointGuidePage = () => (
     title="브레이크포인트 (Breakpoint)"
     description={
       <>
-        모바일 퍼스트 — 프리픽스 없는 유틸이 기본(모바일)이고, 상위 구간만 <code>wide:</code>/
-        <code>pc:</code> 로 덮어씁니다. 기본 <code>sm:</code>/<code>md:</code>/<code>lg:</code> 는
-        비활성화되어 있고, 콘텐츠 영역은 <code>max-w-content</code>({tokens.container.content}px) 로
-        제한합니다.
+        모바일 퍼스트 3단계 브레이크포인트(기본 → <code>wide:</code> → <code>pc:</code>)입니다.
       </>
     }
   >
