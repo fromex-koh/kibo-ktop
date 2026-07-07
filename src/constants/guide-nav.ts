@@ -27,7 +27,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
   },
   {
     title: '컴포넌트',
-    items: [{ label: '페이지 헤더', href: '/component-guide/page-header' }],
+    items: [{ label: 'PageHeader', href: '/component-guide/page-header' }],
   },
   {
     title: '효과',
