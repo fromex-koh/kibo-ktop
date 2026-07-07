@@ -172,7 +172,11 @@ const IconGuidePage = () => (
                         >
                           <Icon
                             aria-hidden="true"
-                            style={{ width: glyphPx, height: glyphPx, color: 'var(--raw-common-white)' }}
+                            style={{
+                              width: glyphPx,
+                              height: glyphPx,
+                              color: 'var(--raw-common-white)',
+                            }}
                           />
                         </span>
                       ))}
