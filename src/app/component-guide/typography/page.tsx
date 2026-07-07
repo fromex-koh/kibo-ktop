@@ -9,6 +9,11 @@ export const metadata: Metadata = { title: '타이포그래피' };
 // 자간·행간 확인 위주의 긴 문장 대신 컴팩트하게 둔다(전체 문장 표본은 필요하면 별도 페이지에서).
 const PREVIEW_SAMPLE = '가나다 Ag 12';
 
+// font-sans(가변폭) vs font-mono(고정폭) 비교 표본 — 같은 5글자를 두 줄(좁은 i·넓은 W)로 두면
+// 가변폭은 두 줄의 렌더 너비가 크게 달라지고, 고정폭은 글자마다 폭이 같아 두 줄 너비가 같아진다.
+// 배경 박스(inline-block)로 감싸 그 실제 렌더 너비 차이가 눈에 보이게 한다.
+const WIDTH_DEMO_LINES = ['iiiii', 'WWWWW'];
+
 type TypographyToken = {
   size: { mobile: number; pc: number };
   weight: number;
@@ -162,12 +167,48 @@ const TypographyGuidePage = () => (
           를 1순위로 쓰고, 로드 실패·미지원 글리프는 아래 순서로 폴백합니다. 코드·수치 등 고정폭이
           필요한 곳은 <code>font-mono</code> 를 씁니다.
         </p>
-        <div className="flex flex-wrap items-center gap-2">
-          <span className="typo-caption-regular text-subtle">유틸리티 클래스 (클릭 복사)</span>
-          <CopyChip value="font-sans" />
-          <CopyChip value="font-mono" />
+      </div>
+
+      {/* font-sans(가변폭) vs font-mono(고정폭) 미리보기 — 같은 5글자 두 줄의 렌더 너비를 나란히 비교 */}
+      <div className="wide:grid-cols-2 grid grid-cols-1 gap-4">
+        <div className="border-gray-subtle-2 flex flex-col gap-3 rounded-xl border p-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <CopyChip value="font-sans" />
+            <span className="typo-caption-regular text-subtle">
+              가변폭 — 글자마다 렌더 너비가 다릅니다
+            </span>
+          </div>
+          <div className="flex flex-col items-start gap-1.5">
+            {WIDTH_DEMO_LINES.map((line) => (
+              <span
+                key={line}
+                className="bg-element-primary/10 text-bolder typo-body-l-regular inline-block w-fit rounded px-1.5 py-0.5 font-sans"
+              >
+                {line}
+              </span>
+            ))}
+          </div>
+        </div>
+        <div className="border-gray-subtle-2 flex flex-col gap-3 rounded-xl border p-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <CopyChip value="font-mono" />
+            <span className="typo-caption-regular text-subtle">
+              고정폭 — 글자마다 렌더 너비가 같습니다
+            </span>
+          </div>
+          <div className="flex flex-col items-start gap-1.5">
+            {WIDTH_DEMO_LINES.map((line) => (
+              <span
+                key={line}
+                className="bg-element-primary/10 text-bolder typo-body-l-regular inline-block w-fit rounded px-1.5 py-0.5 font-mono"
+              >
+                {line}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
+
       <ol className="border-gray-subtle-2 divide-gray-subtle-2 divide-y rounded-xl border">
         {SANS_STACK.map((font, i) => (
           <li key={font.name} className="flex items-start gap-3 px-4 py-3">

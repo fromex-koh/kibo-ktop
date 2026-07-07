@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import CopyChip from '@/components/guide/copy-chip';
+import CodeBlock from '@/components/guide/code-block';
 import GuidePage from '@/components/guide/guide-page';
 import { PageHeader, PageHeaderDescription, PageHeaderTitle } from '@/components/page-header';
 
@@ -35,15 +35,10 @@ const PageHeaderGuidePage = () => (
     </section>
 
     <section aria-labelledby="ph-usage" className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 id="ph-usage" className="typo-heading-h4-bold">
-          사용법
-        </h2>
-        <CopyChip value={USAGE_CODE} label="사용법" />
-      </div>
-      <pre className="border-gray-subtle-2 bg-surface overflow-x-auto rounded-xl border p-4">
-        <code className="typo-caption-regular font-mono">{USAGE_CODE}</code>
-      </pre>
+      <h2 id="ph-usage" className="typo-heading-h4-bold">
+        사용법
+      </h2>
+      <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="사용법" />
     </section>
   </GuidePage>
 );
