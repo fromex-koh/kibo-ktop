@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import GuidePage from '@/components/guide/guide-page';
-import tokens from '../../../../tokens.json';
+import tokens from '@tokens';
 
 export const metadata: Metadata = { title: '그림자' };
 

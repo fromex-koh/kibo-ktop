@@ -14,7 +14,7 @@ import { ArrowUpRight, Home, Menu, PanelLeft, X } from 'lucide-react';
 import type { GuideNavSection } from '@/constants/guide-nav';
 import SkipNav, { type SkipLinkItem } from '@/components/skip-nav';
 import ThemeToggle from '@/components/theme-toggle';
-import tokens from '../../tokens.json';
+import tokens from '@tokens';
 
 // works/system-guide 프로젝트의 사이드 내비게이션 구조를 이 프로젝트 브레이크포인트(wide/pc)·색상·
 // 그리드·크기 토큰으로 재구성한 공용 레이아웃 셸(헤더 + 사이드 내비).

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import ActiveBreakpointTag from '@/components/guide/active-breakpoint-tag';
 import GuidePage from '@/components/guide/guide-page';
-import tokens from '../../../../tokens.json';
+import tokens from '@tokens';
 
 export const metadata: Metadata = { title: '브레이크포인트' };
 

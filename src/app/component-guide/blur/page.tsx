@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import Image from 'next/image';
 import GuidePage from '@/components/guide/guide-page';
-import tokens from '../../../../tokens.json';
+import tokens from '@tokens';
 import sampleCatImg from '../../../../public/sample-cat.jpg';
 
 export const metadata: Metadata = { title: '흐림' };
