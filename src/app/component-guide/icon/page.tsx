@@ -26,11 +26,12 @@ import tokens from '@tokens';
 
 export const metadata: Metadata = { title: 'Icon' };
 
-// Icon 컴포넌트 사용법 스니펫 — variant 별로 코드블럭을 나눠 보여준다.
+// Icon 컴포넌트 사용법 스니펫 — variant 별로 코드블럭을 나눠 보여준다. 미리보기와 같은 아이콘·
+// 크기(size-icon-2xl)로 맞춰 마크업과 미리보기가 일치한다.
 const USAGE_OUTLINE = `import { X } from 'lucide-react';
 import { Icon } from '@/components/icon';
 
-<Icon icon={X} className="size-icon-lg" />`;
+<Icon icon={X} className="size-icon-2xl" />`;
 
 const USAGE_SOLID = `import { X } from 'lucide-react';
 import { Icon } from '@/components/icon';
@@ -305,8 +306,7 @@ const IconGuidePage = () => (
           <h3 className="typo-body-l-medium text-foreground">outline — 아이콘만 (기본)</h3>
         </div>
         <div className="border-gray-subtle-2 flex items-center gap-4 rounded-md border p-6">
-          <Icon icon={X} className="size-icon-lg text-bolder" />
-          <Icon icon={Info} className="size-icon-lg text-bolder" />
+          <Icon icon={X} className="size-icon-2xl" />
         </div>
         <CodeBlock code={USAGE_OUTLINE} language="tsx" copyLabel="복사" />
       </div>
@@ -320,13 +320,6 @@ const IconGuidePage = () => (
         </div>
         <div className="border-gray-subtle-2 flex items-center gap-4 rounded-md border p-6">
           <Icon icon={X} variant="solid" className="size-icon-2xl" />
-          {/* solid info 는 lucide 에 채운 글리프가 없어 배지 안에 텍스트 'i' 를 넣어 만든다
-              (아이콘 목록 Solid 큐레이션과 동일). */}
-          <span className="bg-info-surface text-info-text size-icon-2xl flex items-center justify-center rounded-full">
-            <span aria-hidden="true" className="typo-heading-h4-bold">
-              i
-            </span>
-          </span>
         </div>
         <CodeBlock code={USAGE_SOLID} language="tsx" copyLabel="복사" />
       </div>
