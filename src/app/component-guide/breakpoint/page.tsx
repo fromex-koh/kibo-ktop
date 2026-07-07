@@ -48,9 +48,9 @@ const BreakpointGuidePage = () => (
             // 구간명은 기기 하나를 가리키지 않으므로(예: wide = 태블릿·노트북 공유 폭),
             // 실제 포함 기기는 여기서 별도 안내한다. 새 브레이크포인트 키 추가 시 함께 갱신.
             const DEVICE_HINT: Record<string, string> = {
-              mobile: '모바일',
-              wide: '태블릿·노트북',
-              pc: '데스크톱',
+              mobile: 'Galaxy S24(360px)·iPhone 15(393px)',
+              wide: 'iPad 10세대 세로(820px)·가로(1180px)',
+              pc: 'Full HD 1920×1080(스케일 125%→1536px)',
             };
             const entries = Object.entries(tokens.breakpoint).sort((a, b) => a[1] - b[1]);
             const rows = [
@@ -92,6 +92,16 @@ const BreakpointGuidePage = () => (
         </tbody>
       </table>
     </div>
+    <p className="typo-caption-regular text-subtle">
+      국내 스마트폰은 삼성 갤럭시가 다수, iPhone 이 그다음인데 두 계열 모두 CSS 뷰포트 폭이
+      360~393px 라 <code>mobile</code>&nbsp;구간(0~767px) 안에 여유 있게 들어갑니다. 태블릿은 iPad
+      세로(820px)·가로(1180px) 모두 <code>wide</code>&nbsp;구간(768~1279px) 안이라 위
+      &apos;태블릿·노트북이 함께 걸치는 폭&apos; 설계와 맞습니다. 데스크톱은 Full HD(1920×1080)가
+      국내 1위 해상도인데, Windows 기본 배율(125%)을 적용해도 유효 뷰포트가 1536px 라{' '}
+      <code>pc</code>&nbsp;구간(1280px~) 안에 넉넉히 들어옵니다 — 즉 국내에서 실제로 가장 많이
+      쓰이는 기기 기준으로는 이 3구간 밖으로 밀려나 레이아웃이 깨지는 경우가 거의 없습니다. (기기
+      CSS 폭은 실측 기준이며, 브랜드별 점유율은 조사 시점·기관마다 차이가 있어 참고용입니다.)
+    </p>
   </GuidePage>
 );
 

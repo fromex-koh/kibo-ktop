@@ -18,6 +18,11 @@ const getGridRevealClass = (index: number) => {
   return 'hidden pc:flex';
 };
 
+// 모바일 container 는 고정 상한 없이 유동('100%')이라 표에 그대로 적으면 감이 안 온다.
+// 국내에서 가장 흔한 스마트폰(Galaxy S24 계열) 의 CSS 뷰포트 폭인 360px 을 기준으로,
+// margin(16px)×2 를 뺀 예시값(328px)을 보여준다.
+const MOBILE_REFERENCE_VIEWPORT = 360;
+
 // 레이아웃 그리드 미리보기 — 사이드바 없는 독립 전체화면. .grid-layout 이 뷰포트 전체 폭을 그대로
 // 써서 해상도별 실제 그리드(모바일 328 / 태블릿 792 / 데스크톱 1200)를 정확히 확인할 수 있다.
 // (컴포넌트 가이드 사이드 레이아웃 안에 넣으면 pc 에서 사이드바 폭만큼 좁아져 값이 어긋난다.)
@@ -87,7 +92,7 @@ const GridPreviewPage = () => (
                 <tr key={key} className="border-gray-subtle-2 border-b last:border-b-0">
                   <td className="typo-body-l-regular px-4 py-3">
                     <span className="inline-flex items-center gap-2">
-                      {key === 'mobile' ? 'mobile (기본)' : key}
+                      {key}
                       <ActiveBreakpointTag targetKey={key} />
                     </span>
                   </td>
@@ -98,7 +103,11 @@ const GridPreviewPage = () => (
                     {g.gutter}px
                   </td>
                   <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
-                    {typeof g.container === 'number' ? `${g.container}px` : g.container}
+                    {key === 'mobile'
+                      ? `${MOBILE_REFERENCE_VIEWPORT - 2 * g.margin}px (${MOBILE_REFERENCE_VIEWPORT}px 기준)`
+                      : typeof g.container === 'number'
+                        ? `${g.container}px`
+                        : g.container}
                   </td>
                   <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
                     {g.margin}px
