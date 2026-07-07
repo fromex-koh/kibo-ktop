@@ -16,6 +16,10 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
     ],
   },
   {
+    title: '아이콘',
+    items: [{ label: '아이콘 (Icon)', href: '/component-guide/icon' }],
+  },
+  {
     title: '레이아웃',
     items: [
       { label: '브레이크포인트', href: '/component-guide/breakpoint' },

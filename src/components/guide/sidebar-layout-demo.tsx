@@ -17,7 +17,7 @@ const SidebarLayoutDemo = () => {
     >
       <GuidePage
         title="사이드 메뉴 레이아웃 (예시 페이지)"
-        category={GUIDE_NAV_SECTIONS[1].title}
+        category={GUIDE_NAV_SECTIONS[2].title}
         description={
           <>
             works/system-guide 프로젝트의 사이드 내비게이션 구조를 이 프로젝트의 브레이크포인트(

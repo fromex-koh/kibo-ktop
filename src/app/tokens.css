@@ -647,9 +647,12 @@
 
 :root {
   /* fixed size (명명) → size-* w-* h-* */
+  --ds-spacing-icon-xs: 0.75rem;
   --ds-spacing-icon-sm: 1rem;
   --ds-spacing-icon-md: 1.25rem;
   --ds-spacing-icon-lg: 1.5rem;
+  --ds-spacing-icon-xl: 2rem;
+  --ds-spacing-icon-2xl: 2.5rem;
   --ds-spacing-control-h-sm: 2.25rem;
   --ds-spacing-control-h-md: 2.5rem;
   --ds-spacing-control-h-lg: 3rem;
@@ -732,9 +735,12 @@
 }
 
 @theme inline {
+  --spacing-icon-xs: var(--ds-spacing-icon-xs);
   --spacing-icon-sm: var(--ds-spacing-icon-sm);
   --spacing-icon-md: var(--ds-spacing-icon-md);
   --spacing-icon-lg: var(--ds-spacing-icon-lg);
+  --spacing-icon-xl: var(--ds-spacing-icon-xl);
+  --spacing-icon-2xl: var(--ds-spacing-icon-2xl);
   --spacing-control-h-sm: var(--ds-spacing-control-h-sm);
   --spacing-control-h-md: var(--ds-spacing-control-h-md);
   --spacing-control-h-lg: var(--ds-spacing-control-h-lg);
