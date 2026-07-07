@@ -304,7 +304,7 @@ const PublishingIndex = () => {
       </ul>
 
       {/* 자산 버전 요약 */}
-      <div className="bg-background border-gray-subtle-2 overflow-x-auto rounded-xl border">
+      <div className="bg-background border-gray-subtle-2 overflow-x-auto rounded-md border">
         <table className="w-full text-left">
           <caption className="sr-only">자산별 버전 예시</caption>
           <thead>
@@ -343,7 +343,7 @@ const PublishingIndex = () => {
 
       {/* 공통 레이아웃 — 화면을 찍어내는 틀(내부 콘텐츠만 바뀜) 단위라 화면 표와 별도로 다룬다.
           위 자산 표와 구분되도록 간격을 더 둔다. */}
-      <div className="bg-background border-gray-subtle-2 mt-4 overflow-x-auto rounded-xl border">
+      <div className="bg-background border-gray-subtle-2 mt-4 overflow-x-auto rounded-md border">
         <table className="w-full text-left">
           <caption className="sr-only">공통 레이아웃 상태·버전</caption>
           <thead>
@@ -451,7 +451,7 @@ const PublishingIndex = () => {
         id="screen-structure-panel"
         role="tabpanel"
         aria-labelledby={`userType-tab-${FILTER_ID[filter]}`}
-        className="bg-background border-gray-subtle-2 overflow-x-auto rounded-xl border"
+        className="bg-background border-gray-subtle-2 overflow-x-auto rounded-md border"
       >
         <table className="w-full text-left">
           <caption className="sr-only">사이트 구조별 화면 ID·상태·버전 예시</caption>
