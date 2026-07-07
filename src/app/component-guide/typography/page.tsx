@@ -5,8 +5,9 @@ import tokens from '@tokens';
 
 export const metadata: Metadata = { title: '타이포그래피' };
 
-// 한글·영문·숫자·기호가 모두 섞인 미리보기 문장(글꼴 렌더링 확인용).
-const SAMPLE_TEXT = '다람쥐 헌 쳇바퀴에 타고파 ABC xyz 123 !?@#';
+// 한글·영문(대소문자)·숫자가 섞인 짧은 미리보기 표본 — 표 한 행 안에서 바로 렌더를 확인하는 용도라
+// 자간·행간 확인 위주의 긴 문장 대신 컴팩트하게 둔다(전체 문장 표본은 필요하면 별도 페이지에서).
+const PREVIEW_SAMPLE = '가나다 Ag 12';
 
 type TypographyToken = {
   size: { mobile: number; pc: number };
@@ -34,7 +35,9 @@ const TYPOGRAPHY_GROUPED = TYPOGRAPHY_GROUPS.map((group) => ({
   tokens: TYPOGRAPHY_ENTRIES.filter(([name]) => groupNameOfTypo(name) === group.name),
 })).filter((group) => group.tokens.length > 0);
 
-// 그룹 하나 = 독립 테이블(클래스·크기·굵기·행간·자간). 클래스 칩을 클릭하면 이름이 복사된다.
+// 그룹 하나 = 독립 테이블(미리보기·클래스·크기·굵기·행간·자간). '미리보기' 칸이 실제 typo-* 클래스를
+// 바로 적용해 렌더하므로, 클래스를 쓰면 어떻게 나오는지 값 옆에서 바로 확인할 수 있다.
+// 클래스 칩을 클릭하면 이름이 복사된다.
 const TypographyScaleTable = ({
   title,
   entries,
@@ -46,9 +49,12 @@ const TypographyScaleTable = ({
     <h3 className="typo-body-l-medium text-bolder font-semibold">{title}</h3>
     <div className="border-gray-subtle-2 overflow-x-auto rounded-xl border">
       <table className="w-full text-left">
-        <caption className="sr-only">{title} typo-* 클래스별 크기·굵기·행간·자간</caption>
+        <caption className="sr-only">{title} typo-* 클래스별 미리보기·크기·굵기·행간·자간</caption>
         <thead>
           <tr className="border-gray-subtle-2 bg-surface border-b">
+            <th scope="col" className="typo-body-l-medium px-4 py-3">
+              미리보기
+            </th>
             <th scope="col" className="typo-body-l-medium px-4 py-3">
               클래스
             </th>
@@ -72,6 +78,9 @@ const TypographyScaleTable = ({
         <tbody>
           {entries.map(([name, t]) => (
             <tr key={name} className="border-gray-subtle-2 border-b last:border-b-0">
+              <td className="px-4 py-3 whitespace-nowrap">
+                <span className={`typo-${name}`}>{PREVIEW_SAMPLE}</span>
+              </td>
               <th scope="row" className="px-4 py-3 text-left font-normal">
                 <CopyChip value={`typo-${name}`} />
               </th>
@@ -131,7 +140,7 @@ const SANS_STACK = [
   },
 ];
 
-// 타이포그래피 — typo-* 복합 유틸리티. 위엔 유틸리티가 묶어 적용하는 값(토큰) 테이블, 아래엔 실제 렌더 미리보기.
+// 타이포그래피 — typo-* 복합 유틸리티. 스케일 표 각 행에 실제 렌더 미리보기를 함께 담는다.
 const TypographyGuidePage = () => (
   <GuidePage
     title="타이포그래피 (Typography)"
@@ -211,9 +220,10 @@ const TypographyGuidePage = () => (
         </h2>
         <p className="typo-body-l-regular text-subtle">
           용도별 <code>typo-*</code> <strong>유틸리티 클래스</strong> 목록을 Figma 분류(Display·
-          Heading·Title·Body·Caption·Micro)별 표로 나눴습니다. 각 클래스가 한 번에 묶어 적용하는
-          값(크기·굵기·행간·자간 <strong>토큰</strong>)은 아래와 같습니다. 클래스 칩을 클릭하면
-          이름이 복사됩니다.
+          Heading·Title·Body·Caption·Micro)별 표로 나눴습니다. &apos;미리보기&apos; 칸이 그 행의
+          클래스를 바로 적용해 렌더하므로, 클래스를 쓰면 어떻게 나오는지 크기·굵기·행간·자간{' '}
+          <strong>토큰</strong> 값 옆에서 바로 확인할 수 있습니다. 클래스 칩을 클릭하면 이름이
+          복사됩니다.
         </p>
       </div>
       <div className="flex flex-col gap-6">
@@ -221,23 +231,6 @@ const TypographyGuidePage = () => (
           <TypographyScaleTable key={group.name} title={group.name} entries={group.tokens} />
         ))}
       </div>
-    </section>
-
-    {/* 미리보기 — 실제 렌더(아래) */}
-    <section aria-labelledby="typo-preview" className="flex flex-col gap-4">
-      <h2 id="typo-preview" className="typo-heading-h4-bold">
-        미리보기 (Preview)
-      </h2>
-      <ul className="border-gray-subtle-2 divide-gray-subtle-2 divide-y rounded-xl border">
-        {Object.entries(tokens.typography).map(([name, t]) => (
-          <li key={name} className="flex flex-col gap-2 px-4 py-5">
-            <span className="typo-caption-regular text-subtle font-mono">
-              typo-{name} · {t.size.mobile}→{t.size.pc}px · w{t.weight}
-            </span>
-            <p className={`typo-${name}`}>{SAMPLE_TEXT}</p>
-          </li>
-        ))}
-      </ul>
     </section>
   </GuidePage>
 );
