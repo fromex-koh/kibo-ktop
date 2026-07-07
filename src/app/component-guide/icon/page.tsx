@@ -33,9 +33,6 @@ const LUCIDE_ICON_COUNT_LABEL = '2,000개 이상';
 // 아이콘 크기 — size.icon-* 토큰(size-icon-* 유틸)만 사용한다. 클래스명은 Tailwind 정적 분석을
 // 위해 리터럴로 고정 — 템플릿 문자열(`size-${key}`)로 조합하면 스캐너가 인식하지 못해 스타일이
 // 안 나온다(z-index 가이드와 같은 이유). 새 크기를 추가하면 tokens.json 의 size.icon-* 와 함께 갱신.
-// Solid 배지의 글리프는 원과 같은 크기를 쓴다 — lucide 아이콘은 자체 뷰박스(24×24) 안에 이미
-// 여백을 두고 그려져 있어(대지 자체가 글리프보다 크다), 배지 쪽에서 또 한 번 인위적으로 축소하면
-// 이중 여백이 생겨 아이콘이 배지 안에서 붕 뜬 것처럼 작아 보인다.
 const ICON_SIZES = [
   { key: 'icon-xs', class: 'size-icon-xs' },
   { key: 'icon-sm', class: 'size-icon-sm' },
@@ -155,33 +152,41 @@ const IconGuidePage = () => (
             </tr>
           </thead>
           <tbody>
-            {ICON_SIZES.map(({ key, class: sizeClass }) => (
-              <tr key={key} className="border-gray-subtle-2 bg-background border-b last:border-b-0">
-                <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    {SOLID_SWATCHES.map(({ label, Icon, bg }) => (
-                      <span
-                        key={label}
-                        className={`${sizeClass} flex shrink-0 items-center justify-center rounded-full`}
-                        style={{ backgroundColor: bg }}
-                      >
-                        <Icon
-                          aria-hidden="true"
-                          className={sizeClass}
-                          style={{ color: 'var(--raw-common-white)' }}
-                        />
-                      </span>
-                    ))}
-                  </div>
-                </td>
-                <th scope="row" className="px-4 py-3 text-left font-normal">
-                  <CopyChip value={sizeClass} />
-                </th>
-                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
-                  {tokens.size[key]}px
-                </td>
-              </tr>
-            ))}
+            {ICON_SIZES.map(({ key, class: sizeClass }) => {
+              // 배지 원 대비 글리프 50% 비율(참고 이미지 기준). xs~md(12·16·20px) 원은 절반 값이
+              // 정의된 토큰(최소 12px)보다 작아 size-icon-* 로 표현이 안 되므로, 이 표에서만
+              // 정확한 비율 검증을 위해 계산된 px 를 인라인으로 준다(PB-12 — 토큰 뷰어 예외).
+              const glyphPx = tokens.size[key] / 2;
+              return (
+                <tr
+                  key={key}
+                  className="border-gray-subtle-2 bg-background border-b last:border-b-0"
+                >
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      {SOLID_SWATCHES.map(({ label, Icon, bg }) => (
+                        <span
+                          key={label}
+                          className={`${sizeClass} flex shrink-0 items-center justify-center rounded-full`}
+                          style={{ backgroundColor: bg }}
+                        >
+                          <Icon
+                            aria-hidden="true"
+                            style={{ width: glyphPx, height: glyphPx, color: 'var(--raw-common-white)' }}
+                          />
+                        </span>
+                      ))}
+                    </div>
+                  </td>
+                  <th scope="row" className="px-4 py-3 text-left font-normal">
+                    <CopyChip value={sizeClass} />
+                  </th>
+                  <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                    {tokens.size[key]}px
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
@@ -223,7 +228,7 @@ const IconGuidePage = () => (
               className="border-gray-subtle-2 flex flex-col items-center gap-3 rounded-md border p-4"
             >
               <span className="bg-info-surface text-info-text size-icon-2xl flex items-center justify-center rounded-full">
-                <Icon aria-hidden="true" className="size-icon-2xl" />
+                <Icon aria-hidden="true" className="size-icon-md" />
               </span>
               <CopyChip value={name} />
             </li>
