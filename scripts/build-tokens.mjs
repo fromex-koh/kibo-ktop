@@ -326,21 +326,24 @@ L.push('  --color-current: currentColor;')
 L.push('  --color-inherit: inherit;')
 L.push('')
 
+// pseudo-element(::-webkit-scrollbar 등) 전용 — className 을 못 붙이는 대상이라 Tailwind
+// 유틸리티가 필요 없다. --ds-* 로만 남기고 @theme inline(--color-*) 에는 노출하지 않는다.
+const NO_UTILITY_SLOTS = new Set(['scroll-thumb', 'scroll-track'])
+
 const semanticNames = Object.keys(semantic)
 const shadcnSlotNames = semanticNames.filter((name) => SHADCN_SLOTS.has(name))
-const customSlotNames = semanticNames.filter((name) => !SHADCN_SLOTS.has(name))
+const customSlotNames = semanticNames.filter((name) => !SHADCN_SLOTS.has(name) && !NO_UTILITY_SLOTS.has(name))
 
 if (shadcnSlotNames.length) {
     L.push('  /* shadcn 표준 슬롯 (https://ui.shadcn.com/docs/theming) — 이름 변경 금지, 값만 tokens.json 에서 매핑 */')
     for (const name of shadcnSlotNames) L.push(`  --color-${name}: var(--ds-${name});`)
     L.push('')
 }
-if (customSlotNames.length || Object.keys(overlay).length) {
-    L.push('  /* 프로젝트 커스텀 슬롯 — shadcn 표준에 없음. 추가하려면 tokens.json semantic 에 새 키만 넣으면 됨 */')
-    for (const name of customSlotNames) L.push(`  --color-${name}: var(--ds-${name});`)
-    for (const k of Object.keys(overlay)) L.push(`  --color-overlay-${k}: var(--ds-overlay-${k});`)
-    L.push('')
-}
+// 프로젝트 커스텀 슬롯 — shadcn 표준에 없는 이름을 tokens.json semantic 에 추가하면 여기 자동으로 나열된다.
+// (지금 비어 있어도 이 주석은 항상 남겨 새 커스텀 슬롯이 생길 위치를 표시한다.)
+L.push('  /* 프로젝트 커스텀 슬롯 — shadcn 표준에 없음. 추가하려면 tokens.json semantic 에 새 키만 넣으면 됨 */')
+for (const name of customSlotNames) L.push(`  --color-${name}: var(--ds-${name});`)
+L.push('')
 
 L.push('  /* 컬러 팔레트 (raw 스케일) — 시맨틱 슬롯의 원재료. 화면 코드에서 직접 사용 지양, 슬롯을 거칠 것(PB-05) */')
 for (const hue of hues) for (const s of scale) L.push(`  --color-${hue}-${s}: var(--ds-${hue}-${s});`)

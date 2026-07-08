@@ -141,7 +141,7 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                     onClick={closeDrawer}
                     aria-hidden="true"
                     tabIndex={-1}
-                    className={`bg-overlay-lg top-header-top z-drawer-backdrop pc:hidden fixed inset-x-0 bottom-0 transition-opacity duration-200 motion-reduce:transition-none ${
+                    className={`top-header-top z-drawer-backdrop pc:hidden fixed inset-x-0 bottom-0 bg-[var(--ds-overlay-lg)] transition-opacity duration-200 motion-reduce:transition-none ${
                         isDrawerActive ? 'opacity-100' : 'pointer-events-none opacity-0'
                     }`}
                 />

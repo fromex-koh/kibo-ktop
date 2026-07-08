@@ -95,6 +95,16 @@ const ShadcnTestPage = () => {
                     <Input id="disabled-input" name="disabled-input" placeholder="수정 불가" disabled />
                 </div>
             </section>
+
+            {/* Overlay — Tailwind 유틸리티가 아니라 var(--ds-overlay-*) 로 직접 참조(드로어 백드롭 등) */}
+            <section className="mt-10 flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">Overlay</h2>
+                <div className="flex flex-wrap items-center gap-6">
+                    <div className="size-20 rounded-lg bg-[var(--ds-overlay-sm)]" />
+                    <div className="size-20 rounded-lg bg-[var(--ds-overlay-md)]" />
+                    <div className="size-20 rounded-lg bg-[var(--ds-overlay-lg)]" />
+                </div>
+            </section>
         </main>
     )
 }

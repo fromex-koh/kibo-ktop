@@ -4,9 +4,13 @@ import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '오버레이'}
 
-// 오버레이 — 반투명 토큰(라이트=검정 / 다크=흰색 alpha)을 bg-overlay-* 유틸리티로 적용. 드로어 백드롭 등.
+// 오버레이 — 반투명 토큰(라이트=검정 / 다크=흰색 alpha). 색상값만 있어 Tailwind 유틸리티로 노출하지
+// 않고 var(--ds-overlay-*) 로 직접 참조한다(드로어 백드롭 등).
 const OverlayGuidePage = () => (
-    <GuidePage title="오버레이 (Overlay)" description="bg-overlay-* 유틸리티로 적용하는 반투명 오버레이 토큰입니다.">
+    <GuidePage
+        title="오버레이 (Overlay)"
+        description="var(--ds-overlay-*) 로 직접 참조하는 반투명 오버레이 토큰입니다."
+    >
         <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
             {Object.entries(tokens.overlay).map(([k, ref]) => {
                 // "black.5" → "--raw-black-a5" (primitive → semantic 매핑 표시)
