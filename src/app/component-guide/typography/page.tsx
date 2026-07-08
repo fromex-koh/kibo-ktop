@@ -26,7 +26,7 @@ type TypographyEntry = [string, TypographyToken]
 // Caption·Micro) 순서 그대로 표를 나눈다. tokens.json 순서를 유지한 채 첫 매칭 그룹에 담는다.
 const TYPOGRAPHY_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'Display', match: (n) => n.startsWith('display-')},
-    {name: 'Heading', match: (n) => n.startsWith('heading-')},
+    {name: 'Heading', match: (n) => /^h[1-4]-/.test(n)},
     {name: 'Title', match: (n) => n.startsWith('title-')},
     {name: 'Body', match: (n) => n.startsWith('body-')},
     {name: 'Caption', match: (n) => n.startsWith('caption-')},
@@ -154,7 +154,7 @@ const TypographyGuidePage = () => (
         {/* 글꼴 체계 (Font Family) */}
         <section aria-labelledby="typo-font" className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-                <h2 id="typo-font" className="typo-heading-h4-bold">
+                <h2 id="typo-font" className="typo-h4-bold">
                     글꼴 (Font Family)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
@@ -276,7 +276,7 @@ const TypographyGuidePage = () => (
         {/* 타이포그래피 스케일 — typo-* 유틸리티가 묶어 적용하는 값(토큰)을 Figma 분류별 표로 나눈다 */}
         <section aria-labelledby="typo-tokens" className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-                <h2 id="typo-tokens" className="typo-heading-h4-bold">
+                <h2 id="typo-tokens" className="typo-h4-bold">
                     타이포그래피 스케일
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">

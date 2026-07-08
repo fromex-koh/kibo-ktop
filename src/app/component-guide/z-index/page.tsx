@@ -42,7 +42,7 @@ const ZIndexGuidePage = () => (
         {/* 겹침 시연 — 값이 큰 카드가 위에 그려진다 */}
         <section aria-labelledby="z-demo" className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-                <h2 id="z-demo" className="typo-heading-h4-bold">
+                <h2 id="z-demo" className="typo-h4-bold">
                     쌓임 순서 미리보기
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
@@ -68,7 +68,7 @@ const ZIndexGuidePage = () => (
         {/* 전체 토큰 레퍼런스 */}
         <section aria-labelledby="z-tokens" className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
-                <h2 id="z-tokens" className="typo-heading-h4-bold">
+                <h2 id="z-tokens" className="typo-h4-bold">
                     레이어 토큰
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">

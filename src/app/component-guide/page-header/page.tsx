@@ -31,7 +31,7 @@ const PageHeaderGuidePage = () => (
     >
         <section aria-labelledby="ph-variant" className="flex flex-col gap-6">
             <div>
-                <h2 id="ph-variant" className="typo-heading-h4-bold">
+                <h2 id="ph-variant" className="typo-h4-bold">
                     Variant
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
@@ -82,7 +82,7 @@ const PageHeaderGuidePage = () => (
 
         <section aria-labelledby="ph-composition" className="flex flex-col gap-4">
             <div>
-                <h2 id="ph-composition" className="typo-heading-h4-bold">
+                <h2 id="ph-composition" className="typo-h4-bold">
                     Composition
                 </h2>
                 <p className="text-foreground-muted text-sm">이 컴포넌트 내부에 들어갈 수 있는 요소들입니다.</p>
@@ -130,7 +130,7 @@ const PageHeaderGuidePage = () => (
 
         <section aria-labelledby="ph-props" className="flex flex-col gap-4">
             <div>
-                <h2 id="ph-props" className="typo-heading-h4-bold">
+                <h2 id="ph-props" className="typo-h4-bold">
                     Props
                 </h2>
                 <p className="text-foreground-muted text-sm">커스터마이징 가능한 속성들입니다.</p>

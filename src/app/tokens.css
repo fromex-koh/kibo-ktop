@@ -667,7 +667,7 @@
       font-size: 2.25rem;
     }
   }
-  .typo-heading-h1-bold {
+  .typo-h1-bold {
     font-size: 2rem;
     font-weight: 700;
     line-height: 1.5;
@@ -676,7 +676,7 @@
       font-size: 2rem;
     }
   }
-  .typo-heading-h1-medium {
+  .typo-h1-medium {
     font-size: 2rem;
     font-weight: 500;
     line-height: 1.5;
@@ -685,7 +685,7 @@
       font-size: 2rem;
     }
   }
-  .typo-heading-h1-regular {
+  .typo-h1-regular {
     font-size: 2rem;
     font-weight: 400;
     line-height: 1.5;
@@ -694,7 +694,7 @@
       font-size: 2rem;
     }
   }
-  .typo-heading-h2-bold {
+  .typo-h2-bold {
     font-size: 1.75rem;
     font-weight: 700;
     line-height: 1.5;
@@ -703,7 +703,7 @@
       font-size: 1.75rem;
     }
   }
-  .typo-heading-h2-medium {
+  .typo-h2-medium {
     font-size: 1.75rem;
     font-weight: 500;
     line-height: 1.5;
@@ -712,7 +712,7 @@
       font-size: 1.75rem;
     }
   }
-  .typo-heading-h2-regular {
+  .typo-h2-regular {
     font-size: 1.75rem;
     font-weight: 400;
     line-height: 1.5;
@@ -721,7 +721,7 @@
       font-size: 1.75rem;
     }
   }
-  .typo-heading-h3-bold {
+  .typo-h3-bold {
     font-size: 1.625rem;
     font-weight: 700;
     line-height: 1.5;
@@ -730,7 +730,7 @@
       font-size: 1.625rem;
     }
   }
-  .typo-heading-h3-medium {
+  .typo-h3-medium {
     font-size: 1.625rem;
     font-weight: 500;
     line-height: 1.5;
@@ -739,7 +739,7 @@
       font-size: 1.625rem;
     }
   }
-  .typo-heading-h3-regular {
+  .typo-h3-regular {
     font-size: 1.625rem;
     font-weight: 400;
     line-height: 1.5;
@@ -748,7 +748,7 @@
       font-size: 1.625rem;
     }
   }
-  .typo-heading-h4-bold {
+  .typo-h4-bold {
     font-size: 1.5rem;
     font-weight: 700;
     line-height: 1.5;
@@ -757,7 +757,7 @@
       font-size: 1.5rem;
     }
   }
-  .typo-heading-h4-medium {
+  .typo-h4-medium {
     font-size: 1.5rem;
     font-weight: 500;
     line-height: 1.5;
@@ -766,7 +766,7 @@
       font-size: 1.5rem;
     }
   }
-  .typo-heading-h4-regular {
+  .typo-h4-regular {
     font-size: 1.5rem;
     font-weight: 400;
     line-height: 1.5;

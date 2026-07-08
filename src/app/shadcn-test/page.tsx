@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 const ShadcnTestPage = () => {
     return (
         <main id="main" className="max-w-content mx-auto px-4 py-10">
-            <h1 className="typo-heading-h4-bold">shadcn 통합 테스트</h1>
+            <h1 className="typo-h4-bold">shadcn 통합 테스트</h1>
             <p className="typo-body-l-regular text-muted-foreground mt-2">
                 shadcn Button·Input 이 프로젝트 디자인 토큰(--ds-*)으로 렌더되는지 확인하는 페이지.
             </p>

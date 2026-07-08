@@ -114,7 +114,7 @@ const IconGuidePage = () => (
     >
         <section aria-labelledby="icon-library" className="flex flex-col gap-4">
             <div>
-                <h2 id="icon-library" className="typo-heading-h4-bold">
+                <h2 id="icon-library" className="typo-h4-bold">
                     라이브러리
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
@@ -164,7 +164,7 @@ const IconGuidePage = () => (
 
         <section aria-labelledby="icon-size" className="flex flex-col gap-4">
             <div>
-                <h2 id="icon-size" className="typo-heading-h4-bold">
+                <h2 id="icon-size" className="typo-h4-bold">
                     크기
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
@@ -235,7 +235,7 @@ const IconGuidePage = () => (
 
         <section aria-labelledby="icon-list" className="flex flex-col gap-6">
             <div>
-                <h2 id="icon-list" className="typo-heading-h4-bold">
+                <h2 id="icon-list" className="typo-h4-bold">
                     아이콘 목록
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
@@ -288,7 +288,7 @@ const IconGuidePage = () => (
 
         <section aria-labelledby="icon-variant" className="flex flex-col gap-6">
             <div>
-                <h2 id="icon-variant" className="typo-heading-h4-bold">
+                <h2 id="icon-variant" className="typo-h4-bold">
                     Variant
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
@@ -325,7 +325,7 @@ const IconGuidePage = () => (
 
         <section aria-labelledby="icon-props" className="flex flex-col gap-4">
             <div>
-                <h2 id="icon-props" className="typo-heading-h4-bold">
+                <h2 id="icon-props" className="typo-h4-bold">
                     Props
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
