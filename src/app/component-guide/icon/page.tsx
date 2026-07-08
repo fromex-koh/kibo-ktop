@@ -314,7 +314,7 @@ const IconGuidePage = () => (
           <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
             variant
           </span>
-          <h3 className="typo-body-l-medium text-foreground">solid — 원형 배지 안에 아이콘</h3>
+          <h3 className="typo-body-l-medium text-foreground">solid — 원형 안에 아이콘</h3>
         </div>
         <div className="border-gray-subtle-2 flex items-center gap-4 rounded-md border p-6">
           <Icon icon={X} variant="solid" className="size-icon-2xl" />
@@ -359,11 +359,15 @@ const IconGuidePage = () => (
                   className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
                 >
                   icon
+                  <span aria-hidden="true" className="text-error-text">
+                    *
+                  </span>
+                  <span className="sr-only"> (필수)</span>
                 </th>
                 <td className="px-4 py-3">
                   <div className="flex flex-col gap-2">
                     <p className="typo-body-l-regular text-subtle">
-                      표시할 lucide 아이콘 컴포넌트(필수).
+                      표시할 lucide 아이콘 컴포넌트.
                     </p>
                     <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
                       LucideIcon
