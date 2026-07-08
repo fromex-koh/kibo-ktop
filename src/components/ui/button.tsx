@@ -28,9 +28,9 @@ const buttonVariants = cva(
                 'icon-lg': 'size-control-h-lg min-h-11 min-w-11',
                 // 컴팩트 변형(밀도 높은 UI용) — 44px 미만, 인접 간격 확보 전제하에 제한적으로 사용
                 sm: 'h-control-h-sm gap-1.5 rounded-md px-3 text-xs',
-                xs: "h-8 gap-1 rounded-md px-2 text-xs [&_svg:not([class*='size-'])]:size-3",
+                xs: "h-control-h-xs gap-1 rounded-md px-2 text-xs [&_svg:not([class*='size-'])]:size-3",
                 'icon-sm': 'size-control-h-sm rounded-md',
-                'icon-xs': "size-8 rounded-md [&_svg:not([class*='size-'])]:size-3",
+                'icon-xs': "size-control-h-xs rounded-md [&_svg:not([class*='size-'])]:size-3",
             },
         },
         defaultVariants: {

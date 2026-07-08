@@ -473,6 +473,7 @@
   --ds-spacing-icon-lg: 1.5rem;
   --ds-spacing-icon-xl: 2rem;
   --ds-spacing-icon-2xl: 2.5rem;
+  --ds-spacing-control-h-xs: 2rem;
   --ds-spacing-control-h-sm: 2.25rem;
   --ds-spacing-control-h-md: 2.5rem;
   --ds-spacing-control-h-lg: 3rem;
@@ -562,6 +563,7 @@
   --spacing-icon-lg: var(--ds-spacing-icon-lg);
   --spacing-icon-xl: var(--ds-spacing-icon-xl);
   --spacing-icon-2xl: var(--ds-spacing-icon-2xl);
+  --spacing-control-h-xs: var(--ds-spacing-control-h-xs);
   --spacing-control-h-sm: var(--ds-spacing-control-h-sm);
   --spacing-control-h-md: var(--ds-spacing-control-h-md);
   --spacing-control-h-lg: var(--ds-spacing-control-h-lg);
