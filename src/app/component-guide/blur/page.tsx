@@ -1,5 +1,6 @@
 import type {Metadata} from 'next'
 import Image from 'next/image'
+import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
 import tokens from '@tokens'
 import sampleCatImg from '../../../../public/sample-cat.jpg'
@@ -27,7 +28,7 @@ const BlurGuidePage = () => (
                         />
                     </div>
                     <div className="border-border flex flex-col gap-1 border-t px-4 py-3">
-                        <span className="typo-body-l-medium">blur-{k}</span>
+                        <CopyChip value={`blur-${k}`} />
                         <span className="typo-caption-regular text-muted-foreground font-mono">
                             --ds-blur-{k} · {px}px
                         </span>

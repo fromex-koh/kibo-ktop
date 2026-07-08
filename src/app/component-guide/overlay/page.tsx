@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
 import tokens from '@tokens'
 
@@ -34,10 +35,9 @@ const OverlayGuidePage = () => (
                             />
                         </div>
                         <div className="border-border flex flex-col gap-1 border-t px-4 py-3">
-                            <span className="typo-body-l-medium">overlay-{k}</span>
-                            <span className="typo-caption-regular text-muted-foreground font-mono">
-                                --ds-overlay-{k}
-                            </span>
+                            {/* Tailwind 유틸리티가 없으니(NO_UTILITY_SLOTS) 복사값은 클래스명이 아니라
+                                실제 사용법 그대로인 CSS 변수 참조 — label 로 짧은 이름만 보여준다. */}
+                            <CopyChip value={`var(--ds-overlay-${k})`} label={`overlay-${k}`} />
                             <span className="typo-caption-regular text-muted-foreground font-mono">
                                 ↳ {rawVar(ref.light)} / {rawVar(ref.dark)}
                             </span>
