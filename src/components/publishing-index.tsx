@@ -421,7 +421,7 @@ const PublishingIndex = () => {
                                 onClick={() => setFilter(f)}
                                 onKeyDown={(e) => onTabKeyDown(e, i)}
                                 className={`typo-body-l-medium focus-visible:ring-ring inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-md px-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-                                    selected ? 'bg-background text-foreground shadow-1' : 'text-muted-foreground'
+                                    selected ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
                                 }`}
                             >
                                 <FilterIcon filter={f} />

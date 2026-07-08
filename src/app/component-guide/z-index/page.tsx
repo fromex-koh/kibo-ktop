@@ -54,7 +54,7 @@ const ZIndexGuidePage = () => (
                 {STACK_DEMO.map((card) => (
                     <div
                         key={card.z}
-                        className={`${card.z} ${card.pos} border-border bg-card shadow-2 absolute flex w-36 flex-col gap-1 rounded-lg border p-3`}
+                        className={`${card.z} ${card.pos} border-border bg-card absolute flex w-36 flex-col gap-1 rounded-lg border p-3 shadow-md`}
                     >
                         <span className="typo-body-l-medium">{card.label}</span>
                         <span className="typo-caption-regular text-muted-foreground font-mono">

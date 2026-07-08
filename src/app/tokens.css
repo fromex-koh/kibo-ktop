@@ -490,9 +490,9 @@
   --ds-radius-2xl: 1.5rem;
   --ds-radius-full: 999px;
   /* shadow (라이트) — px 입력 → rem, 색은 primitive 참조 */
-  --ds-shadow-1: 0 0.0625rem 0.1875rem 0 var(--raw-black-a10);
-  --ds-shadow-2: 0 0.25rem 0.5rem 0 var(--raw-black-a10);
-  --ds-shadow-3: 0 0.5rem 1rem 0 var(--raw-black-a25);
+  --ds-shadow-sm: 0 0.0625rem 0.1875rem 0 var(--raw-black-a10);
+  --ds-shadow-md: 0 0.25rem 0.5rem 0 var(--raw-black-a10);
+  --ds-shadow-lg: 0 0.5rem 1rem 0 var(--raw-black-a25);
   /* blur */
   --ds-blur-sm: 0.375rem;
   --ds-blur-md: 0.75rem;
@@ -536,9 +536,9 @@
 
 .dark {
   /* shadow (다크 = 흰색 primitive) */
-  --ds-shadow-1: 0 0.0625rem 0.1875rem 0 var(--raw-white-a10);
-  --ds-shadow-2: 0 0.25rem 0.5rem 0 var(--raw-white-a25);
-  --ds-shadow-3: 0 0.5rem 1rem 0 var(--raw-white-a50);
+  --ds-shadow-sm: 0 0.0625rem 0.1875rem 0 var(--raw-white-a10);
+  --ds-shadow-md: 0 0.25rem 0.5rem 0 var(--raw-white-a25);
+  --ds-shadow-lg: 0 0.5rem 1rem 0 var(--raw-white-a50);
 }
 
 @theme {
@@ -576,9 +576,9 @@
   --radius-xl: var(--ds-radius-xl);
   --radius-2xl: var(--ds-radius-2xl);
   --radius-full: var(--ds-radius-full);
-  --shadow-1: var(--ds-shadow-1);
-  --shadow-2: var(--ds-shadow-2);
-  --shadow-3: var(--ds-shadow-3);
+  --shadow-sm: var(--ds-shadow-sm);
+  --shadow-md: var(--ds-shadow-md);
+  --shadow-lg: var(--ds-shadow-lg);
   --blur-sm: var(--ds-blur-sm);
   --blur-md: var(--ds-blur-md);
   --blur-lg: var(--ds-blur-lg);
