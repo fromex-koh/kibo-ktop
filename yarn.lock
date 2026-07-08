@@ -660,6 +660,11 @@
   dependencies:
     "@tybys/wasm-util" "^0.10.3"
 
+"@naverpay/prettier-config@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@naverpay/prettier-config/-/prettier-config-1.0.1.tgz#0a2e4b9904cfbad24c282e02828a612077a4d164"
+  integrity sha512-Wr0e6a91ufu+ijG+xIiCi5ZSKysZ9NqxoaBR1QR3cGe0sbB+oQXcHN3HdZF7bzU7mmlvNTD3/faWTQm4jNftKA==
+
 "@next/env@16.2.9":
   version "16.2.9"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-16.2.9.tgz#c2bbcb1647503cae0f11e6a326799acd1ea29e9e"

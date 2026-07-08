@@ -3,42 +3,42 @@
 // 섹션을 추가·리네임하면 여기 href(#s-*)와 페이지의 aria-labelledby id 를 함께 맞춘다.
 
 // external: true 면 새 창(target=_blank)으로 여는 링크(사이드바 콘텐츠 밖에서 봐야 하는 독립 화면).
-export type GuideNavItem = { label: string; href: string; external?: boolean };
-export type GuideNavSection = { title: string; items: GuideNavItem[] };
+export type GuideNavItem = {label: string; href: string; external?: boolean}
+export type GuideNavSection = {title: string; items: GuideNavItem[]}
 
 export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
-  {
-    title: '색상 · 타이포',
-    items: [
-      { label: '색상 (Primitive)', href: '/component-guide/color' },
-      { label: '색상 (Semantic)', href: '/component-guide/semantic-color' },
-      { label: '타이포그래피', href: '/component-guide/typography' },
-    ],
-  },
-  {
-    title: '레이아웃',
-    items: [
-      { label: '브레이크포인트', href: '/component-guide/breakpoint' },
-      { label: '레이아웃 그리드', href: '/publishing/grid', external: true },
-      { label: '사이드 메뉴 레이아웃', href: '/publishing/sidebar-layout' },
-      { label: '간격 (Spacing)', href: '/component-guide/spacing' },
-      { label: '레이어 (Z-index)', href: '/component-guide/z-index' },
-    ],
-  },
-  {
-    title: '컴포넌트',
-    items: [
-      { label: 'Icon', href: '/component-guide/icon' },
-      { label: 'PageHeader', href: '/component-guide/page-header' },
-    ],
-  },
-  {
-    title: '효과',
-    items: [
-      { label: '라운드', href: '/component-guide/radius' },
-      { label: '그림자', href: '/component-guide/shadow' },
-      { label: '흐림', href: '/component-guide/blur' },
-      { label: '오버레이', href: '/component-guide/overlay' },
-    ],
-  },
-];
+    {
+        title: '색상 · 타이포',
+        items: [
+            {label: '색상 (Primitive)', href: '/component-guide/color'},
+            {label: '색상 (Semantic)', href: '/component-guide/semantic-color'},
+            {label: '타이포그래피', href: '/component-guide/typography'},
+        ],
+    },
+    {
+        title: '레이아웃',
+        items: [
+            {label: '브레이크포인트', href: '/component-guide/breakpoint'},
+            {label: '레이아웃 그리드', href: '/publishing/grid', external: true},
+            {label: '사이드 메뉴 레이아웃', href: '/publishing/sidebar-layout'},
+            {label: '간격 (Spacing)', href: '/component-guide/spacing'},
+            {label: '레이어 (Z-index)', href: '/component-guide/z-index'},
+        ],
+    },
+    {
+        title: '컴포넌트',
+        items: [
+            {label: 'Icon', href: '/component-guide/icon'},
+            {label: 'PageHeader', href: '/component-guide/page-header'},
+        ],
+    },
+    {
+        title: '효과',
+        items: [
+            {label: '라운드', href: '/component-guide/radius'},
+            {label: '그림자', href: '/component-guide/shadow'},
+            {label: '흐림', href: '/component-guide/blur'},
+            {label: '오버레이', href: '/component-guide/overlay'},
+        ],
+    },
+]

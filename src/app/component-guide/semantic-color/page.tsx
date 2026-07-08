@@ -1,230 +1,219 @@
-import type { Metadata } from 'next';
-import CopyChip from '@/components/guide/copy-chip';
-import GuidePage from '@/components/guide/guide-page';
-import tokens from '@tokens';
+import type {Metadata} from 'next'
+import CopyChip from '@/components/guide/copy-chip'
+import GuidePage from '@/components/guide/guide-page'
+import tokens from '@tokens'
 
-export const metadata: Metadata = { title: 'Semantic' };
+export const metadata: Metadata = {title: 'Semantic'}
 
 // 각 토큰의 대표 유틸리티 클래스명 — 접두사(bg/text/border)는 역할로 결정한다.
 // border·text 그룹은 접두사 중복을 피해 토큰명이 무접두사(default·bolder…)라 집합으로 판별한다.
 const BORDER_TOKENS = new Set([
-  'default',
-  'gray-subtle-1',
-  'gray-subtle-2',
-  'gray-subtle-3',
-  'white',
-  'strong',
-  'focus',
-]);
+    'default',
+    'gray-subtle-1',
+    'gray-subtle-2',
+    'gray-subtle-3',
+    'white',
+    'strong',
+    'focus',
+])
 const TEXT_TOKENS = new Set([
-  'bolder',
-  'basic',
-  'subtle',
-  'inverse',
-  'subtle-inverse',
-  'disabled',
-  'disabled-on',
-  'primary',
-  'secondary',
-  'tertiary',
-  // 상태/버튼 그룹의 foreground(읽기용 텍스트) 멤버 — bare 라서 text-* 로 매핑한다.
-  'success',
-  'warning',
-  'error',
-  'info',
-  'secondary-green',
-  'secondary-orange',
-]);
+    'bolder',
+    'basic',
+    'subtle',
+    'inverse',
+    'subtle-inverse',
+    'disabled',
+    'disabled-on',
+    'primary',
+    'secondary',
+    'tertiary',
+    // 상태/버튼 그룹의 foreground(읽기용 텍스트) 멤버 — bare 라서 text-* 로 매핑한다.
+    'success',
+    'warning',
+    'error',
+    'info',
+    'secondary-green',
+    'secondary-orange',
+])
 // 모든 색 토큰은 --color-* 브리지로 유틸이 생기므로 대표 유틸 클래스를 돌려준다.
 // (scroll-thumb·track 은 실제론 스크롤바 CSS 변수로 쓰지만 bg-* 유틸도 유효해 복사용으로 노출.)
 const utilClass = (name: string): string => {
-  if (BORDER_TOKENS.has(name)) return `border-${name}`;
-  if (TEXT_TOKENS.has(name)) return `text-${name}`;
-  if (name.startsWith('icon-')) return `text-${name}`; // 아이콘은 currentColor(text-)로 색을 준다
-  if (name.includes('border')) return `border-${name}`;
-  return `bg-${name}`;
-};
+    if (BORDER_TOKENS.has(name)) return `border-${name}`
+    if (TEXT_TOKENS.has(name)) return `text-${name}`
+    if (name.startsWith('icon-')) return `text-${name}` // 아이콘은 currentColor(text-)로 색을 준다
+    if (name.includes('border')) return `border-${name}`
+    return `bg-${name}`
+}
 
 // 앱이 실제로 쓰는 시맨틱 토큰(--ds → bg-*/text-* 유틸)을 tokens.json 에서 그대로 문서화한다.
 // 인덱싱 타입 오류를 피하려고 Record 로 받는다(값 형태는 build-tokens 검증이 보장).
-const scale: number[] = tokens.scale;
-const primitive: Record<string, Record<string, string>> = tokens.primitive;
-const common: Record<string, string> = tokens.common;
-const semantic: Record<string, string | { light: string; dark: string }> = tokens.semantic;
+const scale: number[] = tokens.scale
+const primitive: Record<string, Record<string, string>> = tokens.primitive
+const common: Record<string, string> = tokens.common
+const semantic: Record<string, string | {light: string; dark: string}> = tokens.semantic
 
 // 다크 위치반사(생성기와 동일 규칙): 스케일 배열에서 대칭 위치.
-const mirror = (step: number): number => scale[scale.length - 1 - scale.indexOf(step)];
+const mirror = (step: number): number => scale[scale.length - 1 - scale.indexOf(step)]
 
 // 투명 값(alpha) 뒤에 깔 체커보드 (토큰 뷰어 인라인 var 은 PB-12 허용).
 // --raw-* 는 모드에 안 뒤집히는 고정 프리미티브라 라이트/다크 어디서든 동일한 '투명 표시' 체커가 된다.
 const CHECKERBOARD =
-  'repeating-conic-gradient(var(--raw-gray-300) 0% 25%, var(--raw-common-white) 0% 50%) 0 0 / 8px 8px';
+    'repeating-conic-gradient(var(--raw-gray-300) 0% 25%, var(--raw-common-white) 0% 50%) 0 0 / 8px 8px'
 
 // 참조("gray.900"·"common.white"·"black.75") → CSS 색. alpha(black/white)는 rgba, 그 외는 hex.
 const rawColor = (ref: string): string => {
-  if (ref === 'transparent' || ref === 'currentColor') return ref;
-  const [hue, step] = ref.split('.');
-  if (hue === 'black' || hue === 'white') {
-    return `rgba(${hue === 'black' ? '0, 0, 0' : '255, 255, 255'}, ${Number(step) / 100})`;
-  }
-  return hue === 'common' ? common[step] : primitive[hue][step];
-};
+    if (ref === 'transparent' || ref === 'currentColor') return ref
+    const [hue, step] = ref.split('.')
+    if (hue === 'black' || hue === 'white') {
+        return `rgba(${hue === 'black' ? '0, 0, 0' : '255, 255, 255'}, ${Number(step) / 100})`
+    }
+    return hue === 'common' ? common[step] : primitive[hue][step]
+}
 
 // 문자열 ref = 다크 자동 반사, {light,dark} = 명시값 → 모드별 색으로 해석
-const resolveModes = (
-  val: string | { light: string; dark: string },
-): { light: string; dark: string } => {
-  if (typeof val !== 'string') {
-    return { light: rawColor(val.light), dark: rawColor(val.dark) };
-  }
-  const [hue, step] = val.split('.');
-  return { light: rawColor(val), dark: rawColor(`${hue}.${mirror(Number(step))}`) };
-};
+const resolveModes = (val: string | {light: string; dark: string}): {light: string; dark: string} => {
+    if (typeof val !== 'string') {
+        return {light: rawColor(val.light), dark: rawColor(val.dark)}
+    }
+    const [hue, step] = val.split('.')
+    return {light: rawColor(val), dark: rawColor(`${hue}.${mirror(Number(step))}`)}
+}
 
 // 참조 primitive 표기 — 문자열은 "라이트 → 다크(반사)", 객체는 "light / dark".
-const refLabel = (val: string | { light: string; dark: string }): string => {
-  if (typeof val !== 'string') {
-    return `${val.light} / ${val.dark}`;
-  }
-  const [hue, step] = val.split('.');
-  return `${val} → ${hue}.${mirror(Number(step))} (반사)`;
-};
+const refLabel = (val: string | {light: string; dark: string}): string => {
+    if (typeof val !== 'string') {
+        return `${val.light} / ${val.dark}`
+    }
+    const [hue, step] = val.split('.')
+    return `${val} → ${hue}.${mirror(Number(step))} (반사)`
+}
 
 // 표기용 rgba 문자열 — hex 는 변환, 이미 rgba(alpha)면 그대로.
 const toRgbaText = (color: string): string => {
-  if (!color.startsWith('#')) return color;
-  const r = parseInt(color.slice(1, 3), 16);
-  const g = parseInt(color.slice(3, 5), 16);
-  const b = parseInt(color.slice(5, 7), 16);
-  return `rgba(${r}, ${g}, ${b}, 1)`;
-};
+    if (!color.startsWith('#')) return color
+    const r = parseInt(color.slice(1, 3), 16)
+    const g = parseInt(color.slice(3, 5), 16)
+    const b = parseInt(color.slice(5, 7), 16)
+    return `rgba(${r}, ${g}, ${b}, 1)`
+}
 
 // 맨 앞 '현재' 칸 — 실제 토큰을 현재 테마로 렌더. 다크 토글 시 실제로 바뀐다(파이프라인 검증).
 // :root/.dark 에 출력되는 --ds-* 를 참조한다(--color-* 는 @theme inline 이라 런타임 변수로 안 나옴).
-const LiveSwatch = ({ name }: { name: string }) => (
-  <span
-    aria-hidden="true"
-    className="border-gray-subtle-2 size-icon-lg relative block shrink-0 overflow-hidden rounded border"
-    style={{ background: CHECKERBOARD }}
-  >
-    <span className="absolute inset-0" style={{ background: `var(--ds-${name})` }} />
-  </span>
-);
+const LiveSwatch = ({name}: {name: string}) => (
+    <span
+        aria-hidden="true"
+        className="border-gray-subtle-2 size-icon-lg relative block shrink-0 overflow-hidden rounded border"
+        style={{background: CHECKERBOARD}}
+    >
+        <span className="absolute inset-0" style={{background: `var(--ds-${name})`}} />
+    </span>
+)
 
 // 정적 모드값 칸 — 해석된 색 스와치 + rgba 표기(모드 무관 고정 표시).
-const ModeSwatch = ({ color }: { color: string }) => (
-  <span className="flex items-center gap-3">
-    <span
-      aria-hidden="true"
-      className="border-gray-subtle-2 size-icon-md relative shrink-0 overflow-hidden rounded border"
-      style={{ background: CHECKERBOARD }}
-    >
-      <span className="absolute inset-0" style={{ background: color }} />
+const ModeSwatch = ({color}: {color: string}) => (
+    <span className="flex items-center gap-3">
+        <span
+            aria-hidden="true"
+            className="border-gray-subtle-2 size-icon-md relative shrink-0 overflow-hidden rounded border"
+            style={{background: CHECKERBOARD}}
+        >
+            <span className="absolute inset-0" style={{background: color}} />
+        </span>
+        <span className="typo-caption-regular text-subtle font-mono whitespace-nowrap">{toRgbaText(color)}</span>
     </span>
-    <span className="typo-caption-regular text-subtle font-mono whitespace-nowrap">
-      {toRgbaText(color)}
-    </span>
-  </span>
-);
+)
 
-type SemanticEntry = [string, string | { light: string; dark: string }];
+type SemanticEntry = [string, string | {light: string; dark: string}]
 
 // 그룹 판별 — 순서대로 첫 매칭. border·text 는 무접두사라 집합으로, 나머지는 접두사로.
-const SEMANTIC_GROUPS: { name: string; match: (n: string) => boolean }[] = [
-  { name: 'background', match: (n) => n === 'background' || n.startsWith('background-') },
-  { name: 'surface', match: (n) => n === 'surface' || n.startsWith('surface-') },
-  { name: 'border', match: (n) => BORDER_TOKENS.has(n) },
-  { name: 'text', match: (n) => TEXT_TOKENS.has(n) },
-  { name: 'button', match: (n) => n.startsWith('button-') },
-  { name: 'input', match: (n) => n.startsWith('input-') },
-  { name: 'icon', match: (n) => n.startsWith('icon-') },
-  { name: 'element', match: (n) => n.startsWith('element-') },
-  { name: 'primary', match: (n) => n.startsWith('primary-') },
-  { name: 'secondary', match: (n) => n.startsWith('secondary-') },
-  { name: 'success', match: (n) => n.startsWith('success-') },
-  { name: 'warning', match: (n) => n.startsWith('warning-') },
-  { name: 'error', match: (n) => n.startsWith('error-') },
-  { name: 'info', match: (n) => n.startsWith('info-') },
-  { name: '기타', match: () => true },
-];
-const groupNameOf = (name: string): string =>
-  SEMANTIC_GROUPS.find((group) => group.match(name))?.name ?? '기타';
+const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
+    {name: 'background', match: (n) => n === 'background' || n.startsWith('background-')},
+    {name: 'surface', match: (n) => n === 'surface' || n.startsWith('surface-')},
+    {name: 'border', match: (n) => BORDER_TOKENS.has(n)},
+    {name: 'text', match: (n) => TEXT_TOKENS.has(n)},
+    {name: 'button', match: (n) => n.startsWith('button-')},
+    {name: 'input', match: (n) => n.startsWith('input-')},
+    {name: 'icon', match: (n) => n.startsWith('icon-')},
+    {name: 'element', match: (n) => n.startsWith('element-')},
+    {name: 'primary', match: (n) => n.startsWith('primary-')},
+    {name: 'secondary', match: (n) => n.startsWith('secondary-')},
+    {name: 'success', match: (n) => n.startsWith('success-')},
+    {name: 'warning', match: (n) => n.startsWith('warning-')},
+    {name: 'error', match: (n) => n.startsWith('error-')},
+    {name: 'info', match: (n) => n.startsWith('info-')},
+    {name: '기타', match: () => true},
+]
+const groupNameOf = (name: string): string => SEMANTIC_GROUPS.find((group) => group.match(name))?.name ?? '기타'
 
 // tokens.json 순서를 유지한 채 그룹으로 묶는다(각 토큰은 첫 매칭 그룹 하나에만 속함).
 const GROUPED = SEMANTIC_GROUPS.map((group) => ({
-  name: group.name,
-  tokens: Object.entries(semantic).filter(([name]) => groupNameOf(name) === group.name),
-})).filter((group) => group.tokens.length > 0);
+    name: group.name,
+    tokens: Object.entries(semantic).filter(([name]) => groupNameOf(name) === group.name),
+})).filter((group) => group.tokens.length > 0)
 
 // 그룹 하나 = 독립 테이블. 현재(라이브)·클래스(클릭 복사)·라이트·다크·참조 primitive.
-const SemanticTable = ({ title, tokens }: { title: string; tokens: SemanticEntry[] }) => (
-  <section className="flex flex-col gap-2">
-    <h2 className="typo-body-l-medium text-bolder font-semibold">{title}</h2>
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse text-left">
-        <thead>
-          <tr className="border-gray-subtle-2 border-b">
-            <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
-              현재
-            </th>
-            <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
-              클래스 (클릭 복사)
-            </th>
-            <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
-              라이트
-            </th>
-            <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
-              다크
-            </th>
-            <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
-              참조 primitive
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {tokens.map(([name, val]) => {
-            const modes = resolveModes(val);
-            return (
-              <tr
-                key={name}
-                className="border-gray-subtle-2 hover:bg-surface border-b transition-colors"
-              >
-                <td className="px-3 py-3">
-                  <LiveSwatch name={name} />
-                </td>
-                <th scope="row" className="px-3 py-3 text-left">
-                  <CopyChip value={utilClass(name)} />
-                </th>
-                <td className="px-3 py-3">
-                  <ModeSwatch color={modes.light} />
-                </td>
-                <td className="px-3 py-3">
-                  <ModeSwatch color={modes.dark} />
-                </td>
-                <td className="typo-caption-regular text-subtle px-3 py-3 font-mono whitespace-nowrap">
-                  {refLabel(val)}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  </section>
-);
+const SemanticTable = ({title, tokens}: {title: string; tokens: SemanticEntry[]}) => (
+    <section className="flex flex-col gap-2">
+        <h2 className="typo-body-l-medium text-bolder font-semibold">{title}</h2>
+        <div className="overflow-x-auto">
+            <table className="w-full border-collapse text-left">
+                <thead>
+                    <tr className="border-gray-subtle-2 border-b">
+                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                            현재
+                        </th>
+                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                            클래스 (클릭 복사)
+                        </th>
+                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                            라이트
+                        </th>
+                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                            다크
+                        </th>
+                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                            참조 primitive
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {tokens.map(([name, val]) => {
+                        const modes = resolveModes(val)
+                        return (
+                            <tr key={name} className="border-gray-subtle-2 hover:bg-surface border-b transition-colors">
+                                <td className="px-3 py-3">
+                                    <LiveSwatch name={name} />
+                                </td>
+                                <th scope="row" className="px-3 py-3 text-left">
+                                    <CopyChip value={utilClass(name)} />
+                                </th>
+                                <td className="px-3 py-3">
+                                    <ModeSwatch color={modes.light} />
+                                </td>
+                                <td className="px-3 py-3">
+                                    <ModeSwatch color={modes.dark} />
+                                </td>
+                                <td className="typo-caption-regular text-subtle px-3 py-3 font-mono whitespace-nowrap">
+                                    {refLabel(val)}
+                                </td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </table>
+        </div>
+    </section>
+)
 
 // 색상(Semantic) — 앱이 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
 const SemanticColorGuidePage = () => (
-  <GuidePage
-    title="02 Semantic Color"
-    description="앱이 실제로 쓰는 시맨틱 색상 토큰을 그룹별 표로 정리했습니다."
-  >
-    <div className="flex flex-col gap-8">
-      {GROUPED.map((group) => (
-        <SemanticTable key={group.name} title={group.name} tokens={group.tokens} />
-      ))}
-    </div>
-  </GuidePage>
-);
+    <GuidePage title="02 Semantic Color" description="앱이 실제로 쓰는 시맨틱 색상 토큰을 그룹별 표로 정리했습니다.">
+        <div className="flex flex-col gap-8">
+            {GROUPED.map((group) => (
+                <SemanticTable key={group.name} title={group.name} tokens={group.tokens} />
+            ))}
+        </div>
+    </GuidePage>
+)
 
-export default SemanticColorGuidePage;
+export default SemanticColorGuidePage

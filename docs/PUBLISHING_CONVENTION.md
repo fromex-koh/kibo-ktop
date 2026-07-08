@@ -50,35 +50,35 @@ tokens.json (px 숫자) → yarn tokens → src/app/tokens.css (자동) → Tail
 
 - **[PB-07] `typo-*` 복합 클래스 사용 (MUST)** — 제목·본문은 `typo-heading-*`·`typo-body-*`·`typo-label`·`typo-caption`. 크기·굵기·행간·자간·모바일/PC 반응형이 **한 묶음**으로 적용된다.
 - **[PB-08] `typo-*` 와 `text-*`/`font-*`/`leading-*`/`tracking-*` 를 같은 요소에 함께 쓰지 않음 (MUST)** — 둘 다 `font-size` 등을 지정해 cascade 순서로 충돌한다. 한 요소엔 `typo-*` **하나만**.
-  ```tsx
-  <h1 className="typo-heading-lg">제목</h1>              // O
-  <h1 className="typo-heading-lg text-3xl">제목</h1>     // X (충돌)
-  ```
+    ```tsx
+    <h1 className="typo-heading-lg">제목</h1>              // O
+    <h1 className="typo-heading-lg text-3xl">제목</h1>     // X (충돌)
+    ```
 
 ## 간격 · 형태 · 효과
 
 - **[PB-09] 간격·라운드·그림자는 토큰 유틸 사용 (MUST)** — 간격 `p-* m-* gap-*`(spacing), 모서리 `rounded-*`(radius), 그림자 `shadow-*`(effect), 블러 `blur-*`. 임의값 `p-[13px]`·`rounded-[7px]` 지양.
 - **[PB-10] 고정 크기는 size 토큰 (RECOMMENDED)** — 아이콘은 `size-icon-md`, 컨트롤 높이는 `h-control-h-md` 등. (`control-h-*` 는 버튼·인풋 등 컨트롤의 **높이** 토큰이라 `h-*`/`min-h-*` 로 쓴다.)
 - **[PB-13] 간격은 base 배수, 라운드·크기·그림자는 정의된 토큰만 (MUST)**
-  - **간격(spacing)**: `tokens.json`의 `spacingBase`(현재 4px)를 기준으로 한 **정수 배수 유틸**(`p-4`·`gap-6`·`mt-8`…)을 쓴다. base가 그리드를 강제하므로 어떤 정수 N이든 4px 그리드에 맞는다(`p-4`=16px·`p-6`=24px). `base` 하나만 바꾸면 전체가 비율대로 조정된다. **임의 px(`p-[13px]`)·반단위(`p-1.5`) 남용은 지양**한다.
-  - **라운드·고정크기·그림자(radius·size·shadow)**: `tokens.json`에 **정의된 키만** 쓴다(`rounded-md`·`size-icon-md`·`shadow-2`). 미정의 키는 Tailwind 기본이 나가므로 지양.
-  - base 값·정의 목록은 `tokens.json` 또는 가이드 화면 `/component-guide` 에서 확인한다.
-  - ⚠️ **현재 spacingBase·radius·size·shadow·typography 값은 디자인 확정 전 임시(placeholder)**다. 확정 후 `tokens.json`을 실제 값으로 교체한다(비선형 스케일이 필요하면 명명 토큰으로 추가). 강제가 필요하면 추후 ESLint 규칙을 추가한다.
+    - **간격(spacing)**: `tokens.json`의 `spacingBase`(현재 4px)를 기준으로 한 **정수 배수 유틸**(`p-4`·`gap-6`·`mt-8`…)을 쓴다. base가 그리드를 강제하므로 어떤 정수 N이든 4px 그리드에 맞는다(`p-4`=16px·`p-6`=24px). `base` 하나만 바꾸면 전체가 비율대로 조정된다. **임의 px(`p-[13px]`)·반단위(`p-1.5`) 남용은 지양**한다.
+    - **라운드·고정크기·그림자(radius·size·shadow)**: `tokens.json`에 **정의된 키만** 쓴다(`rounded-md`·`size-icon-md`·`shadow-2`). 미정의 키는 Tailwind 기본이 나가므로 지양.
+    - base 값·정의 목록은 `tokens.json` 또는 가이드 화면 `/component-guide` 에서 확인한다.
+    - ⚠️ **현재 spacingBase·radius·size·shadow·typography 값은 디자인 확정 전 임시(placeholder)**다. 확정 후 `tokens.json`을 실제 값으로 교체한다(비선형 스케일이 필요하면 명명 토큰으로 추가). 강제가 필요하면 추후 ESLint 규칙을 추가한다.
 
 ## 반응형 (브레이크포인트)
 
 - **[PB-14] 브레이크포인트는 정의된 프리픽스만, 모바일 퍼스트 (MUST)**
-  - 3단계: **모바일 0–767px(기본, 프리픽스 없음) · `wide:` 768px 이상 · `pc:` 1280px 이상**. 기본 유틸로 모바일을 만들고 상위 구간만 프리픽스로 덮어쓴다.
-  - `wide:` 는 특정 기기 하나를 가리키지 않는다 — **768~1279px 구간은 태블릿(가로)·노트북이 함께 걸치는 폭**이라 `tablet:`처럼 기기명을 쓰면 부정확하다. 그래서 기기 중립적으로 "넓어진 화면"을 뜻하는 `wide`를 쓴다.
-  - Tailwind 기본 `sm:`/`md:`/`lg:`/`xl:`/`2xl:` 는 **생성기가 제거해 동작하지 않는다** — 정의된 프리픽스(`wide:`/`pc:`)만 쓴다.
-  - 콘텐츠 영역은 고정폭 대신 **`max-w-content`**(1200px) + `mx-auto` 로 제한한다(ST-004 연계). `max-w-4xl` 등 기본 스케일도 제거됨.
-  - 값 변경은 `tokens.json` 의 `breakpoint`/`container` 수정 → `yarn tokens`. 타이포 모바일→PC 전환점(`typographyBreakpoint`)도 breakpoint 키 참조("wide")로 연동된다.
+    - 3단계: **모바일 0–767px(기본, 프리픽스 없음) · `wide:` 768px 이상 · `pc:` 1280px 이상**. 기본 유틸로 모바일을 만들고 상위 구간만 프리픽스로 덮어쓴다.
+    - `wide:` 는 특정 기기 하나를 가리키지 않는다 — **768~1279px 구간은 태블릿(가로)·노트북이 함께 걸치는 폭**이라 `tablet:`처럼 기기명을 쓰면 부정확하다. 그래서 기기 중립적으로 "넓어진 화면"을 뜻하는 `wide`를 쓴다.
+    - Tailwind 기본 `sm:`/`md:`/`lg:`/`xl:`/`2xl:` 는 **생성기가 제거해 동작하지 않는다** — 정의된 프리픽스(`wide:`/`pc:`)만 쓴다.
+    - 콘텐츠 영역은 고정폭 대신 **`max-w-content`**(1200px) + `mx-auto` 로 제한한다(ST-004 연계). `max-w-4xl` 등 기본 스케일도 제거됨.
+    - 값 변경은 `tokens.json` 의 `breakpoint`/`container` 수정 → `yarn tokens`. 타이포 모바일→PC 전환점(`typographyBreakpoint`)도 breakpoint 키 참조("wide")로 연동된다.
 - **[PB-15] 레이아웃 그리드는 `.grid-layout` 하나로 (MUST)** — 컬럼 수·거터(칸 간격)·마진(가장자리 여백)은 `tokens.json`의 `grid`(브레이크포인트별)에서 온다. 컬럼 그리드가 필요한 곳엔 `grid-cols-*`/`gap-*`/`px-*` 를 직접 조합하지 않고 **`.grid-layout`** 클래스를 쓴다 — 내부적으로 `--ds-grid-columns`/`--ds-grid-gutter`/`--ds-grid-margin` 과 공용 `max-w-content` 폭 상한을 함께 캡슐화한다.
-  - `grid` 의 키는 `breakpoint`(+`mobile`)와 **정확히 1:1 대응**해야 하며, 어긋나면(키 누락·불일치) 빌드가 실패한다. 브레이크포인트를 리네임·추가하면 `grid` 도 함께 갱신한다.
-  - 값 변경은 `tokens.json` 의 `grid` 수정 → `yarn tokens`. 현재 값은 다른 디자인 토큰과 마찬가지로 확정 전 placeholder다.
+    - `grid` 의 키는 `breakpoint`(+`mobile`)와 **정확히 1:1 대응**해야 하며, 어긋나면(키 누락·불일치) 빌드가 실패한다. 브레이크포인트를 리네임·추가하면 `grid` 도 함께 갱신한다.
+    - 값 변경은 `tokens.json` 의 `grid` 수정 → `yarn tokens`. 현재 값은 다른 디자인 토큰과 마찬가지로 확정 전 placeholder다.
 - **[PB-16] 스크롤바도 토큰 기반 (MUST)** — 두께는 `size.scrollbar-w`, 색은 `semantic.scroll-thumb`/`scroll-track`(gray 스케일 참조라 다크 자동 반사)에서 온다. `html { scrollbar-gutter: stable }` 로 스크롤바 유무와 무관하게 콘텐츠 폭을 고정한다(레이아웃 시프트 방지).
-  - `::-webkit-scrollbar` 만 커스터마이즈한다(Chrome/Safari/Edge). 표준 `scrollbar-width`/`scrollbar-color` 는 **의도적으로 두지 않는다** — Chrome 121+ 에서 표준 속성이 있으면 두께 커스텀을 무시하고 플랫폼 기본(`thin`, ~11px)을 적용해 예약된 gutter 폭과 어긋난다. Firefox 는 기본 스크롤바를 그대로 쓴다.
-  - 값 변경은 `tokens.json` 의 `size.scrollbar-w`/`semantic.scroll-thumb`/`scroll-track` 수정 → `yarn tokens`.
+    - `::-webkit-scrollbar` 만 커스터마이즈한다(Chrome/Safari/Edge). 표준 `scrollbar-width`/`scrollbar-color` 는 **의도적으로 두지 않는다** — Chrome 121+ 에서 표준 속성이 있으면 두께 커스텀을 무시하고 플랫폼 기본(`thin`, ~11px)을 적용해 예약된 gutter 폭과 어긋난다. Firefox 는 기본 스크롤바를 그대로 쓴다.
+    - 값 변경은 `tokens.json` 의 `size.scrollbar-w`/`semantic.scroll-thumb`/`scroll-track` 수정 → `yarn tokens`.
 
 ## 대비 (접근성 연계)
 

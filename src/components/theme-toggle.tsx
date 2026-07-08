@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { useSyncExternalStore } from 'react';
-import { useTheme } from 'next-themes';
-import { Moon, Sun } from 'lucide-react';
+import {useSyncExternalStore} from 'react'
+import {useTheme} from 'next-themes'
+import {Moon, Sun} from 'lucide-react'
 
 // 구독할 외부 변화가 없는 스토어 — 서버 스냅샷(false)과 클라 스냅샷(true)이 갈리는 것만 이용해
 // "마운트 이후(클라)" 여부를 하이드레이션-세이프하게 읽는다. (setState-in-effect 안티패턴 회피)
-const subscribe = () => () => {};
-const getSnapshot = () => true;
-const getServerSnapshot = () => false;
+const subscribe = () => () => {}
+const getSnapshot = () => true
+const getServerSnapshot = () => false
 
 /**
  * 라이트/다크 수동 토글 버튼.
@@ -19,36 +19,36 @@ const getServerSnapshot = () => false;
  *   아이콘은 `aria-hidden` 처리. `<button>`·키보드 기본 동작·focus-visible·44px 타깃. [KWCAG 5.1.1]
  */
 const ThemeToggle = () => {
-  const { resolvedTheme, setTheme } = useTheme();
-  const isMounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+    const {resolvedTheme, setTheme} = useTheme()
+    const isMounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
-  if (!isMounted) {
-    return <div className="min-h-11 min-w-11" aria-hidden="true" />;
-  }
+    if (!isMounted) {
+        return <div className="min-h-11 min-w-11" aria-hidden="true" />
+    }
 
-  const toggleTheme = () => {
-    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark');
-  };
+    const toggleTheme = () => {
+        setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
+    }
 
-  // 아이콘만 보이므로 이 문구를 aria-label/title 로 제공 → 스크린리더가 버튼 기능을 낭독.
-  // '전환 대상'을 가리켜 클릭 시 무엇이 되는지 명확히 한다.
-  const label = resolvedTheme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환';
+    // 아이콘만 보이므로 이 문구를 aria-label/title 로 제공 → 스크린리더가 버튼 기능을 낭독.
+    // '전환 대상'을 가리켜 클릭 시 무엇이 되는지 명확히 한다.
+    const label = resolvedTheme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'
 
-  return (
-    <button
-      type="button"
-      onClick={toggleTheme}
-      aria-label={label}
-      title={label}
-      className="text-subtle hover:text-bolder focus-visible:ring-focus focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-    >
-      {resolvedTheme === 'dark' ? (
-        <Sun aria-hidden="true" className="size-icon-sm" />
-      ) : (
-        <Moon aria-hidden="true" className="size-icon-sm" />
-      )}
-    </button>
-  );
-};
+    return (
+        <button
+            type="button"
+            onClick={toggleTheme}
+            aria-label={label}
+            title={label}
+            className="text-subtle hover:text-bolder focus-visible:ring-focus focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+        >
+            {resolvedTheme === 'dark' ? (
+                <Sun aria-hidden="true" className="size-icon-sm" />
+            ) : (
+                <Moon aria-hidden="true" className="size-icon-sm" />
+            )}
+        </button>
+    )
+}
 
-export default ThemeToggle;
+export default ThemeToggle

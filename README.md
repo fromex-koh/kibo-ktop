@@ -135,14 +135,14 @@ yarn tokens   # tokens.json(px) 수정 후 실행 (yarn dev/build 시 자동)
 ### 적용 방식
 
 1. `next/font/local` 로 폰트를 로드하고 CSS 변수 `--font-pretendard` 로 노출한다. ([layout.tsx](src/app/layout.tsx))
-   ```tsx
-   const pretendard = localFont({
-     src: './fonts/PretendardVariable.woff2',
-     display: 'swap',
-     weight: '100 900',
-     variable: '--font-pretendard',
-   });
-   ```
+    ```tsx
+    const pretendard = localFont({
+        src: './fonts/PretendardVariable.woff2',
+        display: 'swap',
+        weight: '100 900',
+        variable: '--font-pretendard',
+    })
+    ```
 2. `globals.css` 의 `--font-sans` 에 위 변수 + 한글 폴백을 연결한다. → Tailwind `font-sans` 유틸리티가 이를 사용.
 3. `<body>` 에 `font-sans` 적용 → 전역 기본 서체가 된다.
 
@@ -157,9 +157,9 @@ yarn tokens   # tokens.json(px) 수정 후 실행 (yarn dev/build 시 자동)
 - **웹 접근성 (KWCAG 2.1)** — 4원칙·13지침·24검사항목 전체를 코딩 규칙으로 정리.
   규칙·예시·PR 체크리스트는 [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) 참고.
 
-  > **기준: KWCAG 2.1** — 공공기관 프로젝트로, 국내 웹 접근성 의무의 기술 기준은
-  > 국제 표준(WCAG)이 아니라 **국가표준 KWCAG**다. 본 프로젝트는 요구 기준에 따라 **2.1**(2015)을 적용한다.
-  > 「디지털포용법」(2026.1.22 시행)·「장애인차별금지법」 등에 따라 공공기관은 준수 의무가 있다.
+    > **기준: KWCAG 2.1** — 공공기관 프로젝트로, 국내 웹 접근성 의무의 기술 기준은
+    > 국제 표준(WCAG)이 아니라 **국가표준 KWCAG**다. 본 프로젝트는 요구 기준에 따라 **2.1**(2015)을 적용한다.
+    > 「디지털포용법」(2026.1.22 시행)·「장애인차별금지법」 등에 따라 공공기관은 준수 의무가 있다.
 
 - **마크업** — 시맨틱 태그 우선, 논리적 헤딩 계층, 랜드마크(`header`/`nav`/`main`/`footer`) 사용.
 - **스타일** — TailwindCSS 유틸리티 기반, 명도 대비·포커스 표시 등 접근성 스타일 준수.

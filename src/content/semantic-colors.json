@@ -1,936 +1,936 @@
 {
-  "//": "Figma 02 Semantic Color 에서 추출한 시맨틱 색상 정의(가이드 표시용 참조 데이터). Light/Dark 각 모드의 해석값(rgba, alpha 보존)과 참조 primitive(ref)를 담는다. 앱 런타임 토큰(tokens.json semantic)과는 별개이며 색상(Semantic) 가이드에서만 소비한다. Figma 갱신 시 수동 재추출.",
-  "groups": [
-    {
-      "name": "background",
-      "tokens": [
+    "//": "Figma 02 Semantic Color 에서 추출한 시맨틱 색상 정의(가이드 표시용 참조 데이터). Light/Dark 각 모드의 해석값(rgba, alpha 보존)과 참조 primitive(ref)를 담는다. 앱 런타임 토큰(tokens.json semantic)과는 별개이며 색상(Semantic) 가이드에서만 소비한다. Figma 갱신 시 수동 재추출.",
+    "groups": [
         {
-          "name": "white",
-          "light": "rgba(255, 255, 255, 1)",
-          "dark": "rgba(54, 116, 218, 1)",
-          "lightRef": "common/white",
-          "darkRef": "brand/blue/500"
+            "name": "background",
+            "tokens": [
+                {
+                    "name": "white",
+                    "light": "rgba(255, 255, 255, 1)",
+                    "dark": "rgba(54, 116, 218, 1)",
+                    "lightRef": "common/white",
+                    "darkRef": "brand/blue/500"
+                },
+                {
+                    "name": "secondary",
+                    "light": "rgba(244, 245, 246, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "brand/gray/50",
+                    "darkRef": "brand/blue/600"
+                },
+                {
+                    "name": "inverse",
+                    "light": "rgba(29, 32, 35, 1)",
+                    "dark": "rgba(120, 162, 230, 1)",
+                    "lightRef": "common/black",
+                    "darkRef": "brand/blue/300"
+                },
+                {
+                    "name": "dim",
+                    "light": "rgba(0, 0, 0, 0.75)",
+                    "dark": "rgba(231, 244, 254, 1)",
+                    "lightRef": "alpha/black75",
+                    "darkRef": "brand/blue/50"
+                }
+            ]
         },
         {
-          "name": "secondary",
-          "light": "rgba(244, 245, 246, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "brand/gray/50",
-          "darkRef": "brand/blue/600"
+            "name": "surface",
+            "tokens": [
+                {
+                    "name": "white",
+                    "light": "rgba(255, 255, 255, 1)",
+                    "dark": "rgba(54, 116, 218, 1)",
+                    "lightRef": "common/white",
+                    "darkRef": "brand/blue/500"
+                },
+                {
+                    "name": "gray-subtle-1",
+                    "light": "rgba(244, 245, 246, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "brand/gray/50",
+                    "darkRef": "brand/blue/600"
+                },
+                {
+                    "name": "gray-subtle-2",
+                    "light": "rgba(230, 232, 234, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "brand/gray/100",
+                    "darkRef": "brand/blue/600"
+                },
+                {
+                    "name": "gray-subtle-3",
+                    "light": "rgba(183, 187, 191, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "brand/gray/200",
+                    "darkRef": "brand/blue/600"
+                },
+                {
+                    "name": "inverse",
+                    "light": "rgba(29, 32, 35, 1)",
+                    "dark": "rgba(120, 162, 230, 1)",
+                    "lightRef": "common/black",
+                    "darkRef": "brand/blue/300"
+                },
+                {
+                    "name": "primary-subtler",
+                    "light": "rgba(231, 244, 254, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "brand/blue/50",
+                    "darkRef": "brand/blue/600"
+                },
+                {
+                    "name": "secondary-green-subtler",
+                    "light": "rgba(243, 250, 236, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "brand/green/50",
+                    "darkRef": "brand/blue/600"
+                },
+                {
+                    "name": "secondary-orange-subtler",
+                    "light": "rgba(254, 243, 233, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "brand/orange/50",
+                    "darkRef": "brand/blue/600"
+                },
+                {
+                    "name": "error-subtler",
+                    "light": "rgba(253, 239, 236, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "system/error/50",
+                    "darkRef": "brand/blue/600"
+                },
+                {
+                    "name": "warning-subtler",
+                    "light": "rgba(255, 243, 219, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "system/warning/50",
+                    "darkRef": "brand/blue/600"
+                },
+                {
+                    "name": "success-subtler",
+                    "light": "rgba(234, 246, 236, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "system/success/50",
+                    "darkRef": "brand/blue/600"
+                },
+                {
+                    "name": "info-subtler",
+                    "light": "rgba(231, 244, 254, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "system/info/50",
+                    "darkRef": "brand/blue/600"
+                }
+            ]
         },
         {
-          "name": "inverse",
-          "light": "rgba(29, 32, 35, 1)",
-          "dark": "rgba(120, 162, 230, 1)",
-          "lightRef": "common/black",
-          "darkRef": "brand/blue/300"
+            "name": "border",
+            "tokens": [
+                {
+                    "name": "default",
+                    "light": "rgba(50, 54, 59, 1)",
+                    "dark": "rgba(50, 54, 59, 1)",
+                    "lightRef": "brand/gray/700",
+                    "darkRef": "brand/gray/700"
+                },
+                {
+                    "name": "gray-subtle-1",
+                    "light": "rgba(132, 139, 148, 1)",
+                    "dark": "rgba(88, 94, 101, 1)",
+                    "lightRef": "brand/gray/300",
+                    "darkRef": "brand/gray/500"
+                },
+                {
+                    "name": "gray-subtle-2",
+                    "light": "rgba(183, 187, 191, 1)",
+                    "dark": "rgba(88, 94, 101, 1)",
+                    "lightRef": "brand/gray/200",
+                    "darkRef": "brand/gray/500"
+                },
+                {
+                    "name": "gray-subtle-3",
+                    "light": "rgba(230, 232, 234, 1)",
+                    "dark": "rgba(88, 94, 101, 1)",
+                    "lightRef": "brand/gray/100",
+                    "darkRef": "brand/gray/500"
+                },
+                {
+                    "name": "white",
+                    "light": "rgba(255, 255, 255, 1)",
+                    "dark": "rgba(183, 187, 191, 1)",
+                    "lightRef": "common/white",
+                    "darkRef": "brand/gray/200"
+                },
+                {
+                    "name": "strong",
+                    "light": "rgba(88, 94, 101, 1)",
+                    "dark": "rgba(132, 139, 148, 1)",
+                    "lightRef": "brand/gray/500",
+                    "darkRef": "brand/gray/300"
+                },
+                {
+                    "name": "focus",
+                    "light": "rgba(54, 116, 218, 1)",
+                    "dark": "rgba(183, 187, 191, 1)",
+                    "lightRef": "brand/blue/500",
+                    "darkRef": "brand/gray/200"
+                },
+                {
+                    "name": "error",
+                    "light": "rgba(222, 52, 18, 1)",
+                    "dark": "rgba(183, 187, 191, 1)",
+                    "lightRef": "system/error/500",
+                    "darkRef": "brand/gray/200"
+                }
+            ]
         },
         {
-          "name": "dim",
-          "light": "rgba(0, 0, 0, 0.75)",
-          "dark": "rgba(231, 244, 254, 1)",
-          "lightRef": "alpha/black75",
-          "darkRef": "brand/blue/50"
+            "name": "text",
+            "tokens": [
+                {
+                    "name": "bolder",
+                    "light": "rgba(29, 32, 35, 1)",
+                    "dark": "rgba(50, 54, 59, 1)",
+                    "lightRef": "brand/gray/900",
+                    "darkRef": "brand/gray/700"
+                },
+                {
+                    "name": "basic",
+                    "light": "rgba(50, 54, 59, 1)",
+                    "dark": "rgba(50, 54, 59, 1)",
+                    "lightRef": "brand/gray/700",
+                    "darkRef": "brand/gray/700"
+                },
+                {
+                    "name": "subtle",
+                    "light": "rgba(88, 94, 101, 1)",
+                    "dark": "rgba(50, 54, 59, 1)",
+                    "lightRef": "brand/gray/500",
+                    "darkRef": "brand/gray/700"
+                },
+                {
+                    "name": "inverse",
+                    "light": "rgba(255, 255, 255, 1)",
+                    "dark": "rgba(50, 54, 59, 1)",
+                    "lightRef": "common/white",
+                    "darkRef": "brand/gray/700"
+                },
+                {
+                    "name": "subtle-inverse",
+                    "light": "rgba(244, 245, 246, 1)",
+                    "dark": "rgba(50, 54, 59, 1)",
+                    "lightRef": "brand/gray/50",
+                    "darkRef": "brand/gray/700"
+                },
+                {
+                    "name": "disabled",
+                    "light": "rgba(183, 187, 191, 1)",
+                    "dark": "rgba(183, 187, 191, 1)",
+                    "lightRef": "brand/gray/200",
+                    "darkRef": "brand/gray/200"
+                },
+                {
+                    "name": "disabled-on",
+                    "light": "rgba(132, 139, 148, 1)",
+                    "dark": "rgba(183, 187, 191, 1)",
+                    "lightRef": "brand/gray/300",
+                    "darkRef": "brand/gray/200"
+                },
+                {
+                    "name": "primary",
+                    "light": "rgba(49, 106, 198, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "brand/blue/600",
+                    "darkRef": "system/info/600"
+                },
+                {
+                    "name": "secondary",
+                    "light": "rgba(30, 64, 120, 1)",
+                    "dark": "rgba(88, 94, 101, 1)",
+                    "lightRef": "brand/blue/800",
+                    "darkRef": "brand/gray/500"
+                },
+                {
+                    "name": "tertiary",
+                    "light": "rgba(23, 49, 92, 1)",
+                    "dark": "rgba(132, 139, 148, 1)",
+                    "lightRef": "brand/blue/900",
+                    "darkRef": "brand/gray/300"
+                },
+                {
+                    "name": "error",
+                    "light": "rgba(222, 52, 18, 1)",
+                    "dark": "rgba(50, 54, 59, 1)",
+                    "lightRef": "system/error/500",
+                    "darkRef": "brand/gray/700"
+                },
+                {
+                    "name": "warning",
+                    "light": "rgba(138, 92, 0, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "system/warning/600",
+                    "darkRef": "system/info/600"
+                },
+                {
+                    "name": "success",
+                    "light": "rgba(38, 115, 55, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "system/success/600",
+                    "darkRef": "system/info/600"
+                },
+                {
+                    "name": "info",
+                    "light": "rgba(49, 106, 198, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "system/info/600",
+                    "darkRef": "system/info/600"
+                }
+            ]
+        },
+        {
+            "name": "button",
+            "tokens": [
+                {
+                    "name": "primary-fill",
+                    "light": "rgba(54, 116, 218, 1)",
+                    "dark": "rgba(37, 110, 244, 1)",
+                    "lightRef": "brand/blue/500",
+                    "darkRef": null
+                },
+                {
+                    "name": "primary-fill-hover",
+                    "light": "rgba(38, 82, 155, 1)",
+                    "dark": "rgba(11, 80, 208, 1)",
+                    "lightRef": "brand/blue/700",
+                    "darkRef": null
+                },
+                {
+                    "name": "primary-fill-pressed",
+                    "light": "rgba(38, 82, 155, 1)",
+                    "dark": "rgba(8, 56, 145, 1)",
+                    "lightRef": "brand/blue/700",
+                    "darkRef": null
+                },
+                {
+                    "name": "secondary-fill",
+                    "light": "rgba(231, 244, 254, 1)",
+                    "dark": "rgba(2, 15, 39, 1)",
+                    "lightRef": "brand/blue/50",
+                    "darkRef": null
+                },
+                {
+                    "name": "secondary-fill-hover",
+                    "light": "rgba(193, 212, 244, 1)",
+                    "dark": "rgba(3, 22, 58, 1)",
+                    "lightRef": "brand/blue/100",
+                    "darkRef": null
+                },
+                {
+                    "name": "secondary-fill-pressed",
+                    "light": "rgba(193, 212, 244, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "brand/blue/100",
+                    "darkRef": null
+                },
+                {
+                    "name": "secondary-border",
+                    "light": "rgba(54, 116, 218, 1)",
+                    "dark": "rgba(37, 110, 244, 1)",
+                    "lightRef": "brand/blue/500",
+                    "darkRef": null
+                },
+                {
+                    "name": "tertiary-fill",
+                    "light": "rgba(255, 255, 255, 1)",
+                    "dark": "rgba(0, 0, 0, 0)",
+                    "lightRef": "common/white",
+                    "darkRef": null
+                },
+                {
+                    "name": "tertiary-fill-hover",
+                    "light": "rgba(230, 232, 234, 1)",
+                    "dark": "rgba(19, 20, 22, 1)",
+                    "lightRef": "brand/gray/100",
+                    "darkRef": null
+                },
+                {
+                    "name": "tertiary-fill-pressed",
+                    "light": "rgba(230, 232, 234, 1)",
+                    "dark": "rgba(51, 54, 61, 1)",
+                    "lightRef": "brand/gray/100",
+                    "darkRef": null
+                },
+                {
+                    "name": "tertiary-border",
+                    "light": "rgba(132, 139, 148, 1)",
+                    "dark": "rgba(138, 148, 158, 1)",
+                    "lightRef": "brand/gray/300",
+                    "darkRef": null
+                },
+                {
+                    "name": "text-fill",
+                    "light": "rgba(255, 255, 255, 0)",
+                    "dark": "rgba(0, 0, 0, 0)",
+                    "lightRef": null,
+                    "darkRef": null
+                },
+                {
+                    "name": "text-fill-hover",
+                    "light": "rgba(238, 242, 247, 1)",
+                    "dark": "rgba(9, 31, 37, 1)",
+                    "lightRef": null,
+                    "darkRef": null
+                },
+                {
+                    "name": "text-fill-pressed",
+                    "light": "rgba(214, 224, 235, 1)",
+                    "dark": "rgba(14, 49, 57, 1)",
+                    "lightRef": null,
+                    "darkRef": null
+                },
+                {
+                    "name": "text-border",
+                    "light": "rgba(0, 0, 0, 0)",
+                    "dark": "rgba(255, 255, 255, 0.5)",
+                    "lightRef": null,
+                    "darkRef": null
+                },
+                {
+                    "name": "disabled-fill",
+                    "light": "rgba(230, 232, 234, 1)",
+                    "dark": "rgba(51, 54, 61, 1)",
+                    "lightRef": "brand/gray/100",
+                    "darkRef": null
+                },
+                {
+                    "name": "disabled-border",
+                    "light": "rgba(183, 187, 191, 1)",
+                    "dark": "rgba(70, 76, 83, 1)",
+                    "lightRef": "brand/gray/200",
+                    "darkRef": null
+                }
+            ]
+        },
+        {
+            "name": "input",
+            "tokens": [
+                {
+                    "name": "surface",
+                    "light": "rgba(255, 255, 255, 1)",
+                    "dark": "rgba(37, 110, 244, 1)",
+                    "lightRef": "common/white",
+                    "darkRef": null
+                },
+                {
+                    "name": "border",
+                    "light": "rgba(183, 187, 191, 1)",
+                    "dark": "rgba(11, 80, 208, 1)",
+                    "lightRef": "brand/gray/200",
+                    "darkRef": null
+                },
+                {
+                    "name": "border-active",
+                    "light": "rgba(54, 116, 218, 1)",
+                    "dark": "rgba(8, 56, 145, 1)",
+                    "lightRef": "brand/blue/500",
+                    "darkRef": null
+                },
+                {
+                    "name": "border-error",
+                    "light": "rgba(189, 44, 15, 1)",
+                    "dark": "rgba(2, 15, 39, 1)",
+                    "lightRef": "system/error/600",
+                    "darkRef": null
+                },
+                {
+                    "name": "surface-disabled",
+                    "light": "rgba(244, 245, 246, 1)",
+                    "dark": "rgba(3, 22, 58, 1)",
+                    "lightRef": "brand/gray/50",
+                    "darkRef": null
+                },
+                {
+                    "name": "border-disabled",
+                    "light": "rgba(183, 187, 191, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "brand/gray/200",
+                    "darkRef": null
+                }
+            ]
+        },
+        {
+            "name": "icon",
+            "tokens": [
+                {
+                    "name": "gray",
+                    "light": "rgba(29, 32, 35, 1)",
+                    "dark": "rgba(37, 110, 244, 1)",
+                    "lightRef": "brand/gray/900",
+                    "darkRef": null
+                },
+                {
+                    "name": "gray-light",
+                    "light": "rgba(183, 187, 191, 1)",
+                    "dark": "rgba(11, 80, 208, 1)",
+                    "lightRef": "brand/gray/200",
+                    "darkRef": null
+                },
+                {
+                    "name": "gray-dark",
+                    "light": "rgba(132, 139, 148, 1)",
+                    "dark": "rgba(11, 80, 208, 1)",
+                    "lightRef": "brand/gray/300",
+                    "darkRef": null
+                },
+                {
+                    "name": "gray-fill",
+                    "light": "rgba(244, 245, 246, 1)",
+                    "dark": "rgba(8, 56, 145, 1)",
+                    "lightRef": "brand/gray/50",
+                    "darkRef": null
+                },
+                {
+                    "name": "inverse",
+                    "light": "rgba(255, 255, 255, 1)",
+                    "dark": "rgba(2, 15, 39, 1)",
+                    "lightRef": "common/white",
+                    "darkRef": null
+                },
+                {
+                    "name": "disabled",
+                    "light": "rgba(183, 187, 191, 1)",
+                    "dark": "rgba(3, 22, 58, 1)",
+                    "lightRef": "brand/gray/200",
+                    "darkRef": null
+                },
+                {
+                    "name": "disabled-on",
+                    "light": "rgba(132, 139, 148, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "brand/gray/300",
+                    "darkRef": null
+                },
+                {
+                    "name": "primary",
+                    "light": "rgba(54, 116, 218, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "brand/blue/500",
+                    "darkRef": null
+                },
+                {
+                    "name": "secondary",
+                    "light": "rgba(30, 64, 120, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "brand/blue/800",
+                    "darkRef": null
+                }
+            ]
+        },
+        {
+            "name": "element",
+            "tokens": [
+                {
+                    "name": "inverse",
+                    "light": "rgba(255, 255, 255, 1)",
+                    "dark": "rgba(2, 15, 39, 1)",
+                    "lightRef": "common/white",
+                    "darkRef": null
+                },
+                {
+                    "name": "gray",
+                    "light": "rgba(230, 232, 234, 1)",
+                    "dark": "rgba(2, 15, 39, 1)",
+                    "lightRef": "brand/gray/100",
+                    "darkRef": null
+                },
+                {
+                    "name": "gray-light",
+                    "light": "rgba(244, 245, 246, 1)",
+                    "dark": "rgba(2, 15, 39, 1)",
+                    "lightRef": "brand/gray/50",
+                    "darkRef": null
+                },
+                {
+                    "name": "gray-dark",
+                    "light": "rgba(183, 187, 191, 1)",
+                    "dark": "rgba(2, 15, 39, 1)",
+                    "lightRef": "brand/gray/200",
+                    "darkRef": null
+                },
+                {
+                    "name": "disabled",
+                    "light": "rgba(183, 187, 191, 1)",
+                    "dark": "rgba(3, 22, 58, 1)",
+                    "lightRef": "brand/gray/200",
+                    "darkRef": null
+                },
+                {
+                    "name": "disabled-light",
+                    "light": "rgba(230, 232, 234, 1)",
+                    "dark": "rgba(3, 22, 58, 1)",
+                    "lightRef": "brand/gray/100",
+                    "darkRef": null
+                },
+                {
+                    "name": "disabled-dark",
+                    "light": "rgba(132, 139, 148, 1)",
+                    "dark": "rgba(3, 22, 58, 1)",
+                    "lightRef": "brand/gray/300",
+                    "darkRef": null
+                },
+                {
+                    "name": "primary",
+                    "light": "rgba(54, 116, 218, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "brand/blue/500",
+                    "darkRef": null
+                },
+                {
+                    "name": "primary-light",
+                    "light": "rgba(231, 244, 254, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "brand/blue/50",
+                    "darkRef": null
+                },
+                {
+                    "name": "secondary",
+                    "light": "rgba(30, 64, 120, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "brand/blue/800",
+                    "darkRef": null
+                },
+                {
+                    "name": "secondary-light",
+                    "light": "rgba(231, 244, 254, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "brand/blue/50",
+                    "darkRef": null
+                },
+                {
+                    "name": "success",
+                    "light": "rgba(34, 135, 56, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "system/success/500",
+                    "darkRef": null
+                },
+                {
+                    "name": "success-light",
+                    "light": "rgba(234, 246, 236, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "system/success/50",
+                    "darkRef": null
+                },
+                {
+                    "name": "warning",
+                    "light": "rgba(158, 106, 0, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "system/warning/500",
+                    "darkRef": null
+                },
+                {
+                    "name": "warning-light",
+                    "light": "rgba(255, 243, 219, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "system/warning/50",
+                    "darkRef": null
+                },
+                {
+                    "name": "error",
+                    "light": "rgba(222, 52, 18, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "system/error/500",
+                    "darkRef": null
+                },
+                {
+                    "name": "error-light",
+                    "light": "rgba(253, 239, 236, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "system/error/50",
+                    "darkRef": null
+                },
+                {
+                    "name": "info",
+                    "light": "rgba(54, 116, 218, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "system/info/500",
+                    "darkRef": null
+                },
+                {
+                    "name": "info-light",
+                    "light": "rgba(231, 244, 254, 1)",
+                    "dark": "rgba(5, 37, 97, 1)",
+                    "lightRef": "system/info/50",
+                    "darkRef": null
+                }
+            ]
+        },
+        {
+            "name": "primary",
+            "tokens": [
+                {
+                    "name": "surface",
+                    "light": "rgba(231, 244, 254, 1)",
+                    "dark": "rgba(231, 244, 254, 1)",
+                    "lightRef": "brand/blue/50",
+                    "darkRef": "brand/blue/50"
+                },
+                {
+                    "name": "base",
+                    "light": "rgba(54, 116, 218, 1)",
+                    "dark": "rgba(54, 116, 218, 1)",
+                    "lightRef": "brand/blue/500",
+                    "darkRef": "brand/blue/500"
+                },
+                {
+                    "name": "hover",
+                    "light": "rgba(49, 106, 198, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "brand/blue/600",
+                    "darkRef": "brand/blue/600"
+                },
+                {
+                    "name": "pressed",
+                    "light": "rgba(38, 82, 155, 1)",
+                    "dark": "rgba(38, 82, 155, 1)",
+                    "lightRef": "brand/blue/700",
+                    "darkRef": "brand/blue/700"
+                },
+                {
+                    "name": "border",
+                    "light": "rgba(120, 162, 230, 1)",
+                    "dark": "rgba(120, 162, 230, 1)",
+                    "lightRef": "brand/blue/300",
+                    "darkRef": "brand/blue/300"
+                },
+                {
+                    "name": "text",
+                    "light": "rgba(49, 106, 198, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "brand/blue/600",
+                    "darkRef": "brand/blue/600"
+                }
+            ]
+        },
+        {
+            "name": "secondary",
+            "tokens": [
+                {
+                    "name": "green/surface",
+                    "light": "rgba(243, 250, 236, 1)",
+                    "dark": "rgba(243, 250, 236, 1)",
+                    "lightRef": "brand/green/50",
+                    "darkRef": "brand/green/50"
+                },
+                {
+                    "name": "green/base",
+                    "light": "rgba(135, 200, 65, 1)",
+                    "dark": "rgba(135, 200, 65, 1)",
+                    "lightRef": "brand/green/500",
+                    "darkRef": "brand/green/500"
+                },
+                {
+                    "name": "green/hover",
+                    "light": "rgba(123, 182, 59, 1)",
+                    "dark": "rgba(123, 182, 59, 1)",
+                    "lightRef": "brand/green/600",
+                    "darkRef": "brand/green/600"
+                },
+                {
+                    "name": "green/pressed",
+                    "light": "rgba(96, 142, 46, 1)",
+                    "dark": "rgba(96, 142, 46, 1)",
+                    "lightRef": "brand/green/700",
+                    "darkRef": "brand/green/700"
+                },
+                {
+                    "name": "green/border",
+                    "light": "rgba(175, 218, 128, 1)",
+                    "dark": "rgba(175, 218, 128, 1)",
+                    "lightRef": "brand/green/300",
+                    "darkRef": "brand/green/300"
+                },
+                {
+                    "name": "green/text",
+                    "light": "rgba(96, 142, 46, 1)",
+                    "dark": "rgba(96, 142, 46, 1)",
+                    "lightRef": "brand/green/700",
+                    "darkRef": "brand/green/700"
+                },
+                {
+                    "name": "orange/surface",
+                    "light": "rgba(254, 243, 233, 1)",
+                    "dark": "rgba(254, 243, 233, 1)",
+                    "lightRef": "brand/orange/50",
+                    "darkRef": "brand/orange/50"
+                },
+                {
+                    "name": "orange/base",
+                    "light": "rgba(241, 135, 30, 1)",
+                    "dark": "rgba(241, 135, 30, 1)",
+                    "lightRef": "brand/orange/500",
+                    "darkRef": "brand/orange/500"
+                },
+                {
+                    "name": "orange/hover",
+                    "light": "rgba(219, 123, 27, 1)",
+                    "dark": "rgba(219, 123, 27, 1)",
+                    "lightRef": "brand/orange/600",
+                    "darkRef": "brand/orange/600"
+                },
+                {
+                    "name": "orange/pressed",
+                    "light": "rgba(171, 96, 21, 1)",
+                    "dark": "rgba(171, 96, 21, 1)",
+                    "lightRef": "brand/orange/700",
+                    "darkRef": "brand/orange/700"
+                },
+                {
+                    "name": "orange/border",
+                    "light": "rgba(246, 175, 104, 1)",
+                    "dark": "rgba(246, 175, 104, 1)",
+                    "lightRef": "brand/orange/300",
+                    "darkRef": "brand/orange/300"
+                },
+                {
+                    "name": "orange/text",
+                    "light": "rgba(219, 123, 27, 1)",
+                    "dark": "rgba(219, 123, 27, 1)",
+                    "lightRef": "brand/orange/600",
+                    "darkRef": "brand/orange/600"
+                }
+            ]
+        },
+        {
+            "name": "success",
+            "tokens": [
+                {
+                    "name": "surface",
+                    "light": "rgba(234, 246, 236, 1)",
+                    "dark": "rgba(234, 246, 236, 1)",
+                    "lightRef": "system/success/50",
+                    "darkRef": "system/success/50"
+                },
+                {
+                    "name": "base",
+                    "light": "rgba(34, 135, 56, 1)",
+                    "dark": "rgba(34, 135, 56, 1)",
+                    "lightRef": "system/success/500",
+                    "darkRef": "system/success/500"
+                },
+                {
+                    "name": "border",
+                    "light": "rgba(169, 218, 180, 1)",
+                    "dark": "rgba(169, 218, 180, 1)",
+                    "lightRef": "system/success/100",
+                    "darkRef": "system/success/100"
+                },
+                {
+                    "name": "text",
+                    "light": "rgba(38, 115, 55, 1)",
+                    "dark": "rgba(38, 115, 55, 1)",
+                    "lightRef": "system/success/600",
+                    "darkRef": "system/success/600"
+                }
+            ]
+        },
+        {
+            "name": "warning",
+            "tokens": [
+                {
+                    "name": "surface",
+                    "light": "rgba(255, 243, 219, 1)",
+                    "dark": "rgba(255, 243, 219, 1)",
+                    "lightRef": "system/warning/50",
+                    "darkRef": "system/warning/50"
+                },
+                {
+                    "name": "base",
+                    "light": "rgba(255, 177, 20, 1)",
+                    "dark": "rgba(255, 177, 20, 1)",
+                    "lightRef": "system/warning/300",
+                    "darkRef": "system/warning/300"
+                },
+                {
+                    "name": "border",
+                    "light": "rgba(255, 224, 163, 1)",
+                    "dark": "rgba(255, 224, 163, 1)",
+                    "lightRef": "system/warning/100",
+                    "darkRef": "system/warning/100"
+                },
+                {
+                    "name": "text",
+                    "light": "rgba(138, 92, 0, 1)",
+                    "dark": "rgba(138, 92, 0, 1)",
+                    "lightRef": "system/warning/600",
+                    "darkRef": "system/warning/600"
+                }
+            ]
+        },
+        {
+            "name": "error",
+            "tokens": [
+                {
+                    "name": "surface",
+                    "light": "rgba(253, 239, 236, 1)",
+                    "dark": "rgba(253, 239, 236, 1)",
+                    "lightRef": "system/error/50",
+                    "darkRef": "system/error/50"
+                },
+                {
+                    "name": "base",
+                    "light": "rgba(222, 52, 18, 1)",
+                    "dark": "rgba(222, 52, 18, 1)",
+                    "lightRef": "system/error/500",
+                    "darkRef": "system/error/500"
+                },
+                {
+                    "name": "border",
+                    "light": "rgba(252, 223, 217, 1)",
+                    "dark": "rgba(252, 223, 217, 1)",
+                    "lightRef": "system/error/100",
+                    "darkRef": "system/error/100"
+                },
+                {
+                    "name": "text",
+                    "light": "rgba(189, 44, 15, 1)",
+                    "dark": "rgba(189, 44, 15, 1)",
+                    "lightRef": "system/error/600",
+                    "darkRef": "system/error/600"
+                }
+            ]
+        },
+        {
+            "name": "info",
+            "tokens": [
+                {
+                    "name": "surface",
+                    "light": "rgba(231, 244, 254, 1)",
+                    "dark": "rgba(231, 244, 254, 1)",
+                    "lightRef": "system/info/50",
+                    "darkRef": "system/info/50"
+                },
+                {
+                    "name": "base",
+                    "light": "rgba(54, 116, 218, 1)",
+                    "dark": "rgba(54, 116, 218, 1)",
+                    "lightRef": "system/info/500",
+                    "darkRef": "system/info/500"
+                },
+                {
+                    "name": "border",
+                    "light": "rgba(193, 212, 244, 1)",
+                    "dark": "rgba(193, 212, 244, 1)",
+                    "lightRef": "system/info/100",
+                    "darkRef": "system/info/100"
+                },
+                {
+                    "name": "text",
+                    "light": "rgba(49, 106, 198, 1)",
+                    "dark": "rgba(49, 106, 198, 1)",
+                    "lightRef": "system/info/600",
+                    "darkRef": "system/info/600"
+                }
+            ]
         }
-      ]
-    },
-    {
-      "name": "surface",
-      "tokens": [
-        {
-          "name": "white",
-          "light": "rgba(255, 255, 255, 1)",
-          "dark": "rgba(54, 116, 218, 1)",
-          "lightRef": "common/white",
-          "darkRef": "brand/blue/500"
-        },
-        {
-          "name": "gray-subtle-1",
-          "light": "rgba(244, 245, 246, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "brand/gray/50",
-          "darkRef": "brand/blue/600"
-        },
-        {
-          "name": "gray-subtle-2",
-          "light": "rgba(230, 232, 234, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "brand/gray/100",
-          "darkRef": "brand/blue/600"
-        },
-        {
-          "name": "gray-subtle-3",
-          "light": "rgba(183, 187, 191, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "brand/gray/200",
-          "darkRef": "brand/blue/600"
-        },
-        {
-          "name": "inverse",
-          "light": "rgba(29, 32, 35, 1)",
-          "dark": "rgba(120, 162, 230, 1)",
-          "lightRef": "common/black",
-          "darkRef": "brand/blue/300"
-        },
-        {
-          "name": "primary-subtler",
-          "light": "rgba(231, 244, 254, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "brand/blue/50",
-          "darkRef": "brand/blue/600"
-        },
-        {
-          "name": "secondary-green-subtler",
-          "light": "rgba(243, 250, 236, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "brand/green/50",
-          "darkRef": "brand/blue/600"
-        },
-        {
-          "name": "secondary-orange-subtler",
-          "light": "rgba(254, 243, 233, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "brand/orange/50",
-          "darkRef": "brand/blue/600"
-        },
-        {
-          "name": "error-subtler",
-          "light": "rgba(253, 239, 236, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "system/error/50",
-          "darkRef": "brand/blue/600"
-        },
-        {
-          "name": "warning-subtler",
-          "light": "rgba(255, 243, 219, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "system/warning/50",
-          "darkRef": "brand/blue/600"
-        },
-        {
-          "name": "success-subtler",
-          "light": "rgba(234, 246, 236, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "system/success/50",
-          "darkRef": "brand/blue/600"
-        },
-        {
-          "name": "info-subtler",
-          "light": "rgba(231, 244, 254, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "system/info/50",
-          "darkRef": "brand/blue/600"
-        }
-      ]
-    },
-    {
-      "name": "border",
-      "tokens": [
-        {
-          "name": "default",
-          "light": "rgba(50, 54, 59, 1)",
-          "dark": "rgba(50, 54, 59, 1)",
-          "lightRef": "brand/gray/700",
-          "darkRef": "brand/gray/700"
-        },
-        {
-          "name": "gray-subtle-1",
-          "light": "rgba(132, 139, 148, 1)",
-          "dark": "rgba(88, 94, 101, 1)",
-          "lightRef": "brand/gray/300",
-          "darkRef": "brand/gray/500"
-        },
-        {
-          "name": "gray-subtle-2",
-          "light": "rgba(183, 187, 191, 1)",
-          "dark": "rgba(88, 94, 101, 1)",
-          "lightRef": "brand/gray/200",
-          "darkRef": "brand/gray/500"
-        },
-        {
-          "name": "gray-subtle-3",
-          "light": "rgba(230, 232, 234, 1)",
-          "dark": "rgba(88, 94, 101, 1)",
-          "lightRef": "brand/gray/100",
-          "darkRef": "brand/gray/500"
-        },
-        {
-          "name": "white",
-          "light": "rgba(255, 255, 255, 1)",
-          "dark": "rgba(183, 187, 191, 1)",
-          "lightRef": "common/white",
-          "darkRef": "brand/gray/200"
-        },
-        {
-          "name": "strong",
-          "light": "rgba(88, 94, 101, 1)",
-          "dark": "rgba(132, 139, 148, 1)",
-          "lightRef": "brand/gray/500",
-          "darkRef": "brand/gray/300"
-        },
-        {
-          "name": "focus",
-          "light": "rgba(54, 116, 218, 1)",
-          "dark": "rgba(183, 187, 191, 1)",
-          "lightRef": "brand/blue/500",
-          "darkRef": "brand/gray/200"
-        },
-        {
-          "name": "error",
-          "light": "rgba(222, 52, 18, 1)",
-          "dark": "rgba(183, 187, 191, 1)",
-          "lightRef": "system/error/500",
-          "darkRef": "brand/gray/200"
-        }
-      ]
-    },
-    {
-      "name": "text",
-      "tokens": [
-        {
-          "name": "bolder",
-          "light": "rgba(29, 32, 35, 1)",
-          "dark": "rgba(50, 54, 59, 1)",
-          "lightRef": "brand/gray/900",
-          "darkRef": "brand/gray/700"
-        },
-        {
-          "name": "basic",
-          "light": "rgba(50, 54, 59, 1)",
-          "dark": "rgba(50, 54, 59, 1)",
-          "lightRef": "brand/gray/700",
-          "darkRef": "brand/gray/700"
-        },
-        {
-          "name": "subtle",
-          "light": "rgba(88, 94, 101, 1)",
-          "dark": "rgba(50, 54, 59, 1)",
-          "lightRef": "brand/gray/500",
-          "darkRef": "brand/gray/700"
-        },
-        {
-          "name": "inverse",
-          "light": "rgba(255, 255, 255, 1)",
-          "dark": "rgba(50, 54, 59, 1)",
-          "lightRef": "common/white",
-          "darkRef": "brand/gray/700"
-        },
-        {
-          "name": "subtle-inverse",
-          "light": "rgba(244, 245, 246, 1)",
-          "dark": "rgba(50, 54, 59, 1)",
-          "lightRef": "brand/gray/50",
-          "darkRef": "brand/gray/700"
-        },
-        {
-          "name": "disabled",
-          "light": "rgba(183, 187, 191, 1)",
-          "dark": "rgba(183, 187, 191, 1)",
-          "lightRef": "brand/gray/200",
-          "darkRef": "brand/gray/200"
-        },
-        {
-          "name": "disabled-on",
-          "light": "rgba(132, 139, 148, 1)",
-          "dark": "rgba(183, 187, 191, 1)",
-          "lightRef": "brand/gray/300",
-          "darkRef": "brand/gray/200"
-        },
-        {
-          "name": "primary",
-          "light": "rgba(49, 106, 198, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "brand/blue/600",
-          "darkRef": "system/info/600"
-        },
-        {
-          "name": "secondary",
-          "light": "rgba(30, 64, 120, 1)",
-          "dark": "rgba(88, 94, 101, 1)",
-          "lightRef": "brand/blue/800",
-          "darkRef": "brand/gray/500"
-        },
-        {
-          "name": "tertiary",
-          "light": "rgba(23, 49, 92, 1)",
-          "dark": "rgba(132, 139, 148, 1)",
-          "lightRef": "brand/blue/900",
-          "darkRef": "brand/gray/300"
-        },
-        {
-          "name": "error",
-          "light": "rgba(222, 52, 18, 1)",
-          "dark": "rgba(50, 54, 59, 1)",
-          "lightRef": "system/error/500",
-          "darkRef": "brand/gray/700"
-        },
-        {
-          "name": "warning",
-          "light": "rgba(138, 92, 0, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "system/warning/600",
-          "darkRef": "system/info/600"
-        },
-        {
-          "name": "success",
-          "light": "rgba(38, 115, 55, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "system/success/600",
-          "darkRef": "system/info/600"
-        },
-        {
-          "name": "info",
-          "light": "rgba(49, 106, 198, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "system/info/600",
-          "darkRef": "system/info/600"
-        }
-      ]
-    },
-    {
-      "name": "button",
-      "tokens": [
-        {
-          "name": "primary-fill",
-          "light": "rgba(54, 116, 218, 1)",
-          "dark": "rgba(37, 110, 244, 1)",
-          "lightRef": "brand/blue/500",
-          "darkRef": null
-        },
-        {
-          "name": "primary-fill-hover",
-          "light": "rgba(38, 82, 155, 1)",
-          "dark": "rgba(11, 80, 208, 1)",
-          "lightRef": "brand/blue/700",
-          "darkRef": null
-        },
-        {
-          "name": "primary-fill-pressed",
-          "light": "rgba(38, 82, 155, 1)",
-          "dark": "rgba(8, 56, 145, 1)",
-          "lightRef": "brand/blue/700",
-          "darkRef": null
-        },
-        {
-          "name": "secondary-fill",
-          "light": "rgba(231, 244, 254, 1)",
-          "dark": "rgba(2, 15, 39, 1)",
-          "lightRef": "brand/blue/50",
-          "darkRef": null
-        },
-        {
-          "name": "secondary-fill-hover",
-          "light": "rgba(193, 212, 244, 1)",
-          "dark": "rgba(3, 22, 58, 1)",
-          "lightRef": "brand/blue/100",
-          "darkRef": null
-        },
-        {
-          "name": "secondary-fill-pressed",
-          "light": "rgba(193, 212, 244, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "brand/blue/100",
-          "darkRef": null
-        },
-        {
-          "name": "secondary-border",
-          "light": "rgba(54, 116, 218, 1)",
-          "dark": "rgba(37, 110, 244, 1)",
-          "lightRef": "brand/blue/500",
-          "darkRef": null
-        },
-        {
-          "name": "tertiary-fill",
-          "light": "rgba(255, 255, 255, 1)",
-          "dark": "rgba(0, 0, 0, 0)",
-          "lightRef": "common/white",
-          "darkRef": null
-        },
-        {
-          "name": "tertiary-fill-hover",
-          "light": "rgba(230, 232, 234, 1)",
-          "dark": "rgba(19, 20, 22, 1)",
-          "lightRef": "brand/gray/100",
-          "darkRef": null
-        },
-        {
-          "name": "tertiary-fill-pressed",
-          "light": "rgba(230, 232, 234, 1)",
-          "dark": "rgba(51, 54, 61, 1)",
-          "lightRef": "brand/gray/100",
-          "darkRef": null
-        },
-        {
-          "name": "tertiary-border",
-          "light": "rgba(132, 139, 148, 1)",
-          "dark": "rgba(138, 148, 158, 1)",
-          "lightRef": "brand/gray/300",
-          "darkRef": null
-        },
-        {
-          "name": "text-fill",
-          "light": "rgba(255, 255, 255, 0)",
-          "dark": "rgba(0, 0, 0, 0)",
-          "lightRef": null,
-          "darkRef": null
-        },
-        {
-          "name": "text-fill-hover",
-          "light": "rgba(238, 242, 247, 1)",
-          "dark": "rgba(9, 31, 37, 1)",
-          "lightRef": null,
-          "darkRef": null
-        },
-        {
-          "name": "text-fill-pressed",
-          "light": "rgba(214, 224, 235, 1)",
-          "dark": "rgba(14, 49, 57, 1)",
-          "lightRef": null,
-          "darkRef": null
-        },
-        {
-          "name": "text-border",
-          "light": "rgba(0, 0, 0, 0)",
-          "dark": "rgba(255, 255, 255, 0.5)",
-          "lightRef": null,
-          "darkRef": null
-        },
-        {
-          "name": "disabled-fill",
-          "light": "rgba(230, 232, 234, 1)",
-          "dark": "rgba(51, 54, 61, 1)",
-          "lightRef": "brand/gray/100",
-          "darkRef": null
-        },
-        {
-          "name": "disabled-border",
-          "light": "rgba(183, 187, 191, 1)",
-          "dark": "rgba(70, 76, 83, 1)",
-          "lightRef": "brand/gray/200",
-          "darkRef": null
-        }
-      ]
-    },
-    {
-      "name": "input",
-      "tokens": [
-        {
-          "name": "surface",
-          "light": "rgba(255, 255, 255, 1)",
-          "dark": "rgba(37, 110, 244, 1)",
-          "lightRef": "common/white",
-          "darkRef": null
-        },
-        {
-          "name": "border",
-          "light": "rgba(183, 187, 191, 1)",
-          "dark": "rgba(11, 80, 208, 1)",
-          "lightRef": "brand/gray/200",
-          "darkRef": null
-        },
-        {
-          "name": "border-active",
-          "light": "rgba(54, 116, 218, 1)",
-          "dark": "rgba(8, 56, 145, 1)",
-          "lightRef": "brand/blue/500",
-          "darkRef": null
-        },
-        {
-          "name": "border-error",
-          "light": "rgba(189, 44, 15, 1)",
-          "dark": "rgba(2, 15, 39, 1)",
-          "lightRef": "system/error/600",
-          "darkRef": null
-        },
-        {
-          "name": "surface-disabled",
-          "light": "rgba(244, 245, 246, 1)",
-          "dark": "rgba(3, 22, 58, 1)",
-          "lightRef": "brand/gray/50",
-          "darkRef": null
-        },
-        {
-          "name": "border-disabled",
-          "light": "rgba(183, 187, 191, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "brand/gray/200",
-          "darkRef": null
-        }
-      ]
-    },
-    {
-      "name": "icon",
-      "tokens": [
-        {
-          "name": "gray",
-          "light": "rgba(29, 32, 35, 1)",
-          "dark": "rgba(37, 110, 244, 1)",
-          "lightRef": "brand/gray/900",
-          "darkRef": null
-        },
-        {
-          "name": "gray-light",
-          "light": "rgba(183, 187, 191, 1)",
-          "dark": "rgba(11, 80, 208, 1)",
-          "lightRef": "brand/gray/200",
-          "darkRef": null
-        },
-        {
-          "name": "gray-dark",
-          "light": "rgba(132, 139, 148, 1)",
-          "dark": "rgba(11, 80, 208, 1)",
-          "lightRef": "brand/gray/300",
-          "darkRef": null
-        },
-        {
-          "name": "gray-fill",
-          "light": "rgba(244, 245, 246, 1)",
-          "dark": "rgba(8, 56, 145, 1)",
-          "lightRef": "brand/gray/50",
-          "darkRef": null
-        },
-        {
-          "name": "inverse",
-          "light": "rgba(255, 255, 255, 1)",
-          "dark": "rgba(2, 15, 39, 1)",
-          "lightRef": "common/white",
-          "darkRef": null
-        },
-        {
-          "name": "disabled",
-          "light": "rgba(183, 187, 191, 1)",
-          "dark": "rgba(3, 22, 58, 1)",
-          "lightRef": "brand/gray/200",
-          "darkRef": null
-        },
-        {
-          "name": "disabled-on",
-          "light": "rgba(132, 139, 148, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "brand/gray/300",
-          "darkRef": null
-        },
-        {
-          "name": "primary",
-          "light": "rgba(54, 116, 218, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "brand/blue/500",
-          "darkRef": null
-        },
-        {
-          "name": "secondary",
-          "light": "rgba(30, 64, 120, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "brand/blue/800",
-          "darkRef": null
-        }
-      ]
-    },
-    {
-      "name": "element",
-      "tokens": [
-        {
-          "name": "inverse",
-          "light": "rgba(255, 255, 255, 1)",
-          "dark": "rgba(2, 15, 39, 1)",
-          "lightRef": "common/white",
-          "darkRef": null
-        },
-        {
-          "name": "gray",
-          "light": "rgba(230, 232, 234, 1)",
-          "dark": "rgba(2, 15, 39, 1)",
-          "lightRef": "brand/gray/100",
-          "darkRef": null
-        },
-        {
-          "name": "gray-light",
-          "light": "rgba(244, 245, 246, 1)",
-          "dark": "rgba(2, 15, 39, 1)",
-          "lightRef": "brand/gray/50",
-          "darkRef": null
-        },
-        {
-          "name": "gray-dark",
-          "light": "rgba(183, 187, 191, 1)",
-          "dark": "rgba(2, 15, 39, 1)",
-          "lightRef": "brand/gray/200",
-          "darkRef": null
-        },
-        {
-          "name": "disabled",
-          "light": "rgba(183, 187, 191, 1)",
-          "dark": "rgba(3, 22, 58, 1)",
-          "lightRef": "brand/gray/200",
-          "darkRef": null
-        },
-        {
-          "name": "disabled-light",
-          "light": "rgba(230, 232, 234, 1)",
-          "dark": "rgba(3, 22, 58, 1)",
-          "lightRef": "brand/gray/100",
-          "darkRef": null
-        },
-        {
-          "name": "disabled-dark",
-          "light": "rgba(132, 139, 148, 1)",
-          "dark": "rgba(3, 22, 58, 1)",
-          "lightRef": "brand/gray/300",
-          "darkRef": null
-        },
-        {
-          "name": "primary",
-          "light": "rgba(54, 116, 218, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "brand/blue/500",
-          "darkRef": null
-        },
-        {
-          "name": "primary-light",
-          "light": "rgba(231, 244, 254, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "brand/blue/50",
-          "darkRef": null
-        },
-        {
-          "name": "secondary",
-          "light": "rgba(30, 64, 120, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "brand/blue/800",
-          "darkRef": null
-        },
-        {
-          "name": "secondary-light",
-          "light": "rgba(231, 244, 254, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "brand/blue/50",
-          "darkRef": null
-        },
-        {
-          "name": "success",
-          "light": "rgba(34, 135, 56, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "system/success/500",
-          "darkRef": null
-        },
-        {
-          "name": "success-light",
-          "light": "rgba(234, 246, 236, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "system/success/50",
-          "darkRef": null
-        },
-        {
-          "name": "warning",
-          "light": "rgba(158, 106, 0, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "system/warning/500",
-          "darkRef": null
-        },
-        {
-          "name": "warning-light",
-          "light": "rgba(255, 243, 219, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "system/warning/50",
-          "darkRef": null
-        },
-        {
-          "name": "error",
-          "light": "rgba(222, 52, 18, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "system/error/500",
-          "darkRef": null
-        },
-        {
-          "name": "error-light",
-          "light": "rgba(253, 239, 236, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "system/error/50",
-          "darkRef": null
-        },
-        {
-          "name": "info",
-          "light": "rgba(54, 116, 218, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "system/info/500",
-          "darkRef": null
-        },
-        {
-          "name": "info-light",
-          "light": "rgba(231, 244, 254, 1)",
-          "dark": "rgba(5, 37, 97, 1)",
-          "lightRef": "system/info/50",
-          "darkRef": null
-        }
-      ]
-    },
-    {
-      "name": "primary",
-      "tokens": [
-        {
-          "name": "surface",
-          "light": "rgba(231, 244, 254, 1)",
-          "dark": "rgba(231, 244, 254, 1)",
-          "lightRef": "brand/blue/50",
-          "darkRef": "brand/blue/50"
-        },
-        {
-          "name": "base",
-          "light": "rgba(54, 116, 218, 1)",
-          "dark": "rgba(54, 116, 218, 1)",
-          "lightRef": "brand/blue/500",
-          "darkRef": "brand/blue/500"
-        },
-        {
-          "name": "hover",
-          "light": "rgba(49, 106, 198, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "brand/blue/600",
-          "darkRef": "brand/blue/600"
-        },
-        {
-          "name": "pressed",
-          "light": "rgba(38, 82, 155, 1)",
-          "dark": "rgba(38, 82, 155, 1)",
-          "lightRef": "brand/blue/700",
-          "darkRef": "brand/blue/700"
-        },
-        {
-          "name": "border",
-          "light": "rgba(120, 162, 230, 1)",
-          "dark": "rgba(120, 162, 230, 1)",
-          "lightRef": "brand/blue/300",
-          "darkRef": "brand/blue/300"
-        },
-        {
-          "name": "text",
-          "light": "rgba(49, 106, 198, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "brand/blue/600",
-          "darkRef": "brand/blue/600"
-        }
-      ]
-    },
-    {
-      "name": "secondary",
-      "tokens": [
-        {
-          "name": "green/surface",
-          "light": "rgba(243, 250, 236, 1)",
-          "dark": "rgba(243, 250, 236, 1)",
-          "lightRef": "brand/green/50",
-          "darkRef": "brand/green/50"
-        },
-        {
-          "name": "green/base",
-          "light": "rgba(135, 200, 65, 1)",
-          "dark": "rgba(135, 200, 65, 1)",
-          "lightRef": "brand/green/500",
-          "darkRef": "brand/green/500"
-        },
-        {
-          "name": "green/hover",
-          "light": "rgba(123, 182, 59, 1)",
-          "dark": "rgba(123, 182, 59, 1)",
-          "lightRef": "brand/green/600",
-          "darkRef": "brand/green/600"
-        },
-        {
-          "name": "green/pressed",
-          "light": "rgba(96, 142, 46, 1)",
-          "dark": "rgba(96, 142, 46, 1)",
-          "lightRef": "brand/green/700",
-          "darkRef": "brand/green/700"
-        },
-        {
-          "name": "green/border",
-          "light": "rgba(175, 218, 128, 1)",
-          "dark": "rgba(175, 218, 128, 1)",
-          "lightRef": "brand/green/300",
-          "darkRef": "brand/green/300"
-        },
-        {
-          "name": "green/text",
-          "light": "rgba(96, 142, 46, 1)",
-          "dark": "rgba(96, 142, 46, 1)",
-          "lightRef": "brand/green/700",
-          "darkRef": "brand/green/700"
-        },
-        {
-          "name": "orange/surface",
-          "light": "rgba(254, 243, 233, 1)",
-          "dark": "rgba(254, 243, 233, 1)",
-          "lightRef": "brand/orange/50",
-          "darkRef": "brand/orange/50"
-        },
-        {
-          "name": "orange/base",
-          "light": "rgba(241, 135, 30, 1)",
-          "dark": "rgba(241, 135, 30, 1)",
-          "lightRef": "brand/orange/500",
-          "darkRef": "brand/orange/500"
-        },
-        {
-          "name": "orange/hover",
-          "light": "rgba(219, 123, 27, 1)",
-          "dark": "rgba(219, 123, 27, 1)",
-          "lightRef": "brand/orange/600",
-          "darkRef": "brand/orange/600"
-        },
-        {
-          "name": "orange/pressed",
-          "light": "rgba(171, 96, 21, 1)",
-          "dark": "rgba(171, 96, 21, 1)",
-          "lightRef": "brand/orange/700",
-          "darkRef": "brand/orange/700"
-        },
-        {
-          "name": "orange/border",
-          "light": "rgba(246, 175, 104, 1)",
-          "dark": "rgba(246, 175, 104, 1)",
-          "lightRef": "brand/orange/300",
-          "darkRef": "brand/orange/300"
-        },
-        {
-          "name": "orange/text",
-          "light": "rgba(219, 123, 27, 1)",
-          "dark": "rgba(219, 123, 27, 1)",
-          "lightRef": "brand/orange/600",
-          "darkRef": "brand/orange/600"
-        }
-      ]
-    },
-    {
-      "name": "success",
-      "tokens": [
-        {
-          "name": "surface",
-          "light": "rgba(234, 246, 236, 1)",
-          "dark": "rgba(234, 246, 236, 1)",
-          "lightRef": "system/success/50",
-          "darkRef": "system/success/50"
-        },
-        {
-          "name": "base",
-          "light": "rgba(34, 135, 56, 1)",
-          "dark": "rgba(34, 135, 56, 1)",
-          "lightRef": "system/success/500",
-          "darkRef": "system/success/500"
-        },
-        {
-          "name": "border",
-          "light": "rgba(169, 218, 180, 1)",
-          "dark": "rgba(169, 218, 180, 1)",
-          "lightRef": "system/success/100",
-          "darkRef": "system/success/100"
-        },
-        {
-          "name": "text",
-          "light": "rgba(38, 115, 55, 1)",
-          "dark": "rgba(38, 115, 55, 1)",
-          "lightRef": "system/success/600",
-          "darkRef": "system/success/600"
-        }
-      ]
-    },
-    {
-      "name": "warning",
-      "tokens": [
-        {
-          "name": "surface",
-          "light": "rgba(255, 243, 219, 1)",
-          "dark": "rgba(255, 243, 219, 1)",
-          "lightRef": "system/warning/50",
-          "darkRef": "system/warning/50"
-        },
-        {
-          "name": "base",
-          "light": "rgba(255, 177, 20, 1)",
-          "dark": "rgba(255, 177, 20, 1)",
-          "lightRef": "system/warning/300",
-          "darkRef": "system/warning/300"
-        },
-        {
-          "name": "border",
-          "light": "rgba(255, 224, 163, 1)",
-          "dark": "rgba(255, 224, 163, 1)",
-          "lightRef": "system/warning/100",
-          "darkRef": "system/warning/100"
-        },
-        {
-          "name": "text",
-          "light": "rgba(138, 92, 0, 1)",
-          "dark": "rgba(138, 92, 0, 1)",
-          "lightRef": "system/warning/600",
-          "darkRef": "system/warning/600"
-        }
-      ]
-    },
-    {
-      "name": "error",
-      "tokens": [
-        {
-          "name": "surface",
-          "light": "rgba(253, 239, 236, 1)",
-          "dark": "rgba(253, 239, 236, 1)",
-          "lightRef": "system/error/50",
-          "darkRef": "system/error/50"
-        },
-        {
-          "name": "base",
-          "light": "rgba(222, 52, 18, 1)",
-          "dark": "rgba(222, 52, 18, 1)",
-          "lightRef": "system/error/500",
-          "darkRef": "system/error/500"
-        },
-        {
-          "name": "border",
-          "light": "rgba(252, 223, 217, 1)",
-          "dark": "rgba(252, 223, 217, 1)",
-          "lightRef": "system/error/100",
-          "darkRef": "system/error/100"
-        },
-        {
-          "name": "text",
-          "light": "rgba(189, 44, 15, 1)",
-          "dark": "rgba(189, 44, 15, 1)",
-          "lightRef": "system/error/600",
-          "darkRef": "system/error/600"
-        }
-      ]
-    },
-    {
-      "name": "info",
-      "tokens": [
-        {
-          "name": "surface",
-          "light": "rgba(231, 244, 254, 1)",
-          "dark": "rgba(231, 244, 254, 1)",
-          "lightRef": "system/info/50",
-          "darkRef": "system/info/50"
-        },
-        {
-          "name": "base",
-          "light": "rgba(54, 116, 218, 1)",
-          "dark": "rgba(54, 116, 218, 1)",
-          "lightRef": "system/info/500",
-          "darkRef": "system/info/500"
-        },
-        {
-          "name": "border",
-          "light": "rgba(193, 212, 244, 1)",
-          "dark": "rgba(193, 212, 244, 1)",
-          "lightRef": "system/info/100",
-          "darkRef": "system/info/100"
-        },
-        {
-          "name": "text",
-          "light": "rgba(49, 106, 198, 1)",
-          "dark": "rgba(49, 106, 198, 1)",
-          "lightRef": "system/info/600",
-          "darkRef": "system/info/600"
-        }
-      ]
-    }
-  ]
+    ]
 }
