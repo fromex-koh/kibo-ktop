@@ -1039,3 +1039,14 @@
 @utility z-skiplink {
   z-index: var(--ds-z-skiplink);
 }
+
+/* overlay → bg-overlay-* 유틸 (배경 전용 — text-*, border-* 등은 의도적으로 안 만듦) */
+@utility bg-overlay-sm {
+  background-color: var(--ds-overlay-sm);
+}
+@utility bg-overlay-md {
+  background-color: var(--ds-overlay-md);
+}
+@utility bg-overlay-lg {
+  background-color: var(--ds-overlay-lg);
+}

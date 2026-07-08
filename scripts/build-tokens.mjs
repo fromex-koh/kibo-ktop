@@ -493,6 +493,16 @@ if (Object.keys(z).length) {
     L.push('')
 }
 
+// overlay → bg-overlay-* 유틸 하나만. --color-* 브리지(@theme inline)에 올리면 text-*/border-* 등
+// 색을 받는 유틸리티 전부가 같이 생겨버리는데(오사용 위험), 배경 전용 토큰이라 @utility 로 bg- 만
+// 콕 집어 만든다. 이것도 JIT 콘텐츠 스캔 대상이라, 실제로 어딘가 리터럴로 써야 CSS 가 생성된다.
+if (Object.keys(overlay).length) {
+    L.push('/* overlay → bg-overlay-* 유틸 (배경 전용 — text-*, border-* 등은 의도적으로 안 만듦) */')
+    for (const k of Object.keys(overlay))
+        L.push(`@utility bg-overlay-${k} {`, `  background-color: var(--ds-overlay-${k});`, '}')
+    L.push('')
+}
+
 writeFileSync(OUT, L.join('\n'))
 console.log(
     `✅ tokens.css 생성 — color(hue ${hues.length}·semantic ${Object.keys(semantic).length}·alpha ${Object.keys(alpha).length}), ` +
