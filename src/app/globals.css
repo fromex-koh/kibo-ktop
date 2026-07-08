@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 /* 색상 토큰(raw/ds/@theme) — tokens.json 에서 자동 생성. 수정은 tokens.json → yarn tokens */
 @import './tokens.css';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 /* dark: 유틸리티를 클래스 기반으로 전환 (OS 기본값은 layout.tsx 인라인 스크립트가 처리) */
 @custom-variant dark (&:where(.dark, .dark *));
