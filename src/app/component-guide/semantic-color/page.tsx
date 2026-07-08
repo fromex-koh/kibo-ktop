@@ -9,10 +9,11 @@ export const metadata: Metadata = {title: 'Semantic'}
 // ring-/outline-/divide-/fill-/stroke-/decoration-/accent-/caret-/from-/via-/to- 등 13개 이상)에서
 // 실제로 유효하다. 여기선 실무에서 가장 많이 쓰는 3개(bg-/text-/border-)만 큐레이션해서 보여준다 —
 // 나머지 접두사도 전부 동작하니 필요하면 같은 슬롯 이름에 직접 붙여 쓰면 된다.
-// scroll-thumb/track 은 pseudo-element 전용이라 --color-* 유틸이 없어(build-tokens.mjs 의
-// NO_UTILITY_SLOTS) var() 임의값의 bg- 하나만 의미가 있다.
+// scroll-thumb/track 은 pseudo-element(::-webkit-scrollbar) 전용이라 Tailwind 유틸리티 자체가
+// 없다(build-tokens.mjs 의 NO_UTILITY_SLOTS) — className 이 아니라 CSS 안에서 var() 로 직접 참조하는
+// 게 유일한 실제 사용법이라, 복사값도 가짜 유틸리티 클래스가 아니라 그 CSS 변수 자체로 보여준다.
 const utilClasses = (name: string): string[] => {
-    if (name === 'scroll-thumb' || name === 'scroll-track') return [`bg-[var(--ds-${name})]`]
+    if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
     return [`bg-${name}`, `text-${name}`, `border-${name}`]
 }
 
