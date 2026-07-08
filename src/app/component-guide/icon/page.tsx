@@ -328,7 +328,10 @@ const IconGuidePage = () => (
         <h2 id="icon-props" className="typo-heading-h4-bold">
           Props
         </h2>
-        <p className="typo-body-l-regular text-subtle">커스터마이징 가능한 속성들입니다.</p>
+        <p className="typo-body-l-regular text-subtle">
+          커스터마이징 가능한 속성들입니다. 필수 값은 이름 옆에{' '}
+          <span className="text-error">*</span> 로 표시했습니다.
+        </p>
       </div>
 
       <div className="flex flex-col gap-2">
