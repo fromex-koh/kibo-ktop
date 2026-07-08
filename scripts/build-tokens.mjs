@@ -22,6 +22,11 @@ const effect = tokens.effect ?? {}
 const overlay = tokens.overlay ?? {} // 반투명 오버레이 (모드별 alpha)
 const z = tokens.z ?? {} // z-index 레이어 순서 (정수, rem 변환 안 함) → z-* 유틸
 const typography = tokens.typography ?? {}
+// 타이포 공유 하위값 primitive — 45개 typo 토큰이 이름으로 참조(color 의 primitive→semantic 과 동일).
+// weight/lineHeight/letterSpacing 는 몇 개의 공유값이라 primitive 로 빼고, size 만 토큰별로 둔다.
+const fontWeight = tokens.fontWeight ?? {}
+const lineHeight = tokens.lineHeight ?? {}
+const letterSpacing = tokens.letterSpacing ?? {}
 const breakpoint = tokens.breakpoint ?? {} // 반응형 브레이크포인트(px) → wide:/pc: 프리픽스
 const container = tokens.container ?? {} // 콘텐츠 최대 폭(px) → max-w-* 유틸
 const grid = tokens.grid ?? {} // 브레이크포인트별 레이아웃 그리드(columns/gutter/margin) → .grid-layout
@@ -166,7 +171,12 @@ for (const [k, v] of Object.entries(effect.shadow ?? {})) {
 for (const [name, t] of Object.entries(typography)) {
     if (t.size?.mobile === undefined || t.size?.pc === undefined)
         errors.push(`typography.${name}.size.{mobile,pc} 누락`)
-    if (t.weight === undefined || t.lineHeight === undefined) errors.push(`typography.${name}.{weight,lineHeight} 누락`)
+    // weight/lineHeight/letterSpacing 는 primitive 맵의 키를 이름으로 참조해야 한다(없는 키면 빌드 실패).
+    if (!(t.weight in fontWeight)) errors.push(`typography.${name}.weight="${t.weight}" — fontWeight 에 없는 키`)
+    if (!(t.lineHeight in lineHeight))
+        errors.push(`typography.${name}.lineHeight="${t.lineHeight}" — lineHeight 에 없는 키`)
+    if (t.letterSpacing !== undefined && !(t.letterSpacing in letterSpacing))
+        errors.push(`typography.${name}.letterSpacing="${t.letterSpacing}" — letterSpacing 에 없는 키`)
 }
 
 if (errors.length) {
@@ -452,28 +462,35 @@ L.push('}', '')
 // 의 정식 utilities 레이어에 들어가 레이어 없는(unlayered) 클래스의 "항상 우선" 문제를 피한다.
 const typoNames = Object.keys(typography)
 if (typoNames.length) {
-    // 먼저 각 typo 값을 --ds-typo-* 변수로 노출한다 — .typo-* 클래스와 (globals.css 의 page-header
-    // compact 같은) 합성 유틸이 같은 변수를 참조해 값 중복 없이 tokens.json 단일 소스를 유지한다.
-    // 다른 토큰 패밀리(color·spacing·radius…)가 모두 --ds-* 변수를 갖는 것과 구조를 통일.
+    // 1) 공유 하위값 primitive — font-weight/line-height/letter-spacing 은 몇 개의 공유값이라
+    //    --ds-font-weight-*·--ds-line-height-*·--ds-letter-spacing-* 로 한 번만 낸다(color 의
+    //    primitive 처럼). "bold=700" 이 45번 복제되던 걸 한 곳으로 모은다.
     L.push(':root {')
-    L.push('  /* typography 값 → --ds-typo-* (클래스·합성유틸 공용 단일 소스, mobile 기본 + -pc) */')
+    L.push('  /* typography primitive — 공유 하위값(굵기·행간·자간). typo 토큰이 이름으로 참조 */')
+    for (const [k, v] of Object.entries(fontWeight)) L.push(`  --ds-font-weight-${k}: ${v};`)
+    for (const [k, v] of Object.entries(lineHeight)) L.push(`  --ds-line-height-${k}: ${v};`)
+    for (const [k, v] of Object.entries(letterSpacing)) L.push(`  --ds-letter-spacing-${k}: ${toRem(v)};`)
+    L.push('}', '')
+
+    // 2) font-size 만 토큰별(--ds-typo-*-font-size) — 크기는 토큰마다 다른 고유값이라 primitive 로
+    //    묶지 않는다. mobile/pc 분리는 반응형 타이포 대비(현재는 값이 같아도 구조 유지).
+    L.push(':root {')
+    L.push('  /* typography font-size → --ds-typo-*-font-size (토큰별 고유값, mobile 기본 + -pc) */')
     for (const [name, t] of Object.entries(typography)) {
         L.push(`  --ds-typo-${name}-font-size: ${toRem(t.size.mobile)};`)
         L.push(`  --ds-typo-${name}-font-size-pc: ${toRem(t.size.pc)};`)
-        L.push(`  --ds-typo-${name}-font-weight: ${t.weight};`)
-        L.push(`  --ds-typo-${name}-line-height: ${t.lineHeight};`)
-        if (t.letterSpacing !== undefined) L.push(`  --ds-typo-${name}-letter-spacing: ${toRem(t.letterSpacing)};`)
     }
     L.push('}', '')
 
+    // 3) .typo-* 클래스 — size 는 토큰별 변수, weight/line-height/letter-spacing 은 primitive 참조.
     L.push(`@layer utilities {`)
-    L.push(`  /* typography → .typo-* (모바일 기본, ${typoBp}px↑ = PC) — 값은 위 --ds-typo-* 참조 */`)
+    L.push(`  /* typography → .typo-* (모바일 기본, ${typoBp}px↑ = PC) */`)
     for (const [name, t] of Object.entries(typography)) {
         L.push(`  .typo-${name} {`)
         L.push(`    font-size: var(--ds-typo-${name}-font-size);`)
-        L.push(`    font-weight: var(--ds-typo-${name}-font-weight);`)
-        L.push(`    line-height: var(--ds-typo-${name}-line-height);`)
-        if (t.letterSpacing !== undefined) L.push(`    letter-spacing: var(--ds-typo-${name}-letter-spacing);`)
+        L.push(`    font-weight: var(--ds-font-weight-${t.weight});`)
+        L.push(`    line-height: var(--ds-line-height-${t.lineHeight});`)
+        if (t.letterSpacing !== undefined) L.push(`    letter-spacing: var(--ds-letter-spacing-${t.letterSpacing});`)
         L.push(`    @media (min-width: ${typoBp}px) {`)
         L.push(`      font-size: var(--ds-typo-${name}-font-size-pc);`)
         L.push('    }')

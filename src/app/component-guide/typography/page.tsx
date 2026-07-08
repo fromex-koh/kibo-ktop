@@ -14,12 +14,19 @@ const PREVIEW_SAMPLE = '가나다 Ag 12'
 // 배경 박스(inline-block)로 감싸 그 실제 렌더 너비 차이가 눈에 보이게 한다.
 const WIDTH_DEMO_LINES = ['iiiii', 'WWWWW']
 
+// weight/lineHeight/letterSpacing 는 primitive 맵(tokens.fontWeight 등)의 키를 이름으로 참조한다.
+// 표에는 이름이 아니라 실제 값(700·1.5·0)을 그 맵에서 되찾아 보여준다.
 type TypographyToken = {
     size: {mobile: number; pc: number}
-    weight: number
-    lineHeight: number
+    weight: string
+    lineHeight: string
     letterSpacing: string
 }
+
+// primitive 맵을 이름→값 조회용 Record 로 받는다(tokens.fontWeight 등이 그대로 대입 가능).
+const FONT_WEIGHT: Record<string, number> = tokens.fontWeight
+const LINE_HEIGHT: Record<string, number> = tokens.lineHeight
+const LETTER_SPACING: Record<string, string> = tokens.letterSpacing
 type TypographyEntry = [string, TypographyToken]
 
 // 타이포그래피 스케일 그룹 — Figma '크기(font-size)' 프레임의 분류(Display·Heading·Title·Body·
@@ -89,13 +96,13 @@ const TypographyScaleTable = ({title, entries}: {title: string; entries: Typogra
                                 {t.size.pc}px
                             </td>
                             <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                {t.weight}
+                                {FONT_WEIGHT[t.weight]}
                             </td>
                             <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                {t.lineHeight}
+                                {LINE_HEIGHT[t.lineHeight]}
                             </td>
                             <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                {t.letterSpacing}
+                                {LETTER_SPACING[t.letterSpacing]}
                             </td>
                         </tr>
                     ))}

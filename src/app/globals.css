@@ -46,33 +46,28 @@
 
 /* PageHeader compact 변형 전용 합성 typo — 이름이 다른 두 typo 토큰을 브레이크포인트(768px)에서
    전환한다. typo-* 는 순수 CSS 클래스(@layer utilities 원시 클래스)라 wide: 프리픽스도 @apply 도
-   받지 못해, 이 전환만 전용 합성 유틸로 뺐다. 값은 리터럴이 아니라 생성된 --ds-typo-* 변수를 참조해
-   tokens.json 단일 소스를 그대로 따라간다(768px 만 미디어쿼리 조건이라 리터럴 — CSS 변수는 조건에 못 씀).
+   받지 못해, 이 전환만 전용 합성 유틸로 뺐다. 값은 생성된 토큰 변수 참조 — 크기는 토큰별
+   --ds-typo-*-font-size, 굵기·행간·자간은 공유 primitive(--ds-font-weight-*·--ds-line-height-*·
+   --ds-letter-spacing-*). 두 전환 토큰이 같은 primitive(bold/normal)를 공유해 768px 에선 크기만 바뀐다.
    · title: Heading/H4/bold(mobile) → Display/M/bold(≥768px)
    · description: Body/XL/Regular(mobile) → Title/L/Regular(≥768px) */
 @layer utilities {
     .typo-page-header-title-compact {
         font-size: var(--ds-typo-h4-bold-font-size);
-        font-weight: var(--ds-typo-h4-bold-font-weight);
-        line-height: var(--ds-typo-h4-bold-line-height);
-        letter-spacing: var(--ds-typo-h4-bold-letter-spacing);
+        font-weight: var(--ds-font-weight-bold);
+        line-height: var(--ds-line-height-normal);
+        letter-spacing: var(--ds-letter-spacing-normal);
         @media (min-width: 768px) {
             font-size: var(--ds-typo-display-m-bold-font-size);
-            font-weight: var(--ds-typo-display-m-bold-font-weight);
-            line-height: var(--ds-typo-display-m-bold-line-height);
-            letter-spacing: var(--ds-typo-display-m-bold-letter-spacing);
         }
     }
     .typo-page-header-description-compact {
         font-size: var(--ds-typo-body-xl-regular-font-size);
-        font-weight: var(--ds-typo-body-xl-regular-font-weight);
-        line-height: var(--ds-typo-body-xl-regular-line-height);
-        letter-spacing: var(--ds-typo-body-xl-regular-letter-spacing);
+        font-weight: var(--ds-font-weight-regular);
+        line-height: var(--ds-line-height-normal);
+        letter-spacing: var(--ds-letter-spacing-normal);
         @media (min-width: 768px) {
             font-size: var(--ds-typo-title-l-regular-font-size);
-            font-weight: var(--ds-typo-title-l-regular-font-weight);
-            line-height: var(--ds-typo-title-l-regular-line-height);
-            letter-spacing: var(--ds-typo-title-l-regular-letter-spacing);
         }
     }
 }
