@@ -20,6 +20,9 @@ const getGridRevealClass = (index: number) => {
 // PUBLISHING_CONVENTION.md 의 그리드 예시 뷰포트) 같이 표기해 감을 맞춘다.
 const REFERENCE_VIEWPORT: Record<string, number> = {mobile: 360, wide: 1200, pc: 1920}
 
+// grid.container 가 container 토큰 키(예: "content")면 실제 px 로 되찾아 표에 보여준다(값 단일 소스).
+const CONTAINER_PX: Record<string, number> = tokens.container
+
 // 레이아웃 그리드 미리보기 — 사이드바 없는 독립 전체화면. .grid-layout 이 뷰포트 전체 폭을 그대로
 // 써서 해상도별 실제 그리드(모바일 328 / 태블릿 792 / 데스크톱 1200)를 정확히 확인할 수 있다.
 // (컴포넌트 가이드 사이드 레이아웃 안에 넣으면 pc 에서 사이드바 폭만큼 좁아져 값이 어긋난다.)
@@ -99,9 +102,7 @@ const GridPreviewPage = () => (
                                     <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                         {key === 'mobile'
                                             ? `${REFERENCE_VIEWPORT.mobile - 2 * g.margin}px (${REFERENCE_VIEWPORT.mobile}px 기준)`
-                                            : typeof g.container === 'number'
-                                              ? `${g.container}px (${REFERENCE_VIEWPORT[key]}px 기준)`
-                                              : g.container}
+                                            : `${typeof g.container === 'number' ? g.container : CONTAINER_PX[g.container]}px (${REFERENCE_VIEWPORT[key]}px 기준)`}
                                     </td>
                                     <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                         {g.margin}px

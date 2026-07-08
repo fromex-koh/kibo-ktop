@@ -135,8 +135,15 @@ if (Object.keys(grid).length) {
         if (!Number.isInteger(v.columns) || v.columns < 1) errors.push(`grid.${k}.columns 는 1 이상의 정수여야 함`)
         if (!numOrStr(v.gutter)) errors.push(`grid.${k}.gutter 는 숫자(px) 또는 문자열이어야 함`)
         if (!numOrStr(v.margin)) errors.push(`grid.${k}.margin 는 숫자(px) 또는 문자열이어야 함`)
-        // container: 콘텐츠 고정 폭(px 숫자) 또는 유동 상한 문자열("100%" = 상한 없음).
-        if (!numOrStr(v.container)) errors.push(`grid.${k}.container 는 숫자(px) 또는 문자열("100%")이어야 함`)
+        // container: px 숫자 / CSS 길이 문자열("100%") / container 토큰 키 참조(예: "content").
+        if (!numOrStr(v.container)) {
+            errors.push(`grid.${k}.container 는 숫자(px)·CSS 길이·container 키여야 함`)
+        } else if (typeof v.container === 'string' && !(v.container in container) && !/[%\d]/.test(v.container)) {
+            // %·숫자 없는 순수 식별자인데 container 키에 없으면 오타로 보고 실패시킨다.
+            errors.push(
+                `grid.${k}.container="${v.container}" — container 토큰 키 아님(현재: ${Object.keys(container).join('/')})`,
+            )
+        }
     }
 }
 // alpha 프리미티브: white/black 만, 스텝은 1~100 숫자 배열
@@ -416,12 +423,15 @@ if (Object.keys(z).length) {
     L.push('  /* z-index (레이어 순서) — 정수, rem 변환 안 함 */')
     for (const [k, v] of Object.entries(z)) L.push(`  --ds-z-${k}: ${v};`)
 }
+// grid.container 값: container 토큰 키(예: "content") 면 그 토큰을 var() 참조해 값 중복을 없앤다
+// (pc 그리드 폭 = 콘텐츠 폭이라 1200 을 두 번 쓰지 않음). 아니면 px 숫자·CSS 길이("100%") 그대로.
+const gridContainerVal = (v) => (typeof v === 'string' && v in container ? `var(--container-${v})` : toRem(v))
 if (grid.mobile) {
     L.push('  /* grid (모바일 기본) — columns/gutter/margin(최소여백)/container(고정폭), 상위 구간은 아래 @media */')
     L.push(`  --ds-grid-columns: ${grid.mobile.columns};`)
     L.push(`  --ds-grid-gutter: ${toRem(grid.mobile.gutter)};`)
     L.push(`  --ds-grid-margin: ${toRem(grid.mobile.margin)};`)
-    L.push(`  --ds-grid-container: ${toRem(grid.mobile.container)};`)
+    L.push(`  --ds-grid-container: ${gridContainerVal(grid.mobile.container)};`)
 }
 L.push('}', '')
 
@@ -434,7 +444,7 @@ for (const [key, px] of gridEntries) {
     L.push(`    --ds-grid-columns: ${g.columns};`)
     L.push(`    --ds-grid-gutter: ${toRem(g.gutter)};`)
     L.push(`    --ds-grid-margin: ${toRem(g.margin)};`)
-    L.push(`    --ds-grid-container: ${toRem(g.container)};`)
+    L.push(`    --ds-grid-container: ${gridContainerVal(g.container)};`)
     L.push('  }', '}', '')
 }
 

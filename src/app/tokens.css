@@ -531,7 +531,7 @@
     --ds-grid-columns: 12;
     --ds-grid-gutter: 1.5rem;
     --ds-grid-margin: 1.5rem;
-    --ds-grid-container: 75rem;
+    --ds-grid-container: var(--container-content);
   }
 }
 
