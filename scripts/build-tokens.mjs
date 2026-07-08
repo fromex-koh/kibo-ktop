@@ -452,16 +452,30 @@ L.push('}', '')
 // 의 정식 utilities 레이어에 들어가 레이어 없는(unlayered) 클래스의 "항상 우선" 문제를 피한다.
 const typoNames = Object.keys(typography)
 if (typoNames.length) {
+    // 먼저 각 typo 값을 --ds-typo-* 변수로 노출한다 — .typo-* 클래스와 (globals.css 의 page-header
+    // compact 같은) 합성 유틸이 같은 변수를 참조해 값 중복 없이 tokens.json 단일 소스를 유지한다.
+    // 다른 토큰 패밀리(color·spacing·radius…)가 모두 --ds-* 변수를 갖는 것과 구조를 통일.
+    L.push(':root {')
+    L.push('  /* typography 값 → --ds-typo-* (클래스·합성유틸 공용 단일 소스, mobile 기본 + -pc) */')
+    for (const [name, t] of Object.entries(typography)) {
+        L.push(`  --ds-typo-${name}-font-size: ${toRem(t.size.mobile)};`)
+        L.push(`  --ds-typo-${name}-font-size-pc: ${toRem(t.size.pc)};`)
+        L.push(`  --ds-typo-${name}-font-weight: ${t.weight};`)
+        L.push(`  --ds-typo-${name}-line-height: ${t.lineHeight};`)
+        if (t.letterSpacing !== undefined) L.push(`  --ds-typo-${name}-letter-spacing: ${toRem(t.letterSpacing)};`)
+    }
+    L.push('}', '')
+
     L.push(`@layer utilities {`)
-    L.push(`  /* typography → .typo-* (모바일 기본, ${typoBp}px↑ = PC) */`)
+    L.push(`  /* typography → .typo-* (모바일 기본, ${typoBp}px↑ = PC) — 값은 위 --ds-typo-* 참조 */`)
     for (const [name, t] of Object.entries(typography)) {
         L.push(`  .typo-${name} {`)
-        L.push(`    font-size: ${toRem(t.size.mobile)};`)
-        L.push(`    font-weight: ${t.weight};`)
-        L.push(`    line-height: ${t.lineHeight};`)
-        if (t.letterSpacing !== undefined) L.push(`    letter-spacing: ${toRem(t.letterSpacing)};`)
+        L.push(`    font-size: var(--ds-typo-${name}-font-size);`)
+        L.push(`    font-weight: var(--ds-typo-${name}-font-weight);`)
+        L.push(`    line-height: var(--ds-typo-${name}-line-height);`)
+        if (t.letterSpacing !== undefined) L.push(`    letter-spacing: var(--ds-typo-${name}-letter-spacing);`)
         L.push(`    @media (min-width: ${typoBp}px) {`)
-        L.push(`      font-size: ${toRem(t.size.pc)};`)
+        L.push(`      font-size: var(--ds-typo-${name}-font-size-pc);`)
         L.push('    }')
         L.push('  }')
     }

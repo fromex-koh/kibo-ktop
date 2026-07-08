@@ -585,411 +585,640 @@
   --blur-lg: var(--ds-blur-lg);
 }
 
+:root {
+  /* typography 값 → --ds-typo-* (클래스·합성유틸 공용 단일 소스, mobile 기본 + -pc) */
+  --ds-typo-display-xl-bold-font-size: 3rem;
+  --ds-typo-display-xl-bold-font-size-pc: 3rem;
+  --ds-typo-display-xl-bold-font-weight: 700;
+  --ds-typo-display-xl-bold-line-height: 1.5;
+  --ds-typo-display-xl-bold-letter-spacing: 0;
+  --ds-typo-display-xl-medium-font-size: 3rem;
+  --ds-typo-display-xl-medium-font-size-pc: 3rem;
+  --ds-typo-display-xl-medium-font-weight: 500;
+  --ds-typo-display-xl-medium-line-height: 1.5;
+  --ds-typo-display-xl-medium-letter-spacing: 0;
+  --ds-typo-display-xl-regular-font-size: 3rem;
+  --ds-typo-display-xl-regular-font-size-pc: 3rem;
+  --ds-typo-display-xl-regular-font-weight: 400;
+  --ds-typo-display-xl-regular-line-height: 1.5;
+  --ds-typo-display-xl-regular-letter-spacing: 0;
+  --ds-typo-display-l-bold-font-size: 2.5rem;
+  --ds-typo-display-l-bold-font-size-pc: 2.5rem;
+  --ds-typo-display-l-bold-font-weight: 700;
+  --ds-typo-display-l-bold-line-height: 1.5;
+  --ds-typo-display-l-bold-letter-spacing: 0;
+  --ds-typo-display-l-medium-font-size: 2.5rem;
+  --ds-typo-display-l-medium-font-size-pc: 2.5rem;
+  --ds-typo-display-l-medium-font-weight: 500;
+  --ds-typo-display-l-medium-line-height: 1.5;
+  --ds-typo-display-l-medium-letter-spacing: 0;
+  --ds-typo-display-l-regular-font-size: 2.5rem;
+  --ds-typo-display-l-regular-font-size-pc: 2.5rem;
+  --ds-typo-display-l-regular-font-weight: 400;
+  --ds-typo-display-l-regular-line-height: 1.5;
+  --ds-typo-display-l-regular-letter-spacing: 0;
+  --ds-typo-display-m-bold-font-size: 2.25rem;
+  --ds-typo-display-m-bold-font-size-pc: 2.25rem;
+  --ds-typo-display-m-bold-font-weight: 700;
+  --ds-typo-display-m-bold-line-height: 1.5;
+  --ds-typo-display-m-bold-letter-spacing: 0;
+  --ds-typo-display-m-medium-font-size: 2.25rem;
+  --ds-typo-display-m-medium-font-size-pc: 2.25rem;
+  --ds-typo-display-m-medium-font-weight: 500;
+  --ds-typo-display-m-medium-line-height: 1.5;
+  --ds-typo-display-m-medium-letter-spacing: 0;
+  --ds-typo-display-m-regular-font-size: 2.25rem;
+  --ds-typo-display-m-regular-font-size-pc: 2.25rem;
+  --ds-typo-display-m-regular-font-weight: 400;
+  --ds-typo-display-m-regular-line-height: 1.5;
+  --ds-typo-display-m-regular-letter-spacing: 0;
+  --ds-typo-h1-bold-font-size: 2rem;
+  --ds-typo-h1-bold-font-size-pc: 2rem;
+  --ds-typo-h1-bold-font-weight: 700;
+  --ds-typo-h1-bold-line-height: 1.5;
+  --ds-typo-h1-bold-letter-spacing: 0;
+  --ds-typo-h1-medium-font-size: 2rem;
+  --ds-typo-h1-medium-font-size-pc: 2rem;
+  --ds-typo-h1-medium-font-weight: 500;
+  --ds-typo-h1-medium-line-height: 1.5;
+  --ds-typo-h1-medium-letter-spacing: 0;
+  --ds-typo-h1-regular-font-size: 2rem;
+  --ds-typo-h1-regular-font-size-pc: 2rem;
+  --ds-typo-h1-regular-font-weight: 400;
+  --ds-typo-h1-regular-line-height: 1.5;
+  --ds-typo-h1-regular-letter-spacing: 0;
+  --ds-typo-h2-bold-font-size: 1.75rem;
+  --ds-typo-h2-bold-font-size-pc: 1.75rem;
+  --ds-typo-h2-bold-font-weight: 700;
+  --ds-typo-h2-bold-line-height: 1.5;
+  --ds-typo-h2-bold-letter-spacing: 0;
+  --ds-typo-h2-medium-font-size: 1.75rem;
+  --ds-typo-h2-medium-font-size-pc: 1.75rem;
+  --ds-typo-h2-medium-font-weight: 500;
+  --ds-typo-h2-medium-line-height: 1.5;
+  --ds-typo-h2-medium-letter-spacing: 0;
+  --ds-typo-h2-regular-font-size: 1.75rem;
+  --ds-typo-h2-regular-font-size-pc: 1.75rem;
+  --ds-typo-h2-regular-font-weight: 400;
+  --ds-typo-h2-regular-line-height: 1.5;
+  --ds-typo-h2-regular-letter-spacing: 0;
+  --ds-typo-h3-bold-font-size: 1.625rem;
+  --ds-typo-h3-bold-font-size-pc: 1.625rem;
+  --ds-typo-h3-bold-font-weight: 700;
+  --ds-typo-h3-bold-line-height: 1.5;
+  --ds-typo-h3-bold-letter-spacing: 0;
+  --ds-typo-h3-medium-font-size: 1.625rem;
+  --ds-typo-h3-medium-font-size-pc: 1.625rem;
+  --ds-typo-h3-medium-font-weight: 500;
+  --ds-typo-h3-medium-line-height: 1.5;
+  --ds-typo-h3-medium-letter-spacing: 0;
+  --ds-typo-h3-regular-font-size: 1.625rem;
+  --ds-typo-h3-regular-font-size-pc: 1.625rem;
+  --ds-typo-h3-regular-font-weight: 400;
+  --ds-typo-h3-regular-line-height: 1.5;
+  --ds-typo-h3-regular-letter-spacing: 0;
+  --ds-typo-h4-bold-font-size: 1.5rem;
+  --ds-typo-h4-bold-font-size-pc: 1.5rem;
+  --ds-typo-h4-bold-font-weight: 700;
+  --ds-typo-h4-bold-line-height: 1.5;
+  --ds-typo-h4-bold-letter-spacing: 0;
+  --ds-typo-h4-medium-font-size: 1.5rem;
+  --ds-typo-h4-medium-font-size-pc: 1.5rem;
+  --ds-typo-h4-medium-font-weight: 500;
+  --ds-typo-h4-medium-line-height: 1.5;
+  --ds-typo-h4-medium-letter-spacing: 0;
+  --ds-typo-h4-regular-font-size: 1.5rem;
+  --ds-typo-h4-regular-font-size-pc: 1.5rem;
+  --ds-typo-h4-regular-font-weight: 400;
+  --ds-typo-h4-regular-line-height: 1.5;
+  --ds-typo-h4-regular-letter-spacing: 0;
+  --ds-typo-title-xl-bold-font-size: 1.375rem;
+  --ds-typo-title-xl-bold-font-size-pc: 1.375rem;
+  --ds-typo-title-xl-bold-font-weight: 700;
+  --ds-typo-title-xl-bold-line-height: 1.5;
+  --ds-typo-title-xl-bold-letter-spacing: 0;
+  --ds-typo-title-xl-medium-font-size: 1.375rem;
+  --ds-typo-title-xl-medium-font-size-pc: 1.375rem;
+  --ds-typo-title-xl-medium-font-weight: 500;
+  --ds-typo-title-xl-medium-line-height: 1.5;
+  --ds-typo-title-xl-medium-letter-spacing: 0;
+  --ds-typo-title-xl-regular-font-size: 1.375rem;
+  --ds-typo-title-xl-regular-font-size-pc: 1.375rem;
+  --ds-typo-title-xl-regular-font-weight: 400;
+  --ds-typo-title-xl-regular-line-height: 1.5;
+  --ds-typo-title-xl-regular-letter-spacing: 0;
+  --ds-typo-title-l-bold-font-size: 1.25rem;
+  --ds-typo-title-l-bold-font-size-pc: 1.25rem;
+  --ds-typo-title-l-bold-font-weight: 700;
+  --ds-typo-title-l-bold-line-height: 1.5;
+  --ds-typo-title-l-bold-letter-spacing: 0;
+  --ds-typo-title-l-medium-font-size: 1.25rem;
+  --ds-typo-title-l-medium-font-size-pc: 1.25rem;
+  --ds-typo-title-l-medium-font-weight: 500;
+  --ds-typo-title-l-medium-line-height: 1.5;
+  --ds-typo-title-l-medium-letter-spacing: 0;
+  --ds-typo-title-l-regular-font-size: 1.25rem;
+  --ds-typo-title-l-regular-font-size-pc: 1.25rem;
+  --ds-typo-title-l-regular-font-weight: 400;
+  --ds-typo-title-l-regular-line-height: 1.5;
+  --ds-typo-title-l-regular-letter-spacing: 0;
+  --ds-typo-title-m-bold-font-size: 1.125rem;
+  --ds-typo-title-m-bold-font-size-pc: 1.125rem;
+  --ds-typo-title-m-bold-font-weight: 700;
+  --ds-typo-title-m-bold-line-height: 1.5;
+  --ds-typo-title-m-bold-letter-spacing: 0;
+  --ds-typo-title-m-medium-font-size: 1.125rem;
+  --ds-typo-title-m-medium-font-size-pc: 1.125rem;
+  --ds-typo-title-m-medium-font-weight: 500;
+  --ds-typo-title-m-medium-line-height: 1.5;
+  --ds-typo-title-m-medium-letter-spacing: 0;
+  --ds-typo-title-m-regular-font-size: 1.125rem;
+  --ds-typo-title-m-regular-font-size-pc: 1.125rem;
+  --ds-typo-title-m-regular-font-weight: 400;
+  --ds-typo-title-m-regular-line-height: 1.5;
+  --ds-typo-title-m-regular-letter-spacing: 0;
+  --ds-typo-body-xl-bold-font-size: 1rem;
+  --ds-typo-body-xl-bold-font-size-pc: 1rem;
+  --ds-typo-body-xl-bold-font-weight: 700;
+  --ds-typo-body-xl-bold-line-height: 1.5;
+  --ds-typo-body-xl-bold-letter-spacing: 0;
+  --ds-typo-body-xl-medium-font-size: 1rem;
+  --ds-typo-body-xl-medium-font-size-pc: 1rem;
+  --ds-typo-body-xl-medium-font-weight: 500;
+  --ds-typo-body-xl-medium-line-height: 1.5;
+  --ds-typo-body-xl-medium-letter-spacing: 0;
+  --ds-typo-body-xl-regular-font-size: 1rem;
+  --ds-typo-body-xl-regular-font-size-pc: 1rem;
+  --ds-typo-body-xl-regular-font-weight: 400;
+  --ds-typo-body-xl-regular-line-height: 1.5;
+  --ds-typo-body-xl-regular-letter-spacing: 0;
+  --ds-typo-body-l-bold-font-size: 0.875rem;
+  --ds-typo-body-l-bold-font-size-pc: 0.875rem;
+  --ds-typo-body-l-bold-font-weight: 700;
+  --ds-typo-body-l-bold-line-height: 1.5;
+  --ds-typo-body-l-bold-letter-spacing: 0;
+  --ds-typo-body-l-medium-font-size: 0.875rem;
+  --ds-typo-body-l-medium-font-size-pc: 0.875rem;
+  --ds-typo-body-l-medium-font-weight: 500;
+  --ds-typo-body-l-medium-line-height: 1.5;
+  --ds-typo-body-l-medium-letter-spacing: 0;
+  --ds-typo-body-l-regular-font-size: 0.875rem;
+  --ds-typo-body-l-regular-font-size-pc: 0.875rem;
+  --ds-typo-body-l-regular-font-weight: 400;
+  --ds-typo-body-l-regular-line-height: 1.5;
+  --ds-typo-body-l-regular-letter-spacing: 0;
+  --ds-typo-body-m-bold-font-size: 0.8125rem;
+  --ds-typo-body-m-bold-font-size-pc: 0.8125rem;
+  --ds-typo-body-m-bold-font-weight: 700;
+  --ds-typo-body-m-bold-line-height: 1.5;
+  --ds-typo-body-m-bold-letter-spacing: 0;
+  --ds-typo-body-m-medium-font-size: 0.8125rem;
+  --ds-typo-body-m-medium-font-size-pc: 0.8125rem;
+  --ds-typo-body-m-medium-font-weight: 500;
+  --ds-typo-body-m-medium-line-height: 1.5;
+  --ds-typo-body-m-medium-letter-spacing: 0;
+  --ds-typo-body-m-regular-font-size: 0.8125rem;
+  --ds-typo-body-m-regular-font-size-pc: 0.8125rem;
+  --ds-typo-body-m-regular-font-weight: 400;
+  --ds-typo-body-m-regular-line-height: 1.5;
+  --ds-typo-body-m-regular-letter-spacing: 0;
+  --ds-typo-caption-bold-font-size: 0.75rem;
+  --ds-typo-caption-bold-font-size-pc: 0.75rem;
+  --ds-typo-caption-bold-font-weight: 700;
+  --ds-typo-caption-bold-line-height: 1.5;
+  --ds-typo-caption-bold-letter-spacing: 0;
+  --ds-typo-caption-medium-font-size: 0.75rem;
+  --ds-typo-caption-medium-font-size-pc: 0.75rem;
+  --ds-typo-caption-medium-font-weight: 500;
+  --ds-typo-caption-medium-line-height: 1.5;
+  --ds-typo-caption-medium-letter-spacing: 0;
+  --ds-typo-caption-regular-font-size: 0.75rem;
+  --ds-typo-caption-regular-font-size-pc: 0.75rem;
+  --ds-typo-caption-regular-font-weight: 400;
+  --ds-typo-caption-regular-line-height: 1.5;
+  --ds-typo-caption-regular-letter-spacing: 0;
+  --ds-typo-micro-bold-font-size: 0.6875rem;
+  --ds-typo-micro-bold-font-size-pc: 0.6875rem;
+  --ds-typo-micro-bold-font-weight: 700;
+  --ds-typo-micro-bold-line-height: 1.5;
+  --ds-typo-micro-bold-letter-spacing: 0;
+  --ds-typo-micro-medium-font-size: 0.6875rem;
+  --ds-typo-micro-medium-font-size-pc: 0.6875rem;
+  --ds-typo-micro-medium-font-weight: 500;
+  --ds-typo-micro-medium-line-height: 1.5;
+  --ds-typo-micro-medium-letter-spacing: 0;
+  --ds-typo-micro-regular-font-size: 0.6875rem;
+  --ds-typo-micro-regular-font-size-pc: 0.6875rem;
+  --ds-typo-micro-regular-font-weight: 400;
+  --ds-typo-micro-regular-line-height: 1.5;
+  --ds-typo-micro-regular-letter-spacing: 0;
+}
+
 @layer utilities {
-  /* typography → .typo-* (모바일 기본, 768px↑ = PC) */
+  /* typography → .typo-* (모바일 기본, 768px↑ = PC) — 값은 위 --ds-typo-* 참조 */
   .typo-display-xl-bold {
-    font-size: 3rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-display-xl-bold-font-size);
+    font-weight: var(--ds-typo-display-xl-bold-font-weight);
+    line-height: var(--ds-typo-display-xl-bold-line-height);
+    letter-spacing: var(--ds-typo-display-xl-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 3rem;
+      font-size: var(--ds-typo-display-xl-bold-font-size-pc);
     }
   }
   .typo-display-xl-medium {
-    font-size: 3rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-display-xl-medium-font-size);
+    font-weight: var(--ds-typo-display-xl-medium-font-weight);
+    line-height: var(--ds-typo-display-xl-medium-line-height);
+    letter-spacing: var(--ds-typo-display-xl-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 3rem;
+      font-size: var(--ds-typo-display-xl-medium-font-size-pc);
     }
   }
   .typo-display-xl-regular {
-    font-size: 3rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-display-xl-regular-font-size);
+    font-weight: var(--ds-typo-display-xl-regular-font-weight);
+    line-height: var(--ds-typo-display-xl-regular-line-height);
+    letter-spacing: var(--ds-typo-display-xl-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 3rem;
+      font-size: var(--ds-typo-display-xl-regular-font-size-pc);
     }
   }
   .typo-display-l-bold {
-    font-size: 2.5rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-display-l-bold-font-size);
+    font-weight: var(--ds-typo-display-l-bold-font-weight);
+    line-height: var(--ds-typo-display-l-bold-line-height);
+    letter-spacing: var(--ds-typo-display-l-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 2.5rem;
+      font-size: var(--ds-typo-display-l-bold-font-size-pc);
     }
   }
   .typo-display-l-medium {
-    font-size: 2.5rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-display-l-medium-font-size);
+    font-weight: var(--ds-typo-display-l-medium-font-weight);
+    line-height: var(--ds-typo-display-l-medium-line-height);
+    letter-spacing: var(--ds-typo-display-l-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 2.5rem;
+      font-size: var(--ds-typo-display-l-medium-font-size-pc);
     }
   }
   .typo-display-l-regular {
-    font-size: 2.5rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-display-l-regular-font-size);
+    font-weight: var(--ds-typo-display-l-regular-font-weight);
+    line-height: var(--ds-typo-display-l-regular-line-height);
+    letter-spacing: var(--ds-typo-display-l-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 2.5rem;
+      font-size: var(--ds-typo-display-l-regular-font-size-pc);
     }
   }
   .typo-display-m-bold {
-    font-size: 2.25rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-display-m-bold-font-size);
+    font-weight: var(--ds-typo-display-m-bold-font-weight);
+    line-height: var(--ds-typo-display-m-bold-line-height);
+    letter-spacing: var(--ds-typo-display-m-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 2.25rem;
+      font-size: var(--ds-typo-display-m-bold-font-size-pc);
     }
   }
   .typo-display-m-medium {
-    font-size: 2.25rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-display-m-medium-font-size);
+    font-weight: var(--ds-typo-display-m-medium-font-weight);
+    line-height: var(--ds-typo-display-m-medium-line-height);
+    letter-spacing: var(--ds-typo-display-m-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 2.25rem;
+      font-size: var(--ds-typo-display-m-medium-font-size-pc);
     }
   }
   .typo-display-m-regular {
-    font-size: 2.25rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-display-m-regular-font-size);
+    font-weight: var(--ds-typo-display-m-regular-font-weight);
+    line-height: var(--ds-typo-display-m-regular-line-height);
+    letter-spacing: var(--ds-typo-display-m-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 2.25rem;
+      font-size: var(--ds-typo-display-m-regular-font-size-pc);
     }
   }
   .typo-h1-bold {
-    font-size: 2rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h1-bold-font-size);
+    font-weight: var(--ds-typo-h1-bold-font-weight);
+    line-height: var(--ds-typo-h1-bold-line-height);
+    letter-spacing: var(--ds-typo-h1-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 2rem;
+      font-size: var(--ds-typo-h1-bold-font-size-pc);
     }
   }
   .typo-h1-medium {
-    font-size: 2rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h1-medium-font-size);
+    font-weight: var(--ds-typo-h1-medium-font-weight);
+    line-height: var(--ds-typo-h1-medium-line-height);
+    letter-spacing: var(--ds-typo-h1-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 2rem;
+      font-size: var(--ds-typo-h1-medium-font-size-pc);
     }
   }
   .typo-h1-regular {
-    font-size: 2rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h1-regular-font-size);
+    font-weight: var(--ds-typo-h1-regular-font-weight);
+    line-height: var(--ds-typo-h1-regular-line-height);
+    letter-spacing: var(--ds-typo-h1-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 2rem;
+      font-size: var(--ds-typo-h1-regular-font-size-pc);
     }
   }
   .typo-h2-bold {
-    font-size: 1.75rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h2-bold-font-size);
+    font-weight: var(--ds-typo-h2-bold-font-weight);
+    line-height: var(--ds-typo-h2-bold-line-height);
+    letter-spacing: var(--ds-typo-h2-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.75rem;
+      font-size: var(--ds-typo-h2-bold-font-size-pc);
     }
   }
   .typo-h2-medium {
-    font-size: 1.75rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h2-medium-font-size);
+    font-weight: var(--ds-typo-h2-medium-font-weight);
+    line-height: var(--ds-typo-h2-medium-line-height);
+    letter-spacing: var(--ds-typo-h2-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.75rem;
+      font-size: var(--ds-typo-h2-medium-font-size-pc);
     }
   }
   .typo-h2-regular {
-    font-size: 1.75rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h2-regular-font-size);
+    font-weight: var(--ds-typo-h2-regular-font-weight);
+    line-height: var(--ds-typo-h2-regular-line-height);
+    letter-spacing: var(--ds-typo-h2-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.75rem;
+      font-size: var(--ds-typo-h2-regular-font-size-pc);
     }
   }
   .typo-h3-bold {
-    font-size: 1.625rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h3-bold-font-size);
+    font-weight: var(--ds-typo-h3-bold-font-weight);
+    line-height: var(--ds-typo-h3-bold-line-height);
+    letter-spacing: var(--ds-typo-h3-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.625rem;
+      font-size: var(--ds-typo-h3-bold-font-size-pc);
     }
   }
   .typo-h3-medium {
-    font-size: 1.625rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h3-medium-font-size);
+    font-weight: var(--ds-typo-h3-medium-font-weight);
+    line-height: var(--ds-typo-h3-medium-line-height);
+    letter-spacing: var(--ds-typo-h3-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.625rem;
+      font-size: var(--ds-typo-h3-medium-font-size-pc);
     }
   }
   .typo-h3-regular {
-    font-size: 1.625rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h3-regular-font-size);
+    font-weight: var(--ds-typo-h3-regular-font-weight);
+    line-height: var(--ds-typo-h3-regular-line-height);
+    letter-spacing: var(--ds-typo-h3-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.625rem;
+      font-size: var(--ds-typo-h3-regular-font-size-pc);
     }
   }
   .typo-h4-bold {
-    font-size: 1.5rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h4-bold-font-size);
+    font-weight: var(--ds-typo-h4-bold-font-weight);
+    line-height: var(--ds-typo-h4-bold-line-height);
+    letter-spacing: var(--ds-typo-h4-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.5rem;
+      font-size: var(--ds-typo-h4-bold-font-size-pc);
     }
   }
   .typo-h4-medium {
-    font-size: 1.5rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h4-medium-font-size);
+    font-weight: var(--ds-typo-h4-medium-font-weight);
+    line-height: var(--ds-typo-h4-medium-line-height);
+    letter-spacing: var(--ds-typo-h4-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.5rem;
+      font-size: var(--ds-typo-h4-medium-font-size-pc);
     }
   }
   .typo-h4-regular {
-    font-size: 1.5rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-h4-regular-font-size);
+    font-weight: var(--ds-typo-h4-regular-font-weight);
+    line-height: var(--ds-typo-h4-regular-line-height);
+    letter-spacing: var(--ds-typo-h4-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.5rem;
+      font-size: var(--ds-typo-h4-regular-font-size-pc);
     }
   }
   .typo-title-xl-bold {
-    font-size: 1.375rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-title-xl-bold-font-size);
+    font-weight: var(--ds-typo-title-xl-bold-font-weight);
+    line-height: var(--ds-typo-title-xl-bold-line-height);
+    letter-spacing: var(--ds-typo-title-xl-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.375rem;
+      font-size: var(--ds-typo-title-xl-bold-font-size-pc);
     }
   }
   .typo-title-xl-medium {
-    font-size: 1.375rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-title-xl-medium-font-size);
+    font-weight: var(--ds-typo-title-xl-medium-font-weight);
+    line-height: var(--ds-typo-title-xl-medium-line-height);
+    letter-spacing: var(--ds-typo-title-xl-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.375rem;
+      font-size: var(--ds-typo-title-xl-medium-font-size-pc);
     }
   }
   .typo-title-xl-regular {
-    font-size: 1.375rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-title-xl-regular-font-size);
+    font-weight: var(--ds-typo-title-xl-regular-font-weight);
+    line-height: var(--ds-typo-title-xl-regular-line-height);
+    letter-spacing: var(--ds-typo-title-xl-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.375rem;
+      font-size: var(--ds-typo-title-xl-regular-font-size-pc);
     }
   }
   .typo-title-l-bold {
-    font-size: 1.25rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-title-l-bold-font-size);
+    font-weight: var(--ds-typo-title-l-bold-font-weight);
+    line-height: var(--ds-typo-title-l-bold-line-height);
+    letter-spacing: var(--ds-typo-title-l-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.25rem;
+      font-size: var(--ds-typo-title-l-bold-font-size-pc);
     }
   }
   .typo-title-l-medium {
-    font-size: 1.25rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-title-l-medium-font-size);
+    font-weight: var(--ds-typo-title-l-medium-font-weight);
+    line-height: var(--ds-typo-title-l-medium-line-height);
+    letter-spacing: var(--ds-typo-title-l-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.25rem;
+      font-size: var(--ds-typo-title-l-medium-font-size-pc);
     }
   }
   .typo-title-l-regular {
-    font-size: 1.25rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-title-l-regular-font-size);
+    font-weight: var(--ds-typo-title-l-regular-font-weight);
+    line-height: var(--ds-typo-title-l-regular-line-height);
+    letter-spacing: var(--ds-typo-title-l-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.25rem;
+      font-size: var(--ds-typo-title-l-regular-font-size-pc);
     }
   }
   .typo-title-m-bold {
-    font-size: 1.125rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-title-m-bold-font-size);
+    font-weight: var(--ds-typo-title-m-bold-font-weight);
+    line-height: var(--ds-typo-title-m-bold-line-height);
+    letter-spacing: var(--ds-typo-title-m-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.125rem;
+      font-size: var(--ds-typo-title-m-bold-font-size-pc);
     }
   }
   .typo-title-m-medium {
-    font-size: 1.125rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-title-m-medium-font-size);
+    font-weight: var(--ds-typo-title-m-medium-font-weight);
+    line-height: var(--ds-typo-title-m-medium-line-height);
+    letter-spacing: var(--ds-typo-title-m-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.125rem;
+      font-size: var(--ds-typo-title-m-medium-font-size-pc);
     }
   }
   .typo-title-m-regular {
-    font-size: 1.125rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-title-m-regular-font-size);
+    font-weight: var(--ds-typo-title-m-regular-font-weight);
+    line-height: var(--ds-typo-title-m-regular-line-height);
+    letter-spacing: var(--ds-typo-title-m-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1.125rem;
+      font-size: var(--ds-typo-title-m-regular-font-size-pc);
     }
   }
   .typo-body-xl-bold {
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-body-xl-bold-font-size);
+    font-weight: var(--ds-typo-body-xl-bold-font-weight);
+    line-height: var(--ds-typo-body-xl-bold-line-height);
+    letter-spacing: var(--ds-typo-body-xl-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1rem;
+      font-size: var(--ds-typo-body-xl-bold-font-size-pc);
     }
   }
   .typo-body-xl-medium {
-    font-size: 1rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-body-xl-medium-font-size);
+    font-weight: var(--ds-typo-body-xl-medium-font-weight);
+    line-height: var(--ds-typo-body-xl-medium-line-height);
+    letter-spacing: var(--ds-typo-body-xl-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1rem;
+      font-size: var(--ds-typo-body-xl-medium-font-size-pc);
     }
   }
   .typo-body-xl-regular {
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-body-xl-regular-font-size);
+    font-weight: var(--ds-typo-body-xl-regular-font-weight);
+    line-height: var(--ds-typo-body-xl-regular-line-height);
+    letter-spacing: var(--ds-typo-body-xl-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 1rem;
+      font-size: var(--ds-typo-body-xl-regular-font-size-pc);
     }
   }
   .typo-body-l-bold {
-    font-size: 0.875rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-body-l-bold-font-size);
+    font-weight: var(--ds-typo-body-l-bold-font-weight);
+    line-height: var(--ds-typo-body-l-bold-line-height);
+    letter-spacing: var(--ds-typo-body-l-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.875rem;
+      font-size: var(--ds-typo-body-l-bold-font-size-pc);
     }
   }
   .typo-body-l-medium {
-    font-size: 0.875rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-body-l-medium-font-size);
+    font-weight: var(--ds-typo-body-l-medium-font-weight);
+    line-height: var(--ds-typo-body-l-medium-line-height);
+    letter-spacing: var(--ds-typo-body-l-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.875rem;
+      font-size: var(--ds-typo-body-l-medium-font-size-pc);
     }
   }
   .typo-body-l-regular {
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-body-l-regular-font-size);
+    font-weight: var(--ds-typo-body-l-regular-font-weight);
+    line-height: var(--ds-typo-body-l-regular-line-height);
+    letter-spacing: var(--ds-typo-body-l-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.875rem;
+      font-size: var(--ds-typo-body-l-regular-font-size-pc);
     }
   }
   .typo-body-m-bold {
-    font-size: 0.8125rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-body-m-bold-font-size);
+    font-weight: var(--ds-typo-body-m-bold-font-weight);
+    line-height: var(--ds-typo-body-m-bold-line-height);
+    letter-spacing: var(--ds-typo-body-m-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.8125rem;
+      font-size: var(--ds-typo-body-m-bold-font-size-pc);
     }
   }
   .typo-body-m-medium {
-    font-size: 0.8125rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-body-m-medium-font-size);
+    font-weight: var(--ds-typo-body-m-medium-font-weight);
+    line-height: var(--ds-typo-body-m-medium-line-height);
+    letter-spacing: var(--ds-typo-body-m-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.8125rem;
+      font-size: var(--ds-typo-body-m-medium-font-size-pc);
     }
   }
   .typo-body-m-regular {
-    font-size: 0.8125rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-body-m-regular-font-size);
+    font-weight: var(--ds-typo-body-m-regular-font-weight);
+    line-height: var(--ds-typo-body-m-regular-line-height);
+    letter-spacing: var(--ds-typo-body-m-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.8125rem;
+      font-size: var(--ds-typo-body-m-regular-font-size-pc);
     }
   }
   .typo-caption-bold {
-    font-size: 0.75rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-caption-bold-font-size);
+    font-weight: var(--ds-typo-caption-bold-font-weight);
+    line-height: var(--ds-typo-caption-bold-line-height);
+    letter-spacing: var(--ds-typo-caption-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.75rem;
+      font-size: var(--ds-typo-caption-bold-font-size-pc);
     }
   }
   .typo-caption-medium {
-    font-size: 0.75rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-caption-medium-font-size);
+    font-weight: var(--ds-typo-caption-medium-font-weight);
+    line-height: var(--ds-typo-caption-medium-line-height);
+    letter-spacing: var(--ds-typo-caption-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.75rem;
+      font-size: var(--ds-typo-caption-medium-font-size-pc);
     }
   }
   .typo-caption-regular {
-    font-size: 0.75rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-caption-regular-font-size);
+    font-weight: var(--ds-typo-caption-regular-font-weight);
+    line-height: var(--ds-typo-caption-regular-line-height);
+    letter-spacing: var(--ds-typo-caption-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.75rem;
+      font-size: var(--ds-typo-caption-regular-font-size-pc);
     }
   }
   .typo-micro-bold {
-    font-size: 0.6875rem;
-    font-weight: 700;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-micro-bold-font-size);
+    font-weight: var(--ds-typo-micro-bold-font-weight);
+    line-height: var(--ds-typo-micro-bold-line-height);
+    letter-spacing: var(--ds-typo-micro-bold-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.6875rem;
+      font-size: var(--ds-typo-micro-bold-font-size-pc);
     }
   }
   .typo-micro-medium {
-    font-size: 0.6875rem;
-    font-weight: 500;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-micro-medium-font-size);
+    font-weight: var(--ds-typo-micro-medium-font-weight);
+    line-height: var(--ds-typo-micro-medium-line-height);
+    letter-spacing: var(--ds-typo-micro-medium-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.6875rem;
+      font-size: var(--ds-typo-micro-medium-font-size-pc);
     }
   }
   .typo-micro-regular {
-    font-size: 0.6875rem;
-    font-weight: 400;
-    line-height: 1.5;
-    letter-spacing: 0;
+    font-size: var(--ds-typo-micro-regular-font-size);
+    font-weight: var(--ds-typo-micro-regular-font-weight);
+    line-height: var(--ds-typo-micro-regular-line-height);
+    letter-spacing: var(--ds-typo-micro-regular-letter-spacing);
     @media (min-width: 768px) {
-      font-size: 0.6875rem;
+      font-size: var(--ds-typo-micro-regular-font-size-pc);
     }
   }
 }
