@@ -43,8 +43,8 @@ const RootLayout = ({
     children: React.ReactNode
 }>) => {
     return (
-        <html lang="ko" suppressHydrationWarning className={`${pretendard.variable} h-full antialiased`}>
-            <body className="flex min-h-full flex-col font-sans">
+        <html lang="ko" suppressHydrationWarning className="h-full antialiased">
+            <body className={`${pretendard.variable} flex min-h-full flex-col font-sans`}>
                 <ThemeProvider>{children}</ThemeProvider>
             </body>
         </html>
