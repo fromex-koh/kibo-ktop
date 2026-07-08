@@ -23,10 +23,16 @@ const overlay = tokens.overlay ?? {} // 반투명 오버레이 (모드별 alpha)
 const z = tokens.z ?? {} // z-index 레이어 순서 (정수, rem 변환 안 함) → z-* 유틸
 const typography = tokens.typography ?? {}
 // 타이포 공유 하위값 primitive — 45개 typo 토큰이 이름으로 참조(color 의 primitive→semantic 과 동일).
-// weight/lineHeight/letterSpacing 는 몇 개의 공유값이라 primitive 로 빼고, size 만 토큰별로 둔다.
+// weight/lineHeight/letterSpacing 는 몇 개의 공유값이라 primitive 로 빼고, size 는 tier 로 공유한다.
 const fontWeight = tokens.fontWeight ?? {}
 const lineHeight = tokens.lineHeight ?? {}
 const letterSpacing = tokens.letterSpacing ?? {}
+// typo 이름은 <tier>-<weight> 구조 — 굵기 접미사를 떼면 크기 tier(display-xl 등). font-size 는 굵기와
+// 무관하므로 tier 로 공유한다(display-xl-bold/medium/regular 3개가 --ds-font-size-display-xl 하나를 참조).
+const tierOf = (name) => {
+    const w = Object.keys(fontWeight).find((k) => name.endsWith(`-${k}`))
+    return w ? name.slice(0, -(w.length + 1)) : name
+}
 const breakpoint = tokens.breakpoint ?? {} // 반응형 브레이크포인트(px) → wide:/pc: 프리픽스
 const container = tokens.container ?? {} // 콘텐츠 최대 폭(px) → max-w-* 유틸
 const grid = tokens.grid ?? {} // 브레이크포인트별 레이아웃 그리드(columns/gutter/margin) → .grid-layout
@@ -177,6 +183,18 @@ for (const [name, t] of Object.entries(typography)) {
         errors.push(`typography.${name}.lineHeight="${t.lineHeight}" — lineHeight 에 없는 키`)
     if (t.letterSpacing !== undefined && !(t.letterSpacing in letterSpacing))
         errors.push(`typography.${name}.letterSpacing="${t.letterSpacing}" — letterSpacing 에 없는 키`)
+}
+// tier 크기 일관성 — font-size 를 tier 로 공유하므로, 같은 tier 의 굵기 변형은 크기가 같아야 한다.
+// 다르면 조용히 한 값으로 합쳐지지 않도록 빌드를 실패시킨다(굵기별로 크기가 달라야 하면 tier 공유 불가).
+const tierSize = {}
+for (const [name, t] of Object.entries(typography)) {
+    const tier = tierOf(name)
+    const key = `${t.size?.mobile}/${t.size?.pc}`
+    if (tierSize[tier] === undefined) tierSize[tier] = key
+    else if (tierSize[tier] !== key)
+        errors.push(
+            `typography tier "${tier}" — 굵기 변형 간 크기 불일치(${tierSize[tier]} vs ${key}), font-size tier 공유 불가`,
+        )
 }
 
 if (errors.length) {
@@ -472,29 +490,34 @@ if (typoNames.length) {
     for (const [k, v] of Object.entries(letterSpacing)) L.push(`  --ds-letter-spacing-${k}: ${toRem(v)};`)
     L.push('}', '')
 
-    // 2) font-size 만 토큰별 — 굵기·행간·자간은 위 primitive 라, 이 변수는 크기 하나만 담는다.
-    //    그래서 '세트'를 뜻하는 typo 가 아니라 속성명 --ds-font-size-<name> 으로 둔다(위 세 primitive
-    //    --ds-font-weight-*·--ds-line-height-*·--ds-letter-spacing- 과 동일 규칙). typo 는 세트인
-    //    .typo-* 클래스에만 남긴다. -pc 는 PC(≥typoBp) 크기. 크기는 토큰별 고유값이라 primitive 로 안 묶음.
+    // 2) font-size — 굵기·행간·자간은 위 primitive 라 이 변수는 크기만 담는다. 크기는 굵기와 무관해
+    //    tier(display-xl 등) 로 공유한다: display-xl-bold/medium/regular 3개가 --ds-font-size-display-xl
+    //    하나를 참조 → 변수 1/3. 속성명 규칙(--ds-font-weight-*…)에 맞춰 --ds-font-size-<tier>. -pc 는
+    //    PC(≥typoBp) 크기. typo(세트)는 .typo-* 클래스에만 남긴다.
     L.push(':root {')
-    L.push('  /* font-size → --ds-font-size-<name>(모바일) · -pc(PC), 토큰별 고유값 */')
+    L.push('  /* font-size → --ds-font-size-<tier>(모바일) · -pc(PC), 굵기 무관·tier 공유 */')
+    const emittedTiers = new Set()
     for (const [name, t] of Object.entries(typography)) {
-        L.push(`  --ds-font-size-${name}: ${toRem(t.size.mobile)};`)
-        L.push(`  --ds-font-size-${name}-pc: ${toRem(t.size.pc)};`)
+        const tier = tierOf(name)
+        if (emittedTiers.has(tier)) continue
+        emittedTiers.add(tier)
+        L.push(`  --ds-font-size-${tier}: ${toRem(t.size.mobile)};`)
+        L.push(`  --ds-font-size-${tier}-pc: ${toRem(t.size.pc)};`)
     }
     L.push('}', '')
 
-    // 3) .typo-* 클래스 — 네 속성 변수(font-size 는 토큰별, 나머지는 primitive)를 한 세트로 묶는다.
+    // 3) .typo-* 클래스 — 네 속성 변수(font-size 는 tier, 나머지는 primitive)를 한 세트로 묶는다.
     L.push(`@layer utilities {`)
     L.push(`  /* typography → .typo-* (모바일 기본, ${typoBp}px↑ = PC) */`)
     for (const [name, t] of Object.entries(typography)) {
+        const tier = tierOf(name)
         L.push(`  .typo-${name} {`)
-        L.push(`    font-size: var(--ds-font-size-${name});`)
+        L.push(`    font-size: var(--ds-font-size-${tier});`)
         L.push(`    font-weight: var(--ds-font-weight-${t.weight});`)
         L.push(`    line-height: var(--ds-line-height-${t.lineHeight});`)
         if (t.letterSpacing !== undefined) L.push(`    letter-spacing: var(--ds-letter-spacing-${t.letterSpacing});`)
         L.push(`    @media (min-width: ${typoBp}px) {`)
-        L.push(`      font-size: var(--ds-font-size-${name}-pc);`)
+        L.push(`      font-size: var(--ds-font-size-${tier}-pc);`)
         L.push('    }')
         L.push('  }')
     }
