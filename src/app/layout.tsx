@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-import { THEME_STORAGE_KEY } from '@/constants/theme';
+import ThemeProvider from '@/components/theme-provider';
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from '@/constants/site';
 import './globals.css';
 
@@ -37,10 +37,6 @@ export const metadata: Metadata = {
   },
 };
 
-// FOUC 방지: 첫 페인트 전에 저장된 테마(없으면 OS 설정)를 <html> 클래스로 주입.
-// localStorage 선택이 우선하고, 없으면 prefers-color-scheme 를 따른다.
-const themeInitScript = `(function(){try{let t=localStorage.getItem('${THEME_STORAGE_KEY}');if(t!=='light'&&t!=='dark'){t=window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';}document.documentElement.classList.add(t);}catch(e){}})();`;
-
 const RootLayout = ({
   children,
 }: Readonly<{
@@ -53,8 +49,7 @@ const RootLayout = ({
       className={`${pretendard.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col font-sans">
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
-        {children}
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );
