@@ -5,44 +5,15 @@ import tokens from '@tokens'
 
 export const metadata: Metadata = {title: 'Semantic'}
 
-// 각 토큰의 대표 유틸리티 클래스명 — 접두사(bg/text/border)는 역할로 결정한다.
-// border·text 그룹은 접두사 중복을 피해 토큰명이 무접두사(default·bolder…)라 집합으로 판별한다.
-const BORDER_TOKENS = new Set([
-    'default',
-    'gray-subtle-1',
-    'gray-subtle-2',
-    'gray-subtle-3',
-    'white',
-    'strong',
-    'focus',
-])
-const TEXT_TOKENS = new Set([
-    'bolder',
-    'basic',
-    'subtle',
-    'inverse',
-    'subtle-inverse',
-    'disabled',
-    'disabled-on',
-    'primary',
-    'secondary',
-    'tertiary',
-    // 상태/버튼 그룹의 foreground(읽기용 텍스트) 멤버 — bare 라서 text-* 로 매핑한다.
-    'success',
-    'warning',
-    'error',
-    'info',
-    'secondary-green',
-    'secondary-orange',
-])
-// 모든 색 토큰은 --color-* 브리지로 유틸이 생기므로 대표 유틸 클래스를 돌려준다.
-// (scroll-thumb·track 은 실제론 스크롤바 CSS 변수로 쓰지만 bg-* 유틸도 유효해 복사용으로 노출.)
-const utilClass = (name: string): string => {
-    if (BORDER_TOKENS.has(name)) return `border-${name}`
-    if (TEXT_TOKENS.has(name)) return `text-${name}`
-    if (name.startsWith('icon-')) return `text-${name}` // 아이콘은 currentColor(text-)로 색을 준다
-    if (name.includes('border')) return `border-${name}`
-    return `bg-${name}`
+// 시맨틱 색상 슬롯 하나는 --color-* 브리지를 거쳐 색을 받는 유틸리티 접두사 전부(bg-/text-/border-/
+// ring-/outline-/divide-/fill-/stroke-/decoration-/accent-/caret-/from-/via-/to- 등 13개 이상)에서
+// 실제로 유효하다. 여기선 실무에서 가장 많이 쓰는 3개(bg-/text-/border-)만 큐레이션해서 보여준다 —
+// 나머지 접두사도 전부 동작하니 필요하면 같은 슬롯 이름에 직접 붙여 쓰면 된다.
+// scroll-thumb/track 은 pseudo-element 전용이라 --color-* 유틸이 없어(build-tokens.mjs 의
+// NO_UTILITY_SLOTS) var() 임의값의 bg- 하나만 의미가 있다.
+const utilClasses = (name: string): string[] => {
+    if (name === 'scroll-thumb' || name === 'scroll-track') return [`bg-[var(--ds-${name})]`]
+    return [`bg-${name}`, `text-${name}`, `border-${name}`]
 }
 
 // 앱이 실제로 쓰는 시맨틱 토큰(--ds → bg-*/text-* 유틸)을 tokens.json 에서 그대로 문서화한다.
@@ -97,15 +68,55 @@ const toRgbaText = (color: string): string => {
     return `rgba(${r}, ${g}, ${b}, 1)`
 }
 
+// '현재' 칸 배경 유틸리티 클래스 — Tailwind 는 className 에 리터럴로 등장하는 클래스명만 스캔하므로
+// `bg-${name}` 처럼 동적으로 조합하면 생성되지 않는다. semantic 슬롯은 34개로 고정돼 있어 전부
+// 리터럴로 나열한다. scroll-thumb/track 은 pseudo-element 전용이라 --color-* 유틸이 없어(build-tokens.mjs
+// 의 NO_UTILITY_SLOTS) var() 임의값으로 대신 참조한다.
+const LIVE_SWATCH_CLASS: Record<string, string> = {
+    background: 'bg-background',
+    foreground: 'bg-foreground',
+    card: 'bg-card',
+    'card-foreground': 'bg-card-foreground',
+    popover: 'bg-popover',
+    'popover-foreground': 'bg-popover-foreground',
+    primary: 'bg-primary',
+    'primary-foreground': 'bg-primary-foreground',
+    secondary: 'bg-secondary',
+    'secondary-foreground': 'bg-secondary-foreground',
+    muted: 'bg-muted',
+    'muted-foreground': 'bg-muted-foreground',
+    accent: 'bg-accent',
+    'accent-foreground': 'bg-accent-foreground',
+    destructive: 'bg-destructive',
+    'destructive-foreground': 'bg-destructive-foreground',
+    border: 'bg-border',
+    input: 'bg-input',
+    ring: 'bg-ring',
+    'chart-1': 'bg-chart-1',
+    'chart-2': 'bg-chart-2',
+    'chart-3': 'bg-chart-3',
+    'chart-4': 'bg-chart-4',
+    'chart-5': 'bg-chart-5',
+    sidebar: 'bg-sidebar',
+    'sidebar-foreground': 'bg-sidebar-foreground',
+    'sidebar-primary': 'bg-sidebar-primary',
+    'sidebar-primary-foreground': 'bg-sidebar-primary-foreground',
+    'sidebar-accent': 'bg-sidebar-accent',
+    'sidebar-accent-foreground': 'bg-sidebar-accent-foreground',
+    'sidebar-border': 'bg-sidebar-border',
+    'sidebar-ring': 'bg-sidebar-ring',
+    'scroll-thumb': 'bg-[var(--ds-scroll-thumb)]',
+    'scroll-track': 'bg-[var(--ds-scroll-track)]',
+}
+
 // 맨 앞 '현재' 칸 — 실제 토큰을 현재 테마로 렌더. 다크 토글 시 실제로 바뀐다(파이프라인 검증).
-// :root/.dark 에 출력되는 --ds-* 를 참조한다(--color-* 는 @theme inline 이라 런타임 변수로 안 나옴).
 const LiveSwatch = ({name}: {name: string}) => (
     <span
         aria-hidden="true"
         className="border-border size-icon-lg relative block shrink-0 overflow-hidden rounded border"
         style={{background: CHECKERBOARD}}
     >
-        <span className="absolute inset-0" style={{background: `var(--ds-${name})`}} />
+        <span className={`absolute inset-0 ${LIVE_SWATCH_CLASS[name]}`} />
     </span>
 )
 
@@ -127,22 +138,19 @@ const ModeSwatch = ({color}: {color: string}) => (
 
 type SemanticEntry = [string, string | {light: string; dark: string}]
 
-// 그룹 판별 — 순서대로 첫 매칭. border·text 는 무접두사라 집합으로, 나머지는 접두사로.
+// 그룹 판별 — 순서대로 첫 매칭. shadcn 표준 슬롯의 base/-foreground 페어를 한 그룹으로 묶는다.
 const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
-    {name: 'background', match: (n) => n === 'background' || n.startsWith('background-')},
-    {name: 'surface', match: (n) => n === 'surface' || n.startsWith('surface-')},
-    {name: 'border', match: (n) => BORDER_TOKENS.has(n)},
-    {name: 'text', match: (n) => TEXT_TOKENS.has(n)},
-    {name: 'button', match: (n) => n.startsWith('button-')},
-    {name: 'input', match: (n) => n.startsWith('input-')},
-    {name: 'icon', match: (n) => n.startsWith('icon-')},
-    {name: 'element', match: (n) => n.startsWith('element-')},
-    {name: 'primary', match: (n) => n.startsWith('primary-')},
-    {name: 'secondary', match: (n) => n.startsWith('secondary-')},
-    {name: 'success', match: (n) => n.startsWith('success-')},
-    {name: 'warning', match: (n) => n.startsWith('warning-')},
-    {name: 'error', match: (n) => n.startsWith('error-')},
-    {name: 'info', match: (n) => n.startsWith('info-')},
+    {name: 'background', match: (n) => n === 'background' || n === 'foreground'},
+    {name: 'card', match: (n) => n === 'card' || n === 'card-foreground'},
+    {name: 'popover', match: (n) => n === 'popover' || n === 'popover-foreground'},
+    {name: 'primary', match: (n) => n === 'primary' || n === 'primary-foreground'},
+    {name: 'secondary', match: (n) => n === 'secondary' || n === 'secondary-foreground'},
+    {name: 'muted', match: (n) => n === 'muted' || n === 'muted-foreground'},
+    {name: 'accent', match: (n) => n === 'accent' || n === 'accent-foreground'},
+    {name: 'destructive', match: (n) => n === 'destructive' || n === 'destructive-foreground'},
+    {name: 'border / input / ring', match: (n) => n === 'border' || n === 'input' || n === 'ring'},
+    {name: 'chart', match: (n) => n.startsWith('chart-')},
+    {name: 'sidebar', match: (n) => n.startsWith('sidebar')},
     {name: '기타', match: () => true},
 ]
 const groupNameOf = (name: string): string => SEMANTIC_GROUPS.find((group) => group.match(name))?.name ?? '기타'
@@ -202,7 +210,11 @@ const SemanticTable = ({title, tokens}: {title: string; tokens: SemanticEntry[]}
                                     <LiveSwatch name={name} />
                                 </td>
                                 <th scope="row" className="px-3 py-3 text-left">
-                                    <CopyChip value={utilClass(name)} />
+                                    <span className="flex flex-wrap gap-1.5">
+                                        {utilClasses(name).map((cls) => (
+                                            <CopyChip key={cls} value={cls} />
+                                        ))}
+                                    </span>
                                 </th>
                                 <td className="px-3 py-3">
                                     <ModeSwatch color={modes.light} />
@@ -225,6 +237,14 @@ const SemanticTable = ({title, tokens}: {title: string; tokens: SemanticEntry[]}
 // 색상(Semantic) — 앱이 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
 const SemanticColorGuidePage = () => (
     <GuidePage title="02 Semantic Color" description="앱이 실제로 쓰는 시맨틱 색상 토큰을 그룹별 표로 정리했습니다.">
+        <p className="typo-body-m-regular text-muted-foreground">
+            &ldquo;클래스&rdquo; 칸의 <code className="font-mono">bg-</code>/<code className="font-mono">text-</code>/
+            <code className="font-mono">border-</code>는 자주 쓰는 3개만 고른 큐레이션입니다. 시맨틱 슬롯은 실제로{' '}
+            <code className="font-mono">ring-</code>/<code className="font-mono">outline-</code>/
+            <code className="font-mono">divide-</code>/<code className="font-mono">fill-</code>/
+            <code className="font-mono">stroke-</code> 등 색을 받는 유틸리티 접두사 13개 이상에서 전부 유효하니,
+            필요하면 같은 슬롯 이름에 원하는 접두사를 직접 붙여 쓰면 됩니다.
+        </p>
         <div className="flex flex-col gap-8">
             {GROUPED.map((group) => (
                 <SemanticTable key={group.name} title={group.name} tokens={group.tokens} />
