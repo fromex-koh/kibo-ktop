@@ -480,47 +480,47 @@ L.push('}', '')
 // 의 정식 utilities 레이어에 들어가 레이어 없는(unlayered) 클래스의 "항상 우선" 문제를 피한다.
 const typoNames = Object.keys(typography)
 if (typoNames.length) {
-    // 1) 공유 하위값 primitive — font-weight/line-height/letter-spacing 은 몇 개의 공유값이라
-    //    --ds-font-weight-*·--ds-line-height-*·--ds-letter-spacing-* 로 한 번만 낸다(color 의
-    //    primitive 처럼). "bold=700" 이 45번 복제되던 걸 한 곳으로 모은다.
+    // 1) 공유 하위값 primitive — 굵기·행간·자간은 역할이 아니라 원시값(700·1.5·0)이라, 색상 primitive
+    //    (--raw-blue-500)와 같은 --raw-* 네임스페이스에 둔다. font-weight/line-height/letter-spacing 은
+    //    몇 개의 공유값이라 한 번만 낸다("bold=700" 이 45번 복제되던 걸 모음). .typo-* 가 이 원시를 소비한다.
     L.push(':root {')
-    L.push('  /* typography primitive — 공유 하위값(굵기·행간·자간). typo 토큰이 이름으로 참조 */')
-    for (const [k, v] of Object.entries(fontWeight)) L.push(`  --ds-font-weight-${k}: ${v};`)
-    for (const [k, v] of Object.entries(lineHeight)) L.push(`  --ds-line-height-${k}: ${v};`)
-    for (const [k, v] of Object.entries(letterSpacing)) L.push(`  --ds-letter-spacing-${k}: ${toRem(v)};`)
+    L.push('  /* typography primitive — 원시 하위값(굵기·행간·자간). color 처럼 --raw-*, typo 가 이름 참조 */')
+    for (const [k, v] of Object.entries(fontWeight)) L.push(`  --raw-font-weight-${k}: ${v};`)
+    for (const [k, v] of Object.entries(lineHeight)) L.push(`  --raw-line-height-${k}: ${v};`)
+    for (const [k, v] of Object.entries(letterSpacing)) L.push(`  --raw-letter-spacing-${k}: ${toRem(v)};`)
     L.push('}', '')
 
-    // 2) font-size — 굵기·행간·자간은 위 primitive 라 이 변수는 크기만 담는다. 크기는 굵기와 무관해
-    //    tier(display-xl 등) 로 공유한다: display-xl-bold/medium/regular 3개가 --ds-font-size-display-xl
-    //    하나를 참조 → 변수 1/3. 속성명 규칙(--ds-font-weight-*…)에 맞춰 --ds-font-size-<tier>. -pc 는
-    //    PC(≥typoBp) 크기. mobile/pc 페어는 반응형 타이포 대비 항상 낸다. 단, pc==mobile 이면 값 리터럴을
-    //    반복하지 않고 -pc 가 base 변수를 참조 → 값은 단일 소스, pc 만 다르면 그 tier 에 실제 값이 들어간다.
-    //    typo(세트)는 .typo-* 클래스에만 남긴다.
+    // 2) font-size primitive — 크기도 원시 스케일값이라 --raw-font-size-*(색상 스케일 --raw-blue-* 와 동렬).
+    //    굵기·행간·자간은 위 primitive 라 이 변수는 크기만 담는다. 크기는 굵기와 무관해 tier(display-xl
+    //    등) 로 공유한다: display-xl-bold/medium/regular 3개가 --raw-font-size-display-xl 하나를 참조 →
+    //    변수 1/3. -pc 는 PC(≥typoBp) 크기. mobile/pc 페어는 반응형 타이포 대비 항상 낸다. 단, pc==mobile
+    //    이면 값 리터럴을 반복하지 않고 -pc 가 base 를 참조 → 값 단일 소스. typo(세트)는 .typo-* 클래스에만.
     L.push(':root {')
-    L.push('  /* font-size → --ds-font-size-<tier>(모바일) · -pc(PC), 굵기 무관·tier 공유 */')
+    L.push('  /* font-size primitive → --raw-font-size-<tier>(모바일) · -pc(PC), 굵기 무관·tier 공유 */')
     const emittedTiers = new Set()
     for (const [name, t] of Object.entries(typography)) {
         const tier = tierOf(name)
         if (emittedTiers.has(tier)) continue
         emittedTiers.add(tier)
-        L.push(`  --ds-font-size-${tier}: ${toRem(t.size.mobile)};`)
-        const pc = t.size.pc === t.size.mobile ? `var(--ds-font-size-${tier})` : toRem(t.size.pc)
-        L.push(`  --ds-font-size-${tier}-pc: ${pc};`)
+        L.push(`  --raw-font-size-${tier}: ${toRem(t.size.mobile)};`)
+        const pc = t.size.pc === t.size.mobile ? `var(--raw-font-size-${tier})` : toRem(t.size.pc)
+        L.push(`  --raw-font-size-${tier}-pc: ${pc};`)
     }
     L.push('}', '')
 
-    // 3) .typo-* 클래스 — 네 속성 변수(font-size 는 tier, 나머지는 primitive)를 한 세트로 묶는다.
+    // 3) .typo-* 클래스 = 타이포의 semantic 층 — 네 원시(primitive)를 한 세트로 묶는다(색상 semantic 이
+    //    --raw-* 를 참조하는 것과 동일 구조). font-size 는 tier, 나머지는 공유 primitive.
     L.push(`@layer utilities {`)
     L.push(`  /* typography → .typo-* (모바일 기본, ${typoBp}px↑ = PC) */`)
     for (const [name, t] of Object.entries(typography)) {
         const tier = tierOf(name)
         L.push(`  .typo-${name} {`)
-        L.push(`    font-size: var(--ds-font-size-${tier});`)
-        L.push(`    font-weight: var(--ds-font-weight-${t.weight});`)
-        L.push(`    line-height: var(--ds-line-height-${t.lineHeight});`)
-        if (t.letterSpacing !== undefined) L.push(`    letter-spacing: var(--ds-letter-spacing-${t.letterSpacing});`)
+        L.push(`    font-size: var(--raw-font-size-${tier});`)
+        L.push(`    font-weight: var(--raw-font-weight-${t.weight});`)
+        L.push(`    line-height: var(--raw-line-height-${t.lineHeight});`)
+        if (t.letterSpacing !== undefined) L.push(`    letter-spacing: var(--raw-letter-spacing-${t.letterSpacing});`)
         L.push(`    @media (min-width: ${typoBp}px) {`)
-        L.push(`      font-size: var(--ds-font-size-${tier}-pc);`)
+        L.push(`      font-size: var(--raw-font-size-${tier}-pc);`)
         L.push('    }')
         L.push('  }')
     }

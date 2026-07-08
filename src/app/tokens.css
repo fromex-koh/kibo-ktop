@@ -586,453 +586,453 @@
 }
 
 :root {
-  /* typography primitive — 공유 하위값(굵기·행간·자간). typo 토큰이 이름으로 참조 */
-  --ds-font-weight-regular: 400;
-  --ds-font-weight-medium: 500;
-  --ds-font-weight-bold: 700;
-  --ds-line-height-normal: 1.5;
-  --ds-letter-spacing-normal: 0;
+  /* typography primitive — 원시 하위값(굵기·행간·자간). color 처럼 --raw-*, typo 가 이름 참조 */
+  --raw-font-weight-regular: 400;
+  --raw-font-weight-medium: 500;
+  --raw-font-weight-bold: 700;
+  --raw-line-height-normal: 1.5;
+  --raw-letter-spacing-normal: 0;
 }
 
 :root {
-  /* font-size → --ds-font-size-<tier>(모바일) · -pc(PC), 굵기 무관·tier 공유 */
-  --ds-font-size-display-xl: 3rem;
-  --ds-font-size-display-xl-pc: var(--ds-font-size-display-xl);
-  --ds-font-size-display-l: 2.5rem;
-  --ds-font-size-display-l-pc: var(--ds-font-size-display-l);
-  --ds-font-size-display-m: 2.25rem;
-  --ds-font-size-display-m-pc: var(--ds-font-size-display-m);
-  --ds-font-size-h1: 2rem;
-  --ds-font-size-h1-pc: var(--ds-font-size-h1);
-  --ds-font-size-h2: 1.75rem;
-  --ds-font-size-h2-pc: var(--ds-font-size-h2);
-  --ds-font-size-h3: 1.625rem;
-  --ds-font-size-h3-pc: var(--ds-font-size-h3);
-  --ds-font-size-h4: 1.5rem;
-  --ds-font-size-h4-pc: var(--ds-font-size-h4);
-  --ds-font-size-title-xl: 1.375rem;
-  --ds-font-size-title-xl-pc: var(--ds-font-size-title-xl);
-  --ds-font-size-title-l: 1.25rem;
-  --ds-font-size-title-l-pc: var(--ds-font-size-title-l);
-  --ds-font-size-title-m: 1.125rem;
-  --ds-font-size-title-m-pc: var(--ds-font-size-title-m);
-  --ds-font-size-body-xl: 1rem;
-  --ds-font-size-body-xl-pc: var(--ds-font-size-body-xl);
-  --ds-font-size-body-l: 0.875rem;
-  --ds-font-size-body-l-pc: var(--ds-font-size-body-l);
-  --ds-font-size-body-m: 0.8125rem;
-  --ds-font-size-body-m-pc: var(--ds-font-size-body-m);
-  --ds-font-size-caption: 0.75rem;
-  --ds-font-size-caption-pc: var(--ds-font-size-caption);
-  --ds-font-size-micro: 0.6875rem;
-  --ds-font-size-micro-pc: var(--ds-font-size-micro);
+  /* font-size primitive → --raw-font-size-<tier>(모바일) · -pc(PC), 굵기 무관·tier 공유 */
+  --raw-font-size-display-xl: 3rem;
+  --raw-font-size-display-xl-pc: var(--raw-font-size-display-xl);
+  --raw-font-size-display-l: 2.5rem;
+  --raw-font-size-display-l-pc: var(--raw-font-size-display-l);
+  --raw-font-size-display-m: 2.25rem;
+  --raw-font-size-display-m-pc: var(--raw-font-size-display-m);
+  --raw-font-size-h1: 2rem;
+  --raw-font-size-h1-pc: var(--raw-font-size-h1);
+  --raw-font-size-h2: 1.75rem;
+  --raw-font-size-h2-pc: var(--raw-font-size-h2);
+  --raw-font-size-h3: 1.625rem;
+  --raw-font-size-h3-pc: var(--raw-font-size-h3);
+  --raw-font-size-h4: 1.5rem;
+  --raw-font-size-h4-pc: var(--raw-font-size-h4);
+  --raw-font-size-title-xl: 1.375rem;
+  --raw-font-size-title-xl-pc: var(--raw-font-size-title-xl);
+  --raw-font-size-title-l: 1.25rem;
+  --raw-font-size-title-l-pc: var(--raw-font-size-title-l);
+  --raw-font-size-title-m: 1.125rem;
+  --raw-font-size-title-m-pc: var(--raw-font-size-title-m);
+  --raw-font-size-body-xl: 1rem;
+  --raw-font-size-body-xl-pc: var(--raw-font-size-body-xl);
+  --raw-font-size-body-l: 0.875rem;
+  --raw-font-size-body-l-pc: var(--raw-font-size-body-l);
+  --raw-font-size-body-m: 0.8125rem;
+  --raw-font-size-body-m-pc: var(--raw-font-size-body-m);
+  --raw-font-size-caption: 0.75rem;
+  --raw-font-size-caption-pc: var(--raw-font-size-caption);
+  --raw-font-size-micro: 0.6875rem;
+  --raw-font-size-micro-pc: var(--raw-font-size-micro);
 }
 
 @layer utilities {
   /* typography → .typo-* (모바일 기본, 768px↑ = PC) */
   .typo-display-xl-bold {
-    font-size: var(--ds-font-size-display-xl);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-display-xl);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-display-xl-pc);
+      font-size: var(--raw-font-size-display-xl-pc);
     }
   }
   .typo-display-xl-medium {
-    font-size: var(--ds-font-size-display-xl);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-display-xl);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-display-xl-pc);
+      font-size: var(--raw-font-size-display-xl-pc);
     }
   }
   .typo-display-xl-regular {
-    font-size: var(--ds-font-size-display-xl);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-display-xl);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-display-xl-pc);
+      font-size: var(--raw-font-size-display-xl-pc);
     }
   }
   .typo-display-l-bold {
-    font-size: var(--ds-font-size-display-l);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-display-l);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-display-l-pc);
+      font-size: var(--raw-font-size-display-l-pc);
     }
   }
   .typo-display-l-medium {
-    font-size: var(--ds-font-size-display-l);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-display-l);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-display-l-pc);
+      font-size: var(--raw-font-size-display-l-pc);
     }
   }
   .typo-display-l-regular {
-    font-size: var(--ds-font-size-display-l);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-display-l);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-display-l-pc);
+      font-size: var(--raw-font-size-display-l-pc);
     }
   }
   .typo-display-m-bold {
-    font-size: var(--ds-font-size-display-m);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-display-m);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-display-m-pc);
+      font-size: var(--raw-font-size-display-m-pc);
     }
   }
   .typo-display-m-medium {
-    font-size: var(--ds-font-size-display-m);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-display-m);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-display-m-pc);
+      font-size: var(--raw-font-size-display-m-pc);
     }
   }
   .typo-display-m-regular {
-    font-size: var(--ds-font-size-display-m);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-display-m);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-display-m-pc);
+      font-size: var(--raw-font-size-display-m-pc);
     }
   }
   .typo-h1-bold {
-    font-size: var(--ds-font-size-h1);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h1);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h1-pc);
+      font-size: var(--raw-font-size-h1-pc);
     }
   }
   .typo-h1-medium {
-    font-size: var(--ds-font-size-h1);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h1);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h1-pc);
+      font-size: var(--raw-font-size-h1-pc);
     }
   }
   .typo-h1-regular {
-    font-size: var(--ds-font-size-h1);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h1);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h1-pc);
+      font-size: var(--raw-font-size-h1-pc);
     }
   }
   .typo-h2-bold {
-    font-size: var(--ds-font-size-h2);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h2);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h2-pc);
+      font-size: var(--raw-font-size-h2-pc);
     }
   }
   .typo-h2-medium {
-    font-size: var(--ds-font-size-h2);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h2);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h2-pc);
+      font-size: var(--raw-font-size-h2-pc);
     }
   }
   .typo-h2-regular {
-    font-size: var(--ds-font-size-h2);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h2);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h2-pc);
+      font-size: var(--raw-font-size-h2-pc);
     }
   }
   .typo-h3-bold {
-    font-size: var(--ds-font-size-h3);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h3);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h3-pc);
+      font-size: var(--raw-font-size-h3-pc);
     }
   }
   .typo-h3-medium {
-    font-size: var(--ds-font-size-h3);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h3);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h3-pc);
+      font-size: var(--raw-font-size-h3-pc);
     }
   }
   .typo-h3-regular {
-    font-size: var(--ds-font-size-h3);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h3);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h3-pc);
+      font-size: var(--raw-font-size-h3-pc);
     }
   }
   .typo-h4-bold {
-    font-size: var(--ds-font-size-h4);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h4);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h4-pc);
+      font-size: var(--raw-font-size-h4-pc);
     }
   }
   .typo-h4-medium {
-    font-size: var(--ds-font-size-h4);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h4);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h4-pc);
+      font-size: var(--raw-font-size-h4-pc);
     }
   }
   .typo-h4-regular {
-    font-size: var(--ds-font-size-h4);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-h4);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-h4-pc);
+      font-size: var(--raw-font-size-h4-pc);
     }
   }
   .typo-title-xl-bold {
-    font-size: var(--ds-font-size-title-xl);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-title-xl);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-title-xl-pc);
+      font-size: var(--raw-font-size-title-xl-pc);
     }
   }
   .typo-title-xl-medium {
-    font-size: var(--ds-font-size-title-xl);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-title-xl);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-title-xl-pc);
+      font-size: var(--raw-font-size-title-xl-pc);
     }
   }
   .typo-title-xl-regular {
-    font-size: var(--ds-font-size-title-xl);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-title-xl);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-title-xl-pc);
+      font-size: var(--raw-font-size-title-xl-pc);
     }
   }
   .typo-title-l-bold {
-    font-size: var(--ds-font-size-title-l);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-title-l);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-title-l-pc);
+      font-size: var(--raw-font-size-title-l-pc);
     }
   }
   .typo-title-l-medium {
-    font-size: var(--ds-font-size-title-l);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-title-l);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-title-l-pc);
+      font-size: var(--raw-font-size-title-l-pc);
     }
   }
   .typo-title-l-regular {
-    font-size: var(--ds-font-size-title-l);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-title-l);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-title-l-pc);
+      font-size: var(--raw-font-size-title-l-pc);
     }
   }
   .typo-title-m-bold {
-    font-size: var(--ds-font-size-title-m);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-title-m);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-title-m-pc);
+      font-size: var(--raw-font-size-title-m-pc);
     }
   }
   .typo-title-m-medium {
-    font-size: var(--ds-font-size-title-m);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-title-m);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-title-m-pc);
+      font-size: var(--raw-font-size-title-m-pc);
     }
   }
   .typo-title-m-regular {
-    font-size: var(--ds-font-size-title-m);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-title-m);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-title-m-pc);
+      font-size: var(--raw-font-size-title-m-pc);
     }
   }
   .typo-body-xl-bold {
-    font-size: var(--ds-font-size-body-xl);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-body-xl);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-body-xl-pc);
+      font-size: var(--raw-font-size-body-xl-pc);
     }
   }
   .typo-body-xl-medium {
-    font-size: var(--ds-font-size-body-xl);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-body-xl);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-body-xl-pc);
+      font-size: var(--raw-font-size-body-xl-pc);
     }
   }
   .typo-body-xl-regular {
-    font-size: var(--ds-font-size-body-xl);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-body-xl);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-body-xl-pc);
+      font-size: var(--raw-font-size-body-xl-pc);
     }
   }
   .typo-body-l-bold {
-    font-size: var(--ds-font-size-body-l);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-body-l);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-body-l-pc);
+      font-size: var(--raw-font-size-body-l-pc);
     }
   }
   .typo-body-l-medium {
-    font-size: var(--ds-font-size-body-l);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-body-l);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-body-l-pc);
+      font-size: var(--raw-font-size-body-l-pc);
     }
   }
   .typo-body-l-regular {
-    font-size: var(--ds-font-size-body-l);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-body-l);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-body-l-pc);
+      font-size: var(--raw-font-size-body-l-pc);
     }
   }
   .typo-body-m-bold {
-    font-size: var(--ds-font-size-body-m);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-body-m);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-body-m-pc);
+      font-size: var(--raw-font-size-body-m-pc);
     }
   }
   .typo-body-m-medium {
-    font-size: var(--ds-font-size-body-m);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-body-m);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-body-m-pc);
+      font-size: var(--raw-font-size-body-m-pc);
     }
   }
   .typo-body-m-regular {
-    font-size: var(--ds-font-size-body-m);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-body-m);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-body-m-pc);
+      font-size: var(--raw-font-size-body-m-pc);
     }
   }
   .typo-caption-bold {
-    font-size: var(--ds-font-size-caption);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-caption);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-caption-pc);
+      font-size: var(--raw-font-size-caption-pc);
     }
   }
   .typo-caption-medium {
-    font-size: var(--ds-font-size-caption);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-caption);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-caption-pc);
+      font-size: var(--raw-font-size-caption-pc);
     }
   }
   .typo-caption-regular {
-    font-size: var(--ds-font-size-caption);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-caption);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-caption-pc);
+      font-size: var(--raw-font-size-caption-pc);
     }
   }
   .typo-micro-bold {
-    font-size: var(--ds-font-size-micro);
-    font-weight: var(--ds-font-weight-bold);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-micro);
+    font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-micro-pc);
+      font-size: var(--raw-font-size-micro-pc);
     }
   }
   .typo-micro-medium {
-    font-size: var(--ds-font-size-micro);
-    font-weight: var(--ds-font-weight-medium);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-micro);
+    font-weight: var(--raw-font-weight-medium);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-micro-pc);
+      font-size: var(--raw-font-size-micro-pc);
     }
   }
   .typo-micro-regular {
-    font-size: var(--ds-font-size-micro);
-    font-weight: var(--ds-font-weight-regular);
-    line-height: var(--ds-line-height-normal);
-    letter-spacing: var(--ds-letter-spacing-normal);
+    font-size: var(--raw-font-size-micro);
+    font-weight: var(--raw-font-weight-regular);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-font-size-micro-pc);
+      font-size: var(--raw-font-size-micro-pc);
     }
   }
 }
