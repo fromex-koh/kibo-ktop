@@ -47,27 +47,27 @@
 /* PageHeader compact 변형 전용 합성 typo — 이름이 다른 두 typo 토큰을 브레이크포인트(768px)에서
    전환한다. typo-* 는 순수 CSS 클래스(@layer utilities 원시 클래스)라 wide: 프리픽스도 @apply 도
    받지 못해, 이 전환만 전용 합성 유틸로 뺐다. 값은 생성된 토큰 변수 참조 — 크기는 토큰별
-   --ds-typo-<name>, 굵기·행간·자간은 공유 primitive(--ds-font-weight-*·--ds-line-height-*·
+   --ds-font-size-<name>, 굵기·행간·자간은 공유 primitive(--ds-font-weight-*·--ds-line-height-*·
    --ds-letter-spacing-*). 두 전환 토큰이 같은 primitive(bold/normal)를 공유해 768px 에선 크기만 바뀐다.
    · title: Heading/H4/bold(mobile) → Display/M/bold(≥768px)
    · description: Body/XL/Regular(mobile) → Title/L/Regular(≥768px) */
 @layer utilities {
     .typo-page-header-title-compact {
-        font-size: var(--ds-typo-h4-bold);
+        font-size: var(--ds-font-size-h4-bold);
         font-weight: var(--ds-font-weight-bold);
         line-height: var(--ds-line-height-normal);
         letter-spacing: var(--ds-letter-spacing-normal);
         @media (min-width: 768px) {
-            font-size: var(--ds-typo-display-m-bold);
+            font-size: var(--ds-font-size-display-m-bold);
         }
     }
     .typo-page-header-description-compact {
-        font-size: var(--ds-typo-body-xl-regular);
+        font-size: var(--ds-font-size-body-xl-regular);
         font-weight: var(--ds-font-weight-regular);
         line-height: var(--ds-line-height-normal);
         letter-spacing: var(--ds-letter-spacing-normal);
         @media (min-width: 768px) {
-            font-size: var(--ds-typo-title-l-regular);
+            font-size: var(--ds-font-size-title-l-regular);
         }
     }
 }

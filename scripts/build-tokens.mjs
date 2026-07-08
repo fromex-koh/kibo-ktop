@@ -472,28 +472,29 @@ if (typoNames.length) {
     for (const [k, v] of Object.entries(letterSpacing)) L.push(`  --ds-letter-spacing-${k}: ${toRem(v)};`)
     L.push('}', '')
 
-    // 2) 크기만 토큰별. typo 토큰의 per-token 값은 이제 크기 하나뿐이라(굵기·행간·자간은 위 primitive)
-    //    속성명 접미사 없이 --ds-typo-<name> 자체가 그 크기다(다른 토큰 --ds-radius-md·--ds-z-modal 처럼).
-    //    -pc 는 PC(≥typoBp) 크기. 크기는 토큰마다 다른 고유값이라 primitive 로 묶지 않는다.
+    // 2) font-size 만 토큰별 — 굵기·행간·자간은 위 primitive 라, 이 변수는 크기 하나만 담는다.
+    //    그래서 '세트'를 뜻하는 typo 가 아니라 속성명 --ds-font-size-<name> 으로 둔다(위 세 primitive
+    //    --ds-font-weight-*·--ds-line-height-*·--ds-letter-spacing- 과 동일 규칙). typo 는 세트인
+    //    .typo-* 클래스에만 남긴다. -pc 는 PC(≥typoBp) 크기. 크기는 토큰별 고유값이라 primitive 로 안 묶음.
     L.push(':root {')
-    L.push('  /* typography 크기 → --ds-typo-<name>(모바일) · --ds-typo-<name>-pc(PC), 토큰별 고유값 */')
+    L.push('  /* font-size → --ds-font-size-<name>(모바일) · -pc(PC), 토큰별 고유값 */')
     for (const [name, t] of Object.entries(typography)) {
-        L.push(`  --ds-typo-${name}: ${toRem(t.size.mobile)};`)
-        L.push(`  --ds-typo-${name}-pc: ${toRem(t.size.pc)};`)
+        L.push(`  --ds-font-size-${name}: ${toRem(t.size.mobile)};`)
+        L.push(`  --ds-font-size-${name}-pc: ${toRem(t.size.pc)};`)
     }
     L.push('}', '')
 
-    // 3) .typo-* 클래스 — size 는 토큰별 변수, weight/line-height/letter-spacing 은 primitive 참조.
+    // 3) .typo-* 클래스 — 네 속성 변수(font-size 는 토큰별, 나머지는 primitive)를 한 세트로 묶는다.
     L.push(`@layer utilities {`)
     L.push(`  /* typography → .typo-* (모바일 기본, ${typoBp}px↑ = PC) */`)
     for (const [name, t] of Object.entries(typography)) {
         L.push(`  .typo-${name} {`)
-        L.push(`    font-size: var(--ds-typo-${name});`)
+        L.push(`    font-size: var(--ds-font-size-${name});`)
         L.push(`    font-weight: var(--ds-font-weight-${t.weight});`)
         L.push(`    line-height: var(--ds-line-height-${t.lineHeight});`)
         if (t.letterSpacing !== undefined) L.push(`    letter-spacing: var(--ds-letter-spacing-${t.letterSpacing});`)
         L.push(`    @media (min-width: ${typoBp}px) {`)
-        L.push(`      font-size: var(--ds-typo-${name}-pc);`)
+        L.push(`      font-size: var(--ds-font-size-${name}-pc);`)
         L.push('    }')
         L.push('  }')
     }
