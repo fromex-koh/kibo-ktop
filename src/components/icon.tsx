@@ -20,7 +20,7 @@ const Icon = ({ icon: Glyph, variant = 'outline', className = '' }: IconProps) =
     return (
       <span
         aria-hidden="true"
-        className={`bg-info-surface text-info-text inline-flex items-center justify-center rounded-full ${className}`.trim()}
+        className={`bg-info-surface text-info inline-flex items-center justify-center rounded-full ${className}`.trim()}
       >
         {/* 배지의 60% 로 여백을 둔다(고정 px 아닌 비율이라 어느 size-icon-* 에도 맞는다). */}
         <Glyph style={{ width: '60%', height: '60%' }} />

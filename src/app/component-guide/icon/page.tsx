@@ -270,7 +270,7 @@ const IconGuidePage = () => (
               key={item.name}
               className="border-gray-subtle-2 flex flex-col items-center gap-3 rounded-md border p-4"
             >
-              <span className="bg-info-surface text-info-text size-icon-xl flex items-center justify-center rounded-full">
+              <span className="bg-info-surface text-info size-icon-xl flex items-center justify-center rounded-full">
                 {item.kind === 'icon' ? (
                   <item.Glyph aria-hidden="true" className="size-icon-md" />
                 ) : (
@@ -359,7 +359,7 @@ const IconGuidePage = () => (
                   className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
                 >
                   icon
-                  <span aria-hidden="true" className="text-error-text">
+                  <span aria-hidden="true" className="text-error">
                     *
                   </span>
                   <span className="sr-only"> (필수)</span>

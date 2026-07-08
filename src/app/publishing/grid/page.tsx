@@ -50,7 +50,7 @@ const GridPreviewPage = () => (
           aria-hidden="true"
           className={`${getGridRevealClass(i)} bg-error-base/15 border-error-base/40 h-20 items-center justify-center rounded-md border`}
         >
-          <span className="bg-surface border-error-base text-error-text typo-caption-regular flex size-7 items-center justify-center rounded-full border-2">
+          <span className="bg-surface border-error-base text-error typo-caption-regular flex size-7 items-center justify-center rounded-full border-2">
             {i + 1}
           </span>
         </span>

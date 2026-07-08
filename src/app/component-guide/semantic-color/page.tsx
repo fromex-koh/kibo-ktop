@@ -15,7 +15,6 @@ const BORDER_TOKENS = new Set([
   'white',
   'strong',
   'focus',
-  'error',
 ]);
 const TEXT_TOKENS = new Set([
   'bolder',
@@ -28,6 +27,13 @@ const TEXT_TOKENS = new Set([
   'primary',
   'secondary',
   'tertiary',
+  // 상태/버튼 그룹의 foreground(읽기용 텍스트) 멤버 — bare 라서 text-* 로 매핑한다.
+  'success',
+  'warning',
+  'error',
+  'info',
+  'secondary-green',
+  'secondary-orange',
 ]);
 // 모든 색 토큰은 --color-* 브리지로 유틸이 생기므로 대표 유틸 클래스를 돌려준다.
 // (scroll-thumb·track 은 실제론 스크롤바 CSS 변수로 쓰지만 bg-* 유틸도 유효해 복사용으로 노출.)
@@ -35,7 +41,6 @@ const utilClass = (name: string): string => {
   if (BORDER_TOKENS.has(name)) return `border-${name}`;
   if (TEXT_TOKENS.has(name)) return `text-${name}`;
   if (name.startsWith('icon-')) return `text-${name}`; // 아이콘은 currentColor(text-)로 색을 준다
-  if (name.endsWith('-text')) return `text-${name}`; // primary/secondary 의 text 멤버
   if (name.includes('border')) return `border-${name}`;
   return `bg-${name}`;
 };
