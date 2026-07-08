@@ -33,9 +33,9 @@ const SidebarLayoutDemo = () => {
             왼쪽 사이드 메뉴는 실제 컴포넌트 가이드와 동일한 목록을 그대로 재사용하고 항목을
             클릭하면 실제 해당 페이지로 이동하므로, 이 안내가 없으면 이 화면 자체를 진짜
             가이드 페이지로 착각하기 쉽다. */}
-                <div className="border-info-border bg-info-surface flex items-start gap-3 rounded-md border p-4">
-                    <Info aria-hidden="true" className="text-info mt-0.5 size-5 shrink-0" />
-                    <p className="typo-body-l-regular text-info">
+                <div className="border-primary bg-primary/10 flex items-start gap-3 rounded-md border p-4">
+                    <Info aria-hidden="true" className="text-primary mt-0.5 size-5 shrink-0" />
+                    <p className="typo-body-l-regular text-primary">
                         <strong className="font-semibold">이 페이지는 실제 화면이 아니라 예시입니다.</strong>{' '}
                         <code>SidebarLayout</code> 컴포넌트의 레이아웃(고정 레일·오프캔버스 드로어)만 확인하기 위한
                         것으로, 아래 콘텐츠 블록은 더미입니다. 왼쪽 사이드 메뉴는 실제 컴포넌트 가이드와 같은 목록이라
@@ -48,9 +48,9 @@ const SidebarLayoutDemo = () => {
                     {Array.from({length: 6}).map((_, i) => (
                         <div
                             key={i}
-                            className="border-gray-subtle-2 bg-surface col-span-4 flex aspect-video items-center justify-center rounded-xl border"
+                            className="border-border bg-card col-span-4 flex aspect-video items-center justify-center rounded-xl border"
                         >
-                            <span className="typo-caption-regular text-subtle">더미 콘텐츠 블록 {i + 1}</span>
+                            <span className="typo-caption-regular text-muted-foreground">더미 콘텐츠 블록 {i + 1}</span>
                         </div>
                     ))}
                 </div>

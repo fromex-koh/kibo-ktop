@@ -12,32 +12,41 @@ const RadiusGuidePage = () => (
         <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left">
                 <thead>
-                    <tr className="border-gray-subtle-2 border-b">
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                    <tr className="border-border border-b">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             미리보기
                         </th>
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             클래스 (클릭 복사)
                         </th>
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             값
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     {Object.entries(tokens.radius).map(([k, px]) => (
-                        <tr key={k} className="border-gray-subtle-2 hover:bg-surface border-b transition-colors">
+                        <tr key={k} className="border-border hover:bg-card border-b transition-colors">
                             <td className="px-3 py-3">
                                 <span
                                     aria-hidden="true"
-                                    className="bg-surface border-gray-subtle-2 block size-16 border"
+                                    className="bg-card border-border block size-16 border"
                                     style={{borderRadius: `var(--ds-radius-${k})`}}
                                 />
                             </td>
                             <th scope="row" className="px-3 py-3 text-left font-normal">
                                 <CopyChip value={`rounded-${k}`} />
                             </th>
-                            <td className="typo-caption-regular text-subtle px-3 py-3 font-mono whitespace-nowrap">
+                            <td className="typo-caption-regular text-muted-foreground px-3 py-3 font-mono whitespace-nowrap">
                                 {typeof px === 'number' ? `${px}px` : px}
                             </td>
                         </tr>

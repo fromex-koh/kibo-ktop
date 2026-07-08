@@ -102,7 +102,7 @@ const toRgbaText = (color: string): string => {
 const LiveSwatch = ({name}: {name: string}) => (
     <span
         aria-hidden="true"
-        className="border-gray-subtle-2 size-icon-lg relative block shrink-0 overflow-hidden rounded border"
+        className="border-border size-icon-lg relative block shrink-0 overflow-hidden rounded border"
         style={{background: CHECKERBOARD}}
     >
         <span className="absolute inset-0" style={{background: `var(--ds-${name})`}} />
@@ -114,12 +114,14 @@ const ModeSwatch = ({color}: {color: string}) => (
     <span className="flex items-center gap-3">
         <span
             aria-hidden="true"
-            className="border-gray-subtle-2 size-icon-md relative shrink-0 overflow-hidden rounded border"
+            className="border-border size-icon-md relative shrink-0 overflow-hidden rounded border"
             style={{background: CHECKERBOARD}}
         >
             <span className="absolute inset-0" style={{background: color}} />
         </span>
-        <span className="typo-caption-regular text-subtle font-mono whitespace-nowrap">{toRgbaText(color)}</span>
+        <span className="typo-caption-regular text-muted-foreground font-mono whitespace-nowrap">
+            {toRgbaText(color)}
+        </span>
     </span>
 )
 
@@ -154,24 +156,39 @@ const GROUPED = SEMANTIC_GROUPS.map((group) => ({
 // 그룹 하나 = 독립 테이블. 현재(라이브)·클래스(클릭 복사)·라이트·다크·참조 primitive.
 const SemanticTable = ({title, tokens}: {title: string; tokens: SemanticEntry[]}) => (
     <section className="flex flex-col gap-2">
-        <h2 className="typo-body-l-medium text-bolder font-semibold">{title}</h2>
+        <h2 className="typo-body-l-medium text-foreground font-semibold">{title}</h2>
         <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left">
                 <thead>
-                    <tr className="border-gray-subtle-2 border-b">
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                    <tr className="border-border border-b">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             현재
                         </th>
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             클래스 (클릭 복사)
                         </th>
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             라이트
                         </th>
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             다크
                         </th>
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             참조 primitive
                         </th>
                     </tr>
@@ -180,7 +197,7 @@ const SemanticTable = ({title, tokens}: {title: string; tokens: SemanticEntry[]}
                     {tokens.map(([name, val]) => {
                         const modes = resolveModes(val)
                         return (
-                            <tr key={name} className="border-gray-subtle-2 hover:bg-surface border-b transition-colors">
+                            <tr key={name} className="border-border hover:bg-card border-b transition-colors">
                                 <td className="px-3 py-3">
                                     <LiveSwatch name={name} />
                                 </td>
@@ -193,7 +210,7 @@ const SemanticTable = ({title, tokens}: {title: string; tokens: SemanticEntry[]}
                                 <td className="px-3 py-3">
                                     <ModeSwatch color={modes.dark} />
                                 </td>
-                                <td className="typo-caption-regular text-subtle px-3 py-3 font-mono whitespace-nowrap">
+                                <td className="typo-caption-regular text-muted-foreground px-3 py-3 font-mono whitespace-nowrap">
                                     {refLabel(val)}
                                 </td>
                             </tr>

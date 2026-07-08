@@ -193,17 +193,14 @@ const ratio = (a, b) => {
     const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x)
     return (hi + 0.05) / (lo + 0.05)
 }
-// WCAG: 본문 텍스트 4.5:1 / 큰 텍스트·아이콘·UI 그래픽 3:1 (1.4.3, 1.4.11)
+// WCAG: 본문 텍스트 4.5:1 (1.4.3)
 const TEXT = 4.5
-const NONTEXT = 3
+// shadcn 슬롯 기준 — 시맨틱 이름이 슬롯 세트로 교체되어 검사 대상도 슬롯으로 맞춘다.
 const CHECKS = [
-    {fg: 'bolder', bg: 'background', min: TEXT, kind: '본문 텍스트'},
-    {fg: 'subtle', bg: 'background', min: TEXT, kind: '보조 텍스트'},
-    {fg: 'primary', bg: 'surface', min: TEXT, kind: '링크 텍스트'},
-    {fg: 'error', bg: 'error-surface', min: NONTEXT, kind: '상태 텍스트'},
-    {fg: 'warning', bg: 'warning-surface', min: NONTEXT, kind: '상태 텍스트'},
-    {fg: 'success', bg: 'success-surface', min: NONTEXT, kind: '상태 텍스트'},
-    {fg: 'info', bg: 'info-surface', min: NONTEXT, kind: '상태 텍스트'},
+    {fg: 'foreground', bg: 'background', min: TEXT, kind: '본문 텍스트'},
+    {fg: 'muted-foreground', bg: 'background', min: TEXT, kind: '보조 텍스트'},
+    {fg: 'primary', bg: 'background', min: TEXT, kind: '링크 텍스트'},
+    {fg: 'primary-foreground', bg: 'primary', min: TEXT, kind: '버튼 텍스트'},
 ]
 for (const {fg, bg, min, kind} of CHECKS) {
     for (const mode of ['light', 'dark']) {
@@ -282,6 +279,43 @@ if (Object.keys(overlay).length) {
 }
 L.push('}', '')
 
+// shadcn 공식 템플릿이 제공하는 시맨틱 슬롯 이름(https://ui.shadcn.com/docs/theming) — 고정 목록.
+// 이 이름들은 shadcn 컴포넌트(button/input 등)가 그대로 참조하므로 리네임하지 않는다.
+const SHADCN_SLOTS = new Set([
+    'background',
+    'foreground',
+    'card',
+    'card-foreground',
+    'popover',
+    'popover-foreground',
+    'primary',
+    'primary-foreground',
+    'secondary',
+    'secondary-foreground',
+    'muted',
+    'muted-foreground',
+    'accent',
+    'accent-foreground',
+    'destructive',
+    'destructive-foreground',
+    'border',
+    'input',
+    'ring',
+    'chart-1',
+    'chart-2',
+    'chart-3',
+    'chart-4',
+    'chart-5',
+    'sidebar',
+    'sidebar-foreground',
+    'sidebar-primary',
+    'sidebar-primary-foreground',
+    'sidebar-accent',
+    'sidebar-accent-foreground',
+    'sidebar-border',
+    'sidebar-ring',
+])
+
 // @theme inline — 색상 브리지 (런타임 --ds 참조)
 // Tailwind 기본 색 팔레트(red/slate/… 50~950)를 제거 → 프로젝트 8색·시맨틱만 유효(오사용은 무효 유틸이 되어 드러남).
 // breakpoint·container 를 initial 로 지우는 것과 같은 방식. 단 구조 키워드(투명/현재색/상속)는 되살린다.
@@ -291,9 +325,24 @@ L.push('  --color-transparent: transparent;')
 L.push('  --color-current: currentColor;')
 L.push('  --color-inherit: inherit;')
 L.push('')
-for (const name of Object.keys(semantic)) L.push(`  --color-${name}: var(--ds-${name});`)
-for (const k of Object.keys(overlay)) L.push(`  --color-overlay-${k}: var(--ds-overlay-${k});`)
-L.push('')
+
+const semanticNames = Object.keys(semantic)
+const shadcnSlotNames = semanticNames.filter((name) => SHADCN_SLOTS.has(name))
+const customSlotNames = semanticNames.filter((name) => !SHADCN_SLOTS.has(name))
+
+if (shadcnSlotNames.length) {
+    L.push('  /* shadcn 표준 슬롯 (https://ui.shadcn.com/docs/theming) — 이름 변경 금지, 값만 tokens.json 에서 매핑 */')
+    for (const name of shadcnSlotNames) L.push(`  --color-${name}: var(--ds-${name});`)
+    L.push('')
+}
+if (customSlotNames.length || Object.keys(overlay).length) {
+    L.push('  /* 프로젝트 커스텀 슬롯 — shadcn 표준에 없음. 추가하려면 tokens.json semantic 에 새 키만 넣으면 됨 */')
+    for (const name of customSlotNames) L.push(`  --color-${name}: var(--ds-${name});`)
+    for (const k of Object.keys(overlay)) L.push(`  --color-overlay-${k}: var(--ds-overlay-${k});`)
+    L.push('')
+}
+
+L.push('  /* 컬러 팔레트 (raw 스케일) — 시맨틱 슬롯의 원재료. 화면 코드에서 직접 사용 지양, 슬롯을 거칠 것(PB-05) */')
 for (const hue of hues) for (const s of scale) L.push(`  --color-${hue}-${s}: var(--ds-${hue}-${s});`)
 L.push('}', '')
 

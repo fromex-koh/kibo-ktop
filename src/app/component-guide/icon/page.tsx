@@ -57,9 +57,9 @@ const ICON_SIZES = [
 ] as const
 
 // 크기 표의 미리보기 — 같은 크기에서 두 스타일(Outline·Solid)이 어떻게 보이는지 나란히 보여준다.
-//   - Outline: span 없이 아이콘만(=슬롯 크기 그대로). 아이콘 색은 text-bolder.
+//   - Outline: span 없이 아이콘만(=슬롯 크기 그대로). 아이콘 색은 text-foreground.
 //   - Solid: span(배지)이 슬롯 크기를 차지하고, 안의 아이콘은 여백을 두고 작게 넣는다. 배지 색은
-//     시맨틱 토큰이라 라이트/다크에서 자동 반전돼 어느 테마에서도 배경과 대비된다(bg-bolder 는
+//     시맨틱 토큰이라 라이트/다크에서 자동 반전돼 어느 테마에서도 배경과 대비된다(bg-foreground 는
 //     라이트에서 어둡고 다크에서 밝다). glyphScale = 배지 대비 아이콘 크기(lucide 는 아이콘마다
 //     뷰박스 점유율이 달라 배지 안 여백을 이 값으로 맞춘다).
 const SIZE_SWATCHES = [
@@ -117,36 +117,36 @@ const IconGuidePage = () => (
                 <h2 id="icon-library" className="typo-heading-h4-bold">
                     라이브러리
                 </h2>
-                <p className="typo-body-l-regular text-subtle">
+                <p className="typo-body-l-regular text-muted-foreground">
                     아이콘은 이 프로젝트의 표준 라이브러리인 lucide-react 하나만 사용합니다([NA-008]).
                 </p>
             </div>
-            <div className="border-gray-subtle-2 flex flex-col gap-4 rounded-md border p-4">
+            <div className="border-border flex flex-col gap-4 rounded-md border p-4">
                 <dl className="typo-body-l-regular flex flex-col gap-3">
                     <div className="flex items-center gap-3">
-                        <dt className="text-subtle w-20 shrink-0">패키지</dt>
+                        <dt className="text-muted-foreground w-20 shrink-0">패키지</dt>
                         <dd className="font-mono">lucide-react</dd>
                     </div>
                     <div className="flex items-center gap-3">
-                        <dt className="text-subtle w-20 shrink-0">버전</dt>
+                        <dt className="text-muted-foreground w-20 shrink-0">버전</dt>
                         <dd className="font-mono">v{LUCIDE_VERSION}</dd>
                     </div>
                     <div className="flex items-center gap-3">
-                        <dt className="text-subtle w-20 shrink-0">라이선스</dt>
+                        <dt className="text-muted-foreground w-20 shrink-0">라이선스</dt>
                         <dd>ISC — 상업적 사용 가능(무료)</dd>
                     </div>
                     <div className="flex items-center gap-3">
-                        <dt className="text-subtle w-20 shrink-0">아이콘 수</dt>
+                        <dt className="text-muted-foreground w-20 shrink-0">아이콘 수</dt>
                         <dd>{LUCIDE_ICON_COUNT_LABEL}</dd>
                     </div>
                     <div className="flex items-center gap-3">
-                        <dt className="text-subtle w-20 shrink-0">저장소</dt>
+                        <dt className="text-muted-foreground w-20 shrink-0">저장소</dt>
                         <dd>
                             <a
                                 href={LUCIDE_REPO_URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-primary focus-visible:ring-focus focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                                className="text-primary focus-visible:ring-ring focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                             >
                                 <GitBranch aria-hidden="true" className="size-4 shrink-0" />
                                 lucide-icons/lucide
@@ -167,13 +167,15 @@ const IconGuidePage = () => (
                 <h2 id="icon-size" className="typo-heading-h4-bold">
                     크기
                 </h2>
-                <p className="typo-body-l-regular text-subtle">size-icon-* 유틸로 쓰는 아이콘 크기 토큰입니다.</p>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    size-icon-* 유틸로 쓰는 아이콘 크기 토큰입니다.
+                </p>
             </div>
-            <div className="bg-background border-gray-subtle-2 overflow-x-auto rounded-md border">
+            <div className="bg-background border-border overflow-x-auto rounded-md border">
                 <table className="w-full text-left">
                     <caption className="sr-only">아이콘 크기 토큰과 클래스</caption>
                     <thead>
-                        <tr className="border-gray-subtle-2 border-b bg-gray-100/25">
+                        <tr className="border-border border-b bg-gray-100/25">
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 미리보기
                             </th>
@@ -187,7 +189,7 @@ const IconGuidePage = () => (
                     </thead>
                     <tbody>
                         {ICON_SIZES.map(({key, class: sizeClass}) => (
-                            <tr key={key} className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                            <tr key={key} className="border-border bg-background border-b last:border-b-0">
                                 <td className="px-4 py-3">
                                     <div className="flex items-center gap-3">
                                         {SIZE_SWATCHES.map((swatch) => {
@@ -198,7 +200,7 @@ const IconGuidePage = () => (
                                                     <Icon
                                                         key={label}
                                                         aria-hidden="true"
-                                                        className={`${sizeClass} text-bolder shrink-0`}
+                                                        className={`${sizeClass} text-foreground shrink-0`}
                                                     />
                                                 )
                                             }
@@ -221,7 +223,7 @@ const IconGuidePage = () => (
                                 <th scope="row" className="px-4 py-3 text-left font-normal">
                                     <CopyChip value={sizeClass} />
                                 </th>
-                                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                     {tokens.size[key]}px
                                 </td>
                             </tr>
@@ -236,7 +238,7 @@ const IconGuidePage = () => (
                 <h2 id="icon-list" className="typo-heading-h4-bold">
                     아이콘 목록
                 </h2>
-                <p className="typo-body-l-regular text-subtle">
+                <p className="typo-body-l-regular text-muted-foreground">
                     Outline 은 {CURATED_ICONS.length}개 아이콘 — 칩을 클릭하면 컴포넌트 이름이 복사됩니다. lucide-react
                     는 획(Outline) 스타일 단일 세트라, 배지·알림처럼 강조가 필요한 곳엔 아이콘을 원형 배경에 채운 Solid
                     스타일을 조합해 씁니다. Solid 는 실제로 배지가 어울리는 X(닫기)· info(안내) 두 가지만
@@ -252,11 +254,8 @@ const IconGuidePage = () => (
                 <h3 className="typo-body-l-medium text-foreground">Outline</h3>
                 <ul className="wide:grid-cols-4 pc:grid-cols-6 grid grid-cols-3 gap-3">
                     {CURATED_ICONS.map(({name, Icon}) => (
-                        <li
-                            key={name}
-                            className="border-gray-subtle-2 flex flex-col items-center gap-3 rounded-md border p-4"
-                        >
-                            <Icon aria-hidden="true" className="size-icon-xl text-bolder" />
+                        <li key={name} className="border-border flex flex-col items-center gap-3 rounded-md border p-4">
+                            <Icon aria-hidden="true" className="size-icon-xl text-foreground" />
                             <CopyChip value={name} />
                         </li>
                     ))}
@@ -269,9 +268,9 @@ const IconGuidePage = () => (
                     {SOLID_ICONS.map((item) => (
                         <li
                             key={item.name}
-                            className="border-gray-subtle-2 flex flex-col items-center gap-3 rounded-md border p-4"
+                            className="border-border flex flex-col items-center gap-3 rounded-md border p-4"
                         >
-                            <span className="bg-info-surface text-info size-icon-xl flex items-center justify-center rounded-full">
+                            <span className="bg-primary/10 text-primary size-icon-xl flex items-center justify-center rounded-full">
                                 {item.kind === 'icon' ? (
                                     <item.Glyph aria-hidden="true" className="size-icon-md" />
                                 ) : (
@@ -292,7 +291,9 @@ const IconGuidePage = () => (
                 <h2 id="icon-variant" className="typo-heading-h4-bold">
                     Variant
                 </h2>
-                <p className="typo-body-l-regular text-subtle">용도에 맞춰 선택하는 아이콘 스타일 2가지입니다.</p>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    용도에 맞춰 선택하는 아이콘 스타일 2가지입니다.
+                </p>
             </div>
 
             <div className="flex flex-col gap-4">
@@ -302,7 +303,7 @@ const IconGuidePage = () => (
                     </span>
                     <h3 className="typo-body-l-medium text-foreground">outline — 아이콘만 (기본)</h3>
                 </div>
-                <div className="border-gray-subtle-2 flex items-center gap-4 rounded-md border p-6">
+                <div className="border-border flex items-center gap-4 rounded-md border p-6">
                     <Icon icon={X} className="size-icon-2xl" />
                 </div>
                 <CodeBlock code={USAGE_OUTLINE} language="tsx" copyLabel="복사" />
@@ -315,7 +316,7 @@ const IconGuidePage = () => (
                     </span>
                     <h3 className="typo-body-l-medium text-foreground">solid — 원형 안에 아이콘</h3>
                 </div>
-                <div className="border-gray-subtle-2 flex items-center gap-4 rounded-md border p-6">
+                <div className="border-border flex items-center gap-4 rounded-md border p-6">
                     <Icon icon={X} variant="solid" className="size-icon-2xl" />
                 </div>
                 <CodeBlock code={USAGE_SOLID} language="tsx" copyLabel="복사" />
@@ -327,19 +328,19 @@ const IconGuidePage = () => (
                 <h2 id="icon-props" className="typo-heading-h4-bold">
                     Props
                 </h2>
-                <p className="typo-body-l-regular text-subtle">
-                    커스터마이징 가능한 속성들입니다. 필수 값은 이름 옆에 <span className="text-error">*</span> 로
+                <p className="typo-body-l-regular text-muted-foreground">
+                    커스터마이징 가능한 속성들입니다. 필수 값은 이름 옆에 <span className="text-destructive">*</span> 로
                     표시했습니다.
                 </p>
             </div>
 
             <div className="flex flex-col gap-2">
                 <h3 className="typo-body-l-medium text-foreground">BASIC</h3>
-                <div className="bg-background border-gray-subtle-2 overflow-x-auto rounded-md border">
+                <div className="bg-background border-border overflow-x-auto rounded-md border">
                     <table className="w-full text-left">
                         <caption className="sr-only">Icon Props 목록</caption>
                         <thead>
-                            <tr className="border-gray-subtle-2 border-b bg-gray-100/25">
+                            <tr className="border-border border-b bg-gray-100/25">
                                 <th scope="col" className="typo-body-l-medium px-4 py-3">
                                     Name
                                 </th>
@@ -355,20 +356,20 @@ const IconGuidePage = () => (
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                            <tr className="border-border bg-background border-b last:border-b-0">
                                 <th
                                     scope="row"
-                                    className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
                                 >
                                     icon
-                                    <span aria-hidden="true" className="text-error">
+                                    <span aria-hidden="true" className="text-destructive">
                                         *
                                     </span>
                                     <span className="sr-only"> (필수)</span>
                                 </th>
                                 <td className="px-4 py-3">
                                     <div className="flex flex-col gap-2">
-                                        <p className="typo-body-l-regular text-subtle">
+                                        <p className="typo-body-l-regular text-muted-foreground">
                                             표시할 lucide 아이콘 컴포넌트.
                                         </p>
                                         <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
@@ -376,19 +377,19 @@ const IconGuidePage = () => (
                                         </span>
                                     </div>
                                 </td>
-                                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">-</td>
-                                <td className="typo-body-l-regular text-subtle px-4 py-3">-</td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">-</td>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">-</td>
                             </tr>
-                            <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                            <tr className="border-border bg-background border-b last:border-b-0">
                                 <th
                                     scope="row"
-                                    className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
                                 >
                                     variant
                                 </th>
                                 <td className="px-4 py-3">
                                     <div className="flex flex-col gap-2">
-                                        <p className="typo-body-l-regular text-subtle">
+                                        <p className="typo-body-l-regular text-muted-foreground">
                                             아이콘 스타일. outline 은 글리프만, solid 는 원형 배지 안에 담아 강조한다.
                                         </p>
                                         <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
@@ -396,7 +397,7 @@ const IconGuidePage = () => (
                                         </span>
                                     </div>
                                 </td>
-                                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                     &apos;outline&apos;
                                 </td>
                                 <td className="px-4 py-3">
@@ -410,16 +411,16 @@ const IconGuidePage = () => (
                                     </div>
                                 </td>
                             </tr>
-                            <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                            <tr className="border-border bg-background border-b last:border-b-0">
                                 <th
                                     scope="row"
-                                    className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
                                 >
                                     className
                                 </th>
                                 <td className="px-4 py-3">
                                     <div className="flex flex-col gap-2">
-                                        <p className="typo-body-l-regular text-subtle">
+                                        <p className="typo-body-l-regular text-muted-foreground">
                                             크기·색 확장. outline 은 아이콘에, solid 는 배지에 적용된다(예:
                                             size-icon-*).
                                         </p>
@@ -428,8 +429,10 @@ const IconGuidePage = () => (
                                         </span>
                                     </div>
                                 </td>
-                                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">&quot;&quot;</td>
-                                <td className="typo-body-l-regular text-subtle px-4 py-3">-</td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                                    &quot;&quot;
+                                </td>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">-</td>
                             </tr>
                         </tbody>
                     </table>

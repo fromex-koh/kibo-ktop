@@ -15,18 +15,20 @@ const ShadowGuidePage = () => (
                     return `--raw-${name}-a${step}`
                 }
                 return (
-                    <li key={k} className="border-gray-subtle-2 overflow-hidden rounded-xl border">
+                    <li key={k} className="border-border overflow-hidden rounded-xl border">
                         {/* 그림자가 라이트=검정/다크=흰색으로 전환되므로 자연 배경 위에서 양쪽 다 보임 */}
                         <div className="bg-background flex aspect-[16/10] items-center justify-center">
                             <span
-                                className="bg-surface border-gray-subtle-2 size-16 rounded-lg border"
+                                className="bg-card border-border size-16 rounded-lg border"
                                 style={{boxShadow: `var(--ds-shadow-${k})`}}
                             />
                         </div>
-                        <div className="border-gray-subtle-2 flex flex-col gap-1 border-t px-4 py-3">
+                        <div className="border-border flex flex-col gap-1 border-t px-4 py-3">
                             <span className="typo-body-l-medium">shadow-{k}</span>
-                            <span className="typo-caption-regular text-subtle font-mono">--ds-shadow-{k}</span>
-                            <span className="typo-caption-regular text-subtle font-mono">
+                            <span className="typo-caption-regular text-muted-foreground font-mono">
+                                --ds-shadow-{k}
+                            </span>
+                            <span className="typo-caption-regular text-muted-foreground font-mono">
                                 ↳ {rawVar(val.color.light)} / {rawVar(val.color.dark)}
                             </span>
                         </div>

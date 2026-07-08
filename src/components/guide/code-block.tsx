@@ -11,7 +11,7 @@ import CopyChip from '@/components/guide/copy-chip'
 type CodeBlockProps = {code: string; language?: Language; copyLabel?: string}
 
 const CodeBlock = ({code, language = 'tsx', copyLabel}: CodeBlockProps) => (
-    <div className="border-gray-subtle-2 relative overflow-hidden rounded-md border">
+    <div className="border-border relative overflow-hidden rounded-md border">
         <div className="absolute top-3 right-3">
             <CopyChip value={code} label={copyLabel} />
         </div>

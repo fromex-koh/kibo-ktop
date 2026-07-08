@@ -37,21 +37,27 @@ const ColorTable = ({title, rows}: {title: ReactNode; rows: SwatchRow[]}) => (
         <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left">
                 <thead>
-                    <tr className="border-gray-subtle-2 border-b">
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                    <tr className="border-border border-b">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             이름
                         </th>
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             값
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     {rows.map((row) => (
-                        <tr key={row.name} className="border-gray-subtle-2 hover:bg-surface border-b transition-colors">
+                        <tr key={row.name} className="border-border hover:bg-card border-b transition-colors">
                             <th
                                 scope="row"
-                                className="typo-caption-regular text-bolder w-1/3 px-3 py-3 font-mono font-normal"
+                                className="typo-caption-regular text-foreground w-1/3 px-3 py-3 font-mono font-normal"
                             >
                                 {row.name}
                             </th>
@@ -59,12 +65,12 @@ const ColorTable = ({title, rows}: {title: ReactNode; rows: SwatchRow[]}) => (
                                 <span className="flex items-center gap-3">
                                     <span
                                         aria-hidden="true"
-                                        className="border-gray-subtle-2 size-icon-md relative shrink-0 overflow-hidden rounded border"
+                                        className="border-border size-icon-md relative shrink-0 overflow-hidden rounded border"
                                         style={{background: CHECKERBOARD}}
                                     >
                                         <span className="absolute inset-0" style={{background: row.cssVar}} />
                                     </span>
-                                    <span className="typo-caption-regular text-subtle font-mono whitespace-nowrap">
+                                    <span className="typo-caption-regular text-muted-foreground font-mono whitespace-nowrap">
                                         {row.value}
                                     </span>
                                 </span>
@@ -89,8 +95,8 @@ const ColorGuidePage = () => (
                     key={hue}
                     title={
                         <>
-                            <span className="text-subtle">{groupOf(hue)} / </span>
-                            <span className="text-bolder font-semibold">{hue}</span>
+                            <span className="text-muted-foreground">{groupOf(hue)} / </span>
+                            <span className="text-foreground font-semibold">{hue}</span>
                         </>
                     }
                     rows={Object.entries(steps).map(([step, hex]) => ({
@@ -101,7 +107,7 @@ const ColorGuidePage = () => (
                 />
             ))}
             <ColorTable
-                title={<span className="text-bolder font-semibold">common</span>}
+                title={<span className="text-foreground font-semibold">common</span>}
                 rows={Object.entries(tokens.common).map(([name, value]) => ({
                     name,
                     cssVar: `var(--raw-common-${name})`,
@@ -109,7 +115,7 @@ const ColorGuidePage = () => (
                 }))}
             />
             <ColorTable
-                title={<span className="text-bolder font-semibold">alpha</span>}
+                title={<span className="text-foreground font-semibold">alpha</span>}
                 rows={Object.entries(tokens.alpha).flatMap(([color, steps]) =>
                     steps.map((step) => ({
                         name: `${color}${step}`,

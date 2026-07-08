@@ -24,20 +24,20 @@ const BUILD_TIME = process.env.NEXT_PUBLIC_BUILD_TIME ?? '로컬 개발'
 
 const Home = () => {
     return (
-        <main className="bg-background text-bolder min-h-screen">
+        <main className="bg-background text-foreground min-h-screen">
             <div className="max-w-content mx-auto flex w-full flex-col gap-12 px-6 py-16">
                 {/* 홈은 헤더가 없어, 라이트/다크 토글을 콘텐츠 우상단에 둔다(헤더가 있는 화면은 헤더 우측). */}
                 <div className="flex justify-end">
                     <ThemeToggle />
                 </div>
                 <header className="flex flex-col items-center gap-3 text-center">
-                    <code className="border-gray-subtle-2 text-subtle rounded-md border px-2 py-1 font-mono text-sm">
+                    <code className="border-border text-muted-foreground rounded-md border px-2 py-1 font-mono text-sm">
                         {badge}
                     </code>
                     <h1 className="typo-display-m-bold">{SITE_NAME}</h1>
                     {/* 현재 버전·빌드 시각 (자리만 잡은 placeholder — 위 BUILD_VERSION/BUILD_TIME 참조) */}
-                    <p className="typo-body-l-regular text-subtle">
-                        현재 버전: <span className="text-bolder font-semibold">{BUILD_VERSION}</span> / {BUILD_TIME}
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        현재 버전: <span className="text-foreground font-semibold">{BUILD_VERSION}</span> / {BUILD_TIME}
                     </p>
                 </header>
 
@@ -52,13 +52,13 @@ const Home = () => {
                         </div>
                         <dl className="flex flex-col gap-3 text-sm">
                             <div className="flex items-center gap-3">
-                                <dt className="text-subtle w-16 shrink-0">저장소</dt>
+                                <dt className="text-muted-foreground w-16 shrink-0">저장소</dt>
                                 <dd>
                                     <a
                                         href={REPOSITORY_URL}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-primary focus-visible:ring-focus focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium break-all hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                                        className="text-primary focus-visible:ring-ring focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium break-all hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                                     >
                                         <GitBranch aria-hidden="true" className="size-4 shrink-0" />
                                         {REPOSITORY_URL_LABEL}
@@ -67,7 +67,7 @@ const Home = () => {
                                 </dd>
                             </div>
                             <div className="flex items-center gap-3">
-                                <dt className="text-subtle w-16 shrink-0">작업자</dt>
+                                <dt className="text-muted-foreground w-16 shrink-0">작업자</dt>
                                 <dd>{projectInfo.author}</dd>
                             </div>
                         </dl>
@@ -85,7 +85,7 @@ const Home = () => {
                             <Link
                                 href={guide.href}
                                 aria-label={guide.linkLabel}
-                                className="group bg-element-primary focus-visible:ring-focus focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                                className="group bg-primary focus-visible:ring-ring focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                             >
                                 <ArrowUpRight
                                     aria-hidden="true"
@@ -93,7 +93,7 @@ const Home = () => {
                                 />
                             </Link>
                         </div>
-                        <p className="typo-body-l-regular text-subtle">{guide.description}</p>
+                        <p className="typo-body-l-regular text-muted-foreground">{guide.description}</p>
                     </section>
                 </div>
 

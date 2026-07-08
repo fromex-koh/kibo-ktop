@@ -16,16 +16,16 @@ const BreakpointGuidePage = () => (
             </>
         }
     >
-        <p className="typo-caption-regular text-subtle">
+        <p className="typo-caption-regular text-muted-foreground">
             구간명은 특정 기기 하나를 뜻하지 않는다. <code>wide</code> 는 태블릿(세로·가로)과 노트북이 함께 걸치는 폭
             구간이라 기기 중립적으로 이름 붙였다(단, 12.9형급 대형 태블릿을 가로로 눕히면 <code>pc</code> 구간으로
             넘어갈 수 있다).
         </p>
-        <div className="border-gray-subtle-2 overflow-x-auto rounded-xl border">
+        <div className="border-border overflow-x-auto rounded-xl border">
             <table className="w-full text-left">
                 <caption className="sr-only">브레이크포인트 구간과 프리픽스, 포함 기기</caption>
                 <thead>
-                    <tr className="border-gray-subtle-2 bg-surface border-b">
+                    <tr className="border-border bg-card border-b">
                         <th scope="col" className="typo-body-l-medium px-4 py-3">
                             구간
                         </th>
@@ -67,29 +67,33 @@ const BreakpointGuidePage = () => (
                             })),
                         ]
                         return rows.map((r) => (
-                            <tr key={r.name} className="border-gray-subtle-2 border-b last:border-b-0">
+                            <tr key={r.name} className="border-border border-b last:border-b-0">
                                 <td className="typo-body-l-regular px-4 py-3">
                                     <span className="inline-flex items-center gap-2">
                                         {r.name}
                                         <ActiveBreakpointTag targetKey={r.key} />
                                     </span>
                                 </td>
-                                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">{r.range}</td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                                    {r.range}
+                                </td>
                                 <td className="px-4 py-3">
                                     {r.prefix ? (
                                         <CopyChip value={r.prefix} />
                                     ) : (
-                                        <span className="typo-caption-regular text-subtle font-mono">없음</span>
+                                        <span className="typo-caption-regular text-muted-foreground font-mono">
+                                            없음
+                                        </span>
                                     )}
                                 </td>
-                                <td className="typo-body-l-regular text-subtle px-4 py-3">{r.device}</td>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{r.device}</td>
                             </tr>
                         ))
                     })()}
                 </tbody>
             </table>
         </div>
-        <p className="typo-caption-regular text-subtle">
+        <p className="typo-caption-regular text-muted-foreground">
             국내 스마트폰은 삼성 갤럭시가 다수, iPhone 이 그다음인데 두 계열 모두 CSS 뷰포트 폭이 360~393px 라{' '}
             <code>mobile</code>&nbsp;구간(0~767px) 안에 여유 있게 들어갑니다. 태블릿은 iPad 세로(820px)·가로(1180px)
             모두 <code>wide</code>&nbsp;구간(768~1279px) 안이라 위 &apos;태블릿·노트북이 함께 걸치는 폭&apos; 설계와

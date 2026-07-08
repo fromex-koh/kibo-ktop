@@ -82,9 +82,9 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
     ]
 
     return (
-        <div className="bg-background text-bolder min-h-screen">
+        <div className="bg-background text-foreground min-h-screen">
             <SkipNav links={skipLinks} />
-            <header className="border-gray-subtle-2 bg-background wide:px-6 h-header-h z-header sticky top-0 flex items-center gap-3 border-b px-4">
+            <header className="border-border bg-background wide:px-6 h-header-h z-header sticky top-0 flex items-center gap-3 border-b px-4">
                 {/* 햄버거 — pc 미만에서만. pc 는 상시 레일이라 토글이 불필요해 숨긴다.
             터치 타깃은 44px(min-h-11/min-w-11) 유지(KWCAG 6.1.3), 아이콘만 한 단계 작게(icon-sm)
             해서 은은한 모노톤 원형으로 보이게 한다. */}
@@ -95,7 +95,7 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                     aria-label={isDrawerOpen ? '사이드 메뉴 닫기' : '사이드 메뉴 열기'}
                     aria-expanded={isDrawerOpen}
                     aria-controls="sidebar-layout-nav"
-                    className="text-subtle hover:text-bolder focus-visible:ring-focus focus-visible:ring-offset-background pc:hidden inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="text-muted-foreground hover:text-foreground focus-visible:ring-ring focus-visible:ring-offset-background pc:hidden inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                 >
                     {isDrawerOpen ? (
                         <X aria-hidden="true" className="size-icon-sm" />
@@ -106,7 +106,7 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                 <Link
                     href="/"
                     aria-label="홈으로"
-                    className="text-subtle hover:text-bolder focus-visible:ring-focus focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                    className="text-muted-foreground hover:text-foreground focus-visible:ring-ring focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 items-center justify-center rounded-full bg-gray-100 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                 >
                     <Home aria-hidden="true" className="size-icon-sm" />
                 </Link>
@@ -154,13 +154,13 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                     tabIndex={-1}
                     inert={isNavOffCanvas || undefined}
                     aria-label={navLabel}
-                    className={`border-gray-subtle-2 bg-background wide:px-6 top-header-top z-drawer pc:translate-x-0 pc:py-8 w-sidebar-w focus-visible:ring-focus fixed bottom-0 left-0 flex flex-col gap-6 overflow-y-auto border-r p-4 transition-transform duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-inset motion-reduce:transition-none ${
+                    className={`border-border bg-background wide:px-6 top-header-top z-drawer pc:translate-x-0 pc:py-8 w-sidebar-w focus-visible:ring-ring fixed bottom-0 left-0 flex flex-col gap-6 overflow-y-auto border-r p-4 transition-transform duration-200 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-inset motion-reduce:transition-none ${
                         isDrawerOpen ? 'translate-x-0' : '-translate-x-full'
                     }`}
                 >
                     {navSections.map((section) => (
                         <div key={section.title} className="flex flex-col gap-2">
-                            <h2 className="typo-caption-regular text-subtle px-1 font-semibold uppercase">
+                            <h2 className="typo-caption-regular text-muted-foreground px-1 font-semibold uppercase">
                                 {section.title}
                             </h2>
                             <ul className="flex flex-col gap-0.5">
@@ -176,10 +176,10 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                                                     ? {target: '_blank', rel: 'noopener noreferrer'}
                                                     : {})}
                                                 aria-current={isActive ? 'page' : undefined}
-                                                className={`focus-visible:ring-focus focus-visible:ring-offset-background typo-body-l-regular flex items-center justify-between gap-1.5 rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                                                className={`focus-visible:ring-ring focus-visible:ring-offset-background typo-body-l-regular flex items-center justify-between gap-1.5 rounded-lg px-3 py-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                                                     isActive
-                                                        ? 'bg-element-primary/10 text-bolder font-semibold'
-                                                        : 'text-subtle hover:text-bolder hover:bg-gray-100'
+                                                        ? 'bg-primary/10 text-foreground font-semibold'
+                                                        : 'text-muted-foreground hover:text-foreground hover:bg-gray-100'
                                                 }`}
                                             >
                                                 {item.label}
@@ -209,7 +209,7 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                     id="main"
                     tabIndex={-1}
                     inert={isDrawerActive || undefined}
-                    className="focus-visible:ring-focus focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
+                    className="focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
                 >
                     {children}
                 </main>

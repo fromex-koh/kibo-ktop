@@ -36,7 +36,7 @@ const PageHeaderTitle = ({variant = 'default', className = '', children, ...prop
 type PageHeaderDescriptionProps = ComponentPropsWithoutRef<'p'> & {variant?: PageHeaderVariant}
 
 const PageHeaderDescription = ({variant = 'default', className = '', ...props}: PageHeaderDescriptionProps) => (
-    <p className={`${DESCRIPTION_VARIANT_CLASS[variant]} text-subtle ${className}`.trim()} {...props} />
+    <p className={`${DESCRIPTION_VARIANT_CLASS[variant]} text-muted-foreground ${className}`.trim()} {...props} />
 )
 
 export {PageHeader, PageHeaderTitle, PageHeaderDescription}

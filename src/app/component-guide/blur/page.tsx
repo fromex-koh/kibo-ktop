@@ -11,7 +11,7 @@ const BlurGuidePage = () => (
     <GuidePage title="흐림 (Blur)" description="blur-* 유틸리티로 적용하는 흐림 토큰입니다.">
         <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
             {Object.entries(tokens.effect.blur).map(([k, px]) => (
-                <li key={k} className="border-gray-subtle-2 overflow-hidden rounded-xl border">
+                <li key={k} className="border-border overflow-hidden rounded-xl border">
                     <div className="relative aspect-[16/10] overflow-hidden">
                         <Image
                             src={sampleCatImg}
@@ -22,9 +22,9 @@ const BlurGuidePage = () => (
                             style={{filter: `blur(var(--ds-blur-${k}))`}}
                         />
                     </div>
-                    <div className="border-gray-subtle-2 flex flex-col gap-1 border-t px-4 py-3">
+                    <div className="border-border flex flex-col gap-1 border-t px-4 py-3">
                         <span className="typo-body-l-medium">blur-{k}</span>
-                        <span className="typo-caption-regular text-subtle font-mono">
+                        <span className="typo-caption-regular text-muted-foreground font-mono">
                             --ds-blur-{k} · {px}px
                         </span>
                     </div>

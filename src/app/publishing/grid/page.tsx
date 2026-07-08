@@ -24,14 +24,14 @@ const REFERENCE_VIEWPORT: Record<string, number> = {mobile: 360, wide: 1200, pc:
 // 써서 해상도별 실제 그리드(모바일 328 / 태블릿 792 / 데스크톱 1200)를 정확히 확인할 수 있다.
 // (컴포넌트 가이드 사이드 레이아웃 안에 넣으면 pc 에서 사이드바 폭만큼 좁아져 값이 어긋난다.)
 const GridPreviewPage = () => (
-    <main className="bg-background text-bolder wide:py-16 flex min-h-screen flex-col gap-10 py-12">
+    <main className="bg-background text-foreground wide:py-16 flex min-h-screen flex-col gap-10 py-12">
         {/* 제목·설명 + 테마 토글 (읽기 좋은 폭으로 제한) */}
         <div className="max-w-content mx-auto flex w-full flex-col gap-2 px-6">
             <div className="flex items-start justify-between gap-4">
                 <h1 className="typo-display-m-bold">레이아웃 그리드 미리보기</h1>
                 <ThemeToggle />
             </div>
-            <p className="typo-body-l-regular text-subtle">
+            <p className="typo-body-l-regular text-muted-foreground">
                 브라우저 폭을 조절하면(또는 기기 회전) 실제 컬럼 수가 4 → 8 → 12 로 바뀝니다. 이 화면은 사이드바 없이
                 뷰포트 전체 폭을 그대로 써서, 해상도별 실제 그리드(가장자리 여백·거터 포함)를 정확히 보여줍니다.
             </p>
@@ -43,9 +43,9 @@ const GridPreviewPage = () => (
                 <span
                     key={i}
                     aria-hidden="true"
-                    className={`${getGridRevealClass(i)} bg-error-base/15 border-error-base/40 h-20 items-center justify-center rounded-md border`}
+                    className={`${getGridRevealClass(i)} bg-destructive/15 border-destructive/40 h-20 items-center justify-center rounded-md border`}
                 >
-                    <span className="bg-surface border-error-base text-error typo-caption-regular flex size-7 items-center justify-center rounded-full border-2">
+                    <span className="bg-card border-destructive text-destructive typo-caption-regular flex size-7 items-center justify-center rounded-full border-2">
                         {i + 1}
                     </span>
                 </span>
@@ -54,11 +54,11 @@ const GridPreviewPage = () => (
 
         {/* 표 — 읽기 좋은 폭으로 제한 */}
         <div className="max-w-content mx-auto w-full px-6">
-            <div className="border-gray-subtle-2 overflow-x-auto rounded-xl border">
+            <div className="border-border overflow-x-auto rounded-xl border">
                 <table className="w-full text-left">
                     <caption className="sr-only">브레이크포인트별 그리드 columns·gutter·container·margin</caption>
                     <thead>
-                        <tr className="border-gray-subtle-2 bg-surface border-b">
+                        <tr className="border-border bg-card border-b">
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 구간
                             </th>
@@ -83,27 +83,27 @@ const GridPreviewPage = () => (
                                 ([a], [b]) => order.indexOf(a) - order.indexOf(b),
                             )
                             return rows.map(([key, g]) => (
-                                <tr key={key} className="border-gray-subtle-2 border-b last:border-b-0">
+                                <tr key={key} className="border-border border-b last:border-b-0">
                                     <td className="typo-body-l-regular px-4 py-3">
                                         <span className="inline-flex items-center gap-2">
                                             {key}
                                             <ActiveBreakpointTag targetKey={key} />
                                         </span>
                                     </td>
-                                    <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                         {g.columns}
                                     </td>
-                                    <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                         {g.gutter}px
                                     </td>
-                                    <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                         {key === 'mobile'
                                             ? `${REFERENCE_VIEWPORT.mobile - 2 * g.margin}px (${REFERENCE_VIEWPORT.mobile}px 기준)`
                                             : typeof g.container === 'number'
                                               ? `${g.container}px (${REFERENCE_VIEWPORT[key]}px 기준)`
                                               : g.container}
                                     </td>
-                                    <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                         {g.margin}px
                                     </td>
                                 </tr>

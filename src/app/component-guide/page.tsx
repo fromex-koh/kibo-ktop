@@ -16,23 +16,29 @@ const ComponentGuidePage = () => (
         <div className="flex flex-col gap-8">
             {GUIDE_NAV_SECTIONS.map((section) => (
                 <section key={section.title} aria-label={section.title} className="flex flex-col gap-3">
-                    <h2 className="typo-title-l-bold text-subtle">{section.title}</h2>
+                    <h2 className="typo-title-l-bold text-muted-foreground">{section.title}</h2>
                     <ul className="wide:grid-cols-2 pc:grid-cols-3 grid grid-cols-1 gap-3">
                         {section.items.map((item) => (
                             <li key={item.href}>
                                 <Link
                                     href={item.href}
                                     {...(item.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
-                                    className="border-gray-subtle-2 bg-surface focus-visible:ring-focus focus-visible:ring-offset-background flex items-center justify-between gap-3 rounded-xl border px-4 py-4 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                                    className="border-border bg-card focus-visible:ring-ring focus-visible:ring-offset-background flex items-center justify-between gap-3 rounded-xl border px-4 py-4 transition-colors hover:bg-gray-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                                 >
                                     <span className="typo-body-xl-regular font-medium">
                                         {item.label}
                                         {item.external && <span className="sr-only"> (새 창에서 열림)</span>}
                                     </span>
                                     {item.external ? (
-                                        <ArrowUpRight aria-hidden="true" className="text-subtle size-4 shrink-0" />
+                                        <ArrowUpRight
+                                            aria-hidden="true"
+                                            className="text-muted-foreground size-4 shrink-0"
+                                        />
                                     ) : (
-                                        <ArrowRight aria-hidden="true" className="text-subtle size-4 shrink-0" />
+                                        <ArrowRight
+                                            aria-hidden="true"
+                                            className="text-muted-foreground size-4 shrink-0"
+                                        />
                                     )}
                                 </Link>
                             </li>

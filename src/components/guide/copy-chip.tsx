@@ -35,11 +35,11 @@ const CopyChip = ({value, label}: {value: string; label?: string}) => {
             onClick={handleCopy}
             title={isCopied ? '복사됨' : actionText}
             aria-label={actionText}
-            className="text-primary focus-visible:ring-focus focus-visible:ring-offset-background typo-caption-regular inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-gray-100 px-2.5 py-1.5 font-mono transition-colors hover:bg-gray-200/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+            className="text-primary focus-visible:ring-ring focus-visible:ring-offset-background typo-caption-regular inline-flex cursor-pointer items-center gap-1.5 rounded-md bg-gray-100 px-2.5 py-1.5 font-mono transition-colors hover:bg-gray-200/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
         >
             {displayText}
             {isCopied ? (
-                <Check aria-hidden="true" className="text-success size-3.5 shrink-0" />
+                <Check aria-hidden="true" className="text-primary size-3.5 shrink-0" />
             ) : (
                 <Copy aria-hidden="true" className="size-3.5 shrink-0 opacity-60" />
             )}

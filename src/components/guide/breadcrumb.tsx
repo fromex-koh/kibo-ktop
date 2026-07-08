@@ -10,12 +10,12 @@ type BreadcrumbProps = {
 // aria-current(현재 위치).
 const Breadcrumb = ({category, current}: BreadcrumbProps) => (
     <nav aria-label="브레드크럼">
-        <ol className="typo-caption-regular text-subtle flex flex-wrap items-center gap-1.5">
+        <ol className="typo-caption-regular text-muted-foreground flex flex-wrap items-center gap-1.5">
             <li>{category}</li>
             <li aria-hidden="true">
                 <ChevronRight className="size-3.5" />
             </li>
-            <li aria-current="page" className="text-bolder font-semibold">
+            <li aria-current="page" className="text-foreground font-semibold">
                 {current}
             </li>
         </ol>

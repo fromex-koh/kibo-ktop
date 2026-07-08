@@ -45,19 +45,19 @@ const ZIndexGuidePage = () => (
                 <h2 id="z-demo" className="typo-heading-h4-bold">
                     쌓임 순서 미리보기
                 </h2>
-                <p className="typo-body-l-regular text-subtle">
+                <p className="typo-body-l-regular text-muted-foreground">
                     아래 카드는 값이 큰 순서대로 위에 겹칩니다 — 토큰 값이 곧 우선순위입니다.
                 </p>
             </div>
             {/* 겹침을 보이려면 positioned 요소가 필요해 데모에 한해 absolute 를 쓴다(ST-005 예외). */}
-            <div className="border-gray-subtle-2 bg-background relative h-52 overflow-hidden rounded-xl border">
+            <div className="border-border bg-background relative h-52 overflow-hidden rounded-xl border">
                 {STACK_DEMO.map((card) => (
                     <div
                         key={card.z}
-                        className={`${card.z} ${card.pos} border-gray-subtle-2 bg-surface shadow-2 absolute flex w-36 flex-col gap-1 rounded-lg border p-3`}
+                        className={`${card.z} ${card.pos} border-border bg-card shadow-2 absolute flex w-36 flex-col gap-1 rounded-lg border p-3`}
                     >
                         <span className="typo-body-l-medium">{card.label}</span>
-                        <span className="typo-caption-regular text-subtle font-mono">
+                        <span className="typo-caption-regular text-muted-foreground font-mono">
                             {card.z} · {card.value}
                         </span>
                     </div>
@@ -71,15 +71,15 @@ const ZIndexGuidePage = () => (
                 <h2 id="z-tokens" className="typo-heading-h4-bold">
                     레이어 토큰
                 </h2>
-                <p className="typo-body-l-regular text-subtle">
+                <p className="typo-body-l-regular text-muted-foreground">
                     정수라 rem 변환하지 않습니다. 클래스 칩을 클릭하면 이름이 복사됩니다.
                 </p>
             </div>
-            <div className="border-gray-subtle-2 overflow-x-auto rounded-xl border">
+            <div className="border-border overflow-x-auto rounded-xl border">
                 <table className="w-full text-left">
                     <caption className="sr-only">z-* 레이어 토큰의 값과 용도</caption>
                     <thead>
-                        <tr className="border-gray-subtle-2 bg-surface border-b">
+                        <tr className="border-border bg-card border-b">
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 클래스
                             </th>
@@ -93,12 +93,16 @@ const ZIndexGuidePage = () => (
                     </thead>
                     <tbody>
                         {Object.entries(tokens.z).map(([name, value]) => (
-                            <tr key={name} className="border-gray-subtle-2 border-b last:border-b-0">
+                            <tr key={name} className="border-border border-b last:border-b-0">
                                 <th scope="row" className="px-4 py-3 text-left font-normal">
                                     <CopyChip value={`z-${name}`} />
                                 </th>
-                                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">{value}</td>
-                                <td className="typo-body-l-regular text-subtle px-4 py-3">{Z_USAGE[name] ?? '—'}</td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                                    {value}
+                                </td>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
+                                    {Z_USAGE[name] ?? '—'}
+                                </td>
                             </tr>
                         ))}
                     </tbody>

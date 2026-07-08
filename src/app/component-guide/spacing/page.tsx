@@ -22,25 +22,34 @@ const SpacingGuidePage = () => (
         <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left">
                 <thead>
-                    <tr className="border-gray-subtle-2 border-b">
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                    <tr className="border-border border-b">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             미리보기
                         </th>
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             클래스 (클릭 복사)
                         </th>
-                        <th scope="col" className="typo-body-l-medium text-subtle px-3 py-3 whitespace-nowrap">
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
                             값
                         </th>
                     </tr>
                 </thead>
                 <tbody>
                     {multiples.map((n) => (
-                        <tr key={n} className="border-gray-subtle-2 hover:bg-surface border-b transition-colors">
+                        <tr key={n} className="border-border hover:bg-card border-b transition-colors">
                             <td className="px-3 py-3">
                                 <span
                                     aria-hidden="true"
-                                    className="bg-element-primary block h-3 rounded-sm"
+                                    className="bg-primary block h-3 rounded-sm"
                                     style={{width: `calc(var(--spacing) * ${n})`}}
                                 />
                             </td>
@@ -48,7 +57,7 @@ const SpacingGuidePage = () => (
                                 <div className="flex flex-col gap-2">
                                     {SPACING_GROUPS.map((group) => (
                                         <div key={group.label} className="flex flex-wrap items-center gap-2">
-                                            <span className="typo-caption-regular text-subtle w-14 shrink-0">
+                                            <span className="typo-caption-regular text-muted-foreground w-14 shrink-0">
                                                 {group.label}
                                             </span>
                                             {group.prefixes.map((prefix) => (
@@ -58,7 +67,7 @@ const SpacingGuidePage = () => (
                                     ))}
                                 </div>
                             </th>
-                            <td className="typo-caption-regular text-subtle px-3 py-3 font-mono whitespace-nowrap">
+                            <td className="typo-caption-regular text-muted-foreground px-3 py-3 font-mono whitespace-nowrap">
                                 {n * tokens.spacingBase}px
                             </td>
                         </tr>

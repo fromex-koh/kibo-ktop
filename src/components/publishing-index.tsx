@@ -43,13 +43,13 @@ const NoteCell = ({note}: {note?: StructureNote}) => (
     <>
         {note === 'issue' && (
             <span className="inline-flex items-center">
-                <AlertTriangle aria-hidden="true" className="text-error size-4" />
+                <AlertTriangle aria-hidden="true" className="text-destructive size-4" />
                 <span className="sr-only">이슈 있음</span>
             </span>
         )}
         {note === 'info' && (
             <span className="inline-flex items-center">
-                <Info aria-hidden="true" className="text-info size-4" />
+                <Info aria-hidden="true" className="text-primary size-4" />
                 <span className="sr-only">추가 정보 있음</span>
             </span>
         )}
@@ -63,15 +63,15 @@ const NoteCell = ({note}: {note?: StructureNote}) => (
 // 화면(leaf)의 수동 기입 버전이 이 값과 같으면 "이번 릴리스에서 반영됨"으로 하이라이트한다.
 const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev'
 
-// 상태별 색상 — 이 프로젝트에 이미 정의된 시맨틱 토큰(danger/warning/info/success)만 재사용.
-// 색만으로 구분하지 않도록 상태명을 항상 함께 표기한다. [KWCAG 5.3.1]
+// 상태별 색상 — shadcn 슬롯(primary/destructive)만 사용. warning/success 는 대응 슬롯이 없어
+// 회색(muted)으로 강등한다. 색만으로 구분하지 않도록 상태명을 항상 함께 표기한다. [KWCAG 5.3.1]
 const STATUS_STYLES: Record<Status, string> = {
-    대기중: 'bg-gray-100 text-subtle',
-    진행중: 'bg-info-surface text-info',
-    수정요청: 'bg-error-surface text-error',
-    보완: 'bg-warning-surface text-warning',
-    완료: 'bg-success-surface text-success',
-    최종완료: 'bg-success-surface text-success',
+    대기중: 'bg-muted text-muted-foreground',
+    진행중: 'bg-primary/10 text-primary',
+    수정요청: 'bg-destructive/10 text-destructive',
+    보완: 'bg-muted text-muted-foreground',
+    완료: 'bg-muted text-muted-foreground',
+    최종완료: 'bg-muted text-muted-foreground',
 }
 
 const StatusTag = ({status}: {status: Status}) => (
@@ -189,13 +189,13 @@ const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
 
 // 뎁스 배지 색상 — 시맨틱 토큰 brand(라이트·다크 모드에서 값이 바뀌지 않는 고정색)의
 // 불투명도만 20/40/60/80% 로 단계적으로 올려 뎁스가 깊어질수록 진해지게 한다(새 색상
-// 하드코딩 없음). text-bolder 하나로 통일해도 이 네 단계 전부 라이트·다크 모드 모두
+// 하드코딩 없음). text-foreground 하나로 통일해도 이 네 단계 전부 라이트·다크 모드 모두
 // 4.5:1 이상 대비를 유지한다(실측 확인). 뎁스가 이 배열보다 깊어지면 마지막 스타일을 그대로 쓴다.
 const DEPTH_BADGE_STYLES = [
-    'bg-element-primary/20 text-bolder',
-    'bg-element-primary/40 text-bolder',
-    'bg-element-primary/60 text-bolder',
-    'bg-element-primary/80 text-bolder',
+    'bg-primary/20 text-foreground',
+    'bg-primary/40 text-foreground',
+    'bg-primary/60 text-foreground',
+    'bg-primary/80 text-foreground',
 ]
 const depthBadgeClass = (depth: number): string => DEPTH_BADGE_STYLES[Math.min(depth, DEPTH_BADGE_STYLES.length - 1)]
 
@@ -264,7 +264,7 @@ const PublishingIndex = () => {
                 <h2 id="section-publishing-index" className="typo-title-l-bold">
                     퍼블리싱 인덱스
                 </h2>
-                <p className="typo-body-l-regular text-subtle">
+                <p className="typo-body-l-regular text-muted-foreground">
                     이 플랫폼의 화면별 퍼블리싱 진행 상태와 산출물 버전을 추적합니다. 버전은 git 태그를 기준으로 자동
                     계산되며, 이번 릴리스에서 바뀐 항목은 강조 표시됩니다.
                 </p>
@@ -277,29 +277,35 @@ const PublishingIndex = () => {
                         <StatusTag status={status} />
                     </li>
                 ))}
-                <li className="text-error typo-caption-regular inline-flex items-center gap-1 font-semibold">
+                <li className="text-destructive typo-caption-regular inline-flex items-center gap-1 font-semibold">
                     <AlertTriangle aria-hidden="true" className="size-3.5" />
                     이슈
                 </li>
-                <li className="text-info typo-caption-regular inline-flex items-center gap-1 font-semibold">
+                <li className="text-primary typo-caption-regular inline-flex items-center gap-1 font-semibold">
                     <Info aria-hidden="true" className="size-3.5" />
                     정보
                 </li>
             </ul>
 
             {/* 자산 버전 요약 */}
-            <div className="bg-background border-gray-subtle-2 overflow-x-auto rounded-md border">
+            <div className="bg-background border-border overflow-x-auto rounded-md border">
                 <table className="w-full text-left">
                     <caption className="sr-only">자산별 버전 예시</caption>
                     <thead>
-                        <tr className="border-gray-subtle-2 border-b bg-gray-100/25">
+                        <tr className="border-border border-b bg-gray-100/25">
                             {assetVersions.map((a) => (
                                 <th key={a.name} scope="col" className="typo-body-l-medium px-4 py-3 text-center">
                                     <span className="inline-flex items-center justify-center gap-1.5">
                                         {a.kind === 'folder' ? (
-                                            <Folder aria-hidden="true" className="text-subtle size-3.5 shrink-0" />
+                                            <Folder
+                                                aria-hidden="true"
+                                                className="text-muted-foreground size-3.5 shrink-0"
+                                            />
                                         ) : (
-                                            <File aria-hidden="true" className="text-subtle size-3.5 shrink-0" />
+                                            <File
+                                                aria-hidden="true"
+                                                className="text-muted-foreground size-3.5 shrink-0"
+                                            />
                                         )}
                                         <span className="sr-only">{a.kind === 'folder' ? '폴더 ' : '파일 '}</span>
                                         {a.name}
@@ -314,7 +320,9 @@ const PublishingIndex = () => {
                                 <td
                                     key={a.name}
                                     className={`typo-body-l-regular px-4 py-3 text-center font-mono ${
-                                        a.isCurrent ? 'bg-element-primary/10 text-primary font-semibold' : 'text-subtle'
+                                        a.isCurrent
+                                            ? 'bg-primary/10 text-primary font-semibold'
+                                            : 'text-muted-foreground'
                                     }`}
                                 >
                                     <VersionCell version={a.version} isCurrent={a.isCurrent} />
@@ -327,11 +335,11 @@ const PublishingIndex = () => {
 
             {/* 공통 레이아웃 — 화면을 찍어내는 틀(내부 콘텐츠만 바뀜) 단위라 화면 표와 별도로 다룬다.
           위 자산 표와 구분되도록 간격을 더 둔다. */}
-            <div className="bg-background border-gray-subtle-2 mt-4 overflow-x-auto rounded-md border">
+            <div className="bg-background border-border mt-4 overflow-x-auto rounded-md border">
                 <table className="w-full text-left">
                     <caption className="sr-only">공통 레이아웃 상태·버전</caption>
                     <thead>
-                        <tr className="border-gray-subtle-2 border-b bg-gray-100/25">
+                        <tr className="border-border border-b bg-gray-100/25">
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 공통 레이아웃
                             </th>
@@ -352,16 +360,19 @@ const PublishingIndex = () => {
                             return (
                                 <tr
                                     key={layout.label}
-                                    className={`border-gray-subtle-2 border-b last:border-b-0 ${
-                                        isCurrent ? 'bg-element-primary/10' : 'bg-background'
+                                    className={`border-border border-b last:border-b-0 ${
+                                        isCurrent ? 'bg-primary/10' : 'bg-background'
                                     }`}
                                 >
                                     <th
                                         scope="row"
-                                        className="typo-body-l-regular border-gray-subtle-2 border-r px-4 py-3 align-top font-normal"
+                                        className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
                                     >
                                         <span className="inline-flex items-center gap-2">
-                                            <LayoutGrid aria-hidden="true" className="text-subtle size-4 shrink-0" />
+                                            <LayoutGrid
+                                                aria-hidden="true"
+                                                className="text-muted-foreground size-4 shrink-0"
+                                            />
                                             {layout.label}
                                         </span>
                                     </th>
@@ -370,7 +381,7 @@ const PublishingIndex = () => {
                                     </td>
                                     <td
                                         className={`typo-caption-regular px-4 py-3 font-mono ${
-                                            isCurrent ? 'text-primary font-semibold' : 'text-subtle'
+                                            isCurrent ? 'text-primary font-semibold' : 'text-muted-foreground'
                                         }`}
                                     >
                                         <VersionCell version={layout.version} isCurrent={isCurrent} />
@@ -409,8 +420,8 @@ const PublishingIndex = () => {
                                 tabIndex={selected ? 0 : -1}
                                 onClick={() => setFilter(f)}
                                 onKeyDown={(e) => onTabKeyDown(e, i)}
-                                className={`typo-body-l-medium focus-visible:ring-focus inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-md px-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-                                    selected ? 'bg-background text-bolder shadow-1' : 'text-subtle'
+                                className={`typo-body-l-medium focus-visible:ring-ring inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-md px-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                                    selected ? 'bg-background text-foreground shadow-1' : 'text-muted-foreground'
                                 }`}
                             >
                                 <FilterIcon filter={f} />
@@ -422,10 +433,10 @@ const PublishingIndex = () => {
 
                 {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
             진척률은 '최종완료' 화면 비율이라 상태값이 바뀔 때마다 자동으로 갱신된다. */}
-                <p aria-live="polite" className="typo-body-l-regular text-subtle">
-                    {filter} 화면 본수: <span className="text-bolder font-semibold">{screenCount}개</span>
+                <p aria-live="polite" className="typo-body-l-regular text-muted-foreground">
+                    {filter} 화면 본수: <span className="text-foreground font-semibold">{screenCount}개</span>
                     {filter === '전체' ? ' (공통 레이아웃 제외)' : ''} · 작업 진척률:{' '}
-                    <span className="text-bolder font-semibold">{progressPercent}%</span> (최종완료 {doneCount}/
+                    <span className="text-foreground font-semibold">{progressPercent}%</span> (최종완료 {doneCount}/
                     {screenCount})
                 </p>
             </div>
@@ -435,12 +446,12 @@ const PublishingIndex = () => {
                 id="screen-structure-panel"
                 role="tabpanel"
                 aria-labelledby={`userType-tab-${FILTER_ID[filter]}`}
-                className="bg-background border-gray-subtle-2 overflow-x-auto rounded-md border"
+                className="bg-background border-border overflow-x-auto rounded-md border"
             >
                 <table className="w-full text-left">
                     <caption className="sr-only">사이트 구조별 화면 ID·상태·버전 예시</caption>
                     <thead>
-                        <tr className="border-gray-subtle-2 border-b bg-gray-100/25">
+                        <tr className="border-border border-b bg-gray-100/25">
                             {depthHeaders.map((header) => (
                                 <th key={header} scope="col" className="typo-body-l-medium px-4 py-3">
                                     {header}
@@ -466,8 +477,8 @@ const PublishingIndex = () => {
                             return (
                                 <tr
                                     key={leaf.key}
-                                    className={`border-gray-subtle-2 border-b last:border-b-0 ${
-                                        isCurrent ? 'bg-element-primary/10' : 'bg-background'
+                                    className={`border-border border-b last:border-b-0 ${
+                                        isCurrent ? 'bg-primary/10' : 'bg-background'
                                     }`}
                                 >
                                     {depthCells[i].map((cell, depth) => {
@@ -477,7 +488,7 @@ const PublishingIndex = () => {
                                                 <th
                                                     key={depth}
                                                     scope="row"
-                                                    className="typo-caption-regular text-subtle border-gray-subtle-2 border-r px-4 py-3 align-top font-normal"
+                                                    className="typo-caption-regular text-muted-foreground border-border border-r px-4 py-3 align-top font-normal"
                                                 >
                                                     <span aria-hidden="true">-</span>
                                                     <span className="sr-only">해당 없음</span>
@@ -490,7 +501,7 @@ const PublishingIndex = () => {
                                                 scope="row"
                                                 rowSpan={cell.rowSpan}
                                                 colSpan={cell.colSpan}
-                                                className="typo-body-l-regular border-gray-subtle-2 border-r px-4 py-3 align-top font-normal"
+                                                className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
                                             >
                                                 <span className="inline-flex items-center gap-2">
                                                     <span
@@ -505,7 +516,7 @@ const PublishingIndex = () => {
                                             </th>
                                         )
                                     })}
-                                    <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                         {leaf.screenId}
                                     </td>
                                     <td className="px-4 py-3">
@@ -513,7 +524,7 @@ const PublishingIndex = () => {
                                     </td>
                                     <td
                                         className={`typo-caption-regular px-4 py-3 font-mono ${
-                                            isCurrent ? 'text-primary font-semibold' : 'text-subtle'
+                                            isCurrent ? 'text-primary font-semibold' : 'text-muted-foreground'
                                         }`}
                                     >
                                         <VersionCell version={leaf.version} isCurrent={isCurrent} />

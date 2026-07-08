@@ -34,7 +34,7 @@ const PageHeaderGuidePage = () => (
                 <h2 id="ph-variant" className="typo-heading-h4-bold">
                     Variant
                 </h2>
-                <p className="typo-body-l-regular text-subtle">
+                <p className="typo-body-l-regular text-muted-foreground">
                     페이지 성격에 맞춰 선택하는 타이포그래피 조합 2가지입니다.
                 </p>
             </div>
@@ -46,7 +46,7 @@ const PageHeaderGuidePage = () => (
                     </span>
                     <h3 className="typo-body-l-medium text-foreground">default — 일반 페이지</h3>
                 </div>
-                <div className="border-gray-subtle-2 rounded-md border p-6">
+                <div className="border-border rounded-md border p-6">
                     <PageHeader>
                         <PageHeaderTitle>내 정보 확인</PageHeaderTitle>
                         <PageHeaderDescription>
@@ -64,7 +64,7 @@ const PageHeaderGuidePage = () => (
                     </span>
                     <h3 className="typo-body-l-medium text-foreground">compact — 콘텐츠 밀도가 높은 페이지</h3>
                 </div>
-                <div className="border-gray-subtle-2 rounded-md border p-6">
+                <div className="border-border rounded-md border p-6">
                     <PageHeader>
                         <PageHeaderTitle variant="compact">사업자 정보 입력</PageHeaderTitle>
                         <PageHeaderDescription variant="compact">
@@ -72,7 +72,7 @@ const PageHeaderGuidePage = () => (
                         </PageHeaderDescription>
                     </PageHeader>
                 </div>
-                <p className="typo-body-l-regular text-subtle">
+                <p className="typo-body-l-regular text-muted-foreground">
                     모바일에서는 Heading/H4/bold + Body/XL/Regular, wide 이상에서는 Display/M/bold + Title/L/Regular 로
                     전환됩니다. 화면 폭을 줄여 확인해 보세요.
                 </p>
@@ -87,11 +87,11 @@ const PageHeaderGuidePage = () => (
                 </h2>
                 <p className="text-foreground-muted text-sm">이 컴포넌트 내부에 들어갈 수 있는 요소들입니다.</p>
             </div>
-            <div className="bg-background border-gray-subtle-2 overflow-x-auto rounded-md border">
+            <div className="bg-background border-border overflow-x-auto rounded-md border">
                 <table className="w-full text-left">
                     <caption className="sr-only">Composition 목록</caption>
                     <thead>
-                        <tr className="border-gray-subtle-2 border-b bg-gray-100/25">
+                        <tr className="border-border border-b bg-gray-100/25">
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 Name
                             </th>
@@ -101,25 +101,25 @@ const PageHeaderGuidePage = () => (
                         </tr>
                     </thead>
                     <tbody>
-                        <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                        <tr className="border-border bg-background border-b last:border-b-0">
                             <th
                                 scope="row"
-                                className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                                className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
                             >
                                 PageHeaderTitle
                             </th>
-                            <td className="typo-body-l-regular text-subtle px-4 py-3">
+                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
                                 페이지 제목을 표시합니다. 내부적으로 h1 요소를 렌더링합니다.
                             </td>
                         </tr>
-                        <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                        <tr className="border-border bg-background border-b last:border-b-0">
                             <th
                                 scope="row"
-                                className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                                className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
                             >
                                 PageHeaderDescription
                             </th>
-                            <td className="typo-body-l-regular text-subtle px-4 py-3">
+                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
                                 페이지의 추가 설명을 표시합니다. 내부적으로 p 요소를 렌더링합니다.
                             </td>
                         </tr>
@@ -139,11 +139,11 @@ const PageHeaderGuidePage = () => (
             {/* BASIC */}
             <div className="flex flex-col gap-2">
                 <h3 className="typo-body-l-medium text-foreground">BASIC</h3>
-                <div className="bg-background border-gray-subtle-2 overflow-x-auto rounded-md border">
+                <div className="bg-background border-border overflow-x-auto rounded-md border">
                     <table className="w-full text-left">
                         <caption className="sr-only">BASIC Props 목록</caption>
                         <thead>
-                            <tr className="border-gray-subtle-2 border-b bg-gray-100/25">
+                            <tr className="border-border border-b bg-gray-100/25">
                                 <th scope="col" className="typo-body-l-medium px-4 py-3">
                                     Name
                                 </th>
@@ -159,16 +159,16 @@ const PageHeaderGuidePage = () => (
                             </tr>
                         </thead>
                         <tbody>
-                            <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                            <tr className="border-border bg-background border-b last:border-b-0">
                                 <th
                                     scope="row"
-                                    className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
                                 >
                                     variant
                                 </th>
                                 <td className="px-4 py-3">
                                     <div className="flex flex-col gap-2">
-                                        <p className="typo-body-l-regular text-subtle">
+                                        <p className="typo-body-l-regular text-muted-foreground">
                                             PageHeaderTitle·PageHeaderDescription 각각에 적용하는 타이포그래피 조합.
                                             페이지 성격에 맞춰 선택한다.
                                         </p>
@@ -177,7 +177,7 @@ const PageHeaderGuidePage = () => (
                                         </span>
                                     </div>
                                 </td>
-                                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                     &apos;default&apos;
                                 </td>
                                 <td className="px-4 py-3">
@@ -191,23 +191,27 @@ const PageHeaderGuidePage = () => (
                                     </div>
                                 </td>
                             </tr>
-                            <tr className="border-gray-subtle-2 bg-background border-b last:border-b-0">
+                            <tr className="border-border bg-background border-b last:border-b-0">
                                 <th
                                     scope="row"
-                                    className="typo-body-l-regular border-gray-subtle-2 text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
                                 >
                                     className
                                 </th>
                                 <td className="px-4 py-3">
                                     <div className="flex flex-col gap-2">
-                                        <p className="typo-body-l-regular text-subtle">추가 클래스명으로 스타일 확장</p>
+                                        <p className="typo-body-l-regular text-muted-foreground">
+                                            추가 클래스명으로 스타일 확장
+                                        </p>
                                         <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
                                             string
                                         </span>
                                     </div>
                                 </td>
-                                <td className="typo-caption-regular text-subtle px-4 py-3 font-mono">&quot;&quot;</td>
-                                <td className="typo-body-l-regular text-subtle px-4 py-3">-</td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                                    &quot;&quot;
+                                </td>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">-</td>
                             </tr>
                         </tbody>
                     </table>
