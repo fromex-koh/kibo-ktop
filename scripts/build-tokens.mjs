@@ -531,16 +531,20 @@ if (typoNames.length) {
 // width = min(100% − 2×margin, container) + margin-inline:auto:
 //  · 넓은 화면: container 고정폭으로 캡핑되고 남는 공간이 자동 여백(중앙정렬) → 스펙의 큰 여백(204/360)이 자동
 //  · 좁은 화면: container 에 못 미치면 최소 margin 만 남기고 폭이 유동으로 줄어듦(컬럼이 과하게 안 좁아짐)
+// @layer utilities 로 감싼다 — unlayered 면 모든 layered(Tailwind 유틸·.typo-*)를 무조건 이겨(always-wins)
+// 예컨대 gap-8 이 조용히 무시된다. .typo-* 와 동일하게 utilities 레이어에 둬 그 문제를 피한다.
 if (Object.keys(grid).length) {
-    L.push('/* .grid-layout — tokens.json grid 기반 반응형 컬럼 그리드.')
-    L.push('   width = min(100% − 2×margin, container): 넓으면 container 고정폭 중앙정렬(남는 공간=자동 여백),')
-    L.push('   좁으면 최소 margin 만 남기고 폭이 줄어든다. margin=가장자리 최소 여백, container=콘텐츠 고정 폭. */')
-    L.push('.grid-layout {')
-    L.push('  display: grid;')
-    L.push('  grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));')
-    L.push('  gap: var(--ds-grid-gutter);')
-    L.push('  width: min(100% - 2 * var(--ds-grid-margin), var(--ds-grid-container));')
-    L.push('  margin-inline: auto;')
+    L.push('@layer utilities {')
+    L.push('  /* .grid-layout — tokens.json grid 기반 반응형 컬럼 그리드.')
+    L.push('     width = min(100% − 2×margin, container): 넓으면 container 고정폭 중앙정렬(남는 공간=자동 여백),')
+    L.push('     좁으면 최소 margin 만 남기고 폭이 줄어든다. margin=가장자리 최소 여백, container=콘텐츠 고정 폭. */')
+    L.push('  .grid-layout {')
+    L.push('    display: grid;')
+    L.push('    grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));')
+    L.push('    gap: var(--ds-grid-gutter);')
+    L.push('    width: min(100% - 2 * var(--ds-grid-margin), var(--ds-grid-container));')
+    L.push('    margin-inline: auto;')
+    L.push('  }')
     L.push('}', '')
 }
 

@@ -1037,15 +1037,17 @@
   }
 }
 
-/* .grid-layout — tokens.json grid 기반 반응형 컬럼 그리드.
-   width = min(100% − 2×margin, container): 넓으면 container 고정폭 중앙정렬(남는 공간=자동 여백),
-   좁으면 최소 margin 만 남기고 폭이 줄어든다. margin=가장자리 최소 여백, container=콘텐츠 고정 폭. */
-.grid-layout {
-  display: grid;
-  grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));
-  gap: var(--ds-grid-gutter);
-  width: min(100% - 2 * var(--ds-grid-margin), var(--ds-grid-container));
-  margin-inline: auto;
+@layer utilities {
+  /* .grid-layout — tokens.json grid 기반 반응형 컬럼 그리드.
+     width = min(100% − 2×margin, container): 넓으면 container 고정폭 중앙정렬(남는 공간=자동 여백),
+     좁으면 최소 margin 만 남기고 폭이 줄어든다. margin=가장자리 최소 여백, container=콘텐츠 고정 폭. */
+  .grid-layout {
+    display: grid;
+    grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));
+    gap: var(--ds-grid-gutter);
+    width: min(100% - 2 * var(--ds-grid-margin), var(--ds-grid-container));
+    margin-inline: auto;
+  }
 }
 
 /* z-index → z-* 유틸 (@utility 라 focus: 등 variant 지원) */
