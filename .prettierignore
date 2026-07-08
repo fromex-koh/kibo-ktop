@@ -9,3 +9,4 @@ package-lock.json
 src/app/fonts
 *.woff2
 src/app/tokens.css
+.claude/settings.local.json
