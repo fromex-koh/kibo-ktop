@@ -6,73 +6,46 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
-  --font-sans:
-    var(--font-pretendard), 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system,
-    BlinkMacSystemFont, system-ui, sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --font-sans:
+        var(--font-pretendard), 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, system-ui,
+        sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-body {
-  background: var(--ds-background);
-  color: var(--ds-bolder);
-  font-family: var(--font-sans);
-}
+@layer base {
+    body {
+        background: var(--ds-background);
+        color: var(--ds-bolder);
+    }
 
-/* 스크롤 안정화 (Windows 처럼 경계에서 고정):
-   - overscroll-behavior: none — macOS 고무줄(rubber-band) 오버스크롤 바운스 제거. 스크롤 경계(맨
-     위/아래)에서 콘텐츠가 튕겨 fixed 사이드바 기준으로 덜컹여 보이던 현상을 없애 하드 스톱시킨다.
-   - scrollbar-gutter: stable — 스크롤바 자리를 항상 예약해 오버플로 유무에 따른 가로 폭 변화 방지.
-   ⚠️ 표준 scrollbar-width/scrollbar-color 는 의도적으로 두지 않는다 — Chrome 121+ 에서 표준 속성이
-   있으면 아래 ::-webkit-scrollbar 커스텀(6px)을 무시하고 'thin'(플랫폼 기본 ~11px)을 적용해,
-   예약된 폭이 실제 스크롤바 두께와 어긋나게 된다. */
-html {
-  overscroll-behavior: none;
-  scrollbar-gutter: stable;
-}
+    html {
+        @apply font-sans;
 
-/* WebKit/Blink 공통 스크롤바 — 두께·라운드는 rem 토큰(size.scrollbar-w/radius.sm), 색은 --ds-scroll-*
-   (gray 스케일 참조라 다크에서 자동 반사). Firefox 는 이 pseudo-element 를 지원하지 않아 기본
-   스크롤바를 사용한다. */
-::-webkit-scrollbar {
-  width: var(--ds-spacing-scrollbar-w);
-  height: var(--ds-spacing-scrollbar-w);
-  background-color: var(--ds-scroll-track);
-}
-::-webkit-scrollbar-thumb {
-  border-radius: var(--ds-radius-sm);
-  background-color: var(--ds-scroll-thumb);
-}
-::-webkit-scrollbar-track {
-  border-radius: var(--ds-radius-sm);
-  background-color: var(--ds-scroll-track);
-}
+        /* 스크롤 안정화 (Windows 처럼 경계에서 고정):
+           - overscroll-behavior: none — macOS 고무줄(rubber-band) 오버스크롤 바운스 제거. 스크롤 경계(맨
+             위/아래)에서 콘텐츠가 튕겨 fixed 사이드바 기준으로 덜컹여 보이던 현상을 없애 하드 스톱시킨다.
+           - scrollbar-gutter: stable — 스크롤바 자리를 항상 예약해 오버플로 유무에 따른 가로 폭 변화 방지.
+           ⚠️ 표준 scrollbar-width/scrollbar-color 는 의도적으로 두지 않는다 — Chrome 121+ 에서 표준 속성이
+           있으면 아래 ::-webkit-scrollbar 커스텀(6px)을 무시하고 'thin'(플랫폼 기본 ~11px)을 적용해,
+           예약된 폭이 실제 스크롤바 두께와 어긋나게 된다. */
+        overscroll-behavior: none;
+        scrollbar-gutter: stable;
+    }
 
-/* PageHeader "compact" variant(콘텐츠 밀도가 높은 페이지) 전용 — 모바일 Heading/H4/bold ↔ wide
-   이상 Display/M/bold 처럼 서로 다른 typo-* 조합 사이를 브레이크포인트로 전환해야 한다. 토큰
-   생성기(tokens.css)는 "같은 이름의 크기만 mobile/pc 로 분기"만 표현하므로, 이런 이름이 다른
-   두 조합 간 전환은 생성기 범위 밖이라 여기 손으로 추가한다. 값은 typo-heading-h4-bold /
-   typo-display-m-bold / typo-body-xl-regular / typo-title-l-regular 와 동일하게 맞춘다 —
-   tokens.json 의 해당 값이 바뀌면 함께 갱신할 것. */
-.typo-page-header-title-compact {
-  font-size: 1.5rem; /* typo-heading-h4-bold */
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-@media (min-width: 768px) {
-  .typo-page-header-title-compact {
-    font-size: 2.25rem; /* typo-display-m-bold */
-  }
-}
-
-.typo-page-header-description-compact {
-  font-size: 1rem; /* typo-body-xl-regular */
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-@media (min-width: 768px) {
-  .typo-page-header-description-compact {
-    font-size: 1.25rem; /* typo-title-l-regular */
-  }
+    /* WebKit/Blink 공통 스크롤바 — 두께·라운드는 rem 토큰(size.scrollbar-w/radius.sm), 색은 --ds-scroll-*
+       (gray 스케일 참조라 다크에서 자동 반사). Firefox 는 이 pseudo-element 를 지원하지 않아 기본
+       스크롤바를 사용한다. */
+    ::-webkit-scrollbar {
+        width: var(--ds-spacing-scrollbar-w);
+        height: var(--ds-spacing-scrollbar-w);
+        background-color: var(--ds-scroll-track);
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: var(--ds-radius-sm);
+        background-color: var(--ds-scroll-thumb);
+    }
+    ::-webkit-scrollbar-track {
+        border-radius: var(--ds-radius-sm);
+        background-color: var(--ds-scroll-track);
+    }
 }
