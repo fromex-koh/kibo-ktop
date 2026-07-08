@@ -597,35 +597,35 @@
 :root {
   /* font-size → --ds-font-size-<tier>(모바일) · -pc(PC), 굵기 무관·tier 공유 */
   --ds-font-size-display-xl: 3rem;
-  --ds-font-size-display-xl-pc: 3rem;
+  --ds-font-size-display-xl-pc: var(--ds-font-size-display-xl);
   --ds-font-size-display-l: 2.5rem;
-  --ds-font-size-display-l-pc: 2.5rem;
+  --ds-font-size-display-l-pc: var(--ds-font-size-display-l);
   --ds-font-size-display-m: 2.25rem;
-  --ds-font-size-display-m-pc: 2.25rem;
+  --ds-font-size-display-m-pc: var(--ds-font-size-display-m);
   --ds-font-size-h1: 2rem;
-  --ds-font-size-h1-pc: 2rem;
+  --ds-font-size-h1-pc: var(--ds-font-size-h1);
   --ds-font-size-h2: 1.75rem;
-  --ds-font-size-h2-pc: 1.75rem;
+  --ds-font-size-h2-pc: var(--ds-font-size-h2);
   --ds-font-size-h3: 1.625rem;
-  --ds-font-size-h3-pc: 1.625rem;
+  --ds-font-size-h3-pc: var(--ds-font-size-h3);
   --ds-font-size-h4: 1.5rem;
-  --ds-font-size-h4-pc: 1.5rem;
+  --ds-font-size-h4-pc: var(--ds-font-size-h4);
   --ds-font-size-title-xl: 1.375rem;
-  --ds-font-size-title-xl-pc: 1.375rem;
+  --ds-font-size-title-xl-pc: var(--ds-font-size-title-xl);
   --ds-font-size-title-l: 1.25rem;
-  --ds-font-size-title-l-pc: 1.25rem;
+  --ds-font-size-title-l-pc: var(--ds-font-size-title-l);
   --ds-font-size-title-m: 1.125rem;
-  --ds-font-size-title-m-pc: 1.125rem;
+  --ds-font-size-title-m-pc: var(--ds-font-size-title-m);
   --ds-font-size-body-xl: 1rem;
-  --ds-font-size-body-xl-pc: 1rem;
+  --ds-font-size-body-xl-pc: var(--ds-font-size-body-xl);
   --ds-font-size-body-l: 0.875rem;
-  --ds-font-size-body-l-pc: 0.875rem;
+  --ds-font-size-body-l-pc: var(--ds-font-size-body-l);
   --ds-font-size-body-m: 0.8125rem;
-  --ds-font-size-body-m-pc: 0.8125rem;
+  --ds-font-size-body-m-pc: var(--ds-font-size-body-m);
   --ds-font-size-caption: 0.75rem;
-  --ds-font-size-caption-pc: 0.75rem;
+  --ds-font-size-caption-pc: var(--ds-font-size-caption);
   --ds-font-size-micro: 0.6875rem;
-  --ds-font-size-micro-pc: 0.6875rem;
+  --ds-font-size-micro-pc: var(--ds-font-size-micro);
 }
 
 @layer utilities {

@@ -493,7 +493,9 @@ if (typoNames.length) {
     // 2) font-size — 굵기·행간·자간은 위 primitive 라 이 변수는 크기만 담는다. 크기는 굵기와 무관해
     //    tier(display-xl 등) 로 공유한다: display-xl-bold/medium/regular 3개가 --ds-font-size-display-xl
     //    하나를 참조 → 변수 1/3. 속성명 규칙(--ds-font-weight-*…)에 맞춰 --ds-font-size-<tier>. -pc 는
-    //    PC(≥typoBp) 크기. typo(세트)는 .typo-* 클래스에만 남긴다.
+    //    PC(≥typoBp) 크기. mobile/pc 페어는 반응형 타이포 대비 항상 낸다. 단, pc==mobile 이면 값 리터럴을
+    //    반복하지 않고 -pc 가 base 변수를 참조 → 값은 단일 소스, pc 만 다르면 그 tier 에 실제 값이 들어간다.
+    //    typo(세트)는 .typo-* 클래스에만 남긴다.
     L.push(':root {')
     L.push('  /* font-size → --ds-font-size-<tier>(모바일) · -pc(PC), 굵기 무관·tier 공유 */')
     const emittedTiers = new Set()
@@ -502,7 +504,8 @@ if (typoNames.length) {
         if (emittedTiers.has(tier)) continue
         emittedTiers.add(tier)
         L.push(`  --ds-font-size-${tier}: ${toRem(t.size.mobile)};`)
-        L.push(`  --ds-font-size-${tier}-pc: ${toRem(t.size.pc)};`)
+        const pc = t.size.pc === t.size.mobile ? `var(--ds-font-size-${tier})` : toRem(t.size.pc)
+        L.push(`  --ds-font-size-${tier}-pc: ${pc};`)
     }
     L.push('}', '')
 
