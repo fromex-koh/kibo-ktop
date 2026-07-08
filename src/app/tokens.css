@@ -595,504 +595,504 @@
 }
 
 :root {
-  /* typography font-size → --ds-typo-*-font-size (토큰별 고유값, mobile 기본 + -pc) */
-  --ds-typo-display-xl-bold-font-size: 3rem;
-  --ds-typo-display-xl-bold-font-size-pc: 3rem;
-  --ds-typo-display-xl-medium-font-size: 3rem;
-  --ds-typo-display-xl-medium-font-size-pc: 3rem;
-  --ds-typo-display-xl-regular-font-size: 3rem;
-  --ds-typo-display-xl-regular-font-size-pc: 3rem;
-  --ds-typo-display-l-bold-font-size: 2.5rem;
-  --ds-typo-display-l-bold-font-size-pc: 2.5rem;
-  --ds-typo-display-l-medium-font-size: 2.5rem;
-  --ds-typo-display-l-medium-font-size-pc: 2.5rem;
-  --ds-typo-display-l-regular-font-size: 2.5rem;
-  --ds-typo-display-l-regular-font-size-pc: 2.5rem;
-  --ds-typo-display-m-bold-font-size: 2.25rem;
-  --ds-typo-display-m-bold-font-size-pc: 2.25rem;
-  --ds-typo-display-m-medium-font-size: 2.25rem;
-  --ds-typo-display-m-medium-font-size-pc: 2.25rem;
-  --ds-typo-display-m-regular-font-size: 2.25rem;
-  --ds-typo-display-m-regular-font-size-pc: 2.25rem;
-  --ds-typo-h1-bold-font-size: 2rem;
-  --ds-typo-h1-bold-font-size-pc: 2rem;
-  --ds-typo-h1-medium-font-size: 2rem;
-  --ds-typo-h1-medium-font-size-pc: 2rem;
-  --ds-typo-h1-regular-font-size: 2rem;
-  --ds-typo-h1-regular-font-size-pc: 2rem;
-  --ds-typo-h2-bold-font-size: 1.75rem;
-  --ds-typo-h2-bold-font-size-pc: 1.75rem;
-  --ds-typo-h2-medium-font-size: 1.75rem;
-  --ds-typo-h2-medium-font-size-pc: 1.75rem;
-  --ds-typo-h2-regular-font-size: 1.75rem;
-  --ds-typo-h2-regular-font-size-pc: 1.75rem;
-  --ds-typo-h3-bold-font-size: 1.625rem;
-  --ds-typo-h3-bold-font-size-pc: 1.625rem;
-  --ds-typo-h3-medium-font-size: 1.625rem;
-  --ds-typo-h3-medium-font-size-pc: 1.625rem;
-  --ds-typo-h3-regular-font-size: 1.625rem;
-  --ds-typo-h3-regular-font-size-pc: 1.625rem;
-  --ds-typo-h4-bold-font-size: 1.5rem;
-  --ds-typo-h4-bold-font-size-pc: 1.5rem;
-  --ds-typo-h4-medium-font-size: 1.5rem;
-  --ds-typo-h4-medium-font-size-pc: 1.5rem;
-  --ds-typo-h4-regular-font-size: 1.5rem;
-  --ds-typo-h4-regular-font-size-pc: 1.5rem;
-  --ds-typo-title-xl-bold-font-size: 1.375rem;
-  --ds-typo-title-xl-bold-font-size-pc: 1.375rem;
-  --ds-typo-title-xl-medium-font-size: 1.375rem;
-  --ds-typo-title-xl-medium-font-size-pc: 1.375rem;
-  --ds-typo-title-xl-regular-font-size: 1.375rem;
-  --ds-typo-title-xl-regular-font-size-pc: 1.375rem;
-  --ds-typo-title-l-bold-font-size: 1.25rem;
-  --ds-typo-title-l-bold-font-size-pc: 1.25rem;
-  --ds-typo-title-l-medium-font-size: 1.25rem;
-  --ds-typo-title-l-medium-font-size-pc: 1.25rem;
-  --ds-typo-title-l-regular-font-size: 1.25rem;
-  --ds-typo-title-l-regular-font-size-pc: 1.25rem;
-  --ds-typo-title-m-bold-font-size: 1.125rem;
-  --ds-typo-title-m-bold-font-size-pc: 1.125rem;
-  --ds-typo-title-m-medium-font-size: 1.125rem;
-  --ds-typo-title-m-medium-font-size-pc: 1.125rem;
-  --ds-typo-title-m-regular-font-size: 1.125rem;
-  --ds-typo-title-m-regular-font-size-pc: 1.125rem;
-  --ds-typo-body-xl-bold-font-size: 1rem;
-  --ds-typo-body-xl-bold-font-size-pc: 1rem;
-  --ds-typo-body-xl-medium-font-size: 1rem;
-  --ds-typo-body-xl-medium-font-size-pc: 1rem;
-  --ds-typo-body-xl-regular-font-size: 1rem;
-  --ds-typo-body-xl-regular-font-size-pc: 1rem;
-  --ds-typo-body-l-bold-font-size: 0.875rem;
-  --ds-typo-body-l-bold-font-size-pc: 0.875rem;
-  --ds-typo-body-l-medium-font-size: 0.875rem;
-  --ds-typo-body-l-medium-font-size-pc: 0.875rem;
-  --ds-typo-body-l-regular-font-size: 0.875rem;
-  --ds-typo-body-l-regular-font-size-pc: 0.875rem;
-  --ds-typo-body-m-bold-font-size: 0.8125rem;
-  --ds-typo-body-m-bold-font-size-pc: 0.8125rem;
-  --ds-typo-body-m-medium-font-size: 0.8125rem;
-  --ds-typo-body-m-medium-font-size-pc: 0.8125rem;
-  --ds-typo-body-m-regular-font-size: 0.8125rem;
-  --ds-typo-body-m-regular-font-size-pc: 0.8125rem;
-  --ds-typo-caption-bold-font-size: 0.75rem;
-  --ds-typo-caption-bold-font-size-pc: 0.75rem;
-  --ds-typo-caption-medium-font-size: 0.75rem;
-  --ds-typo-caption-medium-font-size-pc: 0.75rem;
-  --ds-typo-caption-regular-font-size: 0.75rem;
-  --ds-typo-caption-regular-font-size-pc: 0.75rem;
-  --ds-typo-micro-bold-font-size: 0.6875rem;
-  --ds-typo-micro-bold-font-size-pc: 0.6875rem;
-  --ds-typo-micro-medium-font-size: 0.6875rem;
-  --ds-typo-micro-medium-font-size-pc: 0.6875rem;
-  --ds-typo-micro-regular-font-size: 0.6875rem;
-  --ds-typo-micro-regular-font-size-pc: 0.6875rem;
+  /* typography 크기 → --ds-typo-<name>(모바일) · --ds-typo-<name>-pc(PC), 토큰별 고유값 */
+  --ds-typo-display-xl-bold: 3rem;
+  --ds-typo-display-xl-bold-pc: 3rem;
+  --ds-typo-display-xl-medium: 3rem;
+  --ds-typo-display-xl-medium-pc: 3rem;
+  --ds-typo-display-xl-regular: 3rem;
+  --ds-typo-display-xl-regular-pc: 3rem;
+  --ds-typo-display-l-bold: 2.5rem;
+  --ds-typo-display-l-bold-pc: 2.5rem;
+  --ds-typo-display-l-medium: 2.5rem;
+  --ds-typo-display-l-medium-pc: 2.5rem;
+  --ds-typo-display-l-regular: 2.5rem;
+  --ds-typo-display-l-regular-pc: 2.5rem;
+  --ds-typo-display-m-bold: 2.25rem;
+  --ds-typo-display-m-bold-pc: 2.25rem;
+  --ds-typo-display-m-medium: 2.25rem;
+  --ds-typo-display-m-medium-pc: 2.25rem;
+  --ds-typo-display-m-regular: 2.25rem;
+  --ds-typo-display-m-regular-pc: 2.25rem;
+  --ds-typo-h1-bold: 2rem;
+  --ds-typo-h1-bold-pc: 2rem;
+  --ds-typo-h1-medium: 2rem;
+  --ds-typo-h1-medium-pc: 2rem;
+  --ds-typo-h1-regular: 2rem;
+  --ds-typo-h1-regular-pc: 2rem;
+  --ds-typo-h2-bold: 1.75rem;
+  --ds-typo-h2-bold-pc: 1.75rem;
+  --ds-typo-h2-medium: 1.75rem;
+  --ds-typo-h2-medium-pc: 1.75rem;
+  --ds-typo-h2-regular: 1.75rem;
+  --ds-typo-h2-regular-pc: 1.75rem;
+  --ds-typo-h3-bold: 1.625rem;
+  --ds-typo-h3-bold-pc: 1.625rem;
+  --ds-typo-h3-medium: 1.625rem;
+  --ds-typo-h3-medium-pc: 1.625rem;
+  --ds-typo-h3-regular: 1.625rem;
+  --ds-typo-h3-regular-pc: 1.625rem;
+  --ds-typo-h4-bold: 1.5rem;
+  --ds-typo-h4-bold-pc: 1.5rem;
+  --ds-typo-h4-medium: 1.5rem;
+  --ds-typo-h4-medium-pc: 1.5rem;
+  --ds-typo-h4-regular: 1.5rem;
+  --ds-typo-h4-regular-pc: 1.5rem;
+  --ds-typo-title-xl-bold: 1.375rem;
+  --ds-typo-title-xl-bold-pc: 1.375rem;
+  --ds-typo-title-xl-medium: 1.375rem;
+  --ds-typo-title-xl-medium-pc: 1.375rem;
+  --ds-typo-title-xl-regular: 1.375rem;
+  --ds-typo-title-xl-regular-pc: 1.375rem;
+  --ds-typo-title-l-bold: 1.25rem;
+  --ds-typo-title-l-bold-pc: 1.25rem;
+  --ds-typo-title-l-medium: 1.25rem;
+  --ds-typo-title-l-medium-pc: 1.25rem;
+  --ds-typo-title-l-regular: 1.25rem;
+  --ds-typo-title-l-regular-pc: 1.25rem;
+  --ds-typo-title-m-bold: 1.125rem;
+  --ds-typo-title-m-bold-pc: 1.125rem;
+  --ds-typo-title-m-medium: 1.125rem;
+  --ds-typo-title-m-medium-pc: 1.125rem;
+  --ds-typo-title-m-regular: 1.125rem;
+  --ds-typo-title-m-regular-pc: 1.125rem;
+  --ds-typo-body-xl-bold: 1rem;
+  --ds-typo-body-xl-bold-pc: 1rem;
+  --ds-typo-body-xl-medium: 1rem;
+  --ds-typo-body-xl-medium-pc: 1rem;
+  --ds-typo-body-xl-regular: 1rem;
+  --ds-typo-body-xl-regular-pc: 1rem;
+  --ds-typo-body-l-bold: 0.875rem;
+  --ds-typo-body-l-bold-pc: 0.875rem;
+  --ds-typo-body-l-medium: 0.875rem;
+  --ds-typo-body-l-medium-pc: 0.875rem;
+  --ds-typo-body-l-regular: 0.875rem;
+  --ds-typo-body-l-regular-pc: 0.875rem;
+  --ds-typo-body-m-bold: 0.8125rem;
+  --ds-typo-body-m-bold-pc: 0.8125rem;
+  --ds-typo-body-m-medium: 0.8125rem;
+  --ds-typo-body-m-medium-pc: 0.8125rem;
+  --ds-typo-body-m-regular: 0.8125rem;
+  --ds-typo-body-m-regular-pc: 0.8125rem;
+  --ds-typo-caption-bold: 0.75rem;
+  --ds-typo-caption-bold-pc: 0.75rem;
+  --ds-typo-caption-medium: 0.75rem;
+  --ds-typo-caption-medium-pc: 0.75rem;
+  --ds-typo-caption-regular: 0.75rem;
+  --ds-typo-caption-regular-pc: 0.75rem;
+  --ds-typo-micro-bold: 0.6875rem;
+  --ds-typo-micro-bold-pc: 0.6875rem;
+  --ds-typo-micro-medium: 0.6875rem;
+  --ds-typo-micro-medium-pc: 0.6875rem;
+  --ds-typo-micro-regular: 0.6875rem;
+  --ds-typo-micro-regular-pc: 0.6875rem;
 }
 
 @layer utilities {
   /* typography → .typo-* (모바일 기본, 768px↑ = PC) */
   .typo-display-xl-bold {
-    font-size: var(--ds-typo-display-xl-bold-font-size);
+    font-size: var(--ds-typo-display-xl-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-display-xl-bold-font-size-pc);
+      font-size: var(--ds-typo-display-xl-bold-pc);
     }
   }
   .typo-display-xl-medium {
-    font-size: var(--ds-typo-display-xl-medium-font-size);
+    font-size: var(--ds-typo-display-xl-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-display-xl-medium-font-size-pc);
+      font-size: var(--ds-typo-display-xl-medium-pc);
     }
   }
   .typo-display-xl-regular {
-    font-size: var(--ds-typo-display-xl-regular-font-size);
+    font-size: var(--ds-typo-display-xl-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-display-xl-regular-font-size-pc);
+      font-size: var(--ds-typo-display-xl-regular-pc);
     }
   }
   .typo-display-l-bold {
-    font-size: var(--ds-typo-display-l-bold-font-size);
+    font-size: var(--ds-typo-display-l-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-display-l-bold-font-size-pc);
+      font-size: var(--ds-typo-display-l-bold-pc);
     }
   }
   .typo-display-l-medium {
-    font-size: var(--ds-typo-display-l-medium-font-size);
+    font-size: var(--ds-typo-display-l-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-display-l-medium-font-size-pc);
+      font-size: var(--ds-typo-display-l-medium-pc);
     }
   }
   .typo-display-l-regular {
-    font-size: var(--ds-typo-display-l-regular-font-size);
+    font-size: var(--ds-typo-display-l-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-display-l-regular-font-size-pc);
+      font-size: var(--ds-typo-display-l-regular-pc);
     }
   }
   .typo-display-m-bold {
-    font-size: var(--ds-typo-display-m-bold-font-size);
+    font-size: var(--ds-typo-display-m-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-display-m-bold-font-size-pc);
+      font-size: var(--ds-typo-display-m-bold-pc);
     }
   }
   .typo-display-m-medium {
-    font-size: var(--ds-typo-display-m-medium-font-size);
+    font-size: var(--ds-typo-display-m-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-display-m-medium-font-size-pc);
+      font-size: var(--ds-typo-display-m-medium-pc);
     }
   }
   .typo-display-m-regular {
-    font-size: var(--ds-typo-display-m-regular-font-size);
+    font-size: var(--ds-typo-display-m-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-display-m-regular-font-size-pc);
+      font-size: var(--ds-typo-display-m-regular-pc);
     }
   }
   .typo-h1-bold {
-    font-size: var(--ds-typo-h1-bold-font-size);
+    font-size: var(--ds-typo-h1-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h1-bold-font-size-pc);
+      font-size: var(--ds-typo-h1-bold-pc);
     }
   }
   .typo-h1-medium {
-    font-size: var(--ds-typo-h1-medium-font-size);
+    font-size: var(--ds-typo-h1-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h1-medium-font-size-pc);
+      font-size: var(--ds-typo-h1-medium-pc);
     }
   }
   .typo-h1-regular {
-    font-size: var(--ds-typo-h1-regular-font-size);
+    font-size: var(--ds-typo-h1-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h1-regular-font-size-pc);
+      font-size: var(--ds-typo-h1-regular-pc);
     }
   }
   .typo-h2-bold {
-    font-size: var(--ds-typo-h2-bold-font-size);
+    font-size: var(--ds-typo-h2-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h2-bold-font-size-pc);
+      font-size: var(--ds-typo-h2-bold-pc);
     }
   }
   .typo-h2-medium {
-    font-size: var(--ds-typo-h2-medium-font-size);
+    font-size: var(--ds-typo-h2-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h2-medium-font-size-pc);
+      font-size: var(--ds-typo-h2-medium-pc);
     }
   }
   .typo-h2-regular {
-    font-size: var(--ds-typo-h2-regular-font-size);
+    font-size: var(--ds-typo-h2-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h2-regular-font-size-pc);
+      font-size: var(--ds-typo-h2-regular-pc);
     }
   }
   .typo-h3-bold {
-    font-size: var(--ds-typo-h3-bold-font-size);
+    font-size: var(--ds-typo-h3-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h3-bold-font-size-pc);
+      font-size: var(--ds-typo-h3-bold-pc);
     }
   }
   .typo-h3-medium {
-    font-size: var(--ds-typo-h3-medium-font-size);
+    font-size: var(--ds-typo-h3-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h3-medium-font-size-pc);
+      font-size: var(--ds-typo-h3-medium-pc);
     }
   }
   .typo-h3-regular {
-    font-size: var(--ds-typo-h3-regular-font-size);
+    font-size: var(--ds-typo-h3-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h3-regular-font-size-pc);
+      font-size: var(--ds-typo-h3-regular-pc);
     }
   }
   .typo-h4-bold {
-    font-size: var(--ds-typo-h4-bold-font-size);
+    font-size: var(--ds-typo-h4-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h4-bold-font-size-pc);
+      font-size: var(--ds-typo-h4-bold-pc);
     }
   }
   .typo-h4-medium {
-    font-size: var(--ds-typo-h4-medium-font-size);
+    font-size: var(--ds-typo-h4-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h4-medium-font-size-pc);
+      font-size: var(--ds-typo-h4-medium-pc);
     }
   }
   .typo-h4-regular {
-    font-size: var(--ds-typo-h4-regular-font-size);
+    font-size: var(--ds-typo-h4-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-h4-regular-font-size-pc);
+      font-size: var(--ds-typo-h4-regular-pc);
     }
   }
   .typo-title-xl-bold {
-    font-size: var(--ds-typo-title-xl-bold-font-size);
+    font-size: var(--ds-typo-title-xl-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-title-xl-bold-font-size-pc);
+      font-size: var(--ds-typo-title-xl-bold-pc);
     }
   }
   .typo-title-xl-medium {
-    font-size: var(--ds-typo-title-xl-medium-font-size);
+    font-size: var(--ds-typo-title-xl-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-title-xl-medium-font-size-pc);
+      font-size: var(--ds-typo-title-xl-medium-pc);
     }
   }
   .typo-title-xl-regular {
-    font-size: var(--ds-typo-title-xl-regular-font-size);
+    font-size: var(--ds-typo-title-xl-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-title-xl-regular-font-size-pc);
+      font-size: var(--ds-typo-title-xl-regular-pc);
     }
   }
   .typo-title-l-bold {
-    font-size: var(--ds-typo-title-l-bold-font-size);
+    font-size: var(--ds-typo-title-l-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-title-l-bold-font-size-pc);
+      font-size: var(--ds-typo-title-l-bold-pc);
     }
   }
   .typo-title-l-medium {
-    font-size: var(--ds-typo-title-l-medium-font-size);
+    font-size: var(--ds-typo-title-l-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-title-l-medium-font-size-pc);
+      font-size: var(--ds-typo-title-l-medium-pc);
     }
   }
   .typo-title-l-regular {
-    font-size: var(--ds-typo-title-l-regular-font-size);
+    font-size: var(--ds-typo-title-l-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-title-l-regular-font-size-pc);
+      font-size: var(--ds-typo-title-l-regular-pc);
     }
   }
   .typo-title-m-bold {
-    font-size: var(--ds-typo-title-m-bold-font-size);
+    font-size: var(--ds-typo-title-m-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-title-m-bold-font-size-pc);
+      font-size: var(--ds-typo-title-m-bold-pc);
     }
   }
   .typo-title-m-medium {
-    font-size: var(--ds-typo-title-m-medium-font-size);
+    font-size: var(--ds-typo-title-m-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-title-m-medium-font-size-pc);
+      font-size: var(--ds-typo-title-m-medium-pc);
     }
   }
   .typo-title-m-regular {
-    font-size: var(--ds-typo-title-m-regular-font-size);
+    font-size: var(--ds-typo-title-m-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-title-m-regular-font-size-pc);
+      font-size: var(--ds-typo-title-m-regular-pc);
     }
   }
   .typo-body-xl-bold {
-    font-size: var(--ds-typo-body-xl-bold-font-size);
+    font-size: var(--ds-typo-body-xl-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-body-xl-bold-font-size-pc);
+      font-size: var(--ds-typo-body-xl-bold-pc);
     }
   }
   .typo-body-xl-medium {
-    font-size: var(--ds-typo-body-xl-medium-font-size);
+    font-size: var(--ds-typo-body-xl-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-body-xl-medium-font-size-pc);
+      font-size: var(--ds-typo-body-xl-medium-pc);
     }
   }
   .typo-body-xl-regular {
-    font-size: var(--ds-typo-body-xl-regular-font-size);
+    font-size: var(--ds-typo-body-xl-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-body-xl-regular-font-size-pc);
+      font-size: var(--ds-typo-body-xl-regular-pc);
     }
   }
   .typo-body-l-bold {
-    font-size: var(--ds-typo-body-l-bold-font-size);
+    font-size: var(--ds-typo-body-l-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-body-l-bold-font-size-pc);
+      font-size: var(--ds-typo-body-l-bold-pc);
     }
   }
   .typo-body-l-medium {
-    font-size: var(--ds-typo-body-l-medium-font-size);
+    font-size: var(--ds-typo-body-l-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-body-l-medium-font-size-pc);
+      font-size: var(--ds-typo-body-l-medium-pc);
     }
   }
   .typo-body-l-regular {
-    font-size: var(--ds-typo-body-l-regular-font-size);
+    font-size: var(--ds-typo-body-l-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-body-l-regular-font-size-pc);
+      font-size: var(--ds-typo-body-l-regular-pc);
     }
   }
   .typo-body-m-bold {
-    font-size: var(--ds-typo-body-m-bold-font-size);
+    font-size: var(--ds-typo-body-m-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-body-m-bold-font-size-pc);
+      font-size: var(--ds-typo-body-m-bold-pc);
     }
   }
   .typo-body-m-medium {
-    font-size: var(--ds-typo-body-m-medium-font-size);
+    font-size: var(--ds-typo-body-m-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-body-m-medium-font-size-pc);
+      font-size: var(--ds-typo-body-m-medium-pc);
     }
   }
   .typo-body-m-regular {
-    font-size: var(--ds-typo-body-m-regular-font-size);
+    font-size: var(--ds-typo-body-m-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-body-m-regular-font-size-pc);
+      font-size: var(--ds-typo-body-m-regular-pc);
     }
   }
   .typo-caption-bold {
-    font-size: var(--ds-typo-caption-bold-font-size);
+    font-size: var(--ds-typo-caption-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-caption-bold-font-size-pc);
+      font-size: var(--ds-typo-caption-bold-pc);
     }
   }
   .typo-caption-medium {
-    font-size: var(--ds-typo-caption-medium-font-size);
+    font-size: var(--ds-typo-caption-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-caption-medium-font-size-pc);
+      font-size: var(--ds-typo-caption-medium-pc);
     }
   }
   .typo-caption-regular {
-    font-size: var(--ds-typo-caption-regular-font-size);
+    font-size: var(--ds-typo-caption-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-caption-regular-font-size-pc);
+      font-size: var(--ds-typo-caption-regular-pc);
     }
   }
   .typo-micro-bold {
-    font-size: var(--ds-typo-micro-bold-font-size);
+    font-size: var(--ds-typo-micro-bold);
     font-weight: var(--ds-font-weight-bold);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-micro-bold-font-size-pc);
+      font-size: var(--ds-typo-micro-bold-pc);
     }
   }
   .typo-micro-medium {
-    font-size: var(--ds-typo-micro-medium-font-size);
+    font-size: var(--ds-typo-micro-medium);
     font-weight: var(--ds-font-weight-medium);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-micro-medium-font-size-pc);
+      font-size: var(--ds-typo-micro-medium-pc);
     }
   }
   .typo-micro-regular {
-    font-size: var(--ds-typo-micro-regular-font-size);
+    font-size: var(--ds-typo-micro-regular);
     font-weight: var(--ds-font-weight-regular);
     line-height: var(--ds-line-height-normal);
     letter-spacing: var(--ds-letter-spacing-normal);
     @media (min-width: 768px) {
-      font-size: var(--ds-typo-micro-regular-font-size-pc);
+      font-size: var(--ds-typo-micro-regular-pc);
     }
   }
 }

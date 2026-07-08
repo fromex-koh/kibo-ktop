@@ -472,13 +472,14 @@ if (typoNames.length) {
     for (const [k, v] of Object.entries(letterSpacing)) L.push(`  --ds-letter-spacing-${k}: ${toRem(v)};`)
     L.push('}', '')
 
-    // 2) font-size 만 토큰별(--ds-typo-*-font-size) — 크기는 토큰마다 다른 고유값이라 primitive 로
-    //    묶지 않는다. mobile/pc 분리는 반응형 타이포 대비(현재는 값이 같아도 구조 유지).
+    // 2) 크기만 토큰별. typo 토큰의 per-token 값은 이제 크기 하나뿐이라(굵기·행간·자간은 위 primitive)
+    //    속성명 접미사 없이 --ds-typo-<name> 자체가 그 크기다(다른 토큰 --ds-radius-md·--ds-z-modal 처럼).
+    //    -pc 는 PC(≥typoBp) 크기. 크기는 토큰마다 다른 고유값이라 primitive 로 묶지 않는다.
     L.push(':root {')
-    L.push('  /* typography font-size → --ds-typo-*-font-size (토큰별 고유값, mobile 기본 + -pc) */')
+    L.push('  /* typography 크기 → --ds-typo-<name>(모바일) · --ds-typo-<name>-pc(PC), 토큰별 고유값 */')
     for (const [name, t] of Object.entries(typography)) {
-        L.push(`  --ds-typo-${name}-font-size: ${toRem(t.size.mobile)};`)
-        L.push(`  --ds-typo-${name}-font-size-pc: ${toRem(t.size.pc)};`)
+        L.push(`  --ds-typo-${name}: ${toRem(t.size.mobile)};`)
+        L.push(`  --ds-typo-${name}-pc: ${toRem(t.size.pc)};`)
     }
     L.push('}', '')
 
@@ -487,12 +488,12 @@ if (typoNames.length) {
     L.push(`  /* typography → .typo-* (모바일 기본, ${typoBp}px↑ = PC) */`)
     for (const [name, t] of Object.entries(typography)) {
         L.push(`  .typo-${name} {`)
-        L.push(`    font-size: var(--ds-typo-${name}-font-size);`)
+        L.push(`    font-size: var(--ds-typo-${name});`)
         L.push(`    font-weight: var(--ds-font-weight-${t.weight});`)
         L.push(`    line-height: var(--ds-line-height-${t.lineHeight});`)
         if (t.letterSpacing !== undefined) L.push(`    letter-spacing: var(--ds-letter-spacing-${t.letterSpacing});`)
         L.push(`    @media (min-width: ${typoBp}px) {`)
-        L.push(`      font-size: var(--ds-typo-${name}-font-size-pc);`)
+        L.push(`      font-size: var(--ds-typo-${name}-pc);`)
         L.push('    }')
         L.push('  }')
     }
