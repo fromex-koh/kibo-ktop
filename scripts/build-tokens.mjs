@@ -431,20 +431,30 @@ for (const k of Object.keys(shadow)) L.push(`  --shadow-${k}: var(--ds-shadow-${
 for (const k of Object.keys(blur)) L.push(`  --blur-${k}: var(--ds-blur-${k});`)
 L.push('}', '')
 
-// typography — 복합 토큰 → .typo-* 클래스 (모바일 기본 + PC 미디어쿼리)
+// typography — 복합 토큰 → .typo-* (모바일 기본 + PC 미디어쿼리), Tailwind 의 utilities 레이어에 배치.
+// @theme 의 --text-* 는 font-size+line-height 만 짝지을 수 있고 font-weight·letter-spacing 은 별도
+// 네임스페이스라 한 클래스로 못 묶는다(PB-07/08 이 요구하는 "typo-* 하나만" 원칙과 안 맞음) — 그래서
+// 커스텀 클래스로 4개 속성 + 반응형을 한 클래스에 담는다.
+// @utility(Tailwind 커스텀 유틸리티 API)는 안 쓴다 — @utility 도 결국 JIT 콘텐츠 스캔 대상이라, 이
+// 클래스명을 `typo-${name}` 처럼 동적으로 조합해 쓰는 곳(예: typography 가이드 페이지가 tokens.json 의
+// 45개 항목을 순회하며 미리보기를 그리는 부분)은 리터럴로 안 잡혀 전부 무효 클래스가 된다. 대신 plain
+// `@layer utilities { }` 로 감싼다 — 콘텐츠 스캔과 무관하게 항상 전부 출력되면서도, 이름 그대로 Tailwind
+// 의 정식 utilities 레이어에 들어가 레이어 없는(unlayered) 클래스의 "항상 우선" 문제를 피한다.
 const typoNames = Object.keys(typography)
 if (typoNames.length) {
-    L.push(`/* typography → .typo-* (모바일 기본, ${typoBp}px↑ = PC) */`)
+    L.push(`@layer utilities {`)
+    L.push(`  /* typography → .typo-* (모바일 기본, ${typoBp}px↑ = PC) */`)
     for (const [name, t] of Object.entries(typography)) {
-        L.push(`.typo-${name} {`)
-        L.push(`  font-size: ${toRem(t.size.mobile)};`)
-        L.push(`  font-weight: ${t.weight};`)
-        L.push(`  line-height: ${t.lineHeight};`)
-        if (t.letterSpacing !== undefined) L.push(`  letter-spacing: ${toRem(t.letterSpacing)};`)
-        L.push('}')
+        L.push(`  .typo-${name} {`)
+        L.push(`    font-size: ${toRem(t.size.mobile)};`)
+        L.push(`    font-weight: ${t.weight};`)
+        L.push(`    line-height: ${t.lineHeight};`)
+        if (t.letterSpacing !== undefined) L.push(`    letter-spacing: ${toRem(t.letterSpacing)};`)
+        L.push(`    @media (min-width: ${typoBp}px) {`)
+        L.push(`      font-size: ${toRem(t.size.pc)};`)
+        L.push('    }')
+        L.push('  }')
     }
-    L.push(`@media (min-width: ${typoBp}px) {`)
-    for (const [name, t] of Object.entries(typography)) L.push(`  .typo-${name} { font-size: ${toRem(t.size.pc)}; }`)
     L.push('}', '')
 }
 

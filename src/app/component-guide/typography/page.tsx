@@ -291,6 +291,15 @@ const TypographyGuidePage = () => (
                     반응형 크기가 필요해질 경우를 대비해 그대로 남겨뒀습니다(값만 다르게 채우면 바로 반응형으로
                     전환됩니다).
                 </p>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    <code>typo-*</code>는 Tailwind의 <code>@theme</code>(<code>--text-*</code>)나 <code>@utility</code>
+                    가 아니라 <code>@layer utilities</code>로 감싼 커스텀 클래스입니다. <code>--text-*</code>는
+                    font-size·line-height만 묶을 수 있어 font-weight·letter-spacing까지 한 클래스에 담을 수 없고,{' '}
+                    <code>@utility</code>는 이 페이지의 &apos;미리보기&apos; 칸처럼 <code>{'`typo-${name}`'}</code>로
+                    클래스명을 동적으로 조합하는 곳에서는 Tailwind가 스캔하지 못해 스타일이 아예 적용되지 않습니다.{' '}
+                    <code>@layer utilities</code>는 스캔과 무관하게 항상 전부 출력되면서도 Tailwind의 정식 유틸리티
+                    레이어에 들어가, 다른 유틸리티와 캐스케이드 우선순위가 정상적으로 겨룹니다.
+                </p>
             </div>
             <div className="flex flex-col gap-6">
                 {TYPOGRAPHY_GROUPED.map((group) => (

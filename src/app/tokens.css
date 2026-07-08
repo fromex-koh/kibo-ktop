@@ -584,323 +584,413 @@
   --blur-lg: var(--ds-blur-lg);
 }
 
-/* typography → .typo-* (모바일 기본, 768px↑ = PC) */
-.typo-display-xl-bold {
-  font-size: 3rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-display-xl-medium {
-  font-size: 3rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-display-xl-regular {
-  font-size: 3rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-display-l-bold {
-  font-size: 2.5rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-display-l-medium {
-  font-size: 2.5rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-display-l-regular {
-  font-size: 2.5rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-display-m-bold {
-  font-size: 2.25rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-display-m-medium {
-  font-size: 2.25rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-display-m-regular {
-  font-size: 2.25rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h1-bold {
-  font-size: 2rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h1-medium {
-  font-size: 2rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h1-regular {
-  font-size: 2rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h2-bold {
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h2-medium {
-  font-size: 1.75rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h2-regular {
-  font-size: 1.75rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h3-bold {
-  font-size: 1.625rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h3-medium {
-  font-size: 1.625rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h3-regular {
-  font-size: 1.625rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h4-bold {
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h4-medium {
-  font-size: 1.5rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-heading-h4-regular {
-  font-size: 1.5rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-title-xl-bold {
-  font-size: 1.375rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-title-xl-medium {
-  font-size: 1.375rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-title-xl-regular {
-  font-size: 1.375rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-title-l-bold {
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-title-l-medium {
-  font-size: 1.25rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-title-l-regular {
-  font-size: 1.25rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-title-m-bold {
-  font-size: 1.125rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-title-m-medium {
-  font-size: 1.125rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-title-m-regular {
-  font-size: 1.125rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-body-xl-bold {
-  font-size: 1rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-body-xl-medium {
-  font-size: 1rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-body-xl-regular {
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-body-l-bold {
-  font-size: 0.875rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-body-l-medium {
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-body-l-regular {
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-body-m-bold {
-  font-size: 0.8125rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-body-m-medium {
-  font-size: 0.8125rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-body-m-regular {
-  font-size: 0.8125rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-caption-bold {
-  font-size: 0.75rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-caption-medium {
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-caption-regular {
-  font-size: 0.75rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-micro-bold {
-  font-size: 0.6875rem;
-  font-weight: 700;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-micro-medium {
-  font-size: 0.6875rem;
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-.typo-micro-regular {
-  font-size: 0.6875rem;
-  font-weight: 400;
-  line-height: 1.5;
-  letter-spacing: 0;
-}
-@media (min-width: 768px) {
-  .typo-display-xl-bold { font-size: 3rem; }
-  .typo-display-xl-medium { font-size: 3rem; }
-  .typo-display-xl-regular { font-size: 3rem; }
-  .typo-display-l-bold { font-size: 2.5rem; }
-  .typo-display-l-medium { font-size: 2.5rem; }
-  .typo-display-l-regular { font-size: 2.5rem; }
-  .typo-display-m-bold { font-size: 2.25rem; }
-  .typo-display-m-medium { font-size: 2.25rem; }
-  .typo-display-m-regular { font-size: 2.25rem; }
-  .typo-heading-h1-bold { font-size: 2rem; }
-  .typo-heading-h1-medium { font-size: 2rem; }
-  .typo-heading-h1-regular { font-size: 2rem; }
-  .typo-heading-h2-bold { font-size: 1.75rem; }
-  .typo-heading-h2-medium { font-size: 1.75rem; }
-  .typo-heading-h2-regular { font-size: 1.75rem; }
-  .typo-heading-h3-bold { font-size: 1.625rem; }
-  .typo-heading-h3-medium { font-size: 1.625rem; }
-  .typo-heading-h3-regular { font-size: 1.625rem; }
-  .typo-heading-h4-bold { font-size: 1.5rem; }
-  .typo-heading-h4-medium { font-size: 1.5rem; }
-  .typo-heading-h4-regular { font-size: 1.5rem; }
-  .typo-title-xl-bold { font-size: 1.375rem; }
-  .typo-title-xl-medium { font-size: 1.375rem; }
-  .typo-title-xl-regular { font-size: 1.375rem; }
-  .typo-title-l-bold { font-size: 1.25rem; }
-  .typo-title-l-medium { font-size: 1.25rem; }
-  .typo-title-l-regular { font-size: 1.25rem; }
-  .typo-title-m-bold { font-size: 1.125rem; }
-  .typo-title-m-medium { font-size: 1.125rem; }
-  .typo-title-m-regular { font-size: 1.125rem; }
-  .typo-body-xl-bold { font-size: 1rem; }
-  .typo-body-xl-medium { font-size: 1rem; }
-  .typo-body-xl-regular { font-size: 1rem; }
-  .typo-body-l-bold { font-size: 0.875rem; }
-  .typo-body-l-medium { font-size: 0.875rem; }
-  .typo-body-l-regular { font-size: 0.875rem; }
-  .typo-body-m-bold { font-size: 0.8125rem; }
-  .typo-body-m-medium { font-size: 0.8125rem; }
-  .typo-body-m-regular { font-size: 0.8125rem; }
-  .typo-caption-bold { font-size: 0.75rem; }
-  .typo-caption-medium { font-size: 0.75rem; }
-  .typo-caption-regular { font-size: 0.75rem; }
-  .typo-micro-bold { font-size: 0.6875rem; }
-  .typo-micro-medium { font-size: 0.6875rem; }
-  .typo-micro-regular { font-size: 0.6875rem; }
+@layer utilities {
+  /* typography → .typo-* (모바일 기본, 768px↑ = PC) */
+  .typo-display-xl-bold {
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 3rem;
+    }
+  }
+  .typo-display-xl-medium {
+    font-size: 3rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 3rem;
+    }
+  }
+  .typo-display-xl-regular {
+    font-size: 3rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 3rem;
+    }
+  }
+  .typo-display-l-bold {
+    font-size: 2.5rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+  .typo-display-l-medium {
+    font-size: 2.5rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+  .typo-display-l-regular {
+    font-size: 2.5rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 2.5rem;
+    }
+  }
+  .typo-display-m-bold {
+    font-size: 2.25rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 2.25rem;
+    }
+  }
+  .typo-display-m-medium {
+    font-size: 2.25rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 2.25rem;
+    }
+  }
+  .typo-display-m-regular {
+    font-size: 2.25rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 2.25rem;
+    }
+  }
+  .typo-heading-h1-bold {
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+  .typo-heading-h1-medium {
+    font-size: 2rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+  .typo-heading-h1-regular {
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 2rem;
+    }
+  }
+  .typo-heading-h2-bold {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.75rem;
+    }
+  }
+  .typo-heading-h2-medium {
+    font-size: 1.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.75rem;
+    }
+  }
+  .typo-heading-h2-regular {
+    font-size: 1.75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.75rem;
+    }
+  }
+  .typo-heading-h3-bold {
+    font-size: 1.625rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.625rem;
+    }
+  }
+  .typo-heading-h3-medium {
+    font-size: 1.625rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.625rem;
+    }
+  }
+  .typo-heading-h3-regular {
+    font-size: 1.625rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.625rem;
+    }
+  }
+  .typo-heading-h4-bold {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.5rem;
+    }
+  }
+  .typo-heading-h4-medium {
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.5rem;
+    }
+  }
+  .typo-heading-h4-regular {
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.5rem;
+    }
+  }
+  .typo-title-xl-bold {
+    font-size: 1.375rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.375rem;
+    }
+  }
+  .typo-title-xl-medium {
+    font-size: 1.375rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.375rem;
+    }
+  }
+  .typo-title-xl-regular {
+    font-size: 1.375rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.375rem;
+    }
+  }
+  .typo-title-l-bold {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.25rem;
+    }
+  }
+  .typo-title-l-medium {
+    font-size: 1.25rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.25rem;
+    }
+  }
+  .typo-title-l-regular {
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.25rem;
+    }
+  }
+  .typo-title-m-bold {
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.125rem;
+    }
+  }
+  .typo-title-m-medium {
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.125rem;
+    }
+  }
+  .typo-title-m-regular {
+    font-size: 1.125rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1.125rem;
+    }
+  }
+  .typo-body-xl-bold {
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+  .typo-body-xl-medium {
+    font-size: 1rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+  .typo-body-xl-regular {
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+  .typo-body-l-bold {
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.875rem;
+    }
+  }
+  .typo-body-l-medium {
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.875rem;
+    }
+  }
+  .typo-body-l-regular {
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.875rem;
+    }
+  }
+  .typo-body-m-bold {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.8125rem;
+    }
+  }
+  .typo-body-m-medium {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.8125rem;
+    }
+  }
+  .typo-body-m-regular {
+    font-size: 0.8125rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.8125rem;
+    }
+  }
+  .typo-caption-bold {
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.75rem;
+    }
+  }
+  .typo-caption-medium {
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.75rem;
+    }
+  }
+  .typo-caption-regular {
+    font-size: 0.75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.75rem;
+    }
+  }
+  .typo-micro-bold {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.6875rem;
+    }
+  }
+  .typo-micro-medium {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.6875rem;
+    }
+  }
+  .typo-micro-regular {
+    font-size: 0.6875rem;
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0;
+    @media (min-width: 768px) {
+      font-size: 0.6875rem;
+    }
+  }
 }
 
 /* .grid-layout — tokens.json grid 기반 반응형 컬럼 그리드.
