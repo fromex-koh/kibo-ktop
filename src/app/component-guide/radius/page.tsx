@@ -19,6 +19,11 @@ const ROUNDED_CLASS: Record<string, string> = {
     full: 'rounded-full',
 }
 
+// tokens.radius 의 숫자값은 절대 px 가 아니라 radiusBase 로부터의 오프셋이다(shadcn 컨벤션: 단일
+// --radius + calc 파생, spacing 의 "단일 base 가 전체 스케일을 지배" 원리와 동일). '값' 칸엔 오프셋이
+// 아니라 실제 최종 반경(base + 오프셋)을 보여준다.
+const resolvedPx = (v: number | string): number | string => (typeof v === 'number' ? tokens.radiusBase + v : v)
+
 // 라운드 — Figma '05 Radius' 정의를 반경 토큰(--ds-radius-*)으로 반영. rounded-* 유틸로 쓰며
 // 정의된 키(xs·sm·md·lg·xl·2xl·full)만 사용한다. '클래스' 칩을 클릭하면 이름이 복사된다.
 const RadiusGuidePage = () => (
@@ -48,22 +53,25 @@ const RadiusGuidePage = () => (
                     </tr>
                 </thead>
                 <tbody>
-                    {Object.entries(tokens.radius).map(([k, px]) => (
-                        <tr key={k} className="border-border hover:bg-card border-b transition-colors">
-                            <td className="px-3 py-3">
-                                <span
-                                    aria-hidden="true"
-                                    className={`bg-card border-border block size-16 border ${ROUNDED_CLASS[k]}`}
-                                />
-                            </td>
-                            <th scope="row" className="px-3 py-3 text-left font-normal">
-                                <CopyChip value={`rounded-${k}`} />
-                            </th>
-                            <td className="typo-caption-regular text-muted-foreground px-3 py-3 font-mono whitespace-nowrap">
-                                {typeof px === 'number' ? `${px}px` : px}
-                            </td>
-                        </tr>
-                    ))}
+                    {Object.entries(tokens.radius).map(([k, offset]) => {
+                        const px = resolvedPx(offset)
+                        return (
+                            <tr key={k} className="border-border hover:bg-card border-b transition-colors">
+                                <td className="px-3 py-3">
+                                    <span
+                                        aria-hidden="true"
+                                        className={`bg-card border-border block size-16 border ${ROUNDED_CLASS[k]}`}
+                                    />
+                                </td>
+                                <th scope="row" className="px-3 py-3 text-left font-normal">
+                                    <CopyChip value={`rounded-${k}`} />
+                                </th>
+                                <td className="typo-caption-regular text-muted-foreground px-3 py-3 font-mono whitespace-nowrap">
+                                    {typeof px === 'number' ? `${px}px` : px}
+                                </td>
+                            </tr>
+                        )
+                    })}
                 </tbody>
             </table>
         </div>

@@ -13,6 +13,9 @@ const alpha = tokens.alpha ?? {} // 반투명 프리미티브 (white/black × al
 // 디자인 토큰 (px 숫자로 입력 → rem 출력)
 const remBase = tokens.remBase ?? 16
 const spacingBase = tokens.spacingBase ?? 4 // 숫자 spacing = calc(base × N), 무한 스케일
+// shadcn 컨벤션(단일 --radius + calc 파생) — radiusBase 가 기준(lg=오프셋 0), radius 의 숫자값은
+// 거기서부터의 오프셋(px). 문자열값(예: full)만 오프셋이 안 맞는 절대 리터럴.
+const radiusBase = tokens.radiusBase ?? 16
 const radius = tokens.radius ?? {}
 const size = tokens.size ?? {}
 const effect = tokens.effect ?? {}
@@ -80,6 +83,7 @@ for (const val of Object.values(semantic)) {
 // ── 1.5) 디자인 토큰 검증 ──
 const numOrStr = (v) => typeof v === 'number' || typeof v === 'string'
 if (typeof spacingBase !== 'number') errors.push('spacingBase 는 숫자(px)여야 함')
+if (typeof radiusBase !== 'number') errors.push('radiusBase 는 숫자(px)여야 함')
 for (const [k, v] of Object.entries(radius))
     if (!numOrStr(v)) errors.push(`radius.${k} 는 숫자(px) 또는 문자열이어야 함`)
 // size: 숫자(px) 또는 다른 size 키를 가리키는 참조(문자열). 참조는 값 중복 없이 별칭을 만든다.
@@ -362,9 +366,15 @@ if (Object.keys(size).length) {
     const sizeVal = (v) => (typeof v === 'string' ? `var(--ds-spacing-${v})` : toRem(v))
     for (const [k, v] of Object.entries(size)) L.push(`  --ds-spacing-${k}: ${sizeVal(v)};`)
 }
-if (Object.keys(radius).length) {
-    L.push('  /* radius */')
-    for (const [k, v] of Object.entries(radius)) L.push(`  --ds-radius-${k}: ${toRem(v)};`)
+// radius — 기준값(--ds-radius-base) 하나 + 오프셋(shadcn 컨벤션과 동일한 계산식). spacing 의 "단일
+// base 가 전체 스케일을 지배" 원리를 라운드에도 적용한다. radius 의 숫자값 = base 로부터의 오프셋(px,
+// 0 이면 base 자체), 문자열값(예: full) = 오프셋이 안 맞는 절대 리터럴.
+L.push('  /* radius — base ± 오프셋(shadcn 컨벤션: 단일 --radius + calc 파생) */')
+L.push(`  --ds-radius-base: ${toRem(radiusBase)};`)
+for (const [k, v] of Object.entries(radius)) {
+    if (typeof v === 'string') L.push(`  --ds-radius-${k}: ${toRem(v)};`)
+    else if (v === 0) L.push(`  --ds-radius-${k}: var(--ds-radius-base);`)
+    else L.push(`  --ds-radius-${k}: calc(var(--ds-radius-base) + ${toRem(v)});`)
 }
 if (Object.keys(shadow).length) {
     L.push('  /* shadow (라이트) — px 입력 → rem, 색은 primitive 참조 */')
@@ -486,7 +496,7 @@ if (Object.keys(z).length) {
 writeFileSync(OUT, L.join('\n'))
 console.log(
     `✅ tokens.css 생성 — color(hue ${hues.length}·semantic ${Object.keys(semantic).length}·alpha ${Object.keys(alpha).length}), ` +
-        `spacingBase ${spacingBase}px, radius ${Object.keys(radius).length}, ` +
+        `spacingBase ${spacingBase}px, radiusBase ${radiusBase}px, radius ${Object.keys(radius).length}, ` +
         `size ${Object.keys(size).length}, shadow ${Object.keys(effect.shadow ?? {}).length}, ` +
         `blur ${Object.keys(effect.blur ?? {}).length}, overlay ${Object.keys(overlay).length}, ` +
         `breakpoint ${Object.keys(breakpoint).length}, container ${Object.keys(container).length}, ` +

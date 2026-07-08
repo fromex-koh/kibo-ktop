@@ -481,13 +481,14 @@
   --ds-spacing-header-top: var(--ds-spacing-header-h);
   --ds-spacing-sidebar-w: 16rem;
   --ds-spacing-sidebar-pl: var(--ds-spacing-sidebar-w);
-  /* radius */
-  --ds-radius-xs: 0.25rem;
-  --ds-radius-sm: 0.5rem;
-  --ds-radius-md: 0.75rem;
-  --ds-radius-lg: 1rem;
-  --ds-radius-xl: 1.25rem;
-  --ds-radius-2xl: 1.5rem;
+  /* radius — base ± 오프셋(shadcn 컨벤션: 단일 --radius + calc 파생) */
+  --ds-radius-base: 1rem;
+  --ds-radius-xs: calc(var(--ds-radius-base) + -0.75rem);
+  --ds-radius-sm: calc(var(--ds-radius-base) + -0.5rem);
+  --ds-radius-md: calc(var(--ds-radius-base) + -0.25rem);
+  --ds-radius-lg: var(--ds-radius-base);
+  --ds-radius-xl: calc(var(--ds-radius-base) + 0.25rem);
+  --ds-radius-2xl: calc(var(--ds-radius-base) + 0.5rem);
   --ds-radius-full: 999px;
   /* shadow (라이트) — px 입력 → rem, 색은 primitive 참조 */
   --ds-shadow-sm: 0 0.0625rem 0.1875rem 0 var(--raw-black-a10);
