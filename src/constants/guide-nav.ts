@@ -16,6 +16,15 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         ],
     },
     {
+        title: '효과',
+        items: [
+            {label: '라운드', href: '/component-guide/radius'},
+            {label: '그림자', href: '/component-guide/shadow'},
+            {label: '흐림', href: '/component-guide/blur'},
+            {label: '오버레이', href: '/component-guide/overlay'},
+        ],
+    },
+    {
         title: '레이아웃',
         items: [
             {label: '브레이크포인트', href: '/component-guide/breakpoint'},
@@ -30,15 +39,6 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         items: [
             {label: 'Icon', href: '/component-guide/icon'},
             {label: 'PageHeader', href: '/component-guide/page-header'},
-        ],
-    },
-    {
-        title: '효과',
-        items: [
-            {label: '라운드', href: '/component-guide/radius'},
-            {label: '그림자', href: '/component-guide/shadow'},
-            {label: '흐림', href: '/component-guide/blur'},
-            {label: '오버레이', href: '/component-guide/overlay'},
         ],
     },
 ]
