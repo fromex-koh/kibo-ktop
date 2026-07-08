@@ -21,6 +21,46 @@ const BreakpointGuidePage = () => (
             구간이라 기기 중립적으로 이름 붙였다(단, 12.9형급 대형 태블릿을 가로로 눕히면 <code>pc</code> 구간으로
             넘어갈 수 있다).
         </p>
+
+        {/* 라이브 데모 — 브라우저 폭을 줄였다 늘리면 실제로 재배치된다. 프리픽스 동작을 그대로 보여주려
+            grid-cols-* 를 직접 조합했다(실제 콘텐츠 그리드는 PB-15 대로 .grid-layout 사용). */}
+        <section aria-labelledby="s-bp-demo" className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+                <h2 id="s-bp-demo" className="typo-h4-bold">
+                    라이브 데모
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    브라우저 폭을 줄였다 늘리면 아래 카드가 <code>1 → 2 → 3</code>열로 재배치되고, 현재 구간 표시도 함께
+                    바뀝니다.
+                </p>
+            </div>
+
+            {/* 현재 구간 — CSS 프리픽스만으로 구간별 하나만 보이게 토글(그 자체가 프리픽스 동작 예시). */}
+            <p className="typo-body-l-regular">
+                현재 활성 구간:{' '}
+                <span className="text-primary font-semibold">
+                    <span className="wide:hidden">mobile (기본)</span>
+                    <span className="wide:inline pc:hidden hidden">wide (≥768px)</span>
+                    <span className="pc:inline hidden">pc (≥1280px)</span>
+                </span>
+            </p>
+
+            <code className="typo-caption-regular text-muted-foreground bg-card border-border w-fit rounded-md border px-3 py-1 font-mono">
+                grid grid-cols-1 wide:grid-cols-2 pc:grid-cols-3
+            </code>
+
+            <ul className="wide:grid-cols-2 pc:grid-cols-3 grid grid-cols-1 gap-4">
+                {Array.from({length: 6}, (_, i) => i + 1).map((n) => (
+                    <li
+                        key={n}
+                        className="bg-card border-border text-foreground typo-body-l-medium flex min-h-24 items-center justify-center rounded-lg border"
+                    >
+                        카드 {n}
+                    </li>
+                ))}
+            </ul>
+        </section>
+
         <div className="border-border overflow-x-auto rounded-xl border">
             <table className="w-full text-left">
                 <caption className="sr-only">브레이크포인트 구간과 프리픽스, 포함 기기</caption>
