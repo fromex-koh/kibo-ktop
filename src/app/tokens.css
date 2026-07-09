@@ -197,6 +197,7 @@
 
   /* purpose */
   --ds-background: var(--raw-common-white);
+  --ds-background-alt: var(--ds-gray-50);
   --ds-foreground: var(--ds-gray-900);
   --ds-foreground-basic: var(--ds-gray-700);
   --ds-foreground-subtle: var(--ds-gray-500);
@@ -411,6 +412,7 @@
   --color-sidebar-ring: var(--ds-sidebar-ring);
 
   /* 프로젝트 커스텀 슬롯 — shadcn 표준에 없음. 추가하려면 tokens.json semantic 에 새 키만 넣으면 됨 */
+  --color-background-alt: var(--ds-background-alt);
   --color-foreground-basic: var(--ds-foreground-basic);
   --color-foreground-subtle: var(--ds-foreground-subtle);
   --color-foreground-disabled: var(--ds-foreground-disabled);
