@@ -1,6 +1,5 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
-import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
 import tokens from '@tokens'
 
@@ -38,7 +37,7 @@ const PrimitiveTable = ({title, hint, rows}: {title: string; hint: string; rows:
                 <thead>
                     <tr className="border-border bg-card border-b">
                         <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            변수 (클릭 복사)
+                            변수
                         </th>
                         <th scope="col" className="typo-body-l-medium px-4 py-3">
                             값
@@ -52,7 +51,9 @@ const PrimitiveTable = ({title, hint, rows}: {title: string; hint: string; rows:
                     {rows.map((row) => (
                         <tr key={row.cssVar} className="border-border border-b last:border-b-0">
                             <th scope="row" className="px-4 py-3 text-left font-normal">
-                                <CopyChip value={row.cssVar} />
+                                <span className="typo-caption-regular text-foreground font-mono">
+                                    {row.cssVar.slice(4, -1)}
+                                </span>
                             </th>
                             <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
                                 {row.value}

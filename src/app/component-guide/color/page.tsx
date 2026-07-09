@@ -42,7 +42,7 @@ const ColorTable = ({title, rows}: {title: ReactNode; rows: SwatchRow[]}) => (
                             scope="col"
                             className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
                         >
-                            이름
+                            변수
                         </th>
                         <th
                             scope="col"
@@ -57,9 +57,9 @@ const ColorTable = ({title, rows}: {title: ReactNode; rows: SwatchRow[]}) => (
                         <tr key={row.name} className="border-border hover:bg-card border-b transition-colors">
                             <th
                                 scope="row"
-                                className="typo-caption-regular text-foreground w-1/3 px-3 py-3 font-mono font-normal"
+                                className="typo-caption-regular text-foreground w-1/3 px-3 py-3 font-mono font-normal whitespace-nowrap"
                             >
-                                {row.name}
+                                {row.cssVar.slice(4, -1)}
                             </th>
                             <td className="px-3 py-3">
                                 <span className="flex items-center gap-3">
