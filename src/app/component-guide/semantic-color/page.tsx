@@ -276,6 +276,14 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <code className="font-mono">foreground</code> 는 이 배경 위 기본 텍스트색이다.
         </>
     ),
+    'muted / muted-foreground': (
+        <>
+            시선을 덜 끄는 <strong>보조 표면</strong> — hover·비활성 영역, 스켈레톤, 조용한 패널 배경 등에{' '}
+            <code className="font-mono">bg-muted</code>. 짝인 <code className="font-mono">muted-foreground</code> 는
+            캡션·placeholder·도움말처럼 <strong>덜 중요한 보조 텍스트</strong>에 쓰는 흐린 글자색(
+            <code className="font-mono">text-muted-foreground</code>)이다.
+        </>
+    ),
 }
 
 // 색상(Semantic) — 앱이 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
