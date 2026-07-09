@@ -304,11 +304,11 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     '상태 (status)': (
         <>
-            성공·경고·오류·정보 상태를 나타내는 <strong>옅은 상태 표면</strong> — 상태 카드·배너·배지 배경에{' '}
+            성공·경고·오류·정보 상태의 <strong>단색 상태색</strong> — 상태 버튼·배지·강조에{' '}
             <code className="font-mono">bg-success</code>·<code className="font-mono">bg-destructive</code> 등(각 hue의
-            가장 옅은 톤 50), 그 위 텍스트는 진한 상태색(<code className="font-mono">text-success-foreground</code> =
-            700)로 대비를 맞춘다. 다크에서는 배경 50→900·텍스트 700→200으로 자동 반사돼 어느 테마에서도 읽힌다. 오류
-            슬롯은 shadcn 표준 이름 <code className="font-mono">destructive</code> 를 그대로 쓴다(이름=계약).
+            진한 톤 700), 그 위 텍스트는 옅은 톤(<code className="font-mono">text-success-foreground</code> = 50)으로
+            대비를 맞춘다. 다크에서는 배경 700→200·텍스트 50→900으로 자동 반사돼 어느 테마에서도 읽힌다. 오류 슬롯은
+            shadcn 표준 이름 <code className="font-mono">destructive</code> 를 그대로 쓴다(이름=계약).
         </>
     ),
 }
