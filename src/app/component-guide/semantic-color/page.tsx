@@ -96,6 +96,10 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'accent-foreground': 'bg-accent-foreground',
     destructive: 'bg-destructive',
     'destructive-foreground': 'bg-destructive-foreground',
+    'success-subtle': 'bg-success-subtle',
+    'warning-subtle': 'bg-warning-subtle',
+    'error-subtle': 'bg-error-subtle',
+    'info-subtle': 'bg-info-subtle',
     border: 'bg-border',
     input: 'bg-input',
     ring: 'bg-ring',
@@ -155,6 +159,7 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'secondary / secondary-foreground', match: (n) => n === 'secondary' || n === 'secondary-foreground'},
     {name: 'accent / accent-foreground', match: (n) => n === 'accent' || n === 'accent-foreground'},
     {name: 'destructive / destructive-foreground', match: (n) => n === 'destructive' || n === 'destructive-foreground'},
+    {name: '상태 표면 (status-subtle)', match: (n) => n.endsWith('-subtle')},
     {name: 'border / input / ring', match: (n) => n === 'border' || n === 'input' || n === 'ring'},
     {name: 'chart', match: (n) => n.startsWith('chart-')},
     {name: 'sidebar', match: (n) => n.startsWith('sidebar')},
@@ -291,6 +296,17 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <code className="font-mono">bg-card</code>. 짝인 <code className="font-mono">card-foreground</code> 는 그
             안의 텍스트색. 현재 값은 <code className="font-mono">background</code> 와 같지만(흰/검정), 역할이
             &lsquo;바닥&rsquo;이 아니라 &lsquo;그 위에 올린 면&rsquo;이라 별도 슬롯으로 둔다.
+        </>
+    ),
+    '상태 표면 (status-subtle)': (
+        <>
+            성공·경고·오류·정보를 나타내는 <strong>옅은 상태 카드·배너 배경</strong> — 각 상태 hue 의 가장 옅은 톤(50)을{' '}
+            <code className="font-mono">bg-success-subtle</code>·<code className="font-mono">bg-warning-subtle</code>{' '}
+            등으로 쓴다. 다크에서는 자동으로 짙은 톤(900)으로 반사되고(팔레트{' '}
+            <code className="font-mono">bg-success-50</code> 직접 사용은 고정값이라 다크에서 안 뒤집힘), 그 위 텍스트는
+            일반 <code className="font-mono">text-foreground</code> 가 테마 따라 같이 뒤집혀 그대로 읽힌다. 강한 단색
+            상태색·상태 텍스트는 <code className="font-mono">text-destructive</code>·팔레트{' '}
+            <code className="font-mono">text-success-600</code> 등을 쓴다.
         </>
     ),
 }
