@@ -38,7 +38,7 @@ const pageHeaderDescriptionVariants = cva('text-foreground-subtle', {
 type PageHeaderVariant = NonNullable<VariantProps<typeof pageHeaderTitleVariants>['variant']>
 
 const PageHeader = ({className, ...props}: ComponentPropsWithoutRef<'header'>) => (
-    <header data-slot="page-header" className={cn('flex flex-col gap-1', className)} {...props} />
+    <header data-slot="page-header" className={cn('flex flex-col gap-y-1', className)} {...props} />
 )
 
 type PageHeaderTitleProps = ComponentPropsWithoutRef<'h1'> & VariantProps<typeof pageHeaderTitleVariants>
