@@ -17,17 +17,9 @@ export const metadata: Metadata = {title: '색상 (Semantic)'}
 // 테두리 전용 색 슬롯 — 이름에 'border' 를 넣으면 유틸이 border-border-* 로 이중접두라, 슬롯명엔 border 를
 // 빼고(예: subtle-1) 유틸 표기만 border- 로 강제한다 → border-subtle-1.
 const BORDER_TONE_SLOTS = new Set(['subtle-1', 'subtle-2', 'subtle-3'])
-// 텍스트 전용 색 슬롯(이름에 text/foreground 신호가 없지만 용도가 텍스트) → text- 로 표기.
-const TEXT_TONE_SLOTS = new Set(['primary-1', 'primary-2', 'primary-3'])
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
-    if (
-        name === 'foreground' ||
-        name.endsWith('-foreground') ||
-        name.startsWith('foreground-') ||
-        TEXT_TONE_SLOTS.has(name)
-    )
-        return [`text-${name}`]
+    if (name === 'foreground' || name.endsWith('-foreground') || name.startsWith('foreground-')) return [`text-${name}`]
     if (name === 'border' || name.endsWith('-border') || BORDER_TONE_SLOTS.has(name)) return [`border-${name}`]
     if (name === 'ring' || name.endsWith('-ring')) return [`ring-${name}`]
     if (name === 'input') return [`border-${name}`]
@@ -92,11 +84,9 @@ const toRgbaText = (color: string): string => {
 // 의 NO_UTILITY_SLOTS) var() 임의값으로 대신 참조한다.
 const LIVE_SWATCH_CLASS: Record<string, string> = {
     background: 'bg-background',
-    'background-alt': 'bg-background-alt',
     foreground: 'bg-foreground',
     'foreground-subtle': 'bg-foreground-subtle',
     card: 'bg-card',
-    'card-foreground': 'bg-card-foreground',
     popover: 'bg-popover',
     'popover-foreground': 'bg-popover-foreground',
     primary: 'bg-primary',
@@ -120,9 +110,6 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     info: 'bg-info',
     'info-foreground': 'bg-info-foreground',
     'primary-subtle': 'bg-primary-subtle',
-    'primary-1': 'bg-primary-1',
-    'primary-2': 'bg-primary-2',
-    'primary-3': 'bg-primary-3',
     'secondary-green-subtle': 'bg-secondary-green-subtle',
     'secondary-orange-subtle': 'bg-secondary-orange-subtle',
     border: 'bg-border',
@@ -179,19 +166,18 @@ type SemanticEntry = [string, string | {light: string; dark: string}]
 
 // 그룹 판별 — 순서대로 첫 매칭. shadcn 표준 슬롯의 base/-foreground 페어를 한 그룹으로 묶는다.
 const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
-    {name: 'background / background-alt', match: (n) => n === 'background' || n === 'background-alt'},
+    {name: 'background', match: (n) => n === 'background'},
     {
-        name: 'foreground (+ subtle)',
+        name: 'foreground',
         match: (n) => n === 'foreground' || n.startsWith('foreground-'),
     },
+    {name: 'card', match: (n) => n === 'card'},
     {name: 'muted / muted-foreground', match: (n) => n === 'muted' || n === 'muted-foreground'},
-    {name: 'card / card-foreground', match: (n) => n === 'card' || n === 'card-foreground'},
     {name: 'popover / popover-foreground', match: (n) => n === 'popover' || n === 'popover-foreground'},
     {
         name: 'primary / primary-foreground / primary-subtle',
         match: (n) => n === 'primary' || n === 'primary-foreground' || n === 'primary-subtle',
     },
-    {name: '브랜드 텍스트 (primary-1/2/3)', match: (n) => n.startsWith('primary-') && /-\d$/.test(n)},
     {
         name: 'secondary / secondary-foreground / secondary-green-subtle / secondary-orange-subtle',
         match: (n) =>
@@ -327,16 +313,14 @@ const SemanticTable = ({
 
 // 그룹별 사용처 설명 — 각 시맨틱 슬롯이 화면 어디에 쓰이는 색인지 간결히. 채워진 그룹만 표기한다.
 const GROUP_USAGE: Record<string, ReactNode> = {
-    'background / background-alt': (
+    background: (
         <>
             페이지·앱의 가장 바닥 배경색 — <code className="font-mono">&lt;body&gt;</code> 와 최상위 레이아웃의 기본
-            바탕. 그 위에 <code className="font-mono">card</code>·<code className="font-mono">popover</code>·
-            <code className="font-mono">sidebar</code> 등 다른 표면이 얹힌다. 짝인{' '}
-            <code className="font-mono">bg-background-alt</code>(gray.50)는 바닥과 살짝 구분되는{' '}
-            <strong>보조 배경 면</strong>(섹션 구분·줄무늬 배경 등)에 쓴다.
+            바탕(gray.50). 그 위에 <code className="font-mono">card</code>·<code className="font-mono">popover</code>·
+            <code className="font-mono">sidebar</code> 등 다른 표면이 얹힌다.
         </>
     ),
-    'foreground (+ subtle)': (
+    foreground: (
         <>
             배경 위 <strong>텍스트색 가족</strong> — <code className="font-mono">text-foreground</code>
             (gray.900, 제목·강조·기본 본문) · <code className="font-mono">text-foreground-subtle</code>(gray.500, 보조).
@@ -354,12 +338,12 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <code className="font-mono">text-muted-foreground</code>)이다.
         </>
     ),
-    'card / card-foreground': (
+    card: (
         <>
             바탕 위에 얹는 <strong>담긴 콘텐츠 블록(카드·패널)</strong> 의 표면색 — 통계 카드, 항목 박스, 섹션 패널 등에{' '}
-            <code className="font-mono">bg-card</code>. 짝인 <code className="font-mono">card-foreground</code> 는 그
-            안의 텍스트색. 현재 값은 <code className="font-mono">background</code> 와 같지만(흰/검정), 역할이
-            &lsquo;바닥&rsquo;이 아니라 &lsquo;그 위에 올린 면&rsquo;이라 별도 슬롯으로 둔다.
+            <code className="font-mono">bg-card</code>. 안의 텍스트색은 별도 슬롯 없이{' '}
+            <code className="font-mono">text-foreground</code> 를 그대로 쓴다. 역할이 &lsquo;바닥&rsquo;이 아니라
+            &lsquo;그 위에 올린 면&rsquo;이라 배경색만 별도 슬롯으로 둔다.
         </>
     ),
     'primary / primary-foreground / primary-subtle': (
@@ -368,17 +352,6 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             강조에, <code className="font-mono">text-primary-foreground</code> 는 그 위 텍스트에 쓴다. 같은 가족의{' '}
             <code className="font-mono">bg-primary-subtle</code>(blue.50)는 <strong>옅은 브랜드 틴트 표면</strong>
             (선택·강조 패널)으로, 솔리드와 별개 멤버다. 다크는 각각 자동 반사된다.
-        </>
-    ),
-    '브랜드 텍스트 (primary-1/2/3)': (
-        <>
-            브랜드(파랑) <strong>강조 텍스트</strong> 3단 — 링크·강조 문구에{' '}
-            <code className="font-mono">text-primary-1</code>(blue.600) ·{' '}
-            <code className="font-mono">text-primary-2</code>
-            (blue.800, 더 진함) · <code className="font-mono">text-primary-3</code>(blue.900, 가장 진함). 다크는 밝은
-            파랑으로 자동 반사. <code className="font-mono">text-primary-1</code> 은{' '}
-            <code className="font-mono">text-primary</code>(primary 슬롯)와 값이 같다 — 기본 링크는 그냥{' '}
-            <code className="font-mono">text-primary</code> 를 써도 된다.
         </>
     ),
     'accent / accent-foreground / accent-subtle / accent-strong': (

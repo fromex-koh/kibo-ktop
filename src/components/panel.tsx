@@ -15,7 +15,7 @@ const Panel = ({
         data-slot="panel"
         data-size={size}
         className={cn(
-            'group/panel bg-card text-card-foreground flex flex-col gap-(--panel-spacing) overflow-hidden rounded-xl py-10 text-sm [--panel-spacing:--spacing(4)] has-data-[slot=panel-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--panel-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=panel-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl',
+            'group/panel bg-card text-foreground flex flex-col gap-(--panel-spacing) overflow-hidden rounded-xl py-10 text-sm [--panel-spacing:--spacing(4)] has-data-[slot=panel-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--panel-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=panel-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl',
             className,
         )}
         {...props}

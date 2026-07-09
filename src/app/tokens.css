@@ -196,12 +196,10 @@
   --ds-info-900: var(--raw-info-900);
 
   /* purpose */
-  --ds-background: var(--raw-common-white);
-  --ds-background-alt: var(--ds-gray-50);
+  --ds-background: var(--ds-gray-50);
   --ds-foreground: var(--ds-gray-900);
   --ds-foreground-subtle: var(--ds-gray-500);
   --ds-card: var(--raw-common-white);
-  --ds-card-foreground: var(--ds-gray-900);
   --ds-popover: var(--raw-common-white);
   --ds-popover-foreground: var(--ds-gray-900);
   --ds-primary: var(--raw-blue-600);
@@ -221,13 +219,10 @@
   --ds-warning: var(--ds-warning-700);
   --ds-warning-foreground: var(--ds-warning-600);
   --ds-error: var(--ds-error-700);
-  --ds-error-foreground: var(--ds-error-500);
+  --ds-error-foreground: var(--ds-error-600);
   --ds-info: var(--ds-info-700);
   --ds-info-foreground: var(--ds-info-600);
   --ds-primary-subtle: var(--ds-blue-50);
-  --ds-primary-1: var(--ds-blue-600);
-  --ds-primary-2: var(--ds-blue-800);
-  --ds-primary-3: var(--ds-blue-900);
   --ds-secondary-green-subtle: var(--ds-green-50);
   --ds-secondary-orange-subtle: var(--ds-orange-50);
   --ds-border: var(--raw-gray-700);
@@ -345,7 +340,6 @@
   --ds-info-900: var(--raw-info-50);
 
   /* purpose override (수동 지정) */
-  --ds-background: var(--raw-common-black);
   --ds-card: var(--raw-gray-800);
   --ds-popover: var(--raw-common-black);
   --ds-primary: var(--raw-blue-300);
@@ -378,7 +372,6 @@
   --color-background: var(--ds-background);
   --color-foreground: var(--ds-foreground);
   --color-card: var(--ds-card);
-  --color-card-foreground: var(--ds-card-foreground);
   --color-popover: var(--ds-popover);
   --color-popover-foreground: var(--ds-popover-foreground);
   --color-primary: var(--ds-primary);
@@ -409,7 +402,6 @@
   --color-sidebar-ring: var(--ds-sidebar-ring);
 
   /* 프로젝트 커스텀 슬롯 — shadcn 표준에 없음. 추가하려면 tokens.json semantic 에 새 키만 넣으면 됨 */
-  --color-background-alt: var(--ds-background-alt);
   --color-foreground-subtle: var(--ds-foreground-subtle);
   --color-accent-subtle: var(--ds-accent-subtle);
   --color-accent-strong: var(--ds-accent-strong);
@@ -422,9 +414,6 @@
   --color-info: var(--ds-info);
   --color-info-foreground: var(--ds-info-foreground);
   --color-primary-subtle: var(--ds-primary-subtle);
-  --color-primary-1: var(--ds-primary-1);
-  --color-primary-2: var(--ds-primary-2);
-  --color-primary-3: var(--ds-primary-3);
   --color-secondary-green-subtle: var(--ds-secondary-green-subtle);
   --color-secondary-orange-subtle: var(--ds-secondary-orange-subtle);
   --color-subtle-1: var(--ds-subtle-1);
@@ -1095,7 +1084,7 @@
   .grid-layout {
     display: grid;
     grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));
-    gap: var(--ds-grid-gutter);
+    column-gap: var(--ds-grid-gutter);
     width: min(100% - 2 * var(--ds-grid-margin), var(--ds-grid-container));
     margin-inline: auto;
   }

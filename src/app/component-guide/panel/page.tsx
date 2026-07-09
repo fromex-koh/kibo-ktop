@@ -10,9 +10,7 @@ export const metadata: Metadata = {title: '패널 (Panel)'}
 // CopyChip 의 label 로 짧게 노출하고 클립보드엔 이 전체를 복사한다.
 const USAGE_CODE = `<Panel>
   <PanelContent>
-    <div className="grid-layout">
-      {/* 데모·섹션들을 그리드 셀로 배치 */}
-    </div>
+   {/* 데모·섹션들을 그리드 셀로 배치 */}
   </PanelContent>
 </Panel>`
 
@@ -37,20 +35,18 @@ const PanelGuidePage = () => (
                     여러 데모 섹션을 그리드로 묶어 감쌉니다.
                 </p>
             </div>
-            <div className="bg-background-alt rounded-md p-6">
+            <div className="bg-background rounded-md p-6">
                 <Panel>
                     <PanelContent>
-                        <div className="grid-layout">
-                            <div className="col-span-4 flex flex-col gap-4">
-                                <h3 className="typo-title-l-bold">섹션 A</h3>
-                                <p className="typo-body-l-regular text-muted-foreground">
-                                    그리드 셀 하나에 들어가는 콘텐츠입니다.
-                                </p>
-                            </div>
-                            <div className="col-span-4 flex flex-col gap-4">
-                                <h3 className="typo-title-l-bold">섹션 B</h3>
-                                <Button size="sm">액션</Button>
-                            </div>
+                        <div className="col-span-4 flex flex-col gap-4">
+                            <h3 className="typo-title-l-bold">섹션 A</h3>
+                            <p className="typo-body-l-regular text-muted-foreground">
+                                그리드 셀 하나에 들어가는 콘텐츠입니다.
+                            </p>
+                        </div>
+                        <div className="col-span-4 flex flex-col gap-4">
+                            <h3 className="typo-title-l-bold">섹션 B</h3>
+                            <Button size="sm">액션</Button>
                         </div>
                     </PanelContent>
                 </Panel>
