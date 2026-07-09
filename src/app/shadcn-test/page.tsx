@@ -1,7 +1,13 @@
 import type {Metadata} from 'next'
 import {Check, Search} from 'lucide-react'
 import {Button} from '@/components/ui/button'
+import {Checkbox} from '@/components/ui/checkbox'
 import {Input} from '@/components/ui/input'
+import {Label} from '@/components/ui/label'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
+import {Switch} from '@/components/ui/switch'
+import {Textarea} from '@/components/ui/textarea'
 
 export const metadata: Metadata = {
     title: 'shadcn 통합 테스트',
@@ -12,7 +18,7 @@ const ShadcnTestPage = () => {
         <main id="main" className="max-w-content mx-auto px-4 py-10">
             <h1 className="typo-h4-bold">shadcn 통합 테스트</h1>
             <p className="typo-body-l-regular text-muted-foreground mt-2">
-                shadcn Button·Input 이 프로젝트 디자인 토큰(--ds-*)으로 렌더되는지 확인하는 페이지.
+                shadcn 기본 폼 요소가 프로젝트 디자인 토큰(--ds-*)으로 렌더되는지 확인하는 페이지.
             </p>
 
             {/* Button variants */}
@@ -64,16 +70,12 @@ const ShadcnTestPage = () => {
                 <h2 className="typo-title-l-bold">Input</h2>
 
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="name" className="typo-body-m-medium">
-                        이름
-                    </label>
+                    <Label htmlFor="name">이름</Label>
                     <Input id="name" name="name" placeholder="홍길동" autoComplete="name" />
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="email" className="typo-body-m-medium">
-                        이메일
-                    </label>
+                    <Label htmlFor="email">이메일</Label>
                     <Input
                         id="email"
                         name="email"
@@ -89,20 +91,95 @@ const ShadcnTestPage = () => {
                 </div>
 
                 <div className="flex flex-col gap-2">
-                    <label htmlFor="disabled-input" className="typo-body-m-medium">
-                        비활성 입력
-                    </label>
+                    <Label htmlFor="disabled-input">비활성 입력</Label>
                     <Input id="disabled-input" name="disabled-input" placeholder="수정 불가" disabled />
                 </div>
             </section>
 
-            {/* Overlay — Tailwind 유틸리티가 아니라 var(--ds-overlay-*) 로 직접 참조(드로어 백드롭 등) */}
+            {/* Textarea */}
+            <section className="mt-10 flex max-w-md flex-col gap-2">
+                <h2 className="typo-title-l-bold">Textarea</h2>
+                <Label htmlFor="message">메시지</Label>
+                <Textarea id="message" name="message" placeholder="내용을 입력하세요" />
+            </section>
+
+            {/* Checkbox */}
+            <section className="mt-10 flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">Checkbox</h2>
+                <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2">
+                        <Checkbox id="terms" defaultChecked />
+                        <Label htmlFor="terms">이용약관에 동의합니다</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Checkbox id="marketing" />
+                        <Label htmlFor="marketing">마케팅 정보 수신 (선택)</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Checkbox id="cb-disabled" disabled />
+                        <Label htmlFor="cb-disabled">비활성 항목</Label>
+                    </div>
+                </div>
+            </section>
+
+            {/* Radio group */}
+            <section className="mt-10 flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">Radio Group</h2>
+                <RadioGroup defaultValue="card" aria-label="결제 수단" className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2">
+                        <RadioGroupItem value="card" id="pay-card" />
+                        <Label htmlFor="pay-card">신용카드</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <RadioGroupItem value="transfer" id="pay-transfer" />
+                        <Label htmlFor="pay-transfer">계좌이체</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <RadioGroupItem value="phone" id="pay-phone" disabled />
+                        <Label htmlFor="pay-phone">휴대폰 결제 (비활성)</Label>
+                    </div>
+                </RadioGroup>
+            </section>
+
+            {/* Switch */}
+            <section className="mt-10 flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">Switch</h2>
+                <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-2">
+                        <Switch id="notif" defaultChecked />
+                        <Label htmlFor="notif">알림 받기</Label>
+                    </div>
+                    <div className="flex items-center gap-2">
+                        <Switch id="sw-disabled" disabled />
+                        <Label htmlFor="sw-disabled">비활성 스위치</Label>
+                    </div>
+                </div>
+            </section>
+
+            {/* Select */}
+            <section className="mt-10 flex max-w-md flex-col gap-2">
+                <h2 className="typo-title-l-bold">Select</h2>
+                <Label htmlFor="fruit-trigger">좋아하는 과일</Label>
+                <Select>
+                    <SelectTrigger id="fruit-trigger" className="w-full">
+                        <SelectValue placeholder="과일 선택" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="apple">사과</SelectItem>
+                        <SelectItem value="banana">바나나</SelectItem>
+                        <SelectItem value="cherry">체리</SelectItem>
+                        <SelectItem value="grape">포도</SelectItem>
+                    </SelectContent>
+                </Select>
+            </section>
+
+            {/* Overlay — bg-overlay-* 유틸(다크 자동반사). 임의값 var() 대신 토큰 유틸 사용([SC-01]) */}
             <section className="mt-10 flex flex-col gap-4">
                 <h2 className="typo-title-l-bold">Overlay</h2>
                 <div className="flex flex-wrap items-center gap-6">
-                    <div className="size-20 rounded-lg bg-[var(--ds-overlay-sm)]" />
-                    <div className="size-20 rounded-lg bg-[var(--ds-overlay-md)]" />
-                    <div className="size-20 rounded-lg bg-[var(--ds-overlay-lg)]" />
+                    <div className="bg-overlay-sm size-20 rounded-lg" />
+                    <div className="bg-overlay-md size-20 rounded-lg" />
+                    <div className="bg-overlay-lg size-20 rounded-lg" />
                 </div>
             </section>
         </main>
