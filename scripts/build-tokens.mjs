@@ -557,7 +557,7 @@ if (Object.keys(grid).length) {
     L.push('  .grid-layout {')
     L.push('    display: grid;')
     L.push('    grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));')
-    L.push('    gap: var(--ds-grid-gutter);')
+    L.push('    column-gap: var(--ds-grid-gutter);')
     L.push('    width: min(100% - 2 * var(--ds-grid-margin), var(--ds-grid-container));')
     L.push('    margin-inline: auto;')
     L.push('  }')
