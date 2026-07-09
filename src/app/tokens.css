@@ -206,7 +206,7 @@
   --ds-primary-foreground: var(--raw-common-white);
   --ds-secondary: var(--ds-gray-100);
   --ds-secondary-foreground: var(--ds-gray-900);
-  --ds-muted: var(--ds-gray-100);
+  --ds-muted: var(--ds-gray-50);
   --ds-muted-foreground: var(--raw-gray-500);
   --ds-accent: var(--ds-gray-100);
   --ds-accent-foreground: var(--ds-gray-900);
@@ -235,6 +235,7 @@
   --ds-overlay-sm: var(--raw-black-a10);
   --ds-overlay-md: var(--raw-black-a25);
   --ds-overlay-lg: var(--raw-black-a50);
+  --ds-overlay-xl: var(--raw-black-a75);
 }
 
 .dark {
@@ -338,6 +339,7 @@
   --ds-overlay-sm: var(--raw-white-a10);
   --ds-overlay-md: var(--raw-white-a25);
   --ds-overlay-lg: var(--raw-white-a50);
+  --ds-overlay-xl: var(--raw-white-a75);
 }
 
 @theme inline {
@@ -1096,4 +1098,7 @@
 }
 @utility bg-overlay-lg {
   background-color: var(--ds-overlay-lg);
+}
+@utility bg-overlay-xl {
+  background-color: var(--ds-overlay-xl);
 }

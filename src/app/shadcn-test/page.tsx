@@ -259,6 +259,7 @@ const ShadcnTestPage = () => {
                             <div className="bg-overlay-sm size-20 rounded-lg" />
                             <div className="bg-overlay-md size-20 rounded-lg" />
                             <div className="bg-overlay-lg size-20 rounded-lg" />
+                            <div className="bg-overlay-xl size-20 rounded-lg" />
                         </div>
                     </section>
 
