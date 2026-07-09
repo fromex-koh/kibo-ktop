@@ -19,7 +19,7 @@ export const metadata: Metadata = {title: '색상 (Semantic)'}
 const BORDER_TONE_SLOTS = new Set(['subtle-1', 'subtle-2', 'subtle-3'])
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
-    if (name === 'foreground' || name.endsWith('-foreground')) return [`text-${name}`]
+    if (name === 'foreground' || name.endsWith('-foreground') || name.startsWith('foreground-')) return [`text-${name}`]
     if (name === 'border' || name.endsWith('-border') || BORDER_TONE_SLOTS.has(name)) return [`border-${name}`]
     if (name === 'ring' || name.endsWith('-ring')) return [`ring-${name}`]
     if (name === 'input') return [`border-${name}`]
@@ -85,6 +85,8 @@ const toRgbaText = (color: string): string => {
 const LIVE_SWATCH_CLASS: Record<string, string> = {
     background: 'bg-background',
     foreground: 'bg-foreground',
+    'foreground-basic': 'bg-foreground-basic',
+    'foreground-subtle': 'bg-foreground-subtle',
     card: 'bg-card',
     'card-foreground': 'bg-card-foreground',
     popover: 'bg-popover',
@@ -166,7 +168,11 @@ type SemanticEntry = [string, string | {light: string; dark: string}]
 
 // 그룹 판별 — 순서대로 첫 매칭. shadcn 표준 슬롯의 base/-foreground 페어를 한 그룹으로 묶는다.
 const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
-    {name: 'background / foreground', match: (n) => n === 'background' || n === 'foreground'},
+    {name: 'background', match: (n) => n === 'background'},
+    {
+        name: 'foreground (+ basic/subtle)',
+        match: (n) => n === 'foreground' || n === 'foreground-basic' || n === 'foreground-subtle',
+    },
     {name: 'muted / muted-foreground', match: (n) => n === 'muted' || n === 'muted-foreground'},
     {name: 'card / card-foreground', match: (n) => n === 'card' || n === 'card-foreground'},
     {name: 'popover / popover-foreground', match: (n) => n === 'popover' || n === 'popover-foreground'},
@@ -309,12 +315,20 @@ const SemanticTable = ({
 
 // 그룹별 사용처 설명 — 각 시맨틱 슬롯이 화면 어디에 쓰이는 색인지 간결히. 채워진 그룹만 표기한다.
 const GROUP_USAGE: Record<string, ReactNode> = {
-    'background / foreground': (
+    background: (
         <>
             페이지·앱의 가장 바닥 배경색 — <code className="font-mono">&lt;body&gt;</code> 와 최상위 레이아웃의 기본
             바탕. 그 위에 <code className="font-mono">card</code>·<code className="font-mono">popover</code>·
-            <code className="font-mono">sidebar</code> 등 다른 표면이 얹힌다. 짝인{' '}
-            <code className="font-mono">foreground</code> 는 이 배경 위 기본 텍스트색이다.
+            <code className="font-mono">sidebar</code> 등 다른 표면이 얹힌다.
+        </>
+    ),
+    'foreground (+ basic/subtle)': (
+        <>
+            배경 위 <strong>텍스트색 가족</strong>(진하기 3단) — <code className="font-mono">text-foreground</code>
+            (gray.900, 가장 진함 = 제목·강조) · <code className="font-mono">text-foreground-basic</code>(gray.700, 기본
+            본문) · <code className="font-mono">text-foreground-subtle</code>(gray.500, 보조·흐린 텍스트). 다크에서는
+            각각 밝은 톤으로 자동 반사돼 읽힌다. (색 있는 텍스트는 <code className="font-mono">text-primary</code>·
+            <code className="font-mono">text-error</code> 등 해당 슬롯을 쓴다.)
         </>
     ),
     'muted / muted-foreground': (
