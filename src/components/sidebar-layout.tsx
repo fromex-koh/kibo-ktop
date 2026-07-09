@@ -3,8 +3,9 @@
 import type {ReactNode} from 'react'
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
-import {ArrowUpRight, Blocks, ChevronRight} from 'lucide-react'
-import type {GuideNavSection} from '@/constants/guide-nav'
+import {ArrowUpRight, Blocks, ChevronRight, Component, Layers, LayoutGrid, Palette, Sparkles} from 'lucide-react'
+import type {LucideIcon} from 'lucide-react'
+import type {GuideNavIconKey, GuideNavSection} from '@/constants/guide-nav'
 import Breadcrumb from '@/components/guide/breadcrumb'
 import SkipNav, {type SkipLinkItem} from '@/components/skip-nav'
 import ThemeToggle from '@/components/theme-toggle'
@@ -38,6 +39,15 @@ type SidebarLayoutProps = {
 
 // 빌드 시점 git 버전(next.config.ts 주입). 브랜드 헤더의 버전 표기에 쓴다.
 const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev'
+
+// 섹션 아이콘 키(직렬화 가능) → lucide 컴포넌트. 데이터(guide-nav)는 키만 두고 실제 컴포넌트는 여기서 해석.
+const SECTION_ICONS: Record<GuideNavIconKey, LucideIcon> = {
+    primitive: Layers,
+    semantic: Palette,
+    effect: Sparkles,
+    layout: LayoutGrid,
+    component: Component,
+}
 
 // 반복 영역(내비) 건너뛰고 본문으로 (KWCAG 6.4.1). 모바일 메뉴 진입은 헤더의 SidebarTrigger 로 한다.
 const SKIP_LINKS: readonly SkipLinkItem[] = [{href: '#main', label: '본문 바로가기'}]
@@ -80,18 +90,19 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                         <SidebarGroupContent>
                             <SidebarMenu>
                                 {navSections.map((section) => {
-                                    // 현재 라우트를 포함한 섹션은 기본 펼침(그 외는 접힘) — shadcn submenu 관례.
-                                    const isOpen = section.title === activeCrumb?.category
+                                    const SectionIcon = SECTION_ICONS[section.icon]
                                     return (
+                                        // 모든 섹션 기본 펼침(defaultOpen) — 사용자가 접을 수 있는 상태로 시작.
                                         <Collapsible
                                             key={section.title}
                                             asChild
-                                            defaultOpen={isOpen}
+                                            defaultOpen
                                             className="group/collapsible"
                                         >
                                             <SidebarMenuItem>
                                                 <CollapsibleTrigger asChild>
                                                     <SidebarMenuButton>
+                                                        <SectionIcon aria-hidden="true" />
                                                         <span className="flex-1 truncate">{section.title}</span>
                                                         <ChevronRight
                                                             aria-hidden="true"

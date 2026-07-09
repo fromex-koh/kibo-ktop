@@ -4,7 +4,7 @@ import {GUIDE_NAV_SECTIONS} from '@/constants/guide-nav'
 import SidebarLayout from '@/components/sidebar-layout'
 
 // 공용 SidebarLayout 셸을 그대로 쓰고, 본문은 다른 컴포넌트 가이드 페이지들과 같은 GuidePage
-// 틀(브레드크럼 + PageHeader)을 재사용한 뒤 레이아웃 확인용 데모 콘텐츠로 채운다.
+// 틀(PageHeader)을 재사용한 뒤 레이아웃 확인용 데모 콘텐츠로 채운다(브레드크럼은 셸 상단 앱바에 있다).
 // 실제 가이드(/component-guide)도 같은 셸·같은 사이드 메뉴를 쓰고 항목 클릭 시 실제 페이지로
 // 이동하기까지 해서, 자칫 이 화면 자체를 실제 가이드 페이지로 착각할 수 있다 — 그래서 본문
 // 맨 위에 "이 페이지는 예시"임을 알리는 안내를 둔다.
@@ -17,7 +17,6 @@ const SidebarLayoutDemo = () => {
         >
             <GuidePage
                 title="사이드 메뉴 레이아웃 (예시 페이지)"
-                category={GUIDE_NAV_SECTIONS[1].title}
                 description={
                     <>
                         works/system-guide 프로젝트의 사이드 내비게이션 구조를 이 프로젝트의 브레이크포인트(

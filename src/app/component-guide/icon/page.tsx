@@ -21,7 +21,6 @@ import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
 import {Icon} from '@/components/icon'
-import {GUIDE_NAV_SECTIONS} from '@/constants/guide-nav'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '아이콘 (Icon)'}
@@ -107,11 +106,7 @@ const SOLID_ICONS = [
 ] as const
 
 const IconGuidePage = () => (
-    <GuidePage
-        title="아이콘 (Icon)"
-        category={GUIDE_NAV_SECTIONS[2].title}
-        description="lucide-react 아이콘 중 실제 화면에서 쓰는 것들을 큐레이션했습니다."
-    >
+    <GuidePage title="아이콘 (Icon)" description="lucide-react 아이콘 중 실제 화면에서 쓰는 것들을 큐레이션했습니다.">
         <section aria-labelledby="icon-library" className="flex flex-col gap-4">
             <div>
                 <h2 id="icon-library" className="typo-h4-bold">
