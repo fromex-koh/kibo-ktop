@@ -15,7 +15,7 @@ import {cn} from '@/lib/utils'
 // compact — 밀도 높은 페이지(폼 많은 페이지): 반응형 전환(모바일 Heading/H4·Body/XL → wide↑ Display/M·Title/L).
 //   전환은 globals.css 의 typo-page-header-*-compact 합성 유틸이 담당한다(typo-* 는 순수 클래스라
 //   wide: 프리픽스를 못 받아, 서로 다른 typo 조합 사이의 브레이크포인트 전환을 전용 유틸로 뺐다).
-const pageHeaderTitleVariants = cva('text-balance', {
+const pageHeaderTitleVariants = cva('text-foreground text-balance', {
     variants: {
         variant: {
             default: 'typo-display-l-bold',
@@ -25,7 +25,7 @@ const pageHeaderTitleVariants = cva('text-balance', {
     defaultVariants: {variant: 'default'},
 })
 
-const pageHeaderDescriptionVariants = cva('text-muted-foreground', {
+const pageHeaderDescriptionVariants = cva('text-foreground-subtle', {
     variants: {
         variant: {
             default: 'typo-title-l-regular',
@@ -38,7 +38,7 @@ const pageHeaderDescriptionVariants = cva('text-muted-foreground', {
 type PageHeaderVariant = NonNullable<VariantProps<typeof pageHeaderTitleVariants>['variant']>
 
 const PageHeader = ({className, ...props}: ComponentPropsWithoutRef<'header'>) => (
-    <header data-slot="page-header" className={cn('flex flex-col gap-2', className)} {...props} />
+    <header data-slot="page-header" className={cn('flex flex-col gap-1', className)} {...props} />
 )
 
 type PageHeaderTitleProps = ComponentPropsWithoutRef<'h1'> & VariantProps<typeof pageHeaderTitleVariants>
