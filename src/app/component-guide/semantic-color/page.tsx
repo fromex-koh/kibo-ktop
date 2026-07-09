@@ -102,6 +102,9 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'warning-foreground': 'bg-warning-foreground',
     info: 'bg-info',
     'info-foreground': 'bg-info-foreground',
+    'primary-subtle': 'bg-primary-subtle',
+    'secondary-green-subtle': 'bg-secondary-green-subtle',
+    'secondary-orange-subtle': 'bg-secondary-orange-subtle',
     border: 'bg-border',
     input: 'bg-input',
     ring: 'bg-ring',
@@ -164,6 +167,7 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
         name: '상태 (status)',
         match: (n) => ['destructive', 'success', 'warning', 'info'].some((s) => n === s || n === `${s}-foreground`),
     },
+    {name: '브랜드 표면 (brand surface)', match: (n) => n.endsWith('-subtle')},
     {name: 'border / input / ring', match: (n) => n === 'border' || n === 'input' || n === 'ring'},
     {name: 'chart', match: (n) => n.startsWith('chart-')},
     {name: 'sidebar', match: (n) => n.startsWith('sidebar')},
@@ -309,6 +313,17 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             진한 톤 700), 그 위 텍스트는 옅은 톤(<code className="font-mono">text-success-foreground</code> = 50)으로
             대비를 맞춘다. 다크에서는 배경 700→200·텍스트 50→900으로 자동 반사돼 어느 테마에서도 읽힌다. 오류 슬롯은
             shadcn 표준 이름 <code className="font-mono">destructive</code> 를 그대로 쓴다(이름=계약).
+        </>
+    ),
+    '브랜드 표면 (brand surface)': (
+        <>
+            브랜드·강조 색으로 은은하게 칠한 <strong>틴트 표면</strong> — 선택·강조 패널, 카테고리 카드 등에{' '}
+            <code className="font-mono">bg-primary-subtle</code>(파랑)·
+            <code className="font-mono">bg-secondary-green-subtle</code>·
+            <code className="font-mono">bg-secondary-orange-subtle</code>. 각 hue 의 옅은 톤(50)이며 다크에서 짙은
+            톤(900)으로 자동 반사된다. 솔리드 <code className="font-mono">bg-primary</code>(버튼)와는 별개인 같은 가족
+            멤버다. 그 위 텍스트는 <code className="font-mono">text-foreground</code> 가 테마 따라 flip 돼 그대로
+            읽힌다.
         </>
     ),
 }
