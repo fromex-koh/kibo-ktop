@@ -223,7 +223,7 @@
   --ds-primary-subtle: var(--ds-blue-50);
   --ds-secondary-green-subtle: var(--ds-green-50);
   --ds-secondary-orange-subtle: var(--ds-orange-50);
-  --ds-border: var(--ds-gray-200);
+  --ds-border: var(--raw-gray-700);
   --ds-input: var(--ds-gray-200);
   --ds-ring: var(--ds-blue-500);
   --ds-chart-1: var(--ds-blue-500);
@@ -341,6 +341,7 @@
   --ds-primary: var(--raw-blue-300);
   --ds-primary-foreground: var(--raw-gray-900);
   --ds-muted-foreground: var(--raw-gray-300);
+  --ds-border: var(--raw-gray-700);
   --ds-sidebar: var(--raw-common-black);
   --ds-sidebar-primary: var(--raw-blue-300);
   --ds-sidebar-primary-foreground: var(--raw-gray-900);
