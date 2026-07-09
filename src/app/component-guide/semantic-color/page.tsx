@@ -359,6 +359,27 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <code className="font-mono">bg-primary-subtle</code> 를 쓴다.
         </>
     ),
+    border: (
+        <>
+            일반 <strong>테두리·구분선</strong> 색 — 카드·패널 외곽선, 표(Table) 구분선,{' '}
+            <code className="font-mono">Separator</code>, 섹션 경계 등에{' '}
+            <code className="font-mono">border-border</code>. 거의 모든 컴포넌트의 기본 테두리가 이 슬롯을 참조한다.
+        </>
+    ),
+    input: (
+        <>
+            <strong>폼 컨트롤 테두리</strong> 색 — Input·Textarea·Select 등 입력 요소의 테두리에{' '}
+            <code className="font-mono">border-input</code>. 일반 테두리(<code className="font-mono">border</code>)와
+            구분되는 폼 전용 테두리색이라, 인풋만 다른 톤으로 조정할 수 있다.
+        </>
+    ),
+    ring: (
+        <>
+            <strong>키보드 포커스 링</strong> 색 — 버튼·인풋·링크 등 상호작용 요소가 포커스될 때 두르는 링에{' '}
+            <code className="font-mono">focus-visible:ring-ring</code>. 키보드 접근성(KWCAG 6.1.2)의 포커스 표시라 모든
+            인터랙티브 요소에 필수다.
+        </>
+    ),
 }
 
 // 색상(Semantic) — 앱이 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
