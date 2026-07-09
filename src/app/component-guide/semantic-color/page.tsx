@@ -17,9 +17,17 @@ export const metadata: Metadata = {title: '색상 (Semantic)'}
 // 테두리 전용 색 슬롯 — 이름에 'border' 를 넣으면 유틸이 border-border-* 로 이중접두라, 슬롯명엔 border 를
 // 빼고(예: subtle-1) 유틸 표기만 border- 로 강제한다 → border-subtle-1.
 const BORDER_TONE_SLOTS = new Set(['subtle-1', 'subtle-2', 'subtle-3'])
+// 텍스트 전용 색 슬롯(이름에 text/foreground 신호가 없지만 용도가 텍스트) → text- 로 표기.
+const TEXT_TONE_SLOTS = new Set(['primary-1', 'primary-2', 'primary-3'])
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
-    if (name === 'foreground' || name.endsWith('-foreground') || name.startsWith('foreground-')) return [`text-${name}`]
+    if (
+        name === 'foreground' ||
+        name.endsWith('-foreground') ||
+        name.startsWith('foreground-') ||
+        TEXT_TONE_SLOTS.has(name)
+    )
+        return [`text-${name}`]
     if (name === 'border' || name.endsWith('-border') || BORDER_TONE_SLOTS.has(name)) return [`border-${name}`]
     if (name === 'ring' || name.endsWith('-ring')) return [`ring-${name}`]
     if (name === 'input') return [`border-${name}`]
@@ -114,6 +122,9 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     info: 'bg-info',
     'info-foreground': 'bg-info-foreground',
     'primary-subtle': 'bg-primary-subtle',
+    'primary-1': 'bg-primary-1',
+    'primary-2': 'bg-primary-2',
+    'primary-3': 'bg-primary-3',
     'secondary-green-subtle': 'bg-secondary-green-subtle',
     'secondary-orange-subtle': 'bg-secondary-orange-subtle',
     border: 'bg-border',
@@ -182,6 +193,7 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
         name: 'primary / primary-foreground / primary-subtle',
         match: (n) => n === 'primary' || n === 'primary-foreground' || n === 'primary-subtle',
     },
+    {name: '브랜드 텍스트 (primary-1/2/3)', match: (n) => TEXT_TONE_SLOTS.has(n)},
     {
         name: 'secondary / secondary-foreground / secondary-green-subtle / secondary-orange-subtle',
         match: (n) =>
@@ -359,6 +371,17 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             강조에, <code className="font-mono">text-primary-foreground</code> 는 그 위 텍스트에 쓴다. 같은 가족의{' '}
             <code className="font-mono">bg-primary-subtle</code>(blue.50)는 <strong>옅은 브랜드 틴트 표면</strong>
             (선택·강조 패널)으로, 솔리드와 별개 멤버다. 다크는 각각 자동 반사된다.
+        </>
+    ),
+    '브랜드 텍스트 (primary-1/2/3)': (
+        <>
+            브랜드(파랑) <strong>강조 텍스트</strong> 3단 — 링크·강조 문구에{' '}
+            <code className="font-mono">text-primary-1</code>(blue.600) ·{' '}
+            <code className="font-mono">text-primary-2</code>
+            (blue.800, 더 진함) · <code className="font-mono">text-primary-3</code>(blue.900, 가장 진함). 다크는 밝은
+            파랑으로 자동 반사. <code className="font-mono">text-primary-1</code> 은{' '}
+            <code className="font-mono">text-primary</code>(primary 슬롯)와 값이 같다 — 기본 링크는 그냥{' '}
+            <code className="font-mono">text-primary</code> 를 써도 된다.
         </>
     ),
     'accent / accent-foreground / accent-subtle / accent-strong': (

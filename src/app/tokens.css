@@ -227,6 +227,9 @@
   --ds-info: var(--ds-info-700);
   --ds-info-foreground: var(--ds-info-50);
   --ds-primary-subtle: var(--ds-blue-50);
+  --ds-primary-1: var(--ds-blue-600);
+  --ds-primary-2: var(--ds-blue-800);
+  --ds-primary-3: var(--ds-blue-900);
   --ds-secondary-green-subtle: var(--ds-green-50);
   --ds-secondary-orange-subtle: var(--ds-orange-50);
   --ds-border: var(--raw-gray-700);
@@ -423,6 +426,9 @@
   --color-info: var(--ds-info);
   --color-info-foreground: var(--ds-info-foreground);
   --color-primary-subtle: var(--ds-primary-subtle);
+  --color-primary-1: var(--ds-primary-1);
+  --color-primary-2: var(--ds-primary-2);
+  --color-primary-3: var(--ds-primary-3);
   --color-secondary-green-subtle: var(--ds-secondary-green-subtle);
   --color-secondary-orange-subtle: var(--ds-secondary-orange-subtle);
   --color-subtle-1: var(--ds-subtle-1);
