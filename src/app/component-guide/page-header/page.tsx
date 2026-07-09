@@ -4,7 +4,7 @@ import GuidePage from '@/components/guide/guide-page'
 import {GUIDE_NAV_SECTIONS} from '@/constants/guide-nav'
 import {PageHeader, PageHeaderDescription, PageHeaderTitle} from '@/components/page-header'
 
-export const metadata: Metadata = {title: 'PageHeader'}
+export const metadata: Metadata = {title: '페이지 헤더 (PageHeader)'}
 
 // 사용법 스니펫 — CopyChip 의 label 로 짧게 노출하고 클립보드엔 이 전체를 복사한다.
 const USAGE_CODE_DEFAULT = `<PageHeader>
@@ -25,7 +25,7 @@ const USAGE_CODE_COMPACT = `<PageHeader>
 // 내부적으로 이 컴포넌트를 쓴다(직접 예시로 확인하려면 이 페이지 맨 위 타이틀이 바로 그 결과).
 const PageHeaderGuidePage = () => (
     <GuidePage
-        title="PageHeader"
+        title="페이지 헤더 (PageHeader)"
         description="페이지·섹션 최상단의 제목+설명 묶음 컴포넌트입니다."
         category={GUIDE_NAV_SECTIONS[2].title}
     >

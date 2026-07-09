@@ -3,7 +3,7 @@ import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
 import tokens from '@tokens'
 
-export const metadata: Metadata = {title: '타이포그래피'}
+export const metadata: Metadata = {title: '타이포그래피 (Typography)'}
 
 // 한글·영문(대소문자)·숫자가 섞인 짧은 미리보기 표본 — 표 한 행 안에서 바로 렌더를 확인하는 용도라
 // 자간·행간 확인 위주의 긴 문장 대신 컴팩트하게 둔다(전체 문장 표본은 필요하면 별도 페이지에서).

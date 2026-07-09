@@ -24,7 +24,7 @@ import {Icon} from '@/components/icon'
 import {GUIDE_NAV_SECTIONS} from '@/constants/guide-nav'
 import tokens from '@tokens'
 
-export const metadata: Metadata = {title: 'Icon'}
+export const metadata: Metadata = {title: '아이콘 (Icon)'}
 
 // Icon 컴포넌트 사용법 스니펫 — variant 별로 코드블럭을 나눠 보여준다. 미리보기와 같은 아이콘·
 // 크기(size-icon-2xl)로 맞춰 마크업과 미리보기가 일치한다.
@@ -108,7 +108,7 @@ const SOLID_ICONS = [
 
 const IconGuidePage = () => (
     <GuidePage
-        title="Icon"
+        title="아이콘 (Icon)"
         category={GUIDE_NAV_SECTIONS[2].title}
         description="lucide-react 아이콘 중 실제 화면에서 쓰는 것들을 큐레이션했습니다."
     >

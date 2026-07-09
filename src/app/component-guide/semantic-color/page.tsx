@@ -4,7 +4,7 @@ import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
 import tokens from '@tokens'
 
-export const metadata: Metadata = {title: 'Semantic'}
+export const metadata: Metadata = {title: '색상 (Semantic)'}
 
 // 시맨틱 색상 슬롯 하나는 --color-* 브리지를 거쳐 색을 받는 유틸리티 접두사 전부(bg-/text-/border-/
 // ring-/outline-/divide-/fill-/stroke-/decoration-/accent-/caret-/from-/via-/to- 등 13개 이상)에서
@@ -251,7 +251,7 @@ const SemanticTable = ({title, tokens, note}: {title: string; tokens: SemanticEn
 
 // 색상(Semantic) — 앱이 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
 const SemanticColorGuidePage = () => (
-    <GuidePage title="02 Semantic Color" description="앱이 실제로 쓰는 시맨틱 색상 토큰을 그룹별 표로 정리했습니다.">
+    <GuidePage title="색상 (Semantic)" description="앱이 실제로 쓰는 시맨틱 색상 토큰을 그룹별 표로 정리했습니다.">
         <p className="typo-body-m-regular text-muted-foreground">
             &ldquo;클래스&rdquo; 칸의 <code className="font-mono">bg-</code>/<code className="font-mono">text-</code>/
             <code className="font-mono">border-</code>는 자주 쓰는 3개만 고른 큐레이션입니다. 시맨틱 슬롯은 실제로{' '}

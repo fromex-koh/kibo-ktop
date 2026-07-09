@@ -3,7 +3,7 @@ import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
 import tokens from '@tokens'
 
-export const metadata: Metadata = {title: '오버레이'}
+export const metadata: Metadata = {title: '오버레이 (Overlay)'}
 
 // bg-overlay-* 는 @utility 로 배경 전용 유틸리티만 만들어져 있다(text-*/border-* 등은 의도적으로
 // 없음). Tailwind 는 className 에 리터럴로 등장하는 클래스명만 스캔하므로 `bg-overlay-${k}` 처럼

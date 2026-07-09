@@ -4,7 +4,7 @@ import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
 import tokens from '@tokens'
 
-export const metadata: Metadata = {title: '브레이크포인트'}
+export const metadata: Metadata = {title: '브레이크포인트 (Breakpoint)'}
 
 // 브레이크포인트 — 모바일 퍼스트 3단계(기본 → wide: → pc:). 정의된 프리픽스만 사용.
 const BreakpointGuidePage = () => (

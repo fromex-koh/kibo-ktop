@@ -3,7 +3,7 @@ import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
 import tokens from '@tokens'
 
-export const metadata: Metadata = {title: '그림자'}
+export const metadata: Metadata = {title: '그림자 (Shadow)'}
 
 // '미리보기' 칸 클래스 — Tailwind 는 className 에 리터럴로 등장하는 클래스명만 스캔해서 CSS 를
 // 생성하므로 `shadow-${k}` 처럼 동적으로 조합하면 안 만들어진다. shadow 키는 3개뿐인 고정 목록이라

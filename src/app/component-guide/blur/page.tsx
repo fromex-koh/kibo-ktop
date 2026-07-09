@@ -5,7 +5,7 @@ import GuidePage from '@/components/guide/guide-page'
 import tokens from '@tokens'
 import sampleCatImg from '../../../../public/sample-cat.jpg'
 
-export const metadata: Metadata = {title: '흐림'}
+export const metadata: Metadata = {title: '흐림 (Blur)'}
 
 // Tailwind 는 className 에 리터럴로 등장하는 클래스명만 스캔해서 CSS 를 생성한다 — tokens.effect.blur
 // 의 키(k)를 템플릿 리터럴로 조합해 넘기면(예: `blur-${k}`) 스캔되지 않아 유틸리티가 아예 안 만들어진다.
