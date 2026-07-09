@@ -160,7 +160,10 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'muted / muted-foreground', match: (n) => n === 'muted' || n === 'muted-foreground'},
     {name: 'card / card-foreground', match: (n) => n === 'card' || n === 'card-foreground'},
     {name: 'popover / popover-foreground', match: (n) => n === 'popover' || n === 'popover-foreground'},
-    {name: 'primary / primary-foreground', match: (n) => n === 'primary' || n === 'primary-foreground'},
+    {
+        name: 'primary / primary-foreground / primary-subtle',
+        match: (n) => n === 'primary' || n === 'primary-foreground' || n === 'primary-subtle',
+    },
     {name: 'secondary / secondary-foreground', match: (n) => n === 'secondary' || n === 'secondary-foreground'},
     {name: 'accent / accent-foreground', match: (n) => n === 'accent' || n === 'accent-foreground'},
     {
@@ -306,6 +309,14 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             &lsquo;바닥&rsquo;이 아니라 &lsquo;그 위에 올린 면&rsquo;이라 별도 슬롯으로 둔다.
         </>
     ),
+    'primary / primary-foreground / primary-subtle': (
+        <>
+            브랜드·주요 액션 색 가족 — <code className="font-mono">bg-primary</code>(blue.600 솔리드)는 주요 버튼·링크·
+            강조에, <code className="font-mono">text-primary-foreground</code> 는 그 위 텍스트에 쓴다. 같은 가족의{' '}
+            <code className="font-mono">bg-primary-subtle</code>(blue.50)는 <strong>옅은 브랜드 틴트 표면</strong>
+            (선택·강조 패널)으로, 솔리드와 별개 멤버다. 다크는 각각 자동 반사된다.
+        </>
+    ),
     '상태 (status)': (
         <>
             성공·경고·오류·정보 상태의 <strong>단색 상태색</strong> — 상태 버튼·배지·강조에{' '}
@@ -317,13 +328,11 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     '브랜드 표면 (brand surface)': (
         <>
-            브랜드·강조 색으로 은은하게 칠한 <strong>틴트 표면</strong> — 선택·강조 패널, 카테고리 카드 등에{' '}
-            <code className="font-mono">bg-primary-subtle</code>(파랑)·
+            브랜드·강조 색의 <strong>옅은 틴트 표면</strong> — 카테고리 카드·강조 패널 등에{' '}
             <code className="font-mono">bg-secondary-green-subtle</code>·
-            <code className="font-mono">bg-secondary-orange-subtle</code>. 각 hue 의 옅은 톤(50)이며 다크에서 짙은
-            톤(900)으로 자동 반사된다. 솔리드 <code className="font-mono">bg-primary</code>(버튼)와는 별개인 같은 가족
-            멤버다. 그 위 텍스트는 <code className="font-mono">text-foreground</code> 가 테마 따라 flip 돼 그대로
-            읽힌다.
+            <code className="font-mono">bg-secondary-orange-subtle</code>(각 hue 의 옅은 톤 50, 다크 900 자동 반사). 위
+            텍스트는 <code className="font-mono">text-foreground</code> 가 테마 따라 flip 된다. 파랑 계열은 primary
+            가족의 <code className="font-mono">bg-primary-subtle</code> 를 쓴다.
         </>
     ),
 }
