@@ -1,3 +1,4 @@
+import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
@@ -163,9 +164,11 @@ const GROUPED = SEMANTIC_GROUPS.map((group) => ({
 })).filter((group) => group.tokens.length > 0)
 
 // 그룹 하나 = 독립 테이블. 현재(라이브)·클래스(클릭 복사)·라이트·다크·참조 primitive.
-const SemanticTable = ({title, tokens}: {title: string; tokens: SemanticEntry[]}) => (
+// note 를 주면 표 아래에 그룹별 부연을 단다(예: scroll 은 유틸리티가 아닌 이유).
+const SemanticTable = ({title, tokens, note}: {title: string; tokens: SemanticEntry[]; note?: ReactNode}) => (
     <section className="flex flex-col gap-2">
         <h2 className="typo-body-l-medium text-foreground font-semibold">{title}</h2>
+        {note && <p className="typo-caption-regular text-muted-foreground">{note}</p>}
         <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left">
                 <thead>
@@ -211,10 +214,21 @@ const SemanticTable = ({title, tokens}: {title: string; tokens: SemanticEntry[]}
                                     <LiveSwatch name={name} />
                                 </td>
                                 <th scope="row" className="px-3 py-3 text-left">
-                                    <span className="flex flex-wrap gap-1.5">
-                                        {utilClasses(name).map((cls) => (
-                                            <CopyChip key={cls} value={cls} />
-                                        ))}
+                                    <span className="flex flex-wrap items-center gap-1.5">
+                                        {utilClasses(name).map((cls) =>
+                                            // var(--ds-*) 참조는 유틸리티 클래스가 아니라 CSS 변수라 복사 대상이
+                                            // 아니다 — 칩 대신 변수명만 평문으로 노출한다(scroll-thumb/track).
+                                            cls.startsWith('var(') ? (
+                                                <span
+                                                    key={cls}
+                                                    className="typo-caption-regular text-foreground font-mono"
+                                                >
+                                                    {cls.slice(4, -1)}
+                                                </span>
+                                            ) : (
+                                                <CopyChip key={cls} value={cls} />
+                                            ),
+                                        )}
                                     </span>
                                 </th>
                                 <td className="px-3 py-3">
@@ -248,7 +262,23 @@ const SemanticColorGuidePage = () => (
         </p>
         <div className="flex flex-col gap-8">
             {GROUPED.map((group) => (
-                <SemanticTable key={group.name} title={group.name} tokens={group.tokens} />
+                <SemanticTable
+                    key={group.name}
+                    title={group.name}
+                    tokens={group.tokens}
+                    note={
+                        group.name === '기타' ? (
+                            <>
+                                스크롤바 색은 <code className="font-mono">::-webkit-scrollbar</code> 가상요소에만
+                                적용되는데, 가상요소엔 <code className="font-mono">className</code> 을 붙일 수 없어{' '}
+                                <code className="font-mono">bg-*</code> 같은 유틸리티가 무의미합니다. 그래서 유틸리티로
+                                만들지 않고 <code className="font-mono">globals.css</code> 안에서{' '}
+                                <code className="font-mono">var(--ds-scroll-*)</code> 로 직접 참조하며, 여기선 그
+                                변수명만 표기합니다(복사 대상 아님).
+                            </>
+                        ) : undefined
+                    }
+                />
             ))}
         </div>
     </GuidePage>
