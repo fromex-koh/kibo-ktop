@@ -6,16 +6,21 @@ import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '색상 (Semantic)'}
 
-// 시맨틱 색상 슬롯 하나는 --color-* 브리지를 거쳐 색을 받는 유틸리티 접두사 전부(bg-/text-/border-/
-// ring-/outline-/divide-/fill-/stroke-/decoration-/accent-/caret-/from-/via-/to- 등 13개 이상)에서
-// 실제로 유효하다. 여기선 실무에서 가장 많이 쓰는 3개(bg-/text-/border-)만 큐레이션해서 보여준다 —
-// 나머지 접두사도 전부 동작하니 필요하면 같은 슬롯 이름에 직접 붙여 쓰면 된다.
+// 각 슬롯에서 '실제로 쓰는' 대표 유틸리티 하나만 노출한다 — bg-/text-/border- 를 다 나열하면
+// text-background 처럼 안 쓰는 조합까지 보여 헷갈리기 때문. 유형별로:
+//   -foreground(텍스트색) → text- · border/-border(테두리) → border- · ring/-ring(포커스링) → ring- ·
+//   input(폼 테두리) → border- · 그 외(배경 표면) → bg-.
+// 다른 접두사(outline-/divide-/fill-/stroke- 등)도 전부 유효하며(설명 참고) 필요하면 직접 붙여 쓴다.
 // scroll-thumb/track 은 pseudo-element(::-webkit-scrollbar) 전용이라 Tailwind 유틸리티 자체가
-// 없다(build-tokens.mjs 의 NO_UTILITY_SLOTS) — className 이 아니라 CSS 안에서 var() 로 직접 참조하는
-// 게 유일한 실제 사용법이라, 복사값도 가짜 유틸리티 클래스가 아니라 그 CSS 변수 자체로 보여준다.
+// 없다(build-tokens.mjs 의 NO_UTILITY_SLOTS) — CSS 안에서 var() 로 직접 참조하는 게 유일한 사용법이라
+// 복사값도 유틸리티 클래스가 아니라 그 CSS 변수 자체로 보여준다.
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
-    return [`bg-${name}`, `text-${name}`, `border-${name}`]
+    if (name === 'foreground' || name.endsWith('-foreground')) return [`text-${name}`]
+    if (name === 'border' || name.endsWith('-border')) return [`border-${name}`]
+    if (name === 'ring' || name.endsWith('-ring')) return [`ring-${name}`]
+    if (name === 'input') return [`border-${name}`]
+    return [`bg-${name}`]
 }
 
 // 앱이 실제로 쓰는 시맨틱 토큰(--ds → bg-*/text-* 유틸)을 tokens.json 에서 그대로 문서화한다.
@@ -143,11 +148,11 @@ type SemanticEntry = [string, string | {light: string; dark: string}]
 // 그룹 판별 — 순서대로 첫 매칭. shadcn 표준 슬롯의 base/-foreground 페어를 한 그룹으로 묶는다.
 const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'background / foreground', match: (n) => n === 'background' || n === 'foreground'},
+    {name: 'muted / muted-foreground', match: (n) => n === 'muted' || n === 'muted-foreground'},
     {name: 'card / card-foreground', match: (n) => n === 'card' || n === 'card-foreground'},
     {name: 'popover / popover-foreground', match: (n) => n === 'popover' || n === 'popover-foreground'},
     {name: 'primary / primary-foreground', match: (n) => n === 'primary' || n === 'primary-foreground'},
     {name: 'secondary / secondary-foreground', match: (n) => n === 'secondary' || n === 'secondary-foreground'},
-    {name: 'muted / muted-foreground', match: (n) => n === 'muted' || n === 'muted-foreground'},
     {name: 'accent / accent-foreground', match: (n) => n === 'accent' || n === 'accent-foreground'},
     {name: 'destructive / destructive-foreground', match: (n) => n === 'destructive' || n === 'destructive-foreground'},
     {name: 'border / input / ring', match: (n) => n === 'border' || n === 'input' || n === 'ring'},
@@ -279,13 +284,14 @@ const SemanticColorGuidePage = () => (
         title="색상 (Semantic)"
         description={
             <>
-                앱이 실제로 쓰는 시맨틱 색상 토큰을 그룹별 표로 정리했습니다. &ldquo;클래스&rdquo; 칸의{' '}
-                <code className="font-mono">bg-</code>/<code className="font-mono">text-</code>/
-                <code className="font-mono">border-</code>는 자주 쓰는 3개만 고른 큐레이션입니다. 시맨틱 슬롯은 실제로{' '}
-                <code className="font-mono">ring-</code>/<code className="font-mono">outline-</code>/
-                <code className="font-mono">divide-</code>/<code className="font-mono">fill-</code>/
-                <code className="font-mono">stroke-</code> 등 색을 받는 유틸리티 접두사 13개 이상에서 전부 유효하니,
-                필요하면 같은 슬롯 이름에 원하는 접두사를 직접 붙여 쓰면 됩니다.
+                앱이 실제로 쓰는 시맨틱 색상 토큰을 그룹별 표로 정리했습니다. &ldquo;클래스&rdquo; 칸은 각 슬롯에서
+                실제로 쓰는 대표 유틸리티 하나만 보여줍니다 — 배경은 <code className="font-mono">bg-</code>, 텍스트(
+                <code className="font-mono">-foreground</code>)는 <code className="font-mono">text-</code>, 테두리는{' '}
+                <code className="font-mono">border-</code>, 포커스 링은 <code className="font-mono">ring-</code>. 시맨틱
+                슬롯은 실제로 <code className="font-mono">outline-</code>/<code className="font-mono">divide-</code>/
+                <code className="font-mono">fill-</code>/<code className="font-mono">stroke-</code> 등 색을 받는
+                유틸리티 접두사 13개 이상에서 전부 유효하니, 필요하면 같은 슬롯 이름에 원하는 접두사를 직접 붙여 쓰면
+                됩니다.
             </>
         }
     >
