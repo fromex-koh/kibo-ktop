@@ -9,7 +9,6 @@ import Breadcrumb from '@/components/guide/breadcrumb'
 import SkipNav, {type SkipLinkItem} from '@/components/skip-nav'
 import ThemeToggle from '@/components/theme-toggle'
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/ui/collapsible'
-import {Separator} from '@/components/ui/separator'
 import {
     Sidebar,
     SidebarContent,
@@ -158,7 +157,6 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                     z-10: shadcn Sheet(z-50) 아래에 오도록 낮게 둔다(드로어 열리면 헤더가 오버레이 밑). */}
                 <header className="border-border bg-background h-header-h wide:px-6 sticky top-0 z-10 flex items-center gap-2 border-b px-4">
                     <SidebarTrigger className="text-muted-foreground hover:text-foreground min-h-11 min-w-11" />
-                    <Separator orientation="vertical" className="mr-1 data-[orientation=vertical]:h-4" />
                     {activeCrumb ? (
                         <Breadcrumb category={activeCrumb.category} current={activeCrumb.label} />
                     ) : (
