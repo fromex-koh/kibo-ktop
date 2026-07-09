@@ -3,27 +3,30 @@
 import type {ReactNode} from 'react'
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
-import {ArrowUpRight, Home} from 'lucide-react'
+import {ArrowUpRight, ChevronRight, Home} from 'lucide-react'
 import type {GuideNavSection} from '@/constants/guide-nav'
 import SkipNav, {type SkipLinkItem} from '@/components/skip-nav'
 import ThemeToggle from '@/components/theme-toggle'
+import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/ui/collapsible'
 import {
     Sidebar,
     SidebarContent,
     SidebarGroup,
     SidebarGroupContent,
-    SidebarGroupLabel,
     SidebarInset,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
+    SidebarMenuSub,
+    SidebarMenuSubButton,
+    SidebarMenuSubItem,
     SidebarProvider,
     SidebarTrigger,
 } from '@/components/ui/sidebar'
 
-// 공용 사이드 레이아웃 셸 — shadcn 공식 Sidebar 기반. wide(768px)↑ 상시 레일 / 미만 오프캔버스 Sheet.
-// 모바일 Sheet(Radix Dialog)가 포커스 트랩·Esc 닫기·닫은 뒤 포커스 복귀·배경 스크롤 잠금을 자동 처리하므로
-// 커스텀 a11y 코드를 위임한다. 콘텐츠(children)는 소비자가 자기 컨테이너(max-w-content·grid-layout)로 감싼다.
+// 공용 사이드 레이아웃 셸 — shadcn 공식 Sidebar(submenu 패턴). 섹션 = 접히는 상위 메뉴(Collapsible),
+// 항목 = 하위메뉴(SidebarMenuSub). wide(768px)↑ 상시 레일 / 미만 오프캔버스 Sheet(Radix Dialog 가
+// 포커스 트랩·Esc·포커스 복귀·스크롤 잠금 자동 처리). 콘텐츠는 소비자가 자기 컨테이너로 감싼다.
 type SidebarLayoutProps = {
     title: string
     navSections: readonly GuideNavSection[]
@@ -42,46 +45,81 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
             <SkipNav links={SKIP_LINKS} />
             <Sidebar aria-label={navLabel}>
                 <SidebarContent>
-                    {navSections.map((section) => (
-                        <SidebarGroup key={section.title}>
-                            <SidebarGroupLabel>{section.title}</SidebarGroupLabel>
-                            <SidebarGroupContent>
-                                <SidebarMenu>
-                                    {section.items.map((item) => {
-                                        // external 은 새 창 링크(라우트 개념 없음). 그 외엔 현재 라우트면 활성.
-                                        const isActive = !item.external && pathname === item.href
-                                        return (
-                                            <SidebarMenuItem key={item.href}>
-                                                <SidebarMenuButton
-                                                    asChild
-                                                    isActive={isActive}
-                                                    aria-current={isActive ? 'page' : undefined}
-                                                >
-                                                    <Link
-                                                        href={item.href}
-                                                        {...(item.external
-                                                            ? {target: '_blank', rel: 'noopener noreferrer'}
-                                                            : {})}
-                                                    >
-                                                        <span className="flex-1 truncate">{item.label}</span>
-                                                        {item.external && (
-                                                            <>
-                                                                <ArrowUpRight
-                                                                    aria-hidden="true"
-                                                                    className="size-3.5 shrink-0"
-                                                                />
-                                                                <span className="sr-only"> (새 창에서 열림)</span>
-                                                            </>
-                                                        )}
-                                                    </Link>
-                                                </SidebarMenuButton>
+                    <SidebarGroup>
+                        <SidebarGroupContent>
+                            <SidebarMenu>
+                                {navSections.map((section) => {
+                                    // 현재 라우트를 포함한 섹션은 기본 펼침(그 외는 접힘) — shadcn submenu 관례.
+                                    const hasActiveItem = section.items.some(
+                                        (item) => !item.external && item.href === pathname,
+                                    )
+                                    return (
+                                        <Collapsible
+                                            key={section.title}
+                                            asChild
+                                            defaultOpen={hasActiveItem}
+                                            className="group/collapsible"
+                                        >
+                                            <SidebarMenuItem>
+                                                <CollapsibleTrigger asChild>
+                                                    <SidebarMenuButton>
+                                                        <span className="flex-1 truncate">{section.title}</span>
+                                                        <ChevronRight
+                                                            aria-hidden="true"
+                                                            className="transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90"
+                                                        />
+                                                    </SidebarMenuButton>
+                                                </CollapsibleTrigger>
+                                                <CollapsibleContent>
+                                                    <SidebarMenuSub>
+                                                        {section.items.map((item) => {
+                                                            // external 은 새 창 링크. 그 외엔 현재 라우트면 활성.
+                                                            const isActive = !item.external && pathname === item.href
+                                                            return (
+                                                                <SidebarMenuSubItem key={item.href}>
+                                                                    <SidebarMenuSubButton
+                                                                        asChild
+                                                                        isActive={isActive}
+                                                                        aria-current={isActive ? 'page' : undefined}
+                                                                    >
+                                                                        <Link
+                                                                            href={item.href}
+                                                                            {...(item.external
+                                                                                ? {
+                                                                                      target: '_blank',
+                                                                                      rel: 'noopener noreferrer',
+                                                                                  }
+                                                                                : {})}
+                                                                        >
+                                                                            <span className="flex-1 truncate">
+                                                                                {item.label}
+                                                                            </span>
+                                                                            {item.external && (
+                                                                                <>
+                                                                                    <ArrowUpRight
+                                                                                        aria-hidden="true"
+                                                                                        className="size-3.5 shrink-0"
+                                                                                    />
+                                                                                    <span className="sr-only">
+                                                                                        {' '}
+                                                                                        (새 창에서 열림)
+                                                                                    </span>
+                                                                                </>
+                                                                            )}
+                                                                        </Link>
+                                                                    </SidebarMenuSubButton>
+                                                                </SidebarMenuSubItem>
+                                                            )
+                                                        })}
+                                                    </SidebarMenuSub>
+                                                </CollapsibleContent>
                                             </SidebarMenuItem>
-                                        )
-                                    })}
-                                </SidebarMenu>
-                            </SidebarGroupContent>
-                        </SidebarGroup>
-                    ))}
+                                        </Collapsible>
+                                    )
+                                })}
+                            </SidebarMenu>
+                        </SidebarGroupContent>
+                    </SidebarGroup>
                 </SidebarContent>
             </Sidebar>
 
