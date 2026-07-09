@@ -8,6 +8,7 @@ import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
 import {Switch} from '@/components/ui/switch'
 import {Textarea} from '@/components/ui/textarea'
+import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
 
 export const metadata: Metadata = {
     title: 'shadcn 통합 테스트',
@@ -171,6 +172,66 @@ const ShadcnTestPage = () => {
                         <SelectItem value="grape">포도</SelectItem>
                     </SelectContent>
                 </Select>
+            </section>
+
+            {/* Chip (단일 선택 = radio 기능) — shadcn 에 Chip 은 없고 ToggleGroup type="single" 이 그 역할.
+                variant="outline" + rounded-full 로 칩(pill) 형태. 하나만 선택된다. */}
+            <section className="mt-10 flex flex-col gap-3">
+                <h2 className="typo-title-l-bold">Chip — 단일 선택 (radio 기능)</h2>
+                <p className="typo-caption-regular text-muted-foreground">
+                    ToggleGroup <code>type=&quot;single&quot;</code> — 하나만 선택됩니다.
+                </p>
+                <ToggleGroup
+                    type="single"
+                    defaultValue="week"
+                    variant="outline"
+                    aria-label="기간"
+                    className="flex-wrap"
+                >
+                    <ToggleGroupItem value="day" className="rounded-full px-4">
+                        일간
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="week" className="rounded-full px-4">
+                        주간
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="month" className="rounded-full px-4">
+                        월간
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="year" className="rounded-full px-4">
+                        연간
+                    </ToggleGroupItem>
+                </ToggleGroup>
+            </section>
+
+            {/* Chip (다중 선택 = checkbox 기능) — ToggleGroup type="multiple". 여러 개 선택된다. */}
+            <section className="mt-10 flex flex-col gap-3">
+                <h2 className="typo-title-l-bold">Chip — 다중 선택 (checkbox 기능)</h2>
+                <p className="typo-caption-regular text-muted-foreground">
+                    ToggleGroup <code>type=&quot;multiple&quot;</code> — 여러 개 선택됩니다.
+                </p>
+                <ToggleGroup
+                    type="multiple"
+                    defaultValue={['react', 'ts']}
+                    variant="outline"
+                    aria-label="관심 기술"
+                    className="flex-wrap"
+                >
+                    <ToggleGroupItem value="react" className="rounded-full px-4">
+                        React
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="ts" className="rounded-full px-4">
+                        TypeScript
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="tailwind" className="rounded-full px-4">
+                        Tailwind
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="next" className="rounded-full px-4">
+                        Next.js
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="radix" className="rounded-full px-4">
+                        Radix
+                    </ToggleGroupItem>
+                </ToggleGroup>
             </section>
 
             {/* Overlay — bg-overlay-* 유틸(다크 자동반사). 임의값 var() 대신 토큰 유틸 사용([SC-01]) */}
