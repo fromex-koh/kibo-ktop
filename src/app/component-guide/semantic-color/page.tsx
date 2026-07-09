@@ -142,14 +142,14 @@ type SemanticEntry = [string, string | {light: string; dark: string}]
 
 // 그룹 판별 — 순서대로 첫 매칭. shadcn 표준 슬롯의 base/-foreground 페어를 한 그룹으로 묶는다.
 const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
-    {name: 'background', match: (n) => n === 'background' || n === 'foreground'},
-    {name: 'card', match: (n) => n === 'card' || n === 'card-foreground'},
-    {name: 'popover', match: (n) => n === 'popover' || n === 'popover-foreground'},
-    {name: 'primary', match: (n) => n === 'primary' || n === 'primary-foreground'},
-    {name: 'secondary', match: (n) => n === 'secondary' || n === 'secondary-foreground'},
-    {name: 'muted', match: (n) => n === 'muted' || n === 'muted-foreground'},
-    {name: 'accent', match: (n) => n === 'accent' || n === 'accent-foreground'},
-    {name: 'destructive', match: (n) => n === 'destructive' || n === 'destructive-foreground'},
+    {name: 'background / foreground', match: (n) => n === 'background' || n === 'foreground'},
+    {name: 'card / card-foreground', match: (n) => n === 'card' || n === 'card-foreground'},
+    {name: 'popover / popover-foreground', match: (n) => n === 'popover' || n === 'popover-foreground'},
+    {name: 'primary / primary-foreground', match: (n) => n === 'primary' || n === 'primary-foreground'},
+    {name: 'secondary / secondary-foreground', match: (n) => n === 'secondary' || n === 'secondary-foreground'},
+    {name: 'muted / muted-foreground', match: (n) => n === 'muted' || n === 'muted-foreground'},
+    {name: 'accent / accent-foreground', match: (n) => n === 'accent' || n === 'accent-foreground'},
+    {name: 'destructive / destructive-foreground', match: (n) => n === 'destructive' || n === 'destructive-foreground'},
     {name: 'border / input / ring', match: (n) => n === 'border' || n === 'input' || n === 'ring'},
     {name: 'chart', match: (n) => n.startsWith('chart-')},
     {name: 'sidebar', match: (n) => n.startsWith('sidebar')},
@@ -263,7 +263,7 @@ const SemanticTable = ({
 
 // 그룹별 사용처 설명 — 각 시맨틱 슬롯이 화면 어디에 쓰이는 색인지 간결히. 채워진 그룹만 표기한다.
 const GROUP_USAGE: Record<string, ReactNode> = {
-    background: (
+    'background / foreground': (
         <>
             페이지·앱의 가장 바닥 배경색 — <code className="font-mono">&lt;body&gt;</code> 와 최상위 레이아웃의 기본
             바탕. 그 위에 <code className="font-mono">card</code>·<code className="font-mono">popover</code>·
