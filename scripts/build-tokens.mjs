@@ -240,10 +240,12 @@ const CHECKS = [
     {fg: 'muted-foreground', bg: 'background', min: TEXT, kind: '보조 텍스트'},
     {fg: 'primary', bg: 'background', min: TEXT, kind: '링크 텍스트'},
     {fg: 'primary-foreground', bg: 'primary', min: TEXT, kind: '버튼 텍스트'},
-    {fg: 'success-foreground', bg: 'success', min: TEXT, kind: '성공 버튼 텍스트'},
-    {fg: 'warning-foreground', bg: 'warning', min: TEXT, kind: '경고 버튼 텍스트'},
-    {fg: 'error-foreground', bg: 'error', min: TEXT, kind: '오류 버튼 텍스트'},
-    {fg: 'info-foreground', bg: 'info', min: TEXT, kind: '정보 버튼 텍스트'},
+    // success/warning/error/info-foreground 는 해당 색 배경(bg-success 등) 위가 아니라 일반 배경 위에서
+    // 직접 읽는 상태 텍스트라, 대비도 배경(background) 기준으로 검사한다.
+    {fg: 'success-foreground', bg: 'background', min: TEXT, kind: '성공 상태 텍스트'},
+    {fg: 'warning-foreground', bg: 'background', min: TEXT, kind: '경고 상태 텍스트'},
+    {fg: 'error-foreground', bg: 'background', min: TEXT, kind: '오류 상태 텍스트'},
+    {fg: 'info-foreground', bg: 'background', min: TEXT, kind: '정보 상태 텍스트'},
 ]
 for (const {fg, bg, min, kind} of CHECKS) {
     for (const mode of ['light', 'dark']) {
