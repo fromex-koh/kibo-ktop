@@ -1,5 +1,6 @@
 import type {Metadata} from 'next'
 import {Check, Search} from 'lucide-react'
+import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card'
 import {Checkbox} from '@/components/ui/checkbox'
@@ -22,7 +23,6 @@ import {
     SubSectionHeaderDescription,
     SubSectionHeaderTitle,
 } from '@/components/sub-section-header'
-import {Switch} from '@/components/ui/switch'
 import {Textarea} from '@/components/ui/textarea'
 import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
 import AdvancedFields from './advanced-fields'
@@ -34,10 +34,19 @@ export const metadata: Metadata = {
     title: 'shadcn 통합 테스트',
 }
 
+// Card 5개 가로 나열 데모 항목(데모 데이터). 상태 칩 색상은 composite.tsx 의 STATUSES 와 동일 —
+// shadcn 표준 슬롯엔 success/warning/info 가 없어(역할 슬롯만) 프로젝트 팔레트 키를 쓴다(PB-05 보조).
+const CARD_ROW_ITEMS = [
+    {title: '기업정보', status: '활성', statusClassName: 'bg-success-100 text-success-700'},
+    {title: '대표자 경력사항', status: '대기', statusClassName: 'bg-warning-100 text-warning-700'},
+    {title: '기업 기타 정보', status: '정지', statusClassName: 'bg-error-100 text-error-700'},
+    {title: '핵심 기술 인력 현황', status: '신규', statusClassName: 'bg-info-100 text-info-700'},
+    {title: '기술 개발 실적', status: '활성', statusClassName: 'bg-success-100 text-success-700'},
+] as const
+
 const ShadcnTestPage = () => {
     return (
         <>
-            {/* 이 페이지의 실제 전역 헤더 — 아래 데모 그리드의 '전역 헤더' 섹션과 동일 컴포넌트 */}
             <SiteHeader />
             <main id="main" className="bg-background py-10">
                 <div className="grid-layout">
@@ -53,6 +62,22 @@ const ShadcnTestPage = () => {
                     <h4 className="typo-h4-bold text-foreground col-span-full">
                         [기업] 정보 수집·이용·제공·조회 동의서
                     </h4>
+
+                    {/* Card 5개 가로 나열 — gap-x-4(16px) */}
+                    <div className="col-span-full grid grid-cols-5 gap-x-4">
+                        {CARD_ROW_ITEMS.map((item) => (
+                            <Card key={item.title}>
+                                <CardHeader>
+                                    <CardTitle>
+                                        <h3 className="typo-title-l-bold">{item.title}</h3>
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <Badge className={item.statusClassName}>{item.status}</Badge>
+                                </CardContent>
+                            </Card>
+                        ))}
+                    </div>
 
                     {/* 모든 데모를 Panel 하나에 담는다 — 개별 Card 래핑 대신 이 Panel 안에서
                     grid-layout(4/8/12 반응형 컬럼)으로 배치 (PB-15) */}
@@ -204,21 +229,6 @@ const ShadcnTestPage = () => {
                                 </RadioGroup>
                             </div>
 
-                            {/* Switch */}
-                            <div className="col-span-4 flex flex-col gap-4">
-                                <h2 className="typo-title-l-bold">Switch</h2>
-                                <div className="flex flex-col gap-3">
-                                    <div className="flex items-center gap-2">
-                                        <Switch id="notif" defaultChecked />
-                                        <Label htmlFor="notif">알림 받기</Label>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <Switch id="sw-disabled" disabled />
-                                        <Label htmlFor="sw-disabled">비활성 스위치</Label>
-                                    </div>
-                                </div>
-                            </div>
-
                             {/* Select */}
                             <div className="col-span-4 flex flex-col gap-4">
                                 <h2 className="typo-title-l-bold">Select</h2>
@@ -310,11 +320,10 @@ const ShadcnTestPage = () => {
                                 </div>
                             </div>
 
-                            {/* Card — shadcn 컴포넌트 자체 데모(Panel 과는 별개 컴포넌트). rounded-lg 로
-                                라운드를 확장([SC-01] 토큰 유틸). */}
+                            {/* Card — shadcn 컴포넌트 자체 데모(Panel 과는 별개 컴포넌트). */}
                             <div className="col-span-4 flex flex-col gap-4">
                                 <h2 className="typo-title-l-bold">Card</h2>
-                                <Card className="rounded-lg">
+                                <Card>
                                     <CardHeader>
                                         <CardTitle>플랜 안내</CardTitle>
                                         <CardDescription>
@@ -322,9 +331,8 @@ const ShadcnTestPage = () => {
                                         </CardDescription>
                                     </CardHeader>
                                     <CardContent>
-                                        <p className="typo-body-l-regular text-muted-foreground">
-                                            shadcn Card 컴포넌트를 그대로 사용하고, className 으로 라운드값만
-                                            확장했습니다.
+                                        <p className="typo-body-l-regular text-foreground">
+                                            shadcn Card 컴포넌트를 그대로 사용합니다.
                                         </p>
                                     </CardContent>
                                     <CardFooter>
