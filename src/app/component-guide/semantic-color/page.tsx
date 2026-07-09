@@ -18,7 +18,15 @@ export const metadata: Metadata = {title: '색상 (Semantic)'}
 // 빼고(예: subtle-1) 유틸 표기만 border- 로 강제한다 → border-subtle-1.
 const BORDER_TONE_SLOTS = new Set(['subtle-1', 'subtle-2', 'subtle-3'])
 // 텍스트 전용 색 슬롯(이름에 text/foreground 신호가 없지만 용도가 텍스트) → text- 로 표기.
-const TEXT_TONE_SLOTS = new Set(['primary-1', 'primary-2', 'primary-3'])
+const TEXT_TONE_SLOTS = new Set([
+    'primary-1',
+    'primary-2',
+    'primary-3',
+    'success-text',
+    'warning-text',
+    'error-text',
+    'info-text',
+])
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
     if (
@@ -115,12 +123,16 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'destructive-foreground': 'bg-destructive-foreground',
     success: 'bg-success',
     'success-foreground': 'bg-success-foreground',
+    'success-text': 'bg-success-text',
     warning: 'bg-warning',
     'warning-foreground': 'bg-warning-foreground',
+    'warning-text': 'bg-warning-text',
     error: 'bg-error',
     'error-foreground': 'bg-error-foreground',
+    'error-text': 'bg-error-text',
     info: 'bg-info',
     'info-foreground': 'bg-info-foreground',
+    'info-text': 'bg-info-text',
     'primary-subtle': 'bg-primary-subtle',
     'primary-1': 'bg-primary-1',
     'primary-2': 'bg-primary-2',
@@ -193,7 +205,7 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
         name: 'primary / primary-foreground / primary-subtle',
         match: (n) => n === 'primary' || n === 'primary-foreground' || n === 'primary-subtle',
     },
-    {name: '브랜드 텍스트 (primary-1/2/3)', match: (n) => TEXT_TONE_SLOTS.has(n)},
+    {name: '브랜드 텍스트 (primary-1/2/3)', match: (n) => n.startsWith('primary-') && /-\d$/.test(n)},
     {
         name: 'secondary / secondary-foreground / secondary-green-subtle / secondary-orange-subtle',
         match: (n) =>
@@ -212,7 +224,10 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     },
     {
         name: '상태 (status)',
-        match: (n) => ['success', 'warning', 'error', 'info'].some((s) => n === s || n === `${s}-foreground`),
+        match: (n) =>
+            ['success', 'warning', 'error', 'info'].some(
+                (s) => n === s || n === `${s}-foreground` || n === `${s}-text`,
+            ),
     },
     {name: 'border (+ subtle-1/2/3)', match: (n) => n === 'border' || BORDER_TONE_SLOTS.has(n)},
     {name: 'input', match: (n) => n === 'input'},
@@ -405,13 +420,14 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     '상태 (status)': (
         <>
-            성공·경고·오류·정보 상태의 <strong>단색 상태색</strong> — 상태 버튼·배지·배너·강조에{' '}
-            <code className="font-mono">bg-success</code>·<code className="font-mono">bg-error</code> 등(각 hue 진한 톤
-            700), 텍스트는 옅은 톤(<code className="font-mono">text-error-foreground</code> = 50). 다크에서는 배경
-            700→200·텍스트 50→900으로 자동 반사돼 어느 테마에서도 읽힌다. 오류는 shadcn 표준{' '}
-            <code className="font-mono">destructive</code>(위 별도 섹션·버튼용)와 구분되는{' '}
-            <strong>status 전용 error</strong> 슬롯(<code className="font-mono">bg-error</code>·
-            <code className="font-mono">text-error-foreground</code>)이다.
+            성공·경고·오류·정보 상태색. <strong>단색 상태(버튼·배지·배너)</strong>는{' '}
+            <code className="font-mono">bg-success</code>·<code className="font-mono">bg-error</code> 등(진한 톤 700) +
+            텍스트 <code className="font-mono">text-error-foreground</code>(옅은 톤 50, 다크 700→200·50→900 자동 반사).
+            오류는 shadcn 표준 <code className="font-mono">destructive</code>(위 별도 섹션·버튼용)와 구분되는{' '}
+            <strong>status 전용</strong> 슬롯이다. 일반 배경 위에 <strong>직접 쓰는 상태 텍스트</strong>(에러 문구·안내
+            등)는 톤이 다른 별도 멤버 <code className="font-mono">text-success-text</code>·
+            <code className="font-mono">text-error-text</code> 등을 쓴다 — 대비상{' '}
+            <code className="font-mono">-foreground</code> 와 섞어 쓰지 않는다(색 있는 배경 위에서 안 보임).
         </>
     ),
     'secondary / secondary-foreground / secondary-green-subtle / secondary-orange-subtle': (
