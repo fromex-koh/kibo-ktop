@@ -212,6 +212,12 @@
   --ds-accent-foreground: var(--ds-gray-900);
   --ds-destructive: var(--ds-error-600);
   --ds-destructive-foreground: var(--raw-common-white);
+  --ds-success: var(--raw-success-600);
+  --ds-success-foreground: var(--raw-common-white);
+  --ds-warning: var(--raw-warning-600);
+  --ds-warning-foreground: var(--raw-common-white);
+  --ds-info: var(--raw-info-600);
+  --ds-info-foreground: var(--raw-common-white);
   --ds-success-subtle: var(--ds-success-50);
   --ds-warning-subtle: var(--ds-warning-50);
   --ds-error-subtle: var(--ds-error-50);
@@ -334,7 +340,13 @@
   --ds-primary: var(--raw-blue-300);
   --ds-primary-foreground: var(--raw-gray-900);
   --ds-muted-foreground: var(--raw-gray-300);
-  --ds-destructive-foreground: var(--raw-common-white);
+  --ds-destructive-foreground: var(--raw-gray-900);
+  --ds-success: var(--raw-success-300);
+  --ds-success-foreground: var(--raw-gray-900);
+  --ds-warning: var(--raw-warning-300);
+  --ds-warning-foreground: var(--raw-gray-900);
+  --ds-info: var(--raw-info-300);
+  --ds-info-foreground: var(--raw-gray-900);
   --ds-sidebar: var(--raw-common-black);
   --ds-sidebar-primary: var(--raw-blue-300);
   --ds-sidebar-primary-foreground: var(--raw-gray-900);
@@ -387,6 +399,12 @@
   --color-sidebar-ring: var(--ds-sidebar-ring);
 
   /* 프로젝트 커스텀 슬롯 — shadcn 표준에 없음. 추가하려면 tokens.json semantic 에 새 키만 넣으면 됨 */
+  --color-success: var(--ds-success);
+  --color-success-foreground: var(--ds-success-foreground);
+  --color-warning: var(--ds-warning);
+  --color-warning-foreground: var(--ds-warning-foreground);
+  --color-info: var(--ds-info);
+  --color-info-foreground: var(--ds-info-foreground);
   --color-success-subtle: var(--ds-success-subtle);
   --color-warning-subtle: var(--ds-warning-subtle);
   --color-error-subtle: var(--ds-error-subtle);

@@ -96,6 +96,12 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'accent-foreground': 'bg-accent-foreground',
     destructive: 'bg-destructive',
     'destructive-foreground': 'bg-destructive-foreground',
+    success: 'bg-success',
+    'success-foreground': 'bg-success-foreground',
+    warning: 'bg-warning',
+    'warning-foreground': 'bg-warning-foreground',
+    info: 'bg-info',
+    'info-foreground': 'bg-info-foreground',
     'success-subtle': 'bg-success-subtle',
     'warning-subtle': 'bg-warning-subtle',
     'error-subtle': 'bg-error-subtle',
@@ -158,7 +164,10 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'primary / primary-foreground', match: (n) => n === 'primary' || n === 'primary-foreground'},
     {name: 'secondary / secondary-foreground', match: (n) => n === 'secondary' || n === 'secondary-foreground'},
     {name: 'accent / accent-foreground', match: (n) => n === 'accent' || n === 'accent-foreground'},
-    {name: 'destructive / destructive-foreground', match: (n) => n === 'destructive' || n === 'destructive-foreground'},
+    {
+        name: '상태 솔리드 (status)',
+        match: (n) => ['destructive', 'success', 'warning', 'info'].some((s) => n === s || n === `${s}-foreground`),
+    },
     {name: '상태 표면 (status-subtle)', match: (n) => n.endsWith('-subtle')},
     {name: 'border / input / ring', match: (n) => n === 'border' || n === 'input' || n === 'ring'},
     {name: 'chart', match: (n) => n.startsWith('chart-')},
@@ -296,6 +305,16 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <code className="font-mono">bg-card</code>. 짝인 <code className="font-mono">card-foreground</code> 는 그
             안의 텍스트색. 현재 값은 <code className="font-mono">background</code> 와 같지만(흰/검정), 역할이
             &lsquo;바닥&rsquo;이 아니라 &lsquo;그 위에 올린 면&rsquo;이라 별도 슬롯으로 둔다.
+        </>
+    ),
+    '상태 솔리드 (status)': (
+        <>
+            강조가 강한 <strong>단색 상태색</strong> — 상태 버튼·배지·아이콘 배경에{' '}
+            <code className="font-mono">bg-success</code>·<code className="font-mono">bg-destructive</code> 등, 그 위
+            텍스트는 <code className="font-mono">text-success-foreground</code> 등. 오류의 솔리드는 shadcn 표준 이름{' '}
+            <code className="font-mono">destructive</code> 를 그대로 쓴다(이름=계약). 다크에서 배경이 밝아지면(600→300)
+            텍스트가 어두워져(<code className="font-mono">gray.900</code>) 대비를 유지한다. <strong>옅은 배경</strong>이
+            필요하면 <code className="font-mono">*-subtle</code>(아래) 를 쓴다.
         </>
     ),
     '상태 표면 (status-subtle)': (
