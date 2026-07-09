@@ -1,18 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import {Blocks, ChevronRight, User} from 'lucide-react'
+import {ChevronRight} from 'lucide-react'
 import {Badge} from '@/components/ui/badge'
-import {Button} from '@/components/ui/button'
-import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu'
 import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
+import {SiteHeaderDemo} from './site-header'
 
 // grid-layout 안의 카드 셀. col-span 은 사용처에서 준다.
 const CARD = 'bg-card border-border flex flex-col gap-4 rounded-xl border p-6'
@@ -73,92 +65,15 @@ const SegmentedControl = () => (
     </section>
 )
 
-// ── 전역 헤더(Header) — 로고 + 드롭다운 내비 + 세그먼티드 + 사용자 영역 ──
-// 헤더 메뉴 드롭다운은 NavigationMenu(viewport=false → 각 항목 바로 아래로 펼침).
-const PLATFORM_LINKS = [
-    '오픈 플랫폼 소개',
-    'KTRS-FM 소개',
-    'Tech-Index 소개',
-    '투자모형 소개',
-    'K-BIGx 소개',
-    '탄소중립 소개',
-]
-const DIAGNOSIS_LINKS = ['자가진단 신청', '평가모형 선택', '진단 결과 조회']
-
-const HeaderMenuContent = ({links}: {links: readonly string[]}) => (
-    <NavigationMenuContent>
-        <ul className="flex w-56 flex-col gap-0.5">
-            {links.map((link) => (
-                <li key={link}>
-                    <NavigationMenuLink asChild>
-                        <Link href="#" className="typo-body-l-regular">
-                            {link}
-                        </Link>
-                    </NavigationMenuLink>
-                </li>
-            ))}
-        </ul>
-    </NavigationMenuContent>
-)
-
+// ── 전역 헤더(Header) — 이 페이지 상단에 실제 sticky 헤더로도 쓰는 컴포넌트를 카드로 큐레이션 ──
 const GlobalHeader = () => (
     <section className={`${CARD} col-span-full`}>
         <h2 className="typo-title-l-bold">전역 헤더 (Header)</h2>
         <p className="typo-caption-regular text-muted-foreground">
-            로고 · 드롭다운 내비(NavigationMenu) · 세그먼티드 컨트롤 · 사용자 영역을 조합한 헤더. 실제로는 상단에{' '}
-            <code>sticky top-0</code> 로 고정합니다.
+            로고 · 드롭다운 내비(NavigationMenu) · 세그먼티드 컨트롤 · 사용자 영역 조합. 이 페이지 상단에 실제{' '}
+            <code>sticky</code> 헤더로도 적용돼 있습니다(같은 컴포넌트).
         </p>
-        <header className="border-border bg-background flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg border px-4 py-3">
-            {/* 로고 */}
-            <Link href="#" className="flex items-center gap-2">
-                <span className="bg-primary text-primary-foreground flex size-8 items-center justify-center rounded-md">
-                    <Blocks aria-hidden="true" className="size-icon-sm" />
-                </span>
-                <span className="typo-body-l-bold">K-TOP</span>
-                <span className="typo-caption-regular text-muted-foreground wide:inline hidden">
-                    기술평가 통합 플랫폼
-                </span>
-            </Link>
-
-            {/* 드롭다운 내비 */}
-            <NavigationMenu viewport={false} className="wide:flex hidden">
-                <NavigationMenuList>
-                    <NavigationMenuItem>
-                        <NavigationMenuTrigger>플랫폼 소개</NavigationMenuTrigger>
-                        <HeaderMenuContent links={PLATFORM_LINKS} />
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                        <NavigationMenuTrigger>자가진단</NavigationMenuTrigger>
-                        <HeaderMenuContent links={DIAGNOSIS_LINKS} />
-                    </NavigationMenuItem>
-                    <NavigationMenuItem>
-                        <NavigationMenuLink asChild className="typo-body-l-medium">
-                            <Link href="#">특허평가</Link>
-                        </NavigationMenuLink>
-                    </NavigationMenuItem>
-                </NavigationMenuList>
-            </NavigationMenu>
-
-            {/* 우측 — 세그먼티드 + 사용자 */}
-            <div className="ml-auto flex items-center gap-3">
-                <ToggleGroup type="single" defaultValue="corp" spacing={0} variant="outline" aria-label="회원 유형">
-                    <ToggleGroupItem value="corp" size="sm" className={SEGMENT_ON}>
-                        기업
-                    </ToggleGroupItem>
-                    <ToggleGroupItem value="org" size="sm" className={SEGMENT_ON}>
-                        기관
-                    </ToggleGroupItem>
-                </ToggleGroup>
-                <span className="typo-body-l-medium wide:flex hidden items-center gap-1.5">
-                    <User aria-hidden="true" className="size-icon-sm" />
-                    홍길동 님
-                </span>
-                <Button variant="ghost" size="sm">
-                    로그인
-                </Button>
-                <Button size="sm">회원가입</Button>
-            </div>
-        </header>
+        <SiteHeaderDemo />
     </section>
 )
 
