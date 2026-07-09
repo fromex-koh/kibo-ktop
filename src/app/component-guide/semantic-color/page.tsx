@@ -105,6 +105,8 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'success-foreground': 'bg-success-foreground',
     warning: 'bg-warning',
     'warning-foreground': 'bg-warning-foreground',
+    error: 'bg-error',
+    'error-foreground': 'bg-error-foreground',
     info: 'bg-info',
     'info-foreground': 'bg-info-foreground',
     'primary-subtle': 'bg-primary-subtle',
@@ -185,8 +187,12 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
         match: (n) => n === 'accent' || n === 'accent-foreground' || n === 'accent-subtle' || n === 'accent-strong',
     },
     {
+        name: 'destructive / destructive-foreground',
+        match: (n) => n === 'destructive' || n === 'destructive-foreground',
+    },
+    {
         name: '상태 (status)',
-        match: (n) => ['destructive', 'success', 'warning', 'info'].some((s) => n === s || n === `${s}-foreground`),
+        match: (n) => ['success', 'warning', 'error', 'info'].some((s) => n === s || n === `${s}-foreground`),
     },
     {name: 'border (+ subtle-1/2/3)', match: (n) => n === 'border' || BORDER_TONE_SLOTS.has(n)},
     {name: 'input', match: (n) => n === 'input'},
@@ -345,13 +351,25 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             것(디자인 gray-subtle-1/2/3 대응). 문자열 ref라 다크에서 &lsquo;배경에 가까울수록 subtle&rsquo;이 유지된다.
         </>
     ),
+    'destructive / destructive-foreground': (
+        <>
+            <strong>위험/삭제 액션</strong>의 단색 빨강 — shadcn <strong>표준 슬롯</strong>. 삭제 버튼(
+            <code className="font-mono">&lt;Button variant=&quot;destructive&quot;&gt;</code>)·되돌릴 수 없는 동작에{' '}
+            <code className="font-mono">bg-destructive</code>(error.600) +{' '}
+            <code className="font-mono">text-destructive-foreground</code>
+            (흰). 상태 표시(배너·배지)용 오류색은 아래 <strong>상태</strong> 섹션의{' '}
+            <code className="font-mono">bg-error</code> 를 쓴다(역할이 다름 — 버튼 vs 상태 표면).
+        </>
+    ),
     '상태 (status)': (
         <>
-            성공·경고·오류·정보 상태의 <strong>단색 상태색</strong> — 상태 버튼·배지·강조에{' '}
-            <code className="font-mono">bg-success</code>·<code className="font-mono">bg-destructive</code> 등(각 hue의
-            진한 톤 700), 그 위 텍스트는 옅은 톤(<code className="font-mono">text-success-foreground</code> = 50)으로
-            대비를 맞춘다. 다크에서는 배경 700→200·텍스트 50→900으로 자동 반사돼 어느 테마에서도 읽힌다. 오류 슬롯은
-            shadcn 표준 이름 <code className="font-mono">destructive</code> 를 그대로 쓴다(이름=계약).
+            성공·경고·오류·정보 상태의 <strong>단색 상태색</strong> — 상태 버튼·배지·배너·강조에{' '}
+            <code className="font-mono">bg-success</code>·<code className="font-mono">bg-error</code> 등(각 hue 진한 톤
+            700), 텍스트는 옅은 톤(<code className="font-mono">text-error-foreground</code> = 50). 다크에서는 배경
+            700→200·텍스트 50→900으로 자동 반사돼 어느 테마에서도 읽힌다. 오류는 shadcn 표준{' '}
+            <code className="font-mono">destructive</code>(위 별도 섹션·버튼용)와 구분되는{' '}
+            <strong>status 전용 error</strong> 슬롯(<code className="font-mono">bg-error</code>·
+            <code className="font-mono">text-error-foreground</code>)이다.
         </>
     ),
     'secondary / secondary-foreground / secondary-green-subtle / secondary-orange-subtle': (
