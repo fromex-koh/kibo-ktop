@@ -26,7 +26,7 @@ const ShadcnTestPage = () => {
         <>
             {/* 이 페이지의 실제 전역 헤더 — 아래 데모 그리드의 '전역 헤더' 카드와 동일 컴포넌트 */}
             <SiteHeader />
-            <main id="main" className="py-10">
+            <main id="main" className="bg-background-alt py-10">
                 <div className="max-w-content mx-auto flex flex-col gap-2 px-4">
                     <h1 className="typo-h4-bold">shadcn 통합 테스트</h1>
                     <p className="typo-body-l-regular text-muted-foreground">
