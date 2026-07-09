@@ -210,6 +210,8 @@
   --ds-muted-foreground: var(--raw-gray-500);
   --ds-accent: var(--ds-gray-100);
   --ds-accent-foreground: var(--ds-gray-900);
+  --ds-accent-subtle: var(--ds-gray-50);
+  --ds-accent-strong: var(--ds-gray-200);
   --ds-destructive: var(--ds-error-700);
   --ds-destructive-foreground: var(--ds-error-50);
   --ds-success: var(--ds-success-700);
@@ -391,6 +393,8 @@
   --color-sidebar-ring: var(--ds-sidebar-ring);
 
   /* 프로젝트 커스텀 슬롯 — shadcn 표준에 없음. 추가하려면 tokens.json semantic 에 새 키만 넣으면 됨 */
+  --color-accent-subtle: var(--ds-accent-subtle);
+  --color-accent-strong: var(--ds-accent-strong);
   --color-success: var(--ds-success);
   --color-success-foreground: var(--ds-success-foreground);
   --color-warning: var(--ds-warning);

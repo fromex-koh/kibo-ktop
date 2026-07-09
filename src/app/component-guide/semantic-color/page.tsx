@@ -94,6 +94,8 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'muted-foreground': 'bg-muted-foreground',
     accent: 'bg-accent',
     'accent-foreground': 'bg-accent-foreground',
+    'accent-subtle': 'bg-accent-subtle',
+    'accent-strong': 'bg-accent-strong',
     destructive: 'bg-destructive',
     'destructive-foreground': 'bg-destructive-foreground',
     success: 'bg-success',
@@ -172,7 +174,10 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
             n === 'secondary-green-subtle' ||
             n === 'secondary-orange-subtle',
     },
-    {name: 'accent / accent-foreground', match: (n) => n === 'accent' || n === 'accent-foreground'},
+    {
+        name: 'accent / accent-foreground / accent-subtle / accent-strong',
+        match: (n) => n === 'accent' || n === 'accent-foreground' || n === 'accent-subtle' || n === 'accent-strong',
+    },
     {
         name: '상태 (status)',
         match: (n) => ['destructive', 'success', 'warning', 'info'].some((s) => n === s || n === `${s}-foreground`),
@@ -321,6 +326,15 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             강조에, <code className="font-mono">text-primary-foreground</code> 는 그 위 텍스트에 쓴다. 같은 가족의{' '}
             <code className="font-mono">bg-primary-subtle</code>(blue.50)는 <strong>옅은 브랜드 틴트 표면</strong>
             (선택·강조 패널)으로, 솔리드와 별개 멤버다. 다크는 각각 자동 반사된다.
+        </>
+    ),
+    'accent / accent-foreground / accent-subtle / accent-strong': (
+        <>
+            중립 하이라이트 가족 — <code className="font-mono">bg-accent</code>(gray.100)는 메뉴·옵션·ghost 버튼에서
+            hover/선택된 항목을 칠하는 표준 하이라이트, <code className="font-mono">text-accent-foreground</code> 는 그
+            위 텍스트. 같은 가족의 <code className="font-mono">bg-accent-subtle</code>(gray.50, 더 옅은 면)·
+            <code className="font-mono">bg-accent-strong</code>(gray.200, 더 진한 면)은 중립 표면 레벨을 세분한
+            것(디자인 gray-subtle-1/2/3 대응). 문자열 ref라 다크에서 &lsquo;배경에 가까울수록 subtle&rsquo;이 유지된다.
         </>
     ),
     '상태 (status)': (
