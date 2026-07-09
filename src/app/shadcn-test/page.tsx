@@ -9,6 +9,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/c
 import {Switch} from '@/components/ui/switch'
 import {Textarea} from '@/components/ui/textarea'
 import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
+import AdvancedFields from './advanced-fields'
 
 export const metadata: Metadata = {
     title: 'shadcn 통합 테스트',
@@ -233,6 +234,9 @@ const ShadcnTestPage = () => {
                     </ToggleGroupItem>
                 </ToggleGroup>
             </section>
+
+            {/* DatePicker · 주소 검색(+상세) · 업종 코드 — 상태가 필요해 client 컴포넌트로 분리 */}
+            <AdvancedFields />
 
             {/* Overlay — bg-overlay-* 유틸(다크 자동반사). 임의값 var() 대신 토큰 유틸 사용([SC-01]) */}
             <section className="mt-10 flex flex-col gap-4">
