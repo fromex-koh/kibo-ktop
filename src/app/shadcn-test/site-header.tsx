@@ -133,7 +133,7 @@ const HeaderContent = ({navLabel}: {navLabel: string}) => (
 // z-10: Dialog/Popover 등 오버레이(z-50) 아래에 오도록 낮게 둔다. py-8 로 1920×105(hug) 목업의
 // 헤더 높이를 재현한다(고정 h-[px] 대신 패딩+콘텐츠 높이로 자연스럽게 hug, ST-004 준수).
 const SiteHeader = () => (
-    <header className="border-border bg-background sticky top-0 z-10">
+    <header className="border-border bg-card sticky top-0 z-10">
         <div className="max-w-content mx-auto flex flex-wrap items-center gap-x-6 gap-y-3 px-4 py-8">
             <HeaderContent navLabel="주 메뉴" />
         </div>
@@ -142,7 +142,7 @@ const SiteHeader = () => (
 
 // 데모용 — 컴포넌트 가이드 카드 안에서 시연. 실제 헤더가 이미 banner 라 여긴 랜드마크가 아닌 div.
 export const SiteHeaderDemo = () => (
-    <div className="border-border bg-background flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg border px-4 py-8">
+    <div className="border-border bg-card flex flex-wrap items-center gap-x-6 gap-y-3 rounded-lg border px-4 py-8">
         <HeaderContent navLabel="헤더 데모 메뉴" />
     </div>
 )
