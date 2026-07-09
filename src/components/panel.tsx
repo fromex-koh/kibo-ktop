@@ -15,7 +15,7 @@ const Panel = ({
         data-slot="panel"
         data-size={size}
         className={cn(
-            'group/panel bg-card text-card-foreground ring-foreground/10 flex flex-col gap-(--panel-spacing) overflow-hidden rounded-xl py-(--panel-spacing) text-sm ring-1 [--panel-spacing:--spacing(4)] has-data-[slot=panel-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--panel-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=panel-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl',
+            'group/panel bg-card text-card-foreground flex flex-col gap-(--panel-spacing) overflow-hidden rounded-xl py-10 text-sm [--panel-spacing:--spacing(4)] has-data-[slot=panel-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--panel-spacing:--spacing(3)] data-[size=sm]:has-data-[slot=panel-footer]:pb-0 *:[img:first-child]:rounded-t-xl *:[img:last-child]:rounded-b-xl',
             className,
         )}
         {...props}
@@ -26,7 +26,7 @@ const PanelHeader = ({className, ...props}: ComponentPropsWithoutRef<'div'>) => 
     <div
         data-slot="panel-header"
         className={cn(
-            'group/panel-header @container/panel-header grid auto-rows-min items-start gap-1 rounded-t-xl px-(--panel-spacing) has-data-[slot=panel-action]:grid-cols-[1fr_auto] has-data-[slot=panel-description]:grid-rows-[auto_auto] [.border-b]:pb-(--panel-spacing)',
+            'group/panel-header @container/panel-header grid auto-rows-min items-start gap-1 rounded-t-xl px-25.5 has-data-[slot=panel-action]:grid-cols-[1fr_auto] has-data-[slot=panel-description]:grid-rows-[auto_auto] [.border-b]:pb-(--panel-spacing)',
             className,
         )}
         {...props}
@@ -54,13 +54,13 @@ const PanelAction = ({className, ...props}: ComponentPropsWithoutRef<'div'>) => 
 )
 
 const PanelContent = ({className, ...props}: ComponentPropsWithoutRef<'div'>) => (
-    <div data-slot="panel-content" className={cn('px-(--panel-spacing)', className)} {...props} />
+    <div data-slot="panel-content" className={cn('px-25.5', className)} {...props} />
 )
 
 const PanelFooter = ({className, ...props}: ComponentPropsWithoutRef<'div'>) => (
     <div
         data-slot="panel-footer"
-        className={cn('bg-muted/50 flex items-center rounded-b-xl border-t p-(--panel-spacing)', className)}
+        className={cn('bg-muted/50 flex items-center rounded-b-xl border-t px-25.5 py-10', className)}
         {...props}
     />
 )
