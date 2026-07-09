@@ -164,10 +164,22 @@ const GROUPED = SEMANTIC_GROUPS.map((group) => ({
 })).filter((group) => group.tokens.length > 0)
 
 // 그룹 하나 = 독립 테이블. 현재(라이브)·클래스(클릭 복사)·라이트·다크·참조 primitive.
-// note 를 주면 표 아래에 그룹별 부연을 단다(예: scroll 은 유틸리티가 아닌 이유).
-const SemanticTable = ({title, tokens, note}: {title: string; tokens: SemanticEntry[]; note?: ReactNode}) => (
+// usage: 이 슬롯(그룹)이 화면 어디에 쓰이는 색인지 간결한 사용처 설명(제목 아래 서브텍스트).
+// note: 특수 동작 부연(예: scroll 은 유틸리티가 아닌 이유).
+const SemanticTable = ({
+    title,
+    tokens,
+    usage,
+    note,
+}: {
+    title: string
+    tokens: SemanticEntry[]
+    usage?: ReactNode
+    note?: ReactNode
+}) => (
     <section className="flex flex-col gap-2">
         <h2 className="typo-body-l-medium text-foreground font-semibold">{title}</h2>
+        {usage && <p className="typo-caption-regular text-muted-foreground">{usage}</p>}
         {note && <p className="typo-caption-regular text-muted-foreground">{note}</p>}
         <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left">
@@ -249,6 +261,18 @@ const SemanticTable = ({title, tokens, note}: {title: string; tokens: SemanticEn
     </section>
 )
 
+// 그룹별 사용처 설명 — 각 시맨틱 슬롯이 화면 어디에 쓰이는 색인지 간결히. 채워진 그룹만 표기한다.
+const GROUP_USAGE: Record<string, ReactNode> = {
+    background: (
+        <>
+            페이지·앱의 가장 바닥 배경색 — <code className="font-mono">&lt;body&gt;</code> 와 최상위 레이아웃의 기본
+            바탕. 그 위에 <code className="font-mono">card</code>·<code className="font-mono">popover</code>·
+            <code className="font-mono">sidebar</code> 등 다른 표면이 얹힌다. 짝인{' '}
+            <code className="font-mono">foreground</code> 는 이 배경 위 기본 텍스트색이다.
+        </>
+    ),
+}
+
 // 색상(Semantic) — 앱이 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
 const SemanticColorGuidePage = () => (
     <GuidePage title="색상 (Semantic)" description="앱이 실제로 쓰는 시맨틱 색상 토큰을 그룹별 표로 정리했습니다.">
@@ -266,6 +290,7 @@ const SemanticColorGuidePage = () => (
                     key={group.name}
                     title={group.name}
                     tokens={group.tokens}
+                    usage={GROUP_USAGE[group.name]}
                     note={
                         group.name === '기타' ? (
                             <>
