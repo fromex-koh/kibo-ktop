@@ -278,10 +278,19 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'muted / muted-foreground': (
         <>
-            시선을 덜 끄는 <strong>보조 표면</strong> — hover·비활성 영역, 스켈레톤, 조용한 패널 배경 등에{' '}
-            <code className="font-mono">bg-muted</code>. 짝인 <code className="font-mono">muted-foreground</code> 는
-            캡션·placeholder·도움말처럼 <strong>덜 중요한 보조 텍스트</strong>에 쓰는 흐린 글자색(
+            시선을 덜 끄는 <strong>보조 표면</strong> — <strong>비활성 입력 필드 배경</strong>, 헤더 드롭다운·토글·표
+            행의 <strong>hover/선택</strong>, 스켈레톤 로딩 등에 <code className="font-mono">bg-muted</code>. 짝인{' '}
+            <code className="font-mono">muted-foreground</code> 는 캡션·placeholder·도움말처럼{' '}
+            <strong>덜 중요한 보조 텍스트</strong>에 쓰는 흐린 글자색(
             <code className="font-mono">text-muted-foreground</code>)이다.
+        </>
+    ),
+    'card / card-foreground': (
+        <>
+            바탕 위에 얹는 <strong>담긴 콘텐츠 블록(카드·패널)</strong> 의 표면색 — 통계 카드, 항목 박스, 섹션 패널 등에{' '}
+            <code className="font-mono">bg-card</code>. 짝인 <code className="font-mono">card-foreground</code> 는 그
+            안의 텍스트색. 현재 값은 <code className="font-mono">background</code> 와 같지만(흰/검정), 역할이
+            &lsquo;바닥&rsquo;이 아니라 &lsquo;그 위에 올린 면&rsquo;이라 별도 슬롯으로 둔다.
         </>
     ),
 }
