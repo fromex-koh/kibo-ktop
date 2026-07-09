@@ -1,68 +1,109 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePage from '@/components/guide/guide-page'
-import {Panel, PanelContent} from '@/components/panel'
 import {Button} from '@/components/ui/button'
+import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card'
 
-export const metadata: Metadata = {title: '패널 (Panel)'}
+export const metadata: Metadata = {title: '카드 (Card)'}
 
-// 사용법 스니펫 — shadcn-test 페이지의 실제 사용 그대로(Panel + PanelContent 만, Header/Footer 없음).
-// CopyChip 의 label 로 짧게 노출하고 클립보드엔 이 전체를 복사한다.
-const USAGE_CODE = `<Panel>
-  <PanelContent>
-   {/* 데모·섹션들을 그리드 셀로 배치 */}
-  </PanelContent>
-</Panel>`
+// 사용법 스니펫 — CopyChip 의 label 로 짧게 노출하고 클립보드엔 이 전체를 복사한다.
+const USAGE_CODE = `<Card>
+  <CardHeader>
+    <CardTitle>플랜 안내</CardTitle>
+    <CardDescription>
+      bg-card 토큰으로 구성한 카드입니다.
+    </CardDescription>
+  </CardHeader>
+  <CardContent>
+    <p>shadcn Card 컴포넌트를 그대로 사용합니다.</p>
+  </CardContent>
+  <CardFooter>
+    <Button size="sm">자세히 보기</Button>
+  </CardFooter>
+</Card>`
 
-// 패널 — shadcn Card 와 구조·스타일이 동일한 합성(compound) 컴포넌트입니다. shadcn CLI 로 설치되는
-// 실제 프리미티브가 아니라 프로젝트 커스텀 컴포넌트(src/components/panel.tsx)라 src/components/ui/**
-// 밖(PageHeader 와 같은 위치)에 있습니다. Card 와 달리 border/ring 이 없고, 상하 40px·좌우 102px
-// 패딩이 기본값입니다(여러 데모를 하나의 패널로 묶어 담는 용도로 조정됨).
-// 아래 데모는 shadcn-test 페이지에서 실제로 쓰는 형태 그대로다 — Panel + PanelContent 만 쓰고
-// PanelHeader/PanelFooter 는 쓰지 않는다(그 페이지는 Panel 하나로 모든 데모 콘텐츠를 감싼다).
-const PanelGuidePage = () => (
-    <GuidePage
-        title="패널 (Panel)"
-        description="Card 와 구조·스타일이 동일한 합성 컴포넌트입니다. border/ring 없이 배경만으로 콘텐츠 영역을 감쌉니다."
-    >
-        <section aria-labelledby="panel-demo" className="flex flex-col gap-4">
+const USAGE_CODE_ACTION = `<Card>
+  <CardHeader>
+    <CardTitle>플랜 안내</CardTitle>
+    <CardDescription>
+      제목 오른쪽에 액션을 둘 수 있습니다.
+    </CardDescription>
+    <CardAction>
+      <Button variant="ghost" size="sm">
+        수정
+      </Button>
+    </CardAction>
+  </CardHeader>
+  <CardContent>
+    <p>본문 콘텐츠입니다.</p>
+  </CardContent>
+</Card>`
+
+// 카드 — shadcn CLI 로 설치된 실제 프리미티브(src/components/ui/card.tsx). 별도 래퍼 컴포넌트를
+// 만들지 않고 원본을 그대로 쓴다([SC-02]). 개별 콘텐츠 블록(통계 카드·항목 박스)에 쓰고, 여러
+// 데모·섹션을 하나로 묶는 넓은 콘텐츠 영역에는 Panel 을 쓴다(component-guide/panel 참고).
+const CardGuidePage = () => (
+    <GuidePage title="카드 (Card)" description="shadcn Card 프리미티브입니다. 개별 콘텐츠 블록을 감쌉니다.">
+        <section aria-labelledby="card-demo" className="flex flex-col gap-4">
             <div>
-                <h2 id="panel-demo" className="typo-h4-bold">
+                <h2 id="card-demo" className="typo-h4-bold">
                     사용 예시
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">/shadcn-test</code> 페이지에서 실제로 쓰는 형태입니다 — Panel 하나가
-                    여러 데모 섹션을 그리드로 묶어 감쌉니다.
+                    <code className="font-mono">/shadcn-test</code> 페이지에서 실제로 쓰는 형태입니다 —
+                    CardHeader/CardTitle/CardDescription/CardContent/CardFooter 합성 구조입니다.
                 </p>
             </div>
             <div className="bg-background rounded-md p-6">
-                <Panel>
-                    <PanelContent>
-                        <div className="col-span-4 flex flex-col gap-4">
-                            <h3 className="typo-title-l-bold">섹션 A</h3>
-                            <p className="typo-body-l-regular text-muted-foreground">
-                                그리드 셀 하나에 들어가는 콘텐츠입니다.
-                            </p>
-                        </div>
-                        <div className="col-span-4 flex flex-col gap-4">
-                            <h3 className="typo-title-l-bold">섹션 B</h3>
-                            <Button size="sm">액션</Button>
-                        </div>
-                    </PanelContent>
-                </Panel>
+                <Card className="max-w-sm">
+                    <CardHeader>
+                        <CardTitle>플랜 안내</CardTitle>
+                        <CardDescription>bg-card 토큰으로 구성한 카드입니다.</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="typo-body-l-regular text-foreground">shadcn Card 컴포넌트를 그대로 사용합니다.</p>
+                    </CardContent>
+                    <CardFooter>
+                        <Button size="sm">자세히 보기</Button>
+                    </CardFooter>
+                </Card>
             </div>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+
+            <div className="flex flex-col gap-2">
+                <h3 className="typo-body-l-medium text-foreground">CardAction — 제목 오른쪽 액션(선택)</h3>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    <code className="font-mono">CardAction</code> 을 CardHeader 안에 넣으면 CSS{' '}
+                    <code className="font-mono">has-data-[slot=card-action]</code> 선택자로 자동 2열 레이아웃이 된다(JS
+                    분기 없음).
+                </p>
+            </div>
+            <div className="bg-background rounded-md p-6">
+                <Card className="max-w-sm">
+                    <CardHeader>
+                        <CardTitle>플랜 안내</CardTitle>
+                        <CardDescription>제목 오른쪽에 액션을 둘 수 있습니다.</CardDescription>
+                        <CardAction>
+                            <Button variant="ghost" size="sm">
+                                수정
+                            </Button>
+                        </CardAction>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="typo-body-l-regular text-foreground">본문 콘텐츠입니다.</p>
+                    </CardContent>
+                </Card>
+            </div>
+            <CodeBlock code={USAGE_CODE_ACTION} language="tsx" copyLabel="복사" />
         </section>
 
-        <section aria-labelledby="panel-composition" className="flex flex-col gap-4">
+        <section aria-labelledby="card-composition" className="flex flex-col gap-4">
             <div>
-                <h2 id="panel-composition" className="typo-h4-bold">
+                <h2 id="card-composition" className="typo-h4-bold">
                     Composition
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    이 컴포넌트 내부에 들어갈 수 있는 요소들입니다. 현재 앱에서는{' '}
-                    <code className="font-mono">PanelContent</code> 만 쓰지만, Card 와 같은 합성 API 라 나머지도 필요할
-                    때 그대로 쓸 수 있습니다.
+                    이 컴포넌트 내부에 들어갈 수 있는 요소들입니다.
                 </p>
             </div>
             <div className="bg-background border-border overflow-x-auto rounded-md border">
@@ -80,15 +121,12 @@ const PanelGuidePage = () => (
                     </thead>
                     <tbody>
                         {[
-                            ['PanelContent', '패널의 본문 콘텐츠를 표시합니다. 현재 유일하게 쓰이는 슬롯입니다.'],
-                            ['PanelHeader', '제목·설명·액션을 묶는 상단 영역입니다. (현재 미사용)'],
-                            [
-                                'PanelTitle',
-                                '패널 제목을 표시합니다. 시맨틱 헤딩은 직접 자식으로 넣습니다. (현재 미사용)',
-                            ],
-                            ['PanelDescription', '패널의 추가 설명을 표시합니다. (현재 미사용)'],
-                            ['PanelAction', 'PanelHeader 우측에 배치하는 액션(버튼 등) 영역입니다. (현재 미사용)'],
-                            ['PanelFooter', '패널 하단의 액션 영역을 표시합니다. (현재 미사용)'],
+                            ['CardHeader', '제목·설명·액션을 묶는 상단 영역입니다.'],
+                            ['CardTitle', '카드 제목을 표시합니다.'],
+                            ['CardDescription', '카드의 추가 설명을 표시합니다.'],
+                            ['CardAction', 'CardHeader 우측에 배치하는 액션(버튼 등) 영역입니다.'],
+                            ['CardContent', '카드의 본문 콘텐츠를 표시합니다.'],
+                            ['CardFooter', '카드 하단의 액션 영역을 표시합니다.'],
                         ].map(([name, desc]) => (
                             <tr key={name} className="border-border bg-background border-b last:border-b-0">
                                 <th
@@ -105,13 +143,13 @@ const PanelGuidePage = () => (
             </div>
         </section>
 
-        <section aria-labelledby="panel-props" className="flex flex-col gap-4">
+        <section aria-labelledby="card-props" className="flex flex-col gap-4">
             <div>
-                <h2 id="panel-props" className="typo-h4-bold">
+                <h2 id="card-props" className="typo-h4-bold">
                     Props
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    Panel(최상위)에서 커스터마이징 가능한 속성입니다.
+                    Card(최상위)에서 커스터마이징 가능한 속성입니다.
                 </p>
             </div>
             <div className="bg-background border-border overflow-x-auto rounded-md border">
@@ -145,7 +183,7 @@ const PanelGuidePage = () => (
                                 <div className="flex flex-col gap-2">
                                     <p className="typo-body-l-regular text-muted-foreground">
                                         내부 요소 간 간격(gap)에 쓰이는{' '}
-                                        <code className="font-mono">--panel-spacing</code> 변수 크기.
+                                        <code className="font-mono">--card-spacing</code> 변수 크기.
                                     </p>
                                     <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
                                         &apos;default&apos; | &apos;sm&apos;
@@ -195,4 +233,4 @@ const PanelGuidePage = () => (
     </GuidePage>
 )
 
-export default PanelGuidePage
+export default CardGuidePage
