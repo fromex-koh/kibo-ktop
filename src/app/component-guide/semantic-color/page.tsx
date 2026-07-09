@@ -275,15 +275,20 @@ const GROUP_USAGE: Record<string, ReactNode> = {
 
 // 색상(Semantic) — 앱이 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
 const SemanticColorGuidePage = () => (
-    <GuidePage title="색상 (Semantic)" description="앱이 실제로 쓰는 시맨틱 색상 토큰을 그룹별 표로 정리했습니다.">
-        <p className="typo-body-m-regular text-muted-foreground">
-            &ldquo;클래스&rdquo; 칸의 <code className="font-mono">bg-</code>/<code className="font-mono">text-</code>/
-            <code className="font-mono">border-</code>는 자주 쓰는 3개만 고른 큐레이션입니다. 시맨틱 슬롯은 실제로{' '}
-            <code className="font-mono">ring-</code>/<code className="font-mono">outline-</code>/
-            <code className="font-mono">divide-</code>/<code className="font-mono">fill-</code>/
-            <code className="font-mono">stroke-</code> 등 색을 받는 유틸리티 접두사 13개 이상에서 전부 유효하니,
-            필요하면 같은 슬롯 이름에 원하는 접두사를 직접 붙여 쓰면 됩니다.
-        </p>
+    <GuidePage
+        title="색상 (Semantic)"
+        description={
+            <>
+                앱이 실제로 쓰는 시맨틱 색상 토큰을 그룹별 표로 정리했습니다. &ldquo;클래스&rdquo; 칸의{' '}
+                <code className="font-mono">bg-</code>/<code className="font-mono">text-</code>/
+                <code className="font-mono">border-</code>는 자주 쓰는 3개만 고른 큐레이션입니다. 시맨틱 슬롯은 실제로{' '}
+                <code className="font-mono">ring-</code>/<code className="font-mono">outline-</code>/
+                <code className="font-mono">divide-</code>/<code className="font-mono">fill-</code>/
+                <code className="font-mono">stroke-</code> 등 색을 받는 유틸리티 접두사 13개 이상에서 전부 유효하니,
+                필요하면 같은 슬롯 이름에 원하는 접두사를 직접 붙여 쓰면 됩니다.
+            </>
+        }
+    >
         <div className="flex flex-col gap-8">
             {GROUPED.map((group) => (
                 <SemanticTable
