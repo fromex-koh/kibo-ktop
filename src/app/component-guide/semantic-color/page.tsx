@@ -182,7 +182,7 @@ type SemanticEntry = [string, string | {light: string; dark: string}]
 
 // 그룹 판별 — 순서대로 첫 매칭. shadcn 표준 슬롯의 base/-foreground 페어를 한 그룹으로 묶는다.
 const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
-    {name: 'background', match: (n) => n === 'background'},
+    {name: 'background / background-alt', match: (n) => n === 'background' || n === 'background-alt'},
     {
         name: 'foreground (+ basic/subtle/disabled)',
         match: (n) => n === 'foreground' || n.startsWith('foreground-'),
@@ -330,11 +330,13 @@ const SemanticTable = ({
 
 // 그룹별 사용처 설명 — 각 시맨틱 슬롯이 화면 어디에 쓰이는 색인지 간결히. 채워진 그룹만 표기한다.
 const GROUP_USAGE: Record<string, ReactNode> = {
-    background: (
+    'background / background-alt': (
         <>
             페이지·앱의 가장 바닥 배경색 — <code className="font-mono">&lt;body&gt;</code> 와 최상위 레이아웃의 기본
             바탕. 그 위에 <code className="font-mono">card</code>·<code className="font-mono">popover</code>·
-            <code className="font-mono">sidebar</code> 등 다른 표면이 얹힌다.
+            <code className="font-mono">sidebar</code> 등 다른 표면이 얹힌다. 짝인{' '}
+            <code className="font-mono">bg-background-alt</code>(gray.50)는 바닥과 살짝 구분되는{' '}
+            <strong>보조 배경 면</strong>(섹션 구분·줄무늬 배경 등)에 쓴다.
         </>
     ),
     'foreground (+ basic/subtle/disabled)': (
