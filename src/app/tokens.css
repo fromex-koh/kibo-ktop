@@ -206,7 +206,7 @@
   --ds-primary-foreground: var(--raw-common-white);
   --ds-secondary: var(--ds-gray-100);
   --ds-secondary-foreground: var(--ds-gray-900);
-  --ds-muted: var(--ds-gray-50);
+  --ds-muted: var(--ds-gray-100);
   --ds-muted-foreground: var(--raw-gray-500);
   --ds-accent: var(--ds-gray-100);
   --ds-accent-foreground: var(--ds-gray-900);
