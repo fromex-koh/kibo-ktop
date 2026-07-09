@@ -164,13 +164,19 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
         name: 'primary / primary-foreground / primary-subtle',
         match: (n) => n === 'primary' || n === 'primary-foreground' || n === 'primary-subtle',
     },
-    {name: 'secondary / secondary-foreground', match: (n) => n === 'secondary' || n === 'secondary-foreground'},
+    {
+        name: 'secondary / secondary-foreground / secondary-green-subtle / secondary-orange-subtle',
+        match: (n) =>
+            n === 'secondary' ||
+            n === 'secondary-foreground' ||
+            n === 'secondary-green-subtle' ||
+            n === 'secondary-orange-subtle',
+    },
     {name: 'accent / accent-foreground', match: (n) => n === 'accent' || n === 'accent-foreground'},
     {
         name: '상태 (status)',
         match: (n) => ['destructive', 'success', 'warning', 'info'].some((s) => n === s || n === `${s}-foreground`),
     },
-    {name: '브랜드 표면 (brand surface)', match: (n) => n.endsWith('-subtle')},
     {name: 'border / input / ring', match: (n) => n === 'border' || n === 'input' || n === 'ring'},
     {name: 'chart', match: (n) => n.startsWith('chart-')},
     {name: 'sidebar', match: (n) => n.startsWith('sidebar')},
@@ -326,13 +332,15 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             shadcn 표준 이름 <code className="font-mono">destructive</code> 를 그대로 쓴다(이름=계약).
         </>
     ),
-    '브랜드 표면 (brand surface)': (
+    'secondary / secondary-foreground / secondary-green-subtle / secondary-orange-subtle': (
         <>
-            브랜드·강조 색의 <strong>옅은 틴트 표면</strong> — 카테고리 카드·강조 패널 등에{' '}
+            보조(secondary) 색 가족 — <code className="font-mono">bg-secondary</code>(회색 중립 표면)·
+            <code className="font-mono">text-secondary-foreground</code> 는 shadcn 표준 보조 버튼·칩. 같은 가족의{' '}
             <code className="font-mono">bg-secondary-green-subtle</code>·
-            <code className="font-mono">bg-secondary-orange-subtle</code>(각 hue 의 옅은 톤 50, 다크 900 자동 반사). 위
-            텍스트는 <code className="font-mono">text-foreground</code> 가 테마 따라 flip 된다. 파랑 계열은 primary
-            가족의 <code className="font-mono">bg-primary-subtle</code> 를 쓴다.
+            <code className="font-mono">bg-secondary-orange-subtle</code> 는 <strong>초록·주황 옅은 틴트 표면</strong>
+            (카테고리 카드·강조 패널, 각 hue 옅은 톤 50 · 다크 900 자동 반사). 위 텍스트는{' '}
+            <code className="font-mono">text-foreground</code> 가 flip 된다. 파랑 계열은 primary 가족의{' '}
+            <code className="font-mono">bg-primary-subtle</code> 를 쓴다.
         </>
     ),
 }
