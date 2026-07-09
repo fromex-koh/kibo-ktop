@@ -6,7 +6,6 @@ import {ko} from 'date-fns/locale'
 import {CalendarIcon, Search} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {Calendar} from '@/components/ui/calendar'
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card'
 import {
     Dialog,
     DialogContent,
@@ -65,161 +64,77 @@ const AdvancedFields = () => {
     return (
         <>
             {/* DatePicker — Popover + Calendar 조합 (shadcn 의 DatePicker 패턴) */}
-            <Card className="col-span-4">
-                <CardHeader>
-                    <CardTitle>
-                        <h2 className="typo-title-l-bold">DatePicker</h2>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                    <Label htmlFor="date-trigger">날짜 선택</Label>
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button
-                                id="date-trigger"
-                                variant="outline"
-                                className={date ? 'w-full justify-start' : 'text-muted-foreground w-full justify-start'}
-                            >
-                                <CalendarIcon aria-hidden="true" />
-                                {date ? format(date, 'PPP', {locale: ko}) : '날짜를 선택하세요'}
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar mode="single" selected={date} onSelect={setDate} locale={ko} />
-                        </PopoverContent>
-                    </Popover>
-                </CardContent>
-            </Card>
+            <div className="col-span-4 flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">DatePicker</h2>
+                <Label htmlFor="date-trigger">날짜 선택</Label>
+                <Popover>
+                    <PopoverTrigger asChild>
+                        <Button
+                            id="date-trigger"
+                            variant="outline"
+                            className={date ? 'w-full justify-start' : 'text-muted-foreground w-full justify-start'}
+                        >
+                            <CalendarIcon aria-hidden="true" />
+                            {date ? format(date, 'PPP', {locale: ko}) : '날짜를 선택하세요'}
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar mode="single" selected={date} onSelect={setDate} locale={ko} />
+                    </PopoverContent>
+                </Popover>
+            </div>
 
             {/* 주소 검색 (+ 상세주소) — 검색 버튼 → 모달 → 선택 → input 채움 */}
-            <Card className="col-span-4">
-                <CardHeader>
-                    <CardTitle>
-                        <h2 className="typo-title-l-bold">주소 검색</h2>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="address">주소</Label>
-                        <div className="flex gap-2">
-                            <Input
-                                id="address"
-                                readOnly
-                                value={address ? `(${address.zip}) ${address.road}` : ''}
-                                placeholder="주소 검색을 눌러주세요"
-                                className="flex-1"
-                            />
-                            <Dialog open={addressOpen} onOpenChange={setAddressOpen}>
-                                <DialogTrigger asChild>
-                                    <Button variant="outline">
-                                        <Search aria-hidden="true" />
-                                        주소 검색
-                                    </Button>
-                                </DialogTrigger>
-                                <DialogContent className="w-120">
-                                    <DialogHeader>
-                                        <DialogTitle>주소 검색</DialogTitle>
-                                        <DialogDescription>도로명·지번·건물명·우편번호로 검색하세요.</DialogDescription>
-                                    </DialogHeader>
-                                    <Input
-                                        value={addressQuery}
-                                        onChange={(event) => setAddressQuery(event.target.value)}
-                                        placeholder="예: 테헤란로"
-                                        aria-label="주소 검색어"
-                                    />
-                                    <ul className="flex max-h-80 flex-col gap-0.5 overflow-y-auto">
-                                        {addressResults.map((item) => (
-                                            <li key={`${item.zip}-${item.road}`}>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => {
-                                                        setAddress(item)
-                                                        setAddressOpen(false)
-                                                        setAddressQuery('')
-                                                    }}
-                                                    className={resultButtonClass}
-                                                >
-                                                    <span className="typo-body-l-regular text-foreground">
-                                                        {item.road}
-                                                    </span>
-                                                    <span className="typo-caption-regular text-muted-foreground font-mono">
-                                                        ({item.zip})
-                                                    </span>
-                                                </button>
-                                            </li>
-                                        ))}
-                                        {addressResults.length === 0 && (
-                                            <li className="typo-body-l-regular text-muted-foreground px-3 py-6 text-center">
-                                                검색 결과가 없습니다.
-                                            </li>
-                                        )}
-                                    </ul>
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <Label htmlFor="address-detail">상세주소</Label>
-                        <Input id="address-detail" name="address-detail" placeholder="상세주소 (동/호수 등)" />
-                    </div>
-                </CardContent>
-            </Card>
-
-            {/* 업종 코드 입력 — 검색 버튼 → 모달 → 선택 → input 채움 */}
-            <Card className="col-span-4">
-                <CardHeader>
-                    <CardTitle>
-                        <h2 className="typo-title-l-bold">업종 코드</h2>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                    <Label htmlFor="industry">업종</Label>
+            <div className="col-span-4 flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">주소 검색</h2>
+                <div className="flex flex-col gap-2">
+                    <Label htmlFor="address">주소</Label>
                     <div className="flex gap-2">
                         <Input
-                            id="industry"
+                            id="address"
                             readOnly
-                            value={industry ? `${industry.code} · ${industry.name}` : ''}
-                            placeholder="검색을 눌러 업종을 선택하세요"
+                            value={address ? `(${address.zip}) ${address.road}` : ''}
+                            placeholder="주소 검색을 눌러주세요"
                             className="flex-1"
                         />
-                        <Dialog open={industryOpen} onOpenChange={setIndustryOpen}>
+                        <Dialog open={addressOpen} onOpenChange={setAddressOpen}>
                             <DialogTrigger asChild>
                                 <Button variant="outline">
                                     <Search aria-hidden="true" />
-                                    검색
+                                    주소 검색
                                 </Button>
                             </DialogTrigger>
                             <DialogContent className="w-120">
                                 <DialogHeader>
-                                    <DialogTitle>업종 코드 검색</DialogTitle>
-                                    <DialogDescription>업종명 또는 코드로 검색하세요.</DialogDescription>
+                                    <DialogTitle>주소 검색</DialogTitle>
+                                    <DialogDescription>도로명·지번·건물명·우편번호로 검색하세요.</DialogDescription>
                                 </DialogHeader>
                                 <Input
-                                    value={industryQuery}
-                                    onChange={(event) => setIndustryQuery(event.target.value)}
-                                    placeholder="예: 소프트웨어 / 62010"
-                                    aria-label="업종 검색어"
+                                    value={addressQuery}
+                                    onChange={(event) => setAddressQuery(event.target.value)}
+                                    placeholder="예: 테헤란로"
+                                    aria-label="주소 검색어"
                                 />
                                 <ul className="flex max-h-80 flex-col gap-0.5 overflow-y-auto">
-                                    {industryResults.map((item) => (
-                                        <li key={item.code}>
+                                    {addressResults.map((item) => (
+                                        <li key={`${item.zip}-${item.road}`}>
                                             <button
                                                 type="button"
                                                 onClick={() => {
-                                                    setIndustry(item)
-                                                    setIndustryOpen(false)
-                                                    setIndustryQuery('')
+                                                    setAddress(item)
+                                                    setAddressOpen(false)
+                                                    setAddressQuery('')
                                                 }}
                                                 className={resultButtonClass}
                                             >
-                                                <span className="typo-body-l-regular text-foreground">{item.name}</span>
+                                                <span className="typo-body-l-regular text-foreground">{item.road}</span>
                                                 <span className="typo-caption-regular text-muted-foreground font-mono">
-                                                    {item.code}
+                                                    ({item.zip})
                                                 </span>
                                             </button>
                                         </li>
                                     ))}
-                                    {industryResults.length === 0 && (
+                                    {addressResults.length === 0 && (
                                         <li className="typo-body-l-regular text-muted-foreground px-3 py-6 text-center">
                                             검색 결과가 없습니다.
                                         </li>
@@ -228,8 +143,72 @@ const AdvancedFields = () => {
                             </DialogContent>
                         </Dialog>
                     </div>
-                </CardContent>
-            </Card>
+                </div>
+                <div className="flex flex-col gap-2">
+                    <Label htmlFor="address-detail">상세주소</Label>
+                    <Input id="address-detail" name="address-detail" placeholder="상세주소 (동/호수 등)" />
+                </div>
+            </div>
+
+            {/* 업종 코드 입력 — 검색 버튼 → 모달 → 선택 → input 채움 */}
+            <div className="col-span-4 flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">업종 코드</h2>
+                <Label htmlFor="industry">업종</Label>
+                <div className="flex gap-2">
+                    <Input
+                        id="industry"
+                        readOnly
+                        value={industry ? `${industry.code} · ${industry.name}` : ''}
+                        placeholder="검색을 눌러 업종을 선택하세요"
+                        className="flex-1"
+                    />
+                    <Dialog open={industryOpen} onOpenChange={setIndustryOpen}>
+                        <DialogTrigger asChild>
+                            <Button variant="outline">
+                                <Search aria-hidden="true" />
+                                검색
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent className="w-120">
+                            <DialogHeader>
+                                <DialogTitle>업종 코드 검색</DialogTitle>
+                                <DialogDescription>업종명 또는 코드로 검색하세요.</DialogDescription>
+                            </DialogHeader>
+                            <Input
+                                value={industryQuery}
+                                onChange={(event) => setIndustryQuery(event.target.value)}
+                                placeholder="예: 소프트웨어 / 62010"
+                                aria-label="업종 검색어"
+                            />
+                            <ul className="flex max-h-80 flex-col gap-0.5 overflow-y-auto">
+                                {industryResults.map((item) => (
+                                    <li key={item.code}>
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIndustry(item)
+                                                setIndustryOpen(false)
+                                                setIndustryQuery('')
+                                            }}
+                                            className={resultButtonClass}
+                                        >
+                                            <span className="typo-body-l-regular text-foreground">{item.name}</span>
+                                            <span className="typo-caption-regular text-muted-foreground font-mono">
+                                                {item.code}
+                                            </span>
+                                        </button>
+                                    </li>
+                                ))}
+                                {industryResults.length === 0 && (
+                                    <li className="typo-body-l-regular text-muted-foreground px-3 py-6 text-center">
+                                        검색 결과가 없습니다.
+                                    </li>
+                                )}
+                            </ul>
+                        </DialogContent>
+                    </Dialog>
+                </div>
+            </div>
         </>
     )
 }

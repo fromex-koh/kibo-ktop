@@ -22,7 +22,6 @@ import {
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import {Button} from '@/components/ui/button'
-import {Card, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 import {
     Pagination,
     PaginationContent,
@@ -92,204 +91,168 @@ const Showcase = () => {
     return (
         <>
             {/* Stepper */}
-            <Card className="col-span-full">
-                <CardHeader>
-                    <CardTitle>
-                        <h2 className="typo-title-l-bold">Stepper</h2>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                    <Stepper current={step} />
-                    <div className="flex gap-2">
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setStep((s) => Math.max(0, s - 1))}
-                            disabled={step === 0}
-                        >
-                            이전
-                        </Button>
-                        <Button
-                            size="sm"
-                            onClick={() => setStep((s) => Math.min(STEPS.length - 1, s + 1))}
-                            disabled={step === STEPS.length - 1}
-                        >
-                            다음
-                        </Button>
-                    </div>
-                </CardContent>
-            </Card>
+            <div className="col-span-full flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">Stepper</h2>
+                <Stepper current={step} />
+                <div className="flex gap-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setStep((s) => Math.max(0, s - 1))}
+                        disabled={step === 0}
+                    >
+                        이전
+                    </Button>
+                    <Button
+                        size="sm"
+                        onClick={() => setStep((s) => Math.min(STEPS.length - 1, s + 1))}
+                        disabled={step === STEPS.length - 1}
+                    >
+                        다음
+                    </Button>
+                </div>
+            </div>
 
             {/* Tabs */}
-            <Card className="col-span-4">
-                <CardHeader>
-                    <CardTitle>
-                        <h2 className="typo-title-l-bold">Tabs</h2>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                    <Tabs defaultValue="account">
-                        <TabsList>
-                            <TabsTrigger value="account">계정</TabsTrigger>
-                            <TabsTrigger value="password">비밀번호</TabsTrigger>
-                            <TabsTrigger value="team">팀</TabsTrigger>
-                        </TabsList>
-                        <TabsContent value="account" className="typo-body-l-regular text-muted-foreground pt-3">
-                            계정 정보를 관리하는 탭입니다.
-                        </TabsContent>
-                        <TabsContent value="password" className="typo-body-l-regular text-muted-foreground pt-3">
-                            비밀번호를 변경하는 탭입니다.
-                        </TabsContent>
-                        <TabsContent value="team" className="typo-body-l-regular text-muted-foreground pt-3">
-                            팀원을 초대·관리하는 탭입니다.
-                        </TabsContent>
-                    </Tabs>
-                </CardContent>
-            </Card>
+            <div className="col-span-4 flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">Tabs</h2>
+                <Tabs defaultValue="account">
+                    <TabsList>
+                        <TabsTrigger value="account">계정</TabsTrigger>
+                        <TabsTrigger value="password">비밀번호</TabsTrigger>
+                        <TabsTrigger value="team">팀</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="account" className="typo-body-l-regular text-muted-foreground pt-3">
+                        계정 정보를 관리하는 탭입니다.
+                    </TabsContent>
+                    <TabsContent value="password" className="typo-body-l-regular text-muted-foreground pt-3">
+                        비밀번호를 변경하는 탭입니다.
+                    </TabsContent>
+                    <TabsContent value="team" className="typo-body-l-regular text-muted-foreground pt-3">
+                        팀원을 초대·관리하는 탭입니다.
+                    </TabsContent>
+                </Tabs>
+            </div>
 
             {/* Breadcrumb */}
-            <Card className="col-span-4">
-                <CardHeader>
-                    <CardTitle>
-                        <h2 className="typo-title-l-bold">Breadcrumb</h2>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="#">홈</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="#">신청 관리</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>기술평가 신청</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                </CardContent>
-            </Card>
+            <div className="col-span-4 flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">Breadcrumb</h2>
+                <Breadcrumb>
+                    <BreadcrumbList>
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="#">홈</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbLink href="#">신청 관리</BreadcrumbLink>
+                        </BreadcrumbItem>
+                        <BreadcrumbSeparator />
+                        <BreadcrumbItem>
+                            <BreadcrumbPage>기술평가 신청</BreadcrumbPage>
+                        </BreadcrumbItem>
+                    </BreadcrumbList>
+                </Breadcrumb>
+            </div>
 
             {/* Confirm 모달 (AlertDialog) */}
-            <Card className="col-span-4">
-                <CardHeader>
-                    <CardTitle>
-                        <h2 className="typo-title-l-bold">Confirm 모달</h2>
-                    </CardTitle>
-                    <CardDescription>AlertDialog — 되돌릴 수 없는 작업 전 확인.</CardDescription>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                    <AlertDialog>
-                        <AlertDialogTrigger asChild>
-                            <Button variant="destructive" className="w-fit">
-                                신청 삭제
-                            </Button>
-                        </AlertDialogTrigger>
-                        <AlertDialogContent className="w-100">
-                            <AlertDialogHeader>
-                                <AlertDialogTitle>정말 삭제하시겠어요?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                    삭제한 신청서는 되돌릴 수 없습니다. 계속하시겠습니까?
-                                </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                                <AlertDialogCancel>취소</AlertDialogCancel>
-                                <AlertDialogAction>삭제</AlertDialogAction>
-                            </AlertDialogFooter>
-                        </AlertDialogContent>
-                    </AlertDialog>
-                </CardContent>
-            </Card>
+            <div className="col-span-4 flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">Confirm 모달</h2>
+                <p className="typo-caption-regular text-muted-foreground">AlertDialog — 되돌릴 수 없는 작업 전 확인.</p>
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button variant="destructive" className="w-fit">
+                            신청 삭제
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="w-100">
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>정말 삭제하시겠어요?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                삭제한 신청서는 되돌릴 수 없습니다. 계속하시겠습니까?
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>취소</AlertDialogCancel>
+                            <AlertDialogAction>삭제</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
+            </div>
 
             {/* Pagination */}
-            <Card className="col-span-4">
-                <CardHeader>
-                    <CardTitle>
-                        <h2 className="typo-title-l-bold">Pagination</h2>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                    <Pagination>
-                        <PaginationContent>
-                            <PaginationItem>
-                                <PaginationPrevious
+            <div className="col-span-4 flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">Pagination</h2>
+                <Pagination>
+                    <PaginationContent>
+                        <PaginationItem>
+                            <PaginationPrevious
+                                href="#"
+                                text="이전"
+                                aria-disabled={page === 1}
+                                onClick={(event) => {
+                                    event.preventDefault()
+                                    setPage((p) => Math.max(1, p - 1))
+                                }}
+                            />
+                        </PaginationItem>
+                        {Array.from({length: totalPages}, (_, index) => index + 1).map((n) => (
+                            <PaginationItem key={n}>
+                                <PaginationLink
                                     href="#"
-                                    text="이전"
-                                    aria-disabled={page === 1}
+                                    isActive={n === page}
                                     onClick={(event) => {
                                         event.preventDefault()
-                                        setPage((p) => Math.max(1, p - 1))
+                                        setPage(n)
                                     }}
-                                />
+                                >
+                                    {n}
+                                </PaginationLink>
                             </PaginationItem>
-                            {Array.from({length: totalPages}, (_, index) => index + 1).map((n) => (
-                                <PaginationItem key={n}>
-                                    <PaginationLink
-                                        href="#"
-                                        isActive={n === page}
-                                        onClick={(event) => {
-                                            event.preventDefault()
-                                            setPage(n)
-                                        }}
-                                    >
-                                        {n}
-                                    </PaginationLink>
-                                </PaginationItem>
-                            ))}
-                            <PaginationItem>
-                                <PaginationNext
-                                    href="#"
-                                    text="다음"
-                                    aria-disabled={page === totalPages}
-                                    onClick={(event) => {
-                                        event.preventDefault()
-                                        setPage((p) => Math.min(totalPages, p + 1))
-                                    }}
-                                />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
-                </CardContent>
-            </Card>
+                        ))}
+                        <PaginationItem>
+                            <PaginationNext
+                                href="#"
+                                text="다음"
+                                aria-disabled={page === totalPages}
+                                onClick={(event) => {
+                                    event.preventDefault()
+                                    setPage((p) => Math.min(totalPages, p + 1))
+                                }}
+                            />
+                        </PaginationItem>
+                    </PaginationContent>
+                </Pagination>
+            </div>
 
             {/* 데이터 테이블 */}
-            <Card className="col-span-full">
-                <CardHeader>
-                    <CardTitle>
-                        <h2 className="typo-title-l-bold">데이터 테이블</h2>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent className="flex flex-col gap-4">
-                    <div className="overflow-x-auto">
-                        <Table>
-                            <TableCaption className="sr-only">사용자 목록</TableCaption>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>ID</TableHead>
-                                    <TableHead>이름</TableHead>
-                                    <TableHead>역할</TableHead>
-                                    <TableHead>상태</TableHead>
+            <div className="col-span-full flex flex-col gap-4">
+                <h2 className="typo-title-l-bold">데이터 테이블</h2>
+                <div className="overflow-x-auto">
+                    <Table>
+                        <TableCaption className="sr-only">사용자 목록</TableCaption>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>ID</TableHead>
+                                <TableHead>이름</TableHead>
+                                <TableHead>역할</TableHead>
+                                <TableHead>상태</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {ROWS.map((row) => (
+                                <TableRow key={row.id}>
+                                    <TableCell className="font-mono">{row.id}</TableCell>
+                                    <TableCell>{row.name}</TableCell>
+                                    <TableCell>{row.role}</TableCell>
+                                    <TableCell className={`font-semibold ${STATUS_CLASS[row.status]}`}>
+                                        {row.status}
+                                    </TableCell>
                                 </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {ROWS.map((row) => (
-                                    <TableRow key={row.id}>
-                                        <TableCell className="font-mono">{row.id}</TableCell>
-                                        <TableCell>{row.name}</TableCell>
-                                        <TableCell>{row.role}</TableCell>
-                                        <TableCell className={`font-semibold ${STATUS_CLASS[row.status]}`}>
-                                            {row.status}
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
-                    </div>
-                </CardContent>
-            </Card>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </div>
+            </div>
         </>
     )
 }
