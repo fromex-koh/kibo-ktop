@@ -5,6 +5,7 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {Checkbox} from '@/components/ui/checkbox'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
+import {PageHeader, PageHeaderDescription, PageHeaderTitle} from '@/components/page-header'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
 import {Switch} from '@/components/ui/switch'
@@ -28,16 +29,17 @@ const ShadcnTestPage = () => {
             {/* 이 페이지의 실제 전역 헤더 — 아래 데모 그리드의 '전역 헤더' 카드와 동일 컴포넌트 */}
             <SiteHeader />
             <main id="main" className="bg-background-alt py-10">
-                <div className="max-w-content mx-auto flex flex-col gap-2 px-4">
-                    <h1 className="typo-h4-bold">shadcn 통합 테스트</h1>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        shadcn 기본 폼 요소·컴포넌트가 프로젝트 디자인 토큰·레이아웃 그리드로 렌더되는지 확인하는
-                        페이지.
-                    </p>
-                </div>
-
                 {/* 데모들을 프로젝트 grid-layout(4/8/12 반응형 컬럼)에 카드로 배치 (PB-15) */}
-                <div className="grid-layout mt-8">
+                <div className="grid-layout">
+                    {/* 페이지 타이틀 — PageHeader compact variant, 그리드 전체 폭(col-span-full) */}
+                    <PageHeader className="col-span-full">
+                        <PageHeaderTitle variant="compact">shadcn 통합 테스트</PageHeaderTitle>
+                        <PageHeaderDescription variant="compact">
+                            shadcn 기본 폼 요소·컴포넌트가 프로젝트 디자인 토큰·레이아웃 그리드로 렌더되는지 확인하는
+                            페이지.
+                        </PageHeaderDescription>
+                    </PageHeader>
+
                     {/* Button variants */}
                     <section className={CARD}>
                         <h2 className="typo-title-l-bold">Button — variant</h2>
