@@ -349,7 +349,7 @@
 
   /* purpose override (수동 지정) */
   --ds-background: var(--raw-common-black);
-  --ds-card: var(--raw-common-black);
+  --ds-card: var(--raw-gray-800);
   --ds-popover: var(--raw-common-black);
   --ds-primary: var(--raw-blue-300);
   --ds-primary-foreground: var(--raw-gray-900);
