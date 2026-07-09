@@ -92,6 +92,7 @@ const toRgbaText = (color: string): string => {
 // 의 NO_UTILITY_SLOTS) var() 임의값으로 대신 참조한다.
 const LIVE_SWATCH_CLASS: Record<string, string> = {
     background: 'bg-background',
+    'background-alt': 'bg-background-alt',
     foreground: 'bg-foreground',
     'foreground-basic': 'bg-foreground-basic',
     'foreground-subtle': 'bg-foreground-subtle',
