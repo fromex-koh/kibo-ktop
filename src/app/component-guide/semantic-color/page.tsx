@@ -14,10 +14,13 @@ export const metadata: Metadata = {title: '색상 (Semantic)'}
 // scroll-thumb/track 은 pseudo-element(::-webkit-scrollbar) 전용이라 Tailwind 유틸리티 자체가
 // 없다(build-tokens.mjs 의 NO_UTILITY_SLOTS) — CSS 안에서 var() 로 직접 참조하는 게 유일한 사용법이라
 // 복사값도 유틸리티 클래스가 아니라 그 CSS 변수 자체로 보여준다.
+// 테두리 전용 색 슬롯 — 이름에 'border' 를 넣으면 유틸이 border-border-* 로 이중접두라, 슬롯명엔 border 를
+// 빼고(예: subtle-1) 유틸 표기만 border- 로 강제한다 → border-subtle-1.
+const BORDER_TONE_SLOTS = new Set(['subtle-1', 'subtle-2', 'subtle-3'])
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
     if (name === 'foreground' || name.endsWith('-foreground')) return [`text-${name}`]
-    if (name === 'border' || name.endsWith('-border') || name.startsWith('border-')) return [`border-${name}`]
+    if (name === 'border' || name.endsWith('-border') || BORDER_TONE_SLOTS.has(name)) return [`border-${name}`]
     if (name === 'ring' || name.endsWith('-ring')) return [`ring-${name}`]
     if (name === 'input') return [`border-${name}`]
     return [`bg-${name}`]
@@ -108,9 +111,9 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'secondary-green-subtle': 'bg-secondary-green-subtle',
     'secondary-orange-subtle': 'bg-secondary-orange-subtle',
     border: 'bg-border',
-    'border-subtle-1': 'bg-border-subtle-1',
-    'border-subtle-2': 'bg-border-subtle-2',
-    'border-subtle-3': 'bg-border-subtle-3',
+    'subtle-1': 'bg-subtle-1',
+    'subtle-2': 'bg-subtle-2',
+    'subtle-3': 'bg-subtle-3',
     input: 'bg-input',
     ring: 'bg-ring',
     'chart-1': 'bg-chart-1',
@@ -185,7 +188,7 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
         name: '상태 (status)',
         match: (n) => ['destructive', 'success', 'warning', 'info'].some((s) => n === s || n === `${s}-foreground`),
     },
-    {name: 'border (+ border-subtle-1/2/3)', match: (n) => n === 'border' || n.startsWith('border-subtle')},
+    {name: 'border (+ subtle-1/2/3)', match: (n) => n === 'border' || BORDER_TONE_SLOTS.has(n)},
     {name: 'input', match: (n) => n === 'input'},
     {name: 'ring', match: (n) => n === 'ring'},
     {name: 'chart', match: (n) => n.startsWith('chart-')},
@@ -362,14 +365,17 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <code className="font-mono">bg-primary-subtle</code> 를 쓴다.
         </>
     ),
-    'border (+ border-subtle-1/2/3)': (
+    'border (+ subtle-1/2/3)': (
         <>
             일반 <strong>테두리·구분선</strong> 색 — 카드·패널 외곽선, 표(Table) 구분선,{' '}
             <code className="font-mono">Separator</code>, 섹션 경계 등에{' '}
             <code className="font-mono">border-border</code>. 거의 모든 컴포넌트의 기본 테두리가 이 슬롯을 참조한다(진한
-            기본 = gray.700). 더 <strong>옅은 테두리</strong>가 필요하면 같은 가족의{' '}
-            <code className="font-mono">border-border-subtle-1</code>(gray.300)~<code className="font-mono">-3</code>
-            (gray.100)을 쓴다(다크는 모두 gray.500).
+            기본 = gray.700). 더 <strong>옅은 테두리</strong>가 필요하면{' '}
+            <code className="font-mono">border-subtle-1</code>(gray.300)~
+            <code className="font-mono">border-subtle-3</code>
+            (gray.100)을 쓴다(다크는 모두 gray.500). 슬롯명에 border 를 안 넣어 유틸이{' '}
+            <code className="font-mono">border-subtle-1</code>(이중접두{' '}
+            <code className="font-mono">border-border-*</code> 회피)로 나온다.
         </>
     ),
     input: (
