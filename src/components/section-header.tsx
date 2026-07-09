@@ -1,0 +1,50 @@
+import type {ComponentPropsWithoutRef} from 'react'
+import {cn} from '@/lib/utils'
+
+// 섹션 상단의 제목+설명(+선택적 액션) 묶음 — PageHeader/Card 와 같은 합성(compound) 컴포넌트 API.
+// 페이지 전체 타이틀(PageHeader, h1)보다 한 단계 아래인 섹션 타이틀에 쓴다(h2). 타이포 조합은
+// 고정값(Heading/H4/bold + Body/XL/Regular)이라 PageHeader 와 달리 variant 가 없다. 텍스트 색은
+// PageHeader 와 동일하게 text-foreground(제목)·text-foreground-subtle(설명).
+// SectionHeaderAction 유무는 CardHeader/CardAction 과 같은 방식(has-data-[slot=...] CSS 선택자)으로
+// 처리한다 — JS 분기 없이, 액션을 넣으면 자동으로 title/description 왼쪽 + action 오른쪽 2열 그리드가 되고
+// 넣지 않으면 title/description 만 세로로 쌓인다.
+
+const SectionHeader = ({className, ...props}: ComponentPropsWithoutRef<'div'>) => (
+    <div
+        data-slot="section-header"
+        className={cn(
+            'grid auto-rows-min items-start gap-y-2 has-data-[slot=section-header-action]:grid-cols-[1fr_auto] has-data-[slot=section-header-description]:grid-rows-[auto_auto]',
+            className,
+        )}
+        {...props}
+    />
+)
+
+const SectionHeaderTitle = ({className, children, ...props}: ComponentPropsWithoutRef<'h2'>) => (
+    <h2
+        data-slot="section-header-title"
+        className={cn('typo-h4-bold text-foreground text-balance', className)}
+        {...props}
+    >
+        {children}
+    </h2>
+)
+
+const SectionHeaderDescription = ({className, ...props}: ComponentPropsWithoutRef<'p'>) => (
+    <p
+        data-slot="section-header-description"
+        className={cn('typo-body-xl-regular text-foreground-subtle', className)}
+        {...props}
+    />
+)
+
+// 제목 오른쪽에 배치하는 선택적 액션 영역(버튼 등). 넣지 않으면 SectionHeader 는 그냥 세로 스택.
+const SectionHeaderAction = ({className, ...props}: ComponentPropsWithoutRef<'div'>) => (
+    <div
+        data-slot="section-header-action"
+        className={cn('col-start-2 row-span-2 row-start-1 self-start justify-self-end', className)}
+        {...props}
+    />
+)
+
+export {SectionHeader, SectionHeaderTitle, SectionHeaderDescription, SectionHeaderAction}

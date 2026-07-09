@@ -53,6 +53,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         items: [
             {label: 'Icon', href: '/component-guide/icon'},
             {label: 'PageHeader', href: '/component-guide/page-header'},
+            {label: 'SectionHeader', href: '/component-guide/section-header'},
             {label: 'Panel', href: '/component-guide/panel'},
         ],
     },
