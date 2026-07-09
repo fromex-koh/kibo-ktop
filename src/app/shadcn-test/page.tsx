@@ -1,6 +1,7 @@
 import type {Metadata} from 'next'
 import {Check, Search} from 'lucide-react'
 import {Button} from '@/components/ui/button'
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
@@ -262,6 +263,26 @@ const ShadcnTestPage = () => {
                             <div className="bg-overlay-xl size-20 rounded-lg" />
                         </div>
                     </section>
+
+                    {/* Card — shadcn 컴포넌트 데모. 자체 bg-card 표면을 가진 컴포넌트라 이중 카드를
+                    피하려 CARD 래퍼 없이 라벨 + 컴포넌트만 배치. rounded-lg 로 라운드를 확장([SC-01] 토큰 유틸). */}
+                    <div className="col-span-4 flex flex-col gap-4">
+                        <h2 className="typo-title-l-bold">Card</h2>
+                        <Card className="rounded-lg">
+                            <CardHeader>
+                                <CardTitle>플랜 안내</CardTitle>
+                                <CardDescription>bg-card 토큰과 rounded-lg 라운드로 구성한 카드입니다.</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="typo-body-l-regular text-muted-foreground">
+                                    shadcn Card 컴포넌트를 그대로 사용하고, className 으로 라운드값만 확장했습니다.
+                                </p>
+                            </CardContent>
+                            <CardFooter>
+                                <Button size="sm">자세히 보기</Button>
+                            </CardFooter>
+                        </Card>
+                    </div>
 
                     {/* Stepper · Tabs · Breadcrumb · Confirm 모달 · Pagination · 데이터 테이블 */}
                     <Showcase />
