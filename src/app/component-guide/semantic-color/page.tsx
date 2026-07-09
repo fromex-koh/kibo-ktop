@@ -102,10 +102,6 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'warning-foreground': 'bg-warning-foreground',
     info: 'bg-info',
     'info-foreground': 'bg-info-foreground',
-    'success-subtle': 'bg-success-subtle',
-    'warning-subtle': 'bg-warning-subtle',
-    'error-subtle': 'bg-error-subtle',
-    'info-subtle': 'bg-info-subtle',
     border: 'bg-border',
     input: 'bg-input',
     ring: 'bg-ring',
@@ -165,10 +161,9 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'secondary / secondary-foreground', match: (n) => n === 'secondary' || n === 'secondary-foreground'},
     {name: 'accent / accent-foreground', match: (n) => n === 'accent' || n === 'accent-foreground'},
     {
-        name: '상태 솔리드 (status)',
+        name: '상태 (status)',
         match: (n) => ['destructive', 'success', 'warning', 'info'].some((s) => n === s || n === `${s}-foreground`),
     },
-    {name: '상태 표면 (status-subtle)', match: (n) => n.endsWith('-subtle')},
     {name: 'border / input / ring', match: (n) => n === 'border' || n === 'input' || n === 'ring'},
     {name: 'chart', match: (n) => n.startsWith('chart-')},
     {name: 'sidebar', match: (n) => n.startsWith('sidebar')},
@@ -307,25 +302,13 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             &lsquo;바닥&rsquo;이 아니라 &lsquo;그 위에 올린 면&rsquo;이라 별도 슬롯으로 둔다.
         </>
     ),
-    '상태 솔리드 (status)': (
+    '상태 (status)': (
         <>
-            강조가 강한 <strong>단색 상태색</strong> — 상태 버튼·배지·아이콘 배경에{' '}
-            <code className="font-mono">bg-success</code>·<code className="font-mono">bg-destructive</code> 등, 그 위
-            텍스트는 <code className="font-mono">text-success-foreground</code> 등. 오류의 솔리드는 shadcn 표준 이름{' '}
-            <code className="font-mono">destructive</code> 를 그대로 쓴다(이름=계약). 다크에서 배경이 밝아지면(600→300)
-            텍스트가 어두워져(<code className="font-mono">gray.900</code>) 대비를 유지한다. <strong>옅은 배경</strong>이
-            필요하면 <code className="font-mono">*-subtle</code>(아래) 를 쓴다.
-        </>
-    ),
-    '상태 표면 (status-subtle)': (
-        <>
-            성공·경고·오류·정보를 나타내는 <strong>옅은 상태 카드·배너 배경</strong> — 각 상태 hue 의 가장 옅은 톤(50)을{' '}
-            <code className="font-mono">bg-success-subtle</code>·<code className="font-mono">bg-warning-subtle</code>{' '}
-            등으로 쓴다. 다크에서는 자동으로 짙은 톤(900)으로 반사되고(팔레트{' '}
-            <code className="font-mono">bg-success-50</code> 직접 사용은 고정값이라 다크에서 안 뒤집힘), 그 위 텍스트는
-            일반 <code className="font-mono">text-foreground</code> 가 테마 따라 같이 뒤집혀 그대로 읽힌다. 강한 단색
-            상태색·상태 텍스트는 <code className="font-mono">text-destructive</code>·팔레트{' '}
-            <code className="font-mono">text-success-600</code> 등을 쓴다.
+            성공·경고·오류·정보 상태를 나타내는 <strong>옅은 상태 표면</strong> — 상태 카드·배너·배지 배경에{' '}
+            <code className="font-mono">bg-success</code>·<code className="font-mono">bg-destructive</code> 등(각 hue의
+            가장 옅은 톤 50), 그 위 텍스트는 진한 상태색(<code className="font-mono">text-success-foreground</code> =
+            700)로 대비를 맞춘다. 다크에서는 배경 50→900·텍스트 700→200으로 자동 반사돼 어느 테마에서도 읽힌다. 오류
+            슬롯은 shadcn 표준 이름 <code className="font-mono">destructive</code> 를 그대로 쓴다(이름=계약).
         </>
     ),
 }
