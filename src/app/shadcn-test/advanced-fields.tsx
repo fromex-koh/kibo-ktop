@@ -42,6 +42,9 @@ const MOCK_INDUSTRY: readonly IndustryItem[] = [
 const resultButtonClass =
     'hover:bg-muted focus-visible:bg-muted focus-visible:ring-ring flex w-full flex-col gap-0.5 rounded-md px-3 py-2 text-left transition-colors focus:outline-none focus-visible:ring-2'
 
+// grid-layout 안의 카드 셀(col-span-4 = 모바일 1 / wide 2 / pc 3열).
+const CARD = 'bg-card border-border col-span-4 flex flex-col gap-4 rounded-xl border p-6'
+
 const AdvancedFields = () => {
     // DatePicker
     const [date, setDate] = useState<Date>()
@@ -64,7 +67,7 @@ const AdvancedFields = () => {
     return (
         <>
             {/* DatePicker — Popover + Calendar 조합 (shadcn 의 DatePicker 패턴) */}
-            <section className="mt-10 flex max-w-md flex-col gap-2">
+            <section className={CARD}>
                 <h2 className="typo-title-l-bold">DatePicker</h2>
                 <Label htmlFor="date-trigger">날짜 선택</Label>
                 <Popover>
@@ -85,7 +88,7 @@ const AdvancedFields = () => {
             </section>
 
             {/* 주소 검색 (+ 상세주소) — 검색 버튼 → 모달 → 선택 → input 채움 */}
-            <section className="mt-10 flex max-w-md flex-col gap-4">
+            <section className={CARD}>
                 <h2 className="typo-title-l-bold">주소 검색</h2>
                 <div className="flex flex-col gap-2">
                     <Label htmlFor="address">주소</Label>
@@ -151,7 +154,7 @@ const AdvancedFields = () => {
             </section>
 
             {/* 업종 코드 입력 — 검색 버튼 → 모달 → 선택 → input 채움 */}
-            <section className="mt-10 flex max-w-md flex-col gap-2">
+            <section className={CARD}>
                 <h2 className="typo-title-l-bold">업종 코드</h2>
                 <Label htmlFor="industry">업종</Label>
                 <div className="flex gap-2">
