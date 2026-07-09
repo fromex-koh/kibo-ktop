@@ -17,7 +17,7 @@ export const metadata: Metadata = {title: '색상 (Semantic)'}
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
     if (name === 'foreground' || name.endsWith('-foreground')) return [`text-${name}`]
-    if (name === 'border' || name.endsWith('-border')) return [`border-${name}`]
+    if (name === 'border' || name.endsWith('-border') || name.startsWith('border-')) return [`border-${name}`]
     if (name === 'ring' || name.endsWith('-ring')) return [`ring-${name}`]
     if (name === 'input') return [`border-${name}`]
     return [`bg-${name}`]
@@ -108,6 +108,9 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'secondary-green-subtle': 'bg-secondary-green-subtle',
     'secondary-orange-subtle': 'bg-secondary-orange-subtle',
     border: 'bg-border',
+    'border-subtle-1': 'bg-border-subtle-1',
+    'border-subtle-2': 'bg-border-subtle-2',
+    'border-subtle-3': 'bg-border-subtle-3',
     input: 'bg-input',
     ring: 'bg-ring',
     'chart-1': 'bg-chart-1',
@@ -182,7 +185,7 @@ const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
         name: '상태 (status)',
         match: (n) => ['destructive', 'success', 'warning', 'info'].some((s) => n === s || n === `${s}-foreground`),
     },
-    {name: 'border', match: (n) => n === 'border'},
+    {name: 'border (+ border-subtle-1/2/3)', match: (n) => n === 'border' || n.startsWith('border-subtle')},
     {name: 'input', match: (n) => n === 'input'},
     {name: 'ring', match: (n) => n === 'ring'},
     {name: 'chart', match: (n) => n.startsWith('chart-')},
@@ -359,11 +362,14 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <code className="font-mono">bg-primary-subtle</code> 를 쓴다.
         </>
     ),
-    border: (
+    'border (+ border-subtle-1/2/3)': (
         <>
             일반 <strong>테두리·구분선</strong> 색 — 카드·패널 외곽선, 표(Table) 구분선,{' '}
             <code className="font-mono">Separator</code>, 섹션 경계 등에{' '}
-            <code className="font-mono">border-border</code>. 거의 모든 컴포넌트의 기본 테두리가 이 슬롯을 참조한다.
+            <code className="font-mono">border-border</code>. 거의 모든 컴포넌트의 기본 테두리가 이 슬롯을 참조한다(진한
+            기본 = gray.700). 더 <strong>옅은 테두리</strong>가 필요하면 같은 가족의{' '}
+            <code className="font-mono">border-border-subtle-1</code>(gray.300)~<code className="font-mono">-3</code>
+            (gray.100)을 쓴다(다크는 모두 gray.500).
         </>
     ),
     input: (
