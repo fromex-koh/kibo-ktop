@@ -10,6 +10,7 @@ import {Switch} from '@/components/ui/switch'
 import {Textarea} from '@/components/ui/textarea'
 import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
 import AdvancedFields from './advanced-fields'
+import Composite from './composite'
 import Showcase from './showcase'
 
 export const metadata: Metadata = {
@@ -258,6 +259,9 @@ const ShadcnTestPage = () => {
 
                 {/* Stepper · Tabs · Breadcrumb · Confirm 모달 · Pagination · 데이터 테이블 */}
                 <Showcase />
+
+                {/* 상태 칩 · 세그먼티드 컨트롤 · 전역 헤더 · Sticky 사이드메뉴(LNB) */}
+                <Composite />
             </div>
         </main>
     )
