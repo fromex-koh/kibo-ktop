@@ -94,10 +94,7 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     background: 'bg-background',
     'background-alt': 'bg-background-alt',
     foreground: 'bg-foreground',
-    'foreground-basic': 'bg-foreground-basic',
     'foreground-subtle': 'bg-foreground-subtle',
-    'foreground-disabled': 'bg-foreground-disabled',
-    'foreground-disabled-on': 'bg-foreground-disabled-on',
     card: 'bg-card',
     'card-foreground': 'bg-card-foreground',
     popover: 'bg-popover',
@@ -184,7 +181,7 @@ type SemanticEntry = [string, string | {light: string; dark: string}]
 const SEMANTIC_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'background / background-alt', match: (n) => n === 'background' || n === 'background-alt'},
     {
-        name: 'foreground (+ basic/subtle/disabled)',
+        name: 'foreground (+ subtle)',
         match: (n) => n === 'foreground' || n.startsWith('foreground-'),
     },
     {name: 'muted / muted-foreground', match: (n) => n === 'muted' || n === 'muted-foreground'},
@@ -339,15 +336,12 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <strong>보조 배경 면</strong>(섹션 구분·줄무늬 배경 등)에 쓴다.
         </>
     ),
-    'foreground (+ basic/subtle/disabled)': (
+    'foreground (+ subtle)': (
         <>
-            배경 위 <strong>텍스트색 가족</strong> — 진하기 3단: <code className="font-mono">text-foreground</code>
-            (gray.900, 제목·강조) · <code className="font-mono">text-foreground-basic</code>(gray.700, 기본 본문) ·{' '}
-            <code className="font-mono">text-foreground-subtle</code>(gray.500, 보조). 비활성 상태:{' '}
-            <code className="font-mono">text-foreground-disabled</code>(gray.200) ·{' '}
-            <code className="font-mono">text-foreground-disabled-on</code>(gray.300). 다크는 각각 밝은 톤으로 자동 반사.
-            비활성은 <strong>상태색</strong>이라 성격이 다르며, shadcn 컴포넌트는 이 토큰 대신{' '}
-            <code className="font-mono">disabled:opacity-50</code> 를 쓴다(이 토큰은 커스텀 화면용). 색 있는 텍스트는{' '}
+            배경 위 <strong>텍스트색 가족</strong> — <code className="font-mono">text-foreground</code>
+            (gray.900, 제목·강조·기본 본문) · <code className="font-mono">text-foreground-subtle</code>(gray.500, 보조).
+            다크는 각각 밝은 톤으로 자동 반사. 비활성 텍스트는 shadcn 컴포넌트 관례대로{' '}
+            <code className="font-mono">disabled:opacity-50</code> 를 쓴다. 색 있는 텍스트는{' '}
             <code className="font-mono">text-primary</code>·<code className="font-mono">text-error</code> 등 해당 슬롯.
         </>
     ),
