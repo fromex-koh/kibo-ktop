@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import {Blocks, User} from 'lucide-react'
+import ThemeToggle from '@/components/theme-toggle'
 import {Button} from '@/components/ui/button'
 import {
     NavigationMenu,
@@ -93,6 +94,7 @@ const HeaderContent = ({navLabel}: {navLabel: string}) => (
                 로그인
             </Button>
             <Button size="sm">회원가입</Button>
+            <ThemeToggle />
         </div>
     </>
 )
