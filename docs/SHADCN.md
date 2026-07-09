@@ -62,7 +62,7 @@ tokens.json  semantic(=shadcn 표준 슬롯명)   →  yarn tokens  →  src/app
 
 ### 현재 정의된 슬롯 (tokens.json `semantic`)
 
-- **shadcn 표준(34)**: `background`·`foreground` · `card(+ -foreground)` · `popover(+…)` · `primary(+…)` ·
+- **shadcn 표준(32)**: `background`·`foreground` · `card(+ -foreground)` · `popover(+…)` · `primary(+…)` ·
   `secondary(+…)` · `muted(+…)` · `accent(+…)` · `destructive(+…)` · `border` · `input` · `ring` ·
   `chart-1~5` · `sidebar` (+`-foreground`/`-primary`/`-primary-foreground`/`-accent`/`-accent-foreground`/
   `-border`/`-ring`)
