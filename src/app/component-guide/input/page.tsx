@@ -21,13 +21,13 @@ const USAGE_CODE = `<div className="wide:w-90 flex w-full flex-col gap-2">
 const ADDON_CODE = `<div className="wide:w-90 flex w-full flex-col gap-4">
   {/* 검색 버튼 (클릭 가능) — 입력 박스 안쪽 오른쪽에 절대배치 */}
   <div className="relative">
-    <Input placeholder="검색어를 입력하세요" className="pr-11" />
+    <Input placeholder="검색어를 입력하세요" className="pr-14" />
     <Button
       type="button"
       variant="ghost"
       size="icon-sm"
       aria-label="검색"
-      className="text-muted-foreground absolute top-1/2 right-1.5 -translate-y-1/2"
+      className="text-muted-foreground absolute top-px right-px bottom-px h-auto w-12 rounded-l-none rounded-r-[calc(var(--ds-radius-sm)-1px)] not-disabled:active:bg-accent not-disabled:active:not-aria-[haspopup]:translate-y-0"
     >
       <Search aria-hidden="true" className="size-5" />
     </Button>
@@ -145,13 +145,13 @@ const InputGuidePage = () => (
             <div className={FIELD_GROUP_DEMO_CLASS}>
                 {/* 검색 버튼 — 클릭 가능(입력 박스 안쪽 절대배치) */}
                 <div className="relative">
-                    <Input placeholder="검색어를 입력하세요" aria-label="검색어" className="pr-11" />
+                    <Input placeholder="검색어를 입력하세요" aria-label="검색어" className="pr-14" />
                     <Button
                         type="button"
                         variant="ghost"
                         size="icon-sm"
                         aria-label="검색"
-                        className="text-muted-foreground absolute top-1/2 right-1.5 -translate-y-1/2"
+                        className="text-muted-foreground not-disabled:active:bg-accent absolute top-px right-px bottom-px h-auto w-12 rounded-l-none rounded-r-[calc(var(--ds-radius-sm)-1px)] not-disabled:active:not-aria-[haspopup]:translate-y-0"
                     >
                         <Search aria-hidden="true" className="size-5" />
                     </Button>
