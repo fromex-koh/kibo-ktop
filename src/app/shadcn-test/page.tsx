@@ -64,7 +64,7 @@ const ShadcnTestPage = () => {
                     </h4>
 
                     {/* Card 5개 가로 나열 — gap-x-4(16px) */}
-                    <div className="col-span-full grid grid-cols-5 gap-x-4">
+                    <div className="col-span-full mb-6 grid grid-cols-5 gap-x-4">
                         {CARD_ROW_ITEMS.map((item) => (
                             <Card key={item.title}>
                                 <CardHeader>
