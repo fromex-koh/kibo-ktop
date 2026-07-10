@@ -296,21 +296,48 @@ const ShadcnTestPage = () => {
                                 </RadioGroup>
                             </div>
 
-                            {/* Select */}
+                            {/* Select — Figma selectbox 반영(48px). 필수표시 별표 + 오류 상태 예시 */}
                             <div className="col-span-4 flex flex-col gap-4">
                                 <h2 className="typo-title-l-bold">Select</h2>
-                                <Label htmlFor="fruit-trigger">좋아하는 과일</Label>
-                                <Select>
-                                    <SelectTrigger id="fruit-trigger" className="w-full">
-                                        <SelectValue placeholder="과일 선택" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="apple">사과</SelectItem>
-                                        <SelectItem value="banana">바나나</SelectItem>
-                                        <SelectItem value="cherry">체리</SelectItem>
-                                        <SelectItem value="grape">포도</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <div className="flex flex-col gap-2">
+                                    <Label htmlFor="fruit-trigger">
+                                        좋아하는 과일 <span className="text-error-500">*</span>
+                                    </Label>
+                                    <Select>
+                                        <SelectTrigger id="fruit-trigger" className="w-full">
+                                            <SelectValue placeholder="선택해주세요" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="apple">사과</SelectItem>
+                                            <SelectItem value="banana">바나나</SelectItem>
+                                            <SelectItem value="cherry">체리</SelectItem>
+                                            <SelectItem value="grape">포도</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <Label htmlFor="region-trigger">
+                                        지역 <span className="text-error-500">*</span>
+                                    </Label>
+                                    <Select>
+                                        <SelectTrigger
+                                            id="region-trigger"
+                                            aria-invalid="true"
+                                            aria-describedby="region-err"
+                                            className="w-full"
+                                        >
+                                            <SelectValue placeholder="선택해주세요" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="seoul">서울</SelectItem>
+                                            <SelectItem value="busan">부산</SelectItem>
+                                            <SelectItem value="daegu">대구</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <p id="region-err" role="alert" className="typo-caption-regular text-error-500">
+                                        필수 항목입니다.
+                                    </p>
+                                </div>
                             </div>
 
                             {/* Chip (단일 선택 = radio 기능) — shadcn 에 Chip 은 없고 ToggleGroup type="single" 이
