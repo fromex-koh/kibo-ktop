@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {Download} from 'lucide-react'
+import {ArrowRight, Download} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
@@ -11,9 +11,16 @@ const USAGE_CODE = `<Button variant="default" size="medium">저장</Button>
 <Button variant="secondary" size="medium">취소</Button>
 <Button variant="tertiary" size="medium">더보기</Button>`
 
-const USAGE_CODE_ICON = `<Button variant="default" size="medium">
+const USAGE_CODE_ICON = `{/* 아이콘 왼쪽 */}
+<Button variant="default" size="medium">
   <Download aria-hidden="true" />
   다운로드
+</Button>
+
+{/* 아이콘 오른쪽 */}
+<Button variant="default" size="medium">
+  다음
+  <ArrowRight aria-hidden="true" />
 </Button>`
 
 // Figma 버튼 컴포넌트셋의 3 type. secondary 는 회색 solid 가 아니라 연한 블루 틴트+테두리 스타일이다.
@@ -68,14 +75,20 @@ const ButtonGuidePage = () => (
             <div className="flex flex-col gap-2">
                 <h3 className="typo-body-l-medium text-foreground">아이콘 조합</h3>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    아이콘은 별도 prop 이 아니라 children 으로 텍스트와 함께 조합합니다. 장식 목적 아이콘에는{' '}
-                    <code className="font-mono">aria-hidden</code> 을 붙입니다.
+                    아이콘은 별도 prop 이 아니라 children 으로 텍스트와 함께 조합합니다. 텍스트 좌/우 어느 쪽에도 놓을
+                    수 있고, 장식 목적 아이콘에는 <code className="font-mono">aria-hidden</code> 을 붙입니다.
                 </p>
             </div>
-            <Button variant="default" size="medium">
-                <Download aria-hidden="true" />
-                다운로드
-            </Button>
+            <div className="flex flex-wrap items-center gap-3">
+                <Button variant="default" size="medium">
+                    <Download aria-hidden="true" />
+                    다운로드
+                </Button>
+                <Button variant="default" size="medium">
+                    다음
+                    <ArrowRight aria-hidden="true" />
+                </Button>
+            </div>
             <CodeBlock code={USAGE_CODE_ICON} language="tsx" copyLabel="복사" />
         </section>
 
@@ -127,7 +140,7 @@ const ButtonGuidePage = () => (
                                     <td key={type.key} className="px-4 py-3 align-middle">
                                         <div className="flex flex-col items-start gap-2">
                                             <Button variant={type.key} size={size.key}>
-                                                {size.key === 'medium' && <Download aria-hidden="true" />}
+                                                <Download aria-hidden="true" />
                                                 버튼
                                             </Button>
                                             <CopyChip value={`variant="${type.key}" size="${size.key}"`} label="복사" />
