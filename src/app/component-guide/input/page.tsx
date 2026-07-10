@@ -1,13 +1,14 @@
 import type {Metadata} from 'next'
-import {Calendar, Lock, Search} from 'lucide-react'
+import {Lock, Search} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePage from '@/components/guide/guide-page'
+import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
 
 export const metadata: Metadata = {title: '인풋 (Input)'}
 
-const USAGE_CODE = `<div className="flex flex-col gap-2">
+const USAGE_CODE = `<div className="wide:w-90 flex w-full flex-col gap-2">
   <Label htmlFor="name">
     이름 <span className="text-error-500">*</span>
   </Label>
@@ -17,32 +18,36 @@ const USAGE_CODE = `<div className="flex flex-col gap-2">
   </p>
 </div>`
 
-const ADDON_CODE = `{/* 우측 아이콘 (검색·날짜 등) */}
-<div className="relative">
-  <Input placeholder="검색어를 입력하세요" className="pr-11" />
-  <Search aria-hidden="true" className="text-muted-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2" />
-</div>
-
-{/* 단위 접미사 */}
-<div className="relative">
-  <Input type="number" placeholder="0" className="pr-10" />
-  <span className="text-foreground absolute top-1/2 right-4 -translate-y-1/2">명</span>
-</div>
-
-{/* 아이콘 + 단위 조합 */}
-<div className="relative">
-  <Input type="number" placeholder="0" className="pr-16" />
-  <div className="text-muted-foreground absolute top-1/2 right-4 flex -translate-y-1/2 items-center gap-1.5">
-    <span className="text-foreground">건</span>
-    <Calendar aria-hidden="true" className="size-5" />
+const ADDON_CODE = `<div className="wide:w-90 flex w-full flex-col gap-4">
+  {/* 검색 버튼 (클릭 가능) — 입력 박스 안쪽 오른쪽에 절대배치 */}
+  <div className="relative">
+    <Input placeholder="검색어를 입력하세요" className="pr-11" />
+    <Button
+      type="button"
+      variant="ghost"
+      size="icon-sm"
+      aria-label="검색"
+      className="text-muted-foreground absolute top-1/2 right-1.5 -translate-y-1/2"
+    >
+      <Search aria-hidden="true" className="size-5" />
+    </Button>
   </div>
-</div>
 
-{/* 잠금(읽기전용) — readOnly + lock 아이콘 */}
-<div className="relative">
-  <Input readOnly defaultValue="11222-1234567" className="pr-11" />
-  <Lock aria-hidden="true" className="text-muted-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2" />
+  {/* 단위 접미사 — 입력 박스 밖 오른쪽에 형제로 배치(Figma) */}
+  <div className="flex items-center gap-2">
+    <Input type="number" placeholder="0" className="flex-1" />
+    <span className="typo-body-l-regular text-foreground shrink-0">명</span>
+  </div>
+
+  {/* 잠금(읽기전용) — readOnly + lock 아이콘 */}
+  <div className="relative">
+    <Input readOnly defaultValue="11222-1234567" className="pr-11" />
+    <Lock aria-hidden="true" className="text-muted-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2" />
+  </div>
 </div>`
+
+const FIELD_DEMO_CLASS = 'wide:w-90 flex w-full flex-col gap-2'
+const FIELD_GROUP_DEMO_CLASS = 'wide:w-90 flex w-full flex-col gap-4'
 
 const InputGuidePage = () => (
     <GuidePage
@@ -61,13 +66,17 @@ const InputGuidePage = () => (
                     로 연결합니다.
                 </p>
             </div>
-            <div className="flex max-w-sm flex-col gap-2">
+            <div className={FIELD_DEMO_CLASS}>
                 <Label htmlFor="demo-name">
                     이름 <span className="text-error-500">*</span>
                 </Label>
                 <Input id="demo-name" placeholder="내용을 입력하세요" aria-describedby="demo-name-help" />
                 <p id="demo-name-help" className="typo-caption-regular text-muted-foreground">
                     입력 시 필요한 정보를 입력해주세요.
+                </p>
+                <p className="typo-caption-regular text-muted-foreground">
+                    wide 이상에서는 부모 레일을 <code className="font-mono">w-90</code>(360px)로 두어 Input 의 최소 폭
+                    기준을 확인합니다.
                 </p>
             </div>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
@@ -84,16 +93,18 @@ const InputGuidePage = () => (
                     <code className="font-mono">blue.500</code> 로 바뀝니다.
                 </p>
             </div>
-            <div className="wide:grid-cols-2 grid grid-cols-1 gap-6">
-                <div className="flex flex-col gap-2">
+            {/* Input 이 wide 부터 min-w-90(360px)이라, 두 열이 각각 360px 를 담을 수 있는 pc(≥1280px)에서만 2열.
+                wide 구간(768~1279px)은 단일 열로 두어 좁은 열에서 인풋이 넘치지 않게 한다. */}
+            <div className="pc:grid-cols-2 grid grid-cols-1 justify-items-start gap-6">
+                <div className={FIELD_DEMO_CLASS}>
                     <Label htmlFor="st-default">기본 (default)</Label>
                     <Input id="st-default" placeholder="내용을 입력하세요" />
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className={FIELD_DEMO_CLASS}>
                     <Label htmlFor="st-completed">값 입력됨 (completed)</Label>
                     <Input id="st-completed" defaultValue="홍길동" />
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className={FIELD_DEMO_CLASS}>
                     <Label htmlFor="st-error">오류 (error)</Label>
                     <Input
                         id="st-error"
@@ -105,11 +116,11 @@ const InputGuidePage = () => (
                         에러메시지가 노출됩니다.
                     </p>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className={FIELD_DEMO_CLASS}>
                     <Label htmlFor="st-disabled">비활성 (disabled)</Label>
                     <Input id="st-disabled" placeholder="내용을 입력하세요" disabled />
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className={FIELD_DEMO_CLASS}>
                     <Label htmlFor="st-view">읽기전용 (view)</Label>
                     <Input id="st-view" defaultValue="수정 불가한 값" readOnly />
                 </div>
@@ -122,39 +133,33 @@ const InputGuidePage = () => (
                     애드온 (아이콘·단위)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    우측 아이콘·단위는 <code className="font-mono">relative</code> 래퍼에 절대배치로 얹고, 겹치지 않도록
-                    Input 에 오른쪽 padding(<code className="font-mono">pr-*</code>)을 줍니다.
+                    검색처럼 <span className="text-foreground font-medium">동작</span>이 있는 우측 요소는 아이콘이
+                    아니라 <code className="font-mono">Button</code>(ghost·icon)으로 두고, 잠금 같은{' '}
+                    <span className="text-foreground font-medium">상태 표시</span>는 아이콘으로 둡니다. 둘 다{' '}
+                    <code className="font-mono">relative</code> 래퍼에 절대배치하고{' '}
+                    <code className="font-mono">pr-*</code> 로 겹침을 막습니다. 단위(명·건 등)는 Figma 처럼 입력 박스{' '}
+                    <span className="text-foreground font-medium">밖</span> 오른쪽에 형제로 나란히 둡니다(
+                    <code className="font-mono">flex</code>).
                 </p>
             </div>
-            <div className="flex max-w-sm flex-col gap-4">
-                {/* 우측 아이콘 — 검색 */}
+            <div className={FIELD_GROUP_DEMO_CLASS}>
+                {/* 검색 버튼 — 클릭 가능(입력 박스 안쪽 절대배치) */}
                 <div className="relative">
-                    <Input placeholder="검색어를 입력하세요" aria-label="검색" className="pr-11" />
-                    <Search
-                        aria-hidden="true"
-                        className="text-muted-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2"
-                    />
+                    <Input placeholder="검색어를 입력하세요" aria-label="검색어" className="pr-11" />
+                    <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon-sm"
+                        aria-label="검색"
+                        className="text-muted-foreground absolute top-1/2 right-1.5 -translate-y-1/2"
+                    >
+                        <Search aria-hidden="true" className="size-5" />
+                    </Button>
                 </div>
-                {/* 우측 아이콘 — 날짜 */}
-                <div className="relative">
-                    <Input placeholder="날짜를 선택하세요" aria-label="날짜" className="pr-11" />
-                    <Calendar
-                        aria-hidden="true"
-                        className="text-muted-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2"
-                    />
-                </div>
-                {/* 단위 접미사 */}
-                <div className="relative">
-                    <Input type="number" placeholder="0" aria-label="인원" className="pr-10" />
-                    <span className="text-foreground absolute top-1/2 right-4 -translate-y-1/2">명</span>
-                </div>
-                {/* 아이콘 + 단위 조합 */}
-                <div className="relative">
-                    <Input type="number" placeholder="0" aria-label="건수" className="pr-16" />
-                    <div className="text-muted-foreground absolute top-1/2 right-4 flex -translate-y-1/2 items-center gap-1.5">
-                        <span className="text-foreground">건</span>
-                        <Calendar aria-hidden="true" className="size-5" />
-                    </div>
+                {/* 단위 접미사 — 입력 박스 밖 오른쪽에 형제로 배치 */}
+                <div className="flex items-center gap-2">
+                    <Input type="number" placeholder="0" aria-label="인원" className="flex-1" />
+                    <span className="typo-body-l-regular text-foreground shrink-0">명</span>
                 </div>
                 {/* 잠금(읽기전용) — readOnly + lock 아이콘 */}
                 <div className="relative">
