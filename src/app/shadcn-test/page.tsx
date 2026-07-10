@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {Calendar, Check, Lock, Search} from 'lucide-react'
+import {Check, Lock, Search} from 'lucide-react'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card'
@@ -215,33 +215,15 @@ const ShadcnTestPage = () => {
 
                                 <div className="flex flex-col gap-2">
                                     <Label htmlFor="headcount">인원</Label>
-                                    <div className="relative">
+                                    <div className="flex items-center gap-2">
                                         <Input
                                             id="headcount"
                                             name="headcount"
                                             type="number"
                                             placeholder="0"
-                                            className="pr-10"
+                                            className="flex-1"
                                         />
-                                        <span className="text-foreground absolute top-1/2 right-4 -translate-y-1/2">
-                                            명
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="flex flex-col gap-2">
-                                    <Label htmlFor="event-date">개업일자</Label>
-                                    <div className="relative">
-                                        <Input
-                                            id="event-date"
-                                            name="event-date"
-                                            placeholder="날짜를 선택하세요"
-                                            className="pr-11"
-                                        />
-                                        <Calendar
-                                            aria-hidden="true"
-                                            className="text-muted-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2"
-                                        />
+                                        <span className="typo-body-l-regular text-foreground shrink-0">명</span>
                                     </div>
                                 </div>
 

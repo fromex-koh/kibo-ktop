@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {ArrowRight, Download} from 'lucide-react'
+import {ArrowRight, Download, LoaderCircle} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
@@ -21,6 +21,12 @@ const USAGE_CODE_ICON = `{/* 아이콘 왼쪽 */}
 <Button variant="default" size="medium">
   다음
   <ArrowRight aria-hidden="true" />
+</Button>`
+
+// Loading — variant 색은 유지하고 스피너 + aria-busy + pointer-events-none 로 진행 중을 표현한다.
+const LOADING_CODE = `<Button variant="default" size="medium" aria-busy className="pointer-events-none">
+  <LoaderCircle aria-hidden="true" className="animate-spin" />
+  로딩중
 </Button>`
 
 // Figma 버튼 컴포넌트셋의 3 type. secondary 는 회색 solid 가 아니라 연한 블루 틴트+테두리 스타일이다.
@@ -170,6 +176,35 @@ const ButtonGuidePage = () => (
                     </Button>
                 ))}
             </div>
+        </section>
+
+        <section aria-labelledby="button-loading" className="flex flex-col gap-4">
+            <div>
+                <h2 id="button-loading" className="typo-h4-bold">
+                    Loading 상태
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    진행 중 상태입니다. Disabled 와 달리 variant 색은 그대로 두고 스피너(
+                    <code className="font-mono">animate-spin</code>)를 앞에 둡니다.{' '}
+                    <code className="font-mono">aria-busy</code> +{' '}
+                    <code className="font-mono">pointer-events-none</code> 로 진행 중 중복 클릭을 막습니다.
+                </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+                {TYPES.map((type) => (
+                    <Button
+                        key={type.key}
+                        variant={type.key}
+                        size="medium"
+                        aria-busy="true"
+                        className="pointer-events-none"
+                    >
+                        <LoaderCircle aria-hidden="true" className="animate-spin" />
+                        로딩중
+                    </Button>
+                ))}
+            </div>
+            <CodeBlock code={LOADING_CODE} language="tsx" copyLabel="복사" />
         </section>
 
         <section aria-labelledby="button-props" className="flex flex-col gap-4">

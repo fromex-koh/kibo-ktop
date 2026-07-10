@@ -163,7 +163,10 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                 </SidebarContent>
             </Sidebar>
 
-            <SidebarInset>
+            {/* min-w-0: SidebarInset 은 가로 flex(Sidebar+Inset)의 flex-1 이라, min-w 가 없으면 min-width:auto 가
+                콘텐츠 min-content(코드블럭의 nowrap <pre> 등)로 커져 본문이 뷰포트보다 넓어지고 페이지 가로
+                스크롤이 생긴다. min-w-0 으로 본문을 트랙 폭에 맞춰 줄여, 코드블럭은 내부(overflow-x-auto)에서만 스크롤. */}
+            <SidebarInset className="min-w-0">
                 {/* 상단 앱바 — 트리거(모바일=Sheet 열기 / 데스크톱=레일 접기) + 브레드크럼(카테고리 > 현재) + 테마.
                     z-10: shadcn Sheet(z-50) 아래에 오도록 낮게 둔다(드로어 열리면 헤더가 오버레이 밑). */}
                 <header className="border-border bg-background h-header-h wide:px-6 sticky top-0 z-10 flex items-center gap-2 border-b px-4">

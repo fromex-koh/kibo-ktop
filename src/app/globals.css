@@ -60,6 +60,17 @@
         border-radius: var(--ds-radius-sm);
         background-color: var(--ds-scroll-track);
     }
+
+    /* number 인풋의 네이티브 증감 스피너 제거 — 단위·아이콘 애드온과 겹치고 Figma 디자인엔 없다.
+       (Chrome/Safari 는 ::-webkit-*-spin-button, Firefox 는 appearance:textfield) */
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+        margin: 0;
+        appearance: none;
+    }
+    input[type='number'] {
+        appearance: textfield;
+    }
 }
 
 /* PageHeader compact 변형 전용 합성 typo — 이름이 다른 두 typo 토큰을 브레이크포인트(768px)에서
