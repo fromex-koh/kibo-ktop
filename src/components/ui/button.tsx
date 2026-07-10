@@ -51,21 +51,14 @@ const buttonVariants = cva(
         },
         // Figma 상 primary(variant=default) 만 갖는 예외 — 다른 type 과 폰트가 달라 size 축만으로는 표현 불가:
         //  - large: primary 는 18px(다른 size 와 달리 large 안에서도 type 별 폰트가 갈린다), 실측 폭도 95px(나머지는 90px).
-        //  - medium/small: primary 만 default(휴지) 상태에서 font-bold, hover/pressed/disabled 는 font-medium.
+        //  - medium/small: primary 만 font-bold(다른 type 은 medium). hover/pressed 도 700 을 유지해 텍스트
+        //    폭이 흔들리지 않게 하고, 비활성만 Figma 대로 font-medium 으로 둔다.
         compoundVariants: [
             {variant: 'default', size: 'large', class: 'min-w-control-min-w-md text-lg'},
             {variant: 'secondary', size: 'large', class: 'min-w-control-min-w-sm'},
             {variant: 'tertiary', size: 'large', class: 'min-w-control-min-w-sm'},
-            {
-                variant: 'default',
-                size: 'medium',
-                class: 'font-bold hover:font-medium active:font-medium disabled:font-medium',
-            },
-            {
-                variant: 'default',
-                size: 'small',
-                class: 'font-bold hover:font-medium active:font-medium disabled:font-medium',
-            },
+            {variant: 'default', size: 'medium', class: 'font-bold disabled:font-medium'},
+            {variant: 'default', size: 'small', class: 'font-bold disabled:font-medium'},
         ],
         defaultVariants: {
             variant: 'default',
