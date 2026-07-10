@@ -7,12 +7,12 @@ import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
 import {SiteHeaderDemo} from './site-header'
 
 // ── 상태 칩(Badge) ──
-// 상태색 — shadcn 표준 슬롯엔 success/warning/info 가 없어(역할 슬롯만) 프로젝트 팔레트 키를 쓴다(PB-05 보조).
+// Figma 배지 반영본 — 상태 의미는 color(info/success/warning/error/neutral)로, 강조는 variant 로 정한다.
 const STATUSES = [
-    {label: '활성', className: 'bg-success-100 text-success-700'},
-    {label: '대기', className: 'bg-warning-100 text-warning-700'},
-    {label: '정지', className: 'bg-error-100 text-error-700'},
-    {label: '신규', className: 'bg-info-100 text-info-700'},
+    {label: '활성', color: 'success'},
+    {label: '대기', color: 'warning'},
+    {label: '정지', color: 'error'},
+    {label: '신규', color: 'info'},
 ] as const
 
 const StatusChips = () => (
@@ -23,16 +23,21 @@ const StatusChips = () => (
         </p>
         <div className="flex flex-wrap items-center gap-2">
             {STATUSES.map((status) => (
-                <Badge key={status.label} className={status.className}>
+                <Badge key={status.label} color={status.color}>
                     {status.label}
                 </Badge>
             ))}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-            <Badge>기본</Badge>
-            <Badge variant="secondary">보조</Badge>
-            <Badge variant="destructive">위험</Badge>
-            <Badge variant="outline">아웃라인</Badge>
+            <Badge color="info" variant="solid-pastel">
+                solid-pastel
+            </Badge>
+            <Badge color="info" variant="outline">
+                outline
+            </Badge>
+            <Badge color="info" variant="solid">
+                solid
+            </Badge>
         </div>
     </div>
 )
@@ -93,7 +98,7 @@ const StickySidebar = () => (
             >
                 <div className="border-border flex flex-col gap-1 border-b pb-4">
                     <span className="typo-body-l-bold">㈜케이탑테크놀로지</span>
-                    <Badge variant="secondary" className="w-fit">
+                    <Badge color="info" className="w-fit">
                         기업회원
                     </Badge>
                 </div>

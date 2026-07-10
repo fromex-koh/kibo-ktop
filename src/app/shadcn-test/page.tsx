@@ -34,14 +34,14 @@ export const metadata: Metadata = {
     title: 'shadcn 통합 테스트',
 }
 
-// Card 5개 가로 나열 데모 항목(데모 데이터). 상태 칩 색상은 composite.tsx 의 STATUSES 와 동일 —
-// shadcn 표준 슬롯엔 success/warning/info 가 없어(역할 슬롯만) 프로젝트 팔레트 키를 쓴다(PB-05 보조).
+// Card 5개 가로 나열 데모 항목(데모 데이터). 상태 색은 Figma 배지 반영본 Badge 의 color 로 정한다
+// (composite.tsx 의 STATUSES 와 동일 매핑 — 활성=success·대기=warning·정지=error·신규=info).
 const CARD_ROW_ITEMS = [
-    {title: '기업정보', status: '활성', statusClassName: 'bg-success-100 text-success-700'},
-    {title: '대표자 경력사항', status: '대기', statusClassName: 'bg-warning-100 text-warning-700'},
-    {title: '기업 기타 정보', status: '정지', statusClassName: 'bg-error-100 text-error-700'},
-    {title: '핵심 기술 인력 현황', status: '신규', statusClassName: 'bg-info-100 text-info-700'},
-    {title: '기술 개발 실적', status: '활성', statusClassName: 'bg-success-100 text-success-700'},
+    {title: '기업정보', status: '활성', statusColor: 'success'},
+    {title: '대표자 경력사항', status: '대기', statusColor: 'warning'},
+    {title: '기업 기타 정보', status: '정지', statusColor: 'error'},
+    {title: '핵심 기술 인력 현황', status: '신규', statusColor: 'info'},
+    {title: '기술 개발 실적', status: '활성', statusColor: 'success'},
 ] as const
 
 const ShadcnTestPage = () => {
@@ -73,7 +73,7 @@ const ShadcnTestPage = () => {
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                    <Badge className={item.statusClassName}>{item.status}</Badge>
+                                    <Badge color={item.statusColor}>{item.status}</Badge>
                                 </CardContent>
                             </Card>
                         ))}
