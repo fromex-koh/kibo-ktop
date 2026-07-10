@@ -110,44 +110,68 @@ const ShadcnTestPage = () => {
 
                             <Separator className="border-subtle-3 col-span-full my-10 border-t bg-transparent" />
 
-                            {/* Button variants */}
+                            {/* Button variants — Figma 디자인(default/secondary/tertiary) + 유틸 variant */}
                             <div className="col-span-4 flex flex-col gap-4">
                                 <h2 className="typo-title-l-bold">Button — variant</h2>
                                 <div className="flex flex-wrap items-center gap-3">
-                                    <Button>기본 (primary)</Button>
-                                    <Button variant="secondary">보조 (secondary)</Button>
-                                    <Button variant="outline">아웃라인</Button>
-                                    <Button variant="ghost">고스트</Button>
-                                    <Button variant="destructive">삭제</Button>
+                                    <Button variant="default" size="medium">
+                                        Primary
+                                    </Button>
+                                    <Button variant="secondary" size="medium">
+                                        Secondary
+                                    </Button>
+                                    <Button variant="tertiary" size="medium">
+                                        Tertiary
+                                    </Button>
+                                </div>
+                                <div className="flex flex-wrap items-center gap-3">
+                                    <Button variant="outline" size="medium">
+                                        아웃라인
+                                    </Button>
+                                    <Button variant="ghost" size="medium">
+                                        고스트
+                                    </Button>
+                                    <Button variant="destructive" size="medium">
+                                        삭제
+                                    </Button>
                                     <Button variant="link">링크</Button>
                                 </div>
                             </div>
 
-                            {/* Button sizes */}
+                            {/* Button sizes — Figma 사이즈 스케일(xlarge~xsmall) + 아이콘 버튼 */}
                             <div className="col-span-4 flex flex-col gap-4">
                                 <h2 className="typo-title-l-bold">Button — size</h2>
                                 <div className="flex flex-wrap items-center gap-3">
-                                    <Button size="sm">Small</Button>
-                                    <Button size="default">Default</Button>
-                                    <Button size="lg">Large</Button>
+                                    <Button size="xlarge">xlarge</Button>
+                                    <Button size="large">large</Button>
+                                    <Button size="medium">medium</Button>
+                                    <Button size="small">small</Button>
+                                    <Button size="xsmall">xsmall</Button>
+                                </div>
+                                <div className="flex flex-wrap items-center gap-3">
                                     <Button size="icon" aria-label="검색">
                                         <Search aria-hidden="true" />
                                     </Button>
-                                    <Button size="icon" variant="secondary" aria-label="확인">
+                                    <Button size="icon-sm" variant="secondary" aria-label="확인">
                                         <Check aria-hidden="true" />
                                     </Button>
                                 </div>
                             </div>
 
-                            {/* Button states */}
+                            {/* Button states — Figma variant 별 비활성 + 아이콘 조합 */}
                             <div className="col-span-4 flex flex-col gap-4">
                                 <h2 className="typo-title-l-bold">Button — 상태</h2>
                                 <div className="flex flex-wrap items-center gap-3">
-                                    <Button disabled>비활성</Button>
-                                    <Button variant="secondary" disabled>
+                                    <Button variant="default" size="medium" disabled>
                                         비활성
                                     </Button>
-                                    <Button>
+                                    <Button variant="secondary" size="medium" disabled>
+                                        비활성
+                                    </Button>
+                                    <Button variant="tertiary" size="medium" disabled>
+                                        비활성
+                                    </Button>
+                                    <Button variant="default" size="medium">
                                         <Check aria-hidden="true" />
                                         아이콘 + 라벨
                                     </Button>
@@ -191,40 +215,83 @@ const ShadcnTestPage = () => {
                                 <Textarea id="message" name="message" placeholder="내용을 입력하세요" />
                             </div>
 
-                            {/* Checkbox */}
+                            {/* Checkbox — 1depth(라벨만) + 2depth(제목+설명) */}
                             <div className="col-span-4 flex flex-col gap-4">
                                 <h2 className="typo-title-l-bold">Checkbox</h2>
                                 <div className="flex flex-col gap-3">
                                     <div className="flex items-center gap-2">
                                         <Checkbox id="terms" defaultChecked />
-                                        <Label htmlFor="terms">이용약관에 동의합니다</Label>
+                                        <Label htmlFor="terms" className="font-normal">
+                                            이용약관에 동의합니다
+                                        </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Checkbox id="marketing" />
-                                        <Label htmlFor="marketing">마케팅 정보 수신 (선택)</Label>
+                                        <Label htmlFor="marketing" className="font-normal">
+                                            마케팅 정보 수신 (선택)
+                                        </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Checkbox id="cb-disabled" disabled />
-                                        <Label htmlFor="cb-disabled">비활성 항목</Label>
+                                        <Label htmlFor="cb-disabled" className="font-normal">
+                                            비활성 항목
+                                        </Label>
+                                    </div>
+                                    {/* 2depth — 제목 + 설명 */}
+                                    <div className="flex flex-col gap-1">
+                                        <div className="flex items-center gap-2">
+                                            <Checkbox id="cb-all" defaultChecked aria-describedby="cb-all-desc" />
+                                            <Label htmlFor="cb-all" className="font-bold">
+                                                전체 동의
+                                            </Label>
+                                        </div>
+                                        <p id="cb-all-desc" className="typo-body-xl-regular text-muted-foreground ml-8">
+                                            서비스 이용약관·개인정보 수집 및 이용에 모두 동의합니다.
+                                        </p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Radio group */}
+                            {/* Radio group — 1depth(라벨만) + 2depth(제목+설명) */}
                             <div className="col-span-4 flex flex-col gap-4">
                                 <h2 className="typo-title-l-bold">Radio Group</h2>
                                 <RadioGroup defaultValue="card" aria-label="결제 수단" className="flex flex-col gap-3">
                                     <div className="flex items-center gap-2">
                                         <RadioGroupItem value="card" id="pay-card" />
-                                        <Label htmlFor="pay-card">신용카드</Label>
+                                        <Label htmlFor="pay-card" className="font-normal">
+                                            신용카드
+                                        </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <RadioGroupItem value="transfer" id="pay-transfer" />
-                                        <Label htmlFor="pay-transfer">계좌이체</Label>
+                                        <Label htmlFor="pay-transfer" className="font-normal">
+                                            계좌이체
+                                        </Label>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <RadioGroupItem value="phone" id="pay-phone" disabled />
-                                        <Label htmlFor="pay-phone">휴대폰 결제 (비활성)</Label>
+                                        <Label htmlFor="pay-phone" className="font-normal">
+                                            휴대폰 결제 (비활성)
+                                        </Label>
+                                    </div>
+                                    {/* 2depth — 제목 + 설명 */}
+                                    <div className="flex flex-col gap-1">
+                                        <div className="flex items-center gap-2">
+                                            <RadioGroupItem
+                                                value="meet"
+                                                id="pay-meet"
+                                                aria-describedby="pay-meet-desc"
+                                            />
+                                            <Label htmlFor="pay-meet" className="font-bold">
+                                                만나서 결제
+                                            </Label>
+                                        </div>
+                                        <p
+                                            id="pay-meet-desc"
+                                            className="typo-body-xl-regular text-muted-foreground ml-8"
+                                        >
+                                            상품 수령 시 카드 또는 현금으로 결제합니다.
+                                        </p>
                                     </div>
                                 </RadioGroup>
                             </div>
