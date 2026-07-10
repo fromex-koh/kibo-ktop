@@ -36,6 +36,24 @@ const USAGE_CODE_ACTION = `<Card>
   </CardFooter>
 </Card>`
 
+// Composition 트리 — https://ui.shadcn.com/docs/components/base/card 의 표기 방식을 따른다.
+const COMPOSITION_TREE = `Card
+├── CardHeader
+│   ├── CardTitle
+│   ├── CardDescription
+│   └── CardAction
+├── CardContent
+└── CardFooter`
+
+const COMPOSITION_ITEMS = [
+    ['CardHeader', '제목·설명·액션을 묶는 상단 영역입니다.'],
+    ['CardTitle', '카드 제목을 표시합니다.'],
+    ['CardDescription', '카드의 추가 설명을 표시합니다.'],
+    ['CardAction', 'CardHeader 우측에 배치하는 액션(버튼 등) 영역입니다.'],
+    ['CardContent', '카드의 본문 콘텐츠를 표시합니다.'],
+    ['CardFooter', '카드 하단의 액션 영역을 표시합니다.'],
+] as const
+
 // 카드 — shadcn CLI 로 설치된 실제 프리미티브(src/components/ui/card.tsx). 별도 래퍼 컴포넌트를
 // 만들지 않고 원본을 그대로 쓴다([SC-02]). 개별 콘텐츠 블록(통계 카드·항목 박스)에 쓰고, 여러
 // 데모·섹션을 하나로 묶는 넓은 콘텐츠 영역에는 Panel 을 쓴다(component-guide/panel 참고).
@@ -52,21 +70,19 @@ const CardGuidePage = () => (
                     CardAction/CardFooter 는 버튼 없이 텍스트만으로도 쓸 수 있습니다.
                 </p>
             </div>
-            <div className="bg-background rounded-md p-6">
-                <Card className="max-w-sm">
-                    <CardHeader>
-                        <CardTitle>Card Title</CardTitle>
-                        <CardDescription>Card Description</CardDescription>
-                        <CardAction>Card Action</CardAction>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="typo-body-l-regular text-foreground">Card Content</p>
-                    </CardContent>
-                    <CardFooter>
-                        <p className="typo-body-l-regular text-foreground">Card Footer</p>
-                    </CardFooter>
-                </Card>
-            </div>
+            <Card className="max-w-sm">
+                <CardHeader>
+                    <CardTitle>Card Title</CardTitle>
+                    <CardDescription>Card Description</CardDescription>
+                    <CardAction>Card Action</CardAction>
+                </CardHeader>
+                <CardContent>
+                    <p className="typo-body-l-regular text-foreground">Card Content</p>
+                </CardContent>
+                <CardFooter>
+                    <p className="typo-body-l-regular text-foreground">Card Footer</p>
+                </CardFooter>
+            </Card>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
 
             <div className="flex flex-col gap-2">
@@ -77,21 +93,19 @@ const CardGuidePage = () => (
                     분기 없음).
                 </p>
             </div>
-            <div className="bg-background rounded-md p-6">
-                <Card className="max-w-sm">
-                    <CardHeader>
-                        <CardTitle>플랜 안내</CardTitle>
-                        <CardDescription>제목 오른쪽에 액션을 둘 수 있습니다.</CardDescription>
-                        <CardAction>수정</CardAction>
-                    </CardHeader>
-                    <CardContent>
-                        <p className="typo-body-l-regular text-foreground">본문 콘텐츠입니다.</p>
-                    </CardContent>
-                    <CardFooter>
-                        <p className="typo-body-l-regular text-foreground">저장</p>
-                    </CardFooter>
-                </Card>
-            </div>
+            <Card className="max-w-sm">
+                <CardHeader>
+                    <CardTitle>플랜 안내</CardTitle>
+                    <CardDescription>제목 오른쪽에 액션을 둘 수 있습니다.</CardDescription>
+                    <CardAction>수정</CardAction>
+                </CardHeader>
+                <CardContent>
+                    <p className="typo-body-l-regular text-foreground">본문 콘텐츠입니다.</p>
+                </CardContent>
+                <CardFooter>
+                    <p className="typo-body-l-regular text-foreground">저장</p>
+                </CardFooter>
+            </Card>
             <CodeBlock code={USAGE_CODE_ACTION} language="tsx" copyLabel="복사" />
         </section>
 
@@ -104,41 +118,17 @@ const CardGuidePage = () => (
                     이 컴포넌트 내부에 들어갈 수 있는 요소들입니다.
                 </p>
             </div>
-            <div className="bg-background border-border overflow-x-auto rounded-md border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">Composition 목록</caption>
-                    <thead>
-                        <tr className="border-border border-b bg-gray-100/25">
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Name
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Description
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {[
-                            ['CardHeader', '제목·설명·액션을 묶는 상단 영역입니다.'],
-                            ['CardTitle', '카드 제목을 표시합니다.'],
-                            ['CardDescription', '카드의 추가 설명을 표시합니다.'],
-                            ['CardAction', 'CardHeader 우측에 배치하는 액션(버튼 등) 영역입니다.'],
-                            ['CardContent', '카드의 본문 콘텐츠를 표시합니다.'],
-                            ['CardFooter', '카드 하단의 액션 영역을 표시합니다.'],
-                        ].map(([name, desc]) => (
-                            <tr key={name} className="border-border bg-background border-b last:border-b-0">
-                                <th
-                                    scope="row"
-                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                                >
-                                    {name}
-                                </th>
-                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{desc}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+            <div className="bg-background border-border overflow-x-auto rounded-md border p-4">
+                <pre className="typo-caption-regular text-foreground font-mono">{COMPOSITION_TREE}</pre>
             </div>
+            <dl className="flex flex-col gap-2">
+                {COMPOSITION_ITEMS.map(([name, desc]) => (
+                    <div key={name} className="flex flex-col gap-0.5">
+                        <dt className="typo-body-l-medium text-primary font-mono">{name}</dt>
+                        <dd className="typo-body-l-regular text-muted-foreground">{desc}</dd>
+                    </div>
+                ))}
+            </dl>
         </section>
 
         <section aria-labelledby="card-props" className="flex flex-col gap-4">
