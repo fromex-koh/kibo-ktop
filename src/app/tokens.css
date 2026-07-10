@@ -272,6 +272,7 @@
   --ds-radio-checked: var(--ds-blue-500);
   --ds-radio-disabled-fill: var(--ds-gray-100);
   --ds-radio-disabled-border: var(--ds-gray-200);
+  --ds-badge-solid-fg: var(--raw-common-white);
 
   /* overlay (라이트 = 검정 alpha, primitive 참조) */
   --ds-overlay-sm: var(--raw-black-a10);
@@ -382,6 +383,7 @@
   --ds-sidebar-primary-foreground: var(--raw-gray-900);
   --ds-button-primary-text: var(--raw-common-white);
   --ds-button-tertiary-fill: var(--raw-gray-800);
+  --ds-badge-solid-fg: var(--raw-common-white);
 
   /* overlay override (다크 = 흰색 alpha, primitive 참조) */
   --ds-overlay-sm: var(--raw-white-a10);
@@ -473,6 +475,7 @@
   --color-radio-checked: var(--ds-radio-checked);
   --color-radio-disabled-fill: var(--ds-radio-disabled-fill);
   --color-radio-disabled-border: var(--ds-radio-disabled-border);
+  --color-badge-solid-fg: var(--ds-badge-solid-fg);
 
   /* 컬러 팔레트 (raw 스케일) — 시맨틱 슬롯의 원재료. 화면 코드에서 직접 사용 지양, 슬롯을 거칠 것(PB-05) */
   --color-blue-50: var(--ds-blue-50);
