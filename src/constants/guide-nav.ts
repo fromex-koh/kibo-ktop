@@ -59,6 +59,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {label: 'Checkbox', href: '/component-guide/checkbox'},
             {label: 'Radio', href: '/component-guide/radio'},
             {label: 'Badge', href: '/component-guide/badge'},
+            {label: 'Select', href: '/component-guide/select'},
             {label: 'Card', href: '/component-guide/card'},
             {label: 'Panel', href: '/component-guide/panel'},
             {label: 'Separator', href: '/component-guide/separator'},
