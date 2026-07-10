@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {Check, Search} from 'lucide-react'
+import {Calendar, Check, Lock, Search} from 'lucide-react'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card'
@@ -178,12 +178,23 @@ const ShadcnTestPage = () => {
                                 </div>
                             </div>
 
-                            {/* Input */}
+                            {/* Input — Figma text_input 반영(48px). 필수표시·헬프·단위·읽기전용 */}
                             <div className="col-span-4 flex flex-col gap-4">
                                 <h2 className="typo-title-l-bold">Input</h2>
                                 <div className="flex flex-col gap-2">
-                                    <Label htmlFor="name">이름</Label>
-                                    <Input id="name" name="name" placeholder="홍길동" autoComplete="name" />
+                                    <Label htmlFor="name">
+                                        이름 <span className="text-error-500">*</span>
+                                    </Label>
+                                    <Input
+                                        id="name"
+                                        name="name"
+                                        placeholder="내용을 입력하세요"
+                                        autoComplete="name"
+                                        aria-describedby="name-help"
+                                    />
+                                    <p id="name-help" className="typo-caption-regular text-muted-foreground">
+                                        입력 시 필요한 정보를 입력해주세요.
+                                    </p>
                                 </div>
 
                                 <div className="flex flex-col gap-2">
@@ -197,9 +208,58 @@ const ShadcnTestPage = () => {
                                         aria-invalid="true"
                                         aria-describedby="email-err"
                                     />
-                                    <p id="email-err" role="alert" className="typo-caption-regular text-destructive">
+                                    <p id="email-err" role="alert" className="typo-caption-regular text-error-500">
                                         올바른 이메일을 입력하세요.
                                     </p>
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <Label htmlFor="headcount">인원</Label>
+                                    <div className="relative">
+                                        <Input
+                                            id="headcount"
+                                            name="headcount"
+                                            type="number"
+                                            placeholder="0"
+                                            className="pr-10"
+                                        />
+                                        <span className="text-foreground absolute top-1/2 right-4 -translate-y-1/2">
+                                            명
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <Label htmlFor="event-date">개업일자</Label>
+                                    <div className="relative">
+                                        <Input
+                                            id="event-date"
+                                            name="event-date"
+                                            placeholder="날짜를 선택하세요"
+                                            className="pr-11"
+                                        />
+                                        <Calendar
+                                            aria-hidden="true"
+                                            className="text-muted-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2"
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex flex-col gap-2">
+                                    <Label htmlFor="corp-no">법인번호 (읽기전용)</Label>
+                                    <div className="relative">
+                                        <Input
+                                            id="corp-no"
+                                            name="corp-no"
+                                            defaultValue="11222-1234567"
+                                            readOnly
+                                            className="pr-11"
+                                        />
+                                        <Lock
+                                            aria-hidden="true"
+                                            className="text-muted-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2"
+                                        />
+                                    </div>
                                 </div>
 
                                 <div className="flex flex-col gap-2">
