@@ -182,8 +182,9 @@ const ShadcnTestPage = () => {
                             <div className="col-span-4 flex flex-col gap-4">
                                 <h2 className="typo-title-l-bold">Input</h2>
                                 <div className="flex flex-col gap-2">
-                                    <Label htmlFor="name">
-                                        이름 <span className="text-error-500">*</span>
+                                    <Label htmlFor="name" className="gap-1">
+                                        이름
+                                        <span className="text-error-500">*</span>
                                     </Label>
                                     <Input
                                         id="name"
@@ -342,8 +343,9 @@ const ShadcnTestPage = () => {
                             <div className="col-span-4 flex flex-col gap-4">
                                 <h2 className="typo-title-l-bold">Select</h2>
                                 <div className="flex flex-col gap-2">
-                                    <Label htmlFor="fruit-trigger">
-                                        좋아하는 과일 <span className="text-error-500">*</span>
+                                    <Label htmlFor="fruit-trigger" className="gap-1">
+                                        좋아하는 과일
+                                        <span className="text-error-500">*</span>
                                     </Label>
                                     <Select>
                                         <SelectTrigger id="fruit-trigger" className="w-full">
@@ -358,8 +360,9 @@ const ShadcnTestPage = () => {
                                     </Select>
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <Label htmlFor="region-trigger">
-                                        지역 <span className="text-error-500">*</span>
+                                    <Label htmlFor="region-trigger" className="gap-1">
+                                        지역
+                                        <span className="text-error-500">*</span>
                                     </Label>
                                     <Select>
                                         <SelectTrigger

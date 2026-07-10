@@ -9,8 +9,9 @@ import {Label} from '@/components/ui/label'
 export const metadata: Metadata = {title: '인풋 (Input)'}
 
 const USAGE_CODE = `<div className="wide:w-90 flex w-full flex-col gap-2">
-  <Label htmlFor="name">
-    이름 <span className="text-error-500">*</span>
+  <Label htmlFor="name" className="gap-1">
+    이름
+    <span className="text-error-500">*</span>
   </Label>
   <Input id="name" placeholder="내용을 입력하세요" aria-describedby="name-help" />
   <p id="name-help" className="typo-caption-regular text-muted-foreground">
@@ -67,8 +68,9 @@ const InputGuidePage = () => (
                 </p>
             </div>
             <div className={FIELD_DEMO_CLASS}>
-                <Label htmlFor="demo-name">
-                    이름 <span className="text-error-500">*</span>
+                <Label htmlFor="demo-name" className="gap-1">
+                    이름
+                    <span className="text-error-500">*</span>
                 </Label>
                 <Input id="demo-name" placeholder="내용을 입력하세요" aria-describedby="demo-name-help" />
                 <p id="demo-name-help" className="typo-caption-regular text-muted-foreground">

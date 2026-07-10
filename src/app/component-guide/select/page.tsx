@@ -7,8 +7,9 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/c
 export const metadata: Metadata = {title: '셀렉트 (Select)'}
 
 const USAGE_CODE = `<div className="flex flex-col gap-2">
-  <Label htmlFor="fruit">
-    좋아하는 과일 <span className="text-error-500">*</span>
+  <Label htmlFor="fruit" className="gap-1">
+    좋아하는 과일
+    <span className="text-error-500">*</span>
   </Label>
   <Select>
     <SelectTrigger id="fruit" className="w-full">
@@ -55,8 +56,9 @@ const SelectGuidePage = () => (
                 </p>
             </div>
             <div className="flex max-w-sm flex-col gap-2">
-                <Label htmlFor="demo-fruit">
-                    좋아하는 과일 <span className="text-error-500">*</span>
+                <Label htmlFor="demo-fruit" className="gap-1">
+                    좋아하는 과일
+                    <span className="text-error-500">*</span>
                 </Label>
                 <Select>
                     <SelectTrigger id="demo-fruit" className="w-full">
