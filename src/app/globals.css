@@ -20,6 +20,14 @@
         color: var(--ds-foreground);
     }
 
+    /* 클릭 가능한 요소는 포인터 커서. Tailwind v4 preflight 는 버튼을 브라우저 기본값(cursor:default)으로
+       두므로, shadcn(Tailwind v4) 공식 권장대로 base 레이어에서 되살린다. 비활성(:disabled)은 제외하고,
+       cursor-not-allowed 등 개별 유틸(더 높은 우선순위)이 필요한 컴포넌트는 각자 덮어쓴다. */
+    button:not(:disabled),
+    [role='button']:not(:disabled) {
+        cursor: pointer;
+    }
+
     html {
         @apply font-sans;
 
