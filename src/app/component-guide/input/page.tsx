@@ -36,7 +36,7 @@ const ADDON_CODE = `<div className="wide:w-90 flex w-full flex-col gap-4">
   {/* 단위 접미사 — 입력 박스 밖 오른쪽에 형제로 배치(Figma) */}
   <div className="flex items-center gap-2">
     <Input type="number" placeholder="0" className="flex-1" />
-    <span className="typo-body-l-regular text-foreground shrink-0">명</span>
+    <span className="typo-body-xl-regular text-foreground shrink-0">명</span>
   </div>
 
   {/* 잠금(읽기전용) — readOnly + lock 아이콘 */}
@@ -159,7 +159,7 @@ const InputGuidePage = () => (
                 {/* 단위 접미사 — 입력 박스 밖 오른쪽에 형제로 배치 */}
                 <div className="flex items-center gap-2">
                     <Input type="number" placeholder="0" aria-label="인원" className="flex-1" />
-                    <span className="typo-body-l-regular text-foreground shrink-0">명</span>
+                    <span className="typo-body-xl-regular text-foreground shrink-0">명</span>
                 </div>
                 {/* 잠금(읽기전용) — readOnly + lock 아이콘 */}
                 <div className="relative">
