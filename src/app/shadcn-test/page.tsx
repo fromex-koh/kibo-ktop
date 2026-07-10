@@ -90,7 +90,7 @@ const ShadcnTestPage = () => {
                                     서비스 이용을 위해 아래 개인정보 처리방침에 동의해 주세요.
                                 </SectionHeaderDescription>
                                 <SectionHeaderAction>
-                                    <Button variant="outline" size="sm">
+                                    <Button variant="tertiary" size="small">
                                         최근 입력 정보 불러오기
                                     </Button>
                                 </SectionHeaderAction>
@@ -102,7 +102,7 @@ const ShadcnTestPage = () => {
                                     담당자 정보를 정확히 입력해 주세요.
                                 </SubSectionHeaderDescription>
                                 <SubSectionHeaderAction>
-                                    <Button variant="outline" size="sm">
+                                    <Button variant="tertiary" size="small">
                                         초기화
                                     </Button>
                                 </SubSectionHeaderAction>
