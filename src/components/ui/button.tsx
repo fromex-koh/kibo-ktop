@@ -8,21 +8,22 @@ import {cn} from '@/lib/utils'
 // variant 는 전용 버튼 토큰(button-*-fill / -hover / -pressed)에 정밀 연결한다.
 // size 는 control-h 토큰을 쓰되, 상호작용 타깃은 min-h-11(44px, KWCAG 6.1.3)로 보정한다.
 const buttonVariants = cva(
-    "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+    "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 not-disabled:active:not-aria-[haspopup]:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     {
         variants: {
             variant: {
                 default:
-                    'bg-button-primary-fill text-button-primary-text hover:bg-button-primary-fill-hover active:bg-button-primary-fill-hover disabled:bg-button-primary-disabled-fill disabled:text-button-primary-disabled-text disabled:opacity-100',
+                    'bg-button-primary-fill text-button-primary-text not-disabled:hover:bg-button-primary-fill-hover not-disabled:active:bg-button-primary-fill-hover disabled:bg-button-primary-disabled-fill disabled:text-button-primary-disabled-text disabled:opacity-100',
                 secondary:
-                    'bg-button-secondary-fill text-button-secondary-text border-button-secondary-border hover:bg-button-secondary-fill-hover hover:text-button-secondary-text-hover active:bg-button-secondary-fill-hover active:text-button-secondary-text-pressed disabled:bg-button-secondary-disabled-fill disabled:border-button-secondary-disabled-border disabled:text-button-secondary-disabled-text disabled:opacity-100',
+                    'bg-button-secondary-fill text-button-secondary-text border-button-secondary-border not-disabled:hover:bg-button-secondary-fill-hover not-disabled:hover:text-button-secondary-text-hover not-disabled:active:bg-button-secondary-fill-hover not-disabled:active:text-button-secondary-text-pressed disabled:bg-button-secondary-disabled-fill disabled:border-button-secondary-disabled-border disabled:text-button-secondary-disabled-text disabled:opacity-100',
                 tertiary:
-                    'bg-button-tertiary-fill text-button-tertiary-text border-button-tertiary-border hover:bg-button-tertiary-fill-hover active:bg-button-tertiary-fill-hover disabled:border-button-tertiary-disabled-border disabled:text-button-tertiary-disabled-text disabled:opacity-100',
-                outline: 'border-input bg-background text-foreground hover:bg-accent aria-expanded:bg-accent',
-                ghost: 'text-foreground hover:bg-accent aria-expanded:bg-accent',
+                    'bg-button-tertiary-fill text-button-tertiary-text border-button-tertiary-border not-disabled:hover:bg-button-tertiary-fill-hover not-disabled:active:bg-button-tertiary-fill-hover disabled:border-button-tertiary-disabled-border disabled:text-button-tertiary-disabled-text disabled:opacity-100',
+                outline:
+                    'border-input bg-background text-foreground not-disabled:hover:bg-accent aria-expanded:bg-accent',
+                ghost: 'text-foreground not-disabled:hover:bg-accent aria-expanded:bg-accent',
                 destructive:
-                    'bg-destructive text-destructive-foreground hover:bg-destructive/90 active:bg-destructive/80',
-                link: 'text-primary underline-offset-4 hover:underline',
+                    'bg-destructive text-destructive-foreground not-disabled:hover:bg-destructive/90 not-disabled:active:bg-destructive/80',
+                link: 'text-primary underline-offset-4 not-disabled:hover:underline',
             },
             size: {
                 // 기본/큰 사이즈 + 아이콘 버튼은 44px 터치 타깃 보장
