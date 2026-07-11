@@ -197,6 +197,7 @@
 
   /* purpose */
   --ds-background: var(--ds-gray-50);
+  --ds-surface: var(--raw-common-white);
   --ds-foreground: var(--ds-gray-900);
   --ds-foreground-subtle: var(--ds-gray-500);
   --ds-label-foreground: var(--ds-gray-700);
@@ -369,6 +370,7 @@
   --ds-info-900: var(--raw-info-50);
 
   /* purpose override (수동 지정) */
+  --ds-surface: var(--raw-gray-800);
   --ds-card: var(--raw-gray-800);
   --ds-popover: var(--raw-common-black);
   --ds-primary: var(--raw-blue-300);
@@ -437,6 +439,7 @@
   --color-sidebar-ring: var(--ds-sidebar-ring);
 
   /* 프로젝트 커스텀 슬롯 — shadcn 표준에 없음. 추가하려면 tokens.json semantic 에 새 키만 넣으면 됨 */
+  --color-surface: var(--ds-surface);
   --color-foreground-subtle: var(--ds-foreground-subtle);
   --color-label-foreground: var(--ds-label-foreground);
   --color-accent-subtle: var(--ds-accent-subtle);
@@ -584,8 +587,6 @@
   --ds-spacing-control-min-w-sm: 5.625rem;
   --ds-spacing-control-min-w-md: 5.9375rem;
   --ds-spacing-control-min-w-lg: 9.75rem;
-  --ds-spacing-checkbox-label-w: 20.5rem;
-  --ds-spacing-radio-label-w: 20.5rem;
   --ds-spacing-scrollbar-w: 0.375rem;
   --ds-spacing-header-h: 4rem;
   --ds-spacing-header-top: var(--ds-spacing-header-h);
@@ -676,8 +677,6 @@
   --spacing-control-min-w-sm: var(--ds-spacing-control-min-w-sm);
   --spacing-control-min-w-md: var(--ds-spacing-control-min-w-md);
   --spacing-control-min-w-lg: var(--ds-spacing-control-min-w-lg);
-  --spacing-checkbox-label-w: var(--ds-spacing-checkbox-label-w);
-  --spacing-radio-label-w: var(--ds-spacing-radio-label-w);
   --spacing-scrollbar-w: var(--ds-spacing-scrollbar-w);
   --spacing-header-h: var(--ds-spacing-header-h);
   --spacing-header-top: var(--ds-spacing-header-top);
