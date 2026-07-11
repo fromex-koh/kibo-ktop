@@ -142,7 +142,7 @@ src/components/ui/<name>.tsx    ← ① 원본 (npx shadcn add 그대로, 손대
         │
         ▼
 src/components/kit/<name>.tsx   ← ② kit 창구 (화면·도메인 코드가 유일하게 import)
-   ├─ 재스킨 O (button·input): styled copy — 원본 복사 + 스타일(cva·className)만 교체
+   ├─ 재스킨 O (button·input·badge): styled copy — 원본 복사 + 스타일(cva·className)만 교체
    └─ 재스킨 X (그 외 대부분):  facade — export * from '@/components/ui/<name>' 한 줄
 ```
 
