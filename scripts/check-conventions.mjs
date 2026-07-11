@@ -36,10 +36,12 @@ const RULES = [
     },
     {
         id: 'PB-05',
-        // 프로젝트 소유 8색(blue·green·orange·gray·success·warning·error·info)은 50~900 스케일로 허용.
-        // 스케일이 Tailwind 기본(50~950)과 이름이 겹치므로, 소유하지 않은 기본 팔레트 휴(slate·red·amber 등)와
+        // 프로젝트 소유 10색(blue·navy·green·orange·grape·gray·success·warning·error·info)은 50~900 스케일로 허용.
+        // 스케일이 Tailwind 기본(50~950)과 이름이 겹치므로, 소유하지 않은 기본 팔레트 휴(slate·red·amber·purple 등)와
         // 소유 휴의 950 스텝(프로젝트 최대 900 → 950 은 기본 팔레트 누수)만 차단한다.
-        desc: 'Tailwind 기본 팔레트 키 사용 금지 — 프로젝트 팔레트(8색·50~900)/시맨틱 토큰을 쓰세요',
+        // (navy·grape 는 Tailwind 기본에 없는 이름이라 차단 목록/950 가드 어디에도 넣지 않는다 — 보라색 hue 는
+        //  Tailwind 의 purple 과 철자가 겹쳐 유틸이 오탐되므로 grape 로 명명해 충돌을 피한다.)
+        desc: 'Tailwind 기본 팔레트 키 사용 금지 — 프로젝트 팔레트(10색·50~900)/시맨틱 토큰을 쓰세요',
         re: /-(?:zinc|slate|neutral|stone|red|amber|yellow|lime|emerald|teal|cyan|sky|indigo|violet|purple|fuchsia|pink|rose)-(?:50|100|200|300|400|500|600|700|800|900|950)\b|-(?:gray|blue|green|orange)-950\b/,
     },
     {
