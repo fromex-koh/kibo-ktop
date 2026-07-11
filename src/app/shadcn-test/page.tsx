@@ -264,27 +264,21 @@ const ShadcnTestPage = () => {
                                 <div className="flex flex-col gap-3">
                                     <div className="flex items-center gap-2">
                                         <Checkbox id="terms" defaultChecked />
-                                        <Label htmlFor="terms" className="font-normal">
-                                            이용약관에 동의합니다
-                                        </Label>
+                                        <Label htmlFor="terms">이용약관에 동의합니다</Label>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Checkbox id="marketing" />
-                                        <Label htmlFor="marketing" className="font-normal">
-                                            마케팅 정보 수신 (선택)
-                                        </Label>
+                                        <Label htmlFor="marketing">마케팅 정보 수신 (선택)</Label>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <Checkbox id="cb-disabled" disabled />
-                                        <Label htmlFor="cb-disabled" className="font-normal">
-                                            비활성 항목
-                                        </Label>
+                                        <Label htmlFor="cb-disabled">비활성 항목</Label>
                                     </div>
                                     {/* 2depth — 제목 + 설명 */}
                                     <div className="flex flex-col gap-1">
                                         <div className="flex items-center gap-2">
                                             <Checkbox id="cb-all" defaultChecked aria-describedby="cb-all-desc" />
-                                            <Label htmlFor="cb-all" className="font-bold">
+                                            <Label htmlFor="cb-all" className="text-foreground font-bold">
                                                 전체 동의
                                             </Label>
                                         </div>
@@ -301,21 +295,15 @@ const ShadcnTestPage = () => {
                                 <RadioGroup defaultValue="card" aria-label="결제 수단" className="flex flex-col gap-3">
                                     <div className="flex items-center gap-2">
                                         <RadioGroupItem value="card" id="pay-card" />
-                                        <Label htmlFor="pay-card" className="font-normal">
-                                            신용카드
-                                        </Label>
+                                        <Label htmlFor="pay-card">신용카드</Label>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <RadioGroupItem value="transfer" id="pay-transfer" />
-                                        <Label htmlFor="pay-transfer" className="font-normal">
-                                            계좌이체
-                                        </Label>
+                                        <Label htmlFor="pay-transfer">계좌이체</Label>
                                     </div>
                                     <div className="flex items-center gap-2">
                                         <RadioGroupItem value="phone" id="pay-phone" disabled />
-                                        <Label htmlFor="pay-phone" className="font-normal">
-                                            휴대폰 결제 (비활성)
-                                        </Label>
+                                        <Label htmlFor="pay-phone">휴대폰 결제 (비활성)</Label>
                                     </div>
                                     {/* 2depth — 제목 + 설명 */}
                                     <div className="flex flex-col gap-1">
@@ -325,7 +313,7 @@ const ShadcnTestPage = () => {
                                                 id="pay-meet"
                                                 aria-describedby="pay-meet-desc"
                                             />
-                                            <Label htmlFor="pay-meet" className="font-bold">
+                                            <Label htmlFor="pay-meet" className="text-foreground font-bold">
                                                 만나서 결제
                                             </Label>
                                         </div>

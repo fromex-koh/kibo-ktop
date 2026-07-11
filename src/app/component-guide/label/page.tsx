@@ -20,19 +20,29 @@ const REQUIRED_CODE = `<Label htmlFor="name" className="gap-1">
 
 const CHECKBOX_CODE = `<div className="flex items-center gap-2">
   <Checkbox id="terms" defaultChecked />
-  <Label htmlFor="terms" className="font-normal">이용약관에 동의합니다</Label>
+  <Label htmlFor="terms">이용약관에 동의합니다</Label>
 </div>`
 
 const DISABLED_CODE = `{/* 연결된 컨트롤이 disabled 이면 peer-disabled 로 라벨도 흐려진다 */}
 <div className="flex items-center gap-2">
   <Checkbox id="opt-in" disabled className="peer" />
-  <Label htmlFor="opt-in" className="font-normal">비활성 옵션</Label>
+  <Label htmlFor="opt-in">비활성 옵션</Label>
 </div>`
 
-// Figma 라벨 스타일의 핵심 값 — 문서 표에 그대로 노출한다.
+// Figma 라벨 스타일의 핵심 값 — 문서 표에 그대로 노출한다(Figma checkbox 세트 label 프레임 기준).
 const STYLE_ROWS = [
     {prop: '크기', value: 'text-base', note: '16px — 폼 라벨 크기를 통일(바닐라 14px 에서 상향)'},
-    {prop: '굵기', value: 'font-medium', note: '기본 medium(500). 강조가 필요하면 사용처에서 font-bold'},
+    {prop: '행간', value: 'leading-normal', note: '24px(150%) — Figma 라벨 텍스트 행간'},
+    {
+        prop: '색',
+        value: 'text-label-foreground',
+        note: 'gray.700 — Figma 라벨 본문색 전용 시맨틱 토큰. 강조(2depth 제목)는 text-foreground(gray.900)',
+    },
+    {
+        prop: '굵기',
+        value: 'font-normal',
+        note: '기본 Regular(400) — Figma 라벨 기본(1depth). 강조(2depth 제목)는 사용처에서 font-bold',
+    },
     {prop: '커서', value: 'cursor-pointer', note: '라벨 클릭으로 연결 컨트롤을 토글할 수 있음을 알림'},
     {prop: '정렬', value: 'flex items-center gap-2', note: '별표·아이콘 등 인라인 요소를 gap 으로 정렬'},
     {prop: '비활성', value: 'peer-disabled / group-data-[disabled]', note: '연결 컨트롤 비활성 시 자동으로 흐려짐'},
@@ -68,8 +78,8 @@ const LabelGuidePage = () => (
                     스타일 (Figma)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    Figma 폼 라벨 스펙을 반영한 기본 스타일입니다. 크기·굵기·커서는 원본에 담겨 있어 별도 클래스 없이
-                    적용됩니다.
+                    Figma 폼 라벨 스펙을 반영한 기본 스타일입니다. 크기·행간·굵기·커서는 원본에 담겨 있어 별도 클래스
+                    없이 적용됩니다.
                 </p>
             </div>
             <div className="bg-background border-border overflow-x-auto rounded-md border">
@@ -112,8 +122,9 @@ const LabelGuidePage = () => (
                     조합 (Composition)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    라벨은 단독으로 쓰기보다 폼 컨트롤과 조합해 씁니다. 체크박스·라디오처럼 라벨이 오른쪽에 오는 경우엔
-                    보통 <code className="font-mono">font-normal</code> 로 굵기를 낮춥니다.
+                    라벨은 단독으로 쓰기보다 폼 컨트롤과 조합해 씁니다. 기본 굵기는 Regular(
+                    <code className="font-mono">font-normal</code>)라 별도 지정 없이 쓰고, 2depth 제목처럼 강조가 필요한
+                    곳에서만 <code className="font-mono">font-bold</code> 를 씌웁니다.
                 </p>
             </div>
 
@@ -121,9 +132,7 @@ const LabelGuidePage = () => (
                 <h3 className="typo-body-l-medium text-foreground">체크박스 + 라벨</h3>
                 <div className="flex items-center gap-2">
                     <Checkbox id="compose-terms" defaultChecked />
-                    <Label htmlFor="compose-terms" className="font-normal">
-                        이용약관에 동의합니다
-                    </Label>
+                    <Label htmlFor="compose-terms">이용약관에 동의합니다</Label>
                 </div>
                 <CodeBlock code={CHECKBOX_CODE} language="tsx" copyLabel="복사" />
             </div>
@@ -133,15 +142,11 @@ const LabelGuidePage = () => (
                 <RadioGroup defaultValue="a" className="flex flex-col gap-2">
                     <div className="flex items-center gap-2">
                         <RadioGroupItem id="compose-r-a" value="a" />
-                        <Label htmlFor="compose-r-a" className="font-normal">
-                            선택지 A
-                        </Label>
+                        <Label htmlFor="compose-r-a">선택지 A</Label>
                     </div>
                     <div className="flex items-center gap-2">
                         <RadioGroupItem id="compose-r-b" value="b" />
-                        <Label htmlFor="compose-r-b" className="font-normal">
-                            선택지 B
-                        </Label>
+                        <Label htmlFor="compose-r-b">선택지 B</Label>
                     </div>
                 </RadioGroup>
             </div>
@@ -170,9 +175,7 @@ const LabelGuidePage = () => (
                 </p>
                 <div className="flex items-center gap-2">
                     <Checkbox id="compose-opt" disabled className="peer" />
-                    <Label htmlFor="compose-opt" className="font-normal">
-                        비활성 옵션
-                    </Label>
+                    <Label htmlFor="compose-opt">비활성 옵션</Label>
                 </div>
                 <CodeBlock code={DISABLED_CODE} language="tsx" copyLabel="복사" />
             </div>

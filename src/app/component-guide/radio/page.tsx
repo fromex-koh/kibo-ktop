@@ -10,27 +10,27 @@ export const metadata: Metadata = {title: '라디오 (Radio)'}
 const USAGE_CODE = `<RadioGroup defaultValue="card" aria-label="결제 수단">
   <div className="flex items-center gap-2">
     <RadioGroupItem value="card" id="pay-card" />
-    <Label htmlFor="pay-card" className="font-normal">신용카드</Label>
+    <Label htmlFor="pay-card">신용카드</Label>
   </div>
   <div className="flex items-center gap-2">
     <RadioGroupItem value="transfer" id="pay-transfer" />
-    <Label htmlFor="pay-transfer" className="font-normal">계좌이체</Label>
+    <Label htmlFor="pay-transfer">계좌이체</Label>
   </div>
 </RadioGroup>`
 
 const DEPTH1_CODE = `<div className="flex items-center gap-2">
   <RadioGroupItem value="r1" id="r-1" />
-  <Label htmlFor="r-1" className="font-normal">라디오버튼</Label>
+  <Label htmlFor="r-1">라디오버튼</Label>
 </div>`
 
 const DEPTH2_CODE = `<div className="flex flex-col gap-1">
   <div className="flex items-center gap-2">
     <RadioGroupItem value="r2" id="r-2" aria-describedby="r-2-desc" />
-    <Label htmlFor="r-2" className="font-bold">라디오버튼</Label>
+    <Label htmlFor="r-2" className="font-bold text-foreground">라디오버튼</Label>
   </div>
   {/* 설명은 제목 아래로 들여쓰기(ml-8)하고, Figma 라벨 폭(328px)을 max-w-radio-label-w 로 걸어
       어디서 줄바꿈되는지 보이게 한다. */}
-  <p id="r-2-desc" className="typo-body-xl-regular text-foreground ml-8 max-w-radio-label-w">
+  <p id="r-2-desc" className="typo-body-xl-regular text-label-foreground ml-8 max-w-radio-label-w">
     2depth 스타일의 부가적인 설명이 들어갈 경우 해당 예시처럼 사용됩니다.
   </p>
 </div>`
@@ -69,15 +69,11 @@ const RadioGuidePage = () => (
             <RadioGroup defaultValue="card" aria-label="결제 수단" className="flex flex-col gap-3">
                 <div className="flex items-center gap-2">
                     <RadioGroupItem value="card" id="pay-card" />
-                    <Label htmlFor="pay-card" className="font-normal">
-                        신용카드
-                    </Label>
+                    <Label htmlFor="pay-card">신용카드</Label>
                 </div>
                 <div className="flex items-center gap-2">
                     <RadioGroupItem value="transfer" id="pay-transfer" />
-                    <Label htmlFor="pay-transfer" className="font-normal">
-                        계좌이체
-                    </Label>
+                    <Label htmlFor="pay-transfer">계좌이체</Label>
                 </div>
             </RadioGroup>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
@@ -160,9 +156,7 @@ const RadioGuidePage = () => (
                     <h3 className="typo-body-l-medium text-foreground">1depth — 라벨만</h3>
                     <div className="flex items-center gap-2">
                         <RadioGroupItem value="r1" id="depth-r1" />
-                        <Label htmlFor="depth-r1" className="font-normal">
-                            라디오버튼
-                        </Label>
+                        <Label htmlFor="depth-r1">라디오버튼</Label>
                     </div>
                     <CodeBlock code={DEPTH1_CODE} language="tsx" copyLabel="복사" />
                 </div>
@@ -179,11 +173,14 @@ const RadioGuidePage = () => (
                     <div className="flex flex-col gap-1">
                         <div className="flex items-center gap-2">
                             <RadioGroupItem value="r2" id="depth-r2" aria-describedby="depth-r2-desc" />
-                            <Label htmlFor="depth-r2" className="font-bold">
+                            <Label htmlFor="depth-r2" className="text-foreground font-bold">
                                 라디오버튼
                             </Label>
                         </div>
-                        <p id="depth-r2-desc" className="typo-body-xl-regular text-foreground max-w-radio-label-w ml-8">
+                        <p
+                            id="depth-r2-desc"
+                            className="typo-body-xl-regular text-label-foreground max-w-radio-label-w ml-8"
+                        >
                             2depth 스타일의 부가적인 설명이 들어갈 경우 해당 예시처럼 사용됩니다.
                         </p>
                     </div>

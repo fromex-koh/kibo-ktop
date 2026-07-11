@@ -9,22 +9,22 @@ export const metadata: Metadata = {title: '체크박스 (Checkbox)'}
 
 const USAGE_CODE = `<div className="flex items-center gap-2">
   <Checkbox id="terms" defaultChecked />
-  <Label htmlFor="terms" className="font-normal">이용약관에 동의합니다</Label>
+  <Label htmlFor="terms">이용약관에 동의합니다</Label>
 </div>`
 
 const DEPTH1_CODE = `<div className="flex items-center gap-2">
   <Checkbox id="agree-1" />
-  <Label htmlFor="agree-1" className="font-normal">체크박스</Label>
+  <Label htmlFor="agree-1">체크박스</Label>
 </div>`
 
 const DEPTH2_CODE = `<div className="flex flex-col gap-1">
   <div className="flex items-center gap-2">
     <Checkbox id="agree-2" aria-describedby="agree-2-desc" />
-    <Label htmlFor="agree-2" className="font-bold">체크박스</Label>
+    <Label htmlFor="agree-2" className="font-bold text-foreground">체크박스</Label>
   </div>
   {/* 설명은 제목 아래로 들여쓰기(ml-8 = 체크박스 24 + gap 8)하고, Figma 라벨 폭(328px)을
       max-w-checkbox-label-w 로 걸어 어디서 줄바꿈되는지 보이게 한다. */}
-  <p id="agree-2-desc" className="typo-body-xl-regular text-foreground ml-8 max-w-checkbox-label-w">
+  <p id="agree-2-desc" className="typo-body-xl-regular text-label-foreground ml-8 max-w-checkbox-label-w">
     2depth 스타일의 부가적인 설명이 들어갈 경우 해당 예시처럼 사용됩니다.
   </p>
 </div>`
@@ -61,9 +61,7 @@ const CheckboxGuidePage = () => (
             </div>
             <div className="flex items-center gap-2">
                 <Checkbox id="terms" defaultChecked />
-                <Label htmlFor="terms" className="font-normal">
-                    이용약관에 동의합니다
-                </Label>
+                <Label htmlFor="terms">이용약관에 동의합니다</Label>
             </div>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>
@@ -142,9 +140,7 @@ const CheckboxGuidePage = () => (
                 <h3 className="typo-body-l-medium text-foreground">1depth — 라벨만</h3>
                 <div className="flex items-center gap-2">
                     <Checkbox id="depth-1" />
-                    <Label htmlFor="depth-1" className="font-normal">
-                        체크박스
-                    </Label>
+                    <Label htmlFor="depth-1">체크박스</Label>
                 </div>
                 <CodeBlock code={DEPTH1_CODE} language="tsx" copyLabel="복사" />
             </div>
@@ -161,13 +157,16 @@ const CheckboxGuidePage = () => (
                 <div className="flex flex-col gap-1">
                     <div className="flex items-center gap-2">
                         <Checkbox id="depth-2" aria-describedby="depth-2-desc" />
-                        <Label htmlFor="depth-2" className="font-bold">
+                        <Label htmlFor="depth-2" className="text-foreground font-bold">
                             체크박스
                         </Label>
                     </div>
                     {/* 설명은 제목 아래로 들여쓰기(ml-8 = 체크박스 24 + gap 8)하고, Figma 라벨 폭(328px)을
                         max-w-checkbox-label-w 로 걸어 어디서 줄바꿈되는지 보이게 한다. */}
-                    <p id="depth-2-desc" className="typo-body-xl-regular text-foreground max-w-checkbox-label-w ml-8">
+                    <p
+                        id="depth-2-desc"
+                        className="typo-body-xl-regular text-label-foreground max-w-checkbox-label-w ml-8"
+                    >
                         2depth 스타일의 부가적인 설명이 들어갈 경우 해당 예시처럼 사용됩니다.
                     </p>
                 </div>
