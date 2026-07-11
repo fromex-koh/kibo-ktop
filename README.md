@@ -91,6 +91,7 @@ docs/
   ├─ ACCESSIBILITY.md          # KWCAG 2.1 코딩 규칙 (24개 검사항목) — 퍼블리싱 핵심 기준
   ├─ CODE_CONVENTION.md        # 프론트엔드 표준 코드 컨벤션 (ST/NA/NC/MD/CD)
   ├─ PUBLISHING_CONVENTION.md  # 퍼블리싱/디자인 토큰 컨벤션 (PB-01~16)
+  ├─ SHADCN.md                 # shadcn/ui 통합 규칙 (styled copy 패턴, SC-01~04)
   └─ GIT_CONVENTION.md         # Git 브랜치 전략 & 커밋 메시지 컨벤션
 eslint.config.mjs # 린트 설정
 .prettierrc.json  # Prettier 포맷 규칙
@@ -107,6 +108,8 @@ eslint.config.mjs # 린트 설정
   4원칙·13지침·24검사항목을 마크업/스타일 관점으로 정리한 규칙·예시·PR 체크리스트.
 - **[docs/PUBLISHING_CONVENTION.md](docs/PUBLISHING_CONVENTION.md)** — 퍼블리싱/디자인 토큰 컨벤션.
   색상·타이포(`typo-*`)·간격·라운드·그림자·브레이크포인트·레이아웃 그리드·스크롤바 토큰 사용 규칙(PB-01~16)과 PR 체크리스트.
+- **[docs/SHADCN.md](docs/SHADCN.md)** — shadcn/ui 통합 규칙.
+  원본은 바닐라로 보존하고 스타일만 복사본에서 바꾸는 **styled copy 패턴**(SC-01~04), 테마 슬롯·컴포넌트 추가법.
 - **[docs/GIT_CONVENTION.md](docs/GIT_CONVENTION.md)** — Git 브랜치 전략 & 커밋 메시지 컨벤션.
   현재(1인 작업)와 향후(팀 합류 시) 브랜치 전략, Conventional Commits 기반 커밋 메시지 포맷·예시.
 
@@ -126,6 +129,25 @@ yarn tokens   # tokens.json(px) 수정 후 실행 (yarn dev/build 시 자동)
 - **브레이크포인트**도 `tokens.json`(`breakpoint`/`container`)에서 관리한다 — **모바일 0–767(기본) · `wide:` 768 이상 · `pc:` 1280 이상** 3단계(모바일 퍼스트). `wide:` 는 태블릿(가로)·노트북이 함께 걸치는 구간이라 특정 기기명 대신 **기기 중립적인 "넓은 화면"** 을 이름으로 썼다. Tailwind 기본 `sm:`/`md:` 등은 **비활성화**되어 정의된 프리픽스만 동작하고, 콘텐츠 영역은 고정폭 대신 **`max-w-content`**(1280px)로 제한한다. (규칙: `PB-14`)
 - **레이아웃 그리드**(컬럼 수·거터·마진)도 `tokens.json`(`grid`, 브레이크포인트별)에서 관리하며, `.grid-layout` 클래스 하나로 적용한다(모바일 4열 → `wide` 8열 → `pc` 12열). `grid` 키는 `breakpoint`와 1:1 대응해야 하며 어긋나면 빌드가 실패한다. (규칙: `PB-15`)
 - **스크롤바**(두께·색)도 토큰 기반이다 — 두께 `size.scrollbar-w`(6px), 색 `semantic.scroll-thumb`/`scroll-track`(gray 스케일 참조라 다크 자동 반사). `html`에 `scrollbar-gutter: stable` 로 레이아웃 시프트를 방지한다. (규칙: `PB-16`, `system-guide` 프로젝트와 동일 구조)
+
+## 컴포넌트 (shadcn/ui)
+
+버튼·인풋·다이얼로그 등 기본 UI 는 **shadcn/ui** 를 쓴다. 커스터마이즈는 **styled copy 패턴**으로 한다 — 한 컴포넌트를 **두 파일**로 나눠, 원본은 바닐라로 보존하고 스타일만 복사본에서 바꾼다.
+
+```
+src/components/ui/button.tsx   ← ① 원본 (npx shadcn add 그대로, 손대지 않음)
+                                    · 동작 · 접근성 · 라이브러리 업데이트 담당
+        │  그대로 복사, 스타일(cva)만 교체
+        ▼
+src/components/button.tsx      ← ② 복사본 (styled copy, 화면이 실제 import)
+                                    · 원본과 유일한 차이 = buttonVariants(스타일) 뿐
+```
+
+- **책임 분리** — _스타일은 복사본, 그 외 전부(동작·접근성·업데이트)는 원본._
+- **왜** — 원본을 안 건드리니 라이브러리 업데이트 시 원본만 다시 받고 **셸 변경분만** 복사본에 옮기면 된다(스타일은 그대로 유지, 머지 충돌 최소화). 색·사이즈를 전면 재스킨하는 경우 `cn` 덧칠은 `twMerge` 한계로 충돌하므로 "복사 후 cva 교체"가 안전하다.
+- **화면·도메인 코드는 복사본(`@/components/button`)을 import** 한다(`@/components/ui/*` 직접 사용 금지).
+- 규칙·적용법 전체: **[docs/SHADCN.md](docs/SHADCN.md)** 의 `styled copy 패턴`·`[SC-04]`.
+- 렌더 확인 페이지: `/shadcn-test`, 토큰·컴포넌트 가이드: `/component-guide`.
 
 ## 폰트
 
