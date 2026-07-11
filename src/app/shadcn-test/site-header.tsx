@@ -8,9 +8,9 @@ import {
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
-} from '@/components/ui/navigation-menu'
-import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/ui/sheet'
-import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
+} from '@/components/kit/navigation-menu'
+import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/kit/sheet'
+import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
 
 // 주 내비게이션 항목(데모 데이터). 실제로는 라우트로 연결한다.
 const NAV_LINKS = ['자가진단', '전문가 평가', 'BIGx 보고서', '탄소중립']

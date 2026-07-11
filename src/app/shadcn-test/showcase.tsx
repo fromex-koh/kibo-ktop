@@ -12,7 +12,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
+} from '@/components/kit/alert-dialog'
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -20,8 +20,8 @@ import {
     BreadcrumbList,
     BreadcrumbPage,
     BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
-import {Button} from '@/components/button'
+} from '@/components/kit/breadcrumb'
+import {Button} from '@/components/kit/button'
 import {
     Pagination,
     PaginationContent,
@@ -29,9 +29,9 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from '@/components/ui/pagination'
-import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table'
-import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
+} from '@/components/kit/pagination'
+import {Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow} from '@/components/kit/table'
+import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/kit/tabs'
 
 // ── Stepper (shadcn 미제공 → 프로젝트 토큰으로 커스텀) ──
 const STEPS = ['기본 정보', '기술 정보', '검토', '완료'] as const

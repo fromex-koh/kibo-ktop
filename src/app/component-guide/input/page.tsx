@@ -2,9 +2,9 @@ import type {Metadata} from 'next'
 import {Lock, Search} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePage from '@/components/guide/guide-page'
-import {Button} from '@/components/button'
-import {Input} from '@/components/ui/input'
-import {Label} from '@/components/ui/label'
+import {Button} from '@/components/kit/button'
+import {Input} from '@/components/kit/input'
+import {Label} from '@/components/kit/label'
 
 export const metadata: Metadata = {title: '인풋 (Input)'}
 

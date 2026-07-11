@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePage from '@/components/guide/guide-page'
-import {Separator} from '@/components/ui/separator'
+import {Separator} from '@/components/kit/separator'
 
 export const metadata: Metadata = {title: '구분선 (Separator)'}
 

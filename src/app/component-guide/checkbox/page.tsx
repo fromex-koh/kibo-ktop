@@ -2,8 +2,8 @@ import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
-import {Checkbox} from '@/components/ui/checkbox'
-import {Label} from '@/components/ui/label'
+import {Checkbox} from '@/components/kit/checkbox'
+import {Label} from '@/components/kit/label'
 
 export const metadata: Metadata = {title: '체크박스 (Checkbox)'}
 

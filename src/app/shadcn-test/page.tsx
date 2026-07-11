@@ -1,30 +1,30 @@
 import type {Metadata} from 'next'
 import {Check, Lock, Search} from 'lucide-react'
-import {Badge} from '@/components/ui/badge'
-import {Button} from '@/components/button'
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card'
-import {Checkbox} from '@/components/ui/checkbox'
-import {Input} from '@/components/ui/input'
-import {Label} from '@/components/ui/label'
+import {Badge} from '@/components/kit/badge'
+import {Button} from '@/components/kit/button'
+import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/kit/card'
+import {Checkbox} from '@/components/kit/checkbox'
+import {Input} from '@/components/kit/input'
+import {Label} from '@/components/kit/label'
 import {PageHeader, PageHeaderDescription, PageHeaderTitle} from '@/components/page-header'
 import {Panel, PanelContent} from '@/components/panel'
-import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
+import {RadioGroup, RadioGroupItem} from '@/components/kit/radio-group'
 import {
     SectionHeader,
     SectionHeaderAction,
     SectionHeaderDescription,
     SectionHeaderTitle,
 } from '@/components/section-header'
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
-import {Separator} from '@/components/ui/separator'
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/kit/select'
+import {Separator} from '@/components/kit/separator'
 import {
     SubSectionHeader,
     SubSectionHeaderAction,
     SubSectionHeaderDescription,
     SubSectionHeaderTitle,
 } from '@/components/sub-section-header'
-import {Textarea} from '@/components/ui/textarea'
-import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
+import {Textarea} from '@/components/kit/textarea'
+import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
 import AdvancedFields from './advanced-fields'
 import Composite from './composite'
 import Showcase from './showcase'

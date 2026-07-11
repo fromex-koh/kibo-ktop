@@ -2,8 +2,8 @@
 
 import Link from 'next/link'
 import {ChevronRight} from 'lucide-react'
-import {Badge} from '@/components/ui/badge'
-import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
+import {Badge} from '@/components/kit/badge'
+import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
 import {SiteHeaderDemo} from './site-header'
 
 // ── 상태 칩(Badge) ──

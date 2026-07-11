@@ -2,8 +2,8 @@ import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
-import {Label} from '@/components/ui/label'
-import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
+import {Label} from '@/components/kit/label'
+import {RadioGroup, RadioGroupItem} from '@/components/kit/radio-group'
 
 export const metadata: Metadata = {title: '라디오 (Radio)'}
 

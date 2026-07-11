@@ -9,7 +9,7 @@ import type {GuideNavIconKey, GuideNavSection} from '@/constants/guide-nav'
 import Breadcrumb from '@/components/guide/breadcrumb'
 import SkipNav, {type SkipLinkItem} from '@/components/skip-nav'
 import ThemeToggle from '@/components/theme-toggle'
-import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/ui/collapsible'
+import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/kit/collapsible'
 import {
     Sidebar,
     SidebarContent,
@@ -25,7 +25,7 @@ import {
     SidebarMenuSubItem,
     SidebarProvider,
     SidebarTrigger,
-} from '@/components/ui/sidebar'
+} from '@/components/kit/sidebar'
 
 // 공용 사이드 레이아웃 셸 — shadcn 공식 Sidebar(문서형: 브랜드 헤더 + submenu 나비 + 상단 브레드크럼).
 // 섹션 = 접히는 상위 메뉴(Collapsible), 항목 = 하위메뉴(SidebarMenuSub). md(≥768px)↑ 상시 레일 / 미만

@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePage from '@/components/guide/guide-page'
-import {Button} from '@/components/button'
+import {Button} from '@/components/kit/button'
 import {
     SectionHeader,
     SectionHeaderAction,

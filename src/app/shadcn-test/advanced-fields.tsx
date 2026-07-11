@@ -4,8 +4,8 @@ import {useState} from 'react'
 import {format} from 'date-fns'
 import {ko} from 'date-fns/locale'
 import {CalendarIcon, Search} from 'lucide-react'
-import {Button} from '@/components/button'
-import {Calendar} from '@/components/ui/calendar'
+import {Button} from '@/components/kit/button'
+import {Calendar} from '@/components/kit/calendar'
 import {
     Dialog,
     DialogContent,
@@ -13,10 +13,10 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/ui/dialog'
-import {Input} from '@/components/ui/input'
-import {Label} from '@/components/ui/label'
-import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
+} from '@/components/kit/dialog'
+import {Input} from '@/components/kit/input'
+import {Label} from '@/components/kit/label'
+import {Popover, PopoverContent, PopoverTrigger} from '@/components/kit/popover'
 
 // 실제 주소검색(Daum 우편번호)·업종코드 조회는 외부 API/스크립트라 [NA-003] 위반이라, 여기선
 // "검색 버튼 → 모달 → 선택 → input 채움" UX 패턴만 목업 데이터로 시연한다(컴포넌트 테스트 목적).
