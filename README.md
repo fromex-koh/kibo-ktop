@@ -31,7 +31,7 @@ yarn dev        # ← 이 첫 실행이 자동 생성 파일을 만들어 줍니
 - **버전을 맞추세요** — Next 16 · React 19 · TailwindCSS 4 기준입니다. 낮은 버전에선 API 가 달라 동작이 다를 수 있습니다(특히 Tailwind v4 는 설정을 CSS 로 합니다 — `tailwind.config.js` 없음).
 - **디자인 값은 `tokens.json` 단일 소스** — 컴포넌트가 쓰는 `bg-brand`·`text-foreground`·`rounded-md`·`.grid-layout` 등은 전부 `tokens.json → yarn tokens → src/app/tokens.css` 로 생성됩니다. **이 파이프라인(`tokens.json`·`scripts/build-tokens.mjs`·`globals.css`·`postcss.config.mjs`)을 함께 가져가야** className 이 살아 있습니다.
 - **브레이크포인트** — **Tailwind 기본 프리픽스**(`sm:`/`md:`/`lg:`/`xl:`/`2xl:`)를 그대로 씁니다(모바일 퍼스트). 프로젝트 주 티어는 `md:`(768)·`xl:`(1280) 두 단계이며 새 코드는 이 둘을 우선 사용합니다. (기본을 지우지 않아 shadcn·익숙한 유틸이 그대로 동작합니다.)
-- **재사용 컴포넌트는 `src/components/` 루트**, 가이드/데모 전용은 `src/components/guide/` 에 있습니다.
+- **컴포넌트 폴더 구조** — `src/components/ui/`(shadcn 원본, 손대지 않음) · `src/components/kit/`(화면이 import 하는 앱-대면 창구: styled copy + facade, 아래 "컴포넌트" 참고) · `src/components/` 루트(page-header 등 도메인 컴포넌트) · `src/components/guide/`(가이드/데모 전용).
 
 ## 기술 스택
 
@@ -134,20 +134,22 @@ yarn tokens   # tokens.json(px) 수정 후 실행 (yarn dev/build 시 자동)
 
 ## 컴포넌트 (shadcn/ui)
 
-버튼·인풋·다이얼로그 등 기본 UI 는 **shadcn/ui** 를 쓴다. 커스터마이즈는 **styled copy 패턴**으로 한다 — 한 컴포넌트를 **두 파일**로 나눠, 원본은 바닐라로 보존하고 스타일만 복사본에서 바꾼다.
+버튼·인풋·다이얼로그 등 기본 UI 는 **shadcn/ui** 를 쓴다. 컴포넌트는 **두 레이어(폴더)**로 나눈다 — 원본은 바닐라로 보존하고, 화면은 `kit/` 창구로만 import 한다.
 
 ```
-src/components/ui/button.tsx   ← ① 원본 (npx shadcn add 그대로, 손대지 않음)
+src/components/ui/<name>.tsx    ← ① 원본 (npx shadcn add 그대로, 손대지 않음)
                                     · 동작 · 접근성 · 라이브러리 업데이트 담당
-        │  그대로 복사, 스타일(cva)만 교체
+        │
         ▼
-src/components/button.tsx      ← ② 복사본 (styled copy, 화면이 실제 import)
-                                    · 원본과 유일한 차이 = buttonVariants(스타일) 뿐
+src/components/kit/<name>.tsx   ← ② kit 창구 (화면·도메인 코드가 유일하게 import)
+   ├─ 재스킨 O (button·input): styled copy — 원본 복사 + 스타일(cva·className)만 교체
+   └─ 재스킨 X (그 외 대부분):  facade — export * from '@/components/ui/<name>' 한 줄
 ```
 
-- **책임 분리** — _스타일은 복사본, 그 외 전부(동작·접근성·업데이트)는 원본._
-- **왜** — 원본을 안 건드리니 라이브러리 업데이트 시 원본만 다시 받고 **셸 변경분만** 복사본에 옮기면 된다(스타일은 그대로 유지, 머지 충돌 최소화). 색·사이즈를 전면 재스킨하는 경우 `cn` 덧칠은 `twMerge` 한계로 충돌하므로 "복사 후 cva 교체"가 안전하다.
-- **화면·도메인 코드는 복사본(`@/components/button`)을 import** 한다(`@/components/ui/*` 직접 사용 금지).
+- **책임 분리** — _스타일은 kit(복사본), 그 외 전부(동작·접근성·업데이트)는 원본._
+- **왜** — 원본을 안 건드리니 라이브러리 업데이트 시 원본만 다시 받고 **셸 변경분만** 복사본에 옮기면 된다(스타일은 그대로 유지, facade 는 자동 반영). 색·사이즈를 전면 재스킨하는 경우 `cn` 덧칠은 `twMerge` 한계로 충돌하므로 "복사 후 cva 교체"가 안전하다.
+- **화면·도메인 코드는 `@/components/kit/<name>` 만 import** 한다(`@/components/ui/*` 직접 사용 금지).
+- 재스킨이 필요 없으면 facade(재수출)로 두고, 나중에 필요해지면 그 파일만 styled copy 로 승격하면 사용처는 안 바뀐다.
 - 규칙·적용법 전체: **[docs/SHADCN.md](docs/SHADCN.md)** 의 `styled copy 패턴`·`[SC-04]`.
 - 렌더 확인 페이지: `/shadcn-test`, 토큰·컴포넌트 가이드: `/component-guide`.
 
