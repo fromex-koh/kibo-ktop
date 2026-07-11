@@ -18,11 +18,16 @@ const VARIANTS = [
 ] as const
 
 const COLORS = [
+    // 상태색(semantic) — Figma blue/green/orange/red/gray 와 값이 동일.
     {key: 'info', label: 'info', desc: '정보·기본(blue)'},
     {key: 'success', label: 'success', desc: '성공·활성(green)'},
     {key: 'warning', label: 'warning', desc: '주의·대기(orange)'},
     {key: 'error', label: 'error', desc: '오류·정지(red)'},
     {key: 'neutral', label: 'neutral', desc: '중립·기타(gray)'},
+    // 보조색(Figma secondary-*) — 상태가 아닌 분류용 액센트.
+    {key: 'secondary-green', label: 'secondary-green', desc: '보조·녹색(green)'},
+    {key: 'secondary-orange', label: 'secondary-orange', desc: '보조·주황(orange)'},
+    {key: 'secondary-grape', label: 'secondary-grape', desc: '보조·보라(grape)'},
 ] as const
 
 // 매트릭스 각 셀에서 두 shape 를 짝지어 보여준다(pill=완전 둥근 / round=8px 라운드).
@@ -39,7 +44,7 @@ const BadgeGuidePage = () => (
                     사용 예시
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">color</code>(info/success/warning/error/neutral)로 의미를,{' '}
+                    <code className="font-mono">color</code>(상태 5색 + 보조 secondary 3색)로 의미를,{' '}
                     <code className="font-mono">variant</code>(solid-pastel/outline/solid)로 강조를,{' '}
                     <code className="font-mono">shape</code>(pill/round)로 형태를 정합니다.
                 </p>
@@ -62,7 +67,7 @@ const BadgeGuidePage = () => (
                     Variant × Color 큐레이션
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    5가지 color 를 행으로, 3가지 variant 를 열로 교차한 전체 조합입니다. 각 셀은{' '}
+                    8가지 color(상태 5색 + 보조 3색)를 행으로, 3가지 variant 를 열로 교차한 전체 조합입니다. 각 셀은{' '}
                     <code className="font-mono">pill</code>(왼쪽)·<code className="font-mono">round</code>(오른쪽) 두
                     shape 를 짝지어 보여줍니다.
                 </p>
@@ -190,9 +195,10 @@ const BadgeGuidePage = () => (
                         {[
                             {
                                 name: 'color',
-                                desc: '의미(색 계열). 상태 배지에 사용합니다.',
+                                desc: '색 계열. 상태 5색 + 분류용 보조 3색.',
                                 def: "'neutral'",
-                                control: 'info | success | warning | error | neutral',
+                                control:
+                                    'info | success | warning | error | neutral | secondary-green | secondary-orange | secondary-grape',
                             },
                             {
                                 name: 'variant',
