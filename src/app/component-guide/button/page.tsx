@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {ArrowRight, Download, LoaderCircle} from 'lucide-react'
+import {ArrowRight, Download, LoaderCircle, Plus, Search, Settings} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
@@ -21,6 +21,18 @@ const USAGE_CODE_ICON = `{/* 아이콘 왼쪽 */}
 <Button variant="default" size="medium">
   다음
   <ArrowRight aria-hidden="true" />
+</Button>`
+
+// 아이콘 전용 버튼 — 아이콘만 있으므로 aria-label 로 용도를 알리고, 모서리는 두 가지(살짝 둥근 rounded-sm =
+// 다른 버튼과 동일 / 완전 원 rounded-full)로 제공한다. size="icon" 은 정사각 + 44px 터치 타깃(min-h/w-11).
+const ICON_BUTTON_CODE = `{/* 살짝 둥근 — 다른 버튼과 동일한 rounded-sm */}
+<Button variant="default" size="icon" className="rounded-sm" aria-label="추가">
+  <Plus aria-hidden="true" />
+</Button>
+
+{/* 아주 동그란 — rounded-full 원형 */}
+<Button variant="default" size="icon" className="rounded-full" aria-label="추가">
+  <Plus aria-hidden="true" />
 </Button>`
 
 // Loading — variant 색은 유지하고 스피너 + aria-busy + pointer-events-none 로 진행 중을 표현한다.
@@ -96,6 +108,50 @@ const ButtonGuidePage = () => (
                 </Button>
             </div>
             <CodeBlock code={USAGE_CODE_ICON} language="tsx" copyLabel="복사" />
+
+            <div className="flex flex-col gap-2">
+                <h3 className="typo-body-l-medium text-foreground">아이콘 전용 버튼</h3>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    아이콘만 있는 버튼은 <code className="font-mono">aria-label</code> 로 용도를 알리고 내부 아이콘에{' '}
+                    <code className="font-mono">aria-hidden</code> 을 붙입니다(5.1.1).{' '}
+                    <code className="font-mono">size=&quot;icon&quot;</code> 은 정사각형 + 44px 터치 타깃을 보장합니다.
+                    모서리는 두 가지 — 다른 버튼과 같은 <code className="font-mono">rounded-sm</code>(살짝 둥근)과 완전
+                    원형 <code className="font-mono">rounded-full</code> 입니다.
+                </p>
+            </div>
+            <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                    <span className="typo-caption-regular text-muted-foreground">
+                        살짝 둥근 (rounded-sm · 다른 버튼과 동일)
+                    </span>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <Button variant="default" size="icon" className="rounded-sm" aria-label="추가">
+                            <Plus aria-hidden="true" />
+                        </Button>
+                        <Button variant="secondary" size="icon" className="rounded-sm" aria-label="검색">
+                            <Search aria-hidden="true" />
+                        </Button>
+                        <Button variant="tertiary" size="icon" className="rounded-sm" aria-label="설정">
+                            <Settings aria-hidden="true" />
+                        </Button>
+                    </div>
+                </div>
+                <div className="flex flex-col gap-2">
+                    <span className="typo-caption-regular text-muted-foreground">아주 동그란 (rounded-full)</span>
+                    <div className="flex flex-wrap items-center gap-3">
+                        <Button variant="default" size="icon" className="rounded-full" aria-label="추가">
+                            <Plus aria-hidden="true" />
+                        </Button>
+                        <Button variant="secondary" size="icon" className="rounded-full" aria-label="검색">
+                            <Search aria-hidden="true" />
+                        </Button>
+                        <Button variant="tertiary" size="icon" className="rounded-full" aria-label="설정">
+                            <Settings aria-hidden="true" />
+                        </Button>
+                    </div>
+                </div>
+            </div>
+            <CodeBlock code={ICON_BUTTON_CODE} language="tsx" copyLabel="복사" />
         </section>
 
         <section aria-labelledby="button-matrix" className="flex flex-col gap-4">
