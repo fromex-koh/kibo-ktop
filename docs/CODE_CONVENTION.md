@@ -3,6 +3,21 @@
 출처: `채널계 프론트엔드 개발 표준 가이드 (v1, 2026.3)`.
 이 프로젝트의 **모든 코드는 아래 규칙과 리뷰 절차를 통과해야** 병합될 수 있다.
 
+> ## ⚠️ 예외: `src/components/ui/**` (shadcn vendored 원본)
+>
+> **이 문서의 규칙(ST/NA/NC/MD/CD)은 `src/components/ui/**` 에는 적용하지 않는다.** 이 폴더는 `npx shadcn add`
+> 로 받은 **다운로드 순정 상태 그대로** 두는 vendored 코드다. 순정 코드에는 `as` 타입 단언([ST-002])·Tailwind
+> 기본 팔레트·`function` 선언([MD-009])·2-space 포맷 등 이 컨벤션과 다른 부분이 있을 수 있는데, **그건 버그가
+> 아니라 의도**다.
+>
+> **왜** — shadcn 이 업데이트될 때 우리 파일과의 **diff 가 "업스트림이 실제로 바꾼 것"만** 남아야 확인·반영이
+> 쉽다. 우리가 규칙에 맞춰 손대면 매 업데이트가 diff·머지 충돌 범벅이 된다. 그래서 원본은 **손대지 않고**, 게이트
+> (ESLint·Prettier·check:conventions)에서도 **면제**한다(typecheck 만 유지).
+>
+> **그럼 프로젝트 커스텀은 어디서?** — 색·크기 등 스타일은 `src/components/kit/<name>.tsx`(styled copy)에서만
+> 한다. 화면·도메인 코드는 항상 `@/components/kit/*` 를 import 하고, `@/components/ui/*` 를 직접 쓰지 않는다.
+> 이 kit/ 코드와 그 외 **모든 앱 코드에는 아래 규칙이 그대로 적용된다.** 자세한 내용: [SHADCN.md](SHADCN.md).
+
 ## 개발 원칙
 
 코드를 작성하는 시간보다 **읽는 시간**이 길다.
@@ -142,6 +157,9 @@
 ---
 
 ## PR 체크리스트
+
+> 아래 항목은 **앱 코드·`kit/` 에만** 해당한다. `src/components/ui/**`(shadcn vendored 원본)는 검사 대상이 아니다
+> (위 [예외](#️-예외-srccomponentsui-shadcn-vendored-원본) 참조).
 
 - [ ] [ST-001/002] `any`·`as` 없음 (Type Guard 사용)
 - [ ] [ST-004] 고정 `w-[px]`/`h-[px]` 없음 (반응형 단위)
