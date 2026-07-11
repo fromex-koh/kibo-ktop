@@ -463,16 +463,18 @@ if (Object.keys(shadow).length) {
 
 // @theme — spacing base 하나로 숫자 스케일 전체 지배: p-N = calc(var(--spacing) * N), 무한.
 L.push('@theme {', `  --spacing: ${toRem(spacingBase)};`)
-// breakpoint — Tailwind 기본(sm/md/lg/xl/2xl) 제거 후 정의 키만 → wide:/pc: (모바일 퍼스트)
+// breakpoint — Tailwind 기본(sm/md/lg/xl/2xl)은 그대로 두고 프로젝트 프리픽스(wide/pc)를 "추가"만 한다.
+// 기본을 initial 로 지우면 shadcn 원본·개발자에게 익숙한 sm:/md: 가 CSS 없이 조용히 무효(silent no-op)가 돼
+// 디버깅이 어렵다. 그래서 기본은 살려 호환성을 지키고, wide:/pc: 는 프로젝트의 시맨틱 3단계(모바일 퍼스트)로 얹는다.
+// (참고: wide=768=md, pc=1280=xl 로 값이 겹치지만 이름만 다른 별칭이라 무해하다. 프로젝트 코드는 wide:/pc: 를 우선한다.)
 if (Object.keys(breakpoint).length) {
-    L.push('', '  /* breakpoint — 기본 sm/md/lg/xl/2xl 제거, 정의 키만 (모바일 = 기본) */')
-    L.push('  --breakpoint-*: initial;')
+    L.push('', '  /* breakpoint — Tailwind 기본(sm/md/lg/xl/2xl) 유지 + 프로젝트 프리픽스 추가 */')
     for (const [k, v] of Object.entries(breakpoint)) L.push(`  --breakpoint-${k}: ${toRem(v)};`)
 }
-// container — 콘텐츠 최대 폭. 기본 스케일(4xl 등) 제거, 정의 키만 → max-w-content
+// container — Tailwind 기본 max-w 스케일(max-w-xs~7xl)도 그대로 두고 프로젝트 키(content)를 "추가"만 한다.
+// shadcn 이 max-w-xs/max-w-sm 등을 쓰므로 기본을 지우면 그 폭 제한이 조용히 사라진다. content 는 그 위에 얹는다.
 if (Object.keys(container).length) {
-    L.push('', '  /* container(max-width) — 기본 스케일 제거, 정의 키만 */')
-    L.push('  --container-*: initial;')
+    L.push('', '  /* container(max-width) — Tailwind 기본 스케일 유지 + 프로젝트 키(content) 추가 */')
     for (const [k, v] of Object.entries(container)) L.push(`  --container-${k}: ${toRem(v)};`)
 }
 L.push('}', '')
