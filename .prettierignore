@@ -12,4 +12,7 @@ src/app/tokens.css
 .claude/settings.local.json
 
 # shadcn 원본(vendored) — 다운로드 순정(2-space 등) 그대로 유지(SC-04). 스타일 커스텀은 kit/ 에서.
+# ui/ 뿐 아니라 shadcn 이 함께 내려주는 lib/utils(cn)·hooks/use-mobile 도 순정 유지 대상.
 src/components/ui
+src/lib/utils.ts
+src/hooks/use-mobile.ts

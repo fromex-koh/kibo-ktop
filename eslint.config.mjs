@@ -40,7 +40,10 @@ const eslintConfig = defineConfig([
         'next-env.d.ts',
         // shadcn 원본(vendored) — 다운로드 순정 그대로 유지한다(SC-04). 순정 코드는 as·기본 팔레트 등
         // 프로젝트 컨벤션과 다를 수 있어 lint 대상에서 제외한다(스타일 커스텀은 kit/ 에서, 여긴 lint 하지 않는다).
+        // ui/ 뿐 아니라 shadcn 이 함께 내려주는 lib/utils(cn)·hooks/use-mobile 도 순정 유지 대상.
         'src/components/ui/**',
+        'src/lib/utils.ts',
+        'src/hooks/use-mobile.ts',
     ]),
 ])
 
