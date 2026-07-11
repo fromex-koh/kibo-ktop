@@ -1,4 +1,6 @@
 import type {Metadata} from 'next'
+import {cn} from '@/lib/utils'
+import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
@@ -66,11 +68,11 @@ const RadioGuidePage = () => (
                 </p>
             </div>
             <RadioGroup defaultValue="card" aria-label="결제 수단" className="flex flex-col gap-3">
-                <div className="flex max-w-90 items-center gap-2">
+                <div className={cn('flex max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
                     <RadioGroupItem value="card" id="pay-card" />
                     <Label htmlFor="pay-card">신용카드</Label>
                 </div>
-                <div className="flex max-w-90 items-center gap-2">
+                <div className={cn('flex max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
                     <RadioGroupItem value="transfer" id="pay-transfer" />
                     <Label htmlFor="pay-transfer">계좌이체</Label>
                 </div>
@@ -153,7 +155,7 @@ const RadioGuidePage = () => (
             <RadioGroup defaultValue="r1" aria-label="Depth 예시" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h3 className="typo-body-l-medium text-foreground">1depth — 라벨만</h3>
-                    <div className="flex max-w-90 items-center gap-2">
+                    <div className={cn('flex max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
                         <RadioGroupItem value="r1" id="depth-r1" />
                         <Label htmlFor="depth-r1">라디오버튼</Label>
                     </div>
@@ -170,7 +172,7 @@ const RadioGuidePage = () => (
                         <code className="font-mono">max-w-90</code>=360) 폭에서 줄바꿈됩니다.
                     </p>
                     <div className="flex max-w-90 flex-col gap-1">
-                        <div className="flex items-center gap-2">
+                        <div className={cn('flex items-center gap-2', FIELD_FOCUS_RING)}>
                             <RadioGroupItem value="r2" id="depth-r2" aria-describedby="depth-r2-desc" />
                             <Label htmlFor="depth-r2" className="text-foreground font-bold">
                                 라디오버튼
