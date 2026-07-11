@@ -25,6 +25,9 @@ const COLORS = [
     {key: 'neutral', label: 'neutral', desc: '중립·기타(gray)'},
 ] as const
 
+// 매트릭스 각 셀에서 두 shape 를 짝지어 보여준다(pill=완전 둥근 / round=8px 라운드).
+const SHAPES = ['pill', 'round'] as const
+
 const BadgeGuidePage = () => (
     <GuidePage
         title="배지 (Badge)"
@@ -59,7 +62,9 @@ const BadgeGuidePage = () => (
                     Variant × Color 큐레이션
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    5가지 color 를 행으로, 3가지 variant 를 열로 교차한 전체 조합입니다(shape=pill 기준).
+                    5가지 color 를 행으로, 3가지 variant 를 열로 교차한 전체 조합입니다. 각 셀은{' '}
+                    <code className="font-mono">pill</code>(왼쪽)·<code className="font-mono">round</code>(오른쪽) 두
+                    shape 를 짝지어 보여줍니다.
                 </p>
             </div>
             <div className="flex flex-col gap-2">
@@ -95,11 +100,18 @@ const BadgeGuidePage = () => (
                                 </th>
                                 {VARIANTS.map((v) => (
                                     <td key={v.key} className="px-4 py-3 align-middle">
-                                        <div className="flex flex-col items-start gap-2">
-                                            <Badge color={c.key} variant={v.key}>
-                                                라벨
-                                            </Badge>
-                                            <CopyChip value={`color="${c.key}" variant="${v.key}"`} label="복사" />
+                                        <div className="flex items-start gap-4">
+                                            {SHAPES.map((s) => (
+                                                <div key={s} className="flex flex-col items-start gap-2">
+                                                    <Badge color={c.key} variant={v.key} shape={s}>
+                                                        라벨
+                                                    </Badge>
+                                                    <CopyChip
+                                                        value={`color="${c.key}" variant="${v.key}" shape="${s}"`}
+                                                        label="복사"
+                                                    />
+                                                </div>
+                                            ))}
                                         </div>
                                     </td>
                                 ))}
