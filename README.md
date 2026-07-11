@@ -149,6 +149,20 @@ src/components/button.tsx      ← ② 복사본 (styled copy, 화면이 실제 
 - 규칙·적용법 전체: **[docs/SHADCN.md](docs/SHADCN.md)** 의 `styled copy 패턴`·`[SC-04]`.
 - 렌더 확인 페이지: `/shadcn-test`, 토큰·컴포넌트 가이드: `/component-guide`.
 
+### 이 패턴이 근거 있는 방식인 이유 (출처)
+
+이 방식은 임의로 만든 규칙이 아니라, **디자인 커스터마이즈가 많은 프로젝트에서 널리 쓰이는 정착된 패턴**이다. 두 가지 업계 관행을 결합한 것이다 — ① 원본(base)은 손대지 않고 커스터마이즈는 별도 파일에 둔다, ② **수정 폭이 큰 컴포넌트는 소스를 복사해 별도 컴포넌트로 fork** 한다.
+
+- **[GOV.UK Design System — Extending and modifying components](https://design-system.service.gov.uk/get-started/extending-and-modifying-components/)** (영국 정부 공식 디자인 시스템) — 대규모 수정 시 원본을 고치지 말고 **소스를 복사해 새 컴포넌트로 만들 것**을 명시:
+    > "If you need to make a large modification to a component you should fork it entirely by copying and pasting the source code to create a new component."
+    > ("복사본"이 라이브러리 업데이트로 깨질 위험을 없앤다는 근거까지 같은 문서에 설명됨 — 우리 방식의 핵심 이유와 동일.)
+- **[shadcn/ui — Best practices for customizing (GitHub Discussion #9754)](https://github.com/shadcn-ui/ui/discussions/9754)** — base `components/ui/` 는 **원형 그대로 두고**(“overwrite it from the registry anytime”) 커스터마이즈는 wrapper/복사본에 두는 **wrapper pattern** 을 권장.
+- **[shadcn/ui — 대규모 프로덕션 디자인 시스템 구조 (GitHub Discussion #9756)](https://github.com/shadcn-ui/ui/discussions/9756)** — 큰 규모에서 `ui/`(원형) · 커스텀 레이어 · 조합 레이어를 **분리**하는 구조 논의.
+- **[Vercel Academy — Extending shadcn/ui with Custom Components](https://vercel.com/academy/shadcn-ui/extending-shadcn-ui-with-custom-components)** (shadcn 개발사 Vercel의 공식 학습 자료) — primitive 를 **깨끗하게 유지**하고 커스텀은 wrapper 컴포넌트로 확장.
+- **[MUI Design System — Wrapping vs. Global Overrides](https://blog.bitsrc.io/creating-a-mui-design-system-wrapping-vs-global-overrides-31800117dbd7)** — 확장 가능한 디자인 시스템에는 전역 override 보다 **wrapping(감싸기/복사) 방식**이 권장된다는, shadcn 밖(MUI) 사례.
+
+> 요약: "원본 보존 + 커스텀 분리"는 주류 권장이고, **전면 재스킨(heavy customization)에는 소스를 복사하는 fork 방식이 표준**이다. 우리 styled copy 는 이 둘을 그대로 따른 것이다.
+
 ## 폰트
 
 - **Pretendard** 를 로컬 가변 폰트로 사용한다 (CDN 미사용).
