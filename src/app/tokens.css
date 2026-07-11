@@ -397,6 +397,8 @@
   --color-transparent: transparent;
   --color-current: currentColor;
   --color-inherit: inherit;
+  --color-black: #000;
+  --color-white: #fff;
 
   /* shadcn 표준 슬롯 (https://ui.shadcn.com/docs/theming) — 이름 변경 금지, 값만 tokens.json 에서 매핑 */
   --color-background: var(--ds-background);

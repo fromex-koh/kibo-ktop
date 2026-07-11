@@ -369,6 +369,10 @@ L.push('  --color-*: initial;')
 L.push('  --color-transparent: transparent;')
 L.push('  --color-current: currentColor;')
 L.push('  --color-inherit: inherit;')
+// black/white 는 브랜드 팔레트가 아니라 구조색이라 유지한다(Tailwind 기본과 동일). shadcn 순정 컴포넌트가
+// 오버레이(bg-black/10)·file input(text-white 등)에 쓰므로, ui/ 를 순정 그대로 두려면 이 두 색이 필요하다.
+L.push('  --color-black: #000;')
+L.push('  --color-white: #fff;')
 L.push('')
 
 // pseudo-element(::-webkit-scrollbar 등) 전용 — className 을 못 붙이는 대상이라 Tailwind

@@ -49,11 +49,18 @@ const RULES = [
     },
 ]
 
+// shadcn 원본(vendored)은 다운로드 순정 그대로 유지하므로(SC-04) 컨벤션 검사에서 제외한다.
+// (프로젝트 스타일 커스텀은 kit/ 에서 하고 그쪽은 정상 검사된다.)
+const SKIP_DIRS = new Set(['components/ui'])
+
 const collectFiles = (dir) => {
     const entries = readdirSync(dir, {withFileTypes: true})
     return entries.flatMap((entry) => {
         const full = join(dir, entry.name)
-        if (entry.isDirectory()) return collectFiles(full)
+        if (entry.isDirectory()) {
+            if (SKIP_DIRS.has(full.replace(/^src[/\\]/, ''))) return []
+            return collectFiles(full)
+        }
         if (TARGET_EXT.has(extname(entry.name))) return [full]
         return []
     })
