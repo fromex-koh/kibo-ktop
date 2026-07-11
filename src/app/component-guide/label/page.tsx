@@ -8,12 +8,13 @@ import {RadioGroup, RadioGroupItem} from '@/components/kit/radio-group'
 
 export const metadata: Metadata = {title: '라벨 (Label)'}
 
+// 입력 필드(Input·Select·Textarea) 조합 라벨은 Body/XL/Bold(font-bold text-foreground).
 const USAGE_CODE = `<div className="flex max-w-90 flex-col gap-2">
-  <Label htmlFor="email">이메일</Label>
+  <Label htmlFor="email" className="font-bold text-foreground">이메일</Label>
   <Input id="email" type="email" placeholder="you@example.com" />
 </div>`
 
-const REQUIRED_CODE = `<Label htmlFor="name" className="gap-1">
+const REQUIRED_CODE = `<Label htmlFor="name" className="gap-1 font-bold text-foreground">
   이름
   <span className="text-error-500">*</span>
 </Label>`
@@ -40,8 +41,8 @@ const STYLE_ROWS = [
     },
     {
         prop: '굵기',
-        value: 'font-normal',
-        note: '기본 Regular(400) — Figma 라벨 기본(1depth). 강조(2depth 제목)는 사용처에서 font-bold',
+        value: 'font-normal (기본)',
+        note: '기본 Regular(400) — 체크박스·라디오 조합 라벨. 입력 필드(Input·Select·Textarea) 조합 라벨은 사용처에서 font-bold(Body/XL/Bold)',
     },
     {prop: '커서', value: 'cursor-pointer', note: '라벨 클릭으로 연결 컨트롤을 토글할 수 있음을 알림'},
     {prop: '정렬', value: 'flex items-center gap-2', note: '별표·아이콘 등 인라인 요소를 gap 으로 정렬'},
@@ -66,7 +67,9 @@ const LabelGuidePage = () => (
                 </p>
             </div>
             <div className="flex max-w-90 flex-col gap-2">
-                <Label htmlFor="demo-email">이메일</Label>
+                <Label htmlFor="demo-email" className="text-foreground font-bold">
+                    이메일
+                </Label>
                 <Input id="demo-email" type="email" placeholder="you@example.com" />
             </div>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
@@ -122,14 +125,20 @@ const LabelGuidePage = () => (
                     조합 (Composition)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    라벨은 단독으로 쓰기보다 폼 컨트롤과 조합해 씁니다. 기본 굵기는 Regular(
-                    <code className="font-mono">font-normal</code>)라 별도 지정 없이 쓰고, 2depth 제목처럼 강조가 필요한
-                    곳에서만 <code className="font-mono">font-bold</code> 를 씌웁니다.
+                    라벨은 <span className="text-foreground font-medium">조합 상대에 따라 굵기가 갈립니다</span>. 입력
+                    필드(<code className="font-mono">Input</code>·<code className="font-mono">Select</code>·
+                    <code className="font-mono">Textarea</code>) 라벨은 Body/XL/Bold(
+                    <code className="font-mono">font-bold text-foreground</code>), 체크박스·라디오 선택형 라벨은
+                    Regular(
+                    <code className="font-mono">font-normal</code>, 기본)로 둡니다.
                 </p>
             </div>
 
             <div className="flex flex-col gap-2">
-                <h3 className="typo-body-l-medium text-foreground">체크박스 + 라벨</h3>
+                <h3 className="typo-body-l-medium text-foreground">
+                    체크박스 + 라벨{' '}
+                    <span className="typo-caption-regular text-muted-foreground">— 라벨 Regular(400), 기본 그대로</span>
+                </h3>
                 <div className="flex max-w-90 items-center gap-2">
                     <Checkbox id="compose-terms" defaultChecked />
                     <Label htmlFor="compose-terms">이용약관에 동의합니다</Label>
@@ -138,7 +147,10 @@ const LabelGuidePage = () => (
             </div>
 
             <div className="flex flex-col gap-2">
-                <h3 className="typo-body-l-medium text-foreground">라디오 + 라벨</h3>
+                <h3 className="typo-body-l-medium text-foreground">
+                    라디오 + 라벨{' '}
+                    <span className="typo-caption-regular text-muted-foreground">— 라벨 Regular(400), 기본 그대로</span>
+                </h3>
                 <RadioGroup defaultValue="a" className="flex flex-col gap-2">
                     <div className="flex max-w-90 items-center gap-2">
                         <RadioGroupItem id="compose-r-a" value="a" />
@@ -152,13 +164,18 @@ const LabelGuidePage = () => (
             </div>
 
             <div className="flex flex-col gap-2">
-                <h3 className="typo-body-l-medium text-foreground">필수 표시 (별표)</h3>
+                <h3 className="typo-body-l-medium text-foreground">
+                    필수 표시 (별표){' '}
+                    <span className="typo-caption-regular text-muted-foreground">
+                        — 입력 필드 라벨이라 Body/XL/Bold
+                    </span>
+                </h3>
                 <p className="typo-body-l-regular text-muted-foreground">
                     필수 입력은 <code className="font-mono">gap-1</code> 로 좁힌 뒤{' '}
                     <code className="font-mono">text-error-500</code> 별표를 인라인으로 둡니다.
                 </p>
                 <div className="flex max-w-90 flex-col gap-2">
-                    <Label htmlFor="compose-name" className="gap-1">
+                    <Label htmlFor="compose-name" className="text-foreground gap-1 font-bold">
                         이름
                         <span className="text-error-500">*</span>
                     </Label>

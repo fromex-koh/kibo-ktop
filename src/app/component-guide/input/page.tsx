@@ -9,7 +9,7 @@ import {Label} from '@/components/kit/label'
 export const metadata: Metadata = {title: '인풋 (Input)'}
 
 const USAGE_CODE = `<div className="max-w-90 flex w-full flex-col gap-2">
-  <Label htmlFor="name" className="gap-1">
+  <Label htmlFor="name" className="gap-1 font-bold text-foreground">
     이름
     <span className="text-error-500">*</span>
   </Label>
@@ -68,7 +68,7 @@ const InputGuidePage = () => (
                 </p>
             </div>
             <div className={FIELD_DEMO_CLASS}>
-                <Label htmlFor="demo-name" className="gap-1">
+                <Label htmlFor="demo-name" className="text-foreground gap-1 font-bold">
                     이름
                     <span className="text-error-500">*</span>
                 </Label>
@@ -99,15 +99,21 @@ const InputGuidePage = () => (
                 2열은 각 열이 360 을 담는 xl(≥1280px)에서 편다. */}
             <div className="grid grid-cols-1 justify-items-start gap-6 xl:grid-cols-2">
                 <div className={FIELD_DEMO_CLASS}>
-                    <Label htmlFor="st-default">기본 (default)</Label>
+                    <Label htmlFor="st-default" className="text-foreground font-bold">
+                        기본 (default)
+                    </Label>
                     <Input id="st-default" placeholder="내용을 입력하세요" />
                 </div>
                 <div className={FIELD_DEMO_CLASS}>
-                    <Label htmlFor="st-completed">값 입력됨 (completed)</Label>
+                    <Label htmlFor="st-completed" className="text-foreground font-bold">
+                        값 입력됨 (completed)
+                    </Label>
                     <Input id="st-completed" defaultValue="홍길동" />
                 </div>
                 <div className={FIELD_DEMO_CLASS}>
-                    <Label htmlFor="st-error">오류 (error)</Label>
+                    <Label htmlFor="st-error" className="text-foreground font-bold">
+                        오류 (error)
+                    </Label>
                     <Input
                         id="st-error"
                         placeholder="내용을 입력하세요"
@@ -119,11 +125,15 @@ const InputGuidePage = () => (
                     </p>
                 </div>
                 <div className={FIELD_DEMO_CLASS}>
-                    <Label htmlFor="st-disabled">비활성 (disabled)</Label>
+                    <Label htmlFor="st-disabled" className="text-foreground font-bold">
+                        비활성 (disabled)
+                    </Label>
                     <Input id="st-disabled" placeholder="내용을 입력하세요" disabled />
                 </div>
                 <div className={FIELD_DEMO_CLASS}>
-                    <Label htmlFor="st-view">읽기전용 (view)</Label>
+                    <Label htmlFor="st-view" className="text-foreground font-bold">
+                        읽기전용 (view)
+                    </Label>
                     <Input id="st-view" defaultValue="수정 불가한 값" readOnly />
                 </div>
             </div>

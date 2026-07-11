@@ -7,7 +7,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/c
 export const metadata: Metadata = {title: '셀렉트 (Select)'}
 
 const USAGE_CODE = `<div className="flex max-w-90 flex-col gap-2">
-  <Label htmlFor="fruit" className="gap-1">
+  <Label htmlFor="fruit" className="gap-1 font-bold text-foreground">
     좋아하는 과일
     <span className="text-error-500">*</span>
   </Label>
@@ -56,7 +56,7 @@ const SelectGuidePage = () => (
                 </p>
             </div>
             <div className="flex max-w-90 flex-col gap-2">
-                <Label htmlFor="demo-fruit" className="gap-1">
+                <Label htmlFor="demo-fruit" className="text-foreground gap-1 font-bold">
                     좋아하는 과일
                     <span className="text-error-500">*</span>
                 </Label>
@@ -84,7 +84,9 @@ const SelectGuidePage = () => (
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="flex max-w-90 flex-col gap-2">
-                    <Label htmlFor="st-default">기본 (default)</Label>
+                    <Label htmlFor="st-default" className="text-foreground font-bold">
+                        기본 (default)
+                    </Label>
                     <Select>
                         <SelectTrigger id="st-default" className="w-full">
                             <SelectValue placeholder="선택해주세요" />
@@ -95,7 +97,9 @@ const SelectGuidePage = () => (
                     </Select>
                 </div>
                 <div className="flex max-w-90 flex-col gap-2">
-                    <Label htmlFor="st-completed">값 선택됨 (completed)</Label>
+                    <Label htmlFor="st-completed" className="text-foreground font-bold">
+                        값 선택됨 (completed)
+                    </Label>
                     <Select defaultValue="apple">
                         <SelectTrigger id="st-completed" className="w-full">
                             <SelectValue placeholder="선택해주세요" />
@@ -106,7 +110,9 @@ const SelectGuidePage = () => (
                     </Select>
                 </div>
                 <div className="flex max-w-90 flex-col gap-2">
-                    <Label htmlFor="st-error">오류 (error)</Label>
+                    <Label htmlFor="st-error" className="text-foreground font-bold">
+                        오류 (error)
+                    </Label>
                     <Select>
                         <SelectTrigger
                             id="st-error"
@@ -125,7 +131,9 @@ const SelectGuidePage = () => (
                     </p>
                 </div>
                 <div className="flex max-w-90 flex-col gap-2">
-                    <Label htmlFor="st-disabled">비활성 (disabled)</Label>
+                    <Label htmlFor="st-disabled" className="text-foreground font-bold">
+                        비활성 (disabled)
+                    </Label>
                     <Select disabled>
                         <SelectTrigger id="st-disabled" className="w-full">
                             <SelectValue placeholder="선택해주세요" />

@@ -7,7 +7,7 @@ import {Textarea} from '@/components/kit/textarea'
 export const metadata: Metadata = {title: '텍스트에어리어 (Textarea)'}
 
 const USAGE_CODE = `<div className="flex w-full max-w-90 flex-col gap-2">
-  <Label htmlFor="msg" className="gap-1">
+  <Label htmlFor="msg" className="gap-1 font-bold text-foreground">
     레이블
     <span className="text-error-500">*</span>
   </Label>
@@ -46,7 +46,7 @@ const TextareaGuidePage = () => (
                 </p>
             </div>
             <div className={FIELD_CLASS}>
-                <Label htmlFor="demo-msg" className="gap-1">
+                <Label htmlFor="demo-msg" className="text-foreground gap-1 font-bold">
                     레이블
                     <span className="text-error-500">*</span>
                 </Label>
@@ -77,15 +77,21 @@ const TextareaGuidePage = () => (
             </div>
             <div className="flex flex-col gap-6">
                 <div className={FIELD_CLASS}>
-                    <Label htmlFor="st-default">기본 (default)</Label>
+                    <Label htmlFor="st-default" className="text-foreground font-bold">
+                        기본 (default)
+                    </Label>
                     <Textarea id="st-default" placeholder="내용을 입력하세요" />
                 </div>
                 <div className={FIELD_CLASS}>
-                    <Label htmlFor="st-completed">값 입력됨 (completed)</Label>
+                    <Label htmlFor="st-completed" className="text-foreground font-bold">
+                        값 입력됨 (completed)
+                    </Label>
                     <Textarea id="st-completed" defaultValue="입력된 내용입니다." />
                 </div>
                 <div className={FIELD_CLASS}>
-                    <Label htmlFor="st-error">오류 (error)</Label>
+                    <Label htmlFor="st-error" className="text-foreground font-bold">
+                        오류 (error)
+                    </Label>
                     <Textarea
                         id="st-error"
                         placeholder="내용을 입력하세요"
@@ -97,11 +103,15 @@ const TextareaGuidePage = () => (
                     </p>
                 </div>
                 <div className={FIELD_CLASS}>
-                    <Label htmlFor="st-disabled">비활성 (disabled)</Label>
+                    <Label htmlFor="st-disabled" className="text-foreground font-bold">
+                        비활성 (disabled)
+                    </Label>
                     <Textarea id="st-disabled" placeholder="내용을 입력하세요" disabled />
                 </div>
                 <div className={FIELD_CLASS}>
-                    <Label htmlFor="st-view">읽기전용 (view)</Label>
+                    <Label htmlFor="st-view" className="text-foreground font-bold">
+                        읽기전용 (view)
+                    </Label>
                     <Textarea id="st-view" defaultValue="수정 불가한 내용입니다." readOnly />
                 </div>
             </div>
