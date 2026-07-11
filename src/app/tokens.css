@@ -200,6 +200,7 @@
   --ds-foreground: var(--ds-gray-900);
   --ds-foreground-subtle: var(--ds-gray-500);
   --ds-card: var(--raw-common-white);
+  --ds-card-foreground: var(--ds-gray-900);
   --ds-popover: var(--raw-common-white);
   --ds-popover-foreground: var(--ds-gray-900);
   --ds-primary: var(--raw-blue-600);
@@ -400,10 +401,11 @@
   --color-black: #000;
   --color-white: #fff;
 
-  /* shadcn 표준 슬롯 (https://ui.shadcn.com/docs/theming) — 이름 변경 금지, 값만 tokens.json 에서 매핑 */
+  /* shadcn 표준 슬롯 (32/32개, https://ui.shadcn.com/docs/theming) — 이름 변경/삭제 금지, 값만 tokens.json 에서 매핑. 누락 시 빌드 실패 */
   --color-background: var(--ds-background);
   --color-foreground: var(--ds-foreground);
   --color-card: var(--ds-card);
+  --color-card-foreground: var(--ds-card-foreground);
   --color-popover: var(--ds-popover);
   --color-popover-foreground: var(--ds-popover-foreground);
   --color-primary: var(--ds-primary);

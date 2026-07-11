@@ -134,10 +134,13 @@ tokens.json  semantic(=shadcn 표준 슬롯명)   →  yarn tokens  →  src/app
 
 ### 현재 정의된 슬롯 (tokens.json `semantic`)
 
-- **shadcn 표준(32)**: `background`·`foreground` · `card(+ -foreground)` · `popover(+…)` · `primary(+…)` ·
+- **shadcn 표준(32개)**: `background`·`foreground` · `card(+ -foreground)` · `popover(+…)` · `primary(+…)` ·
   `secondary(+…)` · `muted(+…)` · `accent(+…)` · `destructive(+…)` · `border` · `input` · `ring` ·
   `chart-1~5` · `sidebar` (+`-foreground`/`-primary`/`-primary-foreground`/`-accent`/`-accent-foreground`/
   `-border`/`-ring`)
+    - **개수는 빌드가 강제한다** — 표준 목록은 생성기의 `SHADCN_SLOTS`(32개)이고, tokens.json semantic 에서 하나라도
+      빠지면 `yarn tokens` 가 **빌드를 실패**시킨다(`❌ shadcn 표준 슬롯 누락(n/32)`). 생성물 `tokens.css` 의 슬롯 주석에도
+      `(32/32개)` 로 개수가 박혀, 하나 사라지면 바로 드러난다. (과거 `card-foreground` 가 조용히 빠졌던 걸 이 검증으로 방지.)
 - **프로젝트 확장(비-shadcn 표면)**: `scroll-thumb`/`scroll-track`(스크롤바 가상요소 — 유틸 없이 `var()` 직접),
   `overlay`(오버레이/스크림 — `bg-overlay-*` 전용 유틸). shadcn 이 안 다루는 표면이라 직접 정의.
 - 상태색(`success`/`warning`/`info`) 등 shadcn 에 없는 역할이 필요하면 **표준 슬롯을 지우지 말고 새 슬롯을

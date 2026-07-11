@@ -383,8 +383,23 @@ const semanticNames = Object.keys(semantic)
 const shadcnSlotNames = semanticNames.filter((name) => SHADCN_SLOTS.has(name))
 const customSlotNames = semanticNames.filter((name) => !SHADCN_SLOTS.has(name) && !NO_UTILITY_SLOTS.has(name))
 
+// shadcn 표준 슬롯(SHADCN_SLOTS)이 tokens.json semantic 에 하나라도 빠지면 빌드를 즉시 실패시킨다 —
+// 컴포넌트가 bg-<slot>/text-<slot> 로 참조하는데 슬롯이 없으면 그 유틸이 조용히 죽는다(예: card-foreground).
+// (errors 배열의 최종 검사는 이 지점보다 앞이라, 여기서 직접 exit 한다.)
+const missingShadcnSlots = [...SHADCN_SLOTS].filter((name) => !semanticNames.includes(name))
+if (missingShadcnSlots.length) {
+    console.error(
+        `❌ shadcn 표준 슬롯 누락(${missingShadcnSlots.length}/${SHADCN_SLOTS.size}): ${missingShadcnSlots.join(', ')}\n` +
+            '   → tokens.json semantic 에 추가해야 한다(https://ui.shadcn.com/docs/theming). 표준 슬롯은 삭제 금지.',
+    )
+    process.exit(1)
+}
+
 if (shadcnSlotNames.length) {
-    L.push('  /* shadcn 표준 슬롯 (https://ui.shadcn.com/docs/theming) — 이름 변경 금지, 값만 tokens.json 에서 매핑 */')
+    // 개수를 주석에 박아 둔다 — 표준 슬롯이 하나라도 사라지면 (n/총)이 어긋나 눈에 바로 띈다. 위 검증이 빌드도 막는다.
+    L.push(
+        `  /* shadcn 표준 슬롯 (${shadcnSlotNames.length}/${SHADCN_SLOTS.size}개, https://ui.shadcn.com/docs/theming) — 이름 변경/삭제 금지, 값만 tokens.json 에서 매핑. 누락 시 빌드 실패 */`,
+    )
     for (const name of shadcnSlotNames) L.push(`  --color-${name}: var(--ds-${name});`)
     L.push('')
 }
