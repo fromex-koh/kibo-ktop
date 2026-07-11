@@ -8,7 +8,9 @@ import {cn} from '@/lib/utils'
 // 폭: w-full 로 부모(폼 필드 wrapper)를 채운다. Figma 폭 360 은 컴포넌트가 아니라 label+input 을
 // 감싸는 폼 필드 wrapper 에서 max-w-90(상한) 으로 잡는다(min-w-0 은 flex 오버플로 방지용으로 유지).
 // 배경은 bg-surface(흰 배경) — Select 와 통일. disabled/read-only 는 bg-muted 로 덮는다.
-// 그 외 색은 shadcn 슬롯(border/input/ring/destructive)에 연결 — 다크는 --ds-* 가 자동 반사(dark: 분기 없음, PB-06).
+// placeholder 는 Figma 대로 text-placeholder(gray.700).
+// focus 는 outline(outline-2 dotted, 색은 --color-ring) + outline-offset-2. 에러(aria-invalid)는 테두리
+// (border-destructive)만 쓴다(포커스링/box-shadow 없음). 그 외 색은 shadcn 슬롯 — 다크 자동 반사(PB-06).
 function Input({className, type, ...props}: React.ComponentProps<'input'>) {
     return (
         <input
@@ -16,11 +18,11 @@ function Input({className, type, ...props}: React.ComponentProps<'input'>) {
             data-slot="input"
             className={cn(
                 'h-control-h-lg border-input bg-surface w-full min-w-0 rounded-sm border px-4 text-base transition-colors outline-none',
-                'placeholder:text-muted-foreground',
-                'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3',
+                'placeholder:text-placeholder',
+                'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dotted',
+                'aria-invalid:border-destructive',
                 'read-only:bg-muted',
                 'disabled:bg-muted disabled:cursor-not-allowed disabled:opacity-50',
-                'aria-invalid:border-destructive aria-invalid:ring-destructive/20 aria-invalid:ring-3',
                 'file:text-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium',
                 className,
             )}

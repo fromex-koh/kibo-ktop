@@ -5,9 +5,10 @@
 // 셸(컴포넌트 구성·props·export)은 원본과 동일하다.
 // 너비: w-fit 을 두지 않아(display:flex 기본) 상위 컨테이너 폭을 채운다. Figma 폭 360 은 트리거 자체가 아니라
 // label+select 를 감싸는 폼 필드 wrapper 에서 max-w-90(상한) 으로 잡는다.
-// 상태: focus 는 Figma focused(=active)대로 테두리 blue.500(border-ring)+focus-visible ring. bg-surface(흰 배경).
-// disabled/readonly 는 Input 과 동일하게 bg-muted — 단 트리거가 <button role=combobox> 라 native :read-only 가
-// 안 먹어 readonly 는 aria-readonly:bg-muted 로 처리한다(사용처에서 <SelectTrigger aria-readonly> 지정).
+// 상태(Input 과 통일): focus 는 outline(outline-2 dotted, 색은 --color-ring) + outline-offset-2, 열림
+// (data-[state=open])은 테두리. 에러는 테두리(border-destructive)만. placeholder 는 text-placeholder(gray.700). bg-surface.
+// disabled 는 bg-muted. readonly 는 트리거가 <button role=combobox> 라 native :read-only 가 안 먹어
+// aria-readonly:bg-muted 로 처리한다(사용처에서 <SelectTrigger aria-readonly> 지정).
 import * as React from 'react'
 import {Select as SelectPrimitive} from 'radix-ui'
 
@@ -39,7 +40,7 @@ function SelectTrigger({
             data-slot="select-trigger"
             data-size={size}
             className={cn(
-                "border-input focus-visible:border-ring focus-visible:ring-ring/50 data-[state=open]:border-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-control-h-lg bg-surface aria-readonly:bg-muted disabled:bg-muted flex items-center justify-between gap-1.5 rounded-sm border text-base whitespace-nowrap transition-colors outline-none select-none focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 data-[size=default]:px-4 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:px-3 data-[size=sm]:text-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5",
+                "border-input focus-visible:outline-ring data-[state=open]:border-ring aria-invalid:border-destructive data-placeholder:text-placeholder data-[size=default]:h-control-h-lg bg-surface aria-readonly:bg-muted disabled:bg-muted flex items-center justify-between gap-1.5 rounded-sm border text-base whitespace-nowrap transition-colors outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dotted disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:px-4 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:px-3 data-[size=sm]:text-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5",
                 className,
             )}
             {...props}
