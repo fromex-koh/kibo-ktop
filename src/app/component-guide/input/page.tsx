@@ -8,7 +8,7 @@ import {Label} from '@/components/kit/label'
 
 export const metadata: Metadata = {title: '인풋 (Input)'}
 
-const USAGE_CODE = `<div className="md:w-90 flex w-full flex-col gap-2">
+const USAGE_CODE = `<div className="max-w-90 flex w-full flex-col gap-2">
   <Label htmlFor="name" className="gap-1">
     이름
     <span className="text-error-500">*</span>
@@ -19,7 +19,7 @@ const USAGE_CODE = `<div className="md:w-90 flex w-full flex-col gap-2">
   </p>
 </div>`
 
-const ADDON_CODE = `<div className="md:w-90 flex w-full flex-col gap-4">
+const ADDON_CODE = `<div className="max-w-90 flex w-full flex-col gap-4">
   {/* 검색 버튼 (클릭 가능) — 입력 박스 안쪽 오른쪽에 절대배치 */}
   <div className="relative">
     <Input placeholder="검색어를 입력하세요" className="pr-14" />
@@ -47,8 +47,8 @@ const ADDON_CODE = `<div className="md:w-90 flex w-full flex-col gap-4">
   </div>
 </div>`
 
-const FIELD_DEMO_CLASS = 'md:w-90 flex w-full flex-col gap-2'
-const FIELD_GROUP_DEMO_CLASS = 'md:w-90 flex w-full flex-col gap-4'
+const FIELD_DEMO_CLASS = 'max-w-90 flex w-full flex-col gap-2'
+const FIELD_GROUP_DEMO_CLASS = 'max-w-90 flex w-full flex-col gap-4'
 
 const InputGuidePage = () => (
     <GuidePage
@@ -77,8 +77,8 @@ const InputGuidePage = () => (
                     입력 시 필요한 정보를 입력해주세요.
                 </p>
                 <p className="typo-caption-regular text-muted-foreground">
-                    md(≥768px) 이상에서는 부모 레일을 <code className="font-mono">w-90</code>(360px)로 두어 Input 의
-                    최소 폭 기준을 확인합니다.
+                    label+input 을 감싸는 필드 wrapper 를 <code className="font-mono">max-w-90</code>(360px 상한)으로
+                    두고, Input 은 <code className="font-mono">w-full</code> 로 그 폭을 채웁니다.
                 </p>
             </div>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
@@ -95,8 +95,8 @@ const InputGuidePage = () => (
                     <code className="font-mono">blue.500</code> 로 바뀝니다.
                 </p>
             </div>
-            {/* Input 이 md(≥768px)부터 min-w-90(360px)이라, 두 열이 각각 360px 를 담을 수 있는 xl(≥1280px)에서만 2열.
-                md 구간(768~1279px)은 단일 열로 두어 좁은 열에서 인풋이 넘치지 않게 한다. */}
+            {/* 각 필드 wrapper 는 max-w-90(360 상한)이고 인풋은 w-full+min-w-0 이라 좁은 열에서도 줄어든다.
+                2열은 각 열이 360 을 담는 xl(≥1280px)에서 편다. */}
             <div className="grid grid-cols-1 justify-items-start gap-6 xl:grid-cols-2">
                 <div className={FIELD_DEMO_CLASS}>
                     <Label htmlFor="st-default">기본 (default)</Label>

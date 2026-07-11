@@ -8,29 +8,28 @@ import {RadioGroup, RadioGroupItem} from '@/components/kit/radio-group'
 export const metadata: Metadata = {title: '라디오 (Radio)'}
 
 const USAGE_CODE = `<RadioGroup defaultValue="card" aria-label="결제 수단">
-  <div className="flex items-center gap-2">
+  <div className="flex max-w-90 items-center gap-2">
     <RadioGroupItem value="card" id="pay-card" />
     <Label htmlFor="pay-card">신용카드</Label>
   </div>
-  <div className="flex items-center gap-2">
+  <div className="flex max-w-90 items-center gap-2">
     <RadioGroupItem value="transfer" id="pay-transfer" />
     <Label htmlFor="pay-transfer">계좌이체</Label>
   </div>
 </RadioGroup>`
 
-const DEPTH1_CODE = `<div className="flex items-center gap-2">
+const DEPTH1_CODE = `<div className="flex max-w-90 items-center gap-2">
   <RadioGroupItem value="r1" id="r-1" />
   <Label htmlFor="r-1">라디오버튼</Label>
 </div>`
 
-const DEPTH2_CODE = `<div className="flex flex-col gap-1">
+const DEPTH2_CODE = `<div className="flex max-w-90 flex-col gap-1">
   <div className="flex items-center gap-2">
     <RadioGroupItem value="r2" id="r-2" aria-describedby="r-2-desc" />
     <Label htmlFor="r-2" className="font-bold text-foreground">라디오버튼</Label>
   </div>
-  {/* 설명은 제목 아래로 들여쓰기(ml-8)하고, Figma 라벨 폭(328px)을 max-w-radio-label-w 로 걸어
-      어디서 줄바꿈되는지 보이게 한다. */}
-  <p id="r-2-desc" className="typo-body-xl-regular text-label-foreground ml-8 max-w-radio-label-w">
+  {/* 설명은 제목 아래로 들여쓰기(ml-8). 폭은 감싸는 wrapper 의 max-w-90(360)이 잡는다. */}
+  <p id="r-2-desc" className="typo-body-xl-regular text-label-foreground ml-8">
     2depth 스타일의 부가적인 설명이 들어갈 경우 해당 예시처럼 사용됩니다.
   </p>
 </div>`
@@ -67,11 +66,11 @@ const RadioGuidePage = () => (
                 </p>
             </div>
             <RadioGroup defaultValue="card" aria-label="결제 수단" className="flex flex-col gap-3">
-                <div className="flex items-center gap-2">
+                <div className="flex max-w-90 items-center gap-2">
                     <RadioGroupItem value="card" id="pay-card" />
                     <Label htmlFor="pay-card">신용카드</Label>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex max-w-90 items-center gap-2">
                     <RadioGroupItem value="transfer" id="pay-transfer" />
                     <Label htmlFor="pay-transfer">계좌이체</Label>
                 </div>
@@ -154,7 +153,7 @@ const RadioGuidePage = () => (
             <RadioGroup defaultValue="r1" aria-label="Depth 예시" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h3 className="typo-body-l-medium text-foreground">1depth — 라벨만</h3>
-                    <div className="flex items-center gap-2">
+                    <div className="flex max-w-90 items-center gap-2">
                         <RadioGroupItem value="r1" id="depth-r1" />
                         <Label htmlFor="depth-r1">라디오버튼</Label>
                     </div>
@@ -167,20 +166,17 @@ const RadioGuidePage = () => (
                         제목은 <code className="font-mono">Label</code>(볼드), 설명은 별도{' '}
                         <code className="font-mono">&lt;p&gt;</code> 로 두고{' '}
                         <code className="font-mono">aria-describedby</code> 로 연결합니다. 원은 제목과 세로 중앙정렬(
-                        <code className="font-mono">items-center</code>)하고, 설명은 제목 아래로 들여써 Figma 라벨
-                        폭(328px)에서 줄바꿈됩니다.
+                        <code className="font-mono">items-center</code>)하고, 설명은 제목 아래로 들여써 감싸는 wrapper(
+                        <code className="font-mono">max-w-90</code>=360) 폭에서 줄바꿈됩니다.
                     </p>
-                    <div className="flex flex-col gap-1">
+                    <div className="flex max-w-90 flex-col gap-1">
                         <div className="flex items-center gap-2">
                             <RadioGroupItem value="r2" id="depth-r2" aria-describedby="depth-r2-desc" />
                             <Label htmlFor="depth-r2" className="text-foreground font-bold">
                                 라디오버튼
                             </Label>
                         </div>
-                        <p
-                            id="depth-r2-desc"
-                            className="typo-body-xl-regular text-label-foreground max-w-radio-label-w ml-8"
-                        >
+                        <p id="depth-r2-desc" className="typo-body-xl-regular text-label-foreground ml-8">
                             2depth 스타일의 부가적인 설명이 들어갈 경우 해당 예시처럼 사용됩니다.
                         </p>
                     </div>

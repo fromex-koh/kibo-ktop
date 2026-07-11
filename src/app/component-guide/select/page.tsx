@@ -6,7 +6,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/c
 
 export const metadata: Metadata = {title: '셀렉트 (Select)'}
 
-const USAGE_CODE = `<div className="flex flex-col gap-2">
+const USAGE_CODE = `<div className="flex max-w-90 flex-col gap-2">
   <Label htmlFor="fruit" className="gap-1">
     좋아하는 과일
     <span className="text-error-500">*</span>
@@ -55,7 +55,7 @@ const SelectGuidePage = () => (
                     <code className="font-mono">id</code> 로 연결합니다.
                 </p>
             </div>
-            <div className="flex max-w-sm flex-col gap-2">
+            <div className="flex max-w-90 flex-col gap-2">
                 <Label htmlFor="demo-fruit" className="gap-1">
                     좋아하는 과일
                     <span className="text-error-500">*</span>
@@ -83,7 +83,7 @@ const SelectGuidePage = () => (
                 </p>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="flex flex-col gap-2">
+                <div className="flex max-w-90 flex-col gap-2">
                     <Label htmlFor="st-default">기본 (default)</Label>
                     <Select>
                         <SelectTrigger id="st-default" className="w-full">
@@ -94,7 +94,7 @@ const SelectGuidePage = () => (
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex max-w-90 flex-col gap-2">
                     <Label htmlFor="st-completed">값 선택됨 (completed)</Label>
                     <Select defaultValue="apple">
                         <SelectTrigger id="st-completed" className="w-full">
@@ -105,7 +105,7 @@ const SelectGuidePage = () => (
                         </SelectContent>
                     </Select>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex max-w-90 flex-col gap-2">
                     <Label htmlFor="st-error">오류 (error)</Label>
                     <Select>
                         <SelectTrigger
@@ -124,7 +124,7 @@ const SelectGuidePage = () => (
                         필수 항목입니다.
                     </p>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex max-w-90 flex-col gap-2">
                     <Label htmlFor="st-disabled">비활성 (disabled)</Label>
                     <Select disabled>
                         <SelectTrigger id="st-disabled" className="w-full">

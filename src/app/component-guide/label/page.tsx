@@ -8,7 +8,7 @@ import {RadioGroup, RadioGroupItem} from '@/components/kit/radio-group'
 
 export const metadata: Metadata = {title: '라벨 (Label)'}
 
-const USAGE_CODE = `<div className="flex flex-col gap-2">
+const USAGE_CODE = `<div className="flex max-w-90 flex-col gap-2">
   <Label htmlFor="email">이메일</Label>
   <Input id="email" type="email" placeholder="you@example.com" />
 </div>`
@@ -18,13 +18,13 @@ const REQUIRED_CODE = `<Label htmlFor="name" className="gap-1">
   <span className="text-error-500">*</span>
 </Label>`
 
-const CHECKBOX_CODE = `<div className="flex items-center gap-2">
+const CHECKBOX_CODE = `<div className="flex max-w-90 items-center gap-2">
   <Checkbox id="terms" defaultChecked />
   <Label htmlFor="terms">이용약관에 동의합니다</Label>
 </div>`
 
 const DISABLED_CODE = `{/* 연결된 컨트롤이 disabled 이면 peer-disabled 로 라벨도 흐려진다 */}
-<div className="flex items-center gap-2">
+<div className="flex max-w-90 items-center gap-2">
   <Checkbox id="opt-in" disabled className="peer" />
   <Label htmlFor="opt-in">비활성 옵션</Label>
 </div>`
@@ -65,9 +65,9 @@ const LabelGuidePage = () => (
                     <span className="text-foreground font-medium">7.4.1</span>).
                 </p>
             </div>
-            <div className="flex flex-col gap-2">
+            <div className="flex max-w-90 flex-col gap-2">
                 <Label htmlFor="demo-email">이메일</Label>
-                <Input id="demo-email" type="email" placeholder="you@example.com" className="md:w-90" />
+                <Input id="demo-email" type="email" placeholder="you@example.com" />
             </div>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>
@@ -130,7 +130,7 @@ const LabelGuidePage = () => (
 
             <div className="flex flex-col gap-2">
                 <h3 className="typo-body-l-medium text-foreground">체크박스 + 라벨</h3>
-                <div className="flex items-center gap-2">
+                <div className="flex max-w-90 items-center gap-2">
                     <Checkbox id="compose-terms" defaultChecked />
                     <Label htmlFor="compose-terms">이용약관에 동의합니다</Label>
                 </div>
@@ -140,11 +140,11 @@ const LabelGuidePage = () => (
             <div className="flex flex-col gap-2">
                 <h3 className="typo-body-l-medium text-foreground">라디오 + 라벨</h3>
                 <RadioGroup defaultValue="a" className="flex flex-col gap-2">
-                    <div className="flex items-center gap-2">
+                    <div className="flex max-w-90 items-center gap-2">
                         <RadioGroupItem id="compose-r-a" value="a" />
                         <Label htmlFor="compose-r-a">선택지 A</Label>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex max-w-90 items-center gap-2">
                         <RadioGroupItem id="compose-r-b" value="b" />
                         <Label htmlFor="compose-r-b">선택지 B</Label>
                     </div>
@@ -157,12 +157,12 @@ const LabelGuidePage = () => (
                     필수 입력은 <code className="font-mono">gap-1</code> 로 좁힌 뒤{' '}
                     <code className="font-mono">text-error-500</code> 별표를 인라인으로 둡니다.
                 </p>
-                <div className="flex flex-col gap-2">
+                <div className="flex max-w-90 flex-col gap-2">
                     <Label htmlFor="compose-name" className="gap-1">
                         이름
                         <span className="text-error-500">*</span>
                     </Label>
-                    <Input id="compose-name" placeholder="내용을 입력하세요" className="md:w-90" />
+                    <Input id="compose-name" placeholder="내용을 입력하세요" />
                 </div>
                 <CodeBlock code={REQUIRED_CODE} language="tsx" copyLabel="복사" />
             </div>
@@ -173,7 +173,7 @@ const LabelGuidePage = () => (
                     연결된 컨트롤이 <code className="font-mono">disabled</code> 이면{' '}
                     <code className="font-mono">peer-disabled</code> 로 라벨도 함께 흐려집니다(수동 분기 불필요).
                 </p>
-                <div className="flex items-center gap-2">
+                <div className="flex max-w-90 items-center gap-2">
                     <Checkbox id="compose-opt" disabled className="peer" />
                     <Label htmlFor="compose-opt">비활성 옵션</Label>
                 </div>
