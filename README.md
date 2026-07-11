@@ -147,7 +147,7 @@ src/components/kit/<name>.tsx   ← ② kit 창구 (화면·도메인 코드가 
 ```
 
 - **책임 분리** — _스타일은 kit(복사본), 그 외 전부(동작·접근성·업데이트)는 원본._
-- **⚠️ `src/components/ui/**` 는 다운로드 순정 그대로 두고 코드 컨벤션·게이트에서 면제한다.** shadcn 업데이트 시 **diff 가 업스트림 변경분만** 남아 확인·반영이 쉽도록 하기 위함이다(우리가 규칙에 맞춰 손대면 매 업데이트가 충돌 범벅이 됨). 그래서 ui/ 는 ESLint·Prettier·check:conventions 대상에서 빠진다(typecheck 만 유지). 순정 코드의 `as`·기본 팔레트·2-space 는 버그가 아니라 의도다 → [docs/CODE_CONVENTION.md](docs/CODE_CONVENTION.md) 상단 예외 참고.
+- **⚠️ shadcn 다운로드 파일은 순정 그대로 두고 코드 컨벤션·게이트에서 면제한다.** 대상은 `src/components/ui/**` + `src/lib/utils.ts`(cn) + `src/hooks/use-mobile.ts`. shadcn 업데이트 시 **diff 가 업스트림 변경분만** 남아 확인·반영이 쉽도록 하기 위함이다(우리가 규칙에 맞춰 손대면 매 업데이트가 충돌 범벅이 됨). 그래서 이 파일들은 ESLint·Prettier·check:conventions 대상에서 빠진다(typecheck 만 유지). 순정 코드의 `as`·기본 팔레트·2-space 는 버그가 아니라 의도다 → [docs/CODE_CONVENTION.md](docs/CODE_CONVENTION.md) 상단 예외 참고.
 - **왜(kit)** — 원본을 안 건드리니 라이브러리 업데이트 시 원본만 다시 받고 **셸 변경분만** 복사본에 옮기면 된다(스타일은 그대로 유지, facade 는 자동 반영). 색·사이즈를 전면 재스킨하는 경우 `cn` 덧칠은 `twMerge` 한계로 충돌하므로 "복사 후 cva 교체"가 안전하다.
 - **화면·도메인 코드는 `@/components/kit/<name>` 만 import** 한다(`@/components/ui/*` 직접 사용 금지).
 - 재스킨이 필요 없으면 facade(재수출)로 두고, 나중에 필요해지면 그 파일만 styled copy 로 승격하면 사용처는 안 바뀐다.

@@ -3,12 +3,17 @@
 출처: `채널계 프론트엔드 개발 표준 가이드 (v1, 2026.3)`.
 이 프로젝트의 **모든 코드는 아래 규칙과 리뷰 절차를 통과해야** 병합될 수 있다.
 
-> ## ⚠️ 예외: `src/components/ui/**` (shadcn vendored 원본)
+> ## ⚠️ 예외: shadcn 다운로드 파일(vendored)
 >
-> **이 문서의 규칙(ST/NA/NC/MD/CD)은 `src/components/ui/**` 에는 적용하지 않는다.** 이 폴더는 `npx shadcn add`
-> 로 받은 **다운로드 순정 상태 그대로** 두는 vendored 코드다. 순정 코드에는 `as` 타입 단언([ST-002])·Tailwind
-> 기본 팔레트·`function` 선언([MD-009])·2-space 포맷 등 이 컨벤션과 다른 부분이 있을 수 있는데, **그건 버그가
-> 아니라 의도**다.
+> **이 문서의 규칙(ST/NA/NC/MD/CD)은 `npx shadcn add` 로 받은 vendored 파일에는 적용하지 않는다.** 해당 파일은
+> **다운로드 순정 상태 그대로** 둔다:
+>
+> - **`src/components/ui/**`** — shadcn UI 컴포넌트 원본
+> - **`src/lib/utils.ts`** — `cn` 헬퍼(shadcn 이 함께 내려줌)
+> - **`src/hooks/use-mobile.ts`** — 모바일 판별 훅(Sidebar 의존성)
+>
+> 순정 코드에는 `as` 타입 단언([ST-002])·Tailwind 기본 팔레트·`function` 선언([MD-009])·2-space 포맷 등 이
+> 컨벤션과 다른 부분이 있을 수 있는데, **그건 버그가 아니라 의도**다.
 >
 > **왜** — shadcn 이 업데이트될 때 우리 파일과의 **diff 가 "업스트림이 실제로 바꾼 것"만** 남아야 확인·반영이
 > 쉽다. 우리가 규칙에 맞춰 손대면 매 업데이트가 diff·머지 충돌 범벅이 된다. 그래서 원본은 **손대지 않고**, 게이트

@@ -145,19 +145,27 @@ tokens.json  semantic(=shadcn 표준 슬롯명)   →  yarn tokens  →  src/app
 
 ---
 
-## vendored 컴포넌트 (`src/components/ui/**`) — 순정 유지 + 게이트 면제
+## vendored 파일(shadcn 다운로드) — 순정 유지 + 게이트 면제
 
-**`ui/**` 는 `npx shadcn add` 로 받은 다운로드 순정 상태 그대로 둔다.** 이식·수정하지 않는다 — 그래야 shadcn 이
+**`npx shadcn add` 로 받은 파일은 다운로드 순정 상태 그대로 둔다.** 이식·수정하지 않는다 — 그래야 shadcn 이
 업데이트될 때 우리가 보는 diff 가 "업스트림이 실제로 바꾼 것"만 남아 확인·반영이 쉽다. 스타일 커스텀은 전부 kit
-styled copy 에서 한다([SC-04]).
+styled copy 에서 한다([SC-04]). 대상:
 
-순정 코드는 `as`(ST-002)·기본 팔레트·2-space 포맷 등 프로젝트 컨벤션과 다를 수 있으므로, **`ui/**` 는 게이트에서
-면제**한다(이게 "md 규칙 영향력 밖"의 실체다):
+- **`src/components/ui/**`** — shadcn UI 컴포넌트 원본
+- **`src/lib/utils.ts`** — `cn` 헬퍼(shadcn 이 함께 내려줌)
+- **`src/hooks/use-mobile.ts`** — 모바일 판별 훅(Sidebar 의존성)
 
-- **ESLint**: `eslint.config.mjs` 의 `globalIgnores` 에 `src/components/ui/**`.
-- **Prettier**: `.prettierignore` 에 `src/components/ui`(순정 2-space 유지 → 업스트림과 diff 깨끗).
-- **check:conventions**: `scripts/check-conventions.mjs` 의 `SKIP_DIRS` 에 `components/ui`.
+순정 코드는 `as`(ST-002)·기본 팔레트·`function`·2-space 포맷 등 프로젝트 컨벤션과 다를 수 있으므로, 위 파일들은
+**게이트에서 면제**한다(이게 "md 규칙 영향력 밖"의 실체다):
+
+- **ESLint**: `eslint.config.mjs` 의 `globalIgnores` — `src/components/ui/**`·`src/lib/utils.ts`·`src/hooks/use-mobile.ts`.
+- **Prettier**: `.prettierignore` 에 위 경로(순정 2-space 유지 → 업스트림과 diff 깨끗).
+- **check:conventions**: `scripts/check-conventions.mjs` 의 `SKIP_DIRS`(`components/ui`)·`SKIP_FILES`(`lib/utils.ts`·`hooks/use-mobile.ts`).
 - **typecheck 는 유지** — 순정도 타입은 통과해야 한다(안 되면 그 컴포넌트를 쓰는 게 맞는지 재검토).
+
+> **주의** — 이 파일들은 순정 유지가 원칙이지만, 향후 `cn` 확장(예: `extendTailwindMerge`)처럼 프로젝트가 꼭
+> 손대야 하면 그 순간 순정에서 벗어나 업데이트 시 diff 가 생긴다. 그런 변경은 "그럴 만한 이유"가 있을 때만 하고
+> 주석으로 남긴다. (`use-mobile.ts` 는 과거 SSR 개선을 했었으나, 순정 diff 최소화를 위해 다시 순정으로 되돌렸다.)
 
 CLI 가 설치 시 자동으로 하는 것(=순정 상태의 일부, 우리가 손댄 게 아님)은 그대로 둔다: import alias 재작성
 (`@/registry/*` → `@/lib/utils`·`@/components/ui/*`·`@/hooks/*`), 아이콘 placeholder → `lucide-react` 해석.
