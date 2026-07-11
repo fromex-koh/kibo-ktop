@@ -172,7 +172,7 @@ const TypographyGuidePage = () => (
             </div>
 
             {/* font-sans(가변폭) vs font-mono(고정폭) 미리보기 — 같은 5글자 두 줄의 렌더 너비를 나란히 비교 */}
-            <div className="wide:grid-cols-2 grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <div className="border-border flex flex-col gap-3 rounded-xl border p-4">
                     <div className="flex flex-wrap items-center gap-2">
                         <CopyChip value="font-sans" />

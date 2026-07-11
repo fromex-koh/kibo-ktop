@@ -8,7 +8,7 @@ import {Label} from '@/components/ui/label'
 
 export const metadata: Metadata = {title: '인풋 (Input)'}
 
-const USAGE_CODE = `<div className="wide:w-90 flex w-full flex-col gap-2">
+const USAGE_CODE = `<div className="md:w-90 flex w-full flex-col gap-2">
   <Label htmlFor="name" className="gap-1">
     이름
     <span className="text-error-500">*</span>
@@ -19,7 +19,7 @@ const USAGE_CODE = `<div className="wide:w-90 flex w-full flex-col gap-2">
   </p>
 </div>`
 
-const ADDON_CODE = `<div className="wide:w-90 flex w-full flex-col gap-4">
+const ADDON_CODE = `<div className="md:w-90 flex w-full flex-col gap-4">
   {/* 검색 버튼 (클릭 가능) — 입력 박스 안쪽 오른쪽에 절대배치 */}
   <div className="relative">
     <Input placeholder="검색어를 입력하세요" className="pr-14" />
@@ -36,7 +36,7 @@ const ADDON_CODE = `<div className="wide:w-90 flex w-full flex-col gap-4">
 
   {/* 단위 접미사 — 입력 박스 밖 오른쪽에 형제로 배치(Figma) */}
   <div className="flex items-center gap-2">
-    <Input type="number" placeholder="0" className="wide:min-w-0 flex-1" />
+    <Input type="number" placeholder="0" className="md:min-w-0 flex-1" />
     <span className="typo-body-xl-regular text-foreground shrink-0">명</span>
   </div>
 
@@ -47,8 +47,8 @@ const ADDON_CODE = `<div className="wide:w-90 flex w-full flex-col gap-4">
   </div>
 </div>`
 
-const FIELD_DEMO_CLASS = 'wide:w-90 flex w-full flex-col gap-2'
-const FIELD_GROUP_DEMO_CLASS = 'wide:w-90 flex w-full flex-col gap-4'
+const FIELD_DEMO_CLASS = 'md:w-90 flex w-full flex-col gap-2'
+const FIELD_GROUP_DEMO_CLASS = 'md:w-90 flex w-full flex-col gap-4'
 
 const InputGuidePage = () => (
     <GuidePage
@@ -77,8 +77,8 @@ const InputGuidePage = () => (
                     입력 시 필요한 정보를 입력해주세요.
                 </p>
                 <p className="typo-caption-regular text-muted-foreground">
-                    wide 이상에서는 부모 레일을 <code className="font-mono">w-90</code>(360px)로 두어 Input 의 최소 폭
-                    기준을 확인합니다.
+                    md(≥768px) 이상에서는 부모 레일을 <code className="font-mono">w-90</code>(360px)로 두어 Input 의
+                    최소 폭 기준을 확인합니다.
                 </p>
             </div>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
@@ -95,9 +95,9 @@ const InputGuidePage = () => (
                     <code className="font-mono">blue.500</code> 로 바뀝니다.
                 </p>
             </div>
-            {/* Input 이 wide 부터 min-w-90(360px)이라, 두 열이 각각 360px 를 담을 수 있는 pc(≥1280px)에서만 2열.
-                wide 구간(768~1279px)은 단일 열로 두어 좁은 열에서 인풋이 넘치지 않게 한다. */}
-            <div className="pc:grid-cols-2 grid grid-cols-1 justify-items-start gap-6">
+            {/* Input 이 md(≥768px)부터 min-w-90(360px)이라, 두 열이 각각 360px 를 담을 수 있는 xl(≥1280px)에서만 2열.
+                md 구간(768~1279px)은 단일 열로 두어 좁은 열에서 인풋이 넘치지 않게 한다. */}
+            <div className="grid grid-cols-1 justify-items-start gap-6 xl:grid-cols-2">
                 <div className={FIELD_DEMO_CLASS}>
                     <Label htmlFor="st-default">기본 (default)</Label>
                     <Input id="st-default" placeholder="내용을 입력하세요" />
@@ -160,7 +160,7 @@ const InputGuidePage = () => (
                 </div>
                 {/* 단위 접미사 — 입력 박스 밖 오른쪽에 형제로 배치 */}
                 <div className="flex items-center gap-2">
-                    <Input type="number" placeholder="0" aria-label="인원" className="wide:min-w-0 flex-1" />
+                    <Input type="number" placeholder="0" aria-label="인원" className="flex-1 md:min-w-0" />
                     <span className="typo-body-xl-regular text-foreground shrink-0">명</span>
                 </div>
                 {/* 잠금(읽기전용) — readOnly + lock 아이콘 */}

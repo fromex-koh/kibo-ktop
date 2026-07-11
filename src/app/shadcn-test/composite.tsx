@@ -90,11 +90,11 @@ const StickySidebar = () => (
             스크롤해도 따라오는 옆 메뉴 — CSS <code>position: sticky</code>. 흔히 <strong>LNB</strong>(Local Navigation
             Bar) 또는 sticky sidebar 라고 부릅니다. 아래 오른쪽 콘텐츠를 스크롤하면 왼쪽 메뉴가 상단에 고정됩니다.
         </p>
-        <div className="wide:flex-row flex flex-col gap-6">
+        <div className="flex flex-col gap-6 md:flex-row">
             {/* sticky LNB */}
             <nav
                 aria-label="마이페이지"
-                className="border-border bg-card wide:sticky wide:top-20 wide:w-64 h-fit w-full shrink-0 rounded-xl border p-4"
+                className="border-border bg-card h-fit w-full shrink-0 rounded-xl border p-4 md:sticky md:top-20 md:w-64"
             >
                 <div className="border-border flex flex-col gap-1 border-b pb-4">
                     <span className="typo-body-l-bold">㈜케이탑테크놀로지</span>

@@ -41,7 +41,7 @@ const Home = () => {
                     </p>
                 </header>
 
-                <div className="wide:grid-cols-2 grid gap-6">
+                <div className="grid gap-6 md:grid-cols-2">
                     {/* 프로젝트 정보 */}
                     <section aria-labelledby="section-project" className={CARD_CLASS}>
                         <div className="flex items-center gap-2">

@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/sidebar'
 
 // 공용 사이드 레이아웃 셸 — shadcn 공식 Sidebar(문서형: 브랜드 헤더 + submenu 나비 + 상단 브레드크럼).
-// 섹션 = 접히는 상위 메뉴(Collapsible), 항목 = 하위메뉴(SidebarMenuSub). wide(768px)↑ 상시 레일 / 미만
+// 섹션 = 접히는 상위 메뉴(Collapsible), 항목 = 하위메뉴(SidebarMenuSub). md(≥768px)↑ 상시 레일 / 미만
 // 오프캔버스 Sheet(Radix Dialog 가 포커스 트랩·Esc·복귀·스크롤 잠금 자동 처리). 콘텐츠는 소비자가 감싼다.
 type SidebarLayoutProps = {
     title: string
@@ -169,7 +169,7 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
             <SidebarInset className="min-w-0">
                 {/* 상단 앱바 — 트리거(모바일=Sheet 열기 / 데스크톱=레일 접기) + 브레드크럼(카테고리 > 현재) + 테마.
                     z-10: shadcn Sheet(z-50) 아래에 오도록 낮게 둔다(드로어 열리면 헤더가 오버레이 밑). */}
-                <header className="border-border bg-background h-header-h wide:px-6 sticky top-0 z-10 flex items-center gap-2 border-b px-4">
+                <header className="border-border bg-background h-header-h sticky top-0 z-10 flex items-center gap-2 border-b px-4 md:px-6">
                     <SidebarTrigger className="text-muted-foreground hover:text-foreground min-h-11 min-w-11" />
                     {activeCrumb ? (
                         <Breadcrumb category={activeCrumb.category} current={activeCrumb.label} />

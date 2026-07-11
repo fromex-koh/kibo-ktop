@@ -17,7 +17,7 @@ const ComponentGuidePage = () => (
             {GUIDE_NAV_SECTIONS.map((section) => (
                 <section key={section.title} aria-label={section.title} className="flex flex-col gap-3">
                     <h2 className="typo-title-l-bold text-muted-foreground">{section.title}</h2>
-                    <ul className="wide:grid-cols-2 pc:grid-cols-3 grid grid-cols-1 gap-3">
+                    <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
                         {section.items.map((item) => (
                             <li key={item.href}>
                                 <Link

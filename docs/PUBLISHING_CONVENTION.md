@@ -67,12 +67,12 @@ tokens.json (px 숫자) → yarn tokens → src/app/tokens.css (자동) → Tail
 
 ## 반응형 (브레이크포인트)
 
-- **[PB-14] 프로젝트 프리픽스는 `wide:`/`pc:`(모바일 퍼스트), Tailwind 기본도 사용 가능 (MUST/권장)**
-    - 3단계 시맨틱: **모바일 0–767px(기본, 프리픽스 없음) · `wide:` 768px 이상 · `pc:` 1280px 이상**. 기본 유틸로 모바일을 만들고 상위 구간만 프리픽스로 덮어쓴다. **프로젝트 코드는 이 `wide:`/`pc:` 를 우선**한다(의미가 명확하고 그리드·타이포 토큰과 연동됨).
-    - `wide:` 는 특정 기기 하나를 가리키지 않는다 — **768~1279px 구간은 태블릿(가로)·노트북이 함께 걸치는 폭**이라 `tablet:`처럼 기기명을 쓰면 부정확하다. 그래서 기기 중립적으로 "넓어진 화면"을 뜻하는 `wide`를 쓴다.
-    - Tailwind 기본 `sm:`/`md:`/`lg:`/`xl:`/`2xl:` **도 그대로 동작한다** — 생성기가 기본을 지우지 않고 `wide:`/`pc:` 를 **추가**만 하기 때문이다(`wide`=`md`=768px, `pc`=`xl`=1280px 로 값이 겹치는 별칭). 기본을 지우면 shadcn 원본·손에 익은 `sm:`/`md:` 가 **CSS 없이 조용히 무효(silent no-op)** 가 돼 디버깅이 어려워지므로, 호환성을 위해 살려 둔다. 다만 **팀 일관성을 위해 새 코드는 `wide:`/`pc:` 우선** 사용을 권장한다.
+- **[PB-14] Tailwind 기본 브레이크포인트 사용, 모바일 퍼스트 (MUST/권장)**
+    - **Tailwind 기본 프리픽스를 그대로 쓴다**: `sm:`(640) · `md:`(768) · `lg:`(1024) · `xl:`(1280) · `2xl:`(1536). 기본 유틸로 모바일을 만들고 상위 구간만 프리픽스로 덮어쓴다.
+    - **프로젝트 주 티어는 `md:`(768px)·`xl:`(1280px)** 두 단계다 — 그리드·타이포 전환이 이 두 폭을 기준으로 한다. `sm:`/`lg:`/`2xl:` 도 동작하지만, 레이아웃 일관성을 위해 **새 코드는 `md:`/`xl:` 우선**을 권장한다.
+    - 과거의 커스텀 프리픽스 `wide:`(=md)/`pc:`(=xl)는 **폐기**했다 — 값이 Tailwind 기본과 동일해 별칭만 늘릴 뿐이라, 혼선을 막고 개발자에게 익숙한 표준 이름(`md`/`xl`)으로 통일했다. (생성기가 기본 브레이크포인트를 지우지 않으므로 `sm:`~`2xl:` 가 모두 동작한다 — shadcn 원본·손에 익은 유틸이 silent no-op 되지 않는다.)
     - 콘텐츠 영역은 고정폭 대신 **`max-w-content`**(1200px) + `mx-auto` 로 제한한다(ST-004 연계). `max-w-sm`~`max-w-7xl` 등 Tailwind 기본 max-w 스케일도 **동작한다**(shadcn 다이얼로그 등이 `max-w-xs`/`max-w-sm` 사용) — `content` 키는 그 위에 추가된 것이다.
-    - 값 변경은 `tokens.json` 의 `breakpoint`/`container` 수정 → `yarn tokens`. 타이포 모바일→PC 전환점(`typographyBreakpoint`)도 breakpoint 키 참조("wide")로 연동된다.
+    - 값 변경은 `tokens.json` 의 `breakpoint`(grid·typo 티어 데이터)/`container` 수정 → `yarn tokens`. 타이포 모바일→PC 전환점(`typographyBreakpoint`)도 breakpoint 키 참조("md")로 연동된다. `md`/`xl` 은 값이 Tailwind 기본과 같아 CSS 로는 중복 선언되지 않는다.
 - **[PB-15] 레이아웃 그리드는 `.grid-layout` 하나로 (MUST)** — 컬럼 수·거터(칸 간격)·마진(가장자리 여백)은 `tokens.json`의 `grid`(브레이크포인트별)에서 온다. 컬럼 그리드가 필요한 곳엔 `grid-cols-*`/`gap-*`/`px-*` 를 직접 조합하지 않고 **`.grid-layout`** 클래스를 쓴다 — 내부적으로 `--ds-grid-columns`/`--ds-grid-gutter`/`--ds-grid-margin` 과 공용 `max-w-content` 폭 상한을 함께 캡슐화한다.
     - `grid` 의 키는 `breakpoint`(+`mobile`)와 **정확히 1:1 대응**해야 하며, 어긋나면(키 누락·불일치) 빌드가 실패한다. 브레이크포인트를 리네임·추가하면 `grid` 도 함께 갱신한다.
     - 값 변경은 `tokens.json` 의 `grid` 수정 → `yarn tokens`. 현재 값은 다른 디자인 토큰과 마찬가지로 확정 전 placeholder다.
@@ -97,7 +97,7 @@ tokens.json (px 숫자) → yarn tokens → src/app/tokens.css (자동) → Tail
 - [ ] [PB-06] `dark:` 색 수동 분기 없음 (토큰 자동 반사)
 - [ ] [PB-07/08] `typo-*` 단독 사용 (`text-*` 등과 혼용 없음)
 - [ ] [PB-13] 간격은 base 배수 유틸(`p-4` 등), 라운드·크기·그림자는 정의된 키만
-- [ ] [PB-14] 반응형은 `wide:`/`pc:` 우선(기본 = 모바일). Tailwind 기본 `sm:`/`md:` 도 동작하나 새 코드는 `wide:`/`pc:` 사용. 콘텐츠 영역 `max-w-content`
+- [ ] [PB-14] 반응형은 Tailwind 기본 프리픽스(기본 = 모바일), 주 티어 `md:`/`xl:` 우선. 콘텐츠 영역 `max-w-content`
 - [ ] [PB-15] 컬럼 그리드는 `.grid-layout` 사용 (개별 `grid-cols-*`+`gap-*`+`px-*` 조합 대신)
 - [ ] [PB-16] 스크롤바 두께·색 하드코딩 없음 (`size.scrollbar-w`/`semantic.scroll-thumb`·`scroll-track` 토큰 사용)
 - [ ] [PB-02/03] `tokens.json`(px) 수정 → `yarn tokens`, `tokens.css` 직접수정 없음

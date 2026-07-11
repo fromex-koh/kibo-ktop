@@ -68,8 +68,8 @@ const PageHeaderGuidePage = () => (
                     </PageHeader>
                 </div>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    모바일에서는 Heading/H4/bold + Body/XL/Regular, wide 이상에서는 Display/M/bold + Title/L/Regular 로
-                    전환됩니다. 화면 폭을 줄여 확인해 보세요.
+                    모바일에서는 Heading/H4/bold + Body/XL/Regular, md(≥768) 이상에서는 Display/M/bold + Title/L/Regular
+                    로 전환됩니다. 화면 폭을 줄여 확인해 보세요.
                 </p>
                 <CodeBlock code={USAGE_CODE_COMPACT} language="tsx" copyLabel="복사" />
             </div>

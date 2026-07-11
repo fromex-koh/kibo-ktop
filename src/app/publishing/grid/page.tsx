@@ -7,27 +7,27 @@ export const metadata: Metadata = {title: '레이아웃 그리드 미리보기'}
 
 // 그리드 데모: 현재 브레이크포인트에서 실제 노출되는 컬럼 수만큼만 보이도록 매핑한다.
 // 프리픽스는 Tailwind 정적 분석을 위해 리터럴로 고정 — 새 브레이크포인트 추가 시 함께 갱신.
-const GRID_MAX_COLUMNS = Math.max(tokens.grid.mobile.columns, tokens.grid.wide.columns, tokens.grid.pc.columns)
+const GRID_MAX_COLUMNS = Math.max(tokens.grid.mobile.columns, tokens.grid.md.columns, tokens.grid.xl.columns)
 const getGridRevealClass = (index: number) => {
     if (index < tokens.grid.mobile.columns) return 'flex'
-    if (index < tokens.grid.wide.columns) return 'hidden wide:flex'
-    return 'hidden pc:flex'
+    if (index < tokens.grid.md.columns) return 'hidden md:flex'
+    return 'hidden xl:flex'
 }
 
 // container 감을 잡기 위한 기준 뷰포트. 모바일은 고정 상한 없이 유동('100%')이라 국내에서 가장
-// 흔한 스마트폰(Galaxy S24 계열) 폭인 360px 기준 예시값을 계산해 보여준다. wide·pc 는 container
+// 흔한 스마트폰(Galaxy S24 계열) 폭인 360px 기준 예시값을 계산해 보여준다. md·xl 은 container
 // 가 이미 고정값(792·1200)이라 계산이 필요 없지만, 어느 뷰포트에서 그 값이 나오는지(1200·1920,
 // PUBLISHING_CONVENTION.md 의 그리드 예시 뷰포트) 같이 표기해 감을 맞춘다.
-const REFERENCE_VIEWPORT: Record<string, number> = {mobile: 360, wide: 1200, pc: 1920}
+const REFERENCE_VIEWPORT: Record<string, number> = {mobile: 360, md: 1200, xl: 1920}
 
 // grid.container 가 container 토큰 키(예: "content")면 실제 px 로 되찾아 표에 보여준다(값 단일 소스).
 const CONTAINER_PX: Record<string, number> = tokens.container
 
 // 레이아웃 그리드 미리보기 — 사이드바 없는 독립 전체화면. .grid-layout 이 뷰포트 전체 폭을 그대로
 // 써서 해상도별 실제 그리드(모바일 328 / 태블릿 792 / 데스크톱 1200)를 정확히 확인할 수 있다.
-// (컴포넌트 가이드 사이드 레이아웃 안에 넣으면 pc 에서 사이드바 폭만큼 좁아져 값이 어긋난다.)
+// (컴포넌트 가이드 사이드 레이아웃 안에 넣으면 xl(≥1280)에서 사이드바 폭만큼 좁아져 값이 어긋난다.)
 const GridPreviewPage = () => (
-    <main className="bg-background text-foreground wide:py-16 flex min-h-screen flex-col gap-10 py-12">
+    <main className="bg-background text-foreground flex min-h-screen flex-col gap-10 py-12 md:py-16">
         {/* 제목·설명 + 테마 토글 (읽기 좋은 폭으로 제한) */}
         <div className="max-w-content mx-auto flex w-full flex-col gap-2 px-6">
             <div className="flex items-start justify-between gap-4">

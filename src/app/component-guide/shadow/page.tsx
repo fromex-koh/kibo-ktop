@@ -15,7 +15,7 @@ const SHADOW_CLASS: Record<string, string> = {sm: 'shadow-sm', md: 'shadow-md', 
 // 독립된 값을 쓴다 — 이 프로젝트 구조가 이미 그 컨벤션과 일치한다.
 const ShadowGuidePage = () => (
     <GuidePage title="그림자 (Shadow)" description="shadow-* 유틸로 쓰는 그림자 토큰입니다.">
-        <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
+        <ul className="grid grid-cols-2 gap-5 md:grid-cols-3">
             {Object.entries(tokens.effect.shadow).map(([k, val]) => {
                 // color 참조 "black.10" → "--raw-black-a10" (primitive → semantic 매핑 표시)
                 const rawVar = (ref: string) => {

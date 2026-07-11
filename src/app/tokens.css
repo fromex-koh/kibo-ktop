@@ -649,10 +649,6 @@
 @theme {
   --spacing: 0.25rem;
 
-  /* breakpoint — Tailwind 기본(sm/md/lg/xl/2xl) 유지 + 프로젝트 프리픽스 추가 */
-  --breakpoint-wide: 48rem;
-  --breakpoint-pc: 80rem;
-
   /* container(max-width) — Tailwind 기본 스케일 유지 + 프로젝트 키(content) 추가 */
   --container-content: 75rem;
 }

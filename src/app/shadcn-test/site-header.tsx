@@ -31,7 +31,7 @@ const HeaderContent = ({navLabel}: {navLabel: string}) => (
         </Link>
 
         {/* 주 내비 */}
-        <NavigationMenu aria-label={navLabel} viewport={false} className="wide:flex hidden">
+        <NavigationMenu aria-label={navLabel} viewport={false} className="hidden md:flex">
             <NavigationMenuList>
                 {NAV_LINKS.map((label) => (
                     <NavigationMenuItem key={label}>
@@ -54,7 +54,7 @@ const HeaderContent = ({navLabel}: {navLabel: string}) => (
                 </ToggleGroupItem>
             </ToggleGroup>
 
-            <div className="typo-body-l-regular wide:flex hidden items-center gap-4">
+            <div className="typo-body-l-regular hidden items-center gap-4 md:flex">
                 <Link href="#" className="hover:text-primary">
                     로그인/회원가입
                 </Link>

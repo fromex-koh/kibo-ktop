@@ -82,7 +82,7 @@ const SelectGuidePage = () => (
                     (탭 이동·열림) 시 테두리가 <code className="font-mono">blue.500</code> 로 바뀝니다.
                 </p>
             </div>
-            <div className="wide:grid-cols-2 grid grid-cols-1 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <div className="flex flex-col gap-2">
                     <Label htmlFor="st-default">기본 (default)</Label>
                     <Select>

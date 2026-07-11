@@ -463,13 +463,15 @@ if (Object.keys(shadow).length) {
 
 // @theme — spacing base 하나로 숫자 스케일 전체 지배: p-N = calc(var(--spacing) * N), 무한.
 L.push('@theme {', `  --spacing: ${toRem(spacingBase)};`)
-// breakpoint — Tailwind 기본(sm/md/lg/xl/2xl)은 그대로 두고 프로젝트 프리픽스(wide/pc)를 "추가"만 한다.
-// 기본을 initial 로 지우면 shadcn 원본·개발자에게 익숙한 sm:/md: 가 CSS 없이 조용히 무효(silent no-op)가 돼
-// 디버깅이 어렵다. 그래서 기본은 살려 호환성을 지키고, wide:/pc: 는 프로젝트의 시맨틱 3단계(모바일 퍼스트)로 얹는다.
-// (참고: wide=768=md, pc=1280=xl 로 값이 겹치지만 이름만 다른 별칭이라 무해하다. 프로젝트 코드는 wide:/pc: 를 우선한다.)
-if (Object.keys(breakpoint).length) {
-    L.push('', '  /* breakpoint — Tailwind 기본(sm/md/lg/xl/2xl) 유지 + 프로젝트 프리픽스 추가 */')
-    for (const [k, v] of Object.entries(breakpoint)) L.push(`  --breakpoint-${k}: ${toRem(v)};`)
+// breakpoint — Tailwind 기본(sm/md/lg/xl/2xl)을 그대로 쓴다. 기본을 initial 로 지우면 shadcn 원본·개발자에게
+// 익숙한 sm:/md: 가 CSS 없이 조용히 무효(silent no-op)가 돼 디버깅이 어렵기 때문이다. tokens.json 의 breakpoint
+// (md·xl)는 grid·typography 티어 생성용 데이터라, 값이 Tailwind 기본과 같으면 CSS 로는 중복 선언하지 않는다.
+// 값이 다른 진짜 커스텀 브레이크포인트만 @theme 에 추가로 emit 한다(예: 향후 tokens.json 에 다른 폭을 넣을 때).
+const TW_DEFAULT_BREAKPOINT_PX = {sm: 640, md: 768, lg: 1024, xl: 1280, '2xl': 1536}
+const customBreakpoints = Object.entries(breakpoint).filter(([k, v]) => TW_DEFAULT_BREAKPOINT_PX[k] !== v)
+if (customBreakpoints.length) {
+    L.push('', '  /* breakpoint — Tailwind 기본과 다른 커스텀만 추가(기본 sm/md/lg/xl/2xl 은 그대로 사용) */')
+    for (const [k, v] of customBreakpoints) L.push(`  --breakpoint-${k}: ${toRem(v)};`)
 }
 // container — Tailwind 기본 max-w 스케일(max-w-xs~7xl)도 그대로 두고 프로젝트 키(content)를 "추가"만 한다.
 // shadcn 이 max-w-xs/max-w-sm 등을 쓰므로 기본을 지우면 그 폭 제한이 조용히 사라진다. content 는 그 위에 얹는다.

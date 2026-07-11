@@ -247,7 +247,7 @@ const IconGuidePage = () => (
             넣는다 — 배지 총 크기 = Outline 아이콘 크기라, 둘의 겉넓이가 같아 보인다. */}
             <div className="flex flex-col gap-3">
                 <h3 className="typo-body-l-medium text-foreground">Outline</h3>
-                <ul className="wide:grid-cols-4 pc:grid-cols-6 grid grid-cols-3 gap-3">
+                <ul className="grid grid-cols-3 gap-3 md:grid-cols-4 xl:grid-cols-6">
                     {CURATED_ICONS.map(({name, Icon}) => (
                         <li key={name} className="border-border flex flex-col items-center gap-3 rounded-md border p-4">
                             <Icon aria-hidden="true" className="size-icon-xl text-foreground" />
@@ -259,7 +259,7 @@ const IconGuidePage = () => (
 
             <div className="flex flex-col gap-3">
                 <h3 className="typo-body-l-medium text-foreground">Solid</h3>
-                <ul className="wide:grid-cols-4 pc:grid-cols-6 grid grid-cols-3 gap-3">
+                <ul className="grid grid-cols-3 gap-3 md:grid-cols-4 xl:grid-cols-6">
                     {SOLID_ICONS.map((item) => (
                         <li
                             key={item.name}

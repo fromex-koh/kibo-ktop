@@ -12,9 +12,9 @@ import {cn} from '@/lib/utils'
 // shadcn 권고 중 토큰과 무관한 부분(제목 text-balance = 줄바꿈 균형)만 취한다.
 
 // default — 일반 페이지: Display/L/bold + Title/L/Regular.
-// compact — 밀도 높은 페이지(폼 많은 페이지): 반응형 전환(모바일 Heading/H4·Body/XL → wide↑ Display/M·Title/L).
+// compact — 밀도 높은 페이지(폼 많은 페이지): 반응형 전환(모바일 Heading/H4·Body/XL → md(≥768)↑ Display/M·Title/L).
 //   전환은 globals.css 의 typo-page-header-*-compact 합성 유틸이 담당한다(typo-* 는 순수 클래스라
-//   wide: 프리픽스를 못 받아, 서로 다른 typo 조합 사이의 브레이크포인트 전환을 전용 유틸로 뺐다).
+//   md: 프리픽스를 못 받아, 서로 다른 typo 조합 사이의 브레이크포인트 전환을 전용 유틸로 뺐다).
 const pageHeaderTitleVariants = cva('text-foreground text-balance', {
     variants: {
         variant: {

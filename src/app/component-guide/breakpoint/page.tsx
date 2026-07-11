@@ -6,20 +6,21 @@ import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '브레이크포인트 (Breakpoint)'}
 
-// 브레이크포인트 — 모바일 퍼스트 3단계(기본 → wide: → pc:). 정의된 프리픽스만 사용.
+// 브레이크포인트 — 모바일 퍼스트. Tailwind 기본 프리픽스를 그대로 쓰고, 프로젝트 주 티어는 md(768)·xl(1280).
 const BreakpointGuidePage = () => (
     <GuidePage
         title="브레이크포인트 (Breakpoint)"
         description={
             <>
-                모바일 퍼스트 3단계 브레이크포인트(기본 → <code>wide:</code> → <code>pc:</code>)입니다.
+                모바일 퍼스트입니다. <strong>Tailwind 기본 브레이크포인트</strong>를 그대로 쓰고, 프로젝트의 주 티어는{' '}
+                <code>md:</code>(≥768px) · <code>xl:</code>(≥1280px)입니다(기본 = 모바일, 프리픽스 없음).
             </>
         }
     >
         <p className="typo-caption-regular text-muted-foreground">
-            구간명은 특정 기기 하나를 뜻하지 않는다. <code>wide</code> 는 태블릿(세로·가로)과 노트북이 함께 걸치는 폭
-            구간이라 기기 중립적으로 이름 붙였다(단, 12.9형급 대형 태블릿을 가로로 눕히면 <code>pc</code> 구간으로
-            넘어갈 수 있다).
+            그리드·타이포 전환은 <code>md</code>(768px)·<code>xl</code>(1280px) 두 티어를 기준으로 한다. Tailwind 기본의{' '}
+            <code>sm</code>(640) · <code>lg</code>(1024) · <code>2xl</code>(1536)도 동작하지만, 레이아웃 일관성을 위해
+            새 코드는 <code>md</code>/<code>xl</code>을 우선한다.
         </p>
 
         {/* 라이브 데모 — 브라우저 폭을 줄였다 늘리면 실제로 재배치된다. 프리픽스 동작을 그대로 보여주려
@@ -39,17 +40,17 @@ const BreakpointGuidePage = () => (
             <p className="typo-body-l-regular">
                 현재 활성 구간:{' '}
                 <span className="text-primary font-semibold">
-                    <span className="wide:hidden">mobile (기본)</span>
-                    <span className="wide:inline pc:hidden hidden">wide (≥768px)</span>
-                    <span className="pc:inline hidden">pc (≥1280px)</span>
+                    <span className="md:hidden">mobile (기본)</span>
+                    <span className="hidden md:inline xl:hidden">md (≥768px)</span>
+                    <span className="hidden xl:inline">xl (≥1280px)</span>
                 </span>
             </p>
 
             <code className="typo-caption-regular text-muted-foreground bg-card border-border w-fit rounded-md border px-3 py-1 font-mono">
-                grid grid-cols-1 wide:grid-cols-2 pc:grid-cols-3
+                grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3
             </code>
 
-            <ul className="wide:grid-cols-2 pc:grid-cols-3 grid grid-cols-1 gap-4">
+            <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                 {Array.from({length: 6}, (_, i) => i + 1).map((n) => (
                     <li
                         key={n}
@@ -82,12 +83,12 @@ const BreakpointGuidePage = () => (
                 </thead>
                 <tbody>
                     {(() => {
-                        // 구간명은 기기 하나를 가리키지 않으므로(예: wide = 태블릿·노트북 공유 폭),
+                        // 구간명은 기기 하나를 가리키지 않으므로(예: md = 태블릿·노트북이 함께 걸치는 폭),
                         // 실제 포함 기기는 여기서 별도 안내한다. 새 브레이크포인트 키 추가 시 함께 갱신.
                         const DEVICE_HINT: Record<string, string> = {
                             mobile: 'Galaxy S24(360px)·iPhone 15(393px)',
-                            wide: 'iPad 10세대 세로(820px)·가로(1180px)',
-                            pc: 'Full HD 1920×1080(스케일 125%→1536px)',
+                            md: 'iPad 10세대 세로(820px)·가로(1180px)',
+                            xl: 'Full HD 1920×1080(스케일 125%→1536px)',
                         }
                         const entries = Object.entries(tokens.breakpoint).sort((a, b) => a[1] - b[1])
                         const rows = [
@@ -136,11 +137,11 @@ const BreakpointGuidePage = () => (
         <p className="typo-caption-regular text-muted-foreground">
             국내 스마트폰은 삼성 갤럭시가 다수, iPhone 이 그다음인데 두 계열 모두 CSS 뷰포트 폭이 360~393px 라{' '}
             <code>mobile</code>&nbsp;구간(0~767px) 안에 여유 있게 들어갑니다. 태블릿은 iPad 세로(820px)·가로(1180px)
-            모두 <code>wide</code>&nbsp;구간(768~1279px) 안이라 위 &apos;태블릿·노트북이 함께 걸치는 폭&apos; 설계와
-            맞습니다. 데스크톱은 Full HD(1920×1080)가 국내 1위 해상도인데, Windows 기본 배율(125%)을 적용해도 유효
-            뷰포트가 1536px 라 <code>pc</code>&nbsp;구간(1280px~) 안에 넉넉히 들어옵니다 — 즉 국내에서 실제로 가장 많이
-            쓰이는 기기 기준으로는 이 3구간 밖으로 밀려나 레이아웃이 깨지는 경우가 거의 없습니다. (기기 CSS 폭은 실측
-            기준이며, 브랜드별 점유율은 조사 시점·기관마다 차이가 있어 참고용입니다.)
+            모두 <code>md</code>&nbsp;구간(768~1279px) 안이라 &apos;태블릿·노트북이 함께 걸치는 폭&apos;에 맞습니다.
+            데스크톱은 Full HD(1920×1080)가 국내 1위 해상도인데, Windows 기본 배율(125%)을 적용해도 유효 뷰포트가 1536px
+            라 <code>xl</code>&nbsp;구간(1280px~) 안에 넉넉히 들어옵니다 — 즉 국내에서 실제로 가장 많이 쓰이는 기기
+            기준으로는 이 세 구간 밖으로 밀려나 레이아웃이 깨지는 경우가 거의 없습니다. (기기 CSS 폭은 실측 기준이며,
+            브랜드별 점유율은 조사 시점·기관마다 차이가 있어 참고용입니다.)
         </p>
     </GuidePage>
 )

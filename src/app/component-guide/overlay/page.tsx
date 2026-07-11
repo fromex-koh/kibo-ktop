@@ -14,7 +14,7 @@ const OVERLAY_CLASS: Record<string, string> = {sm: 'bg-overlay-sm', md: 'bg-over
 // 백드롭 등). 배경 전용이라 text-*/border-* 등 다른 색 유틸리티는 의도적으로 만들지 않았다.
 const OverlayGuidePage = () => (
     <GuidePage title="오버레이 (Overlay)" description="bg-overlay-* 유틸리티로 적용하는 반투명 오버레이 토큰입니다.">
-        <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
+        <ul className="grid grid-cols-2 gap-5 md:grid-cols-3">
             {Object.entries(tokens.overlay).map(([k, ref]) => {
                 // "black.5" → "--raw-black-a5" (primitive → semantic 매핑 표시)
                 const rawVar = (r: string) => {

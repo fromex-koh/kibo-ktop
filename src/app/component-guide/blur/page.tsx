@@ -15,7 +15,7 @@ const BLUR_CLASS: Record<string, string> = {sm: 'blur-sm', md: 'blur-md', lg: 'b
 // 흐림 — 흐림 토큰(--ds-blur-*)을 blur-* 유틸리티로 적용. 실제 사진으로 강도를 시각화한다.
 const BlurGuidePage = () => (
     <GuidePage title="흐림 (Blur)" description="blur-* 유틸리티로 적용하는 흐림 토큰입니다.">
-        <ul className="wide:grid-cols-3 grid grid-cols-2 gap-5">
+        <ul className="grid grid-cols-2 gap-5 md:grid-cols-3">
             {Object.entries(tokens.effect.blur).map(([k, px]) => (
                 <li key={k} className="border-border overflow-hidden rounded-xl border">
                     <div className="relative aspect-[16/10] overflow-hidden">

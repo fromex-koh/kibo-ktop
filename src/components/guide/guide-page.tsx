@@ -11,7 +11,7 @@ type GuidePageProps = {
 }
 
 const GuidePage = ({title, description, children}: GuidePageProps) => (
-    <div className="max-w-content wide:py-16 mx-auto flex w-full flex-col gap-10 px-6 py-12">
+    <div className="max-w-content mx-auto flex w-full flex-col gap-10 px-6 py-12 md:py-16">
         <PageHeader>
             <PageHeaderTitle variant="compact">{title}</PageHeaderTitle>
             <PageHeaderDescription variant="compact">{description}</PageHeaderDescription>
