@@ -77,7 +77,7 @@ tokens.json (px 숫자) → yarn tokens → src/app/tokens.css (자동) → Tail
     - `grid` 의 키는 `breakpoint`(+`mobile`)와 **정확히 1:1 대응**해야 하며, 어긋나면(키 누락·불일치) 빌드가 실패한다. 브레이크포인트를 리네임·추가하면 `grid` 도 함께 갱신한다.
     - 값 변경은 `tokens.json` 의 `grid` 수정 → `yarn tokens`. 현재 값은 다른 디자인 토큰과 마찬가지로 확정 전 placeholder다.
 - **[PB-16] 스크롤바도 토큰 기반 (MUST)** — 두께는 `size.scrollbar-w`, 색은 `semantic.scroll-thumb`/`scroll-track`(gray 스케일 참조라 다크 자동 반사)에서 온다. `html { scrollbar-gutter: stable }` 로 스크롤바 유무와 무관하게 콘텐츠 폭을 고정한다(레이아웃 시프트 방지).
-    - **폭 측정 시 주의(6px 차이)**: `scrollbar-gutter: stable` 은 스크롤바 자리(`size.scrollbar-w`=6px)를 항상 예약한다. 그래서 **데스크톱 브라우저를 360px로 줄이면** 클래식 스크롤바(6px)가 자리를 차지해 콘텐츠 폭이 354 → 그리드 컨테이너 **322**가 되고, **실제 스마트폰·DevTools 기기 모드**는 오버레이 스크롤바(0px)라 360 → **328**(스펙값)이 된다. 버그가 아니라 스크롤바 종류(클래식 vs 오버레이) 차이이며, **실제 모바일 값은 328**이다 — 모바일 폭 확인은 창 축소가 아니라 **DevTools 기기 모드/실제 기기**로 한다.
+    - **폭 측정 시 주의(모든 해상도에서 6px 차이)**: `scrollbar-gutter: stable` 은 스크롤바 자리(`size.scrollbar-w`=6px)를 늘 예약한다. 그래서 **데스크톱 브라우저 창을 줄여 재면** 클래식 스크롤바(6px)가 자리를 차지해 어떤 폭에서든 콘텐츠 폭이 6px 작게 나오고, **실제 스마트폰·DevTools 기기 모드**는 오버레이 스크롤바(0px)라 스펙값 그대로 나온다(즉 `창 축소값 = 기기 모드값 − 6px`. 예: 360px에서 322 vs 328). 버그가 아니라 스크롤바 종류(클래식 vs 오버레이) 차이이며 **실제 모바일이 보는 값은 기기 모드 쪽**이다 — 폭 확인은 창 축소가 아니라 **DevTools 기기 모드/실제 기기**로 한다.
     - `::-webkit-scrollbar` 만 커스터마이즈한다(Chrome/Safari/Edge). 표준 `scrollbar-width`/`scrollbar-color` 는 **의도적으로 두지 않는다** — Chrome 121+ 에서 표준 속성이 있으면 두께 커스텀을 무시하고 플랫폼 기본(`thin`, ~11px)을 적용해 예약된 gutter 폭과 어긋난다. Firefox 는 기본 스크롤바를 그대로 쓴다.
     - 값 변경은 `tokens.json` 의 `size.scrollbar-w`/`semantic.scroll-thumb`/`scroll-track` 수정 → `yarn tokens`.
 
