@@ -79,7 +79,7 @@ const toRgbaText = (color: string): string => {
 }
 
 // '현재' 칸 배경 유틸리티 클래스 — Tailwind 는 className 에 리터럴로 등장하는 클래스명만 스캔하므로
-// `bg-${name}` 처럼 동적으로 조합하면 생성되지 않는다. 이 페이지가 보여주는 슬롯(표준 32 + 커스텀 21)을 전부
+// `bg-${name}` 처럼 동적으로 조합하면 생성되지 않는다. 이 페이지가 보여주는 슬롯(표준 32 + 커스텀 22)을 전부
 // 리터럴로 나열한다(컴포넌트 레시피 토큰 button-*/checkbox-*/radio-*/badge-* 는 제외). scroll-thumb/track 은
 // pseudo-element 전용이라 --color-* 유틸이 없어(build-tokens.mjs 의 NO_UTILITY_SLOTS) var() 임의값으로 참조한다.
 const LIVE_SWATCH_CLASS: Record<string, string> = {
@@ -88,6 +88,7 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     foreground: 'bg-foreground',
     'foreground-subtle': 'bg-foreground-subtle',
     'label-foreground': 'bg-label-foreground',
+    placeholder: 'bg-placeholder',
     card: 'bg-card',
     'card-foreground': 'bg-card-foreground',
     popover: 'bg-popover',
