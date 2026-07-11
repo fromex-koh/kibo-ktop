@@ -107,39 +107,6 @@ const TextareaGuidePage = () => (
             </div>
         </section>
 
-        <section aria-labelledby="textarea-wide" className="flex flex-col gap-4">
-            <div>
-                <h2 id="textarea-wide" className="typo-h4-bold">
-                    넓은 폭 활용
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    Textarea 는 <code className="font-mono">w-full</code> 이라 감싸는 폼 필드 폭을 그대로 채웁니다. 상세
-                    입력처럼 넓은 영역이 필요하면 wrapper 의 <code className="font-mono">max-w</code> 제약 없이 전체
-                    폭으로 씁니다(높이는 그대로 120px 고정).
-                </p>
-            </div>
-            <div className="flex w-full flex-col gap-2">
-                <Label htmlFor="wide-msg" className="gap-1">
-                    근무처
-                    <span className="text-error-500">*</span>
-                </Label>
-                <Textarea
-                    id="wide-msg"
-                    placeholder="신청기술의 주요 내용, 특징, 활용 분야 등을 입력해주세요"
-                    aria-describedby="wide-msg-hint"
-                />
-                <div className="flex justify-between gap-2">
-                    <p id="wide-msg-hint" className="typo-caption-regular text-muted-foreground">
-                        메시지를 입력해 주세요
-                    </p>
-                    <span className="typo-body-m-regular shrink-0">
-                        <span className="text-info">80</span>
-                        <span className="text-foreground-subtle"> / 100</span>
-                    </span>
-                </div>
-            </div>
-        </section>
-
         <section aria-labelledby="textarea-props" className="flex flex-col gap-4">
             <div>
                 <h2 id="textarea-props" className="typo-h4-bold">
