@@ -5,16 +5,17 @@ import {cn} from '@/lib/utils'
 // 원본과의 차이는 className(스타일) 뿐이고, 셸(함수·data-slot·props·export)은 동일하다.
 //
 // Figma text_input 반영 — 높이 48px(control-h-lg), radius 8px(rounded-sm), padding 16px, 16px 텍스트. Select 와 통일.
-// 최소 폭: Figma 컴포넌트 폭 360px(=min-w-90, 4px base×90). 모바일은 w-full/min-w-0 로 좁은 폭 허용(오버플로 방지),
-// md(≥768px)부터 min-w-90 을 걸어 데스크톱에서 Figma 최소 폭을 지킨다(PB-13 base 배수·PB-14 모바일 퍼스트).
-// 색은 shadcn 슬롯(border/input/ring/destructive)에 연결 — 다크는 --ds-* 가 자동 반사(dark: 분기 없음, PB-06).
+// 폭: w-full 로 부모(폼 필드 wrapper)를 채운다. Figma 폭 360 은 컴포넌트가 아니라 label+input 을
+// 감싸는 폼 필드 wrapper 에서 max-w-90(상한) 으로 잡는다(min-w-0 은 flex 오버플로 방지용으로 유지).
+// 배경은 bg-surface(흰 배경) — Select 와 통일. disabled/read-only 는 bg-muted 로 덮는다.
+// 그 외 색은 shadcn 슬롯(border/input/ring/destructive)에 연결 — 다크는 --ds-* 가 자동 반사(dark: 분기 없음, PB-06).
 function Input({className, type, ...props}: React.ComponentProps<'input'>) {
     return (
         <input
             type={type}
             data-slot="input"
             className={cn(
-                'h-control-h-lg border-input w-full min-w-0 rounded-sm border bg-transparent px-4 text-base transition-colors outline-none md:min-w-90',
+                'h-control-h-lg border-input bg-surface w-full min-w-0 rounded-sm border px-4 text-base transition-colors outline-none',
                 'placeholder:text-muted-foreground',
                 'focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-3',
                 'read-only:bg-muted',

@@ -3,6 +3,11 @@
 // 프로젝트 Select (styled copy) — 원본 src/components/ui/select.tsx(shadcn 바닐라)를 복사하고 스타일만 교체한다([SC-04]).
 // 원본과의 차이는 SelectTrigger 등의 스타일 className(control-h-lg 높이·rounded-sm·px-4·text-base 로 Input 과 통일) 뿐이고,
 // 셸(컴포넌트 구성·props·export)은 원본과 동일하다.
+// 너비: w-fit 을 두지 않아(display:flex 기본) 상위 컨테이너 폭을 채운다. Figma 폭 360 은 트리거 자체가 아니라
+// label+select 를 감싸는 폼 필드 wrapper 에서 max-w-90(상한) 으로 잡는다.
+// 상태: focus 는 Figma focused(=active)대로 테두리 blue.500(border-ring)+focus-visible ring. bg-surface(흰 배경).
+// disabled/readonly 는 Input 과 동일하게 bg-muted — 단 트리거가 <button role=combobox> 라 native :read-only 가
+// 안 먹어 readonly 는 aria-readonly:bg-muted 로 처리한다(사용처에서 <SelectTrigger aria-readonly> 지정).
 import * as React from 'react'
 import {Select as SelectPrimitive} from 'radix-ui'
 
@@ -34,7 +39,7 @@ function SelectTrigger({
             data-slot="select-trigger"
             data-size={size}
             className={cn(
-                "border-input focus-visible:border-ring focus-visible:ring-ring/50 data-[state=open]:border-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-control-h-lg flex w-fit items-center justify-between gap-1.5 rounded-sm border bg-transparent text-base whitespace-nowrap transition-colors outline-none select-none focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 data-[size=default]:px-4 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:px-3 data-[size=sm]:text-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5",
+                "border-input focus-visible:border-ring focus-visible:ring-ring/50 data-[state=open]:border-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-placeholder:text-muted-foreground data-[size=default]:h-control-h-lg bg-surface aria-readonly:bg-muted disabled:bg-muted flex items-center justify-between gap-1.5 rounded-sm border text-base whitespace-nowrap transition-colors outline-none select-none focus-visible:ring-3 disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-3 data-[size=default]:px-4 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:px-3 data-[size=sm]:text-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5",
                 className,
             )}
             {...props}
