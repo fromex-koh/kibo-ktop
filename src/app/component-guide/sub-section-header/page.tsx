@@ -1,13 +1,13 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePage from '@/components/guide/guide-page'
+import {Button} from '@/components/button'
 import {
     SubSectionHeader,
     SubSectionHeaderAction,
     SubSectionHeaderDescription,
     SubSectionHeaderTitle,
 } from '@/components/sub-section-header'
-import {Button} from '@/components/ui/button'
 
 export const metadata: Metadata = {title: '서브섹션 헤더 (SubSectionHeader)'}
 

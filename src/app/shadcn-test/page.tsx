@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import {Check, Lock, Search} from 'lucide-react'
 import {Badge} from '@/components/ui/badge'
-import {Button} from '@/components/ui/button'
+import {Button} from '@/components/button'
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/ui/card'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Input} from '@/components/ui/input'

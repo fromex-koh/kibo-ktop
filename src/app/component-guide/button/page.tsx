@@ -3,7 +3,7 @@ import {ArrowRight, Download, LoaderCircle} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
-import {Button} from '@/components/ui/button'
+import {Button} from '@/components/button'
 
 export const metadata: Metadata = {title: '버튼 (Button)'}
 

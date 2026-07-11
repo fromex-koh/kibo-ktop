@@ -4,7 +4,7 @@ import {useState} from 'react'
 import {format} from 'date-fns'
 import {ko} from 'date-fns/locale'
 import {CalendarIcon, Search} from 'lucide-react'
-import {Button} from '@/components/ui/button'
+import {Button} from '@/components/button'
 import {Calendar} from '@/components/ui/calendar'
 import {
     Dialog,

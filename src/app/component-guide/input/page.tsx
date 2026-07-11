@@ -2,7 +2,7 @@ import type {Metadata} from 'next'
 import {Lock, Search} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePage from '@/components/guide/guide-page'
-import {Button} from '@/components/ui/button'
+import {Button} from '@/components/button'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
 

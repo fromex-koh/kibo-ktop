@@ -4,62 +4,33 @@ import {Slot} from 'radix-ui'
 
 import {cn} from '@/lib/utils'
 
-// 색/반경/포커스는 프로젝트 디자인 토큰(--ds-*) 브릿지 유틸을 사용한다.
-// variant 는 전용 버튼 토큰(button-*-fill / -hover / -pressed)에 정밀 연결한다.
-// size 는 control-h 토큰을 쓰되, 상호작용 타깃은 min-h-11(44px, KWCAG 6.1.3)로 보정한다.
 const buttonVariants = cva(
-    "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 not-disabled:active:not-aria-[haspopup]:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+    "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     {
         variants: {
             variant: {
-                default:
-                    'bg-button-primary-fill text-button-primary-text not-disabled:hover:bg-button-primary-fill-hover not-disabled:active:bg-button-primary-fill-hover disabled:bg-button-primary-disabled-fill disabled:text-button-primary-disabled-text disabled:opacity-100',
-                secondary:
-                    'bg-button-secondary-fill text-button-secondary-text border-button-secondary-border not-disabled:hover:bg-button-secondary-fill-hover not-disabled:hover:text-button-secondary-text-hover not-disabled:active:bg-button-secondary-fill-hover not-disabled:active:text-button-secondary-text-pressed disabled:bg-button-secondary-disabled-fill disabled:border-button-secondary-disabled-border disabled:text-button-secondary-disabled-text disabled:opacity-100',
-                tertiary:
-                    'bg-button-tertiary-fill text-button-tertiary-text border-button-tertiary-border not-disabled:hover:bg-button-tertiary-fill-hover not-disabled:active:bg-button-tertiary-fill-hover disabled:border-button-tertiary-disabled-border disabled:text-button-tertiary-disabled-text disabled:opacity-100',
+                default: 'bg-primary text-primary-foreground hover:bg-primary/80',
                 outline:
-                    'border-input bg-background text-foreground not-disabled:hover:bg-accent aria-expanded:bg-accent',
-                ghost: 'text-foreground not-disabled:hover:bg-accent aria-expanded:bg-accent',
+                    'border-border bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:border-input dark:bg-input/30 dark:hover:bg-input/50',
+                secondary:
+                    'bg-secondary text-secondary-foreground hover:bg-[color-mix(in_oklch,var(--secondary),var(--foreground)_5%)] aria-expanded:bg-secondary aria-expanded:text-secondary-foreground',
+                ghost: 'hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground dark:hover:bg-muted/50',
                 destructive:
-                    'bg-destructive text-destructive-foreground not-disabled:hover:bg-destructive/90 not-disabled:active:bg-destructive/80',
-                link: 'text-primary underline-offset-4 not-disabled:hover:underline',
+                    'bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40',
+                link: 'text-primary underline-offset-4 hover:underline',
             },
             size: {
-                // 기본/큰 사이즈 + 아이콘 버튼은 44px 터치 타깃 보장
-                default: 'h-control-h-md min-h-11 gap-2 px-4',
-                lg: 'h-control-h-lg min-h-11 gap-2 px-6',
-                icon: 'size-control-h-md min-h-11 min-w-11',
-                'icon-lg': 'size-control-h-lg min-h-11 min-w-11',
-                // 컴팩트 변형(밀도 높은 UI용) — 44px 미만, 인접 간격 확보 전제하에 제한적으로 사용
-                sm: 'h-control-h-sm gap-1.5 rounded-md px-3 text-xs',
-                xs: "h-control-h-xs gap-1 rounded-md px-2 text-xs [&_svg:not([class*='size-'])]:size-3",
-                'icon-sm': 'size-control-h-sm rounded-md',
-                'icon-xs': "size-control-h-xs rounded-md [&_svg:not([class*='size-'])]:size-3",
-                // Figma 버튼 사이즈 스케일 — xlarge/large/medium 은 44px 터치 타깃 보장, small/xsmall 은 컴팩트 예외.
-                // min-w 는 Figma 컴포넌트의 실측 폭(텍스트 "버튼명" 기준 hug 폭)이다. large 는 primary 만 폰트가
-                // 18px(다른 type 은 16px)라 실측 폭도 달라 아래 compoundVariants 에서 별도로 보정한다.
-                xlarge: "h-control-h-2xl min-h-11 min-w-control-min-w-lg gap-2 rounded-sm px-6 text-lg font-bold [&_svg:not([class*='size-'])]:size-6",
-                // large 는 min-w 를 여기 두지 않는다 — primary(95px)/secondary·tertiary(90px)가 갈려
-                // compoundVariants 에서만 지정한다(같은 클래스 문자열 안에 min-w-* 두 개가 동시에 들어가면
-                // tailwind-merge 가 커스텀 스케일 키를 같은 그룹으로 인식하지 못해 중복 제거가 안 된다).
-                large: "h-control-h-xl min-h-11 gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
-                medium: "h-control-h-lg min-h-11 min-w-control-min-w-sm gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
-                small: "h-control-h-md min-w-control-min-w-sm gap-1.5 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-5",
-                xsmall: "h-control-h-xs min-w-control-min-w-xs gap-1 rounded-xs px-3 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
+                default: 'h-8 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
+                xs: "h-6 gap-1 rounded-[min(var(--radius-md),10px)] px-2 text-xs in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
+                sm: "h-7 gap-1 rounded-[min(var(--radius-md),12px)] px-2.5 text-[0.8rem] in-data-[slot=button-group]:rounded-lg has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+                lg: 'h-9 gap-1.5 px-2.5 has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2',
+                icon: 'size-8',
+                'icon-xs':
+                    "size-6 rounded-[min(var(--radius-md),10px)] in-data-[slot=button-group]:rounded-lg [&_svg:not([class*='size-'])]:size-3",
+                'icon-sm': 'size-7 rounded-[min(var(--radius-md),12px)] in-data-[slot=button-group]:rounded-lg',
+                'icon-lg': 'size-9',
             },
         },
-        // Figma 상 primary(variant=default) 만 갖는 예외 — 다른 type 과 폰트가 달라 size 축만으로는 표현 불가:
-        //  - large: primary 는 18px(다른 size 와 달리 large 안에서도 type 별 폰트가 갈린다), 실측 폭도 95px(나머지는 90px).
-        //  - medium/small: primary 만 font-bold(다른 type 은 medium). hover/pressed 도 700 을 유지해 텍스트
-        //    폭이 흔들리지 않게 하고, 비활성만 Figma 대로 font-medium 으로 둔다.
-        compoundVariants: [
-            {variant: 'default', size: 'large', class: 'min-w-control-min-w-md text-lg'},
-            {variant: 'secondary', size: 'large', class: 'min-w-control-min-w-sm'},
-            {variant: 'tertiary', size: 'large', class: 'min-w-control-min-w-sm'},
-            {variant: 'default', size: 'medium', class: 'font-bold disabled:font-medium'},
-            {variant: 'default', size: 'small', class: 'font-bold disabled:font-medium'},
-        ],
         defaultVariants: {
             variant: 'default',
             size: 'default',

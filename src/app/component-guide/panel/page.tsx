@@ -1,8 +1,8 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePage from '@/components/guide/guide-page'
+import {Button} from '@/components/button'
 import {Panel, PanelContent} from '@/components/panel'
-import {Button} from '@/components/ui/button'
 
 export const metadata: Metadata = {title: '패널 (Panel)'}
 
