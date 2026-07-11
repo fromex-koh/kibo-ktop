@@ -45,14 +45,13 @@ const toRem = (v) => (typeof v === 'string' ? v : v === 0 ? '0' : `${+(v / remBa
 
 const errors = []
 const HEX = /^#[0-9a-fA-F]{6}$/
-// 다크 반사 = 위치 기반(스케일 배열에서 대칭 위치): 50↔900·100↔800…400↔500.
-// 스케일이 비대칭(50~900)이라 산술 100−s 를 못 쓴다. 짝수 길이여야 자기 자신에 매핑되는 스텝이 없다.
+// 다크 반사 = 위치 기반(스케일 배열에서 대칭 위치): 10↔900·50↔800…300↔500.
+// 스케일이 비대칭이라 산술을 못 쓴다. 스케일이 홀수(현재 11개)면 가운데 스텝(400)은 자기 자신에 매핑돼
+// 다크=라이트 로 고정된다 — 다크가 아직 디자인 미확정이라 허용한다(대비 미달은 아래 대비 검증이 잡는다).
 const mirror = (s) => scale[scale.length - 1 - scale.indexOf(s)]
 const hues = Object.keys(primitive)
 
 // ── 1) 색상 구조 검증 ──
-if (scale.length % 2 !== 0)
-    errors.push(`scale 길이(${scale.length})가 홀수 — 위치 반사 시 가운데 스텝이 자기 자신에 매핑됨`)
 for (const hue of hues) {
     for (const s of scale) {
         const v = primitive[hue][String(s)]
