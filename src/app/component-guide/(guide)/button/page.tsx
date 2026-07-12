@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {ArrowRight, Download, LoaderCircle, Plus, Search, Settings} from 'lucide-react'
+import {ArrowRight, Download, LoaderCircle, Sun} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
@@ -23,18 +23,6 @@ const USAGE_CODE_ICON = `{/* 아이콘 왼쪽 */}
   <ArrowRight aria-hidden="true" />
 </Button>`
 
-// 아이콘 전용 버튼 — 아이콘만 있으므로 aria-label 로 용도를 알리고, 모서리는 두 가지(살짝 둥근 rounded-sm =
-// 다른 버튼과 동일 / 완전 원 rounded-full)로 제공한다. size="icon" 은 정사각 + 44px 터치 타깃(min-h/w-11).
-const ICON_BUTTON_CODE = `{/* 살짝 둥근 — 다른 버튼과 동일한 rounded-sm */}
-<Button variant="default" size="icon" className="rounded-sm" aria-label="추가">
-  <Plus aria-hidden="true" />
-</Button>
-
-{/* 아주 동그란 — rounded-full 원형 */}
-<Button variant="default" size="icon" className="rounded-full" aria-label="추가">
-  <Plus aria-hidden="true" />
-</Button>`
-
 // Loading — variant 색은 유지하고 스피너 + aria-busy + pointer-events-none 로 진행 중을 표현한다.
 const LOADING_CODE = `<Button variant="default" size="medium" aria-busy className="pointer-events-none">
   <LoaderCircle aria-hidden="true" className="animate-spin" />
@@ -48,24 +36,58 @@ const TYPES = [
     {key: 'tertiary', label: 'Tertiary', desc: '가장 낮은 강조의 보조 액션(취소·더보기 등)에 사용합니다.'},
 ] as const
 
-// Figma 사이즈 스케일 그대로 노출한다(xlarge~xsmall). 클래스명은 cva 안에 리터럴로 고정돼 있어
-// 여기서도 템플릿 문자열 대신 배열에 직접 나열한다(Tailwind 정적 분석, icon 가이드와 동일 이유).
+// Figma 사이즈 스케일(xlarge~small) + 프로젝트 보간 xsmall(36)/2xsmall(32)을 노출한다. 클래스명은 cva 안에
+// 리터럴로 고정돼 있어 여기서도 템플릿 문자열 대신 배열에 직접 나열한다(Tailwind 정적 분석, icon 가이드와 동일 이유).
 const SIZES = [
     {key: 'xlarge', label: 'xlarge', height: 60},
     {key: 'large', label: 'large', height: 52},
     {key: 'medium', label: 'medium', height: 48},
     {key: 'small', label: 'small', height: 40},
-    {key: 'xsmall', label: 'xsmall', height: 32},
+    {key: 'xsmall', label: 'xsmall', height: 36},
+    {key: '2xsmall', label: '2xsmall', height: 32},
 ] as const
 
-const LEGACY_SIZES = ['default', 'lg', 'icon', 'icon-lg', 'sm', 'xs', 'icon-sm', 'icon-xs'] as const
+// 아이콘 전용(정사각) 버튼 사이즈. 텍스트 사이즈와 달리 min-w 가 없어 정사각형이 되고, 텍스트 스케일 높이에
+// 대응한다(icon-2xl=60·icon-xl=52·icon-lg=48·icon=44(44px 터치타깃)·icon-sm=36·icon-xs=32).
+const ICON_SIZES = [
+    {key: 'icon-2xl', label: 'icon-2xl', height: 60},
+    {key: 'icon-xl', label: 'icon-xl', height: 52},
+    {key: 'icon-lg', label: 'icon-lg', height: 48},
+    {key: 'icon', label: 'icon', height: 44},
+    {key: 'icon-sm', label: 'icon-sm', height: 36},
+    {key: 'icon-xs', label: 'icon-xs', height: 32},
+] as const
+
+const LEGACY_SIZES = [
+    'default',
+    'lg',
+    'icon',
+    'icon-lg',
+    'icon-xl',
+    'icon-2xl',
+    'sm',
+    'xs',
+    'icon-sm',
+    'icon-xs',
+] as const
+
+// Button 이 가진 variant 케이스. default/secondary/tertiary 는 Figma 3 type(버튼 전용 토큰),
+// ghost/destructive/link 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는 기존 값이다(outline 은 프로젝트 미사용).
+const ALL_VARIANTS = [
+    {key: 'default', label: 'default', note: 'Figma Primary'},
+    {key: 'secondary', label: 'secondary', note: 'Figma Secondary'},
+    {key: 'tertiary', label: 'tertiary', note: 'Figma Tertiary'},
+    {key: 'ghost', label: 'ghost', note: '내부 컴포넌트용'},
+    {key: 'destructive', label: 'destructive', note: '내부 컴포넌트용'},
+    {key: 'link', label: 'link', note: '내부 컴포넌트용'},
+] as const
 
 // 버튼은 Card 와 달리 아이콘 전용 하위 컴포넌트가 없다 — 아이콘은 props 가 아니라 children 으로
 // 직접 조합한다(lucide-react, 장식 목적이면 aria-hidden). 좌/우 어느 쪽에도 넣을 수 있다.
 const ButtonGuidePage = () => (
     <GuidePage
         title="버튼 (Button)"
-        description="shadcn Button 프리미티브입니다. 3가지 type × 5가지 사이즈를 지원합니다."
+        description="shadcn Button 프리미티브입니다. 3가지 type × 6가지 사이즈에 아이콘 버튼까지 지원합니다."
     >
         <section aria-labelledby="button-demo" className="flex flex-col gap-4">
             <div>
@@ -108,50 +130,34 @@ const ButtonGuidePage = () => (
                 </Button>
             </div>
             <CodeBlock code={USAGE_CODE_ICON} language="tsx" copyLabel="복사" />
+        </section>
 
-            <div className="flex flex-col gap-2">
-                <h3 className="typo-body-l-medium text-foreground">아이콘 전용 버튼</h3>
+        <section aria-labelledby="button-variants" className="flex flex-col gap-4">
+            <div>
+                <h2 id="button-variants" className="typo-h4-bold">
+                    전체 Variant
+                </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    아이콘만 있는 버튼은 <code className="font-mono">aria-label</code> 로 용도를 알리고 내부 아이콘에{' '}
-                    <code className="font-mono">aria-hidden</code> 을 붙입니다(5.1.1).{' '}
-                    <code className="font-mono">size=&quot;icon&quot;</code> 은 정사각형 + 44px 터치 타깃을 보장합니다.
-                    모서리는 두 가지 — 다른 버튼과 같은 <code className="font-mono">rounded-sm</code>(살짝 둥근)과 완전
-                    원형 <code className="font-mono">rounded-full</code> 입니다.
+                    Button 을 디자인에 쓰는 variant 입니다.{' '}
+                    <span className="font-mono">default·secondary·tertiary</span> 는 Figma 3 type(버튼 전용 토큰)이고,{' '}
+                    <span className="font-mono">ghost·destructive·link</span> 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는
+                    기존 값입니다(outline 은 목록에서 제외).
                 </p>
             </div>
             <div className="flex flex-col gap-4">
-                <div className="flex flex-col gap-2">
-                    <span className="typo-caption-regular text-muted-foreground">
-                        살짝 둥근 (rounded-sm · 다른 버튼과 동일)
-                    </span>
-                    <div className="flex flex-wrap items-center gap-3">
-                        <Button variant="default" size="icon" className="rounded-sm" aria-label="추가">
-                            <Plus aria-hidden="true" />
+                {ALL_VARIANTS.map((v) => (
+                    <div key={v.key} className="flex flex-wrap items-center gap-3">
+                        <div className="flex w-40 shrink-0 flex-col">
+                            <span className="typo-body-l-medium text-foreground font-mono">{v.label}</span>
+                            <span className="typo-caption-regular text-muted-foreground">{v.note}</span>
+                        </div>
+                        <Button variant={v.key} size="medium">
+                            버튼
                         </Button>
-                        <Button variant="secondary" size="icon" className="rounded-sm" aria-label="검색">
-                            <Search aria-hidden="true" />
-                        </Button>
-                        <Button variant="tertiary" size="icon" className="rounded-sm" aria-label="설정">
-                            <Settings aria-hidden="true" />
-                        </Button>
+                        <CopyChip value={`variant="${v.key}"`} label="복사" />
                     </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                    <span className="typo-caption-regular text-muted-foreground">아주 동그란 (rounded-full)</span>
-                    <div className="flex flex-wrap items-center gap-3">
-                        <Button variant="default" size="icon" className="rounded-full" aria-label="추가">
-                            <Plus aria-hidden="true" />
-                        </Button>
-                        <Button variant="secondary" size="icon" className="rounded-full" aria-label="검색">
-                            <Search aria-hidden="true" />
-                        </Button>
-                        <Button variant="tertiary" size="icon" className="rounded-full" aria-label="설정">
-                            <Settings aria-hidden="true" />
-                        </Button>
-                    </div>
-                </div>
+                ))}
             </div>
-            <CodeBlock code={ICON_BUTTON_CODE} language="tsx" copyLabel="복사" />
         </section>
 
         <section aria-labelledby="button-matrix" className="flex flex-col gap-4">
@@ -160,8 +166,8 @@ const ButtonGuidePage = () => (
                     Type × Size 큐레이션
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    3 type 을 열로, 5 size 를 행으로 교차해 전체 조합을 확인합니다. 44px 미만인 small·xsmall 은 밀도
-                    높은 UI 용 컴팩트 예외입니다(터치 타깃 보정 미적용, 인접 간격 확보 전제).
+                    3 type 을 열로, 6 size 를 행으로 교차해 전체 조합을 확인합니다. 44px 미만인 small·xsmall·2xsmall 은
+                    밀도 높은 UI 용 컴팩트 예외입니다(터치 타깃 보정 미적용, 인접 간격 확보 전제).
                 </p>
             </div>
             <div className="flex flex-col gap-3">
@@ -213,6 +219,33 @@ const ButtonGuidePage = () => (
                         ))}
                     </tbody>
                 </table>
+            </div>
+        </section>
+
+        <section aria-labelledby="button-icon-matrix" className="flex flex-col gap-4">
+            <div>
+                <h2 id="button-icon-matrix" className="typo-h4-bold">
+                    아이콘 전용 버튼 (ghost)
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    아이콘만 있는 정사각 버튼입니다. 프로젝트에선 <span className="font-mono">ghost</span> variant 로만
+                    씁니다(헤더 테마 토글 등). 아이콘만 있으므로 <code className="font-mono">aria-label</code> 로 용도를
+                    알리고 내부 아이콘은 <code className="font-mono">aria-hidden</code> 입니다(5.1.1).{' '}
+                    <code className="font-mono">icon</code> (44px)은 터치 타깃을 보장하고, 그 이하는 밀도 높은 UI 용
+                    컴팩트 예외입니다. 아이콘 글리프는 icon-sm=24px 기준으로 스케일됩니다.
+                </p>
+            </div>
+            <div className="border-border flex flex-wrap items-end gap-6 rounded-md border p-6">
+                {ICON_SIZES.map((size) => (
+                    <div key={size.key} className="flex flex-col items-center gap-2">
+                        <Button variant="ghost" size={size.key} aria-label="라이트 모드">
+                            <Sun aria-hidden="true" />
+                        </Button>
+                        <span className="typo-caption-regular text-foreground font-mono">{size.label}</span>
+                        <span className="typo-caption-regular text-muted-foreground">{size.height}px</span>
+                        <CopyChip value={`variant="ghost" size="${size.key}"`} label="복사" />
+                    </div>
+                ))}
             </div>
         </section>
 
@@ -332,8 +365,9 @@ const ButtonGuidePage = () => (
                             </th>
                             <td className="px-4 py-3">
                                 <p className="typo-body-l-regular text-muted-foreground">
-                                    Figma 사이즈 스케일(xlarge~xsmall)입니다. 기존 값(default/lg/icon 등)은 다이얼로그·
-                                    시트·사이드바 등 내부 컴포넌트 호환을 위해 그대로 유지됩니다.
+                                    Figma 사이즈 스케일(xlarge~small) + 프로젝트 보간 xsmall(36)·2xsmall(32)입니다. 기존
+                                    값(default/lg/icon 등)은 다이얼로그·시트·사이드바 등 내부 컴포넌트 호환을 위해
+                                    그대로 유지됩니다.
                                 </p>
                             </td>
                             <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">

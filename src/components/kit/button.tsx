@@ -46,22 +46,29 @@ const buttonVariants = cva(
                 ghost: 'text-foreground not-disabled:hover:bg-accent aria-expanded:bg-accent',
                 destructive:
                     'bg-destructive text-destructive-foreground not-disabled:hover:bg-destructive/90 not-disabled:active:bg-destructive/80',
+                // link 는 인라인 텍스트 링크 — size 의 버튼 박스모델(높이·최소폭·패딩)은 아래 compoundVariants 에서 리셋한다.
                 link: 'text-primary underline-offset-4 not-disabled:hover:underline',
             },
             size: {
                 // 기본/큰 사이즈 + 아이콘 버튼은 44px 터치 타깃 보장
                 default: 'h-control-h-md min-h-11 gap-2 px-4',
                 lg: 'h-control-h-lg min-h-11 gap-2 px-6',
-                icon: 'size-control-h-md min-h-11 min-w-11',
-                'icon-lg': 'size-control-h-lg min-h-11 min-w-11',
+                // 정사각 아이콘 전용 — 버튼 높이는 텍스트 스케일에 대응(2xl=60·xl=52·lg=48·icon=44·sm=36·xs=32).
+                // 아이콘 글리프는 icon-sm=24px 를 기준으로 4px 스텝 스케일(xs20·sm24·icon28·lg32·xl36·2xl40).
+                'icon-2xl': "size-control-h-2xl min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-10",
+                'icon-xl': "size-control-h-xl min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-9",
+                icon: "size-control-h-md min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-7",
+                'icon-lg': "size-control-h-lg min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-8",
                 // 컴팩트 변형(밀도 높은 UI용) — 44px 미만, 인접 간격 확보 전제하에 제한적으로 사용
                 sm: 'h-control-h-sm gap-1.5 rounded-md px-3 text-xs',
                 xs: "h-control-h-xs gap-1 rounded-md px-2 text-xs [&_svg:not([class*='size-'])]:size-3",
-                'icon-sm': 'size-control-h-sm rounded-md',
-                'icon-xs': "size-control-h-xs rounded-md [&_svg:not([class*='size-'])]:size-3",
-                // Figma 버튼 사이즈 스케일 — xlarge/large/medium 은 44px 터치 타깃 보장, small/xsmall 은 컴팩트 예외.
-                // min-w 는 Figma 컴포넌트의 실측 폭(텍스트 "버튼명" 기준 hug 폭)이다. large 는 primary 만 폰트가
-                // 18px(다른 type 은 16px)라 실측 폭도 달라 아래 compoundVariants 에서 별도로 보정한다.
+                // 아이콘 버튼 모서리는 텍스트 버튼과 맞춘다 — sm 계열=rounded-sm(8px), xs=rounded-2xs(4px, 2xsmall 과 동일).
+                'icon-sm': "size-control-h-sm rounded-sm [&_svg:not([class*='size-'])]:size-6",
+                'icon-xs': "size-control-h-xs rounded-2xs [&_svg:not([class*='size-'])]:size-5",
+                // Figma 버튼 사이즈 스케일 — xlarge/large/medium 은 44px 터치 타깃 보장, small/xsmall/2xsmall 은
+                // 컴팩트 예외(44px 미만, 인접 간격 확보 전제). min-w 는 Figma 컴포넌트의 실측 폭(텍스트 "버튼명"
+                // 기준 hug 폭)이다. large 는 primary 만 폰트가 18px(다른 type 은 16px)라 실측 폭도 달라 아래
+                // compoundVariants 에서 별도로 보정한다.
                 xlarge: "h-control-h-2xl min-h-11 min-w-control-min-w-lg gap-2 rounded-sm px-6 text-lg font-bold [&_svg:not([class*='size-'])]:size-6",
                 // large 는 min-w 를 여기 두지 않는다 — primary(95px)/secondary·tertiary(90px)가 갈려
                 // compoundVariants 에서만 지정한다(같은 클래스 문자열 안에 min-w-* 두 개가 동시에 들어가면
@@ -69,7 +76,10 @@ const buttonVariants = cva(
                 large: "h-control-h-xl min-h-11 gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
                 medium: "h-control-h-lg min-h-11 min-w-control-min-w-sm gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
                 small: "h-control-h-md min-w-control-min-w-sm gap-1.5 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-5",
-                xsmall: "h-control-h-xs min-w-control-min-w-xs gap-1 rounded-2xs px-3 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
+                // xsmall(36px)은 Figma 스케일에 없던 값을 2xsmall(32)과 small(40) 사이에 끼운 프로젝트 보간 사이즈다.
+                xsmall: "h-control-h-sm min-w-control-min-w-xs gap-1.5 rounded-sm px-4 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
+                '2xsmall':
+                    "h-control-h-xs min-w-control-min-w-xs gap-1 rounded-2xs px-3 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
             },
         },
         // Figma 상 primary(variant=default) 만 갖는 예외 — 다른 type 과 폰트가 달라 size 축만으로는 표현 불가:
@@ -82,6 +92,8 @@ const buttonVariants = cva(
             {variant: 'tertiary', size: 'large', class: 'min-w-control-min-w-sm'},
             {variant: 'default', size: 'medium', class: 'font-bold disabled:font-medium'},
             {variant: 'default', size: 'small', class: 'font-bold disabled:font-medium'},
+            // link 는 인라인 텍스트 링크라 size 의 버튼 박스모델(높이·최소크기·패딩)을 모두 리셋한다.
+            {variant: 'link', class: 'h-auto min-h-0 min-w-0 gap-1 p-0'},
         ],
         defaultVariants: {
             variant: 'default',
