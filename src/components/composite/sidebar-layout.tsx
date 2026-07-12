@@ -6,7 +6,13 @@ import {usePathname} from 'next/navigation'
 import {ArrowUpRight, Blocks, ChevronRight, Component, Layers, LayoutGrid, Palette, Sparkles} from 'lucide-react'
 import type {LucideIcon} from 'lucide-react'
 import type {GuideNavIconKey, GuideNavSection} from '@/constants/guide-nav'
-import Breadcrumb from '@/components/guide/breadcrumb'
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbList,
+    BreadcrumbPage,
+    BreadcrumbSeparator,
+} from '@/components/kit/breadcrumb'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import ThemeToggle from '@/components/composite/theme-toggle'
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/kit/collapsible'
@@ -172,7 +178,15 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                 <header className="border-border bg-background h-header-h sticky top-0 z-10 flex items-center gap-2 border-b px-4 md:px-6">
                     <SidebarTrigger className="text-muted-foreground hover:text-foreground min-h-11 min-w-11" />
                     {activeCrumb ? (
-                        <Breadcrumb category={activeCrumb.category} current={activeCrumb.label} />
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem>{activeCrumb.category}</BreadcrumbItem>
+                                <BreadcrumbSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>{activeCrumb.label}</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
                     ) : (
                         <p aria-hidden="true" className="typo-body-l-medium truncate">
                             {title}
