@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import {ArrowUpRight, GitBranch} from 'lucide-react'
-import PublishingIndex from '@/components/publishing-index'
+import PublishingIndex from '@/components/custom/publishing-index'
 import ThemeToggle from '@/components/composite/theme-toggle'
 import {ICON_REGISTRY} from '@/constants/icon-registry'
 import {HOME_CONTENT} from '@/content'

@@ -20,7 +20,7 @@ import {
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Icon} from '@/components/icon'
+import {Icon} from '@/components/custom/icon'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '아이콘 (Icon)'}
@@ -28,12 +28,12 @@ export const metadata: Metadata = {title: '아이콘 (Icon)'}
 // Icon 컴포넌트 사용법 스니펫 — variant 별로 코드블럭을 나눠 보여준다. 미리보기와 같은 아이콘·
 // 크기(size-icon-2xl)로 맞춰 마크업과 미리보기가 일치한다.
 const USAGE_OUTLINE = `import { X } from 'lucide-react';
-import { Icon } from '@/components/icon';
+import { Icon } from '@/components/custom/icon';
 
 <Icon icon={X} className="size-icon-2xl" />`
 
 const USAGE_SOLID = `import { X } from 'lucide-react';
-import { Icon } from '@/components/icon';
+import { Icon } from '@/components/custom/icon';
 
 <Icon icon={X} variant="solid" className="size-icon-2xl" />`
 
