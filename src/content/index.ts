@@ -3,7 +3,7 @@
 // 열거형(status·icon·note)이 어긋나면 로드/빌드 시점에 에러를 던져 화면에 나가기 전에 차단한다.
 // (tokens.json 을 build-tokens 가 검증해 빌드를 실패시키는 것과 같은 철학)
 
-import {isIconName, type IconName} from '@/components/icon-registry'
+import {isIconName, type IconName} from '@/constants/icon-registry'
 import assetVersionsGenerated from './asset-versions.generated.json'
 import homeJson from './home.json'
 import publishingIndexJson from './publishing-index.json'

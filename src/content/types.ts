@@ -1,7 +1,7 @@
 // src/content/*.json 의 구조를 기술하는 콘텐츠 스키마 타입.
 // JSON 은 열거형 문자열을 넓은 string 으로 추론하므로, 열거값(Status·Note)은 타입가드로 좁힌다. [ST-002]
 
-import type {IconName} from '@/components/icon-registry'
+import type {IconName} from '@/constants/icon-registry'
 
 // ── 퍼블리싱 진행 상태 ──
 // 색/아이콘 매핑은 화면(컴포넌트)이 담당하고, 여기선 '값의 집합'만 정의한다.
