@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '간격 (Spacing)'}
@@ -18,7 +18,7 @@ const SPACING_GROUPS = [
 ]
 
 const SpacingGuidePage = () => (
-    <GuidePage title="간격 (Spacing)" description={<>base {tokens.spacingBase}px × N 스케일의 간격 토큰입니다.</>}>
+    <GuidePageShell title="간격 (Spacing)" description={<>base {tokens.spacingBase}px × N 스케일의 간격 토큰입니다.</>}>
         <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left">
                 <thead>
@@ -75,7 +75,7 @@ const SpacingGuidePage = () => (
                 </tbody>
             </table>
         </div>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default SpacingGuidePage

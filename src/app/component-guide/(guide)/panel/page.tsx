@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Button} from '@/components/kit/button'
 import {Panel, PanelContent} from '@/components/composite/panel'
 
@@ -21,7 +21,7 @@ const USAGE_CODE = `<Panel>
 // 아래 데모는 가장 흔한 형태 — Panel + PanelContent 만 쓰고 PanelHeader/PanelFooter 는 쓰지 않는다
 // (Panel 하나로 여러 데모 콘텐츠를 그리드로 감싼다).
 const PanelGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="패널 (Panel)"
         description="Card 와 구조·스타일이 동일한 합성 컴포넌트입니다. border/ring 없이 배경만으로 콘텐츠 영역을 감쌉니다."
     >
@@ -191,7 +191,7 @@ const PanelGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default PanelGuidePage

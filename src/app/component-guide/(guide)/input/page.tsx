@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import {Lock, Search} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Button} from '@/components/kit/button'
 import {Input} from '@/components/kit/input'
 import {Label} from '@/components/kit/label'
@@ -51,7 +51,7 @@ const FIELD_DEMO_CLASS = 'max-w-90 flex w-full flex-col gap-2'
 const FIELD_GROUP_DEMO_CLASS = 'max-w-90 flex w-full flex-col gap-4'
 
 const InputGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="인풋 (Input)"
         description="shadcn Input 프리미티브입니다. Label 과 조합해 텍스트 입력을 구성합니다."
     >
@@ -274,7 +274,7 @@ const InputGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default InputGuidePage

@@ -3,7 +3,7 @@ import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Checkbox} from '@/components/kit/checkbox'
 import {Label} from '@/components/kit/label'
 
@@ -45,7 +45,7 @@ const STATE_COLS = [
 // 만들지 않는다([SC-02], 프로젝트 원칙). 라벨은 반드시 htmlFor↔id 로 연결해 클릭·스크린리더 접근성을
 // 확보하고(7.4.1), 2depth 부가설명은 aria-describedby 로 연결한다.
 const CheckboxGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="체크박스 (Checkbox)"
         description="shadcn Checkbox 프리미티브입니다. Label 과 조합해 선택 항목을 구성합니다."
     >
@@ -254,7 +254,7 @@ const CheckboxGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default CheckboxGuidePage

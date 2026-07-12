@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
 
 export const metadata: Metadata = {title: '토글 그룹 (ToggleGroup)'}
@@ -24,7 +24,7 @@ const PROPS = [
 
 // 토글 그룹 — shadcn primitive(radix)를 승격한 styled copy. Figma "회원 유형" 세그먼티드가 기본 예시.
 const ToggleGroupGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="토글 그룹 (ToggleGroup)"
         description="여러 항목 중 하나를 선택하는 컨트롤입니다. Figma 세그먼티드 디자인을 segmented 변형으로 담았습니다."
     >
@@ -148,7 +148,7 @@ const ToggleGroupGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default ToggleGroupGuidePage

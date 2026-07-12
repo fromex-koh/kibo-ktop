@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {HeaderDemo} from '@/components/composite/header'
 
 export const metadata: Metadata = {title: '헤더 (Header)'}
@@ -33,7 +33,7 @@ const COMPOSITION = [
 // 헤더 — 로고+주 메뉴+유틸바를 담는 상단 banner 합성 컴포넌트.
 // shadcn 에는 Header primitive 가 없어 kit primitive(NavigationMenu·ToggleGroup·Sheet)를 조립한다.
 const HeaderGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="헤더 (Header)"
         description="로고·주 메뉴·회원 유형·유틸 링크를 담는 사이트 최상단 banner 합성 컴포넌트입니다."
     >
@@ -107,7 +107,7 @@ const HeaderGuidePage = () => (
                 <li>모든 상호작용 요소는 focus-visible 링과 44px 터치 타깃을 가집니다. [6.1.2/6.1.3]</li>
             </ul>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default HeaderGuidePage

@@ -3,7 +3,7 @@ import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Label} from '@/components/kit/label'
 import {RadioGroup, RadioGroupItem} from '@/components/kit/radio-group'
 
@@ -52,7 +52,7 @@ const STATE_COLS = [
 // 접근성을 확보하고(7.4.1), 2depth 부가설명은 aria-describedby 로 연결한다. 상태 매트릭스에서는 각 셀을
 // 최소 RadioGroup 으로 감싸 개별 선택/비활성 상태를 시연한다(라디오는 그룹 소속이라야 렌더된다).
 const RadioGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="라디오 (Radio)"
         description="shadcn RadioGroup 프리미티브입니다. Label 과 조합해 단일 선택 항목을 구성합니다."
     >
@@ -270,7 +270,7 @@ const RadioGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default RadioGuidePage

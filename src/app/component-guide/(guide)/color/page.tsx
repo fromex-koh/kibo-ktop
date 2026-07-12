@@ -1,6 +1,6 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '색상 (Primitive)'}
@@ -85,7 +85,7 @@ const ColorTable = ({title, rows}: {title: ReactNode; rows: SwatchRow[]}) => (
 
 // 색상 — Tier 1 프리미티브 팔레트. Figma(Mode 1) 의 "01 Primitive" 정의를 그룹별 표로 옮긴다.
 const ColorGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="색상 (Primitive)"
         description="프리미티브 색상 팔레트입니다. 직접 쓰지 말고 시맨틱 토큰을 우선하세요."
     >
@@ -125,7 +125,7 @@ const ColorGuidePage = () => (
                 )}
             />
         </div>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default ColorGuidePage

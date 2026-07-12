@@ -1,7 +1,7 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '색상 (Semantic)'}
@@ -514,7 +514,7 @@ const GROUP_USAGE: Record<string, ReactNode> = {
 
 // 색상(Semantic) — 앱이 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
 const SemanticColorGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="색상 (Semantic)"
         description={
             <>
@@ -584,7 +584,7 @@ const SemanticColorGuidePage = () => (
                 ))}
             </section>
         </div>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default SemanticColorGuidePage

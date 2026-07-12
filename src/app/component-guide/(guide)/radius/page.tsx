@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '라운드 (Radius)'}
@@ -28,7 +28,7 @@ const resolvedPx = (v: number | string): number | string => (typeof v === 'numbe
 // 라운드 — Figma '05 Radius' 정의를 반경 토큰(--ds-radius-*)으로 반영. rounded-* 유틸로 쓰며
 // 정의된 키(xs·sm·md·lg·xl·2xl·full)만 사용한다. '클래스' 칩을 클릭하면 이름이 복사된다.
 const RadiusGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="라운드 (Radius)"
         description={<>base {tokens.radiusBase}px ± 오프셋(작은 쪽 2px·큰 쪽 4px 간격) 스케일의 반경 토큰입니다.</>}
     >
@@ -79,7 +79,7 @@ const RadiusGuidePage = () => (
                 </tbody>
             </table>
         </div>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default RadiusGuidePage

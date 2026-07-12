@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Checkbox} from '@/components/kit/checkbox'
 import {Input} from '@/components/kit/input'
 import {Label} from '@/components/kit/label'
@@ -50,7 +50,7 @@ const STYLE_ROWS = [
 ] as const
 
 const LabelGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="라벨 (Label)"
         description="shadcn Label 프리미티브입니다. htmlFor↔id 로 폼 컨트롤과 연결해 함께 씁니다."
     >
@@ -267,7 +267,7 @@ const LabelGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default LabelGuidePage

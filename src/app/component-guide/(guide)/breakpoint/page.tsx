@@ -1,14 +1,14 @@
 import type {Metadata} from 'next'
 import ActiveBreakpointTag from '@/components/guide/active-breakpoint-tag'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '브레이크포인트 (Breakpoint)'}
 
 // 브레이크포인트 — 모바일 퍼스트. Tailwind 기본 프리픽스를 그대로 쓰고, 프로젝트 주 티어는 md(768)·xl(1280).
 const BreakpointGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="브레이크포인트 (Breakpoint)"
         description={
             <>
@@ -143,7 +143,7 @@ const BreakpointGuidePage = () => (
             기준으로는 이 세 구간 밖으로 밀려나 레이아웃이 깨지는 경우가 거의 없습니다. (기기 CSS 폭은 실측 기준이며,
             브랜드별 점유율은 조사 시점·기관마다 차이가 있어 참고용입니다.)
         </p>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default BreakpointGuidePage

@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Button} from '@/components/kit/button'
 import {
     SubSectionHeader,
@@ -36,7 +36,7 @@ const USAGE_CODE_ACTION = `<SubSectionHeader>
 // 타이포만 다르다(SectionHeader: Heading/H4/bold → SubSectionHeader: Title/L/bold). 헤딩 레벨도
 // 한 단계 아래(h3).
 const SubSectionHeaderGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="서브섹션 헤더 (SubSectionHeader)"
         description="섹션 안의 더 작은 하위 구획 최상단의 제목(+선택적 액션) 컴포넌트입니다."
     >
@@ -195,7 +195,7 @@ const SubSectionHeaderGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default SubSectionHeaderGuidePage

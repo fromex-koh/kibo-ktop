@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Button} from '@/components/kit/button'
 import {
     SectionHeader,
@@ -35,7 +35,7 @@ const USAGE_CODE_ACTION = `<SectionHeader>
 // 보다 한 단계 아래 레벨(h2)로, 타이포 조합은 고정값(Heading/H4/bold + Body/XL/Regular)이라
 // variant 가 없다. 텍스트 색은 PageHeader 와 동일하게 text-foreground·text-foreground-subtle.
 const SectionHeaderGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="섹션 헤더 (SectionHeader)"
         description="페이지 안 개별 섹션 최상단의 제목+설명 묶음 컴포넌트입니다."
     >
@@ -194,7 +194,7 @@ const SectionHeaderGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default SectionHeaderGuidePage

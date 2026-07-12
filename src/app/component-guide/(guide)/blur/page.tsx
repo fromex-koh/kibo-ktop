@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import Image from 'next/image'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 import sampleCatImg from '../../../../../public/sample-cat.jpg'
 
@@ -14,7 +14,7 @@ const BLUR_CLASS: Record<string, string> = {sm: 'blur-sm', md: 'blur-md', lg: 'b
 
 // 흐림 — 흐림 토큰(--ds-blur-*)을 blur-* 유틸리티로 적용. 실제 사진으로 강도를 시각화한다.
 const BlurGuidePage = () => (
-    <GuidePage title="흐림 (Blur)" description="blur-* 유틸리티로 적용하는 흐림 토큰입니다.">
+    <GuidePageShell title="흐림 (Blur)" description="blur-* 유틸리티로 적용하는 흐림 토큰입니다.">
         <ul className="grid grid-cols-2 gap-5 md:grid-cols-3">
             {Object.entries(tokens.effect.blur).map(([k, px]) => (
                 <li key={k} className="border-border overflow-hidden rounded-xl border">
@@ -36,7 +36,7 @@ const BlurGuidePage = () => (
                 </li>
             ))}
         </ul>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default BlurGuidePage

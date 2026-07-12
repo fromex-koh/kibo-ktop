@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '그림자 (Shadow)'}
@@ -14,7 +14,7 @@ const SHADOW_CLASS: Record<string, string> = {sm: 'shadow-sm', md: 'shadow-md', 
 // box-shadow 는 x/y/blur/spread/색이 합쳐진 복합값이라 radius 처럼 단일 base+calc 로 못 만들고, 스텝마다
 // 독립된 값을 쓴다 — 이 프로젝트 구조가 이미 그 컨벤션과 일치한다.
 const ShadowGuidePage = () => (
-    <GuidePage title="그림자 (Shadow)" description="shadow-* 유틸로 쓰는 그림자 토큰입니다.">
+    <GuidePageShell title="그림자 (Shadow)" description="shadow-* 유틸로 쓰는 그림자 토큰입니다.">
         <ul className="grid grid-cols-2 gap-5 md:grid-cols-3">
             {Object.entries(tokens.effect.shadow).map(([k, val]) => {
                 // color 참조 "black.10" → "--raw-black-a10" (primitive → semantic 매핑 표시)
@@ -41,7 +41,7 @@ const ShadowGuidePage = () => (
                 )
             })}
         </ul>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default ShadowGuidePage

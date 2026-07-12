@@ -2,7 +2,7 @@ import type {Metadata} from 'next'
 import {ArrowRight, Download, LoaderCircle, Sun} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Button} from '@/components/kit/button'
 
 export const metadata: Metadata = {title: '버튼 (Button)'}
@@ -85,7 +85,7 @@ const ALL_VARIANTS = [
 // 버튼은 Card 와 달리 아이콘 전용 하위 컴포넌트가 없다 — 아이콘은 props 가 아니라 children 으로
 // 직접 조합한다(lucide-react, 장식 목적이면 aria-hidden). 좌/우 어느 쪽에도 넣을 수 있다.
 const ButtonGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="버튼 (Button)"
         description="shadcn Button 프리미티브입니다. 3가지 type × 6가지 사이즈에 아이콘 버튼까지 지원합니다."
     >
@@ -427,7 +427,7 @@ const ButtonGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default ButtonGuidePage

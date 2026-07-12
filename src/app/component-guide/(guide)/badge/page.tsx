@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Badge} from '@/components/kit/badge'
 
 export const metadata: Metadata = {title: '배지 (Badge)'}
@@ -34,7 +34,7 @@ const COLORS = [
 const SHAPES = ['pill', 'round'] as const
 
 const BadgeGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="배지 (Badge)"
         description="shadcn Badge 프리미티브입니다. 상태·분류 라벨을 색과 형태로 구분합니다."
     >
@@ -247,7 +247,7 @@ const BadgeGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default BadgeGuidePage

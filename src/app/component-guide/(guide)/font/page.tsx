@@ -1,6 +1,6 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '폰트 (Primitive)'}
@@ -69,7 +69,7 @@ const PrimitiveTable = ({title, hint, rows}: {title: string; hint: string; rows:
 
 // 폰트 (Primitive) — Tier 1 원시 하위값(굵기·행간·자간·크기). typo-* 가 이들을 묶어 참조한다.
 const FontPrimitiveGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="폰트 (Primitive)"
         description="폰트의 원시 하위값(굵기·행간·자간·크기)입니다. 색상 primitive 처럼 직접 쓰지 말고 typo-* 클래스를 우선하세요."
     >
@@ -109,7 +109,7 @@ const FontPrimitiveGuidePage = () => (
                 }))}
             />
         </div>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default FontPrimitiveGuidePage

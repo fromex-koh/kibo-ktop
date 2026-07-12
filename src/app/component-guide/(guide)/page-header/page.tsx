@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {PageHeader, PageHeaderDescription, PageHeaderTitle} from '@/components/composite/page-header'
 
 export const metadata: Metadata = {title: '페이지 헤더 (PageHeader)'}
@@ -20,10 +20,10 @@ const USAGE_CODE_COMPACT = `<PageHeader>
   </PageHeaderDescription>
 </PageHeader>`
 
-// 페이지 헤더 — 제목+설명 묶음 컴포넌트. 이 가이드 페이지들의 상단 타이틀 영역(GuidePage)도
+// 페이지 헤더 — 제목+설명 묶음 컴포넌트. 이 가이드 페이지들의 상단 타이틀 영역(GuidePageShell)도
 // 내부적으로 이 컴포넌트를 쓴다(직접 예시로 확인하려면 이 페이지 맨 위 타이틀이 바로 그 결과).
 const PageHeaderGuidePage = () => (
-    <GuidePage title="페이지 헤더 (PageHeader)" description="페이지·섹션 최상단의 제목+설명 묶음 컴포넌트입니다.">
+    <GuidePageShell title="페이지 헤더 (PageHeader)" description="페이지·섹션 최상단의 제목+설명 묶음 컴포넌트입니다.">
         <section aria-labelledby="ph-variant" className="flex flex-col gap-6">
             <div>
                 <h2 id="ph-variant" className="typo-h4-bold">
@@ -213,7 +213,7 @@ const PageHeaderGuidePage = () => (
                 </div>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default PageHeaderGuidePage

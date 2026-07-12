@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Label} from '@/components/kit/label'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/kit/select'
 
@@ -38,7 +38,7 @@ const FruitOptions = () =>
     ))
 
 const SelectGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="셀렉트 (Select)"
         description="shadcn Select 프리미티브입니다. Label 과 조합해 단일 선택 입력을 구성합니다."
     >
@@ -229,7 +229,7 @@ const SelectGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default SelectGuidePage

@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Label} from '@/components/kit/label'
 import {Textarea} from '@/components/kit/textarea'
 
@@ -28,7 +28,7 @@ const USAGE_CODE = `<div className="flex w-full max-w-90 flex-col gap-2">
 const FIELD_CLASS = 'flex w-full max-w-90 flex-col gap-2'
 
 const TextareaGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="텍스트에어리어 (Textarea)"
         description="shadcn Textarea 프리미티브입니다. Label 과 조합해 여러 줄 입력을 구성합니다."
     >
@@ -206,7 +206,7 @@ const TextareaGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default TextareaGuidePage

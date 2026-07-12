@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '타이포그래피 (Typography)'}
@@ -154,7 +154,7 @@ const SANS_STACK = [
 
 // 타이포그래피 — typo-* 복합 유틸리티. 스케일 표 각 행에 실제 렌더 미리보기를 함께 담는다.
 const TypographyGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="타이포그래피 (Typography)"
         description="제목·본문·라벨·캡션에 쓰는 타이포그래피 복합 클래스(typo-*)입니다."
     >
@@ -314,7 +314,7 @@ const TypographyGuidePage = () => (
                 ))}
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default TypographyGuidePage

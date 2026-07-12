@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Separator} from '@/components/kit/separator'
 
 export const metadata: Metadata = {title: '구분선 (Separator)'}
@@ -18,7 +18,7 @@ const USAGE_CODE = `<p>위 콘텐츠</p>
 // 선을 그려 border-subtle-3 를 테두리 색으로 쓴다(box-sizing: border-box 라 1px 높이 안에서 1px
 // border-top 이 그대로 두께 1px 을 유지). 위아래 40px 간격(my-10)을 함께 준다.
 const SeparatorGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="구분선 (Separator)"
         description="shadcn Separator 원본에 className 만 얹어 만드는 구분선 패턴입니다."
     >
@@ -197,7 +197,7 @@ const SeparatorGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default SeparatorGuidePage

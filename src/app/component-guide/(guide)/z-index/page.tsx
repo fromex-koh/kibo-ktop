@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CopyChip from '@/components/guide/copy-chip'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '레이어 (Z-index)'}
@@ -31,7 +31,7 @@ const STACK_DEMO = [
 
 // 레이어 (Z-index) — 쌓임 순서 토큰. 값이 아니라 '순서'가 의미.
 const ZIndexGuidePage = () => (
-    <GuidePage
+    <GuidePageShell
         title="레이어 (Z-index)"
         description={
             <>
@@ -109,7 +109,7 @@ const ZIndexGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default ZIndexGuidePage

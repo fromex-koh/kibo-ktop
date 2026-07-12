@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import GuidePage from '@/components/guide/guide-page'
+import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from '@/components/kit/card'
 
 export const metadata: Metadata = {title: '카드 (Card)'}
@@ -58,7 +58,7 @@ const COMPOSITION_ITEMS = [
 // 만들지 않고 원본을 그대로 쓴다([SC-02]). 개별 콘텐츠 블록(통계 카드·항목 박스)에 쓰고, 여러
 // 데모·섹션을 하나로 묶는 넓은 콘텐츠 영역에는 Panel 을 쓴다(component-guide/panel 참고).
 const CardGuidePage = () => (
-    <GuidePage title="카드 (Card)" description="shadcn Card 프리미티브입니다. 개별 콘텐츠 블록을 감쌉니다.">
+    <GuidePageShell title="카드 (Card)" description="shadcn Card 프리미티브입니다. 개별 콘텐츠 블록을 감쌉니다.">
         <section aria-labelledby="card-demo" className="flex flex-col gap-4">
             <div>
                 <h2 id="card-demo" className="typo-h4-bold">
@@ -218,7 +218,7 @@ const CardGuidePage = () => (
                 </table>
             </div>
         </section>
-    </GuidePage>
+    </GuidePageShell>
 )
 
 export default CardGuidePage
