@@ -2,6 +2,7 @@
 
 import {useEffect, useRef, useState} from 'react'
 import {Check, Copy} from 'lucide-react'
+import {Badge} from '@/components/kit/badge'
 
 // 클릭하면 값(유틸리티 클래스명·토큰명 등)을 클립보드에 복사하는 모노 칩.
 // 버튼이라 키보드(Enter/Space)로도 동작하고, 복사 성공은 아이콘 교체 + aria-live 로 알린다.
@@ -29,24 +30,22 @@ const CopyChip = ({value, label}: {value: string; label?: string}) => {
         }
     }
 
+    // kit Badge(solid-pastel·neutral·round)로 스타일링하되, asChild 로 실제 요소는 button 을 유지한다
+    // — 클릭·키보드·포커스·복사 로직은 그대로 두고 칩 룩만 Badge 에 위임한다([SC-04]).
     return (
-        <button
-            type="button"
-            onClick={handleCopy}
-            title={isCopied ? '복사됨' : actionText}
-            aria-label={actionText}
-            className="text-primary focus-visible:ring-ring focus-visible:ring-offset-background typo-caption-regular inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-md bg-gray-100 px-2.5 py-1.5 font-mono transition-colors hover:bg-gray-200/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-        >
-            {displayText}
-            {isCopied ? (
-                <Check aria-hidden="true" className="text-primary size-3.5 shrink-0" />
-            ) : (
-                <Copy aria-hidden="true" className="size-3.5 shrink-0 opacity-60" />
-            )}
-            <span role="status" aria-live="polite" className="sr-only">
-                {isCopied ? `${actionText}됨` : ''}
-            </span>
-        </button>
+        <Badge asChild variant="solid-pastel" color="neutral" shape="round" className="cursor-pointer font-mono">
+            <button type="button" onClick={handleCopy} title={isCopied ? '복사됨' : actionText} aria-label={actionText}>
+                {displayText}
+                {isCopied ? (
+                    <Check aria-hidden="true" className="shrink-0" />
+                ) : (
+                    <Copy aria-hidden="true" className="shrink-0 opacity-60" />
+                )}
+                <span role="status" aria-live="polite" className="sr-only">
+                    {isCopied ? `${actionText}됨` : ''}
+                </span>
+            </button>
+        </Badge>
     )
 }
 
