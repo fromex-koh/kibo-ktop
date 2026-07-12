@@ -1,6 +1,7 @@
 'use client'
 
 import {useSyncExternalStore} from 'react'
+import {Badge} from '@/components/kit/badge'
 import tokens from '@tokens'
 
 // 브레이크포인트 오름차순 정렬 — 예: [['md', 768], ['xl', 1280]]
@@ -32,11 +33,7 @@ const ActiveBreakpointTag = ({targetKey}: {targetKey: string}) => {
     const current = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
     if (current !== targetKey) return null
 
-    return (
-        <span className="bg-primary/10 text-primary typo-caption-regular rounded-full px-2 py-0.5 font-semibold">
-            active
-        </span>
-    )
+    return <Badge color="success">active</Badge>
 }
 
 export default ActiveBreakpointTag
