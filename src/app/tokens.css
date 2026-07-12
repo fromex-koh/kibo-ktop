@@ -722,7 +722,8 @@
   --ds-spacing-sidebar-pl: var(--ds-spacing-sidebar-w);
   /* radius — base ± 오프셋(shadcn 컨벤션: 단일 --radius + calc 파생) */
   --ds-radius-base: 1rem;
-  --ds-radius-xs: calc(var(--ds-radius-base) + -0.75rem);
+  --ds-radius-2xs: calc(var(--ds-radius-base) + -0.75rem);
+  --ds-radius-xs: calc(var(--ds-radius-base) + -0.625rem);
   --ds-radius-sm: calc(var(--ds-radius-base) + -0.5rem);
   --ds-radius-md: calc(var(--ds-radius-base) + -0.25rem);
   --ds-radius-lg: var(--ds-radius-base);
@@ -810,6 +811,7 @@
   --spacing-header-top: var(--ds-spacing-header-top);
   --spacing-sidebar-w: var(--ds-spacing-sidebar-w);
   --spacing-sidebar-pl: var(--ds-spacing-sidebar-pl);
+  --radius-2xs: var(--ds-radius-2xs);
   --radius-xs: var(--ds-radius-xs);
   --radius-sm: var(--ds-radius-sm);
   --radius-md: var(--ds-radius-md);
@@ -829,6 +831,7 @@
   /* typography primitive — 원시 하위값(굵기·행간·자간). color 처럼 --raw-*, typo 가 이름 참조 */
   --raw-font-weight-regular: 400;
   --raw-font-weight-medium: 500;
+  --raw-font-weight-semibold: 600;
   --raw-font-weight-bold: 700;
   --raw-line-height-normal: 1.5;
   --raw-letter-spacing-normal: 0;
@@ -1116,6 +1119,15 @@
   .typo-title-m-bold {
     font-size: var(--raw-font-size-title-m);
     font-weight: var(--raw-font-weight-bold);
+    line-height: var(--raw-line-height-normal);
+    letter-spacing: var(--raw-letter-spacing-normal);
+    @media (min-width: 768px) {
+      font-size: var(--raw-font-size-title-m-pc);
+    }
+  }
+  .typo-title-m-semibold {
+    font-size: var(--raw-font-size-title-m);
+    font-weight: var(--raw-font-weight-semibold);
     line-height: var(--raw-line-height-normal);
     letter-spacing: var(--raw-letter-spacing-normal);
     @media (min-width: 768px) {

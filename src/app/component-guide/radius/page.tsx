@@ -6,10 +6,11 @@ import tokens from '@tokens'
 export const metadata: Metadata = {title: '라운드 (Radius)'}
 
 // '미리보기' 칸 클래스 — Tailwind 는 className 에 리터럴로 등장하는 클래스명만 스캔해서 CSS 를
-// 생성하므로 `rounded-${k}` 처럼 동적으로 조합하면 안 만들어진다(실제로 rounded-xs/rounded-2xl 은 이
-// 프로젝트 다른 곳에 리터럴 사용처가 없어 스캔되지 않고 있었음). radius 키는 7개뿐인 고정 목록이라
+// 생성하므로 `rounded-${k}` 처럼 동적으로 조합하면 안 만들어진다(실제로 rounded-2xs/rounded-2xl 은 이
+// 프로젝트 다른 곳에 리터럴 사용처가 없어 스캔되지 않고 있었음). radius 키는 8개뿐인 고정 목록이라
 // Record 로 리터럴을 나열해 className 에 직접 쓴다.
 const ROUNDED_CLASS: Record<string, string> = {
+    '2xs': 'rounded-2xs',
     xs: 'rounded-xs',
     sm: 'rounded-sm',
     md: 'rounded-md',
@@ -29,7 +30,7 @@ const resolvedPx = (v: number | string): number | string => (typeof v === 'numbe
 const RadiusGuidePage = () => (
     <GuidePage
         title="라운드 (Radius)"
-        description={<>base {tokens.radiusBase}px ± 오프셋(4px 간격) 스케일의 반경 토큰입니다.</>}
+        description={<>base {tokens.radiusBase}px ± 오프셋(작은 쪽 2px·큰 쪽 4px 간격) 스케일의 반경 토큰입니다.</>}
     >
         <div className="overflow-x-auto">
             <table className="w-full border-collapse text-left">

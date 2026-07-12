@@ -69,7 +69,7 @@ const buttonVariants = cva(
                 large: "h-control-h-xl min-h-11 gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
                 medium: "h-control-h-lg min-h-11 min-w-control-min-w-sm gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
                 small: "h-control-h-md min-w-control-min-w-sm gap-1.5 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-5",
-                xsmall: "h-control-h-xs min-w-control-min-w-xs gap-1 rounded-xs px-3 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
+                xsmall: "h-control-h-xs min-w-control-min-w-xs gap-1 rounded-2xs px-3 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
             },
         },
         // Figma 상 primary(variant=default) 만 갖는 예외 — 다른 type 과 폰트가 달라 size 축만으로는 표현 불가:
