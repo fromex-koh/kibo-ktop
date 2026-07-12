@@ -23,12 +23,12 @@ import {
     SubSectionHeaderDescription,
     SubSectionHeaderTitle,
 } from '@/components/sub-section-header'
+import SiteHeader from '@/components/site-header'
 import {Textarea} from '@/components/kit/textarea'
 import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
 import AdvancedFields from './advanced-fields'
 import Composite from './composite'
 import Showcase from './showcase'
-import SiteHeader from './site-header'
 
 export const metadata: Metadata = {
     title: 'shadcn 통합 테스트',

@@ -4,7 +4,7 @@ import Link from 'next/link'
 import {ChevronRight} from 'lucide-react'
 import {Badge} from '@/components/kit/badge'
 import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
-import {SiteHeaderDemo} from './site-header'
+import {SiteHeaderDemo} from '@/components/site-header'
 
 // ── 상태 칩(Badge) ──
 // Figma 배지 반영본 — 상태 의미는 color(info/success/warning/error/neutral)로, 강조는 variant 로 정한다.
@@ -43,24 +43,21 @@ const StatusChips = () => (
 )
 
 // ── 세그먼티드 컨트롤 ──
-// shadcn 에 전용 컴포넌트는 없고 ToggleGroup(type=single, spacing=0)로 만든다 — 인접 세그먼트가
-// 이어붙어 세그먼티드 컨트롤이 된다. 선택 세그먼트만 채움(bg-primary)으로 강조.
-const SEGMENT_ON = 'data-[state=on]:bg-primary data-[state=on]:text-primary-foreground px-6'
-
+// shadcn 에 전용 컴포넌트는 없고 ToggleGroup 의 segmented 변형(Figma 회색 트랙 + 흰 알약)으로 만든다.
 const SegmentedControl = () => (
     <div className="col-span-4 flex flex-col gap-4">
         <h2 className="typo-title-l-bold">세그먼티드 컨트롤</h2>
         <p className="typo-caption-regular text-muted-foreground">
-            ToggleGroup <code>type=&quot;single&quot;</code> + <code>spacing=0</code> — 하나만 선택되는 모드 전환.
+            ToggleGroup <code>variant=&quot;segmented&quot;</code> — 하나만 선택되는 모드 전환.
         </p>
-        <ToggleGroup type="single" defaultValue="corp" spacing={0} variant="outline" aria-label="회원 유형">
-            <ToggleGroupItem value="corp" className={SEGMENT_ON}>
+        <ToggleGroup type="single" defaultValue="corp" variant="segmented" aria-label="회원 유형">
+            <ToggleGroupItem value="corp" className="px-6">
                 기업
             </ToggleGroupItem>
-            <ToggleGroupItem value="org" className={SEGMENT_ON}>
+            <ToggleGroupItem value="org" className="px-6">
                 기관
             </ToggleGroupItem>
-            <ToggleGroupItem value="person" className={SEGMENT_ON}>
+            <ToggleGroupItem value="person" className="px-6">
                 개인
             </ToggleGroupItem>
         </ToggleGroup>
