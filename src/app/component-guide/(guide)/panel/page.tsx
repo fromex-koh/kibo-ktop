@@ -2,11 +2,11 @@ import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePage from '@/components/guide/guide-page'
 import {Button} from '@/components/kit/button'
-import {Panel, PanelContent} from '@/components/panel'
+import {Panel, PanelContent} from '@/components/composite/panel'
 
 export const metadata: Metadata = {title: '패널 (Panel)'}
 
-// 사용법 스니펫 — shadcn-test 페이지의 실제 사용 그대로(Panel + PanelContent 만, Header/Footer 없음).
+// 사용법 스니펫 — 가장 흔한 형태(Panel + PanelContent 만, Header/Footer 없음).
 // CopyChip 의 label 로 짧게 노출하고 클립보드엔 이 전체를 복사한다.
 const USAGE_CODE = `<Panel>
   <PanelContent>
@@ -15,11 +15,11 @@ const USAGE_CODE = `<Panel>
 </Panel>`
 
 // 패널 — shadcn Card 와 구조·스타일이 동일한 합성(compound) 컴포넌트입니다. shadcn CLI 로 설치되는
-// 실제 프리미티브가 아니라 프로젝트 커스텀 컴포넌트(src/components/panel.tsx)라 src/components/ui/**
-// 밖(PageHeader 와 같은 위치)에 있습니다. Card 와 달리 border/ring 이 없고, 상하 40px·좌우 102px
-// 패딩이 기본값입니다(여러 데모를 하나의 패널로 묶어 담는 용도로 조정됨).
-// 아래 데모는 shadcn-test 페이지에서 실제로 쓰는 형태 그대로다 — Panel + PanelContent 만 쓰고
-// PanelHeader/PanelFooter 는 쓰지 않는다(그 페이지는 Panel 하나로 모든 데모 콘텐츠를 감싼다).
+// 실제 프리미티브가 아니라 kit 을 조합한 프로젝트 커스텀 컴포넌트(src/components/composite/panel.tsx)라
+// src/components/ui/** 밖(PageHeader 와 같은 composite 레이어)에 있습니다. Card 와 달리 border/ring 이 없고,
+// 상하 40px·좌우 102px 패딩이 기본값입니다(여러 데모를 하나의 패널로 묶어 담는 용도로 조정됨).
+// 아래 데모는 가장 흔한 형태 — Panel + PanelContent 만 쓰고 PanelHeader/PanelFooter 는 쓰지 않는다
+// (Panel 하나로 여러 데모 콘텐츠를 그리드로 감싼다).
 const PanelGuidePage = () => (
     <GuidePage
         title="패널 (Panel)"
@@ -31,8 +31,7 @@ const PanelGuidePage = () => (
                     사용 예시
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">/shadcn-test</code> 페이지에서 실제로 쓰는 형태입니다 — Panel 하나가
-                    여러 데모 섹션을 그리드로 묶어 감쌉니다.
+                    가장 흔한 형태입니다 — Panel 하나가 여러 데모 섹션을 그리드로 묶어 감쌉니다.
                 </p>
             </div>
             <div className="bg-background rounded-md p-6">
