@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import type {ReactNode} from 'react'
 import {GUIDE_NAV_SECTIONS} from '@/constants/guide-nav'
-import SidebarLayout from '@/components/sidebar-layout'
+import SidebarLayout from '@/components/composite/sidebar-layout'
 
 // 하위 섹션 페이지들이 공유하는 사이드바 셸 — 라우트 이동 사이에 네비/드로어 상태가 유지된다.
 // 각 페이지 제목 뒤에 '· 컴포넌트 가이드'를 붙여 탭 제목에서 맥락이 유지되도록 템플릿을 둔다.

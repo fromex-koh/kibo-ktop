@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import ActiveBreakpointTag from '@/components/guide/active-breakpoint-tag'
-import ThemeToggle from '@/components/theme-toggle'
+import ThemeToggle from '@/components/composite/theme-toggle'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '레이아웃 그리드 미리보기'}

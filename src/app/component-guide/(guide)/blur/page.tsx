@@ -3,7 +3,7 @@ import Image from 'next/image'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePage from '@/components/guide/guide-page'
 import tokens from '@tokens'
-import sampleCatImg from '../../../../public/sample-cat.jpg'
+import sampleCatImg from '../../../../../public/sample-cat.jpg'
 
 export const metadata: Metadata = {title: '흐림 (Blur)'}
 
