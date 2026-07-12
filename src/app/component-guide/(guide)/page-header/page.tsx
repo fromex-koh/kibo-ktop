@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePage from '@/components/guide/guide-page'
-import {PageHeader, PageHeaderDescription, PageHeaderTitle} from '@/components/page-header'
+import {PageHeader, PageHeaderDescription, PageHeaderTitle} from '@/components/composite/page-header'
 
 export const metadata: Metadata = {title: '페이지 헤더 (PageHeader)'}
 

@@ -1,17 +1,17 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePage from '@/components/guide/guide-page'
-import {SiteHeaderDemo} from '@/components/site-header'
+import {HeaderDemo} from '@/components/composite/header'
 
-export const metadata: Metadata = {title: '사이트 헤더 (SiteHeader)'}
+export const metadata: Metadata = {title: '헤더 (Header)'}
 
 // 사용법 스니펫 — 헤더는 인자 없는 합성 컴포넌트라 최상단에 그대로 배치한다.
-const USAGE_CODE = `import SiteHeader from '@/components/site-header'
+const USAGE_CODE = `import Header from '@/components/composite/header'
 
 export default function Layout({children}) {
   return (
     <>
-      <SiteHeader />
+      <Header />
       <main id="main">{children}</main>
     </>
   )
@@ -30,11 +30,11 @@ const COMPOSITION = [
     {name: '전체 메뉴 (Sheet)', desc: '좁은 폭에서 주 메뉴·회원 유형·유틸 링크를 담아 우측에서 여는 드로어.'},
 ] as const
 
-// 사이트 헤더 — 로고+주 메뉴+유틸바를 담는 상단 banner 합성 컴포넌트.
+// 헤더 — 로고+주 메뉴+유틸바를 담는 상단 banner 합성 컴포넌트.
 // shadcn 에는 Header primitive 가 없어 kit primitive(NavigationMenu·ToggleGroup·Sheet)를 조립한다.
-const SiteHeaderGuidePage = () => (
+const HeaderGuidePage = () => (
     <GuidePage
-        title="사이트 헤더 (SiteHeader)"
+        title="헤더 (Header)"
         description="로고·주 메뉴·회원 유형·유틸 링크를 담는 사이트 최상단 banner 합성 컴포넌트입니다."
     >
         <section aria-labelledby="sh-preview" className="flex flex-col gap-4">
@@ -47,7 +47,7 @@ const SiteHeaderGuidePage = () => (
                     폭을 md(≥768) 미만으로 줄이면 유틸바·주 메뉴가 전체 메뉴(Sheet)로 접힙니다.
                 </p>
             </div>
-            <SiteHeaderDemo />
+            <HeaderDemo />
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>
 
@@ -110,4 +110,4 @@ const SiteHeaderGuidePage = () => (
     </GuidePage>
 )
 
-export default SiteHeaderGuidePage
+export default HeaderGuidePage

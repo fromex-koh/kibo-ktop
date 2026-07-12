@@ -3,7 +3,8 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import {ExternalLink, Menu} from 'lucide-react'
-import ThemeToggle from '@/components/theme-toggle'
+import ThemeToggle from '@/components/composite/theme-toggle'
+import {Button} from '@/components/kit/button'
 import {
     NavigationMenu,
     NavigationMenuItem,
@@ -12,11 +13,11 @@ import {
 } from '@/components/kit/navigation-menu'
 import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/kit/sheet'
 import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
-import logoImg from '../../public/logo.svg'
+import logoImg from '../../../public/logo.svg'
 
 // 사이트 최상단 헤더 — Figma "헤더" 프레임을 그대로 옮긴 도메인 합성 컴포넌트.
 // shadcn 에는 Header primitive 가 없어(헤더는 항상 합성) PageHeader·SectionHeader 처럼
-// src/components 에 두고, 내부는 kit primitive(NavigationMenu·ToggleGroup·Sheet)로 조립한다.
+// src/components/composite 에 두고(kit primitive 를 조합한 L2 레이어), NavigationMenu·ToggleGroup·Sheet 로 조립한다.
 //
 // Figma 구조를 2줄로 재현한다:
 //   ┌ 상단 유틸바(우측 정렬): 기업/기관 세그먼티드 · 로그인/회원가입 · 이용안내 · 기술보증기금↗
@@ -77,16 +78,15 @@ const HeaderContent = ({navLabel}: {navLabel: string}) => (
         </div>
 
         {/* ── 메인 내비 ── */}
-        {/* py-2: 행 높이 60px = 가장 큰 자식(테마토글·전체메뉴 아이콘 버튼 44px, KWCAG 터치 타깃) + 8px*2.
-            Figma(콘텐츠 36 + py 12)와 내부 배분은 다르나 총 60px 동일하고 44px 접근성 타깃을 유지한다. */}
-        <div className="flex items-center gap-6 px-4 py-2">
+        {/* Figma 그대로 행 높이 60px = 콘텐츠 36px(로고·주 메뉴 h-9·아이콘 버튼 icon-sm) + py-3(12px)*2. */}
+        <div className="flex items-center gap-6 px-4 py-3">
             <Logo />
 
             <NavigationMenu aria-label={navLabel} viewport={false} className="hidden md:flex">
                 <NavigationMenuList>
                     {NAV_LINKS.map((label) => (
                         <NavigationMenuItem key={label}>
-                            <NavigationMenuLink asChild className="typo-title-m-semibold text-foreground">
+                            <NavigationMenuLink asChild className="typo-title-m-semibold text-foreground h-9 px-2 py-0">
                                 <Link href="#">{label}</Link>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
@@ -99,13 +99,9 @@ const HeaderContent = ({navLabel}: {navLabel: string}) => (
                 <ThemeToggle />
                 <Sheet>
                     <SheetTrigger asChild>
-                        <button
-                            type="button"
-                            aria-label="전체 메뉴 열기"
-                            className="text-muted-foreground hover:text-foreground focus-visible:ring-ring focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 cursor-pointer items-center justify-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                        >
-                            <Menu aria-hidden="true" className="size-icon-sm" />
-                        </button>
+                        <Button variant="ghost" size="icon-sm" aria-label="전체 메뉴 열기">
+                            <Menu aria-hidden="true" />
+                        </Button>
                     </SheetTrigger>
                     <SheetContent side="right" className="gap-0 data-[side=left]:w-fit data-[side=right]:w-fit">
                         <SheetHeader>
@@ -157,7 +153,7 @@ const HeaderContent = ({navLabel}: {navLabel: string}) => (
 
 // 실제 페이지 헤더 — 상단 sticky 풀블리드(banner 랜드마크). 안쪽은 max-w-content 로 폭 제한.
 // z-10: Dialog/Popover 등 오버레이(z-50) 아래에 오도록 낮게 둔다.
-const SiteHeader = () => (
+const Header = () => (
     <header className="bg-card sticky top-0 z-10">
         <div className="max-w-content mx-auto">
             <HeaderContent navLabel="주 메뉴" />
@@ -166,10 +162,10 @@ const SiteHeader = () => (
 )
 
 // 데모용 — 컴포넌트 가이드 카드 안에서 시연. 실제 헤더가 이미 banner 라 여긴 랜드마크가 아닌 div.
-export const SiteHeaderDemo = () => (
+export const HeaderDemo = () => (
     <div className="border-border bg-card overflow-hidden rounded-lg border">
         <HeaderContent navLabel="헤더 데모 메뉴" />
     </div>
 )
 
-export default SiteHeader
+export default Header

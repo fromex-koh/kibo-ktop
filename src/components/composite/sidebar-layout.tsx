@@ -7,8 +7,8 @@ import {ArrowUpRight, Blocks, ChevronRight, Component, Layers, LayoutGrid, Palet
 import type {LucideIcon} from 'lucide-react'
 import type {GuideNavIconKey, GuideNavSection} from '@/constants/guide-nav'
 import Breadcrumb from '@/components/guide/breadcrumb'
-import SkipNav, {type SkipLinkItem} from '@/components/skip-nav'
-import ThemeToggle from '@/components/theme-toggle'
+import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
+import ThemeToggle from '@/components/composite/theme-toggle'
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/kit/collapsible'
 import {
     Sidebar,

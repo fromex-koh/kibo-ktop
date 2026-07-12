@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import {ArrowUpRight, GitBranch} from 'lucide-react'
 import PublishingIndex from '@/components/publishing-index'
-import ThemeToggle from '@/components/theme-toggle'
-import {ICON_REGISTRY} from '@/components/icon-registry'
+import ThemeToggle from '@/components/composite/theme-toggle'
+import {ICON_REGISTRY} from '@/constants/icon-registry'
 import {HOME_CONTENT} from '@/content'
 import {REPOSITORY_URL, SITE_NAME} from '@/constants/site'
 

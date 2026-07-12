@@ -152,7 +152,7 @@ src/components/kit/<name>.tsx   ← ② kit 창구 (화면·도메인 코드가 
 - **화면·도메인 코드는 `@/components/kit/<name>` 만 import** 한다(`@/components/ui/*` 직접 사용 금지).
 - 재스킨이 필요 없으면 facade(재수출)로 두고, 나중에 필요해지면 그 파일만 styled copy 로 승격하면 사용처는 안 바뀐다.
 - 규칙·적용법 전체: **[docs/SHADCN.md](docs/SHADCN.md)** 의 `styled copy 패턴`·`[SC-04]`.
-- 렌더 확인 페이지: `/shadcn-test`, 토큰·컴포넌트 가이드: `/component-guide`.
+- 토큰·컴포넌트 렌더 확인: `/component-guide`.
 
 ### 이 패턴이 근거 있는 방식인 이유 (출처)
 
