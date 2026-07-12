@@ -31,7 +31,13 @@ yarn dev        # ← 이 첫 실행이 자동 생성 파일을 만들어 줍니
 - **버전을 맞추세요** — Next 16 · React 19 · TailwindCSS 4 기준입니다. 낮은 버전에선 API 가 달라 동작이 다를 수 있습니다(특히 Tailwind v4 는 설정을 CSS 로 합니다 — `tailwind.config.js` 없음).
 - **디자인 값은 `tokens.json` 단일 소스** — 컴포넌트가 쓰는 `bg-brand`·`text-foreground`·`rounded-md`·`.grid-layout` 등은 전부 `tokens.json → yarn tokens → src/app/tokens.css` 로 생성됩니다. **이 파이프라인(`tokens.json`·`scripts/build-tokens.mjs`·`globals.css`·`postcss.config.mjs`)을 함께 가져가야** className 이 살아 있습니다.
 - **브레이크포인트** — **Tailwind 기본 프리픽스**(`sm:`/`md:`/`lg:`/`xl:`/`2xl:`)를 그대로 씁니다(모바일 퍼스트). 프로젝트 주 티어는 `md:`(768)·`xl:`(1280) 두 단계이며 새 코드는 이 둘을 우선 사용합니다. (기본을 지우지 않아 shadcn·익숙한 유틸이 그대로 동작합니다.)
-- **컴포넌트 폴더 구조** — `src/components/ui/`(shadcn 원본, 손대지 않음) · `src/components/kit/`(화면이 import 하는 앱-대면 창구: styled copy + facade, 아래 "컴포넌트" 참고) · `src/components/` 루트(page-header 등 도메인 컴포넌트) · `src/components/guide/`(가이드/데모 전용).
+- **컴포넌트 폴더 구조(레이어)** — 화면·도메인 코드는 항상 `kit/`·`composite/`·`custom/` **창구로 import**하고 `ui/` 를 직접 쓰지 않는다.
+    - `src/components/ui/` — shadcn 원본(vendored). **손대지 않음**(게이트 면제).
+    - `src/components/kit/` — `ui/` 승격 창구(styled copy + facade). 프리미티브 1:1.
+    - `src/components/composite/` — `kit` 을 **조합**한 도메인 컴포넌트(header · page-header · section-header · sidebar-layout · theme-toggle 등).
+    - `src/components/custom/` — 프리미티브 **미사용 자체 구현**(icon · publishing-index).
+    - `src/components/guide/` — 컴포넌트 가이드/데모 전용(code-block · copy-chip · guide-page-shell 등).
+    - `src/components/theme-provider.tsx` — next-themes provider 래퍼(루트).
 
 ## 기술 스택
 
@@ -83,18 +89,26 @@ cp .env.example .env.local   # 복사 후 실제 값 입력
 
 ## 프로젝트 구조
 
+포크해서 실운영 개발을 이어갈 때, **반드시 참고·버전관리해야 하는 소스 오브 트루스**와 **편집하면 안 되는 자동 생성물**을 구분한다.
+
 ```
-src/app/          # App Router (layout, page, globals.css)
-  └─ fonts/       # 로컬 폰트 파일 (PretendardVariable.woff2)
-public/           # 정적 에셋
-docs/
-  ├─ ACCESSIBILITY.md          # KWCAG 2.1 코딩 규칙 (24개 검사항목) — 퍼블리싱 핵심 기준
-  ├─ CODE_CONVENTION.md        # 프론트엔드 표준 코드 컨벤션 (ST/NA/NC/MD/CD)
-  ├─ PUBLISHING_CONVENTION.md  # 퍼블리싱/디자인 토큰 컨벤션 (PB-01~16)
-  ├─ SHADCN.md                 # shadcn/ui 통합 규칙 (styled copy 패턴, SC-01~04)
-  └─ GIT_CONVENTION.md         # Git 브랜치 전략 & 커밋 메시지 컨벤션
-eslint.config.mjs # 린트 설정
-.prettierrc.json  # Prettier 포맷 규칙
+# ── 소스 오브 트루스 (반드시 참고 · 버전관리 대상) ──
+tokens.json                  # 디자인 값 단일 소스(색·타이포·간격·라운드·그림자·그리드·브레이크포인트)
+docs/                        # 컨벤션 5종 — 작업 규칙의 기준(아래 "문서")
+src/
+  app/                       # App Router (layout·page·globals.css) + fonts/(로컬 폰트)
+  components/                # ui → kit → composite → custom → guide 레이어(위 "포크…" 참고)
+  content/                   # 화면·홈·퍼블리싱 인덱스 데이터(JSON 단일 소스) + 타입가드
+  constants/                 # 사이트 상수·아이콘 레지스트리·가이드 네비
+  lib/ · hooks/              # cn 유틸 · use-mobile 등
+scripts/                     # 토큰 생성·자산버전·컨벤션 검사·git 버전 주입
+public/                      # 정적 에셋
+next.config.ts · tsconfig.json · eslint.config.mjs · .prettierrc.cjs
+postcss.config.mjs · components.json · .husky/       # 빌드·린트·포맷·shadcn·git 훅 설정
+
+# ── 자동 생성물 (편집 금지 · 버전관리 X, 첫 yarn dev/build 가 생성) ──
+src/app/tokens.css                          # ← tokens.json + yarn tokens
+src/content/asset-versions.generated.json   # ← yarn asset-versions
 ```
 
 ## 문서

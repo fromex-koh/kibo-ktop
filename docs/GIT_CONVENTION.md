@@ -186,7 +186,7 @@ git push origin v1.0.0
 
 ### 퍼블리싱 인덱스의 자산별 버전 — git 히스토리에서 자동 계산
 
-`퍼블리싱 인덱스` 표의 `tokens.css`·`globals.css`·`fonts`·`public`·`component-guide`·`docs` 버전은 **손으로 적지 않는다.** `publishing-index.json` 의 `assetVersions[].path` 를 기준으로 `scripts/compute-asset-versions.mjs` 가 아래 규칙으로 계산해 `src/content/asset-versions.generated.json`(생성 파일, git 미추적)에 쓴다.
+`퍼블리싱 인덱스` 표의 자산 버전(`components`·`cn(lib/utils)`·`tokens.json`·`globals.css`·`public`·`fonts` 등 — 목록은 `publishing-index.json` 의 `assetVersions` 가 단일 소스)은 **손으로 적지 않는다.** 각 `assetVersions[].path` 를 기준으로 `scripts/compute-asset-versions.mjs` 가 아래 규칙으로 계산해 `src/content/asset-versions.generated.json`(생성 파일, git 미추적)에 쓴다.
 
 - 그 경로가 **마지막으로 바뀐 커밋**을 찾고, **그 변경을 포함하는 가장 가까운 태그**를 버전으로 표시한다.
 - 아직 어떤 태그에도 포함되지 않았으면(직전 릴리스 이후 변경, 미공유) `미배포` 로 표시한다.
