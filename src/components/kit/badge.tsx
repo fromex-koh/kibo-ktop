@@ -40,7 +40,7 @@ const badgeVariants = cva(
             {variant: 'solid-pastel', color: 'success', class: 'bg-success-50 text-success-600'},
             {variant: 'solid-pastel', color: 'warning', class: 'bg-warning-50 text-warning-600'},
             {variant: 'solid-pastel', color: 'error', class: 'bg-error-50 text-error-500'},
-            {variant: 'solid-pastel', color: 'neutral', class: 'bg-gray-50 text-gray-500'},
+            {variant: 'solid-pastel', color: 'neutral', class: 'bg-gray-100 text-gray-500'},
             {variant: 'solid-pastel', color: 'secondary-green', class: 'bg-green-50 text-green-800'},
             {variant: 'solid-pastel', color: 'secondary-orange', class: 'bg-orange-50 text-orange-700'},
             {variant: 'solid-pastel', color: 'secondary-grape', class: 'bg-grape-50 text-grape-600'},

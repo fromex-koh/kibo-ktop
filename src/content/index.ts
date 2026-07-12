@@ -1,6 +1,6 @@
 // 콘텐츠 JSON 을 '검증된 타입 확정 객체'로 만들어 export 하는 단일 관문.
 // 컴포넌트는 원본 .json 을 직접 import 하지 않고 반드시 여기서 가져온다(검증 우회 방지).
-// 열거형(status·icon·note)이 어긋나면 로드/빌드 시점에 에러를 던져 화면에 나가기 전에 차단한다.
+// 열거형(status·icon)이 어긋나면 로드/빌드 시점에 에러를 던져 화면에 나가기 전에 차단한다.
 // (tokens.json 을 build-tokens 가 검증해 빌드를 실패시키는 것과 같은 철학)
 
 import {isIconName, type IconName} from '@/constants/icon-registry'
@@ -11,7 +11,6 @@ import {
     isAssetKind,
     isUserType,
     isStatus,
-    isStructureNote,
     type AssetKind,
     type AssetVersion,
     type UserType,
@@ -20,7 +19,6 @@ import {
     type PublishingIndexContent,
     type ScreenInfo,
     type StructureNode,
-    type StructureNote,
 } from './types'
 
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null
@@ -36,17 +34,6 @@ const assertIconName = (value: string, path: string): IconName => {
 const parseAssetKind = (value: string, path: string): AssetKind => {
     if (!isAssetKind(value)) {
         throw new Error(`[content] ${path}: kind "${value}" 은(는) file|folder 여야 합니다.`)
-    }
-    return value
-}
-
-// note 는 JSON 에 있을 수도(문자열) 없을 수도(undefined) 있어 unknown 으로 받아 안전하게 좁힌다.
-const parseNote = (value: unknown, path: string): StructureNote | undefined => {
-    if (value === undefined) {
-        return undefined
-    }
-    if (typeof value !== 'string' || !isStructureNote(value)) {
-        throw new Error(`[content] ${path}: "${String(value)}" 은(는) 유효한 note 값이 아닙니다(issue|info).`)
     }
     return value
 }
@@ -73,13 +60,11 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
     if (typeof value.version !== 'string') {
         throw new Error(`[content] ${where}: version 이 필요합니다.`)
     }
-    const note = parseNote(value.note, `${where} > note`)
     const userType = parseUserType(value.userType, `${where} > userType`)
     return {
         screenId: value.screenId,
         status: value.status,
         version: value.version,
-        ...(note !== undefined ? {note} : {}),
         ...(userType !== undefined ? {userType} : {}),
     }
 }
@@ -146,12 +131,10 @@ const parseCommonLayout = (raw: (typeof publishingIndexJson)['commonLayouts'][nu
     if (!isStatus(raw.status)) {
         throw new Error(`[content] ${where}: status "${raw.status}" 이(가) 유효하지 않습니다.`)
     }
-    const note = parseNote('note' in raw ? raw.note : undefined, `${where} > note`)
     return {
         label: raw.label,
         status: raw.status,
         version: raw.version,
-        ...(note !== undefined ? {note} : {}),
     }
 }
 
@@ -186,4 +169,4 @@ export const HOME_CONTENT: HomeContent = parseHomeContent(homeJson)
 export const PUBLISHING_INDEX_CONTENT: PublishingIndexContent = parsePublishingIndexContent(publishingIndexJson)
 
 export {USER_TYPE_VALUES, isStructureBranch, STATUS_VALUES} from './types'
-export type {UserType, CommonLayout, Status, StructureGroup, StructureNode, StructureNote} from './types'
+export type {UserType, CommonLayout, Status, StructureGroup, StructureNode} from './types'

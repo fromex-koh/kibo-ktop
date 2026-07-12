@@ -1,19 +1,7 @@
 'use client'
 
-import {
-    AlertTriangle,
-    Building2,
-    Check,
-    CheckCheck,
-    File,
-    Folder,
-    Info,
-    Landmark,
-    LayoutGrid,
-    LayoutList,
-    Sparkles,
-} from 'lucide-react'
-import {useMemo, useRef, useState, type KeyboardEvent} from 'react'
+import {Building2, Check, CheckCheck, File, Folder, Landmark, LayoutGrid, LayoutList, Sparkles} from 'lucide-react'
+import {useMemo, useState} from 'react'
 import {
     USER_TYPE_VALUES,
     isStructureBranch,
@@ -23,8 +11,9 @@ import {
     type Status,
     type StructureGroup,
     type StructureNode,
-    type StructureNote,
 } from '@/content'
+import {Badge} from '@/components/kit/badge'
+import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
 
 // isCurrent(이번 릴리스에서 변경됨) 하이라이트는 자산 표·공통 레이아웃 표·화면 표가 모두 같은
 // 방식(배경색 + 아이콘 + sr-only 텍스트)을 쓰므로, 버전 셀 하나를 공용 컴포넌트로 뺀다.
@@ -38,23 +27,18 @@ const VersionCell = ({version, isCurrent}: {version: string; isCurrent: boolean}
     </>
 )
 
-// 비고(이슈/정보) 표시도 공통 레이아웃 표·화면 표가 동일하게 쓴다.
-const NoteCell = ({note}: {note?: StructureNote}) => (
-    <>
-        {note === 'issue' && (
-            <span className="inline-flex items-center">
-                <AlertTriangle aria-hidden="true" className="text-destructive size-4" />
-                <span className="sr-only">이슈 있음</span>
-            </span>
-        )}
-        {note === 'info' && (
-            <span className="inline-flex items-center">
-                <Info aria-hidden="true" className="text-primary size-4" />
-                <span className="sr-only">추가 정보 있음</span>
-            </span>
-        )}
-    </>
-)
+// 자산 표 헤더명 — "이름 (설명)" 형태면 괄호 앞에서 줄바꿈해 두 줄로 보인다(자동 줄바꿈 대신 명시적 <br>).
+const AssetName = ({name}: {name: string}) => {
+    const splitAt = name.indexOf(' (')
+    if (splitAt === -1) return <span>{name}</span>
+    return (
+        <span className="text-center">
+            {name.slice(0, splitAt)}
+            <br />
+            {name.slice(splitAt + 1)}
+        </span>
+    )
+}
 
 // 퍼블리싱 진행 상태 인덱스 데모. 데이터는 src/content/publishing-index.json 단일 소스에서 온다.
 // 이 컴포넌트는 '표현'(상태 색·아이콘 매핑, 뎁스별 rowSpan 계산, 레이아웃, 사용자 유형 필터)만 담당한다.
@@ -63,25 +47,24 @@ const NoteCell = ({note}: {note?: StructureNote}) => (
 // 화면(leaf)의 수동 기입 버전이 이 값과 같으면 "이번 릴리스에서 반영됨"으로 하이라이트한다.
 const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev'
 
-// 상태별 색상 — shadcn 슬롯(primary/destructive)만 사용. warning/success 는 대응 슬롯이 없어
-// 회색(muted)으로 강등한다. 색만으로 구분하지 않도록 상태명을 항상 함께 표기한다. [KWCAG 5.3.1]
-const STATUS_STYLES: Record<Status, string> = {
-    대기중: 'bg-muted text-muted-foreground',
-    진행중: 'bg-primary/10 text-primary',
-    수정요청: 'bg-destructive/10 text-destructive',
-    보완: 'bg-muted text-muted-foreground',
-    완료: 'bg-muted text-muted-foreground',
-    최종완료: 'bg-muted text-muted-foreground',
+// 상태별 Badge 색·변형 — 색만으로 구분하지 않도록 상태명을 항상 함께 표기한다. [KWCAG 5.3.1]
+// success/warning 은 kit Badge 가 제공하는 색으로 매핑(진행=info·보완=warning·완료=success).
+// 완료·최종완료는 같은 success 라, 최종완료만 solid 변형을 써서 완료(solid-pastel)와 시각적으로 겹치지 않게 한다.
+const STATUS_BADGE: Record<Status, {color: 'neutral' | 'info' | 'warning' | 'success' | 'error'; variant?: 'solid'}> = {
+    대기중: {color: 'neutral'},
+    진행중: {color: 'info'},
+    수정요청: {color: 'error'},
+    보완: {color: 'warning'},
+    완료: {color: 'success'},
+    최종완료: {color: 'success', variant: 'solid'},
 }
 
 const StatusTag = ({status}: {status: Status}) => (
-    <span
-        className={`${STATUS_STYLES[status]} typo-caption-regular inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-semibold`}
-    >
-        {status === '최종완료' && <CheckCheck aria-hidden="true" className="size-3" />}
-        {status === '완료' && <Check aria-hidden="true" className="size-3" />}
+    <Badge color={STATUS_BADGE[status].color} variant={STATUS_BADGE[status].variant}>
+        {status === '최종완료' && <CheckCheck aria-hidden="true" />}
+        {status === '완료' && <Check aria-hidden="true" />}
         {status}
-    </span>
+    </Badge>
 )
 
 // 사이트 구조는 뎁스 제한 없는 트리라, 표에 그리려면 각 leaf(실제 화면)를 "뿌리부터 자신까지의
@@ -92,7 +75,6 @@ type FlatLeaf = {
     screenId: string
     status: Status
     version: string
-    note?: StructureNote
     userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 공통(기업·기관 둘 다).
 }
 
@@ -118,7 +100,6 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           screenId: node.screen.screenId,
                           status: node.screen.status,
                           version: node.screen.version,
-                          note: node.screen.note,
                           userType: node.screen.userType ?? branchUserType,
                       },
                   ]
@@ -132,7 +113,6 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 screenId: node.screenId,
                 status: node.status,
                 version: node.version,
-                note: node.note,
                 userType: node.userType ?? inherited,
             },
         ]
@@ -187,15 +167,16 @@ const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
         return cells
     })
 
-// 뎁스 배지 색상 — 시맨틱 토큰 brand(라이트·다크 모드에서 값이 바뀌지 않는 고정색)의
-// 불투명도만 20/40/60/80% 로 단계적으로 올려 뎁스가 깊어질수록 진해지게 한다(새 색상
-// 하드코딩 없음). text-foreground 하나로 통일해도 이 네 단계 전부 라이트·다크 모드 모두
-// 4.5:1 이상 대비를 유지한다(실측 확인). 뎁스가 이 배열보다 깊어지면 마지막 스타일을 그대로 쓴다.
+// 뎁스 배지 색상 — brand(primary) 불투명도를 20/40/70% → solid 로 올려 뎁스가 깊어질수록 진해진다
+// (새 색 하드코딩 없음). 배경이 옅은 얕은 뎁스는 진한 text-foreground 로, 배경이 primary 에 가까워지는
+// 깊은 뎁스는 primary 전용 대비색 text-primary-foreground(라이트=흰색·다크=진회색)로 전환해
+// 라이트·다크 모두 텍스트 대비를 확보한다(어두운 배경 위 어두운 텍스트 문제 해소).
+// 뎁스가 이 배열보다 깊어지면 마지막 스타일을 그대로 쓴다.
 const DEPTH_BADGE_STYLES = [
     'bg-primary/20 text-foreground',
     'bg-primary/40 text-foreground',
-    'bg-primary/60 text-foreground',
-    'bg-primary/80 text-foreground',
+    'bg-primary/70 text-primary-foreground',
+    'bg-primary text-primary-foreground',
 ]
 const depthBadgeClass = (depth: number): string => DEPTH_BADGE_STYLES[Math.min(depth, DEPTH_BADGE_STYLES.length - 1)]
 
@@ -203,8 +184,8 @@ const depthBadgeClass = (depth: number): string => DEPTH_BADGE_STYLES[Math.min(d
 // 공통이라 기업·기관 어느 탭에서나 보인다. '전체'는 프로젝트 전체 화면·진척률 기준.
 type UserTypeFilter = '전체' | UserType
 const USER_TYPE_FILTERS: readonly UserTypeFilter[] = ['전체', ...USER_TYPE_VALUES]
-// id 는 ASCII 로 — 한글 id 는 aria 연결·CSS 선택자에서 문제가 될 수 있어 슬러그로 매핑한다.
-const FILTER_ID: Record<UserTypeFilter, string> = {전체: 'all', 기업: 'corp', 기관: 'org'}
+// 세그먼티드(ToggleGroup) 가 넘겨주는 문자열 value 를 UserTypeFilter 로 좁히는 타입가드([ST-002] as 회피).
+const isUserTypeFilter = (value: string): value is UserTypeFilter => USER_TYPE_FILTERS.some((f) => f === value)
 
 const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean =>
     filter === '전체' || leaf.userType === undefined || leaf.userType === filter
@@ -222,7 +203,6 @@ const ALL_LEAVES = structureGroups.flatMap(collectLeaves)
 
 const PublishingIndex = () => {
     const [filter, setFilter] = useState<UserTypeFilter>('전체')
-    const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
 
     // 선택된 사용자 유형에 맞는 화면만 남기고, 그 부분집합으로 뎁스 컬럼·rowSpan·카운트를 다시 계산한다.
     const leaves = useMemo(() => ALL_LEAVES.filter((leaf) => matchesUserType(leaf, filter)), [filter])
@@ -234,29 +214,6 @@ const PublishingIndex = () => {
     // 작업 진척률 — '최종완료'된 화면 수 / (필터된) 전체 화면 수.
     const doneCount = useMemo(() => leaves.filter((leaf) => leaf.status === '최종완료').length, [leaves])
     const progressPercent = screenCount === 0 ? 0 : Math.round((doneCount / screenCount) * 100)
-
-    // 탭(tablist) 키보드 이동 — 좌우/상하 화살표로 이동+선택, Home/End 로 처음/끝. [KWCAG 6.1.1]
-    const moveTab = (index: number) => {
-        const count = USER_TYPE_FILTERS.length
-        const next = ((index % count) + count) % count
-        setFilter(USER_TYPE_FILTERS[next])
-        tabRefs.current[next]?.focus()
-    }
-    const onTabKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
-        if (event.key === 'ArrowRight' || event.key === 'ArrowDown') {
-            event.preventDefault()
-            moveTab(index + 1)
-        } else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') {
-            event.preventDefault()
-            moveTab(index - 1)
-        } else if (event.key === 'Home') {
-            event.preventDefault()
-            moveTab(0)
-        } else if (event.key === 'End') {
-            event.preventDefault()
-            moveTab(USER_TYPE_FILTERS.length - 1)
-        }
-    }
 
     return (
         <section aria-labelledby="section-publishing-index" className="flex flex-col gap-4">
@@ -277,14 +234,6 @@ const PublishingIndex = () => {
                         <StatusTag status={status} />
                     </li>
                 ))}
-                <li className="text-destructive typo-caption-regular inline-flex items-center gap-1 font-semibold">
-                    <AlertTriangle aria-hidden="true" className="size-3.5" />
-                    이슈
-                </li>
-                <li className="text-primary typo-caption-regular inline-flex items-center gap-1 font-semibold">
-                    <Info aria-hidden="true" className="size-3.5" />
-                    정보
-                </li>
             </ul>
 
             {/* 자산 버전 요약 */}
@@ -308,7 +257,7 @@ const PublishingIndex = () => {
                                             />
                                         )}
                                         <span className="sr-only">{a.kind === 'folder' ? '폴더 ' : '파일 '}</span>
-                                        {a.name}
+                                        <AssetName name={a.name} />
                                     </span>
                                 </th>
                             ))}
@@ -349,9 +298,6 @@ const PublishingIndex = () => {
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 버전
                             </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                비고
-                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -386,9 +332,6 @@ const PublishingIndex = () => {
                                     >
                                         <VersionCell version={layout.version} isCurrent={isCurrent} />
                                     </td>
-                                    <td className="px-4 py-3">
-                                        <NoteCell note={layout.note} />
-                                    </td>
                                 </tr>
                             )
                         })}
@@ -399,37 +342,25 @@ const PublishingIndex = () => {
             {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 전체/기업/기관으로 걸러 보여준다.
           위 공통 레이아웃 표와 구분되도록 간격을 더 둔다. */}
             <div className="mt-4 flex flex-col gap-3">
-                <div
-                    role="tablist"
+                {/* 사용자 유형 필터 — kit ToggleGroup(segmented). 단일 선택이라 type="single",
+                    비어 있는 값(선택 해제)은 무시해 항상 하나가 선택된 상태를 유지한다. 화살표 키·역할은 Radix 담당. */}
+                <ToggleGroup
+                    type="single"
+                    variant="segmented"
+                    value={filter}
+                    onValueChange={(value) => {
+                        if (isUserTypeFilter(value)) setFilter(value)
+                    }}
                     aria-label="사용자 유형별 화면"
-                    className="inline-flex w-fit gap-1 rounded-lg bg-gray-100/50 p-1"
+                    className="w-fit"
                 >
-                    {USER_TYPE_FILTERS.map((f, i) => {
-                        const selected = f === filter
-                        return (
-                            <button
-                                key={f}
-                                ref={(el) => {
-                                    tabRefs.current[i] = el
-                                }}
-                                type="button"
-                                role="tab"
-                                id={`userType-tab-${FILTER_ID[f]}`}
-                                aria-selected={selected}
-                                aria-controls="screen-structure-panel"
-                                tabIndex={selected ? 0 : -1}
-                                onClick={() => setFilter(f)}
-                                onKeyDown={(e) => onTabKeyDown(e, i)}
-                                className={`typo-body-l-medium focus-visible:ring-ring inline-flex min-h-11 cursor-pointer items-center gap-1.5 rounded-md px-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-                                    selected ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground'
-                                }`}
-                            >
-                                <FilterIcon filter={f} />
-                                {f}
-                            </button>
-                        )
-                    })}
-                </div>
+                    {USER_TYPE_FILTERS.map((f) => (
+                        <ToggleGroupItem key={f} value={f} className="gap-1.5 px-4">
+                            <FilterIcon filter={f} />
+                            {f}
+                        </ToggleGroupItem>
+                    ))}
+                </ToggleGroup>
 
                 {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
             진척률은 '최종완료' 화면 비율이라 상태값이 바뀔 때마다 자동으로 갱신된다. */}
@@ -441,13 +372,8 @@ const PublishingIndex = () => {
                 </p>
             </div>
 
-            {/* 사이트 구조 정보 (선택된 사용자 유형 탭의 패널) */}
-            <div
-                id="screen-structure-panel"
-                role="tabpanel"
-                aria-labelledby={`userType-tab-${FILTER_ID[filter]}`}
-                className="bg-background border-border overflow-x-auto rounded-md border"
-            >
+            {/* 사이트 구조 정보 (선택된 사용자 유형으로 필터된 표) — 표의 caption 이 표 자체를 설명한다. */}
+            <div className="bg-background border-border overflow-x-auto rounded-md border">
                 <table className="w-full text-left">
                     <caption className="sr-only">사이트 구조별 화면 ID·상태·버전 예시</caption>
                     <thead>
@@ -465,9 +391,6 @@ const PublishingIndex = () => {
                             </th>
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 버전
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                비고
                             </th>
                         </tr>
                     </thead>
@@ -528,9 +451,6 @@ const PublishingIndex = () => {
                                         }`}
                                     >
                                         <VersionCell version={leaf.version} isCurrent={isCurrent} />
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <NoteCell note={leaf.note} />
                                     </td>
                                 </tr>
                             )

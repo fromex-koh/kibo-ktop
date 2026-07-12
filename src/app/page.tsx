@@ -2,6 +2,7 @@ import Link from 'next/link'
 import {ArrowUpRight, GitBranch} from 'lucide-react'
 import PublishingIndex from '@/components/custom/publishing-index'
 import ThemeToggle from '@/components/composite/theme-toggle'
+import {Badge} from '@/components/kit/badge'
 import {ICON_REGISTRY} from '@/constants/icon-registry'
 import {HOME_CONTENT} from '@/content'
 import {REPOSITORY_URL, SITE_NAME} from '@/constants/site'
@@ -31,9 +32,9 @@ const Home = () => {
                     <ThemeToggle />
                 </div>
                 <header className="flex flex-col items-center gap-3 text-center">
-                    <code className="border-border text-muted-foreground rounded-md border px-2 py-1 font-mono text-sm">
-                        {badge}
-                    </code>
+                    <Badge asChild color="neutral" className="font-mono">
+                        <code>{badge}</code>
+                    </Badge>
                     <h1 className="typo-display-m-bold">{SITE_NAME}</h1>
                     {/* 현재 버전·빌드 시각 (자리만 잡은 placeholder — 위 BUILD_VERSION/BUILD_TIME 참조) */}
                     <p className="typo-body-l-regular text-muted-foreground">
