@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import DatePickerDemo from './date-picker-demo'
+import DatePickerDemo, {DatePickerStatesDemo} from './date-picker-demo'
 
 export const metadata: Metadata = {title: '데이트피커 (DatePicker)'}
 
@@ -14,7 +14,8 @@ const PROPS_ITEMS = [
     ['value', '선택된 날짜(controlled). 없으면 placeholder 표시.', 'Date | undefined'],
     ['onChange', '날짜 선택/해제 시 호출.', '(date?: Date) => void'],
     ['placeholder', '값이 없을 때 표시할 안내 문구.', "string (기본 '연도-월-일')"],
-    ['disabled', '비활성화.', 'boolean'],
+    ['disabled', '비활성화. bg-muted + 흐림, 클릭·포커스 불가.', 'boolean'],
+    ['readOnly', '읽기 전용. 값은 보이지만 달력이 열리지 않는다(비활성과 달리 흐려지지 않음).', 'boolean'],
     ['id·name·aria-invalid 등', '트리거 button 에 전달된다(라벨 연결·검증).', 'button 속성'],
 ] as const
 
@@ -38,6 +39,20 @@ const DatePickerGuidePage = () => (
             </div>
             <DatePickerDemo />
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+        </section>
+
+        <section aria-labelledby="date-picker-state" className="flex flex-col gap-4">
+            <div>
+                <h2 id="date-picker-state" className="typo-h4-bold">
+                    상태 (State)
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    기본(placeholder)·값 입력됨·읽기전용·비활성 상태입니다. <code className="font-mono">readOnly</code>{' '}
+                    는 값은 그대로 보이되 달력이 열리지 않고, <code className="font-mono">disabled</code> 는 흐려지며
+                    클릭·포커스가 막힙니다.
+                </p>
+            </div>
+            <DatePickerStatesDemo />
         </section>
 
         <section aria-labelledby="date-picker-props" className="flex flex-col gap-4">
