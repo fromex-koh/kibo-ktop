@@ -1,6 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
+import {BaseCard} from '@/components/composite/base-card'
 import {Separator} from '@/components/kit/separator'
 
 export const metadata: Metadata = {title: '구분선 (Separator)'}
@@ -32,11 +33,11 @@ const SeparatorGuidePage = () => (
                     <code className="font-mono">my-10</code>(40px)을 클래스로 직접 지정합니다.
                 </p>
             </div>
-            <div className="border-border rounded-md border p-6">
+            <BaseCard>
                 <p className="typo-body-l-regular text-foreground">위 콘텐츠</p>
                 <Separator className={DIVIDER_CLASS} />
                 <p className="typo-body-l-regular text-foreground">아래 콘텐츠</p>
-            </div>
+            </BaseCard>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>
 
