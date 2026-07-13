@@ -6,13 +6,8 @@ import {usePathname} from 'next/navigation'
 import {ArrowUpRight, Blocks, ChevronRight, Component, Layers, LayoutGrid, Palette, Sparkles} from 'lucide-react'
 import type {LucideIcon} from 'lucide-react'
 import type {GuideNavIconKey, GuideNavSection} from '@/constants/guide-nav'
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from '@/components/kit/breadcrumb'
+import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage} from '@/components/kit/breadcrumb'
+import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import ThemeToggle from '@/components/composite/theme-toggle'
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/kit/collapsible'
@@ -181,7 +176,7 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                         <Breadcrumb>
                             <BreadcrumbList>
                                 <BreadcrumbItem>{activeCrumb.category}</BreadcrumbItem>
-                                <BreadcrumbSeparator />
+                                <BreadcrumbDotSeparator />
                                 <BreadcrumbItem>
                                     <BreadcrumbPage>{activeCrumb.label}</BreadcrumbPage>
                                 </BreadcrumbItem>

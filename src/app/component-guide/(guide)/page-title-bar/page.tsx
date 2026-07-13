@@ -4,14 +4,8 @@ import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
 import {Badge} from '@/components/kit/badge'
-import {
-    Breadcrumb,
-    BreadcrumbItem,
-    BreadcrumbLink,
-    BreadcrumbList,
-    BreadcrumbPage,
-    BreadcrumbSeparator,
-} from '@/components/kit/breadcrumb'
+import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from '@/components/kit/breadcrumb'
+import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 
 export const metadata: Metadata = {title: '페이지 타이틀 바 (PageTitleBar)'}
 
@@ -28,11 +22,11 @@ const USAGE_CODE = `<PageTitleBar
         <BreadcrumbItem>
           <BreadcrumbLink href="/">홈</BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
+        <BreadcrumbDotSeparator />
         <BreadcrumbItem>
           <BreadcrumbLink href="/self">자가진단</BreadcrumbLink>
         </BreadcrumbItem>
-        <BreadcrumbSeparator />
+        <BreadcrumbDotSeparator />
         <BreadcrumbItem>
           <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
           <ChevronDownIcon aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
@@ -56,11 +50,11 @@ const DemoBreadcrumb = () => (
             <BreadcrumbItem>
                 <BreadcrumbLink href="/">홈</BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
+            <BreadcrumbDotSeparator />
             <BreadcrumbItem>
                 <BreadcrumbLink href="/self">자가진단</BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
+            <BreadcrumbDotSeparator />
             <BreadcrumbItem>
                 <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
                 <ChevronDownIcon aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />

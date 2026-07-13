@@ -9,8 +9,8 @@ import {
     BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
-    BreadcrumbSeparator,
 } from '@/components/kit/breadcrumb'
+import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 
 export const metadata: Metadata = {title: '브레드크럼 (Breadcrumb)'}
 
@@ -23,11 +23,11 @@ const USAGE_CODE = `<div className="inline-flex items-center rounded-full bg-sur
       <BreadcrumbItem>
         <BreadcrumbLink href="/">홈</BreadcrumbLink>
       </BreadcrumbItem>
-      <BreadcrumbSeparator />
+      <BreadcrumbDotSeparator />
       <BreadcrumbItem>
         <BreadcrumbLink href="/self">자가진단</BreadcrumbLink>
       </BreadcrumbItem>
-      <BreadcrumbSeparator />
+      <BreadcrumbDotSeparator />
       <BreadcrumbItem>
         <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
         {/* 현재 페이지에서 형제 페이지로 이동하는 드롭다운 표시 */}
@@ -44,7 +44,8 @@ const COMPOSITION = [
     ['BreadcrumbItem', '한 항목 <li>.'],
     ['BreadcrumbLink', '이동 가능한 항목(<a>). hover 시 진해진다.'],
     ['BreadcrumbPage', '현재 페이지(이동 불가). 굵게 + foreground, aria-current="page".'],
-    ['BreadcrumbSeparator', '구분자. 기본은 4px 회색 점, children 으로 교체 가능.'],
+    ['BreadcrumbSeparator', '구분자. kit 은 원본 그대로(기본 chevron). children 으로 교체 가능.'],
+    ['BreadcrumbDotSeparator', '프로젝트 표준 점(·) 구분자(composite). kit Separator 에 점을 주입한 조합.'],
     ['BreadcrumbEllipsis', '경로가 길 때 중간을 … 로 접는 표시.'],
 ] as const
 
@@ -73,11 +74,11 @@ const BreadcrumbGuidePage = () => (
                             <BreadcrumbItem>
                                 <BreadcrumbLink href="#">홈</BreadcrumbLink>
                             </BreadcrumbItem>
-                            <BreadcrumbSeparator />
+                            <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
                                 <BreadcrumbLink href="#">자가진단</BreadcrumbLink>
                             </BreadcrumbItem>
-                            <BreadcrumbSeparator />
+                            <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
                                 <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
                                 <ChevronDownIcon aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
@@ -105,7 +106,7 @@ const BreadcrumbGuidePage = () => (
                             <BreadcrumbItem>
                                 <BreadcrumbLink href="#">홈</BreadcrumbLink>
                             </BreadcrumbItem>
-                            <BreadcrumbSeparator />
+                            <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
                                 <BreadcrumbPage>자가진단</BreadcrumbPage>
                             </BreadcrumbItem>
@@ -131,11 +132,11 @@ const BreadcrumbGuidePage = () => (
                             <BreadcrumbItem>
                                 <BreadcrumbLink href="#">홈</BreadcrumbLink>
                             </BreadcrumbItem>
-                            <BreadcrumbSeparator />
+                            <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
                                 <BreadcrumbEllipsis />
                             </BreadcrumbItem>
-                            <BreadcrumbSeparator />
+                            <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
                                 <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
                             </BreadcrumbItem>
