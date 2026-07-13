@@ -13,7 +13,7 @@ import {cn} from '@/lib/utils'
 // 카드는 <label> 이라 카드 어디를 눌러도 컨트롤이 토글된다. 선택 강조는 CSS :has() 가 아니라 React 상태로
 // data-selected 를 직접 얹어 적용한다 — :has([data-state=checked]) 는 동적 attribute 변경에 재평가가
 // 불안정(Chrome 포함)해 토글 후 스타일이 안 바뀌기 때문이다. 색은 Figma 그대로 selectable-card-checked
-// (blue.500, 테두리)·selectable-card-bg(blue.10, 배경) 컴포넌트 시맨틱 토큰.
+// (blue.500, 테두리)·selectable-card-bg(blue.50=#f3f8ff, 배경) 컴포넌트 시맨틱 토큰.
 // 상태: disabled = 컨트롤 비활성 + 카드 흐림, readOnly = 상호작용만 막고(값·모양 유지) 흐리지 않음.
 
 // 라디오 그룹의 현재 선택 값 — 각 카드가 자기 value 와 비교해 선택 여부(data-selected)를 안정적으로 안다.
