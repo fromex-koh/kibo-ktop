@@ -63,6 +63,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {label: 'Chip', href: '/component-guide/chip'},
             {label: 'SelectableCard', href: '/component-guide/selectable-card'},
             {label: 'Stepper', href: '/component-guide/stepper'},
+            {label: 'Breadcrumb', href: '/component-guide/breadcrumb'},
             {label: 'Badge', href: '/component-guide/badge'},
             {label: 'Select', href: '/component-guide/select'},
             {label: 'Input', href: '/component-guide/input'},
