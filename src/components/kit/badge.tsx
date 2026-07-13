@@ -10,7 +10,7 @@ import {cn} from '@/lib/utils'
 // 직접 쓴다(상태 색 계열, PB-05 보조). solid 배지의 흰 텍스트는 text-white 가 무효라
 // badge-solid-fg 토큰을 쓰고, outline 배지의 흰 배경은 bg-card(다크 자동 반사)로 처리한다.
 const badgeVariants = cva(
-    'group/badge inline-flex h-7 w-fit shrink-0 items-center justify-center gap-1 border border-transparent px-4 text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 [&>svg]:pointer-events-none [&>svg]:size-3.5',
+    'group/badge inline-flex w-fit shrink-0 items-center justify-center border border-transparent px-4 font-medium whitespace-nowrap transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 [&>svg]:pointer-events-none',
     {
         variants: {
             variant: {
@@ -18,12 +18,20 @@ const badgeVariants = cva(
                 outline: 'bg-card',
                 solid: 'text-badge-solid-fg',
             },
+            // 크기 — Figma 두 배지 크기. sm(기본)=28px·14px, lg=40px·16px(px-4 동일, 세로만 커짐).
+            size: {
+                sm: 'h-7 gap-1 text-sm [&>svg]:size-3.5',
+                lg: 'h-10 gap-1.5 text-base [&>svg]:size-4',
+            },
             color: {
                 info: '',
                 success: '',
                 warning: '',
                 error: '',
                 neutral: '',
+                // navy — 상태 색이 아닌 브랜드 분류색. 상태색과 동일한 스텝 패턴(pastel bg-50/text-600 ·
+                // outline border-500/text-600 · solid bg-500)을 navy 팔레트로 적용(Figma 기본색 blue/green/… 과 동일 구조).
+                navy: '',
                 // 보조색(Figma secondary-*) — 상태 색이 아니라 분류용. 프로젝트 팔레트(green/orange/grape) 직접 사용.
                 'secondary-green': '',
                 'secondary-orange': '',
@@ -41,6 +49,7 @@ const badgeVariants = cva(
             {variant: 'solid-pastel', color: 'warning', class: 'bg-warning-50 text-warning-600'},
             {variant: 'solid-pastel', color: 'error', class: 'bg-error-50 text-error-500'},
             {variant: 'solid-pastel', color: 'neutral', class: 'bg-gray-100 text-gray-500'},
+            {variant: 'solid-pastel', color: 'navy', class: 'bg-navy-50 text-navy-600'},
             {variant: 'solid-pastel', color: 'secondary-green', class: 'bg-green-50 text-green-800'},
             {variant: 'solid-pastel', color: 'secondary-orange', class: 'bg-orange-50 text-orange-700'},
             {variant: 'solid-pastel', color: 'secondary-grape', class: 'bg-grape-50 text-grape-600'},
@@ -50,6 +59,7 @@ const badgeVariants = cva(
             {variant: 'outline', color: 'warning', class: 'border-warning-500 text-warning-600'},
             {variant: 'outline', color: 'error', class: 'border-error-500 text-error-500'},
             {variant: 'outline', color: 'neutral', class: 'border-gray-300 text-gray-300'},
+            {variant: 'outline', color: 'navy', class: 'border-navy-500 text-navy-600'},
             {variant: 'outline', color: 'secondary-green', class: 'border-green-800 text-green-800'},
             {variant: 'outline', color: 'secondary-orange', class: 'border-orange-700 text-orange-700'},
             {variant: 'outline', color: 'secondary-grape', class: 'border-grape-600 text-grape-600'},
@@ -59,6 +69,7 @@ const badgeVariants = cva(
             {variant: 'solid', color: 'warning', class: 'bg-warning-500'},
             {variant: 'solid', color: 'error', class: 'bg-error-500'},
             {variant: 'solid', color: 'neutral', class: 'bg-gray-300'},
+            {variant: 'solid', color: 'navy', class: 'bg-navy-500'},
             {variant: 'solid', color: 'secondary-green', class: 'bg-green-800'},
             {variant: 'solid', color: 'secondary-orange', class: 'bg-orange-700'},
             {variant: 'solid', color: 'secondary-grape', class: 'bg-grape-600'},
@@ -67,6 +78,7 @@ const badgeVariants = cva(
             variant: 'solid-pastel',
             color: 'neutral',
             shape: 'pill',
+            size: 'sm',
         },
     },
 )
@@ -76,6 +88,7 @@ function Badge({
     variant = 'solid-pastel',
     color = 'neutral',
     shape = 'pill',
+    size = 'sm',
     asChild = false,
     ...props
 }: React.ComponentProps<'span'> & VariantProps<typeof badgeVariants> & {asChild?: boolean}) {
@@ -87,7 +100,8 @@ function Badge({
             data-variant={variant}
             data-color={color}
             data-shape={shape}
-            className={cn(badgeVariants({variant, color, shape}), className)}
+            data-size={size}
+            className={cn(badgeVariants({variant, color, shape, size}), className)}
             {...props}
         />
     )

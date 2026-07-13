@@ -24,6 +24,8 @@ const COLORS = [
     {key: 'warning', label: 'warning', desc: '주의·대기(orange)'},
     {key: 'error', label: 'error', desc: '오류·정지(red)'},
     {key: 'neutral', label: 'neutral', desc: '중립·기타(gray)'},
+    // 브랜드 분류색 — 상태색과 동일 스텝 패턴을 navy 팔레트로 적용.
+    {key: 'navy', label: 'navy', desc: '브랜드·분류(navy)'},
     // 보조색(Figma secondary-*) — 상태가 아닌 분류용 액센트.
     {key: 'secondary-green', label: 'secondary-green', desc: '보조·녹색(green)'},
     {key: 'secondary-orange', label: 'secondary-orange', desc: '보조·주황(orange)'},
@@ -165,6 +167,39 @@ const BadgeGuidePage = () => (
             </div>
         </section>
 
+        <section aria-labelledby="badge-size" className="flex flex-col gap-4">
+            <div>
+                <h2 id="badge-size" className="typo-h4-bold">
+                    Size
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    Figma 두 크기입니다 — <code className="font-mono">sm</code>(기본, 28px·14px)과{' '}
+                    <code className="font-mono">lg</code>(40px·16px). 페이지 타이틀 바처럼 큰 제목 옆에는{' '}
+                    <code className="font-mono">lg</code> 를 씁니다.
+                </p>
+            </div>
+            <div className="flex flex-col gap-3">
+                <div className="flex items-center gap-3">
+                    <span className="typo-caption-regular text-muted-foreground w-16 font-mono">sm</span>
+                    <Badge color="navy" variant="outline" shape="round" size="sm">
+                        KTRS-FM 평가
+                    </Badge>
+                    <Badge color="info" size="sm">
+                        진행중
+                    </Badge>
+                </div>
+                <div className="flex items-center gap-3">
+                    <span className="typo-caption-regular text-muted-foreground w-16 font-mono">lg</span>
+                    <Badge color="navy" variant="outline" shape="round" size="lg">
+                        KTRS-FM 평가
+                    </Badge>
+                    <Badge color="info" size="lg">
+                        진행중
+                    </Badge>
+                </div>
+            </div>
+        </section>
+
         <section aria-labelledby="badge-props" className="flex flex-col gap-4">
             <div>
                 <h2 id="badge-props" className="typo-h4-bold">
@@ -195,10 +230,10 @@ const BadgeGuidePage = () => (
                         {[
                             {
                                 name: 'color',
-                                desc: '색 계열. 상태 5색 + 분류용 보조 3색.',
+                                desc: '색 계열. 상태 5색 + navy(브랜드 분류) + 분류용 보조 3색.',
                                 def: "'neutral'",
                                 control:
-                                    'info | success | warning | error | neutral | secondary-green | secondary-orange | secondary-grape',
+                                    'info | success | warning | error | neutral | navy | secondary-green | secondary-orange | secondary-grape',
                             },
                             {
                                 name: 'variant',
@@ -211,6 +246,12 @@ const BadgeGuidePage = () => (
                                 desc: '모서리 형태.',
                                 def: "'pill'",
                                 control: 'pill | round',
+                            },
+                            {
+                                name: 'size',
+                                desc: '크기. sm=28px·14px, lg=40px·16px.',
+                                def: "'sm'",
+                                control: 'sm | lg',
                             },
                             {
                                 name: 'asChild',
