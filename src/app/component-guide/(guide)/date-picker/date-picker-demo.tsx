@@ -9,7 +9,7 @@ import {Label} from '@/components/kit/label'
 const DatePickerDemo = () => {
     const [date, setDate] = useState<Date | undefined>(undefined)
     return (
-        <div className="flex max-w-90 flex-col gap-2">
+        <div className="flex w-full max-w-90 flex-col gap-2">
             <Label htmlFor="demo-date" className="text-foreground gap-1 font-bold">
                 날짜 선택
             </Label>
@@ -20,7 +20,7 @@ const DatePickerDemo = () => {
 
 // 상태 필드 wrapper — Label + 컨트롤(Input 상태 가이드와 동일 구조).
 const StateField = ({id, label, children}: {id: string; label: string; children: ReactNode}) => (
-    <div className="flex max-w-90 flex-col gap-2">
+    <div className="flex w-full max-w-90 flex-col gap-2">
         <Label htmlFor={id} className="text-foreground font-bold">
             {label}
         </Label>
