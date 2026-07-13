@@ -11,13 +11,13 @@ export const metadata: Metadata = {title: '폼 카드 (FormCard)'}
 
 const USAGE_CODE = `<FormCard
   title="기업정보"
-  subtitle={<><span className="text-destructive">*</span> 표시 항목은 필수 입력 항목입니다.</>}
+  subtitle={<><span className="text-error-500">*</span> 표시 항목은 필수 입력 항목입니다.</>}
   action={<Button variant="tertiary" size="small">최근 입력 정보 불러오기</Button>}
 >
-  {/* 본문 — 2열 폼 필드 (필수 * 는 text-destructive) */}
+  {/* 본문 — 2열 폼 필드. 라벨은 다른 폼(Input/Select/Textarea)과 동일 스타일, 필수 * 는 text-error-500 */}
   <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
     <div className="flex flex-col gap-1.5">
-      <Label htmlFor="corp-type">기업형태 <span className="text-destructive">*</span></Label>
+      <Label htmlFor="corp-type" className="text-foreground gap-1 font-bold">기업형태 <span className="text-error-500">*</span></Label>
       <Select>
         <SelectTrigger id="corp-type" className="w-full">
           <SelectValue placeholder="선택해주세요" />
@@ -28,7 +28,7 @@ const USAGE_CODE = `<FormCard
       </Select>
     </div>
     <div className="flex flex-col gap-1.5">
-      <Label htmlFor="corp-name">기업명 <span className="text-destructive">*</span></Label>
+      <Label htmlFor="corp-name" className="text-foreground gap-1 font-bold">기업명 <span className="text-error-500">*</span></Label>
       <Input id="corp-name" defaultValue="(주)테크놀로지" disabled />
     </div>
   </div>
@@ -64,7 +64,7 @@ const FormCardGuidePage = () => (
                 title="기업정보"
                 subtitle={
                     <>
-                        <span className="text-destructive">*</span> 표시 항목은 필수 입력 항목입니다.
+                        <span className="text-error-500">*</span> 표시 항목은 필수 입력 항목입니다.
                     </>
                 }
                 action={
@@ -76,8 +76,9 @@ const FormCardGuidePage = () => (
                 {/* Figma 배치 — 한 행에 2개씩(2열 그리드), 좁은 폭에선 1열 */}
                 <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="corp-type">
-                            기업형태 <span className="text-destructive">*</span>
+                        <Label htmlFor="corp-type" className="text-foreground gap-1 font-bold">
+                            기업형태
+                            <span className="text-error-500">*</span>
                         </Label>
                         <Select>
                             <SelectTrigger id="corp-type" className="w-full">
@@ -90,19 +91,23 @@ const FormCardGuidePage = () => (
                         </Select>
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="corp-name">
-                            기업명 <span className="text-destructive">*</span>
+                        <Label htmlFor="corp-name" className="text-foreground gap-1 font-bold">
+                            기업명
+                            <span className="text-error-500">*</span>
                         </Label>
                         <Input id="corp-name" defaultValue="(주)테크놀로지" disabled />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="corp-reg">
-                            사업자번호 <span className="text-destructive">*</span>
+                        <Label htmlFor="corp-reg" className="text-foreground gap-1 font-bold">
+                            사업자번호
+                            <span className="text-error-500">*</span>
                         </Label>
                         <Input id="corp-reg" defaultValue="123-45-67890" />
                     </div>
                     <div className="flex flex-col gap-1.5">
-                        <Label htmlFor="corp-corp-no">법인번호</Label>
+                        <Label htmlFor="corp-corp-no" className="text-foreground gap-1 font-bold">
+                            법인번호
+                        </Label>
                         <Input id="corp-corp-no" defaultValue="11222-1234567" />
                     </div>
                 </div>
