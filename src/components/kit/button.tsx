@@ -48,6 +48,11 @@ const buttonVariants = cva(
                     'bg-destructive text-destructive-foreground not-disabled:hover:bg-destructive/90 not-disabled:active:bg-destructive/80',
                 // link 는 인라인 텍스트 링크 — size 의 버튼 박스모델(높이·최소폭·패딩)은 아래 compoundVariants 에서 리셋한다.
                 link: 'text-primary underline-offset-4 not-disabled:hover:underline',
+                // text 는 Figma "button_text" — 채움·테두리 없는 텍스트 버튼(gray.700 = label-foreground). 아이콘+텍스트.
+                // 타이포는 Figma 타입 그대로 typo-body-l-regular(14px·행간 150%·Regular)로 지정한다 — text-sm(행간
+                // 20px)과 달리 행간 150%(21px)라 h-auto 인 이 변형의 높이가 Figma 와 맞는다. 박스모델(높이·최소폭·
+                // 패딩)은 아래 compoundVariants 에서 리셋한다.
+                text: 'typo-body-l-regular text-label-foreground not-disabled:hover:text-foreground aria-expanded:text-foreground',
             },
             size: {
                 // 기본/큰 사이즈 + 아이콘 버튼은 44px 터치 타깃 보장
@@ -94,6 +99,9 @@ const buttonVariants = cva(
             {variant: 'default', size: 'small', class: 'font-bold disabled:font-medium'},
             // link 는 인라인 텍스트 링크라 size 의 버튼 박스모델(높이·최소크기·패딩)을 모두 리셋한다.
             {variant: 'link', class: 'h-auto min-h-0 min-w-0 gap-1 p-0'},
+            // text 도 채움 없는 텍스트 버튼이라 박스모델을 리셋한다. size 의 text-*/svg 크기·gap 은 유지하고
+            // (예: xsmall = text-sm 14px + svg 16px), 높이·최소폭·패딩만 지우고 굵기는 Figma 대로 Regular 로 둔다.
+            {variant: 'text', class: 'h-auto min-h-0 min-w-0 p-0 font-normal'},
         ],
         defaultVariants: {
             variant: 'default',

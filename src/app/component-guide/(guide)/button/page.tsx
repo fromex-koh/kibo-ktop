@@ -71,12 +71,13 @@ const LEGACY_SIZES = [
     'icon-xs',
 ] as const
 
-// Button 이 가진 variant 케이스. default/secondary/tertiary 는 Figma 3 type(버튼 전용 토큰),
+// Button 이 가진 variant 케이스. default/secondary/tertiary/text 는 Figma type(버튼 전용 토큰),
 // ghost/destructive/link 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는 기존 값이다(outline 은 프로젝트 미사용).
 const ALL_VARIANTS = [
     {key: 'default', label: 'default', note: 'Figma Primary'},
     {key: 'secondary', label: 'secondary', note: 'Figma Secondary'},
     {key: 'tertiary', label: 'tertiary', note: 'Figma Tertiary'},
+    {key: 'text', label: 'text', note: 'Figma Text(채움·테두리 없음)'},
     {key: 'ghost', label: 'ghost', note: '내부 컴포넌트용'},
     {key: 'destructive', label: 'destructive', note: '내부 컴포넌트용'},
     {key: 'link', label: 'link', note: '내부 컴포넌트용'},
@@ -139,7 +140,8 @@ const ButtonGuidePage = () => (
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
                     Button 을 디자인에 쓰는 variant 입니다.{' '}
-                    <span className="font-mono">default·secondary·tertiary</span> 는 Figma 3 type(버튼 전용 토큰)이고,{' '}
+                    <span className="font-mono">default·secondary·tertiary·text</span> 는 Figma type(
+                    <span className="font-mono">text</span> 는 채움·테두리 없는 텍스트 버튼)이고,{' '}
                     <span className="font-mono">ghost·destructive·link</span> 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는
                     기존 값입니다(outline 은 목록에서 제외).
                 </p>
