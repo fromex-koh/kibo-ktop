@@ -72,13 +72,55 @@ const SelectGuidePage = () => (
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>
 
+        <section aria-labelledby="select-size" className="flex flex-col gap-4">
+            <div>
+                <h2 id="select-size" className="typo-h4-bold">
+                    사이즈 (Size)
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    Figma 두 사이즈입니다 — <code className="font-mono">Large</code>(기본, 48px)와{' '}
+                    <code className="font-mono">Medium</code>(40px). <code className="font-mono">size</code> prop 으로
+                    정합니다(밀도 높은 UI 용 <code className="font-mono">sm</code>=28px 도 있음).
+                </p>
+            </div>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                <div className="flex max-w-90 flex-col gap-2">
+                    <Label htmlFor="sz-lg" className="text-foreground font-bold">
+                        Large (default · 48px)
+                    </Label>
+                    <Select>
+                        <SelectTrigger id="sz-lg" className="w-full">
+                            <SelectValue placeholder="선택해주세요" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <FruitOptions />
+                        </SelectContent>
+                    </Select>
+                </div>
+                <div className="flex max-w-90 flex-col gap-2">
+                    <Label htmlFor="sz-md" className="text-foreground font-bold">
+                        Medium (md · 40px)
+                    </Label>
+                    <Select>
+                        <SelectTrigger id="sz-md" size="md" className="w-full">
+                            <SelectValue placeholder="선택해주세요" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <FruitOptions />
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+        </section>
+
         <section aria-labelledby="select-state" className="flex flex-col gap-4">
             <div>
                 <h2 id="select-state" className="typo-h4-bold">
                     상태 (State)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    기본·값 선택됨·오류·비활성 상태입니다. <span className="text-foreground font-medium">포커스</span>
+                    기본·값 선택됨·오류·읽기전용·비활성 상태입니다.{' '}
+                    <span className="text-foreground font-medium">포커스</span>
                     (탭 이동·열림) 시 테두리가 <code className="font-mono">blue.500</code> 로 바뀝니다.
                 </p>
             </div>
@@ -129,6 +171,19 @@ const SelectGuidePage = () => (
                     <p id="st-error-msg" role="alert" className="typo-caption-regular text-error-500">
                         필수 항목입니다.
                     </p>
+                </div>
+                <div className="flex max-w-90 flex-col gap-2">
+                    <Label htmlFor="st-readonly" className="text-foreground font-bold">
+                        읽기전용 (readOnly)
+                    </Label>
+                    <Select defaultValue="apple">
+                        <SelectTrigger id="st-readonly" aria-readonly className="w-full">
+                            <SelectValue placeholder="선택해주세요" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <FruitOptions />
+                        </SelectContent>
+                    </Select>
                 </div>
                 <div className="flex max-w-90 flex-col gap-2">
                     <Label htmlFor="st-disabled" className="text-foreground font-bold">
@@ -190,13 +245,19 @@ const SelectGuidePage = () => (
                             },
                             {
                                 name: 'size',
-                                desc: 'SelectTrigger — 높이. default 는 48px(Figma), sm 은 밀도 높은 UI 용 컴팩트.',
+                                desc: 'SelectTrigger — 높이. default(Large)=48px · md(Medium)=40px · sm(컴팩트)=28px.',
                                 def: "'default'",
-                                control: 'default | sm',
+                                control: 'default | md | sm',
                             },
                             {
                                 name: 'aria-invalid',
                                 desc: 'SelectTrigger — 오류 상태. 테두리가 error 색으로 바뀝니다(오류 메시지는 aria-describedby 로 연결).',
+                                def: '-',
+                                control: 'boolean',
+                            },
+                            {
+                                name: 'aria-readonly',
+                                desc: 'SelectTrigger — 읽기전용 표시(bg-muted, 비활성과 달리 흐리지 않음).',
                                 def: '-',
                                 control: 'boolean',
                             },
