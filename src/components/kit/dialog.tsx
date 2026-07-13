@@ -6,6 +6,7 @@
 //   · Title: 24px Bold(text-2xl font-bold) — 원본 16px medium 에서 교체.
 //   · Close(X): 카드 우상단(top-8 right-8) — 원본 top-2 right-2 에서 이동.
 //   · Footer: muted 바(음영·상단선·음수 마진)를 걷어내고, Figma 처럼 카드 패딩 안에서 버튼을 가운데 정렬(gap-6).
+//   · Overlay: 배경 딤을 Figma "dim"(검정 75%)에 맞춰 bg-overlay-xl(scrim 토큰)로, 블러 제거.
 // 포커스 트랩·Esc 닫기·바깥 클릭 닫기·배경 스크롤 잠금 등 동작/접근성은 전부 radix(DialogPrimitive) 원형 그대로다 —
 // styled copy 는 스타일만 책임진다. 내용이 길 때의 스크롤은 primitive 가 높이를 강제하지 않고, 사용처에서 스크롤 영역
 // (예: max-h-* + overflow-y-auto)을 두어 처리한다(가이드의 '내부 스크롤' 케이스 참고).
@@ -38,7 +39,9 @@ function DialogOverlay({className, ...props}: React.ComponentProps<typeof Dialog
         <DialogPrimitive.Overlay
             data-slot="dialog-overlay"
             className={cn(
-                'data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 fixed inset-0 isolate z-50 bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs',
+                // 배경 딤(scrim) — Figma "dim" 반영: 검정 75%(다크는 흰색 75% 자동). 프로젝트 scrim 토큰
+                // bg-overlay-xl 사용(블러 없음). 원본의 bg-black/10·backdrop-blur 에서 교체(스타일만, [SC-04]).
+                'data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 bg-overlay-xl fixed inset-0 isolate z-50 duration-100',
                 className,
             )}
             {...props}
