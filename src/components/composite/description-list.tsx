@@ -13,12 +13,12 @@ import {cn} from '@/lib/utils'
 // ⚠️ empty 색(gray.300, #848b94)은 흰 배경 대비 약 3.3:1 로 본문 대비 기준([5.3.3] 4.5:1) 미만이다 —
 //    Figma "미입력" 플레이스홀더 색을 그대로 반영한 것이라, 본문성 값이 아니라 "값 없음" 상태 표시에만 쓴다.
 
+// 박스 스타일만 분리 export — SelectableDescriptionList 처럼 <dl> 이 아닌 다른 요소(<label>)에 똑같은
+// 카드 박스(배경·테두리·라운드·패딩)를 입혀야 할 때, 클래스 문자열을 중복 작성하지 않고 그대로 재사용한다.
+const descriptionListBoxClassName = 'bg-surface border-subtle-3 flex w-full flex-col gap-3 rounded-md border p-6'
+
 const DescriptionList = ({className, ...props}: ComponentPropsWithoutRef<'dl'>) => (
-    <dl
-        data-slot="description-list"
-        className={cn('bg-surface border-subtle-3 flex w-full flex-col gap-3 rounded-md border p-6', className)}
-        {...props}
-    />
+    <dl data-slot="description-list" className={cn(descriptionListBoxClassName, className)} {...props} />
 )
 
 type DescriptionListItemProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
@@ -44,5 +44,5 @@ const DescriptionListItem = ({term, children, empty = false, className, ...props
     </div>
 )
 
-export {DescriptionList, DescriptionListItem}
+export {DescriptionList, DescriptionListItem, descriptionListBoxClassName}
 export type {DescriptionListItemProps}
