@@ -1,12 +1,12 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {DescriptionList, DescriptionListItem} from '@/components/composite/description-list'
+import {SummaryList, SummaryListItem} from '@/components/composite/summary-list'
 import {FormCard} from '@/components/composite/form-card'
 import {NumberBadge} from '@/components/composite/number-badge'
 import {Button} from '@/components/kit/button'
 
-export const metadata: Metadata = {title: '설명 목록 (DescriptionList)'}
+export const metadata: Metadata = {title: '요약 목록 (SummaryList)'}
 
 // 기업정보 요약 데이터 — [라벨, 값, 미입력여부]. Figma "리스트" 필드 반영(상태 라벨성 junk 행은 제외).
 const COMPANY_INFO = [
@@ -52,21 +52,21 @@ const CAREER_2 = [
 
 const USAGE_CODE = `{/* 리스트는 FormCard(헤더 내장 카드) 본문으로 넣어 실제 화면처럼 배치 */}
 <FormCard title="기업정보">
-  <DescriptionList>
-    <DescriptionListItem term="기업형태">법인</DescriptionListItem>
-    <DescriptionListItem term="기업명">㈜테크놀로지</DescriptionListItem>
+  <SummaryList>
+    <SummaryListItem term="기업형태">법인</SummaryListItem>
+    <SummaryListItem term="기업명">㈜테크놀로지</SummaryListItem>
     {/* 값이 없으면 empty — "미입력"을 더 흐린 색으로 */}
-    <DescriptionListItem term="업종코드" empty>미입력</DescriptionListItem>
-  </DescriptionList>
+    <SummaryListItem term="업종코드" empty>미입력</SummaryListItem>
+  </SummaryList>
 </FormCard>`
 
 const COMPOSED_CODE = `{/* FormCard 헤더는 SectionHeader 를 그대로 내장 — title/action 만 주면 제목+수정 버튼 헤더가 되고,
     목록은 본문(children)으로 들어간다. 헤더를 따로 조립할 필요가 없다. */}
 <FormCard title="기업정보" action={<Button variant="tertiary" size="small">수정</Button>}>
-  <DescriptionList>
-    <DescriptionListItem term="기업형태">법인</DescriptionListItem>
+  <SummaryList>
+    <SummaryListItem term="기업형태">법인</SummaryListItem>
     {/* … */}
-  </DescriptionList>
+  </SummaryList>
 </FormCard>`
 
 const TWO_COLUMN_CODE = `{/* 항목이 많으면 리스트를 2열로 — Figma "2단"(경력 2건). 제목 옆 건수는 NumberBadge */}
@@ -75,32 +75,32 @@ const TWO_COLUMN_CODE = `{/* 항목이 많으면 리스트를 2열로 — Figma 
   action={<Button variant="tertiary" size="small">수정</Button>}
 >
   <div className="grid gap-6 md:grid-cols-2">
-    <DescriptionList>{/* 경력 1 */}</DescriptionList>
-    <DescriptionList>{/* 경력 2 */}</DescriptionList>
+    <SummaryList>{/* 경력 1 */}</SummaryList>
+    <SummaryList>{/* 경력 2 */}</SummaryList>
   </div>
 </FormCard>`
 
 // 조합 API 설명 — [이름, 설명]
 const COMPOSITION = [
     [
-        'DescriptionList',
+        'SummaryList',
         '읽기 전용 정보 목록 컨테이너. 내부적으로 <dl> 을 렌더링한다. 흰 배경·연한 테두리·둥근 모서리 카드.',
     ],
     [
-        'DescriptionListItem',
+        'SummaryListItem',
         '개별 행. term(라벨, <dt>) + 값(children, <dd> 우측 정렬). empty 를 주면 값을 더 흐린 색으로 표시(미입력 등).',
     ],
 ] as const
 
-// 설명 목록 — Figma "기업정보"·"2단" 요약 화면 반영. 목록만 신규 composite, 헤더·카드는 FormCard(SectionHeader 내장) 재사용.
-const DescriptionListGuidePage = () => (
+// 요약 목록 — Figma "기업정보"·"2단" 요약 화면 반영. 목록만 신규 composite, 헤더·카드는 FormCard(SectionHeader 내장) 재사용.
+const SummaryListGuidePage = () => (
     <GuidePageShell
-        title="설명 목록 (DescriptionList)"
+        title="요약 목록 (SummaryList)"
         description="라벨(좌)과 값(우)으로 정보를 나열하는 읽기 전용 요약 목록입니다. 시맨틱은 HTML 정의 목록(<dl>/<dt>/<dd>) 그대로라 스크린리더가 '라벨: 값' 쌍으로 읽습니다. 값 편집이 아니라 조회용입니다."
     >
-        <section aria-labelledby="dl-usage" className="flex flex-col gap-4">
+        <section aria-labelledby="sl-usage" className="flex flex-col gap-4">
             <div>
-                <h2 id="dl-usage" className="typo-h4-bold">
+                <h2 id="sl-usage" className="typo-h4-bold">
                     사용 예시
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
@@ -112,20 +112,20 @@ const DescriptionListGuidePage = () => (
                 </p>
             </div>
             <FormCard title="기업정보">
-                <DescriptionList>
+                <SummaryList>
                     {COMPANY_INFO.map(([term, detail, empty]) => (
-                        <DescriptionListItem key={term} term={term} empty={empty}>
+                        <SummaryListItem key={term} term={term} empty={empty}>
                             {detail}
-                        </DescriptionListItem>
+                        </SummaryListItem>
                     ))}
-                </DescriptionList>
+                </SummaryList>
             </FormCard>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>
 
-        <section aria-labelledby="dl-composed" className="flex flex-col gap-4">
+        <section aria-labelledby="sl-composed" className="flex flex-col gap-4">
             <div>
-                <h2 id="dl-composed" className="typo-h4-bold">
+                <h2 id="sl-composed" className="typo-h4-bold">
                     FormCard 조립 (제목 + 액션)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
@@ -144,20 +144,20 @@ const DescriptionListGuidePage = () => (
                     </Button>
                 }
             >
-                <DescriptionList>
+                <SummaryList>
                     {COMPANY_INFO.map(([term, detail, empty]) => (
-                        <DescriptionListItem key={term} term={term} empty={empty}>
+                        <SummaryListItem key={term} term={term} empty={empty}>
                             {detail}
-                        </DescriptionListItem>
+                        </SummaryListItem>
                     ))}
-                </DescriptionList>
+                </SummaryList>
             </FormCard>
             <CodeBlock code={COMPOSED_CODE} language="tsx" copyLabel="복사" />
         </section>
 
-        <section aria-labelledby="dl-two-column" className="flex flex-col gap-4">
+        <section aria-labelledby="sl-two-column" className="flex flex-col gap-4">
             <div>
-                <h2 id="dl-two-column" className="typo-h4-bold">
+                <h2 id="sl-two-column" className="typo-h4-bold">
                     2단 (2-column)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
@@ -180,32 +180,32 @@ const DescriptionListGuidePage = () => (
                 }
             >
                 <div className="grid gap-6 md:grid-cols-2">
-                    <DescriptionList>
+                    <SummaryList>
                         {CAREER_1.map(([term, detail]) => (
-                            <DescriptionListItem key={term} term={term}>
+                            <SummaryListItem key={term} term={term}>
                                 {detail}
-                            </DescriptionListItem>
+                            </SummaryListItem>
                         ))}
-                    </DescriptionList>
-                    <DescriptionList>
+                    </SummaryList>
+                    <SummaryList>
                         {CAREER_2.map(([term, detail]) => (
-                            <DescriptionListItem key={term} term={term}>
+                            <SummaryListItem key={term} term={term}>
                                 {detail}
-                            </DescriptionListItem>
+                            </SummaryListItem>
                         ))}
-                    </DescriptionList>
+                    </SummaryList>
                 </div>
             </FormCard>
             <CodeBlock code={TWO_COLUMN_CODE} language="tsx" copyLabel="복사" />
         </section>
 
-        <section aria-labelledby="dl-composition" className="flex flex-col gap-4">
+        <section aria-labelledby="sl-composition" className="flex flex-col gap-4">
             <div>
-                <h2 id="dl-composition" className="typo-h4-bold">
+                <h2 id="sl-composition" className="typo-h4-bold">
                     구성
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    설명 목록은 컨테이너와 개별 행으로 이뤄집니다.
+                    요약 목록은 컨테이너와 개별 행으로 이뤄집니다.
                 </p>
             </div>
             <dl className="flex flex-col gap-2">
@@ -220,4 +220,4 @@ const DescriptionListGuidePage = () => (
     </GuidePageShell>
 )
 
-export default DescriptionListGuidePage
+export default SummaryListGuidePage
