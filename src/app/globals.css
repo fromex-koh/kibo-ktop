@@ -71,6 +71,15 @@
     input[type='number'] {
         appearance: textfield;
     }
+
+    /* search 인풋의 네이티브 X(지우기) 버튼 제거 — 브라우저마다 모양·클릭 영역·포커스 가능 여부가 달라
+       ([6.1.1] 키보드 접근 보장 불가) SearchBar(composite) 가 자체 X 버튼(kit Button, 키보드 포커스 가능)으로
+       대체한다. Chrome/Safari(WebKit/Blink)만 전용 셀렉터가 있다 — Firefox 는 애초에 기본 X 버튼을 그리지 않아
+       추가 처리가 필요 없다. */
+    input[type='search']::-webkit-search-cancel-button,
+    input[type='search']::-webkit-search-decoration {
+        appearance: none;
+    }
 }
 
 /* PageHeader compact 변형 전용 합성 typo — 이름이 다른 두 typo 토큰을 브레이크포인트(768px)에서
