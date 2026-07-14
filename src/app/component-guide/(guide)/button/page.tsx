@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {ArrowRight, Download, LoaderCircle, Sun} from 'lucide-react'
+import {ArrowRight, Download, LoaderCircle, Search, Sun} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
@@ -56,6 +56,15 @@ const ICON_SIZES = [
     {key: 'icon', label: 'icon', height: 44},
     {key: 'icon-sm', label: 'icon-sm', height: 36},
     {key: 'icon-xs', label: 'icon-xs', height: 32},
+] as const
+
+// 아이콘 전용 버튼에 쓸 수 있는 variant — 텍스트 버튼과 동일하게 Figma 3 type(primary/secondary/tertiary)
+// + 프로젝트 내부용 ghost 를 전부 지원한다(variant·size 는 cva 의 독립된 축이라 서로 제약이 없다).
+const ICON_VARIANTS = [
+    {key: 'default', label: 'primary'},
+    {key: 'secondary', label: 'secondary'},
+    {key: 'tertiary', label: 'tertiary'},
+    {key: 'ghost', label: 'ghost'},
 ] as const
 
 const LEGACY_SIZES = [
@@ -227,25 +236,84 @@ const ButtonGuidePage = () => (
         <section aria-labelledby="button-icon-matrix" className="flex flex-col gap-4">
             <div>
                 <h2 id="button-icon-matrix" className="typo-h4-bold">
-                    아이콘 전용 버튼 (ghost)
+                    아이콘 전용 버튼
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    아이콘만 있는 정사각 버튼입니다. 프로젝트에선 <span className="font-mono">ghost</span> variant 로만
-                    씁니다(헤더 테마 토글 등). 아이콘만 있으므로 <code className="font-mono">aria-label</code> 로 용도를
-                    알리고 내부 아이콘은 <code className="font-mono">aria-hidden</code> 입니다(5.1.1).{' '}
+                    아이콘만 있는 정사각 버튼입니다. <span className="font-mono">variant</span> 와{' '}
+                    <span className="font-mono">size</span> 는 서로 독립된 축이라, 텍스트 버튼과 똑같이{' '}
+                    <span className="font-mono">primary·secondary·tertiary</span>(+ 내부용{' '}
+                    <span className="font-mono">ghost</span>) 를 아이콘 버튼에도 그대로 쓸 수 있습니다. 아이콘만
+                    있으므로 <code className="font-mono">aria-label</code> 로 용도를 알리고 내부 아이콘은{' '}
+                    <code className="font-mono">aria-hidden</code> 입니다(5.1.1).{' '}
                     <code className="font-mono">icon</code> (44px)은 터치 타깃을 보장하고, 그 이하는 밀도 높은 UI 용
-                    컴팩트 예외입니다. 아이콘 글리프는 icon-sm=24px 기준으로 스케일됩니다.
+                    컴팩트 예외입니다.
+                </p>
+            </div>
+            <div className="bg-background border-border overflow-x-auto rounded-md border">
+                <table className="w-full text-left">
+                    <caption className="sr-only">아이콘 버튼 variant·size 조합 미리보기</caption>
+                    <thead>
+                        <tr className="border-border border-b bg-gray-100/25">
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Size
+                            </th>
+                            {ICON_VARIANTS.map((v) => (
+                                <th key={v.key} scope="col" className="typo-body-l-medium px-4 py-3">
+                                    {v.label}
+                                </th>
+                            ))}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {ICON_SIZES.map((size) => (
+                            <tr key={size.key} className="border-border bg-background border-b last:border-b-0">
+                                <th
+                                    scope="row"
+                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
+                                >
+                                    {size.label}
+                                    <span className="typo-caption-regular text-muted-foreground block font-sans">
+                                        {size.height}px
+                                    </span>
+                                </th>
+                                {ICON_VARIANTS.map((v) => (
+                                    <td key={v.key} className="px-4 py-3 align-middle">
+                                        <div className="flex flex-col items-start gap-2">
+                                            <Button variant={v.key} size={size.key} aria-label="라이트 모드">
+                                                <Sun aria-hidden="true" />
+                                            </Button>
+                                            <CopyChip value={`variant="${v.key}" size="${size.key}"`} label="복사" />
+                                        </div>
+                                    </td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section aria-labelledby="button-icon-pill" className="flex flex-col gap-4">
+            <div>
+                <h2 id="button-icon-pill" className="typo-h4-bold">
+                    완전 원형 (pill)
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    아이콘 버튼의 기본 모서리는 <span className="font-mono">rounded-sm</span>(8px) 이지만, 검색 바의
+                    검색 버튼처럼 완전한 원형이 필요하면{' '}
+                    <code className="font-mono">className=&quot;rounded-full&quot;</code> 로 덮어씁니다(twMerge 가 기본
+                    radius 를 정확히 치환합니다). 어떤 <span className="font-mono">variant</span> 에도 그대로
+                    적용됩니다.
                 </p>
             </div>
             <div className="border-border flex flex-wrap items-end gap-6 rounded-md border p-6">
-                {ICON_SIZES.map((size) => (
-                    <div key={size.key} className="flex flex-col items-center gap-2">
-                        <Button variant="ghost" size={size.key} aria-label="라이트 모드">
-                            <Sun aria-hidden="true" />
+                {ICON_VARIANTS.map((v) => (
+                    <div key={v.key} className="flex flex-col items-center gap-2">
+                        <Button variant={v.key} size="icon" className="rounded-full" aria-label="검색">
+                            <Search aria-hidden="true" />
                         </Button>
-                        <span className="typo-caption-regular text-foreground font-mono">{size.label}</span>
-                        <span className="typo-caption-regular text-muted-foreground">{size.height}px</span>
-                        <CopyChip value={`variant="ghost" size="${size.key}"`} label="복사" />
+                        <span className="typo-caption-regular text-foreground font-mono">{v.label}</span>
+                        <CopyChip value={`variant="${v.key}" size="icon" className="rounded-full"`} label="복사" />
                     </div>
                 ))}
             </div>

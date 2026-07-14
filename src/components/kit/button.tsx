@@ -29,6 +29,8 @@ import {cn} from '@/lib/utils'
 // 색/반경/포커스는 프로젝트 디자인 토큰(--ds-*) 브릿지 유틸을 사용한다.
 // variant 는 전용 버튼 토큰(button-*-fill / -hover / -pressed)에 정밀 연결한다.
 // size 는 control-h 토큰을 쓰되, 상호작용 타깃은 min-h-11(44px, KWCAG 6.1.3)로 보정한다.
+// 변형 키 이름(default·secondary·…)·defaultVariants·셸은 원본과 동일하게 유지한다 — kit 은 스타일만 책임진다.
+// (원본의 default 가 이 프로젝트의 Figma "Primary" 다. 이름은 안 바꾸고 가이드/문서에서 "Primary" 로 설명한다.)
 // ─────────────────────────────────────────────────────────────────────────────
 const buttonVariants = cva(
     "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:outline-2 focus-visible:outline-dotted focus-visible:outline-ring focus-visible:outline-offset-2 not-disabled:active:not-aria-[haspopup]:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -59,17 +61,22 @@ const buttonVariants = cva(
                 default: 'h-control-h-md min-h-11 gap-2 px-4',
                 lg: 'h-control-h-lg min-h-11 gap-2 px-6',
                 // 정사각 아이콘 전용 — 버튼 높이는 텍스트 스케일에 대응(2xl=60·xl=52·lg=48·icon=44·sm=36·xs=32).
-                // 아이콘 글리프는 icon-sm=24px 를 기준으로 4px 스텝 스케일(xs20·sm24·icon28·lg32·xl36·2xl40).
-                'icon-2xl': "size-control-h-2xl min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-10",
-                'icon-xl': "size-control-h-xl min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-9",
-                icon: "size-control-h-md min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-7",
-                'icon-lg': "size-control-h-lg min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-8",
+                // 아이콘 글리프는 프로젝트 size-icon-* 토큰(xs12·sm16·md20·lg24·xl32·2xl40)에서, SearchBar 검색
+                // 버튼(44px 버튼·24px 아이콘 = 0.545 비율, Figma 실측)과 같은 비율에 가장 가까운 토큰을 쓴다.
+                // 토큰 스케일 간격이 4px 씩 늘다가 xl 부터 8px 씩 벌어져(24→32→40), 이 비율에 맞추면 icon/icon-lg
+                // 가 24px 로, icon-xl/icon-2xl 이 32px 로 겹친다 — 버튼 박스만 커지고 아이콘은 유지되는 흔한
+                // 패턴(Material 등)으로, 임의 계단값보다 비율 오차가 훨씬 작다(최대 0.07 vs 기존 0.15+).
+                'icon-2xl':
+                    "size-control-h-2xl min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-xl",
+                'icon-xl': "size-control-h-xl min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-xl",
+                icon: "size-control-h-md min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-lg",
+                'icon-lg': "size-control-h-lg min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-lg",
                 // 컴팩트 변형(밀도 높은 UI용) — 44px 미만, 인접 간격 확보 전제하에 제한적으로 사용
                 sm: 'h-control-h-sm gap-1.5 rounded-md px-3 text-xs',
                 xs: "h-control-h-xs gap-1 rounded-md px-2 text-xs [&_svg:not([class*='size-'])]:size-3",
                 // 아이콘 버튼 모서리는 텍스트 버튼과 맞춘다 — sm 계열=rounded-sm(8px), xs=rounded-2xs(4px, 2xsmall 과 동일).
-                'icon-sm': "size-control-h-sm rounded-sm [&_svg:not([class*='size-'])]:size-6",
-                'icon-xs': "size-control-h-xs rounded-2xs [&_svg:not([class*='size-'])]:size-5",
+                'icon-sm': "size-control-h-sm rounded-sm [&_svg:not([class*='size-'])]:size-icon-md",
+                'icon-xs': "size-control-h-xs rounded-2xs [&_svg:not([class*='size-'])]:size-icon-sm",
                 // Figma 버튼 사이즈 스케일 — xlarge/large/medium 은 44px 터치 타깃 보장, small/xsmall/2xsmall 은
                 // 컴팩트 예외(44px 미만, 인접 간격 확보 전제). min-w 는 Figma 컴포넌트의 실측 폭(텍스트 "버튼명"
                 // 기준 hug 폭)이다. large 는 primary 만 폰트가 18px(다른 type 은 16px)라 실측 폭도 달라 아래
