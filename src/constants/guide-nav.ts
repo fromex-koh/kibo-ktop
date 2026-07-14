@@ -85,6 +85,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {label: 'SummaryList', href: '/component-guide/summary-list'},
             {label: 'SelectableSummaryList', href: '/component-guide/selectable-summary-list'},
             {label: 'Separator', href: '/component-guide/separator'},
+            {label: 'ScrollToTopButton', href: '/component-guide/scroll-to-top-button'},
         ],
     },
 ]
