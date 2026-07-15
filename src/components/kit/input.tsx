@@ -10,7 +10,7 @@ import {cn} from '@/lib/utils'
 // PROJECT-STYLE: Figma 입력/선택 컨트롤 기본 테두리는 border-control(gray.200)로 통일한다.
 // 배경은 bg-surface(흰 배경) — Select 와 통일. disabled/read-only 는 bg-muted 로 덮는다.
 // placeholder 는 Figma 대로 text-placeholder(gray.700).
-// focus 는 outline(outline-2 dotted, 색은 --color-ring) + outline-offset-2. 에러(aria-invalid)는 테두리
+// focus 는 Button 과 같은 solid outline(outline-2, 색은 --color-ring) + outline-offset-2. 에러(aria-invalid)는 테두리
 // (border-destructive)만 쓴다(포커스링/box-shadow 없음). 그 외 색은 shadcn 슬롯 — 다크 자동 반사(PB-06).
 function Input({className, type, ...props}: React.ComponentProps<'input'>) {
     return (
@@ -20,7 +20,7 @@ function Input({className, type, ...props}: React.ComponentProps<'input'>) {
             className={cn(
                 'h-control-h-lg border-control bg-surface w-full min-w-0 rounded-sm border px-4 text-base transition-colors outline-none',
                 'placeholder:text-placeholder',
-                'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dotted',
+                'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid',
                 'aria-invalid:border-destructive',
                 'read-only:bg-muted',
                 'disabled:bg-muted disabled:cursor-not-allowed disabled:opacity-50',

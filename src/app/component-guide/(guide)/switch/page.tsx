@@ -1,4 +1,6 @@
 import type {Metadata} from 'next'
+import {cn} from '@/lib/utils'
+import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Label} from '@/components/kit/label'
@@ -6,7 +8,7 @@ import {Switch} from '@/components/kit/switch'
 
 export const metadata: Metadata = {title: '스위치 (Switch)'}
 
-const USAGE_CODE = `<div className="flex items-center gap-2">
+const USAGE_CODE = `<div className={cn('flex w-fit items-center gap-2', FIELD_FOCUS_RING)}>
   <Switch id="marketing" defaultChecked />
   <Label htmlFor="marketing">마케팅 정보 수신</Label>
 </div>`
@@ -103,11 +105,11 @@ const SwitchGuidePage = () => (
                 </p>
             </div>
             <div className="border-border flex flex-col gap-4 rounded-md border p-6">
-                <div className="flex items-center gap-2">
+                <div className={cn('flex w-fit items-center gap-2', FIELD_FOCUS_RING)}>
                     <Switch id="sw-marketing" defaultChecked />
                     <Label htmlFor="sw-marketing">마케팅 정보 수신</Label>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className={cn('flex w-fit items-center gap-2', FIELD_FOCUS_RING)}>
                     <Switch id="sw-alarm" />
                     <Label htmlFor="sw-alarm">푸시 알림 받기</Label>
                 </div>

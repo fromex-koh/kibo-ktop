@@ -4,10 +4,16 @@
 
 // external: true 면 새 창(target=_blank)으로 여는 링크(사이드바 콘텐츠 밖에서 봐야 하는 독립 화면).
 export type GuideNavItem = {label: string; href: string; external?: boolean}
+export type GuideNavItemGroup = {title: string; items: GuideNavItem[]}
 // icon: 사이드 상위 메뉴(섹션) 아이콘의 '키'. 실제 lucide 컴포넌트는 클라이언트(sidebar-layout)에서
 // 매핑한다 — 컴포넌트(메서드 있는 객체)는 서버→클라이언트 prop 경계를 못 넘으므로 직렬화 가능한 문자열로 둔다.
 export type GuideNavIconKey = 'primitive' | 'semantic' | 'effect' | 'layout' | 'component'
-export type GuideNavSection = {title: string; icon: GuideNavIconKey; items: GuideNavItem[]}
+export type GuideNavSection = {
+    title: string
+    icon: GuideNavIconKey
+    items?: GuideNavItem[]
+    groups?: GuideNavItemGroup[]
+}
 
 export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
     {
@@ -49,45 +55,65 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
     {
         title: '컴포넌트',
         icon: 'component',
-        items: [
-            {label: 'Icon', href: '/component-guide/icon'},
-            {label: 'ListMarker', href: '/component-guide/list-marker'},
-            {label: 'Header', href: '/component-guide/header'},
-            {label: 'PageHeader', href: '/component-guide/page-header'},
-            {label: 'SectionHeader', href: '/component-guide/section-header'},
-            {label: 'SubSectionHeader', href: '/component-guide/sub-section-header'},
-            {label: 'StepHeader', href: '/component-guide/step-header'},
-            {label: 'PageTitleBar', href: '/component-guide/page-title-bar'},
-            {label: 'ActionBar', href: '/component-guide/action-bar'},
-            {label: 'Button', href: '/component-guide/button'},
-            {label: 'Checkbox', href: '/component-guide/checkbox'},
-            {label: 'Radio', href: '/component-guide/radio'},
-            {label: 'Switch', href: '/component-guide/switch'},
-            {label: 'ToggleGroup', href: '/component-guide/toggle-group'},
-            {label: 'Chip', href: '/component-guide/chip'},
-            {label: 'SelectableCard', href: '/component-guide/selectable-card'},
-            {label: 'Stepper', href: '/component-guide/stepper'},
-            {label: 'Breadcrumb', href: '/component-guide/breadcrumb'},
-            {label: 'Badge', href: '/component-guide/badge'},
-            {label: 'NumberBadge', href: '/component-guide/number-badge'},
-            {label: 'Alert', href: '/component-guide/alert'},
-            {label: 'ReviewList', href: '/component-guide/review-list'},
-            {label: 'Dialog', href: '/component-guide/dialog'},
-            {label: 'Select', href: '/component-guide/select'},
-            {label: 'Combobox', href: '/component-guide/combobox'},
-            {label: 'Input', href: '/component-guide/input'},
-            {label: 'SearchBar', href: '/component-guide/search-bar'},
-            {label: 'DatePicker', href: '/component-guide/date-picker'},
-            {label: 'Textarea', href: '/component-guide/textarea'},
-            {label: 'Label', href: '/component-guide/label'},
-            {label: 'BaseCard', href: '/component-guide/base-card'},
-            {label: 'FormCard', href: '/component-guide/form-card'},
-            {label: 'TabCard', href: '/component-guide/tab-card'},
-            {label: 'Tabs', href: '/component-guide/tabs'},
-            {label: 'SummaryList', href: '/component-guide/summary-list'},
-            {label: 'SelectableSummaryList', href: '/component-guide/selectable-summary-list'},
-            {label: 'Separator', href: '/component-guide/separator'},
-            {label: 'ScrollToTopButton', href: '/component-guide/scroll-to-top-button'},
+        groups: [
+            {
+                title: '폼 요소',
+                items: [
+                    {label: 'Button', href: '/component-guide/button'},
+                    {label: 'Checkbox', href: '/component-guide/checkbox'},
+                    {label: 'Radio', href: '/component-guide/radio'},
+                    {label: 'Switch', href: '/component-guide/switch'},
+                    {label: 'ToggleGroup', href: '/component-guide/toggle-group'},
+                    {label: 'Chip', href: '/component-guide/chip'},
+                    {label: 'SelectableCard', href: '/component-guide/selectable-card'},
+                    {label: 'Select', href: '/component-guide/select'},
+                    {label: 'Combobox', href: '/component-guide/combobox'},
+                    {label: 'Input', href: '/component-guide/input'},
+                    {label: 'SearchBar', href: '/component-guide/search-bar'},
+                    {label: 'DatePicker', href: '/component-guide/date-picker'},
+                    {label: 'Textarea', href: '/component-guide/textarea'},
+                    {label: 'Label', href: '/component-guide/label'},
+                ],
+            },
+            {
+                title: '레이아웃',
+                items: [
+                    {label: 'Header', href: '/component-guide/header'},
+                    {label: 'PageHeader', href: '/component-guide/page-header'},
+                    {label: 'SectionHeader', href: '/component-guide/section-header'},
+                    {label: 'SubSectionHeader', href: '/component-guide/sub-section-header'},
+                    {label: 'StepHeader', href: '/component-guide/step-header'},
+                    {label: 'PageTitleBar', href: '/component-guide/page-title-bar'},
+                    {label: 'ActionBar', href: '/component-guide/action-bar'},
+                    {label: 'Stepper', href: '/component-guide/stepper'},
+                    {label: 'Breadcrumb', href: '/component-guide/breadcrumb'},
+                    {label: 'BaseCard', href: '/component-guide/base-card'},
+                    {label: 'FormCard', href: '/component-guide/form-card'},
+                    {label: 'TabCard', href: '/component-guide/tab-card'},
+                    {label: 'Tabs', href: '/component-guide/tabs'},
+                    {label: 'Separator', href: '/component-guide/separator'},
+                    {label: 'ScrollToTopButton', href: '/component-guide/scroll-to-top-button'},
+                ],
+            },
+            {
+                title: '데이터 표시',
+                items: [
+                    {label: 'ReviewList', href: '/component-guide/review-list'},
+                    {label: 'SummaryList', href: '/component-guide/summary-list'},
+                    {label: 'SelectableSummaryList', href: '/component-guide/selectable-summary-list'},
+                ],
+            },
+            {
+                title: '디자인 요소',
+                items: [
+                    {label: 'Icon', href: '/component-guide/icon'},
+                    {label: 'ListMarker', href: '/component-guide/list-marker'},
+                    {label: 'Badge', href: '/component-guide/badge'},
+                    {label: 'NumberBadge', href: '/component-guide/number-badge'},
+                    {label: 'Alert', href: '/component-guide/alert'},
+                    {label: 'Dialog', href: '/component-guide/dialog'},
+                ],
+            },
         ],
     },
 ]

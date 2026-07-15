@@ -5,7 +5,7 @@ import Link from 'next/link'
 import {usePathname} from 'next/navigation'
 import {ArrowUpRight, Blocks, ChevronRight, Component, Layers, LayoutGrid, Palette, Sparkles} from 'lucide-react'
 import type {LucideIcon} from 'lucide-react'
-import type {GuideNavIconKey, GuideNavSection} from '@/constants/guide-nav'
+import type {GuideNavIconKey, GuideNavItem, GuideNavSection} from '@/constants/guide-nav'
 import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage} from '@/components/kit/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
@@ -58,7 +58,14 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
 
     // 현재 라우트가 속한 (섹션, 항목) — 상단 브레드크럼(카테고리 > 현재)과 섹션 기본 펼침에 쓴다.
     const activeCrumb = navSections
-        .flatMap((section) => section.items.map((item) => ({category: section.title, ...item})))
+        .flatMap((section) => {
+            const sectionItems = section.items?.map((item) => ({category: section.title, ...item})) ?? []
+            const groupItems =
+                section.groups?.flatMap((group) =>
+                    group.items.map((item) => ({category: `${section.title} · ${group.title}`, ...item})),
+                ) ?? []
+            return [...sectionItems, ...groupItems]
+        })
         .find((item) => !item.external && item.href === pathname)
 
     return (
@@ -113,45 +120,21 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                                                 </CollapsibleTrigger>
                                                 <CollapsibleContent>
                                                     <SidebarMenuSub>
-                                                        {section.items.map((item) => {
-                                                            // external 은 새 창 링크. 그 외엔 현재 라우트면 활성.
-                                                            const isActive = !item.external && pathname === item.href
-                                                            return (
-                                                                <SidebarMenuSubItem key={item.href}>
-                                                                    <SidebarMenuSubButton
-                                                                        asChild
-                                                                        isActive={isActive}
-                                                                        aria-current={isActive ? 'page' : undefined}
-                                                                    >
-                                                                        <Link
-                                                                            href={item.href}
-                                                                            {...(item.external
-                                                                                ? {
-                                                                                      target: '_blank',
-                                                                                      rel: 'noopener noreferrer',
-                                                                                  }
-                                                                                : {})}
-                                                                        >
-                                                                            <span className="flex-1 truncate">
-                                                                                {item.label}
-                                                                            </span>
-                                                                            {item.external && (
-                                                                                <>
-                                                                                    <ArrowUpRight
-                                                                                        aria-hidden="true"
-                                                                                        className="size-3.5 shrink-0"
-                                                                                    />
-                                                                                    <span className="sr-only">
-                                                                                        {' '}
-                                                                                        (새 창에서 열림)
-                                                                                    </span>
-                                                                                </>
-                                                                            )}
-                                                                        </Link>
-                                                                    </SidebarMenuSubButton>
-                                                                </SidebarMenuSubItem>
-                                                            )
-                                                        })}
+                                                        {section.items?.map((item) => (
+                                                            <GuideNavSubItem key={item.href} item={item} />
+                                                        ))}
+                                                        {section.groups?.map((group) => (
+                                                            <SidebarMenuSubItem key={group.title} className="mt-2">
+                                                                <p className="text-muted-foreground px-2 py-1 text-xs font-semibold">
+                                                                    {group.title}
+                                                                </p>
+                                                                <SidebarMenuSub className="mx-0 border-l-0 px-0">
+                                                                    {group.items.map((item) => (
+                                                                        <GuideNavSubItem key={item.href} item={item} />
+                                                                    ))}
+                                                                </SidebarMenuSub>
+                                                            </SidebarMenuSubItem>
+                                                        ))}
                                                     </SidebarMenuSub>
                                                 </CollapsibleContent>
                                             </SidebarMenuItem>
@@ -202,6 +185,35 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                 </main>
             </SidebarInset>
         </SidebarProvider>
+    )
+}
+
+const GuideNavSubItem = ({item}: {item: GuideNavItem}) => {
+    const pathname = usePathname()
+    const isActive = !item.external && pathname === item.href
+
+    return (
+        <SidebarMenuSubItem>
+            <SidebarMenuSubButton asChild isActive={isActive} aria-current={isActive ? 'page' : undefined}>
+                <Link
+                    href={item.href}
+                    {...(item.external
+                        ? {
+                              target: '_blank',
+                              rel: 'noopener noreferrer',
+                          }
+                        : {})}
+                >
+                    <span className="flex-1 truncate">{item.label}</span>
+                    {item.external && (
+                        <>
+                            <ArrowUpRight aria-hidden="true" className="size-3.5 shrink-0" />
+                            <span className="sr-only"> (새 창에서 열림)</span>
+                        </>
+                    )}
+                </Link>
+            </SidebarMenuSubButton>
+        </SidebarMenuSubItem>
     )
 }
 

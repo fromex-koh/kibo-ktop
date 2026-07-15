@@ -9,17 +9,17 @@ import {Label} from '@/components/kit/label'
 
 export const metadata: Metadata = {title: '체크박스 (Checkbox)'}
 
-const USAGE_CODE = `<div className="flex max-w-90 items-center gap-2">
+const USAGE_CODE = `<div className={cn('flex w-fit max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
   <Checkbox id="terms" defaultChecked />
   <Label htmlFor="terms">이용약관에 동의합니다</Label>
 </div>`
 
-const DEPTH1_CODE = `<div className="flex max-w-90 items-center gap-2">
+const DEPTH1_CODE = `<div className={cn('flex w-fit max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
   <Checkbox id="agree-1" />
   <Label htmlFor="agree-1">체크박스</Label>
 </div>`
 
-const DEPTH2_CODE = `<div className="flex max-w-90 flex-col gap-1">
+const DEPTH2_CODE = `<div className={cn('flex w-fit max-w-90 flex-col gap-1', FIELD_FOCUS_RING)}>
   <div className="flex items-center gap-2">
     <Checkbox id="agree-2" aria-describedby="agree-2-desc" />
     <Label htmlFor="agree-2" className="font-bold text-foreground">체크박스</Label>
@@ -60,7 +60,7 @@ const CheckboxGuidePage = () => (
                     <code className="font-mono">id</code> 로 연결해 함께 씁니다. 라벨을 클릭해도 토글됩니다.
                 </p>
             </div>
-            <div className={cn('flex max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
+            <div className={cn('flex w-fit max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
                 <Checkbox id="terms" defaultChecked />
                 <Label htmlFor="terms">이용약관에 동의합니다</Label>
             </div>
@@ -139,7 +139,7 @@ const CheckboxGuidePage = () => (
 
             <div className="flex flex-col gap-2">
                 <h3 className="typo-body-l-medium text-foreground">1depth — 라벨만</h3>
-                <div className={cn('flex max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
+                <div className={cn('flex w-fit max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
                     <Checkbox id="depth-1" />
                     <Label htmlFor="depth-1">체크박스</Label>
                 </div>
@@ -155,8 +155,8 @@ const CheckboxGuidePage = () => (
                     <code className="font-mono">items-center</code>)하고, 설명은 제목 아래로 들여써 감싸는 wrapper(
                     <code className="font-mono">max-w-90</code>=360) 폭에서 줄바꿈됩니다.
                 </p>
-                <div className="flex max-w-90 flex-col gap-1">
-                    <div className={cn('flex items-center gap-2', FIELD_FOCUS_RING)}>
+                <div className={cn('flex w-fit max-w-90 flex-col gap-1', FIELD_FOCUS_RING)}>
+                    <div className="flex items-center gap-2">
                         <Checkbox id="depth-2" aria-describedby="depth-2-desc" />
                         <Label htmlFor="depth-2" className="text-foreground font-bold">
                             체크박스

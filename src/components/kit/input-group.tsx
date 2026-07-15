@@ -18,7 +18,7 @@ import {Textarea} from '@/components/kit/textarea'
 // 박스 모델 변경 — 원본은 컨테이너에 고정 h-8 + 개별 px 보정(has-[data-align=...])으로 여백을 짰지만,
 // 이 프로젝트는 "여백은 컨테이너가 한 번에, 자식은 p-0"로 단순화했다: InputGroup 이 rounded-sm·h-control-h-lg·
 // px-4·gap-2 를 갖고, InputGroupInput/Textarea 는 자기 테두리·배경·패딩을 전부 지우고 컨테이너 안에 꽉 찬다.
-// 포커스도 원본의 ring 대신 kit/Input 과 통일된 outline(점선) 스타일을 컨테이너에 얹는다.
+// 포커스도 원본의 ring 대신 Button 과 같은 solid outline 스타일을 컨테이너에 얹는다.
 //
 // InputGroupButton 은 원본처럼 별도 size 축(xs/sm/icon-xs/icon-sm)을 새로 두지 않는다 — kit/Button 이 이미
 // icon-xs~icon-2xl 의 촘촘한 크기 스케일을 갖고 있어(32~60px), 중복 스케일을 또 만들 이유가 없다. kit/Button 의
@@ -26,7 +26,7 @@ import {Textarea} from '@/components/kit/textarea'
 
 const inputGroupClassName = cn(
     'group/input-group border-input bg-surface has-disabled:bg-muted has-disabled:opacity-50 relative flex h-control-h-lg w-full min-w-0 items-center gap-2 rounded-sm border px-4 transition-colors outline-none',
-    'has-[[data-slot=input-group-control]:focus-visible]:outline-ring has-[[data-slot=input-group-control]:focus-visible]:outline-2 has-[[data-slot=input-group-control]:focus-visible]:outline-offset-2 has-[[data-slot=input-group-control]:focus-visible]:outline-dotted',
+    'has-[[data-slot=input-group-control]:focus-visible]:outline-ring has-[[data-slot=input-group-control]:focus-visible]:outline-2 has-[[data-slot=input-group-control]:focus-visible]:outline-offset-2 has-[[data-slot=input-group-control]:focus-visible]:outline-solid',
     'has-[[data-slot][aria-invalid=true]]:border-destructive',
 )
 

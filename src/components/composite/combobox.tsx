@@ -9,7 +9,7 @@ import {cn} from '@/lib/utils'
 
 // 콤보박스(Combobox) — 검색으로 걸러 하나를 고르는 선택 컨트롤(L2 composite). shadcn 에 단일 프리미티브가
 // 없어 kit Popover + Command(cmdk)를 조합한다. 트리거는 Input 과 시각적으로 통일한다(높이 48px·rounded-sm·
-// border-input·bg-surface·px-4·text-base·점선 포커스) — DatePicker·Select 트리거와 동일 스킨. 우측 chevron.
+// border-input·bg-surface·px-4·text-base·solid 포커스) — DatePicker·Select 트리거와 동일 스킨. 우측 chevron.
 // 값은 controlled(value/onValueChange). 열면 검색 입력 + 필터된 목록이 나오고, 고르면 닫힌다.
 
 type ComboboxOption = {value: string; label: string}
@@ -62,7 +62,7 @@ const Combobox = ({
                     data-readonly={readOnly || undefined}
                     className={cn(
                         'h-control-h-lg border-input bg-surface flex w-full min-w-0 cursor-pointer items-center justify-between gap-2 rounded-sm border px-4 text-base transition-colors outline-none',
-                        'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dotted',
+                        'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid',
                         'aria-invalid:border-destructive',
                         // readOnly: 값·모양은 유지하되 열리지 않는다(비활성과 달리 흐리지 않음). DatePicker 와 동일.
                         'data-[readonly]:bg-muted data-[readonly]:cursor-default',
