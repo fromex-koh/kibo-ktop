@@ -24,8 +24,8 @@ const PROPS_ITEMS = [
     ['placeholder', '값이 없을 때 트리거 문구.', "string (기본 '선택하세요')"],
     ['searchPlaceholder', '검색 입력 placeholder.', "string (기본 '검색...')"],
     ['emptyText', '검색 결과 없을 때 문구.', "string (기본 '결과가 없습니다.')"],
-    ['disabled', '비활성화(흐림 + 클릭 불가).', 'boolean'],
-    ['readOnly', '읽기 전용(값·모양 유지, 열리지 않음, 흐리지 않음).', 'boolean'],
+    ['disabled', '비활성화(공통 field-disabled 스타일 + 클릭 불가).', 'boolean'],
+    ['readOnly', '읽기 전용(값은 유지하되 열리지 않음).', 'boolean'],
     ['id·name·aria-invalid 등', '트리거 button 에 전달(라벨 연결·검증).', 'button 속성'],
 ] as const
 
@@ -55,8 +55,8 @@ const ComboboxGuidePage = () => (
                     상태 (State)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    기본(placeholder)·값 선택됨·읽기전용·비활성 상태입니다. 트리거 스타일은 Input/Select/DatePicker 와
-                    동일합니다.
+                    기본(placeholder)·값 선택됨·오류·읽기전용·비활성 상태입니다. 트리거 스타일은 Select 와 같은 토큰
+                    체계를 씁니다.
                 </p>
             </div>
             <ComboboxStatesDemo />

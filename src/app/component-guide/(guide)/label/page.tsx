@@ -30,7 +30,6 @@ const DISABLED_CODE = `{/* 연결된 컨트롤이 disabled 이면 peer-disabled 
   <Label htmlFor="opt-in">비활성 옵션</Label>
 </div>`
 
-// Figma 라벨 스타일의 핵심 값 — 문서 표에 그대로 노출한다(Figma checkbox 세트 label 프레임 기준).
 const STYLE_ROWS = [
     {prop: '크기', value: 'text-base', note: '16px — 폼 라벨 크기를 통일(바닐라 14px 에서 상향)'},
     {prop: '행간', value: 'leading-normal', note: '24px(150%) — Figma 라벨 텍스트 행간'},
@@ -46,7 +45,11 @@ const STYLE_ROWS = [
     },
     {prop: '커서', value: 'cursor-pointer', note: '라벨 클릭으로 연결 컨트롤을 토글할 수 있음을 알림'},
     {prop: '정렬', value: 'flex items-center gap-2', note: '별표·아이콘 등 인라인 요소를 gap 으로 정렬'},
-    {prop: '비활성', value: 'peer-disabled / group-data-[disabled]', note: '연결 컨트롤 비활성 시 자동으로 흐려짐'},
+    {
+        prop: '비활성',
+        value: 'text-disabled',
+        note: 'gray.300 — 연결 컨트롤 비활성 시 peer/group 상태로 라벨 색상을 명시',
+    },
 ] as const
 
 const LabelGuidePage = () => (

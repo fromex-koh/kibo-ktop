@@ -9,12 +9,8 @@ import {Calendar} from '@/components/kit/calendar'
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/kit/popover'
 import {cn} from '@/lib/utils'
 
-// 데이트피커 — kit Input 의 스타일을 그대로 입힌 트리거 버튼 + kit Popover·Calendar 조합(L2 composite).
-// 클릭하면 달력이 열리고, 날짜를 고르면 트리거에 yyyy-MM-dd 로 표시되며 달력이 닫힌다.
-// 값은 controlled(value/onChange). 트리거 스타일은 kit/input 과 시각적으로 통일한다(높이 48px·rounded-sm·
-// border-input·bg-surface·px-4·text-base·solid 포커스). 비어 있으면 placeholder 색(text-placeholder).
-// 상태(Input 과 동일): disabled = bg-muted + 흐림 + 클릭 불가, readOnly = 값은 보이되 달력이 안 열리고
-//   bg-muted(흐림 없음). native readonly 가 없는 button 이라 readOnly 는 open 차단 + data-readonly 스타일로 구현.
+// DatePicker — kit Input 스타일을 입힌 trigger button + kit Popover/Calendar 조합.
+// PROJECT-STYLE: disabled/readOnly 배경은 입력형 컨트롤 공통 bg-field-disabled를 쓴다.
 type DatePickerProps = {
     value?: Date
     onChange?: (date?: Date) => void
@@ -46,19 +42,24 @@ const DatePicker = ({
                     data-slot="date-picker-trigger"
                     data-readonly={readOnly || undefined}
                     className={cn(
-                        'h-control-h-lg border-input bg-surface flex w-full min-w-0 cursor-pointer items-center justify-between gap-2 rounded-sm border px-4 text-base transition-colors outline-none',
+                        'h-control-h-lg border-control bg-surface text-label-foreground flex w-full min-w-0 cursor-pointer items-center justify-between gap-2 rounded-sm border px-4 text-base transition-colors outline-none',
                         'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid',
                         'aria-invalid:border-destructive',
-                        'data-[readonly]:bg-muted data-[readonly]:cursor-default',
-                        'disabled:bg-muted disabled:cursor-not-allowed disabled:opacity-50',
+                        'data-[readonly]:bg-field-disabled data-[readonly]:cursor-default',
+                        'disabled:border-control disabled:bg-field-disabled disabled:text-disabled disabled:cursor-not-allowed disabled:opacity-100',
                         className,
                     )}
                     {...props}
                 >
-                    <span className={value ? 'text-foreground' : 'text-placeholder'}>
+                    <span
+                        className={cn(
+                            value ? 'text-label-foreground' : 'text-placeholder',
+                            disabled && 'text-disabled',
+                        )}
+                    >
                         {value ? format(value, 'yyyy-MM-dd') : placeholder}
                     </span>
-                    <CalendarIcon aria-hidden="true" className="text-muted-foreground size-icon-md shrink-0" />
+                    <CalendarIcon aria-hidden="true" className="text-foreground size-icon-md shrink-0" />
                 </button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">

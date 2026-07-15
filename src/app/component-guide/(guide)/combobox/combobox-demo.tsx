@@ -40,7 +40,7 @@ export const ComboboxDemo = () => {
     )
 }
 
-// 상태 큐레이션 — 기본(placeholder)·값 선택됨·비활성.
+// 상태 큐레이션 — 기본(placeholder)·값 선택됨·오류·읽기전용·비활성.
 export const ComboboxStatesDemo = () => {
     const [empty, setEmpty] = useState('')
     const [filled, setFilled] = useState('corp')
@@ -57,6 +57,19 @@ export const ComboboxStatesDemo = () => {
             </Field>
             <Field id="st-filled" label="값 선택됨">
                 <Combobox id="st-filled" options={CORP_TYPES} value={filled} onValueChange={setFilled} />
+            </Field>
+            <Field id="st-error" label="오류 (error)">
+                <Combobox
+                    id="st-error"
+                    options={CORP_TYPES}
+                    value=""
+                    placeholder="선택하세요"
+                    aria-invalid="true"
+                    aria-describedby="st-error-msg"
+                />
+                <p id="st-error-msg" role="alert" className="typo-caption-regular text-error-500">
+                    필수 항목입니다.
+                </p>
             </Field>
             <Field id="st-readonly" label="읽기전용 (readOnly)">
                 <Combobox id="st-readonly" options={CORP_TYPES} value="corp" readOnly />

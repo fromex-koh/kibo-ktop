@@ -7,10 +7,8 @@ import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandL
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/kit/popover'
 import {cn} from '@/lib/utils'
 
-// 콤보박스(Combobox) — 검색으로 걸러 하나를 고르는 선택 컨트롤(L2 composite). shadcn 에 단일 프리미티브가
-// 없어 kit Popover + Command(cmdk)를 조합한다. 트리거는 Input 과 시각적으로 통일한다(높이 48px·rounded-sm·
-// border-input·bg-surface·px-4·text-base·solid 포커스) — DatePicker·Select 트리거와 동일 스킨. 우측 chevron.
-// 값은 controlled(value/onValueChange). 열면 검색 입력 + 필터된 목록이 나오고, 고르면 닫힌다.
+// 콤보박스(Combobox) — 검색으로 걸러 하나를 고르는 선택 컨트롤(L2 composite).
+// PROJECT-STYLE: Trigger는 Select와 같은 control/surface/field-disabled 토큰과 상태 border를 쓴다.
 
 type ComboboxOption = {value: string; label: string}
 
@@ -61,20 +59,22 @@ const Combobox = ({
                     data-slot="combobox-trigger"
                     data-readonly={readOnly || undefined}
                     className={cn(
-                        'h-control-h-lg border-input bg-surface flex w-full min-w-0 cursor-pointer items-center justify-between gap-2 rounded-sm border px-4 text-base transition-colors outline-none',
-                        'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid',
-                        'aria-invalid:border-destructive',
-                        // readOnly: 값·모양은 유지하되 열리지 않는다(비활성과 달리 흐리지 않음). DatePicker 와 동일.
-                        'data-[readonly]:bg-muted data-[readonly]:cursor-default',
-                        'disabled:bg-muted disabled:cursor-not-allowed disabled:opacity-50',
+                        'group/combobox-trigger border-control bg-surface text-label-foreground focus-visible:border-primary focus-visible:outline-ring data-[state=open]:border-primary data-[state=open]:outline-ring aria-invalid:border-destructive h-control-h-lg data-[readonly]:bg-field-disabled disabled:border-control disabled:bg-field-disabled disabled:text-disabled flex w-full min-w-0 cursor-pointer items-center justify-between gap-2 rounded-sm border px-4 text-base transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid disabled:cursor-not-allowed disabled:opacity-100',
+                        readOnly && 'cursor-default',
                         className,
                     )}
                     {...props}
                 >
-                    <span className={cn('truncate', selected ? 'text-foreground' : 'text-placeholder')}>
+                    <span
+                        className={cn(
+                            'truncate',
+                            selected ? 'text-label-foreground' : 'text-placeholder',
+                            disabled && 'text-disabled',
+                        )}
+                    >
                         {selected ? selected.label : placeholder}
                     </span>
-                    <ChevronDownIcon aria-hidden="true" className="text-muted-foreground size-5 shrink-0" />
+                    <ChevronDownIcon aria-hidden="true" className="text-foreground size-5 shrink-0" />
                 </button>
             </PopoverTrigger>
             {/* 팝오버 폭을 트리거 폭에 맞춘다(콤보박스 표준) — radix 가 노출하는 CSS 변수 참조라 arbitrary 최소 사용([SC-01]) */}

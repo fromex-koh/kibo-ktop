@@ -43,7 +43,7 @@ const ADDON_CODE = `<div className="max-w-90 flex w-full flex-col gap-4">
   {/* 잠금(읽기전용) — readOnly + lock 아이콘 */}
   <div className="relative">
     <Input readOnly defaultValue="11222-1234567" className="pr-11" />
-    <Lock aria-hidden="true" className="text-muted-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2" />
+    <Lock aria-hidden="true" className="text-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2" />
   </div>
 </div>`
 
@@ -128,7 +128,7 @@ const InputGuidePage = () => (
                     <Label htmlFor="st-disabled" className="text-foreground font-bold">
                         비활성 (disabled)
                     </Label>
-                    <Input id="st-disabled" placeholder="내용을 입력하세요" disabled />
+                    <Input id="st-disabled" defaultValue="비활성 입력값" disabled />
                 </div>
                 <div className={FIELD_DEMO_CLASS}>
                     <Label htmlFor="st-view" className="text-foreground font-bold">
@@ -178,7 +178,7 @@ const InputGuidePage = () => (
                     <Input readOnly defaultValue="11222-1234567" aria-label="법인번호(읽기전용)" className="pr-11" />
                     <Lock
                         aria-hidden="true"
-                        className="text-muted-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2"
+                        className="text-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2"
                     />
                 </div>
             </div>

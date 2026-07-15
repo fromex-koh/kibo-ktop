@@ -106,7 +106,7 @@ const TextareaGuidePage = () => (
                     <Label htmlFor="st-disabled" className="text-foreground font-bold">
                         비활성 (disabled)
                     </Label>
-                    <Textarea id="st-disabled" placeholder="내용을 입력하세요" disabled />
+                    <Textarea id="st-disabled" defaultValue="비활성 입력 내용입니다." disabled />
                 </div>
                 <div className={FIELD_CLASS}>
                     <Label htmlFor="st-view" className="text-foreground font-bold">

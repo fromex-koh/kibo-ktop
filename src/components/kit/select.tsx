@@ -5,19 +5,39 @@
 // 셸(컴포넌트 구성·props·export)은 원본과 동일하다.
 // 너비: w-fit 을 두지 않아(display:flex 기본) 상위 컨테이너 폭을 채운다. Figma 폭 360 은 트리거 자체가 아니라
 // label+select 를 감싸는 폼 필드 wrapper 에서 max-w-90(상한) 으로 잡는다.
-// 상태: focus(키보드)와 열림(data-[state=open]=마우스 클릭) 모두 Button 과 같은 solid outline(outline-2,
-// 색 --color-ring, offset-2)으로 통일한다 — 입력 수단에 따라 포커스링이 달라지지 않게. 에러는 테두리
-// (border-destructive)만. placeholder 는 text-placeholder(gray.700). bg-surface.
-// disabled 는 bg-muted. readonly 는 트리거가 <button role=combobox> 라 native :read-only 가 안 먹어
-// aria-readonly:bg-muted 로 처리한다(사용처에서 <SelectTrigger aria-readonly> 지정).
+// PROJECT-STYLE: Select Trigger는 입력 계열과 같은 control/surface/field-disabled 토큰을 쓰고,
+// focus/open/error는 border 토큰으로 상태를 드러낸다.
 import * as React from 'react'
 import {Select as SelectPrimitive} from 'radix-ui'
 
 import {cn} from '@/lib/utils'
 import {ChevronDownIcon, CheckIcon, ChevronUpIcon} from 'lucide-react'
 
-function Select({...props}: React.ComponentProps<typeof SelectPrimitive.Root>) {
-    return <SelectPrimitive.Root data-slot="select" {...props} />
+const SelectReadOnlyContext = React.createContext(false)
+
+type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root> & {
+    readOnly?: boolean
+}
+
+function Select({readOnly = false, open, defaultOpen, onOpenChange, onValueChange, ...props}: SelectProps) {
+    return (
+        <SelectReadOnlyContext.Provider value={readOnly}>
+            <SelectPrimitive.Root
+                data-slot="select"
+                open={readOnly ? false : open}
+                defaultOpen={readOnly ? false : defaultOpen}
+                onOpenChange={(open) => {
+                    if (readOnly) return
+                    onOpenChange?.(open)
+                }}
+                onValueChange={(value) => {
+                    if (readOnly) return
+                    onValueChange?.(value)
+                }}
+                {...props}
+            />
+        </SelectReadOnlyContext.Provider>
+    )
 }
 
 function SelectGroup({className, ...props}: React.ComponentProps<typeof SelectPrimitive.Group>) {
@@ -32,27 +52,34 @@ function SelectTrigger({
     className,
     size = 'default',
     children,
+    'aria-readonly': ariaReadOnly,
     ...props
 }: React.ComponentProps<typeof SelectPrimitive.Trigger> & {
     size?: 'sm' | 'md' | 'default'
 }) {
+    const readOnly = useSelectReadOnly()
+
     return (
         <SelectPrimitive.Trigger
             data-slot="select-trigger"
             data-size={size}
+            aria-readonly={readOnly || ariaReadOnly || undefined}
             className={cn(
-                // PROJECT-STYLE: Figma 입력/선택 컨트롤 기본 테두리는 border-control(gray.200)로 통일한다.
-                "border-control focus-visible:outline-ring data-[state=open]:outline-ring aria-invalid:border-destructive data-placeholder:text-placeholder data-[size=default]:h-control-h-lg bg-surface aria-readonly:bg-muted disabled:bg-muted data-[size=md]:h-control-h-md flex items-center justify-between gap-1.5 rounded-sm border text-base whitespace-nowrap transition-colors outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid disabled:cursor-not-allowed disabled:opacity-50 data-[size=default]:px-4 data-[size=md]:px-4 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:px-3 data-[size=sm]:text-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 data-[state=open]:outline-2 data-[state=open]:outline-offset-2 data-[state=open]:outline-solid [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5",
+                "group/select-trigger border-control bg-surface text-label-foreground focus-visible:border-primary focus-visible:outline-ring data-[state=open]:border-primary data-[state=open]:outline-ring aria-invalid:border-destructive data-placeholder:text-placeholder data-[size=default]:h-control-h-lg aria-readonly:bg-field-disabled disabled:border-control disabled:bg-field-disabled disabled:text-disabled disabled:data-placeholder:text-disabled data-[size=md]:h-control-h-md flex items-center justify-between gap-1.5 rounded-sm border text-base whitespace-nowrap transition-colors outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid disabled:cursor-not-allowed disabled:opacity-100 data-[size=default]:px-4 data-[size=md]:px-4 data-[size=sm]:h-7 data-[size=sm]:rounded-[min(var(--radius-md),10px)] data-[size=sm]:px-3 data-[size=sm]:text-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 data-[state=open]:outline-2 data-[state=open]:outline-offset-2 data-[state=open]:outline-solid [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-5",
                 className,
             )}
             {...props}
         >
             {children}
             <SelectPrimitive.Icon asChild>
-                <ChevronDownIcon className="text-muted-foreground pointer-events-none size-5" />
+                <ChevronDownIcon className="text-foreground pointer-events-none size-5" />
             </SelectPrimitive.Icon>
         </SelectPrimitive.Trigger>
     )
+}
+
+function useSelectReadOnly() {
+    return React.useContext(SelectReadOnlyContext)
 }
 
 function SelectContent({

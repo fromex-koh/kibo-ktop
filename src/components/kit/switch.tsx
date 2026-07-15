@@ -6,6 +6,7 @@
 //   · 색은 기존 팔레트/시맨틱에서 Figma 최근사값으로: off=bg-gray-400(#6d7882 근사), on=bg-primary
 //     (blue.500, #3f7deb), thumb=bg-white(구조색, 항상 흰색). 원본의 arbitrary px 사이즈·dark 분기는 스케일 유틸/
 //     토큰으로 대체(다크 자동 반사, [PB-06]). 포커스링은 Button과 같은 solid outline 규칙을 쓴다.
+// PROJECT-STYLE: disabled는 Checkbox/Radio와 같은 공통 disabled 토큰(bg-control-disabled / bg-disabled-subtle)을 쓴다.
 import * as React from 'react'
 import {Switch as SwitchPrimitive} from 'radix-ui'
 
@@ -23,14 +24,14 @@ function Switch({
             data-slot="switch"
             data-size={size}
             className={cn(
-                'peer group/switch focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-checked:bg-primary relative inline-flex shrink-0 items-center rounded-full border border-transparent px-0.5 transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid aria-invalid:ring-3 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-unchecked:bg-gray-400 data-[size=default]:h-6 data-[size=default]:w-10 data-[size=sm]:h-5 data-[size=sm]:w-8',
+                'peer group/switch focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-checked:bg-primary data-disabled:bg-control-disabled data-disabled:data-checked:bg-control-disabled data-disabled:data-unchecked:bg-control-disabled relative inline-flex shrink-0 items-center rounded-full border border-transparent px-0.5 transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid aria-invalid:ring-3 data-disabled:cursor-not-allowed data-disabled:opacity-100 data-unchecked:bg-gray-400 data-[size=default]:h-6 data-[size=default]:w-10 data-[size=sm]:h-5 data-[size=sm]:w-8',
                 className,
             )}
             {...props}
         >
             <SwitchPrimitive.Thumb
                 data-slot="switch-thumb"
-                className="pointer-events-none block rounded-full bg-white ring-0 transition-transform group-data-[size=default]/switch:size-5 group-data-[size=sm]/switch:size-4 group-data-[size=default]/switch:data-checked:translate-x-4 group-data-[size=sm]/switch:data-checked:translate-x-3 data-unchecked:translate-x-0"
+                className="group-data-[disabled]/switch:bg-disabled-subtle pointer-events-none block rounded-full bg-white ring-0 transition-transform group-data-[size=default]/switch:size-5 group-data-[size=sm]/switch:size-4 group-data-[size=default]/switch:data-checked:translate-x-4 group-data-[size=sm]/switch:data-checked:translate-x-3 data-unchecked:translate-x-0"
             />
         </SwitchPrimitive.Root>
     )

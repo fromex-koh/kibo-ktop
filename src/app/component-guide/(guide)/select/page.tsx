@@ -176,8 +176,8 @@ const SelectGuidePage = () => (
                     <Label htmlFor="st-readonly" className="text-foreground font-bold">
                         읽기전용 (readOnly)
                     </Label>
-                    <Select defaultValue="apple">
-                        <SelectTrigger id="st-readonly" aria-readonly className="w-full">
+                    <Select defaultValue="apple" readOnly>
+                        <SelectTrigger id="st-readonly" className="w-full">
                             <SelectValue placeholder="선택해주세요" />
                         </SelectTrigger>
                         <SelectContent>
@@ -189,7 +189,7 @@ const SelectGuidePage = () => (
                     <Label htmlFor="st-disabled" className="text-foreground font-bold">
                         비활성 (disabled)
                     </Label>
-                    <Select disabled>
+                    <Select defaultValue="apple" disabled>
                         <SelectTrigger id="st-disabled" className="w-full">
                             <SelectValue placeholder="선택해주세요" />
                         </SelectTrigger>
@@ -256,9 +256,9 @@ const SelectGuidePage = () => (
                                 control: 'boolean',
                             },
                             {
-                                name: 'aria-readonly',
-                                desc: 'SelectTrigger — 읽기전용 표시(bg-muted, 비활성과 달리 흐리지 않음).',
-                                def: '-',
+                                name: 'readOnly',
+                                desc: 'Select — 읽기전용. 값은 유지하되 목록 열기와 값 변경을 막고 읽기전용 스타일을 표시합니다.',
+                                def: 'false',
                                 control: 'boolean',
                             },
                             {
