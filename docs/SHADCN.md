@@ -167,10 +167,14 @@ overflow-y-auto` 내부 스크롤 박스**로 감싼다(Content 내부라 radix 
 - **업데이트가 안전하다.** 라이브러리가 바뀌면 원본만 `npx shadcn add` 로 다시 받고, 원본의 **셸 변경분만**
   복사본에 옮긴다. 스타일(cva)은 그 diff에 없으니 **그대로 유지**된다. 원본을 직접 고쳤다면 매 업데이트가
   머지 충돌이 되지만, 이 방식은 충돌 지점이 "셸"로 한정된다.
+- **표준 슬롯을 최대한 공유한다.** kit styled copy 라도 `bg-primary`·`text-primary-foreground`·`border-input`·
+  `ring-ring` 처럼 shadcn 이 이미 가진 슬롯으로 표현 가능한 값은 그대로 쓴다. 컴포넌트별 전용 토큰은 표준 슬롯으로
+  흡수할 수 없을 때만 남긴다.
 - **왜 감싸지(compose) 않고 복사하나.** 얇게 감싸 `cn` 으로 덮어쓰는 방법도 있지만, 이 프로젝트 `cn` 은 순정
-  `twMerge`(확장 없음)라 커스텀 색 유틸이 원본의 표준 슬롯(`bg-primary`)과
-  **중복제거되지 않아** 두 색이 함께 남는다. 색·사이즈를 **전면 재스킨**하는 이 프로젝트에선, 살짝 덧칠하는
-  compose 대신 **"복사 후 cva 만 교체"** 가 충돌 없는 방식이다(업계에서 heavy customization 시 쓰는 방식).
+  `twMerge`(확장 없음)라 원본의 상태 유틸과 프로젝트 상태 유틸(예: `hover:bg-primary/80` vs
+  `hover:bg-primary-hover`)이 안정적으로 **중복제거된다고 보장하기 어렵다**. 색·사이즈를 전면 재스킨하는 이
+  프로젝트에선, wrapper override 보다 **"복사 후 cva 만 교체"** 가 충돌 없는 방식이다(업계에서 heavy customization 시
+  쓰는 방식).
 
 ### 새 컴포넌트에 적용하는 법
 
@@ -182,6 +186,36 @@ overflow-y-auto` 내부 스크롤 박스**로 감싼다(Content 내부라 radix 
 
 > facade 로 시작하고, 나중에 재스킨이 필요해지면 그 파일만 styled copy 로 승격하면 사용처는 안 바뀐다.
 > 판단이 서지 않으면 facade 로 둔다(중복 0).
+
+### `PROJECT-STYLE` 주석 포맷
+
+styled copy 에서 shadcn 원본과 다른 스타일을 남겨야 할 때는 코드 근처에 `PROJECT-STYLE:` 주석을 붙인다.
+개발자가 diff 를 보자마자 "실수로 달라진 게 아니라 프로젝트/Figma 사양 때문에 남긴 차이"임을 알 수 있게 하기 위한
+표식이다.
+
+형식:
+
+```tsx
+// PROJECT-STYLE: <shadcn 원본 방식>이지만,
+// <프로젝트/Figma 사양>이므로
+// <유지하는 프로젝트 토큰/유틸>을 사용한다.
+```
+
+예:
+
+```tsx
+// PROJECT-STYLE: shadcn 원본은 hover:bg-primary/80 이지만,
+// Figma hover/pressed는 solid brand token(blue.600/blue.700)이므로
+// bg-primary-hover/bg-primary-pressed를 유지한다.
+```
+
+원칙:
+
+- 표준 슬롯(`bg-primary`, `text-primary-foreground`, `border-input`, `ring-ring` 등)으로 표현 가능하면 주석 없이 표준 슬롯을 쓴다.
+- shadcn 원본의 opacity 유틸(`bg-primary/80` 등)과 Figma 의 solid token 이 실제로 다르면, 값을 억지로 맞추지 않고 프로젝트 상태 슬롯(`bg-primary-hover` 등)을 둔다.
+- `PROJECT-STYLE` 은 원본과 다르게 남기는 이유가 있을 때만 쓴다.
+- 주석은 긴 배경 설명이 아니라 **원본 방식 → 프로젝트 사유 → 유지 토큰**만 적는다.
+- 전체 예외 목록은 `rg "PROJECT-STYLE:" src/components/kit` 로 확인한다.
 
 ### 근거 (이 패턴이 표준인 출처)
 

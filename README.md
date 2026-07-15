@@ -29,7 +29,7 @@ yarn dev        # ← 이 첫 실행이 자동 생성 파일을 만들어 줍니
 ### 이 프로젝트를 포크해 화면/컴포넌트를 가져갈 때
 
 - **버전을 맞추세요** — Next 16 · React 19 · TailwindCSS 4 기준입니다. 낮은 버전에선 API 가 달라 동작이 다를 수 있습니다(특히 Tailwind v4 는 설정을 CSS 로 합니다 — `tailwind.config.js` 없음).
-- **디자인 값은 `tokens.json` 단일 소스** — 컴포넌트가 쓰는 `bg-brand`·`text-foreground`·`rounded-md`·`.grid-layout` 등은 전부 `tokens.json → yarn tokens → src/app/tokens.css` 로 생성됩니다. **이 파이프라인(`tokens.json`·`scripts/build-tokens.mjs`·`globals.css`·`postcss.config.mjs`)을 함께 가져가야** className 이 살아 있습니다.
+- **디자인 값은 `tokens.json` 단일 소스** — 컴포넌트가 쓰는 `bg-primary`·`text-foreground`·`rounded-md`·`.grid-layout` 등은 전부 `tokens.json → yarn tokens → src/app/tokens.css` 로 생성됩니다. **이 파이프라인(`tokens.json`·`scripts/build-tokens.mjs`·`globals.css`·`postcss.config.mjs`)을 함께 가져가야** className 이 살아 있습니다.
 - **브레이크포인트** — **Tailwind 기본 프리픽스**(`sm:`/`md:`/`lg:`/`xl:`/`2xl:`)를 그대로 씁니다(모바일 퍼스트). 프로젝트 주 티어는 `md:`(768)·`xl:`(1280) 두 단계이며 새 코드는 이 둘을 우선 사용합니다. (기본을 지우지 않아 shadcn·익숙한 유틸이 그대로 동작합니다.)
 - **컴포넌트 폴더 구조(레이어)** — 화면·도메인 코드는 항상 `kit/`·`composite/`·`custom/` **창구로 import**하고 `ui/` 를 직접 쓰지 않는다.
     - `src/components/ui/` — shadcn 원본(vendored). **손대지 않음**(게이트 면제).
@@ -64,13 +64,19 @@ yarn dev                    # 개발 서버 (http://localhost:3000)
 
 ## 스크립트
 
-| 명령          | 설명                      |
-| ------------- | ------------------------- |
-| `yarn dev`    | 개발 서버 실행            |
-| `yarn build`  | 프로덕션 빌드             |
-| `yarn start`  | 빌드 결과 실행            |
-| `yarn lint`   | ESLint 검사 (접근성 포함) |
-| `yarn format` | Prettier 포맷 적용        |
+| 명령                     | 설명                                                  |
+| ------------------------ | ----------------------------------------------------- |
+| `yarn dev`               | 개발 서버 실행(`predev`에서 토큰·자산 버전 생성)      |
+| `yarn build`             | 프로덕션 빌드(`prebuild`에서 토큰·자산 버전 생성)     |
+| `yarn start`             | 빌드 결과 실행                                        |
+| `yarn tokens`            | `tokens.json` → `src/app/tokens.css` 생성             |
+| `yarn asset-versions`    | git 히스토리 기준 자산 버전 생성                      |
+| `yarn lint`              | ESLint 검사(접근성 포함)                              |
+| `yarn format`            | Prettier 포맷 적용                                    |
+| `yarn format:check`      | Prettier 포맷 검사                                    |
+| `yarn check:conventions` | Tailwind/className 프로젝트 컨벤션 검사               |
+| `yarn typecheck`         | TypeScript 타입 검사                                  |
+| `yarn verify`            | push 전 통합 게이트(tokens·asset·lint·format·type 등) |
 
 ## 환경 변수
 
@@ -142,9 +148,9 @@ yarn tokens   # tokens.json(px) 수정 후 실행 (yarn dev/build 시 자동)
 - **간격**은 `spacingBase`(현재 4px)의 **정수 배수**로 제어한다 — `p-4`(16px)·`gap-6`(24px) 등, **base 하나만 바꾸면 전체 간격이 비율대로 조정**된다. **라운드·크기·그림자는 정의된 토큰 키만** 쓴다(미정의는 Tailwind 기본이 나감). (규칙: [docs/PUBLISHING_CONVENTION.md](docs/PUBLISHING_CONVENTION.md) `PB-13`)
 - **브레이크포인트**는 **Tailwind 기본**(`sm:`/`md:`/`lg:`/`xl:`/`2xl:`)을 그대로 쓴다(모바일 퍼스트). 프로젝트 주 티어는 **`md:` 768 · `xl:` 1280** 두 단계로, 그리드·타이포 전환이 이 두 폭을 기준으로 한다(`tokens.json` 의 `breakpoint` = grid·typo 티어 데이터). 생성기가 기본을 지우지 않아 `sm:`~`2xl:` 가 모두 동작하고(shadcn·익숙한 유틸의 silent no-op 방지), 콘텐츠 영역은 고정폭 대신 **`max-w-content`**(1200px)로 제한한다. (규칙: `PB-14`)
 - **레이아웃 그리드**(컬럼 수·거터·마진)도 `tokens.json`(`grid`, 브레이크포인트별)에서 관리하며, `.grid-layout` 클래스 하나로 적용한다(모바일 4열 → `md` 8열 → `xl` 12열). `grid` 키는 `breakpoint`와 1:1 대응해야 하며 어긋나면 빌드가 실패한다. (규칙: `PB-15`)
-- **스크롤바**(두께·색)도 토큰 기반이다 — 두께 `size.scrollbar-w`(6px), 색 `semantic.scroll-thumb`/`scroll-track`(gray 스케일 참조라 다크 자동 반사). **목적은 브라우저·OS마다 제각각인 스크롤바(폭·색·모양)를 프로젝트 전역에서 하나의 모양으로 통일**하는 것이다. `html`에 `scrollbar-gutter: stable` 을 두는 이유도 그 연장선 — 스크롤바가 생겼다 사라질 때 콘텐츠가 좌우로 흔들리지 않도록 **자리를 항상 예약해 폭을 고정**한다(레이아웃 시프트 방지). (규칙: `PB-16`, `system-guide` 프로젝트와 동일 구조)
+- **스크롤바**(두께·색)도 토큰 기반이다 — 두께 `size.scrollbar-w`(6px), 색 `semantic.scroll-thumb`/`scroll-track`(gray 스케일 참조라 다크 자동 반사). `html`에 `scrollbar-gutter: stable` 을 두어 스크롤바가 생겼다 사라질 때 콘텐츠가 좌우로 흔들리지 않게 한다. 상세 정책은 [docs/PUBLISHING_CONVENTION.md](docs/PUBLISHING_CONVENTION.md) `PB-16` 참고.
 
-    > **참고 — 데스크톱 브라우저 창을 줄여 폭을 재면 콘텐츠 폭이 항상 6px 작게 나옵니다(모든 해상도 공통).** 버그가 아닙니다. `scrollbar-gutter: stable` 이 스크롤바 자리(6px)를 늘 예약하는데, **데스크톱은 클래식 스크롤바(6px 차지)**라 그만큼 빠지고, **실제 스마트폰·DevTools 기기 모드는 오버레이 스크롤바(0px)**라 안 빠져 스펙값 그대로 나옵니다. 즉 어떤 폭에서든 `데스크톱 창 축소값 = 기기 모드값 − 6px`입니다(예: 360px에서 322 vs 328, 768px에서도 6px 차이). **실제 모바일이 보는 값은 기기 모드 쪽**이므로, 폭 확인은 브라우저 창 축소가 아니라 **DevTools 기기 모드(또는 실제 기기)**로 하세요. 예약된 6px는 스크롤바가 생겼다 사라질 때 레이아웃이 흔들리지 않게 하는 의도된 여백입니다.
+    > 참고: 데스크톱 창을 직접 줄여 폭을 재면 클래식 스크롤바 자리(6px) 때문에 DevTools 기기 모드보다 콘텐츠 폭이 6px 작게 보일 수 있다. 모바일 폭 검수는 DevTools 기기 모드 또는 실제 기기 기준으로 한다.
 
 ## 컴포넌트 (shadcn/ui)
 
@@ -162,25 +168,20 @@ src/components/kit/<name>.tsx   ← ② kit 창구 (화면·도메인 코드가 
 
 - **책임 분리** — _스타일은 kit(복사본), 그 외 전부(동작·접근성·업데이트)는 원본._
 - **⚠️ shadcn 다운로드 파일은 순정 그대로 두고 코드 컨벤션·게이트에서 면제한다.** 대상은 `src/components/ui/**` + `src/lib/utils.ts`(cn) + `src/hooks/use-mobile.ts`. shadcn 업데이트 시 **diff 가 업스트림 변경분만** 남아 확인·반영이 쉽도록 하기 위함이다(우리가 규칙에 맞춰 손대면 매 업데이트가 충돌 범벅이 됨). 그래서 이 파일들은 ESLint·Prettier·check:conventions 대상에서 빠진다(typecheck 만 유지). 순정 코드의 `as`·기본 팔레트·2-space 는 버그가 아니라 의도다 → [docs/CODE_CONVENTION.md](docs/CODE_CONVENTION.md) 상단 예외 참고.
-- **왜(kit)** — 원본을 안 건드리니 라이브러리 업데이트 시 원본만 다시 받고 **셸 변경분만** 복사본에 옮기면 된다(스타일은 그대로 유지, facade 는 자동 반영). 색·사이즈를 전면 재스킨하는 경우 `cn` 덧칠은 `twMerge` 한계로 충돌하므로 "복사 후 cva 교체"가 안전하다.
+- **왜(kit)** — 원본을 안 건드리니 라이브러리 업데이트 시 원본만 다시 받고 **셸 변경분만** 복사본에 옮기면 된다. 색·사이즈를 전면 재스킨하는 경우 `cn` 덧칠은 `twMerge` 한계로 충돌할 수 있어 "복사 후 cva 교체"가 안전하다.
+- **스타일 전략** — shadcn 표준 슬롯(`bg-primary`, `text-primary-foreground`, `border-input`, `ring-ring` 등)으로 표현 가능한 값은 kit 에서도 그대로 쓴다. 다만 Figma 가 shadcn 원본의 opacity 표현(`hover:bg-primary/80` 등)과 다른 **solid token** 을 정의한 상태는 styled copy 에 프로젝트 토큰을 남기고, 코드 근처에 `PROJECT-STYLE:` 주석으로 표시한다.
 - **화면·도메인 코드는 `@/components/kit/<name>` 만 import** 한다(`@/components/ui/*` 직접 사용 금지).
 - 재스킨이 필요 없으면 facade(재수출)로 두고, 나중에 필요해지면 그 파일만 styled copy 로 승격하면 사용처는 안 바뀐다.
 - 규칙·적용법 전체: **[docs/SHADCN.md](docs/SHADCN.md)** 의 `styled copy 패턴`·`[SC-04]`.
 - 토큰·컴포넌트 렌더 확인: `/component-guide`.
 
-### 이 패턴이 근거 있는 방식인 이유 (출처)
+### 이 설계의 의도
 
-이 방식은 임의로 만든 규칙이 아니라, **디자인 커스터마이즈가 많은 프로젝트에서 널리 쓰이는 정착된 패턴**이다. 두 가지 업계 관행을 결합한 것이다 — ① 원본(base)은 손대지 않고 커스터마이즈는 별도 파일에 둔다, ② **수정 폭이 큰 컴포넌트는 소스를 복사해 별도 컴포넌트로 fork** 한다.
+이 프로젝트의 목표는 kit 를 독립적인 별도 디자인 시스템으로 키우는 것이 아니라, **가능한 스타일을 shadcn 표준 슬롯으로 되돌리는 것**이다. 그래서 기본/공유 상태는 `bg-primary`·`text-primary-foreground` 같은 슬롯을 우선 쓰고, 디자인 토큰이 shadcn 원본 유틸과 실제로 다를 때만 `PROJECT-STYLE:` 예외로 남긴다.
 
-- **[GOV.UK Design System — Extending and modifying components](https://design-system.service.gov.uk/get-started/extending-and-modifying-components/)** (영국 정부 공식 디자인 시스템) — 대규모 수정 시 원본을 고치지 말고 **소스를 복사해 새 컴포넌트로 만들 것**을 명시:
-    > "If you need to make a large modification to a component you should fork it entirely by copying and pasting the source code to create a new component."
-    > ("복사본"이 라이브러리 업데이트로 깨질 위험을 없앤다는 근거까지 같은 문서에 설명됨 — 우리 방식의 핵심 이유와 동일.)
-- **[shadcn/ui — Best practices for customizing (GitHub Discussion #9754)](https://github.com/shadcn-ui/ui/discussions/9754)** — base `components/ui/` 는 **원형 그대로 두고**(“overwrite it from the registry anytime”) 커스터마이즈는 wrapper/복사본에 두는 **wrapper pattern** 을 권장.
-- **[shadcn/ui — 대규모 프로덕션 디자인 시스템 구조 (GitHub Discussion #9756)](https://github.com/shadcn-ui/ui/discussions/9756)** — 큰 규모에서 `ui/`(원형) · 커스텀 레이어 · 조합 레이어를 **분리**하는 구조 논의.
-- **[Vercel Academy — Extending shadcn/ui with Custom Components](https://vercel.com/academy/shadcn-ui/extending-shadcn-ui-with-custom-components)** (shadcn 개발사 Vercel의 공식 학습 자료) — primitive 를 **깨끗하게 유지**하고 커스텀은 wrapper 컴포넌트로 확장.
-- **[MUI Design System — Wrapping vs. Global Overrides](https://blog.bitsrc.io/creating-a-mui-design-system-wrapping-vs-global-overrides-31800117dbd7)** — 확장 가능한 디자인 시스템에는 전역 override 보다 **wrapping(감싸기/복사) 방식**이 권장된다는, shadcn 밖(MUI) 사례.
+예를 들어 Button hover 는 shadcn 원본의 `hover:bg-primary/80` 과 달리 Figma 가 `brand/blue/600` solid 로 정의했기 때문에 wrapper override 대신 `bg-primary-hover` 를 쓰는 styled copy 로 유지한다. 이 편이 원본 primitive 를 보존하면서도 디자인 값을 정확히 지키는 가장 예측 가능한 방식이다.
 
-> 요약: "원본 보존 + 커스텀 분리"는 주류 권장이고, **전면 재스킨(heavy customization)에는 소스를 복사하는 fork 방식이 표준**이다. 우리 styled copy 는 이 둘을 그대로 따른 것이다.
+근거와 운영 규칙은 [docs/SHADCN.md](docs/SHADCN.md)의 `styled copy 패턴`·`PROJECT-STYLE 주석 포맷`을 기준으로 한다.
 
 ## 폰트
 
@@ -219,6 +220,7 @@ src/components/kit/<name>.tsx   ← ② kit 창구 (화면·도메인 코드가 
 - **마크업** — 시맨틱 태그 우선, 논리적 헤딩 계층, 랜드마크(`header`/`nav`/`main`/`footer`) 사용.
 - **스타일** — TailwindCSS 유틸리티 기반, 명도 대비·포커스 표시 등 접근성 스타일 준수.
 - **자동 검사** — `yarn lint`가 대체 텍스트, 레이블 연결, 키보드 대응 등 접근성 위반 상당수를 검출.
+- **색상 대비** — light/dark 컬러 정합 작업 중이라 토큰 생성기의 대비 게이트는 현재 임시 비활성화되어 있다. 재활성 전까지 실제 대비는 수동 검수한다.
 
 ### 근거
 

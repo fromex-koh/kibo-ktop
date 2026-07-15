@@ -4,10 +4,6 @@ import {Slot} from 'radix-ui'
 
 import {cn} from '@/lib/utils'
 
-// 프로젝트 Button styled copy.
-// 함수 셸(Button·Slot·asChild·data-slot·props·export)은 ui/button.tsx 와 맞추고,
-// 스타일만 Figma 버튼 사양으로 관리한다. shadcn default variant 가 이 프로젝트의 Primary 다.
-// 원본과 의도적으로 다른 스타일은 PROJECT-STYLE 주석으로 이유를 남긴다.
 const buttonVariants = cva(
     "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:outline-2 focus-visible:outline-dotted focus-visible:outline-ring focus-visible:outline-offset-2 not-disabled:active:not-aria-[haspopup]:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     {
