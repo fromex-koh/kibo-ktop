@@ -3,12 +3,13 @@ import {cva, type VariantProps} from 'class-variance-authority'
 import {Slot} from 'radix-ui'
 import {cn} from '@/lib/utils'
 
-// 프로젝트 Badge (styled copy) — 원본 src/components/ui/badge.tsx(shadcn 바닐라)를 복사하고 스타일만 교체한다([SC-04]).
-// 원본과의 차이는 badgeVariants(스타일 cva) 뿐이고, 셸(함수·data-slot·props·export)은 동일하다.
+// 프로젝트 Badge (styled copy) — 원본 src/components/ui/badge.tsx(shadcn 바닐라)를 복사해 프로젝트 배지 시스템으로 확장한다([SC-04]).
+// Badge 셸(함수·asChild·Slot·data-slot·props)은 원본과 동일하게 유지하고, 스타일 cva 와 숫자 배지 래퍼만 추가한다.
 //
 // Figma 배지 디자인 반영 — 3축(variant=type · color · shape). 색은 프로젝트 팔레트 유틸을
-// 직접 쓴다(상태 색 계열, PB-05 보조). solid 배지의 흰 텍스트는 text-white 가 무효라
+// 직접 쓴다(상태 색 계열, PB-05 보조). solid/number 배지의 흰 텍스트는 text-white 가 무효라
 // badge-solid-fg 토큰을 쓰고, outline 배지의 흰 배경은 bg-card(다크 자동 반사)로 처리한다.
+// 숫자 배지(Figma "badge_number")도 같은 badgeVariants 안에서 variant="number" 로 관리한다.
 const badgeVariants = cva(
     'group/badge inline-flex w-fit shrink-0 items-center justify-center border border-transparent px-4 font-medium whitespace-nowrap transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 [&>svg]:pointer-events-none',
     {
@@ -17,6 +18,7 @@ const badgeVariants = cva(
                 'solid-pastel': '',
                 outline: 'bg-card',
                 solid: 'text-badge-solid-fg',
+                number: 'typo-body-l-bold h-6 min-w-7 rounded-full px-2 text-badge-solid-fg',
             },
             // 크기 — Figma 두 배지 크기. sm(기본)=28px·14px, lg=40px·16px(px-4 동일, 세로만 커짐).
             size: {
@@ -36,6 +38,9 @@ const badgeVariants = cva(
                 'secondary-green': '',
                 'secondary-orange': '',
                 'secondary-grape': '',
+                // number — 일반 건수(primary)·새로움/알림(new) 전용 색.
+                primary: '',
+                new: '',
             },
             shape: {
                 pill: 'rounded-full',
@@ -73,6 +78,9 @@ const badgeVariants = cva(
             {variant: 'solid', color: 'secondary-green', class: 'bg-green-800'},
             {variant: 'solid', color: 'secondary-orange', class: 'bg-orange-700'},
             {variant: 'solid', color: 'secondary-grape', class: 'bg-grape-600'},
+            // number: 숫자 전용 pill. 높이/패딩은 variant 에서, 색은 전용 컴포넌트 토큰으로 분리한다.
+            {variant: 'number', color: 'primary', class: 'bg-number-badge-primary'},
+            {variant: 'number', color: 'new', class: 'bg-number-badge-new'},
         ],
         defaultVariants: {
             variant: 'solid-pastel',
@@ -107,4 +115,12 @@ function Badge({
     )
 }
 
-export {Badge, badgeVariants}
+type NumberBadgeProps = Omit<React.ComponentProps<'span'>, 'color'> & {
+    variant?: 'primary' | 'new'
+}
+
+function NumberBadge({className, variant = 'primary', ...props}: NumberBadgeProps) {
+    return <Badge data-slot="number-badge" variant="number" color={variant} className={className} {...props} />
+}
+
+export {Badge, NumberBadge, badgeVariants}

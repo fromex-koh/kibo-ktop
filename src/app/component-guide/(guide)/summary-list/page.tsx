@@ -3,7 +3,7 @@ import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {SummaryList, SummaryListItem} from '@/components/composite/summary-list'
 import {FormCard} from '@/components/composite/form-card'
-import {NumberBadge} from '@/components/composite/number-badge'
+import {NumberBadge} from '@/components/kit/badge'
 import {Button} from '@/components/kit/button'
 
 export const metadata: Metadata = {title: '요약 목록 (SummaryList)'}
