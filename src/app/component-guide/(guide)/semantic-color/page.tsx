@@ -9,7 +9,7 @@ export const metadata: Metadata = {title: '색상 (Semantic)'}
 // 각 슬롯에서 '실제로 쓰는' 대표 유틸리티 하나만 노출한다 — bg-/text-/border- 를 다 나열하면
 // text-background 처럼 안 쓰는 조합까지 보여 헷갈리기 때문. 유형별로:
 //   -foreground(텍스트색) → text- · border/-border(테두리) → border- · ring/-ring(포커스링) → ring- ·
-//   input(폼 테두리) → border- · 그 외(배경 표면) → bg-.
+//   input/control(폼·선택 컨트롤 테두리) → border- · 그 외(배경 표면) → bg-.
 // 다른 접두사(outline-/divide-/fill-/stroke- 등)도 전부 유효하며(설명 참고) 필요하면 직접 붙여 쓴다.
 // scroll-thumb/track 은 pseudo-element(::-webkit-scrollbar) 전용이라 Tailwind 유틸리티 자체가
 // 없다(build-tokens.mjs 의 NO_UTILITY_SLOTS) — CSS 안에서 var() 로 직접 참조하는 게 유일한 사용법이라
@@ -23,7 +23,7 @@ const utilClasses = (name: string): string[] => {
     if (name === 'foreground' || name.endsWith('-foreground') || name.startsWith('foreground-')) return [`text-${name}`]
     if (name === 'border' || name.endsWith('-border') || BORDER_TONE_SLOTS.has(name)) return [`border-${name}`]
     if (name === 'ring' || name.endsWith('-ring')) return [`ring-${name}`]
-    if (name === 'input') return [`border-${name}`]
+    if (name === 'input' || name === 'control') return [`border-${name}`]
     return [`bg-${name}`]
 }
 
@@ -88,6 +88,7 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     surface: 'bg-surface',
     foreground: 'bg-foreground',
     'foreground-subtle': 'bg-foreground-subtle',
+    control: 'bg-control',
     'label-foreground': 'bg-label-foreground',
     placeholder: 'bg-placeholder',
     card: 'bg-card',
@@ -95,6 +96,7 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     popover: 'bg-popover',
     'popover-foreground': 'bg-popover-foreground',
     primary: 'bg-primary',
+    'primary-strong': 'bg-primary-strong',
     'primary-foreground': 'bg-primary-foreground',
     secondary: 'bg-secondary',
     'secondary-hover': 'bg-secondary-hover',
@@ -232,7 +234,10 @@ const STANDARD_GROUPS: Group[] = [
     {name: 'foreground', match: (n) => n === 'foreground'},
     {name: 'card / card-foreground', match: (n) => n === 'card' || n === 'card-foreground'},
     {name: 'popover / popover-foreground', match: (n) => n === 'popover' || n === 'popover-foreground'},
-    {name: 'primary / primary-foreground', match: (n) => n === 'primary' || n === 'primary-foreground'},
+    {
+        name: 'primary / primary-foreground',
+        match: (n) => n === 'primary' || n === 'primary-strong' || n === 'primary-foreground',
+    },
     {name: 'secondary / secondary-foreground', match: (n) => n === 'secondary' || n === 'secondary-foreground'},
     {name: 'muted / muted-foreground', match: (n) => n === 'muted' || n === 'muted-foreground'},
     {name: 'accent / accent-foreground', match: (n) => n === 'accent' || n === 'accent-foreground'},
@@ -245,6 +250,7 @@ const STANDARD_GROUPS: Group[] = [
 ]
 const CUSTOM_GROUPS: Group[] = [
     {name: 'foreground-subtle', match: (n) => n === 'foreground-subtle'},
+    {name: 'control', match: (n) => n === 'control'},
     {name: 'primary-subtle', match: (n) => n === 'primary-subtle'},
     {
         name: 'secondary state',
@@ -440,8 +446,10 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     'primary / primary-foreground': (
         <>
             브랜드·주요 액션 색 — <code className="font-mono">bg-primary</code>(blue.500 솔리드)는 주요
-            버튼·링크·강조에, <code className="font-mono">text-primary-foreground</code> 는 그 위 텍스트에 쓴다. 다크는
-            각각 자동 반사. 옅은 브랜드 틴트 표면은 커스텀 <code className="font-mono">primary-subtle</code>(아래).
+            버튼·링크·강조에, <code className="font-mono">text-primary-strong</code>(blue.600)은 primary보다 한 단계
+            진한 강조 텍스트에, <code className="font-mono">text-primary-foreground</code> 는 그 위 텍스트에 쓴다.
+            다크는 각각 자동 반사. 옅은 브랜드 틴트 표면은 커스텀 <code className="font-mono">primary-subtle</code>
+            (아래).
         </>
     ),
     'accent / accent-foreground': (
@@ -465,7 +473,7 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     'secondary / secondary-foreground': (
         <>
             보조(secondary) 색 — <code className="font-mono">bg-secondary</code>(옅은 브랜드 보조 표면)·
-            <code className="font-mono">text-secondary-foreground</code>(blue.600) 는 shadcn 표준 보조 버튼·칩.
+            <code className="font-mono">text-secondary-foreground</code>(blue.600) 는 shadcn 표준 보조 버튼 텍스트.
             Secondary Button hover/pressed는 <code className="font-mono">bg-secondary-hover</code>/
             <code className="font-mono">bg-secondary-pressed</code>, border는 fill보다 강한 커스텀{' '}
             <code className="font-mono">border-secondary-strong</code>(아래)를 쓴다. 초록·주황 옅은 틴트 표면은 커스텀{' '}
@@ -484,9 +492,9 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     input: (
         <>
-            <strong>폼 컨트롤 테두리</strong> 색 — Input·Textarea·Select 등 입력 요소의 테두리에{' '}
-            <code className="font-mono">border-input</code>. 일반 테두리(<code className="font-mono">border</code>)와
-            구분되는 폼 전용 테두리색이라, 인풋만 다른 톤으로 조정할 수 있다.
+            <strong>shadcn 호환 입력 테두리</strong> 색 — shadcn 원본 <code className="font-mono">ui/*</code>와 신규
+            shadcn 컴포넌트가 기대하는 <code className="font-mono">border-input</code> 슬롯을 위해 유지한다. 프로젝트
+            kit/composite 컨트롤 기본 테두리는 커스텀 <code className="font-mono">border-control</code>을 사용한다.
         </>
     ),
     ring: (
@@ -502,6 +510,13 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <strong>덜 중요한 보조 텍스트</strong>색(gray.500) — 캡션·placeholder·도움말 등에{' '}
             <code className="font-mono">text-foreground-subtle</code>. 다크 자동 반사. 표준{' '}
             <code className="font-mono">foreground</code> 의 프로젝트 확장(보조 톤).
+        </>
+    ),
+    control: (
+        <>
+            <strong>입력/선택 컨트롤 기본 테두리</strong> 색 — Checkbox·Radio·Chip·Input·Select·Textarea처럼 필드와 선택
+            컨트롤을 함께 포괄하는 프로젝트 슬롯. shadcn <code className="font-mono">input</code> 슬롯보다 범위가 넓어{' '}
+            <code className="font-mono">border-control</code>로 구분한다.
         </>
     ),
     'primary-subtle': (

@@ -7,6 +7,7 @@ import {cn} from '@/lib/utils'
 // Figma text_input 반영 — 높이 48px(control-h-lg), radius 8px(rounded-sm), padding 16px, 16px 텍스트. Select 와 통일.
 // 폭: w-full 로 부모(폼 필드 wrapper)를 채운다. Figma 폭 360 은 컴포넌트가 아니라 label+input 을
 // 감싸는 폼 필드 wrapper 에서 max-w-90(상한) 으로 잡는다(min-w-0 은 flex 오버플로 방지용으로 유지).
+// PROJECT-STYLE: Figma 입력/선택 컨트롤 기본 테두리는 border-control(gray.200)로 통일한다.
 // 배경은 bg-surface(흰 배경) — Select 와 통일. disabled/read-only 는 bg-muted 로 덮는다.
 // placeholder 는 Figma 대로 text-placeholder(gray.700).
 // focus 는 outline(outline-2 dotted, 색은 --color-ring) + outline-offset-2. 에러(aria-invalid)는 테두리
@@ -17,7 +18,7 @@ function Input({className, type, ...props}: React.ComponentProps<'input'>) {
             type={type}
             data-slot="input"
             className={cn(
-                'h-control-h-lg border-input bg-surface w-full min-w-0 rounded-sm border px-4 text-base transition-colors outline-none',
+                'h-control-h-lg border-control bg-surface w-full min-w-0 rounded-sm border px-4 text-base transition-colors outline-none',
                 'placeholder:text-placeholder',
                 'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dotted',
                 'aria-invalid:border-destructive',

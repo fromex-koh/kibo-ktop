@@ -45,6 +45,17 @@ const SIZE_COMPARISON_CODE = `{/* size 는 높이만 바꾼다 — large(기본,
   <ChipCheckbox size="medium" value="b">프리미엄형</ChipCheckbox>
 </ChipCheckboxGroup>`
 
+const DISABLED_CODE = `{/* disabled — bg-control-disabled / border-disabled-subtle / text-disabled */}
+<ChipRadioGroup name="disabled-radio" defaultValue="agree" aria-label="비활성 라디오 칩">
+  <ChipRadio value="agree" disabled>동의함</ChipRadio>
+  <ChipRadio value="disagree" disabled>동의하지 않음</ChipRadio>
+</ChipRadioGroup>
+
+<ChipCheckboxGroup aria-label="비활성 체크박스 칩">
+  <ChipCheckbox name="disabled-chip" value="ai" defaultChecked disabled>AI</ChipCheckbox>
+  <ChipCheckbox name="disabled-chip" value="cloud" disabled>클라우드</ChipCheckbox>
+</ChipCheckboxGroup>`
+
 const CONSENT_USAGE_CODE = `{/* 동의 항목처럼 하나만 고르는 자리 — 질문이 라디오 그룹의 레이블 */}
 <p id="consent-1-label">위 고유식별정보 수집·이용에 동의하십니까?</p>
 
@@ -217,6 +228,45 @@ const ChipGuidePage = () => (
                 </div>
             </div>
             <CodeBlock code={SIZE_COMPARISON_CODE} language="tsx" copyLabel="복사" />
+        </section>
+
+        <section aria-labelledby="chip-disabled" className="flex flex-col gap-4">
+            <div>
+                <h2 id="chip-disabled" className="typo-h4-bold">
+                    비활성 상태 (disabled)
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    비활성 칩은 선택/입력 컨트롤 공통 disabled 토큰을 씁니다. 배경은{' '}
+                    <code className="font-mono">bg-control-disabled</code>, 테두리는{' '}
+                    <code className="font-mono">border-disabled-subtle</code>, 텍스트는{' '}
+                    <code className="font-mono">text-disabled</code>로 통일합니다.
+                </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2">
+                <div className="flex flex-col gap-2">
+                    <h3 className="typo-title-l-medium text-foreground">라디오 칩</h3>
+                    <ChipRadioGroup name="disabled-radio-demo" defaultValue="agree" aria-label="비활성 라디오 칩">
+                        <ChipRadio value="agree" disabled>
+                            동의함
+                        </ChipRadio>
+                        <ChipRadio value="disagree" disabled>
+                            동의하지 않음
+                        </ChipRadio>
+                    </ChipRadioGroup>
+                </div>
+                <div className="flex flex-col gap-2">
+                    <h3 className="typo-title-l-medium text-foreground">체크박스 칩</h3>
+                    <ChipCheckboxGroup aria-label="비활성 체크박스 칩">
+                        <ChipCheckbox name="disabled-chip-demo" value="ai" defaultChecked disabled>
+                            AI
+                        </ChipCheckbox>
+                        <ChipCheckbox name="disabled-chip-demo" value="cloud" disabled>
+                            클라우드
+                        </ChipCheckbox>
+                    </ChipCheckboxGroup>
+                </div>
+            </div>
+            <CodeBlock code={DISABLED_CODE} language="tsx" copyLabel="복사" />
         </section>
 
         <section aria-labelledby="chip-consent-usage" className="flex flex-col gap-4">

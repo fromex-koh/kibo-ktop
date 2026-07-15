@@ -5,6 +5,7 @@ import {cn} from '@/lib/utils'
 // 셸(구성·props·data-slot·export)은 원본과 동일하고, className 만 Figma 에 맞춘다.
 //
 // Figma text_area 반영 — Input 과 통일하되 멀티라인: radius 8px(rounded-sm), padding 16px(px-4 py-3), 16px 텍스트.
+// PROJECT-STYLE: Figma 입력/선택 컨트롤 기본 테두리는 border-control(gray.200)로 통일한다.
 // 배경 bg-surface(흰 배경), placeholder text-placeholder(gray.700). disabled/read-only 는 bg-muted.
 // 폭은 컴포넌트가 아니라 label+textarea 를 감싸는 폼 필드 wrapper 에서 max-w-90(상한) 으로 잡는다.
 // focus 는 점선 outline(outline-2 dotted outline-ring outline-offset-2), 에러는 테두리(border-destructive)만
@@ -18,7 +19,7 @@ function Textarea({className, ...props}: React.ComponentProps<'textarea'>) {
         <textarea
             data-slot="textarea"
             className={cn(
-                'border-input bg-surface min-h-30 w-full min-w-0 resize-none rounded-sm border px-4 py-3 text-base transition-colors outline-none',
+                'border-control bg-surface min-h-30 w-full min-w-0 resize-none rounded-sm border px-4 py-3 text-base transition-colors outline-none',
                 'placeholder:text-placeholder',
                 'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dotted',
                 'aria-invalid:border-destructive',
