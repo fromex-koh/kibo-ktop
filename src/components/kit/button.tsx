@@ -23,7 +23,7 @@ import {cn} from '@/lib/utils'
 //
 // 왜 감싸지(compose) 않고 복사하나:
 //   `cn` 이 순정 twMerge(확장 없음)라, 원본 프리미티브에 className 으로 덮어쓰면 커스텀 색 유틸
-//   (bg-button-primary-fill)이 원본의 bg-primary 와 중복제거되지 않아 두 색이 함께 남는다. 색·사이즈를
+//   (bg-primary)이 원본의 bg-primary 와 중복제거되지 않아 두 색이 함께 남는다. 색·사이즈를
 //   전면 재스킨하는 이 프로젝트에선 "복사 후 buttonVariants 만 교체"가 충돌 없는 정석이다.
 //
 // 색/반경/포커스는 프로젝트 디자인 토큰(--ds-*) 브릿지 유틸을 사용한다.
@@ -38,7 +38,7 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    'bg-button-primary-fill text-button-primary-text not-disabled:hover:bg-button-primary-fill-hover not-disabled:active:bg-button-primary-fill-pressed disabled:bg-button-primary-disabled-fill disabled:text-button-primary-disabled-text disabled:opacity-100',
+                    'bg-primary text-button-primary-text not-disabled:hover:bg-button-primary-fill-hover not-disabled:active:bg-button-primary-fill-pressed disabled:bg-button-primary-disabled-fill disabled:text-button-primary-disabled-text disabled:opacity-100',
                 secondary:
                     'bg-button-secondary-fill text-button-secondary-text border-button-secondary-border not-disabled:hover:bg-button-secondary-fill-hover not-disabled:hover:text-button-secondary-text-hover not-disabled:active:bg-button-secondary-fill-hover not-disabled:active:text-button-secondary-text-pressed disabled:bg-button-secondary-disabled-fill disabled:border-button-secondary-disabled-border disabled:text-button-secondary-disabled-text disabled:opacity-100',
                 tertiary:

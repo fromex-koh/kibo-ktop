@@ -79,7 +79,7 @@ const badgeVariants = cva(
             {variant: 'solid', color: 'secondary-orange', class: 'bg-orange-700'},
             {variant: 'solid', color: 'secondary-grape', class: 'bg-grape-600'},
             // number: 숫자 전용 pill. 높이/패딩은 variant 에서, 색은 전용 컴포넌트 토큰으로 분리한다.
-            {variant: 'number', color: 'primary', class: 'bg-number-badge-primary'},
+            {variant: 'number', color: 'primary', class: 'bg-primary'},
             {variant: 'number', color: 'new', class: 'bg-number-badge-new'},
         ],
         defaultVariants: {

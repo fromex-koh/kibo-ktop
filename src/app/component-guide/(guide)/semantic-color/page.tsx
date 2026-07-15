@@ -396,7 +396,7 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'primary / primary-foreground': (
         <>
-            브랜드·주요 액션 색 — <code className="font-mono">bg-primary</code>(blue.600 솔리드)는 주요
+            브랜드·주요 액션 색 — <code className="font-mono">bg-primary</code>(blue.500 솔리드)는 주요
             버튼·링크·강조에, <code className="font-mono">text-primary-foreground</code> 는 그 위 텍스트에 쓴다. 다크는
             각각 자동 반사. 옅은 브랜드 틴트 표면은 커스텀 <code className="font-mono">primary-subtle</code>(아래).
         </>

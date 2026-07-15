@@ -19,7 +19,7 @@ import {cn} from '@/lib/utils'
 //
 // Figma 반영(checkbox 와 동일 체계):
 //   • 크기 size-6(24px)·rounded-full, 내부 점 size-2.5.
-//   • 색은 전용 radio 토큰에 연결 — 체크됨 border/bg-radio-checked, 비활성 border-radio-disabled-border·
+//   • 색은 표준 primary 슬롯에 연결 — 체크됨 border/bg-primary, 비활성 border-radio-disabled-border·
 //     bg-radio-disabled-fill(회색 원), 비활성 점 bg-radio-disabled-border.
 //   • dark: 수동 분기는 두지 않는다(토큰이 .dark 에서 자동 반사, [PB-06]).
 // ─────────────────────────────────────────────────────────────────────────────
@@ -34,7 +34,7 @@ function RadioGroupItem({className, ...props}: React.ComponentProps<typeof Radio
         <RadioGroupPrimitive.Item
             data-slot="radio-group-item"
             className={cn(
-                'group/radio-group-item peer border-input bg-surface focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:aria-checked:border-radio-checked data-checked:border-radio-checked data-checked:bg-radio-checked data-checked:text-primary-foreground disabled:border-radio-disabled-border disabled:bg-radio-disabled-fill relative flex aspect-square size-6 shrink-0 rounded-full border outline-none after:absolute after:-inset-x-3 after:-inset-y-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dotted disabled:cursor-not-allowed disabled:opacity-100',
+                'group/radio-group-item peer border-input bg-surface focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:aria-checked:border-primary data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground disabled:border-radio-disabled-border disabled:bg-radio-disabled-fill relative flex aspect-square size-6 shrink-0 rounded-full border outline-none after:absolute after:-inset-x-3 after:-inset-y-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dotted disabled:cursor-not-allowed disabled:opacity-100',
                 className,
             )}
             {...props}

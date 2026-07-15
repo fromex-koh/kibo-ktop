@@ -20,7 +20,7 @@ import {CheckIcon} from 'lucide-react'
 //
 // Figma 반영:
 //   • 크기 size-6(24px)·rounded-2xs(4px)·인디케이터 아이콘 size-4.
-//   • 색은 전용 checkbox 토큰에 연결 — 체크됨 border/bg-checkbox-checked, 비활성
+//   • 색은 표준 primary 슬롯에 연결 — 체크됨 border/bg-primary, 비활성
 //     border-checkbox-disabled-border·bg-checkbox-disabled-fill(회색 박스).
 //   • dark: 수동 분기는 두지 않는다(토큰이 .dark 에서 자동 반사, [PB-06]).
 // ─────────────────────────────────────────────────────────────────────────────
@@ -29,7 +29,7 @@ function Checkbox({className, ...props}: React.ComponentProps<typeof CheckboxPri
         <CheckboxPrimitive.Root
             data-slot="checkbox"
             className={cn(
-                'peer border-input bg-surface focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:aria-checked:border-checkbox-checked data-checked:border-checkbox-checked data-checked:bg-checkbox-checked data-checked:text-primary-foreground disabled:border-checkbox-disabled-border disabled:bg-checkbox-disabled-fill disabled:text-checkbox-disabled-border rounded-2xs relative flex size-6 shrink-0 items-center justify-center border transition-colors outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dotted disabled:cursor-not-allowed disabled:opacity-100',
+                'peer border-input bg-surface focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:aria-checked:border-primary data-checked:border-primary data-checked:bg-primary data-checked:text-primary-foreground disabled:border-checkbox-disabled-border disabled:bg-checkbox-disabled-fill disabled:text-checkbox-disabled-border rounded-2xs relative flex size-6 shrink-0 items-center justify-center border transition-colors outline-none group-has-disabled/field:opacity-50 after:absolute after:-inset-x-3 after:-inset-y-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dotted disabled:cursor-not-allowed disabled:opacity-100',
                 className,
             )}
             {...props}

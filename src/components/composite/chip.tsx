@@ -14,7 +14,7 @@ import {cn} from '@/lib/utils'
 // 체크된 칩마다 value). role/키보드/단일·다중 동작은 전부 radix 원본이 처리한다.
 //
 // 상태색(Figma, 두 종류 공통): 미선택 = 흰 배경·border-input(1px)·label-foreground(Regular),
-//   선택 = border-chip-checked(blue.500, 2px)·text-primary(blue.600, Bold), 비활성 = bg-muted + 흐림.
+//   선택 = border-chip-checked(blue.500, 2px)·text-primary(blue.500, Bold), 비활성 = bg-muted + 흐림.
 // data-checked = radix data-state=checked (shadcn/tailwind.css 커스텀 변형). RadioGroup.Item·Checkbox.Root 모두
 // 같은 data-state 를 쓰므로 상태 스타일(chipStateClassName)을 그대로 공유한다.
 //
@@ -97,7 +97,7 @@ const ChipCheckbox = ({
         {...props}
     >
         <span className="flex-1 text-left">{children}</span>
-        {/* 선택 시에만 마운트되는 우측 체크 아이콘(radix Indicator). 색은 라벨(text-primary, blue.600)이 아니라
+        {/* 선택 시에만 마운트되는 우측 체크 아이콘(radix Indicator). 색은 라벨(text-primary, blue.500)이 아니라
             border 와 같은 chip-checked(blue.500)를 명시 지정 — Figma 아이콘이 라벨보다 한 톤 밝은 테두리 동색이다.
             strokeWidth=3: lucide 기본(2, 24 viewBox)은 16px 렌더 시 실측 ~1.33px 라 Figma 체크(~1.9px)보다 얇아, 3 으로 맞춘다. */}
         <CheckboxPrimitive.Indicator data-slot="chip-checkbox-indicator" className="text-chip-checked shrink-0">

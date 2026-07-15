@@ -10,7 +10,7 @@ import {cn} from '@/lib/utils'
 // kit/InputGroup(승격) 위에 조립했다. 폭은 Figma 실측 그대로 max-w-147(=588px, spacingBase 4px 배수 — [PB-13]).
 //
 // 색(Figma): 컨테이너 = bg-surface·border-input(gray.200)·rounded-full, 버튼 = 원형·파란 배경·흰 검색 아이콘
-// 24px — kit/Button 의 variant="default"(button-primary-fill=blue.500)·size="icon" 를 그대로 쓰면 색·아이콘
+// 24px — kit/Button 의 variant="default"(bg-primary=blue.500)·size="icon" 를 그대로 쓰면 색·아이콘
 // 크기(size-icon-lg=24px 가 size="icon" 기본값) 모두 커스텀 없이 일치한다(별도 className 오버라이드 불필요).
 // 버튼 박스 크기만 Figma 실측(40px)과 다르다 — kit/Button 의 size="icon" 은 44px 최소 터치 타깃([6.1.3])이
 // 강제돼 44px 로 렌더링된다. 이건 앱 전역에서 아이콘 버튼에 이미 일관 적용 중인 접근성 규칙이라 그대로 둔다
