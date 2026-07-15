@@ -25,6 +25,13 @@ const RULES = [
         re: /\b(?:w|h|min-w|max-w|min-h|max-h)-\[[\d.]+px\]/,
     },
     {
+        id: 'SC-01',
+        desc: 'arbitrary value 사용 — 토큰/기존 유틸리티를 쓰세요',
+        // data-[state] 같은 arbitrary variant와 CSS 변수 기반 예외는 제외하고,
+        // 기존 유틸리티로 대체 가능한 간격·링·위치·크기의 숫자/px/calc arbitrary value를 막는다.
+        re: /\b(?:p[trblxy]?|m[trblxy]?|gap(?:-[xy])?|space-[xy]|ring|top|right|bottom|left|inset(?:-[xy])?|w|h|min-w|min-h)-\[(?:-?[\d.]+(?:px|rem)?|calc\([^\]]+\))\]/,
+    },
+    {
         id: 'CD-001',
         desc: '!important 사용 금지 — 선택자 구체성/클래스 조합으로 해결하세요',
         re: /!important|(?<=[\s"'`])!(?:bg|text|border|ring|outline|p|px|py|pt|pb|pl|pr|m|mx|my|mt|mb|ml|mr|w|h|gap|rounded|shadow|z|font|leading|tracking|opacity|flex|grid|from|to|via)-/,
