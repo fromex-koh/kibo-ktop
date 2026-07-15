@@ -1,7 +1,12 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {SelectableCardBadgeDemo, SelectableCardRadioDemo, SelectableCardStatesDemo} from './selectable-card-demo'
+import {
+    SelectableCardBadgeDemo,
+    SelectableCardRadioDemo,
+    SelectableCardRadioStatesDemo,
+    SelectableCardStatesDemo,
+} from './selectable-card-demo'
 
 export const metadata: Metadata = {title: '선택 카드 (SelectableCard)'}
 
@@ -13,6 +18,21 @@ const RADIO_CODE = `<SelectableCardGroup value={value} onValueChange={setValue} 
     전체 항목 동의
   </SelectableCard>
 </SelectableCardGroup>`
+
+const RADIO_STATES_CODE = `<div className="flex flex-col gap-3">
+  <SelectableCardGroup value="checked" className="grid-cols-2 gap-3">
+    <SelectableCard control="radio" value="default">기본 (default)</SelectableCard>
+    <SelectableCard control="radio" value="checked">선택됨 (checked)</SelectableCard>
+  </SelectableCardGroup>
+  <SelectableCardGroup value="disabled-checked" className="grid-cols-2 gap-3">
+    <SelectableCard control="radio" value="disabled-default" disabled>비활성 미선택</SelectableCard>
+    <SelectableCard control="radio" value="disabled-checked" disabled>비활성 선택</SelectableCard>
+  </SelectableCardGroup>
+  <SelectableCardGroup value="readonly-checked" className="grid-cols-2 gap-3">
+    <SelectableCard control="radio" value="readonly-default" readOnly>읽기전용 미선택</SelectableCard>
+    <SelectableCard control="radio" value="readonly-checked" readOnly>읽기전용 선택</SelectableCard>
+  </SelectableCardGroup>
+</div>`
 
 const CHECKBOX_CODE = `<SelectableCard control="checkbox" checked={checked} onCheckedChange={setChecked}>
   전체 항목 동의
@@ -45,8 +65,8 @@ const SelectableCardGuidePage = () => (
                     상태 (State)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    체크전·체크후·비활성·읽기전용입니다. <code className="font-mono">disabled</code> 는 카드가 흐려지고,{' '}
-                    <code className="font-mono">readOnly</code> 는 값·모양은 유지한 채 상호작용만 막힙니다.
+                    체크전·체크후·비활성·읽기전용 상태입니다. <code className="font-mono">disabled</code> 와{' '}
+                    <code className="font-mono">readOnly</code> 는 공통 disabled 토큰으로 비활성/잠금 상태를 표시합니다.
                 </p>
             </div>
             <SelectableCardStatesDemo />
@@ -77,7 +97,16 @@ const SelectableCardGuidePage = () => (
                 </p>
             </div>
             <SelectableCardRadioDemo />
+            <div className="flex flex-col gap-3">
+                <h3 className="typo-title-l-medium text-foreground">라디오 상태 큐레이션</h3>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    라디오 카드도 체크박스 카드와 동일하게 기본·선택됨·비활성·읽기전용 상태를 확인할 수 있습니다.
+                    비활성/읽기전용은 미선택과 선택 케이스를 함께 둬서 border 표시 규칙까지 비교합니다.
+                </p>
+                <SelectableCardRadioStatesDemo />
+            </div>
             <CodeBlock code={RADIO_CODE} language="tsx" copyLabel="복사" />
+            <CodeBlock code={RADIO_STATES_CODE} language="tsx" copyLabel="복사" />
             <CodeBlock code={CHECKBOX_CODE} language="tsx" copyLabel="복사" />
         </section>
 

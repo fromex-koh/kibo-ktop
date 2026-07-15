@@ -27,7 +27,7 @@ const chipVariants = cva(
 )
 
 const chipStateClassName = cn(
-    'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dotted',
+    'focus-visible:outline-ring focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid',
     'data-checked:border-2 data-checked:border-primary data-checked:text-primary-strong data-checked:font-bold',
     'disabled:border-disabled-subtle disabled:bg-control-disabled disabled:text-disabled disabled:cursor-not-allowed disabled:opacity-100',
 )

@@ -87,3 +87,32 @@ export const SelectableCardRadioDemo = () => {
         </SelectableCardGroup>
     )
 }
+
+export const SelectableCardRadioStatesDemo = () => (
+    <div className="flex flex-col gap-3">
+        <SelectableCardGroup value="checked" className="grid-cols-2 gap-3">
+            <SelectableCard control="radio" value="default">
+                기본 (default)
+            </SelectableCard>
+            <SelectableCard control="radio" value="checked">
+                선택됨 (checked)
+            </SelectableCard>
+        </SelectableCardGroup>
+        <SelectableCardGroup value="disabled-checked" className="grid-cols-2 gap-3">
+            <SelectableCard control="radio" value="disabled-default" disabled>
+                비활성 미선택
+            </SelectableCard>
+            <SelectableCard control="radio" value="disabled-checked" disabled>
+                비활성 선택
+            </SelectableCard>
+        </SelectableCardGroup>
+        <SelectableCardGroup value="readonly-checked" className="grid-cols-2 gap-3">
+            <SelectableCard control="radio" value="readonly-default" readOnly>
+                읽기전용 미선택
+            </SelectableCard>
+            <SelectableCard control="radio" value="readonly-checked" readOnly>
+                읽기전용 선택
+            </SelectableCard>
+        </SelectableCardGroup>
+    </div>
+)

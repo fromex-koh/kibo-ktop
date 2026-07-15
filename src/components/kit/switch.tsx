@@ -5,7 +5,7 @@
 //   · 트랙 40×24(default)·완전 둥근, thumb 20(흰색)·2px inset, on 일 때 16px 이동. sm 은 컴팩트(32×20·thumb16·12px).
 //   · 색은 기존 팔레트/시맨틱에서 Figma 최근사값으로: off=bg-gray-400(#6d7882 근사), on=bg-primary
 //     (blue.500, #3f7deb), thumb=bg-white(구조색, 항상 흰색). 원본의 arbitrary px 사이즈·dark 분기는 스케일 유틸/
-//     토큰으로 대체(다크 자동 반사, [PB-06]). 포커스링·터치 hit-area(after:-inset)·disabled 는 원본 그대로.
+//     토큰으로 대체(다크 자동 반사, [PB-06]). 포커스링은 Button과 같은 solid outline 규칙을 쓴다.
 import * as React from 'react'
 import {Switch as SwitchPrimitive} from 'radix-ui'
 
@@ -23,7 +23,7 @@ function Switch({
             data-slot="switch"
             data-size={size}
             className={cn(
-                'peer group/switch focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-checked:bg-primary relative inline-flex shrink-0 items-center rounded-full border border-transparent px-0.5 transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:ring-3 aria-invalid:ring-3 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-unchecked:bg-gray-400 data-[size=default]:h-6 data-[size=default]:w-10 data-[size=sm]:h-5 data-[size=sm]:w-8',
+                'peer group/switch focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-checked:bg-primary relative inline-flex shrink-0 items-center rounded-full border border-transparent px-0.5 transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid aria-invalid:ring-3 data-disabled:cursor-not-allowed data-disabled:opacity-50 data-unchecked:bg-gray-400 data-[size=default]:h-6 data-[size=default]:w-10 data-[size=sm]:h-5 data-[size=sm]:w-8',
                 className,
             )}
             {...props}
