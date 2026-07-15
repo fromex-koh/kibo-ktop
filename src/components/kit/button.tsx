@@ -9,11 +9,11 @@ const buttonVariants = cva(
     {
         variants: {
             variant: {
-                // PROJECT-STYLE: shadcn 원본은 hover:bg-primary/80 이지만,
-                // Figma hover/pressed는 solid brand token(blue.600/blue.700)이므로
-                // bg-primary-hover/bg-primary-pressed를 유지한다.
+                // PROJECT-STYLE: shadcn 원본은 hover:bg-primary/80 + disabled:opacity-50 이지만,
+                // Figma 상태값은 solid brand/control token과 disabled text token(blue.600/blue.700/gray.100/gray.300)이므로
+                // bg-primary-hover/bg-primary-pressed/disabled:bg-control-disabled/disabled:text-disabled + disabled:opacity-100을 유지한다.
                 default:
-                    'bg-primary text-primary-foreground not-disabled:hover:bg-primary-hover not-disabled:active:bg-primary-pressed disabled:bg-button-primary-disabled-fill disabled:text-button-primary-disabled-text disabled:opacity-100',
+                    'bg-primary text-primary-foreground not-disabled:hover:bg-primary-hover not-disabled:active:bg-primary-pressed disabled:bg-control-disabled disabled:text-disabled disabled:opacity-100',
                 secondary:
                     'bg-button-secondary-fill text-button-secondary-text border-button-secondary-border not-disabled:hover:bg-button-secondary-fill-hover not-disabled:hover:text-button-secondary-text-hover not-disabled:active:bg-button-secondary-fill-hover not-disabled:active:text-button-secondary-text-pressed disabled:bg-button-secondary-disabled-fill disabled:border-button-secondary-disabled-border disabled:text-button-secondary-disabled-text disabled:opacity-100',
                 tertiary:

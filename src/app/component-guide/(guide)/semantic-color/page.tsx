@@ -19,6 +19,7 @@ export const metadata: Metadata = {title: '색상 (Semantic)'}
 const BORDER_TONE_SLOTS = new Set(['subtle-1', 'subtle-2', 'subtle-3'])
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
+    if (name === 'disabled') return [`text-${name}`]
     if (name === 'foreground' || name.endsWith('-foreground') || name.startsWith('foreground-')) return [`text-${name}`]
     if (name === 'border' || name.endsWith('-border') || BORDER_TONE_SLOTS.has(name)) return [`border-${name}`]
     if (name === 'ring' || name.endsWith('-ring')) return [`ring-${name}`]
@@ -137,6 +138,9 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'sidebar-ring': 'bg-sidebar-ring',
     'scroll-thumb': 'bg-[var(--ds-scroll-thumb)]',
     'scroll-track': 'bg-[var(--ds-scroll-track)]',
+    disabled: 'bg-disabled',
+    'control-disabled': 'bg-control-disabled',
+    'field-disabled': 'bg-field-disabled',
 }
 
 // 맨 앞 '현재' 칸 — 실제 토큰을 현재 테마로 렌더. 다크 토글 시 실제로 바뀐다(파이프라인 검증).
@@ -236,6 +240,7 @@ const CUSTOM_GROUPS: Group[] = [
         match: (n) => n === 'secondary-green-subtle' || n === 'secondary-orange-subtle',
     },
     {name: 'subtle-1 / subtle-2 / subtle-3', match: (n) => BORDER_TONE_SLOTS.has(n)},
+    {name: 'disabled', match: (n) => n === 'disabled' || n === 'control-disabled' || n === 'field-disabled'},
     {
         name: '상태 (success / warning / error / info)',
         match: (n) => ['success', 'warning', 'error', 'info'].some((s) => n === s || n === `${s}-foreground`),
@@ -489,6 +494,14 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <code className="font-mono">border</code>(진한 기본)보다 옅게. 슬롯명에 border 를 빼 이중접두(
             <code className="font-mono">border-border-*</code>) 회피 →{' '}
             <code className="font-mono">border-subtle-1</code>.
+        </>
+    ),
+    disabled: (
+        <>
+            <strong>비활성 상태</strong> 색 — <code className="font-mono">text-disabled</code>(gray.300)는 Button·Input·
+            Textarea 등 disabled 텍스트에, <code className="font-mono">bg-control-disabled</code>(gray.100)는 Button·
+            Checkbox·Radio·Switch·Chip 같은 선택/액션 컨트롤 배경에,{' '}
+            <code className="font-mono">bg-field-disabled</code>(gray.50)는 Input·Textarea 같은 입력 필드 배경에 쓴다.
         </>
     ),
     '상태 (success / warning / error / info)': (
