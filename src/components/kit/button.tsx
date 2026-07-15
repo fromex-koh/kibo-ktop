@@ -38,7 +38,7 @@ const buttonVariants = cva(
         variants: {
             variant: {
                 default:
-                    'bg-primary text-button-primary-text not-disabled:hover:bg-button-primary-fill-hover not-disabled:active:bg-button-primary-fill-pressed disabled:bg-button-primary-disabled-fill disabled:text-button-primary-disabled-text disabled:opacity-100',
+                    'bg-primary text-primary-foreground not-disabled:hover:bg-button-primary-fill-hover not-disabled:active:bg-button-primary-fill-pressed disabled:bg-button-primary-disabled-fill disabled:text-button-primary-disabled-text disabled:opacity-100',
                 secondary:
                     'bg-button-secondary-fill text-button-secondary-text border-button-secondary-border not-disabled:hover:bg-button-secondary-fill-hover not-disabled:hover:text-button-secondary-text-hover not-disabled:active:bg-button-secondary-fill-hover not-disabled:active:text-button-secondary-text-pressed disabled:bg-button-secondary-disabled-fill disabled:border-button-secondary-disabled-border disabled:text-button-secondary-disabled-text disabled:opacity-100',
                 tertiary:
