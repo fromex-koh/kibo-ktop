@@ -83,6 +83,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {label: 'BaseCard', href: '/component-guide/base-card'},
             {label: 'FormCard', href: '/component-guide/form-card'},
             {label: 'TabCard', href: '/component-guide/tab-card'},
+            {label: 'Tabs', href: '/component-guide/tabs'},
             {label: 'SummaryList', href: '/component-guide/summary-list'},
             {label: 'SelectableSummaryList', href: '/component-guide/selectable-summary-list'},
             {label: 'Separator', href: '/component-guide/separator'},
