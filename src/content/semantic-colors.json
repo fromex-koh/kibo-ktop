@@ -333,8 +333,8 @@
                     "darkRef": null
                 },
                 {
-                    "name": "secondary-border",
-                    "light": "rgba(54, 116, 218, 1)",
+                    "name": "secondary-strong",
+                    "light": "rgba(63, 125, 235, 1)",
                     "dark": "rgba(37, 110, 244, 1)",
                     "lightRef": "brand/blue/500",
                     "darkRef": null

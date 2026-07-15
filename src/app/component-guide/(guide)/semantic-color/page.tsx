@@ -97,7 +97,18 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     primary: 'bg-primary',
     'primary-foreground': 'bg-primary-foreground',
     secondary: 'bg-secondary',
+    'secondary-hover': 'bg-secondary-hover',
+    'secondary-pressed': 'bg-secondary-pressed',
     'secondary-foreground': 'bg-secondary-foreground',
+    'secondary-foreground-hover': 'bg-secondary-foreground-hover',
+    'secondary-foreground-pressed': 'bg-secondary-foreground-pressed',
+    'secondary-strong': 'bg-secondary-strong',
+    tertiary: 'bg-tertiary',
+    'tertiary-hover': 'bg-tertiary-hover',
+    'tertiary-pressed': 'bg-tertiary-pressed',
+    'tertiary-foreground': 'bg-tertiary-foreground',
+    'tertiary-strong': 'bg-tertiary-strong',
+    'disabled-subtle': 'bg-disabled-subtle',
     muted: 'bg-muted',
     'muted-foreground': 'bg-muted-foreground',
     accent: 'bg-accent',
@@ -140,6 +151,7 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'scroll-track': 'bg-[var(--ds-scroll-track)]',
     disabled: 'bg-disabled',
     'control-disabled': 'bg-control-disabled',
+    'control-disabled-subtle': 'bg-control-disabled-subtle',
     'field-disabled': 'bg-field-disabled',
 }
 
@@ -234,13 +246,39 @@ const STANDARD_GROUPS: Group[] = [
 const CUSTOM_GROUPS: Group[] = [
     {name: 'foreground-subtle', match: (n) => n === 'foreground-subtle'},
     {name: 'primary-subtle', match: (n) => n === 'primary-subtle'},
+    {
+        name: 'secondary state',
+        match: (n) =>
+            n === 'secondary-hover' ||
+            n === 'secondary-pressed' ||
+            n === 'secondary-foreground-hover' ||
+            n === 'secondary-foreground-pressed' ||
+            n === 'secondary-strong',
+    },
+    {
+        name: 'tertiary / tertiary-foreground / tertiary-strong',
+        match: (n) =>
+            n === 'tertiary' ||
+            n === 'tertiary-hover' ||
+            n === 'tertiary-pressed' ||
+            n === 'tertiary-foreground' ||
+            n === 'tertiary-strong',
+    },
     {name: 'accent-subtle / accent-strong', match: (n) => n === 'accent-subtle' || n === 'accent-strong'},
     {
         name: 'secondary-green-subtle / secondary-orange-subtle',
         match: (n) => n === 'secondary-green-subtle' || n === 'secondary-orange-subtle',
     },
     {name: 'subtle-1 / subtle-2 / subtle-3', match: (n) => BORDER_TONE_SLOTS.has(n)},
-    {name: 'disabled', match: (n) => n === 'disabled' || n === 'control-disabled' || n === 'field-disabled'},
+    {
+        name: 'disabled',
+        match: (n) =>
+            n === 'disabled' ||
+            n === 'disabled-subtle' ||
+            n === 'control-disabled' ||
+            n === 'control-disabled-subtle' ||
+            n === 'field-disabled',
+    },
     {
         name: '상태 (success / warning / error / info)',
         match: (n) => ['success', 'warning', 'error', 'info'].some((s) => n === s || n === `${s}-foreground`),
@@ -426,10 +464,13 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'secondary / secondary-foreground': (
         <>
-            보조(secondary) 색 — <code className="font-mono">bg-secondary</code>(회색 중립 표면)·
-            <code className="font-mono">text-secondary-foreground</code> 는 shadcn 표준 보조 버튼·칩. 초록·주황 옅은
-            틴트 표면은 커스텀 <code className="font-mono">secondary-green-subtle</code>/
-            <code className="font-mono">-orange-subtle</code>(아래).
+            보조(secondary) 색 — <code className="font-mono">bg-secondary</code>(옅은 브랜드 보조 표면)·
+            <code className="font-mono">text-secondary-foreground</code>(blue.600) 는 shadcn 표준 보조 버튼·칩.
+            Secondary Button hover/pressed는 <code className="font-mono">bg-secondary-hover</code>/
+            <code className="font-mono">bg-secondary-pressed</code>, border는 fill보다 강한 커스텀{' '}
+            <code className="font-mono">border-secondary-strong</code>(아래)를 쓴다. 초록·주황 옅은 틴트 표면은 커스텀{' '}
+            <code className="font-mono">secondary-green-subtle</code>/<code className="font-mono">-orange-subtle</code>
+            (아래).
         </>
     ),
     border: (
@@ -470,6 +511,25 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             (솔리드)와 별개 멤버. 다크 자동 반사.
         </>
     ),
+    'secondary state': (
+        <>
+            <strong>Secondary 상태 톤</strong> — <code className="font-mono">bg-secondary-hover</code>와{' '}
+            <code className="font-mono">bg-secondary-pressed</code>(blue.100)는 hover/pressed 배경에,{' '}
+            <code className="font-mono">text-secondary-foreground-hover</code>와{' '}
+            <code className="font-mono">text-secondary-foreground-pressed</code>(navy.600)는 hover/pressed 텍스트에,{' '}
+            <code className="font-mono">border-secondary-strong</code>(blue.500)은 Secondary Button 테두리에 쓴다.{' '}
+            <code className="font-mono">bg-secondary</code>는 기본 fill 값(blue.10)을 유지한다.
+        </>
+    ),
+    'tertiary / tertiary-foreground / tertiary-strong': (
+        <>
+            <strong>Tertiary Button 표면/텍스트/테두리</strong> — <code className="font-mono">bg-tertiary</code>
+            (white)는 기본 배경에, <code className="font-mono">bg-tertiary-hover</code>/
+            <code className="font-mono">bg-tertiary-pressed</code>(gray.100)는 hover/pressed 배경에,{' '}
+            <code className="font-mono">text-tertiary-foreground</code>(gray.700)는 기본 텍스트에,{' '}
+            <code className="font-mono">border-tertiary-strong</code>(gray.300)은 기본 테두리에 쓴다.
+        </>
+    ),
     'accent-subtle / accent-strong': (
         <>
             중립 하이라이트(<code className="font-mono">accent</code>)의 <strong>표면 레벨 세분</strong> —{' '}
@@ -501,7 +561,9 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <strong>비활성 상태</strong> 색 — <code className="font-mono">text-disabled</code>(gray.300)는 Button·Input·
             Textarea 등 disabled 텍스트에, <code className="font-mono">bg-control-disabled</code>(gray.100)는 Button·
             Checkbox·Radio·Switch·Chip 같은 선택/액션 컨트롤 배경에,{' '}
-            <code className="font-mono">bg-field-disabled</code>(gray.50)는 Input·Textarea 같은 입력 필드 배경에 쓴다.
+            <code className="font-mono">bg-control-disabled-subtle</code>(white)는 Tertiary Button처럼 표면형 컨트롤의
+            disabled 배경에, <code className="font-mono">bg-field-disabled</code>(gray.50)는 Input·Textarea 같은 입력
+            필드 배경에, <code className="font-mono">border-disabled-subtle</code>(gray.200)는 disabled 테두리에 쓴다.
         </>
     ),
     '상태 (success / warning / error / info)': (

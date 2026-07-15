@@ -82,14 +82,20 @@ const LEGACY_SIZES = [
 
 // Button 이 가진 variant 케이스. default/secondary/tertiary/text 는 Figma type(버튼 전용 토큰),
 // ghost/destructive/link 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는 기존 값이다(outline 은 프로젝트 미사용).
+// 채움이 없는 text/link 는 모양이 비슷해 마지막에 나란히 둔다.
 const ALL_VARIANTS = [
     {key: 'default', label: 'default', note: 'Figma Primary'},
     {key: 'secondary', label: 'secondary', note: 'Figma Secondary'},
     {key: 'tertiary', label: 'tertiary', note: 'Figma Tertiary'},
-    {key: 'text', label: 'text', note: 'Figma Text(채움·테두리 없음)'},
     {key: 'ghost', label: 'ghost', note: '내부 컴포넌트용'},
     {key: 'destructive', label: 'destructive', note: '내부 컴포넌트용'},
+    {key: 'text', label: 'text', note: 'Figma Text(채움·테두리 없음)'},
     {key: 'link', label: 'link', note: '내부 컴포넌트용'},
+] as const
+
+const INLINE_VARIANTS = [
+    {key: 'text', label: 'text', note: '채움·테두리 없는 텍스트형'},
+    {key: 'link', label: 'link', note: '밑줄 링크형'},
 ] as const
 
 // 버튼은 Card 와 달리 아이콘 전용 하위 컴포넌트가 없다 — 아이콘은 props 가 아니라 children 으로
@@ -293,6 +299,59 @@ const ButtonGuidePage = () => (
             </div>
         </section>
 
+        <section aria-labelledby="button-inline-matrix" className="flex flex-col gap-4">
+            <div>
+                <h2 id="button-inline-matrix" className="typo-h4-bold">
+                    Link/Text 큐레이션
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    비교하기 쉽도록 미리보기는 모두 <span className="font-mono">medium</span> size 로 통일합니다.{' '}
+                    <span className="font-mono">link</span> 와 <span className="font-mono">text</span> variant 는 같은
+                    size 축을 타되, <span className="font-mono">text + xsmall</span> 만 기존 텍스트 버튼 사양(
+                    <span className="font-mono">typo-body-l-regular</span>·400)을 유지합니다.
+                </p>
+            </div>
+            <div className="bg-background border-border overflow-x-auto rounded-md border">
+                <table className="w-full text-left">
+                    <caption className="sr-only">link text 버튼 variant 미리보기</caption>
+                    <thead>
+                        <tr className="border-border border-b bg-gray-100/25">
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Variant
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Preview
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Note
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {INLINE_VARIANTS.map((variant) => (
+                            <tr key={variant.key} className="border-border bg-background border-b last:border-b-0">
+                                <th
+                                    scope="row"
+                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
+                                >
+                                    {variant.label}
+                                </th>
+                                <td className="px-4 py-3 align-middle">
+                                    <div className="flex flex-col items-start gap-2">
+                                        <Button variant={variant.key} size="medium">
+                                            자세히 보기
+                                        </Button>
+                                        <CopyChip value={`variant="${variant.key}" size="medium"`} label="복사" />
+                                    </div>
+                                </td>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{variant.note}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <section aria-labelledby="button-icon-pill" className="flex flex-col gap-4">
             <div>
                 <h2 id="button-icon-pill" className="typo-h4-bold">
@@ -402,10 +461,9 @@ const ButtonGuidePage = () => (
                             </th>
                             <td className="px-4 py-3">
                                 <p className="typo-body-l-regular text-muted-foreground">
-                                    강조 단계. default/secondary/tertiary 는 Figma 디자인을 반영한 버튼 전용 토큰(
-                                    <code className="font-mono">button-*</code>)을 씁니다.
-                                    outline/ghost/destructive/link 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는 기존
-                                    값입니다.
+                                    강조 단계. default/secondary/tertiary 는 Figma 디자인을 반영한 버튼 전용 토큰을
+                                    씁니다. outline/ghost/destructive 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는 기존
+                                    값이고, text/link 는 채움이 없는 인라인 액션이라 마지막에 함께 둡니다.
                                 </p>
                             </td>
                             <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
@@ -413,16 +471,21 @@ const ButtonGuidePage = () => (
                             </td>
                             <td className="px-4 py-3">
                                 <div className="flex flex-wrap gap-1">
-                                    {[...TYPES.map((t) => t.key), 'outline', 'ghost', 'destructive', 'link'].map(
-                                        (value) => (
-                                            <span
-                                                key={value}
-                                                className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs"
-                                            >
-                                                {value}
-                                            </span>
-                                        ),
-                                    )}
+                                    {[
+                                        ...TYPES.map((t) => t.key),
+                                        'outline',
+                                        'ghost',
+                                        'destructive',
+                                        'text',
+                                        'link',
+                                    ].map((value) => (
+                                        <span
+                                            key={value}
+                                            className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs"
+                                        >
+                                            {value}
+                                        </span>
+                                    ))}
                                 </div>
                             </td>
                         </tr>
