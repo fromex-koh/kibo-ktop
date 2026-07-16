@@ -9,6 +9,7 @@ const twMerge = extendTailwindMerge({
   extend: {
     theme: {
       spacing: [
+        "control-h-2xs",
         "control-h-xs",
         "control-h-sm",
         "control-h-md",

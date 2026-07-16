@@ -24,8 +24,13 @@ const buttonVariants = cva(
                 ghost: 'text-foreground not-disabled:hover:bg-accent aria-expanded:bg-accent',
                 destructive:
                     'bg-destructive text-destructive-foreground not-disabled:hover:bg-destructive/90 not-disabled:active:bg-destructive/80',
-                link: 'text-primary underline-offset-4 not-disabled:hover:underline',
-                text: 'text-label-foreground not-disabled:hover:text-foreground aria-expanded:text-foreground',
+                // PROJECT-STYLE: link 는 Figma button_text 와 사양이 같고 hover 밑줄만 다르다.
+                // 색·상태 규칙은 text 와 동일하게 두고 underline 만 얹는다.
+                link: 'text-label-foreground underline-offset-4 not-disabled:hover:underline disabled:text-disabled-subtle disabled:opacity-100',
+                // PROJECT-STYLE: shadcn 원본에 Text type 은 없다. Figma button_text 는 default/hover/pressed 가
+                // 모두 같은 label-foreground(gray.700)라 상태별 색 변화를 두지 않고,
+                // disabled 만 공통 opacity-50 대신 solid disabled-subtle(gray.200)로 바꾼다.
+                text: 'text-label-foreground disabled:text-disabled-subtle disabled:opacity-100',
             },
             size: {
                 default: 'h-control-h-md min-h-11 gap-2 px-4',
@@ -56,9 +61,39 @@ const buttonVariants = cva(
             {variant: 'tertiary', size: 'large', class: 'min-w-control-min-w-sm'},
             {variant: 'default', size: 'medium', class: 'font-bold disabled:font-medium'},
             {variant: 'default', size: 'small', class: 'font-bold disabled:font-medium'},
-            {variant: 'link', class: 'h-auto min-h-0 min-w-0 gap-1 p-0'},
-            {variant: 'text', class: 'h-auto min-h-0 min-w-0 p-0'},
-            {variant: 'text', size: 'xsmall', class: 'typo-body-l-regular font-normal'},
+            // PROJECT-STYLE: 채움·테두리가 없는 text/link 는 Figma button_text 사양을 공유한다(link 는 밑줄만 추가).
+            // 좌우 패딩이 없고 전 사이즈가 Regular(400)라 공통 font-medium 을 되돌리며, 높이는 공용 축의
+            // min-h-11 터치 보정 대신 Figma 값을 그대로 쓴다.
+            {variant: ['text', 'link'], class: 'min-h-0 min-w-0 p-0 font-normal'},
+            // PROJECT-STYLE: Figma button_text 는 공용 size 축과 달리 자체 4단 스케일을 쓴다
+            // (높이 40/32/24/24 · 폰트 18/16/14/12 · 아이콘 20/20/16/12). Figma 에 없는 xlarge 는 large 와,
+            // 2xsmall 은 xsmall 과 같게 둬 스케일 역전(2xsmall 이 xsmall 보다 큼)을 막는다.
+            {variant: ['text', 'link'], size: 'xlarge', class: "h-control-h-md [&_svg:not([class*='size-'])]:size-5"},
+            {
+                variant: ['text', 'link'],
+                size: 'large',
+                class: "h-control-h-md text-lg [&_svg:not([class*='size-'])]:size-5",
+            },
+            {
+                variant: ['text', 'link'],
+                size: 'medium',
+                class: "h-control-h-xs text-base [&_svg:not([class*='size-'])]:size-5",
+            },
+            {
+                variant: ['text', 'link'],
+                size: 'small',
+                class: "h-control-h-2xs text-sm [&_svg:not([class*='size-'])]:size-4",
+            },
+            {
+                variant: ['text', 'link'],
+                size: 'xsmall',
+                class: "h-control-h-2xs text-xs [&_svg:not([class*='size-'])]:size-3",
+            },
+            {
+                variant: ['text', 'link'],
+                size: '2xsmall',
+                class: "h-control-h-2xs text-xs [&_svg:not([class*='size-'])]:size-3",
+            },
         ],
         defaultVariants: {
             variant: 'default',

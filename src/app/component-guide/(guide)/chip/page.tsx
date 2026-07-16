@@ -289,7 +289,7 @@ const ChipGuidePage = () => (
                             </Badge>
                             <h3 className="typo-title-l-medium text-foreground">1. 수집·이용에 관한 사항</h3>
                         </div>
-                        <Button type="button" variant="text" size="xsmall">
+                        <Button type="button" variant="text" size="small">
                             내용보기
                             <ChevronRight aria-hidden="true" />
                         </Button>

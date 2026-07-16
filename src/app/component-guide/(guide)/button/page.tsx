@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {ArrowRight, Download, LoaderCircle, Search, Sun} from 'lucide-react'
+import {ArrowRight, ChevronRight, Download, LoaderCircle, Search, Sun} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Button} from '@/components/kit/button'
@@ -99,13 +99,88 @@ const ALL_VARIANTS = [
     {key: 'ghost', label: 'ghost', note: '내부 컴포넌트용'},
     {key: 'destructive', label: 'destructive', note: '내부 컴포넌트용'},
     {key: 'text', label: 'text', note: 'Figma Text(채움·테두리 없음)'},
-    {key: 'link', label: 'link', note: '내부 컴포넌트용'},
+    {key: 'link', label: 'link', note: 'Figma Text + hover 밑줄'},
 ] as const
 
 const INLINE_VARIANTS = [
     {key: 'text', label: 'text', note: '채움·테두리 없는 텍스트형'},
-    {key: 'link', label: 'link', note: '밑줄 링크형'},
+    {key: 'link', label: 'link', note: 'text 와 같되 hover 에 밑줄'},
 ] as const
+
+// Figma button_text 는 공용 size 축(xlarge~2xsmall)과 별개로 자체 4단 스케일을 쓴다(값은 Figma 실측 px).
+// link 도 이 사양을 그대로 공유한다 — hover 밑줄만 다르다.
+const INLINE_SIZES = [
+    {key: 'large', label: 'large', height: 40, font: 18, icon: 20},
+    {key: 'medium', label: 'medium', height: 32, font: 16, icon: 20},
+    {key: 'small', label: 'small', height: 24, font: 14, icon: 16},
+    {key: 'xsmall', label: 'xsmall', height: 24, font: 12, icon: 12},
+] as const
+
+// text·link 는 같은 Figma 사양을 공유하므로 큐레이션 표도 같은 모양으로 나란히 둔다.
+const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'link'; caption: string}) => (
+    <div className="bg-background border-border overflow-x-auto rounded-md border">
+        <table className="w-full text-left">
+            <caption className="sr-only">{caption}</caption>
+            <thead>
+                <tr className="border-border border-b bg-gray-100/25">
+                    <th scope="col" className="typo-body-l-medium px-4 py-3">
+                        Size
+                    </th>
+                    <th scope="col" className="typo-body-l-medium px-4 py-3">
+                        텍스트
+                    </th>
+                    <th scope="col" className="typo-body-l-medium px-4 py-3">
+                        아이콘 왼쪽
+                    </th>
+                    <th scope="col" className="typo-body-l-medium px-4 py-3">
+                        아이콘 오른쪽
+                    </th>
+                    <th scope="col" className="typo-body-l-medium px-4 py-3">
+                        disabled
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {INLINE_SIZES.map((size) => (
+                    <tr key={size.key} className="border-border bg-background border-b last:border-b-0">
+                        <th
+                            scope="row"
+                            className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
+                        >
+                            {size.label}
+                            <span className="typo-caption-regular text-muted-foreground block font-sans">
+                                {size.height}px · 폰트 {size.font}px · 아이콘 {size.icon}px
+                            </span>
+                        </th>
+                        <td className="px-4 py-3 align-middle">
+                            <Button variant={variant} size={size.key}>
+                                버튼명
+                            </Button>
+                        </td>
+                        <td className="px-4 py-3 align-middle">
+                            <Button variant={variant} size={size.key}>
+                                <Download aria-hidden="true" />
+                                버튼명
+                            </Button>
+                        </td>
+                        <td className="px-4 py-3 align-middle">
+                            <Button variant={variant} size={size.key}>
+                                버튼명
+                                <ChevronRight aria-hidden="true" />
+                            </Button>
+                        </td>
+                        <td className="px-4 py-3 align-middle">
+                            <Button variant={variant} size={size.key} disabled>
+                                <Download aria-hidden="true" />
+                                버튼명
+                            </Button>
+                        </td>
+                    </tr>
+                ))}
+            </tbody>
+        </table>
+    </div>
+)
 
 // 버튼은 Card 와 달리 아이콘 전용 하위 컴포넌트가 없다 — 아이콘은 props 가 아니라 children 으로
 // 직접 조합한다(lucide-react, 장식 목적이면 aria-hidden). 좌/우 어느 쪽에도 넣을 수 있다.
@@ -166,8 +241,9 @@ const ButtonGuidePage = () => (
                     Button 을 디자인에 쓰는 variant 입니다.{' '}
                     <span className="font-mono">default·secondary·tertiary·text</span> 는 Figma type(
                     <span className="font-mono">text</span> 는 채움·테두리 없는 텍스트 버튼)이고,{' '}
-                    <span className="font-mono">ghost·destructive·link</span> 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는
-                    기존 값입니다(outline 은 목록에서 제외).
+                    <span className="font-mono">link</span> 는 그 text 사양에 hover 밑줄만 더한 형태입니다.{' '}
+                    <span className="font-mono">ghost·destructive</span> 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는 기존
+                    값입니다(outline 은 목록에서 제외).
                 </p>
             </div>
             <div className="flex flex-col gap-4">
@@ -311,10 +387,17 @@ const ButtonGuidePage = () => (
                     Link/Text 큐레이션
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    비교하기 쉽도록 미리보기는 모두 <span className="font-mono">medium</span> size 로 통일합니다.{' '}
-                    <span className="font-mono">link</span> 와 <span className="font-mono">text</span> variant 는 같은
-                    size 축을 타되, <span className="font-mono">text + xsmall</span> 만 기존 텍스트 버튼 사양(
-                    <span className="font-mono">typo-body-l-regular</span>·400)을 유지합니다.
+                    비교하기 쉽도록 미리보기는 모두 <span className="font-mono">medium</span> size 로 통일합니다. 둘은
+                    같은 Figma 사양(높이·폰트·아이콘·색)을 공유하고 <span className="font-mono">link</span> 만 hover 에
+                    밑줄이 붙습니다. size 별 사양은 아래{' '}
+                    <a href="#button-text-matrix" className="text-primary underline underline-offset-4">
+                        Text
+                    </a>
+                    ·
+                    <a href="#button-link-matrix" className="text-primary underline underline-offset-4">
+                        Link 사이즈 큐레이션
+                    </a>
+                    을 참고하세요.
                 </p>
             </div>
             <div className="bg-background border-border overflow-x-auto rounded-md border">
@@ -355,6 +438,41 @@ const ButtonGuidePage = () => (
                     </tbody>
                 </table>
             </div>
+        </section>
+
+        <section aria-labelledby="button-text-matrix" className="flex flex-col gap-4">
+            <div>
+                <h2 id="button-text-matrix" className="typo-h4-bold">
+                    Text 사이즈 큐레이션
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    Figma <span className="font-mono">button_text</span> 는 공용 size 축과 별개로 자체 4단 스케일(높이
+                    40/32/24/24 · 폰트 18/16/14/12 · 아이콘 20/20/16/12)을 쓰고, 전 사이즈가 Regular(400)입니다.
+                    채움·테두리가 없어 <span className="font-mono">default·hover·pressed</span> 가 모두 같은 색(
+                    <span className="font-mono">label-foreground</span>)이라 상태 피드백은 focus 링뿐이고,{' '}
+                    <span className="font-mono">disabled</span> 만 흐리게가 아니라 solid{' '}
+                    <span className="font-mono">disabled-subtle</span> 로 바뀝니다. 높이는 Figma 값을 그대로 쓰므로 공용
+                    축의 44px 터치 보정(<span className="font-mono">min-h-11</span>)이 적용되지 않습니다 — 밀도 높은 UI
+                    용 컴팩트 예외로, 인접 간격을 넉넉히 두고 씁니다(6.1.3).
+                </p>
+            </div>
+            <InlineSizeTable variant="text" caption="text 버튼 size 조합 미리보기" />
+        </section>
+
+        <section aria-labelledby="button-link-matrix" className="flex flex-col gap-4">
+            <div>
+                <h2 id="button-link-matrix" className="typo-h4-bold">
+                    Link 사이즈 큐레이션
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    <span className="font-mono">link</span> 는 위 <span className="font-mono">text</span> 와 높이·폰트·
+                    아이콘·색 사양이 모두 같고,{' '}
+                    <strong className="text-foreground font-medium">hover 에서만 밑줄</strong>(
+                    <span className="font-mono">underline-offset-4</span>)이 붙는 점만 다릅니다. 표의 미리보기는 정적
+                    이라 밑줄이 보이지 않으니 마우스를 올려 확인하세요.
+                </p>
+            </div>
+            <InlineSizeTable variant="link" caption="link 버튼 size 조합 미리보기" />
         </section>
 
         <section aria-labelledby="button-icon-pill" className="flex flex-col gap-4">
