@@ -1,3 +1,30 @@
-// kit facade — 프로젝트 표준 import 창구. 이 컴포넌트는 재스킨이 없어 원본(ui/)을 그대로 재수출한다.
-// 커스터마이즈가 필요해지면 원본을 복사해 styled copy 로 승격한다([SC-04]).
-export * from '@/components/ui/separator'
+'use client'
+
+// PROJECT-STYLE: shadcn 원본은 bg-border 배경으로 선을 그리지만,
+// 프로젝트 구분선은 subtle border token을 쓰는 실제 border 선으로 표현한다.
+import * as React from 'react'
+import {Separator as SeparatorPrimitive} from 'radix-ui'
+
+import {cn} from '@/lib/utils'
+
+function Separator({
+    className,
+    orientation = 'horizontal',
+    decorative = true,
+    ...props
+}: React.ComponentProps<typeof SeparatorPrimitive.Root>) {
+    return (
+        <SeparatorPrimitive.Root
+            data-slot="separator"
+            decorative={decorative}
+            orientation={orientation}
+            className={cn(
+                'border-subtle-3 shrink-0 bg-transparent data-horizontal:h-px data-horizontal:w-full data-horizontal:border-t data-vertical:w-px data-vertical:self-stretch data-vertical:border-l',
+                className,
+            )}
+            {...props}
+        />
+    )
+}
+
+export {Separator}

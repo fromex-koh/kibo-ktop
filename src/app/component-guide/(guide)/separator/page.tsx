@@ -6,22 +6,18 @@ import {Separator} from '@/components/kit/separator'
 
 export const metadata: Metadata = {title: '구분선 (Separator)'}
 
-const DIVIDER_CLASS = 'border-subtle-3 my-10 border-t bg-transparent'
+const DIVIDER_CLASS = 'my-10'
 
 // 사용법 스니펫 — CopyChip 의 label 로 짧게 노출하고 클립보드엔 이 전체를 복사한다.
 const USAGE_CODE = `<p>위 콘텐츠</p>
-<Separator className="border-subtle-3 my-10 border-t bg-transparent" />
+<Separator className="my-10" />
 <p>아래 콘텐츠</p>`
 
-// 구분선 — shadcn Separator(src/components/ui/separator.tsx) 원본을 그대로 쓰고 className 으로만
-// 스타일을 확장한다([SC-02] vendored 컴포넌트는 확장만, 감싸지 않는다 — 별도 Divider 래퍼를 만들지 않는다).
-// Separator 원형은 배경색(bg-border)으로 1px 선을 그리지만, 이 프로젝트의 구분선은 실제 border-top 으로
-// 선을 그려 border-subtle-3 를 테두리 색으로 쓴다(box-sizing: border-box 라 1px 높이 안에서 1px
-// border-top 이 그대로 두께 1px 을 유지). 위아래 40px 간격(my-10)을 함께 준다.
+// 구분선 — kit Separator가 프로젝트 선 스타일을 기본으로 책임지고, 사용처는 필요한 간격만 더한다.
 const SeparatorGuidePage = () => (
     <GuidePageShell
         title="구분선 (Separator)"
-        description="shadcn Separator 원본에 className 만 얹어 만드는 구분선 패턴입니다."
+        description="kit Separator에 프로젝트 구분선 기본 스타일을 반영한 패턴입니다."
     >
         <section aria-labelledby="dv-demo" className="flex flex-col gap-4">
             <div>
@@ -29,8 +25,8 @@ const SeparatorGuidePage = () => (
                     사용 예시
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    두께 1px, 색상 <code className="font-mono">border-subtle-3</code>, 위아래 간격{' '}
-                    <code className="font-mono">my-10</code>(40px)을 클래스로 직접 지정합니다.
+                    두께 1px, 색상 <code className="font-mono">border-subtle-3</code>는 기본값이고, 위아래 간격{' '}
+                    <code className="font-mono">my-10</code>(40px)만 사용처에서 지정합니다.
                 </p>
             </div>
             <BaseCard>
@@ -47,15 +43,15 @@ const SeparatorGuidePage = () => (
                     클래스 레시피
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    Separator 원형은 배경색(<code className="font-mono">bg-border</code>)으로 선을 그리는데, 아래 네
-                    클래스로 실제 <code className="font-mono">border-top</code> 선으로 바꾼다.
+                    kit Separator는 기본적으로 border-subtle-3 실제 border 선을 사용한다. 사용처에서는 보통 간격만
+                    더한다.
                 </p>
             </div>
             <div className="bg-background border-border overflow-x-auto rounded-md border">
                 <table className="w-full text-left">
                     <caption className="sr-only">클래스 레시피 목록</caption>
                     <thead>
-                        <tr className="border-border border-b bg-gray-100/25">
+                        <tr className="border-border bg-muted/50 border-b">
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 클래스
                             </th>
@@ -70,32 +66,11 @@ const SeparatorGuidePage = () => (
                                 scope="row"
                                 className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
                             >
-                                border-t
+                                기본 선 스타일
                             </th>
                             <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                1px 두께의 실제 테두리 선을 그린다.
-                            </td>
-                        </tr>
-                        <tr className="border-border bg-background border-b last:border-b-0">
-                            <th
-                                scope="row"
-                                className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                            >
-                                border-subtle-3
-                            </th>
-                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                테두리 색을 시맨틱 토큰 subtle-3 로 지정한다.
-                            </td>
-                        </tr>
-                        <tr className="border-border bg-background border-b last:border-b-0">
-                            <th
-                                scope="row"
-                                className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                            >
-                                bg-transparent
-                            </th>
-                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                Separator 원형의 기본 배경(bg-border)을 지운다.
+                                kit Separator 기본값이다. 수평은 border-top, 수직은 border-left 로 1px 선을 그리고
+                                색상은 border-subtle-3 를 사용한다.
                             </td>
                         </tr>
                         <tr className="border-border bg-background border-b last:border-b-0">
@@ -127,7 +102,7 @@ const SeparatorGuidePage = () => (
                 <table className="w-full text-left">
                     <caption className="sr-only">Props 목록</caption>
                     <thead>
-                        <tr className="border-border border-b bg-gray-100/25">
+                        <tr className="border-border bg-muted/50 border-b">
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 Name
                             </th>
@@ -153,7 +128,7 @@ const SeparatorGuidePage = () => (
                             <td className="px-4 py-3">
                                 <div className="flex flex-col gap-2">
                                     <p className="typo-body-l-regular text-muted-foreground">가로/세로 방향</p>
-                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                                    <span className="bg-muted text-primary inline-block w-fit rounded px-2 py-1 font-mono text-xs">
                                         &apos;horizontal&apos; | &apos;vertical&apos;
                                     </span>
                                 </div>
@@ -163,10 +138,10 @@ const SeparatorGuidePage = () => (
                             </td>
                             <td className="px-4 py-3">
                                 <div className="flex flex-wrap gap-1">
-                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                                    <span className="bg-muted text-primary inline-block w-fit rounded px-2 py-1 font-mono text-xs">
                                         horizontal
                                     </span>
-                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                                    <span className="bg-muted text-primary inline-block w-fit rounded px-2 py-1 font-mono text-xs">
                                         vertical
                                     </span>
                                 </div>
@@ -184,7 +159,7 @@ const SeparatorGuidePage = () => (
                                     <p className="typo-body-l-regular text-muted-foreground">
                                         추가 클래스명으로 스타일 확장
                                     </p>
-                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                                    <span className="bg-muted text-primary inline-block w-fit rounded px-2 py-1 font-mono text-xs">
                                         string
                                     </span>
                                 </div>

@@ -8,12 +8,11 @@ import {
 import {Card, CardContent} from '@/components/kit/card'
 import {cn} from '@/lib/utils'
 
-// 폼 카드 — kit Card 를 감싼 넓은 폼 섹션 카드(L2 composite). Figma "기업정보" 반영:
-//   · 좌우 102px · 상하 40px 패딩(--card-spacing 40px + 좌우만 px-25.5 로 확장)
-//   · 헤더는 SectionHeader 재사용 — 좌측 제목(H4/bold)+서브텍스트(Body/XL/Regular) / 우측 액션(자동 2열).
-//     타이포·색·액션 배치가 SectionHeader 와 동일해 별도 카드 헤더를 만들지 않고 그대로 쓴다.
-//   · 헤더 아래 본문(children)
-// 패딩이 24px 인 일반 카드는 BaseCard 를 쓴다.
+// 폼 카드 — kit Card 를 감싼 넓은 폼 섹션 카드(L2 composite). 패딩이 24px 인 일반 카드는 BaseCard 를 쓴다.
+// PROJECT-STYLE: shadcn Card의 로컬 spacing 변수(--card-spacing)를 사용해
+// Header/Content/Footer 간격과 상하 패딩을 FormCard 사양(40px)으로 맞춘다.
+// 좌우 102px 패딩은 FormCard 전용 레이아웃 사양이라 SectionHeader/CardContent 에서 별도로 확장한다.
+// 헤더는 SectionHeader 를 재사용해 타이포·색·액션 배치를 동일하게 유지한다.
 type FormCardProps = {
     title?: ReactNode
     subtitle?: ReactNode
