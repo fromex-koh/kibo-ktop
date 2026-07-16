@@ -21,7 +21,7 @@ const USAGE_CODE = `const SKIP_LINKS = [
 
 const STYLE_CODE = `className={cn(
   buttonVariants({variant: 'default', size: 'medium'}),
-  'z-skiplink fixed top-3 left-3 -translate-y-20 border-black bg-black text-white transition-transform duration-200 ease-out hover:bg-black active:bg-black focus:translate-y-0 motion-reduce:transition-none',
+  'z-skiplink border-foreground bg-foreground text-background fixed top-3 left-3 -translate-y-20 transition-transform duration-200 ease-out hover:bg-foreground active:bg-foreground focus:translate-y-0 motion-reduce:transition-none',
 )}`
 
 const PROPS_ITEMS = [
@@ -71,7 +71,8 @@ const SkipNavGuidePage = () => (
                 </li>
                 <li>
                     시각 스타일은 Button <code className="font-mono">default/medium</code>을 재사용하되, SkipNav 전용
-                    배경은 <code className="font-mono">bg-black</code>으로 고정합니다.
+                    고대비 색은 <code className="font-mono">bg-foreground text-background</code> 표준 슬롯으로
+                    반전합니다.
                 </li>
             </ul>
         </section>
@@ -82,7 +83,8 @@ const SkipNavGuidePage = () => (
                     스타일
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    Button variant를 상속해 크기·포커스 링·타이포그래피를 맞추고, 위치·표시 전환·전용 색상만 추가합니다.
+                    Button variant를 상속해 크기·포커스 링·타이포그래피를 맞추고, 위치·표시 전환·고대비 색상만
+                    추가합니다.
                 </p>
             </div>
             <CodeBlock code={STYLE_CODE} language="tsx" copyLabel="복사" />
