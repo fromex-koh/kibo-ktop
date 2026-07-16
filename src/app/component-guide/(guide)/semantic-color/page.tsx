@@ -97,6 +97,8 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'popover-foreground': 'bg-popover-foreground',
     primary: 'bg-primary',
     'primary-strong': 'bg-primary-strong',
+    'primary-hover': 'bg-primary-hover',
+    'primary-pressed': 'bg-primary-pressed',
     'primary-foreground': 'bg-primary-foreground',
     secondary: 'bg-secondary',
     'secondary-hover': 'bg-secondary-hover',
@@ -115,21 +117,13 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'muted-foreground': 'bg-muted-foreground',
     accent: 'bg-accent',
     'accent-foreground': 'bg-accent-foreground',
-    'accent-subtle': 'bg-accent-subtle',
-    'accent-strong': 'bg-accent-strong',
     destructive: 'bg-destructive',
     'destructive-foreground': 'bg-destructive-foreground',
     success: 'bg-success',
-    'success-foreground': 'bg-success-foreground',
     warning: 'bg-warning',
-    'warning-foreground': 'bg-warning-foreground',
     error: 'bg-error',
-    'error-foreground': 'bg-error-foreground',
     info: 'bg-info',
-    'info-foreground': 'bg-info-foreground',
     'primary-subtle': 'bg-primary-subtle',
-    'secondary-green-subtle': 'bg-secondary-green-subtle',
-    'secondary-orange-subtle': 'bg-secondary-orange-subtle',
     border: 'bg-border',
     'subtle-1': 'bg-subtle-1',
     'subtle-2': 'bg-subtle-2',
@@ -227,7 +221,8 @@ const STANDARD_SLOTS = new Set([
 
 // 컴포넌트 전용 레시피 토큰(button-*/checkbox-*/radio-*/badge-*)은 일반 색 슬롯이 아니라 특정 컴포넌트
 // 내부에서만 쓰는 값이라 이 색 개요 페이지에서는 제외한다(각 컴포넌트 가이드에서 다룸).
-const isComponentRecipe = (n: string): boolean => /^(button|checkbox|radio|badge|chip|selectable-card|stepper)-/.test(n)
+const isComponentRecipe = (n: string): boolean =>
+    /^(button|checkbox|radio|badge|number-badge|chip|selectable-card|stepper)-/.test(n)
 
 // 슬롯 가족(테이블) 정의 — 표준/커스텀 각각. 각 슬롯은 자기 버킷 안에서 한 가족에만 속한다.
 const STANDARD_GROUPS: Group[] = [
@@ -252,6 +247,7 @@ const STANDARD_GROUPS: Group[] = [
 const CUSTOM_GROUPS: Group[] = [
     {name: 'foreground-subtle', match: (n) => n === 'foreground-subtle'},
     {name: 'control', match: (n) => n === 'control'},
+    {name: 'primary / hover / pressed (프로젝트 확장)', match: (n) => n === 'primary-hover' || n === 'primary-pressed'},
     {name: 'primary-subtle', match: (n) => n === 'primary-subtle'},
     {
         name: 'secondary state',
@@ -270,11 +266,6 @@ const CUSTOM_GROUPS: Group[] = [
             n === 'tertiary-pressed' ||
             n === 'tertiary-foreground' ||
             n === 'tertiary-strong',
-    },
-    {name: 'accent-subtle / accent-strong', match: (n) => n === 'accent-subtle' || n === 'accent-strong'},
-    {
-        name: 'secondary-green-subtle / secondary-orange-subtle',
-        match: (n) => n === 'secondary-green-subtle' || n === 'secondary-orange-subtle',
     },
     {name: 'subtle-1 / subtle-2 / subtle-3', match: (n) => BORDER_TONE_SLOTS.has(n)},
     {
@@ -311,6 +302,8 @@ const STANDARD_GROUPED = groupBy(STANDARD_GROUPS, standardEntries)
 const CUSTOM_GROUPED = groupBy(CUSTOM_GROUPS, customEntries)
 const STANDARD_COUNT = standardEntries.length
 const CUSTOM_COUNT = customEntries.length
+const recipeEntries = Object.entries(semantic).filter(([name]) => isComponentRecipe(name))
+const RECIPE_COUNT = recipeEntries.length
 
 // 그룹 하나 = 독립 테이블. 현재(라이브)·클래스(클릭 복사)·라이트·다크·참조 primitive.
 // usage: 이 슬롯(그룹)이 화면 어디에 쓰이는 색인지 간결한 사용처 설명(제목 아래 서브텍스트).
@@ -412,6 +405,12 @@ const SemanticTable = ({
 
 // 그룹별 사용처 설명 — 각 시맨틱 슬롯이 화면 어디에 쓰이는 색인지 간결히. 채워진 그룹만 표기한다.
 const GROUP_USAGE: Record<string, ReactNode> = {
+    'primary / hover / pressed (프로젝트 확장)': (
+        <>
+            Primary Button의 상태 배경 — <code className="font-mono">bg-primary-hover</code>와{' '}
+            <code className="font-mono">bg-primary-pressed</code>에 사용한다.
+        </>
+    ),
     background: (
         <>
             페이지·앱의 가장 바닥 배경색 — <code className="font-mono">&lt;body&gt;</code> 와 최상위 레이아웃의 기본
@@ -450,16 +449,16 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             브랜드·주요 액션 색 — <code className="font-mono">bg-primary</code>(blue.500 솔리드)는 주요
             버튼·링크·강조에, <code className="font-mono">text-primary-strong</code>(blue.600)은 primary보다 한 단계
             진한 강조 텍스트에, <code className="font-mono">text-primary-foreground</code> 는 그 위 텍스트에 쓴다.
-            다크는 각각 자동 반사. 옅은 브랜드 틴트 표면은 커스텀 <code className="font-mono">primary-subtle</code>
-            (아래).
+            다크는 각각 자동 반사. hover/pressed 상태는 <code className="font-mono">bg-primary-hover</code>·
+            <code className="font-mono">bg-primary-pressed</code>를 사용하며, 옅은 브랜드 틴트 표면은 커스텀{' '}
+            <code className="font-mono">primary-subtle</code>(아래).
         </>
     ),
     'accent / accent-foreground': (
         <>
             중립 하이라이트 — <code className="font-mono">bg-accent</code>(gray.100)는 메뉴·옵션·ghost 버튼에서
             hover/선택된 항목을 칠하는 표준 하이라이트, <code className="font-mono">text-accent-foreground</code> 는 그
-            위 텍스트. 더 옅거나 진한 중립 표면 레벨은 커스텀 <code className="font-mono">accent-subtle</code>/
-            <code className="font-mono">accent-strong</code>(아래).
+            위 텍스트.
         </>
     ),
     'destructive / destructive-foreground': (
@@ -478,9 +477,7 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <code className="font-mono">text-secondary-foreground</code>(blue.600) 는 shadcn 표준 보조 버튼 텍스트.
             Secondary Button hover/pressed는 <code className="font-mono">bg-secondary-hover</code>/
             <code className="font-mono">bg-secondary-pressed</code>, border는 fill보다 강한 커스텀{' '}
-            <code className="font-mono">border-secondary-strong</code>(아래)를 쓴다. 초록·주황 옅은 틴트 표면은 커스텀{' '}
-            <code className="font-mono">secondary-green-subtle</code>/<code className="font-mono">-orange-subtle</code>
-            (아래).
+            <code className="font-mono">border-secondary-strong</code>(아래)를 쓴다.
         </>
     ),
     border: (
@@ -549,23 +546,6 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <code className="font-mono">border-tertiary-strong</code>(gray.300)은 기본 테두리에 쓴다.
         </>
     ),
-    'accent-subtle / accent-strong': (
-        <>
-            중립 하이라이트(<code className="font-mono">accent</code>)의 <strong>표면 레벨 세분</strong> —{' '}
-            <code className="font-mono">bg-accent-subtle</code>(gray.50, 더 옅음)·
-            <code className="font-mono">bg-accent-strong</code>(gray.200, 더 진함). 디자인 gray-subtle-1/2/3 대응,
-            문자열 ref라 다크에서 &lsquo;배경에 가까울수록 subtle&rsquo; 유지.
-        </>
-    ),
-    'secondary-green-subtle / secondary-orange-subtle': (
-        <>
-            <strong>초록·주황 옅은 틴트 표면</strong>(각 hue 50 · 다크 900 반사) — 카테고리 카드·강조 패널에{' '}
-            <code className="font-mono">bg-secondary-green-subtle</code>·
-            <code className="font-mono">bg-secondary-orange-subtle</code>. 위 텍스트는{' '}
-            <code className="font-mono">text-foreground</code> flip. 파랑 계열은{' '}
-            <code className="font-mono">primary-subtle</code>.
-        </>
-    ),
     'subtle-1 / subtle-2 / subtle-3': (
         <>
             <strong>옅은 테두리</strong> 색 — <code className="font-mono">border-subtle-1</code>(gray.300)~
@@ -596,10 +576,9 @@ const GROUP_USAGE: Record<string, ReactNode> = {
         <>
             성공·경고·오류·정보 상태색 — <code className="font-mono">bg-success</code>·
             <code className="font-mono">bg-error</code> 등(진한 톤 700)은 배지·배너 등 <strong>상태 표면</strong>에,{' '}
-            <code className="font-mono">text-success-foreground</code> 등은 일반 배경 위에서 바로 읽는{' '}
-            <strong>상태 텍스트</strong>(에러 문구·안내 라벨)에 쓴다 — 대비쌍이 아니라 각각 독립적으로 쓰는 두 색이다.
-            다크 자동 반사. 오류는 shadcn 표준 <code className="font-mono">destructive</code>(버튼용)와 구분되는{' '}
-            <strong>status 전용</strong> 슬롯이다.
+            상태 텍스트는 <code className="font-mono">text-foreground</code> 계열을 사용한다. 다크 자동 반사. 오류는
+            shadcn 표준 <code className="font-mono">destructive</code>(버튼용)와 구분되는 <strong>status 전용</strong>{' '}
+            슬롯이다.
         </>
     ),
     'scroll-thumb / scroll-track': (
@@ -683,6 +662,23 @@ const SemanticColorGuidePage = () => (
                         usage={GROUP_USAGE[group.name]}
                     />
                 ))}
+            </section>
+
+            <section aria-labelledby="component-recipes" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-1">
+                    <h2 id="component-recipes" className="typo-h4-bold text-foreground">
+                        컴포넌트 전용 레시피 토큰{' '}
+                        <span className="text-muted-foreground font-normal">({RECIPE_COUNT}개)</span>
+                    </h2>
+                    <p className="typo-caption-regular text-muted-foreground">
+                        shadcn 표준 슬롯이 아닌 컴포넌트 내부 전용 토큰입니다. 해당 컴포넌트의 스타일 예외와 함께
+                        확인하세요.
+                    </p>
+                </div>
+                <SemanticTable
+                    title="button / checkbox / radio / badge / chip / selectable-card / stepper"
+                    tokens={recipeEntries}
+                />
             </section>
         </div>
     </GuidePageShell>
