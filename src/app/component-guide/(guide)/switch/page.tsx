@@ -16,7 +16,7 @@ const USAGE_CODE = `<div className={cn('flex w-fit items-center gap-2', FIELD_FO
 const PROPS_ITEMS = [
     ['checked · onCheckedChange', '켜짐 상태(제어). 비제어면 defaultChecked 로 초기값만.', 'boolean · (v) => void'],
     ['defaultChecked', '비제어 초기 상태.', 'boolean'],
-    ['size', '크기. default=40×24, sm(컴팩트)=32×20.', "'default' | 'sm'"],
+    ['size', '크기. large=40px, medium=36px, small=32px 높이. default는 large.', 'SwitchSize'],
     ['disabled', '비활성(흐림 + 클릭 불가).', 'boolean'],
     ['id · name · aria-*', 'Radix 루트(button role="switch")에 전달. Label 과 htmlFor↔id 로 연결.', 'button 속성'],
 ] as const
@@ -34,18 +34,18 @@ const SwitchGuidePage = () => (
                     상태 (State)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    꺼짐(off)·켜짐(on) 두 상태입니다. off 는 <code className="font-mono">gray-400</code>, on 은{' '}
-                    <code className="font-mono">primary</code>(brand blue) 트랙에 흰 thumb 입니다. 클릭해서 전환해
-                    보세요.
+                    꺼짐(off)·켜짐(on) 두 상태입니다. on 은 <code className="font-mono">bg-primary</code>, off 는{' '}
+                    <code className="font-mono">bg-foreground-subtle</code> 트랙이고 thumb 내부에 상태 아이콘을
+                    표시합니다. 클릭해서 전환해 보세요.
                 </p>
             </div>
             <div className="border-border flex flex-wrap items-center gap-8 rounded-md border p-6">
                 <div className="flex flex-col items-center gap-2">
-                    <Switch aria-label="꺼짐 예시" />
+                    <Switch size="large" aria-label="꺼짐 예시" />
                     <span className="typo-caption-regular text-muted-foreground font-mono">off</span>
                 </div>
                 <div className="flex flex-col items-center gap-2">
-                    <Switch defaultChecked aria-label="켜짐 예시" />
+                    <Switch size="large" defaultChecked aria-label="켜짐 예시" />
                     <span className="typo-caption-regular text-muted-foreground font-mono">on</span>
                 </div>
             </div>
@@ -57,18 +57,23 @@ const SwitchGuidePage = () => (
                     사이즈 (Size)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">default</code>(40×24)과 밀도 높은 UI 용{' '}
-                    <code className="font-mono">sm</code>(32×20)입니다.
+                    Button 크기 체계에 맞춰 <code className="font-mono">large</code>(40px),{' '}
+                    <code className="font-mono">medium</code>(36px), <code className="font-mono">small</code>
+                    (32px) 높이를 씁니다.
                 </p>
             </div>
             <div className="border-border flex flex-wrap items-center gap-8 rounded-md border p-6">
                 <div className="flex flex-col items-center gap-2">
-                    <Switch defaultChecked aria-label="default 크기" />
-                    <span className="typo-caption-regular text-muted-foreground font-mono">default</span>
+                    <Switch size="large" defaultChecked aria-label="large 크기" />
+                    <span className="typo-caption-regular text-muted-foreground font-mono">large</span>
                 </div>
                 <div className="flex flex-col items-center gap-2">
-                    <Switch size="sm" defaultChecked aria-label="sm 크기" />
-                    <span className="typo-caption-regular text-muted-foreground font-mono">sm</span>
+                    <Switch size="medium" defaultChecked aria-label="medium 크기" />
+                    <span className="typo-caption-regular text-muted-foreground font-mono">medium</span>
+                </div>
+                <div className="flex flex-col items-center gap-2">
+                    <Switch size="small" defaultChecked aria-label="small 크기" />
+                    <span className="typo-caption-regular text-muted-foreground font-mono">small</span>
                 </div>
             </div>
         </section>
@@ -79,7 +84,7 @@ const SwitchGuidePage = () => (
                     비활성 (Disabled)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">disabled</code> — 흐리게(opacity) 표시하고 클릭을 막습니다.
+                    <code className="font-mono">disabled</code> — 공통 disabled 토큰으로 색상을 낮추고 클릭을 막습니다.
                 </p>
             </div>
             <div className="border-border flex flex-wrap items-center gap-8 rounded-md border p-6">

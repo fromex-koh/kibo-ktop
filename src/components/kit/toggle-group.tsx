@@ -7,7 +7,8 @@ import {ToggleGroup as ToggleGroupPrimitive} from 'radix-ui'
 import {cn} from '@/lib/utils'
 import {toggleVariants} from '@/components/kit/toggle'
 
-// PROJECT-STYLE: segmented 그룹은 muted 트랙을, 항목 스타일은 kit/toggle 의 segmented variant를 공유한다.
+// PROJECT-STYLE: 프로젝트에서는 ToggleGroup을 segmented variant로만 사용한다.
+// default/outline은 shadcn 호환 fallback으로 유지하고, segmented 트랙/항목 스타일만 프로젝트 기준으로 관리한다.
 
 const ToggleGroupContext = React.createContext<
     VariantProps<typeof toggleVariants> & {

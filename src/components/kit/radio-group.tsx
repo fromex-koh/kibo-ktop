@@ -28,7 +28,7 @@ function RadioGroupItem({className, ...props}: React.ComponentProps<typeof Radio
                 data-slot="radio-group-indicator"
                 className="flex size-6 items-center justify-center"
             >
-                <span className="bg-primary-foreground group-data-[disabled]/radio-group-item:bg-disabled-subtle absolute top-1/2 left-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full" />
+                <span className="bg-primary-foreground group-data-disabled/radio-group-item:bg-disabled-subtle absolute top-1/2 left-1/2 size-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full" />
             </RadioGroupPrimitive.Indicator>
         </RadioGroupPrimitive.Item>
     )

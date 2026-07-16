@@ -25,7 +25,7 @@ import {Textarea} from '@/components/kit/textarea'
 // size prop 을 그대로 받는다(기본 icon-sm=36px).
 
 const inputGroupClassName = cn(
-    'group/input-group border-input bg-surface has-disabled:bg-muted has-disabled:opacity-50 relative flex h-control-h-lg w-full min-w-0 items-center gap-2 rounded-sm border px-4 transition-colors outline-none',
+    'group/input-group border-control bg-surface has-disabled:bg-field-disabled has-disabled:opacity-100 relative flex h-control-h-lg w-full min-w-0 items-center gap-2 rounded-sm border px-4 transition-colors outline-none',
     'has-[[data-slot=input-group-control]:focus-visible]:outline-ring has-[[data-slot=input-group-control]:focus-visible]:outline-2 has-[[data-slot=input-group-control]:focus-visible]:outline-offset-2 has-[[data-slot=input-group-control]:focus-visible]:outline-solid',
     'has-[[data-slot][aria-invalid=true]]:border-destructive',
 )
@@ -35,7 +35,7 @@ function InputGroup({className, ...props}: React.ComponentProps<'div'>) {
 }
 
 const inputGroupAddonVariants = cva(
-    "text-foreground-subtle flex h-auto items-center justify-center gap-2 text-sm font-medium select-none group-has-disabled/input-group:opacity-50 [&>svg:not([class*='size-'])]:size-icon-sm",
+    "text-foreground-subtle group-has-disabled/input-group:text-disabled flex h-auto items-center justify-center gap-2 text-sm font-medium select-none [&>svg:not([class*='size-'])]:size-icon-sm",
     {
         variants: {
             align: {

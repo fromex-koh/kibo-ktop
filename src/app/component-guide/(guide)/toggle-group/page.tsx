@@ -17,7 +17,12 @@ const COMPOSITION = [
 
 const PROPS = [
     {name: 'type', desc: '선택 방식 (프로젝트는 단일 선택만 사용)', values: "'single'", def: '—'},
-    {name: 'variant', desc: '시각 스타일 (프로젝트는 segmented 만 사용)', values: "'segmented'", def: "'segmented'"},
+    {
+        name: 'variant',
+        desc: '프로젝트 사용 variant. default/outline은 shadcn 호환 fallback으로만 유지한다.',
+        values: "'segmented'",
+        def: "'segmented'",
+    },
     {name: 'size', desc: '컨트롤 높이', values: "'sm' | 'default' | 'lg'", def: "'default'"},
     {name: 'spacing', desc: '항목 간 간격(px). 0 이면 인접 항목이 이어붙는다', values: 'number', def: '2'},
 ] as const
@@ -34,7 +39,8 @@ const ToggleGroupGuidePage = () => (
                     Preview
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    Figma 세그먼티드 컨트롤(회색 트랙 + 선택 시 흰 알약)입니다.
+                    프로젝트에서는 <code className="font-mono">variant=&quot;segmented&quot;</code> 만 사용합니다. Figma
+                    세그먼티드 컨트롤(회색 트랙 + 선택 시 흰 알약)입니다.
                 </p>
             </div>
             <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">

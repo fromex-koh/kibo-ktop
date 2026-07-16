@@ -2,7 +2,6 @@ import type {Metadata} from 'next'
 import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
-import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Label} from '@/components/kit/label'
 import {RadioGroup, RadioGroupItem} from '@/components/kit/radio-group'
@@ -134,13 +133,6 @@ const RadioGuidePage = () => (
                                                     <Label htmlFor={`radio-${row.key}-${col.key}`}>라디오버튼</Label>
                                                 </div>
                                             </RadioGroup>
-                                            <CopyChip
-                                                value={`<div className={cn('flex w-fit max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
-  <RadioGroupItem value="on" id="radio-${row.key}-${col.key}" />
-  <Label htmlFor="radio-${row.key}-${col.key}">라디오버튼</Label>
-</div>`}
-                                                label="복사"
-                                            />
                                         </div>
                                     </td>
                                 ))}

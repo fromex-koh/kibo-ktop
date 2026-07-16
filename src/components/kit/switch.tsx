@@ -1,38 +1,61 @@
 'use client'
 
-// 프로젝트 Switch (styled copy) — 원본 src/components/ui/switch.tsx(shadcn 바닐라)를 복사하고 스타일만 교체한다([SC-04]).
-// 셸(구성·size prop·data-slot·Thumb·export)은 원본과 동일하고, className 만 Figma "toggle_switch" 에 맞춘다.
-//   · 트랙 40×24(default)·완전 둥근, thumb 20(흰색)·2px inset, on 일 때 16px 이동. sm 은 컴팩트(32×20·thumb16·12px).
-//   · 색은 기존 팔레트/시맨틱에서 Figma 최근사값으로: off=bg-gray-400(#6d7882 근사), on=bg-primary
-//     (blue.500, #3f7deb), thumb=bg-white(구조색, 항상 흰색). 원본의 arbitrary px 사이즈·dark 분기는 스케일 유틸/
-//     토큰으로 대체(다크 자동 반사, [PB-06]). 포커스링은 Button과 같은 solid outline 규칙을 쓴다.
-// PROJECT-STYLE: disabled는 Checkbox/Radio와 같은 공통 disabled 토큰(bg-control-disabled / bg-disabled-subtle)을 쓴다.
 import * as React from 'react'
+import {CheckIcon, XIcon} from 'lucide-react'
 import {Switch as SwitchPrimitive} from 'radix-ui'
 
 import {cn} from '@/lib/utils'
 
+// PROJECT-STYLE: Figma switch on/off 아이콘과 Button small/xsmall/2xsmall 높이에 맞춘 크기를 kit styled copy에서 책임진다.
+// 색은 primary/surface/foreground-subtle/disabled 계열 슬롯으로 연결해 직접 팔레트 유틸을 두지 않는다.
+type SwitchSize = 'large' | 'medium' | 'small' | 'default' | 'sm' | 'xsmall' | '2xsmall'
+
 function Switch({
     className,
-    size = 'default',
+    size = 'large',
     ...props
 }: React.ComponentProps<typeof SwitchPrimitive.Root> & {
-    size?: 'sm' | 'default'
+    size?: SwitchSize
 }) {
+    const visualSize =
+        size === 'default'
+            ? 'large'
+            : size === 'sm' || size === '2xsmall'
+              ? 'small'
+              : size === 'xsmall'
+                ? 'medium'
+                : size
+
     return (
         <SwitchPrimitive.Root
             data-slot="switch"
-            data-size={size}
+            data-size={visualSize}
             className={cn(
-                'peer group/switch focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-checked:bg-primary data-disabled:bg-control-disabled data-disabled:data-checked:bg-control-disabled data-disabled:data-unchecked:bg-control-disabled relative inline-flex shrink-0 items-center rounded-full border border-transparent px-0.5 transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid aria-invalid:ring-3 data-disabled:cursor-not-allowed data-disabled:opacity-100 data-unchecked:bg-gray-400 data-[size=default]:h-6 data-[size=default]:w-10 data-[size=sm]:h-5 data-[size=sm]:w-8',
+                'peer group/switch focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[state=checked]:bg-primary data-[state=unchecked]:bg-foreground-subtle data-disabled:bg-control-disabled data-disabled:data-[state=checked]:bg-control-disabled data-disabled:data-[state=unchecked]:bg-control-disabled relative inline-flex shrink-0 items-center rounded-full border border-transparent p-1 transition-colors outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid aria-invalid:ring-3 data-disabled:cursor-not-allowed data-disabled:opacity-100',
+                'data-[size=large]:h-control-h-md data-[size=medium]:h-control-h-sm data-[size=small]:h-control-h-xs data-[size=large]:w-18 data-[size=medium]:w-16 data-[size=small]:w-14',
                 className,
             )}
             {...props}
         >
             <SwitchPrimitive.Thumb
                 data-slot="switch-thumb"
-                className="group-data-[disabled]/switch:bg-disabled-subtle pointer-events-none block rounded-full bg-white ring-0 transition-transform group-data-[size=default]/switch:size-5 group-data-[size=sm]/switch:size-4 group-data-[size=default]/switch:data-checked:translate-x-4 group-data-[size=sm]/switch:data-checked:translate-x-3 data-unchecked:translate-x-0"
-            />
+                className={cn(
+                    'group/thumb bg-surface text-foreground-subtle data-[state=checked]:text-primary group-data-disabled/switch:bg-disabled-subtle group-data-disabled/switch:text-disabled pointer-events-none flex items-center justify-center rounded-full ring-0 transition-transform',
+                    'group-data-[size=large]/switch:size-8 group-data-[size=medium]/switch:size-7 group-data-[size=small]/switch:size-6',
+                    'group-data-[size=large]/switch:data-[state=checked]:translate-x-8 group-data-[size=medium]/switch:data-[state=checked]:translate-x-7 group-data-[size=small]/switch:data-[state=checked]:translate-x-6 data-[state=unchecked]:translate-x-0',
+                )}
+            >
+                <CheckIcon
+                    aria-hidden="true"
+                    className="group-data-disabled/switch:text-disabled hidden size-5 group-data-[size=small]/switch:size-4 group-data-[state=checked]/thumb:block"
+                    strokeWidth={3}
+                />
+                <XIcon
+                    aria-hidden="true"
+                    className="group-data-disabled/switch:text-disabled block size-5 group-data-[size=small]/switch:size-4 group-data-[state=checked]/thumb:hidden"
+                    strokeWidth={2.75}
+                />
+            </SwitchPrimitive.Thumb>
         </SwitchPrimitive.Root>
     )
 }

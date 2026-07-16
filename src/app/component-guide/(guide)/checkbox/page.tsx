@@ -2,7 +2,6 @@ import type {Metadata} from 'next'
 import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
-import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Checkbox} from '@/components/kit/checkbox'
 import {Label} from '@/components/kit/label'
@@ -110,10 +109,6 @@ const CheckboxGuidePage = () => (
                                                 defaultChecked={row.checked}
                                                 disabled={col.disabled}
                                                 aria-label={`${row.label} ${col.label}`}
-                                            />
-                                            <CopyChip
-                                                value={`defaultChecked={${row.checked}}${col.disabled ? ' disabled' : ''}`}
-                                                label="복사"
                                             />
                                         </div>
                                     </td>

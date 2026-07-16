@@ -1,7 +1,6 @@
 import type {Metadata} from 'next'
 import {ArrowRight, Download, LoaderCircle, Search, Sun} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
-import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Button} from '@/components/kit/button'
 
@@ -181,7 +180,6 @@ const ButtonGuidePage = () => (
                         <Button variant={v.key} size="medium">
                             버튼
                         </Button>
-                        <CopyChip value={`variant="${v.key}"`} label="복사" />
                     </div>
                 ))}
             </div>
@@ -238,7 +236,6 @@ const ButtonGuidePage = () => (
                                                 <Download aria-hidden="true" />
                                                 버튼
                                             </Button>
-                                            <CopyChip value={`variant="${type.key}" size="${size.key}"`} label="복사" />
                                         </div>
                                     </td>
                                 ))}
@@ -298,7 +295,6 @@ const ButtonGuidePage = () => (
                                             <Button variant={v.key} size={size.key} aria-label="라이트 모드">
                                                 <Sun aria-hidden="true" />
                                             </Button>
-                                            <CopyChip value={`variant="${v.key}" size="${size.key}"`} label="복사" />
                                         </div>
                                     </td>
                                 ))}
@@ -351,7 +347,6 @@ const ButtonGuidePage = () => (
                                         <Button variant={variant.key} size="medium">
                                             자세히 보기
                                         </Button>
-                                        <CopyChip value={`variant="${variant.key}" size="medium"`} label="복사" />
                                     </div>
                                 </td>
                                 <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{variant.note}</td>
@@ -382,7 +377,6 @@ const ButtonGuidePage = () => (
                             <Search aria-hidden="true" />
                         </Button>
                         <span className="typo-caption-regular text-foreground font-mono">{v.label}</span>
-                        <CopyChip value={`variant="${v.key}" size="icon" className="rounded-full"`} label="복사" />
                     </div>
                 ))}
             </div>

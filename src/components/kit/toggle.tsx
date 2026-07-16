@@ -6,7 +6,8 @@ import {Toggle as TogglePrimitive} from 'radix-ui'
 
 import {cn} from '@/lib/utils'
 
-// PROJECT-STYLE: segmented 항목은 ToggleGroupItem 도 공유하므로 item 표면/텍스트 상태를 여기서 관리한다.
+// PROJECT-STYLE: 프로젝트에서는 ToggleGroup을 segmented variant로만 사용한다.
+// default/outline은 shadcn 호환 fallback으로 유지하고, segmented 항목 스타일만 프로젝트 토큰으로 관리한다.
 const toggleVariants = cva(
     "group/toggle inline-flex items-center justify-center gap-1 rounded-lg text-sm font-medium whitespace-nowrap transition-all outline-none hover:bg-muted hover:text-foreground focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-ring focus-visible:outline-offset-2 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 aria-pressed:bg-muted data-[state=on]:bg-muted [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     {

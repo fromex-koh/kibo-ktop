@@ -1,6 +1,5 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
-import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Badge, NumberBadge} from '@/components/kit/badge'
 
@@ -116,10 +115,6 @@ const BadgeGuidePage = () => (
                                                     <Badge color={c.key} variant={v.key} shape={s}>
                                                         라벨
                                                     </Badge>
-                                                    <CopyChip
-                                                        value={`color="${c.key}" variant="${v.key}" shape="${s}"`}
-                                                        label="복사"
-                                                    />
                                                 </div>
                                             ))}
                                         </div>

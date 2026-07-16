@@ -9,14 +9,8 @@ import {cn} from '@/lib/utils'
 // shadcn 에 이 조합(인풋+addon 버튼)을 위한 프리미티브 InputGroup 이 있어([SC-03]), 새로 만들지 않고
 // kit/InputGroup(승격) 위에 조립했다. 폭은 Figma 실측 그대로 max-w-147(=588px, spacingBase 4px 배수 — [PB-13]).
 //
-// 색(Figma): 컨테이너 = bg-surface·border-input(gray.200)·rounded-full, 버튼 = 원형·파란 배경·흰 검색 아이콘
-// 24px — kit/Button 의 variant="default"(bg-primary=blue.500)·size="icon" 를 그대로 쓰면 색·아이콘
-// 크기(size-icon-lg=24px 가 size="icon" 기본값) 모두 커스텀 없이 일치한다(별도 className 오버라이드 불필요).
-// 버튼 박스 크기만 Figma 실측(40px)과 다르다 — kit/Button 의 size="icon" 은 44px 최소 터치 타깃([6.1.3])이
-// 강제돼 44px 로 렌더링된다. 이건 앱 전역에서 아이콘 버튼에 이미 일관 적용 중인 접근성 규칙이라 그대로 둔다
-// (Figma 목업이 터치 타깃을 고려하지 않은 값이지, 이 컴포넌트만의 예외를 만들 이유는 아니다).
-// ⚠️ placeholder 는 이 화면에서 gray.500(text-muted-foreground)이다 — 일반 Input 의 기본 placeholder
-// (gray.700, text-placeholder)보다 한 톤 밝은, 이 컴포넌트만의 실측 색이라 여기서만 override 한다.
+// PROJECT-STYLE: 컨테이너는 InputGroup의 control/surface/field-disabled 토큰을 따르고,
+// 검색 버튼은 kit/Button default/icon 스타일을 그대로 사용한다. placeholder도 Input 기본 text-placeholder를 공유한다.
 //
 // 지우기(X) 버튼 — type="search" 의 네이티브 X 버튼은 브라우저마다 모양·클릭 영역이 다르고 Firefox 는
 // 아예 안 그려지며, 무엇보다 키보드로 포커스가 안 가([6.1.1] 위반). globals.css 에서 네이티브 버튼 자체를
@@ -106,7 +100,6 @@ const SearchBar = ({
                     ref={inputRef}
                     id={inputId}
                     type="search"
-                    className="placeholder:text-muted-foreground"
                     onKeyDown={handleKeyDown}
                     onChange={handleChange}
                     value={value}

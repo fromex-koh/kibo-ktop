@@ -18,7 +18,6 @@ import {
     X,
 } from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
-import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Icon} from '@/components/custom/icon'
 import tokens from '@tokens'
@@ -154,8 +153,12 @@ const IconGuidePage = () => (
                     </div>
                 </dl>
                 <div className="flex flex-wrap gap-2">
-                    <CopyChip value="yarn add lucide-react" label="설치" />
-                    <CopyChip value="import { Home } from 'lucide-react';" label="사용법" />
+                    <code className="border-border bg-muted text-foreground rounded-sm border px-2 py-1 font-mono text-sm">
+                        yarn add lucide-react
+                    </code>
+                    <code className="border-border bg-muted text-foreground rounded-sm border px-2 py-1 font-mono text-sm">
+                        import {'{ Home }'} from &apos;lucide-react&apos;;
+                    </code>
                 </div>
             </div>
         </section>
@@ -219,7 +222,7 @@ const IconGuidePage = () => (
                                     </div>
                                 </td>
                                 <th scope="row" className="px-4 py-3 text-left font-normal">
-                                    <CopyChip value={sizeClass} />
+                                    <code className="text-foreground font-mono">{sizeClass}</code>
                                 </th>
                                 <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                     {tokens.size[key]}px
@@ -254,7 +257,7 @@ const IconGuidePage = () => (
                     {CURATED_ICONS.map(({name, Icon}) => (
                         <li key={name} className="border-border flex flex-col items-center gap-3 rounded-md border p-4">
                             <Icon aria-hidden="true" className="size-icon-xl text-foreground" />
-                            <CopyChip value={name} />
+                            <code className="text-foreground font-mono text-sm">{name}</code>
                         </li>
                     ))}
                 </ul>
@@ -277,7 +280,7 @@ const IconGuidePage = () => (
                                     </span>
                                 )}
                             </span>
-                            <CopyChip value={item.markup} label={item.name} />
+                            <code className="text-foreground font-mono text-sm">{item.name}</code>
                         </li>
                     ))}
                 </ul>
