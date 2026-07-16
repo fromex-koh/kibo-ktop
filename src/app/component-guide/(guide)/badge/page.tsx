@@ -9,6 +9,9 @@ const USAGE_CODE = `<Badge color="success">활성</Badge>
 <Badge color="warning" variant="outline">대기</Badge>
 <Badge color="error" variant="solid">정지</Badge>`
 
+const NUMBER_USAGE_CODE = `<Badge type="number" color="primary">2</Badge>
+<Badge type="number" color="new">5</Badge>`
+
 // Figma badge 의 세 축.
 const VARIANTS = [
     {key: 'solid-pastel', label: 'solid-pastel', desc: '연한 배경 + 진한 텍스트. 상태 칩 기본형.'},
@@ -37,7 +40,7 @@ const SHAPES = ['pill', 'round'] as const
 const BadgeGuidePage = () => (
     <GuidePageShell
         title="배지 (Badge)"
-        description="shadcn Badge 프리미티브입니다. 상태·분류 라벨을 관리합니다. 숫자 배지는 별도 NumberBadge 가이드에서 확인합니다."
+        description="shadcn Badge 프리미티브입니다. type으로 라벨과 숫자 배지를 구분하고, variant·color·shape로 표현을 조합합니다."
     >
         <section aria-labelledby="badge-demo" className="flex flex-col gap-4">
             <div>
@@ -195,6 +198,35 @@ const BadgeGuidePage = () => (
             </div>
         </section>
 
+        <section aria-labelledby="badge-number" className="flex flex-col gap-4">
+            <div>
+                <h2 id="badge-number" className="typo-h4-bold">
+                    숫자 배지 (type=&quot;number&quot;)
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    숫자 배지는 동일한 <code className="font-mono">Badge</code> 컴포넌트에서{' '}
+                    <code className="font-mono">type=&quot;number&quot;</code>로 사용합니다. 기본{' '}
+                    <code className="font-mono">color=&quot;primary&quot;</code>는 일반 건수,{' '}
+                    <code className="font-mono">color=&quot;new&quot;</code>는 새로움·알림을 강조합니다.
+                </p>
+            </div>
+            <div className="flex items-center gap-4">
+                <Badge type="number" color="primary">
+                    2
+                </Badge>
+                <Badge type="number" color="new">
+                    5
+                </Badge>
+                <Badge type="number" color="primary">
+                    12
+                </Badge>
+                <Badge type="number" color="new">
+                    99
+                </Badge>
+            </div>
+            <CodeBlock code={NUMBER_USAGE_CODE} language="tsx" copyLabel="복사" />
+        </section>
+
         <section aria-labelledby="badge-props" className="flex flex-col gap-4">
             <div>
                 <h2 id="badge-props" className="typo-h4-bold">
@@ -229,6 +261,12 @@ const BadgeGuidePage = () => (
                                 def: "'neutral'",
                                 control:
                                     'info | success | warning | error | neutral | navy | secondary-green | secondary-orange | secondary-grape',
+                            },
+                            {
+                                name: 'type',
+                                desc: '표시 목적. label은 상태·분류 라벨, number는 숫자 배지.',
+                                def: "'label'",
+                                control: 'label | number',
                             },
                             {
                                 name: 'variant',

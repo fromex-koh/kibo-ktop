@@ -124,7 +124,6 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'Icon', href: '/component-guide/icon'},
                     {label: 'ListMarker', href: '/component-guide/list-marker'},
                     {label: 'Badge', href: '/component-guide/badge'},
-                    {label: 'NumberBadge', href: '/component-guide/number-badge'},
                 ],
             },
             {
