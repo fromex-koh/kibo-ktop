@@ -15,7 +15,7 @@ import {cn} from '@/lib/utils'
 //   · 헤더 아래 본문(children)
 // 패딩이 24px 인 일반 카드는 BaseCard 를 쓴다.
 type FormCardProps = {
-    title: ReactNode
+    title?: ReactNode
     subtitle?: ReactNode
     action?: ReactNode
     children: ReactNode
@@ -24,11 +24,13 @@ type FormCardProps = {
 
 const FormCard = ({title, subtitle, action, children, className}: FormCardProps) => (
     <Card className={cn('[--card-spacing:--spacing(10)]', className)}>
-        <SectionHeader className="px-25.5">
-            <SectionHeaderTitle>{title}</SectionHeaderTitle>
-            {subtitle ? <SectionHeaderDescription>{subtitle}</SectionHeaderDescription> : null}
-            {action ? <SectionHeaderAction>{action}</SectionHeaderAction> : null}
-        </SectionHeader>
+        {title || subtitle || action ? (
+            <SectionHeader className="px-25.5">
+                {title ? <SectionHeaderTitle>{title}</SectionHeaderTitle> : null}
+                {subtitle ? <SectionHeaderDescription>{subtitle}</SectionHeaderDescription> : null}
+                {action ? <SectionHeaderAction>{action}</SectionHeaderAction> : null}
+            </SectionHeader>
+        ) : null}
         <CardContent className="px-25.5">{children}</CardContent>
     </Card>
 )

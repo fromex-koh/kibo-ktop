@@ -95,7 +95,13 @@ const SearchBar = ({
             <label htmlFor={inputId} className="sr-only">
                 {label}
             </label>
-            <InputGroup className={cn('h-auto max-w-147 gap-6 rounded-full py-3 pr-3 pl-8', className)}>
+            <InputGroup
+                className={cn(
+                    'h-auto max-w-147 gap-6 rounded-full py-3 pr-3 pl-8',
+                    'has-disabled:bg-field-disabled has-disabled:opacity-100',
+                    className,
+                )}
+            >
                 <InputGroupInput
                     ref={inputRef}
                     id={inputId}

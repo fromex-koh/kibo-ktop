@@ -96,7 +96,7 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                 <SidebarContent>
                     <SidebarGroup>
                         <SidebarGroupContent>
-                            <SidebarMenu>
+                            <SidebarMenu className="gap-3">
                                 {navSections.map((section) => {
                                     const SectionIcon = SECTION_ICONS[section.icon]
                                     return (
@@ -105,11 +105,11 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                                             key={section.title}
                                             asChild
                                             defaultOpen
-                                            className="group/collapsible"
+                                            className="group/collapsible border-sidebar-border border-t pt-3 first:border-t-0 first:pt-0"
                                         >
                                             <SidebarMenuItem>
                                                 <CollapsibleTrigger asChild>
-                                                    <SidebarMenuButton>
+                                                    <SidebarMenuButton className="hover:bg-primary-subtle active:bg-primary-subtle data-open:hover:bg-primary-subtle rounded-none font-semibold">
                                                         <SectionIcon aria-hidden="true" />
                                                         <span className="flex-1 truncate">{section.title}</span>
                                                         <ChevronRight
@@ -124,8 +124,11 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                                                             <GuideNavSubItem key={item.href} item={item} />
                                                         ))}
                                                         {section.groups?.map((group) => (
-                                                            <SidebarMenuSubItem key={group.title} className="mt-2">
-                                                                <p className="text-muted-foreground px-2 py-1 text-xs font-semibold">
+                                                            <SidebarMenuSubItem
+                                                                key={group.title}
+                                                                className="mt-4 first:mt-2"
+                                                            >
+                                                                <p className="border-primary bg-muted/50 text-primary mb-1 flex h-7 items-center rounded-none border-l-2 px-2 text-xs font-bold">
                                                                     {group.title}
                                                                 </p>
                                                                 <SidebarMenuSub className="mx-0 border-l-0 px-0">
@@ -194,7 +197,12 @@ const GuideNavSubItem = ({item}: {item: GuideNavItem}) => {
 
     return (
         <SidebarMenuSubItem>
-            <SidebarMenuSubButton asChild isActive={isActive} aria-current={isActive ? 'page' : undefined}>
+            <SidebarMenuSubButton
+                asChild
+                isActive={isActive}
+                aria-current={isActive ? 'page' : undefined}
+                className="hover:bg-primary-subtle active:bg-primary-subtle data-active:bg-primary-subtle rounded-none"
+            >
                 <Link
                     href={item.href}
                     {...(item.external

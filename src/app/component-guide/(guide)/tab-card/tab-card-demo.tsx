@@ -1,6 +1,8 @@
 'use client'
 
 import {useState} from 'react'
+import {FormCard} from '@/components/composite/form-card'
+import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
 import {TabCard, TabCardList, type TabCardStatus} from '@/components/composite/tab-card'
 import {Button} from '@/components/kit/button'
 
@@ -32,20 +34,21 @@ const TabCardDemo = () => {
                     />
                 ))}
             </TabCardList>
-            <div
-                role="tabpanel"
-                id="tabcard-panel"
-                aria-labelledby={`tabcard-${active}`}
-                className="border-border bg-card flex flex-col items-start gap-4 rounded-lg border p-6"
-            >
-                <p className="typo-body-l-regular text-foreground">
-                    <span className="font-semibold">{current?.title}</span> 섹션 내용입니다. 활성 탭에서 Tab 키를 누르면
-                    아래 버튼(탭 콘텐츠 안)으로 포커스가 들어옵니다. (상태: {current?.status})
-                </p>
-                {/* 탭 → 콘텐츠 키보드 진입 테스트용 포커스 대상 */}
-                <Button variant="secondary" size="small">
-                    {current?.title} 저장
-                </Button>
+            <div role="tabpanel" id="tabcard-panel" aria-labelledby={`tabcard-${active}`} className="w-full">
+                <FormCard>
+                    <div className="flex flex-col items-start gap-6">
+                        <SectionHeader>
+                            <SectionHeaderTitle>{current?.title}</SectionHeaderTitle>
+                            <SectionHeaderDescription>
+                                현재 선택된 탭의 입력 콘텐츠입니다. 상태: {current?.status}
+                            </SectionHeaderDescription>
+                        </SectionHeader>
+                        {/* 탭 → 콘텐츠 키보드 진입 테스트용 포커스 대상 */}
+                        <Button variant="secondary" size="small">
+                            {current?.title} 저장
+                        </Button>
+                    </div>
+                </FormCard>
             </div>
         </div>
     )
