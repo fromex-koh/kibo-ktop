@@ -1,6 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
+import {BaseCard} from '@/components/composite/base-card'
 import {StepHeader} from '@/components/composite/step-header'
 
 export const metadata: Metadata = {title: '스텝 헤더 (StepHeader)'}
@@ -59,7 +60,7 @@ const StepHeaderGuidePage = () => (
                     <code className="font-mono">nextLabel</code> 은 우측에 다음 단계를 흐리게 미리 보여줍니다.
                 </p>
             </div>
-            <div className="border-border rounded-md border p-6">
+            <BaseCard>
                 <StepHeader
                     title="1단계. 고객 정보 활용 동의"
                     count={5}
@@ -67,7 +68,7 @@ const StepHeaderGuidePage = () => (
                     description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해주세요."
                     nextLabel="2단계. 기업·기술정보 입력"
                 />
-            </div>
+            </BaseCard>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>
 
@@ -81,18 +82,20 @@ const StepHeaderGuidePage = () => (
                     마지막 단계는 <code className="font-mono">nextLabel</code> 을 생략합니다.
                 </p>
             </div>
-            <div className="border-border flex flex-col gap-8 rounded-md border p-6">
-                {PROGRESS_CASES.map((c) => (
-                    <StepHeader
-                        key={c.current}
-                        title={c.title}
-                        count={5}
-                        current={c.current}
-                        description={c.description}
-                        nextLabel={c.nextLabel}
-                    />
-                ))}
-            </div>
+            <BaseCard>
+                <div className="flex flex-col gap-8">
+                    {PROGRESS_CASES.map((c) => (
+                        <StepHeader
+                            key={c.current}
+                            title={c.title}
+                            count={5}
+                            current={c.current}
+                            description={c.description}
+                            nextLabel={c.nextLabel}
+                        />
+                    ))}
+                </div>
+            </BaseCard>
         </section>
 
         <section aria-labelledby="sh-props" className="flex flex-col gap-4">

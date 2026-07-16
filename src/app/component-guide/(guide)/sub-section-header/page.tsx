@@ -2,6 +2,7 @@ import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Button} from '@/components/kit/button'
+import {BaseCard} from '@/components/composite/base-card'
 import {
     SubSectionHeader,
     SubSectionHeaderAction,
@@ -49,12 +50,12 @@ const SubSectionHeaderGuidePage = () => (
                     Title/L/bold 제목 + Body/XL/Regular 설명, 간격은 gap-y-1.5(6px)입니다.
                 </p>
             </div>
-            <div className="border-border rounded-md border p-6">
+            <BaseCard>
                 <SubSectionHeader>
                     <SubSectionHeaderTitle>기업 담당자 정보</SubSectionHeaderTitle>
                     <SubSectionHeaderDescription>담당자 정보를 정확히 입력해 주세요.</SubSectionHeaderDescription>
                 </SubSectionHeader>
-            </div>
+            </BaseCard>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
 
             <div className="flex flex-col gap-2">
@@ -65,7 +66,7 @@ const SubSectionHeaderGuidePage = () => (
                     <code className="font-mono">has-data-[slot=...]</code> 선택자 — JS 분기 없음).
                 </p>
             </div>
-            <div className="border-border rounded-md border p-6">
+            <BaseCard>
                 <SubSectionHeader>
                     <SubSectionHeaderTitle>기업 담당자 정보</SubSectionHeaderTitle>
                     <SubSectionHeaderDescription>담당자 정보를 정확히 입력해 주세요.</SubSectionHeaderDescription>
@@ -75,7 +76,7 @@ const SubSectionHeaderGuidePage = () => (
                         </Button>
                     </SubSectionHeaderAction>
                 </SubSectionHeader>
-            </div>
+            </BaseCard>
             <CodeBlock code={USAGE_CODE_ACTION} language="tsx" copyLabel="복사" />
         </section>
 

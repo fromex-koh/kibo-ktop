@@ -3,6 +3,7 @@ import {ArrowLeft, ArrowRight} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {ActionBar, ActionBarCenter, ActionBarEnd, ActionBarStart} from '@/components/composite/action-bar'
+import {BaseCard} from '@/components/composite/base-card'
 import {Button} from '@/components/kit/button'
 
 export const metadata: Metadata = {title: '액션 바 (ActionBar)'}
@@ -57,7 +58,7 @@ const ActionBarGuidePage = () => (
                     넣으면 각각 왼쪽 끝·오른쪽 끝에 붙습니다. 오른쪽처럼 여러 버튼을 한 구역에 넣을 수도 있습니다.
                 </p>
             </div>
-            <div className="border-border rounded-md border p-4">
+            <BaseCard>
                 <ActionBar>
                     <ActionBarStart>
                         <Button variant="tertiary" size="medium">
@@ -71,7 +72,7 @@ const ActionBarGuidePage = () => (
                         <Button size="medium">저장</Button>
                     </ActionBarEnd>
                 </ActionBar>
-            </div>
+            </BaseCard>
             <CodeBlock code={START_END_CODE} language="tsx" copyLabel="복사" />
         </section>
 
@@ -87,7 +88,7 @@ const ActionBarGuidePage = () => (
                     단계 이동처럼 두 버튼을 가운데 페어로 둘 때 씁니다.
                 </p>
             </div>
-            <div className="border-border rounded-md border p-4">
+            <BaseCard>
                 <ActionBar>
                     <ActionBarCenter>
                         <Button variant="secondary" size="xlarge">
@@ -100,7 +101,7 @@ const ActionBarGuidePage = () => (
                         </Button>
                     </ActionBarCenter>
                 </ActionBar>
-            </div>
+            </BaseCard>
             <CodeBlock code={CENTER_CODE} language="tsx" copyLabel="복사" />
         </section>
 

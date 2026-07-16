@@ -1,6 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
+import {BaseCard} from '@/components/composite/base-card'
 import {Step, Stepper, type StepState} from '@/components/composite/stepper'
 
 export const metadata: Metadata = {title: '스테퍼 (Stepper)'}
@@ -37,15 +38,17 @@ const StepperGuidePage = () => (
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">단계 원 하나의 세 가지 상태입니다.</p>
             </div>
-            <div className="border-border flex flex-wrap gap-10 rounded-md border p-6">
-                {STATES.map(({state, label, desc}) => (
-                    <div key={state} className="flex flex-col items-center gap-2 text-center">
-                        <Step state={state}>1</Step>
-                        <span className="typo-body-l-medium text-foreground font-mono">{label}</span>
-                        <span className="typo-caption-regular text-muted-foreground max-w-40">{desc}</span>
-                    </div>
-                ))}
-            </div>
+            <BaseCard>
+                <div className="flex flex-wrap gap-10">
+                    {STATES.map(({state, label, desc}) => (
+                        <div key={state} className="flex flex-col items-center gap-2 text-center">
+                            <Step state={state}>1</Step>
+                            <span className="typo-body-l-medium text-foreground font-mono">{label}</span>
+                            <span className="typo-caption-regular text-muted-foreground max-w-40">{desc}</span>
+                        </div>
+                    ))}
+                </div>
+            </BaseCard>
         </section>
 
         <section aria-labelledby="stepper-usage" className="flex flex-col gap-4">
@@ -58,16 +61,18 @@ const StepperGuidePage = () => (
                     계산합니다. 아래는 5단계에서 현재 단계를 1·3·5로 둔 예시입니다.
                 </p>
             </div>
-            <div className="border-border flex flex-col gap-6 rounded-md border p-6">
-                {[1, 3, 5].map((current) => (
-                    <div key={current} className="flex items-center gap-4">
-                        <span className="typo-caption-regular text-muted-foreground w-24 shrink-0">
-                            current={current}
-                        </span>
-                        <Stepper count={5} current={current} aria-label={`5단계 중 ${current}단계 진행`} />
-                    </div>
-                ))}
-            </div>
+            <BaseCard>
+                <div className="flex flex-col gap-6">
+                    {[1, 3, 5].map((current) => (
+                        <div key={current} className="flex items-center gap-4">
+                            <span className="typo-caption-regular text-muted-foreground w-24 shrink-0">
+                                current={current}
+                            </span>
+                            <Stepper count={5} current={current} aria-label={`5단계 중 ${current}단계 진행`} />
+                        </div>
+                    ))}
+                </div>
+            </BaseCard>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>
 
