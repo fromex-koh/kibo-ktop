@@ -55,7 +55,7 @@ const SelectableSummaryList = ({value, disabled, id, className, children}: Selec
                 'cursor-pointer transition-colors',
                 'data-[selected]:border-primary data-[selected]:bg-primary-subtle data-[selected]:border-2',
                 'data-[disabled]:border-disabled-subtle data-[disabled]:bg-control-disabled data-[disabled]:text-disabled data-[disabled]:cursor-not-allowed data-[disabled]:opacity-100',
-                'has-[:focus-visible]:outline-ring has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-dotted',
+                'has-[:focus-visible]:outline-ring has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-solid',
                 className,
             )}
         >

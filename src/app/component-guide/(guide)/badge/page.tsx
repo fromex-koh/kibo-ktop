@@ -1,16 +1,13 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Badge, NumberBadge} from '@/components/kit/badge'
+import {Badge} from '@/components/kit/badge'
 
 export const metadata: Metadata = {title: '배지 (Badge)'}
 
 const USAGE_CODE = `<Badge color="success">활성</Badge>
 <Badge color="warning" variant="outline">대기</Badge>
 <Badge color="error" variant="solid">정지</Badge>`
-
-const NUMBER_BADGE_CODE = `<NumberBadge>2</NumberBadge>
-<NumberBadge variant="new">5</NumberBadge>`
 
 // Figma badge 의 세 축.
 const VARIANTS = [
@@ -40,7 +37,7 @@ const SHAPES = ['pill', 'round'] as const
 const BadgeGuidePage = () => (
     <GuidePageShell
         title="배지 (Badge)"
-        description="shadcn Badge 프리미티브입니다. 상태·분류 라벨과 숫자 배지를 한 컴포넌트 계열에서 관리합니다."
+        description="shadcn Badge 프리미티브입니다. 상태·분류 라벨을 관리합니다. 숫자 배지는 별도 NumberBadge 가이드에서 확인합니다."
     >
         <section aria-labelledby="badge-demo" className="flex flex-col gap-4">
             <div>
@@ -198,25 +195,6 @@ const BadgeGuidePage = () => (
             </div>
         </section>
 
-        <section aria-labelledby="badge-number" className="flex flex-col gap-4">
-            <div>
-                <h2 id="badge-number" className="typo-h4-bold">
-                    숫자 배지
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    개수·알림처럼 숫자만 표시하는 배지는 같은 Badge 파일의 숫자 변형입니다. 사용처에서는 의미가 더
-                    분명하도록 <code className="font-mono">NumberBadge</code> 래퍼를 사용합니다.
-                </p>
-            </div>
-            <div className="flex items-center gap-4">
-                <NumberBadge>2</NumberBadge>
-                <NumberBadge variant="new">5</NumberBadge>
-                <NumberBadge>12</NumberBadge>
-                <NumberBadge variant="new">99</NumberBadge>
-            </div>
-            <CodeBlock code={NUMBER_BADGE_CODE} language="tsx" copyLabel="복사" />
-        </section>
-
         <section aria-labelledby="badge-props" className="flex flex-col gap-4">
             <div>
                 <h2 id="badge-props" className="typo-h4-bold">
@@ -254,9 +232,9 @@ const BadgeGuidePage = () => (
                             },
                             {
                                 name: 'variant',
-                                desc: '강조 스타일. number 는 NumberBadge 래퍼가 내부에서 사용합니다.',
+                                desc: '강조 스타일.',
                                 def: "'solid-pastel'",
-                                control: 'solid-pastel | outline | solid | number',
+                                control: 'solid-pastel | outline | solid',
                             },
                             {
                                 name: 'shape',
