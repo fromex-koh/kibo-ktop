@@ -7,7 +7,7 @@ import {cn} from '@/lib/utils'
 //   · 좌측: [단계 제목(h1) + Stepper(진행 인디케이터)] 한 줄 + 그 아래 설명문.
 //   · 우측(상단): 다음 단계 미리보기 라벨 + 오른쪽 화살표(다음으로 진행됨을 암시).
 // 기존 컴포넌트 조합 — Stepper(composite) + lucide ArrowRight([NA-008]). 제목/설명은 시맨틱 요소 + typo-* 토큰.
-// 색: 제목 foreground(gray.900) · 설명 foreground-subtle(gray.500) · 다음단계 gray.200
+// 색: 제목 foreground(gray.900) · 설명 foreground-subtle(gray.500) · 다음단계 stepper-inactive(gray.200)
 //   (Stepper 의 '예정(before)' 단계와 동일한 inactive 톤 — 아직 도달 전 단계라 희미하게. 아직 활성화되지
 //    않은 UI 미리보기라 명도 대비 예외에 해당한다[KWCAG 5.3.3 / WCAG 1.4.3 inactive component].)
 // 간격은 Figma 그대로 — 제목↔스텝 gap-6(24px) · 제목행↔설명 gap-2(8px) · 라벨↔화살표 gap-2(8px).
@@ -34,7 +34,7 @@ const StepHeader = ({title, count, current, description, nextLabel, className, .
             {description ? <p className="typo-title-m-regular text-foreground-subtle">{description}</p> : null}
         </div>
         {nextLabel ? (
-            <p data-slot="step-header-next" className="flex shrink-0 items-center gap-2 text-gray-200">
+            <p data-slot="step-header-next" className="text-stepper-inactive flex shrink-0 items-center gap-2">
                 <span className="typo-title-l-medium">{nextLabel}</span>
                 <ArrowRight aria-hidden="true" className="size-icon-lg shrink-0" />
             </p>

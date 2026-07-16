@@ -48,7 +48,7 @@ const ScrollToTopButton = ({label = '맨 위로 이동', className}: ScrollToTop
             onClick={handleClick}
             aria-label={label}
             className={cn(
-                'z-sticky fixed right-6 bottom-6 rounded-full shadow-lg',
+                'z-sticky shadow-1 fixed right-6 bottom-6 rounded-full',
                 'motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-2 motion-safe:duration-300',
                 className,
             )}
