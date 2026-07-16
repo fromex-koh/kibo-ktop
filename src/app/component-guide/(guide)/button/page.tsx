@@ -29,6 +29,16 @@ const LOADING_CODE = `<Button variant="default" size="medium" aria-busy classNam
   로딩중
 </Button>`
 
+const DISABLED_ICON_CODE = `<Button variant="default" size="medium" disabled>
+  <Download aria-hidden="true" />
+  다운로드
+</Button>
+
+<Button variant="secondary" size="medium" disabled>
+  다음
+  <ArrowRight aria-hidden="true" />
+</Button>`
+
 // Figma 버튼 컴포넌트셋의 3 type. secondary 는 회색 solid 가 아니라 연한 블루 틴트+테두리 스타일이다.
 const TYPES = [
     {key: 'default', label: 'Primary', desc: '가장 강조되는 주요 액션(화면당 1개 권장)에 사용합니다.'},
@@ -394,6 +404,19 @@ const ButtonGuidePage = () => (
                     </Button>
                 ))}
             </div>
+            <div className="flex flex-wrap items-center gap-3">
+                {TYPES.map((type) => (
+                    <Button key={type.key} variant={type.key} size="medium" disabled>
+                        <Download aria-hidden="true" />
+                        {type.label}
+                    </Button>
+                ))}
+                <Button variant="secondary" size="medium" disabled>
+                    다음
+                    <ArrowRight aria-hidden="true" />
+                </Button>
+            </div>
+            <CodeBlock code={DISABLED_ICON_CODE} language="tsx" copyLabel="복사" />
         </section>
 
         <section aria-labelledby="button-loading" className="flex flex-col gap-4">

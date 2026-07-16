@@ -14,7 +14,7 @@ const buttonVariants = cva(
                 // secondary/tertiary는 bg/text/border/state 슬롯을 재매핑하고,
                 // disabled는 공통 control/disabled 계열 토큰으로 통일한다.
                 default:
-                    'bg-primary text-primary-foreground not-disabled:hover:bg-primary-hover not-disabled:active:bg-primary-pressed disabled:bg-control-disabled disabled:text-disabled disabled:opacity-100',
+                    'border-primary bg-primary text-primary-foreground not-disabled:hover:bg-primary-hover not-disabled:active:bg-primary-pressed disabled:border-control-disabled disabled:bg-control-disabled disabled:text-disabled disabled:opacity-100',
                 secondary:
                     'bg-secondary text-secondary-foreground border-secondary-strong not-disabled:hover:bg-secondary-hover not-disabled:hover:text-secondary-foreground-hover not-disabled:active:bg-secondary-pressed not-disabled:active:text-secondary-foreground-pressed disabled:bg-control-disabled disabled:border-disabled-subtle disabled:text-disabled disabled:opacity-100',
                 tertiary:
