@@ -503,7 +503,9 @@ const GROUP_USAGE: Record<string, ReactNode> = {
         <>
             <strong>키보드 포커스 링</strong> 색 — 버튼·인풋·링크 등 상호작용 요소가 포커스될 때 두르는 링에{' '}
             <code className="font-mono">focus-visible:ring-ring</code>. 키보드 접근성(KWCAG 6.1.2)의 포커스 표시라 모든
-            인터랙티브 요소에 필수다.
+            인터랙티브 요소에 필수다. Tabs 처럼 outline 을 컴포넌트 안쪽으로 넣어야 하는 경우에는 프로젝트 유틸{' '}
+            <code className="font-mono">focus-outline-inset</code>을 함께 사용한다(
+            <code className="font-mono">outline-offset: -0.25rem</code>).
         </>
     ),
     // ── 아래는 shadcn 표준에 없는 프로젝트 커스텀 슬롯 ──

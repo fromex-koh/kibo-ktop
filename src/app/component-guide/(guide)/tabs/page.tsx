@@ -92,7 +92,7 @@ const PROPS_ITEMS = [
 const TabsGuidePage = () => (
     <GuidePageShell
         title="탭 (Tabs)"
-        description="shadcn Tabs 프리미티브입니다. 원본에 이미 있던 line variant 스타일을 Figma 언더라인 탭 값으로 교체해 승격했습니다. line 탭은 TabsScrollArea 로 감싸, 화면이 좁아지거나 탭이 늘어나면 좌우 화살표 버튼(데스크톱·모바일 공통)으로 넘겨보고 가장자리가 페이드됩니다. 키보드 좌우 화살표로 탭을 옮기면 활성 탭이 중앙에 오도록 스크롤됩니다."
+        description="shadcn Tabs 프리미티브입니다. 원본에 이미 있던 line variant 스타일을 Figma 언더라인 탭 값으로 교체해 승격했습니다. line 탭은 TabsScrollArea 로 감싸, 화면이 좁아지거나 탭이 늘어나면 좌우 화살표 버튼(데스크톱·모바일 공통)으로 탭 하나 너비씩 이동합니다. 가장자리는 페이드로 표시되며 키보드 탐색 시 활성 탭은 중앙에 정렬됩니다."
     >
         <section aria-labelledby="tabs-line-usage" className="flex flex-col gap-4">
             <div>
