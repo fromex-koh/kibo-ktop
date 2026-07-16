@@ -25,9 +25,7 @@ const USAGE_CODE_ACTION = `<SectionHeader>
     * 표시 항목은 필수 입력 항목입니다.
   </SectionHeaderDescription>
   <SectionHeaderAction>
-    <Button variant="outline" size="sm">
-      최근 입력 정보 불러오기
-    </Button>
+    <Button variant="tertiary" size="small">수정</Button>
   </SectionHeaderAction>
 </SectionHeader>`
 
@@ -60,7 +58,9 @@ const SectionHeaderGuidePage = () => (
                 <p className="typo-body-l-regular text-muted-foreground">
                     <code className="font-mono">SectionHeaderAction</code> 을 넣으면 자동으로 제목/설명은 왼쪽, 액션은
                     오른쪽 2열 레이아웃이 된다(CSS <code className="font-mono">has-data-[slot=...]</code> 선택자 — JS
-                    분기 없음). 넣지 않으면 위 예시처럼 세로로만 쌓인다.
+                    분기 없음). 넣지 않으면 위 예시처럼 세로로만 쌓인다. 액션 버튼은 Figma 기준{' '}
+                    <code className="font-mono">variant=&quot;tertiary&quot;</code> ·{' '}
+                    <code className="font-mono">size=&quot;small&quot;</code>(40px) 이다.
                 </p>
             </div>
             <div className="border-border rounded-md border p-6">
@@ -68,8 +68,8 @@ const SectionHeaderGuidePage = () => (
                     <SectionHeaderTitle>기업정보</SectionHeaderTitle>
                     <SectionHeaderDescription>* 표시 항목은 필수 입력 항목입니다.</SectionHeaderDescription>
                     <SectionHeaderAction>
-                        <Button variant="outline" size="sm">
-                            최근 입력 정보 불러오기
+                        <Button variant="tertiary" size="small">
+                            수정
                         </Button>
                     </SectionHeaderAction>
                 </SectionHeader>
