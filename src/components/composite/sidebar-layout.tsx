@@ -3,7 +3,7 @@
 import {Fragment, type ReactNode} from 'react'
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
-import {ArrowUpRight, Blocks, ChevronRight, Component, Layers, LayoutGrid, Palette, Sparkles} from 'lucide-react'
+import {ArrowUpRight, Blocks, ChevronRight, Component, Layers, LayoutGrid, Palette, Pin, Sparkles} from 'lucide-react'
 import type {LucideIcon} from 'lucide-react'
 import type {GuideNavIconKey, GuideNavItem, GuideNavSection} from '@/constants/guide-nav'
 import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage} from '@/components/kit/breadcrumb'
@@ -208,7 +208,7 @@ const GuideNavSubItem = ({item}: {item: GuideNavItem}) => {
                 asChild
                 isActive={isActive}
                 aria-current={isActive ? 'page' : undefined}
-                className="hover:bg-primary-subtle active:bg-primary-subtle data-active:bg-primary-subtle rounded-none"
+                className="hover:bg-primary-subtle active:bg-primary-subtle data-active:bg-primary-subtle data-active:text-primary-strong rounded-none data-active:font-semibold"
             >
                 <Link
                     href={item.href}
@@ -219,6 +219,9 @@ const GuideNavSubItem = ({item}: {item: GuideNavItem}) => {
                           }
                         : {})}
                 >
+                    <span aria-hidden="true" className="size-icon-xs flex shrink-0 items-center justify-center">
+                        {isActive ? <Pin className="text-primary-strong size-icon-xs" /> : null}
+                    </span>
                     <span className="flex-1 truncate">{item.label}</span>
                     {item.external && (
                         <>

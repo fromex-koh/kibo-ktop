@@ -280,6 +280,55 @@ const TypographyGuidePage = () => (
             </p>
         </section>
 
+        <section aria-labelledby="typo-project-utilities" className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+                <h2 id="typo-project-utilities" className="typo-h4-bold">
+                    프로젝트 특수 타이포 유틸리티
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    대부분의 텍스트는 <code>typo-*</code> 조합을 우선 사용합니다. 다만 Header 유틸 링크처럼 기존
+                    컴포넌트 variant 위에 특정 자간만 덧씌워야 하는 경우, 목적이 드러나는 작은 유틸리티로 분리합니다.
+                </p>
+            </div>
+            <div className="border-border overflow-x-auto rounded-xl border">
+                <table className="w-full text-left">
+                    <caption className="sr-only">프로젝트 특수 타이포 유틸리티 목록</caption>
+                    <thead>
+                        <tr className="border-border bg-card border-b">
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                미리보기
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                클래스
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                값
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                사용처
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr className="border-border border-b last:border-b-0">
+                            <td className="px-4 py-3 whitespace-nowrap">
+                                <span className="tracking-header-link font-medium">{PREVIEW_SAMPLE}</span>
+                            </td>
+                            <th scope="row" className="px-4 py-3 text-left font-normal">
+                                <CopyChip value="tracking-header-link" />
+                            </th>
+                            <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
+                                letter-spacing: -0.035rem (-0.56px)
+                            </td>
+                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
+                                Header 상단 유틸 링크의 Button text variant 보정.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         {/* 타이포그래피 스케일 — typo-* 유틸리티가 묶어 적용하는 값(토큰)을 Figma 분류별 표로 나눈다 */}
         <section aria-labelledby="typo-tokens" className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
