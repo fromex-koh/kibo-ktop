@@ -1,6 +1,6 @@
 'use client'
 
-import type {ReactNode} from 'react'
+import {Fragment, type ReactNode} from 'react'
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
 import {ArrowUpRight, Blocks, ChevronRight, Component, Layers, LayoutGrid, Palette, Sparkles} from 'lucide-react'
@@ -50,8 +50,11 @@ const SECTION_ICONS: Record<GuideNavIconKey, LucideIcon> = {
     component: Component,
 }
 
-// 반복 영역(내비) 건너뛰고 본문으로 (KWCAG 6.4.1). 모바일 메뉴 진입은 헤더의 SidebarTrigger 로 한다.
-const SKIP_LINKS: readonly SkipLinkItem[] = [{href: '#main', label: '본문 바로가기'}]
+// 반복 영역 건너뛰기 링크(KWCAG 6.4.1). 모바일 메뉴 진입은 헤더의 SidebarTrigger 로 한다.
+const SKIP_LINKS: readonly SkipLinkItem[] = [
+    {href: '#sidebar-navigation', label: '사이드메뉴 바로가기'},
+    {href: '#main', label: '본문 바로가기'},
+]
 
 const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutProps) => {
     const pathname = usePathname()
@@ -59,10 +62,10 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
     // 현재 라우트가 속한 (섹션, 항목) — 상단 브레드크럼(카테고리 > 현재)과 섹션 기본 펼침에 쓴다.
     const activeCrumb = navSections
         .flatMap((section) => {
-            const sectionItems = section.items?.map((item) => ({category: section.title, ...item})) ?? []
+            const sectionItems = section.items?.map((item) => ({categories: [section.title], ...item})) ?? []
             const groupItems =
                 section.groups?.flatMap((group) =>
-                    group.items.map((item) => ({category: `${section.title} · ${group.title}`, ...item})),
+                    group.items.map((item) => ({categories: [section.title, group.title], ...item})),
                 ) ?? []
             return [...sectionItems, ...groupItems]
         })
@@ -71,7 +74,7 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
     return (
         <SidebarProvider>
             <SkipNav links={SKIP_LINKS} />
-            <Sidebar aria-label={navLabel}>
+            <Sidebar id="sidebar-navigation" tabIndex={-1} aria-label={navLabel}>
                 {/* 브랜드 헤더 — 로고 + 타이틀 + 버전. 홈으로 가는 링크를 겸한다(문서형 사이드바 관례). */}
                 <SidebarHeader>
                     <SidebarMenu>
@@ -161,8 +164,12 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                     {activeCrumb ? (
                         <Breadcrumb>
                             <BreadcrumbList>
-                                <BreadcrumbItem>{activeCrumb.category}</BreadcrumbItem>
-                                <BreadcrumbDotSeparator />
+                                {activeCrumb.categories.map((category) => (
+                                    <Fragment key={category}>
+                                        <BreadcrumbItem>{category}</BreadcrumbItem>
+                                        <BreadcrumbDotSeparator />
+                                    </Fragment>
+                                ))}
                                 <BreadcrumbItem>
                                     <BreadcrumbPage>{activeCrumb.label}</BreadcrumbPage>
                                 </BreadcrumbItem>

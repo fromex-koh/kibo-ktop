@@ -375,7 +375,7 @@ const PublishingIndex = () => {
             {/* 사이트 구조 정보 (선택된 사용자 유형으로 필터된 표) — 표의 caption 이 표 자체를 설명한다. */}
             <div className="bg-background border-border overflow-x-auto rounded-md border">
                 <table className="w-full text-left">
-                    <caption className="sr-only">사이트 구조별 화면 ID·상태·버전 예시</caption>
+                    <caption className="sr-only">사이트 구조별 상태·버전 예시</caption>
                     <thead>
                         <tr className="border-border border-b bg-gray-100/25">
                             {depthHeaders.map((header) => (
@@ -383,9 +383,6 @@ const PublishingIndex = () => {
                                     {header}
                                 </th>
                             ))}
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                화면 ID
-                            </th>
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 상태
                             </th>
@@ -439,9 +436,6 @@ const PublishingIndex = () => {
                                             </th>
                                         )
                                     })}
-                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {leaf.screenId}
-                                    </td>
                                     <td className="px-4 py-3">
                                         <StatusTag status={leaf.status} />
                                     </td>
