@@ -34,7 +34,7 @@ yarn dev        # ← 이 첫 실행이 자동 생성 파일을 만들어 줍니
 - **컴포넌트 폴더 구조(레이어)** — 화면·도메인 코드는 항상 `kit/`·`composite/`·`custom/` **창구로 import**하고 `ui/` 를 직접 쓰지 않는다.
     - `src/components/ui/` — shadcn 원본(vendored). **손대지 않음**(게이트 면제).
     - `src/components/kit/` — `ui/` 승격 창구(styled copy + facade). 프리미티브 1:1.
-    - `src/components/composite/` — `kit` 을 **조합**한 도메인 컴포넌트(header · page-header · section-header · sidebar-layout · theme-toggle 등).
+    - `src/components/composite/` — `kit` 을 **조합**한 도메인 컴포넌트(header · section-header · sidebar-layout · theme-toggle 등).
     - `src/components/custom/` — 프리미티브 **미사용 자체 구현**(icon · publishing-index).
     - `src/components/guide/` — 컴포넌트 가이드/데모 전용(code-block · copy-chip · guide-page-shell 등).
     - `src/components/theme-provider.tsx` — next-themes provider 래퍼(루트).

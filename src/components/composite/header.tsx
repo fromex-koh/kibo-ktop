@@ -16,7 +16,7 @@ import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
 import logoImg from '../../../public/logo.svg'
 
 // 사이트 최상단 헤더 — Figma "헤더" 프레임을 그대로 옮긴 도메인 합성 컴포넌트.
-// shadcn 에는 Header primitive 가 없어(헤더는 항상 합성) PageHeader·SectionHeader 처럼
+// shadcn 에는 Header primitive 가 없어(헤더는 항상 합성) SectionHeader 처럼
 // src/components/composite 에 두고(kit primitive 를 조합한 L2 레이어), NavigationMenu·ToggleGroup·Sheet 로 조립한다.
 //
 // Figma 구조를 2줄로 재현한다:

@@ -1,10 +1,9 @@
 import type {ComponentPropsWithoutRef} from 'react'
 import {cn} from '@/lib/utils'
 
-// 섹션 상단의 제목+설명(+선택적 액션) 묶음 — PageHeader/Card 와 같은 합성(compound) 컴포넌트 API.
-// 페이지 전체 타이틀(PageHeader, h1)보다 한 단계 아래인 섹션 타이틀에 쓴다(h2). 타이포 조합은
-// 고정값(Heading/H4/bold + Body/XL/Regular)이라 PageHeader 와 달리 variant 가 없다. 텍스트 색은
-// PageHeader 와 동일하게 text-foreground(제목)·text-foreground-subtle(설명).
+// 섹션 상단의 제목+설명(+선택적 액션) 묶음 — Card 와 같은 합성(compound) 컴포넌트 API.
+// 페이지 안의 섹션 타이틀에 쓰므로 h2 로 렌더한다. 텍스트 색은
+// text-foreground(제목)·text-foreground-subtle(설명)을 사용한다.
 // SectionHeaderAction 유무는 CardHeader/CardAction 과 같은 방식(has-data-[slot=...] CSS 선택자)으로
 // 처리한다 — JS 분기 없이, 액션을 넣으면 자동으로 title/description 왼쪽 + action 오른쪽 2열 그리드가 되고
 // 넣지 않으면 title/description 만 세로로 쌓인다.

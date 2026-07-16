@@ -247,7 +247,7 @@ styled copy 에서 shadcn 원본과 다른 스타일을 남겨야 할 때는 코
 - **`composite/` 에 두는 것** — kit primitive 를 **조합**하거나 디자인 시스템 위에서 **자체 합성(compound)** 한 우리
   컴포넌트. primitive 가 아니므로 `ui/`(순정 전용)·`kit/`(primitive 1:1 창구) 어디에도 넣을 수 없다.
   예: `header`(NavigationMenu·ToggleGroup·Sheet·Button 조합) · `theme-toggle`(Button + 테마 로직) · `sidebar-layout`
-  · `page-header` · `section-header` · `sub-section-header` · `panel`.
+  · `section-header` · `sub-section-header` · `panel`.
 - **`composite/` 에 두지 않는 것** — provider(`theme-provider`) · 아이콘 시스템(`icon`·`icon-registry`) · 특정 화면
   전용 feature(`publishing-index`) 는 성격이 달라 `src/components` 최상위(또는 각자 폴더)에 둔다. 가이드 화면 전용은 `guide/`.
 - **import 규칙** — 화면·도메인 코드는 `@/components/composite/<name>` 로 import 한다. composite 내부에서 조합 대상

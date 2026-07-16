@@ -79,7 +79,6 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 title: '페이지 구조',
                 items: [
                     {label: 'Header', href: '/component-guide/header'},
-                    {label: 'PageHeader', href: '/component-guide/page-header'},
                     {label: 'PageTitleBar', href: '/component-guide/page-title-bar'},
                     {label: 'Breadcrumb', href: '/component-guide/breadcrumb'},
                     {label: 'SkipNav', href: '/component-guide/skip-nav'},

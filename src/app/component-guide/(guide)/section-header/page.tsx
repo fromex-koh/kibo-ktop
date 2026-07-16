@@ -31,9 +31,8 @@ const USAGE_CODE_ACTION = `<SectionHeader>
   </SectionHeaderAction>
 </SectionHeader>`
 
-// 섹션 헤더 — 페이지 안 개별 섹션의 제목+설명 묶음 컴포넌트. PageHeader(h1, 페이지 전체 타이틀)
-// 보다 한 단계 아래 레벨(h2)로, 타이포 조합은 고정값(Heading/H4/bold + Body/XL/Regular)이라
-// variant 가 없다. 텍스트 색은 PageHeader 와 동일하게 text-foreground·text-foreground-subtle.
+// 섹션 헤더 — 페이지 안 개별 섹션의 제목+설명 묶음 컴포넌트.
+// 섹션 타이틀이므로 h2 를 쓰고, text-foreground·text-foreground-subtle 토큰을 사용한다.
 const SectionHeaderGuidePage = () => (
     <GuidePageShell
         title="섹션 헤더 (SectionHeader)"
