@@ -299,6 +299,25 @@ tokens.json  semantic(=shadcn 표준 슬롯명)   →  yarn tokens  →  src/app
 - 상태색(`success`/`warning`/`info`) 등 shadcn 에 없는 역할이 필요하면 **표준 슬롯을 지우지 말고 새 슬롯을
   추가**한다(tokens.json semantic 에 키 추가).
 
+### `card` 와 `surface` 사용 규칙
+
+`card` 는 shadcn 표준 슬롯이고, `surface` 는 프로젝트 확장 슬롯이다. 현재 light mode 에서는 둘 다
+`common.white` 를 참조할 수 있지만, **값이 같다는 이유로 둘을 합치지 않는다.** 두 슬롯은 "현재 색"이 아니라
+**미래에 달라질 수 있는 역할**을 분리하기 위해 둔다.
+
+- **`bg-card` 사용** — Card·BaseCard·FormCard·Dialog/Popover content 처럼 독립된 카드/패널/컨테이너 배경.
+  shadcn 이 이미 표준으로 제공하는 "떠 있는 면" 역할이다.
+- **`bg-surface` 사용** — 카드가 아닌 기본 흰 표면. Input·Select·Combobox·Checkbox·Radio·Chip·SelectableCard
+  처럼 컨트롤 또는 선택 UI 자체의 바탕 면에 쓴다.
+
+정리 기준:
+
+- 컴포넌트가 의미적으로 **카드/패널**이면 `bg-card`.
+- 컴포넌트가 의미적으로 **컨트롤 표면**이면 `bg-surface`.
+- 두 값이 현재 같더라도 사용처의 의미가 다르면 그대로 분리한다.
+- 디자인에서 카드 배경과 컨트롤 표면이 실제로 달라질 경우, `tokens.json` 의 `surface` 값만 바꾸면 컨트롤 표면만
+  함께 이동한다.
+
 ---
 
 ## vendored 파일(shadcn 다운로드) — 순정 유지 + 게이트 면제
