@@ -7,7 +7,7 @@ import {BreadcrumbSeparator} from '@/components/kit/breadcrumb'
 // li 를 inline-flex items-center 로 둬 4px 점을 인접 텍스트와 세로 중앙 정렬한다(순수 스타일).
 const BreadcrumbDotSeparator = (props: ComponentProps<typeof BreadcrumbSeparator>) => (
     <BreadcrumbSeparator className="inline-flex items-center" {...props}>
-        <span className="bg-input size-1 shrink-0 rounded-full" />
+        <span className="bg-separator-dot size-1 shrink-0 rounded-full" />
     </BreadcrumbSeparator>
 )
 

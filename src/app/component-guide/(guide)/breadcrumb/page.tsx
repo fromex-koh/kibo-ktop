@@ -14,7 +14,7 @@ import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-sepa
 
 export const metadata: Metadata = {title: '브레드크럼 (Breadcrumb)'}
 
-// Figma "브레드크럼" 컨테이너 — 흰 알약(rounded-full) + 그림자 + 좌우 40px·상하 16px 패딩.
+// Figma "브레드크럼" 컨테이너 — bg-surface 알약(rounded-full) + shadow-1 + 좌우 40px·상하 16px 패딩.
 const PILL = 'inline-flex items-center rounded-full bg-surface px-10 py-4 shadow-1'
 
 const USAGE_CODE = `<div className="inline-flex items-center rounded-full bg-surface px-10 py-4 shadow-1">
@@ -40,21 +40,21 @@ const USAGE_CODE = `<div className="inline-flex items-center rounded-full bg-sur
 // 조합 API 설명 — [이름, 설명]
 const COMPOSITION = [
     ['Breadcrumb', '<nav aria-label="breadcrumb"> 래퍼.'],
-    ['BreadcrumbList', '항목들을 감싸는 <ol>. 16px·label-foreground·항목 간 12px.'],
+    ['BreadcrumbList', '항목들을 감싸는 <ol>. typo-body-xl-regular·label-foreground·항목 간 12px.'],
     ['BreadcrumbItem', '한 항목 <li>.'],
     ['BreadcrumbLink', '이동 가능한 항목(<a>). hover 시 진해진다.'],
-    ['BreadcrumbPage', '현재 페이지(이동 불가). 굵게 + foreground, aria-current="page".'],
+    ['BreadcrumbPage', '현재 페이지(이동 불가). typo-body-xl-bold + foreground, aria-current="page".'],
     ['BreadcrumbSeparator', '구분자. kit 은 원본 그대로(기본 chevron). children 으로 교체 가능.'],
     ['BreadcrumbDotSeparator', '프로젝트 표준 점(·) 구분자(composite). kit Separator 에 점을 주입한 조합.'],
     ['BreadcrumbEllipsis', '경로가 길 때 중간을 … 로 접는 표시.'],
 ] as const
 
-// 브레드크럼 — shadcn Breadcrumb 를 Figma 스타일(점 구분자·16px·굵은 현재)로 승격한 styled copy.
-// Figma 는 흰 알약(rounded-full + 그림자) 컨테이너에 담고, 현재 페이지에 드롭다운 화살표(⌄)를 붙인다.
+// 브레드크럼 — shadcn Breadcrumb 를 프로젝트 스타일(점 구분자·토큰 타이포·현재 페이지 강조)로 승격한 styled copy.
+// Figma 는 bg-surface 알약(rounded-full + shadow-1) 컨테이너에 담고, 현재 페이지에 드롭다운 화살표(⌄)를 붙인다.
 const BreadcrumbGuidePage = () => (
     <GuidePageShell
         title="브레드크럼 (Breadcrumb)"
-        description="현재 위치의 상위 경로를 보여주는 내비게이션입니다. 흰 알약(그림자) 안에 담고 항목은 점(·)으로 구분하며, 현재 페이지는 굵게 표시합니다."
+        description="현재 위치의 상위 경로를 보여주는 내비게이션입니다. bg-surface 알약(shadow-1) 안에 담고 항목은 점(·)으로 구분하며, 현재 페이지는 typo-body-xl-bold로 표시합니다."
     >
         <section aria-labelledby="bc-main" className="flex flex-col gap-4">
             <div>
@@ -62,8 +62,8 @@ const BreadcrumbGuidePage = () => (
                     기본 (Figma)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    흰 알약(<code className="font-mono">rounded-full</code> +{' '}
-                    <code className="font-mono">shadow-1</code>) 컨테이너 · 점 구분자 · 링크(중간)와 굵은 현재 페이지 ·
+                    <code className="font-mono">bg-surface</code> 알약(<code className="font-mono">rounded-full</code> +{' '}
+                    <code className="font-mono">shadow-1</code>) 컨테이너 · 점 구분자 · 링크(중간)와 현재 페이지 강조 ·
                     현재 페이지의 드롭다운 화살표(⌄)까지 Figma 그대로입니다.
                 </p>
             </div>

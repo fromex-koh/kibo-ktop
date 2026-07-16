@@ -136,6 +136,7 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'subtle-3': 'bg-subtle-3',
     input: 'bg-input',
     ring: 'bg-ring',
+    'separator-dot': 'bg-separator-dot',
     'chart-1': 'bg-chart-1',
     'chart-2': 'bg-chart-2',
     'chart-3': 'bg-chart-3',
@@ -285,6 +286,7 @@ const CUSTOM_GROUPS: Group[] = [
             n === 'control-disabled-subtle' ||
             n === 'field-disabled',
     },
+    {name: 'separator-dot', match: (n) => n === 'separator-dot'},
     {
         name: '상태 (success / warning / error / info)',
         match: (n) => ['success', 'warning', 'error', 'info'].some((s) => n === s || n === `${s}-foreground`),
@@ -579,6 +581,13 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             <code className="font-mono">bg-control-disabled-subtle</code>(white)는 Tertiary Button처럼 표면형 컨트롤의
             disabled 배경에, <code className="font-mono">bg-field-disabled</code>(gray.50)는 Input·Textarea 같은 입력
             필드 배경에, <code className="font-mono">border-disabled-subtle</code>(gray.200)는 disabled 테두리에 쓴다.
+        </>
+    ),
+    'separator-dot': (
+        <>
+            <strong>작은 점 구분자</strong> 색 — Breadcrumb 같은 1depth 경로 구분자 dot에{' '}
+            <code className="font-mono">bg-separator-dot</code>(gray.200)을 쓴다. shadcn 입력 호환 슬롯인{' '}
+            <code className="font-mono">input</code>과 역할이 달라 별도 프로젝트 슬롯으로 분리한다.
         </>
     ),
     '상태 (success / warning / error / info)': (

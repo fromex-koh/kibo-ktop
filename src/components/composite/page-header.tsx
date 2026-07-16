@@ -6,10 +6,9 @@ import {cn} from '@/lib/utils'
 // 합성(compound) 컴포넌트 API. shadcn 의 최신 컴포넌트 관례를 그대로 따른다:
 //   1) cn() 로 className 병합(twMerge·undefined 안전), 2) 모든 요소에 data-slot 부여(슬롯 타깃팅),
 //   3) 변형은 cva() 로 정의(button/badge 의 *Variants 패턴).
-// 다만 타이포 '값'은 프로젝트 토큰 시스템(typo-*)을 유지한다 — shadcn 은 타이포 컴포넌트를 제공하지
-// 않고("We do not ship any typography styles by default") text-4xl·font-extrabold 같은 하드코딩 유틸
-// 예시만 주므로, 그걸 도입하면 토큰 단일소스·대비검증·반응형([PB-01/07/08])을 오히려 깬다.
-// shadcn 권고 중 토큰과 무관한 부분(제목 text-balance = 줄바꿈 균형)만 취한다.
+// 색은 text-foreground/text-foreground-subtle, 타이포는 프로젝트 typo-* 토큰을 사용한다.
+// shadcn 은 타이포 컴포넌트를 제공하지 않으므로, text-4xl·font-extrabold 같은 하드코딩 유틸 대신
+// 프로젝트 토큰 단일소스를 유지한다. 제목 text-balance 는 줄바꿈 균형용 순수 구조 유틸이다.
 
 // default — 일반 페이지: Display/L/bold + Title/L/Regular.
 // compact — 밀도 높은 페이지(폼 많은 페이지): 반응형 전환(모바일 Heading/H4·Body/XL → md(≥768)↑ Display/M·Title/L).

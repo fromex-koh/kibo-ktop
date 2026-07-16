@@ -39,7 +39,7 @@ const USAGE_CODE = `<PageTitleBar
 const PROPS_ITEMS = [
     ['title', '페이지 제목. 최상단 제목이라 h1 로 렌더됩니다.', 'ReactNode'],
     ['badge', '제목 옆 분류 배지 슬롯(<Badge> 조합, 선택).', 'ReactNode'],
-    ['breadcrumb', '우측 위치 표시 슬롯(<Breadcrumb> 조합). 흰 알약 컨테이너로 감싸 렌더(선택).', 'ReactNode'],
+    ['breadcrumb', '우측 위치 표시 슬롯(<Breadcrumb> 조합). bg-surface 알약 컨테이너로 감싸 렌더(선택).', 'ReactNode'],
     ['className', '추가 클래스명으로 스타일 확장.', 'string'],
 ] as const
 
@@ -77,7 +77,7 @@ const PageTitleBarGuidePage = () => (
                 <p className="typo-body-l-regular text-muted-foreground">
                     <code className="font-mono">title</code> 옆에 <code className="font-mono">Badge</code> 를,{' '}
                     <code className="font-mono">breadcrumb</code> 슬롯에 <code className="font-mono">Breadcrumb</code>{' '}
-                    를 꽂아 조합합니다. 브레드크럼은 흰 알약 컨테이너로 감싸 렌더됩니다.
+                    를 꽂아 조합합니다. 브레드크럼은 bg-surface + shadow-1 알약 컨테이너로 감싸 렌더됩니다.
                 </p>
             </div>
             <div className="border-border rounded-md border p-6">
