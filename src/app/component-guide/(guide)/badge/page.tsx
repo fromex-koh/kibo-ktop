@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Badge} from '@/components/kit/badge'
+import {Badge} from '@/components/ui/badge'
 
 export const metadata: Metadata = {title: '배지 (Badge)'}
 

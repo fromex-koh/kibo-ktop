@@ -5,8 +5,8 @@ import GuidePageShell from '@/components/guide/guide-page-shell'
 import {BaseCard} from '@/components/composite/base-card'
 import {ChipCheckbox, ChipCheckboxGroup, ChipRadio, ChipRadioGroup} from '@/components/composite/chip'
 import {ListMarker} from '@/components/custom/list-marker'
-import {Badge} from '@/components/kit/badge'
-import {Button} from '@/components/kit/button'
+import {Badge} from '@/components/ui/badge'
+import {Button} from '@/components/ui/button'
 
 export const metadata: Metadata = {title: '칩 (Chip)'}
 

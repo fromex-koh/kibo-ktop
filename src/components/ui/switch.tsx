@@ -1,33 +1,40 @@
-"use client"
+'use client'
 
-import * as React from "react"
-import { Switch as SwitchPrimitive } from "radix-ui"
+import * as React from 'react'
+import {CheckIcon, XIcon} from 'lucide-react'
+import {Switch as SwitchPrimitive} from 'radix-ui'
+import {switchRootClassName, switchThumbClassName} from '@/components/theme/switch.variants'
+import {cn} from '@/lib/utils'
 
-import { cn } from "@/lib/utils"
+type SwitchSize = 'large' | 'medium' | 'small' | 'default' | 'sm' | 'xsmall' | '2xsmall'
 
-function Switch({
-  className,
-  size = "default",
-  ...props
-}: React.ComponentProps<typeof SwitchPrimitive.Root> & {
-  size?: "sm" | "default"
-}) {
-  return (
-    <SwitchPrimitive.Root
-      data-slot="switch"
-      data-size={size}
-      className={cn(
-        "peer group/switch relative inline-flex shrink-0 items-center rounded-full border border-transparent transition-all outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 data-[size=default]:h-[18.4px] data-[size=default]:w-[32px] data-[size=sm]:h-[14px] data-[size=sm]:w-[24px] dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 data-checked:bg-primary data-unchecked:bg-input dark:data-unchecked:bg-input/80 data-disabled:cursor-not-allowed data-disabled:opacity-50",
-        className
-      )}
-      {...props}
-    >
-      <SwitchPrimitive.Thumb
-        data-slot="switch-thumb"
-        className="pointer-events-none block rounded-full bg-background ring-0 transition-transform group-data-[size=default]/switch:size-4 group-data-[size=sm]/switch:size-3 group-data-[size=default]/switch:data-checked:translate-x-[calc(100%-2px)] group-data-[size=sm]/switch:data-checked:translate-x-[calc(100%-2px)] dark:data-checked:bg-primary-foreground group-data-[size=default]/switch:data-unchecked:translate-x-0 group-data-[size=sm]/switch:data-unchecked:translate-x-0 dark:data-unchecked:bg-foreground"
-      />
-    </SwitchPrimitive.Root>
-  )
+// PROJECT-STYLE: shadcn Switch 셸은 유지하고 프로젝트 크기·상태 스타일은 theme에서 주입한다.
+function Switch({className, size = 'large', ...props}: React.ComponentProps<typeof SwitchPrimitive.Root> & {size?: SwitchSize}) {
+    const visualSize = size === 'default' ? 'large' : size === 'sm' || size === '2xsmall' ? 'small' : size === 'xsmall' ? 'medium' : size
+    return (
+        <SwitchPrimitive.Root
+            data-slot="switch"
+            data-size={visualSize}
+            className={cn(
+                switchRootClassName,
+                'data-[size=large]:h-control-h-md data-[size=medium]:h-control-h-sm data-[size=small]:h-control-h-xs data-[size=large]:w-18 data-[size=medium]:w-16 data-[size=small]:w-14',
+                className,
+            )}
+            {...props}
+        >
+            <SwitchPrimitive.Thumb
+                data-slot="switch-thumb"
+                className={cn(
+                    switchThumbClassName,
+                    'group-data-[size=large]/switch:size-8 group-data-[size=medium]/switch:size-7 group-data-[size=small]/switch:size-6',
+                    'group-data-[size=large]/switch:data-[state=checked]:translate-x-8 group-data-[size=medium]/switch:data-[state=checked]:translate-x-7 group-data-[size=small]/switch:data-[state=checked]:translate-x-6 data-[state=unchecked]:translate-x-0',
+                )}
+            >
+                <CheckIcon aria-hidden="true" className="group-data-disabled/switch:text-disabled hidden size-5 group-data-[size=small]/switch:size-4 group-data-[state=checked]/thumb:block" strokeWidth={3} />
+                <XIcon aria-hidden="true" className="group-data-disabled/switch:text-disabled block size-5 group-data-[size=small]/switch:size-4 group-data-[state=checked]/thumb:hidden" strokeWidth={2.75} />
+            </SwitchPrimitive.Thumb>
+        </SwitchPrimitive.Root>
+    )
 }
 
-export { Switch }
+export {Switch}

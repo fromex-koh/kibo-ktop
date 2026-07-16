@@ -2,7 +2,7 @@
 
 import {useState} from 'react'
 import {SelectableCard, SelectableCardGroup} from '@/components/composite/selectable-card'
-import {Badge} from '@/components/kit/badge'
+import {Badge} from '@/components/ui/badge'
 
 // 우측 뱃지 — 필수(파란 아웃라인)·선택(회색 아웃라인).
 const RequiredBadge = () => (

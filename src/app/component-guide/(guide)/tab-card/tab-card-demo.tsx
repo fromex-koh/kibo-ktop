@@ -4,7 +4,7 @@ import {useState} from 'react'
 import {FormCard} from '@/components/composite/form-card'
 import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
 import {TabCard, TabCardList, type TabCardStatus} from '@/components/composite/tab-card'
-import {Button} from '@/components/kit/button'
+import {Button} from '@/components/ui/button'
 
 // Figma "입력타겟" 데이터 — 섹션 제목 + 작성 상태.
 const SECTIONS: {id: string; title: string; status: TabCardStatus}[] = [

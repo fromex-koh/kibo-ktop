@@ -3,8 +3,8 @@
 import {useEffect, useRef, useState} from 'react'
 import type {ComponentPropsWithoutRef} from 'react'
 import {ChevronLeft, ChevronRight} from 'lucide-react'
-import {Button} from '@/components/kit/button'
-import {TabsList} from '@/components/kit/tabs'
+import {Button} from '@/components/ui/button'
+import {TabsList} from '@/components/ui/tabs'
 import {cn} from '@/lib/utils'
 
 // 좌우 스크롤 탭(TabsScrollArea) — 탭이 많아 폭을 넘칠 때, 좌우 화살표 버튼으로 넘겨보는 TabsList(variant="line")

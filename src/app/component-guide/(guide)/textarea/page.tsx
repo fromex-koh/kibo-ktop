@@ -1,8 +1,8 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Label} from '@/components/kit/label'
-import {Textarea} from '@/components/kit/textarea'
+import {Label} from '@/components/ui/label'
+import {Textarea} from '@/components/ui/textarea'
 
 export const metadata: Metadata = {title: '텍스트에어리어 (Textarea)'}
 

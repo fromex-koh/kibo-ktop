@@ -2,7 +2,7 @@ import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {BaseCard} from '@/components/composite/base-card'
-import {Separator} from '@/components/kit/separator'
+import {Separator} from '@/components/ui/separator'
 
 export const metadata: Metadata = {title: '구분선 (Separator)'}
 

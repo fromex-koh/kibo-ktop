@@ -2,7 +2,7 @@ import type {Metadata} from 'next'
 import {CircleAlert, CircleCheck, Info, TriangleAlert} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Alert, AlertDescription, AlertTitle} from '@/components/kit/alert'
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
 
 export const metadata: Metadata = {title: '알림 (Alert)'}
 

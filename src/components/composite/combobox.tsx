@@ -3,8 +3,8 @@
 import type {ComponentPropsWithoutRef} from 'react'
 import {useId, useState} from 'react'
 import {CheckIcon, ChevronDownIcon} from 'lucide-react'
-import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from '@/components/kit/command'
-import {Popover, PopoverContent, PopoverTrigger} from '@/components/kit/popover'
+import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from '@/components/ui/command'
+import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
 import {cn} from '@/lib/utils'
 
 // 콤보박스(Combobox) — 검색으로 걸러 하나를 고르는 선택 컨트롤(L2 composite).

@@ -1,7 +1,7 @@
 'use client'
 
 import {useSyncExternalStore} from 'react'
-import {Badge} from '@/components/kit/badge'
+import {Badge} from '@/components/ui/badge'
 import tokens from '@tokens'
 
 // 브레이크포인트 오름차순 정렬 — 예: [['md', 768], ['xl', 1280]]

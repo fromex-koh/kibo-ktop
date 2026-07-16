@@ -2,7 +2,7 @@
 
 import {useEffect, useRef, useState} from 'react'
 import {Check, Copy} from 'lucide-react'
-import {Badge} from '@/components/kit/badge'
+import {Badge} from '@/components/ui/badge'
 
 // 클릭하면 값(유틸리티 클래스명·토큰명 등)을 클립보드에 복사하는 모노 칩.
 // 버튼이라 키보드(Enter/Space)로도 동작하고, 복사 성공은 아이콘 교체 + aria-live 로 알린다.

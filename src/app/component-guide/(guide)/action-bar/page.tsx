@@ -4,7 +4,7 @@ import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {ActionBar, ActionBarCenter, ActionBarEnd, ActionBarStart} from '@/components/composite/action-bar'
 import {BaseCard} from '@/components/composite/base-card'
-import {Button} from '@/components/kit/button'
+import {Button} from '@/components/ui/button'
 
 export const metadata: Metadata = {title: '액션 바 (ActionBar)'}
 

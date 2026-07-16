@@ -2,8 +2,8 @@
 
 import type {ComponentProps, ReactNode} from 'react'
 import {createContext, useContext} from 'react'
-import {Checkbox} from '@/components/kit/checkbox'
-import {RadioGroup, RadioGroupItem} from '@/components/kit/radio-group'
+import {Checkbox} from '@/components/ui/checkbox'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {cn} from '@/lib/utils'
 
 // PROJECT-COMPOSITE: kit Radio/Checkbox primitive를 카드형 선택 패턴으로 조합한다.

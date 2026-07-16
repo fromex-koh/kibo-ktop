@@ -5,7 +5,7 @@ import {
     SectionHeaderDescription,
     SectionHeaderTitle,
 } from '@/components/composite/section-header'
-import {Card, CardContent} from '@/components/kit/card'
+import {Card, CardContent} from '@/components/ui/card'
 import {cn} from '@/lib/utils'
 
 // 폼 카드 — kit Card 를 감싼 넓은 폼 섹션 카드(L2 composite). 패딩이 24px 인 일반 카드는 BaseCard 를 쓴다.

@@ -1,0 +1,4 @@
+const shadcnSelectTriggerClassName = 'inline-flex h-9 w-full items-center justify-between rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs outline-none focus:bg-accent focus:text-accent-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:cursor-not-allowed disabled:opacity-50'
+const shadcnSelectContentClassName = 'bg-popover text-popover-foreground relative z-50 max-h-(--radix-select-content-available-height) min-w-32 overflow-x-hidden overflow-y-auto rounded-md border shadow-md'
+const shadcnSelectItemClassName = 'focus:bg-accent focus:text-accent-foreground relative flex w-full cursor-default items-center rounded-sm py-1.5 pr-8 pl-2 text-sm outline-none select-none'
+export {shadcnSelectTriggerClassName, shadcnSelectContentClassName, shadcnSelectItemClassName}

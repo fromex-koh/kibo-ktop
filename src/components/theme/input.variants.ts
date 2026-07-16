@@ -1,0 +1,3 @@
+const inputClassName =
+    'h-control-h-lg border-control bg-surface text-label-foreground focus-visible:border-primary focus-visible:outline-ring w-full min-w-0 rounded-sm border px-4 text-base transition-colors outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid placeholder:text-placeholder disabled:placeholder:text-disabled aria-invalid:border-destructive read-only:bg-field-disabled disabled:border-control disabled:bg-field-disabled disabled:text-disabled disabled:cursor-not-allowed disabled:opacity-100 file:text-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium'
+export {inputClassName}

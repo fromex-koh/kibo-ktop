@@ -12,8 +12,8 @@ import {
     type StructureGroup,
     type StructureNode,
 } from '@/content'
-import {Badge} from '@/components/kit/badge'
-import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
+import {Badge} from '@/components/ui/badge'
+import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
 
 // isCurrent(이번 릴리스에서 변경됨) 하이라이트는 자산 표·공통 레이아웃 표·화면 표가 모두 같은
 // 방식(배경색 + 아이콘 + sr-only 텍스트)을 쓰므로, 버전 셀 하나를 공용 컴포넌트로 뺀다.

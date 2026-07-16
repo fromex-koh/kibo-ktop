@@ -6,11 +6,11 @@ import {usePathname} from 'next/navigation'
 import {ArrowUpRight, Blocks, ChevronRight, Component, Layers, LayoutGrid, Palette, Pin, Sparkles} from 'lucide-react'
 import type {LucideIcon} from 'lucide-react'
 import type {GuideNavIconKey, GuideNavItem, GuideNavSection} from '@/constants/guide-nav'
-import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage} from '@/components/kit/breadcrumb'
+import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage} from '@/components/ui/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import ThemeToggle from '@/components/composite/theme-toggle'
-import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/kit/collapsible'
+import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/ui/collapsible'
 import {
     Sidebar,
     SidebarContent,
@@ -26,7 +26,7 @@ import {
     SidebarMenuSubItem,
     SidebarProvider,
     SidebarTrigger,
-} from '@/components/kit/sidebar'
+} from '@/components/ui/sidebar'
 
 // 공용 사이드 레이아웃 셸 — shadcn 공식 Sidebar(문서형: 브랜드 헤더 + submenu 나비 + 상단 브레드크럼).
 // 섹션 = 접히는 상위 메뉴(Collapsible), 항목 = 하위메뉴(SidebarMenuSub). md(≥768px)↑ 상시 레일 / 미만

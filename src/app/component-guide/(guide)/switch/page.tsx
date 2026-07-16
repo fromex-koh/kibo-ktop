@@ -3,8 +3,8 @@ import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Label} from '@/components/kit/label'
-import {Switch} from '@/components/kit/switch'
+import {Label} from '@/components/ui/label'
+import {Switch} from '@/components/ui/switch'
 
 export const metadata: Metadata = {title: '스위치 (Switch)'}
 

@@ -1,8 +1,8 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Label} from '@/components/kit/label'
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/kit/select'
+import {Label} from '@/components/ui/label'
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
 
 export const metadata: Metadata = {title: '셀렉트 (Select)'}
 

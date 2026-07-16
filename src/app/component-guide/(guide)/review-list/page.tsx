@@ -2,7 +2,7 @@ import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {ReviewList, ReviewItem} from '@/components/composite/review-list'
-import {Badge} from '@/components/kit/badge'
+import {Badge} from '@/components/ui/badge'
 
 export const metadata: Metadata = {title: '검토 목록 (ReviewList)'}
 

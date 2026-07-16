@@ -2,7 +2,7 @@ import type {Metadata} from 'next'
 import {ArrowRight, ChevronRight, Download, LoaderCircle, Search, Sun} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Button} from '@/components/kit/button'
+import {Button} from '@/components/ui/button'
 
 export const metadata: Metadata = {title: '버튼 (Button)'}
 

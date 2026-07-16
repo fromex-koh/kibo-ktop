@@ -2,7 +2,7 @@
 
 import {useEffect, useState} from 'react'
 import {ChevronUp} from 'lucide-react'
-import {Button} from '@/components/kit/button'
+import {Button} from '@/components/ui/button'
 import {cn} from '@/lib/utils'
 
 // 플로팅 "맨 위로" 버튼 — 일정 높이 이상 스크롤하면 우측 하단에 나타난다.

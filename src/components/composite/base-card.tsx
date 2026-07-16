@@ -1,5 +1,5 @@
 import type {ReactNode} from 'react'
-import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/kit/card'
+import {Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle} from '@/components/ui/card'
 
 // 베이스 카드 — kit Card(패딩 24px)를 감싼 도메인 카드(L2 composite). 제목(+서브텍스트·액션) 헤더는
 // 선택이고 본문(children)은 필수다. 헤더에 title 을 주면 좌측 제목/서브텍스트, action 은 우측에 자동 배치된다.

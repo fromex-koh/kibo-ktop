@@ -2,7 +2,7 @@ import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {BaseCard} from '@/components/composite/base-card'
-import {Badge} from '@/components/kit/badge'
+import {Badge} from '@/components/ui/badge'
 
 export const metadata: Metadata = {title: '베이스 카드 (BaseCard)'}
 

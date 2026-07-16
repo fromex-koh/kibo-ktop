@@ -1,7 +1,7 @@
 'use client'
 
 import type {ComponentPropsWithoutRef, KeyboardEvent, ReactNode} from 'react'
-import {Badge} from '@/components/kit/badge'
+import {Badge} from '@/components/ui/badge'
 import {cn} from '@/lib/utils'
 
 // 탭 카드 — 카드 모양의 탭(L2 composite). Figma "입력타겟" 반영: 제목 + 진행 상태 배지의 카드가

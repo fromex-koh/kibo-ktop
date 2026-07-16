@@ -4,15 +4,15 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {ExternalLink, Menu} from 'lucide-react'
 import ThemeToggle from '@/components/composite/theme-toggle'
-import {Button} from '@/components/kit/button'
+import {Button} from '@/components/ui/button'
 import {
     NavigationMenu,
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
-} from '@/components/kit/navigation-menu'
-import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/kit/sheet'
-import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
+} from '@/components/ui/navigation-menu'
+import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/ui/sheet'
+import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
 import {cn} from '@/lib/utils'
 import logoImg from '../../../public/logo.svg'
 

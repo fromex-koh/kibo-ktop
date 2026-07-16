@@ -3,7 +3,7 @@
 import {useSyncExternalStore} from 'react'
 import {useTheme} from 'next-themes'
 import {Moon, Sun} from 'lucide-react'
-import {Button} from '@/components/kit/button'
+import {Button} from '@/components/ui/button'
 
 // 구독할 외부 변화가 없는 스토어 — 서버 스냅샷(false)과 클라 스냅샷(true)이 갈리는 것만 이용해
 // "마운트 이후(클라)" 여부를 하이드레이션-세이프하게 읽는다. (setState-in-effect 안티패턴 회피)

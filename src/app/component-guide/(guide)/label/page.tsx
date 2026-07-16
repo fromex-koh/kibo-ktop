@@ -1,10 +1,10 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Checkbox} from '@/components/kit/checkbox'
-import {Input} from '@/components/kit/input'
-import {Label} from '@/components/kit/label'
-import {RadioGroup, RadioGroupItem} from '@/components/kit/radio-group'
+import {Checkbox} from '@/components/ui/checkbox'
+import {Input} from '@/components/ui/input'
+import {Label} from '@/components/ui/label'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 
 export const metadata: Metadata = {title: '라벨 (Label)'}
 

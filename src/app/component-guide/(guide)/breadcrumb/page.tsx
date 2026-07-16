@@ -9,7 +9,7 @@ import {
     BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
-} from '@/components/kit/breadcrumb'
+} from '@/components/ui/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 
 export const metadata: Metadata = {title: '브레드크럼 (Breadcrumb)'}

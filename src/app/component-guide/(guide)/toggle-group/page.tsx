@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {ToggleGroup, ToggleGroupItem} from '@/components/kit/toggle-group'
+import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
 
 export const metadata: Metadata = {title: '토글 그룹 (ToggleGroup)'}
 

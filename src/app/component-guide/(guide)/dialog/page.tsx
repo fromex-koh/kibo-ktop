@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Button} from '@/components/kit/button'
+import {Button} from '@/components/ui/button'
 import {
     Dialog,
     DialogClose,
@@ -11,9 +11,9 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from '@/components/kit/dialog'
-import {Input} from '@/components/kit/input'
-import {Label} from '@/components/kit/label'
+} from '@/components/ui/dialog'
+import {Input} from '@/components/ui/input'
+import {Label} from '@/components/ui/label'
 import {ListMarker} from '@/components/custom/list-marker'
 
 export const metadata: Metadata = {title: '다이얼로그 (Dialog)'}

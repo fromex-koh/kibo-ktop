@@ -3,8 +3,8 @@ import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Checkbox} from '@/components/kit/checkbox'
-import {Label} from '@/components/kit/label'
+import {Checkbox} from '@/components/ui/checkbox'
+import {Label} from '@/components/ui/label'
 
 export const metadata: Metadata = {title: '체크박스 (Checkbox)'}
 

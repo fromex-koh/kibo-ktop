@@ -3,7 +3,7 @@
 import type {ReactNode} from 'react'
 import {useState} from 'react'
 import {DatePicker} from '@/components/composite/date-picker'
-import {Label} from '@/components/kit/label'
+import {Label} from '@/components/ui/label'
 
 const FIELD_DEMO_CLASS = 'max-w-90 flex w-full flex-col gap-2'
 const FIELD_LABEL_CLASS = 'text-foreground font-bold'

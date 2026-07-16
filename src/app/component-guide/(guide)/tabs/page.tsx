@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Tabs, TabsList, TabsTrigger, TabsContent} from '@/components/kit/tabs'
+import {Tabs, TabsList, TabsTrigger, TabsContent} from '@/components/ui/tabs'
 import {TabsScrollArea} from '@/components/composite/tabs-scroll-area'
 
 export const metadata: Metadata = {title: '탭 (Tabs)'}

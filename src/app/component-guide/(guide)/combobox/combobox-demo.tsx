@@ -3,7 +3,7 @@
 import type {ReactNode} from 'react'
 import {useState} from 'react'
 import {Combobox} from '@/components/composite/combobox'
-import {Label} from '@/components/kit/label'
+import {Label} from '@/components/ui/label'
 
 const CORP_TYPES = [
     {value: 'corp', label: '주식회사'},

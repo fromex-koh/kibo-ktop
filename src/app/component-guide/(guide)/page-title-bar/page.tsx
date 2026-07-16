@@ -3,8 +3,8 @@ import {ChevronDownIcon} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
-import {Badge} from '@/components/kit/badge'
-import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from '@/components/kit/breadcrumb'
+import {Badge} from '@/components/ui/badge'
+import {Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage} from '@/components/ui/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 
 export const metadata: Metadata = {title: '페이지 타이틀 바 (PageTitleBar)'}

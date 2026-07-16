@@ -2,7 +2,7 @@
 
 import {useId, useRef, useState, type ChangeEvent, type ComponentPropsWithoutRef, type KeyboardEvent} from 'react'
 import {Search, X} from 'lucide-react'
-import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from '@/components/kit/input-group'
+import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from '@/components/ui/input-group'
 import {cn} from '@/lib/utils'
 
 // 검색 바(SearchBar) — 텍스트 입력 + 원형 검색 버튼을 조립한 L2 composite. Figma "text_input"(검색창) 반영.

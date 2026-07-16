@@ -1,6 +1,6 @@
 import {Children, cloneElement, isValidElement} from 'react'
 import type {ComponentPropsWithoutRef, ReactNode} from 'react'
-import {Badge} from '@/components/kit/badge'
+import {Badge} from '@/components/ui/badge'
 import {cn} from '@/lib/utils'
 
 // 검토 목록(ReviewList) — 입력·판정된 항목을 검토·확인하는 읽기 전용 목록. Figma "li"(예: "02. 경영주는 …

@@ -3,8 +3,8 @@ import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Label} from '@/components/kit/label'
-import {RadioGroup, RadioGroupItem} from '@/components/kit/radio-group'
+import {Label} from '@/components/ui/label'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 
 export const metadata: Metadata = {title: '라디오 (Radio)'}
 

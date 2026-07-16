@@ -3,7 +3,7 @@
 import type {ComponentProps, ReactNode} from 'react'
 import {createContext, useContext} from 'react'
 import {summaryListBoxClassName} from '@/components/composite/summary-list'
-import {RadioGroup, RadioGroupItem} from '@/components/kit/radio-group'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {cn} from '@/lib/utils'
 
 // 선택 가능한 요약 목록(SelectableSummaryList) — 여러 항목(기업 등) 중 하나를 라디오로 고르는 카드형

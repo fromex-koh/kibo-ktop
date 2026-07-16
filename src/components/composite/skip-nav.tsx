@@ -1,5 +1,5 @@
 import type {MouseEvent} from 'react'
-import {buttonVariants} from '@/components/kit/button'
+import {buttonVariants} from '@/components/ui/button'
 import {cn} from '@/lib/utils'
 
 export type SkipLinkItem = {
