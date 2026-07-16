@@ -12,11 +12,11 @@ import {
     NavigationMenuList,
 } from '@/components/ui/navigation-menu'
 import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/ui/sheet'
-import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
+import {SegmentedRadioGroup, SegmentedRadioGroupItem} from '@/components/composite/segmented-toggle-group'
 import {cn} from '@/lib/utils'
 import logoImg from '../../../public/logo.svg'
 
-// PROJECT-COMPOSITE: Header primitive가 없어 NavigationMenu·ToggleGroup·Sheet·Button을 조합한 사이트 상단 합성 컴포넌트.
+// PROJECT-COMPOSITE: Header primitive가 없어 NavigationMenu·SegmentedRadioGroup·Sheet·Button을 조합한 사이트 상단 합성 컴포넌트.
 // PROJECT-STYLE: 로고는 h1 > a > img 구조를 유지하고, 유틸 링크는 Button text variant 위에 Header 전용 자간만 보정한다.
 const NAV_LINKS = ['자가진단', '전문가 평가', 'BIGx 보고서', '탄소중립']
 
@@ -28,10 +28,10 @@ const UTILITY_LINKS: {label: string; external?: boolean}[] = [
 
 // 유틸바와 모바일 Sheet에서 공유하는 회원 유형 세그먼티드.
 const MemberTypeToggle = () => (
-    <ToggleGroup type="single" defaultValue="corp" variant="segmented" size="sm" aria-label="회원 유형">
-        <ToggleGroupItem value="corp">기업</ToggleGroupItem>
-        <ToggleGroupItem value="org">기관</ToggleGroupItem>
-    </ToggleGroup>
+    <SegmentedRadioGroup type="single" defaultValue="corp" variant="segmented" size="sm" aria-label="회원 유형">
+        <SegmentedRadioGroupItem value="corp">기업</SegmentedRadioGroupItem>
+        <SegmentedRadioGroupItem value="org">기관</SegmentedRadioGroupItem>
+    </SegmentedRadioGroup>
 )
 
 // 링크 의미는 유지하고 Button text variant의 토큰/포커스 스타일을 재사용한다.

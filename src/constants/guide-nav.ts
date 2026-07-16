@@ -71,7 +71,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'Combobox', href: '/component-guide/combobox'},
                     {label: 'Textarea', href: '/component-guide/textarea'},
                     {label: 'SearchBar', href: '/component-guide/search-bar'},
-                    {label: 'ToggleGroup', href: '/component-guide/toggle-group'},
+                    {label: 'Segmented Radio', href: '/component-guide/segmented-radio'},
                     {label: 'Switch', href: '/component-guide/switch'},
                 ],
             },

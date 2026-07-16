@@ -13,7 +13,7 @@ import {
     type StructureNode,
 } from '@/content'
 import {Badge} from '@/components/ui/badge'
-import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
+import {SegmentedRadioGroup, SegmentedRadioGroupItem} from '@/components/composite/segmented-toggle-group'
 
 // isCurrent(이번 릴리스에서 변경됨) 하이라이트는 자산 표·공통 레이아웃 표·화면 표가 모두 같은
 // 방식(배경색 + 아이콘 + sr-only 텍스트)을 쓰므로, 버전 셀 하나를 공용 컴포넌트로 뺀다.
@@ -184,7 +184,7 @@ const depthBadgeClass = (depth: number): string => DEPTH_BADGE_STYLES[Math.min(d
 // 공통이라 기업·기관 어느 탭에서나 보인다. '전체'는 프로젝트 전체 화면·진척률 기준.
 type UserTypeFilter = '전체' | UserType
 const USER_TYPE_FILTERS: readonly UserTypeFilter[] = ['전체', ...USER_TYPE_VALUES]
-// 세그먼티드(ToggleGroup) 가 넘겨주는 문자열 value 를 UserTypeFilter 로 좁히는 타입가드([ST-002] as 회피).
+// 세그먼티드(SegmentedRadioGroup) 가 넘겨주는 문자열 value 를 UserTypeFilter 로 좁히는 타입가드([ST-002] as 회피).
 const isUserTypeFilter = (value: string): value is UserTypeFilter => USER_TYPE_FILTERS.some((f) => f === value)
 
 const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean =>
@@ -342,9 +342,9 @@ const PublishingIndex = () => {
             {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 전체/기업/기관으로 걸러 보여준다.
           위 공통 레이아웃 표와 구분되도록 간격을 더 둔다. */}
             <div className="mt-4 flex flex-col gap-3">
-                {/* 사용자 유형 필터 — kit ToggleGroup(segmented). 단일 선택이라 type="single",
+                {/* 사용자 유형 필터 — kit SegmentedRadioGroup(segmented). 단일 선택이라 type="single",
                     비어 있는 값(선택 해제)은 무시해 항상 하나가 선택된 상태를 유지한다. 화살표 키·역할은 Radix 담당. */}
-                <ToggleGroup
+                <SegmentedRadioGroup
                     type="single"
                     variant="segmented"
                     value={filter}
@@ -355,12 +355,12 @@ const PublishingIndex = () => {
                     className="w-fit"
                 >
                     {USER_TYPE_FILTERS.map((f) => (
-                        <ToggleGroupItem key={f} value={f} className="gap-1.5 px-4">
+                        <SegmentedRadioGroupItem key={f} value={f} className="gap-1.5 px-4">
                             <FilterIcon filter={f} />
                             {f}
-                        </ToggleGroupItem>
+                        </SegmentedRadioGroupItem>
                     ))}
-                </ToggleGroup>
+                </SegmentedRadioGroup>
 
                 {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
             진척률은 '최종완료' 화면 비율이라 상태값이 바뀔 때마다 자동으로 갱신된다. */}

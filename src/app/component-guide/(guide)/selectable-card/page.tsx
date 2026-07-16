@@ -53,11 +53,10 @@ const PROPS_ITEMS = [
     ['labelClassName', '라벨 타이포 override(기본 typo-title-l-bold).', 'string'],
 ] as const
 
-// 선택 카드 — kit Radio/Checkbox + Card + Badge 를 합성한 composite. 카드 전체가 선택 대상이다.
 const SelectableCardGuidePage = () => (
     <GuidePageShell
         title="선택 카드 (SelectableCard)"
-        description="카드 안에 라디오/체크박스를 품은 선택 컨트롤입니다. 카드 전체가 하나의 선택 대상이고, 선택되면 연한 파란 배경 + 파란 테두리로 강조됩니다. control 로 라디오(단일)·체크박스(다중)를 정합니다."
+        description="shadcn Radio Group의 Choice Card 패턴(FieldLabel > Field + Radio/Checkbox)을 프로젝트 스타일로 확장한 선택 컨트롤입니다. 카드 전체가 하나의 선택 대상이고, control 로 라디오(단일)·체크박스(다중)를 정합니다."
     >
         <section aria-labelledby="sc-state" className="flex flex-col gap-4">
             <div>
@@ -92,8 +91,9 @@ const SelectableCardGuidePage = () => (
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
                     <code className="font-mono">control=&quot;radio&quot;</code> 카드를{' '}
-                    <code className="font-mono">SelectableCardGroup</code>(kit RadioGroup 래퍼) 으로 감싸면 하나만
-                    선택됩니다. Figma 처럼 <code className="font-mono">grid-cols-2</code> 로 2단 배치했습니다.
+                    <code className="font-mono">SelectableCardGroup</code>(shadcn RadioGroup 래퍼) 으로 감싸면 하나만
+                    선택됩니다. 각 항목은 Choice Card 구조를 사용하며, Figma처럼{' '}
+                    <code className="font-mono">grid-cols-2</code> 로 2단 배치했습니다.
                 </p>
             </div>
             <SelectableCardRadioDemo />

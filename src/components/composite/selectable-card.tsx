@@ -3,12 +3,13 @@
 import type {ComponentProps, ReactNode} from 'react'
 import {createContext, useContext} from 'react'
 import {Checkbox} from '@/components/ui/checkbox'
+import {Field, FieldContent, FieldLabel} from '@/components/ui/field'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {cn} from '@/lib/utils'
 
-// PROJECT-COMPOSITE: kit Radio/Checkbox primitive를 카드형 선택 패턴으로 조합한다.
-// 카드 전체가 label 역할을 하고, 선택 강조는 CSS :has() 대신 React 상태(data-selected)로 안정적으로 표시한다.
-// PROJECT-STYLE: selected는 primary/primary-subtle, disabled/readOnly는 공통 disabled 토큰을 쓴다.
+// PROJECT-COMPOSITE: shadcn Choice Card 패턴(FieldLabel > Field + Radio/Checkbox)을 프로젝트 선택 카드로 조합한다.
+// PROJECT-STYLE: FieldLabel 기본 카드 selector를 덮고 기존 padding/border와 프로젝트 상태 토큰을 유지한다.
+// selected는 primary/primary-subtle, disabled/readOnly는 공통 disabled 토큰을 쓴다.
 // disabled/readOnly에서도 선택된 카드만 border를 보이고, 미선택 카드는 border를 숨긴다.
 
 const SelectableCardValueContext = createContext<string | undefined>(undefined)
@@ -58,18 +59,19 @@ const SelectableCard = ({
     const controlTabIndex = readOnly ? -1 : undefined
 
     return (
-        // htmlFor를 두면 감싸기+for 연결이 겹쳐 토글이 두 번 발생한다.
-        <label
+        <FieldLabel
             data-slot="selectable-card"
             data-selected={visualSelected || undefined}
             data-disabled={disabled || undefined}
             data-readonly={readOnly || undefined}
             className={cn(
-                'bg-surface flex cursor-pointer items-center gap-2 rounded-lg border-2 px-10 py-6 transition-colors',
+                'bg-surface flex cursor-pointer items-center gap-2 rounded-lg border-2 px-10 py-6 transition-colors has-[>[data-slot=field]]:border-2 *:data-[slot=field]:p-0',
                 !visualSelected && !lockedSelected && 'border-transparent',
-                visualSelected && 'border-primary bg-primary-subtle',
+                visualSelected &&
+                    'border-primary bg-primary-subtle has-data-checked:border-primary has-data-checked:bg-primary-subtle dark:has-data-checked:border-primary dark:has-data-checked:bg-primary-subtle',
                 locked && 'bg-control-disabled text-disabled opacity-100',
-                lockedSelected && 'border-disabled-subtle',
+                lockedSelected &&
+                    'border-disabled-subtle has-data-checked:border-disabled-subtle has-data-checked:bg-control-disabled dark:has-data-checked:border-disabled-subtle dark:has-data-checked:bg-control-disabled',
                 disabled && 'cursor-not-allowed',
                 readOnly && 'pointer-events-none cursor-default',
                 // 내부 컨트롤 포커스는 카드 전체 링으로 표시한다.
@@ -77,29 +79,36 @@ const SelectableCard = ({
                 className,
             )}
         >
-            {control === 'radio' ? (
-                <RadioGroupItem
-                    id={id}
-                    value={value ?? ''}
-                    disabled={disabled || readOnly}
-                    tabIndex={controlTabIndex}
-                    className="focus-visible:outline-none"
-                />
-            ) : (
-                <Checkbox
-                    id={id}
-                    name={name}
-                    value={value}
-                    checked={checked}
-                    onCheckedChange={onCheckedChange}
-                    disabled={disabled || readOnly}
-                    tabIndex={controlTabIndex}
-                    className="focus-visible:outline-none"
-                />
-            )}
-            <span className={cn('typo-title-l-bold flex-1 text-current', labelClassName)}>{children}</span>
-            {badges ? <span className="flex shrink-0 items-center gap-2">{badges}</span> : null}
-        </label>
+            <Field
+                orientation="horizontal"
+                className="items-center gap-2 has-[>[data-slot=field-content]]:items-center"
+            >
+                {control === 'radio' ? (
+                    <RadioGroupItem
+                        id={id}
+                        value={value ?? ''}
+                        disabled={disabled || readOnly}
+                        tabIndex={controlTabIndex}
+                        className="focus-visible:outline-none"
+                    />
+                ) : (
+                    <Checkbox
+                        id={id}
+                        name={name}
+                        value={value}
+                        checked={checked}
+                        onCheckedChange={onCheckedChange}
+                        disabled={disabled || readOnly}
+                        tabIndex={controlTabIndex}
+                        className="focus-visible:outline-none"
+                    />
+                )}
+                <FieldContent className="gap-0">
+                    <span className={cn('typo-title-l-bold text-current', labelClassName)}>{children}</span>
+                </FieldContent>
+                {badges ? <span className="flex shrink-0 items-center gap-2">{badges}</span> : null}
+            </Field>
+        </FieldLabel>
     )
 }
 

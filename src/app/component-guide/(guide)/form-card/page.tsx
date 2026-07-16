@@ -5,7 +5,7 @@ import {FormCard} from '@/components/composite/form-card'
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select'
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 
 export const metadata: Metadata = {title: '폼 카드 (FormCard)'}
 

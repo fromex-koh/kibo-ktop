@@ -1,25 +1,25 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {ToggleGroup, ToggleGroupItem} from '@/components/ui/toggle-group'
+import {SegmentedRadioGroup, SegmentedRadioGroupItem} from '@/components/composite/segmented-toggle-group'
 
-export const metadata: Metadata = {title: '토글 그룹 (ToggleGroup)'}
+export const metadata: Metadata = {title: '세그먼티드 라디오 (Segmented Radio)'}
 
-const USAGE_SEGMENTED = `<ToggleGroup type="single" defaultValue="corp" variant="segmented" size="sm">
-  <ToggleGroupItem value="corp">기업</ToggleGroupItem>
-  <ToggleGroupItem value="org">기관</ToggleGroupItem>
-</ToggleGroup>`
+const USAGE_SEGMENTED = `<SegmentedRadioGroup type="single" defaultValue="corp" variant="segmented" size="sm">
+  <SegmentedRadioGroupItem value="corp">기업</SegmentedRadioGroupItem>
+  <SegmentedRadioGroupItem value="org">기관</SegmentedRadioGroupItem>
+</SegmentedRadioGroup>`
 
 const COMPOSITION = [
-    {name: 'ToggleGroup', desc: '토글 항목들을 감싸는 그룹. type(single)·variant·size·spacing 을 정한다.'},
-    {name: 'ToggleGroupItem', desc: '개별 토글 항목. value 로 선택 상태를 식별한다.'},
+    {name: 'SegmentedRadioGroup', desc: '라디오 세그먼트 항목을 감싸는 그룹. 프로젝트에서는 단일 선택만 사용한다.'},
+    {name: 'SegmentedRadioGroupItem', desc: '개별 라디오 세그먼트 항목. value 로 선택 상태를 식별한다.'},
 ] as const
 
 const PROPS = [
     {name: 'type', desc: '선택 방식 (프로젝트는 단일 선택만 사용)', values: "'single'", def: '—'},
     {
         name: 'variant',
-        desc: '프로젝트 사용 variant. default/outline은 shadcn 호환 fallback으로만 유지한다.',
+        desc: '프로젝트에서는 라디오 기반 segmented variant만 사용한다.',
         values: "'segmented'",
         def: "'segmented'",
     },
@@ -27,11 +27,10 @@ const PROPS = [
     {name: 'spacing', desc: '항목 간 간격(px). 0 이면 인접 항목이 이어붙는다', values: 'number', def: '2'},
 ] as const
 
-// 토글 그룹 — shadcn primitive(radix)를 승격한 styled copy. Figma "회원 유형" 세그먼티드가 기본 예시.
-const ToggleGroupGuidePage = () => (
+const SegmentedRadioGroupGuidePage = () => (
     <GuidePageShell
-        title="토글 그룹 (ToggleGroup)"
-        description="여러 항목 중 하나를 선택하는 컨트롤입니다. Figma 세그먼티드 디자인을 segmented 변형으로 담았습니다."
+        title="세그먼티드 라디오 (Segmented Radio)"
+        description="여러 항목 중 하나를 선택하는 라디오 기반 세그먼티드 컨트롤입니다."
     >
         <section aria-labelledby="tg-preview" className="flex flex-col gap-4">
             <div>
@@ -40,31 +39,31 @@ const ToggleGroupGuidePage = () => (
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
                     프로젝트에서는 <code className="font-mono">variant=&quot;segmented&quot;</code> 만 사용합니다. Figma
-                    세그먼티드 컨트롤(회색 트랙 + 선택 시 흰 알약)입니다.
+                    라디오 기반 세그먼티드 컨트롤(회색 트랙 + 선택 시 흰 알약)입니다. 토글처럼 다중 선택하지 않습니다.
                 </p>
             </div>
             <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">
-                <ToggleGroup
+                <SegmentedRadioGroup
                     type="single"
                     defaultValue="corp"
                     variant="segmented"
                     size="sm"
                     aria-label="회원 유형 (2개)"
                 >
-                    <ToggleGroupItem value="corp">기업</ToggleGroupItem>
-                    <ToggleGroupItem value="org">기관</ToggleGroupItem>
-                </ToggleGroup>
-                <ToggleGroup
+                    <SegmentedRadioGroupItem value="corp">기업</SegmentedRadioGroupItem>
+                    <SegmentedRadioGroupItem value="org">기관</SegmentedRadioGroupItem>
+                </SegmentedRadioGroup>
+                <SegmentedRadioGroup
                     type="single"
                     defaultValue="corp"
                     variant="segmented"
                     size="sm"
                     aria-label="회원 유형 (3개)"
                 >
-                    <ToggleGroupItem value="corp">기업</ToggleGroupItem>
-                    <ToggleGroupItem value="org">기관</ToggleGroupItem>
-                    <ToggleGroupItem value="person">개인</ToggleGroupItem>
-                </ToggleGroup>
+                    <SegmentedRadioGroupItem value="corp">기업</SegmentedRadioGroupItem>
+                    <SegmentedRadioGroupItem value="org">기관</SegmentedRadioGroupItem>
+                    <SegmentedRadioGroupItem value="person">개인</SegmentedRadioGroupItem>
+                </SegmentedRadioGroup>
             </div>
             <CodeBlock code={USAGE_SEGMENTED} language="tsx" copyLabel="복사" />
         </section>
@@ -111,7 +110,7 @@ const ToggleGroupGuidePage = () => (
                 <h2 id="tg-props" className="typo-h4-bold">
                     Props
                 </h2>
-                <p className="text-foreground-muted text-sm">ToggleGroup 의 주요 속성입니다.</p>
+                <p className="text-foreground-muted text-sm">라디오 기반 SegmentedRadioGroup의 주요 속성입니다.</p>
             </div>
             <div className="bg-background border-border overflow-x-auto rounded-md border">
                 <table className="w-full text-left">
@@ -157,4 +156,4 @@ const ToggleGroupGuidePage = () => (
     </GuidePageShell>
 )
 
-export default ToggleGroupGuidePage
+export default SegmentedRadioGroupGuidePage
