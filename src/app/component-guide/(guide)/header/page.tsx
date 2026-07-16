@@ -19,7 +19,7 @@ export default function Layout({children}) {
 
 // 헤더가 조립하는 primitive 목록(Composition 표).
 const COMPOSITION = [
-    {name: '로고', desc: '홈으로 가는 브랜드 워드마크. 현재는 자리표시자이며 실제 K-top 로고 자산으로 교체한다.'},
+    {name: '로고', desc: 'h1 > a > img 구조의 사이트명 로고. 이미지는 기술보증기금 alt 값을 제공한다.'},
     {
         name: '주 메뉴 (NavigationMenu)',
         desc: '자가진단·전문가 평가·BIGx 보고서·탄소중립 등 주 내비게이션. md 미만에서 숨고 전체 메뉴(Sheet)로 이동한다.',
@@ -97,6 +97,7 @@ const HeaderGuidePage = () => (
             </div>
             <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-2 pl-5">
                 <li>실제 헤더는 banner 랜드마크(&lt;header&gt;)로 렌더링됩니다. [8.2.1]</li>
+                <li>로고는 사이트명을 전달하는 h1 안에 홈 링크와 이미지로 구성됩니다.</li>
                 <li>
                     테마 토글·전체 메뉴 버튼은 아이콘 전용이라 aria-label 을 제공하고 내부 아이콘은 aria-hidden 입니다.
                     [5.1.1]

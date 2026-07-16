@@ -55,12 +55,13 @@ const UtilityLink = ({label, external}: {label: string; external?: boolean}) => 
     </Link>
 )
 
-// 로고 — public/logo.svg(브랜드 마크) 정적 import + next/image([NA-005]). alt 가 링크 접근성 이름이 된다.
-// 브랜드 고정색이라 다크에서도 원본 그대로 노출한다(로고는 색 반사 대상 아님).
+// 로고 — 사이트명을 h1로 제공하고, 이미지는 기존 정적 import/className을 유지한다.
 const Logo = () => (
-    <Link href="#" className="flex items-center">
-        <Image src={logoImg} alt="K-TOP 홈" priority className="h-9 w-auto" />
-    </Link>
+    <h1>
+        <Link href="#" className="flex items-center">
+            <Image src={logoImg} alt="기술보증기금" priority className="h-9 w-auto" />
+        </Link>
+    </h1>
 )
 
 // 헤더 본문(유틸바 + 메인 내비) — 실제 헤더(banner)와 가이드 데모 카드가 공유한다.

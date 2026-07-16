@@ -43,7 +43,6 @@ const PROPS_ITEMS = [
     ['className', '추가 클래스명으로 스타일 확장.', 'string'],
 ] as const
 
-// 데모용 브레드크럼 — 홈 · 자가진단 · 현재(고객정보활용동의) + 드롭다운 화살표.
 const DemoBreadcrumb = () => (
     <Breadcrumb>
         <BreadcrumbList>
@@ -63,7 +62,6 @@ const DemoBreadcrumb = () => (
     </Breadcrumb>
 )
 
-// 페이지 타이틀 바 — 페이지 최상단 스트립(composite). 제목 + Badge + Breadcrumb 조합.
 const PageTitleBarGuidePage = () => (
     <GuidePageShell
         title="페이지 타이틀 바 (PageTitleBar)"
@@ -100,21 +98,23 @@ const PageTitleBarGuidePage = () => (
                     조합 (Composition)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    슬롯에 넣는 컴포넌트를 바꿔 다양하게 구성합니다. 예: 상태 배지(
-                    <code className="font-mono">solid</code>) + 배지 없음.
+                    슬롯에 넣는 컴포넌트를 바꿔 다양하게 구성합니다. 예: 동일한 <code className="font-mono">Badge</code>{' '}
+                    조합 + 배지 없는 페이지.
                 </p>
             </div>
-            <div className="border-border flex flex-col gap-8 rounded-md border p-6">
-                <PageTitleBar
-                    title="평가 현황"
-                    badge={
-                        <Badge variant="solid" color="info" shape="round" size="lg">
-                            진행중
-                        </Badge>
-                    }
-                    breadcrumb={<DemoBreadcrumb />}
-                />
-                <PageTitleBar title="대시보드" breadcrumb={<DemoBreadcrumb />} />
+            <div className="border-border rounded-md border p-6">
+                <div className="flex flex-col gap-8">
+                    <PageTitleBar
+                        title="평가 현황"
+                        badge={
+                            <Badge variant="outline" color="navy" shape="round" size="lg">
+                                KTRS-FM 평가
+                            </Badge>
+                        }
+                        breadcrumb={<DemoBreadcrumb />}
+                    />
+                    <PageTitleBar title="마이 페이지" breadcrumb={<DemoBreadcrumb />} />
+                </div>
             </div>
         </section>
 
