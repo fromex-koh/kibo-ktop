@@ -96,6 +96,79 @@ const COMPOSITION = [
     ],
 ]
 
+const PROPS = [
+    {
+        component: 'ChipRadioGroup',
+        name: 'value / defaultValue',
+        description: '제어 또는 비제어 방식으로 현재 선택된 ChipRadio의 value를 지정합니다.',
+        defaultValue: '-',
+        control: 'string',
+    },
+    {
+        component: 'ChipRadioGroup',
+        name: 'onValueChange',
+        description: '단일 선택값이 바뀔 때 호출됩니다.',
+        defaultValue: '-',
+        control: '(value) => void',
+    },
+    {
+        component: 'ChipRadioGroup',
+        name: 'name',
+        description: '폼 제출에 사용할 라디오 그룹 이름입니다.',
+        defaultValue: '-',
+        control: 'string',
+    },
+    {
+        component: 'ChipRadio',
+        name: 'value',
+        description: '그룹 안에서 개별 라디오 칩을 구분하는 필수 값입니다.',
+        defaultValue: '-',
+        control: 'string',
+    },
+    {
+        component: 'ChipRadio / ChipCheckbox',
+        name: 'size',
+        description: '칩 높이입니다. lg는 48px, md는 40px입니다.',
+        defaultValue: '"lg"',
+        control: '"lg" | "md"',
+    },
+    {
+        component: 'ChipCheckbox',
+        name: 'checked / defaultChecked',
+        description: '제어 또는 비제어 방식으로 개별 체크박스 칩의 선택 상태를 지정합니다.',
+        defaultValue: 'false',
+        control: 'boolean | "indeterminate"',
+    },
+    {
+        component: 'ChipCheckbox',
+        name: 'onCheckedChange',
+        description: '개별 체크박스 칩의 선택 상태가 바뀔 때 호출됩니다.',
+        defaultValue: '-',
+        control: '(checked) => void',
+    },
+    {
+        component: 'ChipCheckbox',
+        name: 'name / value',
+        description: '체크된 칩을 폼으로 제출할 때 사용할 필드 이름과 값입니다.',
+        defaultValue: 'value="on"',
+        control: 'string',
+    },
+    {
+        component: 'ChipRadioGroup / ChipRadio / ChipCheckbox',
+        name: 'disabled',
+        description: '그룹 전체 또는 개별 칩의 상호작용을 비활성화합니다.',
+        defaultValue: 'false',
+        control: 'boolean',
+    },
+    {
+        component: '모든 구성요소',
+        name: 'className',
+        description: '레이아웃이나 폭 등 사용처 스타일을 추가합니다.',
+        defaultValue: '""',
+        control: 'string',
+    },
+]
+
 // 칩 — 기능이 다른 두 종류(라디오·체크박스). 둘 다 name(+value)→hidden input 으로 폼 제출된다.
 const ChipGuidePage = () => (
     <GuidePageShell
@@ -414,6 +487,70 @@ const ChipGuidePage = () => (
                     있지 않으므로, 실제 화면에 쓸 때는 사용처에서 <code className="font-mono">{'<form>'}</code>
                     으로 감싸야 제출됩니다.
                 </p>
+            </div>
+        </section>
+
+        <section aria-labelledby="chip-props" className="flex flex-col gap-4">
+            <div>
+                <h2 id="chip-props" className="typo-h4-bold">
+                    Props
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    Chip을 구성하는 라디오·체크박스 그룹과 개별 칩에서 주로 사용하는 속성입니다.
+                </p>
+            </div>
+            <div className="bg-background border-border overflow-x-auto rounded-md border">
+                <table className="w-full text-left">
+                    <caption className="sr-only">Chip Props 목록</caption>
+                    <thead>
+                        <tr className="border-border border-b bg-gray-100/25">
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Component
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Name
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Description
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Default
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Control
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {PROPS.map((prop) => (
+                            <tr
+                                key={`${prop.component}-${prop.name}`}
+                                className="border-border bg-background border-b last:border-b-0"
+                            >
+                                <th
+                                    scope="row"
+                                    className="typo-caption-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
+                                >
+                                    {prop.component}
+                                </th>
+                                <td className="typo-caption-regular text-primary px-4 py-3 align-top font-mono whitespace-nowrap">
+                                    {prop.name}
+                                </td>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3 align-top">
+                                    {prop.description}
+                                </td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 align-top font-mono whitespace-nowrap">
+                                    {prop.defaultValue}
+                                </td>
+                                <td className="px-4 py-3 align-top">
+                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs whitespace-nowrap">
+                                        {prop.control}
+                                    </span>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
         </section>
     </GuidePageShell>
