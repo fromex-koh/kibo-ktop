@@ -3,6 +3,7 @@
 import {useState} from 'react'
 import {SelectableCard, SelectableCardGroup} from '@/components/composite/selectable-card'
 import {Badge} from '@/components/ui/badge'
+import {Button} from '@/components/ui/button'
 
 // 우측 뱃지 — 필수(파란 아웃라인)·선택(회색 아웃라인).
 const RequiredBadge = () => (
@@ -68,7 +69,13 @@ export const SelectableCardBadgeDemo = () => {
 export const SelectableCardRadioDemo = () => {
     const [value, setValue] = useState('required')
     return (
-        <SelectableCardGroup value={value} onValueChange={setValue} className="grid-cols-2 gap-3">
+        <SelectableCardGroup
+            name="agreement"
+            aria-label="동의 범위"
+            value={value}
+            onValueChange={setValue}
+            className="grid-cols-2 gap-3"
+        >
             <SelectableCard control="radio" value="required" badges={<RequiredBadge />}>
                 필수항목만 동의
             </SelectableCard>
@@ -90,7 +97,12 @@ export const SelectableCardRadioDemo = () => {
 
 export const SelectableCardRadioStatesDemo = () => (
     <div className="flex flex-col gap-3">
-        <SelectableCardGroup value="checked" className="grid-cols-2 gap-3">
+        <SelectableCardGroup
+            name="radio-default-state"
+            aria-label="기본 라디오 상태"
+            value="checked"
+            className="grid-cols-2 gap-3"
+        >
             <SelectableCard control="radio" value="default">
                 기본 (default)
             </SelectableCard>
@@ -98,7 +110,12 @@ export const SelectableCardRadioStatesDemo = () => (
                 선택됨 (checked)
             </SelectableCard>
         </SelectableCardGroup>
-        <SelectableCardGroup value="disabled-checked" className="grid-cols-2 gap-3">
+        <SelectableCardGroup
+            name="radio-disabled-state"
+            aria-label="비활성 라디오 상태"
+            value="disabled-checked"
+            className="grid-cols-2 gap-3"
+        >
             <SelectableCard control="radio" value="disabled-default" disabled>
                 비활성 미선택
             </SelectableCard>
@@ -106,7 +123,12 @@ export const SelectableCardRadioStatesDemo = () => (
                 비활성 선택
             </SelectableCard>
         </SelectableCardGroup>
-        <SelectableCardGroup value="readonly-checked" className="grid-cols-2 gap-3">
+        <SelectableCardGroup
+            name="radio-readonly-state"
+            aria-label="읽기전용 라디오 상태"
+            value="readonly-checked"
+            className="grid-cols-2 gap-3"
+        >
             <SelectableCard control="radio" value="readonly-default" readOnly>
                 읽기전용 미선택
             </SelectableCard>
@@ -116,3 +138,97 @@ export const SelectableCardRadioStatesDemo = () => (
         </SelectableCardGroup>
     </div>
 )
+
+export const SelectableCardFormDemo = () => {
+    const [consent, setConsent] = useState(false)
+    const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+
+    return (
+        <form
+            className="flex flex-col gap-4"
+            onSubmit={(event) => {
+                event.preventDefault()
+                const entries = Array.from(new FormData(event.currentTarget).entries()).map(([key, value]) => [
+                    key,
+                    String(value),
+                ])
+                setSubmittedData(JSON.stringify(entries))
+            }}
+        >
+            <fieldset className="flex flex-col gap-3">
+                <legend id="applicant-type-label" className="typo-title-l-medium text-foreground">
+                    신청 주체
+                </legend>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    사업자 유형에 맞는 신청 주체를 선택해 주세요.
+                </p>
+                <SelectableCardGroup
+                    name="applicantType"
+                    aria-labelledby="applicant-type-label"
+                    defaultValue="corporation"
+                    className="grid-cols-2 gap-3"
+                    required
+                >
+                    <SelectableCard control="radio" value="corporation">
+                        법인사업자
+                    </SelectableCard>
+                    <SelectableCard control="radio" value="sole-proprietor">
+                        개인사업자
+                    </SelectableCard>
+                </SelectableCardGroup>
+            </fieldset>
+
+            <fieldset className="flex flex-col gap-3">
+                <legend id="reception-channel-label" className="typo-title-l-medium text-foreground">
+                    접수 채널
+                </legend>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    최초 접수 시 선택한 채널이며 신청 단계에서는 변경할 수 없습니다.
+                </p>
+                <SelectableCardGroup
+                    name="receptionChannel"
+                    aria-labelledby="reception-channel-label"
+                    value="online"
+                    className="grid-cols-2 gap-3"
+                >
+                    <SelectableCard control="radio" value="online" readOnly>
+                        온라인 접수
+                    </SelectableCard>
+                    <SelectableCard control="radio" value="in-person" readOnly>
+                        방문 접수
+                    </SelectableCard>
+                </SelectableCardGroup>
+            </fieldset>
+
+            <fieldset className="flex flex-col gap-3">
+                <legend className="typo-title-l-medium text-foreground">필수 동의</legend>
+                <SelectableCard
+                    control="checkbox"
+                    name="privacyConsent"
+                    value="agreed"
+                    checked={consent}
+                    onCheckedChange={setConsent}
+                    badges={<RequiredBadge />}
+                    required
+                >
+                    개인정보 수집·이용에 동의합니다.
+                </SelectableCard>
+            </fieldset>
+
+            <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-3">
+                    <Button type="submit">신청 내용 확인</Button>
+                    <span className="typo-body-l-regular text-muted-foreground">
+                        선택한 값이 실제 FormData에 포함되는지 확인합니다.
+                    </span>
+                </div>
+                <output
+                    className="typo-body-l-regular bg-surface border-border text-muted-foreground min-h-10 rounded-md border px-3 py-2 break-all"
+                    aria-live="polite"
+                >
+                    {submittedData}
+                </output>
+            </div>
+        </form>
+    )
+}

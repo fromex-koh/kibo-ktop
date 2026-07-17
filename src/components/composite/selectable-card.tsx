@@ -1,33 +1,65 @@
 'use client'
 
 import type {ComponentProps, ReactNode} from 'react'
-import {createContext, useContext} from 'react'
+import {createContext, useContext, useState} from 'react'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Field, FieldContent, FieldLabel} from '@/components/ui/field'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
+import {
+    selectableCardBadgesClassName,
+    selectableCardContentClassName,
+    selectableCardControlClassName,
+    selectableCardFieldClassName,
+    selectableCardTitleClassName,
+    selectableCardVariants,
+} from '@/components/theme/selectable-card.variants'
 import {cn} from '@/lib/utils'
 
 // PROJECT-COMPOSITE: shadcn Choice Card 패턴(FieldLabel > Field + Radio/Checkbox)을 프로젝트 선택 카드로 조합한다.
-// PROJECT-STYLE: FieldLabel 기본 카드 selector를 덮고 기존 padding/border와 프로젝트 상태 토큰을 유지한다.
-// selected는 primary/primary-subtle, disabled/readOnly는 공통 disabled 토큰을 쓴다.
-// disabled/readOnly에서도 선택된 카드만 border를 보이고, 미선택 카드는 border를 숨긴다.
+// PROJECT-STYLE: 카드와 상태 스타일은 theme/selectable-card.variants.ts에서 관리한다.
 
-const SelectableCardValueContext = createContext<string | undefined>(undefined)
+type SelectableCardGroupAccessibleName =
+    {'aria-label': string; 'aria-labelledby'?: never} | {'aria-label'?: never; 'aria-labelledby': string}
 
-const SelectableCardGroup = ({value, children, ...props}: ComponentProps<typeof RadioGroup>) => (
-    <SelectableCardValueContext.Provider value={typeof value === 'string' ? value : undefined}>
-        <RadioGroup value={value} {...props}>
-            {children}
-        </RadioGroup>
-    </SelectableCardValueContext.Provider>
-)
+type SelectableCardGroupProps = Omit<ComponentProps<typeof RadioGroup>, 'name' | 'aria-label' | 'aria-labelledby'> & {
+    name: string
+} & SelectableCardGroupAccessibleName
 
-type SelectableCardProps = {
-    control?: 'radio' | 'checkbox'
-    value?: string
-    checked?: boolean
-    onCheckedChange?: (checked: boolean) => void
-    name?: string
+type SelectableCardGroupContextValue = {
+    value: string | undefined
+    name: string
+    form: string | undefined
+}
+
+const SelectableCardValueContext = createContext<SelectableCardGroupContextValue | undefined>(undefined)
+
+const SelectableCardGroup = ({
+    value,
+    defaultValue,
+    onValueChange,
+    name,
+    form,
+    children,
+    ...props
+}: SelectableCardGroupProps) => {
+    const [internalValue, setInternalValue] = useState(defaultValue ?? '')
+    const currentValue = value ?? internalValue
+
+    const handleValueChange = (nextValue: string) => {
+        if (value === undefined) setInternalValue(nextValue)
+        onValueChange?.(nextValue)
+    }
+
+    return (
+        <SelectableCardValueContext.Provider value={{value: currentValue, name, form}}>
+            <RadioGroup value={currentValue} onValueChange={handleValueChange} name={name} form={form} {...props}>
+                {children}
+            </RadioGroup>
+        </SelectableCardValueContext.Provider>
+    )
+}
+
+type SelectableCardBaseProps = {
     disabled?: boolean
     readOnly?: boolean
     badges?: ReactNode
@@ -37,12 +69,36 @@ type SelectableCardProps = {
     children: ReactNode
 }
 
+type SelectableCardRadioProps = SelectableCardBaseProps & {
+    control: 'radio'
+    value: string
+    checked?: never
+    onCheckedChange?: never
+    name?: never
+    required?: never
+    form?: never
+}
+
+type SelectableCardCheckboxProps = SelectableCardBaseProps & {
+    control?: 'checkbox'
+    value?: string
+    checked?: boolean
+    onCheckedChange?: (checked: boolean) => void
+    name?: string
+    required?: boolean
+    form?: string
+}
+
+type SelectableCardProps = SelectableCardRadioProps | SelectableCardCheckboxProps
+
 const SelectableCard = ({
     control = 'checkbox',
     value,
     checked,
     onCheckedChange,
     name,
+    required,
+    form,
     disabled,
     readOnly,
     badges,
@@ -51,8 +107,14 @@ const SelectableCard = ({
     className,
     children,
 }: SelectableCardProps) => {
-    const groupValue = useContext(SelectableCardValueContext)
-    const selected = control === 'radio' ? groupValue !== undefined && groupValue === value : Boolean(checked)
+    const group = useContext(SelectableCardValueContext)
+
+    if (control === 'radio' && value === undefined) {
+        throw new Error('SelectableCard의 radio control에는 value가 필요합니다.')
+    }
+
+    const radioValue = value ?? ''
+    const selected = control === 'radio' ? group?.value === value : Boolean(checked)
     const locked = Boolean(disabled || readOnly)
     const visualSelected = selected && !locked
     const lockedSelected = selected && locked
@@ -64,53 +126,57 @@ const SelectableCard = ({
             data-selected={visualSelected || undefined}
             data-disabled={disabled || undefined}
             data-readonly={readOnly || undefined}
-            className={cn(
-                'bg-surface flex cursor-pointer items-center gap-2 rounded-lg border-2 px-10 py-6 transition-colors has-[>[data-slot=field]]:border-2 *:data-[slot=field]:p-0',
-                !visualSelected && !lockedSelected && 'border-transparent',
-                visualSelected &&
-                    'border-primary bg-primary-subtle has-data-checked:border-primary has-data-checked:bg-primary-subtle dark:has-data-checked:border-primary dark:has-data-checked:bg-primary-subtle',
-                locked && 'bg-control-disabled text-disabled opacity-100',
-                lockedSelected &&
-                    'border-disabled-subtle has-data-checked:border-disabled-subtle has-data-checked:bg-control-disabled dark:has-data-checked:border-disabled-subtle dark:has-data-checked:bg-control-disabled',
-                disabled && 'cursor-not-allowed',
-                readOnly && 'pointer-events-none cursor-default',
-                // 내부 컨트롤 포커스는 카드 전체 링으로 표시한다.
-                'has-[:focus-visible]:outline-ring has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-solid',
+            className={selectableCardVariants({
+                selected: visualSelected,
+                unselected: !visualSelected && !lockedSelected,
+                locked,
+                lockedSelected,
+                disabled: Boolean(disabled),
+                readOnly: Boolean(readOnly),
                 className,
-            )}
+            })}
         >
-            <Field
-                orientation="horizontal"
-                className="items-center gap-2 has-[>[data-slot=field-content]]:items-center"
-            >
+            <Field orientation="horizontal" className={selectableCardFieldClassName}>
                 {control === 'radio' ? (
-                    <RadioGroupItem
-                        id={id}
-                        value={value ?? ''}
-                        disabled={disabled || readOnly}
-                        tabIndex={controlTabIndex}
-                        className="focus-visible:outline-none"
-                    />
+                    <>
+                        <RadioGroupItem
+                            id={id}
+                            value={radioValue}
+                            disabled={disabled || readOnly}
+                            tabIndex={controlTabIndex}
+                            className={selectableCardControlClassName}
+                        />
+                        {readOnly && selected && group ? (
+                            <input type="hidden" name={group.name} value={radioValue} form={group.form} />
+                        ) : null}
+                    </>
                 ) : (
-                    <Checkbox
-                        id={id}
-                        name={name}
-                        value={value}
-                        checked={checked}
-                        onCheckedChange={onCheckedChange}
-                        disabled={disabled || readOnly}
-                        tabIndex={controlTabIndex}
-                        className="focus-visible:outline-none"
-                    />
+                    <>
+                        <Checkbox
+                            id={id}
+                            name={name}
+                            value={value}
+                            checked={checked}
+                            onCheckedChange={onCheckedChange}
+                            required={required}
+                            form={form}
+                            disabled={disabled || readOnly}
+                            tabIndex={controlTabIndex}
+                            className={selectableCardControlClassName}
+                        />
+                        {readOnly && checked && name ? (
+                            <input type="hidden" name={name} value={value ?? 'on'} form={form} />
+                        ) : null}
+                    </>
                 )}
-                <FieldContent className="gap-0">
-                    <span className={cn('typo-title-l-bold text-current', labelClassName)}>{children}</span>
+                <FieldContent className={selectableCardContentClassName}>
+                    <span className={cn(selectableCardTitleClassName, labelClassName)}>{children}</span>
                 </FieldContent>
-                {badges ? <span className="flex shrink-0 items-center gap-2">{badges}</span> : null}
+                {badges ? <span className={selectableCardBadgesClassName}>{badges}</span> : null}
             </Field>
         </FieldLabel>
     )
 }
 
 export {SelectableCard, SelectableCardGroup}
-export type {SelectableCardProps}
+export type {SelectableCardGroupProps, SelectableCardProps}
