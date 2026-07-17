@@ -1,6 +1,6 @@
 'use client'
 
-import {Building2, Check, CheckCheck, File, Folder, Landmark, LayoutGrid, LayoutList, Sparkles} from 'lucide-react'
+import {Check, CheckCheck, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
 import {useMemo, useState} from 'react'
 import {
     USER_TYPE_VALUES,
@@ -14,6 +14,8 @@ import {
 } from '@/content'
 import {Badge} from '@/components/ui/badge'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
+import {BaseCard} from '@/components/composite/base-card'
+import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
 
 // isCurrent(이번 릴리스에서 변경됨) 하이라이트는 자산 표·공통 레이아웃 표·화면 표가 모두 같은
 // 방식(배경색 + 아이콘 + sr-only 텍스트)을 쓰므로, 버전 셀 하나를 공용 컴포넌트로 뺀다.
@@ -190,12 +192,6 @@ const isUserTypeFilter = (value: string): value is UserTypeFilter => USER_TYPE_F
 const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean =>
     filter === '전체' || leaf.userType === undefined || leaf.userType === filter
 
-const FilterIcon = ({filter}: {filter: UserTypeFilter}) => {
-    if (filter === '기업') return <Building2 aria-hidden="true" className="size-4 shrink-0" />
-    if (filter === '기관') return <Landmark aria-hidden="true" className="size-4 shrink-0" />
-    return <LayoutList aria-hidden="true" className="size-4 shrink-0" />
-}
-
 const {assetVersions, commonLayouts, structureGroups} = PUBLISHING_INDEX_CONTENT
 
 // 전체 화면(트리를 펼친 leaf) — 필터·카운트는 이 목록을 기준으로 컴포넌트 안에서 파생한다.
@@ -217,240 +213,251 @@ const PublishingIndex = () => {
 
     return (
         <section aria-labelledby="section-publishing-index" className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
-                <h2 id="section-publishing-index" className="typo-title-l-bold">
-                    퍼블리싱 인덱스
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    이 플랫폼의 화면별 퍼블리싱 진행 상태와 산출물 버전을 추적합니다. 버전은 git 태그를 기준으로 자동
-                    계산되며, 이번 릴리스에서 바뀐 항목은 강조 표시됩니다.
-                </p>
-            </div>
-
-            {/* 상태 태그 범례 */}
-            <ul aria-label="상태 범례" className="flex flex-wrap items-center gap-2">
-                {STATUS_VALUES.map((status) => (
-                    <li key={status}>
-                        <StatusTag status={status} />
-                    </li>
-                ))}
-            </ul>
-
-            {/* 자산 버전 요약 */}
-            <div className="bg-background border-border overflow-x-auto rounded-md border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">자산별 버전 예시</caption>
-                    <thead>
-                        <tr className="border-border border-b bg-gray-100/25">
-                            {assetVersions.map((a) => (
-                                <th key={a.name} scope="col" className="typo-body-l-medium px-4 py-3 text-center">
-                                    <span className="inline-flex items-center justify-center gap-1.5">
-                                        {a.kind === 'folder' ? (
-                                            <Folder
-                                                aria-hidden="true"
-                                                className="text-muted-foreground size-3.5 shrink-0"
-                                            />
-                                        ) : (
-                                            <File
-                                                aria-hidden="true"
-                                                className="text-muted-foreground size-3.5 shrink-0"
-                                            />
-                                        )}
-                                        <span className="sr-only">{a.kind === 'folder' ? '폴더 ' : '파일 '}</span>
-                                        <AssetName name={a.name} />
-                                    </span>
-                                </th>
+            <BaseCard>
+                <div className="flex flex-col gap-8">
+                    <SectionHeader>
+                        <SectionHeaderTitle id="section-publishing-index">퍼블리싱 인덱스</SectionHeaderTitle>
+                        <SectionHeaderDescription>
+                            이 플랫폼의 화면별 퍼블리싱 진행 상태와 산출물 버전을 추적합니다. 버전은 git 태그를 기준으로
+                            자동 계산되며, 이번 릴리스에서 바뀐 항목은 강조 표시됩니다.
+                        </SectionHeaderDescription>
+                    </SectionHeader>
+                    <div className="flex flex-col gap-3">
+                        {/* 상태 태그 범례 */}
+                        <ul aria-label="상태 범례" className="flex flex-wrap items-center gap-2">
+                            {STATUS_VALUES.map((status) => (
+                                <li key={status}>
+                                    <StatusTag status={status} />
+                                </li>
                             ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr className="bg-background">
-                            {assetVersions.map((a) => (
-                                <td
-                                    key={a.name}
-                                    className={`typo-body-l-regular px-4 py-3 text-center font-mono ${
-                                        a.isCurrent
-                                            ? 'bg-primary/10 text-primary font-semibold'
-                                            : 'text-muted-foreground'
-                                    }`}
-                                >
-                                    <VersionCell version={a.version} isCurrent={a.isCurrent} />
-                                </td>
-                            ))}
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                        </ul>
 
-            {/* 공통 레이아웃 — 화면을 찍어내는 틀(내부 콘텐츠만 바뀜) 단위라 화면 표와 별도로 다룬다.
-          위 자산 표와 구분되도록 간격을 더 둔다. */}
-            <div className="bg-background border-border mt-4 overflow-x-auto rounded-md border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">공통 레이아웃 상태·버전</caption>
-                    <thead>
-                        <tr className="border-border border-b bg-gray-100/25">
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                공통 레이아웃
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                상태
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                버전
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {commonLayouts.map((layout) => {
-                            const isCurrent = layout.version === BUILD_VERSION
-                            return (
-                                <tr
-                                    key={layout.label}
-                                    className={`border-border border-b last:border-b-0 ${
-                                        isCurrent ? 'bg-primary/10' : 'bg-background'
-                                    }`}
-                                >
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
-                                    >
-                                        <span className="inline-flex items-center gap-2">
-                                            <LayoutGrid
-                                                aria-hidden="true"
-                                                className="text-muted-foreground size-4 shrink-0"
-                                            />
-                                            {layout.label}
-                                        </span>
-                                    </th>
-                                    <td className="px-4 py-3">
-                                        <StatusTag status={layout.status} />
-                                    </td>
-                                    <td
-                                        className={`typo-caption-regular px-4 py-3 font-mono ${
-                                            isCurrent ? 'text-primary font-semibold' : 'text-muted-foreground'
-                                        }`}
-                                    >
-                                        <VersionCell version={layout.version} isCurrent={isCurrent} />
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
-            </div>
-
-            {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 전체/기업/기관으로 걸러 보여준다.
-          위 공통 레이아웃 표와 구분되도록 간격을 더 둔다. */}
-            <div className="mt-4 flex flex-col gap-3">
-                {/* 사용자 유형 필터 — 라디오 기반 단일 선택이다. 비어 있는 값은 무시해 항상 하나가 선택된 상태를
-                    유지한다. 화살표 키·역할은 Radix 담당. */}
-                <SegmentedControl
-                    type="radio"
-                    value={filter}
-                    onValueChange={(value) => {
-                        if (isUserTypeFilter(value)) setFilter(value)
-                    }}
-                    aria-label="사용자 유형별 화면"
-                    className="w-fit"
-                >
-                    {USER_TYPE_FILTERS.map((f) => (
-                        <SegmentedControlItem key={f} value={f} className="gap-1.5 px-4">
-                            <FilterIcon filter={f} />
-                            {f}
-                        </SegmentedControlItem>
-                    ))}
-                </SegmentedControl>
-
-                {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
-            진척률은 '최종완료' 화면 비율이라 상태값이 바뀔 때마다 자동으로 갱신된다. */}
-                <p aria-live="polite" className="typo-body-l-regular text-muted-foreground">
-                    {filter} 화면 본수: <span className="text-foreground font-semibold">{screenCount}개</span>
-                    {filter === '전체' ? ' (공통 레이아웃 제외)' : ''} · 작업 진척률:{' '}
-                    <span className="text-foreground font-semibold">{progressPercent}%</span> (최종완료 {doneCount}/
-                    {screenCount})
-                </p>
-            </div>
-
-            {/* 사이트 구조 정보 (선택된 사용자 유형으로 필터된 표) — 표의 caption 이 표 자체를 설명한다. */}
-            <div className="bg-background border-border overflow-x-auto rounded-md border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">사이트 구조별 상태·버전 예시</caption>
-                    <thead>
-                        <tr className="border-border border-b bg-gray-100/25">
-                            {depthHeaders.map((header) => (
-                                <th key={header} scope="col" className="typo-body-l-medium px-4 py-3">
-                                    {header}
-                                </th>
-                            ))}
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                상태
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                버전
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {leaves.map((leaf, i) => {
-                            const isCurrent = leaf.version === BUILD_VERSION
-                            return (
-                                <tr
-                                    key={leaf.key}
-                                    className={`border-border border-b last:border-b-0 ${
-                                        isCurrent ? 'bg-primary/10' : 'bg-background'
-                                    }`}
-                                >
-                                    {depthCells[i].map((cell, depth) => {
-                                        if (cell.kind === 'continued') return null
-                                        if (cell.kind === 'empty') {
-                                            return (
-                                                <th
-                                                    key={depth}
-                                                    scope="row"
-                                                    className="typo-caption-regular text-muted-foreground border-border border-r px-4 py-3 align-top font-normal"
-                                                >
-                                                    <span aria-hidden="true">-</span>
-                                                    <span className="sr-only">해당 없음</span>
-                                                </th>
-                                            )
-                                        }
-                                        return (
+                        {/* 자산 버전 요약 */}
+                        <div className="bg-background border-border overflow-x-auto rounded-md border">
+                            <table className="w-full text-left">
+                                <caption className="sr-only">자산별 버전 예시</caption>
+                                <thead>
+                                    <tr className="border-border border-b bg-gray-100/25">
+                                        {assetVersions.map((a) => (
                                             <th
-                                                key={depth}
-                                                scope="row"
-                                                rowSpan={cell.rowSpan}
-                                                colSpan={cell.colSpan}
-                                                className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
+                                                key={a.name}
+                                                scope="col"
+                                                className="typo-body-l-medium px-4 py-3 text-center"
                                             >
-                                                <span className="inline-flex items-center gap-2">
-                                                    <span
-                                                        aria-hidden="true"
-                                                        className={`${depthBadgeClass(depth)} flex size-5 shrink-0 items-center justify-center rounded font-mono text-xs font-bold`}
-                                                    >
-                                                        {depth + 1}
+                                                <span className="inline-flex items-center justify-center gap-1.5">
+                                                    {a.kind === 'folder' ? (
+                                                        <Folder
+                                                            aria-hidden="true"
+                                                            className="text-muted-foreground size-3.5 shrink-0"
+                                                        />
+                                                    ) : (
+                                                        <File
+                                                            aria-hidden="true"
+                                                            className="text-muted-foreground size-3.5 shrink-0"
+                                                        />
+                                                    )}
+                                                    <span className="sr-only">
+                                                        {a.kind === 'folder' ? '폴더 ' : '파일 '}
                                                     </span>
-                                                    <span className="sr-only">{depth + 1}뎁스 </span>
-                                                    {cell.label}
+                                                    <AssetName name={a.name} />
                                                 </span>
                                             </th>
+                                        ))}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr className="bg-background">
+                                        {assetVersions.map((a) => (
+                                            <td
+                                                key={a.name}
+                                                className={`typo-body-l-regular px-4 py-3 text-center font-mono ${
+                                                    a.isCurrent
+                                                        ? 'bg-primary/10 text-primary font-semibold'
+                                                        : 'text-muted-foreground'
+                                                }`}
+                                            >
+                                                <VersionCell version={a.version} isCurrent={a.isCurrent} />
+                                            </td>
+                                        ))}
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* 공통 레이아웃 — 화면을 찍어내는 틀(내부 콘텐츠만 바뀜) 단위라 화면 표와 별도로 다룬다.
+          위 자산 표와 구분되도록 간격을 더 둔다. */}
+                        <div className="bg-background border-border overflow-x-auto rounded-md border">
+                            <table className="w-full text-left">
+                                <caption className="sr-only">공통 레이아웃 상태·버전</caption>
+                                <thead>
+                                    <tr className="border-border border-b bg-gray-100/25">
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            공통 레이아웃
+                                        </th>
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            상태
+                                        </th>
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            버전
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {commonLayouts.map((layout) => {
+                                        const isCurrent = layout.version === BUILD_VERSION
+                                        return (
+                                            <tr
+                                                key={layout.label}
+                                                className={`border-border border-b last:border-b-0 ${
+                                                    isCurrent ? 'bg-primary/10' : 'bg-background'
+                                                }`}
+                                            >
+                                                <th
+                                                    scope="row"
+                                                    className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
+                                                >
+                                                    <span className="inline-flex items-center gap-2">
+                                                        <LayoutGrid
+                                                            aria-hidden="true"
+                                                            className="text-muted-foreground size-4 shrink-0"
+                                                        />
+                                                        {layout.label}
+                                                    </span>
+                                                </th>
+                                                <td className="px-4 py-3">
+                                                    <StatusTag status={layout.status} />
+                                                </td>
+                                                <td
+                                                    className={`typo-caption-regular px-4 py-3 font-mono ${
+                                                        isCurrent
+                                                            ? 'text-primary font-semibold'
+                                                            : 'text-muted-foreground'
+                                                    }`}
+                                                >
+                                                    <VersionCell version={layout.version} isCurrent={isCurrent} />
+                                                </td>
+                                            </tr>
                                         )
                                     })}
-                                    <td className="px-4 py-3">
-                                        <StatusTag status={leaf.status} />
-                                    </td>
-                                    <td
-                                        className={`typo-caption-regular px-4 py-3 font-mono ${
-                                            isCurrent ? 'text-primary font-semibold' : 'text-muted-foreground'
-                                        }`}
-                                    >
-                                        <VersionCell version={leaf.version} isCurrent={isCurrent} />
-                                    </td>
-                                </tr>
-                            )
-                        })}
-                    </tbody>
-                </table>
-            </div>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                        {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 전체/기업/기관으로 걸러 보여준다.
+          위 공통 레이아웃 표와 구분되도록 간격을 더 둔다. */}
+                        {/* 사용자 유형 필터 — 라디오 기반 단일 선택이다. 비어 있는 값은 무시해 항상 하나가 선택된 상태를
+                    유지한다. 화살표 키·역할은 Radix 담당. */}
+                        <SegmentedControl
+                            type="radio"
+                            value={filter}
+                            onValueChange={(value) => {
+                                if (isUserTypeFilter(value)) setFilter(value)
+                            }}
+                            aria-label="사용자 유형별 화면"
+                            className="w-fit"
+                        >
+                            {USER_TYPE_FILTERS.map((f) => (
+                                <SegmentedControlItem key={f} value={f} className="px-4">
+                                    {f}
+                                </SegmentedControlItem>
+                            ))}
+                        </SegmentedControl>
+
+                        {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
+            진척률은 '최종완료' 화면 비율이라 상태값이 바뀔 때마다 자동으로 갱신된다. */}
+                        <p aria-live="polite" className="typo-body-l-regular text-muted-foreground">
+                            {filter} 화면 본수: <span className="text-foreground font-semibold">{screenCount}개</span>
+                            {filter === '전체' ? ' (공통 레이아웃 제외)' : ''} · 작업 진척률:{' '}
+                            <span className="text-foreground font-semibold">{progressPercent}%</span> (최종완료{' '}
+                            {doneCount}/{screenCount})
+                        </p>
+                        {/* 사이트 구조 정보 (선택된 사용자 유형으로 필터된 표) — 표의 caption 이 표 자체를 설명한다. */}
+                        <div className="bg-background border-border overflow-x-auto rounded-md border">
+                            <table className="w-full text-left">
+                                <caption className="sr-only">사이트 구조별 상태·버전 예시</caption>
+                                <thead>
+                                    <tr className="border-border border-b bg-gray-100/25">
+                                        {depthHeaders.map((header) => (
+                                            <th key={header} scope="col" className="typo-body-l-medium px-4 py-3">
+                                                {header}
+                                            </th>
+                                        ))}
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            상태
+                                        </th>
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            버전
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {leaves.map((leaf, i) => {
+                                        const isCurrent = leaf.version === BUILD_VERSION
+                                        return (
+                                            <tr
+                                                key={leaf.key}
+                                                className={`border-border border-b last:border-b-0 ${
+                                                    isCurrent ? 'bg-primary/10' : 'bg-background'
+                                                }`}
+                                            >
+                                                {depthCells[i].map((cell, depth) => {
+                                                    if (cell.kind === 'continued') return null
+                                                    if (cell.kind === 'empty') {
+                                                        return (
+                                                            <th
+                                                                key={depth}
+                                                                scope="row"
+                                                                className="typo-caption-regular text-muted-foreground border-border border-r px-4 py-3 align-top font-normal"
+                                                            >
+                                                                <span aria-hidden="true">-</span>
+                                                                <span className="sr-only">해당 없음</span>
+                                                            </th>
+                                                        )
+                                                    }
+                                                    return (
+                                                        <th
+                                                            key={depth}
+                                                            scope="row"
+                                                            rowSpan={cell.rowSpan}
+                                                            colSpan={cell.colSpan}
+                                                            className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
+                                                        >
+                                                            <span className="inline-flex items-center gap-2">
+                                                                <span
+                                                                    aria-hidden="true"
+                                                                    className={`${depthBadgeClass(depth)} flex size-5 shrink-0 items-center justify-center rounded font-mono text-xs font-bold`}
+                                                                >
+                                                                    {depth + 1}
+                                                                </span>
+                                                                <span className="sr-only">{depth + 1}뎁스 </span>
+                                                                {cell.label}
+                                                            </span>
+                                                        </th>
+                                                    )
+                                                })}
+                                                <td className="px-4 py-3">
+                                                    <StatusTag status={leaf.status} />
+                                                </td>
+                                                <td
+                                                    className={`typo-caption-regular px-4 py-3 font-mono ${
+                                                        isCurrent
+                                                            ? 'text-primary font-semibold'
+                                                            : 'text-muted-foreground'
+                                                    }`}
+                                                >
+                                                    <VersionCell version={leaf.version} isCurrent={isCurrent} />
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </BaseCard>
         </section>
     )
 }

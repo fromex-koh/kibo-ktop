@@ -2,6 +2,8 @@ import Link from 'next/link'
 import {ArrowUpRight, GitBranch} from 'lucide-react'
 import PublishingIndex from '@/components/custom/publishing-index'
 import ThemeToggle from '@/components/composite/theme-toggle'
+import {BaseCard} from '@/components/composite/base-card'
+import {Button} from '@/components/ui/button'
 import {Badge} from '@/components/ui/badge'
 import {ICON_REGISTRY} from '@/constants/icon-registry'
 import {HOME_CONTENT} from '@/content'
@@ -12,8 +14,6 @@ import {REPOSITORY_URL, SITE_NAME} from '@/constants/site'
 const {badge, projectInfo, guide} = HOME_CONTENT
 const ProjectInfoIcon = ICON_REGISTRY[projectInfo.icon]
 const GuideIcon = ICON_REGISTRY[guide.icon]
-
-const CARD_CLASS = 'bg-gray-100/25 flex flex-col gap-3 rounded-xl p-6'
 
 // 저장소 링크에 URL 자체를 노출해 보는 사람이 주소를 확인할 수 있게 한다(스킴은 생략해 간결하게).
 const REPOSITORY_URL_LABEL = REPOSITORY_URL.replace(/^https?:\/\//, '')
@@ -44,13 +44,14 @@ const Home = () => {
 
                 <div className="grid gap-6 md:grid-cols-2">
                     {/* 프로젝트 정보 */}
-                    <section aria-labelledby="section-project" className={CARD_CLASS}>
-                        <div className="flex items-center gap-2">
-                            <ProjectInfoIcon aria-hidden="true" className="text-primary size-6" />
-                            <h2 id="section-project" className="typo-title-l-bold">
-                                {projectInfo.title}
-                            </h2>
-                        </div>
+                    <BaseCard
+                        title={
+                            <span className="flex items-center gap-2">
+                                <ProjectInfoIcon aria-hidden="true" className="text-primary size-6" />
+                                <span>{projectInfo.title}</span>
+                            </span>
+                        }
+                    >
                         <dl className="flex flex-col gap-3 text-sm">
                             <div className="flex items-center gap-3">
                                 <dt className="text-muted-foreground w-16 shrink-0">저장소</dt>
@@ -72,30 +73,26 @@ const Home = () => {
                                 <dd>{projectInfo.author}</dd>
                             </div>
                         </dl>
-                    </section>
+                    </BaseCard>
 
                     {/* 컴포넌트 가이드 */}
-                    <section aria-labelledby="section-guide" className={CARD_CLASS}>
-                        <div className="flex items-start justify-between gap-4">
-                            <div className="flex items-center gap-2">
+                    <BaseCard
+                        title={
+                            <span className="flex items-center gap-2">
                                 <GuideIcon aria-hidden="true" className="text-primary size-6 shrink-0" />
-                                <h2 id="section-guide" className="typo-title-l-bold">
-                                    {guide.title}
-                                </h2>
-                            </div>
-                            <Link
-                                href={guide.href}
-                                aria-label={guide.linkLabel}
-                                className="group bg-primary focus-visible:ring-ring focus-visible:ring-offset-background inline-flex min-h-11 min-w-11 shrink-0 items-center justify-center rounded-full transition-opacity hover:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                            >
-                                <ArrowUpRight
-                                    aria-hidden="true"
-                                    className="text-background size-5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                                />
-                            </Link>
-                        </div>
+                                <span>{guide.title}</span>
+                            </span>
+                        }
+                        action={
+                            <Button asChild variant="default" size="icon" className="rounded-full">
+                                <Link href={guide.href} aria-label={guide.linkLabel}>
+                                    <ArrowUpRight aria-hidden="true" />
+                                </Link>
+                            </Button>
+                        }
+                    >
                         <p className="typo-body-l-regular text-muted-foreground">{guide.description}</p>
-                    </section>
+                    </BaseCard>
                 </div>
 
                 <PublishingIndex />
