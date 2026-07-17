@@ -57,28 +57,15 @@ const CheckboxFormDemo = () => {
                 </FieldDescription>
                 <FieldGroup className="gap-3">
                     <Field orientation="horizontal" className="w-fit">
-                        <Checkbox
-                            id="form-interest-ai"
-                            name="interest"
-                            value="ai"
-                            defaultChecked
-                        />
+                        <Checkbox id="form-interest-ai" name="interest" value="ai" defaultChecked />
                         <FieldLabel htmlFor="form-interest-ai">AI</FieldLabel>
                     </Field>
                     <Field orientation="horizontal" className="w-fit">
-                        <Checkbox
-                            id="form-interest-cloud"
-                            name="interest"
-                            value="cloud"
-                        />
+                        <Checkbox id="form-interest-cloud" name="interest" value="cloud" />
                         <FieldLabel htmlFor="form-interest-cloud">클라우드</FieldLabel>
                     </Field>
                     <Field orientation="horizontal" className="w-fit">
-                        <Checkbox
-                            id="form-interest-security"
-                            name="interest"
-                            value="security"
-                        />
+                        <Checkbox id="form-interest-security" name="interest" value="security" />
                         <FieldLabel htmlFor="form-interest-security">보안</FieldLabel>
                     </Field>
                 </FieldGroup>

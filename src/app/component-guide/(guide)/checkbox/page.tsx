@@ -335,9 +335,10 @@ const CheckboxGuidePage = () => (
                         <em>Missing form label</em>로 탐지할 수 있습니다. 해당 input은{' '}
                         <code className="font-mono">aria-hidden=&quot;true&quot;</code>와{' '}
                         <code className="font-mono">tabindex=&quot;-1&quot;</code>로 접근성 트리와 키보드 탐색에서
-                        제외됩니다. 실제 조작 요소인 <code className="font-mono">button[role=&quot;checkbox&quot;]</code>은{' '}
-                        연결된 Label을 통해 접근 가능한 이름을 제공하므로 실제 사용자 접근성에 영향을 주지 않는 자동
-                        검사 오탐으로 판단하여 예외 처리합니다.
+                        제외됩니다. 실제 조작 요소인{' '}
+                        <code className="font-mono">button[role=&quot;checkbox&quot;]</code>은 연결된 Label을 통해 접근
+                        가능한 이름을 제공하므로 실제 사용자 접근성에 영향을 주지 않는 자동 검사 오탐으로 판단하여 예외
+                        처리합니다.
                     </p>
                 </div>
             </div>
