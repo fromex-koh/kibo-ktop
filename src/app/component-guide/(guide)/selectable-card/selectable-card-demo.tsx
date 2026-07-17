@@ -17,7 +17,7 @@ const OptionalBadge = () => (
     </Badge>
 )
 
-// 상태 큐레이션 — 체크전·체크후·비활성(disabled)·읽기전용(readOnly).
+// 상태 큐레이션 — 체크전·체크후·비활성(disabled).
 export const SelectableCardStatesDemo = () => {
     const [unchecked, setUnchecked] = useState(false)
     const [checked, setChecked] = useState(true)
@@ -31,9 +31,6 @@ export const SelectableCardStatesDemo = () => {
             </SelectableCard>
             <SelectableCard control="checkbox" checked={false} disabled>
                 비활성 (disabled)
-            </SelectableCard>
-            <SelectableCard control="checkbox" checked readOnly>
-                읽기전용 (readOnly)
             </SelectableCard>
         </div>
     )
@@ -123,19 +120,6 @@ export const SelectableCardRadioStatesDemo = () => (
                 비활성 선택
             </SelectableCard>
         </SelectableCardGroup>
-        <SelectableCardGroup
-            name="radio-readonly-state"
-            aria-label="읽기전용 라디오 상태"
-            value="readonly-checked"
-            className="grid-cols-2 gap-3"
-        >
-            <SelectableCard control="radio" value="readonly-default" readOnly>
-                읽기전용 미선택
-            </SelectableCard>
-            <SelectableCard control="radio" value="readonly-checked" readOnly>
-                읽기전용 선택
-            </SelectableCard>
-        </SelectableCardGroup>
     </div>
 )
 
@@ -179,28 +163,6 @@ export const SelectableCardFormDemo = () => {
             </fieldset>
 
             <fieldset className="flex flex-col gap-3">
-                <legend id="reception-channel-label" className="typo-title-l-medium text-foreground">
-                    접수 채널
-                </legend>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    최초 접수 시 선택한 채널이며 신청 단계에서는 변경할 수 없습니다.
-                </p>
-                <SelectableCardGroup
-                    name="receptionChannel"
-                    aria-labelledby="reception-channel-label"
-                    value="online"
-                    className="grid-cols-2 gap-3"
-                >
-                    <SelectableCard control="radio" value="online" readOnly>
-                        온라인 접수
-                    </SelectableCard>
-                    <SelectableCard control="radio" value="in-person" readOnly>
-                        방문 접수
-                    </SelectableCard>
-                </SelectableCardGroup>
-            </fieldset>
-
-            <fieldset className="flex flex-col gap-3">
                 <legend className="typo-title-l-medium text-foreground">필수 동의</legend>
                 <SelectableCard
                     control="checkbox"
@@ -219,7 +181,7 @@ export const SelectableCardFormDemo = () => {
                 <div className="flex items-center gap-3">
                     <Button type="submit">신청 내용 확인</Button>
                     <span className="typo-body-l-regular text-muted-foreground">
-                        선택한 값이 실제 FormData에 포함되는지 확인합니다.
+                        name과 value를 지정한 선택값이 FormData에 포함되는지 확인합니다.
                     </span>
                 </div>
                 <output

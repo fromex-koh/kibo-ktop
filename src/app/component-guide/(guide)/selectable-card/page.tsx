@@ -36,10 +36,6 @@ const RADIO_STATES_CODE = `<div className="flex flex-col gap-3">
     <SelectableCard control="radio" value="disabled-default" disabled>비활성 미선택</SelectableCard>
     <SelectableCard control="radio" value="disabled-checked" disabled>비활성 선택</SelectableCard>
   </SelectableCardGroup>
-  <SelectableCardGroup name="readonly-state" aria-label="읽기전용 라디오 상태" value="readonly-checked" className="grid-cols-2 gap-3">
-    <SelectableCard control="radio" value="readonly-default" readOnly>읽기전용 미선택</SelectableCard>
-    <SelectableCard control="radio" value="readonly-checked" readOnly>읽기전용 선택</SelectableCard>
-  </SelectableCardGroup>
 </div>`
 
 const CHECKBOX_CODE = `<SelectableCard control="checkbox" name="agreement" value="all" checked={checked} onCheckedChange={setChecked}>
@@ -58,15 +54,6 @@ const FORM_CODE = `<form onSubmit={handleSubmit}>
     >
       <SelectableCard control="radio" value="corporation">법인사업자</SelectableCard>
       <SelectableCard control="radio" value="sole-proprietor">개인사업자</SelectableCard>
-    </SelectableCardGroup>
-  </fieldset>
-
-  {/* readOnly는 조작을 막지만 hidden input으로 현재 값을 제출합니다. */}
-  <fieldset>
-    <legend id="reception-channel-label">접수 채널</legend>
-    <SelectableCardGroup name="receptionChannel" aria-labelledby="reception-channel-label" value="online">
-      <SelectableCard control="radio" value="online" readOnly>온라인 접수</SelectableCard>
-      <SelectableCard control="radio" value="in-person" readOnly>방문 접수</SelectableCard>
     </SelectableCardGroup>
   </fieldset>
 
@@ -91,14 +78,14 @@ const PROPS = [
     {
         component: 'SelectableCardGroup',
         name: 'name',
-        description: '폼 제출 필드 이름입니다. 누락할 수 없는 필수 속성입니다.',
+        description: '폼 제출 시 사용할 필드 이름입니다. 화면 상태 선택에만 사용한다면 생략할 수 있습니다.',
         defaultValue: '-',
         control: 'string',
     },
     {
         component: 'SelectableCardGroup',
         name: 'aria-label / aria-labelledby',
-        description: '라디오 그룹의 접근성 이름입니다. 두 속성 중 하나를 반드시 제공합니다.',
+        description: '라디오 그룹의 목적을 보조기기에 전달합니다. 사용 시 두 속성 중 하나를 제공합니다.',
         defaultValue: '-',
         control: 'string',
     },
@@ -141,7 +128,7 @@ const PROPS = [
     {
         component: 'SelectableCard',
         name: 'value',
-        description: '폼 제출 값입니다. radio 카드에서는 타입 수준의 필수 속성이고 checkbox에서는 선택 사항입니다.',
+        description: '폼 제출 값입니다. radio 카드에는 각 항목을 구분하는 고유한 값을 지정합니다.',
         defaultValue: '-',
         control: 'string',
     },
@@ -170,13 +157,6 @@ const PROPS = [
         component: 'SelectableCard',
         name: 'disabled',
         description: '상호작용을 막고 공통 비활성 배경·텍스트·테두리 토큰을 적용합니다.',
-        defaultValue: 'false',
-        control: 'boolean',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'readOnly',
-        description: '값 변경과 포커스를 막습니다. name이 있으면 선택된 현재 값을 hidden input으로 폼 제출합니다.',
         defaultValue: 'false',
         control: 'boolean',
     },
@@ -228,9 +208,8 @@ const SelectableCardGuidePage = () => (
                     상태 (State)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    체크전·체크후·비활성·읽기전용 상태입니다. <code className="font-mono">disabled</code> 와{' '}
-                    <code className="font-mono">readOnly</code> 는 모두 공통 disabled 토큰으로 잠금 상태를 표시하며,
-                    readOnly도 값 변경과 포커스를 막습니다.
+                    체크전·체크후·비활성 상태입니다. <code className="font-mono">disabled</code>는 primitive의
+                    상호작용과 폼 제출 규칙을 그대로 따르며 공통 disabled 토큰으로 표시합니다.
                 </p>
             </div>
             <SelectableCardStatesDemo />
@@ -268,8 +247,8 @@ const SelectableCardGuidePage = () => (
             <div className="flex flex-col gap-3">
                 <h3 className="typo-title-l-medium text-foreground">라디오 상태 큐레이션</h3>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    라디오 카드도 체크박스 카드와 동일하게 기본·선택됨·비활성·읽기전용 상태를 확인할 수 있습니다.
-                    비활성/읽기전용은 미선택과 선택 케이스를 함께 둬서 border 표시 규칙까지 비교합니다.
+                    라디오 카드도 체크박스 카드와 동일하게 기본·선택됨·비활성 상태를 확인할 수 있습니다. 비활성은
+                    미선택과 선택 케이스를 함께 둬서 border 표시 규칙까지 비교합니다.
                 </p>
                 <SelectableCardRadioStatesDemo />
             </div>
@@ -284,12 +263,13 @@ const SelectableCardGuidePage = () => (
                     신청 Form 제출
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    실제 신청 화면을 가정해 신청 주체, 필수 동의, 변경할 수 없는 접수 채널을 구성했습니다. 라디오는
-                    그룹의 <code className="font-mono">name</code>, 체크박스는 카드의{' '}
-                    <code className="font-mono">name</code>과 <code className="font-mono">value</code>로 제출됩니다.{' '}
-                    <code className="font-mono">disabled</code> 값은 HTML 표준대로 제외하고,{' '}
-                    <code className="font-mono">readOnly</code>의 선택값은 hidden input으로 유지합니다. 아래 버튼으로
-                    실제 <code className="font-mono">FormData</code> 결과를 확인할 수 있습니다.
+                    실제 신청 화면을 가정해 신청 주체와 필수 동의를 구성했습니다. 라디오는 그룹에{' '}
+                    <code className="font-mono">name</code>, 각 항목에 <code className="font-mono">value</code>를
+                    지정하고, 체크박스는 카드에 <code className="font-mono">name</code>과{' '}
+                    <code className="font-mono">value</code>를 지정하면 선택값이 제출됩니다. 컴포넌트가 실제{' '}
+                    <code className="font-mono">form</code> 안에 있어야 하며,{' '}
+                    <code className="font-mono">disabled</code> 값은 폼 제출에서 제외됩니다. 아래 버튼으로 실제{' '}
+                    <code className="font-mono">FormData</code> 결과를 확인할 수 있습니다.
                 </p>
             </div>
             <SelectableCardFormDemo />

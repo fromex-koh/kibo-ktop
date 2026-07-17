@@ -2,7 +2,7 @@
 
 import {useState, type ComponentProps} from 'react'
 import {Checkbox} from '@/components/ui/checkbox'
-import {Label} from '@/components/ui/label'
+import {Field, FieldGroup, FieldLabel} from '@/components/ui/field'
 
 const OPTIONS = [
     {id: 'email', label: '이메일 알림'},
@@ -29,26 +29,38 @@ const CheckboxIndeterminateDemo = () => {
     }
 
     return (
-        <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-                <Checkbox id="notification-all" checked={parentChecked} onCheckedChange={toggleAll} />
-                <Label htmlFor="notification-all" className="text-foreground font-bold">
+        <FieldGroup className="gap-3">
+            <Field orientation="horizontal" className="w-fit">
+                <Checkbox
+                    id="notification-all"
+                    checked={parentChecked}
+                    onCheckedChange={toggleAll}
+                    aria-labelledby="notification-all-label"
+                />
+                <FieldLabel
+                    id="notification-all-label"
+                    htmlFor="notification-all"
+                    className="text-foreground font-bold"
+                >
                     알림 전체 선택
-                </Label>
-            </div>
-            <div className="border-border ml-3 flex flex-col gap-2 border-l pl-5">
+                </FieldLabel>
+            </Field>
+            <FieldGroup className="border-border ml-3 gap-2 border-l pl-5">
                 {OPTIONS.map(({id, label}) => (
-                    <div key={id} className="flex items-center gap-2">
+                    <Field key={id} orientation="horizontal" className="w-fit">
                         <Checkbox
                             id={`notification-${id}`}
+                            aria-labelledby={`notification-${id}-label`}
                             checked={selected.has(id)}
                             onCheckedChange={(checked) => toggleOption(id, checked)}
                         />
-                        <Label htmlFor={`notification-${id}`}>{label}</Label>
-                    </div>
+                        <FieldLabel id={`notification-${id}-label`} htmlFor={`notification-${id}`}>
+                            {label}
+                        </FieldLabel>
+                    </Field>
                 ))}
-            </div>
-        </div>
+            </FieldGroup>
+        </FieldGroup>
     )
 }
 

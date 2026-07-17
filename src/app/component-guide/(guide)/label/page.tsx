@@ -20,14 +20,14 @@ const REQUIRED_CODE = `<Label htmlFor="name" className="gap-1 font-bold text-for
 </Label>`
 
 const CHECKBOX_CODE = `<div className="flex max-w-90 items-center gap-2">
-  <Checkbox id="terms" defaultChecked />
-  <Label htmlFor="terms">이용약관에 동의합니다</Label>
+  <Checkbox id="terms" defaultChecked aria-labelledby="terms-label" />
+  <Label id="terms-label" htmlFor="terms">이용약관에 동의합니다</Label>
 </div>`
 
 const DISABLED_CODE = `{/* 연결된 컨트롤이 disabled 이면 peer-disabled 로 라벨 색상도 바뀐다 */}
 <div className="flex max-w-90 items-center gap-2">
-  <Checkbox id="opt-in" disabled className="peer" />
-  <Label htmlFor="opt-in">비활성 옵션</Label>
+  <Checkbox id="opt-in" disabled className="peer" aria-labelledby="opt-in-label" />
+  <Label id="opt-in-label" htmlFor="opt-in">비활성 옵션</Label>
 </div>`
 
 const STYLE_ROWS = [
@@ -143,8 +143,10 @@ const LabelGuidePage = () => (
                     <span className="typo-caption-regular text-muted-foreground">— 라벨 Regular(400), 기본 그대로</span>
                 </h3>
                 <div className="flex max-w-90 items-center gap-2">
-                    <Checkbox id="compose-terms" defaultChecked />
-                    <Label htmlFor="compose-terms">이용약관에 동의합니다</Label>
+                    <Checkbox id="compose-terms" defaultChecked aria-labelledby="compose-terms-label" />
+                    <Label id="compose-terms-label" htmlFor="compose-terms">
+                        이용약관에 동의합니다
+                    </Label>
                 </div>
                 <CodeBlock code={CHECKBOX_CODE} language="tsx" copyLabel="복사" />
             </div>
@@ -196,8 +198,10 @@ const LabelGuidePage = () => (
                     불필요).
                 </p>
                 <div className="flex max-w-90 items-center gap-2">
-                    <Checkbox id="compose-opt" disabled className="peer" />
-                    <Label htmlFor="compose-opt">비활성 옵션</Label>
+                    <Checkbox id="compose-opt" disabled className="peer" aria-labelledby="compose-opt-label" />
+                    <Label id="compose-opt-label" htmlFor="compose-opt">
+                        비활성 옵션
+                    </Label>
                 </div>
                 <CodeBlock code={DISABLED_CODE} language="tsx" copyLabel="복사" />
             </div>

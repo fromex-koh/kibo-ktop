@@ -5,35 +5,58 @@ import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Label} from '@/components/ui/label'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
+import RadioFormDemo from './radio-form-demo'
 
 export const metadata: Metadata = {title: '라디오 (Radio)'}
 
 const USAGE_CODE = `<RadioGroup defaultValue="card" aria-label="결제 수단">
   <div className={cn('flex w-fit max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
-    <RadioGroupItem value="card" id="pay-card" />
-    <Label htmlFor="pay-card">신용카드</Label>
+    <RadioGroupItem value="card" id="pay-card" aria-labelledby="pay-card-label" />
+    <Label id="pay-card-label" htmlFor="pay-card">신용카드</Label>
   </div>
   <div className={cn('flex w-fit max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
-    <RadioGroupItem value="transfer" id="pay-transfer" />
-    <Label htmlFor="pay-transfer">계좌이체</Label>
+    <RadioGroupItem value="transfer" id="pay-transfer" aria-labelledby="pay-transfer-label" />
+    <Label id="pay-transfer-label" htmlFor="pay-transfer">계좌이체</Label>
   </div>
 </RadioGroup>`
 
 const DEPTH1_CODE = `<div className={cn('flex w-fit max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
-  <RadioGroupItem value="r1" id="r-1" />
-  <Label htmlFor="r-1">라디오버튼</Label>
+  <RadioGroupItem value="r1" id="r-1" aria-labelledby="r-1-label" />
+  <Label id="r-1-label" htmlFor="r-1">라디오버튼</Label>
 </div>`
 
 const DEPTH2_CODE = `<div className={cn('flex w-fit max-w-90 flex-col gap-1', FIELD_FOCUS_RING)}>
   <div className="flex items-center gap-2">
-    <RadioGroupItem value="r2" id="r-2" aria-describedby="r-2-desc" />
-    <Label htmlFor="r-2" className="font-bold text-foreground">라디오버튼</Label>
+    <RadioGroupItem value="r2" id="r-2" aria-labelledby="r-2-label" aria-describedby="r-2-desc" />
+    <Label id="r-2-label" htmlFor="r-2" className="font-bold text-foreground">라디오버튼</Label>
   </div>
   {/* 설명은 제목 아래로 들여쓰기(ml-8). 폭은 감싸는 wrapper 의 max-w-90(360)이 잡는다. */}
   <p id="r-2-desc" className="typo-body-xl-regular text-label-foreground ml-8">
     2depth 스타일의 부가적인 설명이 들어갈 경우 해당 예시처럼 사용됩니다.
   </p>
 </div>`
+
+const FORM_CODE = `<form onSubmit={handleSubmit}>
+  <fieldset>
+    <legend id="payment-method-label">결제 수단</legend>
+    <RadioGroup
+      name="paymentMethod"
+      defaultValue="card"
+      aria-labelledby="payment-method-label"
+      required
+    >
+      <RadioGroupItem id="payment-card" value="card" aria-labelledby="payment-card-label" />
+      <Label id="payment-card-label" htmlFor="payment-card">신용카드</Label>
+
+      <RadioGroupItem id="payment-transfer" value="transfer" aria-labelledby="payment-transfer-label" />
+      <Label id="payment-transfer-label" htmlFor="payment-transfer">계좌이체</Label>
+    </RadioGroup>
+  </fieldset>
+  <Button type="submit">제출</Button>
+</form>
+
+const formData = new FormData(form)
+formData.get('paymentMethod') // "card"`
 
 // Figma radio 의 두 축 — check(off/on) × state(default/disabled).
 const CHECK_ROWS = [
@@ -68,12 +91,16 @@ const RadioGuidePage = () => (
             </div>
             <RadioGroup defaultValue="card" aria-label="결제 수단" className="flex flex-col gap-3">
                 <div className={cn('flex w-fit max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
-                    <RadioGroupItem value="card" id="pay-card" />
-                    <Label htmlFor="pay-card">신용카드</Label>
+                    <RadioGroupItem value="card" id="pay-card" aria-labelledby="pay-card-label" />
+                    <Label id="pay-card-label" htmlFor="pay-card">
+                        신용카드
+                    </Label>
                 </div>
                 <div className={cn('flex w-fit max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
-                    <RadioGroupItem value="transfer" id="pay-transfer" />
-                    <Label htmlFor="pay-transfer">계좌이체</Label>
+                    <RadioGroupItem value="transfer" id="pay-transfer" aria-labelledby="pay-transfer-label" />
+                    <Label id="pay-transfer-label" htmlFor="pay-transfer">
+                        계좌이체
+                    </Label>
                 </div>
             </RadioGroup>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
@@ -129,8 +156,17 @@ const RadioGuidePage = () => (
                                                         FIELD_FOCUS_RING,
                                                     )}
                                                 >
-                                                    <RadioGroupItem value="on" id={`radio-${row.key}-${col.key}`} />
-                                                    <Label htmlFor={`radio-${row.key}-${col.key}`}>라디오버튼</Label>
+                                                    <RadioGroupItem
+                                                        value="on"
+                                                        id={`radio-${row.key}-${col.key}`}
+                                                        aria-labelledby={`radio-${row.key}-${col.key}-label`}
+                                                    />
+                                                    <Label
+                                                        id={`radio-${row.key}-${col.key}-label`}
+                                                        htmlFor={`radio-${row.key}-${col.key}`}
+                                                    >
+                                                        라디오버튼
+                                                    </Label>
                                                 </div>
                                             </RadioGroup>
                                         </div>
@@ -159,8 +195,10 @@ const RadioGuidePage = () => (
                 <RadioGroup defaultValue="r1" aria-label="1depth 라디오 예시" className="flex flex-col gap-2">
                     <h3 className="typo-body-l-medium text-foreground">1depth — 라벨만</h3>
                     <div className={cn('flex w-fit max-w-90 items-center gap-2', FIELD_FOCUS_RING)}>
-                        <RadioGroupItem value="r1" id="depth-r1" />
-                        <Label htmlFor="depth-r1">라디오버튼</Label>
+                        <RadioGroupItem value="r1" id="depth-r1" aria-labelledby="depth-r1-label" />
+                        <Label id="depth-r1-label" htmlFor="depth-r1">
+                            라디오버튼
+                        </Label>
                     </div>
                     <CodeBlock code={DEPTH1_CODE} language="tsx" copyLabel="복사" />
                 </RadioGroup>
@@ -176,8 +214,13 @@ const RadioGuidePage = () => (
                     </p>
                     <div className={cn('flex w-fit max-w-90 flex-col gap-1', FIELD_FOCUS_RING)}>
                         <div className="flex items-center gap-2">
-                            <RadioGroupItem value="r2" id="depth-r2" aria-describedby="depth-r2-desc" />
-                            <Label htmlFor="depth-r2" className="text-foreground font-bold">
+                            <RadioGroupItem
+                                value="r2"
+                                id="depth-r2"
+                                aria-labelledby="depth-r2-label"
+                                aria-describedby="depth-r2-desc"
+                            />
+                            <Label id="depth-r2-label" htmlFor="depth-r2" className="text-foreground font-bold">
                                 라디오버튼
                             </Label>
                         </div>
@@ -188,6 +231,24 @@ const RadioGuidePage = () => (
                     <CodeBlock code={DEPTH2_CODE} language="tsx" copyLabel="복사" />
                 </RadioGroup>
             </div>
+        </section>
+
+        <section aria-labelledby="radio-form" className="flex flex-col gap-4">
+            <div>
+                <h2 id="radio-form" className="typo-h4-bold">
+                    폼 제출
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    실제 <code className="font-mono">form</code> 안에서 <code className="font-mono">RadioGroup</code>에{' '}
+                    <code className="font-mono">name</code>, 각 <code className="font-mono">RadioGroupItem</code>에
+                    고유한 <code className="font-mono">value</code>를 지정하면 선택값 하나가 제출됩니다.{' '}
+                    <code className="font-mono">required</code>는 그룹의 필수 선택을 검증하고,{' '}
+                    <code className="font-mono">form</code>은 외부 form 요소와 연결할 때 사용합니다.{' '}
+                    <code className="font-mono">disabled</code> 항목은 제출에서 제외됩니다.
+                </p>
+            </div>
+            <RadioFormDemo />
+            <CodeBlock code={FORM_CODE} language="tsx" copyLabel="복사" />
         </section>
 
         <section aria-labelledby="radio-props" className="flex flex-col gap-4">
@@ -237,6 +298,18 @@ const RadioGuidePage = () => (
                                 desc: 'RadioGroup — 선택이 바뀔 때 호출되는 콜백입니다.',
                                 def: '-',
                                 control: '(value) => void',
+                            },
+                            {
+                                name: 'name',
+                                desc: 'RadioGroup — 폼 제출 시 사용할 필드 이름입니다.',
+                                def: '-',
+                                control: 'string',
+                            },
+                            {
+                                name: 'required / form',
+                                desc: 'RadioGroup — 네이티브 필수 선택 검증과 외부 form 연결에 사용합니다.',
+                                def: 'false / -',
+                                control: 'boolean / string',
                             },
                             {
                                 name: 'disabled',
