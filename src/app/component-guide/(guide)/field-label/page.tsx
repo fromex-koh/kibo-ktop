@@ -26,8 +26,28 @@ const INVALID_CODE = `<Field data-invalid className={cn('max-w-90', FIELD_FOCUS_
     <span aria-hidden="true" className="text-error-500">*</span>
     <span className="sr-only"> (필수)</span>
   </FieldLabel>
-  <Input id="manager-name" required aria-invalid aria-describedby="manager-name-error" />
+  <Input
+    id="manager-name"
+    placeholder="담당자명을 입력하세요"
+    required
+    aria-invalid
+    aria-describedby="manager-name-error"
+  />
   <FieldError id="manager-name-error">담당자명을 입력해 주세요.</FieldError>
+</Field>
+
+<Field data-disabled="true" className="max-w-90">
+  <FieldLabel htmlFor="reception-agency" className="font-bold text-foreground">
+    접수 기관
+  </FieldLabel>
+  <Input
+    id="reception-agency"
+    value="기술보증기금"
+    placeholder="접수 기관을 입력하세요"
+    disabled
+    readOnly
+  />
+  <FieldDescription>비활성 상태에서는 수정할 수 없습니다.</FieldDescription>
 </Field>`
 
 const PROPS_ITEMS = [
@@ -127,6 +147,7 @@ const FieldLabelGuidePage = () => (
                     </FieldLabel>
                     <Input
                         id="field-label-manager"
+                        placeholder="담당자명을 입력하세요"
                         required
                         aria-invalid
                         aria-describedby="field-label-manager-error"
@@ -137,7 +158,13 @@ const FieldLabelGuidePage = () => (
                     <FieldLabel htmlFor="field-label-disabled" className="text-foreground font-bold">
                         접수 기관
                     </FieldLabel>
-                    <Input id="field-label-disabled" value="기술보증기금" disabled readOnly />
+                    <Input
+                        id="field-label-disabled"
+                        value="기술보증기금"
+                        placeholder="접수 기관을 입력하세요"
+                        disabled
+                        readOnly
+                    />
                     <FieldDescription>비활성 상태에서는 수정할 수 없습니다.</FieldDescription>
                 </Field>
             </div>

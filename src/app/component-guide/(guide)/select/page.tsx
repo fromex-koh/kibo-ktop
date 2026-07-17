@@ -148,18 +148,18 @@ const SelectGuidePage = () => (
                     사이즈 (Size)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    프로젝트에서 사용하는 두 사이즈입니다 — <code className="font-mono">Large</code>(기본, 48px)와{' '}
-                    <code className="font-mono">Medium</code>(40px). <code className="font-mono">size</code> prop으로
+                    프로젝트에서 사용하는 두 사이즈입니다 — <code className="font-mono">lg</code>(기본, 48px)와{' '}
+                    <code className="font-mono">md</code>(40px). <code className="font-mono">size</code> prop으로
                     정합니다.
                 </p>
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                 <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
                     <FieldLabel htmlFor="sz-lg" className="text-foreground font-bold">
-                        Large (default · 48px)
+                        lg (default · 48px)
                     </FieldLabel>
                     <Select>
-                        <SelectTrigger id="sz-lg" className="w-full">
+                        <SelectTrigger id="sz-lg" size="lg" className="w-full">
                             <SelectValue placeholder="선택해주세요" />
                         </SelectTrigger>
                         <SelectContent>
@@ -169,7 +169,7 @@ const SelectGuidePage = () => (
                 </Field>
                 <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
                     <FieldLabel htmlFor="sz-md" className="text-foreground font-bold">
-                        Medium (md · 40px)
+                        md (40px)
                     </FieldLabel>
                     <Select>
                         <SelectTrigger id="sz-md" size="md" className="w-full">
@@ -347,9 +347,9 @@ const SelectGuidePage = () => (
                             },
                             {
                                 name: 'size',
-                                desc: 'SelectTrigger — 높이. default(Large)=48px · md(Medium)=40px.',
-                                def: "'default'",
-                                control: 'default | md',
+                                desc: 'SelectTrigger — 높이. lg=48px · md=40px.',
+                                def: "'lg'",
+                                control: "'lg' | 'md'",
                             },
                             {
                                 name: 'aria-invalid',

@@ -5,15 +5,15 @@ import type {ComponentProps} from 'react'
 import {Switch as PrimitiveSwitch} from '@/components/ui/switch'
 import {cn} from '@/lib/utils'
 
-type ControlSwitchSize = 'large' | 'medium' | 'small' | 'default' | 'sm' | 'xsmall' | '2xsmall'
+type ControlSwitchSize = 'lg' | 'md' | 'sm'
 type ControlSwitchProps = Omit<ComponentProps<typeof PrimitiveSwitch>, 'size'> & {size?: ControlSwitchSize}
 
-function ControlSwitch({className, size = 'medium', ...props}: ControlSwitchProps) {
-    const primitiveSize = size === 'small' || size === 'sm' || size === '2xsmall' ? 'sm' : 'default'
+function ControlSwitch({className, size = 'md', ...props}: ControlSwitchProps) {
+    const primitiveSize = size === 'sm' ? 'sm' : 'default'
     const sizeStyles =
-        size === 'large'
+        size === 'lg'
             ? 'data-[size=default]:h-control-h-md data-[size=default]:w-18 data-[size=default]:[&>[data-slot=switch-thumb]]:size-8 data-[size=default]:[&>[data-slot=switch-thumb][data-state=checked]]:translate-x-8'
-            : primitiveSize === 'sm'
+            : size === 'sm'
               ? 'data-[size=sm]:h-control-h-xs data-[size=sm]:w-14 data-[size=sm]:[&>[data-slot=switch-thumb]]:size-6 data-[size=sm]:[&>[data-slot=switch-thumb][data-state=checked]]:translate-x-6'
               : 'data-[size=default]:h-control-h-sm data-[size=default]:w-16 data-[size=default]:[&>[data-slot=switch-thumb]]:size-7 data-[size=default]:[&>[data-slot=switch-thumb][data-state=checked]]:translate-x-7'
 

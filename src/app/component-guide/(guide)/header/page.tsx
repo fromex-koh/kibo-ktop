@@ -24,10 +24,13 @@ const COMPOSITION = [
         name: '주 메뉴 (NavigationMenu)',
         desc: '자가진단·전문가 평가·BIGx 보고서·탄소중립 등 주 내비게이션. md 미만에서 숨고 전체 메뉴(Sheet)로 이동한다.',
     },
-    {name: '회원 유형 (Segmented Control)', desc: '기업/기관 세그먼티드 컨트롤. 유틸바와 모바일 Sheet 에서 공유한다.'},
+    {
+        name: '화면 유형 (Segmented Control)',
+        desc: '기업/기관 화면으로 이동하는 link 타입 세그먼티드 컨트롤. 유틸바와 모바일 Sheet에서 공유한다.',
+    },
     {name: '유틸 링크', desc: '로그인/회원가입·이용안내·기술보증기금(외부 링크↗). 상단 유틸바에 우측 정렬.'},
     {name: '테마 토글 (ThemeToggle)', desc: '라이트/다크 전환 아이콘 버튼.'},
-    {name: '전체 메뉴 (Sheet)', desc: '좁은 폭에서 주 메뉴·회원 유형·유틸 링크를 담아 우측에서 여는 드로어.'},
+    {name: '전체 메뉴 (Sheet)', desc: '좁은 폭에서 주 메뉴·화면 유형 링크·유틸 링크를 담아 우측에서 여는 드로어.'},
 ] as const
 
 // 헤더 — 로고+주 메뉴+유틸바를 담는 상단 banner 합성 컴포넌트.
@@ -35,7 +38,7 @@ const COMPOSITION = [
 const HeaderGuidePage = () => (
     <GuidePageShell
         title="헤더 (Header)"
-        description="로고·주 메뉴·회원 유형·유틸 링크를 담는 사이트 최상단 banner 합성 컴포넌트입니다."
+        description="로고·주 메뉴·화면 유형 링크·유틸 링크를 담는 사이트 최상단 banner 합성 컴포넌트입니다."
     >
         <section aria-labelledby="sh-preview" className="flex flex-col gap-4">
             <div>
@@ -43,8 +46,8 @@ const HeaderGuidePage = () => (
                     Preview
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    상단 유틸바(회원 유형·유틸 링크)와 메인 내비(로고·주 메뉴·테마 토글·전체 메뉴) 2줄 구성입니다. 화면
-                    폭을 md(≥768) 미만으로 줄이면 유틸바·주 메뉴가 전체 메뉴(Sheet)로 접힙니다.
+                    상단 유틸바(화면 유형 링크·유틸 링크)와 메인 내비(로고·주 메뉴·테마 토글·전체 메뉴) 2줄 구성입니다.
+                    화면 폭을 md(≥768) 미만으로 줄이면 유틸바·주 메뉴가 전체 메뉴(Sheet)로 접힙니다.
                 </p>
             </div>
             <HeaderDemo />

@@ -312,16 +312,16 @@ const TypographyGuidePage = () => (
                     <tbody>
                         <tr className="border-border border-b last:border-b-0">
                             <td className="px-4 py-3 whitespace-nowrap">
-                                <span className="tracking-header-link font-medium">{PREVIEW_SAMPLE}</span>
+                                <span className="tracking-control-label font-medium">{PREVIEW_SAMPLE}</span>
                             </td>
                             <th scope="row" className="px-4 py-3 text-left font-normal">
-                                <CopyChip value="tracking-header-link" />
+                                <CopyChip value="tracking-control-label" />
                             </th>
                             <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
                                 letter-spacing: -0.035rem (-0.56px)
                             </td>
                             <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                Header 상단 유틸 링크의 Button text variant 보정.
+                                Header 상단 유틸 링크와 Segmented Control 항목 등 컨트롤 라벨의 프로젝트 전용 자간.
                             </td>
                         </tr>
                     </tbody>

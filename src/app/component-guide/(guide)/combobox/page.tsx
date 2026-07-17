@@ -170,7 +170,7 @@ const PROPS_ITEMS = [
     },
     {
         name: 'className',
-        desc: 'shadcn ComboboxInput의 InputGroup 레이아웃을 확장합니다.',
+        desc: '입력형의 InputGroup 또는 드롭다운형의 Trigger 레이아웃과 스타일을 확장합니다.',
         def: '""',
         control: 'string',
     },

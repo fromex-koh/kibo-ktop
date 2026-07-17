@@ -198,7 +198,7 @@ const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'link'; caption:
 const ButtonGuidePage = () => (
     <GuidePageShell
         title="버튼 (Button)"
-        description="최신 shadcn Button shell과 props 구조를 유지하고 프로젝트 buttonVariants를 연결한 컴포넌트입니다. 3가지 주요 type × 6가지 프로젝트 사이즈와 아이콘 버튼을 지원합니다."
+        description="최신 shadcn Button shell과 props 구조를 유지하고 프로젝트 buttonVariants를 연결한 컴포넌트입니다. 3가지 주요 variant × 6가지 프로젝트 사이즈와 아이콘 버튼을 지원합니다."
     >
         <section aria-labelledby="button-demo" className="flex flex-col gap-4">
             <div>

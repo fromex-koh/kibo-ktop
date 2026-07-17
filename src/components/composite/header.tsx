@@ -2,6 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import {Suspense} from 'react'
+import {useSearchParams} from 'next/navigation'
 import {ExternalLink, Menu} from 'lucide-react'
 import ThemeToggle from '@/components/composite/theme-toggle'
 import {Button} from '@/components/ui/button'
@@ -26,12 +28,54 @@ const UTILITY_LINKS: {label: string; external?: boolean}[] = [
     {label: '기술보증기금', external: true},
 ]
 
-// 유틸바와 모바일 Sheet에서 공유하는 회원 유형 세그먼티드.
-const MemberTypeToggle = () => (
-    <SegmentedControl type="radio" defaultValue="corp" aria-label="회원 유형">
-        <SegmentedControlItem value="corp">기업</SegmentedControlItem>
-        <SegmentedControlItem value="org">기관</SegmentedControlItem>
+type Audience = 'corp' | 'org'
+
+const AUDIENCES = ['corp', 'org'] satisfies readonly Audience[]
+
+const isAudience = (value: string | null): value is Audience => value === 'corp' || value === 'org'
+
+// 유틸바와 모바일 Sheet에서 공유하는 화면 유형 링크 세그먼티드.
+const MemberTypeToggle = () => {
+    const searchParams = useSearchParams()
+    const audienceParam = searchParams.get('audience')
+    const audience = isAudience(audienceParam) ? audienceParam : 'corp'
+
+    const getHref = (nextAudience: Audience) => {
+        const nextParams = new URLSearchParams(searchParams.toString())
+        nextParams.set('audience', nextAudience)
+        return `?${nextParams.toString()}`
+    }
+
+    return (
+        <SegmentedControl type="link" aria-label="화면 유형">
+            {AUDIENCES.map((value) => (
+                <SegmentedControlItem
+                    key={value}
+                    href={getHref(value)}
+                    replace
+                    scroll={false}
+                    aria-current={audience === value ? 'page' : undefined}
+                >
+                    {value === 'corp' ? '기업' : '기관'}
+                </SegmentedControlItem>
+            ))}
+        </SegmentedControl>
+    )
+}
+
+const MemberTypeToggleFallback = () => (
+    <SegmentedControl type="link" aria-label="화면 유형">
+        <SegmentedControlItem href="?audience=corp" aria-current="page">
+            기업
+        </SegmentedControlItem>
+        <SegmentedControlItem href="?audience=org">기관</SegmentedControlItem>
     </SegmentedControl>
+)
+
+const MemberTypeNavigation = () => (
+    <Suspense fallback={<MemberTypeToggleFallback />}>
+        <MemberTypeToggle />
+    </Suspense>
 )
 
 // 링크 의미는 유지하고 Button text variant의 토큰/포커스 스타일을 재사용한다.
@@ -40,7 +84,7 @@ const UtilityLink = ({label, external, className}: {label: string; external?: bo
         variant="text"
         size="lg"
         asChild
-        className={cn('tracking-header-link font-medium', external ? 'gap-0.5' : undefined, className)}
+        className={cn('tracking-control-label font-medium', external ? 'gap-0.5' : undefined, className)}
     >
         <Link href="#" {...(external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}>
             {label}
@@ -63,7 +107,7 @@ const HeaderContent = ({navLabel}: {navLabel: string}) => (
     <div className="flex flex-col">
         <div className="hidden justify-end md:flex">
             <div className="flex items-center gap-4 px-4 py-2">
-                <MemberTypeToggle />
+                <MemberTypeNavigation />
                 {UTILITY_LINKS.map((link) => (
                     <UtilityLink key={link.label} {...link} />
                 ))}
@@ -99,7 +143,7 @@ const HeaderContent = ({navLabel}: {navLabel: string}) => (
                         </SheetHeader>
 
                         <div className="px-4 pb-2">
-                            <MemberTypeToggle />
+                            <MemberTypeNavigation />
                         </div>
 
                         <nav aria-label="전체 메뉴" className="flex flex-col gap-1 px-4">

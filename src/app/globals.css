@@ -83,10 +83,6 @@
 }
 
 @layer utilities {
-    .tracking-header-link {
-        letter-spacing: -0.035rem; /* -0.56px */
-    }
-
     .focus-outline-inset:focus-visible {
         outline-offset: -0.25rem; /* -4px */
     }

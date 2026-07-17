@@ -9,20 +9,30 @@ import {Switch} from '@/components/composite/control-switch'
 export const metadata: Metadata = {title: '스위치 (Switch)'}
 
 const USAGE_CODE = `<Field orientation="horizontal" className={cn('w-fit gap-2', FIELD_FOCUS_RING)}>
-  <Switch id="marketing" defaultChecked />
-  <FieldLabel htmlFor="marketing">마케팅 정보 수신</FieldLabel>
+  <Switch id="marketing" defaultChecked aria-labelledby="marketing-label" />
+  <FieldLabel id="marketing-label" htmlFor="marketing">마케팅 정보 수신</FieldLabel>
 </Field>`
 
 const PROPS_ITEMS = [
-    ['checked · onCheckedChange', '켜짐 상태(제어). 비제어면 defaultChecked 로 초기값만.', 'boolean · (v) => void'],
-    ['defaultChecked', '비제어 초기 상태.', 'boolean'],
-    ['size', '크기. large=40px, medium=36px, small=32px 높이. default는 large.', 'SwitchSize'],
-    ['disabled', '비활성(흐림 + 클릭 불가).', 'boolean'],
-    ['id · name · aria-*', 'Radix 루트(button role="switch")에 전달. FieldLabel과 htmlFor↔id로 연결.', 'button 속성'],
+    {
+        name: 'checked · onCheckedChange',
+        desc: '켜짐 상태(제어). 비제어면 defaultChecked로 초기값만 지정합니다.',
+        type: 'boolean · (value: boolean) => void',
+        def: '—',
+    },
+    {name: 'defaultChecked', desc: '비제어 초기 상태입니다.', type: 'boolean', def: 'false'},
+    {name: 'size', desc: 'lg=40px, md=36px, sm=32px 높이입니다.', type: "'lg' | 'md' | 'sm'", def: "'md'"},
+    {name: 'disabled', desc: '비활성 상태로 표시하고 상호작용을 막습니다.', type: 'boolean', def: 'false'},
+    {
+        name: 'id · name · aria-*',
+        desc: 'Radix 루트(button role="switch")에 전달하며 FieldLabel과 htmlFor↔id로 연결합니다.',
+        type: 'button 속성',
+        def: '—',
+    },
 ] as const
 
-// 스위치 — shadcn Switch 프리미티브를 Figma 토글 스위치 스타일로 재스킨한 styled copy(kit).
-// 상태(on/off)·전환 애니메이션·키보드(Space/Enter)·포커스는 radix 원형 그대로다.
+// 스위치 — shadcn Switch primitive를 호출하는 프로젝트 wrapper다.
+// 프로젝트 크기와 색상만 확장하고 상태·키보드·포커스 동작은 primitive에 위임한다.
 const SwitchGuidePage = () => (
     <GuidePageShell
         title="스위치 (Switch)"
@@ -35,18 +45,22 @@ const SwitchGuidePage = () => (
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
                     꺼짐(off)·켜짐(on) 두 상태입니다. on 은 <code className="font-mono">bg-primary</code>, off 는{' '}
-                    <code className="font-mono">bg-foreground-subtle</code> 트랙이고 thumb 내부에 상태 아이콘을
-                    표시합니다. 클릭해서 전환해 보세요.
+                    <code className="font-mono">bg-foreground-subtle</code> 트랙으로 표시합니다. 클릭해서 전환해 보세요.
+                    상태 예시는 <code className="font-mono">lg</code> 크기입니다.
                 </p>
             </div>
             <div className="border-border flex flex-wrap items-center gap-8 rounded-md border p-6">
                 <div className="flex flex-col items-center gap-2">
-                    <Switch size="large" aria-label="꺼짐 예시" />
-                    <span className="typo-caption-regular text-muted-foreground font-mono">off</span>
+                    <Switch size="lg" aria-labelledby="sw-state-off-label" />
+                    <span id="sw-state-off-label" className="typo-caption-regular text-muted-foreground font-mono">
+                        off
+                    </span>
                 </div>
                 <div className="flex flex-col items-center gap-2">
-                    <Switch size="large" defaultChecked aria-label="켜짐 예시" />
-                    <span className="typo-caption-regular text-muted-foreground font-mono">on</span>
+                    <Switch size="lg" defaultChecked aria-labelledby="sw-state-on-label" />
+                    <span id="sw-state-on-label" className="typo-caption-regular text-muted-foreground font-mono">
+                        on
+                    </span>
                 </div>
             </div>
         </section>
@@ -57,23 +71,29 @@ const SwitchGuidePage = () => (
                     사이즈 (Size)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    Button 크기 체계에 맞춰 <code className="font-mono">large</code>(40px),{' '}
-                    <code className="font-mono">medium</code>(36px), <code className="font-mono">small</code>
-                    (32px) 높이를 씁니다.
+                    Button 크기 체계에 맞춰 <code className="font-mono">lg</code>(40px),{' '}
+                    <code className="font-mono">md</code>(36px), <code className="font-mono">sm</code>(32px) 높이를
+                    씁니다. 기본값은 <code className="font-mono">md</code>입니다.
                 </p>
             </div>
             <div className="border-border flex flex-wrap items-center gap-8 rounded-md border p-6">
                 <div className="flex flex-col items-center gap-2">
-                    <Switch size="large" defaultChecked aria-label="large 크기" />
-                    <span className="typo-caption-regular text-muted-foreground font-mono">large</span>
+                    <Switch size="lg" defaultChecked aria-labelledby="sw-size-lg-label" />
+                    <span id="sw-size-lg-label" className="typo-caption-regular text-muted-foreground font-mono">
+                        lg
+                    </span>
                 </div>
                 <div className="flex flex-col items-center gap-2">
-                    <Switch size="medium" defaultChecked aria-label="medium 크기" />
-                    <span className="typo-caption-regular text-muted-foreground font-mono">medium</span>
+                    <Switch size="md" defaultChecked aria-labelledby="sw-size-md-label" />
+                    <span id="sw-size-md-label" className="typo-caption-regular text-muted-foreground font-mono">
+                        md
+                    </span>
                 </div>
                 <div className="flex flex-col items-center gap-2">
-                    <Switch size="small" defaultChecked aria-label="small 크기" />
-                    <span className="typo-caption-regular text-muted-foreground font-mono">small</span>
+                    <Switch size="sm" defaultChecked aria-labelledby="sw-size-sm-label" />
+                    <span id="sw-size-sm-label" className="typo-caption-regular text-muted-foreground font-mono">
+                        sm
+                    </span>
                 </div>
             </div>
         </section>
@@ -89,12 +109,16 @@ const SwitchGuidePage = () => (
             </div>
             <div className="border-border flex flex-wrap items-center gap-8 rounded-md border p-6">
                 <div className="flex flex-col items-center gap-2">
-                    <Switch disabled aria-label="비활성 꺼짐" />
-                    <span className="typo-caption-regular text-muted-foreground font-mono">disabled · off</span>
+                    <Switch disabled aria-labelledby="sw-disabled-off-label" />
+                    <span id="sw-disabled-off-label" className="typo-caption-regular text-muted-foreground font-mono">
+                        disabled · off
+                    </span>
                 </div>
                 <div className="flex flex-col items-center gap-2">
-                    <Switch disabled defaultChecked aria-label="비활성 켜짐" />
-                    <span className="typo-caption-regular text-muted-foreground font-mono">disabled · on</span>
+                    <Switch disabled defaultChecked aria-labelledby="sw-disabled-on-label" />
+                    <span id="sw-disabled-on-label" className="typo-caption-regular text-muted-foreground font-mono">
+                        disabled · on
+                    </span>
                 </div>
             </div>
         </section>
@@ -112,12 +136,16 @@ const SwitchGuidePage = () => (
             </div>
             <div className="border-border flex flex-col gap-4 rounded-md border p-6">
                 <Field orientation="horizontal" className={cn('w-fit gap-2', FIELD_FOCUS_RING)}>
-                    <Switch id="sw-marketing" defaultChecked />
-                    <FieldLabel htmlFor="sw-marketing">마케팅 정보 수신</FieldLabel>
+                    <Switch id="sw-marketing" defaultChecked aria-labelledby="sw-marketing-label" />
+                    <FieldLabel id="sw-marketing-label" htmlFor="sw-marketing">
+                        마케팅 정보 수신
+                    </FieldLabel>
                 </Field>
                 <Field orientation="horizontal" className={cn('w-fit gap-2', FIELD_FOCUS_RING)}>
-                    <Switch id="sw-alarm" />
-                    <FieldLabel htmlFor="sw-alarm">푸시 알림 받기</FieldLabel>
+                    <Switch id="sw-alarm" aria-labelledby="sw-alarm-label" />
+                    <FieldLabel id="sw-alarm-label" htmlFor="sw-alarm">
+                        푸시 알림 받기
+                    </FieldLabel>
                 </Field>
             </div>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
@@ -130,17 +158,58 @@ const SwitchGuidePage = () => (
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">Switch 에 넘기는 속성입니다.</p>
             </div>
-            <dl className="flex flex-col gap-2">
-                {PROPS_ITEMS.map(([name, desc, type]) => (
-                    <div key={name} className="flex flex-col gap-0.5">
-                        <dt className="typo-body-l-medium text-primary font-mono">
-                            {name}
-                            <span className="text-muted-foreground ml-2 font-normal">{type}</span>
-                        </dt>
-                        <dd className="typo-body-l-regular text-muted-foreground">{desc}</dd>
-                    </div>
-                ))}
-            </dl>
+            <div className="bg-background border-border overflow-x-auto rounded-md border">
+                <table className="w-full text-left">
+                    <caption className="sr-only">Switch Props 목록</caption>
+                    <thead>
+                        <tr className="border-border border-b bg-gray-100/25">
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Component
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Name
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Description
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Type
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Default
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {PROPS_ITEMS.map((item, index) => (
+                            <tr key={item.name} className="border-border bg-background border-b last:border-b-0">
+                                {index === 0 ? (
+                                    <th
+                                        scope="rowgroup"
+                                        rowSpan={PROPS_ITEMS.length}
+                                        className="typo-caption-regular border-border text-muted-foreground border-r px-4 py-3 align-top font-mono font-normal"
+                                    >
+                                        Switch
+                                    </th>
+                                ) : null}
+                                <th
+                                    scope="row"
+                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
+                                >
+                                    {item.name}
+                                </th>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{item.desc}</td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                                    {item.type}
+                                </td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                                    {item.def}
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </section>
     </GuidePageShell>
 )

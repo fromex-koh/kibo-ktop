@@ -18,7 +18,7 @@ import {cn} from '@/lib/utils'
 
 type SelectFieldProps = ComponentProps<typeof PrimitiveSelect> & {readOnly?: boolean}
 type SelectTriggerProps = Omit<ComponentProps<typeof PrimitiveSelectTrigger>, 'size'> & {
-    size?: 'md' | 'default'
+    size?: 'lg' | 'md'
 }
 
 const SelectFieldReadOnlyContext = createContext(false)
@@ -41,7 +41,7 @@ function SelectField({readOnly = false, open, defaultOpen, onOpenChange, onValue
     )
 }
 
-function SelectTrigger({className, size = 'default', ...props}: SelectTriggerProps) {
+function SelectTrigger({className, size = 'lg', ...props}: SelectTriggerProps) {
     const readOnly = useContext(SelectFieldReadOnlyContext)
 
     return (

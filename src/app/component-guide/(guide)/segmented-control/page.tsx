@@ -368,14 +368,20 @@ const SegmentedControlGuidePage = () => (
                         </tr>
                     </thead>
                     <tbody>
-                        {PROPS.map((p) => (
+                        {PROPS.map((p, index) => (
                             <tr
                                 key={`${p.component}-${p.name}`}
                                 className="border-border bg-background border-b last:border-b-0"
                             >
-                                <td className="typo-caption-regular border-border text-muted-foreground border-r px-4 py-3 align-top font-mono">
-                                    {p.component}
-                                </td>
+                                {PROPS.findIndex((item) => item.component === p.component) === index ? (
+                                    <th
+                                        scope="rowgroup"
+                                        rowSpan={PROPS.filter((item) => item.component === p.component).length}
+                                        className="typo-caption-regular border-border text-muted-foreground border-r px-4 py-3 align-top font-mono font-normal"
+                                    >
+                                        {p.component}
+                                    </th>
+                                ) : null}
                                 <th
                                     scope="row"
                                     className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"

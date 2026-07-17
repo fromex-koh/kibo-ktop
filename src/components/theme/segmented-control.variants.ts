@@ -3,7 +3,7 @@ const segmentedControlClassName =
     'group/segmented-control bg-muted flex w-fit items-center gap-0.5 rounded-xs p-0.5 data-vertical:flex-col'
 
 const segmentedControlItemClassName =
-    'focus-visible:outline-ring h-control-h-2xs rounded-2xs typo-body-l-medium tracking-segmented-control text-label-foreground relative flex flex-none cursor-pointer items-center justify-center whitespace-nowrap px-3 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid'
+    'focus-visible:outline-ring h-control-h-2xs rounded-2xs typo-body-l-medium tracking-control-label text-label-foreground relative flex flex-none cursor-pointer items-center justify-center whitespace-nowrap px-3 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid'
 
 const segmentedControlLinkItemStateClassName = 'aria-[current=page]:bg-surface aria-[current=page]:shadow-sm'
 
