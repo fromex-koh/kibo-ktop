@@ -2,18 +2,55 @@ import type {Metadata} from 'next'
 import {
     ArrowLeft,
     ArrowRight,
+    ArrowUpRight,
+    Blocks,
+    Building2,
     Calendar,
+    ChartArea,
     Check,
+    CheckCheck,
     ChevronDown,
     ChevronLeft,
     ChevronRight,
     ChevronsRight,
     ChevronUp,
+    CircleAlert,
+    CircleCheck,
+    Component,
+    Copy,
     Download,
+    ExternalLink,
+    Eye,
+    EyeOff,
+    File,
+    FileCheckCorner,
+    FilePenLine,
+    Folder,
     GitBranch,
     Home,
+    IdCardLanyard,
     Info,
+    Landmark,
+    Layers,
+    LayoutGrid,
+    LayoutList,
+    LoaderCircle,
     Lock,
+    Menu,
+    Moon,
+    MoreHorizontal,
+    Mouse,
+    Palette,
+    PanelLeft,
+    Pin,
+    Plus,
+    RotateCcw,
+    SavePen,
+    Search,
+    Sparkles,
+    SquareArrowOutUpRight,
+    Sun,
+    TriangleAlert,
     Upload,
     X,
 } from 'lucide-react'
@@ -54,54 +91,73 @@ const ICON_SIZES = [
     {key: 'icon-2xl', class: 'size-icon-2xl'},
 ] as const
 
-// 크기 표의 미리보기 — 같은 크기에서 두 스타일(Outline·Solid)이 어떻게 보이는지 나란히 보여준다.
-//   - Outline: span 없이 아이콘만(=슬롯 크기 그대로). 아이콘 색은 text-foreground.
-//   - Solid: span(배지)이 슬롯 크기를 차지하고, 안의 아이콘은 여백을 두고 작게 넣는다. 배지 색은
-//     시맨틱 토큰이라 라이트/다크에서 자동 반전돼 어느 테마에서도 배경과 대비된다(bg-foreground 는
-//     라이트에서 어둡고 다크에서 밝다). glyphScale = 배지 대비 아이콘 크기(lucide 는 아이콘마다
-//     뷰박스 점유율이 달라 배지 안 여백을 이 값으로 맞춘다).
-const SIZE_SWATCHES = [
-    {
-        label: 'Solid',
-        Icon: X,
-        solid: true as const,
-        badgeClass: 'bg-gray-400 text-white',
-        glyphScale: 0.55,
-    },
-    {label: 'Outline', Icon: Info, solid: false as const},
-] as const
-
-// 아이콘 큐레이션 — 실제 화면에서 자주 쓰는 lucide-react 아이콘([NA-008] 표준 단일 아이콘
-// 라이브러리). 새 아이콘이 필요하면 여기 추가한다.
+// 아이콘 큐레이션 — 프로젝트 소스에서 실제 import하는 lucide-react 아이콘 + Figma 아이콘 세트(icon/line-*)의
+// lucide 대응 아이콘 전체([NA-008] 표준 단일 아이콘 라이브러리). *Icon 별칭은 같은 글리프의 정식 이름으로 합쳐
+// 중복을 제거한다. 새 아이콘을 사용하거나 Figma 세트에 추가되면 함께 갱신한다.
+// Figma 이름 ↔ lucide 매핑이 자명하지 않은 것: line-reset→RotateCcw · line-alert→CircleAlert ·
+// line-left/right/up/down→Chevron* · line-close→X.
 const CURATED_ICONS = [
-    {name: 'Home', Icon: Home},
-    {name: 'X', Icon: X},
-    {name: 'ArrowRight', Icon: ArrowRight},
     {name: 'ArrowLeft', Icon: ArrowLeft},
-    {name: 'Download', Icon: Download},
-    {name: 'Upload', Icon: Upload},
+    {name: 'ArrowRight', Icon: ArrowRight},
+    {name: 'ArrowUpRight', Icon: ArrowUpRight},
+    {name: 'Blocks', Icon: Blocks},
+    {name: 'Building2', Icon: Building2},
+    {name: 'Calendar', Icon: Calendar},
+    {name: 'ChartArea', Icon: ChartArea},
+    {name: 'Check', Icon: Check},
+    {name: 'CheckCheck', Icon: CheckCheck},
+    {name: 'ChevronDown', Icon: ChevronDown},
     {name: 'ChevronLeft', Icon: ChevronLeft},
     {name: 'ChevronRight', Icon: ChevronRight},
-    {name: 'ChevronUp', Icon: ChevronUp},
-    {name: 'ChevronDown', Icon: ChevronDown},
     {name: 'ChevronsRight', Icon: ChevronsRight},
-    {name: 'Check', Icon: Check},
+    {name: 'ChevronUp', Icon: ChevronUp},
+    {name: 'CircleAlert', Icon: CircleAlert},
+    {name: 'CircleCheck', Icon: CircleCheck},
+    {name: 'Component', Icon: Component},
+    {name: 'Copy', Icon: Copy},
+    {name: 'Download', Icon: Download},
+    {name: 'ExternalLink', Icon: ExternalLink},
+    {name: 'Eye', Icon: Eye},
+    {name: 'EyeOff', Icon: EyeOff},
+    {name: 'File', Icon: File},
+    {name: 'FileCheckCorner', Icon: FileCheckCorner},
+    {name: 'FilePenLine', Icon: FilePenLine},
+    {name: 'Folder', Icon: Folder},
+    {name: 'GitBranch', Icon: GitBranch},
+    {name: 'Home', Icon: Home},
+    {name: 'IdCardLanyard', Icon: IdCardLanyard},
     {name: 'Info', Icon: Info},
+    {name: 'Landmark', Icon: Landmark},
+    {name: 'Layers', Icon: Layers},
+    {name: 'LayoutGrid', Icon: LayoutGrid},
+    {name: 'LayoutList', Icon: LayoutList},
+    {name: 'LoaderCircle', Icon: LoaderCircle},
     {name: 'Lock', Icon: Lock},
-    {name: 'Calendar', Icon: Calendar},
+    {name: 'Menu', Icon: Menu},
+    {name: 'Moon', Icon: Moon},
+    {name: 'MoreHorizontal', Icon: MoreHorizontal},
+    {name: 'Mouse', Icon: Mouse},
+    {name: 'Palette', Icon: Palette},
+    {name: 'PanelLeft', Icon: PanelLeft},
+    {name: 'Pin', Icon: Pin},
+    {name: 'Plus', Icon: Plus},
+    {name: 'RotateCcw', Icon: RotateCcw},
+    {name: 'SavePen', Icon: SavePen},
+    {name: 'Search', Icon: Search},
+    {name: 'Sparkles', Icon: Sparkles},
+    {name: 'SquareArrowOutUpRight', Icon: SquareArrowOutUpRight},
+    {name: 'Sun', Icon: Sun},
+    {name: 'TriangleAlert', Icon: TriangleAlert},
+    {name: 'Upload', Icon: Upload},
+    {name: 'X', Icon: X},
 ] as const
 
-// Solid(원형 배지) 스타일은 강조·알림 배지 용도라 실제로 몇 개만 의미가 있다 — 닫기/오류의 X,
-// 안내의 info 두 가지만 큐레이션한다. info 는 lucide 에 채운(solid) 글리프가 없어, 배지 안에
-// 텍스트 'i' 를 넣어 만든다(글리프 조합).
+// Solid(원형 배지) 스타일은 강조·알림 배지 용도라 실제로 몇 개만 큐레이션한다. 별도 마크업으로
+// 모양을 흉내 내지 않고 실제 Icon wrapper를 렌더해 구현과 가이드가 항상 같게 유지되도록 한다.
 const SOLID_ICONS = [
-    {name: 'X', kind: 'icon' as const, Glyph: X, markup: '<Icon icon={X} variant="solid" />'},
-    {
-        name: 'Info',
-        kind: 'text' as const,
-        char: 'i',
-        markup: '<Icon icon={Info} variant="solid" />',
-    },
+    {name: 'X', Glyph: X},
+    {name: 'Info', Glyph: Info},
+    {name: 'CircleAlert', Glyph: CircleAlert},
 ] as const
 
 const IconGuidePage = () => (
@@ -115,7 +171,11 @@ const IconGuidePage = () => (
                     라이브러리
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    아이콘은 이 프로젝트의 표준 라이브러리인 lucide-react 하나만 사용합니다([NA-008]).
+                    재사용 아이콘은 이 프로젝트의 표준 라이브러리인 lucide-react 하나만 사용합니다([NA-008]). shadcn{' '}
+                    <code>radix-nova</code> registry에는 별도 Icon primitive가 없으므로,{' '}
+                    <code>components/custom/icon.tsx</code>가 Lucide 글리프를 받아 프로젝트의 outline·solid 표현만
+                    부여합니다. 프로젝트 variant 스타일은 <code>components/theme/icon.variants.ts</code>에 분리되어
+                    wrapper와 연결되며, shadcn 원본을 복사하거나 수정한 컴포넌트가 아닙니다.
                 </p>
             </div>
             <div className="border-border flex flex-col gap-4 rounded-md border p-4">
@@ -193,32 +253,8 @@ const IconGuidePage = () => (
                             <tr key={key} className="border-border bg-background border-b last:border-b-0">
                                 <td className="px-4 py-3">
                                     <div className="flex items-center gap-3">
-                                        {SIZE_SWATCHES.map((swatch) => {
-                                            const {label, Icon} = swatch
-                                            // Outline: span 없이 아이콘만.
-                                            if (!swatch.solid) {
-                                                return (
-                                                    <Icon
-                                                        key={label}
-                                                        aria-hidden="true"
-                                                        className={`${sizeClass} text-foreground shrink-0`}
-                                                    />
-                                                )
-                                            }
-                                            // Solid: span(배지)이 슬롯 크기를 차지하고 아이콘은 여백을 두고 작게.
-                                            const glyphPx = tokens.size[key] * swatch.glyphScale
-                                            return (
-                                                <span
-                                                    key={label}
-                                                    className={`${sizeClass} ${swatch.badgeClass} flex shrink-0 items-center justify-center rounded-full`}
-                                                >
-                                                    <Icon
-                                                        aria-hidden="true"
-                                                        style={{width: glyphPx, height: glyphPx}}
-                                                    />
-                                                </span>
-                                            )
-                                        })}
+                                        <Icon icon={X} variant="solid" className={`${sizeClass} shrink-0`} />
+                                        <Icon icon={Info} className={`${sizeClass} text-foreground shrink-0`} />
                                     </div>
                                 </td>
                                 <th scope="row" className="px-4 py-3 text-left font-normal">
@@ -240,10 +276,12 @@ const IconGuidePage = () => (
                     아이콘 목록
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    Outline 은 {CURATED_ICONS.length}개 아이콘 — 칩을 클릭하면 컴포넌트 이름이 복사됩니다. lucide-react
-                    는 획(Outline) 스타일 단일 세트라, 배지·알림처럼 강조가 필요한 곳엔 아이콘을 원형 배경에 채운 Solid
-                    스타일을 조합해 씁니다. Solid 는 실제로 배지가 어울리는 X(닫기)· info(안내) 두 가지만
-                    큐레이션했습니다.
+                    Outline은 프로젝트에서 사용하는 아이콘과 Figma 아이콘 세트(icon/line-*)의 lucide 대응 아이콘을 합친{' '}
+                    {CURATED_ICONS.length}개 전체입니다. lucide-react의 <code>*Icon</code> 별칭은 같은 글리프의 정식
+                    이름으로 합쳐 중복을 제거했습니다. lucide-react는 획(Outline) 스타일 단일 세트라, 배지·알림처럼
+                    강조가 필요한 곳엔 아이콘을 원형 배경에 채운 Solid 스타일을 조합해 씁니다. Solid는 실제로 배지가
+                    어울리는 X(닫기)·info(안내)·alert(경고) 세 가지만 큐레이션했습니다. Stepper의 삼각형은 재사용
+                    아이콘이 아니라 해당 컴포넌트에만 쓰는 장식 SVG이므로 목록에서 제외합니다.
                 </p>
             </div>
 
@@ -254,9 +292,9 @@ const IconGuidePage = () => (
             <div className="flex flex-col gap-3">
                 <h3 className="typo-body-l-medium text-foreground">Outline</h3>
                 <ul className="grid grid-cols-3 gap-3 md:grid-cols-4 xl:grid-cols-6">
-                    {CURATED_ICONS.map(({name, Icon}) => (
+                    {CURATED_ICONS.map(({name, Icon: Glyph}) => (
                         <li key={name} className="border-border flex flex-col items-center gap-3 rounded-md border p-4">
-                            <Icon aria-hidden="true" className="size-icon-xl text-foreground" />
+                            <Icon icon={Glyph} className="size-icon-xl text-foreground" />
                             <code className="text-foreground font-mono text-sm">{name}</code>
                         </li>
                     ))}
@@ -266,21 +304,10 @@ const IconGuidePage = () => (
             <div className="flex flex-col gap-3">
                 <h3 className="typo-body-l-medium text-foreground">Solid</h3>
                 <ul className="grid grid-cols-3 gap-3 md:grid-cols-4 xl:grid-cols-6">
-                    {SOLID_ICONS.map((item) => (
-                        <li
-                            key={item.name}
-                            className="border-border flex flex-col items-center gap-3 rounded-md border p-4"
-                        >
-                            <span className="bg-primary/10 text-primary size-icon-xl flex items-center justify-center rounded-full">
-                                {item.kind === 'icon' ? (
-                                    <item.Glyph aria-hidden="true" className="size-icon-md" />
-                                ) : (
-                                    <span aria-hidden="true" className="typo-title-l-bold">
-                                        {item.char}
-                                    </span>
-                                )}
-                            </span>
-                            <code className="text-foreground font-mono text-sm">{item.name}</code>
+                    {SOLID_ICONS.map(({name, Glyph}) => (
+                        <li key={name} className="border-border flex flex-col items-center gap-3 rounded-md border p-4">
+                            <Icon icon={Glyph} variant="solid" className="size-icon-xl" />
+                            <code className="text-foreground font-mono text-sm">{name}</code>
                         </li>
                     ))}
                 </ul>

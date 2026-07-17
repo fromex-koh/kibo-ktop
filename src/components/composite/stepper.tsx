@@ -3,11 +3,11 @@ import {cn} from '@/lib/utils'
 
 // 스테퍼(Stepper) — 다단계 흐름의 진행 단계를 번호 원으로 보여주는 인디케이터(L2 composite).
 // Figma "step_atomic" 반영: 32px 원 + 16px Medium 번호, 상태 3가지.
-//   · completion(완료)  : 흰 배경 · 테두리/숫자 stepper-accent(grape.600)
+//   · completion(완료)  : 흰 배경 · 테두리/숫자 stepper-accent(grape.900)
 //   · ongoing(진행중)   : 채움 stepper-accent · 흰 숫자(text-primary-foreground, 다크 자동 대비)
 //   · before(예정)      : 흰 배경 · 테두리/숫자 stepper-inactive(gray.200)
 // shadcn 에 stepper 프리미티브가 없어 직접 만든다(순수 시각 인디케이터라 kit 조합 없음, compound 라 composite/).
-// 색은 Figma 그대로 stepper-accent(grape.600)·stepper-inactive(gray.200) 컴포넌트 시맨틱 토큰.
+// 색은 Figma 그대로 stepper-accent(grape.900)·stepper-inactive(gray.200) 컴포넌트 시맨틱 토큰.
 
 type StepState = 'completion' | 'ongoing' | 'before'
 
@@ -30,7 +30,7 @@ type StepProps = {
 } & Omit<ComponentPropsWithoutRef<'span'>, 'children'>
 
 // 단계 하나 — 번호 원 + 아래 진행중 표식(▲ 캐럿). children 은 단계 번호. 진행중은 사용처에서 aria-current.
-// Figma "Polygon 1"(grape.600, 8×7 둥근 위쪽 삼각형)을 원 아래에 둔다. 삼각형 자리(SVG)는 모든 상태가
+// Figma "Polygon 1"(grape.900, 8×7 둥근 위쪽 삼각형)을 원 아래에 둔다. 삼각형 자리(SVG)는 모든 상태가
 // 차지하되 진행중일 때만 색을 채워(그 외 투명), 원들이 한 줄에서 위로 나란히 정렬된 채 표식만 나타난다.
 const Step = ({state = 'before', children, className, ...props}: StepProps) => (
     <span

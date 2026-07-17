@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Badge} from '@/components/ui/badge'
+import {Badge, NumberBadge} from '@/components/ui/badge'
 
 export const metadata: Metadata = {title: '배지 (Badge)'}
 
@@ -11,6 +11,10 @@ const USAGE_CODE = `<Badge color="success">활성</Badge>
 
 const NUMBER_USAGE_CODE = `<Badge type="number" color="primary">2</Badge>
 <Badge type="number" color="new">5</Badge>`
+
+const NUMBER_BADGE_USAGE_CODE = `{/* 기존 NumberBadge import 호환용 wrapper */}
+<NumberBadge variant="primary">2</NumberBadge>
+<NumberBadge variant="new">5</NumberBadge>`
 
 // Figma badge 의 세 축.
 const VARIANTS = [
@@ -40,7 +44,7 @@ const SHAPES = ['pill', 'round'] as const
 const BadgeGuidePage = () => (
     <GuidePageShell
         title="배지 (Badge)"
-        description="shadcn Badge 프리미티브입니다. type으로 라벨과 숫자 배지를 구분하고, variant·color·shape로 표현을 조합합니다."
+        description="shadcn Badge 셸에 프로젝트 theme variant를 연결한 컴포넌트입니다. type으로 라벨과 숫자 배지를 구분하고 variant·color·shape·size로 표현을 조합합니다."
     >
         <section aria-labelledby="badge-demo" className="flex flex-col gap-4">
             <div>
@@ -48,7 +52,7 @@ const BadgeGuidePage = () => (
                     사용 예시
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">color</code>(상태 5색 + 보조 secondary 3색)로 의미를,{' '}
+                    <code className="font-mono">color</code>(상태 5색 + navy + 보조 secondary 3색)로 의미를,{' '}
                     <code className="font-mono">variant</code>(solid-pastel/outline/solid)로 강조를,{' '}
                     <code className="font-mono">shape</code>(pill/round)로 형태를 정합니다.
                 </p>
@@ -71,9 +75,9 @@ const BadgeGuidePage = () => (
                     Variant × Color 큐레이션
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    8가지 color(상태 5색 + 보조 3색)를 행으로, 3가지 variant 를 열로 교차한 전체 조합입니다. 각 셀은{' '}
-                    <code className="font-mono">pill</code>(왼쪽)·<code className="font-mono">round</code>(오른쪽) 두
-                    shape 를 짝지어 보여줍니다.
+                    9가지 label color(상태 5색 + navy + 보조 3색)를 행으로, 3가지 variant를 열로 교차한 전체 조합입니다.
+                    각 셀은 <code className="font-mono">pill</code>(왼쪽)·<code className="font-mono">round</code>
+                    (오른쪽) 두 shape 를 짝지어 보여줍니다.
                 </p>
             </div>
             <div className="flex flex-col gap-2">
@@ -179,7 +183,7 @@ const BadgeGuidePage = () => (
             <div className="flex flex-col gap-3">
                 <div className="flex items-center gap-3">
                     <span className="typo-caption-regular text-muted-foreground w-16 font-mono">sm</span>
-                    <Badge color="navy" variant="outline" shape="round" size="sm">
+                    <Badge color="navy" variant="solid" shape="round" size="sm">
                         KTRS-FM 평가
                     </Badge>
                     <Badge color="info" size="sm">
@@ -188,7 +192,7 @@ const BadgeGuidePage = () => (
                 </div>
                 <div className="flex items-center gap-3">
                     <span className="typo-caption-regular text-muted-foreground w-16 font-mono">lg</span>
-                    <Badge color="navy" variant="outline" shape="round" size="lg">
+                    <Badge color="navy" variant="solid" shape="round" size="lg">
                         KTRS-FM 평가
                     </Badge>
                     <Badge color="info" size="lg">
@@ -207,7 +211,9 @@ const BadgeGuidePage = () => (
                     숫자 배지는 동일한 <code className="font-mono">Badge</code> 컴포넌트에서{' '}
                     <code className="font-mono">type=&quot;number&quot;</code>로 사용합니다. 기본{' '}
                     <code className="font-mono">color=&quot;primary&quot;</code>는 일반 건수,{' '}
-                    <code className="font-mono">color=&quot;new&quot;</code>는 새로움·알림을 강조합니다.
+                    <code className="font-mono">color=&quot;new&quot;</code>는 새로움·알림을 강조합니다. 숫자 타입에서는
+                    이 두 color만 사용합니다. <code className="font-mono">NumberBadge</code>는 기존 import 호환을 위해
+                    같은 구성을 감싼 wrapper입니다.
                 </p>
             </div>
             <div className="flex items-center gap-4">
@@ -225,6 +231,14 @@ const BadgeGuidePage = () => (
                 </Badge>
             </div>
             <CodeBlock code={NUMBER_USAGE_CODE} language="tsx" copyLabel="복사" />
+            <div className="flex flex-col gap-3">
+                <h3 className="typo-body-l-medium text-foreground">NumberBadge 호환 wrapper</h3>
+                <div className="flex items-center gap-4">
+                    <NumberBadge variant="primary">2</NumberBadge>
+                    <NumberBadge variant="new">5</NumberBadge>
+                </div>
+                <CodeBlock code={NUMBER_BADGE_USAGE_CODE} language="tsx" copyLabel="복사" />
+            </div>
         </section>
 
         <section aria-labelledby="badge-props" className="flex flex-col gap-4">
@@ -257,10 +271,10 @@ const BadgeGuidePage = () => (
                         {[
                             {
                                 name: 'color',
-                                desc: '색 계열. 상태 5색 + navy(브랜드 분류) + 분류용 보조 3색.',
+                                desc: '색 계열. label은 상태 5색·navy·보조 3색, number는 primary·new만 사용합니다.',
                                 def: "'neutral'",
                                 control:
-                                    'info | success | warning | error | neutral | navy | secondary-green | secondary-orange | secondary-grape',
+                                    'info | success | warning | error | neutral | navy | secondary-green | secondary-orange | secondary-grape | primary | new',
                             },
                             {
                                 name: 'type',
@@ -298,6 +312,18 @@ const BadgeGuidePage = () => (
                                 def: '""',
                                 control: 'string',
                             },
+                            {
+                                name: 'children',
+                                desc: '배지 내부에 표시할 라벨·숫자·아이콘 등의 콘텐츠입니다.',
+                                def: '-',
+                                control: 'ReactNode',
+                            },
+                            {
+                                name: 'span props',
+                                desc: 'id, aria-* 등 네이티브 span 속성을 전달합니다.',
+                                def: '-',
+                                control: "React.ComponentProps<'span'>",
+                            },
                         ].map((prop) => (
                             <tr key={prop.name} className="border-border bg-background border-b last:border-b-0">
                                 <th
@@ -319,6 +345,69 @@ const BadgeGuidePage = () => (
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            <div className="flex flex-col gap-2">
+                <h3 className="typo-body-l-medium text-foreground">NumberBadge</h3>
+                <div className="bg-background border-border overflow-x-auto rounded-md border">
+                    <table className="w-full text-left">
+                        <caption className="sr-only">NumberBadge Props 목록</caption>
+                        <thead>
+                            <tr className="border-border border-b bg-gray-100/25">
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Default
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Control
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr className="border-border bg-background border-b last:border-b-0">
+                                <th
+                                    scope="row"
+                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 text-left align-top font-mono font-normal"
+                                >
+                                    variant
+                                </th>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
+                                    Badge의 number 타입에 전달할 숫자 배지 색상입니다.
+                                </td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                                    &apos;primary&apos;
+                                </td>
+                                <td className="px-4 py-3">
+                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                                        primary | new
+                                    </span>
+                                </td>
+                            </tr>
+                            <tr className="border-border bg-background border-b last:border-b-0">
+                                <th
+                                    scope="row"
+                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 text-left align-top font-mono font-normal"
+                                >
+                                    span props
+                                </th>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
+                                    color를 제외한 네이티브 span 속성과 className·children을 전달합니다.
+                                </td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">-</td>
+                                <td className="px-4 py-3">
+                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                                        Omit&lt;ComponentProps&lt;&apos;span&apos;&gt;, &apos;color&apos;&gt;
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
     </GuidePageShell>
