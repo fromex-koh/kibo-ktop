@@ -27,6 +27,7 @@ const typography = tokens.typography ?? {}
 const fontWeight = tokens.fontWeight ?? {}
 const lineHeight = tokens.lineHeight ?? {}
 const letterSpacing = tokens.letterSpacing ?? {}
+const tracking = tokens.tracking ?? {} // 역할 기반 자간(px) → tracking-* 유틸
 // typo 이름은 <tier>-<weight> 구조 — 굵기 접미사를 떼면 크기 tier(display-xl 등). font-size 는 굵기와
 // 무관하므로 tier 로 공유한다(display-xl-bold/medium/regular 3개가 --ds-font-size-display-xl 하나를 참조).
 const tierOf = (name) => {
@@ -510,6 +511,7 @@ for (const k of Object.keys(size)) L.push(`  --spacing-${k}: var(--ds-spacing-${
 for (const k of Object.keys(radius)) L.push(`  --radius-${k}: var(--ds-radius-${k});`)
 for (const k of Object.keys(shadow)) L.push(`  --shadow-${k}: var(--ds-shadow-${k});`)
 for (const k of Object.keys(blur)) L.push(`  --blur-${k}: var(--ds-blur-${k});`)
+for (const [k, v] of Object.entries(tracking)) L.push(`  --tracking-${k}: ${toRem(v)};`)
 L.push('}', '')
 
 // typography — 복합 토큰 → .typo-* (모바일 기본 + PC 미디어쿼리), Tailwind 의 utilities 레이어에 배치.
