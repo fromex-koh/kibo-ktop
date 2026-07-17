@@ -1,3 +1,8 @@
+/**
+ * Source: shadcn radix-nova registry
+ * Purpose: 원본 CVA 기준선 비교용
+ * Do not import from application code.
+ */
 import {cva} from 'class-variance-authority'
 
 const shadcnInputGroupClassName =
