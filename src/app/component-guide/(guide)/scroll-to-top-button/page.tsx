@@ -9,10 +9,33 @@ const USAGE_CODE = `{/* 컴포넌트 가이드 셸(component-guide/(guide)/layou
 
 const CUSTOM_LABEL_CODE = `<ScrollToTopButton label="맨 위로 스크롤" />`
 
-// 조합 API 설명 — [이름, 설명, 타입, 기본값]
+const STYLE_CODE = `<Button
+  variant="default"
+  size="icon"
+  onClick={handleClick}
+  aria-label={label}
+  className={cn(
+    'z-sticky shadow-1 fixed right-6 bottom-6 rounded-full',
+    'motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-2 motion-safe:duration-300',
+    className,
+  )}
+>
+  <ChevronUp aria-hidden="true" />
+</Button>`
+
 const PROPS_ITEMS = [
-    ['label', '아이콘 전용 버튼의 접근성 라벨([5.1.1]).', 'string', "'맨 위로 이동'"],
-    ['className', '추가 클래스명으로 위치·스타일 확장', 'string', '-'],
+    {
+        name: 'label',
+        type: 'string',
+        defaultValue: "'맨 위로 이동'",
+        description: '아이콘 전용 버튼의 접근 가능한 이름으로 사용할 텍스트입니다.',
+    },
+    {
+        name: 'className',
+        type: 'string',
+        defaultValue: '-',
+        description: 'Button에 병합할 추가 클래스입니다. 위치나 스타일을 확장할 때 사용합니다.',
+    },
 ] as const
 
 // 맨 위로 버튼 — 스크롤이 SCROLL_THRESHOLD_PX(400px)를 넘으면 우측 하단에 나타나는 플로팅 버튼.
@@ -49,16 +72,12 @@ const ScrollToTopButtonGuidePage = () => (
                     스크롤 컨테이너 없이 문서 자체가 스크롤됩니다.
                 </li>
                 <li>
-                    보이지 않을 때는 DOM 에서 아예 제거됩니다 — 화면 밖에 숨겨진 버튼이 Tab 순서에 남아 포커스를 받는
-                    것을 막기 위함입니다([6.1.2]).
+                    최초 렌더링과 스크롤할 때 <code className="font-mono">window.scrollY</code>를 확인하며,{' '}
+                    <code className="font-mono">400px</code>를 초과할 때만 버튼을 렌더링합니다.
                 </li>
                 <li>
-                    클릭하면 맨 위로 스크롤합니다. <code className="font-mono">prefers-reduced-motion</code> 을
-                    존중해([6.3.1]) 이 설정이 켜져 있으면 부드러운 스크롤 대신 즉시 이동합니다.
-                </li>
-                <li>
-                    아이콘만 있는 버튼이라 <code className="font-mono">aria-label</code> 로 용도를 알리고 내부 아이콘은{' '}
-                    <code className="font-mono">aria-hidden</code> 입니다([5.1.1]).
+                    클릭하면 맨 위로 스크롤합니다. <code className="font-mono">prefers-reduced-motion</code> 을 존중해
+                    이 설정이 켜져 있으면 부드러운 스크롤 대신 즉시 이동합니다.
                 </li>
             </ul>
         </section>
@@ -73,6 +92,41 @@ const ScrollToTopButtonGuidePage = () => (
                 </p>
             </div>
             <CodeBlock code={CUSTOM_LABEL_CODE} language="tsx" copyLabel="복사" />
+        </section>
+
+        <section aria-labelledby="sttb-style" className="flex flex-col gap-4">
+            <div>
+                <h2 id="sttb-style" className="typo-h4-bold">
+                    스타일
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    프로젝트 Button의 default/icon 조합을 재사용합니다. 위치는 sticky 레이어 토큰으로 고정하고, 그림자는
+                    shadow-1 토큰을 사용하며 완전한 원형으로 표현합니다.
+                </p>
+            </div>
+            <CodeBlock code={STYLE_CODE} language="tsx" copyLabel="복사" />
+        </section>
+
+        <section aria-labelledby="sttb-accessibility" className="flex flex-col gap-4">
+            <div>
+                <h2 id="sttb-accessibility" className="typo-h4-bold">
+                    접근성
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    키보드 탐색과 모션 감소 설정을 모두 고려합니다.
+                </p>
+            </div>
+            <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-2 pl-5">
+                <li>보이지 않을 때는 DOM에서 제거되어 숨겨진 버튼이 Tab 순서에 포함되지 않습니다.</li>
+                <li>
+                    아이콘 전용 버튼은 <code>aria-label</code>로 접근 가능한 이름을 제공하고, 장식용 아이콘은{' '}
+                    <code>aria-hidden=&quot;true&quot;</code>로 제외합니다.
+                </li>
+                <li>
+                    진입 애니메이션은 <code>motion-safe:</code> 조건에서만 실행됩니다.
+                </li>
+                <li>프로젝트 Button의 공통 포커스 링을 그대로 사용합니다.</li>
+            </ul>
         </section>
 
         <section aria-labelledby="sttb-props" className="flex flex-col gap-4">
@@ -91,32 +145,32 @@ const ScrollToTopButtonGuidePage = () => (
                                 Name
                             </th>
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Description
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 Type
                             </th>
                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                 Default
                             </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Description
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {PROPS_ITEMS.map(([name, desc, type, defaultValue]) => (
+                        {PROPS_ITEMS.map(({name, type, defaultValue, description}) => (
                             <tr key={name} className="border-border bg-background border-b last:border-b-0">
                                 <th
                                     scope="row"
-                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
+                                    className="typo-body-l-regular text-primary px-4 py-3 text-left font-mono font-normal whitespace-nowrap"
                                 >
                                     {name}
                                 </th>
-                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{desc}</td>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
                                     {type}
                                 </td>
                                 <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
                                     {defaultValue}
                                 </td>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{description}</td>
                             </tr>
                         ))}
                     </tbody>
