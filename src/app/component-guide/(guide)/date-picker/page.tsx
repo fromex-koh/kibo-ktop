@@ -25,9 +25,15 @@ const PROPS_ITEMS = [
     },
     {
         name: 'name / form / required',
-        desc: 'FormData 필드 이름, 외부 form 연결, 필수 상태를 지정합니다. 날짜는 yyyy-MM-dd 형식으로 제출됩니다.',
+        desc: 'FormData 필드 이름, 외부 form 연결, 네이티브 필수 검증을 지정합니다. 날짜는 yyyy-MM-dd 형식으로 제출됩니다.',
         def: '- / - / false',
         control: 'string / string / boolean',
+    },
+    {
+        name: 'onInvalid',
+        desc: '네이티브 required 검증이 실패했을 때 호출됩니다. FieldError 상태를 연결할 때 사용합니다.',
+        def: '-',
+        control: 'FormEventHandler<HTMLInputElement>',
     },
     {
         name: 'disabled',
@@ -60,18 +66,11 @@ const [visitDateError, setVisitDateError] = useState(false)
 
 const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
   event.preventDefault()
-  const nextError = visitDate === undefined
-  setVisitDateError(nextError)
-  if (nextError) {
-    document.getElementById('visit-date')?.focus()
-    return
-  }
-
   const formData = new FormData(event.currentTarget)
   console.log(Object.fromEntries(formData))
 }
 
-<form noValidate onSubmit={handleSubmit}>
+<form onSubmit={handleSubmit}>
   <Field data-invalid={visitDateError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
     <FieldLabel htmlFor="visit-date" className="gap-1 font-bold text-foreground">
       방문 예정일
@@ -87,6 +86,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
         setVisitDate(date)
         setVisitDateError(false)
       }}
+      onInvalid={() => setVisitDateError(true)}
       aria-invalid={visitDateError || undefined}
       aria-describedby={visitDateError ? 'visit-date-error' : undefined}
     />
@@ -147,8 +147,10 @@ const DatePickerGuidePage = () => (
                 <p className="typo-body-l-regular text-muted-foreground">
                     <code className="font-mono">name</code>을 지정하면 선택 날짜가{' '}
                     <code className="font-mono">yyyy-MM-dd</code> 문자열로 FormData에 포함됩니다. 예시는 필수 날짜를
-                    직접 검증해 <code className="font-mono">FieldError</code>를 노출하고 첫 오류 트리거로 포커스를
-                    이동합니다. readOnly 날짜는 제출되지만 disabled 날짜는 제출되지 않습니다.
+                    네이티브 <code className="font-mono">required</code>로 검증하고{' '}
+                    <code className="font-mono">onInvalid</code>로 <code className="font-mono">FieldError</code>를
+                    노출합니다. 검증이 실패하면 실제 조작 요소인 DatePicker 트리거로 포커스가 이동합니다. readOnly
+                    날짜는 제출되지만 disabled 날짜는 제출되지 않습니다.
                 </p>
             </div>
             <DatePickerFormDemo />

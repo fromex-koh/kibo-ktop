@@ -13,8 +13,10 @@ const InputFormDemo = () => {
     const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
     const [nameError, setNameError] = useState(false)
     const [emailError, setEmailError] = useState(false)
+    const [applicantCountError, setApplicantCountError] = useState(false)
     const nameRef = useRef<HTMLInputElement>(null)
     const emailRef = useRef<HTMLInputElement>(null)
+    const applicantCountRef = useRef<HTMLInputElement>(null)
 
     return (
         <form
@@ -26,12 +28,15 @@ const InputFormDemo = () => {
                 const formData = new FormData(event.currentTarget)
                 const nextNameError = String(formData.get('applicantName') ?? '').trim() === ''
                 const nextEmailError = !(emailRef.current?.validity.valid ?? false)
+                const nextApplicantCountError = !(applicantCountRef.current?.validity.valid ?? true)
                 setNameError(nextNameError)
                 setEmailError(nextEmailError)
+                setApplicantCountError(nextApplicantCountError)
 
-                if (nextNameError || nextEmailError) {
+                if (nextNameError || nextEmailError || nextApplicantCountError) {
                     if (nextNameError) nameRef.current?.focus()
-                    else emailRef.current?.focus()
+                    else if (nextEmailError) emailRef.current?.focus()
+                    else applicantCountRef.current?.focus()
                     return
                 }
 
@@ -90,21 +95,28 @@ const InputFormDemo = () => {
                 {emailError ? <FieldError id="form-email-error">올바른 이메일 주소를 입력해 주세요.</FieldError> : null}
             </Field>
 
-            <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field data-invalid={applicantCountError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
                 <FieldLabel htmlFor="form-applicant-count" className="text-foreground font-bold">
                     신청 인원
                 </FieldLabel>
                 <div className="flex items-center gap-2">
                     <Input
+                        ref={applicantCountRef}
                         id="form-applicant-count"
                         name="applicantCount"
                         type="number"
                         min="1"
                         defaultValue="3"
+                        aria-invalid={applicantCountError || undefined}
+                        aria-describedby={applicantCountError ? 'form-applicant-count-error' : undefined}
+                        onChange={() => setApplicantCountError(false)}
                         className="flex-1 md:min-w-0"
                     />
                     <span className="typo-body-xl-regular text-foreground shrink-0">명</span>
                 </div>
+                {applicantCountError ? (
+                    <FieldError id="form-applicant-count-error">신청 인원은 1명 이상 입력해 주세요.</FieldError>
+                ) : null}
             </Field>
 
             <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>

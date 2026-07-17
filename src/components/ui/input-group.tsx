@@ -38,6 +38,8 @@ function InputGroupAddon({
             data-align={align}
             className={cn(inputGroupAddonVariants({align}), className)}
             onClick={(event) => {
+                // PROJECT-CONVENTION: [ST-002] 타입 단언 금지.
+                // Registry: if ((event.target as HTMLElement).closest('button')) return
                 const target = event.target
                 if (target instanceof Element && target.closest('button')) return
                 event.currentTarget.parentElement?.querySelector('input')?.focus()

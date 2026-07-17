@@ -4,6 +4,7 @@ import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
+import {PasswordInput} from '@/components/composite/password-input'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 import {Input} from '@/components/ui/input'
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from '@/components/ui/input-group'
@@ -54,6 +55,13 @@ const ADDON_CODE = `<div className="max-w-90 flex w-full flex-col gap-4">
     </InputGroupAddon>
   </InputGroup>
 
+  {/* 비밀번호 표시·숨김 — 상태를 관리하는 PasswordInput composite */}
+  <PasswordInput
+    aria-label="비밀번호"
+    defaultValue="Kibo-password-1234"
+    autoComplete="current-password"
+  />
+
   {/* 단위 접미사 — 입력 박스 밖 오른쪽에 형제로 배치(Figma) */}
   <div className="flex items-center gap-2">
     <Input type="number" placeholder="0" aria-label="인원" className="md:min-w-0 flex-1" />
@@ -72,20 +80,25 @@ const ADDON_CODE = `<div className="max-w-90 flex w-full flex-col gap-4">
 const FORM_CODE = `const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
 const [nameError, setNameError] = useState(false)
 const [emailError, setEmailError] = useState(false)
+const [applicantCountError, setApplicantCountError] = useState(false)
 const nameRef = useRef<HTMLInputElement>(null)
 const emailRef = useRef<HTMLInputElement>(null)
+const applicantCountRef = useRef<HTMLInputElement>(null)
 
 const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
   event.preventDefault()
   const formData = new FormData(event.currentTarget)
   const nextNameError = String(formData.get('applicantName') ?? '').trim() === ''
   const nextEmailError = !(emailRef.current?.validity.valid ?? false)
+  const nextApplicantCountError = !(applicantCountRef.current?.validity.valid ?? true)
   setNameError(nextNameError)
   setEmailError(nextEmailError)
+  setApplicantCountError(nextApplicantCountError)
 
-  if (nextNameError || nextEmailError) {
+  if (nextNameError || nextEmailError || nextApplicantCountError) {
     if (nextNameError) nameRef.current?.focus()
-    else emailRef.current?.focus()
+    else if (nextEmailError) emailRef.current?.focus()
+    else applicantCountRef.current?.focus()
     return
   }
 
@@ -138,19 +151,26 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     {emailError ? <FieldError id="email-error">올바른 이메일 주소를 입력해 주세요.</FieldError> : null}
   </Field>
 
-  <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <Field data-invalid={applicantCountError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
     <FieldLabel htmlFor="applicant-count" className="font-bold text-foreground">신청 인원</FieldLabel>
     <div className="flex items-center gap-2">
       <Input
+        ref={applicantCountRef}
         id="applicant-count"
         name="applicantCount"
         type="number"
         min="1"
         defaultValue="3"
+        aria-invalid={applicantCountError || undefined}
+        aria-describedby={applicantCountError ? 'applicant-count-error' : undefined}
+        onChange={() => setApplicantCountError(false)}
         className="flex-1 md:min-w-0"
       />
       <span className="typo-body-xl-regular text-foreground shrink-0">명</span>
     </div>
+    {applicantCountError ? (
+      <FieldError id="applicant-count-error">신청 인원은 1명 이상 입력해 주세요.</FieldError>
+    ) : null}
   </Field>
 
   <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
@@ -275,8 +295,9 @@ const InputGuidePage = () => (
                     아니라 <code className="font-mono">InputGroupButton</code>으로 두고, 잠금 같은{' '}
                     <span className="text-foreground font-medium">상태 표시</span>는{' '}
                     <code className="font-mono">InputGroupAddon</code> 안의 아이콘으로 둡니다. InputGroup이 컨트롤과
-                    애드온의 테두리·포커스·비활성·읽기전용 상태를 함께 관리합니다. 단위(명·건 등)는 Figma처럼 입력 박스{' '}
-                    <span className="text-foreground font-medium">밖</span> 오른쪽에 형제로 나란히 둡니다(
+                    애드온의 테두리·포커스·비활성·읽기전용 상태를 함께 관리합니다. 비밀번호 표시·숨김은 이 구조를 조합한{' '}
+                    <code className="font-mono">PasswordInput</code> composite를 사용합니다. 단위(명·건 등)는 Figma처럼
+                    입력 박스 <span className="text-foreground font-medium">밖</span> 오른쪽에 형제로 나란히 둡니다(
                     <code className="font-mono">flex</code>).
                 </p>
             </div>
@@ -294,6 +315,12 @@ const InputGuidePage = () => (
                         </InputGroupButton>
                     </InputGroupAddon>
                 </InputGroup>
+                {/* 비밀번호 표시·숨김 — InputGroup을 조합한 composite */}
+                <PasswordInput
+                    aria-label="비밀번호"
+                    defaultValue="Kibo-password-1234"
+                    autoComplete="current-password"
+                />
                 {/* 단위 접미사 — 입력 박스 밖 오른쪽에 형제로 배치 */}
                 <div className="flex items-center gap-2">
                     <Input type="number" placeholder="0" aria-label="인원" className="flex-1 md:min-w-0" />

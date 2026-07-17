@@ -16,21 +16,38 @@ const USAGE_CODE = `const [value, setValue] = useState('')
     value={value}
     onValueChange={setValue}
     placeholder="기업형태를 선택하세요"
-    searchPlaceholder="기업형태 검색..."
     aria-describedby="corp-help"
   />
   <FieldDescription id="corp-help">기업형태를 검색해 한 가지를 선택해 주세요.</FieldDescription>
 </Field>`
 
+const DROPDOWN_CODE = `<Combobox
+  id="corp-dropdown"
+  type="dropdown"
+  options={corpTypes}
+  value={value}
+  onValueChange={setValue}
+  placeholder="기업형태를 선택하세요"
+  searchPlaceholder="기업형태 검색"
+/>`
+
 const FORM_CODE = `const [organization, setOrganization] = useState('')
+const [supportProgram, setSupportProgram] = useState('')
 const [organizationError, setOrganizationError] = useState(false)
+const [supportProgramError, setSupportProgramError] = useState(false)
 
 const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
   event.preventDefault()
   const nextError = organization === ''
+  const nextSupportProgramError = supportProgram === ''
   setOrganizationError(nextError)
+  setSupportProgramError(nextSupportProgramError)
   if (nextError) {
     document.getElementById('organization')?.focus()
+    return
+  }
+  if (nextSupportProgramError) {
+    document.getElementById('support-program')?.focus()
     return
   }
 
@@ -61,6 +78,31 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     {organizationError ? <FieldError id="organization-error">신청 기관을 선택해 주세요.</FieldError> : null}
   </Field>
 
+  <Field data-invalid={supportProgramError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+    <FieldLabel htmlFor="support-program" className="gap-1 font-bold text-foreground">
+      지원 프로그램
+      <span aria-hidden="true" className="text-error-500">*</span>
+      <span className="sr-only"> (필수)</span>
+    </FieldLabel>
+    <Combobox
+      id="support-program"
+      type="dropdown"
+      name="supportProgram"
+      required
+      options={supportPrograms}
+      value={supportProgram}
+      onValueChange={(value) => {
+        setSupportProgram(value)
+        setSupportProgramError(false)
+      }}
+      placeholder="지원 프로그램을 선택하세요"
+      searchPlaceholder="지원 프로그램 검색"
+      aria-invalid={supportProgramError || undefined}
+      aria-describedby={supportProgramError ? 'support-program-error' : undefined}
+    />
+    {supportProgramError ? <FieldError id="support-program-error">지원 프로그램을 선택해 주세요.</FieldError> : null}
+  </Field>
+
   <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
     <FieldLabel htmlFor="reception-office" className="font-bold text-foreground">접수 지점</FieldLabel>
     <Combobox
@@ -78,6 +120,12 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 const PROPS_ITEMS = [
     {name: 'options', desc: '검색하고 선택할 항목 목록입니다.', def: '-', control: 'ComboboxOption[]'},
     {
+        name: 'type',
+        desc: '외부 입력창에서 검색하는 형태와 드롭다운 내부에 검색창을 두는 형태를 선택합니다.',
+        def: "'input'",
+        control: "'input' | 'dropdown'",
+    },
+    {
         name: 'value / onValueChange',
         desc: '현재 선택값과 값이 바뀔 때 호출되는 콜백입니다.',
         def: '- / -',
@@ -86,8 +134,8 @@ const PROPS_ITEMS = [
     {name: 'placeholder', desc: '값이 없을 때 트리거에 표시됩니다.', def: "'선택하세요'", control: 'string'},
     {
         name: 'searchPlaceholder',
-        desc: '팝오버 내부 검색 입력에 표시됩니다.',
-        def: "'검색...'",
+        desc: 'dropdown 타입의 목록 내부 검색창에 표시됩니다.',
+        def: "'검색어를 입력하세요'",
         control: 'string',
     },
     {
@@ -98,7 +146,7 @@ const PROPS_ITEMS = [
     },
     {
         name: 'name / form / required',
-        desc: 'FormData 필드 이름, 외부 form 연결, 필수 상태를 지정합니다.',
+        desc: 'Base UI Combobox의 FormData 필드 이름, 외부 form 연결, 네이티브 필수 상태를 지정합니다.',
         def: '- / - / false',
         control: 'string / string / boolean',
     },
@@ -122,7 +170,7 @@ const PROPS_ITEMS = [
     },
     {
         name: 'className',
-        desc: 'InputGroup 기반 루트 컨테이너의 레이아웃을 확장합니다.',
+        desc: 'shadcn ComboboxInput의 InputGroup 레이아웃을 확장합니다.',
         def: '""',
         control: 'string',
     },
@@ -131,7 +179,7 @@ const PROPS_ITEMS = [
 const ComboboxGuidePage = () => (
     <GuidePageShell
         title="콤보박스 (Combobox)"
-        description="InputGroup, Popover, Command를 조합한 프로젝트 composite입니다. Field와 조합해 검색 가능한 단일 선택 입력을 구성합니다."
+        description="Base UI 기반 shadcn Combobox primitive를 프로젝트 단일 선택 API로 제공하는 wrapper입니다. Field와 조합해 검색 가능한 입력을 구성합니다."
     >
         <section aria-labelledby="cb-demo" className="flex flex-col gap-4">
             <div>
@@ -141,12 +189,13 @@ const ComboboxGuidePage = () => (
                 <p className="typo-body-l-regular text-muted-foreground">
                     <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>,{' '}
                     <code className="font-mono">Combobox</code>, <code className="font-mono">FieldDescription</code>을
-                    조합합니다. 트리거는 InputGroup을 사용해 Input과 외관·상태를 공유하고, 목록을 열어 검색한 뒤 한 가지
-                    값을 선택합니다.
+                    조합합니다. shadcn ComboboxInput은 InputGroup을 사용해 Input과 외관·상태를 공유하며, 입력과 목록
+                    탐색을 하나의 Base UI Combobox 상태로 처리합니다.
                 </p>
             </div>
             <ComboboxDemo />
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+            <CodeBlock code={DROPDOWN_CODE} language="tsx" copyLabel="드롭다운 검색형 복사" />
         </section>
 
         <section aria-labelledby="cb-state" className="flex flex-col gap-4">
@@ -170,9 +219,10 @@ const ComboboxGuidePage = () => (
                     폼 제출
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">name</code>을 지정하면 선택값이 FormData에 포함됩니다. 예시는 필수값을
-                    직접 검증해 <code className="font-mono">FieldError</code>를 표시하고 첫 오류 트리거로 포커스를
-                    이동합니다. readOnly 값은 제출되지만 disabled 값은 제출되지 않습니다.
+                    <code className="font-mono">name</code>을 지정하면 Base UI Combobox가 선택값을 FormData에
+                    포함합니다. 예시는 필수값을 직접 검증해 <code className="font-mono">FieldError</code>를 표시하고 첫
+                    오류 입력으로 포커스를 이동합니다. 입력형과 드롭다운 검색형 모두 제출값을 확인할 수 있으며, readOnly
+                    값은 제출되지만 disabled 값은 제출되지 않습니다.
                 </p>
             </div>
             <ComboboxFormDemo />

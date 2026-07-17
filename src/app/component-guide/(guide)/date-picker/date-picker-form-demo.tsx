@@ -17,17 +17,8 @@ const DatePickerFormDemo = () => {
     return (
         <form
             className="flex flex-col gap-4"
-            noValidate
             onSubmit={(event) => {
                 event.preventDefault()
-
-                const nextVisitDateError = visitDate === undefined
-                setVisitDateError(nextVisitDateError)
-                if (nextVisitDateError) {
-                    document.getElementById('form-visit-date')?.focus()
-                    return
-                }
-
                 const formData = new FormData(event.currentTarget)
                 setSubmittedData(
                     JSON.stringify({
@@ -54,6 +45,7 @@ const DatePickerFormDemo = () => {
                         setVisitDate(date)
                         setVisitDateError(false)
                     }}
+                    onInvalid={() => setVisitDateError(true)}
                     aria-invalid={visitDateError || undefined}
                     aria-describedby={visitDateError ? 'form-visit-date-error' : undefined}
                 />

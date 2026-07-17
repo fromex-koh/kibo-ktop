@@ -13,9 +13,17 @@ const ORGANIZATIONS: ComboboxOption[] = [
     {value: 'small-enterprise-agency', label: '소상공인시장진흥공단'},
 ]
 
+const SUPPORT_PROGRAMS: ComboboxOption[] = [
+    {value: 'technology-guarantee', label: '기술보증'},
+    {value: 'startup-support', label: '창업지원'},
+    {value: 'technology-evaluation', label: '기술평가'},
+]
+
 const ComboboxFormDemo = () => {
     const [organization, setOrganization] = useState('')
+    const [supportProgram, setSupportProgram] = useState('')
     const [organizationError, setOrganizationError] = useState(false)
+    const [supportProgramError, setSupportProgramError] = useState(false)
     const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
 
     return (
@@ -26,9 +34,15 @@ const ComboboxFormDemo = () => {
                 event.preventDefault()
 
                 const nextOrganizationError = organization === ''
+                const nextSupportProgramError = supportProgram === ''
                 setOrganizationError(nextOrganizationError)
+                setSupportProgramError(nextSupportProgramError)
                 if (nextOrganizationError) {
                     document.getElementById('form-organization')?.focus()
+                    return
+                }
+                if (nextSupportProgramError) {
+                    document.getElementById('form-support-program')?.focus()
                     return
                 }
 
@@ -36,6 +50,7 @@ const ComboboxFormDemo = () => {
                 setSubmittedData(
                     JSON.stringify({
                         organization: formData.get('organization'),
+                        supportProgram: formData.get('supportProgram'),
                         receptionOffice: formData.get('receptionOffice'),
                     }),
                 )
@@ -60,12 +75,40 @@ const ComboboxFormDemo = () => {
                         setOrganizationError(false)
                     }}
                     placeholder="기관을 선택하세요"
-                    searchPlaceholder="기관명 검색..."
                     aria-invalid={organizationError || undefined}
                     aria-describedby={organizationError ? 'form-organization-error' : undefined}
                 />
                 {organizationError ? (
                     <FieldError id="form-organization-error">신청 기관을 선택해 주세요.</FieldError>
+                ) : null}
+            </Field>
+
+            <Field data-invalid={supportProgramError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                <FieldLabel htmlFor="form-support-program" className="text-foreground gap-1 font-bold">
+                    지원 프로그램
+                    <span aria-hidden="true" className="text-error-500">
+                        *
+                    </span>
+                    <span className="sr-only"> (필수)</span>
+                </FieldLabel>
+                <Combobox
+                    id="form-support-program"
+                    type="dropdown"
+                    name="supportProgram"
+                    required
+                    options={SUPPORT_PROGRAMS}
+                    value={supportProgram}
+                    onValueChange={(value) => {
+                        setSupportProgram(value)
+                        setSupportProgramError(false)
+                    }}
+                    placeholder="지원 프로그램을 선택하세요"
+                    searchPlaceholder="지원 프로그램 검색"
+                    aria-invalid={supportProgramError || undefined}
+                    aria-describedby={supportProgramError ? 'form-support-program-error' : undefined}
+                />
+                {supportProgramError ? (
+                    <FieldError id="form-support-program-error">지원 프로그램을 선택해 주세요.</FieldError>
                 ) : null}
             </Field>
 
@@ -88,7 +131,7 @@ const ComboboxFormDemo = () => {
                         선택 내용 확인
                     </Button>
                     <span className="typo-body-l-regular text-muted-foreground">
-                        선택값과 readOnly 값 모두 각 Combobox의 name으로 제출됩니다.
+                        입력형·드롭다운 검색형·readOnly 값이 각 Combobox의 name으로 제출됩니다.
                     </span>
                 </div>
                 <output

@@ -27,22 +27,42 @@ const StateField = ({id, label, children, error}: {id: string; label: string; ch
 
 export const ComboboxDemo = () => {
     const [value, setValue] = useState('')
+    const [dropdownValue, setDropdownValue] = useState('')
     return (
-        <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
-            <FieldLabel htmlFor="demo-combobox" className="text-foreground font-bold">
-                기업형태
-            </FieldLabel>
-            <Combobox
-                id="demo-combobox"
-                options={CORP_TYPES}
-                value={value}
-                onValueChange={setValue}
-                placeholder="기업형태를 선택하세요"
-                searchPlaceholder="기업형태 검색..."
-                aria-describedby="demo-combobox-help"
-            />
-            <FieldDescription id="demo-combobox-help">기업형태를 검색해 한 가지를 선택해 주세요.</FieldDescription>
-        </Field>
+        <div className="grid gap-6">
+            <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                <FieldLabel htmlFor="demo-combobox" className="text-foreground font-bold">
+                    입력형
+                </FieldLabel>
+                <Combobox
+                    id="demo-combobox"
+                    options={CORP_TYPES}
+                    value={value}
+                    onValueChange={setValue}
+                    placeholder="기업형태를 선택하세요"
+                    aria-describedby="demo-combobox-help"
+                />
+                <FieldDescription id="demo-combobox-help">외부 입력창에서 검색하고 선택합니다.</FieldDescription>
+            </Field>
+            <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                <FieldLabel htmlFor="demo-dropdown-combobox" className="text-foreground font-bold">
+                    드롭다운 검색형
+                </FieldLabel>
+                <Combobox
+                    id="demo-dropdown-combobox"
+                    type="dropdown"
+                    options={CORP_TYPES}
+                    value={dropdownValue}
+                    onValueChange={setDropdownValue}
+                    placeholder="기업형태를 선택하세요"
+                    searchPlaceholder="기업형태 검색"
+                    aria-describedby="demo-dropdown-combobox-help"
+                />
+                <FieldDescription id="demo-dropdown-combobox-help">
+                    목록을 연 후 드롭다운 내부에서 검색합니다.
+                </FieldDescription>
+            </Field>
+        </div>
     )
 }
 

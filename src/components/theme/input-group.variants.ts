@@ -18,13 +18,15 @@ const inputGroupAddonVariants = cva(
     },
 )
 
-const inputGroupButtonVariants = cva('shrink-0 shadow-none', {
+const inputGroupButtonVariants = cva('shrink-0 bg-clip-border shadow-none', {
     variants: {
         size: {
-            xs: '',
-            sm: '',
-            'icon-xs': 'p-0',
-            'icon-sm': 'p-0',
+            xs: "h-control-h-xs min-h-0 min-w-control-min-w-xs gap-1 rounded-2xs px-3 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
+            sm: "h-control-h-sm min-h-0 min-w-control-min-w-xs gap-1.5 rounded-sm px-4 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
+            'icon-xs':
+                "size-control-h-xs min-h-0 min-w-0 gap-0 rounded-2xs p-0 [&_svg:not([class*='size-'])]:size-icon-sm",
+            'icon-sm':
+                "size-control-h-sm min-h-0 min-w-0 gap-0 rounded-sm p-0 [&_svg:not([class*='size-'])]:size-icon-md",
         },
     },
     defaultVariants: {size: 'xs'},
