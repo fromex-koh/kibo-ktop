@@ -1,5 +1,5 @@
 import type {ComponentProps} from 'react'
-import {BreadcrumbSeparator} from '@/components/ui/breadcrumb'
+import {BreadcrumbSeparator} from '@/components/composite/breadcrumb'
 
 // 프로젝트 표준 브레드크럼 구분자 — 4px 회색 점(·). (L2 composite)
 // kit/breadcrumb 는 원본 바닐라라 기본 구분자가 chevron 이다. 프로젝트 표준인 점 구분자는 kit 의 기본값을

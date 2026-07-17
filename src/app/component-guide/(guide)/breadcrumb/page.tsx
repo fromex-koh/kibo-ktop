@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {ChevronDownIcon} from 'lucide-react'
+import {ChevronRightIcon} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {
@@ -9,7 +9,8 @@ import {
     BreadcrumbLink,
     BreadcrumbList,
     BreadcrumbPage,
-} from '@/components/ui/breadcrumb'
+    BreadcrumbSeparator,
+} from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 
 export const metadata: Metadata = {title: '브레드크럼 (Breadcrumb)'}
@@ -30,8 +31,8 @@ const USAGE_CODE = `<div className="inline-flex items-center rounded-full bg-sur
       <BreadcrumbDotSeparator />
       <BreadcrumbItem>
         <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
-        {/* 현재 페이지에서 형제 페이지로 이동하는 드롭다운 표시 */}
-        <ChevronDownIcon aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
+        {/* 현재 페이지 표시 화살표(›) — Figma icon/line-right */}
+        <ChevronRightIcon aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
       </BreadcrumbItem>
     </BreadcrumbList>
   </Breadcrumb>
@@ -44,17 +45,101 @@ const COMPOSITION = [
     ['BreadcrumbItem', '한 항목 <li>.'],
     ['BreadcrumbLink', '이동 가능한 항목(<a>). hover 시 진해진다.'],
     ['BreadcrumbPage', '현재 페이지(이동 불가). typo-body-xl-bold + foreground, aria-current="page".'],
-    ['BreadcrumbSeparator', '구분자. kit 은 원본 그대로(기본 chevron). children 으로 교체 가능.'],
-    ['BreadcrumbDotSeparator', '프로젝트 표준 점(·) 구분자(composite). kit Separator 에 점을 주입한 조합.'],
+    ['BreadcrumbSeparator', 'ui primitive의 기본 chevron 구분자. children으로 다른 표식을 주입할 수 있다.'],
+    ['BreadcrumbDotSeparator', '프로젝트 표준 점(·) 구분자. BreadcrumbSeparator에 점을 주입한 composite 조합.'],
     ['BreadcrumbEllipsis', '경로가 길 때 중간을 … 로 접는 표시.'],
 ] as const
 
-// 브레드크럼 — shadcn Breadcrumb 를 프로젝트 스타일(점 구분자·토큰 타이포·현재 페이지 강조)로 승격한 styled copy.
-// Figma 는 bg-surface 알약(rounded-full + shadow-1) 컨테이너에 담고, 현재 페이지에 드롭다운 화살표(⌄)를 붙인다.
+type PropItem = {
+    component: string
+    name: string
+    type: string
+    defaultValue: string
+    description: string
+    rowSpan?: number
+}
+
+const PROPS_ITEMS: readonly PropItem[] = [
+    {
+        component: 'Breadcrumb',
+        name: 'nav props',
+        type: "React.ComponentProps<'nav'>",
+        defaultValue: 'aria-label="breadcrumb"',
+        description: 'className·aria-* 등 네이티브 nav 속성을 전달합니다.',
+    },
+    {
+        component: 'BreadcrumbList',
+        name: 'ol props',
+        type: "React.ComponentProps<'ol'>",
+        defaultValue: '-',
+        description: '프로젝트 타이포·색상·12px 간격 위에 네이티브 ol 속성을 전달합니다.',
+    },
+    {
+        component: 'BreadcrumbItem',
+        name: 'li props',
+        type: "React.ComponentProps<'li'>",
+        defaultValue: '-',
+        description: '한 경로 항목을 감싸며 네이티브 li 속성을 전달합니다.',
+    },
+    {
+        component: 'BreadcrumbLink',
+        rowSpan: 2,
+        name: 'asChild',
+        type: 'boolean',
+        defaultValue: 'false',
+        description: '자체 a 대신 자식 링크 요소에 속성과 스타일을 합성합니다.',
+    },
+    {
+        component: 'BreadcrumbLink',
+        name: 'anchor props',
+        type: "React.ComponentProps<'a'>",
+        defaultValue: '-',
+        description: 'href·target·className 등 네이티브 a 속성을 전달합니다.',
+    },
+    {
+        component: 'BreadcrumbPage',
+        name: 'span props',
+        type: "React.ComponentProps<'span'>",
+        defaultValue: 'aria-current="page"',
+        description: '현재 페이지에 role="link"와 aria-disabled="true"도 자동 적용합니다.',
+    },
+    {
+        component: 'BreadcrumbSeparator',
+        rowSpan: 2,
+        name: 'children',
+        type: 'ReactNode',
+        defaultValue: '<ChevronRightIcon />',
+        description: '기본 chevron 대신 표시할 구분자 콘텐츠입니다.',
+    },
+    {
+        component: 'BreadcrumbSeparator',
+        name: 'li props',
+        type: "React.ComponentProps<'li'>",
+        defaultValue: '-',
+        description: '장식용 li에 className 등 네이티브 속성을 전달합니다.',
+    },
+    {
+        component: 'BreadcrumbDotSeparator',
+        name: 'separator props',
+        type: 'ComponentProps<typeof BreadcrumbSeparator>',
+        defaultValue: '4px separator dot',
+        description: '프로젝트 점을 고정 children으로 사용하고 나머지 Separator Props를 전달합니다.',
+    },
+    {
+        component: 'BreadcrumbEllipsis',
+        name: 'span props',
+        type: "React.ComponentProps<'span'>",
+        defaultValue: '<MoreHorizontalIcon />',
+        description: '접힌 경로를 나타내는 장식 span에 네이티브 속성을 전달합니다.',
+    },
+]
+
+// 브레드크럼 — 바닐라 shadcn Breadcrumb primitive를 composite wrapper에서 호출하고 프로젝트 theme 스타일을 연결한다.
+// Figma 는 bg-surface 알약(rounded-full + shadow-1) 컨테이너에 담고, 현재 페이지에 오른쪽 화살표(›)를 붙인다.
 const BreadcrumbGuidePage = () => (
     <GuidePageShell
         title="브레드크럼 (Breadcrumb)"
-        description="현재 위치의 상위 경로를 보여주는 내비게이션입니다. bg-surface 알약(shadow-1) 안에 담고 항목은 점(·)으로 구분하며, 현재 페이지는 typo-body-xl-bold로 표시합니다."
+        description="바닐라 shadcn Breadcrumb primitive를 프로젝트 wrapper로 조합한 위치 내비게이션입니다. bg-surface 알약 안에서 점(·)으로 구분하고 현재 페이지를 강조합니다."
     >
         <section aria-labelledby="bc-main" className="flex flex-col gap-4">
             <div>
@@ -64,7 +149,12 @@ const BreadcrumbGuidePage = () => (
                 <p className="typo-body-l-regular text-muted-foreground">
                     <code className="font-mono">bg-surface</code> 알약(<code className="font-mono">rounded-full</code> +{' '}
                     <code className="font-mono">shadow-1</code>) 컨테이너 · 점 구분자 · 링크(중간)와 현재 페이지 강조 ·
-                    현재 페이지의 드롭다운 화살표(⌄)까지 Figma 그대로입니다.
+                    현재 페이지의 오른쪽 화살표(›)까지 Figma 그대로입니다.
+                </p>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    <code>ui/breadcrumb.tsx</code>는 registry 원본을 유지하고, <code>composite/breadcrumb.tsx</code>가
+                    원본 구성요소를 직접 호출하면서 <code>theme/breadcrumb.variants.ts</code>의 프로젝트 스타일을
+                    연결합니다. primitive를 복사하지 않습니다.
                 </p>
             </div>
             <div>
@@ -81,7 +171,10 @@ const BreadcrumbGuidePage = () => (
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
                                 <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
-                                <ChevronDownIcon aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
+                                <ChevronRightIcon
+                                    aria-hidden="true"
+                                    className="text-foreground size-icon-sm shrink-0"
+                                />
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
@@ -90,13 +183,52 @@ const BreadcrumbGuidePage = () => (
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>
 
+        <section aria-labelledby="bc-separator" className="flex flex-col gap-4">
+            <div>
+                <h2 id="bc-separator" className="typo-h4-bold">
+                    Separator
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    primitive 기본 chevron과 프로젝트 표준 점 구분자를 모두 사용할 수 있습니다.
+                </p>
+            </div>
+            <div className="flex flex-wrap gap-8">
+                <div className={PILL}>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="#">홈</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>자가진단</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                </div>
+                <div className={PILL}>
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="#">홈</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbDotSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>자가진단</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                </div>
+            </div>
+        </section>
+
         <section aria-labelledby="bc-basic" className="flex flex-col gap-4">
             <div>
                 <h2 id="bc-basic" className="typo-h4-bold">
-                    2뎁스 (드롭다운 없음)
+                    2뎁스 (화살표 없음)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    단계가 적고 현재 페이지에 드롭다운이 필요 없으면 화살표를 뺍니다.
+                    단계가 적으면 현재 페이지의 화살표(›)를 뺍니다.
                 </p>
             </div>
             <div>
@@ -163,6 +295,91 @@ const BreadcrumbGuidePage = () => (
                     </div>
                 ))}
             </dl>
+        </section>
+
+        <section aria-labelledby="bc-accessibility" className="flex flex-col gap-4">
+            <div>
+                <h2 id="bc-accessibility" className="typo-h4-bold">
+                    접근성
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    현재 위치와 이동 가능한 상위 경로를 내비게이션·목록 구조로 전달합니다.
+                </p>
+            </div>
+            <ul className="typo-body-l-regular text-muted-foreground list-disc space-y-1 pl-5">
+                <li>
+                    Breadcrumb는 <code>nav[aria-label=&quot;breadcrumb&quot;]</code>, BreadcrumbList는 <code>ol</code>로
+                    렌더링됩니다.
+                </li>
+                <li>
+                    현재 페이지에는 aria-current=&quot;page&quot;와 aria-disabled=&quot;true&quot;가 자동 적용됩니다.
+                </li>
+                <li>chevron·점·ellipsis 구분 표시는 장식이므로 접근성 트리에서 제외됩니다.</li>
+                <li>이동 가능한 이전 경로만 BreadcrumbLink로 제공하고 현재 페이지는 링크로 만들지 않습니다.</li>
+            </ul>
+        </section>
+
+        <section aria-labelledby="bc-props" className="flex flex-col gap-4">
+            <div>
+                <h2 id="bc-props" className="typo-h4-bold">
+                    Props
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    각 wrapper는 대응하는 ui primitive의 네이티브 Props를 그대로 전달합니다.
+                </p>
+            </div>
+            <div className="border-border overflow-x-auto rounded-md border">
+                <table className="w-full text-left">
+                    <caption className="sr-only">Breadcrumb 구성요소 Props 목록</caption>
+                    <thead>
+                        <tr className="border-border bg-card border-b">
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Component
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Name
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Type
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Default
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Description
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {PROPS_ITEMS.map(({component, name, type, defaultValue, description, rowSpan}) => (
+                            <tr key={`${component}-${name}`} className="border-border border-b last:border-b-0">
+                                {rowSpan || PROPS_ITEMS.filter((item) => item.component === component).length === 1 ? (
+                                    <th
+                                        scope="rowgroup"
+                                        rowSpan={rowSpan}
+                                        className="typo-body-l-medium border-border text-primary border-r px-4 py-3 text-left align-top font-mono"
+                                    >
+                                        {component}
+                                    </th>
+                                ) : null}
+                                <th
+                                    scope="row"
+                                    className="typo-body-l-regular px-4 py-3 text-left font-mono font-normal"
+                                >
+                                    {name}
+                                </th>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
+                                    {type}
+                                </td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
+                                    {defaultValue}
+                                </td>
+                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{description}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </section>
     </GuidePageShell>
 )

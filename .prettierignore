@@ -11,8 +11,11 @@ src/app/fonts
 src/app/tokens.css
 .claude/settings.local.json
 
-# shadcn 원본(vendored) — 다운로드 순정(2-space 등) 그대로 유지(SC-04). 스타일 커스텀은 kit/ 에서.
-# ui/ 뿐 아니라 shadcn 이 함께 내려주는 lib/utils(cn)·hooks/use-mobile 도 순정 유지 대상.
+# shadcn 셸(ui/) — 순정·수정 셸 모두 업스트림 2-space 포맷을 그대로 유지한다(SC-02). 수정 셸도
+# 본문은 업스트림 코드라, 프로젝트 포맷(4-space)으로 재포맷하면 업데이트 때 diff 전체가 오염된다.
+# (lint·check:conventions 는 수정 셸을 검사하지만, 포맷만은 업스트림을 따른다.)
+# lib/utils(cn)·hooks/use-mobile 은 shadcn 이 함께 내려주는 순정 파일, vendor/ 는 바닐라 cva 보관소.
 src/components/ui
 src/lib/utils.ts
 src/hooks/use-mobile.ts
+vendor

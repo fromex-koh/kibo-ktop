@@ -58,24 +58,27 @@ const RULES = [
     },
 ]
 
-// shadcn 원본(vendored)은 다운로드 순정 그대로 유지하므로(SC-04) 컨벤션 검사에서 제외한다.
-// (프로젝트 스타일 커스텀은 kit/ 에서 하고 그쪽은 정상 검사된다.)
-// ui/ 폴더 + shadcn 이 함께 내려주는 개별 파일(lib/utils=cn, hooks/use-mobile)까지 포함.
+// shadcn vendored 중 "순정" 파일만 컨벤션 검사에서 제외한다(SC-02) — 순정 코드는 기본 팔레트·
+// arbitrary value 등 프로젝트 컨벤션과 다를 수 있다. cva 를 theme/ 로 추출한 "수정 셸"(theme import
+// 가 있는 ui 파일)은 프로젝트가 유지보수하는 코드라 정상 검사한다(eslint.config.mjs 와 같은 판별).
+// 프로젝트 스타일(components/theme/)은 항상 전체 검사 대상이다.
 const norm = (p) => p.replace(/^src[/\\]/, '').replace(/\\/g, '/')
-const SKIP_DIRS = new Set(['components/ui'])
 const SKIP_FILES = new Set(['lib/utils.ts', 'hooks/use-mobile.ts'])
+const UI_DIR_PREFIX = 'components/ui/'
+const isVanillaUiFile = (full) =>
+    norm(full).startsWith(UI_DIR_PREFIX) && !readFileSync(full, 'utf8').includes("from '@/components/theme/")
 
 const collectFiles = (dir) => {
     const entries = readdirSync(dir, {withFileTypes: true})
     return entries.flatMap((entry) => {
         const full = join(dir, entry.name)
         if (entry.isDirectory()) {
-            if (SKIP_DIRS.has(norm(full))) return []
             return collectFiles(full)
         }
         if (SKIP_FILES.has(norm(full))) return []
-        if (TARGET_EXT.has(extname(entry.name))) return [full]
-        return []
+        if (!TARGET_EXT.has(extname(entry.name))) return []
+        if (isVanillaUiFile(full)) return []
+        return [full]
     })
 }
 
