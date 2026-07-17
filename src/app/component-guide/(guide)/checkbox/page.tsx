@@ -35,7 +35,7 @@ const options = ['email', 'message', 'push']
 const checked: ComponentProps<typeof Checkbox>['checked'] =
   selected.size === options.length ? true : selected.size === 0 ? false : 'indeterminate'
 
-<Field orientation="horizontal">
+<Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
   <Checkbox
     id="notification-all"
     aria-labelledby="notification-all-label"
@@ -45,7 +45,14 @@ const checked: ComponentProps<typeof Checkbox>['checked'] =
     }
   />
   <FieldLabel id="notification-all-label" htmlFor="notification-all">알림 전체 선택</FieldLabel>
-</Field>`
+</Field>
+
+{options.map((option) => (
+  <Field key={option} orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
+    <Checkbox id={\`notification-\${option}\`} checked={selected.has(option)} />
+    <FieldLabel htmlFor={\`notification-\${option}\`}>{option}</FieldLabel>
+  </Field>
+))}`
 
 const FORM_CODE = `const [privacyChecked, setPrivacyChecked] = useState(false)
 const [privacyError, setPrivacyError] = useState(false)
@@ -76,11 +83,11 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     <FieldLegend>관심 분야</FieldLegend>
     <FieldDescription>관심 있는 분야를 모두 선택해 주세요.</FieldDescription>
     <FieldGroup>
-      <Field orientation="horizontal">
+      <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
         <Checkbox id="interest-ai" name="interest" value="ai" />
         <FieldLabel htmlFor="interest-ai">AI</FieldLabel>
       </Field>
-      <Field orientation="horizontal">
+      <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
         <Checkbox id="interest-cloud" name="interest" value="cloud" />
         <FieldLabel htmlFor="interest-cloud">클라우드</FieldLabel>
       </Field>
@@ -88,7 +95,11 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
   </FieldSet>
 
   {/* 1depth: 라벨 + 유효성 검사 */}
-  <Field orientation="horizontal" data-invalid={privacyError || undefined}>
+  <Field
+    orientation="horizontal"
+    data-invalid={privacyError || undefined}
+    className={cn('w-fit', FIELD_FOCUS_RING)}
+  >
     <Checkbox
       ref={privacyRef}
       id="privacy"
@@ -111,7 +122,11 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
   </Field>
 
   {/* 2depth: 라벨 + 설명 + 유효성 검사 */}
-  <Field orientation="horizontal" data-invalid={termsError || undefined}>
+  <Field
+    orientation="horizontal"
+    data-invalid={termsError || undefined}
+    className={cn('w-fit max-w-90', FIELD_FOCUS_RING)}
+  >
     <Checkbox
       ref={termsRef}
       id="terms"

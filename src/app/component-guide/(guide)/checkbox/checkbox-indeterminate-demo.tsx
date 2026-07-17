@@ -1,6 +1,8 @@
 'use client'
 
 import {useState, type ComponentProps} from 'react'
+import {cn} from '@/lib/utils'
+import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Field, FieldGroup, FieldLabel} from '@/components/ui/field'
 
@@ -30,7 +32,7 @@ const CheckboxIndeterminateDemo = () => {
 
     return (
         <FieldGroup className="gap-3">
-            <Field orientation="horizontal" className="w-fit">
+            <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
                 <Checkbox
                     id="notification-all"
                     checked={parentChecked}
@@ -47,7 +49,7 @@ const CheckboxIndeterminateDemo = () => {
             </Field>
             <FieldGroup className="border-border ml-3 gap-2 border-l pl-5">
                 {OPTIONS.map(({id, label}) => (
-                    <Field key={id} orientation="horizontal" className="w-fit">
+                    <Field key={id} orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
                         <Checkbox
                             id={`notification-${id}`}
                             aria-labelledby={`notification-${id}-label`}

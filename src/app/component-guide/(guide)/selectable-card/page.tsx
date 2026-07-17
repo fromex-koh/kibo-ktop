@@ -71,7 +71,7 @@ const FORM_CODE = `<form onSubmit={handleSubmit}>
     </SelectableCard>
   </fieldset>
 
-  <Button type="submit">신청 내용 확인</Button>
+  <Button type="submit" variant="default" size="md">신청 내용 확인</Button>
 </form>`
 
 const PROPS = [

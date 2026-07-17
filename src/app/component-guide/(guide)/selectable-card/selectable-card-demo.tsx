@@ -179,7 +179,9 @@ export const SelectableCardFormDemo = () => {
 
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                    <Button type="submit">신청 내용 확인</Button>
+                    <Button type="submit" variant="default" size="md">
+                        신청 내용 확인
+                    </Button>
                     <span className="typo-body-l-regular text-muted-foreground">
                         name과 value를 지정한 선택값이 FormData에 포함되는지 확인합니다.
                     </span>

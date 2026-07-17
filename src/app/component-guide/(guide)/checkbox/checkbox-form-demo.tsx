@@ -1,6 +1,8 @@
 'use client'
 
 import {useRef, useState} from 'react'
+import {cn} from '@/lib/utils'
+import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {Button} from '@/components/ui/button'
 import {Checkbox} from '@/components/ui/checkbox'
 import {
@@ -56,22 +58,26 @@ const CheckboxFormDemo = () => {
                     관심 있는 분야를 모두 선택해 주세요.
                 </FieldDescription>
                 <FieldGroup className="gap-3">
-                    <Field orientation="horizontal" className="w-fit">
+                    <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
                         <Checkbox id="form-interest-ai" name="interest" value="ai" defaultChecked />
                         <FieldLabel htmlFor="form-interest-ai">AI</FieldLabel>
                     </Field>
-                    <Field orientation="horizontal" className="w-fit">
+                    <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
                         <Checkbox id="form-interest-cloud" name="interest" value="cloud" />
                         <FieldLabel htmlFor="form-interest-cloud">클라우드</FieldLabel>
                     </Field>
-                    <Field orientation="horizontal" className="w-fit">
+                    <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
                         <Checkbox id="form-interest-security" name="interest" value="security" />
                         <FieldLabel htmlFor="form-interest-security">보안</FieldLabel>
                     </Field>
                 </FieldGroup>
             </FieldSet>
 
-            <Field orientation="horizontal" data-invalid={privacyError || undefined} className="w-fit">
+            <Field
+                orientation="horizontal"
+                data-invalid={privacyError || undefined}
+                className={cn('w-fit', FIELD_FOCUS_RING)}
+            >
                 <Checkbox
                     ref={privacyRef}
                     id="form-privacy"
@@ -95,7 +101,11 @@ const CheckboxFormDemo = () => {
                 </FieldContent>
             </Field>
 
-            <Field orientation="horizontal" data-invalid={termsError || undefined} className="w-fit">
+            <Field
+                orientation="horizontal"
+                data-invalid={termsError || undefined}
+                className={cn('w-fit max-w-90', FIELD_FOCUS_RING)}
+            >
                 <Checkbox
                     ref={termsRef}
                     id="form-terms"
