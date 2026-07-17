@@ -18,7 +18,7 @@ const SkipNav = ({links}: {links: readonly SkipLinkItem[]}) => (
                 href={link.href}
                 onClick={link.onSelect}
                 className={cn(
-                    buttonVariants({variant: 'default', size: 'medium'}),
+                    buttonVariants({variant: 'default', size: 'lg'}),
                     'z-skiplink border-foreground bg-foreground text-background hover:bg-foreground active:bg-foreground fixed top-3 left-3 -translate-y-20 transition-transform duration-200 ease-out focus:translate-y-0 motion-reduce:transition-none',
                 )}
             >

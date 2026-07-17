@@ -44,7 +44,7 @@ const TabCardDemo = () => {
                             </SectionHeaderDescription>
                         </SectionHeader>
                         {/* 탭 → 콘텐츠 키보드 진입 테스트용 포커스 대상 */}
-                        <Button variant="secondary" size="small">
+                        <Button variant="secondary" size="md">
                             {current?.title} 저장
                         </Button>
                     </div>

@@ -24,7 +24,7 @@ const CHECKBOX_CODE = `<div className="flex max-w-90 items-center gap-2">
   <Label htmlFor="terms">이용약관에 동의합니다</Label>
 </div>`
 
-const DISABLED_CODE = `{/* 연결된 컨트롤이 disabled 이면 peer-disabled 로 라벨도 흐려진다 */}
+const DISABLED_CODE = `{/* 연결된 컨트롤이 disabled 이면 peer-disabled 로 라벨 색상도 바뀐다 */}
 <div className="flex max-w-90 items-center gap-2">
   <Checkbox id="opt-in" disabled className="peer" />
   <Label htmlFor="opt-in">비활성 옵션</Label>
@@ -55,7 +55,7 @@ const STYLE_ROWS = [
 const LabelGuidePage = () => (
     <GuidePageShell
         title="라벨 (Label)"
-        description="shadcn Label 프리미티브입니다. htmlFor↔id 로 폼 컨트롤과 연결해 함께 씁니다."
+        description="최신 shadcn Label shell과 props 구조를 유지하고 프로젝트 label 스타일을 연결한 컴포넌트입니다. htmlFor↔id 로 폼 컨트롤과 연결해 함께 씁니다."
     >
         <section aria-labelledby="label-demo" className="flex flex-col gap-4">
             <div>
@@ -84,8 +84,8 @@ const LabelGuidePage = () => (
                     스타일 (Figma)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    Figma 폼 라벨 스펙을 반영한 기본 스타일입니다. 크기·행간·굵기·커서는 원본에 담겨 있어 별도 클래스
-                    없이 적용됩니다.
+                    Figma 폼 라벨 스펙을 반영한 프로젝트 기본 스타일입니다. 크기·행간·기본 굵기·커서는{' '}
+                    <code className="font-mono">theme/label.variants.ts</code> 에 정의되어 별도 클래스 없이 적용됩니다.
                 </p>
             </div>
             <div className="bg-background border-border overflow-x-auto rounded-md border">
@@ -191,7 +191,9 @@ const LabelGuidePage = () => (
                 <h3 className="typo-body-l-medium text-foreground">비활성 반영</h3>
                 <p className="typo-body-l-regular text-muted-foreground">
                     연결된 컨트롤이 <code className="font-mono">disabled</code> 이면{' '}
-                    <code className="font-mono">peer-disabled</code> 로 라벨도 함께 흐려집니다(수동 분기 불필요).
+                    <code className="font-mono">peer-disabled</code> 로 라벨 색상도{' '}
+                    <code className="font-mono">text-disabled</code> 로 바뀝니다. opacity는 낮추지 않습니다(수동 분기
+                    불필요).
                 </p>
                 <div className="flex max-w-90 items-center gap-2">
                     <Checkbox id="compose-opt" disabled className="peer" />
@@ -243,7 +245,7 @@ const LabelGuidePage = () => (
                             },
                             {
                                 name: 'className',
-                                desc: '추가 클래스명으로 스타일 확장(예: font-normal·gap-1).',
+                                desc: '추가 클래스명으로 스타일 확장(예: font-bold·gap-1).',
                                 def: '""',
                                 control: 'string',
                             },

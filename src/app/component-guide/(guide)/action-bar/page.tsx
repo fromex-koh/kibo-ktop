@@ -9,25 +9,25 @@ import {Button} from '@/components/ui/button'
 export const metadata: Metadata = {title: '액션 바 (ActionBar)'}
 
 const START_END_CODE = `{/* 왼쪽 "목록" · 오른쪽 "수정"/"저장" — Start/End 만 쓰면 자연히 양 끝에 붙는다 */}
-{/* 한 ActionBar 안의 버튼은 모두 같은 size 로 통일한다(여기선 medium) */}
+{/* 한 ActionBar 안의 버튼은 모두 같은 size 로 통일한다(여기선 lg) */}
 <ActionBar>
   <ActionBarStart>
-    <Button variant="tertiary" size="medium">목록</Button>
+    <Button variant="tertiary" size="lg">목록</Button>
   </ActionBarStart>
   <ActionBarEnd>
-    <Button variant="secondary" size="medium">수정</Button>
-    <Button size="medium">저장</Button>
+    <Button variant="secondary" size="lg">수정</Button>
+    <Button size="lg">저장</Button>
   </ActionBarEnd>
 </ActionBar>`
 
 const CENTER_CODE = `{/* "이전" / "다음" — Center 만 쓰면 Start/End 없이도 컨테이너 정중앙에 온다 */}
 <ActionBar>
   <ActionBarCenter>
-    <Button variant="secondary" size="xlarge">
+    <Button variant="secondary" size="2xl">
       <ArrowLeft aria-hidden="true" />
       이전
     </Button>
-    <Button size="xlarge">
+    <Button size="2xl">
       다음
       <ArrowRight aria-hidden="true" />
     </Button>
@@ -61,15 +61,15 @@ const ActionBarGuidePage = () => (
             <BaseCard>
                 <ActionBar>
                     <ActionBarStart>
-                        <Button variant="tertiary" size="medium">
+                        <Button variant="tertiary" size="lg">
                             목록
                         </Button>
                     </ActionBarStart>
                     <ActionBarEnd>
-                        <Button variant="secondary" size="medium">
+                        <Button variant="secondary" size="lg">
                             수정
                         </Button>
-                        <Button size="medium">저장</Button>
+                        <Button size="lg">저장</Button>
                     </ActionBarEnd>
                 </ActionBar>
             </BaseCard>
@@ -91,11 +91,11 @@ const ActionBarGuidePage = () => (
             <BaseCard>
                 <ActionBar>
                     <ActionBarCenter>
-                        <Button variant="secondary" size="xlarge">
+                        <Button variant="secondary" size="2xl">
                             <ArrowLeft aria-hidden="true" />
                             이전
                         </Button>
-                        <Button size="xlarge">
+                        <Button size="2xl">
                             다음
                             <ArrowRight aria-hidden="true" />
                         </Button>

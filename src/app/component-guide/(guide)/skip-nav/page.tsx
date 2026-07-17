@@ -20,7 +20,7 @@ const USAGE_CODE = `const SKIP_LINKS = [
 </main>`
 
 const STYLE_CODE = `className={cn(
-  buttonVariants({variant: 'default', size: 'medium'}),
+  buttonVariants({variant: 'default', size: 'lg'}),
   'z-skiplink border-foreground bg-foreground text-background fixed top-3 left-3 -translate-y-20 transition-transform duration-200 ease-out hover:bg-foreground active:bg-foreground focus:translate-y-0 motion-reduce:transition-none',
 )}`
 
@@ -70,9 +70,8 @@ const SkipNavGuidePage = () => (
                     <code className="font-mono">focus:translate-y-0</code>으로 나타납니다.
                 </li>
                 <li>
-                    시각 스타일은 Button <code className="font-mono">default/medium</code>을 재사용하되, SkipNav 전용
-                    고대비 색은 <code className="font-mono">bg-foreground text-background</code> 표준 슬롯으로
-                    반전합니다.
+                    시각 스타일은 Button <code className="font-mono">default/lg</code>를 재사용하되, SkipNav 전용 고대비
+                    색은 <code className="font-mono">bg-foreground text-background</code> 표준 슬롯으로 반전합니다.
                 </li>
             </ul>
         </section>

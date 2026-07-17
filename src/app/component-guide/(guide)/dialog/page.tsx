@@ -20,7 +20,7 @@ export const metadata: Metadata = {title: '다이얼로그 (Dialog)'}
 
 const USAGE_CODE = `<Dialog>
   <DialogTrigger asChild>
-    <Button size="medium">열기</Button>
+    <Button size="lg">열기</Button>
   </DialogTrigger>
   <DialogContent aria-describedby={undefined}>
     <DialogHeader>
@@ -48,9 +48,9 @@ const USAGE_CODE = `<Dialog>
 
     <DialogFooter>
       <DialogClose asChild>
-        <Button variant="tertiary" size="xlarge">취소</Button>
+        <Button variant="tertiary" size="2xl">취소</Button>
       </DialogClose>
-      <Button size="xlarge">확인</Button>
+      <Button size="2xl">확인</Button>
     </DialogFooter>
   </DialogContent>
 </Dialog>`
@@ -99,7 +99,7 @@ const DialogGuidePage = () => (
             <div className="border-border flex flex-wrap gap-3 rounded-md border p-6">
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button size="medium">기본 다이얼로그 열기</Button>
+                        <Button size="lg">기본 다이얼로그 열기</Button>
                     </DialogTrigger>
                     <DialogContent aria-describedby={undefined}>
                         <DialogHeader>
@@ -164,12 +164,12 @@ const DialogGuidePage = () => (
                         </div>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button variant="tertiary" size="xlarge">
+                                <Button variant="tertiary" size="2xl">
                                     취소
                                 </Button>
                             </DialogClose>
                             <DialogClose asChild>
-                                <Button size="xlarge">확인</Button>
+                                <Button size="2xl">확인</Button>
                             </DialogClose>
                         </DialogFooter>
                     </DialogContent>
@@ -198,7 +198,7 @@ const DialogGuidePage = () => (
                 {/* 알림형 — 단일 확인 버튼 */}
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button size="medium">알림형</Button>
+                        <Button size="lg">알림형</Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-md">
                         <DialogHeader>
@@ -209,7 +209,7 @@ const DialogGuidePage = () => (
                         </DialogHeader>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button size="xlarge">확인</Button>
+                                <Button size="2xl">확인</Button>
                             </DialogClose>
                         </DialogFooter>
                     </DialogContent>
@@ -218,7 +218,7 @@ const DialogGuidePage = () => (
                 {/* 폼 입력형 */}
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button size="medium">폼 입력형</Button>
+                        <Button size="lg">폼 입력형</Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
@@ -233,12 +233,12 @@ const DialogGuidePage = () => (
                         </div>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button variant="tertiary" size="xlarge">
+                                <Button variant="tertiary" size="2xl">
                                     취소
                                 </Button>
                             </DialogClose>
                             <DialogClose asChild>
-                                <Button size="xlarge">저장</Button>
+                                <Button size="2xl">저장</Button>
                             </DialogClose>
                         </DialogFooter>
                     </DialogContent>
@@ -248,7 +248,7 @@ const DialogGuidePage = () => (
                     모달·헤더·푸터는 그대로 있고, 스크롤 영역만 높이가 고정된다(약관·긴 목록용). */}
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button size="medium">내부 스크롤 (높이 제한)</Button>
+                        <Button size="lg">내부 스크롤 (높이 제한)</Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader>
@@ -266,12 +266,12 @@ const DialogGuidePage = () => (
                         </div>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button variant="tertiary" size="xlarge">
+                                <Button variant="tertiary" size="2xl">
                                     닫기
                                 </Button>
                             </DialogClose>
                             <DialogClose asChild>
-                                <Button size="xlarge">동의</Button>
+                                <Button size="2xl">동의</Button>
                             </DialogClose>
                         </DialogFooter>
                     </DialogContent>
@@ -280,7 +280,7 @@ const DialogGuidePage = () => (
                 {/* 닫기 버튼 숨김 */}
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button size="medium">닫기 버튼 숨김</Button>
+                        <Button size="lg">닫기 버튼 숨김</Button>
                     </DialogTrigger>
                     <DialogContent showCloseButton={false}>
                         <DialogHeader>
@@ -289,12 +289,12 @@ const DialogGuidePage = () => (
                         </DialogHeader>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button variant="tertiary" size="xlarge">
+                                <Button variant="tertiary" size="2xl">
                                     거부
                                 </Button>
                             </DialogClose>
                             <DialogClose asChild>
-                                <Button size="xlarge">동의</Button>
+                                <Button size="2xl">동의</Button>
                             </DialogClose>
                         </DialogFooter>
                     </DialogContent>
@@ -303,7 +303,7 @@ const DialogGuidePage = () => (
                 {/* 크기 변형 — 넓게 */}
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button size="medium">크기 변형 (넓게)</Button>
+                        <Button size="lg">크기 변형 (넓게)</Button>
                     </DialogTrigger>
                     <DialogContent className="sm:max-w-2xl">
                         <DialogHeader>
@@ -315,7 +315,7 @@ const DialogGuidePage = () => (
                         </DialogHeader>
                         <DialogFooter>
                             <DialogClose asChild>
-                                <Button size="xlarge">확인</Button>
+                                <Button size="2xl">확인</Button>
                             </DialogClose>
                         </DialogFooter>
                     </DialogContent>

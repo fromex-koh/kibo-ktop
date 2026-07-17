@@ -6,36 +6,58 @@ import {Button} from '@/components/ui/button'
 
 export const metadata: Metadata = {title: '버튼 (Button)'}
 
-const USAGE_CODE = `<Button variant="default" size="medium">저장</Button>
-<Button variant="secondary" size="medium">취소</Button>
-<Button variant="tertiary" size="medium">더보기</Button>`
+const USAGE_CODE = `<Button variant="default" size="lg">저장</Button>
+<Button variant="secondary" size="lg">취소</Button>
+<Button variant="tertiary" size="lg">더보기</Button>`
 
 const USAGE_CODE_ICON = `{/* 아이콘 왼쪽 */}
-<Button variant="default" size="medium">
+<Button variant="default" size="lg">
   <Download aria-hidden="true" />
   다운로드
 </Button>
 
 {/* 아이콘 오른쪽 */}
-<Button variant="default" size="medium">
+<Button variant="default" size="lg">
   다음
   <ArrowRight aria-hidden="true" />
 </Button>`
 
 // Loading — variant 색은 유지하고 스피너 + aria-busy + pointer-events-none 로 진행 중을 표현한다.
-const LOADING_CODE = `<Button variant="default" size="medium" aria-busy className="pointer-events-none">
+const LOADING_CODE = `<Button variant="default" size="lg" aria-busy className="pointer-events-none">
   <LoaderCircle aria-hidden="true" className="animate-spin" />
   로딩중
 </Button>`
 
-const DISABLED_ICON_CODE = `<Button variant="default" size="medium" disabled>
+const DISABLED_ICON_CODE = `<Button variant="default" size="lg" disabled>
   <Download aria-hidden="true" />
   다운로드
 </Button>
 
-<Button variant="secondary" size="medium" disabled>
+<Button variant="secondary" size="lg" disabled>
   다음
   <ArrowRight aria-hidden="true" />
+</Button>
+
+<Button variant="text" size="lg" disabled>텍스트 버튼</Button>
+<Button variant="link" size="lg" disabled>링크 버튼</Button>`
+
+const ROUND_ICON_CODE = `<Button
+  variant="default"
+  size="icon-lg"
+  className="rounded-full"
+  aria-label="검색"
+>
+  <Search aria-hidden="true" />
+</Button>
+
+<Button
+  variant="default"
+  size="icon-lg"
+  className="rounded-full"
+  disabled
+  aria-label="검색 불가"
+>
+  <Search aria-hidden="true" />
 </Button>`
 
 // Figma 버튼 컴포넌트셋의 3 type. secondary 는 회색 solid 가 아니라 연한 블루 틴트+테두리 스타일이다.
@@ -45,15 +67,15 @@ const TYPES = [
     {key: 'tertiary', label: 'Tertiary', desc: '가장 낮은 강조의 보조 액션(취소·더보기 등)에 사용합니다.'},
 ] as const
 
-// Figma 사이즈 스케일(xlarge~small) + 프로젝트 보간 xsmall(36)/2xsmall(32)을 노출한다. 클래스명은 cva 안에
+// Figma 6단계 사이즈를 shadcn 축약형(2xl~xs)으로 노출한다. 클래스명은 cva 안에
 // 리터럴로 고정돼 있어 여기서도 템플릿 문자열 대신 배열에 직접 나열한다(Tailwind 정적 분석, icon 가이드와 동일 이유).
 const SIZES = [
-    {key: 'xlarge', label: 'xlarge', height: 60},
-    {key: 'large', label: 'large', height: 52},
-    {key: 'medium', label: 'medium', height: 48},
-    {key: 'small', label: 'small', height: 40},
-    {key: 'xsmall', label: 'xsmall', height: 36},
-    {key: '2xsmall', label: '2xsmall', height: 32},
+    {key: '2xl', label: '2xl', height: 60},
+    {key: 'xl', label: 'xl', height: 52},
+    {key: 'lg', label: 'lg', height: 48},
+    {key: 'md', label: 'md', height: 40},
+    {key: 'sm', label: 'sm', height: 36},
+    {key: 'xs', label: 'xs', height: 32},
 ] as const
 
 // 아이콘 전용(정사각) 버튼 사이즈. 텍스트 사이즈와 달리 min-w 가 없어 정사각형이 되고, 텍스트 스케일 높이에
@@ -76,26 +98,16 @@ const ICON_VARIANTS = [
     {key: 'ghost', label: 'ghost'},
 ] as const
 
-const LEGACY_SIZES = [
-    'default',
-    'lg',
-    'icon',
-    'icon-lg',
-    'icon-xl',
-    'icon-2xl',
-    'sm',
-    'xs',
-    'icon-sm',
-    'icon-xs',
-] as const
+const LEGACY_SIZES = ['default', 'icon', 'icon-lg', 'icon-xl', 'icon-2xl', 'icon-sm', 'icon-xs'] as const
 
 // Button 이 가진 variant 케이스. default/secondary/tertiary/text 는 Figma type(버튼 전용 토큰),
-// ghost/destructive/link 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는 기존 값이다(outline 은 프로젝트 미사용).
+// outline/ghost/destructive/link 는 내부 컴포넌트 및 인라인 액션에서 쓰는 호환 값이다.
 // 채움이 없는 text/link 는 모양이 비슷해 마지막에 나란히 둔다.
 const ALL_VARIANTS = [
     {key: 'default', label: 'default', note: 'Figma Primary'},
     {key: 'secondary', label: 'secondary', note: 'Figma Secondary'},
     {key: 'tertiary', label: 'tertiary', note: 'Figma Tertiary'},
+    {key: 'outline', label: 'outline', note: '내부 컴포넌트용'},
     {key: 'ghost', label: 'ghost', note: '내부 컴포넌트용'},
     {key: 'destructive', label: 'destructive', note: '내부 컴포넌트용'},
     {key: 'text', label: 'text', note: 'Figma Text(채움·테두리 없음)'},
@@ -107,13 +119,21 @@ const INLINE_VARIANTS = [
     {key: 'link', label: 'link', note: 'text 와 같되 hover 에 밑줄'},
 ] as const
 
-// Figma button_text 는 공용 size 축(xlarge~2xsmall)과 별개로 자체 4단 스케일을 쓴다(값은 Figma 실측 px).
+const DISABLED_VARIANTS = [
+    {key: 'default', label: 'Primary'},
+    {key: 'secondary', label: 'Secondary'},
+    {key: 'tertiary', label: 'Tertiary'},
+    {key: 'text', label: 'Text'},
+    {key: 'link', label: 'Link'},
+] as const
+
+// Figma button_text 는 공용 size 축(2xl~xs)과 별개로 자체 4단 스케일을 쓴다(값은 Figma 실측 px).
 // link 도 이 사양을 그대로 공유한다 — hover 밑줄만 다르다.
 const INLINE_SIZES = [
-    {key: 'large', label: 'large', height: 40, font: 18, icon: 20},
-    {key: 'medium', label: 'medium', height: 32, font: 16, icon: 20},
-    {key: 'small', label: 'small', height: 24, font: 14, icon: 16},
-    {key: 'xsmall', label: 'xsmall', height: 24, font: 12, icon: 12},
+    {key: 'xl', label: 'xl', height: 40, font: 18, icon: 20},
+    {key: 'lg', label: 'lg', height: 32, font: 16, icon: 20},
+    {key: 'md', label: 'md', height: 24, font: 14, icon: 16},
+    {key: 'sm', label: 'sm', height: 24, font: 12, icon: 12},
 ] as const
 
 // text·link 는 같은 Figma 사양을 공유하므로 큐레이션 표도 같은 모양으로 나란히 둔다.
@@ -134,9 +154,6 @@ const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'link'; caption:
                     </th>
                     <th scope="col" className="typo-body-l-medium px-4 py-3">
                         아이콘 오른쪽
-                    </th>
-                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                        disabled
                     </th>
                 </tr>
             </thead>
@@ -169,12 +186,6 @@ const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'link'; caption:
                                 <ChevronRight aria-hidden="true" />
                             </Button>
                         </td>
-                        <td className="px-4 py-3 align-middle">
-                            <Button variant={variant} size={size.key} disabled>
-                                <Download aria-hidden="true" />
-                                버튼명
-                            </Button>
-                        </td>
                     </tr>
                 ))}
             </tbody>
@@ -187,7 +198,7 @@ const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'link'; caption:
 const ButtonGuidePage = () => (
     <GuidePageShell
         title="버튼 (Button)"
-        description="shadcn Button 프리미티브입니다. 3가지 type × 6가지 사이즈에 아이콘 버튼까지 지원합니다."
+        description="최신 shadcn Button shell과 props 구조를 유지하고 프로젝트 buttonVariants를 연결한 컴포넌트입니다. 3가지 주요 type × 6가지 프로젝트 사이즈와 아이콘 버튼을 지원합니다."
     >
         <section aria-labelledby="button-demo" className="flex flex-col gap-4">
             <div>
@@ -200,13 +211,13 @@ const ButtonGuidePage = () => (
                 </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-                <Button variant="default" size="medium">
+                <Button variant="default" size="lg">
                     저장
                 </Button>
-                <Button variant="secondary" size="medium">
+                <Button variant="secondary" size="lg">
                     취소
                 </Button>
-                <Button variant="tertiary" size="medium">
+                <Button variant="tertiary" size="lg">
                     더보기
                 </Button>
             </div>
@@ -220,11 +231,11 @@ const ButtonGuidePage = () => (
                 </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
-                <Button variant="default" size="medium">
+                <Button variant="default" size="lg">
                     <Download aria-hidden="true" />
                     다운로드
                 </Button>
-                <Button variant="default" size="medium">
+                <Button variant="default" size="lg">
                     다음
                     <ArrowRight aria-hidden="true" />
                 </Button>
@@ -242,8 +253,8 @@ const ButtonGuidePage = () => (
                     <span className="font-mono">default·secondary·tertiary·text</span> 는 Figma type(
                     <span className="font-mono">text</span> 는 채움·테두리 없는 텍스트 버튼)이고,{' '}
                     <span className="font-mono">link</span> 는 그 text 사양에 hover 밑줄만 더한 형태입니다.{' '}
-                    <span className="font-mono">ghost·destructive</span> 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는 기존
-                    값입니다(outline 은 목록에서 제외).
+                    <span className="font-mono">outline·ghost·destructive</span> 는 다이얼로그·시트 등 내부 컴포넌트가
+                    쓰는 호환 값입니다.
                 </p>
             </div>
             <div className="flex flex-col gap-4">
@@ -253,7 +264,7 @@ const ButtonGuidePage = () => (
                             <span className="typo-body-l-medium text-foreground font-mono">{v.label}</span>
                             <span className="typo-caption-regular text-muted-foreground">{v.note}</span>
                         </div>
-                        <Button variant={v.key} size="medium">
+                        <Button variant={v.key} size="lg">
                             버튼
                         </Button>
                     </div>
@@ -267,8 +278,8 @@ const ButtonGuidePage = () => (
                     Type × Size 큐레이션
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    3 type 을 열로, 6 size 를 행으로 교차해 전체 조합을 확인합니다. 44px 미만인 small·xsmall·2xsmall 은
-                    밀도 높은 UI 용 컴팩트 예외입니다(터치 타깃 보정 미적용, 인접 간격 확보 전제).
+                    3 type 을 열로, 6 size 를 행으로 교차해 전체 조합을 확인합니다. 44px 미만인 md·sm·xs 는 밀도 높은 UI
+                    용 컴팩트 예외입니다(터치 타깃 보정 미적용, 인접 간격 확보 전제).
                 </p>
             </div>
             <div className="flex flex-col gap-3">
@@ -387,8 +398,8 @@ const ButtonGuidePage = () => (
                     Link/Text 큐레이션
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    비교하기 쉽도록 미리보기는 모두 <span className="font-mono">medium</span> size 로 통일합니다. 둘은
-                    같은 Figma 사양(높이·폰트·아이콘·색)을 공유하고 <span className="font-mono">link</span> 만 hover 에
+                    비교하기 쉽도록 미리보기는 모두 <span className="font-mono">lg</span> size 로 통일합니다. 둘은 같은
+                    Figma 사양(높이·폰트·아이콘·색)을 공유하고 <span className="font-mono">link</span> 만 hover 에
                     밑줄이 붙습니다. size 별 사양은 아래{' '}
                     <a href="#button-text-matrix" className="text-primary underline underline-offset-4">
                         Text
@@ -427,7 +438,7 @@ const ButtonGuidePage = () => (
                                 </th>
                                 <td className="px-4 py-3 align-middle">
                                     <div className="flex flex-col items-start gap-2">
-                                        <Button variant={variant.key} size="medium">
+                                        <Button variant={variant.key} size="lg">
                                             자세히 보기
                                         </Button>
                                     </div>
@@ -498,6 +509,7 @@ const ButtonGuidePage = () => (
                     </div>
                 ))}
             </div>
+            <CodeBlock code={ROUND_ICON_CODE} language="tsx" copyLabel="복사" />
         </section>
 
         <section aria-labelledby="button-disabled" className="flex flex-col gap-4">
@@ -509,24 +521,82 @@ const ButtonGuidePage = () => (
                     비활성 상태는 단순히 흐리게 처리하지 않고, type 별로 별도 배경·테두리·텍스트 색을 씁니다.
                 </p>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
-                {TYPES.map((type) => (
-                    <Button key={type.key} variant={type.key} size="medium" disabled>
-                        {type.label}
-                    </Button>
-                ))}
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-                {TYPES.map((type) => (
-                    <Button key={type.key} variant={type.key} size="medium" disabled>
-                        <Download aria-hidden="true" />
-                        {type.label}
-                    </Button>
-                ))}
-                <Button variant="secondary" size="medium" disabled>
-                    다음
-                    <ArrowRight aria-hidden="true" />
-                </Button>
+            <div className="bg-background border-border overflow-x-auto rounded-md border">
+                <table className="w-full text-left">
+                    <caption className="sr-only">Button variant별 비활성 상태</caption>
+                    <thead>
+                        <tr className="border-border border-b bg-gray-100/25">
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Variant
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                텍스트
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                아이콘 왼쪽
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                아이콘 오른쪽
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                아이콘 전용
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                원형 아이콘
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {DISABLED_VARIANTS.map((variant) => (
+                            <tr key={variant.key} className="border-border bg-background border-b last:border-b-0">
+                                <th
+                                    scope="row"
+                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 font-mono font-normal"
+                                >
+                                    {variant.label}
+                                </th>
+                                <td className="px-4 py-3">
+                                    <Button variant={variant.key} size="lg" disabled>
+                                        버튼명
+                                    </Button>
+                                </td>
+                                <td className="px-4 py-3">
+                                    <Button variant={variant.key} size="lg" disabled>
+                                        <Download aria-hidden="true" />
+                                        버튼명
+                                    </Button>
+                                </td>
+                                <td className="px-4 py-3">
+                                    <Button variant={variant.key} size="lg" disabled>
+                                        버튼명
+                                        <ArrowRight aria-hidden="true" />
+                                    </Button>
+                                </td>
+                                <td className="px-4 py-3">
+                                    <Button
+                                        variant={variant.key}
+                                        size="icon-lg"
+                                        disabled
+                                        aria-label={`${variant.label} 비활성 아이콘 버튼`}
+                                    >
+                                        <Search aria-hidden="true" />
+                                    </Button>
+                                </td>
+                                <td className="px-4 py-3">
+                                    <Button
+                                        variant={variant.key}
+                                        size="icon-lg"
+                                        className="rounded-full"
+                                        disabled
+                                        aria-label={`${variant.label} 비활성 원형 아이콘 버튼`}
+                                    >
+                                        <Search aria-hidden="true" />
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </div>
             <CodeBlock code={DISABLED_ICON_CODE} language="tsx" copyLabel="복사" />
         </section>
@@ -548,7 +618,7 @@ const ButtonGuidePage = () => (
                     <Button
                         key={type.key}
                         variant={type.key}
-                        size="medium"
+                        size="lg"
                         aria-busy="true"
                         className="pointer-events-none"
                     >
@@ -633,9 +703,8 @@ const ButtonGuidePage = () => (
                             </th>
                             <td className="px-4 py-3">
                                 <p className="typo-body-l-regular text-muted-foreground">
-                                    Figma 사이즈 스케일(xlarge~small) + 프로젝트 보간 xsmall(36)·2xsmall(32)입니다. 기존
-                                    값(default/lg/icon 등)은 다이얼로그·시트·사이드바 등 내부 컴포넌트 호환을 위해
-                                    그대로 유지됩니다.
+                                    Figma 6단계 사이즈를 shadcn 방식의 축약형 2xl/xl/lg/md/sm/xs로 제공합니다. default와
+                                    icon 계열은 다이얼로그·시트·사이드바 등 내부 컴포넌트 호환을 위해 유지됩니다.
                                 </p>
                             </td>
                             <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">

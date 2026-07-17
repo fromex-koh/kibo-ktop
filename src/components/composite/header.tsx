@@ -38,7 +38,7 @@ const MemberTypeToggle = () => (
 const UtilityLink = ({label, external, className}: {label: string; external?: boolean; className?: string}) => (
     <Button
         variant="text"
-        size="medium"
+        size="lg"
         asChild
         className={cn('tracking-header-link font-medium', external ? 'gap-0.5' : undefined, className)}
     >
