@@ -5,6 +5,7 @@ import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Label} from '@/components/ui/label'
+import CheckboxIndeterminateDemo from './checkbox-indeterminate-demo'
 
 export const metadata: Metadata = {title: '체크박스 (Checkbox)'}
 
@@ -29,10 +30,25 @@ const DEPTH2_CODE = `<div className={cn('flex w-fit max-w-90 flex-col gap-1', FI
   </p>
 </div>`
 
-// Figma checkbox_item 의 두 축 — check(off/on) × state(default/disabled).
+const INDETERMINATE_CODE = `const [selected, setSelected] = useState(() => new Set(['email']))
+const options = ['email', 'message', 'push']
+const checked: ComponentProps<typeof Checkbox>['checked'] =
+  selected.size === options.length ? true : selected.size === 0 ? false : 'indeterminate'
+
+<Checkbox
+  id="notification-all"
+  checked={checked}
+  onCheckedChange={(nextChecked) =>
+    setSelected(nextChecked === true ? new Set(options) : new Set())
+  }
+/>
+<Label htmlFor="notification-all">알림 전체 선택</Label>`
+
+// Checkbox 선택 상태(off/on/indeterminate) × 상호작용 상태(default/disabled)를 비교한다.
 const CHECK_ROWS = [
     {key: 'off', label: 'Off (미체크)', checked: false},
     {key: 'on', label: 'On (체크)', checked: true},
+    {key: 'indeterminate', label: 'Indeterminate (부분 선택)', checked: 'indeterminate'},
 ] as const
 
 const STATE_COLS = [
@@ -72,8 +88,8 @@ const CheckboxGuidePage = () => (
                     상태 (State)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    선택(off/on) × 상태(default/disabled) 조합입니다. 체크됨은{' '}
-                    <code className="font-mono">blue.500</code>, 비활성은 회색 박스(
+                    선택(off/on/indeterminate) × 상태(default/disabled) 조합입니다. Indeterminate는 하위 항목이 일부만
+                    선택된 상태를 나타냅니다. 체크됨은 <code className="font-mono">blue.500</code>, 비활성은 회색 박스(
                     <code className="font-mono">gray.100</code>)로 표현됩니다.
                 </p>
             </div>
@@ -117,6 +133,19 @@ const CheckboxGuidePage = () => (
                         ))}
                     </tbody>
                 </table>
+            </div>
+            <div className="flex flex-col gap-3">
+                <div>
+                    <h3 className="typo-body-l-medium text-foreground">Indeterminate 사용 예시</h3>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        하위 항목이 일부만 선택되면 전체 선택 Checkbox가 부분 선택 상태가 됩니다. 전체 선택을 누르면
+                        모든 항목이 선택되고, 다시 누르면 모두 해제됩니다.
+                    </p>
+                </div>
+                <div className="border-border rounded-md border p-6">
+                    <CheckboxIndeterminateDemo />
+                </div>
+                <CodeBlock code={INDETERMINATE_CODE} language="tsx" copyLabel="복사" />
             </div>
         </section>
 
