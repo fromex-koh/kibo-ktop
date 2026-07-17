@@ -3,22 +3,22 @@ import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Label} from '@/components/ui/label'
+import {Field, FieldLabel} from '@/components/ui/field'
 import {Switch} from '@/components/composite/control-switch'
 
 export const metadata: Metadata = {title: '스위치 (Switch)'}
 
-const USAGE_CODE = `<div className={cn('flex w-fit items-center gap-2', FIELD_FOCUS_RING)}>
+const USAGE_CODE = `<Field orientation="horizontal" className={cn('w-fit gap-2', FIELD_FOCUS_RING)}>
   <Switch id="marketing" defaultChecked />
-  <Label htmlFor="marketing">마케팅 정보 수신</Label>
-</div>`
+  <FieldLabel htmlFor="marketing">마케팅 정보 수신</FieldLabel>
+</Field>`
 
 const PROPS_ITEMS = [
     ['checked · onCheckedChange', '켜짐 상태(제어). 비제어면 defaultChecked 로 초기값만.', 'boolean · (v) => void'],
     ['defaultChecked', '비제어 초기 상태.', 'boolean'],
     ['size', '크기. large=40px, medium=36px, small=32px 높이. default는 large.', 'SwitchSize'],
     ['disabled', '비활성(흐림 + 클릭 불가).', 'boolean'],
-    ['id · name · aria-*', 'Radix 루트(button role="switch")에 전달. Label 과 htmlFor↔id 로 연결.', 'button 속성'],
+    ['id · name · aria-*', 'Radix 루트(button role="switch")에 전달. FieldLabel과 htmlFor↔id로 연결.', 'button 속성'],
 ] as const
 
 // 스위치 — shadcn Switch 프리미티브를 Figma 토글 스위치 스타일로 재스킨한 styled copy(kit).
@@ -102,22 +102,23 @@ const SwitchGuidePage = () => (
         <section aria-labelledby="sw-usage" className="flex flex-col gap-4">
             <div>
                 <h2 id="sw-usage" className="typo-h4-bold">
-                    사용 예시 (Label 조합)
+                    사용 예시 (FieldLabel 조합)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">Label</code> 과 <code className="font-mono">htmlFor</code>↔
-                    <code className="font-mono">id</code> 로 연결합니다. 라벨을 눌러도 토글됩니다.
+                    <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>과
+                    Switch를 두고 <code className="font-mono">htmlFor</code>↔<code className="font-mono">id</code>로
+                    연결합니다. 라벨을 눌러도 토글되며 포커스링은 전체 영역을 감쌉니다.
                 </p>
             </div>
             <div className="border-border flex flex-col gap-4 rounded-md border p-6">
-                <div className={cn('flex w-fit items-center gap-2', FIELD_FOCUS_RING)}>
+                <Field orientation="horizontal" className={cn('w-fit gap-2', FIELD_FOCUS_RING)}>
                     <Switch id="sw-marketing" defaultChecked />
-                    <Label htmlFor="sw-marketing">마케팅 정보 수신</Label>
-                </div>
-                <div className={cn('flex w-fit items-center gap-2', FIELD_FOCUS_RING)}>
+                    <FieldLabel htmlFor="sw-marketing">마케팅 정보 수신</FieldLabel>
+                </Field>
+                <Field orientation="horizontal" className={cn('w-fit gap-2', FIELD_FOCUS_RING)}>
                     <Switch id="sw-alarm" />
-                    <Label htmlFor="sw-alarm">푸시 알림 받기</Label>
-                </div>
+                    <FieldLabel htmlFor="sw-alarm">푸시 알림 받기</FieldLabel>
+                </Field>
             </div>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>

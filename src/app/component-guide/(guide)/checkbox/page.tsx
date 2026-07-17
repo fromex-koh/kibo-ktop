@@ -54,7 +54,16 @@ const checked: ComponentProps<typeof Checkbox>['checked'] =
   </Field>
 ))}`
 
-const FORM_CODE = `const [privacyChecked, setPrivacyChecked] = useState(false)
+const FORM_CODE = `const interestOptions = ['ai', 'cloud']
+const [selectedInterests, setSelectedInterests] = useState(() => new Set(['ai']))
+const interestChecked: ComponentProps<typeof Checkbox>['checked'] =
+  selectedInterests.size === interestOptions.length
+    ? true
+    : selectedInterests.size === 0
+      ? false
+      : 'indeterminate'
+
+const [privacyChecked, setPrivacyChecked] = useState(false)
 const [privacyError, setPrivacyError] = useState(false)
 const [termsChecked, setTermsChecked] = useState(false)
 const [termsError, setTermsError] = useState(false)
@@ -81,16 +90,37 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 <form noValidate onSubmit={handleSubmit}>
   <FieldSet>
     <FieldLegend>관심 분야</FieldLegend>
-    <FieldDescription>관심 있는 분야를 모두 선택해 주세요.</FieldDescription>
+    <FieldDescription>전체 선택은 하위 항목의 상태를 요약합니다.</FieldDescription>
     <FieldGroup>
       <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
-        <Checkbox id="interest-ai" name="interest" value="ai" />
-        <FieldLabel htmlFor="interest-ai">AI</FieldLabel>
+        <Checkbox
+          id="interest-all"
+          checked={interestChecked}
+          onCheckedChange={(checked) =>
+            setSelectedInterests(checked === true ? new Set(interestOptions) : new Set())
+          }
+        />
+        <FieldLabel htmlFor="interest-all">관심 분야 전체 선택</FieldLabel>
       </Field>
-      <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
-        <Checkbox id="interest-cloud" name="interest" value="cloud" />
-        <FieldLabel htmlFor="interest-cloud">클라우드</FieldLabel>
-      </Field>
+      {interestOptions.map((option) => (
+        <Field key={option} orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
+          <Checkbox
+            id={\`interest-\${option}\`}
+            name="interest"
+            value={option}
+            checked={selectedInterests.has(option)}
+            onCheckedChange={(checked) => {
+              setSelectedInterests((current) => {
+                const next = new Set(current)
+                if (checked === true) next.add(option)
+                else next.delete(option)
+                return next
+              })
+            }}
+          />
+          <FieldLabel htmlFor={\`interest-\${option}\`}>{option}</FieldLabel>
+        </Field>
+      ))}
     </FieldGroup>
   </FieldSet>
 
@@ -332,12 +362,13 @@ const CheckboxGuidePage = () => (
                     실제 <code className="font-mono">form</code> 안에서 Checkbox에{' '}
                     <code className="font-mono">name</code>과 <code className="font-mono">value</code>를 지정하면 체크된
                     값만 제출됩니다. 같은 <code className="font-mono">name</code>을 사용하는 복수 값은{' '}
-                    <code className="font-mono">FormData.getAll()</code>로 읽습니다.{' '}
-                    <code className="font-mono">required</code>는 개별 Checkbox의 필수 체크를 검증하고,{' '}
-                    <code className="font-mono">form</code>은 외부 form 요소와 연결할 때 사용합니다.{' '}
-                    <code className="font-mono">disabled</code> 항목은 제출에서 제외됩니다. 필수 약관을 선택하지 않고
-                    제출하면 첫 번째 오류 Checkbox로 포커스를 이동합니다. 1depth는 라벨 아래에, 2depth는 설명 아래에{' '}
-                    <code className="font-mono">FieldError</code>를{' '}
+                    <code className="font-mono">FormData.getAll()</code>로 읽습니다. Indeterminate 전체 선택 Checkbox는
+                    하위 항목을 제어하는 요약 상태이므로 <code className="font-mono">name</code>을 주지 않습니다. 실제
+                    FormData에는 선택된 하위 Checkbox 값만 포함됩니다. <code className="font-mono">required</code>는
+                    개별 Checkbox의 필수 체크를 검증하고, <code className="font-mono">form</code>은 외부 form 요소와
+                    연결할 때 사용합니다. <code className="font-mono">disabled</code> 항목은 제출에서 제외됩니다. 필수
+                    약관을 선택하지 않고 제출하면 첫 번째 오류 Checkbox로 포커스를 이동합니다. 1depth는 라벨 아래에,
+                    2depth는 설명 아래에 <code className="font-mono">FieldError</code>를{' '}
                     <code className="font-mono">role=&quot;alert&quot;</code>로 노출합니다.
                 </p>
                 <div className="bg-surface border-border mt-3 flex flex-col gap-1 rounded-md border p-4">

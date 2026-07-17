@@ -1,6 +1,6 @@
 'use client'
 
-import {useRef, useState} from 'react'
+import {useRef, useState, type ComponentProps} from 'react'
 import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {Button} from '@/components/ui/button'
@@ -16,14 +16,27 @@ import {
     FieldSet,
 } from '@/components/ui/field'
 
+const INTEREST_OPTIONS = [
+    {value: 'ai', label: 'AI'},
+    {value: 'cloud', label: '클라우드'},
+    {value: 'security', label: '보안'},
+] as const
+
 const CheckboxFormDemo = () => {
     const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+    const [selectedInterests, setSelectedInterests] = useState(() => new Set<string>(['ai']))
     const [privacyChecked, setPrivacyChecked] = useState(false)
     const [privacyError, setPrivacyError] = useState(false)
     const [termsChecked, setTermsChecked] = useState(false)
     const [termsError, setTermsError] = useState(false)
     const privacyRef = useRef<HTMLButtonElement>(null)
     const termsRef = useRef<HTMLButtonElement>(null)
+    const interestChecked: ComponentProps<typeof Checkbox>['checked'] =
+        selectedInterests.size === INTEREST_OPTIONS.length
+            ? true
+            : selectedInterests.size === 0
+              ? false
+              : 'indeterminate'
 
     return (
         <form
@@ -46,6 +59,7 @@ const CheckboxFormDemo = () => {
                 const formData = new FormData(event.currentTarget)
                 const result = {
                     interest: formData.getAll('interest'),
+                    interestAggregate: interestChecked,
                     privacy: formData.get('privacy'),
                     terms: formData.get('terms'),
                 }
@@ -55,21 +69,48 @@ const CheckboxFormDemo = () => {
             <FieldSet>
                 <FieldLegend className="typo-title-l-medium text-foreground">관심 분야</FieldLegend>
                 <FieldDescription className="typo-body-l-regular">
-                    관심 있는 분야를 모두 선택해 주세요.
+                    전체 선택은 하위 항목의 상태를 요약하며, 실제 제출에는 선택된 하위 값만 포함됩니다.
                 </FieldDescription>
                 <FieldGroup className="gap-3">
                     <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
-                        <Checkbox id="form-interest-ai" name="interest" value="ai" defaultChecked />
-                        <FieldLabel htmlFor="form-interest-ai">AI</FieldLabel>
+                        <Checkbox
+                            id="form-interest-all"
+                            checked={interestChecked}
+                            onCheckedChange={(checked) =>
+                                setSelectedInterests(
+                                    checked === true
+                                        ? new Set(INTEREST_OPTIONS.map((option) => option.value))
+                                        : new Set(),
+                                )
+                            }
+                        />
+                        <FieldLabel htmlFor="form-interest-all">관심 분야 전체 선택</FieldLabel>
                     </Field>
-                    <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
-                        <Checkbox id="form-interest-cloud" name="interest" value="cloud" />
-                        <FieldLabel htmlFor="form-interest-cloud">클라우드</FieldLabel>
-                    </Field>
-                    <Field orientation="horizontal" className={cn('w-fit', FIELD_FOCUS_RING)}>
-                        <Checkbox id="form-interest-security" name="interest" value="security" />
-                        <FieldLabel htmlFor="form-interest-security">보안</FieldLabel>
-                    </Field>
+                    <div className="flex flex-col gap-3 pl-8">
+                        {INTEREST_OPTIONS.map((option) => (
+                            <Field
+                                key={option.value}
+                                orientation="horizontal"
+                                className={cn('w-fit', FIELD_FOCUS_RING)}
+                            >
+                                <Checkbox
+                                    id={`form-interest-${option.value}`}
+                                    name="interest"
+                                    value={option.value}
+                                    checked={selectedInterests.has(option.value)}
+                                    onCheckedChange={(checked) => {
+                                        setSelectedInterests((current) => {
+                                            const next = new Set(current)
+                                            if (checked === true) next.add(option.value)
+                                            else next.delete(option.value)
+                                            return next
+                                        })
+                                    }}
+                                />
+                                <FieldLabel htmlFor={`form-interest-${option.value}`}>{option.label}</FieldLabel>
+                            </Field>
+                        ))}
+                    </div>
                 </FieldGroup>
             </FieldSet>
 
@@ -153,7 +194,7 @@ const CheckboxFormDemo = () => {
                         선택 내용 확인
                     </Button>
                     <span className="typo-body-l-regular text-muted-foreground">
-                        복수 선택값은 FormData.getAll()로 확인합니다.
+                        Indeterminate는 요약 상태이며, 하위 선택값은 FormData.getAll()로 확인합니다.
                     </span>
                 </div>
                 <output
