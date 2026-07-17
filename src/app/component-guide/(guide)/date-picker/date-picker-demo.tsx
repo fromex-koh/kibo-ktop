@@ -2,37 +2,37 @@
 
 import type {ReactNode} from 'react'
 import {useState} from 'react'
+import {cn} from '@/lib/utils'
+import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {DatePicker} from '@/components/composite/date-picker'
-import {Label} from '@/components/ui/label'
+import {Field, FieldDescription, FieldError, FieldLabel} from '@/components/ui/field'
 
-const FIELD_DEMO_CLASS = 'max-w-90 flex w-full flex-col gap-2'
+const FIELD_DEMO_CLASS = 'max-w-90'
 const FIELD_LABEL_CLASS = 'text-foreground font-bold'
 
-// 데이트피커 데모 — 선택 값을 상태로 관리한다(controlled).
 const DatePickerDemo = () => {
     const [date, setDate] = useState<Date | undefined>(undefined)
     return (
-        <div className={FIELD_DEMO_CLASS}>
-            <Label htmlFor="demo-date" className={FIELD_LABEL_CLASS}>
+        <Field className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+            <FieldLabel htmlFor="demo-date" className={FIELD_LABEL_CLASS}>
                 날짜 선택
-            </Label>
-            <DatePicker id="demo-date" value={date} onChange={setDate} />
-        </div>
+            </FieldLabel>
+            <DatePicker id="demo-date" value={date} onChange={setDate} aria-describedby="demo-date-help" />
+            <FieldDescription id="demo-date-help">달력에서 날짜를 선택해 주세요.</FieldDescription>
+        </Field>
     )
 }
 
-// 상태 필드 wrapper — Label + 컨트롤(Input 상태 가이드와 동일 구조).
-const StateField = ({id, label, children}: {id: string; label: string; children: ReactNode}) => (
-    <div className={FIELD_DEMO_CLASS}>
-        <Label htmlFor={id} className={FIELD_LABEL_CLASS}>
+const StateField = ({id, label, children, error}: {id: string; label: string; children: ReactNode; error?: string}) => (
+    <Field data-invalid={error ? true : undefined} className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+        <FieldLabel htmlFor={id} className={FIELD_LABEL_CLASS}>
             {label}
-        </Label>
+        </FieldLabel>
         {children}
-    </div>
+        {error ? <FieldError id={`${id}-error`}>{error}</FieldError> : null}
+    </Field>
 )
 
-// 상태 큐레이션 — 기본(placeholder)·값 입력됨·읽기전용·비활성.
-// 읽기전용/비활성은 고정 표본 날짜(2026-07-13)를 값으로 둔다.
 const SAMPLE_DATE = new Date(2026, 6, 13)
 
 export const DatePickerStatesDemo = () => {
@@ -45,6 +45,9 @@ export const DatePickerStatesDemo = () => {
             </StateField>
             <StateField id="st-filled" label="값 입력됨">
                 <DatePicker id="st-filled" value={filled} onChange={setFilled} />
+            </StateField>
+            <StateField id="st-error" label="오류 (error)" error="날짜를 선택해 주세요.">
+                <DatePicker id="st-error" aria-invalid aria-describedby="st-error-error" />
             </StateField>
             <StateField id="st-readonly" label="읽기전용 (readOnly)">
                 <DatePicker id="st-readonly" value={SAMPLE_DATE} readOnly />

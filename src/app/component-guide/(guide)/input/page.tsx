@@ -4,7 +4,7 @@ import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Field, FieldDescription, FieldError, FieldLabel} from '@/components/ui/field'
+import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 import {Input} from '@/components/ui/input'
 import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from '@/components/ui/input-group'
 import InputFormDemo from './input-form-demo'
@@ -17,10 +17,7 @@ const USAGE_CODE = `<Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
     <span aria-hidden="true" className="text-error-500">*</span>
     <span className="sr-only"> (필수)</span>
   </FieldLabel>
-  <Input id="name" required placeholder="내용을 입력하세요" aria-describedby="name-help" />
-  <FieldDescription id="name-help" className="typo-caption-regular text-muted-foreground">
-    입력 시 필요한 정보를 입력해주세요.
-  </FieldDescription>
+  <Input id="name" required placeholder="내용을 입력하세요" />
 </Field>`
 
 const STATE_CODE = `const [nameError, setNameError] = useState(false)
@@ -189,10 +186,9 @@ const InputGuidePage = () => (
                     사용 예시
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>,{' '}
-                    <code className="font-mono">Input</code>, <code className="font-mono">FieldDescription</code>을
-                    조합합니다. 필수 입력은 라벨의 별표로 표시하고 도움말은{' '}
-                    <code className="font-mono">aria-describedby</code>로 연결합니다.
+                    <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>과{' '}
+                    <code className="font-mono">Input</code>을 조합합니다. 필수 입력은 라벨의 별표와 화면 낭독기용
+                    텍스트로 전달합니다.
                 </p>
             </div>
             <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
@@ -203,10 +199,7 @@ const InputGuidePage = () => (
                     </span>
                     <span className="sr-only"> (필수)</span>
                 </FieldLabel>
-                <Input id="demo-name" required placeholder="내용을 입력하세요" aria-describedby="demo-name-help" />
-                <FieldDescription id="demo-name-help" className="typo-caption-regular text-muted-foreground">
-                    입력 시 필요한 정보를 입력해주세요.
-                </FieldDescription>
+                <Input id="demo-name" required placeholder="내용을 입력하세요" />
             </Field>
             <p className="typo-caption-regular text-muted-foreground">
                 label+input 을 감싸는 필드 wrapper 를 <code className="font-mono">max-w-90</code>(360px 상한)으로 두고,

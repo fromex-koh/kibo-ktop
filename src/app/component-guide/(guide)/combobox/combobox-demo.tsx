@@ -2,8 +2,10 @@
 
 import type {ReactNode} from 'react'
 import {useState} from 'react'
+import {cn} from '@/lib/utils'
+import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {Combobox} from '@/components/composite/combobox'
-import {Label} from '@/components/ui/label'
+import {Field, FieldDescription, FieldError, FieldLabel} from '@/components/ui/field'
 
 const CORP_TYPES = [
     {value: 'corp', label: '주식회사'},
@@ -13,21 +15,23 @@ const CORP_TYPES = [
     {value: 'llp', label: '유한책임회사'},
 ]
 
-// 필드 wrapper — Label + 컨트롤. w-full max-w-90(360px) 로 Input/Select/DatePicker 필드와 동일.
-const Field = ({id, label, children}: {id: string; label: string; children: ReactNode}) => (
-    <div className="flex w-full max-w-90 flex-col gap-2">
-        <Label htmlFor={id} className="text-foreground font-bold">
+const StateField = ({id, label, children, error}: {id: string; label: string; children: ReactNode; error?: string}) => (
+    <Field data-invalid={error ? true : undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+        <FieldLabel htmlFor={id} className="text-foreground font-bold">
             {label}
-        </Label>
+        </FieldLabel>
         {children}
-    </div>
+        {error ? <FieldError id={`${id}-error`}>{error}</FieldError> : null}
+    </Field>
 )
 
-// 사용 예시 — Label + Combobox(제어). 열면 검색 입력 + 필터된 목록.
 export const ComboboxDemo = () => {
     const [value, setValue] = useState('')
     return (
-        <Field id="demo-combobox" label="기업형태">
+        <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <FieldLabel htmlFor="demo-combobox" className="text-foreground font-bold">
+                기업형태
+            </FieldLabel>
             <Combobox
                 id="demo-combobox"
                 options={CORP_TYPES}
@@ -35,18 +39,19 @@ export const ComboboxDemo = () => {
                 onValueChange={setValue}
                 placeholder="기업형태를 선택하세요"
                 searchPlaceholder="기업형태 검색..."
+                aria-describedby="demo-combobox-help"
             />
+            <FieldDescription id="demo-combobox-help">기업형태를 검색해 한 가지를 선택해 주세요.</FieldDescription>
         </Field>
     )
 }
 
-// 상태 큐레이션 — 기본(placeholder)·값 선택됨·오류·읽기전용·비활성.
 export const ComboboxStatesDemo = () => {
     const [empty, setEmpty] = useState('')
     const [filled, setFilled] = useState('corp')
     return (
         <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
-            <Field id="st-empty" label="기본 (placeholder)">
+            <StateField id="st-empty" label="기본 (placeholder)">
                 <Combobox
                     id="st-empty"
                     options={CORP_TYPES}
@@ -54,29 +59,26 @@ export const ComboboxStatesDemo = () => {
                     onValueChange={setEmpty}
                     placeholder="선택하세요"
                 />
-            </Field>
-            <Field id="st-filled" label="값 선택됨">
+            </StateField>
+            <StateField id="st-filled" label="값 선택됨">
                 <Combobox id="st-filled" options={CORP_TYPES} value={filled} onValueChange={setFilled} />
-            </Field>
-            <Field id="st-error" label="오류 (error)">
+            </StateField>
+            <StateField id="st-error" label="오류 (error)" error="필수 항목입니다.">
                 <Combobox
                     id="st-error"
                     options={CORP_TYPES}
                     value=""
                     placeholder="선택하세요"
                     aria-invalid="true"
-                    aria-describedby="st-error-msg"
+                    aria-describedby="st-error-error"
                 />
-                <p id="st-error-msg" role="alert" className="typo-caption-regular text-error-500">
-                    필수 항목입니다.
-                </p>
-            </Field>
-            <Field id="st-readonly" label="읽기전용 (readOnly)">
+            </StateField>
+            <StateField id="st-readonly" label="읽기전용 (readOnly)">
                 <Combobox id="st-readonly" options={CORP_TYPES} value="corp" readOnly />
-            </Field>
-            <Field id="st-disabled" label="비활성 (disabled)">
+            </StateField>
+            <StateField id="st-disabled" label="비활성 (disabled)">
                 <Combobox id="st-disabled" options={CORP_TYPES} value="corp" disabled />
-            </Field>
+            </StateField>
         </div>
     )
 }

@@ -18,7 +18,7 @@ import {cn} from '@/lib/utils'
 
 type SelectFieldProps = ComponentProps<typeof PrimitiveSelect> & {readOnly?: boolean}
 type SelectTriggerProps = Omit<ComponentProps<typeof PrimitiveSelectTrigger>, 'size'> & {
-    size?: 'sm' | 'md' | 'default'
+    size?: 'md' | 'default'
 }
 
 const SelectFieldReadOnlyContext = createContext(false)
@@ -43,12 +43,11 @@ function SelectField({readOnly = false, open, defaultOpen, onOpenChange, onValue
 
 function SelectTrigger({className, size = 'default', ...props}: SelectTriggerProps) {
     const readOnly = useContext(SelectFieldReadOnlyContext)
-    const primitiveSize = size === 'sm' ? 'sm' : 'default'
 
     return (
         <PrimitiveSelectTrigger
             {...props}
-            size={primitiveSize}
+            size="default"
             data-project-size={size}
             aria-readonly={readOnly || undefined}
             className={cn(selectTriggerClassName, className)}
