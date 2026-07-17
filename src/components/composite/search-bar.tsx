@@ -121,8 +121,8 @@ const SearchBar = ({
                     ) : null}
                     <InputGroupButton
                         variant="default"
-                        size="icon"
-                        className="rounded-full"
+                        size="icon-sm"
+                        className="size-control-h-md min-h-11 min-w-11 rounded-full"
                         aria-label={searchLabel}
                         disabled={disabled}
                         onClick={() => onSearch?.(inputRef.current?.value ?? '')}

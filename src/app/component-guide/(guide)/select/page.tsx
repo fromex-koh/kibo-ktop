@@ -9,9 +9,10 @@ export const metadata: Metadata = {title: '셀렉트 (Select)'}
 const USAGE_CODE = `<div className="flex max-w-90 flex-col gap-2">
   <Label htmlFor="fruit" className="gap-1 font-bold text-foreground">
     좋아하는 과일
-    <span className="text-error-500">*</span>
+    <span aria-hidden="true" className="text-error-500">*</span>
+    <span className="sr-only"> (필수)</span>
   </Label>
-  <Select>
+  <Select required>
     <SelectTrigger id="fruit" className="w-full">
       <SelectValue placeholder="선택해주세요" />
     </SelectTrigger>
@@ -49,18 +50,20 @@ const SelectGuidePage = () => (
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
                     <code className="font-mono">Label</code> + <code className="font-mono">Select</code> 조합입니다.
-                    필수 입력은 라벨에{' '}
-                    <code className="font-mono">&lt;span className=&quot;text-error-500&quot;&gt;*&lt;/span&gt;</code>{' '}
-                    별표를 붙여 표시합니다. 라벨은 <code className="font-mono">htmlFor</code>↔
-                    <code className="font-mono">id</code> 로 연결합니다.
+                    필수 입력은 라벨에 시각적 별표는 <code className="font-mono">aria-hidden</code>으로 숨기고{' '}
+                    <code className="font-mono">sr-only</code> 텍스트로 필수 상태를 전달합니다. 라벨은{' '}
+                    <code className="font-mono">htmlFor</code>↔<code className="font-mono">id</code> 로 연결합니다.
                 </p>
             </div>
             <div className="flex max-w-90 flex-col gap-2">
                 <Label htmlFor="demo-fruit" className="text-foreground gap-1 font-bold">
                     좋아하는 과일
-                    <span className="text-error-500">*</span>
+                    <span aria-hidden="true" className="text-error-500">
+                        *
+                    </span>
+                    <span className="sr-only"> (필수)</span>
                 </Label>
-                <Select>
+                <Select required>
                     <SelectTrigger id="demo-fruit" className="w-full">
                         <SelectValue placeholder="선택해주세요" />
                     </SelectTrigger>

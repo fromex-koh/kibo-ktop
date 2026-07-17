@@ -116,7 +116,11 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
       aria-describedby={privacyError ? 'privacy-error' : undefined}
     />
     <FieldContent className={privacyError ? undefined : 'min-h-6 justify-center'}>
-      <FieldLabel htmlFor="privacy">개인정보 처리방침을 확인했습니다. (필수)</FieldLabel>
+      <FieldLabel htmlFor="privacy" className="gap-1">
+        개인정보 처리방침을 확인했습니다.
+        <span aria-hidden="true" className="text-error-500">*</span>
+        <span className="sr-only"> (필수)</span>
+      </FieldLabel>
       {privacyError ? <FieldError id="privacy-error">개인정보 처리방침을 확인해 주세요.</FieldError> : null}
     </FieldContent>
   </Field>
@@ -144,8 +148,10 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     />
     <FieldContent>
       <div className="flex flex-col gap-0.5">
-        <FieldLabel htmlFor="terms" className="font-bold text-foreground">
-          이용약관에 동의합니다. (필수)
+        <FieldLabel htmlFor="terms" className="gap-1 font-bold text-foreground">
+          이용약관에 동의합니다.
+          <span aria-hidden="true" className="text-error-500">*</span>
+          <span className="sr-only"> (필수)</span>
         </FieldLabel>
         <FieldDescription id="terms-description" className="typo-body-xl-regular text-label-foreground">
           서비스 이용을 위해 이용약관 동의가 필요합니다.

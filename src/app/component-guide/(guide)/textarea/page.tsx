@@ -9,9 +9,10 @@ export const metadata: Metadata = {title: '텍스트에어리어 (Textarea)'}
 const USAGE_CODE = `<div className="flex w-full max-w-90 flex-col gap-2">
   <Label htmlFor="msg" className="gap-1 font-bold text-foreground">
     레이블
-    <span className="text-error-500">*</span>
+    <span aria-hidden="true" className="text-error-500">*</span>
+    <span className="sr-only"> (필수)</span>
   </Label>
-  <Textarea id="msg" placeholder="내용을 입력하세요" aria-describedby="msg-hint" />
+  <Textarea id="msg" required placeholder="내용을 입력하세요" aria-describedby="msg-hint" />
   {/* 힌트(왼쪽) + 글자수 카운터(오른쪽) */}
   <div className="flex justify-between gap-2">
     <p id="msg-hint" className="typo-caption-regular text-muted-foreground">
@@ -48,9 +49,12 @@ const TextareaGuidePage = () => (
             <div className={FIELD_CLASS}>
                 <Label htmlFor="demo-msg" className="text-foreground gap-1 font-bold">
                     레이블
-                    <span className="text-error-500">*</span>
+                    <span aria-hidden="true" className="text-error-500">
+                        *
+                    </span>
+                    <span className="sr-only"> (필수)</span>
                 </Label>
-                <Textarea id="demo-msg" placeholder="내용을 입력하세요" aria-describedby="demo-msg-hint" />
+                <Textarea id="demo-msg" required placeholder="내용을 입력하세요" aria-describedby="demo-msg-hint" />
                 <div className="flex justify-between gap-2">
                     <p id="demo-msg-hint" className="typo-caption-regular text-muted-foreground">
                         메시지를 입력해 주세요

@@ -11,14 +11,14 @@ export const metadata: Metadata = {title: '폼 카드 (FormCard)'}
 
 const USAGE_CODE = `<FormCard
   title="기업정보"
-  subtitle={<><span className="text-error-500">*</span> 표시 항목은 필수 입력 항목입니다.</>}
+  subtitle={<><span aria-hidden="true" className="text-error-500">*</span><span className="sr-only">별표</span> 표시 항목은 필수 입력 항목입니다.</>}
   action={<Button variant="tertiary" size="md">최근 입력 정보 불러오기</Button>}
 >
   {/* 본문 — 2열 폼 필드. 라벨은 다른 폼(Input/Select/Textarea)과 동일 스타일, 필수 * 는 text-error-500 */}
   <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
     <div className="flex flex-col gap-1.5">
-      <Label htmlFor="corp-type" className="text-foreground gap-1 font-bold">기업형태 <span className="text-error-500">*</span></Label>
-      <Select>
+      <Label htmlFor="corp-type" className="text-foreground gap-1 font-bold">기업형태 <span aria-hidden="true" className="text-error-500">*</span><span className="sr-only"> (필수)</span></Label>
+      <Select required>
         <SelectTrigger id="corp-type" className="w-full">
           <SelectValue placeholder="선택해주세요" />
         </SelectTrigger>
@@ -28,8 +28,8 @@ const USAGE_CODE = `<FormCard
       </Select>
     </div>
     <div className="flex flex-col gap-1.5">
-      <Label htmlFor="corp-name" className="text-foreground gap-1 font-bold">기업명 <span className="text-error-500">*</span></Label>
-      <Input id="corp-name" defaultValue="(주)테크놀로지" disabled />
+      <Label htmlFor="corp-name" className="text-foreground gap-1 font-bold">기업명 <span aria-hidden="true" className="text-error-500">*</span><span className="sr-only"> (필수)</span></Label>
+      <Input id="corp-name" defaultValue="(주)테크놀로지" required disabled />
     </div>
   </div>
 </FormCard>`
@@ -64,7 +64,10 @@ const FormCardGuidePage = () => (
                 title="기업정보"
                 subtitle={
                     <>
-                        <span className="text-error-500">*</span> 표시 항목은 필수 입력 항목입니다.
+                        <span aria-hidden="true" className="text-error-500">
+                            *
+                        </span>
+                        <span className="sr-only">별표</span> 표시 항목은 필수 입력 항목입니다.
                     </>
                 }
                 action={
@@ -78,9 +81,12 @@ const FormCardGuidePage = () => (
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="corp-type" className="text-foreground gap-1 font-bold">
                             기업형태
-                            <span className="text-error-500">*</span>
+                            <span aria-hidden="true" className="text-error-500">
+                                *
+                            </span>
+                            <span className="sr-only"> (필수)</span>
                         </Label>
-                        <Select>
+                        <Select required>
                             <SelectTrigger id="corp-type" className="w-full">
                                 <SelectValue placeholder="선택해주세요" />
                             </SelectTrigger>
@@ -93,16 +99,22 @@ const FormCardGuidePage = () => (
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="corp-name" className="text-foreground gap-1 font-bold">
                             기업명
-                            <span className="text-error-500">*</span>
+                            <span aria-hidden="true" className="text-error-500">
+                                *
+                            </span>
+                            <span className="sr-only"> (필수)</span>
                         </Label>
-                        <Input id="corp-name" defaultValue="(주)테크놀로지" disabled />
+                        <Input id="corp-name" defaultValue="(주)테크놀로지" required disabled />
                     </div>
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="corp-reg" className="text-foreground gap-1 font-bold">
                             사업자번호
-                            <span className="text-error-500">*</span>
+                            <span aria-hidden="true" className="text-error-500">
+                                *
+                            </span>
+                            <span className="sr-only"> (필수)</span>
                         </Label>
-                        <Input id="corp-reg" defaultValue="123-45-67890" />
+                        <Input id="corp-reg" defaultValue="123-45-67890" required />
                     </div>
                     <div className="flex flex-col gap-1.5">
                         <Label htmlFor="corp-corp-no" className="text-foreground gap-1 font-bold">

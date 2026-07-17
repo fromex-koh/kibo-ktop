@@ -1,51 +1,179 @@
 import type {Metadata} from 'next'
 import {Lock, Search} from 'lucide-react'
+import {cn} from '@/lib/utils'
+import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {Button} from '@/components/ui/button'
+import {Field, FieldDescription, FieldError, FieldLabel} from '@/components/ui/field'
 import {Input} from '@/components/ui/input'
-import {Label} from '@/components/ui/label'
+import {InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput} from '@/components/ui/input-group'
+import InputFormDemo from './input-form-demo'
 
 export const metadata: Metadata = {title: '인풋 (Input)'}
 
-const USAGE_CODE = `<div className="max-w-90 flex w-full flex-col gap-2">
-  <Label htmlFor="name" className="gap-1 font-bold text-foreground">
+const USAGE_CODE = `<Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <FieldLabel htmlFor="name" className="gap-1 font-bold text-foreground">
     이름
-    <span className="text-error-500">*</span>
-  </Label>
-  <Input id="name" placeholder="내용을 입력하세요" aria-describedby="name-help" />
-  <p id="name-help" className="typo-caption-regular text-muted-foreground">
+    <span aria-hidden="true" className="text-error-500">*</span>
+    <span className="sr-only"> (필수)</span>
+  </FieldLabel>
+  <Input id="name" required placeholder="내용을 입력하세요" aria-describedby="name-help" />
+  <FieldDescription id="name-help" className="typo-caption-regular text-muted-foreground">
     입력 시 필요한 정보를 입력해주세요.
-  </p>
-</div>`
+  </FieldDescription>
+</Field>`
+
+const STATE_CODE = `const [nameError, setNameError] = useState(false)
+
+<Field data-invalid={nameError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <FieldLabel htmlFor="applicant-name" className="gap-1 font-bold text-foreground">
+    신청자 이름
+    <span aria-hidden="true" className="text-error-500">*</span>
+    <span className="sr-only"> (필수)</span>
+  </FieldLabel>
+  <Input
+    id="applicant-name"
+    name="applicantName"
+    required
+    aria-invalid={nameError || undefined}
+    aria-describedby={nameError ? 'applicant-name-error' : undefined}
+    onChange={() => setNameError(false)}
+  />
+  {nameError ? <FieldError id="applicant-name-error">신청자 이름을 입력해 주세요.</FieldError> : null}
+</Field>`
 
 const ADDON_CODE = `<div className="max-w-90 flex w-full flex-col gap-4">
-  {/* 검색 버튼 (클릭 가능) — 입력 박스 안쪽 오른쪽에 절대배치 */}
-  <div className="relative">
-    <Input placeholder="검색어를 입력하세요" className="pr-14" />
-    <Button
-      type="button"
-      variant="ghost"
-      size="icon-sm"
-      aria-label="검색"
-      className="text-muted-foreground absolute top-px right-px bottom-px h-auto w-12 rounded-l-none rounded-r-[calc(var(--ds-radius-sm)-1px)] not-disabled:active:bg-accent not-disabled:active:not-aria-[haspopup]:translate-y-0"
-    >
-      <Search aria-hidden="true" className="size-5" />
-    </Button>
-  </div>
+  {/* 검색 버튼 — InputGroup의 우측 동작 애드온 */}
+  <InputGroup className="pr-0">
+    <InputGroupInput placeholder="검색어를 입력하세요" aria-label="검색어" />
+    <InputGroupAddon align="inline-end" className="h-full p-0">
+      <InputGroupButton
+        size="icon-sm"
+        aria-label="검색"
+        className="text-muted-foreground h-full w-12 rounded-l-none rounded-r-sm not-disabled:active:bg-accent not-disabled:active:not-aria-[haspopup]:translate-y-0"
+      >
+        <Search aria-hidden="true" className="size-5" />
+      </InputGroupButton>
+    </InputGroupAddon>
+  </InputGroup>
 
   {/* 단위 접미사 — 입력 박스 밖 오른쪽에 형제로 배치(Figma) */}
   <div className="flex items-center gap-2">
-    <Input type="number" placeholder="0" className="md:min-w-0 flex-1" />
+    <Input type="number" placeholder="0" aria-label="인원" className="md:min-w-0 flex-1" />
     <span className="typo-body-xl-regular text-foreground shrink-0">명</span>
   </div>
 
-  {/* 잠금(읽기전용) — readOnly + lock 아이콘 */}
-  <div className="relative">
-    <Input readOnly defaultValue="11222-1234567" className="pr-11" />
-    <Lock aria-hidden="true" className="text-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2" />
-  </div>
+  {/* 잠금(읽기전용) — InputGroup의 우측 상태 애드온 */}
+  <InputGroup>
+    <InputGroupInput readOnly defaultValue="11222-1234567" aria-label="법인번호(읽기전용)" />
+    <InputGroupAddon align="inline-end" className="text-foreground">
+      <Lock aria-hidden="true" className="size-5" />
+    </InputGroupAddon>
+  </InputGroup>
 </div>`
+
+const FORM_CODE = `const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+const [nameError, setNameError] = useState(false)
+const [emailError, setEmailError] = useState(false)
+const nameRef = useRef<HTMLInputElement>(null)
+const emailRef = useRef<HTMLInputElement>(null)
+
+const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+  event.preventDefault()
+  const formData = new FormData(event.currentTarget)
+  const nextNameError = String(formData.get('applicantName') ?? '').trim() === ''
+  const nextEmailError = !(emailRef.current?.validity.valid ?? false)
+  setNameError(nextNameError)
+  setEmailError(nextEmailError)
+
+  if (nextNameError || nextEmailError) {
+    if (nextNameError) nameRef.current?.focus()
+    else emailRef.current?.focus()
+    return
+  }
+
+  const result = {
+    applicantName: formData.get('applicantName'),
+    email: formData.get('email'),
+    applicantCount: formData.get('applicantCount'),
+    corporateNumber: formData.get('corporateNumber'),
+  }
+  setSubmittedData(JSON.stringify(result))
+}
+
+<form noValidate onSubmit={handleSubmit}>
+  {/* 1depth: 라벨 + 입력 + 유효성 검사 */}
+  <Field data-invalid={nameError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+    <FieldLabel htmlFor="applicant-name" className="gap-1 font-bold text-foreground">
+      신청자 이름
+      <span aria-hidden="true" className="text-error-500">*</span>
+      <span className="sr-only"> (필수)</span>
+    </FieldLabel>
+    <Input
+      ref={nameRef}
+      id="applicant-name"
+      name="applicantName"
+      required
+      aria-invalid={nameError || undefined}
+      aria-describedby={nameError ? 'applicant-name-error' : undefined}
+      onChange={() => setNameError(false)}
+    />
+    {nameError ? <FieldError id="applicant-name-error">신청자 이름을 입력해 주세요.</FieldError> : null}
+  </Field>
+
+  {/* 이메일 형식 유효성 검사 */}
+  <Field data-invalid={emailError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+    <FieldLabel htmlFor="email" className="gap-1 font-bold text-foreground">
+      이메일
+      <span aria-hidden="true" className="text-error-500">*</span>
+      <span className="sr-only"> (필수)</span>
+    </FieldLabel>
+    <Input
+      ref={emailRef}
+      id="email"
+      name="email"
+      type="email"
+      required
+      aria-invalid={emailError || undefined}
+      aria-describedby={emailError ? 'email-error' : undefined}
+      onChange={() => setEmailError(false)}
+    />
+    {emailError ? <FieldError id="email-error">올바른 이메일 주소를 입력해 주세요.</FieldError> : null}
+  </Field>
+
+  <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+    <FieldLabel htmlFor="applicant-count" className="font-bold text-foreground">신청 인원</FieldLabel>
+    <div className="flex items-center gap-2">
+      <Input
+        id="applicant-count"
+        name="applicantCount"
+        type="number"
+        min="1"
+        defaultValue="3"
+        className="flex-1 md:min-w-0"
+      />
+      <span className="typo-body-xl-regular text-foreground shrink-0">명</span>
+    </div>
+  </Field>
+
+  <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+    <FieldLabel htmlFor="corporate-number" className="font-bold text-foreground">법인번호</FieldLabel>
+    <InputGroup className="has-[[data-slot=input-group-control]:focus-visible]:outline-none">
+      <InputGroupInput
+        id="corporate-number"
+        name="corporateNumber"
+        readOnly
+        defaultValue="11222-1234567"
+      />
+      <InputGroupAddon align="inline-end" className="text-foreground">
+        <Lock aria-hidden="true" className="size-5" />
+      </InputGroupAddon>
+    </InputGroup>
+  </Field>
+
+  <Button type="submit" variant="default" size="md">입력 내용 확인</Button>
+  <output aria-live="polite">{submittedData}</output>
+</form>`
 
 const FIELD_DEMO_CLASS = 'max-w-90 flex w-full flex-col gap-2'
 const FIELD_GROUP_DEMO_CLASS = 'max-w-90 flex w-full flex-col gap-4'
@@ -53,7 +181,7 @@ const FIELD_GROUP_DEMO_CLASS = 'max-w-90 flex w-full flex-col gap-4'
 const InputGuidePage = () => (
     <GuidePageShell
         title="인풋 (Input)"
-        description="shadcn Input 프리미티브입니다. Label 과 조합해 텍스트 입력을 구성합니다."
+        description="shadcn Input 프리미티브입니다. Field와 조합해 라벨·설명·오류가 포함된 텍스트 입력을 구성합니다."
     >
         <section aria-labelledby="input-demo" className="flex flex-col gap-4">
             <div>
@@ -61,26 +189,29 @@ const InputGuidePage = () => (
                     사용 예시
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">Label</code> + <code className="font-mono">Input</code> 조합입니다. 필수
-                    입력은 라벨에 <code className="font-mono">text-error-500</code> 별표로, 도움말은 하단{' '}
-                    <code className="font-mono">&lt;p&gt;</code> 를 <code className="font-mono">aria-describedby</code>{' '}
-                    로 연결합니다.
+                    <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>,{' '}
+                    <code className="font-mono">Input</code>, <code className="font-mono">FieldDescription</code>을
+                    조합합니다. 필수 입력은 라벨의 별표로 표시하고 도움말은{' '}
+                    <code className="font-mono">aria-describedby</code>로 연결합니다.
                 </p>
             </div>
-            <div className={FIELD_DEMO_CLASS}>
-                <Label htmlFor="demo-name" className="text-foreground gap-1 font-bold">
+            <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                <FieldLabel htmlFor="demo-name" className="text-foreground gap-1 font-bold">
                     이름
-                    <span className="text-error-500">*</span>
-                </Label>
-                <Input id="demo-name" placeholder="내용을 입력하세요" aria-describedby="demo-name-help" />
-                <p id="demo-name-help" className="typo-caption-regular text-muted-foreground">
+                    <span aria-hidden="true" className="text-error-500">
+                        *
+                    </span>
+                    <span className="sr-only"> (필수)</span>
+                </FieldLabel>
+                <Input id="demo-name" required placeholder="내용을 입력하세요" aria-describedby="demo-name-help" />
+                <FieldDescription id="demo-name-help" className="typo-caption-regular text-muted-foreground">
                     입력 시 필요한 정보를 입력해주세요.
-                </p>
-                <p className="typo-caption-regular text-muted-foreground">
-                    label+input 을 감싸는 필드 wrapper 를 <code className="font-mono">max-w-90</code>(360px 상한)으로
-                    두고, Input 은 <code className="font-mono">w-full</code> 로 그 폭을 채웁니다.
-                </p>
-            </div>
+                </FieldDescription>
+            </Field>
+            <p className="typo-caption-regular text-muted-foreground">
+                label+input 을 감싸는 필드 wrapper 를 <code className="font-mono">max-w-90</code>(360px 상한)으로 두고,
+                Input 은 <code className="font-mono">w-full</code> 로 그 폭을 채웁니다.
+            </p>
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>
 
@@ -92,51 +223,53 @@ const InputGuidePage = () => (
                 <p className="typo-body-l-regular text-muted-foreground">
                     기본·값 입력됨·오류·비활성·읽기전용 상태입니다.{' '}
                     <span className="text-foreground font-medium">포커스</span> 시 테두리가{' '}
-                    <code className="font-mono">blue.500</code> 로 바뀝니다.
+                    <code className="font-mono">blue.500</code> 로 바뀝니다. 기본 Input도 항상{' '}
+                    <code className="font-mono">Field</code>로 감싸고, 오류가 있으면 동일 구조 안에{' '}
+                    <code className="font-mono">FieldError</code>만 조건부로 추가합니다. 프로젝트 Input은 48px 높이로
+                    고정되어 별도의 <code className="font-mono">size</code> prop을 제공하지 않습니다.
                 </p>
             </div>
             {/* 각 필드 wrapper 는 max-w-90(360 상한)이고 인풋은 w-full+min-w-0 이라 좁은 열에서도 줄어든다.
                 2열은 각 열이 360 을 담는 xl(≥1280px)에서 편다. */}
             <div className="grid grid-cols-1 justify-items-start gap-6 xl:grid-cols-2">
-                <div className={FIELD_DEMO_CLASS}>
-                    <Label htmlFor="st-default" className="text-foreground font-bold">
+                <Field className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+                    <FieldLabel htmlFor="st-default" className="text-foreground font-bold">
                         기본 (default)
-                    </Label>
+                    </FieldLabel>
                     <Input id="st-default" placeholder="내용을 입력하세요" />
-                </div>
-                <div className={FIELD_DEMO_CLASS}>
-                    <Label htmlFor="st-completed" className="text-foreground font-bold">
+                </Field>
+                <Field className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+                    <FieldLabel htmlFor="st-completed" className="text-foreground font-bold">
                         값 입력됨 (completed)
-                    </Label>
+                    </FieldLabel>
                     <Input id="st-completed" defaultValue="홍길동" />
-                </div>
-                <div className={FIELD_DEMO_CLASS}>
-                    <Label htmlFor="st-error" className="text-foreground font-bold">
+                </Field>
+                <Field data-invalid className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+                    <FieldLabel htmlFor="st-error" className="text-foreground font-bold">
                         오류 (error)
-                    </Label>
+                    </FieldLabel>
                     <Input
                         id="st-error"
                         placeholder="내용을 입력하세요"
                         aria-invalid="true"
                         aria-describedby="st-error-msg"
                     />
-                    <p id="st-error-msg" role="alert" className="typo-caption-regular text-error-500">
-                        에러메시지가 노출됩니다.
-                    </p>
-                </div>
-                <div className={FIELD_DEMO_CLASS}>
-                    <Label htmlFor="st-disabled" className="text-foreground font-bold">
+                    <FieldError id="st-error-msg">에러메시지가 노출됩니다.</FieldError>
+                </Field>
+                <Field className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+                    <FieldLabel htmlFor="st-disabled" className="text-foreground font-bold">
                         비활성 (disabled)
-                    </Label>
+                    </FieldLabel>
                     <Input id="st-disabled" defaultValue="비활성 입력값" disabled />
-                </div>
-                <div className={FIELD_DEMO_CLASS}>
-                    <Label htmlFor="st-view" className="text-foreground font-bold">
+                </Field>
+                <Field className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+                    <FieldLabel htmlFor="st-view" className="text-foreground font-bold">
                         읽기전용 (view)
-                    </Label>
+                    </FieldLabel>
                     <Input id="st-view" defaultValue="수정 불가한 값" readOnly />
-                </div>
+                </Field>
             </div>
+            <CodeBlock code={STATE_CODE} language="tsx" copyLabel="복사" />
         </section>
 
         <section aria-labelledby="input-addon" className="flex flex-col gap-4">
@@ -146,43 +279,60 @@ const InputGuidePage = () => (
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
                     검색처럼 <span className="text-foreground font-medium">동작</span>이 있는 우측 요소는 아이콘이
-                    아니라 <code className="font-mono">Button</code>(ghost·icon)으로 두고, 잠금 같은{' '}
-                    <span className="text-foreground font-medium">상태 표시</span>는 아이콘으로 둡니다. 둘 다{' '}
-                    <code className="font-mono">relative</code> 래퍼에 절대배치하고{' '}
-                    <code className="font-mono">pr-*</code> 로 겹침을 막습니다. 단위(명·건 등)는 Figma 처럼 입력 박스{' '}
+                    아니라 <code className="font-mono">InputGroupButton</code>으로 두고, 잠금 같은{' '}
+                    <span className="text-foreground font-medium">상태 표시</span>는{' '}
+                    <code className="font-mono">InputGroupAddon</code> 안의 아이콘으로 둡니다. InputGroup이 컨트롤과
+                    애드온의 테두리·포커스·비활성·읽기전용 상태를 함께 관리합니다. 단위(명·건 등)는 Figma처럼 입력 박스{' '}
                     <span className="text-foreground font-medium">밖</span> 오른쪽에 형제로 나란히 둡니다(
                     <code className="font-mono">flex</code>).
                 </p>
             </div>
             <div className={FIELD_GROUP_DEMO_CLASS}>
-                {/* 검색 버튼 — 클릭 가능(입력 박스 안쪽 절대배치) */}
-                <div className="relative">
-                    <Input placeholder="검색어를 입력하세요" aria-label="검색어" className="pr-14" />
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-sm"
-                        aria-label="검색"
-                        className="text-muted-foreground not-disabled:active:bg-accent absolute top-px right-px bottom-px h-auto w-12 rounded-l-none rounded-r-[calc(var(--ds-radius-sm)-1px)] not-disabled:active:not-aria-[haspopup]:translate-y-0"
-                    >
-                        <Search aria-hidden="true" className="size-5" />
-                    </Button>
-                </div>
+                {/* 검색 버튼 — 클릭 가능한 우측 애드온 */}
+                <InputGroup className="pr-0">
+                    <InputGroupInput placeholder="검색어를 입력하세요" aria-label="검색어" />
+                    <InputGroupAddon align="inline-end" className="h-full p-0">
+                        <InputGroupButton
+                            size="icon-sm"
+                            aria-label="검색"
+                            className="text-muted-foreground not-disabled:active:bg-accent h-full w-12 rounded-l-none rounded-r-sm not-disabled:active:not-aria-[haspopup]:translate-y-0"
+                        >
+                            <Search aria-hidden="true" className="size-5" />
+                        </InputGroupButton>
+                    </InputGroupAddon>
+                </InputGroup>
                 {/* 단위 접미사 — 입력 박스 밖 오른쪽에 형제로 배치 */}
                 <div className="flex items-center gap-2">
                     <Input type="number" placeholder="0" aria-label="인원" className="flex-1 md:min-w-0" />
                     <span className="typo-body-xl-regular text-foreground shrink-0">명</span>
                 </div>
-                {/* 잠금(읽기전용) — readOnly + lock 아이콘 */}
-                <div className="relative">
-                    <Input readOnly defaultValue="11222-1234567" aria-label="법인번호(읽기전용)" className="pr-11" />
-                    <Lock
-                        aria-hidden="true"
-                        className="text-foreground absolute top-1/2 right-4 size-5 -translate-y-1/2"
-                    />
-                </div>
+                {/* 잠금(읽기전용) — 상태 표시 우측 애드온 */}
+                <InputGroup>
+                    <InputGroupInput readOnly defaultValue="11222-1234567" aria-label="법인번호(읽기전용)" />
+                    <InputGroupAddon align="inline-end" className="text-foreground">
+                        <Lock aria-hidden="true" className="size-5" />
+                    </InputGroupAddon>
+                </InputGroup>
             </div>
             <CodeBlock code={ADDON_CODE} language="tsx" copyLabel="복사" />
+        </section>
+
+        <section aria-labelledby="input-form" className="flex flex-col gap-4">
+            <div>
+                <h2 id="input-form" className="typo-h4-bold">
+                    폼 제출
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    네이티브 Input에 <code className="font-mono">name</code>을 지정하면 입력값이 FormData로 제출됩니다.
+                    예시는 <code className="font-mono">required</code> 필드를 직접 검증하고 각 Input 아래에{' '}
+                    <code className="font-mono">FieldError</code>를{' '}
+                    <code className="font-mono">role=&quot;alert&quot;</code>로 노출합니다. 여러 필드가 유효하지 않으면
+                    첫 번째 오류 Input으로 포커스를 이동합니다. 단위가 있는 number Input과 잠금 아이콘이 있는 readOnly
+                    Input도 함께 제출하며, readOnly 값은 수정할 수 없지만 disabled와 달리 FormData에 포함됩니다.
+                </p>
+            </div>
+            <InputFormDemo />
+            <CodeBlock code={FORM_CODE} language="tsx" copyLabel="복사" />
         </section>
 
         <section aria-labelledby="input-props" className="flex flex-col gap-4">
@@ -228,14 +378,32 @@ const InputGuidePage = () => (
                                 control: 'string',
                             },
                             {
+                                name: 'name / value / defaultValue',
+                                desc: '폼 필드 이름과 제어·비제어 입력값을 지정합니다.',
+                                def: '- / - / -',
+                                control: 'string',
+                            },
+                            {
+                                name: 'required / form',
+                                desc: '필수 상태를 표시하고 외부 form 요소와 연결합니다. 가이드 예시는 FieldError를 위한 커스텀 검증을 사용합니다.',
+                                def: 'false / -',
+                                control: 'boolean / string',
+                            },
+                            {
+                                name: 'onChange',
+                                desc: '입력값이 변경될 때 호출되는 네이티브 change 이벤트 핸들러입니다.',
+                                def: '-',
+                                control: 'ChangeEventHandler<HTMLInputElement>',
+                            },
+                            {
                                 name: 'disabled',
-                                desc: '비활성. 회색 배경 + 상호작용 차단.',
+                                desc: '비활성. 회색 배경으로 표시되고 상호작용과 폼 제출에서 제외됩니다.',
                                 def: 'false',
                                 control: 'boolean',
                             },
                             {
                                 name: 'readOnly',
-                                desc: '읽기전용(view). 회색 배경으로 값만 보여줍니다.',
+                                desc: '읽기전용(view). 값을 수정할 수 없지만 폼 제출에는 포함됩니다.',
                                 def: 'false',
                                 control: 'boolean',
                             },
@@ -246,8 +414,14 @@ const InputGuidePage = () => (
                                 control: 'boolean',
                             },
                             {
+                                name: 'id / aria-describedby',
+                                desc: 'FieldLabel과 도움말·오류 메시지를 Input에 연결합니다.',
+                                def: '-',
+                                control: 'string',
+                            },
+                            {
                                 name: 'className',
-                                desc: '추가 클래스명으로 스타일 확장(아이콘·단위 시 pr-* 등).',
+                                desc: '추가 클래스명으로 레이아웃 또는 화면별 스타일을 확장합니다. 내부 애드온은 InputGroup을 사용합니다.',
                                 def: '""',
                                 control: 'string',
                             },

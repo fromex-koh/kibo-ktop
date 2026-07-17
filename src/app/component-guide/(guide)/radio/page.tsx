@@ -55,7 +55,11 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 
 <form noValidate onSubmit={handleSubmit}>
   <FieldSet data-invalid={paymentError || undefined}>
-    <FieldLegend id="payment-method-label">결제 수단 (필수)</FieldLegend>
+    <FieldLegend id="payment-method-label">
+      결제 수단
+      <span aria-hidden="true" className="text-error-500 ml-1">*</span>
+      <span className="sr-only"> (필수)</span>
+    </FieldLegend>
     <RadioGroup
       name="paymentMethod"
       value={paymentMethod}

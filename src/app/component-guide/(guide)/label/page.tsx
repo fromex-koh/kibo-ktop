@@ -16,8 +16,10 @@ const USAGE_CODE = `<div className="flex max-w-90 flex-col gap-2">
 
 const REQUIRED_CODE = `<Label htmlFor="name" className="gap-1 font-bold text-foreground">
   이름
-  <span className="text-error-500">*</span>
-</Label>`
+  <span aria-hidden="true" className="text-error-500">*</span>
+  <span className="sr-only"> (필수)</span>
+</Label>
+<Input id="name" required />`
 
 const CHECKBOX_CODE = `<div className="flex max-w-90 items-center gap-2">
   <Checkbox id="terms" defaultChecked aria-labelledby="terms-label" />
@@ -177,14 +179,19 @@ const LabelGuidePage = () => (
                 </h3>
                 <p className="typo-body-l-regular text-muted-foreground">
                     필수 입력은 <code className="font-mono">gap-1</code> 로 좁힌 뒤{' '}
-                    <code className="font-mono">text-error-500</code> 별표를 인라인으로 둡니다.
+                    <code className="font-mono">text-error-500</code> 별표를 인라인으로 둡니다. 별표는{' '}
+                    <code className="font-mono">aria-hidden</code>으로 숨기고 <code className="font-mono">sr-only</code>{' '}
+                    “필수” 텍스트와 컨트롤의 <code className="font-mono">required</code>를 함께 사용합니다.
                 </p>
                 <div className="flex max-w-90 flex-col gap-2">
                     <Label htmlFor="compose-name" className="text-foreground gap-1 font-bold">
                         이름
-                        <span className="text-error-500">*</span>
+                        <span aria-hidden="true" className="text-error-500">
+                            *
+                        </span>
+                        <span className="sr-only"> (필수)</span>
                     </Label>
-                    <Input id="compose-name" placeholder="내용을 입력하세요" />
+                    <Input id="compose-name" required placeholder="내용을 입력하세요" />
                 </div>
                 <CodeBlock code={REQUIRED_CODE} language="tsx" copyLabel="복사" />
             </div>

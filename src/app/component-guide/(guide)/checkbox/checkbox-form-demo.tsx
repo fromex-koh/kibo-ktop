@@ -94,7 +94,13 @@ const CheckboxFormDemo = () => {
                     aria-describedby={privacyError ? 'form-privacy-error' : undefined}
                 />
                 <FieldContent className={privacyError ? undefined : 'min-h-6 justify-center'}>
-                    <FieldLabel htmlFor="form-privacy">개인정보 처리방침을 확인했습니다. (필수)</FieldLabel>
+                    <FieldLabel htmlFor="form-privacy" className="gap-1">
+                        개인정보 처리방침을 확인했습니다.
+                        <span aria-hidden="true" className="text-error-500">
+                            *
+                        </span>
+                        <span className="sr-only"> (필수)</span>
+                    </FieldLabel>
                     {privacyError ? (
                         <FieldError id="form-privacy-error">개인정보 처리방침을 확인해 주세요.</FieldError>
                     ) : null}
@@ -123,8 +129,12 @@ const CheckboxFormDemo = () => {
                 />
                 <FieldContent>
                     <div className="flex flex-col gap-0.5">
-                        <FieldLabel htmlFor="form-terms" className="text-foreground font-bold">
-                            이용약관에 동의합니다. (필수)
+                        <FieldLabel htmlFor="form-terms" className="text-foreground gap-1 font-bold">
+                            이용약관에 동의합니다.
+                            <span aria-hidden="true" className="text-error-500">
+                                *
+                            </span>
+                            <span className="sr-only"> (필수)</span>
                         </FieldLabel>
                         <FieldDescription
                             id="form-terms-description"

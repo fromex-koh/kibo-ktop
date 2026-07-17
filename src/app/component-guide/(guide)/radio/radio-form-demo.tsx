@@ -54,7 +54,11 @@ const RadioFormDemo = () => {
         >
             <FieldSet data-invalid={paymentError || undefined}>
                 <FieldLegend id="payment-method-label" className="typo-title-l-medium text-foreground">
-                    결제 수단 (필수)
+                    결제 수단
+                    <span aria-hidden="true" className="text-error-500 ml-1">
+                        *
+                    </span>
+                    <span className="sr-only"> (필수)</span>
                 </FieldLegend>
                 <RadioGroup
                     name="paymentMethod"
@@ -84,7 +88,11 @@ const RadioFormDemo = () => {
 
             <FieldSet data-invalid={receiptError || undefined}>
                 <FieldLegend id="receipt-channel-label" className="typo-title-l-medium text-foreground">
-                    영수증 수신 방법 (필수)
+                    영수증 수신 방법
+                    <span aria-hidden="true" className="text-error-500 ml-1">
+                        *
+                    </span>
+                    <span className="sr-only"> (필수)</span>
                 </FieldLegend>
                 <RadioGroup
                     name="receiptChannel"
