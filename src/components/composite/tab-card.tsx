@@ -8,11 +8,12 @@ import {cn} from '@/lib/utils'
 // 가로로 나열되고, 선택된 탭만 파란 테두리(border-primary) + 제목 bold 로 강조된다.
 // 폼 섹션을 전환하는 탭 내비게이션에 쓴다(각 탭 = 한 섹션, 배지 = 그 섹션의 작성 상태).
 
-// 진행 상태 → kit Badge 매핑. 작성중(info)·작성완료(info 아웃라인)·미작성(neutral).
+// 진행 상태 → Badge 매핑(Figma). 작성중(info solid-pastel)·작성완료(grape 아웃라인)·미작성(neutral solid-pastel).
+// 배지는 모두 radius 8(round)이다.
 type TabCardStatus = '작성중' | '작성완료' | '미작성'
-const STATUS_BADGE: Record<TabCardStatus, {color: 'info' | 'neutral'; variant?: 'outline'}> = {
+const STATUS_BADGE: Record<TabCardStatus, {color: 'info' | 'neutral' | 'secondary-grape'; variant?: 'outline'}> = {
     작성중: {color: 'info'},
-    작성완료: {color: 'info', variant: 'outline'},
+    작성완료: {color: 'secondary-grape', variant: 'outline'},
     미작성: {color: 'neutral'},
 }
 
@@ -58,9 +59,15 @@ const TabCard = ({title, status, active = false, className, onKeyDown, ...props}
             )}
             {...props}
         >
-            <span className={cn('text-foreground', active ? 'typo-title-l-bold' : 'typo-title-l-medium')}>{title}</span>
+            <span
+                className={cn(
+                    active ? 'typo-title-l-bold text-foreground' : 'typo-title-l-medium text-label-foreground',
+                )}
+            >
+                {title}
+            </span>
             {badge ? (
-                <Badge color={badge.color} variant={badge.variant}>
+                <Badge color={badge.color} variant={badge.variant} shape="round">
                     {status}
                 </Badge>
             ) : null}
