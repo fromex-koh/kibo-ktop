@@ -49,6 +49,7 @@ export type HomeContent = {
 export type AssetVersion = {
     name: string
     kind: AssetKind
+    description: string
     version: string
     isCurrent: boolean // 이번 릴리스(최신 버전)에서 바뀐 자산이면 true — 하이라이트 표시에 쓰인다.
 }
@@ -58,6 +59,7 @@ export type AssetVersionSource = {
     name: string
     path: string
     kind: AssetKind
+    description: string
 }
 
 // 사이트 구조는 뎁스 제한 없는 트리다 — 자식이 있으면 branch(더 깊은 메뉴), 없으면 leaf(실제 화면 1건).

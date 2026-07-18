@@ -144,6 +144,7 @@ const parsePublishingIndexContent = (raw: typeof publishingIndexJson): Publishin
         return {
             name: asset.name,
             kind: parseAssetKind(asset.kind, `publishing-index.json > assetVersions > ${asset.name} > kind`),
+            description: asset.description,
             version,
             isCurrent,
         }

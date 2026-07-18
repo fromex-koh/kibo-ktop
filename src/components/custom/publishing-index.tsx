@@ -29,19 +29,6 @@ const VersionCell = ({version, isCurrent}: {version: string; isCurrent: boolean}
     </>
 )
 
-// 자산 표 헤더명 — "이름 (설명)" 형태면 괄호 앞에서 줄바꿈해 두 줄로 보인다(자동 줄바꿈 대신 명시적 <br>).
-const AssetName = ({name}: {name: string}) => {
-    const splitAt = name.indexOf(' (')
-    if (splitAt === -1) return <span>{name}</span>
-    return (
-        <span className="text-center">
-            {name.slice(0, splitAt)}
-            <br />
-            {name.slice(splitAt + 1)}
-        </span>
-    )
-}
-
 // 퍼블리싱 진행 상태 인덱스 데모. 데이터는 src/content/publishing-index.json 단일 소스에서 온다.
 // 이 컴포넌트는 '표현'(상태 색·아이콘 매핑, 뎁스별 rowSpan 계산, 레이아웃, 사용자 유형 필터)만 담당한다.
 
@@ -212,80 +199,127 @@ const PublishingIndex = () => {
     const progressPercent = screenCount === 0 ? 0 : Math.round((doneCount / screenCount) * 100)
 
     return (
-        <section aria-labelledby="section-publishing-index" className="flex flex-col gap-4">
+        <section aria-label="퍼블리싱 현황" className="flex flex-col gap-4">
             <BaseCard>
                 <div className="flex flex-col gap-8">
-                    <SectionHeader>
-                        <SectionHeaderTitle id="section-publishing-index">퍼블리싱 인덱스</SectionHeaderTitle>
-                        <SectionHeaderDescription>
-                            이 플랫폼의 화면별 퍼블리싱 진행 상태와 산출물 버전을 추적합니다. 버전은 git 태그를 기준으로
-                            자동 계산되며, 이번 릴리스에서 바뀐 항목은 강조 표시됩니다.
-                        </SectionHeaderDescription>
-                    </SectionHeader>
                     <div className="flex flex-col gap-3">
-                        {/* 상태 태그 범례 */}
-                        <ul aria-label="상태 범례" className="flex flex-wrap items-center gap-2">
+                        <SectionHeader>
+                            <SectionHeaderTitle id="frontend-handoff-assets-title">
+                                프론트엔드 인계 자산
+                            </SectionHeaderTitle>
+                            <SectionHeaderDescription>
+                                컴포넌트의 기능과 외관에 영향을 주는 경로입니다. 반영 버전은 마지막 변경을 포함하는 Git
+                                태그로 자동 계산하며, 아직 태그에 포함되지 않은 변경은 미배포로 표시합니다.
+                            </SectionHeaderDescription>
+                        </SectionHeader>
+
+                        {/* 프론트엔드 개발자에게 인계할 자산과 마지막 반영 버전 */}
+                        <div
+                            role="region"
+                            aria-labelledby="frontend-handoff-assets-title"
+                            className="bg-background border-border max-h-100 overflow-auto overscroll-contain rounded-md border"
+                        >
+                            <table className="w-full text-left">
+                                <caption className="sr-only">프론트엔드 인계 자산별 변경 영향과 반영 버전</caption>
+                                <thead className="bg-muted sticky top-0">
+                                    <tr className="border-border border-b">
+                                        <th scope="col" className="typo-body-l-medium w-24 px-4 py-3">
+                                            구분
+                                        </th>
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            경로
+                                        </th>
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            변경 영향
+                                        </th>
+                                        <th scope="col" className="typo-body-l-medium w-28 px-4 py-3">
+                                            반영 버전
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {assetVersions.map((asset) => (
+                                        <tr key={asset.name} className="border-border border-b last:border-b-0">
+                                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
+                                                <span className="inline-flex items-center gap-1.5">
+                                                    {asset.kind === 'folder' ? (
+                                                        <Folder aria-hidden="true" className="size-3.5 shrink-0" />
+                                                    ) : (
+                                                        <File aria-hidden="true" className="size-3.5 shrink-0" />
+                                                    )}
+                                                    {asset.kind === 'folder' ? '폴더' : '파일'}
+                                                </span>
+                                            </td>
+                                            <th
+                                                scope="row"
+                                                className="typo-body-l-medium text-primary-strong px-4 py-3 font-mono"
+                                            >
+                                                {asset.name}
+                                            </th>
+                                            <td className="typo-body-l-regular text-foreground-subtle min-w-64 px-4 py-3">
+                                                {asset.description}
+                                            </td>
+                                            <td
+                                                className={`typo-body-l-regular px-4 py-3 font-mono ${
+                                                    asset.isCurrent
+                                                        ? 'bg-primary/10 text-primary font-semibold'
+                                                        : 'text-muted-foreground'
+                                                }`}
+                                            >
+                                                <VersionCell version={asset.version} isCurrent={asset.isCurrent} />
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                        <SectionHeader>
+                            <SectionHeaderTitle id="section-publishing-index">퍼블리싱 인덱스</SectionHeaderTitle>
+                            <SectionHeaderDescription>
+                                이 플랫폼의 화면별 퍼블리싱 진행 상태와 산출물 버전을 추적합니다. 버전은 git 태그를
+                                기준으로 자동 계산되며, 이번 릴리스에서 바뀐 항목은 강조 표시됩니다.
+                            </SectionHeaderDescription>
+                        </SectionHeader>
+                        {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 전체/기업/기관으로 걸러 보여준다.
+          위 공통 레이아웃 표와 구분되도록 간격을 더 둔다. */}
+                        {/* 사용자 유형 필터 — 라디오 기반 단일 선택이다. 비어 있는 값은 무시해 항상 하나가 선택된 상태를
+                    유지한다. 화살표 키·역할은 Radix 담당. */}
+                        <SegmentedControl
+                            type="radio"
+                            value={filter}
+                            onValueChange={(value) => {
+                                if (isUserTypeFilter(value)) setFilter(value)
+                            }}
+                            aria-label="사용자 유형별 화면"
+                            className="w-fit"
+                        >
+                            {USER_TYPE_FILTERS.map((f) => (
+                                <SegmentedControlItem key={f} value={f} className="px-4">
+                                    {f}
+                                </SegmentedControlItem>
+                            ))}
+                        </SegmentedControl>
+
+                        {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
+            진척률은 '최종완료' 화면 비율이라 상태값이 바뀔 때마다 자동으로 갱신된다. */}
+                        <p aria-live="polite" className="typo-body-l-regular text-muted-foreground">
+                            {filter} 화면 본수: <span className="text-foreground font-semibold">{screenCount}개</span>
+                            {filter === '전체' ? ' (공통 레이아웃 제외)' : ''} · 작업 진척률:{' '}
+                            <span className="text-foreground font-semibold">{progressPercent}%</span> (최종완료{' '}
+                            {doneCount}/{screenCount})
+                        </p>
+                        {/* 아래 화면 목록에서 사용하는 진행 상태 범례 */}
+                        <ul aria-label="화면 진행 상태 범례" className="flex flex-wrap items-center gap-2">
                             {STATUS_VALUES.map((status) => (
                                 <li key={status}>
                                     <StatusTag status={status} />
                                 </li>
                             ))}
                         </ul>
-
-                        {/* 자산 버전 요약 */}
-                        <div className="bg-background border-border overflow-x-auto rounded-md border">
-                            <table className="w-full text-left">
-                                <caption className="sr-only">자산별 버전 예시</caption>
-                                <thead>
-                                    <tr className="border-border bg-muted/25 border-b">
-                                        {assetVersions.map((a) => (
-                                            <th
-                                                key={a.name}
-                                                scope="col"
-                                                className="typo-body-l-medium px-4 py-3 text-center"
-                                            >
-                                                <span className="inline-flex items-center justify-center gap-1.5">
-                                                    {a.kind === 'folder' ? (
-                                                        <Folder
-                                                            aria-hidden="true"
-                                                            className="text-muted-foreground size-3.5 shrink-0"
-                                                        />
-                                                    ) : (
-                                                        <File
-                                                            aria-hidden="true"
-                                                            className="text-muted-foreground size-3.5 shrink-0"
-                                                        />
-                                                    )}
-                                                    <span className="sr-only">
-                                                        {a.kind === 'folder' ? '폴더 ' : '파일 '}
-                                                    </span>
-                                                    <AssetName name={a.name} />
-                                                </span>
-                                            </th>
-                                        ))}
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr className="bg-background">
-                                        {assetVersions.map((a) => (
-                                            <td
-                                                key={a.name}
-                                                className={`typo-body-l-regular px-4 py-3 text-center font-mono ${
-                                                    a.isCurrent
-                                                        ? 'bg-primary/10 text-primary font-semibold'
-                                                        : 'text-muted-foreground'
-                                                }`}
-                                            >
-                                                <VersionCell version={a.version} isCurrent={a.isCurrent} />
-                                            </td>
-                                        ))}
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        {/* 공통 레이아웃 — 화면을 찍어내는 틀(내부 콘텐츠만 바뀜) 단위라 화면 표와 별도로 다룬다.
-          위 자산 표와 구분되도록 간격을 더 둔다. */}
+                        {/* 여러 화면이 공유하는 레이아웃은 개별 화면과 구분해 별도 표로 표시한다. */}
                         <div className="bg-background border-border overflow-x-auto rounded-md border">
                             <table className="w-full text-left">
                                 <caption className="sr-only">공통 레이아웃 상태·버전</caption>
@@ -342,37 +376,6 @@ const PublishingIndex = () => {
                                 </tbody>
                             </table>
                         </div>
-                    </div>
-
-                    <div className="flex flex-col gap-3">
-                        {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 전체/기업/기관으로 걸러 보여준다.
-          위 공통 레이아웃 표와 구분되도록 간격을 더 둔다. */}
-                        {/* 사용자 유형 필터 — 라디오 기반 단일 선택이다. 비어 있는 값은 무시해 항상 하나가 선택된 상태를
-                    유지한다. 화살표 키·역할은 Radix 담당. */}
-                        <SegmentedControl
-                            type="radio"
-                            value={filter}
-                            onValueChange={(value) => {
-                                if (isUserTypeFilter(value)) setFilter(value)
-                            }}
-                            aria-label="사용자 유형별 화면"
-                            className="w-fit"
-                        >
-                            {USER_TYPE_FILTERS.map((f) => (
-                                <SegmentedControlItem key={f} value={f} className="px-4">
-                                    {f}
-                                </SegmentedControlItem>
-                            ))}
-                        </SegmentedControl>
-
-                        {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
-            진척률은 '최종완료' 화면 비율이라 상태값이 바뀔 때마다 자동으로 갱신된다. */}
-                        <p aria-live="polite" className="typo-body-l-regular text-muted-foreground">
-                            {filter} 화면 본수: <span className="text-foreground font-semibold">{screenCount}개</span>
-                            {filter === '전체' ? ' (공통 레이아웃 제외)' : ''} · 작업 진척률:{' '}
-                            <span className="text-foreground font-semibold">{progressPercent}%</span> (최종완료{' '}
-                            {doneCount}/{screenCount})
-                        </p>
                         {/* 사이트 구조 정보 (선택된 사용자 유형으로 필터된 표) — 표의 caption 이 표 자체를 설명한다. */}
                         <div className="bg-background border-border overflow-x-auto rounded-md border">
                             <table className="w-full text-left">

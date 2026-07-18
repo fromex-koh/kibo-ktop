@@ -223,9 +223,10 @@ const ComponentGuidePage = () => (
                         </div>
                     ))}
                 </div>
-                <p className="bg-muted text-foreground mt-4 rounded-md p-4 text-center font-mono font-semibold">
-                    tokens → theme → ui → composite → screen
-                </p>
+                <div className="bg-muted text-foreground mt-4 flex flex-col gap-1 rounded-md p-4 text-center font-mono font-semibold">
+                    <p>tokens → theme → ui</p>
+                    <p>theme + ui → composite / custom → screen</p>
+                </div>
             </BaseCard>
         </section>
 
