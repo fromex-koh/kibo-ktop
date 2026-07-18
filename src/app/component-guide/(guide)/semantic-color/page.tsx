@@ -159,6 +159,8 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'control-disabled': 'bg-control-disabled',
     'control-disabled-subtle': 'bg-control-disabled-subtle',
     'field-disabled': 'bg-field-disabled',
+    'icon-solid-neutral': 'bg-icon-solid-neutral',
+    'icon-solid-neutral-foreground': 'bg-icon-solid-neutral-foreground',
     'stepper-accent': 'bg-stepper-accent',
     'stepper-inactive': 'bg-stepper-inactive',
     'number-badge-new': 'bg-number-badge-new',
@@ -232,10 +234,10 @@ const STANDARD_SLOTS = new Set([
     'sidebar-ring',
 ])
 
-// 컴포넌트 전용 레시피 토큰(button-*/checkbox-*/radio-*/badge-*)은 일반 색 슬롯이 아니라 특정 컴포넌트
+// 컴포넌트 전용 레시피 토큰(button-*/checkbox-*/radio-*/badge-*/icon-*)은 일반 색 슬롯이 아니라 특정 컴포넌트
 // 내부에서만 쓰는 값이라 이 색 개요 페이지에서는 제외한다(각 컴포넌트 가이드에서 다룸).
 const isComponentRecipe = (n: string): boolean =>
-    /^(button|checkbox|radio|badge|number-badge|chip|selectable-card|stepper)-/.test(n)
+    /^(button|checkbox|radio|badge|number-badge|chip|icon|selectable-card|stepper)-/.test(n)
 
 // 슬롯 가족(테이블) 정의 — 표준/커스텀 각각. 각 슬롯은 자기 버킷 안에서 한 가족에만 속한다.
 const STANDARD_GROUPS: Group[] = [

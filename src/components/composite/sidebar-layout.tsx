@@ -172,8 +172,8 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                 스크롤이 생긴다. min-w-0 으로 본문을 트랙 폭에 맞춰 줄여, 코드블럭은 내부(overflow-x-auto)에서만 스크롤. */}
             <SidebarInset className="min-w-0">
                 {/* 상단 앱바 — 트리거(모바일=Sheet 열기 / 데스크톱=레일 접기) + 브레드크럼(카테고리 > 현재) + 테마.
-                    z-10: shadcn Sheet(z-50) 아래에 오도록 낮게 둔다(드로어 열리면 헤더가 오버레이 밑). */}
-                <header className="border-border bg-background h-header-h sticky top-0 z-10 flex items-center gap-2 border-b px-4 md:px-6">
+                    z-header: Sheet의 z-drawer-backdrop 아래에 있어 드로어가 열리면 오버레이 밑에 놓인다. */}
+                <header className="border-border bg-background h-header-h z-header sticky top-0 flex items-center gap-2 border-b px-4 md:px-6">
                     <SidebarTrigger className="text-muted-foreground hover:text-foreground min-h-11 min-w-11" />
                     {activeCrumb ? (
                         <Breadcrumb>

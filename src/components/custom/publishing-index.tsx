@@ -237,7 +237,7 @@ const PublishingIndex = () => {
                             <table className="w-full text-left">
                                 <caption className="sr-only">자산별 버전 예시</caption>
                                 <thead>
-                                    <tr className="border-border border-b bg-gray-100/25">
+                                    <tr className="border-border bg-muted/25 border-b">
                                         {assetVersions.map((a) => (
                                             <th
                                                 key={a.name}
@@ -290,7 +290,7 @@ const PublishingIndex = () => {
                             <table className="w-full text-left">
                                 <caption className="sr-only">공통 레이아웃 상태·버전</caption>
                                 <thead>
-                                    <tr className="border-border border-b bg-gray-100/25">
+                                    <tr className="border-border bg-muted/25 border-b">
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
                                             공통 레이아웃
                                         </th>
@@ -378,7 +378,7 @@ const PublishingIndex = () => {
                             <table className="w-full text-left">
                                 <caption className="sr-only">사이트 구조별 상태·버전 예시</caption>
                                 <thead>
-                                    <tr className="border-border border-b bg-gray-100/25">
+                                    <tr className="border-border bg-muted/25 border-b">
                                         {depthHeaders.map((header) => (
                                             <th key={header} scope="col" className="typo-body-l-medium px-4 py-3">
                                                 {header}

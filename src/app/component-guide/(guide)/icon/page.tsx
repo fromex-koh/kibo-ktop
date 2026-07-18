@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import type {LucideIcon} from 'lucide-react'
 import {
     ArrowLeft,
     ArrowRight,
@@ -58,7 +59,7 @@ import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import PropsTable from '@/components/guide/props-table'
 import {BaseCard} from '@/components/composite/base-card'
-import {Icon} from '@/components/custom/icon'
+import {Icon, type IconSymbol} from '@/components/custom/icon'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '아이콘 (Icon)'}
@@ -74,6 +75,12 @@ const USAGE_SOLID = `import { X } from 'lucide-react';
 import { Icon } from '@/components/custom/icon';
 
 <Icon icon={X} variant="solid" className="size-icon-2xl" />`
+
+const SOLID_TEXT_USAGE = `import { Icon } from '@/components/custom/icon';
+
+{/* lucide에 solid 글리프가 없는 정보·경고 아이콘 */}
+<Icon symbol="info" variant="solid" className="size-icon-xl" />
+<Icon symbol="alert" variant="solid" className="size-icon-xl" />`
 
 // package.json 의 lucide-react 버전과 라이선스. 패키지를 올리면 함께 갱신한다.
 const LUCIDE_VERSION = '1.23.0'
@@ -154,17 +161,43 @@ const CURATED_ICONS = [
     {name: 'X', Icon: X},
 ] as const
 
-// Solid(원형 배지) 스타일은 강조·알림 배지 용도라 실제로 몇 개만 큐레이션한다. 별도 마크업으로
-// 모양을 흉내 내지 않고 실제 Icon wrapper를 렌더해 구현과 가이드가 항상 같게 유지되도록 한다.
-const SOLID_ICONS = [
-    {name: 'X', Glyph: X},
-    {name: 'Info', Glyph: Info},
-    {name: 'CircleAlert', Glyph: CircleAlert},
-] as const
+// Solid(원형 배지) 스타일은 강조·알림 배지 용도라 실제로 몇 개만 큐레이션한다. lucide에 채운 글리프가
+// 없는 Info·CircleAlert는 기존 디자인대로 원형 배지 안에 문자 i·!를 사용한다.
+type SolidIconItem = {name: string; icon: LucideIcon; symbol?: never} | {name: string; icon?: never; symbol: IconSymbol}
+
+const SOLID_ICONS: readonly SolidIconItem[] = [
+    {name: 'X', icon: X},
+    {name: 'Info', symbol: 'info'},
+    {name: 'CircleAlert', symbol: 'alert'},
+]
+
+const SOLID_TEXT_ICONS: readonly {name: string; symbol: IconSymbol}[] = [
+    {name: 'Info', symbol: 'info'},
+    {name: 'CircleAlert', symbol: 'alert'},
+]
 
 const PROPS_ITEMS = [
-    ['Icon', 'icon', '표시할 Lucide 아이콘 컴포넌트입니다.', '-', 'LucideIcon'],
-    ['Icon', 'variant', '글리프만 표시하거나 원형 배지 안에 강조합니다.', "'outline'", "'outline' | 'solid'"],
+    [
+        'Icon',
+        'icon',
+        'Lucide 모드에서 표시할 아이콘 컴포넌트입니다. symbol과 함께 쓸 수 없습니다.',
+        '조건부 필수',
+        'LucideIcon',
+    ],
+    [
+        'Icon',
+        'symbol',
+        '문자형 Solid 아이콘을 선택합니다. icon과 함께 쓸 수 없습니다.',
+        '조건부 필수',
+        "'info' | 'alert'",
+    ],
+    [
+        'Icon',
+        'variant',
+        'Lucide 글리프를 그대로 표시하거나 원형 배지 안에 강조합니다. symbol은 solid만 지원합니다.',
+        "'outline'",
+        "'outline' | 'solid'",
+    ],
     ['Icon', 'className', '크기와 색상 유틸리티를 추가합니다.', "''", 'string'],
 ] as const
 
@@ -320,13 +353,17 @@ const IconGuidePage = () => (
                 <div className="flex flex-col gap-3">
                     <h3 className="typo-body-l-medium text-foreground">Solid</h3>
                     <ul className="grid grid-cols-3 gap-3 md:grid-cols-4 xl:grid-cols-6">
-                        {SOLID_ICONS.map(({name, Glyph}) => (
+                        {SOLID_ICONS.map((item) => (
                             <li
-                                key={name}
+                                key={item.name}
                                 className="border-border flex flex-col items-center gap-3 rounded-md border p-4"
                             >
-                                <Icon icon={Glyph} variant="solid" className="size-icon-xl" />
-                                <code className="text-foreground font-mono text-sm">{name}</code>
+                                {item.icon ? (
+                                    <Icon icon={item.icon} variant="solid" className="size-icon-xl" />
+                                ) : (
+                                    <Icon symbol={item.symbol} variant="solid" className="size-icon-xl" />
+                                )}
+                                <code className="text-foreground font-mono text-sm">{item.name}</code>
                             </li>
                         ))}
                     </ul>
@@ -370,6 +407,31 @@ const IconGuidePage = () => (
                     </div>
                     <CodeBlock code={USAGE_SOLID} language="tsx" copyLabel="복사" />
                 </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="icon-solid-text" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="icon-solid-text" className="typo-h4-bold">
+                        텍스트 Solid 아이콘 사용
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        Lucide에 채운 형태가 없는 Info와 CircleAlert는 <code className="font-mono">symbol</code>{' '}
+                        prop으로 사용합니다. Icon이 원형 배지와 문자 <code>i</code>·<code>!</code>,{' '}
+                        <code className="font-mono">aria-hidden</code>을 함께 처리합니다. 버튼이나 링크에서 사용할 때는
+                        상호작용 요소에 별도의 접근 가능한 이름을 제공합니다.
+                    </p>
+                </div>
+                <div className="border-border flex flex-wrap items-center gap-8 rounded-md border p-6">
+                    {SOLID_TEXT_ICONS.map(({name, symbol}) => (
+                        <div key={name} className="flex items-center gap-3">
+                            <Icon symbol={symbol} variant="solid" className="size-icon-xl" />
+                            <code className="text-foreground font-mono text-sm">{name}</code>
+                        </div>
+                    ))}
+                </div>
+                <CodeBlock code={SOLID_TEXT_USAGE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 

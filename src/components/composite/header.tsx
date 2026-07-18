@@ -177,7 +177,7 @@ const HeaderContent = ({navLabel}: {navLabel: string}) => (
 )
 
 const Header = () => (
-    <header className="bg-card sticky top-0 z-10">
+    <header className="bg-card z-header sticky top-0">
         <div className="max-w-content mx-auto">
             <HeaderContent navLabel="주 메뉴" />
         </div>

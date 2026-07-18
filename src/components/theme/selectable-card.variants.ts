@@ -1,11 +1,11 @@
 import {cva} from 'class-variance-authority'
 
 const selectableCardVariants = cva(
-    'bg-surface flex cursor-pointer items-center gap-2 rounded-lg border-2 border-transparent px-10 py-6 transition-colors has-[>[data-slot=field]]:border-2 *:data-[slot=field]:p-0 has-data-checked:border-primary has-data-checked:bg-primary-subtle dark:has-data-checked:border-primary dark:has-data-checked:bg-primary-subtle has-[:focus-visible]:outline-ring has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-solid',
+    'bg-surface flex cursor-pointer items-center gap-2 rounded-lg border-2 border-transparent px-10 py-6 transition-colors has-[>[data-slot=field]]:border-2 *:data-[slot=field]:p-0 has-data-checked:border-primary has-data-checked:bg-primary-subtle has-[:focus-visible]:outline-ring has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-solid',
     {
         variants: {
             disabled: {
-                true: 'bg-control-disabled text-disabled has-data-checked:border-disabled-subtle has-data-checked:bg-control-disabled dark:has-data-checked:border-disabled-subtle dark:has-data-checked:bg-control-disabled cursor-not-allowed opacity-100',
+                true: 'bg-control-disabled text-disabled has-data-checked:border-disabled-subtle has-data-checked:bg-control-disabled cursor-not-allowed opacity-100',
                 false: '',
             },
         },
