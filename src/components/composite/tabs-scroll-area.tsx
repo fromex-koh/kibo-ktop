@@ -25,9 +25,9 @@ import {cn} from '@/lib/utils'
 //
 // 중앙정렬: 키보드로 활성 탭을 옮길 때 해당 탭을 스크롤 영역 중앙에 배치한다. 화살표는 탭 너비만큼만 이동한다.
 //
-// 페이드: 스크롤 가능한 쪽만 배경색→투명 그라데이션 오버레이(토큰·유틸: from-background + w-8)로 가장자리를 부드럽게
-// 가려 하드컷을 없앤다. 순수 장식이라 aria-hidden·pointer-events-none. 배경이 bg-background 아닌 표면 위에선 색이
-// 어긋나므로 그땐 부모 배경을 맞춘다. 클릭·중앙정렬 스크롤은 prefers-reduced-motion 을 존중한다([6.3.1]).
+// 페이드: 스크롤 가능한 쪽만 카드 표면색→투명 그라데이션 오버레이(토큰·유틸: from-surface + w-8)로 가장자리를
+// 부드럽게 가려 하드컷을 없앤다. 순수 장식이라 aria-hidden·pointer-events-none. 클릭·중앙정렬 스크롤은
+// prefers-reduced-motion 을 존중한다([6.3.1]).
 
 const KEYBOARD_NAV_KEYS = ['ArrowLeft', 'ArrowRight', 'Home', 'End']
 const DIMMED_ARROW_CLASS = 'pointer-events-none opacity-50'
@@ -128,13 +128,13 @@ const TabsScrollArea = ({className, children, ...props}: TabsScrollAreaProps) =>
                 {canScrollLeft ? (
                     <div
                         aria-hidden="true"
-                        className="from-background pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r to-transparent"
+                        className="from-surface pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r to-transparent"
                     />
                 ) : null}
                 {canScrollRight ? (
                     <div
                         aria-hidden="true"
-                        className="from-background pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l to-transparent"
+                        className="from-surface pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l to-transparent"
                     />
                 ) : null}
             </div>

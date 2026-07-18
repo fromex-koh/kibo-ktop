@@ -2,12 +2,12 @@ import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
+import PropsTable from '@/components/guide/props-table'
 import {Tabs, TabsList, TabsTrigger, TabsContent} from '@/components/ui/tabs'
 import {TabsScrollArea} from '@/components/composite/tabs-scroll-area'
 
 export const metadata: Metadata = {title: '탭 (Tabs)'}
 
-// 좌우 스크롤 케이스 데모용 — 실제 화면처럼 폭이 좁아 탭이 다 안 들어가는 상황을 만든다.
 const MANY_TABS = [
     ['tab1', '내 정보 확인'],
     ['tab2', '진행현황 결과조회'],
@@ -19,9 +19,6 @@ const MANY_TABS = [
     ['tab8', '이용약관'],
 ] as const
 
-// TabsScrollArea — ui TabsList의 line 사용 패턴을 확장하는 composite. 넘치면 좌우 화살표 버튼으로
-// 넘겨보고 가장자리가 페이드된다 — 그래서 line 탭은 항상 TabsList 대신 이걸 쓴다(화면 폭이 좁아지거나 탭이
-// 늘어나도 항상 안전하다).
 const LINE_USAGE_CODE = `<Tabs defaultValue="info">
   <TabsScrollArea aria-label="마이페이지 메뉴">
     <TabsTrigger value="info">내 정보 확인</TabsTrigger>
@@ -96,15 +93,10 @@ const PROPS_ITEMS = [
     ],
 ] as const
 
-// 탭 — shadcn Tabs 프리미티브(원본에 이미 있는 variant="line")를 그대로 승격해 스타일만 Figma 값으로
-// 교체했다([SC-03]). Figma "언더라인 탭"(마이페이지 상단 내비) 반영: 24px 텍스트·52px 높이·16px 간격,
-// 비활성 gray.500 Regular → 활성 gray.900 Bold + 밑줄. 세그먼트(default) variant 는 Figma 스펙이 없어
-// shadcn 원본 스타일 그대로 둔다. line 탭은 TabsList 를 직접 쓰지 않고 항상 TabsScrollArea(composite) 로
-// 감싼다 — 탭이 많거나 화면이 좁아 넘쳐도 좌우 화살표로 넘겨보고 가장자리가 페이드되는 안전한 기본 선택지다.
 const TabsGuidePage = () => (
     <GuidePageShell
         title="탭 (Tabs)"
-        description="shadcn Tabs 프리미티브입니다. 원본에 이미 있던 line variant 스타일을 Figma 언더라인 탭 값으로 교체해 승격했습니다. line 탭은 TabsScrollArea 로 감싸, 화면이 좁아지거나 탭이 늘어나면 좌우 화살표 버튼(데스크톱·모바일 공통)으로 탭 하나 너비씩 이동합니다. 가장자리는 페이드로 표시되며 키보드 탐색 시 활성 탭은 중앙에 정렬됩니다."
+        description="콘텐츠 영역을 전환하는 shadcn 기반 탭입니다. 프로젝트 언더라인형은 TabsScrollArea와 조합해 작은 화면과 긴 탭 목록에 대응합니다."
     >
         <BaseCard>
             <section aria-labelledby="tabs-line-usage" className="flex flex-col gap-4">
@@ -113,10 +105,9 @@ const TabsGuidePage = () => (
                         사용 예시 — 언더라인 (line)
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        Figma 마이페이지 상단 내비 케이스입니다. 활성 탭만 굵게 + 밑줄로 강조되고, 나머지는 옅은
-                        회색입니다. <code className="font-mono">TabsList</code> 대신{' '}
-                        <code className="font-mono">TabsScrollArea</code> 를 씁니다 — 창을 좁혀 탭이 넘치면 좌우 화살표
-                        버튼으로 넘겨봅니다(아래{' '}
+                        프로젝트 언더라인형입니다. 활성 탭은 굵은 제목과 밑줄로 표시합니다. 화면 폭에 안전하게
+                        대응하려면 <code className="font-mono">TabsList</code> 대신{' '}
+                        <code className="font-mono">TabsScrollArea</code>를 사용합니다(아래{' '}
                         <a href="#tabs-scroll" className="text-primary-strong underline underline-offset-2">
                             많은 탭
                         </a>{' '}
@@ -184,14 +175,12 @@ const TabsGuidePage = () => (
                         많은 탭 (좌우 스크롤)
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        위와 같은 <code className="font-mono">TabsScrollArea</code> 가 실제로 넘칠 때 어떻게 바뀌는지
-                        보여주는 예시입니다 — 좁은 폭(400px)에 8개 탭을 넣어 재현했습니다. 좌우 화살표
-                        버튼(데스크톱·모바일 공통)으로 넘겨보고, 더 넘길 수 없는 쪽 화살표는 흐리게 비활성됩니다. 키보드
-                        좌우 화살표로 탭을 옮기면 활성 탭이 중앙에 오도록 스크롤되고, 좌우 가장자리는 그라데이션으로
-                        페이드됩니다.
+                        400px 영역에 8개 탭을 넣은 예시입니다. 스크롤 버튼은 탭을 선택하지 않고 목록만 탭 하나 너비만큼
+                        이동합니다. 탭 키보드 이동 시 포커스된 탭은 중앙에 맞춰지고, 스크롤 가능한 가장자리는 흰색
+                        surface 그라데이션으로 표시됩니다.
                     </p>
                 </div>
-                <div className="border-border max-w-100 rounded-md border p-4">
+                <div className="bg-surface border-border max-w-100 rounded-md border p-4">
                     <Tabs defaultValue="tab1">
                         <TabsScrollArea aria-label="마이페이지 메뉴">
                             {MANY_TABS.map(([value, label]) => (
@@ -222,8 +211,8 @@ const TabsGuidePage = () => (
                         세그먼트 (default)
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">variant</code> 를 생략하면 shadcn 원본의 세그먼트(알약) 탭입니다.
-                        Figma 스펙이 없어 원본 스타일 그대로 둡니다.
+                        <code className="font-mono">variant</code>를 생략하면 기본 세그먼트형을 사용합니다. 프로젝트
+                        화면의 언더라인형이 필요할 때만 <code className="font-mono">TabsScrollArea</code>를 선택합니다.
                     </p>
                 </div>
                 <Tabs defaultValue="tab1">
@@ -250,54 +239,7 @@ const TabsGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">Tabs 조합에서 넘기는 속성입니다.</p>
                 </div>
-                <div className="border-border overflow-x-auto rounded-xl border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">Tabs 조합 Props 목록</caption>
-                        <thead>
-                            <tr className="border-border bg-card border-b">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Component
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Description
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Default
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Type
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {PROPS_ITEMS.map(([component, name, description, defaultValue, type]) => (
-                                <tr key={`${component}-${name}`} className="border-border border-b last:border-b-0">
-                                    <td className="typo-body-l-regular text-foreground px-4 py-3 font-mono">
-                                        {component}
-                                    </td>
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-medium text-primary-strong px-4 py-3 font-mono"
-                                    >
-                                        {name}
-                                    </th>
-                                    <td className="typo-body-l-regular text-foreground-subtle px-4 py-3">
-                                        {description}
-                                    </td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {defaultValue}
-                                    </td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {type}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <PropsTable items={PROPS_ITEMS} caption="Tabs 조합 Props 목록" />
             </section>
         </BaseCard>
     </GuidePageShell>
