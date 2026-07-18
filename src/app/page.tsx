@@ -26,13 +26,13 @@ const BUILD_TIME = process.env.NEXT_PUBLIC_BUILD_TIME ?? '로컬 개발'
 const Home = () => {
     return (
         <main className="bg-background text-foreground min-h-screen">
-            <div className="max-w-content mx-auto flex w-full flex-col gap-12 px-6 py-16">
+            <div className="max-w-content mx-auto flex w-full flex-col gap-6 px-6 py-16">
                 {/* 홈은 헤더가 없어, 라이트/다크 토글을 콘텐츠 우상단에 둔다(헤더가 있는 화면은 헤더 우측). */}
                 <div className="flex justify-end">
                     <ThemeToggle />
                 </div>
                 <header className="flex flex-col items-center gap-3 text-center">
-                    <Badge asChild color="neutral" className="font-mono">
+                    <Badge asChild variant="solid" color="navy" shape="round" size="lg" className="font-mono">
                         <code>{badge}</code>
                     </Badge>
                     <h1 className="typo-display-m-bold">{SITE_NAME}</h1>
@@ -42,7 +42,7 @@ const Home = () => {
                     </p>
                 </header>
 
-                <div className="grid gap-6 md:grid-cols-2">
+                <div className="grid gap-x-6 gap-y-6 md:grid-cols-2">
                     {/* 프로젝트 정보 */}
                     <BaseCard
                         title={

@@ -118,12 +118,29 @@ src/app/tokens.css                          # ← tokens.json + yarn tokens
 src/content/asset-versions.generated.json   # ← yarn asset-versions
 ```
 
+### 유지보수자 파일 맵
+
+화면·스타일·원본 기준선을 수정할 때 아래 책임 경계를 먼저 확인한다.
+
+| 경로                                         | 책임                                  | 변경 기준                                                        |
+| -------------------------------------------- | ------------------------------------- | ---------------------------------------------------------------- |
+| `src/app/page.tsx`                           | 시작 페이지 조합                      | 프로젝트 카드·Badge·링크·퍼블리싱 인덱스 배치만 수정             |
+| `src/content/home.json`                      | 시작 페이지 텍스트·아이콘·링크 데이터 | 화면 문구나 링크 변경 시 우선 수정                               |
+| `src/components/ui/`                         | shadcn primitive 셸                   | 구조·props·동작·접근성은 원본 유지; 스타일은 theme import만 허용 |
+| `src/components/theme/`                      | 프로젝트 전용 CVA·스타일 토큰         | 디자인 스타일 변경의 유일한 작업 위치                            |
+| `src/components/composite/`                  | primitive 조합 컴포넌트               | 여러 primitive를 조합하거나 프로젝트 기능을 확장할 때 수정       |
+| `src/components/custom/publishing-index.tsx` | 퍼블리싱 인덱스 화면 전용 표현·필터   | 시작 페이지 인덱스 UI와 필터 동작 수정                           |
+| `src/content/publishing-index.json`          | 퍼블리싱 인덱스 화면·상태·버전 데이터 | 인덱스 행이나 상태 변경 시 수정                                  |
+| `src/app/component-guide/(guide)/`           | 컴포넌트 가이드·사용 예시             | 컴포넌트 API·스타일 변경 시 가이드도 함께 갱신                   |
+| `vendor/shadcn-baseline/`                    | shadcn 바닐라 CVA 기준선              | 앱에서 import하지 않으며 업스트림 비교용으로만 갱신              |
+| `tokens.json`                                | 디자인 토큰 원본                      | 색상·간격·타이포·효과 변경 시 직접 수정 후 토큰 생성             |
+
 ## 문서
 
 프로젝트의 기준은 `docs/` 에 정의되어 있으며, 작업 시 항상 준수한다.
 **우선순위: 코드 컨벤션(개발 표준) > 접근성 > 퍼블리싱 컨벤션** (충돌 시 위쪽을 따른다).
 
-- **[docs/CODE_CONVENTION.md](docs/CODE_CONVENTION.md)** — 프론트엔드 표준 코드 컨벤션(개발자 기준, **최우선**).
+- **[docs/CODE_CONVENTION.md](docs/CODE_CONVENTION.md)** — 개발 표준 코드 컨벤션(개발자 기준, **최우선**).
   `any`/`as` 금지·네이밍·Arrow Function·시맨틱 색상 토큰 등 ST/NA/NC/MD/CD 규칙과 PR 체크리스트.
 - **[docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md)** — 웹 접근성(KWCAG 2.1) 코딩 규칙.
   4원칙·13지침·24검사항목을 마크업/스타일 관점으로 정리한 규칙·예시·PR 체크리스트.

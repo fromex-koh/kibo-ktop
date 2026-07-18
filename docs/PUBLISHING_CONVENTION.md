@@ -5,7 +5,7 @@
 
 ## 우선순위 (충돌 시)
 
-1. **[docs/CODE_CONVENTION.md](CODE_CONVENTION.md)** — 프론트엔드 개발 표준. **최우선.** 본 문서와 충돌하면 이쪽을 따른다.
+1. **[docs/CODE_CONVENTION.md](CODE_CONVENTION.md)** — 개발 표준. **최우선.** 본 문서와 충돌하면 이쪽을 따른다.
 2. **[docs/ACCESSIBILITY.md](ACCESSIBILITY.md)** — 웹 접근성(KWCAG 2.1). 법적 필수.
 3. **본 문서** — 위 둘과 상충하지 않는 범위에서 적용하는 퍼블리싱/토큰 규칙.
 

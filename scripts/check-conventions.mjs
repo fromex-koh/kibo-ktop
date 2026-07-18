@@ -2,15 +2,25 @@
 // 정규식으로 정적 검사한다. 위반이 하나라도 있으면 exit 1 → pre-push 훅이 push 를 막는다.
 //
 // ⚠️ 자동 검사는 '기계적으로 판별 가능한' 규칙만 커버한다. Magic Number·가독성·대체 텍스트의
-//    적절성 등은 사람이 판단해야 하므로 docs 의 PR 체크리스트로 수동 확인한다.
+//    적절성 등은 사람이 판단해야 하므로 코드 리뷰에서 수동 확인한다.
 //
 // 검사 대상: src/**/*.{ts,tsx}. (docs/*.md 의 '나쁜 예시' 코드블록은 검사하지 않는다.)
 
 import {readdirSync, readFileSync} from 'node:fs'
+import {createHash} from 'node:crypto'
 import {join, extname} from 'node:path'
 
 const SRC_DIR = 'src'
 const TARGET_EXT = new Set(['.ts', '.tsx'])
+const CODE_CONVENTION_PATH = 'docs/CODE_CONVENTION.md'
+const CODE_CONVENTION_SHA256 = '716d3050220913335f68cb77f575b84fc7c08d10137f112357e64b453f427167'
+
+const codeConventionHash = createHash('sha256').update(readFileSync(CODE_CONVENTION_PATH)).digest('hex')
+
+if (codeConventionHash !== CODE_CONVENTION_SHA256) {
+    console.error(`\n❌ ${CODE_CONVENTION_PATH}는 원본 HWP 전용 잠금 문서이므로 수정할 수 없습니다.\n`)
+    process.exit(1)
+}
 
 // [규칙ID, 설명, 정규식] — 각 소스 라인에 대해 test 한다.
 const RULES = [

@@ -1,4 +1,5 @@
 import type {ComponentPropsWithoutRef} from 'react'
+import {Slot} from 'radix-ui'
 import {cn} from '@/lib/utils'
 
 // 섹션 상단의 제목+설명(+선택적 액션) 묶음 — Card 와 같은 합성(compound) 컴포넌트 API.
@@ -29,13 +30,23 @@ const SectionHeaderTitle = ({className, children, ...props}: ComponentPropsWitho
     </h2>
 )
 
-const SectionHeaderDescription = ({className, ...props}: ComponentPropsWithoutRef<'p'>) => (
-    <p
-        data-slot="section-header-description"
-        className={cn('typo-body-xl-regular text-foreground-subtle', className)}
-        {...props}
-    />
-)
+// asChild 로 <ul> 등 다른 요소에 설명 스타일을 씌운다 — 여러 줄 안내가 필요하면
+// ul + ListMarker 리스트로 조합한다(Figma "리스트형 설명"). 기본은 <p>.
+const SectionHeaderDescription = ({
+    className,
+    asChild = false,
+    ...props
+}: ComponentPropsWithoutRef<'p'> & {asChild?: boolean}) => {
+    const Comp = asChild ? Slot.Root : 'p'
+
+    return (
+        <Comp
+            data-slot="section-header-description"
+            className={cn('typo-body-xl-regular text-foreground-subtle', className)}
+            {...props}
+        />
+    )
+}
 
 // 제목 오른쪽에 배치하는 선택적 액션 영역(버튼 등). 넣지 않으면 SectionHeader 는 그냥 세로 스택.
 const SectionHeaderAction = ({className, ...props}: ComponentPropsWithoutRef<'div'>) => (

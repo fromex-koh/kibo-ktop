@@ -62,7 +62,7 @@ const STATUS_BADGE: Record<Status, {color: 'neutral' | 'info' | 'warning' | 'suc
 }
 
 const StatusTag = ({status}: {status: Status}) => (
-    <Badge color={STATUS_BADGE[status].color} variant={STATUS_BADGE[status].variant}>
+    <Badge color={STATUS_BADGE[status].color} variant={STATUS_BADGE[status].variant} shape="round">
         {status === '최종완료' && <CheckCheck aria-hidden="true" />}
         {status === '완료' && <Check aria-hidden="true" />}
         {status}
