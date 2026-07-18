@@ -25,11 +25,11 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         ],
     },
     {
-        title: 'Semantic · 타이포',
+        title: 'Semantic (의미)',
         icon: 'semantic',
         items: [
             {label: '색상 (Color)', href: '/component-guide/semantic-color'},
-            {label: '타이포그래피 (typo-*)', href: '/component-guide/typography'},
+            {label: '타이포그래피 (Typography)', href: '/component-guide/typography'},
         ],
     },
     {
