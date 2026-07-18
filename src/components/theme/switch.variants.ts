@@ -1,6 +1,12 @@
-const switchRootClassName =
-    'peer group/switch focus-visible:outline-ring aria-invalid:border-destructive aria-invalid:ring-destructive/20 data-[state=checked]:bg-primary data-[state=unchecked]:bg-foreground-subtle data-disabled:bg-control-disabled data-disabled:data-[state=checked]:bg-control-disabled data-disabled:data-[state=unchecked]:bg-control-disabled relative inline-flex shrink-0 items-center rounded-full border border-transparent p-1 transition-colors outline-none after:absolute after:-inset-x-3 after:-inset-y-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid aria-invalid:ring-3 data-disabled:cursor-not-allowed data-disabled:opacity-100'
-const switchThumbClassName =
-    'group/thumb bg-surface text-foreground-subtle data-[state=checked]:text-primary group-data-disabled/switch:bg-disabled-subtle group-data-disabled/switch:text-disabled pointer-events-none flex items-center justify-center rounded-full ring-0 transition-transform'
+// PROJECT-STYLE: ui/switch primitive는 원본 API를 유지하고,
+// 프로젝트의 상태색·포커스·lg/md/sm 크기는 ControlSwitch wrapper의 theme에서 관리한다.
+const controlSwitchClassName =
+    'peer group/switch focus-visible:outline-ring data-[state=checked]:bg-primary data-[state=unchecked]:bg-foreground-subtle data-disabled:bg-control-disabled data-[disabled]:bg-control-disabled disabled:bg-control-disabled disabled:data-[state=checked]:bg-control-disabled disabled:data-[state=unchecked]:bg-control-disabled data-disabled:data-[state=checked]:bg-control-disabled data-disabled:data-[state=unchecked]:bg-control-disabled [&>[data-slot=switch-thumb]]:bg-surface data-disabled:[&>[data-slot=switch-thumb]]:bg-surface data-[disabled]:[&>[data-slot=switch-thumb]]:bg-surface disabled:[&>[data-slot=switch-thumb]]:bg-surface relative inline-flex shrink-0 items-center rounded-full border border-transparent p-1 transition-colors focus-visible:border-transparent focus-visible:ring-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid disabled:opacity-100 data-disabled:opacity-100 data-[disabled]:opacity-100'
 
-export {switchRootClassName, switchThumbClassName}
+const controlSwitchSizeClassNames = {
+    lg: 'data-[size=default]:h-control-h-md data-[size=default]:w-18 data-[size=default]:[&>[data-slot=switch-thumb]]:size-8 data-[size=default]:[&>[data-slot=switch-thumb][data-state=checked]]:translate-x-8',
+    md: 'data-[size=default]:h-control-h-sm data-[size=default]:w-16 data-[size=default]:[&>[data-slot=switch-thumb]]:size-7 data-[size=default]:[&>[data-slot=switch-thumb][data-state=checked]]:translate-x-7',
+    sm: 'data-[size=sm]:h-control-h-xs data-[size=sm]:w-14 data-[size=sm]:[&>[data-slot=switch-thumb]]:size-6 data-[size=sm]:[&>[data-slot=switch-thumb][data-state=checked]]:translate-x-6',
+}
+
+export {controlSwitchClassName, controlSwitchSizeClassNames}

@@ -34,11 +34,11 @@ const tierOf = (name) => {
     const w = Object.keys(fontWeight).find((k) => name.endsWith(`-${k}`))
     return w ? name.slice(0, -(w.length + 1)) : name
 }
-const breakpoint = tokens.breakpoint ?? {} // 반응형 브레이크포인트(px) → wide:/pc: 프리픽스
+const breakpoint = tokens.breakpoint ?? {} // 반응형 브레이크포인트(px) → grid·typography 티어 생성
 const container = tokens.container ?? {} // 콘텐츠 최대 폭(px) → max-w-* 유틸
 const grid = tokens.grid ?? {} // 브레이크포인트별 레이아웃 그리드(columns/gutter/margin) → .grid-layout
-// 타이포 모바일→PC 전환점: breakpoint 키 참조("wide") 또는 px 숫자
-const typoBpRaw = tokens.typographyBreakpoint ?? 'wide'
+// 타이포 모바일→PC 전환점: breakpoint 키 참조("md") 또는 px 숫자
+const typoBpRaw = tokens.typographyBreakpoint ?? 'md'
 const typoBp = typeof typoBpRaw === 'number' ? typoBpRaw : (breakpoint[typoBpRaw] ?? 768)
 
 // px 숫자 → rem. 문자열(%, em, 특수값 등)은 그대로, 0은 무단위.

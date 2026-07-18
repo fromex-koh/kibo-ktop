@@ -141,69 +141,22 @@ src/content/asset-versions.generated.json   # ← yarn asset-versions
 **우선순위: 코드 컨벤션(개발 표준) > 접근성 > 퍼블리싱 컨벤션** (충돌 시 위쪽을 따른다).
 
 - **[docs/CODE_CONVENTION.md](docs/CODE_CONVENTION.md)** — 개발 표준 코드 컨벤션(개발자 기준, **최우선**).
-  `any`/`as` 금지·네이밍·Arrow Function·시맨틱 색상 토큰 등 ST/NA/NC/MD/CD 규칙과 PR 체크리스트.
+  첨부 표준 원문만 반영한 ST/NA/NC/MD/CD 규칙. 내용 변경은 컨벤션 검사에서 차단한다.
 - **[docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md)** — 웹 접근성(KWCAG 2.1) 코딩 규칙.
   4원칙·13지침·24검사항목을 마크업/스타일 관점으로 정리한 규칙·예시·PR 체크리스트.
 - **[docs/PUBLISHING_CONVENTION.md](docs/PUBLISHING_CONVENTION.md)** — 퍼블리싱/디자인 토큰 컨벤션.
   색상·타이포(`typo-*`)·간격·라운드·그림자·브레이크포인트·레이아웃 그리드·스크롤바 토큰 사용 규칙(PB-01~16)과 PR 체크리스트.
 - **[docs/SHADCN.md](docs/SHADCN.md)** — shadcn/ui 통합 규칙.
-  원본은 바닐라로 보존하고 스타일만 복사본에서 바꾸는 **styled copy 패턴**(SC-01~04), 테마 슬롯·컴포넌트 추가법.
+  원본 셸 보존, 프로젝트 theme 분리, arbitrary value 예외, 컴포넌트 추가·업데이트 방법.
 - **[docs/GIT_CONVENTION.md](docs/GIT_CONVENTION.md)** — Git 브랜치 전략 & 커밋 메시지 컨벤션.
   현재(1인 작업)와 향후(팀 합류 시) 브랜치 전략, Conventional Commits 기반 커밋 메시지 포맷·예시.
 
-> 위 문서들은 `CLAUDE.md`(→ `AGENTS.md` 경유)로 로드되어 작업 시 자동 적용된다.
+## 디자인 토큰과 컴포넌트
 
-## 디자인 토큰
-
-색상·타이포·간격·라운드·그림자는 **`tokens.json` 단일 소스**에서 생성한다(px 입력 → rem 출력).
-
-```bash
-yarn tokens   # tokens.json(px) 수정 후 실행 (yarn dev/build 시 자동)
-```
-
-- 생성물 `src/app/tokens.css`(자동)를 `globals.css` 가 `@import` → 색상 `bg-*`·타이포 `typo-*`·간격 `p-*`/`gap-*`·`rounded-*`·`shadow-*` 로 사용. 전체 목록은 가이드 화면 `/component-guide` 에서 확인.
-- **⚠️ 현재 spacing·radius·size·shadow·typography 값은 디자인 확정 전 임시(placeholder)** 다. 확정되면 `tokens.json` 을 실제 값으로 교체한다(불규칙 스케일도 그대로 정의 가능).
-- **간격**은 `spacingBase`(현재 4px)의 **정수 배수**로 제어한다 — `p-4`(16px)·`gap-6`(24px) 등, **base 하나만 바꾸면 전체 간격이 비율대로 조정**된다. **라운드·크기·그림자는 정의된 토큰 키만** 쓴다(미정의는 Tailwind 기본이 나감). (규칙: [docs/PUBLISHING_CONVENTION.md](docs/PUBLISHING_CONVENTION.md) `PB-13`)
-- **브레이크포인트**는 **Tailwind 기본**(`sm:`/`md:`/`lg:`/`xl:`/`2xl:`)을 그대로 쓴다(모바일 퍼스트). 프로젝트 주 티어는 **`md:` 768 · `xl:` 1280** 두 단계로, 그리드·타이포 전환이 이 두 폭을 기준으로 한다(`tokens.json` 의 `breakpoint` = grid·typo 티어 데이터). 생성기가 기본을 지우지 않아 `sm:`~`2xl:` 가 모두 동작하고(shadcn·익숙한 유틸의 silent no-op 방지), 콘텐츠 영역은 고정폭 대신 **`max-w-content`**(1200px)로 제한한다. (규칙: `PB-14`)
-- **레이아웃 그리드**(컬럼 수·거터·마진)도 `tokens.json`(`grid`, 브레이크포인트별)에서 관리하며, `.grid-layout` 클래스 하나로 적용한다(모바일 4열 → `md` 8열 → `xl` 12열). `grid` 키는 `breakpoint`와 1:1 대응해야 하며 어긋나면 빌드가 실패한다. (규칙: `PB-15`)
-- **스크롤바**(두께·색)도 토큰 기반이다 — 두께 `size.scrollbar-w`(6px), 색 `semantic.scroll-thumb`/`scroll-track`(gray 스케일 참조라 다크 자동 반사). `html`에 `scrollbar-gutter: stable` 을 두어 스크롤바가 생겼다 사라질 때 콘텐츠가 좌우로 흔들리지 않게 한다. 상세 정책은 [docs/PUBLISHING_CONVENTION.md](docs/PUBLISHING_CONVENTION.md) `PB-16` 참고.
-
-    > 참고: 데스크톱 창을 직접 줄여 폭을 재면 클래식 스크롤바 자리(6px) 때문에 DevTools 기기 모드보다 콘텐츠 폭이 6px 작게 보일 수 있다. 모바일 폭 검수는 DevTools 기기 모드 또는 실제 기기 기준으로 한다.
-
-## 컴포넌트 (shadcn/ui)
-
-버튼·인풋·다이얼로그 등 기본 UI 는 **shadcn/ui** 를 쓴다. **셸과 스타일을 파일로 분리**한다 — 셸(구조·동작·접근성)은 업스트림 원형을 유지하고, 프로젝트 스타일(cva)은 `theme/` 에서만 관리한다.
-
-```
-src/components/ui/<name>.tsx              ← 셸 (업스트림 원형 — 동작·접근성·업데이트 담당)
-                                              · 기본은 npx shadcn add 순정 그대로
-                                              · 재스킨한 컴포넌트만 cva → theme import 한 줄로 교체
-        │ import {xxxVariants} from '@/components/theme/<name>.variants'
-        ▼
-src/components/theme/<name>.variants.ts   ← 프로젝트 스타일 (cva — 재스킨의 유일한 작업 장소)
-        ▼ (추출 시 밀려난 바닐라 cva 는)
-vendor/shadcn-baseline/<name>.variants.ts ← 바닐라 cva 보관소 (업데이트 diff 기준선)
-```
-
-- **책임 분리** — _스타일은 theme, 그 외 전부(구조·동작·접근성·업데이트)는 ui 셸 = 업스트림._
-- **⚠️ 순정 파일은 코드 컨벤션·게이트에서 면제한다.** 대상은 `ui/` 중 순정 셸(theme import 없음 — 게이트가 자동 판별) + `src/lib/utils.ts`(cn) + `src/hooks/use-mobile.ts` + `vendor/`. shadcn 업데이트 시 **diff 가 업스트림 변경분만** 남아 확인·반영이 쉽도록 하기 위함이다. cva 를 추출한 **수정 셸은 검사 대상**이다(포맷만 업스트림 2-space 유지). 순정 코드의 `as`·기본 팔레트·2-space 는 버그가 아니라 의도다 → [docs/CODE_CONVENTION.md](docs/CODE_CONVENTION.md) 상단 예외 참고.
-- **왜(분리)** — 셸이 업스트림과 거의 같으니(차이는 theme import 한 줄) 라이브러리 업데이트 시 새로 받아 `git diff` 하면 업스트림 변경분이 그대로 보인다. 색·사이즈를 전면 재스킨하는 경우 `cn` 덧칠은 `twMerge` 한계로 충돌할 수 있어 "cva 교체"가 안전하다.
-- **스타일 전략** — shadcn 표준 슬롯(`bg-primary`, `text-primary-foreground`, `border-input`, `ring-ring` 등)으로 표현 가능한 값은 theme 에서도 그대로 쓴다. 다만 Figma 가 shadcn 원본의 opacity 표현(`hover:bg-primary/80` 등)과 다른 **solid token** 을 정의한 상태는 프로젝트 토큰을 남기고, 코드 근처에 `PROJECT-STYLE:` 주석으로 표시한다.
-- **화면·도메인 코드는 `@/components/ui/<name>` 을 직접 import** 한다(별도 창구 레이어 없음).
-- 재스킨이 필요 없으면 순정 셸 그대로 쓰고, 필요해지면 그때 cva 를 theme 로 추출하면 사용처는 안 바뀐다.
-- 규칙·적용법 전체: **[docs/SHADCN.md](docs/SHADCN.md)** 의 `셸·스타일 분리 패턴`·`[SC-02]/[SC-04]`.
-- 토큰·컴포넌트 렌더 확인: `/component-guide`.
-
-### 이 설계의 의도
-
-이 프로젝트의 목표는 theme 를 독립적인 별도 디자인 시스템으로 키우는 것이 아니라, **가능한 스타일을 shadcn 표준 슬롯으로 되돌리는 것**이다. 그래서 기본/공유 상태는 `bg-primary`·`text-primary-foreground` 같은 슬롯을 우선 쓰고, 디자인 토큰이 shadcn 원본 유틸과 실제로 다를 때만 `PROJECT-STYLE:` 예외로 남긴다.
-
-예를 들어 Button hover 는 shadcn 원본의 `hover:bg-primary/80` 과 달리 Figma 가 `brand/blue/600` solid 로 정의했기 때문에 wrapper override 대신 `bg-primary-hover` 를 쓰는 theme cva 로 유지한다. 이 편이 원본 primitive 를 보존하면서도 디자인 값을 정확히 지키는 가장 예측 가능한 방식이다.
-
-근거와 운영 규칙은 [docs/SHADCN.md](docs/SHADCN.md)의 `셸·스타일 분리 패턴`·`PROJECT-STYLE 주석 포맷`을 기준으로 한다.
-
-> **구조 변천** — 과거 `ui/`(순정)+`kit/`(styled copy·facade 창구) 2중 레이어였으나 2026-07 에 현재 구조로
-> 통합했다(커밋 `3316ff8`). 오래된 자료의 `kit/` 언급은 `theme/`(스타일)·`ui/` 직접 import 로 읽으면 된다.
+- 디자인 값은 `tokens.json`을 수정한 뒤 `yarn tokens`로 생성한다. 생성물 `src/app/tokens.css`는 직접 수정하지 않는다.
+- 토큰·반응형·그리드·스크롤바의 상세 규칙은 [PUBLISHING_CONVENTION.md](docs/PUBLISHING_CONVENTION.md)를 따른다.
+- shadcn 셸·theme·바닐라 CVA의 책임과 업데이트 절차는 [SHADCN.md](docs/SHADCN.md)를 따른다.
+- 실제 토큰과 컴포넌트 렌더링은 `/component-guide`에서 확인한다.
 
 ## 폰트
 
@@ -227,37 +180,6 @@ vendor/shadcn-baseline/<name>.variants.ts ← 바닐라 cva 보관소 (업데이
 - 폴백: `Apple SD Gothic Neo`, `Malgun Gothic`, `system-ui`.
 
 > 서브셋 재생성: `pyftsubset` 로 유니코드 범위를 지정해 다시 만들 수 있다(한글 완성형 `U+AC00-D7A3` 유지 권장).
-
-## 퍼블리싱 기준
-
-이 프로젝트가 정의하는 퍼블리싱 규칙은 다음과 같이 구성된다.
-
-- **웹 접근성 (KWCAG 2.1)** — 4원칙·13지침·24검사항목 전체를 코딩 규칙으로 정리.
-  규칙·예시·PR 체크리스트는 [docs/ACCESSIBILITY.md](docs/ACCESSIBILITY.md) 참고.
-
-    > **기준: KWCAG 2.1** — 공공기관 프로젝트로, 국내 웹 접근성 의무의 기술 기준은
-    > 국제 표준(WCAG)이 아니라 **국가표준 KWCAG**다. 본 프로젝트는 요구 기준에 따라 **2.1**(2015)을 적용한다.
-    > 「디지털포용법」(2026.1.22 시행)·「장애인차별금지법」 등에 따라 공공기관은 준수 의무가 있다.
-
-- **마크업** — 시맨틱 태그 우선, 논리적 헤딩 계층, 랜드마크(`header`/`nav`/`main`/`footer`) 사용.
-- **스타일** — TailwindCSS 유틸리티 기반, 명도 대비·포커스 표시 등 접근성 스타일 준수.
-- **자동 검사** — `yarn lint`가 대체 텍스트, 레이블 연결, 키보드 대응 등 접근성 위반 상당수를 검출.
-- **색상 대비** — light/dark 컬러 정합 작업 중이라 토큰 생성기의 대비 게이트는 현재 임시 비활성화되어 있다. 재활성 전까지 실제 대비는 수동 검수한다.
-
-### 근거
-
-- [KWCAG 2.1 지침 (한국형 웹 콘텐츠 접근성 지침 2.1)](https://websoul.co.kr/accessibility/WA_guide21.asp)
-- [디지털포용법 (국가법령정보센터) — 웹 접근성 품질인증의 현행 법적 근거(제21조)](https://www.law.go.kr/법령/디지털포용법)
-- [장애인차별금지 및 권리구제 등에 관한 법률 (국가법령정보센터)](https://www.law.go.kr/법령/장애인차별금지및권리구제등에관한법률)
-- [웹 접근성 품질마크(인증) 제도 안내 (문화체육관광부)](https://www.mcst.go.kr/site/s_etc/webAccess/accessibility.jsp)
-
-## 한계 (자동 검사로 못 잡는 항목)
-
-정적 분석은 접근성 문제의 일부만 잡는다. 아래는 **수동 점검**이 필요하다.
-
-- 명도 대비(색상값), 실제 대체 텍스트의 적절성, 실제 자막 유무
-- CSS/Tailwind 스타일 오류(ESLint는 CSS를 검사하지 않음)
-- 키보드 전체 흐름, 스크린리더 확인
 
 ## 검색 노출 차단 (내부용)
 
