@@ -3,7 +3,18 @@
 import {Fragment, type ReactNode} from 'react'
 import Link from 'next/link'
 import {usePathname} from 'next/navigation'
-import {ArrowUpRight, Blocks, ChevronRight, Component, Layers, LayoutGrid, Palette, Pin, Sparkles} from 'lucide-react'
+import {
+    ArrowUpRight,
+    Blocks,
+    ChevronRight,
+    Component,
+    Home,
+    Layers,
+    LayoutGrid,
+    Palette,
+    Pin,
+    Sparkles,
+} from 'lucide-react'
 import type {LucideIcon} from 'lucide-react'
 import type {GuideNavIconKey, GuideNavItem, GuideNavSection} from '@/constants/guide-nav'
 import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage} from '@/components/composite/breadcrumb'
@@ -33,6 +44,7 @@ import {
 // 오프캔버스 Sheet(Radix Dialog 가 포커스 트랩·Esc·복귀·스크롤 잠금 자동 처리). 콘텐츠는 소비자가 감싼다.
 type SidebarLayoutProps = {
     title: string
+    navRootItem?: GuideNavItem
     navSections: readonly GuideNavSection[]
     navLabel: string // 사이드 내비의 aria-label
     children: ReactNode
@@ -56,20 +68,21 @@ const SKIP_LINKS: readonly SkipLinkItem[] = [
     {href: '#main', label: '본문 바로가기'},
 ]
 
-const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutProps) => {
+const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: SidebarLayoutProps) => {
     const pathname = usePathname()
 
     // 현재 라우트가 속한 (섹션, 항목) — 상단 브레드크럼(카테고리 > 현재)과 섹션 기본 펼침에 쓴다.
-    const activeCrumb = navSections
-        .flatMap((section) => {
+    const activeCrumb = [
+        ...(navRootItem ? [{categories: [], ...navRootItem}] : []),
+        ...navSections.flatMap((section) => {
             const sectionItems = section.items?.map((item) => ({categories: [section.title], ...item})) ?? []
             const groupItems =
                 section.groups?.flatMap((group) =>
                     group.items.map((item) => ({categories: [section.title, group.title], ...item})),
                 ) ?? []
             return [...sectionItems, ...groupItems]
-        })
-        .find((item) => !item.external && item.href === pathname)
+        }),
+    ].find((item) => !item.external && item.href === pathname)
 
     return (
         <SidebarProvider>
@@ -100,6 +113,7 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                     <SidebarGroup>
                         <SidebarGroupContent>
                             <SidebarMenu className="gap-3">
+                                {navRootItem ? <GuideNavRootItem item={navRootItem} /> : null}
                                 {navSections.map((section) => {
                                     const SectionIcon = SECTION_ICONS[section.icon]
                                     return (
@@ -195,6 +209,31 @@ const SidebarLayout = ({title, navSections, navLabel, children}: SidebarLayoutPr
                 </main>
             </SidebarInset>
         </SidebarProvider>
+    )
+}
+
+const GuideNavRootItem = ({item}: {item: GuideNavItem}) => {
+    const pathname = usePathname()
+    const isActive = !item.external && pathname === item.href
+
+    return (
+        <SidebarMenuItem>
+            <SidebarMenuButton
+                asChild
+                isActive={isActive}
+                aria-current={isActive ? 'page' : undefined}
+                className="hover:bg-primary-subtle active:bg-primary-subtle data-active:bg-primary-subtle data-active:text-primary-strong rounded-none font-semibold data-active:font-semibold"
+            >
+                <Link href={item.href}>
+                    {isActive ? (
+                        <Pin aria-hidden="true" className="text-primary-strong size-icon-xs" />
+                    ) : (
+                        <Home aria-hidden="true" className="size-icon-xs" />
+                    )}
+                    <span className="flex-1 truncate">{item.label}</span>
+                </Link>
+            </SidebarMenuButton>
+        </SidebarMenuItem>
     )
 }
 

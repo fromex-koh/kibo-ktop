@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {Tabs, TabsList, TabsTrigger, TabsContent} from '@/components/ui/tabs'
@@ -18,7 +19,7 @@ const MANY_TABS = [
     ['tab8', '이용약관'],
 ] as const
 
-// TabsScrollArea — kit/TabsList(variant="line") 를 그대로 대체하는 composite. 넘치면 좌우 화살표 버튼으로
+// TabsScrollArea — ui TabsList의 line 사용 패턴을 확장하는 composite. 넘치면 좌우 화살표 버튼으로
 // 넘겨보고 가장자리가 페이드된다 — 그래서 line 탭은 항상 TabsList 대신 이걸 쓴다(화면 폭이 좁아지거나 탭이
 // 늘어나도 항상 안전하다).
 const LINE_USAGE_CODE = `<Tabs defaultValue="info">
@@ -70,16 +71,27 @@ const DEFAULT_VARIANT_CODE = `{/* variant 생략 시 기본값 — shadcn 세그
   <TabsContent value="tab2">카드 보기</TabsContent>
 </Tabs>`
 
-// 조합 API 설명 — [이름, 설명, 타입]
+// 조합 API 설명 — [컴포넌트, 이름, 설명, 기본값, 타입]
 const PROPS_ITEMS = [
-    ['Tabs · defaultValue / value', '초기/현재 활성 탭 값. onValueChange 로 제어 모드 전환.', 'string'],
-    ['TabsList · variant', "'line'(Figma 언더라인 탭) | 'default'(세그먼트 탭, shadcn 원본).", "'line' | 'default'"],
-    ['TabsList · aria-label', '탭 묶음 이름(스크린리더용, 필수).', 'string'],
-    ['TabsTrigger · value', '해당 탭의 고유 값 — 같은 값의 TabsContent 와 연결된다.', 'string'],
-    ['TabsContent · value', '해당 패널의 고유 값.', 'string'],
+    ['Tabs', 'defaultValue', '비제어 방식의 초기 활성 탭 값입니다.', 'undefined', 'string'],
+    [
+        'Tabs',
+        'value · onValueChange',
+        '현재 활성 탭과 변경 콜백으로 제어합니다.',
+        'undefined',
+        'string · (value: string) => void',
+    ],
+    ['Tabs', 'orientation', '탭 이동 방향과 레이아웃 방향입니다.', "'horizontal'", "'horizontal' | 'vertical'"],
+    ['TabsList', 'variant', '세그먼트 기본형 또는 프로젝트 언더라인형입니다.', "'default'", "'default' | 'line'"],
+    ['TabsList', 'aria-label', '탭 목록의 접근 가능한 이름입니다.', 'undefined', 'string'],
+    ['TabsTrigger', 'value', '같은 값을 가진 TabsContent와 연결되는 고유 값입니다.', '-', 'string'],
+    ['TabsTrigger', 'disabled', '개별 탭을 비활성화합니다.', 'false', 'boolean'],
+    ['TabsContent', 'value', '연결할 TabsTrigger의 값입니다.', '-', 'string'],
     [
         'TabsScrollArea',
-        'line 탭에서 TabsList 대신 쓰는 composite(composite/tabs-scroll-area). 탭이 폭을 넘치면 좌우 화살표 버튼(데스크톱·모바일 공통)으로 넘겨보고, 키보드 화살표로 탭을 옮기면 활성 탭이 중앙에 오도록 스크롤된다. 좌우 가장자리는 배경색 그라데이션으로 페이드된다. Props 는 TabsList 와 동일(aria-label 등), variant 는 내부에서 항상 line.',
+        'TabsList props',
+        'line 탭에 스크롤 버튼·가장자리 페이드·키보드 중앙 정렬을 추가합니다.',
+        'undefined',
         'ComponentPropsWithoutRef<typeof TabsList>',
     ],
 ] as const
@@ -94,151 +106,200 @@ const TabsGuidePage = () => (
         title="탭 (Tabs)"
         description="shadcn Tabs 프리미티브입니다. 원본에 이미 있던 line variant 스타일을 Figma 언더라인 탭 값으로 교체해 승격했습니다. line 탭은 TabsScrollArea 로 감싸, 화면이 좁아지거나 탭이 늘어나면 좌우 화살표 버튼(데스크톱·모바일 공통)으로 탭 하나 너비씩 이동합니다. 가장자리는 페이드로 표시되며 키보드 탐색 시 활성 탭은 중앙에 정렬됩니다."
     >
-        <section aria-labelledby="tabs-line-usage" className="flex flex-col gap-4">
-            <div>
-                <h2 id="tabs-line-usage" className="typo-h4-bold">
-                    사용 예시 — 언더라인 (line)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    Figma 마이페이지 상단 내비 케이스입니다. 활성 탭만 굵게 + 밑줄로 강조되고, 나머지는 옅은 회색입니다.{' '}
-                    <code className="font-mono">TabsList</code> 대신 <code className="font-mono">TabsScrollArea</code>{' '}
-                    를 씁니다 — 창을 좁혀 탭이 넘치면 좌우 화살표 버튼으로 넘겨봅니다(아래{' '}
-                    <a href="#tabs-scroll" className="text-primary underline underline-offset-2">
-                        많은 탭
-                    </a>{' '}
-                    섹션 참고).
-                </p>
-            </div>
-            <Tabs defaultValue="info">
-                <TabsScrollArea aria-label="마이페이지 메뉴">
-                    <TabsTrigger value="info">내 정보 확인</TabsTrigger>
-                    <TabsTrigger value="status">진행현황 결과조회</TabsTrigger>
-                    <TabsTrigger value="report">K-BIGx 보고서 이력</TabsTrigger>
-                    <TabsTrigger value="paid">유료 서비스 관리</TabsTrigger>
-                    <TabsTrigger value="qna">1:1 문의</TabsTrigger>
-                </TabsScrollArea>
-                <TabsContent value="info" className="typo-body-l-regular text-muted-foreground pt-6">
-                    내 정보 확인 내용
-                </TabsContent>
-                <TabsContent value="status" className="typo-body-l-regular text-muted-foreground pt-6">
-                    진행현황 결과조회 내용
-                </TabsContent>
-                <TabsContent value="report" className="typo-body-l-regular text-muted-foreground pt-6">
-                    K-BIGx 보고서 이력 내용
-                </TabsContent>
-                <TabsContent value="paid" className="typo-body-l-regular text-muted-foreground pt-6">
-                    유료 서비스 관리 내용
-                </TabsContent>
-                <TabsContent value="qna" className="typo-body-l-regular text-muted-foreground pt-6">
-                    1:1 문의 내용
-                </TabsContent>
-            </Tabs>
-            <CodeBlock code={LINE_USAGE_CODE} language="tsx" copyLabel="복사" />
-        </section>
-
-        <section aria-labelledby="tabs-two" className="flex flex-col gap-4">
-            <div>
-                <h2 id="tabs-two" className="typo-h4-bold">
-                    탭 2개
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    탭 개수와 무관하게 같은 스타일이 적용됩니다. 각 탭은 텍스트 길이만큼만 폭을 차지합니다(hug).
-                </p>
-            </div>
-            <Tabs defaultValue="all">
-                <TabsScrollArea aria-label="목록 필터">
-                    <TabsTrigger value="all">전체</TabsTrigger>
-                    <TabsTrigger value="pending">진행중</TabsTrigger>
-                </TabsScrollArea>
-                <TabsContent value="all" className="typo-body-l-regular text-muted-foreground pt-6">
-                    전체 목록
-                </TabsContent>
-                <TabsContent value="pending" className="typo-body-l-regular text-muted-foreground pt-6">
-                    진행중 목록
-                </TabsContent>
-            </Tabs>
-            <CodeBlock code={TWO_TAB_CODE} language="tsx" copyLabel="복사" />
-        </section>
-
-        <section aria-labelledby="tabs-scroll" className="flex flex-col gap-4">
-            <div>
-                <h2 id="tabs-scroll" className="typo-h4-bold">
-                    많은 탭 (좌우 스크롤)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    위와 같은 <code className="font-mono">TabsScrollArea</code> 가 실제로 넘칠 때 어떻게 바뀌는지
-                    보여주는 예시입니다 — 좁은 폭(400px)에 8개 탭을 넣어 재현했습니다. 좌우 화살표 버튼(데스크톱·모바일
-                    공통)으로 넘겨보고, 더 넘길 수 없는 쪽 화살표는 흐리게 비활성됩니다. 키보드 좌우 화살표로 탭을
-                    옮기면 활성 탭이 중앙에 오도록 스크롤되고, 좌우 가장자리는 그라데이션으로 페이드됩니다.
-                </p>
-            </div>
-            <div className="border-border max-w-100 rounded-md border p-4">
-                <Tabs defaultValue="tab1">
+        <BaseCard>
+            <section aria-labelledby="tabs-line-usage" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="tabs-line-usage" className="typo-h4-bold">
+                        사용 예시 — 언더라인 (line)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        Figma 마이페이지 상단 내비 케이스입니다. 활성 탭만 굵게 + 밑줄로 강조되고, 나머지는 옅은
+                        회색입니다. <code className="font-mono">TabsList</code> 대신{' '}
+                        <code className="font-mono">TabsScrollArea</code> 를 씁니다 — 창을 좁혀 탭이 넘치면 좌우 화살표
+                        버튼으로 넘겨봅니다(아래{' '}
+                        <a href="#tabs-scroll" className="text-primary-strong underline underline-offset-2">
+                            많은 탭
+                        </a>{' '}
+                        섹션 참고).
+                    </p>
+                </div>
+                <Tabs defaultValue="info">
                     <TabsScrollArea aria-label="마이페이지 메뉴">
-                        {MANY_TABS.map(([value, label]) => (
-                            <TabsTrigger key={value} value={value}>
-                                {label}
-                            </TabsTrigger>
-                        ))}
+                        <TabsTrigger value="info">내 정보 확인</TabsTrigger>
+                        <TabsTrigger value="status">진행현황 결과조회</TabsTrigger>
+                        <TabsTrigger value="report">K-BIGx 보고서 이력</TabsTrigger>
+                        <TabsTrigger value="paid">유료 서비스 관리</TabsTrigger>
+                        <TabsTrigger value="qna">1:1 문의</TabsTrigger>
                     </TabsScrollArea>
-                    {MANY_TABS.map(([value, label]) => (
-                        <TabsContent
-                            key={value}
-                            value={value}
-                            className="typo-body-l-regular text-muted-foreground pt-6"
-                        >
-                            {label} 내용
-                        </TabsContent>
-                    ))}
+                    <TabsContent value="info" className="typo-body-l-regular text-muted-foreground pt-6">
+                        내 정보 확인 내용
+                    </TabsContent>
+                    <TabsContent value="status" className="typo-body-l-regular text-muted-foreground pt-6">
+                        진행현황 결과조회 내용
+                    </TabsContent>
+                    <TabsContent value="report" className="typo-body-l-regular text-muted-foreground pt-6">
+                        K-BIGx 보고서 이력 내용
+                    </TabsContent>
+                    <TabsContent value="paid" className="typo-body-l-regular text-muted-foreground pt-6">
+                        유료 서비스 관리 내용
+                    </TabsContent>
+                    <TabsContent value="qna" className="typo-body-l-regular text-muted-foreground pt-6">
+                        1:1 문의 내용
+                    </TabsContent>
                 </Tabs>
-            </div>
-            <CodeBlock code={SCROLL_AREA_CODE} language="tsx" copyLabel="복사" />
-        </section>
+                <CodeBlock code={LINE_USAGE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="tabs-default" className="flex flex-col gap-4">
-            <div>
-                <h2 id="tabs-default" className="typo-h4-bold">
-                    세그먼트 (default)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">variant</code> 를 생략하면 shadcn 원본의 세그먼트(알약) 탭입니다. Figma
-                    스펙이 없어 원본 스타일 그대로 둡니다.
-                </p>
-            </div>
-            <Tabs defaultValue="tab1">
-                <TabsList aria-label="보기 전환">
-                    <TabsTrigger value="tab1">목록</TabsTrigger>
-                    <TabsTrigger value="tab2">카드</TabsTrigger>
-                </TabsList>
-                <TabsContent value="tab1" className="typo-body-l-regular text-muted-foreground pt-4">
-                    목록 보기
-                </TabsContent>
-                <TabsContent value="tab2" className="typo-body-l-regular text-muted-foreground pt-4">
-                    카드 보기
-                </TabsContent>
-            </Tabs>
-            <CodeBlock code={DEFAULT_VARIANT_CODE} language="tsx" copyLabel="복사" />
-        </section>
+        <BaseCard>
+            <section aria-labelledby="tabs-two" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="tabs-two" className="typo-h4-bold">
+                        탭 2개
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        탭 개수와 무관하게 같은 스타일이 적용됩니다. 각 탭은 텍스트 길이만큼만 폭을 차지합니다(hug).
+                    </p>
+                </div>
+                <Tabs defaultValue="all">
+                    <TabsScrollArea aria-label="목록 필터">
+                        <TabsTrigger value="all">전체</TabsTrigger>
+                        <TabsTrigger value="pending">진행중</TabsTrigger>
+                    </TabsScrollArea>
+                    <TabsContent value="all" className="typo-body-l-regular text-muted-foreground pt-6">
+                        전체 목록
+                    </TabsContent>
+                    <TabsContent value="pending" className="typo-body-l-regular text-muted-foreground pt-6">
+                        진행중 목록
+                    </TabsContent>
+                </Tabs>
+                <CodeBlock code={TWO_TAB_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="tabs-props" className="flex flex-col gap-4">
-            <div>
-                <h2 id="tabs-props" className="typo-h4-bold">
-                    Props
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">Tabs 조합에서 넘기는 속성입니다.</p>
-            </div>
-            <dl className="flex flex-col gap-2">
-                {PROPS_ITEMS.map(([name, desc, type]) => (
-                    <div key={name} className="flex flex-col gap-0.5">
-                        <dt className="typo-body-l-medium text-primary font-mono">
-                            {name}
-                            <span className="text-muted-foreground ml-2 font-normal">{type}</span>
-                        </dt>
-                        <dd className="typo-body-l-regular text-muted-foreground">{desc}</dd>
-                    </div>
-                ))}
-            </dl>
-        </section>
+        <BaseCard>
+            <section aria-labelledby="tabs-scroll" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="tabs-scroll" className="typo-h4-bold">
+                        많은 탭 (좌우 스크롤)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        위와 같은 <code className="font-mono">TabsScrollArea</code> 가 실제로 넘칠 때 어떻게 바뀌는지
+                        보여주는 예시입니다 — 좁은 폭(400px)에 8개 탭을 넣어 재현했습니다. 좌우 화살표
+                        버튼(데스크톱·모바일 공통)으로 넘겨보고, 더 넘길 수 없는 쪽 화살표는 흐리게 비활성됩니다. 키보드
+                        좌우 화살표로 탭을 옮기면 활성 탭이 중앙에 오도록 스크롤되고, 좌우 가장자리는 그라데이션으로
+                        페이드됩니다.
+                    </p>
+                </div>
+                <div className="border-border max-w-100 rounded-md border p-4">
+                    <Tabs defaultValue="tab1">
+                        <TabsScrollArea aria-label="마이페이지 메뉴">
+                            {MANY_TABS.map(([value, label]) => (
+                                <TabsTrigger key={value} value={value}>
+                                    {label}
+                                </TabsTrigger>
+                            ))}
+                        </TabsScrollArea>
+                        {MANY_TABS.map(([value, label]) => (
+                            <TabsContent
+                                key={value}
+                                value={value}
+                                className="typo-body-l-regular text-muted-foreground pt-6"
+                            >
+                                {label} 내용
+                            </TabsContent>
+                        ))}
+                    </Tabs>
+                </div>
+                <CodeBlock code={SCROLL_AREA_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="tabs-default" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="tabs-default" className="typo-h4-bold">
+                        세그먼트 (default)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">variant</code> 를 생략하면 shadcn 원본의 세그먼트(알약) 탭입니다.
+                        Figma 스펙이 없어 원본 스타일 그대로 둡니다.
+                    </p>
+                </div>
+                <Tabs defaultValue="tab1">
+                    <TabsList aria-label="보기 전환">
+                        <TabsTrigger value="tab1">목록</TabsTrigger>
+                        <TabsTrigger value="tab2">카드</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value="tab1" className="typo-body-l-regular text-muted-foreground pt-4">
+                        목록 보기
+                    </TabsContent>
+                    <TabsContent value="tab2" className="typo-body-l-regular text-muted-foreground pt-4">
+                        카드 보기
+                    </TabsContent>
+                </Tabs>
+                <CodeBlock code={DEFAULT_VARIANT_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="tabs-props" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="tabs-props" className="typo-h4-bold">
+                        Props
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">Tabs 조합에서 넘기는 속성입니다.</p>
+                </div>
+                <div className="border-border overflow-x-auto rounded-xl border">
+                    <table className="w-full text-left">
+                        <caption className="sr-only">Tabs 조합 Props 목록</caption>
+                        <thead>
+                            <tr className="border-border bg-card border-b">
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Component
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Default
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Type
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {PROPS_ITEMS.map(([component, name, description, defaultValue, type]) => (
+                                <tr key={`${component}-${name}`} className="border-border border-b last:border-b-0">
+                                    <td className="typo-body-l-regular text-foreground px-4 py-3 font-mono">
+                                        {component}
+                                    </td>
+                                    <th
+                                        scope="row"
+                                        className="typo-body-l-medium text-primary-strong px-4 py-3 font-mono"
+                                    >
+                                        {name}
+                                    </th>
+                                    <td className="typo-body-l-regular text-foreground-subtle px-4 py-3">
+                                        {description}
+                                    </td>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
+                                        {defaultValue}
+                                    </td>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
+                                        {type}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </BaseCard>
     </GuidePageShell>
 )
 

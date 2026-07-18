@@ -16,7 +16,12 @@ export const metadata: Metadata = {
 // ScrollToTopButton 을 셸 레벨에 한 번 마운트 — 각 섹션 페이지가 길어지면(예: Button 가이드) 어디서든
 // 공통으로 쓸 수 있게 모든 가이드 페이지에 전역 적용한다.
 const ComponentGuideLayout = ({children}: {children: ReactNode}) => (
-    <SidebarLayout title="컴포넌트 가이드" navSections={GUIDE_NAV_SECTIONS} navLabel="컴포넌트 가이드 내비게이션">
+    <SidebarLayout
+        title="컴포넌트 가이드"
+        navRootItem={{label: '컴포넌트 가이드 홈', href: '/component-guide'}}
+        navSections={GUIDE_NAV_SECTIONS}
+        navLabel="컴포넌트 가이드 내비게이션"
+    >
         {children}
         <ScrollToTopButton />
     </SidebarLayout>

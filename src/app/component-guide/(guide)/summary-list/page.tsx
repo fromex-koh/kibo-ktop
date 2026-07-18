@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {SummaryList, SummaryListItem} from '@/components/composite/summary-list'
@@ -80,15 +81,25 @@ const TWO_COLUMN_CODE = `{/* 항목이 많으면 리스트를 2열로 — Figma 
   </div>
 </FormCard>`
 
-// 조합 API 설명 — [이름, 설명]
-const COMPOSITION = [
+// 조합 API 설명 — [컴포넌트, 이름, 설명, 기본값, 타입]
+const PROPS_ITEMS = [
+    ['SummaryList', 'children', 'SummaryListItem 목록입니다.', '-', 'ReactNode'],
     [
         'SummaryList',
-        '읽기 전용 정보 목록 컨테이너. 내부적으로 <dl> 을 렌더링한다. 흰 배경·연한 테두리·둥근 모서리 카드.',
+        'className · dl props',
+        '목록 스타일과 네이티브 dl 속성을 전달합니다.',
+        'undefined',
+        'DlHTMLAttributes',
     ],
+    ['SummaryListItem', 'term', '왼쪽 dt로 렌더링할 항목명입니다.', '-', 'ReactNode'],
+    ['SummaryListItem', 'children', '오른쪽 dd로 렌더링할 값입니다.', '-', 'ReactNode'],
+    ['SummaryListItem', 'empty', '미입력 값에 흐린 상태 색상을 적용합니다.', 'false', 'boolean'],
     [
         'SummaryListItem',
-        '개별 행. term(라벨, <dt>) + 값(children, <dd> 우측 정렬). empty 를 주면 값을 더 흐린 색으로 표시(미입력 등).',
+        'className · div props',
+        '행 스타일과 네이티브 div 속성을 전달합니다.',
+        'undefined',
+        'HTMLAttributes',
     ],
 ] as const
 
@@ -199,24 +210,66 @@ const SummaryListGuidePage = () => (
             <CodeBlock code={TWO_COLUMN_CODE} language="tsx" copyLabel="복사" />
         </section>
 
-        <section aria-labelledby="sl-composition" className="flex flex-col gap-4">
-            <div>
-                <h2 id="sl-composition" className="typo-h4-bold">
-                    구성
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    요약 목록은 컨테이너와 개별 행으로 이뤄집니다.
-                </p>
-            </div>
-            <dl className="flex flex-col gap-2">
-                {COMPOSITION.map(([name, desc]) => (
-                    <div key={name} className="flex flex-col gap-0.5">
-                        <dt className="typo-body-l-medium text-primary font-mono">{name}</dt>
-                        <dd className="typo-body-l-regular text-muted-foreground">{desc}</dd>
-                    </div>
-                ))}
-            </dl>
-        </section>
+        <BaseCard>
+            <section aria-labelledby="sl-composition" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="sl-composition" className="typo-h4-bold">
+                        Props
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        SummaryList와 SummaryListItem에 넘기는 주요 속성입니다.
+                    </p>
+                </div>
+                <div className="border-border overflow-x-auto rounded-xl border">
+                    <table className="w-full text-left">
+                        <caption className="sr-only">SummaryList와 SummaryListItem Props 목록</caption>
+                        <thead>
+                            <tr className="border-border bg-card border-b">
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Component
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Default
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Type
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {PROPS_ITEMS.map(([component, name, description, defaultValue, type]) => (
+                                <tr key={`${component}-${name}`} className="border-border border-b last:border-b-0">
+                                    <td className="typo-body-l-regular text-foreground px-4 py-3 font-mono">
+                                        {component}
+                                    </td>
+                                    <th
+                                        scope="row"
+                                        className="typo-body-l-medium text-primary-strong px-4 py-3 font-mono"
+                                    >
+                                        {name}
+                                    </th>
+                                    <td className="typo-body-l-regular text-foreground-subtle px-4 py-3">
+                                        {description}
+                                    </td>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
+                                        {defaultValue}
+                                    </td>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
+                                        {type}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </BaseCard>
     </GuidePageShell>
 )
 

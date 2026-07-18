@@ -19,6 +19,12 @@ const getGridRevealClass = (index: number) => {
 // 360px 예시값을 계산하고, md·xl은 프로젝트 검수 기준 뷰포트를 함께 표기한다.
 const REFERENCE_VIEWPORT: Record<string, number> = {mobile: 360, md: 1200, xl: 1920}
 
+const GRID_RANGE_LABELS: Record<string, string> = {
+    mobile: 'Mobile',
+    md: 'Tablet (md)',
+    xl: 'PC (xl)',
+}
+
 // grid.container 가 container 토큰 키(예: "content")면 실제 px 로 되찾아 표에 보여준다(값 단일 소스).
 const CONTAINER_PX: Record<string, number> = tokens.container
 
@@ -106,7 +112,7 @@ const GridPreviewPage = () => (
                                         <tr key={key} className="border-border border-b last:border-b-0">
                                             <td className="typo-body-l-regular px-4 py-3">
                                                 <span className="inline-flex items-center gap-2">
-                                                    {key}
+                                                    {GRID_RANGE_LABELS[key] ?? key}
                                                     <ActiveBreakpointTag targetKey={key} />
                                                 </span>
                                             </td>

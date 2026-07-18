@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import ComboboxFormDemo from './combobox-form-demo'
@@ -181,104 +182,112 @@ const ComboboxGuidePage = () => (
         title="콤보박스 (Combobox)"
         description="Base UI 기반 shadcn Combobox primitive를 프로젝트 단일 선택 API로 제공하는 wrapper입니다. Field와 조합해 검색 가능한 입력을 구성합니다."
     >
-        <section aria-labelledby="cb-demo" className="flex flex-col gap-4">
-            <div>
-                <h2 id="cb-demo" className="typo-h4-bold">
-                    사용 예시
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>,{' '}
-                    <code className="font-mono">Combobox</code>, <code className="font-mono">FieldDescription</code>을
-                    조합합니다. shadcn ComboboxInput은 InputGroup을 사용해 Input과 외관·상태를 공유하며, 입력과 목록
-                    탐색을 하나의 Base UI Combobox 상태로 처리합니다.
-                </p>
-            </div>
-            <ComboboxDemo />
-            <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
-            <CodeBlock code={DROPDOWN_CODE} language="tsx" copyLabel="드롭다운 검색형 복사" />
-        </section>
+        <BaseCard>
+            <section aria-labelledby="cb-demo" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="cb-demo" className="typo-h4-bold">
+                        사용 예시
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>,{' '}
+                        <code className="font-mono">Combobox</code>, <code className="font-mono">FieldDescription</code>
+                        을 조합합니다. shadcn ComboboxInput은 InputGroup을 사용해 Input과 외관·상태를 공유하며, 입력과
+                        목록 탐색을 하나의 Base UI Combobox 상태로 처리합니다.
+                    </p>
+                </div>
+                <ComboboxDemo />
+                <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+                <CodeBlock code={DROPDOWN_CODE} language="tsx" copyLabel="드롭다운 검색형 복사" />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="cb-state" className="flex flex-col gap-4">
-            <div>
-                <h2 id="cb-state" className="typo-h4-bold">
-                    상태 (State)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    기본·값 선택됨·오류·읽기전용·비활성 상태입니다. 오류가 있으면 동일 Field 안에{' '}
-                    <code className="font-mono">FieldError</code>를 추가합니다. readOnly는 값이 유지되지만 목록이 열리지
-                    않고, disabled는 클릭과 포커스가 막힙니다. Input과 같은 48px 높이로 고정되어 별도의 size prop을
-                    제공하지 않습니다.
-                </p>
-            </div>
-            <ComboboxStatesDemo />
-        </section>
+        <BaseCard>
+            <section aria-labelledby="cb-state" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="cb-state" className="typo-h4-bold">
+                        상태 (State)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        기본·값 선택됨·오류·읽기전용·비활성 상태입니다. 오류가 있으면 동일 Field 안에{' '}
+                        <code className="font-mono">FieldError</code>를 추가합니다. readOnly는 값이 유지되지만 목록이
+                        열리지 않고, disabled는 클릭과 포커스가 막힙니다. Input과 같은 48px 높이로 고정되어 별도의 size
+                        prop을 제공하지 않습니다.
+                    </p>
+                </div>
+                <ComboboxStatesDemo />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="cb-form" className="flex flex-col gap-4">
-            <div>
-                <h2 id="cb-form" className="typo-h4-bold">
-                    폼 제출
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">name</code>을 지정하면 Base UI Combobox가 선택값을 FormData에
-                    포함합니다. 예시는 필수값을 직접 검증해 <code className="font-mono">FieldError</code>를 표시하고 첫
-                    오류 입력으로 포커스를 이동합니다. 입력형과 드롭다운 검색형 모두 제출값을 확인할 수 있으며, readOnly
-                    값은 제출되지만 disabled 값은 제출되지 않습니다.
-                </p>
-            </div>
-            <ComboboxFormDemo />
-            <CodeBlock code={FORM_CODE} language="tsx" copyLabel="복사" />
-        </section>
+        <BaseCard>
+            <section aria-labelledby="cb-form" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="cb-form" className="typo-h4-bold">
+                        폼 제출
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">name</code>을 지정하면 Base UI Combobox가 선택값을 FormData에
+                        포함합니다. 예시는 필수값을 직접 검증해 <code className="font-mono">FieldError</code>를 표시하고
+                        첫 오류 입력으로 포커스를 이동합니다. 입력형과 드롭다운 검색형 모두 제출값을 확인할 수 있으며,
+                        readOnly 값은 제출되지만 disabled 값은 제출되지 않습니다.
+                    </p>
+                </div>
+                <ComboboxFormDemo />
+                <CodeBlock code={FORM_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="cb-props" className="flex flex-col gap-4">
-            <div>
-                <h2 id="cb-props" className="typo-h4-bold">
-                    Props
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">Combobox에서 자주 쓰는 속성입니다.</p>
-            </div>
-            <div className="bg-background border-border overflow-x-auto rounded-md border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">Props 목록</caption>
-                    <thead>
-                        <tr className="border-border border-b bg-gray-100/25">
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Name
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Description
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Default
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Control
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {PROPS_ITEMS.map((prop) => (
-                            <tr key={prop.name} className="border-border bg-background border-b last:border-b-0">
-                                <th
-                                    scope="row"
-                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                                >
-                                    {prop.name}
+        <BaseCard>
+            <section aria-labelledby="cb-props" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="cb-props" className="typo-h4-bold">
+                        Props
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">Combobox에서 자주 쓰는 속성입니다.</p>
+                </div>
+                <div className="bg-background border-border overflow-x-auto rounded-md border">
+                    <table className="w-full text-left">
+                        <caption className="sr-only">Props 목록</caption>
+                        <thead>
+                            <tr className="border-border border-b bg-gray-100/25">
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Name
                                 </th>
-                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{prop.desc}</td>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                    {prop.def}
-                                </td>
-                                <td className="px-4 py-3">
-                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
-                                        {prop.control}
-                                    </span>
-                                </td>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Default
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Control
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+                        </thead>
+                        <tbody>
+                            {PROPS_ITEMS.map((prop) => (
+                                <tr key={prop.name} className="border-border bg-background border-b last:border-b-0">
+                                    <th
+                                        scope="row"
+                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
+                                    >
+                                        {prop.name}
+                                    </th>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{prop.desc}</td>
+                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                                        {prop.def}
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                                            {prop.control}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </BaseCard>
     </GuidePageShell>
 )
 

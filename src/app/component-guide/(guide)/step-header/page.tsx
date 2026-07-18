@@ -49,74 +49,80 @@ const StepHeaderGuidePage = () => (
         title="스텝 헤더 (StepHeader)"
         description="다단계(마법사) 플로우 한 단계의 최상단 헤더입니다. 단계 제목·진행 스테퍼·설명과 다음 단계 미리보기를 한 묶음으로 제공합니다."
     >
-        <section aria-labelledby="sh-usage" className="flex flex-col gap-4">
-            <div>
-                <h2 id="sh-usage" className="typo-h4-bold">
-                    사용 예시
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">title</code> + <code className="font-mono">count</code>·
-                    <code className="font-mono">current</code> 로 제목과 진행 스테퍼를 함께 배치합니다.{' '}
-                    <code className="font-mono">nextLabel</code> 은 우측에 다음 단계를 흐리게 미리 보여줍니다.
-                </p>
-            </div>
-            <BaseCard>
-                <StepHeader
-                    title="1단계. 고객 정보 활용 동의"
-                    count={5}
-                    current={1}
-                    description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해주세요."
-                    nextLabel="2단계. 기업·기술정보 입력"
-                />
-            </BaseCard>
-            <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
-        </section>
-
-        <section aria-labelledby="sh-progress" className="flex flex-col gap-4">
-            <div>
-                <h2 id="sh-progress" className="typo-h4-bold">
-                    진행 (Progress)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">current</code> 에 따라 스테퍼가 완료·진행중·예정을 자동 계산합니다.
-                    마지막 단계는 <code className="font-mono">nextLabel</code> 을 생략합니다.
-                </p>
-            </div>
-            <BaseCard>
-                <div className="flex flex-col gap-8">
-                    {PROGRESS_CASES.map((c) => (
-                        <StepHeader
-                            key={c.current}
-                            title={c.title}
-                            count={5}
-                            current={c.current}
-                            description={c.description}
-                            nextLabel={c.nextLabel}
-                        />
-                    ))}
+        <BaseCard>
+            <section aria-labelledby="sh-usage" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="sh-usage" className="typo-h4-bold">
+                        사용 예시
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">title</code> + <code className="font-mono">count</code>·
+                        <code className="font-mono">current</code> 로 제목과 진행 스테퍼를 함께 배치합니다.{' '}
+                        <code className="font-mono">nextLabel</code> 은 우측에 다음 단계를 흐리게 미리 보여줍니다.
+                    </p>
                 </div>
-            </BaseCard>
-        </section>
+                <div className="border-border rounded-xl border p-6">
+                    <StepHeader
+                        title="1단계. 고객 정보 활용 동의"
+                        count={5}
+                        current={1}
+                        description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해주세요."
+                        nextLabel="2단계. 기업·기술정보 입력"
+                    />
+                </div>
+                <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="sh-props" className="flex flex-col gap-4">
-            <div>
-                <h2 id="sh-props" className="typo-h4-bold">
-                    Props
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">StepHeader 에 넘기는 속성입니다.</p>
-            </div>
-            <dl className="flex flex-col gap-2">
-                {PROPS_ITEMS.map(([name, desc, type]) => (
-                    <div key={name} className="flex flex-col gap-0.5">
-                        <dt className="typo-body-l-medium text-primary font-mono">
-                            {name}
-                            <span className="text-muted-foreground ml-2 font-normal">{type}</span>
-                        </dt>
-                        <dd className="typo-body-l-regular text-muted-foreground">{desc}</dd>
+        <BaseCard>
+            <section aria-labelledby="sh-progress" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="sh-progress" className="typo-h4-bold">
+                        진행 (Progress)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">current</code> 에 따라 스테퍼가 완료·진행중·예정을 자동 계산합니다.
+                        마지막 단계는 <code className="font-mono">nextLabel</code> 을 생략합니다.
+                    </p>
+                </div>
+                <div className="border-border rounded-xl border p-6">
+                    <div className="flex flex-col gap-8">
+                        {PROGRESS_CASES.map((c) => (
+                            <StepHeader
+                                key={c.current}
+                                title={c.title}
+                                count={5}
+                                current={c.current}
+                                description={c.description}
+                                nextLabel={c.nextLabel}
+                            />
+                        ))}
                     </div>
-                ))}
-            </dl>
-        </section>
+                </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="sh-props" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="sh-props" className="typo-h4-bold">
+                        Props
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">StepHeader 에 넘기는 속성입니다.</p>
+                </div>
+                <dl className="flex flex-col gap-2">
+                    {PROPS_ITEMS.map(([name, desc, type]) => (
+                        <div key={name} className="flex flex-col gap-0.5">
+                            <dt className="typo-body-l-medium text-primary font-mono">
+                                {name}
+                                <span className="text-muted-foreground ml-2 font-normal">{type}</span>
+                            </dt>
+                            <dd className="typo-body-l-regular text-muted-foreground">{desc}</dd>
+                        </div>
+                    ))}
+                </dl>
+            </section>
+        </BaseCard>
     </GuidePageShell>
 )
 

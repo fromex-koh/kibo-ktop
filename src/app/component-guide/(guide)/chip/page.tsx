@@ -196,378 +196,407 @@ const ChipGuidePage = () => (
         title="칩 (Chip)"
         description="라벨을 눌러 고르는 카드형 선택 컨트롤입니다. 겉모습은 칩이지만 기능이 다른 두 종류가 있습니다 — 하나만 고르는 라디오 칩과, 여러 개를 독립적으로 켜고 끄는 체크박스 칩입니다. 둘 다 속은 폼 프리미티브라 name 을 주면 선택값이 폼에 제출됩니다."
     >
-        <section aria-labelledby="chip-kinds" className="flex flex-col gap-4">
-            <div>
-                <h2 id="chip-kinds" className="typo-h4-bold">
-                    두 종류 (라디오 · 체크박스)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <strong className="text-foreground font-medium">모양이 아니라 기능이 다릅니다.</strong> 라디오 칩은
-                    그룹에서 <strong className="text-foreground font-medium">하나만</strong> 고르고(하나를 고르면 다른
-                    것이 해제), 체크박스 칩은 각 칩을{' '}
-                    <strong className="text-foreground font-medium">독립적으로 켜고 끕니다(여러 개 동시 선택)</strong>.
-                    직접 눌러보면 차이가 바로 보입니다.
-                </p>
-            </div>
-            <div className="grid gap-6 md:grid-cols-2">
-                <div className="flex flex-col gap-2">
-                    <h3 className="typo-title-l-medium text-foreground">라디오 — 단일 선택</h3>
+        <BaseCard>
+            <section aria-labelledby="chip-kinds" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="chip-kinds" className="typo-h4-bold">
+                        두 종류 (라디오 · 체크박스)
+                    </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        하나만 선택됩니다. 라벨은 가운데 정렬, 아이콘 없음.
+                        <strong className="text-foreground font-medium">모양이 아니라 기능이 다릅니다.</strong> 라디오
+                        칩은 그룹에서 <strong className="text-foreground font-medium">하나만</strong> 고르고(하나를
+                        고르면 다른 것이 해제), 체크박스 칩은 각 칩을{' '}
+                        <strong className="text-foreground font-medium">
+                            독립적으로 켜고 끕니다(여러 개 동시 선택)
+                        </strong>
+                        . 직접 눌러보면 차이가 바로 보입니다.
                     </p>
-                    <ChipRadioGroup name="kind-radio-demo" defaultValue="basic" aria-label="요금제(단일 선택)">
-                        <ChipRadio value="basic">기본형</ChipRadio>
-                        <ChipRadio value="premium">프리미엄형</ChipRadio>
-                        <ChipRadio value="custom">맞춤형</ChipRadio>
-                    </ChipRadioGroup>
                 </div>
-                <div className="flex flex-col gap-2">
-                    <h3 className="typo-title-l-medium text-foreground">체크박스 — 다중 선택</h3>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        여러 개를 동시에 켤 수 있습니다. 선택 시 우측에 체크 아이콘.
-                    </p>
-                    <ChipCheckboxGroup aria-label="관심 분야(다중 선택)">
-                        <ChipCheckbox name="interest" value="ai" defaultChecked>
-                            AI
-                        </ChipCheckbox>
-                        <ChipCheckbox name="interest" value="cloud">
-                            클라우드
-                        </ChipCheckbox>
-                        <ChipCheckbox name="interest" value="security" defaultChecked>
-                            보안
-                        </ChipCheckbox>
-                    </ChipCheckboxGroup>
-                </div>
-            </div>
-            <CodeBlock code={KINDS_CODE} language="tsx" copyLabel="복사" />
-        </section>
-
-        <section aria-labelledby="chip-sizes" className="flex flex-col gap-4">
-            <div>
-                <h2 id="chip-sizes" className="typo-h4-bold">
-                    크기 (size)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">size</code> 는 높이만 바꾸고, 라디오·체크박스 두 종류에 똑같이
-                    적용됩니다 — <code className="font-mono">lg</code>(기본, 48px)·
-                    <code className="font-mono">md</code>
-                    (40px)입니다. <code className="font-mono">md</code> 는 44px 터치 타깃([6.1.3]) 미만인 컴팩트 예외라,
-                    밀도가 필요한 자리에서만 제한적으로 씁니다(버튼의 <code className="font-mono">sm</code>/
-                    <code className="font-mono">xs</code> 와 같은 성격).
-                </p>
-            </div>
-            <div className="grid gap-6 md:grid-cols-2">
-                <div className="flex flex-col gap-3">
-                    <h3 className="typo-title-l-medium text-foreground">
-                        lg <code className="typo-body-l-regular text-muted-foreground font-mono">(기본값, 48px)</code>
-                    </h3>
-                    <div className="flex flex-col gap-1.5">
-                        <span className="typo-caption-regular text-muted-foreground font-mono">ChipRadio</span>
-                        <ChipRadioGroup name="size-lg-radio" defaultValue="agree" aria-label="크기 비교 — lg 라디오">
-                            <ChipRadio size="lg" value="agree">
-                                동의함
-                            </ChipRadio>
-                            <ChipRadio size="lg" value="disagree">
-                                동의하지 않음
-                            </ChipRadio>
+                <div className="grid gap-6 md:grid-cols-2">
+                    <div className="flex flex-col gap-2">
+                        <h3 className="typo-title-l-medium text-foreground">라디오 — 단일 선택</h3>
+                        <p className="typo-body-l-regular text-muted-foreground">
+                            하나만 선택됩니다. 라벨은 가운데 정렬, 아이콘 없음.
+                        </p>
+                        <ChipRadioGroup name="kind-radio-demo" defaultValue="basic" aria-label="요금제(단일 선택)">
+                            <ChipRadio value="basic">기본형</ChipRadio>
+                            <ChipRadio value="premium">프리미엄형</ChipRadio>
+                            <ChipRadio value="custom">맞춤형</ChipRadio>
                         </ChipRadioGroup>
                     </div>
-                    <div className="flex flex-col gap-1.5">
-                        <span className="typo-caption-regular text-muted-foreground font-mono">ChipCheckbox</span>
-                        <ChipCheckboxGroup aria-label="크기 비교 — lg 체크박스">
-                            <ChipCheckbox size="lg" value="basic" defaultChecked>
-                                기본형
+                    <div className="flex flex-col gap-2">
+                        <h3 className="typo-title-l-medium text-foreground">체크박스 — 다중 선택</h3>
+                        <p className="typo-body-l-regular text-muted-foreground">
+                            여러 개를 동시에 켤 수 있습니다. 선택 시 우측에 체크 아이콘.
+                        </p>
+                        <ChipCheckboxGroup aria-label="관심 분야(다중 선택)">
+                            <ChipCheckbox name="interest" value="ai" defaultChecked>
+                                AI
                             </ChipCheckbox>
-                            <ChipCheckbox size="lg" value="premium">
-                                프리미엄형
+                            <ChipCheckbox name="interest" value="cloud">
+                                클라우드
                             </ChipCheckbox>
-                        </ChipCheckboxGroup>
-                    </div>
-                </div>
-                <div className="flex flex-col gap-3">
-                    <h3 className="typo-title-l-medium text-foreground">
-                        md <code className="typo-body-l-regular text-muted-foreground font-mono">(40px)</code>
-                    </h3>
-                    <div className="flex flex-col gap-1.5">
-                        <span className="typo-caption-regular text-muted-foreground font-mono">ChipRadio</span>
-                        <ChipRadioGroup name="size-md-radio" defaultValue="agree" aria-label="크기 비교 — md 라디오">
-                            <ChipRadio size="md" value="agree">
-                                동의함
-                            </ChipRadio>
-                            <ChipRadio size="md" value="disagree">
-                                동의하지 않음
-                            </ChipRadio>
-                        </ChipRadioGroup>
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                        <span className="typo-caption-regular text-muted-foreground font-mono">ChipCheckbox</span>
-                        <ChipCheckboxGroup aria-label="크기 비교 — md 체크박스">
-                            <ChipCheckbox size="md" value="basic" defaultChecked>
-                                기본형
-                            </ChipCheckbox>
-                            <ChipCheckbox size="md" value="premium">
-                                프리미엄형
+                            <ChipCheckbox name="interest" value="security" defaultChecked>
+                                보안
                             </ChipCheckbox>
                         </ChipCheckboxGroup>
                     </div>
                 </div>
-            </div>
-            <CodeBlock code={SIZE_COMPARISON_CODE} language="tsx" copyLabel="복사" />
-        </section>
+                <CodeBlock code={KINDS_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="chip-disabled" className="flex flex-col gap-4">
-            <div>
-                <h2 id="chip-disabled" className="typo-h4-bold">
-                    비활성 상태 (disabled)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    비활성 칩은 선택/입력 컨트롤 공통 disabled 토큰을 씁니다. 배경은{' '}
-                    <code className="font-mono">bg-control-disabled</code>, 테두리는{' '}
-                    <code className="font-mono">border-disabled-subtle</code>, 텍스트는{' '}
-                    <code className="font-mono">text-disabled</code>로 통일합니다.
-                </p>
-            </div>
-            <div className="grid gap-6 md:grid-cols-2">
-                <div className="flex flex-col gap-2">
-                    <h3 className="typo-title-l-medium text-foreground">라디오 칩</h3>
-                    <ChipRadioGroup name="disabled-radio-demo" defaultValue="agree" aria-label="비활성 라디오 칩">
-                        <ChipRadio value="agree" disabled>
-                            동의함
-                        </ChipRadio>
-                        <ChipRadio value="disagree" disabled>
-                            동의하지 않음
-                        </ChipRadio>
-                    </ChipRadioGroup>
-                </div>
-                <div className="flex flex-col gap-2">
-                    <h3 className="typo-title-l-medium text-foreground">체크박스 칩</h3>
-                    <ChipCheckboxGroup aria-label="비활성 체크박스 칩">
-                        <ChipCheckbox name="disabled-chip-demo" value="ai" defaultChecked disabled>
-                            AI
-                        </ChipCheckbox>
-                        <ChipCheckbox name="disabled-chip-demo" value="cloud" disabled>
-                            클라우드
-                        </ChipCheckbox>
-                    </ChipCheckboxGroup>
-                </div>
-            </div>
-            <CodeBlock code={DISABLED_CODE} language="tsx" copyLabel="복사" />
-        </section>
-
-        <section aria-labelledby="chip-consent-usage" className="flex flex-col gap-4">
-            <div>
-                <h2 id="chip-consent-usage" className="typo-h4-bold">
-                    실제 사용 예시 — 라디오 (동의)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    동의 항목처럼 하나만 고르는 자리에 라디오 칩을 씁니다. 제목(필수 배지 + 번호)·안내 질문·동일 폭 칩
-                    두 개로 구성한 예시입니다.
-                </p>
-            </div>
-            <BaseCard>
-                <div className="flex flex-col gap-3">
-                    {/* 헤더 — 뱃지 + 제목 | 내용보기 버튼 */}
-                    <div className="flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-2">
-                            <Badge variant="outline" color="info" shape="round">
-                                필수
-                            </Badge>
-                            <h3 className="typo-title-l-medium text-foreground">1. 수집·이용에 관한 사항</h3>
-                        </div>
-                        <Button type="button" variant="text" size="md">
-                            내용보기
-                            <ChevronRight aria-hidden="true" />
-                        </Button>
-                    </div>
-                    {/* 안내 질문 — 라디오 그룹의 레이블(aria-labelledby 로 연결) */}
-                    <p
-                        id="consent-1-label"
-                        className="typo-body-xl-regular text-foreground-subtle flex items-start gap-1.5"
-                    >
-                        <ListMarker type="unordered" level={2} />위 고유식별정보 수집·이용에 동의하십니까?
+        <BaseCard>
+            <section aria-labelledby="chip-sizes" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="chip-sizes" className="typo-h4-bold">
+                        크기 (size)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">size</code> 는 높이만 바꾸고, 라디오·체크박스 두 종류에 똑같이
+                        적용됩니다 — <code className="font-mono">lg</code>(기본, 48px)·
+                        <code className="font-mono">md</code>
+                        (40px)입니다. <code className="font-mono">md</code> 는 44px 터치 타깃([6.1.3]) 미만인 컴팩트
+                        예외라, 밀도가 필요한 자리에서만 제한적으로 씁니다(버튼의 <code className="font-mono">sm</code>/
+                        <code className="font-mono">xs</code> 와 같은 성격).
                     </p>
-                    {/* 라디오 칩 — 동일 폭 2개(flex-1) */}
-                    <ChipRadioGroup
-                        name="consent-1"
-                        defaultValue="agree"
-                        aria-labelledby="consent-1-label"
-                        className="w-full"
-                    >
-                        <ChipRadio value="agree" className="flex-1">
-                            동의함
-                        </ChipRadio>
-                        <ChipRadio value="disagree" className="flex-1">
-                            동의하지 않음
-                        </ChipRadio>
-                    </ChipRadioGroup>
                 </div>
-            </BaseCard>
-            <CodeBlock code={CONSENT_USAGE_CODE} language="tsx" copyLabel="복사" />
-        </section>
-
-        <section aria-labelledby="chip-checkbox-usage" className="flex flex-col gap-4">
-            <div>
-                <h2 id="chip-checkbox-usage" className="typo-h4-bold">
-                    실제 사용 예시 — 체크박스 (문장 인라인)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    자가진단 문항처럼 문장 흐름 안에 체크박스 칩을 끼워 넣는 예시입니다.{' '}
-                    <strong className="text-foreground font-medium">&quot;외주가공 또는 자체제작&quot;</strong> 처럼
-                    여러 항목을 함께 고를 수 있어 체크박스(다중)를 씁니다. 번호·카테고리 배지·흐르는 텍스트 사이에
-                    칩(md)이 인라인으로 배치됩니다.
-                </p>
-            </div>
-            <BaseCard>
-                <div className="flex flex-col gap-2">
-                    {/* 문항 1 — 제조(초록 배지) */}
-                    <div className="flex gap-2">
-                        <span className="typo-body-xl-bold text-foreground mt-2 shrink-0">17.</span>
-                        <ChipCheckboxGroup aria-label="생산과정 방식 선택" className="w-full items-center">
-                            <Badge variant="solid-pastel" color="secondary-green" shape="round">
-                                제조
-                            </Badge>
-                            <span className="typo-body-xl-regular text-foreground">
-                                신청기술이 적용된 제품 생산 시, 생산과정이
-                            </span>
-                            <ChipCheckbox size="md" name="prod-1" value="outsourced" defaultChecked>
-                                외주가공
-                            </ChipCheckbox>
-                            <span className="typo-body-xl-regular text-foreground">또는</span>
-                            <ChipCheckbox size="md" name="prod-1" value="inhouse">
-                                자체제작
-                            </ChipCheckbox>
-                            <span className="typo-body-xl-regular text-foreground">을 통해 이루어진다.</span>
-                        </ChipCheckboxGroup>
-                    </div>
-                    {/* 문항 2 — 서비스(보라 배지) */}
-                    <div className="flex gap-2">
-                        {/* 번호 자리 맞춤용 빈 칸(같은 폭) — 실제 화면에선 문항마다 번호가 붙는다 */}
-                        <span aria-hidden="true" className="typo-body-xl-bold mt-2 shrink-0 opacity-0">
-                            17.
-                        </span>
-                        <ChipCheckboxGroup aria-label="제작과정 방식 선택" className="w-full items-center">
-                            <Badge variant="solid-pastel" color="secondary-grape" shape="round">
-                                서비스
-                            </Badge>
-                            <span className="typo-body-xl-regular text-foreground">
-                                신청기술이 적용된 제품/서비스 제작 시, 제작과정이
-                            </span>
-                            <ChipCheckbox size="md" name="prod-2" value="outsourced">
-                                외주인력
-                            </ChipCheckbox>
-                            <span className="typo-body-xl-regular text-foreground">또는</span>
-                            <ChipCheckbox size="md" name="prod-2" value="inhouse">
-                                자체인력
-                            </ChipCheckbox>
-                            <span className="typo-body-xl-regular text-foreground">을 통해 이루어진다.</span>
-                        </ChipCheckboxGroup>
-                    </div>
-                </div>
-            </BaseCard>
-            <CodeBlock code={CHECKBOX_USAGE_CODE} language="tsx" copyLabel="복사" />
-        </section>
-
-        <section aria-labelledby="chip-composition" className="flex flex-col gap-4">
-            <div>
-                <h2 id="chip-composition" className="typo-h4-bold">
-                    구성
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    칩은 그룹과 개별 칩으로 이뤄지며, 라디오·체크박스 각각 한 쌍입니다.
-                </p>
-            </div>
-            <dl className="flex flex-col gap-2">
-                {COMPOSITION.map(([name, desc]) => (
-                    <div key={name} className="flex flex-col gap-0.5">
-                        <dt className="typo-body-l-medium text-primary font-mono">{name}</dt>
-                        <dd className="typo-body-l-regular text-muted-foreground">{desc}</dd>
-                    </div>
-                ))}
-            </dl>
-        </section>
-
-        <section aria-labelledby="chip-form-submit" className="flex flex-col gap-4">
-            <div>
-                <h2 id="chip-form-submit" className="typo-h4-bold">
-                    폼 제출
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    Chip은 Radix의 네이티브 폼 동작을 그대로 사용합니다. 실제 <code className="font-mono">form</code>{' '}
-                    안에서 라디오 그룹에 <code className="font-mono">name</code>, 각 항목에 고유한{' '}
-                    <code className="font-mono">value</code>를 지정하면 선택값 하나가 제출됩니다. 체크박스는 함께 제출할
-                    항목에 같은 <code className="font-mono">name</code>과 각 <code className="font-mono">value</code>를
-                    지정하며, 선택된 값은 <code className="font-mono">FormData.getAll()</code>로 읽습니다.{' '}
-                    <code className="font-mono">name</code>은 폼 제출이 필요할 때만 사용하고,{' '}
-                    <code className="font-mono">disabled</code> 항목은 HTML 표준에 따라 제출에서 제외됩니다.
-                </p>
-            </div>
-            <ChipFormDemo />
-            <CodeBlock code={FORM_SUBMIT_CODE} language="tsx" copyLabel="복사" />
-        </section>
-
-        <section aria-labelledby="chip-props" className="flex flex-col gap-4">
-            <div>
-                <h2 id="chip-props" className="typo-h4-bold">
-                    Props
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    Chip을 구성하는 라디오·체크박스 그룹과 개별 칩에서 주로 사용하는 속성입니다.
-                </p>
-            </div>
-            <div className="bg-background border-border overflow-x-auto rounded-md border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">Chip Props 목록</caption>
-                    <thead>
-                        <tr className="border-border border-b bg-gray-100/25">
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Component
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Name
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Description
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Default
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Control
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {PROPS.map((prop) => (
-                            <tr
-                                key={`${prop.component}-${prop.name}`}
-                                className="border-border bg-background border-b last:border-b-0"
+                <div className="grid gap-6 md:grid-cols-2">
+                    <div className="flex flex-col gap-3">
+                        <h3 className="typo-title-l-medium text-foreground">
+                            lg{' '}
+                            <code className="typo-body-l-regular text-muted-foreground font-mono">(기본값, 48px)</code>
+                        </h3>
+                        <div className="flex flex-col gap-1.5">
+                            <span className="typo-caption-regular text-muted-foreground font-mono">ChipRadio</span>
+                            <ChipRadioGroup
+                                name="size-lg-radio"
+                                defaultValue="agree"
+                                aria-label="크기 비교 — lg 라디오"
                             >
-                                <th
-                                    scope="row"
-                                    className="typo-caption-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                                >
-                                    {prop.component}
+                                <ChipRadio size="lg" value="agree">
+                                    동의함
+                                </ChipRadio>
+                                <ChipRadio size="lg" value="disagree">
+                                    동의하지 않음
+                                </ChipRadio>
+                            </ChipRadioGroup>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <span className="typo-caption-regular text-muted-foreground font-mono">ChipCheckbox</span>
+                            <ChipCheckboxGroup aria-label="크기 비교 — lg 체크박스">
+                                <ChipCheckbox size="lg" value="basic" defaultChecked>
+                                    기본형
+                                </ChipCheckbox>
+                                <ChipCheckbox size="lg" value="premium">
+                                    프리미엄형
+                                </ChipCheckbox>
+                            </ChipCheckboxGroup>
+                        </div>
+                    </div>
+                    <div className="flex flex-col gap-3">
+                        <h3 className="typo-title-l-medium text-foreground">
+                            md <code className="typo-body-l-regular text-muted-foreground font-mono">(40px)</code>
+                        </h3>
+                        <div className="flex flex-col gap-1.5">
+                            <span className="typo-caption-regular text-muted-foreground font-mono">ChipRadio</span>
+                            <ChipRadioGroup
+                                name="size-md-radio"
+                                defaultValue="agree"
+                                aria-label="크기 비교 — md 라디오"
+                            >
+                                <ChipRadio size="md" value="agree">
+                                    동의함
+                                </ChipRadio>
+                                <ChipRadio size="md" value="disagree">
+                                    동의하지 않음
+                                </ChipRadio>
+                            </ChipRadioGroup>
+                        </div>
+                        <div className="flex flex-col gap-1.5">
+                            <span className="typo-caption-regular text-muted-foreground font-mono">ChipCheckbox</span>
+                            <ChipCheckboxGroup aria-label="크기 비교 — md 체크박스">
+                                <ChipCheckbox size="md" value="basic" defaultChecked>
+                                    기본형
+                                </ChipCheckbox>
+                                <ChipCheckbox size="md" value="premium">
+                                    프리미엄형
+                                </ChipCheckbox>
+                            </ChipCheckboxGroup>
+                        </div>
+                    </div>
+                </div>
+                <CodeBlock code={SIZE_COMPARISON_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chip-disabled" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="chip-disabled" className="typo-h4-bold">
+                        비활성 상태 (disabled)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        비활성 칩은 선택/입력 컨트롤 공통 disabled 토큰을 씁니다. 배경은{' '}
+                        <code className="font-mono">bg-control-disabled</code>, 테두리는{' '}
+                        <code className="font-mono">border-disabled-subtle</code>, 텍스트는{' '}
+                        <code className="font-mono">text-disabled</code>로 통일합니다.
+                    </p>
+                </div>
+                <div className="grid gap-6 md:grid-cols-2">
+                    <div className="flex flex-col gap-2">
+                        <h3 className="typo-title-l-medium text-foreground">라디오 칩</h3>
+                        <ChipRadioGroup name="disabled-radio-demo" defaultValue="agree" aria-label="비활성 라디오 칩">
+                            <ChipRadio value="agree" disabled>
+                                동의함
+                            </ChipRadio>
+                            <ChipRadio value="disagree" disabled>
+                                동의하지 않음
+                            </ChipRadio>
+                        </ChipRadioGroup>
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <h3 className="typo-title-l-medium text-foreground">체크박스 칩</h3>
+                        <ChipCheckboxGroup aria-label="비활성 체크박스 칩">
+                            <ChipCheckbox name="disabled-chip-demo" value="ai" defaultChecked disabled>
+                                AI
+                            </ChipCheckbox>
+                            <ChipCheckbox name="disabled-chip-demo" value="cloud" disabled>
+                                클라우드
+                            </ChipCheckbox>
+                        </ChipCheckboxGroup>
+                    </div>
+                </div>
+                <CodeBlock code={DISABLED_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chip-consent-usage" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="chip-consent-usage" className="typo-h4-bold">
+                        실제 사용 예시 — 라디오 (동의)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        동의 항목처럼 하나만 고르는 자리에 라디오 칩을 씁니다. 제목(필수 배지 + 번호)·안내 질문·동일 폭
+                        칩 두 개로 구성한 예시입니다.
+                    </p>
+                </div>
+                <div className="border-border rounded-xl border p-6">
+                    <div className="flex flex-col gap-3">
+                        {/* 헤더 — 뱃지 + 제목 | 내용보기 버튼 */}
+                        <div className="flex items-center justify-between gap-4">
+                            <div className="flex items-center gap-2">
+                                <Badge variant="outline" color="info" shape="round">
+                                    필수
+                                </Badge>
+                                <h3 className="typo-title-l-medium text-foreground">1. 수집·이용에 관한 사항</h3>
+                            </div>
+                            <Button type="button" variant="text" size="md">
+                                내용보기
+                                <ChevronRight aria-hidden="true" />
+                            </Button>
+                        </div>
+                        {/* 안내 질문 — 라디오 그룹의 레이블(aria-labelledby 로 연결) */}
+                        <p
+                            id="consent-1-label"
+                            className="typo-body-xl-regular text-foreground-subtle flex items-start gap-1.5"
+                        >
+                            <ListMarker type="unordered" level={2} />위 고유식별정보 수집·이용에 동의하십니까?
+                        </p>
+                        {/* 라디오 칩 — 동일 폭 2개(flex-1) */}
+                        <ChipRadioGroup
+                            name="consent-1"
+                            defaultValue="agree"
+                            aria-labelledby="consent-1-label"
+                            className="w-full"
+                        >
+                            <ChipRadio value="agree" className="flex-1">
+                                동의함
+                            </ChipRadio>
+                            <ChipRadio value="disagree" className="flex-1">
+                                동의하지 않음
+                            </ChipRadio>
+                        </ChipRadioGroup>
+                    </div>
+                </div>
+                <CodeBlock code={CONSENT_USAGE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chip-checkbox-usage" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="chip-checkbox-usage" className="typo-h4-bold">
+                        실제 사용 예시 — 체크박스 (문장 인라인)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        자가진단 문항처럼 문장 흐름 안에 체크박스 칩을 끼워 넣는 예시입니다.{' '}
+                        <strong className="text-foreground font-medium">&quot;외주가공 또는 자체제작&quot;</strong> 처럼
+                        여러 항목을 함께 고를 수 있어 체크박스(다중)를 씁니다. 번호·카테고리 배지·흐르는 텍스트 사이에
+                        칩(md)이 인라인으로 배치됩니다.
+                    </p>
+                </div>
+                <div className="border-border rounded-xl border p-6">
+                    <div className="flex flex-col gap-2">
+                        {/* 문항 1 — 제조(초록 배지) */}
+                        <div className="flex gap-2">
+                            <span className="typo-body-xl-bold text-foreground mt-2 shrink-0">17.</span>
+                            <ChipCheckboxGroup aria-label="생산과정 방식 선택" className="w-full items-center">
+                                <Badge variant="solid-pastel" color="secondary-green" shape="round">
+                                    제조
+                                </Badge>
+                                <span className="typo-body-xl-regular text-foreground">
+                                    신청기술이 적용된 제품 생산 시, 생산과정이
+                                </span>
+                                <ChipCheckbox size="md" name="prod-1" value="outsourced" defaultChecked>
+                                    외주가공
+                                </ChipCheckbox>
+                                <span className="typo-body-xl-regular text-foreground">또는</span>
+                                <ChipCheckbox size="md" name="prod-1" value="inhouse">
+                                    자체제작
+                                </ChipCheckbox>
+                                <span className="typo-body-xl-regular text-foreground">을 통해 이루어진다.</span>
+                            </ChipCheckboxGroup>
+                        </div>
+                        {/* 문항 2 — 서비스(보라 배지) */}
+                        <div className="flex gap-2">
+                            {/* 번호 자리 맞춤용 빈 칸(같은 폭) — 실제 화면에선 문항마다 번호가 붙는다 */}
+                            <span aria-hidden="true" className="typo-body-xl-bold mt-2 shrink-0 opacity-0">
+                                17.
+                            </span>
+                            <ChipCheckboxGroup aria-label="제작과정 방식 선택" className="w-full items-center">
+                                <Badge variant="solid-pastel" color="secondary-grape" shape="round">
+                                    서비스
+                                </Badge>
+                                <span className="typo-body-xl-regular text-foreground">
+                                    신청기술이 적용된 제품/서비스 제작 시, 제작과정이
+                                </span>
+                                <ChipCheckbox size="md" name="prod-2" value="outsourced">
+                                    외주인력
+                                </ChipCheckbox>
+                                <span className="typo-body-xl-regular text-foreground">또는</span>
+                                <ChipCheckbox size="md" name="prod-2" value="inhouse">
+                                    자체인력
+                                </ChipCheckbox>
+                                <span className="typo-body-xl-regular text-foreground">을 통해 이루어진다.</span>
+                            </ChipCheckboxGroup>
+                        </div>
+                    </div>
+                </div>
+                <CodeBlock code={CHECKBOX_USAGE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chip-composition" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="chip-composition" className="typo-h4-bold">
+                        구성
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        칩은 그룹과 개별 칩으로 이뤄지며, 라디오·체크박스 각각 한 쌍입니다.
+                    </p>
+                </div>
+                <dl className="flex flex-col gap-2">
+                    {COMPOSITION.map(([name, desc]) => (
+                        <div key={name} className="flex flex-col gap-0.5">
+                            <dt className="typo-body-l-medium text-primary font-mono">{name}</dt>
+                            <dd className="typo-body-l-regular text-muted-foreground">{desc}</dd>
+                        </div>
+                    ))}
+                </dl>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chip-form-submit" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="chip-form-submit" className="typo-h4-bold">
+                        폼 제출
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        Chip은 Radix의 네이티브 폼 동작을 그대로 사용합니다. 실제{' '}
+                        <code className="font-mono">form</code> 안에서 라디오 그룹에{' '}
+                        <code className="font-mono">name</code>, 각 항목에 고유한{' '}
+                        <code className="font-mono">value</code>를 지정하면 선택값 하나가 제출됩니다. 체크박스는 함께
+                        제출할 항목에 같은 <code className="font-mono">name</code>과 각{' '}
+                        <code className="font-mono">value</code>를 지정하며, 선택된 값은{' '}
+                        <code className="font-mono">FormData.getAll()</code>로 읽습니다.{' '}
+                        <code className="font-mono">name</code>은 폼 제출이 필요할 때만 사용하고,{' '}
+                        <code className="font-mono">disabled</code> 항목은 HTML 표준에 따라 제출에서 제외됩니다.
+                    </p>
+                </div>
+                <ChipFormDemo />
+                <CodeBlock code={FORM_SUBMIT_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chip-props" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="chip-props" className="typo-h4-bold">
+                        Props
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        Chip을 구성하는 라디오·체크박스 그룹과 개별 칩에서 주로 사용하는 속성입니다.
+                    </p>
+                </div>
+                <div className="bg-background border-border overflow-x-auto rounded-md border">
+                    <table className="w-full text-left">
+                        <caption className="sr-only">Chip Props 목록</caption>
+                        <thead>
+                            <tr className="border-border border-b bg-gray-100/25">
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Component
                                 </th>
-                                <td className="typo-caption-regular text-primary px-4 py-3 align-top font-mono whitespace-nowrap">
-                                    {prop.name}
-                                </td>
-                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3 align-top">
-                                    {prop.description}
-                                </td>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 align-top font-mono whitespace-nowrap">
-                                    {prop.defaultValue}
-                                </td>
-                                <td className="px-4 py-3 align-top">
-                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs whitespace-nowrap">
-                                        {prop.control}
-                                    </span>
-                                </td>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Default
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Control
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+                        </thead>
+                        <tbody>
+                            {PROPS.map((prop) => (
+                                <tr
+                                    key={`${prop.component}-${prop.name}`}
+                                    className="border-border bg-background border-b last:border-b-0"
+                                >
+                                    <th
+                                        scope="row"
+                                        className="typo-caption-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
+                                    >
+                                        {prop.component}
+                                    </th>
+                                    <td className="typo-caption-regular text-primary px-4 py-3 align-top font-mono whitespace-nowrap">
+                                        {prop.name}
+                                    </td>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 align-top">
+                                        {prop.description}
+                                    </td>
+                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 align-top font-mono whitespace-nowrap">
+                                        {prop.defaultValue}
+                                    </td>
+                                    <td className="px-4 py-3 align-top">
+                                        <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs whitespace-nowrap">
+                                            {prop.control}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </BaseCard>
     </GuidePageShell>
 )
 

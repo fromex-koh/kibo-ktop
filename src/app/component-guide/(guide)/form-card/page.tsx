@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {FormCard} from '@/components/composite/form-card'
@@ -34,16 +35,16 @@ const USAGE_CODE = `<FormCard
   </div>
 </FormCard>`
 
-// Props 설명 — [이름, 설명, 타입]
+// Props 설명 — [이름, 설명, 기본값, 타입]
 const PROPS_ITEMS = [
-    ['title', '카드 제목 (필수).', 'ReactNode'],
-    ['subtitle', '제목 아래 서브텍스트(선택). 필수 안내 등.', 'ReactNode'],
-    ['action', '헤더 우측 액션(버튼 등, 선택).', 'ReactNode'],
-    ['children', '헤더 아래 본문 콘텐츠 (필수).', 'ReactNode'],
-    ['className', '추가 클래스명으로 스타일 확장.', 'string'],
+    ['title', '카드 제목. subtitle·action과 함께 헤더를 구성합니다.', 'undefined', 'ReactNode'],
+    ['subtitle', '제목 아래 서브텍스트 또는 필수 입력 안내입니다.', 'undefined', 'ReactNode'],
+    ['action', '헤더 우측 액션 영역입니다.', 'undefined', 'ReactNode'],
+    ['children', '헤더 아래 폼 본문 콘텐츠입니다.', '-', 'ReactNode'],
+    ['className', 'Card 루트에 추가할 클래스명입니다.', 'undefined', 'string'],
 ] as const
 
-// 폼 카드 — kit Card 를 감싼 넓은 폼 섹션 카드(composite/form-card). 좌우 102px·상하 40px 패딩,
+// 폼 카드 — ui Card를 감싼 넓은 폼 섹션 카드(composite/form-card). 좌우 102px·상하 40px 패딩,
 // 헤더(제목·서브텍스트 좌 / 액션 우) + 본문(2열 폼 필드). Figma "기업정보" 폼 섹션을 반영한다.
 const FormCardGuidePage = () => (
     <GuidePageShell
@@ -127,25 +128,58 @@ const FormCardGuidePage = () => (
             <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
         </section>
 
-        <section aria-labelledby="form-card-props" className="flex flex-col gap-4">
-            <div>
-                <h2 id="form-card-props" className="typo-h4-bold">
-                    Props
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">FormCard 에 넘기는 속성입니다.</p>
-            </div>
-            <dl className="flex flex-col gap-2">
-                {PROPS_ITEMS.map(([name, desc, type]) => (
-                    <div key={name} className="flex flex-col gap-0.5">
-                        <dt className="typo-body-l-medium text-primary font-mono">
-                            {name}
-                            <span className="text-muted-foreground ml-2 font-normal">{type}</span>
-                        </dt>
-                        <dd className="typo-body-l-regular text-muted-foreground">{desc}</dd>
-                    </div>
-                ))}
-            </dl>
-        </section>
+        <BaseCard>
+            <section aria-labelledby="form-card-props" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="form-card-props" className="typo-h4-bold">
+                        Props
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">FormCard 에 넘기는 속성입니다.</p>
+                </div>
+                <div className="border-border overflow-x-auto rounded-xl border">
+                    <table className="w-full text-left">
+                        <caption className="sr-only">FormCard Props 목록</caption>
+                        <thead>
+                            <tr className="border-border bg-card border-b">
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Default
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Type
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {PROPS_ITEMS.map(([name, description, defaultValue, type]) => (
+                                <tr key={name} className="border-border border-b last:border-b-0">
+                                    <th
+                                        scope="row"
+                                        className="typo-body-l-medium text-primary-strong px-4 py-3 font-mono"
+                                    >
+                                        {name}
+                                    </th>
+                                    <td className="typo-body-l-regular text-foreground-subtle px-4 py-3">
+                                        {description}
+                                    </td>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
+                                        {defaultValue}
+                                    </td>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
+                                        {type}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </BaseCard>
     </GuidePageShell>
 )
 

@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import DatePickerFormDemo from './date-picker-form-demo'
@@ -106,107 +107,115 @@ const DatePickerGuidePage = () => (
         title="데이트피커 (DatePicker)"
         description="InputGroup, Popover, Calendar를 조합한 프로젝트 composite입니다. Field와 조합해 라벨·설명·오류가 포함된 날짜 입력을 구성합니다."
     >
-        <section aria-labelledby="date-picker-demo" className="flex flex-col gap-4">
-            <div>
-                <h2 id="date-picker-demo" className="typo-h4-bold">
-                    사용 예시
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>,{' '}
-                    <code className="font-mono">DatePicker</code>, <code className="font-mono">FieldDescription</code>을
-                    조합합니다. 트리거는 <code className="font-mono">InputGroup</code>을 사용해 Input과 동일한
-                    높이·테두리·배경·포커스를 공유하며, 날짜는 <code className="font-mono">yyyy-MM-dd</code>로
-                    표시됩니다.
-                </p>
-            </div>
-            <DatePickerDemo />
-            <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
-        </section>
+        <BaseCard>
+            <section aria-labelledby="date-picker-demo" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="date-picker-demo" className="typo-h4-bold">
+                        사용 예시
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>,{' '}
+                        <code className="font-mono">DatePicker</code>,{' '}
+                        <code className="font-mono">FieldDescription</code>을 조합합니다. 트리거는{' '}
+                        <code className="font-mono">InputGroup</code>을 사용해 Input과 동일한 높이·테두리·배경·포커스를
+                        공유하며, 날짜는 <code className="font-mono">yyyy-MM-dd</code>로 표시됩니다.
+                    </p>
+                </div>
+                <DatePickerDemo />
+                <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="date-picker-state" className="flex flex-col gap-4">
-            <div>
-                <h2 id="date-picker-state" className="typo-h4-bold">
-                    상태 (State)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    기본·값 입력됨·오류·읽기전용·비활성 상태입니다. 오류가 있으면 동일 Field 안에{' '}
-                    <code className="font-mono">FieldError</code>를 추가합니다.{' '}
-                    <code className="font-mono">readOnly</code>는 값은 그대로 보이되 달력이 열리지 않고,{' '}
-                    <code className="font-mono">disabled</code>는 클릭과 포커스가 막힙니다. 프로젝트 DatePicker는
-                    Input과 같은 48px 높이로 고정되어 별도의 size prop을 제공하지 않습니다.
-                </p>
-            </div>
-            <DatePickerStatesDemo />
-        </section>
+        <BaseCard>
+            <section aria-labelledby="date-picker-state" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="date-picker-state" className="typo-h4-bold">
+                        상태 (State)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        기본·값 입력됨·오류·읽기전용·비활성 상태입니다. 오류가 있으면 동일 Field 안에{' '}
+                        <code className="font-mono">FieldError</code>를 추가합니다.{' '}
+                        <code className="font-mono">readOnly</code>는 값은 그대로 보이되 달력이 열리지 않고,{' '}
+                        <code className="font-mono">disabled</code>는 클릭과 포커스가 막힙니다. 프로젝트 DatePicker는
+                        Input과 같은 48px 높이로 고정되어 별도의 size prop을 제공하지 않습니다.
+                    </p>
+                </div>
+                <DatePickerStatesDemo />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="date-picker-form" className="flex flex-col gap-4">
-            <div>
-                <h2 id="date-picker-form" className="typo-h4-bold">
-                    폼 제출
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">name</code>을 지정하면 선택 날짜가{' '}
-                    <code className="font-mono">yyyy-MM-dd</code> 문자열로 FormData에 포함됩니다. 예시는 필수 날짜를
-                    네이티브 <code className="font-mono">required</code>로 검증하고{' '}
-                    <code className="font-mono">onInvalid</code>로 <code className="font-mono">FieldError</code>를
-                    노출합니다. 검증이 실패하면 실제 조작 요소인 DatePicker 트리거로 포커스가 이동합니다. readOnly
-                    날짜는 제출되지만 disabled 날짜는 제출되지 않습니다.
-                </p>
-            </div>
-            <DatePickerFormDemo />
-            <CodeBlock code={FORM_CODE} language="tsx" copyLabel="복사" />
-        </section>
+        <BaseCard>
+            <section aria-labelledby="date-picker-form" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="date-picker-form" className="typo-h4-bold">
+                        폼 제출
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">name</code>을 지정하면 선택 날짜가{' '}
+                        <code className="font-mono">yyyy-MM-dd</code> 문자열로 FormData에 포함됩니다. 예시는 필수 날짜를
+                        네이티브 <code className="font-mono">required</code>로 검증하고{' '}
+                        <code className="font-mono">onInvalid</code>로 <code className="font-mono">FieldError</code>를
+                        노출합니다. 검증이 실패하면 실제 조작 요소인 DatePicker 트리거로 포커스가 이동합니다. readOnly
+                        날짜는 제출되지만 disabled 날짜는 제출되지 않습니다.
+                    </p>
+                </div>
+                <DatePickerFormDemo />
+                <CodeBlock code={FORM_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="date-picker-props" className="flex flex-col gap-4">
-            <div>
-                <h2 id="date-picker-props" className="typo-h4-bold">
-                    Props
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">DatePicker 에 넘기는 속성입니다.</p>
-            </div>
-            <div className="bg-background border-border overflow-x-auto rounded-md border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">Props 목록</caption>
-                    <thead>
-                        <tr className="border-border border-b bg-gray-100/25">
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Name
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Description
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Default
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Control
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {PROPS_ITEMS.map((prop) => (
-                            <tr key={prop.name} className="border-border bg-background border-b last:border-b-0">
-                                <th
-                                    scope="row"
-                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                                >
-                                    {prop.name}
+        <BaseCard>
+            <section aria-labelledby="date-picker-props" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="date-picker-props" className="typo-h4-bold">
+                        Props
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">DatePicker 에 넘기는 속성입니다.</p>
+                </div>
+                <div className="bg-background border-border overflow-x-auto rounded-md border">
+                    <table className="w-full text-left">
+                        <caption className="sr-only">Props 목록</caption>
+                        <thead>
+                            <tr className="border-border border-b bg-gray-100/25">
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Name
                                 </th>
-                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{prop.desc}</td>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                    {prop.def}
-                                </td>
-                                <td className="px-4 py-3">
-                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
-                                        {prop.control}
-                                    </span>
-                                </td>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Default
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Control
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+                        </thead>
+                        <tbody>
+                            {PROPS_ITEMS.map((prop) => (
+                                <tr key={prop.name} className="border-border bg-background border-b last:border-b-0">
+                                    <th
+                                        scope="row"
+                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
+                                    >
+                                        {prop.name}
+                                    </th>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{prop.desc}</td>
+                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                                        {prop.def}
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                                            {prop.control}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </BaseCard>
     </GuidePageShell>
 )
 

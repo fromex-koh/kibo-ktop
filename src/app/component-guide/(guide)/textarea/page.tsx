@@ -1,5 +1,6 @@
 import type {Metadata} from 'next'
 import {cn} from '@/lib/utils'
+import {BaseCard} from '@/components/composite/base-card'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
@@ -144,141 +145,155 @@ const TextareaGuidePage = () => (
         title="텍스트에어리어 (Textarea)"
         description="shadcn Textarea primitive와 외부 글자 수 영역을 제공하는 TextareaCounter composite입니다. Field와 조합해 여러 줄 입력을 구성합니다."
     >
-        <section aria-labelledby="textarea-demo" className="flex flex-col gap-4">
-            <div>
-                <h2 id="textarea-demo" className="typo-h4-bold">
-                    사용 예시
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    글자 수가 필요한 경우 <code className="font-mono">TextareaCounter</code>를 사용합니다. 원래 디자인에
-                    맞춰 Textarea와 카운터를 형제로 배치하고 카운터는 입력 테두리 밖 오른쪽에 표시합니다. 현재 글자 수는
-                    입력할 때 자동으로 갱신되며 Field 포커스링은 라벨·Textarea·카운터 전체를 감쌉니다.
-                </p>
-            </div>
-            <TextareaCounterDemo />
-            <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
-        </section>
+        <BaseCard>
+            <section aria-labelledby="textarea-demo" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="textarea-demo" className="typo-h4-bold">
+                        사용 예시
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        글자 수가 필요한 경우 <code className="font-mono">TextareaCounter</code>를 사용합니다. 원래
+                        디자인에 맞춰 Textarea와 카운터를 형제로 배치하고 카운터는 입력 테두리 밖 오른쪽에 표시합니다.
+                        현재 글자 수는 입력할 때 자동으로 갱신되며 Field 포커스링은 라벨·Textarea·카운터 전체를
+                        감쌉니다.
+                    </p>
+                </div>
+                <TextareaCounterDemo />
+                <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="textarea-state" className="flex flex-col gap-4">
-            <div>
-                <h2 id="textarea-state" className="typo-h4-bold">
-                    상태 (State)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    기본·값 입력됨·오류·비활성·읽기전용 상태입니다. 포커스링은 Button과 같은 solid outline이며 Field로
-                    감싼 경우 라벨과 입력 영역 전체를 표시합니다. 프로젝트 Textarea는 최소 높이 120px이고 크기 조절을
-                    막아 내용이 넘치면 내부 스크롤을 사용합니다.
-                </p>
-            </div>
-            <div className="grid grid-cols-1 justify-items-start gap-6 xl:grid-cols-2">
-                <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
-                    <FieldLabel htmlFor="st-default" className="text-foreground font-bold">
-                        기본 (default)
-                    </FieldLabel>
-                    <TextareaCounter id="st-default" maxLength={100} placeholder="내용을 입력하세요" />
-                </Field>
-                <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
-                    <FieldLabel htmlFor="st-completed" className="text-foreground font-bold">
-                        값 입력됨 (completed)
-                    </FieldLabel>
-                    <TextareaCounter id="st-completed" maxLength={100} defaultValue="입력된 내용입니다." />
-                </Field>
-                <Field data-invalid className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
-                    <FieldLabel htmlFor="st-error" className="text-foreground font-bold">
-                        오류 (error)
-                    </FieldLabel>
-                    <TextareaCounter
-                        id="st-error"
-                        maxLength={100}
-                        placeholder="내용을 입력하세요"
-                        aria-invalid
-                        aria-describedby="st-error-msg"
-                        footer={<FieldError id="st-error-msg">필수 항목입니다.</FieldError>}
-                    />
-                </Field>
-                <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
-                    <FieldLabel htmlFor="st-disabled" className="text-foreground font-bold">
-                        비활성 (disabled)
-                    </FieldLabel>
-                    <TextareaCounter id="st-disabled" maxLength={100} defaultValue="비활성 입력 내용입니다." disabled />
-                </Field>
-                <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
-                    <FieldLabel htmlFor="st-view" className="text-foreground font-bold">
-                        읽기전용 (readOnly)
-                    </FieldLabel>
-                    <TextareaCounter id="st-view" maxLength={100} defaultValue="수정 불가한 내용입니다." readOnly />
-                </Field>
-            </div>
-        </section>
+        <BaseCard>
+            <section aria-labelledby="textarea-state" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="textarea-state" className="typo-h4-bold">
+                        상태 (State)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        기본·값 입력됨·오류·비활성·읽기전용 상태입니다. 포커스링은 Button과 같은 solid outline이며
+                        Field로 감싼 경우 라벨과 입력 영역 전체를 표시합니다. 프로젝트 Textarea는 최소 높이 120px이고
+                        크기 조절을 막아 내용이 넘치면 내부 스크롤을 사용합니다.
+                    </p>
+                </div>
+                <div className="grid grid-cols-1 justify-items-start gap-6 xl:grid-cols-2">
+                    <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
+                        <FieldLabel htmlFor="st-default" className="text-foreground font-bold">
+                            기본 (default)
+                        </FieldLabel>
+                        <TextareaCounter id="st-default" maxLength={100} placeholder="내용을 입력하세요" />
+                    </Field>
+                    <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
+                        <FieldLabel htmlFor="st-completed" className="text-foreground font-bold">
+                            값 입력됨 (completed)
+                        </FieldLabel>
+                        <TextareaCounter id="st-completed" maxLength={100} defaultValue="입력된 내용입니다." />
+                    </Field>
+                    <Field data-invalid className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
+                        <FieldLabel htmlFor="st-error" className="text-foreground font-bold">
+                            오류 (error)
+                        </FieldLabel>
+                        <TextareaCounter
+                            id="st-error"
+                            maxLength={100}
+                            placeholder="내용을 입력하세요"
+                            aria-invalid
+                            aria-describedby="st-error-msg"
+                            footer={<FieldError id="st-error-msg">필수 항목입니다.</FieldError>}
+                        />
+                    </Field>
+                    <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
+                        <FieldLabel htmlFor="st-disabled" className="text-foreground font-bold">
+                            비활성 (disabled)
+                        </FieldLabel>
+                        <TextareaCounter
+                            id="st-disabled"
+                            maxLength={100}
+                            defaultValue="비활성 입력 내용입니다."
+                            disabled
+                        />
+                    </Field>
+                    <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
+                        <FieldLabel htmlFor="st-view" className="text-foreground font-bold">
+                            읽기전용 (readOnly)
+                        </FieldLabel>
+                        <TextareaCounter id="st-view" maxLength={100} defaultValue="수정 불가한 내용입니다." readOnly />
+                    </Field>
+                </div>
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="textarea-form" className="flex flex-col gap-4">
-            <div>
-                <h2 id="textarea-form" className="typo-h4-bold">
-                    폼 제출
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    네이티브 Textarea에 <code className="font-mono">name</code>을 지정하면 값이 FormData로 제출됩니다.
-                    예시는 필수값을 직접 검증해 <code className="font-mono">FieldError</code>를 표시하고 첫 오류
-                    입력으로 포커스를 이동합니다. TextareaCounter도 동일한 네이티브 textarea를 사용하며 readOnly 값은
-                    제출되지만 disabled 값은 제출되지 않습니다.
-                </p>
-            </div>
-            <TextareaFormDemo />
-            <CodeBlock code={FORM_CODE} language="tsx" copyLabel="복사" />
-        </section>
+        <BaseCard>
+            <section aria-labelledby="textarea-form" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="textarea-form" className="typo-h4-bold">
+                        폼 제출
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        네이티브 Textarea에 <code className="font-mono">name</code>을 지정하면 값이 FormData로
+                        제출됩니다. 예시는 필수값을 직접 검증해 <code className="font-mono">FieldError</code>를 표시하고
+                        첫 오류 입력으로 포커스를 이동합니다. TextareaCounter도 동일한 네이티브 textarea를 사용하며
+                        readOnly 값은 제출되지만 disabled 값은 제출되지 않습니다.
+                    </p>
+                </div>
+                <TextareaFormDemo />
+                <CodeBlock code={FORM_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="textarea-props" className="flex flex-col gap-4">
-            <div>
-                <h2 id="textarea-props" className="typo-h4-bold">
-                    Props
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    Textarea는 네이티브 textarea 속성을, TextareaCounter는 동일 속성과 카운터 구성을 지원합니다.
-                </p>
-            </div>
-            <div className="bg-background border-border overflow-x-auto rounded-md border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">Props 목록</caption>
-                    <thead>
-                        <tr className="border-border border-b bg-gray-100/25">
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Name
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Description
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Default
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Control
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {PROPS_ITEMS.map((prop) => (
-                            <tr key={prop.name} className="border-border bg-background border-b last:border-b-0">
-                                <th
-                                    scope="row"
-                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                                >
-                                    {prop.name}
+        <BaseCard>
+            <section aria-labelledby="textarea-props" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="textarea-props" className="typo-h4-bold">
+                        Props
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        Textarea는 네이티브 textarea 속성을, TextareaCounter는 동일 속성과 카운터 구성을 지원합니다.
+                    </p>
+                </div>
+                <div className="bg-background border-border overflow-x-auto rounded-md border">
+                    <table className="w-full text-left">
+                        <caption className="sr-only">Props 목록</caption>
+                        <thead>
+                            <tr className="border-border border-b bg-gray-100/25">
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Name
                                 </th>
-                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{prop.desc}</td>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                    {prop.def}
-                                </td>
-                                <td className="px-4 py-3">
-                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
-                                        {prop.control}
-                                    </span>
-                                </td>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Description
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Default
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Control
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+                        </thead>
+                        <tbody>
+                            {PROPS_ITEMS.map((prop) => (
+                                <tr key={prop.name} className="border-border bg-background border-b last:border-b-0">
+                                    <th
+                                        scope="row"
+                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
+                                    >
+                                        {prop.name}
+                                    </th>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{prop.desc}</td>
+                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                                        {prop.def}
+                                    </td>
+                                    <td className="px-4 py-3">
+                                        <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+                                            {prop.control}
+                                        </span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </BaseCard>
     </GuidePageShell>
 )
 

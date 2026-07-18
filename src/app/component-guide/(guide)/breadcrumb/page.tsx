@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
 import {ChevronRightIcon} from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
@@ -141,246 +142,265 @@ const BreadcrumbGuidePage = () => (
         title="브레드크럼 (Breadcrumb)"
         description="바닐라 shadcn Breadcrumb primitive를 프로젝트 wrapper로 조합한 위치 내비게이션입니다. bg-surface 알약 안에서 점(·)으로 구분하고 현재 페이지를 강조합니다."
     >
-        <section aria-labelledby="bc-main" className="flex flex-col gap-4">
-            <div>
-                <h2 id="bc-main" className="typo-h4-bold">
-                    기본 (Figma)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <code className="font-mono">bg-surface</code> 알약(<code className="font-mono">rounded-full</code> +{' '}
-                    <code className="font-mono">shadow-1</code>) 컨테이너 · 점 구분자 · 링크(중간)와 현재 페이지 강조 ·
-                    현재 페이지의 오른쪽 화살표(›)까지 Figma 그대로입니다.
-                </p>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <code>ui/breadcrumb.tsx</code>는 registry 원본을 유지하고, <code>composite/breadcrumb.tsx</code>가
-                    원본 구성요소를 직접 호출하면서 <code>theme/breadcrumb.variants.ts</code>의 프로젝트 스타일을
-                    연결합니다. primitive를 복사하지 않습니다.
-                </p>
-            </div>
-            <div>
-                <div className={PILL}>
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="#">홈</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbDotSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="#">자가진단</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbDotSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
-                                <ChevronRightIcon
-                                    aria-hidden="true"
-                                    className="text-foreground size-icon-sm shrink-0"
-                                />
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
+        <BaseCard>
+            <section aria-labelledby="bc-main" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="bc-main" className="typo-h4-bold">
+                        기본 (Figma)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">bg-surface</code> 알약(
+                        <code className="font-mono">rounded-full</code> + <code className="font-mono">shadow-1</code>)
+                        컨테이너 · 점 구분자 · 링크(중간)와 현재 페이지 강조 · 현재 페이지의 오른쪽 화살표(›)까지 Figma
+                        그대로입니다.
+                    </p>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code>ui/breadcrumb.tsx</code>는 registry 원본을 유지하고, <code>composite/breadcrumb.tsx</code>
+                        가 원본 구성요소를 직접 호출하면서 <code>theme/breadcrumb.variants.ts</code>의 프로젝트 스타일을
+                        연결합니다. primitive를 복사하지 않습니다.
+                    </p>
                 </div>
-            </div>
-            <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
-        </section>
-
-        <section aria-labelledby="bc-separator" className="flex flex-col gap-4">
-            <div>
-                <h2 id="bc-separator" className="typo-h4-bold">
-                    Separator
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    primitive 기본 chevron과 프로젝트 표준 점 구분자를 모두 사용할 수 있습니다.
-                </p>
-            </div>
-            <div className="flex flex-wrap gap-8">
-                <div className={PILL}>
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="#">홈</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>자가진단</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                </div>
-                <div className={PILL}>
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="#">홈</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbDotSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>자가진단</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                </div>
-            </div>
-        </section>
-
-        <section aria-labelledby="bc-basic" className="flex flex-col gap-4">
-            <div>
-                <h2 id="bc-basic" className="typo-h4-bold">
-                    2뎁스 (화살표 없음)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    단계가 적으면 현재 페이지의 화살표(›)를 뺍니다.
-                </p>
-            </div>
-            <div>
-                <div className={PILL}>
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="#">홈</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbDotSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>자가진단</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                </div>
-            </div>
-        </section>
-
-        <section aria-labelledby="bc-ellipsis" className="flex flex-col gap-4">
-            <div>
-                <h2 id="bc-ellipsis" className="typo-h4-bold">
-                    접힘 (Ellipsis)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    경로가 길면 중간 단계를 <code className="font-mono">BreadcrumbEllipsis</code>(…)로 접습니다.
-                </p>
-            </div>
-            <div>
-                <div className={PILL}>
-                    <Breadcrumb>
-                        <BreadcrumbList>
-                            <BreadcrumbItem>
-                                <BreadcrumbLink href="#">홈</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbDotSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbEllipsis />
-                            </BreadcrumbItem>
-                            <BreadcrumbDotSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
-                            </BreadcrumbItem>
-                        </BreadcrumbList>
-                    </Breadcrumb>
-                </div>
-            </div>
-        </section>
-
-        <section aria-labelledby="bc-composition" className="flex flex-col gap-4">
-            <div>
-                <h2 id="bc-composition" className="typo-h4-bold">
-                    구성
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    브레드크럼은 여러 하위 컴포넌트로 조합합니다.
-                </p>
-            </div>
-            <dl className="flex flex-col gap-2">
-                {COMPOSITION.map(([name, desc]) => (
-                    <div key={name} className="flex flex-col gap-0.5">
-                        <dt className="typo-body-l-medium text-primary font-mono">{name}</dt>
-                        <dd className="typo-body-l-regular text-muted-foreground">{desc}</dd>
+                <div>
+                    <div className={PILL}>
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink href="#">홈</BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbDotSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink href="#">자가진단</BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbDotSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
+                                    <ChevronRightIcon
+                                        aria-hidden="true"
+                                        className="text-foreground size-icon-sm shrink-0"
+                                    />
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
                     </div>
-                ))}
-            </dl>
-        </section>
+                </div>
+                <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="bc-accessibility" className="flex flex-col gap-4">
-            <div>
-                <h2 id="bc-accessibility" className="typo-h4-bold">
-                    접근성
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    현재 위치와 이동 가능한 상위 경로를 내비게이션·목록 구조로 전달합니다.
-                </p>
-            </div>
-            <ul className="typo-body-l-regular text-muted-foreground list-disc space-y-1 pl-5">
-                <li>
-                    Breadcrumb는 <code>nav[aria-label=&quot;breadcrumb&quot;]</code>, BreadcrumbList는 <code>ol</code>로
-                    렌더링됩니다.
-                </li>
-                <li>
-                    현재 페이지에는 aria-current=&quot;page&quot;와 aria-disabled=&quot;true&quot;가 자동 적용됩니다.
-                </li>
-                <li>chevron·점·ellipsis 구분 표시는 장식이므로 접근성 트리에서 제외됩니다.</li>
-                <li>이동 가능한 이전 경로만 BreadcrumbLink로 제공하고 현재 페이지는 링크로 만들지 않습니다.</li>
-            </ul>
-        </section>
+        <BaseCard>
+            <section aria-labelledby="bc-separator" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="bc-separator" className="typo-h4-bold">
+                        Separator
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        primitive 기본 chevron과 프로젝트 표준 점 구분자를 모두 사용할 수 있습니다.
+                    </p>
+                </div>
+                <div className="flex flex-wrap gap-8">
+                    <div className={PILL}>
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink href="#">홈</BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>자가진단</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                    </div>
+                    <div className={PILL}>
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink href="#">홈</BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbDotSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>자가진단</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                    </div>
+                </div>
+            </section>
+        </BaseCard>
 
-        <section aria-labelledby="bc-props" className="flex flex-col gap-4">
-            <div>
-                <h2 id="bc-props" className="typo-h4-bold">
-                    Props
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    각 wrapper는 대응하는 ui primitive의 네이티브 Props를 그대로 전달합니다.
-                </p>
-            </div>
-            <div className="border-border overflow-x-auto rounded-md border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">Breadcrumb 구성요소 Props 목록</caption>
-                    <thead>
-                        <tr className="border-border bg-card border-b">
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Component
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Name
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Type
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Default
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Description
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {PROPS_ITEMS.map(({component, name, type, defaultValue, description, rowSpan}) => (
-                            <tr key={`${component}-${name}`} className="border-border border-b last:border-b-0">
-                                {rowSpan || PROPS_ITEMS.filter((item) => item.component === component).length === 1 ? (
-                                    <th
-                                        scope="rowgroup"
-                                        rowSpan={rowSpan}
-                                        className="typo-body-l-medium border-border text-primary border-r px-4 py-3 text-left align-top font-mono"
-                                    >
-                                        {component}
-                                    </th>
-                                ) : null}
-                                <th
-                                    scope="row"
-                                    className="typo-body-l-regular px-4 py-3 text-left font-mono font-normal"
-                                >
-                                    {name}
+        <BaseCard>
+            <section aria-labelledby="bc-basic" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="bc-basic" className="typo-h4-bold">
+                        2뎁스 (화살표 없음)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        단계가 적으면 현재 페이지의 화살표(›)를 뺍니다.
+                    </p>
+                </div>
+                <div>
+                    <div className={PILL}>
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink href="#">홈</BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbDotSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>자가진단</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                    </div>
+                </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="bc-ellipsis" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="bc-ellipsis" className="typo-h4-bold">
+                        접힘 (Ellipsis)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        경로가 길면 중간 단계를 <code className="font-mono">BreadcrumbEllipsis</code>(…)로 접습니다.
+                    </p>
+                </div>
+                <div>
+                    <div className={PILL}>
+                        <Breadcrumb>
+                            <BreadcrumbList>
+                                <BreadcrumbItem>
+                                    <BreadcrumbLink href="#">홈</BreadcrumbLink>
+                                </BreadcrumbItem>
+                                <BreadcrumbDotSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbEllipsis />
+                                </BreadcrumbItem>
+                                <BreadcrumbDotSeparator />
+                                <BreadcrumbItem>
+                                    <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
+                                </BreadcrumbItem>
+                            </BreadcrumbList>
+                        </Breadcrumb>
+                    </div>
+                </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="bc-composition" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="bc-composition" className="typo-h4-bold">
+                        구성
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        브레드크럼은 여러 하위 컴포넌트로 조합합니다.
+                    </p>
+                </div>
+                <dl className="flex flex-col gap-2">
+                    {COMPOSITION.map(([name, desc]) => (
+                        <div key={name} className="flex flex-col gap-0.5">
+                            <dt className="typo-body-l-medium text-primary font-mono">{name}</dt>
+                            <dd className="typo-body-l-regular text-muted-foreground">{desc}</dd>
+                        </div>
+                    ))}
+                </dl>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="bc-accessibility" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="bc-accessibility" className="typo-h4-bold">
+                        접근성
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        현재 위치와 이동 가능한 상위 경로를 내비게이션·목록 구조로 전달합니다.
+                    </p>
+                </div>
+                <ul className="typo-body-l-regular text-muted-foreground list-disc space-y-1 pl-5">
+                    <li>
+                        Breadcrumb는 <code>nav[aria-label=&quot;breadcrumb&quot;]</code>, BreadcrumbList는{' '}
+                        <code>ol</code>로 렌더링됩니다.
+                    </li>
+                    <li>
+                        현재 페이지에는 aria-current=&quot;page&quot;와 aria-disabled=&quot;true&quot;가 자동
+                        적용됩니다.
+                    </li>
+                    <li>chevron·점·ellipsis 구분 표시는 장식이므로 접근성 트리에서 제외됩니다.</li>
+                    <li>이동 가능한 이전 경로만 BreadcrumbLink로 제공하고 현재 페이지는 링크로 만들지 않습니다.</li>
+                </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="bc-props" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="bc-props" className="typo-h4-bold">
+                        Props
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        각 wrapper는 대응하는 ui primitive의 네이티브 Props를 그대로 전달합니다.
+                    </p>
+                </div>
+                <div className="border-border overflow-x-auto rounded-md border">
+                    <table className="w-full text-left">
+                        <caption className="sr-only">Breadcrumb 구성요소 Props 목록</caption>
+                        <thead>
+                            <tr className="border-border bg-card border-b">
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Component
                                 </th>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
-                                    {type}
-                                </td>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
-                                    {defaultValue}
-                                </td>
-                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{description}</td>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Name
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Type
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Default
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Description
+                                </th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
-        </section>
+                        </thead>
+                        <tbody>
+                            {PROPS_ITEMS.map(({component, name, type, defaultValue, description, rowSpan}) => (
+                                <tr key={`${component}-${name}`} className="border-border border-b last:border-b-0">
+                                    {rowSpan ||
+                                    PROPS_ITEMS.filter((item) => item.component === component).length === 1 ? (
+                                        <th
+                                            scope="rowgroup"
+                                            rowSpan={rowSpan}
+                                            className="typo-body-l-medium border-border text-primary border-r px-4 py-3 text-left align-top font-mono"
+                                        >
+                                            {component}
+                                        </th>
+                                    ) : null}
+                                    <th
+                                        scope="row"
+                                        className="typo-body-l-regular px-4 py-3 text-left font-mono font-normal"
+                                    >
+                                        {name}
+                                    </th>
+                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
+                                        {type}
+                                    </td>
+                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
+                                        {defaultValue}
+                                    </td>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
+                                        {description}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </BaseCard>
     </GuidePageShell>
 )
 
