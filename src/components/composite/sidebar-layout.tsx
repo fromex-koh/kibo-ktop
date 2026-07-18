@@ -16,7 +16,7 @@ import {
     Sparkles,
 } from 'lucide-react'
 import type {LucideIcon} from 'lucide-react'
-import type {GuideNavIconKey, GuideNavItem, GuideNavSection} from '@/constants/guide-nav'
+import type {GuideNavIconKey, GuideNavItem, GuideNavItemGroup, GuideNavSection} from '@/constants/guide-nav'
 import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage} from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
@@ -77,9 +77,15 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
         ...navSections.flatMap((section) => {
             const sectionItems = section.items?.map((item) => ({categories: [section.title], ...item})) ?? []
             const groupItems =
-                section.groups?.flatMap((group) =>
-                    group.items.map((item) => ({categories: [section.title, group.title], ...item})),
-                ) ?? []
+                section.groups?.flatMap((group) => [
+                    ...(group.items?.map((item) => ({categories: [section.title, group.title], ...item})) ?? []),
+                    ...(group.groups?.flatMap((subgroup) =>
+                        (subgroup.items ?? []).map((item) => ({
+                            categories: [section.title, group.title, subgroup.title],
+                            ...item,
+                        })),
+                    ) ?? []),
+                ]) ?? []
             return [...sectionItems, ...groupItems]
         }),
     ].find((item) => !item.external && item.href === pathname)
@@ -149,8 +155,14 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                                                                     {group.title}
                                                                 </p>
                                                                 <SidebarMenuSub className="mx-0 border-l-0 px-0">
-                                                                    {group.items.map((item) => (
+                                                                    {group.items?.map((item) => (
                                                                         <GuideNavSubItem key={item.href} item={item} />
+                                                                    ))}
+                                                                    {group.groups?.map((subgroup) => (
+                                                                        <GuideNavNestedGroup
+                                                                            key={subgroup.title}
+                                                                            group={subgroup}
+                                                                        />
                                                                     ))}
                                                                 </SidebarMenuSub>
                                                             </SidebarMenuSubItem>
@@ -211,6 +223,17 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
         </SidebarProvider>
     )
 }
+
+const GuideNavNestedGroup = ({group}: {group: GuideNavItemGroup}) => (
+    <SidebarMenuSubItem className="mt-3 first:mt-1">
+        <p className="typo-caption-medium text-primary-strong px-2 py-1">{group.title}</p>
+        <SidebarMenuSub className="mx-0 border-l-0 px-0">
+            {group.items?.map((item) => (
+                <GuideNavSubItem key={item.href} item={item} />
+            ))}
+        </SidebarMenuSub>
+    </SidebarMenuSubItem>
+)
 
 const GuideNavRootItem = ({item}: {item: GuideNavItem}) => {
     const pathname = usePathname()

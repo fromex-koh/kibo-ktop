@@ -4,7 +4,11 @@
 
 // external: true 면 새 창(target=_blank)으로 여는 링크(사이드바 콘텐츠 밖에서 봐야 하는 독립 화면).
 export type GuideNavItem = {label: string; href: string; external?: boolean}
-export type GuideNavItemGroup = {title: string; items: GuideNavItem[]}
+export type GuideNavItemGroup = {
+    title: string
+    items?: GuideNavItem[]
+    groups?: GuideNavItemGroup[]
+}
 // icon: 사이드 상위 메뉴(섹션) 아이콘의 '키'. 실제 lucide 컴포넌트는 클라이언트(sidebar-layout)에서
 // 매핑한다 — 컴포넌트(메서드 있는 객체)는 서버→클라이언트 prop 경계를 못 넘으므로 직렬화 가능한 문자열로 둔다.
 export type GuideNavIconKey = 'primitive' | 'semantic' | 'effect' | 'layout' | 'component'
@@ -58,24 +62,34 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         groups: [
             {
                 title: '폼 요소',
-                items: [
-                    {label: 'Label', href: '/component-guide/label'},
-                    {label: 'FieldLabel', href: '/component-guide/field-label'},
-                    {label: 'Button', href: '/component-guide/button'},
-                    {label: 'Input', href: '/component-guide/input'},
-                    {label: 'Textarea', href: '/component-guide/textarea'},
-                    {label: 'Select', href: '/component-guide/select'},
-                    {label: 'Combobox', href: '/component-guide/combobox'},
-                    {label: 'DatePicker', href: '/component-guide/date-picker'},
-                    {label: 'Checkbox', href: '/component-guide/checkbox'},
-                    {label: 'Radio', href: '/component-guide/radio'},
-                    {label: 'Chip', href: '/component-guide/chip'},
-                    {label: 'QuestionGroupHeader', href: '/component-guide/question-group-header'},
-                    {label: 'QuestionList', href: '/component-guide/question-list'},
-                    {label: 'SelectableCard', href: '/component-guide/selectable-card'},
-                    {label: 'Segmented Control', href: '/component-guide/segmented-control'},
-                    {label: 'SearchBar', href: '/component-guide/search-bar'},
-                    {label: 'Switch', href: '/component-guide/switch'},
+                groups: [
+                    {
+                        title: '공통 폼 컨트롤',
+                        items: [
+                            {label: 'Label', href: '/component-guide/label'},
+                            {label: 'FieldLabel', href: '/component-guide/field-label'},
+                            {label: 'Button', href: '/component-guide/button'},
+                            {label: 'Input', href: '/component-guide/input'},
+                            {label: 'Textarea', href: '/component-guide/textarea'},
+                            {label: 'Select', href: '/component-guide/select'},
+                            {label: 'Combobox', href: '/component-guide/combobox'},
+                            {label: 'DatePicker', href: '/component-guide/date-picker'},
+                            {label: 'Checkbox', href: '/component-guide/checkbox'},
+                            {label: 'Radio', href: '/component-guide/radio'},
+                            {label: 'Switch', href: '/component-guide/switch'},
+                        ],
+                    },
+                    {
+                        title: '프로젝트 폼 패턴',
+                        items: [
+                            {label: 'Chip', href: '/component-guide/chip'},
+                            {label: 'QuestionGroupHeader', href: '/component-guide/question-group-header'},
+                            {label: 'QuestionList', href: '/component-guide/question-list'},
+                            {label: 'SelectableCard', href: '/component-guide/selectable-card'},
+                            {label: 'Segmented Control', href: '/component-guide/segmented-control'},
+                            {label: 'SearchBar', href: '/component-guide/search-bar'},
+                        ],
+                    },
                 ],
             },
             {
