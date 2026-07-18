@@ -1,5 +1,6 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
@@ -24,7 +25,7 @@ const alphaRgba = (color: string, step: number): string =>
 const CHECKERBOARD =
     'repeating-conic-gradient(var(--raw-gray-300) 0% 25%, var(--raw-common-white) 0% 50%) 0 0 / 8px 8px'
 
-// 휴가 속한 그룹(brand/system) 라벨 — Figma 의 "brand / blue" 표기를 재현한다. 미정의면 휴명으로 대체.
+// hue가 속한 그룹(brand/system) 라벨 — Figma의 "brand / blue" 표기를 재현한다. 미정의면 hue명으로 대체.
 const groupOf = (hue: string): string =>
     Object.entries(tokens.primitiveGroups).find(([, hues]) => hues.includes(hue))?.[0] ?? hue
 
@@ -93,102 +94,109 @@ const ColorGuidePage = () => (
         description="tokens.json의 원시 색상 팔레트입니다. 일반 UI에서는 직접 사용하지 말고 역할이 드러나는 시맨틱 색상 유틸리티를 우선하세요."
     >
         <div className="flex flex-col gap-12">
-            <section aria-labelledby="primitive-rule-title" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                    <h2 id="primitive-rule-title" className="typo-h4-bold text-foreground">
-                        구조와 사용 원칙
-                    </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        원시값은 시맨틱 토큰이 참조하는 기반 값이며, 화면에서는 bg-primary·text-foreground처럼 용도가
-                        드러나는 클래스를 사용합니다.
-                    </p>
-                </div>
-                <div className="border-border bg-card grid gap-4 rounded-xl border p-5 md:grid-cols-3">
+            <BaseCard>
+                <section aria-labelledby="primitive-rule-title" className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">단일 원본</strong>
-                        <p className="text-foreground-subtle">
-                            값 변경은 <code className="font-mono">tokens.json</code>에서만 진행합니다.
+                        <h2 id="primitive-rule-title" className="typo-h4-bold text-foreground">
+                            구조와 사용 원칙
+                        </h2>
+                        <p className="typo-body-l-regular text-foreground-subtle">
+                            원시값은 시맨틱 토큰이 참조하는 기반 값이며, 화면에서는 bg-primary·text-foreground처럼
+                            용도가 드러나는 클래스를 사용합니다.
                         </p>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">생성 과정</strong>
-                        <p className="text-foreground-subtle">
-                            <code className="font-mono">yarn tokens</code>가 raw·ds 변수와 색상 유틸리티를 생성합니다.
-                        </p>
+                    <div className="grid gap-4 md:grid-cols-3">
+                        <div className="flex flex-col gap-1">
+                            <strong className="text-foreground">단일 원본</strong>
+                            <p className="text-foreground-subtle">
+                                값 변경은 <code className="font-mono">tokens.json</code>에서만 진행합니다.
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <strong className="text-foreground">생성 과정</strong>
+                            <p className="text-foreground-subtle">
+                                <code className="font-mono">yarn tokens</code>가 raw·ds 변수와 색상 유틸리티를
+                                생성합니다.
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <strong className="text-foreground">다크 모드</strong>
+                            <p className="text-foreground-subtle">
+                                raw 값은 고정되고 ds 스케일은 단계 위치를 반사합니다. 시맨틱 페이지에서 실제 매핑을
+                                확인합니다.
+                            </p>
+                        </div>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">다크 모드</strong>
-                        <p className="text-foreground-subtle">
-                            raw 값은 고정되고 ds 스케일은 단계 위치를 반사합니다. 시맨틱 페이지에서 실제 매핑을
-                            확인합니다.
-                        </p>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </BaseCard>
 
             {Object.entries(primitiveGroups).map(([group, hues]) => (
-                <section key={group} aria-labelledby={`primitive-${group}`} className="flex flex-col gap-6">
+                <BaseCard key={group}>
+                    <section aria-labelledby={`primitive-${group}`} className="flex flex-col gap-6">
+                        <div className="flex flex-col gap-1">
+                            <h2 id={`primitive-${group}`} className="typo-h4-bold text-foreground capitalize">
+                                {group}
+                            </h2>
+                            <p className="typo-caption-regular text-muted-foreground">
+                                {group === 'brand'
+                                    ? '브랜드와 중립 UI에 사용하는 원시 팔레트입니다.'
+                                    : '성공·경고·오류·정보 상태의 기반 원시 팔레트입니다.'}
+                            </p>
+                        </div>
+                        <div className="grid gap-8 xl:grid-cols-2">
+                            {hues.map((hue) => (
+                                <ColorTable
+                                    key={hue}
+                                    title={
+                                        <>
+                                            <span className="text-muted-foreground">{groupOf(hue)} / </span>
+                                            <span className="text-foreground font-semibold">{hue}</span>
+                                        </>
+                                    }
+                                    rows={Object.entries(primitive[hue]).map(([step, hex]) => ({
+                                        name: step,
+                                        cssVar: `var(--raw-${hue}-${step})`,
+                                        value: hexToRgba(hex),
+                                    }))}
+                                />
+                            ))}
+                        </div>
+                    </section>
+                </BaseCard>
+            ))}
+
+            <BaseCard>
+                <section aria-labelledby="primitive-common" className="flex flex-col gap-6">
                     <div className="flex flex-col gap-1">
-                        <h2 id={`primitive-${group}`} className="typo-h4-bold text-foreground capitalize">
-                            {group}
+                        <h2 id="primitive-common" className="typo-h4-bold text-foreground">
+                            Common · Alpha
                         </h2>
                         <p className="typo-caption-regular text-muted-foreground">
-                            {group === 'brand'
-                                ? '브랜드와 중립 UI에 사용하는 원시 팔레트입니다.'
-                                : '성공·경고·오류·정보 상태의 기반 원시 팔레트입니다.'}
+                            스케일 밖의 고정 앵커와 오버레이·그림자 등에 사용하는 투명도 원시값입니다.
                         </p>
                     </div>
                     <div className="grid gap-8 xl:grid-cols-2">
-                        {hues.map((hue) => (
-                            <ColorTable
-                                key={hue}
-                                title={
-                                    <>
-                                        <span className="text-muted-foreground">{groupOf(hue)} / </span>
-                                        <span className="text-foreground font-semibold">{hue}</span>
-                                    </>
-                                }
-                                rows={Object.entries(primitive[hue]).map(([step, hex]) => ({
-                                    name: step,
-                                    cssVar: `var(--raw-${hue}-${step})`,
-                                    value: hexToRgba(hex),
-                                }))}
-                            />
-                        ))}
+                        <ColorTable
+                            title={<span className="text-foreground font-semibold">common</span>}
+                            rows={Object.entries(common).map(([name, value]) => ({
+                                name,
+                                cssVar: `var(--raw-common-${name})`,
+                                value: display(value),
+                            }))}
+                        />
+                        <ColorTable
+                            title={<span className="text-foreground font-semibold">alpha</span>}
+                            rows={Object.entries(alpha).flatMap(([color, steps]) =>
+                                steps.map((step) => ({
+                                    name: `${color}${step}`,
+                                    cssVar: `var(--raw-${color}-a${step})`,
+                                    value: alphaRgba(color, step),
+                                })),
+                            )}
+                        />
                     </div>
                 </section>
-            ))}
-
-            <section aria-labelledby="primitive-common" className="flex flex-col gap-6">
-                <div className="flex flex-col gap-1">
-                    <h2 id="primitive-common" className="typo-h4-bold text-foreground">
-                        Common · Alpha
-                    </h2>
-                    <p className="typo-caption-regular text-muted-foreground">
-                        스케일 밖의 고정 앵커와 오버레이·그림자 등에 사용하는 투명도 원시값입니다.
-                    </p>
-                </div>
-                <div className="grid gap-8 xl:grid-cols-2">
-                    <ColorTable
-                        title={<span className="text-foreground font-semibold">common</span>}
-                        rows={Object.entries(common).map(([name, value]) => ({
-                            name,
-                            cssVar: `var(--raw-common-${name})`,
-                            value: display(value),
-                        }))}
-                    />
-                    <ColorTable
-                        title={<span className="text-foreground font-semibold">alpha</span>}
-                        rows={Object.entries(alpha).flatMap(([color, steps]) =>
-                            steps.map((step) => ({
-                                name: `${color}${step}`,
-                                cssVar: `var(--raw-${color}-a${step})`,
-                                value: alphaRgba(color, step),
-                            })),
-                        )}
-                    />
-                </div>
-            </section>
+            </BaseCard>
 
             <p className="typo-caption-regular text-muted-foreground">
                 현재 primitive {PRIMITIVE_COLOR_COUNT}개, common {COMMON_COLOR_COUNT}개, alpha {ALPHA_COLOR_COUNT}개를{' '}

@@ -1,5 +1,6 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
@@ -28,104 +29,109 @@ type PrimitiveRow = {cssVar: string; value: ReactNode; preview?: ReactNode}
 
 // 한 원시 그룹 = 독립 테이블(변수·값·미리보기). 변수 칩을 클릭하면 이름이 복사된다.
 const PrimitiveTable = ({title, hint, rows}: {title: string; hint: string; rows: PrimitiveRow[]}) => (
-    <section className="flex flex-col gap-2">
-        <div className="flex flex-col gap-1">
-            <h2 className="typo-h4-bold">{title}</h2>
-            <p className="typo-body-l-regular text-muted-foreground">{hint}</p>
-        </div>
-        <div className="border-border overflow-x-auto rounded-xl border">
-            <table className="w-full text-left">
-                <caption className="sr-only">{title} 원시 변수와 값</caption>
-                <thead>
-                    <tr className="border-border bg-card border-b">
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            변수
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            값
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            미리보기
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows.map((row) => (
-                        <tr key={row.cssVar} className="border-border border-b last:border-b-0">
-                            <th scope="row" className="px-4 py-3 text-left font-normal">
-                                <span className="typo-caption-regular text-foreground font-mono">
-                                    {row.cssVar.slice(4, -1)}
-                                </span>
+    <BaseCard>
+        <section className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+                <h2 className="typo-h4-bold">{title}</h2>
+                <p className="typo-body-l-regular text-muted-foreground">{hint}</p>
+            </div>
+            <div className="border-border overflow-x-auto rounded-xl border">
+                <table className="w-full text-left">
+                    <caption className="sr-only">{title} 원시 변수와 값</caption>
+                    <thead>
+                        <tr className="border-border bg-card border-b">
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                변수
                             </th>
-                            <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
-                                {row.value}
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap">{row.preview ?? '—'}</td>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                값
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                미리보기
+                            </th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    </section>
+                    </thead>
+                    <tbody>
+                        {rows.map((row) => (
+                            <tr key={row.cssVar} className="border-border border-b last:border-b-0">
+                                <th scope="row" className="px-4 py-3 text-left font-normal">
+                                    <span className="typo-caption-regular text-foreground font-mono">
+                                        {row.cssVar.slice(4, -1)}
+                                    </span>
+                                </th>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
+                                    {row.value}
+                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap">{row.preview ?? '—'}</td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </BaseCard>
 )
 
 // font-size는 모바일·PC 변수가 한 쌍이다. 값이 같아도 -pc 변수를 생성해 typo-*가 같은 구조로 참조하며,
 // 생성 CSS에서는 중복 리터럴 대신 모바일 변수를 다시 가리킨다.
 const FontSizeTable = () => (
-    <section className="flex flex-col gap-2">
-        <div className="flex flex-col gap-1">
-            <h2 className="typo-h4-bold">크기 (font-size)</h2>
-            <p className="typo-body-l-regular text-muted-foreground">
-                tier별 모바일·PC 원시 변수를 생성합니다. tokens.json에는 px 숫자로 입력하고 CSS에는 rem으로 출력합니다.
-            </p>
-        </div>
-        <div className="border-border overflow-x-auto rounded-xl border">
-            <table className="w-full text-left">
-                <caption className="sr-only">font-size tier별 모바일·PC 원시 변수와 값</caption>
-                <thead>
-                    <tr className="border-border bg-card border-b">
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            Tier
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            모바일 변수·값
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            PC 변수·값
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            미리보기
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {FONT_SIZE_TIERS.map(({tier, mobile, pc}) => (
-                        <tr key={tier} className="border-border border-b last:border-b-0">
-                            <th
-                                scope="row"
-                                className="typo-caption-regular text-foreground px-4 py-3 text-left font-mono"
-                            >
-                                {tier}
+    <BaseCard>
+        <section className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+                <h2 className="typo-h4-bold">크기 (font-size)</h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    tier별 모바일·PC 원시 변수를 생성합니다. tokens.json에는 px 숫자로 입력하고 CSS에는 rem으로
+                    출력합니다.
+                </p>
+            </div>
+            <div className="border-border overflow-x-auto rounded-xl border">
+                <table className="w-full text-left">
+                    <caption className="sr-only">font-size tier별 모바일·PC 원시 변수와 값</caption>
+                    <thead>
+                        <tr className="border-border bg-card border-b">
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                Tier
                             </th>
-                            <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
-                                <span className="text-foreground">--raw-font-size-{tier}</span>
-                                <br />
-                                {mobile}px → {mobile / tokens.remBase}rem
-                            </td>
-                            <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
-                                <span className="text-foreground">--raw-font-size-{tier}-pc</span>
-                                <br />
-                                {pc}px → {pc / tokens.remBase}rem
-                            </td>
-                            <td className="px-4 py-3 whitespace-nowrap">
-                                <span style={{fontSize: `var(--raw-font-size-${tier})`}}>{PREVIEW_SAMPLE}</span>
-                            </td>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                모바일 변수·값
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                PC 변수·값
+                            </th>
+                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                미리보기
+                            </th>
                         </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    </section>
+                    </thead>
+                    <tbody>
+                        {FONT_SIZE_TIERS.map(({tier, mobile, pc}) => (
+                            <tr key={tier} className="border-border border-b last:border-b-0">
+                                <th
+                                    scope="row"
+                                    className="typo-caption-regular text-foreground px-4 py-3 text-left font-mono"
+                                >
+                                    {tier}
+                                </th>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
+                                    <span className="text-foreground">--raw-font-size-{tier}</span>
+                                    <br />
+                                    {mobile}px → {mobile / tokens.remBase}rem
+                                </td>
+                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
+                                    <span className="text-foreground">--raw-font-size-{tier}-pc</span>
+                                    <br />
+                                    {pc}px → {pc / tokens.remBase}rem
+                                </td>
+                                <td className="px-4 py-3 whitespace-nowrap">
+                                    <span style={{fontSize: `var(--raw-font-size-${tier})`}}>{PREVIEW_SAMPLE}</span>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </BaseCard>
 )
 
 const TYPOGRAPHY_COUNT = Object.keys(tokens.typography).length
@@ -138,38 +144,40 @@ const FontPrimitiveGuidePage = () => (
         description="tokens.json의 폰트 원시값입니다. 일반 UI에서는 개별 값을 조합하지 말고 크기·굵기·행간·자간을 묶은 typo-* 클래스를 우선하세요."
     >
         <div className="flex flex-col gap-12">
-            <section aria-labelledby="font-primitive-rule" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                    <h2 id="font-primitive-rule" className="typo-h4-bold text-foreground">
-                        구조와 사용 원칙
-                    </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        font-size·font-weight·line-height·letter-spacing 원시값을 조합해 하나의 typo-* 복합 유틸리티를
-                        생성합니다.
-                    </p>
-                </div>
-                <div className="border-border bg-card grid gap-4 rounded-xl border p-5 md:grid-cols-3">
+            <BaseCard>
+                <section aria-labelledby="font-primitive-rule" className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">단일 원본</strong>
-                        <p className="text-foreground-subtle">
-                            값과 조합은 <code className="font-mono">tokens.json</code>에서 관리합니다.
+                        <h2 id="font-primitive-rule" className="typo-h4-bold text-foreground">
+                            구조와 사용 원칙
+                        </h2>
+                        <p className="typo-body-l-regular text-foreground-subtle">
+                            font-size·font-weight·line-height·letter-spacing 원시값을 조합해 하나의 typo-* 복합
+                            유틸리티를 생성합니다.
                         </p>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">단위 변환</strong>
-                        <p className="text-foreground-subtle">
-                            크기·자간의 px 입력값은 <code className="font-mono">yarn tokens</code>에서 rem으로
-                            변환됩니다.
-                        </p>
+                    <div className="grid gap-4 md:grid-cols-3">
+                        <div className="flex flex-col gap-1">
+                            <strong className="text-foreground">단일 원본</strong>
+                            <p className="text-foreground-subtle">
+                                값과 조합은 <code className="font-mono">tokens.json</code>에서 관리합니다.
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <strong className="text-foreground">단위 변환</strong>
+                            <p className="text-foreground-subtle">
+                                크기·자간의 px 입력값은 <code className="font-mono">yarn tokens</code>에서 rem으로
+                                변환됩니다.
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <strong className="text-foreground">사용 계층</strong>
+                            <p className="text-foreground-subtle">
+                                원시 변수 → <code className="font-mono">typo-*</code> → 컴포넌트 순서로 적용합니다.
+                            </p>
+                        </div>
                     </div>
-                    <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">사용 계층</strong>
-                        <p className="text-foreground-subtle">
-                            원시 변수 → <code className="font-mono">typo-*</code> → 컴포넌트 순서로 적용합니다.
-                        </p>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </BaseCard>
 
             <PrimitiveTable
                 title="굵기 (font-weight)"

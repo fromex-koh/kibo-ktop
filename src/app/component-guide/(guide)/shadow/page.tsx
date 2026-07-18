@@ -1,51 +1,83 @@
 import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '그림자 (Shadow)'}
 
-// '미리보기' 칸 클래스 — Tailwind 는 className 에 리터럴로 등장하는 클래스명만 스캔해서 CSS 를
-// 생성하므로 `shadow-${k}` 처럼 동적으로 조합하면 안 만들어진다. 프로젝트 스케일(1/2/3) 리터럴을
-// Record 로 나열해 className 에 직접 쓴다.
-const SHADOW_CLASS: Record<string, string> = {'1': 'shadow-1', '2': 'shadow-2', '3': 'shadow-3'}
+// 동적 키 조합은 Tailwind가 스캔하지 못하므로 실제 토큰 이름을 리터럴로 보관한다.
+const SHADOW_CLASS: Record<string, string> = {
+    '1': 'shadow-1',
+    sm: 'shadow-sm',
+    md: 'shadow-md',
+    lg: 'shadow-lg',
+}
 
-// 그림자 — 프로젝트에서 쓰는 그림자는 1/2/3 스케일만이다. tokens.json 의 sm/md/lg 는 shadcn ui/
-// 컴포넌트(popover=shadow-md 등)가 참조하는 유틸 이름이라 남겨둔 shadcn 전용이므로 여기선 제외한다.
-// primitive alpha 참조(라이트=검정 / 다크=흰색)라 배경에 관계없이 보인다. box-shadow 는 x/y/blur/
-// spread/색 복합값이라 radius 처럼 단일 base+calc 로 못 만들고 스텝마다 독립 값을 쓴다.
+const shadowEntries = Object.entries(tokens.effect.shadow)
+const projectEntries = shadowEntries.filter(([name]) => /^\d+$/.test(name))
+const compatibilityEntries = shadowEntries.filter(([name]) => !/^\d+$/.test(name))
+
+const rawVar = (ref: string): string => {
+    const [name, step] = ref.split('.')
+    return `--raw-${name}-a${step}`
+}
+
+const ShadowList = ({entries}: {entries: typeof shadowEntries}) => (
+    <ul className="grid gap-5 md:grid-cols-3">
+        {entries.map(([name, value]) => (
+            <li key={name} className="border-border overflow-hidden rounded-xl border">
+                <div className="bg-background flex aspect-video items-center justify-center">
+                    <span className={`bg-card border-border size-16 rounded-lg border ${SHADOW_CLASS[name]}`} />
+                </div>
+                <div className="border-border flex flex-col gap-2 border-t px-4 py-3">
+                    <CopyChip value={SHADOW_CLASS[name]} />
+                    <span className="typo-body-l-regular text-muted-foreground font-mono">
+                        x {value.x}px · y {value.y}px · blur {value.blur}px · spread {value.spread}px
+                    </span>
+                    <span className="typo-body-l-regular text-muted-foreground font-mono">
+                        {rawVar(value.color.light)} / {rawVar(value.color.dark)}
+                    </span>
+                </div>
+            </li>
+        ))}
+    </ul>
+)
+
 const ShadowGuidePage = () => (
-    <GuidePageShell title="그림자 (Shadow)" description="shadow-1/2/3 유틸로 쓰는 프로젝트 그림자 토큰입니다.">
-        <ul className="grid grid-cols-2 gap-5 md:grid-cols-3">
-            {Object.entries(tokens.effect.shadow)
-                .filter(([k]) => /^\d+$/.test(k))
-                .map(([k, val]) => {
-                    // color 참조 "black.10" → "--raw-black-a10" (primitive → semantic 매핑 표시)
-                    const rawVar = (ref: string) => {
-                        const [name, step] = ref.split('.')
-                        return `--raw-${name}-a${step}`
-                    }
-                    return (
-                        <li key={k} className="border-border overflow-hidden rounded-xl border">
-                            {/* 그림자가 라이트=검정/다크=흰색으로 전환되므로 자연 배경 위에서 양쪽 다 보임 */}
-                            <div className="bg-background flex aspect-[16/10] items-center justify-center">
-                                <span
-                                    className={`bg-card border-border size-16 rounded-lg border ${SHADOW_CLASS[k]}`}
-                                />
-                            </div>
-                            <div className="border-border flex flex-col gap-1 border-t px-4 py-3">
-                                <CopyChip value={`shadow-${k}`} />
-                                <span className="typo-caption-regular text-muted-foreground font-mono">
-                                    --ds-shadow-{k}
-                                </span>
-                                <span className="typo-caption-regular text-muted-foreground font-mono">
-                                    ↳ {rawVar(val.color.light)} / {rawVar(val.color.dark)}
-                                </span>
-                            </div>
-                        </li>
-                    )
-                })}
-        </ul>
+    <GuidePageShell
+        title="그림자 (Shadow)"
+        description="프로젝트 표면과 shadcn primitive에서 사용하는 box-shadow 토큰입니다."
+    >
+        <BaseCard>
+            <section aria-labelledby="project-shadow" className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                    <h2 id="project-shadow" className="typo-h4-bold text-foreground">
+                        프로젝트 그림자
+                    </h2>
+                    <p className="typo-body-l-regular text-foreground-subtle">
+                        프로젝트 화면에서 직접 선택하는 그림자입니다. 현재 <code className="font-mono">shadow-1</code>을
+                        사용합니다.
+                    </p>
+                </div>
+                <ShadowList entries={projectEntries} />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="compatibility-shadow" className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                    <h2 id="compatibility-shadow" className="typo-h4-bold text-foreground">
+                        shadcn 호환 그림자
+                    </h2>
+                    <p className="typo-body-l-regular text-foreground-subtle">
+                        shadcn primitive가 참조하는 표준 유틸리티 이름을 유지합니다. 프로젝트 화면에서는 먼저 shadow-1을
+                        검토합니다.
+                    </p>
+                </div>
+                <ShadowList entries={compatibilityEntries} />
+            </section>
+        </BaseCard>
     </GuidePageShell>
 )
 

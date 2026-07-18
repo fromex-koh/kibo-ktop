@@ -33,23 +33,23 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         ],
     },
     {
-        title: '효과',
+        title: '형태·효과',
         icon: 'effect',
         items: [
-            {label: '라운드', href: '/component-guide/radius'},
-            {label: '그림자', href: '/component-guide/shadow'},
-            {label: '흐림', href: '/component-guide/blur'},
-            {label: '오버레이', href: '/component-guide/overlay'},
+            {label: '모서리 반경 (Radius)', href: '/component-guide/radius'},
+            {label: '그림자 (Shadow)', href: '/component-guide/shadow'},
+            {label: '흐림 (Blur)', href: '/component-guide/blur'},
+            {label: '오버레이 (Overlay)', href: '/component-guide/overlay'},
         ],
     },
     {
         title: '레이아웃',
         icon: 'layout',
         items: [
-            {label: '브레이크포인트', href: '/component-guide/breakpoint'},
-            {label: '레이아웃 그리드', href: '/component-guide/grid', external: true},
+            {label: '브레이크포인트 (Breakpoint)', href: '/component-guide/breakpoint'},
+            {label: '레이아웃 그리드 (Grid)', href: '/component-guide/grid', external: true},
             {label: '간격 (Spacing)', href: '/component-guide/spacing'},
-            {label: '레이어 (Z-index)', href: '/component-guide/z-index'},
+            {label: '쌓임 순서 (Z-index)', href: '/component-guide/z-index'},
         ],
     },
     {

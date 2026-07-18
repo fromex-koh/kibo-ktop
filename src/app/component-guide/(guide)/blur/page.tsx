@@ -1,5 +1,6 @@
 import type {Metadata} from 'next'
 import Image from 'next/image'
+import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
@@ -14,28 +15,41 @@ const BLUR_CLASS: Record<string, string> = {sm: 'blur-sm', md: 'blur-md', lg: 'b
 
 // 흐림 — 흐림 토큰(--ds-blur-*)을 blur-* 유틸리티로 적용. 실제 사진으로 강도를 시각화한다.
 const BlurGuidePage = () => (
-    <GuidePageShell title="흐림 (Blur)" description="blur-* 유틸리티로 적용하는 흐림 토큰입니다.">
-        <ul className="grid grid-cols-2 gap-5 md:grid-cols-3">
-            {Object.entries(tokens.effect.blur).map(([k, px]) => (
-                <li key={k} className="border-border overflow-hidden rounded-xl border">
-                    <div className="relative aspect-[16/10] overflow-hidden">
-                        <Image
-                            src={sampleCatImg}
-                            alt="파란 하늘을 배경으로 위를 올려다보는 고양이"
-                            fill
-                            sizes="(min-width: 768px) 33vw, 50vw"
-                            className={`object-cover ${BLUR_CLASS[k]}`}
-                        />
-                    </div>
-                    <div className="border-border flex flex-col gap-1 border-t px-4 py-3">
-                        <CopyChip value={`blur-${k}`} />
-                        <span className="typo-caption-regular text-muted-foreground font-mono">
-                            --ds-blur-{k} · {px}px
-                        </span>
-                    </div>
-                </li>
-            ))}
-        </ul>
+    <GuidePageShell title="흐림 (Blur)" description="이미지와 장식 요소에 적용하는 blur-* 효과 토큰입니다.">
+        <BaseCard>
+            <section aria-labelledby="blur-scale" className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                    <h2 id="blur-scale" className="typo-h4-bold text-foreground">
+                        Blur scale
+                    </h2>
+                    <p className="typo-body-l-regular text-foreground-subtle">
+                        sm·md·lg 세 단계로 흐림 강도를 구분합니다. 실제 콘텐츠를 가리는 배경 효과에는 Overlay 토큰을
+                        함께 검토합니다.
+                    </p>
+                </div>
+                <ul className="grid gap-5 md:grid-cols-3">
+                    {Object.entries(tokens.effect.blur).map(([k, px]) => (
+                        <li key={k} className="border-border overflow-hidden rounded-xl border">
+                            <div className="relative aspect-video overflow-hidden">
+                                <Image
+                                    src={sampleCatImg}
+                                    alt="파란 하늘을 배경으로 위를 올려다보는 고양이"
+                                    fill
+                                    sizes="(min-width: 768px) 33vw, 100vw"
+                                    className={`object-cover ${BLUR_CLASS[k]}`}
+                                />
+                            </div>
+                            <div className="border-border flex flex-col gap-1 border-t px-4 py-3">
+                                <CopyChip value={`blur-${k}`} />
+                                <span className="typo-body-l-regular text-muted-foreground font-mono">
+                                    --ds-blur-{k} · {px}px
+                                </span>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        </BaseCard>
     </GuidePageShell>
 )
 

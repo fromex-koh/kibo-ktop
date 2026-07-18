@@ -1,5 +1,6 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
@@ -340,7 +341,7 @@ const SemanticTable = ({
     usage?: ReactNode
     note?: ReactNode
 }) => (
-    <section className="bg-surface flex flex-col gap-4 rounded-lg p-5">
+    <section className="border-border flex flex-col gap-4 border-b pb-8 last:border-b-0 last:pb-0">
         <h3 className="typo-title-m-semibold text-foreground">{title}</h3>
         {usage && <p className="typo-body-l-regular text-muted-foreground">{usage}</p>}
         {note && <p className="typo-body-l-regular text-muted-foreground">{note}</p>}
@@ -484,116 +485,116 @@ const SemanticColorGuidePage = () => (
         }
     >
         <div className="flex flex-col gap-12">
-            <section aria-labelledby="semantic-rule" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                    <h2 id="semantic-rule" className="typo-h4-bold text-foreground">
-                        구조와 사용 원칙
-                    </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        같은 원시 색상이라도 UI에서 맡는 역할이 다르면 별도 슬롯으로 관리합니다. 일반 화면에서는 raw CSS
-                        변수 대신 아래 대표 유틸리티를 사용합니다.
+            <BaseCard>
+                <section aria-labelledby="semantic-rule" className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-1">
+                        <h2 id="semantic-rule" className="typo-h4-bold text-foreground">
+                            구조와 사용 원칙
+                        </h2>
+                        <p className="typo-body-l-regular text-foreground-subtle">
+                            같은 원시 색상이라도 UI에서 맡는 역할이 다르면 별도 슬롯으로 관리합니다. 일반 화면에서는 raw
+                            CSS 변수 대신 아래 대표 유틸리티를 사용합니다.
+                        </p>
+                    </div>
+                    <div className="grid gap-4 md:grid-cols-3">
+                        <div className="flex flex-col gap-1">
+                            <strong className="text-foreground">표준 슬롯</strong>
+                            <p className="text-foreground-subtle">
+                                shadcn이 기대하는 {STANDARD_COUNT}개 이름은 유지하고 값만 프로젝트 팔레트에 매핑합니다.
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <strong className="text-foreground">프로젝트 슬롯</strong>
+                            <p className="text-foreground-subtle">
+                                표준 슬롯으로 표현하기 어려운 상태·표면·텍스트 역할만 제한적으로 확장합니다.
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-1">
+                            <strong className="text-foreground">모드 매핑</strong>
+                            <p className="text-foreground-subtle">
+                                문자열 참조는 다크에서 스케일을 반사하고, 명시 객체는 light·dark 값을 각각 사용합니다.
+                            </p>
+                        </div>
+                    </div>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        전체 {TOTAL_COUNT}개 = shadcn 표준 {STANDARD_COUNT}개 + 프로젝트 공용 {CUSTOM_COUNT}개 +
+                        컴포넌트 레시피 {RECIPE_COUNT}개
                     </p>
-                </div>
-                <div className="border-border bg-card grid gap-4 rounded-xl border p-5 md:grid-cols-3">
-                    <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">표준 슬롯</strong>
-                        <p className="text-foreground-subtle">
-                            shadcn이 기대하는 {STANDARD_COUNT}개 이름은 유지하고 값만 프로젝트 팔레트에 매핑합니다.
-                        </p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">프로젝트 슬롯</strong>
-                        <p className="text-foreground-subtle">
-                            표준 슬롯으로 표현하기 어려운 상태·표면·텍스트 역할만 제한적으로 확장합니다.
-                        </p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">모드 매핑</strong>
-                        <p className="text-foreground-subtle">
-                            문자열 참조는 다크에서 스케일을 반사하고, 명시 객체는 light·dark 값을 각각 사용합니다.
-                        </p>
-                    </div>
-                </div>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    전체 {TOTAL_COUNT}개 = shadcn 표준 {STANDARD_COUNT}개 + 프로젝트 공용 {CUSTOM_COUNT}개 + 컴포넌트
-                    레시피 {RECIPE_COUNT}개
-                </p>
-            </section>
+                </section>
+            </BaseCard>
 
             {/* ① shadcn 표준 슬롯 체계 — 두 섹션 제목은 같은 위계(h2)라 표준/커스텀이 한눈에 구분된다. */}
-            <section
-                aria-labelledby="std-slots"
-                className="border-border bg-muted flex flex-col gap-8 rounded-xl border p-6 md:p-8"
-            >
-                <div className="flex flex-col gap-1">
-                    <h2 id="std-slots" className="typo-h4-bold text-foreground">
-                        shadcn 표준 슬롯 <span className="text-muted-foreground font-normal">({STANDARD_COUNT}개)</span>
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        아래 표들은 <strong>shadcn 공식 표준 슬롯 체계</strong>입니다(
-                        <a
-                            href="https://ui.shadcn.com/docs/theming"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-primary hover:underline"
-                        >
-                            theming 문서
-                        </a>{' '}
-                        기준, 이름 고정·값만 프로젝트 매핑). 개수는 빌드가 강제해 하나라도 빠지면 실패합니다.
-                    </p>
-                </div>
-                {STANDARD_GROUPED.map((group) => (
-                    <SemanticTable
-                        key={group.name}
-                        title={group.name}
-                        tokens={group.tokens}
-                        usage={GROUP_USAGE[group.name]}
-                    />
-                ))}
-            </section>
+            <BaseCard>
+                <section aria-labelledby="std-slots" className="flex flex-col gap-8">
+                    <div className="flex flex-col gap-1">
+                        <h2 id="std-slots" className="typo-h4-bold text-foreground">
+                            shadcn 표준 슬롯{' '}
+                            <span className="text-muted-foreground font-normal">({STANDARD_COUNT}개)</span>
+                        </h2>
+                        <p className="typo-body-l-regular text-muted-foreground">
+                            아래 표들은 <strong>shadcn 공식 표준 슬롯 체계</strong>입니다(
+                            <a
+                                href="https://ui.shadcn.com/docs/theming"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-primary-strong underline underline-offset-2"
+                            >
+                                theming 문서
+                            </a>{' '}
+                            기준, 이름 고정·값만 프로젝트 매핑). 개수는 빌드가 강제해 하나라도 빠지면 실패합니다.
+                        </p>
+                    </div>
+                    {STANDARD_GROUPED.map((group) => (
+                        <SemanticTable
+                            key={group.name}
+                            title={group.name}
+                            tokens={group.tokens}
+                            usage={GROUP_USAGE[group.name]}
+                        />
+                    ))}
+                </section>
+            </BaseCard>
 
             {/* ② 프로젝트 커스텀 슬롯 — 표준에 없는 프로젝트 확장. */}
-            <section
-                aria-labelledby="custom-slots"
-                className="border-border bg-muted flex flex-col gap-8 rounded-xl border p-6 md:p-8"
-            >
-                <div className="flex flex-col gap-1">
-                    <h2 id="custom-slots" className="typo-h4-bold text-foreground">
-                        프로젝트 커스텀 슬롯{' '}
-                        <span className="text-muted-foreground font-normal">({CUSTOM_COUNT}개)</span>
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        shadcn 표준에 없어 프로젝트가 추가한 공용 슬롯입니다. 보조 텍스트·표면·컨트롤·상태·스크롤바처럼
-                        여러 컴포넌트가 공유하는 역할만 이 섹션에서 관리합니다. 특정 컴포넌트에만 쓰는 값은 아래 레시피
-                        섹션으로 분리합니다.
-                    </p>
-                </div>
-                {CUSTOM_GROUPED.map((group) => (
-                    <SemanticTable
-                        key={group.name}
-                        title={group.name}
-                        tokens={group.tokens}
-                        usage={GROUP_USAGE[group.name]}
-                    />
-                ))}
-            </section>
+            <BaseCard>
+                <section aria-labelledby="custom-slots" className="flex flex-col gap-8">
+                    <div className="flex flex-col gap-1">
+                        <h2 id="custom-slots" className="typo-h4-bold text-foreground">
+                            프로젝트 커스텀 슬롯{' '}
+                            <span className="text-muted-foreground font-normal">({CUSTOM_COUNT}개)</span>
+                        </h2>
+                        <p className="typo-body-l-regular text-muted-foreground">
+                            shadcn 표준에 없어 프로젝트가 추가한 공용 슬롯입니다. 보조
+                            텍스트·표면·컨트롤·상태·스크롤바처럼 여러 컴포넌트가 공유하는 역할만 이 섹션에서 관리합니다.
+                            특정 컴포넌트에만 쓰는 값은 아래 레시피 섹션으로 분리합니다.
+                        </p>
+                    </div>
+                    {CUSTOM_GROUPED.map((group) => (
+                        <SemanticTable
+                            key={group.name}
+                            title={group.name}
+                            tokens={group.tokens}
+                            usage={GROUP_USAGE[group.name]}
+                        />
+                    ))}
+                </section>
+            </BaseCard>
 
-            <section
-                aria-labelledby="component-recipes"
-                className="border-border bg-muted flex flex-col gap-8 rounded-xl border p-6 md:p-8"
-            >
-                <div className="flex flex-col gap-1">
-                    <h2 id="component-recipes" className="typo-h4-bold text-foreground">
-                        컴포넌트 전용 레시피 토큰{' '}
-                        <span className="text-muted-foreground font-normal">({RECIPE_COUNT}개)</span>
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        현재 Badge의 숫자 타입과 Stepper에서만 사용하는 프로젝트 전용 색입니다. 공용 역할로 확장하지
-                        않고 해당 컴포넌트의 스타일 예외와 함께 관리합니다.
-                    </p>
-                </div>
-                <SemanticTable title="Badge (number) / Stepper" tokens={recipeEntries} />
-            </section>
+            <BaseCard>
+                <section aria-labelledby="component-recipes" className="flex flex-col gap-8">
+                    <div className="flex flex-col gap-1">
+                        <h2 id="component-recipes" className="typo-h4-bold text-foreground">
+                            컴포넌트 전용 레시피 토큰{' '}
+                            <span className="text-muted-foreground font-normal">({RECIPE_COUNT}개)</span>
+                        </h2>
+                        <p className="typo-body-l-regular text-muted-foreground">
+                            현재 Badge의 숫자 타입과 Stepper에서만 사용하는 프로젝트 전용 색입니다. 공용 역할로 확장하지
+                            않고 해당 컴포넌트의 스타일 예외와 함께 관리합니다.
+                        </p>
+                    </div>
+                    <SemanticTable title="Badge (number) / Stepper" tokens={recipeEntries} />
+                </section>
+            </BaseCard>
         </div>
     </GuidePageShell>
 )

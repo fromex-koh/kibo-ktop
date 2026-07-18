@@ -1,4 +1,6 @@
+import type {ComponentPropsWithoutRef} from 'react'
 import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
@@ -45,13 +47,17 @@ const TYPOGRAPHY_GROUPED = TYPOGRAPHY_GROUPS.map((group) => ({
     name: group.name,
     tokens: TYPOGRAPHY_ENTRIES.filter(([name]) => groupNameOfTypo(name) === group.name),
 })).filter((group) => group.tokens.length > 0)
+const TYPOGRAPHY_COUNT = TYPOGRAPHY_ENTRIES.length
+const TYPOGRAPHY_TIER_COUNT = new Set(
+    TYPOGRAPHY_ENTRIES.map(([name]) => name.replace(/-(regular|medium|semibold|bold)$/, '')),
+).size
 
 // 그룹 하나 = 독립 테이블(미리보기·클래스·크기·굵기·행간·자간). '미리보기' 칸이 실제 typo-* 클래스를
 // 바로 적용해 렌더하므로, 클래스를 쓰면 어떻게 나오는지 값 옆에서 바로 확인할 수 있다.
 // 클래스 칩을 클릭하면 이름이 복사된다.
 const TypographyScaleTable = ({title, entries}: {title: string; entries: TypographyEntry[]}) => (
-    <div className="flex flex-col gap-2">
-        <h3 className="typo-body-l-medium text-foreground font-semibold">{title}</h3>
+    <div className="flex flex-col gap-3">
+        <h3 className="typo-title-m-semibold text-foreground">{title}</h3>
         <div className="border-border overflow-x-auto rounded-xl border">
             <table className="w-full text-left">
                 <caption className="sr-only">{title} typo-* 클래스별 미리보기·크기·굵기·행간·자간</caption>
@@ -89,19 +95,19 @@ const TypographyScaleTable = ({title, entries}: {title: string; entries: Typogra
                             <th scope="row" className="px-4 py-3 text-left font-normal">
                                 <CopyChip value={`typo-${name}`} />
                             </th>
-                            <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
                                 {t.size.mobile}px
                             </td>
-                            <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
                                 {t.size.pc}px
                             </td>
-                            <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
                                 {FONT_WEIGHT[t.weight]}
                             </td>
-                            <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
                                 {LINE_HEIGHT[t.lineHeight]}
                             </td>
-                            <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
+                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
                                 {LETTER_SPACING[t.letterSpacing]}
                             </td>
                         </tr>
@@ -152,14 +158,52 @@ const SANS_STACK = [
     },
 ]
 
+// 페이지의 최상위 문서 그룹을 실제 프로젝트 Card로 구분한다.
+const TypographySectionCard = ({children, ...props}: ComponentPropsWithoutRef<'section'>) => (
+    <BaseCard>
+        <section {...props}>{children}</section>
+    </BaseCard>
+)
+
 // 타이포그래피 — typo-* 복합 유틸리티. 스케일 표 각 행에 실제 렌더 미리보기를 함께 담는다.
 const TypographyGuidePage = () => (
     <GuidePageShell
         title="타이포그래피 (Typography)"
-        description="제목·본문·라벨·캡션에 쓰는 타이포그래피 복합 클래스(typo-*)입니다."
+        description="프로젝트의 제목·본문·라벨·캡션에 사용하는 typo-* 복합 유틸리티와 글꼴 체계입니다."
     >
+        <TypographySectionCard aria-labelledby="typo-overview" className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+                <h2 id="typo-overview" className="typo-h4-bold">
+                    구조와 사용 원칙
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    개별 text·font·leading·tracking 유틸리티를 조합하지 않고, 역할에 맞는 typo-* 클래스 하나를
+                    우선합니다.
+                </p>
+            </div>
+            <div className="border-border bg-card grid gap-4 rounded-xl border p-5 md:grid-cols-3">
+                <div className="flex flex-col gap-1">
+                    <strong className="text-foreground">복합 속성</strong>
+                    <p className="text-foreground-subtle">크기·굵기·행간·자간을 한 클래스에서 함께 적용합니다.</p>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <strong className="text-foreground">반응형 구조</strong>
+                    <p className="text-foreground-subtle">
+                        모바일을 기본으로 하고 <code className="font-mono">{tokens.typographyBreakpoint}:</code>부터 PC
+                        크기를 적용합니다.
+                    </p>
+                </div>
+                <div className="flex flex-col gap-1">
+                    <strong className="text-foreground">현재 구성</strong>
+                    <p className="text-foreground-subtle">
+                        크기 tier {TYPOGRAPHY_TIER_COUNT}개와 typo-* 조합 {TYPOGRAPHY_COUNT}개를 제공합니다.
+                    </p>
+                </div>
+            </div>
+        </TypographySectionCard>
+
         {/* 글꼴 체계 (Font Family) */}
-        <section aria-labelledby="typo-font" className="flex flex-col gap-4">
+        <TypographySectionCard aria-labelledby="typo-font" className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
                 <h2 id="typo-font" className="typo-h4-bold">
                     글꼴 (Font Family)
@@ -176,7 +220,7 @@ const TypographyGuidePage = () => (
                 <div className="border-border flex flex-col gap-3 rounded-xl border p-4">
                     <div className="flex flex-wrap items-center gap-2">
                         <CopyChip value="font-sans" />
-                        <span className="typo-caption-regular text-muted-foreground">
+                        <span className="typo-body-l-regular text-muted-foreground">
                             가변폭 — 글자마다 렌더 너비가 다릅니다
                         </span>
                     </div>
@@ -184,7 +228,7 @@ const TypographyGuidePage = () => (
                         {WIDTH_DEMO_LINES.map((line) => (
                             <span
                                 key={line}
-                                className="bg-primary/10 text-foreground typo-body-l-regular inline-block w-fit rounded px-1.5 py-0.5 font-sans"
+                                className="bg-primary-subtle text-foreground typo-body-l-regular inline-block w-fit rounded px-1.5 py-0.5 font-sans"
                             >
                                 {line}
                             </span>
@@ -194,7 +238,7 @@ const TypographyGuidePage = () => (
                 <div className="border-border flex flex-col gap-3 rounded-xl border p-4">
                     <div className="flex flex-wrap items-center gap-2">
                         <CopyChip value="font-mono" />
-                        <span className="typo-caption-regular text-muted-foreground">
+                        <span className="typo-body-l-regular text-muted-foreground">
                             고정폭 — 글자마다 렌더 너비가 같습니다
                         </span>
                     </div>
@@ -202,7 +246,7 @@ const TypographyGuidePage = () => (
                         {WIDTH_DEMO_LINES.map((line) => (
                             <span
                                 key={line}
-                                className="bg-primary/10 text-foreground typo-body-l-regular inline-block w-fit rounded px-1.5 py-0.5 font-mono"
+                                className="bg-primary-subtle text-foreground typo-body-l-regular inline-block w-fit rounded px-1.5 py-0.5 font-mono"
                             >
                                 {line}
                             </span>
@@ -216,28 +260,28 @@ const TypographyGuidePage = () => (
                     <li key={font.name} className="flex items-start gap-3 px-4 py-3">
                         <span
                             aria-hidden="true"
-                            className={`typo-caption-regular flex size-6 shrink-0 items-center justify-center rounded-full font-mono font-bold ${
-                                font.isPrimary ? 'bg-primary/80 text-background' : 'text-muted-foreground bg-gray-100'
+                            className={`typo-body-l-bold flex size-6 shrink-0 items-center justify-center rounded-full font-mono ${
+                                font.isPrimary ? 'bg-primary text-primary-foreground' : 'text-muted-foreground bg-muted'
                             }`}
                         >
                             {i + 1}
                         </span>
                         <div className="flex flex-col gap-0.5">
                             <span className="inline-flex flex-wrap items-center gap-2">
-                                <span className="typo-body-l-regular text-foreground font-semibold">{font.name}</span>
+                                <span className="typo-body-l-medium text-foreground">{font.name}</span>
                                 <span
-                                    className={`typo-caption-regular rounded-full px-2 py-0.5 font-semibold ${
+                                    className={`typo-body-l-medium rounded-full px-2 py-0.5 ${
                                         font.isPrimary
-                                            ? 'bg-primary/10 text-primary'
-                                            : 'text-muted-foreground bg-gray-100'
+                                            ? 'bg-primary-subtle text-primary-strong'
+                                            : 'text-muted-foreground bg-muted'
                                     }`}
                                 >
                                     {font.role}
                                 </span>
                             </span>
-                            <span className="typo-caption-regular text-muted-foreground">{font.desc}</span>
+                            <span className="typo-body-l-regular text-muted-foreground">{font.desc}</span>
                             {font.version && (
-                                <span className="typo-caption-regular text-muted-foreground">
+                                <span className="typo-body-l-regular text-muted-foreground">
                                     v{font.version} · {font.license}
                                     {font.repoUrl && (
                                         <>
@@ -246,7 +290,7 @@ const TypographyGuidePage = () => (
                                                 href={font.repoUrl}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-primary focus-visible:ring-ring focus-visible:ring-offset-background rounded-sm underline decoration-1 underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                                                className="text-primary-strong focus-visible:ring-ring focus-visible:ring-offset-background rounded-sm underline decoration-1 underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                                             >
                                                 저장소
                                                 <span className="sr-only"> (새 창에서 열림)</span>
@@ -259,28 +303,24 @@ const TypographyGuidePage = () => (
                     </li>
                 ))}
             </ol>
-            <p className="typo-caption-regular text-muted-foreground">
+            <p className="typo-body-l-regular text-muted-foreground">
                 고정폭(<code>font-mono</code>): <code>ui-monospace</code> · <code>SFMono-Regular</code> ·{' '}
                 <code>Menlo</code> · <code>Consolas</code> · <code>monospace</code> 순으로 폴백합니다.
             </p>
-        </section>
+        </TypographySectionCard>
 
         {/* 크기 단위 안내 — px 입력, rem 출력(접근성) */}
-        <section aria-labelledby="typo-rem" className="border-border bg-card flex flex-col gap-1 rounded-xl border p-4">
-            <h2 id="typo-rem" className="typo-body-l-medium">
+        <TypographySectionCard aria-labelledby="typo-rem" className="flex flex-col gap-2">
+            <h2 id="typo-rem" className="typo-h4-bold">
                 크기 단위 — px 입력, rem 출력
             </h2>
             <p className="typo-body-l-regular text-muted-foreground">
-                토큰 크기는 인지 기준인 <strong>px</strong> 로 <code>tokens.json</code> 에 쓰고, 생성기가{' '}
-                <strong>rem</strong>(÷ remBase {tokens.remBase})으로 변환해 내보냅니다. 아래 표는 이해를 돕기 위해 px 로
-                표기하지만, 실제 출력은 rem 입니다(예: PC {tokens.typography['display-m-bold'].size.pc}
-                px → {tokens.typography['display-m-bold'].size.pc / tokens.remBase}rem). 글자 크기를 rem 으로 두면
-                사용자가 브라우저 기본 글꼴 크기를 키웠을 때 본문도 비례해 커져 <strong>접근성</strong>에 유리합니다.
-                (px→rem 변환은 간격·크기 등 전 토큰 공통 원칙입니다.)
+                <code>tokens.json</code>에는 px 숫자로 입력하고 생성기는 remBase {tokens.remBase}을 기준으로 rem으로
+                변환합니다. 표는 디자인 확인을 위해 px로 표시하지만 실제 CSS는 rem을 사용합니다.
             </p>
-        </section>
+        </TypographySectionCard>
 
-        <section aria-labelledby="typo-project-utilities" className="flex flex-col gap-4">
+        <TypographySectionCard aria-labelledby="typo-project-utilities" className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
                 <h2 id="typo-project-utilities" className="typo-h4-bold">
                     프로젝트 특수 타이포 유틸리티
@@ -312,12 +352,12 @@ const TypographyGuidePage = () => (
                     <tbody>
                         <tr className="border-border border-b last:border-b-0">
                             <td className="px-4 py-3 whitespace-nowrap">
-                                <span className="tracking-control-label font-medium">{PREVIEW_SAMPLE}</span>
+                                <span className="typo-body-l-medium tracking-control-label">{PREVIEW_SAMPLE}</span>
                             </td>
                             <th scope="row" className="px-4 py-3 text-left font-normal">
                                 <CopyChip value="tracking-control-label" />
                             </th>
-                            <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
+                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
                                 letter-spacing: -0.035rem (-0.56px)
                             </td>
                             <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
@@ -327,42 +367,29 @@ const TypographyGuidePage = () => (
                     </tbody>
                 </table>
             </div>
-        </section>
+        </TypographySectionCard>
 
         {/* 타이포그래피 스케일 — typo-* 유틸리티가 묶어 적용하는 값(토큰)을 Figma 분류별 표로 나눈다 */}
-        <section aria-labelledby="typo-tokens" className="flex flex-col gap-4">
+        <TypographySectionCard aria-labelledby="typo-tokens" className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
                 <h2 id="typo-tokens" className="typo-h4-bold">
                     타이포그래피 스케일
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    용도별 <code>typo-*</code> <strong>유틸리티 클래스</strong> 목록을 Figma 분류(Display·
-                    Heading·Title·Body·Caption·Micro)별 표로 나눴습니다. &apos;미리보기&apos; 칸이 그 행의 클래스를 바로
-                    적용해 렌더하므로, 클래스를 쓰면 어떻게 나오는지 크기·굵기·행간·자간 <strong>토큰</strong> 값 옆에서
-                    바로 확인할 수 있습니다. 클래스 칩을 클릭하면 이름이 복사됩니다.
+                    {TYPOGRAPHY_COUNT}개 클래스를 Display·Heading·Title·Body·Caption·Micro로 구분합니다. 미리보기에는
+                    해당 클래스가 실제 적용되며 클래스 칩을 선택하면 이름이 복사됩니다.
                 </p>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    현재는 <strong>크기 (모바일)</strong>과 <strong>크기 (PC)</strong> 값이 모든 토큰에서 동일합니다.
-                    Figma 디자인이 해상도별 폰트 크기 변화를 두지 않았기 때문이며, 모바일/PC 분기 구조 자체는 나중에
-                    반응형 크기가 필요해질 경우를 대비해 그대로 남겨뒀습니다(값만 다르게 채우면 바로 반응형으로
-                    전환됩니다).
-                </p>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    <code>typo-*</code>는 Tailwind의 <code>@theme</code>(<code>--text-*</code>)나 <code>@utility</code>
-                    가 아니라 <code>@layer utilities</code>로 감싼 커스텀 클래스입니다. <code>--text-*</code>는
-                    font-size·line-height만 묶을 수 있어 font-weight·letter-spacing까지 한 클래스에 담을 수 없고,{' '}
-                    <code>@utility</code>는 이 페이지의 &apos;미리보기&apos; 칸처럼 <code>{'`typo-${name}`'}</code>로
-                    클래스명을 동적으로 조합하는 곳에서는 Tailwind가 스캔하지 못해 스타일이 아예 적용되지 않습니다.{' '}
-                    <code>@layer utilities</code>는 스캔과 무관하게 항상 전부 출력되면서도 Tailwind의 정식 유틸리티
-                    레이어에 들어가, 다른 유틸리티와 캐스케이드 우선순위가 정상적으로 겨룹니다.
+                    현재 모바일과 PC 크기는 동일하지만 반응형 구조는 유지합니다. 향후 <code>tokens.json</code>의 PC 값만
+                    변경하면 {tokens.typographyBreakpoint} breakpoint부터 자동으로 적용됩니다.
                 </p>
             </div>
-            <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-8">
                 {TYPOGRAPHY_GROUPED.map((group) => (
                     <TypographyScaleTable key={group.name} title={group.name} entries={group.tokens} />
                 ))}
             </div>
-        </section>
+        </TypographySectionCard>
     </GuidePageShell>
 )
 
