@@ -1,6 +1,6 @@
 'use client'
 
-import {Check, CheckCheck, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
+import {Check, CircleCheckBig, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
 import {useMemo, useState} from 'react'
 import {
     USER_TYPE_VALUES,
@@ -50,7 +50,7 @@ const STATUS_BADGE: Record<Status, {color: 'neutral' | 'info' | 'warning' | 'suc
 
 const StatusTag = ({status}: {status: Status}) => (
     <Badge color={STATUS_BADGE[status].color} variant={STATUS_BADGE[status].variant} shape="round">
-        {status === '최종완료' && <CheckCheck aria-hidden="true" />}
+        {status === '최종완료' && <CircleCheckBig aria-hidden="true" />}
         {status === '완료' && <Check aria-hidden="true" />}
         {status}
     </Badge>
@@ -156,16 +156,16 @@ const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
         return cells
     })
 
-// 뎁스 배지 색상 — brand(primary) 불투명도를 20/40/70% → solid 로 올려 뎁스가 깊어질수록 진해진다
+// 뎁스 배지 색상 — 시작 페이지의 포인트 컬러인 navy 불투명도를 20/40/70% → solid 로 올려 뎁스가 깊어질수록 진해진다
 // (새 색 하드코딩 없음). 배경이 옅은 얕은 뎁스는 진한 text-foreground 로, 배경이 primary 에 가까워지는
 // 깊은 뎁스는 primary 전용 대비색 text-primary-foreground(라이트=흰색·다크=진회색)로 전환해
 // 라이트·다크 모두 텍스트 대비를 확보한다(어두운 배경 위 어두운 텍스트 문제 해소).
 // 뎁스가 이 배열보다 깊어지면 마지막 스타일을 그대로 쓴다.
 const DEPTH_BADGE_STYLES = [
-    'bg-primary/20 text-foreground',
-    'bg-primary/40 text-foreground',
-    'bg-primary/70 text-primary-foreground',
-    'bg-primary text-primary-foreground',
+    'bg-navy-600/20 text-foreground',
+    'bg-navy-600/40 text-foreground',
+    'bg-navy-600/70 text-primary-foreground',
+    'bg-navy-600 text-primary-foreground',
 ]
 const depthBadgeClass = (depth: number): string => DEPTH_BADGE_STYLES[Math.min(depth, DEPTH_BADGE_STYLES.length - 1)]
 
@@ -237,7 +237,7 @@ const PublishingIndex = () => {
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="bg-surface">
                                     {assetVersions.map((asset) => (
                                         <tr key={asset.name} className="border-border border-b last:border-b-0">
                                             <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
@@ -252,7 +252,7 @@ const PublishingIndex = () => {
                                             </td>
                                             <th
                                                 scope="row"
-                                                className="typo-body-l-medium text-primary-strong px-4 py-3 font-mono"
+                                                className="typo-body-l-medium text-navy-600 px-4 py-3 font-mono"
                                             >
                                                 {asset.name}
                                             </th>
@@ -262,7 +262,7 @@ const PublishingIndex = () => {
                                             <td
                                                 className={`typo-body-l-regular px-4 py-3 font-mono ${
                                                     asset.isCurrent
-                                                        ? 'bg-primary/10 text-primary font-semibold'
+                                                        ? 'bg-navy-600/10 text-navy-600 font-semibold'
                                                         : 'text-muted-foreground'
                                                 }`}
                                             >
@@ -297,7 +297,11 @@ const PublishingIndex = () => {
                             className="w-fit"
                         >
                             {USER_TYPE_FILTERS.map((f) => (
-                                <SegmentedControlItem key={f} value={f} className="px-4">
+                                <SegmentedControlItem
+                                    key={f}
+                                    value={f}
+                                    className="has-[[data-state=checked]]:bg-navy-600 has-[[data-state=checked]]:text-primary-foreground px-4"
+                                >
                                     {f}
                                 </SegmentedControlItem>
                             ))}
@@ -336,14 +340,14 @@ const PublishingIndex = () => {
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="bg-surface">
                                     {commonLayouts.map((layout) => {
                                         const isCurrent = layout.version === BUILD_VERSION
                                         return (
                                             <tr
                                                 key={layout.label}
                                                 className={`border-border border-b last:border-b-0 ${
-                                                    isCurrent ? 'bg-primary/10' : 'bg-background'
+                                                    isCurrent ? 'bg-navy-600/10' : 'bg-surface'
                                                 }`}
                                             >
                                                 <th
@@ -364,7 +368,7 @@ const PublishingIndex = () => {
                                                 <td
                                                     className={`typo-caption-regular px-4 py-3 font-mono ${
                                                         isCurrent
-                                                            ? 'text-primary font-semibold'
+                                                            ? 'text-navy-600 font-semibold'
                                                             : 'text-muted-foreground'
                                                     }`}
                                                 >
@@ -395,14 +399,14 @@ const PublishingIndex = () => {
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="bg-surface">
                                     {leaves.map((leaf, i) => {
                                         const isCurrent = leaf.version === BUILD_VERSION
                                         return (
                                             <tr
                                                 key={leaf.key}
                                                 className={`border-border border-b last:border-b-0 ${
-                                                    isCurrent ? 'bg-primary/10' : 'bg-background'
+                                                    isCurrent ? 'bg-navy-600/10' : 'bg-surface'
                                                 }`}
                                             >
                                                 {depthCells[i].map((cell, depth) => {
@@ -446,7 +450,7 @@ const PublishingIndex = () => {
                                                 <td
                                                     className={`typo-caption-regular px-4 py-3 font-mono ${
                                                         isCurrent
-                                                            ? 'text-primary font-semibold'
+                                                            ? 'text-navy-600 font-semibold'
                                                             : 'text-muted-foreground'
                                                     }`}
                                                 >

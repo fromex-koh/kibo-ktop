@@ -7,6 +7,17 @@
 /* dark: 유틸리티를 클래스 기반으로 전환 (OS 기본값은 layout.tsx 인라인 스크립트가 처리) */
 @custom-variant dark (&:where(.dark, .dark *));
 
+@layer components {
+    /* 시작 페이지 가이드 링크 — Button default의 blue 상태를 navy 포인트로 덮는다. */
+    .home-guide-link-button:not(:disabled):hover {
+        background-color: var(--ds-navy-700);
+    }
+
+    .home-guide-link-button:not(:disabled):active {
+        background-color: var(--ds-navy-800);
+    }
+}
+
 @theme inline {
     --font-sans:
         var(--font-pretendard), 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, system-ui,

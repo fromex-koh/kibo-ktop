@@ -108,6 +108,14 @@ const SkipNavGuidePage = () => (
                         반전합니다.
                     </li>
                 </ul>
+                <aside className="bg-muted text-muted-foreground rounded-md p-4">
+                    <p className="typo-body-l-medium text-foreground">Safari 키보드 테스트</p>
+                    <p className="typo-body-l-regular mt-1">
+                        macOS Safari에서 <kbd>Tab</kbd>으로 링크·버튼까지 이동하려면 Safari 설정 → 고급 →{' '}
+                        <q>Tab 키를 눌러 웹 페이지의 각 항목 강조 표시</q>를 켜세요. macOS 시스템 설정에서도 키보드
+                        탐색을 전체 컨트롤로 활성화해야 포커스링과 SkipNav 표시를 확인할 수 있습니다.
+                    </p>
+                </aside>
             </section>
         </BaseCard>
 

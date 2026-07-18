@@ -47,7 +47,7 @@ const Home = () => {
                     <BaseCard
                         title={
                             <span className="flex items-center gap-2">
-                                <ProjectInfoIcon aria-hidden="true" className="text-primary size-6" />
+                                <ProjectInfoIcon aria-hidden="true" className="text-navy-600 size-6" />
                                 <span>{projectInfo.title}</span>
                             </span>
                         }
@@ -60,7 +60,7 @@ const Home = () => {
                                         href={REPOSITORY_URL}
                                         target="_blank"
                                         rel="noopener noreferrer"
-                                        className="text-primary focus-visible:ring-ring focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium break-all hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                                        className="text-navy-600 focus-visible:ring-ring focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium break-all hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
                                     >
                                         <GitBranch aria-hidden="true" className="size-4 shrink-0" />
                                         {REPOSITORY_URL_LABEL}
@@ -79,12 +79,17 @@ const Home = () => {
                     <BaseCard
                         title={
                             <span className="flex items-center gap-2">
-                                <GuideIcon aria-hidden="true" className="text-primary size-6 shrink-0" />
+                                <GuideIcon aria-hidden="true" className="text-navy-600 size-6 shrink-0" />
                                 <span>{guide.title}</span>
                             </span>
                         }
                         action={
-                            <Button asChild variant="default" size="icon" className="rounded-full">
+                            <Button
+                                asChild
+                                variant="default"
+                                size="icon"
+                                className="home-guide-link-button bg-navy-600 rounded-full"
+                            >
                                 <Link href={guide.href} aria-label={guide.linkLabel}>
                                     <ArrowUpRight aria-hidden="true" />
                                 </Link>
