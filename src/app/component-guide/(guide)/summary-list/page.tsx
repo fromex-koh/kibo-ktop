@@ -4,7 +4,7 @@ import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {SummaryList, SummaryListItem} from '@/components/composite/summary-list'
 import {FormCard} from '@/components/composite/form-card'
-import {NumberBadge} from '@/components/ui/badge'
+import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 
 export const metadata: Metadata = {title: '요약 목록 (SummaryList)'}
@@ -70,9 +70,9 @@ const COMPOSED_CODE = `{/* FormCard 헤더는 SectionHeader 를 그대로 내장
   </SummaryList>
 </FormCard>`
 
-const TWO_COLUMN_CODE = `{/* 항목이 많으면 리스트를 2열로 — Figma "2단"(경력 2건). 제목 옆 건수는 NumberBadge */}
+const TWO_COLUMN_CODE = `{/* 항목이 많으면 리스트를 2열로 — Figma "2단"(경력 2건). 제목 옆 건수는 숫자 Badge */}
 <FormCard
-  title={<span className="flex items-center gap-2">대표자 경력사항 <NumberBadge>2</NumberBadge></span>}
+  title={<span className="flex items-center gap-2">대표자 경력사항 <Badge type="number" color="primary">2</Badge></span>}
   action={<Button variant="tertiary" size="md">수정</Button>}
 >
   <div className="grid gap-6 md:grid-cols-2">
@@ -174,14 +174,17 @@ const SummaryListGuidePage = () => (
                 <p className="typo-body-l-regular text-muted-foreground">
                     항목이 여럿이면 목록을 <strong className="text-foreground font-medium">2열로 나란히</strong> 둡니다
                     (Figma &quot;2단&quot; — 대표자 경력 2건). 제목 옆 건수는{' '}
-                    <code className="font-mono">NumberBadge</code> 로 표시하고, 좁은 화면에선 자동으로 1열로 접힙니다.
+                    <code className="font-mono">Badge type=&quot;number&quot;</code> 로 표시하고, 좁은 화면에선 자동으로
+                    1열로 접힙니다.
                 </p>
             </div>
             <FormCard
                 title={
                     <span className="flex items-center gap-2">
                         대표자 경력사항
-                        <NumberBadge>2</NumberBadge>
+                        <Badge type="number" color="primary">
+                            2
+                        </Badge>
                     </span>
                 }
                 action={

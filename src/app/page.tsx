@@ -32,13 +32,7 @@ const Home = () => {
                     <ThemeToggle />
                 </div>
                 <header className="flex flex-col items-center gap-3 text-center">
-                    <Badge
-                        asChild
-                        color="primary"
-                        shape="round"
-                        size="lg"
-                        className="bg-primary-subtle text-primary font-mono"
-                    >
+                    <Badge asChild color="info" shape="round" size="lg" className="font-mono">
                         <code>{badge}</code>
                     </Badge>
                     <h1 className="typo-display-m-bold">{SITE_NAME}</h1>

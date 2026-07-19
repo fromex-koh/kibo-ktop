@@ -3,7 +3,7 @@ import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import PropsTable from '@/components/guide/props-table'
-import {Badge, NumberBadge} from '@/components/ui/badge'
+import {Badge} from '@/components/ui/badge'
 
 export const metadata: Metadata = {title: '배지 (Badge)'}
 
@@ -13,10 +13,6 @@ const USAGE_CODE = `<Badge color="success">활성</Badge>
 
 const NUMBER_USAGE_CODE = `<Badge type="number" color="primary">2</Badge>
 <Badge type="number" color="new">5</Badge>`
-
-const NUMBER_BADGE_USAGE_CODE = `{/* 기존 NumberBadge import 호환용 wrapper */}
-<NumberBadge variant="primary">2</NumberBadge>
-<NumberBadge variant="new">5</NumberBadge>`
 
 // Figma badge 의 세 축.
 const VARIANTS = [
@@ -69,15 +65,6 @@ const PROPS_ITEMS = [
         '추가 스타일과 네이티브 span 속성을 전달합니다.',
         'undefined',
         "ComponentProps<'span'>",
-    ],
-    ['NumberBadge', 'variant', '호환 wrapper의 숫자 배지 색상을 선택합니다.', "'primary'", "'primary' | 'new'"],
-    ['NumberBadge', 'children', '표시할 숫자 또는 짧은 콘텐츠입니다.', '-', 'ReactNode'],
-    [
-        'NumberBadge',
-        'className · span props',
-        'color를 제외한 네이티브 span 속성을 전달합니다.',
-        'undefined',
-        "Omit<ComponentProps<'span'>, 'color'>",
     ],
 ] as const
 
@@ -263,8 +250,7 @@ const BadgeGuidePage = () => (
                         <code className="font-mono">type=&quot;number&quot;</code>로 사용합니다. 기본{' '}
                         <code className="font-mono">color=&quot;primary&quot;</code>는 일반 건수,{' '}
                         <code className="font-mono">color=&quot;new&quot;</code>는 새로움·알림을 강조합니다. 숫자
-                        타입에서는 이 두 color만 사용합니다. <code className="font-mono">NumberBadge</code>는 기존
-                        import 호환을 위해 같은 구성을 감싼 wrapper입니다.
+                        타입에서는 이 두 color만 사용합니다.
                     </p>
                 </div>
                 <div className="flex items-center gap-4">
@@ -282,14 +268,6 @@ const BadgeGuidePage = () => (
                     </Badge>
                 </div>
                 <CodeBlock code={NUMBER_USAGE_CODE} language="tsx" copyLabel="복사" />
-                <div className="flex flex-col gap-3">
-                    <h3 className="typo-body-l-medium text-foreground">NumberBadge 호환 wrapper</h3>
-                    <div className="flex items-center gap-4">
-                        <NumberBadge variant="primary">2</NumberBadge>
-                        <NumberBadge variant="new">5</NumberBadge>
-                    </div>
-                    <CodeBlock code={NUMBER_BADGE_USAGE_CODE} language="tsx" copyLabel="복사" />
-                </div>
             </section>
         </BaseCard>
 
@@ -303,7 +281,7 @@ const BadgeGuidePage = () => (
                         Badge 에서 커스터마이징 가능한 속성입니다.
                     </p>
                 </div>
-                <PropsTable items={PROPS_ITEMS} caption="Badge와 NumberBadge Props 목록" />
+                <PropsTable items={PROPS_ITEMS} caption="Badge Props 목록" />
             </section>
         </BaseCard>
     </GuidePageShell>

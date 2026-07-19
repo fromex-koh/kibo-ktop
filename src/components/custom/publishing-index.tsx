@@ -156,17 +156,6 @@ const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
         return cells
     })
 
-// 뎁스 배지 색상 — raw 팔레트 대신 모드별 대비가 보장되는 semantic 조합만 쓴다.
-// 뎁스가 깊어질수록 primary-subtle → secondary → primary 로 강조를 높인다.
-// 뎁스가 이 배열보다 깊어지면 마지막 스타일을 그대로 쓴다.
-const DEPTH_BADGE_STYLES = [
-    'bg-primary-subtle text-primary',
-    'bg-secondary text-secondary-foreground',
-    'bg-primary text-primary-foreground',
-    'bg-primary text-primary-foreground',
-]
-const depthBadgeClass = (depth: number): string => DEPTH_BADGE_STYLES[Math.min(depth, DEPTH_BADGE_STYLES.length - 1)]
-
 // 사용자 유형 필터 — '전체' + 실제 userType 값(기업·기관). 화면(leaf)에 userType 가 없으면
 // 공통이라 기업·기관 어느 탭에서나 보인다. '전체'는 프로젝트 전체 화면·진척률 기준.
 type UserTypeFilter = '전체' | UserType
@@ -430,12 +419,9 @@ const PublishingIndex = () => {
                                                             className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
                                                         >
                                                             <span className="inline-flex items-center gap-2">
-                                                                <span
-                                                                    aria-hidden="true"
-                                                                    className={`${depthBadgeClass(depth)} flex size-5 shrink-0 items-center justify-center rounded font-mono text-xs font-bold`}
-                                                                >
+                                                                <Badge aria-hidden="true" type="number" color="primary">
                                                                     {depth + 1}
-                                                                </span>
+                                                                </Badge>
                                                                 <span className="sr-only">{depth + 1}뎁스 </span>
                                                                 {cell.label}
                                                             </span>
