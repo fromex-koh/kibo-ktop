@@ -4,7 +4,7 @@ import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
-import sampleCatImg from '../../../../../public/sample-cat.jpg'
+import blurSampleImg from '../../../../../public/blur-sample.png'
 
 export const metadata: Metadata = {title: '흐림 (Blur)'}
 
@@ -13,7 +13,7 @@ export const metadata: Metadata = {title: '흐림 (Blur)'}
 // 그래서 실제 blur-sm/md/lg 리터럴 문자열을 고정 Record 로 두고 그 값을 그대로 className 에 쓴다.
 const BLUR_CLASS: Record<string, string> = {sm: 'blur-sm', md: 'blur-md', lg: 'blur-lg'}
 
-// 흐림 — 흐림 토큰(--ds-blur-*)을 blur-* 유틸리티로 적용. 실제 사진으로 강도를 시각화한다.
+// 흐림 — 흐림 토큰(--ds-blur-*)을 blur-* 유틸리티로 적용. 공통 OG 이미지와 같은 navy 계열의 추상 이미지로 강도를 시각화한다.
 const BlurGuidePage = () => (
     <GuidePageShell title="흐림 (Blur)" description="이미지와 장식 요소에 적용하는 blur-* 효과 토큰입니다.">
         <BaseCard>
@@ -32,8 +32,8 @@ const BlurGuidePage = () => (
                         <li key={k} className="border-border overflow-hidden rounded-xl border">
                             <div className="relative aspect-video overflow-hidden">
                                 <Image
-                                    src={sampleCatImg}
-                                    alt="파란 하늘을 배경으로 위를 올려다보는 고양이"
+                                    src={blurSampleImg}
+                                    alt="navy 격자 위에 빛나는 중심 큐브가 있는 추상 기술 이미지"
                                     fill
                                     sizes="(min-width: 768px) 33vw, 100vw"
                                     className={`object-cover ${BLUR_CLASS[k]}`}

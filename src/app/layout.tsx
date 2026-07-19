@@ -34,6 +34,14 @@ export const metadata: Metadata = {
         siteName: SITE_NAME,
         title: SITE_NAME,
         description: SITE_DESCRIPTION,
+        images: [
+            {
+                url: '/og-image.png',
+                width: 1200,
+                height: 630,
+                alt: '기술평가 통합 플랫폼 퍼블리싱 가이드',
+            },
+        ],
     },
 }
 

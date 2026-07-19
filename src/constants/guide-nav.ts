@@ -21,6 +21,11 @@ export type GuideNavSection = {
 
 export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
     {
+        title: '프로젝트',
+        icon: 'semantic',
+        items: [{label: 'Open Graph', href: '/component-guide/open-graph'}],
+    },
+    {
         title: 'Primitive (원시)',
         icon: 'primitive',
         items: [
