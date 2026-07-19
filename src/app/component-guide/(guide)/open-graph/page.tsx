@@ -3,19 +3,20 @@ import Image from 'next/image'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
-import {SITE_DESCRIPTION, SITE_NAME, SITE_URL} from '@/constants/site'
 
 export const metadata: Metadata = {title: 'Open Graph 미리보기'}
+
+const SERVICE_IMAGE = '/images/og/k-top-service-preview.png'
 
 const OPEN_GRAPH_CODE = `export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'ko_KR',
-    url: '${SITE_URL}',
-    title: '${SITE_NAME}',
-    description: '${SITE_DESCRIPTION}',
+    url: 'https://www.kibo.or.kr/ktop/main',
+    title: 'K-TOP 개방형 기술평가 플랫폼',
+    description: '기업의 혁신성장역량, 기술사업성, 원천기술 특성을 평가하는 개방형 기술평가 플랫폼입니다.',
     images: [{
-      url: '/og-image.png',
+      url: '${SERVICE_IMAGE}',
       width: 1200,
       height: 630,
     }],
@@ -23,14 +24,14 @@ const OPEN_GRAPH_CODE = `export const metadata: Metadata = {
 }`
 
 const PREVIEW_CONTENT = {
-    domain: 'example.com',
-    title: SITE_NAME,
-    description: SITE_DESCRIPTION,
+    domain: 'www.kibo.or.kr/ktop/main',
+    title: 'K-TOP 개방형 기술평가 플랫폼',
+    description: '기업의 혁신성장역량 평가, 기술사업성 평가, 원천기술 평가를 제공하는 개방형 기술평가 플랫폼입니다.',
 }
 
 const PreviewLogo = ({className = ''}: {className?: string}) => (
     <div className={`relative overflow-hidden ${className}`} aria-hidden="true">
-        <Image src="/og-image.png" alt="" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+        <Image src={SERVICE_IMAGE} alt="" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
     </div>
 )
 
@@ -39,33 +40,31 @@ const OpenGraphGuidePage = () => (
         title="Open Graph 미리보기"
         description="링크 공유 시 노출되는 메타데이터와 대표 이미지를 확인합니다."
     >
-        <BaseCard>
-            <section aria-labelledby="og-preview" className="flex flex-col gap-4">
-                <div className="text-center">
-                    <h2 id="og-preview" className="typo-h4-bold">
-                        공유 미리보기
-                    </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        실제 공유 카드와 동일하게 사용할 Open Graph 이미지를 확인합니다.
-                    </p>
+        <section aria-labelledby="og-preview" className="flex flex-col gap-4">
+            <div className="text-center">
+                <h2 id="og-preview" className="typo-h4-bold">
+                    공유 미리보기
+                </h2>
+                <p className="typo-body-l-regular text-foreground-subtle">
+                    실 서비스 K-TOP 페이지에서 사용하는 제목·설명·대표 이미지 기준으로 공유 미리보기를 확인합니다.
+                </p>
+            </div>
+            <div className="border-subtle-3 mx-auto w-full max-w-2xl overflow-hidden rounded-lg border">
+                <Image
+                    src={SERVICE_IMAGE}
+                    alt="K-TOP 개방형 기술평가 플랫폼 Open Graph 이미지"
+                    width={1200}
+                    height={630}
+                    loading="eager"
+                    className="h-auto w-full"
+                />
+                <div className="border-border bg-surface flex flex-col gap-1 border-t px-4 py-3">
+                    <p className="typo-body-l-medium text-foreground">{PREVIEW_CONTENT.title}</p>
+                    <p className="typo-body-l-regular text-foreground-subtle">{PREVIEW_CONTENT.description}</p>
+                    <p className="typo-caption-regular text-muted-foreground font-mono">{PREVIEW_CONTENT.domain}</p>
                 </div>
-                <div className="border-subtle-3 mx-auto w-full max-w-2xl overflow-hidden rounded-lg border">
-                    <Image
-                        src="/og-image.png"
-                        alt="기술평가 통합 플랫폼 퍼블리싱 가이드 Open Graph 이미지"
-                        width={1200}
-                        height={630}
-                        loading="eager"
-                        className="h-auto w-full"
-                    />
-                    <div className="border-border bg-surface flex flex-col gap-1 border-t px-4 py-3">
-                        <p className="typo-body-l-medium text-foreground">{SITE_NAME}</p>
-                        <p className="typo-body-l-regular text-foreground-subtle">{SITE_DESCRIPTION}</p>
-                        <p className="typo-caption-regular text-muted-foreground font-mono">{SITE_URL}</p>
-                    </div>
-                </div>
-            </section>
-        </BaseCard>
+            </div>
+        </section>
 
         <section aria-labelledby="og-shapes" className="flex flex-col gap-8">
             <BaseCard>
