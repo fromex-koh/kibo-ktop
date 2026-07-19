@@ -84,7 +84,7 @@ const TECH_STACK = [
 
 const IntegrationStep = ({number, title, children}: {number: number; title: string; children: ReactNode}) => (
     <li className="flex items-start gap-3">
-        <span className="bg-navy-600 text-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-full text-sm font-bold">
+        <span className="bg-primary text-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-full text-sm font-bold">
             {number}
         </span>
         <div className="flex flex-col gap-1">
@@ -102,7 +102,7 @@ const PathList = ({items}: {items: typeof REQUIRED_PATHS}) => (
                 className="grid gap-1 py-3 first:pt-0 last:pb-0 md:grid-cols-[minmax(14rem,0.8fr)_1.2fr] md:gap-6"
             >
                 <dt>
-                    <code className="text-navy-600 font-mono text-sm font-semibold">{item.path}</code>
+                    <code className="text-primary font-mono text-sm font-semibold">{item.path}</code>
                 </dt>
                 <dd className="text-foreground-subtle">{item.description}</dd>
             </div>

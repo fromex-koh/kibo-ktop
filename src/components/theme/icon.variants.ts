@@ -4,7 +4,7 @@ const iconVariants = cva('', {
     variants: {
         variant: {
             outline: '',
-            solid: 'bg-primary/10 text-primary inline-flex items-center justify-center rounded-full',
+            solid: 'bg-icon-solid-neutral text-icon-solid-neutral-foreground inline-flex items-center justify-center rounded-full',
         },
     },
     defaultVariants: {

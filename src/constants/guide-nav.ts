@@ -11,7 +11,7 @@ export type GuideNavItemGroup = {
 }
 // icon: 사이드 상위 메뉴(섹션) 아이콘의 '키'. 실제 lucide 컴포넌트는 클라이언트(sidebar-layout)에서
 // 매핑한다 — 컴포넌트(메서드 있는 객체)는 서버→클라이언트 prop 경계를 못 넘으므로 직렬화 가능한 문자열로 둔다.
-export type GuideNavIconKey = 'primitive' | 'semantic' | 'effect' | 'layout' | 'component'
+export type GuideNavIconKey = 'project' | 'primitive' | 'semantic' | 'effect' | 'layout' | 'component'
 export type GuideNavSection = {
     title: string
     icon: GuideNavIconKey
@@ -22,8 +22,11 @@ export type GuideNavSection = {
 export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
     {
         title: '프로젝트',
-        icon: 'semantic',
-        items: [{label: 'Open Graph', href: '/component-guide/open-graph'}],
+        icon: 'project',
+        items: [
+            {label: 'Open Graph', href: '/component-guide/open-graph'},
+            {label: '명도 대비 검사', href: '/component-guide/contrast-check'},
+        ],
     },
     {
         title: 'Primitive (원시)',

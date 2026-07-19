@@ -8,6 +8,7 @@ import {
     Blocks,
     ChevronRight,
     Component,
+    FolderKanban,
     Home,
     Layers,
     LayoutGrid,
@@ -55,6 +56,7 @@ const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev'
 
 // 섹션 아이콘 키(직렬화 가능) → lucide 컴포넌트. 데이터(guide-nav)는 키만 두고 실제 컴포넌트는 여기서 해석.
 const SECTION_ICONS: Record<GuideNavIconKey, LucideIcon> = {
+    project: FolderKanban,
     primitive: Layers,
     semantic: Palette,
     effect: Sparkles,
@@ -100,7 +102,7 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                         <SidebarMenuItem>
                             <SidebarMenuButton size="lg" asChild>
                                 <Link href="/" aria-label="홈으로">
-                                    <span className="bg-navy-600 text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                                    <span className="bg-primary text-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
                                         <Blocks aria-hidden="true" className="size-icon-sm" />
                                     </span>
                                     <span className="flex flex-col gap-0.5 leading-none">
@@ -132,7 +134,7 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                                         >
                                             <SidebarMenuItem>
                                                 <CollapsibleTrigger asChild>
-                                                    <SidebarMenuButton className="hover:bg-navy-50 active:bg-navy-50 data-open:hover:bg-navy-50 rounded-none font-semibold">
+                                                    <SidebarMenuButton className="hover:bg-primary-subtle active:bg-primary-subtle data-open:hover:bg-primary-subtle rounded-none font-semibold">
                                                         <SectionIcon aria-hidden="true" />
                                                         <span className="flex-1 truncate">{section.title}</span>
                                                         <ChevronRight
@@ -155,7 +157,7 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                                                                 key={group.title}
                                                                 className="mt-4 first:mt-2"
                                                             >
-                                                                <p className="border-navy-500 bg-muted/50 text-navy-600 mb-1 flex h-7 items-center rounded-none border-l-2 px-2 text-xs font-bold">
+                                                                <p className="border-primary bg-primary-subtle text-primary mb-1 flex h-7 items-center rounded-none border-l-2 px-2 text-xs font-bold">
                                                                     {group.title}
                                                                 </p>
                                                                 <SidebarMenuSub className="mx-0 border-l-0 px-0">
@@ -235,7 +237,7 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
 
 const GuideNavNestedGroup = ({group, categories}: {group: GuideNavItemGroup; categories: string[]}) => (
     <SidebarMenuSubItem className="mt-3 first:mt-1">
-        <p className="typo-caption-medium text-navy-600 px-2 py-1">{group.title}</p>
+        <p className="typo-caption-medium text-primary px-2 py-1">{group.title}</p>
         <SidebarMenuSub className="mx-0 border-l-0 px-0">
             {group.items?.map((item) => (
                 <GuideNavSubItem key={item.href} item={item} categories={[...categories, group.title]} />
@@ -254,11 +256,11 @@ const GuideNavRootItem = ({item}: {item: GuideNavItem}) => {
                 asChild
                 isActive={isActive}
                 aria-current={isActive ? 'page' : undefined}
-                className="hover:bg-navy-50 active:bg-navy-50 data-active:bg-navy-50 data-active:text-navy-600 rounded-none font-semibold data-active:font-semibold"
+                className="hover:bg-primary-subtle active:bg-primary-subtle data-active:bg-primary-subtle data-active:text-primary rounded-none font-semibold data-active:font-semibold"
             >
                 <Link href={item.href} aria-label={`${item.label} 가이드 홈으로 이동`}>
                     {isActive ? (
-                        <Pin aria-hidden="true" className="text-navy-600 size-icon-xs" />
+                        <Pin aria-hidden="true" className="text-primary size-icon-xs" />
                     ) : (
                         <Home aria-hidden="true" className="size-icon-xs" />
                     )}
@@ -279,7 +281,7 @@ const GuideNavSubItem = ({item, categories}: {item: GuideNavItem; categories: st
                 asChild
                 isActive={isActive}
                 aria-current={isActive ? 'page' : undefined}
-                className="hover:bg-navy-50 active:bg-navy-50 data-active:bg-navy-50 data-active:text-navy-600 rounded-none data-active:font-semibold"
+                className="hover:bg-primary-subtle active:bg-primary-subtle data-active:bg-primary-subtle data-active:text-primary rounded-none data-active:font-semibold"
             >
                 <Link
                     href={item.href}
@@ -292,7 +294,7 @@ const GuideNavSubItem = ({item, categories}: {item: GuideNavItem; categories: st
                         : {})}
                 >
                     <span aria-hidden="true" className="size-icon-xs flex shrink-0 items-center justify-center">
-                        {isActive ? <Pin className="text-navy-600 size-icon-xs" /> : null}
+                        {isActive ? <Pin className="text-primary size-icon-xs" /> : null}
                     </span>
                     <span className="flex-1 truncate">{item.label}</span>
                     {item.external && (
