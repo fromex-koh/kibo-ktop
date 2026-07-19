@@ -19,7 +19,9 @@ const OPTION_ILLUSTRATIONS = {
 } as const
 
 // 실제 사용처는 next/image 로 일러스트를 넘긴다([NA-005]). 제목이 정보를 전달하므로 일러스트는 장식이다 → alt=""([5.1.1]).
-const DemoIllustration = ({src}: {src: string}) => <Image src={src} alt="" width={148} height={100} />
+const DemoIllustration = ({src, loading = 'lazy'}: {src: string; loading?: 'eager' | 'lazy'}) => (
+    <Image src={src} alt="" width={148} height={100} loading={loading} style={{width: 148, height: 100}} />
+)
 
 const USAGE_CODE = `<OptionCard
   href="/evaluation/ktrs-fm"
@@ -124,7 +126,7 @@ const OptionCardGuidePage = () => (
                         title="KTRS-FM 평가"
                         subtitle="표준 기술금융 모형"
                         description="기술사업화 역량 및 재무적 안정성을 종합적으로 평가하는 표준 기술금융 모형입니다."
-                        illustration={<DemoIllustration src={OPTION_ILLUSTRATIONS.ktrsFm} />}
+                        illustration={<DemoIllustration src={OPTION_ILLUSTRATIONS.ktrsFm} loading="eager" />}
                     />
                     <OptionCard
                         href="#oc-props"

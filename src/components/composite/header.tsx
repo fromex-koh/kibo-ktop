@@ -164,7 +164,7 @@ const HeaderContent = ({navLabel}: {navLabel: string}) => (
                                 <SheetClose asChild key={link.label}>
                                     <UtilityLink
                                         {...link}
-                                        className="not-disabled:hover:bg-primary-subtle not-disabled:hover:text-primary-strong min-h-11 w-full justify-start rounded-md px-3"
+                                        className="not-disabled:hover:bg-navy-50 not-disabled:hover:text-navy-600 min-h-11 w-full justify-start rounded-md px-3"
                                     />
                                 </SheetClose>
                             ))}

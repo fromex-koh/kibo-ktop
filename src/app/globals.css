@@ -16,6 +16,15 @@
     .home-guide-link-button:not(:disabled):active {
         background-color: var(--ds-navy-800);
     }
+
+    /* 컴포넌트 가이드 공통 플로팅 액션 — Button default의 blue 상태를 navy 포인트로 덮는다. */
+    .scroll-to-top-button:not(:disabled):hover {
+        background-color: var(--ds-navy-700);
+    }
+
+    .scroll-to-top-button:not(:disabled):active {
+        background-color: var(--ds-navy-800);
+    }
 }
 
 @theme inline {
