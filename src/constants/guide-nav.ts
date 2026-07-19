@@ -25,7 +25,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         icon: 'project',
         items: [
             {label: 'Open Graph', href: '/component-guide/open-graph'},
-            {label: '명도 대비 검사', href: '/component-guide/contrast-check'},
+            {label: '명도 대비 확인', href: '/component-guide/contrast-check'},
         ],
     },
     {
