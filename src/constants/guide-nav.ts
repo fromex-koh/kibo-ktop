@@ -73,7 +73,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                         items: [
                             {label: 'Label', href: '/component-guide/label'},
                             {label: 'FieldLabel', href: '/component-guide/field-label'},
-                            {label: 'Button', href: '/component-guide/button'},
+                            {label: 'Button 컴포넌트', href: '/component-guide/button'},
                             {label: 'Input', href: '/component-guide/input'},
                             {label: 'Textarea', href: '/component-guide/textarea'},
                             {label: 'Select', href: '/component-guide/select'},

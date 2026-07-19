@@ -17,8 +17,8 @@ const BASIC_CODE = `<Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
 </Field>`
 
 const HORIZONTAL_CODE = `<Field orientation="horizontal" className={cn('w-fit gap-2', FIELD_FOCUS_RING)}>
-  <Checkbox id="terms" name="terms" />
-  <FieldLabel htmlFor="terms">이용약관에 동의합니다</FieldLabel>
+  <Checkbox id="terms" name="terms" aria-labelledby="terms-label" />
+  <FieldLabel id="terms-label" htmlFor="terms">이용약관에 동의합니다</FieldLabel>
 </Field>`
 
 const INVALID_CODE = `<Field data-invalid className={cn('max-w-90', FIELD_FOCUS_RING)}>
@@ -122,8 +122,10 @@ const FieldLabelGuidePage = () => (
                 </div>
                 <div className="border-border rounded-md border p-6">
                     <Field orientation="horizontal" className={cn('w-fit gap-2', FIELD_FOCUS_RING)}>
-                        <Checkbox id="field-label-terms" name="terms" />
-                        <FieldLabel htmlFor="field-label-terms">이용약관에 동의합니다</FieldLabel>
+                        <Checkbox id="field-label-terms" name="terms" aria-labelledby="field-label-terms-label" />
+                        <FieldLabel id="field-label-terms-label" htmlFor="field-label-terms">
+                            이용약관에 동의합니다
+                        </FieldLabel>
                     </Field>
                 </div>
                 <CodeBlock code={HORIZONTAL_CODE} language="tsx" copyLabel="복사" />

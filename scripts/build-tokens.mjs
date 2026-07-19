@@ -210,9 +210,9 @@ if (errors.length) {
 }
 
 // ── 2) 대비(WCAG) 검증 — 텍스트 4.5:1 / 큰텍스트·아이콘·그래픽 3:1 ──
-// Figma light/dark 컬러 정합 작업 중에는 대비 게이트를 잠시 비활성화한다.
-// 재개 시 ENABLE_CONTRAST_CHECK 를 true 로 바꾸고 CHECKS 기준을 다시 검토한다.
-const ENABLE_CONTRAST_CHECK = false
+// 디자이너 확정 전 임시 dark 컬러의 핵심 시맨틱 조합만 빌드에서 검증한다.
+// light 원본은 현재 그대로 보존하고 별도 디자인 검수 후 조정한다. disabled·장식 요소는 대비 예외다.
+const ENABLE_CONTRAST_CHECK = true
 const rawHex = (hue, step) => (hue === 'common' ? common[step] : primitive[hue][String(step)])
 const resolveHex = (name, mode) => {
     const val = semantic[name]
@@ -235,24 +235,46 @@ const ratio = (a, b) => {
     const [hi, lo] = [lum(a), lum(b)].sort((x, y) => y - x)
     return (hi + 0.05) / (lo + 0.05)
 }
-// WCAG: 본문 텍스트 4.5:1 (1.4.3)
+// WCAG: 본문 텍스트 4.5:1 (1.4.3), UI 경계·포커스 표시 3:1 (1.4.11)
 const TEXT = 4.5
+const UI = 3
 // shadcn 슬롯 기준 — 시맨틱 이름이 슬롯 세트로 교체되어 검사 대상도 슬롯으로 맞춘다.
 const CHECKS = [
     {fg: 'foreground', bg: 'background', min: TEXT, kind: '본문 텍스트'},
+    {fg: 'foreground', bg: 'surface', min: TEXT, kind: '표면 본문 텍스트'},
     {fg: 'muted-foreground', bg: 'background', min: TEXT, kind: '보조 텍스트'},
+    {fg: 'muted-foreground', bg: 'surface', min: TEXT, kind: '표면 보조 텍스트'},
+    {fg: 'foreground-subtle', bg: 'background', min: TEXT, kind: '부가 텍스트'},
+    {fg: 'foreground-subtle', bg: 'surface', min: TEXT, kind: '표면 부가 텍스트'},
+    {fg: 'label-foreground', bg: 'background', min: TEXT, kind: '레이블 텍스트'},
+    {fg: 'label-foreground', bg: 'surface', min: TEXT, kind: '표면 레이블 텍스트'},
+    {fg: 'disabled', bg: 'background', min: TEXT, kind: '비활성 텍스트'},
+    {fg: 'disabled', bg: 'surface', min: TEXT, kind: '표면 비활성 텍스트'},
+    {fg: 'disabled', bg: 'field-disabled', min: TEXT, kind: '비활성 필드 텍스트'},
+    {fg: 'disabled-subtle', bg: 'control-disabled-subtle', min: UI, kind: '비활성 컨트롤 경계'},
     {fg: 'primary', bg: 'background', min: TEXT, kind: '링크 텍스트'},
+    {fg: 'primary', bg: 'surface', min: TEXT, kind: '표면 링크 텍스트'},
+    {fg: 'primary', bg: 'primary-subtle', min: TEXT, kind: '강조 텍스트'},
     {fg: 'primary-foreground', bg: 'primary', min: TEXT, kind: '버튼 텍스트'},
-    // success/warning/error/info-foreground 는 해당 색 배경(bg-success 등) 위가 아니라 일반 배경 위에서
-    // 직접 읽는 상태 텍스트라, 대비도 배경(background) 기준으로 검사한다.
-    {fg: 'success-foreground', bg: 'background', min: TEXT, kind: '성공 상태 텍스트'},
-    {fg: 'warning-foreground', bg: 'background', min: TEXT, kind: '경고 상태 텍스트'},
-    {fg: 'error-foreground', bg: 'background', min: TEXT, kind: '오류 상태 텍스트'},
-    {fg: 'info-foreground', bg: 'background', min: TEXT, kind: '정보 상태 텍스트'},
+    {fg: 'destructive-foreground', bg: 'destructive', min: TEXT, kind: '오류 버튼 텍스트'},
+    {
+        fg: 'icon-solid-neutral-foreground',
+        bg: 'icon-solid-neutral',
+        min: TEXT,
+        kind: '중립 solid 아이콘',
+    },
+    {fg: 'badge-solid-fg', bg: 'number-badge-new', min: TEXT, kind: '신규 숫자 배지'},
+    {fg: 'success', bg: 'background', min: TEXT, kind: '성공 상태 텍스트'},
+    {fg: 'warning', bg: 'background', min: TEXT, kind: '경고 상태 텍스트'},
+    {fg: 'error', bg: 'background', min: TEXT, kind: '오류 상태 텍스트'},
+    {fg: 'info', bg: 'background', min: TEXT, kind: '정보 상태 텍스트'},
+    {fg: 'border', bg: 'background', min: UI, kind: '기본 경계'},
+    {fg: 'input', bg: 'background', min: UI, kind: '입력 경계'},
+    {fg: 'ring', bg: 'background', min: UI, kind: '포커스 표시'},
 ]
 if (ENABLE_CONTRAST_CHECK) {
     for (const {fg, bg, min, kind} of CHECKS) {
-        for (const mode of ['light', 'dark']) {
+        for (const mode of ['dark']) {
             const r = ratio(resolveHex(fg, mode), resolveHex(bg, mode))
             if (r < min) errors.push(`대비 미달 [${mode}] ${fg} on ${bg} (${kind}): ${r.toFixed(2)}:1 (< ${min})`)
         }

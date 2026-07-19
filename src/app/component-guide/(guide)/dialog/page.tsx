@@ -24,15 +24,18 @@ const USAGE_CODE = `<Dialog>
   <DialogTrigger asChild>
     <Button size="lg">열기</Button>
   </DialogTrigger>
-  <DialogContent aria-describedby={undefined}>
+  <DialogContent>
     <DialogHeader>
       <DialogTitle>타이틀</DialogTitle>
+      <DialogDescription className="sr-only">
+        자가진단 안내의 비순서 및 순서 목록을 확인합니다.
+      </DialogDescription>
     </DialogHeader>
 
     {/* 본문 — 소제목(20px Bold) + 리스트(ListMarker 조합). 긴 목록은 아래 '내부 스크롤' 케이스처럼
         max-h + overflow-y-auto 박스로 감싼다. */}
     <div className="flex flex-col gap-4">
-      <p className="typo-title-l-bold text-foreground">1depth</p>
+      <h3 className="typo-title-l-bold text-foreground">1depth</h3>
       <ul className="flex flex-col gap-2">
         <li>
           <span className="flex gap-1.5 typo-body-xl-regular text-label-foreground">
@@ -161,14 +164,17 @@ const DialogGuidePage = () => (
                         <DialogTrigger asChild>
                             <Button size="lg">기본 다이얼로그 열기</Button>
                         </DialogTrigger>
-                        <DialogContent aria-describedby={undefined}>
+                        <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>타이틀</DialogTitle>
+                                <DialogDescription className="sr-only">
+                                    자가진단 안내의 비순서 및 순서 목록을 확인합니다.
+                                </DialogDescription>
                             </DialogHeader>
                             {/* 본문 — Figma 그대로: 소제목(20px Bold) + 비순서/순서 중첩 리스트(ListMarker).
                             일반 본문은 스크롤 없이 그대로 흐른다(긴 목록은 아래 '내부 스크롤' 케이스 참고). */}
                             <div className="flex flex-col gap-4">
-                                <p className="typo-title-l-bold text-foreground">1depth</p>
+                                <h3 className="typo-title-l-bold text-foreground">1depth</h3>
                                 <ul className="flex flex-col gap-2">
                                     <li>
                                         <span className="typo-body-xl-regular text-label-foreground flex gap-1.5">

@@ -2,7 +2,7 @@ import {cva} from 'class-variance-authority'
 
 // PROJECT-STYLE: shadcn Button 함수 셸은 ui/button.tsx에 유지하고 프로젝트 스타일만 이 파일에서 관리한다.
 const buttonVariants = cva(
-    "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-ring focus-visible:outline-offset-2 not-disabled:active:not-aria-[haspopup]:translate-y-px disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+    "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-ring focus-visible:outline-offset-2 not-disabled:active:not-aria-[haspopup]:translate-y-px disabled:cursor-not-allowed disabled:opacity-100 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     {
         variants: {
             variant: {
@@ -13,10 +13,10 @@ const buttonVariants = cva(
                 tertiary:
                     'bg-tertiary text-tertiary-foreground border-tertiary-strong not-disabled:hover:bg-tertiary-hover not-disabled:active:bg-tertiary-pressed disabled:bg-control-disabled-subtle disabled:border-disabled-subtle disabled:text-disabled disabled:opacity-100',
                 outline:
-                    'border-input bg-background text-foreground not-disabled:hover:bg-accent aria-expanded:bg-accent',
-                ghost: 'text-foreground not-disabled:hover:bg-accent aria-expanded:bg-accent',
+                    'border-input bg-background text-foreground not-disabled:hover:bg-accent aria-expanded:bg-accent disabled:border-disabled-subtle disabled:bg-control-disabled disabled:text-disabled',
+                ghost: 'text-foreground not-disabled:hover:bg-accent aria-expanded:bg-accent disabled:bg-control-disabled disabled:text-disabled',
                 destructive:
-                    'bg-destructive text-destructive-foreground not-disabled:hover:bg-destructive/90 not-disabled:active:bg-destructive/80',
+                    'bg-destructive text-destructive-foreground not-disabled:hover:bg-destructive/90 not-disabled:active:bg-destructive/80 disabled:border-disabled-subtle disabled:bg-control-disabled disabled:text-disabled',
                 link: 'text-label-foreground underline-offset-4 not-disabled:hover:underline disabled:text-disabled-subtle disabled:opacity-100',
                 text: 'text-label-foreground disabled:text-disabled-subtle disabled:opacity-100',
             },

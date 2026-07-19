@@ -5,7 +5,7 @@ const datePickerTriggerClassName =
 const datePickerPlaceholderClassName = 'text-placeholder'
 const datePickerValueClassName = 'text-label-foreground'
 const datePickerDisabledValueClassName = 'text-disabled'
-const datePickerIconClassName = 'text-foreground size-icon-md shrink-0'
+const datePickerIconClassName = 'text-foreground group-has-disabled/input-group:text-disabled size-icon-md shrink-0'
 
 export {
     datePickerGroupClassName,

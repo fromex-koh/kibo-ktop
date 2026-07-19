@@ -5,10 +5,10 @@ export const alertVariants = cva(
     {
         variants: {
             variant: {
-                info: 'bg-info-10 border-info-100 *:[svg]:text-info-500',
-                success: 'bg-success-10 border-success-100 *:[svg]:text-success-500',
-                warning: 'bg-warning-10 border-warning-100 *:[svg]:text-warning-500',
-                error: 'bg-error-10 border-error-100 *:[svg]:text-error-500',
+                info: 'bg-info-10 border-info-100 dark:border-info-400 *:[svg]:text-info-500',
+                success: 'bg-success-10 border-success-100 dark:border-success-400 *:[svg]:text-success-500',
+                warning: 'bg-warning-10 border-warning-100 dark:border-warning-400 *:[svg]:text-warning-500',
+                error: 'bg-error-10 border-error-100 dark:border-error-400 *:[svg]:text-error-500',
             },
         },
         defaultVariants: {variant: 'info'},

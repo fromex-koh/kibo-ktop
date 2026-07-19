@@ -156,16 +156,14 @@ const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
         return cells
     })
 
-// 뎁스 배지 색상 — 시작 페이지의 포인트 컬러인 navy 불투명도를 20/40/70% → solid 로 올려 뎁스가 깊어질수록 진해진다
-// (새 색 하드코딩 없음). 배경이 옅은 얕은 뎁스는 진한 text-foreground 로, 배경이 primary 에 가까워지는
-// 깊은 뎁스는 primary 전용 대비색 text-primary-foreground(라이트=흰색·다크=진회색)로 전환해
-// 라이트·다크 모두 텍스트 대비를 확보한다(어두운 배경 위 어두운 텍스트 문제 해소).
+// 뎁스 배지 색상 — raw 팔레트 대신 모드별 대비가 보장되는 semantic 조합만 쓴다.
+// 뎁스가 깊어질수록 primary-subtle → secondary → primary 로 강조를 높인다.
 // 뎁스가 이 배열보다 깊어지면 마지막 스타일을 그대로 쓴다.
 const DEPTH_BADGE_STYLES = [
-    'bg-navy-600/20 text-foreground',
-    'bg-navy-600/40 text-foreground',
-    'bg-navy-600/70 text-primary-foreground',
-    'bg-navy-600 text-primary-foreground',
+    'bg-primary-subtle text-primary',
+    'bg-secondary text-secondary-foreground',
+    'bg-primary text-primary-foreground',
+    'bg-primary text-primary-foreground',
 ]
 const depthBadgeClass = (depth: number): string => DEPTH_BADGE_STYLES[Math.min(depth, DEPTH_BADGE_STYLES.length - 1)]
 
@@ -252,7 +250,7 @@ const PublishingIndex = () => {
                                             </td>
                                             <th
                                                 scope="row"
-                                                className="typo-body-l-medium text-navy-600 px-4 py-3 font-mono"
+                                                className="typo-body-l-medium text-primary px-4 py-3 font-mono"
                                             >
                                                 {asset.name}
                                             </th>
@@ -262,7 +260,7 @@ const PublishingIndex = () => {
                                             <td
                                                 className={`typo-body-l-regular px-4 py-3 font-mono ${
                                                     asset.isCurrent
-                                                        ? 'bg-navy-600/10 text-navy-600 font-semibold'
+                                                        ? 'bg-primary-subtle text-primary font-semibold'
                                                         : 'text-muted-foreground'
                                                 }`}
                                             >
@@ -300,7 +298,7 @@ const PublishingIndex = () => {
                                 <SegmentedControlItem
                                     key={f}
                                     value={f}
-                                    className="has-[[data-state=checked]]:bg-navy-600 has-[[data-state=checked]]:text-primary-foreground px-4"
+                                    className="has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground px-4"
                                 >
                                     {f}
                                 </SegmentedControlItem>
@@ -347,7 +345,7 @@ const PublishingIndex = () => {
                                             <tr
                                                 key={layout.label}
                                                 className={`border-border border-b last:border-b-0 ${
-                                                    isCurrent ? 'bg-navy-600/10' : 'bg-surface'
+                                                    isCurrent ? 'bg-primary-subtle' : 'bg-surface'
                                                 }`}
                                             >
                                                 <th
@@ -368,7 +366,7 @@ const PublishingIndex = () => {
                                                 <td
                                                     className={`typo-caption-regular px-4 py-3 font-mono ${
                                                         isCurrent
-                                                            ? 'text-navy-600 font-semibold'
+                                                            ? 'text-primary font-semibold'
                                                             : 'text-muted-foreground'
                                                     }`}
                                                 >
@@ -406,7 +404,7 @@ const PublishingIndex = () => {
                                             <tr
                                                 key={leaf.key}
                                                 className={`border-border border-b last:border-b-0 ${
-                                                    isCurrent ? 'bg-navy-600/10' : 'bg-surface'
+                                                    isCurrent ? 'bg-primary-subtle' : 'bg-surface'
                                                 }`}
                                             >
                                                 {depthCells[i].map((cell, depth) => {
@@ -450,7 +448,7 @@ const PublishingIndex = () => {
                                                 <td
                                                     className={`typo-caption-regular px-4 py-3 font-mono ${
                                                         isCurrent
-                                                            ? 'text-navy-600 font-semibold'
+                                                            ? 'text-primary font-semibold'
                                                             : 'text-muted-foreground'
                                                     }`}
                                                 >

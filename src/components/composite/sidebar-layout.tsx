@@ -144,7 +144,11 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                                                 <CollapsibleContent>
                                                     <SidebarMenuSub>
                                                         {section.items?.map((item) => (
-                                                            <GuideNavSubItem key={item.href} item={item} />
+                                                            <GuideNavSubItem
+                                                                key={item.href}
+                                                                item={item}
+                                                                categories={[section.title]}
+                                                            />
                                                         ))}
                                                         {section.groups?.map((group) => (
                                                             <SidebarMenuSubItem
@@ -156,12 +160,17 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                                                                 </p>
                                                                 <SidebarMenuSub className="mx-0 border-l-0 px-0">
                                                                     {group.items?.map((item) => (
-                                                                        <GuideNavSubItem key={item.href} item={item} />
+                                                                        <GuideNavSubItem
+                                                                            key={item.href}
+                                                                            item={item}
+                                                                            categories={[section.title, group.title]}
+                                                                        />
                                                                     ))}
                                                                     {group.groups?.map((subgroup) => (
                                                                         <GuideNavNestedGroup
                                                                             key={subgroup.title}
                                                                             group={subgroup}
+                                                                            categories={[section.title, group.title]}
                                                                         />
                                                                     ))}
                                                                 </SidebarMenuSub>
@@ -224,12 +233,12 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
     )
 }
 
-const GuideNavNestedGroup = ({group}: {group: GuideNavItemGroup}) => (
+const GuideNavNestedGroup = ({group, categories}: {group: GuideNavItemGroup; categories: string[]}) => (
     <SidebarMenuSubItem className="mt-3 first:mt-1">
         <p className="typo-caption-medium text-navy-600 px-2 py-1">{group.title}</p>
         <SidebarMenuSub className="mx-0 border-l-0 px-0">
             {group.items?.map((item) => (
-                <GuideNavSubItem key={item.href} item={item} />
+                <GuideNavSubItem key={item.href} item={item} categories={[...categories, group.title]} />
             ))}
         </SidebarMenuSub>
     </SidebarMenuSubItem>
@@ -247,7 +256,7 @@ const GuideNavRootItem = ({item}: {item: GuideNavItem}) => {
                 aria-current={isActive ? 'page' : undefined}
                 className="hover:bg-navy-50 active:bg-navy-50 data-active:bg-navy-50 data-active:text-navy-600 rounded-none font-semibold data-active:font-semibold"
             >
-                <Link href={item.href}>
+                <Link href={item.href} aria-label={`${item.label} 가이드 홈으로 이동`}>
                     {isActive ? (
                         <Pin aria-hidden="true" className="text-navy-600 size-icon-xs" />
                     ) : (
@@ -260,7 +269,7 @@ const GuideNavRootItem = ({item}: {item: GuideNavItem}) => {
     )
 }
 
-const GuideNavSubItem = ({item}: {item: GuideNavItem}) => {
+const GuideNavSubItem = ({item, categories}: {item: GuideNavItem; categories: string[]}) => {
     const pathname = usePathname()
     const isActive = !item.external && pathname === item.href
 
@@ -274,6 +283,7 @@ const GuideNavSubItem = ({item}: {item: GuideNavItem}) => {
             >
                 <Link
                     href={item.href}
+                    aria-label={`${[...categories, item.label].join(' · ')} 가이드로 이동${item.external ? ' (새 창)' : ''}`}
                     {...(item.external
                         ? {
                               target: '_blank',

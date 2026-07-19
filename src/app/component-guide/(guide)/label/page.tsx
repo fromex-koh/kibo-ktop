@@ -51,7 +51,7 @@ const STYLE_ROWS = [
     {
         prop: '비활성',
         value: 'text-disabled',
-        note: 'gray.300 — 연결 컨트롤 비활성 시 peer/group 상태로 라벨 색상을 명시',
+        note: 'light gray.300 / dark gray.200 — 연결 컨트롤 비활성 시 peer/group 상태로 라벨 색상을 명시',
     },
 ] as const
 
