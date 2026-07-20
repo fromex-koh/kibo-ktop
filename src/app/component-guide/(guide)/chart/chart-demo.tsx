@@ -28,6 +28,30 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationLabel: '법인주주',
                 status: 'good',
             },
+            {
+                id: 'korea-development',
+                label: '한국개발',
+                businessNumber: '401-01-01010',
+                relationCode: '20',
+                relationLabel: '대표-대표',
+                status: 'attention',
+            },
+            {
+                id: 'korea-engineering',
+                label: '한국엔지니어링',
+                businessNumber: '402-02-02020',
+                relationCode: '31',
+                relationLabel: '동일주소(타업종)',
+                status: 'normal',
+            },
+            {
+                id: 'korea-infrastructure',
+                label: '한국인프라건설',
+                businessNumber: '403-03-03030',
+                relationCode: '30',
+                relationLabel: '동일주소(동업종)',
+                status: 'good',
+            },
         ],
     },
     {
@@ -43,6 +67,30 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationLabel: '법인특수관계',
                 status: 'normal',
             },
+            {
+                id: 'korea-food-service',
+                label: '한국푸드서비스',
+                businessNumber: '411-01-01010',
+                relationCode: '10',
+                relationLabel: '법인주주',
+                status: 'good',
+            },
+            {
+                id: 'korea-hotel',
+                label: '한국호텔',
+                businessNumber: '412-02-02020',
+                relationCode: '24',
+                relationLabel: '임원-임원',
+                status: 'attention',
+            },
+            {
+                id: 'korea-dining',
+                label: '한국외식산업',
+                businessNumber: '413-03-03030',
+                relationCode: '21',
+                relationLabel: '대표-임원',
+                status: 'alert',
+            },
         ],
     },
     {
@@ -56,6 +104,30 @@ const COMPANY_SECTORS: CompanySector[] = [
                 businessNumber: '777-77-77777',
                 relationCode: '31',
                 relationLabel: '동일주소(타업종)',
+                status: 'good',
+            },
+            {
+                id: 'korea-education',
+                label: '한국교육원',
+                businessNumber: '421-01-01010',
+                relationCode: '11',
+                relationLabel: '법인특수관계',
+                status: 'normal',
+            },
+            {
+                id: 'korea-academy',
+                label: '한국인재개발원',
+                businessNumber: '422-02-02020',
+                relationCode: '20',
+                relationLabel: '대표-대표',
+                status: 'attention',
+            },
+            {
+                id: 'korea-learning',
+                label: '한국평생교육서비스',
+                businessNumber: '423-03-03030',
+                relationCode: '40',
+                relationLabel: '동일거주지',
                 status: 'good',
             },
         ],
@@ -81,6 +153,62 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationLabel: '법인특수관계',
                 status: 'normal',
             },
+            {
+                id: 'korea-machinery',
+                label: '한국기계',
+                businessNumber: '201-01-01010',
+                relationCode: '10',
+                relationLabel: '법인주주',
+                status: 'good',
+            },
+            {
+                id: 'korea-materials',
+                label: '한국소재',
+                businessNumber: '202-02-02020',
+                relationCode: '20',
+                relationLabel: '대표-대표',
+                status: 'attention',
+            },
+            {
+                id: 'korea-parts',
+                label: '한국부품',
+                businessNumber: '203-03-03030',
+                relationCode: '21',
+                relationLabel: '대표-임원',
+                status: 'alert',
+            },
+            {
+                id: 'korea-precision',
+                label: '한국정밀',
+                businessNumber: '204-04-04040',
+                relationCode: '23',
+                relationLabel: '임원-대표',
+                status: 'danger',
+            },
+            {
+                id: 'korea-automation',
+                label: '한국자동화',
+                businessNumber: '205-05-05050',
+                relationCode: '24',
+                relationLabel: '임원-임원',
+                status: 'high-risk',
+            },
+            {
+                id: 'korea-factory',
+                label: '한국팩토리',
+                businessNumber: '206-06-06060',
+                relationCode: '30',
+                relationLabel: '동일주소(동업종)',
+                status: 'poor',
+            },
+            {
+                id: 'korea-production',
+                label: '한국생산기술',
+                businessNumber: '207-07-07070',
+                relationCode: '31',
+                relationLabel: '동일주소(타업종)',
+                status: 'closed',
+            },
         ],
     },
     {
@@ -95,6 +223,30 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationCode: '40',
                 relationLabel: '동일거주지',
                 status: 'normal',
+            },
+            {
+                id: 'korea-management',
+                label: '한국경영서비스',
+                businessNumber: '431-01-01010',
+                relationCode: '20',
+                relationLabel: '대표-대표',
+                status: 'good',
+            },
+            {
+                id: 'korea-support',
+                label: '한국기업지원',
+                businessNumber: '432-02-02020',
+                relationCode: '11',
+                relationLabel: '법인특수관계',
+                status: 'attention',
+            },
+            {
+                id: 'korea-facility',
+                label: '한국시설관리',
+                businessNumber: '433-03-03030',
+                relationCode: '30',
+                relationLabel: '동일주소(동업종)',
+                status: 'poor',
             },
         ],
     },
@@ -111,6 +263,30 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationLabel: '동일주소(동업종)',
                 status: 'high-risk',
             },
+            {
+                id: 'korea-finance',
+                label: '한국금융',
+                businessNumber: '441-01-01010',
+                relationCode: '10',
+                relationLabel: '법인주주',
+                status: 'normal',
+            },
+            {
+                id: 'korea-insurance',
+                label: '한국보험서비스',
+                businessNumber: '442-02-02020',
+                relationCode: '21',
+                relationLabel: '대표-임원',
+                status: 'good',
+            },
+            {
+                id: 'korea-capital',
+                label: '한국캐피탈',
+                businessNumber: '443-03-03030',
+                relationCode: '31',
+                relationLabel: '동일주소(타업종)',
+                status: 'alert',
+            },
         ],
     },
     {
@@ -126,6 +302,30 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationLabel: '대표-임원',
                 status: 'attention',
             },
+            {
+                id: 'korea-distribution',
+                label: '한국유통',
+                businessNumber: '451-01-01010',
+                relationCode: '11',
+                relationLabel: '법인특수관계',
+                status: 'normal',
+            },
+            {
+                id: 'korea-market',
+                label: '한국마켓',
+                businessNumber: '452-02-02020',
+                relationCode: '24',
+                relationLabel: '임원-임원',
+                status: 'good',
+            },
+            {
+                id: 'korea-commerce',
+                label: '한국커머스플랫폼',
+                businessNumber: '453-03-03030',
+                relationCode: '20',
+                relationLabel: '대표-대표',
+                status: 'attention',
+            },
         ],
     },
     {
@@ -139,6 +339,108 @@ const COMPANY_SECTORS: CompanySector[] = [
                 businessNumber: '666-66-66666',
                 relationCode: '23',
                 relationLabel: '임원-대표',
+                status: 'attention',
+            },
+            {
+                id: 'korea-telecom',
+                label: '한국통신',
+                businessNumber: '461-01-01010',
+                relationCode: '10',
+                relationLabel: '법인주주',
+                status: 'normal',
+            },
+            {
+                id: 'korea-data',
+                label: '한국데이터서비스',
+                businessNumber: '462-02-02020',
+                relationCode: '23',
+                relationLabel: '임원-대표',
+                status: 'good',
+            },
+            {
+                id: 'korea-software',
+                label: '한국소프트웨어기술',
+                businessNumber: '463-03-03030',
+                relationCode: '31',
+                relationLabel: '동일주소(타업종)',
+                status: 'alert',
+            },
+        ],
+    },
+    {
+        id: 'professional-science',
+        label: '전문/과학',
+        icon: 'education',
+        companies: [
+            {
+                id: 'korea-research',
+                label: '한국연구개발',
+                businessNumber: '103-03-03030',
+                relationCode: '20',
+                relationLabel: '대표-대표',
+                status: 'good',
+            },
+            {
+                id: 'korea-science',
+                label: '한국과학기술',
+                businessNumber: '471-01-01010',
+                relationCode: '11',
+                relationLabel: '법인특수관계',
+                status: 'normal',
+            },
+            {
+                id: 'korea-consulting',
+                label: '한국기술컨설팅',
+                businessNumber: '472-02-02020',
+                relationCode: '20',
+                relationLabel: '대표-대표',
+                status: 'attention',
+            },
+            {
+                id: 'korea-laboratory',
+                label: '한국산업연구소',
+                businessNumber: '473-03-03030',
+                relationCode: '24',
+                relationLabel: '임원-임원',
+                status: 'good',
+            },
+        ],
+    },
+    {
+        id: 'transport-storage',
+        label: '운수/창고',
+        icon: 'retail',
+        companies: [
+            {
+                id: 'korea-logistics',
+                label: '한국물류',
+                businessNumber: '104-04-04040',
+                relationCode: '41',
+                relationLabel: '동일대표(개인)',
+                status: 'poor',
+            },
+            {
+                id: 'korea-transport',
+                label: '한국운송',
+                businessNumber: '481-01-01010',
+                relationCode: '10',
+                relationLabel: '법인주주',
+                status: 'normal',
+            },
+            {
+                id: 'korea-storage',
+                label: '한국물류창고',
+                businessNumber: '482-02-02020',
+                relationCode: '30',
+                relationLabel: '동일주소(동업종)',
+                status: 'good',
+            },
+            {
+                id: 'korea-delivery',
+                label: '한국종합배송서비스',
+                businessNumber: '483-03-03030',
+                relationCode: '41',
+                relationLabel: '동일대표(개인)',
                 status: 'attention',
             },
         ],
@@ -277,14 +579,26 @@ const CompanyRelationshipLegend = () => (
 
 const CompanyNetworkDemo = () => {
     const [sectorCount, setSectorCount] = useState(COMPANY_SECTORS.length)
-    const visibleSectors = COMPANY_SECTORS.slice(0, sectorCount)
+    const visibleSectors = COMPANY_SECTORS.slice(0, sectorCount).map((sector) => ({
+        ...sector,
+        companies:
+            sectorCount === COMPANY_SECTORS.length
+                ? sector.companies
+                : sector.companies.slice(0, sectorCount === 6 && sector.id === 'manufacturing' ? 7 : 2),
+    }))
+    const companyCount = visibleSectors.reduce((total, sector) => total + sector.companies.length, 0)
+    const scenarios = [
+        {count: 3, label: '적음 3개'},
+        {count: 6, label: '중간 6개'},
+        {count: COMPANY_SECTORS.length, label: `많음 ${COMPANY_SECTORS.length}개`},
+    ]
 
     return (
         <div className="flex flex-col gap-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="typo-body-l-medium">데이터 수에 따른 자동 재배치</p>
-                <div className="flex gap-2" role="group" aria-label="연계기업 데이터 수 선택">
-                    {[6, COMPANY_SECTORS.length].map((count) => (
+                <p className="typo-body-l-medium">섹터·기업 수에 따른 반경·각도 자동 재계산</p>
+                <div className="flex gap-2" role="group" aria-label="연계기업 섹터 수 선택">
+                    {scenarios.map(({count, label}) => (
                         <Button
                             key={count}
                             type="button"
@@ -293,7 +607,7 @@ const CompanyNetworkDemo = () => {
                             aria-pressed={sectorCount === count}
                             onClick={() => setSectorCount(count)}
                         >
-                            {count}개
+                            {label}
                         </Button>
                     ))}
                 </div>
@@ -303,7 +617,7 @@ const CompanyNetworkDemo = () => {
                 <CompanyRelationshipGraph
                     companyName="주식회사 한국첨단산업기술연구원"
                     sectors={visibleSectors}
-                    ariaLabel={`한국기업을 중심으로 ${visibleSectors.length}개 산업 섹터와 섹터별 연계기업의 관계 코드·EW등급을 나타낸 네트워크 그래프`}
+                    ariaLabel={`한국기업을 중심으로 ${visibleSectors.length}개 산업 섹터와 ${companyCount}개 연계기업의 관계 코드·EW등급을 나타낸 네트워크 그래프`}
                 />
             </div>
         </div>

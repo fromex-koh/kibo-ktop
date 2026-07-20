@@ -69,15 +69,56 @@ const NETWORK_CODE = `import { NetworkGraph } from '@/components/custom/network-
   ariaLabel="산업과 연계기업의 공급망 분포"
 />`
 
-const WORD_CLOUD_CODE = `import { WordCloud } from '@/components/custom/word-cloud';
+const WORD_CLOUD_CODE = `import {
+  WordCloud,
+  type WordCloudItem,
+} from '@/components/custom/word-cloud';
 
-<WordCloud
-  words={[
-    { text: '인공지능', weight: 100 },
-    { text: '학습', weight: 82 },
-  ]}
-  ariaLabel="최근 연구개발 이슈"
-/>`
+// 예: API에서 받은 키워드별 원시 빈도·중요도
+const issueKeywordsFromApi = [
+  { keyword: '인공지능', score: 248 },
+  { keyword: '학습', score: 203 },
+  { keyword: '기술', score: 174 },
+  { keyword: '이미지', score: 159 },
+  { keyword: '이공', score: 151 },
+  { keyword: '모델', score: 139 },
+  { keyword: '신경망', score: 126 },
+  { keyword: '지능', score: 117 },
+  { keyword: '인식', score: 104 },
+  { keyword: '기반', score: 94 },
+  { keyword: '분석', score: 84 },
+  { keyword: '분류', score: 77 },
+  { keyword: '예측', score: 72 },
+  { keyword: '서비스', score: 67 },
+  { keyword: '영상', score: 62 },
+  { keyword: '활용', score: 57 },
+  { keyword: '네트워크', score: 52 },
+  { keyword: '성능', score: 47 },
+];
+
+// 가장 큰 score를 100으로 보고 1~100 범위의 weight로 정규화합니다.
+const maximumScore = Math.max(
+  ...issueKeywordsFromApi.map(({ score }) => score),
+  1,
+);
+
+const issueWords: WordCloudItem[] = issueKeywordsFromApi
+  .filter(({ keyword, score }) => keyword.trim() && score > 0)
+  .map(({ keyword, score }) => ({
+    text: keyword, // 중복되지 않는 표시 단어
+    weight: Math.max(1, Math.round((score / maximumScore) * 100)),
+  }))
+  .sort((a, b) => b.weight - a.weight);
+
+export default function ResearchIssueWordCloud() {
+  return (
+    <WordCloud
+      words={issueWords}
+      ariaLabel="최근 3개년 R&D 이슈를 중요도순으로 표시한 워드클라우드"
+      className="w-full"
+    />
+  );
+}`
 
 const PROPS_ITEMS = [
     [
@@ -98,7 +139,13 @@ const PROPS_ITEMS = [
     ['NetworkGraph', 'nodes', '기업·산업 노드와 상태·가중치·아이콘 데이터를 전달합니다.', '-', 'NetworkNode[]'],
     ['NetworkGraph', 'links', '노드 사이 연결 관계와 비중을 전달합니다.', '-', 'NetworkLink[]'],
     ['NetworkGraph', 'ariaLabel', '그래프가 전달하는 핵심 관계를 간결하게 설명합니다.', '-', 'string'],
-    ['WordCloud', 'words', '단어와 중요도 가중치를 전달합니다.', '-', 'WordCloudItem[]'],
+    [
+        'WordCloud',
+        'words',
+        '중복되지 않는 단어와 양수 가중치를 전달합니다. weight가 클수록 글자가 크게 표시되며 중요도순으로 정렬해 전달합니다.',
+        '-',
+        'WordCloudItem[]',
+    ],
     ['WordCloud', 'ariaLabel', '워드클라우드가 나타내는 데이터 범위를 설명합니다.', '-', 'string'],
     [
         '공통',
@@ -161,12 +208,9 @@ const ChartGuidePage = () => (
                         연계기업 네트워크
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        고정된 분석기업을 중심으로 동적인 산업 섹터와 섹터별 연계기업을 두 단계로 연결합니다. 섹터와
-                        기업 수가 달라지면 방사형 각도와 위치를 다시 계산하며, 섹터와 기업 사이 숫자는 연계유형, 외곽
-                        노드 색상은 기업별 EW등급을 나타냅니다. 분석기업과 섹터는 점선, 섹터와 연계기업은 실선으로
-                        연결됩니다. 중앙 분석기업과 산업 섹터는 고정되며, 외곽 기업 노드는 마우스로 이동해 겹친 관계를
-                        직접 확인할 수 있습니다. 화면이 좁아지면 가로 스크롤 대신 전체 노드를 비율에 맞게 축소하고,
-                        모바일에서는 여백과 높이를 자동 조정합니다.
+                        분석기업을 중심으로 산업 섹터와 연계기업을 연결합니다. 연결선의 숫자는 연계유형, 기업 노드의
+                        색상은 EW등급을 나타냅니다. 데이터 규모에 맞춰 노드를 자동 배치하며, 외곽 기업은 직접 이동하거나
+                        키보드로 선택해 상세 정보를 확인할 수 있습니다.
                     </p>
                 </div>
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
@@ -177,7 +221,7 @@ const ChartGuidePage = () => (
                     language="tsx"
                     copyLabel="CompanyRelationshipGraph 사용 코드 복사"
                 />
-                <LicenseNotice libraries={[CYTOSCAPE_LICENSE]} />
+                <LicenseNotice libraries={[CYTOSCAPE_LICENSE, FCOSE_LICENSE]} />
             </section>
         </BaseCard>
 
@@ -208,14 +252,15 @@ const ChartGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
                         중요도에 따라 글자 크기를 계산하고 단어 간 충돌을 피해 자동 배치합니다. 모든 단어는 가독성을
-                        위해 수평으로 유지합니다.
+                        위해 수평으로 유지합니다. 컨테이너 크기가 바뀌면 글자 크기를 자동으로 재계산하며, 입력 순서를
+                        유지하므로 중요도가 큰 단어부터 정렬해 전달합니다.
                     </p>
                 </div>
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
                     <IssueWordCloudDemo />
                 </div>
                 <LicenseNotice libraries={[WORD_CLOUD_LICENSE]} />
-                <CodeBlock code={WORD_CLOUD_CODE} language="tsx" copyLabel="WordCloud 사용 코드 복사" />
+                <CodeBlock code={WORD_CLOUD_CODE} language="tsx" copyLabel="R&D 이슈 WordCloud 데이터 연결 코드 복사" />
             </section>
         </BaseCard>
 

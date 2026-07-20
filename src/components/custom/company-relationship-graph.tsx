@@ -33,6 +33,8 @@ type CompanyRelationshipGraphProps = Omit<ComponentPropsWithoutRef<'div'>, 'chil
 
 type TooltipState = {text: string; x: number; y: number}
 type KeyboardTarget = TooltipState & {id: string; size: number}
+type RelativePlacementConstraint =
+    {gap: number; left: string; right: string} | {bottom: string; gap: number; top: string}
 
 const LUCIDE_ICON_MARKUP: Record<SectorIcon | 'analysis', string> = {
     analysis:
@@ -70,13 +72,49 @@ const STATUS_LABELS: Record<CompanyRiskStatus, string> = {
 }
 
 const CENTER = {x: 360, y: 250}
-const SECTOR_RADIUS = 116
-const COMPANY_RADIUS = 220
+const BASE_SECTOR_RADIUS = 116
+const SECTOR_ARC_GAP = 92
+const DENSE_BAND_RADIUS_GAP = 48
+const COMPANY_RADIUS_GAP = 104
+const COMPANY_OUTWARD_GAP = 84
+const COMPANIES_PER_BAND = 3
 
 const positionAt = (angle: number, radius: number) => ({
     x: CENTER.x + Math.cos(angle) * radius,
     y: CENTER.y + Math.sin(angle) * radius,
 })
+
+const getSectorRadius = (sectorCount: number, maximumCompanyCount: number) => {
+    const countBasedRadius =
+        sectorCount <= 8 ? BASE_SECTOR_RADIUS : Math.ceil((sectorCount * SECTOR_ARC_GAP) / (Math.PI * 2))
+    const companyBandCount = Math.max(1, Math.ceil(maximumCompanyCount / COMPANIES_PER_BAND))
+    return countBasedRadius + (companyBandCount - 1) * DENSE_BAND_RADIUS_GAP
+}
+
+const addOutwardConstraints = (
+    constraints: RelativePlacementConstraint[],
+    sectorNodeId: string,
+    companyNodeId: string,
+    angle: number,
+) => {
+    const horizontalDirection = Math.cos(angle)
+    const verticalDirection = Math.sin(angle)
+
+    if (Math.abs(horizontalDirection) > 0.35) {
+        constraints.push(
+            horizontalDirection > 0
+                ? {left: sectorNodeId, right: companyNodeId, gap: COMPANY_OUTWARD_GAP}
+                : {left: companyNodeId, right: sectorNodeId, gap: COMPANY_OUTWARD_GAP},
+        )
+    }
+    if (Math.abs(verticalDirection) > 0.35) {
+        constraints.push(
+            verticalDirection > 0
+                ? {top: sectorNodeId, bottom: companyNodeId, gap: COMPANY_OUTWARD_GAP}
+                : {top: companyNodeId, bottom: sectorNodeId, gap: COMPANY_OUTWARD_GAP},
+        )
+    }
+}
 
 const readColor = (token: string, probe: HTMLElement) => {
     probe.style.color = `var(${token})`
@@ -125,8 +163,13 @@ const CompanyRelationshipGraph = ({
         let resizeObserver: ResizeObserver | undefined
 
         const renderGraph = async () => {
-            const {default: cytoscape} = await import('cytoscape')
+            const [{default: cytoscape}, {default: fcose}] = await Promise.all([
+                import('cytoscape'),
+                import('cytoscape-fcose'),
+            ])
             if (cancelled || !containerRef.current) return
+
+            cytoscape.use(fcose)
 
             const probe = document.createElement('span')
             containerRef.current.appendChild(probe)
@@ -160,6 +203,11 @@ const CompanyRelationshipGraph = ({
                 poor: colors.poor,
             }
             const getFitPadding = () => (container.clientWidth < 640 ? 20 : 44)
+            const maximumCompanyCount = Math.max(0, ...sectors.map((sector) => sector.companies.length))
+            const sectorRadius = getSectorRadius(sectors.length, maximumCompanyCount)
+            const companyRadius = sectorRadius + COMPANY_RADIUS_GAP
+            const fixedNodeConstraint = [{nodeId: 'analysis-company', position: CENTER}]
+            const relativePlacementConstraint: RelativePlacementConstraint[] = []
             const elements: ElementDefinition[] = [
                 {
                     data: {
@@ -175,9 +223,10 @@ const CompanyRelationshipGraph = ({
             ]
             sectors.forEach((sector, sectorIndex) => {
                 const sectorAngle = -Math.PI / 2 + (sectorIndex * Math.PI * 2) / Math.max(sectors.length, 1)
-                const sectorPosition = positionAt(sectorAngle, SECTOR_RADIUS)
+                const sectorPosition = positionAt(sectorAngle, sectorRadius)
                 const sectorNodeId = `sector-${sector.id}`
                 const sectorGap = (Math.PI * 2) / Math.max(sectors.length, 1)
+                fixedNodeConstraint.push({nodeId: sectorNodeId, position: sectorPosition})
 
                 elements.push(
                     {
@@ -198,22 +247,23 @@ const CompanyRelationshipGraph = ({
                 )
 
                 sector.companies.forEach((company, companyIndex) => {
-                    const companiesPerBand = 3
-                    const bandIndex = Math.floor(companyIndex / companiesPerBand)
-                    const indexInBand = companyIndex % companiesPerBand
+                    const bandIndex = Math.floor(companyIndex / COMPANIES_PER_BAND)
+                    const indexInBand = companyIndex % COMPANIES_PER_BAND
                     const bandItemCount = Math.min(
-                        companiesPerBand,
-                        sector.companies.length - bandIndex * companiesPerBand,
+                        COMPANIES_PER_BAND,
+                        sector.companies.length - bandIndex * COMPANIES_PER_BAND,
                     )
                     const companyAngleStep = Math.min(0.32, (sectorGap * 0.75) / Math.max(bandItemCount, 1))
                     const offset = (indexInBand - (bandItemCount - 1) / 2) * companyAngleStep
                     const companyAngle = sectorAngle + offset
-                    const companyPosition = positionAt(companyAngle, COMPANY_RADIUS + bandIndex * 64)
+                    const companyPosition = positionAt(companyAngle, companyRadius + bandIndex * 64)
+                    const companyNodeId = `company-${company.id}`
+                    addOutwardConstraints(relativePlacementConstraint, sectorNodeId, companyNodeId, companyAngle)
 
                     elements.push(
                         {
                             data: {
-                                id: `company-${company.id}`,
+                                id: companyNodeId,
                                 label: company.label,
                                 displayLabel: truncateLabel(company.label, 10),
                                 status: company.status,
@@ -226,7 +276,7 @@ const CompanyRelationshipGraph = ({
                             data: {
                                 id: `relationship-${sector.id}-${company.id}`,
                                 source: sectorNodeId,
-                                target: `company-${company.id}`,
+                                target: companyNodeId,
                                 label: company.relationCode,
                             },
                             classes: 'relationship',
@@ -355,6 +405,23 @@ const CompanyRelationshipGraph = ({
                 autoungrabify: false,
                 layout: {name: 'preset', fit: true, padding: getFitPadding()},
             })
+            const collisionAvoidanceLayout = {
+                name: 'fcose',
+                quality: 'proof',
+                randomize: false,
+                animate: false,
+                fit: true,
+                padding: getFitPadding(),
+                nodeDimensionsIncludeLabels: true,
+                packComponents: false,
+                nodeRepulsion: 9000,
+                idealEdgeLength: 112,
+                gravity: 0.08,
+                numIter: 2500,
+                fixedNodeConstraint,
+                relativePlacementConstraint,
+            }
+            graph.layout(collisionAvoidanceLayout).run()
             const analysisNode = graph.$id('analysis-company')
             graph.center(analysisNode)
             analysisNode.lock()
