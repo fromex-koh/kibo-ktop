@@ -16,13 +16,13 @@ const COMPANY_RELATIONSHIP_CODE = `import {
 const relationshipSectors: CompanySector[] = [
   {
     id: 'construction',          // 중복되지 않는 섹터 ID
-    label: '건설',             // 2depth 섹터명
+    label: '건설',                 // 2depth 섹터명
     icon: 'construction',       // 섹터 아이콘
     companies: [                // 해당 섹터의 3depth 기업
       {
         id: 'korea-construction',
         label: '한국건설',
-        businessNumber: '444-44-44444',
+        businessNumber: '444-44-44444', // 툴팁·스크린리더용 원문 데이터
         relationCode: '24',     // 섹터-기업 연결선에 표시될 번호
         relationLabel: '임원-임원',
         status: 'normal',       // EW등급 및 노드 색상
@@ -41,7 +41,6 @@ const relationshipSectors: CompanySector[] = [
         relationCode: '11',
         relationLabel: '법인특수관계',
         status: 'normal',
-        linkKind: 'transaction', // 선택: 거래관계는 점선으로 표시
       },
     ],
   },
@@ -50,9 +49,9 @@ const relationshipSectors: CompanySector[] = [
 export default function CompanyRelationshipSection() {
   return (
     <CompanyRelationshipGraph
-      companyName="한국기업(주)"
+      companyName="주식회사 한국첨단산업기술연구원"
       sectors={relationshipSectors}
-      ariaLabel="한국기업(주)와 연계기업의 산업 섹터별 관계"
+      ariaLabel="한국첨단산업기술연구원과 연계기업의 산업 섹터별 관계"
     />
   );
 }
@@ -81,11 +80,17 @@ const WORD_CLOUD_CODE = `import { WordCloud } from '@/components/custom/word-clo
 />`
 
 const PROPS_ITEMS = [
-    ['CompanyRelationshipGraph', 'companyName', '네트워크 중심에 표시할 기준 기업명을 전달합니다.', '-', 'string'],
+    [
+        'CompanyRelationshipGraph',
+        'companyName',
+        '네트워크 중심의 분석기업명입니다. 14자를 넘으면 화면에서 말줄임하고 전체 이름은 툴팁·접근성 데이터에 유지합니다.',
+        '-',
+        'string',
+    ],
     [
         'CompanyRelationshipGraph',
         'sectors',
-        '동적 산업 섹터와 각 섹터에 포함된 기업·관계 코드·EW등급 데이터를 전달합니다.',
+        '동적 산업 섹터와 각 섹터의 기업·관계 코드·EW등급을 전달합니다. 섹터·기업 id는 각각 중복되지 않아야 합니다.',
         '-',
         'CompanySector[]',
     ],
@@ -158,8 +163,10 @@ const ChartGuidePage = () => (
                     <p className="typo-body-l-regular text-foreground-subtle">
                         고정된 분석기업을 중심으로 동적인 산업 섹터와 섹터별 연계기업을 두 단계로 연결합니다. 섹터와
                         기업 수가 달라지면 방사형 각도와 위치를 다시 계산하며, 섹터와 기업 사이 숫자는 연계유형, 외곽
-                        노드 색상은 기업별 EW등급을 나타냅니다. 중앙 분석기업과 산업 섹터는 고정되며, 외곽 기업 노드는
-                        마우스로 이동해 겹친 관계를 직접 확인할 수 있습니다.
+                        노드 색상은 기업별 EW등급을 나타냅니다. 분석기업과 섹터는 점선, 섹터와 연계기업은 실선으로
+                        연결됩니다. 중앙 분석기업과 산업 섹터는 고정되며, 외곽 기업 노드는 마우스로 이동해 겹친 관계를
+                        직접 확인할 수 있습니다. 화면이 좁아지면 가로 스크롤 대신 전체 노드를 비율에 맞게 축소하고,
+                        모바일에서는 여백과 높이를 자동 조정합니다.
                     </p>
                 </div>
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
@@ -224,6 +231,11 @@ const ChartGuidePage = () => (
                 </div>
                 <ul className="typo-body-l-regular text-foreground-subtle flex list-disc flex-col gap-2 pl-5">
                     <li>노드 상태는 색상뿐 아니라 숨김 데이터의 상태명으로도 전달합니다.</li>
+                    <li>연계기업 네트워크의 모든 노드는 Tab 키로 이동하며, 포커스 시 전체 정보 툴팁을 표시합니다.</li>
+                    <li>
+                        분석기업명은 14자, 외곽 기업명은 10자 초과 시 화면에서 말줄임하며 원문은 툴팁·스크린리더 목록에
+                        유지합니다.
+                    </li>
                     <li>네트워크 연결 비중과 워드 중요도는 차트 내부의 읽기 가능한 목록에 포함됩니다.</li>
                     <li>각 차트에서 사용하는 라이브러리와 공식 MIT LICENSE 근거는 해당 섹션에서 확인합니다.</li>
                 </ul>

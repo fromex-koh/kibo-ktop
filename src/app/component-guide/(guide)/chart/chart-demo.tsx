@@ -75,7 +75,7 @@ const COMPANY_SECTORS: CompanySector[] = [
             },
             {
                 id: 'korea-electronics',
-                label: '한국전자',
+                label: '한국전력설비기술서비스주식회사',
                 businessNumber: '888-88-88888',
                 relationCode: '11',
                 relationLabel: '법인특수관계',
@@ -125,7 +125,6 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationCode: '21',
                 relationLabel: '대표-임원',
                 status: 'attention',
-                linkKind: 'transaction',
             },
         ],
     },
@@ -249,10 +248,9 @@ const CompanyRelationshipLegend = () => (
                 {[
                     ['bg-chart-2', '정상'],
                     ['bg-success', '유보'],
-                    ['bg-warning', '관심'],
-                    ['bg-chart-3', '주의'],
-                    ['bg-error', '경보'],
-                    ['bg-destructive', '위험'],
+                    ['bg-chart-3', '관심'],
+                    ['bg-warning', '경보'],
+                    ['bg-error', '위험'],
                     ['bg-destructive', '고위험'],
                     ['bg-chart-1', '부도'],
                     ['bg-chart-5', '휴업/폐업/청산'],
@@ -266,12 +264,12 @@ const CompanyRelationshipLegend = () => (
         </div>
         <div className="border-border bg-background flex gap-6 rounded-md border border-dashed p-3 sm:col-span-2 lg:col-span-1 xl:col-span-2">
             <span className="flex items-center gap-2">
-                <span className="bg-border h-px w-5" aria-hidden="true" />
-                기업 간 관계
+                <span className="border-foreground-subtle w-5 border-t border-dashed" aria-hidden="true" />
+                분석기업-섹터
             </span>
             <span className="flex items-center gap-2">
-                <span className="border-foreground-subtle w-5 border-t border-dashed" aria-hidden="true" />
-                거래관계
+                <span className="bg-border h-px w-5" aria-hidden="true" />
+                섹터-연계기업
             </span>
         </div>
     </div>
@@ -303,7 +301,7 @@ const CompanyNetworkDemo = () => {
             <div className="grid items-start gap-6 lg:grid-cols-[17rem_minmax(0,1fr)]">
                 <CompanyRelationshipLegend />
                 <CompanyRelationshipGraph
-                    companyName="한국기업(주)"
+                    companyName="주식회사 한국첨단산업기술연구원"
                     sectors={visibleSectors}
                     ariaLabel={`한국기업을 중심으로 ${visibleSectors.length}개 산업 섹터와 섹터별 연계기업의 관계 코드·EW등급을 나타낸 네트워크 그래프`}
                 />

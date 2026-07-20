@@ -16,7 +16,6 @@ type RelatedCompany = {
     relationCode: string
     relationLabel: string
     status: CompanyRiskStatus
-    linkKind?: 'company' | 'transaction'
 }
 
 type CompanySector = {
@@ -33,6 +32,7 @@ type CompanyRelationshipGraphProps = Omit<ComponentPropsWithoutRef<'div'>, 'chil
 }
 
 type TooltipState = {text: string; x: number; y: number}
+type KeyboardTarget = TooltipState & {id: string; size: number}
 
 const LUCIDE_ICON_MARKUP: Record<SectorIcon | 'analysis', string> = {
     analysis:
@@ -99,6 +99,11 @@ const getStatusColor = (status: unknown, colors: Record<CompanyRiskStatus, strin
     }
 }
 
+const truncateLabel = (label: string, maximumLength: number) => {
+    const characters = Array.from(label)
+    return characters.length > maximumLength ? `${characters.slice(0, maximumLength).join('')}…` : label
+}
+
 const CompanyRelationshipGraph = ({
     companyName,
     sectors,
@@ -108,6 +113,7 @@ const CompanyRelationshipGraph = ({
 }: CompanyRelationshipGraphProps) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const [tooltip, setTooltip] = useState<TooltipState>()
+    const [keyboardTargets, setKeyboardTargets] = useState<KeyboardTarget[]>([])
     const {resolvedTheme} = useTheme()
 
     useEffect(() => {
@@ -153,11 +159,13 @@ const CompanyRelationshipGraph = ({
                 normal: colors.normal,
                 poor: colors.poor,
             }
+            const getFitPadding = () => (container.clientWidth < 640 ? 20 : 44)
             const elements: ElementDefinition[] = [
                 {
                     data: {
                         id: 'analysis-company',
                         label: companyName,
+                        displayLabel: truncateLabel(companyName, 14),
                         tooltip: `${companyName} - 분석 대상 기업`,
                         iconUrl: createLucideDataUri('analysis', colors.primaryForeground),
                     },
@@ -176,6 +184,7 @@ const CompanyRelationshipGraph = ({
                         data: {
                             id: sectorNodeId,
                             label: sector.label,
+                            displayLabel: truncateLabel(sector.label, 9),
                             tooltip: `${sector.label} 섹터 - 연계기업 분포 섹터`,
                             iconUrl: createLucideDataUri(sector.icon, colors.subtle),
                         },
@@ -206,6 +215,7 @@ const CompanyRelationshipGraph = ({
                             data: {
                                 id: `company-${company.id}`,
                                 label: company.label,
+                                displayLabel: truncateLabel(company.label, 10),
                                 status: company.status,
                                 tooltip: `${company.label} - EW: ${STATUS_LABELS[company.status]} / 유형${company.relationCode} : ${company.relationLabel}`,
                             },
@@ -219,7 +229,7 @@ const CompanyRelationshipGraph = ({
                                 target: `company-${company.id}`,
                                 label: company.relationCode,
                             },
-                            classes: company.linkKind === 'transaction' ? 'relationship transaction' : 'relationship',
+                            classes: 'relationship',
                         },
                     )
                 })
@@ -229,7 +239,7 @@ const CompanyRelationshipGraph = ({
                 {
                     selector: 'node',
                     style: {
-                        label: 'data(label)',
+                        label: 'data(displayLabel)',
                         color: colors.foreground,
                         'font-size': 11,
                         'font-weight': 600,
@@ -313,7 +323,7 @@ const CompanyRelationshipGraph = ({
                     selector: 'edge.sector-link',
                     style: {
                         'line-color': colors.subtle,
-                        'line-style': 'dotted',
+                        'line-style': 'dashed',
                     },
                 },
                 {
@@ -330,10 +340,6 @@ const CompanyRelationshipGraph = ({
                     },
                 },
                 {
-                    selector: 'edge.transaction',
-                    style: {'line-style': 'dashed', 'line-color': colors.subtle},
-                },
-                {
                     selector: 'node:active, node:selected',
                     style: {'border-color': colors.foreground, 'border-width': 3},
                 },
@@ -343,16 +349,39 @@ const CompanyRelationshipGraph = ({
                 container: containerRef.current,
                 elements,
                 style: stylesheet,
-                minZoom: 0.55,
+                minZoom: 0.35,
                 maxZoom: 2,
                 boxSelectionEnabled: false,
                 autoungrabify: false,
-                layout: {name: 'preset', fit: true, padding: 44},
+                layout: {name: 'preset', fit: true, padding: getFitPadding()},
             })
             const analysisNode = graph.$id('analysis-company')
             graph.center(analysisNode)
             analysisNode.lock()
             graph.nodes('.sector').lock()
+
+            let positionFrame: number | undefined
+            const updateKeyboardTargets = () => {
+                if (!graph || cancelled) return
+                setKeyboardTargets(
+                    graph.nodes().map((node) => {
+                        const position = node.renderedPosition()
+                        return {
+                            id: node.id(),
+                            text: String(node.data('tooltip')),
+                            x: position.x,
+                            y: position.y,
+                            size: node.renderedWidth() + 12,
+                        }
+                    }),
+                )
+            }
+            const scheduleKeyboardTargetUpdate = () => {
+                if (positionFrame !== undefined) cancelAnimationFrame(positionFrame)
+                positionFrame = requestAnimationFrame(updateKeyboardTargets)
+            }
+            graph.on('position pan zoom', scheduleKeyboardTargetUpdate)
+            scheduleKeyboardTargetUpdate()
 
             graph.on('mouseover', 'node', (event) => {
                 const node = event.target
@@ -375,26 +404,49 @@ const CompanyRelationshipGraph = ({
 
             resizeObserver = new ResizeObserver(() => {
                 graph?.resize()
-                graph?.fit(undefined, 44)
+                graph?.fit(undefined, getFitPadding())
                 const centerNode = graph?.$id('analysis-company')
                 if (centerNode?.length) graph?.center(centerNode)
+                scheduleKeyboardTargetUpdate()
             })
             resizeObserver.observe(containerRef.current)
+
+            return () => {
+                if (positionFrame !== undefined) cancelAnimationFrame(positionFrame)
+            }
         }
 
-        void renderGraph()
+        let cleanupRenderedGraph: (() => void) | undefined
+        void renderGraph().then((cleanup) => {
+            cleanupRenderedGraph = cleanup
+        })
 
         return () => {
             cancelled = true
+            cleanupRenderedGraph?.()
             resizeObserver?.disconnect()
             graph?.destroy()
             setTooltip(undefined)
+            setKeyboardTargets([])
         }
     }, [ariaLabel, companyName, resolvedTheme, sectors])
 
     return (
-        <div {...props} className={cn('relative min-w-0 overflow-x-auto', className)}>
-            <div ref={containerRef} role="img" aria-label={ariaLabel} className="h-125 w-full min-w-150 lg:min-w-0" />
+        <div {...props} className={cn('relative min-w-0 overflow-hidden', className)}>
+            <div ref={containerRef} role="img" aria-label={ariaLabel} className="h-100 w-full sm:h-125" />
+            {keyboardTargets.map((target) => (
+                <button
+                    key={target.id}
+                    type="button"
+                    className="focus-visible:outline-primary pointer-events-none absolute z-5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-transparent bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2"
+                    style={{left: target.x, top: target.y, width: target.size, height: target.size}}
+                    onFocus={() => setTooltip(target)}
+                    onBlur={() => setTooltip(undefined)}
+                    aria-label={target.text}
+                >
+                    <span className="sr-only">{target.text}</span>
+                </button>
+            ))}
             {tooltip ? (
                 <div
                     className="border-border bg-popover text-popover-foreground pointer-events-none absolute z-10 max-w-60 -translate-x-1/2 -translate-y-[calc(100%+12px)] rounded-md border px-3 py-2 text-xs font-medium shadow-md"
