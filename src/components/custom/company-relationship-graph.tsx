@@ -55,7 +55,7 @@ const LUCIDE_ICON_MARKUP: Record<SectorIcon | 'analysis', string> = {
 
 const createLucideDataUri = (icon: SectorIcon | 'analysis', color: string) =>
     `data:image/svg+xml;utf8,${encodeURIComponent(
-        `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${LUCIDE_ICON_MARKUP[icon]}</svg>`,
+        `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${LUCIDE_ICON_MARKUP[icon]}</svg>`,
     )}`
 
 const STATUS_LABELS: Record<CompanyRiskStatus, string> = {
@@ -254,9 +254,12 @@ const CompanyRelationshipGraph = ({
                         'outline-width': 5,
                         'outline-offset': 2,
                         'background-image': 'data(iconUrl)',
-                        'background-width': '34px',
-                        'background-height': '34px',
+                        'background-width': '42%',
+                        'background-height': '42%',
                         'background-fit': 'none',
+                        'background-repeat': 'no-repeat',
+                        'background-position-x': '50%',
+                        'background-position-y': '50%',
                         color: colors.foreground,
                         'font-size': 12,
                         'font-weight': 700,
@@ -272,9 +275,12 @@ const CompanyRelationshipGraph = ({
                         'border-color': colors.border,
                         'border-width': 1.5,
                         'background-image': 'data(iconUrl)',
-                        'background-width': '22px',
-                        'background-height': '22px',
+                        'background-width': '46%',
+                        'background-height': '46%',
                         'background-fit': 'none',
+                        'background-repeat': 'no-repeat',
+                        'background-position-x': '50%',
+                        'background-position-y': '50%',
                         color: colors.foreground,
                         'font-size': 10,
                         'font-weight': 700,

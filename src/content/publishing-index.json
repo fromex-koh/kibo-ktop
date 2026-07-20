@@ -109,6 +109,12 @@
             "description": "설치 의존성의 실제 고정 버전"
         },
         {
+            "name": "THIRD_PARTY_LICENSES.md",
+            "path": "THIRD_PARTY_LICENSES.md",
+            "kind": "file",
+            "description": "운영 의존성과 번들 폰트의 제3자 저작권·라이선스 고지"
+        },
+        {
             "name": "next.config.ts",
             "path": "next.config.ts",
             "kind": "file",

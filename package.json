@@ -5,6 +5,8 @@
     "packageManager": "yarn@1.22.22",
     "scripts": {
         "tokens": "node scripts/build-tokens.mjs",
+        "license-notices": "node scripts/generate-third-party-licenses.mjs",
+        "license-notices:check": "node scripts/generate-third-party-licenses.mjs --check",
         "asset-versions": "node scripts/compute-asset-versions.mjs",
         "predev": "yarn tokens",
         "prebuild": "yarn tokens",
@@ -16,7 +18,7 @@
         "format:check": "prettier --check .",
         "check:conventions": "node scripts/check-conventions.mjs",
         "typecheck": "tsc --noEmit",
-        "verify": "yarn tokens && yarn lint && yarn format:check && yarn check:conventions && yarn typecheck",
+        "verify": "yarn tokens && yarn license-notices:check && yarn lint && yarn format:check && yarn check:conventions && yarn typecheck",
         "prepare": "husky"
     },
     "dependencies": {

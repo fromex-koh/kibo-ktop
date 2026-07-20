@@ -5,6 +5,7 @@ build
 dist
 coverage
 yarn.lock
+THIRD_PARTY_LICENSES.md
 package-lock.json
 src/app/fonts
 *.woff2

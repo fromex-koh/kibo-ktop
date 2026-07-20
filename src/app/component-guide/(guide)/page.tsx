@@ -33,6 +33,10 @@ const REQUIRED_PATHS = [
         path: 'src/lib/utils.ts · src/hooks/use-mobile.ts',
         description: 'className 병합과 반응형 동작에 필요한 공통 코드',
     },
+    {
+        path: 'package.json · yarn.lock · THIRD_PARTY_LICENSES.md',
+        description: '실행 의존성·고정 버전과 함께 유지해야 하는 제3자 저작권 및 라이선스 고지',
+    },
 ]
 
 const PIPELINE_PATHS = [
@@ -324,7 +328,10 @@ const ComponentGuidePage = () => (
                     <IntegrationStep number={1} title="패키지 병합">
                         <p>
                             <code className="font-mono">package.json</code>의 dependencies와 Tailwind 관련
-                            devDependencies를 대상 프로젝트에 병합하고 lockfile을 다시 생성합니다.
+                            devDependencies를 대상 프로젝트에 병합하고 lockfile을 다시 생성합니다. 사용하는 의존성의
+                            고지가 누락되지 않도록 <code className="font-mono">THIRD_PARTY_LICENSES.md</code>도 함께
+                            유지하고, 의존성 변경 후 <code className="font-mono">yarn license-notices</code>로
+                            갱신합니다.
                         </p>
                     </IntegrationStep>
                     <IntegrationStep number={2} title="shadcn 설정 병합">
@@ -354,6 +361,8 @@ const ComponentGuidePage = () => (
                         <p>
                             동일한 외관이 필요하면 <code className="font-mono">src/app/fonts/</code>의 Pretendard와 실제
                             사용 컴포넌트가 참조하는 <code className="font-mono">public/</code> 에셋도 함께 옮깁니다.
+                            폰트를 옮길 때 같은 폴더의 <code className="font-mono">LICENSE-PRETENDARD.txt</code>를
+                            분리하거나 삭제하지 않습니다.
                         </p>
                     </IntegrationStep>
                 </ul>

@@ -49,6 +49,46 @@ const PROPS_ITEMS = [
     ],
 ] as const
 
+type LicenseLink = {name: string; href: string}
+
+const LicenseNotice = ({libraries}: {libraries: LicenseLink[]}) => (
+    <div className="bg-muted border-border typo-body-m-regular text-foreground-subtle rounded-lg border p-4">
+        <p>
+            <strong className="text-foreground">라이선스: MIT · 상업적 사용 가능</strong>
+            <br />
+            상업 서비스에서 사용·수정·배포할 수 있습니다. 라이브러리 사본 또는 주요 부분을 배포할 때는 원문의 저작권 및
+            라이선스 고지를 함께 유지해야 합니다.
+        </p>
+        <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+            {libraries.map((library) => (
+                <li key={library.name}>
+                    <a
+                        href={library.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary underline underline-offset-4"
+                    >
+                        {library.name} 공식 LICENSE
+                    </a>
+                </li>
+            ))}
+        </ul>
+    </div>
+)
+
+const CYTOSCAPE_LICENSE: LicenseLink = {
+    name: 'Cytoscape.js',
+    href: 'https://github.com/cytoscape/cytoscape.js/blob/master/LICENSE',
+}
+const FCOSE_LICENSE: LicenseLink = {
+    name: 'cytoscape-fcose',
+    href: 'https://github.com/iVis-at-Bilkent/cytoscape.js-fcose/blob/master/LICENSE',
+}
+const WORD_CLOUD_LICENSE: LicenseLink = {
+    name: 'WordCloud2.js',
+    href: 'https://github.com/timdream/wordcloud2.js/blob/gh-pages/LICENSE',
+}
+
 const ChartGuidePage = () => (
     <GuidePageShell
         title="차트 (Chart)"
@@ -70,6 +110,7 @@ const ChartGuidePage = () => (
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
                     <CompanyNetworkDemo />
                 </div>
+                <LicenseNotice libraries={[CYTOSCAPE_LICENSE]} />
             </section>
         </BaseCard>
 
@@ -87,6 +128,7 @@ const ChartGuidePage = () => (
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
                     <SupplyNetworkDemo />
                 </div>
+                <LicenseNotice libraries={[CYTOSCAPE_LICENSE, FCOSE_LICENSE]} />
                 <CodeBlock code={NETWORK_CODE} language="tsx" copyLabel="NetworkGraph 사용 코드 복사" />
             </section>
         </BaseCard>
@@ -105,6 +147,7 @@ const ChartGuidePage = () => (
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
                     <IssueWordCloudDemo />
                 </div>
+                <LicenseNotice libraries={[WORD_CLOUD_LICENSE]} />
                 <CodeBlock code={WORD_CLOUD_CODE} language="tsx" copyLabel="WordCloud 사용 코드 복사" />
             </section>
         </BaseCard>
@@ -122,7 +165,7 @@ const ChartGuidePage = () => (
                 <ul className="typo-body-l-regular text-foreground-subtle flex list-disc flex-col gap-2 pl-5">
                     <li>노드 상태는 색상뿐 아니라 숨김 데이터의 상태명으로도 전달합니다.</li>
                     <li>네트워크 연결 비중과 워드 중요도는 차트 내부의 읽기 가능한 목록에 포함됩니다.</li>
-                    <li>Cytoscape.js, cytoscape-fcose, WordCloud2.js는 모두 MIT 라이선스입니다.</li>
+                    <li>각 차트에서 사용하는 라이브러리와 공식 MIT LICENSE 근거는 해당 섹션에서 확인합니다.</li>
                 </ul>
             </section>
         </BaseCard>
