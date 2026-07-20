@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useRef, type ComponentPropsWithoutRef} from 'react'
+import {useEffect, useRef, useState, type ComponentPropsWithoutRef} from 'react'
 import {useTheme} from 'next-themes'
 import {cn} from '@/lib/utils'
 
@@ -21,6 +21,8 @@ const readColor = (token: string, probe: HTMLElement) => {
 
 const WordCloud = ({words, ariaLabel, className, ...props}: WordCloudProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
+    const containerRef = useRef<HTMLDivElement>(null)
+    const [tooltip, setTooltip] = useState<{text: string; weight: number; x: number; y: number} | null>(null)
     const {resolvedTheme} = useTheme()
 
     useEffect(() => {
@@ -77,6 +79,21 @@ const WordCloud = ({words, ariaLabel, className, ...props}: WordCloudProps) => {
                     shrinkToFit: false,
                     wait: 1,
                     weightFactor: (weight) => Math.max(16, Math.min(112, weight * 1.12) * responsiveScale),
+                    hover: (item, _dimension, event) => {
+                        if (!item || !event || !containerRef.current) {
+                            setTooltip(null)
+                            return
+                        }
+
+                        const [text, weight] = item
+                        const containerRect = containerRef.current.getBoundingClientRect()
+                        setTooltip({
+                            text,
+                            weight,
+                            x: event.clientX - containerRect.left,
+                            y: event.clientY - containerRect.top,
+                        })
+                    },
                 })
             }
 
@@ -101,13 +118,24 @@ const WordCloud = ({words, ariaLabel, className, ...props}: WordCloudProps) => {
         return () => {
             cancelled = true
             cancelAnimationFrame(resizeFrame)
+            setTooltip(null)
             disconnectObserver?.()
         }
     }, [resolvedTheme, words])
 
     return (
-        <div {...props} className={cn('relative', className)}>
+        <div ref={containerRef} {...props} className={cn('relative', className)}>
             <canvas ref={canvasRef} role="img" aria-label={ariaLabel} className="h-96 w-full" />
+            {tooltip && (
+                <div
+                    role="tooltip"
+                    className="border-border bg-popover text-popover-foreground pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full rounded-md border px-3 py-2 shadow-md"
+                    style={{left: tooltip.x, top: tooltip.y - 10}}
+                >
+                    <p className="typo-body-m-bold">{tooltip.text}</p>
+                    <p className="typo-body-s-regular">중요도 {tooltip.weight}</p>
+                </div>
+            )}
             <ol className="sr-only">
                 {words.map((word) => (
                     <li key={word.text}>

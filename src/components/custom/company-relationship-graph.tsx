@@ -28,6 +28,7 @@ type CompanySector = {
 type CompanyRelationshipGraphProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     companyName: string
     sectors: CompanySector[]
+    directCompanies?: RelatedCompany[]
     ariaLabel: string
 }
 
@@ -78,6 +79,7 @@ const DENSE_BAND_RADIUS_GAP = 48
 const COMPANY_RADIUS_GAP = 104
 const COMPANY_OUTWARD_GAP = 84
 const COMPANIES_PER_BAND = 3
+const EMPTY_DIRECT_COMPANIES: RelatedCompany[] = []
 
 const positionAt = (angle: number, radius: number) => ({
     x: CENTER.x + Math.cos(angle) * radius,
@@ -145,6 +147,7 @@ const truncateLabel = (label: string, maximumLength: number) => {
 const CompanyRelationshipGraph = ({
     companyName,
     sectors,
+    directCompanies = EMPTY_DIRECT_COMPANIES,
     ariaLabel,
     className,
     ...props
@@ -203,8 +206,9 @@ const CompanyRelationshipGraph = ({
                 poor: colors.poor,
             }
             const getFitPadding = () => (container.clientWidth < 640 ? 20 : 44)
+            const branchCount = sectors.length + directCompanies.length
             const maximumCompanyCount = Math.max(0, ...sectors.map((sector) => sector.companies.length))
-            const sectorRadius = getSectorRadius(sectors.length, maximumCompanyCount)
+            const sectorRadius = getSectorRadius(branchCount, maximumCompanyCount)
             const companyRadius = sectorRadius + COMPANY_RADIUS_GAP
             const fixedNodeConstraint = [{nodeId: 'analysis-company', position: CENTER}]
             const relativePlacementConstraint: RelativePlacementConstraint[] = []
@@ -222,10 +226,10 @@ const CompanyRelationshipGraph = ({
                 },
             ]
             sectors.forEach((sector, sectorIndex) => {
-                const sectorAngle = -Math.PI / 2 + (sectorIndex * Math.PI * 2) / Math.max(sectors.length, 1)
+                const sectorAngle = -Math.PI / 2 + (sectorIndex * Math.PI * 2) / Math.max(branchCount, 1)
                 const sectorPosition = positionAt(sectorAngle, sectorRadius)
                 const sectorNodeId = `sector-${sector.id}`
-                const sectorGap = (Math.PI * 2) / Math.max(sectors.length, 1)
+                const sectorGap = (Math.PI * 2) / Math.max(branchCount, 1)
                 fixedNodeConstraint.push({nodeId: sectorNodeId, position: sectorPosition})
 
                 elements.push(
@@ -254,7 +258,9 @@ const CompanyRelationshipGraph = ({
                         sector.companies.length - bandIndex * COMPANIES_PER_BAND,
                     )
                     const companyAngleStep = Math.min(0.32, (sectorGap * 0.75) / Math.max(bandItemCount, 1))
-                    const offset = (indexInBand - (bandItemCount - 1) / 2) * companyAngleStep
+                    const bandRotationDirection = sectorIndex % 2 === 0 ? 1 : -1
+                    const bandRotation = bandIndex % 2 === 0 ? 0 : companyAngleStep * 0.5 * bandRotationDirection
+                    const offset = (indexInBand - (bandItemCount - 1) / 2) * companyAngleStep + bandRotation
                     const companyAngle = sectorAngle + offset
                     const companyPosition = positionAt(companyAngle, companyRadius + bandIndex * 64)
                     const companyNodeId = `company-${company.id}`
@@ -283,6 +289,37 @@ const CompanyRelationshipGraph = ({
                         },
                     )
                 })
+            })
+
+            directCompanies.forEach((company, companyIndex) => {
+                const branchIndex = sectors.length + companyIndex
+                const companyAngle = -Math.PI / 2 + (branchIndex * Math.PI * 2) / Math.max(branchCount, 1)
+                const companyPosition = positionAt(companyAngle, companyRadius)
+                const companyNodeId = `direct-company-${company.id}`
+                addOutwardConstraints(relativePlacementConstraint, 'analysis-company', companyNodeId, companyAngle)
+
+                elements.push(
+                    {
+                        data: {
+                            id: companyNodeId,
+                            label: company.label,
+                            displayLabel: truncateLabel(company.label, 10),
+                            status: company.status,
+                            tooltip: `${company.label} - EW: ${STATUS_LABELS[company.status]} / 유형${company.relationCode} : ${company.relationLabel}`,
+                        },
+                        position: companyPosition,
+                        classes: 'company',
+                    },
+                    {
+                        data: {
+                            id: `direct-relationship-${company.id}`,
+                            source: 'analysis-company',
+                            target: companyNodeId,
+                            label: company.relationCode,
+                        },
+                        classes: 'relationship direct-relationship',
+                    },
+                )
             })
 
             const stylesheet: StylesheetJson = [
@@ -496,7 +533,7 @@ const CompanyRelationshipGraph = ({
             setTooltip(undefined)
             setKeyboardTargets([])
         }
-    }, [ariaLabel, companyName, resolvedTheme, sectors])
+    }, [ariaLabel, companyName, directCompanies, resolvedTheme, sectors])
 
     return (
         <div {...props} className={cn('relative min-w-0 overflow-hidden', className)}>
@@ -539,6 +576,12 @@ const CompanyRelationshipGraph = ({
                                     </li>
                                 ))}
                             </ul>
+                        </li>
+                    ))}
+                    {directCompanies.map((company) => (
+                        <li key={company.id}>
+                            {company.label}, 섹터 정보 없이 분석기업에 직접 연결, 사업자번호 {company.businessNumber},
+                            EW {STATUS_LABELS[company.status]}, 유형{company.relationCode} {company.relationLabel}
                         </li>
                     ))}
                 </ul>
