@@ -54,6 +54,25 @@ const PIPELINE_PATHS = [
     },
 ]
 
+const REPOSITORY_ONLY_PATHS = [
+    {
+        path: '.github/workflows/release-main.yml',
+        description: '이 퍼블리싱 저장소의 work → main 공유와 자동 패치 태그 생성에만 사용하는 워크플로',
+    },
+    {
+        path: 'scripts/git-info.mjs · scripts/compute-asset-versions.mjs',
+        description: '시작 페이지의 현재 버전과 프론트엔드 인계 자산 반영 버전을 계산하는 저장소용 스크립트',
+    },
+    {
+        path: 'src/content/publishing-index.json',
+        description: '이 저장소의 퍼블리싱 진행 현황과 인계 자산 목록을 표시하기 위한 문서 데이터',
+    },
+    {
+        path: 'src/content/asset-versions.generated.json',
+        description: 'Git 이력에서 생성되는 인계 자산 버전 산출물로, 컴포넌트 실행에는 필요하지 않음',
+    },
+]
+
 const CORE_PRINCIPLES = [
     {
         title: '토큰 우선',
@@ -270,6 +289,30 @@ const ComponentGuidePage = () => (
                     <p className="text-foreground-subtle mt-1">
                         <code className="font-mono">src/app/tokens.css</code>는 직접 복사하거나 수정하지 않고, 이식한
                         프로젝트에서 <code className="font-mono">yarn tokens</code>를 실행해 다시 생성합니다.
+                    </p>
+                </div>
+            </BaseCard>
+        </section>
+
+        <section className="flex flex-col gap-6" aria-labelledby="migration-repository-only-title">
+            <BaseCard>
+                <SectionHeader className="mb-6">
+                    <SectionHeaderTitle id="migration-repository-only-title">
+                        퍼블리싱 저장소 전용 — 복사 제외
+                    </SectionHeaderTitle>
+                    <SectionHeaderDescription>
+                        아래 항목은 이 저장소의 배포 버전과 퍼블리싱 현황을 관리하기 위한 기능입니다. 컴포넌트의
+                        스타일·동작과 무관하므로 프론트엔드 개발자가 다른 저장소로 컴포넌트를 이식할 때 가져가지
+                        않습니다.
+                    </SectionHeaderDescription>
+                </SectionHeader>
+                <PathList items={REPOSITORY_ONLY_PATHS} />
+                <div className="border-border bg-muted mt-5 rounded-md border p-4">
+                    <p className="text-foreground font-semibold">대상 저장소의 릴리스는 별도 관리</p>
+                    <p className="text-foreground-subtle mt-1">
+                        새 프론트엔드 저장소에서도 자동 버전 태그가 필요할 때만 해당 저장소의 브랜치·배포 정책에 맞는
+                        GitHub Actions를 별도로 구성합니다. 이 저장소의 workflow permissions 설정은 이식하지 않아도
+                        됩니다.
                     </p>
                 </div>
             </BaseCard>
