@@ -4,7 +4,6 @@ import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/guide/copy-chip'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import tokens from '@tokens'
-import blurSampleImg from '../../../../../public/blur-sample.png'
 
 export const metadata: Metadata = {title: '흐림 (Blur)'}
 
@@ -32,7 +31,7 @@ const BlurGuidePage = () => (
                         <li key={k} className="border-border overflow-hidden rounded-xl border">
                             <div className="relative aspect-video overflow-hidden">
                                 <Image
-                                    src={blurSampleImg}
+                                    src="/blur-sample.png"
                                     alt="navy 격자 위에 빛나는 중심 큐브가 있는 추상 기술 이미지"
                                     fill
                                     sizes="(min-width: 768px) 33vw, 100vw"

@@ -16,8 +16,6 @@ import {
 import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/ui/sheet'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
 import {cn} from '@/lib/utils'
-import logoDarkImg from '../../../public/images/logo-dark.svg'
-import logoLightImg from '../../../public/images/logo-light.svg'
 
 // PROJECT-COMPOSITE: Header primitive가 없어 NavigationMenu·SegmentedControl·Sheet·Button을 조합한 사이트 상단 합성 컴포넌트.
 // PROJECT-STYLE: 로고는 h1 > a > img 구조를 유지하고 테마 클래스에 맞는 에셋을 노출한다.
@@ -99,8 +97,22 @@ const UtilityLink = ({label, external, className}: {label: string; external?: bo
 const Logo = () => (
     <h1>
         <Link href="#" className="flex items-center">
-            <Image src={logoLightImg} alt="기술보증기금" priority className="h-auto w-30 dark:hidden" />
-            <Image src={logoDarkImg} alt="기술보증기금" priority className="hidden h-auto w-30 dark:block" />
+            <Image
+                src="/images/logo-light.svg"
+                alt="기술보증기금"
+                width={140}
+                height={32}
+                priority
+                className="h-auto w-30 dark:hidden"
+            />
+            <Image
+                src="/images/logo-dark.svg"
+                alt="기술보증기금"
+                width={140}
+                height={32}
+                priority
+                className="hidden h-auto w-30 dark:block"
+            />
         </Link>
     </h1>
 )
