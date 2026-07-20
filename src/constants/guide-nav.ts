@@ -155,6 +155,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {
                 title: '피드백 / 오버레이',
                 items: [
+                    {label: 'ActionCheck', href: '/component-guide/action-check'},
                     {label: 'Alert', href: '/component-guide/alert'},
                     {label: 'Dialog', href: '/component-guide/dialog'},
                 ],
