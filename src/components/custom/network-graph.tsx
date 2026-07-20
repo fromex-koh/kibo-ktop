@@ -100,6 +100,19 @@ const truncateLabel = (label: string, maximumLength: number) => {
     return characters.length > maximumLength ? `${characters.slice(0, maximumLength).join('')}…` : label
 }
 
+const getWeightedBranchLayout = (weights: number[]) => {
+    const normalizedWeights = weights.map((weight) => Math.max(1, weight))
+    const totalWeight = normalizedWeights.reduce((total, weight) => total + weight, 0)
+    const spans = normalizedWeights.map((weight) => (Math.PI * 2 * weight) / Math.max(totalWeight, 1))
+    let cursor = -Math.PI / 2 - (spans[0] ?? Math.PI * 2) / 2
+    const angles = spans.map((span) => {
+        const angle = cursor + span / 2
+        cursor += span
+        return angle
+    })
+    return {angles, spans}
+}
+
 const readColor = (token: string, probe: HTMLElement) => {
     probe.style.color = `var(${token})`
     return getComputedStyle(probe).color
@@ -267,6 +280,40 @@ const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGra
                     },
                 },
                 {
+                    selector: 'node.industry-above',
+                    style: {
+                        'text-valign': 'top',
+                        'text-halign': 'center',
+                        'text-margin-y': -9,
+                    },
+                },
+                {
+                    selector: 'node.industry-below',
+                    style: {
+                        'text-valign': 'bottom',
+                        'text-halign': 'center',
+                        'text-margin-y': 9,
+                    },
+                },
+                {
+                    selector: 'node.industry-left',
+                    style: {
+                        'text-valign': 'center',
+                        'text-halign': 'left',
+                        'text-margin-x': -9,
+                        'text-margin-y': 0,
+                    },
+                },
+                {
+                    selector: 'node.industry-right',
+                    style: {
+                        'text-valign': 'center',
+                        'text-halign': 'right',
+                        'text-margin-x': 9,
+                        'text-margin-y': 0,
+                    },
+                },
+                {
                     selector: 'node.company-above',
                     style: {
                         'text-valign': 'top',
@@ -357,14 +404,21 @@ const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGra
             )
             const industryRadius = getIndustryRadius(branchCount, maximumCompanyCount)
             const companyRadius = industryRadius + COMPANY_RADIUS_GAP
-            const branchAngleGap = (Math.PI * 2) / branchCount
+            const branchWeights = firstLevelLinks.map((branchLink) => {
+                const branchNode = nodes.find((node) => node.id === branchLink.target)
+                if (branchNode?.kind !== 'industry') return 1
+                const companyCount = links.filter((link) => link.source === branchNode.id).length
+                return Math.max(1, Math.ceil(companyCount / COMPANIES_PER_BAND))
+            })
+            const {angles: branchAngles, spans: branchAngleSpans} = getWeightedBranchLayout(branchWeights)
             const positions = new Map<string, {x: number; y: number}>([[analysisNode.id, CENTER]])
 
             firstLevelLinks.forEach((branchLink, branchIndex) => {
                 const branchNode = nodes.find((node) => node.id === branchLink.target)
                 if (!branchNode) return
 
-                const branchAngle = -Math.PI / 2 + branchAngleGap * branchIndex
+                const branchAngle = branchAngles[branchIndex] ?? -Math.PI / 2
+                const branchAngleSpan = branchAngleSpans[branchIndex] ?? (Math.PI * 2) / branchCount
                 const branchRadius =
                     branchNode.kind === 'industry'
                         ? industryRadius
@@ -380,7 +434,7 @@ const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGra
                         COMPANIES_PER_BAND,
                         companyLinks.length - bandIndex * COMPANIES_PER_BAND,
                     )
-                    const companyAngleStep = Math.min(0.32, (branchAngleGap * 0.9) / Math.max(bandItemCount, 1))
+                    const companyAngleStep = Math.min(0.4, (branchAngleSpan * 0.88) / Math.max(bandItemCount, 1))
                     const bandRotationDirection = branchIndex % 2 === 0 ? 1 : -1
                     const bandRotation = bandIndex % 2 === 0 ? 0 : companyAngleStep * 0.5 * bandRotationDirection
                     const offset = (indexInBand - (bandItemCount - 1) / 2) * companyAngleStep + bandRotation
@@ -395,6 +449,16 @@ const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGra
             })
 
             graph.nodes().positions((node) => positions.get(node.id()) ?? CENTER)
+            graph.nodes('.industry').forEach((node) => {
+                const position = positions.get(node.id()) ?? CENTER
+                const horizontalDistance = position.x - CENTER.x
+                const verticalDistance = position.y - CENTER.y
+                if (Math.abs(horizontalDistance) > Math.abs(verticalDistance)) {
+                    node.addClass(horizontalDistance < 0 ? 'industry-left' : 'industry-right')
+                    return
+                }
+                node.addClass(verticalDistance < 0 ? 'industry-above' : 'industry-below')
+            })
             graph.nodes('.company').forEach((node) => {
                 const position = positions.get(node.id()) ?? CENTER
                 const isAboveCenter = position.y < CENTER.y
@@ -402,6 +466,8 @@ const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGra
             })
             const getFitPadding = () => (container.clientWidth < 640 ? 36 : 72)
             graph.layout({name: 'preset', animate: false, fit: true, padding: getFitPadding()}).run()
+            graph.$id(analysisNode.id).lock()
+            graph.nodes('.industry').lock()
 
             let positionFrame: number | undefined
             const hierarchicalNodeIds = [

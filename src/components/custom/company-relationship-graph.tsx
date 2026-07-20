@@ -76,6 +76,7 @@ const CENTER = {x: 360, y: 250}
 const BASE_SECTOR_RADIUS = 116
 const SECTOR_ARC_GAP = 92
 const DENSE_BAND_RADIUS_GAP = 48
+const DENSE_COMPANY_RADIUS_GAP = 40
 const COMPANY_RADIUS_GAP = 104
 const COMPANY_OUTWARD_GAP = 84
 const COMPANIES_PER_BAND = 3
@@ -87,10 +88,23 @@ const positionAt = (angle: number, radius: number) => ({
 })
 
 const getSectorRadius = (sectorCount: number, maximumCompanyCount: number) => {
-    const countBasedRadius =
-        sectorCount <= 8 ? BASE_SECTOR_RADIUS : Math.ceil((sectorCount * SECTOR_ARC_GAP) / (Math.PI * 2))
+    const countBasedRadius = Math.max(BASE_SECTOR_RADIUS, Math.ceil((sectorCount * SECTOR_ARC_GAP) / (Math.PI * 2)))
     const companyBandCount = Math.max(1, Math.ceil(maximumCompanyCount / COMPANIES_PER_BAND))
-    return countBasedRadius + (companyBandCount - 1) * DENSE_BAND_RADIUS_GAP
+    const companyDensityRadius = Math.max(0, maximumCompanyCount - COMPANIES_PER_BAND) * DENSE_COMPANY_RADIUS_GAP
+    return countBasedRadius + (companyBandCount - 1) * DENSE_BAND_RADIUS_GAP + companyDensityRadius
+}
+
+const getWeightedBranchLayout = (weights: number[]) => {
+    const normalizedWeights = weights.map((weight) => Math.max(1, weight))
+    const totalWeight = normalizedWeights.reduce((total, weight) => total + weight, 0)
+    const spans = normalizedWeights.map((weight) => (Math.PI * 2 * weight) / Math.max(totalWeight, 1))
+    let cursor = -Math.PI / 2 - (spans[0] ?? Math.PI * 2) / 2
+    const angles = spans.map((span) => {
+        const angle = cursor + span / 2
+        cursor += span
+        return angle
+    })
+    return {angles, spans}
 }
 
 const addOutwardConstraints = (
@@ -210,6 +224,11 @@ const CompanyRelationshipGraph = ({
             const maximumCompanyCount = Math.max(0, ...sectors.map((sector) => sector.companies.length))
             const sectorRadius = getSectorRadius(branchCount, maximumCompanyCount)
             const companyRadius = sectorRadius + COMPANY_RADIUS_GAP
+            const branchWeights = [
+                ...sectors.map((sector) => Math.max(1, Math.ceil(sector.companies.length / COMPANIES_PER_BAND))),
+                ...directCompanies.map(() => 1),
+            ]
+            const {angles: branchAngles, spans: branchAngleSpans} = getWeightedBranchLayout(branchWeights)
             const fixedNodeConstraint = [{nodeId: 'analysis-company', position: CENTER}]
             const relativePlacementConstraint: RelativePlacementConstraint[] = []
             const elements: ElementDefinition[] = [
@@ -226,10 +245,10 @@ const CompanyRelationshipGraph = ({
                 },
             ]
             sectors.forEach((sector, sectorIndex) => {
-                const sectorAngle = -Math.PI / 2 + (sectorIndex * Math.PI * 2) / Math.max(branchCount, 1)
+                const sectorAngle = branchAngles[sectorIndex] ?? -Math.PI / 2
                 const sectorPosition = positionAt(sectorAngle, sectorRadius)
                 const sectorNodeId = `sector-${sector.id}`
-                const sectorGap = (Math.PI * 2) / Math.max(branchCount, 1)
+                const sectorGap = branchAngleSpans[sectorIndex] ?? (Math.PI * 2) / Math.max(branchCount, 1)
                 fixedNodeConstraint.push({nodeId: sectorNodeId, position: sectorPosition})
 
                 elements.push(
@@ -257,7 +276,7 @@ const CompanyRelationshipGraph = ({
                         COMPANIES_PER_BAND,
                         sector.companies.length - bandIndex * COMPANIES_PER_BAND,
                     )
-                    const companyAngleStep = Math.min(0.32, (sectorGap * 0.75) / Math.max(bandItemCount, 1))
+                    const companyAngleStep = Math.min(0.4, (sectorGap * 0.88) / Math.max(bandItemCount, 1))
                     const bandRotationDirection = sectorIndex % 2 === 0 ? 1 : -1
                     const bandRotation = bandIndex % 2 === 0 ? 0 : companyAngleStep * 0.5 * bandRotationDirection
                     const offset = (indexInBand - (bandItemCount - 1) / 2) * companyAngleStep + bandRotation
@@ -293,7 +312,7 @@ const CompanyRelationshipGraph = ({
 
             directCompanies.forEach((company, companyIndex) => {
                 const branchIndex = sectors.length + companyIndex
-                const companyAngle = -Math.PI / 2 + (branchIndex * Math.PI * 2) / Math.max(branchCount, 1)
+                const companyAngle = branchAngles[branchIndex] ?? -Math.PI / 2
                 const companyPosition = positionAt(companyAngle, companyRadius)
                 const companyNodeId = `direct-company-${company.id}`
                 addOutwardConstraints(relativePlacementConstraint, 'analysis-company', companyNodeId, companyAngle)
