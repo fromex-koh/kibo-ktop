@@ -1,0 +1,72 @@
+name: Release main
+
+on:
+    push:
+        branches:
+            - main
+
+permissions:
+    contents: write
+
+concurrency:
+    group: release-main
+    cancel-in-progress: false
+
+jobs:
+    release:
+        name: Verify and tag release
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout full history
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Check whether HEAD is already released
+              id: released
+              shell: bash
+              run: |
+                  if git tag --points-at HEAD --list 'v[0-9]*.[0-9]*.[0-9]*' | grep -q .; then
+                      echo 'value=true' >> "$GITHUB_OUTPUT"
+                  else
+                      echo 'value=false' >> "$GITHUB_OUTPUT"
+                  fi
+
+            - name: Set up Node.js
+              if: steps.released.outputs.value == 'false'
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: yarn
+
+            - name: Install dependencies
+              if: steps.released.outputs.value == 'false'
+              run: yarn install --frozen-lockfile
+
+            - name: Verify release source
+              if: steps.released.outputs.value == 'false'
+              run: yarn verify
+
+            - name: Resolve next patch version
+              if: steps.released.outputs.value == 'false'
+              id: version
+              shell: bash
+              run: |
+                  latest=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)
+                  latest=${latest:-v0.0.0}
+                  version=${latest#v}
+                  IFS='.' read -r major minor patch <<< "$version"
+                  next="v${major}.${minor}.$((patch + 1))"
+                  echo "value=$next" >> "$GITHUB_OUTPUT"
+
+            - name: Create tagged release commit
+              if: steps.released.outputs.value == 'false'
+              env:
+                  RELEASE_VERSION: ${{ steps.version.outputs.value }}
+              shell: bash
+              run: |
+                  git config user.name 'github-actions[bot]'
+                  git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+                  git commit --allow-empty -m "chore(release): ${RELEASE_VERSION}"
+                  git tag -a "$RELEASE_VERSION" -m "$RELEASE_VERSION"
+                  git push origin HEAD:main "refs/tags/${RELEASE_VERSION}"
