@@ -9,6 +9,30 @@ import {isHeadAtTag, resolveHeadVersion, resolvePathVersion} from './git-info.mj
 const SOURCE = 'src/content/publishing-index.json'
 const OUTPUT = 'src/content/asset-versions.generated.json'
 
+// 자산별 버전 추적을 v0.1.1부터 시작한다. 그 이전 커밋에서 마지막으로 바뀐 자산도
+// 인계 기준선에는 v0.1.1로 표시하되, 이미 v0.1.0으로 배포된 폰트 이력은 그대로 보존한다.
+// '미배포'는 아직 어떤 태그에도 포함되지 않은 실제 변경이므로 기준선으로 덮어쓰지 않는다.
+const DEFAULT_BASELINE_VERSION = 'v0.1.1'
+const BASELINE_VERSION_BY_PATH = new Map([['src/app/fonts', 'v0.1.0']])
+
+const parseVersion = (version) => {
+    const match = /^v(\d+)\.(\d+)\.(\d+)$/.exec(version)
+    return match ? match.slice(1).map(Number) : null
+}
+
+const applyBaselineVersion = (version, path) => {
+    const baselineVersion = BASELINE_VERSION_BY_PATH.get(path) ?? DEFAULT_BASELINE_VERSION
+    const parsedVersion = parseVersion(version)
+    const parsedBaseline = parseVersion(baselineVersion)
+    if (!parsedVersion || !parsedBaseline) return version
+
+    for (let index = 0; index < parsedVersion.length; index += 1) {
+        if (parsedVersion[index] > parsedBaseline[index]) return version
+        if (parsedVersion[index] < parsedBaseline[index]) return baselineVersion
+    }
+    return version
+}
+
 const {assetVersions} = JSON.parse(readFileSync(SOURCE, 'utf8'))
 const headVersion = resolveHeadVersion()
 // 태그 이후 커밋이 더 있으면(작업 중) 버전 문자열만으로는 오탐(우연한 일치)이 날 수 있어
@@ -17,7 +41,7 @@ const headVersion = resolveHeadVersion()
 const atTag = isHeadAtTag()
 
 const generated = assetVersions.map(({name, path}) => {
-    const version = resolvePathVersion(path)
+    const version = applyBaselineVersion(resolvePathVersion(path), path)
     return {name, version, isCurrent: atTag && version === headVersion}
 })
 
