@@ -51,7 +51,7 @@ type SidebarLayoutProps = {
     children: ReactNode
 }
 
-// 빌드 시점 git 버전(next.config.ts 주입). 브랜드 헤더의 버전 표기에 쓴다.
+// 커밋된 릴리스 메타데이터 버전(next.config.ts 주입). 브랜드 헤더의 버전 표기에 쓴다.
 const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev'
 
 // 섹션 아이콘 키(직렬화 가능) → lucide 컴포넌트. 데이터(guide-nav)는 키만 두고 실제 컴포넌트는 여기서 해석.

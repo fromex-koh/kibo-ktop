@@ -59,6 +59,12 @@ jobs:
                   next="v${major}.${minor}.$((patch + 1))"
                   echo "value=$next" >> "$GITHUB_OUTPUT"
 
+            - name: Generate release metadata
+              if: steps.released.outputs.value == 'false'
+              env:
+                  RELEASE_VERSION: ${{ steps.version.outputs.value }}
+              run: yarn asset-versions
+
             - name: Create tagged release commit
               if: steps.released.outputs.value == 'false'
               env:
@@ -67,6 +73,7 @@ jobs:
               run: |
                   git config user.name 'github-actions[bot]'
                   git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-                  git commit --allow-empty -m "chore(release): ${RELEASE_VERSION}"
+                  git add src/content/asset-versions.generated.json
+                  git commit -m "chore(release): ${RELEASE_VERSION}"
                   git tag -a "$RELEASE_VERSION" -m "$RELEASE_VERSION"
                   git push origin HEAD:main "refs/tags/${RELEASE_VERSION}"

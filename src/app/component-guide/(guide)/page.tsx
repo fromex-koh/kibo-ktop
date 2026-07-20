@@ -61,7 +61,7 @@ const REPOSITORY_ONLY_PATHS = [
     },
     {
         path: 'scripts/git-info.mjs · scripts/compute-asset-versions.mjs',
-        description: '시작 페이지의 현재 버전과 프론트엔드 인계 자산 반영 버전을 계산하는 저장소용 스크립트',
+        description: 'GitHub Actions에서 릴리스 버전과 인계 자산 반영 버전을 확정하는 저장소용 스크립트',
     },
     {
         path: 'src/content/publishing-index.json',
@@ -69,7 +69,7 @@ const REPOSITORY_ONLY_PATHS = [
     },
     {
         path: 'src/content/asset-versions.generated.json',
-        description: 'Git 이력에서 생성되는 인계 자산 버전 산출물로, 컴포넌트 실행에는 필요하지 않음',
+        description: '릴리스 커밋에 포함되는 저장소용 버전 스냅샷으로, 이식한 컴포넌트 실행에는 필요하지 않음',
     },
 ]
 

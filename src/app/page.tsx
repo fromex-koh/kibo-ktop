@@ -18,7 +18,7 @@ const GuideIcon = ICON_REGISTRY[guide.icon]
 // 저장소 링크에 URL 자체를 노출해 보는 사람이 주소를 확인할 수 있게 한다(스킴은 생략해 간결하게).
 const REPOSITORY_URL_LABEL = REPOSITORY_URL.replace(/^https?:\/\//, '')
 
-// 현재 버전·빌드 시각 — next.config.ts 가 빌드 시점의 git 버전·시각을 주입한다.
+// 현재 버전·빌드 시각 — next.config.ts가 커밋된 릴리스 메타데이터와 빌드 시각을 주입한다.
 // 로컬 개발 등 값이 없을 때만 폴백을 쓴다. (MD-003)
 const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev'
 const BUILD_TIME = process.env.NEXT_PUBLIC_BUILD_TIME ?? '로컬 개발'

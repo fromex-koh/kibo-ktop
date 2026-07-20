@@ -45,7 +45,7 @@ export type HomeContent = {
 }
 
 // ── 퍼블리싱 인덱스 ──
-// 화면에 최종적으로 쓰이는 형태 — version·isCurrent 는 asset-versions.generated.json(자동 계산)에서 온다.
+// 화면에 최종적으로 쓰이는 형태 — version·isCurrent는 커밋된 릴리스 메타데이터에서 온다.
 export type AssetVersion = {
     name: string
     kind: AssetKind

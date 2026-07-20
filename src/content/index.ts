@@ -119,10 +119,10 @@ const parseHomeContent = (raw: typeof homeJson): HomeContent => ({
     },
 })
 
-// version·isCurrent 는 publishing-index.json 이 아니라 자동 생성된
-// asset-versions.generated.json(scripts/compute-asset-versions.mjs)에서 가져온다. [MD-003]
+// version·isCurrent는 publishing-index.json이 아니라 GitHub Actions가 릴리스 커밋에 확정한
+// asset-versions.generated.json에서 가져온다. [MD-003]
 const findGeneratedVersion = (name: string): {version: string; isCurrent: boolean} => {
-    const found = assetVersionsGenerated.find((a) => a.name === name)
+    const found = assetVersionsGenerated.assets.find((a) => a.name === name)
     return {version: found?.version ?? '-', isCurrent: found?.isCurrent ?? false}
 }
 

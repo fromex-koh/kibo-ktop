@@ -1,0 +1,105 @@
+{
+    "version": "v0.1.2",
+    "assets": [
+        {
+            "name": "src/components/ui",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "src/components/theme",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "src/components/composite",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "src/components/custom",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "src/components/theme-provider.tsx",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "src/constants/theme.ts",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "src/lib/utils.ts",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "src/hooks/use-mobile.ts",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "tokens.json",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "scripts/build-tokens.mjs",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "src/app/globals.css",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "postcss.config.mjs",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "src/app/layout.tsx",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "components.json",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "tsconfig.json",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "package.json",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "yarn.lock",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "next.config.ts",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "public",
+            "version": "v0.1.1",
+            "isCurrent": false
+        },
+        {
+            "name": "src/app/fonts",
+            "version": "v0.1.0",
+            "isCurrent": false
+        }
+    ]
+}

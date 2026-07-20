@@ -159,7 +159,7 @@ row.screenId 로 이름이 바뀜. 기존 데이터를 쓰는 곳이 있다면
 
 ## 버전 관리 (SemVer + 자동 패치 태그)
 
-버전의 **단일 소스는 git 태그**다(`package.json` 의 `version` 이 아님). 화면의 '현재 버전'은 빌드 시점에 `git describe --tags --always` 로 읽어 주입되므로, **태그를 붙이면 그 순간부터 화면에 `vX.Y.Z` 가 표시**된다(태그가 없으면 커밋 SHA).
+버전의 원본은 GitHub Actions가 생성하는 git 태그이며, 배포 화면의 단일 소스는 같은 릴리스 커밋에 포함된 `src/content/asset-versions.generated.json`이다(`package.json`의 `version`이 아님). Vercel은 빌드 중 git을 다시 조회하지 않는다.
 
 ### 버전 체계 — `vMAJOR.MINOR.PATCH` (예 `v1.4.9`)
 
@@ -177,29 +177,29 @@ row.screenId 로 이름이 바뀜. 기존 데이터를 쓰는 곳이 있다면
 v0.1.0 → v0.1.1 → v0.1.2
 ```
 
-- 태그는 자동화가 만든 **`main`의 빈 릴리스 커밋**에 주석 태그(`-a`)로 붙는다.
+- 태그는 자동화가 릴리스 메타데이터를 포함해 만든 **`main`의 릴리스 커밋**에 주석 태그(`-a`)로 붙는다.
 - 배포는 최초 머지 커밋이 아니라 뒤이어 생성되는 `chore(release): vX.Y.Z` 커밋을 기준으로 완료되어야 한다.
 - MAJOR·MINOR 변경은 자동 PATCH 릴리스 범위가 아니므로, 필요할 때 워크플로 입력을 확장하거나 담당자가 별도 릴리스 정책을 결정한다.
 
-> 커밋 type을 분석해 MAJOR·MINOR·PATCH를 자동 결정해야 하는 시점에는 `semantic-release`로 승격할 수 있다. 지금의 `git describe` 주입 방식은 그대로 호환된다.
+> 커밋 type을 분석해 MAJOR·MINOR·PATCH를 자동 결정해야 하는 시점에는 `semantic-release`로 승격할 수 있다.
 
 ### 배포 연동
 
-이 저장소는 릴리스 커밋과 태그 생성 및 빌드 시점 버전 주입까지 책임진다. 외부 배포 서비스는 자동화가 뒤이어 push하는 `chore(release): vX.Y.Z` 커밋을 최종 배포해야 한다. 해당 커밋은 태그와 같은 커밋이므로 시작 페이지와 사이드바에 정확한 버전이 표시된다.
+이 저장소는 릴리스 메타데이터 확정, 릴리스 커밋과 태그 생성을 책임진다. 외부 배포 서비스는 자동화가 뒤이어 push하는 `chore(release): vX.Y.Z` 커밋을 최종 배포해야 한다. 시작 페이지와 사이드바는 해당 커밋에 저장된 버전을 표시한다.
 
 ### 퍼블리싱 인덱스의 자산별 버전 — git 히스토리에서 자동 계산
 
-`퍼블리싱 인덱스` 표의 자산 버전(`components`·`cn(lib/utils)`·`tokens.json`·`globals.css`·`public`·`fonts` 등 — 목록은 `publishing-index.json` 의 `assetVersions` 가 단일 소스)은 **손으로 적지 않는다.** 각 `assetVersions[].path` 를 기준으로 `scripts/compute-asset-versions.mjs` 가 아래 규칙으로 계산해 `src/content/asset-versions.generated.json`(생성 파일, git 미추적)에 쓴다.
+`퍼블리싱 인덱스` 표의 자산 버전(`components`·`cn(lib/utils)`·`tokens.json`·`globals.css`·`public`·`fonts` 등 — 목록은 `publishing-index.json` 의 `assetVersions` 가 단일 소스)은 **손으로 적지 않는다.** GitHub Actions가 전체 git 이력과 다음 릴리스 버전으로 계산해 `src/content/asset-versions.generated.json`에 쓰고, 릴리스 커밋에 함께 포함한다. Vercel·로컬 빌드는 이 파일을 다시 생성하지 않는다.
 
 - 그 경로가 **마지막으로 바뀐 커밋**을 찾고, **그 변경을 포함하는 가장 가까운 태그**를 버전으로 표시한다.
-- 아직 어떤 태그에도 포함되지 않았으면(직전 릴리스 이후 변경, 미공유) `미배포` 로 표시한다.
-- 계산된 버전이 **현재 HEAD 버전과 같으면**(`isCurrent: true`) 표에서 하이라이트(배경색 + 아이콘 + `sr-only` 텍스트)된다 — 즉 **이번 공유(머지+태그)에서 실제로 바뀐 자산만 강조**되어 보인다.
+- Vercel 이전 배포의 git 조회 실패를 정리하기 위해 인계 자산의 최소 기준선은 `v0.1.3`이며, 폰트만 기존 `v0.1.0` 이력을 유지한다.
+- 최신 태그 이후 변경된 경로는 Actions가 곧 생성할 릴리스 버전으로 확정한다.
+- 확정된 버전이 **이번 릴리스 버전과 같으면**(`isCurrent: true`) 표에서 하이라이트된다.
+- 시작 페이지의 현재 버전도 같은 파일의 `version`을 사용하므로 Vercel의 얕은 clone 여부와 무관하다.
 
 새 자산을 표에 추가하려면 `publishing-index.json` 에 `{ name, path, kind }` 만 추가하면 된다(버전은 자동).
 
-```bash
-yarn asset-versions   # predev/prebuild/verify 에 이미 포함 — 수동 실행은 확인용
-```
+`yarn asset-versions`는 `RELEASE_VERSION=vX.Y.Z`를 제공하는 GitHub Actions 릴리스 단계 전용이다.
 
 ---
 

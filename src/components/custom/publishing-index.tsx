@@ -32,7 +32,7 @@ const VersionCell = ({version, isCurrent}: {version: string; isCurrent: boolean}
 // 퍼블리싱 진행 상태 인덱스 데모. 데이터는 src/content/publishing-index.json 단일 소스에서 온다.
 // 이 컴포넌트는 '표현'(상태 색·아이콘 매핑, 뎁스별 rowSpan 계산, 레이아웃, 사용자 유형 필터)만 담당한다.
 
-// 현재 HEAD 버전 — next.config.ts 가 주입(src/app/page.tsx 의 BUILD_VERSION과 같은 소스).
+// 현재 릴리스 버전 — next.config.ts가 주입(src/app/page.tsx의 BUILD_VERSION과 같은 소스).
 // 화면(leaf)의 수동 기입 버전이 이 값과 같으면 "이번 릴리스에서 반영됨"으로 하이라이트한다.
 const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev'
 
@@ -195,8 +195,8 @@ const PublishingIndex = () => {
                                 프론트엔드 인계 자산
                             </SectionHeaderTitle>
                             <SectionHeaderDescription>
-                                컴포넌트의 기능과 외관에 영향을 주는 경로입니다. 반영 버전은 마지막 변경을 포함하는 Git
-                                태그로 자동 계산하며, 아직 태그에 포함되지 않은 변경은 미배포로 표시합니다.
+                                컴포넌트의 기능과 외관에 영향을 주는 경로입니다. 반영 버전은 GitHub Actions가 릴리스할
+                                때 확정하며, 이번 릴리스에서 변경된 경로만 강조합니다.
                             </SectionHeaderDescription>
                         </SectionHeader>
 
@@ -266,8 +266,8 @@ const PublishingIndex = () => {
                         <SectionHeader>
                             <SectionHeaderTitle id="section-publishing-index">퍼블리싱 인덱스</SectionHeaderTitle>
                             <SectionHeaderDescription>
-                                이 플랫폼의 화면별 퍼블리싱 진행 상태와 산출물 버전을 추적합니다. 버전은 git 태그를
-                                기준으로 자동 계산되며, 이번 릴리스에서 바뀐 항목은 강조 표시됩니다.
+                                이 플랫폼의 화면별 퍼블리싱 진행 상태와 산출물 버전을 추적합니다. 이번 릴리스 버전과
+                                같은 항목은 강조 표시됩니다.
                             </SectionHeaderDescription>
                         </SectionHeader>
                         {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 전체/기업/기관으로 걸러 보여준다.
