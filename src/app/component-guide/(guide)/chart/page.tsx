@@ -7,6 +7,61 @@ import {CompanyNetworkDemo, IssueWordCloudDemo, SupplyNetworkDemo} from './chart
 
 export const metadata: Metadata = {title: '차트 (Chart)'}
 
+const COMPANY_RELATIONSHIP_CODE = `import {
+  CompanyRelationshipGraph,
+  type CompanySector,
+} from '@/components/custom/company-relationship-graph';
+
+// API 응답을 이 구조로 변환해 sectors prop에 전달합니다.
+const relationshipSectors: CompanySector[] = [
+  {
+    id: 'construction',          // 중복되지 않는 섹터 ID
+    label: '건설',             // 2depth 섹터명
+    icon: 'construction',       // 섹터 아이콘
+    companies: [                // 해당 섹터의 3depth 기업
+      {
+        id: 'korea-construction',
+        label: '한국건설',
+        businessNumber: '444-44-44444',
+        relationCode: '24',     // 섹터-기업 연결선에 표시될 번호
+        relationLabel: '임원-임원',
+        status: 'normal',       // EW등급 및 노드 색상
+      },
+    ],
+  },
+  {
+    id: 'food',
+    label: '숙식/음식',
+    icon: 'food',
+    companies: [
+      {
+        id: 'korea-industry',
+        label: '한국실업',
+        businessNumber: '111-11-11111',
+        relationCode: '11',
+        relationLabel: '법인특수관계',
+        status: 'normal',
+        linkKind: 'transaction', // 선택: 거래관계는 점선으로 표시
+      },
+    ],
+  },
+];
+
+export default function CompanyRelationshipSection() {
+  return (
+    <CompanyRelationshipGraph
+      companyName="한국기업(주)"
+      sectors={relationshipSectors}
+      ariaLabel="한국기업(주)와 연계기업의 산업 섹터별 관계"
+    />
+  );
+}
+
+// icon: construction | education | finance | food | information |
+//       management | manufacturing | retail
+// status: normal | good | attention | alert | danger | high-risk |
+//         poor | closed`
+
 const NETWORK_CODE = `import { NetworkGraph } from '@/components/custom/network-graph';
 
 <NetworkGraph
@@ -110,6 +165,11 @@ const ChartGuidePage = () => (
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
                     <CompanyNetworkDemo />
                 </div>
+                <CodeBlock
+                    code={COMPANY_RELATIONSHIP_CODE}
+                    language="tsx"
+                    copyLabel="CompanyRelationshipGraph 사용 코드 복사"
+                />
                 <LicenseNotice libraries={[CYTOSCAPE_LICENSE]} />
             </section>
         </BaseCard>
