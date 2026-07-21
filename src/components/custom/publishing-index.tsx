@@ -199,64 +199,66 @@ const PublishingIndex = () => {
                         </SectionHeader>
 
                         {/* 프론트엔드 개발자에게 인계할 자산과 마지막 반영 버전 */}
-                        <div
-                            role="region"
-                            aria-labelledby="frontend-handoff-assets-title"
-                            className="bg-background border-border max-h-100 overflow-auto overscroll-contain rounded-md border"
-                        >
-                            <table className="w-full text-left">
-                                <caption className="sr-only">프론트엔드 인계 자산별 변경 영향과 반영 버전</caption>
-                                <thead className="bg-muted sticky top-0">
-                                    <tr className="border-border border-b">
-                                        <th scope="col" className="typo-body-l-medium w-24 px-4 py-3">
-                                            구분
-                                        </th>
-                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                            경로
-                                        </th>
-                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                            변경 영향
-                                        </th>
-                                        <th scope="col" className="typo-body-l-medium w-28 px-4 py-3">
-                                            반영 버전
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-surface">
-                                    {assetVersions.map((asset) => (
-                                        <tr key={asset.name} className="border-border border-b last:border-b-0">
-                                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                                <span className="inline-flex items-center gap-1.5">
-                                                    {asset.kind === 'folder' ? (
-                                                        <Folder aria-hidden="true" className="size-3.5 shrink-0" />
-                                                    ) : (
-                                                        <File aria-hidden="true" className="size-3.5 shrink-0" />
-                                                    )}
-                                                    {asset.kind === 'folder' ? '폴더' : '파일'}
-                                                </span>
-                                            </td>
-                                            <th
-                                                scope="row"
-                                                className="typo-body-l-medium text-primary px-4 py-3 font-mono"
-                                            >
-                                                {asset.name}
+                        <div className="bg-background border-border overflow-hidden rounded-md border">
+                            <div
+                                role="region"
+                                aria-labelledby="frontend-handoff-assets-title"
+                                className="max-h-100 overflow-auto overscroll-contain"
+                            >
+                                <table className="w-full text-left">
+                                    <caption className="sr-only">프론트엔드 인계 자산별 변경 영향과 반영 버전</caption>
+                                    <thead className="bg-muted sticky top-0">
+                                        <tr className="border-border border-b">
+                                            <th scope="col" className="typo-body-l-medium w-24 px-4 py-3">
+                                                구분
                                             </th>
-                                            <td className="typo-body-l-regular text-foreground-subtle min-w-64 px-4 py-3">
-                                                {asset.description}
-                                            </td>
-                                            <td
-                                                className={`typo-body-l-regular px-4 py-3 font-mono ${
-                                                    asset.isCurrent
-                                                        ? 'bg-primary-subtle text-primary font-semibold'
-                                                        : 'text-muted-foreground'
-                                                }`}
-                                            >
-                                                <VersionCell version={asset.version} isCurrent={asset.isCurrent} />
-                                            </td>
+                                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                                경로
+                                            </th>
+                                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                                변경 영향
+                                            </th>
+                                            <th scope="col" className="typo-body-l-medium w-28 px-4 py-3">
+                                                반영 버전
+                                            </th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className="bg-surface">
+                                        {assetVersions.map((asset) => (
+                                            <tr key={asset.name} className="border-border border-b last:border-b-0">
+                                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
+                                                    <span className="inline-flex items-center gap-1.5">
+                                                        {asset.kind === 'folder' ? (
+                                                            <Folder aria-hidden="true" className="size-3.5 shrink-0" />
+                                                        ) : (
+                                                            <File aria-hidden="true" className="size-3.5 shrink-0" />
+                                                        )}
+                                                        {asset.kind === 'folder' ? '폴더' : '파일'}
+                                                    </span>
+                                                </td>
+                                                <th
+                                                    scope="row"
+                                                    className="typo-body-l-medium text-primary px-4 py-3 font-mono"
+                                                >
+                                                    {asset.name}
+                                                </th>
+                                                <td className="typo-body-l-regular text-foreground-subtle min-w-64 px-4 py-3">
+                                                    {asset.description}
+                                                </td>
+                                                <td
+                                                    className={`typo-body-l-regular px-4 py-3 font-mono ${
+                                                        asset.isCurrent
+                                                            ? 'bg-primary-subtle text-primary font-semibold'
+                                                            : 'text-muted-foreground'
+                                                    }`}
+                                                >
+                                                    <VersionCell version={asset.version} isCurrent={asset.isCurrent} />
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 

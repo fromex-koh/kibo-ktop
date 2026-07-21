@@ -133,6 +133,7 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     error: 'bg-error',
     info: 'bg-info',
     'primary-subtle': 'bg-primary-subtle',
+    'action-check-halo': 'bg-action-check-halo',
     border: 'bg-border',
     'subtle-1': 'bg-subtle-1',
     'subtle-2': 'bg-subtle-2',
@@ -234,10 +235,10 @@ const STANDARD_SLOTS = new Set([
     'sidebar-ring',
 ])
 
-// 컴포넌트 전용 레시피 토큰(button-*/checkbox-*/radio-*/badge-*/icon-*)은 일반 색 슬롯이 아니라 특정 컴포넌트
+// 컴포넌트 전용 레시피 토큰(action-check-*/button-*/checkbox-*/radio-*/badge-*/icon-*)은 일반 색 슬롯이 아니라 특정 컴포넌트
 // 내부에서만 쓰는 값이라 이 색 개요 페이지에서는 제외한다(각 컴포넌트 가이드에서 다룸).
 const isComponentRecipe = (n: string): boolean =>
-    /^(button|checkbox|radio|badge|number-badge|chip|icon|selectable-card|stepper)-/.test(n)
+    /^(action-check|button|checkbox|radio|badge|number-badge|chip|icon|selectable-card|stepper)-/.test(n)
 
 // 슬롯 가족(테이블) 정의 — 표준/커스텀 각각. 각 슬롯은 자기 버킷 안에서 한 가족에만 속한다.
 const STANDARD_GROUPS: Group[] = [
@@ -327,7 +328,6 @@ const STANDARD_COUNT = standardEntries.length
 const CUSTOM_COUNT = customEntries.length
 const recipeEntries = Object.entries(semantic).filter(([name]) => isComponentRecipe(name))
 const RECIPE_COUNT = recipeEntries.length
-const TOTAL_COUNT = Object.keys(semantic).length
 
 // 그룹 하나 = 독립 테이블. 현재(라이브)·클래스(클릭 복사)·라이트·다크·참조 primitive.
 // usage: 이 슬롯(그룹)이 화면 어디에 쓰이는 색인지 간결한 사용처 설명(제목 아래 서브텍스트).
@@ -481,8 +481,8 @@ const SemanticColorGuidePage = () => (
         title="색상 (Semantic)"
         description={
             <>
-                프로젝트에서 실제로 사용하는 시맨틱 색상 토큰입니다. 현재 테마의 결과와 라이트·다크 원시 팔레트 매핑을
-                함께 확인할 수 있습니다.
+                역할 기반 색상 클래스와 라이트·다크 매핑을 확인하고 복사할 수 있습니다. 화면 코드에서는 원시 팔레트보다
+                이 페이지의 시맨틱 클래스를 우선 사용합니다.
             </>
         }
     >
@@ -494,34 +494,35 @@ const SemanticColorGuidePage = () => (
                             구조와 사용 원칙
                         </h2>
                         <p className="typo-body-l-regular text-foreground-subtle">
-                            같은 원시 색상이라도 UI에서 맡는 역할이 다르면 별도 슬롯으로 관리합니다. 일반 화면에서는 raw
-                            CSS 변수 대신 아래 대표 유틸리티를 사용합니다.
+                            색상값이나 단계가 아니라 UI에서 맡는 역할을 기준으로 클래스를 선택합니다.
                         </p>
                     </div>
                     <div className="grid gap-4 md:grid-cols-3">
                         <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">표준 슬롯</strong>
+                            <strong className="text-foreground">역할 기반 클래스 사용</strong>
                             <p className="text-foreground-subtle">
-                                shadcn이 기대하는 {STANDARD_COUNT}개 이름은 유지하고 값만 프로젝트 팔레트에 매핑합니다.
+                                <code className="font-mono">bg-blue-500</code>·
+                                <code className="font-mono">bg-info-500</code> 대신{' '}
+                                <code className="font-mono">bg-primary</code>·<code className="font-mono">bg-info</code>
+                                처럼 역할이 드러나는 클래스를 사용합니다.
                             </p>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">프로젝트 슬롯</strong>
+                            <strong className="text-foreground">배경과 전경 함께 적용</strong>
                             <p className="text-foreground-subtle">
-                                표준 슬롯으로 표현하기 어려운 상태·표면·텍스트 역할만 제한적으로 확장합니다.
+                                <code className="font-mono">bg-primary</code>에는{' '}
+                                <code className="font-mono">text-primary-foreground</code>처럼 대응하는 전경색을 함께
+                                사용해 대비를 유지합니다.
                             </p>
                         </div>
                         <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">모드 매핑</strong>
+                            <strong className="text-foreground">테마별 클래스 분기 금지</strong>
                             <p className="text-foreground-subtle">
-                                문자열 참조는 다크에서 스케일을 반사하고, 명시 객체는 light·dark 값을 각각 사용합니다.
+                                동일한 시맨틱 클래스가 라이트·다크 값을 자동 전환합니다. 컴포넌트에서 테마별 원시 색상을
+                                직접 지정하지 않습니다.
                             </p>
                         </div>
                     </div>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        전체 {TOTAL_COUNT}개 = shadcn 표준 {STANDARD_COUNT}개 + 프로젝트 공용 {CUSTOM_COUNT}개 +
-                        컴포넌트 레시피 {RECIPE_COUNT}개
-                    </p>
                 </section>
             </BaseCard>
 
@@ -534,7 +535,8 @@ const SemanticColorGuidePage = () => (
                             <span className="text-muted-foreground font-normal">({STANDARD_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
-                            아래 표들은 <strong>shadcn 공식 표준 슬롯 체계</strong>입니다(
+                            shadcn primitive와 공통 UI에서 사용하는 기본 역할입니다. 컴포넌트를 추가할 때 먼저 이
+                            슬롯으로 표현할 수 있는지 확인합니다. 슬롯 이름은{' '}
                             <a
                                 href="https://ui.shadcn.com/docs/theming"
                                 target="_blank"
@@ -542,8 +544,8 @@ const SemanticColorGuidePage = () => (
                                 className="text-primary-strong underline underline-offset-2"
                             >
                                 theming 문서
-                            </a>{' '}
-                            기준, 이름 고정·값만 프로젝트 매핑). 개수는 빌드가 강제해 하나라도 빠지면 실패합니다.
+                            </a>
+                            를 따릅니다.
                         </p>
                     </div>
                     {STANDARD_GROUPED.map((group) => (
@@ -566,9 +568,8 @@ const SemanticColorGuidePage = () => (
                             <span className="text-muted-foreground font-normal">({CUSTOM_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
-                            shadcn 표준에 없어 프로젝트가 추가한 공용 슬롯입니다. 보조
-                            텍스트·표면·컨트롤·상태·스크롤바처럼 여러 컴포넌트가 공유하는 역할만 이 섹션에서 관리합니다.
-                            특정 컴포넌트에만 쓰는 값은 아래 레시피 섹션으로 분리합니다.
+                            보조 텍스트·표면·컨트롤·상태처럼 여러 화면에서 공유하는 프로젝트 역할입니다. 표준 슬롯으로
+                            의미를 표현할 수 없을 때만 사용합니다.
                         </p>
                     </div>
                     {CUSTOM_GROUPED.map((group) => (
@@ -590,11 +591,11 @@ const SemanticColorGuidePage = () => (
                             <span className="text-muted-foreground font-normal">({RECIPE_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
-                            현재 Badge의 숫자 타입과 Stepper에서만 사용하는 프로젝트 전용 색입니다. 공용 역할로 확장하지
-                            않고 해당 컴포넌트의 스타일 예외와 함께 관리합니다.
+                            특정 컴포넌트 내부 구현에서만 사용합니다. 화면에서는 이 토큰을 직접 조합하지 말고 해당
+                            컴포넌트의 variant·prop을 사용합니다.
                         </p>
                     </div>
-                    <SemanticTable title="Badge (number) / Stepper" tokens={recipeEntries} />
+                    <SemanticTable title="ActionCheck / Icon / Badge / Stepper" tokens={recipeEntries} />
                 </section>
             </BaseCard>
         </div>
