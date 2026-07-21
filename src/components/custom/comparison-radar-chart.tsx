@@ -81,7 +81,37 @@ const ComparisonRadarChart = ({
                         tick={{fill: 'var(--ds-foreground)', fontSize: 12, fontWeight: 600}}
                     />
                     <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} axisLine={false} tickCount={6} />
-                    <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" labelKey="label" />} />
+                    <ChartTooltip
+                        cursor={false}
+                        content={
+                            <ChartTooltipContent
+                                hideIndicator
+                                labelKey="label"
+                                formatter={(value, name) => {
+                                    const item =
+                                        name === 'primaryValue'
+                                            ? chartConfig.primaryValue
+                                            : name === 'comparisonValue'
+                                              ? chartConfig.comparisonValue
+                                              : undefined
+
+                                    return (
+                                        <div className="flex w-full items-center justify-between gap-6">
+                                            <span className="flex items-center gap-1.5">
+                                                <span
+                                                    className="size-2.5 shrink-0 rounded-full"
+                                                    style={{backgroundColor: item?.color}}
+                                                    aria-hidden="true"
+                                                />
+                                                {item?.label}
+                                            </span>
+                                            <strong className="text-foreground tabular-nums">{Number(value)}</strong>
+                                        </div>
+                                    )
+                                }}
+                            />
+                        }
+                    />
                     <Radar
                         name="comparisonValue"
                         dataKey="comparisonValue"

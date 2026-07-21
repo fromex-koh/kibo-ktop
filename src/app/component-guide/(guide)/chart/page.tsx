@@ -1,6 +1,12 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
+import {ColumnChart, type ColumnChartItem} from '@/components/custom/column-chart'
 import {ComparisonRadarChart, type ComparisonRadarItem} from '@/components/custom/comparison-radar-chart'
+import {
+    GroupedColumnChart,
+    type GroupedColumnItem,
+    type GroupedColumnSeries,
+} from '@/components/custom/grouped-column-chart'
 import {ListMarker} from '@/components/custom/list-marker'
 import {RatingMatrix, type RatingMatrixRow} from '@/components/custom/rating-matrix'
 import CodeBlock from '@/components/guide/code-block'
@@ -362,6 +368,177 @@ const BUSINESS_METRIC_RADAR_DATA: ComparisonRadarItem[] = [
     {id: 'cash-flow', label: '현금흐름', primaryValue: 38, comparisonValue: 55},
 ]
 
+const GROUPED_COLUMN_CODE = `import {
+  GroupedColumnChart,
+  type GroupedColumnItem,
+  type GroupedColumnSeries,
+} from '@/components/custom/grouped-column-chart';
+
+// 비교할 계열은 개수 제한 없이 key·표시명·semantic 색상으로 구성합니다.
+const fiscalYears: GroupedColumnSeries[] = [
+  { key: '2022', label: '2022년', color: 'var(--ds-chart-4)' },
+  { key: '2023', label: '2023년', color: 'var(--ds-chart-2)' },
+  { key: '2024', label: '2024년', color: 'var(--ds-chart-1)' },
+];
+
+// API의 항목별 값을 series의 key와 동일한 values 필드에 연결합니다.
+const financialData: GroupedColumnItem[] = [
+  { id: 'assets', label: '총자산', values: { '2022': 11826, '2023': 17168, '2024': 18768 } },
+  { id: 'equity', label: '자본총계', values: { '2022': 5332, '2023': 5130, '2024': 5191 } },
+  { id: 'liabilities', label: '부채총계', values: { '2022': 6494, '2023': 12038, '2024': 13577 } },
+  { id: 'sales', label: '매출액', values: { '2022': 16329, '2023': 18115, '2024': 18243 } },
+  { id: 'operating-profit', label: '영업이익', values: { '2022': 1042, '2023': 497, '2024': 821 } },
+  { id: 'net-income', label: '순이익', values: { '2022': 821, '2023': 466, '2024': 60 } },
+];
+
+export default function FinancialStatusChart() {
+  return (
+    <GroupedColumnChart
+      data={financialData}
+      series={fiscalYears}
+      unit="백만원"
+      yAxisStep={2000}
+      ariaLabel="최근 3개년 총자산·자본·부채·매출·이익 비교"
+    />
+  );
+}`
+
+const GROUPED_COLUMN_VARIATION_CODE = `import {
+  GroupedColumnChart,
+  type GroupedColumnItem,
+  type GroupedColumnSeries,
+} from '@/components/custom/grouped-column-chart';
+
+// X축을 연도, 묶음 계열을 재무 항목으로 구성한 배리에이션입니다.
+const series: GroupedColumnSeries[] = [
+  { key: 'assets', label: '총자산', color: 'var(--ds-chart-4)' },
+  { key: 'liabilities', label: '부채', color: 'var(--ds-chart-3)' },
+  { key: 'equity', label: '자본', color: 'var(--ds-chart-2)' },
+];
+
+const data: GroupedColumnItem[] = [
+  { id: '2022', label: '2022', values: { assets: 286.4, liabilities: 138.2, equity: 148.2 } },
+  { id: '2023', label: '2023', values: { assets: 305.2, liabilities: 141.8, equity: 163.4 } },
+  { id: '2024', label: '2024', values: { assets: 324.8, liabilities: 142.6, equity: 182.2 } },
+];
+
+export default function BalanceSheetChart() {
+  return (
+    <GroupedColumnChart
+      data={data}
+      series={series}
+      showValueLabels
+      showLegend={false}
+      valueFractionDigits={1}
+      unit="억원"
+      yAxisStep={50}
+      ariaLabel="2022년부터 2024년까지 총자산·부채·자본 비교"
+    />
+  );
+}`
+
+const GROUPED_COLUMN_INCOME_CODE = `import {
+  GroupedColumnChart,
+  type GroupedColumnItem,
+  type GroupedColumnSeries,
+} from '@/components/custom/grouped-column-chart';
+
+const series: GroupedColumnSeries[] = [
+  { key: 'sales', label: '매출', color: 'var(--ds-chart-4)' },
+  { key: 'operatingProfit', label: '영업이익', color: 'var(--ds-chart-1)' },
+  { key: 'netIncome', label: '순이익', color: 'var(--ds-chart-3)' },
+];
+
+const data: GroupedColumnItem[] = [
+  { id: '2022', label: '2022', values: { sales: 221.6, operatingProfit: 28.4, netIncome: 20.8 } },
+  { id: '2023', label: '2023', values: { sales: 244.8, operatingProfit: 34.1, netIncome: 24.6 } },
+  { id: '2024', label: '2024', values: { sales: 267.4, operatingProfit: 38.2, netIncome: 28.6 } },
+];
+
+export default function IncomeStatementChart() {
+  return (
+    <GroupedColumnChart
+      data={data}
+      series={series}
+      showValueLabels
+      showLegend={false}
+      valueFractionDigits={1}
+      unit="억원"
+      yAxisStep={50}
+      ariaLabel="2022년부터 2024년까지 매출·영업이익·순이익 비교"
+    />
+  );
+}`
+
+const GROUPED_COLUMN_SERIES: GroupedColumnSeries[] = [
+    {key: '2022', label: '2022년', color: 'var(--ds-chart-4)'},
+    {key: '2023', label: '2023년', color: 'var(--ds-chart-2)'},
+    {key: '2024', label: '2024년', color: 'var(--ds-chart-1)'},
+]
+
+const GROUPED_COLUMN_DATA: GroupedColumnItem[] = [
+    {id: 'assets', label: '총자산', values: {'2022': 11826, '2023': 17168, '2024': 18768}},
+    {id: 'equity', label: '자본총계', values: {'2022': 5332, '2023': 5130, '2024': 5191}},
+    {id: 'liabilities', label: '부채총계', values: {'2022': 6494, '2023': 12038, '2024': 13577}},
+    {id: 'sales', label: '매출액', values: {'2022': 16329, '2023': 18115, '2024': 18243}},
+    {id: 'operating-profit', label: '영업이익', values: {'2022': 1042, '2023': 497, '2024': 821}},
+    {id: 'net-income', label: '순이익', values: {'2022': 821, '2023': 466, '2024': 60}},
+]
+
+const BALANCE_SHEET_SERIES: GroupedColumnSeries[] = [
+    {key: 'assets', label: '총자산', color: 'var(--ds-chart-4)'},
+    {key: 'liabilities', label: '부채', color: 'var(--ds-chart-3)'},
+    {key: 'equity', label: '자본', color: 'var(--ds-chart-2)'},
+]
+
+const BALANCE_SHEET_DATA: GroupedColumnItem[] = [
+    {id: '2022', label: '2022', values: {assets: 286.4, liabilities: 138.2, equity: 148.2}},
+    {id: '2023', label: '2023', values: {assets: 305.2, liabilities: 141.8, equity: 163.4}},
+    {id: '2024', label: '2024', values: {assets: 324.8, liabilities: 142.6, equity: 182.2}},
+]
+
+const INCOME_STATEMENT_SERIES: GroupedColumnSeries[] = [
+    {key: 'sales', label: '매출', color: 'var(--ds-chart-4)'},
+    {key: 'operatingProfit', label: '영업이익', color: 'var(--ds-chart-1)'},
+    {key: 'netIncome', label: '순이익', color: 'var(--ds-chart-3)'},
+]
+
+const INCOME_STATEMENT_DATA: GroupedColumnItem[] = [
+    {id: '2022', label: '2022', values: {sales: 221.6, operatingProfit: 28.4, netIncome: 20.8}},
+    {id: '2023', label: '2023', values: {sales: 244.8, operatingProfit: 34.1, netIncome: 24.6}},
+    {id: '2024', label: '2024', values: {sales: 267.4, operatingProfit: 38.2, netIncome: 28.6}},
+]
+
+const COLUMN_CODE = `import {
+  ColumnChart,
+  type ColumnChartItem,
+} from '@/components/custom/column-chart';
+
+// 하나의 지표를 기간·항목별 단일 막대로 비교합니다.
+const annualSales: ColumnChartItem[] = [
+  { id: '2022', label: '2022', value: 456075, color: 'var(--ds-chart-2)' },
+  { id: '2023', label: '2023', value: 452875, color: 'var(--ds-chart-5)' },
+  { id: '2024', label: '2024', value: 466542, color: 'var(--ds-chart-1)' },
+];
+
+export default function AnnualSalesChart() {
+  return (
+    <ColumnChart
+      data={annualSales}
+      barWidth={80}
+      unit="천원"
+      yAxisStep={50000}
+      ariaLabel="2022년부터 2024년까지 인당 매출액 비교"
+    />
+  );
+}`
+
+const COLUMN_DATA: ColumnChartItem[] = [
+    {id: '2022', label: '2022', value: 456075, color: 'var(--ds-chart-2)'},
+    {id: '2023', label: '2023', value: 452875, color: 'var(--ds-chart-5)'},
+    {id: '2024', label: '2024', value: 466542, color: 'var(--ds-chart-1)'},
+]
+
 const WORD_CLOUD_CODE = `import {
   WordCloud,
   type WordCloudItem,
@@ -493,6 +670,52 @@ const PROPS_ITEMS = [
         'string',
     ],
     ['ComparisonRadarChart', 'ariaLabel', '레이더 차트에서 비교하는 대상과 지표 범위를 설명합니다.', '-', 'string'],
+    [
+        'GroupedColumnChart',
+        'data',
+        '항목별 고유 id·표시명과 series key에 대응하는 숫자 값을 전달합니다.',
+        '-',
+        'GroupedColumnItem[]',
+    ],
+    [
+        'GroupedColumnChart',
+        'series',
+        '묶음으로 비교할 계열의 고유 key·표시명·semantic chart 색상을 전달합니다.',
+        '-',
+        'GroupedColumnSeries[]',
+    ],
+    ['GroupedColumnChart', 'unit', '툴팁과 접근성 표의 숫자 뒤에 표시할 단위를 전달합니다.', 'undefined', 'string'],
+    ['GroupedColumnChart', 'showValueLabels', '각 막대 위에 포맷된 숫자 값을 표시합니다.', 'false', 'boolean'],
+    ['GroupedColumnChart', 'showLegend', '차트 아래 원형 범례 표시 여부를 설정합니다.', 'true', 'boolean'],
+    [
+        'GroupedColumnChart',
+        'valueFractionDigits',
+        '툴팁·막대 라벨·접근성 표에 표시할 소수점 자릿수를 지정합니다.',
+        '0',
+        'number',
+    ],
+    [
+        'GroupedColumnChart',
+        'yAxisStep',
+        'Y축 눈금 간격을 지정합니다. 생략하면 데이터 범위에 맞춰 자동 계산합니다.',
+        'undefined',
+        'number',
+    ],
+    ['GroupedColumnChart', 'ariaLabel', '묶음 세로 막대 차트가 비교하는 항목·계열·기간을 설명합니다.', '-', 'string'],
+    ['ColumnChart', 'data', '단일 계열의 항목별 id·표시명·숫자 값과 선택 색상을 전달합니다.', '-', 'ColumnChartItem[]'],
+    ['ColumnChart', 'barWidth', '막대 하나의 너비를 px 단위로 지정하며 16~120 범위로 보정합니다.', '56', 'number'],
+    [
+        'ColumnChart',
+        'color',
+        '개별 항목에 color가 없을 때 사용할 기본 semantic chart 색상입니다.',
+        'ds-chart-1',
+        'string',
+    ],
+    ['ColumnChart', 'unit', '툴팁과 접근성 표의 숫자 뒤에 표시할 단위를 전달합니다.', 'undefined', 'string'],
+    ['ColumnChart', 'showValueLabels', '각 막대 위에 포맷된 숫자 값을 표시합니다.', 'true', 'boolean'],
+    ['ColumnChart', 'valueFractionDigits', '툴팁·막대 라벨의 소수점 자릿수를 지정합니다.', '0', 'number'],
+    ['ColumnChart', 'yAxisStep', 'Y축 눈금 간격을 지정합니다.', 'undefined', 'number'],
+    ['ColumnChart', 'ariaLabel', '단일 세로 막대 차트가 비교하는 지표와 기간을 설명합니다.', '-', 'string'],
     [
         'WordCloud',
         'words',
@@ -803,6 +1026,127 @@ const ChartGuidePage = () => (
                     language="tsx"
                     copyLabel="ComparisonRadarChart 데이터 연결 코드 복사"
                 />
+                <LicenseNotice libraries={[RECHARTS_LICENSE]} />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chart-grouped-column" className="flex flex-col gap-5">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="flex flex-col gap-1">
+                        <h2 id="chart-grouped-column" className="typo-h4-bold">
+                            최근 3개년 재무 현황 (GroupedColumnChart)
+                        </h2>
+                        <ul className="typo-body-l-regular text-foreground-subtle mt-1 flex flex-col gap-1">
+                            {[
+                                '항목마다 여러 기간·대상의 값을 나란히 배치해 증감과 규모를 비교합니다.',
+                                'series를 추가하거나 제거하면 범례와 막대 묶음, 접근성 표의 열이 함께 변경됩니다.',
+                                'X축 데이터와 series 구성을 바꾸고 값 라벨 옵션을 조합하면 재무상태표·손익계산서 형태로 확장할 수 있습니다.',
+                                '작은 화면에서는 막대와 축의 최소 너비를 유지하고 차트 영역만 가로로 이동합니다.',
+                                '막대에 마우스를 올리면 계열명·값·단위를 툴팁으로 확인할 수 있습니다.',
+                            ].map((description) => (
+                                <li key={description} className="flex items-start gap-1.5">
+                                    <ListMarker type="unordered" level={1} />
+                                    <span>{description}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+                <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                    <GroupedColumnChart
+                        data={GROUPED_COLUMN_DATA}
+                        series={GROUPED_COLUMN_SERIES}
+                        unit="백만원"
+                        yAxisStep={2000}
+                        ariaLabel="최근 3개년 총자산·자본·부채·매출·영업이익·순이익 비교"
+                    />
+                </div>
+                <CodeBlock
+                    code={GROUPED_COLUMN_CODE}
+                    language="tsx"
+                    copyLabel="GroupedColumnChart 기본형 데이터 연결 코드 복사"
+                />
+                <div className="grid gap-6">
+                    <section aria-labelledby="chart-grouped-column-balance-sheet" className="flex flex-col gap-3">
+                        <h3 id="chart-grouped-column-balance-sheet" className="typo-title-l-bold">
+                            재무상태표 배리에이션
+                        </h3>
+                        <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                            <GroupedColumnChart
+                                data={BALANCE_SHEET_DATA}
+                                series={BALANCE_SHEET_SERIES}
+                                showValueLabels
+                                showLegend={false}
+                                valueFractionDigits={1}
+                                unit="억원"
+                                yAxisStep={50}
+                                ariaLabel="2022년부터 2024년까지 총자산·부채·자본 비교"
+                            />
+                        </div>
+                        <CodeBlock
+                            code={GROUPED_COLUMN_VARIATION_CODE}
+                            language="tsx"
+                            copyLabel="GroupedColumnChart 재무상태표 코드 복사"
+                        />
+                    </section>
+                    <section aria-labelledby="chart-grouped-column-income-statement" className="flex flex-col gap-3">
+                        <h3 id="chart-grouped-column-income-statement" className="typo-title-l-bold">
+                            손익계산서 배리에이션
+                        </h3>
+                        <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                            <GroupedColumnChart
+                                data={INCOME_STATEMENT_DATA}
+                                series={INCOME_STATEMENT_SERIES}
+                                showValueLabels
+                                showLegend={false}
+                                valueFractionDigits={1}
+                                unit="억원"
+                                yAxisStep={50}
+                                ariaLabel="2022년부터 2024년까지 매출·영업이익·순이익 비교"
+                            />
+                        </div>
+                        <CodeBlock
+                            code={GROUPED_COLUMN_INCOME_CODE}
+                            language="tsx"
+                            copyLabel="GroupedColumnChart 손익계산서 코드 복사"
+                        />
+                    </section>
+                </div>
+                <LicenseNotice libraries={[RECHARTS_LICENSE]} />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chart-column" className="flex flex-col gap-5">
+                <div className="flex flex-col gap-1">
+                    <h2 id="chart-column" className="typo-h4-bold">
+                        인당 매출액 (ColumnChart)
+                    </h2>
+                    <ul className="typo-body-l-regular text-foreground-subtle mt-1 flex flex-col gap-1">
+                        {[
+                            '하나의 지표를 기간이나 항목별 단일 막대로 비교합니다.',
+                            '항목별 color를 전달하면 의미가 유지되는 semantic chart 색상으로 구분할 수 있습니다.',
+                            '작은 화면에서는 축과 막대의 최소 너비를 유지하고 차트 영역만 가로로 이동합니다.',
+                            '막대 위 값 라벨과 숨김 데이터 표를 함께 제공해 색상에만 의존하지 않습니다.',
+                        ].map((description) => (
+                            <li key={description} className="flex items-start gap-1.5">
+                                <ListMarker type="unordered" level={1} />
+                                <span>{description}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                    <ColumnChart
+                        data={COLUMN_DATA}
+                        barWidth={80}
+                        unit="천원"
+                        yAxisStep={50000}
+                        ariaLabel="2022년부터 2024년까지 인당 매출액 비교"
+                    />
+                </div>
+                <CodeBlock code={COLUMN_CODE} language="tsx" />
                 <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>
         </BaseCard>

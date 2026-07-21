@@ -1253,8 +1253,7 @@ const CompanyNetworkDemo = () => {
 
     return (
         <div className="flex flex-col gap-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="typo-body-l-medium">섹터·기업 수에 따른 반경·각도 자동 재계산</p>
+            <div className="flex flex-wrap items-center justify-end gap-3">
                 <div className="flex gap-2" role="group" aria-label="연계기업 섹터 수 선택">
                     {scenarios.map(({id, label}) => (
                         <Button
@@ -1294,8 +1293,7 @@ const SupplyNetworkDemo = () => {
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="typo-body-l-medium">업종·기업 수에 따른 반경·각도 자동 재계산</p>
+            <div className="flex flex-wrap items-center justify-end gap-3">
                 <div className="flex gap-2" role="group" aria-label="공급망 노드 수 선택">
                     {SUPPLY_SCENARIOS.map(({id, label}) => (
                         <Button
@@ -1380,8 +1378,7 @@ const InnovationGrowthIndexDemo = () => {
 
     return (
         <div className="flex flex-col gap-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="typo-body-l-medium">진단 상태별 점수·키컬러 변경</p>
+            <div className="flex flex-wrap items-center justify-end gap-3">
                 <div className="flex flex-wrap gap-2" role="group" aria-label="혁신성장역량 진단 상태 선택">
                     {INNOVATION_INDEX_SCENARIOS.map((item) => (
                         <Button
@@ -1452,8 +1449,7 @@ const CreditRatingDemo = () => {
 
     return (
         <div className="flex flex-col gap-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="typo-body-l-medium">신용등급별 게이지·키컬러 변경</p>
+            <div className="flex flex-wrap items-center justify-end gap-3">
                 <div className="flex flex-wrap gap-2" role="group" aria-label="기업신용등급 시나리오 선택">
                     {CREDIT_RATING_SCENARIOS.map((item) => (
                         <Button
@@ -1508,8 +1504,7 @@ const TechnologyHoldingsDemo = () => {
 
     return (
         <div className="flex flex-col gap-5">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="typo-body-l-medium">비율 분포에 따른 외부 라벨 충돌 방지</p>
+            <div className="flex flex-wrap items-center justify-end gap-3">
                 <div className="flex flex-wrap gap-2" role="group" aria-label="기업 보유기술 비율 분포 선택">
                     {TECHNOLOGY_HOLDING_SCENARIOS.map(({id, label}) => (
                         <Button
@@ -1545,8 +1540,7 @@ const IssueWordCloudDemo = () => {
 
     return (
         <div className="flex flex-col gap-4">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-                <p className="typo-body-l-medium">키워드 수에 따른 크기·배치 자동 재계산</p>
+            <div className="flex flex-wrap items-center justify-end gap-3">
                 <div className="flex gap-2" role="group" aria-label="워드클라우드 키워드 수 선택">
                     {scenarios.map(({id, label}) => (
                         <Button

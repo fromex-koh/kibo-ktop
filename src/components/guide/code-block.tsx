@@ -3,7 +3,6 @@
 import {Highlight, themes, type Language, type PrismTheme} from 'prism-react-renderer'
 import {useTheme} from 'next-themes'
 import {useSyncExternalStore} from 'react'
-import CopyChip from '@/components/guide/copy-chip'
 
 // 코드 스니펫을 실제 문법 강조가 적용된 코드블럭으로 보여준다(MIT 라이선스 prism-react-renderer).
 // 페이지와 코드블럭의 명암을 반대로 둔다: 라이트 페이지에는 oneDark, 다크 페이지에는 vsLight.
@@ -24,19 +23,16 @@ const subscribeToHydration = () => () => undefined
 const getClientSnapshot = () => true
 const getServerSnapshot = () => false
 
-const CodeBlock = ({code, language = 'tsx', copyLabel}: CodeBlockProps) => {
+const CodeBlock = ({code, language = 'tsx'}: CodeBlockProps) => {
     const {resolvedTheme} = useTheme()
     const isHydrated = useSyncExternalStore(subscribeToHydration, getClientSnapshot, getServerSnapshot)
     const codeTheme = isHydrated && resolvedTheme === 'dark' ? accessibleVsLight : themes.oneDark
 
     return (
         <div className="border-border relative overflow-hidden rounded-md border">
-            <div className="absolute top-3 right-3">
-                <CopyChip value={code} label={copyLabel} />
-            </div>
             <Highlight code={code.trim()} language={language} theme={codeTheme}>
                 {({style, tokens, getLineProps, getTokenProps}) => (
-                    <pre className="typo-caption-regular overflow-x-auto p-4 pr-24 font-mono" style={style}>
+                    <pre className="typo-caption-regular overflow-x-auto p-4 font-mono" style={style}>
                         {tokens.map((line, lineIndex) => (
                             <div key={lineIndex} {...getLineProps({line})}>
                                 {line.map((token, tokenIndex) => (
