@@ -2,7 +2,13 @@
 
 import {useState} from 'react'
 import {CompanyRelationshipGraph, type CompanySector} from '@/components/custom/company-relationship-graph'
+import {
+    InnovationGrowthIndexChart,
+    type InnovationGrowthIndexData,
+    type InnovationGrowthGrade,
+} from '@/components/custom/innovation-growth-index-chart'
 import {NetworkGraph, type NetworkLink, type NetworkNode} from '@/components/custom/network-graph'
+import {TechnologyHoldingsChart, type TechnologyHoldingItem} from '@/components/custom/technology-holdings-chart'
 import {WordCloud, type WordCloudItem} from '@/components/custom/word-cloud'
 import {Button} from '@/components/ui/button'
 
@@ -1320,6 +1326,131 @@ const SupplyNetworkDemo = () => {
     )
 }
 
+const INNOVATION_INDEX_SCENARIOS: Array<{grade: InnovationGrowthGrade; data: InnovationGrowthIndexData}> = [
+    {
+        grade: '우수',
+        data: {
+            score: 88.4,
+            grade: '우수',
+            topPercentage: 10,
+            comparisonLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+        },
+    },
+    {
+        grade: '양호',
+        data: {
+            score: 73.7,
+            grade: '양호',
+            topPercentage: 25,
+            comparisonLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+        },
+    },
+    {
+        grade: '주의',
+        data: {
+            score: 52.1,
+            grade: '주의',
+            topPercentage: 48,
+            comparisonLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+        },
+    },
+    {
+        grade: '위험',
+        data: {
+            score: 31.6,
+            grade: '위험',
+            topPercentage: 75,
+            comparisonLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+        },
+    },
+]
+
+const InnovationGrowthIndexDemo = () => {
+    const [grade, setGrade] = useState<InnovationGrowthGrade>('양호')
+    const scenario = INNOVATION_INDEX_SCENARIOS.find((item) => item.grade === grade) ?? INNOVATION_INDEX_SCENARIOS[1]
+
+    return (
+        <div className="flex flex-col gap-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="typo-body-l-medium">진단 상태별 점수·키컬러 변경</p>
+                <div className="flex flex-wrap gap-2" role="group" aria-label="혁신성장역량 진단 상태 선택">
+                    {INNOVATION_INDEX_SCENARIOS.map((item) => (
+                        <Button
+                            key={item.grade}
+                            type="button"
+                            size="xs"
+                            variant={grade === item.grade ? 'default' : 'outline'}
+                            aria-pressed={grade === item.grade}
+                            onClick={() => setGrade(item.grade)}
+                        >
+                            {item.grade}
+                        </Button>
+                    ))}
+                </div>
+            </div>
+            <InnovationGrowthIndexChart
+                data={scenario.data}
+                ariaLabel={`혁신성장역량 Tech-Index ${scenario.data.score}점, ${scenario.data.grade}, 동일업종 상위 ${scenario.data.topPercentage}%`}
+            />
+        </div>
+    )
+}
+
+type TechnologyHoldingScenarioId = 'balanced' | 'clustered' | 'skewed'
+
+const TECHNOLOGY_HOLDING_BASE = [
+    {id: 'wireless-service', label: '무선·이동통신 서비스', count: 13, color: 'var(--ds-chart-2)'},
+    {id: 'wireless-system', label: '무선·이동통신 시스템', count: 11, color: 'var(--ds-chart-4)'},
+    {id: 'iot-service', label: '사물인터넷 응용서비스', count: 6, color: 'var(--ds-chart-1)'},
+    {id: 'platform', label: '정보통신 융합 플랫폼', count: 4, color: 'var(--ds-chart-3)'},
+    {id: 'other', label: '기타', count: 9, color: 'var(--ds-chart-5)'},
+] as const
+
+const TECHNOLOGY_HOLDING_SCENARIOS: Array<{
+    id: TechnologyHoldingScenarioId
+    label: string
+    percentages: number[]
+}> = [
+    {id: 'balanced', label: '균형', percentages: [30, 25, 15, 10, 20]},
+    {id: 'clustered', label: '근접', percentages: [55, 18, 11, 9, 7]},
+    {id: 'skewed', label: '편중', percentages: [82, 7, 5, 4, 2]},
+]
+
+const TechnologyHoldingsDemo = () => {
+    const [scenarioId, setScenarioId] = useState<TechnologyHoldingScenarioId>('balanced')
+    const scenario = TECHNOLOGY_HOLDING_SCENARIOS.find(({id}) => id === scenarioId) ?? TECHNOLOGY_HOLDING_SCENARIOS[0]
+    const data: TechnologyHoldingItem[] = TECHNOLOGY_HOLDING_BASE.map((item, index) => ({
+        ...item,
+        percentage: scenario.percentages[index],
+    }))
+
+    return (
+        <div className="flex flex-col gap-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="typo-body-l-medium">비율 분포에 따른 외부 라벨 충돌 방지</p>
+                <div className="flex flex-wrap gap-2" role="group" aria-label="기업 보유기술 비율 분포 선택">
+                    {TECHNOLOGY_HOLDING_SCENARIOS.map(({id, label}) => (
+                        <Button
+                            key={id}
+                            type="button"
+                            size="xs"
+                            variant={scenarioId === id ? 'default' : 'outline'}
+                            aria-pressed={scenarioId === id}
+                            onClick={() => setScenarioId(id)}
+                        >
+                            {label}
+                        </Button>
+                    ))}
+                </div>
+            </div>
+            <TechnologyHoldingsChart
+                data={data}
+                ariaLabel={`${scenario.label} 분포의 기업 보유기술 5개 분류 비중과 건수`}
+            />
+        </div>
+    )
+}
+
 const IssueWordCloudDemo = () => {
     const [scenario, setScenario] = useState<'large' | 'medium' | 'small'>('large')
     const scenarios = [
@@ -1357,4 +1488,4 @@ const IssueWordCloudDemo = () => {
     )
 }
 
-export {CompanyNetworkDemo, IssueWordCloudDemo, SupplyNetworkDemo}
+export {CompanyNetworkDemo, InnovationGrowthIndexDemo, IssueWordCloudDemo, SupplyNetworkDemo, TechnologyHoldingsDemo}

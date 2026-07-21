@@ -4,7 +4,14 @@ import {ListMarker} from '@/components/custom/list-marker'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import PropsTable from '@/components/guide/props-table'
-import {CompanyNetworkDemo, IssueWordCloudDemo, SupplyNetworkDemo} from './chart-demo'
+import {Badge} from '@/components/ui/badge'
+import {
+    CompanyNetworkDemo,
+    InnovationGrowthIndexDemo,
+    IssueWordCloudDemo,
+    SupplyNetworkDemo,
+    TechnologyHoldingsDemo,
+} from './chart-demo'
 
 export const metadata: Metadata = {title: '차트 (Chart)'}
 
@@ -110,6 +117,115 @@ export default function SupplyNetwork() {
 // icon: information | science | rental | food | manufacturing |
 //       construction | finance | retail | education | transport`
 
+const TECHNOLOGY_HOLDINGS_CODE = `import {
+  TechnologyHoldingsChart,
+  type TechnologyHoldingItem,
+} from '@/components/custom/technology-holdings-chart';
+
+type ApiTechnologyHolding = {
+  categoryCode: string;
+  categoryName: string;
+  ratio: number;
+  patentCount: number;
+  semanticColor: string;
+};
+
+// 예: API에서 받은 기술 분류별 보유 현황
+const technologyHoldingsFromApi: ApiTechnologyHolding[] = [
+  {
+    categoryCode: 'wireless-service',
+    categoryName: '무선·이동통신 서비스',
+    ratio: 30,
+    patentCount: 13,
+    semanticColor: 'var(--ds-chart-2)',
+  },
+  {
+    categoryCode: 'wireless-system',
+    categoryName: '무선·이동통신 시스템',
+    ratio: 25,
+    patentCount: 11,
+    semanticColor: 'var(--ds-chart-4)',
+  },
+  {
+    categoryCode: 'iot-service',
+    categoryName: '사물인터넷 응용서비스',
+    ratio: 15,
+    patentCount: 6,
+    semanticColor: 'var(--ds-chart-1)',
+  },
+  {
+    categoryCode: 'platform',
+    categoryName: '정보통신 융합 플랫폼',
+    ratio: 10,
+    patentCount: 4,
+    semanticColor: 'var(--ds-chart-3)',
+  },
+  {
+    categoryCode: 'other',
+    categoryName: '기타',
+    ratio: 20,
+    patentCount: 9,
+    semanticColor: 'var(--ds-chart-5)',
+  },
+];
+
+// API의 기술 분류별 건수와 비중을 이 구조로 변환합니다.
+const toChartData = (apiData: ApiTechnologyHolding[]): TechnologyHoldingItem[] =>
+  apiData.map((item) => ({
+    id: item.categoryCode,
+    label: item.categoryName,
+    percentage: item.ratio,
+    count: item.patentCount,
+    color: item.semanticColor,
+  }));
+
+export default function TechnologyHoldingsSection() {
+  return (
+    <TechnologyHoldingsChart
+      data={toChartData(technologyHoldingsFromApi)}
+      ariaLabel="소분류 기준 기업 보유기술 비중과 건수"
+    />
+  );
+}`
+
+const INNOVATION_GROWTH_INDEX_CODE = `import {
+  InnovationGrowthIndexChart,
+  type InnovationGrowthGrade,
+  type InnovationGrowthIndexData,
+} from '@/components/custom/innovation-growth-index-chart';
+
+type ApiInnovationGrowthIndex = {
+  techIndexScore: number;
+  diagnosisGrade: InnovationGrowthGrade;
+  industryTopPercentage: number;
+  comparisonIndustryName: string;
+};
+
+// 예: API에서 받은 혁신성장역량 평가 결과
+const innovationIndexFromApi: ApiInnovationGrowthIndex = {
+  techIndexScore: 73.7,
+  diagnosisGrade: '양호', // '우수' | '양호' | '주의' | '위험'
+  industryTopPercentage: 25,
+  comparisonIndustryName: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+};
+
+// API 필드를 컴포넌트 data 형식으로 변환합니다.
+const toChartData = (apiData: ApiInnovationGrowthIndex): InnovationGrowthIndexData => ({
+  score: apiData.techIndexScore,
+  grade: apiData.diagnosisGrade,
+  topPercentage: apiData.industryTopPercentage,
+  comparisonLabel: apiData.comparisonIndustryName,
+});
+
+export default function InnovationGrowthIndexSection() {
+  return (
+    <InnovationGrowthIndexChart
+      data={toChartData(innovationIndexFromApi)}
+      ariaLabel="혁신성장역량 Tech-Index 점수와 동일업종 상위 비율"
+    />
+  );
+}`
+
 const WORD_CLOUD_CODE = `import {
   WordCloud,
   type WordCloudItem,
@@ -194,6 +310,34 @@ const PROPS_ITEMS = [
     ],
     ['NetworkGraph', 'ariaLabel', '분석기업과 업종·거래기업 관계를 간결하게 설명합니다.', '-', 'string'],
     [
+        'TechnologyHoldingsChart',
+        'data',
+        '기술 분류별 고유 id, 분류명, 비중, 보유 건수와 semantic chart 색상을 전달합니다.',
+        '-',
+        'TechnologyHoldingItem[]',
+    ],
+    [
+        'TechnologyHoldingsChart',
+        'ariaLabel',
+        '도넛 차트가 비교하는 분류 기준과 데이터 범위를 설명합니다.',
+        '-',
+        'string',
+    ],
+    [
+        'InnovationGrowthIndexChart',
+        'data',
+        'Tech-Index 점수, 진단 등급, 동일업종 상위 비율과 비교 기준명을 전달합니다. 점수와 비율은 0~100 범위로 표시합니다.',
+        '-',
+        'InnovationGrowthIndexData',
+    ],
+    [
+        'InnovationGrowthIndexChart',
+        'ariaLabel',
+        '원형 지수와 동일업종 상위 비율이 나타내는 평가 범위를 설명합니다.',
+        '-',
+        'string',
+    ],
+    [
         'WordCloud',
         'words',
         '중복되지 않는 단어와 양수 가중치를 전달합니다. weight가 클수록 글자가 크게 표시되며 중요도순으로 정렬해 전달합니다.',
@@ -244,6 +388,10 @@ const CYTOSCAPE_LICENSE: LicenseLink = {
 const FCOSE_LICENSE: LicenseLink = {
     name: 'cytoscape-fcose',
     href: 'https://github.com/iVis-at-Bilkent/cytoscape.js-fcose/blob/master/LICENSE',
+}
+const RECHARTS_LICENSE: LicenseLink = {
+    name: 'Recharts',
+    href: 'https://github.com/recharts/recharts/blob/main/LICENSE',
 }
 const WORD_CLOUD_LICENSE: LicenseLink = {
     name: 'WordCloud2.js',
@@ -316,6 +464,66 @@ const ChartGuidePage = () => (
                 </div>
                 <LicenseNotice libraries={[CYTOSCAPE_LICENSE, FCOSE_LICENSE]} />
                 <CodeBlock code={NETWORK_CODE} language="tsx" copyLabel="NetworkGraph 사용 코드 복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chart-technology-holdings" className="flex flex-col gap-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex flex-col gap-1">
+                        <h2 id="chart-technology-holdings" className="typo-h4-bold">
+                            기업 보유기술
+                        </h2>
+                        <ul className="typo-body-l-regular text-foreground-subtle mt-1 flex flex-col gap-1">
+                            {[
+                                '기술 분류별 보유 비중과 건수를 도넛과 범례로 함께 비교합니다.',
+                                '공간이 충분한 비율값은 조각 위에, 좁은 조각은 충돌을 피한 연결선에 표시합니다.',
+                                '브라우저 너비가 바뀌면 차트 크기를 다시 계산하므로 라벨이 짧은 시간 뒤 재배치될 수 있습니다.',
+                                '중간·모바일 화면에서는 차트와 범례를 세로로 배치해 라벨 영역을 확보합니다.',
+                            ].map((description) => (
+                                <li key={description} className="flex items-start gap-1.5">
+                                    <ListMarker type="unordered" level={1} />
+                                    <span>{description}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <Badge color="neutral">소분류 기준</Badge>
+                </div>
+                <div className="bg-background border-border overflow-hidden rounded-xl border p-4 sm:p-6">
+                    <TechnologyHoldingsDemo />
+                </div>
+                <CodeBlock
+                    code={TECHNOLOGY_HOLDINGS_CODE}
+                    language="tsx"
+                    copyLabel="TechnologyHoldingsChart 데이터 연결 코드 복사"
+                />
+                <LicenseNotice libraries={[RECHARTS_LICENSE]} />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chart-innovation-growth-index" className="flex flex-col gap-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex flex-col gap-1">
+                        <h2 id="chart-innovation-growth-index" className="typo-h4-bold">
+                            혁신성장역량지수
+                        </h2>
+                        <p className="typo-body-l-regular text-foreground-subtle">
+                            Tech-Index 점수와 진단 상태, 동일업종 내 상위 비율을 함께 표시합니다.
+                        </p>
+                    </div>
+                    <Badge color="neutral">2025.12.04 기준</Badge>
+                </div>
+                <div className="bg-background border-border overflow-hidden rounded-xl border p-4 sm:p-6">
+                    <InnovationGrowthIndexDemo />
+                </div>
+                <CodeBlock
+                    code={INNOVATION_GROWTH_INDEX_CODE}
+                    language="tsx"
+                    copyLabel="InnovationGrowthIndexChart 데이터 연결 코드 복사"
+                />
+                <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>
         </BaseCard>
 
