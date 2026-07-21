@@ -1,5 +1,7 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
+import {BusinessMetricRadarChart, type BusinessMetricRadarItem} from '@/components/custom/business-metric-radar-chart'
+import {BusinessPerformanceMatrix, type PerformanceMatrixRow} from '@/components/custom/business-performance-matrix'
 import {ListMarker} from '@/components/custom/list-marker'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
@@ -280,6 +282,75 @@ export default function CreditRatingSection() {
   );
 }`
 
+const BUSINESS_PERFORMANCE_MATRIX_CODE = `import {
+  BusinessPerformanceMatrix,
+  type PerformanceMatrixRow,
+} from '@/components/custom/business-performance-matrix';
+
+// API 응답을 행 단위 데이터로 구성합니다.
+const performanceRows: PerformanceMatrixRow[] = [
+  { id: 'growth', label: '성장성', rating: 'weak' },
+  { id: 'profitability', label: '수익성', rating: 'good' },
+  { id: 'stability', label: '안정성', rating: 'average' },
+  { id: 'activity', label: '활동성', rating: 'good' },
+  { id: 'liquidity', label: '유동성', rating: 'average' },
+  { id: 'cash-flow', label: '현금흐름', rating: 'poor' },
+];
+
+export default function BusinessPerformanceSection() {
+  return (
+    <BusinessPerformanceMatrix
+      rows={performanceRows}
+      ariaLabel="기업 경영지표별 평가등급"
+    />
+  );
+}
+
+// rating: poor(취약) | weak(미흡) | average(보통) |
+//         good(양호) | excellent(우수)`
+
+const BUSINESS_PERFORMANCE_ROWS: PerformanceMatrixRow[] = [
+    {id: 'growth', label: '성장성', rating: 'weak'},
+    {id: 'profitability', label: '수익성', rating: 'good'},
+    {id: 'stability', label: '안정성', rating: 'average'},
+    {id: 'activity', label: '활동성', rating: 'good'},
+    {id: 'liquidity', label: '유동성', rating: 'average'},
+    {id: 'cash-flow', label: '현금흐름', rating: 'poor'},
+]
+
+const BUSINESS_METRIC_RADAR_CODE = `import {
+  BusinessMetricRadarChart,
+  type BusinessMetricRadarItem,
+} from '@/components/custom/business-metric-radar-chart';
+
+// API에서 받은 조회기업과 업종평균의 부문별 점수를 연결합니다.
+const comparisonData: BusinessMetricRadarItem[] = [
+  { id: 'growth', metric: '성장성', company: 52, industryAverage: 60 },
+  { id: 'profitability', metric: '수익성', company: 78, industryAverage: 68 },
+  { id: 'stability', metric: '안정성', company: 72, industryAverage: 61 },
+  { id: 'activity', metric: '활동성', company: 66, industryAverage: 45 },
+  { id: 'liquidity', metric: '유동성', company: 58, industryAverage: 57 },
+  { id: 'cash-flow', metric: '현금흐름', company: 38, industryAverage: 55 },
+];
+
+export default function BusinessMetricComparison() {
+  return (
+    <BusinessMetricRadarChart
+      data={comparisonData}
+      ariaLabel="조회기업과 업종평균의 6개 경영지표 점수 비교"
+    />
+  );
+}`
+
+const BUSINESS_METRIC_RADAR_DATA: BusinessMetricRadarItem[] = [
+    {id: 'growth', metric: '성장성', company: 52, industryAverage: 60},
+    {id: 'profitability', metric: '수익성', company: 78, industryAverage: 68},
+    {id: 'stability', metric: '안정성', company: 72, industryAverage: 61},
+    {id: 'activity', metric: '활동성', company: 66, industryAverage: 45},
+    {id: 'liquidity', metric: '유동성', company: 58, industryAverage: 57},
+    {id: 'cash-flow', metric: '현금흐름', company: 38, industryAverage: 55},
+]
+
 const WORD_CLOUD_CODE = `import {
   WordCloud,
   type WordCloudItem,
@@ -406,6 +477,34 @@ const PROPS_ITEMS = [
         'string',
     ],
     [
+        'BusinessPerformanceMatrix',
+        'rows',
+        '지표별 고유 id·표시명과 하나의 평가등급을 전달합니다.',
+        '-',
+        'PerformanceMatrixRow[]',
+    ],
+    [
+        'BusinessPerformanceMatrix',
+        'ariaLabel',
+        '표가 비교하는 기업 지표와 평가등급의 범위를 설명합니다.',
+        '-',
+        'string',
+    ],
+    [
+        'BusinessMetricRadarChart',
+        'data',
+        '지표별 고유 id·표시명과 조회기업·업종평균의 0~100 점수를 전달합니다.',
+        '-',
+        'BusinessMetricRadarItem[]',
+    ],
+    [
+        'BusinessMetricRadarChart',
+        'ariaLabel',
+        '레이더 차트에서 비교하는 대상과 경영지표 범위를 설명합니다.',
+        '-',
+        'string',
+    ],
+    [
         'WordCloud',
         'words',
         '중복되지 않는 단어와 양수 가중치를 전달합니다. weight가 클수록 글자가 크게 표시되며 중요도순으로 정렬해 전달합니다.',
@@ -469,7 +568,7 @@ const WORD_CLOUD_LICENSE: LicenseLink = {
 const ChartGuidePage = () => (
     <GuidePageShell
         title="차트 (Chart)"
-        description="실제 데이터 변화에 따라 자동 배치되는 네트워크 그래프와 워드클라우드입니다. 모든 시각화 색상은 semantic chart 토큰을 사용합니다."
+        description="실제 데이터에 따라 표현되는 네트워크·정량 차트와 접근 가능한 등급 매트릭스입니다. 모든 시각화 색상은 semantic chart 토큰을 사용합니다."
     >
         <BaseCard>
             <section aria-labelledby="chart-company-network" className="flex flex-col gap-5">
@@ -642,6 +741,76 @@ const ChartGuidePage = () => (
                     code={CREDIT_RATING_CODE}
                     language="tsx"
                     copyLabel="CreditRatingGauge 데이터 연결 코드 복사"
+                />
+                <LicenseNotice libraries={[RECHARTS_LICENSE]} />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chart-business-performance" className="flex flex-col gap-5">
+                <div className="flex flex-col gap-1">
+                    <h2 id="chart-business-performance" className="typo-h4-bold">
+                        기업 경영지표 등급
+                    </h2>
+                    <ul className="typo-body-l-regular text-foreground-subtle mt-1 flex flex-col gap-1">
+                        {[
+                            'Recharts 전용 차트가 아닌 시맨틱 table 기반의 커스텀 등급 매트릭스입니다.',
+                            '각 지표에는 하나의 등급만 전달하며 데이터 타입에서 행당 단일 체크를 보장합니다.',
+                            '작은 화면에서는 열 너비를 유지하고 표 영역만 가로로 이동해 전체 등급을 확인합니다.',
+                        ].map((description) => (
+                            <li key={description} className="flex items-start gap-1.5">
+                                <ListMarker type="unordered" level={1} />
+                                <span>{description}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+                <div className="bg-background border-border overflow-hidden rounded-xl border p-4 sm:p-6">
+                    <BusinessPerformanceMatrix
+                        rows={BUSINESS_PERFORMANCE_ROWS}
+                        ariaLabel="기업 경영지표별 취약·미흡·보통·양호·우수 평가등급"
+                    />
+                </div>
+                <CodeBlock
+                    code={BUSINESS_PERFORMANCE_MATRIX_CODE}
+                    language="tsx"
+                    copyLabel="BusinessPerformanceMatrix 데이터 연결 코드 복사"
+                />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chart-business-metric-radar" className="flex flex-col gap-5">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex flex-col gap-1">
+                        <h2 id="chart-business-metric-radar" className="typo-h4-bold">
+                            부문별 비교
+                        </h2>
+                        <ul className="typo-body-l-regular text-foreground-subtle mt-1 flex flex-col gap-1">
+                            {[
+                                '조회기업과 업종평균의 경영지표 점수를 동일한 0~100 축에서 비교합니다.',
+                                '실선·면은 조회기업, 점선은 업종평균으로 표현해 색상 외에도 형태로 구분합니다.',
+                                '컨테이너 너비에 맞춰 차트가 자동 축소되며 전체 수치는 접근성 표로 함께 제공합니다.',
+                            ].map((description) => (
+                                <li key={description} className="flex items-start gap-1.5">
+                                    <ListMarker type="unordered" level={1} />
+                                    <span>{description}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                    <Badge color="neutral">조회기업 vs 업종평균</Badge>
+                </div>
+                <div className="bg-background border-border overflow-hidden rounded-xl border p-4 sm:p-6">
+                    <BusinessMetricRadarChart
+                        data={BUSINESS_METRIC_RADAR_DATA}
+                        ariaLabel="조회기업과 업종평균의 성장성·수익성·안정성·활동성·유동성·현금흐름 점수 비교"
+                    />
+                </div>
+                <CodeBlock
+                    code={BUSINESS_METRIC_RADAR_CODE}
+                    language="tsx"
+                    copyLabel="BusinessMetricRadarChart 데이터 연결 코드 복사"
                 />
                 <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>
