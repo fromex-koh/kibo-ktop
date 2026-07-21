@@ -80,6 +80,7 @@ const WordCloud = ({words, ariaLabel, className, ...props}: WordCloudProps) => {
                     wait: 1,
                     weightFactor: (weight) => Math.max(16, Math.min(112, weight * 1.12) * responsiveScale),
                     hover: (item, _dimension, event) => {
+                        target.style.cursor = item ? 'pointer' : ''
                         if (!item || !event || !containerRef.current) {
                             setTooltip(null)
                             return
@@ -132,8 +133,8 @@ const WordCloud = ({words, ariaLabel, className, ...props}: WordCloudProps) => {
                     className="border-border bg-popover text-popover-foreground pointer-events-none absolute z-10 -translate-x-1/2 -translate-y-full rounded-md border px-3 py-2 shadow-md"
                     style={{left: tooltip.x, top: tooltip.y - 10}}
                 >
-                    <p className="typo-body-m-bold">{tooltip.text}</p>
-                    <p className="typo-body-s-regular">중요도 {tooltip.weight}</p>
+                    <p className="typo-body-l-bold">{tooltip.text}</p>
+                    <p className="typo-body-s-regular mt-1">중요도 {tooltip.weight}</p>
                 </div>
             )}
             <ol className="sr-only">

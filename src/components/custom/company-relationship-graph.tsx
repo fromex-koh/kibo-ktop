@@ -158,6 +158,15 @@ const truncateLabel = (label: string, maximumLength: number) => {
     return characters.length > maximumLength ? `${characters.slice(0, maximumLength).join('')}…` : label
 }
 
+const getTooltipParts = (text: string) => {
+    const separatorIndex = text.indexOf(' - ')
+    if (separatorIndex < 0) return {title: text, description: ''}
+    return {
+        title: text.slice(0, separatorIndex),
+        description: text.slice(separatorIndex + 3),
+    }
+}
+
 const CompanyRelationshipGraph = ({
     companyName,
     sectors,
@@ -221,9 +230,8 @@ const CompanyRelationshipGraph = ({
             }
             const getFitPadding = () => (container.clientWidth < 640 ? 20 : 44)
             const branchCount = sectors.length + directCompanies.length
-            const maximumCompanyCount = Math.max(0, ...sectors.map((sector) => sector.companies.length))
-            const sectorRadius = getSectorRadius(branchCount, maximumCompanyCount)
-            const companyRadius = sectorRadius + COMPANY_RADIUS_GAP
+            const baseSectorRadius = getSectorRadius(branchCount, 0)
+            const baseCompanyRadius = baseSectorRadius + COMPANY_RADIUS_GAP
             const branchWeights = [
                 ...sectors.map((sector) => Math.max(1, Math.ceil(sector.companies.length / COMPANIES_PER_BAND))),
                 ...directCompanies.map(() => 1),
@@ -246,6 +254,8 @@ const CompanyRelationshipGraph = ({
             ]
             sectors.forEach((sector, sectorIndex) => {
                 const sectorAngle = branchAngles[sectorIndex] ?? -Math.PI / 2
+                const sectorRadius = getSectorRadius(branchCount, sector.companies.length)
+                const companyRadius = sectorRadius + COMPANY_RADIUS_GAP
                 const sectorPosition = positionAt(sectorAngle, sectorRadius)
                 const sectorNodeId = `sector-${sector.id}`
                 const sectorGap = branchAngleSpans[sectorIndex] ?? (Math.PI * 2) / Math.max(branchCount, 1)
@@ -313,7 +323,7 @@ const CompanyRelationshipGraph = ({
             directCompanies.forEach((company, companyIndex) => {
                 const branchIndex = sectors.length + companyIndex
                 const companyAngle = branchAngles[branchIndex] ?? -Math.PI / 2
-                const companyPosition = positionAt(companyAngle, companyRadius)
+                const companyPosition = positionAt(companyAngle, baseCompanyRadius)
                 const companyNodeId = `direct-company-${company.id}`
                 addOutwardConstraints(relativePlacementConstraint, 'analysis-company', companyNodeId, companyAngle)
 
@@ -449,6 +459,17 @@ const CompanyRelationshipGraph = ({
                     selector: 'node:active, node:selected',
                     style: {'border-color': colors.foreground, 'border-width': 3},
                 },
+                {
+                    selector: 'node.is-hovered',
+                    style: {
+                        'border-color': colors.primary,
+                        'border-width': 3,
+                    },
+                },
+                {
+                    selector: 'node:grabbed',
+                    style: {'border-color': colors.primary, 'border-width': 4},
+                },
             ]
 
             graph = cytoscape({
@@ -532,12 +553,14 @@ const CompanyRelationshipGraph = ({
 
             graph.on('mouseover', 'node', (event) => {
                 const node = event.target
+                node.addClass('is-hovered')
                 const position = node.renderedPosition()
                 const tooltipText = node.data('tooltip')
                 if (typeof tooltipText === 'string') setTooltip({text: tooltipText, x: position.x, y: position.y})
-                if (!node.locked()) container.style.cursor = 'grab'
+                container.style.cursor = 'pointer'
             })
-            graph.on('mouseout', 'node', () => {
+            graph.on('mouseout', 'node', (event) => {
+                event.target.removeClass('is-hovered')
                 setTooltip(undefined)
                 container.style.cursor = ''
             })
@@ -546,7 +569,7 @@ const CompanyRelationshipGraph = ({
                 setTooltip(undefined)
             })
             graph.on('free', 'node', () => {
-                container.style.cursor = 'grab'
+                container.style.cursor = 'pointer'
             })
 
             resizeObserver = new ResizeObserver(() => {
@@ -576,6 +599,8 @@ const CompanyRelationshipGraph = ({
         }
     }, [ariaLabel, companyName, directCompanies, resolvedTheme, sectors])
 
+    const tooltipParts = tooltip ? getTooltipParts(tooltip.text) : undefined
+
     return (
         <div {...props} className={cn('relative min-w-0 overflow-hidden', className)}>
             <div ref={containerRef} role="img" aria-label={ariaLabel} className="h-100 w-full sm:h-125" />
@@ -583,7 +608,7 @@ const CompanyRelationshipGraph = ({
                 <button
                     key={target.id}
                     type="button"
-                    className="focus-visible:outline-primary pointer-events-none absolute z-5 -translate-x-1/2 -translate-y-1/2 rounded-full border border-transparent bg-transparent focus-visible:outline-2 focus-visible:outline-offset-2"
+                    className="focus-visible:border-primary pointer-events-none absolute z-5 -translate-x-1/2 -translate-y-1/2 cursor-pointer rounded-full border border-transparent bg-transparent focus-visible:border-2 focus-visible:outline-none"
                     style={{left: target.x, top: target.y, width: target.size, height: target.size}}
                     onFocus={() => setTooltip(target)}
                     onBlur={() => setTooltip(undefined)}
@@ -592,13 +617,16 @@ const CompanyRelationshipGraph = ({
                     <span className="sr-only">{target.text}</span>
                 </button>
             ))}
-            {tooltip ? (
+            {tooltip && tooltipParts ? (
                 <div
                     className="border-border bg-popover text-popover-foreground pointer-events-none absolute z-10 max-w-60 -translate-x-1/2 -translate-y-[calc(100%+12px)] rounded-md border px-3 py-2 text-xs font-medium shadow-md"
                     style={{left: tooltip.x, top: tooltip.y}}
                     role="tooltip"
                 >
-                    {tooltip.text}
+                    <p className="typo-body-l-bold">{tooltipParts.title}</p>
+                    {tooltipParts.description ? (
+                        <p className="typo-body-s-regular mt-1">{tooltipParts.description}</p>
+                    ) : null}
                 </div>
             ) : null}
             <div className="sr-only">

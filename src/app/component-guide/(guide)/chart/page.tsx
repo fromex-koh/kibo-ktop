@@ -14,10 +14,10 @@ const COMPANY_RELATIONSHIP_CODE = `import {
   type RelatedCompany,
 } from '@/components/custom/company-relationship-graph';
 
-// API 응답을 이 구조로 변환해 sectors prop에 전달합니다.
+// 1. API 응답을 2depth 섹터 → 3depth 기업 구조로 변환합니다.
 const relationshipSectors: CompanySector[] = [
   {
-    id: 'construction',          // 중복되지 않는 섹터 ID
+    id: 'construction',          // API 원본의 안정적이고 중복되지 않는 ID
     label: '건설',                 // 2depth 섹터명
     icon: 'construction',       // 섹터 아이콘
     companies: [                // 해당 섹터의 3depth 기업
@@ -31,24 +31,9 @@ const relationshipSectors: CompanySector[] = [
       },
     ],
   },
-  {
-    id: 'food',
-    label: '숙식/음식',
-    icon: 'food',
-    companies: [
-      {
-        id: 'korea-industry',
-        label: '한국실업',
-        businessNumber: '111-11-11111',
-        relationCode: '11',
-        relationLabel: '법인특수관계',
-        status: 'normal',
-      },
-    ],
-  },
 ];
 
-// 2depth 섹터 정보가 없는 기업은 directCompanies로 전달합니다.
+// 2. 섹터 정보가 없는 기업만 별도 배열로 전달합니다. 없으면 생략할 수 있습니다.
 const directCompanies: RelatedCompany[] = [
   {
     id: 'direct-partner',
@@ -61,6 +46,7 @@ const directCompanies: RelatedCompany[] = [
 ];
 
 export default function CompanyRelationshipSection() {
+  // 3. 변환한 데이터를 각 prop에 연결합니다. 노드 수에 따른 배치는 자동입니다.
   return (
     <CompanyRelationshipGraph
       companyName="주식회사 한국첨단산업기술연구원"
@@ -82,36 +68,35 @@ const NETWORK_CODE = `import {
   type NetworkNode,
 } from '@/components/custom/network-graph';
 
-// API 응답을 노드와 연결선으로 분리합니다. 모든 id는 중복되지 않아야 합니다.
+// 1. API 응답의 개체를 nodes로 변환합니다. 모든 id는 중복되지 않아야 합니다.
 const nodes: NetworkNode[] = [
   // 1depth 분석기업은 하나만 전달합니다.
   { id: 'analysis', label: '한국기업(주)', kind: 'analysis', status: 'interest', weight: 100 },
 
   // 2depth 업종. icon은 업종 노드 내부에 표시됩니다.
   { id: 'information', label: '정보통신', kind: 'industry', status: 'interest', weight: 80, icon: 'information' },
-  { id: 'science', label: '과학기술', kind: 'industry', status: 'interest', weight: 70, icon: 'science' },
 
-  // 3depth 거래기업. status는 노드 색상, weight는 노드 크기에 반영됩니다.
+  // 3depth 거래기업. status는 색상, weight(1~100)는 20~48px의 상대 크기에 반영됩니다.
+  // 1·2depth 크기는 kind에 따라 고정되므로 weight는 3depth의 비교값으로 사용합니다.
   { id: 'company-a', label: '한국정보기술(주)', kind: 'company', status: 'normal', weight: 40 },
-  { id: 'company-b', label: '한국과학연구원', kind: 'company', status: 'danger', weight: 32 },
   { id: 'company-direct', label: '한국직접거래(주)', kind: 'company', status: 'normal', weight: 30 },
 ];
 
+// 2. source와 target에는 반드시 위 nodes에 존재하는 id를 넣습니다.
 const links: NetworkLink[] = [
   // ratio는 연결선에 표시할 비중(%)입니다.
   // 1depth → 2depth
   { id: 'analysis-information', source: 'analysis', target: 'information', ratio: 60.13 },
-  { id: 'analysis-science', source: 'analysis', target: 'science', ratio: 18.42 },
 
   // 2depth → 3depth
   { id: 'information-company-a', source: 'information', target: 'company-a', ratio: 28.33 },
-  { id: 'science-company-b', source: 'science', target: 'company-b', ratio: 54.24 },
 
   // 업종 정보가 없는 3depth 기업은 분석기업에서 바로 연결합니다.
   { id: 'analysis-company-direct', source: 'analysis', target: 'company-direct', ratio: 2.21 },
 ];
 
 export default function SupplyNetwork() {
+  // 3. 완성한 nodes와 links를 전달하면 반경·각도·축소는 자동 계산됩니다.
   return (
     <NetworkGraph
       nodes={nodes}
@@ -130,43 +115,37 @@ const WORD_CLOUD_CODE = `import {
   type WordCloudItem,
 } from '@/components/custom/word-cloud';
 
-// 예: API에서 받은 키워드별 원시 빈도·중요도
+// 1. API에서 받은 키워드별 원시 빈도·중요도입니다.
 const issueKeywordsFromApi = [
   { keyword: '인공지능', score: 248 },
   { keyword: '학습', score: 203 },
   { keyword: '기술', score: 174 },
   { keyword: '이미지', score: 159 },
-  { keyword: '이공', score: 151 },
-  { keyword: '모델', score: 139 },
-  { keyword: '신경망', score: 126 },
-  { keyword: '지능', score: 117 },
-  { keyword: '인식', score: 104 },
-  { keyword: '기반', score: 94 },
-  { keyword: '분석', score: 84 },
-  { keyword: '분류', score: 77 },
-  { keyword: '예측', score: 72 },
-  { keyword: '서비스', score: 67 },
-  { keyword: '영상', score: 62 },
-  { keyword: '활용', score: 57 },
-  { keyword: '네트워크', score: 52 },
-  { keyword: '성능', score: 47 },
 ];
 
-// 가장 큰 score를 100으로 보고 1~100 범위의 weight로 정규화합니다.
+// 2. 같은 키워드가 여러 번 오면 먼저 합산합니다.
+const scoreByKeyword = new Map<string, number>();
+issueKeywordsFromApi.forEach(({ keyword, score }) => {
+  const text = keyword.trim();
+  if (!text || score <= 0) return;
+  scoreByKeyword.set(text, (scoreByKeyword.get(text) ?? 0) + score);
+});
+
+// 3. 가장 큰 score를 100으로 보고 weight를 1~100 범위로 정규화합니다.
 const maximumScore = Math.max(
-  ...issueKeywordsFromApi.map(({ score }) => score),
+  ...scoreByKeyword.values(),
   1,
 );
 
-const issueWords: WordCloudItem[] = issueKeywordsFromApi
-  .filter(({ keyword, score }) => keyword.trim() && score > 0)
-  .map(({ keyword, score }) => ({
-    text: keyword, // 중복되지 않는 표시 단어
+const issueWords: WordCloudItem[] = Array.from(scoreByKeyword)
+  .map(([text, score]) => ({
+    text,
     weight: Math.max(1, Math.round((score / maximumScore) * 100)),
   }))
   .sort((a, b) => b.weight - a.weight);
 
 export default function ResearchIssueWordCloud() {
+  // 4. 정규화한 배열을 전달하면 글자 크기와 배치는 자동 계산됩니다.
   return (
     <WordCloud
       words={issueWords}
@@ -202,7 +181,7 @@ const PROPS_ITEMS = [
     [
         'NetworkGraph',
         'nodes',
-        '분석기업(kind="analysis") 1개와 업종(kind="industry"), 거래기업(kind="company")을 전달합니다. 모든 id는 중복되지 않아야 합니다.',
+        '분석기업(kind="analysis") 1개와 업종(kind="industry"), 거래기업(kind="company")을 전달합니다. 3depth 기업의 weight(1~100)는 상대적 노드 크기에 반영되며 모든 id는 중복되지 않아야 합니다.',
         '-',
         'NetworkNode[]',
     ],
@@ -287,6 +266,7 @@ const ChartGuidePage = () => (
                             '분석기업을 중심으로 산업 섹터와 연계기업을 연결합니다.',
                             '연결선의 숫자는 연계유형, 기업 노드의 색상은 EW등급을 나타냅니다.',
                             '섹터 정보가 없는 기업은 분석기업에 바로 연결합니다.',
+                            '연계기업이 많은 섹터만 분석기업과의 거리를 늘려 배치 공간을 확보합니다.',
                             '외곽 노드나 라벨이 영역을 벗어나면 분석기업을 중앙에 유지한 채 자동 축소합니다.',
                             '외곽 기업은 직접 이동하거나 키보드로 선택해 상세 정보를 확인할 수 있습니다.',
                         ].map((description) => (
@@ -320,6 +300,7 @@ const ChartGuidePage = () => (
                             '분석기업에서 업종과 거래기업으로 이어지는 공급망 비중을 표시합니다.',
                             '업종 정보가 없는 기업은 분석기업에 바로 연결합니다.',
                             '데이터 규모에 맞춰 반경·각도·라벨 위치를 자동 조정합니다.',
+                            '거래기업이 많은 업종만 분석기업과의 거리를 늘려 배치 공간을 확보합니다.',
                             '외곽 노드나 라벨이 영역을 벗어나면 전체 그래프가 화면 안에 들어오도록 자동 축소합니다.',
                             '노드는 마우스나 Tab 키로 선택해 전체 정보 툴팁을 확인할 수 있습니다.',
                         ].map((description) => (
@@ -344,12 +325,20 @@ const ChartGuidePage = () => (
                     <h2 id="chart-word-cloud" className="typo-h4-bold">
                         R&amp;D 이슈 워드클라우드
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        중요도에 따라 글자 크기를 계산하고 단어 간 충돌을 피해 자동 배치합니다. 모든 단어는 가독성을
-                        위해 수평으로 유지합니다. 컨테이너 크기가 바뀌면 글자 크기를 자동으로 재계산하며, 입력 순서를
-                        유지하므로 중요도가 큰 단어부터 정렬해 전달합니다. 단어에 마우스를 올리면 중요도 툴팁을
-                        표시합니다.
-                    </p>
+                    <ul className="typo-body-l-regular text-foreground-subtle flex list-none flex-col gap-1">
+                        {[
+                            'score는 API에서 받은 빈도·중요도 등의 원본 값입니다.',
+                            'weight는 글자 크기에 사용할 시각적 값이며, 가장 큰 score를 100으로 두고 1~100 범위로 정규화합니다.',
+                            '정규화하면 API 점수의 단위나 범위가 달라도 상대적 중요도를 유지하면서 글자 크기를 안정적으로 표시할 수 있습니다.',
+                            '중요도가 큰 단어부터 전달하면 충돌을 피해 수평으로 자동 배치하고, 컨테이너 크기에 맞춰 다시 계산합니다.',
+                            '단어에 마우스를 올리면 정규화된 중요도 weight를 툴팁으로 확인할 수 있습니다.',
+                        ].map((description) => (
+                            <li key={description} className="flex items-start gap-1.5">
+                                <ListMarker type="unordered" level={1} />
+                                <span>{description}</span>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
                     <IssueWordCloudDemo />

@@ -669,6 +669,54 @@ const SUPPLY_DENSE_COMPANIES: SupplyDenseCompany[] = [
         weight: 18,
     },
     {
+        id: 'retail-wholesale',
+        industryId: 'retail-industry',
+        label: '한국종합도매',
+        ratio: 3.46,
+        status: 'normal',
+        weight: 18,
+    },
+    {
+        id: 'retail-mart',
+        industryId: 'retail-industry',
+        label: '한국생활마트',
+        ratio: 2.91,
+        status: 'normal',
+        weight: 17,
+    },
+    {
+        id: 'retail-commerce-platform',
+        industryId: 'retail-industry',
+        label: '한국커머스플랫폼',
+        ratio: 2.38,
+        status: 'interest',
+        weight: 16,
+    },
+    {
+        id: 'retail-distribution',
+        industryId: 'retail-industry',
+        label: '한국유통네트워크',
+        ratio: 1.94,
+        status: 'normal',
+        weight: 15,
+    },
+    {
+        id: 'retail-franchise',
+        industryId: 'retail-industry',
+        label: '한국프랜차이즈유통',
+        ratio: 1.52,
+        status: 'danger',
+        weight: 14,
+    },
+    {
+        id: 'retail-global',
+        industryId: 'retail-industry',
+        label: '한국글로벌트레이딩',
+        ratio: 1.17,
+        status: 'closed',
+        weight: 13,
+    },
+    {
         id: 'education-learning',
         industryId: 'education-industry',
         label: '한국평생교육원',
@@ -815,7 +863,7 @@ const SUPPLY_DENSE_COMPANIES: SupplyDenseCompany[] = [
     {
         id: 'transport-warehouse',
         industryId: 'transport-industry',
-        label: '한국창고운영',
+        label: '한국스마트통합물류창고운영주식회사',
         ratio: 2.31,
         status: 'normal',
         weight: 15,
@@ -848,7 +896,7 @@ const SUPPLY_NODES: NetworkNode[] = [
     {id: 'retail-industry', label: '도소매', kind: 'industry', status: 'interest', weight: 60, icon: 'retail'},
     {
         id: 'education-industry',
-        label: '교육서비스',
+        label: '교육서비스·인적자원개발업',
         kind: 'industry',
         status: 'interest',
         weight: 56,
@@ -921,7 +969,16 @@ const SUPPLY_SCENARIOS: {id: SupplyScenarioId; label: string; nodeIds: string[]}
     {
         id: 'small',
         label: '적음',
-        nodeIds: ['supply-analysis', 'it', 'science', 'supply-1', 'supply-5', 'direct-supply-1'],
+        nodeIds: [
+            'supply-analysis',
+            'it',
+            'science',
+            'supply-1',
+            'supply-2',
+            'supply-3',
+            'supply-5',
+            'direct-supply-1',
+        ],
     },
     {
         id: 'medium',
@@ -931,19 +988,82 @@ const SUPPLY_SCENARIOS: {id: SupplyScenarioId; label: string; nodeIds: string[]}
             'it',
             'science',
             'rental',
-            'food',
+            'manufacturing-industry',
+            'retail-industry',
+            'education-industry',
             'supply-1',
+            'supply-2',
+            'supply-3',
+            'supply-4',
+            'it-cloud',
             'supply-5',
-            'supply-6',
-            'science-lab',
             'supply-7',
             'rental-office',
-            'rental-equipment',
-            'supply-8',
+            'manufacturing-company',
+            'manufacturing-parts',
+            'manufacturing-precision',
+            'retail-company',
+            'education-company',
+            'education-learning',
             'direct-supply-1',
         ],
     },
-    {id: 'large', label: '많음', nodeIds: SUPPLY_NODES.map(({id}) => id)},
+    {
+        id: 'large',
+        label: '많음',
+        nodeIds: [
+            'supply-analysis',
+            'it',
+            'science',
+            'rental',
+            'food',
+            'manufacturing-industry',
+            'retail-industry',
+            'education-industry',
+            'transport-industry',
+            'supply-1',
+            'supply-2',
+            'supply-3',
+            'supply-4',
+            'it-cloud',
+            'it-security',
+            'supply-5',
+            'science-lab',
+            'supply-7',
+            'supply-8',
+            'manufacturing-company',
+            'manufacturing-parts',
+            'manufacturing-precision',
+            'retail-company',
+            'retail-commerce',
+            'retail-market',
+            'retail-wholesale',
+            'retail-mart',
+            'retail-commerce-platform',
+            'retail-distribution',
+            'retail-franchise',
+            'retail-global',
+            'education-company',
+            'education-learning',
+            'education-training',
+            'education-digital',
+            'transport-company',
+            'transport-delivery',
+            'transport-storage',
+            'transport-air',
+            'transport-marine',
+            'transport-rail',
+            'transport-cold',
+            'transport-port',
+            'transport-express',
+            'transport-terminal',
+            'transport-smart',
+            'transport-global',
+            'transport-warehouse',
+            'direct-supply-1',
+            'direct-supply-2',
+        ],
+    },
 ]
 
 const ISSUE_WORDS: WordCloudItem[] = [
@@ -992,12 +1112,6 @@ const NetworkLegend = ({nodes}: {nodes: NetworkNode[]}) => {
                     ))}
                 </ul>
             </div>
-            <div className="bg-muted rounded-xl p-4">
-                <h3 className="typo-body-m-bold">읽는 방법</h3>
-                <p className="typo-body-m-regular text-foreground-subtle mt-2">
-                    분석기업에서 업종과 거래기업으로 이어지는 선의 비중(%)을 따라가면 됩니다.
-                </p>
-            </div>
             <div className="border-border bg-background flex flex-wrap gap-x-6 gap-y-3 rounded-md border border-dashed p-3">
                 <span className="flex items-center gap-2">
                     <span className="border-foreground-subtle w-5 border-t border-dashed" aria-hidden="true" />
@@ -1007,6 +1121,12 @@ const NetworkLegend = ({nodes}: {nodes: NetworkNode[]}) => {
                     <span className="bg-border h-px w-5" aria-hidden="true" />
                     업종-거래기업
                 </span>
+            </div>
+            <div className="bg-muted rounded-xl p-4">
+                <h3 className="typo-body-m-bold">읽는 방법</h3>
+                <p className="typo-body-m-regular text-foreground-subtle mt-2">
+                    분석기업에서 업종과 거래기업으로 이어지는 선의 비중(%)을 따라가면 됩니다.
+                </p>
             </div>
         </aside>
     )
@@ -1060,48 +1180,87 @@ const CompanyRelationshipLegend = () => (
         </div>
         <div className="border-border bg-background flex gap-6 rounded-md border border-dashed p-3 sm:col-span-2 lg:col-span-1 xl:col-span-2">
             <span className="flex items-center gap-2">
-                <span className="border-foreground-subtle w-5 border-t border-dashed" aria-hidden="true" />
-                분석기업-섹터
+                <span className="bg-border h-px w-5" aria-hidden="true" />
+                기업 간 관계 (연계유형)
             </span>
             <span className="flex items-center gap-2">
-                <span className="bg-border h-px w-5" aria-hidden="true" />
-                섹터-연계기업
+                <span className="border-foreground-subtle w-5 border-t border-dashed" aria-hidden="true" />
+                거래관계 (부가세)
             </span>
         </div>
     </div>
 )
 
+type CompanyScenarioId = 'large' | 'medium' | 'small'
+
+type CompanyScenario = {
+    id: CompanyScenarioId
+    label: string
+    companyCounts: Record<string, number>
+    directCompanyCount: number
+}
+
 const CompanyNetworkDemo = () => {
-    const [sectorCount, setSectorCount] = useState(COMPANY_SECTORS.length)
-    const visibleSectors = COMPANY_SECTORS.slice(0, sectorCount).map((sector) => ({
-        ...sector,
-        companies:
-            sectorCount === COMPANY_SECTORS.length
-                ? sector.companies
-                : sector.companies.slice(0, sectorCount === 6 && sector.id === 'manufacturing' ? 7 : 2),
-    }))
-    const companyCount =
-        visibleSectors.reduce((total, sector) => total + sector.companies.length, 0) +
-        DIRECT_RELATIONSHIP_COMPANIES.length
-    const scenarios = [
-        {count: 3, label: '적음'},
-        {count: 6, label: '중간'},
-        {count: COMPANY_SECTORS.length, label: '많음'},
+    const scenarios: CompanyScenario[] = [
+        {
+            id: 'small',
+            label: '적음',
+            companyCounts: {construction: 1, food: 3, manufacturing: 1},
+            directCompanyCount: 1,
+        },
+        {
+            id: 'medium',
+            label: '중간',
+            companyCounts: {
+                construction: 2,
+                food: 1,
+                education: 2,
+                manufacturing: 7,
+                management: 1,
+                information: 4,
+            },
+            directCompanyCount: 1,
+        },
+        {
+            id: 'large',
+            label: '많음',
+            companyCounts: {
+                construction: 3,
+                food: 2,
+                education: 7,
+                manufacturing: 9,
+                management: 2,
+                finance: 1,
+                retail: 3,
+                information: 5,
+                'transport-storage': 3,
+            },
+            directCompanyCount: 2,
+        },
     ]
+    const [scenarioId, setScenarioId] = useState<CompanyScenarioId>('large')
+    const scenario = scenarios.find(({id}) => id === scenarioId) ?? scenarios[2]
+    const visibleSectors = COMPANY_SECTORS.filter((sector) => sector.id in scenario.companyCounts).map((sector) => ({
+        ...sector,
+        companies: sector.companies.slice(0, scenario.companyCounts[sector.id]),
+    }))
+    const visibleDirectCompanies = DIRECT_RELATIONSHIP_COMPANIES.slice(0, scenario.directCompanyCount)
+    const companyCount =
+        visibleSectors.reduce((total, sector) => total + sector.companies.length, 0) + visibleDirectCompanies.length
 
     return (
         <div className="flex flex-col gap-5">
             <div className="flex flex-wrap items-center justify-between gap-3">
                 <p className="typo-body-l-medium">섹터·기업 수에 따른 반경·각도 자동 재계산</p>
                 <div className="flex gap-2" role="group" aria-label="연계기업 섹터 수 선택">
-                    {scenarios.map(({count, label}) => (
+                    {scenarios.map(({id, label}) => (
                         <Button
-                            key={count}
+                            key={id}
                             type="button"
                             size="xs"
-                            variant={sectorCount === count ? 'default' : 'outline'}
-                            aria-pressed={sectorCount === count}
-                            onClick={() => setSectorCount(count)}
+                            variant={scenarioId === id ? 'default' : 'outline'}
+                            aria-pressed={scenarioId === id}
+                            onClick={() => setScenarioId(id)}
                         >
                             {label}
                         </Button>
@@ -1113,7 +1272,7 @@ const CompanyNetworkDemo = () => {
                 <CompanyRelationshipGraph
                     companyName="주식회사 한국첨단산업기술연구원"
                     sectors={visibleSectors}
-                    directCompanies={DIRECT_RELATIONSHIP_COMPANIES}
+                    directCompanies={visibleDirectCompanies}
                     ariaLabel={`한국기업을 중심으로 ${visibleSectors.length}개 산업 섹터와 ${companyCount}개 연계기업의 관계 코드·EW등급을 나타낸 네트워크 그래프`}
                 />
             </div>
