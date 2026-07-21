@@ -5,14 +5,14 @@ import {Progress as ProgressPrimitive} from 'radix-ui'
 import {cn} from '@/lib/utils'
 
 type ProgressProps = React.ComponentProps<typeof ProgressPrimitive.Root> & {
-    indicatorStyle?: React.CSSProperties
+    indicatorClassName?: string
 }
 
 const Progress = ({
     className,
     value = 0,
     max = 100,
-    indicatorStyle,
+    indicatorClassName,
     ...props
 }: ProgressProps) => {
     const normalizedMax = Math.max(1, max ?? 100)
@@ -29,8 +29,8 @@ const Progress = ({
         >
             <ProgressPrimitive.Indicator
                 data-slot="progress-indicator"
-                className="bg-primary h-full w-full rounded-full transition-transform"
-                style={{...indicatorStyle, transform: `translateX(-${100 - percentage}%)`}}
+                className={cn('bg-primary h-full w-full rounded-full transition-transform', indicatorClassName)}
+                style={{transform: `translateX(-${100 - percentage}%)`}}
             />
         </ProgressPrimitive.Root>
     )

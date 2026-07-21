@@ -15,7 +15,7 @@ export default function CompletionRate() {
       label="사업계획 작성 진행률"
       value={42.5}
       valueFractionDigits={1}
-      color="var(--ds-info)"
+      indicatorClassName="bg-info"
       className="max-w-sm"
     />
   );
@@ -31,7 +31,13 @@ const PROPS_ITEMS = [
     ],
     ['ProgressBar', 'value', '현재 진행 값을 전달하며 0과 max 사이로 자동 보정합니다.', '-', 'number'],
     ['ProgressBar', 'max', '진행 완료를 나타내는 최댓값입니다.', '100', 'number'],
-    ['ProgressBar', 'color', 'indicator에 적용할 semantic 색상 토큰 문자열을 전달합니다.', 'primary', 'string'],
+    [
+        'ProgressBar',
+        'indicatorClassName',
+        'indicator에 적용할 semantic 배경 유틸리티 클래스를 전달합니다. 예: bg-info, bg-success',
+        'bg-primary',
+        'string',
+    ],
     ['ProgressBar', 'showValue', '프로그레스바 위에 백분율 텍스트를 표시합니다.', 'true', 'boolean'],
     ['ProgressBar', 'valueFractionDigits', '표시하는 백분율의 소수점 자릿수를 지정합니다.', '1', 'number'],
     [
@@ -63,7 +69,7 @@ const ProgressBarGuidePage = () => (
                         label="사업계획 작성 진행률"
                         value={42.5}
                         valueFractionDigits={1}
-                        color="var(--ds-info)"
+                        indicatorClassName="bg-info"
                         className="max-w-sm"
                     />
                 </div>

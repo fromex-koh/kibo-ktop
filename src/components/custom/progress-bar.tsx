@@ -5,7 +5,7 @@ import {Progress} from '@/components/ui/progress'
 import {cn} from '@/lib/utils'
 
 type ProgressBarProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
-    color?: string
+    indicatorClassName?: string
     label: string
     max?: number
     showValue?: boolean
@@ -15,7 +15,7 @@ type ProgressBarProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
 
 const ProgressBar = ({
     label,
-    color,
+    indicatorClassName,
     max = 100,
     showValue = true,
     value,
@@ -42,7 +42,7 @@ const ProgressBar = ({
                 aria-label={label}
                 aria-valuetext={valueText}
                 getValueLabel={() => valueText}
-                indicatorStyle={color ? {backgroundColor: color} : undefined}
+                indicatorClassName={indicatorClassName}
             />
         </div>
     )
