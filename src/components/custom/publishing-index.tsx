@@ -203,16 +203,16 @@ const PublishingIndex = () => {
                             <div
                                 role="region"
                                 aria-labelledby="frontend-handoff-assets-title"
-                                className="max-h-100 overflow-auto overscroll-contain"
+                                className="overflow-x-auto overscroll-contain"
                             >
-                                <table className="w-full text-left">
+                                <table className="w-full min-w-3xl table-fixed text-left">
                                     <caption className="sr-only">프론트엔드 인계 자산별 변경 영향과 반영 버전</caption>
-                                    <thead className="bg-muted sticky top-0">
-                                        <tr className="border-border border-b">
+                                    <thead className="bg-muted relative z-10 block">
+                                        <tr className="border-border [display:table] w-full table-fixed border-b">
                                             <th scope="col" className="typo-body-l-medium w-24 px-4 py-3">
                                                 구분
                                             </th>
-                                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            <th scope="col" className="typo-body-l-medium w-1/3 px-4 py-3">
                                                 경로
                                             </th>
                                             <th scope="col" className="typo-body-l-medium px-4 py-3">
@@ -223,10 +223,13 @@ const PublishingIndex = () => {
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-surface">
+                                    <tbody className="bg-surface block max-h-88 overflow-y-auto overscroll-contain">
                                         {assetVersions.map((asset) => (
-                                            <tr key={asset.name} className="border-border border-b last:border-b-0">
-                                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
+                                            <tr
+                                                key={asset.name}
+                                                className="border-border [display:table] w-full table-fixed border-b last:border-b-0"
+                                            >
+                                                <td className="typo-body-l-regular text-muted-foreground w-24 px-4 py-3">
                                                     <span className="inline-flex items-center gap-1.5">
                                                         {asset.kind === 'folder' ? (
                                                             <Folder aria-hidden="true" className="size-3.5 shrink-0" />
@@ -238,7 +241,7 @@ const PublishingIndex = () => {
                                                 </td>
                                                 <th
                                                     scope="row"
-                                                    className="typo-body-l-medium text-primary px-4 py-3 font-mono"
+                                                    className="typo-body-l-medium text-primary w-1/3 px-4 py-3 font-mono"
                                                 >
                                                     {asset.name}
                                                 </th>
@@ -246,7 +249,7 @@ const PublishingIndex = () => {
                                                     {asset.description}
                                                 </td>
                                                 <td
-                                                    className={`typo-body-l-regular px-4 py-3 font-mono ${
+                                                    className={`typo-body-l-regular w-28 px-4 py-3 font-mono ${
                                                         asset.isCurrent
                                                             ? 'bg-primary-subtle text-primary font-semibold'
                                                             : 'text-muted-foreground'
