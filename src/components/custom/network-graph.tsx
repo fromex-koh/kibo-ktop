@@ -393,17 +393,8 @@ const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGra
 
             const firstLevelLinks = links.filter((link) => link.source === analysisNode.id)
             const branchCount = Math.max(1, firstLevelLinks.length)
-            const maximumCompanyCount = Math.max(
-                0,
-                ...firstLevelLinks.map((branchLink) => {
-                    const branchNode = nodes.find((node) => node.id === branchLink.target)
-                    return branchNode?.kind === 'industry'
-                        ? links.filter((link) => link.source === branchNode.id).length
-                        : 0
-                }),
-            )
-            const industryRadius = getIndustryRadius(branchCount, maximumCompanyCount)
-            const companyRadius = industryRadius + COMPANY_RADIUS_GAP
+            const baseIndustryRadius = getIndustryRadius(branchCount, 0)
+            const baseCompanyRadius = baseIndustryRadius + COMPANY_RADIUS_GAP
             const branchWeights = firstLevelLinks.map((branchLink) => {
                 const branchNode = nodes.find((node) => node.id === branchLink.target)
                 if (branchNode?.kind !== 'industry') return 1
@@ -419,14 +410,17 @@ const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGra
 
                 const branchAngle = branchAngles[branchIndex] ?? -Math.PI / 2
                 const branchAngleSpan = branchAngleSpans[branchIndex] ?? (Math.PI * 2) / branchCount
+                const companyLinks =
+                    branchNode.kind === 'industry' ? links.filter((link) => link.source === branchNode.id) : []
+                const branchIndustryRadius = getIndustryRadius(branchCount, companyLinks.length)
+                const branchCompanyRadius = branchIndustryRadius + COMPANY_RADIUS_GAP
                 const branchRadius =
                     branchNode.kind === 'industry'
-                        ? industryRadius
-                        : companyRadius + getCompanyLabelRadiusExtension(branchNode.label)
+                        ? branchIndustryRadius
+                        : baseCompanyRadius + getCompanyLabelRadiusExtension(branchNode.label)
                 positions.set(branchNode.id, positionAt(branchAngle, branchRadius))
 
                 if (branchNode.kind !== 'industry') return
-                const companyLinks = links.filter((link) => link.source === branchNode.id)
                 companyLinks.forEach((companyLink, companyIndex) => {
                     const bandIndex = Math.floor(companyIndex / COMPANIES_PER_BAND)
                     const indexInBand = companyIndex % COMPANIES_PER_BAND
@@ -443,7 +437,10 @@ const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGra
                     const labelRadiusExtension = companyNode ? getCompanyLabelRadiusExtension(companyNode.label) : 0
                     positions.set(
                         companyLink.target,
-                        positionAt(companyAngle, companyRadius + bandIndex * COMPANY_BAND_GAP + labelRadiusExtension),
+                        positionAt(
+                            companyAngle,
+                            branchCompanyRadius + bandIndex * COMPANY_BAND_GAP + labelRadiusExtension,
+                        ),
                     )
                 })
             })

@@ -1,5 +1,6 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
+import {ListMarker} from '@/components/custom/list-marker'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import PropsTable from '@/components/guide/props-table'
@@ -281,12 +282,20 @@ const ChartGuidePage = () => (
                     <h2 id="chart-company-network" className="typo-h4-bold">
                         연계기업 네트워크
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        분석기업을 중심으로 산업 섹터와 연계기업을 연결합니다. 연결선의 숫자는 연계유형, 기업 노드의
-                        색상은 EW등급을 나타냅니다. 섹터 정보가 없는 기업은 분석기업에 바로 연결합니다. 데이터 규모에
-                        맞춰 노드를 자동 배치하며, 외곽 기업은 직접 이동하거나 키보드로 선택해 상세 정보를 확인할 수
-                        있습니다.
-                    </p>
+                    <ul className="typo-body-l-regular text-foreground-subtle flex list-none flex-col gap-1">
+                        {[
+                            '분석기업을 중심으로 산업 섹터와 연계기업을 연결합니다.',
+                            '연결선의 숫자는 연계유형, 기업 노드의 색상은 EW등급을 나타냅니다.',
+                            '섹터 정보가 없는 기업은 분석기업에 바로 연결합니다.',
+                            '외곽 노드나 라벨이 영역을 벗어나면 분석기업을 중앙에 유지한 채 자동 축소합니다.',
+                            '외곽 기업은 직접 이동하거나 키보드로 선택해 상세 정보를 확인할 수 있습니다.',
+                        ].map((description) => (
+                            <li key={description} className="flex items-start gap-1.5">
+                                <ListMarker type="unordered" level={1} />
+                                <span>{description}</span>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
                     <CompanyNetworkDemo />
@@ -306,11 +315,20 @@ const ChartGuidePage = () => (
                     <h2 id="chart-supply-network" className="typo-h4-bold">
                         산업별 공급망 분포
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        분석기업에서 업종과 거래기업으로 이어지는 공급망 비중을 표시합니다. 업종 정보가 없는 기업은
-                        분석기업에 바로 연결하며, 데이터 규모에 맞춰 반경·각도·라벨 위치를 자동 조정합니다. 노드는
-                        마우스나 Tab 키로 선택해 전체 정보 툴팁을 확인할 수 있습니다.
-                    </p>
+                    <ul className="typo-body-l-regular text-foreground-subtle flex list-none flex-col gap-1">
+                        {[
+                            '분석기업에서 업종과 거래기업으로 이어지는 공급망 비중을 표시합니다.',
+                            '업종 정보가 없는 기업은 분석기업에 바로 연결합니다.',
+                            '데이터 규모에 맞춰 반경·각도·라벨 위치를 자동 조정합니다.',
+                            '외곽 노드나 라벨이 영역을 벗어나면 전체 그래프가 화면 안에 들어오도록 자동 축소합니다.',
+                            '노드는 마우스나 Tab 키로 선택해 전체 정보 툴팁을 확인할 수 있습니다.',
+                        ].map((description) => (
+                            <li key={description} className="flex items-start gap-1.5">
+                                <ListMarker type="unordered" level={1} />
+                                <span>{description}</span>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
                     <SupplyNetworkDemo />

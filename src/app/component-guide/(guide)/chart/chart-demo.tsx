@@ -91,6 +91,22 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationLabel: '대표-임원',
                 status: 'alert',
             },
+            {
+                id: 'korea-resort',
+                label: '한국리조트서비스',
+                businessNumber: '414-04-04040',
+                relationCode: '30',
+                relationLabel: '동일주소(동업종)',
+                status: 'normal',
+            },
+            {
+                id: 'korea-catering',
+                label: '한국케이터링',
+                businessNumber: '415-05-05050',
+                relationCode: '23',
+                relationLabel: '임원-대표',
+                status: 'good',
+            },
         ],
     },
     {
@@ -129,6 +145,46 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationCode: '40',
                 relationLabel: '동일거주지',
                 status: 'good',
+            },
+            {
+                id: 'korea-digital-education',
+                label: '한국디지털교육원',
+                businessNumber: '424-04-04040',
+                relationCode: '11',
+                relationLabel: '법인특수관계',
+                status: 'normal',
+            },
+            {
+                id: 'korea-vocational-training',
+                label: '한국직업교육원',
+                businessNumber: '425-05-05050',
+                relationCode: '24',
+                relationLabel: '임원-임원',
+                status: 'good',
+            },
+            {
+                id: 'korea-online-learning',
+                label: '한국온라인학습서비스',
+                businessNumber: '426-06-06060',
+                relationCode: '20',
+                relationLabel: '대표-대표',
+                status: 'attention',
+            },
+            {
+                id: 'korea-education-contents',
+                label: '한국교육콘텐츠연구소',
+                businessNumber: '427-07-07070',
+                relationCode: '31',
+                relationLabel: '동일주소(타업종)',
+                status: 'normal',
+            },
+            {
+                id: 'korea-industrial-academy',
+                label: '한국산업아카데미',
+                businessNumber: '428-08-08080',
+                relationCode: '21',
+                relationLabel: '대표-임원',
+                status: 'alert',
             },
         ],
     },
@@ -248,6 +304,22 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationLabel: '동일주소(동업종)',
                 status: 'poor',
             },
+            {
+                id: 'korea-office-service',
+                label: '한국오피스서비스',
+                businessNumber: '434-04-04040',
+                relationCode: '10',
+                relationLabel: '법인주주',
+                status: 'normal',
+            },
+            {
+                id: 'korea-business-support',
+                label: '한국비즈니스지원센터',
+                businessNumber: '435-05-05050',
+                relationCode: '11',
+                relationLabel: '법인특수관계',
+                status: 'good',
+            },
         ],
     },
     {
@@ -286,6 +358,22 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationCode: '31',
                 relationLabel: '동일주소(타업종)',
                 status: 'alert',
+            },
+            {
+                id: 'korea-investment',
+                label: '한국투자금융',
+                businessNumber: '444-04-04040',
+                relationCode: '20',
+                relationLabel: '대표-대표',
+                status: 'normal',
+            },
+            {
+                id: 'korea-fintech',
+                label: '한국핀테크서비스',
+                businessNumber: '445-05-05050',
+                relationCode: '23',
+                relationLabel: '임원-대표',
+                status: 'attention',
             },
         ],
     },
@@ -326,6 +414,22 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationLabel: '대표-대표',
                 status: 'attention',
             },
+            {
+                id: 'korea-wholesale',
+                label: '한국종합도매',
+                businessNumber: '454-04-04040',
+                relationCode: '30',
+                relationLabel: '동일주소(동업종)',
+                status: 'normal',
+            },
+            {
+                id: 'korea-retail-platform',
+                label: '한국리테일플랫폼',
+                businessNumber: '455-05-05050',
+                relationCode: '11',
+                relationLabel: '법인특수관계',
+                status: 'good',
+            },
         ],
     },
     {
@@ -364,6 +468,22 @@ const COMPANY_SECTORS: CompanySector[] = [
                 relationCode: '31',
                 relationLabel: '동일주소(타업종)',
                 status: 'alert',
+            },
+            {
+                id: 'korea-cloud-platform',
+                label: '한국클라우드플랫폼',
+                businessNumber: '464-04-04040',
+                relationCode: '10',
+                relationLabel: '법인주주',
+                status: 'normal',
+            },
+            {
+                id: 'korea-security-service',
+                label: '한국정보보안서비스',
+                businessNumber: '465-05-05050',
+                relationCode: '24',
+                relationLabel: '임원-임원',
+                status: 'poor',
             },
         ],
     },
@@ -565,6 +685,46 @@ const SUPPLY_DENSE_COMPANIES: SupplyDenseCompany[] = [
         weight: 17,
     },
     {
+        id: 'education-digital',
+        industryId: 'education-industry',
+        label: '한국디지털교육원',
+        ratio: 7.82,
+        status: 'normal',
+        weight: 22,
+    },
+    {
+        id: 'education-vocational',
+        industryId: 'education-industry',
+        label: '한국직업교육원',
+        ratio: 6.47,
+        status: 'normal',
+        weight: 21,
+    },
+    {
+        id: 'education-online',
+        industryId: 'education-industry',
+        label: '한국온라인학습',
+        ratio: 5.34,
+        status: 'interest',
+        weight: 20,
+    },
+    {
+        id: 'education-contents',
+        industryId: 'education-industry',
+        label: '한국교육콘텐츠',
+        ratio: 4.26,
+        status: 'normal',
+        weight: 19,
+    },
+    {
+        id: 'education-academy',
+        industryId: 'education-industry',
+        label: '한국산업아카데미',
+        ratio: 2.89,
+        status: 'danger',
+        weight: 18,
+    },
+    {
         id: 'transport-delivery',
         industryId: 'transport-industry',
         label: '한국배송서비스',
@@ -579,6 +739,86 @@ const SUPPLY_DENSE_COMPANIES: SupplyDenseCompany[] = [
         ratio: 3.86,
         status: 'interest',
         weight: 18,
+    },
+    {
+        id: 'transport-air',
+        industryId: 'transport-industry',
+        label: '한국항공운송',
+        ratio: 9.42,
+        status: 'normal',
+        weight: 24,
+    },
+    {
+        id: 'transport-marine',
+        industryId: 'transport-industry',
+        label: '한국해상운송',
+        ratio: 8.76,
+        status: 'normal',
+        weight: 23,
+    },
+    {
+        id: 'transport-rail',
+        industryId: 'transport-industry',
+        label: '한국철도물류',
+        ratio: 7.91,
+        status: 'interest',
+        weight: 22,
+    },
+    {
+        id: 'transport-cold',
+        industryId: 'transport-industry',
+        label: '한국저온물류',
+        ratio: 6.84,
+        status: 'normal',
+        weight: 21,
+    },
+    {
+        id: 'transport-port',
+        industryId: 'transport-industry',
+        label: '한국항만서비스',
+        ratio: 5.73,
+        status: 'closed',
+        weight: 20,
+    },
+    {
+        id: 'transport-express',
+        industryId: 'transport-industry',
+        label: '한국특송물류',
+        ratio: 4.89,
+        status: 'normal',
+        weight: 19,
+    },
+    {
+        id: 'transport-terminal',
+        industryId: 'transport-industry',
+        label: '한국물류터미널',
+        ratio: 4.12,
+        status: 'interest',
+        weight: 18,
+    },
+    {
+        id: 'transport-smart',
+        industryId: 'transport-industry',
+        label: '한국스마트물류',
+        ratio: 3.58,
+        status: 'normal',
+        weight: 17,
+    },
+    {
+        id: 'transport-global',
+        industryId: 'transport-industry',
+        label: '한국글로벌운송',
+        ratio: 2.94,
+        status: 'danger',
+        weight: 16,
+    },
+    {
+        id: 'transport-warehouse',
+        industryId: 'transport-industry',
+        label: '한국창고운영',
+        ratio: 2.31,
+        status: 'normal',
+        weight: 15,
     },
 ]
 
@@ -680,12 +920,12 @@ type SupplyScenarioId = 'large' | 'medium' | 'small'
 const SUPPLY_SCENARIOS: {id: SupplyScenarioId; label: string; nodeIds: string[]}[] = [
     {
         id: 'small',
-        label: '적음 6개',
+        label: '적음',
         nodeIds: ['supply-analysis', 'it', 'science', 'supply-1', 'supply-5', 'direct-supply-1'],
     },
     {
         id: 'medium',
-        label: '중간 14개',
+        label: '중간',
         nodeIds: [
             'supply-analysis',
             'it',
@@ -703,7 +943,7 @@ const SUPPLY_SCENARIOS: {id: SupplyScenarioId; label: string; nodeIds: string[]}
             'direct-supply-1',
         ],
     },
-    {id: 'large', label: `많음 ${SUPPLY_NODES.length}개`, nodeIds: SUPPLY_NODES.map(({id}) => id)},
+    {id: 'large', label: '많음', nodeIds: SUPPLY_NODES.map(({id}) => id)},
 ]
 
 const ISSUE_WORDS: WordCloudItem[] = [
@@ -757,6 +997,16 @@ const NetworkLegend = ({nodes}: {nodes: NetworkNode[]}) => {
                 <p className="typo-body-m-regular text-foreground-subtle mt-2">
                     분석기업에서 업종과 거래기업으로 이어지는 선의 비중(%)을 따라가면 됩니다.
                 </p>
+            </div>
+            <div className="border-border bg-background flex flex-wrap gap-x-6 gap-y-3 rounded-md border border-dashed p-3">
+                <span className="flex items-center gap-2">
+                    <span className="border-foreground-subtle w-5 border-t border-dashed" aria-hidden="true" />
+                    분석기업-업종
+                </span>
+                <span className="flex items-center gap-2">
+                    <span className="bg-border h-px w-5" aria-hidden="true" />
+                    업종-거래기업
+                </span>
             </div>
         </aside>
     )
@@ -834,9 +1084,9 @@ const CompanyNetworkDemo = () => {
         visibleSectors.reduce((total, sector) => total + sector.companies.length, 0) +
         DIRECT_RELATIONSHIP_COMPANIES.length
     const scenarios = [
-        {count: 3, label: '적음 3개'},
-        {count: 6, label: '중간 6개'},
-        {count: COMPANY_SECTORS.length, label: `많음 ${COMPANY_SECTORS.length}개`},
+        {count: 3, label: '적음'},
+        {count: 6, label: '중간'},
+        {count: COMPANY_SECTORS.length, label: '많음'},
     ]
 
     return (
@@ -911,8 +1161,41 @@ const SupplyNetworkDemo = () => {
     )
 }
 
-const IssueWordCloudDemo = () => (
-    <WordCloud words={ISSUE_WORDS} ariaLabel="최근 연구개발 이슈 18개를 중요도순으로 나타낸 워드클라우드" />
-)
+const IssueWordCloudDemo = () => {
+    const [scenario, setScenario] = useState<'large' | 'medium' | 'small'>('large')
+    const scenarios = [
+        {id: 'small' as const, label: '적음', wordCount: 6},
+        {id: 'medium' as const, label: '중간', wordCount: 12},
+        {id: 'large' as const, label: '많음', wordCount: ISSUE_WORDS.length},
+    ]
+    const selectedScenario = scenarios.find(({id}) => id === scenario) ?? scenarios[2]
+    const visibleWords = ISSUE_WORDS.slice(0, selectedScenario.wordCount)
+
+    return (
+        <div className="flex flex-col gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="typo-body-l-medium">키워드 수에 따른 크기·배치 자동 재계산</p>
+                <div className="flex gap-2" role="group" aria-label="워드클라우드 키워드 수 선택">
+                    {scenarios.map(({id, label}) => (
+                        <Button
+                            key={id}
+                            type="button"
+                            size="xs"
+                            variant={scenario === id ? 'default' : 'outline'}
+                            aria-pressed={scenario === id}
+                            onClick={() => setScenario(id)}
+                        >
+                            {label}
+                        </Button>
+                    ))}
+                </div>
+            </div>
+            <WordCloud
+                words={visibleWords}
+                ariaLabel={`최근 연구개발 이슈 ${visibleWords.length}개를 중요도순으로 나타낸 워드클라우드`}
+            />
+        </div>
+    )
+}
 
 export {CompanyNetworkDemo, IssueWordCloudDemo, SupplyNetworkDemo}

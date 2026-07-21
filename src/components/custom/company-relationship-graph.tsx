@@ -455,7 +455,7 @@ const CompanyRelationshipGraph = ({
                 container: containerRef.current,
                 elements,
                 style: stylesheet,
-                minZoom: 0.35,
+                minZoom: 0.1,
                 maxZoom: 2,
                 boxSelectionEnabled: false,
                 autoungrabify: false,
@@ -479,7 +479,31 @@ const CompanyRelationshipGraph = ({
             }
             graph.layout(collisionAvoidanceLayout).run()
             const analysisNode = graph.$id('analysis-company')
-            graph.center(analysisNode)
+            const containGraphAroundAnalysis = () => {
+                if (!graph || !analysisNode.length) return
+
+                const padding = getFitPadding()
+                const bounds = graph.elements().boundingBox({includeLabels: true, includeOverlays: false})
+                const analysisPosition = analysisNode.position()
+                const horizontalRadius = Math.max(analysisPosition.x - bounds.x1, bounds.x2 - analysisPosition.x)
+                const verticalRadius = Math.max(analysisPosition.y - bounds.y1, bounds.y2 - analysisPosition.y)
+                const availableHalfWidth = Math.max(1, container.clientWidth / 2 - padding)
+                const availableHalfHeight = Math.max(1, container.clientHeight / 2 - padding)
+                const zoom = Math.min(
+                    1,
+                    availableHalfWidth / Math.max(horizontalRadius, 1),
+                    availableHalfHeight / Math.max(verticalRadius, 1),
+                )
+
+                graph.viewport({
+                    zoom,
+                    pan: {
+                        x: container.clientWidth / 2 - analysisPosition.x * zoom,
+                        y: container.clientHeight / 2 - analysisPosition.y * zoom,
+                    },
+                })
+            }
+            containGraphAroundAnalysis()
             analysisNode.lock()
             graph.nodes('.sector').lock()
 
@@ -527,9 +551,7 @@ const CompanyRelationshipGraph = ({
 
             resizeObserver = new ResizeObserver(() => {
                 graph?.resize()
-                graph?.fit(undefined, getFitPadding())
-                const centerNode = graph?.$id('analysis-company')
-                if (centerNode?.length) graph?.center(centerNode)
+                containGraphAroundAnalysis()
                 scheduleKeyboardTargetUpdate()
             })
             resizeObserver.observe(containerRef.current)
