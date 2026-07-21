@@ -7,6 +7,7 @@ import PropsTable from '@/components/guide/props-table'
 import {Badge} from '@/components/ui/badge'
 import {
     CompanyNetworkDemo,
+    CreditRatingDemo,
     InnovationGrowthIndexDemo,
     IssueWordCloudDemo,
     SupplyNetworkDemo,
@@ -226,6 +227,59 @@ export default function InnovationGrowthIndexSection() {
   );
 }`
 
+const CREDIT_RATING_CODE = `import {
+  CreditRatingGauge,
+  type CreditRatingData,
+  type CreditRatingTone,
+} from '@/components/custom/credit-rating-gauge';
+
+type ApiCreditRating = {
+  gradeCode: string;
+  gradeName: string;
+  gaugeValue: number;
+  evaluationDate: string;
+  settlementDate: string;
+};
+
+// 1. API 응답 예시
+const creditRatingFromApi: ApiCreditRating = {
+  gradeCode: 'BBB+',
+  gradeName: '보통 상위',
+  gaugeValue: 78,
+  evaluationDate: '2025-05-20',
+  settlementDate: '2024-12-31',
+};
+
+// 2. 등급 코드를 컴포넌트의 시맨틱 색상으로 변환합니다.
+const getCreditRatingTone = (grade: string): CreditRatingTone => {
+  if (grade === 'AAA' || grade.startsWith('AA')) return 'excellent';
+  if (grade.startsWith('A')) return 'good';
+  if (grade.startsWith('BBB')) return 'normal';
+  if (grade.startsWith('BB') || grade.startsWith('B')) return 'caution';
+  return 'danger'; // CCC·CC·C·D
+};
+
+// 3. API 응답을 컴포넌트가 받는 data 형태로 변환합니다.
+const toCreditRatingData = (item: ApiCreditRating): CreditRatingData => ({
+  grade: item.gradeCode,               // 'BBB+'
+  description: item.gradeName,         // '보통 상위'
+  score: item.gaugeValue,               // 78 (0~100)
+  evaluationDate: item.evaluationDate, // '2025-05-20'
+  settlementDate: item.settlementDate, // '2024-12-31'
+  tone: getCreditRatingTone(item.gradeCode),
+});
+
+export default function CreditRatingSection() {
+  const data = toCreditRatingData(creditRatingFromApi);
+
+  return (
+    <CreditRatingGauge
+      data={data}
+      ariaLabel={\`기업신용등급 \${data.grade}, \${data.description}, 평가일자 \${data.evaluationDate}, 결산일자 \${data.settlementDate}\`}
+    />
+  );
+}`
+
 const WORD_CLOUD_CODE = `import {
   WordCloud,
   type WordCloudItem,
@@ -334,6 +388,20 @@ const PROPS_ITEMS = [
         'InnovationGrowthIndexChart',
         'ariaLabel',
         '원형 지수와 동일업종 상위 비율이 나타내는 평가 범위를 설명합니다.',
+        '-',
+        'string',
+    ],
+    [
+        'CreditRatingGauge',
+        'data',
+        '기업신용등급, 등급 설명, 게이지 지수, 평가일자·결산일자와 임시 색상 의미 tone을 전달합니다. 지수는 0~100 범위로 표시합니다.',
+        '-',
+        'CreditRatingData',
+    ],
+    [
+        'CreditRatingGauge',
+        'ariaLabel',
+        '반원형 게이지가 나타내는 기업신용등급과 평가 기준을 설명합니다.',
         '-',
         'string',
     ],
@@ -522,6 +590,58 @@ const ChartGuidePage = () => (
                     code={INNOVATION_GROWTH_INDEX_CODE}
                     language="tsx"
                     copyLabel="InnovationGrowthIndexChart 데이터 연결 코드 복사"
+                />
+                <LicenseNotice libraries={[RECHARTS_LICENSE]} />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chart-credit-rating" className="flex flex-col gap-5">
+                <div className="flex flex-col gap-1">
+                    <h2 id="chart-credit-rating" className="typo-h4-bold">
+                        기업신용등급
+                    </h2>
+                    <ul className="typo-body-l-regular text-foreground-subtle mt-1 flex flex-col gap-1">
+                        {[
+                            'data에 등급·설명·게이지 값·평가일자·결산일자·tone을 전달합니다.',
+                            '등급 코드에 따른 tone 매핑은 API 변환 단계에서 프로젝트 정책에 맞게 연결합니다.',
+                            'score는 반원 게이지의 표시 비율입니다. 현재 예시는 화면 확인용 임시값이며, 실제 연동 시 API 값 또는 확정된 등급별 기준을 사용해야 합니다.',
+                            '3자 이상 등급은 글자 크기와 설명 간격을 자동 조정하며 전체 원문은 접근성 텍스트에 유지합니다.',
+                        ].map((description) => (
+                            <li key={description} className="flex items-start gap-1.5">
+                                <ListMarker type="unordered" level={1} />
+                                <span>{description}</span>
+                            </li>
+                        ))}
+                    </ul>
+                    <p className="typo-body-m-regular text-foreground-subtle mt-2">
+                        등급 체계 참고:{' '}
+                        <a
+                            href="https://www.nicerating.com/disclosure/longTermGrade.do"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-primary underline underline-offset-4"
+                        >
+                            NICE신용평가 장기등급 정의
+                        </a>
+                        {' · '}
+                        <a
+                            href="https://korearatings.com/cms/frCmnCon/index.do?MENU_ID=240"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-primary underline underline-offset-4"
+                        >
+                            한국기업평가 장기 신용등급
+                        </a>
+                    </p>
+                </div>
+                <div className="bg-background border-border overflow-visible rounded-xl border p-4 sm:p-6">
+                    <CreditRatingDemo />
+                </div>
+                <CodeBlock
+                    code={CREDIT_RATING_CODE}
+                    language="tsx"
+                    copyLabel="CreditRatingGauge 데이터 연결 코드 복사"
                 />
                 <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>

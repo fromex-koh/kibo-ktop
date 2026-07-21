@@ -2,7 +2,7 @@
 
 import type {ComponentPropsWithoutRef} from 'react'
 import {PolarAngleAxis, RadialBar, RadialBarChart} from 'recharts'
-import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
+import {ChartContainer, type ChartConfig} from '@/components/ui/chart'
 import {cn} from '@/lib/utils'
 
 type InnovationGrowthIndexData = {
@@ -36,15 +36,10 @@ const InnovationGrowthIndexChart = ({data, ariaLabel, className, ...props}: Inno
     const chartData = [{name: 'score', score, fill: 'var(--color-score)'}]
 
     return (
-        <div {...props} className={cn('grid items-center gap-8 lg:grid-cols-[15rem_minmax(0,1fr)]', className)}>
-            <div className="relative mx-auto size-60 max-w-full">
-                <ChartContainer
-                    config={chartConfig}
-                    className="aspect-square size-full [&_.recharts-radial-bar-sector]:cursor-pointer"
-                    aria-label={ariaLabel}
-                >
+        <div {...props} className={cn('grid items-center gap-8 lg:grid-cols-[14rem_minmax(0,1fr)]', className)}>
+            <div className="relative mx-auto size-56 max-w-full">
+                <ChartContainer config={chartConfig} className="aspect-square size-full" aria-label={ariaLabel}>
                     <RadialBarChart
-                        accessibilityLayer
                         data={chartData}
                         startAngle={90}
                         endAngle={-270}
@@ -52,32 +47,15 @@ const InnovationGrowthIndexChart = ({data, ariaLabel, className, ...props}: Inno
                         outerRadius="100%"
                     >
                         <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
-                        <ChartTooltip
-                            cursor={false}
-                            content={
-                                <ChartTooltipContent
-                                    hideLabel
-                                    hideIndicator
-                                    formatter={() => (
-                                        <div>
-                                            <p className="typo-body-l-bold">Tech-Index</p>
-                                            <p className="typo-body-s-regular mt-1">
-                                                {score.toFixed(1)}점 · {data.grade}
-                                            </p>
-                                        </div>
-                                    )}
-                                />
-                            }
-                        />
                         <RadialBar dataKey="score" background={{fill: 'var(--ds-muted)'}} cornerRadius={999} />
                     </RadialBarChart>
                 </ChartContainer>
-                <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
+                <div className="pointer-events-none absolute inset-0 flex translate-y-2 flex-col items-center justify-center text-center leading-none">
                     <span className="text-foreground-subtle text-xs font-bold">TECH-INDEX SCORE</span>
-                    <strong className="mt-1 text-5xl leading-none tabular-nums" style={{color: keyColor}}>
+                    <strong className="mt-1.5 text-4xl leading-none tabular-nums" style={{color: keyColor}}>
                         {score.toFixed(1)}
                     </strong>
-                    <span className="typo-body-m-bold mt-2" style={{color: keyColor}}>
+                    <span className="typo-body-l-bold mt-2" style={{color: keyColor}}>
                         {data.grade}
                     </span>
                 </div>

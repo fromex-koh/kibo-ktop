@@ -2,6 +2,7 @@
 
 import {useState} from 'react'
 import {CompanyRelationshipGraph, type CompanySector} from '@/components/custom/company-relationship-graph'
+import {CreditRatingGauge, type CreditRatingData} from '@/components/custom/credit-rating-gauge'
 import {
     InnovationGrowthIndexChart,
     type InnovationGrowthIndexData,
@@ -1396,6 +1397,76 @@ const InnovationGrowthIndexDemo = () => {
     )
 }
 
+const createCreditRatingScenario = (
+    grade: string,
+    description: string,
+    score: number,
+    tone: CreditRatingData['tone'],
+): CreditRatingData => ({
+    grade,
+    description,
+    score,
+    evaluationDate: '2025-05-20',
+    settlementDate: '2024-12-31',
+    tone,
+})
+
+const CREDIT_RATING_SCENARIOS: CreditRatingData[] = [
+    createCreditRatingScenario('AAA', '최고 수준', 100, 'excellent'),
+    createCreditRatingScenario('AA+', '매우 우수 상위', 96, 'excellent'),
+    createCreditRatingScenario('AA', '매우 우수', 93, 'excellent'),
+    createCreditRatingScenario('AA-', '매우 우수 하위', 90, 'excellent'),
+    createCreditRatingScenario('A+', '우수 상위', 87, 'good'),
+    createCreditRatingScenario('A', '우수', 84, 'good'),
+    createCreditRatingScenario('A-', '우수 하위', 81, 'good'),
+    createCreditRatingScenario('BBB+', '보통 상위', 78, 'normal'),
+    createCreditRatingScenario('BBB', '보통', 75, 'normal'),
+    createCreditRatingScenario('BBB-', '보통 하위', 72, 'normal'),
+    createCreditRatingScenario('BB+', '투기적 상위', 68, 'caution'),
+    createCreditRatingScenario('BB', '투기적', 64, 'caution'),
+    createCreditRatingScenario('BB-', '투기적 하위', 60, 'caution'),
+    createCreditRatingScenario('B+', '매우 투기적 상위', 56, 'caution'),
+    createCreditRatingScenario('B', '매우 투기적', 52, 'caution'),
+    createCreditRatingScenario('B-', '매우 투기적 하위', 48, 'caution'),
+    createCreditRatingScenario('CCC+', '채무불이행 위험 높음', 40, 'danger'),
+    createCreditRatingScenario('CCC', '채무불이행 위험 높음', 34, 'danger'),
+    createCreditRatingScenario('CCC-', '채무불이행 위험 높음', 28, 'danger'),
+    createCreditRatingScenario('CC', '채무불이행 위험 매우 높음', 20, 'danger'),
+    createCreditRatingScenario('C', '채무불이행 불가피', 10, 'danger'),
+    createCreditRatingScenario('D', '채무불이행 상태', 0, 'danger'),
+]
+
+const CreditRatingDemo = () => {
+    const [grade, setGrade] = useState('A')
+    const scenario = CREDIT_RATING_SCENARIOS.find((item) => item.grade === grade) ?? CREDIT_RATING_SCENARIOS[5]
+
+    return (
+        <div className="flex flex-col gap-5">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+                <p className="typo-body-l-medium">신용등급별 게이지·키컬러 변경</p>
+                <div className="flex flex-wrap gap-2" role="group" aria-label="기업신용등급 시나리오 선택">
+                    {CREDIT_RATING_SCENARIOS.map((item) => (
+                        <Button
+                            key={item.grade}
+                            type="button"
+                            size="xs"
+                            variant={grade === item.grade ? 'default' : 'outline'}
+                            aria-pressed={grade === item.grade}
+                            onClick={() => setGrade(item.grade)}
+                        >
+                            {item.grade}
+                        </Button>
+                    ))}
+                </div>
+            </div>
+            <CreditRatingGauge
+                data={scenario}
+                ariaLabel={`기업신용등급 ${scenario.grade}, ${scenario.description}, 평가일자 ${scenario.evaluationDate}, 결산일자 ${scenario.settlementDate}`}
+            />
+        </div>
+    )
+}
+
 type TechnologyHoldingScenarioId = 'balanced' | 'clustered' | 'skewed'
 
 const TECHNOLOGY_HOLDING_BASE = [
@@ -1488,4 +1559,11 @@ const IssueWordCloudDemo = () => {
     )
 }
 
-export {CompanyNetworkDemo, InnovationGrowthIndexDemo, IssueWordCloudDemo, SupplyNetworkDemo, TechnologyHoldingsDemo}
+export {
+    CompanyNetworkDemo,
+    CreditRatingDemo,
+    InnovationGrowthIndexDemo,
+    IssueWordCloudDemo,
+    SupplyNetworkDemo,
+    TechnologyHoldingsDemo,
+}
