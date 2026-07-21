@@ -139,6 +139,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {
                 title: '데이터 표시',
                 items: [
+                    {label: 'ProgressBar', href: '/component-guide/progress-bar'},
                     {label: 'Chart', href: '/component-guide/chart'},
                     {label: 'ReviewList', href: '/component-guide/review-list'},
                     {label: 'SummaryList', href: '/component-guide/summary-list'},

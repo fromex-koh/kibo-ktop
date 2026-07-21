@@ -7,6 +7,7 @@ import {
     type GroupedColumnItem,
     type GroupedColumnSeries,
 } from '@/components/custom/grouped-column-chart'
+import {LineChart, type LineChartItem, type LineChartSeries} from '@/components/custom/line-chart'
 import {ListMarker} from '@/components/custom/list-marker'
 import {RatingMatrix, type RatingMatrixRow} from '@/components/custom/rating-matrix'
 import CodeBlock from '@/components/guide/code-block'
@@ -525,7 +526,7 @@ export default function AnnualSalesChart() {
   return (
     <ColumnChart
       data={annualSales}
-      barWidth={80}
+      barWidth={64}
       unit="천원"
       yAxisStep={50000}
       ariaLabel="2022년부터 2024년까지 인당 매출액 비교"
@@ -537,6 +538,209 @@ const COLUMN_DATA: ColumnChartItem[] = [
     {id: '2022', label: '2022', value: 456075, color: 'var(--ds-chart-2)'},
     {id: '2023', label: '2023', value: 452875, color: 'var(--ds-chart-5)'},
     {id: '2024', label: '2024', value: 466542, color: 'var(--ds-chart-1)'},
+]
+
+const FINANCIAL_RATIO_LINE_CODE = `import {
+  LineChart,
+  type LineChartItem,
+  type LineChartSeries,
+} from '@/components/custom/line-chart';
+
+const series: LineChartSeries[] = [
+  { key: 'debtRatio', label: '부채비율', color: 'var(--ds-chart-4)' },
+  { key: 'equityRatio', label: '자기자본비율', color: 'var(--ds-chart-3)' },
+  { key: 'currentRatio', label: '유동비율', color: 'var(--ds-chart-2)' },
+  { key: 'operatingMargin', label: '영업이익률', color: 'var(--ds-chart-1)' },
+  { key: 'netMargin', label: '순이익률', color: 'var(--ds-chart-5)' },
+];
+
+const data: LineChartItem[] = [
+  { id: '2020', label: '2020', values: { debtRatio: 117, equityRatio: 95, currentRatio: 12, operatingMargin: 9, netMargin: 5 } },
+  { id: '2021', label: '2021', values: { debtRatio: 124, equityRatio: 88, currentRatio: 13, operatingMargin: 10, netMargin: 6 } },
+  { id: '2022', label: '2022', values: { debtRatio: 132, equityRatio: 93, currentRatio: 14, operatingMargin: 11, netMargin: 7 } },
+  { id: '2023', label: '2023', values: { debtRatio: 138, equityRatio: 87, currentRatio: 15, operatingMargin: 13, netMargin: 8 } },
+  { id: '2024', label: '2024', values: { debtRatio: 142, equityRatio: 78, currentRatio: 16, operatingMargin: 14, netMargin: 9 } },
+];
+
+export default function FinancialRatioTrend() {
+  return (
+    <LineChart
+      data={data}
+      series={series}
+      unit="%"
+      axisValueSuffix="%"
+      yAxisDomain={[0, 160]}
+      yAxisStep={20}
+      ariaLabel="2020년부터 2024년까지 주요 재무비율 추이"
+    />
+  );
+}`
+
+const CASH_FLOW_LINE_CODE = `import {
+  LineChart,
+  type LineChartItem,
+  type LineChartSeries,
+} from '@/components/custom/line-chart';
+
+const series: LineChartSeries[] = [
+  { key: 'operating', label: '영업활동 현금흐름', color: 'var(--ds-chart-4)' },
+  { key: 'endingCash', label: '기말 현금성자산', color: 'var(--ds-chart-1)' },
+  { key: 'cashIncrease', label: '현금 증가', color: 'var(--ds-chart-3)' },
+  { key: 'investing', label: '투자활동 현금흐름', color: 'var(--ds-chart-5)' },
+  { key: 'financing', label: '재무활동 현금흐름', color: 'var(--ds-chart-2)' },
+];
+
+const data: LineChartItem[] = [
+  { id: '2020', label: '2020', values: { operating: 28, endingCash: 18, cashIncrease: 10, investing: -9, financing: -13 } },
+  { id: '2021', label: '2021', values: { operating: 32, endingCash: 20, cashIncrease: 12, investing: -10, financing: -15 } },
+  { id: '2022', label: '2022', values: { operating: 36, endingCash: 22, cashIncrease: 15, investing: -12, financing: -17 } },
+  { id: '2023', label: '2023', values: { operating: 39, endingCash: 24, cashIncrease: 16, investing: -13, financing: -18 } },
+  { id: '2024', label: '2024', values: { operating: 42, endingCash: 25, cashIncrease: 18, investing: -14, financing: -19 } },
+];
+
+export default function CashFlowTrend() {
+  return (
+    <LineChart
+      data={data}
+      series={series}
+      unit="억원"
+      axisValueSuffix="억"
+      yAxisDomain={[-20, 50]}
+      yAxisStep={10}
+      ariaLabel="2020년부터 2024년까지 주요 현금흐름 추이"
+    />
+  );
+}`
+
+const FINANCIAL_RATIO_LINE_SERIES: LineChartSeries[] = [
+    {key: 'debtRatio', label: '부채비율', color: 'var(--ds-chart-4)'},
+    {key: 'equityRatio', label: '자기자본비율', color: 'var(--ds-chart-3)'},
+    {key: 'currentRatio', label: '유동비율', color: 'var(--ds-chart-2)'},
+    {key: 'operatingMargin', label: '영업이익률', color: 'var(--ds-chart-1)'},
+    {key: 'netMargin', label: '순이익률', color: 'var(--ds-chart-5)'},
+]
+
+const FINANCIAL_RATIO_LINE_DATA: LineChartItem[] = [
+    {
+        id: '2020',
+        label: '2020',
+        values: {debtRatio: 117, equityRatio: 95, currentRatio: 12, operatingMargin: 9, netMargin: 5},
+    },
+    {
+        id: '2021',
+        label: '2021',
+        values: {debtRatio: 124, equityRatio: 88, currentRatio: 13, operatingMargin: 10, netMargin: 6},
+    },
+    {
+        id: '2022',
+        label: '2022',
+        values: {debtRatio: 132, equityRatio: 93, currentRatio: 14, operatingMargin: 11, netMargin: 7},
+    },
+    {
+        id: '2023',
+        label: '2023',
+        values: {debtRatio: 138, equityRatio: 87, currentRatio: 15, operatingMargin: 13, netMargin: 8},
+    },
+    {
+        id: '2024',
+        label: '2024',
+        values: {debtRatio: 142, equityRatio: 78, currentRatio: 16, operatingMargin: 14, netMargin: 9},
+    },
+]
+
+const CASH_FLOW_LINE_SERIES: LineChartSeries[] = [
+    {key: 'operating', label: '영업활동 현금흐름', color: 'var(--ds-chart-4)'},
+    {key: 'endingCash', label: '기말 현금성자산', color: 'var(--ds-chart-1)'},
+    {key: 'cashIncrease', label: '현금 증가', color: 'var(--ds-chart-3)'},
+    {key: 'investing', label: '투자활동 현금흐름', color: 'var(--ds-chart-5)'},
+    {key: 'financing', label: '재무활동 현금흐름', color: 'var(--ds-chart-2)'},
+]
+
+const CASH_FLOW_LINE_DATA: LineChartItem[] = [
+    {
+        id: '2020',
+        label: '2020',
+        values: {operating: 28, endingCash: 18, cashIncrease: 10, investing: -9, financing: -13},
+    },
+    {
+        id: '2021',
+        label: '2021',
+        values: {operating: 32, endingCash: 20, cashIncrease: 12, investing: -10, financing: -15},
+    },
+    {
+        id: '2022',
+        label: '2022',
+        values: {operating: 36, endingCash: 22, cashIncrease: 15, investing: -12, financing: -17},
+    },
+    {
+        id: '2023',
+        label: '2023',
+        values: {operating: 39, endingCash: 24, cashIncrease: 16, investing: -13, financing: -18},
+    },
+    {
+        id: '2024',
+        label: '2024',
+        values: {operating: 42, endingCash: 25, cashIncrease: 18, investing: -14, financing: -19},
+    },
+]
+
+const EMPLOYEE_TREND_LINE_CODE = `import {
+  LineChart,
+  type LineChartItem,
+  type LineChartSeries,
+} from '@/components/custom/line-chart';
+
+const series: LineChartSeries[] = [
+  { key: 'employees', label: '종업원 수', color: 'var(--ds-chart-4)' },
+];
+
+const data: LineChartItem[] = [
+  { id: '2023-03', label: '23.03', values: { employees: 39 } },
+  { id: '2023-06', label: '23.06', values: { employees: 37 } },
+  { id: '2023-09', label: '23.09', values: { employees: 37 } },
+  { id: '2023-12', label: '23.12', values: { employees: 35 } },
+  { id: '2024-03', label: '24.03', values: { employees: 34 } },
+  { id: '2024-06', label: '24.06', values: { employees: 34 } },
+  { id: '2024-09', label: '24.09', values: { employees: 31 } },
+  { id: '2024-12', label: '24.12', values: { employees: 33 } },
+  { id: '2025-03', label: '25.03', values: { employees: 27 } },
+  { id: '2025-06', label: '25.06', values: { employees: 28 } },
+  { id: '2025-09', label: '25.09', values: { employees: 25 } },
+];
+
+export default function EmployeeTrend() {
+  return (
+    <LineChart
+      data={data}
+      series={series}
+      variant="area"
+      curveType="monotone"
+      showValueLabels
+      showLegend={false}
+      unit="명"
+      yAxisDomain={[20, 45]}
+      yAxisStep={5}
+      ariaLabel="2023년 3월부터 2025년 9월까지 분기별 종업원 수 추이"
+    />
+  );
+}`
+
+const EMPLOYEE_TREND_LINE_SERIES: LineChartSeries[] = [
+    {key: 'employees', label: '종업원 수', color: 'var(--ds-chart-4)'},
+]
+
+const EMPLOYEE_TREND_LINE_DATA: LineChartItem[] = [
+    {id: '2023-03', label: '23.03', values: {employees: 39}},
+    {id: '2023-06', label: '23.06', values: {employees: 37}},
+    {id: '2023-09', label: '23.09', values: {employees: 37}},
+    {id: '2023-12', label: '23.12', values: {employees: 35}},
+    {id: '2024-03', label: '24.03', values: {employees: 34}},
+    {id: '2024-06', label: '24.06', values: {employees: 34}},
+    {id: '2024-09', label: '24.09', values: {employees: 31}},
+    {id: '2024-12', label: '24.12', values: {employees: 33}},
+    {id: '2025-03', label: '25.03', values: {employees: 27}},
+    {id: '2025-06', label: '25.06', values: {employees: 28}},
+    {id: '2025-09', label: '25.09', values: {employees: 25}},
 ]
 
 const WORD_CLOUD_CODE = `import {
@@ -716,6 +920,24 @@ const PROPS_ITEMS = [
     ['ColumnChart', 'valueFractionDigits', '툴팁·막대 라벨의 소수점 자릿수를 지정합니다.', '0', 'number'],
     ['ColumnChart', 'yAxisStep', 'Y축 눈금 간격을 지정합니다.', 'undefined', 'number'],
     ['ColumnChart', 'ariaLabel', '단일 세로 막대 차트가 비교하는 지표와 기간을 설명합니다.', '-', 'string'],
+    [
+        'LineChart',
+        'data',
+        '기간별 고유 id·표시명과 series key에 대응하는 숫자 값을 전달합니다.',
+        '-',
+        'LineChartItem[]',
+    ],
+    ['LineChart', 'series', '각 선의 고유 key·표시명·semantic chart 색상을 전달합니다.', '-', 'LineChartSeries[]'],
+    ['LineChart', 'unit', '툴팁과 접근성 표의 숫자 뒤에 표시할 단위를 전달합니다.', 'undefined', 'string'],
+    ['LineChart', 'axisValueSuffix', 'Y축 눈금 숫자 뒤에 표시할 짧은 단위 기호를 전달합니다.', "''", 'string'],
+    ['LineChart', 'yAxisDomain', 'Y축의 최솟값과 최댓값을 배열로 지정합니다.', '데이터 범위', '[number, number]'],
+    ['LineChart', 'yAxisStep', 'Y축 눈금 간격을 지정합니다.', 'undefined', 'number'],
+    ['LineChart', 'showLegend', '차트 아래 원형 범례 표시 여부를 설정합니다.', 'true', 'boolean'],
+    ['LineChart', 'showValueLabels', '각 데이터 포인트 위에 숫자 값을 표시합니다.', 'false', 'boolean'],
+    ['LineChart', 'variant', '기본 선 또는 하단 영역을 채운 선 형태를 선택합니다.', 'line', "'line' | 'area'"],
+    ['LineChart', 'curveType', '선의 연결을 직선 또는 완만한 곡선으로 표시합니다.', 'linear', "'linear' | 'monotone'"],
+    ['LineChart', 'valueFractionDigits', '툴팁과 접근성 표의 소수점 자릿수를 지정합니다.', '0', 'number'],
+    ['LineChart', 'ariaLabel', '선 차트가 비교하는 지표와 기간을 설명합니다.', '-', 'string'],
     [
         'WordCloud',
         'words',
@@ -1140,13 +1362,95 @@ const ChartGuidePage = () => (
                 <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
                     <ColumnChart
                         data={COLUMN_DATA}
-                        barWidth={80}
+                        barWidth={64}
                         unit="천원"
                         yAxisStep={50000}
                         ariaLabel="2022년부터 2024년까지 인당 매출액 비교"
                     />
                 </div>
                 <CodeBlock code={COLUMN_CODE} language="tsx" />
+                <LicenseNotice libraries={[RECHARTS_LICENSE]} />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="chart-line" className="flex flex-col gap-5">
+                <div className="flex flex-col gap-1">
+                    <h2 id="chart-line" className="typo-h4-bold">
+                        추이 비교 (LineChart)
+                    </h2>
+                    <ul className="typo-body-l-regular text-foreground-subtle mt-1 flex flex-col gap-1">
+                        {[
+                            '여러 지표가 기간에 따라 변화하는 방향과 폭을 동일한 시간축에서 비교합니다.',
+                            'series의 key·라벨·색상을 변경하면 선·범례·툴팁·접근성 표가 함께 갱신됩니다.',
+                            'Y축 범위와 눈금 간격을 주입해 비율과 음수가 포함된 금액 데이터를 같은 컴포넌트로 표현합니다.',
+                            '작은 화면에서는 시간축의 최소 너비를 유지하고 차트 영역만 가로로 이동합니다.',
+                        ].map((description) => (
+                            <li key={description} className="flex items-start gap-1.5">
+                                <ListMarker type="unordered" level={1} />
+                                <span>{description}</span>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+
+                <section aria-labelledby="chart-line-financial-ratio" className="flex flex-col gap-3">
+                    <h3 id="chart-line-financial-ratio" className="typo-title-l-bold">
+                        주요 재무비율
+                    </h3>
+                    <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                        <LineChart
+                            data={FINANCIAL_RATIO_LINE_DATA}
+                            series={FINANCIAL_RATIO_LINE_SERIES}
+                            unit="%"
+                            axisValueSuffix="%"
+                            yAxisDomain={[0, 160]}
+                            yAxisStep={20}
+                            ariaLabel="2020년부터 2024년까지 주요 재무비율 추이"
+                        />
+                    </div>
+                    <CodeBlock code={FINANCIAL_RATIO_LINE_CODE} language="tsx" />
+                </section>
+
+                <section aria-labelledby="chart-line-cash-flow" className="flex flex-col gap-3">
+                    <h3 id="chart-line-cash-flow" className="typo-title-l-bold">
+                        현금흐름 추이
+                    </h3>
+                    <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                        <LineChart
+                            data={CASH_FLOW_LINE_DATA}
+                            series={CASH_FLOW_LINE_SERIES}
+                            unit="억원"
+                            axisValueSuffix="억"
+                            yAxisDomain={[-20, 50]}
+                            yAxisStep={10}
+                            ariaLabel="2020년부터 2024년까지 주요 현금흐름 추이"
+                        />
+                    </div>
+                    <CodeBlock code={CASH_FLOW_LINE_CODE} language="tsx" />
+                </section>
+
+                <section aria-labelledby="chart-line-employee" className="flex flex-col gap-3">
+                    <h3 id="chart-line-employee" className="typo-title-l-bold">
+                        분기별 종업원 수
+                    </h3>
+                    <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                        <LineChart
+                            data={EMPLOYEE_TREND_LINE_DATA}
+                            series={EMPLOYEE_TREND_LINE_SERIES}
+                            variant="area"
+                            curveType="monotone"
+                            showValueLabels
+                            showLegend={false}
+                            unit="명"
+                            yAxisDomain={[20, 45]}
+                            yAxisStep={5}
+                            ariaLabel="2023년 3월부터 2025년 9월까지 분기별 종업원 수 추이"
+                        />
+                    </div>
+                    <CodeBlock code={EMPLOYEE_TREND_LINE_CODE} language="tsx" />
+                </section>
+
                 <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>
         </BaseCard>
