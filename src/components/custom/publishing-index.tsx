@@ -124,21 +124,20 @@ const spanAt = (leaves: FlatLeaf[], index: number, depth: number): number => {
 type DepthCell =
     | {kind: 'span'; label: string; rowSpan: number; colSpan: number}
     | {kind: 'continued'} // 이전 행의 rowSpan 이 덮고 있거나, 같은 행의 colSpan 에 흡수됨 — 렌더하지 않음
-    | {kind: 'empty'} // 이 leaf 는 여기까지 안 내려가지만, 같은 rowSpan 그룹의 다른 leaf 는 더 내려감 — 빈 칸을 명시적으로 렌더
+    | {kind: 'empty'; colSpan: number} // 이 화면에서 사용하지 않는 나머지 뎁스를 한 칸으로 병합.
 
-// leaf 가 더 내려가지 않는 뎁스는 "-" 로 끊어 보이지 않도록, 마지막 실제 라벨 칸을 남은 뎁스
-// 칸까지 colSpan 으로 이어붙인다 — 1뎁스→2뎁스→3뎁스가 시각적으로 하나로 연결되어 보인다.
-// 단, "같은 rowSpan 그룹(같은 접두사) 안의 다른 leaf 가 더 깊이 내려가는" 경우엔(예: '(1)
-// 고객정보활용동의' 자신도 화면이면서 하위에 상세보기·전자서명을 더 가짐) colSpan 으로 흡수하면
-// 그 하위 leaf 들의 실제 칸이 사라지므로, 그룹 전체가 여기서 끝날 때만 colSpan 을 쓴다.
+// 같은 접두사의 화면이 모두 끝나는 뎁스는 마지막 라벨을 남은 칸까지 병합한다. 메뉴 자체도 화면이면서
+// 하위 화면이 더 있는 경우에는 라벨 셀의 rowSpan을 유지하고, 자기 화면 행에서만 남은 빈 뎁스를 하나의
+// "해당 없음" 셀로 병합한다. 따라서 하위 행의 실제 뎁스는 보존하면서 '-'가 여러 번 반복되지 않는다.
 const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
     leaves.map((leaf, i) => {
         const cells: DepthCell[] = Array.from({length: maxDepth}, () => ({kind: 'continued'}))
         let depth = 0
         while (depth < maxDepth) {
             if (depth >= leaf.path.length) {
-                cells[depth] = {kind: 'empty'}
-                depth += 1
+                const colSpan = maxDepth - depth
+                cells[depth] = {kind: 'empty', colSpan}
+                depth += colSpan
                 continue
             }
             const key = pathKeyAt(leaf, depth)
@@ -156,15 +155,14 @@ const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
         return cells
     })
 
-// 사용자 유형 필터 — '전체' + 실제 userType 값(기업·기관). 화면(leaf)에 userType 가 없으면
-// 공통이라 기업·기관 어느 탭에서나 보인다. '전체'는 프로젝트 전체 화면·진척률 기준.
-type UserTypeFilter = '전체' | UserType
-const USER_TYPE_FILTERS: readonly UserTypeFilter[] = ['전체', ...USER_TYPE_VALUES]
+// IA 원문이 기업용·기관용으로 각각 관리되므로 사용자 유형별 인덱스도 서로 섞지 않는다.
+// 같은 메뉴명이라도 역할과 동작이 다를 수 있어 공통 화면으로 합치지 않는다.
+type UserTypeFilter = UserType
+const USER_TYPE_FILTERS: readonly UserTypeFilter[] = USER_TYPE_VALUES
 // SegmentedControl radio 타입이 넘겨주는 문자열 value를 UserTypeFilter로 좁히는 타입가드([ST-002] as 회피).
 const isUserTypeFilter = (value: string): value is UserTypeFilter => USER_TYPE_FILTERS.some((f) => f === value)
 
-const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean =>
-    filter === '전체' || leaf.userType === undefined || leaf.userType === filter
+const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean => leaf.userType === filter
 
 const {assetVersions, commonLayouts, structureGroups} = PUBLISHING_INDEX_CONTENT
 
@@ -172,7 +170,7 @@ const {assetVersions, commonLayouts, structureGroups} = PUBLISHING_INDEX_CONTENT
 const ALL_LEAVES = structureGroups.flatMap(collectLeaves)
 
 const PublishingIndex = () => {
-    const [filter, setFilter] = useState<UserTypeFilter>('전체')
+    const [filter, setFilter] = useState<UserTypeFilter>('기업')
 
     // 선택된 사용자 유형에 맞는 화면만 남기고, 그 부분집합으로 뎁스 컬럼·rowSpan·카운트를 다시 계산한다.
     const leaves = useMemo(() => ALL_LEAVES.filter((leaf) => matchesUserType(leaf, filter)), [filter])
@@ -266,11 +264,11 @@ const PublishingIndex = () => {
                         <SectionHeader>
                             <SectionHeaderTitle id="section-publishing-index">퍼블리싱 인덱스</SectionHeaderTitle>
                             <SectionHeaderDescription>
-                                이 플랫폼의 화면별 퍼블리싱 진행 상태와 산출물 버전을 추적합니다. 이번 릴리스 버전과
-                                같은 항목은 강조 표시됩니다.
+                                기업·기관 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다. 메뉴 자체가 화면인 행의
+                                미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시합니다.
                             </SectionHeaderDescription>
                         </SectionHeader>
-                        {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 전체/기업/기관으로 걸러 보여준다.
+                        {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 기업/기관 IA 한 벌씩 걸러 보여준다.
           위 공통 레이아웃 표와 구분되도록 간격을 더 둔다. */}
                         {/* 사용자 유형 필터 — 라디오 기반 단일 선택이다. 비어 있는 값은 무시해 항상 하나가 선택된 상태를
                     유지한다. 화살표 키·역할은 Radix 담당. */}
@@ -298,7 +296,7 @@ const PublishingIndex = () => {
             진척률은 '최종완료' 화면 비율이라 상태값이 바뀔 때마다 자동으로 갱신된다. */}
                         <p aria-live="polite" className="typo-body-l-regular text-muted-foreground">
                             {filter} 화면 본수: <span className="text-foreground font-semibold">{screenCount}개</span>
-                            {filter === '전체' ? ' (공통 레이아웃 제외)' : ''} · 작업 진척률:{' '}
+                            {' · '}작업 진척률:{' '}
                             <span className="text-foreground font-semibold">{progressPercent}%</span> (최종완료{' '}
                             {doneCount}/{screenCount})
                         </p>
@@ -403,6 +401,7 @@ const PublishingIndex = () => {
                                                             <th
                                                                 key={depth}
                                                                 scope="row"
+                                                                colSpan={cell.colSpan}
                                                                 className="typo-caption-regular text-muted-foreground border-border border-r px-4 py-3 align-top font-normal"
                                                             >
                                                                 <span aria-hidden="true">-</span>
