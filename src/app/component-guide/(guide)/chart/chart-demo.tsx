@@ -2,14 +2,10 @@
 
 import {useState} from 'react'
 import {CompanyRelationshipGraph, type CompanySector} from '@/components/custom/company-relationship-graph'
-import {CreditRatingGauge, type CreditRatingData} from '@/components/custom/credit-rating-gauge'
-import {
-    InnovationGrowthIndexChart,
-    type InnovationGrowthIndexData,
-    type InnovationGrowthGrade,
-} from '@/components/custom/innovation-growth-index-chart'
 import {NetworkGraph, type NetworkLink, type NetworkNode} from '@/components/custom/network-graph'
-import {TechnologyHoldingsChart, type TechnologyHoldingItem} from '@/components/custom/technology-holdings-chart'
+import {PercentageDonutChart, type PercentageDonutItem} from '@/components/custom/percentage-donut-chart'
+import {ScoreBenchmarkChart, type ScoreBenchmarkData} from '@/components/custom/score-benchmark-chart'
+import {SemicircleRatingGauge, type SemicircleRatingData} from '@/components/custom/semicircle-rating-gauge'
 import {WordCloud, type WordCloudItem} from '@/components/custom/word-cloud'
 import {Button} from '@/components/ui/button'
 
@@ -1327,48 +1323,60 @@ const SupplyNetworkDemo = () => {
     )
 }
 
-const INNOVATION_INDEX_SCENARIOS: Array<{grade: InnovationGrowthGrade; data: InnovationGrowthIndexData}> = [
+const INNOVATION_INDEX_SCENARIOS: Array<{label: string; data: ScoreBenchmarkData}> = [
     {
-        grade: '우수',
+        label: '우수',
         data: {
             score: 88.4,
-            grade: '우수',
-            topPercentage: 10,
-            comparisonLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+            scoreLabel: 'TECH-INDEX SCORE',
+            statusLabel: '우수',
+            tone: 'strong',
+            benchmarkPercentage: 10,
+            benchmarkLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+            summary: '인프라·투입·활동·성과 부문별 전문가 검증 결과',
         },
     },
     {
-        grade: '양호',
+        label: '양호',
         data: {
             score: 73.7,
-            grade: '양호',
-            topPercentage: 25,
-            comparisonLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+            scoreLabel: 'TECH-INDEX SCORE',
+            statusLabel: '양호',
+            tone: 'positive',
+            benchmarkPercentage: 25,
+            benchmarkLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+            summary: '인프라·투입·활동·성과 부문별 전문가 검증 결과',
         },
     },
     {
-        grade: '주의',
+        label: '주의',
         data: {
             score: 52.1,
-            grade: '주의',
-            topPercentage: 48,
-            comparisonLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+            scoreLabel: 'TECH-INDEX SCORE',
+            statusLabel: '주의',
+            tone: 'caution',
+            benchmarkPercentage: 48,
+            benchmarkLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+            summary: '인프라·투입·활동·성과 부문별 전문가 검증 결과',
         },
     },
     {
-        grade: '위험',
+        label: '위험',
         data: {
             score: 31.6,
-            grade: '위험',
-            topPercentage: 75,
-            comparisonLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+            scoreLabel: 'TECH-INDEX SCORE',
+            statusLabel: '위험',
+            tone: 'danger',
+            benchmarkPercentage: 75,
+            benchmarkLabel: '동일업종 기준 · 그 외 기타 전자부품 제조업',
+            summary: '인프라·투입·활동·성과 부문별 전문가 검증 결과',
         },
     },
 ]
 
 const InnovationGrowthIndexDemo = () => {
-    const [grade, setGrade] = useState<InnovationGrowthGrade>('양호')
-    const scenario = INNOVATION_INDEX_SCENARIOS.find((item) => item.grade === grade) ?? INNOVATION_INDEX_SCENARIOS[1]
+    const [status, setStatus] = useState('양호')
+    const scenario = INNOVATION_INDEX_SCENARIOS.find((item) => item.label === status) ?? INNOVATION_INDEX_SCENARIOS[1]
 
     return (
         <div className="flex flex-col gap-5">
@@ -1377,21 +1385,21 @@ const InnovationGrowthIndexDemo = () => {
                 <div className="flex flex-wrap gap-2" role="group" aria-label="혁신성장역량 진단 상태 선택">
                     {INNOVATION_INDEX_SCENARIOS.map((item) => (
                         <Button
-                            key={item.grade}
+                            key={item.label}
                             type="button"
                             size="xs"
-                            variant={grade === item.grade ? 'default' : 'outline'}
-                            aria-pressed={grade === item.grade}
-                            onClick={() => setGrade(item.grade)}
+                            variant={status === item.label ? 'default' : 'outline'}
+                            aria-pressed={status === item.label}
+                            onClick={() => setStatus(item.label)}
                         >
-                            {item.grade}
+                            {item.label}
                         </Button>
                     ))}
                 </div>
             </div>
-            <InnovationGrowthIndexChart
+            <ScoreBenchmarkChart
                 data={scenario.data}
-                ariaLabel={`혁신성장역량 Tech-Index ${scenario.data.score}점, ${scenario.data.grade}, 동일업종 상위 ${scenario.data.topPercentage}%`}
+                ariaLabel={`혁신성장역량 Tech-Index ${scenario.data.score}점, ${scenario.data.statusLabel}, 동일업종 상위 ${scenario.data.benchmarkPercentage}%`}
             />
         </div>
     )
@@ -1401,17 +1409,19 @@ const createCreditRatingScenario = (
     grade: string,
     description: string,
     score: number,
-    tone: CreditRatingData['tone'],
-): CreditRatingData => ({
-    grade,
+    tone: SemicircleRatingData['tone'],
+): SemicircleRatingData => ({
+    label: grade,
     description,
-    score,
-    evaluationDate: '2025-05-20',
-    settlementDate: '2024-12-31',
+    percentage: score,
+    details: [
+        {label: '평가일자', value: '2025-05-20'},
+        {label: '결산일자', value: '2024-12-31'},
+    ],
     tone,
 })
 
-const CREDIT_RATING_SCENARIOS: CreditRatingData[] = [
+const CREDIT_RATING_SCENARIOS: SemicircleRatingData[] = [
     createCreditRatingScenario('AAA', '최고 수준', 100, 'excellent'),
     createCreditRatingScenario('AA+', '매우 우수 상위', 96, 'excellent'),
     createCreditRatingScenario('AA', '매우 우수', 93, 'excellent'),
@@ -1438,7 +1448,7 @@ const CREDIT_RATING_SCENARIOS: CreditRatingData[] = [
 
 const CreditRatingDemo = () => {
     const [grade, setGrade] = useState('A')
-    const scenario = CREDIT_RATING_SCENARIOS.find((item) => item.grade === grade) ?? CREDIT_RATING_SCENARIOS[5]
+    const scenario = CREDIT_RATING_SCENARIOS.find((item) => item.label === grade) ?? CREDIT_RATING_SCENARIOS[5]
 
     return (
         <div className="flex flex-col gap-5">
@@ -1447,21 +1457,22 @@ const CreditRatingDemo = () => {
                 <div className="flex flex-wrap gap-2" role="group" aria-label="기업신용등급 시나리오 선택">
                     {CREDIT_RATING_SCENARIOS.map((item) => (
                         <Button
-                            key={item.grade}
+                            key={item.label}
                             type="button"
                             size="xs"
-                            variant={grade === item.grade ? 'default' : 'outline'}
-                            aria-pressed={grade === item.grade}
-                            onClick={() => setGrade(item.grade)}
+                            variant={grade === item.label ? 'default' : 'outline'}
+                            aria-pressed={grade === item.label}
+                            onClick={() => setGrade(item.label)}
                         >
-                            {item.grade}
+                            {item.label}
                         </Button>
                     ))}
                 </div>
             </div>
-            <CreditRatingGauge
+            <SemicircleRatingGauge
                 data={scenario}
-                ariaLabel={`기업신용등급 ${scenario.grade}, ${scenario.description}, 평가일자 ${scenario.evaluationDate}, 결산일자 ${scenario.settlementDate}`}
+                title="기업신용등급"
+                ariaLabel={`기업신용등급 ${scenario.label}, ${scenario.description}, 평가일자 2025-05-20, 결산일자 2024-12-31`}
             />
         </div>
     )
@@ -1490,7 +1501,7 @@ const TECHNOLOGY_HOLDING_SCENARIOS: Array<{
 const TechnologyHoldingsDemo = () => {
     const [scenarioId, setScenarioId] = useState<TechnologyHoldingScenarioId>('balanced')
     const scenario = TECHNOLOGY_HOLDING_SCENARIOS.find(({id}) => id === scenarioId) ?? TECHNOLOGY_HOLDING_SCENARIOS[0]
-    const data: TechnologyHoldingItem[] = TECHNOLOGY_HOLDING_BASE.map((item, index) => ({
+    const data: PercentageDonutItem[] = TECHNOLOGY_HOLDING_BASE.map((item, index) => ({
         ...item,
         percentage: scenario.percentages[index],
     }))
@@ -1514,7 +1525,7 @@ const TechnologyHoldingsDemo = () => {
                     ))}
                 </div>
             </div>
-            <TechnologyHoldingsChart
+            <PercentageDonutChart
                 data={data}
                 ariaLabel={`${scenario.label} 분포의 기업 보유기술 5개 분류 비중과 건수`}
             />

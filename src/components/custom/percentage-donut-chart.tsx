@@ -5,7 +5,7 @@ import {Pie, PieChart, type PieLabelRenderProps} from 'recharts'
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
 import {cn} from '@/lib/utils'
 
-type TechnologyHoldingItem = {
+type PercentageDonutItem = {
     id: string
     label: string
     percentage: number
@@ -13,8 +13,8 @@ type TechnologyHoldingItem = {
     color: string
 }
 
-type TechnologyHoldingsChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
-    data: TechnologyHoldingItem[]
+type PercentageDonutChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
+    data: PercentageDonutItem[]
     ariaLabel: string
 }
 
@@ -26,7 +26,7 @@ type LabelPosition = {
     normalizedY: number
 }
 
-const getLabelPositions = (data: TechnologyHoldingItem[]) => {
+const getLabelPositions = (data: PercentageDonutItem[]) => {
     const total = data.reduce((sum, item) => sum + Math.max(0, item.percentage), 0) || 1
     let accumulated = 0
     const positions = new Map<string, LabelPosition>()
@@ -72,7 +72,7 @@ const getLabelPositions = (data: TechnologyHoldingItem[]) => {
 }
 
 const createExternalLabelRenderer = (positions: Map<string, LabelPosition>) => {
-    return function TechnologyHoldingExternalLabel({
+    return function PercentageDonutExternalLabel({
         cx,
         cy,
         midAngle,
@@ -96,7 +96,7 @@ const createExternalLabelRenderer = (positions: Map<string, LabelPosition>) => {
 
             return (
                 <text
-                    className="technology-holding-value"
+                    className="percentage-donut-value"
                     x={labelX}
                     y={labelY}
                     fill="var(--ds-foreground)"
@@ -126,7 +126,7 @@ const createExternalLabelRenderer = (positions: Map<string, LabelPosition>) => {
         const color = typeof payload?.fill === 'string' ? payload.fill : 'var(--ds-foreground-subtle)'
 
         return (
-            <g className="technology-holding-label" aria-hidden="true">
+            <g className="percentage-donut-label" aria-hidden="true">
                 <polyline
                     points={`${startX},${startY} ${middleX},${middleY} ${endX},${middleY}`}
                     fill="none"
@@ -150,7 +150,7 @@ const createExternalLabelRenderer = (positions: Map<string, LabelPosition>) => {
     }
 }
 
-const TechnologyHoldingsChart = ({data, ariaLabel, className, ...props}: TechnologyHoldingsChartProps) => {
+const PercentageDonutChart = ({data, ariaLabel, className, ...props}: PercentageDonutChartProps) => {
     const config: ChartConfig = Object.fromEntries(data.map(({id, label, color}) => [id, {label, color}]))
     const chartData = data.map((item) => ({...item, fill: `var(--color-${item.id})`}))
     const labelPositions = useMemo(() => getLabelPositions(data), [data])
@@ -228,5 +228,5 @@ const TechnologyHoldingsChart = ({data, ariaLabel, className, ...props}: Technol
     )
 }
 
-export {TechnologyHoldingsChart}
-export type {TechnologyHoldingItem, TechnologyHoldingsChartProps}
+export {PercentageDonutChart}
+export type {PercentageDonutChartProps, PercentageDonutItem}

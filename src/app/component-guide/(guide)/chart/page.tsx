@@ -1,8 +1,8 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
-import {BusinessMetricRadarChart, type BusinessMetricRadarItem} from '@/components/custom/business-metric-radar-chart'
-import {BusinessPerformanceMatrix, type PerformanceMatrixRow} from '@/components/custom/business-performance-matrix'
+import {ComparisonRadarChart, type ComparisonRadarItem} from '@/components/custom/comparison-radar-chart'
 import {ListMarker} from '@/components/custom/list-marker'
+import {RatingMatrix, type RatingMatrixRow} from '@/components/custom/rating-matrix'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import PropsTable from '@/components/guide/props-table'
@@ -121,9 +121,9 @@ export default function SupplyNetwork() {
 //       construction | finance | retail | education | transport`
 
 const TECHNOLOGY_HOLDINGS_CODE = `import {
-  TechnologyHoldingsChart,
-  type TechnologyHoldingItem,
-} from '@/components/custom/technology-holdings-chart';
+  PercentageDonutChart,
+  type PercentageDonutItem,
+} from '@/components/custom/percentage-donut-chart';
 
 type ApiTechnologyHolding = {
   categoryCode: string;
@@ -173,7 +173,7 @@ const technologyHoldingsFromApi: ApiTechnologyHolding[] = [
 ];
 
 // API의 기술 분류별 건수와 비중을 이 구조로 변환합니다.
-const toChartData = (apiData: ApiTechnologyHolding[]): TechnologyHoldingItem[] =>
+const toChartData = (apiData: ApiTechnologyHolding[]): PercentageDonutItem[] =>
   apiData.map((item) => ({
     id: item.categoryCode,
     label: item.categoryName,
@@ -184,7 +184,7 @@ const toChartData = (apiData: ApiTechnologyHolding[]): TechnologyHoldingItem[] =
 
 export default function TechnologyHoldingsSection() {
   return (
-    <TechnologyHoldingsChart
+    <PercentageDonutChart
       data={toChartData(technologyHoldingsFromApi)}
       ariaLabel="소분류 기준 기업 보유기술 비중과 건수"
     />
@@ -192,14 +192,14 @@ export default function TechnologyHoldingsSection() {
 }`
 
 const INNOVATION_GROWTH_INDEX_CODE = `import {
-  InnovationGrowthIndexChart,
-  type InnovationGrowthGrade,
-  type InnovationGrowthIndexData,
-} from '@/components/custom/innovation-growth-index-chart';
+  ScoreBenchmarkChart,
+  type ScoreBenchmarkData,
+  type ScoreBenchmarkTone,
+} from '@/components/custom/score-benchmark-chart';
 
 type ApiInnovationGrowthIndex = {
   techIndexScore: number;
-  diagnosisGrade: InnovationGrowthGrade;
+  diagnosisGrade: string;
   industryTopPercentage: number;
   comparisonIndustryName: string;
 };
@@ -212,17 +212,23 @@ const innovationIndexFromApi: ApiInnovationGrowthIndex = {
   comparisonIndustryName: '동일업종 기준 · 그 외 기타 전자부품 제조업',
 };
 
-// API 필드를 컴포넌트 data 형식으로 변환합니다.
-const toChartData = (apiData: ApiInnovationGrowthIndex): InnovationGrowthIndexData => ({
+const getTone = (grade: string): ScoreBenchmarkTone =>
+  ({ 우수: 'strong', 양호: 'positive', 주의: 'caution', 위험: 'danger' })[grade] ?? 'caution';
+
+// 업무 필드를 재사용 가능한 점수·벤치마크 구조로 변환합니다.
+const toChartData = (apiData: ApiInnovationGrowthIndex): ScoreBenchmarkData => ({
   score: apiData.techIndexScore,
-  grade: apiData.diagnosisGrade,
-  topPercentage: apiData.industryTopPercentage,
-  comparisonLabel: apiData.comparisonIndustryName,
+  scoreLabel: 'TECH-INDEX SCORE',
+  statusLabel: apiData.diagnosisGrade,
+  tone: getTone(apiData.diagnosisGrade),
+  benchmarkPercentage: apiData.industryTopPercentage,
+  benchmarkLabel: apiData.comparisonIndustryName,
+  summary: '인프라·투입·활동·성과 부문별 전문가 검증 결과',
 });
 
 export default function InnovationGrowthIndexSection() {
   return (
-    <InnovationGrowthIndexChart
+    <ScoreBenchmarkChart
       data={toChartData(innovationIndexFromApi)}
       ariaLabel="혁신성장역량 Tech-Index 점수와 동일업종 상위 비율"
     />
@@ -230,10 +236,10 @@ export default function InnovationGrowthIndexSection() {
 }`
 
 const CREDIT_RATING_CODE = `import {
-  CreditRatingGauge,
-  type CreditRatingData,
-  type CreditRatingTone,
-} from '@/components/custom/credit-rating-gauge';
+  SemicircleRatingGauge,
+  type RatingGaugeTone,
+  type SemicircleRatingData,
+} from '@/components/custom/semicircle-rating-gauge';
 
 type ApiCreditRating = {
   gradeCode: string;
@@ -253,7 +259,7 @@ const creditRatingFromApi: ApiCreditRating = {
 };
 
 // 2. 등급 코드를 컴포넌트의 시맨틱 색상으로 변환합니다.
-const getCreditRatingTone = (grade: string): CreditRatingTone => {
+const getCreditRatingTone = (grade: string): RatingGaugeTone => {
   if (grade === 'AAA' || grade.startsWith('AA')) return 'excellent';
   if (grade.startsWith('A')) return 'good';
   if (grade.startsWith('BBB')) return 'normal';
@@ -262,12 +268,14 @@ const getCreditRatingTone = (grade: string): CreditRatingTone => {
 };
 
 // 3. API 응답을 컴포넌트가 받는 data 형태로 변환합니다.
-const toCreditRatingData = (item: ApiCreditRating): CreditRatingData => ({
-  grade: item.gradeCode,               // 'BBB+'
-  description: item.gradeName,         // '보통 상위'
-  score: item.gaugeValue,               // 78 (0~100)
-  evaluationDate: item.evaluationDate, // '2025-05-20'
-  settlementDate: item.settlementDate, // '2024-12-31'
+const toCreditRatingData = (item: ApiCreditRating): SemicircleRatingData => ({
+  label: item.gradeCode,
+  description: item.gradeName,
+  percentage: item.gaugeValue,
+  details: [
+    { label: '평가일자', value: item.evaluationDate },
+    { label: '결산일자', value: item.settlementDate },
+  ],
   tone: getCreditRatingTone(item.gradeCode),
 });
 
@@ -275,20 +283,21 @@ export default function CreditRatingSection() {
   const data = toCreditRatingData(creditRatingFromApi);
 
   return (
-    <CreditRatingGauge
+    <SemicircleRatingGauge
       data={data}
-      ariaLabel={\`기업신용등급 \${data.grade}, \${data.description}, 평가일자 \${data.evaluationDate}, 결산일자 \${data.settlementDate}\`}
+      title="기업신용등급"
+      ariaLabel={\`기업신용등급 \${data.label}, \${data.description}\`}
     />
   );
 }`
 
 const BUSINESS_PERFORMANCE_MATRIX_CODE = `import {
-  BusinessPerformanceMatrix,
-  type PerformanceMatrixRow,
-} from '@/components/custom/business-performance-matrix';
+  RatingMatrix,
+  type RatingMatrixRow,
+} from '@/components/custom/rating-matrix';
 
 // API 응답을 행 단위 데이터로 구성합니다.
-const performanceRows: PerformanceMatrixRow[] = [
+const performanceRows: RatingMatrixRow[] = [
   { id: 'growth', label: '성장성', rating: 'weak' },
   { id: 'profitability', label: '수익성', rating: 'good' },
   { id: 'stability', label: '안정성', rating: 'average' },
@@ -299,7 +308,7 @@ const performanceRows: PerformanceMatrixRow[] = [
 
 export default function BusinessPerformanceSection() {
   return (
-    <BusinessPerformanceMatrix
+    <RatingMatrix
       rows={performanceRows}
       ariaLabel="기업 경영지표별 평가등급"
     />
@@ -309,7 +318,7 @@ export default function BusinessPerformanceSection() {
 // rating: poor(취약) | weak(미흡) | average(보통) |
 //         good(양호) | excellent(우수)`
 
-const BUSINESS_PERFORMANCE_ROWS: PerformanceMatrixRow[] = [
+const BUSINESS_PERFORMANCE_ROWS: RatingMatrixRow[] = [
     {id: 'growth', label: '성장성', rating: 'weak'},
     {id: 'profitability', label: '수익성', rating: 'good'},
     {id: 'stability', label: '안정성', rating: 'average'},
@@ -319,36 +328,38 @@ const BUSINESS_PERFORMANCE_ROWS: PerformanceMatrixRow[] = [
 ]
 
 const BUSINESS_METRIC_RADAR_CODE = `import {
-  BusinessMetricRadarChart,
-  type BusinessMetricRadarItem,
-} from '@/components/custom/business-metric-radar-chart';
+  ComparisonRadarChart,
+  type ComparisonRadarItem,
+} from '@/components/custom/comparison-radar-chart';
 
 // API에서 받은 조회기업과 업종평균의 부문별 점수를 연결합니다.
-const comparisonData: BusinessMetricRadarItem[] = [
-  { id: 'growth', metric: '성장성', company: 52, industryAverage: 60 },
-  { id: 'profitability', metric: '수익성', company: 78, industryAverage: 68 },
-  { id: 'stability', metric: '안정성', company: 72, industryAverage: 61 },
-  { id: 'activity', metric: '활동성', company: 66, industryAverage: 45 },
-  { id: 'liquidity', metric: '유동성', company: 58, industryAverage: 57 },
-  { id: 'cash-flow', metric: '현금흐름', company: 38, industryAverage: 55 },
+const comparisonData: ComparisonRadarItem[] = [
+  { id: 'growth', label: '성장성', primaryValue: 52, comparisonValue: 60 },
+  { id: 'profitability', label: '수익성', primaryValue: 78, comparisonValue: 68 },
+  { id: 'stability', label: '안정성', primaryValue: 72, comparisonValue: 61 },
+  { id: 'activity', label: '활동성', primaryValue: 66, comparisonValue: 45 },
+  { id: 'liquidity', label: '유동성', primaryValue: 58, comparisonValue: 57 },
+  { id: 'cash-flow', label: '현금흐름', primaryValue: 38, comparisonValue: 55 },
 ];
 
 export default function BusinessMetricComparison() {
   return (
-    <BusinessMetricRadarChart
+    <ComparisonRadarChart
       data={comparisonData}
+      primaryLabel="조회기업"
+      comparisonLabel="업종평균"
       ariaLabel="조회기업과 업종평균의 6개 경영지표 점수 비교"
     />
   );
 }`
 
-const BUSINESS_METRIC_RADAR_DATA: BusinessMetricRadarItem[] = [
-    {id: 'growth', metric: '성장성', company: 52, industryAverage: 60},
-    {id: 'profitability', metric: '수익성', company: 78, industryAverage: 68},
-    {id: 'stability', metric: '안정성', company: 72, industryAverage: 61},
-    {id: 'activity', metric: '활동성', company: 66, industryAverage: 45},
-    {id: 'liquidity', metric: '유동성', company: 58, industryAverage: 57},
-    {id: 'cash-flow', metric: '현금흐름', company: 38, industryAverage: 55},
+const BUSINESS_METRIC_RADAR_DATA: ComparisonRadarItem[] = [
+    {id: 'growth', label: '성장성', primaryValue: 52, comparisonValue: 60},
+    {id: 'profitability', label: '수익성', primaryValue: 78, comparisonValue: 68},
+    {id: 'stability', label: '안정성', primaryValue: 72, comparisonValue: 61},
+    {id: 'activity', label: '활동성', primaryValue: 66, comparisonValue: 45},
+    {id: 'liquidity', label: '유동성', primaryValue: 58, comparisonValue: 57},
+    {id: 'cash-flow', label: '현금흐름', primaryValue: 38, comparisonValue: 55},
 ]
 
 const WORD_CLOUD_CODE = `import {
@@ -435,75 +446,53 @@ const PROPS_ITEMS = [
     ],
     ['NetworkGraph', 'ariaLabel', '분석기업과 업종·거래기업 관계를 간결하게 설명합니다.', '-', 'string'],
     [
-        'TechnologyHoldingsChart',
+        'PercentageDonutChart',
         'data',
-        '기술 분류별 고유 id, 분류명, 비중, 보유 건수와 semantic chart 색상을 전달합니다.',
+        '항목별 고유 id, 표시명, 비중, 건수와 semantic chart 색상을 전달합니다.',
         '-',
-        'TechnologyHoldingItem[]',
+        'PercentageDonutItem[]',
     ],
+    ['PercentageDonutChart', 'ariaLabel', '도넛 차트가 비교하는 분류 기준과 데이터 범위를 설명합니다.', '-', 'string'],
     [
-        'TechnologyHoldingsChart',
-        'ariaLabel',
-        '도넛 차트가 비교하는 분류 기준과 데이터 범위를 설명합니다.',
-        '-',
-        'string',
-    ],
-    [
-        'InnovationGrowthIndexChart',
+        'ScoreBenchmarkChart',
         'data',
-        'Tech-Index 점수, 진단 등급, 동일업종 상위 비율과 비교 기준명을 전달합니다. 점수와 비율은 0~100 범위로 표시합니다.',
+        '점수명, 점수, 상태, 요약, 비교 기준명·비율과 상태 색상 tone을 전달합니다. 점수와 비율은 0~100 범위로 표시합니다.',
         '-',
-        'InnovationGrowthIndexData',
+        'ScoreBenchmarkData',
     ],
     [
-        'InnovationGrowthIndexChart',
+        'ScoreBenchmarkChart',
         'ariaLabel',
-        '원형 지수와 동일업종 상위 비율이 나타내는 평가 범위를 설명합니다.',
+        '원형 점수와 비교 기준 비율이 나타내는 데이터 범위를 설명합니다.',
         '-',
         'string',
     ],
     [
-        'CreditRatingGauge',
+        'SemicircleRatingGauge',
         'data',
-        '기업신용등급, 등급 설명, 게이지 지수, 평가일자·결산일자와 임시 색상 의미 tone을 전달합니다. 지수는 0~100 범위로 표시합니다.',
+        '등급 라벨, 설명, 게이지 표시 비율, 부가 정보 목록과 상태 색상 tone을 전달합니다. 비율은 0~100 범위로 표시합니다.',
         '-',
-        'CreditRatingData',
+        'SemicircleRatingData',
     ],
+    ['SemicircleRatingGauge', 'title', '툴팁과 보조 설명에 사용할 게이지 제목을 전달합니다.', '-', 'string'],
+    ['SemicircleRatingGauge', 'ariaLabel', '반원형 게이지가 나타내는 등급과 평가 기준을 설명합니다.', '-', 'string'],
+    ['RatingMatrix', 'rows', '지표별 고유 id·표시명과 하나의 평가등급을 전달합니다.', '-', 'RatingMatrixRow[]'],
+    ['RatingMatrix', 'ariaLabel', '표가 비교하는 행 지표와 평가등급의 범위를 설명합니다.', '-', 'string'],
     [
-        'CreditRatingGauge',
-        'ariaLabel',
-        '반원형 게이지가 나타내는 기업신용등급과 평가 기준을 설명합니다.',
-        '-',
-        'string',
-    ],
-    [
-        'BusinessPerformanceMatrix',
-        'rows',
-        '지표별 고유 id·표시명과 하나의 평가등급을 전달합니다.',
-        '-',
-        'PerformanceMatrixRow[]',
-    ],
-    [
-        'BusinessPerformanceMatrix',
-        'ariaLabel',
-        '표가 비교하는 기업 지표와 평가등급의 범위를 설명합니다.',
-        '-',
-        'string',
-    ],
-    [
-        'BusinessMetricRadarChart',
+        'ComparisonRadarChart',
         'data',
-        '지표별 고유 id·표시명과 조회기업·업종평균의 0~100 점수를 전달합니다.',
+        '지표별 고유 id·표시명과 주 대상·비교 대상의 0~100 값을 전달합니다.',
         '-',
-        'BusinessMetricRadarItem[]',
+        'ComparisonRadarItem[]',
     ],
     [
-        'BusinessMetricRadarChart',
-        'ariaLabel',
-        '레이더 차트에서 비교하는 대상과 경영지표 범위를 설명합니다.',
+        'ComparisonRadarChart',
+        'primaryLabel · comparisonLabel',
+        '범례·툴팁·숨김 데이터 표에 표시할 두 비교 대상의 이름을 전달합니다.',
         '-',
         'string',
     ],
+    ['ComparisonRadarChart', 'ariaLabel', '레이더 차트에서 비교하는 대상과 지표 범위를 설명합니다.', '-', 'string'],
     [
         'WordCloud',
         'words',
@@ -574,7 +563,7 @@ const ChartGuidePage = () => (
             <section aria-labelledby="chart-company-network" className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1">
                     <h2 id="chart-company-network" className="typo-h4-bold">
-                        연계기업 네트워크
+                        연계기업 네트워크 (CompanyRelationshipGraph)
                     </h2>
                     <ul className="typo-body-l-regular text-foreground-subtle flex list-none flex-col gap-1">
                         {[
@@ -608,7 +597,7 @@ const ChartGuidePage = () => (
             <section aria-labelledby="chart-supply-network" className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1">
                     <h2 id="chart-supply-network" className="typo-h4-bold">
-                        산업별 공급망 분포
+                        산업별 공급망 분포 (NetworkGraph)
                     </h2>
                     <ul className="typo-body-l-regular text-foreground-subtle flex list-none flex-col gap-1">
                         {[
@@ -639,7 +628,7 @@ const ChartGuidePage = () => (
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex flex-col gap-1">
                         <h2 id="chart-technology-holdings" className="typo-h4-bold">
-                            기업 보유기술
+                            기업 보유기술 (PercentageDonutChart)
                         </h2>
                         <ul className="typo-body-l-regular text-foreground-subtle mt-1 flex flex-col gap-1">
                             {[
@@ -663,7 +652,7 @@ const ChartGuidePage = () => (
                 <CodeBlock
                     code={TECHNOLOGY_HOLDINGS_CODE}
                     language="tsx"
-                    copyLabel="TechnologyHoldingsChart 데이터 연결 코드 복사"
+                    copyLabel="PercentageDonutChart 데이터 연결 코드 복사"
                 />
                 <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>
@@ -674,7 +663,7 @@ const ChartGuidePage = () => (
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex flex-col gap-1">
                         <h2 id="chart-innovation-growth-index" className="typo-h4-bold">
-                            혁신성장역량지수
+                            혁신성장역량지수 (ScoreBenchmarkChart)
                         </h2>
                         <p className="typo-body-l-regular text-foreground-subtle">
                             Tech-Index 점수와 진단 상태, 동일업종 내 상위 비율을 함께 표시합니다.
@@ -688,7 +677,7 @@ const ChartGuidePage = () => (
                 <CodeBlock
                     code={INNOVATION_GROWTH_INDEX_CODE}
                     language="tsx"
-                    copyLabel="InnovationGrowthIndexChart 데이터 연결 코드 복사"
+                    copyLabel="ScoreBenchmarkChart 데이터 연결 코드 복사"
                 />
                 <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>
@@ -698,7 +687,7 @@ const ChartGuidePage = () => (
             <section aria-labelledby="chart-credit-rating" className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1">
                     <h2 id="chart-credit-rating" className="typo-h4-bold">
-                        기업신용등급
+                        기업신용등급 (SemicircleRatingGauge)
                     </h2>
                     <ul className="typo-body-l-regular text-foreground-subtle mt-1 flex flex-col gap-1">
                         {[
@@ -740,7 +729,7 @@ const ChartGuidePage = () => (
                 <CodeBlock
                     code={CREDIT_RATING_CODE}
                     language="tsx"
-                    copyLabel="CreditRatingGauge 데이터 연결 코드 복사"
+                    copyLabel="SemicircleRatingGauge 데이터 연결 코드 복사"
                 />
                 <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>
@@ -750,7 +739,7 @@ const ChartGuidePage = () => (
             <section aria-labelledby="chart-business-performance" className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1">
                     <h2 id="chart-business-performance" className="typo-h4-bold">
-                        기업 경영지표 등급
+                        기업 경영지표 등급 (RatingMatrix)
                     </h2>
                     <ul className="typo-body-l-regular text-foreground-subtle mt-1 flex flex-col gap-1">
                         {[
@@ -766,7 +755,7 @@ const ChartGuidePage = () => (
                     </ul>
                 </div>
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4 sm:p-6">
-                    <BusinessPerformanceMatrix
+                    <RatingMatrix
                         rows={BUSINESS_PERFORMANCE_ROWS}
                         ariaLabel="기업 경영지표별 취약·미흡·보통·양호·우수 평가등급"
                     />
@@ -774,7 +763,7 @@ const ChartGuidePage = () => (
                 <CodeBlock
                     code={BUSINESS_PERFORMANCE_MATRIX_CODE}
                     language="tsx"
-                    copyLabel="BusinessPerformanceMatrix 데이터 연결 코드 복사"
+                    copyLabel="RatingMatrix 데이터 연결 코드 복사"
                 />
             </section>
         </BaseCard>
@@ -784,7 +773,7 @@ const ChartGuidePage = () => (
                 <div className="flex flex-wrap items-center justify-between gap-3">
                     <div className="flex flex-col gap-1">
                         <h2 id="chart-business-metric-radar" className="typo-h4-bold">
-                            부문별 비교
+                            부문별 비교 (ComparisonRadarChart)
                         </h2>
                         <ul className="typo-body-l-regular text-foreground-subtle mt-1 flex flex-col gap-1">
                             {[
@@ -802,15 +791,17 @@ const ChartGuidePage = () => (
                     <Badge color="neutral">조회기업 vs 업종평균</Badge>
                 </div>
                 <div className="bg-background border-border overflow-hidden rounded-xl border p-4 sm:p-6">
-                    <BusinessMetricRadarChart
+                    <ComparisonRadarChart
                         data={BUSINESS_METRIC_RADAR_DATA}
+                        primaryLabel="조회기업"
+                        comparisonLabel="업종평균"
                         ariaLabel="조회기업과 업종평균의 성장성·수익성·안정성·활동성·유동성·현금흐름 점수 비교"
                     />
                 </div>
                 <CodeBlock
                     code={BUSINESS_METRIC_RADAR_CODE}
                     language="tsx"
-                    copyLabel="BusinessMetricRadarChart 데이터 연결 코드 복사"
+                    copyLabel="ComparisonRadarChart 데이터 연결 코드 복사"
                 />
                 <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>
@@ -820,7 +811,7 @@ const ChartGuidePage = () => (
             <section aria-labelledby="chart-word-cloud" className="flex flex-col gap-5">
                 <div className="flex flex-col gap-1">
                     <h2 id="chart-word-cloud" className="typo-h4-bold">
-                        R&amp;D 이슈 워드클라우드
+                        R&amp;D 이슈 워드클라우드 (WordCloud)
                     </h2>
                     <ul className="typo-body-l-regular text-foreground-subtle flex list-none flex-col gap-1">
                         {[

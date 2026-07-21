@@ -5,25 +5,30 @@ import {PolarAngleAxis, RadialBar, RadialBarChart} from 'recharts'
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
 import {cn} from '@/lib/utils'
 
-type CreditRatingData = {
-    grade: string
-    description: string
-    score: number
-    evaluationDate: string
-    settlementDate: string
-    tone: CreditRatingTone
+type RatingGaugeDetail = {
+    label: string
+    value: string
 }
 
-type CreditRatingTone = 'caution' | 'danger' | 'excellent' | 'good' | 'normal'
+type SemicircleRatingData = {
+    description: string
+    details: RatingGaugeDetail[]
+    label: string
+    percentage: number
+    tone: RatingGaugeTone
+}
 
-type CreditRatingGaugeProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
-    data: CreditRatingData
+type RatingGaugeTone = 'caution' | 'danger' | 'excellent' | 'good' | 'normal'
+
+type SemicircleRatingGaugeProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     ariaLabel: string
+    data: SemicircleRatingData
+    title: string
 }
 
 const clampPercentage = (value: number) => Math.min(100, Math.max(0, value))
 
-const CREDIT_RATING_COLORS: Record<CreditRatingTone, string> = {
+const RATING_COLORS: Record<RatingGaugeTone, string> = {
     excellent: 'var(--ds-info)',
     good: 'var(--ds-primary)',
     normal: 'var(--ds-success)',
@@ -31,13 +36,13 @@ const CREDIT_RATING_COLORS: Record<CreditRatingTone, string> = {
     danger: 'var(--ds-error)',
 }
 
-const CreditRatingGauge = ({data, ariaLabel, className, ...props}: CreditRatingGaugeProps) => {
-    const score = clampPercentage(data.score)
-    const keyColor = CREDIT_RATING_COLORS[data.tone]
-    const hasCompactGrade = data.grade.length >= 3
+const SemicircleRatingGauge = ({data, title, ariaLabel, className, ...props}: SemicircleRatingGaugeProps) => {
+    const percentage = clampPercentage(data.percentage)
+    const keyColor = RATING_COLORS[data.tone]
+    const hasCompactLabel = data.label.length >= 3
     const hasLongDescription = data.description.length >= 10
-    const chartConfig: ChartConfig = {score: {label: '기업신용등급', color: keyColor}}
-    const chartData = [{name: 'score', score, fill: 'var(--color-score)'}]
+    const chartConfig: ChartConfig = {percentage: {label: title, color: keyColor}}
+    const chartData = [{name: 'percentage', percentage, fill: 'var(--color-percentage)'}]
 
     return (
         <div {...props} className={cn('mx-auto flex w-full max-w-md flex-col items-center', className)}>
@@ -67,42 +72,44 @@ const CreditRatingGauge = ({data, ariaLabel, className, ...props}: CreditRatingG
                                     hideIndicator
                                     formatter={() => (
                                         <div>
-                                            <p className="typo-body-l-bold">기업신용등급 {data.grade}</p>
+                                            <p className="typo-body-l-bold">
+                                                {title} {data.label}
+                                            </p>
                                             <p className="typo-body-s-regular mt-1">
-                                                {data.description} · 지수 {score}
+                                                {data.description} · 표시 비율 {percentage}%
                                             </p>
                                         </div>
                                     )}
                                 />
                             }
                         />
-                        <RadialBar dataKey="score" background={{fill: 'var(--ds-muted)'}} cornerRadius={999} />
+                        <RadialBar dataKey="percentage" background={{fill: 'var(--ds-muted)'}} cornerRadius={999} />
                     </RadialBarChart>
                 </ChartContainer>
 
                 <div
                     className={cn(
                         'pointer-events-none absolute inset-x-0 flex flex-col items-center text-center',
-                        hasCompactGrade ? 'top-[34%]' : hasLongDescription ? 'top-[30%]' : 'top-[32%]',
+                        hasCompactLabel ? 'top-[34%]' : hasLongDescription ? 'top-[30%]' : 'top-[32%]',
                     )}
                 >
                     <strong
                         className={cn(
                             'leading-none tabular-nums',
-                            data.grade.length >= 4
+                            data.label.length >= 4
                                 ? 'text-3xl'
-                                : data.grade.length >= 3 || hasLongDescription
+                                : data.label.length >= 3 || hasLongDescription
                                   ? 'text-4xl'
                                   : 'text-5xl',
                         )}
                         style={{color: keyColor}}
                     >
-                        {data.grade}
+                        {data.label}
                     </strong>
                     <span
                         className={cn(
                             'typo-body-m-regular text-foreground-subtle max-w-28 leading-snug text-balance break-keep whitespace-normal',
-                            hasCompactGrade ? 'mt-1' : hasLongDescription ? 'mt-2' : 'mt-3',
+                            hasCompactLabel ? 'mt-1' : hasLongDescription ? 'mt-2' : 'mt-3',
                         )}
                     >
                         {data.description}
@@ -111,23 +118,21 @@ const CreditRatingGauge = ({data, ariaLabel, className, ...props}: CreditRatingG
             </div>
 
             <dl className="typo-body-m-regular -mt-8 grid grid-cols-[auto_auto] gap-x-2 gap-y-2">
-                <dt className="text-foreground-subtle">평가일자</dt>
-                <dd className="text-foreground font-medium tabular-nums">
-                    <time dateTime={data.evaluationDate}>{data.evaluationDate}</time>
-                </dd>
-                <dt className="text-foreground-subtle">결산일자</dt>
-                <dd className="text-foreground font-medium tabular-nums">
-                    <time dateTime={data.settlementDate}>{data.settlementDate}</time>
-                </dd>
+                {data.details.map((detail) => (
+                    <div key={detail.label} className="contents">
+                        <dt className="text-foreground-subtle">{detail.label}</dt>
+                        <dd className="text-foreground font-medium tabular-nums">{detail.value}</dd>
+                    </div>
+                ))}
             </dl>
 
             <p className="sr-only">
-                기업신용등급 {data.grade}, {data.description}, 지수 {score}, 평가일자 {data.evaluationDate}, 결산일자{' '}
-                {data.settlementDate}
+                {title} {data.label}, {data.description}, 표시 비율 {percentage}%,{' '}
+                {data.details.map(({label, value}) => `${label} ${value}`).join(', ')}
             </p>
         </div>
     )
 }
 
-export {CreditRatingGauge}
-export type {CreditRatingData, CreditRatingGaugeProps, CreditRatingTone}
+export {SemicircleRatingGauge}
+export type {RatingGaugeDetail, RatingGaugeTone, SemicircleRatingData, SemicircleRatingGaugeProps}

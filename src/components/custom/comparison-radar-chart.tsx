@@ -5,31 +5,39 @@ import {PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart} from 'rec
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
 import {cn} from '@/lib/utils'
 
-type BusinessMetricRadarItem = {
+type ComparisonRadarItem = {
     id: string
-    metric: string
-    company: number
-    industryAverage: number
+    label: string
+    primaryValue: number
+    comparisonValue: number
 }
 
-type BusinessMetricRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
+type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     ariaLabel: string
-    data: BusinessMetricRadarItem[]
+    comparisonLabel: string
+    data: ComparisonRadarItem[]
+    primaryLabel: string
 }
 
 const clampScore = (value: number) => Math.min(100, Math.max(0, value))
 const RADAR_DOT_RADIUS = 5
 
-const CHART_CONFIG = {
-    company: {label: '조회기업', color: 'var(--ds-chart-1)'},
-    industryAverage: {label: '업종평균', color: 'var(--ds-chart-5)'},
-} satisfies ChartConfig
-
-const BusinessMetricRadarChart = ({data, ariaLabel, className, ...props}: BusinessMetricRadarChartProps) => {
+const ComparisonRadarChart = ({
+    data,
+    primaryLabel,
+    comparisonLabel,
+    ariaLabel,
+    className,
+    ...props
+}: ComparisonRadarChartProps) => {
+    const chartConfig = {
+        primaryValue: {label: primaryLabel, color: 'var(--ds-chart-1)'},
+        comparisonValue: {label: comparisonLabel, color: 'var(--ds-chart-5)'},
+    } satisfies ChartConfig
     const chartData = data.map((item) => ({
         ...item,
-        company: clampScore(item.company),
-        industryAverage: clampScore(item.industryAverage),
+        primaryValue: clampScore(item.primaryValue),
+        comparisonValue: clampScore(item.comparisonValue),
     }))
 
     return (
@@ -44,7 +52,7 @@ const BusinessMetricRadarChart = ({data, ariaLabel, className, ...props}: Busine
                         }}
                         aria-hidden="true"
                     />
-                    조회기업
+                    {primaryLabel}
                 </span>
                 <span className="flex items-center gap-1.5">
                     <span
@@ -52,12 +60,12 @@ const BusinessMetricRadarChart = ({data, ariaLabel, className, ...props}: Busine
                         style={{borderColor: 'var(--ds-chart-5)'}}
                         aria-hidden="true"
                     />
-                    업종평균
+                    {comparisonLabel}
                 </span>
             </div>
 
             <ChartContainer
-                config={CHART_CONFIG}
+                config={chartConfig}
                 className="mx-auto aspect-square max-h-96 min-h-72 w-full max-w-xl [&_.recharts-polygon]:cursor-pointer"
                 aria-label={ariaLabel}
             >
@@ -69,35 +77,35 @@ const BusinessMetricRadarChart = ({data, ariaLabel, className, ...props}: Busine
                 >
                     <PolarGrid gridType="polygon" stroke="var(--ds-subtle-2)" />
                     <PolarAngleAxis
-                        dataKey="metric"
+                        dataKey="label"
                         tick={{fill: 'var(--ds-foreground)', fontSize: 12, fontWeight: 600}}
                     />
                     <PolarRadiusAxis angle={90} domain={[0, 100]} tick={false} axisLine={false} tickCount={6} />
-                    <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" labelKey="metric" />} />
+                    <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" labelKey="label" />} />
                     <Radar
-                        name="industryAverage"
-                        dataKey="industryAverage"
-                        stroke="var(--color-industryAverage)"
+                        name="comparisonValue"
+                        dataKey="comparisonValue"
+                        stroke="var(--color-comparisonValue)"
                         strokeWidth={2}
                         strokeDasharray="5 4"
                         fill="transparent"
                         dot={{
                             r: RADAR_DOT_RADIUS,
-                            fill: 'var(--color-industryAverage)',
+                            fill: 'var(--color-comparisonValue)',
                             fillOpacity: 1,
                             strokeWidth: 0,
                         }}
                     />
                     <Radar
-                        name="company"
-                        dataKey="company"
-                        stroke="var(--color-company)"
+                        name="primaryValue"
+                        dataKey="primaryValue"
+                        stroke="var(--color-primaryValue)"
                         strokeWidth={2.5}
-                        fill="var(--color-company)"
+                        fill="var(--color-primaryValue)"
                         fillOpacity={0.16}
                         dot={{
                             r: RADAR_DOT_RADIUS,
-                            fill: 'var(--color-company)',
+                            fill: 'var(--color-primaryValue)',
                             fillOpacity: 1,
                             strokeWidth: 0,
                         }}
@@ -110,16 +118,16 @@ const BusinessMetricRadarChart = ({data, ariaLabel, className, ...props}: Busine
                 <thead>
                     <tr>
                         <th scope="col">평가지표</th>
-                        <th scope="col">조회기업</th>
-                        <th scope="col">업종평균</th>
+                        <th scope="col">{primaryLabel}</th>
+                        <th scope="col">{comparisonLabel}</th>
                     </tr>
                 </thead>
                 <tbody>
                     {chartData.map((item) => (
                         <tr key={item.id}>
-                            <th scope="row">{item.metric}</th>
-                            <td>{item.company}</td>
-                            <td>{item.industryAverage}</td>
+                            <th scope="row">{item.label}</th>
+                            <td>{item.primaryValue}</td>
+                            <td>{item.comparisonValue}</td>
                         </tr>
                     ))}
                 </tbody>
@@ -128,5 +136,5 @@ const BusinessMetricRadarChart = ({data, ariaLabel, className, ...props}: Busine
     )
 }
 
-export {BusinessMetricRadarChart}
-export type {BusinessMetricRadarChartProps, BusinessMetricRadarItem}
+export {ComparisonRadarChart}
+export type {ComparisonRadarChartProps, ComparisonRadarItem}

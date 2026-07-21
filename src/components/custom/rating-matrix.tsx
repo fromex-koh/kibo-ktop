@@ -2,21 +2,21 @@ import type {ComponentPropsWithoutRef} from 'react'
 import {Check} from 'lucide-react'
 import {cn} from '@/lib/utils'
 
-type PerformanceRating = 'average' | 'excellent' | 'good' | 'poor' | 'weak'
+type RatingLevel = 'average' | 'excellent' | 'good' | 'poor' | 'weak'
 
-type PerformanceMatrixRow = {
+type RatingMatrixRow = {
     id: string
     label: string
-    rating: PerformanceRating
+    rating: RatingLevel
 }
 
-type BusinessPerformanceMatrixProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
+type RatingMatrixProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     ariaLabel: string
-    rows: PerformanceMatrixRow[]
+    rows: RatingMatrixRow[]
 }
 
 const RATING_LEVELS: Array<{
-    id: PerformanceRating
+    id: RatingLevel
     label: string
     headerClassName: string
     markerClassName: string
@@ -53,7 +53,7 @@ const RATING_LEVELS: Array<{
     },
 ]
 
-const BusinessPerformanceMatrix = ({ariaLabel, rows, className, ...props}: BusinessPerformanceMatrixProps) => (
+const RatingMatrix = ({ariaLabel, rows, className, ...props}: RatingMatrixProps) => (
     <div {...props} className={cn('w-full', className)}>
         <div
             className="border-border dark:bg-background mx-auto w-fit max-w-full overflow-x-auto rounded-lg border bg-white"
@@ -146,5 +146,5 @@ const BusinessPerformanceMatrix = ({ariaLabel, rows, className, ...props}: Busin
     </div>
 )
 
-export {BusinessPerformanceMatrix}
-export type {BusinessPerformanceMatrixProps, PerformanceMatrixRow, PerformanceRating}
+export {RatingMatrix}
+export type {RatingLevel, RatingMatrixProps, RatingMatrixRow}

@@ -5,34 +5,37 @@ import {PolarAngleAxis, RadialBar, RadialBarChart} from 'recharts'
 import {ChartContainer, type ChartConfig} from '@/components/ui/chart'
 import {cn} from '@/lib/utils'
 
-type InnovationGrowthIndexData = {
+type ScoreBenchmarkData = {
+    benchmarkLabel: string
+    benchmarkPercentage: number
     score: number
-    grade: InnovationGrowthGrade
-    topPercentage: number
-    comparisonLabel: string
+    scoreLabel: string
+    statusLabel: string
+    summary: string
+    tone: ScoreBenchmarkTone
 }
 
-type InnovationGrowthGrade = '양호' | '우수' | '위험' | '주의'
+type ScoreBenchmarkTone = 'caution' | 'danger' | 'positive' | 'strong'
 
-type InnovationGrowthIndexChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
-    data: InnovationGrowthIndexData
+type ScoreBenchmarkChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
+    data: ScoreBenchmarkData
     ariaLabel: string
 }
 
-const GRADE_COLORS: Record<InnovationGrowthGrade, string> = {
-    우수: 'var(--ds-info)',
-    양호: 'var(--ds-success)',
-    주의: 'var(--ds-warning)',
-    위험: 'var(--ds-error)',
+const TONE_COLORS: Record<ScoreBenchmarkTone, string> = {
+    strong: 'var(--ds-info)',
+    positive: 'var(--ds-success)',
+    caution: 'var(--ds-warning)',
+    danger: 'var(--ds-error)',
 }
 
 const clampPercentage = (value: number) => Math.min(100, Math.max(0, value))
 
-const InnovationGrowthIndexChart = ({data, ariaLabel, className, ...props}: InnovationGrowthIndexChartProps) => {
+const ScoreBenchmarkChart = ({data, ariaLabel, className, ...props}: ScoreBenchmarkChartProps) => {
     const score = clampPercentage(data.score)
-    const topPercentage = clampPercentage(data.topPercentage)
-    const keyColor = GRADE_COLORS[data.grade]
-    const chartConfig: ChartConfig = {score: {label: 'Tech-Index', color: keyColor}}
+    const benchmarkPercentage = clampPercentage(data.benchmarkPercentage)
+    const keyColor = TONE_COLORS[data.tone]
+    const chartConfig: ChartConfig = {score: {label: data.scoreLabel, color: keyColor}}
     const chartData = [{name: 'score', score, fill: 'var(--color-score)'}]
 
     return (
@@ -51,12 +54,12 @@ const InnovationGrowthIndexChart = ({data, ariaLabel, className, ...props}: Inno
                     </RadialBarChart>
                 </ChartContainer>
                 <div className="pointer-events-none absolute inset-0 flex translate-y-2 flex-col items-center justify-center text-center leading-none">
-                    <span className="text-foreground-subtle text-xs font-bold">TECH-INDEX SCORE</span>
+                    <span className="text-foreground-subtle text-xs font-bold">{data.scoreLabel}</span>
                     <strong className="mt-1.5 text-4xl leading-none tabular-nums" style={{color: keyColor}}>
                         {score.toFixed(1)}
                     </strong>
                     <span className="typo-body-l-bold mt-2" style={{color: keyColor}}>
-                        {data.grade}
+                        {data.statusLabel}
                     </span>
                 </div>
             </div>
@@ -66,29 +69,28 @@ const InnovationGrowthIndexChart = ({data, ariaLabel, className, ...props}: Inno
                     className="bg-muted text-foreground rounded-r-xl border-l-4 px-5 py-4 text-base leading-7"
                     style={{borderColor: keyColor}}
                 >
-                    인프라, 투입, 활동, 성과 부문별 전문가검증 혁신성장역량 평가 결과, Tech-Index는{' '}
-                    <strong style={{color: keyColor}}>{score.toFixed(1)}점</strong>으로 진단되었으며 등급은{' '}
-                    <strong style={{color: keyColor}}>{data.grade}</strong>입니다.
+                    {data.summary} {data.scoreLabel}는 <strong style={{color: keyColor}}>{score.toFixed(1)}점</strong>
+                    이며 상태는 <strong style={{color: keyColor}}>{data.statusLabel}</strong>입니다.
                 </p>
 
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-wrap items-end justify-between gap-2">
-                        <span className="typo-body-m-regular text-foreground-subtle">{data.comparisonLabel}</span>
+                        <span className="typo-body-m-regular text-foreground-subtle">{data.benchmarkLabel}</span>
                         <strong className="typo-title-m-bold" style={{color: keyColor}}>
-                            상위 {topPercentage}%
+                            상위 {benchmarkPercentage}%
                         </strong>
                     </div>
                     <div
                         role="progressbar"
-                        aria-label={`${data.comparisonLabel} 상위 비율`}
+                        aria-label={`${data.benchmarkLabel} 상위 비율`}
                         aria-valuemin={0}
                         aria-valuemax={100}
-                        aria-valuenow={topPercentage}
+                        aria-valuenow={benchmarkPercentage}
                         className="bg-muted h-3 overflow-hidden rounded-full"
                     >
                         <div
                             className="h-full rounded-full"
-                            style={{width: `${topPercentage}%`, backgroundColor: keyColor}}
+                            style={{width: `${benchmarkPercentage}%`, backgroundColor: keyColor}}
                             aria-hidden="true"
                         />
                     </div>
@@ -103,11 +105,12 @@ const InnovationGrowthIndexChart = ({data, ariaLabel, className, ...props}: Inno
             </div>
 
             <p className="sr-only">
-                Tech-Index {score.toFixed(1)}점, 진단 등급 {data.grade}, {data.comparisonLabel} 상위 {topPercentage}%
+                {data.scoreLabel} {score.toFixed(1)}점, 상태 {data.statusLabel}, {data.benchmarkLabel} 상위{' '}
+                {benchmarkPercentage}%
             </p>
         </div>
     )
 }
 
-export {InnovationGrowthIndexChart}
-export type {InnovationGrowthGrade, InnovationGrowthIndexChartProps, InnovationGrowthIndexData}
+export {ScoreBenchmarkChart}
+export type {ScoreBenchmarkChartProps, ScoreBenchmarkData, ScoreBenchmarkTone}
