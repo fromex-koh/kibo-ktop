@@ -2,9 +2,9 @@ import type {Metadata} from 'next'
 import Image from 'next/image'
 import {BaseCard} from '@/components/composite/base-card'
 import {OptionCard} from '@/components/composite/option-card'
-import CodeBlock from '@/components/guide/code-block'
-import GuidePageShell from '@/components/guide/guide-page-shell'
-import PropsTable from '@/components/guide/props-table'
+import CodeBlock from '@/components/custom/code-block'
+import GuidePageShell from '@/components/custom/guide-page-shell'
+import PropsTable from '@/components/custom/props-table'
 import {Badge} from '@/components/ui/badge'
 
 export const metadata: Metadata = {title: '옵션 카드 (OptionCard)'}

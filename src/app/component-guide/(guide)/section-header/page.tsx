@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
-import CodeBlock from '@/components/guide/code-block'
-import GuidePageShell from '@/components/guide/guide-page-shell'
+import CodeBlock from '@/components/custom/code-block'
+import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Button} from '@/components/ui/button'
 import {BaseCard} from '@/components/composite/base-card'
 import {

@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
-import ActiveBreakpointTag from '@/components/guide/active-breakpoint-tag'
+import ActiveBreakpointTag from '@/components/custom/active-breakpoint-tag'
 import ThemeToggle from '@/components/composite/theme-toggle'
 import tokens from '@tokens'
 

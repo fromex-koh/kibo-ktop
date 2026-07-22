@@ -1,8 +1,8 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
-import ActiveBreakpointTag from '@/components/guide/active-breakpoint-tag'
-import CopyChip from '@/components/guide/copy-chip'
-import GuidePageShell from '@/components/guide/guide-page-shell'
+import ActiveBreakpointTag from '@/components/custom/active-breakpoint-tag'
+import CopyChip from '@/components/custom/copy-chip'
+import GuidePageShell from '@/components/custom/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '브레이크포인트 (Breakpoint)'}

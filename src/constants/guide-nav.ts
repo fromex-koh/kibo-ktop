@@ -24,7 +24,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         title: '프로젝트',
         icon: 'project',
         items: [
-            {label: '메인페이지 (Mockup)', href: '/main-page', external: true},
+            {label: '메인페이지 (Mockup)', href: '/component-guide/main-page', external: true},
             {label: 'Open Graph', href: '/component-guide/open-graph'},
             {label: '명도 대비 확인', href: '/component-guide/contrast-check'},
         ],

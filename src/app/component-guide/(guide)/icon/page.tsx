@@ -60,9 +60,9 @@ import {
     User,
     X,
 } from 'lucide-react'
-import CodeBlock from '@/components/guide/code-block'
-import GuidePageShell from '@/components/guide/guide-page-shell'
-import PropsTable from '@/components/guide/props-table'
+import CodeBlock from '@/components/custom/code-block'
+import GuidePageShell from '@/components/custom/guide-page-shell'
+import PropsTable from '@/components/custom/props-table'
 import {BaseCard} from '@/components/composite/base-card'
 import {Icon, type IconSymbol} from '@/components/custom/icon'
 import packageJson from '../../../../../package.json'

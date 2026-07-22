@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
-import CodeBlock from '@/components/guide/code-block'
-import GuidePageShell from '@/components/guide/guide-page-shell'
+import CodeBlock from '@/components/custom/code-block'
+import GuidePageShell from '@/components/custom/guide-page-shell'
 import {HeaderDemo} from '@/components/composite/header'
 
 export const metadata: Metadata = {title: '헤더 (Header)'}

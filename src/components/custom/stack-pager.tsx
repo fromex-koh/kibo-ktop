@@ -9,12 +9,8 @@ const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
 const PAGE_UP_KEYS = new Set(['ArrowUp', 'PageUp'])
 const STACK_PAGER_QUERY = '(min-width: 768px) and (min-height: 720px)'
 const StackPagerActivePageContext = createContext(0)
-const StackPagerGoToPageContext = createContext<(page: number) => void>(() => {})
 
 export const useStackPagerActivePage = () => useContext(StackPagerActivePageContext)
-
-// 바로가기 링크처럼 페이지 밖에서 특정 스택 페이지를 활성화해야 할 때 쓴다.
-export const useStackPagerGoToPage = () => useContext(StackPagerGoToPageContext)
 
 const syncPageElements = (container: HTMLElement, activePage: number, isDesktop: boolean) => {
     const pages = Array.from(container.querySelectorAll<HTMLElement>('[data-stack-page]'))
@@ -66,8 +62,6 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
         )
     }, [])
 
-    // 바로가기 링크용 — 임의의 페이지로 즉시 이동한다. 링크의 기본 앵커 이동이 일어나기 전에
-    // 대상 페이지의 inert 를 동기적으로 풀어야 포커스가 실제로 그 페이지로 옮겨진다. [KWCAG 6.1.1]
     const goToPage = useCallback((page: number) => {
         const container = ref.current
         if (!container) return
@@ -123,6 +117,23 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
             armAfterGestureEnds()
         }
 
+        // 바로가기 링크(#id) 대응 — 비활성 페이지는 inert 라 앵커 이동만으로는 포커스가 옮겨가지 않는다.
+        // 기본 이동이 일어나기 전에 대상이 속한 페이지를 활성화해 inert 를 동기적으로 풀어준다. [KWCAG 6.1.1]
+        const handleFragmentClick = (event: MouseEvent) => {
+            if (!(event.target instanceof Element)) return
+
+            const link = event.target.closest('a[href^="#"]')
+            if (!link) return
+
+            const targetId = link.getAttribute('href')?.slice(1)
+            const target = targetId ? container.querySelector(`#${CSS.escape(targetId)}`) : null
+            const targetPage = target?.closest('[data-stack-page]')
+            if (!targetPage) return
+
+            const targetIndex = pages.indexOf(targetPage instanceof HTMLElement ? targetPage : pages[0])
+            if (targetIndex >= 0) goToPage(targetIndex)
+        }
+
         const handleKeyDown = (event: KeyboardEvent) => {
             if (!desktopQuery.matches || event.target !== container) return
             const direction = PAGE_DOWN_KEYS.has(event.key) ? 1 : PAGE_UP_KEYS.has(event.key) ? -1 : null
@@ -145,6 +156,7 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
         syncPageElements(container, activePageRef.current, desktopQuery.matches)
         container.addEventListener('wheel', handleWheel, {passive: false})
         container.addEventListener('keydown', handleKeyDown)
+        container.addEventListener('click', handleFragmentClick)
         desktopQuery.addEventListener('change', handleDesktopChange)
 
         return () => {
@@ -152,6 +164,7 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
             window.clearTimeout(gestureTimerRef.current)
             container.removeEventListener('wheel', handleWheel)
             container.removeEventListener('keydown', handleKeyDown)
+            container.removeEventListener('click', handleFragmentClick)
             desktopQuery.removeEventListener('change', handleDesktopChange)
             pages.forEach((page) => {
                 delete page.dataset.stackState
@@ -159,15 +172,13 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
                 page.inert = false
             })
         }
-    }, [movePage])
+    }, [movePage, goToPage])
 
     return (
         <StackPagerActivePageContext.Provider value={activePage}>
-            <StackPagerGoToPageContext.Provider value={goToPage}>
-                <div ref={ref} data-stack-pager data-active-page={activePage} className={className}>
-                    {children}
-                </div>
-            </StackPagerGoToPageContext.Provider>
+            <div ref={ref} data-stack-pager data-active-page={activePage} className={className}>
+                {children}
+            </div>
         </StackPagerActivePageContext.Provider>
     )
 }

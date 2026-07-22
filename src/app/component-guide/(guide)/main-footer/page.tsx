@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
-import CodeBlock from '@/components/guide/code-block'
-import GuidePageShell from '@/components/guide/guide-page-shell'
+import CodeBlock from '@/components/custom/code-block'
+import GuidePageShell from '@/components/custom/guide-page-shell'
 import {MainFooterDemo} from '@/components/composite/main-footer'
 
 export const metadata: Metadata = {title: '메인 푸터 (MainFooter)'}
@@ -23,7 +23,7 @@ export default function Page() {
 <MainFooter showMarquee={false} />`
 
 // 메인페이지의 스택 페이저에 넣을 때의 배치 스니펫.
-const STACK_USAGE_CODE = `// app/main-page/page.tsx — 마지막 스택 페이지로 배치한다.
+const STACK_USAGE_CODE = `// app/component-guide/main-page/page.tsx — 마지막 스택 페이지로 배치한다.
 // 데스크톱에서는 고정 레이어의 하단에 맞추고, 모바일에서는 자연 흐름에 둔다.
 <div data-stack-page className="stack-page bg-background relative md:flex md:h-dvh md:flex-col md:justify-end">
   <MainFooter />
@@ -81,7 +81,7 @@ const DEV_NOTES = [
     },
     {
         title: '메인페이지 스택 페이저와의 관계',
-        desc: '푸터 자체는 스택 구조를 모릅니다. /main-page 에서는 data-stack-page 래퍼가 마지막 페이지 역할을 하므로, 다른 화면에서 재사용할 때는 래퍼 없이 그대로 배치하면 됩니다.',
+        desc: '푸터 자체는 스택 구조를 모릅니다. /component-guide/main-page 에서는 data-stack-page 래퍼가 마지막 페이지 역할을 하므로, 다른 화면에서 재사용할 때는 래퍼 없이 그대로 배치하면 됩니다.',
     },
 ] as const
 

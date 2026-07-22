@@ -1,8 +1,8 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import {ChevronRightIcon} from 'lucide-react'
-import CodeBlock from '@/components/guide/code-block'
-import GuidePageShell from '@/components/guide/guide-page-shell'
+import CodeBlock from '@/components/custom/code-block'
+import GuidePageShell from '@/components/custom/guide-page-shell'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
 import {Badge} from '@/components/ui/badge'
 import {

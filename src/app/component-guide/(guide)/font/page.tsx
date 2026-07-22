@@ -1,7 +1,7 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
-import GuidePageShell from '@/components/guide/guide-page-shell'
+import GuidePageShell from '@/components/custom/guide-page-shell'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '폰트 (Primitive)'}

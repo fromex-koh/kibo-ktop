@@ -1,8 +1,8 @@
 import type {Metadata} from 'next'
 import Image from 'next/image'
 import {BaseCard} from '@/components/composite/base-card'
-import CodeBlock from '@/components/guide/code-block'
-import GuidePageShell from '@/components/guide/guide-page-shell'
+import CodeBlock from '@/components/custom/code-block'
+import GuidePageShell from '@/components/custom/guide-page-shell'
 
 export const metadata: Metadata = {title: 'Open Graph 미리보기'}
 
