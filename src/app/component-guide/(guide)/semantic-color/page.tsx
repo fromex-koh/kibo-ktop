@@ -166,6 +166,8 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'stepper-inactive': 'bg-stepper-inactive',
     'number-badge-new': 'bg-number-badge-new',
     'badge-solid-fg': 'bg-badge-solid-fg',
+    'main-accent': 'bg-main-accent',
+    'main-accent-bright': 'bg-main-accent-bright',
 }
 
 // 맨 앞 '현재' 칸 — 실제 토큰을 현재 테마로 렌더. 다크 토글 시 실제로 바뀐다(파이프라인 검증).
@@ -307,6 +309,7 @@ const CUSTOM_GROUPS: Group[] = [
         match: (n) => ['success', 'warning', 'error', 'info'].some((s) => n === s || n === `${s}-foreground`),
     },
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
+    {name: 'main-accent / main-accent-bright', match: (n) => n.startsWith('main-accent')},
     {name: '기타', match: () => true}, // 안전망 — 위에서 안 잡힌 커스텀 슬롯이 있으면 여기로.
 ]
 
@@ -472,6 +475,13 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'scroll-thumb / scroll-track': (
         <>전역 스크롤바의 thumb와 track에 사용합니다. globals.css에서 CSS 변수로 직접 참조합니다.</>
+    ),
+    'main-accent / main-accent-bright': (
+        <>
+            메인페이지(<code className="font-mono">mainpage</code> 스킨)의 포인트 그린입니다. main-accent는 활성
+            메뉴·인디케이터, main-accent-bright는 수치 강조에 사용합니다. 팔레트 스케일 밖 값이라 common 앵커
+            (mint·mint-bright)를 참조하며 모든 테마에서 같은 값입니다.
+        </>
     ),
 }
 

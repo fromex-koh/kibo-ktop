@@ -88,6 +88,8 @@ for (const val of Object.values(semantic)) {
     else {
         parseRef(val.light)
         parseRef(val.dark)
+        // mainpage: 선택 키 — 메인페이지 스킨에서만 다크 값을 대체한다(없으면 다크 값을 따른다).
+        if (val.mainpage !== undefined) parseRef(val.mainpage)
     }
 }
 
@@ -334,22 +336,47 @@ if (Object.keys(overlay).length) {
 }
 L.push('}', '')
 
-// 색상 .dark
-L.push('.dark {', '  color-scheme: dark;', '')
-L.push('  /* scale (다크 = 위치 반사: 50↔900·100↔800…400↔500) */')
-for (const hue of hues) for (const s of scale) L.push(`  --ds-${hue}-${s}: var(--raw-${hue}-${mirror(s)});`)
+// 색상 .dark / .mainpage — 다크 기반 스킨 테마 3종 체계(light·dark·mainpage)의 다크 계열 블록.
+// .mainpage 는 메인페이지 전용 스킨: 다크 값을 그대로 따르되 semantic 에 mainpage 키가 있으면 그 값으로 대체한다.
+// light/dark 와 같은 방식으로 html 클래스로 적용된다(theme-provider 가 메인페이지 라우트에서 forcedTheme 으로 강제).
+const DARK_BASED_THEMES = [
+    {selector: '.dark', comment: '다크', pick: (v) => v.dark, redeclareStringRefs: false},
+    {
+        selector: '.mainpage',
+        comment: '메인페이지 스킨(다크 기반, mainpage 키로 대체)',
+        pick: (v) => v.mainpage ?? v.dark,
+        // ⚠️ 문자열 semantic(var(--ds-<hue>-<step>) 참조)은 선언된 요소에서 var()가 치환·확정된 뒤
+        // 상속된다. html 에 붙는 지금은 .dark 처럼 루트에서 재계산되지만, 가이드 데모처럼 내부 요소에
+        // 클래스를 얹는 경우에도 스킨이 온전하도록 문자열 semantic 을 이 블록에 다시 선언해 둔다.
+        redeclareStringRefs: true,
+    },
+]
 const overrides = Object.entries(semantic).filter(([, v]) => typeof v !== 'string')
-if (overrides.length) {
+for (const theme of DARK_BASED_THEMES) {
+    L.push(`/* ${theme.comment} */`, `${theme.selector} {`, '  color-scheme: dark;', '')
+    L.push('  /* scale (다크 = 위치 반사: 50↔900·100↔800…400↔500) */')
+    for (const hue of hues) for (const s of scale) L.push(`  --ds-${hue}-${s}: var(--raw-${hue}-${mirror(s)});`)
     L.push('', '  /* purpose override (수동 지정) */')
-    for (const [name, val] of overrides) {
-        L.push(`  --ds-${name}: ${rawVarRef(val.dark)};`)
+    for (const [name, val] of Object.entries(semantic)) {
+        if (typeof val === 'string') {
+            if (!theme.redeclareStringRefs) continue
+            if (val === 'transparent' || val === 'currentColor') {
+                L.push(`  --ds-${name}: ${val};`)
+                continue
+            }
+            // 같은 블록의 스케일 변수를 참조 — 이 요소에서 재계산되어 다크 반사가 적용된다.
+            const [hue, step] = val.split('.')
+            L.push(`  --ds-${name}: var(--ds-${hue}-${step});`)
+        } else {
+            L.push(`  --ds-${name}: ${rawVarRef(theme.pick(val))};`)
+        }
     }
+    if (Object.keys(overlay).length) {
+        L.push('', '  /* overlay override (다크 = 흰색 alpha, primitive 참조) */')
+        for (const [k, v] of Object.entries(overlay)) L.push(`  --ds-overlay-${k}: ${resolveAlpha(v.dark)};`)
+    }
+    L.push('}', '')
 }
-if (Object.keys(overlay).length) {
-    L.push('', '  /* overlay override (다크 = 흰색 alpha, primitive 참조) */')
-    for (const [k, v] of Object.entries(overlay)) L.push(`  --ds-overlay-${k}: ${resolveAlpha(v.dark)};`)
-}
-L.push('}', '')
 
 // shadcn 공식 템플릿이 제공하는 시맨틱 슬롯 이름(https://ui.shadcn.com/docs/theming) — 고정 목록.
 // 이 이름들은 shadcn 컴포넌트(button/input 등)가 그대로 참조하므로 리네임하지 않는다.
@@ -610,6 +637,14 @@ if (Object.keys(grid).length) {
     L.push('    grid-template-columns: repeat(var(--ds-grid-columns), minmax(0, 1fr));')
     L.push('    column-gap: var(--ds-grid-gutter);')
     L.push('    width: min(100% - 2 * var(--ds-grid-margin), var(--ds-grid-container));')
+    L.push('    margin-inline: auto;')
+    L.push('  }')
+    L.push('')
+    L.push('  /* .content-layout — 컬럼 그리드 없이 콘텐츠 폭 상한(max-w-content)과 그리드 가장자리 여백만')
+    L.push('     공유하는 셸. 티어별 container(예: md 792) 대신 항상 콘텐츠 최대 폭으로 캡핑하므로,')
+    L.push('     헤더처럼 좁은 티어에서도 한 줄 유지가 필요한 풀블리드 요소에 쓴다. */')
+    L.push('  .content-layout {')
+    L.push('    width: min(100% - 2 * var(--ds-grid-margin), var(--container-content));')
     L.push('    margin-inline: auto;')
     L.push('  }')
     L.push('}', '')

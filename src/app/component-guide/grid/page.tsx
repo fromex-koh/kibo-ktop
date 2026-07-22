@@ -136,6 +136,12 @@ const GridPreviewPage = () => (
                             </tbody>
                         </table>
                     </div>
+                    <p className="typo-body-l-regular text-foreground-subtle">
+                        컬럼 없이 폭만 공유하는 <code className="font-mono">.content-layout</code> 유틸리티도 제공합니다
+                        — 콘텐츠 최대 폭(max-w-content) 상한과 위 margin(최소 바깥 여백)을 그대로 쓰되, 구간별 container
+                        캡핑 없이 항상 콘텐츠 폭까지 넓어집니다. 메인페이지 헤더처럼 그리드 티어보다 넓게 유지해야 하는
+                        풀블리드 요소에 사용합니다.
+                    </p>
                 </section>
             </BaseCard>
         </div>
