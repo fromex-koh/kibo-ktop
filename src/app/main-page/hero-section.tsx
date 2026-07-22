@@ -1,5 +1,12 @@
-import Image from 'next/image'
-import heroBg from '../../../public/images/main-hero/hero-bg-1.webp'
+import heroBg1 from '../../../public/images/main-hero/hero-bg-1.webp'
+import heroBg2 from '../../../public/images/main-hero/hero-bg-2.webp'
+import HeroBackground from './hero-background'
+import AnimatedCounter from './animated-counter'
+
+const HERO_BACKGROUNDS = [
+    {src: heroBg1, position: '50% 50%'},
+    {src: heroBg2, position: '50% 50%'},
+]
 
 // 히어로 통계 — 첫 항목만 수치를 분리해 포인트 그린으로 강조하는 시안.
 const HERO_STATS: {value?: string; label: string; note: string}[] = [
@@ -21,8 +28,8 @@ const HeroSection = () => (
         aria-labelledby="hero-title"
         className="relative min-h-dvh md:fixed md:inset-x-0 md:top-0 md:h-dvh md:min-h-0 md:overflow-hidden"
     >
-        {/* 배경 비주얼 — 장식 이미지라 alt는 비운다. [KWCAG 5.1.1] */}
-        <Image src={heroBg} alt="" fill priority sizes="100vw" placeholder="blur" className="object-cover" />
+        {/* 배경 비주얼 — 장식 이미지라 접근성 트리에서 제외한다. [KWCAG 5.1.1] */}
+        <HeroBackground slides={HERO_BACKGROUNDS} />
         {/* 시안의 딤 처리: 블랙 스크림 + 하단으로 갈수록 짙어지는 그라디언트.
             시안 원본(60%+90%)은 피그마의 이미지 노출 보정을 전제한 값이라 실사진에는 과해,
             같은 인상이 나오는 45%+75%로 조정했다. */}
@@ -30,8 +37,8 @@ const HeroSection = () => (
         <div aria-hidden="true" className="to-background/75 absolute inset-0 bg-linear-to-b from-transparent" />
 
         {/* 모바일 상하 패딩: 위는 고정 헤더, 아래는 SCROLL 인디케이터 자리 확보 */}
-        <div className="relative flex min-h-dvh items-center pt-44 pb-32 md:h-full md:min-h-0 md:py-0">
-            <div className="grid-layout w-full items-center gap-y-16">
+        <div className="relative flex min-h-dvh items-center pt-44 pb-32 motion-safe:[transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] motion-safe:[opacity:calc(1-var(--hero-scroll-progress,0))] md:h-full md:min-h-0 md:py-0">
+            <div className="grid-layout w-full items-start gap-y-16">
                 <div className="col-span-4 flex flex-col gap-6 md:col-span-5 xl:col-span-7">
                     <h2 id="hero-title" className="typo-display-xl-bold text-foreground break-keep">
                         기업에 맞는 기술평가로
@@ -50,7 +57,9 @@ const HeroSection = () => (
                         <li key={stat.label} className="flex flex-col gap-1 md:items-end">
                             <p className="typo-title-xl-medium text-foreground flex items-baseline gap-1">
                                 {stat.value ? (
-                                    <strong className="typo-h1-bold text-main-accent-bright">{stat.value}</strong>
+                                    <strong className="typo-h1-bold text-main-accent-bright">
+                                        <AnimatedCounter value={Number(stat.value)} />
+                                    </strong>
                                 ) : null}
                                 {stat.label}
                             </p>
@@ -61,9 +70,13 @@ const HeroSection = () => (
             </div>
         </div>
 
-        <p aria-hidden="true" className="typo-title-m-bold text-foreground absolute inset-x-0 bottom-14 text-center">
-            <span className="inline-block motion-safe:animate-bounce">SCROLL</span>
-        </p>
+        <div
+            aria-hidden="true"
+            className="text-foreground pointer-events-none absolute inset-x-0 bottom-0 flex h-28 flex-col items-center gap-3"
+        >
+            <span className="typo-title-m-bold">SCROLL</span>
+            <span className="main-scroll-line-fill bg-foreground/30 relative w-px flex-1 overflow-hidden" />
+        </div>
     </section>
 )
 

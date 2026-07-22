@@ -94,7 +94,7 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
     }, [])
 
     return (
-        <div ref={ref} className={className}>
+        <div ref={ref} data-stack-pager className={className}>
             {children}
         </div>
     )
