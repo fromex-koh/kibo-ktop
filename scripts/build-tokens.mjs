@@ -351,7 +351,6 @@ const DARK_BASED_THEMES = [
         redeclareStringRefs: true,
     },
 ]
-const overrides = Object.entries(semantic).filter(([, v]) => typeof v !== 'string')
 for (const theme of DARK_BASED_THEMES) {
     L.push(`/* ${theme.comment} */`, `${theme.selector} {`, '  color-scheme: dark;', '')
     L.push('  /* scale (다크 = 위치 반사: 50↔900·100↔800…400↔500) */')
