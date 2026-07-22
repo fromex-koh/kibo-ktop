@@ -20,11 +20,10 @@ const FOOTER_LINKS: {label: string; emphasized?: boolean}[] = [
 ]
 
 // 페이지 하단 — 흐르는 마키 문구(다크 밴드) + 화이트 푸터(시안 type A_01 하단 영역).
-// snap-end: 스냅 페이지 흐름의 마지막 정착 지점이 푸터 하단에 맞도록 한다.
-// relative + bg-background: fixed 히어로 위에 그려지도록 포지셔닝하고 마키 밴드 뒤를 불투명하게 덮는다.
+// 데스크톱에서는 마지막 고정 레이어의 하단에 맞추고, 모바일에서는 자연 흐름에 둔다.
 // 마키는 장식 요소라 접근성 트리에서 제외하고, 감속 모션 선호 시 정지한다. [KWCAG 6.3.1]
 const MainFooter = () => (
-    <div data-stack-page className="bg-background relative snap-end">
+    <div data-stack-page className="stack-page bg-background relative md:flex md:h-dvh md:flex-col md:justify-end">
         {/* 마키 밴드 — 시안은 다크 배경 위 은은한 대형 문구가 좌측으로 흐른다 */}
         <div aria-hidden="true" className="overflow-hidden py-16">
             {/* PROJECT-STYLE: 140px 대형 장식 타이포는 typo 스케일 밖의 화면 고유 그래픽 요소라

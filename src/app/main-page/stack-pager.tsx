@@ -1,100 +1,143 @@
 'use client'
 
-import {useEffect, useRef, type ReactNode} from 'react'
+import {useCallback, useEffect, useRef, useState, type ReactNode} from 'react'
 
-// godo.co.kr 참고 풀스크린 스택 전환의 휠·키보드 페이징 스크롤 컨테이너.
-// snap-mandatory만으로는 휠 한 틱(±100px 안팎)이 화면 중간을 못 넘겨 항상 제자리로 되돌아온다
-// (사용자에겐 "스크롤이 안 되는" 상태). 그래서 md 이상에서 휠 한 번 = 한 화면 전환으로 매핑한다.
-// 터치·스크롤바 드래그는 네이티브 스크롤 + CSS 스냅에 그대로 맡긴다. [KWCAG 6.1.1]
-const WHEEL_DELTA_MIN = 20 // 트랙패드 관성 잔진동 무시 기준
-const SETTLE_FALLBACK_MS = 1000 // scrollend 미지원 브라우저에서 전환 잠금을 푸는 타임아웃
-const INERTIA_COOLDOWN_MS = 300 // 전환 직후 트랙패드 관성으로 연속 전환되는 것을 막는 냉각시간
-
+const WHEEL_DELTA_TRIGGER = 20
+const WHEEL_GESTURE_IDLE_MS = 120
+const TRANSITION_DURATION_MS = 600
 const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
 const PAGE_UP_KEYS = new Set(['ArrowUp', 'PageUp'])
 
+const syncPageElements = (container: HTMLElement, activePage: number, isDesktop: boolean) => {
+    const pages = Array.from(container.querySelectorAll<HTMLElement>('[data-stack-page]'))
+    pages.forEach((page, index) => {
+        const state = index < activePage ? 'previous' : index > activePage ? 'next' : 'active'
+        page.dataset.stackState = state
+
+        if (isDesktop && state !== 'active') {
+            page.setAttribute('aria-hidden', 'true')
+            page.inert = true
+        } else {
+            page.removeAttribute('aria-hidden')
+            page.inert = false
+        }
+    })
+}
+
+// godo.co.kr처럼 데스크톱에서는 실제 문서 스크롤 대신 고정 레이어의 상태만 전환한다.
+// 한 제스처가 끝날 때까지 다음 입력을 받지 않아 트랙패드 관성이 여러 페이지를 통과시키지 않는다.
+// 모바일은 고정 레이어를 사용하지 않고 기존 자연 스크롤을 유지한다. [KWCAG 6.1.1]
 const StackPager = ({children, className}: {children: ReactNode; className?: string}) => {
     const ref = useRef<HTMLDivElement>(null)
+    const activePageRef = useRef(0)
+    const isTransitioningRef = useRef(false)
+    const isGestureArmedRef = useRef(true)
+    const accumulatedDeltaRef = useRef(0)
+    const transitionTimerRef = useRef(0)
+    const gestureTimerRef = useRef(0)
+    const [activePage, setActivePage] = useState(0)
+
+    const movePage = useCallback((direction: 1 | -1, pageCount: number, reducedMotion: boolean) => {
+        if (isTransitioningRef.current || !isGestureArmedRef.current) return
+
+        const nextPage = Math.min(pageCount - 1, Math.max(0, activePageRef.current + direction))
+        if (nextPage === activePageRef.current) return
+
+        activePageRef.current = nextPage
+        isTransitioningRef.current = true
+        isGestureArmedRef.current = false
+        accumulatedDeltaRef.current = 0
+        setActivePage(nextPage)
+
+        window.clearTimeout(transitionTimerRef.current)
+        transitionTimerRef.current = window.setTimeout(
+            () => {
+                isTransitioningRef.current = false
+            },
+            reducedMotion ? 0 : TRANSITION_DURATION_MS,
+        )
+    }, [])
+
+    useEffect(() => {
+        const container = ref.current
+        if (!container) return
+        syncPageElements(container, activePage, window.matchMedia('(min-width: 768px)').matches)
+    }, [activePage])
 
     useEffect(() => {
         const container = ref.current
         if (!container) return
 
-        // 페이징이 걸리는 폭(스냅과 동일한 md)·감속 모션 선호를 미디어쿼리로 판별
         const desktopQuery = window.matchMedia('(min-width: 768px)')
         const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-        let isPaging = false
-        let cooldownUntil = 0
-        let settleTimer = 0
+        const pages = Array.from(container.querySelectorAll<HTMLElement>('[data-stack-page]'))
 
-        const releaseLock = () => {
-            isPaging = false
-            cooldownUntil = performance.now() + INERTIA_COOLDOWN_MS
-        }
-
-        // 현재 화면 번호에서 한 화면 이동. 범위 밖(마지막 화면이 뷰포트보다 길어 남은 부분 등)이면
-        // false를 돌려 네이티브 스크롤에 맡긴다.
-        const stepPage = (isForward: boolean): boolean => {
-            const pageHeight = container.clientHeight
-            const maxTop = container.scrollHeight - pageHeight
-            const page = Math.round(container.scrollTop / pageHeight)
-            const target = isForward ? page + 1 : page - 1
-            if (target < 0 || target * pageHeight > maxTop) return false
-
-            const targetTop = target * pageHeight
-            isPaging = true
-            window.clearTimeout(settleTimer)
-            settleTimer = window.setTimeout(() => {
-                // smooth 스크롤이 비활성인 환경(감속 설정·일부 내장 브라우저) 폴백 —
-                // 전환이 목표에 못 갔으면 즉시 이동으로 마무리해 페이징이 항상 보장되게 한다.
-                if (Math.abs(container.scrollTop - targetTop) > 1) container.scrollTop = targetTop
-                releaseLock()
-            }, SETTLE_FALLBACK_MS)
-            container.scrollTo({
-                top: targetTop,
-                behavior: reducedMotionQuery.matches ? 'auto' : 'smooth',
-            })
-            return true
+        const armAfterGestureEnds = () => {
+            window.clearTimeout(gestureTimerRef.current)
+            gestureTimerRef.current = window.setTimeout(() => {
+                isGestureArmedRef.current = true
+                accumulatedDeltaRef.current = 0
+            }, WHEEL_GESTURE_IDLE_MS)
         }
 
         const handleWheel = (event: WheelEvent) => {
             if (!desktopQuery.matches) return
-            if (isPaging || performance.now() < cooldownUntil) {
-                event.preventDefault()
+            event.preventDefault()
+
+            if (isTransitioningRef.current || !isGestureArmedRef.current) {
+                isGestureArmedRef.current = false
+                armAfterGestureEnds()
                 return
             }
-            if (Math.abs(event.deltaY) < WHEEL_DELTA_MIN) return
-            if (stepPage(event.deltaY > 0)) event.preventDefault()
+
+            accumulatedDeltaRef.current += event.deltaY
+            if (Math.abs(accumulatedDeltaRef.current) < WHEEL_DELTA_TRIGGER) return
+
+            const direction = accumulatedDeltaRef.current > 0 ? 1 : -1
+            movePage(direction, pages.length, reducedMotionQuery.matches)
+            armAfterGestureEnds()
         }
 
-        // 스크롤 컨테이너 자체에 포커스가 있을 때의 키 스크롤도 스냅에 갇히지 않게 페이징으로 매핑
         const handleKeyDown = (event: KeyboardEvent) => {
             if (!desktopQuery.matches || event.target !== container) return
-            const isForward = PAGE_DOWN_KEYS.has(event.key)
-            if (!isForward && !PAGE_UP_KEYS.has(event.key)) return
-            if (isPaging || stepPage(isForward)) event.preventDefault()
+            const direction = PAGE_DOWN_KEYS.has(event.key) ? 1 : PAGE_UP_KEYS.has(event.key) ? -1 : null
+            if (direction === null) return
+            event.preventDefault()
+            isGestureArmedRef.current = true
+            movePage(direction, pages.length, reducedMotionQuery.matches)
         }
 
-        // 부드러운 전환이 실제로 끝난 시점에 잠금 해제(미지원 브라우저는 타임아웃이 대신 해제)
-        const handleScrollEnd = () => {
-            if (!isPaging) return
-            window.clearTimeout(settleTimer)
-            releaseLock()
+        const handleDesktopChange = () => {
+            if (!desktopQuery.matches) {
+                activePageRef.current = 0
+                isTransitioningRef.current = false
+                isGestureArmedRef.current = true
+                setActivePage(0)
+            }
+            syncPageElements(container, activePageRef.current, desktopQuery.matches)
         }
 
+        syncPageElements(container, activePageRef.current, desktopQuery.matches)
         container.addEventListener('wheel', handleWheel, {passive: false})
         container.addEventListener('keydown', handleKeyDown)
-        container.addEventListener('scrollend', handleScrollEnd)
+        desktopQuery.addEventListener('change', handleDesktopChange)
+
         return () => {
-            window.clearTimeout(settleTimer)
+            window.clearTimeout(transitionTimerRef.current)
+            window.clearTimeout(gestureTimerRef.current)
             container.removeEventListener('wheel', handleWheel)
             container.removeEventListener('keydown', handleKeyDown)
-            container.removeEventListener('scrollend', handleScrollEnd)
+            desktopQuery.removeEventListener('change', handleDesktopChange)
+            pages.forEach((page) => {
+                delete page.dataset.stackState
+                page.removeAttribute('aria-hidden')
+                page.inert = false
+            })
         }
-    }, [])
+    }, [movePage])
 
     return (
-        <div ref={ref} data-stack-pager className={className}>
+        <div ref={ref} data-stack-pager data-active-page={activePage} className={className}>
             {children}
         </div>
     )

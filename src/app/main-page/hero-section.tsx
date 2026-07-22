@@ -16,16 +16,14 @@ const HERO_STATS: HeroStat[] = [
     {id: 'evaluation-data', value: '2.5', label: '만건의 평가정보 생성', note: '매년 기준'},
 ]
 
-// 첫 화면(풀스크린 히어로). md 이상에서 뷰포트에 고정해 두면 다음 섹션이 스크롤을 따라
-// 아래에서 위로 이 화면을 덮으며 올라온다(godo.co.kr 스택 전환 참고). 콘텐츠가 화면보다
-// 길어지는 모바일에서는 고정하지 않고 자연 흐름으로 둔다.
-// sticky가 아닌 fixed인 이유: sticky 요소는 스크롤을 따라 움직여 스냅 지점을 만들지 못해
-// (히어로 위치로 되돌아오는 스냅이 사라짐) 고정은 fixed가, 스냅 지점은 페이지의 스페이서가 담당한다.
+// 첫 화면(풀스크린 히어로). md 이상에서는 StackPager가 고정 레이어로 전환하고,
+// 콘텐츠가 화면보다 길어지는 모바일에서는 자연 흐름으로 둔다.
 // 색상은 mainpage 스킨(다크 기반)의 시맨틱 토큰을 쓴다 — 포인트 그린은 main-accent-* 슬롯.
 const HeroSection = () => (
     <section
+        data-stack-page
         aria-labelledby="hero-title"
-        className="relative min-h-dvh md:fixed md:inset-x-0 md:top-0 md:h-dvh md:min-h-0 md:overflow-hidden"
+        className="stack-page relative min-h-dvh md:h-dvh md:min-h-0 md:overflow-hidden"
     >
         {/* 배경 비주얼 — 장식 이미지라 접근성 트리에서 제외한다. [KWCAG 5.1.1] */}
         <HeroBackground slides={HERO_BACKGROUNDS} />
