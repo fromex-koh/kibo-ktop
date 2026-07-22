@@ -20,7 +20,20 @@ import {cn} from '@/lib/utils'
 // PROJECT-COMPOSITE: Header primitive가 없어 NavigationMenu·SegmentedControl·Sheet·Button을 조합한 사이트 상단 합성 컴포넌트.
 // PROJECT-STYLE: 로고는 h1 > a > img 구조를 유지하고 테마 클래스에 맞는 에셋을 노출한다.
 // 유틸 링크는 Button text variant 위에 Header 전용 자간만 보정한다.
-const NAV_LINKS = ['자가진단', '전문가 평가', 'BIGx 보고서', '탄소중립']
+type HeaderVariant = 'default' | 'main'
+
+type NavLink = {label: string; external?: boolean}
+
+const NAV_LINKS: Record<HeaderVariant, NavLink[]> = {
+    default: [{label: '자가진단'}, {label: '전문가 평가'}, {label: 'BIGx 보고서'}, {label: '탄소중립'}],
+    main: [
+        {label: '플랫폼 소개'},
+        {label: '기술평가'},
+        {label: '특허평가'},
+        {label: 'K-BIGx 보고서'},
+        {label: '탄소중립', external: true},
+    ],
+}
 
 const UTILITY_LINKS: {label: string; external?: boolean}[] = [
     {label: '로그인/회원가입'},
@@ -94,115 +107,172 @@ const UtilityLink = ({label, external, className}: {label: string; external?: bo
 )
 
 // h1 > a > img 구조로 사이트명을 전달한다.
-const Logo = () => (
-    <h1>
-        <Link href="#" className="flex items-center">
-            <Image
-                src="/images/logo-light.svg"
-                alt="기술보증기금"
-                width={140}
-                height={32}
-                priority
-                className="h-auto w-30 dark:hidden"
-            />
-            <Image
-                src="/images/logo-dark.svg"
-                alt="기술보증기금"
-                width={140}
-                height={32}
-                priority
-                className="hidden h-auto w-30 dark:block"
-            />
+const Logo = ({variant}: {variant: HeaderVariant}) => (
+    <h1 className="shrink-0">
+        <Link href="#" className="flex shrink-0 items-center">
+            {variant === 'main' ? (
+                <Image
+                    src="/images/logo-dark.svg"
+                    alt="기술보증기금"
+                    width={140}
+                    height={32}
+                    priority
+                    className="h-auto w-30 shrink-0"
+                />
+            ) : (
+                <>
+                    <Image
+                        src="/images/logo-light.svg"
+                        alt="기술보증기금"
+                        width={140}
+                        height={32}
+                        priority
+                        className="h-auto w-30 shrink-0 dark:hidden"
+                    />
+                    <Image
+                        src="/images/logo-dark.svg"
+                        alt="기술보증기금"
+                        width={140}
+                        height={32}
+                        priority
+                        className="hidden h-auto w-30 shrink-0 dark:block"
+                    />
+                </>
+            )}
         </Link>
     </h1>
 )
 
 // 실제 Header와 가이드 데모가 공유하는 본문.
-const HeaderContent = ({navLabel}: {navLabel: string}) => (
-    <div className="flex flex-col">
-        <div className="hidden justify-end md:flex">
-            <div className="flex items-center gap-4 px-4 py-2">
-                <MemberTypeNavigation />
-                {UTILITY_LINKS.map((link) => (
-                    <UtilityLink key={link.label} {...link} />
-                ))}
-            </div>
-        </div>
+const HeaderContent = ({
+    navLabel,
+    variant,
+    showThemeToggle,
+}: {
+    navLabel: string
+    variant: HeaderVariant
+    showThemeToggle: boolean
+}) => {
+    const isMain = variant === 'main'
+    const navLinks = NAV_LINKS[variant]
 
-        <div className="flex items-center gap-6 px-4 py-3">
-            <Logo />
-
-            <NavigationMenu aria-label={navLabel} viewport={false} className="hidden md:flex">
-                <NavigationMenuList>
-                    {NAV_LINKS.map((label) => (
-                        <NavigationMenuItem key={label}>
-                            <NavigationMenuLink asChild className="typo-title-m-semibold text-foreground h-9 px-2 py-0">
-                                <Link href="#">{label}</Link>
-                            </NavigationMenuLink>
-                        </NavigationMenuItem>
+    return (
+        <div className="flex flex-col">
+            <div className="hidden justify-end md:flex">
+                <div className={cn('flex items-center gap-4 py-2', !isMain && 'px-4')}>
+                    <MemberTypeNavigation />
+                    {UTILITY_LINKS.map((link) => (
+                        <UtilityLink key={link.label} {...link} />
                     ))}
-                </NavigationMenuList>
-            </NavigationMenu>
+                </div>
+            </div>
 
-            <div className="ml-auto flex items-center gap-1">
-                <ThemeToggle />
-                <Sheet>
-                    <SheetTrigger asChild>
-                        <Button variant="ghost" size="icon-sm" aria-label="전체 메뉴 열기">
-                            <Menu aria-hidden="true" />
-                        </Button>
-                    </SheetTrigger>
-                    <SheetContent side="right" className="gap-0 data-[side=left]:w-fit data-[side=right]:w-fit">
-                        <SheetHeader>
-                            <SheetTitle>전체 메뉴</SheetTitle>
-                        </SheetHeader>
+            <div className={cn('flex items-center py-3', isMain ? 'gap-10' : 'gap-6 px-4')}>
+                <Logo variant={variant} />
 
-                        <div className="px-4 pb-2">
-                            <MemberTypeNavigation />
-                        </div>
-
-                        <nav aria-label="전체 메뉴" className="flex flex-col gap-1 px-4">
-                            {NAV_LINKS.map((label) => (
-                                <SheetClose asChild key={label}>
+                <NavigationMenu aria-label={navLabel} viewport={false} className="hidden md:flex">
+                    <NavigationMenuList className={cn(isMain && 'gap-10')}>
+                        {navLinks.map((link) => (
+                            <NavigationMenuItem key={link.label}>
+                                <NavigationMenuLink
+                                    asChild
+                                    className={cn(
+                                        'text-foreground whitespace-nowrap',
+                                        isMain
+                                            ? 'typo-title-xl-bold min-h-11 rounded-none px-0 py-0 hover:bg-transparent focus:bg-transparent'
+                                            : 'typo-title-m-semibold h-9 px-2 py-0',
+                                    )}
+                                >
                                     <Link
                                         href="#"
-                                        className="typo-title-m-semibold hover:bg-muted focus-visible:ring-ring flex min-h-11 items-center rounded-md px-3 focus:outline-none focus-visible:ring-2"
+                                        className="flex items-center gap-1"
+                                        {...(link.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
                                     >
-                                        {label}
+                                        {link.label}
+                                        {link.external ? (
+                                            <ExternalLink aria-hidden="true" className="size-icon-lg" />
+                                        ) : null}
                                     </Link>
-                                </SheetClose>
-                            ))}
-                        </nav>
+                                </NavigationMenuLink>
+                            </NavigationMenuItem>
+                        ))}
+                    </NavigationMenuList>
+                </NavigationMenu>
 
-                        <div className="border-border mt-4 flex flex-col gap-1 border-t px-4 pt-4">
-                            {UTILITY_LINKS.map((link) => (
-                                <SheetClose asChild key={link.label}>
-                                    <UtilityLink
-                                        {...link}
-                                        className="not-disabled:hover:bg-navy-50 not-disabled:hover:text-navy-600 min-h-11 w-full justify-start rounded-md px-3"
-                                    />
-                                </SheetClose>
-                            ))}
-                        </div>
-                    </SheetContent>
-                </Sheet>
+                <div className="ml-auto flex items-center gap-1">
+                    {showThemeToggle ? <ThemeToggle /> : null}
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Button variant="ghost" size="icon-sm" aria-label="전체 메뉴 열기">
+                                <Menu aria-hidden="true" />
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="right" className="gap-0 data-[side=left]:w-fit data-[side=right]:w-fit">
+                            <SheetHeader>
+                                <SheetTitle>전체 메뉴</SheetTitle>
+                            </SheetHeader>
+
+                            <div className="px-4 pb-2">
+                                <MemberTypeNavigation />
+                            </div>
+
+                            <nav aria-label="전체 메뉴" className="flex flex-col gap-1 px-4">
+                                {navLinks.map((link) => (
+                                    <SheetClose asChild key={link.label}>
+                                        <Link
+                                            href="#"
+                                            className="typo-title-m-semibold hover:bg-muted focus-visible:ring-ring flex min-h-11 items-center gap-1 rounded-md px-3 focus:outline-none focus-visible:ring-2"
+                                            {...(link.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
+                                        >
+                                            {link.label}
+                                            {link.external ? (
+                                                <ExternalLink aria-hidden="true" className="size-icon-sm" />
+                                            ) : null}
+                                        </Link>
+                                    </SheetClose>
+                                ))}
+                            </nav>
+
+                            <div className="border-border mt-4 flex flex-col gap-1 border-t px-4 pt-4">
+                                {UTILITY_LINKS.map((link) => (
+                                    <SheetClose asChild key={link.label}>
+                                        <UtilityLink
+                                            {...link}
+                                            className="not-disabled:hover:bg-navy-50 not-disabled:hover:text-navy-600 min-h-11 w-full justify-start rounded-md px-3"
+                                        />
+                                    </SheetClose>
+                                ))}
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+                </div>
             </div>
         </div>
-    </div>
-)
+    )
+}
 
-const Header = () => (
-    <header className="bg-card z-header sticky top-0">
-        <div className="max-w-content mx-auto">
-            <HeaderContent navLabel="주 메뉴" />
-        </div>
-    </header>
-)
+type HeaderProps = {
+    variant?: HeaderVariant
+    showThemeToggle?: boolean
+}
+
+const Header = ({variant = 'default', showThemeToggle}: HeaderProps) => {
+    const isMain = variant === 'main'
+    const shouldShowThemeToggle = showThemeToggle ?? !isMain
+
+    return (
+        <header className={cn('z-header inset-x-0 top-0', isMain ? 'fixed' : 'bg-card sticky')}>
+            <div className={cn(isMain ? 'content-layout' : 'max-w-content mx-auto')}>
+                <HeaderContent navLabel="주 메뉴" variant={variant} showThemeToggle={shouldShowThemeToggle} />
+            </div>
+        </header>
+    )
+}
 
 // 컴포넌트 가이드 카드 안에서 쓰는 데모.
 export const HeaderDemo = () => (
     <div className="border-border bg-card overflow-hidden rounded-lg border">
-        <HeaderContent navLabel="헤더 데모 메뉴" />
+        <HeaderContent navLabel="헤더 데모 메뉴" variant="default" showThemeToggle />
     </div>
 )
 

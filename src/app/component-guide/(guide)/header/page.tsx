@@ -6,17 +6,28 @@ import {HeaderDemo} from '@/components/composite/header'
 
 export const metadata: Metadata = {title: '헤더 (Header)'}
 
-// 사용법 스니펫 — 헤더는 인자 없는 합성 컴포넌트라 최상단에 그대로 배치한다.
+// 사용법 스니펫 — 기본 헤더와 메인 히어로용 배리에이션을 같은 합성 컴포넌트로 제공한다.
 const USAGE_CODE = `import Header from '@/components/composite/header'
 
 export default function Layout({children}) {
   return (
     <>
+      {/* 기본 헤더: 테마 변경 버튼 표시 */}
       <Header />
       <main id="main">{children}</main>
     </>
   )
-}`
+}
+
+// 테마 변경 버튼을 숨기는 경우
+<Header showThemeToggle={false} />
+
+// 어두운 메인 히어로 위에 고정하는 경우
+// main 배리에이션은 기본적으로 테마 변경 버튼을 숨깁니다.
+<Header variant="main" />
+
+// main 배리에이션에서도 필요한 경우 표시할 수 있습니다.
+<Header variant="main" showThemeToggle />`
 
 // 헤더가 조립하는 primitive 목록(Composition 표).
 const COMPOSITION = [
@@ -30,8 +41,15 @@ const COMPOSITION = [
         desc: '기업/기관 화면으로 이동하는 link 타입 세그먼티드 컨트롤. 유틸바와 모바일 Sheet에서 공유한다.',
     },
     {name: '유틸 링크', desc: '로그인/회원가입·이용안내·기술보증기금(외부 링크↗). 상단 유틸바에 우측 정렬.'},
-    {name: '테마 토글 (ThemeToggle)', desc: '라이트/다크 전환 아이콘 버튼.'},
+    {
+        name: 'showThemeToggle',
+        desc: '테마 변경 버튼 노출 여부. 기본 헤더는 true, main 배리에이션은 false이며 사용처에서 명시적으로 변경할 수 있다.',
+    },
     {name: '전체 메뉴 (Sheet)', desc: '좁은 폭에서 주 메뉴·화면 유형 링크·유틸 링크를 담아 우측에서 여는 드로어.'},
+    {
+        name: 'variant="main"',
+        desc: '메인 히어로용 메뉴·흰색 로고·fixed 배치를 적용한다. content-layout grid 정렬은 유지하고 모바일 동작은 기본 헤더와 공유한다.',
+    },
 ] as const
 
 // 헤더 — 로고+주 메뉴+유틸바를 담는 상단 banner 합성 컴포넌트.
@@ -49,7 +67,8 @@ const HeaderGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         상단 유틸바(화면 유형 링크·유틸 링크)와 메인 내비(로고·주 메뉴·테마 토글·전체 메뉴) 2줄
-                        구성입니다. 화면 폭을 md(≥768) 미만으로 줄이면 유틸바·주 메뉴가 전체 메뉴(Sheet)로 접힙니다.
+                        구성입니다. 화면 폭을 md(≥768) 미만으로 줄이면 유틸바·주 메뉴가 전체 메뉴(Sheet)로 접히며, 테마
+                        토글은 showThemeToggle prop으로 사용처에서 노출 여부를 정합니다.
                     </p>
                 </div>
                 <HeaderDemo />

@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import SkipNav from '@/components/composite/skip-nav'
+import Header from '@/components/composite/header'
 import StackPager from './stack-pager'
-import MainHeader from './main-header'
 import HeroSection from './hero-section'
 import TechEvalSection from './tech-eval-section'
 
@@ -15,7 +15,7 @@ export const metadata: Metadata = {title: '메인페이지'}
 const MainPage = () => (
     <StackPager className="bg-background h-dvh overflow-y-auto md:snap-y md:snap-mandatory">
         <SkipNav links={[{href: '#main', label: '본문 바로가기'}]} />
-        <MainHeader />
+        <Header variant="main" />
         <main id="main">
             <HeroSection />
             {/* md 이상에서 히어로(fixed)가 차지할 자리와 스냅 지점을 흐름에 남기는 스페이서 */}
