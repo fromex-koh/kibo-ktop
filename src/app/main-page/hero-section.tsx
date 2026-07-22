@@ -1,20 +1,19 @@
 import heroBg1 from '../../../public/images/main-hero/hero-bg-1.webp'
 import heroBg2 from '../../../public/images/main-hero/hero-bg-2.webp'
 import HeroBackground from './hero-background'
-import AnimatedCounter from './animated-counter'
+import HeroStatsRoller, {type HeroStat} from './hero-stats-roller'
 
 const HERO_BACKGROUNDS = [
     {src: heroBg1, position: '50% 50%'},
     {src: heroBg2, position: '50% 50%'},
 ]
 
-// 히어로 통계 — 첫 항목만 수치를 분리해 포인트 그린으로 강조하는 시안.
-const HERO_STATS: {value?: string; label: string; note: string}[] = [
-    {value: '135', label: '만건의 특허분석', note: '2025년 기준'},
-    {label: '92만건의 기술평가', note: '출처 : 어쩌구저쩌구'},
-    {label: '1,060명의 기술평가 전문인력', note: '업계 평균 800여명'},
-    {label: '30년의 평가 노하우', note: '2025년 기준'},
-    {label: '2.5만건의 평가정보 생성', note: '매년 기준'},
+const HERO_STATS: HeroStat[] = [
+    {id: 'patent-analysis', value: '135', label: '만건의 특허분석', note: '2025년 기준'},
+    {id: 'technology-evaluation', value: '92', label: '만건의 기술평가', note: '출처 : 어쩌구저쩌구'},
+    {id: 'evaluation-experts', value: '1,060', label: '명의 기술평가 전문인력', note: '업계 평균 800여명'},
+    {id: 'evaluation-experience', value: '30', label: '년의 평가 노하우', note: '2025년 기준'},
+    {id: 'evaluation-data', value: '2.5', label: '만건의 평가정보 생성', note: '매년 기준'},
 ]
 
 // 첫 화면(풀스크린 히어로). md 이상에서 뷰포트에 고정해 두면 다음 섹션이 스크롤을 따라
@@ -52,21 +51,7 @@ const HeroSection = () => (
                     </p>
                 </div>
 
-                <ul className="col-span-4 flex flex-col gap-10 md:col-span-3 md:items-end md:text-right xl:col-span-4 xl:col-start-9">
-                    {HERO_STATS.map((stat) => (
-                        <li key={stat.label} className="flex flex-col gap-1 md:items-end">
-                            <p className="typo-title-xl-medium text-foreground flex items-baseline gap-1">
-                                {stat.value ? (
-                                    <strong className="typo-h1-bold text-main-accent-bright">
-                                        <AnimatedCounter value={Number(stat.value)} />
-                                    </strong>
-                                ) : null}
-                                {stat.label}
-                            </p>
-                            <p className="typo-caption-medium text-foreground-subtle">{stat.note}</p>
-                        </li>
-                    ))}
-                </ul>
+                <HeroStatsRoller stats={HERO_STATS} />
             </div>
         </div>
 

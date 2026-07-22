@@ -97,7 +97,7 @@ const TechEvalSection = () => {
     const sectionRef = useRef<HTMLElement>(null)
     const [activeIndex, setActiveIndex] = useState(0)
     const [isInView, setIsInView] = useState(false)
-    // 목차 버튼에 호버/포커스 중이면 진행 바를 멈추고, 벗어나면 멈춘 지점부터 이어서 재생한다.
+    // 목차·CTA 버튼에 호버/포커스 중이면 진행 바를 멈추고, 벗어나면 멈춘 지점부터 이어서 재생한다.
     const [isPaused, setIsPaused] = useState(false)
     const activeService = SERVICES[activeIndex]
 
@@ -190,7 +190,13 @@ const TechEvalSection = () => {
                                             asChild
                                             className="border-muted bg-muted text-foreground text-lg font-bold not-disabled:hover:bg-gray-200 not-disabled:active:bg-gray-50"
                                         >
-                                            <Link href="#">
+                                            <Link
+                                                href="#"
+                                                onMouseEnter={() => setIsPaused(true)}
+                                                onMouseLeave={() => setIsPaused(false)}
+                                                onFocus={() => setIsPaused(true)}
+                                                onBlur={() => setIsPaused(false)}
+                                            >
                                                 자가진단 시작하기
                                                 <ArrowUpRight aria-hidden="true" />
                                             </Link>

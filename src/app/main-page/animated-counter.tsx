@@ -8,9 +8,10 @@ type CounterStyle = CSSProperties & {
 }
 
 // NIFCO Company info 수치처럼 각 자릿수가 한 바퀴 이상 회전한 뒤 목표 숫자에 멈추는 카운터.
-const AnimatedCounter = ({value}: {value: number}) => {
+const AnimatedCounter = ({value, onComplete}: {value: number | string; onComplete?: () => void}) => {
     const [isAnimated, setIsAnimated] = useState(false)
-    const digits = String(value).split('').map(Number)
+    const characters = String(value).split('')
+    const lastDigitIndex = characters.findLastIndex((character) => /\d/.test(character))
 
     useEffect(() => {
         const frame = requestAnimationFrame(() => setIsAnimated(true))
@@ -20,18 +21,30 @@ const AnimatedCounter = ({value}: {value: number}) => {
     return (
         <span aria-label={String(value)} data-animated={isAnimated} className="animated-counter">
             <span aria-hidden="true" className="inline-flex">
-                {digits.map((digit, index) => {
-                    // 최종 숫자에서 시작해 0–9를 한 바퀴 돈 뒤 같은 숫자로 돌아가므로
-                    // hydration·애니메이션 시작 전에도 000 대신 실제 값이 보인다.
-                    const reel = Array.from({length: 11}, (_, step) => (digit + step) % 10)
+                {characters.map((character, index) => {
+                    if (!/\d/.test(character)) {
+                        return <span key={`${character}-${index}`}>{character}</span>
+                    }
+
+                    const digit = Number(character)
+                    // 모든 자릿수를 0에서 시작해 0–9를 한 바퀴 돈 뒤 목표 숫자에 멈춘다.
+                    const reel = [
+                        0,
+                        ...Array.from({length: 9}, (_, step) => step + 1),
+                        ...Array.from({length: digit + 1}, (_, step) => step),
+                    ]
                     const style: CounterStyle = {
-                        '--counter-delay': `${index * 220}ms`,
-                        '--counter-end': '-10em',
+                        '--counter-delay': `${characters.slice(0, index).filter((item) => /\d/.test(item)).length * 220}ms`,
+                        '--counter-end': `-${reel.length - 1}em`,
                     }
 
                     return (
                         <span key={`${digit}-${index}`} className="animated-counter-digit">
-                            <span className="animated-counter-track" style={style}>
+                            <span
+                                className="animated-counter-track"
+                                style={style}
+                                onAnimationEnd={index === lastDigitIndex ? onComplete : undefined}
+                            >
                                 {reel.map((number, step) => (
                                     <span key={step}>{number}</span>
                                 ))}
