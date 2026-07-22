@@ -20,7 +20,7 @@ const MainPage = () => (
         <main id="main">
             <HeroSection />
             {/* md 이상에서 히어로(fixed)가 차지할 자리와 스냅 지점을 흐름에 남기는 스페이서 */}
-            <div aria-hidden="true" className="hidden h-dvh snap-start md:block" />
+            <div aria-hidden="true" data-stack-page className="hidden h-dvh snap-start md:block" />
             <TechEvalSection />
         </main>
         <MainFooter />

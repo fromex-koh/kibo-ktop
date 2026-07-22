@@ -125,6 +125,7 @@ const TechEvalSection = () => {
     return (
         <section
             ref={sectionRef}
+            data-stack-page
             aria-labelledby="tech-eval-title"
             className="bg-background relative flex min-h-dvh snap-start flex-col py-28 md:pt-50"
         >

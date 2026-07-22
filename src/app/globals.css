@@ -157,16 +157,17 @@
     height: calc(100% / 6);
 }
 .hero-stat-title {
-    /* 활성 숫자의 최대 line box를 항상 확보해 제목과 보조 문구의 간격을 고정한다. */
-    height: calc(var(--raw-font-size-h1) * var(--raw-line-height-normal));
+    /* 한 줄 제목용 높이를 고정해 롤링 흔들림 없이 보조 문구와의 간격을 일정하게 유지한다. */
+    height: var(--raw-font-size-h1);
     flex-shrink: 0;
+    line-height: 1;
 }
 .hero-stat-value {
     color: var(--color-foreground);
     font-size: var(--raw-font-size-title-xl);
     font-variant-numeric: tabular-nums;
     font-weight: var(--raw-font-weight-medium);
-    line-height: var(--raw-line-height-normal);
+    line-height: 1;
     letter-spacing: var(--raw-letter-spacing-normal);
     white-space: nowrap;
     transition:

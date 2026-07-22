@@ -3,6 +3,7 @@
 import Image, {type StaticImageData} from 'next/image'
 import {useEffect, useRef, useState} from 'react'
 import {cn} from '@/lib/utils'
+import {STACK_PAGE_CHANGE_EVENT} from './stack-pager'
 
 type HeroBackgroundSlide = {
     src: StaticImageData
@@ -15,6 +16,7 @@ const CHANGE_INTERVAL_MS = 7000
 // 전달받은 배경 배열을 순환하므로 이미지를 추가하거나 교체할 때 slides 데이터만 변경한다.
 const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
     const rootRef = useRef<HTMLDivElement>(null)
+    const [resetKey, setResetKey] = useState(0)
     const [{activeIndex, previousIndex}, setTransition] = useState<{
         activeIndex: number
         previousIndex: number | null
@@ -52,8 +54,15 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
             if (rotationTimer) window.clearInterval(rotationTimer)
             rotationTimer = startRotation()
         }
+        const resetOnHeroReentry = (event: Event) => {
+            if (!(event instanceof CustomEvent) || event.detail.page !== 0) return
+            setTransition({activeIndex: 0, previousIndex: null})
+            setResetKey((current) => current + 1)
+            restartRotation()
+        }
 
         scrollContainer.addEventListener('scroll', updateScrollProgress, {passive: true})
+        scrollContainer.addEventListener(STACK_PAGE_CHANGE_EVENT, resetOnHeroReentry)
         reducedMotionQuery.addEventListener('change', restartRotation)
         updateScrollProgress()
 
@@ -61,6 +70,7 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
             cancelAnimationFrame(frame)
             if (rotationTimer) window.clearInterval(rotationTimer)
             scrollContainer.removeEventListener('scroll', updateScrollProgress)
+            scrollContainer.removeEventListener(STACK_PAGE_CHANGE_EVENT, resetOnHeroReentry)
             reducedMotionQuery.removeEventListener('change', restartRotation)
             section.style.removeProperty('--hero-scroll-progress')
         }
@@ -78,7 +88,7 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
 
                 return (
                     <div
-                        key={`${slide.position}-${index}`}
+                        key={`${slide.position}-${index}-${resetKey}`}
                         className={cn(
                             'absolute inset-0 transition-opacity duration-500 [transition-timing-function:ease] motion-reduce:transition-none',
                             isActive ? 'z-1 opacity-100' : 'z-0 opacity-0',
