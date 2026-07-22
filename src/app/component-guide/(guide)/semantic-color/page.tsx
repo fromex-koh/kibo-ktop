@@ -163,6 +163,9 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'segmented-track': 'bg-segmented-track',
     'segmented-foreground': 'bg-segmented-foreground',
     'segmented-active': 'bg-segmented-active',
+    'main-footer-background': 'bg-main-footer-background',
+    'main-footer-muted': 'bg-main-footer-muted',
+    'main-footer-border': 'bg-main-footer-border',
     'main-footer-surface': 'bg-main-footer-surface',
     'main-footer-foreground': 'bg-main-footer-foreground',
     'main-footer-control': 'bg-main-footer-control',
@@ -499,8 +502,9 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'main-footer': (
         <>
-            다크 기반 <code className="font-mono">mainpage</code> 안의 밝은 푸터 표면·Select·Popover에 사용합니다.
-            부분적인 light 테마 전환 없이 푸터 문맥의 색상을 독립적으로 관리합니다.
+            메인페이지 푸터(MainFooter)의 배경·텍스트·구분선·Select 표면에 사용합니다. 시안의 푸터는 테마와 무관하게
+            고정된 다크 표면이라 세 테마 값이 모두 같으며, 부분적인 테마 전환 없이 푸터 문맥의 색상을 독립적으로
+            관리합니다.
         </>
     ),
 }

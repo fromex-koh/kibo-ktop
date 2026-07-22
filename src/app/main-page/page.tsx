@@ -4,7 +4,7 @@ import Header from '@/components/composite/header'
 import StackPager from './stack-pager'
 import HeroSection from './hero-section'
 import TechEvalSection from './tech-eval-section'
-import MainFooter from './main-footer'
+import MainFooter from '@/components/composite/main-footer'
 
 export const metadata: Metadata = {title: '메인페이지'}
 
@@ -21,7 +21,10 @@ const MainPage = () => (
             <HeroSection />
             <TechEvalSection />
         </main>
-        <MainFooter />
+        {/* 마지막 스택 페이지 — 데스크톱에서는 뷰포트 하단에 맞추고, 모바일에서는 자연 흐름에 둔다 */}
+        <div data-stack-page className="stack-page bg-background relative md:flex md:h-dvh md:flex-col md:justify-end">
+            <MainFooter />
+        </div>
     </StackPager>
 )
 
