@@ -82,7 +82,10 @@ const CONTACT = {
     copyright: 'ⓒ The Government of the Republic of Korea. All rights reserved.',
 }
 
-const linkFocusClassName = 'focus-visible:outline-main-footer-focus focus:outline-none focus-visible:outline-2'
+// 포커스 링 — 프로젝트 공통 패턴(outline-none + focus-visible:outline-2/offset-2/solid)을 따른다.
+// outline-solid 가 없으면 outline-none 이 남긴 --tw-outline-style:none 때문에 선이 그려지지 않는다. [KWCAG 6.1.2]
+const linkFocusClassName =
+    'focus-visible:outline-main-footer-focus rounded-2xs outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid'
 
 // 마키 밴드 — 시안의 대형 장식 문구가 좌측으로 흐른다.
 // 장식이라 접근성 트리에서 제외하고, 감속 모션 선호 시 정지한다. [KWCAG 6.3.1]
