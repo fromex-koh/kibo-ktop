@@ -1,56 +1,129 @@
 import type {Metadata} from 'next'
+import type {ReactNode} from 'react'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/guide/code-block'
 import GuidePageShell from '@/components/guide/guide-page-shell'
 import {
-    SelectableCardBadgeDemo,
+    CheckboxBadgeDemo,
+    CheckboxBasicDemo,
+    CheckboxDisabledDemo,
+    RadioBadgeDemo,
+    RadioBasicDemo,
+    RadioDisabledDemo,
     SelectableCardFormDemo,
-    SelectableCardRadioDemo,
-    SelectableCardRadioStatesDemo,
-    SelectableCardStatesDemo,
 } from './selectable-card-demo'
 
 export const metadata: Metadata = {title: '선택 카드 (SelectableCard)'}
 
-const RADIO_CODE = `{/* Controlled — 부모 상태로 선택값 관리 */}
-<SelectableCardGroup name="agreement" aria-label="동의 범위" value={value} onValueChange={setValue} className="grid-cols-2 gap-3">
-  <SelectableCard control="radio" value="required" badges={<Badge …>필수</Badge>}>
-    필수항목만 동의
-  </SelectableCard>
-  <SelectableCard control="radio" value="all" badges={<><Badge>필수</Badge><Badge>선택</Badge></>}>
-    전체 항목 동의
-  </SelectableCard>
+const RADIO_BASIC_CODE = `import {SelectableCard, SelectableCardGroup} from '@/components/composite/selectable-card'
+
+{/* Controlled — 부모 상태로 선택값 관리 */}
+<SelectableCardGroup
+  name="agreement"
+  aria-label="동의 범위"
+  value={value}
+  onValueChange={setValue}
+  className="gap-4 xl:grid-cols-2"
+>
+  <SelectableCard control="radio" value="required">필수항목만 동의</SelectableCard>
+  <SelectableCard control="radio" value="all">전체 항목 동의</SelectableCard>
 </SelectableCardGroup>
 
-{/* Uncontrolled — 초기값 이후 SelectableCardGroup 내부에서 선택값 관리 */}
-<SelectableCardGroup name="agreement" aria-label="동의 범위" defaultValue="required" className="grid-cols-2 gap-3">
+{/* Uncontrolled — 초기값만 주고 그룹 내부에서 선택값 관리 */}
+<SelectableCardGroup
+  name="agreement"
+  aria-label="동의 범위"
+  defaultValue="required"
+  className="gap-4 xl:grid-cols-2"
+>
   <SelectableCard control="radio" value="required">필수항목만 동의</SelectableCard>
   <SelectableCard control="radio" value="all">전체 항목 동의</SelectableCard>
 </SelectableCardGroup>`
 
-const RADIO_STATES_CODE = `<div className="flex flex-col gap-3">
-  <SelectableCardGroup name="default-state" aria-label="기본 라디오 상태" value="checked" className="grid-cols-2 gap-3">
-    <SelectableCard control="radio" value="default">기본 (default)</SelectableCard>
-    <SelectableCard control="radio" value="checked">선택됨 (checked)</SelectableCard>
-  </SelectableCardGroup>
-  <SelectableCardGroup name="disabled-state" aria-label="비활성 라디오 상태" value="disabled-checked" className="grid-cols-2 gap-3">
-    <SelectableCard control="radio" value="disabled-default" disabled>비활성 미선택</SelectableCard>
-    <SelectableCard control="radio" value="disabled-checked" disabled>비활성 선택</SelectableCard>
-  </SelectableCardGroup>
+const RADIO_BADGE_CODE = `import {Badge} from '@/components/ui/badge'
+
+<SelectableCardGroup
+  name="agreement"
+  aria-label="동의 범위"
+  value={value}
+  onValueChange={setValue}
+  className="gap-4 xl:grid-cols-2"
+>
+  {/* 뱃지 1개 */}
+  <SelectableCard
+    control="radio"
+    value="required"
+    badges={<Badge variant="outline" color="info" shape="round">필수</Badge>}
+  >
+    필수항목만 동의
+  </SelectableCard>
+
+  {/* 뱃지 2개 — badges 슬롯에 여러 개를 넘기면 4px 간격으로 나열된다 */}
+  <SelectableCard
+    control="radio"
+    value="all"
+    badges={
+      <>
+        <Badge variant="outline" color="info" shape="round">필수</Badge>
+        <Badge variant="outline" color="neutral" shape="round">선택</Badge>
+      </>
+    }
+  >
+    전체 항목 동의
+  </SelectableCard>
+</SelectableCardGroup>`
+
+const RADIO_DISABLED_CODE = `<SelectableCardGroup
+  name="agreement"
+  aria-label="비활성 라디오 상태"
+  value="disabled-checked"
+  className="gap-4 xl:grid-cols-2"
+>
+  <SelectableCard control="radio" value="disabled-default" disabled>비활성 미선택</SelectableCard>
+  <SelectableCard control="radio" value="disabled-checked" disabled>비활성 선택</SelectableCard>
+</SelectableCardGroup>`
+
+const CHECKBOX_BASIC_CODE = `import {SelectableCard} from '@/components/composite/selectable-card'
+
+{/* 카드마다 독립적인 checked 상태를 가진다 — 그룹으로 감싸지 않는다 */}
+<div className="flex flex-col gap-4">
+  <SelectableCard control="checkbox" checked={first} onCheckedChange={setFirst}>
+    본인은 기술보증기금과 동의서를 작성함에 … 확인합니다.
+  </SelectableCard>
+  <SelectableCard control="checkbox" checked={second} onCheckedChange={setSecond}>
+    본인은 회원정보(마이페이지)상 이메일정보를 확인하였으며 … 동의합니다.
+  </SelectableCard>
 </div>`
 
-const CHECKBOX_CODE = `<SelectableCard control="checkbox" name="agreement" value="all" checked={checked} onCheckedChange={setChecked}>
-  전체 항목 동의
+const CHECKBOX_BADGE_CODE = `<SelectableCard
+  control="checkbox"
+  checked={required}
+  onCheckedChange={setRequired}
+  badges={<Badge variant="outline" color="info" shape="round">필수</Badge>}
+>
+  개인정보 수집·이용에 동의합니다.
+</SelectableCard>
+
+<SelectableCard
+  control="checkbox"
+  checked={optional}
+  onCheckedChange={setOptional}
+  badges={<Badge variant="outline" color="neutral" shape="round">선택</Badge>}
+>
+  마케팅 정보 수신에 동의합니다.
 </SelectableCard>`
+
+const CHECKBOX_DISABLED_CODE = `<SelectableCard control="checkbox" checked={false} disabled>비활성 미선택</SelectableCard>
+<SelectableCard control="checkbox" checked disabled>비활성 선택</SelectableCard>`
 
 const FORM_CODE = `<form onSubmit={handleSubmit}>
   <fieldset>
     <legend id="applicant-type-label">신청 주체</legend>
-    <p>사업자 유형에 맞는 신청 주체를 선택해 주세요.</p>
     <SelectableCardGroup
       name="applicantType"
       aria-labelledby="applicant-type-label"
       defaultValue="corporation"
+      className="gap-4 xl:grid-cols-2"
       required
     >
       <SelectableCard control="radio" value="corporation">법인사업자</SelectableCard>
@@ -122,7 +195,8 @@ const PROPS = [
     {
         component: 'SelectableCard',
         name: 'control',
-        description: '내장 선택 컨트롤입니다. radio는 단일 선택, checkbox는 독립 선택에 사용합니다.',
+        description:
+            '내장 선택 컨트롤입니다. radio는 단일 선택, checkbox는 독립 선택에 사용하며 라벨 타이포도 함께 결정됩니다.',
         defaultValue: '"checkbox"',
         control: '"radio" | "checkbox"',
     },
@@ -164,14 +238,15 @@ const PROPS = [
     {
         component: 'SelectableCard',
         name: 'badges',
-        description: '카드 오른쪽에 Badge 등 보조 요소를 표시하는 슬롯입니다.',
+        description:
+            '라벨 왼쪽에 Badge 등 보조 요소를 표시하는 슬롯입니다. 뱃지 텍스트도 컨트롤의 접근 가능한 이름에 포함됩니다.',
         defaultValue: '-',
         control: 'ReactNode',
     },
     {
         component: 'SelectableCard',
         name: 'labelClassName',
-        description: '기본 typo-title-l-bold 라벨 스타일을 확장하거나 덮어씁니다.',
+        description: 'control이 정한 기본 라벨 타이포를 확장하거나 덮어씁니다.',
         defaultValue: '""',
         control: 'string',
     },
@@ -198,69 +273,128 @@ const PROPS = [
     },
 ]
 
+// 케이스 한 칸 — 제목·설명·미리보기·코드를 한 묶음으로 보여준다. 개발자가 화면에서 본 상태의
+// 코드를 바로 아래에서 확인할 수 있게 짝을 고정한다.
+type GuideCaseProps = {title: string; description: ReactNode; code: string; children: ReactNode}
+
+const GuideCase = ({title, description, code, children}: GuideCaseProps) => (
+    <div className="flex flex-col gap-3">
+        <div>
+            <h3 className="typo-title-l-medium text-foreground">{title}</h3>
+            <p className="typo-body-l-regular text-muted-foreground">{description}</p>
+        </div>
+        {children}
+        <CodeBlock code={code} language="tsx" copyLabel="복사" />
+    </div>
+)
+
 const SelectableCardGuidePage = () => (
     <GuidePageShell
         title="선택 카드 (SelectableCard)"
-        description="shadcn Radio Group의 Choice Card 패턴(FieldLabel > Field + Radio/Checkbox)을 프로젝트 스타일로 확장한 선택 컨트롤입니다. 카드 전체가 하나의 선택 대상이고, control 로 라디오(단일)·체크박스(다중)를 정합니다."
+        description="카드 전체가 하나의 선택 대상인 컨트롤입니다. 카드 어디를 눌러도 선택되고, 뱃지와 라벨이 왼쪽, 선택 컨트롤이 오른쪽 끝에 붙습니다. control 로 단일 선택(radio)과 독립 선택(checkbox)을 정하며 라벨 타이포도 함께 결정됩니다."
     >
         <BaseCard>
-            <section aria-labelledby="sc-state" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="sc-state" className="typo-h4-bold">
-                        상태 (State)
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        체크전·체크후·비활성 상태입니다. <code className="font-mono">disabled</code>는 primitive의
-                        상호작용과 폼 제출 규칙을 그대로 따르며 공통 disabled 토큰으로 표시합니다.
-                    </p>
-                </div>
-                <SelectableCardStatesDemo />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="sc-badge" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="sc-badge" className="typo-h4-bold">
-                        뱃지 (Badge)
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        우측에 뱃지를 1개(필수) 또는 2개(필수·선택) 붙일 수 있습니다.{' '}
-                        <code className="font-mono">badges</code> 슬롯으로 넘깁니다.
-                    </p>
-                </div>
-                <SelectableCardBadgeDemo />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="sc-radio" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="sc-radio" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
                     <h2 id="sc-radio" className="typo-h4-bold">
-                        라디오 그룹 (단일 선택 · 2단)
+                        control=&quot;radio&quot; — 단일 선택
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">control=&quot;radio&quot;</code> 카드를{' '}
-                        <code className="font-mono">SelectableCardGroup</code>(shadcn RadioGroup 래퍼) 으로 감싸면
-                        하나만 선택됩니다. 각 항목은 Choice Card 구조를 사용하며, Figma처럼{' '}
-                        <code className="font-mono">grid-cols-2</code> 로 2단 배치했습니다.{' '}
-                        <code className="font-mono">value</code>와 <code className="font-mono">onValueChange</code>를
-                        쓰는 controlled 방식과 <code className="font-mono">defaultValue</code>를 쓰는 uncontrolled
-                        방식을 모두 지원합니다.
+                        동의 범위처럼 <strong className="font-medium">여러 선택지 중 하나만</strong> 고르는 화면에
+                        씁니다. 반드시 <code className="font-mono">SelectableCardGroup</code>으로 감싸고, 선택값은
+                        그룹이 관리하므로 카드에는 <code className="font-mono">value</code>만 넘깁니다.
                     </p>
+                    <ul className="typo-body-l-regular text-muted-foreground list-disc space-y-1 pl-5">
+                        <li>
+                            라벨은 <code className="font-mono">typo-title-l-bold</code>(20px Bold) 고정입니다 — 선택
+                            여부와 무관합니다.
+                        </li>
+                        <li>
+                            <strong className="font-medium">열 수와 반응형 분기는 화면이 정합니다.</strong> 그룹은 1단
+                            grid만 갖고 있으므로, 2단이 필요한 화면에서 <code className="font-mono">className</code>에{' '}
+                            <code className="font-mono">gap-4 xl:grid-cols-2</code>처럼 배치를 얹습니다. 아래 예시는
+                            태블릿까지 1단으로 쌓고 데스크톱(xl)에서 2단이 됩니다.
+                        </li>
+                    </ul>
                 </div>
-                <SelectableCardRadioDemo />
-                <div className="flex flex-col gap-3">
-                    <h3 className="typo-title-l-medium text-foreground">라디오 상태 큐레이션</h3>
+
+                <GuideCase
+                    title="기본 (뱃지 없음)"
+                    description="라벨만 있는 기본 형태입니다. 선택하면 primary 테두리와 배경이 적용됩니다."
+                    code={RADIO_BASIC_CODE}
+                >
+                    <RadioBasicDemo />
+                </GuideCase>
+
+                <GuideCase
+                    title="뱃지"
+                    description={
+                        <>
+                            항목의 성격을 알리는 뱃지를 라벨 왼쪽에 1개 또는 2개 붙입니다.{' '}
+                            <code className="font-mono">badges</code> 슬롯으로 넘기며, 뱃지 텍스트도 라디오의 접근
+                            가능한 이름에 포함됩니다.
+                        </>
+                    }
+                    code={RADIO_BADGE_CODE}
+                >
+                    <RadioBadgeDemo />
+                </GuideCase>
+
+                <GuideCase
+                    title="비활성 (disabled)"
+                    description="상호작용을 막고 공통 disabled 토큰을 적용합니다. 선택된 항목도 primary 강조 대신 비활성 표시를 따르며 폼 제출에서 제외됩니다."
+                    code={RADIO_DISABLED_CODE}
+                >
+                    <RadioDisabledDemo />
+                </GuideCase>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="sc-checkbox" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="sc-checkbox" className="typo-h4-bold">
+                        control=&quot;checkbox&quot; — 독립 선택
+                    </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        라디오 카드도 체크박스 카드와 동일하게 기본·선택됨·비활성 상태를 확인할 수 있습니다. 비활성은
-                        미선택과 선택 케이스를 함께 둬서 border 표시 규칙까지 비교합니다.
+                        확인 동의처럼 <strong className="font-medium">항목마다 따로</strong> 켜고 끄는 화면에 씁니다.
+                        그룹으로 감싸지 않고 카드마다 <code className="font-mono">checked</code>와{' '}
+                        <code className="font-mono">onCheckedChange</code>로 상태를 관리합니다.
                     </p>
-                    <SelectableCardRadioStatesDemo />
+                    <ul className="typo-body-l-regular text-muted-foreground list-disc space-y-1 pl-5">
+                        <li>
+                            라벨은 <code className="font-mono">typo-body-xl-regular</code>(16px)이고 선택했을 때만
+                            Bold로 강조됩니다 — 긴 동의 문장을 읽는 화면이라 본문 크기를 씁니다.
+                        </li>
+                        <li>
+                            배치는 <code className="font-mono">flex flex-col gap-4</code> 세로 스택입니다.
+                        </li>
+                    </ul>
                 </div>
-                <CodeBlock code={RADIO_CODE} language="tsx" copyLabel="복사" />
-                <CodeBlock code={RADIO_STATES_CODE} language="tsx" copyLabel="복사" />
-                <CodeBlock code={CHECKBOX_CODE} language="tsx" copyLabel="복사" />
+
+                <GuideCase
+                    title="기본 (체크전 · 체크후)"
+                    description="첫 번째는 체크전, 두 번째는 체크후 상태입니다. 카드를 클릭하면 각각 독립적으로 토글됩니다."
+                    code={CHECKBOX_BASIC_CODE}
+                >
+                    <CheckboxBasicDemo />
+                </GuideCase>
+
+                <GuideCase
+                    title="뱃지"
+                    description="checkbox 카드도 radio와 같은 badges 슬롯을 사용합니다. 항목마다 필수·선택이 갈리므로 뱃지로 구분합니다."
+                    code={CHECKBOX_BADGE_CODE}
+                >
+                    <CheckboxBadgeDemo />
+                </GuideCase>
+
+                <GuideCase
+                    title="비활성 (disabled)"
+                    description="미선택·선택 두 경우 모두 공통 disabled 토큰으로 표시되고 폼 제출에서 제외됩니다."
+                    code={CHECKBOX_DISABLED_CODE}
+                >
+                    <CheckboxDisabledDemo />
+                </GuideCase>
             </section>
         </BaseCard>
 
@@ -271,12 +405,12 @@ const SelectableCardGuidePage = () => (
                         신청 Form 제출
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        실제 신청 화면을 가정해 신청 주체와 필수 동의를 구성했습니다. 라디오는 그룹에{' '}
+                        실제 신청 화면을 가정해 두 control을 함께 구성했습니다. 라디오는 그룹에{' '}
                         <code className="font-mono">name</code>, 각 항목에 <code className="font-mono">value</code>를
                         지정하고, 체크박스는 카드에 <code className="font-mono">name</code>과{' '}
                         <code className="font-mono">value</code>를 지정하면 선택값이 제출됩니다. 컴포넌트가 실제{' '}
                         <code className="font-mono">form</code> 안에 있어야 하며,{' '}
-                        <code className="font-mono">disabled</code> 값은 폼 제출에서 제외됩니다. 아래 버튼으로 실제{' '}
+                        <code className="font-mono">disabled</code> 값은 제출에서 제외됩니다. 아래 버튼으로 실제{' '}
                         <code className="font-mono">FormData</code> 결과를 확인할 수 있습니다.
                     </p>
                 </div>

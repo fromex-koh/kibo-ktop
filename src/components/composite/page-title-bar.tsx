@@ -1,9 +1,9 @@
 import type {ComponentPropsWithoutRef, ReactNode} from 'react'
+import {breadcrumbPillClassName} from '@/components/theme/breadcrumb.variants'
 import {cn} from '@/lib/utils'
 
 // PROJECT-COMPOSITE: 페이지 최상단 wayfinding 바. 제목(h1)·Badge·Breadcrumb 슬롯을 조합한다.
-// PROJECT-STYLE: Breadcrumb 슬롯은 bg-surface + shadow-1 알약 컨테이너로 감싼다.
-const BREADCRUMB_PILL = 'inline-flex items-center rounded-full bg-surface px-10 py-4 shadow-1'
+// PROJECT-STYLE: Breadcrumb 슬롯을 감싸는 알약 외형은 theme/breadcrumb.variants.ts 가 단일 소스다.
 
 type PageTitleBarProps = {
     title: ReactNode
@@ -22,7 +22,7 @@ const PageTitleBar = ({title, badge, breadcrumb, className, ...props}: PageTitle
             {badge}
         </div>
         {breadcrumb ? (
-            <div data-slot="page-title-bar-nav" className={BREADCRUMB_PILL}>
+            <div data-slot="page-title-bar-nav" className={breadcrumbPillClassName}>
                 {breadcrumb}
             </div>
         ) : null}

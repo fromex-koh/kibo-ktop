@@ -19,6 +19,7 @@ import {
     CircleCheck,
     Component,
     Copy,
+    CreditCard,
     Download,
     ExternalLink,
     Eye,
@@ -26,6 +27,7 @@ import {
     File,
     FileCheckCorner,
     FilePenLine,
+    FileSearchCorner,
     Folder,
     GitBranch,
     Home,
@@ -38,9 +40,11 @@ import {
     LoaderCircle,
     Lock,
     Menu,
+    MessageCircleMore,
     Moon,
     MoreHorizontal,
     Mouse,
+    NotepadText,
     Palette,
     PanelLeft,
     Pin,
@@ -53,6 +57,7 @@ import {
     Sun,
     TriangleAlert,
     Upload,
+    User,
     X,
 } from 'lucide-react'
 import CodeBlock from '@/components/guide/code-block'
@@ -60,33 +65,33 @@ import GuidePageShell from '@/components/guide/guide-page-shell'
 import PropsTable from '@/components/guide/props-table'
 import {BaseCard} from '@/components/composite/base-card'
 import {Icon, type IconSymbol} from '@/components/custom/icon'
+import packageJson from '../../../../../package.json'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '아이콘 (Icon)'}
 
-// Icon 컴포넌트 사용법 스니펫 — variant 별로 코드블럭을 나눠 보여준다. 미리보기와 같은 아이콘·
-// 크기(size-icon-2xl)로 맞춰 마크업과 미리보기가 일치한다.
-const USAGE_OUTLINE = `import { X } from 'lucide-react';
-import { Icon } from '@/components/custom/icon';
+// lucide-react 버전은 package.json 을 단일 소스로 읽는다 — 패키지를 올리면 이 페이지도 저절로 갱신된다.
+const LUCIDE_VERSION = packageJson.dependencies['lucide-react'].replace(/^[\^~]/, '')
+const LUCIDE_REPO_URL = 'https://github.com/lucide-icons/lucide'
 
-<Icon icon={X} className="size-icon-2xl" />`
+// 사용법 — 세 형태(outline·solid·symbol)를 한 스니펫에 담아 미리보기와 1:1 로 맞춘다.
+const USAGE_CODE = `import {Search, X} from 'lucide-react'
+import {Icon} from '@/components/custom/icon'
 
-const USAGE_SOLID = `import { X } from 'lucide-react';
-import { Icon } from '@/components/custom/icon';
+{/* outline(기본) — 글리프 그대로. 크기는 size-icon-*, 색은 text-* 유틸 */}
+<Icon icon={Search} className="size-icon-xl text-foreground" />
 
-<Icon icon={X} variant="solid" className="size-icon-2xl" />`
+{/* solid — 원형 배지 안에 글리프 */}
+<Icon icon={X} variant="solid" className="size-icon-xl" />
 
-const SOLID_TEXT_USAGE = `import { Icon } from '@/components/custom/icon';
-
-{/* lucide에 solid 글리프가 없는 정보·경고 아이콘 */}
+{/* symbol — lucide 에 채운 글리프가 없는 정보·경고는 문자형 배지(i·!) */}
 <Icon symbol="info" variant="solid" className="size-icon-xl" />
 <Icon symbol="alert" variant="solid" className="size-icon-xl" />`
 
-// package.json 의 lucide-react 버전과 라이선스. 패키지를 올리면 함께 갱신한다.
-const LUCIDE_VERSION = '1.23.0'
-const LUCIDE_REPO_URL = 'https://github.com/lucide-icons/lucide'
-// 정확한 아이콘 총 개수는 릴리스마다 계속 늘어나(deprecated 별칭 포함 약 2,000개), 대략치로 안내.
-const LUCIDE_ICON_COUNT_LABEL = '2,000개 이상'
+// 아이콘 단독 버튼 — 접근 가능한 이름은 감싸는 상호작용 요소가 갖는다([5.1.1]).
+const ICON_BUTTON_CODE = `<Button size="icon" aria-label="검색">
+    <Search />
+</Button>`
 
 // 아이콘 크기 — size.icon-* 토큰(size-icon-* 유틸)만 사용한다. 클래스명은 Tailwind 정적 분석을
 // 위해 리터럴로 고정 — 템플릿 문자열(`size-${key}`)로 조합하면 스캐너가 인식하지 못해 스타일이
@@ -103,8 +108,7 @@ const ICON_SIZES = [
 // 아이콘 큐레이션 — 프로젝트 소스에서 실제 import하는 lucide-react 아이콘 + Figma 아이콘 세트(icon/line-*)의
 // lucide 대응 아이콘 전체([NA-008] 표준 단일 아이콘 라이브러리). *Icon 별칭은 같은 글리프의 정식 이름으로 합쳐
 // 중복을 제거한다. 새 아이콘을 사용하거나 Figma 세트에 추가되면 함께 갱신한다.
-// Figma 이름 ↔ lucide 매핑이 자명하지 않은 것: line-reset→RotateCcw · line-alert→CircleAlert ·
-// line-left/right/up/down→Chevron* · line-close→X.
+// Figma 이름 ↔ lucide 매핑 규칙과 예외는 페이지의 "Figma 이름 매핑" 표가 단일 안내처다.
 const CURATED_ICONS = [
     {name: 'ArrowLeft', Icon: ArrowLeft},
     {name: 'ArrowRight', Icon: ArrowRight},
@@ -124,6 +128,7 @@ const CURATED_ICONS = [
     {name: 'CircleCheck', Icon: CircleCheck},
     {name: 'Component', Icon: Component},
     {name: 'Copy', Icon: Copy},
+    {name: 'CreditCard', Icon: CreditCard},
     {name: 'Download', Icon: Download},
     {name: 'ExternalLink', Icon: ExternalLink},
     {name: 'Eye', Icon: Eye},
@@ -131,6 +136,7 @@ const CURATED_ICONS = [
     {name: 'File', Icon: File},
     {name: 'FileCheckCorner', Icon: FileCheckCorner},
     {name: 'FilePenLine', Icon: FilePenLine},
+    {name: 'FileSearchCorner', Icon: FileSearchCorner},
     {name: 'Folder', Icon: Folder},
     {name: 'GitBranch', Icon: GitBranch},
     {name: 'Home', Icon: Home},
@@ -143,9 +149,11 @@ const CURATED_ICONS = [
     {name: 'LoaderCircle', Icon: LoaderCircle},
     {name: 'Lock', Icon: Lock},
     {name: 'Menu', Icon: Menu},
+    {name: 'MessageCircleMore', Icon: MessageCircleMore},
     {name: 'Moon', Icon: Moon},
     {name: 'MoreHorizontal', Icon: MoreHorizontal},
     {name: 'Mouse', Icon: Mouse},
+    {name: 'NotepadText', Icon: NotepadText},
     {name: 'Palette', Icon: Palette},
     {name: 'PanelLeft', Icon: PanelLeft},
     {name: 'Pin', Icon: Pin},
@@ -158,7 +166,18 @@ const CURATED_ICONS = [
     {name: 'Sun', Icon: Sun},
     {name: 'TriangleAlert', Icon: TriangleAlert},
     {name: 'Upload', Icon: Upload},
+    {name: 'User', Icon: User},
     {name: 'X', Icon: X},
+] as const
+
+// Figma 세트 이름은 icon/line-<kebab-case> = lucide PascalCase 이름이 기본 규칙이다
+// (예: icon/line-file-pen-line → FilePenLine). 규칙에서 벗어나는 예외만 표로 안내한다.
+const FIGMA_NAME_EXCEPTIONS = [
+    {figma: 'icon/line-close', lucide: 'X'},
+    {figma: 'icon/line-left · right · up · down', lucide: 'ChevronLeft · ChevronRight · ChevronUp · ChevronDown'},
+    {figma: 'icon/line-reset', lucide: 'RotateCcw'},
+    {figma: 'icon/line-alert', lucide: 'CircleAlert'},
+    {figma: 'icon/blank', lucide: '대응 없음 — 빈 슬롯 플레이스홀더'},
 ] as const
 
 // Solid(원형 배지) 스타일은 강조·알림 배지 용도라 실제로 몇 개만 큐레이션한다. lucide에 채운 글리프가
@@ -167,11 +186,6 @@ type SolidIconItem = {name: string; icon: LucideIcon; symbol?: never} | {name: s
 
 const SOLID_ICONS: readonly SolidIconItem[] = [
     {name: 'X', icon: X},
-    {name: 'Info', symbol: 'info'},
-    {name: 'CircleAlert', symbol: 'alert'},
-]
-
-const SOLID_TEXT_ICONS: readonly {name: string; symbol: IconSymbol}[] = [
     {name: 'Info', symbol: 'info'},
     {name: 'CircleAlert', symbol: 'alert'},
 ]
@@ -213,11 +227,10 @@ const IconGuidePage = () => (
                         라이브러리
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        재사용 아이콘은 이 프로젝트의 표준 라이브러리인 lucide-react 하나만 사용합니다([NA-008]). shadcn{' '}
-                        <code>radix-nova</code> registry에는 별도 Icon primitive가 없으므로,{' '}
-                        <code>components/custom/icon.tsx</code>가 Lucide 글리프를 받아 프로젝트의 outline·solid 표현만
-                        부여합니다. 프로젝트 variant 스타일은 <code>components/theme/icon.variants.ts</code>에 분리되어
-                        wrapper와 연결되며, shadcn 원본을 복사하거나 수정한 컴포넌트가 아닙니다.
+                        아이콘은 표준 단일 라이브러리 lucide-react만 사용합니다([NA-008]) — SVG를 직접 그리거나 다른
+                        아이콘 폰트를 섞지 않습니다. 글리프를 그대로 쓰는 것이 outline이고, 원형 배지(solid)나
+                        문자형(symbol) 표현이 필요할 때 <code>Icon</code> 래퍼(
+                        <code>components/custom/icon.tsx</code>)를 사용합니다.
                     </p>
                 </div>
                 <div className="border-border flex flex-col gap-4 rounded-md border p-4">
@@ -233,10 +246,6 @@ const IconGuidePage = () => (
                         <div className="flex items-center gap-3">
                             <dt className="text-muted-foreground w-20 shrink-0">라이선스</dt>
                             <dd>ISC — 상업적 사용 가능(무료)</dd>
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <dt className="text-muted-foreground w-20 shrink-0">아이콘 수</dt>
-                            <dd>{LUCIDE_ICON_COUNT_LABEL}</dd>
                         </div>
                         <div className="flex items-center gap-3">
                             <dt className="text-muted-foreground w-20 shrink-0">저장소</dt>
@@ -259,10 +268,41 @@ const IconGuidePage = () => (
                             yarn add lucide-react
                         </code>
                         <code className="border-border bg-muted text-foreground rounded-sm border px-2 py-1 font-mono text-sm">
-                            import {'{ Home }'} from &apos;lucide-react&apos;;
+                            {"import { Home } from 'lucide-react';"}
                         </code>
                     </div>
                 </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="icon-usage" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="icon-usage" className="typo-h4-bold">
+                        사용법
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        형태는 outline(기본)·solid·symbol 세 가지입니다. 크기는{' '}
+                        <code className="font-mono">size-icon-*</code>, 색은 <code className="font-mono">text-*</code>{' '}
+                        시맨틱 유틸로 지정하고, solid 배지 색은 variant가 정합니다.
+                    </p>
+                </div>
+                <div className="border-border flex flex-wrap items-center gap-8 rounded-md border p-6">
+                    <div className="flex items-center gap-3">
+                        <Icon icon={Search} className="size-icon-xl text-foreground" />
+                        <code className="text-foreground font-mono text-sm">outline</code>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <Icon icon={X} variant="solid" className="size-icon-xl" />
+                        <code className="text-foreground font-mono text-sm">solid</code>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <Icon symbol="info" variant="solid" className="size-icon-xl" />
+                        <Icon symbol="alert" variant="solid" className="size-icon-xl" />
+                        <code className="text-foreground font-mono text-sm">symbol</code>
+                    </div>
+                </div>
+                <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
@@ -322,12 +362,10 @@ const IconGuidePage = () => (
                         아이콘 목록
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        Outline은 프로젝트에서 사용하는 아이콘과 Figma 아이콘 세트(icon/line-*)의 lucide 대응 아이콘을
-                        합친 {CURATED_ICONS.length}개 전체입니다. lucide-react의 <code>*Icon</code> 별칭은 같은 글리프의
-                        정식 이름으로 합쳐 중복을 제거했습니다. lucide-react는 획(Outline) 스타일 단일 세트라,
-                        배지·알림처럼 강조가 필요한 곳엔 아이콘을 원형 배경에 채운 Solid 스타일을 조합해 씁니다. Solid는
-                        실제로 배지가 어울리는 X(닫기)·info(안내)·alert(경고) 세 가지만 큐레이션했습니다. Stepper의
-                        삼각형은 재사용 아이콘이 아니라 해당 컴포넌트에만 쓰는 장식 SVG이므로 목록에서 제외합니다.
+                        프로젝트에서 실제 사용하는 아이콘과 Figma 아이콘 세트(icon/line-*)의 lucide 대응을 합친{' '}
+                        {CURATED_ICONS.length}개입니다. 목록에 없는 아이콘이 필요하면 lucide에서 골라 쓰고 이 목록에도
+                        추가합니다. Solid는 배지가 어울리는 X(닫기)·info(안내)·alert(경고) 세 가지만 씁니다. Stepper의
+                        삼각형처럼 한 컴포넌트 전용 장식 SVG는 재사용 아이콘이 아니므로 목록에 없습니다.
                     </p>
                 </div>
 
@@ -368,70 +406,73 @@ const IconGuidePage = () => (
                         ))}
                     </ul>
                 </div>
+
+                <div className="flex flex-col gap-3">
+                    <h3 className="typo-body-l-medium text-foreground">Figma 이름 매핑</h3>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        Figma 세트 이름 <code className="font-mono">icon/line-&lt;kebab-case&gt;</code>는 lucide의 같은
+                        이름(PascalCase)에 대응합니다 — 예:{' '}
+                        <code className="font-mono">icon/line-file-pen-line → FilePenLine</code>. 규칙에서 벗어나는
+                        예외만 아래 표에 정리했습니다.
+                    </p>
+                    <div className="bg-background border-border overflow-x-auto rounded-md border">
+                        <table className="w-full text-left">
+                            <caption className="sr-only">규칙에서 벗어나는 Figma 이름과 lucide 이름 매핑</caption>
+                            <thead>
+                                <tr className="border-border border-b bg-gray-100/25">
+                                    <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                        Figma 이름
+                                    </th>
+                                    <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                        lucide 아이콘
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {FIGMA_NAME_EXCEPTIONS.map(({figma, lucide}) => (
+                                    <tr key={figma} className="border-border bg-background border-b last:border-b-0">
+                                        <th scope="row" className="px-4 py-3 text-left font-normal">
+                                            <code className="text-foreground font-mono text-sm">{figma}</code>
+                                        </th>
+                                        <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
+                                            <code className="font-mono text-sm">{lucide}</code>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="icon-variant" className="flex flex-col gap-6">
+            <section aria-labelledby="icon-accessibility" className="flex flex-col gap-4">
                 <div>
-                    <h2 id="icon-variant" className="typo-h4-bold">
-                        Variant
+                    <h2 id="icon-accessibility" className="typo-h4-bold">
+                        접근성
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        용도에 맞춰 선택하는 아이콘 스타일 2가지입니다.
+                        아이콘은 순수 장식이고, 의미 전달은 텍스트와 감싸는 요소가 담당합니다.
                     </p>
                 </div>
-
-                <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-2">
-                        <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
-                            variant
-                        </span>
-                        <h3 className="typo-body-l-medium text-foreground">outline — 아이콘만 (기본)</h3>
-                    </div>
-                    <div className="border-border flex items-center gap-4 rounded-md border p-6">
-                        <Icon icon={X} className="size-icon-2xl" />
-                    </div>
-                    <CodeBlock code={USAGE_OUTLINE} language="tsx" copyLabel="복사" />
-                </div>
-
-                <div className="flex flex-col gap-4">
-                    <div className="flex items-center gap-2">
-                        <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
-                            variant
-                        </span>
-                        <h3 className="typo-body-l-medium text-foreground">solid — 원형 안에 아이콘</h3>
-                    </div>
-                    <div className="border-border flex items-center gap-4 rounded-md border p-6">
-                        <Icon icon={X} variant="solid" className="size-icon-2xl" />
-                    </div>
-                    <CodeBlock code={USAGE_SOLID} language="tsx" copyLabel="복사" />
-                </div>
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="icon-solid-text" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="icon-solid-text" className="typo-h4-bold">
-                        텍스트 Solid 아이콘 사용
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        Lucide에 채운 형태가 없는 Info와 CircleAlert는 <code className="font-mono">symbol</code>{' '}
-                        prop으로 사용합니다. Icon이 원형 배지와 문자 <code>i</code>·<code>!</code>,{' '}
-                        <code className="font-mono">aria-hidden</code>을 함께 처리합니다. 버튼이나 링크에서 사용할 때는
-                        상호작용 요소에 별도의 접근 가능한 이름을 제공합니다.
-                    </p>
-                </div>
-                <div className="border-border flex flex-wrap items-center gap-8 rounded-md border p-6">
-                    {SOLID_TEXT_ICONS.map(({name, symbol}) => (
-                        <div key={name} className="flex items-center gap-3">
-                            <Icon symbol={symbol} variant="solid" className="size-icon-xl" />
-                            <code className="text-foreground font-mono text-sm">{name}</code>
-                        </div>
-                    ))}
-                </div>
-                <CodeBlock code={SOLID_TEXT_USAGE} language="tsx" copyLabel="복사" />
+                <ul className="typo-body-l-regular text-muted-foreground list-disc space-y-1 pl-5">
+                    <li>
+                        <code>Icon</code> 래퍼는 항상 <code className="font-mono">aria-hidden</code>을 처리합니다.
+                        lucide 글리프를 직접 쓸 때는 <code className="font-mono">aria-hidden=&quot;true&quot;</code>를
+                        직접 지정합니다.
+                    </li>
+                    <li>
+                        아이콘 단독 버튼·링크는 감싸는 상호작용 요소에 <code className="font-mono">aria-label</code>을
+                        붙입니다([5.1.1]).
+                    </li>
+                    <li>
+                        클릭·터치 대상은 44×44px 이상(<code className="font-mono">min-h-11 min-w-11</code>)을
+                        확보합니다([6.1.3]).
+                    </li>
+                    <li>상태·정보를 색만으로 구분하지 않고 텍스트를 병행합니다([5.3.1]).</li>
+                </ul>
+                <CodeBlock code={ICON_BUTTON_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 

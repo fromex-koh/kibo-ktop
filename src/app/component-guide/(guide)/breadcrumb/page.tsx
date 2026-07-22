@@ -13,13 +13,15 @@ import {
     BreadcrumbSeparator,
 } from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
+import {breadcrumbPillClassName} from '@/components/theme/breadcrumb.variants'
 
 export const metadata: Metadata = {title: '브레드크럼 (Breadcrumb)'}
 
-// Figma "브레드크럼" 컨테이너 — bg-surface 알약(rounded-full) + shadow-1 + 좌우 40px·상하 16px 패딩.
-const PILL = 'inline-flex items-center rounded-full bg-surface px-10 py-4 shadow-1'
+// Figma "브레드크럼" 알약 컨테이너 — 클래스 정의는 theme/breadcrumb.variants.ts 가 단일 소스다.
+const PILL = breadcrumbPillClassName
 
-const USAGE_CODE = `<div className="inline-flex items-center rounded-full bg-surface px-10 py-4 shadow-1">
+const USAGE_CODE = `{/* 알약 컨테이너 — PageTitleBar 를 쓰면 breadcrumb 슬롯이 이 외형을 자동으로 씌운다 */}
+<div className={breadcrumbPillClassName}>
   <Breadcrumb>
     <BreadcrumbList>
       <BreadcrumbItem>
@@ -144,21 +146,35 @@ const BreadcrumbGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="bc-main" className="flex flex-col gap-4">
-                <div>
+                <div className="flex flex-col gap-2">
                     <h2 id="bc-main" className="typo-h4-bold">
                         기본 (Figma)
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">bg-surface</code> 알약(
-                        <code className="font-mono">rounded-full</code> + <code className="font-mono">shadow-1</code>)
-                        컨테이너 · 점 구분자 · 링크(중간)와 현재 페이지 강조 · 현재 페이지의 오른쪽 화살표(›)까지 Figma
-                        그대로입니다.
+                        알약 컨테이너 · 점 구분자 · 상위 경로 링크 · 강조된 현재 페이지와 오른쪽 화살표(›)까지 Figma
+                        사양 그대로입니다. 알약은 <code className="font-mono">PageTitleBar</code>의{' '}
+                        <code className="font-mono">breadcrumb</code> 슬롯이 자동으로 씌우므로, 그 안에서 쓸 때는 아래
+                        코드의 감싸는 <code className="font-mono">div</code>가 필요 없습니다.
                     </p>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        <code>ui/breadcrumb.tsx</code>는 registry 원본을 유지하고, <code>composite/breadcrumb.tsx</code>
-                        가 원본 구성요소를 직접 호출하면서 <code>theme/breadcrumb.variants.ts</code>의 프로젝트 스타일을
-                        연결합니다. primitive를 복사하지 않습니다.
-                    </p>
+                    <ul className="typo-body-l-regular text-muted-foreground list-disc space-y-1 pl-5">
+                        <li>
+                            컨테이너 — <code className="font-mono">bg-surface</code> ·{' '}
+                            <code className="font-mono">rounded-full</code> ·{' '}
+                            <code className="font-mono">px-10 py-4</code>(40·16px) ·{' '}
+                            <code className="font-mono">shadow-1</code>
+                        </li>
+                        <li>
+                            경로 항목 — 16px Regular <code className="font-mono">text-label-foreground</code>, 항목 간{' '}
+                            <code className="font-mono">gap-3</code>(12px)
+                        </li>
+                        <li>
+                            구분자 — 4px 원 <code className="font-mono">bg-separator-dot</code>
+                        </li>
+                        <li>
+                            현재 페이지 — 16px Bold <code className="font-mono">text-foreground</code>, 오른쪽에 16px
+                            화살표를 4px 띄워 붙임
+                        </li>
+                    </ul>
                 </div>
                 <div>
                     <div className={PILL}>
