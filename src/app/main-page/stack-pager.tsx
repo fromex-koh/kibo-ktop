@@ -1,12 +1,15 @@
 'use client'
 
-import {useCallback, useEffect, useRef, useState, type ReactNode} from 'react'
+import {createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode} from 'react'
 
 const WHEEL_DELTA_TRIGGER = 20
 const WHEEL_GESTURE_IDLE_MS = 120
 const TRANSITION_DURATION_MS = 600
 const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
 const PAGE_UP_KEYS = new Set(['ArrowUp', 'PageUp'])
+const StackPagerActivePageContext = createContext(0)
+
+export const useStackPagerActivePage = () => useContext(StackPagerActivePageContext)
 
 const syncPageElements = (container: HTMLElement, activePage: number, isDesktop: boolean) => {
     const pages = Array.from(container.querySelectorAll<HTMLElement>('[data-stack-page]'))
@@ -137,9 +140,11 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
     }, [movePage])
 
     return (
-        <div ref={ref} data-stack-pager data-active-page={activePage} className={className}>
-            {children}
-        </div>
+        <StackPagerActivePageContext.Provider value={activePage}>
+            <div ref={ref} data-stack-pager data-active-page={activePage} className={className}>
+                {children}
+            </div>
+        </StackPagerActivePageContext.Provider>
     )
 }
 

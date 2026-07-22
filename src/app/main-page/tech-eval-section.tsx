@@ -1,12 +1,13 @@
 'use client'
 
-import {useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import Image, {type StaticImageData} from 'next/image'
 import Link from 'next/link'
 import {ArrowUpRight} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {cn} from '@/lib/utils'
 import Reveal from './reveal'
+import {useStackPagerActivePage} from './stack-pager'
 import kBigxReportVisual from '../../../public/images/main-hero/k-bigx-report.webp'
 import patentEvaluationVisual from '../../../public/images/main-hero/patent-evaluation.webp'
 import techEvaluationVisual from '../../../public/images/main-hero/tech-evaluation.webp'
@@ -91,10 +92,27 @@ const SERVICES: Service[] = [
 // 두 번째 화면. 세로 레일의 진행 바가 완료되면 다음 서비스로 전환하며 마지막 이후 처음부터 반복한다.
 // 일시정지 컨트롤은 시안 확정으로 제거됨(KWCAG 6.2.2 자동 전환 정지 수단은 검수 단계에서 재논의).
 const TechEvalSection = () => {
+    const stackPage = useStackPagerActivePage()
     const [activeIndex, setActiveIndex] = useState(0)
+    const [entrySequence, setEntrySequence] = useState(0)
+    const previousStackPageRef = useRef(stackPage)
     // 목차·CTA 버튼에 호버/포커스 중이면 진행 바를 멈추고, 벗어나면 멈춘 지점부터 이어서 재생한다.
     const [isPaused, setIsPaused] = useState(false)
     const activeService = SERVICES[activeIndex]
+
+    // 두 번째 섹션에 새로 진입할 때만 첫 서비스와 진행 시간을 초기화한다.
+    // 실제 스크롤 위치나 StackPager 전환 상태는 변경하지 않아 페이지 이동과 독립적으로 동작한다.
+    useEffect(() => {
+        const hasEnteredSecondSection = stackPage === 1 && previousStackPageRef.current !== 1
+
+        if (hasEnteredSecondSection) {
+            setActiveIndex(0)
+            setIsPaused(false)
+            setEntrySequence((current) => current + 1)
+        }
+
+        previousStackPageRef.current = stackPage
+    }, [stackPage])
 
     const showNextService = () => {
         setActiveIndex((current) => (current + 1) % SERVICES.length)
@@ -115,7 +133,7 @@ const TechEvalSection = () => {
                         className="bg-foreground-subtle absolute inset-y-0 left-0 w-1 overflow-hidden"
                     >
                         <span
-                            key={activeIndex}
+                            key={`${entrySequence}-${activeIndex}`}
                             data-paused={isPaused}
                             onAnimationEnd={showNextService}
                             className="tech-service-progress-fill bg-main-accent absolute inset-0 origin-top"
@@ -184,7 +202,7 @@ const TechEvalSection = () => {
                 </ul>
 
                 <Reveal className="col-span-4 flex flex-col gap-5 motion-safe:delay-150 md:col-span-4 xl:col-span-6 xl:col-start-7">
-                    <div key={`visual-${activeIndex}`} className="tech-service-content-enter">
+                    <div key={`visual-${entrySequence}-${activeIndex}`} className="tech-service-content-enter">
                         <Image
                             src={activeService.image}
                             alt=""
@@ -193,7 +211,10 @@ const TechEvalSection = () => {
                         />
                     </div>
 
-                    <div key={`description-${activeIndex}`} className="tech-service-content-enter flex flex-col gap-8">
+                    <div
+                        key={`description-${entrySequence}-${activeIndex}`}
+                        className="tech-service-content-enter flex flex-col gap-8"
+                    >
                         <div className="flex flex-col gap-2">
                             <h3 className="typo-title-m-bold text-foreground">{activeService.descriptionTitle}</h3>
                             <p className="typo-body-xl-regular text-foreground">{activeService.description}</p>
