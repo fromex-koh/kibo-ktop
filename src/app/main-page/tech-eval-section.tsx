@@ -8,7 +8,6 @@ import {Button} from '@/components/ui/button'
 import {cn} from '@/lib/utils'
 import Reveal from './reveal'
 import {useStackPagerActivePage} from './stack-pager'
-import kBigxReportVisual from '../../../public/images/main-hero/k-bigx-report.webp'
 import patentEvaluationVisual from '../../../public/images/main-hero/patent-evaluation.webp'
 import techEvaluationVisual from '../../../public/images/main-hero/tech-evaluation.webp'
 
@@ -68,7 +67,8 @@ const SERVICES: Service[] = [
         description:
             '기업·기술·특허·산업 데이터를 연계해 기업의 현황과 성장 가능성을 다각도로 확인할 수 있도록 구성한 데이터 기반 분석 보고서입니다.',
         tags: ['기업 분석', '산업 분석', '기술 분석', '특허 분석', '데이터 보고서'],
-        image: kBigxReportVisual,
+        // 전용 비주얼 미확보 — 확보 전까지 앞의 두 비주얼을 번갈아 재사용한다.
+        image: techEvaluationVisual,
     },
     {
         // 시안 목차의 4번째 항목 — 활성 상태 시안이 아직 없어 콘텐츠는 임시값이다.
@@ -84,8 +84,8 @@ const SERVICES: Service[] = [
         description:
             '기업의 온실가스 배출 현황과 감축 역량을 진단해 탄소중립 전환 전략 수립을 지원하는 평가 서비스입니다.',
         tags: ['탄소중립', '온실가스 진단', '감축 전략', 'ESG'],
-        // 전용 비주얼 미확보 — 확보 전까지 기술평가 비주얼을 임시 재사용한다.
-        image: techEvaluationVisual,
+        // 전용 비주얼 미확보 — 확보 전까지 앞의 두 비주얼을 번갈아 재사용한다.
+        image: patentEvaluationVisual,
     },
 ]
 
