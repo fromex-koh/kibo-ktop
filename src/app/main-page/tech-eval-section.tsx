@@ -1,6 +1,6 @@
 'use client'
 
-import {useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import Image, {type StaticImageData} from 'next/image'
 import Link from 'next/link'
 import {ArrowUpRight} from 'lucide-react'
@@ -88,11 +88,35 @@ const SERVICES: Service[] = [
     },
 ]
 
+// 섹션이 뷰포트에 이만큼 들어왔을 때 롤링을 시작/리셋한다.
+const SECTION_IN_VIEW_THRESHOLD = 0.5
+
 // 두 번째 화면. 세로 레일의 진행 바가 완료되면 다음 서비스로 전환하며 마지막 이후 처음부터 반복한다.
 // 일시정지 컨트롤은 시안 확정으로 제거됨(KWCAG 6.2.2 자동 전환 정지 수단은 검수 단계에서 재논의).
 const TechEvalSection = () => {
+    const sectionRef = useRef<HTMLElement>(null)
     const [activeIndex, setActiveIndex] = useState(0)
+    const [isInView, setIsInView] = useState(false)
+    // 목차 버튼에 호버/포커스 중이면 진행 바를 멈추고, 벗어나면 멈춘 지점부터 이어서 재생한다.
+    const [isPaused, setIsPaused] = useState(false)
     const activeService = SERVICES[activeIndex]
+
+    // 화면 밖에서는 롤링을 멈추고, 히어로에서 내려와 섹션에 진입할 때마다 항상 첫 서비스부터 시작한다.
+    useEffect(() => {
+        const element = sectionRef.current
+        if (!element) return
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                const inView = entry?.isIntersecting ?? false
+                setIsInView(inView)
+                if (inView) setActiveIndex(0)
+            },
+            {threshold: SECTION_IN_VIEW_THRESHOLD},
+        )
+        observer.observe(element)
+        return () => observer.disconnect()
+    }, [])
 
     const showNextService = () => {
         setActiveIndex((current) => (current + 1) % SERVICES.length)
@@ -100,6 +124,7 @@ const TechEvalSection = () => {
 
     return (
         <section
+            ref={sectionRef}
             aria-labelledby="tech-eval-title"
             className="bg-background relative flex min-h-dvh snap-start flex-col py-28 md:pt-50"
         >
@@ -111,11 +136,15 @@ const TechEvalSection = () => {
                         aria-hidden="true"
                         className="bg-foreground-subtle absolute inset-y-0 left-0 w-1 overflow-hidden"
                     >
-                        <span
-                            key={activeIndex}
-                            onAnimationEnd={showNextService}
-                            className="tech-service-progress-fill bg-main-accent absolute inset-0 origin-top"
-                        />
+                        {/* 화면 안에 있을 때만 진행 바가 돌고, 벗어나면 멈춘다(재진입 시 첫 서비스부터) */}
+                        {isInView && (
+                            <span
+                                key={activeIndex}
+                                data-paused={isPaused}
+                                onAnimationEnd={showNextService}
+                                className="tech-service-progress-fill bg-main-accent absolute inset-0 origin-top"
+                            />
+                        )}
                     </div>
 
                     {SERVICES.map((service, index) => {
@@ -127,6 +156,10 @@ const TechEvalSection = () => {
                                     type="button"
                                     aria-current={isActive ? 'true' : undefined}
                                     onClick={() => setActiveIndex(index)}
+                                    onMouseEnter={() => setIsPaused(true)}
+                                    onMouseLeave={() => setIsPaused(false)}
+                                    onFocus={() => setIsPaused(true)}
+                                    onBlur={() => setIsPaused(false)}
                                     className={cn(
                                         'cursor-pointer text-left transition-colors',
                                         isActive
@@ -138,7 +171,14 @@ const TechEvalSection = () => {
                                 </button>
 
                                 {isActive && (
-                                    <Reveal className="mt-4 mb-24 flex flex-col items-start gap-6">
+                                    // mb-24는 다음 목차 항목과의 간격 — 마지막 항목이 활성일 땐 아래 항목이 없어
+                                    // 빼야 레일(진행 바)이 버튼 라인에 맞춰 끝난다.
+                                    <Reveal
+                                        className={cn(
+                                            'mt-4 flex flex-col items-start gap-6',
+                                            index < SERVICES.length - 1 && 'mb-24',
+                                        )}
+                                    >
                                         <h2
                                             id="tech-eval-title"
                                             className="typo-display-xl-bold text-foreground break-keep"

@@ -4,6 +4,7 @@ import Header from '@/components/composite/header'
 import StackPager from './stack-pager'
 import HeroSection from './hero-section'
 import TechEvalSection from './tech-eval-section'
+import MainFooter from './main-footer'
 
 export const metadata: Metadata = {title: '메인페이지'}
 
@@ -22,6 +23,7 @@ const MainPage = () => (
             <div aria-hidden="true" className="hidden h-dvh snap-start md:block" />
             <TechEvalSection />
         </main>
+        <MainFooter />
     </StackPager>
 )
 

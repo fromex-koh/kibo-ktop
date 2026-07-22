@@ -168,6 +168,9 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'badge-solid-fg': 'bg-badge-solid-fg',
     'main-accent': 'bg-main-accent',
     'main-accent-bright': 'bg-main-accent-bright',
+    'segmented-track': 'bg-segmented-track',
+    'segmented-foreground': 'bg-segmented-foreground',
+    'segmented-active': 'bg-segmented-active',
 }
 
 // 맨 앞 '현재' 칸 — 실제 토큰을 현재 테마로 렌더. 다크 토글 시 실제로 바뀐다(파이프라인 검증).
@@ -240,7 +243,7 @@ const STANDARD_SLOTS = new Set([
 // 컴포넌트 전용 레시피 토큰(action-check-*/button-*/checkbox-*/radio-*/badge-*/icon-*)은 일반 색 슬롯이 아니라 특정 컴포넌트
 // 내부에서만 쓰는 값이라 이 색 개요 페이지에서는 제외한다(각 컴포넌트 가이드에서 다룸).
 const isComponentRecipe = (n: string): boolean =>
-    /^(action-check|button|checkbox|radio|badge|number-badge|chip|icon|selectable-card|stepper)-/.test(n)
+    /^(action-check|button|checkbox|radio|badge|number-badge|chip|icon|selectable-card|stepper|segmented)-/.test(n)
 
 // 슬롯 가족(테이블) 정의 — 표준/커스텀 각각. 각 슬롯은 자기 버킷 안에서 한 가족에만 속한다.
 const STANDARD_GROUPS: Group[] = [
@@ -605,7 +608,7 @@ const SemanticColorGuidePage = () => (
                             컴포넌트의 variant·prop을 사용합니다.
                         </p>
                     </div>
-                    <SemanticTable title="ActionCheck / Icon / Badge / Stepper" tokens={recipeEntries} />
+                    <SemanticTable title="ActionCheck / Icon / Badge / Stepper / Segmented" tokens={recipeEntries} />
                 </section>
             </BaseCard>
         </div>

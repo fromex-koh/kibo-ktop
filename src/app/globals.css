@@ -144,6 +144,15 @@
 .tech-service-progress-fill {
     animation: tech-service-progress 5s linear forwards;
 }
+/* 목차 버튼 호버/포커스 동안 롤링을 멈춘다(벗어나면 이어서 재생) */
+.tech-service-progress-fill[data-paused='true'] {
+    animation-play-state: paused;
+}
+
+/* 하단 마키 — 같은 문구 두 벌을 이어 붙여 왼쪽으로 무한히 흐른다. */
+.main-marquee {
+    animation: main-marquee 40s linear infinite;
+}
 .tech-service-content-enter {
     animation: tech-service-content-enter 600ms ease both;
 }
@@ -202,6 +211,15 @@
     }
 }
 
+@keyframes main-marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
 @media (prefers-reduced-motion: reduce) {
     .main-scroll-line-fill::after {
         opacity: 1;
@@ -219,7 +237,8 @@
         animation: none;
     }
     .tech-service-progress-fill,
-    .tech-service-content-enter {
+    .tech-service-content-enter,
+    .main-marquee {
         animation: none;
     }
     .tech-service-progress-fill {
