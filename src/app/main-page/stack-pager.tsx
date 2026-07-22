@@ -7,6 +7,7 @@ const WHEEL_GESTURE_IDLE_MS = 120
 const TRANSITION_DURATION_MS = 600
 const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
 const PAGE_UP_KEYS = new Set(['ArrowUp', 'PageUp'])
+const STACK_PAGER_QUERY = '(min-width: 768px) and (min-height: 720px)'
 const StackPagerActivePageContext = createContext(0)
 
 export const useStackPagerActivePage = () => useContext(StackPagerActivePageContext)
@@ -27,9 +28,9 @@ const syncPageElements = (container: HTMLElement, activePage: number, isDesktop:
     })
 }
 
-// godo.co.kr처럼 데스크톱에서는 실제 문서 스크롤 대신 고정 레이어의 상태만 전환한다.
+// 화면 너비와 높이가 모두 충분하면 실제 문서 스크롤 대신 고정 레이어의 상태만 전환한다.
 // 한 제스처가 끝날 때까지 다음 입력을 받지 않아 트랙패드 관성이 여러 페이지를 통과시키지 않는다.
-// 모바일은 고정 레이어를 사용하지 않고 기존 자연 스크롤을 유지한다. [KWCAG 6.1.1]
+// 모바일 또는 낮은 데스크톱 화면은 고정 레이어를 사용하지 않고 자연 스크롤을 유지한다. [KWCAG 6.1.1]
 const StackPager = ({children, className}: {children: ReactNode; className?: string}) => {
     const ref = useRef<HTMLDivElement>(null)
     const activePageRef = useRef(0)
@@ -64,14 +65,14 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
     useEffect(() => {
         const container = ref.current
         if (!container) return
-        syncPageElements(container, activePage, window.matchMedia('(min-width: 768px)').matches)
+        syncPageElements(container, activePage, window.matchMedia(STACK_PAGER_QUERY).matches)
     }, [activePage])
 
     useEffect(() => {
         const container = ref.current
         if (!container) return
 
-        const desktopQuery = window.matchMedia('(min-width: 768px)')
+        const desktopQuery = window.matchMedia(STACK_PAGER_QUERY)
         const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
         const pages = Array.from(container.querySelectorAll<HTMLElement>('[data-stack-page]'))
 

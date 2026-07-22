@@ -7,7 +7,7 @@ type CounterStyle = CSSProperties & {
     '--counter-end': string
 }
 
-// NIFCO Company info 수치처럼 각 자릿수가 한 바퀴 이상 회전한 뒤 목표 숫자에 멈추는 카운터.
+// 각 자릿수가 한 바퀴 이상 회전한 뒤 목표 숫자에 멈추는 카운터.
 const AnimatedCounter = ({value, onComplete}: {value: number | string; onComplete?: () => void}) => {
     const [isAnimated, setIsAnimated] = useState(false)
     const characters = String(value).split('')

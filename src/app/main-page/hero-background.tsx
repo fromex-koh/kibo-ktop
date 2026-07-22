@@ -11,7 +11,7 @@ type HeroBackgroundSlide = {
 
 const CHANGE_INTERVAL_MS = 7000
 
-// HDC 메인 비주얼처럼 배경 레이어를 겹쳐 크로스페이드하고, 활성 이미지는 확대 상태에서 원래 크기로 돌아온다.
+// 배경 레이어를 겹쳐 크로스페이드하고, 활성 이미지는 확대 상태에서 원래 크기로 돌아온다.
 // 전달받은 배경 배열을 순환하므로 이미지를 추가하거나 교체할 때 slides 데이터만 변경한다.
 const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
     const rootRef = useRef<HTMLDivElement>(null)
