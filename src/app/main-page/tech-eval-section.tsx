@@ -127,7 +127,7 @@ const TechEvalSection = () => {
             ref={sectionRef}
             data-stack-page
             aria-labelledby="tech-eval-title"
-            className="bg-background relative flex min-h-dvh snap-start flex-col py-28 md:pt-50"
+            className="bg-background relative flex min-h-dvh snap-start flex-col py-28 md:h-dvh md:min-h-0 md:pt-50"
         >
             <div className="grid-layout w-full items-start gap-y-16">
                 {/* 좌: 세로 레일 + 서비스 목차. 각 서비스는 레일 전체 높이를 진행 바로 쓰고,

@@ -12,7 +12,6 @@ const INERTIA_COOLDOWN_MS = 300 // 전환 직후 트랙패드 관성으로 연�
 
 const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
 const PAGE_UP_KEYS = new Set(['ArrowUp', 'PageUp'])
-export const STACK_PAGE_CHANGE_EVENT = 'stackpagechange'
 
 const StackPager = ({children, className}: {children: ReactNode; className?: string}) => {
     const ref = useRef<HTMLDivElement>(null)
@@ -27,19 +26,10 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
         let isPaging = false
         let cooldownUntil = 0
         let settleTimer = 0
-        let currentPage = Math.round(container.scrollTop / container.clientHeight)
-
-        const announcePageChange = () => {
-            const nextPage = Math.round(container.scrollTop / container.clientHeight)
-            if (nextPage === currentPage) return
-            currentPage = nextPage
-            container.dispatchEvent(new CustomEvent(STACK_PAGE_CHANGE_EVENT, {detail: {page: currentPage}}))
-        }
 
         const releaseLock = () => {
             isPaging = false
             cooldownUntil = performance.now() + INERTIA_COOLDOWN_MS
-            announcePageChange()
         }
 
         // 현재 화면 번호에서 한 화면 이동. 범위 밖(마지막 화면이 뷰포트보다 길어 남은 부분 등)이면
@@ -87,7 +77,6 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
 
         // 부드러운 전환이 실제로 끝난 시점에 잠금 해제(미지원 브라우저는 타임아웃이 대신 해제)
         const handleScrollEnd = () => {
-            announcePageChange()
             if (!isPaging) return
             window.clearTimeout(settleTimer)
             releaseLock()
