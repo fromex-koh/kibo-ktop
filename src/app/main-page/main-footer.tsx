@@ -87,19 +87,22 @@ const MainFooter = () => (
                     <p className="typo-body-l-regular">
                         ⓒ The Government of the Republic of Korea. All rights reserved.
                     </p>
-                    {/* 관련사이트 — 프로젝트 Select 컴포넌트 사용. 푸터는 mainpage(다크) 스킨 속
-                        고정 화이트 표면이라 시맨틱 토큰이 다크로 해석되므로 사용처에서 라이트 색을 명시한다. */}
+                    {/* 관련 사이트 — 구조·크기는 가이드의 Select를 그대로 사용하고, 밝은 푸터 표면의 색상만
+                        mainpage 전용 main-footer-* 시맨틱 토큰으로 연결한다. */}
                     <Select>
                         <SelectTrigger
-                            size="md"
-                            aria-label="관련사이트"
-                            className="min-w-40 rounded-full border-black/10 bg-white text-black data-placeholder:text-black"
+                            aria-label="관련 사이트"
+                            className="border-main-footer-control bg-main-footer-surface text-main-footer-foreground data-placeholder:text-main-footer-placeholder focus-visible:border-main-footer-focus focus-visible:outline-main-footer-focus data-[state=open]:border-main-footer-focus data-[state=open]:outline-main-footer-focus [&_svg]:text-main-footer-foreground w-full max-w-90"
                         >
-                            <SelectValue placeholder="관련사이트" />
+                            <SelectValue placeholder="관련 사이트" />
                         </SelectTrigger>
-                        <SelectContent className="border-black/10 bg-white">
+                        <SelectContent className="bg-main-footer-popover text-main-footer-popover-foreground ring-main-footer-control">
                             {FAMILY_SITES.map((site) => (
-                                <SelectItem key={site.value} value={site.value} className="text-black">
+                                <SelectItem
+                                    key={site.value}
+                                    value={site.value}
+                                    className="focus:bg-main-footer-accent focus:text-main-footer-accent-foreground not-data-[variant=destructive]:focus:**:text-main-footer-accent-foreground"
+                                >
                                     {site.label}
                                 </SelectItem>
                             ))}

@@ -60,7 +60,7 @@ for (const hue of hues) {
         else if (!HEX.test(v)) errors.push(`primitive.${hue}.${s}="${v}" 는 #RRGGBB 형식 아님`)
     }
 }
-// common: 스케일 밖 단일값(앵커) — hex 만 검증. semantic 은 {light,dark} 에서만 참조한다(반사 대상 아님).
+// common: 스케일 밖 단일값(앵커) — hex 만 검증. semantic 의 각 테마 명시값에서 참조한다.
 for (const [k, v] of Object.entries(common))
     if (!HEX.test(v) && v !== 'transparent' && v !== 'currentColor')
         errors.push(`common.${k}="${v}" 는 #RRGGBB 또는 transparent/currentColor 여야 함`)
@@ -83,13 +83,14 @@ const parseRef = (ref) => {
     else if (!scale.includes(Number(step))) errors.push(`참조 "${ref}" — 스케일 '${step}' 없음`)
     return [hue, Number(step)]
 }
-for (const val of Object.values(semantic)) {
-    if (typeof val === 'string') parseRef(val)
-    else {
-        parseRef(val.light)
-        parseRef(val.dark)
-        // mainpage: 선택 키 — 메인페이지 스킨에서만 다크 값을 대체한다(없으면 다크 값을 따른다).
-        if (val.mainpage !== undefined) parseRef(val.mainpage)
+for (const [name, val] of Object.entries(semantic)) {
+    if (!val || typeof val !== 'object') {
+        errors.push(`semantic.${name} 는 {light,dark,mainpage} 객체여야 함`)
+        continue
+    }
+    for (const theme of ['light', 'dark', 'mainpage']) {
+        if (typeof val[theme] !== 'string') errors.push(`semantic.${name}.${theme} 누락`)
+        else parseRef(val[theme])
     }
 }
 
@@ -218,11 +219,7 @@ const ENABLE_CONTRAST_CHECK = true
 const rawHex = (hue, step) => (hue === 'common' ? common[step] : primitive[hue][String(step)])
 const resolveHex = (name, mode) => {
     const val = semantic[name]
-    if (typeof val === 'string') {
-        const [hue, step] = parseRef(val) // 문자열 = ds 반사
-        return rawHex(hue, mode === 'dark' ? mirror(step) : step)
-    }
-    const [hue, step] = parseRef(val[mode]) // {light,dark} = 직접 raw
+    const [hue, step] = parseRef(val[mode])
     return rawHex(hue, step)
 }
 const lin = (c) => {
@@ -291,7 +288,7 @@ if (errors.length) {
 const L = []
 L.push('/* 자동 생성 파일 — tokens.json 에서 생성됨. 직접 수정 금지. (yarn tokens) */', '')
 
-// 색상 :root
+// 색상 :root — 별도 클래스가 없을 때 적용되는 기본 라이트 테마.
 L.push(':root {', '  color-scheme: light;', '')
 for (const hue of hues) {
     L.push(`  /* raw ${hue} */`)
@@ -323,12 +320,7 @@ L.push('', '  /* scale (라이트 = raw identity) */')
 for (const hue of hues) for (const s of scale) L.push(`  --ds-${hue}-${s}: var(--raw-${hue}-${s});`)
 L.push('', '  /* purpose */')
 for (const [name, val] of Object.entries(semantic)) {
-    if (typeof val === 'string') {
-        const [hue, step] = val.split('.')
-        L.push(`  --ds-${name}: var(--ds-${hue}-${step});`)
-    } else {
-        L.push(`  --ds-${name}: ${rawVarRef(val.light)};`)
-    }
+    L.push(`  --ds-${name}: ${rawVarRef(val.light)};`)
 }
 if (Object.keys(overlay).length) {
     L.push('', '  /* overlay (라이트 = 검정 alpha, primitive 참조) */')
@@ -336,19 +328,14 @@ if (Object.keys(overlay).length) {
 }
 L.push('}', '')
 
-// 색상 .dark / .mainpage — 다크 기반 스킨 테마 3종 체계(light·dark·mainpage)의 다크 계열 블록.
-// .mainpage 는 메인페이지 전용 스킨: 다크 값을 그대로 따르되 semantic 에 mainpage 키가 있으면 그 값으로 대체한다.
+// 색상 .dark / .mainpage — tokens.json 에 각각 명시된 전체 시맨틱 세트를 그대로 생성한다.
 // light/dark 와 같은 방식으로 html 클래스로 적용된다(theme-provider 가 메인페이지 라우트에서 forcedTheme 으로 강제).
 const DARK_BASED_THEMES = [
-    {selector: '.dark', comment: '다크', pick: (v) => v.dark, redeclareStringRefs: false},
+    {selector: '.dark', comment: '다크', pick: (v) => v.dark},
     {
         selector: '.mainpage',
-        comment: '메인페이지 스킨(다크 기반, mainpage 키로 대체)',
-        pick: (v) => v.mainpage ?? v.dark,
-        // ⚠️ 문자열 semantic(var(--ds-<hue>-<step>) 참조)은 선언된 요소에서 var()가 치환·확정된 뒤
-        // 상속된다. html 에 붙는 지금은 .dark 처럼 루트에서 재계산되지만, 가이드 데모처럼 내부 요소에
-        // 클래스를 얹는 경우에도 스킨이 온전하도록 문자열 semantic 을 이 블록에 다시 선언해 둔다.
-        redeclareStringRefs: true,
+        comment: '메인페이지 스킨',
+        pick: (v) => v.mainpage,
     },
 ]
 for (const theme of DARK_BASED_THEMES) {
@@ -357,18 +344,7 @@ for (const theme of DARK_BASED_THEMES) {
     for (const hue of hues) for (const s of scale) L.push(`  --ds-${hue}-${s}: var(--raw-${hue}-${mirror(s)});`)
     L.push('', '  /* purpose override (수동 지정) */')
     for (const [name, val] of Object.entries(semantic)) {
-        if (typeof val === 'string') {
-            if (!theme.redeclareStringRefs) continue
-            if (val === 'transparent' || val === 'currentColor') {
-                L.push(`  --ds-${name}: ${val};`)
-                continue
-            }
-            // 같은 블록의 스케일 변수를 참조 — 이 요소에서 재계산되어 다크 반사가 적용된다.
-            const [hue, step] = val.split('.')
-            L.push(`  --ds-${name}: var(--ds-${hue}-${step});`)
-        } else {
-            L.push(`  --ds-${name}: ${rawVarRef(theme.pick(val))};`)
-        }
+        L.push(`  --ds-${name}: ${rawVarRef(theme.pick(val))};`)
     }
     if (Object.keys(overlay).length) {
         L.push('', '  /* overlay override (다크 = 흰색 alpha, primitive 참조) */')

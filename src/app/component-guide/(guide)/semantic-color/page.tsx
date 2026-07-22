@@ -28,6 +28,9 @@ const TEXT_TONE_SLOTS = new Set([
 ])
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
+    if (name === 'main-footer-control') return ['border-main-footer-control']
+    if (name === 'main-footer-placeholder') return ['text-main-footer-placeholder']
+    if (name === 'main-footer-focus') return ['ring-main-footer-focus']
     if (TEXT_TONE_SLOTS.has(name)) return [`text-${name}`]
     if (name === 'foreground' || name.endsWith('-foreground') || name.startsWith('foreground-')) return [`text-${name}`]
     if (name === 'border' || name.endsWith('-border') || BORDER_TONE_SLOTS.has(name)) return [`border-${name}`]
@@ -38,13 +41,10 @@ const utilClasses = (name: string): string[] => {
 
 // 앱이 실제로 쓰는 시맨틱 토큰(--ds → bg-*/text-* 유틸)을 tokens.json 에서 그대로 문서화한다.
 // 인덱싱 타입 오류를 피하려고 Record 로 받는다(값 형태는 build-tokens 검증이 보장).
-const scale: number[] = tokens.scale
 const primitive: Record<string, Record<string, string>> = tokens.primitive
 const common: Record<string, string> = tokens.common
-const semantic: Record<string, string | {light: string; dark: string}> = tokens.semantic
-
-// 다크 위치반사(생성기와 동일 규칙): 스케일 배열에서 대칭 위치.
-const mirror = (step: number): number => scale[scale.length - 1 - scale.indexOf(step)]
+type SemanticValue = {light: string; dark: string; mainpage: string}
+const semantic: Record<string, SemanticValue> = tokens.semantic
 
 // 투명 값(alpha) 뒤에 깔 체커보드 (토큰 뷰어 인라인 var 은 PB-12 허용).
 // --raw-* 는 모드에 안 뒤집히는 고정 프리미티브라 라이트/다크 어디서든 동일한 '투명 표시' 체커가 된다.
@@ -61,22 +61,14 @@ const rawColor = (ref: string): string => {
     return hue === 'common' ? common[step] : primitive[hue][step]
 }
 
-// 문자열 ref = 다크 자동 반사, {light,dark} = 명시값 → 모드별 색으로 해석
-const resolveModes = (val: string | {light: string; dark: string}): {light: string; dark: string} => {
-    if (typeof val !== 'string') {
-        return {light: rawColor(val.light), dark: rawColor(val.dark)}
-    }
-    const [hue, step] = val.split('.')
-    return {light: rawColor(val), dark: rawColor(`${hue}.${mirror(Number(step))}`)}
+// tokens.json 에 명시된 테마별 참조를 색상값으로 해석한다.
+const resolveModes = (val: SemanticValue): {light: string; dark: string; mainpage: string} => {
+    return {light: rawColor(val.light), dark: rawColor(val.dark), mainpage: rawColor(val.mainpage)}
 }
 
-// 참조 primitive 표기 — 문자열은 "라이트 → 다크(반사)", 객체는 "light / dark".
-const refLabel = (val: string | {light: string; dark: string}): string => {
-    if (typeof val !== 'string') {
-        return `${val.light} / ${val.dark}`
-    }
-    const [hue, step] = val.split('.')
-    return `${val} → ${hue}.${mirror(Number(step))} (반사)`
+// tokens.json 에 명시된 light / dark / mainpage primitive 참조를 그대로 표기한다.
+const refLabel = (val: SemanticValue): string => {
+    return `${val.light} / ${val.dark} / ${val.mainpage}`
 }
 
 // 표기용 rgba 문자열 — hex 는 변환, 이미 rgba(alpha)면 그대로.
@@ -171,6 +163,15 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'segmented-track': 'bg-segmented-track',
     'segmented-foreground': 'bg-segmented-foreground',
     'segmented-active': 'bg-segmented-active',
+    'main-footer-surface': 'bg-main-footer-surface',
+    'main-footer-foreground': 'bg-main-footer-foreground',
+    'main-footer-control': 'bg-main-footer-control',
+    'main-footer-placeholder': 'bg-main-footer-placeholder',
+    'main-footer-popover': 'bg-main-footer-popover',
+    'main-footer-popover-foreground': 'bg-main-footer-popover-foreground',
+    'main-footer-accent': 'bg-main-footer-accent',
+    'main-footer-accent-foreground': 'bg-main-footer-accent-foreground',
+    'main-footer-focus': 'bg-main-footer-focus',
 }
 
 // 맨 앞 '현재' 칸 — 실제 토큰을 현재 테마로 렌더. 다크 토글 시 실제로 바뀐다(파이프라인 검증).
@@ -200,7 +201,7 @@ const ModeSwatch = ({color}: {color: string}) => (
     </span>
 )
 
-type SemanticEntry = [string, string | {light: string; dark: string}]
+type SemanticEntry = [string, SemanticValue]
 type Group = {name: string; match: (n: string) => boolean}
 
 // shadcn 공식 표준 슬롯 (https://ui.shadcn.com/docs/theming) — 생성기의 SHADCN_SLOTS 와 동일한 32개.
@@ -313,6 +314,7 @@ const CUSTOM_GROUPS: Group[] = [
     },
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
     {name: 'main-accent / main-accent-bright', match: (n) => n.startsWith('main-accent')},
+    {name: 'main-footer', match: (n) => n.startsWith('main-footer-')},
     {name: '기타', match: () => true}, // 안전망 — 위에서 안 잡힌 커스텀 슬롯이 있으면 여기로.
 ]
 
@@ -335,7 +337,7 @@ const CUSTOM_COUNT = customEntries.length
 const recipeEntries = Object.entries(semantic).filter(([name]) => isComponentRecipe(name))
 const RECIPE_COUNT = recipeEntries.length
 
-// 그룹 하나 = 독립 테이블. 현재(라이브)·클래스(클릭 복사)·라이트·다크·참조 primitive.
+// 그룹 하나 = 독립 테이블. 현재(라이브)·클래스(클릭 복사)·light·dark·mainpage·참조 primitive.
 // usage: 이 슬롯(그룹)이 화면 어디에 쓰이는 색인지 간결한 사용처 설명(제목 아래 서브텍스트).
 // note: 특수 동작 부연(예: scroll 은 유틸리티가 아닌 이유).
 const SemanticTable = ({
@@ -355,7 +357,7 @@ const SemanticTable = ({
         {note && <p className="typo-body-l-regular text-muted-foreground">{note}</p>}
         <div className="border-border overflow-x-auto rounded-xl border">
             <table className="w-full text-left">
-                <caption className="sr-only">{title} 시맨틱 색상 토큰과 라이트·다크 매핑</caption>
+                <caption className="sr-only">{title} 시맨틱 색상 토큰과 light·dark·mainpage 매핑</caption>
                 <thead>
                     <tr className="border-border bg-card border-b">
                         <th
@@ -381,6 +383,12 @@ const SemanticTable = ({
                             className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
                         >
                             다크
+                        </th>
+                        <th
+                            scope="col"
+                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
+                        >
+                            메인페이지
                         </th>
                         <th
                             scope="col"
@@ -421,6 +429,9 @@ const SemanticTable = ({
                                 </td>
                                 <td className="px-3 py-3">
                                     <ModeSwatch color={modes.dark} />
+                                </td>
+                                <td className="px-3 py-3">
+                                    <ModeSwatch color={modes.mainpage} />
                                 </td>
                                 <td className="typo-body-l-regular text-muted-foreground px-3 py-3 font-mono whitespace-nowrap">
                                     {refLabel(val)}
@@ -486,6 +497,12 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             (mint·mint-bright)를 참조하며 모든 테마에서 같은 값입니다.
         </>
     ),
+    'main-footer': (
+        <>
+            다크 기반 <code className="font-mono">mainpage</code> 안의 밝은 푸터 표면·Select·Popover에 사용합니다.
+            부분적인 light 테마 전환 없이 푸터 문맥의 색상을 독립적으로 관리합니다.
+        </>
+    ),
 }
 
 // 색상(Semantic) — 프로젝트가 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
@@ -494,14 +511,14 @@ const SemanticColorGuidePage = () => (
         title="색상 (Semantic)"
         description={
             <>
-                역할 기반 색상 클래스와 라이트·다크 매핑을 확인하고 복사할 수 있습니다. 화면 코드에서는 원시 팔레트보다
-                이 페이지의 시맨틱 클래스를 우선 사용합니다.
+                같은 역할의 색상 클래스를 light·dark·mainpage 세 테마에서 일관되게 사용하는 방법과 테마별 매핑을
+                확인합니다.
             </>
         }
     >
         <div className="flex flex-col gap-12">
             <BaseCard>
-                <section aria-labelledby="semantic-rule" className="flex flex-col gap-4">
+                <section aria-labelledby="semantic-rule" className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h2 id="semantic-rule" className="typo-h4-bold text-foreground">
                             구조와 사용 원칙
@@ -534,6 +551,74 @@ const SemanticColorGuidePage = () => (
                                 동일한 시맨틱 클래스가 라이트·다크 값을 자동 전환합니다. 컴포넌트에서 테마별 원시 색상을
                                 직접 지정하지 않습니다.
                             </p>
+                        </div>
+                    </div>
+
+                    <div className="border-border flex flex-col gap-5 border-t pt-8">
+                        <div className="flex flex-col gap-1">
+                            <h3 className="typo-title-l-bold text-foreground">테마별 동일 토큰 세트</h3>
+                            <p className="typo-body-l-regular text-foreground-subtle">
+                                세 테마는 이름과 개수가 같은 시맨틱 토큰 한 벌씩을 가집니다. 현재 특정 테마에서 사용하지
+                                않는 토큰도 삭제하지 않으며, 토큰 이름은 동일하고 실제 색상값만 테마에 따라 달라집니다.
+                            </p>
+                        </div>
+
+                        <div className="grid gap-3 md:grid-cols-3">
+                            <div className="border-border bg-surface flex flex-col gap-1 rounded-lg border p-4">
+                                <strong className="text-foreground">
+                                    <code className="font-mono">:root</code> · light
+                                </strong>
+                                <p className="text-foreground-subtle">별도 테마 클래스가 없을 때 적용되는 기본 세트</p>
+                            </div>
+                            <div className="border-border bg-surface flex flex-col gap-1 rounded-lg border p-4">
+                                <strong className="text-foreground">
+                                    <code className="font-mono">.dark</code>
+                                </strong>
+                                <p className="text-foreground-subtle">다크 화면에 적용되는 동일 이름의 전체 세트</p>
+                            </div>
+                            <div className="border-border bg-surface flex flex-col gap-1 rounded-lg border p-4">
+                                <strong className="text-foreground">
+                                    <code className="font-mono">.mainpage</code>
+                                </strong>
+                                <p className="text-foreground-subtle">
+                                    메인페이지 전용 스킨에 적용되는 동일 이름의 전체 세트
+                                </p>
+                            </div>
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <div className="flex flex-col gap-2">
+                                <strong className="text-foreground">개발자는 클래스 하나만 사용</strong>
+                                <p className="text-foreground-subtle">
+                                    예를 들어 <code className="font-mono">bg-primary</code>는 현재 상위 테마의{' '}
+                                    <code className="font-mono">--ds-primary</code> 값을 자동으로 사용합니다.
+                                    컴포넌트에서 light·dark·mainpage 클래스를 조건문으로 나누지 않습니다.
+                                </p>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <strong className="text-foreground">세 테마 값을 원본에 모두 명시</strong>
+                                <p className="text-foreground-subtle">
+                                    모든 토큰은 <code className="font-mono">tokens.json</code>에 light·dark·mainpage
+                                    값을 각각 작성합니다. 값이 같아도 생략하거나 다른 테마에서 자동 상속하지 않습니다.
+                                </p>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <strong className="text-foreground">현재 미사용 토큰도 세 테마 모두 보유</strong>
+                                <p className="text-foreground-subtle">
+                                    light·dark에서 <code className="font-mono">main-accent</code>를 사용하지 않더라도
+                                    세트 구조를 맞추기 위해 동일 토큰을 유지합니다. 이후 테마별 값만 독립적으로 변경할
+                                    수 있습니다.
+                                </p>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <strong className="text-foreground">부분 테마 덮어쓰기 대신 역할 토큰 확장</strong>
+                                <p className="text-foreground-subtle">
+                                    mainpage 안의 밝은 푸터처럼 별도 표면이 필요하면{' '}
+                                    <code className="font-mono">.light</code>를 부분 적용하지 않고{' '}
+                                    <code className="font-mono">main-footer-*</code>처럼 문맥이 분명한 시맨틱 토큰을
+                                    사용합니다.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </section>
