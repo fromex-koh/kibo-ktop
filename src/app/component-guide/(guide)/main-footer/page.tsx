@@ -22,6 +22,20 @@ export default function Page() {
 // 장식 마키 없이 푸터 본문만 노출하는 경우
 <MainFooter showMarquee={false} />`
 
+// 메인페이지의 스택 페이저에 넣을 때의 배치 스니펫.
+const STACK_USAGE_CODE = `// app/main-page/page.tsx — 마지막 스택 페이지로 배치한다.
+// 데스크톱에서는 고정 레이어의 하단에 맞추고, 모바일에서는 자연 흐름에 둔다.
+<div data-stack-page className="stack-page bg-background relative md:flex md:h-dvh md:flex-col md:justify-end">
+  <MainFooter />
+</div>`
+
+// Props — [이름, 설명, 기본값, 타입]
+const PROPS_ITEMS = [
+    ['showMarquee', '상단 장식 마키 밴드 노출 여부입니다.', 'true', 'boolean'],
+    ['className', '푸터 루트에 클래스를 덧붙입니다(색은 토큰 고정).', 'undefined', 'string'],
+    ['...props', 'aria-*·id 등 네이티브 footer 속성을 그대로 전달합니다.', '-', "ComponentProps<'footer'>"],
+] as const
+
 // 푸터가 조립하는 요소 목록(Composition 표).
 const COMPOSITION = [
     {
@@ -43,20 +57,32 @@ const COMPOSITION = [
     },
 ] as const
 
-// 푸터가 사용하는 시맨틱 색 토큰 — 테마와 무관하게 세 테마(light·dark·mainpage) 값이 모두 같다.
-const COLOR_TOKENS = [
-    {token: 'main-footer-background', role: '푸터 배경 (gray.900)'},
-    {token: 'main-footer-foreground', role: '기본 텍스트·제목 (common.white)'},
-    {token: 'main-footer-muted', role: '사이트맵 링크·보조 텍스트 (gray.300)'},
-    {token: 'main-footer-border', role: '구분선 (gray.700)'},
-    {token: 'main-footer-surface', role: '관련사이트 Select 표면 (gray.700)'},
-    {token: 'main-footer-control', role: 'Select 테두리 (gray.700)'},
-    {token: 'main-footer-placeholder', role: 'Select placeholder (gray.50)'},
-    {token: 'main-footer-popover', role: 'Select 목록 배경 (gray.800)'},
-    {token: 'main-footer-popover-foreground', role: 'Select 목록 텍스트 (gray.50)'},
-    {token: 'main-footer-accent', role: 'Select 항목 hover·focus 배경 (gray.600)'},
-    {token: 'main-footer-accent-foreground', role: 'Select 항목 hover·focus 텍스트 (common.white)'},
-    {token: 'main-footer-focus', role: '포커스 링·테두리 (blue.400)'},
+// 개발자가 연동 전에 알아야 하는 사항 — 데이터 위치·링크 처리·색 정책.
+const DEV_NOTES = [
+    {
+        title: '메뉴·연락처 데이터는 컴포넌트 상수',
+        desc: '사이트맵(SITEMAP)·유틸 링크(UTILITY_LINKS)·관련사이트(FAMILY_SITES)·연락처(CONTACT)는 main-footer.tsx 상단 상수입니다. 현재 href 는 전부 "#" 목업이므로 라우트 확정 시 이 상수만 실제 경로로 교체합니다. 항목이 늘어도 마크업 수정은 필요 없습니다.',
+    },
+    {
+        title: '관련사이트 Select 는 표시 전용',
+        desc: 'Select 는 값 변경 핸들러가 없는 목업 상태입니다. 실제 이동을 붙일 때는 onValueChange 에서 곧바로 라우팅하지 말고 명시적인 이동 버튼이나 확인 절차를 두어야 합니다. [KWCAG 7.2.1]',
+    },
+    {
+        title: '색은 main-footer-* 토큰 고정',
+        desc: '시안 푸터는 테마와 무관한 고정 다크 표면이라 세 테마(light·dark·mainpage) 값이 모두 같습니다. 사용처에서 dark: 분기나 임의 색을 덮지 말고 tokens.json 의 main-footer-* 값만 수정합니다. 토큰 목록은 Semantic 색상 가이드의 main-footer 그룹에 있습니다.',
+    },
+    {
+        title: '반응형 전환점',
+        desc: 'xl(≥1280) 이상에서 대표전화가 사이트맵 우측으로, md(≥768) 이상에서 주소와 관련사이트가 좌우로 나뉩니다. 폭은 content-layout(max-w-content)을 따르므로 별도 컨테이너로 감쌀 필요가 없습니다.',
+    },
+    {
+        title: '마키는 컴포넌트 폭 전체를 사용',
+        desc: '마키 밴드는 뷰포트 폭을 흐르는 장식이라 좁은 컨테이너 안에 넣으면 잘립니다. 카드·모달 등 폭이 제한된 문맥에서는 showMarquee={false} 로 끕니다. 애니메이션은 globals.css 의 main-marquee 키프레임입니다.',
+    },
+    {
+        title: '메인페이지 스택 페이저와의 관계',
+        desc: '푸터 자체는 스택 구조를 모릅니다. /main-page 에서는 data-stack-page 래퍼가 마지막 페이지 역할을 하므로, 다른 화면에서 재사용할 때는 래퍼 없이 그대로 배치하면 됩니다.',
+    },
 ] as const
 
 // 메인 푸터 — shadcn 에 Footer primitive 가 없어 Select·Separator·Link·Image 를 조립한 합성 컴포넌트.
@@ -122,44 +148,79 @@ const MainFooterGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="mf-tokens" className="flex flex-col gap-4">
+            <section aria-labelledby="mf-props" className="flex flex-col gap-4">
                 <div>
-                    <h2 id="mf-tokens" className="typo-h4-bold">
-                        색 토큰
+                    <h2 id="mf-props" className="typo-h4-bold">
+                        Props
                     </h2>
-                    <p className="text-foreground-muted text-sm">
-                        시안의 푸터는 테마와 무관하게 고정된 다크 표면이라 main-footer-* 역할 토큰의 light·dark·mainpage
-                        값이 모두 같습니다. 값 변경은 tokens.json 에서만 합니다.
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        MainFooter 에 넘기는 속성입니다. 메뉴·연락처는 props 가 아니라 컴포넌트 상수로 관리합니다.
                     </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
+                <div className="border-border overflow-x-auto rounded-xl border">
                     <table className="w-full text-left">
-                        <caption className="sr-only">색 토큰 목록</caption>
+                        <caption className="sr-only">MainFooter Props 목록</caption>
                         <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
+                            <tr className="border-border bg-card border-b">
                                 <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Token
+                                    Name
                                 </th>
                                 <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Role
+                                    Description
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Default
+                                </th>
+                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                    Type
                                 </th>
                             </tr>
                         </thead>
                         <tbody>
-                            {COLOR_TOKENS.map((row) => (
-                                <tr key={row.token} className="border-border bg-background border-b last:border-b-0">
+                            {PROPS_ITEMS.map(([name, description, defaultValue, type]) => (
+                                <tr key={name} className="border-border border-b last:border-b-0">
                                     <th
                                         scope="row"
-                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
+                                        className="typo-body-l-medium text-primary-strong px-4 py-3 font-mono"
                                     >
-                                        {row.token}
+                                        {name}
                                     </th>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{row.role}</td>
+                                    <td className="typo-body-l-regular text-foreground-subtle px-4 py-3">
+                                        {description}
+                                    </td>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
+                                        {defaultValue}
+                                    </td>
+                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
+                                        {type}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="mf-dev" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="mf-dev" className="typo-h4-bold">
+                        개발 시 참고사항
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        데이터 연동·라우팅·색 정책 등 사용 전에 알아야 하는 사항입니다.
+                    </p>
+                </div>
+                <dl className="flex flex-col gap-5">
+                    {DEV_NOTES.map((note) => (
+                        <div key={note.title} className="flex flex-col gap-1">
+                            <dt className="typo-body-xl-bold text-foreground">{note.title}</dt>
+                            <dd className="typo-body-l-regular text-muted-foreground">{note.desc}</dd>
+                        </div>
+                    ))}
+                </dl>
+                <CodeBlock code={STACK_USAGE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
