@@ -120,6 +120,8 @@ const TechEvalSection = () => {
 
     return (
         <section
+            id="tech-eval"
+            tabIndex={-1}
             data-stack-page
             aria-labelledby="tech-eval-title"
             className="stack-page bg-background relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:pt-50"

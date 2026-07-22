@@ -9,8 +9,12 @@ const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
 const PAGE_UP_KEYS = new Set(['ArrowUp', 'PageUp'])
 const STACK_PAGER_QUERY = '(min-width: 768px) and (min-height: 720px)'
 const StackPagerActivePageContext = createContext(0)
+const StackPagerGoToPageContext = createContext<(page: number) => void>(() => {})
 
 export const useStackPagerActivePage = () => useContext(StackPagerActivePageContext)
+
+// 바로가기 링크처럼 페이지 밖에서 특정 스택 페이지를 활성화해야 할 때 쓴다.
+export const useStackPagerGoToPage = () => useContext(StackPagerGoToPageContext)
 
 const syncPageElements = (container: HTMLElement, activePage: number, isDesktop: boolean) => {
     const pages = Array.from(container.querySelectorAll<HTMLElement>('[data-stack-page]'))
@@ -60,6 +64,23 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
             },
             reducedMotion ? 0 : TRANSITION_DURATION_MS,
         )
+    }, [])
+
+    // 바로가기 링크용 — 임의의 페이지로 즉시 이동한다. 링크의 기본 앵커 이동이 일어나기 전에
+    // 대상 페이지의 inert 를 동기적으로 풀어야 포커스가 실제로 그 페이지로 옮겨진다. [KWCAG 6.1.1]
+    const goToPage = useCallback((page: number) => {
+        const container = ref.current
+        if (!container) return
+
+        const pageCount = container.querySelectorAll('[data-stack-page]').length
+        const nextPage = Math.min(pageCount - 1, Math.max(0, page))
+
+        activePageRef.current = nextPage
+        isTransitioningRef.current = false
+        isGestureArmedRef.current = true
+        accumulatedDeltaRef.current = 0
+        syncPageElements(container, nextPage, window.matchMedia(STACK_PAGER_QUERY).matches)
+        setActivePage(nextPage)
     }, [])
 
     useEffect(() => {
@@ -142,9 +163,11 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
 
     return (
         <StackPagerActivePageContext.Provider value={activePage}>
-            <div ref={ref} data-stack-pager data-active-page={activePage} className={className}>
-                {children}
-            </div>
+            <StackPagerGoToPageContext.Provider value={goToPage}>
+                <div ref={ref} data-stack-pager data-active-page={activePage} className={className}>
+                    {children}
+                </div>
+            </StackPagerGoToPageContext.Provider>
         </StackPagerActivePageContext.Provider>
     )
 }

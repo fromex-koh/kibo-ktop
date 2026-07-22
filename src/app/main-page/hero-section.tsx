@@ -20,10 +20,15 @@ const HERO_STATS: HeroStat[] = [
 // 콘텐츠가 화면보다 길어지는 모바일에서는 자연 흐름으로 둔다.
 // 색상은 mainpage 스킨(다크 기반)의 시맨틱 토큰을 쓴다 — 포인트 그린은 main-accent-* 슬롯.
 const HeroSection = () => (
+    // 본문 바로가기 대상 — 섹션 안에 조작 요소가 없어 섹션 전체에 포커스 링을 그려 도착 위치를 알린다.
+    // outline 은 배경 이미지·딤 오버레이(absolute inset-0)가 나중에 그려지며 가려지므로,
+    // 마지막에 그려지는 ::after 테두리로 표시한다. [KWCAG 6.1.2]
     <section
+        id="hero"
+        tabIndex={-1}
         data-stack-page
         aria-labelledby="hero-title"
-        className="stack-page relative min-h-dvh md:h-dvh md:min-h-0 md:overflow-hidden"
+        className="focus-visible:after:border-ring stack-page relative min-h-dvh outline-none focus-visible:after:pointer-events-none focus-visible:after:absolute focus-visible:after:inset-0 focus-visible:after:border-2 md:h-dvh md:min-h-0 md:overflow-hidden"
     >
         {/* 배경 비주얼 — 장식 이미지라 접근성 트리에서 제외한다. [KWCAG 5.1.1] */}
         <HeroBackground slides={HERO_BACKGROUNDS} />
