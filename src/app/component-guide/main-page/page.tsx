@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import Header from '@/components/composite/header'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
-import MainFooter from '@/components/composite/main-footer'
+import Footer from '@/components/composite/footer'
 import StackPager from '@/components/custom/stack-pager'
 import HeroSection from '@/components/custom/hero-section'
 import TechEvalSection from '@/components/custom/tech-eval-section'
@@ -38,7 +38,7 @@ const MainPage = () => (
             data-stack-page
             className="stack-page bg-background relative md:flex md:h-dvh md:flex-col md:justify-end"
         >
-            <MainFooter />
+            <Footer />
         </div>
     </StackPager>
 )

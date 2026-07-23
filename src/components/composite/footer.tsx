@@ -7,8 +7,10 @@ import {Separator} from '@/components/ui/separator'
 import {cn} from '@/lib/utils'
 
 // PROJECT-COMPOSITE: shadcn 에 Footer primitive 가 없어 Select·Separator·Link·Image 를 조합한
-// 메인페이지 하단 contentinfo 합성 컴포넌트. 시안(type A_01)의 다크 푸터를 그대로 옮긴다.
-// 색은 테마(light·dark·mainpage)와 무관하게 고정된 표면이라 main-footer-* 역할 토큰만 사용한다.
+// 전 페이지 하단 contentinfo 합성 컴포넌트. 시안(type A_01)의 푸터 구조를 옮긴다.
+// 색은 표준 시맨틱 토큰(bg-background·text-foreground·text-muted-foreground·border …)만 써서 페이지 테마를
+// 그대로 따른다 — 메인페이지는 mainpage(다크) 스킨, 서브페이지는 light/dark 모드로 자동 반사된다([PB-06]).
+// 로고만 어두운/밝은 표면에 맞춰 light 테마엔 컬러 로고, dark·mainpage 엔 화이트 로고로 교체한다.
 
 const MARQUEE_TEXT = 'Korea Technology-rating Open platform'
 
@@ -85,7 +87,7 @@ const CONTACT = {
 // 포커스 링 — 프로젝트 공통 패턴(outline-none + focus-visible:outline-2/offset-2/solid)을 따른다.
 // outline-solid 가 없으면 outline-none 이 남긴 --tw-outline-style:none 때문에 선이 그려지지 않는다. [KWCAG 6.1.2]
 const linkFocusClassName =
-    'focus-visible:outline-main-footer-focus outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid'
+    'focus-visible:outline-ring outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid'
 
 // 마키 밴드 — 시안의 대형 장식 문구가 좌측으로 흐른다.
 // 장식이라 접근성 트리에서 제외하고, 감속 모션 선호 시 정지한다. [KWCAG 6.3.1]
@@ -94,37 +96,43 @@ const MarqueeBand = () => (
         {/* PROJECT-STYLE: 140px 대형 장식 타이포는 typo 스케일 밖의 화면 고유 그래픽 요소라
             clamp arbitrary 값을 제한적으로 사용한다(다른 화면에서 재사용 시 토큰 승격). */}
         <div className="main-marquee flex w-max">
-            <span className="text-main-footer-foreground/10 text-[clamp(4rem,7.3vw,8.75rem)] leading-[1.4] font-black whitespace-nowrap">
+            <span className="text-foreground/10 text-[clamp(4rem,7.3vw,8.75rem)] leading-[1.4] font-black whitespace-nowrap">
                 {MARQUEE_TEXT}&nbsp;&nbsp;&nbsp;
             </span>
-            <span className="text-main-footer-foreground/10 text-[clamp(4rem,7.3vw,8.75rem)] leading-[1.4] font-black whitespace-nowrap">
+            <span className="text-foreground/10 text-[clamp(4rem,7.3vw,8.75rem)] leading-[1.4] font-black whitespace-nowrap">
                 {MARQUEE_TEXT}&nbsp;&nbsp;&nbsp;
             </span>
         </div>
     </div>
 )
 
-type MainFooterProps = ComponentProps<'footer'> & {showMarquee?: boolean}
+type FooterProps = ComponentProps<'footer'> & {showMarquee?: boolean}
 
-const MainFooter = ({showMarquee = true, className, ...props}: MainFooterProps) => (
-    <footer
-        {...props}
-        className={cn('bg-main-footer-background text-main-footer-foreground', className)}
-        aria-label="사이트 정보"
-    >
+const Footer = ({showMarquee = true, className, ...props}: FooterProps) => (
+    <footer {...props} className={cn('bg-background text-foreground', className)} aria-label="사이트 정보">
         {showMarquee && <MarqueeBand />}
 
         {/* 시안 간격 — 마키 아래 60px, 로고와 사이트맵 사이 80px, 구분선 위아래 32px, 하단 40px */}
         <div className="content-layout flex flex-col gap-8 pt-12 pb-10 md:pt-15">
             <div className="flex flex-col gap-10 md:gap-20">
-                {/* 다크 표면 전용 KIBO 기술보증기금 로고(시안 240×32) */}
+                {/* KIBO 기술보증기금 로고(시안 240×32) — 표면 명도에 맞춰 교체한다: 밝은 표면=컬러 로고, 어두운
+                    표면(dark·mainpage)=화이트 로고. 교체는 dark:/mainpage: 변형(조상 클래스 기준) 대신 각 테마 스코프가
+                    재정의하는 CSS 변수(--footer-logo-on-*)로 제어해, 가이드의 .light 중첩 미리보기에서도 nearest 스코프가
+                    이겨 배경 명도와 항상 일치한다. */}
                 <Link href="#" className={cn('flex w-fit items-center', linkFocusClassName)}>
                     <Image
-                        src="/images/logo-white.svg"
+                        src="/images/logo-kibo.svg"
                         alt="기술보증기금"
                         width={240}
                         height={32}
-                        className="h-auto w-45 md:w-60"
+                        className="[display:var(--footer-logo-on-light)] h-auto w-45 md:w-60"
+                    />
+                    <Image
+                        src="/images/logo-kibo-white.svg"
+                        alt="기술보증기금"
+                        width={240}
+                        height={32}
+                        className="[display:var(--footer-logo-on-dark)] h-auto w-45 md:w-60"
                     />
                 </Link>
 
@@ -151,7 +159,7 @@ const MainFooter = ({showMarquee = true, className, ...props}: MainFooterProps) 
                                                 <Link
                                                     href={link.href}
                                                     className={cn(
-                                                        'typo-body-l-medium text-main-footer-muted hover:text-main-footer-foreground',
+                                                        'typo-body-l-medium text-muted-foreground hover:text-foreground',
                                                         linkFocusClassName,
                                                     )}
                                                 >
@@ -173,13 +181,13 @@ const MainFooter = ({showMarquee = true, className, ...props}: MainFooterProps) 
                                     {CONTACT.number}
                                 </a>
                             </p>
-                            <p className="typo-body-l-regular text-main-footer-muted">{CONTACT.hours}</p>
+                            <p className="typo-body-l-regular text-muted-foreground">{CONTACT.hours}</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <Separator className="border-main-footer-border" />
+            <Separator />
 
             <div className="flex flex-col gap-5">
                 <nav aria-label="이용 정보">
@@ -206,22 +214,15 @@ const MainFooter = ({showMarquee = true, className, ...props}: MainFooterProps) 
                         <p>{CONTACT.copyright}</p>
                     </div>
 
-                    {/* 관련 사이트 — 구조·크기는 가이드의 Select 를 그대로 쓰고, 다크 푸터 표면의 색상만
-                        main-footer-* 시맨틱 토큰으로 연결한다. */}
+                    {/* 관련 사이트 — 가이드의 Select 를 그대로 쓴다. 색은 Select 기본 시맨틱 토큰이 페이지 테마를
+                        따르므로 별도 색 오버라이드 없이 폭(layout)만 지정한다. */}
                     <Select>
-                        <SelectTrigger
-                            aria-label="관련 사이트"
-                            className="border-main-footer-control bg-main-footer-surface text-main-footer-foreground data-placeholder:text-main-footer-placeholder focus-visible:border-main-footer-focus focus-visible:outline-main-footer-focus data-[state=open]:border-main-footer-focus data-[state=open]:outline-main-footer-focus [&_svg]:text-main-footer-foreground w-full md:max-w-70"
-                        >
+                        <SelectTrigger aria-label="관련 사이트" className="w-full md:max-w-70">
                             <SelectValue placeholder="관련사이트" />
                         </SelectTrigger>
-                        <SelectContent className="bg-main-footer-popover text-main-footer-popover-foreground ring-main-footer-control">
+                        <SelectContent>
                             {FAMILY_SITES.map((site) => (
-                                <SelectItem
-                                    key={site.value}
-                                    value={site.value}
-                                    className="focus:bg-main-footer-accent focus:text-main-footer-accent-foreground not-data-[variant=destructive]:focus:**:text-main-footer-accent-foreground"
-                                >
+                                <SelectItem key={site.value} value={site.value}>
                                     {site.label}
                                 </SelectItem>
                             ))}
@@ -234,10 +235,10 @@ const MainFooter = ({showMarquee = true, className, ...props}: MainFooterProps) 
 )
 
 // 가이드 프리뷰 — 마키는 화면 폭 전체를 흐르는 장식이라 데모에서는 감춘다.
-export const MainFooterDemo = () => (
+export const FooterDemo = () => (
     <div className="border-border overflow-hidden rounded-lg border">
-        <MainFooter showMarquee={false} />
+        <Footer showMarquee={false} />
     </div>
 )
 
-export default MainFooter
+export default Footer

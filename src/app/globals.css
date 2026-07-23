@@ -6,6 +6,24 @@
 
 /* dark: 유틸리티를 클래스 기반으로 전환 (OS 기본값은 layout.tsx 인라인 스크립트가 처리) */
 @custom-variant dark (&:where(.dark, .dark *));
+/* mainpage: 유틸리티 — 메인페이지 스킨(.mainpage)에서만 적용. 테마별 로고 교체 등 클래스 스코프 대응에 쓴다. */
+@custom-variant mainpage (&:where(.mainpage, .mainpage *));
+
+/* Footer 로고 테마 교체 — footer 전용 변수(일반 전역 유틸 아님). nearest 스코프 제어용.
+   dark:/mainpage: 변형은 "조상 어딘가에 .dark/.mainpage 가 있으면" 매칭되므로, 가이드처럼 .light 로 중첩
+   고정한 미리보기(상위 html 은 .dark)에서 밝은 배경에 화이트 로고가 나오는 어긋남이 생긴다. 색(--ds-*)처럼
+   각 테마 스코프가 재정의하는 CSS 변수로 로고 표시를 제어하면 가장 가까운 스코프(.light/.dark/.mainpage)가
+   이겨 배경 명도와 항상 일치한다. 값은 display 키워드(block/none). 참조: composite/footer.tsx 로고 2개뿐. */
+:root,
+.light {
+    --footer-logo-on-light: block;
+    --footer-logo-on-dark: none;
+}
+.dark,
+.mainpage {
+    --footer-logo-on-light: none;
+    --footer-logo-on-dark: block;
+}
 
 @theme inline {
     --font-sans:

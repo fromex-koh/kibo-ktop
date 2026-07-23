@@ -107,7 +107,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 items: [
                     {label: 'Header', href: '/component-guide/header'},
                     {label: 'StickySidebar', href: '/component-guide/sticky-sidebar'},
-                    {label: 'MainFooter', href: '/component-guide/main-footer'},
+                    {label: 'Footer', href: '/component-guide/footer'},
                     {label: 'PageTitleBar', href: '/component-guide/page-title-bar'},
                     {label: 'Breadcrumb', href: '/component-guide/breadcrumb'},
                     {label: 'Pagination', href: '/component-guide/pagination'},

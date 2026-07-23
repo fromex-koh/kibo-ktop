@@ -112,7 +112,7 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
         <Link href="#" className="flex shrink-0 items-center">
             {variant === 'main' ? (
                 <Image
-                    src="/images/logo-dark.svg"
+                    src="/images/logo-ktop-white.svg"
                     alt="기술보증기금"
                     width={140}
                     height={32}
@@ -122,7 +122,7 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
             ) : (
                 <>
                     <Image
-                        src="/images/logo-light.svg"
+                        src="/images/logo-ktop.svg"
                         alt="기술보증기금"
                         width={140}
                         height={32}
@@ -130,7 +130,7 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
                         className="h-auto w-30 shrink-0 dark:hidden"
                     />
                     <Image
-                        src="/images/logo-dark.svg"
+                        src="/images/logo-ktop-white.svg"
                         alt="기술보증기금"
                         width={140}
                         height={32}

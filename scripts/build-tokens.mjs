@@ -328,6 +328,19 @@ if (Object.keys(overlay).length) {
 }
 L.push('}', '')
 
+// 색상 .light — :root 의 라이트 값을 클래스로도 스코프할 수 있게 복제한다(다크/메인페이지처럼 중첩 미리보기 가능).
+// raw 팔레트는 모드 무관이라 :root 에서 상속되므로 여기선 scale·purpose·overlay 만 재선언한다.
+L.push('/* 라이트(클래스 스코프 — .dark/.mainpage 처럼 중첩 강제용) */', '.light {', '  color-scheme: light;', '')
+L.push('  /* scale (라이트 = raw identity) */')
+for (const hue of hues) for (const s of scale) L.push(`  --ds-${hue}-${s}: var(--raw-${hue}-${s});`)
+L.push('', '  /* purpose */')
+for (const [name, val] of Object.entries(semantic)) L.push(`  --ds-${name}: ${rawVarRef(val.light)};`)
+if (Object.keys(overlay).length) {
+    L.push('', '  /* overlay */')
+    for (const [k, v] of Object.entries(overlay)) L.push(`  --ds-overlay-${k}: ${resolveAlpha(v.light)};`)
+}
+L.push('}', '')
+
 // 색상 .dark / .mainpage — tokens.json 에 각각 명시된 전체 시맨틱 세트를 그대로 생성한다.
 // light/dark 와 같은 방식으로 html 클래스로 적용된다(theme-provider 가 메인페이지 라우트에서 forcedTheme 으로 강제).
 const DARK_BASED_THEMES = [
