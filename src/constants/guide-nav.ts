@@ -123,6 +123,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'StepHeader', href: '/component-guide/step-header'},
                     {label: 'Stepper', href: '/component-guide/stepper'},
                     {label: 'ActionBar', href: '/component-guide/action-bar'},
+                    {label: 'StepNavigation', href: '/component-guide/step-navigation'},
                 ],
             },
             {
