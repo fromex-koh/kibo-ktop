@@ -2,6 +2,7 @@ import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import SearchFilterFormDemo from './search-filter-form-demo'
 import {MinimalFilterCaseDemo, TwoColumnFilterCaseDemo} from './search-filter-form-cases-demo'
 
@@ -84,6 +85,17 @@ const USAGE_INLINE = `{/* SearchFilterFields·SearchFilterActions 는 얇은 레
     <Button type="submit" variant="default" size="lg">조회</Button>
   </div>
 </SearchFilterForm>`
+
+const COMPOSITION_COLUMNS = [
+    {key: 'name', header: 'Name', align: 'start', rowHeader: true},
+    {key: 'desc', header: 'Description', align: 'start', wrap: true},
+] as const
+
+const SUBMIT_COLUMNS = [
+    {key: 'field', header: 'Field', align: 'start', rowHeader: true},
+    {key: 'keys', header: 'FormData key', align: 'start'},
+    {key: 'desc', header: '값', align: 'start', wrap: true},
+] as const
 
 const COMPOSITION = [
     {
@@ -197,34 +209,19 @@ const SearchFilterFormGuidePage = () => (
                     </h2>
                     <p className="text-foreground-muted text-sm">폼이 조립하는 요소들입니다.</p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">Composition 목록</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Description
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {COMPOSITION.map((row) => (
-                                <tr key={row.name} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                                    >
-                                        {row.name}
-                                    </th>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{row.desc}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    caption="Composition 목록"
+                    columns={COMPOSITION_COLUMNS}
+                    rows={COMPOSITION.map((row) => ({
+                        key: row.name,
+                        cells: [
+                            <span key="name" className="font-mono">
+                                {row.name}
+                            </span>,
+                            row.desc,
+                        ],
+                    }))}
+                />
             </section>
         </BaseCard>
 
@@ -298,40 +295,22 @@ const SearchFilterFormGuidePage = () => (
                     </p>
                 </div>
                 <SearchFilterFormDemo />
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">필드별 제출 키 목록</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Field
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    FormData key
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    값
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {SUBMIT_KEYS.map((row) => (
-                                <tr key={row.field} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                                    >
-                                        {row.field}
-                                    </th>
-                                    <td className="typo-body-l-regular text-foreground-subtle px-4 py-3 font-mono">
-                                        {row.keys}
-                                    </td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{row.desc}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    caption="필드별 제출 키 목록"
+                    columns={SUBMIT_COLUMNS}
+                    rows={SUBMIT_KEYS.map((row) => ({
+                        key: row.field,
+                        cells: [
+                            <span key="field" className="font-mono">
+                                {row.field}
+                            </span>,
+                            <span key="keys" className="font-mono">
+                                {row.keys}
+                            </span>,
+                            row.desc,
+                        ],
+                    }))}
+                />
                 <div className="bg-surface border-border flex flex-col gap-2 rounded-md border p-4">
                     <h3 className="typo-body-l-medium text-foreground">WAVE 검사 예외 — Missing form label (Select)</h3>
                     <p className="typo-body-l-regular text-muted-foreground">

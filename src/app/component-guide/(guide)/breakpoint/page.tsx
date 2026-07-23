@@ -3,9 +3,17 @@ import {BaseCard} from '@/components/composite/base-card'
 import ActiveBreakpointTag from '@/components/custom/active-breakpoint-tag'
 import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '브레이크포인트 (Breakpoint)'}
+
+const BREAKPOINT_COLUMNS = [
+    {key: 'name', header: '구간', align: 'start'},
+    {key: 'range', header: '범위', align: 'start'},
+    {key: 'prefix', header: '프리픽스', align: 'start'},
+    {key: 'device', header: '포함 기기', align: 'start', wrap: true},
+] as const
 
 // 브레이크포인트 — 모바일 퍼스트. Tailwind 기본 프리픽스를 그대로 쓰고, 프로젝트 주 티어는 md(768)·xl(1280).
 const BreakpointGuidePage = () => (
@@ -81,81 +89,56 @@ const BreakpointGuidePage = () => (
                         범위와 대표 기기는 레이아웃 검수 기준이며 실제 기기에서는 CSS viewport를 기준으로 확인합니다.
                     </p>
                 </div>
-                <div className="border-border overflow-x-auto rounded-xl border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">브레이크포인트 구간과 프리픽스, 포함 기기</caption>
-                        <thead>
-                            <tr className="border-border bg-card border-b">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    구간
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    범위
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    프리픽스
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    포함 기기
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {(() => {
-                                // 구간명은 기기 하나를 가리키지 않으므로(예: md = 태블릿·노트북이 함께 걸치는 폭),
-                                // 실제 포함 기기는 여기서 별도 안내한다. 새 브레이크포인트 키 추가 시 함께 갱신.
-                                const DEVICE_HINT: Record<string, string> = {
-                                    mobile: 'Galaxy S24(360px)·iPhone 15(393px)',
-                                    md: 'iPad 10세대 세로(820px)·가로(1180px)',
-                                    xl: 'Full HD 1920×1080(스케일 125%→1536px)',
-                                }
-                                const entries = Object.entries(tokens.breakpoint).sort((a, b) => a[1] - b[1])
-                                const rows = [
-                                    {
-                                        key: 'mobile',
-                                        name: 'mobile (기본)',
-                                        range: `0 ~ ${entries[0][1] - 1}px`,
-                                        prefix: null,
-                                        device: DEVICE_HINT['mobile'],
-                                    },
-                                    ...entries.map(([k, v], i) => ({
-                                        key: k,
-                                        name: k,
-                                        range:
-                                            i + 1 < entries.length ? `${v} ~ ${entries[i + 1][1] - 1}px` : `${v}px ~`,
-                                        prefix: `${k}:`,
-                                        device: DEVICE_HINT[k] ?? '—',
-                                    })),
-                                ]
-                                return rows.map((r) => (
-                                    <tr key={r.name} className="border-border border-b last:border-b-0">
-                                        <td className="typo-body-l-regular px-4 py-3">
-                                            <span className="inline-flex items-center gap-2">
-                                                {r.name}
-                                                <ActiveBreakpointTag targetKey={r.key} />
-                                            </span>
-                                        </td>
-                                        <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                            {r.range}
-                                        </td>
-                                        <td className="px-4 py-3">
-                                            {r.prefix ? (
-                                                <CopyChip value={r.prefix} />
-                                            ) : (
-                                                <span className="typo-body-l-regular text-muted-foreground font-mono">
-                                                    없음
-                                                </span>
-                                            )}
-                                        </td>
-                                        <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                            {r.device}
-                                        </td>
-                                    </tr>
-                                ))
-                            })()}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    caption="브레이크포인트 구간과 프리픽스, 포함 기기"
+                    columns={BREAKPOINT_COLUMNS}
+                    rows={(() => {
+                        // 구간명은 기기 하나를 가리키지 않으므로(예: md = 태블릿·노트북이 함께 걸치는 폭),
+                        // 실제 포함 기기는 여기서 별도 안내한다. 새 브레이크포인트 키 추가 시 함께 갱신.
+                        const DEVICE_HINT: Record<string, string> = {
+                            mobile: 'Galaxy S24(360px)·iPhone 15(393px)',
+                            md: 'iPad 10세대 세로(820px)·가로(1180px)',
+                            xl: 'Full HD 1920×1080(스케일 125%→1536px)',
+                        }
+                        const entries = Object.entries(tokens.breakpoint).sort((a, b) => a[1] - b[1])
+                        const rows = [
+                            {
+                                key: 'mobile',
+                                name: 'mobile (기본)',
+                                range: `0 ~ ${entries[0][1] - 1}px`,
+                                prefix: null,
+                                device: DEVICE_HINT['mobile'],
+                            },
+                            ...entries.map(([k, v], i) => ({
+                                key: k,
+                                name: k,
+                                range: i + 1 < entries.length ? `${v} ~ ${entries[i + 1][1] - 1}px` : `${v}px ~`,
+                                prefix: `${k}:`,
+                                device: DEVICE_HINT[k] ?? '—',
+                            })),
+                        ]
+                        return rows.map((r) => ({
+                            key: r.name,
+                            cells: [
+                                <span key="name" className="inline-flex items-center gap-2">
+                                    {r.name}
+                                    <ActiveBreakpointTag targetKey={r.key} />
+                                </span>,
+                                <span key="range" className="font-mono">
+                                    {r.range}
+                                </span>,
+                                r.prefix ? (
+                                    <CopyChip key="prefix" value={r.prefix} />
+                                ) : (
+                                    <span key="prefix" className="font-mono">
+                                        없음
+                                    </span>
+                                ),
+                                r.device,
+                            ],
+                        }))
+                    })()}
+                />
             </section>
         </BaseCard>
     </GuidePageShell>

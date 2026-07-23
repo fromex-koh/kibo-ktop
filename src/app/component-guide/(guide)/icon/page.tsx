@@ -63,12 +63,24 @@ import {
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
+import {Table} from '@/components/custom/table'
 import {BaseCard} from '@/components/composite/base-card'
 import {Icon, type IconSymbol} from '@/components/custom/icon'
 import packageJson from '../../../../../package.json'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '아이콘 (Icon)'}
+
+const ICON_SIZE_COLUMNS = [
+    {key: 'preview', header: '미리보기', align: 'start'},
+    {key: 'class', header: '클래스 (클릭 복사)', align: 'start', rowHeader: true},
+    {key: 'value', header: '값', align: 'start'},
+] as const
+
+const FIGMA_MAP_COLUMNS = [
+    {key: 'figma', header: 'Figma 이름', align: 'start', rowHeader: true},
+    {key: 'lucide', header: 'lucide 아이콘', align: 'start'},
+] as const
 
 // lucide-react 버전은 package.json 을 단일 소스로 읽는다 — 패키지를 올리면 이 페이지도 저절로 갱신된다.
 const LUCIDE_VERSION = packageJson.dependencies['lucide-react'].replace(/^[\^~]/, '')
@@ -316,42 +328,25 @@ const IconGuidePage = () => (
                         size-icon-* 유틸로 쓰는 아이콘 크기 토큰입니다.
                     </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">아이콘 크기 토큰과 클래스</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    미리보기
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    클래스 (클릭 복사)
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    값
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {ICON_SIZES.map(({key, class: sizeClass}) => (
-                                <tr key={key} className="border-border bg-background border-b last:border-b-0">
-                                    <td className="px-4 py-3">
-                                        <div className="flex items-center gap-3">
-                                            <Icon icon={X} variant="solid" className={`${sizeClass} shrink-0`} />
-                                            <Icon icon={Info} className={`${sizeClass} text-foreground shrink-0`} />
-                                        </div>
-                                    </td>
-                                    <th scope="row" className="px-4 py-3 text-left font-normal">
-                                        <code className="text-foreground font-mono">{sizeClass}</code>
-                                    </th>
-                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {tokens.size[key]}px
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    caption="아이콘 크기 토큰과 클래스"
+                    columns={ICON_SIZE_COLUMNS}
+                    rows={ICON_SIZES.map(({key, class: sizeClass}) => ({
+                        key,
+                        cells: [
+                            <div key="preview" className="flex items-center gap-3">
+                                <Icon icon={X} variant="solid" className={`${sizeClass} shrink-0`} />
+                                <Icon icon={Info} className={`${sizeClass} text-foreground shrink-0`} />
+                            </div>,
+                            <code key="class" className="text-foreground font-mono">
+                                {sizeClass}
+                            </code>,
+                            <span key="value" className="font-mono">
+                                {tokens.size[key]}px
+                            </span>,
+                        ],
+                    }))}
+                />
             </section>
         </BaseCard>
 
@@ -415,33 +410,21 @@ const IconGuidePage = () => (
                         <code className="font-mono">icon/line-file-pen-line → FilePenLine</code>. 규칙에서 벗어나는
                         예외만 아래 표에 정리했습니다.
                     </p>
-                    <div className="bg-background border-border overflow-x-auto rounded-md border">
-                        <table className="w-full text-left">
-                            <caption className="sr-only">규칙에서 벗어나는 Figma 이름과 lucide 이름 매핑</caption>
-                            <thead>
-                                <tr className="border-border border-b bg-gray-100/25">
-                                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                        Figma 이름
-                                    </th>
-                                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                        lucide 아이콘
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {FIGMA_NAME_EXCEPTIONS.map(({figma, lucide}) => (
-                                    <tr key={figma} className="border-border bg-background border-b last:border-b-0">
-                                        <th scope="row" className="px-4 py-3 text-left font-normal">
-                                            <code className="text-foreground font-mono text-sm">{figma}</code>
-                                        </th>
-                                        <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                            <code className="font-mono text-sm">{lucide}</code>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
+                    <Table
+                        caption="규칙에서 벗어나는 Figma 이름과 lucide 이름 매핑"
+                        columns={FIGMA_MAP_COLUMNS}
+                        rows={FIGMA_NAME_EXCEPTIONS.map(({figma, lucide}) => ({
+                            key: figma,
+                            cells: [
+                                <code key="figma" className="text-foreground font-mono text-sm">
+                                    {figma}
+                                </code>,
+                                <code key="lucide" className="font-mono text-sm">
+                                    {lucide}
+                                </code>,
+                            ],
+                        }))}
+                    />
                 </div>
             </section>
         </BaseCard>

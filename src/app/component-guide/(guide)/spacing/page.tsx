@@ -2,6 +2,7 @@ import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '간격 (Spacing)'}
@@ -17,6 +18,12 @@ const SPACING_GROUPS = [
     {label: 'Margin', prefixes: ['m', 'mx', 'my', 'mt', 'mr', 'mb', 'ml']},
     {label: 'Gap', prefixes: ['gap', 'gap-x', 'gap-y']},
 ]
+
+const SPACING_COLUMNS = [
+    {key: 'preview', header: '미리보기', align: 'start'},
+    {key: 'class', header: '클래스 (클릭 복사)', align: 'start', wrap: true, rowHeader: true},
+    {key: 'value', header: '값', align: 'start'},
+] as const
 
 const SpacingGuidePage = () => (
     <GuidePageShell
@@ -34,54 +41,36 @@ const SpacingGuidePage = () => (
                         유틸리티에 공통 적용합니다.
                     </p>
                 </div>
-                <div className="border-border overflow-x-auto rounded-xl border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">Spacing 1~20의 미리보기, 유틸리티와 px 값</caption>
-                        <thead>
-                            <tr className="border-border bg-card border-b">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3 whitespace-nowrap">
-                                    미리보기
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3 whitespace-nowrap">
-                                    클래스 (클릭 복사)
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3 whitespace-nowrap">
-                                    값
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {multiples.map((n) => (
-                                <tr key={n} className="border-border border-b last:border-b-0">
-                                    <td className="px-4 py-3">
-                                        <span
-                                            aria-hidden="true"
-                                            className="bg-primary block h-3 rounded-sm"
-                                            style={{width: `calc(var(--spacing) * ${n})`}}
-                                        />
-                                    </td>
-                                    <th scope="row" className="px-4 py-3 text-left align-top font-normal">
-                                        <div className="flex flex-col gap-2">
-                                            {SPACING_GROUPS.map((group) => (
-                                                <div key={group.label} className="flex flex-wrap items-center gap-2">
-                                                    <span className="typo-body-l-regular text-muted-foreground w-14 shrink-0">
-                                                        {group.label}
-                                                    </span>
-                                                    {group.prefixes.map((prefix) => (
-                                                        <CopyChip key={prefix} value={`${prefix}-${n}`} />
-                                                    ))}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </th>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
-                                        {n * tokens.spacingBase}px
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    caption="Spacing 1~20의 미리보기, 유틸리티와 px 값"
+                    columns={SPACING_COLUMNS}
+                    rows={multiples.map((n) => ({
+                        key: String(n),
+                        cells: [
+                            <span
+                                key="preview"
+                                aria-hidden="true"
+                                className="bg-primary block h-3 rounded-sm"
+                                style={{width: `calc(var(--spacing) * ${n})`}}
+                            />,
+                            <div key="class" className="flex flex-col gap-2">
+                                {SPACING_GROUPS.map((group) => (
+                                    <div key={group.label} className="flex flex-wrap items-center gap-2">
+                                        <span className="typo-body-l-regular text-muted-foreground w-14 shrink-0">
+                                            {group.label}
+                                        </span>
+                                        {group.prefixes.map((prefix) => (
+                                            <CopyChip key={prefix} value={`${prefix}-${n}`} />
+                                        ))}
+                                    </div>
+                                ))}
+                            </div>,
+                            <span key="value" className="font-mono">
+                                {n * tokens.spacingBase}px
+                            </span>,
+                        ],
+                    }))}
+                />
             </section>
         </BaseCard>
     </GuidePageShell>

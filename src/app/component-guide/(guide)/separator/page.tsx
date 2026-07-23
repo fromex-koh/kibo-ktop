@@ -1,10 +1,37 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import {BaseCard} from '@/components/composite/base-card'
 import {Separator} from '@/components/ui/separator'
 
 export const metadata: Metadata = {title: '구분선 (Separator)'}
+
+const RECIPE_COLUMNS = [
+    {key: 'class', header: '클래스', align: 'start', rowHeader: true},
+    {key: 'role', header: '역할', align: 'start', wrap: true},
+] as const
+
+const RECIPE_ROWS = [
+    {
+        key: 'default',
+        cells: [
+            <span key="class" className="font-mono">
+                기본 선 스타일
+            </span>,
+            'ui Separator 기본값입니다. 수평은 border-top, 수직은 border-left로 1px 선을 그리고 색상은 border-subtle-3을 사용합니다.',
+        ],
+    },
+    {
+        key: 'my-10',
+        cells: [
+            <span key="class" className="font-mono">
+                my-10
+            </span>,
+            '위아래 40px 간격을 줍니다.',
+        ],
+    },
+]
 
 const DIVIDER_CLASS = 'my-10'
 
@@ -56,46 +83,7 @@ const SeparatorGuidePage = () => (
                         더한다.
                     </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">클래스 레시피 목록</caption>
-                        <thead>
-                            <tr className="border-border bg-muted/50 border-b">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    클래스
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    역할
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="border-border bg-background border-b last:border-b-0">
-                                <th
-                                    scope="row"
-                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                                >
-                                    기본 선 스타일
-                                </th>
-                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                    ui Separator 기본값입니다. 수평은 border-top, 수직은 border-left로 1px 선을 그리고
-                                    색상은 border-subtle-3을 사용합니다.
-                                </td>
-                            </tr>
-                            <tr className="border-border bg-background border-b last:border-b-0">
-                                <th
-                                    scope="row"
-                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                                >
-                                    my-10
-                                </th>
-                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                    위아래 40px 간격을 줍니다.
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <Table caption="클래스 레시피 목록" columns={RECIPE_COLUMNS} rows={RECIPE_ROWS} />
             </section>
         </BaseCard>
 

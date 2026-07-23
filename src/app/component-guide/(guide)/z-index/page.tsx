@@ -2,6 +2,7 @@ import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '쌓임 순서 (Z-index)'}
@@ -29,6 +30,12 @@ const STACK_DEMO = [
     {z: 'z-modal', label: '모달', value: tokens.z.modal, pos: 'top-15 left-24'},
     {z: 'z-toast', label: '토스트', value: tokens.z.toast, pos: 'top-20 left-32'},
 ]
+
+const Z_COLUMNS = [
+    {key: 'class', header: '클래스', align: 'start', rowHeader: true},
+    {key: 'value', header: '값', align: 'start'},
+    {key: 'usage', header: '용도', align: 'start', wrap: true},
+] as const
 
 // 쌓임 순서 (Z-index) — 겹치는 UI의 우선순위를 정하는 토큰. 값 자체보다 '순서'가 의미.
 const ZIndexGuidePage = () => (
@@ -79,39 +86,20 @@ const ZIndexGuidePage = () => (
                         정수라 rem 변환하지 않습니다. 클래스 칩을 클릭하면 이름이 복사됩니다.
                     </p>
                 </div>
-                <div className="border-border overflow-x-auto rounded-xl border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">z-* 레이어 토큰의 값과 용도</caption>
-                        <thead>
-                            <tr className="border-border bg-card border-b">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    클래스
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    값
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    용도
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {Object.entries(tokens.z).map(([name, value]) => (
-                                <tr key={name} className="border-border border-b last:border-b-0">
-                                    <th scope="row" className="px-4 py-3 text-left font-normal">
-                                        <CopyChip value={`z-${name}`} />
-                                    </th>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {value}
-                                    </td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                        {Z_USAGE[name] ?? '—'}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    caption="z-* 레이어 토큰의 값과 용도"
+                    columns={Z_COLUMNS}
+                    rows={Object.entries(tokens.z).map(([name, value]) => ({
+                        key: name,
+                        cells: [
+                            <CopyChip key="class" value={`z-${name}`} />,
+                            <span key="value" className="font-mono">
+                                {value}
+                            </span>,
+                            Z_USAGE[name] ?? '—',
+                        ],
+                    }))}
+                />
             </section>
         </BaseCard>
     </GuidePageShell>

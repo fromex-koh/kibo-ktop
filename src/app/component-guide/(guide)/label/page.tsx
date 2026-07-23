@@ -2,6 +2,7 @@ import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
@@ -32,6 +33,12 @@ const DISABLED_CODE = `{/* 연결된 컨트롤이 disabled 이면 peer-disabled 
   <Checkbox id="opt-in" disabled className="peer" aria-labelledby="opt-in-label" />
   <Label id="opt-in-label" htmlFor="opt-in">비활성 옵션</Label>
 </div>`
+
+const STYLE_COLUMNS = [
+    {key: 'prop', header: '항목', align: 'start', rowHeader: true},
+    {key: 'value', header: '값', align: 'start'},
+    {key: 'note', header: '설명', align: 'start', wrap: true},
+] as const
 
 const STYLE_ROWS = [
     {prop: '크기', value: 'text-base', note: '16px — 폼 라벨 크기를 통일(바닐라 14px 에서 상향)'},
@@ -95,40 +102,20 @@ const LabelGuidePage = () => (
                         적용됩니다.
                     </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">라벨 기본 스타일 값</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    항목
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    값
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    설명
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {STYLE_ROWS.map((row) => (
-                                <tr key={row.prop} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border text-foreground border-r px-4 py-3 align-top font-normal whitespace-nowrap"
-                                    >
-                                        {row.prop}
-                                    </th>
-                                    <td className="typo-caption-regular text-primary px-4 py-3 font-mono">
-                                        {row.value}
-                                    </td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{row.note}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    caption="라벨 기본 스타일 값"
+                    columns={STYLE_COLUMNS}
+                    rows={STYLE_ROWS.map((row) => ({
+                        key: row.prop,
+                        cells: [
+                            row.prop,
+                            <span key="value" className="font-mono">
+                                {row.value}
+                            </span>,
+                            row.note,
+                        ],
+                    }))}
+                />
             </section>
         </BaseCard>
 
