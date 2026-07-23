@@ -13,6 +13,7 @@ const USAGE_CODE = `import {Table} from '@/components/custom/table'
 import {Badge} from '@/components/ui/badge'
 
 <Table
+  size="md"
   caption="이용권 사용 이력"
   columns={[
     {key: 'name', header: '상품명', align: 'start'},
@@ -33,6 +34,9 @@ import {Badge} from '@/components/ui/badge'
     },
   ]}
 />`
+
+const SIZE_CODE = `<Table size="md" caption="기본 크기" columns={columns} rows={rows} />
+<Table size="sm" caption="작은 크기" columns={columns} rows={rows} />`
 
 const detailButton = (
     <Button variant="tertiary" size="sm">
@@ -126,6 +130,13 @@ const PROPS_ITEMS = [
         "'line'",
         "'line'",
     ],
+    [
+        'Table',
+        'size',
+        '표의 타이포와 셀 여백 크기입니다. md는 헤더·본문 16px, sm은 색상 가이드 표 기준으로 헤더 14px·본문 12px입니다.',
+        "'md'",
+        "'sm' | 'md'",
+    ],
     ['Table', 'className', '컨테이너에 추가할 클래스입니다.', 'undefined', 'string'],
 ] as const
 
@@ -144,6 +155,31 @@ const TableGuidePage = () => (
                     이 표 스타일은 <strong className="text-foreground">컴포넌트 가이드 문서 페이지 전용</strong>입니다.
                     실제 프로젝트 화면에는 사용하지 않으며, 프로젝트에서 쓰는 표는 별도 스타일로 정의합니다.
                 </p>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="tb-size" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="tb-size" className="typo-h4-bold">
+                        크기 (size)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        기본값인 md는 기존 데이터 표 크기를 유지합니다. sm은 색상 가이드 표와 같은 타이포 크기를
+                        사용하고 셀 여백을 줄여 더 많은 데이터를 조밀하게 보여줍니다.
+                    </p>
+                </div>
+                <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
+                        <h3 className="typo-body-l-medium">md (기본)</h3>
+                        <Table caption="기본 크기 표" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <h3 className="typo-body-l-medium">sm</h3>
+                        <Table size="sm" caption="작은 크기 표" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
+                    </div>
+                </div>
+                <CodeBlock code={SIZE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 

@@ -6,9 +6,10 @@ import {cn} from '@/lib/utils'
 //    (프로젝트 화면에 쓰는 표는 별도로 정의한다.) ui/table 은 shadcn 셸이고, 이 컴포넌트는 가이드 문서 전용의
 //    데이터 주도(columns·rows) 표다 — props-table 와 같은 계열.
 //
-// 공통 구조: 헤더 = bg-background(옅은 회색) · foreground(gray.900) · body-xl-medium(16px), 본문 = label-foreground
-// (gray.700) · body-xl-regular(16px), 셀 기본 가운데 정렬, 셀 padding px-4 py-3(행 높이 48), 헤더·행 사이 옅은
-// 구분선(subtle-3). 셀은 ReactNode 라 배지·버튼 등도 그대로 넣는다. 전부 기존 토큰이라 커스텀 색이 없다([PB-04]).
+// 공통 구조: 헤더 = bg-background(옅은 회색) · foreground(gray.900), 본문 = label-foreground(gray.700),
+// 셀 기본 가운데 정렬, 헤더·행 사이 옅은 구분선(subtle-3). size=md(기본)는 헤더·본문 16px와 px-4 py-3,
+// size=sm은 색상 가이드 표 기준인 헤더 14px·본문 12px와 px-3 py-2를 쓴다. 셀은 ReactNode 라 배지·버튼 등도
+// 그대로 넣는다. 전부 기존 토큰이라 커스텀 색이 없다([PB-04]).
 //
 // 스타일 분기(variant): 표 외곽 등 변형별로 달라지는 부분만 아래 TABLE_VARIANT_OVERRIDES 에 슬롯 단위로 둔다.
 //   - line(현재 유일): 표 상·하단 굵은 진한 라인(border-foreground 2px) + 라운드 없음(Figma).
@@ -26,6 +27,7 @@ const ALIGN_CLASS: Record<TableAlign, string> = {
 
 // 표 스타일 변형. 현재는 line 하나뿐이며, 추후 스타일이 늘면 키를 추가한다.
 type TableVariant = 'line'
+type TableSize = 'sm' | 'md'
 
 // 표의 스타일 슬롯 — 변형에 따라 달라질 수 있는 부분.
 type TableSlots = {
@@ -45,15 +47,26 @@ type TableSlots = {
 const SHARED_SLOTS: TableSlots = {
     container: '',
     headerRow: 'bg-background border-subtle-3 border-b',
-    th: 'typo-body-xl-medium text-foreground',
+    th: 'text-foreground',
     bodyRow: 'border-subtle-3 border-b last:border-b-0',
-    td: 'typo-body-xl-regular text-label-foreground',
+    td: 'text-label-foreground',
 }
 
 // 변형별 오버라이드 — 지정한 슬롯만 SHARED_SLOTS 를 대체한다.
 const TABLE_VARIANT_OVERRIDES: Record<TableVariant, Partial<TableSlots>> = {
     // 상·하단 굵은 진한 라인 + 라운드 없음(Figma 데이터 표 기본).
     line: {container: 'border-foreground border-y-2'},
+}
+
+const TABLE_SIZE_SLOTS: Record<TableSize, Pick<TableSlots, 'th' | 'td'>> = {
+    sm: {
+        th: 'typo-body-l-medium px-3 py-2',
+        td: 'typo-caption-regular px-3 py-2',
+    },
+    md: {
+        th: 'typo-body-xl-medium px-4 py-3',
+        td: 'typo-body-xl-regular px-4 py-3',
+    },
 }
 
 type TableColumn = {
@@ -83,11 +96,14 @@ type TableProps = {
     rows: readonly TableRowData[]
     // 표 스타일 변형. 현재 line 하나(상·하단 굵은 라인). 추후 스타일이 늘면 확장한다.
     variant?: TableVariant
+    // 표의 밀도. md가 기존 기본 크기이며, sm은 색상 가이드 표의 타이포 크기를 따른다.
+    size?: TableSize
     className?: string
 }
 
-const Table = ({caption, columns, rows, variant = 'line', className}: TableProps) => {
+const Table = ({caption, columns, rows, variant = 'line', size = 'md', className}: TableProps) => {
     const slots = {...SHARED_SLOTS, ...TABLE_VARIANT_OVERRIDES[variant]}
+    const sizeSlots = TABLE_SIZE_SLOTS[size]
 
     return (
         <div className={cn('overflow-x-auto', slots.container, className)}>
@@ -101,7 +117,7 @@ const Table = ({caption, columns, rows, variant = 'line', className}: TableProps
                                 scope="col"
                                 className={cn(
                                     slots.th,
-                                    'px-4 py-3',
+                                    sizeSlots.th,
                                     ALIGN_CLASS[col.align ?? 'center'],
                                     col.wrap ? 'whitespace-normal' : 'whitespace-nowrap',
                                 )}
@@ -118,7 +134,7 @@ const Table = ({caption, columns, rows, variant = 'line', className}: TableProps
                                 const col = columns[ci]
                                 const cellClass = cn(
                                     slots.td,
-                                    'px-4 py-3',
+                                    sizeSlots.td,
                                     ALIGN_CLASS[col?.align ?? 'center'],
                                     col?.wrap ? 'whitespace-normal' : 'whitespace-nowrap',
                                 )
@@ -142,4 +158,4 @@ const Table = ({caption, columns, rows, variant = 'line', className}: TableProps
 }
 
 export {Table}
-export type {TableColumn, TableRowData, TableProps, TableAlign, TableVariant}
+export type {TableColumn, TableRowData, TableProps, TableAlign, TableVariant, TableSize}

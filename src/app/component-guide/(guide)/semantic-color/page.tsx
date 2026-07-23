@@ -3,6 +3,7 @@ import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '색상 (Semantic)'}
@@ -188,9 +189,7 @@ const ModeSwatch = ({color}: {color: string}) => (
         >
             <span className="absolute inset-0" style={{background: color}} />
         </span>
-        <span className="typo-body-l-regular text-muted-foreground font-mono whitespace-nowrap">
-            {toRgbaText(color)}
-        </span>
+        <span className="text-muted-foreground font-mono whitespace-nowrap">{toRgbaText(color)}</span>
     </span>
 )
 
@@ -330,6 +329,24 @@ const CUSTOM_COUNT = customEntries.length
 const recipeEntries = Object.entries(semantic).filter(([name]) => isComponentRecipe(name))
 const RECIPE_COUNT = recipeEntries.length
 
+const SEMANTIC_TABLE_COLUMNS = [
+    {key: 'current', header: <span className="text-muted-foreground">현재</span>, align: 'start'},
+    {
+        key: 'class',
+        header: <span className="text-muted-foreground">클래스 (클릭 복사)</span>,
+        align: 'start',
+        rowHeader: true,
+    },
+    {key: 'light', header: <span className="text-muted-foreground">라이트</span>, align: 'start'},
+    {key: 'dark', header: <span className="text-muted-foreground">다크</span>, align: 'start'},
+    {key: 'mainpage', header: <span className="text-muted-foreground">메인페이지</span>, align: 'start'},
+    {
+        key: 'primitive',
+        header: <span className="text-muted-foreground">참조 primitive</span>,
+        align: 'start',
+    },
+] as const
+
 // 그룹 하나 = 독립 테이블. 현재(라이브)·클래스(클릭 복사)·light·dark·mainpage·참조 primitive.
 // usage: 이 슬롯(그룹)이 화면 어디에 쓰이는 색인지 간결한 사용처 설명(제목 아래 서브텍스트).
 // note: 특수 동작 부연(예: scroll 은 유틸리티가 아닌 이유).
@@ -348,93 +365,39 @@ const SemanticTable = ({
         <h3 className="typo-title-m-semibold text-foreground">{title}</h3>
         {usage && <p className="typo-body-l-regular text-muted-foreground">{usage}</p>}
         {note && <p className="typo-body-l-regular text-muted-foreground">{note}</p>}
-        <div className="border-border overflow-x-auto rounded-xl border">
-            <table className="w-full text-left">
-                <caption className="sr-only">{title} 시맨틱 색상 토큰과 light·dark·mainpage 매핑</caption>
-                <thead>
-                    <tr className="border-border bg-card border-b">
-                        <th
-                            scope="col"
-                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
-                        >
-                            현재
-                        </th>
-                        <th
-                            scope="col"
-                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
-                        >
-                            클래스 (클릭 복사)
-                        </th>
-                        <th
-                            scope="col"
-                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
-                        >
-                            라이트
-                        </th>
-                        <th
-                            scope="col"
-                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
-                        >
-                            다크
-                        </th>
-                        <th
-                            scope="col"
-                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
-                        >
-                            메인페이지
-                        </th>
-                        <th
-                            scope="col"
-                            className="typo-body-l-medium text-muted-foreground px-3 py-3 whitespace-nowrap"
-                        >
-                            참조 primitive
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tokens.map(([name, val]) => {
-                        const modes = resolveModes(val)
-                        return (
-                            <tr key={name} className="border-border border-b last:border-b-0">
-                                <td className="px-3 py-3">
-                                    <LiveSwatch name={name} />
-                                </td>
-                                <th scope="row" className="px-3 py-3 text-left">
-                                    <span className="flex flex-wrap items-center gap-1.5">
-                                        {utilClasses(name).map((cls) =>
-                                            // var(--ds-*) 참조는 유틸리티 클래스가 아니라 CSS 변수라 복사 대상이
-                                            // 아니다 — 칩 대신 변수명만 평문으로 노출한다(scroll-thumb/track).
-                                            cls.startsWith('var(') ? (
-                                                <span
-                                                    key={cls}
-                                                    className="typo-body-l-regular text-foreground font-mono"
-                                                >
-                                                    {cls.slice(4, -1)}
-                                                </span>
-                                            ) : (
-                                                <CopyChip key={cls} value={cls} />
-                                            ),
-                                        )}
+        <Table
+            size="sm"
+            caption={`${title} 시맨틱 색상 토큰과 light·dark·mainpage 매핑`}
+            columns={SEMANTIC_TABLE_COLUMNS}
+            rows={tokens.map(([name, val]) => {
+                const modes = resolveModes(val)
+                return {
+                    key: name,
+                    cells: [
+                        <LiveSwatch key="current" name={name} />,
+                        <span key="class" className="flex flex-wrap items-center gap-1.5">
+                            {utilClasses(name).map((cls) =>
+                                // var(--ds-*) 참조는 유틸리티 클래스가 아니라 CSS 변수라 복사 대상이
+                                // 아니다 — 칩 대신 변수명만 평문으로 노출한다(scroll-thumb/track).
+                                cls.startsWith('var(') ? (
+                                    <span key={cls} className="text-foreground font-mono">
+                                        {cls.slice(4, -1)}
                                     </span>
-                                </th>
-                                <td className="px-3 py-3">
-                                    <ModeSwatch color={modes.light} />
-                                </td>
-                                <td className="px-3 py-3">
-                                    <ModeSwatch color={modes.dark} />
-                                </td>
-                                <td className="px-3 py-3">
-                                    <ModeSwatch color={modes.mainpage} />
-                                </td>
-                                <td className="typo-body-l-regular text-muted-foreground px-3 py-3 font-mono whitespace-nowrap">
-                                    {refLabel(val)}
-                                </td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
-        </div>
+                                ) : (
+                                    <CopyChip key={cls} value={cls} />
+                                ),
+                            )}
+                        </span>,
+                        <ModeSwatch key="light" color={modes.light} />,
+                        <ModeSwatch key="dark" color={modes.dark} />,
+                        <ModeSwatch key="mainpage" color={modes.mainpage} />,
+                        <span key="primitive" className="text-muted-foreground font-mono whitespace-nowrap">
+                            {refLabel(val)}
+                        </span>,
+                    ],
+                }
+            })}
+        />
     </section>
 )
 

@@ -2,6 +2,7 @@ import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '색상 (Primitive)'}
@@ -31,51 +32,38 @@ const groupOf = (hue: string): string =>
 
 type SwatchRow = {name: string; cssVar: string; value: string}
 
-// 팔레트 하나 = 독립 테이블. 투명 값도 보이도록 스와치 뒤에 체커보드를 둔다.
-const ColorTable = ({title, rows}: {title: ReactNode; rows: SwatchRow[]}) => (
+const COLOR_TABLE_COLUMNS = [
+    {key: 'variable', header: '변수', align: 'start', rowHeader: true},
+    {key: 'value', header: '값', align: 'start'},
+] as const
+
+// 팔레트 하나 = 공용 Table의 sm 크기. 투명 값도 보이도록 스와치 뒤에 체커보드를 둔다.
+const ColorTable = ({title, caption, rows}: {title: ReactNode; caption: string; rows: SwatchRow[]}) => (
     <section className="flex flex-col gap-2">
         <h3 className="typo-body-l-medium">{title}</h3>
-        <div className="border-border overflow-x-auto rounded-xl border">
-            <table className="w-full text-left">
-                <caption className="sr-only">{title} 원시 색상 변수와 값</caption>
-                <thead>
-                    <tr className="border-border bg-card border-b">
-                        <th scope="col" className="typo-body-l-medium px-4 py-3 whitespace-nowrap">
-                            변수
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3 whitespace-nowrap">
-                            값
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {rows.map((row) => (
-                        <tr key={row.name} className="border-border border-b last:border-b-0">
-                            <th
-                                scope="row"
-                                className="typo-caption-regular text-foreground w-1/3 px-4 py-3 font-mono font-normal whitespace-nowrap"
-                            >
-                                {row.cssVar.slice(4, -1)}
-                            </th>
-                            <td className="px-4 py-3">
-                                <span className="flex items-center gap-3">
-                                    <span
-                                        aria-hidden="true"
-                                        className="border-border size-icon-md relative shrink-0 overflow-hidden rounded border"
-                                        style={{background: CHECKERBOARD}}
-                                    >
-                                        <span className="absolute inset-0" style={{background: row.cssVar}} />
-                                    </span>
-                                    <span className="typo-caption-regular text-muted-foreground font-mono whitespace-nowrap">
-                                        {row.value}
-                                    </span>
-                                </span>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+        <Table
+            size="sm"
+            caption={`${caption} 원시 색상 변수와 값`}
+            columns={COLOR_TABLE_COLUMNS}
+            rows={rows.map((row) => ({
+                key: row.name,
+                cells: [
+                    <span key="variable" className="text-foreground font-mono">
+                        {row.cssVar.slice(4, -1)}
+                    </span>,
+                    <span key="value" className="flex items-center gap-3">
+                        <span
+                            aria-hidden="true"
+                            className="border-border size-icon-md relative shrink-0 overflow-hidden rounded border"
+                            style={{background: CHECKERBOARD}}
+                        >
+                            <span className="absolute inset-0" style={{background: row.cssVar}} />
+                        </span>
+                        <span className="text-muted-foreground font-mono whitespace-nowrap">{row.value}</span>
+                    </span>,
+                ],
+            }))}
+        />
     </section>
 )
 
@@ -147,6 +135,7 @@ const ColorGuidePage = () => (
                             {hues.map((hue) => (
                                 <ColorTable
                                     key={hue}
+                                    caption={`${groupOf(hue)} / ${hue}`}
                                     title={
                                         <>
                                             <span className="text-muted-foreground">{groupOf(hue)} / </span>
@@ -177,6 +166,7 @@ const ColorGuidePage = () => (
                     </div>
                     <div className="grid gap-8 xl:grid-cols-2">
                         <ColorTable
+                            caption="common"
                             title={<span className="text-foreground font-semibold">common</span>}
                             rows={Object.entries(common).map(([name, value]) => ({
                                 name,
@@ -185,6 +175,7 @@ const ColorGuidePage = () => (
                             }))}
                         />
                         <ColorTable
+                            caption="alpha"
                             title={<span className="text-foreground font-semibold">alpha</span>}
                             rows={Object.entries(alpha).flatMap(([color, steps]) =>
                                 steps.map((step) => ({

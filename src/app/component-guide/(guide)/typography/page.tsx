@@ -3,6 +3,7 @@ import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '타이포그래피 (Typography)'}
@@ -52,71 +53,60 @@ const TYPOGRAPHY_TIER_COUNT = new Set(
     TYPOGRAPHY_ENTRIES.map(([name]) => name.replace(/-(regular|medium|semibold|bold)$/, '')),
 ).size
 
+const TYPOGRAPHY_SCALE_COLUMNS = [
+    {key: 'preview', header: '미리보기', align: 'start'},
+    {key: 'class', header: '클래스', align: 'start', rowHeader: true},
+    {key: 'mobile', header: '크기 (모바일)', align: 'start'},
+    {key: 'pc', header: '크기 (PC)', align: 'start'},
+    {key: 'weight', header: '굵기', align: 'start'},
+    {key: 'lineHeight', header: '행간', align: 'start'},
+    {key: 'letterSpacing', header: '자간', align: 'start'},
+] as const
+
 // 그룹 하나 = 독립 테이블(미리보기·클래스·크기·굵기·행간·자간). '미리보기' 칸이 실제 typo-* 클래스를
 // 바로 적용해 렌더하므로, 클래스를 쓰면 어떻게 나오는지 값 옆에서 바로 확인할 수 있다.
 // 클래스 칩을 클릭하면 이름이 복사된다.
 const TypographyScaleTable = ({title, entries}: {title: string; entries: TypographyEntry[]}) => (
     <div className="flex flex-col gap-3">
         <h3 className="typo-title-m-semibold text-foreground">{title}</h3>
-        <div className="border-border overflow-x-auto rounded-xl border">
-            <table className="w-full text-left">
-                <caption className="sr-only">{title} typo-* 클래스별 미리보기·크기·굵기·행간·자간</caption>
-                <thead>
-                    <tr className="border-border bg-card border-b">
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            미리보기
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            클래스
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            크기 (모바일)
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            크기 (PC)
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            굵기
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            행간
-                        </th>
-                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                            자간
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {entries.map(([name, t]) => (
-                        <tr key={name} className="border-border border-b last:border-b-0">
-                            <td className="px-4 py-3 whitespace-nowrap">
-                                <span className={`typo-${name}`}>{PREVIEW_SAMPLE}</span>
-                            </td>
-                            <th scope="row" className="px-4 py-3 text-left font-normal">
-                                <CopyChip value={`typo-${name}`} />
-                            </th>
-                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                {t.size.mobile}px
-                            </td>
-                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                {t.size.pc}px
-                            </td>
-                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                {FONT_WEIGHT[t.weight]}
-                            </td>
-                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                {LINE_HEIGHT[t.lineHeight]}
-                            </td>
-                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                {LETTER_SPACING[t.letterSpacing]}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
+        <Table
+            size="sm"
+            caption={`${title} typo-* 클래스별 미리보기·크기·굵기·행간·자간`}
+            columns={TYPOGRAPHY_SCALE_COLUMNS}
+            rows={entries.map(([name, t]) => ({
+                key: name,
+                cells: [
+                    <span key="preview" className={`typo-${name} text-foreground whitespace-nowrap`}>
+                        {PREVIEW_SAMPLE}
+                    </span>,
+                    <CopyChip key="class" value={`typo-${name}`} />,
+                    <span key="mobile" className="text-muted-foreground font-mono">
+                        {t.size.mobile}px
+                    </span>,
+                    <span key="pc" className="text-muted-foreground font-mono">
+                        {t.size.pc}px
+                    </span>,
+                    <span key="weight" className="text-muted-foreground font-mono">
+                        {FONT_WEIGHT[t.weight]}
+                    </span>,
+                    <span key="lineHeight" className="text-muted-foreground font-mono">
+                        {LINE_HEIGHT[t.lineHeight]}
+                    </span>,
+                    <span key="letterSpacing" className="text-muted-foreground font-mono">
+                        {LETTER_SPACING[t.letterSpacing]}
+                    </span>,
+                ],
+            }))}
+        />
     </div>
 )
+
+const PROJECT_UTILITY_COLUMNS = [
+    {key: 'preview', header: '미리보기', align: 'start'},
+    {key: 'class', header: '클래스', align: 'start', rowHeader: true},
+    {key: 'value', header: '값', align: 'start'},
+    {key: 'usage', header: '사용처', align: 'start', wrap: true},
+] as const
 
 // 실제 글꼴 체계는 src/app/globals.css 의 @theme(--font-sans / --font-mono) + layout.tsx 의
 // Pretendard 로컬 폰트(next/font/local)에서 온다. 아래는 그 값을 그대로 문서화한 것.
@@ -330,43 +320,31 @@ const TypographyGuidePage = () => (
                     컴포넌트 variant 위에 특정 자간만 덧씌워야 하는 경우, 목적이 드러나는 작은 유틸리티로 분리합니다.
                 </p>
             </div>
-            <div className="border-border overflow-x-auto rounded-xl border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">프로젝트 특수 타이포 유틸리티 목록</caption>
-                    <thead>
-                        <tr className="border-border bg-card border-b">
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                미리보기
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                클래스
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                값
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                사용처
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr className="border-border border-b last:border-b-0">
-                            <td className="px-4 py-3 whitespace-nowrap">
-                                <span className="typo-body-l-medium tracking-control-label">{PREVIEW_SAMPLE}</span>
-                            </td>
-                            <th scope="row" className="px-4 py-3 text-left font-normal">
-                                <CopyChip value="tracking-control-label" />
-                            </th>
-                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
+            <Table
+                size="sm"
+                caption="프로젝트 특수 타이포 유틸리티 목록"
+                columns={PROJECT_UTILITY_COLUMNS}
+                rows={[
+                    {
+                        key: 'tracking-control-label',
+                        cells: [
+                            <span
+                                key="preview"
+                                className="typo-body-l-medium tracking-control-label text-foreground whitespace-nowrap"
+                            >
+                                {PREVIEW_SAMPLE}
+                            </span>,
+                            <CopyChip key="class" value="tracking-control-label" />,
+                            <span key="value" className="text-muted-foreground font-mono whitespace-nowrap">
                                 letter-spacing: -0.035rem (-0.56px)
-                            </td>
-                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
+                            </span>,
+                            <span key="usage" className="text-muted-foreground">
                                 Header 상단 유틸 링크와 Segmented Control 항목 등 컨트롤 라벨의 프로젝트 전용 자간.
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                            </span>,
+                        ],
+                    },
+                ]}
+            />
         </TypographySectionCard>
 
         {/* 타이포그래피 스케일 — typo-* 유틸리티가 묶어 적용하는 값(토큰)을 Figma 분류별 표로 나눈다 */}

@@ -2,6 +2,7 @@ import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '폰트 (Primitive)'}
@@ -27,6 +28,12 @@ for (const [name, t] of Object.entries(tokens.typography)) {
 
 type PrimitiveRow = {cssVar: string; value: ReactNode; preview?: ReactNode}
 
+const PRIMITIVE_TABLE_COLUMNS = [
+    {key: 'variable', header: '변수', align: 'start', rowHeader: true},
+    {key: 'value', header: '값', align: 'start'},
+    {key: 'preview', header: '미리보기', align: 'start'},
+] as const
+
 // 한 원시 그룹 = 독립 테이블(변수·값·미리보기). 변수 칩을 클릭하면 이름이 복사된다.
 const PrimitiveTable = ({title, hint, rows}: {title: string; hint: string; rows: PrimitiveRow[]}) => (
     <BaseCard>
@@ -35,42 +42,35 @@ const PrimitiveTable = ({title, hint, rows}: {title: string; hint: string; rows:
                 <h2 className="typo-h4-bold">{title}</h2>
                 <p className="typo-body-l-regular text-muted-foreground">{hint}</p>
             </div>
-            <div className="border-border overflow-x-auto rounded-xl border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">{title} 원시 변수와 값</caption>
-                    <thead>
-                        <tr className="border-border bg-card border-b">
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                변수
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                값
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                미리보기
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {rows.map((row) => (
-                            <tr key={row.cssVar} className="border-border border-b last:border-b-0">
-                                <th scope="row" className="px-4 py-3 text-left font-normal">
-                                    <span className="typo-caption-regular text-foreground font-mono">
-                                        {row.cssVar.slice(4, -1)}
-                                    </span>
-                                </th>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
-                                    {row.value}
-                                </td>
-                                <td className="px-4 py-3 whitespace-nowrap">{row.preview ?? '—'}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+            <Table
+                size="sm"
+                caption={`${title} 원시 변수와 값`}
+                columns={PRIMITIVE_TABLE_COLUMNS}
+                rows={rows.map((row) => ({
+                    key: row.cssVar,
+                    cells: [
+                        <span key="variable" className="text-foreground font-mono">
+                            {row.cssVar.slice(4, -1)}
+                        </span>,
+                        <span key="value" className="text-muted-foreground font-mono whitespace-nowrap">
+                            {row.value}
+                        </span>,
+                        <span key="preview" className="text-foreground whitespace-nowrap">
+                            {row.preview ?? '—'}
+                        </span>,
+                    ],
+                }))}
+            />
         </section>
     </BaseCard>
 )
+
+const FONT_SIZE_TABLE_COLUMNS = [
+    {key: 'tier', header: 'Tier', align: 'start', rowHeader: true},
+    {key: 'mobile', header: '모바일 변수·값', align: 'start'},
+    {key: 'pc', header: 'PC 변수·값', align: 'start'},
+    {key: 'preview', header: '미리보기', align: 'start'},
+] as const
 
 // font-size는 모바일·PC 변수가 한 쌍이다. 값이 같아도 -pc 변수를 생성해 typo-*가 같은 구조로 참조하며,
 // 생성 CSS에서는 중복 리터럴 대신 모바일 변수를 다시 가리킨다.
@@ -84,52 +84,32 @@ const FontSizeTable = () => (
                     출력합니다.
                 </p>
             </div>
-            <div className="border-border overflow-x-auto rounded-xl border">
-                <table className="w-full text-left">
-                    <caption className="sr-only">font-size tier별 모바일·PC 원시 변수와 값</caption>
-                    <thead>
-                        <tr className="border-border bg-card border-b">
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                Tier
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                모바일 변수·값
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                PC 변수·값
-                            </th>
-                            <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                미리보기
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {FONT_SIZE_TIERS.map(({tier, mobile, pc}) => (
-                            <tr key={tier} className="border-border border-b last:border-b-0">
-                                <th
-                                    scope="row"
-                                    className="typo-caption-regular text-foreground px-4 py-3 text-left font-mono"
-                                >
-                                    {tier}
-                                </th>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
-                                    <span className="text-foreground">--raw-font-size-{tier}</span>
-                                    <br />
-                                    {mobile}px → {mobile / tokens.remBase}rem
-                                </td>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
-                                    <span className="text-foreground">--raw-font-size-{tier}-pc</span>
-                                    <br />
-                                    {pc}px → {pc / tokens.remBase}rem
-                                </td>
-                                <td className="px-4 py-3 whitespace-nowrap">
-                                    <span style={{fontSize: `var(--raw-font-size-${tier})`}}>{PREVIEW_SAMPLE}</span>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+            <Table
+                size="sm"
+                caption="font-size tier별 모바일·PC 원시 변수와 값"
+                columns={FONT_SIZE_TABLE_COLUMNS}
+                rows={FONT_SIZE_TIERS.map(({tier, mobile, pc}) => ({
+                    key: tier,
+                    cells: [
+                        <span key="tier" className="text-foreground font-mono">
+                            {tier}
+                        </span>,
+                        <span key="mobile" className="text-muted-foreground font-mono whitespace-nowrap">
+                            <span className="text-foreground">--raw-font-size-{tier}</span>
+                            <br />
+                            {mobile}px → {mobile / tokens.remBase}rem
+                        </span>,
+                        <span key="pc" className="text-muted-foreground font-mono whitespace-nowrap">
+                            <span className="text-foreground">--raw-font-size-{tier}-pc</span>
+                            <br />
+                            {pc}px → {pc / tokens.remBase}rem
+                        </span>,
+                        <span key="preview" className="text-foreground whitespace-nowrap">
+                            <span style={{fontSize: `var(--raw-font-size-${tier})`}}>{PREVIEW_SAMPLE}</span>
+                        </span>,
+                    ],
+                }))}
+            />
         </section>
     </BaseCard>
 )
