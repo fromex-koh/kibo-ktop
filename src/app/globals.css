@@ -8,6 +8,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 /* mainpage: 유틸리티 — 메인페이지 스킨(.mainpage)에서만 적용. 테마별 로고 교체 등 클래스 스코프 대응에 쓴다. */
 @custom-variant mainpage (&:where(.mainpage, .mainpage *));
+/* interactive: — 실제 조작 가능한 상태(native disabled 도 aria-disabled 도 아님)에만 적용. hover·active 를
+   이 변형으로 걸면 aria-disabled(포커스 유지용 비활성) 컨트롤이 hover 하이라이트되지 않는다. Tailwind 기본
+   enabled(:enabled) 는 aria-disabled 를 못 걸러 별도 정의한다. */
+@custom-variant interactive (&:not(:disabled):not([aria-disabled='true']));
 
 /* Footer 로고 테마 교체 — footer 전용 변수(일반 전역 유틸 아님). nearest 스코프 제어용.
    dark:/mainpage: 변형은 "조상 어딘가에 .dark/.mainpage 가 있으면" 매칭되므로, 가이드처럼 .light 로 중첩

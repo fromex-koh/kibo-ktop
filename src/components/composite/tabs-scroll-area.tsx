@@ -30,7 +30,10 @@ import {cn} from '@/lib/utils'
 // prefers-reduced-motion 을 존중한다([6.3.1]).
 
 const KEYBOARD_NAV_KEYS = ['ArrowLeft', 'ArrowRight', 'Home', 'End']
-const DIMMED_ARROW_CLASS = 'pointer-events-none opacity-50'
+// 더 못 가는 방향 버튼의 흐림 처리. 클릭은 onClick 가드로 막고(아래), aria-disabled 커서(cursor-not-allowed)와
+// hover 억제는 Button 컴포넌트가 aria-disabled/interactive 로 처리하므로 여기선 흐림(opacity)만 얹는다.
+// (pointer-events-none 을 쓰면 커서가 안 잡혀 not-allowed 가 안 보이므로 쓰지 않는다.)
+const DIMMED_ARROW_CLASS = 'opacity-50'
 
 type TabsScrollAreaProps = ComponentPropsWithoutRef<typeof TabsList>
 
