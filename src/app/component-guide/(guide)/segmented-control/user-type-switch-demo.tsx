@@ -9,7 +9,7 @@ const USER_TYPES = ['corp', 'org'] satisfies readonly UserType[]
 
 type UserTypeSwitchDemoProps = {
     variant?: 'subtle' | 'solid'
-    size?: 'sm' | 'lg'
+    size?: 'sm' | 'md' | 'lg'
     ariaLabel?: string
     controlClassName?: string
     wrapperClassName?: string

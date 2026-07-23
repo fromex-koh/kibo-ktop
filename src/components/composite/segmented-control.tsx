@@ -15,7 +15,7 @@ import {
 import {cn} from '@/lib/utils'
 
 // PROJECT-COMPOSITE: 동일한 세그먼트 외관으로 로컬 단일 선택(RadioGroup)과 화면 이동(Link)을 제공한다.
-type ResolvedSegmentedControlStyle = {variant: 'subtle' | 'solid'; size: 'sm' | 'lg'}
+type ResolvedSegmentedControlStyle = {variant: 'subtle' | 'solid'; size: 'sm' | 'md' | 'lg'}
 const SegmentedControlStyleContext = createContext<ResolvedSegmentedControlStyle>({variant: 'subtle', size: 'sm'})
 
 type SegmentedControlRadioProps = ComponentProps<typeof RadioGroup> & SegmentedControlStyleProps & {type: 'radio'}

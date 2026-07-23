@@ -11,6 +11,7 @@ const segmentedControlVariants = cva('group/segmented-control flex w-fit items-c
         },
         size: {
             sm: '',
+            md: '',
             lg: '',
         },
     },
@@ -32,14 +33,17 @@ const segmentedControlItemVariants = cva(
             },
             size: {
                 sm: '',
+                md: '',
                 lg: '',
             },
         },
         compoundVariants: [
             {variant: 'subtle', size: 'sm', class: 'h-control-h-2xs typo-body-l-medium px-3 py-1'},
-            {variant: 'subtle', size: 'lg', class: 'typo-title-m-medium min-h-20 min-w-32 px-8 py-4'},
+            {variant: 'subtle', size: 'md', class: 'h-control-h-md typo-body-l-medium px-4'},
+            {variant: 'subtle', size: 'lg', class: 'h-control-h-lg typo-body-xl-medium px-5'},
             {variant: 'solid', size: 'sm', class: 'h-control-h-sm typo-body-l-medium px-3'},
-            {variant: 'solid', size: 'lg', class: 'h-control-h-md typo-body-l-medium px-4'},
+            {variant: 'solid', size: 'md', class: 'h-control-h-md typo-body-l-medium px-4'},
+            {variant: 'solid', size: 'lg', class: 'h-control-h-lg typo-body-xl-medium px-5'},
         ],
         defaultVariants: {
             variant: 'subtle',
