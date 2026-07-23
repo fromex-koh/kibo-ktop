@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import type {ReactNode} from 'react'
 import {BaseCard} from '@/components/composite/base-card'
 import {StepNavigation} from '@/components/composite/step-navigation'
 import CodeBlock from '@/components/custom/code-block'
@@ -81,6 +82,22 @@ const PROPS_ITEMS = [
     ],
 ] as const
 
+// 반투명 확인용 데모 무대 — 바 뒤로 본문 콘텐츠를 깔아 bg-cta-surface 가 비치는 것을 보여준다.
+// 콘텐츠는 장식(aria-hidden)이고, 바는 무대 하단에 겹쳐 둔다.
+const DemoStage = ({children}: {children: ReactNode}) => (
+    <div className="border-border relative h-40 overflow-hidden rounded-md border">
+        <div
+            aria-hidden="true"
+            className="text-foreground-subtle typo-body-l-regular absolute inset-0 flex flex-col justify-end gap-1 px-6 pb-2"
+        >
+            <p>단계 본문 콘텐츠가 여기에 있고…</p>
+            <p>반투명 CTA 바가 이 내용 위에 겹쳐 뜹니다.</p>
+            <p>bg-cta-surface 라서 아래 본문이 살짝 비칩니다.</p>
+        </div>
+        {children}
+    </div>
+)
+
 // 스텝 내비게이션 — 단계형 화면 하단 CTA 바. ActionBar·Button 을 재사용한 합성 컴포넌트.
 const StepNavigationGuidePage = () => (
     <GuidePageShell
@@ -94,8 +111,9 @@ const StepNavigationGuidePage = () => (
                         케이스
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        버튼 라벨·유무·활성 상태만 바꿔 단계별 상황을 표현합니다. 바는 전체폭이라 각 데모를 카드 폭에
-                        맞춰 보여줍니다.
+                        버튼 라벨·유무·활성 상태만 바꿔 단계별 상황을 표현합니다. 각 데모는 바를 본문 콘텐츠 위에 겹쳐
+                        놓아 <code className="font-mono">bg-cta-surface</code> 반투명 효과(뒤 내용이 비침)를 함께
+                        보여줍니다.
                     </p>
                 </div>
                 <div className="flex flex-col gap-6">
@@ -105,9 +123,9 @@ const StepNavigationGuidePage = () => (
                                 <p className="typo-body-l-medium text-foreground">{c.title}</p>
                                 <p className="typo-body-l-regular text-muted-foreground">{c.desc}</p>
                             </div>
-                            <div className="border-border overflow-hidden rounded-md border">
-                                <StepNavigation prev={c.prev} next={c.next} />
-                            </div>
+                            <DemoStage>
+                                <StepNavigation className="absolute inset-x-0 bottom-0" prev={c.prev} next={c.next} />
+                            </DemoStage>
                         </div>
                     ))}
                 </div>
@@ -142,8 +160,10 @@ const StepNavigationGuidePage = () => (
                         <code className="font-mono">className=&quot;sticky bottom-0&quot;</code>(또는 fixed)를 줍니다.
                     </li>
                     <li>
-                        배경은 <code className="font-mono">bg-surface/75</code>로 반투명이라, 본문 위에 겹쳐 뜰 때만 그
-                        효과가 드러납니다.
+                        배경은 반투명 토큰 <code className="font-mono">bg-cta-surface</code>로, 테마별로 알맞은 값을
+                        따릅니다 — light=흰색 75%(시안), dark·mainpage=화이트 10% 프로스트(어두운 표면을 살짝 밝혀 바가
+                        떠 보이게). 반투명은 본문 위에 겹쳐 뜰 때만 드러나므로, 아래 케이스 데모는 바를 본문 콘텐츠 위에
+                        겹쳐 놓았습니다.
                     </li>
                     <li>
                         버튼은 기존 Button(좌 tertiary · 우 primary · size 2xl)을 그대로 씁니다. disabled·asChild(Link)·

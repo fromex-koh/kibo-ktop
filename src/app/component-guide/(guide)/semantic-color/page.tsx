@@ -164,6 +164,7 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'segmented-solid-active-foreground': 'bg-segmented-solid-active-foreground',
     'pagination-active': 'bg-pagination-active',
     'pagination-active-foreground': 'bg-pagination-active-foreground',
+    'cta-surface': 'bg-cta-surface',
 }
 
 // 맨 앞 '현재' 칸 — 실제 토큰을 현재 테마로 렌더. 다크 토글 시 실제로 바뀐다(파이프라인 검증).

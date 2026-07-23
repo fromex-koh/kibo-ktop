@@ -11,7 +11,9 @@ import {cn} from '@/lib/utils'
 // 버튼은 prev·next 에 Button props 를 넘겨 만든다 — children(라벨)·onClick·disabled·asChild 등 Button 의 모든
 // 속성을 그대로 쓸 수 있고, variant·size 기본값(tertiary/default · 2xl)은 넘긴 값으로 덮을 수 있다.
 // 위치(sticky/fixed)는 화면 문맥마다 달라 컴포넌트에서 고정하지 않고 사용처 className 으로 지정한다.
-// 반투명 배경은 스크롤되는 본문 위에 겹쳐 뜰 때만 의미가 있다.
+// 배경은 bg-cta-surface(반투명 토큰) — 테마별로 알맞은 값을 담는다: light=흰색 75%(시안), dark·mainpage=화이트
+// 10% 프로스트(어두운 표면을 살짝 밝혀 바가 떠 보이게, Material 식 dark elevation). /opacity 수정자 없이 토큰 유틸만 쓴다.
+// 반투명은 스크롤되는 본문 위에 겹쳐 뜰 때만 그 효과가 드러난다.
 
 type StepButtonProps = ComponentProps<typeof Button>
 
@@ -25,7 +27,7 @@ type StepNavigationProps = {
 const StepNavigation = ({prev, next, className, ...props}: StepNavigationProps) => (
     <div
         data-slot="step-navigation"
-        className={cn('border-subtle-3 bg-surface/75 w-full border-t', className)}
+        className={cn('border-subtle-3 bg-cta-surface w-full border-t', className)}
         {...props}
     >
         <div className="content-layout py-6">
