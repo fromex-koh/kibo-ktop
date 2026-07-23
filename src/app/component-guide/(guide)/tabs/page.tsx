@@ -3,7 +3,7 @@ import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
-import {Tabs, TabsList, TabsTrigger, TabsContent} from '@/components/ui/tabs'
+import {Tabs, TabsTrigger, TabsContent} from '@/components/ui/tabs'
 import {TabsScrollArea} from '@/components/composite/tabs-scroll-area'
 
 export const metadata: Metadata = {title: '탭 (Tabs)'}
@@ -56,16 +56,6 @@ const SCROLL_AREA_CODE = `<Tabs defaultValue="tab1">
   </TabsScrollArea>
   <TabsContent value="tab1">내 정보 확인 내용</TabsContent>
   {/* ... */}
-</Tabs>`
-
-const DEFAULT_VARIANT_CODE = `{/* variant 생략 시 기본값 — shadcn 세그먼트(알약) 탭, Figma 스펙 없어 원본 그대로 */}
-<Tabs defaultValue="tab1">
-  <TabsList aria-label="보기 전환">
-    <TabsTrigger value="tab1">목록</TabsTrigger>
-    <TabsTrigger value="tab2">카드</TabsTrigger>
-  </TabsList>
-  <TabsContent value="tab1">목록 보기</TabsContent>
-  <TabsContent value="tab2">카드 보기</TabsContent>
 </Tabs>`
 
 // 조합 API 설명 — [컴포넌트, 이름, 설명, 기본값, 타입]
@@ -201,33 +191,6 @@ const TabsGuidePage = () => (
                     </Tabs>
                 </div>
                 <CodeBlock code={SCROLL_AREA_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="tabs-default" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="tabs-default" className="typo-h4-bold">
-                        세그먼트 (default)
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">variant</code>를 생략하면 기본 세그먼트형을 사용합니다. 프로젝트
-                        화면의 언더라인형이 필요할 때만 <code className="font-mono">TabsScrollArea</code>를 선택합니다.
-                    </p>
-                </div>
-                <Tabs defaultValue="tab1">
-                    <TabsList aria-label="보기 전환">
-                        <TabsTrigger value="tab1">목록</TabsTrigger>
-                        <TabsTrigger value="tab2">카드</TabsTrigger>
-                    </TabsList>
-                    <TabsContent value="tab1" className="typo-body-l-regular text-muted-foreground pt-4">
-                        목록 보기
-                    </TabsContent>
-                    <TabsContent value="tab2" className="typo-body-l-regular text-muted-foreground pt-4">
-                        카드 보기
-                    </TabsContent>
-                </Tabs>
-                <CodeBlock code={DEFAULT_VARIANT_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
