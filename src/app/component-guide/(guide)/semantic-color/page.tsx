@@ -165,6 +165,8 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'segmented-active': 'bg-segmented-active',
     'segmented-solid-active': 'bg-segmented-solid-active',
     'segmented-solid-active-foreground': 'bg-segmented-solid-active-foreground',
+    'pagination-active': 'bg-pagination-active',
+    'pagination-active-foreground': 'bg-pagination-active-foreground',
     'main-footer-background': 'bg-main-footer-background',
     'main-footer-muted': 'bg-main-footer-muted',
     'main-footer-border': 'bg-main-footer-border',
@@ -320,6 +322,7 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
     {name: 'main-accent / main-accent-bright', match: (n) => n.startsWith('main-accent')},
     {name: 'main-footer', match: (n) => n.startsWith('main-footer-')},
+    {name: 'pagination', match: (n) => n.startsWith('pagination-')},
     {name: '기타', match: () => true}, // 안전망 — 위에서 안 잡힌 커스텀 슬롯이 있으면 여기로.
 ]
 
@@ -507,6 +510,12 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             메인페이지 푸터(MainFooter)의 배경·텍스트·구분선·Select 표면에 사용합니다. 시안의 푸터는 테마와 무관하게
             고정된 다크 표면이라 세 테마 값이 모두 같으며, 부분적인 테마 전환 없이 푸터 문맥의 색상을 독립적으로
             관리합니다.
+        </>
+    ),
+    pagination: (
+        <>
+            페이지네이션(Pagination)의 현재 페이지 강조 면(navy)과 그 위 텍스트에 사용합니다. 시안대로 세 테마에서 같은
+            navy 값을 유지합니다.
         </>
     ),
 }

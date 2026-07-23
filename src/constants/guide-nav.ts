@@ -109,6 +109,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'MainFooter', href: '/component-guide/main-footer'},
                     {label: 'PageTitleBar', href: '/component-guide/page-title-bar'},
                     {label: 'Breadcrumb', href: '/component-guide/breadcrumb'},
+                    {label: 'Pagination', href: '/component-guide/pagination'},
                     {label: 'SkipNav', href: '/component-guide/skip-nav'},
                     {label: 'ScrollToTopButton', href: '/component-guide/scroll-to-top-button'},
                 ],
