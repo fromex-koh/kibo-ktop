@@ -70,17 +70,17 @@ const COMBOBOX_OPTIONS = [
 const SAMPLE_DATE = new Date(2026, 6, 13)
 const ALERT_VARIANTS = [
     {
-        variant: 'info',
+        color: 'info',
         Icon: Info,
         message: '기업명, 사업자번호, 법인번호는 회원정보 기준으로 자동 입력되며 수정할 수 없습니다.',
     },
-    {variant: 'success', Icon: CircleCheck, message: '제출이 정상적으로 완료되었습니다.'},
+    {color: 'success', Icon: CircleCheck, message: '제출이 정상적으로 완료되었습니다.'},
     {
-        variant: 'warning',
+        color: 'warning',
         Icon: TriangleAlert,
         message: '입력한 정보가 저장되지 않았습니다. 저장 후 다음 단계로 이동하세요.',
     },
-    {variant: 'error', Icon: CircleAlert, message: '사업자번호 형식이 올바르지 않습니다. 다시 확인해 주세요.'},
+    {color: 'error', Icon: CircleAlert, message: '사업자번호 형식이 올바르지 않습니다. 다시 확인해 주세요.'},
 ] as const
 
 const FruitOptions = () => (
@@ -577,8 +577,8 @@ const ContrastCheckPage = () => (
         </section>
 
         <section className="flex flex-col gap-3" aria-label="알림 명도 대비 검수 목록">
-            {ALERT_VARIANTS.map(({variant, Icon: AlertIcon, message}) => (
-                <Alert key={variant} variant={variant}>
+            {ALERT_VARIANTS.map(({color, Icon: AlertIcon, message}) => (
+                <Alert key={color} color={color}>
                     <AlertIcon aria-hidden="true" />
                     <AlertDescription>{message}</AlertDescription>
                 </Alert>
