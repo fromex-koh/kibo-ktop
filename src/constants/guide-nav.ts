@@ -163,6 +163,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 items: [
                     {label: 'ActionCheck', href: '/component-guide/action-check'},
                     {label: 'Alert', href: '/component-guide/alert'},
+                    {label: 'InfoBox', href: '/component-guide/info-box'},
                     {label: 'Dialog', href: '/component-guide/dialog'},
                 ],
             },
