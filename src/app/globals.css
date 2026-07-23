@@ -257,6 +257,33 @@
     animation: tech-service-content-enter 600ms ease both;
 }
 
+/* solid SegmentedControl은 비활성 항목 사이에 Figma 시안의 얇은 회색 구분선(subtle-2)을 둔다. */
+[data-slot='segmented-control'][data-variant='solid'] > [data-slot='segmented-control-item']:not(:first-child)::before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 1px;
+    height: 0.75rem;
+    background: var(--color-subtle-2);
+    content: '';
+    transform: translateY(-50%);
+}
+/* 선택된 항목(navy 면) 양옆의 구분선은 숨긴다 — 시안처럼 navy 면 자체가 항목을 분리하므로,
+   구분선이 navy 모서리에 겹쳐 보이지 않게 한다. 2개짜리는 한 항목이 항상 선택돼 있어 구분선 없이
+   navy 면으로만 구분된다. */
+[data-slot='segmented-control'][data-variant='solid']
+    > [data-slot='segmented-control-item'][aria-current='page']::before,
+[data-slot='segmented-control'][data-variant='solid']
+    > [data-slot='segmented-control-item']:has([data-state='checked'])::before,
+[data-slot='segmented-control'][data-variant='solid']
+    > [data-slot='segmented-control-item'][aria-current='page']
+    + [data-slot='segmented-control-item']::before,
+[data-slot='segmented-control'][data-variant='solid']
+    > [data-slot='segmented-control-item']:has([data-state='checked'])
+    + [data-slot='segmented-control-item']::before {
+    display: none;
+}
+
 @keyframes main-scroll-line-fill {
     0% {
         opacity: 1;

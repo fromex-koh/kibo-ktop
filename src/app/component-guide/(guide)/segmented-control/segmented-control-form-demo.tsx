@@ -7,6 +7,7 @@ import {SegmentedControl, SegmentedControlItem} from '@/components/composite/seg
 
 const SegmentedControlFormDemo = () => {
     const [memberType, setMemberType] = useState('')
+    const [period, setPeriod] = useState('3months')
     const [memberTypeError, setMemberTypeError] = useState(false)
     const [result, setResult] = useState('')
 
@@ -83,6 +84,28 @@ const SegmentedControlFormDemo = () => {
                         <SegmentedControlItem value="sms">문자</SegmentedControlItem>
                     </SegmentedControl>
                 </div>
+            </Field>
+
+            <Field className="w-full max-w-160 items-start">
+                <FieldLabel id="period-label" htmlFor="period-today" className="text-foreground font-bold">
+                    조회 기간
+                </FieldLabel>
+                <SegmentedControl
+                    type="radio"
+                    variant="solid"
+                    size="lg"
+                    name="period"
+                    value={period}
+                    onValueChange={setPeriod}
+                    aria-labelledby="period-label"
+                >
+                    <SegmentedControlItem id="period-today" value="today">
+                        오늘
+                    </SegmentedControlItem>
+                    <SegmentedControlItem value="1month">1개월</SegmentedControlItem>
+                    <SegmentedControlItem value="3months">3개월</SegmentedControlItem>
+                    <SegmentedControlItem value="all">전체</SegmentedControlItem>
+                </SegmentedControl>
             </Field>
 
             <Button type="submit" variant="default" size="md">

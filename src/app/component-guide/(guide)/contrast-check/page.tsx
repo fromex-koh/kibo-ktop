@@ -565,10 +565,10 @@ const ContrastCheckPage = () => (
 
         <section className="flex flex-wrap items-center gap-6" aria-label="세그먼티드 컨트롤 명도 대비 검수 목록">
             <SegmentedControl type="link" aria-label="화면 유형">
-                <SegmentedControlItem href="/component-guide/contrast-check?audience=corp" aria-current="page">
+                <SegmentedControlItem href="/component-guide/contrast-check?userType=corp" aria-current="page">
                     기업
                 </SegmentedControlItem>
-                <SegmentedControlItem href="/component-guide/contrast-check?audience=org">기관</SegmentedControlItem>
+                <SegmentedControlItem href="/component-guide/contrast-check?userType=org">기관</SegmentedControlItem>
             </SegmentedControl>
         </section>
 

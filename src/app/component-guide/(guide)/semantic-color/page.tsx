@@ -163,6 +163,8 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'segmented-track': 'bg-segmented-track',
     'segmented-foreground': 'bg-segmented-foreground',
     'segmented-active': 'bg-segmented-active',
+    'segmented-solid-active': 'bg-segmented-solid-active',
+    'segmented-solid-active-foreground': 'bg-segmented-solid-active-foreground',
     'main-footer-background': 'bg-main-footer-background',
     'main-footer-muted': 'bg-main-footer-muted',
     'main-footer-border': 'bg-main-footer-border',

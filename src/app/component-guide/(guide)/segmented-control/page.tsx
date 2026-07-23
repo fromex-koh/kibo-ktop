@@ -4,32 +4,94 @@ import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
-import AudienceSwitchDemo from './audience-switch-demo'
+import UserTypeSwitchDemo from './user-type-switch-demo'
 import SegmentedControlFormDemo from './segmented-control-form-demo'
 
 export const metadata: Metadata = {title: '세그먼티드 컨트롤 (Segmented Control)'}
 
-const USAGE_SEGMENTED = `<SegmentedControl type="radio" defaultValue="corp" aria-label="회원 유형">
+const USAGE_RADIO_TYPE = `<SegmentedControl type="radio" defaultValue="corp" aria-label="회원 유형">
   <SegmentedControlItem value="corp">기업</SegmentedControlItem>
   <SegmentedControlItem value="org">기관</SegmentedControlItem>
 </SegmentedControl>`
 
-const USAGE_AUDIENCE_SWITCH = `<SegmentedControl type="link" aria-label="화면 유형">
+const USAGE_VARIANTS = `{/* Subtle: 기본 회색 트랙 */}
+<SegmentedControl type="radio" variant="subtle" size="sm" defaultValue="corp" aria-label="회원 유형">
+  <SegmentedControlItem value="corp">기업</SegmentedControlItem>
+  <SegmentedControlItem value="org">기관</SegmentedControlItem>
+</SegmentedControl>
+
+{/* 흰 표면 위 인디고 선택 항목 — 항목은 텍스트 너비만큼만 차지 */}
+<SegmentedControl
+  type="radio"
+  variant="solid"
+  size="lg"
+  defaultValue="3months"
+  aria-label="조회 기간"
+>
+  <SegmentedControlItem value="today">오늘</SegmentedControlItem>
+  <SegmentedControlItem value="1month">1개월</SegmentedControlItem>
+  <SegmentedControlItem value="3months">3개월</SegmentedControlItem>
+  <SegmentedControlItem value="all">전체</SegmentedControlItem>
+</SegmentedControl>`
+
+const USAGE_LINK_TYPE = `<SegmentedControl type="link" aria-label="화면 유형">
   <SegmentedControlItem
-    href="/service?audience=corp"
-    aria-current={audience === 'corp' ? 'page' : undefined}
+    href="/service?userType=corp"
+    aria-current={userType === 'corp' ? 'page' : undefined}
   >
     기업
   </SegmentedControlItem>
   <SegmentedControlItem
-    href="/service?audience=org"
-    aria-current={audience === 'org' ? 'page' : undefined}
+    href="/service?userType=org"
+    aria-current={userType === 'org' ? 'page' : undefined}
+  >
+    기관
+  </SegmentedControlItem>
+</SegmentedControl>`
+
+const USAGE_SOLID_LINK = `{/* Solid도 Link 타입에 동일하게 적용할 수 있습니다. */}
+<SegmentedControl
+  type="link"
+  variant="solid"
+  size="lg"
+  aria-label="화면 유형"
+>
+  <SegmentedControlItem
+    href="/service?userType=corp"
+    aria-current={userType === 'corp' ? 'page' : undefined}
+  >
+    기업
+  </SegmentedControlItem>
+  <SegmentedControlItem
+    href="/service?userType=org"
+    aria-current={userType === 'org' ? 'page' : undefined}
   >
     기관
   </SegmentedControlItem>
 </SegmentedControl>
 
-{audience === 'corp' ? <CorporateView /> : <OrganizationView />}`
+{userType === 'corp' ? <CorporateView /> : <OrganizationView />}`
+
+const USAGE_SIZES = `{/* Sm: 기본 높이와 타이포그래피 */}
+<SegmentedControl type="radio" variant="subtle" size="sm" defaultValue="corp" aria-label="회원 유형">
+  <SegmentedControlItem value="corp">기업</SegmentedControlItem>
+  <SegmentedControlItem value="org">기관</SegmentedControlItem>
+</SegmentedControl>
+
+{/* Lg: 넓은 영역에서 사용하는 큰 높이와 타이포그래피 */}
+<SegmentedControl
+  type="radio"
+  variant="subtle"
+  size="lg"
+  defaultValue="3months"
+  aria-label="조회 기간"
+  className="w-full max-w-160"
+>
+  <SegmentedControlItem value="today">오늘</SegmentedControlItem>
+  <SegmentedControlItem value="1month">1개월</SegmentedControlItem>
+  <SegmentedControlItem value="3months">3개월</SegmentedControlItem>
+  <SegmentedControlItem value="all">전체</SegmentedControlItem>
+</SegmentedControl>`
 
 const USAGE_DISABLED = `{/* 그룹 전체 비활성화 */}
 <SegmentedControl type="radio" defaultValue="corp" disabled aria-label="비활성 회원 유형">
@@ -94,6 +156,24 @@ const USAGE_FORM = `<form noValidate onSubmit={handleSubmit}>
     </div>
   </Field>
 
+  <Field className="w-full max-w-160">
+    <FieldLabel id="period-label" htmlFor="period-today">조회 기간</FieldLabel>
+    <SegmentedControl
+      type="radio"
+      variant="solid"
+      size="lg"
+      name="period"
+      value={period}
+      onValueChange={setPeriod}
+      aria-labelledby="period-label"
+    >
+      <SegmentedControlItem id="period-today" value="today">오늘</SegmentedControlItem>
+      <SegmentedControlItem value="1month">1개월</SegmentedControlItem>
+      <SegmentedControlItem value="3months">3개월</SegmentedControlItem>
+      <SegmentedControlItem value="all">전체</SegmentedControlItem>
+    </SegmentedControl>
+  </Field>
+
   <Button type="submit" variant="default" size="md">
     선택 내용 확인
   </Button>
@@ -117,6 +197,20 @@ const PROPS = [
         desc: '의미와 렌더링 방식을 결정하는 필수 구분자',
         values: "'radio' | 'link'",
         def: '—',
+    },
+    {
+        component: 'SegmentedControl',
+        name: 'variant',
+        desc: '선택 컨트롤의 표면과 활성 항목 강조 방식',
+        values: "'subtle' | 'solid'",
+        def: "'subtle'",
+    },
+    {
+        component: 'SegmentedControl',
+        name: 'size',
+        desc: '항목의 높이·패딩·타이포그래피 크기',
+        values: "'sm' | 'lg'",
+        def: "'sm'",
     },
     {
         component: 'SegmentedControl',
@@ -194,52 +288,212 @@ const PROPS = [
 const SegmentedControlGuidePage = () => (
     <GuidePageShell
         title="세그먼티드 컨트롤 (Segmented Control)"
-        description="단일 선택을 위한 radio 타입과 화면 이동을 위한 link 타입을 제공하는 세그먼티드 컨트롤입니다."
+        description="동작과 시맨틱은 type(link·radio), 표현 방식은 variant(subtle·solid), 크기는 size로 각각 독립적으로 선택합니다."
     >
         <BaseCard>
-            <section aria-labelledby="tg-audience-switch" className="flex flex-col gap-4">
+            <section aria-labelledby="tg-type" className="flex flex-col gap-8">
                 <div>
-                    <h2 id="tg-audience-switch" className="typo-h4-bold">
-                        Link 타입 — 사이트 화면 전환
+                    <h2 id="tg-type" className="typo-h4-bold">
+                        Type
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">type=&quot;link&quot;</code>는 nav와 Next.js Link를 렌더링합니다.
-                        기업용·기관용처럼 페이지 주소와 콘텐츠 범위를 함께 바꾸고, 현재 링크는{' '}
-                        <code className="font-mono">aria-current=&quot;page&quot;</code>로 선택 스타일과 접근성 상태를
-                        전달합니다.
+                        <code className="font-mono">type</code>은 컨트롤의 동작과 HTML 시맨틱을 결정합니다. 화면 이동은{' '}
+                        <code className="font-mono">link</code>, 현재 화면 안의 단일 선택은{' '}
+                        <code className="font-mono">radio</code>를 사용합니다.
                     </p>
                 </div>
-                <Suspense fallback={null}>
-                    <AudienceSwitchDemo />
-                </Suspense>
-                <CodeBlock code={USAGE_AUDIENCE_SWITCH} language="tsx" copyLabel="복사" />
+                <section aria-labelledby="tg-type-link" className="flex flex-col gap-4">
+                    <div>
+                        <h3 id="tg-type-link" className="typo-title-l-bold">
+                            Link
+                        </h3>
+                        <p className="typo-body-l-regular text-muted-foreground mt-2">
+                            <code className="font-mono">type=&quot;link&quot;</code>는 nav와 Next.js Link를
+                            렌더링합니다. 현재 링크에는 <code className="font-mono">aria-current=&quot;page&quot;</code>
+                            를 전달합니다.
+                        </p>
+                    </div>
+                    <Suspense fallback={null}>
+                        <UserTypeSwitchDemo ariaLabel="사용자 유형 — Link 예시" />
+                    </Suspense>
+                    <CodeBlock code={USAGE_LINK_TYPE} language="tsx" copyLabel="복사" />
+                </section>
+
+                <section aria-labelledby="tg-type-radio" className="flex flex-col gap-4">
+                    <div>
+                        <h3 id="tg-type-radio" className="typo-title-l-bold">
+                            Radio
+                        </h3>
+                        <p className="typo-body-l-regular text-muted-foreground mt-2">
+                            <code className="font-mono">type=&quot;radio&quot;</code>는 Radix RadioGroup을 사용하며 현재
+                            화면 안에서 하나의 값을 선택합니다.
+                        </p>
+                    </div>
+                    <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">
+                        <SegmentedControl type="radio" defaultValue="corp" aria-label="회원 유형 (2개)">
+                            <SegmentedControlItem value="corp">기업</SegmentedControlItem>
+                            <SegmentedControlItem value="org">기관</SegmentedControlItem>
+                        </SegmentedControl>
+                        <SegmentedControl type="radio" defaultValue="corp" aria-label="회원 유형 (3개)">
+                            <SegmentedControlItem value="corp">기업</SegmentedControlItem>
+                            <SegmentedControlItem value="org">기관</SegmentedControlItem>
+                            <SegmentedControlItem value="person">개인</SegmentedControlItem>
+                        </SegmentedControl>
+                    </div>
+                    <CodeBlock code={USAGE_RADIO_TYPE} language="tsx" copyLabel="복사" />
+                </section>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="tg-preview" className="flex flex-col gap-4">
+            <section aria-labelledby="tg-variant" className="flex flex-col gap-8">
                 <div>
-                    <h2 id="tg-preview" className="typo-h4-bold">
-                        Radio 타입
+                    <h2 id="tg-variant" className="typo-h4-bold">
+                        Variant
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">type=&quot;radio&quot;</code>는 Radix RadioGroup을 사용한 로컬 단일
-                        선택입니다. 높이는 24px로 고정되며 회색 트랙 위에서 선택 항목을 흰 배경으로 표시합니다. 토글처럼
-                        다중 선택하거나 선택을 해제하지 않습니다.
+                        <code className="font-mono">variant</code>는 외형만 결정합니다.{' '}
+                        <code className="font-mono">subtle</code>과 <code className="font-mono">solid</code>는 Link와
+                        Radio 타입 모두에 동일하게 적용할 수 있습니다.
                     </p>
                 </div>
-                <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">
-                    <SegmentedControl type="radio" defaultValue="corp" aria-label="회원 유형 (2개)">
-                        <SegmentedControlItem value="corp">기업</SegmentedControlItem>
-                        <SegmentedControlItem value="org">기관</SegmentedControlItem>
-                    </SegmentedControl>
-                    <SegmentedControl type="radio" defaultValue="corp" aria-label="회원 유형 (3개)">
-                        <SegmentedControlItem value="corp">기업</SegmentedControlItem>
-                        <SegmentedControlItem value="org">기관</SegmentedControlItem>
-                        <SegmentedControlItem value="person">개인</SegmentedControlItem>
-                    </SegmentedControl>
+
+                <section aria-labelledby="tg-variant-subtle" className="flex flex-col gap-4">
+                    <div>
+                        <h3 id="tg-variant-subtle" className="typo-title-l-bold">
+                            Subtle
+                        </h3>
+                        <p className="typo-body-l-regular text-muted-foreground mt-2">
+                            회색 트랙과 흰색 선택 항목을 사용하는 기본 스타일입니다. 주로{' '}
+                            <code className="font-mono">size=&quot;sm&quot;</code>과 조합합니다.
+                        </p>
+                    </div>
+                    <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">
+                        <SegmentedControl
+                            type="radio"
+                            variant="subtle"
+                            size="sm"
+                            defaultValue="corp"
+                            aria-label="Subtle Radio 예시"
+                        >
+                            <SegmentedControlItem value="corp">기업</SegmentedControlItem>
+                            <SegmentedControlItem value="org">기관</SegmentedControlItem>
+                        </SegmentedControl>
+                    </div>
+                </section>
+
+                <section aria-labelledby="tg-variant-solid" className="flex flex-col gap-4">
+                    <div>
+                        <h3 id="tg-variant-solid" className="typo-title-l-bold">
+                            Solid
+                        </h3>
+                        <p className="typo-body-l-regular text-muted-foreground mt-2">
+                            흰 표면 위에서 선택 항목을 진한 인디고(
+                            <code className="font-mono">segmented-solid-active</code>
+                            )로 강조하고, 비선택 항목 사이에는 얇은 구분선을 둡니다. 필터·기간 전환 토글에 사용합니다.
+                        </p>
+                    </div>
+                    <div aria-labelledby="tg-variant-solid-radio" className="flex flex-col gap-3">
+                        <h4 id="tg-variant-solid-radio" className="typo-body-l-bold text-foreground">
+                            Radio 타입
+                        </h4>
+                        <div className="bg-muted rounded-md p-6">
+                            <SegmentedControl
+                                type="radio"
+                                variant="solid"
+                                size="lg"
+                                defaultValue="3months"
+                                aria-label="Solid Radio 예시"
+                            >
+                                <SegmentedControlItem value="today">오늘</SegmentedControlItem>
+                                <SegmentedControlItem value="1month">1개월</SegmentedControlItem>
+                                <SegmentedControlItem value="3months">3개월</SegmentedControlItem>
+                                <SegmentedControlItem value="all">전체</SegmentedControlItem>
+                            </SegmentedControl>
+                        </div>
+                    </div>
+                    <div aria-labelledby="tg-variant-solid-link" className="flex flex-col gap-3">
+                        <h4 id="tg-variant-solid-link" className="typo-body-l-bold text-foreground">
+                            Link 타입
+                        </h4>
+                        <Suspense fallback={null}>
+                            <UserTypeSwitchDemo
+                                variant="solid"
+                                size="lg"
+                                ariaLabel="화면 유형 — Solid Link 예시"
+                                wrapperClassName="bg-muted border-0"
+                                showContent={false}
+                            />
+                        </Suspense>
+                    </div>
+                    <CodeBlock code={USAGE_VARIANTS} language="tsx" copyLabel="복사" />
+                    <CodeBlock code={USAGE_SOLID_LINK} language="tsx" copyLabel="복사" />
+                </section>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="tg-size" className="flex flex-col gap-8">
+                <div>
+                    <h2 id="tg-size" className="typo-h4-bold">
+                        Size
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">size</code>는 컨트롤의 높이·패딩·타이포그래피 크기만 결정합니다.{' '}
+                        Type과 Variant에 관계없이 <code className="font-mono">sm</code>과{' '}
+                        <code className="font-mono">lg</code>를 선택할 수 있습니다.
+                    </p>
                 </div>
-                <CodeBlock code={USAGE_SEGMENTED} language="tsx" copyLabel="복사" />
+
+                <section aria-labelledby="tg-size-sm" className="flex flex-col gap-4">
+                    <div>
+                        <h3 id="tg-size-sm" className="typo-title-l-bold">
+                            Sm
+                        </h3>
+                        <p className="typo-body-l-regular text-muted-foreground mt-2">
+                            좁은 영역이나 짧은 옵션 전환에 사용하는 기본 크기입니다.
+                        </p>
+                    </div>
+                    <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">
+                        <SegmentedControl
+                            type="radio"
+                            variant="subtle"
+                            size="sm"
+                            defaultValue="corp"
+                            aria-label="Sm 크기 예시"
+                        >
+                            <SegmentedControlItem value="corp">기업</SegmentedControlItem>
+                            <SegmentedControlItem value="org">기관</SegmentedControlItem>
+                        </SegmentedControl>
+                    </div>
+                </section>
+
+                <section aria-labelledby="tg-size-lg" className="flex flex-col gap-4">
+                    <div>
+                        <h3 id="tg-size-lg" className="typo-title-l-bold">
+                            Lg
+                        </h3>
+                        <p className="typo-body-l-regular text-muted-foreground mt-2">
+                            넓은 영역에서 옵션의 시각적 위계를 높일 때 사용하는 큰 크기입니다.
+                        </p>
+                    </div>
+                    <div className="border-border rounded-md border p-6">
+                        <SegmentedControl
+                            type="radio"
+                            variant="subtle"
+                            size="lg"
+                            defaultValue="3months"
+                            aria-label="Lg 크기 예시"
+                            className="w-full max-w-160"
+                        >
+                            <SegmentedControlItem value="today">오늘</SegmentedControlItem>
+                            <SegmentedControlItem value="1month">1개월</SegmentedControlItem>
+                            <SegmentedControlItem value="3months">3개월</SegmentedControlItem>
+                            <SegmentedControlItem value="all">전체</SegmentedControlItem>
+                        </SegmentedControl>
+                    </div>
+                    <CodeBlock code={USAGE_SIZES} language="tsx" copyLabel="복사" />
+                </section>
             </section>
         </BaseCard>
 
@@ -250,22 +504,62 @@ const SegmentedControlGuidePage = () => (
                         Disabled 상태
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        radio 타입은 그룹 전체 또는 개별 항목을 비활성화할 수 있습니다. 선택된 비활성 항목은{' '}
-                        <code className="font-mono">bg-control-disabled-subtle</code>, 모든 비활성 텍스트는{' '}
-                        <code className="font-mono">text-disabled</code>를 사용합니다.
+                        radio 타입은 그룹 전체 또는 개별 항목을 비활성화할 수 있습니다. 선택된 비활성 항목은 강조색 대신
+                        흐린 표면(<code className="font-mono">bg-control-disabled-subtle</code>)에 놓이고, 모든 비활성
+                        텍스트는 <code className="font-mono">text-disabled</code>를 사용합니다. subtle·solid 두 variant
+                        모두 같은 규칙을 따릅니다.
                     </p>
                 </div>
-                <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">
-                    <SegmentedControl type="radio" defaultValue="corp" disabled aria-label="비활성 회원 유형">
-                        <SegmentedControlItem value="corp">기업</SegmentedControlItem>
-                        <SegmentedControlItem value="org">기관</SegmentedControlItem>
-                    </SegmentedControl>
-                    <SegmentedControl type="radio" defaultValue="corp" aria-label="일부 비활성 회원 유형">
-                        <SegmentedControlItem value="corp">기업</SegmentedControlItem>
-                        <SegmentedControlItem value="org" disabled>
-                            기관
-                        </SegmentedControlItem>
-                    </SegmentedControl>
+                <div aria-labelledby="tg-disabled-subtle" className="flex flex-col gap-3">
+                    <h3 id="tg-disabled-subtle" className="typo-body-l-bold text-foreground">
+                        Subtle
+                    </h3>
+                    <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">
+                        <SegmentedControl type="radio" defaultValue="corp" disabled aria-label="비활성 회원 유형">
+                            <SegmentedControlItem value="corp">기업</SegmentedControlItem>
+                            <SegmentedControlItem value="org">기관</SegmentedControlItem>
+                        </SegmentedControl>
+                        <SegmentedControl type="radio" defaultValue="corp" aria-label="일부 비활성 회원 유형">
+                            <SegmentedControlItem value="corp">기업</SegmentedControlItem>
+                            <SegmentedControlItem value="org" disabled>
+                                기관
+                            </SegmentedControlItem>
+                        </SegmentedControl>
+                    </div>
+                </div>
+                <div aria-labelledby="tg-disabled-solid" className="flex flex-col gap-3">
+                    <h3 id="tg-disabled-solid" className="typo-body-l-bold text-foreground">
+                        Solid
+                    </h3>
+                    <div className="bg-muted flex flex-wrap items-center gap-6 rounded-md p-6">
+                        <SegmentedControl
+                            type="radio"
+                            variant="solid"
+                            size="lg"
+                            defaultValue="3months"
+                            disabled
+                            aria-label="비활성 조회 기간"
+                        >
+                            <SegmentedControlItem value="today">오늘</SegmentedControlItem>
+                            <SegmentedControlItem value="1month">1개월</SegmentedControlItem>
+                            <SegmentedControlItem value="3months">3개월</SegmentedControlItem>
+                            <SegmentedControlItem value="all">전체</SegmentedControlItem>
+                        </SegmentedControl>
+                        <SegmentedControl
+                            type="radio"
+                            variant="solid"
+                            size="lg"
+                            defaultValue="3months"
+                            aria-label="일부 비활성 조회 기간"
+                        >
+                            <SegmentedControlItem value="today">오늘</SegmentedControlItem>
+                            <SegmentedControlItem value="1month" disabled>
+                                1개월
+                            </SegmentedControlItem>
+                            <SegmentedControlItem value="3months">3개월</SegmentedControlItem>
+                            <SegmentedControlItem value="all">전체</SegmentedControlItem>
+                        </SegmentedControl>
+                    </div>
                 </div>
                 <CodeBlock code={USAGE_DISABLED} language="tsx" copyLabel="복사" />
             </section>
@@ -280,7 +574,10 @@ const SegmentedControlGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         필수 그룹은 FieldLabel·FieldError와 조합해 미선택 제출 시 오류를 노출하고 첫 항목으로 포커스를
                         이동합니다. 선택 그룹은 required 없이 제출할 수 있으며, 선택한 값만 FormData에 포함됩니다. 두
-                        그룹 모두 2개의 선택지를 함께 보여줍니다.
+                        그룹 모두 선택값을 <code className="font-mono">name</code>에 맞춰 제출합니다. 아래 결과에서 기존{' '}
+                        <code className="font-mono">subtle + sm</code> 필드와 새{' '}
+                        <code className="font-mono">solid + lg</code> 필드가 함께 FormData에 포함되는지 확인할 수
+                        있습니다.
                     </p>
                     <div className="bg-surface border-border mt-3 flex flex-col gap-1 rounded-md border p-4">
                         <h3 className="typo-body-l-medium text-foreground">WAVE 검사 예외 — Missing form label</h3>

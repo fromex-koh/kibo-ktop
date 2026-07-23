@@ -1,20 +1,25 @@
 'use client'
 
 import Link from 'next/link'
-import {useId, type ComponentProps} from 'react'
+import {createContext, useContext, useId, type ComponentProps} from 'react'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {
-    segmentedControlClassName,
-    segmentedControlItemClassName,
-    segmentedControlLinkItemStateClassName,
+    segmentedControlFocusWithinClassName,
+    segmentedControlItemVariants,
+    segmentedControlLinkItemStateClassNames,
     segmentedControlRadioClassName,
-    segmentedControlRadioItemStateClassName,
+    segmentedControlRadioItemStateClassNames,
+    segmentedControlVariants,
+    type SegmentedControlStyleProps,
 } from '@/components/theme/segmented-control.variants'
 import {cn} from '@/lib/utils'
 
 // PROJECT-COMPOSITE: 동일한 세그먼트 외관으로 로컬 단일 선택(RadioGroup)과 화면 이동(Link)을 제공한다.
-type SegmentedControlRadioProps = ComponentProps<typeof RadioGroup> & {type: 'radio'}
-type SegmentedControlLinkProps = ComponentProps<'nav'> & {type: 'link'}
+type ResolvedSegmentedControlStyle = {variant: 'subtle' | 'solid'; size: 'sm' | 'lg'}
+const SegmentedControlStyleContext = createContext<ResolvedSegmentedControlStyle>({variant: 'subtle', size: 'sm'})
+
+type SegmentedControlRadioProps = ComponentProps<typeof RadioGroup> & SegmentedControlStyleProps & {type: 'radio'}
+type SegmentedControlLinkProps = ComponentProps<'nav'> & SegmentedControlStyleProps & {type: 'link'}
 type SegmentedControlProps = SegmentedControlRadioProps | SegmentedControlLinkProps
 type SegmentedControlRadioItemProps = ComponentProps<typeof RadioGroupItem>
 type SegmentedControlLinkItemProps = ComponentProps<typeof Link>
@@ -22,31 +27,44 @@ type SegmentedControlItemProps = SegmentedControlRadioItemProps | SegmentedContr
 
 function SegmentedControl(props: SegmentedControlProps) {
     if (props.type === 'link') {
-        const {type, className, ...navProps} = props
+        const {type, variant = 'subtle', size = 'sm', className, ...navProps} = props
+        const resolvedVariant = variant ?? 'subtle'
+        const resolvedSize = size ?? 'sm'
         return (
-            <nav
-                {...navProps}
-                data-slot="segmented-control"
-                data-type={type}
-                className={cn(segmentedControlClassName, className)}
-            />
+            <SegmentedControlStyleContext.Provider value={{variant: resolvedVariant, size: resolvedSize}}>
+                <nav
+                    {...navProps}
+                    data-slot="segmented-control"
+                    data-type={type}
+                    data-variant={resolvedVariant}
+                    data-size={resolvedSize}
+                    className={cn(segmentedControlVariants({variant: resolvedVariant, size: resolvedSize}), className)}
+                />
+            </SegmentedControlStyleContext.Provider>
         )
     }
 
-    const {type, className, orientation = 'horizontal', ...radioProps} = props
+    const {type, variant = 'subtle', size = 'sm', className, orientation = 'horizontal', ...radioProps} = props
+    const resolvedVariant = variant ?? 'subtle'
+    const resolvedSize = size ?? 'sm'
     return (
-        <RadioGroup
-            {...radioProps}
-            orientation={orientation}
-            data-slot="segmented-control"
-            data-type={type}
-            className={cn(segmentedControlClassName, className)}
-        />
+        <SegmentedControlStyleContext.Provider value={{variant: resolvedVariant, size: resolvedSize}}>
+            <RadioGroup
+                {...radioProps}
+                orientation={orientation}
+                data-slot="segmented-control"
+                data-type={type}
+                data-variant={resolvedVariant}
+                data-size={resolvedSize}
+                className={cn(segmentedControlVariants({variant: resolvedVariant, size: resolvedSize}), className)}
+            />
+        </SegmentedControlStyleContext.Provider>
     )
 }
 
 function SegmentedControlItem(props: SegmentedControlItemProps) {
     const radioLabelId = useId()
+    const {variant, size} = useContext(SegmentedControlStyleContext)
 
     if ('href' in props) {
         const {className, ...linkProps} = props
@@ -54,7 +72,11 @@ function SegmentedControlItem(props: SegmentedControlItemProps) {
             <Link
                 {...linkProps}
                 data-slot="segmented-control-item"
-                className={cn(segmentedControlItemClassName, segmentedControlLinkItemStateClassName, className)}
+                className={cn(
+                    segmentedControlItemVariants({variant, size}),
+                    segmentedControlLinkItemStateClassNames[variant],
+                    className,
+                )}
             />
         )
     }
@@ -64,7 +86,15 @@ function SegmentedControlItem(props: SegmentedControlItemProps) {
         radioItemProps['aria-labelledby'] ?? (radioItemProps['aria-label'] ? undefined : radioLabelId)
 
     return (
-        <div className={cn(segmentedControlItemClassName, segmentedControlRadioItemStateClassName, className)}>
+        <div
+            data-slot="segmented-control-item"
+            className={cn(
+                segmentedControlItemVariants({variant, size}),
+                segmentedControlFocusWithinClassName,
+                segmentedControlRadioItemStateClassNames[variant],
+                className,
+            )}
+        >
             <RadioGroupItem
                 {...radioItemProps}
                 aria-labelledby={accessibleLabelId}

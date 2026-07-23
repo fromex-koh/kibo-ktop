@@ -41,33 +41,33 @@ const UTILITY_LINKS: {label: string; external?: boolean}[] = [
     {label: '기술보증기금', external: true},
 ]
 
-type Audience = 'corp' | 'org'
+type UserType = 'corp' | 'org'
 
-const AUDIENCES = ['corp', 'org'] satisfies readonly Audience[]
+const USER_TYPES = ['corp', 'org'] satisfies readonly UserType[]
 
-const isAudience = (value: string | null): value is Audience => value === 'corp' || value === 'org'
+const isUserType = (value: string | null): value is UserType => value === 'corp' || value === 'org'
 
 // 유틸바와 모바일 Sheet에서 공유하는 화면 유형 링크 세그먼티드.
 const MemberTypeToggle = () => {
     const searchParams = useSearchParams()
-    const audienceParam = searchParams.get('audience')
-    const audience = isAudience(audienceParam) ? audienceParam : 'corp'
+    const userTypeParam = searchParams.get('userType')
+    const userType = isUserType(userTypeParam) ? userTypeParam : 'corp'
 
-    const getHref = (nextAudience: Audience) => {
+    const getHref = (nextUserType: UserType) => {
         const nextParams = new URLSearchParams(searchParams.toString())
-        nextParams.set('audience', nextAudience)
+        nextParams.set('userType', nextUserType)
         return `?${nextParams.toString()}`
     }
 
     return (
         <SegmentedControl type="link" aria-label="화면 유형">
-            {AUDIENCES.map((value) => (
+            {USER_TYPES.map((value) => (
                 <SegmentedControlItem
                     key={value}
                     href={getHref(value)}
                     replace
                     scroll={false}
-                    aria-current={audience === value ? 'page' : undefined}
+                    aria-current={userType === value ? 'page' : undefined}
                 >
                     {value === 'corp' ? '기업' : '기관'}
                 </SegmentedControlItem>
@@ -78,10 +78,10 @@ const MemberTypeToggle = () => {
 
 const MemberTypeToggleFallback = () => (
     <SegmentedControl type="link" aria-label="화면 유형">
-        <SegmentedControlItem href="?audience=corp" aria-current="page">
+        <SegmentedControlItem href="?userType=corp" aria-current="page">
             기업
         </SegmentedControlItem>
-        <SegmentedControlItem href="?audience=org">기관</SegmentedControlItem>
+        <SegmentedControlItem href="?userType=org">기관</SegmentedControlItem>
     </SegmentedControl>
 )
 
