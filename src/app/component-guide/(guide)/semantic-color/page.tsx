@@ -28,9 +28,6 @@ const TEXT_TONE_SLOTS = new Set([
 ])
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
-    if (name === 'main-footer-control') return ['border-main-footer-control']
-    if (name === 'main-footer-placeholder') return ['text-main-footer-placeholder']
-    if (name === 'main-footer-focus') return ['ring-main-footer-focus']
     if (TEXT_TONE_SLOTS.has(name)) return [`text-${name}`]
     if (name === 'foreground' || name.endsWith('-foreground') || name.startsWith('foreground-')) return [`text-${name}`]
     if (name === 'border' || name.endsWith('-border') || BORDER_TONE_SLOTS.has(name)) return [`border-${name}`]
@@ -167,18 +164,6 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'segmented-solid-active-foreground': 'bg-segmented-solid-active-foreground',
     'pagination-active': 'bg-pagination-active',
     'pagination-active-foreground': 'bg-pagination-active-foreground',
-    'main-footer-background': 'bg-main-footer-background',
-    'main-footer-muted': 'bg-main-footer-muted',
-    'main-footer-border': 'bg-main-footer-border',
-    'main-footer-surface': 'bg-main-footer-surface',
-    'main-footer-foreground': 'bg-main-footer-foreground',
-    'main-footer-control': 'bg-main-footer-control',
-    'main-footer-placeholder': 'bg-main-footer-placeholder',
-    'main-footer-popover': 'bg-main-footer-popover',
-    'main-footer-popover-foreground': 'bg-main-footer-popover-foreground',
-    'main-footer-accent': 'bg-main-footer-accent',
-    'main-footer-accent-foreground': 'bg-main-footer-accent-foreground',
-    'main-footer-focus': 'bg-main-footer-focus',
 }
 
 // 맨 앞 '현재' 칸 — 실제 토큰을 현재 테마로 렌더. 다크 토글 시 실제로 바뀐다(파이프라인 검증).
@@ -321,7 +306,6 @@ const CUSTOM_GROUPS: Group[] = [
     },
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
     {name: 'main-accent / main-accent-bright', match: (n) => n.startsWith('main-accent')},
-    {name: 'main-footer', match: (n) => n.startsWith('main-footer-')},
     {name: 'pagination', match: (n) => n.startsWith('pagination-')},
     {name: '기타', match: () => true}, // 안전망 — 위에서 안 잡힌 커스텀 슬롯이 있으면 여기로.
 ]
@@ -505,13 +489,6 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             (mint·mint-bright)를 참조하며 모든 테마에서 같은 값입니다.
         </>
     ),
-    'main-footer': (
-        <>
-            메인페이지 푸터(MainFooter)의 배경·텍스트·구분선·Select 표면에 사용합니다. 시안의 푸터는 테마와 무관하게
-            고정된 다크 표면이라 세 테마 값이 모두 같으며, 부분적인 테마 전환 없이 푸터 문맥의 색상을 독립적으로
-            관리합니다.
-        </>
-    ),
     pagination: (
         <>
             페이지네이션(Pagination)의 현재 페이지 강조 면(navy)과 그 위 텍스트에 사용합니다. 시안대로 세 테마에서 같은
@@ -628,10 +605,11 @@ const SemanticColorGuidePage = () => (
                             <div className="flex flex-col gap-2">
                                 <strong className="text-foreground">부분 테마 덮어쓰기 대신 역할 토큰 확장</strong>
                                 <p className="text-foreground-subtle">
-                                    mainpage 안의 밝은 푸터처럼 별도 표면이 필요하면{' '}
-                                    <code className="font-mono">.light</code>를 부분 적용하지 않고{' '}
-                                    <code className="font-mono">main-footer-*</code>처럼 문맥이 분명한 시맨틱 토큰을
-                                    사용합니다.
+                                    특정 영역만 항상 다른 표면 색이 필요하면 <code className="font-mono">.light</code>·
+                                    <code className="font-mono">.dark</code>를 부분 적용하지 않고{' '}
+                                    <code className="font-mono">sidebar-*</code>·
+                                    <code className="font-mono">chart-*</code>처럼 독립 색맥락을 갖는 역할 토큰을 새로
+                                    정의해 사용합니다.
                                 </p>
                             </div>
                         </div>
