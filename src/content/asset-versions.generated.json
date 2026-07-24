@@ -1,35 +1,35 @@
 {
-    "version": "v0.1.5",
+    "version": "v0.1.6",
     "assets": [
         {
             "name": "src/components/ui",
             "version": "v0.1.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/theme",
             "version": "v0.1.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/composite",
             "version": "v0.1.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/custom",
             "version": "v0.1.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/theme-provider.tsx",
             "version": "v0.1.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/constants/theme.ts",
             "version": "v0.1.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/lib/utils.ts",
@@ -44,17 +44,17 @@
         {
             "name": "tokens.json",
             "version": "v0.1.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "scripts/build-tokens.mjs",
             "version": "v0.1.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/app/globals.css",
             "version": "v0.1.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "postcss.config.mjs",
@@ -79,7 +79,7 @@
         {
             "name": "package.json",
             "version": "v0.1.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "yarn.lock",
@@ -99,7 +99,7 @@
         {
             "name": "public",
             "version": "v0.1.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/app/fonts",
