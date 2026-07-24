@@ -23,8 +23,10 @@ const HeroStatsRoller = ({stats}: {stats: HeroStat[]}) => {
         setIsRolling(false)
     }
 
+    // 우측 지표. md(768)부터 우반부(4열, 5번째 컬럼 시작), xl(1280)부터 5열(8번째 시작),
+    // 2xl(1536)부터 4열(9번째 시작)로 좁혀 초광폭에서 카피와 균형을 맞춘다.
     return (
-        <div className="hero-stats-viewport col-span-4 md:col-span-3 xl:col-span-4 xl:col-start-9">
+        <div className="hero-stats-viewport col-span-4 min-w-0 md:col-start-5 xl:col-span-5 xl:col-start-8 2xl:col-span-4 2xl:col-start-9">
             <ul
                 data-rolling={isRolling}
                 onTransitionEnd={(event) => {
@@ -43,7 +45,7 @@ const HeroStatsRoller = ({stats}: {stats: HeroStat[]}) => {
                             aria-hidden={isClone || undefined}
                             className="hero-stat-row flex flex-col justify-start gap-0 md:items-end md:text-right"
                         >
-                            <p className="hero-stat-title typo-title-xl-medium text-foreground flex items-center gap-1">
+                            <p className="hero-stat-title typo-title-xl-medium text-foreground flex h-auto min-h-[var(--raw-font-size-h1)] items-center gap-1 break-keep md:h-[var(--raw-font-size-h1)] md:whitespace-nowrap">
                                 <strong data-active={isActive} className="hero-stat-value">
                                     {isActive ? (
                                         <AnimatedCounter

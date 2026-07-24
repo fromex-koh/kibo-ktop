@@ -158,8 +158,10 @@ const HeaderContent = ({
 
     return (
         <div className="flex flex-col">
-            <div className="hidden justify-end md:flex">
-                <div className={cn('flex items-center gap-4 py-2', !isMain && 'px-4')}>
+            {/* main 변형은 주 메뉴가 한 줄에 들어가는 lg(1024)부터 PC 헤더로 전환하고, xl(1280)부터 항목 간격을
+                넓힌다. lg 미만에서는 유틸바·주 메뉴를 숨겨 로고+햄버거만 남긴다(링크는 전체 메뉴 Sheet에 유지). */}
+            <div className={cn('hidden justify-end', isMain ? 'lg:flex' : 'md:flex')}>
+                <div className={cn('flex items-center py-2', isMain ? 'gap-2 xl:gap-4' : 'gap-4 px-4')}>
                     <MemberTypeNavigation />
                     {UTILITY_LINKS.map((link) => (
                         <UtilityLink key={link.label} {...link} />
@@ -167,11 +169,15 @@ const HeaderContent = ({
                 </div>
             </div>
 
-            <div className={cn('flex items-center py-3', isMain ? 'gap-10' : 'gap-6 px-4')}>
+            <div className={cn('flex items-center py-3', isMain ? 'gap-6 xl:gap-10' : 'gap-6 px-4')}>
                 <Logo variant={variant} />
 
-                <NavigationMenu aria-label={navLabel} viewport={false} className="hidden md:flex">
-                    <NavigationMenuList className={cn(isMain && 'gap-10')}>
+                <NavigationMenu
+                    aria-label={navLabel}
+                    viewport={false}
+                    className={cn('hidden', isMain ? 'lg:flex' : 'md:flex')}
+                >
+                    <NavigationMenuList className={cn(isMain && 'gap-6 xl:gap-10')}>
                         {navLinks.map((link) => (
                             <NavigationMenuItem key={link.label}>
                                 <NavigationMenuLink

@@ -340,6 +340,12 @@ shadcn 이 함께 내려주는 `src/lib/utils.ts`(cn)·`src/hooks/use-mobile.ts`
 
 - `ui/**` 셸과 `theme/**` variants 안에서만 `text-*`/`font-*` 유틸 허용 — `typo-*` 단독 규칙([PB-07/08])의
   예외(shadcn 원형 유지·theme 스타일은 원형에서 파생). **일반 화면(페이지/도메인 컴포넌트)** 에서는 `typo-*` 를 쓴다.
+- **메인페이지 예외(한시적)** — `src/app/component-guide/main-page/` 의 풀스크린 목업(`hero-section`·`tech-eval-section`
+  의 제목 등)에 한해, 해상도별 제목 크기 축소를 위한 반응형 `text-*`/`font-*`(예: `text-4xl md:text-5xl font-bold`)를
+  허용한다. `typo-*` 는 생성기가 찍는 plain 클래스라 `md:` 같은 반응형 variant 를 못 받고(타이포 가이드가
+  `typo-${name}` 을 동적 조합해 `@utility` 를 못 씀), 프로젝트 반응형 타이포 방침(토큰 `typography.size.{mobile,pc}`
+  분기)이 아직 미정이기 때문이다. 방침이 정해지면 이 예외는 걷어내고 typo 토큰으로 승격/재검토한다. 사용처에는
+  근거 주석을 남긴다.
 
 ---
 

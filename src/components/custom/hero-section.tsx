@@ -28,7 +28,7 @@ const HeroSection = () => (
         tabIndex={-1}
         data-stack-page
         aria-labelledby="hero-title"
-        className="focus-visible:after:border-ring stack-page relative min-h-dvh outline-none focus-visible:after:pointer-events-none focus-visible:after:absolute focus-visible:after:inset-0 focus-visible:after:border-2 md:h-dvh md:min-h-0 md:overflow-hidden"
+        className="focus-visible:after:border-ring stack-page relative min-h-dvh overflow-x-clip outline-none focus-visible:after:pointer-events-none focus-visible:after:absolute focus-visible:after:inset-0 focus-visible:after:border-2 md:h-dvh md:min-h-0 md:overflow-hidden"
     >
         {/* 배경 비주얼 — 장식 이미지라 접근성 트리에서 제외한다. [KWCAG 5.1.1] */}
         <HeroBackground slides={HERO_BACKGROUNDS} />
@@ -38,16 +38,27 @@ const HeroSection = () => (
         <div aria-hidden="true" className="absolute inset-0 bg-black/45" />
         <div aria-hidden="true" className="to-background/75 absolute inset-0 bg-linear-to-b from-transparent" />
 
-        {/* 모바일 상하 패딩: 위는 고정 헤더, 아래는 SCROLL 인디케이터 자리 확보 */}
-        <div className="relative flex min-h-dvh items-center pt-44 pb-32 motion-safe:[transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] motion-safe:[opacity:calc(1-var(--hero-scroll-progress,0))] md:h-full md:min-h-0 md:py-0">
+        {/* 모바일 상하 패딩: 위는 고정 헤더(약 60px) 아래 여유, 아래는 SCROLL 인디케이터(h-28) 자리 확보 */}
+        <div className="relative flex min-h-dvh items-center pt-24 pb-32 motion-safe:[transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] motion-safe:[opacity:calc(1-var(--hero-scroll-progress,0))] md:h-full md:min-h-0 md:py-0">
             <div className="grid-layout w-full items-start gap-y-16">
-                <div className="col-span-4 flex flex-col gap-6 md:col-span-5 xl:col-span-7">
-                    <h2 id="hero-title" className="typo-display-xl-bold text-foreground break-keep">
+                {/* 좌측 카피. xl(1280)부터 6열, 2xl(1536)부터 7열로 넓힌다. min-w-0로 그리드 셀이 콘텐츠에 밀려
+                    넘치지 않게 한다. */}
+                <div className="col-span-4 flex min-w-0 flex-col gap-6 xl:col-span-6 2xl:col-span-7">
+                    {/* 반응형 크기: 모바일 text-4xl(36px) → md text-5xl(48px). typo-* 는 md: 변형을 못 받아
+                        (plain 클래스) 대신 Tailwind 기본 text-* 를 반응형으로 쓴다. leading-normal 은 원래
+                        typo-display-xl-bold 의 행간(--raw-line-height-normal=1.5)을 그대로 맞추기 위함.
+                        프로젝트 반응형 타이포 방침이 정해지면 typo 토큰으로 승격. */}
+                    <h2
+                        id="hero-title"
+                        className="text-foreground text-4xl leading-normal font-bold break-keep md:text-5xl"
+                    >
                         기업에 맞는 기술평가로
                         <br />
                         금융과 성장의 기회를 연결합니다
                     </h2>
-                    <p className="typo-title-l-bold text-foreground-subtle">
+                    {/* 반응형 크기: 모바일 text-base(16px) → md text-xl(20px). PC(md+)는 원래 typo-title-l-bold
+                        과 동일(20px·행간 1.5). 메인페이지 예외(SHADCN.md 타이포 유틸 예외). */}
+                    <p className="text-foreground-subtle text-base leading-normal font-bold md:text-xl">
                         기술사업평가, 혁신성장지수, 투자모형, K-BIGx 보고서, 탄소중립 평가 등{' '}
                         <br className="max-md:hidden" />
                         다양한 기술평가 서비스를 통합 제공하는 플랫폼

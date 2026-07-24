@@ -89,6 +89,37 @@ const SERVICES: Service[] = [
     },
 ]
 
+// 서비스 비주얼(이미지 + 설명 + 태그). md 이상에서는 우측 컬럼, md 미만에서는 활성 목차의 CTA 버튼 바로 아래에
+// 같은 마크업을 재사용한다. 두 배치 중 화면 폭에 따라 한쪽만 표시(display:none)되므로 접근성 트리에도 하나만 남는다.
+const ServiceVisual = ({service}: {service: Service}) => (
+    <>
+        <Image
+            src={service.image}
+            alt=""
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="h-auto w-full rounded-2xl"
+        />
+
+        <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-2">
+                <h3 className="typo-title-m-bold text-foreground">{service.descriptionTitle}</h3>
+                <p className="typo-body-xl-regular text-foreground">{service.description}</p>
+            </div>
+
+            <ul className="flex flex-wrap gap-2">
+                {service.tags.map((tag) => (
+                    <li
+                        key={tag}
+                        className="typo-body-l-medium border-foreground-subtle text-foreground rounded-sm border px-3 py-2"
+                    >
+                        {tag}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    </>
+)
+
 // 두 번째 화면. 세로 레일의 진행 바가 완료되면 다음 서비스로 전환하며 마지막 이후 처음부터 반복한다.
 // 일시정지 컨트롤은 시안 확정으로 제거됨(KWCAG 6.2.2 자동 전환 정지 수단은 검수 단계에서 재논의).
 const TechEvalSection = () => {
@@ -129,7 +160,7 @@ const TechEvalSection = () => {
             <div className="grid-layout w-full items-start gap-y-16">
                 {/* 좌: 세로 레일 + 서비스 목차. 각 서비스는 레일 전체 높이를 진행 바로 쓰고,
                     채움이 끝나면 다음 서비스로 전환되며 채움은 처음부터 다시 시작한다(key 리셋). */}
-                <ul className="relative col-span-4 flex flex-col gap-6 pl-11 md:col-span-4 xl:col-span-5">
+                <ul className="relative col-span-4 flex min-w-0 flex-col gap-6 pl-11 md:col-span-4 xl:col-span-5">
                     <div
                         aria-hidden="true"
                         className="bg-foreground-subtle absolute inset-y-0 left-0 w-1 overflow-hidden"
@@ -155,11 +186,15 @@ const TechEvalSection = () => {
                                     onMouseLeave={() => setIsPaused(false)}
                                     onFocus={() => setIsPaused(true)}
                                     onBlur={() => setIsPaused(false)}
+                                    // 반응형 크기: 모바일 text-lg(18px) → md text-xl(20px). PC(md+)는 원래
+                                    // typo-title-l 과 동일(20px·행간 1.5). 메인페이지 예외(SHADCN.md 타이포 유틸 예외).
                                     className={cn(
                                         'cursor-pointer text-left transition-colors',
+                                        // leading-normal 은 text-lg 뒤에 둔다 — 앞에 두면 twMerge 가 text-*(자체 행간
+                                        // 포함)와 충돌로 제거해 PC 행간이 1.5→1.4 로 바뀐다.
                                         isActive
-                                            ? 'typo-title-l-bold text-main-accent'
-                                            : 'typo-title-l-medium text-muted-foreground hover:text-foreground-subtle',
+                                            ? 'text-main-accent text-lg leading-normal font-bold md:text-xl'
+                                            : 'text-muted-foreground hover:text-foreground-subtle text-lg leading-normal font-medium md:text-xl',
                                     )}
                                 >
                                     {service.title}
@@ -174,16 +209,24 @@ const TechEvalSection = () => {
                                             index < SERVICES.length - 1 && 'mb-24',
                                         )}
                                     >
+                                        {/* 반응형 크기: 모바일 text-4xl(36px) → md text-5xl(48px). typo-* 는
+                                            md: 변형을 못 받아(plain 클래스) Tailwind 기본 text-* 를 반응형으로 쓴다.
+                                            leading-normal 은 원래 typo-display-xl-bold 행간(1.5) 유지. 메인페이지
+                                            예외(SHADCN.md 타이포 유틸 예외 참고). max-w-full 로 컬럼 내 줄바꿈. */}
                                         <h2
                                             id="tech-eval-title"
-                                            className="typo-display-xl-bold text-foreground break-keep"
+                                            className="text-foreground max-w-full text-4xl leading-normal font-bold break-keep md:text-5xl"
                                         >
                                             {service.headline}
                                         </h2>
+                                        {/* PROJECT-STYLE: 프로젝트 버튼 표준은 interactive:hover(=@media hover:hover)로
+                                            터치 기기에서 hover 가 고정되지 않게 한다(not-disabled:hover 는 탭 후 밝은 상태가
+                                            남음). 색은 스킨 반영 --ds-gray-*(mainpage 다크에서 hover #40454c·active #272a2e —
+                                            은은한 다크)라 라이트/다크 다른 버튼엔 영향 없다. */}
                                         <Button
                                             size="xl"
                                             asChild
-                                            className="border-muted bg-muted text-foreground text-lg font-bold not-disabled:hover:bg-gray-200 not-disabled:active:bg-gray-50"
+                                            className="border-muted bg-muted text-foreground interactive:hover:bg-gray-200 interactive:active:bg-gray-50 text-lg font-bold"
                                         >
                                             <Link
                                                 href="#"
@@ -196,6 +239,14 @@ const TechEvalSection = () => {
                                                 <ArrowUpRight aria-hidden="true" />
                                             </Link>
                                         </Button>
+
+                                        {/* 모바일(md 미만): 이미지+설명을 버튼 바로 아래에 둔다. md 이상은 우측 컬럼이 담당. */}
+                                        <div
+                                            key={`visual-mobile-${entrySequence}-${activeIndex}`}
+                                            className="tech-service-content-enter flex w-full flex-col gap-5 md:hidden"
+                                        >
+                                            <ServiceVisual service={service} />
+                                        </div>
                                     </Reveal>
                                 )}
                             </li>
@@ -203,35 +254,13 @@ const TechEvalSection = () => {
                     })}
                 </ul>
 
-                <Reveal className="col-span-4 flex flex-col gap-5 motion-safe:delay-150 md:col-span-4 xl:col-span-6 xl:col-start-7">
-                    <div key={`visual-${entrySequence}-${activeIndex}`} className="tech-service-content-enter">
-                        <Image
-                            src={activeService.image}
-                            alt=""
-                            sizes="(max-width: 768px) 100vw, 50vw"
-                            className="h-auto w-full rounded-2xl"
-                        />
-                    </div>
-
+                {/* 우측 비주얼은 md 이상에서만 표시(md 미만은 활성 목차의 버튼 아래 배치가 담당). */}
+                <Reveal className="hidden flex-col gap-5 motion-safe:delay-150 md:col-span-4 md:flex xl:col-span-6 xl:col-start-7">
                     <div
-                        key={`description-${entrySequence}-${activeIndex}`}
-                        className="tech-service-content-enter flex flex-col gap-8"
+                        key={`visual-${entrySequence}-${activeIndex}`}
+                        className="tech-service-content-enter flex flex-col gap-5"
                     >
-                        <div className="flex flex-col gap-2">
-                            <h3 className="typo-title-m-bold text-foreground">{activeService.descriptionTitle}</h3>
-                            <p className="typo-body-xl-regular text-foreground">{activeService.description}</p>
-                        </div>
-
-                        <ul className="flex flex-wrap gap-2">
-                            {activeService.tags.map((tag) => (
-                                <li
-                                    key={tag}
-                                    className="typo-body-l-medium border-foreground-subtle text-foreground rounded-sm border px-3 py-2"
-                                >
-                                    {tag}
-                                </li>
-                            ))}
-                        </ul>
+                        <ServiceVisual service={activeService} />
                     </div>
                 </Reveal>
             </div>
