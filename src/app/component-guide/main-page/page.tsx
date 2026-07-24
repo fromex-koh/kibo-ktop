@@ -22,6 +22,14 @@ const TECH_EVAL_PAGE_CLASS = [
     'md:h-dvh',
     'md:overflow-hidden',
     'md:[&_.stack-page]:!min-h-0',
+    // 2섹션 아래로 이동할 때는 고정 스택을 정상 문서 흐름으로 풀어 Footer가 아래에서 이어지게 한다.
+    'md:data-[stack-end-released]:!h-auto',
+    'md:data-[stack-end-released]:!overflow-visible',
+    'md:[&_[data-stack-footer]]:hidden',
+    'md:data-[stack-end-released]:[&_[data-stack-footer]]:!flex',
+    'md:data-[stack-end-released]:[&_#tech-eval]:!relative',
+    'md:data-[stack-end-released]:[&_#tech-eval]:!inset-auto',
+    'md:data-[stack-end-released]:[&_#tech-eval]:!transform-none',
     '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page]:fixed',
     '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page]:inset-0',
     '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page]:!h-dvh',
@@ -83,7 +91,11 @@ const TECH_EVAL_PAGE_CLASS = [
 // 색상은 메인페이지 전용 스킨(tokens.css의 .mainpage 블록)을 따른다 — light/dark와 같은 방식으로
 // theme-provider가 이 라우트에서 html 클래스에 'mainpage'를 강제한다(테마 토글과 무관하게 유지).
 const MainPage = () => (
-    <StackPager mediaQuery="(min-width: 768px)" className={`bg-background relative min-h-dvh ${TECH_EVAL_PAGE_CLASS}`}>
+    <StackPager
+        mediaQuery="(min-width: 768px)"
+        releaseScrollAfterLastPage
+        className={`bg-background relative min-h-dvh ${TECH_EVAL_PAGE_CLASS}`}
+    >
         <SkipNav links={SKIP_LINKS} />
         <Header variant="main" />
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다.
@@ -98,12 +110,12 @@ const MainPage = () => (
                 }
             />
         </main>
-        {/* 마지막 스택 페이지 — 데스크톱에서는 뷰포트 하단에 맞추고, 모바일에서는 자연 흐름에 둔다 */}
+        {/* Footer는 2섹션 아래의 일반 문서 흐름으로 열리며 스택 전환 대상에는 포함하지 않는다. */}
         <div
             id="site-info"
             tabIndex={-1}
-            data-stack-page
-            className="stack-page bg-background relative md:flex md:h-dvh md:flex-col md:justify-end"
+            data-stack-footer
+            className="bg-background relative min-h-dvh flex-col justify-end max-md:flex"
         >
             <Footer showMarquee={false} />
         </div>
