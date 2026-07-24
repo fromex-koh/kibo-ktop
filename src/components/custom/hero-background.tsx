@@ -70,7 +70,7 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
         <div
             ref={rootRef}
             aria-hidden="true"
-            className="absolute inset-0 motion-safe:[transform:scale(calc(1+var(--hero-scroll-progress,0)*0.035))]"
+            className="absolute -inset-px [backface-visibility:hidden] motion-safe:[transform:scale(calc(1+var(--hero-scroll-progress,0)*0.035))]"
         >
             {slides.map((slide, index) => {
                 const isActive = activeIndex === index
@@ -80,9 +80,11 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
                     <div
                         key={`${slide.position}-${index}`}
                         className={cn(
-                            'absolute inset-0 transition-opacity duration-500 [transition-timing-function:ease] motion-reduce:transition-none',
+                            'after:to-background/75 main-hero-background-slide absolute inset-0 transition-opacity duration-500 [transition-timing-function:ease] after:absolute after:inset-0 after:z-2 after:bg-linear-to-b after:from-transparent motion-reduce:transition-none',
+                            isActive && 'main-hero-background-active',
                             isActive ? 'z-1 opacity-100' : 'z-0 opacity-0',
                         )}
+                        style={isPrevious ? {transform: 'scale(1)'} : undefined}
                     >
                         <Image
                             src={slide.src}
@@ -91,11 +93,8 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
                             sizes="100vw"
                             placeholder="blur"
                             loading={index === 0 ? 'eager' : 'lazy'}
-                            className={cn(
-                                'main-hero-background-slide object-cover',
-                                isActive && 'main-hero-background-active',
-                            )}
-                            style={{objectPosition: slide.position, ...(isPrevious ? {transform: 'scale(1)'} : {})}}
+                            className="object-cover brightness-[0.55]"
+                            style={{objectPosition: slide.position}}
                         />
                     </div>
                 )

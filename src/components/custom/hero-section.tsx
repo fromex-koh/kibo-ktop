@@ -32,11 +32,8 @@ const HeroSection = () => (
     >
         {/* 배경 비주얼 — 장식 이미지라 접근성 트리에서 제외한다. [KWCAG 5.1.1] */}
         <HeroBackground slides={HERO_BACKGROUNDS} />
-        {/* 시안의 딤 처리: 블랙 스크림 + 하단으로 갈수록 짙어지는 그라디언트.
-            시안 원본(60%+90%)은 피그마의 이미지 노출 보정을 전제한 값이라 실사진에는 과해,
-            같은 인상이 나오는 45%+75%로 조정했다. */}
-        <div aria-hidden="true" className="absolute inset-0 bg-black/45" />
-        <div aria-hidden="true" className="to-background/75 absolute inset-0 bg-linear-to-b from-transparent" />
+        {/* 45% 딤은 배경 이미지 자체의 brightness로 합성하고, 하단 75% 그라디언트만
+            HeroBackground 레이어에 유지해 스냅 중 이미지와 딤의 합성 시점이 어긋나지 않게 한다. */}
 
         {/* 모바일 상하 패딩: 위는 고정 헤더(약 60px) 아래 여유, 아래는 SCROLL 인디케이터(h-28) 자리 확보 */}
         <div className="relative flex min-h-dvh items-center pt-24 pb-32 motion-safe:[transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] motion-safe:[opacity:calc(1-var(--hero-scroll-progress,0))] md:h-full md:min-h-0 md:py-0">
