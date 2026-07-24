@@ -154,12 +154,12 @@
     flex-direction: column;
     line-height: 1;
     transform: translateY(0);
+    /* 마운트 즉시 시작 — JS(rAF) 게이트를 거치면 창이 가려질 때 0에 멈춘 채 시작하지 못한다.
+       타이밍 값(--counter-duration/--counter-delay)은 animated-counter.tsx 가 단일 소스. */
+    animation: animated-counter-roll var(--counter-duration, 3s) ease var(--counter-delay) both;
 }
 .animated-counter-track > span {
     height: 1em;
-}
-.animated-counter[data-animated='true'] .animated-counter-track {
-    animation: animated-counter-roll 3s ease var(--counter-delay) both;
 }
 
 /* 히어로 통계 롤러 — 5개 행을 유지하고 여섯 번째 복제 행까지 한 칸씩 위로 이동한다. */
@@ -383,8 +383,7 @@
         transform: scale(1);
         animation: none;
     }
-    .animated-counter-track,
-    .animated-counter[data-animated='true'] .animated-counter-track {
+    .animated-counter-track {
         transform: translateY(var(--counter-end));
         animation: none;
     }
