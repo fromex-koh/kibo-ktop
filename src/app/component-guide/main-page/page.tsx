@@ -16,73 +16,22 @@ const SKIP_LINKS: readonly SkipLinkItem[] = [
     {href: '#site-info', label: '사이트 정보 바로가기'},
 ]
 
-// 낮은 데스크톱 높이에서는 기존 타이포 크기와 이미지 비율을 유지하고 2섹션의 세로 여백만 압축한다.
-// 페이지 스코프에 한정해 공용 TechEvalSection 컴포넌트와 일반 PC 레이아웃에는 영향을 주지 않는다.
-const TECH_EVAL_PAGE_CLASS = [
-    'md:h-dvh',
-    'md:overflow-hidden',
-    'md:[&_.stack-page]:!min-h-0',
-    // 2섹션 아래로 이동할 때는 고정 스택을 정상 문서 흐름으로 풀어 Footer가 아래에서 이어지게 한다.
-    'md:data-[stack-end-released]:!h-auto',
-    'md:data-[stack-end-released]:!overflow-visible',
-    'md:[&_[data-stack-footer]]:hidden',
-    'md:data-[stack-end-released]:[&_[data-stack-footer]]:!flex',
-    'md:data-[stack-end-released]:[&_#tech-eval]:!relative',
-    'md:data-[stack-end-released]:[&_#tech-eval]:!inset-auto',
-    'md:data-[stack-end-released]:[&_#tech-eval]:!transform-none',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page]:fixed',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page]:inset-0',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page]:!h-dvh',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page]:w-full',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page]:overflow-hidden',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page]:transition-transform',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page]:duration-600',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page[data-stack-state=active]]:z-2',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page[data-stack-state=active]]:translate-y-0',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page[data-stack-state=active]]:pointer-events-auto',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page[data-stack-state=previous]]:z-1',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page[data-stack-state=previous]]:-translate-y-full',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page[data-stack-state=previous]]:pointer-events-none',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page[data-stack-state=next]]:z-1',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page[data-stack-state=next]]:translate-y-full',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page[data-stack-state=next]]:pointer-events-none',
-    '[@media_(min-width:48rem)_and_(max-height:44.999rem)]:[&_.stack-page:not([data-stack-state=active])_.tech-service-progress-fill]:[animation-play-state:paused]',
-    // PC 기준(1920px) 48px을 상한으로 유지하되 좁은 PC에서는 제목만 뷰포트 폭에 맞춰 줄인다.
-    'md:[&_#tech-eval_h2]:text-[clamp(1.75rem,2.5vw,3rem)]',
-    'md:[&_#tech-eval_h2_span]:whitespace-nowrap',
-    // xl 그리드의 비어 있는 중앙 컬럼만큼 제목 영역을 넓혀 긴 문구도 4줄을 넘지 않게 한다.
-    'xl:[&_#tech-eval_h2]:!max-w-none',
-    'xl:[&_#tech-eval_h2]:w-[calc(100%+5rem)]',
+// 메인페이지에서 별도로 요청된 컨테이너 정렬과 2섹션 이후 자연 스크롤만 페이지 스코프로 유지한다.
+// 2섹션의 타이포·이미지·간격은 TechEvalSection의 원래 PC 디자인 값을 그대로 사용한다.
+const MAIN_PAGE_CLASS = [
+    // 1섹션에서는 투명하고 2섹션 진입 시 스냅 시간에 맞춰 페이지 배경색으로 자연스럽게 전환한다.
+    '[&_header]:bg-transparent',
+    '[&_header]:transition-colors',
+    '[&_header]:duration-600',
+    'data-[active-page=1]:[&_header]:bg-background',
+    // Hero는 제자리에 두고 2섹션이 위로 덮도록 해 스무스 전환 중 빈 배경이 드러나지 않게 한다.
+    '[@media_(min-width:48rem)_and_(min-height:45rem)]:[&_.stack-page]:!z-1',
+    '[@media_(min-width:48rem)_and_(min-height:45rem)]:[&_#hero[data-stack-state=previous]]:!transform-none',
     // 1·2섹션 모두 Header의 content-layout과 같은 좌우 여백·최대 폭을 사용한다.
     'md:[&_#hero_.grid-layout]:!w-[min(calc(100%-2*var(--ds-grid-margin)),var(--container-content))]',
     'md:[&_#tech-eval_.grid-layout]:!w-[min(calc(100%-2*var(--ds-grid-margin)),var(--container-content))]',
-    // 제목(2.5vw)과 같은 비율로 우측 콘텐츠도 축소하며 1920px 시안의 588px을 상한으로 유지한다.
-    'md:[&_#tech-eval_.grid-layout>div]:max-w-[clamp(24rem,30.625vw,36.75rem)]',
-    'md:[&_#tech-eval_.grid-layout>div]:justify-self-end',
-    'md:[&_#tech-eval]:!pb-0',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval]:!pt-[clamp(9.5rem,21.75dvh,12.5rem)]',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.grid-layout>div]:!w-full',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.grid-layout>div]:!max-w-[clamp(24rem,75dvh,30.5rem)]',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.grid-layout>div]:justify-self-end',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.tech-service-content-enter>img]:max-w-[clamp(24rem,min(30.625vw,57dvh),30.5rem)]',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.tech-service-content-enter>img]:ml-auto',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.tech-service-content-enter>div]:max-w-[clamp(24rem,min(30.625vw,57dvh),30.5rem)]',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.tech-service-content-enter>div]:ml-auto',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.tech-service-content-enter_p]:text-sm',
-    '[@media_(min-width:48rem)_and_(max-height:50rem)]:[&_#tech-eval_.tech-service-content-enter>img]:!max-w-[clamp(24rem,min(30.625vw,53dvh),30.5rem)]',
-    '[@media_(min-width:48rem)_and_(max-height:50rem)]:[&_#tech-eval_.tech-service-content-enter>div]:!max-w-[clamp(24rem,min(30.625vw,53dvh),30.5rem)]',
-    '[@media_(min-width:48rem)_and_(max-height:50rem)]:[&_#tech-eval_.tech-service-content-enter>div]:!gap-2',
-    '[@media_(min-width:48rem)_and_(max-height:50rem)]:[&_#tech-eval_.tech-service-content-enter_p]:!text-xs',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.grid-layout]:!gap-y-8',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.grid-layout>ul]:!gap-4',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.grid-layout>ul>li>div[data-visible]]:!mt-2',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.grid-layout>ul>li>div[data-visible]]:!mb-8',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.grid-layout>ul>li>div[data-visible]]:!gap-3',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.tech-service-content-enter]:!gap-3',
-    '[@media_(min-width:48rem)_and_(max-height:60rem)]:[&_#tech-eval_.tech-service-content-enter>div]:!gap-4',
-    'md:[&_#tech-eval_.tech-eval-marquee]:!mt-auto',
-    'md:[&_#tech-eval_.tech-eval-marquee>div]:!py-0',
-    'md:[&_#tech-eval_.tech-eval-marquee_span]:!text-[clamp(2.75rem,min(7.3vw,calc(26.667dvh-9.25rem)),8.75rem)]',
+    // 마키는 콘텐츠 다음의 일반 블록으로 두고, 원래 PC 크기가 뷰포트를 넘으면 2섹션 안에서 이어서 본다.
+    'md:[&_#tech-eval]:!overflow-y-auto',
 ].join(' ')
 
 // 메인페이지 목업 — 풀스크린 스택 전환 구조.
@@ -91,11 +40,7 @@ const TECH_EVAL_PAGE_CLASS = [
 // 색상은 메인페이지 전용 스킨(tokens.css의 .mainpage 블록)을 따른다 — light/dark와 같은 방식으로
 // theme-provider가 이 라우트에서 html 클래스에 'mainpage'를 강제한다(테마 토글과 무관하게 유지).
 const MainPage = () => (
-    <StackPager
-        mediaQuery="(min-width: 768px)"
-        releaseScrollAfterLastPage
-        className={`bg-background relative min-h-dvh ${TECH_EVAL_PAGE_CLASS}`}
-    >
+    <StackPager className={`bg-background relative min-h-dvh ${MAIN_PAGE_CLASS}`}>
         <SkipNav links={SKIP_LINKS} />
         <Header variant="main" />
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다.
@@ -104,21 +49,17 @@ const MainPage = () => (
             <HeroSection />
             <TechEvalSection
                 bottomContent={
-                    <div className="tech-eval-marquee mt-auto w-full">
-                        <MarqueeBand />
-                    </div>
+                    <>
+                        <div className="tech-eval-marquee mt-auto w-full">
+                            <MarqueeBand />
+                        </div>
+                        <div id="site-info" tabIndex={-1} className="bg-background relative w-full">
+                            <Footer showMarquee={false} />
+                        </div>
+                    </>
                 }
             />
         </main>
-        {/* Footer는 2섹션 아래의 일반 문서 흐름으로 열리며 스택 전환 대상에는 포함하지 않는다. */}
-        <div
-            id="site-info"
-            tabIndex={-1}
-            data-stack-footer
-            className="bg-background relative min-h-dvh flex-col justify-end max-md:flex"
-        >
-            <Footer showMarquee={false} />
-        </div>
     </StackPager>
 )
 

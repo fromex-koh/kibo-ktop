@@ -50,12 +50,10 @@ const StackPager = ({
     children,
     className,
     mediaQuery = STACK_PAGER_QUERY,
-    releaseScrollAfterLastPage = false,
 }: {
     children: ReactNode
     className?: string
     mediaQuery?: string
-    releaseScrollAfterLastPage?: boolean
 }) => {
     const ref = useRef<HTMLDivElement>(null)
     const activePageRef = useRef(0)
@@ -72,11 +70,8 @@ const StackPager = ({
         const nextPage = Math.min(pageCount - 1, Math.max(0, activePageRef.current + direction))
         if (nextPage === activePageRef.current) return
 
-        const container = ref.current
-        if (container?.hasAttribute('data-stack-end-released')) {
-            container.removeAttribute('data-stack-end-released')
-            window.scrollTo(0, 0)
-        }
+        const nextPageElement = ref.current?.querySelectorAll<HTMLElement>('[data-stack-page]')[nextPage]
+        nextPageElement?.scrollTo({top: 0, left: 0, behavior: 'auto'})
 
         activePageRef.current = nextPage
         isTransitioningRef.current = true
@@ -101,10 +96,8 @@ const StackPager = ({
             const pageCount = container.querySelectorAll('[data-stack-page]').length
             const nextPage = Math.min(pageCount - 1, Math.max(0, page))
 
-            if (container.hasAttribute('data-stack-end-released')) {
-                container.removeAttribute('data-stack-end-released')
-                window.scrollTo(0, 0)
-            }
+            const nextPageElement = container.querySelectorAll<HTMLElement>('[data-stack-page]')[nextPage]
+            nextPageElement?.scrollTo({top: 0, left: 0, behavior: 'auto'})
 
             activePageRef.current = nextPage
             isTransitioningRef.current = false
@@ -141,18 +134,30 @@ const StackPager = ({
         const handleWheel = (event: WheelEvent) => {
             if (!desktopQuery.matches) return
 
-            const isEndReleased = container.hasAttribute('data-stack-end-released')
-            if (isEndReleased) {
-                if (event.deltaY > 0 || window.scrollY > 0) return
-                container.removeAttribute('data-stack-end-released')
-            }
-
-            // 1→2 전환 직후 같은 트랙패드 제스처의 관성 입력이 2→Footer 해제로 이어지지 않게
-            // 전환 잠금과 제스처 종료를 가장 먼저 확인한다.
+            // 1→2 전환 직후 같은 트랙패드 제스처의 관성 입력이 2섹션 내부 스크롤이나
+            // 후속 스크롤로 이어지지 않게 전환 잠금과 제스처 종료를 가장 먼저 확인한다.
             if (isTransitioningRef.current || !isGestureArmedRef.current) {
                 event.preventDefault()
                 isGestureArmedRef.current = false
                 armAfterGestureEnds()
+                return
+            }
+
+            const activePageElement = pages[activePageRef.current]
+            const activePageMaxScroll = activePageElement
+                ? activePageElement.scrollHeight - activePageElement.clientHeight
+                : 0
+            const canScrollActivePageDown =
+                event.deltaY > 0 &&
+                activePageElement !== undefined &&
+                activePageElement.scrollTop < activePageMaxScroll - 1
+            const canScrollActivePageUp =
+                event.deltaY < 0 && activePageElement !== undefined && activePageElement.scrollTop > 1
+
+            if (canScrollActivePageDown || canScrollActivePageUp) {
+                event.preventDefault()
+                activePageElement.scrollBy({top: event.deltaY, behavior: 'auto'})
+                accumulatedDeltaRef.current = 0
                 return
             }
 
@@ -163,13 +168,6 @@ const StackPager = ({
             }
 
             const direction = accumulatedDeltaRef.current > 0 ? 1 : -1
-            if (releaseScrollAfterLastPage && activePageRef.current === pages.length - 1 && direction === 1) {
-                container.setAttribute('data-stack-end-released', '')
-                accumulatedDeltaRef.current = 0
-                armAfterGestureEnds()
-                return
-            }
-
             event.preventDefault()
             movePage(direction, pages.length, reducedMotionQuery.matches)
             armAfterGestureEnds()
@@ -185,12 +183,6 @@ const StackPager = ({
 
             const targetId = link.getAttribute('href')?.slice(1)
             const target = targetId ? container.querySelector(`#${CSS.escape(targetId)}`) : null
-            const targetFooter = target?.closest('[data-stack-footer]')
-            if (releaseScrollAfterLastPage && targetFooter) {
-                goToPage(pages.length - 1)
-                container.setAttribute('data-stack-end-released', '')
-                return
-            }
             const targetPage = target?.closest('[data-stack-page]')
             if (!targetPage) return
 
@@ -202,10 +194,6 @@ const StackPager = ({
             if (!desktopQuery.matches || event.target !== container) return
             const direction = PAGE_DOWN_KEYS.has(event.key) ? 1 : PAGE_UP_KEYS.has(event.key) ? -1 : null
             if (direction === null) return
-            if (releaseScrollAfterLastPage && activePageRef.current === pages.length - 1 && direction === 1) {
-                container.setAttribute('data-stack-end-released', '')
-                return
-            }
             event.preventDefault()
             isGestureArmedRef.current = true
             movePage(direction, pages.length, reducedMotionQuery.matches)
@@ -217,7 +205,6 @@ const StackPager = ({
                 isTransitioningRef.current = false
                 isGestureArmedRef.current = true
                 setActivePage(0)
-                container.removeAttribute('data-stack-end-released')
             }
             syncPageElements(container, activePageRef.current, desktopQuery.matches)
         }
@@ -240,9 +227,8 @@ const StackPager = ({
                 page.removeAttribute('aria-hidden')
                 page.inert = false
             })
-            container.removeAttribute('data-stack-end-released')
         }
-    }, [movePage, goToPage, mediaQuery, releaseScrollAfterLastPage])
+    }, [movePage, goToPage, mediaQuery])
 
     return (
         <StackPagerActivePageContext.Provider value={activePage}>
