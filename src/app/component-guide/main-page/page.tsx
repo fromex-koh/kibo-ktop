@@ -45,7 +45,8 @@ const TECH_EVAL_PAGE_CLASS = [
     // xl 그리드의 비어 있는 중앙 컬럼만큼 제목 영역을 넓혀 긴 문구도 4줄을 넘지 않게 한다.
     'xl:[&_#tech-eval_h2]:!max-w-none',
     'xl:[&_#tech-eval_h2]:w-[calc(100%+5rem)]',
-    // Header의 content-layout과 같은 좌우 여백·최대 폭을 사용한다.
+    // 1·2섹션 모두 Header의 content-layout과 같은 좌우 여백·최대 폭을 사용한다.
+    'md:[&_#hero_.grid-layout]:!w-[min(calc(100%-2*var(--ds-grid-margin)),var(--container-content))]',
     'md:[&_#tech-eval_.grid-layout]:!w-[min(calc(100%-2*var(--ds-grid-margin)),var(--container-content))]',
     // 제목(2.5vw)과 같은 비율로 우측 콘텐츠도 축소하며 1920px 시안의 588px을 상한으로 유지한다.
     'md:[&_#tech-eval_.grid-layout>div]:max-w-[clamp(24rem,30.625vw,36.75rem)]',

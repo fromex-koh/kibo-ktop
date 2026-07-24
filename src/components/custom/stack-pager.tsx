@@ -14,6 +14,21 @@ export const useStackPagerActivePage = () => useContext(StackPagerActivePageCont
 
 const syncPageElements = (container: HTMLElement, activePage: number, isDesktop: boolean) => {
     const pages = Array.from(container.querySelectorAll<HTMLElement>('[data-stack-page]'))
+    const activePageElement = pages[activePage]
+    const focusedElement = container.ownerDocument.activeElement
+    const focusWillBeHidden =
+        isDesktop &&
+        focusedElement instanceof HTMLElement &&
+        pages.some((page, index) => index !== activePage && (page === focusedElement || page.contains(focusedElement)))
+
+    // 새 페이지가 이전 상태에서 inert 였다면 먼저 접근성 트리와 포커스 대상에 복귀시킨다.
+    // 그 다음 포커스를 옮겨야 이전 페이지에 aria-hidden 을 적용할 때 브라우저 경고가 발생하지 않는다.
+    if (isDesktop && activePageElement) {
+        activePageElement.removeAttribute('aria-hidden')
+        activePageElement.inert = false
+        if (focusWillBeHidden) activePageElement.focus({preventScroll: true})
+    }
+
     pages.forEach((page, index) => {
         const state = index < activePage ? 'previous' : index > activePage ? 'next' : 'active'
         page.dataset.stackState = state
