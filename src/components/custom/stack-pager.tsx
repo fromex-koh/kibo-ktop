@@ -31,7 +31,15 @@ const syncPageElements = (container: HTMLElement, activePage: number, isDesktop:
 // 화면 너비와 높이가 모두 충분하면 실제 문서 스크롤 대신 고정 레이어의 상태만 전환한다.
 // 한 제스처가 끝날 때까지 다음 입력을 받지 않아 트랙패드 관성이 여러 페이지를 통과시키지 않는다.
 // 모바일 또는 낮은 데스크톱 화면은 고정 레이어를 사용하지 않고 자연 스크롤을 유지한다. [KWCAG 6.1.1]
-const StackPager = ({children, className}: {children: ReactNode; className?: string}) => {
+const StackPager = ({
+    children,
+    className,
+    mediaQuery = STACK_PAGER_QUERY,
+}: {
+    children: ReactNode
+    className?: string
+    mediaQuery?: string
+}) => {
     const ref = useRef<HTMLDivElement>(null)
     const activePageRef = useRef(0)
     const isTransitioningRef = useRef(false)
@@ -62,32 +70,35 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
         )
     }, [])
 
-    const goToPage = useCallback((page: number) => {
-        const container = ref.current
-        if (!container) return
+    const goToPage = useCallback(
+        (page: number) => {
+            const container = ref.current
+            if (!container) return
 
-        const pageCount = container.querySelectorAll('[data-stack-page]').length
-        const nextPage = Math.min(pageCount - 1, Math.max(0, page))
+            const pageCount = container.querySelectorAll('[data-stack-page]').length
+            const nextPage = Math.min(pageCount - 1, Math.max(0, page))
 
-        activePageRef.current = nextPage
-        isTransitioningRef.current = false
-        isGestureArmedRef.current = true
-        accumulatedDeltaRef.current = 0
-        syncPageElements(container, nextPage, window.matchMedia(STACK_PAGER_QUERY).matches)
-        setActivePage(nextPage)
-    }, [])
-
-    useEffect(() => {
-        const container = ref.current
-        if (!container) return
-        syncPageElements(container, activePage, window.matchMedia(STACK_PAGER_QUERY).matches)
-    }, [activePage])
+            activePageRef.current = nextPage
+            isTransitioningRef.current = false
+            isGestureArmedRef.current = true
+            accumulatedDeltaRef.current = 0
+            syncPageElements(container, nextPage, window.matchMedia(mediaQuery).matches)
+            setActivePage(nextPage)
+        },
+        [mediaQuery],
+    )
 
     useEffect(() => {
         const container = ref.current
         if (!container) return
+        syncPageElements(container, activePage, window.matchMedia(mediaQuery).matches)
+    }, [activePage, mediaQuery])
 
-        const desktopQuery = window.matchMedia(STACK_PAGER_QUERY)
+    useEffect(() => {
+        const container = ref.current
+        if (!container) return
+
+        const desktopQuery = window.matchMedia(mediaQuery)
         const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
         const pages = Array.from(container.querySelectorAll<HTMLElement>('[data-stack-page]'))
 
@@ -172,7 +183,7 @@ const StackPager = ({children, className}: {children: ReactNode; className?: str
                 page.inert = false
             })
         }
-    }, [movePage, goToPage])
+    }, [movePage, goToPage, mediaQuery])
 
     return (
         <StackPagerActivePageContext.Provider value={activePage}>

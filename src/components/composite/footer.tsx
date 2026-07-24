@@ -91,7 +91,7 @@ const linkFocusClassName =
 
 // 마키 밴드 — 시안의 대형 장식 문구가 좌측으로 흐른다.
 // 장식이라 접근성 트리에서 제외하고, 감속 모션 선호 시 정지한다. [KWCAG 6.3.1]
-const MarqueeBand = () => (
+export const MarqueeBand = () => (
     <div aria-hidden="true" className="overflow-hidden py-16">
         {/* PROJECT-STYLE: 140px 대형 장식 타이포는 typo 스케일 밖의 화면 고유 그래픽 요소라
             clamp arbitrary 값을 제한적으로 사용한다(다른 화면에서 재사용 시 토큰 승격). */}

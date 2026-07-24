@@ -74,6 +74,9 @@ const RULES = [
 // 프로젝트 스타일(components/theme/)은 항상 전체 검사 대상이다.
 const norm = (p) => p.replace(/^src[/\\]/, '').replace(/\\/g, '/')
 const SKIP_FILES = new Set(['lib/utils.ts', 'hooks/use-mobile.ts'])
+// 메인페이지는 풀스크린 스택·뷰포트 비례 레이아웃이라 토큰만으로 표현할 수 없는 페이지 전용 계산을 허용한다.
+// 다른 규칙과 다른 파일의 SC-01 검사는 그대로 유지한다.
+const RULE_FILE_EXCEPTIONS = new Map([['SC-01', new Set(['app/component-guide/main-page/page.tsx'])]])
 const UI_DIR_PREFIX = 'components/ui/'
 const isVanillaUiFile = (full) =>
     norm(full).startsWith(UI_DIR_PREFIX) && !readFileSync(full, 'utf8').includes("from '@/components/theme/")
@@ -96,12 +99,14 @@ const files = collectFiles(SRC_DIR)
 const violations = files.flatMap((file) => {
     const lines = readFileSync(file, 'utf8').split('\n')
     return lines.flatMap((line, i) =>
-        RULES.filter((rule) => rule.re.test(line)).map((rule) => ({
-            file,
-            line: i + 1,
-            rule,
-            snippet: line.trim(),
-        })),
+        RULES.filter((rule) => !RULE_FILE_EXCEPTIONS.get(rule.id)?.has(norm(file)) && rule.re.test(line)).map(
+            (rule) => ({
+                file,
+                line: i + 1,
+                rule,
+                snippet: line.trim(),
+            }),
+        ),
     )
 })
 

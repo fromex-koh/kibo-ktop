@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useRef, useState, type ReactNode} from 'react'
 import Image, {type StaticImageData} from 'next/image'
 import Link from 'next/link'
 import {ArrowUpRight} from 'lucide-react'
@@ -26,9 +26,9 @@ const SERVICES: Service[] = [
         title: '기술평가',
         headline: (
             <>
-                기업이 보유한 기술의
-                <br />
-                가치를 증명하는 기술평가
+                <span className="block">기업이 보유한 기술의</span>
+                <span className="block">가치를 증명하는</span>
+                <span className="block">기술평가</span>
             </>
         ),
         descriptionTitle: '기술평가란?',
@@ -41,11 +41,9 @@ const SERVICES: Service[] = [
         title: '특허평가',
         headline: (
             <>
-                특허번호 입력만으로
-                <br />
-                확인할 수 있는
-                <br />
-                객관적 특허가치
+                <span className="block">특허번호 입력만으로</span>
+                <span className="block">확인할 수 있는</span>
+                <span className="block">객관적 특허가치</span>
             </>
         ),
         descriptionTitle: '특허평가(K-PAS)란?',
@@ -58,9 +56,9 @@ const SERVICES: Service[] = [
         title: 'K-BIGx 보고서',
         headline: (
             <>
-                기업과 산업 데이터를 연결한
-                <br />
-                K-BIGx 분석 보고서
+                <span className="block">기업과 산업 데이터를</span>
+                <span className="block">한눈에 연결하는</span>
+                <span className="block">K-BIGx 분석 보고서</span>
             </>
         ),
         descriptionTitle: 'K-BIGx 보고서란?',
@@ -75,9 +73,9 @@ const SERVICES: Service[] = [
         title: '탄소중립',
         headline: (
             <>
-                탄소중립 전환을 준비하는
-                <br />
-                기업을 위한 탄소중립 평가
+                <span className="block">탄소중립 전환을</span>
+                <span className="block">체계적으로 준비하는</span>
+                <span className="block">기업 맞춤형 평가</span>
             </>
         ),
         descriptionTitle: '탄소중립 평가란?',
@@ -122,7 +120,7 @@ const ServiceVisual = ({service}: {service: Service}) => (
 
 // 두 번째 화면. 세로 레일의 진행 바가 완료되면 다음 서비스로 전환하며 마지막 이후 처음부터 반복한다.
 // 일시정지 컨트롤은 시안 확정으로 제거됨(KWCAG 6.2.2 자동 전환 정지 수단은 검수 단계에서 재논의).
-const TechEvalSection = () => {
+const TechEvalSection = ({bottomContent}: {bottomContent?: ReactNode}) => {
     const stackPage = useStackPagerActivePage()
     const [activeIndex, setActiveIndex] = useState(0)
     const [entrySequence, setEntrySequence] = useState(0)
@@ -166,10 +164,18 @@ const TechEvalSection = () => {
                         className="bg-foreground-subtle absolute inset-y-0 left-0 w-1 overflow-hidden"
                     >
                         <span
+                            className="bg-main-accent absolute inset-x-0 top-0"
+                            style={{height: `${(activeIndex / SERVICES.length) * 100}%`}}
+                        />
+                        <span
                             key={`${entrySequence}-${activeIndex}`}
                             data-paused={isPaused}
+                            style={{
+                                top: `${(activeIndex / SERVICES.length) * 100}%`,
+                                height: `${100 / SERVICES.length}%`,
+                            }}
                             onAnimationEnd={showNextService}
-                            className="tech-service-progress-fill bg-main-accent absolute inset-0 origin-top"
+                            className="tech-service-progress-fill bg-main-accent absolute inset-x-0 origin-top"
                         />
                     </div>
 
@@ -264,6 +270,7 @@ const TechEvalSection = () => {
                     </div>
                 </Reveal>
             </div>
+            {bottomContent}
         </section>
     )
 }
