@@ -9,7 +9,7 @@
     "guide": {
         "icon": "LayoutGrid",
         "title": "컴포넌트 가이드",
-        "description": "버튼·폼·모달 등 공통 컴포넌트의 사용법과 접근성 예시를 정리한다.",
+        "description": "버튼·폼·모달 등 공통 컴포넌트의 사용법과 접근성 예시를 정리합니다.",
         "href": "/component-guide",
         "linkLabel": "컴포넌트 가이드 바로가기"
     }
