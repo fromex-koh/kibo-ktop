@@ -17,7 +17,7 @@
         "format": "prettier --write .",
         "format:check": "prettier --check .",
         "check:conventions": "node scripts/check-conventions.mjs",
-        "typecheck": "tsc --noEmit",
+        "typecheck": "next typegen && tsc --noEmit",
         "verify": "yarn tokens && yarn license-notices:check && yarn lint && yarn format:check && yarn check:conventions && yarn typecheck",
         "prepare": "husky"
     },
