@@ -5,6 +5,8 @@ import Footer, {MarqueeBand} from '@/components/composite/footer'
 import StackPager from '@/components/custom/stack-pager'
 import HeroSection from '@/components/custom/hero-section'
 import TechEvalSection from '@/components/custom/tech-eval-section'
+import MainPageHeaderState from './main-page-header-state'
+import styles from './page.module.css'
 
 export const metadata: Metadata = {title: '메인페이지'}
 
@@ -40,7 +42,8 @@ const MAIN_PAGE_CLASS = [
 // 색상은 메인페이지 전용 스킨(tokens.css의 .mainpage 블록)을 따른다 — light/dark와 같은 방식으로
 // theme-provider가 이 라우트에서 html 클래스에 'mainpage'를 강제한다(테마 토글과 무관하게 유지).
 const MainPage = () => (
-    <StackPager className={`bg-background relative min-h-dvh ${MAIN_PAGE_CLASS}`}>
+    <StackPager className={`${styles.root} bg-background relative min-h-dvh ${MAIN_PAGE_CLASS}`}>
+        <MainPageHeaderState />
         <SkipNav links={SKIP_LINKS} />
         <Header variant="main" />
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다.
