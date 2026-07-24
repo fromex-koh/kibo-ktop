@@ -6,6 +6,7 @@ import StackPager from '@/components/custom/stack-pager'
 import HeroSection from '@/components/custom/hero-section'
 import TechEvalSection from '@/components/custom/tech-eval-section'
 import MainPageHeaderState from './main-page-header-state'
+import MobileTechEvalContent from './mobile-tech-eval-content'
 import styles from './page.module.css'
 
 export const metadata: Metadata = {title: '메인페이지'}
@@ -51,6 +52,7 @@ const MainPage = () => (
         <main id="main" tabIndex={-1}>
             <HeroSection />
             <TechEvalSection
+                mobileContent={<MobileTechEvalContent />}
                 bottomContent={
                     <>
                         <div className="tech-eval-marquee mt-auto w-full">

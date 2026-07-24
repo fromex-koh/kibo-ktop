@@ -32,12 +32,14 @@ const MainPageHeaderState = () => {
 
         syncHeaderState()
         window.addEventListener('scroll', syncHeaderState, {passive: true})
+        pager.addEventListener('scroll', syncHeaderState, {passive: true})
         window.addEventListener('resize', syncHeaderState)
         stackPagerQuery.addEventListener('change', syncHeaderState)
 
         return () => {
             window.cancelAnimationFrame(frame)
             window.removeEventListener('scroll', syncHeaderState)
+            pager.removeEventListener('scroll', syncHeaderState)
             window.removeEventListener('resize', syncHeaderState)
             stackPagerQuery.removeEventListener('change', syncHeaderState)
             delete pager.dataset.naturalPage
