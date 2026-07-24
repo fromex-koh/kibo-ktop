@@ -43,7 +43,7 @@ const PrimitiveTable = ({title, hint, rows}: {title: string; hint: string; rows:
                 <p className="typo-body-l-regular text-muted-foreground">{hint}</p>
             </div>
             <Table
-                size="sm"
+                size="md"
                 caption={`${title} 원시 변수와 값`}
                 columns={PRIMITIVE_TABLE_COLUMNS}
                 rows={rows.map((row) => ({
@@ -85,7 +85,7 @@ const FontSizeTable = () => (
                 </p>
             </div>
             <Table
-                size="sm"
+                size="md"
                 caption="font-size tier별 모바일·PC 원시 변수와 값"
                 columns={FONT_SIZE_TABLE_COLUMNS}
                 rows={FONT_SIZE_TIERS.map(({tier, mobile, pc}) => ({

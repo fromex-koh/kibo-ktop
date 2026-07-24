@@ -13,7 +13,7 @@ const USAGE_CODE = `import {Table} from '@/components/custom/table'
 import {Badge} from '@/components/ui/badge'
 
 <Table
-  size="md"
+  size="lg"
   caption="이용권 사용 이력"
   columns={[
     {key: 'name', header: '상품명', align: 'start'},
@@ -35,7 +35,8 @@ import {Badge} from '@/components/ui/badge'
   ]}
 />`
 
-const SIZE_CODE = `<Table size="md" caption="기본 크기" columns={columns} rows={rows} />
+const SIZE_CODE = `<Table size="lg" caption="큰 크기" columns={columns} rows={rows} />
+<Table size="md" caption="중간 크기" columns={columns} rows={rows} />
 <Table size="sm" caption="작은 크기" columns={columns} rows={rows} />`
 
 const detailButton = (
@@ -133,9 +134,9 @@ const PROPS_ITEMS = [
     [
         'Table',
         'size',
-        '표의 타이포와 셀 여백 크기입니다. md는 헤더·본문 16px, sm은 색상 가이드 표 기준으로 헤더 14px·본문 12px입니다.',
-        "'md'",
-        "'sm' | 'md'",
+        '표의 타이포와 셀 여백 크기입니다. sm은 12px, md는 14px, lg는 16px이며 크기에 맞춰 셀 여백도 조정됩니다.',
+        "'lg'",
+        "'sm' | 'md' | 'lg'",
     ],
     ['Table', 'className', '컨테이너에 추가할 클래스입니다.', 'undefined', 'string'],
 ] as const
@@ -165,17 +166,21 @@ const TableGuidePage = () => (
                         크기 (size)
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        기본값인 md는 기존 데이터 표 크기를 유지합니다. sm은 색상 가이드 표와 같은 타이포 크기를
-                        사용하고 셀 여백을 줄여 더 많은 데이터를 조밀하게 보여줍니다.
+                        sm(12px)·md(14px)·lg(16px) 세 단계입니다. 기본값인 lg는 기존 데이터 표 크기를 유지하고, 크기가
+                        작을수록 셀 여백도 줄어 더 많은 데이터를 조밀하게 보여줍니다.
                     </p>
                 </div>
                 <div className="flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
-                        <h3 className="typo-body-l-medium">md (기본)</h3>
-                        <Table caption="기본 크기 표" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
+                        <h3 className="typo-body-l-medium">lg (기본) · 16px</h3>
+                        <Table caption="큰 크기 표" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <h3 className="typo-body-l-medium">sm</h3>
+                        <h3 className="typo-body-l-medium">md · 14px</h3>
+                        <Table size="md" caption="중간 크기 표" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                        <h3 className="typo-body-l-medium">sm · 12px</h3>
                         <Table size="sm" caption="작은 크기 표" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
                     </div>
                 </div>

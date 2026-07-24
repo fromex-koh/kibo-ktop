@@ -7,9 +7,9 @@ import {cn} from '@/lib/utils'
 //    데이터 주도(columns·rows) 표다 — props-table 와 같은 계열.
 //
 // 공통 구조: 헤더 = bg-background(옅은 회색) · foreground(gray.900), 본문 = label-foreground(gray.700),
-// 셀 기본 가운데 정렬, 헤더·행 사이 옅은 구분선(subtle-3). size=md(기본)는 헤더·본문 16px와 px-4 py-3,
-// size=sm은 색상 가이드 표 기준인 헤더 14px·본문 12px와 px-3 py-2를 쓴다. 셀은 ReactNode 라 배지·버튼 등도
-// 그대로 넣는다. 전부 기존 토큰이라 커스텀 색이 없다([PB-04]).
+// 셀 기본 가운데 정렬, 헤더·행 사이 옅은 구분선(subtle-3). 크기는 sm(12px)·md(14px)·lg(16px, 기본)의
+// 3단계이며 크기가 작을수록 셀 여백도 함께 줄인다. 셀은 ReactNode 라 배지·버튼 등도 그대로 넣는다.
+// 전부 기존 토큰이라 커스텀 색이 없다([PB-04]).
 //
 // 스타일 분기(variant): 표 외곽 등 변형별로 달라지는 부분만 아래 TABLE_VARIANT_OVERRIDES 에 슬롯 단위로 둔다.
 //   - line(현재 유일): 표 상·하단 굵은 진한 라인(border-foreground 2px) + 라운드 없음(Figma).
@@ -27,7 +27,7 @@ const ALIGN_CLASS: Record<TableAlign, string> = {
 
 // 표 스타일 변형. 현재는 line 하나뿐이며, 추후 스타일이 늘면 키를 추가한다.
 type TableVariant = 'line'
-type TableSize = 'sm' | 'md'
+type TableSize = 'sm' | 'md' | 'lg'
 
 // 표의 스타일 슬롯 — 변형에 따라 달라질 수 있는 부분.
 type TableSlots = {
@@ -60,10 +60,14 @@ const TABLE_VARIANT_OVERRIDES: Record<TableVariant, Partial<TableSlots>> = {
 
 const TABLE_SIZE_SLOTS: Record<TableSize, Pick<TableSlots, 'th' | 'td'>> = {
     sm: {
-        th: 'typo-body-l-medium px-3 py-2',
+        th: 'typo-caption-medium px-3 py-2',
         td: 'typo-caption-regular px-3 py-2',
     },
     md: {
+        th: 'typo-body-l-medium px-3 py-2.5',
+        td: 'typo-body-l-regular px-3 py-2.5',
+    },
+    lg: {
         th: 'typo-body-xl-medium px-4 py-3',
         td: 'typo-body-xl-regular px-4 py-3',
     },
@@ -96,12 +100,12 @@ type TableProps = {
     rows: readonly TableRowData[]
     // 표 스타일 변형. 현재 line 하나(상·하단 굵은 라인). 추후 스타일이 늘면 확장한다.
     variant?: TableVariant
-    // 표의 밀도. md가 기존 기본 크기이며, sm은 색상 가이드 표의 타이포 크기를 따른다.
+    // 표의 밀도. sm=12px, md=14px, lg=16px이며 기존 크기인 lg가 기본값이다.
     size?: TableSize
     className?: string
 }
 
-const Table = ({caption, columns, rows, variant = 'line', size = 'md', className}: TableProps) => {
+const Table = ({caption, columns, rows, variant = 'line', size = 'lg', className}: TableProps) => {
     const slots = {...SHARED_SLOTS, ...TABLE_VARIANT_OVERRIDES[variant]}
     const sizeSlots = TABLE_SIZE_SLOTS[size]
 

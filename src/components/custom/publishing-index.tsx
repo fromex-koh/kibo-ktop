@@ -241,7 +241,7 @@ const PublishingIndex = () => {
                                                 </td>
                                                 <th
                                                     scope="row"
-                                                    className="typo-body-l-medium text-primary w-1/3 px-4 py-3 font-mono"
+                                                    className="typo-body-l-medium text-primary w-1/3 px-4 py-3"
                                                 >
                                                     {asset.name}
                                                 </th>
@@ -249,7 +249,7 @@ const PublishingIndex = () => {
                                                     {asset.description}
                                                 </td>
                                                 <td
-                                                    className={`typo-body-l-regular w-28 px-4 py-3 font-mono ${
+                                                    className={`typo-body-l-regular w-28 px-4 py-3 ${
                                                         asset.isCurrent
                                                             ? 'bg-primary-subtle text-primary font-semibold'
                                                             : 'text-muted-foreground'
@@ -356,7 +356,7 @@ const PublishingIndex = () => {
                                                     <StatusTag status={layout.status} />
                                                 </td>
                                                 <td
-                                                    className={`typo-caption-regular px-4 py-3 font-mono ${
+                                                    className={`typo-caption-regular px-4 py-3 ${
                                                         isCurrent
                                                             ? 'text-primary font-semibold'
                                                             : 'text-muted-foreground'
@@ -436,7 +436,7 @@ const PublishingIndex = () => {
                                                     <StatusTag status={leaf.status} />
                                                 </td>
                                                 <td
-                                                    className={`typo-caption-regular px-4 py-3 font-mono ${
+                                                    className={`typo-caption-regular px-4 py-3 ${
                                                         isCurrent
                                                             ? 'text-primary font-semibold'
                                                             : 'text-muted-foreground'
