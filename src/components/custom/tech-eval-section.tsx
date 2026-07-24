@@ -7,7 +7,7 @@ import {Button} from '@/components/ui/button'
 import {cn} from '@/lib/utils'
 import Reveal from './reveal'
 import {useStackPagerActivePage} from './stack-pager'
-import {TECH_EVAL_SERVICES, TechEvalServiceVisual} from './tech-eval-services'
+import {TECH_EVAL_CTA_FILL_CLASS, TECH_EVAL_SERVICES, TechEvalServiceVisual} from './tech-eval-services'
 
 // 두 번째 화면. 세로 레일의 진행 바가 완료되면 다음 서비스로 전환하며 마지막 이후 처음부터 반복한다.
 // 일시정지 컨트롤은 시안 확정으로 제거됨(KWCAG 6.2.2 자동 전환 정지 수단은 검수 단계에서 재논의).
@@ -121,11 +121,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                             터치 기기에서 hover 가 고정되지 않게 한다(not-disabled:hover 는 탭 후 밝은 상태가
                                             남음). 색은 스킨 반영 --ds-gray-*(mainpage 다크에서 hover #40454c·active #272a2e —
                                             은은한 다크)라 라이트/다크 다른 버튼엔 영향 없다. */}
-                                        <Button
-                                            size="xl"
-                                            asChild
-                                            className="border-muted bg-muted text-foreground interactive:hover:bg-gray-200 interactive:active:bg-gray-50 text-lg font-bold"
-                                        >
+                                        <Button size="xl" asChild className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-lg')}>
                                             <Link
                                                 href="#"
                                                 onMouseEnter={() => setIsPaused(true)}

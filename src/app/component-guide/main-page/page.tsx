@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import Header from '@/components/composite/header'
+import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import Footer, {MarqueeBand} from '@/components/composite/footer'
 import StackPager from '@/components/custom/stack-pager'
@@ -18,6 +18,24 @@ const SKIP_LINKS: readonly SkipLinkItem[] = [
     {href: '#tech-eval', label: '기술평가 서비스 바로가기'},
     {href: '#site-info', label: '사이트 정보 바로가기'},
 ]
+
+const MAIN_HEADER_NAVIGATION = {
+    corp: [
+        {label: '플랫폼 소개', href: '#'},
+        {label: '기술평가', href: '#'},
+        {label: '특허평가', href: '#'},
+        {label: 'K-BIGx 보고서', href: '#'},
+        {label: '탄소중립', href: '#', external: true},
+    ],
+    org: [
+        {label: '플랫폼 소개', href: '#'},
+        {label: '개별평가', href: '#'},
+        {label: '일괄평가', href: '#'},
+        {label: 'K-BIGx 보고서', href: '#'},
+        {label: '특허평가', href: '#'},
+        {label: '탄소중립', href: '#', external: true},
+    ],
+} satisfies HeaderNavigationByUserType
 
 // 메인페이지에서 별도로 요청된 컨테이너 정렬과 2섹션 이후 자연 스크롤만 페이지 스코프로 유지한다.
 // 2섹션의 타이포·이미지·간격은 TechEvalSection의 원래 PC 디자인 값을 그대로 사용한다.
@@ -46,7 +64,7 @@ const MainPage = () => (
     <StackPager className={`${styles.root} bg-background relative min-h-dvh ${MAIN_PAGE_CLASS}`}>
         <MainPageHeaderState />
         <SkipNav links={SKIP_LINKS} />
-        <Header variant="main" />
+        <Header variant="main" navigationByUserType={MAIN_HEADER_NAVIGATION} />
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다.
                 조작 요소가 아니라서 포커스 표시가 오히려 레이아웃을 해친다. 실제 링은 대상 안의 링크·버튼이 가진다. */}
         <main id="main" tabIndex={-1}>

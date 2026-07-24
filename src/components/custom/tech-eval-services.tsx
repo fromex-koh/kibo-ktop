@@ -12,6 +12,10 @@ export type TechEvalService = {
     image: StaticImageData
 }
 
+// "자가진단 시작하기" CTA가 PC 롤링·모바일 정적 배치에서 공유하는 좌→우 배경 채움 효과.
+export const TECH_EVAL_CTA_FILL_CLASS =
+    'border-transparent bg-muted text-foreground bg-linear-to-r from-action-fill-hover to-action-fill-hover bg-left bg-no-repeat bg-[length:0_100%] font-bold transition-[background-size,color] duration-300 interactive:hover:bg-muted interactive:hover:bg-[length:100%_100%] interactive:active:bg-gray-50 motion-reduce:transition-none'
+
 // 텍스트·태그는 피그마 시안(type A_01 상태 프레임)을 그대로 반영한다.
 export const TECH_EVAL_SERVICES: TechEvalService[] = [
     {

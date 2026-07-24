@@ -92,7 +92,10 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
                             fill
                             sizes="100vw"
                             placeholder="blur"
-                            loading={index === 0 ? 'eager' : 'lazy'}
+                            // SSR의 eager 이미지는 React가 head preload로 승격해, 클라이언트 전환 시
+                            // 실제 사용 전에 preload 미사용 경고가 발생한다. 장식 배경은 blur 상태에서
+                            // 네이티브 lazy 로딩하고 뷰포트 근처에서 즉시 요청되도록 맡긴다.
+                            loading="lazy"
                             className="object-cover brightness-[0.55]"
                             style={{objectPosition: slide.position}}
                         />

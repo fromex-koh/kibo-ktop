@@ -1,7 +1,12 @@
 import Link from 'next/link'
 import {ArrowUpRight} from 'lucide-react'
 import {Button} from '@/components/ui/button'
-import {TECH_EVAL_SERVICES, TechEvalServiceVisual} from '@/components/custom/tech-eval-services'
+import {
+    TECH_EVAL_CTA_FILL_CLASS,
+    TECH_EVAL_SERVICES,
+    TechEvalServiceVisual,
+} from '@/components/custom/tech-eval-services'
+import {cn} from '@/lib/utils'
 
 // 모바일 2섹션은 자동 전환 없이 네 가지 서비스를 문서 순서대로 모두 펼쳐 읽는다.
 const MobileTechEvalContent = () => (
@@ -21,11 +26,7 @@ const MobileTechEvalContent = () => (
                         >
                             {service.headline}
                         </h2>
-                        <Button
-                            size="xl"
-                            asChild
-                            className="border-muted bg-muted text-foreground interactive:hover:bg-gray-200 interactive:active:bg-gray-50 text-base font-bold"
-                        >
+                        <Button size="xl" asChild className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-base')}>
                             <Link href="#">
                                 자가진단 시작하기
                                 <ArrowUpRight aria-hidden="true" />

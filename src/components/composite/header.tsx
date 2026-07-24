@@ -22,16 +22,29 @@ import {cn} from '@/lib/utils'
 // 유틸 링크는 Button text variant 위에 Header 전용 자간만 보정한다.
 type HeaderVariant = 'default' | 'main'
 
-type NavLink = {label: string; external?: boolean}
+type UserType = 'corp' | 'org'
 
-const NAV_LINKS: Record<HeaderVariant, NavLink[]> = {
-    default: [{label: '자가진단'}, {label: '전문가 평가'}, {label: 'BIGx 보고서'}, {label: '탄소중립'}],
+export type HeaderNavLink = {
+    label: string
+    href: string
+    external?: boolean
+}
+
+export type HeaderNavigationByUserType = Record<UserType, readonly HeaderNavLink[]>
+
+const NAV_LINKS: Record<HeaderVariant, readonly HeaderNavLink[]> = {
+    default: [
+        {label: '자가진단', href: '#'},
+        {label: '전문가 평가', href: '#'},
+        {label: 'BIGx 보고서', href: '#'},
+        {label: '탄소중립', href: '#'},
+    ],
     main: [
-        {label: '플랫폼 소개'},
-        {label: '기술평가'},
-        {label: '특허평가'},
-        {label: 'K-BIGx 보고서'},
-        {label: '탄소중립', external: true},
+        {label: '플랫폼 소개', href: '#'},
+        {label: '기술평가', href: '#'},
+        {label: '특허평가', href: '#'},
+        {label: 'K-BIGx 보고서', href: '#'},
+        {label: '탄소중립', href: '#', external: true},
     ],
 }
 
@@ -41,20 +54,14 @@ const UTILITY_LINKS: {label: string; external?: boolean}[] = [
     {label: '기술보증기금', external: true},
 ]
 
-type UserType = 'corp' | 'org'
-
 const USER_TYPES = ['corp', 'org'] satisfies readonly UserType[]
 
 const isUserType = (value: string | null): value is UserType => value === 'corp' || value === 'org'
 
 // 유틸바와 모바일 Sheet에서 공유하는 화면 유형 링크 세그먼티드.
-const MemberTypeToggle = () => {
-    const searchParams = useSearchParams()
-    const userTypeParam = searchParams.get('userType')
-    const userType = isUserType(userTypeParam) ? userTypeParam : 'corp'
-
+const MemberTypeToggle = ({userType, searchParams}: {userType: UserType; searchParams: string}) => {
     const getHref = (nextUserType: UserType) => {
-        const nextParams = new URLSearchParams(searchParams.toString())
+        const nextParams = new URLSearchParams(searchParams)
         nextParams.set('userType', nextUserType)
         return `?${nextParams.toString()}`
     }
@@ -75,21 +82,6 @@ const MemberTypeToggle = () => {
         </SegmentedControl>
     )
 }
-
-const MemberTypeToggleFallback = () => (
-    <SegmentedControl type="link" aria-label="화면 유형">
-        <SegmentedControlItem href="?userType=corp" aria-current="page">
-            기업
-        </SegmentedControlItem>
-        <SegmentedControlItem href="?userType=org">기관</SegmentedControlItem>
-    </SegmentedControl>
-)
-
-const MemberTypeNavigation = () => (
-    <Suspense fallback={<MemberTypeToggleFallback />}>
-        <MemberTypeToggle />
-    </Suspense>
-)
 
 // 링크 의미는 유지하고 Button text variant의 토큰/포커스 스타일을 재사용한다.
 const UtilityLink = ({label, external, className}: {label: string; external?: boolean; className?: string}) => (
@@ -117,7 +109,7 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
                     width={140}
                     height={32}
                     priority
-                    className="h-auto w-30 shrink-0"
+                    className="h-8 w-35 shrink-0"
                 />
             ) : (
                 <>
@@ -127,7 +119,7 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
                         width={140}
                         height={32}
                         priority
-                        className="h-auto w-30 shrink-0 dark:hidden"
+                        className="h-8 w-35 shrink-0 dark:hidden"
                     />
                     <Image
                         src="/images/logo-ktop-white.svg"
@@ -135,7 +127,7 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
                         width={140}
                         height={32}
                         priority
-                        className="hidden h-auto w-30 shrink-0 dark:block"
+                        className="hidden h-8 w-35 shrink-0 dark:block"
                     />
                 </>
             )}
@@ -148,13 +140,19 @@ const HeaderContent = ({
     navLabel,
     variant,
     showThemeToggle,
+    navigationByUserType,
+    userType,
+    searchParams,
 }: {
     navLabel: string
     variant: HeaderVariant
     showThemeToggle: boolean
+    navigationByUserType?: HeaderNavigationByUserType
+    userType: UserType
+    searchParams: string
 }) => {
     const isMain = variant === 'main'
-    const navLinks = NAV_LINKS[variant]
+    const navLinks = navigationByUserType?.[userType] ?? NAV_LINKS[variant]
 
     return (
         <div className="flex flex-col">
@@ -162,7 +160,7 @@ const HeaderContent = ({
                 넓힌다. lg 미만에서는 유틸바·주 메뉴를 숨겨 로고+햄버거만 남긴다(링크는 전체 메뉴 Sheet에 유지). */}
             <div className={cn('hidden justify-end', isMain ? 'lg:flex' : 'md:flex')}>
                 <div className={cn('flex items-center py-2', isMain ? 'gap-2 xl:gap-4' : 'gap-4 px-4')}>
-                    <MemberTypeNavigation />
+                    <MemberTypeToggle userType={userType} searchParams={searchParams} />
                     {UTILITY_LINKS.map((link) => (
                         <UtilityLink key={link.label} {...link} />
                     ))}
@@ -190,7 +188,7 @@ const HeaderContent = ({
                                     )}
                                 >
                                     <Link
-                                        href="#"
+                                        href={link.href}
                                         className="flex items-center gap-1"
                                         {...(link.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
                                     >
@@ -209,7 +207,7 @@ const HeaderContent = ({
                     {showThemeToggle ? <ThemeToggle /> : null}
                     <Sheet>
                         <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon-sm" aria-label="전체 메뉴 열기">
+                            <Button variant="ghost" size="icon" aria-label="전체 메뉴 열기">
                                 <Menu aria-hidden="true" />
                             </Button>
                         </SheetTrigger>
@@ -219,14 +217,14 @@ const HeaderContent = ({
                             </SheetHeader>
 
                             <div className="px-4 pb-2">
-                                <MemberTypeNavigation />
+                                <MemberTypeToggle userType={userType} searchParams={searchParams} />
                             </div>
 
                             <nav aria-label="전체 메뉴" className="flex flex-col gap-1 px-4">
                                 {navLinks.map((link) => (
                                     <SheetClose asChild key={link.label}>
                                         <Link
-                                            href="#"
+                                            href={link.href}
                                             className="typo-title-m-semibold hover:bg-muted focus-visible:ring-ring flex min-h-11 items-center gap-1 rounded-md px-3 focus:outline-none focus-visible:ring-2"
                                             {...(link.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
                                         >
@@ -260,25 +258,89 @@ const HeaderContent = ({
 type HeaderProps = {
     variant?: HeaderVariant
     showThemeToggle?: boolean
+    navigationByUserType?: HeaderNavigationByUserType
 }
 
-const Header = ({variant = 'default', showThemeToggle}: HeaderProps) => {
+const ResolvedHeaderContent = ({
+    navLabel,
+    variant,
+    showThemeToggle,
+    navigationByUserType,
+}: {
+    navLabel: string
+    variant: HeaderVariant
+    showThemeToggle: boolean
+    navigationByUserType?: HeaderNavigationByUserType
+}) => {
+    const searchParams = useSearchParams()
+    const userTypeParam = searchParams.get('userType')
+    const userType = isUserType(userTypeParam) ? userTypeParam : 'corp'
+
+    return (
+        <HeaderContent
+            navLabel={navLabel}
+            variant={variant}
+            showThemeToggle={showThemeToggle}
+            navigationByUserType={navigationByUserType}
+            userType={userType}
+            searchParams={searchParams.toString()}
+        />
+    )
+}
+
+const Header = ({variant = 'default', showThemeToggle, navigationByUserType}: HeaderProps) => {
     const isMain = variant === 'main'
     const shouldShowThemeToggle = showThemeToggle ?? !isMain
 
     return (
         <header className={cn('z-header inset-x-0 top-0', isMain ? 'fixed' : 'bg-card sticky')}>
             <div className={cn(isMain ? 'content-layout' : 'max-w-content mx-auto')}>
-                <HeaderContent navLabel="주 메뉴" variant={variant} showThemeToggle={shouldShowThemeToggle} />
+                <Suspense
+                    fallback={
+                        <HeaderContent
+                            navLabel="주 메뉴"
+                            variant={variant}
+                            showThemeToggle={shouldShowThemeToggle}
+                            navigationByUserType={navigationByUserType}
+                            userType="corp"
+                            searchParams=""
+                        />
+                    }
+                >
+                    <ResolvedHeaderContent
+                        navLabel="주 메뉴"
+                        variant={variant}
+                        showThemeToggle={shouldShowThemeToggle}
+                        navigationByUserType={navigationByUserType}
+                    />
+                </Suspense>
             </div>
         </header>
     )
 }
 
 // 컴포넌트 가이드 카드 안에서 쓰는 데모.
-export const HeaderDemo = () => (
+export const HeaderDemo = ({navigationByUserType}: {navigationByUserType?: HeaderNavigationByUserType}) => (
     <div className="border-border bg-card overflow-hidden rounded-lg border">
-        <HeaderContent navLabel="헤더 데모 메뉴" variant="default" showThemeToggle />
+        <Suspense
+            fallback={
+                <HeaderContent
+                    navLabel="헤더 데모 메뉴"
+                    variant="default"
+                    showThemeToggle
+                    navigationByUserType={navigationByUserType}
+                    userType="corp"
+                    searchParams=""
+                />
+            }
+        >
+            <ResolvedHeaderContent
+                navLabel="헤더 데모 메뉴"
+                variant="default"
+                showThemeToggle
+                navigationByUserType={navigationByUserType}
+            />
+        </Suspense>
     </div>
 )
 
