@@ -88,10 +88,9 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
                             src={slide.src}
                             alt=""
                             fill
-                            fetchPriority={index === 0 ? 'high' : 'low'}
                             sizes="100vw"
                             placeholder="blur"
-                            loading="eager"
+                            loading={index === 0 ? 'eager' : 'lazy'}
                             className={cn(
                                 'main-hero-background-slide object-cover',
                                 isActive && 'main-hero-background-active',
