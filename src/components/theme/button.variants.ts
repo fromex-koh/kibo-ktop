@@ -1,8 +1,11 @@
 import {cva} from 'class-variance-authority'
 
 // PROJECT-STYLE: shadcn Button 함수 셸은 ui/button.tsx에 유지하고 프로젝트 스타일만 이 파일에서 관리한다.
+// outline-ring 은 평상시에도 지정한다 — outline-color 기본값은 currentColor 라 transition-all 이
+// 포커스 순간 '글자색 → ring 색'을 애니메이션해 포커스링이 검정→파랑으로 번지듯 보인다(캘린더 키보드 이동에서 확인).
+// outline-style 이 none 이라 평상시엔 보이지 않고, 포커스 때 두께·offset 만 전환된다.
 const buttonVariants = cva(
-    "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-ring focus-visible:outline-offset-2 interactive:active:not-aria-[haspopup]:translate-y-px disabled:cursor-not-allowed aria-disabled:cursor-not-allowed disabled:opacity-100 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+    "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-ring outline-none select-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-ring focus-visible:outline-offset-2 interactive:active:not-aria-[haspopup]:translate-y-px disabled:cursor-not-allowed aria-disabled:cursor-not-allowed disabled:opacity-100 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
     {
         variants: {
             variant: {

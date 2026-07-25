@@ -46,6 +46,7 @@ KWCAG 2.1은 **4개 원칙 · 13개 지침 · 24개 검사항목**으로 구성�
     ```tsx
     className = 'focus:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2'
     ```
+    `transition-*`(색 전환 포함)이 걸린 요소는 `focus-visible:outline-ring`과 함께 **평상시에도 `outline-ring`을 지정**한다. `outline-color`의 초깃값이 `currentColor`라, 지정하지 않으면 포커스 순간 글자색(대개 검정)에서 ring 색으로 번지듯 전환돼 포커스 표시가 즉시 인식되지 않는다. `outline-style`이 `none`이므로 평상시 화면에는 나타나지 않는다.
 - **[6.1.3] 조작 가능** — 클릭·터치 대상은 최소 **44×44px** 이상(`min-h-11 min-w-11` 또는 충분한 `p-*`). 인접 타깃 간 간격 확보.
 
 ### 지침 6.2 충분한 시간 제공

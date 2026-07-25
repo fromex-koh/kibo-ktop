@@ -24,7 +24,7 @@ const segmentedControlVariants = cva('group/segmented-control flex w-fit items-c
 // 크기(높이·타이포·패딩)는 외형에 따라 다르다 — subtle 은 촘촘한 트랙, solid 는 Figma 토글 치수(40px 항목)를
 // 따르므로 variant×size 조합으로 지정한다. size 변수 자체는 조합을 위한 축으로만 두고 값은 비운다.
 const segmentedControlItemVariants = cva(
-    'focus-visible:outline-ring tracking-control-label relative flex cursor-pointer items-center justify-center whitespace-nowrap border border-transparent focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid',
+    'outline-ring focus-visible:outline-ring tracking-control-label relative flex cursor-pointer items-center justify-center whitespace-nowrap border border-transparent focus-visible:z-10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid',
     {
         variants: {
             variant: {
