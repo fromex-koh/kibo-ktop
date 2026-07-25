@@ -1,8 +1,10 @@
 import type {Metadata} from 'next'
 import type {LucideIcon} from 'lucide-react'
 import {
+    ArrowDown,
     ArrowLeft,
     ArrowRight,
+    ArrowUp,
     ArrowUpRight,
     Blocks,
     Building2,
@@ -122,8 +124,10 @@ const ICON_SIZES = [
 // 중복을 제거한다. 새 아이콘을 사용하거나 Figma 세트에 추가되면 함께 갱신한다.
 // Figma 이름 ↔ lucide 매핑 규칙과 예외는 페이지의 "Figma 이름 매핑" 표가 단일 안내처다.
 const CURATED_ICONS = [
+    {name: 'ArrowDown', Icon: ArrowDown},
     {name: 'ArrowLeft', Icon: ArrowLeft},
     {name: 'ArrowRight', Icon: ArrowRight},
+    {name: 'ArrowUp', Icon: ArrowUp},
     {name: 'ArrowUpRight', Icon: ArrowUpRight},
     {name: 'Blocks', Icon: Blocks},
     {name: 'Building2', Icon: Building2},
@@ -186,6 +190,7 @@ const CURATED_ICONS = [
 // (예: icon/line-file-pen-line → FilePenLine). 규칙에서 벗어나는 예외만 표로 안내한다.
 const FIGMA_NAME_EXCEPTIONS = [
     {figma: 'icon/line-close', lucide: 'X'},
+    {figma: 'icon/line-arrow-top', lucide: 'ArrowUp'},
     {figma: 'icon/line-left · right · up · down', lucide: 'ChevronLeft · ChevronRight · ChevronUp · ChevronDown'},
     {figma: 'icon/line-reset', lucide: 'RotateCcw'},
     {figma: 'icon/line-alert', lucide: 'CircleAlert'},
