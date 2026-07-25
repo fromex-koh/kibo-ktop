@@ -1,6 +1,7 @@
 'use client'
 
 import type {ComponentPropsWithoutRef} from 'react'
+import {useRef} from 'react'
 import {
     Combobox as PrimitiveCombobox,
     ComboboxContent,
@@ -12,11 +13,14 @@ import {
     ComboboxValue,
 } from '@/components/ui/combobox'
 import {
+    comboboxContentClassName,
+    comboboxEmptyClassName,
     comboboxDropdownSearchClassName,
     comboboxDropdownContentClassName,
     comboboxDropdownTriggerClassName,
     comboboxInputClassName,
     comboboxItemClassName,
+    comboboxListClassName,
 } from '@/components/theme/combobox.variants'
 import {cn} from '@/lib/utils'
 
@@ -59,6 +63,10 @@ const Combobox = ({
     ...props
 }: ComboboxProps) => {
     const selectedOption = options.find((option) => option.value === value)
+    // 입력형은 Base UI 가 안쪽 <input> 을 기준으로 드롭다운을 배치해 패널이 InputGroup 보다 좁고
+    // 안쪽으로 들어간다. 앵커를 InputGroup 으로 올려 패널 폭·좌우 위치를 입력 필드와 맞춘다.
+    const inputRef = useRef<HTMLInputElement>(null)
+    const inputGroupAnchor = () => inputRef.current?.closest('[data-slot=input-group]') ?? null
 
     return (
         <PrimitiveCombobox
@@ -76,6 +84,7 @@ const Combobox = ({
         >
             {type === 'input' ? (
                 <ComboboxInput
+                    ref={inputRef}
                     id={id}
                     placeholder={placeholder}
                     disabled={disabled}
@@ -93,7 +102,10 @@ const Combobox = ({
                     <ComboboxValue placeholder={placeholder} />
                 </ComboboxTrigger>
             )}
-            <ComboboxContent className={type === 'dropdown' ? comboboxDropdownContentClassName : undefined}>
+            <ComboboxContent
+                anchor={type === 'input' ? inputGroupAnchor : undefined}
+                className={cn(comboboxContentClassName, type === 'dropdown' && comboboxDropdownContentClassName)}
+            >
                 {type === 'dropdown' ? (
                     <ComboboxInput
                         showTrigger={false}
@@ -102,8 +114,8 @@ const Combobox = ({
                         className={comboboxDropdownSearchClassName}
                     />
                 ) : null}
-                <ComboboxEmpty>{emptyText}</ComboboxEmpty>
-                <ComboboxList>
+                <ComboboxEmpty className={comboboxEmptyClassName}>{emptyText}</ComboboxEmpty>
+                <ComboboxList className={comboboxListClassName}>
                     {(option: ComboboxOption) => (
                         <ComboboxItem key={option.value} value={option} className={comboboxItemClassName}>
                             {option.label}

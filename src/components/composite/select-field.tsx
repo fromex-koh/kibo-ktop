@@ -3,7 +3,7 @@
 import {createContext, useContext, type ComponentProps} from 'react'
 import {
     Select as PrimitiveSelect,
-    SelectContent,
+    SelectContent as PrimitiveSelectContent,
     SelectGroup,
     SelectItem as PrimitiveSelectItem,
     SelectLabel,
@@ -13,7 +13,7 @@ import {
     SelectTrigger as PrimitiveSelectTrigger,
     SelectValue,
 } from '@/components/ui/select'
-import {selectItemClassName, selectTriggerClassName} from '@/components/theme/select.variants'
+import {selectContentClassName, selectItemClassName, selectTriggerClassName} from '@/components/theme/select.variants'
 import {cn} from '@/lib/utils'
 
 type SelectFieldProps = ComponentProps<typeof PrimitiveSelect> & {readOnly?: boolean}
@@ -53,6 +53,10 @@ function SelectTrigger({className, size = 'lg', ...props}: SelectTriggerProps) {
             className={cn(selectTriggerClassName, className)}
         />
     )
+}
+
+function SelectContent({className, ...props}: ComponentProps<typeof PrimitiveSelectContent>) {
+    return <PrimitiveSelectContent {...props} className={cn(selectContentClassName, className)} />
 }
 
 function SelectItem({className, ...props}: ComponentProps<typeof PrimitiveSelectItem>) {
