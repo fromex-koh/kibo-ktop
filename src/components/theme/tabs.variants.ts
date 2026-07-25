@@ -20,4 +20,10 @@ const tabsTriggerClassName =
 // shadcn 원본의 24px·foreground(gray.900)·normal·h-control-h-xl(52) 과 다른 지점이다.
 const tabsTriggerLineClassName =
     'group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground after:bg-label-foreground after:absolute after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:-bottom-1 group-data-horizontal/tabs:after:h-0.5 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100 group-data-[variant=line]/tabs-list:h-tab-line-h group-data-[variant=line]/tabs-list:text-foreground-subtle group-data-[variant=line]/tabs-list:data-active:text-label-foreground group-data-[variant=line]/tabs-list:data-active:font-bold group-data-[variant=line]/tabs-list:flex-none group-data-[variant=line]/tabs-list:justify-start group-data-[variant=line]/tabs-list:gap-0 group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:border-0 group-data-[variant=line]/tabs-list:px-6 group-data-[variant=line]/tabs-list:py-0 group-data-[variant=line]/tabs-list:text-xl group-data-[variant=line]/tabs-list:font-normal group-data-[variant=line]/tabs-list:after:bottom-0'
-export {tabsListVariants, tabsTriggerClassName, tabsTriggerLineClassName}
+// PROJECT-STYLE: shadcn 원본 패널은 outline-none 만 있어 포커스 표시가 없다. 탭 패널은 ARIA 탭 패턴대로
+// 탭 순서에 포함되므로(Radix 가 tabindex=0 부여) 탭 다음 Tab 키에서 여기로 포커스가 온다 —
+// 대체 포커스 링이 없으면 키보드 사용자에게 포커스가 사라진 것처럼 보인다[6.1.2].
+// outline-ring 을 평상시에도 지정해 색 전환 없이 두께만 나타나게 한다.
+const tabsContentClassName =
+    'outline-ring flex-1 text-sm outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid'
+export {tabsContentClassName, tabsListVariants, tabsTriggerClassName, tabsTriggerLineClassName}
