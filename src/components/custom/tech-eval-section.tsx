@@ -123,7 +123,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                             은은한 다크)라 라이트/다크 다른 버튼엔 영향 없다. */}
                                         <Button size="xl" asChild className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-lg')}>
                                             <Link
-                                                href="#"
+                                                href={service.ctaHref}
                                                 onMouseEnter={() => setIsPaused(true)}
                                                 onMouseLeave={() => setIsPaused(false)}
                                                 onFocus={() => setIsPaused(true)}
