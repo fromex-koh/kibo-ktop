@@ -3,6 +3,7 @@ import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
+import {Table} from '@/components/custom/table'
 import {Badge} from '@/components/ui/badge'
 
 export const metadata: Metadata = {title: '배지 (Badge)'}
@@ -39,6 +40,30 @@ const COLORS = [
 // 매트릭스 각 셀에서 두 shape 를 짝지어 보여준다(pill=완전 둥근 / round=8px 라운드).
 const SHAPES = ['pill', 'round'] as const
 
+// Variant × Color 매트릭스 — 가이드 문서용 Table(size="md")에 데이터로 넘긴다.
+const MATRIX_COLUMNS = [
+    {key: 'color', header: 'Color', align: 'start', rowHeader: true},
+    ...VARIANTS.map((v) => ({key: v.key, header: v.label, align: 'start'}) as const),
+] as const
+
+const MATRIX_ROWS = COLORS.map((c) => ({
+    key: c.key,
+    cells: [
+        <span key="name" className="text-primary font-mono">
+            {c.label}
+        </span>,
+        ...VARIANTS.map((v) => (
+            <div key={v.key} className="flex items-center gap-4">
+                {SHAPES.map((s) => (
+                    <Badge key={s} color={c.key} variant={v.key} shape={s}>
+                        라벨
+                    </Badge>
+                ))}
+            </div>
+        )),
+    ],
+}))
+
 const PROPS_ITEMS = [
     ['Badge', 'type', '상태·분류 라벨과 숫자 배지를 구분합니다.', "'label'", "'label' | 'number'"],
     [
@@ -55,8 +80,20 @@ const PROPS_ITEMS = [
         "'neutral'",
         'BadgeColor',
     ],
-    ['Badge', 'shape', '완전 둥근 pill과 작은 라운드 round를 선택합니다.', "'pill'", "'pill' | 'round'"],
-    ['Badge', 'size', 'sm은 28px, lg는 40px 높이입니다.', "'sm'", "'sm' | 'lg'"],
+    [
+        'Badge',
+        'shape',
+        '완전 둥근 pill과 8px 라운드 round를 선택합니다. 여백·크기는 형태에 따라 달라지지 않습니다.',
+        "'pill'",
+        "'pill' | 'round'",
+    ],
+    [
+        'Badge',
+        'size',
+        'sm은 28px 높이(좌우 여백 8px · 최소 너비 60px), lg는 40px 높이(좌우 여백 16px)입니다. number는 28×24입니다.',
+        "'sm'",
+        "'sm' | 'lg'",
+    ],
     ['Badge', 'asChild', '자식 요소에 Badge 스타일과 속성을 합성합니다.', 'false', 'boolean'],
     ['Badge', 'children', '표시할 라벨·숫자·아이콘 콘텐츠입니다.', '-', 'ReactNode'],
     [
@@ -118,48 +155,12 @@ const BadgeGuidePage = () => (
                         </p>
                     ))}
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">배지 variant·color 조합 미리보기</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Color
-                                </th>
-                                {VARIANTS.map((v) => (
-                                    <th key={v.key} scope="col" className="typo-body-l-medium px-4 py-3">
-                                        {v.label}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {COLORS.map((c) => (
-                                <tr key={c.key} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-middle font-mono font-normal whitespace-nowrap"
-                                    >
-                                        {c.label}
-                                    </th>
-                                    {VARIANTS.map((v) => (
-                                        <td key={v.key} className="px-4 py-3 align-middle">
-                                            <div className="flex items-start gap-4">
-                                                {SHAPES.map((s) => (
-                                                    <div key={s} className="flex flex-col items-start gap-2">
-                                                        <Badge color={c.key} variant={v.key} shape={s}>
-                                                            라벨
-                                                        </Badge>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    size="md"
+                    caption="배지 variant·color 조합 미리보기"
+                    columns={MATRIX_COLUMNS}
+                    rows={MATRIX_ROWS}
+                />
             </section>
         </BaseCard>
 
@@ -172,7 +173,8 @@ const BadgeGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         <code className="font-mono">pill</code>(완전 둥근 모서리)과{' '}
                         <code className="font-mono">round</code>
-                        (8px 라운드) 두 형태입니다.
+                        (8px 라운드) 두 형태입니다. 여백·크기는 형태와 무관하며, 시안대로 sm(28px)은 좌우 여백 8px에
+                        최소 너비 60px을 지켜 짧은 라벨도 같은 폭으로 정렬됩니다.
                     </p>
                 </div>
                 <div className="flex flex-col gap-3">
