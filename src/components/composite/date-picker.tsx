@@ -20,7 +20,10 @@ import {
 import {cn} from '@/lib/utils'
 
 type DatePickerProps = {
+    // 제어 사용: value 를 넘기면 표시 값은 항상 이 값이다.
     value?: Date
+    // 비제어 사용: 초기값만 주고 선택 값은 내부 상태로 관리한다(폼에 그대로 꽂아 쓰는 경우).
+    defaultValue?: Date
     onChange?: (date?: Date) => void
     placeholder?: string
     disabled?: boolean
@@ -35,6 +38,7 @@ type DatePickerProps = {
 
 const DatePicker = ({
     value,
+    defaultValue,
     onChange,
     placeholder = '연도-월-일',
     disabled,
@@ -49,6 +53,17 @@ const DatePicker = ({
 }: DatePickerProps) => {
     const [open, setOpen] = useState(false)
     const triggerRef = useRef<HTMLButtonElement>(null)
+    // 제어/비제어 겸용 — value 를 넘기면 그 값을, 안 넘기면 내부 상태를 쓴다.
+    // (value 없이 쓰면 선택한 날짜가 화면에도, name 으로 제출되는 값에도 반영되지 않던 문제를 막는다.)
+    const [internalDate, setInternalDate] = useState<Date | undefined>(defaultValue)
+    const isControlled = value !== undefined
+    const selectedDate = isControlled ? value : internalDate
+
+    const handleSelect = (date?: Date) => {
+        if (!isControlled) setInternalDate(date)
+        onChange?.(date)
+        setOpen(false)
+    }
     return (
         <>
             <Popover open={open} onOpenChange={(next) => !readOnly && setOpen(next)}>
@@ -66,11 +81,11 @@ const DatePicker = ({
                         >
                             <span
                                 className={cn(
-                                    value ? datePickerValueClassName : datePickerPlaceholderClassName,
+                                    selectedDate ? datePickerValueClassName : datePickerPlaceholderClassName,
                                     disabled && datePickerDisabledValueClassName,
                                 )}
                             >
-                                {value ? format(value, 'yyyy-MM-dd') : placeholder}
+                                {selectedDate ? format(selectedDate, 'yyyy-MM-dd') : placeholder}
                             </span>
                             <CalendarIcon aria-hidden="true" className={datePickerIconClassName} />
                         </button>
@@ -79,11 +94,8 @@ const DatePicker = ({
                 <PopoverContent className={datePickerCalendarPopoverClassName} align="start">
                     <Calendar
                         mode="single"
-                        selected={value}
-                        onSelect={(date) => {
-                            onChange?.(date)
-                            setOpen(false)
-                        }}
+                        selected={selectedDate}
+                        onSelect={handleSelect}
                         locale={ko}
                         // 디자인의 헤더는 [이전] 2026.07 [다음] 이 가운데 모인 형태다.
                         navLayout="around"
@@ -102,7 +114,7 @@ const DatePicker = ({
                     tabIndex={-1}
                     aria-label={placeholder}
                     className="sr-only"
-                    value={value ? format(value, 'yyyy-MM-dd') : ''}
+                    value={selectedDate ? format(selectedDate, 'yyyy-MM-dd') : ''}
                     onChange={() => undefined}
                     onInvalid={(event) => {
                         onInvalid?.(event)

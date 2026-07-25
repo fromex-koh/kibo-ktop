@@ -16,7 +16,18 @@ const USAGE_CODE = `const [date, setDate] = useState<Date>()
 </Field>`
 
 const PROPS_ITEMS = [
-    {name: 'value', desc: '선택된 날짜. 값이 없으면 placeholder를 표시합니다.', def: '-', control: 'Date'},
+    {
+        name: 'value',
+        desc: '선택된 날짜(제어). 넘기면 표시 값은 항상 이 값을 따릅니다. 생략하면 컴포넌트가 선택 값을 스스로 관리합니다.',
+        def: '-',
+        control: 'Date',
+    },
+    {
+        name: 'defaultValue',
+        desc: '비제어 사용 시 초기 선택 날짜입니다. value 없이 폼에 그대로 꽂아 쓸 때 사용합니다.',
+        def: '-',
+        control: 'Date',
+    },
     {name: 'onChange', desc: '날짜를 선택하거나 해제할 때 호출됩니다.', def: '-', control: '(date?: Date) => void'},
     {
         name: 'placeholder',
