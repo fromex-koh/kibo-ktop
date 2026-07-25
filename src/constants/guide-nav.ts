@@ -95,6 +95,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                             {label: 'QuestionList', href: '/component-guide/question-list'},
                             {label: 'SelectableCard', href: '/component-guide/selectable-card'},
                             {label: 'Segmented Control', href: '/component-guide/segmented-control'},
+                            {label: 'ConsentList', href: '/component-guide/consent-list'},
                             {label: 'SearchBar', href: '/component-guide/search-bar'},
                             {label: 'SearchFilterForm', href: '/component-guide/search-filter-form'},
                         ],
