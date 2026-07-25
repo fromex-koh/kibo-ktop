@@ -122,7 +122,18 @@ const EvaluationModelPage = () => (
                             subtitle={model.subtitle}
                             description={model.description}
                             // 제목·설명이 정보를 전달하므로 일러스트는 장식이다([5.1.1]).
-                            illustration={<Image src={model.illustration} alt="" width={148} height={100} priority />}
+                            illustration={
+                                // preflight 의 img { height: auto } 가 높이만 덮어써 next/image 비율 경고가 뜬다.
+                                // 시안 이미지 영역은 148×100 고정이라 style 로 두 값을 함께 잠근다(가이드와 동일).
+                                <Image
+                                    src={model.illustration}
+                                    alt=""
+                                    width={148}
+                                    height={100}
+                                    priority
+                                    style={{width: 148, height: 100}}
+                                />
+                            }
                         />
                     ))}
                 </div>
