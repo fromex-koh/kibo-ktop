@@ -107,10 +107,22 @@ const Field = ({
 )
 
 // 회원정보에서 자동 입력되는 값 — readOnly + 자물쇠 애드온(FormData 에는 그대로 포함된다).
-const LockedField = ({id, label, value, required}: {id: string; label: string; value: string; required?: boolean}) => (
+const LockedField = ({
+    id,
+    label,
+    value,
+    required,
+    autoComplete = 'off',
+}: {
+    id: string
+    label: string
+    value: string
+    required?: boolean
+    autoComplete?: string
+}) => (
     <Field id={id} label={label} required={required}>
         <InputGroup>
-            <InputGroupInput id={id} name={id} readOnly defaultValue={value} />
+            <InputGroupInput id={id} name={id} readOnly defaultValue={value} autoComplete={autoComplete} />
             <InputGroupAddon align="inline-end" className="text-foreground">
                 <Lock aria-hidden="true" className="size-icon-md" />
             </InputGroupAddon>
@@ -140,6 +152,7 @@ const LookupField = ({
                 id={id}
                 name={id}
                 readOnly
+                autoComplete="off"
                 placeholder={placeholder}
                 aria-describedby={helper ? `${id}-helper` : undefined}
                 className="min-w-0 flex-1"
@@ -192,10 +205,10 @@ const CareerSection = ({index}: {index: number}) => {
                     <DatePicker id={field('end')} name={field('end')} placeholder="연도-월-일" />
                 </Field>
                 <Field id={field('company')} label="근무처">
-                    <Input id={field('company')} name={field('company')} placeholder="근무처" />
+                    <Input id={field('company')} name={field('company')} autoComplete="off" placeholder="근무처" />
                 </Field>
                 <Field id={field('industry')} label="업종">
-                    <Input id={field('industry')} name={field('industry')} placeholder="업종" />
+                    <Input id={field('industry')} name={field('industry')} autoComplete="off" placeholder="업종" />
                 </Field>
             </FieldGrid>
             <FieldRow3>
@@ -211,10 +224,10 @@ const CareerSection = ({index}: {index: number}) => {
                     </Select>
                 </Field>
                 <Field id={field('duty')} label="담당업무">
-                    <Input id={field('duty')} name={field('duty')} placeholder="담당업무" />
+                    <Input id={field('duty')} name={field('duty')} autoComplete="off" placeholder="담당업무" />
                 </Field>
                 <Field id={field('rank')} label="최종직급">
-                    <Input id={field('rank')} name={field('rank')} placeholder="최종직급" />
+                    <Input id={field('rank')} name={field('rank')} autoComplete="off" placeholder="최종직급" />
                 </Field>
             </FieldRow3>
         </div>
@@ -268,7 +281,13 @@ const CompanyInfoForm = () => (
                             </SelectContent>
                         </Select>
                     </Field>
-                    <LockedField id="corp-name" label="기업명" value="(주)테크놀로지" required />
+                    <LockedField
+                        id="corp-name"
+                        label="기업명"
+                        value="(주)테크놀로지"
+                        required
+                        autoComplete="organization"
+                    />
                     <LockedField id="biz-no" label="사업자번호" value="123-45-67890" required />
                     <LockedField id="corp-no" label="법인번호" value="11222-1234567" />
                 </FieldGrid>
@@ -285,10 +304,17 @@ const CompanyInfoForm = () => (
                         <DatePicker id="found-date" name="foundDate" placeholder="연도-월-일" />
                     </Field>
                     <Field id="ceo-name" label="대표자명">
-                        <Input id="ceo-name" name="ceoName" placeholder="대표자명을 입력해주세요" />
+                        {/* 회사 대표자 이름이라 사용자 본인 정보 자동완성 대상이 아니다. */}
+                        <Input id="ceo-name" name="ceoName" placeholder="대표자명을 입력해주세요" autoComplete="off" />
                     </Field>
                     <Field id="company-tel" label="회사전화번호">
-                        <Input id="company-tel" name="companyTel" placeholder="02-1234-0000" inputMode="tel" />
+                        <Input
+                            id="company-tel"
+                            name="companyTel"
+                            placeholder="02-1234-0000"
+                            inputMode="tel"
+                            autoComplete="off"
+                        />
                     </Field>
                     <LookupField
                         id="industry-code"
@@ -310,6 +336,7 @@ const CompanyInfoForm = () => (
                                     id="address"
                                     name="address"
                                     readOnly
+                                    autoComplete="off"
                                     placeholder="[주소 검색] 버튼으로 자동 입력됩니다."
                                     className="min-w-0 flex-1"
                                 />
@@ -322,6 +349,7 @@ const CompanyInfoForm = () => (
                                 aria-label="상세주소"
                                 placeholder="상세주소"
                                 aria-describedby="address-helper"
+                                autoComplete="off"
                             />
                         </div>
                     </Field>
@@ -336,10 +364,22 @@ const CompanyInfoForm = () => (
                 </SubSectionHeader>
                 <FieldGrid>
                     <Field id="manager-name" label="담당자명" required>
-                        <Input id="manager-name" name="managerName" placeholder="담당자명" required />
+                        <Input
+                            id="manager-name"
+                            name="managerName"
+                            placeholder="담당자명"
+                            required
+                            autoComplete="name"
+                        />
                     </Field>
                     <Field id="manager-position" label="직위" required>
-                        <Input id="manager-position" name="managerPosition" placeholder="직위" required />
+                        <Input
+                            id="manager-position"
+                            name="managerPosition"
+                            placeholder="직위"
+                            required
+                            autoComplete="organization-title"
+                        />
                     </Field>
                     <Field
                         id="manager-tel"
@@ -353,6 +393,7 @@ const CompanyInfoForm = () => (
                             placeholder="010-0000-0000"
                             inputMode="tel"
                             required
+                            autoComplete="tel"
                             aria-describedby="manager-tel-helper"
                         />
                     </Field>

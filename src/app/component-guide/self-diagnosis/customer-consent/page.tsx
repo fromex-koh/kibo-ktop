@@ -248,11 +248,12 @@ const CustomerConsentPage = () => (
                 <div className="flex flex-wrap items-center gap-6">
                     {/* 아이디 @ 도메인 — 시안은 @ 를 입력 칸 안이 아니라 두 칸 사이에 둔다(칸 사이 8px). */}
                     <div className="flex min-w-0 flex-1 items-center gap-2">
+                        {/* 이메일을 아이디·도메인 두 칸으로 나눠 받으므로 email 자동완성(전체 주소)은 맞지 않는다. */}
                         <Input
                             name="emailId"
                             placeholder="이메일 아이디"
                             aria-label="이메일 아이디"
-                            autoComplete="email"
+                            autoComplete="off"
                             className="min-w-0 flex-1"
                         />
                         <span className="typo-body-xl-regular text-label-foreground shrink-0">@</span>
@@ -260,6 +261,7 @@ const CustomerConsentPage = () => (
                             name="emailDomain"
                             placeholder="도메인 직접입력"
                             aria-label="이메일 도메인"
+                            autoComplete="off"
                             className="min-w-0 flex-1"
                         />
                     </div>

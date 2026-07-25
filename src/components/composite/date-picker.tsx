@@ -108,6 +108,8 @@ const DatePicker = ({
                     type="date"
                     name={name}
                     form={form}
+                    // 화면에 보이는 컨트롤의 값을 폼에 전달만 하는 입력이라 브라우저 자동완성 대상이 아니다.
+                    autoComplete="off"
                     required={required}
                     disabled={disabled}
                     readOnly={readOnly}
