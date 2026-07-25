@@ -10,9 +10,8 @@ export const metadata: Metadata = {title: '스텝 내비게이션 (StepNavigatio
 
 const USAGE_CODE = `import {StepNavigation} from '@/components/composite/step-navigation'
 
-{/* 중간 단계 — 좌 이전(tertiary) · 우 다음(primary). 위치는 사용처에서 지정 */}
+{/* 중간 단계 — 좌 이전(tertiary) · 우 다음(primary). 본문 끝에 그대로 붙는 블록이다 */}
 <StepNavigation
-  className="sticky bottom-0"
   prev={{children: '이전', onClick: goPrev}}
   next={{children: '다음', onClick: goNext}}
 />
@@ -76,23 +75,19 @@ const PROPS_ITEMS = [
     [
         'StepNavigation',
         'className · div props',
-        '바 컨테이너 스타일과 위치(sticky/fixed 등)를 지정합니다.',
+        '바 컨테이너에 추가 스타일을 전달합니다. 위치는 문서 흐름을 따르므로 별도 지정이 필요 없습니다.',
         'undefined',
         "ComponentProps<'div'>",
     ],
 ] as const
 
-// 반투명 확인용 데모 무대 — 바 뒤로 본문 콘텐츠를 깔아 bg-cta-surface 가 비치는 것을 보여준다.
-// 콘텐츠는 장식(aria-hidden)이고, 바는 무대 하단에 겹쳐 둔다.
+// 데모 무대 — 실제 배치 그대로, 본문 콘텐츠 아래에 바가 일반 블록으로 붙는다(고정·플로팅 아님).
+// 콘텐츠는 장식(aria-hidden)이다.
 const DemoStage = ({children}: {children: ReactNode}) => (
-    <div className="border-border relative h-40 overflow-hidden rounded-md border">
-        <div
-            aria-hidden="true"
-            className="text-foreground-subtle typo-body-l-regular absolute inset-0 flex flex-col justify-end gap-1 px-6 pb-2"
-        >
-            <p>단계 본문 콘텐츠가 여기에 있고…</p>
-            <p>반투명 CTA 바가 이 내용 위에 겹쳐 뜹니다.</p>
-            <p>bg-cta-surface 라서 아래 본문이 살짝 비칩니다.</p>
+    <div className="border-border flex flex-col overflow-hidden rounded-md border">
+        <div aria-hidden="true" className="text-foreground-subtle typo-body-l-regular flex flex-col gap-1 px-6 py-6">
+            <p>단계 본문 콘텐츠가 여기까지 이어지고…</p>
+            <p>CTA 바는 그 아래에 그대로 붙습니다.</p>
         </div>
         {children}
     </div>
@@ -111,9 +106,8 @@ const StepNavigationGuidePage = () => (
                         케이스
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        버튼 라벨·유무·활성 상태만 바꿔 단계별 상황을 표현합니다. 각 데모는 바를 본문 콘텐츠 위에 겹쳐
-                        놓아 <code className="font-mono">bg-cta-surface</code> 반투명 효과(뒤 내용이 비침)를 함께
-                        보여줍니다.
+                        버튼 라벨·유무·활성 상태만 바꿔 단계별 상황을 표현합니다. 바는 화면에 고정하지 않고 본문 끝에
+                        일반 블록으로 붙으므로, 각 데모도 본문 콘텐츠 아래에 그대로 놓았습니다.
                     </p>
                 </div>
                 <div className="flex flex-col gap-6">
@@ -124,7 +118,7 @@ const StepNavigationGuidePage = () => (
                                 <p className="typo-body-l-regular text-muted-foreground">{c.desc}</p>
                             </div>
                             <DemoStage>
-                                <StepNavigation className="absolute inset-x-0 bottom-0" prev={c.prev} next={c.next} />
+                                <StepNavigation prev={c.prev} next={c.next} />
                             </DemoStage>
                         </div>
                     ))}
@@ -156,14 +150,14 @@ const StepNavigationGuidePage = () => (
                 </div>
                 <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        위치는 컴포넌트가 정하지 않습니다. 스크롤되는 본문 위에 고정하려면 사용처에서{' '}
-                        <code className="font-mono">className=&quot;sticky bottom-0&quot;</code>(또는 fixed)를 줍니다.
+                        바는 본문 마지막에 오는 일반 블록입니다. <code className="font-mono">sticky</code>·
+                        <code className="font-mono">fixed</code> 로 띄우지 않아 본문을 가리지 않고, 짧은 화면에서도
+                        버튼이 그대로 보입니다.
                     </li>
                     <li>
                         배경은 반투명 토큰 <code className="font-mono">bg-cta-surface</code>로, 테마별로 알맞은 값을
                         따릅니다 — light=흰색 75%(시안), dark·mainpage=화이트 10% 프로스트(어두운 표면을 살짝 밝혀 바가
-                        떠 보이게). 반투명은 본문 위에 겹쳐 뜰 때만 드러나므로, 아래 케이스 데모는 바를 본문 콘텐츠 위에
-                        겹쳐 놓았습니다.
+                        떠 보이게).
                     </li>
                     <li>
                         버튼은 기존 Button(좌 tertiary · 우 primary · size 2xl)을 그대로 씁니다. disabled·asChild(Link)·
