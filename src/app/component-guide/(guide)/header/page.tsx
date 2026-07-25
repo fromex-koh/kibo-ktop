@@ -124,7 +124,7 @@ const COMPOSITION = [
     {name: '전체 메뉴 (Sheet)', desc: '좁은 폭에서 주 메뉴·화면 유형 링크·유틸 링크를 담아 우측에서 여는 드로어.'},
     {
         name: 'variant="main"',
-        desc: '메인 히어로용 메뉴·흰색 로고·fixed 배치를 적용한다. content-layout grid 정렬은 유지하고 모바일 동작은 기본 헤더와 공유한다.',
+        desc: '메인 히어로용 메뉴·흰색 로고·fixed 배치를 적용한다. 두 변형 모두 콘텐츠 열은 화면 본문과 같은 content-layout 이라 로고·메뉴가 본문 시작선에 맞고, 모바일 동작도 공유한다.',
     },
 ] as const
 

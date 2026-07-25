@@ -160,7 +160,7 @@ const HeaderContent = ({
             {/* main 변형은 주 메뉴가 한 줄에 들어가는 lg(1024)부터 PC 헤더로 전환하고, xl(1280)부터 항목 간격을
                 넓힌다. lg 미만에서는 유틸바·주 메뉴를 숨겨 로고+햄버거만 남긴다(링크는 전체 메뉴 Sheet에 유지). */}
             <div className={cn('hidden justify-end', isMain ? 'lg:flex' : 'md:flex')}>
-                <div className={cn('flex items-center py-2', isMain ? 'gap-2 xl:gap-4' : 'gap-4 px-4')}>
+                <div className={cn('flex items-center py-2', isMain ? 'gap-2 xl:gap-4' : 'gap-4')}>
                     <MemberTypeToggle userType={userType} searchParams={searchParams} />
                     {UTILITY_LINKS.map((link) => (
                         <UtilityLink key={link.label} {...link} />
@@ -168,7 +168,7 @@ const HeaderContent = ({
                 </div>
             </div>
 
-            <div className={cn('flex items-center py-3', isMain ? 'gap-6 xl:gap-10' : 'gap-6 px-4')}>
+            <div className={cn('flex items-center py-3', isMain ? 'gap-6 xl:gap-10' : 'gap-6')}>
                 <Logo variant={variant} />
 
                 <NavigationMenu
@@ -295,7 +295,9 @@ const Header = ({variant = 'default', showThemeToggle, navigationByUserType}: He
 
     return (
         <header className={cn('z-header inset-x-0 top-0', isMain ? 'fixed' : 'bg-card sticky')}>
-            <div className={cn(isMain ? 'content-layout' : 'max-w-content mx-auto')}>
+            {/* 헤더 콘텐츠 열은 화면 본문과 같은 content-layout 을 쓴다 — 좌우 여백을 헤더 안쪽 px 로 주면
+                로고·메뉴가 본문 시작선보다 안으로 들어가 어긋난다(좁은 화면의 가장자리 여백은 content-layout 이 담당). */}
+            <div className="content-layout">
                 <Suspense
                     fallback={
                         <HeaderContent
