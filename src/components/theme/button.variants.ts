@@ -20,10 +20,20 @@ const buttonVariants = cva(
                 ghost: 'text-foreground interactive:hover:bg-accent aria-expanded:bg-accent disabled:bg-control-disabled disabled:text-disabled',
                 destructive:
                     'bg-destructive text-destructive-foreground interactive:hover:bg-destructive/90 interactive:active:bg-destructive/80 disabled:border-disabled-subtle disabled:bg-control-disabled disabled:text-disabled',
-                link: 'text-label-foreground underline-offset-4 decoration-1 interactive:hover:underline disabled:text-disabled-subtle disabled:opacity-100',
+                // hover 밑줄도 text-underline 과 같은 방식(버튼 폭 전체 1px 선)이라 아이콘 아래에서 끊기지 않는다.
+                // 평상시엔 선을 감춰 두고(opacity-0) hover 에서만 드러낸다 — 표시/숨김만 바뀌어 레이아웃은 그대로다.
+                link: 'text-label-foreground relative after:absolute after:inset-x-0 after:top-1/2 after:h-px after:translate-y-[0.5lh] after:bg-current after:opacity-0 interactive:hover:after:opacity-100 disabled:text-disabled-subtle disabled:opacity-100',
+                // 밑줄 없는 기본 텍스트 버튼 — 헤더 유틸 링크·"내용보기"처럼 본문에 얹히는 인라인 액션에 쓴다.
+                text: 'text-label-foreground no-underline disabled:text-disabled-subtle disabled:opacity-100',
                 // PROJECT-STYLE: Figma button_text 는 default·hover·pressed·disabled 네 상태 모두 1px 밑줄이 있다.
-                // (shadcn 에는 없는 형태라 link 의 hover 밑줄과 구분해 상시 밑줄로 둔다.)
-                text: 'text-label-foreground underline underline-offset-4 decoration-1 disabled:text-disabled-subtle disabled:opacity-100',
+                // 밑줄 유무는 사용처마다 갈려서 text(없음)/text-underline(있음) 두 값으로 나눈다.
+                // 밑줄은 text-decoration 이 아니라 1px 가상요소로 그린다 — 버튼은 inline-flex 라 아이콘(flex 아이템)에는
+                // text-decoration 이 전파되지 않아 시안과 달리 아이콘 밑에서 밑줄이 끊긴다. 가상요소는 버튼 폭 전체를 덮어
+                // 시안처럼 아이콘까지 이어진다.
+                // 위치 = 세로 중앙(top-1/2)에서 글자 줄 높이의 절반(translate-y 0.5lh)만큼 내린 지점 = 글자 줄 아랫변.
+                // [SC-01] 예외: 줄 높이는 사이즈마다 다른 런타임 값이라 토큰·기존 유틸로 표현할 수 없어 lh 단위를 쓴다.
+                'text-underline':
+                    'text-label-foreground relative after:absolute after:inset-x-0 after:top-1/2 after:h-px after:translate-y-[0.5lh] after:bg-current disabled:text-disabled-subtle disabled:opacity-100',
             },
             size: {
                 default: 'h-control-h-md min-h-11 gap-2 px-4',
@@ -48,30 +58,34 @@ const buttonVariants = cva(
             {variant: 'tertiary', size: 'xl', class: 'min-w-control-min-w-sm'},
             {variant: 'default', size: 'lg', class: 'font-bold disabled:font-medium'},
             {variant: 'default', size: 'md', class: 'font-bold disabled:font-medium'},
-            {variant: ['text', 'link'], class: 'min-h-0 min-w-0 p-0 font-normal'},
-            {variant: ['text', 'link'], size: '2xl', class: "h-control-h-md [&_svg:not([class*='size-'])]:size-4"},
+            {variant: ['text', 'text-underline', 'link'], class: 'min-h-0 min-w-0 p-0 font-normal'},
             {
-                variant: ['text', 'link'],
+                variant: ['text', 'text-underline', 'link'],
+                size: '2xl',
+                class: "h-control-h-md [&_svg:not([class*='size-'])]:size-4",
+            },
+            {
+                variant: ['text', 'text-underline', 'link'],
                 size: 'xl',
                 class: "h-control-h-md text-lg [&_svg:not([class*='size-'])]:size-4",
             },
             {
-                variant: ['text', 'link'],
+                variant: ['text', 'text-underline', 'link'],
                 size: 'lg',
                 class: "h-control-h-xs text-base [&_svg:not([class*='size-'])]:size-4",
             },
             {
-                variant: ['text', 'link'],
+                variant: ['text', 'text-underline', 'link'],
                 size: 'md',
                 class: "h-control-h-2xs text-sm [&_svg:not([class*='size-'])]:size-4",
             },
             {
-                variant: ['text', 'link'],
+                variant: ['text', 'text-underline', 'link'],
                 size: 'sm',
                 class: "h-control-h-2xs text-xs [&_svg:not([class*='size-'])]:size-3",
             },
             {
-                variant: ['text', 'link'],
+                variant: ['text', 'text-underline', 'link'],
                 size: 'xs',
                 class: "h-control-h-2xs text-xs [&_svg:not([class*='size-'])]:size-3",
             },

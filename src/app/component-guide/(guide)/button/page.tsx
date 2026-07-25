@@ -112,12 +112,14 @@ const ALL_VARIANTS = [
     {key: 'outline', label: 'outline', note: '내부 컴포넌트용'},
     {key: 'ghost', label: 'ghost', note: '내부 컴포넌트용'},
     {key: 'destructive', label: 'destructive', note: '내부 컴포넌트용'},
-    {key: 'text', label: 'text', note: 'Figma Text(채움·테두리 없음, 상시 1px 밑줄)'},
+    {key: 'text', label: 'text', note: 'Figma Text(채움·테두리 없음, 밑줄 없음)'},
+    {key: 'text-underline', label: 'text-underline', note: 'Figma Text + 상시 1px 밑줄(아이콘까지 이어짐)'},
     {key: 'link', label: 'link', note: 'Figma Text + hover 밑줄'},
 ] as const
 
 const INLINE_VARIANTS = [
-    {key: 'text', label: 'text', note: '채움·테두리 없는 텍스트형(상시 밑줄)'},
+    {key: 'text', label: 'text', note: '채움·테두리 없는 텍스트형(밑줄 없음)'},
+    {key: 'text-underline', label: 'text-underline', note: 'text 와 같되 상시 1px 밑줄 — 아이콘 아래까지 이어진다'},
     {key: 'link', label: 'link', note: 'text 와 같되 밑줄이 hover 에만'},
 ] as const
 
@@ -126,12 +128,14 @@ const DISABLED_VARIANTS = [
     {key: 'secondary', label: 'Secondary'},
     {key: 'tertiary', label: 'Tertiary'},
     {key: 'text', label: 'Text'},
+    {key: 'text-underline', label: 'Text(밑줄)'},
     {key: 'link', label: 'Link'},
 ] as const
 
 // Figma button_text 는 공용 size 축(2xl~xs)과 별개로 자체 4단 스케일을 쓴다(값은 Figma 실측 px).
 // 아이콘은 large·medium·small 16px, xsmall 만 12px 이다.
-// link 도 이 사양을 그대로 공유한다 — text 는 상시 밑줄, link 는 hover 밑줄이라는 점만 다르다.
+// text-underline·link 도 이 사양을 그대로 공유한다 — 밑줄 유무(없음/상시/hover)만 다르다.
+// text-underline 의 밑줄은 text-decoration 이 아니라 버튼 폭 전체를 덮는 1px 선이라 아이콘 아래에서도 끊기지 않는다(시안 동일).
 const INLINE_SIZES = [
     {key: 'xl', label: 'xl', height: 40, font: 18, icon: 16},
     {key: 'lg', label: 'lg', height: 32, font: 16, icon: 16},
@@ -319,7 +323,7 @@ const PROPS_ROWS = [
 ]
 
 // text·link 는 같은 Figma 사양을 공유하므로 큐레이션 표도 같은 모양으로 나란히 둔다.
-const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'link'; caption: string}) => (
+const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'text-underline' | 'link'; caption: string}) => (
     <Table
         size="md"
         caption={caption}
@@ -406,7 +410,8 @@ const ButtonGuidePage = () => (
                         Button 을 디자인에 쓰는 variant 입니다.{' '}
                         <span className="font-mono">default·secondary·tertiary·text</span> 는 Figma type(
                         <span className="font-mono">text</span> 는 채움·테두리 없는 텍스트 버튼)이고,{' '}
-                        <span className="font-mono">link</span> 는 그 text 사양에서 밑줄만 hover 로 미룬 형태입니다.{' '}
+                        <span className="font-mono">text-underline</span> 은 상시 밑줄,{' '}
+                        <span className="font-mono">link</span> 는 hover 밑줄만 다릅니다.{' '}
                         <span className="font-mono">outline·ghost·destructive</span> 는 다이얼로그·시트 등 내부
                         컴포넌트가 쓰는 호환 값입니다.
                     </p>
@@ -517,7 +522,7 @@ const ButtonGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         Figma <span className="font-mono">button_text</span> 는 공용 size 축과 별개로 자체 4단
-                        스케일(높이 40/32/24/24 · 폰트 18/16/14/12 · 아이콘 20/20/16/12)을 쓰고, 전 사이즈가
+                        스케일(높이 40/32/24/24 · 폰트 18/16/14/12 · 아이콘 16/16/16/12)을 쓰고, 전 사이즈가
                         Regular(400)입니다. 채움·테두리가 없어 <span className="font-mono">default·hover·pressed</span>{' '}
                         가 모두 같은 색(
                         <span className="font-mono">label-foreground</span>)이라 상태 피드백은 focus 링뿐이고,{' '}
@@ -527,7 +532,18 @@ const ButtonGuidePage = () => (
                         높은 UI 용 컴팩트 예외로, 인접 간격을 넉넉히 두고 씁니다(6.1.3).
                     </p>
                 </div>
-                <InlineSizeTable variant="text" caption="text 버튼 size 조합 미리보기" />
+                <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-3">
+                        <h3 className="typo-body-l-medium text-foreground font-mono">variant=&quot;text&quot;</h3>
+                        <InlineSizeTable variant="text" caption="text 버튼 size 조합 미리보기" />
+                    </div>
+                    <div className="flex flex-col gap-3">
+                        <h3 className="typo-body-l-medium text-foreground font-mono">
+                            variant=&quot;text-underline&quot;
+                        </h3>
+                        <InlineSizeTable variant="text-underline" caption="text-underline 버튼 size 조합 미리보기" />
+                    </div>
+                </div>
             </section>
         </BaseCard>
 
