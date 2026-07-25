@@ -41,6 +41,10 @@ type QuestionListProps = ComponentPropsWithoutRef<'ol'> & {
 type QuestionOptionProps = Omit<ComponentPropsWithoutRef<'li'>, 'children'> & {
     children: ReactNode
     control?: ReactNode
+    // 순번 대신 앞에 붙이는 표식(제조·서비스 배지 등). 넘기면 (1)(2) 순번 자리를 대신한다.
+    badge?: ReactNode
+    // 본문 첫 줄이 40px 컨트롤(칩·Select)인 행은 'control' — 배지·우측 컨트롤을 그 줄에 맞춘다.
+    align?: QuestionItemAlign
     index?: number
 }
 
@@ -117,13 +121,38 @@ const QuestionList = ({start = 1, className, children, ...props}: QuestionListPr
     </ol>
 )
 
-const QuestionOption = ({children, control, index = 1, className, ...props}: QuestionOptionProps) => (
-    <li data-slot="question-option" className={cn(questionOptionClassName, className)} {...props}>
-        <span aria-hidden="true" className={questionOptionNumberClassName}>{`(${index})`}</span>
-        <span className={questionOptionContentClassName}>{children}</span>
-        {control ? <span className={questionControlClassName}>{control}</span> : null}
-    </li>
-)
+const QuestionOption = ({
+    children,
+    control,
+    badge,
+    align = 'start',
+    index = 1,
+    className,
+    ...props
+}: QuestionOptionProps) => {
+    const isControlLine = align === 'control'
+
+    return (
+        <li data-slot="question-option" className={cn(questionOptionClassName, className)} {...props}>
+            {badge ? (
+                <span
+                    data-slot="question-option-badge"
+                    className={cn(questionBadgeClassName, isControlLine && questionBadgeControlLineClassName)}
+                >
+                    {badge}
+                </span>
+            ) : (
+                <span aria-hidden="true" className={questionOptionNumberClassName}>{`(${index})`}</span>
+            )}
+            <span className={questionOptionContentClassName}>{children}</span>
+            {control ? (
+                <span className={cn(questionControlClassName, isControlLine && questionControlLineClassName)}>
+                    {control}
+                </span>
+            ) : null}
+        </li>
+    )
+}
 
 const QuestionOptionList = ({start = 1, className, children, ...props}: QuestionOptionListProps) => (
     <ol

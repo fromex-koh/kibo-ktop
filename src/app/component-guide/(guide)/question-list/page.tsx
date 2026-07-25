@@ -9,10 +9,12 @@ import {
     QuestionGroupHeaderTitle,
 } from '@/components/composite/question-group-header'
 import {QuestionItem, QuestionList, QuestionOption, QuestionOptionList} from '@/components/composite/question-list'
+import {QuestionSelect} from '@/components/composite/question-select'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
+import {Button} from '@/components/ui/button'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Badge} from '@/components/ui/badge'
 import QuestionListFormDemo from './question-list-form-demo'
@@ -64,8 +66,31 @@ const BASIC_CODE = `<QuestionList start={11}>
   </QuestionItem>
 </QuestionList>`
 
+const SELECT_ANSWER_CODE = `{/* 문장 안 [ ] 에 현재 선택값이 primary 색으로 표시되고, 값이 바뀌면 함께 바뀐다 */}
+<QuestionList start={8}>
+  <QuestionItem helper={<Button variant="text-underline" size="md">TRL 확인 <ChevronRight /></Button>}>
+    <QuestionSelect
+      name="trl"
+      label="기술성숙도(TRL) 단계"
+      before="신청기술의 기술성숙도(TRL)는"
+      after="단계에 해당한다"
+      defaultValue="3"
+      options={[{value: '3', label: '3단계', token: '3'} /* … */]}
+    />
+  </QuestionItem>
+</QuestionList>
+
+{/* 미선택이면 placeholder(기본 "선택")가 [ ] 안에 들어간다 */}
+<QuestionSelect
+  name="technologyType"
+  label="신청기술 유형"
+  before="신청기술은"
+  after="기술이다."
+  options={[{value: 'product', label: '제품'}, {value: 'service', label: '서비스'}]}
+/>`
+
 const OPTION_CODE = `<QuestionList start={8}>
-  <QuestionItem align="control" helper={<Link href="#trl-help">TRL 확인 <ChevronRight /></Link>}>
+  <QuestionItem align="control" helper={<Button variant="text-underline" size="md" asChild><Link href="#trl-help">TRL 확인 <ChevronRight /></Link></Button>}>
     신청기술의 기술성숙도(TRL)는 <Select>{/* ... */}</Select> 단계에 해당한다.
   </QuestionItem>
   <QuestionItem>
@@ -144,6 +169,19 @@ const FORM_CODE = `<form onSubmit={handleSubmit}>
 
   <Button type="submit" variant="default" size="md">선택 내용 확인</Button>
 </form>`
+
+// 문장 속 선택값 데모 — 목록 문구(label)와 문장 표기(token)가 다른 경우와 같은 경우를 함께 보여준다.
+const GUIDE_TRL_OPTIONS = ['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((level) => ({
+    value: level,
+    label: `${level}단계`,
+    token: level,
+}))
+
+const GUIDE_TECHNOLOGY_TYPE_OPTIONS = [
+    {value: 'product', label: '제품'},
+    {value: 'service', label: '서비스'},
+    {value: 'process', label: '공정'},
+] as const
 
 const PROPS_ITEMS = [
     ['QuestionList', 'start', '첫 문항 번호이며 이후 QuestionItem 번호를 자동으로 계산합니다.', '1', 'number'],
@@ -291,6 +329,56 @@ const QuestionListGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="question-select" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="question-select" className="typo-h4-bold">
+                        문장 속 선택값
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        문장이 답과 함께 읽히는 문항입니다. <code className="font-mono">QuestionSelect</code> 는 문장
+                        안의 <code className="font-mono">[ ]</code> 에 현재 선택값을 primary 색으로 보여주고, 그 아래
+                        줄에 선택 컨트롤(폭 180px)을 둡니다. 값을 바꾸면 문장 속 값도 즉시 따라 바뀝니다. 목록 문구와
+                        문장 속 표기가 다를 때는 <code className="font-mono">token</code> 으로 짧은 표기를 지정합니다(
+                        <code className="font-mono">3단계</code> → <code className="font-mono">[3]</code>).
+                    </p>
+                </div>
+                <div className="border-subtle-3 rounded-md border p-6">
+                    <QuestionList start={8}>
+                        <QuestionItem
+                            helper={
+                                <Button variant="text-underline" size="md" className="gap-1">
+                                    TRL 확인
+                                    <ChevronRight aria-hidden="true" />
+                                </Button>
+                            }
+                        >
+                            <QuestionSelect
+                                name="guide-trl"
+                                label="기술성숙도(TRL) 단계"
+                                before="신청기술의 기술성숙도(TRL)는"
+                                after="단계에 해당한다"
+                                defaultValue="3"
+                                options={GUIDE_TRL_OPTIONS}
+                            />
+                        </QuestionItem>
+                    </QuestionList>
+                    <QuestionList start={11} className="mt-6">
+                        <QuestionItem>
+                            <QuestionSelect
+                                name="guide-technology-type"
+                                label="신청기술 유형"
+                                before="신청기술은"
+                                after="기술이다."
+                                options={GUIDE_TECHNOLOGY_TYPE_OPTIONS}
+                            />
+                        </QuestionItem>
+                    </QuestionList>
+                </div>
+                <CodeBlock code={SELECT_ANSWER_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="question-options" className="flex flex-col gap-4">
                 <div>
                     <h2 id="question-options" className="typo-h4-bold">
@@ -305,12 +393,12 @@ const QuestionListGuidePage = () => (
                         <QuestionItem
                             align="control"
                             helper={
-                                <Link
-                                    href="#question-props"
-                                    className="inline-flex items-center gap-0.5 hover:underline"
-                                >
-                                    TRL 확인 <ChevronRight aria-hidden="true" className="size-icon-xs" />
-                                </Link>
+                                <Button variant="text-underline" size="md" asChild>
+                                    <Link href="#question-props">
+                                        TRL 확인
+                                        <ChevronRight aria-hidden="true" />
+                                    </Link>
+                                </Button>
                             }
                         >
                             신청기술의 기술성숙도(TRL)는
