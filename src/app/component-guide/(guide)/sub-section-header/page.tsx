@@ -38,7 +38,7 @@ const USAGE_CODE_LIST = `<SubSectionHeader>
   <SubSectionHeaderTitle>기술인력</SubSectionHeaderTitle>
   <SubSectionHeaderDescription asChild>
     <ul className="flex list-none flex-col gap-1.5">
-      <li className="flex gap-1.5">
+      <li className="flex">
         <ListMarker level={2} />
         <span>
           경영주를 제외하고, 4대보험 가입자 명부 등 확인 가능한 인력을 중복 없이 입력해 주세요.
@@ -165,7 +165,7 @@ const SubSectionHeaderGuidePage = () => (
                         <SubSectionHeaderTitle>기술인력</SubSectionHeaderTitle>
                         <SubSectionHeaderDescription asChild>
                             <ul className="flex list-none flex-col gap-1.5">
-                                <li className="flex gap-1.5">
+                                <li className="flex">
                                     <ListMarker level={2} />
                                     <span>
                                         경영주를 제외하고, 4대보험 가입자 명부 등 확인 가능한 인력을 중복 없이 입력해

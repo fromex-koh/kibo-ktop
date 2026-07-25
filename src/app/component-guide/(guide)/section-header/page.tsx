@@ -38,11 +38,11 @@ const USAGE_CODE_LIST = `<SectionHeader>
   <SectionHeaderTitle>대표자 경력사항</SectionHeaderTitle>
   <SectionHeaderDescription asChild>
     <ul className="flex list-none flex-col gap-2">
-      <li className="flex gap-1.5">
+      <li className="flex">
         <ListMarker />
         <span>대표자 경력사항의 모든 정보는 필수 입력정보입니다.</span>
       </li>
-      <li className="flex gap-1.5">
+      <li className="flex">
         <ListMarker />
         <span>대표자의 경력사항을 현 직장 근무경력을 포함하여 최근 경력부터 과거순으로 차례대로 입력해주십시오.</span>
       </li>
@@ -168,11 +168,11 @@ const SectionHeaderGuidePage = () => (
                         <SectionHeaderTitle>대표자 경력사항</SectionHeaderTitle>
                         <SectionHeaderDescription asChild>
                             <ul className="flex list-none flex-col gap-2">
-                                <li className="flex gap-1.5">
+                                <li className="flex">
                                     <ListMarker />
                                     <span>대표자 경력사항의 모든 정보는 필수 입력정보입니다.</span>
                                 </li>
-                                <li className="flex gap-1.5">
+                                <li className="flex">
                                     <ListMarker />
                                     <span>
                                         대표자의 경력사항을 현 직장 근무경력을 포함하여 최근 경력부터 과거순으로

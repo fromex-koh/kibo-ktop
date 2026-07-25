@@ -1019,7 +1019,7 @@ const ChartGuidePage = () => (
                             '외곽 노드나 라벨이 영역을 벗어나면 분석기업을 중앙에 유지한 채 자동 축소합니다.',
                             '외곽 기업은 직접 이동하거나 키보드로 선택해 상세 정보를 확인할 수 있습니다.',
                         ].map((description) => (
-                            <li key={description} className="flex items-start gap-1.5">
+                            <li key={description} className="flex items-start">
                                 <ListMarker type="unordered" level={1} />
                                 <span>{description}</span>
                             </li>
@@ -1053,7 +1053,7 @@ const ChartGuidePage = () => (
                             '외곽 노드나 라벨이 영역을 벗어나면 전체 그래프가 화면 안에 들어오도록 자동 축소합니다.',
                             '노드는 마우스나 Tab 키로 선택해 전체 정보 툴팁을 확인할 수 있습니다.',
                         ].map((description) => (
-                            <li key={description} className="flex items-start gap-1.5">
+                            <li key={description} className="flex items-start">
                                 <ListMarker type="unordered" level={1} />
                                 <span>{description}</span>
                             </li>
@@ -1082,7 +1082,7 @@ const ChartGuidePage = () => (
                                 '브라우저 너비가 바뀌면 차트 크기를 다시 계산하므로 라벨이 짧은 시간 뒤 재배치될 수 있습니다.',
                                 '중간·모바일 화면에서는 차트와 범례를 세로로 배치해 라벨 영역을 확보합니다.',
                             ].map((description) => (
-                                <li key={description} className="flex items-start gap-1.5">
+                                <li key={description} className="flex items-start">
                                     <ListMarker type="unordered" level={1} />
                                     <span>{description}</span>
                                 </li>
@@ -1141,7 +1141,7 @@ const ChartGuidePage = () => (
                             'score는 반원 게이지의 표시 비율입니다. 현재 예시는 화면 확인용 임시값이며, 실제 연동 시 API 값 또는 확정된 등급별 기준을 사용해야 합니다.',
                             '3자 이상 등급은 글자 크기와 설명 간격을 자동 조정하며 전체 원문은 접근성 텍스트에 유지합니다.',
                         ].map((description) => (
-                            <li key={description} className="flex items-start gap-1.5">
+                            <li key={description} className="flex items-start">
                                 <ListMarker type="unordered" level={1} />
                                 <span>{description}</span>
                             </li>
@@ -1192,7 +1192,7 @@ const ChartGuidePage = () => (
                             '각 지표에는 하나의 등급만 전달하며 데이터 타입에서 행당 단일 체크를 보장합니다.',
                             '작은 화면에서는 열 너비를 유지하고 표 영역만 가로로 이동해 전체 등급을 확인합니다.',
                         ].map((description) => (
-                            <li key={description} className="flex items-start gap-1.5">
+                            <li key={description} className="flex items-start">
                                 <ListMarker type="unordered" level={1} />
                                 <span>{description}</span>
                             </li>
@@ -1226,7 +1226,7 @@ const ChartGuidePage = () => (
                                 '실선·면은 조회기업, 점선은 업종평균으로 표현해 색상 외에도 형태로 구분합니다.',
                                 '컨테이너 너비에 맞춰 차트가 자동 축소되며 전체 수치는 접근성 표로 함께 제공합니다.',
                             ].map((description) => (
-                                <li key={description} className="flex items-start gap-1.5">
+                                <li key={description} className="flex items-start">
                                     <ListMarker type="unordered" level={1} />
                                     <span>{description}</span>
                                 </li>
@@ -1267,7 +1267,7 @@ const ChartGuidePage = () => (
                                 '작은 화면에서는 막대와 축의 최소 너비를 유지하고 차트 영역만 가로로 이동합니다.',
                                 '막대에 마우스를 올리면 계열명·값·단위를 툴팁으로 확인할 수 있습니다.',
                             ].map((description) => (
-                                <li key={description} className="flex items-start gap-1.5">
+                                <li key={description} className="flex items-start">
                                     <ListMarker type="unordered" level={1} />
                                     <span>{description}</span>
                                 </li>
@@ -1352,7 +1352,7 @@ const ChartGuidePage = () => (
                             '작은 화면에서는 축과 막대의 최소 너비를 유지하고 차트 영역만 가로로 이동합니다.',
                             '막대 위 값 라벨과 숨김 데이터 표를 함께 제공해 색상에만 의존하지 않습니다.',
                         ].map((description) => (
-                            <li key={description} className="flex items-start gap-1.5">
+                            <li key={description} className="flex items-start">
                                 <ListMarker type="unordered" level={1} />
                                 <span>{description}</span>
                             </li>
@@ -1386,7 +1386,7 @@ const ChartGuidePage = () => (
                             'Y축 범위와 눈금 간격을 주입해 비율과 음수가 포함된 금액 데이터를 같은 컴포넌트로 표현합니다.',
                             '작은 화면에서는 시간축의 최소 너비를 유지하고 차트 영역만 가로로 이동합니다.',
                         ].map((description) => (
-                            <li key={description} className="flex items-start gap-1.5">
+                            <li key={description} className="flex items-start">
                                 <ListMarker type="unordered" level={1} />
                                 <span>{description}</span>
                             </li>
@@ -1469,7 +1469,7 @@ const ChartGuidePage = () => (
                             '중요도가 큰 단어부터 전달하면 충돌을 피해 수평으로 자동 배치하고, 컨테이너 크기에 맞춰 다시 계산합니다.',
                             '단어에 마우스를 올리면 정규화된 중요도 weight를 툴팁으로 확인할 수 있습니다.',
                         ].map((description) => (
-                            <li key={description} className="flex items-start gap-1.5">
+                            <li key={description} className="flex items-start">
                                 <ListMarker type="unordered" level={1} />
                                 <span>{description}</span>
                             </li>

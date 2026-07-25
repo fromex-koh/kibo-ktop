@@ -38,11 +38,11 @@ const USAGE_CODE = `<Dialog>
       <h3 className="typo-title-l-bold text-foreground">1depth</h3>
       <ul className="flex flex-col gap-2">
         <li>
-          <span className="flex gap-1.5 typo-body-xl-regular text-label-foreground">
+          <span className="flex typo-body-xl-regular text-label-foreground">
             <ListMarker type="unordered" level={1} />텍스트 목록 레벨 1
           </span>
           <ul className="flex flex-col gap-2 pt-2 pl-3">
-            <li className="flex gap-1.5 typo-body-xl-regular text-label-foreground">
+            <li className="flex typo-body-xl-regular text-label-foreground">
               <ListMarker type="unordered" level={2} />텍스트 목록 레벨 2
             </li>
           </ul>
@@ -177,52 +177,52 @@ const DialogGuidePage = () => (
                                 <h3 className="typo-title-l-bold text-foreground">1depth</h3>
                                 <ul className="flex flex-col gap-2">
                                     <li>
-                                        <span className="typo-body-xl-regular text-label-foreground flex gap-1.5">
+                                        <span className="typo-body-xl-regular text-label-foreground flex">
                                             <ListMarker type="unordered" level={1} />
                                             텍스트 목록 레벨 1
                                         </span>
                                         <ul className="flex flex-col gap-2 pt-2 pl-3">
-                                            <li className="typo-body-xl-regular text-label-foreground flex gap-1.5">
+                                            <li className="typo-body-xl-regular text-label-foreground flex">
                                                 <ListMarker type="unordered" level={2} />
                                                 텍스트 목록 레벨 2
                                             </li>
-                                            <li className="typo-body-xl-regular text-label-foreground flex gap-1.5">
+                                            <li className="typo-body-xl-regular text-label-foreground flex">
                                                 <ListMarker type="unordered" level={2} />
                                                 텍스트 목록 레벨 2
                                             </li>
                                         </ul>
                                     </li>
-                                    <li className="typo-body-xl-regular text-label-foreground flex gap-1.5">
+                                    <li className="typo-body-xl-regular text-label-foreground flex">
                                         <ListMarker type="unordered" level={1} />
                                         텍스트 목록 레벨 1
                                     </li>
-                                    <li className="typo-body-xl-regular text-label-foreground flex gap-1.5">
+                                    <li className="typo-body-xl-regular text-label-foreground flex">
                                         <ListMarker type="unordered" level={1} />
                                         텍스트 목록 레벨 1
                                     </li>
                                 </ul>
                                 <ol className="flex flex-col gap-2">
                                     <li>
-                                        <span className="typo-body-xl-regular text-label-foreground flex gap-1.5">
+                                        <span className="typo-body-xl-regular text-label-foreground flex">
                                             <ListMarker type="ordered" level={1} index={1} />
                                             텍스트 목록 레벨 1
                                         </span>
                                         <ol className="flex flex-col gap-2 pt-2 pl-3">
-                                            <li className="typo-body-xl-regular text-label-foreground flex gap-1.5">
+                                            <li className="typo-body-xl-regular text-label-foreground flex">
                                                 <ListMarker type="ordered" level={2} index={1} />
                                                 텍스트 목록 레벨 2
                                             </li>
-                                            <li className="typo-body-xl-regular text-label-foreground flex gap-1.5">
+                                            <li className="typo-body-xl-regular text-label-foreground flex">
                                                 <ListMarker type="ordered" level={2} index={2} />
                                                 텍스트 목록 레벨 2
                                             </li>
                                         </ol>
                                     </li>
-                                    <li className="typo-body-xl-regular text-label-foreground flex gap-1.5">
+                                    <li className="typo-body-xl-regular text-label-foreground flex">
                                         <ListMarker type="ordered" level={1} index={2} />
                                         텍스트 목록 레벨 1
                                     </li>
-                                    <li className="typo-body-xl-regular text-label-foreground flex gap-1.5">
+                                    <li className="typo-body-xl-regular text-label-foreground flex">
                                         <ListMarker type="ordered" level={1} index={3} />
                                         텍스트 목록 레벨 1
                                     </li>

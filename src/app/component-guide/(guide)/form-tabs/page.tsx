@@ -131,7 +131,7 @@ const RepeatSection = ({title, children}: {title: string; children: ReactNode}) 
 
 // 안내 문구 — FormCard 의 subtitle 은 <p> 라 리스트 대신 인라인 불릿으로 둔다[8.1.1].
 const BulletNote = ({children}: {children: string}) => (
-    <span className="flex gap-1.5">
+    <span className="flex">
         <ListMarker />
         <span>{children}</span>
     </span>

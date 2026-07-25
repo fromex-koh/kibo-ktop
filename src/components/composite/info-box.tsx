@@ -13,8 +13,8 @@ import {cn} from '@/lib/utils'
 //
 // 색·타이포(Figma): 제목 = title-l-bold(20px)·foreground(gray.900), 본문·불릿 = body-xl-regular(16px)·
 // foreground-subtle(gray.500, ListMarker 점 색과 동일). 전부 기존 토큰이라 커스텀 색이 없다([PB-04]).
-// 규격(Figma): radius 16(rounded-lg), 패딩 px-10 py-8(40·32), 제목↔목록 gap-4(16), 항목 사이 gap-2(8),
-// 마커↔본문 gap-1.5(6, ListMarker 표준 사용 간격).
+// 규격(Figma): radius 16(rounded-lg), 패딩 px-10 py-8(40·32), 제목↔목록 gap-4(16), 항목 사이 gap-2(8).
+// 마커↔본문 간격은 ListMarker 가 자기 폭(12px 칸)에 포함하므로 행에 gap 을 주지 않는다.
 
 type InfoBoxVariant = 'filled' | 'outline'
 
@@ -57,7 +57,7 @@ const InfoBox = ({variant = 'filled', title, icon, className, children, ...props
 )
 
 const InfoBoxItem = ({className, children, ...props}: ComponentPropsWithoutRef<'li'>) => (
-    <li data-slot="info-box-item" className={cn('flex gap-1.5', className)} {...props}>
+    <li data-slot="info-box-item" className={cn('flex', className)} {...props}>
         <ListMarker type="unordered" level={1} />
         <span className="typo-body-xl-regular text-foreground-subtle min-w-0">{children}</span>
     </li>

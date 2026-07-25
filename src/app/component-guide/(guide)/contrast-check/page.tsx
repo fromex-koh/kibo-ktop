@@ -96,14 +96,14 @@ const ContrastCheckPage = () => (
         <header className="flex flex-col gap-2">
             <h1 className="typo-display-m-bold text-foreground">웹 접근성 명도 대비 검사</h1>
             <ul className="typo-body-l-regular text-foreground-subtle flex list-none flex-col gap-1">
-                <li className="flex items-start gap-1.5">
+                <li className="flex items-start">
                     <ListMarker type="unordered" level={1} />
                     <span>
                         WCAG AA 기준은 일반 텍스트 4.5:1 이상, 24px 이상 또는 18.66px 굵은 텍스트 3:1 이상이며, 사용자
                         인터페이스와 의미 있는 그래픽은 인접 색상과 3:1 이상이어야 합니다.
                     </span>
                 </li>
-                <li className="flex items-start gap-1.5">
+                <li className="flex items-start">
                     <ListMarker type="unordered" level={1} />
                     <span>
                         비선택 상태나 placeholder처럼 사용자가 조작할 수 있거나 입력에 필요한 요소는 4.5:1 이상의 명도

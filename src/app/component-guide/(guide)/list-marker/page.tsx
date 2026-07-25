@@ -2,13 +2,14 @@ import type {Metadata} from 'next'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
+import {Table} from '@/components/custom/table'
 import {BaseCard} from '@/components/composite/base-card'
 import {ListMarker} from '@/components/custom/list-marker'
 
 export const metadata: Metadata = {title: '리스트 마커 (ListMarker)'}
 
 const USAGE_CODE = `<ul className="flex list-none flex-col gap-2">
-  <li className="flex gap-1.5">
+  <li className="flex">
     <ListMarker type="unordered" level={1} />
     위 고유식별정보 수집·이용에 동의하십니까?
   </li>
@@ -17,7 +18,7 @@ const USAGE_CODE = `<ul className="flex list-none flex-col gap-2">
 {/* 번호 목록 — index 로 순번을 넘긴다 */}
 <ol className="flex list-none flex-col gap-2">
   {items.map((text, index) => (
-    <li key={text} className="flex gap-1.5">
+    <li key={text} className="flex">
       <ListMarker type="ordered" level={1} index={index + 1} />
       {text}
     </li>
@@ -31,6 +32,33 @@ const VARIANTS = [
     {type: 'ordered', level: 1, desc: '숫자(1.) — 순서 목록', label: 'ordered · level 1'},
     {type: 'ordered', level: 2, desc: '문자(a.) — 2뎁스 순서 목록', label: 'ordered · level 2'},
 ] as const
+
+// Figma "list_atomic_bullet" 실측 — 마커는 글리프 + 뒤 여백을 자기 폭에 포함한다(본문은 그 오른쪽에서 바로 시작).
+const SPEC_COLUMNS = [
+    {key: 'variant', header: '변형', align: 'start', rowHeader: true},
+    {key: 'glyph', header: '글리프', align: 'start', wrap: true},
+    {key: 'box', header: '마커 칸', align: 'start', wrap: true},
+    {key: 'color', header: '색', align: 'start'},
+] as const
+
+const SPEC_ROWS = [
+    {
+        key: 'unordered-1',
+        cells: ['unordered · level 1', '점 4×4, 원형', '12px (글리프 4 + 여백 8)', 'foreground-subtle'],
+    },
+    {
+        key: 'unordered-2',
+        cells: ['unordered · level 2', '대시 6×1.5, 직사각형', '12px (글리프 6 + 여백 6)', 'foreground-subtle'],
+    },
+    {
+        key: 'ordered-1',
+        cells: ['ordered · level 1', '숫자 "1." body-xl-regular', '글자 폭 + 여백 8', 'label-foreground'],
+    },
+    {
+        key: 'ordered-2',
+        cells: ['ordered · level 2', '문자 "a." body-xl-regular', '글자 폭 + 여백 8', 'label-foreground'],
+    },
+]
 
 const PROPS_ITEMS = [
     ['ListMarker', 'type', '불릿 계열과 순서 계열을 선택합니다.', "'unordered'", "'unordered' | 'ordered'"],
@@ -60,7 +88,7 @@ const ListMarkerGuidePage = () => (
                 <ul className="flex flex-col gap-3">
                     {VARIANTS.map((v) => (
                         <li key={v.label} className="flex items-center gap-4">
-                            <span className="flex w-40 items-center gap-1.5">
+                            <span className="flex w-40 items-center">
                                 <ListMarker type={v.type} level={v.level} index={1} />
                                 <span className="typo-body-xl-regular text-foreground">항목 텍스트</span>
                             </span>
@@ -69,6 +97,23 @@ const ListMarkerGuidePage = () => (
                         </li>
                     ))}
                 </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="lm-spec" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="lm-spec" className="typo-h4-bold">
+                        규격
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        마커는 글리프와 그 뒤 여백을 함께 차지합니다(불릿은 12px 칸, 순번은 글자 폭 + 8px). 본문은 마커
+                        칸 오른쪽에서 바로 시작하므로 <code className="font-mono">li</code> 에 별도{' '}
+                        <code className="font-mono">gap</code> 을 주지 않습니다 — 주면 시안보다 들여쓰기가 그만큼
+                        넓어집니다.
+                    </p>
+                </div>
+                <Table size="md" caption="ListMarker 규격" columns={SPEC_COLUMNS} rows={SPEC_ROWS} />
             </section>
         </BaseCard>
 
@@ -86,29 +131,29 @@ const ListMarkerGuidePage = () => (
                 </div>
                 <div className="grid gap-6 md:grid-cols-2">
                     <ul className="flex list-none flex-col gap-2" aria-label="안내 목록">
-                        <li className="typo-body-xl-regular text-foreground flex gap-1.5">
+                        <li className="typo-body-xl-regular text-foreground flex">
                             <ListMarker type="unordered" level={1} />
                             고유식별정보 수집·이용에 동의합니다.
                         </li>
-                        <li className="typo-body-xl-regular text-foreground flex gap-1.5">
+                        <li className="typo-body-xl-regular text-foreground flex">
                             <ListMarker type="unordered" level={2} />
                             동의 내용은 언제든 철회할 수 있습니다.
                         </li>
                     </ul>
                     <ol className="flex list-none flex-col gap-2" aria-label="수집 정보 목록">
-                        <li className="typo-body-xl-regular text-foreground flex gap-1.5">
+                        <li className="typo-body-xl-regular text-foreground flex">
                             <ListMarker type="ordered" level={1} index={1} />
                             수집·이용 목적: 본인 확인
                         </li>
-                        <li className="typo-body-xl-regular text-foreground flex gap-1.5">
+                        <li className="typo-body-xl-regular text-foreground flex">
                             <ListMarker type="ordered" level={1} index={2} />
                             보유 기간: 5년
                         </li>
-                        <li className="typo-body-xl-regular text-foreground flex gap-1.5">
+                        <li className="typo-body-xl-regular text-foreground flex">
                             <ListMarker type="ordered" level={2} index={1} />
                             세부 항목: 성명
                         </li>
-                        <li className="typo-body-xl-regular text-foreground flex gap-1.5">
+                        <li className="typo-body-xl-regular text-foreground flex">
                             <ListMarker type="ordered" level={2} index={2} />
                             세부 항목: 연락처
                         </li>

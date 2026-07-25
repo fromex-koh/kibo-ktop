@@ -418,7 +418,7 @@ const ChipGuidePage = () => (
                         {/* 안내 질문 — 라디오 그룹의 레이블(aria-labelledby 로 연결) */}
                         <p
                             id="consent-1-label"
-                            className="typo-body-xl-regular text-foreground-subtle flex items-start gap-1.5"
+                            className="typo-body-xl-regular text-foreground-subtle flex items-start"
                         >
                             <ListMarker type="unordered" level={2} />위 고유식별정보 수집·이용에 동의하십니까?
                         </p>

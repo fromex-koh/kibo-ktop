@@ -38,7 +38,7 @@ const SELF_DIAGNOSIS_USAGE_CODE = `<BaseCard variant="outlined" padding="lg">
       <h3 className="typo-title-l-bold text-foreground">자가진단 안내</h3>
     </div>
     <ul className="flex list-none flex-col gap-2">
-      <li className="flex gap-1.5">
+      <li className="flex">
         <ListMarker />
         <span className="typo-body-xl-regular text-foreground-subtle">안내 항목…</span>
       </li>
@@ -148,7 +148,7 @@ const BaseCardGuidePage = () => (
                     </div>
                     <ul className="flex list-none flex-col gap-2">
                         {SELF_DIAGNOSIS_NOTES.map((note) => (
-                            <li key={note} className="flex gap-1.5">
+                            <li key={note} className="flex">
                                 <ListMarker />
                                 <span className="typo-body-xl-regular text-foreground-subtle">{note}</span>
                             </li>
