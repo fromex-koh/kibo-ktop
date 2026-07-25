@@ -26,6 +26,9 @@ const TEXT_TONE_SLOTS = new Set([
     'primary-strong',
     'badge-solid-fg',
     'stepper-inactive',
+    'calendar-sunday',
+    'calendar-saturday',
+    'select-selected-foreground',
 ])
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
@@ -165,6 +168,9 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'segmented-solid-active-foreground': 'bg-segmented-solid-active-foreground',
     'pagination-active': 'bg-pagination-active',
     'pagination-active-foreground': 'bg-pagination-active-foreground',
+    'select-selected-foreground': 'bg-select-selected-foreground',
+    'calendar-sunday': 'bg-calendar-sunday',
+    'calendar-saturday': 'bg-calendar-saturday',
     'cta-surface': 'bg-cta-surface',
 }
 
@@ -307,6 +313,8 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
     {name: 'main-accent / main-accent-bright', match: (n) => n.startsWith('main-accent')},
     {name: 'pagination', match: (n) => n.startsWith('pagination-')},
+    {name: 'calendar (일요일 / 토요일)', match: (n) => n.startsWith('calendar-')},
+    {name: 'select-selected-foreground', match: (n) => n === 'select-selected-foreground'},
     {name: '기타', match: () => true}, // 안전망 — 위에서 안 잡힌 커스텀 슬롯이 있으면 여기로.
 ]
 
@@ -457,6 +465,19 @@ const GROUP_USAGE: Record<string, ReactNode> = {
         <>
             페이지네이션(Pagination)의 현재 페이지 강조 면(navy)과 그 위 텍스트에 사용합니다. 시안대로 세 테마에서 같은
             navy 값을 유지합니다.
+        </>
+    ),
+    'select-selected-foreground': (
+        <>
+            Select·드롭다운에서 현재 선택된 옵션의 텍스트 색입니다. 시안이 선택 상태를 배경 없이 짙은 navy + Medium
+            굵기로만 구분해, 강조 텍스트(primary-strong)와 구분되는 슬롯으로 둡니다.
+        </>
+    ),
+    'calendar (일요일 / 토요일)': (
+        <>
+            달력(Calendar)의 요일 헤더에서 일요일·토요일을 구분하는 색입니다. 오류를 뜻하는 destructive·error 와 역할이
+            달라 별도 슬롯으로 둡니다. 라이트는 Figma 원본(error.500 · blue.600)이고, 다크는 어두운 배경에서 명도 대비를
+            확보하도록 밝은 단계(error.300 · blue.200)로 매핑합니다.
         </>
     ),
 }
