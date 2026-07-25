@@ -6,8 +6,13 @@ const datePickerPlaceholderClassName = 'text-placeholder'
 const datePickerValueClassName = 'text-label-foreground'
 const datePickerDisabledValueClassName = 'text-disabled'
 const datePickerIconClassName = 'text-foreground group-has-disabled/input-group:text-disabled size-icon-md shrink-0'
+// PROJECT-STYLE: shadcn Popover 원본은 rounded-lg + ring-1 이지만,
+// Figma 날짜선택 팝오버는 radius 8 + gray.200 테두리 1px 이라
+// rounded-sm/border-subtle-2 를 쓰고 ring 은 끈다. 내부 여백은 Calendar(p-6)가 가진다.
+const datePickerCalendarPopoverClassName = 'border-subtle-2 w-auto rounded-sm border p-0 ring-0'
 
 export {
+    datePickerCalendarPopoverClassName,
     datePickerGroupClassName,
     datePickerTriggerClassName,
     datePickerPlaceholderClassName,

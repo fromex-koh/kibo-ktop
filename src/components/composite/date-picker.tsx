@@ -9,6 +9,7 @@ import {Calendar} from '@/components/ui/calendar'
 import {InputGroup} from '@/components/ui/input-group'
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
 import {
+    datePickerCalendarPopoverClassName,
     datePickerDisabledValueClassName,
     datePickerGroupClassName,
     datePickerIconClassName,
@@ -75,7 +76,7 @@ const DatePicker = ({
                         </button>
                     </PopoverTrigger>
                 </InputGroup>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent className={datePickerCalendarPopoverClassName} align="start">
                     <Calendar
                         mode="single"
                         selected={value}
@@ -84,6 +85,9 @@ const DatePicker = ({
                             setOpen(false)
                         }}
                         locale={ko}
+                        // 디자인의 헤더는 [이전] 2026.07 [다음] 이 가운데 모인 형태다.
+                        navLayout="around"
+                        formatters={{formatCaption: (date) => format(date, 'yyyy.MM')}}
                     />
                 </PopoverContent>
             </Popover>
