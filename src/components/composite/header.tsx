@@ -98,9 +98,10 @@ const UtilityLink = ({label, external, className}: {label: string; external?: bo
     </Button>
 )
 
-// h1 > a > img 구조로 사이트명을 전달한다.
+// p > a > img 구조로 사이트명을 전달한다. 로고는 모든 화면에 반복되는 홈 링크라 제목(h1)이 아니다 —
+// h1 은 화면마다 하나뿐인 본문 제목(PageTitleBar·히어로 등)의 몫이다. [KWCAG 6.4.2]
 const Logo = ({variant}: {variant: HeaderVariant}) => (
-    <h1 className="shrink-0">
+    <p className="shrink-0">
         <Link href="#" className="flex shrink-0 items-center">
             {variant === 'main' ? (
                 <Image
@@ -132,7 +133,7 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
                 </>
             )}
         </Link>
-    </h1>
+    </p>
 )
 
 // 실제 Header와 가이드 데모가 공유하는 본문.

@@ -6,8 +6,8 @@ import {cn} from '@/lib/utils'
 
 // 스텝 헤더(StepHeader) — 다단계(마법사) 플로우 한 단계의 최상단 헤더(L2 composite).
 // 제목·설명은 두 시안이 같고 우측 진행 인디케이터만 달라 variant 로 나눈다(둘 중 하나로 확정되면 분기 삭제).
-//   · stepper(Figma "1depth")  : [제목(h1) + 번호 원 Stepper] 한 줄 + 아래 설명, 우측 상단에 다음 단계 라벨.
-//   · progress(Figma "타이틀+step"): 좌측 [제목(h1) + 설명], 우측에 StepProgress 진행바(현재/전체·현재·다음 제목 포함).
+//   · stepper(Figma "1depth")  : [제목(h2) + 번호 원 Stepper] 한 줄 + 아래 설명, 우측 상단에 다음 단계 라벨.
+//   · progress(Figma "타이틀+step"): 좌측 [제목(h2) + 설명], 우측에 StepProgress 진행바(현재/전체·현재·다음 제목 포함).
 // 단계 데이터는 steps(제목 배열) 하나로 통일한다 — 전체 수는 steps.length, 다음 단계 라벨은 steps[current] 다.
 // 색: 제목 foreground(gray.900) · 설명 foreground-subtle(gray.500) · 다음단계 stepper-inactive(gray.200)
 //   (Stepper 의 '예정(before)' 단계와 동일한 inactive 톤 — 아직 도달 전 단계라 희미하게. 아직 활성화되지
@@ -16,7 +16,7 @@ import {cn} from '@/lib/utils'
 type StepHeaderVariant = 'stepper' | 'progress'
 
 type StepHeaderProps = {
-    // 단계 제목(예: "1단계. 고객 정보 활용 동의"). 페이지 최상단 제목이라 h1 로 렌더된다.
+    // 단계 제목(예: "1단계. 고객 정보 활용 동의"). 화면 제목 아래에 오는 섹션 제목이라 h2 로 렌더된다.
     title: ReactNode
     // 단계 제목 목록. 전체 단계 수는 이 배열 길이를 단일 소스로 쓴다.
     // stepper 는 길이만, progress 는 현재·다음 단계 제목까지 사용한다.
@@ -50,7 +50,9 @@ const StepHeader = ({
         <header data-slot="step-header" className={cn('flex items-start justify-between gap-4', className)} {...props}>
             <div data-slot="step-header-main" className="flex min-w-0 flex-col gap-2">
                 <div data-slot="step-header-title-row" className="flex items-center gap-6">
-                    <h1 className="typo-h1-bold text-foreground text-balance">{title}</h1>
+                    {/* 단계 제목은 화면 제목(PageTitleBar h1 등) 아래에 오는 섹션 제목이라 h2 다.
+                        크기는 시안 그대로 typo-h1-bold 를 유지한다(타이포 토큰과 헤딩 레벨은 별개). [KWCAG 6.4.2] */}
+                    <h2 className="typo-h1-bold text-foreground text-balance">{title}</h2>
                     {variant === 'stepper' ? <Stepper count={count} current={current} /> : null}
                 </div>
                 {description ? <p className="typo-title-m-regular text-foreground-subtle">{description}</p> : null}

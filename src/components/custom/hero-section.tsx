@@ -45,14 +45,14 @@ const HeroSection = () => (
                         (plain 클래스) 대신 Tailwind 기본 text-* 를 반응형으로 쓴다. leading-normal 은 원래
                         typo-display-xl-bold 의 행간(--raw-line-height-normal=1.5)을 그대로 맞추기 위함.
                         프로젝트 반응형 타이포 방침이 정해지면 typo 토큰으로 승격. */}
-                    <h2
+                    <h1
                         id="hero-title"
                         className="text-foreground text-4xl leading-normal font-bold break-keep md:text-5xl"
                     >
                         기업에 맞는 기술평가로
                         <br />
                         금융과 성장의 기회를 연결합니다
-                    </h2>
+                    </h1>
                     {/* 반응형 크기: 모바일 text-base(16px) → md text-xl(20px). PC(md+)는 원래 typo-title-l-bold
                         과 동일(20px·행간 1.5). 메인페이지 예외(SHADCN.md 타이포 유틸 예외). */}
                     <p className="text-foreground-subtle text-base leading-normal font-bold md:text-xl">

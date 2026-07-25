@@ -95,7 +95,7 @@ const PROPS_ROWS = [
             <span key="k" className="text-primary font-mono">
                 title
             </span>,
-            '단계 제목. 페이지 최상단 제목이라 h1 로 렌더됩니다.',
+            '단계 제목. 화면 제목(PageTitleBar 등) 아래 오는 섹션 제목이라 h2 로 렌더됩니다. 크기는 시안대로 typo-h1-bold 입니다.',
             <span key="t" className="font-mono">
                 ReactNode
             </span>,
