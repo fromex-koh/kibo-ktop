@@ -37,6 +37,8 @@ type SelectableCardCheckboxProps = SelectableCardBaseProps & {
     control?: 'checkbox'
     value?: string
     checked?: boolean
+    // 비제어(uncontrolled) 초기 선택 — 상태를 들고 있지 않아도 되는 화면에서 기본 체크를 표현한다.
+    defaultChecked?: boolean
     onCheckedChange?: (checked: boolean) => void
     name?: string
     required?: boolean
@@ -95,6 +97,7 @@ const SelectableCard = (props: SelectableCardProps) => {
                         name={props.name}
                         value={props.value}
                         checked={props.checked}
+                        defaultChecked={props.defaultChecked}
                         onCheckedChange={props.onCheckedChange}
                         required={props.required}
                         form={props.form}
