@@ -138,6 +138,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {
                 title: '탭',
                 items: [
+                    {label: 'FormTabs', href: '/component-guide/form-tabs'},
                     {label: 'TabCard', href: '/component-guide/tab-card'},
                     {label: 'Tabs', href: '/component-guide/tabs'},
                 ],
