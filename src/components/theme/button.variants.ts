@@ -20,8 +20,10 @@ const buttonVariants = cva(
                 ghost: 'text-foreground interactive:hover:bg-accent aria-expanded:bg-accent disabled:bg-control-disabled disabled:text-disabled',
                 destructive:
                     'bg-destructive text-destructive-foreground interactive:hover:bg-destructive/90 interactive:active:bg-destructive/80 disabled:border-disabled-subtle disabled:bg-control-disabled disabled:text-disabled',
-                link: 'text-label-foreground underline-offset-4 interactive:hover:underline disabled:text-disabled-subtle disabled:opacity-100',
-                text: 'text-label-foreground disabled:text-disabled-subtle disabled:opacity-100',
+                link: 'text-label-foreground underline-offset-4 decoration-1 interactive:hover:underline disabled:text-disabled-subtle disabled:opacity-100',
+                // PROJECT-STYLE: Figma button_text 는 default·hover·pressed·disabled 네 상태 모두 1px 밑줄이 있다.
+                // (shadcn 에는 없는 형태라 link 의 hover 밑줄과 구분해 상시 밑줄로 둔다.)
+                text: 'text-label-foreground underline underline-offset-4 decoration-1 disabled:text-disabled-subtle disabled:opacity-100',
             },
             size: {
                 default: 'h-control-h-md min-h-11 gap-2 px-4',
@@ -47,16 +49,16 @@ const buttonVariants = cva(
             {variant: 'default', size: 'lg', class: 'font-bold disabled:font-medium'},
             {variant: 'default', size: 'md', class: 'font-bold disabled:font-medium'},
             {variant: ['text', 'link'], class: 'min-h-0 min-w-0 p-0 font-normal'},
-            {variant: ['text', 'link'], size: '2xl', class: "h-control-h-md [&_svg:not([class*='size-'])]:size-5"},
+            {variant: ['text', 'link'], size: '2xl', class: "h-control-h-md [&_svg:not([class*='size-'])]:size-4"},
             {
                 variant: ['text', 'link'],
                 size: 'xl',
-                class: "h-control-h-md text-lg [&_svg:not([class*='size-'])]:size-5",
+                class: "h-control-h-md text-lg [&_svg:not([class*='size-'])]:size-4",
             },
             {
                 variant: ['text', 'link'],
                 size: 'lg',
-                class: "h-control-h-xs text-base [&_svg:not([class*='size-'])]:size-5",
+                class: "h-control-h-xs text-base [&_svg:not([class*='size-'])]:size-4",
             },
             {
                 variant: ['text', 'link'],

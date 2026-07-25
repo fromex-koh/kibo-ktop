@@ -3,6 +3,7 @@ import {ArrowRight, ChevronRight, Download, LoaderCircle, Search, Sun} from 'luc
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import {Button} from '@/components/ui/button'
 
 export const metadata: Metadata = {title: '버튼 (Button)'}
@@ -111,13 +112,13 @@ const ALL_VARIANTS = [
     {key: 'outline', label: 'outline', note: '내부 컴포넌트용'},
     {key: 'ghost', label: 'ghost', note: '내부 컴포넌트용'},
     {key: 'destructive', label: 'destructive', note: '내부 컴포넌트용'},
-    {key: 'text', label: 'text', note: 'Figma Text(채움·테두리 없음)'},
+    {key: 'text', label: 'text', note: 'Figma Text(채움·테두리 없음, 상시 1px 밑줄)'},
     {key: 'link', label: 'link', note: 'Figma Text + hover 밑줄'},
 ] as const
 
 const INLINE_VARIANTS = [
-    {key: 'text', label: 'text', note: '채움·테두리 없는 텍스트형'},
-    {key: 'link', label: 'link', note: 'text 와 같되 hover 에 밑줄'},
+    {key: 'text', label: 'text', note: '채움·테두리 없는 텍스트형(상시 밑줄)'},
+    {key: 'link', label: 'link', note: 'text 와 같되 밑줄이 hover 에만'},
 ] as const
 
 const DISABLED_VARIANTS = [
@@ -129,69 +130,218 @@ const DISABLED_VARIANTS = [
 ] as const
 
 // Figma button_text 는 공용 size 축(2xl~xs)과 별개로 자체 4단 스케일을 쓴다(값은 Figma 실측 px).
-// link 도 이 사양을 그대로 공유한다 — hover 밑줄만 다르다.
+// 아이콘은 large·medium·small 16px, xsmall 만 12px 이다.
+// link 도 이 사양을 그대로 공유한다 — text 는 상시 밑줄, link 는 hover 밑줄이라는 점만 다르다.
 const INLINE_SIZES = [
-    {key: 'xl', label: 'xl', height: 40, font: 18, icon: 20},
-    {key: 'lg', label: 'lg', height: 32, font: 16, icon: 20},
+    {key: 'xl', label: 'xl', height: 40, font: 18, icon: 16},
+    {key: 'lg', label: 'lg', height: 32, font: 16, icon: 16},
     {key: 'md', label: 'md', height: 24, font: 14, icon: 16},
     {key: 'sm', label: 'sm', height: 24, font: 12, icon: 12},
 ] as const
 
+// 가이드 표(size="md")의 행 머리글 — 키 이름과 실측 수치를 함께 보여준다.
+const sizeHeaderCell = (label: string, note: string) => (
+    <span className="flex flex-col gap-0.5">
+        <span className="text-primary font-mono">{label}</span>
+        <span className="typo-caption-regular text-muted-foreground">{note}</span>
+    </span>
+)
+
+const nameCell = (value: string) => <span className="text-primary font-mono">{value}</span>
+
+const controlChip = (value: string) => (
+    <span key={value} className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
+        {value}
+    </span>
+)
+
+const TYPE_MATRIX_COLUMNS = [
+    {key: 'size', header: 'Size', align: 'start', rowHeader: true},
+    ...TYPES.map((type) => ({key: type.key, header: type.label, align: 'start'}) as const),
+] as const
+
+const TYPE_MATRIX_ROWS = SIZES.map((size) => ({
+    key: size.key,
+    cells: [
+        sizeHeaderCell(size.label, `${size.height}px`),
+        ...TYPES.map((type) => (
+            <Button key={type.key} variant={type.key} size={size.key}>
+                <Download aria-hidden="true" />
+                버튼
+            </Button>
+        )),
+    ],
+}))
+
+const ICON_MATRIX_COLUMNS = [
+    {key: 'size', header: 'Size', align: 'start', rowHeader: true},
+    ...ICON_VARIANTS.map((variant) => ({key: variant.key, header: variant.label, align: 'start'}) as const),
+] as const
+
+const ICON_MATRIX_ROWS = ICON_SIZES.map((size) => ({
+    key: size.key,
+    cells: [
+        sizeHeaderCell(size.label, `${size.height}px`),
+        ...ICON_VARIANTS.map((variant) => (
+            <Button key={variant.key} variant={variant.key} size={size.key} aria-label="라이트 모드">
+                <Sun aria-hidden="true" />
+            </Button>
+        )),
+    ],
+}))
+
+const INLINE_VARIANT_COLUMNS = [
+    {key: 'variant', header: 'Variant', align: 'start', rowHeader: true},
+    {key: 'preview', header: 'Preview', align: 'start'},
+    {key: 'note', header: 'Note', align: 'start', wrap: true},
+] as const
+
+const INLINE_VARIANT_ROWS = INLINE_VARIANTS.map((variant) => ({
+    key: variant.key,
+    cells: [
+        nameCell(variant.label),
+        <Button key="preview" variant={variant.key} size="lg">
+            자세히 보기
+        </Button>,
+        variant.note,
+    ],
+}))
+
+const INLINE_SIZE_COLUMNS = [
+    {key: 'size', header: 'Size', align: 'start', rowHeader: true},
+    {key: 'text', header: '텍스트', align: 'start'},
+    {key: 'icon-start', header: '아이콘 왼쪽', align: 'start'},
+    {key: 'icon-end', header: '아이콘 오른쪽', align: 'start'},
+] as const
+
+const DISABLED_COLUMNS = [
+    {key: 'variant', header: 'Variant', align: 'start', rowHeader: true},
+    {key: 'text', header: '텍스트', align: 'start'},
+    {key: 'icon-start', header: '아이콘 왼쪽', align: 'start'},
+    {key: 'icon-end', header: '아이콘 오른쪽', align: 'start'},
+    {key: 'icon-only', header: '아이콘 전용', align: 'start'},
+    {key: 'icon-round', header: '원형 아이콘', align: 'start'},
+] as const
+
+const DISABLED_ROWS = DISABLED_VARIANTS.map((variant) => ({
+    key: variant.key,
+    cells: [
+        nameCell(variant.label),
+        <Button key="text" variant={variant.key} size="lg" disabled>
+            버튼명
+        </Button>,
+        <Button key="icon-start" variant={variant.key} size="lg" disabled>
+            <Download aria-hidden="true" />
+            버튼명
+        </Button>,
+        <Button key="icon-end" variant={variant.key} size="lg" disabled>
+            버튼명
+            <ArrowRight aria-hidden="true" />
+        </Button>,
+        <Button
+            key="icon-only"
+            variant={variant.key}
+            size="icon-lg"
+            disabled
+            aria-label={`${variant.label} 비활성 아이콘 버튼`}
+        >
+            <Search aria-hidden="true" />
+        </Button>,
+        <Button
+            key="icon-round"
+            variant={variant.key}
+            size="icon-lg"
+            className="rounded-full"
+            disabled
+            aria-label={`${variant.label} 비활성 원형 아이콘 버튼`}
+        >
+            <Search aria-hidden="true" />
+        </Button>,
+    ],
+}))
+
+const PROPS_COLUMNS = [
+    {key: 'name', header: 'Name', align: 'start', rowHeader: true},
+    {key: 'description', header: 'Description', align: 'start', wrap: true},
+    {key: 'default', header: 'Default', align: 'start'},
+    {key: 'control', header: 'Control', align: 'start', wrap: true},
+] as const
+
+const PROPS_ROWS = [
+    {
+        key: 'variant',
+        cells: [
+            nameCell('variant'),
+            '강조 단계. default/secondary/tertiary 는 Figma 디자인을 반영한 버튼 전용 토큰을 씁니다. outline/ghost/destructive 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는 기존 값이고, text/link 는 채움이 없는 인라인 액션이라 마지막에 함께 둡니다.',
+            <span key="default" className="font-mono">
+                &apos;default&apos;
+            </span>,
+            <span key="control" className="flex flex-wrap gap-1">
+                {[...TYPES.map((type) => type.key), 'outline', 'ghost', 'destructive', 'text', 'link'].map(controlChip)}
+            </span>,
+        ],
+    },
+    {
+        key: 'size',
+        cells: [
+            nameCell('size'),
+            'Figma 6단계 사이즈를 shadcn 방식의 축약형 2xl/xl/lg/md/sm/xs로 제공합니다. default와 icon 계열은 다이얼로그·시트·사이드바 등 내부 컴포넌트 호환을 위해 유지됩니다.',
+            <span key="default" className="font-mono">
+                &apos;default&apos;
+            </span>,
+            <span key="control" className="flex flex-wrap gap-1">
+                {[...SIZES.map((size) => size.key), ...LEGACY_SIZES].map(controlChip)}
+            </span>,
+        ],
+    },
+    {
+        key: 'asChild',
+        cells: [
+            nameCell('asChild'),
+            'next/link 등 다른 요소에 버튼 스타일만 씌울 때 사용합니다.',
+            <span key="default" className="font-mono">
+                false
+            </span>,
+            <span key="control">{controlChip('boolean')}</span>,
+        ],
+    },
+    {
+        key: 'className',
+        cells: [
+            nameCell('className'),
+            '추가 클래스명으로 스타일 확장',
+            <span key="default" className="font-mono">
+                &quot;&quot;
+            </span>,
+            '-',
+        ],
+    },
+]
+
 // text·link 는 같은 Figma 사양을 공유하므로 큐레이션 표도 같은 모양으로 나란히 둔다.
 const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'link'; caption: string}) => (
-    <div className="bg-background border-border overflow-x-auto rounded-md border">
-        <table className="w-full text-left">
-            <caption className="sr-only">{caption}</caption>
-            <thead>
-                <tr className="border-border border-b bg-gray-100/25">
-                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                        Size
-                    </th>
-                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                        텍스트
-                    </th>
-                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                        아이콘 왼쪽
-                    </th>
-                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                        아이콘 오른쪽
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                {INLINE_SIZES.map((size) => (
-                    <tr key={size.key} className="border-border bg-background border-b last:border-b-0">
-                        <th
-                            scope="row"
-                            className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                        >
-                            {size.label}
-                            <span className="typo-caption-regular text-muted-foreground block font-sans">
-                                {size.height}px · 폰트 {size.font}px · 아이콘 {size.icon}px
-                            </span>
-                        </th>
-                        <td className="px-4 py-3 align-middle">
-                            <Button variant={variant} size={size.key}>
-                                버튼명
-                            </Button>
-                        </td>
-                        <td className="px-4 py-3 align-middle">
-                            <Button variant={variant} size={size.key}>
-                                <Download aria-hidden="true" />
-                                버튼명
-                            </Button>
-                        </td>
-                        <td className="px-4 py-3 align-middle">
-                            <Button variant={variant} size={size.key}>
-                                버튼명
-                                <ChevronRight aria-hidden="true" />
-                            </Button>
-                        </td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-    </div>
+    <Table
+        size="md"
+        caption={caption}
+        columns={INLINE_SIZE_COLUMNS}
+        rows={INLINE_SIZES.map((size) => ({
+            key: size.key,
+            cells: [
+                sizeHeaderCell(size.label, `${size.height}px · 폰트 ${size.font}px · 아이콘 ${size.icon}px`),
+                <Button key="text" variant={variant} size={size.key}>
+                    버튼명
+                </Button>,
+                <Button key="icon-start" variant={variant} size={size.key}>
+                    <Download aria-hidden="true" />
+                    버튼명
+                </Button>,
+                <Button key="icon-end" variant={variant} size={size.key}>
+                    버튼명
+                    <ChevronRight aria-hidden="true" />
+                </Button>,
+            ],
+        }))}
+    />
 )
 
 // 버튼은 Card 와 달리 아이콘 전용 하위 컴포넌트가 없다 — 아이콘은 props 가 아니라 children 으로
@@ -256,7 +406,7 @@ const ButtonGuidePage = () => (
                         Button 을 디자인에 쓰는 variant 입니다.{' '}
                         <span className="font-mono">default·secondary·tertiary·text</span> 는 Figma type(
                         <span className="font-mono">text</span> 는 채움·테두리 없는 텍스트 버튼)이고,{' '}
-                        <span className="font-mono">link</span> 는 그 text 사양에 hover 밑줄만 더한 형태입니다.{' '}
+                        <span className="font-mono">link</span> 는 그 text 사양에서 밑줄만 hover 로 미룬 형태입니다.{' '}
                         <span className="font-mono">outline·ghost·destructive</span> 는 다이얼로그·시트 등 내부
                         컴포넌트가 쓰는 호환 값입니다.
                     </p>
@@ -295,48 +445,12 @@ const ButtonGuidePage = () => (
                         </p>
                     ))}
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">버튼 type·size 조합 미리보기</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Size
-                                </th>
-                                {TYPES.map((type) => (
-                                    <th key={type.key} scope="col" className="typo-body-l-medium px-4 py-3">
-                                        {type.label}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {SIZES.map((size) => (
-                                <tr key={size.key} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                                    >
-                                        {size.label}
-                                        <span className="typo-caption-regular text-muted-foreground block font-sans">
-                                            {size.height}px
-                                        </span>
-                                    </th>
-                                    {TYPES.map((type) => (
-                                        <td key={type.key} className="px-4 py-3 align-middle">
-                                            <div className="flex flex-col items-start gap-2">
-                                                <Button variant={type.key} size={size.key}>
-                                                    <Download aria-hidden="true" />
-                                                    버튼
-                                                </Button>
-                                            </div>
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    size="md"
+                    caption="버튼 type·size 조합 미리보기"
+                    columns={TYPE_MATRIX_COLUMNS}
+                    rows={TYPE_MATRIX_ROWS}
+                />
             </section>
         </BaseCard>
 
@@ -357,47 +471,12 @@ const ButtonGuidePage = () => (
                         컴팩트 예외입니다.
                     </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">아이콘 버튼 variant·size 조합 미리보기</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Size
-                                </th>
-                                {ICON_VARIANTS.map((v) => (
-                                    <th key={v.key} scope="col" className="typo-body-l-medium px-4 py-3">
-                                        {v.label}
-                                    </th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {ICON_SIZES.map((size) => (
-                                <tr key={size.key} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                                    >
-                                        {size.label}
-                                        <span className="typo-caption-regular text-muted-foreground block font-sans">
-                                            {size.height}px
-                                        </span>
-                                    </th>
-                                    {ICON_VARIANTS.map((v) => (
-                                        <td key={v.key} className="px-4 py-3 align-middle">
-                                            <div className="flex flex-col items-start gap-2">
-                                                <Button variant={v.key} size={size.key} aria-label="라이트 모드">
-                                                    <Sun aria-hidden="true" />
-                                                </Button>
-                                            </div>
-                                        </td>
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    size="md"
+                    caption="아이콘 버튼 variant·size 조합 미리보기"
+                    columns={ICON_MATRIX_COLUMNS}
+                    rows={ICON_MATRIX_ROWS}
+                />
             </section>
         </BaseCard>
 
@@ -421,46 +500,12 @@ const ButtonGuidePage = () => (
                         을 참고하세요.
                     </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">link text 버튼 variant 미리보기</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Variant
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Preview
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Note
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {INLINE_VARIANTS.map((variant) => (
-                                <tr key={variant.key} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                                    >
-                                        {variant.label}
-                                    </th>
-                                    <td className="px-4 py-3 align-middle">
-                                        <div className="flex flex-col items-start gap-2">
-                                            <Button variant={variant.key} size="lg">
-                                                자세히 보기
-                                            </Button>
-                                        </div>
-                                    </td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                        {variant.note}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    size="md"
+                    caption="link text 버튼 variant 미리보기"
+                    columns={INLINE_VARIANT_COLUMNS}
+                    rows={INLINE_VARIANT_ROWS}
+                />
             </section>
         </BaseCard>
 
@@ -542,83 +587,12 @@ const ButtonGuidePage = () => (
                         비활성 상태는 단순히 흐리게 처리하지 않고, type 별로 별도 배경·테두리·텍스트 색을 씁니다.
                     </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">Button variant별 비활성 상태</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Variant
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    텍스트
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    아이콘 왼쪽
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    아이콘 오른쪽
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    아이콘 전용
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    원형 아이콘
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {DISABLED_VARIANTS.map((variant) => (
-                                <tr key={variant.key} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 font-mono font-normal"
-                                    >
-                                        {variant.label}
-                                    </th>
-                                    <td className="px-4 py-3">
-                                        <Button variant={variant.key} size="lg" disabled>
-                                            버튼명
-                                        </Button>
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <Button variant={variant.key} size="lg" disabled>
-                                            <Download aria-hidden="true" />
-                                            버튼명
-                                        </Button>
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <Button variant={variant.key} size="lg" disabled>
-                                            버튼명
-                                            <ArrowRight aria-hidden="true" />
-                                        </Button>
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <Button
-                                            variant={variant.key}
-                                            size="icon-lg"
-                                            disabled
-                                            aria-label={`${variant.label} 비활성 아이콘 버튼`}
-                                        >
-                                            <Search aria-hidden="true" />
-                                        </Button>
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <Button
-                                            variant={variant.key}
-                                            size="icon-lg"
-                                            className="rounded-full"
-                                            disabled
-                                            aria-label={`${variant.label} 비활성 원형 아이콘 버튼`}
-                                        >
-                                            <Search aria-hidden="true" />
-                                        </Button>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    size="md"
+                    caption="Button variant별 비활성 상태"
+                    columns={DISABLED_COLUMNS}
+                    rows={DISABLED_ROWS}
+                />
                 <CodeBlock code={DISABLED_ICON_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
@@ -664,135 +638,7 @@ const ButtonGuidePage = () => (
                         Button 에서 커스터마이징 가능한 속성입니다.
                     </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">Props 목록</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Description
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Default
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Control
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr className="border-border bg-background border-b last:border-b-0">
-                                <th
-                                    scope="row"
-                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                                >
-                                    variant
-                                </th>
-                                <td className="px-4 py-3">
-                                    <p className="typo-body-l-regular text-muted-foreground">
-                                        강조 단계. default/secondary/tertiary 는 Figma 디자인을 반영한 버튼 전용 토큰을
-                                        씁니다. outline/ghost/destructive 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는
-                                        기존 값이고, text/link 는 채움이 없는 인라인 액션이라 마지막에 함께 둡니다.
-                                    </p>
-                                </td>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                    &apos;default&apos;
-                                </td>
-                                <td className="px-4 py-3">
-                                    <div className="flex flex-wrap gap-1">
-                                        {[
-                                            ...TYPES.map((t) => t.key),
-                                            'outline',
-                                            'ghost',
-                                            'destructive',
-                                            'text',
-                                            'link',
-                                        ].map((value) => (
-                                            <span
-                                                key={value}
-                                                className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs"
-                                            >
-                                                {value}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="border-border bg-background border-b last:border-b-0">
-                                <th
-                                    scope="row"
-                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                                >
-                                    size
-                                </th>
-                                <td className="px-4 py-3">
-                                    <p className="typo-body-l-regular text-muted-foreground">
-                                        Figma 6단계 사이즈를 shadcn 방식의 축약형 2xl/xl/lg/md/sm/xs로 제공합니다.
-                                        default와 icon 계열은 다이얼로그·시트·사이드바 등 내부 컴포넌트 호환을 위해
-                                        유지됩니다.
-                                    </p>
-                                </td>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                    &apos;default&apos;
-                                </td>
-                                <td className="px-4 py-3">
-                                    <div className="flex flex-wrap gap-1">
-                                        {[...SIZES.map((s) => s.key), ...LEGACY_SIZES].map((value) => (
-                                            <span
-                                                key={value}
-                                                className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs"
-                                            >
-                                                {value}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr className="border-border bg-background border-b last:border-b-0">
-                                <th
-                                    scope="row"
-                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                                >
-                                    asChild
-                                </th>
-                                <td className="px-4 py-3">
-                                    <p className="typo-body-l-regular text-muted-foreground">
-                                        <code className="font-mono">next/link</code> 등 다른 요소에 버튼 스타일만 씌울
-                                        때 사용합니다.
-                                    </p>
-                                </td>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                    false
-                                </td>
-                                <td className="px-4 py-3">
-                                    <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
-                                        boolean
-                                    </span>
-                                </td>
-                            </tr>
-                            <tr className="border-border bg-background border-b last:border-b-0">
-                                <th
-                                    scope="row"
-                                    className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal"
-                                >
-                                    className
-                                </th>
-                                <td className="px-4 py-3">
-                                    <p className="typo-body-l-regular text-muted-foreground">
-                                        추가 클래스명으로 스타일 확장
-                                    </p>
-                                </td>
-                                <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                    &quot;&quot;
-                                </td>
-                                <td className="typo-body-l-regular text-muted-foreground px-4 py-3">-</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <Table size="md" caption="Props 목록" columns={PROPS_COLUMNS} rows={PROPS_ROWS} />
             </section>
         </BaseCard>
     </GuidePageShell>
