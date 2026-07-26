@@ -5,63 +5,54 @@
    § 1 가져오기   § 2 커스텀 변형   § 3 테마 값 확장
    § 4 전역 기본값   § 5 커스텀 유틸리티   § 6 CSS 로만 되는 규칙 */
 
-/* ── § 1 가져오기 — @import 는 상대경로만 쓴다(@ alias 는 해석 못 해 빌드 실패) ────────── */
+/* ═════ § 1 · 가져오기 ═══════════════════════════════════════════════════════════════════════════ */
+
 @import 'tailwindcss';
-/* 토큰 생성물 — 수정은 tokens.json → yarn tokens */
-@import './tokens.css';
+@import './tokens.css'; /* 토큰 생성물 — 수정은 tokens.json → yarn tokens */
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
-/* 메인페이지 전용 */
-@import '../styles/main-page.css';
+@import '../styles/main-page.css'; /* 메인페이지 전용 */
 
-/* ── § 2 커스텀 변형 — JSX 프리픽스(dark:bg-card). 추가하면 /component-guide/breakpoint 에 기록 ── */
+/* ═════ § 2 · 커스텀 변형 — JSX 프리픽스(dark:bg-card). 추가하면 /component-guide/breakpoint 에 기록 ═══ */
 
-/* 테마는 OS 설정이 아니라 클래스로 결정한다 */
-@custom-variant dark (&:where(.dark, .dark *));
-/* 메인페이지 스킨 안에서만 */
-@custom-variant mainpage (&:where(.mainpage, .mainpage *));
-/* 조작 가능한 상태에만 — Tailwind 의 enabled: 는 aria-disabled 를 걸러내지 못한다 */
-@custom-variant interactive (&:not(:disabled):not([aria-disabled='true']));
+@custom-variant dark (&:where(.dark, .dark *)); /* 테마는 OS 가 아니라 클래스로 결정 */
+@custom-variant mainpage (&:where(.mainpage, .mainpage *)); /* 메인페이지 스킨 안에서만 */
+@custom-variant interactive (&:not(:disabled):not([aria-disabled='true'])); /* enabled: 가 못 거르는 aria-disabled 제외 */
 
-/* 높이 기준 변형 — 기본 브레이크포인트는 너비만 다룬다. 기준값은 stack-pager.tsx 의
-   STACK_PAGER_QUERY(768×640)와 한 세트다. 축약형은 동작하지 않아 블록 + @slot 을 쓴다. */
-
-/* 페이저 켜짐 — 고정 레이어 전환 */
+/* 높이 기준 변형 — 기본 브레이크포인트는 너비만 다룬다. 값은 stack-pager.tsx 의 STACK_PAGER_QUERY 와 한 세트다.
+   pager-on 고정 레이어 전환 · pager-off 자연 스크롤+스냅 · short 세로 640px 미만 · landscape 480px 미만 */
 @custom-variant pager-on {
     @media (min-width: 48rem) and (min-height: 40rem) {
         @slot;
     }
 }
-/* 페이저 꺼짐 — 자연 스크롤 + 스크롤 스냅 */
 @custom-variant pager-off {
     @media (width < 48rem), (height < 40rem) {
         @slot;
     }
 }
-/* 세로 640px 미만 — 밀도 한 단계 축소 */
 @custom-variant short {
     @media (height < 40rem) {
         @slot;
     }
 }
-/* 세로 480px 미만(모바일 가로) — 밀도 두 단계 축소 */
 @custom-variant landscape {
     @media (height < 30rem) {
         @slot;
     }
 }
 
-/* ── § 3 테마 값 확장 — tokens.json 이 다루지 않는 값만 ──────────────────────────────── */
+/* ═════ § 3 · 테마 값 확장 — tokens.json 이 다루지 않는 값만 ══════════════════════════════════════ */
 
-/* 폰트 — next/font 변수를 Tailwind 슬롯에 연결 */
 @theme inline {
+    /* next/font 변수를 Tailwind 슬롯에 연결 */
     --font-sans:
         var(--font-pretendard), 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, system-ui,
         sans-serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-/* 사용처: @/components/composite/footer.tsx — 표면 명도에 맞춰 로고 교체.
+/* @/components/composite/footer.tsx — 표면 명도에 맞춰 로고 교체.
    dark: 변형 대신 변수를 쓰는 이유는 .light 로 중첩 고정한 미리보기에서 어긋나기 때문이다. */
 :root,
 .light {
@@ -74,17 +65,17 @@
     --footer-logo-on-dark: block;
 }
 
-/* ── § 4 전역 기본값 — 모든 화면에 적용되는 브라우저·preflight 보정 ───────────────────── */
+/* ═════ § 4 · 전역 기본값 — 모든 화면에 적용되는 브라우저·preflight 보정 ═════════════════════════ */
+
 @layer base {
     body {
         background: var(--ds-background);
         color: var(--ds-foreground);
     }
 
-    /* preflight 가 지운 포인터 커서를 되살린다(shadcn 권장). 비활성은 제외 */
     button:not(:disabled),
     [role='button']:not(:disabled) {
-        cursor: pointer;
+        cursor: pointer; /* preflight 가 지운 포인터 커서 복원(shadcn 권장) */
     }
 
     html {
@@ -94,9 +85,8 @@
         scrollbar-gutter: stable; /* 스크롤바 자리 예약 → 페이지 이동 시 레이아웃 시프트 방지 */
     }
 
-    /* 팝오버가 스크롤을 잠근 동안만 예약 해제 — react-remove-scroll 보정과 겹쳐 덜컹인다 */
     html:has(body[data-scroll-locked]) {
-        scrollbar-gutter: auto;
+        scrollbar-gutter: auto; /* 팝오버 스크롤 잠금 중에는 해제 — 라이브러리 보정과 겹쳐 덜컹인다 */
     }
 
     /* 스크롤바 커스텀 (WebKit/Blink 전용). 표준 scrollbar-width 는 두지 않는다 — 예약 폭과 어긋난다 [PB-16] */
@@ -124,18 +114,18 @@
         appearance: textfield;
     }
 
-    /* 네이티브 X 버튼 제거 — 키보드 접근을 보장할 수 없어 SearchBar 가 자체 버튼으로 대체한다 [KWCAG 6.1.1] */
+    /* 네이티브 X 버튼 제거 — 키보드 접근을 보장할 수 없어 SearchBar 가 자체 버튼으로 대체 [KWCAG 6.1.1] */
     input[type='search']::-webkit-search-cancel-button,
     input[type='search']::-webkit-search-decoration {
         appearance: none;
     }
 }
 
-/* ── § 5 커스텀 유틸리티 — Tailwind 에 없어 직접 만든 클래스 ─────────────────────────── */
+/* ═════ § 5 · 커스텀 유틸리티 — Tailwind 에 없어 직접 만든 클래스 ═══════════════════════════════ */
+
 @layer utilities {
-    /* 포커스 링을 안쪽에 그린다 — 잘리는 컨테이너 안의 컨트롤용 */
     .focus-outline-inset:focus-visible {
-        outline-offset: -0.25rem; /* -4px */
+        outline-offset: -0.25rem; /* -4px, 잘리는 컨테이너 안쪽에 포커스 링 */
     }
 
     /* 스크롤바만 숨기고 스크롤은 유지 — 화살표로 스크롤 신호를 주는 곳에서만 쓴다 [PB-16 예외] */
@@ -148,7 +138,7 @@
     }
 }
 
-/* 사용처: @/components/custom/hero-section.tsx · tech-eval-section.tsx (grid-layout 과 함께)
+/* @/components/custom/hero-section.tsx · tech-eval-section.tsx — grid-layout 과 함께 붙인다.
    그리드 폭을 콘텐츠 최대 폭으로 캡핑해 Header 와 선을 맞춘다. 레이어 밖이어야 grid-layout 을 이긴다. */
 @media (min-width: 768px) {
     .grid-layout-content {
@@ -156,9 +146,9 @@
     }
 }
 
-/* ── § 6 CSS 로만 되는 규칙 — 가상요소·:has()·@keyframes. 유틸리티로 되면 여기 두지 않는다 ── */
+/* ═════ § 6 · CSS 로만 되는 규칙 — 가상요소·:has()·@keyframes ═══════════════════════════════════ */
 
-/* 사용처: @/components/composite/segmented-control.tsx (solid) — 항목 사이 구분선 */
+/* @/components/composite/segmented-control.tsx (solid) — 항목 사이 구분선 */
 [data-slot='segmented-control'][data-variant='solid'] > [data-slot='segmented-control-item']:not(:first-child)::before {
     position: absolute;
     top: 50%;
@@ -169,7 +159,6 @@
     content: '';
     transform: translateY(-50%);
 }
-/* 선택된 항목(navy 면) 양옆은 숨긴다 — 모서리에 선이 겹쳐 보인다 */
 [data-slot='segmented-control'][data-variant='solid']
     > [data-slot='segmented-control-item'][aria-current='page']::before,
 [data-slot='segmented-control'][data-variant='solid']
@@ -180,10 +169,10 @@
 [data-slot='segmented-control'][data-variant='solid']
     > [data-slot='segmented-control-item']:has([data-state='checked'])
     + [data-slot='segmented-control-item']::before {
-    display: none;
+    display: none; /* 선택된 navy 면 양옆은 모서리에 선이 겹쳐 숨긴다 */
 }
 
-/* 사용처: @/components/custom/marquee-band.tsx — 같은 문구 두 벌이 왼쪽으로 무한히 흐른다.
+/* @/components/custom/marquee-band.tsx — 같은 문구 두 벌이 왼쪽으로 무한히 흐른다.
    속도·정지 동작은 아래 세 규칙에서만 고치면 된다. */
 .main-marquee {
     animation: main-marquee 40s linear infinite;
