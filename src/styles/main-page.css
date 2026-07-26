@@ -11,7 +11,7 @@
    1n = 4px(tokens.json 의 spacingBase)이다. 값을 고칠 때는 옆의 px 주석도 함께 고친다. [PB-13]
    font-size 는 간격 스케일이 아니라 rem 을 그대로 두고 px 만 주석으로 병기한다. */
 
-/* ═══ 배경 슬라이드 — custom/hero-background.tsx ═══════════════════════════════
+/* ═══ 배경 슬라이드 — @/components/custom/hero-background.tsx ═══════════════════════════════
    활성 클래스를 JS 가 붙여 Tailwind purge 대상이 아니라 여기 둔다. */
 .main-hero-background-slide {
     transform: scale(1.2);
@@ -36,7 +36,7 @@
     }
 }
 
-/* ═══ 숫자 카운터 — custom/animated-counter.tsx ════════════════════════════════
+/* ═══ 숫자 카운터 — @/components/custom/animated-counter.tsx ════════════════════════════════
    0에서 시작해 자릿수별로 순차 회전하는 레일. */
 .animated-counter-digit {
     display: inline-block;
@@ -72,7 +72,7 @@
     }
 }
 
-/* ═══ 히어로 세로 밀도 — custom/hero-section.tsx ═══════════════════════════════
+/* ═══ 히어로 세로 밀도 — @/components/custom/hero-section.tsx ═══════════════════════════════
    화면이 낮아질수록 여백·간격·글자를 줄여 카피·지표·스크롤 표시를 한 화면에 담는다.
    단계는 (1) md 미만 → (2) height<40rem → (3) height<30rem 순이며 뒤 단계가 앞을 덮는다.
    한 속성의 모든 단계를 클래스 하나가 갖는다 — 사용처에서 같은 속성을 Tailwind 유틸리티로 덧대도
@@ -188,7 +188,7 @@
     }
 }
 
-/* ═══ SCROLL 표시 — custom/hero-section.tsx 하단 ═══════════════════════════════
+/* ═══ SCROLL 표시 — @/components/custom/hero-section.tsx 하단 ═══════════════════════════════
    트랙 안의 선이 위→아래로 채워진 뒤 사라지며 반복된다. */
 @layer utilities {
     .main-scroll-line-fill::after {
@@ -223,7 +223,7 @@
     }
 }
 
-/* ═══ 지표 롤러 — custom/hero-stats-roller.tsx ═════════════════════════════════
+/* ═══ 지표 롤러 — @/components/custom/hero-stats-roller.tsx ═════════════════════════════════
    5개 행을 유지하고 여섯 번째 복제 행까지 한 칸씩 위로 이동한다.
    md 미만과 모바일 가로에서는 트랙을 300%로 키워 한 번에 2행만 보이게 한다. */
 .hero-stats-viewport {
@@ -310,7 +310,7 @@
     }
 }
 
-/* ═══ 2섹션 서비스 — custom/tech-eval-section.tsx ══════════════════════════════
+/* ═══ 2섹션 서비스 — @/components/custom/tech-eval-section.tsx ══════════════════════════════
    제목은 히어로와 같은 lg 미만 유동 축소만 적용한다(세로 단계는 없음).
    자동 전환은 세로 진행 바와 콘텐츠 페이드가 같은 주기로 움직인다. */
 .tech-title-scale {
@@ -360,7 +360,7 @@
     }
 }
 
-/* ═══ 스택 페이저 — custom/stack-pager.tsx + [data-stack-page] 섹션들 ══════════
+/* ═══ 스택 페이저 — @/components/custom/stack-pager.tsx + [data-stack-page] 섹션들 ══════════
    조건은 stack-pager.tsx 의 STACK_PAGER_QUERY 와 한 세트다 — 한쪽만 바꾸면 어긋난다. */
 
 /* 페이저가 꺼진 낮은 화면에서만 섹션 최소 설계 높이를 유지해 콘텐츠 겹침을 막는다.

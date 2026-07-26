@@ -1,29 +1,50 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   전역 스타일
+
+   여기 있는 것 — 전역 설정과, Tailwind 유틸리티로 표현할 수 없어 CSS 로 둔 규칙.
+   여기 없는 것 — 한 화면에서만 쓰는 값(src/styles/<화면>.css)·컴포넌트 스타일(theme/*.variants.ts).
+
+   § 1  가져오기            Tailwind · 생성된 토큰 · 외부 CSS · 화면 전용 CSS
+   § 2  커스텀 변형          JSX 에서 프리픽스로 쓰는 조건 (dark: · pager-on: …)
+   § 3  테마 값 확장         @theme 폰트 · 테마 스코프별 변수
+   § 4  전역 기본값          @layer base — 브라우저·preflight 보정
+   § 5  커스텀 유틸리티       Tailwind 에 없어 직접 만든 클래스
+   § 6  CSS 로만 되는 규칙    가상요소 · :has() · 키프레임처럼 유틸리티로 못 쓰는 것
+
+   색·간격·라운드 등 디자인 값은 tokens.json 이 단일 소스다. 이 파일에서 hex 나 rem 을 직접 쓰지 않고
+   생성된 변수(--ds-*)나 --spacing(n) 을 쓴다. [PB-01 · PB-19]
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ── § 1 가져오기 ──────────────────────────────────────────────────────────────
+   경로는 상대경로만 쓴다 — CSS @import 는 tsconfig 의 @ alias 를 해석하지 못해 빌드가 실패한다
+   (TS/TSX import 는 @/… 를 그대로 쓴다). */
 @import 'tailwindcss';
-/* 색상 토큰(raw/ds/@theme) — tokens.json 에서 자동 생성. 수정은 tokens.json → yarn tokens */
+/* 색상·간격·타이포 토큰(raw/ds/@theme) — tokens.json 에서 자동 생성. 수정은 tokens.json → yarn tokens */
 @import './tokens.css';
 @import 'tw-animate-css';
 @import 'shadcn/tailwind.css';
-/* 화면 전용 CSS — 이 파일에는 전역 설정과 공용 컴포넌트 규칙만 두고, 한 화면에서만 쓰는 값은 분리한다.
-   전부 레이어 밖 규칙이라 여기서 먼저 읽혀도 base·utilities 레이어와 우선순위가 겹치지 않는다. */
+/* 화면 전용 CSS — 레이어 밖 규칙이라 여기서 먼저 읽혀도 base·utilities 레이어와 우선순위가 겹치지 않는다. */
 @import '../styles/main-page.css';
 
-/* dark: 유틸리티를 클래스 기반으로 전환 (OS 기본값은 layout.tsx 인라인 스크립트가 처리) */
+/* ── § 2 커스텀 변형 ───────────────────────────────────────────────────────────
+   JSX 에서 `dark:bg-card`, `pager-on:z-1` 처럼 프리픽스로 쓰는 조건들이다.
+   Tailwind 기본 변형으로 표현할 수 없을 때만 추가하고, 추가하면 /component-guide/breakpoint 에 기록한다. */
+
+/* 테마는 OS 설정이 아니라 클래스로 정한다(초기값은 layout.tsx 인라인 스크립트가 결정). */
 @custom-variant dark (&:where(.dark, .dark *));
-/* mainpage: 유틸리티 — 메인페이지 스킨(.mainpage)에서만 적용. 테마별 로고 교체 등 클래스 스코프 대응에 쓴다. */
+/* 메인페이지 스킨(.mainpage) 안에서만 적용 — 테마별 로고 교체 등 클래스 스코프 대응용. */
 @custom-variant mainpage (&:where(.mainpage, .mainpage *));
-/* interactive: — 실제 조작 가능한 상태(native disabled 도 aria-disabled 도 아님)에만 적용. hover·active 를
-   이 변형으로 걸면 aria-disabled(포커스 유지용 비활성) 컨트롤이 hover 하이라이트되지 않는다. Tailwind 기본
-   enabled(:enabled) 는 aria-disabled 를 못 걸러 별도 정의한다. */
+/* 실제 조작 가능한 상태에만 적용한다. Tailwind 기본 enabled(:enabled) 는 aria-disabled 를 걸러내지 못해,
+   포커스를 유지하려고 aria-disabled 로 비활성한 컨트롤이 hover 하이라이트되는 문제가 있다. */
 @custom-variant interactive (&:not(:disabled):not([aria-disabled='true']));
 
-/* 세로 높이 기준 반응형 변형 — Tailwind 기본 브레이크포인트(sm/md/xl…)는 너비만 다루는데,
-   풀스크린 전환 화면은 "높이가 충분한가"가 레이아웃을 가르는 축이라 이름을 붙여 유틸리티로 쓴다.
-   축약형(@custom-variant name (@media …))은 적용되지 않으므로 블록 + @slot 형태를 쓴다.
-   기준값은 stack-pager.tsx 의 STACK_PAGER_QUERY(768×640)와 한 세트다 — 바꾸면 함께 맞춘다.
-   - pager-on  : 스택 페이저가 켜지는 화면(고정 레이어 전환)
-   - pager-off : 페이저가 꺼져 자연 스크롤 + 스크롤 스냅으로 넘어가는 화면
-   - short     : 세로 640px 미만(초소형 모바일·낮은 데스크톱 창) — 밀도 한 단계 축소
-   - landscape : 세로 480px 미만(모바일 가로) — 밀도 두 단계 축소 */
+/* 높이 기준 변형 — Tailwind 기본 브레이크포인트(sm/md/xl…)는 너비만 다루는데, 풀스크린 전환 화면은
+   "세로가 충분한가"가 레이아웃을 가른다. 기준값은 stack-pager.tsx 의 STACK_PAGER_QUERY(768×640)와
+   한 세트다 — 한쪽만 바꾸면 어긋난다. 축약형은 적용되지 않으니 블록 + @slot 형태를 유지한다.
+     pager-on   스택 페이저가 켜지는 화면(고정 레이어 전환)
+     pager-off  페이저가 꺼져 자연 스크롤 + 스크롤 스냅으로 넘어가는 화면
+     short      세로 640px 미만 — 밀도 한 단계 축소
+     landscape  세로 480px 미만(모바일 가로) — 밀도 두 단계 축소 */
 @custom-variant pager-on {
     @media (min-width: 48rem) and (min-height: 40rem) {
         @slot;
@@ -45,7 +66,18 @@
     }
 }
 
-/* 사용처: components/composite/footer.tsx (로고 2개)
+/* ── § 3 테마 값 확장 ──────────────────────────────────────────────────────────
+   tokens.json 이 다루지 않는 값만 여기서 정의한다. */
+
+/* 폰트 — next/font 가 주입하는 CSS 변수를 Tailwind 슬롯에 연결한다. */
+@theme inline {
+    --font-sans:
+        var(--font-pretendard), 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, system-ui,
+        sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* 사용처: @/components/composite/footer.tsx (로고 2개)
    푸터 로고를 표면 명도에 맞춰 교체하는 display 변수. dark:/mainpage: 변형 대신 변수를 쓰는 이유는
    그 변형이 "조상 어딘가에 .dark 가 있으면" 매칭돼, .light 로 중첩 고정한 미리보기에서 밝은 배경에
    화이트 로고가 나오기 때문이다. 변수는 가장 가까운 테마 스코프가 이겨 항상 배경과 일치한다. */
@@ -60,22 +92,17 @@
     --footer-logo-on-dark: block;
 }
 
-@theme inline {
-    --font-sans:
-        var(--font-pretendard), 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, system-ui,
-        sans-serif;
-    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-}
-
+/* ── § 4 전역 기본값 ───────────────────────────────────────────────────────────
+   모든 화면에 적용되는 브라우저 기본 동작 보정. 특정 컴포넌트 스타일은 여기 두지 않는다. */
 @layer base {
     body {
         background: var(--ds-background);
         color: var(--ds-foreground);
     }
 
-    /* 클릭 가능한 요소는 포인터 커서. Tailwind v4 preflight 는 버튼을 브라우저 기본값(cursor:default)으로
-       두므로, shadcn(Tailwind v4) 공식 권장대로 base 레이어에서 되살린다. 비활성(:disabled)은 제외하고,
-       cursor-not-allowed 등 개별 유틸(더 높은 우선순위)이 필요한 컴포넌트는 각자 덮어쓴다. */
+    /* 클릭 가능한 요소는 포인터 커서. Tailwind v4 preflight 가 버튼을 브라우저 기본값(cursor:default)으로
+       두므로 shadcn 공식 권장대로 되살린다. 비활성은 제외하고, cursor-not-allowed 가 필요한 컴포넌트는
+       개별 유틸리티로 덮는다. */
     button:not(:disabled),
     [role='button']:not(:disabled) {
         cursor: pointer;
@@ -85,18 +112,17 @@
         @apply font-sans;
 
         overscroll-behavior: none; /* macOS 고무줄 바운스 제거 */
-        scrollbar-gutter: stable; /* 스크롤바 자리 항상 예약 → 레이아웃 시프트 방지 */
+        scrollbar-gutter: stable; /* 스크롤바 자리 항상 예약 → 페이지 이동 시 레이아웃 시프트 방지 */
     }
 
-    /* Radix 팝오버가 열려 스크롤이 잠기는 동안만 gutter 예약을 푼다.
-       react-remove-scroll 이 이미 스크롤바 폭을 보정하는데 gutter 까지 예약하면 이중 보정으로
-       콘텐츠가 덜컹인다. 잠금이 풀리면 stable 로 돌아가 일반 내비게이션 시프트를 다시 막는다. */
+    /* Radix 팝오버가 열려 스크롤이 잠기는 동안만 gutter 예약을 푼다. react-remove-scroll 이 이미
+       스크롤바 폭을 보정하는데 gutter 까지 예약하면 이중 보정으로 콘텐츠가 덜컹인다. */
     html:has(body[data-scroll-locked]) {
         scrollbar-gutter: auto;
     }
 
-    /* 스크롤바 커스텀 (WebKit/Blink 만 — Firefox 는 기본 스크롤바).
-       표준 scrollbar-width/color 는 두지 않는다 — 있으면 아래 두께 커스텀을 무시하고 gutter 폭과 어긋난다. */
+    /* 스크롤바 커스텀 (WebKit/Blink 만 — Firefox 는 기본 스크롤바). 표준 scrollbar-width/color 는 두지
+       않는다 — 있으면 아래 두께 커스텀을 무시해 예약된 gutter 폭과 어긋난다. [PB-16] */
     ::-webkit-scrollbar {
         width: var(--ds-spacing-scrollbar-w);
         height: var(--ds-spacing-scrollbar-w);
@@ -111,8 +137,7 @@
         background-color: var(--ds-scroll-track);
     }
 
-    /* number 인풋의 네이티브 증감 스피너 제거 — 단위·아이콘 애드온과 겹치고 Figma 디자인엔 없다.
-       (Chrome/Safari 는 ::-webkit-*-spin-button, Firefox 는 appearance:textfield) */
+    /* number 인풋의 네이티브 증감 스피너 제거 — 단위·아이콘 애드온과 겹치고 시안에 없다. */
     input[type='number']::-webkit-inner-spin-button,
     input[type='number']::-webkit-outer-spin-button {
         margin: 0;
@@ -122,25 +147,18 @@
         appearance: textfield;
     }
 
-    /* search 인풋의 네이티브 X(지우기) 버튼 제거 — 브라우저마다 모양·클릭 영역·포커스 가능 여부가 달라
-       ([6.1.1] 키보드 접근 보장 불가) SearchBar(composite) 가 자체 X 버튼(kit Button, 키보드 포커스 가능)으로
-       대체한다. Chrome/Safari(WebKit/Blink)만 전용 셀렉터가 있다 — Firefox 는 애초에 기본 X 버튼을 그리지 않아
-       추가 처리가 필요 없다. */
+    /* search 인풋의 네이티브 X 버튼 제거 — 브라우저마다 클릭 영역·포커스 가능 여부가 달라 키보드 접근을
+       보장할 수 없다. SearchBar 가 포커스 가능한 자체 X 버튼으로 대체한다. [KWCAG 6.1.1] */
     input[type='search']::-webkit-search-cancel-button,
     input[type='search']::-webkit-search-decoration {
         appearance: none;
     }
 }
 
-/* 사용처: custom/hero-section.tsx · custom/tech-eval-section.tsx (grid-layout 과 함께 붙인다)
-   그리드 폭을 티어별 container 대신 콘텐츠 최대 폭으로 캡핑해 Header 의 content-layout 과 선을 맞춘다. */
-@media (min-width: 768px) {
-    .grid-layout-content {
-        width: min(100% - 2 * var(--ds-grid-margin), var(--container-content));
-    }
-}
-
+/* ── § 5 커스텀 유틸리티 ───────────────────────────────────────────────────────
+   Tailwind 에 없어 직접 만든 클래스. JSX 에서 다른 유틸리티처럼 쓴다. */
 @layer utilities {
+    /* 포커스 링을 요소 안쪽에 그린다 — 잘리는 컨테이너 안의 컨트롤용. */
     .focus-outline-inset:focus-visible {
         outline-offset: -0.25rem; /* -4px */
     }
@@ -156,9 +174,21 @@
     }
 }
 
-/* 사용처: components/composite/segmented-control.tsx (solid variant)
-   시안의 얇은 회색 구분선. ::before 가상요소 + :has() 조합이라 Tailwind 유틸리티로 표현할 수 없어
-   theme/*.variants.ts 가 아니라 여기 둔다. 색·크기만 바꿀 일이면 아래 값만 고치면 된다. */
+/* 사용처: @/components/custom/hero-section.tsx · @/components/custom/tech-eval-section.tsx
+   그리드 폭을 티어별 container 대신 콘텐츠 최대 폭으로 캡핑해 Header 의 content-layout 과 선을 맞춘다.
+   grid-layout 과 함께 붙여 쓴다. 레이어 밖에 둬야 tokens.css 가 생성한 grid-layout 유틸리티를 이긴다. */
+@media (min-width: 768px) {
+    .grid-layout-content {
+        width: min(100% - 2 * var(--ds-grid-margin), var(--container-content));
+    }
+}
+
+/* ── § 6 CSS 로만 되는 컴포넌트 규칙 ───────────────────────────────────────────
+   가상요소·:has()·@keyframes 처럼 Tailwind 유틸리티로 표현할 수 없는 것만 둔다.
+   유틸리티로 쓸 수 있으면 theme/*.variants.ts 나 사용처 className 이 맞는 자리다. */
+
+/* 사용처: @/components/composite/segmented-control.tsx (solid variant)
+   시안의 얇은 회색 구분선. ::before 가상요소 + :has() 조합이라 유틸리티로 표현할 수 없다. */
 [data-slot='segmented-control'][data-variant='solid'] > [data-slot='segmented-control-item']:not(:first-child)::before {
     position: absolute;
     top: 50%;
@@ -183,8 +213,9 @@
     display: none;
 }
 
-/* 사용처: components/custom/marquee-band.tsx
-   같은 문구 두 벌을 이어 붙여 왼쪽으로 무한히 흐른다. 클래스·키프레임·모션 예외를 한곳에 둔다. */
+/* 사용처: @/components/custom/marquee-band.tsx
+   같은 문구 두 벌을 이어 붙여 왼쪽으로 무한히 흐른다. @keyframes 는 CSS 에만 있는 문법이라 유틸리티로
+   옮길 수 없다. 클래스·키프레임·모션 예외를 한 블록에 둬 속도나 정지 동작을 여기서만 고치면 되게 한다. */
 .main-marquee {
     animation: main-marquee 40s linear infinite;
 }
