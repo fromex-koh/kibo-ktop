@@ -27,7 +27,8 @@ export default function Page() {
 // 메인페이지의 스택 페이저에 넣을 때의 배치 스니펫.
 const STACK_USAGE_CODE = `// app/component-guide/main-page/page.tsx — 마지막 스택 페이지로 배치한다(mainpage 스킨).
 // 데스크톱에서는 고정 레이어의 하단에 맞추고, 모바일에서는 자연 흐름에 둔다.
-<div data-stack-page className="stack-page bg-background relative md:flex md:h-dvh md:flex-col md:justify-end">
+// 레이어 전환 스타일은 theme/stack-pager.variants 의 stackPageClassName 을 붙여 받는다.
+<div data-stack-page className={cn(stackPageClassName, 'bg-background relative md:flex md:h-dvh md:flex-col md:justify-end')}>
   <Footer />
 </div>`
 

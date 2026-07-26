@@ -2,7 +2,6 @@
 @import './tokens.css'; /* 디자인 토큰 — 생성물, 수정은 tokens.json → yarn tokens */
 @import 'tw-animate-css'; /* shadcn 애니메이션 */
 @import 'shadcn/tailwind.css'; /* shadcn 상태 변형 */
-@import '../styles/stack-pager.css'; /* 풀스크린 섹션 전환 컴포넌트 */
 @import '../styles/main-page.css'; /* 메인페이지 전용 스타일 */
 
 /* ═════ § 1 · 커스텀 변형 — JSX 프리픽스(pager-on:z-1). 추가하면 /component-guide/breakpoint 에 기록 ═══ */
@@ -35,8 +34,19 @@
         @slot;
     }
 }
+/* 페이저가 꺼졌지만 모바일도 아닌 띠 — 섹션이 최소 설계 높이를 유지해야 하는 구간 */
+@custom-variant stack-fallback {
+    @media (min-width: 48rem) and (30rem <= height < 40rem) {
+        @slot;
+    }
+}
 
 /* ═════ § 2 · 테마 값 확장 — tokens.json 이 다루지 않는 값만 ══════════════════════════════════════ */
+
+@theme {
+    /* 스택 페이저 섹션 전환 가속도 — ease-stack 유틸리티로 생성된다 */
+    --ease-stack: cubic-bezier(0.5, 0, 0, 1);
+}
 
 @theme inline {
     /* next/font 변수를 Tailwind 슬롯에 연결 */

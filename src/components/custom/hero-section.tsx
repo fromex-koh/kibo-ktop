@@ -2,6 +2,8 @@ import heroBg1 from '../../../public/images/main-hero/hero-bg-1.webp'
 import heroBg2 from '../../../public/images/main-hero/hero-bg-2.webp'
 import HeroBackground from './hero-background'
 import HeroStatsRoller, {type HeroStat} from './hero-stats-roller'
+import {stackPageClassName} from '@/components/theme/stack-pager.variants'
+import {cn} from '@/lib/utils'
 
 const HERO_BACKGROUNDS = [
     {src: heroBg1, position: '50% 50%'},
@@ -31,7 +33,10 @@ const HeroSection = () => (
         // pager-off:snap-* — 페이저가 꺼진 화면의 스크롤 스냅 지점(StackPager 가 컨테이너 담당).
         // 첫 화면은 snap-always 로 두어 한 번의 스크롤이 2섹션을 건너뛰지 않게 한다.
         // 높이는 항상 뷰포트에 맞춘다 — 페이저가 꺼진 낮은 데스크톱만 .stack-page 의 최소 설계 높이를 받는다.
-        className="focus-visible:after:border-ring stack-page pager-off:snap-start pager-off:snap-always relative h-dvh min-h-0 overflow-hidden outline-none focus-visible:after:pointer-events-none focus-visible:after:absolute focus-visible:after:inset-0 focus-visible:after:border-2"
+        className={cn(
+            stackPageClassName,
+            'focus-visible:after:border-ring pager-off:snap-start pager-off:snap-always relative h-dvh min-h-0 overflow-hidden outline-none focus-visible:after:pointer-events-none focus-visible:after:absolute focus-visible:after:inset-0 focus-visible:after:border-2',
+        )}
     >
         {/* 배경 비주얼 — 장식 이미지라 접근성 트리에서 제외한다. [KWCAG 5.1.1] */}
         <HeroBackground slides={HERO_BACKGROUNDS} />

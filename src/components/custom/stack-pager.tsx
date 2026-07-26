@@ -2,6 +2,7 @@
 
 import {createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode} from 'react'
 import {cn} from '@/lib/utils'
+import {stackPagerRootClassName} from '@/components/theme/stack-pager.variants'
 
 const WHEEL_DELTA_TRIGGER = 20
 // 터치 스와이프로 페이지를 넘기는 최소 이동 거리(px). 휠보다 크게 잡아 스크롤 의도와 탭을 구분한다.
@@ -309,6 +310,7 @@ const StackPager = ({
                 // 걸린 채 멈춘다. 스크롤 스냅 컨테이너로 만들어 같은 동작에서 다음 섹션까지 이어지게 한다.
                 // 각 페이지의 스냅 지점은 페이지 쪽에서 pager-off:snap-start 로 선언한다.
                 className={cn(
+                    stackPagerRootClassName,
                     'pager-off:h-dvh pager-off:snap-y pager-off:snap-mandatory pager-off:overflow-y-auto pager-off:overscroll-y-contain',
                     className,
                 )}

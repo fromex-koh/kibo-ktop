@@ -361,7 +361,7 @@
 }
 /* 스택 페이저가 켜진 화면에서 비활성 페이지의 진행 바는 멈춘다(상태는 StackPager 가 매긴다). */
 @media (min-width: 768px) and (min-height: 640px) {
-    .stack-page:not([data-stack-state='active']) .tech-service-progress-fill {
+    [data-stack-page]:not([data-stack-state='active']) .tech-service-progress-fill {
         animation-play-state: paused;
     }
 }
