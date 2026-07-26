@@ -2,6 +2,14 @@ import heroBg1 from '../../../public/images/main-hero/hero-bg-1.webp'
 import heroBg2 from '../../../public/images/main-hero/hero-bg-2.webp'
 import HeroBackground from './hero-background'
 import HeroStatsRoller, {type HeroStat} from './hero-stats-roller'
+import {
+    heroCopyClassName,
+    heroDescClassName,
+    heroFrameClassName,
+    heroGridClassName,
+    heroScrollIndicatorClassName,
+    heroTitleClassName,
+} from '@/components/theme/hero-section.variants'
 import {stackPageClassName} from '@/components/theme/stack-pager.variants'
 import {cn} from '@/lib/utils'
 
@@ -43,22 +51,24 @@ const HeroSection = () => (
         {/* 45% 딤은 배경 이미지 자체의 brightness로 합성하고, 하단 75% 그라디언트만
             HeroBackground 레이어에 유지해 스냅 중 이미지와 딤의 합성 시점이 어긋나지 않게 한다. */}
 
-        {/* 세로 밀도(여백·간격·글자 크기)는 globals.css 의 hero-* 클래스가 화면 높이 단계별로 담당한다. */}
-        <div className="hero-frame relative flex items-center motion-safe:[transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] motion-safe:[opacity:calc(1-var(--hero-scroll-progress,0))]">
-            <div className="grid-layout content-layout hero-grid w-full items-start">
+        {/* 세로 밀도(여백·간격·글자 크기)는 theme/hero-section.variants.ts 가 화면 높이 단계별로 담당한다. */}
+        <div
+            className={cn(
+                heroFrameClassName,
+                'relative flex items-center motion-safe:[transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] motion-safe:[opacity:calc(1-var(--hero-scroll-progress,0))]',
+            )}
+        >
+            <div className={cn(heroGridClassName, 'grid-layout content-layout w-full items-start')}>
                 {/* 좌측 카피. xl(1280)부터 6열, 2xl(1536)부터 7열로 넓힌다. min-w-0로 그리드 셀이 콘텐츠에 밀려
                     넘치지 않게 한다. */}
-                <div className="hero-copy col-span-4 flex min-w-0 flex-col xl:col-span-6 2xl:col-span-7">
-                    {/* 크기·행간은 globals.css 의 hero-title-scale 이 화면 단계별로 담당한다. typo-* 는
-                        생성기가 찍는 plain 클래스라 반응형 변형을 못 받고, 여기는 높이까지 반응해야 해
-                        고정 스케일로 표현할 수 없다. 프로젝트 반응형 타이포 방침이 정해지면 재검토한다. */}
-                    <h1 id="hero-title" className="hero-title-scale text-foreground font-bold break-keep">
+                <div className={cn(heroCopyClassName, 'col-span-4 flex min-w-0 flex-col xl:col-span-6 2xl:col-span-7')}>
+                    <h1 id="hero-title" className={cn(heroTitleClassName, 'text-foreground font-bold break-keep')}>
                         기업에 맞는 기술평가로
                         <br />
                         금융과 성장의 기회를 연결합니다
                     </h1>
-                    {/* PC(md+)는 원래 typo-title-l-bold 과 동일(20px·행간 1.5). 단계별 크기는 hero-desc-scale. */}
-                    <p className="hero-desc-scale text-foreground-subtle font-bold">
+                    {/* PC(md+)는 typo-title-l-bold 과 동일(20px·행간 1.5). 단계별 크기는 heroDescClassName. */}
+                    <p className={cn(heroDescClassName, 'text-foreground-subtle font-bold')}>
                         기술사업평가, 혁신성장지수, 투자모형, K-BIGx 보고서, 탄소중립 평가 등{' '}
                         <br className="max-md:hidden" />
                         다양한 기술평가 서비스를 통합 제공하는 플랫폼
@@ -71,7 +81,10 @@ const HeroSection = () => (
 
         <div
             aria-hidden="true"
-            className="hero-scroll-indicator text-foreground pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-center"
+            className={cn(
+                heroScrollIndicatorClassName,
+                'text-foreground pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-center',
+            )}
         >
             <span className="typo-title-m-bold">SCROLL</span>
             <span className="bg-foreground/30 after:animate-scroll-line relative w-px flex-1 overflow-hidden after:absolute after:inset-0 after:origin-top after:scale-y-0 after:bg-current after:content-[''] motion-reduce:after:scale-y-100 motion-reduce:after:animate-none motion-reduce:after:opacity-100" />
