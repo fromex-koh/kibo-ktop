@@ -9,7 +9,9 @@ const WHEEL_GESTURE_IDLE_MS = 120
 const TRANSITION_DURATION_MS = 600
 const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
 const PAGE_UP_KEYS = new Set(['ArrowUp', 'PageUp'])
-const STACK_PAGER_QUERY = '(min-width: 768px) and (min-height: 640px)'
+// 페이저가 켜지는 화면 조건 — globals.css 의 .stack-page 고정 레이어 미디어쿼리와 같은 값이어야 한다.
+// 값을 바꾸면 globals.css 도 함께 고친다. 같은 판단이 필요한 화면 코드는 이 상수를 import 한다.
+export const STACK_PAGER_QUERY = '(min-width: 768px) and (min-height: 640px)'
 // 페이지 안쪽 스크롤로 인정하는 overflow 값 — hidden 은 화면이 움직이지 않으므로 제외한다.
 const SCROLLABLE_OVERFLOW = new Set(['auto', 'scroll'])
 const StackPagerActivePageContext = createContext(0)

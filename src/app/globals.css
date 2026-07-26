@@ -233,7 +233,8 @@
 
 /* 너비와 높이가 충분할 때만 실제 스크롤 위치를 고정하고, 불투명한 섹션을 세로로 전환한다.
    높이 기준은 640px — 히어로 콘텐츠(약 460px)와 스크롤 표시가 들어가는 최소 높이다. 이보다 낮으면
-   자연 스크롤 + 스크롤 스냅으로 넘어간다. */
+   자연 스크롤 + 스크롤 스냅으로 넘어간다.
+   조건을 바꾸면 stack-pager.tsx 의 STACK_PAGER_QUERY 도 같은 값으로 맞춘다(JS 쪽 단일 소스). */
 @media (min-width: 768px) and (min-height: 640px) {
     [data-stack-pager] {
         height: 100dvh;
