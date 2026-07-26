@@ -64,7 +64,7 @@ const MainPage = () => (
                 mobileContent={<MobileTechEvalContent />}
                 bottomContent={
                     <>
-                        <div className="tech-eval-marquee mt-auto w-full">
+                        <div className="mt-auto w-full">
                             <MarqueeBand />
                         </div>
                         <div id="site-info" tabIndex={-1} className="bg-background relative w-full">
