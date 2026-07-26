@@ -116,13 +116,12 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                                 index < TECH_EVAL_SERVICES.length - 1 && 'mb-24',
                                             )}
                                         >
-                                            {/* 반응형 크기: 모바일 text-4xl(36px) → md text-5xl(48px). typo-* 는
-                                            md: 변형을 못 받아(plain 클래스) Tailwind 기본 text-* 를 반응형으로 쓴다.
-                                            leading-normal 은 원래 typo-display-xl-bold 행간(1.5) 유지. 메인페이지
+                                            {/* 크기·행간은 globals.css 의 tech-title-scale 이 담당한다(lg 미만 유동 축소).
+                                            typo-* 는 생성기가 찍는 plain 클래스라 반응형 변형을 못 받는다. 메인페이지
                                             예외(SHADCN.md 타이포 유틸 예외 참고). max-w-full 로 컬럼 내 줄바꿈. */}
                                             <h2
                                                 id="tech-eval-title"
-                                                className="text-foreground max-w-full text-4xl leading-normal font-bold break-keep md:text-5xl"
+                                                className="tech-title-scale text-foreground max-w-full font-bold break-keep"
                                             >
                                                 {service.headline}
                                             </h2>

@@ -30,34 +30,30 @@ const HeroSection = () => (
         aria-labelledby="hero-title"
         // pager-off:snap-* — 페이저가 꺼진 화면의 스크롤 스냅 지점(StackPager 가 컨테이너 담당).
         // 첫 화면은 snap-always 로 두어 한 번의 스크롤이 2섹션을 건너뛰지 않게 한다.
-        className="focus-visible:after:border-ring stack-page pager-off:snap-start pager-off:snap-always relative min-h-dvh overflow-x-clip outline-none focus-visible:after:pointer-events-none focus-visible:after:absolute focus-visible:after:inset-0 focus-visible:after:border-2 md:h-dvh md:min-h-0 md:overflow-hidden"
+        // 높이는 항상 뷰포트에 맞춘다 — 페이저가 꺼진 낮은 데스크톱만 .stack-page 의 최소 설계 높이를 받는다.
+        className="focus-visible:after:border-ring stack-page pager-off:snap-start pager-off:snap-always relative h-dvh min-h-0 overflow-hidden outline-none focus-visible:after:pointer-events-none focus-visible:after:absolute focus-visible:after:inset-0 focus-visible:after:border-2"
     >
         {/* 배경 비주얼 — 장식 이미지라 접근성 트리에서 제외한다. [KWCAG 5.1.1] */}
         <HeroBackground slides={HERO_BACKGROUNDS} />
         {/* 45% 딤은 배경 이미지 자체의 brightness로 합성하고, 하단 75% 그라디언트만
             HeroBackground 레이어에 유지해 스냅 중 이미지와 딤의 합성 시점이 어긋나지 않게 한다. */}
 
-        {/* 모바일 상하 패딩: 위는 고정 헤더(약 60px) 아래 여유, 아래는 SCROLL 인디케이터(h-28) 자리 확보 */}
-        <div className="relative flex min-h-dvh items-center pt-24 pb-32 motion-safe:[transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] motion-safe:[opacity:calc(1-var(--hero-scroll-progress,0))] md:h-full md:min-h-0 md:py-0">
-            <div className="grid-layout w-full items-start gap-y-16">
+        {/* 세로 밀도(여백·간격·글자 크기)는 globals.css 의 hero-* 클래스가 화면 높이 단계별로 담당한다. */}
+        <div className="hero-frame relative flex items-center motion-safe:[transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] motion-safe:[opacity:calc(1-var(--hero-scroll-progress,0))]">
+            <div className="grid-layout hero-grid w-full items-start">
                 {/* 좌측 카피. xl(1280)부터 6열, 2xl(1536)부터 7열로 넓힌다. min-w-0로 그리드 셀이 콘텐츠에 밀려
                     넘치지 않게 한다. */}
-                <div className="col-span-4 flex min-w-0 flex-col gap-6 xl:col-span-6 2xl:col-span-7">
-                    {/* 반응형 크기: 모바일 text-4xl(36px) → md text-5xl(48px). typo-* 는 md: 변형을 못 받아
-                        (plain 클래스) 대신 Tailwind 기본 text-* 를 반응형으로 쓴다. leading-normal 은 원래
-                        typo-display-xl-bold 의 행간(--raw-line-height-normal=1.5)을 그대로 맞추기 위함.
-                        프로젝트 반응형 타이포 방침이 정해지면 typo 토큰으로 승격. */}
-                    <h1
-                        id="hero-title"
-                        className="text-foreground text-4xl leading-normal font-bold break-keep md:text-5xl"
-                    >
+                <div className="hero-copy col-span-4 flex min-w-0 flex-col xl:col-span-6 2xl:col-span-7">
+                    {/* 크기·행간은 globals.css 의 hero-title-scale 이 화면 단계별로 담당한다. typo-* 는
+                        생성기가 찍는 plain 클래스라 반응형 변형을 못 받고, 여기는 높이까지 반응해야 해
+                        고정 스케일로 표현할 수 없다. 프로젝트 반응형 타이포 방침이 정해지면 재검토한다. */}
+                    <h1 id="hero-title" className="hero-title-scale text-foreground font-bold break-keep">
                         기업에 맞는 기술평가로
                         <br />
                         금융과 성장의 기회를 연결합니다
                     </h1>
-                    {/* 반응형 크기: 모바일 text-base(16px) → md text-xl(20px). PC(md+)는 원래 typo-title-l-bold
-                        과 동일(20px·행간 1.5). 메인페이지 예외(SHADCN.md 타이포 유틸 예외). */}
-                    <p className="text-foreground-subtle text-base leading-normal font-bold md:text-xl">
+                    {/* PC(md+)는 원래 typo-title-l-bold 과 동일(20px·행간 1.5). 단계별 크기는 hero-desc-scale. */}
+                    <p className="hero-desc-scale text-foreground-subtle font-bold">
                         기술사업평가, 혁신성장지수, 투자모형, K-BIGx 보고서, 탄소중립 평가 등{' '}
                         <br className="max-md:hidden" />
                         다양한 기술평가 서비스를 통합 제공하는 플랫폼
@@ -70,7 +66,7 @@ const HeroSection = () => (
 
         <div
             aria-hidden="true"
-            className="text-foreground pointer-events-none absolute inset-x-0 bottom-0 flex h-28 flex-col items-center gap-3"
+            className="hero-scroll-indicator text-foreground pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-center"
         >
             <span className="typo-title-m-bold">SCROLL</span>
             <span className="main-scroll-line-fill bg-foreground/30 relative w-px flex-1 overflow-hidden" />
