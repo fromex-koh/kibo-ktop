@@ -138,14 +138,6 @@
     }
 }
 
-/* @/components/custom/hero-section.tsx · tech-eval-section.tsx — grid-layout 과 함께 붙인다.
-   그리드 폭을 콘텐츠 최대 폭으로 캡핑해 Header 와 선을 맞춘다. 레이어 밖이어야 grid-layout 을 이긴다. */
-@media (min-width: 768px) {
-    .grid-layout-content {
-        width: min(100% - 2 * var(--ds-grid-margin), var(--container-content));
-    }
-}
-
 /* ═════ § 5 · CSS 로만 되는 규칙 — 가상요소·:has()·@keyframes ═══════════════════════════════════ */
 
 /* @/components/composite/segmented-control.tsx (solid) — 항목 사이 구분선 */

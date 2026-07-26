@@ -188,6 +188,15 @@
     }
 }
 
+/* 그리드 폭 — hero-section.tsx · tech-eval-section.tsx 가 grid-layout 과 함께 붙인다.
+   티어별 container 대신 콘텐츠 최대 폭으로 캡핑해 Header 의 content-layout 과 선을 맞춘다.
+   레이어 밖이어야 tokens.css 가 생성한 grid-layout 유틸리티를 이긴다. */
+@media (min-width: 768px) {
+    .grid-layout-content {
+        width: min(100% - 2 * var(--ds-grid-margin), var(--container-content));
+    }
+}
+
 /* ═══ SCROLL 표시 — @/components/custom/hero-section.tsx 하단 ═══════════════════════════════
    트랙 안의 선이 위→아래로 채워진 뒤 사라지며 반복된다. */
 @layer utilities {
