@@ -52,8 +52,10 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-/* @/components/composite/footer.tsx — 표면 명도에 맞춰 로고 교체.
-   dark: 변형 대신 변수를 쓰는 이유는 .light 로 중첩 고정한 미리보기에서 어긋나기 때문이다. */
+/* @/components/composite/footer.tsx — 로고를 표면 명도에 맞춰 교체한다(실제 화면에서도 동작).
+   변수를 쓰는 이유만 가이드 사정이다 — 가이드는 미리보기를 .light/.dark 로 중첩 고정하는데,
+   dark: 변형은 "조상 어딘가에 .dark 가 있으면" 매칭돼 밝은 미리보기에 화이트 로고가 나온다.
+   변수는 가장 가까운 테마 스코프가 이기므로 중첩된 곳에서도 배경과 항상 일치한다. */
 :root,
 .light {
     --footer-logo-on-light: block;
