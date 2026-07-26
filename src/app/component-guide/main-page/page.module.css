@@ -1,15 +1,3 @@
-.root[data-natural-page='1'] header {
-    background-color: var(--ds-background);
-}
-
-.root :global([data-mobile-tech-content]) {
-    display: none;
-}
-
-.root :global(.hero-stats-viewport) {
-    margin-top: 0.625rem;
-}
-
 /* 메인 헤더가 모바일형인 lg 미만에서만 대표 타이틀을 뷰포트에 맞춰 유동 축소한다.
    lg 이상 PC 디자인은 컴포넌트의 기존 48px 값을 그대로 사용한다. */
 @media (width < 64rem) {
@@ -44,14 +32,6 @@
 /* 모바일에서는 히어로 지표를 한 번에 2행만 노출한다.
    5개 데이터와 전환용 복제 행은 유지해 모든 지표가 순서대로 계속 롤링된다. */
 @media (width < 48rem) {
-    .root :global([data-mobile-tech-content]) {
-        display: block;
-    }
-
-    .root :global([data-rolling-tech-content]) {
-        display: none;
-    }
-
     .root :global(#site-info nav[aria-label='사이트맵']) {
         display: none;
     }

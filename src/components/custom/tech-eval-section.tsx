@@ -46,117 +46,130 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
             aria-label="기술평가 서비스"
             className="stack-page bg-background relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:pt-50"
         >
-            {mobileContent ? <div data-mobile-tech-content>{mobileContent}</div> : null}
-            <div data-rolling-tech-content className="grid-layout w-full items-start gap-y-16">
-                {/* 좌: 세로 레일 + 서비스 목차. 각 서비스는 레일 전체 높이를 진행 바로 쓰고,
+            {/* 모바일은 자동 전환 없이 펼쳐 읽는 목록, md 이상은 롤링 레일 — 둘 중 하나만 노출한다.
+                롤링 쪽은 노출 제어를 바깥 래퍼가 맡는다. grid-layout 은 display 를 지정하는 프로젝트
+                유틸리티라 같은 요소에 hidden 을 얹으면 생성 순서상 grid-layout 이 이겨 숨지 않는다. */}
+            {mobileContent ? (
+                <div data-mobile-tech-content className="md:hidden">
+                    {mobileContent}
+                </div>
+            ) : null}
+            <div data-rolling-tech-content className="w-full max-md:hidden">
+                <div className="grid-layout w-full items-start gap-y-16">
+                    {/* 좌: 세로 레일 + 서비스 목차. 각 서비스는 레일 전체 높이를 진행 바로 쓰고,
                     채움이 끝나면 다음 서비스로 전환되며 채움은 처음부터 다시 시작한다(key 리셋). */}
-                <ul className="relative col-span-4 flex min-w-0 flex-col gap-6 pl-11 md:col-span-4 xl:col-span-5">
-                    <div
-                        aria-hidden="true"
-                        className="bg-foreground-subtle absolute inset-y-0 left-0 w-1 overflow-hidden"
-                    >
-                        <span
-                            className="bg-main-accent absolute inset-x-0 top-0"
-                            style={{height: `${(activeIndex / TECH_EVAL_SERVICES.length) * 100}%`}}
-                        />
-                        <span
-                            key={`${entrySequence}-${activeIndex}`}
-                            data-paused={isPaused}
-                            style={{
-                                top: `${(activeIndex / TECH_EVAL_SERVICES.length) * 100}%`,
-                                height: `${100 / TECH_EVAL_SERVICES.length}%`,
-                            }}
-                            onAnimationEnd={showNextService}
-                            className="tech-service-progress-fill bg-main-accent absolute inset-x-0 origin-top"
-                        />
-                    </div>
+                    <ul className="relative col-span-4 flex min-w-0 flex-col gap-6 pl-11 md:col-span-4 xl:col-span-5">
+                        <div
+                            aria-hidden="true"
+                            className="bg-foreground-subtle absolute inset-y-0 left-0 w-1 overflow-hidden"
+                        >
+                            <span
+                                className="bg-main-accent absolute inset-x-0 top-0"
+                                style={{height: `${(activeIndex / TECH_EVAL_SERVICES.length) * 100}%`}}
+                            />
+                            <span
+                                key={`${entrySequence}-${activeIndex}`}
+                                data-paused={isPaused}
+                                style={{
+                                    top: `${(activeIndex / TECH_EVAL_SERVICES.length) * 100}%`,
+                                    height: `${100 / TECH_EVAL_SERVICES.length}%`,
+                                }}
+                                onAnimationEnd={showNextService}
+                                className="tech-service-progress-fill bg-main-accent absolute inset-x-0 origin-top"
+                            />
+                        </div>
 
-                    {TECH_EVAL_SERVICES.map((service, index) => {
-                        const isActive = index === activeIndex
+                        {TECH_EVAL_SERVICES.map((service, index) => {
+                            const isActive = index === activeIndex
 
-                        return (
-                            <li key={service.title} className="relative">
-                                <button
-                                    type="button"
-                                    aria-current={isActive ? 'true' : undefined}
-                                    onClick={() => setActiveIndex(index)}
-                                    onMouseEnter={() => setIsPaused(true)}
-                                    onMouseLeave={() => setIsPaused(false)}
-                                    onFocus={() => setIsPaused(true)}
-                                    onBlur={() => setIsPaused(false)}
-                                    // 반응형 크기: 모바일 text-lg(18px) → md text-xl(20px). PC(md+)는 원래
-                                    // typo-title-l 과 동일(20px·행간 1.5). 메인페이지 예외(SHADCN.md 타이포 유틸 예외).
-                                    className={cn(
-                                        'cursor-pointer text-left transition-colors',
-                                        // leading-normal 은 text-lg 뒤에 둔다 — 앞에 두면 twMerge 가 text-*(자체 행간
-                                        // 포함)와 충돌로 제거해 PC 행간이 1.5→1.4 로 바뀐다.
-                                        isActive
-                                            ? 'text-main-accent text-lg leading-normal font-bold md:text-xl'
-                                            : 'text-muted-foreground hover:text-foreground-subtle text-lg leading-normal font-medium md:text-xl',
-                                    )}
-                                >
-                                    {service.title}
-                                </button>
-
-                                {isActive && (
-                                    // mb-24는 다음 목차 항목과의 간격 — 마지막 항목이 활성일 땐 아래 항목이 없어
-                                    // 빼야 레일(진행 바)이 버튼 라인에 맞춰 끝난다.
-                                    <Reveal
+                            return (
+                                <li key={service.title} className="relative">
+                                    <button
+                                        type="button"
+                                        aria-current={isActive ? 'true' : undefined}
+                                        onClick={() => setActiveIndex(index)}
+                                        onMouseEnter={() => setIsPaused(true)}
+                                        onMouseLeave={() => setIsPaused(false)}
+                                        onFocus={() => setIsPaused(true)}
+                                        onBlur={() => setIsPaused(false)}
+                                        // 반응형 크기: 모바일 text-lg(18px) → md text-xl(20px). PC(md+)는 원래
+                                        // typo-title-l 과 동일(20px·행간 1.5). 메인페이지 예외(SHADCN.md 타이포 유틸 예외).
                                         className={cn(
-                                            'mt-4 flex flex-col items-start gap-6',
-                                            index < TECH_EVAL_SERVICES.length - 1 && 'mb-24',
+                                            'cursor-pointer text-left transition-colors',
+                                            // leading-normal 은 text-lg 뒤에 둔다 — 앞에 두면 twMerge 가 text-*(자체 행간
+                                            // 포함)와 충돌로 제거해 PC 행간이 1.5→1.4 로 바뀐다.
+                                            isActive
+                                                ? 'text-main-accent text-lg leading-normal font-bold md:text-xl'
+                                                : 'text-muted-foreground hover:text-foreground-subtle text-lg leading-normal font-medium md:text-xl',
                                         )}
                                     >
-                                        {/* 반응형 크기: 모바일 text-4xl(36px) → md text-5xl(48px). typo-* 는
+                                        {service.title}
+                                    </button>
+
+                                    {isActive && (
+                                        // mb-24는 다음 목차 항목과의 간격 — 마지막 항목이 활성일 땐 아래 항목이 없어
+                                        // 빼야 레일(진행 바)이 버튼 라인에 맞춰 끝난다.
+                                        <Reveal
+                                            className={cn(
+                                                'mt-4 flex flex-col items-start gap-6',
+                                                index < TECH_EVAL_SERVICES.length - 1 && 'mb-24',
+                                            )}
+                                        >
+                                            {/* 반응형 크기: 모바일 text-4xl(36px) → md text-5xl(48px). typo-* 는
                                             md: 변형을 못 받아(plain 클래스) Tailwind 기본 text-* 를 반응형으로 쓴다.
                                             leading-normal 은 원래 typo-display-xl-bold 행간(1.5) 유지. 메인페이지
                                             예외(SHADCN.md 타이포 유틸 예외 참고). max-w-full 로 컬럼 내 줄바꿈. */}
-                                        <h2
-                                            id="tech-eval-title"
-                                            className="text-foreground max-w-full text-4xl leading-normal font-bold break-keep md:text-5xl"
-                                        >
-                                            {service.headline}
-                                        </h2>
-                                        {/* PROJECT-STYLE: 프로젝트 버튼 표준은 interactive:hover(=@media hover:hover)로
+                                            <h2
+                                                id="tech-eval-title"
+                                                className="text-foreground max-w-full text-4xl leading-normal font-bold break-keep md:text-5xl"
+                                            >
+                                                {service.headline}
+                                            </h2>
+                                            {/* PROJECT-STYLE: 프로젝트 버튼 표준은 interactive:hover(=@media hover:hover)로
                                             터치 기기에서 hover 가 고정되지 않게 한다(not-disabled:hover 는 탭 후 밝은 상태가
                                             남음). 색은 스킨 반영 --ds-gray-*(mainpage 다크에서 hover #40454c·active #272a2e —
                                             은은한 다크)라 라이트/다크 다른 버튼엔 영향 없다. */}
-                                        <Button size="xl" asChild className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-lg')}>
-                                            <Link
-                                                href={service.ctaHref}
-                                                onMouseEnter={() => setIsPaused(true)}
-                                                onMouseLeave={() => setIsPaused(false)}
-                                                onFocus={() => setIsPaused(true)}
-                                                onBlur={() => setIsPaused(false)}
+                                            <Button
+                                                size="xl"
+                                                asChild
+                                                className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-lg')}
                                             >
-                                                자가진단 시작하기
-                                                <ArrowUpRight aria-hidden="true" />
-                                            </Link>
-                                        </Button>
+                                                <Link
+                                                    href={service.ctaHref}
+                                                    onMouseEnter={() => setIsPaused(true)}
+                                                    onMouseLeave={() => setIsPaused(false)}
+                                                    onFocus={() => setIsPaused(true)}
+                                                    onBlur={() => setIsPaused(false)}
+                                                >
+                                                    자가진단 시작하기
+                                                    <ArrowUpRight aria-hidden="true" />
+                                                </Link>
+                                            </Button>
 
-                                        {/* 모바일(md 미만): 이미지+설명을 버튼 바로 아래에 둔다. md 이상은 우측 컬럼이 담당. */}
-                                        <div
-                                            key={`visual-mobile-${entrySequence}-${activeIndex}`}
-                                            className="tech-service-content-enter flex w-full flex-col gap-5 md:hidden"
-                                        >
-                                            <TechEvalServiceVisual service={service} />
-                                        </div>
-                                    </Reveal>
-                                )}
-                            </li>
-                        )
-                    })}
-                </ul>
+                                            {/* 모바일(md 미만): 이미지+설명을 버튼 바로 아래에 둔다. md 이상은 우측 컬럼이 담당. */}
+                                            <div
+                                                key={`visual-mobile-${entrySequence}-${activeIndex}`}
+                                                className="tech-service-content-enter flex w-full flex-col gap-5 md:hidden"
+                                            >
+                                                <TechEvalServiceVisual service={service} />
+                                            </div>
+                                        </Reveal>
+                                    )}
+                                </li>
+                            )
+                        })}
+                    </ul>
 
-                {/* 우측 비주얼은 md 이상에서만 표시(md 미만은 활성 목차의 버튼 아래 배치가 담당). */}
-                <Reveal className="hidden flex-col gap-5 motion-safe:delay-150 md:col-span-4 md:flex xl:col-span-6 xl:col-start-7">
-                    <div
-                        key={`visual-${entrySequence}-${activeIndex}`}
-                        className="tech-service-content-enter flex flex-col gap-5"
-                    >
-                        <TechEvalServiceVisual service={activeService} />
-                    </div>
-                </Reveal>
+                    {/* 우측 비주얼은 md 이상에서만 표시(md 미만은 활성 목차의 버튼 아래 배치가 담당). */}
+                    <Reveal className="hidden flex-col gap-5 motion-safe:delay-150 md:col-span-4 md:flex xl:col-span-6 xl:col-start-7">
+                        <div
+                            key={`visual-${entrySequence}-${activeIndex}`}
+                            className="tech-service-content-enter flex flex-col gap-5"
+                        >
+                            <TechEvalServiceVisual service={activeService} />
+                        </div>
+                    </Reveal>
+                </div>
             </div>
             {bottomContent}
         </section>

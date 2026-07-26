@@ -44,7 +44,10 @@ const MAIN_PAGE_CLASS = [
     '[&_header]:bg-transparent',
     '[&_header]:transition-colors',
     '[&_header]:duration-600',
+    // 페이저가 켜진 화면은 활성 페이지 번호로, 꺼진 화면은 MainPageHeaderState 가 기록하는
+    // 자연 스크롤 위치로 같은 전환을 만든다.
     'data-[active-page=1]:[&_header]:bg-background',
+    'data-[natural-page=1]:[&_header]:bg-background',
     // Hero는 제자리에 두고 2섹션이 위로 덮도록 해 스무스 전환 중 빈 배경이 드러나지 않게 한다.
     'pager-on:[&_.stack-page]:!z-1',
     'pager-on:[&_#hero[data-stack-state=previous]]:!transform-none',

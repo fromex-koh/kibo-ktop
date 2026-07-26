@@ -63,7 +63,7 @@ const HeroStatsRoller = ({stats}: {stats: HeroStat[]}) => {
     // 우측 지표. md(768)부터 우반부(4열, 5번째 컬럼 시작), xl(1280)부터 5열(8번째 시작),
     // 2xl(1536)부터 4열(9번째 시작)로 좁혀 초광폭에서 카피와 균형을 맞춘다.
     return (
-        <div className="hero-stats-viewport col-span-4 min-w-0 md:col-start-5 xl:col-span-5 xl:col-start-8 2xl:col-span-4 2xl:col-start-9">
+        <div className="hero-stats-viewport col-span-4 mt-2.5 min-w-0 md:col-start-5 xl:col-span-5 xl:col-start-8 2xl:col-span-4 2xl:col-start-9">
             <ul
                 data-rolling={isRolling}
                 onTransitionEnd={(event) => {
