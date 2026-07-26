@@ -60,7 +60,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         icon: 'layout',
         items: [
             {label: '브레이크포인트 (Breakpoint)', href: '/component-guide/breakpoint'},
-            {label: '레이아웃 그리드 (Grid)', href: '/component-guide/grid', external: true},
+            {label: '레이아웃 그리드 (Grid)', href: '/component-guide/grid'},
             {label: '간격 (Spacing)', href: '/component-guide/spacing'},
             {label: '쌓임 순서 (Z-index)', href: '/component-guide/z-index'},
         ],

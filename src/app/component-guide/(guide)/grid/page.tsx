@@ -1,7 +1,6 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import ActiveBreakpointTag from '@/components/custom/active-breakpoint-tag'
-import ThemeToggle from '@/components/composite/theme-toggle'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '레이아웃 그리드 (Grid)'}
@@ -31,11 +30,10 @@ const GRID_RANGE_LABELS_BY_KEY = new Map<string, string>(Object.entries(GRID_RAN
 // grid.container 가 container 토큰 키(예: "content")면 실제 px 로 되찾아 표에 보여준다(값 단일 소스).
 const CONTAINER_PX: Record<string, number> = tokens.container
 
-// 레이아웃 그리드 — 사이드바 없는 독립 전체화면. .grid-layout 이 뷰포트 전체 폭을 그대로
-// 써서 해상도별 실제 그리드(모바일 328 / 태블릿 792 / 데스크톱 1200)를 정확히 확인할 수 있다.
-// (컴포넌트 가이드 사이드 레이아웃 안에 넣으면 xl(≥1280)에서 사이드바 폭만큼 좁아져 값이 어긋난다.)
+// 레이아웃 그리드 — 가이드 사이드바 안에서 본문 폭을 기준으로 컬럼·거터·여백을 확인한다.
+// main 과 테마 토글은 가이드 레이아웃이 제공하므로 페이지에서 다시 만들지 않는다.
 const GridPreviewPage = () => (
-    <main className="bg-background text-foreground flex min-h-screen flex-col gap-10 py-12 md:py-16">
+    <div className="flex flex-col gap-10 py-12 md:py-16">
         {/* 제목·설명 + 테마 토글 (읽기 좋은 폭으로 제한) */}
         <div className="max-w-content mx-auto w-full px-6">
             <BaseCard>
@@ -44,11 +42,10 @@ const GridPreviewPage = () => (
                         <h1 id="grid-title" className="typo-display-m-bold">
                             레이아웃 그리드 (Grid)
                         </h1>
-                        <ThemeToggle />
                     </div>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        브라우저 폭에 따라 컬럼 수가 4 → 8 → 12로 바뀝니다. 사이드바 없이 뷰포트 전체 폭을 사용해
-                        가장자리 여백과 거터를 실제 레이아웃 기준으로 확인합니다.
+                        브라우저 폭에 따라 컬럼 수가 4 → 8 → 12로 바뀝니다. 가장자리 여백과 거터가 실제 레이아웃
+                        규칙대로 적용되는지 확인합니다.
                     </p>
                 </section>
             </BaseCard>
@@ -148,7 +145,7 @@ const GridPreviewPage = () => (
                 </section>
             </BaseCard>
         </div>
-    </main>
+    </div>
 )
 
 export default GridPreviewPage
