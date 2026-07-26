@@ -18,7 +18,10 @@ const tierOf = (name: string): string => {
     const w = WEIGHT_KEYS.find((key) => name.endsWith(`-${key}`))
     return w ? name.slice(0, -(w.length + 1)) : name
 }
-const FONT_SIZE_TIERS: {tier: string; mobile: number; pc: number}[] = []
+// px 숫자는 rem 환산까지 보여주고, 문자열 값(마키 밴드의 유동 clamp 등)은 변환 없이 그대로 노출한다. [PB-03]
+const formatFontSize = (value: number | string): string =>
+    typeof value === 'number' ? `${value}px → ${value / tokens.remBase}rem` : value
+const FONT_SIZE_TIERS: {tier: string; mobile: number | string; pc: number | string}[] = []
 for (const [name, t] of Object.entries(tokens.typography)) {
     const tier = tierOf(name)
     if (!FONT_SIZE_TIERS.some((item) => item.tier === tier)) {
@@ -97,12 +100,12 @@ const FontSizeTable = () => (
                         <span key="mobile" className="text-muted-foreground font-mono whitespace-nowrap">
                             <span className="text-foreground">--raw-font-size-{tier}</span>
                             <br />
-                            {mobile}px → {mobile / tokens.remBase}rem
+                            {formatFontSize(mobile)}
                         </span>,
                         <span key="pc" className="text-muted-foreground font-mono whitespace-nowrap">
                             <span className="text-foreground">--raw-font-size-{tier}-pc</span>
                             <br />
-                            {pc}px → {pc / tokens.remBase}rem
+                            {formatFontSize(pc)}
                         </span>,
                         <span key="preview" className="text-foreground whitespace-nowrap">
                             <span style={{fontSize: `var(--raw-font-size-${tier})`}}>{PREVIEW_SAMPLE}</span>

@@ -20,7 +20,8 @@ const WIDTH_DEMO_LINES = ['iiiii', 'WWWWW']
 // weight/lineHeight/letterSpacing 는 primitive 맵(tokens.fontWeight 등)의 키를 이름으로 참조한다.
 // 표에는 이름이 아니라 실제 값(700·1.5·0)을 그 맵에서 되찾아 보여준다.
 type TypographyToken = {
-    size: {mobile: number; pc: number}
+    // 숫자는 px, 문자열은 변환하지 않는 값(마키 밴드의 유동 clamp 처럼 단위 변환 대상이 아닌 것). [PB-03]
+    size: {mobile: number | string; pc: number | string}
     weight: string
     lineHeight: string
     letterSpacing: string
@@ -34,6 +35,7 @@ type TypographyEntry = [string, TypographyToken]
 
 // 타이포그래피 스케일 그룹 — Figma '크기(font-size)' 프레임의 분류(Display·Heading·Title·Body·
 // Caption·Micro) 순서 그대로 표를 나눈다. tokens.json 순서를 유지한 채 첫 매칭 그룹에 담는다.
+// 마지막 '화면 전용'은 어디에도 안 걸리는 토큰을 받는 자리다 — 없으면 새 토큰이 표에서 조용히 빠진다.
 const TYPOGRAPHY_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'Display', match: (n) => n.startsWith('display-')},
     {name: 'Heading', match: (n) => /^h[1-4]-/.test(n)},
@@ -41,17 +43,24 @@ const TYPOGRAPHY_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'Body', match: (n) => n.startsWith('body-')},
     {name: 'Caption', match: (n) => n.startsWith('caption-')},
     {name: 'Micro', match: (n) => n.startsWith('micro-')},
+    {name: '화면 전용', match: () => true},
 ]
-const groupNameOfTypo = (name: string): string => TYPOGRAPHY_GROUPS.find((group) => group.match(name))?.name ?? '기타'
+// 숫자는 px 를 붙여 보여주고, 문자열 값은 그대로 노출한다.
+const formatFontSize = (value: number | string): string => (typeof value === 'number' ? `${value}px` : value)
+const groupNameOfTypo = (name: string): string =>
+    TYPOGRAPHY_GROUPS.find((group) => group.match(name))?.name ?? '화면 전용'
 const TYPOGRAPHY_ENTRIES: TypographyEntry[] = Object.entries(tokens.typography)
 const TYPOGRAPHY_GROUPED = TYPOGRAPHY_GROUPS.map((group) => ({
     name: group.name,
     tokens: TYPOGRAPHY_ENTRIES.filter(([name]) => groupNameOfTypo(name) === group.name),
 })).filter((group) => group.tokens.length > 0)
 const TYPOGRAPHY_COUNT = TYPOGRAPHY_ENTRIES.length
-const TYPOGRAPHY_TIER_COUNT = new Set(
-    TYPOGRAPHY_ENTRIES.map(([name]) => name.replace(/-(regular|medium|semibold|bold)$/, '')),
-).size
+const WEIGHT_KEYS = Object.keys(FONT_WEIGHT)
+const tierOfTypo = (name: string): string => {
+    const weight = WEIGHT_KEYS.find((key) => name.endsWith(`-${key}`))
+    return weight ? name.slice(0, -(weight.length + 1)) : name
+}
+const TYPOGRAPHY_TIER_COUNT = new Set(TYPOGRAPHY_ENTRIES.map(([name]) => tierOfTypo(name))).size
 
 const TYPOGRAPHY_SCALE_COLUMNS = [
     {key: 'preview', header: '미리보기', align: 'start'},
@@ -81,10 +90,10 @@ const TypographyScaleTable = ({title, entries}: {title: string; entries: Typogra
                     </span>,
                     <CopyChip key="class" value={`typo-${name}`} />,
                     <span key="mobile" className="text-muted-foreground font-mono">
-                        {t.size.mobile}px
+                        {formatFontSize(t.size.mobile)}
                     </span>,
                     <span key="pc" className="text-muted-foreground font-mono">
-                        {t.size.pc}px
+                        {formatFontSize(t.size.pc)}
                     </span>,
                     <span key="weight" className="text-muted-foreground font-mono">
                         {FONT_WEIGHT[t.weight]}
