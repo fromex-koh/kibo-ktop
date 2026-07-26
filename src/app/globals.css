@@ -46,6 +46,69 @@
 @theme {
     /* 스택 페이저 섹션 전환 가속도 — ease-stack 유틸리티로 생성된다 */
     --ease-stack: cubic-bezier(0.5, 0, 0, 1);
+
+    /* 메인페이지 애니메이션 — animate-* 유틸리티로 생성된다. 사용처는 각 컴포넌트 className.
+       모션 최소화는 사용처에서 motion-reduce:animate-none 으로 끈다. [KWCAG 6.3.1] */
+    --animate-hero-zoom-out: main-hero-zoom-out 7s ease both;
+    @keyframes main-hero-zoom-out {
+        0% {
+            transform: scale(1.2);
+        }
+        95%,
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    /* 시간은 비워 둔다 — animated-counter.tsx 가 인라인 animation-duration/delay 로 주입한다.
+       theme 변수 안의 var() 는 :root 에서 해석돼 요소별 값을 받을 수 없다. */
+    --animate-counter-roll: animated-counter-roll ease both;
+    @keyframes animated-counter-roll {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(var(--counter-end));
+        }
+    }
+
+    --animate-scroll-line: main-scroll-line-fill 1.5s ease-in-out infinite;
+    @keyframes main-scroll-line-fill {
+        0% {
+            opacity: 1;
+            transform: scaleY(0);
+        }
+        80% {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+        100% {
+            opacity: 0;
+            transform: scaleY(1);
+        }
+    }
+
+    --animate-tech-progress: tech-service-progress 5s linear forwards;
+    @keyframes tech-service-progress {
+        from {
+            transform: scaleY(0);
+        }
+        to {
+            transform: scaleY(1);
+        }
+    }
+
+    --animate-tech-enter: tech-service-content-enter 600ms ease both;
+    @keyframes tech-service-content-enter {
+        from {
+            opacity: 0;
+            transform: translateY(1rem);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 }
 
 @theme inline {

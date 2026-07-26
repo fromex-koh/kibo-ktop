@@ -74,7 +74,7 @@ const HeroSection = () => (
             className="hero-scroll-indicator text-foreground pointer-events-none absolute inset-x-0 bottom-0 flex flex-col items-center"
         >
             <span className="typo-title-m-bold">SCROLL</span>
-            <span className="main-scroll-line-fill bg-foreground/30 relative w-px flex-1 overflow-hidden" />
+            <span className="bg-foreground/30 after:animate-scroll-line relative w-px flex-1 overflow-hidden after:absolute after:inset-0 after:origin-top after:scale-y-0 after:bg-current after:content-[''] motion-reduce:after:scale-y-100 motion-reduce:after:animate-none motion-reduce:after:opacity-100" />
         </div>
     </section>
 )

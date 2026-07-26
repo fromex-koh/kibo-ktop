@@ -1,43 +1,26 @@
 /* 메인페이지(/component-guide/main-page) 목업 전용 스타일.
    globals.css 가 @import 하며, 전역 규칙이 아니라 아래 컴포넌트들이 직접 붙이는 클래스다.
 
-   Tailwind 유틸리티로 표현할 수 없어 여기 있는 값들이다 — 뷰포트 높이에 반응하는 유동 크기(clamp),
-   JS 가 붙이는 동적 클래스, 키프레임 애니메이션, 고정 레이어 전환 규칙.
-
-   블록은 기능 단위로 묶고, 각 블록 안에 클래스 · @keyframes · 모션 최소화 예외를 함께 둔다.
-   애니메이션 하나를 고칠 때 파일을 오가지 않게 하기 위함이다. [KWCAG 6.3.1]
+   Tailwind 유틸리티로 표현할 수 없어 여기 있는 값들이다 — 뷰포트 높이에 반응하는 유동 크기(clamp)와
+   JS 가 붙이는 동적 클래스. 애니메이션은 globals.css 의 @theme 에 등록돼 animate-* 유틸리티로 쓴다.
 
    간격·크기는 rem 을 직접 쓰지 않고 --spacing(n) 으로 적는다 — n 은 JSX 의 p-n·gap-n 과 같은 단위이고
    1n = 4px(tokens.json 의 spacingBase)이다. 값을 고칠 때는 옆의 px 주석도 함께 고친다. [PB-13]
    font-size 는 간격 스케일이 아니라 rem 을 그대로 두고 px 만 주석으로 병기한다. */
 
 /* ═══ 배경 슬라이드 — @/components/custom/hero-background.tsx ═══════════════════════════════
-   활성 클래스를 JS 가 붙여 Tailwind purge 대상이 아니라 여기 둔다. */
+   활성 클래스를 JS 가 붙여 Tailwind purge 대상이 아니라 여기 둔다(줌아웃은 animate-hero-zoom-out). */
 .main-hero-background-slide {
     transform: scale(1.2);
 }
-.main-hero-background-active {
-    animation: main-hero-zoom-out 7s ease both;
-}
-@keyframes main-hero-zoom-out {
-    0% {
-        transform: scale(1.2);
-    }
-    95%,
-    100% {
-        transform: scale(1);
-    }
-}
 @media (prefers-reduced-motion: reduce) {
-    .main-hero-background-slide,
-    .main-hero-background-active {
+    .main-hero-background-slide {
         transform: scale(1);
-        animation: none;
     }
 }
 
 /* ═══ 숫자 카운터 — @/components/custom/animated-counter.tsx ════════════════════════════════
-   0에서 시작해 자릿수별로 순차 회전하는 레일. */
+   0에서 시작해 자릿수별로 순차 회전하는 레일. 회전은 animate-counter-roll, 타이밍 변수는 컴포넌트가 주입. */
 .animated-counter-digit {
     display: inline-block;
     height: 1em;
@@ -50,25 +33,13 @@
     flex-direction: column;
     line-height: 1;
     transform: translateY(0);
-    /* 마운트 즉시 시작 — JS(rAF) 게이트를 거치면 창이 가려질 때 0에 멈춘 채 시작하지 못한다.
-       타이밍 값(--counter-duration/--counter-delay)은 animated-counter.tsx 가 단일 소스. */
-    animation: animated-counter-roll var(--counter-duration, 3s) ease var(--counter-delay) both;
 }
 .animated-counter-track > span {
     height: 1em;
 }
-@keyframes animated-counter-roll {
-    0% {
-        transform: translateY(0);
-    }
-    100% {
-        transform: translateY(var(--counter-end));
-    }
-}
 @media (prefers-reduced-motion: reduce) {
     .animated-counter-track {
         transform: translateY(var(--counter-end));
-        animation: none;
     }
 }
 
@@ -197,41 +168,6 @@
     }
 }
 
-/* ═══ SCROLL 표시 — @/components/custom/hero-section.tsx 하단 ═══════════════════════════════
-   트랙 안의 선이 위→아래로 채워진 뒤 사라지며 반복된다. */
-@layer utilities {
-    .main-scroll-line-fill::after {
-        position: absolute;
-        inset: 0;
-        background-color: currentColor;
-        content: '';
-        transform: scaleY(0);
-        transform-origin: center top;
-        animation: main-scroll-line-fill 1.5s ease-in-out infinite;
-    }
-}
-@keyframes main-scroll-line-fill {
-    0% {
-        opacity: 1;
-        transform: scaleY(0);
-    }
-    80% {
-        opacity: 1;
-        transform: scaleY(1);
-    }
-    100% {
-        opacity: 0;
-        transform: scaleY(1);
-    }
-}
-@media (prefers-reduced-motion: reduce) {
-    .main-scroll-line-fill::after {
-        opacity: 1;
-        transform: scaleY(1);
-        animation: none;
-    }
-}
-
 /* ═══ 지표 롤러 — @/components/custom/hero-stats-roller.tsx ═════════════════════════════════
    5개 행을 유지하고 여섯 번째 복제 행까지 한 칸씩 위로 이동한다.
    md 미만과 모바일 가로에서는 트랙을 300%로 키워 한 번에 2행만 보이게 한다. */
@@ -321,7 +257,7 @@
 
 /* ═══ 2섹션 서비스 — @/components/custom/tech-eval-section.tsx ══════════════════════════════
    제목은 히어로와 같은 lg 미만 유동 축소만 적용한다(세로 단계는 없음).
-   자동 전환은 세로 진행 바와 콘텐츠 페이드가 같은 주기로 움직인다. */
+   진행 바·페이드 애니메이션은 animate-tech-progress · animate-tech-enter 가 담당한다. */
 .tech-title-scale {
     font-size: 3rem; /* 48px */
     line-height: 1.5;
@@ -331,46 +267,12 @@
         font-size: clamp(2rem, calc(1.5rem + 2.1vw), 2.75rem); /* clamp(32px, calc(24px + 2.1vw), 44px) */
     }
 }
-.tech-service-progress-fill {
-    animation: tech-service-progress 5s linear forwards;
-}
-/* 목차 버튼 호버/포커스 동안 롤링을 멈춘다(벗어나면 이어서 재생) */
+/* 목차 버튼 호버/포커스 동안, 그리고 비활성 스택 페이지에서는 진행 바를 멈춘다. */
 .tech-service-progress-fill[data-paused='true'] {
     animation-play-state: paused;
 }
-.tech-service-content-enter {
-    animation: tech-service-content-enter 600ms ease both;
-}
-@keyframes tech-service-progress {
-    from {
-        transform: scaleY(0);
-    }
-    to {
-        transform: scaleY(1);
-    }
-}
-@keyframes tech-service-content-enter {
-    from {
-        opacity: 0;
-        transform: translateY(1rem);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-/* 스택 페이저가 켜진 화면에서 비활성 페이지의 진행 바는 멈춘다(상태는 StackPager 가 매긴다). */
 @media (min-width: 768px) and (min-height: 640px) {
     [data-stack-page]:not([data-stack-state='active']) .tech-service-progress-fill {
         animation-play-state: paused;
-    }
-}
-@media (prefers-reduced-motion: reduce) {
-    .tech-service-progress-fill,
-    .tech-service-content-enter {
-        animation: none;
-    }
-    .tech-service-progress-fill {
-        transform: scaleY(1);
     }
 }

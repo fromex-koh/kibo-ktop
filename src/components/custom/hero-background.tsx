@@ -81,7 +81,7 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
                         key={`${slide.position}-${index}`}
                         className={cn(
                             'after:to-background/75 main-hero-background-slide absolute inset-0 transition-opacity duration-500 [transition-timing-function:ease] after:absolute after:inset-0 after:z-2 after:bg-linear-to-b after:from-transparent motion-reduce:transition-none',
-                            isActive && 'main-hero-background-active',
+                            isActive && 'animate-hero-zoom-out motion-reduce:animate-none',
                             isActive ? 'z-1 opacity-100' : 'z-0 opacity-0',
                         )}
                         style={isPrevious ? {transform: 'scale(1)'} : undefined}

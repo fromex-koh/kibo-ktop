@@ -81,7 +81,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                     height: `${100 / TECH_EVAL_SERVICES.length}%`,
                                 }}
                                 onAnimationEnd={showNextService}
-                                className="tech-service-progress-fill bg-main-accent absolute inset-x-0 origin-top"
+                                className="tech-service-progress-fill animate-tech-progress bg-main-accent absolute inset-x-0 origin-top motion-reduce:scale-y-100 motion-reduce:animate-none"
                             />
                         </div>
 
@@ -154,7 +154,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                             {/* 모바일(md 미만): 이미지+설명을 버튼 바로 아래에 둔다. md 이상은 우측 컬럼이 담당. */}
                                             <div
                                                 key={`visual-mobile-${entrySequence}-${activeIndex}`}
-                                                className="tech-service-content-enter flex w-full flex-col gap-5 md:hidden"
+                                                className="animate-tech-enter flex w-full flex-col gap-5 motion-reduce:animate-none md:hidden"
                                             >
                                                 <TechEvalServiceVisual service={service} />
                                             </div>
@@ -169,7 +169,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                     <Reveal className="hidden flex-col gap-5 motion-safe:delay-150 md:col-span-4 md:flex xl:col-span-6 xl:col-start-7">
                         <div
                             key={`visual-${entrySequence}-${activeIndex}`}
-                            className="tech-service-content-enter flex flex-col gap-5"
+                            className="animate-tech-enter flex flex-col gap-5 motion-reduce:animate-none"
                         >
                             <TechEvalServiceVisual service={activeService} />
                         </div>

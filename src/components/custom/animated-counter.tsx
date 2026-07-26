@@ -3,12 +3,11 @@
 import {type CSSProperties} from 'react'
 
 type CounterStyle = CSSProperties & {
-    '--counter-delay': string
-    '--counter-duration': string
     '--counter-end': string
 }
 
-// 애니메이션 타이밍의 단일 소스 — CSS 는 --counter-duration 변수로 이 값을 그대로 받는다.
+// 애니메이션 타이밍의 단일 소스 — 인라인 스타일로 animation-duration/delay 에 직접 넘긴다
+// (theme 의 --animate-counter-roll 은 이름·가속도만 정하고 시간은 비워 둔다).
 const COUNTER_ROLL_DURATION_MS = 3000
 const COUNTER_DIGIT_STAGGER_MS = 220
 
@@ -41,15 +40,15 @@ const AnimatedCounter = ({value, onComplete}: {value: number | string; onComplet
                         ...Array.from({length: digit + 1}, (_, step) => step),
                     ]
                     const style: CounterStyle = {
-                        '--counter-delay': `${characters.slice(0, index).filter((item) => /\d/.test(item)).length * COUNTER_DIGIT_STAGGER_MS}ms`,
-                        '--counter-duration': `${COUNTER_ROLL_DURATION_MS}ms`,
+                        animationDuration: `${COUNTER_ROLL_DURATION_MS}ms`,
+                        animationDelay: `${characters.slice(0, index).filter((item) => /\d/.test(item)).length * COUNTER_DIGIT_STAGGER_MS}ms`,
                         '--counter-end': `-${reel.length - 1}em`,
                     }
 
                     return (
                         <span key={`${digit}-${index}`} className="animated-counter-digit">
                             <span
-                                className="animated-counter-track"
+                                className="animated-counter-track animate-counter-roll motion-reduce:animate-none"
                                 style={style}
                                 onAnimationEnd={index === lastDigitIndex ? onComplete : undefined}
                             >
