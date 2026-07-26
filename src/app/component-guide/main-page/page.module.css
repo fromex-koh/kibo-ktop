@@ -124,3 +124,70 @@
         height: clamp(7rem, 22dvh, 8rem);
     }
 }
+
+/* 모바일 가로(예: 667×375·844×390)처럼 세로가 480px보다 짧은 화면에서는 밀도를 한 단계 더 낮춘다.
+   가로 모드 폭이 768px 이상인 기기도 많아 너비 조건 없이 높이만으로 적용한다.
+   히어로는 섹션 최소 높이(720px) 대신 뷰포트 높이에 맞춰, 제목·설명·지표·스크롤 표시가
+   서로 겹치거나 잘리지 않고 한 화면에 들어가게 한다. */
+@media (height < 30rem) {
+    .root :global(#hero) {
+        height: 100dvh;
+        min-height: 0;
+        overflow: hidden;
+    }
+
+    .root :global(#hero > .relative) {
+        height: 100%;
+        min-height: 0;
+        padding-top: 3.25rem;
+        padding-bottom: 3.5rem;
+    }
+
+    .root :global(#hero > div:last-child) {
+        height: 3rem;
+        gap: 0.5rem;
+    }
+
+    .root :global(#hero .grid-layout) {
+        row-gap: 0.5rem;
+    }
+
+    .root :global(#hero .grid-layout > div:first-child) {
+        gap: 0.5rem;
+    }
+
+    .root :global(#hero-title + p) {
+        font-size: 0.875rem;
+        line-height: 1.35;
+    }
+
+    /* 지표는 항상 두 줄이 보이고 각 줄에 값·설명이 다 들어가야 해서, 줄 높이(약 58px) 두 개분을 확보한다. */
+    .root :global(.hero-stats-track) {
+        height: 300%;
+    }
+
+    .root :global(.hero-stats-viewport) {
+        height: clamp(6.5rem, 31dvh, 7.25rem);
+        margin-top: 0;
+    }
+}
+
+/* 카피와 지표가 한 컬럼으로 쌓이는 좁은 가로 화면(768px 미만)은 제목·설명까지 줄여야 모두 들어간다. */
+@media (width < 48rem) and (height < 30rem) {
+    .root :global(#hero-title) {
+        font-size: clamp(1.25rem, 3.6vw, 1.5rem);
+        line-height: 1.25;
+    }
+
+    .root :global(#hero-title + p) {
+        font-size: 0.8125rem;
+    }
+}
+
+/* 768px 이상 가로 화면은 카피와 지표가 좌우로 나뉘어 세로 여유가 있으므로 제목만 한 단계 줄인다. */
+@media (width >= 48rem) and (height < 30rem) {
+    .root :global(#hero-title) {
+        font-size: 2rem;
+        line-height: 1.3;
+    }
+}
