@@ -13,6 +13,35 @@
    enabled(:enabled) 는 aria-disabled 를 못 걸러 별도 정의한다. */
 @custom-variant interactive (&:not(:disabled):not([aria-disabled='true']));
 
+/* 세로 높이 기준 반응형 변형 — Tailwind 기본 브레이크포인트(sm/md/xl…)는 너비만 다루는데,
+   풀스크린 전환 화면은 "높이가 충분한가"가 레이아웃을 가르는 축이라 이름을 붙여 유틸리티로 쓴다.
+   축약형(@custom-variant name (@media …))은 적용되지 않으므로 블록 + @slot 형태를 쓴다.
+   기준값은 stack-pager.tsx 의 STACK_PAGER_QUERY(768×640)와 한 세트다 — 바꾸면 함께 맞춘다.
+   - pager-on  : 스택 페이저가 켜지는 화면(고정 레이어 전환)
+   - pager-off : 페이저가 꺼져 자연 스크롤 + 스크롤 스냅으로 넘어가는 화면
+   - short     : 세로 640px 미만(초소형 모바일·낮은 데스크톱 창) — 밀도 한 단계 축소
+   - landscape : 세로 480px 미만(모바일 가로) — 밀도 두 단계 축소 */
+@custom-variant pager-on {
+    @media (min-width: 48rem) and (min-height: 40rem) {
+        @slot;
+    }
+}
+@custom-variant pager-off {
+    @media (width < 48rem), (height < 40rem) {
+        @slot;
+    }
+}
+@custom-variant short {
+    @media (height < 40rem) {
+        @slot;
+    }
+}
+@custom-variant landscape {
+    @media (height < 30rem) {
+        @slot;
+    }
+}
+
 /* Footer 로고 테마 교체 — footer 전용 변수(일반 전역 유틸 아님). nearest 스코프 제어용.
    dark:/mainpage: 변형은 "조상 어딘가에 .dark/.mainpage 가 있으면" 매칭되므로, 가이드처럼 .light 로 중첩
    고정한 미리보기(상위 html 은 .dark)에서 밝은 배경에 화이트 로고가 나오는 어긋남이 생긴다. 색(--ds-*)처럼

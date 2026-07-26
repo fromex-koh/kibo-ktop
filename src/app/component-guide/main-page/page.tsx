@@ -46,8 +46,8 @@ const MAIN_PAGE_CLASS = [
     '[&_header]:duration-600',
     'data-[active-page=1]:[&_header]:bg-background',
     // Hero는 제자리에 두고 2섹션이 위로 덮도록 해 스무스 전환 중 빈 배경이 드러나지 않게 한다.
-    '[@media_(min-width:48rem)_and_(min-height:40rem)]:[&_.stack-page]:!z-1',
-    '[@media_(min-width:48rem)_and_(min-height:40rem)]:[&_#hero[data-stack-state=previous]]:!transform-none',
+    'pager-on:[&_.stack-page]:!z-1',
+    'pager-on:[&_#hero[data-stack-state=previous]]:!transform-none',
     // 1·2섹션 모두 Header의 content-layout과 같은 좌우 여백·최대 폭을 사용한다.
     'md:[&_#hero_.grid-layout]:!w-[min(calc(100%-2*var(--ds-grid-margin)),var(--container-content))]',
     'md:[&_#tech-eval_.grid-layout]:!w-[min(calc(100%-2*var(--ds-grid-margin)),var(--container-content))]',
