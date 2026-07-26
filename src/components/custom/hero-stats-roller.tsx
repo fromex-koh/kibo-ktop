@@ -2,6 +2,14 @@
 
 import {useEffect, useRef, useState} from 'react'
 import AnimatedCounter, {counterTotalDurationMs} from './animated-counter'
+import {
+    heroStatRowClassName,
+    heroStatTitleClassName,
+    heroStatValueClassName,
+    heroStatsTrackClassName,
+    heroStatsViewportClassName,
+} from '@/components/theme/hero-stats-roller.variants'
+import {cn} from '@/lib/utils'
 
 export type HeroStat = {
     id: string
@@ -10,7 +18,7 @@ export type HeroStat = {
     note: string
 }
 
-// globals.css 의 .hero-stats-track[data-rolling='true'] transition 시간과 동기 유지
+// theme/hero-stats-roller.variants.ts 의 duration-700 과 동기 유지
 const ROLLING_TRANSITION_MS = 700
 // animationend/transitionend 가 스로틀로 늦게 도착할 여유를 둔 안전장치 지연
 const FALLBACK_BUFFER_MS = 600
@@ -63,16 +71,22 @@ const HeroStatsRoller = ({stats}: {stats: HeroStat[]}) => {
     // 우측 지표. md(768)부터 우반부(4열, 5번째 컬럼 시작), xl(1280)부터 5열(8번째 시작),
     // 2xl(1536)부터 4열(9번째 시작)로 좁혀 초광폭에서 카피와 균형을 맞춘다.
     return (
-        <div className="hero-stats-viewport col-span-4 min-w-0 md:col-start-5 xl:col-span-5 xl:col-start-8 2xl:col-span-4 2xl:col-start-9">
+        <div
+            className={cn(
+                heroStatsViewportClassName,
+                'col-span-4 min-w-0 md:col-start-5 xl:col-span-5 xl:col-start-8 2xl:col-span-4 2xl:col-start-9',
+            )}
+        >
             <ul
                 data-rolling={isRolling}
                 onTransitionEnd={(event) => {
-                    // 자식(.hero-stat-value 등)에서 버블링된 transitionend 를 걸러 트랙 이동만 마감한다.
-                    if (event.target === event.currentTarget && event.propertyName === 'transform') {
+                    // 자식(숫자 크기 전환)에서 버블링된 transitionend 를 걸러 트랙 이동만 마감한다.
+                    // 프로퍼티가 translate 인 이유 — Tailwind 의 translate-* 는 transform 이 아니라 translate 를 쓴다.
+                    if (event.target === event.currentTarget && event.propertyName === 'translate') {
                         finishRolling()
                     }
                 }}
-                className="hero-stats-track"
+                className={heroStatsTrackClassName}
             >
                 {visibleStats.map((stat, index) => {
                     const isActive = index === 0
@@ -83,10 +97,18 @@ const HeroStatsRoller = ({stats}: {stats: HeroStat[]}) => {
                         <li
                             key={`${stat.id}-${isClone ? 'clone' : 'item'}`}
                             aria-hidden={isClone || undefined}
-                            className="hero-stat-row flex flex-col justify-start gap-0 md:items-end md:text-right"
+                            className={cn(
+                                heroStatRowClassName,
+                                'flex flex-col justify-start gap-0 md:items-end md:text-right',
+                            )}
                         >
-                            <p className="hero-stat-title typo-title-xl-medium text-foreground flex h-auto min-h-[var(--raw-font-size-h1)] items-center gap-1 break-keep md:h-[var(--raw-font-size-h1)] md:whitespace-nowrap">
-                                <strong data-active={isActive} className="hero-stat-value">
+                            <p
+                                className={cn(
+                                    heroStatTitleClassName,
+                                    'text-foreground flex items-center gap-1 break-keep md:whitespace-nowrap',
+                                )}
+                            >
+                                <strong data-active={isActive} className={heroStatValueClassName}>
                                     {isActive ? (
                                         <AnimatedCounter key={stat.id} value={stat.value} onComplete={startRolling} />
                                     ) : isIncoming ? (
