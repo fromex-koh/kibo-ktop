@@ -36,6 +36,8 @@ const tierOf = (name) => {
 }
 const breakpoint = tokens.breakpoint ?? {} // 반응형 브레이크포인트(px) → grid·typography 티어 생성
 const container = tokens.container ?? {} // 콘텐츠 최대 폭(px) → max-w-* 유틸
+// 높이 임계값(px) → 높이 기준 @custom-variant 생성. 너비 breakpoint 로는 표현할 수 없는 축이다.
+const breakpointHeight = tokens.breakpointHeight ?? {}
 const grid = tokens.grid ?? {} // 브레이크포인트별 레이아웃 그리드(columns/gutter/margin) → .grid-layout
 // 타이포 모바일→PC 전환점: breakpoint 키 참조("md") 또는 px 숫자
 const typoBpRaw = tokens.typographyBreakpoint ?? 'md'
@@ -205,6 +207,29 @@ for (const [name, t] of Object.entries(typography)) {
         errors.push(
             `typography tier "${tier}" — 굵기 변형 간 크기 불일치(${tierSize[tier]} vs ${key}), font-size tier 공유 불가`,
         )
+}
+
+// breakpointHeight: stack(페이저 최소 높이) > landscape(모바일 가로) 관계가 깨지면 변형 구간이 뒤집힌다.
+for (const k of ['stack', 'landscape']) {
+    if (typeof breakpointHeight[k] !== 'number') errors.push(`breakpointHeight.${k} 누락 또는 숫자 아님`)
+}
+if (breakpointHeight.stack <= breakpointHeight.landscape)
+    errors.push(
+        `breakpointHeight.stack(${breakpointHeight.stack}) 은 landscape(${breakpointHeight.landscape}) 보다 커야 함`,
+    )
+
+// StackPager 의 JS 쪽 조건은 CSS 변형과 한 세트다 — 주석으로 부탁하지 않고 여기서 어긋나면 빌드를 세운다.
+const STACK_PAGER_SOURCE = 'src/components/custom/stack-pager.tsx'
+try {
+    const src = readFileSync(resolve(ROOT, STACK_PAGER_SOURCE), 'utf8')
+    const expected = `(min-width: ${breakpoint.md}px) and (min-height: ${breakpointHeight.stack}px)`
+    if (!src.includes(`STACK_PAGER_QUERY = '${expected}'`))
+        errors.push(
+            `${STACK_PAGER_SOURCE} 의 STACK_PAGER_QUERY 가 토큰과 다름 — 기대값 "${expected}" ` +
+                '(breakpoint.md · breakpointHeight.stack 과 한 세트)',
+        )
+} catch {
+    errors.push(`${STACK_PAGER_SOURCE} 를 읽을 수 없음 — STACK_PAGER_QUERY 동기화 검증 불가`)
 }
 
 if (errors.length) {
@@ -656,12 +681,46 @@ if (Object.keys(overlay).length) {
     L.push('')
 }
 
+// 높이 기준 @custom-variant — 너비만 다루는 Tailwind 기본 브레이크포인트로 표현할 수 없는 축.
+// 값은 breakpoint.md 와 breakpointHeight 에서 조합하므로 임계값은 tokens.json 한 곳에서만 바꾼다.
+if (Object.keys(breakpointHeight).length) {
+    const w = toRem(breakpoint.md)
+    const stack = toRem(breakpointHeight.stack)
+    const land = toRem(breakpointHeight.landscape)
+    const variant = (name, condition, note) =>
+        L.push(`/* ${note} */`, `@custom-variant ${name} {`, `  @media ${condition} {`, '    @slot;', '  }', '}')
+    L.push('/* 높이 기준 변형 (JSX 프리픽스) — 임계값은 tokens.json 의 breakpoint.md · breakpointHeight */')
+    variant(
+        'pager-on',
+        `(min-width: ${w}) and (min-height: ${stack})`,
+        '스택 페이저가 켜져 고정 레이어로 전환되는 화면',
+    )
+    variant(
+        'pager-off',
+        `(width < ${w}), (height < ${stack})`,
+        '페이저가 꺼져 자연 스크롤 + 스크롤 스냅으로 넘어가는 화면',
+    )
+    variant('short', `(height < ${stack})`, `세로 ${breakpointHeight.stack}px 미만 — 밀도 한 단계 축소`)
+    variant(
+        'landscape',
+        `(height < ${land})`,
+        `세로 ${breakpointHeight.landscape}px 미만(모바일 가로) — 밀도 두 단계 축소`,
+    )
+    variant(
+        'stack-fallback',
+        `(min-width: ${w}) and (${land} <= height < ${stack})`,
+        '페이저는 꺼졌지만 모바일도 아닌 띠 — 섹션이 최소 설계 높이를 유지해야 하는 구간',
+    )
+    L.push('')
+}
+
 writeFileSync(OUT, L.join('\n'))
 console.log(
     `✅ tokens.css 생성 — color(hue ${hues.length}·semantic ${Object.keys(semantic).length}·alpha ${Object.keys(alpha).length}), ` +
         `spacingBase ${spacingBase}px, radiusBase ${radiusBase}px, radius ${Object.keys(radius).length}, ` +
         `size ${Object.keys(size).length}, shadow ${Object.keys(effect.shadow ?? {}).length}, ` +
         `blur ${Object.keys(effect.blur ?? {}).length}, overlay ${Object.keys(overlay).length}, ` +
-        `breakpoint ${Object.keys(breakpoint).length}, container ${Object.keys(container).length}, ` +
+        `breakpoint ${Object.keys(breakpoint).length}(+높이 ${Object.keys(breakpointHeight).length}), ` +
+        `container ${Object.keys(container).length}, ` +
         `grid ${Object.keys(grid).length}, z ${Object.keys(z).length}, typography ${typoNames.length}`,
 )

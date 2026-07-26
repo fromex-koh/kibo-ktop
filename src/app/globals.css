@@ -11,35 +11,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 @custom-variant mainpage (&:where(.mainpage, .mainpage *));
 @custom-variant interactive (&:not(:disabled):not([aria-disabled='true'])); /* enabled: 가 못 거르는 aria-disabled 제외 */
-
-/* 높이 기준 변형 — 기본 브레이크포인트는 너비만 다룬다. 값은 stack-pager.tsx 의 STACK_PAGER_QUERY 와 한 세트다.
-   pager-on 고정 레이어 전환 · pager-off 자연 스크롤+스냅 · short 세로 640px 미만 · landscape 480px 미만 */
-@custom-variant pager-on {
-    @media (min-width: 48rem) and (min-height: 40rem) {
-        @slot;
-    }
-}
-@custom-variant pager-off {
-    @media (width < 48rem), (height < 40rem) {
-        @slot;
-    }
-}
-@custom-variant short {
-    @media (height < 40rem) {
-        @slot;
-    }
-}
-@custom-variant landscape {
-    @media (height < 30rem) {
-        @slot;
-    }
-}
-/* 페이저가 꺼졌지만 모바일도 아닌 띠 — 섹션이 최소 설계 높이를 유지해야 하는 구간 */
-@custom-variant stack-fallback {
-    @media (min-width: 48rem) and (30rem <= height < 40rem) {
-        @slot;
-    }
-}
+/* 높이 기준 변형(pager-on·pager-off·short·landscape·stack-fallback)은 tokens.json 의
+   breakpoint.md · breakpointHeight 에서 생성된다 — 임계값은 거기서만 바꾼다. */
 
 /* ═════ § 2 · 테마 값 확장 — tokens.json 이 다루지 않는 값만 ══════════════════════════════════════ */
 

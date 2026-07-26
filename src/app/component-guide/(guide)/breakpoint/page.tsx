@@ -21,27 +21,32 @@ const HEIGHT_VARIANT_COLUMNS = [
     {key: 'usage', header: '쓰임', align: 'start', wrap: true},
 ] as const
 
-// 높이 축 변형 — globals.css 의 @custom-variant 로 등록. 값 변경 시 여기도 함께 갱신한다.
+// 높이 축 변형 — 조건은 tokens.json 의 breakpoint.md · breakpointHeight 에서 생성되므로 여기서도 그 값을 읽는다.
 const HEIGHT_VARIANTS = [
     {
         prefix: 'pager-on:',
-        condition: '너비 ≥ 768px 그리고 높이 ≥ 640px',
+        condition: `너비 ≥ ${tokens.breakpoint.md}px 그리고 높이 ≥ ${tokens.breakpointHeight.stack}px`,
         usage: '스택 페이저가 켜져 섹션이 고정 레이어로 전환되는 화면',
     },
     {
         prefix: 'pager-off:',
-        condition: '너비 < 768px 또는 높이 < 640px',
+        condition: `너비 < ${tokens.breakpoint.md}px 또는 높이 < ${tokens.breakpointHeight.stack}px`,
         usage: '페이저가 꺼져 자연 스크롤 + 스크롤 스냅으로 넘어가는 화면',
     },
     {
         prefix: 'short:',
-        condition: '높이 < 640px',
+        condition: `높이 < ${tokens.breakpointHeight.stack}px`,
         usage: '초소형 모바일·낮은 데스크톱 창에서 세로 밀도를 한 단계 낮출 때',
     },
     {
         prefix: 'landscape:',
-        condition: '높이 < 480px',
+        condition: `높이 < ${tokens.breakpointHeight.landscape}px`,
         usage: '모바일 가로. 너비 조건이 없어 가로 모드 폭이 768px 이상인 기기도 포함한다',
+    },
+    {
+        prefix: 'stack-fallback:',
+        condition: `너비 ≥ ${tokens.breakpoint.md}px 그리고 ${tokens.breakpointHeight.landscape}px ≤ 높이 < ${tokens.breakpointHeight.stack}px`,
+        usage: '페이저는 꺼졌지만 모바일도 아닌 띠 — 섹션이 최소 설계 높이를 유지해야 하는 구간',
     },
 ] as const
 
@@ -181,8 +186,10 @@ const BreakpointGuidePage = () => (
                     <p className="typo-body-l-regular text-foreground-subtle">
                         Tailwind 기본 브레이크포인트는 너비만 다룹니다. 한 화면을 꽉 채우는 풀스크린 전환 화면은
                         &ldquo;세로가 충분한가&rdquo;가 레이아웃을 가르므로, 높이 조건에 이름을 붙여 같은 유틸리티
-                        문법으로 씁니다. 정의는 <code>globals.css</code>의 <code>@custom-variant</code>이며 기준값은{' '}
-                        <code>stack-pager.tsx</code>의 <code>STACK_PAGER_QUERY</code>와 한 세트입니다.
+                        문법으로 씁니다. 임계값은 <code>tokens.json</code>의 <code>breakpoint.md</code>·
+                        <code>breakpointHeight</code>가 단일 소스이고, 생성기가 <code>@custom-variant</code>를 만듭니다.{' '}
+                        <code>stack-pager.tsx</code>의 <code>STACK_PAGER_QUERY</code>가 어긋나면{' '}
+                        <code>yarn tokens</code>가 빌드를 세웁니다.
                     </p>
                 </div>
 
