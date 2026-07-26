@@ -16,30 +16,6 @@
     }
 }
 
-/* ═══ 숫자 카운터 — @/components/custom/animated-counter.tsx ════════════════════════════════
-   자릿수별 회전 레일. 글자 크기에 맞물려야 해 1em 단위. 회전은 animate-counter-roll. */
-.animated-counter-digit {
-    display: inline-block;
-    height: 1em;
-    overflow: hidden;
-    line-height: 1;
-    vertical-align: -0.08em;
-}
-.animated-counter-track {
-    display: flex;
-    flex-direction: column;
-    line-height: 1;
-    transform: translateY(0);
-}
-.animated-counter-track > span {
-    height: 1em;
-}
-@media (prefers-reduced-motion: reduce) {
-    .animated-counter-track {
-        transform: translateY(var(--counter-end));
-    }
-}
-
 /* ═══ 히어로 세로 밀도 — @/components/custom/hero-section.tsx ═══════════════════════════════
    낮은 화면일수록 여백·글자를 줄여 한 화면에 담는다. (1)→(2)→(3) 순으로 뒤가 앞을 덮는다.
    값은 여기서만 고친다 — 사용처 유틸리티로 덧대도 레이어 밖인 이 클래스가 이긴다. */
@@ -153,14 +129,6 @@
     }
 }
 
-/* ═══ 그리드 폭 — hero-section.tsx · tech-eval-section.tsx (grid-layout 과 함께) ═══════════════
-   Header 의 content-layout 과 선을 맞춘다. 레이어 밖이어야 grid-layout 을 이긴다. */
-@media (min-width: 768px) {
-    .grid-layout-content {
-        width: min(100% - 2 * var(--ds-grid-margin), var(--container-content));
-    }
-}
-
 /* ═══ 지표 롤러 — @/components/custom/hero-stats-roller.tsx ═════════════════════════════════
    5개 행 + 복제 행 1개를 한 칸씩 위로 민다. 트랙 높이가 노출 행 수 — 120%=5행, 300%=2행. */
 .hero-stats-viewport {
@@ -243,26 +211,5 @@
     .hero-stats-track[data-rolling='true'] {
         transform: none;
         transition: none;
-    }
-}
-
-/* ═══ 2섹션 서비스 — @/components/custom/tech-eval-section.tsx ══════════════════════════════
-   제목은 lg 미만 유동 축소만(세로 단계 없음). 애니메이션은 animate-tech-progress · animate-tech-enter. */
-.tech-title-scale {
-    font-size: 3rem; /* 48px */
-    line-height: 1.5;
-}
-@media (width < 64rem) {
-    .tech-title-scale {
-        font-size: clamp(2rem, calc(1.5rem + 2.1vw), 2.75rem); /* clamp(32px, calc(24px + 2.1vw), 44px) */
-    }
-}
-/* 진행 바 정지 — 목차 버튼 호버/포커스 중이거나 섹션이 비활성 스택 페이지일 때. */
-.tech-service-progress-fill[data-paused='true'] {
-    animation-play-state: paused;
-}
-@media (min-width: 768px) and (min-height: 640px) {
-    [data-stack-page]:not([data-stack-state='active']) .tech-service-progress-fill {
-        animation-play-state: paused;
     }
 }

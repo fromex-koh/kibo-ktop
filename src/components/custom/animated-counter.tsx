@@ -46,14 +46,20 @@ const AnimatedCounter = ({value, onComplete}: {value: number | string; onComplet
                     }
 
                     return (
-                        <span key={`${digit}-${index}`} className="animated-counter-digit">
+                        // 자릿수 창과 레일은 글자 크기에 맞물려야 해 1em 단위를 쓴다(고정 px 이면 크기가 바뀔 때 어긋난다).
+                        <span
+                            key={`${digit}-${index}`}
+                            className="inline-block h-[1em] overflow-hidden align-[-0.08em] leading-none"
+                        >
                             <span
-                                className="animated-counter-track animate-counter-roll motion-reduce:animate-none"
+                                className="animate-counter-roll flex flex-col leading-none motion-reduce:translate-y-(--counter-end) motion-reduce:animate-none"
                                 style={style}
                                 onAnimationEnd={index === lastDigitIndex ? onComplete : undefined}
                             >
                                 {reel.map((number, step) => (
-                                    <span key={step}>{number}</span>
+                                    <span key={step} className="h-[1em]">
+                                        {number}
+                                    </span>
                                 ))}
                             </span>
                         </span>

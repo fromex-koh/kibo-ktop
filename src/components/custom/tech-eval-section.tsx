@@ -61,7 +61,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                 </div>
             ) : null}
             <div data-rolling-tech-content className="w-full max-md:hidden">
-                <div className="grid-layout grid-layout-content w-full items-start gap-y-16">
+                <div className="grid-layout content-layout w-full items-start gap-y-16">
                     {/* 좌: 세로 레일 + 서비스 목차. 각 서비스는 레일 전체 높이를 진행 바로 쓰고,
                     채움이 끝나면 다음 서비스로 전환되며 채움은 처음부터 다시 시작한다(key 리셋). */}
                     <ul className="relative col-span-4 flex min-w-0 flex-col gap-6 pl-11 md:col-span-4 xl:col-span-5">
@@ -81,7 +81,8 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                     height: `${100 / TECH_EVAL_SERVICES.length}%`,
                                 }}
                                 onAnimationEnd={showNextService}
-                                className="tech-service-progress-fill animate-tech-progress bg-main-accent absolute inset-x-0 origin-top motion-reduce:scale-y-100 motion-reduce:animate-none"
+                                // 진행바 정지 — 목차 버튼 호버/포커스 중이거나, 이 섹션이 비활성 스택 페이지일 때.
+                                className="animate-tech-progress bg-main-accent pager-on:[[data-stack-page]:not([data-stack-state=active])_&]:[animation-play-state:paused] absolute inset-x-0 origin-top data-[paused=true]:[animation-play-state:paused] motion-reduce:scale-y-100 motion-reduce:animate-none"
                             />
                         </div>
 
@@ -121,12 +122,12 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                                 index < TECH_EVAL_SERVICES.length - 1 && 'mb-24',
                                             )}
                                         >
-                                            {/* 크기·행간은 globals.css 의 tech-title-scale 이 담당한다(lg 미만 유동 축소).
-                                            typo-* 는 생성기가 찍는 plain 클래스라 반응형 변형을 못 받는다. 메인페이지
-                                            예외(SHADCN.md 타이포 유틸 예외 참고). max-w-full 로 컬럼 내 줄바꿈. */}
+                                            {/* 크기는 lg 미만에서 유동 축소(32~44px), lg 이상 48px. typo-* 는 생성기가 찍는
+                                            plain 클래스라 반응형 변형을 못 받는다. 메인페이지 예외(SHADCN.md 타이포 유틸
+                                            예외 참고). max-w-full 로 컬럼 내 줄바꿈. */}
                                             <h2
                                                 id="tech-eval-title"
-                                                className="tech-title-scale text-foreground max-w-full font-bold break-keep"
+                                                className="text-foreground max-w-full text-[clamp(--spacing(8),calc(--spacing(6)+2.1vw),--spacing(11))] leading-normal font-bold break-keep lg:text-5xl"
                                             >
                                                 {service.headline}
                                             </h2>
