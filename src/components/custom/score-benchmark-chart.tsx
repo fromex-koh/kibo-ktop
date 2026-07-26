@@ -41,7 +41,12 @@ const ScoreBenchmarkChart = ({data, ariaLabel, className, ...props}: ScoreBenchm
     return (
         <div {...props} className={cn('grid items-center gap-8 lg:grid-cols-[14rem_minmax(0,1fr)]', className)}>
             <div className="relative mx-auto size-56 max-w-full">
-                <ChartContainer config={chartConfig} className="aspect-square size-full" aria-label={ariaLabel}>
+                <ChartContainer
+                    config={chartConfig}
+                    className="aspect-square size-full"
+                    role="img"
+                    aria-label={ariaLabel}
+                >
                     <RadialBarChart
                         data={chartData}
                         startAngle={90}

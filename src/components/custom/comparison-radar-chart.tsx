@@ -67,6 +67,7 @@ const ComparisonRadarChart = ({
             <ChartContainer
                 config={chartConfig}
                 className="mx-auto aspect-square max-h-96 min-h-72 w-full max-w-xl [&_.recharts-polygon]:cursor-pointer"
+                role="img"
                 aria-label={ariaLabel}
             >
                 <RadarChart

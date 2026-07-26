@@ -18,11 +18,12 @@ const PAUSABLE = 'data-[paused=true]:[animation-play-state:paused] motion-reduce
 
 const PreviewShape = ({kind, isPaused}: {kind: MotionPreviewKind; isPaused: boolean}) => {
     if (kind === 'scale') {
+        // 프레임보다 작은 도형을 넣는다 — 프레임과 같은 크기면 1.2배가 잘려 시종일관 꽉 찬 사각형으로 보인다.
         return (
-            <span className="bg-muted block size-12 overflow-hidden rounded-md">
+            <span className="bg-muted grid size-12 place-items-center overflow-hidden rounded-md">
                 <span
                     data-paused={isPaused}
-                    className={`bg-primary animate-hero-zoom-out block size-full ${PAUSABLE}`}
+                    className={`bg-primary animate-hero-zoom-out size-8 rounded-sm ${PAUSABLE}`}
                 />
             </span>
         )

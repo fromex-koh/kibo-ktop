@@ -63,8 +63,9 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
             <div data-rolling-tech-content className="w-full max-md:hidden">
                 <div className="grid-layout content-layout w-full items-start gap-y-16">
                     {/* 좌: 세로 레일 + 서비스 목차. 각 서비스는 레일 전체 높이를 진행 바로 쓰고,
-                    채움이 끝나면 다음 서비스로 전환되며 채움은 처음부터 다시 시작한다(key 리셋). */}
-                    <ul className="relative col-span-4 flex min-w-0 flex-col gap-6 pl-11 md:col-span-4 xl:col-span-5">
+                    채움이 끝나면 다음 서비스로 전환되며 채움은 처음부터 다시 시작한다(key 리셋).
+                    레일은 ul 밖에 둔다 — ul 은 li 만 자식으로 가질 수 있어 안에 넣으면 마크업 오류다. [KWCAG 8.1.1] */}
+                    <div className="relative col-span-4 min-w-0 md:col-span-4 xl:col-span-5">
                         <div
                             aria-hidden="true"
                             className="bg-foreground-subtle absolute inset-y-0 left-0 w-1 overflow-hidden"
@@ -86,85 +87,87 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                             />
                         </div>
 
-                        {TECH_EVAL_SERVICES.map((service, index) => {
-                            const isActive = index === activeIndex
+                        <ul className="flex flex-col gap-6 pl-11">
+                            {TECH_EVAL_SERVICES.map((service, index) => {
+                                const isActive = index === activeIndex
 
-                            return (
-                                <li key={service.title} className="relative">
-                                    <button
-                                        type="button"
-                                        aria-current={isActive ? 'true' : undefined}
-                                        onClick={() => setActiveIndex(index)}
-                                        onMouseEnter={() => setIsPaused(true)}
-                                        onMouseLeave={() => setIsPaused(false)}
-                                        onFocus={() => setIsPaused(true)}
-                                        onBlur={() => setIsPaused(false)}
-                                        // 반응형 크기: 모바일 text-lg(18px) → md text-xl(20px). PC(md+)는 원래
-                                        // typo-title-l 과 동일(20px·행간 1.5). 메인페이지 예외(SHADCN.md 타이포 유틸 예외).
-                                        className={cn(
-                                            'cursor-pointer text-left transition-colors',
-                                            // leading-normal 은 text-lg 뒤에 둔다 — 앞에 두면 twMerge 가 text-*(자체 행간
-                                            // 포함)와 충돌로 제거해 PC 행간이 1.5→1.4 로 바뀐다.
-                                            isActive
-                                                ? 'text-main-accent text-lg leading-normal font-bold md:text-xl'
-                                                : 'text-muted-foreground hover:text-foreground-subtle text-lg leading-normal font-medium md:text-xl',
-                                        )}
-                                    >
-                                        {service.title}
-                                    </button>
-
-                                    {isActive && (
-                                        // mb-24는 다음 목차 항목과의 간격 — 마지막 항목이 활성일 땐 아래 항목이 없어
-                                        // 빼야 레일(진행 바)이 버튼 라인에 맞춰 끝난다.
-                                        <Reveal
+                                return (
+                                    <li key={service.title} className="relative">
+                                        <button
+                                            type="button"
+                                            aria-current={isActive ? 'true' : undefined}
+                                            onClick={() => setActiveIndex(index)}
+                                            onMouseEnter={() => setIsPaused(true)}
+                                            onMouseLeave={() => setIsPaused(false)}
+                                            onFocus={() => setIsPaused(true)}
+                                            onBlur={() => setIsPaused(false)}
+                                            // 반응형 크기: 모바일 text-lg(18px) → md text-xl(20px). PC(md+)는 원래
+                                            // typo-title-l 과 동일(20px·행간 1.5). 메인페이지 예외(SHADCN.md 타이포 유틸 예외).
                                             className={cn(
-                                                'mt-4 flex flex-col items-start gap-6',
-                                                index < TECH_EVAL_SERVICES.length - 1 && 'mb-24',
+                                                'cursor-pointer text-left transition-colors',
+                                                // leading-normal 은 text-lg 뒤에 둔다 — 앞에 두면 twMerge 가 text-*(자체 행간
+                                                // 포함)와 충돌로 제거해 PC 행간이 1.5→1.4 로 바뀐다.
+                                                isActive
+                                                    ? 'text-main-accent text-lg leading-normal font-bold md:text-xl'
+                                                    : 'text-muted-foreground hover:text-foreground-subtle text-lg leading-normal font-medium md:text-xl',
                                             )}
                                         >
-                                            {/* 크기는 lg 미만에서 유동 축소(32~44px), lg 이상 48px. typo-* 는 생성기가 찍는
+                                            {service.title}
+                                        </button>
+
+                                        {isActive && (
+                                            // mb-24는 다음 목차 항목과의 간격 — 마지막 항목이 활성일 땐 아래 항목이 없어
+                                            // 빼야 레일(진행 바)이 버튼 라인에 맞춰 끝난다.
+                                            <Reveal
+                                                className={cn(
+                                                    'mt-4 flex flex-col items-start gap-6',
+                                                    index < TECH_EVAL_SERVICES.length - 1 && 'mb-24',
+                                                )}
+                                            >
+                                                {/* 크기는 lg 미만에서 유동 축소(32~44px), lg 이상 48px. typo-* 는 생성기가 찍는
                                             plain 클래스라 반응형 변형을 못 받는다. 메인페이지 예외(SHADCN.md 타이포 유틸
                                             예외 참고). max-w-full 로 컬럼 내 줄바꿈. */}
-                                            <h2
-                                                id="tech-eval-title"
-                                                className="text-foreground max-w-full text-[clamp(--spacing(8),calc(--spacing(6)+2.1vw),--spacing(11))] leading-normal font-bold break-keep lg:text-5xl"
-                                            >
-                                                {service.headline}
-                                            </h2>
-                                            {/* PROJECT-STYLE: 프로젝트 버튼 표준은 interactive:hover(=@media hover:hover)로
+                                                <h2
+                                                    id="tech-eval-title"
+                                                    className="text-foreground max-w-full text-[clamp(--spacing(8),calc(--spacing(6)+2.1vw),--spacing(11))] leading-normal font-bold break-keep lg:text-5xl"
+                                                >
+                                                    {service.headline}
+                                                </h2>
+                                                {/* PROJECT-STYLE: 프로젝트 버튼 표준은 interactive:hover(=@media hover:hover)로
                                             터치 기기에서 hover 가 고정되지 않게 한다(not-disabled:hover 는 탭 후 밝은 상태가
                                             남음). 색은 스킨 반영 --ds-gray-*(mainpage 다크에서 hover #40454c·active #272a2e —
                                             은은한 다크)라 라이트/다크 다른 버튼엔 영향 없다. */}
-                                            <Button
-                                                size="xl"
-                                                asChild
-                                                className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-lg')}
-                                            >
-                                                <Link
-                                                    href={service.ctaHref}
-                                                    onMouseEnter={() => setIsPaused(true)}
-                                                    onMouseLeave={() => setIsPaused(false)}
-                                                    onFocus={() => setIsPaused(true)}
-                                                    onBlur={() => setIsPaused(false)}
+                                                <Button
+                                                    size="xl"
+                                                    asChild
+                                                    className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-lg')}
                                                 >
-                                                    자가진단 시작하기
-                                                    <ArrowUpRight aria-hidden="true" />
-                                                </Link>
-                                            </Button>
+                                                    <Link
+                                                        href={service.ctaHref}
+                                                        onMouseEnter={() => setIsPaused(true)}
+                                                        onMouseLeave={() => setIsPaused(false)}
+                                                        onFocus={() => setIsPaused(true)}
+                                                        onBlur={() => setIsPaused(false)}
+                                                    >
+                                                        자가진단 시작하기
+                                                        <ArrowUpRight aria-hidden="true" />
+                                                    </Link>
+                                                </Button>
 
-                                            {/* 모바일(md 미만): 이미지+설명을 버튼 바로 아래에 둔다. md 이상은 우측 컬럼이 담당. */}
-                                            <div
-                                                key={`visual-mobile-${entrySequence}-${activeIndex}`}
-                                                className="animate-tech-enter flex w-full flex-col gap-5 motion-reduce:animate-none md:hidden"
-                                            >
-                                                <TechEvalServiceVisual service={service} />
-                                            </div>
-                                        </Reveal>
-                                    )}
-                                </li>
-                            )
-                        })}
-                    </ul>
+                                                {/* 모바일(md 미만): 이미지+설명을 버튼 바로 아래에 둔다. md 이상은 우측 컬럼이 담당. */}
+                                                <div
+                                                    key={`visual-mobile-${entrySequence}-${activeIndex}`}
+                                                    className="animate-tech-enter flex w-full flex-col gap-5 motion-reduce:animate-none md:hidden"
+                                                >
+                                                    <TechEvalServiceVisual service={service} />
+                                                </div>
+                                            </Reveal>
+                                        )}
+                                    </li>
+                                )
+                            })}
+                        </ul>
+                    </div>
 
                     {/* 우측 비주얼은 md 이상에서만 표시(md 미만은 활성 목차의 버튼 아래 배치가 담당). */}
                     <Reveal className="hidden flex-col gap-5 motion-safe:delay-150 md:col-span-4 md:flex xl:col-span-6 xl:col-start-7">

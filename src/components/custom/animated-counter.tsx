@@ -25,7 +25,10 @@ const AnimatedCounter = ({value, onComplete}: {value: number | string; onComplet
     const lastDigitIndex = characters.findLastIndex((character) => /\d/.test(character))
 
     return (
-        <span aria-label={String(value)} className="animated-counter">
+        <span>
+            {/* 역할 없는 span 에는 aria-label 을 쓸 수 없어(마크업 오류) 읽을 텍스트를 sr-only 로 둔다.
+                회전하는 릴은 장식이라 접근성 트리에서 뺀다. [KWCAG 5.1.1 · 8.1.1] */}
+            <span className="sr-only">{value}</span>
             <span aria-hidden="true" className="inline-flex">
                 {characters.map((character, index) => {
                     if (!/\d/.test(character)) {

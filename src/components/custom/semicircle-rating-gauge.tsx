@@ -50,6 +50,7 @@ const SemicircleRatingGauge = ({data, title, ariaLabel, className, ...props}: Se
                 <ChartContainer
                     config={chartConfig}
                     className="relative h-full w-full overflow-visible [&_.recharts-radial-bar-sector]:cursor-pointer [&_.recharts-tooltip-wrapper]:!z-50"
+                    role="img"
                     aria-label={ariaLabel}
                 >
                     <RadialBarChart

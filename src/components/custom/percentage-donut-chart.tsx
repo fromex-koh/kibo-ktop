@@ -163,6 +163,7 @@ const PercentageDonutChart = ({data, ariaLabel, className, ...props}: Percentage
             <ChartContainer
                 config={config}
                 className="mx-auto aspect-square max-h-80 w-full [&_.recharts-sector]:cursor-pointer"
+                role="img"
                 aria-label={ariaLabel}
             >
                 <PieChart accessibilityLayer>

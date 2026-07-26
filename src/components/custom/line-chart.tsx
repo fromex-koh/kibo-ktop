@@ -85,6 +85,7 @@ const LineChart = ({
                 <ChartContainer
                     config={config}
                     className="h-80 w-full min-w-160 sm:min-w-0 [&_.recharts-dot]:cursor-pointer [&_.recharts-line-curve]:cursor-pointer"
+                    role="img"
                     aria-label={ariaLabel}
                 >
                     <ComposedChart

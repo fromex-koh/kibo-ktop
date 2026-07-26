@@ -95,7 +95,9 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
     return (
         <SidebarProvider>
             <SkipNav links={SKIP_LINKS} />
-            <Sidebar id="sidebar-navigation" tabIndex={-1} aria-label={navLabel}>
+            {/* role="navigation" — 셸이 이 props 를 일반 div 에 얹는데, 역할 없는 div 의 aria-label 은
+                마크업 검사에서 오류다. 실제로 내비게이션 랜드마크라 역할을 명시해 이름을 붙인다. [KWCAG 8.1.1] */}
+            <Sidebar id="sidebar-navigation" tabIndex={-1} role="navigation" aria-label={navLabel}>
                 {/* 브랜드 헤더 — 로고 + 타이틀 + 버전. 홈으로 가는 링크를 겸한다(문서형 사이드바 관례). */}
                 <SidebarHeader>
                     <SidebarMenu>
@@ -193,7 +195,13 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
             {/* min-w-0: SidebarInset 은 가로 flex(Sidebar+Inset)의 flex-1 이라, min-w 가 없으면 min-width:auto 가
                 콘텐츠 min-content(코드블럭의 nowrap <pre> 등)로 커져 본문이 뷰포트보다 넓어지고 페이지 가로
                 스크롤이 생긴다. min-w-0 으로 본문을 트랙 폭에 맞춰 줄여, 코드블럭은 내부(overflow-x-auto)에서만 스크롤. */}
-            <SidebarInset className="min-w-0">
+            {/* SidebarInset 이 곧 <main> 이다 — 안에 또 <main> 을 두면 중첩·중복이라 마크업 오류다.
+                id·tabIndex 는 '본문 바로가기' 스킵 링크의 포커스 대상이다. [KWCAG 6.4.1 · 8.1.1] */}
+            <SidebarInset
+                id="main"
+                tabIndex={-1}
+                className="focus-visible:ring-ring min-w-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
+            >
                 {/* 상단 앱바 — 트리거(모바일=Sheet 열기 / 데스크톱=레일 접기) + 브레드크럼(카테고리 > 현재) + 테마.
                     z-header: Sheet의 z-drawer-backdrop 아래에 있어 드로어가 열리면 오버레이 밑에 놓인다. */}
                 <header className="border-border bg-background h-header-h z-header sticky top-0 flex items-center gap-2 border-b px-4 md:px-6">
@@ -222,14 +230,7 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                     </div>
                 </header>
 
-                {/* 본문 — '본문 바로가기' 스킵 링크의 포커스 대상(id·tabIndex=-1). 컨테이너는 children 이 정한다. */}
-                <main
-                    id="main"
-                    tabIndex={-1}
-                    className="focus-visible:ring-ring focus:outline-none focus-visible:ring-2 focus-visible:ring-inset"
-                >
-                    {children}
-                </main>
+                {children}
             </SidebarInset>
         </SidebarProvider>
     )

@@ -74,6 +74,7 @@ const GroupedColumnChart = ({
                 <ChartContainer
                     config={config}
                     className="h-80 w-full min-w-160 sm:min-w-0 [&_.recharts-rectangle]:cursor-pointer"
+                    role="img"
                     aria-label={ariaLabel}
                 >
                     <BarChart

@@ -144,7 +144,9 @@ const QuestionOption = ({
             ) : (
                 <span aria-hidden="true" className={questionOptionNumberClassName}>{`(${index})`}</span>
             )}
-            <span className={questionOptionContentClassName}>{children}</span>
+            {/* div 인 이유 — 선택 내용으로 ChipCheckboxGroup 같은 블록 요소가 올 수 있는데, span 안의 div 는
+                마크업 오류다. 부모가 li 라 흐름 콘텐츠를 받을 수 있고, 그리드 아이템이라 표시도 그대로다. [KWCAG 8.1.1] */}
+            <div className={questionOptionContentClassName}>{children}</div>
             {control ? (
                 <span className={cn(questionControlClassName, isControlLine && questionControlLineClassName)}>
                     {control}
