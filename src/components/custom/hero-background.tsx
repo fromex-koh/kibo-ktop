@@ -80,11 +80,12 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
                     <div
                         key={`${slide.position}-${index}`}
                         className={cn(
-                            'after:to-background/75 main-hero-background-slide absolute inset-0 transition-opacity duration-500 [transition-timing-function:ease] after:absolute after:inset-0 after:z-2 after:bg-linear-to-b after:from-transparent motion-reduce:transition-none',
+                            'after:to-background/75 absolute inset-0 scale-120 transition-opacity duration-500 [transition-timing-function:ease] after:absolute after:inset-0 after:z-2 after:bg-linear-to-b after:from-transparent motion-reduce:scale-100 motion-reduce:transition-none',
                             isActive && 'animate-hero-zoom-out motion-reduce:animate-none',
                             isActive ? 'z-1 opacity-100' : 'z-0 opacity-0',
                         )}
-                        style={isPrevious ? {transform: 'scale(1)'} : undefined}
+                        // 페이드아웃 중인 이전 슬라이드는 줌아웃이 끝난 배율을 유지한다.
+                        style={isPrevious ? {scale: '1'} : undefined}
                     >
                         <Image
                             src={slide.src}

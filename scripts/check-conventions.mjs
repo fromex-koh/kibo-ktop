@@ -6,7 +6,7 @@
 //
 // 검사 대상: src/**/*.{ts,tsx}. (docs/*.md 의 '나쁜 예시' 코드블록은 검사하지 않는다.)
 
-import {readdirSync, readFileSync} from 'node:fs'
+import {existsSync, readdirSync, readFileSync} from 'node:fs'
 import {createHash} from 'node:crypto'
 import {join, extname} from 'node:path'
 
@@ -135,8 +135,9 @@ const violations = files.flatMap((file) => {
 
 // 화면 전용 CSS 가드 — src/styles/*.css 는 globals.css 를 거치지 않고 라우트에서 직접 import 되므로,
 // @reference 가 없으면 --spacing()·pager-on: 같은 토큰·변형을 해석할 수 없다(빌드는 통과하고 화면만 깨진다).
+// 화면 전용 CSS 가 하나도 없으면 디렉터리 자체가 없다(git 은 빈 디렉터리를 추적하지 않는다) — 없으면 검사 대상 0개.
 const STYLES_DIR = 'src/styles'
-const styleFiles = readdirSync(STYLES_DIR).filter((f) => f.endsWith('.css'))
+const styleFiles = existsSync(STYLES_DIR) ? readdirSync(STYLES_DIR).filter((f) => f.endsWith('.css')) : []
 const missingReference = styleFiles.filter(
     (f) => !/^\s*(\/\*[\s\S]*?\*\/\s*)?@reference\s/.test(readFileSync(`${STYLES_DIR}/${f}`, 'utf8')),
 )

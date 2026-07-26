@@ -22,14 +22,16 @@
 
     /* 메인페이지 애니메이션 — animate-* 유틸리티로 생성된다. 사용처는 각 컴포넌트 className.
        모션 최소화는 사용처에서 motion-reduce:animate-none 으로 끈다. [KWCAG 6.3.1] */
+    /* scale 프로퍼티를 쓰는 이유 — 사용처가 scale-120 으로 시작 배율을 잡는데, Tailwind 의 scale-*
+       는 transform 이 아니라 scale 을 세팅한다. 키프레임이 transform 이면 둘이 곱해져 1.44 로 커진다. */
     --animate-hero-zoom-out: main-hero-zoom-out 7s ease both;
     @keyframes main-hero-zoom-out {
         0% {
-            transform: scale(1.2);
+            scale: 1.2;
         }
         95%,
         100% {
-            transform: scale(1);
+            scale: 1;
         }
     }
 
