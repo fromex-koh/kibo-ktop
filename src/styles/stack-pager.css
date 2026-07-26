@@ -1,0 +1,76 @@
+/* @/components/custom/stack-pager.tsx 와 그 안의 [data-stack-page] 섹션들.
+   화면이 아니라 컴포넌트 소유 CSS다 — 다른 화면에서 StackPager 를 써도 이 파일만 있으면 된다.
+   활성 조건(768×640)은 stack-pager.tsx 의 STACK_PAGER_QUERY 와 한 세트다. 한쪽만 바꾸면 어긋난다. */
+
+/* 페이저가 꺼진 낮은 화면에서만 섹션 최소 설계 높이를 유지해 콘텐츠 겹침을 막는다.
+   위아래 경계가 모두 필요하다 — 페이저가 켜지면 페이지가 100dvh 고정이라 아래가 잘리고,
+   480px 미만(모바일 가로)은 섹션이 밀도를 낮춰 뷰포트에 맞추므로 최소 높이가 남으면 두 배로 늘어난다. */
+@media (min-width: 768px) and (30rem <= height < 40rem) {
+    .stack-page {
+        min-height: 720px;
+    }
+}
+
+/* 너비와 높이가 충분할 때만 실제 스크롤 위치를 고정하고, 불투명한 섹션을 세로로 전환한다.
+   높이 기준 640px 은 첫 화면 콘텐츠(약 460px)와 스크롤 표시가 들어가는 최소 높이다. */
+@media (min-width: 768px) and (min-height: 640px) {
+    [data-stack-pager] {
+        height: 100dvh;
+        overflow: hidden;
+    }
+
+    .stack-page {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100dvh;
+        overflow: hidden;
+        opacity: 1;
+        transition: transform 0.6s cubic-bezier(0.5, 0, 0, 1);
+        will-change: transform;
+    }
+
+    .stack-page[data-stack-state='active'] {
+        z-index: 2;
+        transform: translate3d(0, 0, 0);
+        pointer-events: auto;
+    }
+
+    .stack-page[data-stack-state='previous'] {
+        z-index: 1;
+        transform: translate3d(0, -100dvh, 0);
+        pointer-events: none;
+    }
+
+    .stack-page[data-stack-state='next'] {
+        z-index: 1;
+        transform: translate3d(0, 100dvh, 0);
+        pointer-events: none;
+    }
+
+    /* transition="cover" — 기본(slide)은 이전 페이지가 위로 빠지지만, cover 는 제자리에 두고 다음
+       페이지가 위를 덮는다. 전환 중 두 페이지 사이로 빈 배경이 드러나지 않게 하는 방식이다.
+       모든 레이어를 같은 z-index 로 두어 DOM 순서가 위아래를 결정한다. */
+    [data-stack-transition='cover'] .stack-page[data-stack-state] {
+        z-index: 1;
+    }
+
+    [data-stack-transition='cover'] .stack-page[data-stack-state='previous'] {
+        transform: none;
+    }
+}
+
+/* data-stack-scrollable — 원래 디자인 높이가 뷰포트를 넘는 페이지가 안에서 이어서 스크롤하게 한다.
+   StackPager 의 휠 핸들러도 computed overflow 로 안쪽 스크롤 여부를 판단한다.
+   페이저가 꺼진 낮은 화면에서도 최소 높이(720px)를 넘는 콘텐츠가 흘러넘치지 않도록 md 이상 전체에 건다. */
+@media (min-width: 768px) {
+    .stack-page[data-stack-scrollable] {
+        overflow-y: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .stack-page {
+        transition: none;
+    }
+}
