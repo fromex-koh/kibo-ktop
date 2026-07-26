@@ -40,7 +40,7 @@ const HeroSection = () => (
 
         {/* 세로 밀도(여백·간격·글자 크기)는 globals.css 의 hero-* 클래스가 화면 높이 단계별로 담당한다. */}
         <div className="hero-frame relative flex items-center motion-safe:[transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] motion-safe:[opacity:calc(1-var(--hero-scroll-progress,0))]">
-            <div className="grid-layout hero-grid w-full items-start">
+            <div className="grid-layout grid-layout-content hero-grid w-full items-start">
                 {/* 좌측 카피. xl(1280)부터 6열, 2xl(1536)부터 7열로 넓힌다. min-w-0로 그리드 셀이 콘텐츠에 밀려
                     넘치지 않게 한다. */}
                 <div className="hero-copy col-span-4 flex min-w-0 flex-col xl:col-span-6 2xl:col-span-7">

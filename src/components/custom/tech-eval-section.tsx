@@ -43,6 +43,8 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
             id="tech-eval"
             tabIndex={-1}
             data-stack-page
+            // PC 디자인 높이가 뷰포트를 넘을 수 있어 페이지 안에서 이어서 스크롤한다.
+            data-stack-scrollable
             aria-label="기술평가 서비스"
             // pager-off:snap-start — 페이저가 꺼진 화면의 스크롤 스냅 지점(StackPager 가 컨테이너 담당).
             className="stack-page bg-background pager-off:snap-start relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:pt-50"
@@ -56,7 +58,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                 </div>
             ) : null}
             <div data-rolling-tech-content className="w-full max-md:hidden">
-                <div className="grid-layout w-full items-start gap-y-16">
+                <div className="grid-layout grid-layout-content w-full items-start gap-y-16">
                     {/* 좌: 세로 레일 + 서비스 목차. 각 서비스는 레일 전체 높이를 진행 바로 쓰고,
                     채움이 끝나면 다음 서비스로 전환되며 채움은 처음부터 다시 시작한다(key 리셋). */}
                     <ul className="relative col-span-4 flex min-w-0 flex-col gap-6 pl-11 md:col-span-4 xl:col-span-5">

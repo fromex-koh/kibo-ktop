@@ -10,14 +10,14 @@ import MainPageHeaderState from './main-page-header-state'
 
 export const metadata: Metadata = {title: '메인페이지'}
 
-// 스택 페이지별 바로가기 — 데스크톱에서는 비활성 페이지가 inert 라 앵커 이동만으로는 도달할 수 없어,
-// StackPager 가 링크 클릭을 받아 대상이 속한 페이지를 먼저 활성화한다. [KWCAG 6.4.1 · 6.1.1]
+// 비활성 스택 페이지는 inert 라 앵커 이동이 막힌다 — StackPager 가 클릭을 받아 대상 페이지를 먼저 켠다.
 const SKIP_LINKS: readonly SkipLinkItem[] = [
     {href: '#hero', label: '본문 바로가기'},
     {href: '#tech-eval', label: '기술평가 서비스 바로가기'},
     {href: '#site-info', label: '사이트 정보 바로가기'},
 ]
 
+// href 는 이동 대상 확정 전 목업 값이다. 실제 경로가 정해지면 여기서 교체한다.
 const MAIN_HEADER_NAVIGATION = {
     corp: [
         {label: '플랫폼 소개', href: '#'},
@@ -36,39 +36,25 @@ const MAIN_HEADER_NAVIGATION = {
     ],
 } satisfies HeaderNavigationByUserType
 
-// 메인페이지에서 별도로 요청된 컨테이너 정렬과 2섹션 이후 자연 스크롤만 페이지 스코프로 유지한다.
-// 2섹션의 타이포·이미지·간격은 TechEvalSection의 원래 PC 디자인 값을 그대로 사용한다.
+// 헤더는 1섹션에서 투명, 2섹션 진입 시 배경색. 페이저가 켜졌으면 active-page, 꺼졌으면
+// MainPageHeaderState 가 기록하는 natural-page 로 같은 전환을 만든다.
 const MAIN_PAGE_CLASS = [
-    // 1섹션에서는 투명하고 2섹션 진입 시 스냅 시간에 맞춰 페이지 배경색으로 자연스럽게 전환한다.
     '[&_header]:bg-transparent',
     '[&_header]:transition-colors',
     '[&_header]:duration-600',
-    // 페이저가 켜진 화면은 활성 페이지 번호로, 꺼진 화면은 MainPageHeaderState 가 기록하는
-    // 자연 스크롤 위치로 같은 전환을 만든다.
     'data-[active-page=1]:[&_header]:bg-background',
     'data-[natural-page=1]:[&_header]:bg-background',
-    // Hero는 제자리에 두고 2섹션이 위로 덮도록 해 스무스 전환 중 빈 배경이 드러나지 않게 한다.
-    'pager-on:[&_.stack-page]:!z-1',
-    'pager-on:[&_#hero[data-stack-state=previous]]:!transform-none',
-    // 1·2섹션 모두 Header의 content-layout과 같은 좌우 여백·최대 폭을 사용한다.
-    'md:[&_#hero_.grid-layout]:!w-[min(calc(100%-2*var(--ds-grid-margin)),var(--container-content))]',
-    'md:[&_#tech-eval_.grid-layout]:!w-[min(calc(100%-2*var(--ds-grid-margin)),var(--container-content))]',
-    // 마키는 콘텐츠 다음의 일반 블록으로 두고, 원래 PC 크기가 뷰포트를 넘으면 2섹션 안에서 이어서 본다.
-    'md:[&_#tech-eval]:!overflow-y-auto',
 ].join(' ')
 
-// 메인페이지 목업 — 풀스크린 스택 전환 구조.
-// 너비·높이가 충분한 화면에서는 실제 문서 스크롤 없이 고정된 섹션 레이어의 상태를 transform으로 전환한다.
-// 모바일과 높이가 낮은 데스크톱에서는 각 섹션이 최소 높이를 유지하며 자연스러운 문서 흐름으로 이어진다.
-// 색상은 메인페이지 전용 스킨(tokens.css의 .mainpage 블록)을 따른다 — light/dark와 같은 방식으로
-// theme-provider가 이 라우트에서 html 클래스에 'mainpage'를 강제한다(테마 토글과 무관하게 유지).
+// 메인페이지 목업 — 두 섹션을 StackPager 로 넘긴다. 너비·높이가 충분하면 고정 레이어 전환,
+// 아니면 스크롤 스냅(기준과 변형은 stack-pager.tsx 의 STACK_PAGER_QUERY).
+// 테마는 theme-provider 가 이 라우트에서 mainpage 스킨으로 고정한다 — 테마 토글이 먹지 않는 게 정상이다.
 const MainPage = () => (
-    <StackPager className={`bg-background relative min-h-dvh ${MAIN_PAGE_CLASS}`}>
+    <StackPager transition="cover" className={`bg-background relative min-h-dvh ${MAIN_PAGE_CLASS}`}>
         <MainPageHeaderState />
         <SkipNav links={SKIP_LINKS} />
         <Header variant="main" navigationByUserType={MAIN_HEADER_NAVIGATION} />
-        {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다.
-                조작 요소가 아니라서 포커스 표시가 오히려 레이아웃을 해친다. 실제 링은 대상 안의 링크·버튼이 가진다. */}
+        {/* tabIndex={-1} 은 바로가기 도착점용 — 포커스만 받고 링은 그리지 않는다. */}
         <main id="main" tabIndex={-1}>
             <HeroSection />
             <TechEvalSection
@@ -79,7 +65,7 @@ const MainPage = () => (
                             <MarqueeBand />
                         </div>
                         <div id="site-info" tabIndex={-1} className="bg-background relative w-full">
-                            {/* 모바일 2섹션은 서비스 4종을 모두 펼쳐 이미 길어서 사이트맵까지 두지 않는다. */}
+                            {/* 모바일 2섹션은 서비스 4종을 모두 펼쳐 이미 길어 사이트맵까지 두지 않는다. */}
                             <Footer showMarquee={false} showSitemapOnMobile={false} />
                         </div>
                     </>

@@ -57,10 +57,14 @@ const StackPager = ({
     children,
     className,
     mediaQuery = STACK_PAGER_QUERY,
+    transition = 'slide',
 }: {
     children: ReactNode
     className?: string
     mediaQuery?: string
+    // slide: 이전 페이지가 위로 빠진다. cover: 이전 페이지를 제자리에 두고 다음 페이지가 덮는다
+    // (전환 중 두 페이지 사이로 빈 배경이 드러나지 않는다). 실제 전환 규칙은 globals.css.
+    transition?: 'slide' | 'cover'
 }) => {
     const ref = useRef<HTMLDivElement>(null)
     const activePageRef = useRef(0)
@@ -300,6 +304,7 @@ const StackPager = ({
                 ref={ref}
                 data-stack-pager
                 data-active-page={activePage}
+                data-stack-transition={transition}
                 // 페이저가 꺼지는 화면에서는 자연 스크롤이라 조금만 굴렸을 때 섹션 경계가 어중간하게
                 // 걸린 채 멈춘다. 스크롤 스냅 컨테이너로 만들어 같은 동작에서 다음 섹션까지 이어지게 한다.
                 // 각 페이지의 스냅 지점은 페이지 쪽에서 pager-off:snap-start 로 선언한다.

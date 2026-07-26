@@ -308,6 +308,14 @@
     }
 }
 
+/* .grid-layout 의 폭을 티어별 container 대신 콘텐츠 최대 폭으로 캡핑한다.
+   풀스크린 섹션의 그리드를 Header 의 content-layout 과 같은 선에 맞출 때 함께 쓴다. */
+@media (min-width: 768px) {
+    .grid-layout-content {
+        width: min(100% - 2 * var(--ds-grid-margin), var(--container-content));
+    }
+}
+
 /* 2섹션 서비스 제목 — 히어로와 같은 lg 미만 유동 축소만 적용한다(세로 단계는 없음). */
 .tech-title-scale {
     font-size: 3rem;
@@ -459,6 +467,23 @@
 
     .stack-page:not([data-stack-state='active']) .tech-service-progress-fill {
         animation-play-state: paused;
+    }
+
+    /* transition="cover" — 기본(slide)은 이전 페이지가 위로 빠지지만, cover 는 제자리에 두고 다음
+       페이지가 위를 덮는다. 전환 중 두 페이지 사이로 빈 배경이 드러나지 않게 하는 방식이다.
+       모든 레이어를 같은 z-index 로 두어 DOM 순서가 위아래를 결정한다. */
+    [data-stack-transition='cover'] .stack-page[data-stack-state] {
+        z-index: 1;
+    }
+
+    [data-stack-transition='cover'] .stack-page[data-stack-state='previous'] {
+        transform: none;
+    }
+
+    /* 페이지 안에서 이어서 스크롤할 수 있게 한다 — 원래 디자인 높이가 뷰포트를 넘는 페이지용.
+       StackPager 의 휠 핸들러도 computed overflow 로 안쪽 스크롤 여부를 판단한다. */
+    .stack-page[data-stack-scrollable] {
+        overflow-y: auto;
     }
 }
 
