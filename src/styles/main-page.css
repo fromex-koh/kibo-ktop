@@ -1,15 +1,11 @@
-/* 메인페이지(/component-guide/main-page) 목업 전용 스타일.
-   globals.css 가 @import 하며, 전역 규칙이 아니라 아래 컴포넌트들이 직접 붙이는 클래스다.
+/* 메인페이지 전용 — 유틸리티로 표현할 수 없는 값만 둔다(뷰포트 비례 clamp · em/% 기하값 · JS 동적 클래스).
+   애니메이션은 globals.css 의 @theme, 레이어 전환은 theme/stack-pager.variants.ts 에 있다.
 
-   Tailwind 유틸리티로 표현할 수 없어 여기 있는 값들이다 — 뷰포트 높이에 반응하는 유동 크기(clamp)와
-   JS 가 붙이는 동적 클래스. 애니메이션은 globals.css 의 @theme 에 등록돼 animate-* 유틸리티로 쓴다.
-
-   간격·크기는 rem 을 직접 쓰지 않고 --spacing(n) 으로 적는다 — n 은 JSX 의 p-n·gap-n 과 같은 단위이고
-   1n = 4px(tokens.json 의 spacingBase)이다. 값을 고칠 때는 옆의 px 주석도 함께 고친다. [PB-13]
-   font-size 는 간격 스케일이 아니라 rem 을 그대로 두고 px 만 주석으로 병기한다. */
+   간격은 --spacing(n) 으로 적는다 — n 은 JSX 의 p-n 과 같은 단위(1n = 4px). font-size 만 rem 을 쓴다.
+   옆의 px 주석은 손으로 유지하니 값을 고칠 때 함께 고친다. [PB-13 · PB-19] */
 
 /* ═══ 배경 슬라이드 — @/components/custom/hero-background.tsx ═══════════════════════════════
-   활성 클래스를 JS 가 붙여 Tailwind purge 대상이 아니라 여기 둔다(줌아웃은 animate-hero-zoom-out). */
+   JS 가 붙이는 클래스라 purge 대상이 아니다. 줌아웃 자체는 animate-hero-zoom-out. */
 .main-hero-background-slide {
     transform: scale(1.2);
 }
@@ -20,7 +16,7 @@
 }
 
 /* ═══ 숫자 카운터 — @/components/custom/animated-counter.tsx ════════════════════════════════
-   0에서 시작해 자릿수별로 순차 회전하는 레일. 회전은 animate-counter-roll, 타이밍 변수는 컴포넌트가 주입. */
+   자릿수별 회전 레일. 글자 크기에 맞물려야 해 1em 단위를 쓴다. 회전은 animate-counter-roll. */
 .animated-counter-digit {
     display: inline-block;
     height: 1em;
@@ -44,10 +40,8 @@
 }
 
 /* ═══ 히어로 세로 밀도 — @/components/custom/hero-section.tsx ═══════════════════════════════
-   화면이 낮아질수록 여백·간격·글자를 줄여 카피·지표·스크롤 표시를 한 화면에 담는다.
-   단계는 (1) md 미만 → (2) height<40rem → (3) height<30rem 순이며 뒤 단계가 앞을 덮는다.
-   한 속성의 모든 단계를 클래스 하나가 갖는다 — 사용처에서 같은 속성을 Tailwind 유틸리티로 덧대도
-   레이어 밖인 이 클래스가 이기므로 값은 여기서만 고친다. */
+   화면이 낮아질수록 여백·간격·글자를 줄여 한 화면에 담는다. (1)→(2)→(3) 순으로 뒤가 앞을 덮는다.
+   값은 여기서만 고친다 — 사용처에서 같은 속성을 유틸리티로 덧대도 레이어 밖인 이 클래스가 이긴다. */
 .hero-frame {
     height: 100%;
     min-height: 0;
@@ -136,8 +130,7 @@
     }
 }
 
-/* 대표 카피는 좌우 배치 여부에 따라 크기가 갈린다 — 한 컬럼이면 더 줄이고, 좌우로 나뉘면 여유가 있다.
-   위 (1)~(3) 뒤에 와야 같은 조건에서 이 값이 이긴다. */
+/* (4) 대표 카피 크기 — 한 컬럼이면 더 줄이고 좌우로 나뉘면 여유를 준다. (1)~(3) 뒤에 와야 이긴다. */
 @media (width < 64rem) {
     .hero-title-scale {
         font-size: clamp(2rem, calc(1.5rem + 2.1vw), 2.75rem); /* clamp(32px, calc(24px + 2.1vw), 44px) */
@@ -159,9 +152,8 @@
     }
 }
 
-/* 그리드 폭 — hero-section.tsx · tech-eval-section.tsx 가 grid-layout 과 함께 붙인다.
-   티어별 container 대신 콘텐츠 최대 폭으로 캡핑해 Header 의 content-layout 과 선을 맞춘다.
-   레이어 밖이어야 tokens.css 가 생성한 grid-layout 유틸리티를 이긴다. */
+/* ═══ 그리드 폭 — hero-section.tsx · tech-eval-section.tsx (grid-layout 과 함께 붙인다) ═══════
+   Header 의 content-layout 과 선을 맞춘다. 레이어 밖이어야 grid-layout 유틸리티를 이긴다. */
 @media (min-width: 768px) {
     .grid-layout-content {
         width: min(100% - 2 * var(--ds-grid-margin), var(--container-content));
@@ -169,8 +161,7 @@
 }
 
 /* ═══ 지표 롤러 — @/components/custom/hero-stats-roller.tsx ═════════════════════════════════
-   5개 행을 유지하고 여섯 번째 복제 행까지 한 칸씩 위로 이동한다.
-   md 미만과 모바일 가로에서는 트랙을 300%로 키워 한 번에 2행만 보이게 한다. */
+   5개 행 + 전환용 복제 행 1개를 한 칸씩 위로 민다. 트랙 높이가 곧 노출 행 수 — 120%면 5행, 300%면 2행. */
 .hero-stats-viewport {
     height: clamp(--spacing(112), 58vh, --spacing(136)); /* clamp(448px, 58vh, 544px) */
     margin-top: --spacing(2.5); /* 10px */
@@ -214,8 +205,7 @@
     }
 }
 .hero-stat-title {
-    /* 한 줄 제목용 높이를 고정해 롤링 흔들림 없이 보조 문구와의 간격을 일정하게 유지한다. */
-    height: var(--raw-font-size-h1);
+    height: var(--raw-font-size-h1); /* 고정 — 롤링 중 보조 문구와의 간격이 흔들리지 않게 */
     flex-shrink: 0;
     line-height: 1;
 }
@@ -237,7 +227,7 @@
     font-size: var(--raw-font-size-h1);
     font-weight: var(--raw-font-weight-bold);
 }
-/* 이동하는 동안 현재 숫자는 작아지고 다음 숫자는 커져, 행 교체 시 크기가 튀지 않게 한다. */
+/* 이동 중에는 현재 숫자가 작아지고 다음 숫자가 커진다 — 행 교체 순간 크기가 튀지 않게. */
 .hero-stats-track[data-rolling='true'] .hero-stat-row:first-child .hero-stat-value {
     color: var(--color-foreground);
     font-size: var(--raw-font-size-title-xl);
@@ -256,8 +246,7 @@
 }
 
 /* ═══ 2섹션 서비스 — @/components/custom/tech-eval-section.tsx ══════════════════════════════
-   제목은 히어로와 같은 lg 미만 유동 축소만 적용한다(세로 단계는 없음).
-   진행 바·페이드 애니메이션은 animate-tech-progress · animate-tech-enter 가 담당한다. */
+   제목은 lg 미만 유동 축소만 있다(세로 단계 없음). 애니메이션은 animate-tech-progress · animate-tech-enter. */
 .tech-title-scale {
     font-size: 3rem; /* 48px */
     line-height: 1.5;
@@ -267,7 +256,7 @@
         font-size: clamp(2rem, calc(1.5rem + 2.1vw), 2.75rem); /* clamp(32px, calc(24px + 2.1vw), 44px) */
     }
 }
-/* 목차 버튼 호버/포커스 동안, 그리고 비활성 스택 페이지에서는 진행 바를 멈춘다. */
+/* 진행 바 정지 — 목차 버튼에 호버/포커스 중이거나, 그 섹션이 비활성 스택 페이지일 때. */
 .tech-service-progress-fill[data-paused='true'] {
     animation-play-state: paused;
 }
