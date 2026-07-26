@@ -3,6 +3,8 @@
 import {createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode} from 'react'
 
 const WHEEL_DELTA_TRIGGER = 20
+// 터치 스와이프로 페이지를 넘기는 최소 이동 거리(px). 휠보다 크게 잡아 스크롤 의도와 탭을 구분한다.
+const TOUCH_SWIPE_TRIGGER = 40
 const WHEEL_GESTURE_IDLE_MS = 120
 const TRANSITION_DURATION_MS = 600
 const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
@@ -180,6 +182,50 @@ const StackPager = ({
             armAfterGestureEnds()
         }
 
+        // 터치 스와이프 — 페이저가 켜진 화면(태블릿 포함)은 페이지가 fixed·overflow hidden 이라 네이티브
+        // 스크롤이 없다. 휠만 듣고 있으면 터치로는 다음 섹션으로 갈 수 없으므로 세로 스와이프를 함께 받는다.
+        // 안쪽이 스크롤되는 페이지(2섹션)는 네이티브 스크롤을 그대로 두고, 끝에 닿았을 때만 페이지를 넘긴다.
+        let touchStartY = 0
+        let isTouchTracking = false
+
+        const handleTouchStart = (event: TouchEvent) => {
+            if (!desktopQuery.matches || event.touches.length !== 1) {
+                isTouchTracking = false
+                return
+            }
+            touchStartY = event.touches[0].clientY
+            isTouchTracking = true
+        }
+
+        const handleTouchMove = (event: TouchEvent) => {
+            if (!desktopQuery.matches || !isTouchTracking || event.touches.length !== 1) return
+
+            // 위로 스와이프(손가락이 위로) = 다음 섹션.
+            const swipeDistance = touchStartY - event.touches[0].clientY
+            const direction = swipeDistance > 0 ? 1 : -1
+
+            if (canScrollPageInside(pages[activePageRef.current], direction)) return
+
+            if (isTransitioningRef.current) {
+                event.preventDefault()
+                return
+            }
+
+            if (Math.abs(swipeDistance) < TOUCH_SWIPE_TRIGGER) {
+                event.preventDefault()
+                return
+            }
+
+            event.preventDefault()
+            isTouchTracking = false
+            isGestureArmedRef.current = true
+            movePage(direction, pages.length, reducedMotionQuery.matches)
+        }
+
+        const handleTouchEnd = () => {
+            isTouchTracking = false
+        }
+
         // 바로가기 링크(#id) 대응 — 비활성 페이지는 inert 라 앵커 이동만으로는 포커스가 옮겨가지 않는다.
         // 기본 이동이 일어나기 전에 대상이 속한 페이지를 활성화해 inert 를 동기적으로 풀어준다. [KWCAG 6.1.1]
         const handleFragmentClick = (event: MouseEvent) => {
@@ -218,6 +264,10 @@ const StackPager = ({
 
         syncPageElements(container, activePageRef.current, desktopQuery.matches)
         container.addEventListener('wheel', handleWheel, {passive: false})
+        container.addEventListener('touchstart', handleTouchStart, {passive: true})
+        container.addEventListener('touchmove', handleTouchMove, {passive: false})
+        container.addEventListener('touchend', handleTouchEnd, {passive: true})
+        container.addEventListener('touchcancel', handleTouchEnd, {passive: true})
         container.addEventListener('keydown', handleKeyDown)
         container.addEventListener('click', handleFragmentClick)
         desktopQuery.addEventListener('change', handleDesktopChange)
