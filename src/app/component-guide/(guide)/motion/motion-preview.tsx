@@ -2,10 +2,11 @@
 
 import {useState} from 'react'
 import {Pause, Play, RotateCcw} from 'lucide-react'
+import AnimatedCounter from '@/components/custom/animated-counter'
 import {Button} from '@/components/ui/button'
 
 // 미리보기 도형 종류 — 실제 유틸리티를 그대로 붙여 원본과 같은 시간·가속도로 움직인다.
-export type MotionPreviewKind = 'scale' | 'line' | 'progress' | 'enter' | 'marquee' | 'none'
+export type MotionPreviewKind = 'scale' | 'line' | 'progress' | 'enter' | 'marquee' | 'counter'
 
 // 정지 조작이 필요한 이유
 //  · 한 번만 도는 애니메이션(7s·5s·600ms)은 페이지를 연 순간 끝나 버려, 표까지 내려오면 이미 멈춰 있다.
@@ -66,17 +67,18 @@ const PreviewShape = ({kind, isPaused}: {kind: MotionPreviewKind; isPaused: bool
             </span>
         )
     }
-    // 자릿수 릴 구조가 있어야 의미가 있는 것은 표에서 생략한다(실물은 메인페이지 지표에서 확인).
-    return <span className="typo-body-m-regular text-muted-foreground">—</span>
+    // 카운터는 자릿수 릴 구조가 있어야 의미가 있어, 도형 대신 실제 컴포넌트를 그대로 쓴다.
+    // 시간을 인라인으로 주입하는 것까지 원본 그대로라 표에서 보는 움직임이 화면의 것과 같다.
+    return (
+        <span data-paused={isPaused} className={`typo-h4-bold text-foreground block ${PAUSABLE}`}>
+            <AnimatedCounter value="1,060" />
+        </span>
+    )
 }
 
 const MotionPreview = ({kind, loop, label}: {kind: MotionPreviewKind; loop: boolean; label: string}) => {
     const [runId, setRunId] = useState(0)
     const [isPaused, setIsPaused] = useState(false)
-
-    if (kind === 'none') {
-        return <PreviewShape kind={kind} isPaused={false} />
-    }
 
     const controlLabel = loop ? (isPaused ? `${label} 재생` : `${label} 정지`) : `${label} 다시 재생`
 

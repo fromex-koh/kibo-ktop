@@ -42,7 +42,7 @@ const ANIMATIONS = [
         value: 'animated-counter-roll ease both',
         usage: '숫자 카운터의 자릿수 릴 회전. 시간은 사용처가 인라인으로 주입한다(자릿수마다 지연이 달라서).',
         source: 'custom/animated-counter.tsx',
-        preview: 'none',
+        preview: 'counter',
     },
     {
         name: 'animate-scroll-line',
