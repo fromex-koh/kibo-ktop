@@ -44,7 +44,8 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
             tabIndex={-1}
             data-stack-page
             aria-label="기술평가 서비스"
-            className="stack-page bg-background relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:pt-50"
+            // pager-off:snap-start — 페이저가 꺼진 화면의 스크롤 스냅 지점(StackPager 가 컨테이너 담당).
+            className="stack-page bg-background pager-off:snap-start relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:pt-50"
         >
             {/* 모바일은 자동 전환 없이 펼쳐 읽는 목록, md 이상은 롤링 레일 — 둘 중 하나만 노출한다.
                 롤링 쪽은 노출 제어를 바깥 래퍼가 맡는다. grid-layout 은 display 를 지정하는 프로젝트

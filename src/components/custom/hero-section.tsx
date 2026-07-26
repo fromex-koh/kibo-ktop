@@ -28,7 +28,9 @@ const HeroSection = () => (
         tabIndex={-1}
         data-stack-page
         aria-labelledby="hero-title"
-        className="focus-visible:after:border-ring stack-page relative min-h-dvh overflow-x-clip outline-none focus-visible:after:pointer-events-none focus-visible:after:absolute focus-visible:after:inset-0 focus-visible:after:border-2 md:h-dvh md:min-h-0 md:overflow-hidden"
+        // pager-off:snap-* — 페이저가 꺼진 화면의 스크롤 스냅 지점(StackPager 가 컨테이너 담당).
+        // 첫 화면은 snap-always 로 두어 한 번의 스크롤이 2섹션을 건너뛰지 않게 한다.
+        className="focus-visible:after:border-ring stack-page pager-off:snap-start pager-off:snap-always relative min-h-dvh overflow-x-clip outline-none focus-visible:after:pointer-events-none focus-visible:after:absolute focus-visible:after:inset-0 focus-visible:after:border-2 md:h-dvh md:min-h-0 md:overflow-hidden"
     >
         {/* 배경 비주얼 — 장식 이미지라 접근성 트리에서 제외한다. [KWCAG 5.1.1] */}
         <HeroBackground slides={HERO_BACKGROUNDS} />

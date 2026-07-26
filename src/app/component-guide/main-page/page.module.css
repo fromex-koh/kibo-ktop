@@ -7,28 +7,6 @@
     }
 }
 
-/* 스택 페이저가 꺼지는 크기(모바일 또는 높이가 낮은 데스크톱)에서는 스크롤 스냅으로 섹션을 넘긴다.
-   페이저가 없으면 자연 스크롤이라 조금만 굴렸을 때 히어로 아래가 어중간하게 걸린 채 멈춘다.
-   스냅 지점을 두면 같은 동작에서 2섹션까지 이어지고, 섹션이 뷰포트보다 높은 경우에는
-   (큰 스냅 영역 규칙에 따라) 섹션 안에서 계속 스크롤할 수 있다. */
-@media (width < 48rem), (height < 40rem) {
-    .root {
-        height: 100dvh;
-        overflow-y: auto;
-        overscroll-behavior-y: contain;
-        scroll-snap-type: y mandatory;
-    }
-
-    .root :global(#hero),
-    .root :global(#tech-eval) {
-        scroll-snap-align: start;
-    }
-
-    .root :global(#hero) {
-        scroll-snap-stop: always;
-    }
-}
-
 /* 모바일에서는 히어로 지표를 한 번에 2행만 노출한다.
    5개 데이터와 전환용 복제 행은 유지해 모든 지표가 순서대로 계속 롤링된다. */
 @media (width < 48rem) {
