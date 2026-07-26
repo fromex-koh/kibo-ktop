@@ -1,19 +1,17 @@
+@import 'tailwindcss'; /* 유틸리티 엔진 */
+@import './tokens.css'; /* 디자인 토큰 — 생성물, 수정은 tokens.json → yarn tokens */
+@import 'tw-animate-css'; /* 등장·퇴장 애니메이션 유틸(animate-in·fade-in·slide-in-…) */
+@import 'shadcn/tailwind.css'; /* Radix 상태 변형(data-open:·data-closed:) */
+@import '../styles/main-page.css'; /* 메인페이지 전용 스타일 */
+
 /* 전역 스타일 — 전역 설정과, 유틸리티로 표현할 수 없어 CSS 로 둔 규칙.
    화면 전용 값은 src/styles/<화면>.css, 컴포넌트 스타일은 theme/*.variants.ts 에 있다.
    디자인 값은 tokens.json 이 단일 소스 — hex·rem 을 직접 쓰지 않는다. [PB-01 · PB-19]
 
-   § 1 가져오기   § 2 커스텀 변형   § 3 테마 값 확장
-   § 4 전역 기본값   § 5 커스텀 유틸리티   § 6 CSS 로만 되는 규칙 */
+   § 1 커스텀 변형   § 2 테마 값 확장   § 3 전역 기본값
+   § 4 커스텀 유틸리티   § 5 CSS 로만 되는 규칙 */
 
-/* ═════ § 1 · 가져오기 ═══════════════════════════════════════════════════════════════════════════ */
-
-@import 'tailwindcss';
-@import './tokens.css'; /* 토큰 생성물 — 수정은 tokens.json → yarn tokens */
-@import 'tw-animate-css';
-@import 'shadcn/tailwind.css';
-@import '../styles/main-page.css'; /* 메인페이지 전용 */
-
-/* ═════ § 2 · 커스텀 변형 — JSX 프리픽스(dark:bg-card). 추가하면 /component-guide/breakpoint 에 기록 ═══ */
+/* ═════ § 1 · 커스텀 변형 — JSX 프리픽스(dark:bg-card). 추가하면 /component-guide/breakpoint 에 기록 ═══ */
 
 @custom-variant dark (&:where(.dark, .dark *)); /* 테마는 OS 가 아니라 클래스로 결정 */
 @custom-variant mainpage (&:where(.mainpage, .mainpage *)); /* 메인페이지 스킨 안에서만 */
@@ -42,7 +40,7 @@
     }
 }
 
-/* ═════ § 3 · 테마 값 확장 — tokens.json 이 다루지 않는 값만 ══════════════════════════════════════ */
+/* ═════ § 2 · 테마 값 확장 — tokens.json 이 다루지 않는 값만 ══════════════════════════════════════ */
 
 @theme inline {
     /* next/font 변수를 Tailwind 슬롯에 연결 */
@@ -65,7 +63,7 @@
     --footer-logo-on-dark: block;
 }
 
-/* ═════ § 4 · 전역 기본값 — 모든 화면에 적용되는 브라우저·preflight 보정 ═════════════════════════ */
+/* ═════ § 3 · 전역 기본값 — 모든 화면에 적용되는 브라우저·preflight 보정 ═════════════════════════ */
 
 @layer base {
     body {
@@ -121,7 +119,7 @@
     }
 }
 
-/* ═════ § 5 · 커스텀 유틸리티 — Tailwind 에 없어 직접 만든 클래스 ═══════════════════════════════ */
+/* ═════ § 4 · 커스텀 유틸리티 — Tailwind 에 없어 직접 만든 클래스 ═══════════════════════════════ */
 
 @layer utilities {
     .focus-outline-inset:focus-visible {
@@ -146,7 +144,7 @@
     }
 }
 
-/* ═════ § 6 · CSS 로만 되는 규칙 — 가상요소·:has()·@keyframes ═══════════════════════════════════ */
+/* ═════ § 5 · CSS 로만 되는 규칙 — 가상요소·:has()·@keyframes ═══════════════════════════════════ */
 
 /* @/components/composite/segmented-control.tsx (solid) — 항목 사이 구분선 */
 [data-slot='segmented-control'][data-variant='solid'] > [data-slot='segmented-control-item']:not(:first-child)::before {
