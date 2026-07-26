@@ -619,7 +619,7 @@ const CompanyRelationshipGraph = ({
             ))}
             {tooltip && tooltipParts ? (
                 <div
-                    className="border-border bg-popover text-popover-foreground pointer-events-none absolute z-10 max-w-60 -translate-x-1/2 -translate-y-[calc(100%+12px)] rounded-md border px-3 py-2 text-xs font-medium shadow-md"
+                    className="border-border bg-popover text-popover-foreground pointer-events-none absolute z-10 -mt-3 max-w-60 -translate-x-1/2 -translate-y-full rounded-md border px-3 py-2 text-xs font-medium shadow-md"
                     style={{left: tooltip.x, top: tooltip.y}}
                     role="tooltip"
                 >
