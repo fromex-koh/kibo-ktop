@@ -4,13 +4,6 @@
 @import 'shadcn/tailwind.css'; /* shadcn 상태 변형 */
 @import '../styles/main-page.css'; /* 메인페이지 전용 스타일 */
 
-/* 전역 스타일 — 전역 설정과, 유틸리티로 표현할 수 없어 CSS 로 둔 규칙.
-   화면 전용 값은 src/styles/<화면>.css, 컴포넌트 스타일은 theme/*.variants.ts 에 있다.
-   디자인 값은 tokens.json 이 단일 소스 — hex·rem 을 직접 쓰지 않는다. [PB-01 · PB-19]
-
-   § 1 커스텀 변형   § 2 테마 값 확장   § 3 전역 기본값
-   § 4 커스텀 유틸리티   § 5 CSS 로만 되는 규칙 */
-
 /* ═════ § 1 · 커스텀 변형 — JSX 프리픽스(pager-on:z-1). 추가하면 /component-guide/breakpoint 에 기록 ═══ */
 
 /* 색은 .light/.dark/.mainpage 스코프가 토큰으로 내려주므로 사용처에서 dark: 로 다시 분기하지 않는다.
