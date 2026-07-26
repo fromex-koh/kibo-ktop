@@ -2,7 +2,6 @@
 @import './tokens.css'; /* 디자인 토큰 — 생성물, 수정은 tokens.json → yarn tokens */
 @import 'tw-animate-css'; /* shadcn 애니메이션 */
 @import 'shadcn/tailwind.css'; /* shadcn 상태 변형 */
-@import '../styles/main-page.css'; /* 메인페이지 전용 스타일 */
 
 /* ═════ § 1 · 커스텀 변형 — JSX 프리픽스(pager-on:z-1). 추가하면 /component-guide/breakpoint 에 기록 ═══ */
 

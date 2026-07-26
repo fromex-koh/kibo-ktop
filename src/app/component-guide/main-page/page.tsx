@@ -8,6 +8,8 @@ import TechEvalSection from '@/components/custom/tech-eval-section'
 import MarqueeBand from '@/components/custom/marquee-band'
 import MobileTechEvalContent from '@/components/custom/mobile-tech-eval-content'
 import MainPageHeaderState from '@/app/component-guide/main-page/main-page-header-state'
+// 이 화면에서만 쓰는 CSS — 전역이 아니라 라우트 단위로 로드해 서브페이지 번들에 섞이지 않게 한다.
+import '@/styles/main-page.css'
 
 export const metadata: Metadata = {title: '메인페이지'}
 
