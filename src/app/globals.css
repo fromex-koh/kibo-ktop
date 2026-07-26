@@ -81,6 +81,17 @@
             transform: translateY(0);
         }
     }
+
+    /* 마키(marquee-band.tsx) — 같은 문구 두 벌을 이어 붙여 왼쪽으로 무한히 흐른다 */
+    --animate-marquee: main-marquee 40s linear infinite;
+    @keyframes main-marquee {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%);
+        }
+    }
 }
 
 @theme inline {
@@ -107,19 +118,12 @@
 /* ═════ § 3 · 전역 기본값 — 모든 화면에 적용되는 브라우저·preflight 보정 ═════════════════════════ */
 
 @layer base {
-    body {
-        background: var(--ds-background);
-        color: var(--ds-foreground);
-    }
-
     button:not(:disabled),
     [role='button']:not(:disabled) {
         cursor: pointer; /* preflight 가 지운 포인터 커서 복원(shadcn 권장) */
     }
 
     html {
-        @apply font-sans;
-
         overscroll-behavior: none; /* macOS 고무줄 바운스 제거 */
         scrollbar-gutter: stable; /* 스크롤바 자리 예약 → 페이지 이동 시 레이아웃 시프트 방지 */
     }
@@ -163,10 +167,6 @@
 /* ═════ § 4 · 커스텀 유틸리티 — Tailwind 에 없어 직접 만든 클래스 ═══════════════════════════════ */
 
 @layer utilities {
-    .focus-outline-inset:focus-visible {
-        outline-offset: -0.25rem; /* -4px, 잘리는 컨테이너 안쪽에 포커스 링 */
-    }
-
     /* 스크롤바만 숨기고 스크롤은 유지 — 화살표로 스크롤 신호를 주는 곳에서만 쓴다 [PB-16 예외] */
     .scrollbar-hidden {
         scrollbar-width: none; /* Firefox */
@@ -177,9 +177,11 @@
     }
 }
 
-/* ═════ § 5 · CSS 로만 되는 규칙 — 가상요소·:has()·@keyframes ═══════════════════════════════════ */
+/* ═════ § 5 · 유틸리티로 못 쓰는 규칙 — 여러 선택자를 묶어야 하는 것 ═══════════════════════════ */
 
-/* @/components/composite/segmented-control.tsx (solid) — 항목 사이 구분선 */
+/* @/components/composite/segmented-control.tsx (solid) — 항목 사이 구분선.
+   가상요소나 :has() 는 변형이 있어 문제가 아니다 — 선택 상태에 따라 "그 항목과 다음 형제"가 바뀌어
+   어느 요소에 클래스를 붙일지 정할 수 없고, 조건 4개를 콤마로 묶어야 해서 유틸리티로 표현할 수 없다. */
 [data-slot='segmented-control'][data-variant='solid'] > [data-slot='segmented-control-item']:not(:first-child)::before {
     position: absolute;
     top: 50%;
@@ -201,23 +203,4 @@
     > [data-slot='segmented-control-item']:has([data-state='checked'])
     + [data-slot='segmented-control-item']::before {
     display: none; /* 선택된 navy 면 양옆은 모서리에 선이 겹쳐 숨긴다 */
-}
-
-/* @/components/custom/marquee-band.tsx — 같은 문구 두 벌이 왼쪽으로 무한히 흐른다.
-   속도·정지 동작은 아래 세 규칙에서만 고치면 된다. */
-.main-marquee {
-    animation: main-marquee 40s linear infinite;
-}
-@keyframes main-marquee {
-    from {
-        transform: translateX(0);
-    }
-    to {
-        transform: translateX(-50%);
-    }
-}
-@media (prefers-reduced-motion: reduce) {
-    .main-marquee {
-        animation: none;
-    }
 }

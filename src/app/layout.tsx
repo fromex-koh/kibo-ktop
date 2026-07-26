@@ -62,7 +62,7 @@ const RootLayout = ({
 }>) => {
     return (
         <html lang="ko" suppressHydrationWarning className="h-full antialiased">
-            <body className={`${pretendard.variable} flex min-h-full flex-col font-sans`}>
+            <body className={`${pretendard.variable} bg-background text-foreground flex min-h-full flex-col font-sans`}>
                 <ThemeProvider>{children}</ThemeProvider>
             </body>
         </html>
