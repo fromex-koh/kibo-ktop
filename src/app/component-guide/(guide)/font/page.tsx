@@ -3,6 +3,7 @@ import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
+import {remLiteralsToPx} from '@/lib/token-format'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '폰트 (Primitive)'}
@@ -18,9 +19,9 @@ const tierOf = (name: string): string => {
     const w = WEIGHT_KEYS.find((key) => name.endsWith(`-${key}`))
     return w ? name.slice(0, -(w.length + 1)) : name
 }
-// px 숫자는 rem 환산까지 보여주고, 문자열 값(마키 밴드의 유동 clamp 등)은 변환 없이 그대로 노출한다. [PB-03]
+// px 숫자는 rem 환산까지, 문자열 값(마키 밴드의 유동 clamp 등)은 안의 rem 을 px 로 되돌려 함께 보여준다.
 const formatFontSize = (value: number | string): string =>
-    typeof value === 'number' ? `${value}px → ${value / tokens.remBase}rem` : value
+    typeof value === 'number' ? `${value}px → ${value / tokens.remBase}rem` : `${remLiteralsToPx(value)} → ${value}`
 const FONT_SIZE_TIERS: {tier: string; mobile: number | string; pc: number | string}[] = []
 for (const [name, t] of Object.entries(tokens.typography)) {
     const tier = tierOf(name)

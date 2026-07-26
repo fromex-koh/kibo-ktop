@@ -153,8 +153,30 @@ if (missingReference.length) {
     process.exit(1)
 }
 
+// 모션 큐레이션 가드 — ease-*·animate-* 는 tokens.json 이 아니라 globals.css 의 @theme 에 있어(@keyframes 와
+// 한 몸이다) 토큰 생성기의 검증을 받지 않는다. 값을 추가하고 가이드에 안 적으면 아무도 그 값의 존재를 모른다.
+const MOTION_GUIDE_PAGE = 'src/app/component-guide/(guide)/motion/page.tsx'
+const themeMotionNames = [
+    ...readFileSync('src/app/globals.css', 'utf8').matchAll(/^\s+--((?:ease|animate)-[a-z-]+):/gm),
+]
+    .map((m) => m[1])
+    .sort()
+const motionPageSource = readFileSync(MOTION_GUIDE_PAGE, 'utf8')
+const curatedMotionNames = [...motionPageSource.matchAll(/name: '((?:ease|animate)-[a-z-]+)'/g)].map((m) => m[1]).sort()
+const uncuratedMotion = themeMotionNames.filter((name) => !curatedMotionNames.includes(name))
+const staleMotion = curatedMotionNames.filter((name) => !themeMotionNames.includes(name))
+if (uncuratedMotion.length || staleMotion.length) {
+    console.error('\n❌ 모션 값과 가이드 큐레이션이 어긋납니다:\n')
+    if (uncuratedMotion.length) console.error(`  가이드에 없음: ${uncuratedMotion.join(', ')}`)
+    if (staleMotion.length) console.error(`  @theme 에 없음: ${staleMotion.join(', ')}`)
+    console.error(`    → ${MOTION_GUIDE_PAGE} 의 EASINGS·ANIMATIONS 목록을 globals.css 의 @theme 과 맞추세요.\n`)
+    process.exit(1)
+}
+
 if (violations.length === 0) {
-    console.log(`✅ 컨벤션 검사 통과 (검사 파일 ${files.length}개 · styles CSS ${styleFiles.length}개)`)
+    console.log(
+        `✅ 컨벤션 검사 통과 (검사 파일 ${files.length}개 · styles CSS ${styleFiles.length}개 · 모션 ${themeMotionNames.length}개)`,
+    )
     process.exit(0)
 }
 

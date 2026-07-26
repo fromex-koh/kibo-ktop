@@ -25,6 +25,25 @@ const SPACING_COLUMNS = [
     {key: 'value', header: '값', align: 'start'},
 ] as const
 
+// 명명 크기(size) — base 배수가 아니라 이름으로 부르는 고정 크기다. 생성기가 --spacing-<이름> 으로
+// 등록하므로 간격과 같은 유틸리티 문법을 쓴다(h-control-h-lg · size-icon-md · w-sidebar-w).
+// tokens.json 에서 직접 그리므로 토큰을 추가하면 이 표에 자동으로 나온다.
+// 변수명은 토큰명에서 그대로 유도되므로(--ds-spacing-<이름>) 컬럼으로 두지 않고 설명에 적는다.
+const SIZE_COLUMNS = [
+    {key: 'preview', header: '미리보기', align: 'start'},
+    {key: 'token', header: '토큰 (클릭 복사)', align: 'start', rowHeader: true},
+    {key: 'value', header: '값', align: 'start'},
+] as const
+
+// 값이 숫자면 px, 문자열이면 다른 size 키를 가리킨다(예: header-top → header-h). 참조를 따라가 실제 px 로 보여준다.
+const SIZE_VALUES: Record<string, number | string> = tokens.size
+const resolveSizePx = (value: number | string, depth = 0): number | undefined => {
+    if (typeof value === 'number') return value
+    if (depth > 4) return undefined
+    const referenced = SIZE_VALUES[value]
+    return referenced === undefined ? undefined : resolveSizePx(referenced, depth + 1)
+}
+
 const SpacingGuidePage = () => (
     <GuidePageShell
         title="간격 (Spacing)"
@@ -70,6 +89,48 @@ const SpacingGuidePage = () => (
                             </span>,
                         ],
                     }))}
+                />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="size-scale" className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                    <h2 id="size-scale" className="typo-h4-bold text-foreground">
+                        명명 크기 (size)
+                    </h2>
+                    <p className="typo-body-l-regular text-foreground-subtle">
+                        배수가 아니라 이름으로 부르는 고정 크기입니다. 간격과 같은 스케일에 등록되어 어떤 크기·간격
+                        유틸리티에나 이름을 붙여 씁니다 — <code>size-icon-md</code> · <code>h-control-h-lg</code> ·{' '}
+                        <code>w-sidebar-w</code>. CSS 에서 직접 참조할 때의 변수명은{' '}
+                        <code>--ds-spacing-&lt;이름&gt;</code>입니다.
+                    </p>
+                </div>
+                <Table
+                    caption="명명 크기 토큰의 미리보기와 px 값"
+                    columns={SIZE_COLUMNS}
+                    rows={Object.entries(tokens.size).map(([name, value]) => {
+                        const px = resolveSizePx(value)
+
+                        return {
+                            key: name,
+                            cells: [
+                                <span
+                                    key="preview"
+                                    aria-hidden="true"
+                                    className="bg-primary block h-3 max-w-full rounded-sm"
+                                    style={{width: `var(--ds-spacing-${name})`}}
+                                />,
+                                <CopyChip key="token" value={name} />,
+                                <span key="value" className="font-mono">
+                                    {px === undefined ? '—' : `${px}px`}
+                                    {typeof value === 'string' ? (
+                                        <span className="text-muted-foreground"> · {value} 참조</span>
+                                    ) : null}
+                                </span>,
+                            ],
+                        }
+                    })}
                 />
             </section>
         </BaseCard>

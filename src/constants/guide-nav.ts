@@ -52,6 +52,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {label: '그림자 (Shadow)', href: '/component-guide/shadow'},
             {label: '흐림 (Blur)', href: '/component-guide/blur'},
             {label: '오버레이 (Overlay)', href: '/component-guide/overlay'},
+            {label: '모션 (Motion)', href: '/component-guide/motion'},
         ],
     },
     {

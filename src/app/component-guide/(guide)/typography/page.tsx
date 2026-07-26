@@ -4,6 +4,7 @@ import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
+import {remLiteralsToPx} from '@/lib/token-format'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '타이포그래피 (Typography)'}
@@ -45,8 +46,9 @@ const TYPOGRAPHY_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'Micro', match: (n) => n.startsWith('micro-')},
     {name: '화면 전용', match: () => true},
 ]
-// 숫자는 px 를 붙여 보여주고, 문자열 값은 그대로 노출한다.
-const formatFontSize = (value: number | string): string => (typeof value === 'number' ? `${value}px` : value)
+// 숫자는 px 를 붙이고, 문자열 값(유동 clamp 등)은 안의 rem 을 px 로 되돌려 다른 행과 단위를 맞춘다.
+const formatFontSize = (value: number | string): string =>
+    typeof value === 'number' ? `${value}px` : remLiteralsToPx(value)
 const groupNameOfTypo = (name: string): string =>
     TYPOGRAPHY_GROUPS.find((group) => group.match(name))?.name ?? '화면 전용'
 const TYPOGRAPHY_ENTRIES: TypographyEntry[] = Object.entries(tokens.typography)
