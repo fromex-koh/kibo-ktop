@@ -82,16 +82,18 @@ const toRgbaText = (color: string): string => {
 }
 
 // '현재' 칸 배경 유틸리티 클래스 — Tailwind 는 className 에 리터럴로 등장하는 클래스명만 스캔하므로
-// `bg-${name}` 처럼 동적으로 조합하면 생성되지 않는다. 이 페이지가 보여주는 슬롯을 전부 리터럴로 나열한다.
-// scroll-thumb/track 은
-// pseudo-element 전용이라 --color-* 유틸이 없어(build-tokens.mjs 의 NO_UTILITY_SLOTS) var() 임의값으로 참조한다.
-const LIVE_SWATCH_CLASS: Record<string, string> = {
+// `bg-${name}` 처럼 동적으로 조합하면 생성되지 않는다. semantic 슬롯 전부를 리터럴로 나열하며, 키 타입이
+// tokens.semantic 이라 슬롯을 추가하고 여기 빠뜨리면 typecheck 가 실패한다(스와치가 빈칸으로 나가지 않게).
+// scroll-thumb/track 은 pseudo-element 전용이라 --color-* 유틸이 없어(build-tokens.mjs 의 NO_UTILITY_SLOTS)
+// var() 임의값으로 참조한다.
+const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     background: 'bg-background',
     surface: 'bg-surface',
     foreground: 'bg-foreground',
     'foreground-subtle': 'bg-foreground-subtle',
-    control: 'bg-control',
     'label-foreground': 'bg-label-foreground',
+    disabled: 'bg-disabled',
+    'disabled-subtle': 'bg-disabled-subtle',
     placeholder: 'bg-placeholder',
     card: 'bg-card',
     'card-foreground': 'bg-card-foreground',
@@ -105,16 +107,15 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     secondary: 'bg-secondary',
     'secondary-hover': 'bg-secondary-hover',
     'secondary-pressed': 'bg-secondary-pressed',
+    'secondary-strong': 'bg-secondary-strong',
     'secondary-foreground': 'bg-secondary-foreground',
     'secondary-foreground-hover': 'bg-secondary-foreground-hover',
     'secondary-foreground-pressed': 'bg-secondary-foreground-pressed',
-    'secondary-strong': 'bg-secondary-strong',
     tertiary: 'bg-tertiary',
     'tertiary-hover': 'bg-tertiary-hover',
     'tertiary-pressed': 'bg-tertiary-pressed',
-    'tertiary-foreground': 'bg-tertiary-foreground',
     'tertiary-strong': 'bg-tertiary-strong',
-    'disabled-subtle': 'bg-disabled-subtle',
+    'tertiary-foreground': 'bg-tertiary-foreground',
     muted: 'bg-muted',
     'muted-foreground': 'bg-muted-foreground',
     accent: 'bg-accent',
@@ -127,13 +128,15 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     info: 'bg-info',
     'primary-subtle': 'bg-primary-subtle',
     'action-check-halo': 'bg-action-check-halo',
+    'action-fill-hover': 'bg-action-fill-hover',
     border: 'bg-border',
     'subtle-1': 'bg-subtle-1',
     'subtle-2': 'bg-subtle-2',
     'subtle-3': 'bg-subtle-3',
     input: 'bg-input',
-    ring: 'bg-ring',
+    control: 'bg-control',
     'separator-dot': 'bg-separator-dot',
+    ring: 'bg-ring',
     'chart-1': 'bg-chart-1',
     'chart-2': 'bg-chart-2',
     'chart-3': 'bg-chart-3',
@@ -149,7 +152,6 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'sidebar-ring': 'bg-sidebar-ring',
     'scroll-thumb': 'bg-[var(--ds-scroll-thumb)]',
     'scroll-track': 'bg-[var(--ds-scroll-track)]',
-    disabled: 'bg-disabled',
     'control-disabled': 'bg-control-disabled',
     'control-disabled-subtle': 'bg-control-disabled-subtle',
     'field-disabled': 'bg-field-disabled',
@@ -159,8 +161,6 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'stepper-inactive': 'bg-stepper-inactive',
     'number-badge-new': 'bg-number-badge-new',
     'badge-solid-fg': 'bg-badge-solid-fg',
-    'main-accent': 'bg-main-accent',
-    'main-accent-bright': 'bg-main-accent-bright',
     'segmented-track': 'bg-segmented-track',
     'segmented-foreground': 'bg-segmented-foreground',
     'segmented-active': 'bg-segmented-active',
@@ -171,8 +171,40 @@ const LIVE_SWATCH_CLASS: Record<string, string> = {
     'select-selected-foreground': 'bg-select-selected-foreground',
     'calendar-sunday': 'bg-calendar-sunday',
     'calendar-saturday': 'bg-calendar-saturday',
+    'main-accent': 'bg-main-accent',
+    'main-accent-bright': 'bg-main-accent-bright',
     'cta-surface': 'bg-cta-surface',
+    'pastel-info': 'bg-pastel-info',
+    'pastel-info-foreground': 'bg-pastel-info-foreground',
+    'pastel-info-foreground-strong': 'bg-pastel-info-foreground-strong',
+    'pastel-success': 'bg-pastel-success',
+    'pastel-success-foreground': 'bg-pastel-success-foreground',
+    'pastel-success-foreground-strong': 'bg-pastel-success-foreground-strong',
+    'pastel-warning': 'bg-pastel-warning',
+    'pastel-warning-foreground': 'bg-pastel-warning-foreground',
+    'pastel-warning-foreground-strong': 'bg-pastel-warning-foreground-strong',
+    'pastel-error': 'bg-pastel-error',
+    'pastel-error-foreground': 'bg-pastel-error-foreground',
+    'pastel-error-foreground-strong': 'bg-pastel-error-foreground-strong',
+    'pastel-neutral': 'bg-pastel-neutral',
+    'pastel-neutral-foreground': 'bg-pastel-neutral-foreground',
+    'pastel-navy': 'bg-pastel-navy',
+    'pastel-navy-foreground': 'bg-pastel-navy-foreground',
+    'badge-solid-info': 'bg-badge-solid-info',
+    'badge-solid-success': 'bg-badge-solid-success',
+    'badge-solid-warning': 'bg-badge-solid-warning',
+    'badge-solid-error': 'bg-badge-solid-error',
+    'badge-solid-neutral': 'bg-badge-solid-neutral',
+    'badge-solid-navy': 'bg-badge-solid-navy',
+    'badge-outline-neutral': 'bg-badge-outline-neutral',
+    'alert-info-border': 'bg-alert-info-border',
+    'alert-success-border': 'bg-alert-success-border',
+    'alert-warning-border': 'bg-alert-warning-border',
+    'alert-error-border': 'bg-alert-error-border',
+    'table-surface': 'bg-table-surface',
 }
+// 표는 tokens.json 순서로 그리므로 조회는 문자열 키로 한다(위 객체가 누락 검사를 맡는다).
+const LIVE_SWATCH_BY_NAME = new Map<string, string>(Object.entries(LIVE_SWATCH_CLASS))
 
 // 맨 앞 '현재' 칸 — 실제 토큰을 현재 테마로 렌더. 다크 토글 시 실제로 바뀐다(파이프라인 검증).
 const LiveSwatch = ({name}: {name: string}) => (
@@ -181,7 +213,7 @@ const LiveSwatch = ({name}: {name: string}) => (
         className="border-border size-icon-lg relative block shrink-0 overflow-hidden rounded border"
         style={{background: CHECKERBOARD}}
     >
-        <span className={`absolute inset-0 ${LIVE_SWATCH_CLASS[name]}`} />
+        <span className={`absolute inset-0 ${LIVE_SWATCH_BY_NAME.get(name) ?? ''}`} />
     </span>
 )
 

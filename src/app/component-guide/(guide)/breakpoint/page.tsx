@@ -130,11 +130,13 @@ const BreakpointGuidePage = () => (
                     rows={(() => {
                         // 구간명은 기기 하나를 가리키지 않으므로(예: md = 태블릿·노트북이 함께 걸치는 폭),
                         // 실제 포함 기기는 여기서 별도 안내한다. 새 브레이크포인트 키 추가 시 함께 갱신.
-                        const DEVICE_HINT: Record<string, string> = {
+                        // 키 타입이 tokens.breakpoint(+mobile)라, 구간을 추가하고 여기 빠뜨리면 typecheck 가 실패한다.
+                        const DEVICE_HINT: Record<keyof typeof tokens.breakpoint | 'mobile', string> = {
                             mobile: 'Galaxy S24(360px)·iPhone 15(393px)',
                             md: 'iPad 10세대 세로(820px)·가로(1180px)',
                             xl: 'Full HD 1920×1080(스케일 125%→1536px)',
                         }
+                        const DEVICE_HINT_BY_KEY = new Map<string, string>(Object.entries(DEVICE_HINT))
                         const entries = Object.entries(tokens.breakpoint).sort((a, b) => a[1] - b[1])
                         const rows = [
                             {
@@ -142,14 +144,14 @@ const BreakpointGuidePage = () => (
                                 name: 'mobile (기본)',
                                 range: `0 ~ ${entries[0][1] - 1}px`,
                                 prefix: null,
-                                device: DEVICE_HINT['mobile'],
+                                device: DEVICE_HINT.mobile,
                             },
                             ...entries.map(([k, v], i) => ({
                                 key: k,
                                 name: k,
                                 range: i + 1 < entries.length ? `${v} ~ ${entries[i + 1][1] - 1}px` : `${v}px ~`,
                                 prefix: `${k}:`,
-                                device: DEVICE_HINT[k] ?? '—',
+                                device: DEVICE_HINT_BY_KEY.get(k) ?? '—',
                             })),
                         ]
                         return rows.map((r) => ({

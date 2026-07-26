@@ -7,12 +7,14 @@ import tokens from '@tokens'
 export const metadata: Metadata = {title: '그림자 (Shadow)'}
 
 // 동적 키 조합은 Tailwind가 스캔하지 못하므로 실제 토큰 이름을 리터럴로 보관한다.
-const SHADOW_CLASS: Record<string, string> = {
+const SHADOW_CLASS: Record<keyof typeof tokens.effect.shadow, string> = {
     '1': 'shadow-1',
     sm: 'shadow-sm',
     md: 'shadow-md',
     lg: 'shadow-lg',
 }
+// 표는 tokens.json 순서로 그리므로 조회는 문자열 키로 한다(위 객체가 누락 검사를 맡는다).
+const SHADOW_CLASS_BY_NAME = new Map<string, string>(Object.entries(SHADOW_CLASS))
 
 const shadowEntries = Object.entries(tokens.effect.shadow)
 const projectEntries = shadowEntries.filter(([name]) => /^\d+$/.test(name))
@@ -28,10 +30,12 @@ const ShadowList = ({entries}: {entries: typeof shadowEntries}) => (
         {entries.map(([name, value]) => (
             <li key={name} className="border-border overflow-hidden rounded-xl border">
                 <div className="bg-background flex aspect-video items-center justify-center">
-                    <span className={`bg-card border-border size-16 rounded-lg border ${SHADOW_CLASS[name]}`} />
+                    <span
+                        className={`bg-card border-border size-16 rounded-lg border ${SHADOW_CLASS_BY_NAME.get(name) ?? ''}`}
+                    />
                 </div>
                 <div className="border-border flex flex-col gap-2 border-t px-4 py-3">
-                    <CopyChip value={SHADOW_CLASS[name]} />
+                    <CopyChip value={SHADOW_CLASS_BY_NAME.get(name) ?? ''} />
                     <span className="typo-body-l-regular text-muted-foreground font-mono">
                         x {value.x}px · y {value.y}px · blur {value.blur}px · spread {value.spread}px
                     </span>

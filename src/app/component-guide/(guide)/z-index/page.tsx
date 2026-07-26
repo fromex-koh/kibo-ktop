@@ -8,7 +8,8 @@ import tokens from '@tokens'
 export const metadata: Metadata = {title: '쌓임 순서 (Z-index)'}
 
 // 각 z 토큰의 용도 큐레이션 — 값(순서)만으로는 의미가 안 드러나므로 어디에 쓰는지 함께 적는다.
-const Z_USAGE: Record<string, string> = {
+// 키 타입이 tokens.z 라, 토큰을 추가하고 설명을 빠뜨리면 typecheck 가 실패한다(표에 빈칸으로 나가지 않게).
+const Z_USAGE: Record<keyof typeof tokens.z, string> = {
     base: '기본 흐름 — 별도 레이어 없음(0).',
     dropdown: '드롭다운·셀렉트 메뉴.',
     sticky: '일반 고정 요소 — 툴바·섹션 헤더 등.',
@@ -20,7 +21,11 @@ const Z_USAGE: Record<string, string> = {
     toast: '토스트·스낵바 알림.',
     tooltip: '툴팁 — 거의 최상위.',
     skiplink: '스킵 링크 — 포커스 시 모든 것 위.',
+    'stack-inactive': '스택 페이저에서 화면 밖으로 밀린 섹션 — 활성 섹션 아래.',
+    'stack-active': '스택 페이저에서 현재 보이는 섹션 — 이전·다음 섹션 위.',
 }
+// 표는 tokens.z 순서로 그리므로 조회는 문자열 키로 한다(위 객체가 누락 검사를 맡는다).
+const Z_USAGE_BY_NAME = new Map<string, string>(Object.entries(Z_USAGE))
 
 // 겹침 시연용 큐레이션 subset(값 오름차순). 클래스명은 리터럴로 둬야 Tailwind 가 z-* 유틸을 생성한다.
 const STACK_DEMO = [
@@ -96,7 +101,7 @@ const ZIndexGuidePage = () => (
                             <span key="value" className="font-mono">
                                 {value}
                             </span>,
-                            Z_USAGE[name] ?? '—',
+                            Z_USAGE_BY_NAME.get(name) ?? '—',
                         ],
                     }))}
                 />

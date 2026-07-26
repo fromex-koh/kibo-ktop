@@ -17,13 +17,16 @@ const getGridRevealClass = (index: number) => {
 
 // container 감을 잡기 위한 기준 뷰포트. 모바일은 고정 상한 없이 유동('100%')이므로
 // 360px 예시값을 계산하고, md·xl은 프로젝트 검수 기준 뷰포트를 함께 표기한다.
-const REFERENCE_VIEWPORT: Record<string, number> = {mobile: 360, md: 1200, xl: 1920}
+// 키 타입이 tokens.grid 라, grid 티어를 추가하고 여기 빠뜨리면 typecheck 가 실패한다.
+const REFERENCE_VIEWPORT: Record<keyof typeof tokens.grid, number> = {mobile: 360, md: 1200, xl: 1920}
+const REFERENCE_VIEWPORT_BY_KEY = new Map<string, number>(Object.entries(REFERENCE_VIEWPORT))
 
-const GRID_RANGE_LABELS: Record<string, string> = {
+const GRID_RANGE_LABELS: Record<keyof typeof tokens.grid, string> = {
     mobile: 'Mobile',
     md: 'Tablet (md)',
     xl: 'PC (xl)',
 }
+const GRID_RANGE_LABELS_BY_KEY = new Map<string, string>(Object.entries(GRID_RANGE_LABELS))
 
 // grid.container 가 container 토큰 키(예: "content")면 실제 px 로 되찾아 표에 보여준다(값 단일 소스).
 const CONTAINER_PX: Record<string, number> = tokens.container
@@ -112,7 +115,7 @@ const GridPreviewPage = () => (
                                         <tr key={key} className="border-border border-b last:border-b-0">
                                             <td className="typo-body-l-regular px-4 py-3">
                                                 <span className="inline-flex items-center gap-2">
-                                                    {GRID_RANGE_LABELS[key] ?? key}
+                                                    {GRID_RANGE_LABELS_BY_KEY.get(key) ?? key}
                                                     <ActiveBreakpointTag targetKey={key} />
                                                 </span>
                                             </td>
@@ -125,7 +128,7 @@ const GridPreviewPage = () => (
                                             <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
                                                 {key === 'mobile'
                                                     ? `${REFERENCE_VIEWPORT.mobile - 2 * g.margin}px (${REFERENCE_VIEWPORT.mobile}px 기준)`
-                                                    : `${typeof g.container === 'number' ? g.container : CONTAINER_PX[g.container]}px (${REFERENCE_VIEWPORT[key]}px 기준)`}
+                                                    : `${typeof g.container === 'number' ? g.container : CONTAINER_PX[g.container]}px (${REFERENCE_VIEWPORT_BY_KEY.get(key)}px 기준)`}
                                             </td>
                                             <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
                                                 {g.margin}px

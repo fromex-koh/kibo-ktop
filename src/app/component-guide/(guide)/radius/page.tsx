@@ -11,7 +11,7 @@ export const metadata: Metadata = {title: '모서리 반경 (Radius)'}
 // 생성하므로 `rounded-${k}` 처럼 동적으로 조합하면 안 만들어진다(실제로 rounded-2xs/rounded-2xl 은 이
 // 프로젝트 다른 곳에 리터럴 사용처가 없어 스캔되지 않고 있었음). radius 키는 8개뿐인 고정 목록이라
 // Record 로 리터럴을 나열해 className 에 직접 쓴다.
-const ROUNDED_CLASS: Record<string, string> = {
+const ROUNDED_CLASS: Record<keyof typeof tokens.radius, string> = {
     '2xs': 'rounded-2xs',
     xs: 'rounded-xs',
     sm: 'rounded-sm',
@@ -21,6 +21,8 @@ const ROUNDED_CLASS: Record<string, string> = {
     '2xl': 'rounded-2xl',
     full: 'rounded-full',
 }
+// 표는 tokens.json 순서로 그리므로 조회는 문자열 키로 한다(위 객체가 누락 검사를 맡는다).
+const ROUNDED_CLASS_BY_NAME = new Map<string, string>(Object.entries(ROUNDED_CLASS))
 
 // tokens.radius 의 숫자값은 절대 px 가 아니라 radiusBase 로부터의 오프셋이다(shadcn 컨벤션: 단일
 // --radius + calc 파생, spacing 의 "단일 base 가 전체 스케일을 지배" 원리와 동일). '값' 칸엔 오프셋이
@@ -61,7 +63,7 @@ const RadiusGuidePage = () => (
                                 <span
                                     key="preview"
                                     aria-hidden="true"
-                                    className={`bg-card border-border block size-16 border ${ROUNDED_CLASS[k]}`}
+                                    className={`bg-card border-border block size-16 border ${ROUNDED_CLASS_BY_NAME.get(k) ?? ''}`}
                                 />,
                                 <CopyChip key="class" value={`rounded-${k}`} />,
                                 <span key="value" className="font-mono">
