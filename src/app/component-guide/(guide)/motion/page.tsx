@@ -3,6 +3,7 @@ import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
+import MotionPreview, {type MotionPreviewKind} from './motion-preview'
 
 export const metadata: Metadata = {title: '모션 (Motion)'}
 
@@ -71,7 +72,13 @@ const ANIMATIONS = [
         source: 'custom/marquee-band.tsx',
         preview: 'marquee',
     },
-] as const
+] as const satisfies readonly {
+    name: string
+    value: string
+    usage: string
+    source: string
+    preview: MotionPreviewKind
+}[]
 
 const EASING_COLUMNS = [
     {key: 'preview', header: '미리보기', align: 'start'},
@@ -120,51 +127,6 @@ const EasingCurve = ({points}: {points: readonly [number, number, number, number
             />
         </svg>
     )
-}
-
-// 애니메이션 미리보기 — 실제 유틸리티를 그대로 붙여 렌더한다. 원본이 7초·40초처럼 긴 것도 있어
-// 표에서는 축소한 도형으로 보여주되, 시간·가속도는 토큰 값을 그대로 쓴다.
-const AnimationPreview = ({preview}: {preview: (typeof ANIMATIONS)[number]['preview']}) => {
-    if (preview === 'scale') {
-        return (
-            <span aria-hidden="true" className="bg-muted block size-12 overflow-hidden rounded-md">
-                <span className="bg-primary animate-hero-zoom-out block size-full motion-reduce:animate-none" />
-            </span>
-        )
-    }
-    if (preview === 'line') {
-        return (
-            <span aria-hidden="true" className="bg-muted relative block h-12 w-1 overflow-hidden rounded-full">
-                <span className="bg-primary animate-scroll-line absolute inset-0 origin-top motion-reduce:animate-none" />
-            </span>
-        )
-    }
-    if (preview === 'progress') {
-        return (
-            <span aria-hidden="true" className="bg-muted relative block h-12 w-1 overflow-hidden rounded-full">
-                <span className="bg-primary animate-tech-progress absolute inset-0 origin-top motion-reduce:animate-none" />
-            </span>
-        )
-    }
-    if (preview === 'enter') {
-        return (
-            <span aria-hidden="true" className="block h-12 w-24 overflow-hidden">
-                <span className="bg-primary animate-tech-enter block size-full rounded-md motion-reduce:animate-none" />
-            </span>
-        )
-    }
-    if (preview === 'marquee') {
-        return (
-            <span aria-hidden="true" className="block h-12 w-40 overflow-hidden">
-                <span className="animate-marquee flex h-full w-max items-center motion-reduce:animate-none">
-                    <span className="typo-body-m-bold text-muted-foreground pr-6 whitespace-nowrap">K-TOP</span>
-                    <span className="typo-body-m-bold text-muted-foreground pr-6 whitespace-nowrap">K-TOP</span>
-                </span>
-            </span>
-        )
-    }
-    // 카운터 회전은 자릿수 릴 구조가 있어야 의미가 있어 표에서는 생략한다(실물은 메인페이지 지표에서 확인).
-    return <span className="typo-body-m-regular text-muted-foreground">—</span>
 }
 
 // 모션 — 가속도(ease-*)와 애니메이션(animate-*) 유틸리티. 값의 단일 소스는 globals.css 의 @theme 이다.
@@ -235,7 +197,12 @@ const MotionGuidePage = () => (
                     rows={ANIMATIONS.map((animation) => ({
                         key: animation.name,
                         cells: [
-                            <AnimationPreview key="preview" preview={animation.preview} />,
+                            <MotionPreview
+                                key="preview"
+                                kind={animation.preview}
+                                loop={animation.value.includes('infinite')}
+                                label={animation.name}
+                            />,
                             <CopyChip key="class" value={animation.name} />,
                             <span key="value" className="text-muted-foreground font-mono">
                                 {animation.value}
