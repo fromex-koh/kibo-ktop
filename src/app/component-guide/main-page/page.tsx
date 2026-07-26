@@ -7,7 +7,6 @@ import HeroSection from '@/components/custom/hero-section'
 import TechEvalSection from '@/components/custom/tech-eval-section'
 import MobileTechEvalContent from '@/components/custom/mobile-tech-eval-content'
 import MainPageHeaderState from './main-page-header-state'
-import styles from './page.module.css'
 
 export const metadata: Metadata = {title: '메인페이지'}
 
@@ -64,7 +63,7 @@ const MAIN_PAGE_CLASS = [
 // 색상은 메인페이지 전용 스킨(tokens.css의 .mainpage 블록)을 따른다 — light/dark와 같은 방식으로
 // theme-provider가 이 라우트에서 html 클래스에 'mainpage'를 강제한다(테마 토글과 무관하게 유지).
 const MainPage = () => (
-    <StackPager className={`${styles.root} bg-background relative min-h-dvh ${MAIN_PAGE_CLASS}`}>
+    <StackPager className={`bg-background relative min-h-dvh ${MAIN_PAGE_CLASS}`}>
         <MainPageHeaderState />
         <SkipNav links={SKIP_LINKS} />
         <Header variant="main" navigationByUserType={MAIN_HEADER_NAVIGATION} />
@@ -80,7 +79,8 @@ const MainPage = () => (
                             <MarqueeBand />
                         </div>
                         <div id="site-info" tabIndex={-1} className="bg-background relative w-full">
-                            <Footer showMarquee={false} />
+                            {/* 모바일 2섹션은 서비스 4종을 모두 펼쳐 이미 길어서 사이트맵까지 두지 않는다. */}
+                            <Footer showMarquee={false} showSitemapOnMobile={false} />
                         </div>
                     </>
                 }

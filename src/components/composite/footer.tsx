@@ -106,9 +106,11 @@ export const MarqueeBand = () => (
     </div>
 )
 
-type FooterProps = ComponentProps<'footer'> & {showMarquee?: boolean}
+// showSitemapOnMobile — 모바일에서 사이트맵을 감춘다. 메인페이지처럼 마지막 섹션이 이미 길어
+// 푸터까지 펼치면 스크롤이 과해지는 화면에서 끈다(md 이상에서는 항상 노출).
+type FooterProps = ComponentProps<'footer'> & {showMarquee?: boolean; showSitemapOnMobile?: boolean}
 
-const Footer = ({showMarquee = true, className, ...props}: FooterProps) => (
+const Footer = ({showMarquee = true, showSitemapOnMobile = true, className, ...props}: FooterProps) => (
     <footer {...props} className={cn('bg-background text-foreground', className)} aria-label="사이트 정보">
         {showMarquee && <MarqueeBand />}
 
@@ -137,7 +139,10 @@ const Footer = ({showMarquee = true, className, ...props}: FooterProps) => (
                 </Link>
 
                 <div className="flex flex-col gap-10 xl:flex-row xl:justify-between">
-                    <nav aria-label="사이트맵" className="flex flex-wrap gap-x-15 gap-y-8">
+                    <nav
+                        aria-label="사이트맵"
+                        className={cn('flex flex-wrap gap-x-15 gap-y-8', !showSitemapOnMobile && 'max-md:hidden')}
+                    >
                         {SITEMAP.map((column) => (
                             <div key={column.title} className="flex flex-col gap-6">
                                 <h2 className="typo-body-xl-bold">
