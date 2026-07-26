@@ -12,11 +12,11 @@ const getSnapshot = () => true
 const getServerSnapshot = () => false
 
 /**
- * 라이트/다크 수동 토글 — Button(variant="ghost" size="icon-sm") 을 감싼 도메인 컴포넌트.
+ * 라이트/다크 수동 토글 — Button(variant="ghost" size="icon") 을 감싼 도메인 컴포넌트.
  * 테마 전환 로직(상태)이 있어 별도 컴포넌트로 두되, 버튼 스타일·포커스·접근성은 Button 을 재사용한다.
  * - next-themes 가 .dark 클래스 전환 + localStorage 저장 + 탭 간 동기화를 담당한다.
  * - resolvedTheme 은 서버에서 알 수 없으므로(FOUC 방지 스크립트가 클라에서 결정) 마운트 전엔
- *   같은 크기(icon-sm=36px)의 자리표시자로 렌더해 하이드레이션 불일치·레이아웃 시프트를 피한다.
+ *   같은 크기(icon=44px)의 자리표시자로 렌더해 하이드레이션 불일치·레이아웃 시프트를 피한다.
  * - 접근성: 아이콘만 보이므로 `aria-label` 로 기능을 알리고 내부 아이콘은 `aria-hidden`. [KWCAG 5.1.1]
  */
 const ThemeToggle = () => {
@@ -24,7 +24,7 @@ const ThemeToggle = () => {
     const isMounted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
     if (!isMounted) {
-        return <div className="size-control-h-sm" aria-hidden="true" />
+        return <div className="size-11" aria-hidden="true" />
     }
 
     const toggleTheme = () => {
@@ -36,7 +36,7 @@ const ThemeToggle = () => {
     const label = resolvedTheme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'
 
     return (
-        <Button variant="ghost" size="icon-sm" onClick={toggleTheme} aria-label={label} title={label}>
+        <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label={label} title={label}>
             {resolvedTheme === 'dark' ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
         </Button>
     )
