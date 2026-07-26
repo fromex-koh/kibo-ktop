@@ -7,7 +7,9 @@ const WHEEL_GESTURE_IDLE_MS = 120
 const TRANSITION_DURATION_MS = 600
 const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
 const PAGE_UP_KEYS = new Set(['ArrowUp', 'PageUp'])
-const STACK_PAGER_QUERY = '(min-width: 768px) and (min-height: 720px)'
+const STACK_PAGER_QUERY = '(min-width: 768px) and (min-height: 640px)'
+// 페이지 안쪽 스크롤로 인정하는 overflow 값 — hidden 은 화면이 움직이지 않으므로 제외한다.
+const SCROLLABLE_OVERFLOW = new Set(['auto', 'scroll'])
 const StackPagerActivePageContext = createContext(0)
 
 export const useStackPagerActivePage = () => useContext(StackPagerActivePageContext)
@@ -123,6 +125,15 @@ const StackPager = ({
         const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
         const pages = Array.from(container.querySelectorAll<HTMLElement>('[data-stack-page]'))
 
+        // 페이지 안에서 먼저 스크롤할지 판단할 때 overflow 를 함께 본다 — overflow:hidden 페이지도
+        // 확대된 배경 같은 장식 요소 때문에 scrollHeight 가 커질 수 있는데, 그러면 화면에는 아무 변화가
+        // 없는 상태로 입력만 먹혀 "조금 굴리면 빈 공간만 뜨고 다음 섹션으로 안 넘어가는" 문제가 된다.
+        const canScrollPageInside = (page: HTMLElement | undefined, direction: 1 | -1) => {
+            if (!page || !SCROLLABLE_OVERFLOW.has(getComputedStyle(page).overflowY)) return false
+            const maxScroll = page.scrollHeight - page.clientHeight
+            return direction > 0 ? page.scrollTop < maxScroll - 1 : page.scrollTop > 1
+        }
+
         const armAfterGestureEnds = () => {
             window.clearTimeout(gestureTimerRef.current)
             gestureTimerRef.current = window.setTimeout(() => {
@@ -144,17 +155,13 @@ const StackPager = ({
             }
 
             const activePageElement = pages[activePageRef.current]
-            const activePageMaxScroll = activePageElement
-                ? activePageElement.scrollHeight - activePageElement.clientHeight
-                : 0
-            const canScrollActivePageDown =
-                event.deltaY > 0 &&
-                activePageElement !== undefined &&
-                activePageElement.scrollTop < activePageMaxScroll - 1
-            const canScrollActivePageUp =
-                event.deltaY < 0 && activePageElement !== undefined && activePageElement.scrollTop > 1
+            const canScrollActivePageDown = canScrollPageInside(activePageElement, 1)
+            const canScrollActivePageUp = canScrollPageInside(activePageElement, -1)
 
-            if (canScrollActivePageDown || canScrollActivePageUp) {
+            if (
+                activePageElement &&
+                ((event.deltaY > 0 && canScrollActivePageDown) || (event.deltaY < 0 && canScrollActivePageUp))
+            ) {
                 event.preventDefault()
                 activePageElement.scrollBy({top: event.deltaY, behavior: 'auto'})
                 accumulatedDeltaRef.current = 0
@@ -219,6 +226,10 @@ const StackPager = ({
             window.clearTimeout(transitionTimerRef.current)
             window.clearTimeout(gestureTimerRef.current)
             container.removeEventListener('wheel', handleWheel)
+            container.removeEventListener('touchstart', handleTouchStart)
+            container.removeEventListener('touchmove', handleTouchMove)
+            container.removeEventListener('touchend', handleTouchEnd)
+            container.removeEventListener('touchcancel', handleTouchEnd)
             container.removeEventListener('keydown', handleKeyDown)
             container.removeEventListener('click', handleFragmentClick)
             desktopQuery.removeEventListener('change', handleDesktopChange)

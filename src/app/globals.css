@@ -223,15 +223,18 @@
     animation-play-state: paused;
 }
 
-/* 낮은 데스크톱 화면에서는 콘텐츠가 겹치지 않도록 섹션의 최소 설계 높이를 유지한다. */
-@media (min-width: 768px) {
+/* 스택 페이저가 꺼질 만큼 낮은 화면에서만 섹션의 최소 설계 높이를 유지한다(콘텐츠 겹침 방지).
+   페이저가 켜진 화면에서는 페이지가 100dvh 고정이라 이 값이 남아 있으면 아래가 잘린다. */
+@media (min-width: 768px) and (height < 40rem) {
     .stack-page {
         min-height: 720px;
     }
 }
 
-/* 너비와 높이가 충분할 때만 실제 스크롤 위치를 고정하고, 불투명한 섹션을 세로로 전환한다. */
-@media (min-width: 768px) and (min-height: 720px) {
+/* 너비와 높이가 충분할 때만 실제 스크롤 위치를 고정하고, 불투명한 섹션을 세로로 전환한다.
+   높이 기준은 640px — 히어로 콘텐츠(약 460px)와 스크롤 표시가 들어가는 최소 높이다. 이보다 낮으면
+   자연 스크롤 + 스크롤 스냅으로 넘어간다. */
+@media (min-width: 768px) and (min-height: 640px) {
     [data-stack-pager] {
         height: 100dvh;
         overflow: hidden;
