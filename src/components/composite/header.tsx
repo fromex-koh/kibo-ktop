@@ -325,15 +325,21 @@ const Header = ({variant = 'default', showThemeToggle, navigationByUserType}: He
     )
 }
 
-// 컴포넌트 가이드 카드 안에서 쓰는 데모.
-export const HeaderDemo = ({navigationByUserType}: {navigationByUserType?: HeaderNavigationByUserType}) => (
-    <div className="border-border bg-card overflow-hidden rounded-lg border">
+// 컴포넌트 가이드 카드 안에서 쓰는 데모. 테마 토글 노출은 실제 Header 와 같은 기준을 따른다(main 이면 숨김).
+export const HeaderDemo = ({
+    variant = 'default',
+    navigationByUserType,
+}: {
+    variant?: HeaderVariant
+    navigationByUserType?: HeaderNavigationByUserType
+}) => (
+    <div className="border-border bg-background overflow-hidden rounded-lg border">
         <Suspense
             fallback={
                 <HeaderContent
                     navLabel="헤더 데모 메뉴"
-                    variant="default"
-                    showThemeToggle
+                    variant={variant}
+                    showThemeToggle={variant !== 'main'}
                     navigationByUserType={navigationByUserType}
                     userType="corp"
                     searchParams=""
@@ -342,8 +348,8 @@ export const HeaderDemo = ({navigationByUserType}: {navigationByUserType?: Heade
         >
             <ResolvedHeaderContent
                 navLabel="헤더 데모 메뉴"
-                variant="default"
-                showThemeToggle
+                variant={variant}
+                showThemeToggle={variant !== 'main'}
                 navigationByUserType={navigationByUserType}
             />
         </Suspense>

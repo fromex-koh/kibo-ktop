@@ -4,6 +4,8 @@ import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable, {type PropsTableItem} from '@/components/custom/props-table'
 import {HeaderDemo, type HeaderNavigationByUserType} from '@/components/composite/header'
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
+import {TriangleAlert} from 'lucide-react'
 
 export const metadata: Metadata = {title: '헤더 (Header)'}
 
@@ -128,6 +130,29 @@ const COMPOSITION = [
     },
 ] as const
 
+// 페이지별 테마 케이스 — 클래스 스코프(.light/.dark/.mainpage)로 강제 미리보기한다.
+// 메인페이지는 실제로 variant="main" 을 쓰므로 그 조합으로 보여준다.
+const THEME_CASES = [
+    {
+        theme: 'light',
+        variant: 'default',
+        label: '라이트 (서브페이지)',
+        desc: '밝은 표면 + 컬러 로고. 테마 토글 노출.',
+    },
+    {
+        theme: 'dark',
+        variant: 'default',
+        label: '다크 (서브페이지)',
+        desc: '어두운 표면 + 화이트 로고. 테마 토글 노출.',
+    },
+    {
+        theme: 'mainpage',
+        variant: 'main',
+        label: '메인페이지 (mainpage 스킨 · variant="main")',
+        desc: '히어로 위에 겹치는 배리에이션. 화이트 로고 한 장이며 테마 토글은 숨긴다.',
+    },
+] as const
+
 // 헤더 — 로고+주 메뉴+유틸바를 담는 상단 banner 합성 컴포넌트.
 // shadcn 에는 Header primitive 가 없어 primitive(NavigationMenu·SegmentedControl·Sheet)를 조립한다.
 const HeaderGuidePage = () => (
@@ -149,6 +174,47 @@ const HeaderGuidePage = () => (
                 </div>
                 <HeaderDemo />
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="sh-theme" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="sh-theme" className="typo-h4-bold">
+                        페이지별 테마
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        Header 는 표준 시맨틱 토큰만 쓰므로 놓인 페이지의 테마를 그대로 따릅니다. 로고는 배경 명도에
+                        맞춰 교체되는데, 이 교체는 <code className="font-mono">dark:</code> 변형이 아니라{' '}
+                        <code className="font-mono">--logo-on-*</code> 변수로 제어합니다 — 아래처럼 테마를 중첩 고정해도
+                        가장 가까운 스코프를 따라 항상 배경과 일치시키기 위함입니다.
+                    </p>
+                </div>
+                <Alert color="warning">
+                    <TriangleAlert aria-hidden="true" />
+                    <AlertTitle>쇼케이스 전용 — 실제 사용 시 제외하세요</AlertTitle>
+                    <AlertDescription>
+                        아래 미리보기는 테마 토글과 무관하게 항상 같은 모습으로 확인할 수 있도록 각 미리보기를{' '}
+                        <code className="font-mono">.light</code>·<code className="font-mono">.dark</code>·
+                        <code className="font-mono">.mainpage</code> 클래스로 감싸 테마를 고정했습니다. 실제 화면에서는
+                        이 래퍼 없이 <code className="font-mono">&lt;Header /&gt;</code>만 두면 페이지 테마를 따릅니다.
+                    </AlertDescription>
+                </Alert>
+                <div className="flex flex-col gap-6">
+                    {THEME_CASES.map((tc) => (
+                        <div key={tc.theme} className="flex flex-col gap-2">
+                            <div className="flex flex-wrap items-baseline gap-2">
+                                <p className="typo-body-l-medium text-foreground">{tc.label}</p>
+                                <code className="typo-body-l-regular text-muted-foreground font-mono">.{tc.theme}</code>
+                            </div>
+                            <p className="typo-body-l-regular text-muted-foreground">{tc.desc}</p>
+                            {/* 클래스 스코프로 테마를 강제한다 — 내부 시맨틱 토큰이 해당 테마 값으로 반사된다. */}
+                            <div className={tc.theme}>
+                                <HeaderDemo variant={tc.variant} />
+                            </div>
+                        </div>
+                    ))}
+                </div>
             </section>
         </BaseCard>
 
