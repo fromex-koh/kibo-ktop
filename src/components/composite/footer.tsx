@@ -96,24 +96,22 @@ const Footer = ({showSitemapOnMobile = true, className, ...props}: FooterProps) 
         {/* 시안 간격 — 마키 아래 60px, 로고와 사이트맵 사이 80px, 구분선 위아래 32px, 하단 40px */}
         <div className="content-layout flex flex-col gap-8 pt-12 pb-10 md:pt-15">
             <div className="flex flex-col gap-10 md:gap-20">
-                {/* KIBO 기술보증기금 로고(시안 240×32) — 표면 명도에 맞춰 교체한다: 밝은 표면=컬러 로고, 어두운
-                    표면(dark·mainpage)=화이트 로고. 교체는 dark:/mainpage: 변형(조상 클래스 기준) 대신 각 테마 스코프가
-                    재정의하는 CSS 변수(--footer-logo-on-*)로 제어해, 가이드의 .light 중첩 미리보기에서도 nearest 스코프가
-                    이겨 배경 명도와 항상 일치한다. */}
+                {/* KIBO 로고(시안 240×32) — 두 장을 두고 --logo-on-*(globals.css) 로 배경 명도에 맞는 쪽만 표시한다.
+                    dark: 변형은 중첩 고정한 테마 미리보기에서 틀린 쪽을 고른다 — Header 와 같은 방식. */}
                 <Link href="#" className={cn('flex w-fit items-center', linkFocusClassName)}>
                     <Image
                         src="/images/logo-kibo.svg"
                         alt="기술보증기금"
                         width={240}
                         height={32}
-                        className="[display:var(--footer-logo-on-light)] h-auto w-45 md:w-60"
+                        className="[display:var(--logo-on-light)] h-auto w-45 md:w-60"
                     />
                     <Image
                         src="/images/logo-kibo-white.svg"
                         alt="기술보증기금"
                         width={240}
                         height={32}
-                        className="[display:var(--footer-logo-on-dark)] h-auto w-45 md:w-60"
+                        className="[display:var(--logo-on-dark)] h-auto w-45 md:w-60"
                     />
                 </Link>
 

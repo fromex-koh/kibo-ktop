@@ -52,17 +52,17 @@
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
-/* @/components/composite/footer.tsx — 배경 명도에 맞는 로고만 표시한다(모든 화면).
+/* 헤더·푸터 로고 — 배경 명도에 맞는 한 장만 표시한다(모든 화면).
    dark: 가 아니라 변수인 이유 — 테마를 중첩 고정한 가이드 미리보기에서도 가장 가까운 스코프를 따르게. */
 :root,
 .light {
-    --footer-logo-on-light: block;
-    --footer-logo-on-dark: none;
+    --logo-on-light: block;
+    --logo-on-dark: none;
 }
 .dark,
 .mainpage {
-    --footer-logo-on-light: none;
-    --footer-logo-on-dark: block;
+    --logo-on-light: none;
+    --logo-on-dark: block;
 }
 
 /* ═════ § 3 · 전역 기본값 — 모든 화면에 적용되는 브라우저·preflight 보정 ═════════════════════════ */

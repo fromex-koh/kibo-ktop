@@ -104,6 +104,7 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
     <p className="shrink-0">
         <Link href="#" className="flex shrink-0 items-center">
             {variant === 'main' ? (
+                // 메인페이지는 항상 어두운 배경이라 화이트 로고 한 장만 둔다.
                 <Image
                     src="/images/logo-ktop-white.svg"
                     alt="기술보증기금"
@@ -113,6 +114,8 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
                     className="h-8 w-35 shrink-0"
                 />
             ) : (
+                // 두 장을 두고 --logo-on-*(globals.css) 로 배경 명도에 맞는 쪽만 표시한다.
+                // dark: 변형은 중첩 고정한 테마 미리보기에서 틀린 쪽을 고른다 — Footer 와 같은 방식.
                 <>
                     <Image
                         src="/images/logo-ktop.svg"
@@ -120,7 +123,7 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
                         width={140}
                         height={32}
                         priority
-                        className="h-8 w-35 shrink-0 dark:hidden"
+                        className="[display:var(--logo-on-light)] h-8 w-35 shrink-0"
                     />
                     <Image
                         src="/images/logo-ktop-white.svg"
@@ -128,7 +131,7 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
                         width={140}
                         height={32}
                         priority
-                        className="hidden h-8 w-35 shrink-0 dark:block"
+                        className="[display:var(--logo-on-dark)] h-8 w-35 shrink-0"
                     />
                 </>
             )}
