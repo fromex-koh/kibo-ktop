@@ -15,6 +15,36 @@ const BREAKPOINT_COLUMNS = [
     {key: 'device', header: '포함 기기', align: 'start', wrap: true},
 ] as const
 
+const HEIGHT_VARIANT_COLUMNS = [
+    {key: 'prefix', header: '프리픽스', align: 'start'},
+    {key: 'condition', header: '조건', align: 'start'},
+    {key: 'usage', header: '쓰임', align: 'start', wrap: true},
+] as const
+
+// 높이 축 변형 — globals.css 의 @custom-variant 로 등록. 값 변경 시 여기도 함께 갱신한다.
+const HEIGHT_VARIANTS = [
+    {
+        prefix: 'pager-on:',
+        condition: '너비 ≥ 768px 그리고 높이 ≥ 640px',
+        usage: '스택 페이저가 켜져 섹션이 고정 레이어로 전환되는 화면',
+    },
+    {
+        prefix: 'pager-off:',
+        condition: '너비 < 768px 또는 높이 < 640px',
+        usage: '페이저가 꺼져 자연 스크롤 + 스크롤 스냅으로 넘어가는 화면',
+    },
+    {
+        prefix: 'short:',
+        condition: '높이 < 640px',
+        usage: '초소형 모바일·낮은 데스크톱 창에서 세로 밀도를 한 단계 낮출 때',
+    },
+    {
+        prefix: 'landscape:',
+        condition: '높이 < 480px',
+        usage: '모바일 가로. 너비 조건이 없어 가로 모드 폭이 768px 이상인 기기도 포함한다',
+    },
+] as const
+
 // 브레이크포인트 — 모바일 퍼스트. Tailwind 기본 프리픽스를 그대로 쓰고, 프로젝트 주 티어는 md(768)·xl(1280).
 const BreakpointGuidePage = () => (
     <GuidePageShell
@@ -138,6 +168,41 @@ const BreakpointGuidePage = () => (
                             ],
                         }))
                     })()}
+                />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="s-bp-height" className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                    <h2 id="s-bp-height" className="typo-h4-bold text-foreground">
+                        높이 축 변형
+                    </h2>
+                    <p className="typo-body-l-regular text-foreground-subtle">
+                        Tailwind 기본 브레이크포인트는 너비만 다룹니다. 한 화면을 꽉 채우는 풀스크린 전환 화면은
+                        &ldquo;세로가 충분한가&rdquo;가 레이아웃을 가르므로, 높이 조건에 이름을 붙여 같은 유틸리티
+                        문법으로 씁니다. 정의는 <code>globals.css</code>의 <code>@custom-variant</code>이며 기준값은{' '}
+                        <code>stack-pager.tsx</code>의 <code>STACK_PAGER_QUERY</code>와 한 세트입니다.
+                    </p>
+                </div>
+
+                <code className="typo-body-l-regular text-muted-foreground bg-card border-border w-fit rounded-md border px-3 py-1 font-mono">
+                    pager-off:h-dvh landscape:pt-13
+                </code>
+
+                <Table
+                    caption="높이 기준 반응형 변형과 적용 조건"
+                    columns={HEIGHT_VARIANT_COLUMNS}
+                    rows={HEIGHT_VARIANTS.map((variant) => ({
+                        key: variant.prefix,
+                        cells: [
+                            <CopyChip key="prefix" value={variant.prefix} />,
+                            <span key="condition" className="font-mono">
+                                {variant.condition}
+                            </span>,
+                            variant.usage,
+                        ],
+                    }))}
                 />
             </section>
         </BaseCard>

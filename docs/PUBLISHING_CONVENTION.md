@@ -78,6 +78,7 @@ arbitrary value의 허용 범위, 반복 시 승격 기준, `ui/` 원본 예외�
     - 프로젝트 주 티어는 `md:`와 `xl:`이다. 새 레이아웃은 두 티어를 우선하되 필요한 경우 다른 기본 티어도 사용할 수 있다.
     - 콘텐츠 폭 상한은 `max-w-content`(현재 1200px)와 `mx-auto`를 사용한다.
     - 프로젝트 티어 값은 `tokens.json`의 `breakpoint`, `container`, `typographyBreakpoint`에서 관리한다.
+- **[PB-17] 높이 기준 분기는 등록된 변형 사용(MUST)** — Tailwind 기본 브레이크포인트는 너비만 다룬다. 화면 높이로 갈라야 하는 레이아웃(풀스크린 전환 화면 등)은 `[@media_(min-height:40rem)]:` 같은 arbitrary variant 를 사용처마다 적지 말고 `globals.css` 에 `@custom-variant` 로 등록된 `pager-on:`·`pager-off:`·`short:`·`landscape:` 를 사용한다. 새 조건이 필요하면 같은 자리에 이름을 붙여 추가하고 `/component-guide/breakpoint` 의 높이 축 변형 표를 함께 갱신한다.
 - **[PB-15] 페이지 컬럼 그리드는 `grid-layout` 사용(MUST)** — 페이지의 공통 컬럼·거터·가장자리 여백은 개별 `grid-cols-*`, `gap-*`, `px-*` 조합 대신 `grid-layout`으로 적용한다. `tokens.json`의 `grid` 키는 `mobile`과 모든 프로젝트 breakpoint 키에 1:1로 대응해야 하며, 누락·불일치 시 토큰 생성이 실패한다.
 
 현재 그리드는 모바일 4열, `md` 8열, `xl` 12열이며 구체적인 값은 `tokens.json`을 단일 소스로 한다.
