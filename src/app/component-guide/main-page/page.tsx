@@ -1,10 +1,11 @@
 import type {Metadata} from 'next'
 import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
-import Footer, {MarqueeBand} from '@/components/composite/footer'
+import Footer from '@/components/composite/footer'
 import StackPager from '@/components/custom/stack-pager'
 import HeroSection from '@/components/custom/hero-section'
 import TechEvalSection from '@/components/custom/tech-eval-section'
+import MarqueeBand from '@/components/custom/marquee-band'
 import MobileTechEvalContent from '@/components/custom/mobile-tech-eval-content'
 import MainPageHeaderState from '@/app/component-guide/main-page/main-page-header-state'
 
@@ -68,8 +69,8 @@ const MainPage = () => (
                             <MarqueeBand />
                         </div>
                         <div id="site-info" tabIndex={-1} className="bg-background relative w-full">
-                            {/* 마키를 바로 위에서 이미 쓰고, 모바일 2섹션은 서비스 4종을 다 펼쳐 이미 길다. */}
-                            <Footer showMarquee={false} showSitemapOnMobile={false} />
+                            {/* 모바일 2섹션은 서비스 4종을 다 펼쳐 이미 길어 사이트맵까지 두지 않는다. */}
+                            <Footer showSitemapOnMobile={false} />
                         </div>
                     </>
                 }

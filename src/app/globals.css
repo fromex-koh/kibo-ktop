@@ -183,7 +183,7 @@
     display: none;
 }
 
-/* 사용처: components/composite/footer.tsx (MarqueeBand)
+/* 사용처: components/custom/marquee-band.tsx
    같은 문구 두 벌을 이어 붙여 왼쪽으로 무한히 흐른다. 클래스·키프레임·모션 예외를 한곳에 둔다. */
 .main-marquee {
     animation: main-marquee 40s linear infinite;

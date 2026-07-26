@@ -147,7 +147,7 @@ const EvaluationModelPage = () => (
             </InfoBox>
         </main>
 
-        <Footer showMarquee={false} />
+        <Footer />
     </div>
 )
 

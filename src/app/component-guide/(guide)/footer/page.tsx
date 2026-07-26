@@ -8,7 +8,7 @@ import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
 
 export const metadata: Metadata = {title: '푸터 (Footer)'}
 
-// 사용법 스니펫 — 전 페이지 하단에 배치하는 기본 사용과 마키 제외 사용.
+// 사용법 스니펫 — 전 페이지 하단에 배치하는 기본 사용과 모바일 사이트맵 제외 사용.
 const USAGE_CODE = `import Footer from '@/components/composite/footer'
 
 export default function Page() {
@@ -21,8 +21,8 @@ export default function Page() {
   )
 }
 
-// 장식 마키 없이 푸터 본문만 노출하는 경우
-<Footer showMarquee={false} />`
+// 모바일에서 사이트맵을 감추는 경우(마지막 섹션이 이미 긴 화면)
+<Footer showSitemapOnMobile={false} />`
 
 // 메인페이지의 스택 페이저에 넣을 때의 배치 스니펫.
 const STACK_USAGE_CODE = `// app/component-guide/main-page/page.tsx — 마지막 스택 페이지로 배치한다(mainpage 스킨).
@@ -52,17 +52,13 @@ const THEME_CASES = [
 
 // Props — [이름, 설명, 기본값, 타입]
 const PROPS_ITEMS = [
-    ['showMarquee', '상단 장식 마키 밴드 노출 여부입니다.', 'true', 'boolean'],
+    ['showSitemapOnMobile', 'md 미만에서 사이트맵 노출 여부입니다. md 이상에서는 항상 노출합니다.', 'true', 'boolean'],
     ['className', '푸터 루트에 클래스를 덧붙입니다(색은 페이지 테마를 따름).', 'undefined', 'string'],
     ['...props', 'aria-*·id 등 네이티브 footer 속성을 그대로 전달합니다.', '-', "ComponentProps<'footer'>"],
 ] as const
 
 // 푸터가 조립하는 요소 목록(Composition 표).
 const COMPOSITION = [
-    {
-        name: '마키 밴드 (showMarquee)',
-        desc: '"Korea Technology-rating Open platform" 대형 문구가 좌측으로 흐르는 장식 영역. 기본 true이며 aria-hidden 이고 감속 모션 선호 시 정지한다.',
-    },
     {
         name: '로고',
         desc: '홈으로 이동하는 KIBO 기술보증기금 로고 링크. light 테마엔 컬러 로고(logo-kibo), dark·mainpage 엔 화이트 로고(logo-kibo-white)로 교체된다.',
@@ -107,8 +103,8 @@ const DEV_NOTES = [
         desc: 'xl(≥1280) 이상에서 대표전화가 사이트맵 우측으로, md(≥768) 이상에서 주소와 관련사이트가 좌우로 나뉩니다. 폭은 content-layout(max-w-content)을 따르므로 별도 컨테이너로 감쌀 필요가 없습니다.',
     },
     {
-        title: '마키는 컴포넌트 폭 전체를 사용',
-        desc: '마키 밴드는 뷰포트 폭을 흐르는 장식이라 좁은 컨테이너 안에 넣으면 잘립니다. 카드·모달 등 폭이 제한된 문맥에서는 showMarquee={false} 로 끕니다. 애니메이션은 globals.css 의 main-marquee 키프레임입니다.',
+        title: '마키 밴드는 별도 컴포넌트',
+        desc: '"Korea Technology-rating Open platform" 장식 밴드는 푸터에 종속되지 않고 custom/marquee-band.tsx 로 분리돼 있습니다. 필요한 화면에서 <MarqueeBand /> 를 직접 배치하세요. 뷰포트 폭을 흐르는 전제라 카드·모달처럼 폭이 제한된 컨테이너에 넣으면 잘립니다. 장식이라 aria-hidden 이고 감속 모션 선호 시 정지합니다.',
     },
 ] as const
 
@@ -127,8 +123,7 @@ const FooterGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         로고·사이트맵·대표전화 영역과 구분선 아래 이용 정보 영역 2단 구성입니다. 아래 프리뷰는 테마
                         토글과 무관하게 light 테마로 고정해 보여줍니다. xl(≥1280) 미만에서는 대표전화가 사이트맵 아래로,
-                        md(≥768) 미만에서는 주소·관련사이트가 세로로 쌓입니다. 데모에서는 화면 폭 전체를 흐르는 마키
-                        장식을 감췄습니다(showMarquee=false).
+                        md(≥768) 미만에서는 주소·관련사이트가 세로로 쌓입니다.
                     </p>
                 </div>
                 <Alert color="warning">
@@ -311,7 +306,6 @@ const FooterGuidePage = () => (
                         푸터는 contentinfo 랜드마크(&lt;footer&gt;)로 렌더링되고, 사이트맵·이용 정보는 각각 이름을 가진
                         nav 로 구분됩니다. [8.2.1/6.4.2]
                     </li>
-                    <li>마키는 장식이라 aria-hidden 이며 prefers-reduced-motion 에서 정지합니다. [5.1.1/6.3.1]</li>
                     <li>
                         외부 링크 아이콘은 aria-hidden 이고 &quot;새 창 열림&quot; 텍스트를 함께 제공합니다. [5.1.1]
                     </li>

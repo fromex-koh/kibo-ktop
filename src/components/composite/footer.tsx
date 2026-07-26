@@ -12,8 +12,6 @@ import {cn} from '@/lib/utils'
 // 그대로 따른다 — 메인페이지는 mainpage(다크) 스킨, 서브페이지는 light/dark 모드로 자동 반사된다([PB-06]).
 // 로고만 어두운/밝은 표면에 맞춰 light 테마엔 컬러 로고, dark·mainpage 엔 화이트 로고로 교체한다.
 
-const MARQUEE_TEXT = 'Korea Technology-rating Open platform'
-
 type FooterLink = {label: string; href: string; external?: boolean}
 
 type SitemapColumn = {title: string; href: string; external?: boolean; links: FooterLink[]}
@@ -89,31 +87,12 @@ const CONTACT = {
 const linkFocusClassName =
     'outline-ring focus-visible:outline-ring outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid'
 
-// 마키 밴드 — 시안의 대형 장식 문구가 좌측으로 흐른다.
-// 장식이라 접근성 트리에서 제외하고, 감속 모션 선호 시 정지한다. [KWCAG 6.3.1]
-export const MarqueeBand = () => (
-    <div aria-hidden="true" className="overflow-hidden py-16">
-        {/* PROJECT-STYLE: 140px 대형 장식 타이포는 typo 스케일 밖의 화면 고유 그래픽 요소라
-            clamp arbitrary 값을 제한적으로 사용한다(다른 화면에서 재사용 시 토큰 승격). */}
-        <div className="main-marquee flex w-max">
-            <span className="text-foreground/10 text-[clamp(4rem,7.3vw,8.75rem)] leading-[1.4] font-black whitespace-nowrap">
-                {MARQUEE_TEXT}&nbsp;&nbsp;&nbsp;
-            </span>
-            <span className="text-foreground/10 text-[clamp(4rem,7.3vw,8.75rem)] leading-[1.4] font-black whitespace-nowrap">
-                {MARQUEE_TEXT}&nbsp;&nbsp;&nbsp;
-            </span>
-        </div>
-    </div>
-)
-
 // showSitemapOnMobile — 모바일에서 사이트맵을 감춘다. 메인페이지처럼 마지막 섹션이 이미 길어
 // 푸터까지 펼치면 스크롤이 과해지는 화면에서 끈다(md 이상에서는 항상 노출).
-type FooterProps = ComponentProps<'footer'> & {showMarquee?: boolean; showSitemapOnMobile?: boolean}
+type FooterProps = ComponentProps<'footer'> & {showSitemapOnMobile?: boolean}
 
-const Footer = ({showMarquee = true, showSitemapOnMobile = true, className, ...props}: FooterProps) => (
+const Footer = ({showSitemapOnMobile = true, className, ...props}: FooterProps) => (
     <footer {...props} className={cn('bg-background text-foreground', className)} aria-label="사이트 정보">
-        {showMarquee && <MarqueeBand />}
-
         {/* 시안 간격 — 마키 아래 60px, 로고와 사이트맵 사이 80px, 구분선 위아래 32px, 하단 40px */}
         <div className="content-layout flex flex-col gap-8 pt-12 pb-10 md:pt-15">
             <div className="flex flex-col gap-10 md:gap-20">
@@ -242,7 +221,7 @@ const Footer = ({showMarquee = true, showSitemapOnMobile = true, className, ...p
 // 가이드 프리뷰 — 마키는 화면 폭 전체를 흐르는 장식이라 데모에서는 감춘다.
 export const FooterDemo = () => (
     <div className="border-border overflow-hidden rounded-lg border">
-        <Footer showMarquee={false} />
+        <Footer />
     </div>
 )
 
