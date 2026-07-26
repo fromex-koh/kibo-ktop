@@ -164,7 +164,7 @@
     top: 50%;
     left: 0;
     width: 1px;
-    height: 0.75rem;
+    height: --spacing(3); /* 12px */
     background: var(--color-subtle-2);
     content: '';
     transform: translateY(-50%);

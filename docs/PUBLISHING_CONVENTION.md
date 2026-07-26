@@ -78,6 +78,9 @@ arbitrary value의 허용 범위, 반복 시 승격 기준, `ui/` 원본 예외�
     - 프로젝트 주 티어는 `md:`와 `xl:`이다. 새 레이아웃은 두 티어를 우선하되 필요한 경우 다른 기본 티어도 사용할 수 있다.
     - 콘텐츠 폭 상한은 `max-w-content`(현재 1200px)와 `mx-auto`를 사용한다.
     - 프로젝트 티어 값은 `tokens.json`의 `breakpoint`, `container`, `typographyBreakpoint`에서 관리한다.
+- **[PB-19] 손으로 쓰는 CSS 의 간격 값은 `--spacing(n)`(MUST)** — 직접 작성하는 CSS(`globals.css`·`src/styles/*.css`)에서 간격·크기를 `rem` 으로 바로 적지 않는다. Tailwind 의 `--spacing(n)` 함수를 쓰면 `n` 이 JSX 의 `p-n`·`gap-n` 과 같은 단위가 되고(1n = `spacingBase` = 현재 4px), 값의 출처가 `tokens.json` 하나로 유지된다. `clamp()` 안에서도 쓸 수 있다. 읽는 사람이 px 을 바로 알 수 있도록 `/* 52px */` 형태의 주석을 함께 적고 값을 고칠 때 같이 고친다.
+    - `font-size` 는 간격 스케일이 아니므로 대상이 아니다 — `rem` 을 유지하고 px 주석만 병기한다.
+    - 예: `padding-top: --spacing(13); /* 52px */` · `height: clamp(--spacing(26), 31dvh, --spacing(29)); /* clamp(104px, 31dvh, 116px) */`
 - **[PB-18] CSS 파일의 위치(MUST)** — `src/app/globals.css` 에는 전역 설정(Tailwind 변형·`@theme`·base·전역 유틸리티)과 여러 화면이 공유하는 컴포넌트 규칙만 둔다. 한 화면에서만 쓰는 CSS 는 `src/styles/<화면>.css` 로 분리하고 `globals.css` 에서 `@import` 한다(예: `src/styles/main-page.css`). 한 기능의 클래스·`@keyframes`·`prefers-reduced-motion` 예외는 한 블록에 모으고, 각 블록 머리에 `사용처: <파일>` 을 적는다 — 전역 클래스는 IDE 가 참조를 찾아주지 못해 사용처 표기가 없으면 삭제 가능 여부를 판단할 수 없다.
 - **[PB-17] 높이 기준 분기는 등록된 변형 사용(MUST)** — Tailwind 기본 브레이크포인트는 너비만 다룬다. 화면 높이로 갈라야 하는 레이아웃(풀스크린 전환 화면 등)은 `[@media_(min-height:40rem)]:` 같은 arbitrary variant 를 사용처마다 적지 말고 `globals.css` 에 `@custom-variant` 로 등록된 `pager-on:`·`pager-off:`·`short:`·`landscape:` 를 사용한다. 새 조건이 필요하면 같은 자리에 이름을 붙여 추가하고 `/component-guide/breakpoint` 의 높이 축 변형 표를 함께 갱신한다.
 - **[PB-15] 페이지 컬럼 그리드는 `grid-layout` 사용(MUST)** — 페이지의 공통 컬럼·거터·가장자리 여백은 개별 `grid-cols-*`, `gap-*`, `px-*` 조합 대신 `grid-layout`으로 적용한다. `tokens.json`의 `grid` 키는 `mobile`과 모든 프로젝트 breakpoint 키에 1:1로 대응해야 하며, 누락·불일치 시 토큰 생성이 실패한다.
