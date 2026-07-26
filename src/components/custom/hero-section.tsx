@@ -63,9 +63,9 @@ const HeroSection = () => (
                     넘치지 않게 한다. */}
                 <div className={cn(heroCopyClassName, 'col-span-4 flex min-w-0 flex-col xl:col-span-6 2xl:col-span-7')}>
                     <h1 id="hero-title" className={cn(heroTitleClassName, 'text-foreground font-bold break-keep')}>
-                        기업에 맞는 기술평가로
+                        <span className="xl:whitespace-nowrap">기업에 맞는 기술평가로</span>
                         <br />
-                        금융과 성장의 기회를 연결합니다
+                        <span className="xl:whitespace-nowrap">금융과 성장의 기회를 연결합니다</span>
                     </h1>
                     {/* PC(md+)는 typo-title-l-bold 과 동일(20px·행간 1.5). 단계별 크기는 heroDescClassName. */}
                     <p className={cn(heroDescClassName, 'text-foreground-subtle font-bold')}>
