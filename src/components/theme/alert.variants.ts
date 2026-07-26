@@ -27,22 +27,22 @@ export const alertVariants = cva(
             {
                 variant: 'outline',
                 color: 'info',
-                class: 'bg-info-10 border-info-100 dark:border-info-400 *:[svg]:text-info-500',
+                class: 'bg-info-10 border-alert-info-border *:[svg]:text-info-500',
             },
             {
                 variant: 'outline',
                 color: 'success',
-                class: 'bg-success-10 border-success-100 dark:border-success-400 *:[svg]:text-success-500',
+                class: 'bg-success-10 border-alert-success-border *:[svg]:text-success-500',
             },
             {
                 variant: 'outline',
                 color: 'warning',
-                class: 'bg-warning-10 border-warning-100 dark:border-warning-400 *:[svg]:text-warning-500',
+                class: 'bg-warning-10 border-alert-warning-border *:[svg]:text-warning-500',
             },
             {
                 variant: 'outline',
                 color: 'error',
-                class: 'bg-error-10 border-error-100 dark:border-error-400 *:[svg]:text-error-500',
+                class: 'bg-error-10 border-alert-error-border *:[svg]:text-error-500',
             },
             // solid — 채움 배경(-50) + 중립 아이콘(label-foreground)
             // info 는 Figma 시안 배경 그대로 blue.50(#f3f8ff)을 쓴다(info-50 보다 약간 더 밝은 파랑).

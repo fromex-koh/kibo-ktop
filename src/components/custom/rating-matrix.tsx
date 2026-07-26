@@ -24,14 +24,14 @@ const RATING_LEVELS: Array<{
     {
         id: 'poor',
         label: '취약',
-        headerClassName: 'bg-error-50 text-error-600 dark:bg-muted dark:text-error',
-        markerClassName: 'bg-error-50 text-error-600 dark:bg-muted dark:text-error',
+        headerClassName: 'bg-pastel-error text-pastel-error-foreground-strong',
+        markerClassName: 'bg-pastel-error text-pastel-error-foreground-strong',
     },
     {
         id: 'weak',
         label: '미흡',
-        headerClassName: 'bg-warning-50 text-warning-700 dark:bg-muted dark:text-warning',
-        markerClassName: 'bg-warning-50 text-warning-700 dark:bg-muted dark:text-warning',
+        headerClassName: 'bg-pastel-warning text-pastel-warning-foreground-strong',
+        markerClassName: 'bg-pastel-warning text-pastel-warning-foreground-strong',
     },
     {
         id: 'average',
@@ -42,25 +42,25 @@ const RATING_LEVELS: Array<{
     {
         id: 'good',
         label: '양호',
-        headerClassName: 'bg-success-50 text-success-700 dark:bg-muted dark:text-success',
-        markerClassName: 'bg-success-50 text-success-700 dark:bg-muted dark:text-success',
+        headerClassName: 'bg-pastel-success text-pastel-success-foreground-strong',
+        markerClassName: 'bg-pastel-success text-pastel-success-foreground-strong',
     },
     {
         id: 'excellent',
         label: '우수',
-        headerClassName: 'bg-info-50 text-info-700 dark:bg-muted dark:text-info',
-        markerClassName: 'bg-info-50 text-info-700 dark:bg-muted dark:text-info',
+        headerClassName: 'bg-pastel-info text-pastel-info-foreground-strong',
+        markerClassName: 'bg-pastel-info text-pastel-info-foreground-strong',
     },
 ]
 
 const RatingMatrix = ({ariaLabel, rows, className, ...props}: RatingMatrixProps) => (
     <div {...props} className={cn('w-full', className)}>
         <div
-            className="border-border dark:bg-background mx-auto w-fit max-w-full overflow-x-auto rounded-lg border bg-white"
+            className="border-border bg-table-surface mx-auto w-fit max-w-full overflow-x-auto rounded-lg border"
             role="region"
             aria-label={`${ariaLabel} 표 영역`}
         >
-            <table className="dark:bg-background w-max table-fixed border-collapse bg-white">
+            <table className="bg-table-surface w-max table-fixed border-collapse">
                 <caption className="sr-only">{ariaLabel}</caption>
                 <colgroup>
                     <col className="w-32" />
@@ -70,10 +70,7 @@ const RatingMatrix = ({ariaLabel, rows, className, ...props}: RatingMatrixProps)
                 </colgroup>
                 <thead>
                     <tr className="border-border border-b">
-                        <th
-                            scope="col"
-                            className="bg-navy-50 dark:bg-primary-subtle border-border relative border-r px-3 py-3 text-left"
-                        >
+                        <th scope="col" className="bg-pastel-navy border-border relative border-r px-3 py-3 text-left">
                             <svg
                                 aria-hidden="true"
                                 viewBox="0 0 100 100"
@@ -110,7 +107,7 @@ const RatingMatrix = ({ariaLabel, rows, className, ...props}: RatingMatrixProps)
                         <tr key={row.id} className="border-border border-b last:border-b-0">
                             <th
                                 scope="row"
-                                className="typo-body-m-bold bg-navy-50 text-navy-600 dark:bg-primary-subtle dark:text-primary border-border border-r px-3 py-3 text-center whitespace-nowrap"
+                                className="typo-body-m-bold bg-pastel-navy text-pastel-navy-foreground border-border border-r px-3 py-3 text-center whitespace-nowrap"
                             >
                                 {row.label}
                             </th>
@@ -120,7 +117,7 @@ const RatingMatrix = ({ariaLabel, rows, className, ...props}: RatingMatrixProps)
                                 return (
                                     <td
                                         key={level.id}
-                                        className="dark:bg-background border-border border-r bg-white px-2 py-2 text-center last:border-r-0"
+                                        className="bg-table-surface border-border border-r px-2 py-2 text-center last:border-r-0"
                                     >
                                         {isRated ? (
                                             <span

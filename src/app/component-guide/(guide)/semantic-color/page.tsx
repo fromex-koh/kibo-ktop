@@ -242,7 +242,9 @@ const STANDARD_SLOTS = new Set([
 // 컴포넌트 전용 레시피 토큰(action-check-*/button-*/checkbox-*/radio-*/badge-*/icon-*)은 일반 색 슬롯이 아니라 특정 컴포넌트
 // 내부에서만 쓰는 값이라 이 색 개요 페이지에서는 제외한다(각 컴포넌트 가이드에서 다룸).
 const isComponentRecipe = (n: string): boolean =>
-    /^(action-check|button|checkbox|radio|badge|number-badge|chip|icon|selectable-card|stepper|segmented)-/.test(n)
+    /^(action-check|alert|button|checkbox|radio|badge|number-badge|chip|icon|selectable-card|stepper|segmented)-/.test(
+        n,
+    )
 
 // 슬롯 가족(테이블) 정의 — 표준/커스텀 각각. 각 슬롯은 자기 버킷 안에서 한 가족에만 속한다.
 const STANDARD_GROUPS: Group[] = [
@@ -266,6 +268,9 @@ const STANDARD_GROUPS: Group[] = [
 ]
 const CUSTOM_GROUPS: Group[] = [
     {name: 'surface', match: (n) => n === 'surface'},
+    {name: 'table-surface', match: (n) => n === 'table-surface'},
+    // 옅은 채움 — 배지 solid-pastel·등급 표가 공유한다. 다크는 중립 표면 위 상태색 글자로 뒤집힌다.
+    {name: 'pastel (옅은 채움 배경 / 글자)', match: (n) => n.startsWith('pastel-')},
     {name: 'foreground-subtle', match: (n) => n === 'foreground-subtle'},
     {
         name: 'label-foreground / placeholder',
