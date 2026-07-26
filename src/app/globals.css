@@ -479,9 +479,13 @@
     [data-stack-transition='cover'] .stack-page[data-stack-state='previous'] {
         transform: none;
     }
+}
 
-    /* 페이지 안에서 이어서 스크롤할 수 있게 한다 — 원래 디자인 높이가 뷰포트를 넘는 페이지용.
-       StackPager 의 휠 핸들러도 computed overflow 로 안쪽 스크롤 여부를 판단한다. */
+/* 페이지 안에서 이어서 스크롤할 수 있게 한다 — 원래 디자인 높이가 뷰포트를 넘는 페이지용.
+   StackPager 의 휠 핸들러도 computed overflow 로 안쪽 스크롤 여부를 판단한다.
+   페이저가 꺼진 낮은 화면에서도 섹션 최소 높이(720px)를 넘는 콘텐츠가 밖으로 흘러넘치지 않도록
+   페이저 활성 조건이 아니라 md 이상 전체에 건다. 모바일은 자연 흐름이라 대상이 아니다. */
+@media (min-width: 768px) {
     .stack-page[data-stack-scrollable] {
         overflow-y: auto;
     }
