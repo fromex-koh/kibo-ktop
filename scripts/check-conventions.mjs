@@ -110,8 +110,27 @@ const violations = files.flatMap((file) => {
     )
 })
 
+// 화면 전용 CSS 가드 — src/styles/*.css 는 globals.css 를 거치지 않고 라우트에서 직접 import 되므로,
+// @reference 가 없으면 --spacing()·pager-on: 같은 토큰·변형을 해석할 수 없다(빌드는 통과하고 화면만 깨진다).
+const STYLES_DIR = 'src/styles'
+const styleFiles = readdirSync(STYLES_DIR).filter((f) => f.endsWith('.css'))
+const missingReference = styleFiles.filter(
+    (f) => !/^\s*(\/\*[\s\S]*?\*\/\s*)?@reference\s/.test(readFileSync(`${STYLES_DIR}/${f}`, 'utf8')),
+)
+if (missingReference.length) {
+    console.error('\n❌ src/styles CSS 에 @reference 누락:\n')
+    missingReference.forEach((f) =>
+        console.error(
+            `  ${STYLES_DIR}/${f}\n` +
+                "    → 파일 맨 위에 @reference '../app/globals.css'; 를 두세요. " +
+                '없으면 토큰·변형이 해석되지 않습니다. [PB-18]\n',
+        ),
+    )
+    process.exit(1)
+}
+
 if (violations.length === 0) {
-    console.log(`✅ 컨벤션 검사 통과 (검사 파일 ${files.length}개)`)
+    console.log(`✅ 컨벤션 검사 통과 (검사 파일 ${files.length}개 · styles CSS ${styleFiles.length}개)`)
     process.exit(0)
 }
 
