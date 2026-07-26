@@ -1,7 +1,8 @@
 const MARQUEE_TEXT = 'Korea Technology-rating Open platform'
 
 // 대형 장식 문구가 좌측으로 흐르는 밴드. 뷰포트 폭을 흐르는 전제라 좁은 컨테이너에 넣으면 잘린다.
-// 장식이라 접근성 트리에서 제외하고, 감속 모션 선호 시 정지한다(styles/… 의 main-marquee). [KWCAG 5.1.1 · 6.3.1]
+// 장식이라 접근성 트리에서 제외하고, 감속 모션 선호 시 정지한다 — 흐름·정지 규칙은 globals.css 의
+// .main-marquee 블록(클래스·키프레임·모션 예외가 한곳에 있다). [KWCAG 5.1.1 · 6.3.1]
 const MarqueeBand = () => (
     <div aria-hidden="true" className="overflow-hidden py-16">
         {/* PROJECT-STYLE: 140px 대형 장식 타이포는 typo 스케일 밖의 화면 고유 그래픽 요소라
