@@ -37,9 +37,30 @@ const RULES = [
     {
         id: 'SC-01',
         desc: 'arbitrary value 사용 — 토큰/기존 유틸리티를 쓰세요',
-        // data-[state] 같은 arbitrary variant와 CSS 변수 기반 예외는 제외하고,
-        // 기존 유틸리티로 대체 가능한 간격·링·위치·크기의 숫자/px/calc arbitrary value를 막는다.
-        re: /\b(?:p[trblxy]?|m[trblxy]?|gap(?:-[xy])?|space-[xy]|ring|top|right|bottom|left|inset(?:-[xy])?|w|h|min-w|min-h)-\[(?:-?[\d.]+(?:px|rem)?|calc\([^\]]+\))\]/,
+        // data-[state] 같은 arbitrary variant는 제외하고, 기존 유틸리티로 대체 가능한
+        // 간격·링·위치·크기의 고정 수치 arbitrary value 를 막는다. 계산식은 아래 SC-01-calc 담당.
+        re: /\b(?:p[trblxy]?|m[trblxy]?|gap(?:-[xy])?|space-[xy]|ring|top|right|bottom|left|inset(?:-[xy])?|w|h|min-w|min-h|text|translate(?:-[xy])?)-\[-?[\d.]+(?:px|rem)?\]/,
+    },
+    {
+        id: 'SC-01-calc',
+        desc: '고정 수치만으로 이루어진 계산식 — 토큰 변수를 조합하세요(var(--…)·--spacing(n))',
+        // calc()·clamp()·min()·max() 자체는 허용한다. 런타임 값(Radix 측정값 등)이나 토큰을 조합할 때는
+        // 그 방법밖에 없기 때문이다. 다만 숫자만 감싼 계산식은 기존 유틸리티로 대체 가능하므로 막는다.
+        test: (line) => {
+            const PROPS =
+                /\b(?:p[trblxy]?|m[trblxy]?|gap(?:-[xy])?|space-[xy]|ring|top|right|bottom|left|inset(?:-[xy])?|w|h|min-w|min-h|text|translate(?:-[xy])?)-\[/g
+            for (const m of line.matchAll(PROPS)) {
+                const rest = line.slice(m.index + m[0].length)
+                const end = rest.indexOf(']')
+                if (end === -1) continue
+                const value = rest.slice(0, end)
+                if (!/^(?:calc|clamp|min|max)\(/.test(value)) continue
+                // 토큰 변수나 spacing 스케일을 하나라도 참조하면 통과
+                if (/var\(--|--spacing\(/.test(value)) continue
+                return true
+            }
+            return false
+        },
     },
     {
         id: 'CD-001',
@@ -99,14 +120,16 @@ const files = collectFiles(SRC_DIR)
 const violations = files.flatMap((file) => {
     const lines = readFileSync(file, 'utf8').split('\n')
     return lines.flatMap((line, i) =>
-        RULES.filter((rule) => !RULE_FILE_EXCEPTIONS.get(rule.id)?.has(norm(file)) && rule.re.test(line)).map(
-            (rule) => ({
-                file,
-                line: i + 1,
-                rule,
-                snippet: line.trim(),
-            }),
-        ),
+        RULES.filter(
+            (rule) =>
+                !RULE_FILE_EXCEPTIONS.get(rule.id)?.has(norm(file)) &&
+                (rule.test ? rule.test(line) : rule.re.test(line)),
+        ).map((rule) => ({
+            file,
+            line: i + 1,
+            rule,
+            snippet: line.trim(),
+        })),
     )
 })
 
