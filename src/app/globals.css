@@ -1,7 +1,7 @@
 @import 'tailwindcss'; /* 유틸리티 엔진 */
 @import './tokens.css'; /* 디자인 토큰 — 생성물, 수정은 tokens.json → yarn tokens */
-@import 'tw-animate-css'; /* 등장·퇴장 애니메이션 유틸(animate-in·fade-in·slide-in-…) */
-@import 'shadcn/tailwind.css'; /* Radix 상태 변형(data-open:·data-closed:) */
+@import 'tw-animate-css'; /* shadcn 애니메이션 */
+@import 'shadcn/tailwind.css'; /* shadcn 상태 변형 */
 @import '../styles/main-page.css'; /* 메인페이지 전용 스타일 */
 
 /* 전역 스타일 — 전역 설정과, 유틸리티로 표현할 수 없어 CSS 로 둔 규칙.
