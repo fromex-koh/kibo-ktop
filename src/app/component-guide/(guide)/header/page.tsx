@@ -70,7 +70,13 @@ const PROPS = [
         'true',
         'boolean',
     ],
-    ['Header', 'showThemeToggle', '테마 변경 버튼 노출 여부를 명시적으로 설정합니다.', 'false', 'boolean'],
+    [
+        'Header',
+        'showThemeToggle',
+        '테마 변경 버튼 노출 여부입니다. 버튼 아이콘은 현재 상태가 아니라 전환될 모드를 나타냅니다.',
+        'false',
+        'boolean',
+    ],
     [
         'Header',
         'navigationByUserType',
@@ -105,7 +111,7 @@ const COMPOSITION = [
     },
     {
         name: '아이콘 버튼 (테마 전환·전체 메뉴)',
-        desc: '시안이 배경·패딩·호버 면 없이 24px 아이콘만 두므로 Button 컴포넌트를 쓰지 않고 theme/header.variants.ts 의 클래스를 얹은 button 요소로 그린다. 클릭 영역만 가상요소로 44×44 를 확보한다.',
+        desc: '테마 버튼은 전환될 모드를 나타내 라이트에서 달, 다크에서 해를 표시한다. 아이콘 그룹은 text-foreground로 테마별 대비를 유지하며, 보이는 24px 아이콘과 별도로 클릭 영역을 44×44 확보한다.',
     },
     {name: '전체 메뉴 (Sheet)', desc: '좁은 폭에서 주 메뉴·화면 유형 링크·유틸 링크를 담아 우측에서 여는 드로어.'},
     {
@@ -121,14 +127,14 @@ const THEME_CASES = [
         overlay: false,
         showThemeToggle: true,
         label: '라이트 (서브페이지)',
-        desc: '밝은 표면 + 컬러 로고. 테마 토글 노출.',
+        desc: '밝은 표면 + 컬러 로고. 다크 모드로 전환하는 달 아이콘을 표시합니다.',
     },
     {
         theme: 'dark',
         overlay: false,
         showThemeToggle: true,
         label: '다크 (서브페이지)',
-        desc: '어두운 표면 + 화이트 로고. 테마 토글 노출.',
+        desc: '어두운 표면 + 화이트 로고. 라이트 모드로 전환하는 해 아이콘을 표시합니다.',
     },
     {
         theme: 'mainpage',
@@ -155,7 +161,8 @@ const HeaderGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         상단 유틸바(화면 유형 링크·유틸 링크)와 메인 내비(로고·주 메뉴·테마 전환·전체 메뉴) 2줄
                         구성입니다. 화면 폭을 lg(≥1024) 미만으로 줄이면 유틸바·주 메뉴가 전체 메뉴(Sheet)로 접히며, 테마
-                        전환은 showThemeToggle prop으로 사용처에서 노출 여부를 정합니다.
+                        전환은 showThemeToggle prop으로 노출 여부를 정합니다. 라이트 모드에서는 달, 다크 모드에서는 해
+                        아이콘으로 다음 전환 상태를 안내합니다.
                     </p>
                 </div>
                 <HeaderDemo />
@@ -184,6 +191,7 @@ const HeaderGuidePage = () => (
                         <code className="font-mono">.light</code>·<code className="font-mono">.dark</code>·
                         <code className="font-mono">.mainpage</code> 클래스로 감싸 테마를 고정했습니다. 실제 화면에서는
                         이 래퍼 없이 <code className="font-mono">&lt;Header /&gt;</code>만 두면 페이지 테마를 따릅니다.
+                        미리보기는 카드 안에서 아이콘 버튼이 잘리지 않도록 메뉴 글자와 간격만 한 단계 줄였습니다.
                     </AlertDescription>
                 </Alert>
                 <div className="flex flex-col gap-6">
@@ -298,8 +306,8 @@ const HeaderGuidePage = () => (
                         두고, h1 은 화면마다 하나뿐인 본문 제목이 가집니다.
                     </li>
                     <li>
-                        테마 전환·전체 메뉴 버튼은 아이콘 전용이라 aria-label 을 제공하고 내부 아이콘은 aria-hidden
-                        입니다. [5.1.1]
+                        테마 전환·전체 메뉴 버튼은 아이콘 전용이라 aria-label 을 제공합니다. 테마 버튼은 아이콘과 라벨
+                        모두 전환될 모드(다크 또는 라이트)를 안내하고, 내부 아이콘은 aria-hidden 입니다. [5.1.1]
                     </li>
                     <li>
                         두 아이콘 버튼은 시안대로 배경·패딩이 없어 보이는 상자가 24px 입니다. 클릭 영역은 가상요소로

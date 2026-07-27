@@ -15,4 +15,5 @@ export const headerIconButtonClassName = [
 ].join(' ')
 
 // 시안의 아이콘 간격 20px. 두 버튼의 44px 클릭 영역이 맞닿기만 하고 겹치지 않는 값이다.
-export const headerIconGroupClassName = 'ml-auto flex items-center gap-5'
+// 전경색을 그룹에 명시해 가이드의 .light/.dark/.mainpage 강제 테마 안에서도 아이콘 대비를 유지한다.
+export const headerIconGroupClassName = 'text-foreground ml-auto flex items-center gap-5'

@@ -148,7 +148,7 @@ const HeaderThemeToggle = () => {
             aria-label={label}
             title={label}
         >
-            {isDark ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
+            {isDark ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </button>
     )
 }
@@ -156,6 +156,7 @@ const HeaderThemeToggle = () => {
 const HeaderContent = ({
     navLabel,
     overlay,
+    compact,
     showThemeToggle,
     navigationByUserType,
     userType,
@@ -163,6 +164,7 @@ const HeaderContent = ({
 }: {
     navLabel: string
     overlay: boolean
+    compact: boolean
     showThemeToggle: boolean
     navigationByUserType?: HeaderNavigationByUserType
     userType: UserType
@@ -183,16 +185,19 @@ const HeaderContent = ({
                 </div>
             </div>
 
-            <div className="flex items-center gap-6 py-3 xl:gap-10">
+            <div className={cn('flex items-center py-3', compact ? 'gap-5' : 'gap-6 xl:gap-10')}>
                 <Logo overlay={overlay} />
 
                 <NavigationMenu aria-label={navLabel} viewport={false} className="hidden lg:flex">
-                    <NavigationMenuList className="gap-6 xl:gap-10">
+                    <NavigationMenuList className={compact ? 'gap-5' : 'gap-6 xl:gap-10'}>
                         {navLinks.map((link) => (
                             <NavigationMenuItem key={link.label}>
                                 <NavigationMenuLink
                                     asChild
-                                    className="text-foreground typo-title-xl-bold min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent"
+                                    className={cn(
+                                        'text-foreground min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent',
+                                        compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
+                                    )}
                                 >
                                     <Link
                                         href={link.href}
@@ -271,11 +276,13 @@ type HeaderProps = {
 const ResolvedHeaderContent = ({
     navLabel,
     overlay,
+    compact,
     showThemeToggle,
     navigationByUserType,
 }: {
     navLabel: string
     overlay: boolean
+    compact: boolean
     showThemeToggle: boolean
     navigationByUserType?: HeaderNavigationByUserType
 }) => {
@@ -287,6 +294,7 @@ const ResolvedHeaderContent = ({
         <HeaderContent
             navLabel={navLabel}
             overlay={overlay}
+            compact={compact}
             showThemeToggle={showThemeToggle}
             navigationByUserType={navigationByUserType}
             userType={userType}
@@ -306,6 +314,7 @@ const Header = ({overlay = true, showThemeToggle = false, navigationByUserType}:
                         <HeaderContent
                             navLabel="주 메뉴"
                             overlay={overlay}
+                            compact={false}
                             showThemeToggle={showThemeToggle}
                             navigationByUserType={navigationByUserType}
                             userType="corp"
@@ -316,6 +325,7 @@ const Header = ({overlay = true, showThemeToggle = false, navigationByUserType}:
                     <ResolvedHeaderContent
                         navLabel="주 메뉴"
                         overlay={overlay}
+                        compact={false}
                         showThemeToggle={showThemeToggle}
                         navigationByUserType={navigationByUserType}
                     />
@@ -341,6 +351,7 @@ export const HeaderDemo = ({
                 <HeaderContent
                     navLabel="헤더 데모 메뉴"
                     overlay={overlay}
+                    compact
                     showThemeToggle={showThemeToggle}
                     navigationByUserType={navigationByUserType}
                     userType="corp"
@@ -351,6 +362,7 @@ export const HeaderDemo = ({
             <ResolvedHeaderContent
                 navLabel="헤더 데모 메뉴"
                 overlay={overlay}
+                compact
                 showThemeToggle={showThemeToggle}
                 navigationByUserType={navigationByUserType}
             />
