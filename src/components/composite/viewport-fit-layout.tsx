@@ -39,7 +39,9 @@ const ViewportFitLayout = ({
                 data-slot="viewport-fit-content"
                 className={cn(
                     'content-layout flex min-h-0 flex-1 flex-col',
-                    'gap-[clamp(--spacing(4),2dvh,--spacing(15))]',
+                    // 최소값을 16 → 24 로, 비율을 2 → 3dvh 로 올린다. 낮은 화면에서 완료 문구와 안내 상자가
+                    // 붙어 한 덩어리처럼 보였다 — 아래 여백은 더 줄어드는 구간이라 이 간격이 먼저 좁아진다.
+                    'gap-[clamp(--spacing(6),3dvh,--spacing(15))]',
                     'pt-[clamp(--spacing(4),2dvh,--spacing(10))]',
                     'pb-[clamp(--spacing(6),3.5dvh,--spacing(25))]',
                     mainClassName,
