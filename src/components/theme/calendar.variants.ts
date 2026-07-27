@@ -33,7 +33,7 @@ const calendarClassNames = {
     // 시안: 월·연도 드롭다운 사이 12px, 글자와 화살표 사이 4px.
     dropdowns: 'flex h-7 items-center justify-center gap-3 text-base font-medium',
     dropdown_root:
-        'cn-calendar-dropdown-root outline-ring relative rounded-sm has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-solid',
+        'cn-calendar-dropdown-root outline-ring relative rounded-sm has-[:focus]:outline-2 has-[:focus]:outline-offset-2 has-[:focus]:outline-solid',
     dropdown: 'bg-popover absolute inset-0 opacity-0',
     caption_label: 'font-medium select-none',
     caption_label_label: 'cn-calendar-caption text-base',

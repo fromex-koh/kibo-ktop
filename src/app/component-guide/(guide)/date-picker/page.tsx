@@ -73,6 +73,27 @@ const PROPS_ITEMS = [
     },
 ] as const
 
+const INTERACTION_ITEMS = [
+    {
+        title: '패널·선택 월',
+        description: '패널은 z-popover에 열립니다. 다시 열면 선택한 날짜가 속한 월을 표시합니다.',
+    },
+    {
+        title: '월 이동·포커스',
+        description:
+            '월·연도 select와 좌우 이동 버튼은 월 변경 후 동일한 컨트롤로 포커스를 복원합니다. 모든 컨트롤은 공통 2px 포커스 링을 사용합니다.',
+    },
+    {
+        title: '값·폼 제출',
+        description: '선택값은 yyyy-MM-dd로 표시합니다. name을 지정하면 같은 값이 FormData에 포함됩니다.',
+    },
+    {
+        title: '확장 범위',
+        description:
+            'Calendar primitive는 수정하지 않습니다. DatePicker에서 DayPicker의 select·이동 버튼 슬롯만 확장합니다.',
+    },
+] as const
+
 const FORM_CODE = `const [visitDate, setVisitDate] = useState<Date>()
 const [visitDateError, setVisitDateError] = useState(false)
 
@@ -116,7 +137,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 const DatePickerGuidePage = () => (
     <GuidePageShell
         title="데이트피커 (DatePicker)"
-        description="InputGroup, Popover, Calendar를 조합한 프로젝트 composite입니다. Field와 조합해 라벨·설명·오류가 포함된 날짜 입력을 구성합니다."
+        description="InputGroup·Popover·Calendar를 조합한 날짜 입력 컴포넌트입니다."
     >
         <BaseCard>
             <section aria-labelledby="date-picker-demo" className="flex flex-col gap-4">
@@ -128,14 +149,8 @@ const DatePickerGuidePage = () => (
                         <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>,{' '}
                         <code className="font-mono">DatePicker</code>,{' '}
                         <code className="font-mono">FieldDescription</code>을 조합합니다. 트리거는{' '}
-                        <code className="font-mono">InputGroup</code>을 사용해 Input과 동일한 높이·테두리·배경·포커스를
-                        공유하며, 날짜는 <code className="font-mono">yyyy-MM-dd</code>로 표시됩니다. 달력 패널은{' '}
-                        <code className="font-mono">z-popover</code> 레이어에 열려 고정 Header보다 위에 표시됩니다.
-                        날짜를 선택한 뒤 다시 열면 선택한 날짜가 속한 월로 이동합니다. 키보드 포커스와 패널이 열린
-                        동안에는 Input과 동일한 primary 테두리와 포커스 링을 표시합니다. 헤더는 시안대로{' '}
-                        <strong>월·연도를 각각 고르는 두 드롭다운</strong>(07월 · 2026년)과 좌우 이동 버튼으로 구성되며,
-                        먼 날짜로 이동할 때 한 달씩 넘기지 않아도 됩니다. 월·연도 드롭다운도 키보드 포커스가 보이는 라벨
-                        영역에 공통 2px 포커스 링을 표시합니다.
+                        <code className="font-mono">InputGroup</code>을 사용해 Input과 같은 스타일을 공유하며, 선택값은{' '}
+                        <code className="font-mono">yyyy-MM-dd</code>로 표시됩니다.
                     </p>
                 </div>
                 <DatePickerDemo />
@@ -158,6 +173,28 @@ const DatePickerGuidePage = () => (
                     </p>
                 </div>
                 <DatePickerStatesDemo />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="date-picker-interaction" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="date-picker-interaction" className="typo-h4-bold">
+                        동작·포커스
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">구현과 연동 시 확인할 핵심 동작입니다.</p>
+                </div>
+                <dl className="grid gap-4 md:grid-cols-2">
+                    {INTERACTION_ITEMS.map((item) => (
+                        <div
+                            key={item.title}
+                            className="border-border bg-muted flex flex-col gap-1 rounded-lg border p-4"
+                        >
+                            <dt className="typo-body-xl-bold text-foreground">{item.title}</dt>
+                            <dd className="typo-body-l-regular text-muted-foreground">{item.description}</dd>
+                        </div>
+                    ))}
+                </dl>
             </section>
         </BaseCard>
 

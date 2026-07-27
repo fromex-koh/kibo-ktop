@@ -1,6 +1,6 @@
 'use client'
 
-import type {ComponentPropsWithoutRef} from 'react'
+import type {ChangeEvent, ComponentPropsWithoutRef, MouseEvent} from 'react'
 import {Children, useRef, useState} from 'react'
 import {format} from 'date-fns'
 import {ko} from 'date-fns/locale'
@@ -35,6 +35,38 @@ type DatePickerProps = {
     onInvalid?: ComponentPropsWithoutRef<'input'>['onInvalid']
     className?: string
 } & Pick<ComponentPropsWithoutRef<'button'>, 'aria-invalid' | 'aria-describedby'>
+
+// react-day-picker는 월·연도 변경 시 select DOM을 다시 렌더링해 네이티브 포커스가 body로 빠진다.
+// primitive를 수정하지 않고 Select 슬롯에서 새 DOM이 연결된 다음 동일 컨트롤로 포커스를 복원한다.
+const CalendarDropdownSelect = ({onChange, ...props}: ComponentPropsWithoutRef<'select'>) => {
+    const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+        const accessibleName = event.currentTarget.getAttribute('aria-label')
+        onChange?.(event)
+        requestAnimationFrame(() => {
+            const nextSelect = Array.from(document.querySelectorAll<HTMLSelectElement>('select')).find(
+                (select) => select.getAttribute('aria-label') === accessibleName,
+            )
+            nextSelect?.focus()
+        })
+    }
+
+    return <select onChange={handleChange} {...props} />
+}
+
+const CalendarNavigationButton = ({onClick, ...props}: ComponentPropsWithoutRef<'button'>) => {
+    const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+        const accessibleName = event.currentTarget.getAttribute('aria-label')
+        onClick?.(event)
+        requestAnimationFrame(() => {
+            const nextButton = Array.from(document.querySelectorAll<HTMLButtonElement>('button')).find(
+                (button) => button.getAttribute('aria-label') === accessibleName,
+            )
+            nextButton?.focus()
+        })
+    }
+
+    return <button onClick={handleClick} {...props} />
+}
 
 const DatePicker = ({
     value,
@@ -126,6 +158,9 @@ const DatePicker = ({
                         // 보기만 뒤집으면 읽는 순서가 어긋나므로(DOM 순서 = 읽기 순서 [KWCAG 7.3.1])
                         // 자식 순서 자체를 바꾼다.
                         components={{
+                            Select: CalendarDropdownSelect,
+                            PreviousMonthButton: CalendarNavigationButton,
+                            NextMonthButton: CalendarNavigationButton,
                             DropdownNav: ({children, ...navProps}) => (
                                 <div {...navProps}>{Children.toArray(children).reverse()}</div>
                             ),
