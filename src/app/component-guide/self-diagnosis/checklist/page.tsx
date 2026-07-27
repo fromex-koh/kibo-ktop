@@ -28,6 +28,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/c
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Checkbox} from '@/components/ui/checkbox'
+import {SELF_DIAGNOSIS_STEPS} from '@/constants/self-diagnosis'
 
 export const metadata: Metadata = {title: '체크리스트 입력'}
 
@@ -54,8 +55,6 @@ const PLATFORM_NAVIGATION = {
         {label: '탄소중립', href: '#', external: true},
     ],
 } satisfies HeaderNavigationByUserType
-
-const STEPS = ['고객 정보 활용 동의', '기업·기술정보 입력', '체크리스트 입력', '제출 전 최종 확인', '제출 완료']
 
 const COMPANY_INFO_PATH = '/component-guide/self-diagnosis/company-info'
 
@@ -389,7 +388,7 @@ const ChecklistPage = () => (
                 variant="progress"
                 title="체크리스트 입력"
                 description="평가 항목별 체크리스트를 작성해주세요. 해당사항에 맞게 선택해 주십시오."
-                steps={STEPS}
+                steps={SELF_DIAGNOSIS_STEPS}
                 current={3}
             />
 
@@ -404,7 +403,7 @@ const ChecklistPage = () => (
             prev={{asChild: true, children: <Link href={COMPANY_INFO_PATH}>이전</Link>}}
             next={{
                 asChild: true,
-                children: <Link href="/component-guide/self-diagnosis/final-review">다음</Link>,
+                children: <Link href="/component-guide/self-diagnosis/complete">제출하기</Link>,
             }}
         />
     </div>

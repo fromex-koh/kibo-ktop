@@ -8,9 +8,9 @@ export const metadata: Metadata = {title: '스테퍼 (Stepper)'}
 
 const USAGE_CODE = `{/* count(전체 단계) · current(현재 단계, 1부터) 로 상태 자동 계산 */}
 <Stepper
-  count={5}
+  count={4}
   current={2}
-  aria-label="5단계 중 2단계 진행"
+  aria-label="4단계 중 2단계 진행"
 />
 
 {/* 개별 원을 직접 조합할 수도 있다 */}
@@ -152,17 +152,17 @@ const StepperGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         <code className="font-mono">count</code>·<code className="font-mono">current</code> 로 상태를
-                        자동 계산합니다. 아래는 5단계에서 현재 단계를 1·3·5로 둔 예시입니다.
+                        자동 계산합니다. 아래는 4단계에서 현재 단계를 1·2·4로 둔 예시입니다.
                     </p>
                 </div>
                 <div className="border-border rounded-xl border p-6">
                     <div className="flex flex-col gap-6">
-                        {[1, 3, 5].map((current) => (
+                        {[1, 2, 4].map((current) => (
                             <div key={current} className="flex items-center gap-4">
                                 <span className="typo-caption-regular text-muted-foreground w-24 shrink-0">
                                     current={current}
                                 </span>
-                                <Stepper count={5} current={current} aria-label={`5단계 중 ${current}단계 진행`} />
+                                <Stepper count={4} current={current} aria-label={`4단계 중 ${current}단계 진행`} />
                             </div>
                         ))}
                     </div>

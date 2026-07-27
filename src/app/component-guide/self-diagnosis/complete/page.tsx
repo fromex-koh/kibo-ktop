@@ -43,8 +43,8 @@ const PLATFORM_NAVIGATION = {
 
 const MAIN_PAGE_PATH = '/component-guide/main-page'
 
-// 자가진단 5단계 목업 — Figma "[자가진단] 5단계_제출 완료".
-// 4단계(제출 전 최종 확인)의 "제출하기" 버튼으로 진입한다. 전부 기존 컴포넌트 조합이다:
+// 자가진단 4단계 제출 완료 데모. 3단계 체크리스트의 "제출하기" 버튼으로 진입한다.
+// 전부 기존 컴포넌트 조합이다:
 // Header · PageTitleBar(+Breadcrumb) · ActionCheck(완료 애니메이션) · InfoBox · Button · StepNavigation.
 // 진행 표시(StepHeader)는 이 화면에 없다 — 흐름이 끝나 완료 메시지만 남는다(시안 동일).
 const SelfDiagnosisCompletePage = () => (

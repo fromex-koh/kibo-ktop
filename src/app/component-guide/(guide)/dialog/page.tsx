@@ -63,17 +63,19 @@ const USAGE_CODE = `<Dialog>
 </Dialog>`
 
 // 케이스 설명 — [id, 라벨, 설명]
+// 시안 "[공통] 모달"(40006512:19589)의 6가지 실제 사용 케이스.
+// 공통 규격: 폭 588 · 반경 24 · 여백 40/40/24 · 딤 검정 75% · CTA 높이 60(둘이면 본문 폭을 반씩 나눠 채움).
 const CASE_NOTES = [
-    ['confirm', '기본 (확인·취소)', '제목 + 설명 + 취소(tertiary)·확인(primary) 두 버튼. Figma 표준 팝업.'],
-    ['alert', '알림형 (단일 버튼)', '되돌릴 게 없는 안내. 확인 버튼 하나로 닫는다.'],
-    ['form', '폼 입력형', '본문에 입력 필드. 라벨↔input 연결, 저장/취소.'],
+    ['signin', '안내 + 두 선택', '본문 없이 물음 한 줄만 두고 취소·확인을 나란히. 본문이 없어 물음을 가운데 정렬한다.'],
     [
-        'scroll',
-        '내부 스크롤 (높이 제한)',
-        '본문에 높이 제한 박스(max-h + overflow-y-auto)를 두어 그 안만 스크롤. 약관·긴 목록용.',
+        'logout',
+        '확인 (되돌릴 수 있는 동작)',
+        '소제목으로 무엇을 묻는지, 본문으로 결과를 알린다. 주 동작 하나를 폭 전체로 둔다.',
     ],
-    ['no-close', '닫기 버튼 숨김', 'showCloseButton={false} 로 우상단 X 를 없앤다(강제 선택 등).'],
-    ['sizes', '크기 변형', 'className 의 max-w 로 폭을 조절(기본 sm:max-w-xl).'],
+    ['session', '시간 제한 안내', '남은 시간을 소제목에 노출하고 연장·로그아웃 두 선택을 준다. [6.2.1]'],
+    ['password', '입력 (여러 필드)', '본문에 라벨·필수 표시·도움말을 갖춘 입력을 쌓는다.'],
+    ['identity', '입력 (한 줄 복합)', '주민등록번호처럼 한 줄을 두 칸으로 나눠 받는다. 뒷자리는 마스킹한다.'],
+    ['verify', '입력 (단일 필드)', '확인용 한 칸. 제출 버튼 하나를 폭 전체로 둔다.'],
 ] as const
 
 const PROPS_ITEMS = [
@@ -263,130 +265,176 @@ const DialogGuidePage = () => (
                     ))}
                 </div>
                 <div className="border-border flex flex-wrap gap-3 rounded-md border p-6">
-                    {/* 알림형 — 단일 확인 버튼 */}
+                    {/* 안내 + 두 선택 — 본문이 없어 물음을 가운데 정렬한다. */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">알림형</Button>
+                            <Button size="lg">안내 + 두 선택</Button>
                         </DialogTrigger>
-                        <DialogContent className="sm:max-w-md">
+                        <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>제출이 완료되었습니다</DialogTitle>
-                                <DialogDescription>
-                                    자가진단 결과는 마이페이지에서 다시 확인할 수 있습니다.
+                                <DialogTitle>회원가입/로그인</DialogTitle>
+                                <DialogDescription className="typo-title-l-bold text-foreground text-center">
+                                    회원가입/로그인 후 이용하시겠어요?
                                 </DialogDescription>
                             </DialogHeader>
                             <DialogFooter>
                                 <DialogClose asChild>
-                                    <Button size="2xl">확인</Button>
+                                    <Button variant="tertiary" size="2xl">
+                                        다음에 하기
+                                    </Button>
                                 </DialogClose>
+                                <Button size="2xl">로그인</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
 
-                    {/* 폼 입력형 */}
+                    {/* 확인 — 주 동작 하나를 폭 전체로 */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">폼 입력형</Button>
+                            <Button size="lg">확인</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>담당자 정보 입력</DialogTitle>
-                                <DialogDescription>보고서에 표기할 담당자 이름을 입력해 주세요.</DialogDescription>
+                                <DialogTitle>로그아웃 안내</DialogTitle>
+                                <DialogDescription className="typo-title-l-bold text-foreground">
+                                    로그아웃 하시겠어요?
+                                </DialogDescription>
+                            </DialogHeader>
+                            <p className="typo-body-xl-regular text-label-foreground">
+                                현재 계정에서 로그아웃됩니다.
+                                <br />
+                                다시 이용하시려면 로그인해 주세요.
+                            </p>
+                            <DialogFooter>
+                                <Button size="2xl">로그아웃</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
+                    {/* 시간 제한 안내 — 남은 시간을 소제목에 노출 */}
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size="lg">시간 제한 안내</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>로그인 연장</DialogTitle>
+                                <DialogDescription className="typo-title-l-bold text-foreground">
+                                    로그아웃까지 남은 시간 : 90초
+                                </DialogDescription>
+                            </DialogHeader>
+                            <p className="typo-body-xl-regular text-label-foreground">
+                                10분 동안 서비스를 이용하지 않아 잠시 후 자동으로 로그아웃될 예정입니다.
+                                <br />
+                                로그인 시간을 연장하시겠어요?
+                            </p>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button variant="tertiary" size="2xl">
+                                        로그아웃
+                                    </Button>
+                                </DialogClose>
+                                <Button size="2xl">로그인 연장</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
+                    {/* 입력 — 여러 필드 */}
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size="lg">입력 (여러 필드)</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>비밀번호 변경</DialogTitle>
+                                <DialogDescription className="typo-title-l-bold text-foreground">
+                                    회원님의 소중한 정보를 보호하기 위해 비밀번호를 변경해 주세요.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="flex flex-col gap-4">
+                                <div className="flex flex-col gap-2">
+                                    <Label htmlFor="dlg-pw" className="text-foreground font-bold">
+                                        비밀번호 <span className="text-error">*</span>
+                                    </Label>
+                                    <Input
+                                        id="dlg-pw"
+                                        type="password"
+                                        placeholder="영문, 숫자, 특수문자 포함 10~20자 이내"
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-2">
+                                    <Label htmlFor="dlg-pw-confirm" className="text-foreground font-bold">
+                                        비밀번호 확인 <span className="text-error">*</span>
+                                    </Label>
+                                    <Input
+                                        id="dlg-pw-confirm"
+                                        type="password"
+                                        placeholder="비밀번호를 다시 입력해 주세요"
+                                    />
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button size="2xl">비밀번호 변경</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
+                    {/* 입력 — 한 줄 복합 */}
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size="lg">입력 (한 줄 복합)</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>본인 인증</DialogTitle>
+                                <DialogDescription className="typo-title-l-bold text-foreground">
+                                    주민등록번호를 입력해주세요
+                                </DialogDescription>
                             </DialogHeader>
                             <div className="flex flex-col gap-2">
-                                <Label htmlFor="dlg-manager" className="text-foreground font-bold">
-                                    담당자 이름
+                                <Label htmlFor="dlg-rrn-front" className="text-foreground font-bold">
+                                    주민등록번호
                                 </Label>
-                                <Input id="dlg-manager" placeholder="홍길동" />
+                                <div className="flex items-center gap-2">
+                                    <Input id="dlg-rrn-front" inputMode="numeric" placeholder="901231" />
+                                    <span aria-hidden="true" className="text-label-foreground">
+                                        -
+                                    </span>
+                                    <Input
+                                        id="dlg-rrn-back"
+                                        type="password"
+                                        inputMode="numeric"
+                                        aria-label="주민등록번호 뒷자리"
+                                        placeholder="*******"
+                                    />
+                                </div>
                             </div>
                             <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button variant="tertiary" size="2xl">
-                                        취소
-                                    </Button>
-                                </DialogClose>
-                                <DialogClose asChild>
-                                    <Button size="2xl">저장</Button>
-                                </DialogClose>
+                                <Button size="2xl">본인 확인</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
 
-                    {/* 내부 스크롤 (높이 제한) — 본문에 max-h + overflow-y-auto 박스를 두어 그 안만 스크롤한다.
-                    모달·헤더·푸터는 그대로 있고, 스크롤 영역만 높이가 고정된다(약관·긴 목록용). */}
+                    {/* 입력 — 단일 필드 */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">내부 스크롤 (높이 제한)</Button>
+                            <Button size="lg">입력 (단일 필드)</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>이용 약관</DialogTitle>
-                                <DialogDescription>아래 약관을 확인한 뒤 동의해 주세요.</DialogDescription>
+                                <DialogTitle>내 정보 확인</DialogTitle>
+                                <DialogDescription className="typo-title-l-bold text-foreground">
+                                    회원님의 소중한 정보를 보호하기 위해 비밀번호를 변경해 주세요.
+                                </DialogDescription>
                             </DialogHeader>
-                            <div className="text-label-foreground max-h-64 overflow-y-auto pr-2 text-base">
-                                {Array.from({length: 12}, (_, i) => (
-                                    <p key={i} className="mb-3">
-                                        제{i + 1}조. 본 서비스는 KTRS-FM 평가 결과를 참고 자료로 제공하며, 그 정확성이나
-                                        특정 목적 적합성을 보증하지 않습니다. 이용자는 결과를 최종 의사결정의 유일한
-                                        근거로 삼지 않아야 합니다.
-                                    </p>
-                                ))}
+                            <div className="flex flex-col gap-2">
+                                <Label htmlFor="dlg-verify-pw" className="text-foreground font-bold">
+                                    비밀번호 <span className="text-error">*</span>
+                                </Label>
+                                <Input id="dlg-verify-pw" type="password" placeholder="비밀번호를 입력해 주세요" />
                             </div>
                             <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button variant="tertiary" size="2xl">
-                                        닫기
-                                    </Button>
-                                </DialogClose>
-                                <DialogClose asChild>
-                                    <Button size="2xl">동의</Button>
-                                </DialogClose>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
-
-                    {/* 닫기 버튼 숨김 */}
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button size="lg">닫기 버튼 숨김</Button>
-                        </DialogTrigger>
-                        <DialogContent showCloseButton={false}>
-                            <DialogHeader>
-                                <DialogTitle>약관에 동의해야 진행됩니다</DialogTitle>
-                                <DialogDescription>
-                                    우상단 X 없이, 아래 버튼으로만 선택할 수 있습니다.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button variant="tertiary" size="2xl">
-                                        거부
-                                    </Button>
-                                </DialogClose>
-                                <DialogClose asChild>
-                                    <Button size="2xl">동의</Button>
-                                </DialogClose>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
-
-                    {/* 크기 변형 — 넓게 */}
-                    <Dialog>
-                        <DialogTrigger asChild>
-                            <Button size="lg">크기 변형 (넓게)</Button>
-                        </DialogTrigger>
-                        <DialogContent className="sm:max-w-2xl">
-                            <DialogHeader>
-                                <DialogTitle>넓은 다이얼로그</DialogTitle>
-                                <DialogDescription>
-                                    <code className="font-mono">className=&quot;sm:max-w-2xl&quot;</code> 로 폭을
-                                    넓혔습니다. 표·목록처럼 가로 공간이 필요한 내용에 씁니다.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button size="2xl">확인</Button>
-                                </DialogClose>
+                                <Button size="2xl">비밀번호 확인</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>

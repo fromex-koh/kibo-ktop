@@ -86,15 +86,6 @@ const SCREEN_VALIDATION_RESULTS = [
         owner: 'shadcn/ui → Radix UI Select',
     },
     {
-        route: '/component-guide/self-diagnosis/final-review',
-        errors: 0,
-        warnings: 4,
-        result: 'Valid',
-        detail: 'W3C Markup Validation Service error 없음',
-        cause: '해당 없음',
-        owner: '-',
-    },
-    {
         route: '/component-guide/self-diagnosis/complete',
         errors: 0,
         warnings: 1,

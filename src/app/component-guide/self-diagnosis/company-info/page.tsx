@@ -31,6 +31,7 @@ import {InputGroup, InputGroupAddon, InputGroupInput} from '@/components/ui/inpu
 import {Label} from '@/components/ui/label'
 import {Separator} from '@/components/ui/separator'
 import {ListMarker} from '@/components/custom/list-marker'
+import {SELF_DIAGNOSIS_STEPS} from '@/constants/self-diagnosis'
 
 export const metadata: Metadata = {title: '기업·기술정보 입력'}
 
@@ -57,8 +58,6 @@ const PLATFORM_NAVIGATION = {
         {label: '탄소중립', href: '#', external: true},
     ],
 } satisfies HeaderNavigationByUserType
-
-const STEPS = ['고객 정보 활용 동의', '기업·기술정보 입력', '체크리스트 입력', '제출 전 최종 확인', '제출 완료']
 
 const CONSENT_PATH = '/component-guide/self-diagnosis/customer-consent'
 
@@ -481,7 +480,7 @@ const CompanyInfoPage = () => (
                 variant="progress"
                 title="기업·기술정보 입력"
                 description="평가에 필요한 기업 및 기술 정보를 입력해주세요."
-                steps={STEPS}
+                steps={SELF_DIAGNOSIS_STEPS}
                 current={2}
             />
 

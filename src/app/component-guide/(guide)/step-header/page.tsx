@@ -4,18 +4,15 @@ import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
 import {BaseCard} from '@/components/composite/base-card'
 import {StepHeader} from '@/components/composite/step-header'
+import {SELF_DIAGNOSIS_STEPS} from '@/constants/self-diagnosis'
 
 export const metadata: Metadata = {title: '스텝 헤더 (StepHeader)'}
-
-// 단계 제목 배열 하나가 전체 단계 수·현재 제목·다음 제목의 단일 소스다.
-const STEPS = ['고객 정보 활용 동의', '기업·기술정보 입력', '체크리스트 입력', '제출 전 최종 확인', '제출 완료']
 
 const USAGE_CODE = `const STEPS = [
   '고객 정보 활용 동의',
   '기업·기술정보 입력',
   '체크리스트 입력',
-  '제출 전 최종 확인',
-  '결과 확인',
+  '제출 완료',
 ]
 
 {/* 같은 1단계 내용을 두 시안으로 비교한다 — 우측 진행 표시만 다르다. */}
@@ -36,7 +33,7 @@ const USAGE_CODE = `const STEPS = [
 />`
 
 // 단계별 케이스 — 제목·설명은 Figma 자가진단 화면 헤더 문구를 그대로 쓴다.
-// (5단계 제출 완료 화면은 시안에서 헤더를 확인하지 못해 데모 문구를 넣었다.)
+// (4단계 제출 완료 화면은 실제 데모에서 StepHeader를 사용하지 않아 안내용 문구를 넣었다.)
 const STEP_CASES = [
     {
         current: 1,
@@ -49,8 +46,7 @@ const STEP_CASES = [
         title: '체크리스트 입력',
         description: '평가 항목별 체크리스트를 작성해주세요. 해당사항에 맞게 선택해 주십시오.',
     },
-    {current: 4, title: '제출 전 최종 확인', description: '입력하신 내용을 확인하고 이상이 없으면 제출해 주세요.'},
-    {current: 5, title: '제출 완료', description: '자가진단 제출이 완료되었습니다.'},
+    {current: 4, title: '제출 완료', description: '자가진단 제출이 완료되었습니다.'},
 ] as const
 
 const VARIANT_COLUMNS = [
@@ -198,14 +194,14 @@ const StepHeaderGuidePage = () => (
                     <StepHeader
                         variant="stepper"
                         title="고객 정보 활용 동의"
-                        steps={STEPS}
+                        steps={SELF_DIAGNOSIS_STEPS}
                         current={1}
                         description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해주세요."
                     />
                     <StepHeader
                         variant="progress"
                         title="고객 정보 활용 동의"
-                        steps={STEPS}
+                        steps={SELF_DIAGNOSIS_STEPS}
                         current={1}
                         description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해주세요."
                     />
@@ -250,7 +246,7 @@ const StepHeaderGuidePage = () => (
                                 <StepHeader
                                     key={step.current}
                                     title={step.title}
-                                    steps={STEPS}
+                                    steps={SELF_DIAGNOSIS_STEPS}
                                     current={step.current}
                                     description={step.description}
                                 />
@@ -265,7 +261,7 @@ const StepHeaderGuidePage = () => (
                                     key={step.current}
                                     variant="progress"
                                     title={step.title}
-                                    steps={STEPS}
+                                    steps={SELF_DIAGNOSIS_STEPS}
                                     current={step.current}
                                     description={step.description}
                                 />

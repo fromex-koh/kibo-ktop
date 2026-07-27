@@ -4,16 +4,14 @@ import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
 import {BaseCard} from '@/components/composite/base-card'
 import {StepProgress} from '@/components/composite/step-progress'
+import {SELF_DIAGNOSIS_STEPS} from '@/constants/self-diagnosis'
 
 export const metadata: Metadata = {title: '스텝 진행바 (StepProgress)'}
-
-const STEPS = ['고객 정보 활용 동의', '기업·기술정보 입력', '체크리스트 입력', '제출 전 최종 확인', '제출 완료']
 
 const USAGE_CODE = `const STEPS = [
   '고객 정보 활용 동의',
   '기업·기술정보 입력',
   '체크리스트 입력',
-  '제출 전 최종 확인',
   '제출 완료',
 ]
 
@@ -24,13 +22,13 @@ const PROGRESS_COLUMNS = [
     {key: 'preview', header: '미리보기', align: 'start'},
 ] as const
 
-const PROGRESS_ROWS = STEPS.map((step, index) => ({
+const PROGRESS_ROWS = SELF_DIAGNOSIS_STEPS.map((step, index) => ({
     key: step,
     cells: [
         <span key="current" className="text-primary font-mono">
             {index + 1}
         </span>,
-        <StepProgress key="preview" steps={STEPS} current={index + 1} className="max-w-147" />,
+        <StepProgress key="preview" steps={SELF_DIAGNOSIS_STEPS} current={index + 1} className="max-w-147" />,
     ],
 }))
 
@@ -96,7 +94,7 @@ const StepProgressGuidePage = () => (
                         넘기면 전체 단계 수·현재 제목·다음 제목·채움 비율이 모두 계산됩니다.
                     </p>
                 </div>
-                <StepProgress steps={STEPS} current={2} className="max-w-147" />
+                <StepProgress steps={SELF_DIAGNOSIS_STEPS} current={2} className="max-w-147" />
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
@@ -131,7 +129,7 @@ const StepProgressGuidePage = () => (
                         트랙은 <code className="font-mono">role=&quot;progressbar&quot;</code> 로 현재 단계를 값으로
                         전달하고(<code className="font-mono">aria-valuenow</code>·
                         <code className="font-mono">aria-valuemax</code>),{' '}
-                        <code className="font-mono">aria-valuetext</code> 에 &quot;5단계 중 2단계 · 기업·기술정보
+                        <code className="font-mono">aria-valuetext</code> 에 &quot;4단계 중 2단계 · 기업·기술정보
                         입력&quot; 형태의 문장을 넣어 숫자만으로 읽히지 않게 합니다. 점·채움·노브는 장식이라{' '}
                         <code className="font-mono">aria-hidden</code> 입니다. 단계 제목은 화면에도 그대로 보이므로 색
                         외의 단서가 함께 제공됩니다[5.3.1].

@@ -25,6 +25,7 @@ import {Field, FieldLabel} from '@/components/ui/field'
 import {Input} from '@/components/ui/input'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {FIELD_FOCUS_RING} from '@/constants/field-focus'
+import {SELF_DIAGNOSIS_STEPS} from '@/constants/self-diagnosis'
 import {cn} from '@/lib/utils'
 
 export const metadata: Metadata = {title: '고객 정보 활용 동의'}
@@ -52,9 +53,6 @@ const PLATFORM_NAVIGATION = {
         {label: '탄소중립', href: '#', external: true},
     ],
 } satisfies HeaderNavigationByUserType
-
-// 단계 제목 배열 하나가 전체 단계 수·현재 제목·다음 제목의 단일 소스다(StepHeader/StepProgress 규약).
-const STEPS = ['고객 정보 활용 동의', '기업·기술정보 입력', '체크리스트 입력', '제출 전 최종 확인', '제출 완료']
 
 // [기업] 동의서 — 안내 문구 없이 제목만 있는 행이다.
 const CORP_CONSENTS = [
@@ -175,7 +173,7 @@ const CustomerConsentPage = () => (
                 variant="progress"
                 title="고객 정보 활용 동의"
                 description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해주세요."
-                steps={STEPS}
+                steps={SELF_DIAGNOSIS_STEPS}
                 current={1}
             />
 
