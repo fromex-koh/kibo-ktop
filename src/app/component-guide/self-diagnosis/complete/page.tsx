@@ -108,14 +108,14 @@ const SelfDiagnosisCompletePage = () => (
             <InfoBoxItem>진단 결과발송은 마이페이지 &gt; 진행현황 조회에서 진행할 수 있어요.</InfoBoxItem>
             <InfoBoxItem>
                 은행으로 평가결과를 전송하려면{' '}
-                <Button type="button" variant="text-underline" size="lg">
+                <Button type="button" variant="text-underline" size="md">
                     은행전송
                 </Button>
                 을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
             </InfoBoxItem>
             <InfoBoxItem>
                 기관으로 평가결과를 전송하려면{' '}
-                <Button type="button" variant="text-underline" size="lg">
+                <Button type="button" variant="text-underline" size="md">
                     보증신청
                 </Button>
                 을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
