@@ -220,7 +220,7 @@ const HeaderMenu = ({
                             className={cn(
                                 closeIconMotionClassName,
                                 open
-                                    ? 'scale-100 rotate-0 opacity-100 motion-safe:animate-header-menu-close-enter'
+                                    ? 'motion-safe:animate-header-menu-close-enter scale-100 rotate-0 opacity-100'
                                     : 'scale-75 -rotate-180 opacity-0',
                             )}
                         />
@@ -247,15 +247,14 @@ const HeaderMenu = ({
                     const firstItem = focusableItems[0]
                     const lastItem = focusableItems[focusableItems.length - 1]
                     const shouldReturnToTrigger =
-                        (event.shiftKey && event.target === firstItem) ||
-                        (!event.shiftKey && event.target === lastItem)
+                        (event.shiftKey && event.target === firstItem) || (!event.shiftKey && event.target === lastItem)
 
                     if (shouldReturnToTrigger) {
                         event.preventDefault()
                         triggerRef.current?.focus()
                     }
                 }}
-                className="h-dvh max-w-none gap-0 overflow-y-auto overscroll-y-contain border-0 data-[side=right]:w-screen data-[side=right]:border-0 data-[side=right]:data-closed:slide-out-to-right-0 data-[side=right]:data-open:slide-in-from-right-0 data-[side=right]:sm:max-w-none"
+                className="data-[side=right]:data-closed:slide-out-to-right-0 data-[side=right]:data-open:slide-in-from-right-0 h-dvh max-w-none gap-0 overflow-y-auto overscroll-y-contain border-0 data-[side=right]:w-screen data-[side=right]:border-0 data-[side=right]:sm:max-w-none"
             >
                 <SheetHeader className="content-layout gap-0 px-0 py-0">
                     <div aria-hidden="true" className="hidden h-14 lg:block" />
@@ -278,7 +277,9 @@ const HeaderMenu = ({
                                     {...(link.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
                                 >
                                     {link.label}
-                                    {link.external ? <ExternalLink aria-hidden="true" className="size-icon-sm" /> : null}
+                                    {link.external ? (
+                                        <ExternalLink aria-hidden="true" className="size-icon-sm" />
+                                    ) : null}
                                 </Link>
                             </SheetClose>
                         ))}
@@ -382,7 +383,7 @@ const HeaderContent = ({
                 <div className={headerIconGroupClassName}>
                     <div
                         className={cn(
-                            'flex size-icon-lg shrink-0 items-center justify-center',
+                            'size-icon-lg flex shrink-0 items-center justify-center',
                             !showThemeToggle && 'hidden',
                             menuOpen && 'invisible',
                         )}
@@ -391,11 +392,7 @@ const HeaderContent = ({
                     >
                         {showThemeToggle ? <HeaderThemeToggle /> : null}
                     </div>
-                    <HeaderMenu
-                        navLinks={navLinks}
-                        open={menuOpen}
-                        onOpenChange={setMenuOpen}
-                    />
+                    <HeaderMenu navLinks={navLinks} open={menuOpen} onOpenChange={setMenuOpen} />
                 </div>
             </div>
         </div>
@@ -442,7 +439,7 @@ const Header = ({overlay = true, showThemeToggle = false, navigationByUserType}:
     return (
         <header
             className={cn(
-                'z-header inset-x-0 top-0 has-[[data-header-menu-trigger][aria-expanded=true]]:z-toast has-[[data-header-menu-trigger][aria-expanded=true]]:bg-transparent! has-[[data-header-menu-trigger][aria-expanded=true]]:transition-none!',
+                'z-header has-[[data-header-menu-trigger][aria-expanded=true]]:z-toast inset-x-0 top-0 has-[[data-header-menu-trigger][aria-expanded=true]]:bg-transparent! has-[[data-header-menu-trigger][aria-expanded=true]]:transition-none!',
                 overlay ? 'fixed' : 'bg-card sticky',
             )}
         >
