@@ -63,6 +63,41 @@
         }
     }
 
+    /* 헤더 전체 메뉴 — X는 대칭 형태라 단순 180도 회전만으로 움직임이 잘 보이지 않는다.
+       회전·확대·오버슈트를 한 번에 묶어 열린 상태를 짧고 분명하게 알린다. */
+    --animate-header-menu-close-enter: header-menu-close-enter 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    @keyframes header-menu-close-enter {
+        0% {
+            opacity: 0;
+            transform: rotate(-225deg) scale(0.55);
+        }
+        70% {
+            opacity: 1;
+            transform: rotate(12deg) scale(1.12);
+        }
+        100% {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+        }
+    }
+
+    /* 전체 메뉴 닫힘 — 최초 렌더가 아니라 X에서 Menu로 돌아올 때만 컴포넌트가 이 모션을 붙인다. */
+    --animate-header-menu-trigger-return: header-menu-trigger-return 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    @keyframes header-menu-trigger-return {
+        0% {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.6);
+        }
+        72% {
+            opacity: 1;
+            transform: rotate(-7deg) scale(1.08);
+        }
+        100% {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+        }
+    }
+
     --animate-tech-progress: tech-service-progress 5s linear forwards;
     @keyframes tech-service-progress {
         from {

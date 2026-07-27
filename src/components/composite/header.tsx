@@ -2,9 +2,9 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import {Suspense} from 'react'
+import {Suspense, useRef, useState} from 'react'
 import {useSearchParams} from 'next/navigation'
-import {ExternalLink, Menu, Moon, Sun} from 'lucide-react'
+import {ExternalLink, Menu, Moon, Sun, X} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {
     NavigationMenu,
@@ -49,7 +49,7 @@ const USER_TYPES = ['corp', 'org'] satisfies readonly UserType[]
 
 const isUserType = (value: string | null): value is UserType => value === 'corp' || value === 'org'
 
-// 유틸바와 모바일 Sheet에서 공유하는 화면 유형 링크 세그먼티드.
+// 헤더 상단에서 기업/기관 화면 유형을 전환하는 링크 세그먼티드.
 const MemberTypeToggle = ({userType, searchParams}: {userType: UserType; searchParams: string}) => {
     const getHref = (nextUserType: UserType) => {
         const nextParams = new URLSearchParams(searchParams)
@@ -156,6 +156,150 @@ const HeaderThemeToggle = () => {
     )
 }
 
+const HeaderMenu = ({
+    navLinks,
+    open,
+    onOpenChange,
+}: {
+    navLinks: readonly HeaderNavLink[]
+    open: boolean
+    onOpenChange: (open: boolean) => void
+}) => {
+    const triggerRef = useRef<HTMLButtonElement>(null)
+    const menuContentRef = useRef<HTMLDivElement>(null)
+    const firstMenuLinkRef = useRef<HTMLAnchorElement>(null)
+    const [isClosing, setIsClosing] = useState(false)
+    const label = open ? '전체 메뉴 닫기' : '전체 메뉴 열기'
+    const menuIconMotionClassName =
+        'absolute inset-0 transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none'
+    const closeIconMotionClassName =
+        'absolute inset-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none'
+
+    return (
+        <Sheet
+            modal={false}
+            open={open}
+            onOpenChange={(nextOpen) => {
+                setIsClosing(open && !nextOpen)
+                onOpenChange(nextOpen)
+            }}
+        >
+            <SheetTrigger asChild>
+                <button
+                    ref={triggerRef}
+                    type="button"
+                    className={headerIconButtonClassName}
+                    data-header-menu-trigger
+                    aria-label={label}
+                    aria-expanded={open}
+                    title={label}
+                    onKeyDown={(event) => {
+                        if (!open || event.key !== 'Tab') return
+
+                        event.preventDefault()
+                        if (!event.shiftKey) {
+                            firstMenuLinkRef.current?.focus()
+                            return
+                        }
+
+                        const focusableItems = menuContentRef.current?.querySelectorAll<HTMLElement>(
+                            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+                        )
+                        focusableItems?.[focusableItems.length - 1]?.focus()
+                    }}
+                >
+                    <span aria-hidden="true" className="size-icon-lg relative">
+                        <Menu
+                            className={cn(
+                                menuIconMotionClassName,
+                                open ? 'scale-75 rotate-90 opacity-0' : 'scale-100 rotate-0 opacity-100',
+                                isClosing && 'motion-safe:animate-header-menu-trigger-return',
+                            )}
+                        />
+                        <X
+                            className={cn(
+                                closeIconMotionClassName,
+                                open
+                                    ? 'scale-100 rotate-0 opacity-100 motion-safe:animate-header-menu-close-enter'
+                                    : 'scale-75 -rotate-180 opacity-0',
+                            )}
+                        />
+                    </span>
+                </button>
+            </SheetTrigger>
+            <SheetContent
+                ref={menuContentRef}
+                side="right"
+                showCloseButton={false}
+                onOpenAutoFocus={(event) => {
+                    event.preventDefault()
+                    triggerRef.current?.focus()
+                }}
+                onFocusOutside={(event) => event.preventDefault()}
+                onKeyDown={(event) => {
+                    if (event.key !== 'Tab') return
+
+                    const focusableItems = menuContentRef.current?.querySelectorAll<HTMLElement>(
+                        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+                    )
+                    if (!focusableItems?.length) return
+
+                    const firstItem = focusableItems[0]
+                    const lastItem = focusableItems[focusableItems.length - 1]
+                    const shouldReturnToTrigger =
+                        (event.shiftKey && event.target === firstItem) ||
+                        (!event.shiftKey && event.target === lastItem)
+
+                    if (shouldReturnToTrigger) {
+                        event.preventDefault()
+                        triggerRef.current?.focus()
+                    }
+                }}
+                className="h-dvh max-w-none gap-0 overflow-y-auto overscroll-y-contain border-0 data-[side=right]:w-screen data-[side=right]:border-0 data-[side=right]:data-closed:slide-out-to-right-0 data-[side=right]:data-open:slide-in-from-right-0 data-[side=right]:sm:max-w-none"
+            >
+                <SheetHeader className="content-layout gap-0 px-0 py-0">
+                    <div aria-hidden="true" className="hidden h-14 lg:block" />
+                    <div className="flex h-14 items-center">
+                        <SheetTitle className="typo-h4-bold">전체 메뉴</SheetTitle>
+                    </div>
+                </SheetHeader>
+
+                <div className="content-layout flex flex-1 flex-col pt-6 pb-10 md:pt-8 landscape:pt-4">
+                    <nav
+                        aria-label="전체 메뉴"
+                        className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-x-6 xl:grid-cols-3"
+                    >
+                        {navLinks.map((link, index) => (
+                            <SheetClose asChild key={link.label}>
+                                <Link
+                                    ref={index === 0 ? firstMenuLinkRef : undefined}
+                                    href={link.href}
+                                    className="typo-title-m-semibold border-border hover:bg-muted focus-visible:ring-ring flex min-h-11 items-center gap-1 rounded-md px-3 focus:outline-none focus-visible:ring-2 md:min-h-20 md:items-start md:rounded-none md:border-t md:px-1 md:py-4 xl:min-h-24 xl:py-5"
+                                    {...(link.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
+                                >
+                                    {link.label}
+                                    {link.external ? <ExternalLink aria-hidden="true" className="size-icon-sm" /> : null}
+                                </Link>
+                            </SheetClose>
+                        ))}
+                    </nav>
+
+                    <div className="border-border mt-6 flex flex-col gap-1 border-t pt-4 md:mt-8 md:flex-row md:flex-wrap md:gap-x-6 landscape:mt-4">
+                        {UTILITY_LINKS.map((link) => (
+                            <SheetClose asChild key={link.label}>
+                                <UtilityLink
+                                    {...link}
+                                    className="not-disabled:hover:bg-navy-50 not-disabled:hover:text-navy-600 min-h-11 w-full justify-start rounded-md px-3 md:w-auto"
+                                />
+                            </SheetClose>
+                        ))}
+                    </div>
+                </div>
+            </SheetContent>
+        </Sheet>
+    )
+}
+
 const HeaderContent = ({
     navLabel,
     overlay,
@@ -174,12 +318,17 @@ const HeaderContent = ({
     searchParams: string
 }) => {
     const navLinks = navigationByUserType?.[userType] ?? DEFAULT_NAV_LINKS
+    const [menuOpen, setMenuOpen] = useState(false)
 
     return (
         <div className="flex flex-col">
             {/* 주 메뉴가 한 줄에 들어가는 lg(1024)부터 PC 헤더로 전환하고, xl(1280)부터 항목 간격을
                 넓힌다. lg 미만에서는 유틸바·주 메뉴를 숨겨 로고+햄버거만 남긴다(링크는 전체 메뉴 Sheet에 유지). */}
-            <div className="hidden justify-end lg:flex">
+            <div
+                className={cn('hidden justify-end lg:flex', menuOpen && 'invisible')}
+                inert={menuOpen || undefined}
+                aria-hidden={menuOpen || undefined}
+            >
                 <div className="flex items-center gap-2 py-2 xl:gap-4">
                     <MemberTypeToggle userType={userType} searchParams={searchParams} />
                     {UTILITY_LINKS.map((link) => (
@@ -189,81 +338,64 @@ const HeaderContent = ({
             </div>
 
             <div className={cn('flex items-center py-3', compact ? 'gap-5' : 'gap-6 xl:gap-10')}>
-                <Logo overlay={overlay} />
+                <div
+                    className={cn('shrink-0', menuOpen && 'invisible')}
+                    inert={menuOpen || undefined}
+                    aria-hidden={menuOpen || undefined}
+                >
+                    <Logo overlay={overlay} />
+                </div>
 
-                <NavigationMenu aria-label={navLabel} viewport={false} className="hidden lg:flex">
-                    <NavigationMenuList className={compact ? 'gap-5' : 'gap-6 xl:gap-10'}>
-                        {navLinks.map((link) => (
-                            <NavigationMenuItem key={link.label}>
-                                <NavigationMenuLink
-                                    asChild
-                                    className={cn(
-                                        'text-foreground min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent',
-                                        compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
-                                    )}
-                                >
-                                    <Link
-                                        href={link.href}
-                                        className="flex items-center gap-1"
-                                        {...(link.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
+                <div
+                    className={cn('hidden lg:flex', menuOpen && 'invisible')}
+                    inert={menuOpen || undefined}
+                    aria-hidden={menuOpen || undefined}
+                >
+                    <NavigationMenu aria-label={navLabel} viewport={false} className="hidden lg:flex">
+                        <NavigationMenuList className={compact ? 'gap-5' : 'gap-6 xl:gap-10'}>
+                            {navLinks.map((link) => (
+                                <NavigationMenuItem key={link.label}>
+                                    <NavigationMenuLink
+                                        asChild
+                                        className={cn(
+                                            'text-foreground min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent',
+                                            compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
+                                        )}
                                     >
-                                        {link.label}
-                                        {link.external ? (
-                                            <ExternalLink aria-hidden="true" className="size-icon-lg" />
-                                        ) : null}
-                                    </Link>
-                                </NavigationMenuLink>
-                            </NavigationMenuItem>
-                        ))}
-                    </NavigationMenuList>
-                </NavigationMenu>
-
-                <div className={headerIconGroupClassName}>
-                    {showThemeToggle ? <HeaderThemeToggle /> : null}
-                    <Sheet>
-                        <SheetTrigger asChild>
-                            <button type="button" className={headerIconButtonClassName} aria-label="전체 메뉴 열기">
-                                <Menu aria-hidden="true" />
-                            </button>
-                        </SheetTrigger>
-                        <SheetContent side="right" className="gap-0 data-[side=left]:w-fit data-[side=right]:w-fit">
-                            <SheetHeader>
-                                <SheetTitle>전체 메뉴</SheetTitle>
-                            </SheetHeader>
-
-                            <div className="px-4 pb-2">
-                                <MemberTypeToggle userType={userType} searchParams={searchParams} />
-                            </div>
-
-                            <nav aria-label="전체 메뉴" className="flex flex-col gap-1 px-4">
-                                {navLinks.map((link) => (
-                                    <SheetClose asChild key={link.label}>
                                         <Link
                                             href={link.href}
-                                            className="typo-title-m-semibold hover:bg-muted focus-visible:ring-ring flex min-h-11 items-center gap-1 rounded-md px-3 focus:outline-none focus-visible:ring-2"
+                                            className="flex items-center gap-1"
                                             {...(link.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
                                         >
                                             {link.label}
                                             {link.external ? (
-                                                <ExternalLink aria-hidden="true" className="size-icon-sm" />
+                                                <ExternalLink aria-hidden="true" className="size-icon-lg" />
                                             ) : null}
                                         </Link>
-                                    </SheetClose>
-                                ))}
-                            </nav>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                            ))}
+                        </NavigationMenuList>
+                    </NavigationMenu>
+                </div>
 
-                            <div className="border-border mt-4 flex flex-col gap-1 border-t px-4 pt-4">
-                                {UTILITY_LINKS.map((link) => (
-                                    <SheetClose asChild key={link.label}>
-                                        <UtilityLink
-                                            {...link}
-                                            className="not-disabled:hover:bg-navy-50 not-disabled:hover:text-navy-600 min-h-11 w-full justify-start rounded-md px-3"
-                                        />
-                                    </SheetClose>
-                                ))}
-                            </div>
-                        </SheetContent>
-                    </Sheet>
+                <div className={headerIconGroupClassName}>
+                    <div
+                        className={cn(
+                            'flex size-icon-lg shrink-0 items-center justify-center',
+                            !showThemeToggle && 'hidden',
+                            menuOpen && 'invisible',
+                        )}
+                        inert={menuOpen || undefined}
+                        aria-hidden={menuOpen || undefined}
+                    >
+                        {showThemeToggle ? <HeaderThemeToggle /> : null}
+                    </div>
+                    <HeaderMenu
+                        navLinks={navLinks}
+                        open={menuOpen}
+                        onOpenChange={setMenuOpen}
+                    />
                 </div>
             </div>
         </div>
@@ -308,7 +440,12 @@ const ResolvedHeaderContent = ({
 
 const Header = ({overlay = true, showThemeToggle = false, navigationByUserType}: HeaderProps) => {
     return (
-        <header className={cn('z-header inset-x-0 top-0', overlay ? 'fixed' : 'bg-card sticky')}>
+        <header
+            className={cn(
+                'z-header inset-x-0 top-0 has-[[data-header-menu-trigger][aria-expanded=true]]:z-toast has-[[data-header-menu-trigger][aria-expanded=true]]:bg-transparent! has-[[data-header-menu-trigger][aria-expanded=true]]:transition-none!',
+                overlay ? 'fixed' : 'bg-card sticky',
+            )}
+        >
             {/* 헤더 콘텐츠 열은 화면 본문과 같은 content-layout 을 쓴다 — 좌우 여백을 헤더 안쪽 px 로 주면
                 로고·메뉴가 본문 시작선보다 안으로 들어가 어긋난다(좁은 화면의 가장자리 여백은 content-layout 이 담당). */}
             <div className="content-layout">
