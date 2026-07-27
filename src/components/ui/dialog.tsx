@@ -4,9 +4,9 @@ import * as React from "react"
 import { Dialog as DialogPrimitive } from "radix-ui"
 
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import { XIcon } from "lucide-react"
-import {dialogContentClassName, dialogDescriptionClassName, dialogFooterClassName, dialogHeaderClassName, dialogOverlayClassName, dialogTitleClassName} from '@/components/theme/dialog.variants'
+import { Button } from "@/components/ui/button"
+import {dialogCloseClassName, dialogContentClassName, dialogDescriptionClassName, dialogFooterClassName, dialogHeaderClassName, dialogOverlayClassName, dialogTitleClassName} from '@/components/theme/dialog.variants'
 
 function Dialog({
   ...props
@@ -69,16 +69,10 @@ function DialogContent({
       >
         {children}
         {showCloseButton && (
-          <DialogPrimitive.Close data-slot="dialog-close" asChild>
-            <Button
-              variant="ghost"
-              className="absolute top-8 right-8"
-              size="icon-sm"
-            >
-              <XIcon
-              />
-              <span className="sr-only">Close</span>
-            </Button>
+          <DialogPrimitive.Close data-slot="dialog-close" className={dialogCloseClassName}>
+            <XIcon
+            />
+            <span className="sr-only">닫기</span>
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Content>
