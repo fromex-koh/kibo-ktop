@@ -8,21 +8,24 @@ import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
 
 export const metadata: Metadata = {title: '푸터 (Footer)'}
 
-// 사용법 스니펫 — 전 페이지 하단에 배치하는 기본 사용과 모바일 사이트맵 제외 사용.
+// 사용법 스니펫 — 전체형 기본 variant와 모형선택 화면용 subpage variant.
 const USAGE_CODE = `import Footer from '@/components/composite/footer'
 
 export default function Page() {
   return (
     <>
       <main id="main">{/* ... */}</main>
-      {/* 사이트맵·대표전화·이용 정보를 담은 푸터. 색은 페이지 테마를 자동으로 따른다. */}
+      {/* 전체 사이트맵을 포함하는 기본 푸터 */}
       <Footer />
     </>
   )
 }
 
 // 모바일에서 사이트맵을 감추는 경우(마지막 섹션이 이미 긴 화면)
-<Footer showSitemapOnMobile={false} />`
+<Footer showSitemapOnMobile={false} />
+
+// 평가모형 선택 화면처럼 사이트맵 없이 핵심 기관 정보만 표시하는 경우
+<Footer variant="subpage" />`
 
 // 메인페이지의 스택 페이저에 넣을 때의 배치 스니펫.
 const STACK_USAGE_CODE = `// app/component-guide/main-page/page.tsx — 마지막 스택 페이지로 배치한다(mainpage 스킨).
@@ -53,6 +56,12 @@ const THEME_CASES = [
 
 // Props — [이름, 설명, 기본값, 타입]
 const PROPS_ITEMS = [
+    [
+        'variant',
+        'default는 사이트맵을 포함한 전체형, subpage는 간결한 정보형입니다.',
+        "'default'",
+        "'default' | 'subpage'",
+    ],
     ['showSitemapOnMobile', 'md 미만에서 사이트맵 노출 여부입니다. md 이상에서는 항상 노출합니다.', 'true', 'boolean'],
     ['className', '푸터 루트에 클래스를 덧붙입니다(색은 페이지 테마를 따름).', 'undefined', 'string'],
     ['...props', 'aria-*·id 등 네이티브 footer 속성을 그대로 전달합니다.', '-', "ComponentProps<'footer'>"],
@@ -66,12 +75,12 @@ const COMPOSITION = [
     },
     {
         name: '사이트맵 (nav)',
-        desc: '플랫폼 소개·기술평가·특허평가·K-BIGx 보고서·탄소중립 컬럼. 탄소중립은 외부 링크(↗)라 "새 창 열림" 대체 텍스트를 함께 제공한다.',
+        desc: 'default 전용. 플랫폼 소개·기술평가·특허평가·K-BIGx 보고서·탄소중립 컬럼을 제공한다.',
     },
     {name: '대표전화', desc: '대표번호(tel: 링크)와 운영 시간. xl 이상에서 사이트맵 우측에 배치된다.'},
     {
         name: 'Separator',
-        desc: '사이트맵 영역과 하단 이용 정보를 나누는 구분선. 색은 표준 border 토큰(테마 반사)을 따른다.',
+        desc: 'default 전용. 사이트맵 영역과 하단 이용 정보를 나누며 표준 border 토큰을 따른다.',
     },
     {name: '이용 정보 (nav)', desc: '이용약관·가격 정책·개인정보처리방침(강조)·공지사항/FAQ 유틸 링크.'},
     {name: '주소·저작권', desc: '기관 주소와 저작권 문구.'},
@@ -93,7 +102,7 @@ const DEV_NOTES = [
     },
     {
         title: '메뉴·연락처 데이터는 컴포넌트 상수',
-        desc: '사이트맵(SITEMAP)·유틸 링크(UTILITY_LINKS)·관련사이트(FAMILY_SITES)·연락처(CONTACT)는 footer.tsx 상단 상수입니다. 현재 href 는 전부 "#" 목업이므로 라우트 확정 시 이 상수만 실제 경로로 교체합니다. 항목이 늘어도 마크업 수정은 필요 없습니다.',
+        desc: '사이트맵(SITEMAP)·기본/서브페이지 유틸 링크(UTILITY_LINKS·SUBPAGE_UTILITY_LINKS)·관련사이트(FAMILY_SITES)·연락처(CONTACT)는 footer.tsx 상단 상수입니다. 현재 href 는 목업 값이므로 라우트 확정 시 상수만 실제 경로로 교체합니다.',
     },
     {
         title: '관련사이트 Select 는 표시 전용',
@@ -101,11 +110,11 @@ const DEV_NOTES = [
     },
     {
         title: '반응형 전환점',
-        desc: 'xl(≥1280) 이상에서 대표전화가 사이트맵 우측으로, md(≥768) 이상에서 주소와 관련사이트가 좌우로 나뉩니다. 폭은 content-layout(max-w-content)을 따르므로 별도 컨테이너로 감쌀 필요가 없습니다.',
+        desc: 'default는 xl 이상에서 대표전화가 사이트맵 우측으로 이동합니다. 두 variant 모두 md 이상에서 하단 기관 정보와 관련사이트가 가로로 정렬되며, 폭은 content-layout을 따릅니다.',
     },
     {
-        title: '마키 밴드는 별도 컴포넌트',
-        desc: '"Korea Technology-rating Open platform" 장식 밴드는 푸터에 종속되지 않고 custom/marquee-band.tsx 로 분리돼 있습니다. 필요한 화면에서 <MarqueeBand /> 를 직접 배치하세요. 뷰포트 폭을 흐르는 전제라 카드·모달처럼 폭이 제한된 컨테이너에 넣으면 잘립니다. 장식이라 aria-hidden 이고 감속 모션 선호 시 정지합니다.',
+        title: 'subpage variant 적용 범위',
+        desc: '현재 subpage variant는 자가진단 평가모형 선택 화면에만 적용합니다. 다른 서브페이지에는 자동 적용하지 않으며, 화면 요구사항이 확정된 경우에만 명시적으로 variant="subpage"를 지정합니다.',
     },
 ] as const
 
@@ -113,7 +122,7 @@ const DEV_NOTES = [
 const FooterGuidePage = () => (
     <GuidePageShell
         title="푸터 (Footer)"
-        description="사이트맵·대표전화·이용 정보·관련사이트를 담는 전 페이지 하단 contentinfo 합성 컴포넌트입니다. 색은 페이지 테마(mainpage·light·dark)를 그대로 따릅니다."
+        description="전체 사이트맵형과 서브페이지 정보형을 제공하는 contentinfo 합성 컴포넌트입니다. 색은 페이지 테마(mainpage·light·dark)를 그대로 따릅니다."
     >
         <BaseCard>
             <section aria-labelledby="ft-preview" className="flex flex-col gap-4">
@@ -122,9 +131,8 @@ const FooterGuidePage = () => (
                         Preview
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        로고·사이트맵·대표전화 영역과 구분선 아래 이용 정보 영역 2단 구성입니다. 아래 프리뷰는 테마
-                        토글과 무관하게 light 테마로 고정해 보여줍니다. xl(≥1280) 미만에서는 대표전화가 사이트맵 아래로,
-                        md(≥768) 미만에서는 주소·관련사이트가 세로로 쌓입니다.
+                        default는 사이트맵을 포함한 전체형이고, subpage는 사이트맵을 제외하고 로고·유틸 메뉴·기관
+                        정보·관련사이트를 간결하게 배치합니다. 현재 subpage는 평가모형 선택 화면에만 사용합니다.
                     </p>
                 </div>
                 <Alert color="warning">
@@ -142,6 +150,20 @@ const FooterGuidePage = () => (
                 {/* 미리보기는 테마 토글과 무관하게 light 로 고정한다(쇼케이스용 스캐폴딩 — 실제 사용 시 제외). */}
                 <div className="light">
                     <FooterDemo />
+                </div>
+                <div className="flex flex-col gap-2">
+                    <div className="flex flex-wrap items-baseline gap-2">
+                        <p className="typo-body-l-medium text-foreground">서브페이지 정보형</p>
+                        <code className="typo-body-l-regular text-muted-foreground font-mono">
+                            variant=&quot;subpage&quot;
+                        </code>
+                    </div>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        평가모형 선택 화면에서 사용하는 간결한 푸터입니다.
+                    </p>
+                    <div className="light">
+                        <FooterDemo variant="subpage" />
+                    </div>
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
             </section>
@@ -224,7 +246,7 @@ const FooterGuidePage = () => (
                         Props
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        Footer 에 넘기는 속성입니다. 메뉴·연락처는 props 가 아니라 컴포넌트 상수로 관리합니다.
+                        Footer 에 넘기는 속성입니다. showSitemapOnMobile은 default variant에만 적용됩니다.
                     </p>
                 </div>
                 <div className="border-border overflow-x-auto rounded-xl border">
