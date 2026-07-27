@@ -20,6 +20,8 @@
         ],
         "paths": {
             "@/*": ["./src/*"],
+            "@public/*": ["./public/*"],
+            "@package": ["./package.json"],
             "@tokens": ["./tokens.json"]
         }
     },

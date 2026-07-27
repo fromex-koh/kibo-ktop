@@ -1,7 +1,7 @@
 import Image, {type StaticImageData} from 'next/image'
 import type {ReactNode} from 'react'
-import patentEvaluationVisual from '../../../public/images/main-hero/patent-evaluation.webp'
-import techEvaluationVisual from '../../../public/images/main-hero/tech-evaluation.webp'
+import patentEvaluationVisual from '@public/images/main-hero/patent-evaluation.webp'
+import techEvaluationVisual from '@public/images/main-hero/tech-evaluation.webp'
 
 export type TechEvalService = {
     title: string

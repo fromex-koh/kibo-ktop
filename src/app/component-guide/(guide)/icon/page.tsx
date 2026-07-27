@@ -68,7 +68,7 @@ import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
 import {BaseCard} from '@/components/composite/base-card'
 import {Icon, type IconSymbol} from '@/components/custom/icon'
-import packageJson from '../../../../../package.json'
+import packageJson from '@package'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '아이콘 (Icon)'}

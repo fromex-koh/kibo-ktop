@@ -1,5 +1,5 @@
-import heroBg1 from '../../../public/images/main-hero/hero-bg-1.webp'
-import heroBg2 from '../../../public/images/main-hero/hero-bg-2.webp'
+import heroBg1 from '@public/images/main-hero/hero-bg-1.webp'
+import heroBg2 from '@public/images/main-hero/hero-bg-2.webp'
 import HeroBackground from './hero-background'
 import HeroStatsRoller, {type HeroStat} from './hero-stats-roller'
 import {
