@@ -22,11 +22,11 @@ const calendarClassNames = {
     // [이전] 2026.07 [다음] 이 20px 간격으로 가운데 모인 헤더라
     // navLayout="around" 의 3요소를 헤더 한 줄(3열)에 두고 달력 표를 그 아래 행에 둔다.
     // (flex-wrap 은 fit-content 폭이 '줄바꿈 전 합계'로 잡혀 표가 늘어나므로 grid 를 쓴다.)
-    month: 'grid w-full grid-cols-[1fr_auto_1fr] items-center gap-x-5 gap-y-2',
+    month: 'grid w-full grid-cols-[1fr_auto_1fr] items-center gap-x-2 gap-y-2',
     nav: 'absolute inset-x-0 top-0 flex w-full items-center justify-between gap-1',
-    // justify-self: 1fr 열 안에서 캡션 쪽으로 붙여 [이전] 2026.07 [다음] 간격을 20px 로 유지한다.
-    button_previous: `${calendarNavButtonClassName} justify-self-end`,
-    button_next: `${calendarNavButtonClassName} justify-self-start`,
+    // justify-self: 시안은 이동 버튼이 달력 그리드의 좌우 끝에 붙고 캡션만 가운데 온다.
+    button_previous: `${calendarNavButtonClassName} justify-self-start`,
+    button_next: `${calendarNavButtonClassName} justify-self-end`,
     // col-start-2: navLayout 없이 쓸 때(월 이동 버튼이 nav 로 따로 렌더될 때)도
     // 캡션이 헤더 가운데 열에 오게 해 좌우 정렬이 흔들리지 않게 한다.
     month_caption: 'text-foreground col-start-2 flex h-7 items-center justify-center text-base font-medium',
