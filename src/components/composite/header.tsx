@@ -101,10 +101,10 @@ const UtilityLink = ({label, external, className}: {label: string; external?: bo
 
 // p > a > img 구조로 사이트명을 전달한다. 로고는 모든 화면에 반복되는 홈 링크라 제목(h1)이 아니다 —
 // h1 은 화면마다 하나뿐인 본문 제목(PageTitleBar·히어로 등)의 몫이다. [KWCAG 6.4.2]
-const Logo = ({variant}: {variant: HeaderVariant}) => (
+const Logo = ({variant, overlay}: {variant: HeaderVariant; overlay: boolean}) => (
     <p className="shrink-0">
         <Link href="#" className="flex shrink-0 items-center">
-            {variant === 'main' ? (
+            {variant === 'main' && overlay ? (
                 // 메인페이지는 항상 어두운 배경이라 화이트 로고 한 장만 둔다.
                 <Image
                     src="/images/logo-ktop-white.svg"
@@ -166,6 +166,7 @@ const HeaderThemeToggle = () => {
 const HeaderContent = ({
     navLabel,
     variant,
+    overlay,
     showThemeToggle,
     navigationByUserType,
     userType,
@@ -173,6 +174,7 @@ const HeaderContent = ({
 }: {
     navLabel: string
     variant: HeaderVariant
+    overlay: boolean
     showThemeToggle: boolean
     navigationByUserType?: HeaderNavigationByUserType
     userType: UserType
@@ -195,7 +197,7 @@ const HeaderContent = ({
             </div>
 
             <div className={cn('flex items-center py-3', isMain ? 'gap-6 xl:gap-10' : 'gap-6')}>
-                <Logo variant={variant} />
+                <Logo variant={variant} overlay={overlay} />
 
                 <NavigationMenu
                     aria-label={navLabel}
@@ -284,6 +286,7 @@ const HeaderContent = ({
 
 type HeaderProps = {
     variant?: HeaderVariant
+    overlay?: boolean
     showThemeToggle?: boolean
     navigationByUserType?: HeaderNavigationByUserType
 }
@@ -291,11 +294,13 @@ type HeaderProps = {
 const ResolvedHeaderContent = ({
     navLabel,
     variant,
+    overlay,
     showThemeToggle,
     navigationByUserType,
 }: {
     navLabel: string
     variant: HeaderVariant
+    overlay: boolean
     showThemeToggle: boolean
     navigationByUserType?: HeaderNavigationByUserType
 }) => {
@@ -307,6 +312,7 @@ const ResolvedHeaderContent = ({
         <HeaderContent
             navLabel={navLabel}
             variant={variant}
+            overlay={overlay}
             showThemeToggle={showThemeToggle}
             navigationByUserType={navigationByUserType}
             userType={userType}
@@ -315,12 +321,13 @@ const ResolvedHeaderContent = ({
     )
 }
 
-const Header = ({variant = 'default', showThemeToggle, navigationByUserType}: HeaderProps) => {
+const Header = ({variant = 'default', overlay, showThemeToggle, navigationByUserType}: HeaderProps) => {
     const isMain = variant === 'main'
+    const shouldOverlay = overlay ?? isMain
     const shouldShowThemeToggle = showThemeToggle ?? !isMain
 
     return (
-        <header className={cn('z-header inset-x-0 top-0', isMain ? 'fixed' : 'bg-card sticky')}>
+        <header className={cn('z-header inset-x-0 top-0', shouldOverlay ? 'fixed' : 'bg-card sticky')}>
             {/* 헤더 콘텐츠 열은 화면 본문과 같은 content-layout 을 쓴다 — 좌우 여백을 헤더 안쪽 px 로 주면
                 로고·메뉴가 본문 시작선보다 안으로 들어가 어긋난다(좁은 화면의 가장자리 여백은 content-layout 이 담당). */}
             <div className="content-layout">
@@ -329,6 +336,7 @@ const Header = ({variant = 'default', showThemeToggle, navigationByUserType}: He
                         <HeaderContent
                             navLabel="주 메뉴"
                             variant={variant}
+                            overlay={shouldOverlay}
                             showThemeToggle={shouldShowThemeToggle}
                             navigationByUserType={navigationByUserType}
                             userType="corp"
@@ -339,6 +347,7 @@ const Header = ({variant = 'default', showThemeToggle, navigationByUserType}: He
                     <ResolvedHeaderContent
                         navLabel="주 메뉴"
                         variant={variant}
+                        overlay={shouldOverlay}
                         showThemeToggle={shouldShowThemeToggle}
                         navigationByUserType={navigationByUserType}
                     />
@@ -362,6 +371,7 @@ export const HeaderDemo = ({
                 <HeaderContent
                     navLabel="헤더 데모 메뉴"
                     variant={variant}
+                    overlay={false}
                     showThemeToggle={variant !== 'main'}
                     navigationByUserType={navigationByUserType}
                     userType="corp"
@@ -372,6 +382,7 @@ export const HeaderDemo = ({
             <ResolvedHeaderContent
                 navLabel="헤더 데모 메뉴"
                 variant={variant}
+                overlay={false}
                 showThemeToggle={variant !== 'main'}
                 navigationByUserType={navigationByUserType}
             />

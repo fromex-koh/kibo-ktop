@@ -32,6 +32,9 @@ export default function Layout({children}) {
 // main 배리에이션에서도 필요한 경우 표시할 수 있습니다.
 <Header variant="main" showThemeToggle />
 
+// 서브페이지에서 main 메뉴 외관을 쓰되 본문 위에 겹치지 않는 경우
+<Header variant="main" overlay={false} showThemeToggle />
+
 // 사용자 유형별 메뉴를 URL의 ?userType=corp|org 상태에 맞춰 주입합니다.
 const navigationByUserType = {
   corp: [
@@ -83,6 +86,13 @@ const PROPS = [
         '기본 또는 메인 히어로용 외관과 메뉴 기본값을 선택합니다.',
         '"default"',
         '"default" | "main"',
+    ],
+    [
+        'Header',
+        'overlay',
+        '헤더를 화면 위에 고정할지 설정합니다. false이면 배경과 테마 대응 로고를 사용하며 문서 흐름에 유지됩니다.',
+        'main이면 true',
+        'boolean',
     ],
     [
         'Header',
