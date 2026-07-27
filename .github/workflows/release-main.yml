@@ -65,6 +65,10 @@ jobs:
                   RELEASE_VERSION: ${{ steps.version.outputs.value }}
               run: yarn asset-versions
 
+            - name: Verify generated release metadata
+              if: steps.released.outputs.value == 'false'
+              run: yarn prettier --check RELEASE_NOTES_DRAFT.md src/content/asset-versions.generated.json src/content/release-notes.generated.json
+
             - name: Create tagged release commit
               if: steps.released.outputs.value == 'false'
               env:

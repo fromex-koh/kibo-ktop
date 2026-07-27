@@ -4,6 +4,7 @@
 
 import {readFileSync, writeFileSync} from 'node:fs'
 import {execFileSync} from 'node:child_process'
+import {format, resolveConfig} from 'prettier'
 import {resolvePathVersion} from './git-info.mjs'
 
 const SOURCE = 'src/content/publishing-index.json'
@@ -24,6 +25,11 @@ const releaseVersion = process.env.RELEASE_VERSION
 if (!releaseVersion || !/^v\d+\.\d+\.\d+$/.test(releaseVersion)) {
     throw new Error('RELEASE_VERSION=vX.Y.Z 형식의 다음 릴리스 버전이 필요합니다.')
 }
+
+// 릴리스 문장이 길어지면 JSON.stringify 들여쓰기만으로는 Prettier 결과와 달라질 수 있다.
+// 생성 시점에 프로젝트 설정을 적용해, 생성 직후 format:check와 pre-push 검사가 항상 같은 결과를 보게 한다.
+const prettierConfig = (await resolveConfig(RELEASE_NOTES_OUTPUT)) ?? {}
+const formatJson = (value, filepath) => format(JSON.stringify(value), {...prettierConfig, filepath})
 
 // Vercel 이전 배포에서 git 이력 조회가 실패했으므로 자산별 버전 추적을 v0.1.3에서 다시 시작한다.
 // 그 이전 커밋에서 마지막으로 바뀐 자산도 인계 기준선에는 v0.1.3으로 표시하되,
@@ -61,7 +67,7 @@ const generated = assetVersions.map(({name, path}) => {
 })
 
 const metadata = {version: releaseVersion, assets: generated}
-writeFileSync(OUTPUT, `${JSON.stringify(metadata, null, 4)}\n`)
+writeFileSync(OUTPUT, await formatJson(metadata, OUTPUT))
 
 const git = (...args) => execFileSync('git', args, {encoding: 'utf8'}).trim()
 const previousTag = git('tag', '--list', 'v[0-9]*.[0-9]*.[0-9]*', '--sort=-v:refname').split('\n')[0]
@@ -90,7 +96,7 @@ const releases = [
     },
     ...previousReleaseNotes.filter((release) => release.version !== releaseVersion),
 ].slice(0, 30)
-writeFileSync(RELEASE_NOTES_OUTPUT, `${JSON.stringify({releases}, null, 4)}\n`)
+writeFileSync(RELEASE_NOTES_OUTPUT, await formatJson({releases}, RELEASE_NOTES_OUTPUT))
 writeFileSync(RELEASE_NOTES_DRAFT, EMPTY_RELEASE_NOTES_DRAFT)
 
 const updated = generated.filter((a) => a.isCurrent).map((a) => a.name)
