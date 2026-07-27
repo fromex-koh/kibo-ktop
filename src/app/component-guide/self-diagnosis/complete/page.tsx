@@ -54,15 +54,6 @@ const SelfDiagnosisCompletePage = () => (
                 <Header overlay={false} showThemeToggle navigationByUserType={PLATFORM_NAVIGATION} />
             </>
         }
-        footer={
-            <StepNavigation
-                appearance="plain"
-                className="[&>div]:py-[clamp(--spacing(3),2dvh,--spacing(6))]"
-                prev={{asChild: true, children: <Link href={MAIN_PAGE_PATH}>메인으로 이동</Link>}}
-                next={{children: '결과조회'}}
-            />
-        }
-        // 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다.
         mainProps={{id: 'main', tabIndex: -1}}
     >
         <PageTitleBar
@@ -94,8 +85,7 @@ const SelfDiagnosisCompletePage = () => (
             }
         />
 
-        {/* 완료 알림 — 애니메이션(150px) 바로 아래에 완료 문구가 온다(시안). 완료 사실은 문구가 전달하므로
-                애니메이션은 장식으로 두고(decorative) 접근성 트리에서 제외한다[5.1.1]. */}
+        {/* 완료 알림 — 완료 사실은 문구가 전달하므로 애니메이션은 장식으로 두고 접근성 트리에서 제외한다. */}
         <div className="flex flex-col items-center">
             <ActionCheck decorative />
             <h2 className="typo-h2-bold text-foreground text-center text-balance">
@@ -103,24 +93,34 @@ const SelfDiagnosisCompletePage = () => (
             </h2>
         </div>
 
-        <InfoBox variant="outline" title="알려드려요" className="py-[clamp(--spacing(4),3dvh,--spacing(8))]">
-            <InfoBoxItem>제출하신 자가진단 결과는 마이페이지 &gt; 진행현황 조회에서 확인할 수 있어요.</InfoBoxItem>
-            <InfoBoxItem>진단 결과발송은 마이페이지 &gt; 진행현황 조회에서 진행할 수 있어요.</InfoBoxItem>
-            <InfoBoxItem>
-                은행으로 평가결과를 전송하려면{' '}
-                <Button type="button" variant="text-underline" size="md">
-                    은행전송
-                </Button>
-                을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
-            </InfoBoxItem>
-            <InfoBoxItem>
-                기관으로 평가결과를 전송하려면{' '}
-                <Button type="button" variant="text-underline" size="md">
-                    보증신청
-                </Button>
-                을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
-            </InfoBoxItem>
-        </InfoBox>
+        <div className="flex flex-col gap-15">
+            <InfoBox variant="outline" title="알려드려요">
+                <InfoBoxItem>제출하신 자가진단 결과는 마이페이지 &gt; 진행현황 조회에서 확인할 수 있어요.</InfoBoxItem>
+                <InfoBoxItem>진단 결과발송은 마이페이지 &gt; 진행현황 조회에서 진행할 수 있어요.</InfoBoxItem>
+                <InfoBoxItem>
+                    은행으로 평가결과를 전송하려면{' '}
+                    <Button type="button" variant="text-underline" size="md">
+                        은행전송
+                    </Button>
+                    을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
+                </InfoBoxItem>
+                <InfoBoxItem>
+                    기관으로 평가결과를 전송하려면{' '}
+                    <Button type="button" variant="text-underline" size="md">
+                        보증신청
+                    </Button>
+                    을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
+                </InfoBoxItem>
+            </InfoBox>
+
+            {/* InfoBox 아래 60px(spacing.15) 간격으로 후속 액션을 배치한다. */}
+            <StepNavigation
+                appearance="plain"
+                className="[&>div]:max-w-none [&>div]:px-0 [&>div]:py-0"
+                prev={{asChild: true, children: <Link href={MAIN_PAGE_PATH}>메인으로 이동</Link>}}
+                next={{children: '결과조회'}}
+            />
+        </div>
     </ViewportFitLayout>
 )
 

@@ -75,10 +75,12 @@ const MemberTypeToggle = ({userType, searchParams}: {userType: UserType; searchP
 }
 
 // 링크 의미는 유지하고 Button text variant의 토큰/포커스 스타일을 재사용한다.
+// 시안 상단 유틸바는 14px Medium(행간 21)이다 — text 계열에서 그 크기는 sm 이다.
+// (button_text 시안 기준 xs 12 · sm 14 · md 16 · lg 18)
 const UtilityLink = ({label, external, className}: {label: string; external?: boolean; className?: string}) => (
     <Button
         variant="text"
-        size="lg"
+        size="sm"
         asChild
         className={cn('tracking-control-label font-medium', external ? 'gap-0.5' : undefined, className)}
     >
