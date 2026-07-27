@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import {ArrowUpRight} from 'lucide-react'
+import {ArrowRight} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {
     TECH_EVAL_CTA_FILL_CLASS,
@@ -29,7 +29,7 @@ const MobileTechEvalContent = () => (
                         <Button size="xl" asChild className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-base')}>
                             <Link href={service.ctaHref}>
                                 자가진단 시작하기
-                                <ArrowUpRight aria-hidden="true" />
+                                <ArrowRight aria-hidden="true" />
                             </Link>
                         </Button>
                     </div>

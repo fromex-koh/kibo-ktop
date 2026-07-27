@@ -65,7 +65,7 @@ const UTILITY_LINKS: (FooterLink & {emphasized?: boolean})[] = [
     {label: '이용약관', href: '#'},
     {label: '가격 정책', href: '#'},
     {label: '개인정보처리방침', href: '#', emphasized: true},
-    {label: '공지사항/FAQ', href: '#'},
+    {label: '공지사항', href: '#'},
 ]
 
 const SUBPAGE_UTILITY_LINKS: (FooterLink & {emphasized?: boolean})[] = [

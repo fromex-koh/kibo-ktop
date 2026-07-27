@@ -124,7 +124,7 @@ const COMPOSITION = [
         name: 'Separator',
         desc: 'default 전용. 사이트맵 영역과 하단 이용 정보를 나누며 표준 border 토큰을 따른다.',
     },
-    {name: '이용 정보 (nav)', desc: '이용약관·가격 정책·개인정보처리방침(강조)·공지사항/FAQ 유틸 링크.'},
+    {name: '이용 정보 (nav)', desc: '이용약관·가격 정책·개인정보처리방침(강조)·공지사항 유틸 링크.'},
     {name: '주소·저작권', desc: '기관 주소와 저작권 문구.'},
     {
         name: '관련사이트 (Select)',

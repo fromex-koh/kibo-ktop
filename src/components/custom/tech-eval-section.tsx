@@ -2,7 +2,7 @@
 
 import {useEffect, useRef, useState, type ReactNode} from 'react'
 import Link from 'next/link'
-import {ArrowUpRight} from 'lucide-react'
+import {ArrowRight} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {cn} from '@/lib/utils'
 import Reveal from './reveal'
@@ -150,7 +150,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                                         onBlur={() => setIsPaused(false)}
                                                     >
                                                         자가진단 시작하기
-                                                        <ArrowUpRight aria-hidden="true" />
+                                                        <ArrowRight aria-hidden="true" />
                                                     </Link>
                                                 </Button>
 
