@@ -5,6 +5,7 @@
 
 import {isIconName, type IconName} from '@/constants/icon-registry'
 import assetVersionsGenerated from './asset-versions.generated.json'
+import releaseNotesGenerated from './release-notes.generated.json'
 import homeJson from './home.json'
 import publishingIndexJson from './publishing-index.json'
 import {
@@ -17,6 +18,7 @@ import {
     type CommonLayout,
     type HomeContent,
     type PublishingIndexContent,
+    type ReleaseNote,
     type ScreenInfo,
     type StructureNode,
 } from './types'
@@ -139,6 +141,11 @@ const parseCommonLayout = (raw: (typeof publishingIndexJson)['commonLayouts'][nu
 }
 
 const parsePublishingIndexContent = (raw: typeof publishingIndexJson): PublishingIndexContent => ({
+    releaseNotes: releaseNotesGenerated.releases.map((release): ReleaseNote => ({
+        version: release.version,
+        releasedAt: release.releasedAt,
+        changes: release.changes,
+    })),
     assetVersions: raw.assetVersions.map((asset): AssetVersion => {
         const {version, isCurrent} = findGeneratedVersion(asset.name)
         return {
