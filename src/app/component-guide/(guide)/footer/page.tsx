@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import {TriangleAlert} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
-import {FooterDemo} from '@/components/composite/footer'
+import {FooterDemo, type FooterVariant} from '@/components/composite/footer'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
@@ -35,24 +35,66 @@ const STACK_USAGE_CODE = `// app/component-guide/main-page/page.tsx — 마지�
   <Footer />
 </div>`
 
-// 페이지별 테마 케이스 — 클래스 스코프(.light/.dark/.mainpage)로 강제 미리보기한다.
+const VARIANT_CASES: {
+    variant: FooterVariant
+    label: string
+    usage: string
+    composition: string
+    code: string
+    theme: 'light' | 'mainpage'
+}[] = [
+    {
+        variant: 'default',
+        label: '메인페이지용',
+        usage: '메인페이지의 마지막 스택 섹션에서 사용하는 전체형 푸터입니다.',
+        composition: '로고·전체 사이트맵·대표전화·구분선·이용 정보·주소·관련사이트',
+        code: '<Footer />',
+        theme: 'mainpage',
+    },
+    {
+        variant: 'subpage',
+        label: '서브페이지용',
+        usage: '현재 자가진단 평가모형 선택 화면에서 사용하는 간결한 정보형 푸터입니다.',
+        composition: '로고·유틸 메뉴·대표전화·주소·저작권·관련사이트',
+        code: '<Footer variant="subpage" />',
+        theme: 'light',
+    },
+]
+
+// 실제 화면 조합 — 클래스 스코프(.light/.dark/.mainpage)와 화면에 맞는 variant를 함께 고정한다.
 const THEME_CASES = [
     {
-        theme: 'light',
-        label: '라이트 (서브페이지)',
-        desc: '서브페이지 라이트 모드. 밝은 표면 + 컬러 로고.',
-    },
-    {
-        theme: 'dark',
-        label: '다크 (서브페이지)',
-        desc: '서브페이지 다크 모드. 어두운 표면 + 화이트 로고.',
-    },
-    {
+        variant: 'default',
+        screen: '메인페이지',
+        usage: '<Footer />',
         theme: 'mainpage',
-        label: '메인페이지 (mainpage 스킨)',
-        desc: '메인 라우트에서 강제되는 스킨. 어두운 표면 + 화이트 로고.',
+        label: '메인페이지 · mainpage 스킨',
+        desc: '메인페이지 마지막 섹션의 전체형 푸터. 어두운 표면과 화이트 로고로 고정됩니다.',
     },
-] as const
+    {
+        variant: 'subpage',
+        screen: '평가모형 선택',
+        usage: '<Footer variant="subpage" />',
+        theme: 'light',
+        label: '서브페이지 · 라이트',
+        desc: '사용자가 라이트 모드를 선택한 평가모형 선택 화면. 밝은 표면과 컬러 로고를 사용합니다.',
+    },
+    {
+        variant: 'subpage',
+        screen: '평가모형 선택',
+        usage: '<Footer variant="subpage" />',
+        theme: 'dark',
+        label: '서브페이지 · 다크',
+        desc: '사용자가 다크 모드를 선택한 평가모형 선택 화면. 어두운 표면과 화이트 로고를 사용합니다.',
+    },
+] satisfies {
+    variant: FooterVariant
+    screen: string
+    usage: string
+    theme: 'light' | 'dark' | 'mainpage'
+    label: string
+    desc: string
+}[]
 
 // Props — [이름, 설명, 기본값, 타입]
 const PROPS_ITEMS = [
@@ -139,21 +181,26 @@ const FooterGuidePage = () => (
                     <TriangleAlert aria-hidden="true" />
                     <AlertTitle>쇼케이스 전용 — 실제 사용 시 제외하세요</AlertTitle>
                     <AlertDescription>
-                        이 페이지의 모든 푸터 미리보기는 테마 토글과 무관하게 항상 같은 모습으로 확인할 수 있도록 각
-                        미리보기를 <code className="font-mono">.light</code>·<code className="font-mono">.dark</code>·
-                        <code className="font-mono">.mainpage</code> 클래스로 감싸 테마를 고정했습니다. 이 래핑은 가이드
-                        전용 스캐폴딩이며 기본 컴포넌트 구성이 아닙니다. 실제 화면에 적용할 때는 이 래퍼를 빼고{' '}
-                        <code className="font-mono">&lt;Footer /&gt;</code>만 두세요 — 그러면 놓인 페이지의 테마를
-                        자동으로 따릅니다.
+                        메인페이지용 미리보기는 <code className="font-mono">.mainpage</code>, 서브페이지용 미리보기는{' '}
+                        <code className="font-mono">.light</code> 또는 <code className="font-mono">.dark</code>로 감싸
+                        실제 화면 상태를 고정했습니다. 이 래퍼는 가이드 전용이며 실제 화면에서는 Footer만 배치합니다.
                     </AlertDescription>
                 </Alert>
-                {/* 미리보기는 테마 토글과 무관하게 light 로 고정한다(쇼케이스용 스캐폴딩 — 실제 사용 시 제외). */}
-                <div className="light">
-                    <FooterDemo />
+                <div className="flex flex-col gap-2">
+                    <div className="flex flex-wrap items-baseline gap-2">
+                        <p className="typo-body-l-medium text-foreground">메인페이지용 전체형</p>
+                        <code className="typo-body-l-regular text-muted-foreground font-mono">default</code>
+                    </div>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        메인페이지 마지막 섹션에서 사용하는 전체 사이트맵 푸터입니다.
+                    </p>
+                    <div className="mainpage">
+                        <FooterDemo />
+                    </div>
                 </div>
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-wrap items-baseline gap-2">
-                        <p className="typo-body-l-medium text-foreground">서브페이지 정보형</p>
+                        <p className="typo-body-l-medium text-foreground">서브페이지용 정보형</p>
                         <code className="typo-body-l-regular text-muted-foreground font-mono">
                             variant=&quot;subpage&quot;
                         </code>
@@ -170,29 +217,69 @@ const FooterGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="ft-variant" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="ft-variant" className="typo-h4-bold">
+                        Variant
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        화면 유형에 따라 정보 밀도와 메뉴 구성이 달라집니다. variant는 화면의 테마가 아니라 푸터의
+                        구조를 선택합니다.
+                    </p>
+                </div>
+                <div className="flex flex-col gap-8">
+                    {VARIANT_CASES.map((item) => (
+                        <article key={item.variant} className="flex flex-col gap-3">
+                            <div className="border-border bg-muted grid gap-3 rounded-lg border p-4 md:grid-cols-3">
+                                <div>
+                                    <h3 className="typo-body-xl-bold text-foreground">{item.label}</h3>
+                                    <code className="typo-body-l-regular text-primary font-mono">{item.variant}</code>
+                                </div>
+                                <div>
+                                    <p className="typo-body-l-medium text-foreground">사용 화면</p>
+                                    <p className="typo-body-l-regular text-muted-foreground">{item.usage}</p>
+                                </div>
+                                <div>
+                                    <p className="typo-body-l-medium text-foreground">포함 정보</p>
+                                    <p className="typo-body-l-regular text-muted-foreground">{item.composition}</p>
+                                </div>
+                            </div>
+                            <code className="border-border bg-background text-foreground w-fit rounded-md border px-3 py-2 font-mono text-sm">
+                                {item.code}
+                            </code>
+                            <div className={item.theme}>
+                                <FooterDemo variant={item.variant} />
+                            </div>
+                        </article>
+                    ))}
+                </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="ft-theme" className="flex flex-col gap-4">
                 <div>
                     <h2 id="ft-theme" className="typo-h4-bold">
-                        페이지별 테마
+                        화면별 테마
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        Footer 는 표준 시맨틱 토큰만 쓰므로 놓인 페이지의 테마를 그대로 따릅니다. 메인페이지는 mainpage
-                        스킨, 서브페이지는 light/dark 모드로 자동 반사되고, 표면 명도에 맞춰 로고가 교체됩니다. 아래
-                        미리보기는 각 테마를 클래스로 고정해 페이지 테마 토글과 무관하게 항상 같은 모습이며, 이 고정
-                        래핑은 위 안내대로 가이드 전용입니다(실제 사용 시 제외).
+                        실제 사용 화면과 variant를 함께 큐레이션합니다. 메인페이지는 default와 mainpage 스킨, 평가모형
+                        선택 화면은 subpage와 사용자의 light/dark 테마를 조합합니다.
                     </p>
                 </div>
                 <div className="flex flex-col gap-6">
                     {THEME_CASES.map((tc) => (
-                        <div key={tc.theme} className="flex flex-col gap-2">
+                        <div key={`${tc.screen}-${tc.theme}`} className="flex flex-col gap-2">
                             <div className="flex flex-wrap items-baseline gap-2">
                                 <p className="typo-body-l-medium text-foreground">{tc.label}</p>
-                                <code className="typo-body-l-regular text-muted-foreground font-mono">.{tc.theme}</code>
+                                <code className="typo-body-l-regular text-muted-foreground font-mono">
+                                    {tc.usage} · .{tc.theme}
+                                </code>
                             </div>
                             <p className="typo-body-l-regular text-muted-foreground">{tc.desc}</p>
                             {/* 클래스 스코프로 테마를 강제한다 — 내부 시맨틱 토큰이 해당 테마 값으로 반사된다. */}
                             <div className={tc.theme}>
-                                <FooterDemo />
+                                <FooterDemo variant={tc.variant} />
                             </div>
                         </div>
                     ))}
