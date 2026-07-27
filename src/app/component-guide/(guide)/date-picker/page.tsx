@@ -129,7 +129,8 @@ const DatePickerGuidePage = () => (
                         <code className="font-mono">DatePicker</code>,{' '}
                         <code className="font-mono">FieldDescription</code>을 조합합니다. 트리거는{' '}
                         <code className="font-mono">InputGroup</code>을 사용해 Input과 동일한 높이·테두리·배경·포커스를
-                        공유하며, 날짜는 <code className="font-mono">yyyy-MM-dd</code>로 표시됩니다.
+                        공유하며, 날짜는 <code className="font-mono">yyyy-MM-dd</code>로 표시됩니다. 달력 패널은{' '}
+                        <code className="font-mono">z-popover</code> 레이어에 열려 고정 Header보다 위에 표시됩니다.
                     </p>
                 </div>
                 <DatePickerDemo />
