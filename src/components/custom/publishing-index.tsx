@@ -1,6 +1,6 @@
 'use client'
 
-import {Check, CircleCheckBig, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
+import {Check, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
 import {useMemo, useState} from 'react'
 import {
     USER_TYPE_VALUES,
@@ -29,6 +29,39 @@ const VersionCell = ({version, isCurrent}: {version: string; isCurrent: boolean}
         {isCurrent && <span className="sr-only"> (이번 릴리스에서 변경됨)</span>}
     </>
 )
+
+// 릴리스 초안에서 명시한 컴포넌트 가이드 내부 링크만 새 창 링크로 변환한다.
+// 그 외 Markdown 문법이나 외부 주소는 일반 문자열로 남겨 임의 링크가 화면에 생성되지 않게 한다.
+const RELEASE_NOTE_LINK_PATTERN = /\[([^\]]+)\]\((\/component-guide\/[^)\s]+)\)/g
+
+const ReleaseNoteChange = ({change}: {change: string}) => {
+    const parts: React.ReactNode[] = []
+    let cursor = 0
+
+    for (const match of change.matchAll(RELEASE_NOTE_LINK_PATTERN)) {
+        const [source, label, href] = match
+        const index = match.index
+
+        if (index > cursor) parts.push(change.slice(cursor, index))
+        parts.push(
+            <a
+                key={`${href}-${index}`}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground focus-visible:ring-ring inline-flex items-center gap-0.5 underline underline-offset-4 hover:no-underline focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none"
+            >
+                {label}
+                <ExternalLink aria-hidden="true" className="size-3.5 shrink-0" />
+                <span className="sr-only"> (새 창)</span>
+            </a>,
+        )
+        cursor = index + source.length
+    }
+
+    if (cursor < change.length) parts.push(change.slice(cursor))
+    return <span className="min-w-0">{parts.length > 0 ? parts : change}</span>
+}
 
 // 퍼블리싱 진행 상태 인덱스 데모. 데이터는 src/content/publishing-index.json 단일 소스에서 온다.
 // 이 컴포넌트는 '표현'(상태 색·아이콘 매핑, 뎁스별 rowSpan 계산, 레이아웃, 사용자 유형 필터)만 담당한다.
@@ -241,7 +274,7 @@ const PublishingIndex = () => {
                                                         {release.changes.map((change) => (
                                                             <li key={change} className="flex">
                                                                 <ListMarker />
-                                                                <span className="min-w-0">{change}</span>
+                                                                <ReleaseNoteChange change={change} />
                                                             </li>
                                                         ))}
                                                     </ul>

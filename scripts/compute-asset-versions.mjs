@@ -12,7 +12,12 @@ const RELEASE_NOTES_OUTPUT = 'src/content/release-notes.generated.json'
 const RELEASE_NOTES_DRAFT = 'RELEASE_NOTES_DRAFT.md'
 const EMPTY_RELEASE_NOTES_DRAFT = `# 다음 릴리스 변경사항
 
-<!-- main 병합 전에 노출할 내용을 아래에 불릿(-)으로 작성하세요. 릴리스 성공 후 내용은 자동으로 비워집니다. -->
+<!--
+main 병합 전에 노출할 내용을 아래에 불릿(-)으로 작성하세요.
+항목이 많을 때는 \`[적용 화면 또는 작업 영역] 변경사항\` 형식으로 구분하며, 개수는 제한하지 않습니다.
+컴포넌트 가이드 페이지는 \`[페이지 제목](/component-guide/경로)\` 형식으로 작성하면 새 창 링크로 표시됩니다.
+릴리스 성공 후 내용은 자동으로 비워집니다.
+-->
 `
 const releaseVersion = process.env.RELEASE_VERSION
 
