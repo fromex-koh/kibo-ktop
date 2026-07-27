@@ -131,7 +131,8 @@ const DatePickerGuidePage = () => (
                         <code className="font-mono">InputGroup</code>을 사용해 Input과 동일한 높이·테두리·배경·포커스를
                         공유하며, 날짜는 <code className="font-mono">yyyy-MM-dd</code>로 표시됩니다. 달력 패널은{' '}
                         <code className="font-mono">z-popover</code> 레이어에 열려 고정 Header보다 위에 표시됩니다.
-                        날짜를 선택한 뒤 다시 열면 선택한 날짜가 속한 월로 이동합니다. 헤더는 시안대로{' '}
+                        날짜를 선택한 뒤 다시 열면 선택한 날짜가 속한 월로 이동합니다. 키보드 포커스와 패널이 열린
+                        동안에는 Input과 동일한 primary 테두리와 포커스 링을 표시합니다. 헤더는 시안대로{' '}
                         <strong>월·연도를 각각 고르는 두 드롭다운</strong>(07월 · 2026년)과 좌우 이동 버튼으로 구성되며,
                         먼 날짜로 이동할 때 한 달씩 넘기지 않아도 됩니다.
                     </p>
