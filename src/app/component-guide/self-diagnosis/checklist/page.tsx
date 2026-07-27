@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
+import FinalSubmitNavigation from './final-submit-navigation'
 import type {ReactNode} from 'react'
-import Link from 'next/link'
 import {ChevronRight} from 'lucide-react'
 import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
@@ -14,7 +14,6 @@ import {
 } from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import {StepHeader} from '@/components/composite/step-header'
-import {StepNavigation} from '@/components/composite/step-navigation'
 import {FormCard} from '@/components/composite/form-card'
 import {ChipCheckbox, ChipCheckboxGroup, ChipRadio, ChipRadioGroup} from '@/components/composite/chip'
 import {
@@ -398,15 +397,8 @@ const ChecklistPage = () => (
             </div>
         </main>
 
-        {/* 하단 CTA — 본문 끝에 그대로 붙는 블록이다. */}
-        <StepNavigation
-            appearance="plain"
-            prev={{asChild: true, children: <Link href={COMPANY_INFO_PATH}>이전</Link>}}
-            next={{
-                asChild: true,
-                children: <Link href="/component-guide/self-diagnosis/complete">다음</Link>,
-            }}
-        />
+        {/* 하단 CTA — '다음'은 바로 넘어가지 않고 최종 확인 모달을 먼저 띄운다(시안 [자가진단] alert). */}
+        <FinalSubmitNavigation prevHref={COMPANY_INFO_PATH} completeHref="/component-guide/self-diagnosis/complete" />
     </div>
 )
 
