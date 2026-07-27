@@ -1,12 +1,13 @@
 'use client'
 
 import {useState} from 'react'
-import {Pause, Play, RotateCcw} from 'lucide-react'
+import {Menu, Pause, Play, RotateCcw, X} from 'lucide-react'
 import AnimatedCounter from '@/components/custom/animated-counter'
 import {Button} from '@/components/ui/button'
 
 // 미리보기 도형 종류 — 실제 유틸리티를 그대로 붙여 원본과 같은 시간·가속도로 움직인다.
-export type MotionPreviewKind = 'scale' | 'line' | 'progress' | 'enter' | 'marquee' | 'counter'
+export type MotionPreviewKind =
+    'scale' | 'line' | 'progress' | 'enter' | 'marquee' | 'counter' | 'menu-close' | 'menu-return'
 
 // 정지 조작이 필요한 이유
 //  · 한 번만 도는 애니메이션(7s·5s·600ms)은 페이지를 연 순간 끝나 버려, 표까지 내려오면 이미 멈춰 있다.
@@ -37,6 +38,12 @@ const PreviewShape = ({kind, isPaused}: {kind: MotionPreviewKind; isPaused: bool
                 />
             </span>
         )
+    }
+    if (kind === 'menu-close') {
+        return <X data-paused={isPaused} className={`animate-header-menu-close-enter size-icon-lg ${PAUSABLE}`} />
+    }
+    if (kind === 'menu-return') {
+        return <Menu data-paused={isPaused} className={`animate-header-menu-trigger-return size-icon-lg ${PAUSABLE}`} />
     }
     if (kind === 'progress') {
         return (

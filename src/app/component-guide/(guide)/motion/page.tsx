@@ -52,6 +52,20 @@ const ANIMATIONS = [
         preview: 'line',
     },
     {
+        name: 'animate-header-menu-close-enter',
+        value: 'header-menu-close-enter 420ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        usage: '전체 메뉴가 열릴 때 닫기 아이콘이 회전·확대된 뒤 제자리에서 안정된다.',
+        source: 'composite/header.tsx',
+        preview: 'menu-close',
+    },
+    {
+        name: 'animate-header-menu-trigger-return',
+        value: 'header-menu-trigger-return 340ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        usage: '전체 메뉴가 닫힐 때 메뉴 아이콘이 짧게 회전·확대된 뒤 원래 상태로 복귀한다.',
+        source: 'composite/header.tsx',
+        preview: 'menu-return',
+    },
+    {
         name: 'animate-tech-progress',
         value: 'tech-service-progress 5s linear forwards',
         usage: '2섹션 서비스 목차의 진행 바. 끝나면 다음 서비스로 넘어간다.',
