@@ -70,7 +70,7 @@ type ActionCheckProps = Omit<ComponentPropsWithoutRef<'div'>, 'children' | 'role
 // 브라우저 전용 lottie-web은 effect 안에서 동적으로 불러 Server Component 번들 경계를 좁게 유지한다.
 // 모션 감소 사용자는 중간 움직임 없이 완료 프레임을 바로 보며, 장식용이면 접근성 트리에서 제외한다.
 const ActionCheck = ({
-    size = 150,
+    size,
     'aria-label': ariaLabel = '작업이 완료되었습니다',
     decorative = false,
     onAnimationComplete,
@@ -164,6 +164,11 @@ const ActionCheck = ({
         }
     }, [resolvedTheme])
 
+    const resolvedSize =
+        size == null
+            ? 'var(--action-check-size, var(--viewport-fit-decorative-size, var(--spacing-action-check)))'
+            : `${size}px`
+
     return (
         <div
             {...props}
@@ -173,7 +178,13 @@ const ActionCheck = ({
             aria-label={decorative ? undefined : ariaLabel}
             aria-hidden={decorative ? true : undefined}
             className={cn('shrink-0 overflow-hidden', className)}
-            style={{...style, width: size, height: size}}
+            // ViewportFitLayout 안에서는 공통 장식 크기 변수를 먼저 사용한다. 단독 기본 크기는
+            // size.action-check 토큰이며, 소비자가 size 를 명시한 경우에만 해당 px 값을 사용한다.
+            style={{
+                ...style,
+                width: resolvedSize,
+                height: resolvedSize,
+            }}
         />
     )
 }
