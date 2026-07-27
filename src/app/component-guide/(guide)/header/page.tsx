@@ -9,31 +9,14 @@ import {TriangleAlert} from 'lucide-react'
 
 export const metadata: Metadata = {title: '헤더 (Header)'}
 
-// 사용법 스니펫 — 기본 헤더와 메인 히어로용 배리에이션을 같은 합성 컴포넌트로 제공한다.
+// 사용법 스니펫 — 메뉴 외관은 하나이며, 화면 위 오버레이 여부와 테마 버튼 노출만 사용처가 정한다.
 const USAGE_CODE = `import Header from '@/components/composite/header'
 
-export default function Layout({children}) {
-  return (
-    <>
-      {/* 기본 헤더: 테마 변경 버튼 표시 */}
-      <Header />
-      <main id="main">{children}</main>
-    </>
-  )
-}
+// 어두운 메인 히어로 위에 고정: overlay=true, 테마 버튼 숨김이 기본값입니다.
+<Header />
 
-// 테마 변경 버튼을 숨기는 경우
-<Header showThemeToggle={false} />
-
-// 어두운 메인 히어로 위에 고정하는 경우
-// main 배리에이션은 기본적으로 테마 변경 버튼을 숨깁니다.
-<Header variant="main" />
-
-// main 배리에이션에서도 필요한 경우 표시할 수 있습니다.
-<Header variant="main" showThemeToggle />
-
-// 서브페이지에서 main 메뉴 외관을 쓰되 본문 위에 겹치지 않는 경우
-<Header variant="main" overlay={false} showThemeToggle />
+// 서브페이지: 문서 흐름에 sticky로 두고 테마 버튼을 표시합니다.
+<Header overlay={false} showThemeToggle />
 
 // 사용자 유형별 메뉴를 URL의 ?userType=corp|org 상태에 맞춰 주입합니다.
 const navigationByUserType = {
@@ -47,7 +30,7 @@ const navigationByUserType = {
   ],
 } satisfies HeaderNavigationByUserType
 
-<Header variant="main" navigationByUserType={navigationByUserType} />`
+<Header navigationByUserType={navigationByUserType} />`
 
 const USER_TYPE_USAGE_CODE = `const navigationByUserType = {
   corp: [
@@ -82,30 +65,17 @@ const DEMO_NAVIGATION = {
 const PROPS = [
     [
         'Header',
-        'variant',
-        '기본 또는 메인 히어로용 외관과 메뉴 기본값을 선택합니다.',
-        '"default"',
-        '"default" | "main"',
-    ],
-    [
-        'Header',
         'overlay',
         '헤더를 화면 위에 고정할지 설정합니다. false이면 배경과 테마 대응 로고를 사용하며 문서 흐름에 유지됩니다.',
-        'main이면 true',
+        'true',
         'boolean',
     ],
-    [
-        'Header',
-        'showThemeToggle',
-        '테마 변경 버튼 노출 여부를 명시적으로 설정합니다.',
-        'variant에 따라 결정',
-        'boolean',
-    ],
+    ['Header', 'showThemeToggle', '테마 변경 버튼 노출 여부를 명시적으로 설정합니다.', 'false', 'boolean'],
     [
         'Header',
         'navigationByUserType',
         '기업(corp)·기관(org)의 링크 배열을 주입합니다. 현재 userType 쿼리에 해당하는 배열만 표시합니다.',
-        'variant 기본 메뉴',
+        '기본 메뉴',
         'HeaderNavigationByUserType',
     ],
     ['HeaderNavLink', 'label', '화면에 표시할 메뉴명입니다.', '—', 'string'],
@@ -118,7 +88,7 @@ const COMPOSITION = [
     {name: '로고', desc: 'p > a > img 구조의 사이트명 로고(홈 링크). 이미지는 기술보증기금 alt 값을 제공한다.'},
     {
         name: '주 메뉴 (NavigationMenu)',
-        desc: '자가진단·전문가 평가·BIGx 보고서·탄소중립 등 주 내비게이션. md 미만에서 숨고 전체 메뉴(Sheet)로 이동한다.',
+        desc: '플랫폼 소개·기술평가·특허평가·K-BIGx 보고서·탄소중립 주 내비게이션. lg 미만에서 숨고 전체 메뉴(Sheet)로 이동한다.',
     },
     {
         name: '화면 유형 (Segmented Control)',
@@ -131,7 +101,7 @@ const COMPOSITION = [
     {name: '유틸 링크', desc: '로그인/회원가입·이용안내·기술보증기금(외부 링크↗). 상단 유틸바에 우측 정렬.'},
     {
         name: 'showThemeToggle',
-        desc: '테마 변경 버튼 노출 여부. 기본 헤더는 true, main 배리에이션은 false이며 사용처에서 명시적으로 변경할 수 있다.',
+        desc: '테마 변경 버튼 노출 여부. 기본값은 false이며 라이트·다크 전환이 필요한 서브페이지에서 true로 켠다.',
     },
     {
         name: '아이콘 버튼 (테마 전환·전체 메뉴)',
@@ -139,31 +109,33 @@ const COMPOSITION = [
     },
     {name: '전체 메뉴 (Sheet)', desc: '좁은 폭에서 주 메뉴·화면 유형 링크·유틸 링크를 담아 우측에서 여는 드로어.'},
     {
-        name: 'variant="main"',
-        desc: '메인 히어로용 메뉴·흰색 로고·fixed 배치를 적용한다. 두 변형 모두 콘텐츠 열은 화면 본문과 같은 content-layout 이라 로고·메뉴가 본문 시작선에 맞고, 모바일 동작도 공유한다.',
+        name: 'overlay',
+        desc: 'true이면 흰색 로고와 fixed 배치로 히어로 위에 겹치고, false이면 테마 대응 로고와 배경을 사용해 sticky로 배치한다.',
     },
 ] as const
 
 // 페이지별 테마 케이스 — 클래스 스코프(.light/.dark/.mainpage)로 강제 미리보기한다.
-// 메인페이지는 실제로 variant="main" 을 쓰므로 그 조합으로 보여준다.
 const THEME_CASES = [
     {
         theme: 'light',
-        variant: 'default',
+        overlay: false,
+        showThemeToggle: true,
         label: '라이트 (서브페이지)',
         desc: '밝은 표면 + 컬러 로고. 테마 토글 노출.',
     },
     {
         theme: 'dark',
-        variant: 'default',
+        overlay: false,
+        showThemeToggle: true,
         label: '다크 (서브페이지)',
         desc: '어두운 표면 + 화이트 로고. 테마 토글 노출.',
     },
     {
         theme: 'mainpage',
-        variant: 'main',
-        label: '메인페이지 (mainpage 스킨 · variant="main")',
-        desc: '히어로 위에 겹치는 배리에이션. 화이트 로고 한 장이며 테마 토글은 숨긴다.',
+        overlay: true,
+        showThemeToggle: false,
+        label: '메인페이지 (mainpage 스킨)',
+        desc: '히어로 위에 겹치는 오버레이 헤더. 화이트 로고 한 장이며 테마 토글은 숨긴다.',
     },
 ] as const
 
@@ -182,7 +154,7 @@ const HeaderGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         상단 유틸바(화면 유형 링크·유틸 링크)와 메인 내비(로고·주 메뉴·테마 전환·전체 메뉴) 2줄
-                        구성입니다. 화면 폭을 md(≥768) 미만으로 줄이면 유틸바·주 메뉴가 전체 메뉴(Sheet)로 접히며, 테마
+                        구성입니다. 화면 폭을 lg(≥1024) 미만으로 줄이면 유틸바·주 메뉴가 전체 메뉴(Sheet)로 접히며, 테마
                         전환은 showThemeToggle prop으로 사용처에서 노출 여부를 정합니다.
                     </p>
                 </div>
@@ -224,7 +196,7 @@ const HeaderGuidePage = () => (
                             <p className="typo-body-l-regular text-muted-foreground">{tc.desc}</p>
                             {/* 클래스 스코프로 테마를 강제한다 — 내부 시맨틱 토큰이 해당 테마 값으로 반사된다. */}
                             <div className={tc.theme}>
-                                <HeaderDemo variant={tc.variant} />
+                                <HeaderDemo overlay={tc.overlay} showThemeToggle={tc.showThemeToggle} />
                             </div>
                         </div>
                     ))}

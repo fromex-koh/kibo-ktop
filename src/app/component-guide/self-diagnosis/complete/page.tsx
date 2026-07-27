@@ -49,7 +49,7 @@ const MAIN_PAGE_PATH = '/component-guide/main-page'
 const SelfDiagnosisCompletePage = () => (
     <div className="bg-background flex min-h-dvh flex-col">
         <SkipNav links={SKIP_LINKS} />
-        <Header variant="main" overlay={false} showThemeToggle navigationByUserType={PLATFORM_NAVIGATION} />
+        <Header overlay={false} showThemeToggle navigationByUserType={PLATFORM_NAVIGATION} />
 
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다. */}
         <main id="main" tabIndex={-1} className="content-layout flex flex-1 flex-col gap-15 pt-10 pb-25">

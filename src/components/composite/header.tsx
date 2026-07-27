@@ -21,8 +21,6 @@ import {cn} from '@/lib/utils'
 // PROJECT-COMPOSITE: Header primitive가 없어 NavigationMenu·SegmentedControl·Sheet·Button을 조합한 사이트 상단 합성 컴포넌트.
 // PROJECT-STYLE: 로고는 h1 > a > img 구조를 유지하고 테마 클래스에 맞는 에셋을 노출한다.
 // 유틸 링크는 Button text variant 위에 Header 전용 자간만 보정한다.
-type HeaderVariant = 'default' | 'main'
-
 type UserType = 'corp' | 'org'
 
 export type HeaderNavLink = {
@@ -33,21 +31,13 @@ export type HeaderNavLink = {
 
 export type HeaderNavigationByUserType = Record<UserType, readonly HeaderNavLink[]>
 
-const NAV_LINKS: Record<HeaderVariant, readonly HeaderNavLink[]> = {
-    default: [
-        {label: '자가진단', href: '#'},
-        {label: '전문가 평가', href: '#'},
-        {label: 'BIGx 보고서', href: '#'},
-        {label: '탄소중립', href: '#'},
-    ],
-    main: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '기술평가', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-}
+const DEFAULT_NAV_LINKS: readonly HeaderNavLink[] = [
+    {label: '플랫폼 소개', href: '#'},
+    {label: '기술평가', href: '#'},
+    {label: '특허평가', href: '#'},
+    {label: 'K-BIGx 보고서', href: '#'},
+    {label: '탄소중립', href: '#', external: true},
+]
 
 const UTILITY_LINKS: {label: string; external?: boolean}[] = [
     {label: '로그인/회원가입'},
@@ -101,10 +91,10 @@ const UtilityLink = ({label, external, className}: {label: string; external?: bo
 
 // p > a > img 구조로 사이트명을 전달한다. 로고는 모든 화면에 반복되는 홈 링크라 제목(h1)이 아니다 —
 // h1 은 화면마다 하나뿐인 본문 제목(PageTitleBar·히어로 등)의 몫이다. [KWCAG 6.4.2]
-const Logo = ({variant, overlay}: {variant: HeaderVariant; overlay: boolean}) => (
+const Logo = ({overlay}: {overlay: boolean}) => (
     <p className="shrink-0">
         <Link href="#" className="flex shrink-0 items-center">
-            {variant === 'main' && overlay ? (
+            {overlay ? (
                 // 메인페이지는 항상 어두운 배경이라 화이트 로고 한 장만 둔다.
                 <Image
                     src="/images/logo-ktop-white.svg"
@@ -165,7 +155,6 @@ const HeaderThemeToggle = () => {
 
 const HeaderContent = ({
     navLabel,
-    variant,
     overlay,
     showThemeToggle,
     navigationByUserType,
@@ -173,22 +162,20 @@ const HeaderContent = ({
     searchParams,
 }: {
     navLabel: string
-    variant: HeaderVariant
     overlay: boolean
     showThemeToggle: boolean
     navigationByUserType?: HeaderNavigationByUserType
     userType: UserType
     searchParams: string
 }) => {
-    const isMain = variant === 'main'
-    const navLinks = navigationByUserType?.[userType] ?? NAV_LINKS[variant]
+    const navLinks = navigationByUserType?.[userType] ?? DEFAULT_NAV_LINKS
 
     return (
         <div className="flex flex-col">
-            {/* main 변형은 주 메뉴가 한 줄에 들어가는 lg(1024)부터 PC 헤더로 전환하고, xl(1280)부터 항목 간격을
+            {/* 주 메뉴가 한 줄에 들어가는 lg(1024)부터 PC 헤더로 전환하고, xl(1280)부터 항목 간격을
                 넓힌다. lg 미만에서는 유틸바·주 메뉴를 숨겨 로고+햄버거만 남긴다(링크는 전체 메뉴 Sheet에 유지). */}
-            <div className={cn('hidden justify-end', isMain ? 'lg:flex' : 'md:flex')}>
-                <div className={cn('flex items-center py-2', isMain ? 'gap-2 xl:gap-4' : 'gap-4')}>
+            <div className="hidden justify-end lg:flex">
+                <div className="flex items-center gap-2 py-2 xl:gap-4">
                     <MemberTypeToggle userType={userType} searchParams={searchParams} />
                     {UTILITY_LINKS.map((link) => (
                         <UtilityLink key={link.label} {...link} />
@@ -196,25 +183,16 @@ const HeaderContent = ({
                 </div>
             </div>
 
-            <div className={cn('flex items-center py-3', isMain ? 'gap-6 xl:gap-10' : 'gap-6')}>
-                <Logo variant={variant} overlay={overlay} />
+            <div className="flex items-center gap-6 py-3 xl:gap-10">
+                <Logo overlay={overlay} />
 
-                <NavigationMenu
-                    aria-label={navLabel}
-                    viewport={false}
-                    className={cn('hidden', isMain ? 'lg:flex' : 'md:flex')}
-                >
-                    <NavigationMenuList className={cn(isMain && 'gap-6 xl:gap-10')}>
+                <NavigationMenu aria-label={navLabel} viewport={false} className="hidden lg:flex">
+                    <NavigationMenuList className="gap-6 xl:gap-10">
                         {navLinks.map((link) => (
                             <NavigationMenuItem key={link.label}>
                                 <NavigationMenuLink
                                     asChild
-                                    className={cn(
-                                        'text-foreground whitespace-nowrap',
-                                        isMain
-                                            ? 'typo-title-xl-bold min-h-11 rounded-none px-0 py-0 hover:bg-transparent focus:bg-transparent'
-                                            : 'typo-title-m-semibold h-9 px-2 py-0',
-                                    )}
+                                    className="text-foreground typo-title-xl-bold min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent"
                                 >
                                     <Link
                                         href={link.href}
@@ -285,7 +263,6 @@ const HeaderContent = ({
 }
 
 type HeaderProps = {
-    variant?: HeaderVariant
     overlay?: boolean
     showThemeToggle?: boolean
     navigationByUserType?: HeaderNavigationByUserType
@@ -293,13 +270,11 @@ type HeaderProps = {
 
 const ResolvedHeaderContent = ({
     navLabel,
-    variant,
     overlay,
     showThemeToggle,
     navigationByUserType,
 }: {
     navLabel: string
-    variant: HeaderVariant
     overlay: boolean
     showThemeToggle: boolean
     navigationByUserType?: HeaderNavigationByUserType
@@ -311,7 +286,6 @@ const ResolvedHeaderContent = ({
     return (
         <HeaderContent
             navLabel={navLabel}
-            variant={variant}
             overlay={overlay}
             showThemeToggle={showThemeToggle}
             navigationByUserType={navigationByUserType}
@@ -321,13 +295,9 @@ const ResolvedHeaderContent = ({
     )
 }
 
-const Header = ({variant = 'default', overlay, showThemeToggle, navigationByUserType}: HeaderProps) => {
-    const isMain = variant === 'main'
-    const shouldOverlay = overlay ?? isMain
-    const shouldShowThemeToggle = showThemeToggle ?? !isMain
-
+const Header = ({overlay = true, showThemeToggle = false, navigationByUserType}: HeaderProps) => {
     return (
-        <header className={cn('z-header inset-x-0 top-0', shouldOverlay ? 'fixed' : 'bg-card sticky')}>
+        <header className={cn('z-header inset-x-0 top-0', overlay ? 'fixed' : 'bg-card sticky')}>
             {/* 헤더 콘텐츠 열은 화면 본문과 같은 content-layout 을 쓴다 — 좌우 여백을 헤더 안쪽 px 로 주면
                 로고·메뉴가 본문 시작선보다 안으로 들어가 어긋난다(좁은 화면의 가장자리 여백은 content-layout 이 담당). */}
             <div className="content-layout">
@@ -335,9 +305,8 @@ const Header = ({variant = 'default', overlay, showThemeToggle, navigationByUser
                     fallback={
                         <HeaderContent
                             navLabel="주 메뉴"
-                            variant={variant}
-                            overlay={shouldOverlay}
-                            showThemeToggle={shouldShowThemeToggle}
+                            overlay={overlay}
+                            showThemeToggle={showThemeToggle}
                             navigationByUserType={navigationByUserType}
                             userType="corp"
                             searchParams=""
@@ -346,9 +315,8 @@ const Header = ({variant = 'default', overlay, showThemeToggle, navigationByUser
                 >
                     <ResolvedHeaderContent
                         navLabel="주 메뉴"
-                        variant={variant}
-                        overlay={shouldOverlay}
-                        showThemeToggle={shouldShowThemeToggle}
+                        overlay={overlay}
+                        showThemeToggle={showThemeToggle}
                         navigationByUserType={navigationByUserType}
                     />
                 </Suspense>
@@ -357,12 +325,14 @@ const Header = ({variant = 'default', overlay, showThemeToggle, navigationByUser
     )
 }
 
-// 컴포넌트 가이드 카드 안에서 쓰는 데모. 테마 토글 노출은 실제 Header 와 같은 기준을 따른다(main 이면 숨김).
+// 컴포넌트 가이드 카드 안에서 쓰는 데모. fixed 배치는 카드 안에서 재현할 수 없어 로고·테마 조합만 보여준다.
 export const HeaderDemo = ({
-    variant = 'default',
+    overlay = false,
+    showThemeToggle = true,
     navigationByUserType,
 }: {
-    variant?: HeaderVariant
+    overlay?: boolean
+    showThemeToggle?: boolean
     navigationByUserType?: HeaderNavigationByUserType
 }) => (
     <div className="border-border bg-background overflow-hidden rounded-lg border">
@@ -370,9 +340,8 @@ export const HeaderDemo = ({
             fallback={
                 <HeaderContent
                     navLabel="헤더 데모 메뉴"
-                    variant={variant}
-                    overlay={false}
-                    showThemeToggle={variant !== 'main'}
+                    overlay={overlay}
+                    showThemeToggle={showThemeToggle}
                     navigationByUserType={navigationByUserType}
                     userType="corp"
                     searchParams=""
@@ -381,9 +350,8 @@ export const HeaderDemo = ({
         >
             <ResolvedHeaderContent
                 navLabel="헤더 데모 메뉴"
-                variant={variant}
-                overlay={false}
-                showThemeToggle={variant !== 'main'}
+                overlay={overlay}
+                showThemeToggle={showThemeToggle}
                 navigationByUserType={navigationByUserType}
             />
         </Suspense>

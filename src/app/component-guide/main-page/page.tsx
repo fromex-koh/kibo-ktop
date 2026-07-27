@@ -51,13 +51,13 @@ const MAIN_PAGE_CLASS = [
 // · 전환: 화면이 충분하면 고정 레이어(cover = 히어로는 제자리, 2섹션이 위를 덮음), 아니면 스크롤 스냅.
 //   갈리는 기준은 stack-pager.tsx 의 STACK_PAGER_QUERY.
 // · 반응형: 각 섹션이 자기 것을 갖는다(hero-* 클래스는 globals.css). 여기엔 페이지 전용 조정만 둔다.
-// · 테마: theme-provider 가 이 라우트를 mainpage 스킨으로 고정한다. Header 도 variant="main" 이면
+// · 테마: theme-provider 가 이 라우트를 mainpage 스킨으로 고정한다. Header 는
 //   테마 토글을 숨기므로(showThemeToggle 기본값) 이 화면에는 라이트·다크 전환 수단이 없다.
 const MainPage = () => (
     <StackPager transition="cover" className={`bg-background relative min-h-dvh ${MAIN_PAGE_CLASS}`}>
         <MainPageHeaderState />
         <SkipNav links={SKIP_LINKS} />
-        <Header variant="main" navigationByUserType={MAIN_HEADER_NAVIGATION} />
+        <Header navigationByUserType={MAIN_HEADER_NAVIGATION} />
         {/* id·tabIndex 는 스킵 링크 도착점용 — 포커스만 받고 링은 그리지 않는다(#site-info 도 같다). */}
         <main id="main" tabIndex={-1}>
             <HeroSection />
