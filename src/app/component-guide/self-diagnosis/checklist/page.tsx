@@ -376,7 +376,6 @@ const ChecklistPage = () => (
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
                                 <BreadcrumbPage>체크리스트 입력</BreadcrumbPage>
-                                <ChevronRight aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>

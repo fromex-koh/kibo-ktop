@@ -1,6 +1,5 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
-import {ChevronRightIcon} from 'lucide-react'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {
@@ -34,8 +33,6 @@ const USAGE_CODE = `{/* 알약 컨테이너 — PageTitleBar 를 쓰면 breadcru
       <BreadcrumbDotSeparator />
       <BreadcrumbItem>
         <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
-        {/* 현재 페이지 표시 화살표(›) — Figma icon/line-right */}
-        <ChevronRightIcon aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
       </BreadcrumbItem>
     </BreadcrumbList>
   </Breadcrumb>
@@ -190,10 +187,6 @@ const BreadcrumbGuidePage = () => (
                                 <BreadcrumbDotSeparator />
                                 <BreadcrumbItem>
                                     <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
-                                    <ChevronRightIcon
-                                        aria-hidden="true"
-                                        className="text-foreground size-icon-sm shrink-0"
-                                    />
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>

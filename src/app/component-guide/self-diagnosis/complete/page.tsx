@@ -1,6 +1,5 @@
 import type {Metadata} from 'next'
 import Link from 'next/link'
-import {ChevronRight} from 'lucide-react'
 import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
@@ -89,7 +88,6 @@ const SelfDiagnosisCompletePage = () => (
                         <BreadcrumbDotSeparator />
                         <BreadcrumbItem>
                             <BreadcrumbPage>제출 완료</BreadcrumbPage>
-                            <ChevronRight aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>

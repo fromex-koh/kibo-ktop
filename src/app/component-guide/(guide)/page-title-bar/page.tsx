@@ -1,6 +1,5 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
-import {ChevronRightIcon} from 'lucide-react'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
@@ -36,7 +35,6 @@ const USAGE_CODE = `<PageTitleBar
         <BreadcrumbDotSeparator />
         <BreadcrumbItem>
           <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
-          <ChevronRightIcon aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
@@ -113,7 +111,6 @@ const DemoBreadcrumb = () => (
             <BreadcrumbDotSeparator />
             <BreadcrumbItem>
                 <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
-                <ChevronRightIcon aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
             </BreadcrumbItem>
         </BreadcrumbList>
     </Breadcrumb>

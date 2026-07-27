@@ -162,7 +162,6 @@ const CustomerConsentPage = () => (
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
                                 <BreadcrumbPage>고객 정보 활용 동의</BreadcrumbPage>
-                                <ChevronRight aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>

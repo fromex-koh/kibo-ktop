@@ -1,6 +1,5 @@
 import type {Metadata} from 'next'
 import Image from 'next/image'
-import {ChevronRight} from 'lucide-react'
 import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
 import Footer from '@/components/composite/footer'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
@@ -95,10 +94,6 @@ const EvaluationModelPage = () => (
                                 <BreadcrumbDotSeparator />
                                 <BreadcrumbItem>
                                     <BreadcrumbPage>기술평가</BreadcrumbPage>
-                                    <ChevronRight
-                                        aria-hidden="true"
-                                        className="text-foreground size-icon-sm shrink-0"
-                                    />
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>

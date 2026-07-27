@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import type {ReactNode} from 'react'
 import Link from 'next/link'
-import {ChevronRight, CircleCheck, Lock, Plus, X} from 'lucide-react'
+import {CircleCheck, Lock, Plus, X} from 'lucide-react'
 import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
@@ -469,7 +469,6 @@ const CompanyInfoPage = () => (
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
                                 <BreadcrumbPage>기업정보·기술정보 입력</BreadcrumbPage>
-                                <ChevronRight aria-hidden="true" className="text-foreground size-icon-sm shrink-0" />
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
