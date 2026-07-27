@@ -32,7 +32,8 @@ shadcn/ui의 `radix-nova` 레지스트리 스타일을 이 프로젝트의 **디
   `aria-*`·포커스 관리 등은 **수정하지 않는다**([NA-007]). 허용되는 수정은 **재스킨을 위해 셸 안의 CVA 또는
   className 스타일 정의를 `theme/<name>.variants.ts` import 로 바꾸는 것**이며, 이때 밀려난 바닐라 스타일은
   `vendor/shadcn-baseline/` 에 보관한다(아래 [셸·스타일 분리 패턴](#셸스타일-분리-패턴--ui-셸--theme-스타일) 참조).
-  스타일을 추출하지 않은 셸은 다운로드 순정 그대로 둔다.
+  스타일을 추출하지 않은 셸은 다운로드 순정 그대로 두며 vendor 사본을 만들지 않는다. composite/custom에서 새로
+  만든 컴포넌트의 theme 스타일도 shadcn 원본이 아니므로 vendor 대상이 아니다.
 
     현재 **코드 컨벤션 호환을 위한 최소 예외는 `ui/input-group.tsx` 한 건**이다. 레지스트리 원본의
     `(event.target as HTMLElement)`는 [ST-002]와 충돌하므로 동등한 `event.target instanceof Element` 타입 가드로
@@ -133,8 +134,9 @@ CSS 변수나 함수 문법이라고 **자동 허용되는 것은 아니다.** �
    · 재스킨의 유일한 작업 장소. 게이트(ESLint·Prettier·conventions) 전체 적용
           │ (추출 시 밀려난 바닐라 스타일 정의는)
           ▼
- vendor/shadcn-baseline/<name>.variants.ts ← 바닐라 스타일 보관소 (업데이트 diff 기준선)
+ vendor/shadcn-baseline/<name>.variants.ts ← 수정 셸의 바닐라 스타일 보관소 (업데이트 diff 기준선)
    · 앱 코드에서 import 금지 · src/ 밖이라 빌드/게이트/IDE 자동완성에 안 잡힘
+   · ui 셸이 theme import를 가질 때만 생성 · 순정 ui와 composite/custom은 생성하지 않음
 ```
 
 **책임 분리 (한 줄):** _스타일은 theme, 그 외 전부(구조·동작·접근성·업데이트)는 ui 셸 = 업스트림._
@@ -357,7 +359,7 @@ npx shadcn@latest add <component>
 
 1. **셸이 `src/components/ui/<name>.tsx` 에 순정으로 내려온다** — CLI 가 alias 재작성·아이콘 해석을 자동
    처리한다. 재스킨이 필요 없으면 **여기서 끝** — 화면에서 `@/components/ui/<name>` 을 바로 쓴다(순정 셸은
-   게이트 면제로 자동 인식).
+   게이트 면제로 자동 인식). 이 경우 vendor 기준선 파일도 만들지 않는다.
 2. 색/테두리/포커스 유틸(`bg-primary`·`border-input`·`ring-ring` …)이 표준 슬롯이라 자동으로 프로젝트 토큰에
    연결됨을 확인한다.
 3. **재스킨이 필요하면 스타일 정의를 추출한다**:
@@ -402,5 +404,4 @@ npx shadcn@latest add <component>
 - **검증 페이지**: `/component-guide` — 각 컴포넌트(Button variant/size/상태·Input 등)를 라이트·다크에서 렌더 확인.
 - **PR 체크리스트**: [SC-01] arbitrary value 없음 / [SC-02] `ui/**` 셸의 구조·동작·a11y 수정 없음(스타일 추출과
   명시된 타입 가드만 허용) / [SC-03] 기본 UI 는 shadcn / [SC-04] 공통 스타일은 `theme/*.variants.ts`에서 관리,
-  바닐라 스타일 정의는
-  `vendor/shadcn-baseline/` 에 보관.
+  theme import가 있는 수정 셸의 바닐라 스타일 정의만 `vendor/shadcn-baseline/` 에 보관.

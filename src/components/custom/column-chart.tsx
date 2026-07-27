@@ -57,7 +57,7 @@ const ColumnChart = ({
 
     return (
         <div {...props} className={cn('w-full', className)}>
-            <div className="relative w-full overflow-x-auto">
+            <div className="relative w-full">
                 {unit ? (
                     <span className="typo-body-s-regular text-foreground absolute top-0 left-3 z-10" aria-hidden="true">
                         단위: {unit}
@@ -65,7 +65,7 @@ const ColumnChart = ({
                 ) : null}
                 <ChartContainer
                     config={config}
-                    className="h-80 w-full min-w-120 sm:min-w-0 [&_.recharts-rectangle]:cursor-pointer"
+                    className="h-80 w-full min-w-0 [&_.recharts-rectangle]:cursor-pointer"
                     role="img"
                     aria-label={ariaLabel}
                 >

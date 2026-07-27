@@ -3,6 +3,7 @@
 import {useEffect, useRef, useState, type ComponentPropsWithoutRef} from 'react'
 import {useTheme} from 'next-themes'
 import type {Core, EdgeSingular, ElementDefinition, NodeSingular, StylesheetJson} from 'cytoscape'
+import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import {cn} from '@/lib/utils'
 
 type NetworkNodeStatus = 'closed' | 'danger' | 'interest' | 'normal'
@@ -27,6 +28,7 @@ type NetworkGraphProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     nodes: NetworkNode[]
     links: NetworkLink[]
     ariaLabel: string
+    onLoadingChange?: (isLoading: boolean) => void
 }
 
 type TooltipState = {text: string; x: number; y: number}
@@ -127,16 +129,19 @@ const readColor = (token: string, probe: HTMLElement) => {
     return getComputedStyle(probe).color
 }
 
-const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGraphProps) => {
+const NetworkGraph = ({nodes, links, ariaLabel, onLoadingChange, className, ...props}: NetworkGraphProps) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const [tooltip, setTooltip] = useState<TooltipState>()
     const [keyboardTargets, setKeyboardTargets] = useState<KeyboardTarget[]>([])
+    const [isLoading, setIsLoading] = useState(true)
     const {resolvedTheme} = useTheme()
 
     useEffect(() => {
         const container = containerRef.current
         if (!container || !resolvedTheme) return
 
+        setIsLoading(true)
+        onLoadingChange?.(true)
         let cancelled = false
         let graph: Core | undefined
         let resizeObserver: ResizeObserver | undefined
@@ -408,6 +413,8 @@ const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGra
             if (!analysisNode) {
                 const fallbackLayout = {name: 'fcose', animate: false, fit: true, padding: 48}
                 graph.layout(fallbackLayout).run()
+                setIsLoading(false)
+                onLoadingChange?.(false)
                 return
             }
 
@@ -546,6 +553,8 @@ const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGra
                 scheduleKeyboardTargetUpdate()
             })
             resizeObserver.observe(containerRef.current)
+            setIsLoading(false)
+            onLoadingChange?.(false)
 
             return () => {
                 if (positionFrame !== undefined) cancelAnimationFrame(positionFrame)
@@ -565,13 +574,26 @@ const NetworkGraph = ({nodes, links, ariaLabel, className, ...props}: NetworkGra
             setTooltip(undefined)
             setKeyboardTargets([])
         }
-    }, [ariaLabel, links, nodes, resolvedTheme])
+    }, [ariaLabel, links, nodes, onLoadingChange, resolvedTheme])
 
     const tooltipParts = tooltip ? getTooltipParts(tooltip.text) : undefined
 
     return (
         <div {...props} className={cn('relative min-w-0 overflow-hidden', className)}>
-            <div ref={containerRef} role="img" aria-label={ariaLabel} className="h-120 w-full" />
+            {isLoading ? (
+                <ChartSkeleton
+                    type="network"
+                    label={`${ariaLabel} 데이터를 불러오는 중입니다.`}
+                    className="absolute inset-0 z-5"
+                />
+            ) : null}
+            <div
+                ref={containerRef}
+                role="img"
+                aria-label={ariaLabel}
+                aria-hidden={isLoading}
+                className={cn('h-120 w-full', isLoading && 'invisible')}
+            />
             {keyboardTargets.map((target) => (
                 <button
                     key={target.id}

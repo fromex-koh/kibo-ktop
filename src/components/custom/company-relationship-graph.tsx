@@ -3,6 +3,7 @@
 import {useEffect, useRef, useState, type ComponentPropsWithoutRef} from 'react'
 import {useTheme} from 'next-themes'
 import type {Core, ElementDefinition, NodeSingular, StylesheetJson} from 'cytoscape'
+import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import {cn} from '@/lib/utils'
 
 type CompanyRiskStatus = 'alert' | 'attention' | 'closed' | 'danger' | 'good' | 'high-risk' | 'normal' | 'poor'
@@ -30,6 +31,7 @@ type CompanyRelationshipGraphProps = Omit<ComponentPropsWithoutRef<'div'>, 'chil
     sectors: CompanySector[]
     directCompanies?: RelatedCompany[]
     ariaLabel: string
+    onLoadingChange?: (isLoading: boolean) => void
 }
 
 type TooltipState = {text: string; x: number; y: number}
@@ -172,18 +174,22 @@ const CompanyRelationshipGraph = ({
     sectors,
     directCompanies = EMPTY_DIRECT_COMPANIES,
     ariaLabel,
+    onLoadingChange,
     className,
     ...props
 }: CompanyRelationshipGraphProps) => {
     const containerRef = useRef<HTMLDivElement>(null)
     const [tooltip, setTooltip] = useState<TooltipState>()
     const [keyboardTargets, setKeyboardTargets] = useState<KeyboardTarget[]>([])
+    const [isLoading, setIsLoading] = useState(true)
     const {resolvedTheme} = useTheme()
 
     useEffect(() => {
         const container = containerRef.current
         if (!container || !resolvedTheme) return
 
+        setIsLoading(true)
+        onLoadingChange?.(true)
         let cancelled = false
         let graph: Core | undefined
         let resizeObserver: ResizeObserver | undefined
@@ -578,6 +584,8 @@ const CompanyRelationshipGraph = ({
                 scheduleKeyboardTargetUpdate()
             })
             resizeObserver.observe(containerRef.current)
+            setIsLoading(false)
+            onLoadingChange?.(false)
 
             return () => {
                 if (positionFrame !== undefined) cancelAnimationFrame(positionFrame)
@@ -597,13 +605,26 @@ const CompanyRelationshipGraph = ({
             setTooltip(undefined)
             setKeyboardTargets([])
         }
-    }, [ariaLabel, companyName, directCompanies, resolvedTheme, sectors])
+    }, [ariaLabel, companyName, directCompanies, onLoadingChange, resolvedTheme, sectors])
 
     const tooltipParts = tooltip ? getTooltipParts(tooltip.text) : undefined
 
     return (
         <div {...props} className={cn('relative min-w-0 overflow-hidden', className)}>
-            <div ref={containerRef} role="img" aria-label={ariaLabel} className="h-100 w-full sm:h-125" />
+            {isLoading ? (
+                <ChartSkeleton
+                    type="network"
+                    label={`${ariaLabel} 데이터를 불러오는 중입니다.`}
+                    className="absolute inset-0 z-5 h-100 sm:h-125"
+                />
+            ) : null}
+            <div
+                ref={containerRef}
+                role="img"
+                aria-label={ariaLabel}
+                aria-hidden={isLoading}
+                className={cn('h-100 w-full sm:h-125', isLoading && 'invisible')}
+            />
             {keyboardTargets.map((target) => (
                 <button
                     key={target.id}

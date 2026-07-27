@@ -39,7 +39,7 @@ const ScoreBenchmarkChart = ({data, ariaLabel, className, ...props}: ScoreBenchm
     const chartData = [{name: 'score', score, fill: 'var(--color-score)'}]
 
     return (
-        <div {...props} className={cn('grid items-center gap-8 lg:grid-cols-[14rem_minmax(0,1fr)]', className)}>
+        <div {...props} className={cn('grid items-center gap-8 lg:grid-cols-3', className)}>
             <div className="relative mx-auto size-56 max-w-full">
                 <ChartContainer
                     config={chartConfig}
@@ -69,7 +69,7 @@ const ScoreBenchmarkChart = ({data, ariaLabel, className, ...props}: ScoreBenchm
                 </div>
             </div>
 
-            <div className="flex min-w-0 flex-col gap-6">
+            <div className="flex min-w-0 flex-col gap-6 lg:col-span-2">
                 <p
                     className="bg-muted text-foreground rounded-r-xl border-l-4 px-5 py-4 text-base leading-7"
                     style={{borderColor: keyColor}}

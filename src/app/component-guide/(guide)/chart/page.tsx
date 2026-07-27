@@ -15,6 +15,7 @@ import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
 import {Badge} from '@/components/ui/badge'
 import {
+    ChartLoadingPreview,
     CompanyNetworkDemo,
     CreditRatingDemo,
     InnovationGrowthIndexDemo,
@@ -1002,7 +1003,7 @@ const WORD_CLOUD_LICENSE: LicenseLink = {
 const ChartGuidePage = () => (
     <GuidePageShell
         title="차트 (Chart)"
-        description="실제 데이터에 따라 표현되는 네트워크·정량 차트와 접근 가능한 등급 매트릭스입니다. 모든 시각화 색상은 semantic chart 토큰을 사용합니다."
+        description="실제 데이터에 따라 표현되는 네트워크·정량 차트와 접근 가능한 등급 매트릭스입니다. 모든 시각화는 준비되는 동안 유형별 스켈레톤을 표시하고 semantic chart 토큰을 사용합니다."
     >
         <BaseCard>
             <section aria-labelledby="chart-company-network" className="flex flex-col gap-5">
@@ -1018,6 +1019,7 @@ const ChartGuidePage = () => (
                             '연계기업이 많은 섹터만 분석기업과의 거리를 늘려 배치 공간을 확보합니다.',
                             '외곽 노드나 라벨이 영역을 벗어나면 분석기업을 중앙에 유지한 채 자동 축소합니다.',
                             '외곽 기업은 직접 이동하거나 키보드로 선택해 상세 정보를 확인할 수 있습니다.',
+                            '그래프 모듈과 데이터 배치가 준비되는 동안 범례와 그래프 전체에 Network Skeleton을 표시합니다.',
                         ].map((description) => (
                             <li key={description} className="flex items-start">
                                 <ListMarker type="unordered" level={1} />
@@ -1026,7 +1028,7 @@ const ChartGuidePage = () => (
                         ))}
                     </ul>
                 </div>
-                <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
+                <div className="bg-card border-border overflow-hidden rounded-xl border p-4">
                     <CompanyNetworkDemo />
                 </div>
                 <CodeBlock
@@ -1052,6 +1054,7 @@ const ChartGuidePage = () => (
                             '거래기업이 많은 업종만 분석기업과의 거리를 늘려 배치 공간을 확보합니다.',
                             '외곽 노드나 라벨이 영역을 벗어나면 전체 그래프가 화면 안에 들어오도록 자동 축소합니다.',
                             '노드는 마우스나 Tab 키로 선택해 전체 정보 툴팁을 확인할 수 있습니다.',
+                            '그래프 모듈과 데이터 배치가 준비되는 동안 범례와 그래프 전체에 Network Skeleton을 표시합니다.',
                         ].map((description) => (
                             <li key={description} className="flex items-start">
                                 <ListMarker type="unordered" level={1} />
@@ -1060,7 +1063,7 @@ const ChartGuidePage = () => (
                         ))}
                     </ul>
                 </div>
-                <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
+                <div className="bg-card border-border overflow-hidden rounded-xl border p-4">
                     <SupplyNetworkDemo />
                 </div>
                 <LicenseNotice libraries={[CYTOSCAPE_LICENSE, FCOSE_LICENSE]} />
@@ -1091,7 +1094,7 @@ const ChartGuidePage = () => (
                     </div>
                     <Badge color="neutral">소분류 기준</Badge>
                 </div>
-                <div className="bg-background border-border overflow-hidden rounded-xl border p-4 sm:p-6">
+                <div className="bg-surface border-border overflow-hidden rounded-xl border p-4 sm:p-6">
                     <TechnologyHoldingsDemo />
                 </div>
                 <CodeBlock
@@ -1116,7 +1119,7 @@ const ChartGuidePage = () => (
                     </div>
                     <Badge color="neutral">2025.12.04 기준</Badge>
                 </div>
-                <div className="bg-background border-border overflow-hidden rounded-xl border p-4 sm:p-6">
+                <div className="bg-surface border-border overflow-hidden rounded-xl border p-4 sm:p-6">
                     <InnovationGrowthIndexDemo />
                 </div>
                 <CodeBlock
@@ -1168,7 +1171,7 @@ const ChartGuidePage = () => (
                         </a>
                     </p>
                 </div>
-                <div className="bg-background border-border overflow-visible rounded-xl border p-4 sm:p-6">
+                <div className="bg-surface border-border overflow-visible rounded-xl border p-4 sm:p-6">
                     <CreditRatingDemo />
                 </div>
                 <CodeBlock
@@ -1199,11 +1202,13 @@ const ChartGuidePage = () => (
                         ))}
                     </ul>
                 </div>
-                <div className="bg-background border-border overflow-hidden rounded-xl border p-4 sm:p-6">
-                    <RatingMatrix
-                        rows={BUSINESS_PERFORMANCE_ROWS}
-                        ariaLabel="기업 경영지표별 취약·미흡·보통·양호·우수 평가등급"
-                    />
+                <div className="bg-surface border-border overflow-hidden rounded-xl border p-4 sm:p-6">
+                    <ChartLoadingPreview type="matrix" label="기업 경영지표 등급을 불러오는 중입니다.">
+                        <RatingMatrix
+                            rows={BUSINESS_PERFORMANCE_ROWS}
+                            ariaLabel="기업 경영지표별 취약·미흡·보통·양호·우수 평가등급"
+                        />
+                    </ChartLoadingPreview>
                 </div>
                 <CodeBlock
                     code={BUSINESS_PERFORMANCE_MATRIX_CODE}
@@ -1235,13 +1240,15 @@ const ChartGuidePage = () => (
                     </div>
                     <Badge color="neutral">조회기업 vs 업종평균</Badge>
                 </div>
-                <div className="bg-background border-border overflow-hidden rounded-xl border p-4 sm:p-6">
-                    <ComparisonRadarChart
-                        data={BUSINESS_METRIC_RADAR_DATA}
-                        primaryLabel="조회기업"
-                        comparisonLabel="업종평균"
-                        ariaLabel="조회기업과 업종평균의 성장성·수익성·안정성·활동성·유동성·현금흐름 점수 비교"
-                    />
+                <div className="bg-surface border-border overflow-hidden rounded-xl border p-4 sm:p-6">
+                    <ChartLoadingPreview type="radar" label="부문별 비교를 불러오는 중입니다.">
+                        <ComparisonRadarChart
+                            data={BUSINESS_METRIC_RADAR_DATA}
+                            primaryLabel="조회기업"
+                            comparisonLabel="업종평균"
+                            ariaLabel="조회기업과 업종평균의 성장성·수익성·안정성·활동성·유동성·현금흐름 점수 비교"
+                        />
+                    </ChartLoadingPreview>
                 </div>
                 <CodeBlock
                     code={BUSINESS_METRIC_RADAR_CODE}
@@ -1275,14 +1282,16 @@ const ChartGuidePage = () => (
                         </ul>
                     </div>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
-                    <GroupedColumnChart
-                        data={GROUPED_COLUMN_DATA}
-                        series={GROUPED_COLUMN_SERIES}
-                        unit="백만원"
-                        yAxisStep={2000}
-                        ariaLabel="최근 3개년 총자산·자본·부채·매출·영업이익·순이익 비교"
-                    />
+                <div className="bg-surface border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                    <ChartLoadingPreview type="bar" label="최근 3개년 재무 현황을 불러오는 중입니다.">
+                        <GroupedColumnChart
+                            data={GROUPED_COLUMN_DATA}
+                            series={GROUPED_COLUMN_SERIES}
+                            unit="백만원"
+                            yAxisStep={2000}
+                            ariaLabel="최근 3개년 총자산·자본·부채·매출·영업이익·순이익 비교"
+                        />
+                    </ChartLoadingPreview>
                 </div>
                 <CodeBlock
                     code={GROUPED_COLUMN_CODE}
@@ -1294,17 +1303,19 @@ const ChartGuidePage = () => (
                         <h3 id="chart-grouped-column-balance-sheet" className="typo-title-l-bold">
                             재무상태표 배리에이션
                         </h3>
-                        <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
-                            <GroupedColumnChart
-                                data={BALANCE_SHEET_DATA}
-                                series={BALANCE_SHEET_SERIES}
-                                showValueLabels
-                                showLegend={false}
-                                valueFractionDigits={1}
-                                unit="억원"
-                                yAxisStep={50}
-                                ariaLabel="2022년부터 2024년까지 총자산·부채·자본 비교"
-                            />
+                        <div className="bg-surface border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                            <ChartLoadingPreview type="bar" label="재무상태표를 불러오는 중입니다.">
+                                <GroupedColumnChart
+                                    data={BALANCE_SHEET_DATA}
+                                    series={BALANCE_SHEET_SERIES}
+                                    showValueLabels
+                                    showLegend={false}
+                                    valueFractionDigits={1}
+                                    unit="억원"
+                                    yAxisStep={50}
+                                    ariaLabel="2022년부터 2024년까지 총자산·부채·자본 비교"
+                                />
+                            </ChartLoadingPreview>
                         </div>
                         <CodeBlock
                             code={GROUPED_COLUMN_VARIATION_CODE}
@@ -1316,17 +1327,19 @@ const ChartGuidePage = () => (
                         <h3 id="chart-grouped-column-income-statement" className="typo-title-l-bold">
                             손익계산서 배리에이션
                         </h3>
-                        <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
-                            <GroupedColumnChart
-                                data={INCOME_STATEMENT_DATA}
-                                series={INCOME_STATEMENT_SERIES}
-                                showValueLabels
-                                showLegend={false}
-                                valueFractionDigits={1}
-                                unit="억원"
-                                yAxisStep={50}
-                                ariaLabel="2022년부터 2024년까지 매출·영업이익·순이익 비교"
-                            />
+                        <div className="bg-surface border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                            <ChartLoadingPreview type="bar" label="손익계산서를 불러오는 중입니다.">
+                                <GroupedColumnChart
+                                    data={INCOME_STATEMENT_DATA}
+                                    series={INCOME_STATEMENT_SERIES}
+                                    showValueLabels
+                                    showLegend={false}
+                                    valueFractionDigits={1}
+                                    unit="억원"
+                                    yAxisStep={50}
+                                    ariaLabel="2022년부터 2024년까지 매출·영업이익·순이익 비교"
+                                />
+                            </ChartLoadingPreview>
                         </div>
                         <CodeBlock
                             code={GROUPED_COLUMN_INCOME_CODE}
@@ -1349,7 +1362,7 @@ const ChartGuidePage = () => (
                         {[
                             '하나의 지표를 기간이나 항목별 단일 막대로 비교합니다.',
                             '항목별 color를 전달하면 의미가 유지되는 semantic chart 색상으로 구분할 수 있습니다.',
-                            '작은 화면에서는 축과 막대의 최소 너비를 유지하고 차트 영역만 가로로 이동합니다.',
+                            '작은 화면에서는 컨테이너 너비에 맞춰 축과 막대 간격을 함께 줄여 가로 스크롤 없이 표시합니다.',
                             '막대 위 값 라벨과 숨김 데이터 표를 함께 제공해 색상에만 의존하지 않습니다.',
                         ].map((description) => (
                             <li key={description} className="flex items-start">
@@ -1359,14 +1372,16 @@ const ChartGuidePage = () => (
                         ))}
                     </ul>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
-                    <ColumnChart
-                        data={COLUMN_DATA}
-                        barWidth={64}
-                        unit="천원"
-                        yAxisStep={50000}
-                        ariaLabel="2022년부터 2024년까지 인당 매출액 비교"
-                    />
+                <div className="bg-surface border-border overflow-hidden rounded-xl border p-4 sm:p-6">
+                    <ChartLoadingPreview type="bar" label="인당 매출액을 불러오는 중입니다.">
+                        <ColumnChart
+                            data={COLUMN_DATA}
+                            barWidth={64}
+                            unit="천원"
+                            yAxisStep={50000}
+                            ariaLabel="2022년부터 2024년까지 인당 매출액 비교"
+                        />
+                    </ChartLoadingPreview>
                 </div>
                 <CodeBlock code={COLUMN_CODE} language="tsx" />
                 <LicenseNotice libraries={[RECHARTS_LICENSE]} />
@@ -1398,16 +1413,18 @@ const ChartGuidePage = () => (
                     <h3 id="chart-line-financial-ratio" className="typo-title-l-bold">
                         주요 재무비율
                     </h3>
-                    <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
-                        <LineChart
-                            data={FINANCIAL_RATIO_LINE_DATA}
-                            series={FINANCIAL_RATIO_LINE_SERIES}
-                            unit="%"
-                            axisValueSuffix="%"
-                            yAxisDomain={[0, 160]}
-                            yAxisStep={20}
-                            ariaLabel="2020년부터 2024년까지 주요 재무비율 추이"
-                        />
+                    <div className="bg-surface border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                        <ChartLoadingPreview type="line" label="주요 재무비율 추이를 불러오는 중입니다.">
+                            <LineChart
+                                data={FINANCIAL_RATIO_LINE_DATA}
+                                series={FINANCIAL_RATIO_LINE_SERIES}
+                                unit="%"
+                                axisValueSuffix="%"
+                                yAxisDomain={[0, 160]}
+                                yAxisStep={20}
+                                ariaLabel="2020년부터 2024년까지 주요 재무비율 추이"
+                            />
+                        </ChartLoadingPreview>
                     </div>
                     <CodeBlock code={FINANCIAL_RATIO_LINE_CODE} language="tsx" />
                 </section>
@@ -1416,16 +1433,18 @@ const ChartGuidePage = () => (
                     <h3 id="chart-line-cash-flow" className="typo-title-l-bold">
                         현금흐름 추이
                     </h3>
-                    <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
-                        <LineChart
-                            data={CASH_FLOW_LINE_DATA}
-                            series={CASH_FLOW_LINE_SERIES}
-                            unit="억원"
-                            axisValueSuffix="억"
-                            yAxisDomain={[-20, 50]}
-                            yAxisStep={10}
-                            ariaLabel="2020년부터 2024년까지 주요 현금흐름 추이"
-                        />
+                    <div className="bg-surface border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                        <ChartLoadingPreview type="line" label="현금흐름 추이를 불러오는 중입니다.">
+                            <LineChart
+                                data={CASH_FLOW_LINE_DATA}
+                                series={CASH_FLOW_LINE_SERIES}
+                                unit="억원"
+                                axisValueSuffix="억"
+                                yAxisDomain={[-20, 50]}
+                                yAxisStep={10}
+                                ariaLabel="2020년부터 2024년까지 주요 현금흐름 추이"
+                            />
+                        </ChartLoadingPreview>
                     </div>
                     <CodeBlock code={CASH_FLOW_LINE_CODE} language="tsx" />
                 </section>
@@ -1434,19 +1453,21 @@ const ChartGuidePage = () => (
                     <h3 id="chart-line-employee" className="typo-title-l-bold">
                         분기별 종업원 수
                     </h3>
-                    <div className="bg-background border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
-                        <LineChart
-                            data={EMPLOYEE_TREND_LINE_DATA}
-                            series={EMPLOYEE_TREND_LINE_SERIES}
-                            variant="area"
-                            curveType="monotone"
-                            showValueLabels
-                            showLegend={false}
-                            unit="명"
-                            yAxisDomain={[20, 45]}
-                            yAxisStep={5}
-                            ariaLabel="2023년 3월부터 2025년 9월까지 분기별 종업원 수 추이"
-                        />
+                    <div className="bg-surface border-border overflow-x-auto rounded-xl border p-4 sm:p-6">
+                        <ChartLoadingPreview type="line" label="분기별 종업원 수를 불러오는 중입니다.">
+                            <LineChart
+                                data={EMPLOYEE_TREND_LINE_DATA}
+                                series={EMPLOYEE_TREND_LINE_SERIES}
+                                variant="area"
+                                curveType="monotone"
+                                showValueLabels
+                                showLegend={false}
+                                unit="명"
+                                yAxisDomain={[20, 45]}
+                                yAxisStep={5}
+                                ariaLabel="2023년 3월부터 2025년 9월까지 분기별 종업원 수 추이"
+                            />
+                        </ChartLoadingPreview>
                     </div>
                     <CodeBlock code={EMPLOYEE_TREND_LINE_CODE} language="tsx" />
                 </section>
@@ -1476,7 +1497,7 @@ const ChartGuidePage = () => (
                         ))}
                     </ul>
                 </div>
-                <div className="bg-background border-border overflow-hidden rounded-xl border p-4">
+                <div className="bg-surface border-border overflow-hidden rounded-xl border p-4">
                     <IssueWordCloudDemo />
                 </div>
                 <LicenseNotice libraries={[WORD_CLOUD_LICENSE]} />

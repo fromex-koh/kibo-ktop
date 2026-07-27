@@ -2,6 +2,7 @@
 
 import {useEffect, useRef, useState, type ComponentPropsWithoutRef} from 'react'
 import {useTheme} from 'next-themes'
+import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import {cn} from '@/lib/utils'
 
 type WordCloudItem = {
@@ -23,12 +24,14 @@ const WordCloud = ({words, ariaLabel, className, ...props}: WordCloudProps) => {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const containerRef = useRef<HTMLDivElement>(null)
     const [tooltip, setTooltip] = useState<{text: string; weight: number; x: number; y: number} | null>(null)
+    const [isLoading, setIsLoading] = useState(true)
     const {resolvedTheme} = useTheme()
 
     useEffect(() => {
         const canvas = canvasRef.current
         if (!canvas || !resolvedTheme) return
 
+        setIsLoading(true)
         let cancelled = false
         let resizeFrame = 0
         let previousWidth = 0
@@ -49,6 +52,10 @@ const WordCloud = ({words, ariaLabel, className, ...props}: WordCloudProps) => {
             ]
             const fontFamily = getComputedStyle(canvas).fontFamily
             probe.remove()
+            const handleRendered = () => {
+                if (!cancelled) setIsLoading(false)
+            }
+            canvas.addEventListener('wordcloudstop', handleRendered)
 
             const draw = () => {
                 const target = canvasRef.current
@@ -107,6 +114,7 @@ const WordCloud = ({words, ariaLabel, className, ...props}: WordCloudProps) => {
 
             return () => {
                 observer.disconnect()
+                canvas.removeEventListener('wordcloudstop', handleRendered)
                 renderWordCloud.stop()
             }
         }
@@ -126,7 +134,20 @@ const WordCloud = ({words, ariaLabel, className, ...props}: WordCloudProps) => {
 
     return (
         <div ref={containerRef} {...props} className={cn('relative', className)}>
-            <canvas ref={canvasRef} role="img" aria-label={ariaLabel} className="h-96 w-full" />
+            {isLoading ? (
+                <ChartSkeleton
+                    type="word-cloud"
+                    label={`${ariaLabel} 데이터를 불러오는 중입니다.`}
+                    className="absolute inset-0 z-5"
+                />
+            ) : null}
+            <canvas
+                ref={canvasRef}
+                role="img"
+                aria-label={ariaLabel}
+                aria-hidden={isLoading}
+                className={cn('h-96 w-full', isLoading && 'invisible')}
+            />
             {tooltip && (
                 <div
                     role="tooltip"

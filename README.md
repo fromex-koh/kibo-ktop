@@ -32,12 +32,12 @@ yarn dev        # ← 실행 전에 디자인 토큰 CSS를 자동 생성합니�
 - **오픈소스 고지를 함께 옮기세요** — 컴포넌트와 `package.json`을 이식할 때 [`THIRD_PARTY_LICENSES.md`](THIRD_PARTY_LICENSES.md)도 함께 전달합니다. Pretendard를 가져가면 폰트 옆의 `src/app/fonts/LICENSE-PRETENDARD.txt`도 유지합니다.
 - **브레이크포인트** — **Tailwind 기본 프리픽스**(`sm:`/`md:`/`lg:`/`xl:`/`2xl:`)를 그대로 씁니다(모바일 퍼스트). 프로젝트 주 티어는 `md:`(768)·`xl:`(1280) 두 단계이며 새 코드는 이 둘을 우선 사용합니다. (기본을 지우지 않아 shadcn·익숙한 유틸이 그대로 동작합니다.)
 - **컴포넌트 폴더 구조(레이어)** — 화면·도메인 코드는 `ui/`·`composite/`·`custom/` 를 직접 import 한다. 스타일 수정은 `theme/` 에서만.
-    - `src/components/ui/` — shadcn 셸(vendored). 구조·동작·접근성은 **손대지 않음**. 재스킨한 컴포넌트만 cva 를 `theme/` 로 추출(수정 셸).
-    - `src/components/theme/` — 프로젝트 스타일(`<name>.variants.ts`, cva). **재스킨의 유일한 작업 장소**(게이트 전체 적용).
+    - `src/components/ui/` — shadcn 셸(vendored). 구조·동작·접근성은 **손대지 않음**. 재스킨한 컴포넌트만 CVA·className을 `theme/`으로 추출(수정 셸).
+    - `src/components/theme/` — 프로젝트 스타일(`<name>.variants.ts`, CVA·className). **재스킨의 유일한 작업 장소**(게이트 전체 적용).
     - `src/components/composite/` — `ui` 를 **조합**한 도메인 컴포넌트(header · section-header · sidebar-layout · theme-toggle 등).
     - `src/components/custom/` — 프리미티브 **미사용 자체 구현**(icon · publishing-index · 차트류), 화면 전용 요소(hero-section · stack-pager 등)와 가이드/데모 전용 요소(code-block · copy-chip · guide-page-shell 등)도 여기 둔다.
     - `src/components/theme-provider.tsx` — next-themes provider 래퍼(루트).
-    - `vendor/shadcn-baseline/` — cva 추출 시 밀려난 **바닐라 cva 보관소**(업데이트 diff 기준선, 앱에서 import 금지).
+    - `vendor/shadcn-baseline/` — 수정 셸에서 추출한 **바닐라 스타일(CVA·className) 기준선**. 순정 `ui/` 셸과 composite/custom은 보관 대상이 아니며 앱에서 import하지 않는다.
 
 ## 기술 스택
 
@@ -134,7 +134,7 @@ src/content/asset-versions.generated.json   # git 추적 · GitHub Actions 릴�
 | `src/components/custom/publishing-index.tsx` | 퍼블리싱 인덱스 화면 전용 표현·필터   | 시작 페이지 인덱스 UI와 필터 동작 수정                                  |
 | `src/content/publishing-index.json`          | 퍼블리싱 인덱스 화면·상태·버전 데이터 | 인덱스 행이나 상태 변경 시 수정                                         |
 | `src/app/component-guide/(guide)/`           | 컴포넌트 가이드·사용 예시             | 컴포넌트 API·스타일 변경 시 가이드도 함께 갱신                          |
-| `vendor/shadcn-baseline/`                    | shadcn 바닐라 CVA 기준선              | 앱에서 import하지 않으며 업스트림 비교용으로만 갱신                     |
+| `vendor/shadcn-baseline/`                    | 수정 셸의 바닐라 스타일 기준선        | theme import가 있는 `ui` 셸만 대응하며 앱에서는 import하지 않음         |
 | `tokens.json`                                | 디자인 토큰 원본                      | 색상·간격·타이포·효과 변경 시 직접 수정 후 토큰 생성                    |
 | `THIRD_PARTY_LICENSES.md`                    | 제3자 라이선스 통합 고지              | 의존성 변경 후 `yarn license-notices`로 갱신하고 인계·배포 시 함께 유지 |
 
@@ -158,7 +158,7 @@ src/content/asset-versions.generated.json   # git 추적 · GitHub Actions 릴�
 
 - 디자인 값은 `tokens.json`을 수정한 뒤 `yarn tokens`로 생성한다. 생성물 `src/app/tokens.css`는 직접 수정하지 않는다.
 - 토큰·반응형·그리드·스크롤바의 상세 규칙은 [PUBLISHING_CONVENTION.md](docs/PUBLISHING_CONVENTION.md)를 따른다.
-- shadcn 셸·theme·바닐라 CVA의 책임과 업데이트 절차는 [SHADCN.md](docs/SHADCN.md)를 따른다.
+- shadcn 셸·theme·바닐라 스타일 기준선의 책임과 업데이트 절차는 [SHADCN.md](docs/SHADCN.md)를 따른다.
 - 실제 토큰과 컴포넌트 렌더링은 `/component-guide`에서 확인한다.
 
 ## 폰트

@@ -151,6 +151,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 items: [
                     {label: 'ProgressBar', href: '/component-guide/progress-bar'},
                     {label: 'Chart', href: '/component-guide/chart'},
+                    {label: 'Skeleton / ChartSkeleton', href: '/component-guide/skeleton'},
                     {label: 'Table', href: '/component-guide/table'},
                     {label: 'ReviewList', href: '/component-guide/review-list'},
                     {label: 'SummaryList', href: '/component-guide/summary-list'},

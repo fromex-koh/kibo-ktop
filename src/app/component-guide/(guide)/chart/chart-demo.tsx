@@ -1,6 +1,7 @@
 'use client'
 
-import {useState} from 'react'
+import {useEffect, useMemo, useRef, useState, type ReactNode} from 'react'
+import {ChartSkeleton, type ChartSkeletonType} from '@/components/composite/chart-skeleton'
 import {CompanyRelationshipGraph, type CompanySector} from '@/components/custom/company-relationship-graph'
 import {NetworkGraph, type NetworkLink, type NetworkNode} from '@/components/custom/network-graph'
 import {PercentageDonutChart, type PercentageDonutItem} from '@/components/custom/percentage-donut-chart'
@@ -8,6 +9,64 @@ import {ScoreBenchmarkChart, type ScoreBenchmarkData} from '@/components/custom/
 import {SemicircleRatingGauge, type SemicircleRatingData} from '@/components/custom/semicircle-rating-gauge'
 import {WordCloud, type WordCloudItem} from '@/components/custom/word-cloud'
 import {Button} from '@/components/ui/button'
+import {cn} from '@/lib/utils'
+
+type ChartLoadingPreviewProps = {
+    children: ReactNode
+    label: string
+    type: Exclude<ChartSkeletonType, 'network'>
+}
+
+const ChartLoadingPreview = ({children, label, type}: ChartLoadingPreviewProps) => {
+    const [isLoading, setIsLoading] = useState(true)
+    const contentRef = useRef<HTMLDivElement>(null)
+    const usesIntrinsicSkeletonLayout = type === 'matrix'
+
+    useEffect(() => {
+        let frame = 0
+        let attempts = 0
+
+        const completeWhenRendered = () => {
+            attempts += 1
+            const content = contentRef.current
+            const renderedChart = content?.querySelector('svg, canvas, table')
+            const hasLayout = Boolean(content && content.offsetWidth > 0 && content.offsetHeight > 0)
+
+            if ((renderedChart && hasLayout) || attempts >= 120) {
+                frame = requestAnimationFrame(() => setIsLoading(false))
+                return
+            }
+
+            frame = requestAnimationFrame(completeWhenRendered)
+        }
+
+        frame = requestAnimationFrame(completeWhenRendered)
+        return () => cancelAnimationFrame(frame)
+    }, [])
+
+    return (
+        <div className="relative min-w-0">
+            {isLoading ? (
+                <ChartSkeleton
+                    type={type}
+                    label={label}
+                    className={usesIntrinsicSkeletonLayout ? undefined : 'absolute inset-0 z-5 size-full'}
+                />
+            ) : null}
+            <div
+                ref={contentRef}
+                aria-hidden={isLoading}
+                className={cn(
+                    'min-w-0',
+                    isLoading && 'invisible',
+                    isLoading && usesIntrinsicSkeletonLayout && 'absolute inset-0',
+                )}
+            >
+                {children}
+            </div>
+        </div>
+    )
+}
 
 const COMPANY_SECTORS: CompanySector[] = [
     {
@@ -1105,10 +1164,10 @@ const NetworkLegend = ({nodes}: {nodes: NetworkNode[]}) => {
                 <h3 className="typo-body-l-bold">상태 범례</h3>
                 <ul className="typo-body-l-regular text-foreground-subtle flex flex-col gap-3">
                     {statuses.map(({status, label, color}) => (
-                        <li key={status} className="grid grid-cols-[auto_1fr_auto] items-center gap-3">
+                        <li key={status} className="flex items-center gap-3">
                             <span className={`${color} size-3 rounded-full`} aria-hidden="true" />
-                            <span>{label}</span>
-                            <span className="tabular-nums">
+                            <span className="min-w-0 flex-1">{label}</span>
+                            <span className="shrink-0 tabular-nums">
                                 {companyNodes.filter((node) => node.status === status).length}
                             </span>
                         </li>
@@ -1203,51 +1262,60 @@ type CompanyScenario = {
     directCompanyCount: number
 }
 
+const COMPANY_SCENARIOS: CompanyScenario[] = [
+    {
+        id: 'small',
+        label: '적음',
+        companyCounts: {construction: 1, food: 3, manufacturing: 1},
+        directCompanyCount: 1,
+    },
+    {
+        id: 'medium',
+        label: '중간',
+        companyCounts: {
+            construction: 2,
+            food: 1,
+            education: 2,
+            manufacturing: 7,
+            management: 1,
+            information: 4,
+        },
+        directCompanyCount: 1,
+    },
+    {
+        id: 'large',
+        label: '많음',
+        companyCounts: {
+            construction: 3,
+            food: 2,
+            education: 7,
+            manufacturing: 9,
+            management: 2,
+            finance: 1,
+            retail: 3,
+            information: 5,
+            'transport-storage': 3,
+        },
+        directCompanyCount: 2,
+    },
+]
+
 const CompanyNetworkDemo = () => {
-    const scenarios: CompanyScenario[] = [
-        {
-            id: 'small',
-            label: '적음',
-            companyCounts: {construction: 1, food: 3, manufacturing: 1},
-            directCompanyCount: 1,
-        },
-        {
-            id: 'medium',
-            label: '중간',
-            companyCounts: {
-                construction: 2,
-                food: 1,
-                education: 2,
-                manufacturing: 7,
-                management: 1,
-                information: 4,
-            },
-            directCompanyCount: 1,
-        },
-        {
-            id: 'large',
-            label: '많음',
-            companyCounts: {
-                construction: 3,
-                food: 2,
-                education: 7,
-                manufacturing: 9,
-                management: 2,
-                finance: 1,
-                retail: 3,
-                information: 5,
-                'transport-storage': 3,
-            },
-            directCompanyCount: 2,
-        },
-    ]
     const [scenarioId, setScenarioId] = useState<CompanyScenarioId>('large')
-    const scenario = scenarios.find(({id}) => id === scenarioId) ?? scenarios[2]
-    const visibleSectors = COMPANY_SECTORS.filter((sector) => sector.id in scenario.companyCounts).map((sector) => ({
-        ...sector,
-        companies: sector.companies.slice(0, scenario.companyCounts[sector.id]),
-    }))
-    const visibleDirectCompanies = DIRECT_RELATIONSHIP_COMPANIES.slice(0, scenario.directCompanyCount)
+    const [isGraphLoading, setIsGraphLoading] = useState(true)
+    const scenario = COMPANY_SCENARIOS.find(({id}) => id === scenarioId) ?? COMPANY_SCENARIOS[2]
+    const visibleSectors = useMemo(
+        () =>
+            COMPANY_SECTORS.filter((sector) => sector.id in scenario.companyCounts).map((sector) => ({
+                ...sector,
+                companies: sector.companies.slice(0, scenario.companyCounts[sector.id]),
+            })),
+        [scenario],
+    )
+    const visibleDirectCompanies = useMemo(
+        () => DIRECT_RELATIONSHIP_COMPANIES.slice(0, scenario.directCompanyCount),
+        [scenario],
+    )
     const companyCount =
         visibleSectors.reduce((total, sector) => total + sector.companies.length, 0) + visibleDirectCompanies.length
 
@@ -1255,28 +1323,50 @@ const CompanyNetworkDemo = () => {
         <div className="flex flex-col gap-5">
             <div className="flex flex-wrap items-center justify-end gap-3">
                 <div className="flex gap-2" role="group" aria-label="연계기업 섹터 수 선택">
-                    {scenarios.map(({id, label}) => (
+                    {COMPANY_SCENARIOS.map(({id, label}) => (
                         <Button
                             key={id}
                             type="button"
                             size="xs"
                             variant={scenarioId === id ? 'default' : 'outline'}
                             aria-pressed={scenarioId === id}
-                            onClick={() => setScenarioId(id)}
+                            onClick={() => {
+                                setIsGraphLoading(true)
+                                setScenarioId(id)
+                            }}
                         >
                             {label}
                         </Button>
                     ))}
                 </div>
             </div>
-            <div className="grid items-start gap-6 lg:grid-cols-[17rem_minmax(0,1fr)]">
-                <CompanyRelationshipLegend />
-                <CompanyRelationshipGraph
-                    companyName="주식회사 한국첨단산업기술연구원"
-                    sectors={visibleSectors}
-                    directCompanies={visibleDirectCompanies}
-                    ariaLabel={`한국기업을 중심으로 ${visibleSectors.length}개 산업 섹터와 ${companyCount}개 연계기업의 관계 코드·EW등급을 나타낸 네트워크 그래프`}
-                />
+            <div className="relative">
+                {isGraphLoading ? (
+                    <ChartSkeleton
+                        type="network"
+                        legend="company-relationship"
+                        label="연계기업 범례와 네트워크 그래프를 불러오는 중입니다."
+                        className="relative z-10 h-auto xl:absolute xl:inset-0 xl:h-full"
+                    />
+                ) : null}
+                <div
+                    className={cn(
+                        'grid items-start gap-6 xl:grid-cols-3',
+                        isGraphLoading && 'invisible absolute inset-0 xl:static',
+                    )}
+                    aria-hidden={isGraphLoading}
+                >
+                    <CompanyRelationshipLegend />
+                    <div className="min-w-0 xl:col-span-2">
+                        <CompanyRelationshipGraph
+                            companyName="주식회사 한국첨단산업기술연구원"
+                            sectors={visibleSectors}
+                            directCompanies={visibleDirectCompanies}
+                            ariaLabel={`한국기업을 중심으로 ${visibleSectors.length}개 산업 섹터와 ${companyCount}개 연계기업의 관계 코드·EW등급을 나타낸 네트워크 그래프`}
+                            onLoadingChange={setIsGraphLoading}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     )
@@ -1284,12 +1374,17 @@ const CompanyNetworkDemo = () => {
 
 const SupplyNetworkDemo = () => {
     const [scenarioId, setScenarioId] = useState<SupplyScenarioId>('large')
+    const [isGraphLoading, setIsGraphLoading] = useState(true)
     const scenario = SUPPLY_SCENARIOS.find(({id}) => id === scenarioId) ?? SUPPLY_SCENARIOS[2]
-    const visibleNodeIds = new Set(scenario.nodeIds)
-    const visibleNodes = SUPPLY_NODES.filter(({id}) => visibleNodeIds.has(id))
-    const visibleLinks = SUPPLY_LINKS.filter(
-        ({source, target}) => visibleNodeIds.has(source) && visibleNodeIds.has(target),
-    )
+    const {visibleNodes, visibleLinks} = useMemo(() => {
+        const visibleNodeIds = new Set(scenario.nodeIds)
+        return {
+            visibleNodes: SUPPLY_NODES.filter(({id}) => visibleNodeIds.has(id)),
+            visibleLinks: SUPPLY_LINKS.filter(
+                ({source, target}) => visibleNodeIds.has(source) && visibleNodeIds.has(target),
+            ),
+        }
+    }, [scenario])
 
     return (
         <div className="flex flex-col gap-4">
@@ -1302,20 +1397,42 @@ const SupplyNetworkDemo = () => {
                             size="xs"
                             variant={scenarioId === id ? 'default' : 'outline'}
                             aria-pressed={scenarioId === id}
-                            onClick={() => setScenarioId(id)}
+                            onClick={() => {
+                                setIsGraphLoading(true)
+                                setScenarioId(id)
+                            }}
                         >
                             {label}
                         </Button>
                     ))}
                 </div>
             </div>
-            <div className="grid items-start gap-6 lg:grid-cols-[17rem_minmax(0,1fr)]">
-                <NetworkLegend nodes={visibleNodes} />
-                <NetworkGraph
-                    nodes={visibleNodes}
-                    links={visibleLinks}
-                    ariaLabel={`한국기업을 중심으로 ${visibleNodes.length - 1}개 업종·기업 노드의 공급망 비중을 나타낸 그래프`}
-                />
+            <div className="relative">
+                {isGraphLoading ? (
+                    <ChartSkeleton
+                        type="network"
+                        legend="supply-network"
+                        label="공급망 범례와 네트워크 그래프를 불러오는 중입니다."
+                        className="relative z-10 h-auto xl:absolute xl:inset-0 xl:h-full"
+                    />
+                ) : null}
+                <div
+                    className={cn(
+                        'grid items-start gap-6 xl:grid-cols-3',
+                        isGraphLoading && 'invisible absolute inset-0 xl:static',
+                    )}
+                    aria-hidden={isGraphLoading}
+                >
+                    <NetworkLegend nodes={visibleNodes} />
+                    <div className="min-w-0 xl:col-span-2">
+                        <NetworkGraph
+                            nodes={visibleNodes}
+                            links={visibleLinks}
+                            ariaLabel={`한국기업을 중심으로 ${visibleNodes.length - 1}개 업종·기업 노드의 공급망 비중을 나타낸 그래프`}
+                            onLoadingChange={setIsGraphLoading}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
     )
@@ -1394,10 +1511,12 @@ const InnovationGrowthIndexDemo = () => {
                     ))}
                 </div>
             </div>
-            <ScoreBenchmarkChart
-                data={scenario.data}
-                ariaLabel={`혁신성장역량 Tech-Index ${scenario.data.score}점, ${scenario.data.statusLabel}, 동일업종 상위 ${scenario.data.benchmarkPercentage}%`}
-            />
+            <ChartLoadingPreview key={status} type="benchmark" label="혁신성장역량지수를 불러오는 중입니다.">
+                <ScoreBenchmarkChart
+                    data={scenario.data}
+                    ariaLabel={`혁신성장역량 Tech-Index ${scenario.data.score}점, ${scenario.data.statusLabel}, 동일업종 상위 ${scenario.data.benchmarkPercentage}%`}
+                />
+            </ChartLoadingPreview>
         </div>
     )
 }
@@ -1465,11 +1584,13 @@ const CreditRatingDemo = () => {
                     ))}
                 </div>
             </div>
-            <SemicircleRatingGauge
-                data={scenario}
-                title="기업신용등급"
-                ariaLabel={`기업신용등급 ${scenario.label}, ${scenario.description}, 평가일자 2025-05-20, 결산일자 2024-12-31`}
-            />
+            <ChartLoadingPreview key={grade} type="gauge" label="기업신용등급을 불러오는 중입니다.">
+                <SemicircleRatingGauge
+                    data={scenario}
+                    title="기업신용등급"
+                    ariaLabel={`기업신용등급 ${scenario.label}, ${scenario.description}, 평가일자 2025-05-20, 결산일자 2024-12-31`}
+                />
+            </ChartLoadingPreview>
         </div>
     )
 }
@@ -1520,10 +1641,12 @@ const TechnologyHoldingsDemo = () => {
                     ))}
                 </div>
             </div>
-            <PercentageDonutChart
-                data={data}
-                ariaLabel={`${scenario.label} 분포의 기업 보유기술 5개 분류 비중과 건수`}
-            />
+            <ChartLoadingPreview key={scenarioId} type="donut" label="기업 보유기술을 불러오는 중입니다.">
+                <PercentageDonutChart
+                    data={data}
+                    ariaLabel={`${scenario.label} 분포의 기업 보유기술 5개 분류 비중과 건수`}
+                />
+            </ChartLoadingPreview>
         </div>
     )
 }
@@ -1565,6 +1688,7 @@ const IssueWordCloudDemo = () => {
 }
 
 export {
+    ChartLoadingPreview,
     CompanyNetworkDemo,
     CreditRatingDemo,
     InnovationGrowthIndexDemo,

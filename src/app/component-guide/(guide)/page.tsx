@@ -120,10 +120,7 @@ const IntegrationStep = ({number, title, children}: {number: number; title: stri
 const PathList = ({items}: {items: typeof REQUIRED_PATHS}) => (
     <dl className="divide-border divide-y">
         {items.map((item) => (
-            <div
-                key={item.path}
-                className="grid gap-1 py-3 first:pt-0 last:pb-0 md:grid-cols-[minmax(14rem,0.8fr)_1.2fr] md:gap-6"
-            >
+            <div key={item.path} className="grid gap-1 py-3 first:pt-0 last:pb-0 md:grid-cols-2 md:gap-6">
                 <dt>
                     <code className="text-primary font-mono text-sm font-semibold">{item.path}</code>
                 </dt>
@@ -220,7 +217,7 @@ const ComponentGuidePage = () => (
 │   ├── constants/               # 테마·사이트 등 공통 상수
 │   ├── hooks/                   # 공통 React hooks
 │   └── lib/                     # cn 등 공통 유틸리티
-└── vendor/shadcn-baseline/      # 바닐라 CVA 비교 기준선`}</code>
+└── vendor/shadcn-baseline/      # 수정된 ui 셸의 바닐라 스타일 기준선`}</code>
                 </pre>
             </BaseCard>
         </section>
