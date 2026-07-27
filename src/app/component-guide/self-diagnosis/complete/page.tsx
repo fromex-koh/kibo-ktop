@@ -43,7 +43,7 @@ const PLATFORM_NAVIGATION = {
 
 const MAIN_PAGE_PATH = '/component-guide/main-page'
 
-// 자가진단 4단계 제출 완료 데모. 3단계 체크리스트의 "제출하기" 버튼으로 진입한다.
+// 자가진단 4단계 제출 완료 데모. 3단계 체크리스트의 "다음" 버튼으로 진입한다.
 // 전부 기존 컴포넌트 조합이다:
 // Header · PageTitleBar(+Breadcrumb) · ActionCheck(완료 애니메이션) · InfoBox · Button · StepNavigation.
 // 진행 표시(StepHeader)는 이 화면에 없다 — 흐름이 끝나 완료 메시지만 남는다(시안 동일).
@@ -57,6 +57,7 @@ const SelfDiagnosisCompletePage = () => (
         }
         footer={
             <StepNavigation
+                appearance="plain"
                 className="[&>div]:py-[clamp(--spacing(3),2dvh,--spacing(6))]"
                 prev={{asChild: true, children: <Link href={MAIN_PAGE_PATH}>메인으로 이동</Link>}}
                 next={{children: '결과조회'}}
@@ -105,19 +106,23 @@ const SelfDiagnosisCompletePage = () => (
         </div>
 
         <InfoBox variant="outline" title="알려드려요" className="py-[clamp(--spacing(4),3dvh,--spacing(8))]">
-            <InfoBoxItem>제출하신 자가진단 결과는 &lsquo;진행현황&rsquo; 화면에서 확인하실 수 있습니다.</InfoBoxItem>
-            <InfoBoxItem>진단 결과발송은 &lsquo;진행현황&rsquo; 화면을 통해 진행하실 수 있습니다.</InfoBoxItem>
+            <InfoBoxItem>제출하신 자가진단 결과는 마이페이지 &gt; 진행현황 조회에서 확인할 수 있어요.</InfoBoxItem>
+            <InfoBoxItem>진단 결과발송은 마이페이지 &gt; 진행현황 조회에서 진행할 수 있어요.</InfoBoxItem>
+            <InfoBoxItem>
+                은행으로 평가결과를 전송하려면{' '}
+                <Button type="button" variant="text-underline" size="lg">
+                    은행전송
+                </Button>
+                을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
+            </InfoBoxItem>
+            <InfoBoxItem>
+                기관으로 평가결과를 전송하려면{' '}
+                <Button type="button" variant="text-underline" size="lg">
+                    보증신청
+                </Button>
+                을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
+            </InfoBoxItem>
         </InfoBox>
-
-        {/* 후속 신청 버튼 — 화면 가운데 나란히 둔다(시안). */}
-        <div className="flex flex-wrap justify-center gap-4">
-            <Button variant="tertiary" size="2xl">
-                은행전송
-            </Button>
-            <Button variant="tertiary" size="2xl">
-                보증신청
-            </Button>
-        </div>
     </ViewportFitLayout>
 )
 

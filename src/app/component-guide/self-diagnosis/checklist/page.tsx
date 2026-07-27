@@ -353,7 +353,7 @@ const ChecklistPage = () => (
         <Header overlay={false} showThemeToggle navigationByUserType={PLATFORM_NAVIGATION} />
 
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다. */}
-        <main id="main" tabIndex={-1} className="content-layout flex flex-1 flex-col gap-10 pt-10 pb-25">
+        <main id="main" tabIndex={-1} className="content-layout flex flex-1 flex-col gap-10 pt-10">
             <PageTitleBar
                 title="KTRS-FM"
                 breadcrumb={
@@ -400,10 +400,11 @@ const ChecklistPage = () => (
 
         {/* 하단 CTA — 본문 끝에 그대로 붙는 블록이다. */}
         <StepNavigation
+            appearance="plain"
             prev={{asChild: true, children: <Link href={COMPANY_INFO_PATH}>이전</Link>}}
             next={{
                 asChild: true,
-                children: <Link href="/component-guide/self-diagnosis/complete">제출하기</Link>,
+                children: <Link href="/component-guide/self-diagnosis/complete">다음</Link>,
             }}
         />
     </div>
