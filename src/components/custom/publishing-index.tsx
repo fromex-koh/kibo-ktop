@@ -192,8 +192,7 @@ const PublishingIndex = () => {
                         <SectionHeader>
                             <SectionHeaderTitle id="release-notes-title">버전 업데이트</SectionHeaderTitle>
                             <SectionHeaderDescription>
-                                릴리스 초안에 선별한 변경사항을 최신 버전부터 표시하며, 초안이 없으면 커밋 제목을
-                                자동으로 반영합니다.
+                                버전별 주요 개선 사항과 변경 내용을 최신순으로 안내합니다.
                             </SectionHeaderDescription>
                         </SectionHeader>
 
@@ -261,8 +260,8 @@ const PublishingIndex = () => {
                                 프론트엔드 인계 자산
                             </SectionHeaderTitle>
                             <SectionHeaderDescription>
-                                컴포넌트의 기능과 외관에 영향을 주는 경로입니다. 반영 버전은 GitHub Actions가 릴리스할
-                                때 확정하며, 이번 릴리스에서 변경된 경로만 강조합니다.
+                                서비스 화면과 공통 기능에 영향을 주는 주요 개발 자산의 반영 현황을 안내합니다. 최신
+                                버전에서 변경된 항목은 강조해 표시합니다.
                             </SectionHeaderDescription>
                         </SectionHeader>
 
