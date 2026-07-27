@@ -59,35 +59,29 @@ const buttonVariants = cva(
             {variant: 'default', size: 'lg', class: 'font-bold disabled:font-medium'},
             {variant: 'default', size: 'md', class: 'font-bold disabled:font-medium'},
             {variant: ['text', 'text-underline', 'link'], class: 'min-h-0 min-w-0 p-0 font-normal'},
+            // PROJECT-STYLE: Figma button_text(40006516:20290)는 xsmall 12 · small 14 · medium 16 · large 18
+            // 네 단계이고, 높이는 상자가 아니라 행간(18·21·24·27)이 정한다 — 문장 안에 섞이는 인라인 버튼이라
+            // 컨트롤 높이를 주면 줄 높이가 어긋난다. 아이콘은 12px 단계만 12, 나머지는 16 이다.
+            // xl·2xl 은 시안에 없어 large 와 같은 값으로 둔다(다른 variant 와 size 축을 맞추기 위한 자리).
             {
                 variant: ['text', 'text-underline', 'link'],
-                size: '2xl',
-                class: "h-control-h-md [&_svg:not([class*='size-'])]:size-4",
+                size: ['2xl', 'xl', 'lg'],
+                class: "h-[--spacing(6.75)] text-lg [&_svg:not([class*='size-'])]:size-icon-sm",
             },
             {
                 variant: ['text', 'text-underline', 'link'],
-                size: 'xl',
-                class: "h-control-h-md text-lg [&_svg:not([class*='size-'])]:size-4",
-            },
-            {
-                variant: ['text', 'text-underline', 'link'],
-                size: 'lg',
-                class: "h-control-h-xs text-base [&_svg:not([class*='size-'])]:size-4",
-            },
-            {
-                variant: ['text', 'text-underline', 'link'],
-                size: 'md',
-                class: "h-control-h-2xs text-sm [&_svg:not([class*='size-'])]:size-4",
+                size: ['default', 'md'],
+                class: "h-6 text-base [&_svg:not([class*='size-'])]:size-icon-sm",
             },
             {
                 variant: ['text', 'text-underline', 'link'],
                 size: 'sm',
-                class: "h-control-h-2xs text-xs [&_svg:not([class*='size-'])]:size-3",
+                class: "h-[--spacing(5.25)] text-sm [&_svg:not([class*='size-'])]:size-icon-sm",
             },
             {
                 variant: ['text', 'text-underline', 'link'],
                 size: 'xs',
-                class: "h-control-h-2xs text-xs [&_svg:not([class*='size-'])]:size-3",
+                class: "h-[--spacing(4.5)] text-xs [&_svg:not([class*='size-'])]:size-icon-xs",
             },
         ],
         defaultVariants: {variant: 'default', size: 'default'},
