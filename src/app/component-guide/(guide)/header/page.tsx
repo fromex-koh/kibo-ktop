@@ -123,6 +123,10 @@ const COMPOSITION = [
         name: 'showThemeToggle',
         desc: '테마 변경 버튼 노출 여부. 기본 헤더는 true, main 배리에이션은 false이며 사용처에서 명시적으로 변경할 수 있다.',
     },
+    {
+        name: '아이콘 버튼 (테마 전환·전체 메뉴)',
+        desc: '시안이 배경·패딩·호버 면 없이 24px 아이콘만 두므로 Button 컴포넌트를 쓰지 않고 theme/header.variants.ts 의 클래스를 얹은 button 요소로 그린다. 클릭 영역만 가상요소로 44×44 를 확보한다.',
+    },
     {name: '전체 메뉴 (Sheet)', desc: '좁은 폭에서 주 메뉴·화면 유형 링크·유틸 링크를 담아 우측에서 여는 드로어.'},
     {
         name: 'variant="main"',
@@ -167,9 +171,9 @@ const HeaderGuidePage = () => (
                         Preview
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        상단 유틸바(화면 유형 링크·유틸 링크)와 메인 내비(로고·주 메뉴·테마 토글·전체 메뉴) 2줄
+                        상단 유틸바(화면 유형 링크·유틸 링크)와 메인 내비(로고·주 메뉴·테마 전환·전체 메뉴) 2줄
                         구성입니다. 화면 폭을 md(≥768) 미만으로 줄이면 유틸바·주 메뉴가 전체 메뉴(Sheet)로 접히며, 테마
-                        토글은 showThemeToggle prop으로 사용처에서 노출 여부를 정합니다.
+                        전환은 showThemeToggle prop으로 사용처에서 노출 여부를 정합니다.
                     </p>
                 </div>
                 <HeaderDemo />
@@ -312,14 +316,19 @@ const HeaderGuidePage = () => (
                         두고, h1 은 화면마다 하나뿐인 본문 제목이 가집니다.
                     </li>
                     <li>
-                        테마 토글·전체 메뉴 버튼은 아이콘 전용이라 aria-label 을 제공하고 내부 아이콘은 aria-hidden
+                        테마 전환·전체 메뉴 버튼은 아이콘 전용이라 aria-label 을 제공하고 내부 아이콘은 aria-hidden
                         입니다. [5.1.1]
+                    </li>
+                    <li>
+                        두 아이콘 버튼은 시안대로 배경·패딩이 없어 보이는 상자가 24px 입니다. 클릭 영역은 가상요소로
+                        44×44 를 확보해 시안을 유지하면서 터치 타깃 기준을 지킵니다(아이콘 간격 20px 이라 두 영역이
+                        맞닿기만 하고 겹치지 않습니다). [6.1.3]
                     </li>
                     <li>
                         전체 메뉴(Sheet)는 Radix 가 포커스 트랩·Esc 닫기·포커스 복귀·배경 스크롤 잠금을 담당합니다.
                         [8.2.1]
                     </li>
-                    <li>모든 상호작용 요소는 focus-visible 링과 44px 터치 타깃을 가집니다. [6.1.2/6.1.3]</li>
+                    <li>모든 상호작용 요소는 focus-visible 표시와 44px 클릭 영역을 가집니다. [6.1.2/6.1.3]</li>
                 </ul>
             </section>
         </BaseCard>

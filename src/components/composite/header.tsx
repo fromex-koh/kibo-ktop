@@ -4,8 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {Suspense} from 'react'
 import {useSearchParams} from 'next/navigation'
-import {ExternalLink, Menu} from 'lucide-react'
-import ThemeToggle from '@/components/composite/theme-toggle'
+import {ExternalLink, Menu, Moon, Sun} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {
     NavigationMenu,
@@ -15,6 +14,8 @@ import {
 } from '@/components/ui/navigation-menu'
 import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/ui/sheet'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
+import {headerIconButtonClassName, headerIconGroupClassName} from '@/components/theme/header.variants'
+import {useThemeToggle} from '@/hooks/use-theme-toggle'
 import {cn} from '@/lib/utils'
 
 // PROJECT-COMPOSITE: Header primitive가 없어 NavigationMenu·SegmentedControl·Sheet·Button을 조합한 사이트 상단 합성 컴포넌트.
@@ -140,6 +141,28 @@ const Logo = ({variant}: {variant: HeaderVariant}) => (
 )
 
 // 실제 Header와 가이드 데모가 공유하는 본문.
+// 헤더의 테마 전환 — 시안대로 아이콘만 둔다(가이드 앱바에서 쓰는 ThemeToggle 은 버튼 면이 있는 별개 컴포넌트).
+// 마운트 전에는 아이콘과 같은 크기의 자리표시자를 그려 하이드레이션 불일치·레이아웃 시프트를 피한다.
+const HeaderThemeToggle = () => {
+    const {isMounted, isDark, label, toggleTheme} = useThemeToggle()
+
+    if (!isMounted) {
+        return <div className="size-icon-lg" aria-hidden="true" />
+    }
+
+    return (
+        <button
+            type="button"
+            className={headerIconButtonClassName}
+            onClick={toggleTheme}
+            aria-label={label}
+            title={label}
+        >
+            {isDark ? <Moon aria-hidden="true" /> : <Sun aria-hidden="true" />}
+        </button>
+    )
+}
+
 const HeaderContent = ({
     navLabel,
     variant,
@@ -207,13 +230,13 @@ const HeaderContent = ({
                     </NavigationMenuList>
                 </NavigationMenu>
 
-                <div className="ml-auto flex items-center gap-1">
-                    {showThemeToggle ? <ThemeToggle /> : null}
+                <div className={headerIconGroupClassName}>
+                    {showThemeToggle ? <HeaderThemeToggle /> : null}
                     <Sheet>
                         <SheetTrigger asChild>
-                            <Button variant="ghost" size="icon" aria-label="전체 메뉴 열기">
+                            <button type="button" className={headerIconButtonClassName} aria-label="전체 메뉴 열기">
                                 <Menu aria-hidden="true" />
-                            </Button>
+                            </button>
                         </SheetTrigger>
                         <SheetContent side="right" className="gap-0 data-[side=left]:w-fit data-[side=right]:w-fit">
                             <SheetHeader>
