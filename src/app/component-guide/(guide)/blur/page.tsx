@@ -35,6 +35,7 @@ const BlurGuidePage = () => (
                                 <Image
                                     src="/blur-sample.png"
                                     alt="navy 격자 위에 빛나는 중심 큐브가 있는 추상 기술 이미지"
+                                    draggable={false}
                                     fill
                                     sizes="(min-width: 768px) 33vw, 100vw"
                                     className={`object-cover ${BLUR_CLASS_BY_NAME.get(k) ?? ''}`}

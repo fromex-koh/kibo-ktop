@@ -31,7 +31,14 @@ const PREVIEW_CONTENT = {
 
 const PreviewLogo = ({className = ''}: {className?: string}) => (
     <div className={`relative overflow-hidden ${className}`} aria-hidden="true">
-        <Image src={SERVICE_IMAGE} alt="" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
+        <Image
+            src={SERVICE_IMAGE}
+            alt=""
+            draggable={false}
+            fill
+            sizes="(min-width: 1024px) 40vw, 100vw"
+            className="object-cover"
+        />
     </div>
 )
 
@@ -53,6 +60,7 @@ const OpenGraphGuidePage = () => (
                 <Image
                     src={SERVICE_IMAGE}
                     alt="K-TOP 개방형 기술평가 플랫폼 Open Graph 이미지"
+                    draggable={false}
                     width={1200}
                     height={630}
                     loading="eager"

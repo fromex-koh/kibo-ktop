@@ -90,6 +90,7 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
                         <Image
                             src={slide.src}
                             alt=""
+                            draggable={false}
                             fill
                             sizes="100vw"
                             placeholder="blur"

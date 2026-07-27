@@ -67,6 +67,7 @@ const StickySidebarProfile = ({
                 <Image
                     src={logoSrc}
                     alt={logoAlt}
+                    draggable={false}
                     width={AVATAR_SIZE}
                     height={AVATAR_SIZE}
                     className="bg-surface border-subtle-1 size-12 shrink-0 rounded-lg border object-cover"

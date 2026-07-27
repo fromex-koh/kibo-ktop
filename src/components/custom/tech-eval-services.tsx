@@ -98,6 +98,7 @@ export const TechEvalServiceVisual = ({service}: {service: TechEvalService}) => 
         <Image
             src={service.image}
             alt=""
+            draggable={false}
             sizes="(max-width: 768px) 100vw, 50vw"
             className="h-auto w-full rounded-2xl"
         />

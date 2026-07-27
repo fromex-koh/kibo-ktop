@@ -99,6 +99,7 @@ const Logo = ({overlay}: {overlay: boolean}) => (
                 <Image
                     src="/images/logo-ktop-white.svg"
                     alt="기술보증기금"
+                    draggable={false}
                     width={140}
                     height={32}
                     priority
@@ -111,6 +112,7 @@ const Logo = ({overlay}: {overlay: boolean}) => (
                     <Image
                         src="/images/logo-ktop.svg"
                         alt="기술보증기금"
+                        draggable={false}
                         width={140}
                         height={32}
                         priority
@@ -119,6 +121,7 @@ const Logo = ({overlay}: {overlay: boolean}) => (
                     <Image
                         src="/images/logo-ktop-white.svg"
                         alt="기술보증기금"
+                        draggable={false}
                         width={140}
                         height={32}
                         priority

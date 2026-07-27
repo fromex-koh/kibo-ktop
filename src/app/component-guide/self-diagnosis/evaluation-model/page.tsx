@@ -128,6 +128,7 @@ const EvaluationModelPage = () => (
                                 <Image
                                     src={model.illustration}
                                     alt=""
+                                    draggable={false}
                                     width={148}
                                     height={100}
                                     priority

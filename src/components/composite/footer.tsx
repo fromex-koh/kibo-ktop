@@ -122,6 +122,7 @@ const Footer = ({variant = 'default', showSitemapOnMobile = true, className, ...
                             <Image
                                 src="/images/logo-kibo.svg"
                                 alt="기술보증기금"
+                                draggable={false}
                                 width={240}
                                 height={32}
                                 className="[display:var(--logo-on-light)] h-auto w-45 md:w-60"
@@ -129,6 +130,7 @@ const Footer = ({variant = 'default', showSitemapOnMobile = true, className, ...
                             <Image
                                 src="/images/logo-kibo-white.svg"
                                 alt="기술보증기금"
+                                draggable={false}
                                 width={240}
                                 height={32}
                                 className="[display:var(--logo-on-dark)] h-auto w-45 md:w-60"
@@ -193,6 +195,7 @@ const Footer = ({variant = 'default', showSitemapOnMobile = true, className, ...
                         <Image
                             src="/images/logo-kibo.svg"
                             alt="기술보증기금"
+                            draggable={false}
                             width={240}
                             height={32}
                             className="[display:var(--logo-on-light)] h-auto w-45 md:w-60"
@@ -200,6 +203,7 @@ const Footer = ({variant = 'default', showSitemapOnMobile = true, className, ...
                         <Image
                             src="/images/logo-kibo-white.svg"
                             alt="기술보증기금"
+                            draggable={false}
                             width={240}
                             height={32}
                             className="[display:var(--logo-on-dark)] h-auto w-45 md:w-60"
