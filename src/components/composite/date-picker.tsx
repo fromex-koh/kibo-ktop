@@ -58,15 +58,25 @@ const DatePicker = ({
     const [internalDate, setInternalDate] = useState<Date | undefined>(defaultValue)
     const isControlled = value !== undefined
     const selectedDate = isControlled ? value : internalDate
+    // 패널을 다시 열면 이전 탐색 위치가 아니라 현재 선택값이 속한 월부터 보여준다.
+    const [calendarMonth, setCalendarMonth] = useState(() => selectedDate ?? new Date())
 
     const handleSelect = (date?: Date) => {
         if (!isControlled) setInternalDate(date)
+        if (date) setCalendarMonth(date)
         onChange?.(date)
         setOpen(false)
     }
+
+    const handleOpenChange = (next: boolean) => {
+        if (readOnly) return
+        if (next && selectedDate) setCalendarMonth(selectedDate)
+        setOpen(next)
+    }
+
     return (
         <>
-            <Popover open={open} onOpenChange={(next) => !readOnly && setOpen(next)}>
+            <Popover open={open} onOpenChange={handleOpenChange}>
                 <InputGroup className={cn(datePickerGroupClassName, className)}>
                     <PopoverTrigger asChild>
                         <button
@@ -96,6 +106,8 @@ const DatePicker = ({
                         mode="single"
                         selected={selectedDate}
                         onSelect={handleSelect}
+                        month={calendarMonth}
+                        onMonthChange={setCalendarMonth}
                         locale={ko}
                         // 시안 헤더는 [이전] 07월▾ 2026년▾ [다음] 이다 — 월·연도를 각각 고르는 두 드롭다운이라
                         // captionLayout="dropdown" 을 쓰고, 표기만 시안대로(월 2자리·연도 뒤 '년') 맞춘다.
