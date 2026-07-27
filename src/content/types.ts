@@ -54,6 +54,13 @@ export type AssetVersion = {
     isCurrent: boolean // 이번 릴리스(최신 버전)에서 바뀐 자산이면 true — 하이라이트 표시에 쓰인다.
 }
 
+// main 릴리스마다 GitHub Actions가 누적하는 간략 변경 내역.
+export type ReleaseNote = {
+    version: string
+    releasedAt: string
+    changes: string[]
+}
+
 // publishing-index.json 원본의 assetVersions 항목 형태 — path 는 버전 계산용이라 화면엔 노출하지 않는다.
 export type AssetVersionSource = {
     name: string
@@ -110,6 +117,7 @@ export type CommonLayout = {
 }
 
 export type PublishingIndexContent = {
+    releaseNotes: ReleaseNote[]
     assetVersions: AssetVersion[]
     commonLayouts: CommonLayout[]
     structureGroups: StructureGroup[]

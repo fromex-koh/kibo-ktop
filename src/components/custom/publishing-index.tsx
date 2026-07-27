@@ -16,6 +16,7 @@ import {Badge} from '@/components/ui/badge'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
 import {BaseCard} from '@/components/composite/base-card'
 import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
+import {ListMarker} from '@/components/custom/list-marker'
 
 // isCurrent(이번 릴리스에서 변경됨) 하이라이트는 자산 표·공통 레이아웃 표·화면 표가 모두 같은
 // 방식(배경색 + 아이콘 + sr-only 텍스트)을 쓰므로, 버전 셀 하나를 공용 컴포넌트로 뺀다.
@@ -164,7 +165,7 @@ const isUserTypeFilter = (value: string): value is UserTypeFilter => USER_TYPE_F
 
 const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean => leaf.userType === filter
 
-const {assetVersions, commonLayouts, structureGroups} = PUBLISHING_INDEX_CONTENT
+const {releaseNotes, assetVersions, commonLayouts, structureGroups} = PUBLISHING_INDEX_CONTENT
 
 // 전체 화면(트리를 펼친 leaf) — 필터·카운트는 이 목록을 기준으로 컴포넌트 안에서 파생한다.
 const ALL_LEAVES = structureGroups.flatMap(collectLeaves)
@@ -187,6 +188,73 @@ const PublishingIndex = () => {
         <section aria-label="퍼블리싱 현황" className="flex flex-col gap-4">
             <BaseCard>
                 <div className="flex flex-col gap-8">
+                    <div className="flex flex-col gap-3">
+                        <SectionHeader>
+                            <SectionHeaderTitle id="release-notes-title">버전 업데이트</SectionHeaderTitle>
+                            <SectionHeaderDescription>
+                                릴리스 초안에 선별한 변경사항을 최신 버전부터 표시하며, 초안이 없으면 커밋 제목을
+                                자동으로 반영합니다.
+                            </SectionHeaderDescription>
+                        </SectionHeader>
+
+                        <div className="bg-background border-border overflow-hidden rounded-md border">
+                            <div
+                                role="region"
+                                aria-labelledby="release-notes-title"
+                                className="overflow-x-auto overscroll-contain"
+                            >
+                                <table className="w-full min-w-2xl table-fixed text-left">
+                                    <caption className="sr-only">버전별 릴리스 날짜와 주요 변경사항</caption>
+                                    <thead className="bg-muted relative z-10 block">
+                                        <tr className="border-border [display:table] w-full table-fixed border-b">
+                                            <th scope="col" className="typo-body-l-medium w-28 px-4 py-3">
+                                                버전
+                                            </th>
+                                            <th scope="col" className="typo-body-l-medium w-32 px-4 py-3">
+                                                릴리스
+                                            </th>
+                                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                                변경사항
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-surface block max-h-52 overflow-y-auto overscroll-contain">
+                                        {releaseNotes.map((release, index) => (
+                                            <tr
+                                                key={release.version}
+                                                className={`border-border [display:table] w-full table-fixed border-b last:border-b-0 ${
+                                                    index === 0 ? 'bg-primary-subtle' : ''
+                                                }`}
+                                            >
+                                                <th
+                                                    scope="row"
+                                                    className={`typo-body-l-medium w-28 px-4 py-3 ${
+                                                        index === 0 ? 'text-primary' : 'text-foreground'
+                                                    }`}
+                                                >
+                                                    {release.version}
+                                                </th>
+                                                <td className="typo-body-l-regular text-muted-foreground w-32 px-4 py-3">
+                                                    <time dateTime={release.releasedAt}>{release.releasedAt}</time>
+                                                </td>
+                                                <td className="typo-body-l-regular text-foreground-subtle px-4 py-3">
+                                                    <ul className="flex list-none flex-col gap-1">
+                                                        {release.changes.map((change) => (
+                                                            <li key={change} className="flex">
+                                                                <ListMarker />
+                                                                <span className="min-w-0">{change}</span>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
                     <div className="flex flex-col gap-3">
                         <SectionHeader>
                             <SectionHeaderTitle id="frontend-handoff-assets-title">
@@ -227,7 +295,9 @@ const PublishingIndex = () => {
                                         {assetVersions.map((asset) => (
                                             <tr
                                                 key={asset.name}
-                                                className="border-border [display:table] w-full table-fixed border-b last:border-b-0"
+                                                className={`border-border [display:table] w-full table-fixed border-b last:border-b-0 ${
+                                                    asset.isCurrent ? 'bg-primary-subtle' : ''
+                                                }`}
                                             >
                                                 <td className="typo-body-l-regular text-muted-foreground w-24 px-4 py-3">
                                                     <span className="inline-flex items-center gap-1.5">
@@ -251,7 +321,7 @@ const PublishingIndex = () => {
                                                 <td
                                                     className={`typo-body-l-regular w-28 px-4 py-3 ${
                                                         asset.isCurrent
-                                                            ? 'bg-primary-subtle text-primary font-semibold'
+                                                            ? 'text-primary font-semibold'
                                                             : 'text-muted-foreground'
                                                     }`}
                                                 >
