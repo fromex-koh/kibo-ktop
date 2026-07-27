@@ -15,7 +15,13 @@ const DECORATIVE_CODE = `{/* 같은 의미의 완료 문구가 바로 옆에 있
 <ActionCheck decorative size={96} />`
 
 const PROPS_ITEMS = [
-    ['ActionCheck', 'size', '정사각형 애니메이션의 가로·세로 크기를 px 단위로 지정합니다.', '150', 'number'],
+    [
+        'ActionCheck',
+        'size',
+        '정사각형 애니메이션의 가로·세로 크기를 px 단위로 덮어씁니다. 생략하면 size.action-check 토큰을 사용하고 ViewportFitLayout 안에서는 높이에 따라 유동 조절됩니다.',
+        'size.action-check (150px)',
+        'number',
+    ],
     [
         'ActionCheck',
         'aria-label',

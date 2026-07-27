@@ -106,6 +106,21 @@ const SpacingGuidePage = () => (
                         <code>--ds-spacing-&lt;이름&gt;</code>입니다.
                     </p>
                 </div>
+                <dl className="bg-background border-border grid gap-3 rounded-md border p-4 md:grid-cols-2">
+                    <div className="flex flex-col gap-1">
+                        <dt className="typo-body-l-medium text-foreground font-mono">action-check</dt>
+                        <dd className="typo-body-l-regular text-foreground-subtle">
+                            ActionCheck의 기본 크기 150px입니다. 단독 사용과 ViewportFitLayout의 최대 장식 크기가
+                            공유합니다.
+                        </dd>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <dt className="typo-body-l-medium text-foreground font-mono">viewport-fit-decorative-min</dt>
+                        <dd className="typo-body-l-regular text-foreground-subtle">
+                            낮은 화면에서 완료 애니메이션 같은 장식 요소가 줄어들 수 있는 최소 크기 96px입니다.
+                        </dd>
+                    </div>
+                </dl>
                 <Table
                     caption="명명 크기 토큰의 미리보기와 px 값"
                     columns={SIZE_COLUMNS}
