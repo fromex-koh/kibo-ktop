@@ -1,7 +1,7 @@
 'use client'
 
 import type {ComponentPropsWithoutRef} from 'react'
-import {useRef, useState} from 'react'
+import {Children, useRef, useState} from 'react'
 import {format} from 'date-fns'
 import {ko} from 'date-fns/locale'
 import {CalendarIcon} from 'lucide-react'
@@ -97,9 +97,27 @@ const DatePicker = ({
                         selected={selectedDate}
                         onSelect={handleSelect}
                         locale={ko}
-                        // 디자인의 헤더는 [이전] 2026.07 [다음] 이 가운데 모인 형태다.
+                        // 시안 헤더는 [이전] 07월▾ 2026년▾ [다음] 이다 — 월·연도를 각각 고르는 두 드롭다운이라
+                        // captionLayout="dropdown" 을 쓰고, 표기만 시안대로(월 2자리·연도 뒤 '년') 맞춘다.
                         navLayout="around"
-                        formatters={{formatCaption: (date) => format(date, 'yyyy.MM')}}
+                        captionLayout="dropdown"
+                        formatters={{
+                            formatMonthDropdown: (date) => format(date, 'MM월'),
+                            formatYearDropdown: (year) => format(year, 'yyyy년'),
+                        }}
+                        // 드롭다운 접근성 이름은 라이브러리 기본값이 영어라 한국어로 바꾼다. [KWCAG 5.1.1]
+                        labels={{
+                            labelMonthDropdown: () => '월 선택',
+                            labelYearDropdown: () => '연도 선택',
+                        }}
+                        // react-day-picker 는 연도를 먼저 그리는데 시안은 월이 앞이다.
+                        // 보기만 뒤집으면 읽는 순서가 어긋나므로(DOM 순서 = 읽기 순서 [KWCAG 7.3.1])
+                        // 자식 순서 자체를 바꾼다.
+                        components={{
+                            DropdownNav: ({children, ...navProps}) => (
+                                <div {...navProps}>{Children.toArray(children).reverse()}</div>
+                            ),
+                        }}
                     />
                 </PopoverContent>
             </Popover>

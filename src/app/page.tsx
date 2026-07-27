@@ -64,6 +64,7 @@ const Home = () => {
                                     >
                                         <GitBranch aria-hidden="true" className="size-4 shrink-0" />
                                         {REPOSITORY_URL_LABEL}
+                                        <span className="text-muted-foreground whitespace-nowrap">(main 브랜치)</span>
                                         <span className="sr-only"> (새 창에서 열림)</span>
                                     </a>
                                 </dd>

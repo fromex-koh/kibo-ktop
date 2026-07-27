@@ -14,7 +14,9 @@ const calendarNavButtonClassName =
     'border-subtle-3 bg-surface text-foreground aria-disabled:text-disabled-subtle relative size-7 min-h-0 min-w-0 shrink-0 rounded-sm border p-0 select-none after:absolute after:-inset-2 aria-disabled:bg-surface aria-disabled:opacity-100'
 
 const calendarClassNames = {
-    root: 'w-fit',
+    // PROJECT-STYLE: 시안 날짜선택은 360×350(패딩 24 + 그리드 312)이라 폭을 고정한다.
+    // 셀이 flex-1 이라 그리드 폭이 곧 셀 폭(312/7 = 44.57)을 정한다.
+    root: 'w-90',
     months: 'relative flex flex-col gap-4 md:flex-row',
     // PROJECT-STYLE: shadcn 원본은 세로 스택(flex-col)이지만, Figma 는
     // [이전] 2026.07 [다음] 이 20px 간격으로 가운데 모인 헤더라
@@ -28,7 +30,8 @@ const calendarClassNames = {
     // col-start-2: navLayout 없이 쓸 때(월 이동 버튼이 nav 로 따로 렌더될 때)도
     // 캡션이 헤더 가운데 열에 오게 해 좌우 정렬이 흔들리지 않게 한다.
     month_caption: 'text-foreground col-start-2 flex h-7 items-center justify-center text-base font-medium',
-    dropdowns: 'flex h-7 items-center justify-center gap-1.5 text-base font-medium',
+    // 시안: 월·연도 드롭다운 사이 12px, 글자와 화살표 사이 4px.
+    dropdowns: 'flex h-7 items-center justify-center gap-3 text-base font-medium',
     dropdown_root: 'cn-calendar-dropdown-root relative rounded-sm',
     dropdown: 'bg-popover absolute inset-0 opacity-0',
     caption_label: 'font-medium select-none',
