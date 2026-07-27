@@ -1,9 +1,10 @@
 import type {Metadata} from 'next'
 import Image from 'next/image'
 import {ChevronRight} from 'lucide-react'
+import Link from 'next/link'
 import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
-import Footer from '@/components/composite/footer'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
 import {
     Breadcrumb,
@@ -15,6 +16,7 @@ import {
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import {OptionCard} from '@/components/composite/option-card'
 import {InfoBox, InfoBoxItem} from '@/components/composite/info-box'
+import {cn} from '@/lib/utils'
 
 export const metadata: Metadata = {title: '기술평가 평가모형 선택'}
 
@@ -74,8 +76,113 @@ const NOTICES = [
     '아래 기술사업평가 신청 버튼을 누르면 평가를 위한 정보 입력화면으로 이동합니다.',
 ] as const
 
+// ── 서브페이지 푸터(임시) ─────────────────────────────────────────────────────────────────
+// Figma "footer_area"(40006485:17762)를 이 화면에만 붙인 목업이다. 시안이 확정 전이라 공용
+// 컴포넌트로 만들지 않고 여기서만 쓴다 — 확정되면 composite/footer 로 합치거나 별도 컴포넌트로 승격한다.
+//
+// 시안 값 → 간격: 위 56 / 로고행~정보 48 / 정보~하단 64 / 아래 40, 유틸 링크 24, 소셜 32.
+// 색은 시안의 Hex(#111827·#e5e7eb·#d1d5db) 대신 같은 역할의 시맨틱 토큰을 쓴다. [PB-04]
+const FOOTER_UTILITY_LINKS = [
+    {label: '플랫폼 소개', href: '#'},
+    {label: '이용약관', href: '#'},
+    {label: '가격 정책', href: '#'},
+    {label: '개인정보처리방침', href: '#', emphasized: true},
+    {label: '공지사항', href: '#'},
+]
+
+// 시안의 소셜 아이콘 5종(페이스북·엑스·유튜브·인스타그램·블로그)과 웹접근성 품질마크는 아직 없다 —
+// Figma 프레임에 벡터 자식이 노출되지 않아 API 로 가져올 수 없고 브랜드 아이콘은 lucide 에도 없다([NA-008]).
+// 실제 파일을 받으면 정보 영역 우측과 관련사이트 왼쪽에 넣는다.
+
+const FOOTER_FAMILY_SITES = [
+    {value: 'kibo', label: '기술보증기금'},
+    {value: 'mss', label: '중소벤처기업부'},
+    {value: 'smes', label: '중소벤처24'},
+]
+
+const footerLinkFocusClassName =
+    'outline-ring focus-visible:outline-ring outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid'
+
+const SubPageFooter = () => (
+    <footer aria-label="사이트 정보" className="border-subtle-3 bg-card text-foreground border-t">
+        <div className="content-layout flex flex-col gap-16 pt-14 pb-10">
+            <div className="flex flex-col gap-12">
+                {/* 로고 + 유틸 링크 — 시안은 로고 좌측, 링크 우측 정렬이다. */}
+                <div className="flex flex-wrap items-center justify-between gap-6">
+                    <Link href="#" className={cn('flex w-fit items-center', footerLinkFocusClassName)}>
+                        <Image
+                            src="/images/logo-kibo.svg"
+                            alt="기술보증기금"
+                            width={240}
+                            height={32}
+                            className="[display:var(--logo-on-light)] h-auto w-45 md:w-60"
+                        />
+                        <Image
+                            src="/images/logo-kibo-white.svg"
+                            alt="기술보증기금"
+                            width={240}
+                            height={32}
+                            className="[display:var(--logo-on-dark)] h-auto w-45 md:w-60"
+                        />
+                    </Link>
+                    <nav aria-label="푸터 유틸 메뉴">
+                        <ul className="flex flex-wrap items-center gap-6">
+                            {FOOTER_UTILITY_LINKS.map((link) => (
+                                <li key={link.label}>
+                                    <Link
+                                        href={link.href}
+                                        className={cn(
+                                            link.emphasized ? 'typo-body-xl-bold' : 'typo-body-xl-regular',
+                                            footerLinkFocusClassName,
+                                        )}
+                                    >
+                                        {link.label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                </div>
+
+                {/* 고객센터·주소 */}
+                <div className="flex flex-col gap-8 xl:flex-row xl:justify-between">
+                    <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-1">
+                            <p className="flex flex-wrap items-baseline gap-4">
+                                <span className="typo-title-m-bold">대표전화</span>
+                                <span className="typo-h4-bold">1544-1120</span>
+                            </p>
+                            <p className="typo-body-xl-regular">평일 09:00 ~ 18:00 (토요일 및 공휴일 휴무)</p>
+                        </div>
+                        <p className="typo-body-xl-regular">48400 부산광역시 남구 문현금융로 33 기술보증기금</p>
+                    </div>
+                </div>
+            </div>
+
+            {/* 저작권 + 품질마크·관련사이트 */}
+            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                <p className="typo-body-l-regular">ⓒ The Government of the Republic of Korea. All rights reserved.</p>
+                <div className="flex items-center gap-4">
+                    <Select>
+                        <SelectTrigger aria-label="관련 사이트" className="w-47">
+                            <SelectValue placeholder="관련사이트" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {FOOTER_FAMILY_SITES.map((site) => (
+                                <SelectItem key={site.value} value={site.value}>
+                                    {site.label}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+        </div>
+    </footer>
+)
+
 // 평가모형 선택 목업 — Figma "[자가진단] 평가모형선택". 메인페이지 2섹션의 "자가진단 시작하기" CTA 로 진입한다.
-// 화면 구성은 전부 기존 컴포넌트 조합이다: Header · PageTitleBar(+Breadcrumb) · OptionCard · InfoBox · Footer.
+// 화면 구성은 전부 기존 컴포넌트 조합이다: Header · PageTitleBar(+Breadcrumb) · OptionCard · InfoBox. 푸터만 이 화면 전용 목업이다.
 const EvaluationModelPage = () => (
     <div className="bg-card flex min-h-dvh flex-col">
         <SkipNav links={SKIP_LINKS} />
@@ -147,7 +254,7 @@ const EvaluationModelPage = () => (
             </InfoBox>
         </main>
 
-        <Footer />
+        <SubPageFooter />
     </div>
 )
 
