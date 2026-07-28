@@ -1,6 +1,7 @@
 import type {Metadata, Viewport} from 'next'
 import localFont from 'next/font/local'
 import ThemeProvider from '@/components/theme-provider'
+import {Toaster} from '@/components/ui/sonner'
 import {SITE_DESCRIPTION, SITE_NAME, SITE_URL} from '@/constants/site'
 import './globals.css'
 
@@ -63,7 +64,10 @@ const RootLayout = ({
     return (
         <html lang="ko" suppressHydrationWarning className="h-full antialiased">
             <body className={`${pretendard.variable} bg-background text-foreground flex min-h-full flex-col font-sans`}>
-                <ThemeProvider>{children}</ThemeProvider>
+                <ThemeProvider>
+                    {children}
+                    <Toaster />
+                </ThemeProvider>
             </body>
         </html>
     )

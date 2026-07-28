@@ -459,7 +459,7 @@ const Header = ({overlay = true, showThemeToggle = false, navigationByUserType, 
     return (
         <header
             className={cn(
-                'z-header has-[[data-header-menu-trigger][aria-expanded=true]]:z-toast inset-x-0 top-0 has-[[data-header-menu-trigger][aria-expanded=true]]:bg-transparent! has-[[data-header-menu-trigger][aria-expanded=true]]:transition-none!',
+                'z-header has-[[data-header-menu-trigger][aria-expanded=true]]:z-popover inset-x-0 top-0 has-[[data-header-menu-trigger][aria-expanded=true]]:bg-transparent! has-[[data-header-menu-trigger][aria-expanded=true]]:transition-none!',
                 overlay ? 'fixed' : 'bg-card sticky',
             )}
         >
