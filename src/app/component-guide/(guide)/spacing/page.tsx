@@ -35,11 +35,13 @@ const SIZE_COLUMNS = [
     {key: 'value', header: '값', align: 'start'},
 ] as const
 
-// 값이 숫자면 px, 문자열이면 다른 size 키를 가리킨다(예: header-top → header-h). 참조를 따라가 실제 px 로 보여준다.
+// 값이 숫자면 px, 문자열이면 둘 중 하나다 — 단위가 붙었으면 px 로 환산할 수 없는 CSS 리터럴(예: 80dvh),
+// 아니면 다른 size 키 참조(예: header-top → header-h). 참조는 따라가 실제 px 로 보여준다.
 const SIZE_VALUES: Record<string, number | string> = tokens.size
+const isCssLiteral = (value: string) => /^-?(\d+\.?\d*|\.\d+)[a-z%]+$/i.test(value)
 const resolveSizePx = (value: number | string, depth = 0): number | undefined => {
     if (typeof value === 'number') return value
-    if (depth > 4) return undefined
+    if (depth > 4 || isCssLiteral(value)) return undefined
     const referenced = SIZE_VALUES[value]
     return referenced === undefined ? undefined : resolveSizePx(referenced, depth + 1)
 }
@@ -120,9 +122,17 @@ const SpacingGuidePage = () => (
                             낮은 화면에서 완료 애니메이션 같은 장식 요소가 줄어들 수 있는 최소 크기 96px입니다.
                         </dd>
                     </div>
+                    <div className="flex flex-col gap-1">
+                        <dt className="typo-body-l-medium text-foreground font-mono">modal-max-h</dt>
+                        <dd className="typo-body-l-regular text-foreground-subtle">
+                            다이얼로그의 최대 높이 <code>80dvh</code>입니다. 시안의 &ldquo;화면 높이 기준 20%
+                            여백&rdquo; 을 그대로 옮긴 값으로, 내용이 더 길면 모달이 화면 밖으로 나가는 대신 안에서
+                            스크롤됩니다. 화면 기준 값이라 px 로 환산되지 않고 표에도 값 그대로 표시됩니다.
+                        </dd>
+                    </div>
                 </dl>
                 <Table
-                    caption="명명 크기 토큰의 미리보기와 px 값"
+                    caption="명명 크기 토큰의 미리보기와 값"
                     columns={SIZE_COLUMNS}
                     rows={Object.entries(tokens.size).map(([name, value]) => {
                         const px = resolveSizePx(value)
@@ -130,17 +140,27 @@ const SpacingGuidePage = () => (
                         return {
                             key: name,
                             cells: [
-                                <span
-                                    key="preview"
-                                    aria-hidden="true"
-                                    className="bg-primary block h-3 max-w-full rounded-sm"
-                                    style={{width: `var(--ds-spacing-${name})`}}
-                                />,
+                                // 미리보기 막대는 px 로 환산되는 값에만 그린다 — 화면 기준 값(80dvh 등)은
+                                // 표 안에서 길이를 비교할 기준이 없어 막대가 의미를 갖지 못한다.
+                                px === undefined ? (
+                                    <span key="preview" className="text-muted-foreground font-mono">
+                                        —
+                                    </span>
+                                ) : (
+                                    <span
+                                        key="preview"
+                                        aria-hidden="true"
+                                        className="bg-primary block h-3 max-w-full rounded-sm"
+                                        style={{width: `var(--ds-spacing-${name})`}}
+                                    />
+                                ),
                                 <CopyChip key="token" value={name} />,
                                 <span key="value" className="font-mono">
-                                    {px === undefined ? '—' : `${px}px`}
+                                    {px === undefined ? '' : `${px}px`}
                                     {typeof value === 'string' ? (
-                                        <span className="text-muted-foreground"> · {value} 참조</span>
+                                        <span className={px === undefined ? undefined : 'text-muted-foreground'}>
+                                            {isCssLiteral(value) ? value : ` · ${value} 참조`}
+                                        </span>
                                     ) : null}
                                 </span>,
                             ],

@@ -102,12 +102,17 @@ if (typeof spacingBase !== 'number') errors.push('spacingBase 는 숫자(px)여�
 if (typeof radiusBase !== 'number') errors.push('radiusBase 는 숫자(px)여야 함')
 for (const [k, v] of Object.entries(radius))
     if (!numOrStr(v)) errors.push(`radius.${k} 는 숫자(px) 또는 문자열이어야 함`)
-// size: 숫자(px) 또는 다른 size 키를 가리키는 참조(문자열). 참조는 값 중복 없이 별칭을 만든다.
+// size: 숫자(px) · 다른 size 키를 가리키는 참조(문자열) · 단위가 붙은 CSS 리터럴(문자열) 셋 중 하나.
 // 예: "header-top": "header-h" → 두 유틸이 같은 실제 값 하나를 공유(하나만 바꿔도 동기화).
+// 예: "modal-max-h": "80dvh" → px 로 환산할 수 없는 뷰포트 기준 값. 단위가 있는 문자열은 그대로 내보낸다
+//     ([PB-03] "단위 변환 대상이 아닌 값만 문자열"). 단위 없는 문자열은 여전히 참조로만 해석한다.
+const isCssLiteral = (v) => /^-?(\d+\.?\d*|\.\d+)[a-z%]+$/i.test(v)
 for (const [k, v] of Object.entries(size)) {
     if (typeof v === 'number') continue
     if (typeof v !== 'string') {
-        errors.push(`size.${k} 는 숫자(px) 또는 다른 size 키 참조(문자열)여야 함`)
+        errors.push(`size.${k} 는 숫자(px) · 다른 size 키 참조 · 단위 붙은 CSS 리터럴 중 하나여야 함`)
+    } else if (isCssLiteral(v)) {
+        continue
     } else if (!(v in size)) {
         errors.push(`size.${k}="${v}" — size 에 없는 키를 참조`)
     } else if (v === k) {
@@ -489,8 +494,9 @@ const shadowCss = (v, mode) =>
 L.push(':root {')
 if (Object.keys(size).length) {
     L.push('  /* fixed size (명명) → size-* w-* h-* */')
-    // 문자열 값 = 다른 size 키 별칭 → var() 로 참조(값 중복 없이 하나의 실제 값 공유). 숫자 = px→rem.
-    const sizeVal = (v) => (typeof v === 'string' ? `var(--ds-spacing-${v})` : toRem(v))
+    // 숫자 = px→rem. 문자열은 둘 중 하나 — 단위가 붙었으면 CSS 리터럴이라 그대로, 아니면 다른 size 키
+    // 별칭이라 var() 로 참조(값 중복 없이 하나의 실제 값 공유).
+    const sizeVal = (v) => (typeof v !== 'string' ? toRem(v) : isCssLiteral(v) ? v : `var(--ds-spacing-${v})`)
     for (const [k, v] of Object.entries(size)) L.push(`  --ds-spacing-${k}: ${sizeVal(v)};`)
 }
 // radius — 기준값(--ds-radius-base) 하나 + 오프셋(shadcn 컨벤션과 동일한 계산식). spacing 의 "단일
