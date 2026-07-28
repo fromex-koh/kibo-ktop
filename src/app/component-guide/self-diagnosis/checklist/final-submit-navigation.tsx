@@ -5,7 +5,9 @@ import {useRouter} from 'next/navigation'
 import {useState} from 'react'
 import {StepNavigation} from '@/components/composite/step-navigation'
 import {Button} from '@/components/ui/button'
+import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog'
+import {cn} from '@/lib/utils'
 
 // 체크리스트 하단 CTA — '다음'을 누르면 바로 넘어가지 않고 최종 확인 모달을 띄운다.
 // 시안 "[자가진단] alert"(40006513:19759): 닫기(X)는 모달만 닫고, '제출하기'가 완료 화면으로 보낸다.
@@ -26,8 +28,8 @@ const FinalSubmitNavigation = ({prevHref, completeHref}: {prevHref: string; comp
                     <DialogHeader>
                         <DialogTitle>제출 전 최종 확인</DialogTitle>
                     </DialogHeader>
-                    {/* 시안의 content 프레임 — 소제목과 본문을 한 블록(간격 16)으로 묶는다. */}
-                    <div className="flex flex-col gap-4">
+                    {/* 본문 구획 — 소제목과 본문을 한 블록(간격 16)으로 묶는다. 화면이 낮으면 여기만 스크롤된다. */}
+                    <div className={cn(dialogBodyClassName, 'gap-4')}>
                         <DialogDescription>최종 제출하시겠습니까?</DialogDescription>
                         <p className="typo-body-xl-regular text-label-foreground">
                             입력한 내용을 최종 제출합니다. 제출 전 입력한 정보가 정확한지 다시 한번 확인해 주세요. 제출

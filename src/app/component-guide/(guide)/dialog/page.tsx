@@ -4,7 +4,8 @@ import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
-import {dialogScrollBodyClassName} from '@/components/theme/dialog.variants'
+import {dialogBodyClassName} from '@/components/theme/dialog.variants'
+import {cn} from '@/lib/utils'
 import {CONSENT_QUESTION, CONSENT_SECTIONS, CONSENT_TITLE, type ConsentSection} from './consent-terms'
 import {Button} from '@/components/ui/button'
 import {
@@ -27,40 +28,25 @@ const USAGE_CODE = `<Dialog>
   <DialogTrigger asChild>
     <Button size="lg">열기</Button>
   </DialogTrigger>
+
   <DialogContent>
+    {/* 머리 — 제목. 닫기(X)는 셸이 자동으로 넣는다(끄려면 showCloseButton={false}) */}
     <DialogHeader>
       <DialogTitle>타이틀</DialogTitle>
-      <DialogDescription className="sr-only">
-        자가진단 안내의 비순서 및 순서 목록을 확인합니다.
-      </DialogDescription>
     </DialogHeader>
 
-    {/* 본문 — 소제목(20px Bold) + 리스트(ListMarker 조합). 긴 목록은 아래 '내부 스크롤' 케이스처럼
-        max-h + overflow-y-auto 박스로 감싼다. */}
-    <div className="flex flex-col gap-4">
-      <h3 className="typo-title-l-bold text-foreground">1depth</h3>
-      <ul className="flex flex-col gap-2">
-        <li>
-          <span className="flex typo-body-xl-regular text-label-foreground">
-            <ListMarker type="unordered" level={1} />텍스트 목록 레벨 1
-          </span>
-          <ul className="flex flex-col gap-2 pt-2 pl-3">
-            <li className="flex typo-body-xl-regular text-label-foreground">
-              <ListMarker type="unordered" level={2} />텍스트 목록 레벨 2
-            </li>
-          </ul>
-        </li>
-      </ul>
-      {/* 순서 목록도 동일 — <ol> + <ListMarker type="ordered" index={n} /> */}
+    {/* 본문 — 이 구획만 스크롤된다. 안쪽 간격은 gap 으로 직접 정한다 */}
+    <div className={cn(dialogBodyClassName, 'gap-4')}>
+      <DialogDescription>소제목</DialogDescription>
+      <p className="typo-body-xl-regular text-label-foreground">본문</p>
     </div>
 
+    {/* CTA — 둘이면 폭을 반씩, 하나면 폭 전체 */}
     <DialogFooter>
       <DialogClose asChild>
         <Button variant="tertiary" size="2xl">취소</Button>
       </DialogClose>
-      <DialogClose asChild>
-        <Button size="2xl">확인</Button>
-      </DialogClose>
+      <Button size="2xl">확인</Button>
     </DialogFooter>
   </DialogContent>
 </Dialog>`
@@ -167,6 +153,57 @@ const consentSectionBlocks = (section: ConsentSection) => (
     </div>
 )
 
+// 카드의 세 구획 — 여백을 카드가 통째로 갖지 않고 구획이 각자 갖는다. 그래야 본문이 스크롤될 때 글이
+// 머리·CTA 의 여백 아래로 들어가며 잘린다(가장자리에서 뚝 끊기지 않는다).
+const REGION_COLUMNS = [
+    {key: 'region', header: '구획', align: 'start', rowHeader: true},
+    {key: 'element', header: '요소', align: 'start'},
+    {key: 'padding', header: '자기 여백', align: 'start'},
+    {key: 'behavior', header: '화면이 낮아지면', align: 'start', wrap: true},
+] as const
+
+const REGION_ROWS = [
+    {
+        key: 'head',
+        cells: [
+            <span key="r" className="text-foreground font-medium">
+                머리
+            </span>,
+            <span key="e" className="text-primary font-mono">
+                DialogHeader (+ 닫기 X)
+            </span>,
+            '위 40 · 좌우 40 · 아래 20',
+            '고정 — 높이 그대로 남는다',
+        ],
+    },
+    {
+        key: 'body',
+        cells: [
+            <span key="r" className="text-foreground font-medium">
+                본문
+            </span>,
+            <span key="e" className="text-primary font-mono">
+                div + dialogBodyClassName
+            </span>,
+            '좌우 40 · 상하 4(포커스 링 자리)',
+            '이 구획만 줄어들며 스크롤된다',
+        ],
+    },
+    {
+        key: 'footer',
+        cells: [
+            <span key="r" className="text-foreground font-medium">
+                CTA
+            </span>,
+            <span key="e" className="text-primary font-mono">
+                DialogFooter
+            </span>,
+            '위 20 · 좌우 40 · 아래 24',
+            '고정 — 높이 그대로 남는다',
+        ],
+    },
+] as const
+
 const CASE_COLUMNS = [
     {key: 'case', header: '케이스', align: 'start', rowHeader: true},
     {key: 'slots', header: '구성', align: 'start', wrap: true},
@@ -217,7 +254,7 @@ const PROPS_ITEMS = [
     [
         'DialogHeader',
         'className · div props',
-        '제목과 설명을 묶는 헤더 영역 속성입니다.',
+        '머리 구획입니다. 제목이 여기 들어가고 자기 여백(위 40 · 좌우 40 · 아래 20)을 가집니다.',
         'undefined',
         "ComponentProps<'div'>",
     ],
@@ -225,7 +262,7 @@ const PROPS_ITEMS = [
     [
         'DialogDescription',
         'children · description props',
-        '제목 아래의 선택적 설명입니다.',
+        '소제목(20px Bold)입니다. 시안에서는 머리가 아니라 본문 구획의 첫 줄입니다.',
         '-',
         'DialogPrimitive.Description props',
     ],
@@ -233,7 +270,7 @@ const PROPS_ITEMS = [
     [
         'DialogFooter',
         'className · div props',
-        '액션 영역 스타일과 네이티브 div 속성을 전달합니다.',
+        'CTA 구획입니다. 자기 여백(위 20 · 좌우 40 · 아래 24)을 가지며 마지막 행에 놓입니다.',
         'undefined',
         "ComponentProps<'div'>",
     ],
@@ -269,8 +306,9 @@ const DialogGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         <code className="font-mono">Dialog</code> 안에 <code className="font-mono">DialogTrigger</code>
                         (여는 버튼)와 <code className="font-mono">DialogContent</code>(카드)를 둡니다. 카드는{' '}
-                        <code className="font-mono">Header</code>·<code className="font-mono">Footer</code> 로
-                        구성합니다.
+                        <strong className="text-foreground font-medium">머리 · 본문 · CTA 세 구획</strong>이고, 본문은{' '}
+                        <code className="font-mono">dialogBodyClassName</code> 으로 감쌉니다 — 화면이 낮아지면 이 구획만
+                        줄어들며 스크롤됩니다.
                     </p>
                 </div>
                 <div className="border-border flex flex-wrap gap-3 rounded-md border p-6">
@@ -285,9 +323,8 @@ const DialogGuidePage = () => (
                                     자가진단 안내의 비순서 및 순서 목록을 확인합니다.
                                 </DialogDescription>
                             </DialogHeader>
-                            {/* 본문 — Figma 그대로: 소제목(20px Bold) + 비순서/순서 중첩 리스트(ListMarker).
-                            일반 본문은 스크롤 없이 그대로 흐른다(긴 목록은 아래 '내부 스크롤' 케이스 참고). */}
-                            <div className="flex flex-col gap-4">
+                            {/* 본문 구획 — 화면이 낮으면 여기만 줄어들며 스크롤된다(머리·CTA 는 고정). */}
+                            <div className={cn(dialogBodyClassName, 'gap-4')}>
                                 <h3 className="typo-title-l-bold text-foreground">1depth</h3>
                                 <ul className="flex flex-col gap-2">
                                     <li>
@@ -360,6 +397,27 @@ const DialogGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="dialog-layout" className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                    <h2 id="dialog-layout" className="typo-h4-bold">
+                        레이아웃 구조
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        카드는 세 구획으로 나뉜 grid 입니다. 여백은 카드가 통째로 갖지 않고 구획이 각자 갖습니다 —
+                        그래야 본문이 스크롤될 때 글이 머리·CTA 의 여백 아래로 들어가며 잘리고, 가장자리에서 뚝 끊기지
+                        않습니다.
+                    </p>
+                </div>
+                <Table size="md" caption="다이얼로그 카드의 세 구획" columns={REGION_COLUMNS} rows={REGION_ROWS} />
+                <p className="typo-body-l-regular text-muted-foreground">
+                    카드는 화면보다 짧으면 자기 높이 그대로이고, 화면의 80%(
+                    <code className="font-mono">size.modal-max-h</code>)에 걸리면 본문 구획만 줄어들며 스크롤됩니다.
+                    약관처럼 더 좁은 상한이 필요하면 본문에 <code className="font-mono">max-h-*</code> 를 얹습니다.
+                </p>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="dialog-cases" className="flex flex-col gap-4">
                 <div>
                     <h2 id="dialog-cases" className="typo-h4-bold">
@@ -381,12 +439,16 @@ const DialogGuidePage = () => (
                             <Button size="lg">안내 + 두 선택</Button>
                         </DialogTrigger>
                         <DialogContent showCloseButton={false}>
-                            <DialogHeader>
+                            {/* 머리 구획이 없는 유일한 케이스 — 제목이 sr-only 라 머리 여백을 없애 첫 행을
+                                0 으로 만든다. 그래야 시안 높이(242)가 나온다. */}
+                            <DialogHeader className="p-0">
                                 <DialogTitle className="sr-only">회원가입/로그인</DialogTitle>
+                            </DialogHeader>
+                            <div className={cn(dialogBodyClassName, 'pt-10')}>
                                 <DialogDescription className="py-8 text-center">
                                     회원가입/로그인 후 이용하시겠어요?
                                 </DialogDescription>
-                            </DialogHeader>
+                            </div>
                             <DialogFooter>
                                 <DialogClose asChild>
                                     <Button variant="tertiary" size="2xl">
@@ -408,7 +470,7 @@ const DialogGuidePage = () => (
                                 <DialogTitle>로그아웃 안내</DialogTitle>
                             </DialogHeader>
                             {/* 시안의 content 프레임 — 소제목과 본문을 한 블록(간격 16)으로 묶는다. */}
-                            <div className="flex flex-col gap-4">
+                            <div className={cn(dialogBodyClassName, 'gap-4')}>
                                 <DialogDescription>로그아웃 하시겠어요?</DialogDescription>
                                 <p className="typo-body-xl-regular text-label-foreground">
                                     현재 계정에서 로그아웃됩니다.
@@ -433,7 +495,7 @@ const DialogGuidePage = () => (
                             </DialogHeader>
                             {/* 시안의 content 프레임 — 소제목과 본문을 한 블록(간격 16)으로 묶는다.
                                 타이틀과의 간격 24 와 CTA 와의 간격 24 는 Content 의 grid gap 이 만든다. */}
-                            <div className="flex flex-col gap-4">
+                            <div className={cn(dialogBodyClassName, 'gap-4')}>
                                 <DialogDescription>
                                     로그아웃까지 남은 시간 : <strong className="text-primary font-bold">90초</strong>
                                 </DialogDescription>
@@ -462,32 +524,35 @@ const DialogGuidePage = () => (
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>비밀번호 변경</DialogTitle>
+                            </DialogHeader>
+                            {/* 본문 구획 — 소제목과 입력 묶음(간격 24). 화면이 낮으면 여기만 스크롤된다. */}
+                            <div className={cn(dialogBodyClassName, 'gap-6')}>
                                 <DialogDescription>
                                     회원님의 소중한 정보를 보호하기 위해 비밀번호를 변경해 주세요.
                                 </DialogDescription>
-                            </DialogHeader>
-                            {/* 시안의 li 프레임 — 입력 묶음 사이는 8, 각 묶음 안의 레이블→입력은 16.
-                                시안 인스턴스는 필수 표시(*)를 꺼 둔 상태다. */}
-                            <div className="flex flex-col gap-2">
-                                <div className="flex flex-col gap-4">
-                                    <Label htmlFor="dlg-pw" className="text-foreground font-bold">
-                                        비밀번호
-                                    </Label>
-                                    <Input
-                                        id="dlg-pw"
-                                        type="password"
-                                        placeholder="영문, 숫자, 특수문자 포함 10~20자 이내"
-                                    />
-                                </div>
-                                <div className="flex flex-col gap-4">
-                                    <Label htmlFor="dlg-pw-confirm" className="text-foreground font-bold">
-                                        비밀번호 확인
-                                    </Label>
-                                    <Input
-                                        id="dlg-pw-confirm"
-                                        type="password"
-                                        placeholder="비밀번호를 다시 입력해 주세요"
-                                    />
+                                {/* 시안의 li 프레임 — 입력 묶음 사이는 8, 각 묶음 안의 레이블→입력은 16.
+                                    시안 인스턴스는 필수 표시(*)를 꺼 둔 상태다. */}
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex flex-col gap-4">
+                                        <Label htmlFor="dlg-pw" className="text-foreground font-bold">
+                                            비밀번호
+                                        </Label>
+                                        <Input
+                                            id="dlg-pw"
+                                            type="password"
+                                            placeholder="영문, 숫자, 특수문자 포함 10~20자 이내"
+                                        />
+                                    </div>
+                                    <div className="flex flex-col gap-4">
+                                        <Label htmlFor="dlg-pw-confirm" className="text-foreground font-bold">
+                                            비밀번호 확인
+                                        </Label>
+                                        <Input
+                                            id="dlg-pw-confirm"
+                                            type="password"
+                                            placeholder="비밀번호를 다시 입력해 주세요"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                             <DialogFooter>
@@ -504,25 +569,28 @@ const DialogGuidePage = () => (
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>본인 인증</DialogTitle>
-                                <DialogDescription>주민등록번호를 입력해주세요</DialogDescription>
                             </DialogHeader>
-                            {/* 시안의 li 프레임 — 레이블→입력 16, 한 줄 안의 두 칸과 구분자 사이는 각각 8. */}
-                            <div className="flex flex-col gap-4">
-                                <Label htmlFor="dlg-rrn-front" className="text-foreground font-bold">
-                                    주민등록번호
-                                </Label>
-                                <div className="flex items-center gap-2">
-                                    <Input id="dlg-rrn-front" inputMode="numeric" placeholder="901231" />
-                                    <span aria-hidden="true" className="text-foreground">
-                                        -
-                                    </span>
-                                    <Input
-                                        id="dlg-rrn-back"
-                                        type="password"
-                                        inputMode="numeric"
-                                        aria-label="주민등록번호 뒷자리"
-                                        placeholder="*******"
-                                    />
+                            {/* 본문 구획 — 소제목과 입력 묶음(간격 24). 화면이 낮으면 여기만 스크롤된다. */}
+                            <div className={cn(dialogBodyClassName, 'gap-6')}>
+                                <DialogDescription>주민등록번호를 입력해주세요</DialogDescription>
+                                {/* 시안의 li 프레임 — 레이블→입력 16, 한 줄 안의 두 칸과 구분자 사이는 각각 8. */}
+                                <div className="flex flex-col gap-4">
+                                    <Label htmlFor="dlg-rrn-front" className="text-foreground font-bold">
+                                        주민등록번호
+                                    </Label>
+                                    <div className="flex items-center gap-2">
+                                        <Input id="dlg-rrn-front" inputMode="numeric" placeholder="901231" />
+                                        <span aria-hidden="true" className="text-foreground">
+                                            -
+                                        </span>
+                                        <Input
+                                            id="dlg-rrn-back"
+                                            type="password"
+                                            inputMode="numeric"
+                                            aria-label="주민등록번호 뒷자리"
+                                            placeholder="*******"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                             <DialogFooter>
@@ -539,16 +607,19 @@ const DialogGuidePage = () => (
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>내 정보 확인</DialogTitle>
+                            </DialogHeader>
+                            {/* 본문 구획 — 소제목과 입력 묶음(간격 24). 화면이 낮으면 여기만 스크롤된다. */}
+                            <div className={cn(dialogBodyClassName, 'gap-6')}>
                                 <DialogDescription>
                                     회원님의 소중한 정보를 보호하기 위해 비밀번호를 변경해 주세요.
                                 </DialogDescription>
-                            </DialogHeader>
-                            {/* 시안의 li 프레임 — 레이블→입력 16. 시안 인스턴스는 필수 표시(*)를 꺼 둔 상태다. */}
-                            <div className="flex flex-col gap-4">
-                                <Label htmlFor="dlg-verify-pw" className="text-foreground font-bold">
-                                    비밀번호
-                                </Label>
-                                <Input id="dlg-verify-pw" type="password" placeholder="비밀번호를 입력해 주세요" />
+                                {/* 시안의 li 프레임 — 레이블→입력 16. 시안 인스턴스는 필수 표시(*)를 꺼 둔 상태다. */}
+                                <div className="flex flex-col gap-4">
+                                    <Label htmlFor="dlg-verify-pw" className="text-foreground font-bold">
+                                        비밀번호
+                                    </Label>
+                                    <Input id="dlg-verify-pw" type="password" placeholder="비밀번호를 입력해 주세요" />
+                                </div>
                             </div>
                             <DialogFooter>
                                 <Button size="2xl">비밀번호 확인</Button>
@@ -556,8 +627,9 @@ const DialogGuidePage = () => (
                         </DialogContent>
                     </Dialog>
 
-                    {/* 내부 스크롤 — 시안(40006522:18978)은 본문만 440 높이로 잘라 스크롤한다. 화면이 넉넉하면
-                        제목과 CTA 는 늘 보인다. 본문 상자 규격은 theme 의 dialogScrollBody 가 갖는다. */}
+                    {/* 내부 스크롤 — 시안(40006522:18978)은 본문을 440 높이로 잘라 스크롤한다. 다른 케이스와
+                        같은 본문 구획이고 상한만 더 얹는다 — max-h-112(448)는 시안의 440 + 포커스 링 자리
+                        py-1(8)이라, 실제로 보이는 스크롤 영역이 440 이 된다. */}
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button size="lg">필수 동의사항 (내부 스크롤)</Button>
@@ -569,7 +641,7 @@ const DialogGuidePage = () => (
                                     필수 동의사항 전문을 스크롤하며 확인합니다.
                                 </DialogDescription>
                             </DialogHeader>
-                            <div className={dialogScrollBodyClassName}>
+                            <div className={cn(dialogBodyClassName, 'max-h-112 gap-6 pr-3')}>
                                 {CONSENT_SECTIONS.map(consentSectionBlocks)}
                                 {/* 마무리 질문 — 시안은 이 줄만 가운데 정렬이다(본문 508 폭 기준). */}
                                 <p className="typo-title-l-bold text-foreground text-center">{CONSENT_QUESTION}</p>
@@ -598,12 +670,19 @@ const DialogGuidePage = () => (
                     </h2>
                 </div>
                 <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-2 pl-5">
-                    <li>Radix가 포커스 트랩·Esc 닫기·닫은 뒤 포커스 복귀·배경 스크롤 잠금을 제공합니다([8.2.1]).</li>
+                    <li>
+                        포커스 트랩·Esc 닫기·바깥 클릭 닫기·닫은 뒤 포커스 복귀·배경 스크롤 잠금은 radix 가 처리합니다
+                        ([8.2.1]). 직접 구현하지 마세요.
+                    </li>
                     <li>
                         <code className="font-mono">DialogTitle</code> 은 필수입니다(스크린리더가 모달 이름으로 읽음).
                         시각적 제목이 없으면 <code className="font-mono">sr-only</code> 로라도 둡니다.
                     </li>
-                    <li>아이콘만 있는 닫기(X) 버튼에는 sr-only 텍스트가 포함되어 있습니다([5.1.1]).</li>
+                    <li>
+                        <strong className="text-foreground font-medium">미해결</strong> — 본문이 스크롤될 때 그 영역에
+                        키보드 포커스를 줄 수단이 없습니다. 약관처럼 안에 포커스 받을 요소가 없으면 키보드만으로 읽어
+                        내릴 수 없습니다([6.1.1]).
+                    </li>
                 </ul>
             </section>
         </BaseCard>

@@ -3,39 +3,48 @@ import {buttonVariants} from '@/components/theme/button.variants'
 
 export const dialogOverlayClassName =
     'data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 bg-overlay-xl fixed inset-0 isolate z-modal duration-100'
-// max-h-modal-max-h(= size.modal-max-h, 80dvh) + overflow-y-auto — 시안 주석 "모달 최대 높이 :
-// 디바이스 화면 높이 기준 20% 여백". 세로 가운데 정렬이라 위아래 10% 씩 남는다. 내용이 그보다 길면
-// 모달이 화면 밖으로 잘리는 대신 안에서 스크롤된다.
+// 모달은 머리(제목+닫기) · 본문 · CTA 세 구획이다. grid-rows 로 그 세 행을 고정하고 가운데 행만
+// minmax(0,1fr) 로 둔다 — 카드가 화면보다 짧으면 1fr 이 max-content 로 풀려 자기 높이 그대로 나오고,
+// 화면이 더 낮아 max-h 에 걸리면 가운데 행만 줄어 머리와 CTA 는 제자리에 남는다(본문만 스크롤).
+// 제목과 본문은 row-start 로 직접 배치하고 CTA 는 자동 배치에 맡긴다. overflow-hidden 은 줄어든
+// 가운데 행의 내용이 카드 밖으로 비어져 나오지 않게 한다.
+//
+// 여백은 카드가 통째로 갖지 않고 세 구획이 각자 갖는다(p-0 · gap-0). 그래야 본문이 스크롤될 때 글이
+// 머리·CTA 의 여백 아래로 들어가며 잘려, 맨 가장자리에서 뚝 끊기지 않는다. 구획 사이 24 도 gap 이
+// 아니라 머리의 pb-6 · CTA 의 pt-6 가 만든다 — 그 여백이 스크롤 영역 바깥이라야 같은 효과가 난다.
+//
+// max-h-modal-max-h(= size.modal-max-h, 80dvh) — 시안 주석 "모달 최대 높이 : 디바이스 화면 높이 기준
+// 20% 여백". 세로 가운데 정렬이라 위아래 10% 씩 남는다.
 // %(max-h-4/5)가 아니라 dvh 인 이유 — % 는 초기 컨테이닝 블록 기준이라 가로 스크롤바가 있으면 화면
 // 높이보다 작게 잡히고(500 화면에서 380), 모바일 주소창 개폐에도 흔들린다.
 export const dialogContentClassName =
-    'bg-popover text-popover-foreground data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 fixed inset-x-4 top-1/2 z-modal grid max-h-modal-max-h w-auto -translate-y-1/2 gap-6 overflow-y-auto rounded-2xl p-10 pb-6 text-base duration-100 outline-none sm:left-1/2 sm:w-full sm:max-w-modal sm:-translate-x-1/2'
-// display:contents — 헤더 상자를 없애 제목·설명이 Content 의 grid 행으로 직접 올라간다. 그래야 닫기(X)를
-// 제목과 같은 행에 놓아 세로 중앙 정렬을 grid 가 계산해 준다(absolute 로 띄우지 않아도 된다).
-// 제목↔설명 간격 24 는 헤더의 gap 대신 Content 의 gap-6 이 만든다(값은 같다).
-// 예외: sr-only 로 감추는 헤더(ui/command.tsx)는 상자가 있어야 숨겨지므로 display 를 되돌린다.
-export const dialogHeaderClassName = 'contents [&.sr-only]:block'
-// 시안 CTA — 버튼이 본문 폭을 나눠 채운다(둘이면 246+246·간격 16, 하나면 508 전체).
-// 본문과의 간격 24 는 Content 의 grid gap 이 만들므로 여기서 pt 를 더하지 않는다.
-// 모바일에서는 세로로 쌓고 주 동작을 위에 둔다(flex-col-reverse).
-export const dialogFooterClassName = 'flex flex-col-reverse gap-4 sm:flex-row sm:[&>button]:flex-1'
+    'bg-popover text-popover-foreground data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 fixed inset-x-4 top-1/2 z-modal grid max-h-modal-max-h w-auto -translate-y-1/2 grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden rounded-2xl p-0 text-base duration-100 outline-none sm:left-1/2 sm:w-full sm:max-w-modal sm:-translate-x-1/2'
+// 머리 구획 — 제목이 사는 첫 행이자 자기 여백(위 40 · 좌우 40 · 아래 24)의 주인.
+// 닫기(X)는 셸이 Content 직속으로 렌더하므로 이 상자 안에 들어오지 못한다. 같은 행·같은 칸에 겹쳐
+// 두고 오른쪽 끝으로 밀어 배치한다(dialogCloseClassName).
+export const dialogHeaderClassName = 'col-start-1 row-start-1 flex flex-col gap-6 px-10 pt-10 pb-5'
+// CTA 구획 — 버튼이 본문 폭을 나눠 채운다(둘이면 246+246·간격 16, 하나면 508 전체).
+// 자기 여백(위 24 · 좌우 40 · 아래 24)을 갖는다. 위 24 가 본문과의 간격이고, 스크롤 영역 바깥이라
+// 본문이 이 여백 아래로 들어가며 잘린다. 모바일에서는 세로로 쌓고 주 동작을 위에 둔다.
+// 행은 지정하지 않는다 — 제목(row 1)·본문(row 2)이 자리를 잡고 나면 자동 배치가 마지막 행에 놓는다.
+// row-start-3 을 박으면 머리가 없는 모달(grid-rows-none)에서도 3행이 생겨 빈 행이 남는다.
+export const dialogFooterClassName = 'flex flex-col-reverse gap-4 px-10 pt-5 pb-6 sm:flex-row sm:[&>button]:flex-1'
 
-// 본문만 스크롤하는 모달(약관 등)의 본문 상자 — 시안의 스크롤 높이 440(=max-h-110),
-// 스크롤바 자리 12(=pr-3).
+// 본문 구획 — 머리와 CTA 사이의 가운데 행. 화면이 낮아 카드가 max-h 에 걸리면 이 상자만 줄어들고
+// 스크롤이 여기 생긴다(머리·CTA 는 고정). min-h-0 이 없으면 grid 행이 줄어도 상자가 따라 줄지 않는다.
+// 안쪽 간격(소제목↔본문 등)은 사용처가 flex + gap 으로 정한다 — 케이스마다 16·24 로 다르다.
 //
-// 화면이 낮아도 이 높이를 줄이지 않는다. 한때 Content 에 grid-rows-[auto_minmax(0,1fr)_auto] 를 얹어
-// 가운데 행만 줄였는데, 화면 높이에 따라 본문 상자가 늘었다 줄었다 하면서 스크롤이 생겼다 사라져
-// 예측이 안 됐다. 지금은 모달이 자기 콘텐츠 높이를 그대로 유지하고, 화면이 그보다 낮으면 Content 의
-// max-h-modal-max-h + overflow-y-auto 가 제목·본문·CTA 를 한 번에 스크롤한다(스크롤바 하나).
-export const dialogScrollBodyClassName = 'flex max-h-110 flex-col gap-6 overflow-y-auto pr-3'
+// py-1(4)은 포커스 링 자리다. overflow 컨테이너는 자기 상자 밖을 그려주지 않아서, 맨 위·맨 아래 요소에
+// 포커스가 가면 링(outline 2 + offset 2 = 4)이 잘린다. 그만큼 머리의 pb 와 CTA 의 pt 에서 덜어내
+// 구획 사이 24 는 그대로 둔다(머리 pb-5 + 본문 py-1 = 24). scroll-py-1 은 브라우저가 탭 이동으로
+// 요소를 보이게 스크롤할 때 그 4 를 남기도록 알려준다 — 없으면 요소가 가장자리에 딱 붙어 링이 잘린다.
+export const dialogBodyClassName = 'row-start-2 flex min-h-0 flex-col overflow-y-auto scroll-py-1 px-10 py-1'
 // PROJECT-STYLE: shadcn 원본은 text-lg leading-none font-semibold 이지만,
 // 시안 모달 제목은 24px Bold·행간 36 이므로
 // typo-h4-bold 를 사용한다.
-// row-start-1 은 닫기(X)와 같은 행을 쓰기 위한 것이다 — 둘 다 명시하지 않으면 자동 배치가 서로 다른
-// 행으로 밀어낸다(먼저 배치된 X 가 1행을 차지하고 제목이 2행으로 내려간다).
-// pe-14 는 X 자리(아이콘 32 + 간격 24)를 비워 둔다 — 같은 셀을 겹쳐 쓰므로 이게 없으면 제목이 길어질 때
-// 글자가 X 밑으로 파고든다. 남는 글자 폭 452 는 시안의 제목 텍스트 폭과 같다.
-export const dialogTitleClassName = 'typo-h4-bold text-foreground col-start-1 row-start-1 pe-14'
+// pe-14 는 X 자리(아이콘 32 + 간격 24)를 비워 둔다 — X 가 머리 구획 위에 겹쳐 놓이므로 이게 없으면
+// 제목이 길어질 때 글자가 X 밑으로 파고든다. 남는 글자 폭 452 는 시안의 제목 텍스트 폭과 같다.
+export const dialogTitleClassName = 'typo-h4-bold text-foreground pe-14'
 // PROJECT-STYLE: shadcn 원본은 text-muted-foreground text-sm 이지만,
 // 시안의 모달 소제목은 20px Bold·본문색(gray.900)이므로
 // typo-title-l-bold 와 text-foreground 를 사용한다.
@@ -52,5 +61,5 @@ export const dialogDescriptionClassName = 'typo-title-l-bold text-foreground *:[
 // 그대로 남는다 — self-center 로 두면 행 전체(두 줄)의 한가운데로 내려간다.
 export const dialogCloseClassName = cn(
     buttonVariants({variant: 'plain', size: 'icon-xl'}),
-    'col-start-1 row-start-1 h-9 self-start justify-self-end',
+    'col-start-1 row-start-1 mt-10 me-10 h-9 self-start justify-self-end',
 )
