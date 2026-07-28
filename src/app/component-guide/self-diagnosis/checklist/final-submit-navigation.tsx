@@ -25,14 +25,15 @@ const FinalSubmitNavigation = ({prevHref, completeHref}: {prevHref: string; comp
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>제출 전 최종 확인</DialogTitle>
-                        <DialogDescription className="typo-title-l-bold text-foreground">
-                            최종 제출하시겠습니까?
-                        </DialogDescription>
                     </DialogHeader>
-                    <p className="typo-body-xl-regular text-label-foreground">
-                        입력한 내용을 최종 제출합니다. 제출 전 입력한 정보가 정확한지 다시 한번 확인해 주세요. 제출
-                        후에는 수정이 불가합니다.
-                    </p>
+                    {/* 시안의 content 프레임 — 소제목과 본문을 한 블록(간격 16)으로 묶는다. */}
+                    <div className="flex flex-col gap-4">
+                        <DialogDescription>최종 제출하시겠습니까?</DialogDescription>
+                        <p className="typo-body-xl-regular text-label-foreground">
+                            입력한 내용을 최종 제출합니다. 제출 전 입력한 정보가 정확한지 다시 한번 확인해 주세요. 제출
+                            후에는 수정이 불가합니다.
+                        </p>
+                    </div>
                     <DialogFooter>
                         <Button size="2xl" onClick={() => router.push(completeHref)}>
                             제출하기
