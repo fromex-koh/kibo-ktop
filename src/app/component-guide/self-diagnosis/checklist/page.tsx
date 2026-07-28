@@ -374,13 +374,7 @@ const ChecklistPage = () => (
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/component-guide/self-diagnosis/evaluation-model">
-                                    KTRS-FM
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbDotSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>체크리스트 입력</BreadcrumbPage>
+                                <BreadcrumbPage>KTRS-FM</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>

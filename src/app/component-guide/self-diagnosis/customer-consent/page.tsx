@@ -160,13 +160,7 @@ const CustomerConsentPage = () => (
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/component-guide/self-diagnosis/evaluation-model">
-                                    KTRS-FM
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbDotSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>고객 정보 활용 동의</BreadcrumbPage>
+                                <BreadcrumbPage>KTRS-FM</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
