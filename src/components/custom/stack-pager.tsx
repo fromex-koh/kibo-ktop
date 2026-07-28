@@ -155,7 +155,7 @@ const StackPager = ({
         const handleWheel = (event: WheelEvent) => {
             if (!desktopQuery.matches) return
 
-            // 1→2 전환 직후 같은 트랙패드 제스처의 관성 입력이 2섹션 내부 스크롤이나
+            // 섹션 전환 직후 같은 트랙패드 제스처의 관성 입력이 다음 섹션 내부 스크롤이나
             // 후속 스크롤로 이어지지 않게 전환 잠금과 제스처 종료를 가장 먼저 확인한다.
             if (isTransitioningRef.current || !isGestureArmedRef.current) {
                 event.preventDefault()
@@ -192,7 +192,7 @@ const StackPager = ({
 
         // 터치 스와이프 — 페이저가 켜진 화면(태블릿 포함)은 페이지가 fixed·overflow hidden 이라 네이티브
         // 스크롤이 없다. 휠만 듣고 있으면 터치로는 다음 섹션으로 갈 수 없으므로 세로 스와이프를 함께 받는다.
-        // 안쪽이 스크롤되는 페이지(2섹션)는 네이티브 스크롤을 그대로 두고, 끝에 닿았을 때만 페이지를 넘긴다.
+        // 안쪽이 스크롤되는 페이지는 네이티브 스크롤을 그대로 두고, 끝에 닿았을 때만 페이지를 넘긴다.
         let touchStartY = 0
         let isTouchTracking = false
 

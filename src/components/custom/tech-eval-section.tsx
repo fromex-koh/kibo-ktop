@@ -24,9 +24,9 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
     // 두 번째 섹션에 새로 진입할 때만 첫 서비스와 진행 시간을 초기화한다.
     // 실제 스크롤 위치나 StackPager 전환 상태는 변경하지 않아 페이지 이동과 독립적으로 동작한다.
     useEffect(() => {
-        const hasEnteredSecondSection = stackPage === 1 && previousStackPageRef.current !== 1
+        const hasEnteredThirdSection = stackPage === 2 && previousStackPageRef.current !== 2
 
-        if (hasEnteredSecondSection) {
+        if (hasEnteredThirdSection) {
             setActiveIndex(0)
             setIsPaused(false)
             setEntrySequence((current) => current + 1)

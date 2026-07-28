@@ -11,8 +11,8 @@ const MainPageHeaderState = () => {
     useEffect(() => {
         const pager = document.querySelector<HTMLElement>('[data-stack-pager]')
         const header = pager?.querySelector<HTMLElement>('header')
-        const techEvalSection = pager?.querySelector<HTMLElement>('#tech-eval')
-        if (!pager || !header || !techEvalSection) return
+        const secondSection = pager?.querySelector<HTMLElement>('#service-intro')
+        if (!pager || !header || !secondSection) return
 
         const stackPagerQuery = window.matchMedia(STACK_PAGER_QUERY)
         let frame = 0
@@ -26,7 +26,7 @@ const MainPageHeaderState = () => {
                 }
 
                 const hasEnteredSecondSection =
-                    techEvalSection.getBoundingClientRect().top <= header.getBoundingClientRect().bottom
+                    secondSection.getBoundingClientRect().top <= header.getBoundingClientRect().bottom
                 pager.dataset.naturalPage = hasEnteredSecondSection ? '1' : '0'
             })
         }
