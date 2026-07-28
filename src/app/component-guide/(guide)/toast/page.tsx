@@ -11,7 +11,7 @@ import ToastDemo, {
     ToastPositionDemo,
 } from './toast-demo'
 
-export const metadata: Metadata = {title: '토스트 (Toast)'}
+export const metadata: Metadata = {title: '토스트 (Toast) (작업중)'}
 
 const SETUP_CODE = `import {Toaster} from '@/components/ui/sonner'
 
@@ -129,7 +129,7 @@ const PROPS = [
 
 const ToastGuidePage = () => (
     <GuidePageShell
-        title="토스트 (Toast)"
+        title="토스트 (Toast) (작업중)"
         description="작업 결과나 짧은 상태 변화를 화면 흐름을 막지 않고 알리는 shadcn/ui 기반 피드백 컴포넌트입니다."
     >
         <BaseCard>
