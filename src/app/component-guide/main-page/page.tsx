@@ -57,7 +57,7 @@ const MainPage = () => (
     <StackPager transition="cover" className={`bg-background relative min-h-dvh ${MAIN_PAGE_CLASS}`}>
         <MainPageHeaderState />
         <SkipNav links={SKIP_LINKS} />
-        <Header navigationByUserType={MAIN_HEADER_NAVIGATION} />
+        <Header logoHref="/component-guide/main-page" navigationByUserType={MAIN_HEADER_NAVIGATION} />
         {/* id·tabIndex 는 스킵 링크 도착점용 — 포커스만 받고 링은 그리지 않는다(#site-info 도 같다). */}
         <main id="main" tabIndex={-1}>
             <HeroSection />

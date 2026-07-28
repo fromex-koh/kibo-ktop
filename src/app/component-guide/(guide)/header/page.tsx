@@ -84,6 +84,7 @@ const PROPS = [
         '기본 메뉴',
         'HeaderNavigationByUserType',
     ],
+    ['Header', 'logoHref', '로고를 링크로 사용할 화면에서 이동 경로를 주입합니다.', 'undefined', 'string'],
     ['HeaderNavLink', 'label', '화면에 표시할 메뉴명입니다.', '—', 'string'],
     ['HeaderNavLink', 'href', 'Next.js Link가 이동할 내부 또는 외부 경로입니다.', '—', 'string'],
     ['HeaderNavLink', 'external', '새 창 링크와 외부 링크 아이콘을 적용합니다.', 'false', 'boolean'],
@@ -91,7 +92,10 @@ const PROPS = [
 
 // 헤더가 조립하는 primitive 목록(Composition 표).
 const COMPOSITION = [
-    {name: '로고', desc: 'p > a > img 구조의 사이트명 로고(홈 링크). 이미지는 기술보증기금 alt 값을 제공한다.'},
+    {
+        name: '로고',
+        desc: '사이트 식별 로고. logoHref를 전달한 사용처에서만 링크가 되며 이미지는 기술보증기금 alt 값을 제공한다.',
+    },
     {
         name: '주 메뉴 (NavigationMenu)',
         desc: '플랫폼 소개·기술평가·특허평가·K-BIGx 보고서·탄소중립 주 내비게이션. lg 미만에서 숨고 전체 메뉴(Sheet)로 이동한다.',

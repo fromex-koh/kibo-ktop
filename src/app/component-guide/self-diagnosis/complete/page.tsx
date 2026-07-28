@@ -51,7 +51,12 @@ const SelfDiagnosisCompletePage = () => (
         header={
             <>
                 <SkipNav links={SKIP_LINKS} />
-                <Header overlay={false} showThemeToggle navigationByUserType={PLATFORM_NAVIGATION} />
+                <Header
+                    overlay={false}
+                    showThemeToggle
+                    logoHref="/component-guide/main-page"
+                    navigationByUserType={PLATFORM_NAVIGATION}
+                />
             </>
         }
         mainProps={{id: 'main', tabIndex: -1}}

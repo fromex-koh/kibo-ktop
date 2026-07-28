@@ -91,11 +91,11 @@ const UtilityLink = ({label, external, className}: {label: string; external?: bo
     </Button>
 )
 
-// p > a > img 구조로 사이트명을 전달한다. 로고는 모든 화면에 반복되는 홈 링크라 제목(h1)이 아니다 —
-// h1 은 화면마다 하나뿐인 본문 제목(PageTitleBar·히어로 등)의 몫이다. [KWCAG 6.4.2]
-const Logo = ({overlay}: {overlay: boolean}) => (
-    <p className="shrink-0">
-        <Link href="#" className="flex shrink-0 items-center">
+// 로고는 모든 화면에 반복되는 사이트 식별자라 제목(h1)이 아니다. h1 은 화면마다 하나뿐인 본문
+// 제목(PageTitleBar·히어로 등)의 몫이다. 데모처럼 이동 경로가 정해진 사용처만 logoHref 를 전달한다. [KWCAG 6.4.2]
+const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
+    const image = (
+        <>
             {overlay ? (
                 // 메인페이지는 항상 어두운 배경이라 화이트 로고 한 장만 둔다.
                 <Image
@@ -131,9 +131,21 @@ const Logo = ({overlay}: {overlay: boolean}) => (
                     />
                 </>
             )}
-        </Link>
-    </p>
-)
+        </>
+    )
+
+    return (
+        <p className="shrink-0">
+            {href ? (
+                <Link href={href} className="flex shrink-0 items-center">
+                    {image}
+                </Link>
+            ) : (
+                <span className="flex shrink-0 items-center">{image}</span>
+            )}
+        </p>
+    )
+}
 
 // 실제 Header와 가이드 데모가 공유하는 본문.
 // 헤더의 테마 전환 — 시안대로 아이콘만 둔다(가이드 앱바에서 쓰는 ThemeToggle 은 버튼 면이 있는 별개 컴포넌트).
@@ -309,6 +321,7 @@ const HeaderContent = ({
     compact,
     showThemeToggle,
     navigationByUserType,
+    logoHref,
     userType,
     searchParams,
 }: {
@@ -317,6 +330,7 @@ const HeaderContent = ({
     compact: boolean
     showThemeToggle: boolean
     navigationByUserType?: HeaderNavigationByUserType
+    logoHref?: string
     userType: UserType
     searchParams: string
 }) => {
@@ -346,7 +360,7 @@ const HeaderContent = ({
                     inert={menuOpen || undefined}
                     aria-hidden={menuOpen || undefined}
                 >
-                    <Logo overlay={overlay} />
+                    <Logo overlay={overlay} href={logoHref} />
                 </div>
 
                 <div
@@ -405,6 +419,7 @@ type HeaderProps = {
     overlay?: boolean
     showThemeToggle?: boolean
     navigationByUserType?: HeaderNavigationByUserType
+    logoHref?: string
 }
 
 const ResolvedHeaderContent = ({
@@ -413,12 +428,14 @@ const ResolvedHeaderContent = ({
     compact,
     showThemeToggle,
     navigationByUserType,
+    logoHref,
 }: {
     navLabel: string
     overlay: boolean
     compact: boolean
     showThemeToggle: boolean
     navigationByUserType?: HeaderNavigationByUserType
+    logoHref?: string
 }) => {
     const searchParams = useSearchParams()
     const userTypeParam = searchParams.get('userType')
@@ -431,13 +448,14 @@ const ResolvedHeaderContent = ({
             compact={compact}
             showThemeToggle={showThemeToggle}
             navigationByUserType={navigationByUserType}
+            logoHref={logoHref}
             userType={userType}
             searchParams={searchParams.toString()}
         />
     )
 }
 
-const Header = ({overlay = true, showThemeToggle = false, navigationByUserType}: HeaderProps) => {
+const Header = ({overlay = true, showThemeToggle = false, navigationByUserType, logoHref}: HeaderProps) => {
     return (
         <header
             className={cn(
@@ -456,6 +474,7 @@ const Header = ({overlay = true, showThemeToggle = false, navigationByUserType}:
                             compact={false}
                             showThemeToggle={showThemeToggle}
                             navigationByUserType={navigationByUserType}
+                            logoHref={logoHref}
                             userType="corp"
                             searchParams=""
                         />
@@ -467,6 +486,7 @@ const Header = ({overlay = true, showThemeToggle = false, navigationByUserType}:
                         compact={false}
                         showThemeToggle={showThemeToggle}
                         navigationByUserType={navigationByUserType}
+                        logoHref={logoHref}
                     />
                 </Suspense>
             </div>
