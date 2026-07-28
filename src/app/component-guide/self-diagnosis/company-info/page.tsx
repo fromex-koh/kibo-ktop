@@ -467,13 +467,7 @@ const CompanyInfoPage = () => (
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="/component-guide/self-diagnosis/evaluation-model">
-                                    KTRS-FM
-                                </BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbDotSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>기업정보·기술정보 입력</BreadcrumbPage>
+                                <BreadcrumbPage>KTRS-FM</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>

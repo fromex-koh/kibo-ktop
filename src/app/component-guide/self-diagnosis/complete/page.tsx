@@ -77,13 +77,7 @@ const SelfDiagnosisCompletePage = () => (
                         </BreadcrumbItem>
                         <BreadcrumbDotSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbLink href="/component-guide/self-diagnosis/evaluation-model">
-                                KTRS-FM
-                            </BreadcrumbLink>
-                        </BreadcrumbItem>
-                        <BreadcrumbDotSeparator />
-                        <BreadcrumbItem>
-                            <BreadcrumbPage>제출 완료</BreadcrumbPage>
+                            <BreadcrumbPage>KTRS-FM</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
