@@ -678,11 +678,6 @@ const DialogGuidePage = () => (
                         <code className="font-mono">DialogTitle</code> 은 필수입니다(스크린리더가 모달 이름으로 읽음).
                         시각적 제목이 없으면 <code className="font-mono">sr-only</code> 로라도 둡니다.
                     </li>
-                    <li>
-                        <strong className="text-foreground font-medium">미해결</strong> — 본문이 스크롤될 때 그 영역에
-                        키보드 포커스를 줄 수단이 없습니다. 약관처럼 안에 포커스 받을 요소가 없으면 키보드만으로 읽어
-                        내릴 수 없습니다([6.1.1]).
-                    </li>
                 </ul>
             </section>
         </BaseCard>
