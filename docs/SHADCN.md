@@ -369,7 +369,7 @@ npx shadcn@latest add <component>
       `PROJECT-STYLE` 주석.
     - 셸에서는 스타일 정의를 지우고 `@/components/theme/<name>.variants` import로 연결한다. **셸의 다른 부분은
       `input-group`의 명시된 타입 가드 예외 외에는 손대지 않는다**([SC-02]).
-4. 사이즈에 44px 터치 타깃(`min-h-11`, 아이콘은 `min-w-11`) 반영, 아이콘 버튼 `aria-label` 확인([6.1.3]).
+4. 아이콘 버튼 `aria-label`([5.1.1])과 인접 컨트롤이 겹치지 않는지([6.1.3]) 확인. 크기는 시안을 따르며 최소 px 수치는 맞추지 않는다.
 5. theme 스타일에서 `dark:` 수동 분기는 쓰지 않는다(토큰 자동 반사, [PB-06]).
 6. `yarn verify` 통과.
 
@@ -387,8 +387,10 @@ npx shadcn@latest add <component>
 
 ## 접근성 ([docs/ACCESSIBILITY.md](ACCESSIBILITY.md))
 
-- **터치 타깃 44px** ([6.1.3]) — 기본/큰 사이즈·아이콘 버튼·Input 은 `min-h-11`(+아이콘 `min-w-11`).
-  `sm`/`xs`/`icon-sm`/`icon-xs` 는 밀도 높은 UI 용 **컴팩트 예외**(44px 미만, 인접 간격 확보 전제).
+- **조작 가능** ([6.1.3]) — 인접 컨트롤이 서로 겹치지 않도록 간격을 확보한다. **최소 크기 px 수치는 강제하지
+  않는다** — 44×44 는 WCAG 2.1 SC 2.5.5(AAA)에서 온 값이고 본 프로젝트 기준인 KWCAG 2.1 의 요구사항이 아니다
+  ([ACCESSIBILITY.md](ACCESSIBILITY.md) 참조). 기존 사이즈에 남아 있는 `min-h-11`/`min-w-11` 은 그대로 두되,
+  새 컴포넌트의 크기를 44 에 맞추려고 늘리지 않는다.
 - **포커스** ([6.1.2]) — `focus-visible:ring-ring`(= `--color-ring`) 로 표시. `outline-none` 단독 금지.
 - **아이콘 버튼** ([5.1.1]) — 사용처에서 `aria-label` + 내부 아이콘 `aria-hidden="true"`.
 - **폼** ([7.4.1/7.4.2]) — `<label htmlFor>` ↔ `id`, 오류는 `aria-invalid` + `aria-describedby` + `role="alert"`.
