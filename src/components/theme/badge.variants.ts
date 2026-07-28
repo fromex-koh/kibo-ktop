@@ -76,10 +76,10 @@ export const badgeVariants = cva(
             {variant: 'solid', color: 'secondary-grape', class: 'bg-grape-600'},
             {type: 'number', color: 'primary', class: 'bg-primary text-primary-foreground'},
             {type: 'number', color: 'new', class: 'bg-number-badge-new text-badge-solid-fg'},
-            // PROJECT-STYLE: Figma badge(28px)는 좌우 여백 8px + 최소 너비 60px 이다. 화면 인스턴스에서
-            // "확인"(글자 28px)은 60px 로 벌어지고 "성장초기"(글자 49px)는 49+16=65px 로 늘어난다.
+            // PROJECT-STYLE: badge sm(28px)는 좌우 여백 12px + 최소 너비 60px 이다. 화면 인스턴스에서
+            // "확인"(글자 28px)은 60px 로 벌어지고 "성장초기"(글자 49px)는 49+24=73px 로 늘어난다.
             // lg(40px)는 Figma 에 없는 프로젝트 확장이라 기존 16px 여백을 유지한다.
-            {type: 'label', size: 'sm', class: 'min-w-15 px-2'},
+            {type: 'label', size: 'sm', class: 'min-w-15 px-3'},
             {type: 'label', size: 'lg', class: 'px-4'},
             // PROJECT-STYLE: 숫자 배지는 Figma 28×24 라 size 의 높이(h-7)를 덮어 24px 를 유지한다.
             // Figma 숫자 배지는 테두리가 없다 — 공통 base 의 투명 1px 테두리를 지워 안쪽 폭을

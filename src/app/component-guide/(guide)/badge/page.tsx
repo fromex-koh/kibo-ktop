@@ -90,7 +90,7 @@ const PROPS_ITEMS = [
     [
         'Badge',
         'size',
-        'sm은 28px 높이(좌우 여백 8px · 최소 너비 60px), lg는 40px 높이(좌우 여백 16px)입니다. number는 28×24입니다.',
+        'sm은 28px 높이(좌우 여백 12px · 최소 너비 60px), lg는 40px 높이(좌우 여백 16px)입니다. number는 28×24입니다.',
         "'sm'",
         "'sm' | 'lg'",
     ],
@@ -173,8 +173,8 @@ const BadgeGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         <code className="font-mono">pill</code>(완전 둥근 모서리)과{' '}
                         <code className="font-mono">round</code>
-                        (8px 라운드) 두 형태입니다. 여백·크기는 형태와 무관하며, 시안대로 sm(28px)은 좌우 여백 8px에
-                        최소 너비 60px을 지켜 짧은 라벨도 같은 폭으로 정렬됩니다.
+                        (8px 라운드) 두 형태입니다. 여백·크기는 형태와 무관하며, sm(28px)은 좌우 여백 12px에 최소 너비
+                        60px을 지켜 짧은 라벨도 같은 폭으로 정렬됩니다.
                     </p>
                 </div>
                 <div className="flex flex-col gap-3">
