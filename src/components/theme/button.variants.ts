@@ -18,6 +18,12 @@ const buttonVariants = cva(
                 outline:
                     'border-input bg-background text-foreground interactive:hover:bg-accent aria-expanded:bg-accent disabled:border-disabled-subtle disabled:bg-control-disabled disabled:text-disabled',
                 ghost: 'text-foreground interactive:hover:bg-accent aria-expanded:bg-accent disabled:bg-control-disabled disabled:text-disabled',
+                // PROJECT-STYLE: 시안의 모달 닫기·헤더 아이콘 버튼은 배경·테두리·여백 없이 아이콘만 놓고
+                // hover 에서 아이콘 색만 바꾼다. ghost 를 쓰면 호버 면과 컨트롤 높이 상자가 따라와 시안과 달라진다.
+                // 상자는 size 축이 정한 아이콘 크기와 같다(아래 compoundVariants) — 보이는 크기와 눌리는 범위가
+                // 일치하고, 인접 컨트롤 간격만 확보하면 된다([6.1.3]).
+                // 눌림 시 1px 내려가는 기본 동작은 되돌린다 — 면이 없어 아이콘만 흔들리는 것처럼 보인다.
+                plain: 'border-0 text-current interactive:hover:text-icon-interactive-hover interactive:active:not-aria-[haspopup]:translate-y-0 focus-visible:outline-offset-4 disabled:text-disabled disabled:opacity-100',
                 destructive:
                     'bg-destructive text-destructive-foreground interactive:hover:bg-destructive/90 interactive:active:bg-destructive/80 disabled:border-disabled-subtle disabled:bg-control-disabled disabled:text-disabled',
                 // hover 밑줄도 text-underline 과 같은 방식(버튼 폭 전체 1px 선)이라 아이콘 아래에서 끊기지 않는다.
@@ -59,6 +65,15 @@ const buttonVariants = cva(
             {variant: 'default', size: 'lg', class: 'font-bold disabled:font-medium'},
             {variant: 'default', size: 'md', class: 'font-bold disabled:font-medium'},
             {variant: ['text', 'text-underline', 'link'], class: 'min-h-0 min-w-0 p-0 font-normal'},
+            // variant plain — 컨트롤 높이·최소 크기·패딩·라운드를 걷어내고 상자를 아이콘 크기에 맞춘다.
+            // size 축이 rounded-sm 등을 뒤에 얹으므로 이 되돌림은 variant 가 아니라 여기(compound)에 둔다.
+            // size 는 아이콘 전용 값만 의미가 있다(각 size 가 정한 아이콘 크기 = 상자 크기).
+            {variant: 'plain', class: 'min-h-0 min-w-0 gap-0 rounded-none p-0'},
+            {variant: 'plain', size: 'icon-2xl', class: 'size-icon-2xl'},
+            {variant: 'plain', size: 'icon-xl', class: 'size-icon-xl'},
+            {variant: 'plain', size: ['icon', 'icon-lg'], class: 'size-icon-lg'},
+            {variant: 'plain', size: 'icon-sm', class: 'size-icon-md'},
+            {variant: 'plain', size: 'icon-xs', class: 'size-icon-sm'},
             // PROJECT-STYLE: Figma button_text(40006516:20290)는 xsmall 12 · small 14 · medium 16 · large 18
             // 네 단계이고, 높이는 상자가 아니라 행간(18·21·24·27)이 정한다 — 문장 안에 섞이는 인라인 버튼이라
             // 컨트롤 높이를 주면 줄 높이가 어긋난다. 아이콘은 12px 단계만 12, 나머지는 16 이다.

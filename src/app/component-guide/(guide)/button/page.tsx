@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import {ArrowRight, ChevronRight, Download, LoaderCircle, Search, Sun} from 'lucide-react'
+import {ArrowRight, ChevronRight, Download, LoaderCircle, Search, Sun, X} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
@@ -100,6 +100,17 @@ const ICON_VARIANTS = [
     {key: 'ghost', label: 'ghost'},
 ] as const
 
+// plain 은 컨트롤 높이를 버리고 상자를 아이콘 크기로 맞추는 variant 라, 같은 size 라도 위 표의 높이와
+// 값이 다르다(icon-xl = 52 가 아니라 아이콘 그대로 32). 혼동을 막으려고 표를 따로 둔다.
+const PLAIN_SIZES = [
+    {key: 'icon-2xl', label: 'icon-2xl', box: 40},
+    {key: 'icon-xl', label: 'icon-xl', box: 32},
+    {key: 'icon-lg', label: 'icon-lg', box: 24},
+    {key: 'icon', label: 'icon', box: 24},
+    {key: 'icon-sm', label: 'icon-sm', box: 20},
+    {key: 'icon-xs', label: 'icon-xs', box: 16},
+] as const
+
 const LEGACY_SIZES = ['default', 'icon', 'icon-lg', 'icon-xl', 'icon-2xl', 'icon-sm', 'icon-xs'] as const
 
 // Button 이 가진 variant 케이스. default/secondary/tertiary/text 는 Figma type(버튼 전용 토큰),
@@ -194,6 +205,25 @@ const ICON_MATRIX_ROWS = ICON_SIZES.map((size) => ({
     ],
 }))
 
+const PLAIN_MATRIX_COLUMNS = [
+    {key: 'size', header: 'Size', align: 'start', rowHeader: true},
+    {key: 'preview', header: 'Preview', align: 'start'},
+    {key: 'note', header: '같은 size 의 면 있는 버튼', align: 'start'},
+] as const
+
+const PLAIN_MATRIX_ROWS = PLAIN_SIZES.map((size) => ({
+    key: size.key,
+    cells: [
+        sizeHeaderCell(size.label, `${size.box}px`),
+        <Button key="plain" variant="plain" size={size.key} aria-label="닫기">
+            <X aria-hidden="true" />
+        </Button>,
+        <Button key="compare" variant="tertiary" size={size.key} aria-label="닫기">
+            <X aria-hidden="true" />
+        </Button>,
+    ],
+}))
+
 const INLINE_VARIANT_COLUMNS = [
     {key: 'variant', header: 'Variant', align: 'start', rowHeader: true},
     {key: 'preview', header: 'Preview', align: 'start'},
@@ -227,42 +257,64 @@ const DISABLED_COLUMNS = [
     {key: 'icon-round', header: '원형 아이콘', align: 'start'},
 ] as const
 
-const DISABLED_ROWS = DISABLED_VARIANTS.map((variant) => ({
-    key: variant.key,
-    cells: [
-        nameCell(variant.label),
-        <Button key="text" variant={variant.key} size="lg" disabled>
-            버튼명
-        </Button>,
-        <Button key="icon-start" variant={variant.key} size="lg" disabled>
-            <Download aria-hidden="true" />
-            버튼명
-        </Button>,
-        <Button key="icon-end" variant={variant.key} size="lg" disabled>
-            버튼명
-            <ArrowRight aria-hidden="true" />
-        </Button>,
-        <Button
-            key="icon-only"
-            variant={variant.key}
-            size="icon-lg"
-            disabled
-            aria-label={`${variant.label} 비활성 아이콘 버튼`}
-        >
-            <Search aria-hidden="true" />
-        </Button>,
-        <Button
-            key="icon-round"
-            variant={variant.key}
-            size="icon-lg"
-            className="rounded-full"
-            disabled
-            aria-label={`${variant.label} 비활성 원형 아이콘 버튼`}
-        >
-            <Search aria-hidden="true" />
-        </Button>,
-    ],
-}))
+// 밑줄형(text-underline·link)은 문장 안에 섞이는 인라인 버튼이라 아이콘 전용으로 쓰지 않는다.
+// 글자 없이 아이콘만 남기면 밑줄이 아이콘 아래에 홀로 그려져 시안에 없는 모양이 되므로 큐레이션에서 뺀다.
+const UNDERLINE_VARIANT_KEYS: readonly string[] = ['text-underline', 'link']
+
+const notApplicableCell = (key: string) => (
+    <span key={key} className="typo-caption-regular text-muted-foreground">
+        해당 없음
+    </span>
+)
+
+const DISABLED_ROWS = DISABLED_VARIANTS.map((variant) => {
+    const hasIconOnly = !UNDERLINE_VARIANT_KEYS.includes(variant.key)
+
+    return {
+        key: variant.key,
+        cells: [
+            nameCell(variant.label),
+            <Button key="text" variant={variant.key} size="lg" disabled>
+                버튼명
+            </Button>,
+            <Button key="icon-start" variant={variant.key} size="lg" disabled>
+                <Download aria-hidden="true" />
+                버튼명
+            </Button>,
+            <Button key="icon-end" variant={variant.key} size="lg" disabled>
+                버튼명
+                <ArrowRight aria-hidden="true" />
+            </Button>,
+            hasIconOnly ? (
+                <Button
+                    key="icon-only"
+                    variant={variant.key}
+                    size="icon-lg"
+                    disabled
+                    aria-label={`${variant.label} 비활성 아이콘 버튼`}
+                >
+                    <Search aria-hidden="true" />
+                </Button>
+            ) : (
+                notApplicableCell('icon-only')
+            ),
+            hasIconOnly ? (
+                <Button
+                    key="icon-round"
+                    variant={variant.key}
+                    size="icon-lg"
+                    className="rounded-full"
+                    disabled
+                    aria-label={`${variant.label} 비활성 원형 아이콘 버튼`}
+                >
+                    <Search aria-hidden="true" />
+                </Button>
+            ) : (
+                notApplicableCell('icon-round')
+            ),
+        ],
+    }
+})
 
 const PROPS_COLUMNS = [
     {key: 'name', header: 'Name', align: 'start', rowHeader: true},
@@ -471,9 +523,7 @@ const ButtonGuidePage = () => (
                         <span className="font-mono">primary·secondary·tertiary</span>(+ 내부용{' '}
                         <span className="font-mono">ghost</span>) 를 아이콘 버튼에도 그대로 쓸 수 있습니다. 아이콘만
                         있으므로 <code className="font-mono">aria-label</code> 로 용도를 알리고 내부 아이콘은{' '}
-                        <code className="font-mono">aria-hidden</code> 입니다(5.1.1).{' '}
-                        <code className="font-mono">icon</code> (44px)은 터치 타깃을 보장하고, 그 이하는 밀도 높은 UI 용
-                        컴팩트 예외입니다.
+                        <code className="font-mono">aria-hidden</code> 입니다(5.1.1).
                     </p>
                 </div>
                 <Table
@@ -481,6 +531,37 @@ const ButtonGuidePage = () => (
                     caption="아이콘 버튼 variant·size 조합 미리보기"
                     columns={ICON_MATRIX_COLUMNS}
                     rows={ICON_MATRIX_ROWS}
+                />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="button-plain" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="button-plain" className="typo-h4-bold">
+                        면 없는 아이콘 버튼 (plain)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        배경·테두리·여백 없이{' '}
+                        <strong className="text-foreground font-medium">상자를 아이콘 크기와 똑같이</strong> 두는
+                        variant 입니다. hover 에서 아이콘 색만 바뀌고, 보이는 크기와 눌리는 범위가 일치합니다. 모달
+                        닫기(X)·헤더 아이콘처럼 시안에 면이 없는 아이콘 버튼에 씁니다.
+                    </p>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        컨트롤 높이를 쓰지 않으므로{' '}
+                        <strong className="text-foreground font-medium">
+                            같은 size 라도 위 표의 높이와 값이 다릅니다
+                        </strong>{' '}
+                        — 예를 들어 <span className="font-mono">icon-xl</span> 은 52px 이 아니라 아이콘 그대로 32px
+                        입니다. 오른쪽 열에 같은 size 의 면 있는 버튼을 나란히 두었습니다. 상자가 작아지는 만큼 인접
+                        컨트롤과의 간격은 사용처에서 확보합니다([6.1.3]).
+                    </p>
+                </div>
+                <Table
+                    size="md"
+                    caption="plain 버튼 size 별 상자 크기"
+                    columns={PLAIN_MATRIX_COLUMNS}
+                    rows={PLAIN_MATRIX_ROWS}
                 />
             </section>
         </BaseCard>
@@ -601,6 +682,8 @@ const ButtonGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         비활성 상태는 단순히 흐리게 처리하지 않고, type 별로 별도 배경·테두리·텍스트 색을 씁니다.
+                        밑줄형(<span className="font-mono">text-underline</span>·<span className="font-mono">link</span>
+                        )은 문장 안에 섞이는 인라인 버튼이라 아이콘 전용으로 쓰지 않아 해당 칸을 비웠습니다.
                     </p>
                 </div>
                 <Table
