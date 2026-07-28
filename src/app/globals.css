@@ -205,6 +205,18 @@
 /* ═════ § 4 · 커스텀 유틸리티 — Tailwind 에 없어 직접 만든 클래스 ═══════════════════════════════ */
 
 @layer utilities {
+    /* 메인 히어로 SCROLL 표시 — 54279a4의 원본 구현.
+       고정 트랙 위 ::after 선이 위에서 아래로 채워진 뒤 사라지며 반복된다. */
+    .main-scroll-line-fill::after {
+        position: absolute;
+        inset: 0;
+        background-color: currentColor;
+        content: '';
+        transform: scaleY(0);
+        transform-origin: center top;
+        animation: main-scroll-line-fill 1.5s ease-in-out infinite;
+    }
+
     /* 스크롤바만 숨기고 스크롤은 유지 — 화살표로 스크롤 신호를 주는 곳에서만 쓴다 [PB-16 예외] */
     .scrollbar-hidden {
         scrollbar-width: none; /* Firefox */
@@ -212,6 +224,14 @@
     }
     .scrollbar-hidden::-webkit-scrollbar {
         display: none; /* Chrome/Safari/새 Edge */
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .main-scroll-line-fill::after {
+        opacity: 1;
+        transform: scaleY(1);
+        animation: none;
     }
 }
 
