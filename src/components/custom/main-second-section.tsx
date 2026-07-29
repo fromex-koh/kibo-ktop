@@ -467,7 +467,9 @@ const MainSecondSection = () => {
             // 넘치는 카피 하단이 잘렸다. 페이저가 꺼진 화면에서는 여느 섹션처럼 내용만큼 늘어난다.
             className={cn(
                 stackPageClassName,
-                'bg-main-intro-surface pager-on:overflow-y-auto relative flex min-h-dvh flex-col py-28',
+                // 아래 여백을 두지 않는다 — 페이저가 꺼진 화면에서는 다음 섹션의 위 여백(112)이 그대로
+                // 섹션 사이 간격이 된다. 양쪽에 다 주면 1섹션↔2섹션(112)의 두 배가 되어 혼자 벌어진다.
+                'bg-main-intro-surface pager-on:overflow-y-auto relative flex min-h-dvh flex-col pt-28',
                 'pager-on:h-dvh pager-on:min-h-0 pager-on:py-0',
                 ENTRY_STATE_CLASS,
                 '[--intro-progress:0] [--mask-radius:var(--radius-3xl)]',
