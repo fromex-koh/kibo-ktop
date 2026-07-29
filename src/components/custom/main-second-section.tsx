@@ -141,7 +141,11 @@ const MOBILE_PHOTO_ASPECT_CLASS = 'aspect-[590/380]'
 // w-full 이 필요한 이유 — aspect 와 max-h-full 이 함께 걸리면 높이가 잘릴 때 비율을 지키려고 너비까지
 // 함께 줄어든다(1280×720 에서 588 → 507). 그러면 사진이 그리드 끝선에 못 닿고 카피 폭도 시안(508)보다
 // 좁아진다. 너비를 컬럼에 고정해 두면 잘리는 쪽은 높이뿐이고, 사진은 object-cover 가 채운다.
-const CELL_CLASS = cn('relative col-span-full flex w-full', CELL_ASPECT_CLASS)
+//
+// xl 미만(태블릿)에서 비율을 푸는 이유 — 컬럼이 342 까지 좁아지면 카피가 시안 비율보다 훨씬 길어진다
+// (768×1024 에서 셀 372 vs 카피 746). 비율을 고정하면 카피가 셀 밖으로 흘러넘치고 반대쪽 사진은
+// 짧게 끝나 아래가 비어 보인다. 높이를 카피가 정하게 두면 두 셀이 같은 높이로 맞는다.
+const CELL_CLASS = cn('relative col-span-full flex w-full max-xl:aspect-auto', CELL_ASPECT_CLASS)
 const LEFT_SLOT_CLASS = 'md:col-span-4 md:col-start-1 md:row-start-1 xl:col-span-6 xl:col-start-1'
 const RIGHT_SLOT_CLASS = 'md:col-span-4 md:col-start-5 md:row-start-1 xl:col-span-6 xl:col-start-7'
 
@@ -236,7 +240,7 @@ const IntroLead = ({screen, headingId}: {screen: IntroScreen; headingId?: string
             — SHADCN.md 타이포 유틸 예외(메인페이지 목업 한시적 허용). */}
         <h2
             id={headingId}
-            className="text-main-intro-foreground mt-8 text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(9))] leading-normal font-bold break-keep"
+            className="text-main-intro-foreground mt-8 text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(9))] leading-normal font-bold break-keep max-xl:text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(8))]"
         >
             {screen.title[0]}
             <br />
@@ -308,7 +312,7 @@ const IntroProcessCopy = ({
         <IntroLead screen={screen} headingId={headingId} />
 
         {/* 앞 화면과 같은 방식의 유동 여백. 시안에서는 232px 이고 화면이 낮아지면 48px 까지 줄어든다. */}
-        <div aria-hidden="true" className="min-h-12 flex-1 md:max-h-58" />
+        <div aria-hidden="true" className="min-h-12 flex-1 max-xl:min-h-4 md:max-h-58" />
 
         <IntroProcessRail screen={screen} trigger={trigger} />
     </div>
@@ -509,7 +513,9 @@ const MainSecondSection = () => {
                                 className={cn(CROSSOVER_IMAGE_CLASS, 'absolute inset-0', STATIC_ROUND_CLASS)}
                             />
                             <IntroImageCover mode="swap" />
-                            {/* md:pe-20 — 시안에서 카피 폭이 컬럼(588)이 아니라 508 이고 사진 쪽으로 80px
+                            {/* xl:pe-20 — 시안에서 카피 폭이 컬럼(588)이 아니라 508 이고 사진 쪽으로 80px
+                                물러나 있다(13.6%). 컬럼이 342 로 좁아지는 태블릿에서 80 을 그대로 빼면
+                                262 만 남아 제목이 다섯 줄로 접히므로, 같은 비율인 40 으로 줄인다.
                                 물러나 있다. 사진이 반대편에 있는 셀은 같은 값을 시작 쪽에 준다. */}
                             <IntroProcessCopy
                                 screen={INTRO_SCREENS[0]}
@@ -517,7 +523,7 @@ const MainSecondSection = () => {
                                 trigger="entry"
                                 className={cn(
                                     SWAP_COPY_FADE_CLASS,
-                                    'relative z-20 flex w-full flex-col md:pe-20 md:pt-5',
+                                    'relative z-20 flex w-full flex-col md:pe-10 md:pt-5 xl:pe-20',
                                 )}
                             />
                         </div>
@@ -531,7 +537,7 @@ const MainSecondSection = () => {
                                 className={cn(
                                     CROSSOVER_COPY_CLASS,
                                     BASE_COPY_FADE_CLASS,
-                                    'relative z-20 w-full flex-col md:ps-20 md:pt-5',
+                                    'relative z-20 w-full flex-col md:ps-10 md:pt-5 xl:ps-20',
                                 )}
                             />
                             <IntroImage
