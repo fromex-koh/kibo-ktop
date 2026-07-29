@@ -9,7 +9,7 @@ export const metadata: Metadata = {title: '모서리 반경 (Radius)'}
 
 // '미리보기' 칸 클래스 — Tailwind 는 className 에 리터럴로 등장하는 클래스명만 스캔해서 CSS 를
 // 생성하므로 `rounded-${k}` 처럼 동적으로 조합하면 안 만들어진다(실제로 rounded-2xs/rounded-2xl 은 이
-// 프로젝트 다른 곳에 리터럴 사용처가 없어 스캔되지 않고 있었음). radius 키는 8개뿐인 고정 목록이라
+// 프로젝트 다른 곳에 리터럴 사용처가 없어 스캔되지 않고 있었음). radius 키는 9개뿐인 고정 목록이라
 // Record 로 리터럴을 나열해 className 에 직접 쓴다.
 const ROUNDED_CLASS: Record<keyof typeof tokens.radius, string> = {
     '2xs': 'rounded-2xs',
@@ -19,6 +19,7 @@ const ROUNDED_CLASS: Record<keyof typeof tokens.radius, string> = {
     lg: 'rounded-lg',
     xl: 'rounded-xl',
     '2xl': 'rounded-2xl',
+    '3xl': 'rounded-3xl',
     full: 'rounded-full',
 }
 // 표는 tokens.json 순서로 그리므로 조회는 문자열 키로 한다(위 객체가 누락 검사를 맡는다).
@@ -36,7 +37,7 @@ const RADIUS_COLUMNS = [
 ] as const
 
 // 모서리 반경 — Figma '05 Radius' 정의를 반경 토큰(--ds-radius-*)으로 반영. rounded-* 유틸로 쓰며
-// 정의된 8개 키(2xs·xs·sm·md·lg·xl·2xl·full)만 사용한다. '클래스' 칩을 클릭하면 이름이 복사된다.
+// 정의된 9개 키(2xs·xs·sm·md·lg·xl·2xl·3xl·full)만 사용한다. '클래스' 칩을 클릭하면 이름이 복사된다.
 const RadiusGuidePage = () => (
     <GuidePageShell
         title="모서리 반경 (Radius)"

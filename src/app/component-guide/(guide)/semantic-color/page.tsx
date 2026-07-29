@@ -174,6 +174,11 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'calendar-saturday': 'bg-calendar-saturday',
     'main-accent': 'bg-main-accent',
     'main-accent-bright': 'bg-main-accent-bright',
+    'main-intro-surface': 'bg-main-intro-surface',
+    'main-intro-foreground': 'bg-main-intro-foreground',
+    'main-intro-foreground-subtle': 'bg-main-intro-foreground-subtle',
+    'main-intro-accent': 'bg-main-intro-accent',
+    'main-intro-border': 'bg-main-intro-border',
     'cta-surface': 'bg-cta-surface',
     'pastel-info': 'bg-pastel-info',
     'pastel-info-foreground': 'bg-pastel-info-foreground',
@@ -350,6 +355,7 @@ const CUSTOM_GROUPS: Group[] = [
     },
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
     {name: 'main-accent / main-accent-bright', match: (n) => n.startsWith('main-accent')},
+    {name: 'main-intro (메인 2섹션)', match: (n) => n.startsWith('main-intro-')},
     {name: 'pagination', match: (n) => n.startsWith('pagination-')},
     {name: 'calendar (일요일 / 토요일)', match: (n) => n.startsWith('calendar-')},
     {name: 'select-selected-foreground', match: (n) => n === 'select-selected-foreground'},
@@ -497,6 +503,15 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             메인페이지(<code className="font-mono">mainpage</code> 스킨)의 포인트 그린입니다. main-accent는 활성
             메뉴·인디케이터, main-accent-bright는 수치 강조에 사용합니다. 팔레트 스케일 밖 값이라 common 앵커
             (mint·mint-bright)를 참조하며 모든 테마에서 같은 값입니다.
+        </>
+    ),
+    'main-intro (메인 2섹션)': (
+        <>
+            메인페이지 두 번째 섹션(기업회원 소개)의 색입니다. 이 구간만 시안이 페이지 테마(
+            <code className="font-mono">mainpage</code> = 다크)와 무관하게 밝은 면으로 고정되므로, 사용처에서 테마
+            스코프를 바꾸거나 <code className="font-mono">dark:</code>로 분기하지 않고([PB-06]) 세 테마에 같은 값을 넣은
+            전용 슬롯을 씁니다. surface는 섹션 배경, accent는 eyebrow·단계 번호, foreground/foreground-subtle은
+            제목/본문, border는 단계 목록 구분선입니다.
         </>
     ),
     pagination: (
