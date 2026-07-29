@@ -96,10 +96,9 @@ export const TechEvalServiceVisual = ({service}: {service: TechEvalService}) => 
             alt=""
             draggable={false}
             sizes="(max-width: 768px) 100vw, 50vw"
-            // md 이상은 한 화면 안에 목차·설명·태그까지 함께 들어가야 해서 사진 높이에 상한을 둔다.
-            // 상한(400)은 컬럼 폭에서 나오는 원래 높이(399)와 같아, 높이가 넉넉한 화면에서는 걸리지 않는다.
-            // 모바일은 흐름대로 쌓이므로 상한 없이 원래 비율 그대로 둔다.
-            className="h-auto w-full rounded-2xl md:max-h-[clamp(--spacing(78),50vh,--spacing(100))] md:object-cover"
+            // 시안 프레임 비율 590:380 — 원본 이미지의 고유 비율(588:399)과 달라 명시한다.
+            // 폭은 컬럼을 채우고 높이는 이 비율이 정하며, 남는 부분은 object-cover 가 자른다.
+            className="aspect-[590/380] w-full rounded-2xl object-cover"
         />
 
         <div className="flex flex-col gap-8">

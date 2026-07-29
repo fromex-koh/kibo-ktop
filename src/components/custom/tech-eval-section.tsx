@@ -49,10 +49,9 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
             className={cn(
                 stackPageClassName,
                 // md 이상은 원래 디자인 높이가 뷰포트를 넘을 수 있어 섹션 안에서 이어서 스크롤한다.
-                // 상단 여백은 화면 높이를 따라 112~200px 사이에서 줄어든다 — 시안 값(200)을 고정하면
-                // 1280×720 같은 낮은 화면에서 우측 비주얼 아래가 잘려 스크롤해야 보인다. 최솟값은 고정
-                // 헤더 높이(112)라, 아무리 낮은 화면에서도 첫 목차가 헤더에 가리지 않는다.
-                'bg-background pager-off:snap-start relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:overflow-y-auto md:pt-[clamp(--spacing(28),15vh,--spacing(50))]',
+                // 세로 여백은 섹션이 아니라 롤링 블록이 잡는다 — 첫 화면을 정확히 한 화면(dvh)으로
+                // 두고 그 안에서 시안 간격을 맞춰야 하는데, 섹션에 주면 아래 푸터까지 함께 밀린다.
+                'bg-background pager-off:snap-start relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:overflow-y-auto md:pt-0',
                 // 푸터가 이 페이지의 마지막 요소라 아래 여백을 섹션이 아니라 푸터 자신이 끝낸다 —
                 // 그대로 두면 푸터 밑으로 섹션 padding 만큼 빈 배경 띠가 남는다.
                 bottomContent && 'pb-0',
@@ -66,7 +65,15 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                     {mobileContent}
                 </div>
             ) : null}
-            <div data-rolling-tech-content className="w-full max-md:hidden">
+            {/* 롤링 블록 — 시안(1920×1080) 기준 헤더 아래 80px, 세로 레일 끝 아래 100px 이다.
+                위 여백은 고정 헤더(112) 자리에 시안 80px 을 같은 비율(80/1080 = 7.4vh)로 더하고,
+                아래 여백도 같은 규칙(100/1080 = 9.26vh)이라 어느 높이에서든 80:100 비례가 유지된다.
+                블록 높이는 내용이 정한다 — 화면 높이로 고정하면 남는 높이가 컬럼에 붙어 태그 줄과
+                세로 레일이 시안보다 아래에서 끝난다. */}
+            <div
+                data-rolling-tech-content
+                className="w-full max-md:hidden md:pt-[calc(--spacing(28)+clamp(--spacing(6),7.4vh,--spacing(20)))] md:pb-[clamp(--spacing(8),9.26vh,--spacing(25))]"
+            >
                 <div className="grid-layout content-layout w-full items-start gap-y-16">
                     {/* 좌: 세로 레일 + 서비스 목차. 각 서비스는 레일 전체 높이를 진행 바로 쓰고,
                     채움이 끝나면 다음 서비스로 전환되며 채움은 처음부터 다시 시작한다(key 리셋).
@@ -93,7 +100,9 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                             />
                         </div>
 
-                        <ul className="flex flex-col gap-6 pl-11">
+                        {/* h-full + 활성 항목 grow — 남는 높이를 활성 항목 아래(=다음 목차와의 사이)로 몰아
+                            세로 레일이 컬럼 끝까지 닿게 한다. 나머지 항목 간격은 gap-6 로 고정이다. */}
+                        <ul className="flex h-full flex-col gap-6 pl-11">
                             {TECH_EVAL_SERVICES.map((service, index) => {
                                 const isActive = index === activeIndex
 
@@ -124,12 +133,14 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                         {isActive && (
                                             // 아래 여백은 다음 목차 항목과의 간격 — 마지막 항목이 활성일 땐 아래 항목이 없어
                                             // 빼야 레일(진행 바)이 버튼 라인에 맞춰 끝난다.
-                                            // 상단 여백과 같은 이유로 화면 높이를 따라 40~96px 사이에서 줄어든다.
+                                            // 시안(1920×1080)에서 CTA 아래부터 다음 목차까지가 181px 이다. 목록의
+                                            // 기본 간격(gap-6 = 24)이 더해지므로 여기서는 157 을 잡고, 화면 높이에
+                                            // 같은 비율(157/1080 = 14.54vh)로 따라가게 한다.
                                             <Reveal
                                                 className={cn(
                                                     'mt-4 flex flex-col items-start gap-6',
                                                     index < TECH_EVAL_SERVICES.length - 1 &&
-                                                        'mb-[clamp(--spacing(10),8vh,--spacing(24))]',
+                                                        'mb-[clamp(--spacing(4),14.54vh,--spacing(39.25))]',
                                                 )}
                                             >
                                                 {/* 시안(type A_01) 40px·ExtraBold·행간 1.4. 좁은 화면에서는 32px 까지 유동 축소한다.

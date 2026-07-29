@@ -70,9 +70,10 @@ const MainPage = () => (
             <TechEvalSection
                 mobileContent={<MobileTechEvalContent />}
                 bottomContent={
-                    // pt-* 는 3섹션 본문과 푸터 사이의 최소 간격이다 — 둘이 한 스택 페이지에 있어
-                    // 본문이 화면을 다 채우면 mt-auto 가 흡수할 여백이 없어 푸터가 곧바로 붙는다.
-                    <div id="site-info" tabIndex={-1} className="bg-background relative mt-auto w-full pt-28 md:pt-40">
+                    // md 이상 — 시안(1920×1080)에서 태그 줄 아래부터 푸터까지가 108px 이다. 그중 100px 은
+                    // 3섹션 첫 화면이 이미 아래 여백으로 갖고 있어(세로 레일 끝 아래 100), 여기서는 나머지
+                    // 8px 만 더한다. 모바일은 흐름대로 쌓이므로 기존 간격(112)을 유지한다.
+                    <div id="site-info" tabIndex={-1} className="bg-background relative mt-auto w-full pt-28 md:pt-2">
                         <Footer />
                     </div>
                 }
