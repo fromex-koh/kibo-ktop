@@ -62,7 +62,7 @@ const SelfDiagnosisCompletePage = () => (
         mainProps={{id: 'main', tabIndex: -1}}
     >
         <PageTitleBar
-            title="KTRS-FM"
+            title="혁신성장역량지수(일반)"
             breadcrumb={
                 <Breadcrumb>
                     <BreadcrumbList>
@@ -77,7 +77,7 @@ const SelfDiagnosisCompletePage = () => (
                         </BreadcrumbItem>
                         <BreadcrumbDotSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbPage>KTRS-FM</BreadcrumbPage>
+                            <BreadcrumbPage>혁신성장역량지수(일반)</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
@@ -88,7 +88,7 @@ const SelfDiagnosisCompletePage = () => (
         <div className="flex flex-col items-center">
             <ActionCheck decorative />
             <h2 className="typo-h2-bold text-foreground text-center text-balance">
-                자가진단 - KTRS-FM 평가 완료되었습니다.
+                자가진단 - 혁신성장역량지수(일반) 평가 완료되었습니다.
             </h2>
         </div>
 

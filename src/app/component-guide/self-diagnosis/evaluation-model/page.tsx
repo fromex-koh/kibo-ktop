@@ -47,7 +47,7 @@ const EVALUATION_MODELS = [
         // 선택하면 자가진단 1단계(고객 정보 활용 동의)로 진입한다.
         href: '/component-guide/self-diagnosis/customer-consent',
         badge: '혁신평가',
-        title: '혁신성장지수 평가',
+        title: '혁신성장역량지수(일반)',
         subtitle: 'Tech-Index',
         description:
             '일반 혁신성장기업의 미래 성장 가능성을 측정하는 지수형 평가 모형입니다. 기술혁신성, 시장확장성, 성장 잠재력을 중심으로 평가합니다.',
@@ -57,8 +57,8 @@ const EVALUATION_MODELS = [
         // 창업용 모형 화면은 아직 시안이 없어 같은 1단계로 연결한다.
         href: '/component-guide/self-diagnosis/customer-consent',
         badge: '혁신평가',
-        title: '창업용 Tech-Index',
-        subtitle: '창업기업용',
+        title: '혁신성장역량지수(창업)',
+        subtitle: 'Tech-Index',
         description:
             '창업 초기 기업의 특성에 맞춰 설계된 평가모형입니다. 보유 기술의 혁신성과 향후 성장 잠재력을 중점적으로 분석합니다.',
         illustration: '/images/option-card/startup-tech-index.webp',
@@ -73,7 +73,7 @@ const NOTICES = [
     '아래 기술사업평가 신청 버튼을 누르면 평가를 위한 정보 입력화면으로 이동합니다.',
 ] as const
 
-// 평가모형 선택 목업 — Figma "[자가진단] 평가모형선택". 메인페이지 2섹션의 "자가진단 시작하기" CTA 로 진입한다.
+// 평가모형 선택 목업 — Figma "[자가진단] 평가모형선택". 메인페이지 2섹션의 "시작하기" CTA 로 진입한다.
 // 화면 구성은 기존 컴포넌트 조합이다: Header · PageTitleBar(+Breadcrumb) · OptionCard · InfoBox · Footer(subpage).
 const EvaluationModelPage = () => (
     <div className="bg-card flex min-h-dvh flex-col">

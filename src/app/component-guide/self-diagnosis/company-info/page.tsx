@@ -453,7 +453,7 @@ const CompanyInfoPage = () => (
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다. */}
         <main id="main" tabIndex={-1} className="content-layout flex flex-1 flex-col gap-10 pt-10">
             <PageTitleBar
-                title="KTRS-FM"
+                title="혁신성장역량지수(일반)"
                 breadcrumb={
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -468,7 +468,7 @@ const CompanyInfoPage = () => (
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbPage>KTRS-FM</BreadcrumbPage>
+                                <BreadcrumbPage>혁신성장역량지수(일반)</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>

@@ -130,7 +130,7 @@ const ConsentCard = ({title, children}: {title: string; children: ReactNode}) =>
 )
 
 // 자가진단 1단계 목업 — Figma "[자가진단] 1단계_고객 정보 활용 동의".
-// 평가모형 선택 화면의 "혁신성장지수 평가" 카드로 진입한다. 전부 기존 컴포넌트 조합이다:
+// 평가모형 선택 화면의 "혁신성장역량지수(일반)" 카드로 진입한다. 전부 기존 컴포넌트 조합이다:
 // Header · PageTitleBar(+Breadcrumb) · StepHeader(progress) · SelectableCard · FormCard · ConsentList ·
 // Input/InputGroup/Select · StepNavigation.
 const CustomerConsentPage = () => (
@@ -146,7 +146,7 @@ const CustomerConsentPage = () => (
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다. */}
         <main id="main" tabIndex={-1} className="content-layout flex flex-1 flex-col gap-10 pt-10">
             <PageTitleBar
-                title="KTRS-FM"
+                title="혁신성장역량지수(일반)"
                 breadcrumb={
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -161,7 +161,7 @@ const CustomerConsentPage = () => (
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbPage>KTRS-FM</BreadcrumbPage>
+                                <BreadcrumbPage>혁신성장역량지수(일반)</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>

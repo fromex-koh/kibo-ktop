@@ -258,7 +258,7 @@
             "userType": "기업",
             "children": [
                 {
-                    "label": "KTRS-FM",
+                    "label": "혁신성장역량지수(일반)",
                     "children": [
                         {
                             "label": "(1) 고객정보활용동의",
@@ -1437,7 +1437,7 @@
                     "key": "org-individual-evaluation-verification-progress"
                 },
                 {
-                    "label": "KTRS-FM",
+                    "label": "혁신성장역량지수(일반)",
                     "children": [
                         {
                             "label": "(1) 고객정보활용동의",
