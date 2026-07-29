@@ -8,32 +8,33 @@ import {stackPageClassName} from '@/components/theme/stack-pager.variants'
 import {cn} from '@/lib/utils'
 
 // 좌우 교차로 번갈아 보여주는 두 벌의 카피 — 시안 [메인] 02-1(기업)·02-2(금융·기관).
-// 레이블·레일 제목은 두 시안이 같은 영문 문구를 쓰고, 제목·설명·단계만 대상에 따라 다르다.
+// 레이블·제목·설명·레일 제목·단계가 모두 대상에 따라 다르다.
 // 레일 위 표식은 세 단계 모두에 찍고, 채움이 지나가는 순서대로 켠다.
-const INTRO_LABEL = "Who It's For"
-const INTRO_RAIL_TITLE = 'How It Works'
-
 const INTRO_SCREENS = [
     {
         key: 'corp',
+        label: '중소벤쳐기업',
         title: ['내 기술 3분만에 진단하고', '금융부터 정책사업까지 활용하세요'],
         description: '기업은 자가진단과 전문가 평가를 통해 기술역량을 확인할 수 있습니다.',
         photo: selfDiagnosisPhoto,
+        railTitle: '진단부터 활용까지',
         steps: [
-            {step: '01', label: '자가진단 및 역량확인'},
-            {step: '02', label: '금융접근성 향상'},
-            {step: '03', label: '정책사업 참여 여부 결정'},
+            {step: '01', label: '나의 기술 수준 확인'},
+            {step: '02', label: '금융 투자 기회 확대'},
+            {step: '03', label: '정책 사업 참여'},
         ],
     },
     {
         key: 'org',
-        title: ['기술기반 데이터로 성장 가능성이', '높은 우수 기업을 발굴하세요'],
+        label: '금융·기관',
+        title: ['기술기반 정보로 성장 가능성이', '높은 우수 기업을 발굴하세요'],
         description: '조건에 맞는 기업 검색부터 지원 대상 선정까지, 데이터 기반 의사결정을 지원합니다.',
         photo: consultingPhoto,
+        railTitle: '데이터 기반 기업 발굴',
         steps: [
             {step: '01', label: '투자 여신 심사 활용'},
             {step: '02', label: '보증 추천 연계'},
-            {step: '03', label: '지원사업 선정 신뢰성 확보'},
+            {step: '03', label: '지원사업 선정 활용'},
         ],
     },
 ] as const
@@ -134,7 +135,10 @@ const SWAP_COPY_FADE_CLASS =
 //
 // 비율만 따로 뺀 이유 — 교차가 없는 모바일에서는 사진을 단독으로 놓지만 같은 시안 비율을 쓴다.
 const CELL_ASPECT_CLASS = 'aspect-[588/640]'
-const CELL_CLASS = cn('relative col-span-full flex', CELL_ASPECT_CLASS)
+// w-full 이 필요한 이유 — aspect 와 max-h-full 이 함께 걸리면 높이가 잘릴 때 비율을 지키려고 너비까지
+// 함께 줄어든다(1280×720 에서 588 → 507). 그러면 사진이 그리드 끝선에 못 닿고 카피 폭도 시안(508)보다
+// 좁아진다. 너비를 컬럼에 고정해 두면 잘리는 쪽은 높이뿐이고, 사진은 object-cover 가 채운다.
+const CELL_CLASS = cn('relative col-span-full flex w-full', CELL_ASPECT_CLASS)
 const LEFT_SLOT_CLASS = 'md:col-span-4 md:col-start-1 md:row-start-1 xl:col-span-6 xl:col-start-1'
 const RIGHT_SLOT_CLASS = 'md:col-span-4 md:col-start-5 md:row-start-1 xl:col-span-6 xl:col-start-7'
 
@@ -224,10 +228,7 @@ const IntroImageCover = ({mode}: {mode: keyof typeof COVER_SCALE_CLASS}) => (
 // 모바일은 흐름대로 한 칸씩 쌓아 사진과 번갈아 배치한다.
 const IntroLead = ({screen, headingId}: {screen: IntroScreen; headingId?: string}) => (
     <div className="flex flex-col">
-        {/* 영문 레이블은 lang 을 따로 표시한다 — 문서 기본 언어(ko)와 다르다. [KWCAG 7.1.1] */}
-        <p className="typo-title-m-bold text-main-intro-foreground" lang="en">
-            {INTRO_LABEL}
-        </p>
+        <p className="typo-title-m-bold text-main-intro-foreground">{screen.label}</p>
         {/* 크기는 28~36px 사이에서 유동 축소한다(시안 36px). typo-* 는 반응형 variant 를 못 받는다
             — SHADCN.md 타이포 유틸 예외(메인페이지 목업 한시적 허용). */}
         <h2
@@ -244,9 +245,7 @@ const IntroLead = ({screen, headingId}: {screen: IntroScreen; headingId?: string
 
 const IntroProcessRail = ({screen, trigger}: {screen: IntroScreen; trigger: keyof typeof RAIL_ON_CLASS}) => (
     <div className={cn('flex flex-col', RAIL_ON_CLASS[trigger])}>
-        <h3 className="typo-title-m-bold text-main-intro-foreground" lang="en">
-            {INTRO_RAIL_TITLE}
-        </h3>
+        <h3 className="typo-title-m-bold text-main-intro-foreground">{screen.railTitle}</h3>
         {/* 진행 레일 — 채움과 표식은 장식이라 접근성 트리에서 뺀다. 단계 순서는 아래 ol 이 전한다.
             표식과 채움 마디를 단계 그리드에 함께 얹어, 표식이 항상 아래 ol 의 단계 시작점에 선다.
             gap-x-3.5(14px) — 시안이 508 안에 160 컬럼 + 14 간격이라 그대로 맞춘다. 14 는 spacing
@@ -284,9 +283,7 @@ const IntroProcessRail = ({screen, trigger}: {screen: IntroScreen; trigger: keyo
             {screen.steps.map(({step, label}) => (
                 <li key={step} className="flex flex-col">
                     <span className="typo-body-xl-bold text-main-intro-accent">{step}</span>
-                    <span className="typo-body-l-medium text-main-intro-foreground-subtle mt-1 break-keep">
-                        {label}
-                    </span>
+                    <span className="typo-title-m-bold text-main-intro-foreground-subtle mt-1 break-keep">{label}</span>
                 </li>
             ))}
         </ol>
@@ -483,7 +480,11 @@ const MainSecondSection = () => {
 
             {/* 스크롤 트랙 — 교차가 있는 화면에서만 2화면 높이가 되고, 안쪽 화면이 sticky 로 고정된다. */}
             <div className="pager-on:h-[200dvh] pager-on:flex-none flex-1 max-md:hidden">
-                <div className="pager-on:sticky pager-on:top-0 pager-on:h-dvh flex h-full flex-col justify-center">
+                {/* pt-* 는 고정 헤더(md 56px · lg 이상 112px)가 차지하는 자리다. 화면 높이에 맞춰 가운데
+                    정렬하는 상자라 이만큼 비워 두지 않으면 낮은 화면에서 카피 상단이 헤더에 가린다.
+                    pb-14 는 아래 여유 — 없으면 1280×720 처럼 낮은 화면에서 진행 레일의 단계 라벨이
+                    화면 끝에 딱 붙어 잘린 것처럼 보인다. 줄어든 높이는 카피 안의 유동 여백이 흡수한다. */}
+                <div className="pager-on:sticky pager-on:top-0 pager-on:h-dvh flex h-full flex-col justify-center pt-14 pb-14 lg:pt-28">
                     {/* content-layout — 헤더·1섹션·3섹션과 같은 콘텐츠 폭 셸. grid-layout 만 쓰면 md 티어에서
                         그리드 자체 container(792)로 좁아져 헤더와 좌우 시작선이 어긋난다. */}
                     <div className="grid-layout content-layout w-full gap-y-12 md:max-h-full md:grid-rows-1 md:gap-y-0">
