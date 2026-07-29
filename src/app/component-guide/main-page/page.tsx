@@ -40,13 +40,13 @@ const MAIN_HEADER_NAVIGATION = {
 
 // 헤더 배경 — 1섹션에서 투명, 2섹션 진입 시 불투명. 현재 섹션 판단은 두 갈래다.
 // 페이저가 켜진 화면은 StackPager 의 active-page, 꺼진 화면은 MainPageHeaderState 가 쓰는 natural-page.
+// 헤더는 어느 섹션에서도 위로 밀어 올리지 않고 상단에 붙어 있는다 — 배경색만 바뀐다.
 const MAIN_PAGE_CLASS = [
     '[&_header]:bg-transparent',
-    '[&_header]:transition-[background-color,translate]',
+    '[&_header]:transition-[background-color]',
     '[&_header]:duration-300',
     '[&_header]:ease-out',
     'motion-reduce:[&_header]:transition-none',
-    'data-[header-hidden=true]:[&_header]:-translate-y-full',
     'data-[active-page=1]:[&_header]:bg-background',
     'data-[active-page=2]:[&_header]:bg-background',
     'data-[natural-page=1]:[&_header]:bg-background',
