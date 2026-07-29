@@ -507,11 +507,11 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'main-intro (메인 2섹션)': (
         <>
-            메인페이지 두 번째 섹션(기업회원 소개)의 색입니다. 이 구간만 시안이 페이지 테마(
-            <code className="font-mono">mainpage</code> = 다크)와 무관하게 밝은 면으로 고정되므로, 사용처에서 테마
-            스코프를 바꾸거나 <code className="font-mono">dark:</code>로 분기하지 않고([PB-06]) 세 테마에 같은 값을 넣은
-            전용 슬롯을 씁니다. surface는 섹션 배경, accent는 eyebrow·단계 번호, foreground/foreground-subtle은
-            제목/본문, border는 단계 목록 구분선입니다.
+            메인페이지 두 번째 섹션(기업회원 소개)의 색입니다. 시안([메인] 02-1·02-2)이 페이지 테마와 무관하게 한 벌로
+            정의돼 있어, 사용처에서 테마 스코프를 바꾸거나 <code className="font-mono">dark:</code>로 분기하지 않고
+            ([PB-06]) 세 테마에 같은 값을 넣은 전용 슬롯을 씁니다. surface는 섹션 배경, accent는 단계 번호·진행 표식,
+            foreground/foreground-subtle은 제목·레이블/본문, border는 진행 레일입니다. 현재 시안은 다크 면에 흰 텍스트와
+            민트 강조라 foreground와 foreground-subtle이 같은 값이며, 본문 계조가 생기면 subtle만 낮춥니다.
         </>
     ),
     pagination: (

@@ -1,18 +1,18 @@
 'use client'
 
 import {useCallback, useEffect, useRef, useState, type SyntheticEvent} from 'react'
-import Image from 'next/image'
-import {BriefcaseBusiness} from 'lucide-react'
-import sectionBg from '@public/images/main-hero/section-2-bg-display.webp'
+import Image, {type StaticImageData} from 'next/image'
+import consultingPhoto from '@public/images/main-hero/service-intro-consulting.webp'
+import selfDiagnosisPhoto from '@public/images/main-hero/service-intro-self-diagnosis.webp'
 import {stackPageClassName} from '@/components/theme/stack-pager.variants'
 import {cn} from '@/lib/utils'
 
-// 기업회원 이용 흐름 4단계. 시안의 줄바꿈을 그대로 두려고 label 을 줄 단위 배열로 관리한다.
-const BUSINESS_STEPS = [
-    {step: '01', lines: ['자가진단 신청 및', '결과 조회']},
-    {step: '02', lines: ['전문가 평가 신청 및', '결과 확인']},
-    {step: '03', lines: ['K-BIGx 보고서를', '통한 종합 분석']},
-    {step: '04', lines: ['결과 전송 및', '이력 관리']},
+// 교차 뒤 화면(시안 [메인] 02-1)의 3단계. isReached 는 레일 위 표식이 찍히는 단계다 —
+// 시안에서 앞의 두 단계에만 점이 있고 레일도 그만큼 채워져 있다.
+const PROCESS_STEPS = [
+    {step: '01', label: '자가진단 및 역량확인', isReached: true},
+    {step: '02', label: '금융접근성 향상', isReached: true},
+    {step: '03', label: '정책사업 참여 여부 결정', isReached: false},
 ] as const
 
 // 교차를 켜는 지점 — 트랙을 얼마나 굴렸는지가 아니라 "굴렸는가"만 본다. 스크롤 양에 비례해 긁히지
@@ -34,6 +34,10 @@ const ENTRY_STATE_CLASS = [
 const SWAP_TRANSITION_CLASS =
     'motion-safe:will-change-[clip-path] motion-safe:transition-[clip-path] motion-safe:duration-1000 motion-safe:ease-stack'
 const SHRINK_CLASS = '[clip-path:inset(calc(var(--intro-progress)*50%)_round_var(--mask-radius))]'
+// 교차 확대를 커버가 맡는 쪽 사진은 크기가 고정이라 모서리만 만든다. 라운딩을 상위 셀이 아니라
+// 사진이 직접 갖는 이유는 커버 패널이 같은 라운딩에 잘리면 사진의 안티에일리어싱 가장자리를
+// 덮지 못해 모서리에 밝은 실선이 남기 때문이다(커버는 배경색이라 셀 밖으로 넘어가도 보이지 않는다).
+const STATIC_ROUND_CLASS = '[clip-path:inset(0_round_var(--mask-radius))]'
 const ENTRY_COVER_PANEL_CLASS =
     'bg-main-intro-surface absolute opacity-[0.999] will-change-[scale] transition-[scale] duration-1000 ease-stack motion-reduce:transition-none'
 const COVER_SCALE_CLASS = {
@@ -72,38 +76,42 @@ const RIGHT_SLOT_CLASS = 'md:col-span-4 md:col-start-5 md:row-start-1 xl:col-spa
 const CROSSOVER_IMAGE_CLASS = 'hidden pager-on:block'
 const CROSSOVER_COPY_CLASS = 'hidden pager-on:flex'
 
-// overflow-hidden 을 두지 않는다 — 아래 배치 프레임은 clip-path 가 이미 상자 밖으로 못 나가게 자르고,
-// 둘을 겹치면 같은 직선 모서리를 두 번 깎아 서브픽셀 경계가 실선으로 드러난다.
+// 사진 — 마스크(588:686 = 0.857)와 원본(세로형)의 비율이 가까워 object-cover 하나로 채운다.
+// 좌우만 조금 잘려 인물이 그대로 들어온다. 예전에는 가로형 원본을 시안의 좁은 마스크에 맞추려고
+// 2.4배 확대 프레임을 얹었는데, 세로형 원본에는 그대로 두면 가로 띠만 남는다.
+//
+// overflow-hidden 을 두지 않는다 — object-fit 이 이미 상자 안에서 자르고, clip-path 와 같은 직선
+// 모서리를 두 번 깎으면 서브픽셀 경계가 실선으로 드러난다.
+// 장식 이미지라 alt="" 로 둔다([KWCAG 5.1.1]).
+//
+// 두 장 모두 preload 로 head 에서 먼저 요청한다. 이 섹션은 활성화 전까지 화면 밖(스택 레이어)이라
+// 기본 lazy 로 두면 교차가 시작될 때 아직 받는 중이라 빈 상자가 열린다.
+// 최초 요청에서 Next 이미지 최적화를 기다리지 않도록 원본 WebP 를 그대로 쓴다(unoptimized).
 const IntroImage = ({
+    photo,
     className,
-    preload = false,
     onLoad,
 }: {
+    photo: StaticImageData
     className?: string
-    preload?: boolean
     onLoad?: (event: SyntheticEvent<HTMLImageElement>) => void
 }) => (
     <div className={cn('relative', className)}>
-        {/* 시안과 같은 구도를 만드는 배치 프레임. Figma 에서 사진은 마스크(588×686)보다 크게
-            1415×796 로 깔리고 마스크 왼쪽·위보다 574·89px 앞서 시작한다. object-fit 만으로는
-            이 배율(=cover 보다 약 1.16배 확대)을 낼 수 없어 프레임을 시안 비율의 %로 잡는다.
-            마스크 비율이 588:686 로 고정이라 화면 크기가 달라져도 구도가 유지된다.
-              w 1415/588 · h 796/686 · left -574/588 · top -89/686
-            프레임 비율(1415:796)이 사진 원본 비율과 같아 안쪽 object-cover 는 추가로 자르지 않는다.
-            장식 이미지라 alt="" 로 둔다([KWCAG 5.1.1]). */}
-        {/* 최초 요청에서 Next 이미지 최적화를 기다리지 않도록 표시 크기에 맞춘 전용 WebP를 직접 사용한다.
-            왼쪽 인스턴스는 Next 16의 preload로 head에서 먼저 요청한다. 오른쪽도 같은 src라 네트워크
-            요청과 디코딩 결과를 공유한다. */}
-        <div className="absolute top-[-12.9738%] left-[-97.619%] h-[116.035%] w-[240.6463%]">
-            <Image src={sectionBg} alt="" fill preload={preload} unoptimized onLoad={onLoad} className="object-cover" />
-        </div>
+        <Image src={photo} alt="" fill preload unoptimized onLoad={onLoad} className="object-cover" />
     </div>
 )
 
 // 이미지 위의 단색 패널 네 장이 가장자리 방향으로 줄어들며 중앙부터 사진을 드러낸다.
 // 이미지 자체는 처음부터 전체 면적으로 렌더링되므로 최초 표시 시 텍스처 업로드로 인한 번쩍임이 없다.
+//
+// 이 래퍼는 자르지도 둥글게 하지도 않는다 — 패널은 섹션 배경과 같은 색이라 사진 밖에서는 어차피
+// 보이지 않고, 여기에 라운딩을 주면 같은 상자를 두 번 둥글게 깎아(사진 clip 과 겹쳐) 모서리에서
+// 아래층 안티에일리어싱이 실선처럼 드러난다. 패널이 opacity 로 별도 레이어라 더 도드라진다.
+//
+// -inset-px 로 사진보다 1px 크게 잡는다. 가장자리가 정확히 겹치면 소수점 픽셀에서 패널과 사진이
+// 각각 부분만 덮어 사진이 실선처럼 비친다. 1px 넘긴 자리는 배경색이라 보이지 않는다.
 const IntroImageCover = ({mode}: {mode: keyof typeof COVER_SCALE_CLASS}) => (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-3xl">
+    <div aria-hidden="true" className="pointer-events-none absolute -inset-px z-10">
         <span
             className={cn(
                 ENTRY_COVER_PANEL_CLASS,
@@ -135,45 +143,55 @@ const IntroImageCover = ({mode}: {mode: keyof typeof COVER_SCALE_CLASS}) => (
     </div>
 )
 
-// 카피 — 두 벌이 같은 내용이라 접근성 트리에는 한 벌만 남긴다. 사본은 aria-hidden 으로 두고
-// id 도 주지 않는다(중복 id 금지 [KWCAG 8.1.1]). 원본은 스크롤 위치와 무관하게 항상 트리에 있어
-// 스크린리더 사용자는 교차 여부와 상관없이 같은 내용을 한 번 듣는다.
-const IntroCopy = ({className, isDuplicate = false}: {className: string; isDuplicate?: boolean}) => (
+// 카피(시안 [메인] 02-1·02-2) — 두 시안이 같은 내용을 좌우만 뒤집은 것이라 한 컴포넌트를 두 번 쓴다.
+// 그래서 접근성 트리에는 한 벌만 남긴다. 사본은 aria-hidden 으로 두고 id 도 주지 않는다
+// (중복 id 금지 [KWCAG 8.1.1]). 원본은 스크롤 위치와 무관하게 항상 트리에 있어 한 번만 읽힌다.
+//
+// 색은 시안(다크 면·흰 텍스트·민트 강조)을 main-intro-* 토큰으로 그대로 옮겼다
+// (강조=accent, 제목·레이블·본문=foreground/foreground-subtle, 레일=border).
+const IntroProcessCopy = ({className, isDuplicate = false}: {className: string; isDuplicate?: boolean}) => (
     <div aria-hidden={isDuplicate || undefined} className={className}>
-        <p className="typo-body-xl-bold text-main-intro-accent">기업회원을 위한 플랫폼</p>
-        {/* 크기는 28~40px 사이에서 유동 축소한다. typo-* 는 생성기가 찍는 plain 클래스라 반응형
-            variant 를 못 받는다(SHADCN.md 타이포 유틸 예외 — 메인페이지 목업 한시적 허용). */}
+        <p lang="en" className="typo-title-m-bold text-main-intro-foreground">
+            Who It&apos;s For
+        </p>
+        {/* 크기는 28~36px 사이에서 유동 축소한다(시안 36px). typo-* 는 반응형 variant 를 못 받는다
+            — SHADCN.md 타이포 유틸 예외(메인페이지 목업 한시적 허용). */}
         <h2
             id={isDuplicate ? undefined : 'service-intro-title'}
-            className="text-main-intro-foreground mt-6 text-[clamp(--spacing(7),calc(--spacing(4)+2.2vw),--spacing(10))] leading-normal font-bold break-keep"
+            className="text-main-intro-foreground mt-8 text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(9))] leading-normal font-bold break-keep"
         >
-            기업의 기술 가치와
+            내 기술 3분만에 진단하고
             <br />
-            지원사업 혜택이 궁금하신가요?
+            금융부터 정책사업까지 활용하세요
         </h2>
-        <p className="typo-title-m-medium text-main-intro-foreground-subtle mt-3 break-keep">
+        <p className="typo-body-xl-medium text-main-intro-foreground-subtle mt-4 break-keep">
             기업은 자가진단과 전문가 평가를 통해 기술역량을 확인할 수 있습니다.
         </p>
 
-        {/* 카피와 단계 목록 사이의 유동 여백. 시안에서는 188px 이고 화면이 낮아지면 48px 까지
-            줄어든다. margin 으로는 상한과 하한을 동시에 줄 수 없어 빈 요소로 둔다. */}
-        <div aria-hidden="true" className="min-h-12 flex-1 md:max-h-47" />
+        {/* 앞 화면과 같은 방식의 유동 여백. 시안에서는 232px 이고 화면이 낮아지면 48px 까지 줄어든다. */}
+        <div aria-hidden="true" className="min-h-12 flex-1 md:max-h-58" />
 
         <div className="flex flex-col">
-            <h3 className="text-main-intro-foreground flex items-center gap-2">
-                <BriefcaseBusiness aria-hidden="true" className="size-icon-md" />
-                <span lang="en" className="typo-body-xl-bold">
-                    For Business
-                </span>
+            <h3 lang="en" className="typo-title-m-bold text-main-intro-foreground">
+                How It Works
             </h3>
-            <ol className="border-main-intro-border mt-11 grid grid-cols-2 gap-x-6 gap-y-8 border-t pt-2 md:grid-cols-4">
-                {BUSINESS_STEPS.map(({step, lines}) => (
+            {/* 진행 레일 — 채움과 표식은 장식이라 접근성 트리에서 뺀다. 단계 순서는 아래 ol 이 전한다.
+                채움 폭 2/5 는 시안의 508 중 205 다. 표식은 단계 시작점에 맞춰야 해서 같은 그리드로 얹는다. */}
+            <div aria-hidden="true" className="relative mt-9 h-2">
+                <span className="bg-main-intro-border absolute inset-x-0 top-1/2 h-0.5 -translate-y-1/2" />
+                <span className="bg-main-intro-accent absolute top-1/2 left-0 h-0.5 w-2/5 -translate-y-1/2" />
+                <span className="absolute inset-0 grid grid-cols-3 gap-x-11">
+                    {PROCESS_STEPS.map(({step, isReached}) => (
+                        <span key={step} className={cn('size-2 rounded-full', isReached && 'bg-main-intro-accent')} />
+                    ))}
+                </span>
+            </div>
+            <ol className="mt-4 grid grid-cols-3 gap-x-11">
+                {PROCESS_STEPS.map(({step, label}) => (
                     <li key={step} className="flex flex-col">
-                        <span className="typo-title-m-bold text-main-intro-accent">{step}</span>
+                        <span className="typo-body-xl-bold text-main-intro-accent">{step}</span>
                         <span className="typo-body-l-medium text-main-intro-foreground-subtle mt-1 break-keep">
-                            {lines[0]}
-                            <br />
-                            {lines[1]}
+                            {label}
                         </span>
                     </li>
                 ))}
@@ -182,8 +200,8 @@ const IntroCopy = ({className, isDuplicate = false}: {className: string; isDupli
     </div>
 )
 
-// 두 번째 화면(기업회원 소개). 시안이 페이지 테마(mainpage=다크)와 무관하게 밝은 면으로 고정되는
-// 구간이라, 테마 스코프를 바꾸지 않고 main-intro-* 시맨틱 토큰으로 색을 고정한다([PB-06] 유지).
+// 두 번째 화면(기업회원 소개). 시안이 페이지 테마와 무관하게 한 벌로 정의돼 있어, 테마 스코프를
+// 바꾸지 않고 main-intro-* 시맨틱 토큰으로 색을 고정한다([PB-06] 유지).
 //
 // 레이아웃(1920 시안) — 588 + 24 + 588 = 1200 이라 그대로 grid-layout 의 두 컬럼에 얹힌다.
 // 콘텐츠 높이는 시안의 이미지 마스크(588×686)가 정하고, 그보다 낮은 화면에서는 max-h-full 로 줄어든다.
@@ -311,12 +329,18 @@ const MainSecondSection = () => {
                         {/* 왼쪽 셀 — 아래층 카피 위에 사진이 얹혀 있다. 진입 때 사진이 열리고, 스크롤하면
                             다시 줄어들며 아래층 카피가 드러난다. 진입은 패널, 교차 축소는 clip이 맡는다. */}
                         <div className={cn(ENTRY_STATE_CLASS, CELL_CLASS, 'max-h-full', LEFT_SLOT_CLASS)}>
-                            <IntroCopy
+                            {/* md:pe-20 — 시안에서 카피 폭이 컬럼(588)이 아니라 508 이고 사진 쪽으로 80px
+                                물러나 있다. 반대편 셀은 같은 값을 시작 쪽에 준다. */}
+                            <IntroProcessCopy
                                 isDuplicate
-                                className={cn(CROSSOVER_COPY_CLASS, BASE_COPY_FADE_CLASS, 'w-full flex-col md:pt-23')}
+                                className={cn(
+                                    CROSSOVER_COPY_CLASS,
+                                    BASE_COPY_FADE_CLASS,
+                                    'w-full flex-col md:pe-20 md:pt-5',
+                                )}
                             />
                             <IntroImage
-                                preload
+                                photo={selfDiagnosisPhoto}
                                 onLoad={handleEntryImageLoad}
                                 className={cn('absolute inset-0', SHRINK_CLASS, SWAP_TRANSITION_CLASS)}
                             />
@@ -325,11 +349,17 @@ const MainSecondSection = () => {
 
                         {/* 오른쪽 셀 — 사진은 처음부터 전체 면적으로 합성해 두고 표면색 패널만 연다.
                             카피는 패널보다 위에서 함께 페이드하므로 초기 레이아웃을 가리지 않는다. */}
-                        <div className={cn(CELL_CLASS, 'max-h-full overflow-hidden rounded-3xl', RIGHT_SLOT_CLASS)}>
-                            <IntroImage className={cn(CROSSOVER_IMAGE_CLASS, 'absolute inset-0')} />
+                        <div className={cn(CELL_CLASS, 'max-h-full', RIGHT_SLOT_CLASS)}>
+                            <IntroImage
+                                photo={consultingPhoto}
+                                className={cn(CROSSOVER_IMAGE_CLASS, 'absolute inset-0', STATIC_ROUND_CLASS)}
+                            />
                             <IntroImageCover mode="swap" />
-                            <IntroCopy
-                                className={cn(SWAP_COPY_FADE_CLASS, 'relative z-20 flex w-full flex-col md:pt-23')}
+                            <IntroProcessCopy
+                                className={cn(
+                                    SWAP_COPY_FADE_CLASS,
+                                    'relative z-20 flex w-full flex-col md:ps-20 md:pt-5',
+                                )}
                             />
                         </div>
                     </div>
