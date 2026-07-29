@@ -134,13 +134,17 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                             // 아래 여백은 다음 목차 항목과의 간격 — 마지막 항목이 활성일 땐 아래 항목이 없어
                                             // 빼야 레일(진행 바)이 버튼 라인에 맞춰 끝난다.
                                             // 시안(1920×1080)에서 CTA 아래부터 다음 목차까지가 181px 이다. 목록의
-                                            // 기본 간격(gap-6 = 24)이 더해지므로 여기서는 157 을 잡고, 화면 높이에
-                                            // 같은 비율(157/1080 = 14.54vh)로 따라가게 한다.
+                                            // 기본 간격(gap-6 = 24)이 더해지므로 여기서 잡는 값은 157 이다.
+                                            //
+                                            // 우측 사진의 상한과 같은 식을 쓴다 — 목차 컬럼도 한 화면에 들어가야 해서,
+                                            // 화면높이 - 헤더(112) - 위여백(7.4vh) - 아래여백(9.26vh) - 나머지 목차(396)
+                                            // = 83.34vh - 508 이 이 여백이 쓸 수 있는 최대치다. 뷰포트 798px 이상에서는
+                                            // 이 값이 157 을 넘어 상한에 걸리므로 시안 수치가 그대로 나온다.
                                             <Reveal
                                                 className={cn(
                                                     'mt-4 flex flex-col items-start gap-6',
                                                     index < TECH_EVAL_SERVICES.length - 1 &&
-                                                        'mb-[clamp(--spacing(4),14.54vh,--spacing(39.25))]',
+                                                        'mb-[clamp(--spacing(4),calc(83.34vh---spacing(127)),--spacing(39.25))]',
                                                 )}
                                             >
                                                 {/* 시안(type A_01) 40px·ExtraBold·행간 1.4. 좁은 화면에서는 32px 까지 유동 축소한다.

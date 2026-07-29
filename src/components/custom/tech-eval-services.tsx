@@ -98,7 +98,13 @@ export const TechEvalServiceVisual = ({service}: {service: TechEvalService}) => 
             sizes="(max-width: 768px) 100vw, 50vw"
             // 시안 프레임 비율 590:380 — 원본 이미지의 고유 비율(588:399)과 달라 명시한다.
             // 폭은 컬럼을 채우고 높이는 이 비율이 정하며, 남는 부분은 object-cover 가 자른다.
-            className="aspect-[590/380] w-full rounded-2xl object-cover"
+            //
+            // md 이상의 상한 — 우측 컬럼은 사진(379) + 간격(20) + 설명·태그(154)로 높이가 고정이라,
+            // 헤더와 위아래 여백을 더하면 뷰포트 798px 미만에서는 한 화면에 들어가지 않는다. 그 아래에서만
+            // 사진 세로를 남는 높이에 맞춰 줄인다(폭은 w-full 로 고정이라 그리드 끝선은 그대로).
+            // 계산: 화면높이 - 헤더(112) - 위여백(7.4vh) - 아래여백(9.26vh) - 설명블록(174) = 83.34vh - 286
+            // 상한 380 은 비율에서 나오는 원래 높이(379)와 같아, 높이가 넉넉한 화면에서는 걸리지 않는다.
+            className="aspect-[590/380] w-full rounded-2xl object-cover md:max-h-[clamp(--spacing(40),calc(83.34vh---spacing(71.5)),--spacing(95))]"
         />
 
         <div className="flex flex-col gap-8">
