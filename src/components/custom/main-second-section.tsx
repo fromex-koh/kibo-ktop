@@ -478,8 +478,12 @@ const MainSecondSection = () => {
                 <MobileIntroContent />
             </div>
 
-            {/* 스크롤 트랙 — 교차가 있는 화면에서만 2화면 높이가 되고, 안쪽 화면이 sticky 로 고정된다. */}
-            <div className="pager-on:h-[200dvh] pager-on:flex-none flex-1 max-md:hidden">
+            {/* 스크롤 트랙 — 교차가 있는 화면에서만 화면보다 조금 높아지고, 안쪽 화면이 sticky 로 고정된다.
+                남는 스크롤(10dvh)은 교차를 켜는 데만 쓴다. StackPager 는 이 트랙을 끝까지 굴린 뒤에야
+                다음 섹션으로 넘기므로, 트랙이 길면 교차를 본 뒤 3섹션까지 여러 번 굴려야 했다
+                (2화면 높이 = 한 화면치가 남아 세 번). 한 번 굴리면 교차가 켜지며 트랙도 바닥나고,
+                그다음 한 번에 3섹션으로 넘어간다. */}
+            <div className="pager-on:h-[110dvh] pager-on:flex-none flex-1 max-md:hidden">
                 {/* 세로 배치 — 시안(1920×1080) 기준으로 헤더 아래 100px, 사진 아래 220px 이다.
                     가운데 정렬 대신 위에서부터 쌓아, 헤더 아래 여백만 시안 비율(100/1080 = 9.26vh)로
                     따라가게 하고 남는 높이는 전부 사진 아래로 보낸다. 높이가 모자라면 이 여백과 셀이
