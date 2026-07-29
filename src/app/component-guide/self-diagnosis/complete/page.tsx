@@ -48,6 +48,10 @@ const MAIN_PAGE_PATH = '/component-guide/main-page'
 // 진행 표시(StepHeader)는 이 화면에 없다 — 흐름이 끝나 완료 메시지만 남는다(시안 동일).
 const SelfDiagnosisCompletePage = () => (
     <ViewportFitLayout
+        // max-h-dvh — 셸의 기본은 min-h-dvh 라 내용이 넘치면 그대로 늘어난다(= 아래 간격들이 줄지 않는다).
+        // 상한을 두면 자리가 모자랄 때 flex 가 간격부터 줄여 한 화면에 담긴다. 간격을 다 줄여도 모자라면
+        // 그때는 셸의 원래 동작대로 넘쳐 문서 스크롤로 넘어간다(잘리지 않는다).
+        className="max-h-dvh"
         header={
             <>
                 <SkipNav links={SKIP_LINKS} />
@@ -59,8 +63,18 @@ const SelfDiagnosisCompletePage = () => (
                 />
             </>
         }
-        mainProps={{id: 'main', tabIndex: -1}}
+        // 세로 간격은 시안([자가진단] 5단계_제출 완료, 1920×1080)을 기준으로 화면 높이에 같은 비율로
+        // 따라간다 — 헤더 아래 40px(3.7dvh), 타이틀 아래 100px(9.26dvh), 문구 아래 60px(5.56dvh),
+        // 안내상자 아래 40px(3.7dvh).
+        //
+        // 간격을 gap 이 아니라 별도 요소로 둔 이유 — 헤더·타이틀·안내상자는 높이가 고정이라 화면이
+        // 낮아져도 줄지 않는다. 간격만 비율로 줄이면 1366×768 에서 55px 이 넘쳐 스크롤이 생겼다.
+        // flex 항목으로 두면 자리가 모자랄 때 네 간격이 각자 크기에 비례해 함께 줄어 한 화면에 남는다.
+        // 공용 셸의 기본값은 다른 완료·결과 화면도 쓰므로 이 화면에서만 덮어쓴다.
+        mainProps={{id: 'main', tabIndex: -1, className: 'gap-0 pt-0 [&>:not([aria-hidden])]:shrink-0'}}
     >
+        <div aria-hidden="true" className="h-[clamp(--spacing(2),3.7dvh,--spacing(10))]" />
+
         <PageTitleBar
             title="혁신성장역량지수(일반)"
             breadcrumb={
@@ -84,6 +98,8 @@ const SelfDiagnosisCompletePage = () => (
             }
         />
 
+        <div aria-hidden="true" className="h-[clamp(--spacing(5),9.26dvh,--spacing(25))]" />
+
         {/* 완료 알림 — 완료 사실은 문구가 전달하므로 애니메이션은 장식으로 두고 접근성 트리에서 제외한다. */}
         <div className="flex flex-col items-center">
             <ActionCheck decorative />
@@ -92,7 +108,9 @@ const SelfDiagnosisCompletePage = () => (
             </h2>
         </div>
 
-        <div className="flex flex-col gap-15">
+        <div aria-hidden="true" className="h-[clamp(--spacing(3),5.56dvh,--spacing(15))]" />
+
+        <div className="flex flex-col gap-[clamp(--spacing(2),3.7dvh,--spacing(10))]">
             <InfoBox variant="outline" title="알려드려요">
                 <InfoBoxItem>제출하신 자가진단 결과는 마이페이지 &gt; 진행현황 조회에서 확인할 수 있어요.</InfoBoxItem>
                 <InfoBoxItem>진단 결과발송은 마이페이지 &gt; 진행현황 조회에서 진행할 수 있어요.</InfoBoxItem>
@@ -112,7 +130,7 @@ const SelfDiagnosisCompletePage = () => (
                 </InfoBoxItem>
             </InfoBox>
 
-            {/* InfoBox 아래 60px(spacing.15) 간격으로 후속 액션을 배치한다. */}
+            {/* InfoBox 아래 간격 — 시안 40px(3.7dvh)로 후속 액션을 배치한다. */}
             <StepNavigation
                 appearance="plain"
                 className="[&>div]:max-w-none [&>div]:px-0 [&>div]:py-0"
