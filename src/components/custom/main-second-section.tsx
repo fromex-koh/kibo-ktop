@@ -480,14 +480,17 @@ const MainSecondSection = () => {
 
             {/* 스크롤 트랙 — 교차가 있는 화면에서만 2화면 높이가 되고, 안쪽 화면이 sticky 로 고정된다. */}
             <div className="pager-on:h-[200dvh] pager-on:flex-none flex-1 max-md:hidden">
-                {/* pt-* 는 고정 헤더(md 56px · lg 이상 112px)가 차지하는 자리다. 화면 높이에 맞춰 가운데
-                    정렬하는 상자라 이만큼 비워 두지 않으면 낮은 화면에서 카피 상단이 헤더에 가린다.
-                    pb-14 는 아래 여유 — 없으면 1280×720 처럼 낮은 화면에서 진행 레일의 단계 라벨이
-                    화면 끝에 딱 붙어 잘린 것처럼 보인다. 줄어든 높이는 카피 안의 유동 여백이 흡수한다. */}
-                <div className="pager-on:sticky pager-on:top-0 pager-on:h-dvh flex h-full flex-col justify-center pt-14 pb-14 lg:pt-28">
+                {/* 세로 배치 — 시안(1920×1080) 기준으로 헤더 아래 100px, 사진 아래 220px 이다.
+                    가운데 정렬 대신 위에서부터 쌓아, 헤더 아래 여백만 시안 비율(100/1080 = 9.26vh)로
+                    따라가게 하고 남는 높이는 전부 사진 아래로 보낸다. 높이가 모자라면 이 여백과 셀이
+                    함께 줄어들어(shrink) 카피가 헤더 밑으로 파고들지 않는다. */}
+                <div className="pager-on:sticky pager-on:top-0 pager-on:h-dvh flex h-full flex-col">
+                    {/* 고정 헤더 자리 — md 56px · lg 이상 112px. 여기만 줄어들지 않는다. */}
+                    <div aria-hidden="true" className="h-14 shrink-0 lg:h-28" />
+                    <div aria-hidden="true" className="h-[clamp(--spacing(6),9.26vh,--spacing(25))]" />
                     {/* content-layout — 헤더·1섹션·3섹션과 같은 콘텐츠 폭 셸. grid-layout 만 쓰면 md 티어에서
                         그리드 자체 container(792)로 좁아져 헤더와 좌우 시작선이 어긋난다. */}
-                    <div className="grid-layout content-layout w-full gap-y-12 md:max-h-full md:grid-rows-1 md:gap-y-0">
+                    <div className="grid-layout content-layout min-h-0 w-full gap-y-12 md:grid-rows-1 md:gap-y-0">
                         {/* 왼쪽 셀 — 첫 화면에서 카피가 보이는 쪽. 사진은 처음부터 전체 면적으로 합성해
                             두고 표면색 패널만 연다. 카피는 패널보다 위에서 함께 페이드하므로 초기
                             레이아웃을 가리지 않는다. 스크롤하면 패널이 열리며 사진으로 바뀐다. */}
@@ -533,6 +536,9 @@ const MainSecondSection = () => {
                             <IntroImageCover mode="conceal" />
                         </div>
                     </div>
+                    {/* 사진 아래 여백 — 시안 220px 을 같은 비율(220/1080 = 20.37vh)로 따라간다.
+                        위 여백과 같은 규칙이라 낮은 화면에서도 위:아래 = 100:220 의 비례가 유지된다. */}
+                    <div aria-hidden="true" className="h-[clamp(--spacing(14),20.37vh,--spacing(55))]" />
                 </div>
             </div>
         </section>
