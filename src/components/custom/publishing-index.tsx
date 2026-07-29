@@ -1,11 +1,13 @@
 'use client'
 
+import Link from 'next/link'
 import {Check, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
 import {useMemo, useState} from 'react'
 import {
     USER_TYPE_VALUES,
     isStructureBranch,
     PUBLISHING_INDEX_CONTENT,
+    SCREEN_REGISTRY,
     STATUS_VALUES,
     type UserType,
     type Status,
@@ -93,9 +95,10 @@ const StatusTag = ({status}: {status: Status}) => (
 // 사이트 구조는 뎁스 제한 없는 트리라, 표에 그리려면 각 leaf(실제 화면)를 "뿌리부터 자신까지의
 // 라벨 경로"로 펼쳐야 한다. 이 펼친 목록 + 뎁스별 rowSpan 계산이 표 렌더링의 핵심이다.
 type FlatLeaf = {
-    key: string
+    rowKey: string
+    registryKey?: string
     path: string[] // index 0 = 1뎁스(그룹명) ... 마지막 = leaf 자신의 라벨
-    screenId: string
+    screenId: string | null
     status: Status
     version: string
     userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 공통(기업·기관 둘 다).
@@ -118,7 +121,8 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
             const ownScreen: FlatLeaf[] = node.screen
                 ? [
                       {
-                          key: screenPath.join(' > '),
+                          rowKey: screenPath.join(' > '),
+                          ...(node.screen.key !== undefined ? {registryKey: node.screen.key} : {}),
                           path: screenPath,
                           screenId: node.screen.screenId,
                           status: node.screen.status,
@@ -131,7 +135,8 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
         }
         return [
             {
-                key: nextPath.join(' > '),
+                rowKey: nextPath.join(' > '),
+                ...(node.key !== undefined ? {registryKey: node.key} : {}),
                 path: nextPath,
                 screenId: node.screenId,
                 status: node.status,
@@ -202,6 +207,7 @@ const {releaseNotes, assetVersions, commonLayouts, structureGroups} = PUBLISHING
 
 // 전체 화면(트리를 펼친 leaf) — 필터·카운트는 이 목록을 기준으로 컴포넌트 안에서 파생한다.
 const ALL_LEAVES = structureGroups.flatMap(collectLeaves)
+const SCREEN_REGISTRY_BY_KEY = new Map(SCREEN_REGISTRY.map((screen) => [screen.key, screen]))
 
 const PublishingIndex = () => {
     const [filter, setFilter] = useState<UserTypeFilter>('기업')
@@ -493,10 +499,20 @@ const PublishingIndex = () => {
                                 </thead>
                                 <tbody className="bg-surface">
                                     {leaves.map((leaf, i) => {
-                                        const isCurrent = leaf.version === BUILD_VERSION
+                                        const registeredScreen =
+                                            leaf.registryKey !== undefined
+                                                ? SCREEN_REGISTRY_BY_KEY.get(leaf.registryKey)
+                                                : undefined
+                                        const displayedVersion = registeredScreen?.version ?? leaf.version
+                                        const isCurrent =
+                                            registeredScreen?.isCurrent ?? displayedVersion === BUILD_VERSION
+                                        const effectiveStatus =
+                                            leaf.status === '대기중' && registeredScreen?.implemented
+                                                ? '진행중'
+                                                : leaf.status
                                         return (
                                             <tr
-                                                key={leaf.key}
+                                                key={leaf.rowKey}
                                                 className={`border-border border-b last:border-b-0 ${
                                                     isCurrent ? 'bg-primary-subtle' : 'bg-surface'
                                                 }`}
@@ -516,6 +532,8 @@ const PublishingIndex = () => {
                                                             </th>
                                                         )
                                                     }
+                                                    const isScreenLink =
+                                                        depth === leaf.path.length - 1 && registeredScreen?.implemented
                                                     return (
                                                         <th
                                                             key={depth}
@@ -529,13 +547,23 @@ const PublishingIndex = () => {
                                                                     {depth + 1}
                                                                 </Badge>
                                                                 <span className="sr-only">{depth + 1}뎁스 </span>
-                                                                {cell.label}
+                                                                {isScreenLink ? (
+                                                                    <Link
+                                                                        href={registeredScreen.path}
+                                                                        className="text-primary focus-visible:ring-ring rounded-xs underline underline-offset-4 hover:no-underline focus-visible:ring-2 focus-visible:outline-none"
+                                                                    >
+                                                                        {cell.label}
+                                                                        <span className="sr-only"> 화면으로 이동</span>
+                                                                    </Link>
+                                                                ) : (
+                                                                    cell.label
+                                                                )}
                                                             </span>
                                                         </th>
                                                     )
                                                 })}
                                                 <td className="px-4 py-3">
-                                                    <StatusTag status={leaf.status} />
+                                                    <StatusTag status={effectiveStatus} />
                                                 </td>
                                                 <td
                                                     className={`typo-caption-regular px-4 py-3 ${
@@ -544,7 +572,7 @@ const PublishingIndex = () => {
                                                             : 'text-muted-foreground'
                                                     }`}
                                                 >
-                                                    <VersionCell version={leaf.version} isCurrent={isCurrent} />
+                                                    <VersionCell version={displayedVersion} isCurrent={isCurrent} />
                                                 </td>
                                             </tr>
                                         )
