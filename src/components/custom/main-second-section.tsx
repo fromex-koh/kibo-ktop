@@ -51,6 +51,8 @@ const COVER_SCALE_CLASS = {
 // 맞춰 페이드해 진입 때는 감춰 두고, 사진이 줄어드는 동안 함께 나타나게 한다.
 const BASE_COPY_FADE_CLASS =
     '[opacity:var(--intro-progress)] motion-safe:transition-opacity motion-safe:duration-1000 motion-safe:ease-stack'
+const SWAP_COPY_FADE_CLASS =
+    '[opacity:calc(1_-_var(--intro-progress))] motion-safe:transition-opacity motion-safe:duration-1000 motion-safe:ease-stack'
 
 // 셀 — 시안의 588×686 사각형. 두 겹(아래/위)이 이 상자를 같이 채운다.
 // 라운딩·클리핑을 두지 않는다 — 모서리는 위층 사진의 clip-path 가 혼자 만든다(위 주석 참고).
@@ -100,11 +102,8 @@ const IntroImage = ({
 
 // 이미지 위의 단색 패널 네 장이 가장자리 방향으로 줄어들며 중앙부터 사진을 드러낸다.
 // 이미지 자체는 처음부터 전체 면적으로 렌더링되므로 최초 표시 시 텍스처 업로드로 인한 번쩍임이 없다.
-const IntroImageCover = ({mode, className}: {mode: keyof typeof COVER_SCALE_CLASS; className?: string}) => (
-    <div
-        aria-hidden="true"
-        className={cn('pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-3xl', className)}
-    >
+const IntroImageCover = ({mode}: {mode: keyof typeof COVER_SCALE_CLASS}) => (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-3xl">
         <span
             className={cn(
                 ENTRY_COVER_PANEL_CLASS,
@@ -324,16 +323,14 @@ const MainSecondSection = () => {
                             <IntroImageCover mode="entry" />
                         </div>
 
-                        {/* 오른쪽 셀 — 사진은 처음부터 렌더링하고, 패널이 열리며 밑의 카피를 덮는다. */}
-                        <div className={cn(CELL_CLASS, 'max-h-full', RIGHT_SLOT_CLASS)}>
-                            <IntroCopy className="flex w-full flex-col md:pt-23" />
-                            <IntroImage
-                                className={cn(
-                                    CROSSOVER_IMAGE_CLASS,
-                                    'absolute inset-0 transform-gpu will-change-transform',
-                                )}
+                        {/* 오른쪽 셀 — 사진은 처음부터 전체 면적으로 합성해 두고 표면색 패널만 연다.
+                            카피는 패널보다 위에서 함께 페이드하므로 초기 레이아웃을 가리지 않는다. */}
+                        <div className={cn(CELL_CLASS, 'max-h-full overflow-hidden rounded-3xl', RIGHT_SLOT_CLASS)}>
+                            <IntroImage className={cn(CROSSOVER_IMAGE_CLASS, 'absolute inset-0')} />
+                            <IntroImageCover mode="swap" />
+                            <IntroCopy
+                                className={cn(SWAP_COPY_FADE_CLASS, 'relative z-20 flex w-full flex-col md:pt-23')}
                             />
-                            <IntroImageCover mode="swap" className={CROSSOVER_IMAGE_CLASS} />
                         </div>
                     </div>
                 </div>
