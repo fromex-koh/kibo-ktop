@@ -12,8 +12,12 @@
 // 임계값은 tokens.json 의 breakpoint.md · breakpointHeight 가 단일 소스다. [PB-17]
 // 간격 숫자는 JSX 의 p-n 과 같은 단위(1 = 4px) — 옆 px 은 읽는 사람을 위한 환산이다.
 
+// 위쪽 28(112px) = 고정 헤더 높이, 아래쪽 28 = SCROLL 표시 높이(heroScrollIndicatorClassName 의 h-28).
+// 헤더 아래 여백은 시안(1920×1080)의 80px 을 기준으로 화면 높이에 같은 비율로 따라간다
+// (80/1080 = 7.4vh). 그래서 md 이상에서는 가운데 정렬 대신 위에서부터 이 여백만큼 띄우고,
+// 남는 공간은 전부 아래로 간다. 32px 아래로는 줄지 않는다.
 export const heroFrameClassName = [
-    'h-full min-h-0 py-0',
+    'h-full min-h-0 pt-[calc(--spacing(28)+clamp(--spacing(8),7.4vh,--spacing(20)))] pb-28 md:not-landscape:items-start',
     'max-md:not-short:pt-[clamp(--spacing(18),12dvh,--spacing(24))] max-md:not-short:pb-28', // 72~96 / 112px
     'max-md:short:not-landscape:pt-17 max-md:short:not-landscape:pb-20', // 68 / 80px
     'landscape:pt-13 landscape:pb-14', // 52 / 56px

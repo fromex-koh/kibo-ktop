@@ -5,7 +5,11 @@
 // group/track · group/row 두 그룹을 쓴다 — 첫 행은 기본 크기로 줄고 다음 행이 커져 교체 때 튀지 않는다.
 
 export const heroStatsViewportClassName = [
-    'mt-2.5 h-[clamp(--spacing(112),58vh,--spacing(136))] overflow-hidden', // 10px / 448~544px
+    // 54vh 인 이유 — 히어로가 헤더 아래 유동 여백만큼 내려간 뒤 남는 높이 안에 들어가야 한다.
+    // 페이저 최소 높이(640)에서 346px 이 되어 SCROLL 표시 위로 여유가 남고, 1080 이상에서는 상한
+    // (544)이 걸려 시안 크기 그대로다. 한 행은 이 높이의 1/5 이라 346 에서도 69px 로,
+    // 행 내용(50px)이 들어간다.
+    'mt-2.5 h-[clamp(--spacing(86),54vh,--spacing(136))] overflow-hidden', // 10px / 344~544px
     'max-md:not-short:h-[clamp(--spacing(32),21dvh,--spacing(46))]', // 128~184px
     'max-md:short:not-landscape:h-[clamp(--spacing(28),22dvh,--spacing(32))]', // 112~128px
     'landscape:mt-0 landscape:h-[clamp(--spacing(26),31dvh,--spacing(29))]', // 104~116px
