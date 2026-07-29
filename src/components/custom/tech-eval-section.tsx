@@ -50,6 +50,9 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                 stackPageClassName,
                 // md 이상은 원래 디자인 높이가 뷰포트를 넘을 수 있어 섹션 안에서 이어서 스크롤한다.
                 'bg-background pager-off:snap-start relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:overflow-y-auto md:pt-50',
+                // 푸터가 이 페이지의 마지막 요소라 아래 여백을 섹션이 아니라 푸터 자신이 끝낸다 —
+                // 그대로 두면 푸터 밑으로 섹션 padding 만큼 빈 배경 띠가 남는다.
+                bottomContent && 'pb-0',
             )}
         >
             {/* 모바일은 자동 전환 없이 펼쳐 읽는 목록, md 이상은 롤링 레일 — 둘 중 하나만 노출한다.

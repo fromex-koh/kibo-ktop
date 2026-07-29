@@ -70,7 +70,9 @@ const MainPage = () => (
             <TechEvalSection
                 mobileContent={<MobileTechEvalContent />}
                 bottomContent={
-                    <div id="site-info" tabIndex={-1} className="bg-background relative mt-auto w-full">
+                    // pt-* 는 3섹션 본문과 푸터 사이의 최소 간격이다 — 둘이 한 스택 페이지에 있어
+                    // 본문이 화면을 다 채우면 mt-auto 가 흡수할 여백이 없어 푸터가 곧바로 붙는다.
+                    <div id="site-info" tabIndex={-1} className="bg-background relative mt-auto w-full pt-28 md:pt-40">
                         <Footer />
                     </div>
                 }
