@@ -10,14 +10,14 @@ export type TechEvalService = {
     description: string
     tags: string[]
     image: StaticImageData
-    // "자가진단 시작하기" CTA 가 이동할 화면. 목업이 없는 서비스는 '#'.
+    // "시작하기" CTA 가 이동할 화면. 목업이 없는 서비스는 '#'.
     ctaHref: string
 }
 
 // 기술평가 진입 화면(평가모형 선택) 목업 경로. [MD-010]
 const EVALUATION_MODEL_PATH = '/component-guide/self-diagnosis/evaluation-model'
 
-// "자가진단 시작하기" CTA가 PC 롤링·모바일 정적 배치에서 공유하는 좌→우 배경 채움 효과.
+// "시작하기" CTA가 PC 롤링·모바일 정적 배치에서 공유하는 좌→우 배경 채움 효과.
 export const TECH_EVAL_CTA_FILL_CLASS =
     'border-transparent bg-muted text-foreground bg-linear-to-r from-action-fill-hover to-action-fill-hover bg-left bg-no-repeat bg-[length:0_100%] font-bold transition-[background-size,color] duration-300 interactive:hover:bg-muted interactive:hover:bg-[length:100%_100%] interactive:active:bg-gray-50 motion-reduce:transition-none'
 
@@ -28,8 +28,7 @@ export const TECH_EVAL_SERVICES: TechEvalService[] = [
         headline: (
             <>
                 <span className="block">기업이 보유한 기술의</span>
-                <span className="block">가치를 증명하는</span>
-                <span className="block">기술평가</span>
+                <span className="block">가치를 증명하는 기술평가</span>
             </>
         ),
         descriptionTitle: '기술평가란?',
@@ -44,8 +43,7 @@ export const TECH_EVAL_SERVICES: TechEvalService[] = [
         headline: (
             <>
                 <span className="block">특허번호 입력만으로</span>
-                <span className="block">확인할 수 있는</span>
-                <span className="block">객관적 특허가치</span>
+                <span className="block">확인하는 객관적 특허가치</span>
             </>
         ),
         descriptionTitle: '특허평가(K-PAS)란?',
@@ -59,8 +57,7 @@ export const TECH_EVAL_SERVICES: TechEvalService[] = [
         title: 'K-BIGx 보고서',
         headline: (
             <>
-                <span className="block">기업과 산업 데이터를</span>
-                <span className="block">한눈에 연결하는</span>
+                <span className="block">기업과 산업 데이터를 잇는</span>
                 <span className="block">K-BIGx 분석 보고서</span>
             </>
         ),
@@ -77,8 +74,7 @@ export const TECH_EVAL_SERVICES: TechEvalService[] = [
         title: '탄소중립',
         headline: (
             <>
-                <span className="block">탄소중립 전환을</span>
-                <span className="block">체계적으로 준비하는</span>
+                <span className="block">탄소중립 전환을 준비하는</span>
                 <span className="block">기업 맞춤형 평가</span>
             </>
         ),

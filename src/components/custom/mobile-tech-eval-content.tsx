@@ -26,9 +26,11 @@ const MobileTechEvalContent = () => (
                         >
                             {service.headline}
                         </h2>
+                        {/* aria-label — 보이는 문구가 "시작하기" 뿐이라 링크만 훑을 때 무엇을 시작하는지
+                            알 수 없다. 서비스명을 붙여 목적을 드러낸다. [KWCAG 6.4.3] */}
                         <Button size="xl" asChild className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-base')}>
-                            <Link href={service.ctaHref}>
-                                자가진단 시작하기
+                            <Link href={service.ctaHref} aria-label={`${service.title} 시작하기`}>
+                                시작하기
                                 <ArrowRight aria-hidden="true" />
                             </Link>
                         </Button>

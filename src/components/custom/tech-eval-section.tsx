@@ -49,7 +49,10 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
             className={cn(
                 stackPageClassName,
                 // md 이상은 원래 디자인 높이가 뷰포트를 넘을 수 있어 섹션 안에서 이어서 스크롤한다.
-                'bg-background pager-off:snap-start relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:overflow-y-auto md:pt-50',
+                // 상단 여백은 화면 높이를 따라 112~200px 사이에서 줄어든다 — 시안 값(200)을 고정하면
+                // 1280×720 같은 낮은 화면에서 우측 비주얼 아래가 잘려 스크롤해야 보인다. 최솟값은 고정
+                // 헤더 높이(112)라, 아무리 낮은 화면에서도 첫 목차가 헤더에 가리지 않는다.
+                'bg-background pager-off:snap-start relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:overflow-y-auto md:pt-[clamp(--spacing(28),15vh,--spacing(50))]',
                 // 푸터가 이 페이지의 마지막 요소라 아래 여백을 섹션이 아니라 푸터 자신이 끝낸다 —
                 // 그대로 두면 푸터 밑으로 섹션 padding 만큼 빈 배경 띠가 남는다.
                 bottomContent && 'pb-0',
@@ -119,20 +122,22 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                         </button>
 
                                         {isActive && (
-                                            // mb-24는 다음 목차 항목과의 간격 — 마지막 항목이 활성일 땐 아래 항목이 없어
+                                            // 아래 여백은 다음 목차 항목과의 간격 — 마지막 항목이 활성일 땐 아래 항목이 없어
                                             // 빼야 레일(진행 바)이 버튼 라인에 맞춰 끝난다.
+                                            // 상단 여백과 같은 이유로 화면 높이를 따라 40~96px 사이에서 줄어든다.
                                             <Reveal
                                                 className={cn(
                                                     'mt-4 flex flex-col items-start gap-6',
-                                                    index < TECH_EVAL_SERVICES.length - 1 && 'mb-24',
+                                                    index < TECH_EVAL_SERVICES.length - 1 &&
+                                                        'mb-[clamp(--spacing(10),8vh,--spacing(24))]',
                                                 )}
                                             >
-                                                {/* 크기는 lg 미만에서 유동 축소(32~44px), lg 이상 48px. typo-* 는 생성기가 찍는
-                                            plain 클래스라 반응형 변형을 못 받는다. 메인페이지 예외(SHADCN.md 타이포 유틸
-                                            예외 참고). max-w-full 로 컬럼 내 줄바꿈. */}
+                                                {/* 시안(type A_01) 40px·ExtraBold·행간 1.4. 좁은 화면에서는 32px 까지 유동 축소한다.
+                                            typo-* 는 생성기가 찍는 plain 클래스라 반응형 변형을 못 받는다. 메인페이지 예외
+                                            (SHADCN.md 타이포 유틸 예외 참고). max-w-full 로 컬럼 내 줄바꿈. */}
                                                 <h2
                                                     id="tech-eval-title"
-                                                    className="text-foreground max-w-full text-[clamp(--spacing(8),calc(--spacing(6)+2.1vw),--spacing(11))] leading-normal font-bold break-keep lg:text-5xl"
+                                                    className="text-foreground max-w-full text-[clamp(--spacing(8),calc(--spacing(6)+2.1vw),--spacing(10))] leading-[var(--raw-line-height-tight)] font-extrabold break-keep"
                                                 >
                                                     {service.headline}
                                                 </h2>
@@ -145,14 +150,17 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                                     asChild
                                                     className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-lg')}
                                                 >
+                                                    {/* aria-label — 보이는 문구가 "시작하기" 뿐이라 링크만 훑을 때
+                                                    무엇을 시작하는지 알 수 없다. 서비스명을 붙인다. [KWCAG 6.4.3] */}
                                                     <Link
                                                         href={service.ctaHref}
+                                                        aria-label={`${service.title} 시작하기`}
                                                         onMouseEnter={() => setIsPaused(true)}
                                                         onMouseLeave={() => setIsPaused(false)}
                                                         onFocus={() => setIsPaused(true)}
                                                         onBlur={() => setIsPaused(false)}
                                                     >
-                                                        자가진단 시작하기
+                                                        시작하기
                                                         <ArrowRight aria-hidden="true" />
                                                     </Link>
                                                 </Button>
