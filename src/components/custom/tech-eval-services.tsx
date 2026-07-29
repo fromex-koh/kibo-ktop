@@ -96,7 +96,10 @@ export const TechEvalServiceVisual = ({service}: {service: TechEvalService}) => 
             alt=""
             draggable={false}
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="h-auto w-full rounded-2xl"
+            // md 이상은 한 화면 안에 목차·설명·태그까지 함께 들어가야 해서 사진 높이에 상한을 둔다.
+            // 상한(400)은 컬럼 폭에서 나오는 원래 높이(399)와 같아, 높이가 넉넉한 화면에서는 걸리지 않는다.
+            // 모바일은 흐름대로 쌓이므로 상한 없이 원래 비율 그대로 둔다.
+            className="h-auto w-full rounded-2xl md:max-h-[clamp(--spacing(78),50vh,--spacing(100))] md:object-cover"
         />
 
         <div className="flex flex-col gap-8">
