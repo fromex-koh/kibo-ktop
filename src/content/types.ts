@@ -20,6 +20,27 @@ export const USER_TYPE_VALUES: readonly UserType[] = ['기업', '기관']
 
 export const isUserType = (value: string): value is UserType => USER_TYPE_VALUES.some((userType) => userType === value)
 
+// ── 실제 서비스 화면 경로 레지스트리 ──
+// 화면 ID와 페이지 구현 여부에 의존하지 않는 key로 화면을 추적한다.
+export type ScreenImplementationStatus = 'planned' | 'in-progress'
+
+export const SCREEN_IMPLEMENTATION_STATUS_VALUES: readonly ScreenImplementationStatus[] = ['planned', 'in-progress']
+
+export const isScreenImplementationStatus = (value: string): value is ScreenImplementationStatus =>
+    SCREEN_IMPLEMENTATION_STATUS_VALUES.some((status) => status === value)
+
+export type ScreenRegistryItem = {
+    key: string
+    screenId: string | null
+    userType: UserType
+    path: string
+    name: string
+    implemented: boolean
+    implementationStatus: ScreenImplementationStatus
+    version: string
+    isCurrent: boolean
+}
+
 // 자산이 단일 파일인지 디렉터리인지 — 컬럼 헤더에 파일/폴더 아이콘으로 표시한다.
 export type AssetKind = 'file' | 'folder'
 
@@ -70,10 +91,11 @@ export type AssetVersionSource = {
 }
 
 // 사이트 구조는 뎁스 제한 없는 트리다 — 자식이 있으면 branch(더 깊은 메뉴), 없으면 leaf(실제 화면 1건).
-// leaf 만 screenId·status·version 을 가진다(화면이 있어야 상태를 매길 수 있으므로).
+// leaf 만 screenId·status·version 을 가진다. 화면 ID가 발급되기 전에는 null로 관리한다.
 export type StructureLeaf = {
     label: string
-    screenId: string
+    key?: string // 경로가 확정된 화면은 screen-registry.json과 연결하는 영구 key를 가진다.
+    screenId: string | null
     status: Status
     version: string
     userType?: UserType // 없으면 상위에서 상속(최종적으로 없으면 공통).
@@ -83,7 +105,8 @@ export type StructureLeaf = {
 // label 은 branch.screen(하이브리드) 전용 — branch 자신의 화면을 하위 뎁스 칸에 어떤 이름으로
 // 보여줄지 정한다(예: 결과조회 branch 의 자기 화면은 '목록'). 없으면 빈 칸이 '-' 로 남는다.
 export type ScreenInfo = {
-    screenId: string
+    key?: string
+    screenId: string | null
     status: Status
     version: string
     label?: string

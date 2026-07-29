@@ -1,6 +1,7 @@
 {
     "//": "퍼블리싱 인덱스 데이터 — 이 파일만 수정하면 화면에 반영된다. status 는 types.ts 의 STATUS_VALUES 중 하나. 상태 색·아이콘 매핑은 컴포넌트가 담당한다.",
-    "//screenId": "화면ID는 IA 원문 값을 우선 사용한다. 원문에서 미정이면 IA-COR-###(기업) 또는 IA-ORG-###(기관) 형식의 추적용 임시 ID를 사용하며, 확정 ID 수신 시 교체한다.",
+    "//key": "실제 서비스 경로가 확정된 화면만 영구 key를 가지며, screen-registry.json의 동일한 key와 연결한다. 화면명이나 화면 ID가 바뀌어도 key는 유지한다.",
+    "//screenId": "현재 화면 ID는 모두 미발급 상태이므로 null로 관리한다. 임시 ID를 만들지 않으며, 공식 화면 ID가 발급된 화면만 해당 문자열로 교체한다.",
     "//assetVersions": "다음 프론트엔드 개발자가 변경 사실을 반드시 알아야 하는 실제 컴포넌트·스타일·런타임·설정·에셋만 추적한다. component-guide 전용 파일은 제외한다. version 은 직접 적지 않고 path 기준 git 히스토리로 자동 계산한다. 인계 기준선은 v0.1.3이며 src/app/fonts만 기존 v0.1.0 이력을 유지한다. 이후에는 마지막 변경을 포함하는 최초 태그가 버전이며 아직 태그에 포함되지 않았으면 '미배포'다.",
     "//commonLayouts": "화면이 아니라 여러 화면이 공유하는 '화면을 찍어내는 틀' 단위 레이아웃(메인 레이아웃·서브페이지 레이아웃, 내부 콘텐츠만 바뀌는 틀). Header·Footer 는 이 틀에 이미 포함되므로 개별 행으로 두지 않는다. 독립 화면이 아니라 screenId 가 없고, 별도 표로 렌더링된다. version 은 leaf.version 과 동일한 규칙(수동 기입, 미배포/현재 HEAD 버전과 같으면 하이라이트).",
     "//structureGroups": "2026-07-20 기업·기관 FO IA를 각각 독립된 트리로 반영한다. 기업 128건, 기관 107건이며 기관 IA 83번 평가검증이력 조회는 화면 Type 미정이라 제외한다. leaf.version은 아직 작업 전이면 미배포다.",
@@ -152,7 +153,8 @@
             "children": [
                 {
                     "label": "홈",
-                    "screenId": "SB-FOTA-CM0-0001",
+                    "key": "corp-home",
+                    "screenId": null,
                     "status": "대기중",
                     "version": "미배포"
                 }
@@ -164,9 +166,10 @@
             "children": [
                 {
                     "label": "전체메뉴",
-                    "screenId": "SB-FOTA-CP0-0001",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-full-menu"
                 }
             ]
         },
@@ -176,9 +179,10 @@
             "children": [
                 {
                     "label": "로그인/회원가입",
-                    "screenId": "SB-FOTA-CM1-0001",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-auth"
                 }
             ]
         },
@@ -188,9 +192,10 @@
             "children": [
                 {
                     "label": "이용안내",
-                    "screenId": "SB-FOTA-CM3-0001",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-guide"
                 }
             ]
         },
@@ -200,9 +205,10 @@
             "children": [
                 {
                     "label": "가격 정책",
-                    "screenId": "SB-FOTA-CM4-0001",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-pricing"
                 }
             ]
         },
@@ -212,33 +218,38 @@
             "children": [
                 {
                     "label": "플랫폼 소개",
-                    "screenId": "SB-FOTA-CM0-0002",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-platform"
                 },
                 {
                     "label": "기술평가",
-                    "screenId": "SB-FOTA-CM1-0002",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-platform-technology-evaluation"
                 },
                 {
                     "label": "특허평가",
-                    "screenId": "SB-FOTA-CM2-0002",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-platform-patent-evaluation"
                 },
                 {
                     "label": "K-BIGx 보고서",
-                    "screenId": "SB-FOTA-CM4-0002",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-platform-k-bigx-report"
                 },
                 {
                     "label": "탄소중립",
-                    "screenId": "SB-FOTA-CM5-0002",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-platform-carbon-neutrality"
                 }
             ]
         },
@@ -252,51 +263,58 @@
                         {
                             "label": "(1) 고객정보활용동의",
                             "screen": {
-                                "screenId": "SB-FOTA-CM1-0003",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-ktrs-fm-customer-consent"
                             },
                             "children": [
                                 {
                                     "label": "필수/선택 동의 팝업",
-                                    "screenId": "IA-COR-012",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-customer-consent-consent-popup"
                                 },
                                 {
                                     "label": "개별 상세 보기",
-                                    "screenId": "IA-COR-013",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-customer-consent-detail"
                                 },
                                 {
                                     "label": "전자서명",
-                                    "screenId": "IA-COR-014",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature"
                                 }
                             ]
                         },
                         {
                             "label": "(2) 기업·기술정보 입력",
-                            "screenId": "IA-COR-015",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-ktrs-fm-company-technology-info"
                         },
                         {
                             "label": "2-1 기업정보",
                             "children": [
                                 {
                                     "label": "업종코드 조회",
-                                    "screenId": "IA-COR-016",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-company-info-industry-code-search"
                                 },
                                 {
                                     "label": "주소 찾기",
-                                    "screenId": "IA-COR-017",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-company-info-address-search"
                                 }
                             ]
                         },
@@ -305,9 +323,10 @@
                             "children": [
                                 {
                                     "label": "입력도우미",
-                                    "screenId": "IA-COR-018",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-representative-career-input-helper"
                                 }
                             ]
                         },
@@ -316,77 +335,88 @@
                             "children": [
                                 {
                                     "label": "실적인정 지식재산",
-                                    "screenId": "IA-COR-019",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip"
                                 },
                                 {
                                     "label": "거래유형 설명",
-                                    "screenId": "IA-COR-020",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-transaction-type-guide"
                                 },
                                 {
                                     "label": "전문기술/숙련기술 정의",
-                                    "screenId": "IA-COR-021",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-technology-definition"
                                 }
                             ]
                         },
                         {
                             "label": "(3) 체크리스트 입력",
                             "screen": {
-                                "screenId": "IA-COR-022",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-ktrs-fm-checklist"
                             },
                             "children": [
                                 {
                                     "label": "피인용 확인 메뉴얼",
-                                    "screenId": "IA-COR-023",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual"
                                 },
                                 {
                                     "label": "보증제한 업종",
-                                    "screenId": "IA-COR-024",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-checklist-restricted-industries"
                                 },
                                 {
                                     "label": "TRL 확인",
-                                    "screenId": "IA-COR-025",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-checklist-trl-guide"
                                 }
                             ]
                         },
                         {
                             "label": "(4) 최종 확인",
-                            "screenId": "IA-COR-026",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-ktrs-fm-final-review"
                         },
                         {
                             "label": "(5) 완료 화면",
                             "screen": {
-                                "screenId": "IA-COR-027",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-ktrs-fm-complete"
                             },
                             "children": [
                                 {
                                     "label": "은행 전송",
-                                    "screenId": "IA-COR-028",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer"
                                 },
                                 {
                                     "label": "보증 신청",
-                                    "screenId": "IA-COR-029",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-complete-guarantee-application"
                                 }
                             ]
                         }
@@ -397,9 +427,10 @@
                     "children": [
                         {
                             "label": "(0) 선택 화면",
-                            "screenId": "IA-COR-030",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-tech-index-selection"
                         },
                         {
                             "label": "일반용",
@@ -407,77 +438,88 @@
                                 {
                                     "label": "(1) 고객정보활용동의",
                                     "screen": {
-                                        "screenId": "IA-COR-031",
+                                        "screenId": null,
                                         "status": "대기중",
-                                        "version": "미배포"
+                                        "version": "미배포",
+                                        "key": "corp-technology-evaluation-tech-index-general-customer-consent"
                                     },
                                     "children": [
                                         {
                                             "label": "필수/선택 동의 팝업",
-                                            "screenId": "IA-COR-032",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-customer-consent-consent-popup"
                                         },
                                         {
                                             "label": "개별 상세 보기",
-                                            "screenId": "IA-COR-033",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-customer-consent-detail"
                                         },
                                         {
                                             "label": "전자서명",
-                                            "screenId": "IA-COR-034",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature"
                                         }
                                     ]
                                 },
                                 {
                                     "label": "(2) 기업·기술정보 입력",
-                                    "screenId": "IA-COR-035",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-general-company-technology-info"
                                 },
                                 {
                                     "label": "2-1 기업정보",
                                     "children": [
                                         {
                                             "label": "업종코드 조회",
-                                            "screenId": "IA-COR-036",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-company-info-industry-code-search"
                                         },
                                         {
                                             "label": "주소 찾기",
-                                            "screenId": "IA-COR-037",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-company-info-address-search"
                                         },
                                         {
                                             "label": "기술분류",
-                                            "screenId": "IA-COR-038",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-company-info-technology-category"
                                         },
                                         {
                                             "label": "품목설명",
-                                            "screenId": "IA-COR-039",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-company-info-item-description"
                                         }
                                     ]
                                 },
                                 {
                                     "label": "(4) 최종 확인",
-                                    "screenId": "IA-COR-040",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-general-final-review"
                                 },
                                 {
                                     "label": "(5) 완료 화면",
-                                    "screenId": "IA-COR-041",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-general-complete"
                                 }
                             ]
                         },
@@ -487,77 +529,88 @@
                                 {
                                     "label": "(1) 고객정보활용동의",
                                     "screen": {
-                                        "screenId": "IA-COR-042",
+                                        "screenId": null,
                                         "status": "대기중",
-                                        "version": "미배포"
+                                        "version": "미배포",
+                                        "key": "corp-technology-evaluation-tech-index-startup-customer-consent"
                                     },
                                     "children": [
                                         {
                                             "label": "필수/선택 동의 팝업",
-                                            "screenId": "IA-COR-043",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-consent-popup"
                                         },
                                         {
                                             "label": "개별 상세 보기",
-                                            "screenId": "IA-COR-044",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-detail"
                                         },
                                         {
                                             "label": "전자서명",
-                                            "screenId": "IA-COR-045",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature"
                                         }
                                     ]
                                 },
                                 {
                                     "label": "(2) 기업·기술정보 입력",
-                                    "screenId": "IA-COR-046",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-startup-company-technology-info"
                                 },
                                 {
                                     "label": "2-1 기업정보",
                                     "children": [
                                         {
                                             "label": "업종코드 조회",
-                                            "screenId": "IA-COR-047",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-company-info-industry-code-search"
                                         },
                                         {
                                             "label": "주소 찾기",
-                                            "screenId": "IA-COR-048",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-company-info-address-search"
                                         },
                                         {
                                             "label": "기술분류",
-                                            "screenId": "IA-COR-049",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-company-info-technology-category"
                                         },
                                         {
                                             "label": "품목설명",
-                                            "screenId": "IA-COR-050",
+                                            "screenId": null,
                                             "status": "대기중",
-                                            "version": "미배포"
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-company-info-item-description"
                                         }
                                     ]
                                 },
                                 {
                                     "label": "(4) 최종 확인",
-                                    "screenId": "IA-COR-051",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-startup-final-review"
                                 },
                                 {
                                     "label": "(5) 완료 화면",
-                                    "screenId": "IA-COR-052",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-startup-complete"
                                 }
                             ]
                         }
@@ -569,51 +622,58 @@
                         {
                             "label": "(1) 고객정보활용동의",
                             "screen": {
-                                "screenId": "IA-COR-053",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-investment-model-customer-consent"
                             },
                             "children": [
                                 {
                                     "label": "필수/선택 동의 팝업",
-                                    "screenId": "IA-COR-054",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-customer-consent-consent-popup"
                                 },
                                 {
                                     "label": "개별 상세 보기",
-                                    "screenId": "IA-COR-055",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-customer-consent-detail"
                                 },
                                 {
                                     "label": "전자서명",
-                                    "screenId": "IA-COR-056",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature"
                                 }
                             ]
                         },
                         {
                             "label": "(2) 기업·기술정보 입력",
-                            "screenId": "IA-COR-057",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-investment-model-company-technology-info"
                         },
                         {
                             "label": "2-1 기업정보",
                             "children": [
                                 {
                                     "label": "업종코드 조회",
-                                    "screenId": "IA-COR-058",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-company-info-industry-code-search"
                                 },
                                 {
                                     "label": "주소 찾기",
-                                    "screenId": "IA-COR-059",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-company-info-address-search"
                                 }
                             ]
                         },
@@ -622,65 +682,74 @@
                             "children": [
                                 {
                                     "label": "거래유형 설명",
-                                    "screenId": "IA-COR-060",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-additional-company-info-transaction-type-guide"
                                 },
                                 {
                                     "label": "전문기술/숙련기술 정의",
-                                    "screenId": "IA-COR-061",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-additional-company-info-technology-definition"
                                 }
                             ]
                         },
                         {
                             "label": "(3) 체크리스트 입력",
                             "screen": {
-                                "screenId": "IA-COR-062",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-investment-model-checklist"
                             },
                             "children": [
                                 {
                                     "label": "피인용 확인 메뉴얼",
-                                    "screenId": "IA-COR-063",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-checklist-citation-manual"
                                 },
                                 {
                                     "label": "보증제한 업종",
-                                    "screenId": "IA-COR-064",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-checklist-restricted-industries"
                                 },
                                 {
                                     "label": "TRL 확인",
-                                    "screenId": "IA-COR-065",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-checklist-trl-guide"
                                 }
                             ]
                         },
                         {
                             "label": "(4) 최종 확인",
-                            "screenId": "IA-COR-066",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-investment-model-final-review"
                         },
                         {
                             "label": "(5) 완료 화면",
-                            "screenId": "IA-COR-067",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-investment-model-complete"
                         }
                     ]
                 },
                 {
                     "label": "결과조회",
-                    "screenId": "IA-COR-068",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-technology-evaluation-results"
                 }
             ]
         },
@@ -691,24 +760,27 @@
                 {
                     "label": "특허등급평가 조회",
                     "screen": {
-                        "screenId": "IA-COR-069",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "corp-patent-evaluation-patent-grade-list"
                     },
                     "children": [
                         {
                             "label": "특허등급평가 결과",
                             "screen": {
-                                "screenId": "IA-COR-070",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result"
                             },
                             "children": [
                                 {
                                     "label": "보고서",
-                                    "screenId": "IA-COR-071",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report"
                                 }
                             ]
                         }
@@ -723,131 +795,150 @@
                 {
                     "label": "기업혁신성장보고서 조회",
                     "screen": {
-                        "screenId": "IA-COR-072",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "corp-k-bigx-report-innovation-growth-report"
                     },
                     "children": [
                         {
                             "label": "정보 이용 동의",
-                            "screenId": "IA-COR-073",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-information-consent"
                         },
                         {
                             "label": "보고서 검색 결과",
                             "screen": {
-                                "screenId": "IA-COR-074",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "corp-k-bigx-report-innovation-growth-report-report-search-results"
                             },
                             "children": [
                                 {
                                     "label": "보고서 생성",
-                                    "screenId": "IA-COR-075",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create"
                                 },
                                 {
                                     "label": "보고서 결제",
-                                    "screenId": "IA-COR-076",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-payment"
                                 }
                             ]
                         },
                         {
                             "label": "진단브리핑",
-                            "screenId": "IA-COR-077",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing"
                         },
                         {
                             "label": "기업현황",
-                            "screenId": "IA-COR-078",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-company-overview"
                         },
                         {
                             "label": "기업혁신정보",
                             "children": [
                                 {
                                     "label": "기술분야개요",
-                                    "screenId": "IA-COR-079",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-technology-overview"
                                 },
                                 {
                                     "label": "재무정보",
-                                    "screenId": "IA-COR-080",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-financial-info"
                                 },
                                 {
                                     "label": "기술부문",
-                                    "screenId": "IA-COR-081",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-technology"
                                 },
                                 {
                                     "label": "R&D부문",
-                                    "screenId": "IA-COR-082",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-rnd"
                                 }
                             ]
                         },
                         {
                             "label": "Tech-Index",
-                            "screenId": "IA-COR-083",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-tech-index"
                         },
                         {
                             "label": "신용/재무정보",
-                            "screenId": "IA-COR-084",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info"
                         },
                         {
                             "label": "활동성정보",
-                            "screenId": "IA-COR-085",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-activity-info"
                         },
                         {
                             "label": "인쇄 출력물 선택",
-                            "screenId": "IA-COR-086",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection"
                         },
                         {
                             "label": "보고서 출력",
-                            "screenId": "IA-COR-087",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-report-print"
                         }
                     ]
                 },
                 {
                     "label": "보고서 이력 조회",
                     "screen": {
-                        "screenId": "IA-COR-088",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "corp-k-bigx-report-report-history"
                     },
                     "children": [
                         {
                             "label": "보고서 보기",
-                            "screenId": "IA-COR-089",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-report-history-report-view"
                         },
                         {
                             "label": "보고서 출력",
-                            "screenId": "IA-COR-090",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-report-history-report-print"
                         }
                     ]
                 }
@@ -859,9 +950,10 @@
             "children": [
                 {
                     "label": "탄소중립",
-                    "screenId": "IA-COR-091",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-carbon-neutrality"
                 }
             ]
         },
@@ -872,84 +964,96 @@
                 {
                     "label": "내 정보",
                     "screen": {
-                        "screenId": "IA-COR-092",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "corp-mypage-profile"
                     },
                     "children": [
                         {
                             "label": "업종코드 조회",
-                            "screenId": "IA-COR-093",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-profile-industry-code-search"
                         },
                         {
                             "label": "주소 찾기",
-                            "screenId": "IA-COR-094",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-profile-address-search"
                         }
                     ]
                 },
                 {
                     "label": "평가결과조회",
                     "screen": {
-                        "screenId": "IA-COR-095",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "corp-mypage-evaluation-results"
                     },
                     "children": [
                         {
                             "label": "일반분석",
-                            "screenId": "IA-COR-096",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-evaluation-results-general-analysis"
                         },
                         {
                             "label": "심층분석",
-                            "screenId": "IA-COR-097",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-evaluation-results-in-depth-analysis"
                         },
                         {
                             "label": "은행전송",
-                            "screenId": "IA-COR-098",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-evaluation-results-bank-transfer"
                         },
                         {
                             "label": "기관전송",
-                            "screenId": "IA-COR-099",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-evaluation-results-institution-transfer"
                         },
                         {
                             "label": "전송내역",
-                            "screenId": "IA-COR-100",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-evaluation-results-transfer-history"
                         }
                     ]
                 },
                 {
                     "label": "K-BIGx 보고서 이력",
                     "screen": {
-                        "screenId": "IA-COR-101",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "corp-mypage-k-bigx-report-history"
                     },
                     "children": [
                         {
                             "label": "보고서 보기",
-                            "screenId": "IA-COR-102",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-k-bigx-report-history-report-view"
                         },
                         {
                             "label": "보고서 출력",
-                            "screenId": "IA-COR-103",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-k-bigx-report-history-report-print"
                         }
                     ]
                 },
@@ -959,44 +1063,50 @@
                         {
                             "label": "결제내역",
                             "screen": {
-                                "screenId": "IA-COR-104",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "corp-mypage-paid-services-payment-history"
                             },
                             "children": [
                                 {
                                     "label": "이용내역",
-                                    "screenId": "IA-COR-105",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-usage-history"
                                 }
                             ]
                         },
                         {
                             "label": "환불내역",
-                            "screenId": "IA-COR-106",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-paid-services-refund-history"
                         },
                         {
                             "label": "명세서",
-                            "screenId": "IA-COR-107",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-paid-services-statement"
                         },
                         {
                             "label": "환불 사유 입력",
                             "screen": {
-                                "screenId": "IA-COR-108",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "corp-mypage-paid-services-refund-reason"
                             },
                             "children": [
                                 {
                                     "label": "환불 및 결제 취소 완료",
-                                    "screenId": "IA-COR-109",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-refund-reason-refund-complete"
                                 }
                             ]
                         }
@@ -1005,16 +1115,18 @@
                 {
                     "label": "1:1 문의내역",
                     "screen": {
-                        "screenId": "IA-COR-110",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "corp-mypage-inquiry-history"
                     },
                     "children": [
                         {
                             "label": "문의하기 상세",
-                            "screenId": "IA-COR-111",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-mypage-inquiry-history-inquiry-detail"
                         }
                     ]
                 }
@@ -1027,52 +1139,59 @@
                 {
                     "label": "공지사항",
                     "screen": {
-                        "screenId": "SB-FOTA-CM0-0013",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "corp-notice-announcements"
                     },
                     "children": [
                         {
                             "label": "상세",
-                            "screenId": "SB-FOTA-CM1-0013",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-notice-announcements-detail"
                         }
                     ]
                 },
                 {
                     "label": "자주 묻는 질문",
-                    "screenId": "IA-COR-114",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-notice-faq"
                 },
                 {
                     "label": "1:1 문의 등록",
                     "screen": {
-                        "screenId": "SB-FOTA-OM0-0014",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "corp-notice-inquiry-create"
                     },
                     "children": [
                         {
                             "label": "문의 완료",
-                            "screenId": "IA-COR-116",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-notice-inquiry-create-inquiry-complete"
                         },
                         {
                             "label": "개인정보 수집 및 이용 안내",
-                            "screenId": "SB-FOTA-CP0-0014",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "corp-notice-inquiry-create-privacy-consent-guide"
                         }
                     ]
                 },
                 {
                     "label": "자료실",
-                    "screenId": "SB-FOTA-CM0-0015",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-notice-resources"
                 }
             ]
         },
@@ -1082,9 +1201,10 @@
             "children": [
                 {
                     "label": "기술혁신정보 이용동의",
-                    "screenId": "IA-COR-119",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-technology-information-consent"
                 }
             ]
         },
@@ -1094,9 +1214,10 @@
             "children": [
                 {
                     "label": "결제 완료",
-                    "screenId": "IA-COR-120",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-payment-complete"
                 }
             ]
         },
@@ -1106,9 +1227,10 @@
             "children": [
                 {
                     "label": "404 에러 화면",
-                    "screenId": "SB-FOTA-CM0-0016",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-not-found"
                 }
             ]
         },
@@ -1118,9 +1240,10 @@
             "children": [
                 {
                     "label": "500 에러 화면",
-                    "screenId": "SB-FOTA-CM1-0016",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-server-error"
                 }
             ]
         },
@@ -1130,9 +1253,10 @@
             "children": [
                 {
                     "label": "정기점검 화면",
-                    "screenId": "SB-FOTA-CM2-0016",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-maintenance"
                 }
             ]
         },
@@ -1142,9 +1266,10 @@
             "children": [
                 {
                     "label": "이용약관",
-                    "screenId": "SB-FOTA-CM3-0016",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-terms"
                 }
             ]
         },
@@ -1154,15 +1279,17 @@
             "children": [
                 {
                     "label": "개인정보 처리방침",
-                    "screenId": "SB-FOTA-CM4-0016",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-privacy-policy"
                 },
                 {
                     "label": "알기 쉬운 개인처리방침",
-                    "screenId": "IA-COR-126",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-privacy-policy-easy-privacy-policy"
                 }
             ]
         },
@@ -1172,9 +1299,10 @@
             "children": [
                 {
                     "label": "로그인 연장",
-                    "screenId": "SB-FOTA-CP0-0016",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-session-extension"
                 }
             ]
         },
@@ -1184,9 +1312,10 @@
             "children": [
                 {
                     "label": "로그아웃 종료",
-                    "screenId": "SB-FOTA-CM5-0016",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "corp-logout"
                 }
             ]
         },
@@ -1196,7 +1325,8 @@
             "children": [
                 {
                     "label": "홈",
-                    "screenId": "IA-ORG-001",
+                    "key": "org-home",
+                    "screenId": null,
                     "status": "대기중",
                     "version": "미배포"
                 }
@@ -1208,9 +1338,10 @@
             "children": [
                 {
                     "label": "전체메뉴",
-                    "screenId": "IA-ORG-002",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-full-menu"
                 }
             ]
         },
@@ -1220,9 +1351,10 @@
             "children": [
                 {
                     "label": "로그인/회원가입",
-                    "screenId": "IA-ORG-003",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-auth"
                 }
             ]
         },
@@ -1232,9 +1364,10 @@
             "children": [
                 {
                     "label": "이용안내",
-                    "screenId": "IA-ORG-004",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-guide"
                 }
             ]
         },
@@ -1244,9 +1377,10 @@
             "children": [
                 {
                     "label": "가격 정책",
-                    "screenId": "IA-ORG-005",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-pricing"
                 }
             ]
         },
@@ -1256,33 +1390,38 @@
             "children": [
                 {
                     "label": "플랫폼 소개",
-                    "screenId": "IA-ORG-006",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-platform"
                 },
                 {
                     "label": "기술평가",
-                    "screenId": "IA-ORG-007",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-platform-technology-evaluation"
                 },
                 {
                     "label": "특허평가",
-                    "screenId": "IA-ORG-008",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-platform-patent-evaluation"
                 },
                 {
                     "label": "K-BIGx 보고서",
-                    "screenId": "IA-ORG-009",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-platform-k-bigx-report"
                 },
                 {
                     "label": "탄소중립",
-                    "screenId": "IA-ORG-010",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-platform-carbon-neutrality"
                 }
             ]
         },
@@ -1292,45 +1431,51 @@
             "children": [
                 {
                     "label": "평가검증 진행확인",
-                    "screenId": "IA-ORG-011",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-individual-evaluation-verification-progress"
                 },
                 {
                     "label": "KTRS-FM",
                     "children": [
                         {
                             "label": "(1) 고객정보활용동의",
-                            "screenId": "IA-ORG-012",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-ktrs-fm-customer-consent"
                         },
                         {
                             "label": "(2) 기업·기술정보 입력",
-                            "screenId": "IA-ORG-013",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-ktrs-fm-company-technology-info"
                         },
                         {
                             "label": "2-1 기업정보",
                             "children": [
                                 {
                                     "label": "업종코드 조회",
-                                    "screenId": "IA-ORG-014",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-company-info-industry-code-search"
                                 },
                                 {
                                     "label": "주소 찾기",
-                                    "screenId": "IA-ORG-015",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-company-info-address-search"
                                 },
                                 {
                                     "label": "기업정보 관리",
-                                    "screenId": "IA-ORG-016",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-company-info-company-management"
                                 }
                             ]
                         },
@@ -1339,9 +1484,10 @@
                             "children": [
                                 {
                                     "label": "입력도우미",
-                                    "screenId": "IA-ORG-017",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-representative-capability-career-input-helper"
                                 }
                             ]
                         },
@@ -1350,77 +1496,88 @@
                             "children": [
                                 {
                                     "label": "실적인정 지식재산",
-                                    "screenId": "IA-ORG-018",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-additional-company-info-recognized-ip"
                                 },
                                 {
                                     "label": "거래유형 설명",
-                                    "screenId": "IA-ORG-019",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-additional-company-info-transaction-type-guide"
                                 },
                                 {
                                     "label": "전문기술/숙련기술 정의",
-                                    "screenId": "IA-ORG-020",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-additional-company-info-technology-definition"
                                 }
                             ]
                         },
                         {
                             "label": "(3) 체크리스트 입력",
                             "screen": {
-                                "screenId": "IA-ORG-021",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "org-individual-evaluation-ktrs-fm-checklist"
                             },
                             "children": [
                                 {
                                     "label": "피인용 확인 메뉴얼",
-                                    "screenId": "IA-ORG-022",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-checklist-citation-manual"
                                 },
                                 {
                                     "label": "보증제한 업종",
-                                    "screenId": "IA-ORG-023",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-checklist-restricted-industries"
                                 },
                                 {
                                     "label": "TRL 확인",
-                                    "screenId": "IA-ORG-024",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-checklist-trl-guide"
                                 }
                             ]
                         },
                         {
                             "label": "(4) 최종 확인",
-                            "screenId": "IA-ORG-025",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-ktrs-fm-final-review"
                         },
                         {
                             "label": "(5) 완료 화면",
                             "screen": {
-                                "screenId": "IA-ORG-026",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "org-individual-evaluation-ktrs-fm-complete"
                             },
                             "children": [
                                 {
                                     "label": "은행 전송",
-                                    "screenId": "IA-ORG-027",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-complete-bank-transfer"
                                 },
                                 {
                                     "label": "보증 신청",
-                                    "screenId": "IA-ORG-028",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-complete-guarantee-application"
                                 }
                             ]
                         }
@@ -1431,74 +1588,85 @@
                     "children": [
                         {
                             "label": "(0) 선택 화면",
-                            "screenId": "IA-ORG-029",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-selection"
                         },
                         {
                             "label": "(1) 고객정보활용동의",
-                            "screenId": "IA-ORG-030",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-customer-consent"
                         },
                         {
                             "label": "(2) 기업·기술정보 입력",
-                            "screenId": "IA-ORG-031",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-company-technology-info"
                         },
                         {
                             "label": "2-1 기업정보",
                             "children": [
                                 {
                                     "label": "업종코드 조회",
-                                    "screenId": "IA-ORG-032",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-company-info-industry-code-search"
                                 },
                                 {
                                     "label": "주소 찾기",
-                                    "screenId": "IA-ORG-033",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-company-info-address-search"
                                 },
                                 {
                                     "label": "기술분류",
-                                    "screenId": "IA-ORG-034",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-company-info-technology-category"
                                 },
                                 {
                                     "label": "품목설명",
-                                    "screenId": "IA-ORG-035",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-company-info-item-description"
                                 },
                                 {
                                     "label": "기업정보 관리",
-                                    "screenId": "IA-ORG-036",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-company-info-company-management"
                                 }
                             ]
                         },
                         {
                             "label": "(3) 평가 신청하기",
-                            "screenId": "IA-ORG-037",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-evaluation-application"
                         },
                         {
                             "label": "(4) 최종 확인",
-                            "screenId": "IA-ORG-038",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-final-review"
                         },
                         {
                             "label": "(5) 완료 화면",
-                            "screenId": "IA-ORG-039",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-complete"
                         }
                     ]
                 },
@@ -1507,48 +1675,55 @@
                     "children": [
                         {
                             "label": "(1) 고객정보활용동의",
-                            "screenId": "IA-ORG-040",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-investment-model-customer-consent"
                         },
                         {
                             "label": "(2) 기업·기술정보 입력",
-                            "screenId": "IA-ORG-041",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-investment-model-company-technology-info"
                         },
                         {
                             "label": "2-1 기업정보",
                             "children": [
                                 {
                                     "label": "업종코드 조회",
-                                    "screenId": "IA-ORG-042",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-company-info-industry-code-search"
                                 },
                                 {
                                     "label": "주소 찾기",
-                                    "screenId": "IA-ORG-043",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-company-info-address-search"
                                 },
                                 {
                                     "label": "기술분류",
-                                    "screenId": "IA-ORG-044",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-company-info-technology-category"
                                 },
                                 {
                                     "label": "품목설명",
-                                    "screenId": "IA-ORG-045",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-company-info-item-description"
                                 },
                                 {
                                     "label": "기업정보 관리",
-                                    "screenId": "IA-ORG-046",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-company-info-company-management"
                                 }
                             ]
                         },
@@ -1557,9 +1732,10 @@
                             "children": [
                                 {
                                     "label": "입력도우미",
-                                    "screenId": "IA-ORG-047",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-representative-capability-career-input-helper"
                                 }
                             ]
                         },
@@ -1568,35 +1744,40 @@
                             "children": [
                                 {
                                     "label": "거래유형 설명",
-                                    "screenId": "IA-ORG-048",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-additional-company-info-transaction-type-guide"
                                 },
                                 {
                                     "label": "전문기술/숙련기술 정의",
-                                    "screenId": "IA-ORG-049",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-additional-company-info-technology-definition"
                                 }
                             ]
                         },
                         {
                             "label": "(3) 평가 신청하기",
-                            "screenId": "IA-ORG-050",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-investment-model-evaluation-application"
                         },
                         {
                             "label": "(4) 최종 확인",
-                            "screenId": "IA-ORG-051",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-investment-model-final-review"
                         },
                         {
                             "label": "(5) 완료 화면",
-                            "screenId": "IA-ORG-052",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-investment-model-complete"
                         }
                     ]
                 }
@@ -1608,41 +1789,47 @@
             "children": [
                 {
                     "label": "(1) Tech-Index 선택",
-                    "screenId": "IA-ORG-053",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-batch-evaluation-tech-index-selection"
                 },
                 {
                     "label": "(2) 평가내역조회/일괄평가 진행 선택",
                     "screen": {
-                        "screenId": "IA-ORG-054",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "org-batch-evaluation-evaluation-history-or-batch"
                     },
                     "children": [
                         {
                             "label": "(3) 대량정보 조회 신청",
-                            "screenId": "IA-ORG-055",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-bulk-data-request"
                         },
                         {
                             "label": "(4) 대량정보 조회 신청 완료",
-                            "screenId": "IA-ORG-056",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-bulk-data-complete"
                         },
                         {
                             "label": "(3) 일괄평가 진행 신청",
-                            "screenId": "IA-ORG-057",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-batch-evaluation-request"
                         },
                         {
                             "label": "(4) 일괄평가 신청 완료",
-                            "screenId": "IA-ORG-058",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-batch-evaluation-complete"
                         }
                     ]
                 }
@@ -1655,24 +1842,27 @@
                 {
                     "label": "특허등급평가 조회",
                     "screen": {
-                        "screenId": "IA-ORG-059",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "org-patent-evaluation-patent-grade-list"
                     },
                     "children": [
                         {
                             "label": "특허등급평가 결과",
                             "screen": {
-                                "screenId": "IA-ORG-060",
+                                "screenId": null,
                                 "status": "대기중",
-                                "version": "미배포"
+                                "version": "미배포",
+                                "key": "org-patent-evaluation-patent-grade-list-patent-grade-result"
                             },
                             "children": [
                                 {
                                     "label": "보고서",
-                                    "screenId": "IA-ORG-061",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-patent-evaluation-patent-grade-list-patent-grade-result-report"
                                 }
                             ]
                         }
@@ -1687,109 +1877,125 @@
                 {
                     "label": "기업혁신성장보고서 조회",
                     "screen": {
-                        "screenId": "IA-ORG-062",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "org-k-bigx-report-innovation-growth-report"
                     },
                     "children": [
                         {
                             "label": "정보 이용 동의",
-                            "screenId": "IA-ORG-063",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-information-consent"
                         },
                         {
                             "label": "진단브리핑",
-                            "screenId": "IA-ORG-064",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing"
                         },
                         {
                             "label": "기업현황",
-                            "screenId": "IA-ORG-065",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-company-overview"
                         },
                         {
                             "label": "기업혁신정보",
                             "children": [
                                 {
                                     "label": "기술분야개요",
-                                    "screenId": "IA-ORG-066",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-technology-overview"
                                 },
                                 {
                                     "label": "재무정보",
-                                    "screenId": "IA-ORG-067",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-financial-info"
                                 },
                                 {
                                     "label": "기술부문",
-                                    "screenId": "IA-ORG-068",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-technology"
                                 },
                                 {
                                     "label": "R&D부문",
-                                    "screenId": "IA-ORG-069",
+                                    "screenId": null,
                                     "status": "대기중",
-                                    "version": "미배포"
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-rnd"
                                 }
                             ]
                         },
                         {
                             "label": "Tech-Index",
-                            "screenId": "IA-ORG-070",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-tech-index"
                         },
                         {
                             "label": "신용/재무정보",
-                            "screenId": "IA-ORG-071",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info"
                         },
                         {
                             "label": "활동성정보",
-                            "screenId": "IA-ORG-072",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-activity-info"
                         },
                         {
                             "label": "인쇄 출력물 선택",
-                            "screenId": "IA-ORG-073",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-print-output-selection"
                         },
                         {
                             "label": "보고서 출력",
-                            "screenId": "IA-ORG-074",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-report-print"
                         }
                     ]
                 },
                 {
                     "label": "보고서 이력 조회",
                     "screen": {
-                        "screenId": "IA-ORG-075",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "org-k-bigx-report-report-history"
                     },
                     "children": [
                         {
                             "label": "보고서 보기",
-                            "screenId": "IA-ORG-076",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-report-history-report-view"
                         },
                         {
                             "label": "보고서 출력",
-                            "screenId": "IA-ORG-077",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-report-history-report-print"
                         }
                     ]
                 }
@@ -1801,9 +2007,10 @@
             "children": [
                 {
                     "label": "탄소중립",
-                    "screenId": "IA-ORG-078",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-carbon-neutrality"
                 }
             ]
         },
@@ -1814,72 +2021,82 @@
                 {
                     "label": "내 정보 수정",
                     "screen": {
-                        "screenId": "IA-ORG-079",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "org-mypage-profile-edit"
                     },
                     "children": [
                         {
                             "label": "업종코드 조회",
-                            "screenId": "IA-ORG-080",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-mypage-profile-edit-industry-code-search"
                         },
                         {
                             "label": "주소 찾기",
-                            "screenId": "IA-ORG-081",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-mypage-profile-edit-address-search"
                         }
                     ]
                 },
                 {
                     "label": "평가이력 조회",
-                    "screenId": "IA-ORG-082",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-mypage-evaluation-history"
                 },
                 {
                     "label": "K-BIGx 보고서 이력",
                     "screen": {
-                        "screenId": "IA-ORG-084",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "org-mypage-k-bigx-report-history"
                     },
                     "children": [
                         {
                             "label": "보고서 보기",
-                            "screenId": "IA-ORG-085",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-mypage-k-bigx-report-history-report-view"
                         },
                         {
                             "label": "보고서 출력",
-                            "screenId": "IA-ORG-086",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-mypage-k-bigx-report-history-report-print"
                         }
                     ]
                 },
                 {
                     "label": "하위 계정 진행 현황",
-                    "screenId": "IA-ORG-087",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-mypage-sub-account-progress"
                 },
                 {
                     "label": "1:1 문의 내역",
                     "screen": {
-                        "screenId": "IA-ORG-088",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "org-mypage-inquiry-history"
                     },
                     "children": [
                         {
                             "label": "문의하기 상세",
-                            "screenId": "IA-ORG-089",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-mypage-inquiry-history-inquiry-detail"
                         }
                     ]
                 }
@@ -1892,52 +2109,59 @@
                 {
                     "label": "공지사항",
                     "screen": {
-                        "screenId": "IA-ORG-090",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "org-notice-announcements"
                     },
                     "children": [
                         {
                             "label": "상세",
-                            "screenId": "IA-ORG-091",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-notice-announcements-detail"
                         }
                     ]
                 },
                 {
                     "label": "자주 묻는 질문",
-                    "screenId": "IA-ORG-092",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-notice-faq"
                 },
                 {
                     "label": "1:1 문의 등록",
                     "screen": {
-                        "screenId": "IA-ORG-093",
+                        "screenId": null,
                         "status": "대기중",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "key": "org-notice-inquiry-create"
                     },
                     "children": [
                         {
                             "label": "문의 완료",
-                            "screenId": "IA-ORG-094",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-notice-inquiry-create-inquiry-complete"
                         },
                         {
                             "label": "개인정보 수집 및 이용 안내",
-                            "screenId": "IA-ORG-095",
+                            "screenId": null,
                             "status": "대기중",
-                            "version": "미배포"
+                            "version": "미배포",
+                            "key": "org-notice-inquiry-create-privacy-consent-guide"
                         }
                     ]
                 },
                 {
                     "label": "자료실",
-                    "screenId": "IA-ORG-096",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-notice-resources"
                 }
             ]
         },
@@ -1947,9 +2171,10 @@
             "children": [
                 {
                     "label": "기술혁신정보 이용동의",
-                    "screenId": "IA-ORG-097",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-technology-information-consent"
                 }
             ]
         },
@@ -1959,9 +2184,10 @@
             "children": [
                 {
                     "label": "404 에러 화면",
-                    "screenId": "IA-ORG-098",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-not-found"
                 }
             ]
         },
@@ -1971,9 +2197,10 @@
             "children": [
                 {
                     "label": "500 에러 화면",
-                    "screenId": "IA-ORG-099",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-server-error"
                 }
             ]
         },
@@ -1983,9 +2210,10 @@
             "children": [
                 {
                     "label": "정기점검 화면",
-                    "screenId": "IA-ORG-100",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-maintenance"
                 }
             ]
         },
@@ -1995,9 +2223,10 @@
             "children": [
                 {
                     "label": "우편번호 검색",
-                    "screenId": "IA-ORG-101",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-postcode-search"
                 }
             ]
         },
@@ -2007,9 +2236,10 @@
             "children": [
                 {
                     "label": "분기별 비밀번호 변경",
-                    "screenId": "IA-ORG-102",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-quarterly-password-change"
                 }
             ]
         },
@@ -2019,9 +2249,10 @@
             "children": [
                 {
                     "label": "이용약관",
-                    "screenId": "IA-ORG-103",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-terms"
                 }
             ]
         },
@@ -2031,15 +2262,17 @@
             "children": [
                 {
                     "label": "개인정보 처리방침",
-                    "screenId": "IA-ORG-104",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-privacy-policy"
                 },
                 {
                     "label": "알기 쉬운 개인처리방침",
-                    "screenId": "IA-ORG-105",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-privacy-policy-easy-privacy-policy"
                 }
             ]
         },
@@ -2049,9 +2282,10 @@
             "children": [
                 {
                     "label": "최초 비밀번호 변경",
-                    "screenId": "IA-ORG-106",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-initial-password-change"
                 }
             ]
         },
@@ -2061,9 +2295,10 @@
             "children": [
                 {
                     "label": "로그인 연장",
-                    "screenId": "IA-ORG-107",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-session-extension"
                 }
             ]
         },
@@ -2073,9 +2308,10 @@
             "children": [
                 {
                     "label": "로그아웃 종료",
-                    "screenId": "IA-ORG-108",
+                    "screenId": null,
                     "status": "대기중",
-                    "version": "미배포"
+                    "version": "미배포",
+                    "key": "org-logout"
                 }
             ]
         }

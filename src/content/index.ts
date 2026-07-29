@@ -8,8 +8,11 @@ import assetVersionsGenerated from './asset-versions.generated.json'
 import releaseNotesGenerated from './release-notes.generated.json'
 import homeJson from './home.json'
 import publishingIndexJson from './publishing-index.json'
+import screenRegistryGenerated from './screen-registry.generated.json'
+import screenRegistryJson from './screen-registry.json'
 import {
     isAssetKind,
+    isScreenImplementationStatus,
     isUserType,
     isStatus,
     type AssetKind,
@@ -19,6 +22,7 @@ import {
     type HomeContent,
     type PublishingIndexContent,
     type ReleaseNote,
+    type ScreenRegistryItem,
     type ScreenInfo,
     type StructureNode,
 } from './types'
@@ -51,10 +55,58 @@ const parseUserType = (value: unknown, where: string): UserType | undefined => {
     return value
 }
 
+const USER_TYPE_PATH_PREFIX: Record<UserType, string> = {
+    기업: '/corp',
+    기관: '/org',
+}
+
+type ScreenRegistrySourceItem = Omit<
+    ScreenRegistryItem,
+    'implemented' | 'implementationStatus' | 'version' | 'isCurrent'
+>
+
+const parseScreenRegistryItem = (value: unknown, index: number): ScreenRegistrySourceItem => {
+    const where = `screen-registry.json > screens[${index}]`
+    if (!isRecord(value)) {
+        throw new Error(`[content] ${where}: 객체여야 합니다.`)
+    }
+    if (typeof value.key !== 'string' || value.key.length === 0) {
+        throw new Error(`[content] ${where}: key 가 필요합니다.`)
+    }
+    if (value.screenId !== null && typeof value.screenId !== 'string') {
+        throw new Error(`[content] ${where}: screenId 는 발급된 문자열 또는 미발급 상태인 null 이어야 합니다.`)
+    }
+    const userType = parseUserType(value.userType, `${where} > userType`)
+    if (userType === undefined) {
+        throw new Error(`[content] ${where}: userType 이 필요합니다.`)
+    }
+    const pathPrefix = USER_TYPE_PATH_PREFIX[userType]
+    const hasUserTypePath =
+        typeof value.path === 'string' && (value.path === pathPrefix || value.path.startsWith(`${pathPrefix}/`))
+    if (typeof value.path !== 'string' || !hasUserTypePath) {
+        throw new Error(
+            `[content] ${where}: ${userType} 화면 path 는 "${pathPrefix}" 또는 "${pathPrefix}/..." 형태여야 합니다.`,
+        )
+    }
+    if (typeof value.name !== 'string' || value.name.length === 0) {
+        throw new Error(`[content] ${where}: name 이 필요합니다.`)
+    }
+    return {
+        key: value.key,
+        screenId: value.screenId,
+        userType,
+        path: value.path,
+        name: value.name,
+    }
+}
+
 // leaf 든, branch 의 screen 필드든, '화면 1건'의 형태는 동일하다 — 한 곳에서 검증한다.
 const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenInfo => {
-    if (typeof value.screenId !== 'string') {
-        throw new Error(`[content] ${where}: screenId 가 필요합니다.`)
+    if (value.key !== undefined && (typeof value.key !== 'string' || value.key.length === 0)) {
+        throw new Error(`[content] ${where}: key 는 비어 있지 않은 문자열이어야 합니다.`)
+    }
+    if (value.screenId !== null && typeof value.screenId !== 'string') {
+        throw new Error(`[content] ${where}: screenId 는 발급된 문자열 또는 미발급 상태인 null 이어야 합니다.`)
     }
     if (typeof value.status !== 'string' || !isStatus(value.status)) {
         throw new Error(`[content] ${where}: status "${String(value.status)}" 이(가) 유효하지 않습니다.`)
@@ -64,6 +116,7 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
     }
     const userType = parseUserType(value.userType, `${where} > userType`)
     return {
+        ...(typeof value.key === 'string' ? {key: value.key} : {}),
         screenId: value.screenId,
         status: value.status,
         version: value.version,
@@ -176,5 +229,105 @@ export const HOME_CONTENT: HomeContent = parseHomeContent(homeJson)
 
 export const PUBLISHING_INDEX_CONTENT: PublishingIndexContent = parsePublishingIndexContent(publishingIndexJson)
 
-export {USER_TYPE_VALUES, isStructureBranch, STATUS_VALUES} from './types'
-export type {UserType, CommonLayout, Status, StructureGroup, StructureNode} from './types'
+const SCREEN_REGISTRY_SOURCE = screenRegistryJson.screens.map(parseScreenRegistryItem)
+
+export const SCREEN_REGISTRY: ScreenRegistryItem[] = SCREEN_REGISTRY_SOURCE.map((screen) => {
+    const generated = screenRegistryGenerated.screens.find((item) => item.key === screen.key)
+    if (
+        generated === undefined ||
+        typeof generated.implemented !== 'boolean' ||
+        !isScreenImplementationStatus(generated.implementationStatus) ||
+        typeof generated.version !== 'string' ||
+        typeof generated.isCurrent !== 'boolean'
+    ) {
+        throw new Error(
+            `[content] screen-registry.generated.json: key "${screen.key}"의 구현 상태가 유효하지 않습니다.`,
+        )
+    }
+    return {
+        ...screen,
+        implemented: generated.implemented,
+        implementationStatus: generated.implementationStatus,
+        version: generated.version,
+        isCurrent: generated.isCurrent,
+    }
+})
+
+const assertUniqueScreenRegistryField = (field: 'key' | 'path') => {
+    const values = SCREEN_REGISTRY.map((screen) => screen[field])
+    const duplicate = values.find((value, index) => values.indexOf(value) !== index)
+    if (duplicate !== undefined) {
+        throw new Error(`[content] screen-registry.json: ${field} "${duplicate}" 이(가) 중복되었습니다.`)
+    }
+}
+
+assertUniqueScreenRegistryField('key')
+assertUniqueScreenRegistryField('path')
+
+type IndexedScreenReference = {
+    key: string
+    userType: UserType
+}
+
+const collectIndexedScreenReferences = (): IndexedScreenReference[] => {
+    const collectNode = (node: StructureNode, inheritedUserType?: UserType): IndexedScreenReference[] => {
+        const nodeUserType = node.userType ?? inheritedUserType
+        if ('children' in node) {
+            const ownScreen =
+                node.screen?.key !== undefined
+                    ? [{key: node.screen.key, userType: node.screen.userType ?? nodeUserType}]
+                    : []
+            const children = node.children.flatMap((child) => collectNode(child, nodeUserType))
+            return [...ownScreen, ...children].filter(
+                (screen): screen is IndexedScreenReference => screen.userType !== undefined,
+            )
+        }
+        return node.key !== undefined && nodeUserType !== undefined ? [{key: node.key, userType: nodeUserType}] : []
+    }
+
+    return PUBLISHING_INDEX_CONTENT.structureGroups.flatMap((group) =>
+        group.children.flatMap((node) => collectNode(node, group.userType)),
+    )
+}
+
+const INDEXED_SCREEN_REFERENCES = collectIndexedScreenReferences()
+
+const duplicateIndexedKey = INDEXED_SCREEN_REFERENCES.map((screen) => screen.key).find(
+    (key, index, keys) => keys.indexOf(key) !== index,
+)
+if (duplicateIndexedKey !== undefined) {
+    throw new Error(`[content] publishing-index.json: key "${duplicateIndexedKey}" 이(가) 중복되었습니다.`)
+}
+
+SCREEN_REGISTRY.forEach((registeredScreen) => {
+    const indexedScreen = INDEXED_SCREEN_REFERENCES.find((screen) => screen.key === registeredScreen.key)
+    if (indexedScreen === undefined) {
+        throw new Error(
+            `[content] screen-registry.json: key "${registeredScreen.key}"에 대응하는 퍼블리싱 인덱스 화면이 없습니다.`,
+        )
+    }
+    if (indexedScreen.userType !== registeredScreen.userType) {
+        throw new Error(
+            `[content] ${registeredScreen.key}: 퍼블리싱 인덱스와 경로 레지스트리의 userType이 일치하지 않습니다.`,
+        )
+    }
+})
+
+INDEXED_SCREEN_REFERENCES.forEach((indexedScreen) => {
+    if (!SCREEN_REGISTRY.some((registeredScreen) => registeredScreen.key === indexedScreen.key)) {
+        throw new Error(
+            `[content] publishing-index.json: key "${indexedScreen.key}"에 대응하는 화면 경로가 등록되지 않았습니다.`,
+        )
+    }
+})
+
+export {USER_TYPE_VALUES, isStructureBranch, SCREEN_IMPLEMENTATION_STATUS_VALUES, STATUS_VALUES} from './types'
+export type {
+    UserType,
+    CommonLayout,
+    ScreenImplementationStatus,
+    ScreenRegistryItem,
+    Status,
+    StructureGroup,
+    StructureNode,
+} from './types'

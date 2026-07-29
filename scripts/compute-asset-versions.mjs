@@ -2,7 +2,7 @@
 // 결과 파일은 릴리스 커밋에 포함되며, Vercel·로컬 빌드는 git을 다시 조회하지 않고 이 스냅샷만 읽는다.
 // ⚠️ 직접 실행할 때도 RELEASE_VERSION=vX.Y.Z 가 반드시 필요하다.
 
-import {readFileSync, writeFileSync} from 'node:fs'
+import {existsSync, readFileSync, writeFileSync} from 'node:fs'
 import {execFileSync} from 'node:child_process'
 import {format, resolveConfig} from 'prettier'
 import {resolvePathVersion} from './git-info.mjs'
@@ -10,6 +10,10 @@ import {resolvePathVersion} from './git-info.mjs'
 const SOURCE = 'src/content/publishing-index.json'
 const OUTPUT = 'src/content/asset-versions.generated.json'
 const RELEASE_NOTES_OUTPUT = 'src/content/release-notes.generated.json'
+const SCREEN_REGISTRY_SOURCE = 'src/content/screen-registry.json'
+const SCREEN_REGISTRY_OUTPUT = 'src/content/screen-registry.generated.json'
+const SCREEN_REGISTRY_GENERATED_NOTICE =
+    '자동 생성 파일 — 직접 수정하지 않습니다. 경로·화면 정보는 screen-registry.json에서 관리하며, page 파일 존재 여부는 dev·build·verify 시 자동 반영되고 릴리스 버전은 main 릴리스에서 Git 이력으로 확정됩니다.'
 const RELEASE_NOTES_DRAFT = 'RELEASE_NOTES_DRAFT.md'
 const EMPTY_RELEASE_NOTES_DRAFT = `# 다음 릴리스 변경사항
 
@@ -57,6 +61,7 @@ const applyBaselineVersion = (version, path) => {
 }
 
 const {assetVersions} = JSON.parse(readFileSync(SOURCE, 'utf8'))
+const screenRegistry = JSON.parse(readFileSync(SCREEN_REGISTRY_SOURCE, 'utf8'))
 
 const generated = assetVersions.map(({name, path}) => {
     const resolvedVersion = applyBaselineVersion(resolvePathVersion(path), path)
@@ -68,6 +73,28 @@ const generated = assetVersions.map(({name, path}) => {
 
 const metadata = {version: releaseVersion, assets: generated}
 writeFileSync(OUTPUT, await formatJson(metadata, OUTPUT))
+
+const PAGE_EXTENSIONS = ['tsx', 'ts', 'jsx', 'js']
+const generatedScreens = screenRegistry.screens.map((screen) => {
+    const pagePath = PAGE_EXTENSIONS.map(
+        (extension) => `src/app${screen.path === '/' ? '' : screen.path}/page.${extension}`,
+    ).find((candidate) => existsSync(candidate))
+    const implemented = pagePath !== undefined
+    const resolvedVersion = implemented ? resolvePathVersion(pagePath) : '미배포'
+    const version = implemented && resolvedVersion === '미배포' ? releaseVersion : resolvedVersion
+
+    return {
+        key: screen.key,
+        implemented,
+        implementationStatus: implemented ? 'in-progress' : 'planned',
+        version,
+        isCurrent: implemented && version === releaseVersion,
+    }
+})
+writeFileSync(
+    SCREEN_REGISTRY_OUTPUT,
+    await formatJson({'//': SCREEN_REGISTRY_GENERATED_NOTICE, screens: generatedScreens}, SCREEN_REGISTRY_OUTPUT),
+)
 
 const git = (...args) => execFileSync('git', args, {encoding: 'utf8'}).trim()
 const previousTag = git('tag', '--list', 'v[0-9]*.[0-9]*.[0-9]*', '--sort=-v:refname').split('\n')[0]
@@ -100,8 +127,11 @@ writeFileSync(RELEASE_NOTES_OUTPUT, await formatJson({releases}, RELEASE_NOTES_O
 writeFileSync(RELEASE_NOTES_DRAFT, EMPTY_RELEASE_NOTES_DRAFT)
 
 const updated = generated.filter((a) => a.isCurrent).map((a) => a.name)
+const updatedScreens = generatedScreens.filter((screen) => screen.isCurrent).map((screen) => screen.key)
 console.log(
     `✅ 릴리스 메타데이터 생성 완료 (${releaseVersion}, 릴리스 노트: ${
         draftChanges.length > 0 ? '수동 초안' : '커밋 제목 자동 수집'
-    }${updated.length ? `, 변경 자산: ${updated.join(', ')}` : ''})`,
+    }${updated.length ? `, 변경 자산: ${updated.join(', ')}` : ''}${
+        updatedScreens.length ? `, 변경 화면: ${updatedScreens.join(', ')}` : ''
+    })`,
 )
