@@ -455,7 +455,6 @@ const MainSecondSection = () => {
             tabIndex={-1}
             data-stack-page
             aria-labelledby="service-intro-title"
-            // pager-off:snap-start — 페이저가 꺼진 화면의 스크롤 스냅 지점(StackPager 가 컨테이너 담당).
             // pager-on:overflow-y-auto — 교차용 안쪽 스크롤 트랙. 페이저는 이 값이 auto/scroll 일 때만
             // 양보하므로, 트랙이 없는 화면에서는 한 번의 제스처가 그대로 3섹션으로 넘어간다.
             // --intro-progress 기본 0 은 JS 가 붙기 전과 트랙이 없는 화면의 상태다(위층이 열린 채).
@@ -465,7 +464,7 @@ const MainSecondSection = () => {
             // 넘치는 카피 하단이 잘렸다. 페이저가 꺼진 화면에서는 여느 섹션처럼 내용만큼 늘어난다.
             className={cn(
                 stackPageClassName,
-                'bg-main-intro-surface pager-off:snap-start pager-on:overflow-y-auto relative flex min-h-dvh flex-col py-28',
+                'bg-main-intro-surface pager-on:overflow-y-auto relative flex min-h-dvh flex-col py-28',
                 'pager-on:h-dvh pager-on:min-h-0 pager-on:py-0',
                 ENTRY_STATE_CLASS,
                 '[--intro-progress:0] [--mask-radius:var(--radius-3xl)]',

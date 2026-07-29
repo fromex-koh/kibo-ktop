@@ -332,12 +332,15 @@ const StackPager = ({
                 data-stack-pager
                 data-active-page={activePage}
                 data-stack-transition={transition}
-                // 페이저가 꺼지는 화면에서는 자연 스크롤이라 조금만 굴렸을 때 섹션 경계가 어중간하게
-                // 걸린 채 멈춘다. 스크롤 스냅 컨테이너로 만들어 같은 동작에서 다음 섹션까지 이어지게 한다.
-                // 각 페이지의 스냅 지점은 페이지 쪽에서 pager-off:snap-start 로 선언한다.
+                // 페이저가 꺼지는 화면에서는 스크롤 스냅을 쓰지 않는다 — 모바일의 2·3섹션은 내용을 모두
+                // 펼쳐 화면보다 훨씬 길어서(812 화면에 1992·3815), 스냅을 걸면 mandatory 든 proximity 든
+                // 스크롤이 붙잡히는 느낌이 남는다. 그냥 평범한 세로 스크롤로 둔다.
+                //
+                // 컨테이너를 스크롤러로 두는 것은 유지한다 — 히어로 배경의 확대·페이드가 이 컨테이너의
+                // scrollTop 을 읽는다(hero-background.tsx).
                 className={cn(
                     stackPagerRootClassName,
-                    'pager-off:h-dvh pager-off:snap-y pager-off:snap-mandatory pager-off:overflow-y-auto pager-off:overscroll-y-contain',
+                    'pager-off:h-dvh pager-off:overflow-y-auto pager-off:overscroll-y-contain',
                     className,
                 )}
             >

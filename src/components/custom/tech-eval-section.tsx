@@ -45,13 +45,12 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
             tabIndex={-1}
             data-stack-page
             aria-label="기술평가 서비스"
-            // pager-off:snap-start — 페이저가 꺼진 화면의 스크롤 스냅 지점(StackPager 가 컨테이너 담당).
             className={cn(
                 stackPageClassName,
                 // md 이상은 원래 디자인 높이가 뷰포트를 넘을 수 있어 섹션 안에서 이어서 스크롤한다.
                 // 세로 여백은 섹션이 아니라 롤링 블록이 잡는다 — 첫 화면을 정확히 한 화면(dvh)으로
                 // 두고 그 안에서 시안 간격을 맞춰야 하는데, 섹션에 주면 아래 푸터까지 함께 밀린다.
-                'bg-background pager-off:snap-start relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:overflow-y-auto md:pt-0',
+                'bg-background relative flex min-h-dvh flex-col py-28 md:h-dvh md:min-h-0 md:overflow-y-auto md:pt-0',
                 // 푸터가 이 페이지의 마지막 요소라 아래 여백을 섹션이 아니라 푸터 자신이 끝낸다 —
                 // 그대로 두면 푸터 밑으로 섹션 padding 만큼 빈 배경 띠가 남는다.
                 bottomContent && 'pb-0',
