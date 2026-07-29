@@ -42,8 +42,11 @@ const MAIN_HEADER_NAVIGATION = {
 // 페이저가 켜진 화면은 StackPager 의 active-page, 꺼진 화면은 MainPageHeaderState 가 쓰는 natural-page.
 const MAIN_PAGE_CLASS = [
     '[&_header]:bg-transparent',
-    '[&_header]:transition-colors',
-    '[&_header]:duration-600',
+    '[&_header]:transition-[background-color,translate]',
+    '[&_header]:duration-300',
+    '[&_header]:ease-out',
+    'motion-reduce:[&_header]:transition-none',
+    'data-[header-hidden=true]:[&_header]:-translate-y-full',
     'data-[active-page=1]:[&_header]:bg-background',
     'data-[active-page=2]:[&_header]:bg-background',
     'data-[natural-page=1]:[&_header]:bg-background',

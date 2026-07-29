@@ -2,7 +2,8 @@ import type {Metadata} from 'next'
 import type {ReactNode} from 'react'
 import Link from 'next/link'
 import {CircleCheck, Lock, Plus, X} from 'lucide-react'
-import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
+import {type HeaderNavigationByUserType} from '@/components/composite/header'
+import SelfDiagnosisInputHeader from '@/app/component-guide/self-diagnosis/_components/self-diagnosis-input-header'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
 import {
@@ -442,7 +443,7 @@ const FORM_TABS: readonly FormTabItem[] = [
 const CompanyInfoPage = () => (
     <div className="bg-background flex min-h-dvh flex-col">
         <SkipNav links={SKIP_LINKS} />
-        <Header
+        <SelfDiagnosisInputHeader
             overlay={false}
             showThemeToggle
             logoHref="/component-guide/main-page"

@@ -73,6 +73,14 @@ const CASE_SPECS = [
         when: '되돌릴 수 있는 동작을 한 번 더 묻는다. 소제목으로 무엇을 묻는지, 본문으로 그 결과를 알린다.',
     },
     {
+        key: 'draft-exit',
+        label: '작성 종료 확인',
+        slots: 'Title + Description + 본문 <p>',
+        cta: '보조 + 주 · 반씩(246)',
+        close: '있음',
+        when: '작성 중인 화면을 나가기 전에 자동 저장 여부를 알리고, 계속 작성하거나 나가도록 선택하게 한다.',
+    },
+    {
         key: 'session',
         label: '시간 제한 안내',
         slots: 'Title + Description(숫자만 primary) + 본문 <p>',
@@ -424,7 +432,7 @@ const DialogGuidePage = () => (
                         케이스 큐레이션
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        자주 쓰는 7가지 구성입니다. 표에서 어떤 슬롯 조합인지 확인하고, 아래 같은 이름의 버튼을 눌러
+                        자주 쓰는 8가지 구성입니다. 표에서 어떤 슬롯 조합인지 확인하고, 아래 같은 이름의 버튼을 눌러
                         실제 동작을 보세요. 폭 588 · 반경 24 · 여백 40/40/24 는 모든 케이스가 공유합니다.
                     </p>
                 </div>
@@ -480,6 +488,35 @@ const DialogGuidePage = () => (
                             </div>
                             <DialogFooter>
                                 <Button size="2xl">로그아웃</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+
+                    {/* 작성 종료 확인 — 자동 저장 안내 후 계속 작성하거나 화면을 나가도록 선택 */}
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size="lg">작성 종료 확인</Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle>작성 종료</DialogTitle>
+                            </DialogHeader>
+                            <div className={cn(dialogBodyClassName, 'gap-4')}>
+                                <DialogDescription>입력 화면을 나가시겠습니까?</DialogDescription>
+                                <p className="typo-body-xl-regular text-label-foreground">
+                                    현재까지 작성한 내용은 자동으로 저장되었습니다. 입력 화면을 나가도 나중에 이어서
+                                    작성할 수 있습니다.
+                                </p>
+                            </div>
+                            <DialogFooter>
+                                <DialogClose asChild>
+                                    <Button variant="tertiary" size="2xl">
+                                        계속 작성
+                                    </Button>
+                                </DialogClose>
+                                <DialogClose asChild>
+                                    <Button size="2xl">저장 후 나가기</Button>
+                                </DialogClose>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
