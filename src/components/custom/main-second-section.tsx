@@ -1,9 +1,9 @@
 'use client'
 
-import {useEffect, useRef} from 'react'
+import {useCallback, useEffect, useRef, useState, type SyntheticEvent} from 'react'
 import Image from 'next/image'
 import {BriefcaseBusiness} from 'lucide-react'
-import sectionBg from '@public/images/main-hero/section-2-bg.webp'
+import sectionBg from '@public/images/main-hero/section-2-bg-display.webp'
 import {stackPageClassName} from '@/components/theme/stack-pager.variants'
 import {cn} from '@/lib/utils'
 
@@ -20,24 +20,23 @@ const BUSINESS_STEPS = [
 // 트랙은 남은 스크롤로 제스처를 흡수해, 전환이 시작되자마자 3섹션으로 넘어가지 않게 한다.
 const SWAP_THRESHOLD = 0.05
 
-// 진입 상태 — 섹션이 활성 스택 페이지가 아니면 1. 왼쪽 셀에 두고 아래 조리개 식이 읽는다.
-// 되감기도 자동이다 — 다음 섹션으로 넘어가면 다시 1 이 되고 돌아오면 0 이 된다.
+// 진입 상태 — 사진 자체를 자르지 않고 사진 위의 단색 패널 네 장을 여닫는다. 섹션 활성 직후에는
+// cover=1이고, 이미지 준비 뒤 data-entry-ready를 켜면 0으로 열린다. 사진은 패널 아래에서 처음부터
+// 전체 렌더링되므로 최초 clip 해제 순간의 래스터링 번쩍임이 생기지 않는다.
 // 페이저가 꺼진 화면과 모션 최소화 환경에서는 규칙이 적용되지 않아 늘 0(열린 상태)이다. [KWCAG 6.3.1]
 const ENTRY_STATE_CLASS = [
-    '[--intro-entry:0]',
-    'motion-safe:pager-on:[[data-stack-page]:not([data-stack-state=active])_&]:[--intro-entry:1]',
+    '[--intro-entry-cover:0]',
+    'motion-safe:pager-on:[[data-stack-page]:not([data-entry-ready=true])_&]:[--intro-entry-cover:1]',
 ].join(' ')
 
-// 조리개 — 모서리를 만드는 clip 은 사진의 이것 하나뿐이다. 상위 요소에 라운딩이나 또 다른 clip 을
-// 두면 같은 모서리를 두 번 깎아 안티에일리어싱이 겹치고, 크기가 가까워지는 구간에서 경계가 실선처럼
-// 드러난다. 그래서 셀에는 clip 도 라운딩도 없다(아래층 카피는 면색이 없어 깎을 것이 없다).
-//
-// 왼쪽은 "진입 전"과 "교차 후"가 모두 접힌 상태라 둘 중 큰 값을 쓴다 — 진입 리빌과 교차가 한 식에
-// 들어가므로 상위에 리빌용 clip 을 따로 둘 필요가 없다. 오른쪽은 교차에서만 커진다.
-const SWAP_TRANSITION_CLASS = 'motion-safe:transition-[clip-path] motion-safe:duration-1000 motion-safe:ease-stack'
-const SHRINK_CLASS =
-    '[clip-path:inset(calc(max(var(--intro-progress),var(--intro-entry))*50%)_round_var(--mask-radius))]'
+// 사진 clip은 좌우 교차에만 사용한다. 최초 진입은 아래 IntroEntryCover가 담당해 이미지 래스터링과
+// 애니메이션을 완전히 분리한다.
+const SWAP_TRANSITION_CLASS =
+    'motion-safe:will-change-[clip-path] motion-safe:transition-[clip-path] motion-safe:duration-1000 motion-safe:ease-stack'
+const SHRINK_CLASS = '[clip-path:inset(calc(var(--intro-progress)*50%)_round_var(--mask-radius))]'
 const GROW_CLASS = '[clip-path:inset(calc((1_-_var(--intro-progress))*50%)_round_var(--mask-radius))]'
+const ENTRY_COVER_PANEL_CLASS =
+    'bg-main-intro-surface absolute will-change-[scale] transition-[scale] duration-1000 ease-stack motion-reduce:transition-none'
 
 // 왼쪽 아래층 카피 — 진입 중에는 사진이 접혀 있어 그대로 두면 밑의 카피가 드러난다. 교차 진행도에
 // 맞춰 페이드해 진입 때는 감춰 두고, 사진이 줄어드는 동안 함께 나타나게 한다.
@@ -64,7 +63,15 @@ const CROSSOVER_COPY_CLASS = 'hidden pager-on:flex'
 
 // overflow-hidden 을 두지 않는다 — 아래 배치 프레임은 clip-path 가 이미 상자 밖으로 못 나가게 자르고,
 // 둘을 겹치면 같은 직선 모서리를 두 번 깎아 서브픽셀 경계가 실선으로 드러난다.
-const IntroImage = ({className}: {className?: string}) => (
+const IntroImage = ({
+    className,
+    preload = false,
+    onLoad,
+}: {
+    className?: string
+    preload?: boolean
+    onLoad?: (event: SyntheticEvent<HTMLImageElement>) => void
+}) => (
     <div className={cn('relative', className)}>
         {/* 시안과 같은 구도를 만드는 배치 프레임. Figma 에서 사진은 마스크(588×686)보다 크게
             1415×796 로 깔리고 마스크 왼쪽·위보다 574·89px 앞서 시작한다. object-fit 만으로는
@@ -73,19 +80,43 @@ const IntroImage = ({className}: {className?: string}) => (
               w 1415/588 · h 796/686 · left -574/588 · top -89/686
             프레임 비율(1415:796)이 사진 원본 비율과 같아 안쪽 object-cover 는 추가로 자르지 않는다.
             장식 이미지라 alt="" 로 둔다([KWCAG 5.1.1]). */}
-        {/* priority — 기본 lazy 로 두면 이 섹션이 화면 밖(스택 레이어)에 있는 동안 사진을 받지 않는다.
-            그래서 처음 진입할 때는 조리개가 빈 상자 위에서 열려 인터랙션이 없는 것처럼 보이고,
-            되돌아왔을 때만 캐시가 있어 제대로 보였다. 두 곳이 같은 src 라 요청은 한 번만 나간다. */}
+        {/* 최초 요청에서 Next 이미지 최적화를 기다리지 않도록 표시 크기에 맞춘 전용 WebP를 직접 사용한다.
+            왼쪽 인스턴스는 Next 16의 preload로 head에서 먼저 요청한다. 오른쪽도 같은 src라 네트워크
+            요청과 디코딩 결과를 공유한다. */}
         <div className="absolute top-[-12.9738%] left-[-97.619%] h-[116.035%] w-[240.6463%]">
-            <Image
-                src={sectionBg}
-                alt=""
-                fill
-                priority
-                sizes="(min-width: 768px) 120vw, 240vw"
-                className="object-cover"
-            />
+            <Image src={sectionBg} alt="" fill preload={preload} unoptimized onLoad={onLoad} className="object-cover" />
         </div>
+    </div>
+)
+
+// 이미지 위의 단색 패널 네 장이 가장자리 방향으로 줄어들며 중앙부터 사진을 드러낸다.
+// 이미지 자체는 처음부터 전체 면적으로 렌더링되므로 최초 표시 시 텍스처 업로드로 인한 번쩍임이 없다.
+const IntroEntryCover = () => (
+    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-3xl">
+        <span
+            className={cn(
+                ENTRY_COVER_PANEL_CLASS,
+                'inset-x-0 top-0 h-1/2 origin-top scale-y-[var(--intro-entry-cover)]',
+            )}
+        />
+        <span
+            className={cn(
+                ENTRY_COVER_PANEL_CLASS,
+                'inset-x-0 bottom-0 h-1/2 origin-bottom scale-y-[var(--intro-entry-cover)]',
+            )}
+        />
+        <span
+            className={cn(
+                ENTRY_COVER_PANEL_CLASS,
+                'inset-y-0 left-0 w-1/2 origin-left scale-x-[var(--intro-entry-cover)]',
+            )}
+        />
+        <span
+            className={cn(
+                ENTRY_COVER_PANEL_CLASS,
+                'inset-y-0 right-0 w-1/2 origin-right scale-x-[var(--intro-entry-cover)]',
+            )}
+        />
     </div>
 )
 
@@ -142,9 +173,8 @@ const IntroCopy = ({className, isDuplicate = false}: {className: string; isDupli
 // 레이아웃(1920 시안) — 588 + 24 + 588 = 1200 이라 그대로 grid-layout 의 두 컬럼에 얹힌다.
 // 콘텐츠 높이는 시안의 이미지 마스크(588×686)가 정하고, 그보다 낮은 화면에서는 max-h-full 로 줄어든다.
 //
-// 인터랙션은 두 가지고, 왼쪽 사진에서는 한 clip-path 식으로 합쳐진다(레퍼런스 oneretinaclinic 의
-// Our Value 섹션).
-//  · 진입 리빌 — 섹션이 활성 스택 페이지가 될 때 왼쪽 사진이 조리개처럼 열린다.
+// 인터랙션은 두 가지다(레퍼런스 oneretinaclinic 의 Our Value 섹션).
+//  · 진입 리빌 — 섹션이 활성 스택 페이지가 될 때 사진 위의 단색 패널이 조리개처럼 열린다.
 //  · 좌우 교차 — 안쪽 스크롤 트랙을 한 번 굴리면 왼쪽 사진의 조리개가 줄어들며 밑의 카피가 드러나고,
 //    동시에 오른쪽 사진의 조리개가 커지며 카피를 덮는다. 결과적으로 좌우 배치가 뒤바뀐다.
 //    스크롤 양에 비례해 긁히지 않고 진입 리빌과 같은 1초 전환으로 재생된다.
@@ -152,10 +182,67 @@ const IntroCopy = ({className, isDuplicate = false}: {className: string; isDupli
 // (SCROLLABLE_OVERFLOW), 트랙을 다 굴린 뒤에야 3섹션으로 넘어간다.
 const MainSecondSection = () => {
     const sectionRef = useRef<HTMLElement>(null)
+    const imageReadyFrameRef = useRef(0)
+    const imageReadyStartedRef = useRef(false)
+    const [entryImageReady, setEntryImageReady] = useState(false)
+
+    const confirmEntryImageReady = useCallback((image: HTMLImageElement) => {
+        if (imageReadyStartedRef.current) return
+        imageReadyStartedRef.current = true
+
+        void image
+            .decode()
+            .catch(() => undefined)
+            .then(() => {
+                // decode 직후에도 합성 레이어에 반영되지 않을 수 있어 실제 페인트 프레임까지 보장한다.
+                imageReadyFrameRef.current = window.requestAnimationFrame(() => {
+                    imageReadyFrameRef.current = window.requestAnimationFrame(() => {
+                        setEntryImageReady(true)
+                    })
+                })
+            })
+    }, [])
+
+    const handleEntryImageLoad = useCallback(
+        (event: SyntheticEvent<HTMLImageElement>) => {
+            confirmEntryImageReady(event.currentTarget)
+        },
+        [confirmEntryImageReady],
+    )
+
+    // preload가 hydration보다 먼저 끝난 경우 load 이벤트를 놓칠 수 있어 complete 상태도 함께 확인한다.
+    useEffect(() => {
+        const image = sectionRef.current?.querySelector<HTMLImageElement>('img')
+        if (image?.complete && image.naturalWidth > 0) confirmEntryImageReady(image)
+
+        return () => window.cancelAnimationFrame(imageReadyFrameRef.current)
+    }, [confirmEntryImageReady])
 
     useEffect(() => {
         const section = sectionRef.current
         if (!section) return
+
+        let entryRevealFrame = 0
+        let entrySequence = 0
+
+        const syncEntryReveal = () => {
+            const currentSequence = ++entrySequence
+            window.cancelAnimationFrame(entryRevealFrame)
+            delete section.dataset.entryReady
+
+            if (section.dataset.stackState !== 'active' || !entryImageReady) {
+                return
+            }
+
+            // 별도 사본으로 미리 합성된 이미지를 닫힌 상태에서 두 프레임 확정한 다음 리빌한다.
+            entryRevealFrame = window.requestAnimationFrame(() => {
+                entryRevealFrame = window.requestAnimationFrame(() => {
+                    if (currentSequence === entrySequence && section.dataset.stackState === 'active') {
+                        section.dataset.entryReady = 'true'
+                    }
+                })
+            })
+        }
 
         // 스크롤 양을 그대로 쓰지 않고 0/1 로만 뒤집는다 — 전환 자체는 CSS transition 이 재생한다.
         // 스크롤 이벤트에서 바로 쓴다. 브라우저가 이미 프레임당 한 번으로 묶어 보내고 하는 일도
@@ -170,9 +257,18 @@ const MainSecondSection = () => {
         // 시작해 전환 없이 뚝 바뀐 것처럼 보인다. 처음 한 번 트랙을 되감아 항상 같은 지점에서 시작한다.
         section.scrollTop = 0
         update()
+        const sectionStateObserver = new MutationObserver(syncEntryReveal)
+        sectionStateObserver.observe(section, {attributes: true, attributeFilter: ['data-stack-state']})
+        syncEntryReveal()
         section.addEventListener('scroll', update, {passive: true})
-        return () => section.removeEventListener('scroll', update)
-    }, [])
+        return () => {
+            entrySequence += 1
+            window.cancelAnimationFrame(entryRevealFrame)
+            sectionStateObserver.disconnect()
+            section.removeEventListener('scroll', update)
+            delete section.dataset.entryReady
+        }
+    }, [entryImageReady])
 
     return (
         <section
@@ -204,7 +300,12 @@ const MainSecondSection = () => {
                                 isDuplicate
                                 className={cn(CROSSOVER_COPY_CLASS, BASE_COPY_FADE_CLASS, 'w-full flex-col md:pt-23')}
                             />
-                            <IntroImage className={cn('absolute inset-0', SHRINK_CLASS, SWAP_TRANSITION_CLASS)} />
+                            <IntroImage
+                                preload
+                                onLoad={handleEntryImageLoad}
+                                className={cn('absolute inset-0', SHRINK_CLASS, SWAP_TRANSITION_CLASS)}
+                            />
+                            <IntroEntryCover />
                         </div>
 
                         {/* 오른쪽 셀 — 구조는 왼쪽과 같고 조리개 방향만 반대다. 접혀 있던 사진이 커지며
