@@ -72,6 +72,8 @@ const StackPager = ({
     const isTransitioningRef = useRef(false)
     const isGestureArmedRef = useRef(true)
     const accumulatedDeltaRef = useRef(0)
+    // 이번 제스처가 페이지 안쪽 스크롤에 쓰였는지 — 쓰였다면 같은 제스처로는 페이지를 넘기지 않는다.
+    const hasScrolledInsideRef = useRef(false)
     const transitionTimerRef = useRef(0)
     const gestureTimerRef = useRef(0)
     const [activePage, setActivePage] = useState(0)
@@ -149,6 +151,7 @@ const StackPager = ({
             gestureTimerRef.current = window.setTimeout(() => {
                 isGestureArmedRef.current = true
                 accumulatedDeltaRef.current = 0
+                hasScrolledInsideRef.current = false
             }, WHEEL_GESTURE_IDLE_MS)
         }
 
@@ -175,6 +178,18 @@ const StackPager = ({
                 event.preventDefault()
                 activePageElement.scrollBy({top: event.deltaY, behavior: 'auto'})
                 accumulatedDeltaRef.current = 0
+                // 이 제스처는 안쪽 스크롤용으로 표시하고, 제스처가 끝날 때까지 계속 안쪽만 굴린다.
+                hasScrolledInsideRef.current = true
+                armAfterGestureEnds()
+                return
+            }
+
+            // 안쪽을 굴리던 제스처가 트랙 끝에 닿았다고 해서 그대로 페이지까지 넘기지 않는다.
+            // 한 번 세게 굴렸을 때 2섹션의 두 화면을 지나쳐 1섹션이나 3섹션으로 튀던 원인이다.
+            // 페이지를 넘기려면 손을 떼고(WHEEL_GESTURE_IDLE_MS) 다시 굴려야 한다.
+            if (hasScrolledInsideRef.current) {
+                event.preventDefault()
+                armAfterGestureEnds()
                 return
             }
 
@@ -203,6 +218,7 @@ const StackPager = ({
             }
             touchStartY = event.touches[0].clientY
             isTouchTracking = true
+            hasScrolledInsideRef.current = false
         }
 
         const handleTouchMove = (event: TouchEvent) => {
@@ -212,7 +228,16 @@ const StackPager = ({
             const swipeDistance = touchStartY - event.touches[0].clientY
             const direction = swipeDistance > 0 ? 1 : -1
 
-            if (canScrollPageInside(pages[activePageRef.current], direction)) return
+            if (canScrollPageInside(pages[activePageRef.current], direction)) {
+                hasScrolledInsideRef.current = true
+                return
+            }
+
+            // 휠과 같은 이유 — 안쪽을 스크롤하던 스와이프가 끝에 닿아도 그대로 페이지를 넘기지 않는다.
+            if (hasScrolledInsideRef.current) {
+                event.preventDefault()
+                return
+            }
 
             if (isTransitioningRef.current) {
                 event.preventDefault()
@@ -232,6 +257,7 @@ const StackPager = ({
 
         const handleTouchEnd = () => {
             isTouchTracking = false
+            hasScrolledInsideRef.current = false
         }
 
         // 바로가기 링크(#id) 대응 — 비활성 페이지는 inert 라 앵커 이동만으로는 포커스가 옮겨가지 않는다.
