@@ -29,14 +29,23 @@ const ENTRY_STATE_CLASS = [
     'motion-safe:pager-on:[[data-stack-page]:not([data-entry-ready=true])_&]:[--intro-entry-cover:1]',
 ].join(' ')
 
-// 사진 clip은 좌우 교차에만 사용한다. 최초 진입은 아래 IntroEntryCover가 담당해 이미지 래스터링과
-// 애니메이션을 완전히 분리한다.
+// 왼쪽 사진 clip은 교차 시 축소에만 사용한다. 최초 진입과 오른쪽 사진의 교차 확대는
+// IntroImageCover가 담당해 이미지 래스터링과 애니메이션을 분리한다.
 const SWAP_TRANSITION_CLASS =
     'motion-safe:will-change-[clip-path] motion-safe:transition-[clip-path] motion-safe:duration-1000 motion-safe:ease-stack'
 const SHRINK_CLASS = '[clip-path:inset(calc(var(--intro-progress)*50%)_round_var(--mask-radius))]'
-const GROW_CLASS = '[clip-path:inset(calc((1_-_var(--intro-progress))*50%)_round_var(--mask-radius))]'
 const ENTRY_COVER_PANEL_CLASS =
-    'bg-main-intro-surface absolute will-change-[scale] transition-[scale] duration-1000 ease-stack motion-reduce:transition-none'
+    'bg-main-intro-surface absolute opacity-[0.999] will-change-[scale] transition-[scale] duration-1000 ease-stack motion-reduce:transition-none'
+const COVER_SCALE_CLASS = {
+    entry: {
+        vertical: 'scale-y-[var(--intro-entry-cover)]',
+        horizontal: 'scale-x-[var(--intro-entry-cover)]',
+    },
+    swap: {
+        vertical: 'scale-y-[calc(1_-_var(--intro-progress))]',
+        horizontal: 'scale-x-[calc(1_-_var(--intro-progress))]',
+    },
+} as const
 
 // 왼쪽 아래층 카피 — 진입 중에는 사진이 접혀 있어 그대로 두면 밑의 카피가 드러난다. 교차 진행도에
 // 맞춰 페이드해 진입 때는 감춰 두고, 사진이 줄어드는 동안 함께 나타나게 한다.
@@ -91,30 +100,37 @@ const IntroImage = ({
 
 // 이미지 위의 단색 패널 네 장이 가장자리 방향으로 줄어들며 중앙부터 사진을 드러낸다.
 // 이미지 자체는 처음부터 전체 면적으로 렌더링되므로 최초 표시 시 텍스처 업로드로 인한 번쩍임이 없다.
-const IntroEntryCover = () => (
-    <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-3xl">
+const IntroImageCover = ({mode, className}: {mode: keyof typeof COVER_SCALE_CLASS; className?: string}) => (
+    <div
+        aria-hidden="true"
+        className={cn('pointer-events-none absolute inset-0 z-10 overflow-hidden rounded-3xl', className)}
+    >
         <span
             className={cn(
                 ENTRY_COVER_PANEL_CLASS,
-                'inset-x-0 top-0 h-1/2 origin-top scale-y-[var(--intro-entry-cover)]',
+                'inset-x-0 top-0 h-1/2 origin-top',
+                COVER_SCALE_CLASS[mode].vertical,
             )}
         />
         <span
             className={cn(
                 ENTRY_COVER_PANEL_CLASS,
-                'inset-x-0 bottom-0 h-1/2 origin-bottom scale-y-[var(--intro-entry-cover)]',
+                'inset-x-0 bottom-0 h-1/2 origin-bottom',
+                COVER_SCALE_CLASS[mode].vertical,
             )}
         />
         <span
             className={cn(
                 ENTRY_COVER_PANEL_CLASS,
-                'inset-y-0 left-0 w-1/2 origin-left scale-x-[var(--intro-entry-cover)]',
+                'inset-y-0 left-0 w-1/2 origin-left',
+                COVER_SCALE_CLASS[mode].horizontal,
             )}
         />
         <span
             className={cn(
                 ENTRY_COVER_PANEL_CLASS,
-                'inset-y-0 right-0 w-1/2 origin-right scale-x-[var(--intro-entry-cover)]',
+                'inset-y-0 right-0 w-1/2 origin-right',
+                COVER_SCALE_CLASS[mode].horizontal,
             )}
         />
     </div>
@@ -294,7 +310,7 @@ const MainSecondSection = () => {
                         그리드 자체 container(792)로 좁아져 헤더와 좌우 시작선이 어긋난다. */}
                     <div className="grid-layout content-layout w-full gap-y-12 md:max-h-full md:grid-rows-1 md:gap-y-0">
                         {/* 왼쪽 셀 — 아래층 카피 위에 사진이 얹혀 있다. 진입 때 사진이 열리고, 스크롤하면
-                            다시 줄어들며 아래층 카피가 드러난다. 두 동작 모두 사진의 clip 하나가 맡는다. */}
+                            다시 줄어들며 아래층 카피가 드러난다. 진입은 패널, 교차 축소는 clip이 맡는다. */}
                         <div className={cn(ENTRY_STATE_CLASS, CELL_CLASS, 'max-h-full', LEFT_SLOT_CLASS)}>
                             <IntroCopy
                                 isDuplicate
@@ -305,21 +321,19 @@ const MainSecondSection = () => {
                                 onLoad={handleEntryImageLoad}
                                 className={cn('absolute inset-0', SHRINK_CLASS, SWAP_TRANSITION_CLASS)}
                             />
-                            <IntroEntryCover />
+                            <IntroImageCover mode="entry" />
                         </div>
 
-                        {/* 오른쪽 셀 — 구조는 왼쪽과 같고 조리개 방향만 반대다. 접혀 있던 사진이 커지며
-                            밑의 카피를 덮는다. */}
+                        {/* 오른쪽 셀 — 사진은 처음부터 렌더링하고, 패널이 열리며 밑의 카피를 덮는다. */}
                         <div className={cn(CELL_CLASS, 'max-h-full', RIGHT_SLOT_CLASS)}>
                             <IntroCopy className="flex w-full flex-col md:pt-23" />
                             <IntroImage
                                 className={cn(
                                     CROSSOVER_IMAGE_CLASS,
-                                    'absolute inset-0',
-                                    GROW_CLASS,
-                                    SWAP_TRANSITION_CLASS,
+                                    'absolute inset-0 transform-gpu will-change-transform',
                                 )}
                             />
+                            <IntroImageCover mode="swap" className={CROSSOVER_IMAGE_CLASS} />
                         </div>
                     </div>
                 </div>
