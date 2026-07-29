@@ -133,8 +133,11 @@ const SWAP_COPY_FADE_CLASS =
 // 카피가 시안 비율보다 커지는 화면에서는 셀이 카피만큼 늘어난다(잘리지 않는다). 반대로 여유가
 // 있으면 aspect 가 이겨 시안의 588:640 이 그대로 나온다. 카피는 flex 항목이라 셀 높이를 채운다.
 //
-// 비율만 따로 뺀 이유 — 교차가 없는 모바일에서는 사진을 단독으로 놓지만 같은 시안 비율을 쓴다.
 const CELL_ASPECT_CLASS = 'aspect-[588/640]'
+
+// 모바일 사진은 셀 비율(588:640)이 아니라 3섹션 모바일 사진과 같은 590:380 을 쓴다.
+// 교차가 없어 사진을 단독으로 놓으므로, 한 화면 안에서 두 섹션의 사진 인상이 같아야 한다.
+const MOBILE_PHOTO_ASPECT_CLASS = 'aspect-[590/380]'
 // w-full 이 필요한 이유 — aspect 와 max-h-full 이 함께 걸리면 높이가 잘릴 때 비율을 지키려고 너비까지
 // 함께 줄어든다(1280×720 에서 588 → 507). 그러면 사진이 그리드 끝선에 못 닿고 카피 폭도 시안(508)보다
 // 좁아진다. 너비를 컬럼에 고정해 두면 잘리는 쪽은 높이뿐이고, 사진은 object-cover 가 채운다.
@@ -322,7 +325,7 @@ const MobileIntroContent = () => (
             {INTRO_SCREENS.map((screen) => (
                 <div key={screen.key} className="flex flex-col gap-12">
                     <IntroLead screen={screen} />
-                    <IntroImage photo={screen.photo} className={cn(CELL_ASPECT_CLASS, STATIC_ROUND_CLASS)} />
+                    <IntroImage photo={screen.photo} className={cn(MOBILE_PHOTO_ASPECT_CLASS, STATIC_ROUND_CLASS)} />
                     <IntroProcessRail screen={screen} trigger="entry" />
                 </div>
             ))}
