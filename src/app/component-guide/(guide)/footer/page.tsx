@@ -8,23 +8,20 @@ import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
 
 export const metadata: Metadata = {title: '푸터 (Footer)'}
 
-// 사용법 스니펫 — 전체형 기본 variant와 모형선택 화면용 subpage variant.
+// 사용법 스니펫 — 메인페이지용 기본 variant와 모형선택 화면용 subpage variant.
 const USAGE_CODE = `import Footer from '@/components/composite/footer'
 
 export default function Page() {
   return (
     <>
       <main id="main">{/* ... */}</main>
-      {/* 전체 사이트맵을 포함하는 기본 푸터 */}
+      {/* 메인페이지용 기본 푸터 */}
       <Footer />
     </>
   )
 }
 
-// 모바일에서 사이트맵을 감추는 경우(마지막 섹션이 이미 긴 화면)
-<Footer showSitemapOnMobile={false} />
-
-// 평가모형 선택 화면처럼 사이트맵 없이 핵심 기관 정보만 표시하는 경우
+// 평가모형 선택 화면처럼 '플랫폼 소개'까지 노출하는 서브페이지 푸터
 <Footer variant="subpage" />`
 
 // 메인페이지의 스택 페이저에 넣을 때의 배치 스니펫.
@@ -46,16 +43,16 @@ const VARIANT_CASES: {
     {
         variant: 'default',
         label: '메인페이지용',
-        usage: '메인페이지의 마지막 스택 섹션에서 사용하는 전체형 푸터입니다.',
-        composition: '로고·전체 사이트맵·대표전화·구분선·이용 정보·주소·관련사이트',
+        usage: '메인페이지의 마지막 스택 섹션에서 사용하는 푸터입니다.',
+        composition: '로고·유틸 메뉴(4개)·대표전화·주소·저작권·관련사이트',
         code: '<Footer />',
         theme: 'mainpage',
     },
     {
         variant: 'subpage',
         label: '서브페이지용',
-        usage: '현재 자가진단 평가모형 선택 화면에서 사용하는 간결한 정보형 푸터입니다.',
-        composition: '로고·유틸 메뉴·대표전화·주소·저작권·관련사이트',
+        usage: '현재 자가진단 평가모형 선택 화면에서 사용하는 푸터입니다.',
+        composition: "로고·유틸 메뉴(5개 — '플랫폼 소개' 포함)·대표전화·주소·저작권·관련사이트",
         code: '<Footer variant="subpage" />',
         theme: 'light',
     },
@@ -69,7 +66,7 @@ const THEME_CASES = [
         usage: '<Footer />',
         theme: 'mainpage',
         label: '메인페이지 · mainpage 스킨',
-        desc: '메인페이지 마지막 섹션의 전체형 푸터. 어두운 표면과 화이트 로고로 고정됩니다.',
+        desc: '메인페이지 마지막 섹션의 푸터. 어두운 표면과 화이트 로고로 고정됩니다.',
     },
     {
         variant: 'subpage',
@@ -100,11 +97,10 @@ const THEME_CASES = [
 const PROPS_ITEMS = [
     [
         'variant',
-        'default는 사이트맵을 포함한 전체형, subpage는 간결한 정보형입니다.',
+        "default는 메인페이지용, subpage는 유틸 메뉴에 '플랫폼 소개'가 추가된 서브페이지용입니다.",
         "'default'",
         "'default' | 'subpage'",
     ],
-    ['showSitemapOnMobile', 'md 미만에서 사이트맵 노출 여부입니다. md 이상에서는 항상 노출합니다.', 'true', 'boolean'],
     ['className', '푸터 루트에 클래스를 덧붙입니다(색은 페이지 테마를 따름).', 'undefined', 'string'],
     ['...props', 'aria-*·id 등 네이티브 footer 속성을 그대로 전달합니다.', '-', "ComponentProps<'footer'>"],
 ] as const
@@ -116,15 +112,10 @@ const COMPOSITION = [
         desc: '홈으로 이동하는 KIBO 기술보증기금 로고 링크. light 테마엔 컬러 로고(logo-kibo), dark·mainpage 엔 화이트 로고(logo-kibo-white)로 교체된다.',
     },
     {
-        name: '사이트맵 (nav)',
-        desc: 'default 전용. 플랫폼 소개·기술평가·특허평가·K-BIGx 보고서·탄소중립 컬럼을 제공한다.',
+        name: '유틸 메뉴 (nav)',
+        desc: "이용약관·가격 정책·개인정보처리방침(강조)·공지사항 링크. subpage 에는 '플랫폼 소개'가 앞에 추가된다.",
     },
-    {name: '대표전화', desc: '대표번호(tel: 링크)와 운영 시간. xl 이상에서 사이트맵 우측에 배치된다.'},
-    {
-        name: 'Separator',
-        desc: 'default 전용. 사이트맵 영역과 하단 이용 정보를 나누며 표준 border 토큰을 따른다.',
-    },
-    {name: '이용 정보 (nav)', desc: '이용약관·가격 정책·개인정보처리방침(강조)·공지사항 유틸 링크.'},
+    {name: '대표전화', desc: '대표번호(tel: 링크)와 운영 시간.'},
     {name: '주소·저작권', desc: '기관 주소와 저작권 문구.'},
     {
         name: '관련사이트 (Select)',
@@ -144,7 +135,7 @@ const DEV_NOTES = [
     },
     {
         title: '메뉴·연락처 데이터는 컴포넌트 상수',
-        desc: '사이트맵(SITEMAP)·기본/서브페이지 유틸 링크(UTILITY_LINKS·SUBPAGE_UTILITY_LINKS)·관련사이트(FAMILY_SITES)·연락처(CONTACT)는 footer.tsx 상단 상수입니다. 현재 href 는 목업 값이므로 라우트 확정 시 상수만 실제 경로로 교체합니다.',
+        desc: '기본/서브페이지 유틸 링크(UTILITY_LINKS·SUBPAGE_UTILITY_LINKS)·관련사이트(FAMILY_SITES)·연락처(CONTACT)는 footer.tsx 상단 상수입니다. 현재 href 는 목업 값이므로 라우트 확정 시 상수만 실제 경로로 교체합니다.',
     },
     {
         title: '관련사이트 Select 는 표시 전용',
@@ -152,7 +143,7 @@ const DEV_NOTES = [
     },
     {
         title: '반응형 전환점',
-        desc: 'default는 xl 이상에서 대표전화가 사이트맵 우측으로 이동합니다. 두 variant 모두 md 이상에서 하단 기관 정보와 관련사이트가 가로로 정렬되며, 폭은 content-layout을 따릅니다.',
+        desc: '두 variant 모두 md 이상에서 저작권과 관련사이트가 가로로 정렬되고, 로고와 유틸 메뉴는 폭이 좁아지면 줄바꿈됩니다. 폭은 content-layout을 따릅니다.',
     },
     {
         title: 'subpage variant 적용 범위',
@@ -160,11 +151,11 @@ const DEV_NOTES = [
     },
 ] as const
 
-// 푸터 — shadcn 에 Footer primitive 가 없어 Select·Separator·Link·Image 를 조립한 합성 컴포넌트.
+// 푸터 — shadcn 에 Footer primitive 가 없어 Select·Link·Image 를 조립한 합성 컴포넌트.
 const FooterGuidePage = () => (
     <GuidePageShell
         title="푸터 (Footer)"
-        description="전체 사이트맵형과 서브페이지 정보형을 제공하는 contentinfo 합성 컴포넌트입니다. 색은 페이지 테마(mainpage·light·dark)를 그대로 따릅니다."
+        description="메인페이지형과 서브페이지형을 제공하는 contentinfo 합성 컴포넌트입니다. 색은 페이지 테마(mainpage·light·dark)를 그대로 따릅니다."
     >
         <BaseCard>
             <section aria-labelledby="ft-preview" className="flex flex-col gap-4">
@@ -173,8 +164,8 @@ const FooterGuidePage = () => (
                         Preview
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        default는 사이트맵을 포함한 전체형이고, subpage는 사이트맵을 제외하고 로고·유틸 메뉴·기관
-                        정보·관련사이트를 간결하게 배치합니다. 현재 subpage는 평가모형 선택 화면에만 사용합니다.
+                        두 variant 모두 로고·유틸 메뉴·기관 정보·관련사이트를 같은 구조로 배치하며, 유틸 메뉴 구성과
+                        표면색만 다릅니다. 현재 subpage는 평가모형 선택 화면에만 사용합니다.
                     </p>
                 </div>
                 <Alert color="warning">
@@ -188,11 +179,11 @@ const FooterGuidePage = () => (
                 </Alert>
                 <div className="flex flex-col gap-2">
                     <div className="flex flex-wrap items-baseline gap-2">
-                        <p className="typo-body-l-medium text-foreground">메인페이지용 전체형</p>
+                        <p className="typo-body-l-medium text-foreground">메인페이지용</p>
                         <code className="typo-body-l-regular text-muted-foreground font-mono">default</code>
                     </div>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        메인페이지 마지막 섹션에서 사용하는 전체 사이트맵 푸터입니다.
+                        메인페이지 마지막 섹션에서 사용하는 푸터입니다.
                     </p>
                     <div className="mainpage">
                         <FooterDemo />
@@ -332,9 +323,7 @@ const FooterGuidePage = () => (
                     <h2 id="ft-props" className="typo-h4-bold">
                         Props
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        Footer 에 넘기는 속성입니다. showSitemapOnMobile은 default variant에만 적용됩니다.
-                    </p>
+                    <p className="typo-body-l-regular text-muted-foreground">Footer 에 넘기는 속성입니다.</p>
                 </div>
                 <div className="border-border overflow-x-auto rounded-xl border">
                     <table className="w-full text-left">
@@ -413,11 +402,8 @@ const FooterGuidePage = () => (
                 </div>
                 <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        푸터는 contentinfo 랜드마크(&lt;footer&gt;)로 렌더링되고, 사이트맵·이용 정보는 각각 이름을 가진
-                        nav 로 구분됩니다. [8.2.1/6.4.2]
-                    </li>
-                    <li>
-                        외부 링크 아이콘은 aria-hidden 이고 &quot;새 창 열림&quot; 텍스트를 함께 제공합니다. [5.1.1]
+                        푸터는 contentinfo 랜드마크(&lt;footer&gt;)로 렌더링되고, 유틸 메뉴는 이름을 가진 nav 로
+                        구분됩니다. [8.2.1/6.4.2]
                     </li>
                     <li>모든 링크는 텍스트만으로 목적을 알 수 있고 focus-visible 아웃라인을 가집니다. [6.4.3/6.1.2]</li>
                     <li>관련사이트 Select 는 aria-label 을 가지며 Radix 가 키보드 조작을 담당합니다. [7.4.1/8.2.1]</li>

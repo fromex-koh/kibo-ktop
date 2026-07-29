@@ -71,8 +71,7 @@ const MainPage = () => (
                 mobileContent={<MobileTechEvalContent />}
                 bottomContent={
                     <div id="site-info" tabIndex={-1} className="bg-background relative mt-auto w-full">
-                        {/* 모바일 3섹션은 서비스 4종을 다 펼쳐 이미 길어 사이트맵까지 두지 않는다. */}
-                        <Footer showSitemapOnMobile={false} />
+                        <Footer />
                     </div>
                 }
             />
