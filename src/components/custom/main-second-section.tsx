@@ -412,8 +412,16 @@ const MainSecondSection = () => {
         if (!section) return
 
         let entryRevealFrame = 0
+        let crossoverSettleFrame = 0
         let entrySequence = 0
         let resetTrackTimer = 0
+        let settlingPanels: HTMLElement[] = []
+
+        const releaseCrossoverPanels = () => {
+            settlingPanels.forEach((panel) => panel.style.removeProperty('transition'))
+            settlingPanels = []
+            delete section.dataset.introCrossoverSettling
+        }
 
         // 스크롤 양을 그대로 쓰지 않고 0/1 로만 뒤집는다 — 전환 자체는 CSS transition 이 재생한다.
         // 스크롤 이벤트에서 바로 쓴다. 브라우저가 이미 프레임당 한 번으로 묶어 보내고 하는 일도
@@ -434,6 +442,8 @@ const MainSecondSection = () => {
         const syncEntryReveal = () => {
             const currentSequence = ++entrySequence
             window.cancelAnimationFrame(entryRevealFrame)
+            window.cancelAnimationFrame(crossoverSettleFrame)
+            releaseCrossoverPanels()
 
             // 비활성이 되면 다음 방문을 위해 트랙을 되감아야 한다. 단, 상태가 바뀌는 즉시 되감으면
             // 화면 전환 레이어 아래에서 2영역→1영역 조리개가 잠깐 재생돼 "움찔"해 보인다.
@@ -449,22 +459,38 @@ const MainSecondSection = () => {
                 return
             }
 
-            window.clearTimeout(resetTrackTimer)
-            update()
-
             // 3섹션에서 위로 복귀한 경우에는 StackPager가 이미 트랙 끝(2영역)에 맞춰 둔다.
-            // 이때 최초 진입용 커버를 닫았다가 다시 열면 오른쪽 카피가 움찔하므로, 완료 상태를
-            // 같은 페인트 안에서 확정하고 리빌 애니메이션은 생략한다.
+            // 이때 비활성 상태에서 초기화했던 --intro-progress(0)를 active 상태에서 1로 바꾸면,
+            // 조리개 transition이 한 프레임 재생돼 이미지가 커졌다 작아지는 것처럼 보인다.
+            // 첫 페인트까지 transition을 잠그고 2영역 값을 확정한 뒤 잠금을 해제한다.
             const maxScroll = section.scrollHeight - section.clientHeight
             const isReverseCrossoverEntry =
                 section.dataset.stackEntryDirection === 'backward' &&
                 maxScroll > 0 &&
                 section.scrollTop / maxScroll > SWAP_THRESHOLD
             if (isReverseCrossoverEntry) {
+                section.dataset.introCrossoverSettling = 'true'
+                settlingPanels = Array.from(section.querySelectorAll<HTMLElement>('[data-intro-aperture-panel]'))
+                settlingPanels.forEach((panel) => panel.style.setProperty('transition', 'none'))
+                update()
+                // transition:none과 최종 scale을 같은 레이아웃 계산에 확정한다. 이 읽기가 없으면
+                // 브라우저가 잠금 해제까지 한 프레임으로 합쳐 기존 값에서 다시 보간할 수 있다.
+                void section.offsetHeight
                 section.dataset.entryReady = 'true'
+
+                crossoverSettleFrame = window.requestAnimationFrame(() => {
+                    crossoverSettleFrame = window.requestAnimationFrame(() => {
+                        if (currentSequence === entrySequence && section.dataset.stackState === 'active') {
+                            releaseCrossoverPanels()
+                        }
+                    })
+                })
                 return
             }
 
+            releaseCrossoverPanels()
+            window.clearTimeout(resetTrackTimer)
+            update()
             delete section.dataset.entryReady
 
             if (!entryImageReady) {
@@ -491,6 +517,8 @@ const MainSecondSection = () => {
         return () => {
             entrySequence += 1
             window.cancelAnimationFrame(entryRevealFrame)
+            window.cancelAnimationFrame(crossoverSettleFrame)
+            releaseCrossoverPanels()
             window.clearTimeout(resetTrackTimer)
             sectionStateObserver.disconnect()
             section.removeEventListener('scroll', update)
