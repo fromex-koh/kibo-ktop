@@ -364,8 +364,8 @@ const IconGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         프로젝트에서 실제 사용하는 아이콘과 Figma 아이콘 세트(icon/line-*)의 lucide 대응을 합친{' '}
                         {CURATED_ICONS.length}개입니다. 목록에 없는 아이콘이 필요하면 lucide에서 골라 쓰고 이 목록에도
-                        추가합니다. Solid는 배지가 어울리는 X(닫기)·info(안내)·alert(경고) 세 가지만 씁니다. Stepper의
-                        삼각형처럼 한 컴포넌트 전용 장식 SVG는 재사용 아이콘이 아니므로 목록에 없습니다.
+                        추가합니다. Solid는 배지가 어울리는 X(닫기)·info(안내)·alert(경고) 세 가지만 씁니다. 한
+                        컴포넌트에서만 사용하는 장식 SVG는 재사용 아이콘이 아니므로 목록에 포함하지 않습니다.
                     </p>
                 </div>
 

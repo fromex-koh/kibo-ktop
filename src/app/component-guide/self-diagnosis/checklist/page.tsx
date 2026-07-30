@@ -388,7 +388,6 @@ const ChecklistPage = () => (
             />
 
             <StepHeader
-                variant="progress"
                 title="체크리스트 입력"
                 description="평가 항목별 체크리스트를 작성해주세요. 해당사항에 맞게 선택해 주십시오."
                 steps={SELF_DIAGNOSIS_STEPS}

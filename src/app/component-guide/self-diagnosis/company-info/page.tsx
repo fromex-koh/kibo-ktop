@@ -486,7 +486,6 @@ const CompanyInfoPage = () => (
             />
 
             <StepHeader
-                variant="progress"
                 title="기업·기술정보 입력"
                 description="평가에 필요한 기업 및 기술 정보를 입력해주세요."
                 steps={SELF_DIAGNOSIS_STEPS}

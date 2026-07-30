@@ -25,7 +25,7 @@ const TEXT_TONE_SLOTS = new Set([
     'placeholder',
     'primary-strong',
     'badge-solid-fg',
-    'stepper-inactive',
+    'step-progress-inactive',
     'calendar-sunday',
     'calendar-saturday',
     'select-selected-foreground',
@@ -158,8 +158,7 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'icon-solid-neutral': 'bg-icon-solid-neutral',
     'icon-solid-neutral-foreground': 'bg-icon-solid-neutral-foreground',
     'icon-interactive-hover': 'bg-icon-interactive-hover',
-    'stepper-accent': 'bg-stepper-accent',
-    'stepper-inactive': 'bg-stepper-inactive',
+    'step-progress-inactive': 'bg-step-progress-inactive',
     'number-badge-new': 'bg-number-badge-new',
     'badge-solid-fg': 'bg-badge-solid-fg',
     'segmented-track': 'bg-segmented-track',
@@ -282,7 +281,7 @@ const STANDARD_SLOTS = new Set([
 // 컴포넌트 전용 레시피 토큰(action-check-*/button-*/checkbox-*/radio-*/badge-*/icon-*)은 일반 색 슬롯이 아니라 특정 컴포넌트
 // 내부에서만 쓰는 값이라 이 색 개요 페이지에서는 제외한다(각 컴포넌트 가이드에서 다룸).
 const isComponentRecipe = (n: string): boolean =>
-    /^(action-check|alert|button|checkbox|radio|badge|number-badge|chip|icon|selectable-card|stepper|segmented)-/.test(
+    /^(action-check|alert|button|checkbox|radio|badge|number-badge|chip|icon|selectable-card|step-progress|segmented)-/.test(
         n,
     )
 
@@ -728,7 +727,10 @@ const SemanticColorGuidePage = () => (
                             컴포넌트의 variant·prop을 사용합니다.
                         </p>
                     </div>
-                    <SemanticTable title="ActionCheck / Icon / Badge / Stepper / Segmented" tokens={recipeEntries} />
+                    <SemanticTable
+                        title="ActionCheck / Icon / Badge / StepProgress / Segmented"
+                        tokens={recipeEntries}
+                    />
                 </section>
             </BaseCard>
         </div>

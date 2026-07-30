@@ -228,7 +228,7 @@ theme 스타일에서 shadcn 바닐라와 다른 값을 남겨야 할 때는 코
 
 - **`composite/` 에 두는 것** — ui primitive 를 **조합**하거나 디자인 시스템 위에서 **자체 합성(compound)** 한 우리
   컴포넌트. 예: `header`(NavigationMenu·SegmentedRadioGroup·Sheet·Button 조합) · `section-header` ·
-  `sub-section-header` · `step-header` · `stepper` · `action-bar` · `chip` · `search-bar` 등.
+  `sub-section-header` · `step-header` · `step-progress` · `action-bar` · `chip` · `search-bar` 등.
   shadcn 에 대응 primitive 가 없어 직접 만든 것도 여기 둔다(스타일이 크면 cva 를 `theme/` 로 분리해도 된다 —
   예: `chip.variants.ts`·`segmented-control.variants.ts`).
 - **`custom/` 에 두는 것** — shadcn primitive를 사용하지 않는 자체 구현. `icon`·`list-marker`·`publishing-index`·

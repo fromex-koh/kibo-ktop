@@ -124,7 +124,6 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'SubSectionHeader', href: '/component-guide/sub-section-header'},
                     {label: 'StepHeader', href: '/component-guide/step-header'},
                     {label: 'StepProgress', href: '/component-guide/step-progress'},
-                    {label: 'Stepper', href: '/component-guide/stepper'},
                     {label: 'ActionBar', href: '/component-guide/action-bar'},
                     {label: 'StepNavigation', href: '/component-guide/step-navigation'},
                 ],
@@ -142,7 +141,6 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 title: '탭',
                 items: [
                     {label: 'FormTabs', href: '/component-guide/form-tabs'},
-                    {label: 'TabCard', href: '/component-guide/tab-card'},
                     {label: 'Tabs', href: '/component-guide/tabs'},
                 ],
             },

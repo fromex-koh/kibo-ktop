@@ -3,11 +3,10 @@ import {ArrowRight, Check} from 'lucide-react'
 import {cn} from '@/lib/utils'
 
 // 스텝 진행바(StepProgress) — 다단계 흐름의 진행률을 한 줄 바로 보여주는 인디케이터(L2 composite).
-// Figma "step" 프레임 반영 — StepHeader(번호 원 Stepper)와 같은 역할의 대안 시안이라 별도 컴포넌트로 둔다.
-// 시안이 확정되면 둘 중 하나만 남긴다.
+// Figma "step" 프레임 반영 — StepHeader의 진행 인디케이터로 사용한다.
 //   · 윗줄: [현재/전체 + 현재 단계 제목] ↔ [다음 단계 제목 + 화살표]
 //   · 아랫줄: 트랙(muted) 위에 단계 마일스톤 점 + 현재 지점까지 채운 primary 바 + 흰 노브
-// 색은 전부 기존 토큰 — 트랙 muted(gray.100) · 미도달 점 stepper-inactive(gray.200, 기존 Stepper 와 동일)
+// 색은 전부 기존 토큰 — 트랙 muted(gray.100) · 미도달 점 step-progress-inactive(gray.200)
 // · 채움 primary(blue.500) · 노브 surface. 새 토큰 없음.
 type StepProgressProps = {
     // 단계 제목 목록. 전체 단계 수는 이 배열 길이를 단일 소스로 쓴다.
@@ -64,7 +63,7 @@ const StepProgress = ({steps, current, className, ...props}: StepProgressProps) 
                                 index === count - 1
                                     ? // 도착 링 — 시안 실측 기준 12px 원에 2px 테두리(안쪽 지름 8px).
                                       'border-primary bg-muted size-3 shrink-0 rounded-full border-2'
-                                    : 'bg-stepper-inactive size-2 shrink-0 rounded-full'
+                                    : 'bg-step-progress-inactive size-2 shrink-0 rounded-full'
                             }
                         />
                     ))}

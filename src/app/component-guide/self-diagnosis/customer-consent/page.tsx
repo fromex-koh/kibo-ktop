@@ -174,7 +174,6 @@ const CustomerConsentPage = () => (
             />
 
             <StepHeader
-                variant="progress"
                 title="고객 정보 활용 동의"
                 description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해주세요."
                 steps={SELF_DIAGNOSIS_STEPS}

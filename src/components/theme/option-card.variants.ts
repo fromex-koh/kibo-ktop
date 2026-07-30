@@ -10,7 +10,7 @@
 
 // 카드 루트 — 전체가 클릭 영역인 링크. group 으로 자식(화살표)의 hover/focus 상태를 함께 제어한다.
 // PROJECT-STYLE: 항상 border-2 로 두께를 고정하고 색만 전환한다(rest subtle-3 → hover/focus primary).
-// hover 시 1px→2px 로 두께가 바뀌면 레이아웃 시프트가 나므로, TabCard 와 같은 방식으로 두께를 고정한다.
+// hover 시 1px→2px 로 두께가 바뀌면 레이아웃 시프트가 나므로 테두리 두께를 고정한다.
 const optionCardClassName =
     'group border-subtle-3 bg-card hover:border-primary hover:bg-blue-10 focus-visible:border-primary focus-visible:bg-blue-10 flex h-full w-full flex-col gap-2 rounded-lg border-2 px-10 pt-8 pb-6 outline-none transition-colors focus-visible:outline-2 focus-visible:outline-solid outline-ring focus-visible:outline-ring focus-visible:outline-offset-2'
 const optionCardBodyClassName = 'flex flex-1 flex-col gap-3'
