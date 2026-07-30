@@ -262,6 +262,43 @@ const ToastGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="toast-spec" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="toast-spec" className="typo-h4-bold">
+                        면과 색
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        시안([자가진단] 2단계 자동저장 토스트)의 알약 한 벌을 그대로 쓰며, 값은
+                        <code className="font-mono"> theme/sonner.variants.ts</code>에서 관리합니다.
+                    </p>
+                </div>
+                <ul className="typo-body-l-regular text-foreground-subtle list-disc space-y-2 pl-6">
+                    <li>
+                        면은 <code className="font-mono">bg-toast</code>(반투명 검정 75%), 글자·아이콘은
+                        <code className="font-mono"> text-toast-foreground</code>(흰색)입니다. 시안이 테마와 무관하게 한
+                        벌이라 라이트·다크·메인 세 테마에서 같은 값입니다.
+                    </li>
+                    <li>
+                        시안 치수는 1920 기준 높이 45(위아래 여백 12) · 좌우 여백 24 · 아이콘 20 · 아이콘과 글자 간격 8
+                        · 글자 14px Medium 이고, 모서리는 알약(<code className="font-mono">rounded-full</code>)입니다.
+                    </li>
+                    <li>
+                        폭은 내용만큼 늘어나고 긴 문구는 토스터 폭에서 줄바꿈합니다. 시안의 자동저장 토스트는 189px
+                        입니다.
+                    </li>
+                    <li>
+                        상태별 아이콘 색은 두지 않습니다 — 면이 어두워 라이트 테마용 상태색은 대비가 모자라고, 종류는
+                        색이 아니라 아이콘 모양이 전합니다. [KWCAG 5.3.1]
+                    </li>
+                    <li>
+                        실제 화면 적용 예시는 <code className="font-mono">자가진단 2단계(기업·기술정보 입력)</code>{' '}
+                        화면에서 진입 시 뜨는 자동저장 토스트로 확인할 수 있습니다.
+                    </li>
+                </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="toast-props" className="flex flex-col gap-4">
                 <h2 id="toast-props" className="typo-h4-bold">
                     Props

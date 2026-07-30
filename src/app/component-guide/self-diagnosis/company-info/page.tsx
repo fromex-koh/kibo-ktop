@@ -4,6 +4,7 @@ import Link from 'next/link'
 import {CircleCheck, Lock, Plus, X} from 'lucide-react'
 import {type HeaderNavigationByUserType} from '@/components/composite/header'
 import SelfDiagnosisInputHeader from '@/app/component-guide/self-diagnosis/_components/self-diagnosis-input-header'
+import AutosaveToast from '@/app/component-guide/self-diagnosis/_components/autosave-toast'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
 import {
@@ -450,6 +451,9 @@ const CompanyInfoPage = () => (
             logoHref="/component-guide/main-page"
             navigationByUserType={PLATFORM_NAVIGATION}
         />
+
+        {/* 자동저장 토스트 — 시안의 토스트 노출 예시. 화면을 열면 한 번 뜬다(렌더 결과는 없음). */}
+        <AutosaveToast />
 
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다. */}
         <main id="main" tabIndex={-1} className="content-layout flex flex-1 flex-col gap-10 pt-10">
