@@ -64,7 +64,9 @@ const buttonVariants = cva(
             {variant: 'tertiary', size: 'xl', class: 'min-w-control-min-w-sm'},
             {variant: 'default', size: 'lg', class: 'font-bold disabled:font-medium'},
             {variant: 'default', size: 'md', class: 'font-bold disabled:font-medium'},
-            {variant: ['text', 'text-underline', 'link'], class: 'min-h-0 min-w-0 p-0 font-normal'},
+            // PROJECT-STYLE: button_text 의 텍스트↔아이콘 간격은 네 size 모두 4px 이다(medium·large 확인).
+            // size 축이 6·8px 를 얹으므로 여기서 gap-1 로 되돌린다.
+            {variant: ['text', 'text-underline', 'link'], class: 'min-h-0 min-w-0 gap-1 p-0 font-normal'},
             // variant plain — 컨트롤 높이·최소 크기·패딩·라운드를 걷어내고 상자를 아이콘 크기에 맞춘다.
             // size 축이 rounded-sm 등을 뒤에 얹으므로 이 되돌림은 variant 가 아니라 여기(compound)에 둔다.
             // size 는 아이콘 전용 값만 의미가 있다(각 size 가 정한 아이콘 크기 = 상자 크기).
