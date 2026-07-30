@@ -26,6 +26,7 @@ import {
 } from '@/components/composite/sub-section-header'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import {Alert, AlertDescription} from '@/components/ui/alert'
+import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Input} from '@/components/ui/input'
 import {InputGroup, InputGroupAddon, InputGroupInput} from '@/components/ui/input-group'
@@ -453,7 +454,12 @@ const CompanyInfoPage = () => (
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다. */}
         <main id="main" tabIndex={-1} className="content-layout flex flex-1 flex-col gap-10 pt-10">
             <PageTitleBar
-                title="혁신성장역량지수(일반)"
+                title="신속표준모형"
+                badge={
+                    <Badge variant="solid" color="info" shape="round">
+                        KTRS-FM
+                    </Badge>
+                }
                 breadcrumb={
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -468,7 +474,7 @@ const CompanyInfoPage = () => (
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbPage>혁신성장역량지수(일반)</BreadcrumbPage>
+                                <BreadcrumbPage>KTRS-FM</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>

@@ -15,6 +15,7 @@ import {StepNavigation} from '@/components/composite/step-navigation'
 import {InfoBox, InfoBoxItem} from '@/components/composite/info-box'
 import {ViewportFitLayout} from '@/components/composite/viewport-fit-layout'
 import {ActionCheck} from '@/components/custom/action-check'
+import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 
 export const metadata: Metadata = {title: '제출 완료'}
@@ -76,7 +77,12 @@ const SelfDiagnosisCompletePage = () => (
         <div aria-hidden="true" className="h-[clamp(--spacing(2),3.7dvh,--spacing(10))]" />
 
         <PageTitleBar
-            title="혁신성장역량지수(일반)"
+            title="신속표준모형"
+            badge={
+                <Badge variant="solid" color="info" shape="round">
+                    KTRS-FM
+                </Badge>
+            }
             breadcrumb={
                 <Breadcrumb>
                     <BreadcrumbList>
@@ -91,7 +97,7 @@ const SelfDiagnosisCompletePage = () => (
                         </BreadcrumbItem>
                         <BreadcrumbDotSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbPage>혁신성장역량지수(일반)</BreadcrumbPage>
+                            <BreadcrumbPage>KTRS-FM</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
@@ -104,7 +110,7 @@ const SelfDiagnosisCompletePage = () => (
         <div className="flex flex-col items-center">
             <ActionCheck decorative />
             <h2 className="typo-h2-bold text-foreground text-center text-balance">
-                자가진단 - 혁신성장역량지수(일반) 평가 완료되었습니다.
+                자가진단 - KTRS-FM 평가 완료되었습니다.
             </h2>
         </div>
 

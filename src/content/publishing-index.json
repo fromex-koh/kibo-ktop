@@ -258,7 +258,7 @@
             "userType": "기업",
             "children": [
                 {
-                    "label": "혁신성장역량지수(일반)",
+                    "label": "신속표준모형(KTRS-FM)",
                     "children": [
                         {
                             "label": "(1) 고객정보활용동의",
@@ -1437,7 +1437,7 @@
                     "key": "org-individual-evaluation-verification-progress"
                 },
                 {
-                    "label": "혁신성장역량지수(일반)",
+                    "label": "신속표준모형(KTRS-FM)",
                     "children": [
                         {
                             "label": "(1) 고객정보활용동의",
