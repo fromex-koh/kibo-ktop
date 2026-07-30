@@ -26,15 +26,17 @@ const USAGE_CODE = `<PageTitleBar
     <Breadcrumb>
       <BreadcrumbList>
         <BreadcrumbItem>
-          <BreadcrumbLink href="/">홈</BreadcrumbLink>
+          <BreadcrumbLink href="/component-guide/main-page">홈</BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbDotSeparator />
         <BreadcrumbItem>
-          <BreadcrumbLink href="/self">자가진단</BreadcrumbLink>
+          <BreadcrumbLink href="/component-guide/self-diagnosis/evaluation-model">
+            자가진단
+          </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbDotSeparator />
         <BreadcrumbItem>
-          <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
+          <BreadcrumbPage>제출 완료</BreadcrumbPage>
         </BreadcrumbItem>
       </BreadcrumbList>
     </Breadcrumb>
@@ -98,19 +100,31 @@ const PROPS_ITEMS = [
     },
 ] as const
 
-const DemoBreadcrumb = () => (
+type DemoBreadcrumbProps = {
+    current: string
+    parent?: {
+        href: string
+        label: string
+    }
+}
+
+const DemoBreadcrumb = ({current, parent}: DemoBreadcrumbProps) => (
     <Breadcrumb>
         <BreadcrumbList>
             <BreadcrumbItem>
-                <BreadcrumbLink href="/">홈</BreadcrumbLink>
+                <BreadcrumbLink href="/component-guide/main-page">홈</BreadcrumbLink>
             </BreadcrumbItem>
+            {parent ? (
+                <>
+                    <BreadcrumbDotSeparator />
+                    <BreadcrumbItem>
+                        <BreadcrumbLink href={parent.href}>{parent.label}</BreadcrumbLink>
+                    </BreadcrumbItem>
+                </>
+            ) : null}
             <BreadcrumbDotSeparator />
             <BreadcrumbItem>
-                <BreadcrumbLink href="/self">자가진단</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbDotSeparator />
-            <BreadcrumbItem>
-                <BreadcrumbPage>고객정보활용동의</BreadcrumbPage>
+                <BreadcrumbPage>{current}</BreadcrumbPage>
             </BreadcrumbItem>
         </BreadcrumbList>
     </Breadcrumb>
@@ -142,7 +156,15 @@ const PageTitleBarGuidePage = () => (
                                 KTRS-FM 평가
                             </Badge>
                         }
-                        breadcrumb={<DemoBreadcrumb />}
+                        breadcrumb={
+                            <DemoBreadcrumb
+                                current="제출 완료"
+                                parent={{
+                                    href: '/component-guide/self-diagnosis/evaluation-model',
+                                    label: '자가진단',
+                                }}
+                            />
+                        }
                     />
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
@@ -169,9 +191,17 @@ const PageTitleBarGuidePage = () => (
                                     KTRS-FM 평가
                                 </Badge>
                             }
-                            breadcrumb={<DemoBreadcrumb />}
+                            breadcrumb={
+                                <DemoBreadcrumb
+                                    current="평가 현황"
+                                    parent={{
+                                        href: '/component-guide/self-diagnosis/evaluation-model',
+                                        label: '자가진단',
+                                    }}
+                                />
+                            }
                         />
-                        <PageTitleBar title="마이 페이지" breadcrumb={<DemoBreadcrumb />} />
+                        <PageTitleBar title="마이 페이지" breadcrumb={<DemoBreadcrumb current="마이 페이지" />} />
                     </div>
                 </div>
             </section>
