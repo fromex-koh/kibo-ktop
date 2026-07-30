@@ -44,21 +44,19 @@ const PLATFORM_NAVIGATION = {
 // 평가모형 카드 — 시안의 두 모형. 일러스트는 OptionCard 가이드와 같은 경로 규약을 따른다.
 const EVALUATION_MODELS = [
     {
-        // 선택하면 자가진단 1단계(고객 정보 활용 동의)로 진입한다.
+        // 선택하면 자가진단 1단계(고객 정보 활용 동의)로 진입한다. 1~5단계 화면이 이 모형의 것이다.
         href: '/component-guide/self-diagnosis/customer-consent',
-        badge: '혁신평가',
-        title: '혁신성장역량지수(일반)',
-        subtitle: 'Tech-Index',
+        badge: 'KTRS-FM',
+        title: '신속표준모형',
         description:
             '일반 혁신성장기업의 미래 성장 가능성을 측정하는 지수형 평가 모형입니다. 기술혁신성, 시장확장성, 성장 잠재력을 중심으로 평가합니다.',
         illustration: '/images/option-card/growth-index.webp',
     },
     {
-        // 창업용 모형 화면은 아직 시안이 없어 같은 1단계로 연결한다.
+        // Tech-Index 모형 화면은 아직 시안이 없어 같은 1단계로 연결한다.
         href: '/component-guide/self-diagnosis/customer-consent',
-        badge: '혁신평가',
-        title: '혁신성장역량지수(창업)',
-        subtitle: 'Tech-Index',
+        badge: 'Tech-Index',
+        title: '혁신성장역량지수(일반/창업)',
         description:
             '창업 초기 기업의 특성에 맞춰 설계된 평가모형입니다. 보유 기술의 혁신성과 향후 성장 잠재력을 중점적으로 분석합니다.',
         illustration: '/images/option-card/startup-tech-index.webp',
@@ -119,7 +117,6 @@ const EvaluationModelPage = () => (
                             href={model.href}
                             badge={model.badge}
                             title={model.title}
-                            subtitle={model.subtitle}
                             description={model.description}
                             // 제목·설명이 정보를 전달하므로 일러스트는 장식이다([5.1.1]).
                             illustration={
