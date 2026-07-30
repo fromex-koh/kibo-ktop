@@ -44,6 +44,10 @@ const PLATFORM_NAVIGATION = {
 
 const MAIN_PAGE_PATH = '/component-guide/main-page'
 
+// 시안(알려드려요)은 안내 문장 중 이동 경로만 본문(gray.500)보다 진한 foreground(gray.900)로 강조한다.
+// Figma 에서는 문자 단위 색 override 라 텍스트 노드 색만 보면 드러나지 않는다 — 렌더 이미지로 확인했다.
+const ResultPath = () => <span className="text-foreground">마이페이지 &gt; 평가결과 조회</span>
+
 // 자가진단 4단계 제출 완료 데모. 3단계 체크리스트의 "다음" 버튼으로 진입한다.
 // 전부 기존 컴포넌트 조합이다:
 // Header · PageTitleBar(+Breadcrumb) · ActionCheck(완료 애니메이션) · InfoBox · Button · StepNavigation.
@@ -117,15 +121,22 @@ const SelfDiagnosisCompletePage = () => (
 
         <div className="flex flex-col gap-[clamp(--spacing(2),3.7dvh,--spacing(10))]">
             <InfoBox variant="outline" title="알려드려요">
-                <InfoBoxItem>제출하신 기술평가 결과는 마이페이지 &gt; 평가결과 조회에서 확인할 수 있어요.</InfoBoxItem>
-                <InfoBoxItem>기술평가 결과발송은 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.</InfoBoxItem>
+                <InfoBoxItem>
+                    제출하신 기술평가 결과는 <ResultPath />
+                    에서 확인할 수 있어요.
+                </InfoBoxItem>
+                <InfoBoxItem>
+                    기술평가 결과발송은 <ResultPath />
+                    에서 진행할 수 있어요.
+                </InfoBoxItem>
                 <InfoBoxItem>
                     은행으로 평가결과를 전송하려면{' '}
                     <Button type="button" variant="text-underline" size="md">
                         은행전송
                         <SquareArrowOutUpRight aria-hidden="true" />
                     </Button>
-                    을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
+                    을 선택하거나 <ResultPath />
+                    에서 진행할 수 있어요.
                 </InfoBoxItem>
                 <InfoBoxItem>
                     기관으로 평가결과를 전송하려면{' '}
@@ -133,7 +144,8 @@ const SelfDiagnosisCompletePage = () => (
                         보증신청
                         <SquareArrowOutUpRight aria-hidden="true" />
                     </Button>
-                    을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
+                    을 선택하거나 <ResultPath />
+                    에서 진행할 수 있어요.
                 </InfoBoxItem>
             </InfoBox>
 
