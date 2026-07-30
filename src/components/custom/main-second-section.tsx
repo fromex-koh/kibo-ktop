@@ -150,6 +150,19 @@ const CELL_CLASS = cn('relative col-span-full flex w-full max-xl:aspect-auto', C
 const LEFT_SLOT_CLASS = 'md:col-span-4 md:col-start-1 md:row-start-1 xl:col-span-6 xl:col-start-1'
 const RIGHT_SLOT_CLASS = 'md:col-span-4 md:col-start-5 md:row-start-1 xl:col-span-6 xl:col-start-7'
 
+// 카피 폭 — 시안(1920×1080)에서 카피는 컬럼(588) 전체를 쓰지 않고 사진 쪽으로 물러나 있다.
+// 물러나는 쪽은 사진의 반대편이라 1영역은 끝(pe), 2영역은 시작(ps) 에 준다.
+//  · 1영역 508(= 588 - 80) — 레일(3×160 + 간격 2×14)과 설명문(437)이 모두 508 안에 든다.
+//  · 2영역 518(= 588 - 70) — 설명문 "조건에 맞는 …" 은 한 줄이 517.5px 라 508 에서 두 줄로 접힌다.
+//    시안도 이 설명문만 518 로 두어 콘텐츠 우측선(1560)을 10px 넘겨 놨는데, 넘기는 대신 카피 열을
+//    10px 넓혀 우측선을 그리드에 맞춘다(레일 컬럼은 160 → 163.3 으로 늘어난다).
+// 컬럼이 342 로 좁아지는 태블릿에서는 두 영역 모두 같은 비율(약 13.6%)인 40 을 쓴다 — 80 을 그대로
+// 빼면 262 만 남아 제목이 다섯 줄로 접힌다.
+const COPY_INSET_CLASS = {
+    firstArea: 'md:pe-10 xl:pe-20',
+    secondArea: 'md:ps-10 xl:ps-17.5',
+} as const
+
 // 교차는 페이저가 켜진 화면에서만 한다 — 안쪽 스크롤 트랙이 있어야 스크럽할 것이 생긴다.
 // 폭 기준을 따로 두지 않는 이유: 셀이 카피 높이만큼 늘어나므로 컬럼이 좁아도 잘리지 않는다.
 // (xl 로 묶었더니 1280px 창이 스크롤바 6px 때문에 레이아웃 폭 1274 가 되어 교차가 통째로 꺼졌다.)
@@ -241,11 +254,11 @@ const IntroImageCover = ({mode}: {mode: keyof typeof COVER_SCALE_CLASS}) => (
 const IntroLead = ({screen, headingId}: {screen: IntroScreen; headingId?: string}) => (
     <div className="flex flex-col">
         <p className="typo-title-m-bold text-main-intro-foreground">{screen.label}</p>
-        {/* 크기는 28~36px 사이에서 유동 축소한다(시안 36px). typo-* 는 반응형 variant 를 못 받는다
-            — SHADCN.md 타이포 유틸 예외(메인페이지 목업 한시적 허용). */}
+        {/* 크기는 28~36px 사이에서 유동 축소한다(시안 36px). 굵기는 시안대로 ExtraBold(800) 다.
+            typo-* 는 반응형 variant 를 못 받는다 — SHADCN.md 타이포 유틸 예외(메인페이지 목업 한시적 허용). */}
         <h2
             id={headingId}
-            className="text-main-intro-foreground mt-8 text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(9))] leading-normal font-bold break-keep max-xl:text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(8))]"
+            className="text-main-intro-foreground mt-8 text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(9))] leading-normal font-extrabold break-keep max-xl:text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(8))]"
         >
             {screen.title[0]}
             <br />
@@ -546,17 +559,15 @@ const MainSecondSection = () => {
                                 className={cn(CROSSOVER_IMAGE_CLASS, 'absolute inset-0', STATIC_ROUND_CLASS)}
                             />
                             <IntroImageCover mode="swap" />
-                            {/* xl:pe-20 — 시안에서 카피 폭이 컬럼(588)이 아니라 508 이고 사진 쪽으로 80px
-                                물러나 있다(13.6%). 컬럼이 342 로 좁아지는 태블릿에서 80 을 그대로 빼면
-                                262 만 남아 제목이 다섯 줄로 접히므로, 같은 비율인 40 으로 줄인다.
-                                물러나 있다. 사진이 반대편에 있는 셀은 같은 값을 시작 쪽에 준다. */}
+                            {/* 카피 폭은 COPY_INSET_CLASS 가 정한다(위 주석 — 1영역 508 / 2영역 518). */}
                             <IntroProcessCopy
                                 screen={INTRO_SCREENS[0]}
                                 headingId="service-intro-title"
                                 trigger="entry"
                                 className={cn(
                                     SWAP_COPY_FADE_CLASS,
-                                    'relative z-20 flex w-full flex-col md:pe-10 md:pt-5 xl:pe-20',
+                                    'relative z-20 flex w-full flex-col md:pt-5',
+                                    COPY_INSET_CLASS.firstArea,
                                 )}
                             />
                         </div>
@@ -570,7 +581,8 @@ const MainSecondSection = () => {
                                 className={cn(
                                     CROSSOVER_COPY_CLASS,
                                     BASE_COPY_FADE_CLASS,
-                                    'relative z-20 w-full flex-col md:ps-10 md:pt-5 xl:ps-20',
+                                    'relative z-20 w-full flex-col md:pt-5',
+                                    COPY_INSET_CLASS.secondArea,
                                 )}
                             />
                             <IntroImage
