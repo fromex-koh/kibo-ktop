@@ -1,30 +1,31 @@
 import type {ComponentPropsWithoutRef, ReactNode} from 'react'
-import Image from 'next/image'
 import Link from 'next/link'
 import {ChevronRight, type LucideIcon} from 'lucide-react'
 import {Separator} from '@/components/ui/separator'
 import {cn} from '@/lib/utils'
 
-// 스티키 사이드바(StickySidebar) — 마이페이지 좌측에 고정(sticky)되는 프로필 + 메뉴 + 고객센터 카드.
-// Figma "Frame 2085664009" 반영. 스크롤해도 상단에 붙어 따라오는 사이드 내비게이션이다.
+// 스티키 사이드바(StickySidebar) — 마이페이지 좌측에 고정(sticky)되는 프로필 + 메뉴 카드.
+// Figma 마이페이지 "LNB"(40006629:24978) 반영. 스크롤해도 상단에 붙어 따라오는 사이드 내비게이션이다.
 //
 // 복합(compound) API — 이 프로젝트 표준(ReviewList·InfoBox 등)대로 컨테이너와 섹션 컴포넌트를 나눈다:
 //   · StickySidebar         — 흰 카드(border·rounded-lg) + sticky 컨테이너
-//   · StickySidebarProfile  — 아바타 + 기업명 + 회원 배지(가운데 정렬)
+//   · StickySidebarProfile  — 회원 배지 + 기업명(좌측 정렬, 배지가 위)
 //   · StickySidebarNav      — 메뉴 <nav> 랜드마크
 //   · StickySidebarNavItem  — 아이콘 + 라벨 링크. 현재 항목은 active(옅은 파랑 면 + chevron)
-//   · StickySidebarContact  — 고객센터 전화·상담시간
+//   · StickySidebarContact  — 고객센터 전화·상담시간 (최신 LNB 시안에는 없는 선택 섹션)
 //
 // 색·타이포(Figma): 기업명 = title-l-bold(20)·foreground, 메뉴 = body-xl-medium(16)(활성 foreground /
-// 비활성 label-foreground), 활성 면 = primary-subtle(blue.50), 강조색(아바타·배지·전화) = grape.600(#5a5fd2),
-// 고객센터 = title-m-bold(18), 상담시간 = body-l-regular(14)·foreground-subtle. 전부 기존 토큰이라 커스텀 색이 없다([PB-04]).
-// 규격(Figma): radius 16(rounded-lg), 패딩 px-6 py-10, 섹션 사이 gap-6, 프로필↔메뉴 gap-8, 메뉴 항목 h-14(56).
+// 비활성 label-foreground), 활성 면 = primary-subtle(blue.50), 배지 강조색 = grape.600(#5a5fd2).
+// 전부 기존 토큰이라 커스텀 색이 없다([PB-04]).
+// 규격(Figma): 카드 폭 344(w-86 — 사용처 레이아웃에서 지정), radius 16(rounded-lg), 패딩 px-6 py-10,
+// 프로필↔메뉴 gap-8(32), 배지↔기업명 gap-1(4), 메뉴 항목 min-h-14(한 줄 56, 긴 라벨은 줄바꿈)·
+// rounded-sm(8)·px-6, 아이콘 20·아이콘↔라벨 gap-2(8).
 
 const StickySidebar = ({className, children, ...props}: ComponentPropsWithoutRef<'aside'>) => (
     <aside
         data-slot="sticky-sidebar"
         className={cn(
-            'border-subtle-3 bg-card sticky top-6 flex w-full flex-col gap-6 rounded-lg border px-6 py-10',
+            'border-subtle-3 bg-card sticky top-6 flex w-full flex-col gap-8 rounded-lg border px-6 py-10',
             className,
         )}
         {...props}
@@ -33,53 +34,18 @@ const StickySidebar = ({className, children, ...props}: ComponentPropsWithoutRef
     </aside>
 )
 
-// Figma 아바타 규격 48×48. next/image 는 레이아웃 시프트 방지를 위해 width/height 를 요구한다.
-const AVATAR_SIZE = 48
-
 type StickySidebarProfileProps = {
     // 기업/사용자 이름.
     name: ReactNode
-    // 이름 아래 회원 배지(예: <Badge variant="outline" color="secondary-grape" shape="round" size="sm">기업회원</Badge>).
+    // 이름 위 회원 배지(예: <Badge variant="outline" color="secondary-grape" shape="round" size="sm">기업회원</Badge>).
     badge?: ReactNode
-    // 회사 로고 URL. API 가 내려주는(백엔드 경유 동일 출처) 로고 경로를 받는다. 값이 있으면 로고 이미지를,
-    // 없으면(로고 미등록) grape 플레이스홀더를 렌더한다. 외부 도메인 직접 참조 시 next.config 의 images.remotePatterns 설정이 필요하다.
-    logoSrc?: string
-    // 로고 대체 텍스트. 기본은 빈 문자열(decorative) — 기업명이 바로 아래 텍스트로 제공되므로 로고는 장식이다([5.1.1]).
-    logoAlt?: string
-    // 아바타 전체를 직접 제어할 때의 슬롯. 지정하면 logoSrc 보다 우선한다.
-    avatar?: ReactNode
 } & ComponentPropsWithoutRef<'div'>
 
-const StickySidebarProfile = ({
-    name,
-    badge,
-    logoSrc,
-    logoAlt = '',
-    avatar,
-    className,
-    ...props
-}: StickySidebarProfileProps) => (
-    <div data-slot="sticky-sidebar-profile" className={cn('flex flex-col items-center gap-4', className)} {...props}>
-        {avatar ??
-            (logoSrc ? (
-                // 로고 이미지의 경계가 흰 카드에 묻히지 않도록 회색 테두리로 영역을 명확히 한다.
-                // border-subtle-1(gray.300)은 흰 배경과 약 3:1 이상 대비라 경계 구분 기준([5.3.5])을 만족한다.
-                <Image
-                    src={logoSrc}
-                    alt={logoAlt}
-                    draggable={false}
-                    width={AVATAR_SIZE}
-                    height={AVATAR_SIZE}
-                    className="bg-surface border-subtle-1 size-12 shrink-0 rounded-lg border object-cover"
-                />
-            ) : (
-                // 로고 미등록 폴백 — 브랜드 grape 면([5.1.1] 정보 없는 장식이라 aria-hidden).
-                <div aria-hidden="true" className="bg-grape-600 size-12 shrink-0 rounded-lg" />
-            ))}
-        <div className="flex flex-col items-center gap-1">
-            <p className="typo-title-l-bold text-foreground text-center">{name}</p>
-            {badge}
-        </div>
+// 시안은 배지를 기업명 위에 두고 왼쪽 맞춤이다. DOM 순서도 시각 순서(배지 → 이름)를 따른다([7.3.1]).
+const StickySidebarProfile = ({name, badge, className, ...props}: StickySidebarProfileProps) => (
+    <div data-slot="sticky-sidebar-profile" className={cn('flex flex-col items-start gap-1', className)} {...props}>
+        {badge}
+        <p className="typo-title-l-bold text-foreground">{name}</p>
     </div>
 )
 
@@ -117,17 +83,30 @@ const StickySidebarNavItem = ({
         data-slot="sticky-sidebar-nav-item"
         href={href}
         aria-current={active ? 'page' : undefined}
+        // min-h-14 + py-4 — 라벨 한 줄(행간 24)일 때 시안 높이 56 이 나오고, 길면 자르지 않고 줄바꿈해
+        // 항목이 늘어난다. 줄바꿈은 break-keep 으로 한국어 단어 중간에서 쪼개지지 않게 한다.
+        // hover(키보드 포커스 포함)는 active 와 같은 면·chevron 을 보여 준다 — 시각 상태만 빌리고
+        // aria-current 는 실제 현재 위치에만 남는다.
         className={cn(
-            'flex h-14 items-center gap-2 rounded-sm px-6',
+            'group/sidebar-item flex min-h-14 items-center gap-2 rounded-sm px-6 py-4',
             'focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
-            active ? 'bg-primary-subtle text-foreground' : 'text-label-foreground hover:bg-primary-subtle/50',
+            active
+                ? 'bg-primary-subtle text-foreground'
+                : 'text-label-foreground hover:bg-primary-subtle focus-visible:bg-primary-subtle',
             className,
         )}
         {...props}
     >
         <ItemIcon aria-hidden="true" className="size-icon-md shrink-0" />
-        <span className="typo-body-xl-medium flex-1 truncate">{children}</span>
-        {active ? <ChevronRight aria-hidden="true" className="size-icon-md shrink-0" /> : null}
+        <span className="typo-body-xl-medium flex-1 break-keep">{children}</span>
+        {/* chevron 자리는 항상 잡아 둔다(시안도 비활성 항목에 빈 20px 슬롯) — hover 때 라벨이 밀리지 않는다. */}
+        <ChevronRight
+            aria-hidden="true"
+            className={cn(
+                'size-icon-md shrink-0',
+                !active && 'invisible group-hover/sidebar-item:visible group-focus-visible/sidebar-item:visible',
+            )}
+        />
     </Link>
 )
 
@@ -141,6 +120,7 @@ type StickySidebarContactProps = {
 } & ComponentPropsWithoutRef<'div'>
 
 // tel: 링크는 전화 앱을 여는 외부 스킴이라 next/link 가 아닌 <a> 를 쓴다([NA-006] 예외).
+// 최신 LNB 시안(40006629)에는 고객센터 섹션이 없다 — 고객센터가 있는 화면에서만 Divider 와 함께 조합한다.
 const StickySidebarContact = ({label = '고객센터', phone, hours, className, ...props}: StickySidebarContactProps) => (
     <div data-slot="sticky-sidebar-contact" className={cn('flex flex-col', className)} {...props}>
         <div className="flex items-center gap-2">
