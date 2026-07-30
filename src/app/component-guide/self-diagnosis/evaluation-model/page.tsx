@@ -89,8 +89,9 @@ const EvaluationModelPage = () => (
             navigationByUserType={PLATFORM_NAVIGATION}
         />
 
-        {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다. */}
-        <main id="main" tabIndex={-1} className="content-layout flex flex-col gap-15 pt-10 pb-25">
+        {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다.
+            flex-1 — 화면이 콘텐츠보다 높을 때 남는 높이를 본문이 가져가 푸터가 바닥에 붙는다. */}
+        <main id="main" tabIndex={-1} className="content-layout flex flex-1 flex-col gap-15 pt-10 pb-25">
             <div className="flex flex-col gap-2">
                 <PageTitleBar
                     title="기술평가"
