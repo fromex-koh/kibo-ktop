@@ -1,5 +1,6 @@
 import type {Metadata} from 'next'
 import Link from 'next/link'
+import {SquareArrowOutUpRight} from 'lucide-react'
 import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
@@ -116,12 +117,13 @@ const SelfDiagnosisCompletePage = () => (
 
         <div className="flex flex-col gap-[clamp(--spacing(2),3.7dvh,--spacing(10))]">
             <InfoBox variant="outline" title="알려드려요">
-                <InfoBoxItem>제출하신 자가진단 결과는 마이페이지 &gt; 진행현황 조회에서 확인할 수 있어요.</InfoBoxItem>
-                <InfoBoxItem>진단 결과발송은 마이페이지 &gt; 진행현황 조회에서 진행할 수 있어요.</InfoBoxItem>
+                <InfoBoxItem>제출하신 기술평가 결과는 마이페이지 &gt; 평가결과 조회에서 확인할 수 있어요.</InfoBoxItem>
+                <InfoBoxItem>기술평가 결과발송은 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.</InfoBoxItem>
                 <InfoBoxItem>
                     은행으로 평가결과를 전송하려면{' '}
                     <Button type="button" variant="text-underline" size="md">
                         은행전송
+                        <SquareArrowOutUpRight aria-hidden="true" />
                     </Button>
                     을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
                 </InfoBoxItem>
@@ -129,6 +131,7 @@ const SelfDiagnosisCompletePage = () => (
                     기관으로 평가결과를 전송하려면{' '}
                     <Button type="button" variant="text-underline" size="md">
                         보증신청
+                        <SquareArrowOutUpRight aria-hidden="true" />
                     </Button>
                     을 선택하거나 마이페이지 &gt; 평가결과 조회에서 진행할 수 있어요.
                 </InfoBoxItem>
