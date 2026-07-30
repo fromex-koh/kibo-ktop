@@ -21,6 +21,7 @@ import type {GuideNavIconKey, GuideNavItem, GuideNavItemGroup, GuideNavSection} 
 import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage} from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
+import GuideSearchDialog from '@/components/composite/guide-search-dialog'
 import ThemeToggle from '@/components/composite/theme-toggle'
 import {Collapsible, CollapsibleContent, CollapsibleTrigger} from '@/components/ui/collapsible'
 import {
@@ -225,7 +226,8 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                             {title}
                         </p>
                     )}
-                    <div className="ml-auto">
+                    <div className="ml-auto flex items-center gap-2">
+                        <GuideSearchDialog navRootItem={navRootItem} navSections={navSections} />
                         <ThemeToggle />
                     </div>
                 </header>
