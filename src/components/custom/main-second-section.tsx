@@ -5,6 +5,7 @@ import Image, {type StaticImageData} from 'next/image'
 import consultingPhoto from '@public/images/main-hero/service-intro-consulting.webp'
 import selfDiagnosisPhoto from '@public/images/main-hero/service-intro-self-diagnosis.webp'
 import {stackPageClassName} from '@/components/theme/stack-pager.variants'
+import {STACK_PAGER_TRANSITION_DURATION_MS} from '@/components/custom/stack-pager'
 import {cn} from '@/lib/utils'
 
 // 좌우 교차로 번갈아 보여주는 두 벌의 카피 — 시안 [메인] 02-1(기업)·02-2(금융·기관).
@@ -197,6 +198,7 @@ const IntroImage = ({
 const IntroImageCover = ({mode}: {mode: keyof typeof COVER_SCALE_CLASS}) => (
     <div aria-hidden="true" className="pointer-events-none absolute -inset-px z-10">
         <span
+            data-intro-aperture-panel
             className={cn(
                 ENTRY_COVER_PANEL_CLASS,
                 'inset-x-0 top-0 h-1/2 origin-top',
@@ -204,6 +206,7 @@ const IntroImageCover = ({mode}: {mode: keyof typeof COVER_SCALE_CLASS}) => (
             )}
         />
         <span
+            data-intro-aperture-panel
             className={cn(
                 ENTRY_COVER_PANEL_CLASS,
                 'inset-x-0 bottom-0 h-1/2 origin-bottom',
@@ -211,6 +214,7 @@ const IntroImageCover = ({mode}: {mode: keyof typeof COVER_SCALE_CLASS}) => (
             )}
         />
         <span
+            data-intro-aperture-panel
             className={cn(
                 ENTRY_COVER_PANEL_CLASS,
                 'inset-y-0 left-0 w-1/2 origin-left',
@@ -218,6 +222,7 @@ const IntroImageCover = ({mode}: {mode: keyof typeof COVER_SCALE_CLASS}) => (
             )}
         />
         <span
+            data-intro-aperture-panel
             className={cn(
                 ENTRY_COVER_PANEL_CLASS,
                 'inset-y-0 right-0 w-1/2 origin-right',
@@ -395,6 +400,7 @@ const MainSecondSection = () => {
 
         let entryRevealFrame = 0
         let entrySequence = 0
+        let resetTrackTimer = 0
 
         // 스크롤 양을 그대로 쓰지 않고 0/1 로만 뒤집는다 — 전환 자체는 CSS transition 이 재생한다.
         // 스크롤 이벤트에서 바로 쓴다. 브라우저가 이미 프레임당 한 번으로 묶어 보내고 하는 일도
@@ -416,15 +422,21 @@ const MainSecondSection = () => {
             const currentSequence = ++entrySequence
             window.cancelAnimationFrame(entryRevealFrame)
 
-            // 비활성이 되면 트랙을 되감아 다음 방문이 항상 첫 화면부터 시작하게 한다. 그대로 두면
-            // "트랙은 처음, 교차는 끝난 상태"로 어긋나, 다시 왔을 때 두 번째 화면이 이미 완성된 채
-            // 나타나고 그 화면의 진행 레일도 채워진 채로 남아 재생되지 않는다.
+            // 비활성이 되면 다음 방문을 위해 트랙을 되감아야 한다. 단, 상태가 바뀌는 즉시 되감으면
+            // 화면 전환 레이어 아래에서 2영역→1영역 조리개가 잠깐 재생돼 "움찔"해 보인다.
+            // StackPager의 레이어 전환이 끝난 뒤, 화면 밖에서 초기화한다.
             if (section.dataset.stackState !== 'active') {
-                delete section.dataset.entryReady
-                rewindTrack()
+                window.clearTimeout(resetTrackTimer)
+                resetTrackTimer = window.setTimeout(() => {
+                    if (section.dataset.stackState !== 'active') {
+                        delete section.dataset.entryReady
+                        rewindTrack()
+                    }
+                }, STACK_PAGER_TRANSITION_DURATION_MS)
                 return
             }
 
+            window.clearTimeout(resetTrackTimer)
             update()
 
             // 3섹션에서 위로 복귀한 경우에는 StackPager가 이미 트랙 끝(2영역)에 맞춰 둔다.
@@ -466,6 +478,7 @@ const MainSecondSection = () => {
         return () => {
             entrySequence += 1
             window.cancelAnimationFrame(entryRevealFrame)
+            window.clearTimeout(resetTrackTimer)
             sectionStateObserver.disconnect()
             section.removeEventListener('scroll', update)
             delete section.dataset.entryReady

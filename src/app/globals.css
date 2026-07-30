@@ -213,6 +213,14 @@
         background-color: var(--ds-background);
     }
 
+    /* 2섹션의 조리개 — StackPager가 비활성 레이어의 안쪽 스크롤 위치를 먼저 맞추는 동안
+       scale 전환이 재생되면, 화면 전환 중 이미지가 시작했다 멈추는 것처럼 보인다. 이전·다음
+       레이어에서는 값을 즉시 확정하고, active가 된 뒤에만 조리개 모션을 재생한다. */
+    [data-stack-page][data-stack-state='previous'] [data-intro-aperture-panel],
+    [data-stack-page][data-stack-state='next'] [data-intro-aperture-panel] {
+        transition: none;
+    }
+
     /* 메인 히어로 SCROLL 표시 — 54279a4의 원본 구현.
        고정 트랙 위 ::after 선이 위에서 아래로 채워진 뒤 사라지며 반복된다. */
     .main-scroll-line-fill::after {

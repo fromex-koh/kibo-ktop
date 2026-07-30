@@ -8,7 +8,7 @@ const WHEEL_DELTA_TRIGGER = 20
 // 터치 스와이프로 페이지를 넘기는 최소 이동 거리(px). 휠보다 크게 잡아 스크롤 의도와 탭을 구분한다.
 const TOUCH_SWIPE_TRIGGER = 40
 const WHEEL_GESTURE_IDLE_MS = 120
-const TRANSITION_DURATION_MS = 600
+export const STACK_PAGER_TRANSITION_DURATION_MS = 600
 // 메인 헤더 배경색 페이드 시간. 헤더가 새 섹션이 화면을 채우는 시점에 완료되도록
 // StackPager 의 레이어 전환 종료보다 이 시간만큼 앞서 시작한다.
 const HEADER_BACKGROUND_TRANSITION_MS = 300
@@ -114,13 +114,13 @@ const StackPager = ({
         window.clearTimeout(headerTimerRef.current)
         headerTimerRef.current = window.setTimeout(
             () => setHeaderPage(nextPage),
-            reducedMotion ? 0 : TRANSITION_DURATION_MS - HEADER_BACKGROUND_TRANSITION_MS,
+            reducedMotion ? 0 : STACK_PAGER_TRANSITION_DURATION_MS - HEADER_BACKGROUND_TRANSITION_MS,
         )
         transitionTimerRef.current = window.setTimeout(
             () => {
                 isTransitioningRef.current = false
             },
-            reducedMotion ? 0 : TRANSITION_DURATION_MS,
+            reducedMotion ? 0 : STACK_PAGER_TRANSITION_DURATION_MS,
         )
     }, [])
 
