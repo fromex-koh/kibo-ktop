@@ -7,6 +7,8 @@ export const breadcrumbListClassName =
     'typo-body-xl-regular text-label-foreground flex flex-wrap items-center gap-3 wrap-break-word'
 export const breadcrumbItemClassName = 'inline-flex items-center gap-1'
 export const breadcrumbLinkClassName = 'hover:text-foreground transition-colors'
+// PROJECT-STYLE: 시안 "마지막" 프레임에는 현재 페이지 뒤 16px chevron 이 있지만 쓰지 않기로 결정했다
+// — 현재 위치는 굵은 글자와 aria-current 로 전달한다.
 export const breadcrumbPageClassName = 'typo-body-xl-bold text-foreground'
 export const breadcrumbSeparatorClassName = '[&>svg]:size-3.5'
 export const breadcrumbEllipsisClassName = 'flex size-5 items-center justify-center [&>svg]:size-4'

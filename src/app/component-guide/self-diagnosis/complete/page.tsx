@@ -81,11 +81,12 @@ const SelfDiagnosisCompletePage = () => (
     >
         <div aria-hidden="true" className="h-[clamp(--spacing(2),3.7dvh,--spacing(10))]" />
 
+        {/* 최신 시안(40006638) — 타이틀 "자가진단" + navy "KTRS-FM 평가" 배지, 브레드크럼 홈·자가진단·제출 완료. */}
         <PageTitleBar
-            title="신속표준모형"
+            title="자가진단"
             badge={
-                <Badge variant="solid" color="info" shape="round">
-                    KTRS-FM
+                <Badge variant="solid" color="navy" shape="round" size="lg">
+                    KTRS-FM 평가
                 </Badge>
             }
             breadcrumb={
@@ -97,12 +98,12 @@ const SelfDiagnosisCompletePage = () => (
                         <BreadcrumbDotSeparator />
                         <BreadcrumbItem>
                             <BreadcrumbLink href="/component-guide/self-diagnosis/evaluation-model">
-                                기술평가
+                                자가진단
                             </BreadcrumbLink>
                         </BreadcrumbItem>
                         <BreadcrumbDotSeparator />
                         <BreadcrumbItem>
-                            <BreadcrumbPage>KTRS-FM</BreadcrumbPage>
+                            <BreadcrumbPage>제출 완료</BreadcrumbPage>
                         </BreadcrumbItem>
                     </BreadcrumbList>
                 </Breadcrumb>
