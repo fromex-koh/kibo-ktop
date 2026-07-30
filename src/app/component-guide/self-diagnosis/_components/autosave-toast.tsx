@@ -16,9 +16,6 @@ const AUTOSAVE_POSITION = 'top-center'
 // 헤더 높이(기본 56px·lg 112px) 아래로 40px 떨어진 위치에 토스트 상단을 맞춘다.
 const AUTOSAVE_OFFSET_CLASS_NAME = 'mt-20 sm:mt-18 lg:mt-32'
 
-// 자동저장 완료 상태는 시안처럼 파란 원형 면과 흰색 체크로 구분한다.
-const AUTOSAVE_ICON_CLASS_NAME = 'flex size-icon-lg shrink-0 items-center justify-center'
-
 // 같은 id 를 주어 개발 모드의 이중 마운트에서도 토스트가 두 개 쌓이지 않게 한다.
 const AUTOSAVE_TOAST_ID = 'self-diagnosis-autosave'
 
@@ -40,15 +37,12 @@ const AutosaveToast = () => {
                 icon: (
                     <span
                         aria-hidden="true"
-                        className="bg-primary text-primary-foreground size-icon-lg flex items-center justify-center rounded-full"
+                        className="bg-primary text-primary-foreground size-icon-md flex shrink-0 items-center justify-center rounded-full"
                     >
-                        <Check className="size-icon-sm" strokeWidth={3} />
+                        <Check className="scale-75" strokeWidth={3} />
                     </span>
                 ),
                 className: AUTOSAVE_OFFSET_CLASS_NAME,
-                classNames: {
-                    icon: AUTOSAVE_ICON_CLASS_NAME,
-                },
             })
         }, TOASTER_MOUNT_DELAY_MS)
 

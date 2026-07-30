@@ -39,8 +39,10 @@ const SelfDiagnosisInputHeader = (props: SelfDiagnosisInputHeaderProps) => {
         const headerScope = headerScopeRef.current
         if (!headerScope) return
 
-        const syncMenuTriggerLabel = () => {
-            const menuTrigger = headerScope.querySelector<HTMLButtonElement>('[data-header-menu-trigger]')
+        const syncMenuTriggerLabel = (event: Event) => {
+            if (!(event.target instanceof Element)) return
+
+            const menuTrigger = event.target.closest<HTMLButtonElement>('[data-header-menu-trigger]')
             if (!menuTrigger) return
 
             menuTrigger.setAttribute('aria-label', '작성 종료')
@@ -55,16 +57,16 @@ const SelfDiagnosisInputHeader = (props: SelfDiagnosisInputHeaderProps) => {
             setDialogOpen(true)
         }
 
-        // Header 내부 콘텐츠는 Suspense 뒤에 렌더될 수 있어 라벨은 DOM 변경 시에도 동기화한다.
-        const contentObserver = new MutationObserver(syncMenuTriggerLabel)
-        contentObserver.observe(headerScope, {childList: true, subtree: true})
-        syncMenuTriggerLabel()
-
         // Radix Sheet 트리거보다 앞선 캡처 단계에서 입력 데모 전용 종료 확인 동작으로 전환한다.
+        // 트리거 라벨도 사용자가 포인터·키보드로 접근할 때 바꾼다. Suspense 내부 Header가 hydration 되기
+        // 전에 DOM 속성을 수정하면 서버 마크업과 클라이언트 속성이 달라지므로 MutationObserver는 쓰지 않는다.
+        headerScope.addEventListener('focusin', syncMenuTriggerLabel, true)
+        headerScope.addEventListener('pointerdown', syncMenuTriggerLabel, true)
         headerScope.addEventListener('click', handleHeaderNavigation, true)
 
         return () => {
-            contentObserver.disconnect()
+            headerScope.removeEventListener('focusin', syncMenuTriggerLabel, true)
+            headerScope.removeEventListener('pointerdown', syncMenuTriggerLabel, true)
             headerScope.removeEventListener('click', handleHeaderNavigation, true)
         }
     }, [])
