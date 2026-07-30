@@ -21,7 +21,8 @@ const optionCardTitleGroupClassName = 'flex min-w-0 flex-col'
 const optionCardTitleClassName = 'typo-h2-bold text-foreground'
 const optionCardSubtitleClassName = 'typo-body-xl-medium text-foreground'
 const optionCardIllustrationClassName = 'flex shrink-0 items-center justify-center'
-const optionCardDescriptionClassName = 'typo-body-l-regular text-foreground-subtle'
+// break-keep — 한국어 문장이 좁은 폭에서 단어 중간("잠재/력을")에서 쪼개지지 않게 한다.
+const optionCardDescriptionClassName = 'typo-body-l-regular text-foreground-subtle break-keep'
 // 우하단 화살표 — rest 는 아이콘만, 강조 시 원형 primary 버튼 + 흰 아이콘. 카드가 링크라 장식(aria-hidden)이다.
 const optionCardArrowClassName =
     'text-foreground group-hover:bg-primary group-hover:text-primary-foreground group-focus-visible:bg-primary group-focus-visible:text-primary-foreground mt-auto flex size-8 shrink-0 items-center justify-center self-end rounded-full transition-colors'
