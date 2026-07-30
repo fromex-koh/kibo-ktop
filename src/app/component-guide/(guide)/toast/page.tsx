@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
@@ -258,6 +259,26 @@ const ToastGuidePage = () => (
                     <li>중요한 확인이나 필수 입력을 토스트만으로 전달하지 않습니다.</li>
                     <li>되돌리기처럼 짧고 안전한 후속 동작만 action으로 제공합니다.</li>
                 </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="toast-validator" className="flex flex-col gap-2">
+                <h2 id="toast-validator" className="typo-h4-bold">
+                    W3C 검사기 메시지 (감리 참고)
+                </h2>
+                <p className="typo-body-l-regular text-muted-foreground">
+                    렌더된 DOM을 직렬화해 검사하면 sonner가 런타임에 주입하는 스타일시트 때문에{' '}
+                    <code className="font-mono">CSS: Parse Error</code>와 charset 1024바이트 초과 메시지가 나타날 수
+                    있습니다. 서버 전송 HTML에는 없는 오탐이며, 실측 근거와 판정은{' '}
+                    <Link
+                        href="/component-guide/validation-exceptions"
+                        className="text-primary underline underline-offset-4"
+                    >
+                        마크업 검증
+                    </Link>{' '}
+                    페이지의 &ldquo;렌더된 DOM 직렬화 검사에서만 나타나는 메시지 판정&rdquo; 항목에 기록되어 있습니다.
+                </p>
             </section>
         </BaseCard>
 

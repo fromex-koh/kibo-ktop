@@ -353,21 +353,75 @@ const ValidationExceptionsPage = () => (
             </div>
         </BaseCard>
 
-        <BaseCard title="charset 메시지 판정">
-            <div className="flex flex-col gap-4">
+        <BaseCard
+            title="렌더된 DOM 직렬화 검사에서만 나타나는 메시지 판정"
+            subtitle="charset 위치 · CSS Parse Error — 2026-07-31 실측"
+        >
+            <div className="flex flex-col gap-5">
+                <p>
+                    아래 두 메시지는 <strong>서버가 전송하는 HTML에는 존재하지 않고</strong>, 브라우저에서 스크립트가
+                    실행된 뒤의 DOM을 직렬화(DevTools 복사·확장 저장 등)해 검사기에 제출할 때만 나타납니다. W3C 검사의
+                    본래 대상은 전송되는 문서이므로, 감리 증적은 URL 직접 검사 또는 페이지 소스 제출 기준으로 남깁니다.
+                </p>
+
+                <section aria-labelledby="validation-dom-charset" className="flex flex-col gap-2">
+                    <SectionHeader>
+                        <SectionHeaderTitle id="validation-dom-charset">
+                            1. charset 1024바이트 초과 — 하이드레이션 재배치 결과
+                        </SectionHeaderTitle>
+                        <SectionHeaderDescription>서버 HTML은 규칙 충족, DOM 직렬화본만 위반</SectionHeaderDescription>
+                    </SectionHeader>
+                    <CodeBlock
+                        code="A “charset” attribute on a “meta” element found after the first 1024 bytes."
+                        language="text"
+                    />
+                    <p>
+                        서버 전송 HTML의 <code className="font-mono">&lt;meta charSet=&quot;utf-8&quot;&gt;</code>은
+                        운영 빌드 64바이트·개발 서버 70바이트 위치로 1024바이트 제한을 충족하며, HTTP 응답 헤더도{' '}
+                        <code className="font-mono">Content-Type: text/html; charset=utf-8</code>로 인코딩을 선언합니다.
+                        렌더 후에는 sonner(토스트)가 모듈 로드 시점에 약 10KB 스타일시트를{' '}
+                        <code className="font-mono">head.appendChild</code>로 주입하고, 이어지는 React 하이드레이션이
+                        Next가 관리하는 메타태그를 재배치하면서 charset이 그 스타일 뒤(약 18KB 지점)로 밀립니다. 실제
+                        브라우저는 HTTP 헤더를 우선하므로 인코딩 오해석 위험은 없습니다.
+                    </p>
+                </section>
+
+                <section aria-labelledby="validation-dom-css" className="flex flex-col gap-2">
+                    <SectionHeader>
+                        <SectionHeaderTitle id="validation-dom-css">
+                            2. CSS Parse Error — sonner 주입 스타일시트, 검사기 엔진 한계
+                        </SectionHeaderTitle>
+                        <SectionHeaderDescription>
+                            스펙상 유효한 최신 CSS 문법을 구형 엔진이 파싱하지 못하는 오탐
+                        </SectionHeaderDescription>
+                    </SectionHeader>
+                    <CodeBlock code={'Error: CSS: Parse Error. — “onner-toast]>*{transition:n”'} language="text" />
+                    <p>
+                        프로젝트 CSS(<code className="font-mono">globals.css</code>·
+                        <code className="font-mono">tokens.css</code>)가 아니라 sonner가 런타임에 주입하는
+                        스타일시트입니다(<code className="font-mono">[data-sonner-toast]</code> 셀렉터 — 서버 HTML에는
+                        미포함). 걸리는 지점은 값 없는 불리언 미디어 쿼리{' '}
+                        <code className="font-mono">@media (prefers-reduced-motion)</code>(Media Queries Level 4 유효)와
+                        식을 담는 커스텀 프로퍼티{' '}
+                        <code className="font-mono">--scale: var(--toasts-before) * 0.05 + 1</code>(CSS Variables Level
+                        1 유효 — 커스텀 프로퍼티 값은 임의 토큰열)로, 전 브라우저가 정상 해석합니다. HTML 문법 오류가
+                        아니므로 KWCAG 8.1.1 위반에도 해당하지 않습니다.
+                    </p>
+                </section>
+
                 <div className="flex items-start gap-2">
                     <CircleCheck aria-hidden="true" className="text-success size-icon-md mt-0.5 shrink-0" />
                     <p>
-                        현재 운영 빌드의 <code className="font-mono">&lt;meta charSet=&quot;utf-8&quot;&gt;</code>은
-                        문서 시작 후 64바이트 위치에 생성되어 1024바이트 제한을 충족합니다.
+                        판정 — 두 메시지 모두 서버 전송 HTML 기준 검사에서는 발생하지 않음을 실측으로 확인했습니다(문서
+                        상단 검증 기준과 동일 방식). 서드파티 원본 보존 원칙에 따라 라이브러리(sonner)를 수정하지
+                        않으며, DOM 직렬화본 검사 결과가 제출된 경우 본 항목으로 소명합니다.
                     </p>
                 </div>
                 <div className="flex items-start gap-2">
                     <CircleAlert aria-hidden="true" className="text-warning size-icon-md mt-0.5 shrink-0" />
                     <p>
-                        따라서 <q>charset attribute … after the first 1024 bytes</q> 메시지는 현재 기준으로 shadcn/ui
-                        또는 Recharts 예외에 포함하지 않습니다. 개발 서버, 배포 전환 계층, HTML 붙여넣기 과정에서
-                        재현되면 해당 응답 원문을 별도로 보존해야 합니다.
+                        서버 전송 HTML 기준 검사에서 같은 메시지가 재현되면 본 판정의 전제가 깨진 것이므로, 해당 응답
+                        원문을 보존하고 원인을 재조사합니다.
                     </p>
                 </div>
             </div>
