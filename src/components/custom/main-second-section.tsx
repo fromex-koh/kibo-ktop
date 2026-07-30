@@ -415,15 +415,32 @@ const MainSecondSection = () => {
         const syncEntryReveal = () => {
             const currentSequence = ++entrySequence
             window.cancelAnimationFrame(entryRevealFrame)
-            delete section.dataset.entryReady
 
             // 비활성이 되면 트랙을 되감아 다음 방문이 항상 첫 화면부터 시작하게 한다. 그대로 두면
             // "트랙은 처음, 교차는 끝난 상태"로 어긋나, 다시 왔을 때 두 번째 화면이 이미 완성된 채
             // 나타나고 그 화면의 진행 레일도 채워진 채로 남아 재생되지 않는다.
             if (section.dataset.stackState !== 'active') {
+                delete section.dataset.entryReady
                 rewindTrack()
                 return
             }
+
+            update()
+
+            // 3섹션에서 위로 복귀한 경우에는 StackPager가 이미 트랙 끝(2영역)에 맞춰 둔다.
+            // 이때 최초 진입용 커버를 닫았다가 다시 열면 오른쪽 카피가 움찔하므로, 완료 상태를
+            // 같은 페인트 안에서 확정하고 리빌 애니메이션은 생략한다.
+            const maxScroll = section.scrollHeight - section.clientHeight
+            const isReverseCrossoverEntry =
+                section.dataset.stackEntryDirection === 'backward' &&
+                maxScroll > 0 &&
+                section.scrollTop / maxScroll > SWAP_THRESHOLD
+            if (isReverseCrossoverEntry) {
+                section.dataset.entryReady = 'true'
+                return
+            }
+
+            delete section.dataset.entryReady
 
             if (!entryImageReady) {
                 return
@@ -461,6 +478,9 @@ const MainSecondSection = () => {
             id="service-intro"
             tabIndex={-1}
             data-stack-page
+            // 3섹션에서 위로 돌아오면 교차가 끝난 2영역부터 보여 준다. 이후 위로 스크롤하면
+            // 내부 트랙을 되감아 1영역을 거친 뒤에야 1섹션으로 이동한다.
+            data-stack-reverse-entry="end"
             aria-labelledby="service-intro-title"
             // pager-on:overflow-y-auto — 교차용 안쪽 스크롤 트랙. 페이저는 이 값이 auto/scroll 일 때만
             // 양보하므로, 트랙이 없는 화면에서는 한 번의 제스처가 그대로 3섹션으로 넘어간다.

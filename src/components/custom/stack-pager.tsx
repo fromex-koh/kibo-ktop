@@ -85,7 +85,17 @@ const StackPager = ({
         if (nextPage === activePageRef.current) return
 
         const nextPageElement = ref.current?.querySelectorAll<HTMLElement>('[data-stack-page]')[nextPage]
-        nextPageElement?.scrollTo({top: 0, left: 0, behavior: 'auto'})
+        // 역방향 진입 시에도 내부 트랙의 첫 지점으로 되감으면, 두 화면으로 구성된 섹션은 마지막
+        // 화면을 건너뛴다. 명시적으로 opt-in 한 페이지는 바로 이전(아래) 페이지에서 올라올 때
+        // 트랙 끝에 먼저 도착하고, 다음 위쪽 입력으로 첫 화면까지 되감는다.
+        const enterAtEnd = direction < 0 && nextPageElement?.dataset.stackReverseEntry === 'end'
+        nextPageElement?.scrollTo({
+            top: enterAtEnd ? Math.max(0, nextPageElement.scrollHeight - nextPageElement.clientHeight) : 0,
+            left: 0,
+            behavior: 'auto',
+        })
+        // 화면은 진입 방향을 알아야 첫 진입 전용 모션을 역방향 복귀에 다시 재생하지 않을 수 있다.
+        nextPageElement?.setAttribute('data-stack-entry-direction', direction > 0 ? 'forward' : 'backward')
 
         activePageRef.current = nextPage
         isTransitioningRef.current = true
@@ -112,6 +122,7 @@ const StackPager = ({
 
             const nextPageElement = container.querySelectorAll<HTMLElement>('[data-stack-page]')[nextPage]
             nextPageElement?.scrollTo({top: 0, left: 0, behavior: 'auto'})
+            nextPageElement?.setAttribute('data-stack-entry-direction', 'direct')
 
             activePageRef.current = nextPage
             isTransitioningRef.current = false
@@ -319,6 +330,7 @@ const StackPager = ({
             desktopQuery.removeEventListener('change', handleDesktopChange)
             pages.forEach((page) => {
                 delete page.dataset.stackState
+                delete page.dataset.stackEntryDirection
                 page.removeAttribute('aria-hidden')
                 page.inert = false
             })
