@@ -43,14 +43,7 @@ const MAIN_HEADER_NAVIGATION = {
 // MainPageHeaderState 가 쓰는 natural-page. active-page는 접근성·입력 처리용이라 전환 시작과
 // 동시에 바뀌므로 헤더 배경 기준으로 쓰지 않는다.
 // 헤더는 어느 섹션에서도 위로 밀어 올리지 않고 상단에 붙어 있는다 — 배경색만 바뀐다.
-const MAIN_PAGE_CLASS = [
-    '[&_header]:bg-transparent',
-    '[&_header]:transition-[background-color]',
-    '[&_header]:duration-300',
-    '[&_header]:ease-out',
-    'motion-reduce:[&_header]:transition-none',
-    'data-[natural-page=1]:[&_header]:bg-background',
-].join(' ')
+const MAIN_PAGE_CLASS = ['[&_header]:bg-transparent', 'data-[natural-page=1]:[&_header]:bg-background'].join(' ')
 
 // 메인페이지 목업 — 히어로·신규 서비스 소개·기술평가 세 섹션을 StackPager 로 넘긴다.
 // · 전환: 화면이 충분하면 고정 레이어(cover = 이전 섹션은 제자리, 다음 섹션이 위를 덮음), 아니면 스크롤 스냅.

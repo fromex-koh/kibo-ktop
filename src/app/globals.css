@@ -213,6 +213,18 @@
         background-color: var(--ds-background);
     }
 
+    /* 메인 헤더 배경 — StackPager 전환(600ms)과 겹쳐도 급격해 보이지 않도록 500ms 동안
+       완만하게 들어온다. 이 규칙은 Header 내부의 짧은 일반 전환과 독립적으로 유지한다. */
+    [data-stack-pager] > header {
+        transition: background-color 500ms ease-in-out;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-stack-pager] > header {
+            transition: none;
+        }
+    }
+
     /* 2섹션의 조리개 — StackPager가 비활성 레이어의 안쪽 스크롤 위치를 먼저 맞추는 동안
        scale 전환이 재생되면, 화면 전환 중 이미지가 시작했다 멈추는 것처럼 보인다. 이전·다음
        레이어에서는 값을 즉시 확정하고, active가 된 뒤에만 조리개 모션을 재생한다. */

@@ -11,7 +11,7 @@ const WHEEL_GESTURE_IDLE_MS = 120
 export const STACK_PAGER_TRANSITION_DURATION_MS = 600
 // 메인 헤더 배경색 페이드 시간. 헤더가 새 섹션이 화면을 채우는 시점에 완료되도록
 // StackPager 의 레이어 전환 종료보다 이 시간만큼 앞서 시작한다.
-const HEADER_BACKGROUND_TRANSITION_MS = 300
+const HEADER_BACKGROUND_TRANSITION_MS = 500
 const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
 const PAGE_UP_KEYS = new Set(['ArrowUp', 'PageUp'])
 // 페이저가 켜지는 화면 조건 — globals.css 의 .stack-page 고정 레이어 미디어쿼리와 같은 값이어야 한다.
