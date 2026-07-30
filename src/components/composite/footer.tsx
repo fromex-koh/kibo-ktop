@@ -49,14 +49,40 @@ const linkFocusClassName =
 
 export type FooterVariant = 'default' | 'subpage'
 
+// 메인 시안(footer_area 325px)은 풀스크린 섹션 안에 들어가 서브페이지 시안(378px)보다 세로 간격이 촘촘하고,
+// 관련사이트 셀렉트도 테두리 없는 solid 면이다. 구성·문구는 같으므로 그 차이만 variant 별로 모아 둔다.
+const FOOTER_STYLE = {
+    default: {
+        root: 'gap-10 pt-10 pb-10',
+        topBlock: 'gap-8',
+        contactBlock: 'gap-2',
+        phoneBlock: 'gap-0',
+        phoneRow: 'gap-2',
+        // 메인 시안의 관련사이트는 어두운 푸터 위 solid 면(gray.700)이고 테두리를 끈 상태다.
+        // muted 가 mainpage·dark 에서 gray.700 으로 반사되므로 dark: 분기 없이 시안값이 그대로 나온다([PB-06]).
+        // 테두리는 지우지 않고 투명으로 둬 포커스·열림 상태의 border-primary 표시를 그대로 살린다. [KWCAG 6.1.2]
+        familySite: 'bg-muted border-transparent w-70',
+    },
+    subpage: {
+        root: 'gap-16 pt-14 pb-10',
+        topBlock: 'gap-12',
+        contactBlock: 'gap-3',
+        phoneBlock: 'gap-1',
+        phoneRow: 'gap-4',
+        // 서브 시안은 흰 면 + 회색 테두리라 Select 기본(bg-surface·border-control)을 그대로 쓴다.
+        familySite: 'w-47',
+    },
+} satisfies Record<FooterVariant, Record<string, string>>
+
 // default 는 메인페이지 푸터, subpage 는 모형선택 화면의 정보형 푸터다. 구성은 거의 같고
-// 유틸 링크 목록(default 4개 / subpage 는 '플랫폼 소개' 추가)과 표면색만 다르다.
+// 유틸 링크 목록(default 4개 / subpage 는 '플랫폼 소개' 추가)·표면색·간격·셀렉트 외형(FOOTER_STYLE)만 다르다.
 type FooterProps = ComponentProps<'footer'> & {
     variant?: FooterVariant
 }
 
 const Footer = ({variant = 'default', className, ...props}: FooterProps) => {
     const utilityLinks = variant === 'subpage' ? SUBPAGE_UTILITY_LINKS : UTILITY_LINKS
+    const style = FOOTER_STYLE[variant]
 
     return (
         <footer
@@ -68,8 +94,8 @@ const Footer = ({variant = 'default', className, ...props}: FooterProps) => {
             )}
             aria-label="사이트 정보"
         >
-            <div className="content-layout flex flex-col gap-16 pt-14 pb-10">
-                <div className="flex flex-col gap-12">
+            <div className={cn('content-layout flex flex-col', style.root)}>
+                <div className={cn('flex flex-col', style.topBlock)}>
                     <div className="flex flex-wrap items-center justify-between gap-6">
                         {/* KIBO 로고(시안 240×32) — 두 장을 두고 --logo-on-*(globals.css) 로 배경 명도에 맞는 쪽만 표시한다.
                         dark: 변형은 중첩 고정한 테마 미리보기에서 틀린 쪽을 고른다 — Header 와 같은 방식. */}
@@ -110,9 +136,9 @@ const Footer = ({variant = 'default', className, ...props}: FooterProps) => {
                         </nav>
                     </div>
 
-                    <div className="flex flex-col gap-3">
-                        <div className="flex flex-col gap-1">
-                            <p className="flex flex-wrap items-baseline gap-4">
+                    <div className={cn('flex flex-col', style.contactBlock)}>
+                        <div className={cn('flex flex-col', style.phoneBlock)}>
+                            <p className={cn('flex flex-wrap items-baseline', style.phoneRow)}>
                                 <span className="typo-title-m-bold">대표전화</span>
                                 <a href={`tel:${CONTACT.number}`} className={cn('typo-h4-bold', linkFocusClassName)}>
                                     {CONTACT.number}
@@ -126,10 +152,10 @@ const Footer = ({variant = 'default', className, ...props}: FooterProps) => {
 
                 <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     <p className="typo-body-l-regular">{CONTACT.copyright}</p>
-                    {/* 관련 사이트 — 가이드의 Select 를 그대로 쓴다. 색은 Select 기본 시맨틱 토큰이 페이지 테마를
-                    따르므로 별도 색 오버라이드 없이 폭(layout)만 지정한다. */}
+                    {/* 관련 사이트 — 가이드의 Select 를 그대로 쓴다. 폭과 면 처리는 시안이 variant 별로 달라
+                    FOOTER_STYLE.familySite 에서 넘기고, 그 밖의 색은 Select 기본 시맨틱 토큰이 페이지 테마를 따른다. */}
                     <Select>
-                        <SelectTrigger aria-label="관련 사이트" className="w-47">
+                        <SelectTrigger aria-label="관련 사이트" className={style.familySite}>
                             <SelectValue placeholder="관련사이트" />
                         </SelectTrigger>
                         <SelectContent>

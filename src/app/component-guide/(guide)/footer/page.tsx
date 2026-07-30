@@ -142,6 +142,10 @@ const DEV_NOTES = [
         desc: 'Select 는 값 변경 핸들러가 없는 목업 상태입니다. 실제 이동을 붙일 때는 onValueChange 에서 곧바로 라우팅하지 말고 명시적인 이동 버튼이나 확인 절차를 두어야 합니다. [KWCAG 7.2.1]',
     },
     {
+        title: 'variant 별 간격과 셀렉트 외형',
+        desc: '두 값 모두 footer.tsx 의 FOOTER_STYLE 한 곳에서 관리합니다. default 는 메인 시안(footer_area 325px)대로 위아래 여백 40·블록 간격 32·연락처 내부 8/0 이고, subpage 는 서브 시안(378px)대로 여백 56·간격 48·12/4 입니다. 관련사이트 Select 는 default 가 280px 폭에 테두리 없는 solid 면(bg-muted — mainpage·dark 에서 gray.700 반사), subpage 가 188px 폭에 Select 기본 outline(bg-surface·border-control)입니다.',
+    },
+    {
         title: '반응형 전환점',
         desc: '두 variant 모두 md 이상에서 저작권과 관련사이트가 가로로 정렬되고, 로고와 유틸 메뉴는 폭이 좁아지면 줄바꿈됩니다. 폭은 content-layout을 따릅니다.',
     },
@@ -165,7 +169,8 @@ const FooterGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         두 variant 모두 로고·유틸 메뉴·기관 정보·관련사이트를 같은 구조로 배치하며, 유틸 메뉴 구성과
-                        표면색만 다릅니다. 현재 subpage는 평가모형 선택 화면에만 사용합니다.
+                        표면색·세로 간격만 다릅니다. default는 풀스크린 섹션에 들어가 시안 기준 더 촘촘합니다. 현재
+                        subpage는 평가모형 선택 화면에만 사용합니다.
                     </p>
                 </div>
                 <Alert color="warning">
@@ -197,7 +202,7 @@ const FooterGuidePage = () => (
                         </code>
                     </div>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        평가모형 선택 화면에서 사용하는 간결한 푸터입니다.
+                        평가모형 선택 화면에서 사용하는 정보형 푸터입니다.
                     </p>
                     <div className="light">
                         <FooterDemo variant="subpage" />
