@@ -25,7 +25,6 @@ const TEXT_TONE_SLOTS = new Set([
     'placeholder',
     'primary-strong',
     'badge-solid-fg',
-    'step-progress-inactive',
     'calendar-sunday',
     'calendar-saturday',
     'select-selected-foreground',
@@ -278,8 +277,8 @@ const STANDARD_SLOTS = new Set([
     'sidebar-ring',
 ])
 
-// 컴포넌트 전용 레시피 토큰(action-check-*/button-*/checkbox-*/radio-*/badge-*/icon-*)은 일반 색 슬롯이 아니라 특정 컴포넌트
-// 내부에서만 쓰는 값이라 이 색 개요 페이지에서는 제외한다(각 컴포넌트 가이드에서 다룸).
+// 컴포넌트 전용 레시피 토큰은 일반 색 슬롯이 아니라 특정 컴포넌트 내부에서만 쓰는 값이라
+// 표준·커스텀 슬롯 표에서 제외하고 하단의 레시피 표에 모아 노출한다.
 const isComponentRecipe = (n: string): boolean =>
     /^(action-check|alert|button|checkbox|radio|badge|number-badge|chip|icon|selectable-card|step-progress|segmented)-/.test(
         n,
@@ -727,10 +726,7 @@ const SemanticColorGuidePage = () => (
                             컴포넌트의 variant·prop을 사용합니다.
                         </p>
                     </div>
-                    <SemanticTable
-                        title="ActionCheck / Icon / Badge / StepProgress / Segmented"
-                        tokens={recipeEntries}
-                    />
+                    <SemanticTable title="컴포넌트 전용 색상" tokens={recipeEntries} />
                 </section>
             </BaseCard>
         </div>
