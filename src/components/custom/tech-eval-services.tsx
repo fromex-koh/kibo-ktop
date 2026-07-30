@@ -43,7 +43,7 @@ export const TECH_EVAL_SERVICES: TechEvalService[] = [
         headline: (
             <>
                 <span className="block">특허번호 입력만으로</span>
-                <span className="block">확인하는 객관적 특허가치</span>
+                <span className="block">확인할 수 있는 객관적 특허가치</span>
             </>
         ),
         descriptionTitle: '특허평가(K-PAS)란?',

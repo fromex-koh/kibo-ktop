@@ -20,10 +20,10 @@ const HERO_BACKGROUNDS = [
 
 const HERO_STATS: HeroStat[] = [
     {id: 'patent-analysis', value: '1,350,000', label: '건의 특허분석', note: '2025년 기준'},
-    {id: 'technology-evaluation', value: '92', label: '만건의 기술평가', note: '출처 : 어쩌구저쩌구'},
-    {id: 'evaluation-experts', value: '1,060', label: '명의 기술평가 전문인력', note: '업계 평균 800여명'},
+    {id: 'technology-evaluation', value: '920,000', label: '건의 기술평가', note: '2025년 기준'},
+    {id: 'evaluation-experts', value: '1,060', label: '명의 기술평가 전문인력', note: '2025년 기준'},
     {id: 'evaluation-experience', value: '30', label: '년의 평가 노하우', note: '2025년 기준'},
-    {id: 'evaluation-data', value: '2.5', label: '만건의 평가정보 생성', note: '매년 기준'},
+    {id: 'evaluation-data', value: '25,000', label: '건의 평가정보 생성', note: '2025년 기준'},
 ]
 
 // 첫 화면(풀스크린 히어로). md 이상에서는 StackPager가 고정 레이어로 전환하고,
