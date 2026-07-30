@@ -9,6 +9,9 @@ const WHEEL_DELTA_TRIGGER = 20
 const TOUCH_SWIPE_TRIGGER = 40
 const WHEEL_GESTURE_IDLE_MS = 120
 const TRANSITION_DURATION_MS = 600
+// 메인 헤더 배경색 페이드 시간. 헤더가 새 섹션이 화면을 채우는 시점에 완료되도록
+// StackPager 의 레이어 전환 종료보다 이 시간만큼 앞서 시작한다.
+const HEADER_BACKGROUND_TRANSITION_MS = 300
 const PAGE_DOWN_KEYS = new Set(['ArrowDown', 'PageDown', ' '])
 const PAGE_UP_KEYS = new Set(['ArrowUp', 'PageUp'])
 // 페이저가 켜지는 화면 조건 — globals.css 의 .stack-page 고정 레이어 미디어쿼리와 같은 값이어야 한다.
@@ -75,8 +78,12 @@ const StackPager = ({
     // 이번 제스처가 페이지 안쪽 스크롤에 쓰였는지 — 쓰였다면 같은 제스처로는 페이지를 넘기지 않는다.
     const hasScrolledInsideRef = useRef(false)
     const transitionTimerRef = useRef(0)
+    const headerTimerRef = useRef(0)
     const gestureTimerRef = useRef(0)
     const [activePage, setActivePage] = useState(0)
+    // activePage는 접근성·입력 처리를 위해 전환 시작과 동시에 바뀐다. 헤더는 시각 전환과
+    // 맞춰야 하므로 별도 상태를 둔다. 헤더의 300ms 색상 페이드는 새 화면이 도착하는 시점에 끝난다.
+    const [headerPage, setHeaderPage] = useState(0)
 
     const movePage = useCallback((direction: 1 | -1, pageCount: number, reducedMotion: boolean) => {
         if (isTransitioningRef.current || !isGestureArmedRef.current) return
@@ -104,6 +111,11 @@ const StackPager = ({
         setActivePage(nextPage)
 
         window.clearTimeout(transitionTimerRef.current)
+        window.clearTimeout(headerTimerRef.current)
+        headerTimerRef.current = window.setTimeout(
+            () => setHeaderPage(nextPage),
+            reducedMotion ? 0 : TRANSITION_DURATION_MS - HEADER_BACKGROUND_TRANSITION_MS,
+        )
         transitionTimerRef.current = window.setTimeout(
             () => {
                 isTransitioningRef.current = false
@@ -130,6 +142,7 @@ const StackPager = ({
             accumulatedDeltaRef.current = 0
             syncPageElements(container, nextPage, window.matchMedia(mediaQuery).matches)
             setActivePage(nextPage)
+            setHeaderPage(nextPage)
         },
         [mediaQuery],
     )
@@ -303,6 +316,7 @@ const StackPager = ({
                 isTransitioningRef.current = false
                 isGestureArmedRef.current = true
                 setActivePage(0)
+                setHeaderPage(0)
             }
             syncPageElements(container, activePageRef.current, desktopQuery.matches)
         }
@@ -319,6 +333,7 @@ const StackPager = ({
 
         return () => {
             window.clearTimeout(transitionTimerRef.current)
+            window.clearTimeout(headerTimerRef.current)
             window.clearTimeout(gestureTimerRef.current)
             container.removeEventListener('wheel', handleWheel)
             container.removeEventListener('touchstart', handleTouchStart)
@@ -343,6 +358,7 @@ const StackPager = ({
                 ref={ref}
                 data-stack-pager
                 data-active-page={activePage}
+                data-header-page={headerPage}
                 data-stack-transition={transition}
                 // 페이저가 꺼지는 화면에서는 스크롤 스냅을 쓰지 않는다 — 모바일의 2·3섹션은 내용을 모두
                 // 펼쳐 화면보다 훨씬 길어서(812 화면에 1992·3815), 스냅을 걸면 mandatory 든 proximity 든

@@ -205,6 +205,14 @@
 /* ═════ § 4 · 커스텀 유틸리티 — Tailwind 에 없어 직접 만든 클래스 ═══════════════════════════════ */
 
 @layer utilities {
+    /* 메인 StackPager 헤더 — active-page는 접근성·입력 처리용으로 전환 시작 즉시 바뀐다.
+       header-page는 배경 페이드가 새 섹션 도착과 맞도록 보정한 시각 상태다. 자식 선택자는
+       페이지 전용 상태 연결이라 유틸리티 조합 대신 이곳에서 한 번만 관리한다. */
+    [data-stack-pager][data-header-page='1'] > header,
+    [data-stack-pager][data-header-page='2'] > header {
+        background-color: var(--ds-background);
+    }
+
     /* 메인 히어로 SCROLL 표시 — 54279a4의 원본 구현.
        고정 트랙 위 ::after 선이 위에서 아래로 채워진 뒤 사라지며 반복된다. */
     .main-scroll-line-fill::after {
