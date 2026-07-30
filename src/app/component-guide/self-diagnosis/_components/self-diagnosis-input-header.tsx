@@ -73,7 +73,9 @@ const SelfDiagnosisInputHeader = (props: SelfDiagnosisInputHeaderProps) => {
 
     return (
         <>
-            <div ref={headerScopeRef}>
+            {/* 이벤트 위임용 래퍼가 Header의 sticky 이동 범위를 자기 높이로 제한하지 않도록
+                레이아웃 박스를 만들지 않는다. */}
+            <div ref={headerScopeRef} className="contents">
                 <Header {...props} />
             </div>
 
