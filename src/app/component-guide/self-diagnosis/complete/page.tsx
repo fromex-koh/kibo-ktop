@@ -109,9 +109,7 @@ const SelfDiagnosisCompletePage = () => (
         {/* 완료 알림 — 완료 사실은 문구가 전달하므로 애니메이션은 장식으로 두고 접근성 트리에서 제외한다. */}
         <div className="flex flex-col items-center">
             <ActionCheck decorative />
-            <h2 className="typo-h2-bold text-foreground text-center text-balance">
-                자가진단 - KTRS-FM 평가 완료되었습니다.
-            </h2>
+            <h2 className="typo-h2-bold text-foreground text-center text-balance">KTRS-FM 기술평가가 완료되었어요.</h2>
         </div>
 
         <div aria-hidden="true" className="h-[clamp(--spacing(3),5.56dvh,--spacing(15))]" />
