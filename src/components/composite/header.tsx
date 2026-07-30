@@ -100,7 +100,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
                 // 메인페이지는 항상 어두운 배경이라 화이트 로고 한 장만 둔다.
                 <Image
                     src="/images/logo-ktop-white.svg"
-                    alt="기술보증기금"
+                    alt=""
                     draggable={false}
                     width={140}
                     height={32}
@@ -113,7 +113,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
                 <>
                     <Image
                         src="/images/logo-ktop.svg"
-                        alt="기술보증기금"
+                        alt=""
                         draggable={false}
                         width={140}
                         height={32}
@@ -122,7 +122,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
                     />
                     <Image
                         src="/images/logo-ktop-white.svg"
-                        alt="기술보증기금"
+                        alt=""
                         draggable={false}
                         width={140}
                         height={32}
@@ -134,14 +134,21 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
         </>
     )
 
+    // 이름은 감싸는 요소의 sr-only 텍스트가 갖고 로고 이미지는 모두 alt="" 로 둔다 — 두 장에 같은 대체
+    // 텍스트를 주면 보조기기에 같은 이름이 겹쳐 읽히고(WAVE "A nearby image has the same alternative text"),
+    // 한쪽에만 alt 를 주면 테마가 바뀌어 그쪽이 display:none 이 될 때 이름이 사라진다. [KWCAG 5.1.1/6.4.3]
     return (
         <p className="shrink-0">
             {href ? (
                 <Link href={href} className="flex shrink-0 items-center">
+                    <span className="sr-only">기술보증기금 홈</span>
                     {image}
                 </Link>
             ) : (
-                <span className="flex shrink-0 items-center">{image}</span>
+                <span className="flex shrink-0 items-center">
+                    <span className="sr-only">기술보증기금</span>
+                    {image}
+                </span>
             )}
         </p>
     )

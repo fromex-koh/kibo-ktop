@@ -101,11 +101,15 @@ const FooterContent = ({variant = 'mainpage', portalTheme, className, ...props}:
                 <div className={cn('flex flex-col', style.topBlock)}>
                     <div className="flex flex-wrap items-center justify-between gap-6">
                         {/* KIBO 로고(시안 240×32) — 두 장을 두고 --logo-on-*(globals.css) 로 배경 명도에 맞는 쪽만 표시한다.
-                        dark: 변형은 중첩 고정한 테마 미리보기에서 틀린 쪽을 고른다 — Header 와 같은 방식. */}
+                        dark: 변형은 중첩 고정한 테마 미리보기에서 틀린 쪽을 고른다 — Header 와 같은 방식.
+                        이름은 링크의 sr-only 텍스트가 갖고 두 장 모두 alt="" 로 둔다 — 같은 대체 텍스트를 두 번
+                        노출하면 보조기기에 같은 이름이 겹쳐 읽히고(WAVE "A nearby image has the same alternative
+                        text"), 한쪽에만 alt 를 주면 테마가 바뀔 때 이름이 사라진다. [KWCAG 5.1.1/6.4.3] */}
                         <Link href="#" className={cn('flex w-fit items-center', linkFocusClassName)}>
+                            <span className="sr-only">기술보증기금 홈</span>
                             <Image
                                 src="/images/logo-kibo.svg"
-                                alt="기술보증기금"
+                                alt=""
                                 draggable={false}
                                 width={240}
                                 height={32}
@@ -113,7 +117,7 @@ const FooterContent = ({variant = 'mainpage', portalTheme, className, ...props}:
                             />
                             <Image
                                 src="/images/logo-kibo-white.svg"
-                                alt="기술보증기금"
+                                alt=""
                                 draggable={false}
                                 width={240}
                                 height={32}
