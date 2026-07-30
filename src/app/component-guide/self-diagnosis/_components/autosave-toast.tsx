@@ -23,9 +23,8 @@ const AUTOSAVE_TOAST_ID = 'self-diagnosis-autosave'
 // requestAnimationFrame 한 번만 기다리면 느린 환경에서는 Toaster보다 먼저 실행될 수 있다.
 const TOASTER_MOUNT_DELAY_MS = 100
 
-// 검수용 노출 시간 — 토스터 기본값(4초)은 화면을 열자마자 사라져 시안과 맞춰 보기 어렵다.
-// 실제 서비스에서는 이 옵션을 빼고 기본값을 쓴다.
-const AUTOSAVE_REVIEW_DURATION_MS = 10_000
+// 자동저장 완료 여부를 확인할 수 있으면서 화면을 오래 가리지 않도록 기본 토스트 수준으로 노출한다.
+const AUTOSAVE_DURATION_MS = 1_500
 
 const AutosaveToast = () => {
     useEffect(() => {
@@ -33,7 +32,7 @@ const AutosaveToast = () => {
             toast(AUTOSAVE_MESSAGE, {
                 id: AUTOSAVE_TOAST_ID,
                 position: AUTOSAVE_POSITION,
-                duration: AUTOSAVE_REVIEW_DURATION_MS,
+                duration: AUTOSAVE_DURATION_MS,
                 icon: (
                     <span
                         aria-hidden="true"
