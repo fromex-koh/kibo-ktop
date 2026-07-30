@@ -13,15 +13,8 @@ import {cn} from '@/lib/utils'
 type FooterLink = {label: string; href: string; external?: boolean}
 
 // 하단 유틸 링크 — 개인정보처리방침은 시안에서 굵게 강조한다.
+// 메인·서브 두 시안이 같은 네 항목이라 목록을 나누지 않는다(서브에 있던 '플랫폼 소개'는 시안에서 빠졌다).
 const UTILITY_LINKS: (FooterLink & {emphasized?: boolean})[] = [
-    {label: '이용약관', href: '#'},
-    {label: '가격 정책', href: '#'},
-    {label: '개인정보처리방침', href: '#', emphasized: true},
-    {label: '공지사항', href: '#'},
-]
-
-const SUBPAGE_UTILITY_LINKS: (FooterLink & {emphasized?: boolean})[] = [
-    {label: '플랫폼 소개', href: '#'},
     {label: '이용약관', href: '#'},
     {label: '가격 정책', href: '#'},
     {label: '개인정보처리방침', href: '#', emphasized: true},
@@ -47,48 +40,58 @@ const CONTACT = {
 const linkFocusClassName =
     'outline-ring focus-visible:outline-ring outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid'
 
-export type FooterVariant = 'default' | 'subpage'
+export type FooterVariant = 'mainpage' | 'subpage'
+type FooterTheme = 'light' | 'dark' | 'mainpage'
 
-// 메인 시안(footer_area 325px)은 풀스크린 섹션 안에 들어가 서브페이지 시안(378px)보다 세로 간격이 촘촘하고,
-// 관련사이트 셀렉트도 테두리 없는 solid 면이다. 구성·문구는 같으므로 그 차이만 variant 별로 모아 둔다.
+// 두 시안(메인 footer_area 325px · 서브 316px)은 구성·문구·간격이 거의 같고, 남는 차이는
+// 상단 블록↔카피라이트 줄 간격(메인 40 / 서브 32)·본문 글자 톤·관련사이트 셀렉트 외형뿐이다.
 const FOOTER_STYLE = {
-    default: {
+    mainpage: {
         root: 'gap-10 pt-10 pb-10',
         topBlock: 'gap-8',
         contactBlock: 'gap-2',
         phoneBlock: 'gap-0',
         phoneRow: 'gap-2',
+        // 메인 시안은 어두운 면 위에 모든 글자가 흰색 한 톤이다.
+        bodyTone: 'text-foreground',
         // 메인 시안의 관련사이트는 어두운 푸터 위 solid 면(gray.700)이고 테두리를 끈 상태다.
         // muted 가 mainpage·dark 에서 gray.700 으로 반사되므로 dark: 분기 없이 시안값이 그대로 나온다([PB-06]).
         // 테두리는 지우지 않고 투명으로 둬 포커스·열림 상태의 border-primary 표시를 그대로 살린다. [KWCAG 6.1.2]
         familySite: 'bg-muted border-transparent w-70',
     },
     subpage: {
-        root: 'gap-16 pt-14 pb-10',
-        topBlock: 'gap-12',
-        contactBlock: 'gap-3',
-        phoneBlock: 'gap-1',
-        phoneRow: 'gap-4',
-        // 서브 시안은 흰 면 + 회색 테두리라 Select 기본(bg-surface·border-control)을 그대로 쓴다.
-        familySite: 'w-47',
+        root: 'gap-8 pt-10 pb-10',
+        topBlock: 'gap-8',
+        contactBlock: 'gap-2',
+        phoneBlock: 'gap-0',
+        phoneRow: 'gap-2',
+        // 서브 시안은 유틸 링크·운영시간·주소·저작권·셀렉트를 gray.700 으로 한 단계 낮추고,
+        // 대표전화 줄만 gray.900 으로 남긴다(그 줄은 아래에서 따로 지정한다).
+        bodyTone: 'text-label-foreground',
+        // 서브 시안은 흰 면 + 회색 테두리(gray.200)라 Select 기본(bg-surface·border-control)을 그대로 쓴다.
+        familySite: 'w-70',
     },
 } satisfies Record<FooterVariant, Record<string, string>>
 
-// default 는 메인페이지 푸터, subpage 는 모형선택 화면의 정보형 푸터다. 구성은 거의 같고
-// 유틸 링크 목록(default 4개 / subpage 는 '플랫폼 소개' 추가)·표면색·간격·셀렉트 외형(FOOTER_STYLE)만 다르다.
+// mainpage 는 메인페이지 푸터, subpage 는 서브페이지의 정보형 푸터다. 구성·문구·유틸 링크는 같고
+// 표면색과 FOOTER_STYLE(간격·글자 톤·셀렉트 외형)만 다르다.
 type FooterProps = ComponentProps<'footer'> & {
     variant?: FooterVariant
 }
 
-const Footer = ({variant = 'default', className, ...props}: FooterProps) => {
-    const utilityLinks = variant === 'subpage' ? SUBPAGE_UTILITY_LINKS : UTILITY_LINKS
+type FooterContentProps = FooterProps & {
+    portalTheme?: FooterTheme
+}
+
+const FooterContent = ({variant = 'mainpage', portalTheme, className, ...props}: FooterContentProps) => {
     const style = FOOTER_STYLE[variant]
 
     return (
         <footer
             {...props}
             className={cn(
-                'border-subtle-3 text-foreground border-t',
+                'border-subtle-3 border-t',
+                style.bodyTone,
                 variant === 'subpage' ? 'bg-card' : 'bg-background',
                 className,
             )}
@@ -119,7 +122,7 @@ const Footer = ({variant = 'default', className, ...props}: FooterProps) => {
                         </Link>
                         <nav aria-label="푸터 유틸 메뉴">
                             <ul className="flex flex-wrap items-center gap-6">
-                                {utilityLinks.map((link) => (
+                                {UTILITY_LINKS.map((link) => (
                                     <li key={link.label}>
                                         <Link
                                             href={link.href}
@@ -138,7 +141,9 @@ const Footer = ({variant = 'default', className, ...props}: FooterProps) => {
 
                     <div className={cn('flex flex-col', style.contactBlock)}>
                         <div className={cn('flex flex-col', style.phoneBlock)}>
-                            <p className={cn('flex flex-wrap items-baseline', style.phoneRow)}>
+                            {/* 대표전화 줄만 본문보다 진한 톤이다 — 서브 시안은 본문 gray.700 · 이 줄 gray.900,
+                            메인 시안은 두 값이 같은 흰색이라 어느 쪽에서도 시안과 어긋나지 않는다. */}
+                            <p className={cn('text-foreground flex flex-wrap items-baseline', style.phoneRow)}>
                                 <span className="typo-title-m-bold">대표전화</span>
                                 <a href={`tel:${CONTACT.number}`} className={cn('typo-h4-bold', linkFocusClassName)}>
                                     {CONTACT.number}
@@ -158,7 +163,9 @@ const Footer = ({variant = 'default', className, ...props}: FooterProps) => {
                         <SelectTrigger aria-label="관련 사이트" className={style.familySite}>
                             <SelectValue placeholder="관련사이트" />
                         </SelectTrigger>
-                        <SelectContent>
+                        {/* Dropdown은 body Portal에 렌더링되므로 가이드의 로컬 테마 스코프를 직접 전달한다.
+                        실제 화면은 html의 ThemeProvider 테마를 상속하며 mainpage만 스킨을 명시한다. */}
+                        <SelectContent className={portalTheme}>
                             {FAMILY_SITES.map((site) => (
                                 <SelectItem key={site.value} value={site.value}>
                                     {site.label}
@@ -172,10 +179,14 @@ const Footer = ({variant = 'default', className, ...props}: FooterProps) => {
     )
 }
 
-// 가이드 프리뷰 — 실제 Footer를 카드 안에서 테마별로 확인한다.
-export const FooterDemo = ({variant = 'default'}: {variant?: FooterVariant}) => (
+const Footer = ({variant = 'mainpage', ...props}: FooterProps) => (
+    <FooterContent variant={variant} portalTheme={variant === 'mainpage' ? 'mainpage' : undefined} {...props} />
+)
+
+// 가이드 프리뷰 — Portal로 분리되는 Dropdown까지 고정한 테마로 확인한다.
+export const FooterDemo = ({variant = 'mainpage', theme}: {variant?: FooterVariant; theme?: FooterTheme}) => (
     <div className="border-border overflow-hidden rounded-lg border">
-        <Footer variant={variant} />
+        <FooterContent variant={variant} portalTheme={theme ?? (variant === 'mainpage' ? 'mainpage' : undefined)} />
     </div>
 )
 

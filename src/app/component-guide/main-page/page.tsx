@@ -67,7 +67,7 @@ const MainPage = () => (
                     // 3섹션 첫 화면이 이미 아래 여백으로 갖고 있어(세로 레일 끝 아래 100), 여기서는 나머지
                     // 8px 만 더한다. 모바일은 흐름대로 쌓이므로 기존 간격(112)을 유지한다.
                     <div id="site-info" tabIndex={-1} className="bg-background relative mt-auto w-full pt-28 md:pt-2">
-                        <Footer />
+                        <Footer variant="mainpage" />
                     </div>
                 }
             />
