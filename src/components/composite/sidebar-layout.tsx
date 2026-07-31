@@ -149,11 +149,7 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                                                 <CollapsibleContent>
                                                     <SidebarMenuSub>
                                                         {section.items?.map((item) => (
-                                                            <GuideNavSubItem
-                                                                key={item.href}
-                                                                item={item}
-                                                                categories={[section.title]}
-                                                            />
+                                                            <GuideNavSubItem key={item.href} item={item} />
                                                         ))}
                                                         {section.groups?.map((group) => (
                                                             <SidebarMenuSubItem
@@ -165,17 +161,12 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                                                                 </p>
                                                                 <SidebarMenuSub className="mx-0 border-l-0 px-0">
                                                                     {group.items?.map((item) => (
-                                                                        <GuideNavSubItem
-                                                                            key={item.href}
-                                                                            item={item}
-                                                                            categories={[section.title, group.title]}
-                                                                        />
+                                                                        <GuideNavSubItem key={item.href} item={item} />
                                                                     ))}
                                                                     {group.groups?.map((subgroup) => (
                                                                         <GuideNavNestedGroup
                                                                             key={subgroup.title}
                                                                             group={subgroup}
-                                                                            categories={[section.title, group.title]}
                                                                         />
                                                                     ))}
                                                                 </SidebarMenuSub>
@@ -238,12 +229,12 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
     )
 }
 
-const GuideNavNestedGroup = ({group, categories}: {group: GuideNavItemGroup; categories: string[]}) => (
+const GuideNavNestedGroup = ({group}: {group: GuideNavItemGroup}) => (
     <SidebarMenuSubItem className="mt-3 first:mt-1">
         <p className="typo-caption-medium text-primary px-2 py-1">{group.title}</p>
         <SidebarMenuSub className="mx-0 border-l-0 px-0">
             {group.items?.map((item) => (
-                <GuideNavSubItem key={item.href} item={item} categories={[...categories, group.title]} />
+                <GuideNavSubItem key={item.href} item={item} />
             ))}
         </SidebarMenuSub>
     </SidebarMenuSubItem>
@@ -274,7 +265,7 @@ const GuideNavRootItem = ({item}: {item: GuideNavItem}) => {
     )
 }
 
-const GuideNavSubItem = ({item, categories}: {item: GuideNavItem; categories: string[]}) => {
+const GuideNavSubItem = ({item}: {item: GuideNavItem}) => {
     const pathname = usePathname()
     const isActive = !item.external && pathname === item.href
 
@@ -288,7 +279,6 @@ const GuideNavSubItem = ({item, categories}: {item: GuideNavItem; categories: st
             >
                 <Link
                     href={item.href}
-                    aria-label={`${[...categories, item.label].join(' · ')} 가이드로 이동${item.external ? ' (새 창)' : ''}`}
                     {...(item.external
                         ? {
                               target: '_blank',
@@ -300,6 +290,7 @@ const GuideNavSubItem = ({item, categories}: {item: GuideNavItem; categories: st
                         {isActive ? <Pin className="text-primary size-icon-xs" /> : null}
                     </span>
                     <span className="flex-1 truncate">{item.label}</span>
+                    {item.assistiveSuffix ? <span className="sr-only">{item.assistiveSuffix}</span> : null}
                     {item.external && (
                         <>
                             <ArrowUpRight aria-hidden="true" className="size-3.5 shrink-0" />

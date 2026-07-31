@@ -3,7 +3,7 @@
 // 섹션을 추가·리네임하면 여기 href(#s-*)와 페이지의 aria-labelledby id 를 함께 맞춘다.
 
 // external: true 면 새 창(target=_blank)으로 여는 링크(사이드바 콘텐츠 밖에서 봐야 하는 독립 화면).
-export type GuideNavItem = {label: string; href: string; external?: boolean}
+export type GuideNavItem = {label: string; href: string; external?: boolean; assistiveSuffix?: string}
 export type GuideNavItemGroup = {
     title: string
     items?: GuideNavItem[]
@@ -77,7 +77,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                         items: [
                             {label: 'Label', href: '/component-guide/label'},
                             {label: 'FieldLabel', href: '/component-guide/field-label'},
-                            {label: 'Button 컴포넌트', href: '/component-guide/button'},
+                            {label: 'Button', href: '/component-guide/button', assistiveSuffix: ' 컴포넌트 가이드'},
                             {label: 'Input', href: '/component-guide/input'},
                             {label: 'Textarea', href: '/component-guide/textarea'},
                             {label: 'Select', href: '/component-guide/select'},
