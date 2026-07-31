@@ -47,6 +47,9 @@ const buttonVariants = cva(
                 xl: "h-control-h-xl min-h-11 gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
                 lg: "h-control-h-lg min-h-11 min-w-control-min-w-sm gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
                 md: "h-control-h-md min-w-control-min-w-sm gap-1.5 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-5",
+                // PROJECT-STYLE: 시안 개편으로 면 버튼 스케일은 5단계(60·52·48·40·32)가 되어 sm(36)이 빠졌다.
+                // 키는 텍스트 버튼 스케일(button_text small=14px — 아래 compound)이 쓰므로 유지하되,
+                // 면 버튼(solid·outline 계열)에는 sm 을 새로 쓰지 않는다.
                 sm: "h-control-h-sm min-w-control-min-w-xs gap-1.5 rounded-sm px-4 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
                 xs: "h-control-h-xs min-w-control-min-w-xs gap-1 rounded-2xs px-3 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
                 'icon-2xl':

@@ -29,7 +29,7 @@ import {Badge} from '@/components/ui/badge'
       cells: [
         'K-BIGx 보고서 이용권', '2024.05.18 14:23', '-1회', '15회',
         <Badge variant="solid-pastel" color="info" shape="round" size="sm">차감완료</Badge>,
-        <Button variant="tertiary" size="sm">상세</Button>,
+        <Button variant="tertiary" size="xs">상세</Button>,
       ],
     },
   ]}
@@ -40,7 +40,7 @@ const SIZE_CODE = `<Table size="lg" caption="큰 크기" columns={columns} rows=
 <Table size="sm" caption="작은 크기" columns={columns} rows={rows} />`
 
 const detailButton = (
-    <Button variant="tertiary" size="sm">
+    <Button variant="tertiary" size="xs">
         상세
     </Button>
 )

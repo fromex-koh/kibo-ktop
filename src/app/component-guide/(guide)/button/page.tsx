@@ -69,14 +69,14 @@ const TYPES = [
     {key: 'tertiary', label: 'Tertiary', desc: '가장 낮은 강조의 보조 액션(취소·더보기 등)에 사용합니다.'},
 ] as const
 
-// Figma 6단계 사이즈를 shadcn 축약형(2xl~xs)으로 노출한다. 클래스명은 cva 안에
+// Figma 5단계 사이즈(60·52·48·40·32)를 shadcn 축약형(2xl~xs)으로 노출한다. 클래스명은 cva 안에
 // 리터럴로 고정돼 있어 여기서도 템플릿 문자열 대신 배열에 직접 나열한다(Tailwind 정적 분석, icon 가이드와 동일 이유).
+// sm(36)은 시안 개편으로 면 버튼 스케일에서 빠졌다 — 텍스트 버튼 스케일(sm=14px)에서만 쓴다.
 const SIZES = [
     {key: '2xl', label: '2xl', height: 60},
     {key: 'xl', label: 'xl', height: 52},
     {key: 'lg', label: 'lg', height: 48},
     {key: 'md', label: 'md', height: 40},
-    {key: 'sm', label: 'sm', height: 36},
     {key: 'xs', label: 'xs', height: 32},
 ] as const
 
@@ -341,7 +341,7 @@ const PROPS_ROWS = [
         key: 'size',
         cells: [
             nameCell('size'),
-            'Figma 6단계 사이즈를 shadcn 방식의 축약형 2xl/xl/lg/md/sm/xs로 제공합니다. default와 icon 계열은 다이얼로그·시트·사이드바 등 내부 컴포넌트 호환을 위해 유지됩니다.',
+            'Figma 5단계 사이즈를 shadcn 방식의 축약형 2xl/xl/lg/md/xs로 제공합니다. sm(36px)은 시안 개편으로 면 버튼 스케일에서 제외되어 텍스트 버튼 스케일(14px)에서만 쓰며, default와 icon 계열은 다이얼로그·시트·사이드바 등 내부 컴포넌트 호환을 위해 유지됩니다.',
             <span key="default" className="font-mono">
                 &apos;default&apos;
             </span>,
@@ -491,8 +491,8 @@ const ButtonGuidePage = () => (
                         Type × Size 큐레이션
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        3 type 을 열로, 6 size 를 행으로 교차해 전체 조합을 확인합니다. 44px 미만인 md·sm·xs 는 밀도
-                        높은 UI 용 컴팩트 예외입니다(터치 타깃 보정 미적용, 인접 간격 확보 전제).
+                        3 type 을 열로, 5 size 를 행으로 교차해 전체 조합을 확인합니다. 44px 미만인 md·xs 는 밀도 높은
+                        UI 용 컴팩트 예외입니다(터치 타깃 보정 미적용, 인접 간격 확보 전제).
                     </p>
                 </div>
                 <div className="flex flex-col gap-3">

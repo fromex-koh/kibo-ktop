@@ -113,10 +113,10 @@ const ViewportFitLayoutGuidePage = () => (
                     }
                     footer={
                         <div className="bg-cta-surface border-border flex justify-between border-t px-6 py-3">
-                            <Button variant="tertiary" size="sm">
+                            <Button variant="tertiary" size="md">
                                 이전
                             </Button>
-                            <Button size="sm">결과 확인</Button>
+                            <Button size="md">결과 확인</Button>
                         </div>
                     }
                     mainProps={{className: 'px-6'}}
