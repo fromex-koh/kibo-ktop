@@ -29,7 +29,9 @@ const buttonVariants = cva(
                 destructive:
                     'bg-destructive text-destructive-foreground interactive:hover:bg-destructive/90 interactive:active:bg-destructive/80 disabled:border-disabled-subtle disabled:bg-control-disabled disabled:text-disabled',
                 // 밑줄 없는 기본 텍스트 버튼 — 헤더 유틸 링크·"내용보기"처럼 본문에 얹히는 인라인 액션에 쓴다.
-                text: 'text-label-foreground no-underline disabled:text-disabled-subtle disabled:opacity-100',
+                // PROJECT-STYLE: 눌림 시 1px 내려가는 base 동작은 되돌린다 — 시안(40006650:30781~30790)의
+                // pressed 는 default 와 완전히 같고, 면이 없어 글자만 흔들리는 것처럼 보인다(plain 과 같은 이유).
+                text: 'text-label-foreground no-underline interactive:active:not-aria-[haspopup]:translate-y-0 disabled:text-disabled-subtle disabled:opacity-100',
                 // PROJECT-STYLE: Figma button_text 는 default·hover·pressed·disabled 네 상태 모두 1px 밑줄이 있다.
                 // 밑줄 유무는 사용처마다 갈려서 text(없음)/text-underline(있음) 두 값으로 나눈다.
                 // 밑줄은 글자 폭만 덮고 아이콘 아래로는 이어지지 않는다 — 아이콘이 보이는 시안(40006650:30806)의
@@ -40,7 +42,7 @@ const buttonVariants = cva(
                 // 더 내리면 줄상자 아랫변이 된다(오프셋은 폰트 메트릭이라 size 축에서 지정).
                 // [SC-01] 예외: text-underline-position 은 대응하는 Tailwind 유틸이 없어 arbitrary property 로 쓴다.
                 'text-underline':
-                    'text-label-foreground underline decoration-1 [text-underline-position:under] disabled:text-disabled-subtle disabled:opacity-100',
+                    'text-label-foreground underline decoration-1 [text-underline-position:under] interactive:active:not-aria-[haspopup]:translate-y-0 disabled:text-disabled-subtle disabled:opacity-100',
             },
             size: {
                 default: 'h-control-h-sm min-h-11 gap-2 px-4',
