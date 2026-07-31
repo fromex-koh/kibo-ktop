@@ -17,6 +17,7 @@ const DatePickerFormDemo = () => {
     return (
         <form
             className="flex flex-col gap-4"
+            autoComplete="off"
             onSubmit={(event) => {
                 event.preventDefault()
                 const formData = new FormData(event.currentTarget)

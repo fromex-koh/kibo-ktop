@@ -28,6 +28,7 @@ const RadioFormDemo = () => {
     return (
         <form
             className="flex flex-col gap-6"
+            autoComplete="off"
             noValidate
             onSubmit={(event) => {
                 event.preventDefault()

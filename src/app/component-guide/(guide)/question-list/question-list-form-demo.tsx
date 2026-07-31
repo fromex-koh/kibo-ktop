@@ -21,6 +21,7 @@ const QuestionListFormDemo = () => {
     return (
         <form
             className="flex flex-col gap-8"
+            autoComplete="off"
             onSubmit={(event) => {
                 event.preventDefault()
                 const entries = Array.from(new FormData(event.currentTarget).entries())

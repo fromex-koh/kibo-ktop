@@ -15,6 +15,7 @@ const SegmentedControlFormDemo = () => {
     return (
         <form
             className="border-border flex flex-col items-start gap-6 rounded-md border p-6"
+            autoComplete="off"
             onSubmit={(event) => {
                 event.preventDefault()
                 const formData = new FormData(event.currentTarget)

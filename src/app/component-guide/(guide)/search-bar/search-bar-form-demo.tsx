@@ -13,6 +13,7 @@ const SearchBarFormDemo = () => {
     return (
         <form
             className="flex flex-col gap-4"
+            autoComplete="off"
             noValidate
             onSubmit={(event) => {
                 event.preventDefault()

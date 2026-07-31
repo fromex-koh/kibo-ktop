@@ -10,6 +10,7 @@ const ChipFormDemo = () => {
     return (
         <form
             className="flex flex-col gap-5"
+            autoComplete="off"
             onSubmit={(event) => {
                 event.preventDefault()
                 const formData = new FormData(event.currentTarget)
