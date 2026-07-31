@@ -8,7 +8,9 @@ import {Button} from '@/components/ui/button'
 
 export const metadata: Metadata = {title: '버튼 (Button)'}
 
-const USAGE_CODE = `<Button variant="default" size="lg">저장</Button>
+const USAGE_CODE = `import {Button} from '@/components/ui/button'
+
+<Button variant="default" size="lg">저장</Button>
 <Button variant="secondary" size="lg">취소</Button>
 <Button variant="tertiary" size="lg">더보기</Button>`
 
@@ -405,13 +407,45 @@ const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'text-underline'
 const ButtonGuidePage = () => (
     <GuidePageShell
         title="버튼 (Button)"
-        description="최신 shadcn Button shell과 props 구조를 유지하고 프로젝트 buttonVariants를 연결한 컴포넌트입니다. 3가지 주요 variant × 6가지 프로젝트 사이즈와 아이콘 버튼을 지원합니다."
+        description="프로젝트 공통 액션 컴포넌트입니다. 먼저 variant로 강조 단계를 정하고, size와 아이콘·상태를 조합해 사용합니다."
     >
+        <BaseCard variant="outlined">
+            <section aria-labelledby="button-quick-nav" className="flex flex-col gap-4">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="button-quick-nav" className="typo-h4-bold">
+                        빠른 탐색
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        구현할 버튼 형태에 맞는 항목으로 바로 이동하세요. 일반 버튼은 기본 사용부터 확인하면 됩니다.
+                    </p>
+                </div>
+                <nav aria-label="Button 가이드 주요 항목" className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                    {[
+                        {href: '#button-demo', label: '기본 사용과 아이콘 조합'},
+                        {href: '#button-matrix', label: '기본 버튼 크기 조합'},
+                        {href: '#button-icon-matrix', label: '아이콘 전용 버튼'},
+                        {href: '#button-inline-matrix', label: '인라인 버튼'},
+                        {href: '#button-disabled', label: '상태 처리'},
+                        {href: '#button-props', label: 'Props API'},
+                    ].map((item) => (
+                        <a
+                            key={item.href}
+                            href={item.href}
+                            className="border-border text-foreground hover:bg-primary-subtle focus-visible:ring-ring flex items-center justify-between gap-3 rounded-md border px-4 py-3 font-medium focus-visible:ring-2 focus-visible:outline-none"
+                        >
+                            {item.label}
+                            <ChevronRight aria-hidden="true" className="text-muted-foreground size-icon-sm shrink-0" />
+                        </a>
+                    ))}
+                </nav>
+            </section>
+        </BaseCard>
+
         <BaseCard>
-            <section aria-labelledby="button-demo" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-demo" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-demo" className="typo-h4-bold">
-                        사용 예시
+                        기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         <code className="font-mono">variant</code> 로 강조 단계(Primary/Secondary/Tertiary)를,{' '}
@@ -453,10 +487,10 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-variants" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-variants" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-variants" className="typo-h4-bold">
-                        전체 Variant
+                        Variant 선택 가이드
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         Button 을 디자인에 쓰는 variant 입니다.{' '}
@@ -485,14 +519,14 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-matrix" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-matrix" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-matrix" className="typo-h4-bold">
-                        Type × Size 큐레이션
+                        기본 버튼 크기 조합
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        3 type 을 열로, 5 size 를 행으로 교차해 전체 조합을 확인합니다. 44px 미만인 md·xs 는 밀도 높은
-                        UI 용 컴팩트 예외입니다(터치 타깃 보정 미적용, 인접 간격 확보 전제).
+                        Primary·Secondary·Tertiary와 5단계 size의 실제 조합입니다. 44px 미만인 md·xs는 밀도 높은
+                        UI에서만 사용하고 인접 요소와 충분한 간격을 확보합니다.
                     </p>
                 </div>
                 <div className="flex flex-col gap-3">
@@ -512,10 +546,10 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-icon-matrix" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-icon-matrix" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-icon-matrix" className="typo-h4-bold">
-                        아이콘 전용 버튼
+                        아이콘 버튼 크기와 Variant
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         아이콘만 있는 정사각 버튼입니다. <span className="font-mono">variant</span> 와{' '}
@@ -536,10 +570,10 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-plain" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-plain" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-plain" className="typo-h4-bold">
-                        면 없는 아이콘 버튼 (plain)
+                        여백 없는 아이콘 버튼
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         배경·테두리·여백 없이{' '}
@@ -567,10 +601,10 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-inline-matrix" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-inline-matrix" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-inline-matrix" className="typo-h4-bold">
-                        Link/Text 큐레이션
+                        인라인 버튼 Variant 비교
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         비교하기 쉽도록 미리보기는 모두 <span className="font-mono">lg</span> size 로 통일합니다. 둘은
@@ -581,7 +615,7 @@ const ButtonGuidePage = () => (
                         </a>
                         ·
                         <a href="#button-link-matrix" className="text-primary underline underline-offset-4">
-                            Link 사이즈 큐레이션
+                            Link 버튼 크기
                         </a>
                         을 참고하세요.
                     </p>
@@ -596,10 +630,10 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-text-matrix" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-text-matrix" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-text-matrix" className="typo-h4-bold">
-                        Text 사이즈 큐레이션
+                        Text 버튼 크기
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         Figma <span className="font-mono">button_text</span> 는 공용 size 축과 별개로 자체 4단
@@ -629,10 +663,10 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-link-matrix" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-link-matrix" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-link-matrix" className="typo-h4-bold">
-                        Link 사이즈 큐레이션
+                        Link 버튼 크기
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         <span className="font-mono">link</span> 는 위 <span className="font-mono">text</span> 와
@@ -647,10 +681,10 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-icon-pill" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-icon-pill" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-icon-pill" className="typo-h4-bold">
-                        완전 원형 (pill)
+                        원형 아이콘 버튼
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         아이콘 버튼의 기본 모서리는 <span className="font-mono">rounded-sm</span>(8px) 이지만, 검색 바의
@@ -675,10 +709,10 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-disabled" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-disabled" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-disabled" className="typo-h4-bold">
-                        Disabled 상태
+                        비활성 상태
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         비활성 상태는 단순히 흐리게 처리하지 않고, type 별로 별도 배경·테두리·텍스트 색을 씁니다.
@@ -697,10 +731,10 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-loading" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-loading" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-loading" className="typo-h4-bold">
-                        Loading 상태
+                        로딩 상태
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         진행 중 상태입니다. Disabled 와 달리 variant 색은 그대로 두고 스피너(
@@ -728,10 +762,10 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-props" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="button-props" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-props" className="typo-h4-bold">
-                        Props
+                        Props API
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         Button 에서 커스터마이징 가능한 속성입니다.
