@@ -13,6 +13,27 @@ export const metadata: Metadata = {title: '마크업 검증'}
 
 const AUDIT_DATE = '2026-07-26'
 
+const WAVE_EXCEPTIONS = [
+    {
+        component: 'Checkbox',
+        route: '/component-guide/checkbox',
+        owner: 'Radix Checkbox',
+        role: 'button[role="checkbox"]',
+        message: 'Missing form label',
+        evidence:
+            '폼 연동용 보조 input은 aria-hidden="true"·tabindex="-1"이며 실제 버튼은 연결된 FieldLabel로 접근 가능한 이름을 제공',
+    },
+    {
+        component: 'Radio Group',
+        route: '/component-guide/radio',
+        owner: 'Radix Radio Group',
+        role: 'button[role="radio"]',
+        message: 'Missing form label',
+        evidence:
+            '폼 연동용 보조 input은 aria-hidden="true"·tabindex="-1"이며 실제 버튼은 연결된 FieldLabel로 접근 가능한 이름을 제공',
+    },
+] as const
+
 const VALIDATION_RESULTS = [
     {
         route: '/component-guide/select',
@@ -129,7 +150,7 @@ const ReferenceLink = ({href, children}: {href: string; children: string}) => (
 const ValidationExceptionsPage = () => (
     <GuidePageShell
         title="마크업 검증"
-        description="주요 화면과 외부 라이브러리 생성 마크업의 W3C 검사 결과를 원인과 소유 영역별로 기록합니다."
+        description="주요 화면과 외부 라이브러리 생성 마크업의 W3C·WAVE 검사 결과를 원인과 소유 영역별로 기록합니다."
     >
         <Alert variant="solid" color="info">
             <Info aria-hidden="true" />
@@ -333,6 +354,57 @@ const ValidationExceptionsPage = () => (
                     ))}
                 </TableBody>
             </Table>
+        </BaseCard>
+
+        <BaseCard title="WAVE 자동 검사 예외" subtitle="숨은 폼 연동 요소에서 발생하는 Missing form label">
+            <div className="flex flex-col gap-5">
+                <p className="typo-body-m-regular text-foreground-subtle">
+                    아래 항목은 Radix가 폼 데이터와 이벤트 전달을 위해 자동 생성한 보조 input에서 탐지됩니다. 보조
+                    input은 접근성 트리와 키보드 탐색에서 제외되고, 실제 조작 요소는 FieldLabel을 통해 접근 가능한
+                    이름을 제공하므로 자동 검사 오탐으로 분류합니다.
+                </p>
+                <Table className="min-w-240">
+                    <TableCaption className="sr-only">WAVE Missing form label 자동 검사 예외 목록</TableCaption>
+                    <TableHeader>
+                        <TableRow className="bg-muted hover:bg-muted">
+                            <TableHead scope="col">컴포넌트</TableHead>
+                            <TableHead scope="col">대표 경로</TableHead>
+                            <TableHead scope="col">생성 주체</TableHead>
+                            <TableHead scope="col">WAVE 메시지</TableHead>
+                            <TableHead scope="col">실제 조작 요소</TableHead>
+                            <TableHead scope="col">판정 근거</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {WAVE_EXCEPTIONS.map((item) => (
+                            <TableRow key={item.component}>
+                                <TableCell className="align-top font-bold">{item.component}</TableCell>
+                                <TableCell className="align-top">
+                                    <code className="font-mono">{item.route}</code>
+                                </TableCell>
+                                <TableCell className="align-top">
+                                    <Badge color="warning">{item.owner}</Badge>
+                                </TableCell>
+                                <TableCell className="align-top">
+                                    <code className="font-mono">{item.message}</code>
+                                </TableCell>
+                                <TableCell className="align-top">
+                                    <code className="font-mono">{item.role}</code>
+                                </TableCell>
+                                <TableCell className="max-w-120 align-top whitespace-normal">{item.evidence}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <div className="flex flex-wrap gap-3">
+                    <ReferenceLink href="https://www.radix-ui.com/primitives/docs/components/checkbox">
+                        Radix Checkbox 공식 문서
+                    </ReferenceLink>
+                    <ReferenceLink href="https://www.radix-ui.com/primitives/docs/components/radio-group">
+                        Radix Radio Group 공식 문서
+                    </ReferenceLink>
+                </div>
+            </div>
         </BaseCard>
 
         <BaseCard title="오류가 확인되지 않은 대표 페이지" subtitle="같은 운영 빌드와 검사 방식으로 비교">
