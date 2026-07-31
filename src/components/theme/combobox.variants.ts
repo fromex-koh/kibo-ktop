@@ -13,10 +13,10 @@ const comboboxEmptyClassName = 'typo-body-xl-regular text-foreground-subtle'
 // Base UI 는 data-selected/highlighted 를 값 없는 속성으로 찍는데 Tailwind 축약형(data-selected:)은
 // [data-selected="true"] 로 컴파일되어 매칭되지 않는다 — 존재 여부로 매칭되는 data-[selected]: 형태를 쓴다.
 const comboboxItemClassName =
-    '[&>span]:hidden text-label-foreground data-[highlighted]:bg-primary-subtle data-[highlighted]:text-label-foreground data-[highlighted]:**:text-inherit data-[selected]:text-select-selected-foreground data-[disabled]:text-disabled h-control-h-lg typo-body-xl-regular gap-1.5 rounded-sm px-2 data-[selected]:font-medium data-[disabled]:opacity-100'
-const comboboxDropdownTriggerClassName = `${selectTriggerClassName} h-control-h-lg w-full min-w-0 appearance-none px-4`
+    '[&>span]:hidden text-label-foreground data-[highlighted]:bg-primary-subtle data-[highlighted]:text-label-foreground data-[highlighted]:**:text-inherit data-[selected]:text-select-selected-foreground data-[disabled]:text-disabled h-control-h-md typo-body-xl-regular gap-1.5 rounded-sm px-2 data-[selected]:font-medium data-[disabled]:opacity-100'
+const comboboxDropdownTriggerClassName = `${selectTriggerClassName} h-control-h-md w-full min-w-0 appearance-none px-4`
 const comboboxDropdownContentClassName =
-    '*:data-[slot=input-group]:h-control-h-md *:data-[slot=input-group]:border-control *:data-[slot=input-group]:bg-surface *:data-[slot=input-group]:px-3'
+    '*:data-[slot=input-group]:h-control-h-sm *:data-[slot=input-group]:border-control *:data-[slot=input-group]:bg-surface *:data-[slot=input-group]:px-3'
 const comboboxDropdownSearchClassName = 'w-auto gap-1.5'
 
 export {

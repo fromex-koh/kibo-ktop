@@ -21,7 +21,7 @@ const USAGE_CODE = `const SKIP_LINKS = [
 </main>`
 
 const STYLE_CODE = `className={cn(
-  buttonVariants({variant: 'default', size: 'lg'}),
+  buttonVariants({variant: 'default', size: 'md'}),
   'z-skiplink border-foreground bg-foreground text-background hover:bg-foreground active:bg-foreground fixed top-3 left-3 -translate-y-20 transition-transform duration-200 ease-out focus:translate-y-0 motion-reduce:transition-none',
 )}`
 

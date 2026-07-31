@@ -191,7 +191,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
       {termsError ? <FieldError id="terms-error">이용약관에 동의해 주세요.</FieldError> : null}
     </FieldContent>
   </Field>
-  <Button type="submit" variant="default" size="md">선택 내용 확인</Button>
+  <Button type="submit" variant="default" size="sm">선택 내용 확인</Button>
 </form>
 
 const formData = new FormData(form)

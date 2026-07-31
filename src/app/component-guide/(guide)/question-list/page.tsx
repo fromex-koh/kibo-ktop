@@ -167,7 +167,7 @@ const FORM_CODE = `<form onSubmit={handleSubmit}>
     <ChipRadio value="skilled">숙련기술</ChipRadio>
   </ChipRadioGroup>
 
-  <Button type="submit" variant="default" size="md">선택 내용 확인</Button>
+  <Button type="submit" variant="default" size="sm">선택 내용 확인</Button>
 </form>`
 
 // 문장 속 선택값 데모 — 목록 문구(label)와 문장 표기(token)가 다른 경우와 같은 경우를 함께 보여준다.

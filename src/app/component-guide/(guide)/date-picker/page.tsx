@@ -131,7 +131,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     <DatePicker id="application-date" name="applicationDate" value={applicationDate} readOnly />
   </Field>
 
-  <Button type="submit" variant="default" size="md">날짜 선택 확인</Button>
+  <Button type="submit" variant="default" size="sm">날짜 선택 확인</Button>
 </form>`
 
 const DatePickerGuidePage = () => (

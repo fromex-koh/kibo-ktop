@@ -66,7 +66,7 @@ const SegmentedControlFormDemo = () => {
                 </div>
             </Field>
 
-            <Button type="submit" variant="default" size="md">
+            <Button type="submit" variant="default" size="sm">
                 선택 내용 확인
             </Button>
 

@@ -37,8 +37,8 @@ import {
   </SearchFilterFields>
 
   <SearchFilterActions>
-    <Button type="reset" variant="outline" size="lg">초기화</Button>
-    <Button type="submit" variant="default" size="lg">조회</Button>
+    <Button type="reset" variant="outline" size="md">초기화</Button>
+    <Button type="submit" variant="default" size="md">조회</Button>
   </SearchFilterActions>
 </SearchFilterForm>`
 
@@ -50,7 +50,7 @@ const USAGE_MINIMAL = `{/* 화면에 필요한 필드만 골라 넣는다. 순�
     <PaymentTypeField label="진행상태" />
   </SearchFilterFields>
   <SearchFilterActions>
-    <Button type="submit" variant="default" size="lg">조회</Button>
+    <Button type="submit" variant="default" size="md">조회</Button>
   </SearchFilterActions>
 </SearchFilterForm>`
 
@@ -67,8 +67,8 @@ const USAGE_TWO_COLUMN = `{/* SearchFilterRow 로 두 필드를 md 이상에서 
     </SearchFilterRow>
   </SearchFilterFields>
   <SearchFilterActions>
-    <Button type="reset" variant="outline" size="lg">초기화</Button>
-    <Button type="submit" variant="default" size="lg">조회</Button>
+    <Button type="reset" variant="outline" size="md">초기화</Button>
+    <Button type="submit" variant="default" size="md">조회</Button>
   </SearchFilterActions>
 </SearchFilterForm>`
 
@@ -81,8 +81,8 @@ const USAGE_INLINE = `{/* SearchFilterFields·SearchFilterActions 는 얇은 레
     <CompanyNameField />
   </div>
   <div className="flex justify-end gap-3">
-    <Button type="reset" variant="outline" size="lg">초기화</Button>
-    <Button type="submit" variant="default" size="lg">조회</Button>
+    <Button type="reset" variant="outline" size="md">초기화</Button>
+    <Button type="submit" variant="default" size="md">조회</Button>
   </div>
 </SearchFilterForm>`
 

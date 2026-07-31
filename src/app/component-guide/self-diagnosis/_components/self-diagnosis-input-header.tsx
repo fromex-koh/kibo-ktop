@@ -93,11 +93,11 @@ const SelfDiagnosisInputHeader = (props: SelfDiagnosisInputHeaderProps) => {
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="tertiary" size="2xl">
+                            <Button variant="tertiary" size="xl">
                                 계속 작성
                             </Button>
                         </DialogClose>
-                        <Button size="2xl" onClick={() => router.push(EXIT_PATH)}>
+                        <Button size="xl" onClick={() => router.push(EXIT_PATH)}>
                             저장 후 나가기
                         </Button>
                     </DialogFooter>

@@ -42,8 +42,8 @@ const StepNavigation = ({appearance = 'bar', prev, next, className, ...props}: S
             <ActionBar>
                 {prev || next ? (
                     <ActionBarCenter>
-                        {prev ? <Button variant="tertiary" size="2xl" {...prev} /> : null}
-                        {next ? <Button variant="default" size="2xl" {...next} /> : null}
+                        {prev ? <Button variant="tertiary" size="xl" {...prev} /> : null}
+                        {next ? <Button variant="default" size="xl" {...next} /> : null}
                     </ActionBarCenter>
                 ) : null}
             </ActionBar>

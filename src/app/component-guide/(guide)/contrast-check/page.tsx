@@ -48,10 +48,10 @@ const BADGE_COLORS = [
 
 const BUTTON_VARIANTS = ['default', 'secondary', 'tertiary', 'outline', 'ghost', 'destructive', 'text', 'link'] as const
 
-const BUTTON_SIZES = ['2xl', 'xl', 'lg', 'md', 'sm', 'xs'] as const
+const BUTTON_SIZES = ['xl', 'lg', 'md', 'sm', 'xs'] as const
 const INLINE_BUTTON_SIZES = ['xl', 'lg', 'md', 'sm'] as const
 const ICON_BUTTON_VARIANTS = ['default', 'secondary', 'tertiary', 'ghost'] as const
-const ICON_BUTTON_SIZES = ['icon-2xl', 'icon-xl', 'icon-lg', 'icon', 'icon-sm', 'icon-xs'] as const
+const ICON_BUTTON_SIZES = ['icon-xl', 'icon-lg', 'icon-md', 'icon-sm', 'icon-xs'] as const
 const ICON_SIZES = [
     {key: 'icon-xs', className: 'size-icon-xs'},
     {key: 'icon-sm', className: 'size-icon-sm'},
@@ -139,7 +139,11 @@ const ContrastCheckPage = () => (
         <section className="flex flex-col gap-6" aria-label="버튼 명도 대비 검수 목록">
             <div className="flex flex-wrap items-center gap-4">
                 {BUTTON_VARIANTS.map((variant) => (
-                    <Button key={variant} variant={variant} size="lg">
+                    <Button
+                        key={variant}
+                        variant={variant}
+                        size={variant === 'text' || variant === 'link' ? 'lg' : 'md'}
+                    >
                         {variant}
                     </Button>
                 ))}
@@ -147,13 +151,21 @@ const ContrastCheckPage = () => (
 
             <div className="flex flex-wrap items-center gap-4">
                 {BUTTON_VARIANTS.map((variant) => (
-                    <Button key={`${variant}-left-icon`} variant={variant} size="lg">
+                    <Button
+                        key={`${variant}-left-icon`}
+                        variant={variant}
+                        size={variant === 'text' || variant === 'link' ? 'lg' : 'md'}
+                    >
                         <Download aria-hidden="true" />
                         {variant}
                     </Button>
                 ))}
                 {BUTTON_VARIANTS.map((variant) => (
-                    <Button key={`${variant}-right-icon`} variant={variant} size="lg">
+                    <Button
+                        key={`${variant}-right-icon`}
+                        variant={variant}
+                        size={variant === 'text' || variant === 'link' ? 'lg' : 'md'}
+                    >
                         {variant}
                         <ChevronRight aria-hidden="true" />
                     </Button>
@@ -208,7 +220,7 @@ const ContrastCheckPage = () => (
             </div>
 
             <div className="flex flex-wrap items-center gap-4">
-                <Button variant="default" size="lg" aria-busy="true" className="pointer-events-none">
+                <Button variant="default" size="md" aria-busy="true" className="pointer-events-none">
                     <LoaderCircle aria-hidden="true" className="animate-spin" />
                     처리 중
                 </Button>

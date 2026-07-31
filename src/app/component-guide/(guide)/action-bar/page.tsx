@@ -12,22 +12,22 @@ const START_END_CODE = `{/* 왼쪽 "목록" · 오른쪽 "수정"/"저장" — S
 {/* 한 ActionBar 안의 버튼은 모두 같은 size 로 통일한다(여기선 lg) */}
 <ActionBar>
   <ActionBarStart>
-    <Button variant="tertiary" size="lg">목록</Button>
+    <Button variant="tertiary" size="md">목록</Button>
   </ActionBarStart>
   <ActionBarEnd>
-    <Button variant="secondary" size="lg">수정</Button>
-    <Button size="lg">저장</Button>
+    <Button variant="secondary" size="md">수정</Button>
+    <Button size="md">저장</Button>
   </ActionBarEnd>
 </ActionBar>`
 
 const CENTER_CODE = `{/* "이전" / "다음" — Center 만 쓰면 Start/End 없이도 컨테이너 정중앙에 온다 */}
 <ActionBar>
   <ActionBarCenter>
-    <Button variant="secondary" size="2xl">
+    <Button variant="secondary" size="xl">
       <ArrowLeft aria-hidden="true" />
       이전
     </Button>
-    <Button size="2xl">
+    <Button size="xl">
       다음
       <ArrowRight aria-hidden="true" />
     </Button>
@@ -63,15 +63,15 @@ const ActionBarGuidePage = () => (
                 <div className="border-border rounded-xl border p-6">
                     <ActionBar>
                         <ActionBarStart>
-                            <Button variant="tertiary" size="lg">
+                            <Button variant="tertiary" size="md">
                                 목록
                             </Button>
                         </ActionBarStart>
                         <ActionBarEnd>
-                            <Button variant="secondary" size="lg">
+                            <Button variant="secondary" size="md">
                                 수정
                             </Button>
-                            <Button size="lg">저장</Button>
+                            <Button size="md">저장</Button>
                         </ActionBarEnd>
                     </ActionBar>
                 </div>
@@ -96,11 +96,11 @@ const ActionBarGuidePage = () => (
                 <div className="border-border rounded-xl border p-6">
                     <ActionBar>
                         <ActionBarCenter>
-                            <Button variant="secondary" size="2xl">
+                            <Button variant="secondary" size="xl">
                                 <ArrowLeft aria-hidden="true" />
                                 이전
                             </Button>
-                            <Button size="2xl">
+                            <Button size="xl">
                                 다음
                                 <ArrowRight aria-hidden="true" />
                             </Button>

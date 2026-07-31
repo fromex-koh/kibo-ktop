@@ -41,11 +41,11 @@ const segmentedControlItemVariants = cva(
             // PROJECT-STYLE: 헤더 토글 시안(40006513:19948)은 항목 좌우 여백이 8px 다(41 = 글자 25 + 8×2).
             // md·lg 는 같은 비율로 한 단계씩 올린다 — 트랙 자체가 촘촘한 외형이라 여백이 넓으면 균형이 깨진다.
             {variant: 'subtle', size: 'sm', class: 'h-control-h-2xs typo-body-l-medium px-2'},
-            {variant: 'subtle', size: 'md', class: 'h-control-h-md typo-body-l-medium px-3'},
-            {variant: 'subtle', size: 'lg', class: 'h-control-h-lg typo-body-xl-medium px-4'},
+            {variant: 'subtle', size: 'md', class: 'h-control-h-sm typo-body-l-medium px-3'},
+            {variant: 'subtle', size: 'lg', class: 'h-control-h-md typo-body-xl-medium px-4'},
             {variant: 'solid', size: 'sm', class: 'h-control-h-sm typo-body-l-medium px-3'},
-            {variant: 'solid', size: 'md', class: 'h-control-h-md typo-body-l-medium px-4'},
-            {variant: 'solid', size: 'lg', class: 'h-control-h-lg typo-body-xl-medium px-5'},
+            {variant: 'solid', size: 'md', class: 'h-control-h-sm typo-body-l-medium px-4'},
+            {variant: 'solid', size: 'lg', class: 'h-control-h-md typo-body-xl-medium px-5'},
         ],
         defaultVariants: {
             variant: 'subtle',

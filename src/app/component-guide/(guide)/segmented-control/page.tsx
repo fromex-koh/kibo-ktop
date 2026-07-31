@@ -139,7 +139,7 @@ const USAGE_FORM = `// 세그먼티드는 토글 성격이라 기본값을 두�
     </div>
   </Field>
 
-  <Button type="submit" variant="default" size="md">선택 내용 확인</Button>
+  <Button type="submit" variant="default" size="sm">선택 내용 확인</Button>
 </form>`
 
 const COMPOSITION = [

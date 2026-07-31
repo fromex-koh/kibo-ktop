@@ -10,34 +10,34 @@ export const metadata: Metadata = {title: '버튼 (Button)'}
 
 const USAGE_CODE = `import {Button} from '@/components/ui/button'
 
-<Button variant="default" size="lg">저장</Button>
-<Button variant="secondary" size="lg">취소</Button>
-<Button variant="tertiary" size="lg">더보기</Button>`
+<Button variant="default" size="md">저장</Button>
+<Button variant="secondary" size="md">취소</Button>
+<Button variant="tertiary" size="md">더보기</Button>`
 
 const USAGE_CODE_ICON = `{/* 아이콘 왼쪽 */}
-<Button variant="default" size="lg">
+<Button variant="default" size="md">
   <Download aria-hidden="true" />
   다운로드
 </Button>
 
 {/* 아이콘 오른쪽 */}
-<Button variant="default" size="lg">
+<Button variant="default" size="md">
   다음
   <ArrowRight aria-hidden="true" />
 </Button>`
 
 // Loading — variant 색은 유지하고 스피너 + aria-busy + pointer-events-none 로 진행 중을 표현한다.
-const LOADING_CODE = `<Button variant="default" size="lg" aria-busy className="pointer-events-none">
+const LOADING_CODE = `<Button variant="default" size="md" aria-busy className="pointer-events-none">
   <LoaderCircle aria-hidden="true" className="animate-spin" />
   로딩중
 </Button>`
 
-const DISABLED_ICON_CODE = `<Button variant="default" size="lg" disabled>
+const DISABLED_ICON_CODE = `<Button variant="default" size="md" disabled>
   <Download aria-hidden="true" />
   다운로드
 </Button>
 
-<Button variant="secondary" size="lg" disabled>
+<Button variant="secondary" size="md" disabled>
   다음
   <ArrowRight aria-hidden="true" />
 </Button>
@@ -47,7 +47,7 @@ const DISABLED_ICON_CODE = `<Button variant="default" size="lg" disabled>
 
 const ROUND_ICON_CODE = `<Button
   variant="default"
-  size="icon-lg"
+  size="icon-md"
   className="rounded-full"
   aria-label="검색"
 >
@@ -56,7 +56,7 @@ const ROUND_ICON_CODE = `<Button
 
 <Button
   variant="default"
-  size="icon-lg"
+  size="icon-md"
   className="rounded-full"
   disabled
   aria-label="검색 불가"
@@ -71,25 +71,23 @@ const TYPES = [
     {key: 'tertiary', label: 'Tertiary', desc: '가장 낮은 강조의 보조 액션(취소·더보기 등)에 사용합니다.'},
 ] as const
 
-// Figma 5단계 사이즈(60·52·48·40·32)를 shadcn 축약형(2xl~xs)으로 노출한다. 클래스명은 cva 안에
+// Figma 5단계 사이즈(60·52·48·40·32)를 같은 의미의 축약형(xl~xs)으로 노출한다. 클래스명은 cva 안에
 // 리터럴로 고정돼 있어 여기서도 템플릿 문자열 대신 배열에 직접 나열한다(Tailwind 정적 분석, icon 가이드와 동일 이유).
-// sm(36)은 시안 개편으로 면 버튼 스케일에서 빠졌다 — 텍스트 버튼 스케일(sm=14px)에서만 쓴다.
 const SIZES = [
-    {key: '2xl', label: '2xl', height: 60},
-    {key: 'xl', label: 'xl', height: 52},
-    {key: 'lg', label: 'lg', height: 48},
-    {key: 'md', label: 'md', height: 40},
+    {key: 'xl', label: 'xl', height: 60},
+    {key: 'lg', label: 'lg', height: 52},
+    {key: 'md', label: 'md', height: 48},
+    {key: 'sm', label: 'sm', height: 40},
     {key: 'xs', label: 'xs', height: 32},
 ] as const
 
 // 아이콘 전용(정사각) 버튼 사이즈. 텍스트 사이즈와 달리 min-w 가 없어 정사각형이 되고, 텍스트 스케일 높이에
-// 대응한다(icon-2xl=60·icon-xl=52·icon-lg=48·icon=44(44px 터치타깃)·icon-sm=36·icon-xs=32).
+// 대응한다(icon-xl=60·icon-lg=52·icon-md=48·icon-sm=40·icon-xs=32).
 const ICON_SIZES = [
-    {key: 'icon-2xl', label: 'icon-2xl', height: 60},
-    {key: 'icon-xl', label: 'icon-xl', height: 52},
-    {key: 'icon-lg', label: 'icon-lg', height: 48},
-    {key: 'icon', label: 'icon', height: 44},
-    {key: 'icon-sm', label: 'icon-sm', height: 36},
+    {key: 'icon-xl', label: 'icon-xl', height: 60},
+    {key: 'icon-lg', label: 'icon-lg', height: 52},
+    {key: 'icon-md', label: 'icon-md', height: 48},
+    {key: 'icon-sm', label: 'icon-sm', height: 40},
     {key: 'icon-xs', label: 'icon-xs', height: 32},
 ] as const
 
@@ -103,17 +101,16 @@ const ICON_VARIANTS = [
 ] as const
 
 // plain 은 컨트롤 높이를 버리고 상자를 아이콘 크기로 맞추는 variant 라, 같은 size 라도 위 표의 높이와
-// 값이 다르다(icon-xl = 52 가 아니라 아이콘 그대로 32). 혼동을 막으려고 표를 따로 둔다.
+// 값이 다르다(icon-lg = 52 가 아니라 아이콘 그대로 32). 혼동을 막으려고 표를 따로 둔다.
 const PLAIN_SIZES = [
-    {key: 'icon-2xl', label: 'icon-2xl', box: 40},
-    {key: 'icon-xl', label: 'icon-xl', box: 32},
-    {key: 'icon-lg', label: 'icon-lg', box: 24},
-    {key: 'icon', label: 'icon', box: 24},
+    {key: 'icon-xl', label: 'icon-xl', box: 40},
+    {key: 'icon-lg', label: 'icon-lg', box: 32},
+    {key: 'icon-md', label: 'icon-md', box: 24},
     {key: 'icon-sm', label: 'icon-sm', box: 20},
     {key: 'icon-xs', label: 'icon-xs', box: 16},
 ] as const
 
-const LEGACY_SIZES = ['default', 'icon', 'icon-lg', 'icon-xl', 'icon-2xl', 'icon-sm', 'icon-xs'] as const
+const LEGACY_SIZES = ['default', 'icon'] as const
 
 // Button 이 가진 variant 케이스. default/secondary/tertiary/text 는 Figma type(버튼 전용 토큰),
 // outline/ghost/destructive/link 는 내부 컴포넌트 및 인라인 액션에서 쓰는 호환 값이다.
@@ -145,7 +142,7 @@ const DISABLED_VARIANTS = [
     {key: 'link', label: 'Link'},
 ] as const
 
-// Figma button_text 는 공용 size 축(2xl~xs)과 별개로 자체 4단 스케일을 쓴다(값은 Figma 실측 px).
+// Figma button_text 는 공용 size 축(xl~xs)과 별개로 자체 4단 스케일을 쓴다(값은 Figma 실측 px).
 // 아이콘은 large·medium·small 16px, xsmall 만 12px 이다.
 // text-underline·link 도 이 사양을 그대로 공유한다 — 밑줄 유무(없음/상시/hover)만 다르다.
 // text-underline 의 밑줄은 text-decoration 이 아니라 버튼 폭 전체를 덮는 1px 선이라 아이콘 아래에서도 끊기지 않는다(시안 동일).
@@ -262,6 +259,7 @@ const DISABLED_COLUMNS = [
 // 밑줄형(text-underline·link)은 문장 안에 섞이는 인라인 버튼이라 아이콘 전용으로 쓰지 않는다.
 // 글자 없이 아이콘만 남기면 밑줄이 아이콘 아래에 홀로 그려져 시안에 없는 모양이 되므로 큐레이션에서 뺀다.
 const UNDERLINE_VARIANT_KEYS: readonly string[] = ['text-underline', 'link']
+const INLINE_VARIANT_KEYS: readonly string[] = ['text', ...UNDERLINE_VARIANT_KEYS]
 
 const notApplicableCell = (key: string) => (
     <span key={key} className="typo-caption-regular text-muted-foreground">
@@ -276,14 +274,29 @@ const DISABLED_ROWS = DISABLED_VARIANTS.map((variant) => {
         key: variant.key,
         cells: [
             nameCell(variant.label),
-            <Button key="text" variant={variant.key} size="lg" disabled>
+            <Button
+                key="text"
+                variant={variant.key}
+                size={INLINE_VARIANT_KEYS.includes(variant.key) ? 'lg' : 'md'}
+                disabled
+            >
                 버튼명
             </Button>,
-            <Button key="icon-start" variant={variant.key} size="lg" disabled>
+            <Button
+                key="icon-start"
+                variant={variant.key}
+                size={INLINE_VARIANT_KEYS.includes(variant.key) ? 'lg' : 'md'}
+                disabled
+            >
                 <Download aria-hidden="true" />
                 버튼명
             </Button>,
-            <Button key="icon-end" variant={variant.key} size="lg" disabled>
+            <Button
+                key="icon-end"
+                variant={variant.key}
+                size={INLINE_VARIANT_KEYS.includes(variant.key) ? 'lg' : 'md'}
+                disabled
+            >
                 버튼명
                 <ArrowRight aria-hidden="true" />
             </Button>,
@@ -291,7 +304,7 @@ const DISABLED_ROWS = DISABLED_VARIANTS.map((variant) => {
                 <Button
                     key="icon-only"
                     variant={variant.key}
-                    size="icon-lg"
+                    size="icon-md"
                     disabled
                     aria-label={`${variant.label} 비활성 아이콘 버튼`}
                 >
@@ -304,7 +317,7 @@ const DISABLED_ROWS = DISABLED_VARIANTS.map((variant) => {
                 <Button
                     key="icon-round"
                     variant={variant.key}
-                    size="icon-lg"
+                    size="icon-md"
                     className="rounded-full"
                     disabled
                     aria-label={`${variant.label} 비활성 원형 아이콘 버튼`}
@@ -343,12 +356,14 @@ const PROPS_ROWS = [
         key: 'size',
         cells: [
             nameCell('size'),
-            'Figma 5단계 사이즈를 shadcn 방식의 축약형 2xl/xl/lg/md/xs로 제공합니다. sm(36px)은 시안 개편으로 면 버튼 스케일에서 제외되어 텍스트 버튼 스케일(14px)에서만 쓰며, default와 icon 계열은 다이얼로그·시트·사이드바 등 내부 컴포넌트 호환을 위해 유지됩니다.',
+            'Figma의 xlarge/large/medium/small/xsmall을 xl/lg/md/sm/xs로 1:1 제공합니다(60/52/48/40/32px). default와 icon은 다이얼로그·시트·사이드바 등 기존 내부 컴포넌트 호환을 위해 유지됩니다.',
             <span key="default" className="font-mono">
                 &apos;default&apos;
             </span>,
             <span key="control" className="flex flex-wrap gap-1">
-                {[...SIZES.map((size) => size.key), ...LEGACY_SIZES].map(controlChip)}
+                {[...SIZES.map((size) => size.key), ...ICON_SIZES.map((size) => size.key), ...LEGACY_SIZES].map(
+                    controlChip,
+                )}
             </span>,
         ],
     },
@@ -453,13 +468,13 @@ const ButtonGuidePage = () => (
                     </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
-                    <Button variant="default" size="lg">
+                    <Button variant="default" size="md">
                         저장
                     </Button>
-                    <Button variant="secondary" size="lg">
+                    <Button variant="secondary" size="md">
                         취소
                     </Button>
-                    <Button variant="tertiary" size="lg">
+                    <Button variant="tertiary" size="md">
                         더보기
                     </Button>
                 </div>
@@ -473,11 +488,11 @@ const ButtonGuidePage = () => (
                     </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
-                    <Button variant="default" size="lg">
+                    <Button variant="default" size="md">
                         <Download aria-hidden="true" />
                         다운로드
                     </Button>
-                    <Button variant="default" size="lg">
+                    <Button variant="default" size="md">
                         다음
                         <ArrowRight aria-hidden="true" />
                     </Button>
@@ -509,7 +524,7 @@ const ButtonGuidePage = () => (
                                 <span className="typo-body-l-medium text-foreground font-mono">{v.label}</span>
                                 <span className="typo-caption-regular text-muted-foreground">{v.note}</span>
                             </div>
-                            <Button variant={v.key} size="lg">
+                            <Button variant={v.key} size={INLINE_VARIANT_KEYS.includes(v.key) ? 'lg' : 'md'}>
                                 버튼
                             </Button>
                         </div>
@@ -525,7 +540,7 @@ const ButtonGuidePage = () => (
                         기본 버튼 크기 조합
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        Primary·Secondary·Tertiary와 5단계 size의 실제 조합입니다. 44px 미만인 md·xs는 밀도 높은
+                        Primary·Secondary·Tertiary와 5단계 size의 실제 조합입니다. 44px 미만인 sm·xs는 밀도 높은
                         UI에서만 사용하고 인접 요소와 충분한 간격을 확보합니다.
                     </p>
                 </div>
@@ -586,7 +601,7 @@ const ButtonGuidePage = () => (
                         <strong className="text-foreground font-medium">
                             같은 size 라도 위 표의 높이와 값이 다릅니다
                         </strong>{' '}
-                        — 예를 들어 <span className="font-mono">icon-xl</span> 은 52px 이 아니라 아이콘 그대로 32px
+                        — 예를 들어 <span className="font-mono">icon-lg</span> 는 52px 이 아니라 아이콘 그대로 32px
                         입니다. 오른쪽 열에 같은 size 의 면 있는 버튼을 나란히 두었습니다. 상자가 작아지는 만큼 인접
                         컨트롤과의 간격은 사용처에서 확보합니다([6.1.3]).
                     </p>
@@ -748,7 +763,7 @@ const ButtonGuidePage = () => (
                         <Button
                             key={type.key}
                             variant={type.key}
-                            size="lg"
+                            size="md"
                             aria-busy="true"
                             className="pointer-events-none"
                         >

@@ -159,7 +159,7 @@ const LookupField = ({
                 aria-describedby={helper ? `${id}-helper` : undefined}
                 className="min-w-0 flex-1"
             />
-            <Button variant="tertiary" size="lg" className="shrink-0">
+            <Button variant="tertiary" size="md" className="shrink-0">
                 {action}
             </Button>
         </div>
@@ -246,7 +246,7 @@ const CareerForm = () => (
             </BulletNote>
         }
         action={
-            <Button variant="secondary" size="md">
+            <Button variant="secondary" size="sm">
                 입력도우미
             </Button>
         }
@@ -256,7 +256,7 @@ const CareerForm = () => (
             <Separator />
             <CareerSection index={2} />
             {/* 행추가 — 시안은 카드 폭 전체를 채우는 primary 버튼이다. */}
-            <Button size="md" className="w-full">
+            <Button size="sm" className="w-full">
                 행추가
                 <Plus aria-hidden="true" />
             </Button>
@@ -342,7 +342,7 @@ const CompanyInfoForm = () => (
                                     placeholder="[주소 검색] 버튼으로 자동 입력됩니다."
                                     className="min-w-0 flex-1"
                                 />
-                                <Button variant="tertiary" size="lg" className="shrink-0">
+                                <Button variant="tertiary" size="md" className="shrink-0">
                                     주소 검색
                                 </Button>
                             </div>

@@ -26,7 +26,7 @@ export const metadata: Metadata = {title: '다이얼로그 (Dialog)'}
 
 const USAGE_CODE = `<Dialog>
   <DialogTrigger asChild>
-    <Button size="lg">열기</Button>
+    <Button size="md">열기</Button>
   </DialogTrigger>
 
   <DialogContent>
@@ -44,9 +44,9 @@ const USAGE_CODE = `<Dialog>
     {/* CTA — 둘이면 폭을 반씩, 하나면 폭 전체 */}
     <DialogFooter>
       <DialogClose asChild>
-        <Button variant="tertiary" size="2xl">취소</Button>
+        <Button variant="tertiary" size="xl">취소</Button>
       </DialogClose>
-      <Button size="2xl">확인</Button>
+      <Button size="xl">확인</Button>
     </DialogFooter>
   </DialogContent>
 </Dialog>`
@@ -322,7 +322,7 @@ const DialogGuidePage = () => (
                 <div className="border-border flex flex-wrap gap-3 rounded-md border p-6">
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">기본 다이얼로그 열기</Button>
+                            <Button size="md">기본 다이얼로그 열기</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -389,12 +389,12 @@ const DialogGuidePage = () => (
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild>
-                                    <Button variant="tertiary" size="2xl">
+                                    <Button variant="tertiary" size="xl">
                                         취소
                                     </Button>
                                 </DialogClose>
                                 <DialogClose asChild>
-                                    <Button size="2xl">확인</Button>
+                                    <Button size="xl">확인</Button>
                                 </DialogClose>
                             </DialogFooter>
                         </DialogContent>
@@ -444,7 +444,7 @@ const DialogGuidePage = () => (
                         '다음에 하기'가 대신한다. */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">안내 + 두 선택</Button>
+                            <Button size="md">안내 + 두 선택</Button>
                         </DialogTrigger>
                         <DialogContent showCloseButton={false}>
                             {/* 머리 구획이 없는 유일한 케이스 — 제목이 sr-only 라 머리 여백을 없애 첫 행을
@@ -459,11 +459,11 @@ const DialogGuidePage = () => (
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild>
-                                    <Button variant="tertiary" size="2xl">
+                                    <Button variant="tertiary" size="xl">
                                         다음에 하기
                                     </Button>
                                 </DialogClose>
-                                <Button size="2xl">로그인</Button>
+                                <Button size="xl">로그인</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -471,7 +471,7 @@ const DialogGuidePage = () => (
                     {/* 확인 — 주 동작 하나를 폭 전체로 */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">확인</Button>
+                            <Button size="md">확인</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -487,7 +487,7 @@ const DialogGuidePage = () => (
                                 </p>
                             </div>
                             <DialogFooter>
-                                <Button size="2xl">로그아웃</Button>
+                                <Button size="xl">로그아웃</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -495,7 +495,7 @@ const DialogGuidePage = () => (
                     {/* 작성 종료 확인 — 자동 저장 안내 후 계속 작성하거나 화면을 나가도록 선택 */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">작성 종료 확인</Button>
+                            <Button size="md">작성 종료 확인</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -510,12 +510,12 @@ const DialogGuidePage = () => (
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild>
-                                    <Button variant="tertiary" size="2xl">
+                                    <Button variant="tertiary" size="xl">
                                         계속 작성
                                     </Button>
                                 </DialogClose>
                                 <DialogClose asChild>
-                                    <Button size="2xl">저장 후 나가기</Button>
+                                    <Button size="xl">저장 후 나가기</Button>
                                 </DialogClose>
                             </DialogFooter>
                         </DialogContent>
@@ -524,7 +524,7 @@ const DialogGuidePage = () => (
                     {/* 시간 제한 안내 — 남은 시간을 소제목에 노출 */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">시간 제한 안내</Button>
+                            <Button size="md">시간 제한 안내</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -544,11 +544,11 @@ const DialogGuidePage = () => (
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild>
-                                    <Button variant="tertiary" size="2xl">
+                                    <Button variant="tertiary" size="xl">
                                         로그아웃
                                     </Button>
                                 </DialogClose>
-                                <Button size="2xl">로그인 연장</Button>
+                                <Button size="xl">로그인 연장</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -556,7 +556,7 @@ const DialogGuidePage = () => (
                     {/* 입력 — 여러 필드 */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">입력 (여러 필드)</Button>
+                            <Button size="md">입력 (여러 필드)</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -593,7 +593,7 @@ const DialogGuidePage = () => (
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button size="2xl">비밀번호 변경</Button>
+                                <Button size="xl">비밀번호 변경</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -601,7 +601,7 @@ const DialogGuidePage = () => (
                     {/* 입력 — 한 줄 복합 */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">입력 (한 줄 복합)</Button>
+                            <Button size="md">입력 (한 줄 복합)</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -631,7 +631,7 @@ const DialogGuidePage = () => (
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button size="2xl">본인 확인</Button>
+                                <Button size="xl">본인 확인</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -639,7 +639,7 @@ const DialogGuidePage = () => (
                     {/* 입력 — 단일 필드 */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">입력 (단일 필드)</Button>
+                            <Button size="md">입력 (단일 필드)</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -659,7 +659,7 @@ const DialogGuidePage = () => (
                                 </div>
                             </div>
                             <DialogFooter>
-                                <Button size="2xl">비밀번호 확인</Button>
+                                <Button size="xl">비밀번호 확인</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -669,7 +669,7 @@ const DialogGuidePage = () => (
                         py-1(8)이라, 실제로 보이는 스크롤 영역이 440 이 된다. */}
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button size="lg">필수 동의사항 (내부 스크롤)</Button>
+                            <Button size="md">필수 동의사항 (내부 스크롤)</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
@@ -685,12 +685,12 @@ const DialogGuidePage = () => (
                             </div>
                             <DialogFooter>
                                 <DialogClose asChild>
-                                    <Button variant="tertiary" size="2xl">
+                                    <Button variant="tertiary" size="xl">
                                         동의하지 않음
                                     </Button>
                                 </DialogClose>
                                 <DialogClose asChild>
-                                    <Button size="2xl">동의함</Button>
+                                    <Button size="xl">동의함</Button>
                                 </DialogClose>
                             </DialogFooter>
                         </DialogContent>

@@ -85,7 +85,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     {paymentError ? <FieldError id="payment-method-error">결제 수단을 선택해 주세요.</FieldError> : null}
   </FieldSet>
 
-  <Button type="submit" variant="default" size="md">선택 내용 확인</Button>
+  <Button type="submit" variant="default" size="sm">선택 내용 확인</Button>
 </form>`
 
 // Figma radio 의 두 축 — check(off/on) × state(default/disabled).

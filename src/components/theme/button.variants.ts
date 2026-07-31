@@ -44,31 +44,26 @@ const buttonVariants = cva(
                     'text-label-foreground relative after:absolute after:inset-x-0 after:top-1/2 after:h-px after:translate-y-[0.5lh] after:bg-current disabled:text-disabled-subtle disabled:opacity-100',
             },
             size: {
-                default: 'h-control-h-md min-h-11 gap-2 px-4',
-                '2xl': "h-control-h-2xl min-h-11 min-w-control-min-w-lg gap-2 rounded-sm px-6 text-lg font-bold [&_svg:not([class*='size-'])]:size-6",
-                xl: "h-control-h-xl min-h-11 gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
-                lg: "h-control-h-lg min-h-11 min-w-control-min-w-sm gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
-                md: "h-control-h-md min-w-control-min-w-sm gap-1.5 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-5",
-                // PROJECT-STYLE: 시안 개편으로 면 버튼 스케일은 5단계(60·52·48·40·32)가 되어 sm(36)이 빠졌다.
-                // 키는 텍스트 버튼 스케일(button_text small=14px — 아래 compound)이 쓰므로 유지하되,
-                // 면 버튼(solid·outline 계열)에는 sm 을 새로 쓰지 않는다.
-                sm: "h-control-h-sm min-w-control-min-w-xs gap-1.5 rounded-sm px-4 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
+                default: 'h-control-h-sm min-h-11 gap-2 px-4',
+                xl: "h-control-h-xl min-h-11 min-w-control-min-w-lg gap-2 rounded-sm px-6 text-lg font-bold [&_svg:not([class*='size-'])]:size-6",
+                lg: "h-control-h-lg min-h-11 gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
+                md: "h-control-h-md min-h-11 min-w-control-min-w-sm gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
+                sm: "h-control-h-sm min-w-control-min-w-sm gap-1.5 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-5",
                 xs: "h-control-h-xs min-w-control-min-w-xs gap-1 rounded-2xs px-3 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
-                'icon-2xl':
-                    "size-control-h-2xl min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-xl",
                 'icon-xl': "size-control-h-xl min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-xl",
-                icon: "size-control-h-md min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-lg",
-                'icon-lg': "size-control-h-lg min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-lg",
+                'icon-lg': "size-control-h-lg min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-xl",
+                'icon-md': "size-control-h-md min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-lg",
+                icon: "size-control-h-sm min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-lg",
                 'icon-sm': "size-control-h-sm rounded-sm [&_svg:not([class*='size-'])]:size-icon-md",
                 'icon-xs': "size-control-h-xs rounded-2xs [&_svg:not([class*='size-'])]:size-icon-sm",
             },
         },
         compoundVariants: [
-            {variant: 'default', size: 'xl', class: 'min-w-control-min-w-md text-lg'},
-            {variant: 'secondary', size: 'xl', class: 'min-w-control-min-w-sm'},
-            {variant: 'tertiary', size: 'xl', class: 'min-w-control-min-w-sm'},
-            {variant: 'default', size: 'lg', class: 'font-bold disabled:font-medium'},
+            {variant: 'default', size: 'lg', class: 'min-w-control-min-w-md text-lg'},
+            {variant: 'secondary', size: 'lg', class: 'min-w-control-min-w-sm'},
+            {variant: 'tertiary', size: 'lg', class: 'min-w-control-min-w-sm'},
             {variant: 'default', size: 'md', class: 'font-bold disabled:font-medium'},
+            {variant: 'default', size: 'sm', class: 'font-bold disabled:font-medium'},
             // PROJECT-STYLE: button_text 의 텍스트↔아이콘 간격은 네 size 모두 4px 이다(medium·large 확인).
             // size 축이 6·8px 를 얹으므로 여기서 gap-1 로 되돌린다.
             {variant: ['text', 'text-underline', 'link'], class: 'min-h-0 min-w-0 gap-1 p-0 font-normal'},
@@ -76,18 +71,18 @@ const buttonVariants = cva(
             // size 축이 rounded-sm 등을 뒤에 얹으므로 이 되돌림은 variant 가 아니라 여기(compound)에 둔다.
             // size 는 아이콘 전용 값만 의미가 있다(각 size 가 정한 아이콘 크기 = 상자 크기).
             {variant: 'plain', class: 'min-h-0 min-w-0 gap-0 rounded-none p-0'},
-            {variant: 'plain', size: 'icon-2xl', class: 'size-icon-2xl'},
-            {variant: 'plain', size: 'icon-xl', class: 'size-icon-xl'},
-            {variant: 'plain', size: ['icon', 'icon-lg'], class: 'size-icon-lg'},
+            {variant: 'plain', size: 'icon-xl', class: 'size-icon-2xl'},
+            {variant: 'plain', size: 'icon-lg', class: 'size-icon-xl'},
+            {variant: 'plain', size: ['icon', 'icon-md'], class: 'size-icon-lg'},
             {variant: 'plain', size: 'icon-sm', class: 'size-icon-md'},
             {variant: 'plain', size: 'icon-xs', class: 'size-icon-sm'},
             // PROJECT-STYLE: Figma button_text(40006516:20290)는 xsmall 12 · small 14 · medium 16 · large 18
             // 네 단계이고, 높이는 상자가 아니라 행간(18·21·24·27)이 정한다 — 문장 안에 섞이는 인라인 버튼이라
             // 컨트롤 높이를 주면 줄 높이가 어긋난다. 아이콘은 12px 단계만 12, 나머지는 16 이다.
-            // xl·2xl 은 시안에 없어 large 와 같은 값으로 둔다(다른 variant 와 size 축을 맞추기 위한 자리).
+            // xl 은 시안에 없어 large 와 같은 값으로 둔다(다른 variant 와 size 축을 맞추기 위한 자리).
             {
                 variant: ['text', 'text-underline', 'link'],
-                size: ['2xl', 'xl', 'lg'],
+                size: ['xl', 'lg'],
                 class: "h-[--spacing(6.75)] text-lg [&_svg:not([class*='size-'])]:size-icon-sm",
             },
             {

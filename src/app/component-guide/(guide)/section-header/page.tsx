@@ -27,7 +27,7 @@ const USAGE_CODE_ACTION = `<SectionHeader>
     <span aria-hidden="true" className="text-error-500">*</span> 표시 항목은 필수 입력 항목입니다.
   </SectionHeaderDescription>
   <SectionHeaderAction>
-    <Button variant="tertiary" size="md">
+    <Button variant="tertiary" size="sm">
       최근 입력 정보 불러오기
     </Button>
   </SectionHeaderAction>
@@ -49,7 +49,7 @@ const USAGE_CODE_LIST = `<SectionHeader>
     </ul>
   </SectionHeaderDescription>
   <SectionHeaderAction>
-    <Button variant="tertiary" size="md">입력도우미</Button>
+    <Button variant="tertiary" size="sm">입력도우미</Button>
   </SectionHeaderAction>
 </SectionHeader>`
 
@@ -57,7 +57,7 @@ const STYLE_CODE = `<SectionHeader>
   <SectionHeaderTitle>기업정보</SectionHeaderTitle>
   <SectionHeaderDescription>사업자등록증 기준으로 정확히 입력해 주세요.</SectionHeaderDescription>
   <SectionHeaderAction>
-    <Button variant="tertiary" size="md">최근 입력 정보 불러오기</Button>
+    <Button variant="tertiary" size="sm">최근 입력 정보 불러오기</Button>
   </SectionHeaderAction>
 </SectionHeader>`
 
@@ -146,7 +146,7 @@ const SectionHeaderGuidePage = () => (
                             표시 항목은 필수 입력 항목입니다.
                         </SectionHeaderDescription>
                         <SectionHeaderAction>
-                            <Button variant="tertiary" size="md">
+                            <Button variant="tertiary" size="sm">
                                 최근 입력 정보 불러오기
                             </Button>
                         </SectionHeaderAction>
@@ -182,7 +182,7 @@ const SectionHeaderGuidePage = () => (
                             </ul>
                         </SectionHeaderDescription>
                         <SectionHeaderAction>
-                            <Button variant="tertiary" size="md">
+                            <Button variant="tertiary" size="sm">
                                 입력도우미
                             </Button>
                         </SectionHeaderAction>

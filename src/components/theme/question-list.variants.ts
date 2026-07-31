@@ -12,12 +12,12 @@ const questionHelperClassName = 'typo-body-l-regular text-label-foreground mt-2'
 // PROJECT-STYLE: 본문↔우측 체크박스 간격은 24px 다(시안 실측 — 본문 끝 948 → 체크박스 972).
 const questionControlClassName = 'flex min-h-6 items-center pl-6'
 // PROJECT-STYLE: 인라인 Select/Chip이 있는 행은 첫 줄이 40px 컨트롤 높이라
-// 번호·체크박스를 그 라인 중앙(control-h-md)에 맞춘다. 순수 텍스트 행은 24px 라인 기준 상단 정렬.
-const questionControlLineClassName = 'min-h-control-h-md'
+// 번호·체크박스를 그 라인 중앙(control-h-sm)에 맞춘다. 순수 텍스트 행은 24px 라인 기준 상단 정렬.
+const questionControlLineClassName = 'min-h-control-h-sm'
 // PROJECT-STYLE: 컨트롤 라인(첫 줄 40px) 행의 Badge는 줄 중앙이 아니라 '첫 텍스트 줄 윗변'에 맞춘다 —
 // 시안 실측 기준 배지 상단과 문장 상단이 같은 선이다. pt-2(8px)는 24px 텍스트가 40px 줄 안에서
 // 중앙에 놓일 때 생기는 위 여백 (40-24)/2 다.
-const questionBadgeControlLineClassName = 'min-h-control-h-md items-start pt-2'
+const questionBadgeControlLineClassName = 'min-h-control-h-sm items-start pt-2'
 // PROJECT-STYLE: 우측 컨트롤이 없는 문항은 본문이 컨트롤 열까지 확장되어야
 // 하위 항목(QuestionOption)의 체크박스가 목록 우측 끝(메인 체크박스 열)에 정렬된다.
 const questionContentFillClassName = 'col-span-2'

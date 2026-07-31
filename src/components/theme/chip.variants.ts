@@ -6,8 +6,8 @@ const chipVariants = cva(
     {
         variants: {
             size: {
-                lg: 'h-control-h-lg',
-                md: 'h-control-h-md',
+                lg: 'h-control-h-md',
+                md: 'h-control-h-sm',
             },
         },
         defaultVariants: {

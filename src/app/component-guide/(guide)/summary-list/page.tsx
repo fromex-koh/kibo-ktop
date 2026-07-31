@@ -63,7 +63,7 @@ const USAGE_CODE = `{/* 리스트는 FormCard(헤더 내장 카드) 본문으로
 
 const COMPOSED_CODE = `{/* FormCard 헤더는 SectionHeader 를 그대로 내장 — title/action 만 주면 제목+수정 버튼 헤더가 되고,
     목록은 본문(children)으로 들어간다. 헤더를 따로 조립할 필요가 없다. */}
-<FormCard title="기업정보" action={<Button variant="tertiary" size="md">수정</Button>}>
+<FormCard title="기업정보" action={<Button variant="tertiary" size="sm">수정</Button>}>
   <SummaryList>
     <SummaryListItem term="기업형태">법인</SummaryListItem>
     {/* … */}
@@ -73,7 +73,7 @@ const COMPOSED_CODE = `{/* FormCard 헤더는 SectionHeader 를 그대로 내장
 const TWO_COLUMN_CODE = `{/* 항목이 많으면 리스트를 2열로 — Figma "2단"(경력 2건). 제목 옆 건수는 숫자 Badge */}
 <FormCard
   title={<span className="flex items-center gap-2">대표자 경력사항 <Badge type="number" color="primary">2</Badge></span>}
-  action={<Button variant="tertiary" size="md">수정</Button>}
+  action={<Button variant="tertiary" size="sm">수정</Button>}
 >
   <div className="grid gap-6 md:grid-cols-2">
     <SummaryList>{/* 경력 1 */}</SummaryList>
@@ -150,7 +150,7 @@ const SummaryListGuidePage = () => (
             <FormCard
                 title="기업정보"
                 action={
-                    <Button variant="tertiary" size="md">
+                    <Button variant="tertiary" size="sm">
                         수정
                     </Button>
                 }
@@ -188,7 +188,7 @@ const SummaryListGuidePage = () => (
                     </span>
                 }
                 action={
-                    <Button variant="tertiary" size="md">
+                    <Button variant="tertiary" size="sm">
                         수정
                     </Button>
                 }

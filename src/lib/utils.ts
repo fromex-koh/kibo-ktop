@@ -15,7 +15,6 @@ const twMerge = extendTailwindMerge({
         "control-h-md",
         "control-h-lg",
         "control-h-xl",
-        "control-h-2xl",
         "control-min-w-xs",
         "control-min-w-sm",
         "control-min-w-md",

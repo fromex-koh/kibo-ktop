@@ -13,7 +13,7 @@ export const metadata: Metadata = {title: '폼 카드 (FormCard)'}
 const USAGE_CODE = `<FormCard
   title="기업정보"
   subtitle={<><span aria-hidden="true" className="text-error-500">*</span><span className="sr-only">별표</span> 표시 항목은 필수 입력 항목입니다.</>}
-  action={<Button variant="tertiary" size="md">최근 입력 정보 불러오기</Button>}
+  action={<Button variant="tertiary" size="sm">최근 입력 정보 불러오기</Button>}
 >
   {/* 본문 — 2열 폼 필드. 라벨은 다른 폼(Input/Select/Textarea)과 동일 스타일, 필수 * 는 text-error-500 */}
   <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
@@ -72,7 +72,7 @@ const FormCardGuidePage = () => (
                     </>
                 }
                 action={
-                    <Button variant="tertiary" size="md">
+                    <Button variant="tertiary" size="sm">
                         최근 입력 정보 불러오기
                     </Button>
                 }

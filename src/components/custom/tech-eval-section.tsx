@@ -160,7 +160,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                             남음). 색은 스킨 반영 --ds-gray-*(mainpage 다크에서 hover #40454c·active #272a2e —
                                             은은한 다크)라 라이트/다크 다른 버튼엔 영향 없다. */}
                                                 <Button
-                                                    size="xl"
+                                                    size="lg"
                                                     asChild
                                                     className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-lg')}
                                                 >

@@ -76,7 +76,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     />
   </Field>
 
-  <Button type="submit" variant="default" size="md">입력 내용 확인</Button>
+  <Button type="submit" variant="default" size="sm">입력 내용 확인</Button>
 </form>`
 
 const PROPS_ITEMS = [

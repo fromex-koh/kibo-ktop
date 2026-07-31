@@ -87,7 +87,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     </Select>
   </Field>
 
-  <Button type="submit" variant="default" size="md">선택 내용 확인</Button>
+  <Button type="submit" variant="default" size="sm">선택 내용 확인</Button>
 </form>`
 
 // Figma selectbox 의 상태(default/focused/completed/error) 중 정적으로 보여줄 수 있는 것.

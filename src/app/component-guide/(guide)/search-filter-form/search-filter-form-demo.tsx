@@ -39,10 +39,10 @@ const SearchFilterFormDemo = ({showResult = true}: {showResult?: boolean}) => {
                 </SearchFilterFields>
 
                 <SearchFilterActions>
-                    <Button type="reset" variant="outline" size="lg">
+                    <Button type="reset" variant="outline" size="md">
                         초기화
                     </Button>
-                    <Button type="submit" variant="default" size="lg">
+                    <Button type="submit" variant="default" size="md">
                         조회
                     </Button>
                 </SearchFilterActions>

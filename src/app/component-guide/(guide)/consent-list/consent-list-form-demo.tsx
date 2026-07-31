@@ -143,7 +143,7 @@ const ConsentListFormDemo = () => {
 
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                    <Button type="submit" variant="default" size="md">
+                    <Button type="submit" variant="default" size="sm">
                         동의하고 다음 단계
                     </Button>
                     <span className="typo-body-l-regular text-muted-foreground">

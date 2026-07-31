@@ -47,7 +47,7 @@ const SearchBarFormDemo = () => {
             </Field>
 
             <div className="flex flex-col gap-2">
-                <Button type="submit" variant="default" size="md" className="w-fit">
+                <Button type="submit" variant="default" size="sm" className="w-fit">
                     검색 조건 확인
                 </Button>
                 <output

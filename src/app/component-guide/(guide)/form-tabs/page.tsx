@@ -172,7 +172,7 @@ const ITEMS: readonly FormTabItem[] = [
                     </BulletNote>
                 }
                 action={
-                    <Button variant="secondary" size="md">
+                    <Button variant="secondary" size="sm">
                         입력도우미
                     </Button>
                 }
@@ -203,7 +203,7 @@ const ITEMS: readonly FormTabItem[] = [
                 title="핵심 기술 인력 현황"
                 subtitle={<BulletNote>보유 기술 개발에 직접 참여한 인력을 기준으로 입력해주십시오.</BulletNote>}
                 action={
-                    <Button variant="secondary" size="md">
+                    <Button variant="secondary" size="sm">
                         입력도우미
                     </Button>
                 }
@@ -259,7 +259,7 @@ const ITEMS: readonly FormTabItem[] = [
                 title="기술 개발 실적"
                 subtitle={<BulletNote>최근 3년 이내 완료된 개발 과제부터 입력해주십시오.</BulletNote>}
                 action={
-                    <Button variant="secondary" size="md">
+                    <Button variant="secondary" size="sm">
                         입력도우미
                     </Button>
                 }

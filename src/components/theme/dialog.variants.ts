@@ -60,6 +60,6 @@ export const dialogDescriptionClassName = 'typo-title-l-bold text-foreground *:[
 // 그 상자 안에서 아이콘이 세로 중앙에 놓여 위 42 가 된다. 제목이 두 줄 이상으로 늘어나도 X 는 첫 줄에
 // 그대로 남는다 — self-center 로 두면 행 전체(두 줄)의 한가운데로 내려간다.
 export const dialogCloseClassName = cn(
-    buttonVariants({variant: 'plain', size: 'icon-xl'}),
+    buttonVariants({variant: 'plain', size: 'icon-lg'}),
     'col-start-1 row-start-1 mt-10 me-10 h-9 self-start justify-self-end',
 )

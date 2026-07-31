@@ -53,7 +53,7 @@ const [keywordError, setKeywordError] = useState(false)
     {keywordError ? <FieldError id="keyword-error">검색어를 입력해 주세요.</FieldError> : null}
   </Field>
 
-  <Button type="submit" variant="default" size="md" className="w-fit">검색 조건 확인</Button>
+  <Button type="submit" variant="default" size="sm" className="w-fit">검색 조건 확인</Button>
 </form>`
 
 const PROPS_ITEMS = [

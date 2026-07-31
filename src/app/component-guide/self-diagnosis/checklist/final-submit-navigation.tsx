@@ -37,7 +37,7 @@ const FinalSubmitNavigation = ({prevHref, completeHref}: {prevHref: string; comp
                         </p>
                     </div>
                     <DialogFooter>
-                        <Button size="2xl" onClick={() => router.push(completeHref)}>
+                        <Button size="xl" onClick={() => router.push(completeHref)}>
                             제출하기
                         </Button>
                     </DialogFooter>
