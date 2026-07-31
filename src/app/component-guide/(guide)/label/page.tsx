@@ -1,215 +1,191 @@
 import type {Metadata} from 'next'
+import {cn} from '@/lib/utils'
+import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
 import {Checkbox} from '@/components/ui/checkbox'
+import {Field, FieldLabel} from '@/components/ui/field'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
-import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 
 export const metadata: Metadata = {title: '라벨 (Label)'}
 
-// 입력 필드(Input·Select·Textarea) 조합 라벨은 Body/XL/Bold(font-bold text-foreground).
-const USAGE_CODE = `<div className="flex max-w-90 flex-col gap-2">
-  <Label htmlFor="email" className="font-bold text-foreground">이메일</Label>
-  <Input id="email" type="email" placeholder="you@example.com" />
+const BASIC_CODE = `import {Label} from '@/components/ui/label'
+
+<div className="flex max-w-90 flex-col gap-2">
+  <Label htmlFor="email" className="font-bold text-foreground">
+    이메일
+  </Label>
+  <Input id="email" name="email" type="email" placeholder="이메일을 입력하세요" />
 </div>`
+
+const CHECKBOX_CODE = `<Field orientation="horizontal" className={cn('w-fit max-w-90', FIELD_FOCUS_RING)}>
+  <Checkbox id="terms" name="terms" aria-labelledby="terms-label" />
+  <FieldLabel id="terms-label" htmlFor="terms">이용약관에 동의합니다</FieldLabel>
+</Field>`
 
 const REQUIRED_CODE = `<Label htmlFor="name" className="gap-1 font-bold text-foreground">
   이름
   <span aria-hidden="true" className="text-error-500">*</span>
   <span className="sr-only"> (필수)</span>
 </Label>
-<Input id="name" required />`
+<Input id="name" name="name" required placeholder="이름을 입력하세요" />`
 
-const CHECKBOX_CODE = `<div className="flex max-w-90 items-center gap-2">
-  <Checkbox id="terms" defaultChecked aria-labelledby="terms-label" />
-  <Label id="terms-label" htmlFor="terms">이용약관에 동의합니다</Label>
+const DISABLED_CODE = `<div className="flex items-center gap-2">
+  <Checkbox id="marketing" disabled className="peer" />
+  <Label htmlFor="marketing">마케팅 정보 수신</Label>
 </div>`
 
-const DISABLED_CODE = `{/* 연결된 컨트롤이 disabled 이면 peer-disabled 로 라벨 색상도 바뀐다 */}
-<div className="flex max-w-90 items-center gap-2">
-  <Checkbox id="opt-in" disabled className="peer" aria-labelledby="opt-in-label" />
-  <Label id="opt-in-label" htmlFor="opt-in">비활성 옵션</Label>
-</div>`
+const USAGE_COLUMNS = [
+    {key: 'case', header: '사용 상황', align: 'start', rowHeader: true},
+    {key: 'component', header: '선택', align: 'start'},
+    {key: 'note', header: '기준', align: 'start', wrap: true},
+] as const
 
-const STYLE_COLUMNS = [
-    {key: 'prop', header: '항목', align: 'start', rowHeader: true},
-    {key: 'value', header: '값', align: 'start'},
+const USAGE_ROWS = [
+    {
+        key: 'standalone',
+        cells: [
+            '단순한 컨트롤 연결',
+            <code key="component">Label</code>,
+            '설명·오류 메시지 없이 라벨과 컨트롤만 구성할 때 사용합니다.',
+        ],
+    },
+    {
+        key: 'field',
+        cells: [
+            '설명·오류·상태가 있는 폼 필드',
+            <code key="component">FieldLabel</code>,
+            'Field 안에서 FieldDescription·FieldError와 함께 구성합니다.',
+        ],
+    },
+] as const
+
+const API_COLUMNS = [
+    {key: 'prop', header: 'Prop', align: 'start', rowHeader: true},
+    {key: 'type', header: '값', align: 'start'},
     {key: 'note', header: '설명', align: 'start', wrap: true},
 ] as const
 
-const STYLE_ROWS = [
-    {prop: '크기', value: 'text-base', note: '16px — 폼 라벨 크기를 통일(바닐라 14px 에서 상향)'},
-    {prop: '행간', value: 'leading-normal', note: '24px(150%) — Figma 라벨 텍스트 행간'},
+const API_ROWS = [
     {
-        prop: '색',
-        value: 'text-label-foreground',
-        note: 'gray.700 — Figma 라벨 본문색 전용 시맨틱 토큰. 강조(2depth 제목)는 text-foreground(gray.900)',
+        key: 'htmlFor',
+        cells: [
+            <code key="prop">htmlFor</code>,
+            <code key="type">string</code>,
+            '연결할 컨트롤의 id입니다. 라벨 클릭과 접근 가능한 이름을 연결합니다.',
+        ],
     },
     {
-        prop: '굵기',
-        value: 'font-normal (기본)',
-        note: '기본 Regular(400) — 체크박스·라디오 조합 라벨. 입력 필드(Input·Select·Textarea) 조합 라벨은 사용처에서 font-bold(Body/XL/Bold)',
+        key: 'children',
+        cells: [
+            <code key="prop">children</code>,
+            <code key="type">ReactNode</code>,
+            '라벨 문구와 필수 표시 등 인라인 콘텐츠입니다.',
+        ],
     },
-    {prop: '커서', value: 'cursor-pointer', note: '라벨 클릭으로 연결 컨트롤을 토글할 수 있음을 알림'},
-    {prop: '정렬', value: 'flex items-center gap-2', note: '별표·아이콘 등 인라인 요소를 gap 으로 정렬'},
     {
-        prop: '비활성',
-        value: 'text-disabled',
-        note: 'light gray.300 / dark gray.200 — 연결 컨트롤 비활성 시 peer/group 상태로 라벨 색상을 명시',
+        key: 'className',
+        cells: [
+            <code key="prop">className</code>,
+            <code key="type">string</code>,
+            '입력 필드의 강조 스타일이나 간격을 확장합니다.',
+        ],
     },
 ] as const
 
 const LabelGuidePage = () => (
     <GuidePageShell
         title="라벨 (Label)"
-        description="최신 shadcn Label shell과 props 구조를 유지하고 프로젝트 label 스타일을 연결한 컴포넌트입니다. htmlFor↔id 로 폼 컨트롤과 연결해 함께 씁니다."
+        description="폼 컨트롤에 보이는 이름을 제공하고 클릭 영역과 접근 가능한 이름을 연결하는 공통 Label 컴포넌트입니다."
     >
-        <BaseCard>
-            <section aria-labelledby="label-demo" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="label-demo" className="typo-h4-bold">
-                        사용 예시
+        <BaseCard variant="outlined">
+            <section aria-labelledby="label-basic" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="label-basic" className="typo-h4-bold">
+                        기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">Label</code> 의 <code className="font-mono">htmlFor</code> 를
-                        컨트롤의 <code className="font-mono">id</code> 와 맞춰 연결합니다. 연결하면 라벨을 클릭해도
-                        컨트롤이 포커스·토글되고, 스크린리더가 이름을 함께 읽습니다(
-                        <span className="text-foreground font-medium">7.4.1</span>).
+                        <code>htmlFor</code>와 컨트롤의 <code>id</code>를 같은 값으로 지정합니다. 텍스트 입력 라벨은{' '}
+                        <code>font-bold text-foreground</code>를 적용합니다.
                     </p>
                 </div>
                 <div className="flex max-w-90 flex-col gap-2">
-                    <Label htmlFor="demo-email" className="text-foreground font-bold">
+                    <Label htmlFor="label-email" className="text-foreground font-bold">
                         이메일
                     </Label>
-                    <Input id="demo-email" type="email" placeholder="you@example.com" />
+                    <Input id="label-email" name="email" type="email" placeholder="이메일을 입력하세요" />
                 </div>
-                <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+                <CodeBlock code={BASIC_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="label-style" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="label-style" className="typo-h4-bold">
-                        스타일 (Figma)
+            <section aria-labelledby="label-usage" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="label-usage" className="typo-h4-bold">
+                        컴포넌트 선택
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        Figma 폼 라벨 스펙을 반영한 프로젝트 기본 스타일입니다. 크기·행간·기본 굵기·커서는{' '}
-                        <code className="font-mono">theme/label.variants.ts</code> 에 정의되어 별도 클래스 없이
-                        적용됩니다.
+                        폼 구조가 복잡하면 Label에 기능을 추가하지 말고 Field 조합을 사용합니다.
                     </p>
                 </div>
-                <Table
-                    caption="라벨 기본 스타일 값"
-                    columns={STYLE_COLUMNS}
-                    rows={STYLE_ROWS.map((row) => ({
-                        key: row.prop,
-                        cells: [
-                            row.prop,
-                            <span key="value" className="font-mono">
-                                {row.value}
-                            </span>,
-                            row.note,
-                        ],
-                    }))}
-                />
+                <Table caption="Label과 FieldLabel 사용 기준" columns={USAGE_COLUMNS} rows={USAGE_ROWS} size="md" />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="label-compose" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="label-compose" className="typo-h4-bold">
-                        조합 (Composition)
+            <section aria-labelledby="label-patterns" className="flex flex-col gap-8">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="label-patterns" className="typo-h4-bold">
+                        상태와 조합
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        라벨은 <span className="text-foreground font-medium">조합 상대에 따라 굵기가 갈립니다</span>.
-                        입력 필드(<code className="font-mono">Input</code>·<code className="font-mono">Select</code>·
-                        <code className="font-mono">Textarea</code>) 라벨은 Body/XL/Bold(
-                        <code className="font-mono">font-bold text-foreground</code>), 체크박스·라디오 선택형 라벨은
-                        Regular(
-                        <code className="font-mono">font-normal</code>, 기본)로 둡니다.
+                        선택형 컨트롤은 기본 굵기를 유지합니다. 필수·비활성 상태는 컨트롤의 실제 상태와 함께 표현합니다.
                     </p>
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    <h3 className="typo-body-l-medium text-foreground">
-                        체크박스 + 라벨{' '}
-                        <span className="typo-caption-regular text-muted-foreground">
-                            — 라벨 Regular(400), 기본 그대로
-                        </span>
-                    </h3>
-                    <div className="flex max-w-90 items-center gap-2">
-                        <Checkbox id="compose-terms" defaultChecked aria-labelledby="compose-terms-label" />
-                        <Label id="compose-terms-label" htmlFor="compose-terms">
+                <div className="flex flex-col gap-4">
+                    <h3 className="typo-body-xl-bold">선택형 컨트롤</h3>
+                    <Field orientation="horizontal" className={cn('w-fit max-w-90', FIELD_FOCUS_RING)}>
+                        <Checkbox id="label-terms" name="terms" defaultChecked aria-labelledby="label-terms-label" />
+                        <FieldLabel id="label-terms-label" htmlFor="label-terms">
                             이용약관에 동의합니다
-                        </Label>
-                    </div>
+                        </FieldLabel>
+                    </Field>
                     <CodeBlock code={CHECKBOX_CODE} language="tsx" copyLabel="복사" />
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    <h3 className="typo-body-l-medium text-foreground">
-                        라디오 + 라벨{' '}
-                        <span className="typo-caption-regular text-muted-foreground">
-                            — 라벨 Regular(400), 기본 그대로
-                        </span>
-                    </h3>
-                    <RadioGroup defaultValue="a" className="flex flex-col gap-2">
-                        <div className="flex max-w-90 items-center gap-2">
-                            <RadioGroupItem id="compose-r-a" value="a" />
-                            <Label htmlFor="compose-r-a">선택지 A</Label>
-                        </div>
-                        <div className="flex max-w-90 items-center gap-2">
-                            <RadioGroupItem id="compose-r-b" value="b" />
-                            <Label htmlFor="compose-r-b">선택지 B</Label>
-                        </div>
-                    </RadioGroup>
-                </div>
-
-                <div className="flex flex-col gap-2">
-                    <h3 className="typo-body-l-medium text-foreground">
-                        필수 표시 (별표){' '}
-                        <span className="typo-caption-regular text-muted-foreground">
-                            — 입력 필드 라벨이라 Body/XL/Bold
-                        </span>
-                    </h3>
+                <div className="flex flex-col gap-4">
+                    <h3 className="typo-body-xl-bold">필수 입력</h3>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        필수 입력은 <code className="font-mono">gap-1</code> 로 좁힌 뒤{' '}
-                        <code className="font-mono">text-error-500</code> 별표를 인라인으로 둡니다. 별표는{' '}
-                        <code className="font-mono">aria-hidden</code>으로 숨기고{' '}
-                        <code className="font-mono">sr-only</code> “필수” 텍스트와 컨트롤의{' '}
-                        <code className="font-mono">required</code>를 함께 사용합니다.
+                        컨트롤에 <code>required</code>를 지정하고, 별표는 장식으로 숨긴 뒤 스크린리더용 “필수” 문구를
+                        제공합니다.
                     </p>
                     <div className="flex max-w-90 flex-col gap-2">
-                        <Label htmlFor="compose-name" className="text-foreground gap-1 font-bold">
+                        <Label htmlFor="label-name" className="text-foreground gap-1 font-bold">
                             이름
                             <span aria-hidden="true" className="text-error-500">
                                 *
                             </span>
                             <span className="sr-only"> (필수)</span>
                         </Label>
-                        <Input id="compose-name" required placeholder="내용을 입력하세요" />
+                        <Input id="label-name" name="name" required placeholder="이름을 입력하세요" />
                     </div>
                     <CodeBlock code={REQUIRED_CODE} language="tsx" copyLabel="복사" />
                 </div>
 
-                <div className="flex flex-col gap-2">
-                    <h3 className="typo-body-l-medium text-foreground">비활성 반영</h3>
+                <div className="flex flex-col gap-4">
+                    <h3 className="typo-body-xl-bold">비활성</h3>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        연결된 컨트롤이 <code className="font-mono">disabled</code> 이면{' '}
-                        <code className="font-mono">peer-disabled</code> 로 라벨 색상도{' '}
-                        <code className="font-mono">text-disabled</code> 로 바뀝니다. opacity는 낮추지 않습니다(수동
-                        분기 불필요).
+                        컨트롤에 <code>disabled</code>와 <code>peer</code>를 지정하면 Label의 비활성 색상과 커서가
+                        자동으로 적용됩니다.
                     </p>
-                    <div className="flex max-w-90 items-center gap-2">
-                        <Checkbox id="compose-opt" disabled className="peer" aria-labelledby="compose-opt-label" />
-                        <Label id="compose-opt-label" htmlFor="compose-opt">
-                            비활성 옵션
-                        </Label>
+                    <div className="flex items-center gap-2">
+                        <Checkbox id="label-marketing" disabled className="peer" />
+                        <Label htmlFor="label-marketing">마케팅 정보 수신</Label>
                     </div>
                     <CodeBlock code={DISABLED_CODE} language="tsx" copyLabel="복사" />
                 </div>
@@ -217,76 +193,16 @@ const LabelGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="label-props" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="label-props" className="typo-h4-bold">
-                        Props
+            <section aria-labelledby="label-api" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="label-api" className="typo-h4-bold">
+                        Props API
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        Label(Radix 기반)에서 자주 쓰는 속성입니다.
+                        아래 속성 외에도 Radix Label이 지원하는 표준 HTML label 속성을 전달할 수 있습니다.
                     </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">Props 목록</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Description
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Default
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Control
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {[
-                                {
-                                    name: 'htmlFor',
-                                    desc: '연결할 폼 컨트롤의 id. 이 값으로 라벨↔컨트롤을 묶습니다(7.4.1).',
-                                    def: '-',
-                                    control: 'string',
-                                },
-                                {
-                                    name: 'children',
-                                    desc: '라벨 텍스트. 별표·아이콘 등 인라인 요소를 함께 넣을 수 있습니다.',
-                                    def: '-',
-                                    control: 'ReactNode',
-                                },
-                                {
-                                    name: 'className',
-                                    desc: '추가 클래스명으로 스타일 확장(예: font-bold·gap-1).',
-                                    def: '""',
-                                    control: 'string',
-                                },
-                            ].map((prop) => (
-                                <tr key={prop.name} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                                    >
-                                        {prop.name}
-                                    </th>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{prop.desc}</td>
-                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {prop.def}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
-                                            {prop.control}
-                                        </span>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table caption="Label Props API" columns={API_COLUMNS} rows={API_ROWS} size="md" />
             </section>
         </BaseCard>
     </GuidePageShell>
