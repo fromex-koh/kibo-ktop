@@ -2,8 +2,6 @@
 
 import type {ReactNode} from 'react'
 import {useState} from 'react'
-import {cn} from '@/lib/utils'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {Combobox} from '@/components/composite/combobox'
 import {Field, FieldDescription, FieldError, FieldLabel} from '@/components/ui/field'
 
@@ -16,7 +14,7 @@ const CORP_TYPES = [
 ]
 
 const StateField = ({id, label, children, error}: {id: string; label: string; children: ReactNode; error?: string}) => (
-    <Field data-invalid={error ? true : undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+    <Field data-invalid={error ? true : undefined} className="max-w-90">
         <FieldLabel htmlFor={id} className="text-foreground font-bold">
             {label}
         </FieldLabel>
@@ -30,7 +28,7 @@ export const ComboboxDemo = () => {
     const [dropdownValue, setDropdownValue] = useState('')
     return (
         <div className="grid gap-6">
-            <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field className="max-w-90">
                 <FieldLabel htmlFor="demo-combobox" className="text-foreground font-bold">
                     입력형
                 </FieldLabel>
@@ -44,7 +42,7 @@ export const ComboboxDemo = () => {
                 />
                 <FieldDescription id="demo-combobox-help">외부 입력창에서 검색하고 선택합니다.</FieldDescription>
             </Field>
-            <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field className="max-w-90">
                 <FieldLabel htmlFor="demo-dropdown-combobox" className="text-foreground font-bold">
                     드롭다운 검색형
                 </FieldLabel>

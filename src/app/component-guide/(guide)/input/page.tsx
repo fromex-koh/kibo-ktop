@@ -1,8 +1,6 @@
 import type {Metadata} from 'next'
 import {Lock, Search} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
-import {cn} from '@/lib/utils'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {PasswordInput} from '@/components/composite/password-input'
@@ -13,7 +11,7 @@ import InputFormDemo from './input-form-demo'
 
 export const metadata: Metadata = {title: '인풋 (Input)'}
 
-const USAGE_CODE = `<Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+const USAGE_CODE = `<Field className="max-w-90">
   <FieldLabel htmlFor="name" className="gap-1 font-bold text-foreground">
     이름
     <span aria-hidden="true" className="text-error-500">*</span>
@@ -24,7 +22,7 @@ const USAGE_CODE = `<Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
 
 const STATE_CODE = `const [nameError, setNameError] = useState(false)
 
-<Field data-invalid={nameError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+<Field data-invalid={nameError || undefined} className="max-w-90">
   <FieldLabel htmlFor="applicant-name" className="gap-1 font-bold text-foreground">
     신청자 이름
     <span aria-hidden="true" className="text-error-500">*</span>
@@ -114,7 +112,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 
 <form noValidate onSubmit={handleSubmit}>
   {/* 1depth: 라벨 + 입력 + 유효성 검사 */}
-  <Field data-invalid={nameError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <Field data-invalid={nameError || undefined} className="max-w-90">
     <FieldLabel htmlFor="applicant-name" className="gap-1 font-bold text-foreground">
       신청자 이름
       <span aria-hidden="true" className="text-error-500">*</span>
@@ -133,7 +131,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
   </Field>
 
   {/* 이메일 형식 유효성 검사 */}
-  <Field data-invalid={emailError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <Field data-invalid={emailError || undefined} className="max-w-90">
     <FieldLabel htmlFor="email" className="gap-1 font-bold text-foreground">
       이메일
       <span aria-hidden="true" className="text-error-500">*</span>
@@ -152,7 +150,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     {emailError ? <FieldError id="email-error">올바른 이메일 주소를 입력해 주세요.</FieldError> : null}
   </Field>
 
-  <Field data-invalid={applicantCountError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <Field data-invalid={applicantCountError || undefined} className="max-w-90">
     <FieldLabel htmlFor="applicant-count" className="font-bold text-foreground">신청 인원</FieldLabel>
     <div className="flex items-center gap-2">
       <Input
@@ -174,9 +172,9 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     ) : null}
   </Field>
 
-  <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <Field className="max-w-90">
     <FieldLabel htmlFor="corporate-number" className="font-bold text-foreground">법인번호</FieldLabel>
-    <InputGroup className="has-[[data-slot=input-group-control]:focus-visible]:outline-none">
+    <InputGroup>
       <InputGroupInput
         id="corporate-number"
         name="corporateNumber"
@@ -213,7 +211,7 @@ const InputGuidePage = () => (
                         텍스트로 전달합니다.
                     </p>
                 </div>
-                <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                <Field className="max-w-90">
                     <FieldLabel htmlFor="demo-name" className="text-foreground gap-1 font-bold">
                         이름
                         <span aria-hidden="true" className="text-error-500">
@@ -249,19 +247,19 @@ const InputGuidePage = () => (
                 {/* 각 필드 wrapper 는 max-w-90(360 상한)이고 인풋은 w-full+min-w-0 이라 좁은 열에서도 줄어든다.
                 2열은 각 열이 360 을 담는 xl(≥1280px)에서 편다. */}
                 <div className="grid grid-cols-1 justify-items-start gap-6 xl:grid-cols-2">
-                    <Field className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+                    <Field className={FIELD_DEMO_CLASS}>
                         <FieldLabel htmlFor="st-default" className="text-foreground font-bold">
                             기본 (default)
                         </FieldLabel>
                         <Input id="st-default" placeholder="내용을 입력하세요" />
                     </Field>
-                    <Field className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+                    <Field className={FIELD_DEMO_CLASS}>
                         <FieldLabel htmlFor="st-completed" className="text-foreground font-bold">
                             값 입력됨 (completed)
                         </FieldLabel>
                         <Input id="st-completed" defaultValue="홍길동" />
                     </Field>
-                    <Field data-invalid className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+                    <Field data-invalid className={FIELD_DEMO_CLASS}>
                         <FieldLabel htmlFor="st-error" className="text-foreground font-bold">
                             오류 (error)
                         </FieldLabel>
@@ -273,13 +271,13 @@ const InputGuidePage = () => (
                         />
                         <FieldError id="st-error-msg">에러메시지가 노출됩니다.</FieldError>
                     </Field>
-                    <Field className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+                    <Field className={FIELD_DEMO_CLASS}>
                         <FieldLabel htmlFor="st-disabled" className="text-foreground font-bold">
                             비활성 (disabled)
                         </FieldLabel>
                         <Input id="st-disabled" defaultValue="비활성 입력값" disabled />
                     </Field>
-                    <Field className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+                    <Field className={FIELD_DEMO_CLASS}>
                         <FieldLabel htmlFor="st-view" className="text-foreground font-bold">
                             읽기전용 (view)
                         </FieldLabel>

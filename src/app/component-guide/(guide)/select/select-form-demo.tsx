@@ -1,8 +1,6 @@
 'use client'
 
 import {useState} from 'react'
-import {cn} from '@/lib/utils'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {Button} from '@/components/ui/button'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
@@ -37,7 +35,7 @@ const SelectFormDemo = () => {
                 )
             }}
         >
-            <Field data-invalid={applicationTypeError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field data-invalid={applicationTypeError || undefined} className="max-w-90">
                 <FieldLabel htmlFor="form-application-type" className="text-foreground gap-1 font-bold">
                     신청 유형
                     <span aria-hidden="true" className="text-error-500">
@@ -73,7 +71,7 @@ const SelectFormDemo = () => {
                 ) : null}
             </Field>
 
-            <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field className="max-w-90">
                 <FieldLabel htmlFor="form-reception-channel" className="text-foreground font-bold">
                     접수 경로
                 </FieldLabel>

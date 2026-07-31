@@ -1,7 +1,5 @@
 import type {Metadata} from 'next'
-import {cn} from '@/lib/utils'
 import {BaseCard} from '@/components/composite/base-card'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {TextareaCounter} from '@/components/composite/textarea-counter'
@@ -13,7 +11,7 @@ export const metadata: Metadata = {title: '텍스트에어리어 (Textarea)'}
 
 const USAGE_CODE = `const [message, setMessage] = useState('')
 
-<Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+<Field className="max-w-90">
   <FieldLabel htmlFor="message" className="gap-1 font-bold text-foreground">
     문의 내용
     <span aria-hidden="true" className="text-error-500">*</span>
@@ -53,7 +51,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 }
 
 <form noValidate onSubmit={handleSubmit}>
-  <Field data-invalid={inquiryError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <Field data-invalid={inquiryError || undefined} className="max-w-90">
     <FieldLabel htmlFor="inquiry" className="gap-1 font-bold text-foreground">
       문의 내용
       <span aria-hidden="true" className="text-error-500">*</span>
@@ -154,8 +152,7 @@ const TextareaGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         글자 수가 필요한 경우 <code className="font-mono">TextareaCounter</code>를 사용합니다. 원래
                         디자인에 맞춰 Textarea와 카운터를 형제로 배치하고 카운터는 입력 테두리 밖 오른쪽에 표시합니다.
-                        현재 글자 수는 입력할 때 자동으로 갱신되며 Field 포커스링은 라벨·Textarea·카운터 전체를
-                        감쌉니다.
+                        현재 글자 수는 입력할 때 자동으로 갱신되며 포커스링은 Textarea 입력 영역에만 표시됩니다.
                     </p>
                 </div>
                 <TextareaCounterDemo />
@@ -176,19 +173,19 @@ const TextareaGuidePage = () => (
                     </p>
                 </div>
                 <div className="grid grid-cols-1 justify-items-start gap-6 xl:grid-cols-2">
-                    <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
+                    <Field className={FIELD_CLASS}>
                         <FieldLabel htmlFor="st-default" className="text-foreground font-bold">
                             기본 (default)
                         </FieldLabel>
                         <TextareaCounter id="st-default" maxLength={100} placeholder="내용을 입력하세요" />
                     </Field>
-                    <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
+                    <Field className={FIELD_CLASS}>
                         <FieldLabel htmlFor="st-completed" className="text-foreground font-bold">
                             값 입력됨 (completed)
                         </FieldLabel>
                         <TextareaCounter id="st-completed" maxLength={100} defaultValue="입력된 내용입니다." />
                     </Field>
-                    <Field data-invalid className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
+                    <Field data-invalid className={FIELD_CLASS}>
                         <FieldLabel htmlFor="st-error" className="text-foreground font-bold">
                             오류 (error)
                         </FieldLabel>
@@ -201,7 +198,7 @@ const TextareaGuidePage = () => (
                             footer={<FieldError id="st-error-msg">필수 항목입니다.</FieldError>}
                         />
                     </Field>
-                    <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
+                    <Field className={FIELD_CLASS}>
                         <FieldLabel htmlFor="st-disabled" className="text-foreground font-bold">
                             비활성 (disabled)
                         </FieldLabel>
@@ -212,7 +209,7 @@ const TextareaGuidePage = () => (
                             disabled
                         />
                     </Field>
-                    <Field className={cn(FIELD_CLASS, FIELD_FOCUS_RING)}>
+                    <Field className={FIELD_CLASS}>
                         <FieldLabel htmlFor="st-view" className="text-foreground font-bold">
                             읽기전용 (readOnly)
                         </FieldLabel>

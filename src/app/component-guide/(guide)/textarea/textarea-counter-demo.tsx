@@ -1,8 +1,6 @@
 'use client'
 
 import {useState} from 'react'
-import {cn} from '@/lib/utils'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {TextareaCounter} from '@/components/composite/textarea-counter'
 import {Field, FieldDescription, FieldLabel} from '@/components/ui/field'
 
@@ -10,7 +8,7 @@ const TextareaCounterDemo = () => {
     const [message, setMessage] = useState('')
 
     return (
-        <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+        <Field className="max-w-90">
             <FieldLabel htmlFor="demo-msg" className="text-foreground gap-1 font-bold">
                 문의 내용
                 <span aria-hidden="true" className="text-error-500">

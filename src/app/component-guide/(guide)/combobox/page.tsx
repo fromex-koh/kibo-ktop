@@ -9,7 +9,7 @@ export const metadata: Metadata = {title: '콤보박스 (Combobox)'}
 
 const USAGE_CODE = `const [value, setValue] = useState('')
 
-<Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+<Field className="max-w-90">
   <FieldLabel htmlFor="corp" className="font-bold text-foreground">기업형태</FieldLabel>
   <Combobox
     id="corp"
@@ -57,7 +57,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 }
 
 <form noValidate onSubmit={handleSubmit}>
-  <Field data-invalid={organizationError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <Field data-invalid={organizationError || undefined} className="max-w-90">
     <FieldLabel htmlFor="organization" className="gap-1 font-bold text-foreground">
       신청 기관
       <span aria-hidden="true" className="text-error-500">*</span>
@@ -79,7 +79,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     {organizationError ? <FieldError id="organization-error">신청 기관을 선택해 주세요.</FieldError> : null}
   </Field>
 
-  <Field data-invalid={supportProgramError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <Field data-invalid={supportProgramError || undefined} className="max-w-90">
     <FieldLabel htmlFor="support-program" className="gap-1 font-bold text-foreground">
       지원 프로그램
       <span aria-hidden="true" className="text-error-500">*</span>
@@ -104,7 +104,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     {supportProgramError ? <FieldError id="support-program-error">지원 프로그램을 선택해 주세요.</FieldError> : null}
   </Field>
 
-  <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <Field className="max-w-90">
     <FieldLabel htmlFor="reception-office" className="font-bold text-foreground">접수 지점</FieldLabel>
     <Combobox
       id="reception-office"

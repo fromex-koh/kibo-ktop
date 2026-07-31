@@ -2,8 +2,6 @@
 
 import {useRef, useState} from 'react'
 import {Lock} from 'lucide-react'
-import {cn} from '@/lib/utils'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {Button} from '@/components/ui/button'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 import {Input} from '@/components/ui/input'
@@ -51,7 +49,7 @@ const InputFormDemo = () => {
                 )
             }}
         >
-            <Field data-invalid={nameError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field data-invalid={nameError || undefined} className="max-w-90">
                 <FieldLabel htmlFor="form-applicant-name" className="text-foreground gap-1 font-bold">
                     신청자 이름
                     <span aria-hidden="true" className="text-error-500">
@@ -74,7 +72,7 @@ const InputFormDemo = () => {
                 ) : null}
             </Field>
 
-            <Field data-invalid={emailError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field data-invalid={emailError || undefined} className="max-w-90">
                 <FieldLabel htmlFor="form-email" className="text-foreground gap-1 font-bold">
                     이메일
                     <span aria-hidden="true" className="text-error-500">
@@ -96,7 +94,7 @@ const InputFormDemo = () => {
                 {emailError ? <FieldError id="form-email-error">올바른 이메일 주소를 입력해 주세요.</FieldError> : null}
             </Field>
 
-            <Field data-invalid={applicantCountError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field data-invalid={applicantCountError || undefined} className="max-w-90">
                 <FieldLabel htmlFor="form-applicant-count" className="text-foreground font-bold">
                     신청 인원
                 </FieldLabel>
@@ -120,11 +118,11 @@ const InputFormDemo = () => {
                 ) : null}
             </Field>
 
-            <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field className="max-w-90">
                 <FieldLabel htmlFor="form-corporate-number" className="text-foreground font-bold">
                     법인번호
                 </FieldLabel>
-                <InputGroup className="has-[[data-slot=input-group-control]:focus-visible]:outline-none">
+                <InputGroup>
                     <InputGroupInput
                         id="form-corporate-number"
                         name="corporateNumber"

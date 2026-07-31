@@ -1,8 +1,6 @@
 'use client'
 
 import {useState} from 'react'
-import {cn} from '@/lib/utils'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {Combobox, type ComboboxOption} from '@/components/composite/combobox'
 import {Button} from '@/components/ui/button'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
@@ -57,7 +55,7 @@ const ComboboxFormDemo = () => {
                 )
             }}
         >
-            <Field data-invalid={organizationError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field data-invalid={organizationError || undefined} className="max-w-90">
                 <FieldLabel htmlFor="form-organization" className="text-foreground gap-1 font-bold">
                     신청 기관
                     <span aria-hidden="true" className="text-error-500">
@@ -84,7 +82,7 @@ const ComboboxFormDemo = () => {
                 ) : null}
             </Field>
 
-            <Field data-invalid={supportProgramError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field data-invalid={supportProgramError || undefined} className="max-w-90">
                 <FieldLabel htmlFor="form-support-program" className="text-foreground gap-1 font-bold">
                     지원 프로그램
                     <span aria-hidden="true" className="text-error-500">
@@ -113,7 +111,7 @@ const ComboboxFormDemo = () => {
                 ) : null}
             </Field>
 
-            <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field className="max-w-90">
                 <FieldLabel htmlFor="form-reception-office" className="text-foreground font-bold">
                     접수 지점
                 </FieldLabel>

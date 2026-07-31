@@ -1,11 +1,10 @@
-// label + 폼 컨트롤(checkbox·radio·input·select) 을 감싸는 wrapper 에 얹는 공용 포커스링.
+// checkbox·radio·switch 처럼 label 과 컨트롤이 한 행에서 하나의 선택 영역이 되는 Field 용 포커스링.
 //
-// 자식 컨트롤이 키보드 포커스(focus-visible)되면 wrapper 전체를 solid outline 이 감싸고
-// (has-[:focus-visible]:outline-*), 컨트롤 자체 outline 은 끈다([&_:focus-visible]:outline-none).
-// → label 까지 하나로 감싸는 포커스링이 된다. 단독 컨트롤(label 없이)은 이 wrapper 를 쓰지 않으므로
-//   컴포넌트 자체 outline(focus-visible:outline-2 …)이 그대로 보인다.
+// horizontal Field 에서만 자식 컨트롤의 키보드 포커스를 감지해 wrapper 전체를 감싸고 컨트롤 outline 을 끈다.
+// Input·Select·Combobox·Textarea가 쓰는 vertical Field 에서는 적용되지 않으므로 실제 입력 영역에만
+// 각 컴포넌트의 focus-visible outline 이 표시된다.
 //
 // 색·두께·offset·style 은 Button focus 와 동일(outline-ring / outline-2 / outline-offset-2 / outline-solid).
 // outline 모서리는 각지게 둔다(rounded 미적용).
 export const FIELD_FOCUS_RING =
-    'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-solid has-[:focus-visible]:outline-ring has-[:focus-visible]:outline-offset-2 [&_:focus-visible]:outline-none'
+    'data-[orientation=horizontal]:has-[:focus-visible]:outline-2 data-[orientation=horizontal]:has-[:focus-visible]:outline-solid data-[orientation=horizontal]:has-[:focus-visible]:outline-ring data-[orientation=horizontal]:has-[:focus-visible]:outline-offset-2 data-[orientation=horizontal]:[&_:focus-visible]:outline-none'

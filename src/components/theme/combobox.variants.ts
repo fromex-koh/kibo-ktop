@@ -1,7 +1,7 @@
 import {selectTriggerClassName} from '@/components/theme/select.variants'
 
 const comboboxInputClassName =
-    'w-full gap-1.5 overflow-hidden [&_[data-slot=input-group-control]]:typo-body-xl-regular [&_svg]:size-5 [&_svg]:text-foreground group-has-disabled/input-group:[&_svg]:text-disabled [&_[data-slot=input-group-button]]:size-5 [&_[data-slot=input-group-button]]:min-h-0 [&_[data-slot=input-group-button]]:min-w-0 [&_[data-slot=input-group-button]]:rounded-none [&_[data-slot=input-group-button]]:bg-transparent [&_[data-slot=input-group-button]]:p-0 [&_[data-slot=input-group-button]:hover]:bg-transparent [&_[data-slot=input-group-button]:active]:bg-transparent in-data-[slot=field]:has-[[data-slot=input-group-control]:focus-visible]:outline-none'
+    'w-full gap-1.5 overflow-hidden [&_[data-slot=input-group-control]]:typo-body-xl-regular [&_svg]:size-5 [&_svg]:text-foreground group-has-disabled/input-group:[&_svg]:text-disabled [&_[data-slot=input-group-button]]:size-5 [&_[data-slot=input-group-button]]:min-h-0 [&_[data-slot=input-group-button]]:min-w-0 [&_[data-slot=input-group-button]]:rounded-none [&_[data-slot=input-group-button]]:bg-transparent [&_[data-slot=input-group-button]]:p-0 [&_[data-slot=input-group-button]:hover]:bg-transparent [&_[data-slot=input-group-button]:active]:bg-transparent'
 // PROJECT-STYLE: 드롭다운 패널·옵션은 Select 드롭다운과 같은 Figma 시안을 따른다
 // (패널 radius 8 · gray.200 테두리 1px · 안쪽 여백 8, 옵션 높이 48 · radius 8 · 좌우 여백 8 · 16px).
 const comboboxContentClassName = 'border-subtle-2 min-w-(--anchor-width) rounded-sm border ring-0'

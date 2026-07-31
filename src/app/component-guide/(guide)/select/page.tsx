@@ -1,7 +1,5 @@
 import type {Metadata} from 'next'
-import {cn} from '@/lib/utils'
 import {BaseCard} from '@/components/composite/base-card'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Field, FieldDescription, FieldError, FieldLabel} from '@/components/ui/field'
@@ -10,7 +8,7 @@ import SelectFormDemo from './select-form-demo'
 
 export const metadata: Metadata = {title: '셀렉트 (Select)'}
 
-const USAGE_CODE = `<Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+const USAGE_CODE = `<Field className="max-w-90">
   <FieldLabel htmlFor="fruit" className="gap-1 font-bold text-foreground">
     좋아하는 과일
     <span aria-hidden="true" className="text-error-500">*</span>
@@ -46,7 +44,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
 }
 
 <form noValidate onSubmit={handleSubmit}>
-  <Field data-invalid={applicationTypeError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <Field data-invalid={applicationTypeError || undefined} className="max-w-90">
     <FieldLabel htmlFor="application-type" className="gap-1 font-bold text-foreground">
       신청 유형
       <span aria-hidden="true" className="text-error-500">*</span>
@@ -75,7 +73,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     ) : null}
   </Field>
 
-  <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+  <Field className="max-w-90">
     <FieldLabel htmlFor="reception-channel" className="font-bold text-foreground">
       접수 경로
     </FieldLabel>
@@ -123,7 +121,7 @@ const SelectGuidePage = () => (
                         <code className="font-mono">htmlFor</code>↔<code className="font-mono">id</code>로 연결합니다.
                     </p>
                 </div>
-                <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                <Field className="max-w-90">
                     <FieldLabel htmlFor="demo-fruit" className="text-foreground gap-1 font-bold">
                         좋아하는 과일
                         <span aria-hidden="true" className="text-error-500">
@@ -158,7 +156,7 @@ const SelectGuidePage = () => (
                     </p>
                 </div>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                    <Field className="max-w-90">
                         <FieldLabel htmlFor="sz-lg" className="text-foreground font-bold">
                             lg (default · 48px)
                         </FieldLabel>
@@ -171,7 +169,7 @@ const SelectGuidePage = () => (
                             </SelectContent>
                         </Select>
                     </Field>
-                    <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                    <Field className="max-w-90">
                         <FieldLabel htmlFor="sz-md" className="text-foreground font-bold">
                             md (40px)
                         </FieldLabel>
@@ -201,7 +199,7 @@ const SelectGuidePage = () => (
                     </p>
                 </div>
                 <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                    <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                    <Field className="max-w-90">
                         <FieldLabel htmlFor="st-default" className="text-foreground font-bold">
                             기본 (default)
                         </FieldLabel>
@@ -214,7 +212,7 @@ const SelectGuidePage = () => (
                             </SelectContent>
                         </Select>
                     </Field>
-                    <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                    <Field className="max-w-90">
                         <FieldLabel htmlFor="st-completed" className="text-foreground font-bold">
                             값 선택됨 (completed)
                         </FieldLabel>
@@ -227,7 +225,7 @@ const SelectGuidePage = () => (
                             </SelectContent>
                         </Select>
                     </Field>
-                    <Field data-invalid className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                    <Field data-invalid className="max-w-90">
                         <FieldLabel htmlFor="st-error" className="text-foreground font-bold">
                             오류 (error)
                         </FieldLabel>
@@ -246,7 +244,7 @@ const SelectGuidePage = () => (
                         </Select>
                         <FieldError id="st-error-msg">필수 항목입니다.</FieldError>
                     </Field>
-                    <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                    <Field className="max-w-90">
                         <FieldLabel htmlFor="st-readonly" className="text-foreground font-bold">
                             읽기전용 (readOnly)
                         </FieldLabel>
@@ -259,7 +257,7 @@ const SelectGuidePage = () => (
                             </SelectContent>
                         </Select>
                     </Field>
-                    <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+                    <Field className="max-w-90">
                         <FieldLabel htmlFor="st-disabled" className="text-foreground font-bold">
                             비활성 (disabled)
                         </FieldLabel>

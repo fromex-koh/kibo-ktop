@@ -1,5 +1,5 @@
 const datePickerGroupClassName =
-    'p-0 has-[[data-readonly]]:bg-field-disabled has-[[data-slot=input-group-control]:focus-visible]:border-primary has-[[data-slot=input-group-control][data-state=open]]:border-primary has-[[data-slot=input-group-control][data-state=open]]:outline-ring has-[[data-slot=input-group-control][data-state=open]]:outline-2 has-[[data-slot=input-group-control][data-state=open]]:outline-offset-2 has-[[data-slot=input-group-control][data-state=open]]:outline-solid in-data-[slot=field]:has-[[data-slot=input-group-control]:focus-visible]:outline-none'
+    'p-0 has-[[data-readonly]]:bg-field-disabled has-[[data-slot=input-group-control]:focus-visible]:border-primary has-[[data-slot=input-group-control][data-state=open]]:border-primary has-[[data-slot=input-group-control][data-state=open]]:outline-ring has-[[data-slot=input-group-control][data-state=open]]:outline-2 has-[[data-slot=input-group-control][data-state=open]]:outline-offset-2 has-[[data-slot=input-group-control][data-state=open]]:outline-solid'
 const datePickerTriggerClassName =
     'typo-body-xl-regular text-label-foreground flex h-full w-full min-w-0 cursor-pointer items-center justify-between gap-2 px-4 outline-none data-[readonly]:cursor-default disabled:cursor-not-allowed disabled:text-disabled'
 const datePickerPlaceholderClassName = 'text-placeholder'
