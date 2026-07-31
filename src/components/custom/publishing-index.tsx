@@ -457,7 +457,16 @@ const PublishingIndex = () => {
                                                             aria-hidden="true"
                                                             className="text-muted-foreground size-4 shrink-0"
                                                         />
-                                                        {layout.label}
+                                                        {'href' in layout && typeof layout.href === 'string' ? (
+                                                            <Link
+                                                                href={layout.href}
+                                                                className="text-primary focus-visible:ring-ring rounded-xs font-medium underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:outline-none"
+                                                            >
+                                                                {layout.label}
+                                                            </Link>
+                                                        ) : (
+                                                            layout.label
+                                                        )}
                                                     </span>
                                                 </th>
                                                 <td className="px-4 py-3">

@@ -43,7 +43,7 @@ const BADGE_COLORS = [
     'navy',
     'secondary-green',
     'secondary-orange',
-    'secondary-grape',
+    'secondary-purple',
 ] as const
 
 const BUTTON_VARIANTS = ['default', 'secondary', 'tertiary', 'outline', 'ghost', 'destructive', 'text', 'link'] as const

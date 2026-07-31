@@ -79,7 +79,13 @@ const ALPHA_COLOR_COUNT = Object.values(alpha).reduce((count, steps) => count + 
 const ColorGuidePage = () => (
     <GuidePageShell
         title="색상 (Primitive)"
-        description="tokens.json의 원시 색상 팔레트입니다. 일반 UI에서는 직접 사용하지 말고 역할이 드러나는 시맨틱 색상 유틸리티를 우선하세요."
+        description={
+            <>
+                Figma 변수 정의를 JSON으로 추출해 <code className="font-mono">tokens.json</code>에 반영하고, primitive{' '}
+                {PRIMITIVE_COLOR_COUNT}개·common {COMMON_COLOR_COUNT}개·alpha {ALPHA_COLOR_COUNT}개를 자동
+                큐레이션합니다. 화면에서는 원시값 대신 역할이 드러나는 시맨틱 색상 유틸리티를 우선하세요.
+            </>
+        }
     >
         <div className="flex flex-col gap-12">
             <BaseCard>
@@ -188,11 +194,6 @@ const ColorGuidePage = () => (
                     </div>
                 </section>
             </BaseCard>
-
-            <p className="typo-caption-regular text-muted-foreground">
-                현재 primitive {PRIMITIVE_COLOR_COUNT}개, common {COMMON_COLOR_COUNT}개, alpha {ALPHA_COLOR_COUNT}개를{' '}
-                <code className="font-mono">tokens.json</code>에서 자동 큐레이션합니다.
-            </p>
         </div>
     </GuidePageShell>
 )

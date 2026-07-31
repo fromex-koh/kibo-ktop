@@ -94,7 +94,7 @@ const SECTOR_BADGE = {
         </Badge>
     ),
     service: (
-        <Badge variant="solid-pastel" color="secondary-grape" shape="round">
+        <Badge variant="solid-pastel" color="secondary-purple" shape="round">
             서비스
         </Badge>
     ),

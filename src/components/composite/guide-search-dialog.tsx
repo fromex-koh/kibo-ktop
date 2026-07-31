@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useState, useSyncExternalStore} from 'react'
 import Link from 'next/link'
 import {ArrowRight, Search} from 'lucide-react'
 import type {GuideNavItem, GuideNavItemGroup, GuideNavSection} from '@/constants/guide-nav'
@@ -57,9 +57,14 @@ const createSearchItems = (navRootItem: GuideNavItem | undefined, navSections: r
     ]),
 ]
 
+const subscribeToPlatform = () => () => {}
+const getPlatformShortcut = () => (/Mac|iPhone|iPad|iPod/.test(navigator.userAgent) ? '⌘ K' : 'Ctrl K')
+const getServerShortcut = () => 'Ctrl K'
+
 const GuideSearchDialog = ({navRootItem, navSections}: GuideSearchDialogProps) => {
     const [open, setOpen] = useState(false)
     const [query, setQuery] = useState('')
+    const shortcutLabel = useSyncExternalStore(subscribeToPlatform, getPlatformShortcut, getServerShortcut)
     const searchItems = useMemo(() => createSearchItems(navRootItem, navSections), [navRootItem, navSections])
     const normalizedQuery = query.trim().toLocaleLowerCase('ko-KR')
     const filteredItems = normalizedQuery
@@ -86,10 +91,15 @@ const GuideSearchDialog = ({navRootItem, navSections}: GuideSearchDialogProps) =
     return (
         <Dialog open={open} onOpenChange={handleOpenChange}>
             <DialogTrigger asChild>
-                <button type="button" className={guideSearchTriggerClassName} aria-label="컴포넌트 가이드 검색">
+                <button
+                    type="button"
+                    className={guideSearchTriggerClassName}
+                    aria-label="컴포넌트 가이드 검색"
+                    aria-keyshortcuts="Meta+K Control+K"
+                >
                     <Search aria-hidden="true" className="size-icon-sm shrink-0" />
                     <span className={guideSearchTriggerTextClassName}>컴포넌트 검색</span>
-                    <span className="typo-caption-regular text-muted-foreground hidden md:block">⌘ K</span>
+                    <kbd className="typo-caption-regular text-muted-foreground hidden md:block">{shortcutLabel}</kbd>
                 </button>
             </DialogTrigger>
             <DialogContent aria-describedby="guide-search-description">

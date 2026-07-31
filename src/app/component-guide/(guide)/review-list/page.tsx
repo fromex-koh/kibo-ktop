@@ -19,17 +19,17 @@ const USAGE_CODE = `{/* 번호는 ReviewList 가 자동으로 매긴다(01·02·
   </ReviewItem>
 </ReviewList>`
 
-const STATUS_CODE = `{/* 상태별 배지 — 확인(기본)·미응답(neutral)·응답값(secondary-grape). 전부 outline·round·sm */}
+const STATUS_CODE = `{/* 상태별 배지 — 확인(기본)·미응답(neutral)·응답값(secondary-purple). 전부 outline·round·sm */}
 <ReviewList>
   <ReviewItem badge="확인">경영주는 최근 5년 이내 전문기술인력(박사/기능장/기술사) 자격을 취득하였다.</ReviewItem>
   <ReviewItem badge={<Badge variant="outline" color="neutral" shape="round" size="sm">미응답</Badge>}>
     경영주는 출원인 또는 발명자로 등록한 특허/실용신안이 있다. (KIPRIS에서 확인 가능한 경우만 해당함)
   </ReviewItem>
   {/* Select 로 답한 값은 문장 속 [값] 표기 + 응답값 배지로 표시한다 */}
-  <ReviewItem badge={<Badge variant="outline" color="secondary-grape" shape="round" size="sm">3단계</Badge>}>
+  <ReviewItem badge={<Badge variant="outline" color="secondary-purple" shape="round" size="sm">3단계</Badge>}>
     신청기술의 기술성숙도(TRL)는 [3] 단계에 해당한다.
   </ReviewItem>
-  <ReviewItem badge={<Badge variant="outline" color="secondary-grape" shape="round" size="sm">성장초기</Badge>}>
+  <ReviewItem badge={<Badge variant="outline" color="secondary-purple" shape="round" size="sm">성장초기</Badge>}>
     신청기술은 [성장초기] 기술이다.
   </ReviewItem>
 </ReviewList>`
@@ -52,7 +52,7 @@ const CATEGORY_CODE = `{/* 분류 Badge 하위 행 — category 는 첫 줄 상�
       신청기술이 적용된 제품 생산 시, 생산과정이 외주가공 또는 자체제작 을 통해 이루어진다.
     </ReviewSubItem>
     <ReviewSubItem
-      category={<Badge variant="solid-pastel" color="secondary-grape" shape="round">서비스</Badge>}
+      category={<Badge variant="solid-pastel" color="secondary-purple" shape="round">서비스</Badge>}
       badge="확인"
     >
       신청기술이 적용된 제품/서비스 제작 시, 제작과정이 외주인력 또는 자체인력을 통해 이루어진다.
@@ -162,8 +162,8 @@ const ReviewListGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         확인(<code className="font-mono">info</code>, 기본) · 미응답(
                         <code className="font-mono">neutral</code>) · 응답값(
-                        <code className="font-mono">secondary-grape</code>) 세 종류를 씁니다. Select로 답한 값은 문장 속{' '}
-                        <code className="font-mono">[값]</code> 표기와 응답값 배지로 함께 표시합니다.
+                        <code className="font-mono">secondary-purple</code>) 세 종류를 씁니다. Select로 답한 값은 문장
+                        속 <code className="font-mono">[값]</code> 표기와 응답값 배지로 함께 표시합니다.
                     </p>
                 </div>
                 <div className="border-border rounded-md border p-6">
@@ -183,7 +183,7 @@ const ReviewListGuidePage = () => (
                         </ReviewItem>
                         <ReviewItem
                             badge={
-                                <Badge variant="outline" color="secondary-grape" shape="round" size="sm">
+                                <Badge variant="outline" color="secondary-purple" shape="round" size="sm">
                                     3단계
                                 </Badge>
                             }
@@ -192,7 +192,7 @@ const ReviewListGuidePage = () => (
                         </ReviewItem>
                         <ReviewItem
                             badge={
-                                <Badge variant="outline" color="secondary-grape" shape="round" size="sm">
+                                <Badge variant="outline" color="secondary-purple" shape="round" size="sm">
                                     성장초기
                                 </Badge>
                             }
@@ -258,7 +258,7 @@ const ReviewListGuidePage = () => (
                             </ReviewSubItem>
                             <ReviewSubItem
                                 category={
-                                    <Badge variant="solid-pastel" color="secondary-grape" shape="round">
+                                    <Badge variant="solid-pastel" color="secondary-purple" shape="round">
                                         서비스
                                     </Badge>
                                 }

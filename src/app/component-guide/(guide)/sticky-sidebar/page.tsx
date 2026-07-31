@@ -29,7 +29,7 @@ import {Badge} from '@/components/ui/badge'
   <StickySidebarProfile
     name="(주)케이탑테크놀로지"
     badge={
-      <Badge variant="outline" color="secondary-grape" shape="round" size="sm">
+      <Badge variant="outline" color="secondary-purple" shape="round" size="sm">
         기업회원
       </Badge>
     }
@@ -75,7 +75,7 @@ const DemoSidebar = ({name, navLabel, className}: {name: string; navLabel: strin
         <StickySidebarProfile
             name={name}
             badge={
-                <Badge variant="outline" color="secondary-grape" shape="round" size="sm">
+                <Badge variant="outline" color="secondary-purple" shape="round" size="sm">
                     기업회원
                 </Badge>
             }

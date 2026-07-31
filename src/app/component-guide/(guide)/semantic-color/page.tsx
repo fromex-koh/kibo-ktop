@@ -503,8 +503,8 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     'main-accent / main-accent-bright': (
         <>
             메인페이지(<code className="font-mono">mainpage</code> 스킨)의 포인트 그린입니다. main-accent는 활성
-            메뉴·인디케이터, main-accent-bright는 수치 강조에 사용합니다. 팔레트 스케일 밖 값이라 common 앵커
-            (mint·mint-bright)를 참조하며 모든 테마에서 같은 값입니다.
+            메뉴·인디케이터, main-accent-bright는 수치 강조에 사용합니다. main-accent는 스케일 밖 common.mint를,
+            main-accent-bright는 mint.500을 참조하며 모든 테마에서 같은 값입니다.
         </>
     ),
     'main-intro (메인 2섹션)': (

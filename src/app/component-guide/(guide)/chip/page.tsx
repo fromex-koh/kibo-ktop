@@ -86,7 +86,7 @@ const CHECKBOX_USAGE_CODE = `{/* 문장 인라인 — 번호·Badge·본문 열 
   </QuestionItem>
   <QuestionItem
     align="control"
-    badge={<Badge variant="solid-pastel" color="secondary-grape" shape="round">서비스</Badge>}
+    badge={<Badge variant="solid-pastel" color="secondary-purple" shape="round">서비스</Badge>}
   >
     <ChipCheckboxGroup aria-label="제작과정 방식 선택" className="flex-1 items-center">
       신청기술이 적용된 제품/서비스 제작 시, 제작과정이
@@ -481,7 +481,7 @@ const ChipGuidePage = () => (
                         <QuestionItem
                             align="control"
                             badge={
-                                <Badge variant="solid-pastel" color="secondary-grape" shape="round">
+                                <Badge variant="solid-pastel" color="secondary-purple" shape="round">
                                     서비스
                                 </Badge>
                             }

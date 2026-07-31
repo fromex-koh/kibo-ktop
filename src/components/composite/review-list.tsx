@@ -13,7 +13,7 @@ import {cn} from '@/lib/utils'
 // 사용처에서 번호를 직접 적지 않는다(항목을 추가·재정렬해도 번호가 자동으로 맞는다).
 // 우측 배지는 기존 Badge(outline·info·round·sm = Figma "확인" 배지)를 그대로 재사용한다 — 같은 배지를 새로
 // 만들지 않는다. badge 에 문자열을 넘기면 그 기본 확인 배지로, 엘리먼트를 넘기면 그대로 렌더한다
-// (미응답 = outline·neutral, 응답값 = outline·secondary-grape — Figma 색이 기존 팔레트와 1:1 일치).
+// (미응답 = outline·neutral, 응답값 = outline·secondary-purple — Figma 색이 기존 팔레트와 1:1 일치).
 //
 // 하위 행(ReviewSubItem) — "(1)/(2)" 복수 하위 문장이나 제조/서비스 분류 배지 행처럼 한 번호 아래 여러 행이
 // 각자 상태 배지를 갖는 케이스(Figma "li_2줄이상"). ReviewItem 자식으로 ReviewSubItem 을 넣으면 번호는

@@ -15,7 +15,7 @@ import {cn} from '@/lib/utils'
 //   · StickySidebarContact  — 고객센터 전화·상담시간 (최신 LNB 시안에는 없는 선택 섹션)
 //
 // 색·타이포(Figma): 기업명 = title-l-bold(20)·foreground, 메뉴 = body-xl-medium(16)(활성 foreground /
-// 비활성 label-foreground), 활성 면 = primary-subtle(blue.50), 배지 강조색 = grape.600(#5a5fd2).
+// 비활성 label-foreground), 활성 면 = primary-subtle(blue.50), 배지 강조색 = purple.600(#5a5fd2).
 // 전부 기존 토큰이라 커스텀 색이 없다([PB-04]).
 // 규격(Figma): 카드 폭 344(w-86 — 사용처 레이아웃에서 지정), radius 16(rounded-lg), 패딩 px-6 py-10,
 // 프로필↔메뉴 gap-8(32), 배지↔기업명 gap-1(4), 메뉴 항목 min-h-14(한 줄 56, 긴 라벨은 줄바꿈)·
@@ -37,7 +37,7 @@ const StickySidebar = ({className, children, ...props}: ComponentPropsWithoutRef
 type StickySidebarProfileProps = {
     // 기업/사용자 이름.
     name: ReactNode
-    // 이름 위 회원 배지(예: <Badge variant="outline" color="secondary-grape" shape="round" size="sm">기업회원</Badge>).
+    // 이름 위 회원 배지(예: <Badge variant="outline" color="secondary-purple" shape="round" size="sm">기업회원</Badge>).
     badge?: ReactNode
 } & ComponentPropsWithoutRef<'div'>
 
@@ -125,7 +125,7 @@ const StickySidebarContact = ({label = '고객센터', phone, hours, className, 
     <div data-slot="sticky-sidebar-contact" className={cn('flex flex-col', className)} {...props}>
         <div className="flex items-center gap-2">
             <p className="typo-title-m-bold text-label-foreground">{label}</p>
-            <a href={`tel:${phone.replace(/[^0-9+]/g, '')}`} className="typo-title-m-bold text-grape-600">
+            <a href={`tel:${phone.replace(/[^0-9+]/g, '')}`} className="typo-title-m-bold text-purple-600">
                 {phone}
             </a>
         </div>

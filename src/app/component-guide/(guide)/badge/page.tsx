@@ -34,7 +34,7 @@ const COLORS = [
     // 보조색(Figma secondary-*) — 상태가 아닌 분류용 액센트.
     {key: 'secondary-green', label: 'secondary-green', desc: '보조·녹색(green)'},
     {key: 'secondary-orange', label: 'secondary-orange', desc: '보조·주황(orange)'},
-    {key: 'secondary-grape', label: 'secondary-grape', desc: '보조·보라(grape)'},
+    {key: 'secondary-purple', label: 'secondary-purple', desc: '보조·보라(purple)'},
 ] as const
 
 // 매트릭스 각 셀에서 두 shape 를 짝지어 보여준다(pill=완전 둥근 / round=8px 라운드).
