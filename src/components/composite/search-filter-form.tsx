@@ -1,7 +1,7 @@
 'use client'
 
 import {createContext, useContext, useEffect, useId, useRef, useState, type ComponentProps, type ReactNode} from 'react'
-import {Input} from '@/components/ui/input'
+import {ClearableInput} from '@/components/composite/clearable-input'
 import {DatePicker} from '@/components/composite/date-picker'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
@@ -140,7 +140,7 @@ const CompanyNameField = ({
 
     return (
         <FilterRow label={label} labelId={labelId} htmlFor={id}>
-            <Input
+            <ClearableInput
                 id={id}
                 name={name}
                 value={value}

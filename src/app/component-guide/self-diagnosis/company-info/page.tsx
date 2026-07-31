@@ -29,6 +29,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/c
 import {Alert, AlertDescription} from '@/components/ui/alert'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
+import {ClearableInput} from '@/components/composite/clearable-input'
 import {Input} from '@/components/ui/input'
 import {InputGroup, InputGroupAddon, InputGroupInput} from '@/components/ui/input-group'
 import {Label} from '@/components/ui/label'
@@ -207,10 +208,20 @@ const CareerSection = ({index}: {index: number}) => {
                     <DatePicker id={field('end')} name={field('end')} placeholder="연도-월-일" />
                 </Field>
                 <Field id={field('company')} label="근무처">
-                    <Input id={field('company')} name={field('company')} autoComplete="off" placeholder="근무처" />
+                    <ClearableInput
+                        id={field('company')}
+                        name={field('company')}
+                        autoComplete="off"
+                        placeholder="근무처"
+                    />
                 </Field>
                 <Field id={field('industry')} label="업종">
-                    <Input id={field('industry')} name={field('industry')} autoComplete="off" placeholder="업종" />
+                    <ClearableInput
+                        id={field('industry')}
+                        name={field('industry')}
+                        autoComplete="off"
+                        placeholder="업종"
+                    />
                 </Field>
             </FieldGrid>
             <FieldRow3>
@@ -226,10 +237,10 @@ const CareerSection = ({index}: {index: number}) => {
                     </Select>
                 </Field>
                 <Field id={field('duty')} label="담당업무">
-                    <Input id={field('duty')} name={field('duty')} autoComplete="off" placeholder="담당업무" />
+                    <ClearableInput id={field('duty')} name={field('duty')} autoComplete="off" placeholder="담당업무" />
                 </Field>
                 <Field id={field('rank')} label="최종직급">
-                    <Input id={field('rank')} name={field('rank')} autoComplete="off" placeholder="최종직급" />
+                    <ClearableInput id={field('rank')} name={field('rank')} autoComplete="off" placeholder="최종직급" />
                 </Field>
             </FieldRow3>
         </div>
@@ -307,10 +318,15 @@ const CompanyInfoForm = () => (
                     </Field>
                     <Field id="ceo-name" label="대표자명">
                         {/* 회사 대표자 이름이라 사용자 본인 정보 자동완성 대상이 아니다. */}
-                        <Input id="ceo-name" name="ceoName" placeholder="대표자명을 입력해주세요" autoComplete="off" />
+                        <ClearableInput
+                            id="ceo-name"
+                            name="ceoName"
+                            placeholder="대표자명을 입력해주세요"
+                            autoComplete="off"
+                        />
                     </Field>
                     <Field id="company-tel" label="회사전화번호">
-                        <Input
+                        <ClearableInput
                             id="company-tel"
                             name="companyTel"
                             placeholder="02-1234-0000"
@@ -346,7 +362,7 @@ const CompanyInfoForm = () => (
                                     주소 검색
                                 </Button>
                             </div>
-                            <Input
+                            <ClearableInput
                                 name="addressDetail"
                                 aria-label="상세주소"
                                 placeholder="상세주소"
@@ -366,7 +382,7 @@ const CompanyInfoForm = () => (
                 </SubSectionHeader>
                 <FieldGrid>
                     <Field id="manager-name" label="담당자명" required>
-                        <Input
+                        <ClearableInput
                             id="manager-name"
                             name="managerName"
                             placeholder="담당자명"
@@ -375,7 +391,7 @@ const CompanyInfoForm = () => (
                         />
                     </Field>
                     <Field id="manager-position" label="직위" required>
-                        <Input
+                        <ClearableInput
                             id="manager-position"
                             name="managerPosition"
                             placeholder="직위"
@@ -389,7 +405,7 @@ const CompanyInfoForm = () => (
                         required
                         helper="※ 서류안내, 현장실사 협의 등 평가 진행사항을 안내받을 담당자 정보(휴대폰)를 입력해 주십시오."
                     >
-                        <Input
+                        <ClearableInput
                             id="manager-tel"
                             name="managerTel"
                             placeholder="010-0000-0000"
@@ -400,7 +416,7 @@ const CompanyInfoForm = () => (
                         />
                     </Field>
                     <Field id="manager-email" label="이메일" required>
-                        <Input
+                        <ClearableInput
                             id="manager-email"
                             name="managerEmail"
                             type="email"

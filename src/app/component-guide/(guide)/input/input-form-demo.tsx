@@ -102,6 +102,7 @@ const InputFormDemo = () => {
                     <Input
                         ref={applicantCountRef}
                         id="form-applicant-count"
+                        placeholder="0"
                         name="applicantCount"
                         type="number"
                         min="1"
@@ -125,6 +126,7 @@ const InputFormDemo = () => {
                 <InputGroup>
                     <InputGroupInput
                         id="form-corporate-number"
+                        placeholder="법인번호"
                         name="corporateNumber"
                         readOnly
                         defaultValue="11222-1234567"
