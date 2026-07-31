@@ -2,233 +2,225 @@ import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import ComboboxFormDemo from './combobox-form-demo'
 import {ComboboxDemo, ComboboxStatesDemo} from './combobox-demo'
 
 export const metadata: Metadata = {title: '콤보박스 (Combobox)'}
 
-const USAGE_CODE = `const [value, setValue] = useState('')
+const USAGE_CODE = `import {Combobox} from '@/components/composite/combobox'
+
+const [value, setValue] = useState('')
 
 <Field className="max-w-90">
-  <FieldLabel htmlFor="corp" className="font-bold text-foreground">기업형태</FieldLabel>
+  <FieldLabel htmlFor="corp">기업형태</FieldLabel>
   <Combobox
     id="corp"
-    options={[{value: 'corp', label: '주식회사'}, /* … */]}
+    options={corpTypes}
     value={value}
     onValueChange={setValue}
     placeholder="기업형태를 선택하세요"
     aria-describedby="corp-help"
   />
-  <FieldDescription id="corp-help">기업형태를 검색해 한 가지를 선택해 주세요.</FieldDescription>
+  <FieldDescription id="corp-help">
+    기업형태를 검색해 한 가지를 선택해 주세요.
+  </FieldDescription>
 </Field>`
 
 const DROPDOWN_CODE = `<Combobox
-  id="corp-dropdown"
+  id="program"
   type="dropdown"
-  options={corpTypes}
+  options={programs}
   value={value}
   onValueChange={setValue}
-  placeholder="기업형태를 선택하세요"
-  searchPlaceholder="기업형태 검색"
+  placeholder="지원 프로그램을 선택하세요"
+  searchPlaceholder="지원 프로그램 검색"
 />`
 
-const FORM_CODE = `const [organization, setOrganization] = useState('')
-const [supportProgram, setSupportProgram] = useState('')
-const [organizationError, setOrganizationError] = useState(false)
-const [supportProgramError, setSupportProgramError] = useState(false)
-
-const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-  event.preventDefault()
-  const nextError = organization === ''
-  const nextSupportProgramError = supportProgram === ''
-  setOrganizationError(nextError)
-  setSupportProgramError(nextSupportProgramError)
-  if (nextError) {
-    document.getElementById('organization')?.focus()
-    return
-  }
-  if (nextSupportProgramError) {
-    document.getElementById('support-program')?.focus()
-    return
-  }
-
-  const formData = new FormData(event.currentTarget)
-  console.log(Object.fromEntries(formData))
-}
-
-<form noValidate onSubmit={handleSubmit}>
-  <Field data-invalid={organizationError || undefined} className="max-w-90">
-    <FieldLabel htmlFor="organization" className="gap-1 font-bold text-foreground">
-      신청 기관
-      <span aria-hidden="true" className="text-error-500">*</span>
-      <span className="sr-only"> (필수)</span>
-    </FieldLabel>
+const FORM_CODE = `<form onSubmit={handleSubmit}>
+  <Field data-invalid={error || undefined}>
+    <FieldLabel htmlFor="organization">신청 기관</FieldLabel>
     <Combobox
       id="organization"
       name="organization"
       required
       options={organizations}
-      value={organization}
-      onValueChange={(value) => {
-        setOrganization(value)
-        setOrganizationError(false)
-      }}
-      aria-invalid={organizationError || undefined}
-      aria-describedby={organizationError ? 'organization-error' : undefined}
+      value={value}
+      onValueChange={setValue}
+      aria-invalid={error || undefined}
+      aria-describedby={error ? 'organization-error' : undefined}
     />
-    {organizationError ? <FieldError id="organization-error">신청 기관을 선택해 주세요.</FieldError> : null}
+    {error ? (
+      <FieldError id="organization-error">
+        신청 기관을 선택해 주세요.
+      </FieldError>
+    ) : null}
   </Field>
-
-  <Field data-invalid={supportProgramError || undefined} className="max-w-90">
-    <FieldLabel htmlFor="support-program" className="gap-1 font-bold text-foreground">
-      지원 프로그램
-      <span aria-hidden="true" className="text-error-500">*</span>
-      <span className="sr-only"> (필수)</span>
-    </FieldLabel>
-    <Combobox
-      id="support-program"
-      type="dropdown"
-      name="supportProgram"
-      required
-      options={supportPrograms}
-      value={supportProgram}
-      onValueChange={(value) => {
-        setSupportProgram(value)
-        setSupportProgramError(false)
-      }}
-      placeholder="지원 프로그램을 선택하세요"
-      searchPlaceholder="지원 프로그램 검색"
-      aria-invalid={supportProgramError || undefined}
-      aria-describedby={supportProgramError ? 'support-program-error' : undefined}
-    />
-    {supportProgramError ? <FieldError id="support-program-error">지원 프로그램을 선택해 주세요.</FieldError> : null}
-  </Field>
-
-  <Field className="max-w-90">
-    <FieldLabel htmlFor="reception-office" className="font-bold text-foreground">접수 지점</FieldLabel>
-    <Combobox
-      id="reception-office"
-      name="receptionOffice"
-      options={[{value: 'head-office', label: '본점'}]}
-      value="head-office"
-      readOnly
-    />
-  </Field>
-
-  <Button type="submit" variant="default" size="sm">선택 내용 확인</Button>
 </form>`
 
-const PROPS_ITEMS = [
-    {name: 'options', desc: '검색하고 선택할 항목 목록입니다.', def: '-', control: 'ComboboxOption[]'},
+const TYPE_COLUMNS = [
+    {key: 'type', header: 'Type', align: 'start', rowHeader: true},
+    {key: 'search', header: '검색 위치', align: 'start'},
+    {key: 'use', header: '사용 기준', align: 'start', wrap: true},
+] as const
+
+const TYPE_ROWS = [
     {
-        name: 'type',
-        desc: '외부 입력창에서 검색하는 형태와 드롭다운 내부에 검색창을 두는 형태를 선택합니다.',
-        def: "'input'",
-        control: "'input' | 'dropdown'",
+        key: 'input',
+        cells: [<code key="type">input</code>, '필드 입력창', '옵션이 많고 입력과 검색을 바로 시작해야 할 때 — 기본값'],
     },
     {
-        name: 'value / onValueChange',
-        desc: '현재 선택값과 값이 바뀔 때 호출되는 콜백입니다.',
-        def: '- / -',
-        control: 'string / (value: string) => void',
+        key: 'dropdown',
+        cells: [
+            <code key="type">dropdown</code>,
+            '열린 목록 내부',
+            'Select처럼 값을 먼저 확인하고 필요할 때 검색할 때',
+        ],
     },
-    {name: 'placeholder', desc: '값이 없을 때 트리거에 표시됩니다.', def: "'선택하세요'", control: 'string'},
+] as const
+
+const STATE_COLUMNS = [
+    {key: 'state', header: '상태', align: 'start', rowHeader: true},
+    {key: 'prop', header: '지정 방법', align: 'start'},
+    {key: 'behavior', header: '동작', align: 'start', wrap: true},
+] as const
+
+const STATE_ROWS = [
     {
-        name: 'searchPlaceholder',
-        desc: 'dropdown 타입의 목록 내부 검색창에 표시됩니다.',
-        def: "'검색어를 입력하세요'",
-        control: 'string',
-    },
-    {
-        name: 'emptyText',
-        desc: '검색 결과가 없을 때 표시됩니다.',
-        def: "'결과가 없습니다.'",
-        control: 'string',
-    },
-    {
-        name: 'name / form / required',
-        desc: 'Base UI Combobox의 FormData 필드 이름, 외부 form 연결, 네이티브 필수 상태를 지정합니다.',
-        def: '- / - / false',
-        control: 'string / string / boolean',
-    },
-    {
-        name: 'disabled',
-        desc: '비활성. 목록을 열 수 없고 FormData 제출에서도 제외됩니다.',
-        def: 'false',
-        control: 'boolean',
+        key: 'error',
+        cells: [
+            '오류',
+            <code key="prop">aria-invalid</code>,
+            'Field에 data-invalid를 지정하고 FieldError를 aria-describedby로 연결합니다.',
+        ],
     },
     {
-        name: 'readOnly',
-        desc: '읽기전용. 목록을 열거나 값을 바꿀 수 없지만 값은 FormData에 포함됩니다.',
-        def: 'false',
-        control: 'boolean',
+        key: 'readonly',
+        cells: ['읽기전용', <code key="prop">readOnly</code>, '검색과 값 변경을 막고 제출값은 유지합니다.'],
     },
     {
-        name: 'id / aria-invalid / aria-describedby',
-        desc: 'FieldLabel과 오류 메시지를 트리거에 연결하고 오류 상태를 전달합니다.',
-        def: '-',
-        control: 'string / boolean / string',
+        key: 'disabled',
+        cells: ['비활성', <code key="prop">disabled</code>, '포커스·검색·선택·폼 제출에서 제외합니다.'],
+    },
+] as const
+
+const API_COLUMNS = [
+    {key: 'prop', header: 'Prop', align: 'start', rowHeader: true},
+    {key: 'type', header: '값', align: 'start', wrap: true},
+    {key: 'default', header: '기본값', align: 'start'},
+    {key: 'note', header: '설명', align: 'start', wrap: true},
+] as const
+
+const API_ROWS = [
+    {
+        key: 'options',
+        cells: [<code key="prop">options</code>, <code key="type">ComboboxOption[]</code>, '—', '검색·선택할 항목'],
     },
     {
-        name: 'className',
-        desc: '입력형의 InputGroup 또는 드롭다운형의 Trigger 레이아웃과 스타일을 확장합니다.',
-        def: '""',
-        control: 'string',
+        key: 'type',
+        cells: [
+            <code key="prop">type</code>,
+            <code key="type">input | dropdown</code>,
+            <code key="default">input</code>,
+            '검색 UI 유형',
+        ],
+    },
+    {
+        key: 'value',
+        cells: [
+            <code key="prop">value / onValueChange</code>,
+            <code key="type">string / (value) =&gt; void</code>,
+            '—',
+            '제어 선택값',
+        ],
+    },
+    {
+        key: 'placeholder',
+        cells: [
+            <code key="prop">placeholder / searchPlaceholder / emptyText</code>,
+            <code key="type">string</code>,
+            '컴포넌트 기본 문구',
+            '트리거·검색창·빈 결과 문구',
+        ],
+    },
+    {
+        key: 'form',
+        cells: [
+            <code key="prop">name / form / required</code>,
+            <code key="type">string / string / boolean</code>,
+            '—',
+            '폼 제출 설정',
+        ],
+    },
+    {
+        key: 'state',
+        cells: [
+            <code key="prop">disabled / readOnly</code>,
+            <code key="type">boolean</code>,
+            <code key="default">false</code>,
+            '상호작용 상태',
+        ],
+    },
+    {
+        key: 'a11y',
+        cells: [
+            <code key="prop">id / aria-invalid / aria-describedby</code>,
+            <code key="type">HTML attributes</code>,
+            '—',
+            '라벨·설명·오류 연결',
+        ],
     },
 ] as const
 
 const ComboboxGuidePage = () => (
     <GuidePageShell
         title="콤보박스 (Combobox)"
-        description="Base UI 기반 shadcn Combobox primitive를 프로젝트 단일 선택 API로 제공하는 wrapper입니다. Field와 조합해 검색 가능한 입력을 구성합니다."
+        description="검색 가능한 단일 선택 입력입니다. 검색 위치에 따라 input과 dropdown 타입을 선택합니다."
     >
-        <BaseCard>
-            <section aria-labelledby="cb-demo" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="cb-demo" className="typo-h4-bold">
-                        사용 예시
+        <BaseCard variant="outlined">
+            <section aria-labelledby="combobox-type" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="combobox-type" className="typo-h4-bold">
+                        Type 선택
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>,{' '}
-                        <code className="font-mono">Combobox</code>, <code className="font-mono">FieldDescription</code>
-                        을 조합합니다. shadcn ComboboxInput은 InputGroup을 사용해 Input과 외관·상태를 공유하며, 입력과
-                        목록 탐색을 하나의 Base UI Combobox 상태로 처리합니다.
+                        두 타입은 같은 단일 선택 API를 사용하며 검색창의 위치만 다릅니다. 컨트롤 높이는 48px로 고정되어
+                        size prop을 제공하지 않습니다.
                     </p>
                 </div>
+                <Table caption="Combobox type 사용 기준" columns={TYPE_COLUMNS} rows={TYPE_ROWS} size="md" />
                 <ComboboxDemo />
-                <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
-                <CodeBlock code={DROPDOWN_CODE} language="tsx" copyLabel="드롭다운 검색형 복사" />
+                <div className="grid gap-6 xl:grid-cols-2">
+                    <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="입력형 복사" />
+                    <CodeBlock code={DROPDOWN_CODE} language="tsx" copyLabel="드롭다운형 복사" />
+                </div>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="cb-state" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="cb-state" className="typo-h4-bold">
-                        상태 (State)
+            <section aria-labelledby="combobox-state" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="combobox-state" className="typo-h4-bold">
+                        상태와 오류
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        기본·값 선택됨·오류·읽기전용·비활성 상태입니다. 오류가 있으면 동일 Field 안에{' '}
-                        <code className="font-mono">FieldError</code>를 추가합니다. readOnly는 값이 유지되지만 목록이
-                        열리지 않고, disabled는 클릭과 포커스가 막힙니다. Input과 같은 48px 높이로 고정되어 별도의 size
-                        prop을 제공하지 않습니다.
+                        포커스링은 라벨을 제외한 필드에만 표시됩니다. 드롭다운 옵션은 클릭 가능한 포인터 커서를 사용하고
+                        비활성 옵션은 금지 커서를 사용합니다.
                     </p>
                 </div>
+                <Table caption="Combobox 상태 처리 기준" columns={STATE_COLUMNS} rows={STATE_ROWS} size="md" />
                 <ComboboxStatesDemo />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="cb-form" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="cb-form" className="typo-h4-bold">
+            <section aria-labelledby="combobox-form" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="combobox-form" className="typo-h4-bold">
                         폼 제출
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">name</code>을 지정하면 Base UI Combobox가 선택값을 FormData에
-                        포함합니다. 예시는 필수값을 직접 검증해 <code className="font-mono">FieldError</code>를 표시하고
-                        첫 오류 입력으로 포커스를 이동합니다. 입력형과 드롭다운 검색형 모두 제출값을 확인할 수 있으며,
-                        readOnly 값은 제출되지만 disabled 값은 제출되지 않습니다.
+                        name을 지정하면 선택값이 FormData에 포함됩니다. readOnly 값은 제출되고 disabled 값은 제외됩니다.
                     </p>
                 </div>
                 <ComboboxFormDemo />
@@ -237,55 +229,16 @@ const ComboboxGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="cb-props" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="cb-props" className="typo-h4-bold">
-                        Props
+            <section aria-labelledby="combobox-api" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="combobox-api" className="typo-h4-bold">
+                        Props API
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">Combobox에서 자주 쓰는 속성입니다.</p>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        프로젝트 Combobox wrapper에서 사용하는 주요 속성입니다.
+                    </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">Props 목록</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Description
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Default
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Control
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {PROPS_ITEMS.map((prop) => (
-                                <tr key={prop.name} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                                    >
-                                        {prop.name}
-                                    </th>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{prop.desc}</td>
-                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {prop.def}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
-                                            {prop.control}
-                                        </span>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table caption="Combobox Props API" columns={API_COLUMNS} rows={API_ROWS} size="md" />
             </section>
         </BaseCard>
     </GuidePageShell>
