@@ -5,6 +5,6 @@
 // 각 컴포넌트의 focus-visible outline 이 표시된다.
 //
 // 색·두께·offset·style 은 Button focus 와 동일(outline-ring / outline-2 / outline-offset-2 / outline-solid).
-// outline 모서리는 각지게 둔다(rounded 미적용).
+// wrapper 모서리는 컨트롤 형태를 따른다: checkbox 는 rounded-2xs, radio·switch 는 pill 형태의 rounded-full.
 export const FIELD_FOCUS_RING =
-    'data-[orientation=horizontal]:has-[:focus-visible]:outline-2 data-[orientation=horizontal]:has-[:focus-visible]:outline-solid data-[orientation=horizontal]:has-[:focus-visible]:outline-ring data-[orientation=horizontal]:has-[:focus-visible]:outline-offset-2 data-[orientation=horizontal]:[&_:focus-visible]:outline-none'
+    'data-[orientation=horizontal]:has-[:focus-visible]:outline-2 data-[orientation=horizontal]:has-[:focus-visible]:outline-solid data-[orientation=horizontal]:has-[:focus-visible]:outline-ring data-[orientation=horizontal]:has-[:focus-visible]:outline-offset-2 data-[orientation=horizontal]:[&_:focus-visible]:outline-none has-[[data-slot=checkbox]]:rounded-2xs has-[[data-slot=radio-group-item]]:rounded-full has-[[data-slot=switch]]:rounded-full'
