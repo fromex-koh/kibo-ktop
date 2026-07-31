@@ -46,10 +46,22 @@ const BADGE_COLORS = [
     'secondary-purple',
 ] as const
 
-const BUTTON_VARIANTS = ['default', 'secondary', 'tertiary', 'outline', 'ghost', 'destructive', 'text', 'link'] as const
+const BUTTON_VARIANTS = [
+    'default',
+    'secondary',
+    'tertiary',
+    'outline',
+    'ghost',
+    'destructive',
+    'text',
+    'text-underline',
+] as const
+
+const INLINE_BUTTON_VARIANTS: readonly string[] = ['text', 'text-underline']
 
 const BUTTON_SIZES = ['xl', 'lg', 'md', 'sm', 'xs'] as const
-const INLINE_BUTTON_SIZES = ['xl', 'lg', 'md', 'sm'] as const
+// 인라인 버튼은 Figma button_text 의 4단(large~xsmall)에 대응한다 — xl 은 lg 와 같은 값이라 뺀다.
+const INLINE_BUTTON_SIZES = ['lg', 'md', 'sm', 'xs'] as const
 const ICON_BUTTON_VARIANTS = ['default', 'secondary', 'tertiary', 'ghost'] as const
 const ICON_BUTTON_SIZES = ['icon-xl', 'icon-lg', 'icon-md', 'icon-sm', 'icon-xs'] as const
 const ICON_SIZES = [
@@ -142,7 +154,7 @@ const ContrastCheckPage = () => (
                     <Button
                         key={variant}
                         variant={variant}
-                        size={variant === 'text' || variant === 'link' ? 'lg' : 'md'}
+                        size={INLINE_BUTTON_VARIANTS.includes(variant) ? 'lg' : 'md'}
                     >
                         {variant}
                     </Button>
@@ -154,7 +166,7 @@ const ContrastCheckPage = () => (
                     <Button
                         key={`${variant}-left-icon`}
                         variant={variant}
-                        size={variant === 'text' || variant === 'link' ? 'lg' : 'md'}
+                        size={INLINE_BUTTON_VARIANTS.includes(variant) ? 'lg' : 'md'}
                     >
                         <Download aria-hidden="true" />
                         {variant}
@@ -164,7 +176,7 @@ const ContrastCheckPage = () => (
                     <Button
                         key={`${variant}-right-icon`}
                         variant={variant}
-                        size={variant === 'text' || variant === 'link' ? 'lg' : 'md'}
+                        size={INLINE_BUTTON_VARIANTS.includes(variant) ? 'lg' : 'md'}
                     >
                         {variant}
                         <ChevronRight aria-hidden="true" />
@@ -183,7 +195,7 @@ const ContrastCheckPage = () => (
             </div>
 
             <div className="flex flex-wrap items-center gap-4">
-                {(['text', 'link'] as const).flatMap((variant) =>
+                {(['text', 'text-underline'] as const).flatMap((variant) =>
                     INLINE_BUTTON_SIZES.map((size) => (
                         <Button key={`${variant}-${size}`} variant={variant} size={size}>
                             <Download aria-hidden="true" />

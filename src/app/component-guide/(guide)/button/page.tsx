@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {ArrowRight, ChevronRight, Download, LoaderCircle, Search, Sun, X} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
@@ -43,7 +44,23 @@ const DISABLED_ICON_CODE = `<Button variant="default" size="md" disabled>
 </Button>
 
 <Button variant="text" size="lg" disabled>텍스트 버튼</Button>
-<Button variant="link" size="lg" disabled>링크 버튼</Button>`
+<Button variant="text-underline" size="lg" disabled>밑줄 텍스트 버튼</Button>`
+
+// 인라인 텍스트 버튼을 a 태그로 — 스타일은 그대로 두고 태그만 바꾸는 asChild 조합.
+const INLINE_ANCHOR_CODE = `import Link from 'next/link'
+
+{/* 다른 주소로 이동 → a */}
+<Button variant="text-underline" size="lg" asChild>
+  <Link href="/mypage/result">
+    평가결과 조회
+    <ChevronRight aria-hidden="true" />
+  </Link>
+</Button>
+
+{/* 현재 화면에서 실행 → button (기본) */}
+<Button variant="text-underline" size="lg" onClick={openDialog}>
+  내용보기
+</Button>`
 
 const ROUND_ICON_CODE = `<Button
   variant="default"
@@ -113,8 +130,8 @@ const PLAIN_SIZES = [
 const LEGACY_SIZES = ['default', 'icon'] as const
 
 // Button 이 가진 variant 케이스. default/secondary/tertiary/text 는 Figma type(버튼 전용 토큰),
-// outline/ghost/destructive/link 는 내부 컴포넌트 및 인라인 액션에서 쓰는 호환 값이다.
-// 채움이 없는 text/link 는 모양이 비슷해 마지막에 나란히 둔다.
+// outline/ghost/destructive 는 내부 컴포넌트 및 인라인 액션에서 쓰는 호환 값이다.
+// 채움이 없는 text 계열은 모양이 비슷해 마지막에 나란히 둔다.
 const ALL_VARIANTS = [
     {key: 'default', label: 'default', note: 'Figma Primary'},
     {key: 'secondary', label: 'secondary', note: 'Figma Secondary'},
@@ -124,13 +141,11 @@ const ALL_VARIANTS = [
     {key: 'destructive', label: 'destructive', note: '내부 컴포넌트용'},
     {key: 'text', label: 'text', note: 'Figma Text(채움·테두리 없음, 밑줄 없음)'},
     {key: 'text-underline', label: 'text-underline', note: 'Figma Text + 상시 1px 밑줄(아이콘까지 이어짐)'},
-    {key: 'link', label: 'link', note: 'Figma Text + hover 밑줄'},
 ] as const
 
 const INLINE_VARIANTS = [
     {key: 'text', label: 'text', note: '채움·테두리 없는 텍스트형(밑줄 없음)'},
     {key: 'text-underline', label: 'text-underline', note: 'text 와 같되 상시 1px 밑줄 — 아이콘 아래까지 이어진다'},
-    {key: 'link', label: 'link', note: 'text 와 같되 밑줄이 hover 에만'},
 ] as const
 
 const DISABLED_VARIANTS = [
@@ -139,18 +154,18 @@ const DISABLED_VARIANTS = [
     {key: 'tertiary', label: 'Tertiary'},
     {key: 'text', label: 'Text'},
     {key: 'text-underline', label: 'Text(밑줄)'},
-    {key: 'link', label: 'Link'},
 ] as const
 
-// Figma button_text 는 공용 size 축(xl~xs)과 별개로 자체 4단 스케일을 쓴다(값은 Figma 실측 px).
-// 아이콘은 large·medium·small 16px, xsmall 만 12px 이다.
-// text-underline·link 도 이 사양을 그대로 공유한다 — 밑줄 유무(없음/상시/hover)만 다르다.
+// Figma button_text 는 공용 size 축(xl~xs)과 별개로 자체 4단 스케일(large~xsmall)을 쓴다(값은 Figma 실측 px).
+// 상자 높이를 따로 두지 않고 행간이 정하므로 높이 = 행간이다. 아이콘은 xsmall 만 12px, 나머지는 16px.
+// text-underline 도 이 사양을 그대로 공유한다 — 밑줄 유무만 다르다.
 // text-underline 의 밑줄은 text-decoration 이 아니라 버튼 폭 전체를 덮는 1px 선이라 아이콘 아래에서도 끊기지 않는다(시안 동일).
+// xl 은 시안에 없어 lg 와 같은 값이라 표에서 뺀다.
 const INLINE_SIZES = [
-    {key: 'xl', label: 'xl', height: 40, font: 18, icon: 16},
-    {key: 'lg', label: 'lg', height: 32, font: 16, icon: 16},
-    {key: 'md', label: 'md', height: 24, font: 14, icon: 16},
-    {key: 'sm', label: 'sm', height: 24, font: 12, icon: 12},
+    {key: 'lg', label: 'lg', figma: 'large', font: 18, lineHeight: 27, icon: 16},
+    {key: 'md', label: 'md', figma: 'medium', font: 16, lineHeight: 24, icon: 16},
+    {key: 'sm', label: 'sm', figma: 'small', font: 14, lineHeight: 21, icon: 16},
+    {key: 'xs', label: 'xs', figma: 'xsmall', font: 12, lineHeight: 18, icon: 12},
 ] as const
 
 // 가이드 표(size="md")의 행 머리글 — 키 이름과 실측 수치를 함께 보여준다.
@@ -256,9 +271,10 @@ const DISABLED_COLUMNS = [
     {key: 'icon-round', header: '원형 아이콘', align: 'start'},
 ] as const
 
-// 밑줄형(text-underline·link)은 문장 안에 섞이는 인라인 버튼이라 아이콘 전용으로 쓰지 않는다.
-// 글자 없이 아이콘만 남기면 밑줄이 아이콘 아래에 홀로 그려져 시안에 없는 모양이 되므로 큐레이션에서 뺀다.
-const UNDERLINE_VARIANT_KEYS: readonly string[] = ['text-underline', 'link']
+// 인라인 텍스트 버튼(text·text-underline)은 문장 안에 섞이는 버튼이라 아이콘 전용으로 쓰지 않는다.
+// 시안 button_text 에 아이콘만 있는 케이스가 없고, 면 없는 아이콘 버튼은 plain 이 담당한다.
+// 밑줄형은 글자 없이 아이콘만 남기면 밑줄이 아이콘 아래에 홀로 그려져 더 어색하다.
+const UNDERLINE_VARIANT_KEYS: readonly string[] = ['text-underline']
 const INLINE_VARIANT_KEYS: readonly string[] = ['text', ...UNDERLINE_VARIANT_KEYS]
 
 const notApplicableCell = (key: string) => (
@@ -268,7 +284,7 @@ const notApplicableCell = (key: string) => (
 )
 
 const DISABLED_ROWS = DISABLED_VARIANTS.map((variant) => {
-    const hasIconOnly = !UNDERLINE_VARIANT_KEYS.includes(variant.key)
+    const hasIconOnly = !INLINE_VARIANT_KEYS.includes(variant.key)
 
     return {
         key: variant.key,
@@ -343,12 +359,20 @@ const PROPS_ROWS = [
         key: 'variant',
         cells: [
             nameCell('variant'),
-            '강조 단계. default/secondary/tertiary 는 Figma 디자인을 반영한 버튼 전용 토큰을 씁니다. outline/ghost/destructive 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는 기존 값이고, text/link 는 채움이 없는 인라인 액션이라 마지막에 함께 둡니다.',
+            '강조 단계. default/secondary/tertiary/text 는 Figma 디자인을 반영한 버튼 전용 토큰을 씁니다. outline/ghost/destructive 는 다이얼로그·시트 등 내부 컴포넌트가 쓰는 기존 값이고, plain 은 면 없는 아이콘 버튼, text 계열은 채움이 없는 인라인 액션이라 마지막에 함께 둡니다.',
             <span key="default" className="font-mono">
                 &apos;default&apos;
             </span>,
             <span key="control" className="flex flex-wrap gap-1">
-                {[...TYPES.map((type) => type.key), 'outline', 'ghost', 'destructive', 'text', 'link'].map(controlChip)}
+                {[
+                    ...TYPES.map((type) => type.key),
+                    'outline',
+                    'ghost',
+                    'destructive',
+                    'plain',
+                    'text',
+                    'text-underline',
+                ].map(controlChip)}
             </span>,
         ],
     },
@@ -391,8 +415,8 @@ const PROPS_ROWS = [
     },
 ]
 
-// text·link 는 같은 Figma 사양을 공유하므로 큐레이션 표도 같은 모양으로 나란히 둔다.
-const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'text-underline' | 'link'; caption: string}) => (
+// text·text-underline 은 같은 Figma 사양을 공유하므로 큐레이션 표도 같은 모양으로 나란히 둔다.
+const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'text-underline'; caption: string}) => (
     <Table
         size="md"
         caption={caption}
@@ -400,7 +424,10 @@ const InlineSizeTable = ({variant, caption}: {variant: 'text' | 'text-underline'
         rows={INLINE_SIZES.map((size) => ({
             key: size.key,
             cells: [
-                sizeHeaderCell(size.label, `${size.height}px · 폰트 ${size.font}px · 아이콘 ${size.icon}px`),
+                sizeHeaderCell(
+                    size.label,
+                    `Figma ${size.figma} · 폰트 ${size.font}px · 행간 ${size.lineHeight}px · 아이콘 ${size.icon}px`,
+                ),
                 <Button key="text" variant={variant} size={size.key}>
                     버튼명
                 </Button>,
@@ -440,6 +467,7 @@ const ButtonGuidePage = () => (
                         {href: '#button-matrix', label: '기본 버튼 크기 조합'},
                         {href: '#button-icon-matrix', label: '아이콘 전용 버튼'},
                         {href: '#button-inline-matrix', label: '인라인 버튼'},
+                        {href: '#button-inline-anchor', label: '링크로 쓰는 인라인 버튼'},
                         {href: '#button-disabled', label: '상태 처리'},
                         {href: '#button-props', label: 'Props API'},
                     ].map((item) => (
@@ -511,8 +539,7 @@ const ButtonGuidePage = () => (
                         Button 을 디자인에 쓰는 variant 입니다.{' '}
                         <span className="font-mono">default·secondary·tertiary·text</span> 는 Figma type(
                         <span className="font-mono">text</span> 는 채움·테두리 없는 텍스트 버튼)이고,{' '}
-                        <span className="font-mono">text-underline</span> 은 상시 밑줄,{' '}
-                        <span className="font-mono">link</span> 는 hover 밑줄만 다릅니다.{' '}
+                        <span className="font-mono">text-underline</span> 은 여기에 상시 1px 밑줄이 붙는 점만 다릅니다.{' '}
                         <span className="font-mono">outline·ghost·destructive</span> 는 다이얼로그·시트 등 내부
                         컴포넌트가 쓰는 호환 값입니다.
                     </p>
@@ -623,21 +650,16 @@ const ButtonGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         비교하기 쉽도록 미리보기는 모두 <span className="font-mono">lg</span> size 로 통일합니다. 둘은
-                        같은 Figma 사양(높이·폰트·아이콘·색)을 공유하고 <span className="font-mono">link</span> 만 hover
-                        에 밑줄이 붙습니다. size 별 사양은 아래{' '}
+                        같은 Figma 사양(행간·폰트·아이콘·색)을 공유하고 밑줄 유무만 다릅니다. size 별 사양은 아래{' '}
                         <a href="#button-text-matrix" className="text-primary underline underline-offset-4">
-                            Text
+                            Text 버튼 크기
                         </a>
-                        ·
-                        <a href="#button-link-matrix" className="text-primary underline underline-offset-4">
-                            Link 버튼 크기
-                        </a>
-                        을 참고하세요.
+                        를 참고하세요.
                     </p>
                 </div>
                 <Table
                     size="md"
-                    caption="link text 버튼 variant 미리보기"
+                    caption="인라인 텍스트 버튼 variant 미리보기"
                     columns={INLINE_VARIANT_COLUMNS}
                     rows={INLINE_VARIANT_ROWS}
                 />
@@ -652,14 +674,17 @@ const ButtonGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         Figma <span className="font-mono">button_text</span> 는 공용 size 축과 별개로 자체 4단
-                        스케일(높이 40/32/24/24 · 폰트 18/16/14/12 · 아이콘 16/16/16/12)을 쓰고, 전 사이즈가
-                        Regular(400)입니다. 채움·테두리가 없어 <span className="font-mono">default·hover·pressed</span>{' '}
-                        가 모두 같은 색(
+                        스케일(폰트 18/16/14/12 · 행간 27/24/21/18 · 아이콘 16/16/16/12)을 쓰고, 전 사이즈가
+                        Regular(400)입니다. 상자 높이를 따로 두지 않고{' '}
+                        <strong className="text-foreground font-medium">행간이 높이를 정합니다</strong> — 문장 안에
+                        섞이는 버튼이라 컨트롤 높이를 주면 주변 줄 높이가 어긋나고, 밑줄도 글자 줄 아랫변 기준이라 같이
+                        밀립니다. 채움·테두리가 없어 <span className="font-mono">default·hover·pressed</span> 가 모두
+                        같은 색(
                         <span className="font-mono">label-foreground</span>)이라 상태 피드백은 focus 링뿐이고,{' '}
                         <span className="font-mono">disabled</span> 만 흐리게가 아니라 solid{' '}
-                        <span className="font-mono">disabled-subtle</span> 로 바뀝니다. 높이는 Figma 값을 그대로 쓰므로
-                        공용 축의 44px 터치 보정(<span className="font-mono">min-h-11</span>)이 적용되지 않습니다 — 밀도
-                        높은 UI 용 컴팩트 예외로, 인접 간격을 넉넉히 두고 씁니다(6.1.3).
+                        <span className="font-mono">disabled-subtle</span> 로 바뀝니다. 공용 축의 44px 터치 보정(
+                        <span className="font-mono">min-h-11</span>)도 적용되지 않습니다 — 밀도 높은 UI 용 컴팩트
+                        예외로, 인접 간격을 넉넉히 두고 씁니다(6.1.3).
                     </p>
                 </div>
                 <div className="flex flex-col gap-6">
@@ -678,20 +703,42 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-link-matrix" className="flex flex-col gap-6">
+            <section aria-labelledby="button-inline-anchor" className="flex flex-col gap-6">
                 <div className="flex max-w-4xl flex-col gap-2">
-                    <h2 id="button-link-matrix" className="typo-h4-bold">
-                        Link 버튼 크기
+                    <h2 id="button-inline-anchor" className="typo-h4-bold">
+                        링크로 쓰는 인라인 버튼
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <span className="font-mono">link</span> 는 위 <span className="font-mono">text</span> 와
-                        높이·폰트· 아이콘·색 사양이 모두 같고,{' '}
-                        <strong className="text-foreground font-medium">hover 에서만 밑줄</strong>(
-                        <span className="font-mono">underline-offset-4</span>)이 붙는 점만 다릅니다. 표의 미리보기는
-                        정적 이라 밑줄이 보이지 않으니 마우스를 올려 확인하세요.
+                        인라인 텍스트 버튼은 <code className="font-mono">button</code> 뿐 아니라{' '}
+                        <code className="font-mono">a</code> 로도 쓸 수 있습니다.{' '}
+                        <code className="font-mono">asChild</code> 를 켜고 자식으로{' '}
+                        <code className="font-mono">next/link</code> 를 넣으면 스타일은 그대로 두고 태그만 바뀝니다(
+                        <span className="font-mono">text</span>·<span className="font-mono">text-underline</span> 둘 다
+                        동일).
+                    </p>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        고르는 기준은 모양이 아니라 <strong className="text-foreground font-medium">동작</strong>입니다
+                        — 다른 주소로 이동하면 <code className="font-mono">a</code>, 현재 화면에서 무언가를
+                        실행하면(모달 열기·펼치기·제출) <code className="font-mono">button</code> 입니다([8.1.1]).
+                        링크로 쓸 때는 <code className="font-mono">disabled</code> 가 동작하지 않으므로, 비활성이
+                        필요하면 링크를 빼고 <code className="font-mono">button</code> 으로 두거나 텍스트만 남깁니다.
                     </p>
                 </div>
-                <InlineSizeTable variant="link" caption="link 버튼 size 조합 미리보기" />
+                <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">
+                    <Button variant="text" size="lg" asChild>
+                        <Link href="#button-props">
+                            Props 보기
+                            <ChevronRight aria-hidden="true" />
+                        </Link>
+                    </Button>
+                    <Button variant="text-underline" size="lg" asChild>
+                        <Link href="#button-props">
+                            Props 보기
+                            <ChevronRight aria-hidden="true" />
+                        </Link>
+                    </Button>
+                </div>
+                <CodeBlock code={INLINE_ANCHOR_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
@@ -730,9 +777,11 @@ const ButtonGuidePage = () => (
                         비활성 상태
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        비활성 상태는 단순히 흐리게 처리하지 않고, type 별로 별도 배경·테두리·텍스트 색을 씁니다.
-                        밑줄형(<span className="font-mono">text-underline</span>·<span className="font-mono">link</span>
-                        )은 문장 안에 섞이는 인라인 버튼이라 아이콘 전용으로 쓰지 않아 해당 칸을 비웠습니다.
+                        비활성 상태는 단순히 흐리게 처리하지 않고, type 별로 별도 배경·테두리·텍스트 색을 씁니다. 인라인
+                        텍스트 버튼(<span className="font-mono">text</span>·
+                        <span className="font-mono">text-underline</span>)은 문장 안에 섞이는 버튼이라 아이콘 전용으로
+                        쓰지 않아 해당 칸을 비웠습니다 — 면 없는 아이콘 버튼은 <span className="font-mono">plain</span>{' '}
+                        이 담당합니다.
                     </p>
                 </div>
                 <Table

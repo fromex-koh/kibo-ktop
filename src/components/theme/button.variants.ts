@@ -28,9 +28,6 @@ const buttonVariants = cva(
                 plain: 'border-0 text-current interactive:hover:text-icon-interactive-hover interactive:active:not-aria-[haspopup]:translate-y-0 focus-visible:outline-offset-4 disabled:text-disabled disabled:opacity-100',
                 destructive:
                     'bg-destructive text-destructive-foreground interactive:hover:bg-destructive/90 interactive:active:bg-destructive/80 disabled:border-disabled-subtle disabled:bg-control-disabled disabled:text-disabled',
-                // hover 밑줄도 text-underline 과 같은 방식(버튼 폭 전체 1px 선)이라 아이콘 아래에서 끊기지 않는다.
-                // 평상시엔 선을 감춰 두고(opacity-0) hover 에서만 드러낸다 — 표시/숨김만 바뀌어 레이아웃은 그대로다.
-                link: 'text-label-foreground relative after:absolute after:inset-x-0 after:top-1/2 after:h-px after:translate-y-[0.5lh] after:bg-current after:opacity-0 interactive:hover:after:opacity-100 disabled:text-disabled-subtle disabled:opacity-100',
                 // 밑줄 없는 기본 텍스트 버튼 — 헤더 유틸 링크·"내용보기"처럼 본문에 얹히는 인라인 액션에 쓴다.
                 text: 'text-label-foreground no-underline disabled:text-disabled-subtle disabled:opacity-100',
                 // PROJECT-STYLE: Figma button_text 는 default·hover·pressed·disabled 네 상태 모두 1px 밑줄이 있다.
@@ -64,9 +61,18 @@ const buttonVariants = cva(
             {variant: 'tertiary', size: 'lg', class: 'min-w-control-min-w-sm'},
             {variant: 'default', size: 'md', class: 'font-bold disabled:font-medium'},
             {variant: 'default', size: 'sm', class: 'font-bold disabled:font-medium'},
-            // PROJECT-STYLE: button_text 의 텍스트↔아이콘 간격은 네 size 모두 4px 이다(medium·large 확인).
-            // size 축이 8px 를 얹으므로 여기서 gap-1 로 되돌린다.
-            {variant: ['text', 'text-underline', 'link'], class: 'min-h-0 min-w-0 gap-1 p-0 font-normal'},
+            // PROJECT-STYLE: text 계열은 Figma button_text 를 따르므로 컨트롤 상자를 통째로 벗긴다.
+            // 높이·최소 크기·패딩·테두리를 걷어내면 아래 size 별 블록의 leading-* 가 상자 높이를 정한다.
+            // gap-1 — button_text 의 텍스트↔아이콘 간격은 네 size 모두 4px 인데 size 축이 8px 를 얹는다.
+            // border-0 — 면이 없는 버튼이라 테두리가 보이진 않지만, base 의 투명 테두리가 상자를 위아래
+            // 1px 씩 키워 줄 높이와 어긋나게 만든다. 문장 안에 섞이는 버튼이라 주변 행간까지 밀린다.
+            // size 를 명시해 텍스트 size 조합에만 적용한다 — 아이콘 전용 size(icon-*)는 정사각 상자
+            // (size-control-h-*)가 맞으므로 여기에 걸리면 높이만 풀려 가로로 찌그러진다.
+            {
+                variant: ['text', 'text-underline'],
+                size: ['xl', 'lg', 'md', 'sm', 'xs', 'default'],
+                class: 'h-auto min-h-0 min-w-0 gap-1 border-0 p-0 font-normal',
+            },
             // variant plain — 컨트롤 높이·최소 크기·패딩·라운드를 걷어내고 상자를 아이콘 크기에 맞춘다.
             // size 축이 rounded-sm 등을 뒤에 얹으므로 이 되돌림은 variant 가 아니라 여기(compound)에 둔다.
             // size 는 아이콘 전용 값만 의미가 있다(각 size 가 정한 아이콘 크기 = 상자 크기).
@@ -76,29 +82,32 @@ const buttonVariants = cva(
             {variant: 'plain', size: ['icon', 'icon-md'], class: 'size-icon-lg'},
             {variant: 'plain', size: 'icon-sm', class: 'size-icon-md'},
             {variant: 'plain', size: 'icon-xs', class: 'size-icon-sm'},
-            // PROJECT-STYLE: Figma button_text(40006516:20290)는 xsmall 12 · small 14 · medium 16 · large 18
+            // PROJECT-STYLE: Figma button_text(40006650:30813)는 xsmall 12 · small 14 · medium 16 · large 18
             // 네 단계이고, 높이는 상자가 아니라 행간(18·21·24·27)이 정한다 — 문장 안에 섞이는 인라인 버튼이라
             // 컨트롤 높이를 주면 줄 높이가 어긋난다. 아이콘은 12px 단계만 12, 나머지는 16 이다.
-            // xl 은 시안에 없어 large 와 같은 값으로 둔다(다른 variant 와 size 축을 맞추기 위한 자리).
+            // 행간을 명시하는 이유 — Tailwind 의 text-* 기본 행간(28·20·16)은 시안(27·21·18)과 달라 상자와
+            // 줄 높이가 어긋나고, 밑줄이 translate-y-[0.5lh](=줄 아랫변) 기준이라 그만큼 밀린 자리에 그려진다.
+            // 위 블록이 높이를 h-auto 로 풀어 두므로 여기서 정한 행간이 곧 상자 높이가 된다.
+            // xl 은 button_text 에 없다 — 컨트롤 높이 60 이 남아 깨지므로 빼지 않고 large 로 접는다.
             {
-                variant: ['text', 'text-underline', 'link'],
+                variant: ['text', 'text-underline'],
                 size: ['xl', 'lg'],
-                class: "h-[--spacing(6.75)] text-lg [&_svg:not([class*='size-'])]:size-icon-sm",
+                class: "text-lg leading-[--spacing(6.75)] [&_svg:not([class*='size-'])]:size-icon-sm",
             },
             {
-                variant: ['text', 'text-underline', 'link'],
+                variant: ['text', 'text-underline'],
                 size: ['default', 'md'],
-                class: "h-6 text-base [&_svg:not([class*='size-'])]:size-icon-sm",
+                class: "text-base leading-6 [&_svg:not([class*='size-'])]:size-icon-sm",
             },
             {
-                variant: ['text', 'text-underline', 'link'],
+                variant: ['text', 'text-underline'],
                 size: 'sm',
-                class: "h-[--spacing(5.25)] text-sm [&_svg:not([class*='size-'])]:size-icon-sm",
+                class: "text-sm leading-[--spacing(5.25)] [&_svg:not([class*='size-'])]:size-icon-sm",
             },
             {
-                variant: ['text', 'text-underline', 'link'],
+                variant: ['text', 'text-underline'],
                 size: 'xs',
-                class: "h-[--spacing(4.5)] text-xs [&_svg:not([class*='size-'])]:size-icon-xs",
+                class: "text-xs leading-[--spacing(4.5)] [&_svg:not([class*='size-'])]:size-icon-xs",
             },
         ],
         defaultVariants: {variant: 'default', size: 'default'},
