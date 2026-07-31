@@ -32,7 +32,24 @@ const BASIC_CODE = `<Field className="max-w-90">
   </FieldDescription>
 </Field>`
 
-const ERROR_CODE = `<Field data-invalid className="max-w-90">
+const STATE_CODE = `{/* 기본 */}
+<Field className="max-w-90">
+  <FieldLabel htmlFor="company-name" className="font-bold text-foreground">
+    기업명
+  </FieldLabel>
+  <Input id="company-name" name="companyName" placeholder="기업명을 입력하세요" />
+</Field>
+
+{/* 값 입력됨 */}
+<Field className="max-w-90">
+  <FieldLabel htmlFor="manager-name" className="font-bold text-foreground">
+    담당자명
+  </FieldLabel>
+  <Input id="manager-name" name="managerName" defaultValue="홍길동" />
+</Field>
+
+{/* 오류 */}
+<Field data-invalid className="max-w-90">
   <FieldLabel htmlFor="applicant-name" className="font-bold text-foreground">
     신청자 이름
   </FieldLabel>
@@ -46,6 +63,22 @@ const ERROR_CODE = `<Field data-invalid className="max-w-90">
   <FieldError id="applicant-name-error">
     신청자 이름을 입력해 주세요.
   </FieldError>
+</Field>
+
+{/* 비활성 */}
+<Field data-disabled="true" className="max-w-90">
+  <FieldLabel htmlFor="disabled-company" className="font-bold text-foreground">
+    기업명
+  </FieldLabel>
+  <Input id="disabled-company" value="기술보증기금" disabled readOnly />
+</Field>
+
+{/* 읽기전용 */}
+<Field className="max-w-90">
+  <FieldLabel htmlFor="corporate-number" className="font-bold text-foreground">
+    법인번호
+  </FieldLabel>
+  <Input id="corporate-number" name="corporateNumber" value="11222-1234567" readOnly />
 </Field>`
 
 const COMPOSITE_CODE = `{/* 일반 입력: end action 없음 */}
@@ -359,20 +392,51 @@ const InputGuidePage = () => (
                     </p>
                 </div>
                 <Table caption="Input 상태 처리 기준" columns={STATE_COLUMNS} rows={STATE_ROWS} size="md" />
-                <Field data-invalid className="max-w-90">
-                    <FieldLabel htmlFor="input-applicant" className="text-foreground font-bold">
-                        신청자 이름
-                    </FieldLabel>
-                    <Input
-                        id="input-applicant"
-                        name="applicantName"
-                        placeholder="이름을 입력하세요"
-                        aria-invalid="true"
-                        aria-describedby="input-applicant-error"
-                    />
-                    <FieldError id="input-applicant-error">신청자 이름을 입력해 주세요.</FieldError>
-                </Field>
-                <CodeBlock code={ERROR_CODE} language="tsx" copyLabel="복사" />
+                <div className="grid gap-6 lg:grid-cols-2">
+                    <Field className="max-w-90">
+                        <FieldLabel htmlFor="input-state-default" className="text-foreground font-bold">
+                            기본
+                        </FieldLabel>
+                        <Input id="input-state-default" name="companyName" placeholder="기업명을 입력하세요" />
+                    </Field>
+                    <Field className="max-w-90">
+                        <FieldLabel htmlFor="input-state-filled" className="text-foreground font-bold">
+                            값 입력됨
+                        </FieldLabel>
+                        <Input
+                            id="input-state-filled"
+                            name="managerName"
+                            defaultValue="홍길동"
+                            placeholder="이름을 입력하세요"
+                        />
+                    </Field>
+                    <Field data-invalid className="max-w-90">
+                        <FieldLabel htmlFor="input-state-error" className="text-foreground font-bold">
+                            오류
+                        </FieldLabel>
+                        <Input
+                            id="input-state-error"
+                            name="applicantName"
+                            placeholder="이름을 입력하세요"
+                            aria-invalid="true"
+                            aria-describedby="input-state-error-message"
+                        />
+                        <FieldError id="input-state-error-message">신청자 이름을 입력해 주세요.</FieldError>
+                    </Field>
+                    <Field data-disabled="true" className="max-w-90">
+                        <FieldLabel htmlFor="input-state-disabled" className="text-foreground font-bold">
+                            비활성
+                        </FieldLabel>
+                        <Input id="input-state-disabled" value="기술보증기금" disabled readOnly />
+                    </Field>
+                    <Field className="max-w-90">
+                        <FieldLabel htmlFor="input-state-readonly" className="text-foreground font-bold">
+                            읽기전용
+                        </FieldLabel>
+                        <Input id="input-state-readonly" name="corporateNumber" value="11222-1234567" readOnly />
+                    </Field>
+                </div>
+                <CodeBlock code={STATE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
