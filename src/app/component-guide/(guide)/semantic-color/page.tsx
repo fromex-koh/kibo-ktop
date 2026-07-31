@@ -158,6 +158,7 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'icon-solid-neutral-foreground': 'bg-icon-solid-neutral-foreground',
     'icon-solid-subtle': 'bg-icon-solid-subtle',
     'icon-solid-subtle-foreground': 'bg-icon-solid-subtle-foreground',
+    'accent-subtle': 'bg-accent-subtle',
     'field-error-foreground': 'bg-field-error-foreground',
     'icon-interactive-hover': 'bg-icon-interactive-hover',
     'step-progress-inactive': 'bg-step-progress-inactive',

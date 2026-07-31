@@ -4,9 +4,28 @@ import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Field, FieldDescription, FieldError, FieldLabel} from '@/components/ui/field'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
+import {SelectText} from '@/components/composite/select-text'
 import SelectFormDemo from './select-form-demo'
 
+const TEXT_VARIANT_CODE = `{/* 면 없는 텍스트형 — 목록은 시스템 드롭다운이 그린다 */}
+<SelectText
+  size="lg"
+  aria-label="기간 선택"
+  options={[
+    {value: 'all', label: '전체 기간'},
+    {value: 'year', label: '최근 1년'},
+  ]}
+  value={period}
+  onChange={(event) => setPeriod(event.target.value)}
+/>`
+
 export const metadata: Metadata = {title: '셀렉트 (Select)'}
+
+const PERIOD_OPTIONS = [
+    {value: 'all', label: '전체 기간'},
+    {value: 'year', label: '최근 1년'},
+    {value: 'month', label: '최근 1개월'},
+]
 
 const USAGE_CODE = `<Field className="max-w-90">
   <FieldLabel htmlFor="fruit" className="gap-1 font-bold text-foreground">
@@ -187,6 +206,40 @@ const SelectGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="select-text" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="select-text" className="typo-h4-bold">
+                        텍스트형 (SelectText)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        면·테두리 없이 글자와 화살표만 두는 선택 컨트롤입니다. 제목 옆에서 기간·구분을 바꾸는 자리처럼
+                        입력 필드가 아닌 곳에 씁니다. 목록을{' '}
+                        <strong className="text-foreground font-medium">시스템 드롭다운</strong>이 그리므로 위 Select와
+                        마크업·동작이 완전히 달라 <code className="font-mono">SelectText</code>로 분리했습니다 —
+                        스타일만 같은 theme 파일에서 함께 관리합니다.
+                    </p>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        상자 높이 대신 글자 줄 높이가 크기를 정합니다 — <code className="font-mono">lg</code>(24/36
+                        Bold), <code className="font-mono">md</code>(20/30), <code className="font-mono">sm</code>
+                        (16/24). hover와 pressed는 같은 회색 면(gray.50)입니다.
+                    </p>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <strong className="text-foreground font-medium">열린 목록은 OS가 그립니다.</strong> 위 Select의
+                        패널 스펙(트리거 아래 4px · 옵션 48px · hover blue.50)은 적용되지 않고 macOS·Windows·모바일에서
+                        각각 다르게 보입니다. 목록 모양까지 시안에 맞춰야 하면 상자형 Select를 쓰세요. 대신 모바일
+                        네이티브 UI와 키보드·스크린리더 대응을 브라우저 기본으로 얻습니다.
+                    </p>
+                </div>
+                <div className="flex flex-wrap items-start gap-8">
+                    <SelectText size="lg" options={PERIOD_OPTIONS} defaultValue="all" aria-label="기간 선택(lg)" />
+                    <SelectText size="md" options={PERIOD_OPTIONS} defaultValue="all" aria-label="기간 선택(md)" />
+                    <SelectText size="sm" options={PERIOD_OPTIONS} defaultValue="all" aria-label="기간 선택(sm)" />
+                </div>
+                <CodeBlock code={TEXT_VARIANT_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="select-state" className="flex flex-col gap-4">
                 <div>
                     <h2 id="select-state" className="typo-h4-bold">
@@ -355,9 +408,15 @@ const SelectGuidePage = () => (
                                 },
                                 {
                                     name: 'size',
-                                    desc: 'SelectTrigger — 높이. lg=48px · md=40px.',
+                                    desc: 'SelectTrigger — 상자형은 높이(lg=48px · md=40px), 텍스트형은 글자 크기(lg=24px · md=20px · sm=16px). sm은 텍스트형에만 있습니다.',
                                     def: "'lg'",
-                                    control: "'lg' | 'md'",
+                                    control: "'lg' | 'md' | 'sm'",
+                                },
+                                {
+                                    name: 'variant',
+                                    desc: 'SelectTrigger — 겉모습. box는 테두리 있는 입력 상자, text는 면 없이 글자와 화살표만 두는 형태입니다. 목록과 동작은 같습니다.',
+                                    def: "'box'",
+                                    control: "'box' | 'text'",
                                 },
                                 {
                                     name: 'aria-invalid',
