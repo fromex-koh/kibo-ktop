@@ -140,12 +140,16 @@ const ALL_VARIANTS = [
     {key: 'ghost', label: 'ghost', note: '내부 컴포넌트용'},
     {key: 'destructive', label: 'destructive', note: '내부 컴포넌트용'},
     {key: 'text', label: 'text', note: 'Figma Text(채움·테두리 없음, 밑줄 없음)'},
-    {key: 'text-underline', label: 'text-underline', note: 'Figma Text + 상시 1px 밑줄(아이콘까지 이어짐)'},
+    {key: 'text-underline', label: 'text-underline', note: 'Figma Text + 상시 1px 밑줄(글자 폭만, 아이콘 제외)'},
 ] as const
 
 const INLINE_VARIANTS = [
     {key: 'text', label: 'text', note: '채움·테두리 없는 텍스트형(밑줄 없음)'},
-    {key: 'text-underline', label: 'text-underline', note: 'text 와 같되 상시 1px 밑줄 — 아이콘 아래까지 이어진다'},
+    {
+        key: 'text-underline',
+        label: 'text-underline',
+        note: 'text 와 같되 상시 1px 밑줄 — 글자 폭만 덮고 아이콘 아래로는 안 이어진다',
+    },
 ] as const
 
 const DISABLED_VARIANTS = [
@@ -159,7 +163,7 @@ const DISABLED_VARIANTS = [
 // Figma button_text 는 공용 size 축(xl~xs)과 별개로 자체 4단 스케일(large~xsmall)을 쓴다(값은 Figma 실측 px).
 // 상자 높이를 따로 두지 않고 행간이 정하므로 높이 = 행간이다. 아이콘은 xsmall 만 12px, 나머지는 16px.
 // text-underline 도 이 사양을 그대로 공유한다 — 밑줄 유무만 다르다.
-// text-underline 의 밑줄은 text-decoration 이 아니라 버튼 폭 전체를 덮는 1px 선이라 아이콘 아래에서도 끊기지 않는다(시안 동일).
+// text-underline 의 밑줄은 글자 폭만 덮는다 — 시안에서 아이콘·간격을 뺀 글자 폭과 정확히 같다.
 // xl 은 시안에 없어 lg 와 같은 값이라 표에서 뺀다.
 const INLINE_SIZES = [
     {key: 'lg', label: 'lg', figma: 'large', font: 18, lineHeight: 27, icon: 16},
@@ -273,7 +277,7 @@ const DISABLED_COLUMNS = [
 
 // 인라인 텍스트 버튼(text·text-underline)은 문장 안에 섞이는 버튼이라 아이콘 전용으로 쓰지 않는다.
 // 시안 button_text 에 아이콘만 있는 케이스가 없고, 면 없는 아이콘 버튼은 plain 이 담당한다.
-// 밑줄형은 글자 없이 아이콘만 남기면 밑줄이 아이콘 아래에 홀로 그려져 더 어색하다.
+// 밑줄형은 글자 폭만 긋기 때문에 글자가 없으면 밑줄 자체가 사라져 text 와 구분되지 않는다.
 const UNDERLINE_VARIANT_KEYS: readonly string[] = ['text-underline']
 const INLINE_VARIANT_KEYS: readonly string[] = ['text', ...UNDERLINE_VARIANT_KEYS]
 

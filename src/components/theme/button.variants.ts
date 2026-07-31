@@ -32,13 +32,15 @@ const buttonVariants = cva(
                 text: 'text-label-foreground no-underline disabled:text-disabled-subtle disabled:opacity-100',
                 // PROJECT-STYLE: Figma button_text 는 default·hover·pressed·disabled 네 상태 모두 1px 밑줄이 있다.
                 // 밑줄 유무는 사용처마다 갈려서 text(없음)/text-underline(있음) 두 값으로 나눈다.
-                // 밑줄은 text-decoration 이 아니라 1px 가상요소로 그린다 — 버튼은 inline-flex 라 아이콘(flex 아이템)에는
-                // text-decoration 이 전파되지 않아 시안과 달리 아이콘 밑에서 밑줄이 끊긴다. 가상요소는 버튼 폭 전체를 덮어
-                // 시안처럼 아이콘까지 이어진다.
-                // 위치 = 세로 중앙(top-1/2)에서 글자 줄 높이의 절반(translate-y 0.5lh)만큼 내린 지점 = 글자 줄 아랫변.
-                // [SC-01] 예외: 줄 높이는 사이즈마다 다른 런타임 값이라 토큰·기존 유틸로 표현할 수 없어 lh 단위를 쓴다.
+                // 밑줄은 글자 폭만 덮고 아이콘 아래로는 이어지지 않는다 — 아이콘이 보이는 시안(40006650:30806)의
+                // left/right icon 케이스에서 밑줄 사각형 폭이 아이콘·간격을 뺀 글자 폭(47)과 정확히 같다.
+                // 그래서 가상요소가 아니라 text-decoration 을 쓴다 — 버튼이 inline-flex 라 아이콘(flex 아이템)에는
+                // 전파되지 않고 글자를 감싼 익명 flex 아이템에만 그어져, 폭이 저절로 시안과 같아진다.
+                // 세로 위치는 글자 줄 아랫변이다. under 가 baseline+descent 자리에 긋고, 거기서 남은 만큼
+                // 더 내리면 줄상자 아랫변이 된다(오프셋은 폰트 메트릭이라 size 축에서 지정).
+                // [SC-01] 예외: text-underline-position 은 대응하는 Tailwind 유틸이 없어 arbitrary property 로 쓴다.
                 'text-underline':
-                    'text-label-foreground relative after:absolute after:inset-x-0 after:top-1/2 after:h-px after:translate-y-[0.5lh] after:bg-current disabled:text-disabled-subtle disabled:opacity-100',
+                    'text-label-foreground underline decoration-1 [text-underline-position:under] disabled:text-disabled-subtle disabled:opacity-100',
             },
             size: {
                 default: 'h-control-h-sm min-h-11 gap-2 px-4',
@@ -86,28 +88,35 @@ const buttonVariants = cva(
             // 네 단계이고, 높이는 상자가 아니라 행간(18·21·24·27)이 정한다 — 문장 안에 섞이는 인라인 버튼이라
             // 컨트롤 높이를 주면 줄 높이가 어긋난다. 아이콘은 12px 단계만 12, 나머지는 16 이다.
             // 행간을 명시하는 이유 — Tailwind 의 text-* 기본 행간(28·20·16)은 시안(27·21·18)과 달라 상자와
-            // 줄 높이가 어긋나고, 밑줄이 translate-y-[0.5lh](=줄 아랫변) 기준이라 그만큼 밀린 자리에 그려진다.
-            // 위 블록이 높이를 h-auto 로 풀어 두므로 여기서 정한 행간이 곧 상자 높이가 된다.
+            // 줄 높이가 어긋난다. 위 블록이 높이를 h-auto 로 풀어 두므로 여기서 정한 행간이 곧 상자 높이가 된다.
+            //
+            // underline-offset 은 half-leading = (행간 - 폰트 콘텐츠 높이)/2 다. text-underline-position:under
+            // 가 콘텐츠 영역 아랫변에 긋기 때문에, 이만큼 더 내려야 시안 위치인 줄상자 아랫변에 온다.
+            // 브라우저가 콘텐츠 높이를 size 마다 정수 px 로 반올림해(Pretendard 실측 21·19·16·14) 폰트 크기에
+            // 정비례하지 않는다 — em 하나로 묶으면 최대 0.4px 어긋나므로 size 별로 정확한 값을 둔다.
+            // [SC-01] 예외: 폰트 메트릭에서 나온 값이라 디자인 토큰으로 승격할 대상이 아니고, Tailwind 의
+            // underline-offset 스케일(0·1·2·4·8px)에 2.5·3 이 없다.
+            //
             // xl 은 button_text 에 없다 — 컨트롤 높이 60 이 남아 깨지므로 빼지 않고 large 로 접는다.
             {
                 variant: ['text', 'text-underline'],
                 size: ['xl', 'lg'],
-                class: "text-lg leading-[--spacing(6.75)] [&_svg:not([class*='size-'])]:size-icon-sm",
+                class: "text-lg leading-[--spacing(6.75)] underline-offset-[3px] [&_svg:not([class*='size-'])]:size-icon-sm",
             },
             {
                 variant: ['text', 'text-underline'],
                 size: ['default', 'md'],
-                class: "text-base leading-6 [&_svg:not([class*='size-'])]:size-icon-sm",
+                class: "text-base leading-6 underline-offset-[2.5px] [&_svg:not([class*='size-'])]:size-icon-sm",
             },
             {
                 variant: ['text', 'text-underline'],
                 size: 'sm',
-                class: "text-sm leading-[--spacing(5.25)] [&_svg:not([class*='size-'])]:size-icon-sm",
+                class: "text-sm leading-[--spacing(5.25)] underline-offset-[2.5px] [&_svg:not([class*='size-'])]:size-icon-sm",
             },
             {
                 variant: ['text', 'text-underline'],
                 size: 'xs',
-                class: "text-xs leading-[--spacing(4.5)] [&_svg:not([class*='size-'])]:size-icon-xs",
+                class: "text-xs leading-[--spacing(4.5)] underline-offset-2 [&_svg:not([class*='size-'])]:size-icon-xs",
             },
         ],
         defaultVariants: {variant: 'default', size: 'default'},
