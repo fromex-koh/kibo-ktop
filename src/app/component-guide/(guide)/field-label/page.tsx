@@ -4,24 +4,36 @@ import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Field, FieldDescription, FieldError, FieldLabel} from '@/components/ui/field'
 import {Input} from '@/components/ui/input'
 
 export const metadata: Metadata = {title: '필드 라벨 (FieldLabel)'}
 
-const BASIC_CODE = `<Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
-  <FieldLabel htmlFor="company-name" className="font-bold text-foreground">기업명</FieldLabel>
-  <Input id="company-name" name="companyName" placeholder="기업명을 입력하세요" />
-  <FieldDescription>사업자등록증에 표시된 기업명을 입력해 주세요.</FieldDescription>
+const BASIC_CODE = `<Field className="max-w-90">
+  <FieldLabel htmlFor="company-name" className="font-bold text-foreground">
+    기업명
+  </FieldLabel>
+  <Input
+    id="company-name"
+    name="companyName"
+    placeholder="기업명을 입력하세요"
+    aria-describedby="company-name-description"
+  />
+  <FieldDescription id="company-name-description">
+    사업자등록증에 표시된 기업명을 입력해 주세요.
+  </FieldDescription>
 </Field>`
 
-const HORIZONTAL_CODE = `<Field orientation="horizontal" className={cn('w-fit gap-2', FIELD_FOCUS_RING)}>
+const HORIZONTAL_CODE = `<Field orientation="horizontal" className={cn('w-fit max-w-90', FIELD_FOCUS_RING)}>
   <Checkbox id="terms" name="terms" aria-labelledby="terms-label" />
-  <FieldLabel id="terms-label" htmlFor="terms">이용약관에 동의합니다</FieldLabel>
+  <FieldLabel id="terms-label" htmlFor="terms">
+    이용약관에 동의합니다
+  </FieldLabel>
 </Field>`
 
-const INVALID_CODE = `<Field data-invalid className={cn('max-w-90', FIELD_FOCUS_RING)}>
+const INVALID_CODE = `<Field data-invalid className="max-w-90">
   <FieldLabel htmlFor="manager-name" className="gap-1 font-bold text-foreground">
     담당자명
     <span aria-hidden="true" className="text-error-500">*</span>
@@ -29,123 +41,169 @@ const INVALID_CODE = `<Field data-invalid className={cn('max-w-90', FIELD_FOCUS_
   </FieldLabel>
   <Input
     id="manager-name"
-    placeholder="담당자명을 입력하세요"
+    name="managerName"
     required
-    aria-invalid
+    aria-invalid="true"
     aria-describedby="manager-name-error"
+    placeholder="담당자명을 입력하세요"
   />
   <FieldError id="manager-name-error">담당자명을 입력해 주세요.</FieldError>
-</Field>
+</Field>`
 
-<Field data-disabled="true" className="max-w-90">
+const DISABLED_CODE = `<Field data-disabled="true" className="max-w-90">
   <FieldLabel htmlFor="reception-agency" className="font-bold text-foreground">
     접수 기관
   </FieldLabel>
   <Input
     id="reception-agency"
+    name="receptionAgency"
     value="기술보증기금"
-    placeholder="접수 기관을 입력하세요"
     disabled
     readOnly
   />
-  <FieldDescription>비활성 상태에서는 수정할 수 없습니다.</FieldDescription>
 </Field>`
 
-const PROPS_ITEMS = [
+const LAYOUT_COLUMNS = [
+    {key: 'control', header: '컨트롤', align: 'start', rowHeader: true},
+    {key: 'orientation', header: 'Field 배치', align: 'start'},
+    {key: 'focus', header: '포커스링', align: 'start', wrap: true},
+] as const
+
+const LAYOUT_ROWS = [
     {
-        name: 'htmlFor',
-        desc: '연결할 폼 컨트롤의 id입니다. 라벨을 눌러도 해당 컨트롤이 포커스되거나 전환됩니다.',
-        def: '-',
-        control: 'string',
+        key: 'text-field',
+        cells: [
+            'Input · Select · Combobox · Textarea',
+            <code key="orientation">vertical (기본)</code>,
+            '라벨을 제외한 실제 입력 영역에만 표시합니다.',
+        ],
     },
     {
-        name: 'children',
-        desc: '라벨 텍스트와 필수 표시·아이콘 등 인라인 요소입니다.',
-        def: '-',
-        control: 'ReactNode',
+        key: 'choice',
+        cells: [
+            'Checkbox · Radio · Switch',
+            <code key="orientation">horizontal</code>,
+            'FIELD_FOCUS_RING으로 컨트롤과 라벨 전체를 감쌉니다.',
+        ],
+    },
+] as const
+
+const API_COLUMNS = [
+    {key: 'prop', header: 'Prop', align: 'start', rowHeader: true},
+    {key: 'type', header: '값', align: 'start'},
+    {key: 'note', header: '설명', align: 'start', wrap: true},
+] as const
+
+const API_ROWS = [
+    {
+        key: 'htmlFor',
+        cells: [
+            <code key="prop">htmlFor</code>,
+            <code key="type">string</code>,
+            '연결할 컨트롤의 id입니다. 라벨 클릭과 접근 가능한 이름을 연결합니다.',
+        ],
     },
     {
-        name: 'className',
-        desc: '입력 필드 제목의 font-bold·text-foreground 등 사용처 스타일을 확장합니다.',
-        def: '""',
-        control: 'string',
+        key: 'children',
+        cells: [
+            <code key="prop">children</code>,
+            <code key="type">ReactNode</code>,
+            '라벨 문구와 필수 표시 등 인라인 콘텐츠입니다.',
+        ],
     },
     {
-        name: 'id / aria-* / data-*',
-        desc: 'Label이 지원하는 HTML 속성을 그대로 전달합니다.',
-        def: '-',
-        control: 'LabelHTMLAttributes',
+        key: 'className',
+        cells: [
+            <code key="prop">className</code>,
+            <code key="type">string</code>,
+            '입력 필드 제목의 강조 스타일이나 간격을 확장합니다.',
+        ],
     },
 ] as const
 
 const FieldLabelGuidePage = () => (
     <GuidePageShell
         title="필드 라벨 (FieldLabel)"
-        description="Field 내에서 폼 컨트롤·설명·오류 메시지를 하나의 구조로 묶을 때 사용하는 Label 확장 구성 요소입니다."
+        description="Field 안에서 컨트롤의 라벨을 설명·오류·비활성 상태와 함께 구성하는 Label 확장 컴포넌트입니다."
     >
-        <BaseCard>
-            <section aria-labelledby="field-label-role" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="field-label-role" className="typo-h4-bold">
-                        Label과의 차이
+        <BaseCard variant="outlined">
+            <section aria-labelledby="field-label-basic" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="field-label-basic" className="typo-h4-bold">
+                        기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">FieldLabel</code>은 새로운 primitive가 아니라{' '}
-                        <code className="font-mono">Label</code>을 기반으로 하는 shadcn Field 전용 조합 요소입니다. 단독
-                        라벨만 필요하면 Label을 쓰고, 컨트롤과 <code className="font-mono">FieldDescription</code>·
-                        <code className="font-mono">FieldError</code>를 같이 관리할 때 FieldLabel을 사용합니다.
+                        <code>FieldLabel</code>의 <code>htmlFor</code>와 컨트롤의 <code>id</code>를 연결합니다. 설명은
+                        컨트롤의 <code>aria-describedby</code>로 함께 연결합니다.
                     </p>
                 </div>
-                <div className="border-border rounded-md border p-6">
-                    <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
-                        <FieldLabel htmlFor="field-label-company" className="text-foreground font-bold">
-                            기업명
-                        </FieldLabel>
-                        <Input id="field-label-company" name="companyName" placeholder="기업명을 입력하세요" />
-                        <FieldDescription>사업자등록증에 표시된 기업명을 입력해 주세요.</FieldDescription>
-                    </Field>
-                </div>
+                <Field className="max-w-90">
+                    <FieldLabel htmlFor="field-label-company" className="text-foreground font-bold">
+                        기업명
+                    </FieldLabel>
+                    <Input
+                        id="field-label-company"
+                        name="companyName"
+                        placeholder="기업명을 입력하세요"
+                        aria-describedby="field-label-company-description"
+                    />
+                    <FieldDescription id="field-label-company-description">
+                        사업자등록증에 표시된 기업명을 입력해 주세요.
+                    </FieldDescription>
+                </Field>
                 <CodeBlock code={BASIC_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="field-label-layout" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="field-label-layout" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="field-label-layout" className="typo-h4-bold">
-                        배치 (Orientation)
+                        배치와 포커스
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        Input·Select·Textarea는 기본 vertical Field, Checkbox·Radio·Switch와 인라인으로 배치할 때는{' '}
-                        <code className="font-mono">orientation=&quot;horizontal&quot;</code>을 사용합니다.
+                        컨트롤 유형에 따라 Field 배치와 포커스링 범위를 선택합니다.
                     </p>
                 </div>
-                <div className="border-border rounded-md border p-6">
-                    <Field orientation="horizontal" className={cn('w-fit gap-2', FIELD_FOCUS_RING)}>
-                        <Checkbox id="field-label-terms" name="terms" aria-labelledby="field-label-terms-label" />
-                        <FieldLabel id="field-label-terms-label" htmlFor="field-label-terms">
-                            이용약관에 동의합니다
-                        </FieldLabel>
-                    </Field>
-                </div>
+                <Table
+                    caption="컨트롤 유형별 Field 배치와 포커스링"
+                    columns={LAYOUT_COLUMNS}
+                    rows={LAYOUT_ROWS}
+                    size="md"
+                />
+                <Field orientation="horizontal" className={cn('w-fit max-w-90', FIELD_FOCUS_RING)}>
+                    <Checkbox
+                        id="field-label-terms"
+                        name="terms"
+                        defaultChecked
+                        aria-labelledby="field-label-terms-label"
+                    />
+                    <FieldLabel id="field-label-terms-label" htmlFor="field-label-terms">
+                        이용약관에 동의합니다
+                    </FieldLabel>
+                </Field>
                 <CodeBlock code={HORIZONTAL_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="field-label-message" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="field-label-message" className="typo-h4-bold">
-                        설명·오류·비활성
+            <section aria-labelledby="field-label-state" className="flex flex-col gap-8">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="field-label-state" className="typo-h4-bold">
+                        오류와 비활성
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        오류 상태는 Field의 <code className="font-mono">data-invalid</code>와 컨트롤의{' '}
-                        <code className="font-mono">aria-invalid</code>를 같이 연결합니다. 비활성 Field는{' '}
-                        <code className="font-mono">data-disabled</code>를 지정해 라벨에도 상태를 전달합니다.
+                        Field와 실제 컨트롤에 상태를 함께 지정해야 시각 표현과 접근성 정보가 일치합니다.
                     </p>
                 </div>
-                <div className="border-border grid gap-6 rounded-md border p-6 lg:grid-cols-2">
-                    <Field data-invalid className={cn('max-w-90', FIELD_FOCUS_RING)}>
+
+                <div className="flex flex-col gap-4">
+                    <h3 className="typo-body-xl-bold">오류</h3>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        Field에 <code>data-invalid</code>, 컨트롤에 <code>aria-invalid</code>를 지정하고 오류 메시지는{' '}
+                        <code>aria-describedby</code>로 연결합니다.
+                    </p>
+                    <Field data-invalid className="max-w-90">
                         <FieldLabel htmlFor="field-label-manager" className="text-foreground gap-1 font-bold">
                             담당자명
                             <span aria-hidden="true" className="text-error-500">
@@ -155,78 +213,50 @@ const FieldLabelGuidePage = () => (
                         </FieldLabel>
                         <Input
                             id="field-label-manager"
-                            placeholder="담당자명을 입력하세요"
+                            name="managerName"
                             required
-                            aria-invalid
+                            aria-invalid="true"
                             aria-describedby="field-label-manager-error"
+                            placeholder="담당자명을 입력하세요"
                         />
                         <FieldError id="field-label-manager-error">담당자명을 입력해 주세요.</FieldError>
                     </Field>
+                    <CodeBlock code={INVALID_CODE} language="tsx" copyLabel="복사" />
+                </div>
+
+                <div className="flex flex-col gap-4">
+                    <h3 className="typo-body-xl-bold">비활성</h3>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        Field에 <code>data-disabled</code>, 컨트롤에 <code>disabled</code>를 지정합니다.
+                    </p>
                     <Field data-disabled="true" className="max-w-90">
                         <FieldLabel htmlFor="field-label-disabled" className="text-foreground font-bold">
                             접수 기관
                         </FieldLabel>
                         <Input
                             id="field-label-disabled"
+                            name="receptionAgency"
                             value="기술보증기금"
-                            placeholder="접수 기관을 입력하세요"
                             disabled
                             readOnly
                         />
-                        <FieldDescription>비활성 상태에서는 수정할 수 없습니다.</FieldDescription>
                     </Field>
+                    <CodeBlock code={DISABLED_CODE} language="tsx" copyLabel="복사" />
                 </div>
-                <CodeBlock code={INVALID_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="field-label-props" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="field-label-props" className="typo-h4-bold">
-                        Props
+            <section aria-labelledby="field-label-api" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="field-label-api" className="typo-h4-bold">
+                        Props API
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        FieldLabel은 Label props를 그대로 상속하며 Field 조합을 위한 스타일을 추가합니다.
+                        FieldLabel은 Label props를 그대로 지원하며 Field 상태 스타일을 추가합니다.
                     </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">FieldLabel Props 목록</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Description
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Default
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Control
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {PROPS_ITEMS.map((item) => (
-                                <tr key={item.name} className="border-border border-b last:border-b-0">
-                                    <th scope="row" className="typo-body-l-medium text-primary px-4 py-3 font-mono">
-                                        {item.name}
-                                    </th>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{item.desc}</td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {item.def}
-                                    </td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {item.control}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table caption="FieldLabel Props API" columns={API_COLUMNS} rows={API_ROWS} size="md" />
             </section>
         </BaseCard>
     </GuidePageShell>
