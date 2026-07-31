@@ -13,8 +13,10 @@ const buttonVariants = cva(
                     'border-primary bg-primary text-primary-foreground interactive:hover:bg-primary-hover interactive:active:bg-primary-pressed disabled:border-control-disabled disabled:bg-control-disabled disabled:text-disabled disabled:opacity-100',
                 secondary:
                     'bg-secondary text-secondary-foreground border-secondary-strong interactive:hover:bg-secondary-hover interactive:hover:text-secondary-foreground-hover interactive:active:bg-secondary-pressed interactive:active:text-secondary-foreground-pressed disabled:bg-control-disabled disabled:border-disabled-subtle disabled:text-disabled disabled:opacity-100',
+                // PROJECT-STYLE: tertiary 의 disabled 글자만 시안이 gray.200(#b7bbbf) 이다 — 면이 흰색이라
+                // primary·secondary 의 회색 면(gray.100) 위 gray.300 보다 한 단계 더 옅게 둔다.
                 tertiary:
-                    'bg-tertiary text-tertiary-foreground border-tertiary-strong interactive:hover:bg-tertiary-hover interactive:active:bg-tertiary-pressed disabled:bg-control-disabled-subtle disabled:border-disabled-subtle disabled:text-disabled disabled:opacity-100',
+                    'bg-tertiary text-tertiary-foreground border-tertiary-strong interactive:hover:bg-tertiary-hover interactive:active:bg-tertiary-pressed disabled:bg-control-disabled-subtle disabled:border-disabled-subtle disabled:text-disabled-subtle disabled:opacity-100',
                 outline:
                     'border-input bg-background text-foreground interactive:hover:bg-accent aria-expanded:bg-accent disabled:border-disabled-subtle disabled:bg-control-disabled disabled:text-disabled',
                 ghost: 'text-foreground interactive:hover:bg-accent aria-expanded:bg-accent disabled:bg-control-disabled disabled:text-disabled',
