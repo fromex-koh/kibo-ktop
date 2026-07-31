@@ -4,7 +4,7 @@ import {useRef, useState} from 'react'
 import {Lock} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
-import {Input} from '@/components/ui/input'
+import {ClearableInput} from '@/components/composite/clearable-input'
 import {InputGroup, InputGroupAddon, InputGroupInput} from '@/components/ui/input-group'
 
 const InputFormDemo = () => {
@@ -57,7 +57,7 @@ const InputFormDemo = () => {
                     </span>
                     <span className="sr-only"> (필수)</span>
                 </FieldLabel>
-                <Input
+                <ClearableInput
                     ref={nameRef}
                     id="form-applicant-name"
                     name="applicantName"
@@ -80,7 +80,7 @@ const InputFormDemo = () => {
                     </span>
                     <span className="sr-only"> (필수)</span>
                 </FieldLabel>
-                <Input
+                <ClearableInput
                     ref={emailRef}
                     id="form-email"
                     name="email"
@@ -99,7 +99,7 @@ const InputFormDemo = () => {
                     신청 인원
                 </FieldLabel>
                 <div className="flex items-center gap-2">
-                    <Input
+                    <ClearableInput
                         ref={applicantCountRef}
                         id="form-applicant-count"
                         placeholder="0"

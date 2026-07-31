@@ -155,7 +155,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
       <span aria-hidden="true" className="text-error-500">*</span>
       <span className="sr-only"> (필수)</span>
     </FieldLabel>
-    <Input
+    <ClearableInput
       ref={nameRef}
       id="applicant-name"
       name="applicantName"
@@ -174,7 +174,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
       <span aria-hidden="true" className="text-error-500">*</span>
       <span className="sr-only"> (필수)</span>
     </FieldLabel>
-    <Input
+    <ClearableInput
       ref={emailRef}
       id="email"
       name="email"
@@ -190,7 +190,7 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
   <Field data-invalid={applicantCountError || undefined} className="max-w-90">
     <FieldLabel htmlFor="applicant-count" className="font-bold text-foreground">신청 인원</FieldLabel>
     <div className="flex items-center gap-2">
-      <Input
+      <ClearableInput
         ref={applicantCountRef}
         id="applicant-count"
         name="applicantCount"
@@ -538,6 +538,15 @@ const InputGuidePage = () => (
                         않으면 첫 번째 오류 Input으로 포커스를 이동합니다. 단위가 있는 number Input과 잠금 아이콘이 있는
                         readOnly Input도 함께 제출하며, readOnly 값은 수정할 수 없지만 disabled와 달리 FormData에
                         포함됩니다.
+                    </p>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        입력 필드는 <code className="font-mono">ClearableInput</code>으로 바꿔 넣었습니다.{' '}
+                        <code className="font-mono">name</code>·<code className="font-mono">required</code>·
+                        <code className="font-mono">aria-invalid</code>는 물론 <code className="font-mono">ref</code>도
+                        그대로 통해서, 제출 시 유효성 검사와 첫 오류 필드로의 포커스 이동이{' '}
+                        <code className="font-mono">Input</code>일 때와 똑같이 동작합니다. 지우기 버튼으로 값을 비우면{' '}
+                        <code className="font-mono">onChange</code>도 정상적으로 발생해 오류 표시가 함께 갱신됩니다.
+                        읽기전용 법인번호만 지울 수 없어 그대로 둡니다.
                     </p>
                 </div>
                 <InputFormDemo />

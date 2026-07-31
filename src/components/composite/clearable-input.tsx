@@ -1,6 +1,6 @@
 'use client'
 
-import {useRef, useState, type ChangeEvent, type ComponentPropsWithoutRef, type ReactNode} from 'react'
+import {useRef, useState, type ChangeEvent, type ComponentProps, type ReactNode} from 'react'
 import {X} from 'lucide-react'
 import {InputGroup, InputGroupAddon, InputGroupInput} from '@/components/ui/input-group'
 import {Icon} from '@/components/custom/icon'
@@ -16,7 +16,7 @@ import {cn} from '@/lib/utils'
 // PROJECT-COMPOSITE: 시안 text_input 의 focused 상태에 있는 지우기 버튼을 담은 입력이다.
 // Input 셸은 지우기 버튼을 알지 못하므로([SC-02] 구조 수정 금지) InputGroup 과 Button 을 조합한다.
 // 지우기 버튼은 값이 있고 필드에 포커스가 있는 동안에만 보인다(표시 조건은 theme 의 variant 참고).
-type ClearableInputProps = Omit<ComponentPropsWithoutRef<'input'>, 'size'> & {
+type ClearableInputProps = Omit<ComponentProps<'input'>, 'size'> & {
     /** 아이콘만 있는 버튼이라 대체 텍스트가 필요하다([5.1.1]) */
     clearLabel?: string
     /** 입력 요소에만 얹을 클래스 — 바깥 상자에는 className 을 쓴다 */
@@ -29,6 +29,7 @@ type ClearableInputProps = Omit<ComponentPropsWithoutRef<'input'>, 'size'> & {
 }
 
 const ClearableInput = ({
+    ref,
     className,
     inputClassName,
     endAddon,
@@ -67,7 +68,13 @@ const ClearableInput = ({
     return (
         <InputGroup className={cn(clearableInputGroupClassName, className)}>
             <InputGroupInput
-                ref={inputRef}
+                // 지우기에 쓸 내부 ref 와 바깥에서 넘어온 ref 를 함께 채운다 — Input 이 ref 를 그대로 넘기므로
+                // 바꿔 끼워도 사용처의 focus()·validity 검사가 그대로 동작해야 한다.
+                ref={(node) => {
+                    inputRef.current = node
+                    if (typeof ref === 'function') ref(node)
+                    else if (ref) ref.current = node
+                }}
                 onChange={handleChange}
                 value={value}
                 defaultValue={defaultValue}
