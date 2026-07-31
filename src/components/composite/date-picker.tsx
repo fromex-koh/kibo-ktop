@@ -1,13 +1,14 @@
 'use client'
 
 import type {ChangeEvent, ComponentPropsWithoutRef, MouseEvent} from 'react'
-import {Children, useRef, useState} from 'react'
+import {Children, isValidElement, useRef, useState} from 'react'
 import {format} from 'date-fns'
 import {ko} from 'date-fns/locale'
 import {CalendarIcon} from 'lucide-react'
 import {Calendar} from '@/components/ui/calendar'
 import {InputGroup} from '@/components/ui/input-group'
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
+import {SelectText, type SelectTextOption} from '@/components/composite/select-text'
 import {
     datePickerCalendarPopoverClassName,
     datePickerDisabledValueClassName,
@@ -41,7 +42,18 @@ type DatePickerProps = {
 
 // react-day-picker는 월·연도 변경 시 select DOM을 다시 렌더링해 네이티브 포커스가 body로 빠진다.
 // primitive를 수정하지 않고 Select 슬롯에서 새 DOM이 연결된 다음 동일 컨트롤로 포커스를 복원한다.
-const CalendarDropdownSelect = ({onChange, ...props}: ComponentPropsWithoutRef<'select'>) => {
+const CalendarDropdownSelect = ({onChange, children, className, ...props}: ComponentPropsWithoutRef<'select'>) => {
+    const options = Children.toArray(children).flatMap<SelectTextOption>((child) => {
+        if (!isValidElement<ComponentPropsWithoutRef<'option'>>(child)) return []
+        return [
+            {
+                value: String(child.props.value ?? ''),
+                label: String(child.props.children ?? ''),
+                disabled: child.props.disabled,
+            },
+        ]
+    })
+
     const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const accessibleName = event.currentTarget.getAttribute('aria-label')
         onChange?.(event)
@@ -53,7 +65,7 @@ const CalendarDropdownSelect = ({onChange, ...props}: ComponentPropsWithoutRef<'
         })
     }
 
-    return <select onChange={handleChange} {...props} />
+    return <SelectText {...props} options={options} size="sm" selectClassName={className} onChange={handleChange} />
 }
 
 const CalendarNavigationButton = ({onClick, ...props}: ComponentPropsWithoutRef<'button'>) => {
@@ -157,6 +169,11 @@ const DatePicker = ({
                         labels={{
                             labelMonthDropdown: () => '월 선택',
                             labelYearDropdown: () => '연도 선택',
+                        }}
+                        classNames={{
+                            dropdown_root: 'static rounded-none has-[:focus]:outline-0',
+                            dropdown: 'static inset-auto opacity-100',
+                            caption_label: 'sr-only',
                         }}
                         // react-day-picker 는 연도를 먼저 그리는데 시안은 월이 앞이다.
                         // 보기만 뒤집으면 읽는 순서가 어긋나므로(DOM 순서 = 읽기 순서 [KWCAG 7.3.1])

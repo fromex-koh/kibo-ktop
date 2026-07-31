@@ -7,7 +7,7 @@ import {
 } from '@/components/theme/select.variants'
 import {cn} from '@/lib/utils'
 
-type SelectTextOption = {value: string; label: string}
+type SelectTextOption = {value: string; label: string; disabled?: boolean}
 
 // PROJECT-COMPOSITE: 시안 select_text — 면·테두리 없이 글자와 화살표만 두는 선택 컨트롤이다.
 // 목록은 시스템 드롭다운이 그린다(네이티브 select). Radix 기반 Select 와 마크업·동작이 완전히 달라
@@ -35,7 +35,7 @@ const SelectText = ({options, size = 'lg', placeholder, className, selectClassNa
                 </option>
             ) : null}
             {options.map((option) => (
-                <option key={option.value} value={option.value}>
+                <option key={option.value} value={option.value} disabled={option.disabled}>
                     {option.label}
                 </option>
             ))}
