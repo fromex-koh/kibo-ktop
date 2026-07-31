@@ -48,7 +48,7 @@ const buttonVariants = cva(
                 xl: "h-control-h-xl min-h-11 min-w-control-min-w-lg gap-2 rounded-sm px-6 text-lg font-bold [&_svg:not([class*='size-'])]:size-6",
                 lg: "h-control-h-lg min-h-11 gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
                 md: "h-control-h-md min-h-11 min-w-control-min-w-sm gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
-                sm: "h-control-h-sm min-w-control-min-w-sm gap-1.5 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-5",
+                sm: "h-control-h-sm min-w-control-min-w-sm gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-5",
                 xs: "h-control-h-xs min-w-control-min-w-xs gap-1 rounded-2xs px-3 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
                 'icon-xl': "size-control-h-xl min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-xl",
                 'icon-lg': "size-control-h-lg min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-xl",
@@ -65,7 +65,7 @@ const buttonVariants = cva(
             {variant: 'default', size: 'md', class: 'font-bold disabled:font-medium'},
             {variant: 'default', size: 'sm', class: 'font-bold disabled:font-medium'},
             // PROJECT-STYLE: button_text 의 텍스트↔아이콘 간격은 네 size 모두 4px 이다(medium·large 확인).
-            // size 축이 6·8px 를 얹으므로 여기서 gap-1 로 되돌린다.
+            // size 축이 8px 를 얹으므로 여기서 gap-1 로 되돌린다.
             {variant: ['text', 'text-underline', 'link'], class: 'min-h-0 min-w-0 gap-1 p-0 font-normal'},
             // variant plain — 컨트롤 높이·최소 크기·패딩·라운드를 걷어내고 상자를 아이콘 크기에 맞춘다.
             // size 축이 rounded-sm 등을 뒤에 얹으므로 이 되돌림은 variant 가 아니라 여기(compound)에 둔다.
