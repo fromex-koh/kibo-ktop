@@ -10,7 +10,8 @@ const clearableInputAddonClassName = 'h-full p-0'
 // completed(값은 있으나 포커스 없음)에는 없다. display 가 아니라 visibility 로 감춰야 버튼을 누르는
 // 순간(포커스가 입력 → 버튼으로 옮겨가는 사이)에도 사라지지 않는다.
 // 애드온이 아니라 버튼에 거는 이유 — 애드온에 함께 놓인 다른 요소(검색 버튼 등)는 계속 보여야 한다.
-const clearableInputClearButtonClassName = 'invisible group-focus-within/input-group:visible'
+// rounded-full — 아이콘이 원이라 버튼도 같은 모양이어야 포커스링이 각지지 않는다(plain variant 는 rounded-none).
+const clearableInputClearButtonClassName = 'invisible rounded-full group-focus-within/input-group:visible'
 
 // 시안 icon/fill-circle-clear-gray — gray.200 원 안에 흰 X. Icon 의 solid 는 gray.700 원(강조용)이라
 // 같은 배지 모양에 옅은 색만 바꿔 쓴다.
