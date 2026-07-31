@@ -26,7 +26,7 @@ const SPACING_COLUMNS = [
 ] as const
 
 // 명명 크기(size) — base 배수가 아니라 이름으로 부르는 고정 크기다. 생성기가 --spacing-<이름> 으로
-// 등록하므로 간격과 같은 유틸리티 문법을 쓴다(h-control-h-lg · size-icon-md · w-sidebar-w).
+// 등록하므로 간격과 같은 유틸리티 문법을 쓴다(h-control-h-md · size-icon-md · w-sidebar-w).
 // tokens.json 에서 직접 그리므로 토큰을 추가하면 이 표에 자동으로 나온다.
 // 변수명은 토큰명에서 그대로 유도되므로(--ds-spacing-<이름>) 컬럼으로 두지 않고 설명에 적는다.
 const SIZE_COLUMNS = [
@@ -49,17 +49,54 @@ const resolveSizePx = (value: number | string, depth = 0): number | undefined =>
 const SpacingGuidePage = () => (
     <GuidePageShell
         title="간격 (Spacing)"
-        description={<>padding·margin·gap에 공통으로 사용하는 base {tokens.spacingBase}px × N 간격 스케일입니다.</>}
+        description={
+            <>
+                {tokens.spacingBase}px 배수 간격과 <code>tokens.json</code>의 고정 크기 토큰을 자동으로 큐레이션합니다.
+            </>
+        }
     >
-        <BaseCard>
-            <section aria-labelledby="spacing-scale" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                    <h2 id="spacing-scale" className="typo-h4-bold text-foreground">
-                        Spacing scale
+        <BaseCard variant="outlined">
+            <section aria-labelledby="spacing-usage" className="flex flex-col gap-4">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="spacing-usage" className="typo-h4-bold text-foreground">
+                        사용 기준
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        아래 표는 자주 사용하는 1~20 구간을 큐레이션합니다. 같은 숫자를 padding·margin·gap과 방향별
-                        유틸리티에 공통 적용합니다.
+                        용도에 따라 숫자 간격과 이름이 있는 크기 토큰을 구분해 사용합니다.
+                    </p>
+                </div>
+                <dl className="grid gap-3 md:grid-cols-3">
+                    <div className="border-border flex flex-col gap-2 rounded-md border p-4">
+                        <dt className="typo-body-l-medium text-foreground">여백과 요소 간격</dt>
+                        <dd className="typo-body-l-regular text-foreground-subtle">
+                            <code>p-4</code> · <code>mx-6</code> · <code>gap-8</code>처럼 숫자 유틸리티를 사용합니다.
+                        </dd>
+                    </div>
+                    <div className="border-border flex flex-col gap-2 rounded-md border p-4">
+                        <dt className="typo-body-l-medium text-foreground">컴포넌트 고정 크기</dt>
+                        <dd className="typo-body-l-regular text-foreground-subtle">
+                            <code>h-control-h-md</code> · <code>size-icon-md</code>처럼 의미가 있는 토큰을 사용합니다.
+                        </dd>
+                    </div>
+                    <div className="border-border flex flex-col gap-2 rounded-md border p-4">
+                        <dt className="typo-body-l-medium text-foreground">직접 계산이 필요한 경우</dt>
+                        <dd className="typo-body-l-regular text-foreground-subtle">
+                            유틸리티로 표현할 수 없을 때만 <code>var(--ds-spacing-토큰명)</code>을 참조합니다.
+                        </dd>
+                    </div>
+                </dl>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="spacing-scale" className="flex flex-col gap-4">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="spacing-scale" className="typo-h4-bold text-foreground">
+                        간격 유틸리티
+                    </h2>
+                    <p className="typo-body-l-regular text-foreground-subtle">
+                        숫자 하나는 {tokens.spacingBase}px입니다. 아래 표에서 1~20 구간의 padding·margin·gap 클래스를
+                        바로 복사할 수 있습니다.
                     </p>
                 </div>
                 <Table
@@ -97,37 +134,36 @@ const SpacingGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="size-scale" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="size-scale" className="typo-h4-bold text-foreground">
-                        명명 크기 (size)
+                        고정 크기 토큰
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        배수가 아니라 이름으로 부르는 고정 크기입니다. 간격과 같은 스케일에 등록되어 어떤 크기·간격
-                        유틸리티에나 이름을 붙여 씁니다 — <code>size-icon-md</code> · <code>h-control-h-lg</code> ·{' '}
-                        <code>w-sidebar-w</code>. CSS 에서 직접 참조할 때의 변수명은{' '}
-                        <code>--ds-spacing-&lt;이름&gt;</code>입니다.
+                        아이콘·컨트롤·레이아웃처럼 의미와 값이 함께 유지돼야 하는 크기입니다. 토큰명 앞에{' '}
+                        <code>size-</code> · <code>h-</code> · <code>w-</code>를 붙여 사용합니다.
+                    </p>
+                    <p className="typo-body-l-regular text-foreground-subtle">
+                        컨트롤 높이는 Figma와 1:1로 <code>xl 60 · lg 52 · md 48 · sm 40 · xs 32px</code>입니다.
                     </p>
                 </div>
+                <h3 className="typo-body-l-medium text-foreground">주요 예외 토큰</h3>
                 <dl className="bg-background border-border grid gap-3 rounded-md border p-4 md:grid-cols-2">
                     <div className="flex flex-col gap-1">
                         <dt className="typo-body-l-medium text-foreground font-mono">action-check</dt>
                         <dd className="typo-body-l-regular text-foreground-subtle">
-                            ActionCheck의 기본 크기 150px입니다. 단독 사용과 ViewportFitLayout의 최대 장식 크기가
-                            공유합니다.
+                            ActionCheck와 ViewportFitLayout 장식의 최대 크기인 150px입니다.
                         </dd>
                     </div>
                     <div className="flex flex-col gap-1">
                         <dt className="typo-body-l-medium text-foreground font-mono">viewport-fit-decorative-min</dt>
                         <dd className="typo-body-l-regular text-foreground-subtle">
-                            낮은 화면에서 완료 애니메이션 같은 장식 요소가 줄어들 수 있는 최소 크기 96px입니다.
+                            낮은 화면에서 장식 요소가 축소될 수 있는 최소 크기인 96px입니다.
                         </dd>
                     </div>
                     <div className="flex flex-col gap-1">
                         <dt className="typo-body-l-medium text-foreground font-mono">modal-max-h</dt>
                         <dd className="typo-body-l-regular text-foreground-subtle">
-                            다이얼로그의 최대 높이 <code>80dvh</code>입니다. 시안의 &ldquo;화면 높이 기준 20%
-                            여백&rdquo; 을 그대로 옮긴 값으로, 내용이 더 길면 모달이 화면 밖으로 나가는 대신 안에서
-                            스크롤됩니다. 화면 기준 값이라 px 로 환산되지 않고 표에도 값 그대로 표시됩니다.
+                            다이얼로그 최대 높이 <code>80dvh</code>입니다. 초과 콘텐츠는 내부에서 스크롤됩니다.
                         </dd>
                     </div>
                 </dl>
