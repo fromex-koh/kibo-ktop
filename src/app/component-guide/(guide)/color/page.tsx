@@ -30,11 +30,41 @@ const CHECKERBOARD =
 const groupOf = (hue: string): string =>
     Object.entries(tokens.primitiveGroups).find(([, hues]) => hues.includes(hue))?.[0] ?? hue
 
-type SwatchRow = {name: string; cssVar: string; value: string}
+// Figma "01 Primitive" 팔레트 스트립의 용도 표식(프레임 40006650:29062·29142·29189·29344)을 그대로 옮긴다.
+// 각 hue 에서 시맨틱 계층이 참조하는 대표 단계 안내이며, 그레이의 background·surface(white~100)와
+// disabled(200~300)는 시안이 구간 브래킷으로 묶어 표시하므로 구간의 모든 단계에 같은 표식을 단다.
+// 시안 스트립에 없는 단계(각 hue 의 10 등)는 표식이 없다.
+const USAGE_MARKS: Record<string, Record<string, string>> = {
+    blue: {'50': 'surface', '500': 'base', '600': 'text'},
+    navy: {'50': 'surface', '500': 'base', '600': 'text'},
+    green: {'50': 'surface', '500': 'base', '800': 'text'},
+    orange: {'50': 'surface', '500': 'base', '700': 'text'},
+    purple: {'50': 'surface', '500': 'base', '600': 'text'},
+    mint: {'50': 'surface', '500': 'base', '800': 'text'},
+    gray: {
+        '50': 'background, surface',
+        '100': 'background, surface',
+        '200': 'disabled',
+        '300': 'disabled',
+        '500': 'subtle',
+        '700': 'base',
+        '900': 'bolder',
+    },
+    error: {'500': 'base'},
+    warning: {'300': 'base'},
+    success: {'500': 'base'},
+    info: {'500': 'base'},
+}
+
+// 그레이 스트립의 background·surface 구간은 common.white 에서 시작한다 — common 표에도 같은 표식을 단다.
+const COMMON_USAGE_MARKS: Record<string, string> = {white: 'background, surface'}
+
+type SwatchRow = {name: string; cssVar: string; value: string; usage?: string}
 
 const COLOR_TABLE_COLUMNS = [
     {key: 'variable', header: '변수', align: 'start', rowHeader: true},
     {key: 'value', header: '값', align: 'start'},
+    {key: 'usage', header: '용도', align: 'start'},
 ] as const
 
 // 팔레트 하나 = 공용 Table의 sm 크기. 투명 값도 보이도록 스와치 뒤에 체커보드를 둔다.
@@ -47,6 +77,9 @@ const ColorTable = ({title, caption, rows}: {title: ReactNode; caption: string; 
             columns={COLOR_TABLE_COLUMNS}
             rows={rows.map((row) => ({
                 key: row.name,
+                // 용도가 있는 행만 옅은 포인트 면으로 표시한다 — primary-subtle 은 light 에서 blue.50,
+                // dark 에서 반사값이라 본문 대비를 해치지 않는다([PB-06]).
+                className: row.usage ? 'bg-primary-subtle/60' : undefined,
                 cells: [
                     <span key="variable" className="text-foreground font-mono">
                         {row.cssVar.slice(4, -1)}
@@ -60,6 +93,9 @@ const ColorTable = ({title, caption, rows}: {title: ReactNode; caption: string; 
                             <span className="absolute inset-0" style={{background: row.cssVar}} />
                         </span>
                         <span className="text-muted-foreground font-mono whitespace-nowrap">{row.value}</span>
+                    </span>,
+                    <span key="usage" className="text-muted-foreground whitespace-nowrap">
+                        {row.usage}
                     </span>,
                 ],
             }))}
@@ -152,6 +188,7 @@ const ColorGuidePage = () => (
                                         name: step,
                                         cssVar: `var(--raw-${hue}-${step})`,
                                         value: hexToRgba(hex),
+                                        usage: USAGE_MARKS[hue]?.[step],
                                     }))}
                                 />
                             ))}
@@ -178,6 +215,7 @@ const ColorGuidePage = () => (
                                 name,
                                 cssVar: `var(--raw-common-${name})`,
                                 value: display(value),
+                                usage: COMMON_USAGE_MARKS[name],
                             }))}
                         />
                         <ColorTable

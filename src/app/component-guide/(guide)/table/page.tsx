@@ -120,7 +120,7 @@ const PROPS_ITEMS = [
     [
         'Table',
         'rows',
-        '행 배열. { key, cells }. cells 는 열 순서대로의 ReactNode(배지·버튼 등 가능).',
+        '행 배열. { key, cells, className? }. cells 는 열 순서대로의 ReactNode(배지·버튼 등 가능)이고, className 은 강조 등 행 단위 스타일입니다.',
         '-',
         'TableRowData[]',
     ],

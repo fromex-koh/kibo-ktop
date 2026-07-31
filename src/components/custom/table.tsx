@@ -91,6 +91,8 @@ type TableRowData = {
     key: string
     // 열 순서대로의 셀. 문자열·배지·버튼 등 ReactNode.
     cells: readonly ReactNode[]
+    // 행 강조 등 행 단위 스타일. 기본 행 스타일 뒤에 병합된다(예: 색상 가이드의 용도 표시 행).
+    className?: string
 }
 
 type TableProps = {
@@ -133,7 +135,7 @@ const Table = ({caption, columns, rows, variant = 'line', size = 'lg', className
                 </thead>
                 <tbody>
                     {rows.map((row) => (
-                        <tr key={row.key} className={slots.bodyRow}>
+                        <tr key={row.key} className={cn(slots.bodyRow, row.className)}>
                             {row.cells.map((cell, ci) => {
                                 const col = columns[ci]
                                 const cellClass = cn(
