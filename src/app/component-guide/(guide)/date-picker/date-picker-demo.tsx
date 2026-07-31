@@ -2,8 +2,6 @@
 
 import type {ReactNode} from 'react'
 import {useState} from 'react'
-import {cn} from '@/lib/utils'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {DatePicker} from '@/components/composite/date-picker'
 import {Field, FieldDescription, FieldError, FieldLabel} from '@/components/ui/field'
 
@@ -13,7 +11,7 @@ const FIELD_LABEL_CLASS = 'text-foreground font-bold'
 const DatePickerDemo = () => {
     const [date, setDate] = useState<Date | undefined>(undefined)
     return (
-        <Field className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+        <Field className={FIELD_DEMO_CLASS}>
             <FieldLabel htmlFor="demo-date" className={FIELD_LABEL_CLASS}>
                 날짜 선택
             </FieldLabel>
@@ -23,8 +21,29 @@ const DatePickerDemo = () => {
     )
 }
 
+export const DatePickerSizesDemo = () => {
+    const [lgDate, setLgDate] = useState<Date | undefined>(undefined)
+    const [mdDate, setMdDate] = useState<Date | undefined>(undefined)
+    return (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <Field className={FIELD_DEMO_CLASS}>
+                <FieldLabel htmlFor="size-lg-date" className={FIELD_LABEL_CLASS}>
+                    lg (default · 48px)
+                </FieldLabel>
+                <DatePicker id="size-lg-date" value={lgDate} onChange={setLgDate} />
+            </Field>
+            <Field className={FIELD_DEMO_CLASS}>
+                <FieldLabel htmlFor="size-md-date" className={FIELD_LABEL_CLASS}>
+                    md (40px)
+                </FieldLabel>
+                <DatePicker id="size-md-date" size="md" value={mdDate} onChange={setMdDate} />
+            </Field>
+        </div>
+    )
+}
+
 const StateField = ({id, label, children, error}: {id: string; label: string; children: ReactNode; error?: string}) => (
-    <Field data-invalid={error ? true : undefined} className={cn(FIELD_DEMO_CLASS, FIELD_FOCUS_RING)}>
+    <Field data-invalid={error ? true : undefined} className={FIELD_DEMO_CLASS}>
         <FieldLabel htmlFor={id} className={FIELD_LABEL_CLASS}>
             {label}
         </FieldLabel>

@@ -14,6 +14,7 @@ import {
     datePickerGroupClassName,
     datePickerIconClassName,
     datePickerPlaceholderClassName,
+    datePickerSizeClassName,
     datePickerTriggerClassName,
     datePickerValueClassName,
 } from '@/components/theme/date-picker.variants'
@@ -33,6 +34,8 @@ type DatePickerProps = {
     form?: string
     required?: boolean
     onInvalid?: ComponentPropsWithoutRef<'input'>['onInvalid']
+    /** 시안 date_input 의 large(48px) · medium(40px). Select 와 같은 축이다. */
+    size?: 'lg' | 'md'
     className?: string
 } & Pick<ComponentPropsWithoutRef<'button'>, 'aria-invalid' | 'aria-describedby'>
 
@@ -80,6 +83,7 @@ const DatePicker = ({
     form,
     required,
     onInvalid,
+    size = 'lg',
     className,
     ...props
 }: DatePickerProps) => {
@@ -109,7 +113,7 @@ const DatePicker = ({
     return (
         <>
             <Popover open={open} onOpenChange={handleOpenChange}>
-                <InputGroup className={cn(datePickerGroupClassName, className)}>
+                <InputGroup className={cn(datePickerGroupClassName, datePickerSizeClassName[size], className)}>
                     <PopoverTrigger asChild>
                         <button
                             ref={triggerRef}

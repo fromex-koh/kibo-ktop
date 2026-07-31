@@ -2,114 +2,60 @@ import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
 import DatePickerFormDemo from './date-picker-form-demo'
-import DatePickerDemo, {DatePickerStatesDemo} from './date-picker-demo'
+import DatePickerDemo, {DatePickerSizesDemo, DatePickerStatesDemo} from './date-picker-demo'
 
 export const metadata: Metadata = {title: '데이트피커 (DatePicker)'}
 
-const USAGE_CODE = `const [date, setDate] = useState<Date>()
+const BASIC_CODE = `const [date, setDate] = useState<Date>()
 
-<Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
-  <FieldLabel htmlFor="date" className="font-bold text-foreground">날짜 선택</FieldLabel>
-  <DatePicker id="date" value={date} onChange={setDate} aria-describedby="date-help" />
-  <FieldDescription id="date-help">달력에서 날짜를 선택해 주세요.</FieldDescription>
+<Field className="max-w-90">
+  <FieldLabel htmlFor="visit-date" className="font-bold text-foreground">
+    방문 예정일
+  </FieldLabel>
+  <DatePicker
+    id="visit-date"
+    name="visitDate"
+    value={date}
+    onChange={setDate}
+    aria-describedby="visit-date-description"
+  />
+  <FieldDescription id="visit-date-description">
+    달력에서 날짜를 선택해 주세요.
+  </FieldDescription>
 </Field>`
 
-const PROPS_ITEMS = [
-    {
-        name: 'value',
-        desc: '선택된 날짜(제어). 넘기면 표시 값은 항상 이 값을 따릅니다. 생략하면 컴포넌트가 선택 값을 스스로 관리합니다.',
-        def: '-',
-        control: 'Date',
-    },
-    {
-        name: 'defaultValue',
-        desc: '비제어 사용 시 초기 선택 날짜입니다. value 없이 폼에 그대로 꽂아 쓸 때 사용합니다.',
-        def: '-',
-        control: 'Date',
-    },
-    {name: 'onChange', desc: '날짜를 선택하거나 해제할 때 호출됩니다.', def: '-', control: '(date?: Date) => void'},
-    {
-        name: 'placeholder',
-        desc: '값이 없을 때 표시되는 안내 문구입니다. 라벨을 대체하지 않습니다.',
-        def: "'연도-월-일'",
-        control: 'string',
-    },
-    {
-        name: 'name / form / required',
-        desc: 'FormData 필드 이름, 외부 form 연결, 네이티브 필수 검증을 지정합니다. 날짜는 yyyy-MM-dd 형식으로 제출됩니다.',
-        def: '- / - / false',
-        control: 'string / string / boolean',
-    },
-    {
-        name: 'onInvalid',
-        desc: '네이티브 required 검증이 실패했을 때 호출됩니다. FieldError 상태를 연결할 때 사용합니다.',
-        def: '-',
-        control: 'FormEventHandler<HTMLInputElement>',
-    },
-    {
-        name: 'disabled',
-        desc: '비활성. 달력을 열 수 없고 FormData 제출에서도 제외됩니다.',
-        def: 'false',
-        control: 'boolean',
-    },
-    {
-        name: 'readOnly',
-        desc: '읽기전용. 달력을 열거나 값을 바꿀 수 없지만 값은 FormData에 포함됩니다.',
-        def: 'false',
-        control: 'boolean',
-    },
-    {
-        name: 'id / aria-invalid / aria-describedby',
-        desc: 'FieldLabel과 오류 메시지를 트리거에 연결하고 오류 상태를 전달합니다.',
-        def: '-',
-        control: 'string / boolean / string',
-    },
-    {
-        name: 'className',
-        desc: 'InputGroup 기반 루트 컨테이너의 레이아웃을 확장합니다.',
-        def: '""',
-        control: 'string',
-    },
-] as const
+const SIZE_CODE = `{/* 일반 폼: 48px */}
+<DatePicker size="lg" />
 
-const INTERACTION_ITEMS = [
-    {
-        title: '패널·선택 월',
-        description: '패널은 z-popover에 열립니다. 다시 열면 선택한 날짜가 속한 월을 표시합니다.',
-    },
-    {
-        title: '월 이동·포커스',
-        description:
-            '월·연도 select와 좌우 이동 버튼은 월 변경 후 동일한 컨트롤로 포커스를 복원합니다. 모든 컨트롤은 공통 2px 포커스 링을 사용합니다.',
-    },
-    {
-        title: '값·폼 제출',
-        description: '선택값은 yyyy-MM-dd로 표시합니다. name을 지정하면 같은 값이 FormData에 포함됩니다.',
-    },
-    {
-        title: '확장 범위',
-        description:
-            'Calendar primitive는 수정하지 않습니다. DatePicker에서 DayPicker의 select·이동 버튼 슬롯만 확장합니다.',
-    },
-] as const
+{/* 표·필터 등 밀도 높은 영역: 40px */}
+<DatePicker size="md" />`
+
+const STATE_CODE = `{/* 기본 */}
+<DatePicker placeholder="연도-월-일" />
+
+{/* 값 입력됨 */}
+<DatePicker defaultValue={new Date(2026, 6, 13)} />
+
+{/* 오류 */}
+<DatePicker
+  aria-invalid="true"
+  aria-describedby="visit-date-error"
+/>
+
+{/* 읽기전용: 제출값 유지 */}
+<DatePicker name="applicationDate" value={applicationDate} readOnly />
+
+{/* 비활성: 제출에서 제외 */}
+<DatePicker value={applicationDate} disabled />`
 
 const FORM_CODE = `const [visitDate, setVisitDate] = useState<Date>()
 const [visitDateError, setVisitDateError] = useState(false)
 
-const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-  event.preventDefault()
-  const formData = new FormData(event.currentTarget)
-  console.log(Object.fromEntries(formData))
-}
-
 <form onSubmit={handleSubmit}>
-  <Field data-invalid={visitDateError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
-    <FieldLabel htmlFor="visit-date" className="gap-1 font-bold text-foreground">
-      방문 예정일
-      <span aria-hidden="true" className="text-error-500">*</span>
-      <span className="sr-only"> (필수)</span>
-    </FieldLabel>
+  <Field data-invalid={visitDateError || undefined} className="max-w-90">
+    <FieldLabel htmlFor="visit-date">방문 예정일</FieldLabel>
     <DatePicker
       id="visit-date"
       name="visitDate"
@@ -123,94 +69,203 @@ const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
       aria-invalid={visitDateError || undefined}
       aria-describedby={visitDateError ? 'visit-date-error' : undefined}
     />
-    {visitDateError ? <FieldError id="visit-date-error">방문 예정일을 선택해 주세요.</FieldError> : null}
+    {visitDateError ? (
+      <FieldError id="visit-date-error">
+        방문 예정일을 선택해 주세요.
+      </FieldError>
+    ) : null}
   </Field>
 
-  <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
-    <FieldLabel htmlFor="application-date" className="font-bold text-foreground">신청일</FieldLabel>
-    <DatePicker id="application-date" name="applicationDate" value={applicationDate} readOnly />
-  </Field>
-
-  <Button type="submit" variant="default" size="sm">날짜 선택 확인</Button>
+  <Button type="submit">날짜 선택 확인</Button>
 </form>`
+
+const SIZE_COLUMNS = [
+    {key: 'size', header: 'Size', align: 'start', rowHeader: true},
+    {key: 'height', header: '높이', align: 'start'},
+    {key: 'use', header: '사용 기준', align: 'start', wrap: true},
+] as const
+
+const SIZE_ROWS = [
+    {
+        key: 'lg',
+        cells: [<code key="size">lg</code>, '48px', '일반적인 폼 입력 — 기본값'],
+    },
+    {
+        key: 'md',
+        cells: [<code key="size">md</code>, '40px', '표·필터 등 밀도 높은 영역'],
+    },
+] as const
+
+const STATE_COLUMNS = [
+    {key: 'state', header: '상태', align: 'start', rowHeader: true},
+    {key: 'prop', header: '지정 방법', align: 'start'},
+    {key: 'behavior', header: '동작', align: 'start', wrap: true},
+] as const
+
+const STATE_ROWS = [
+    {
+        key: 'invalid',
+        cells: [
+            '오류',
+            <code key="prop">aria-invalid</code>,
+            'Field에도 data-invalid를 지정하고 메시지를 aria-describedby로 연결합니다.',
+        ],
+    },
+    {
+        key: 'readonly',
+        cells: ['읽기전용', <code key="prop">readOnly</code>, '달력은 열리지 않지만 값과 폼 제출은 유지됩니다.'],
+    },
+    {
+        key: 'disabled',
+        cells: ['비활성', <code key="prop">disabled</code>, '포커스·달력 열기·폼 제출에서 제외됩니다.'],
+    },
+] as const
+
+const API_COLUMNS = [
+    {key: 'prop', header: 'Prop', align: 'start', rowHeader: true},
+    {key: 'type', header: '값', align: 'start', wrap: true},
+    {key: 'default', header: '기본값', align: 'start'},
+    {key: 'note', header: '설명', align: 'start', wrap: true},
+] as const
+
+const API_ROWS = [
+    {
+        key: 'value',
+        cells: [
+            <code key="prop">value / defaultValue</code>,
+            <code key="type">Date | undefined</code>,
+            '-',
+            'value는 제어 방식, defaultValue는 비제어 방식의 초기 날짜입니다.',
+        ],
+    },
+    {
+        key: 'onChange',
+        cells: [
+            <code key="prop">onChange</code>,
+            <code key="type">(date?: Date) =&gt; void</code>,
+            '-',
+            '날짜를 선택하거나 해제할 때 호출됩니다.',
+        ],
+    },
+    {
+        key: 'size',
+        cells: [
+            <code key="prop">size</code>,
+            <code key="type">lg | md</code>,
+            <code key="default">lg</code>,
+            '트리거 높이를 선택합니다.',
+        ],
+    },
+    {
+        key: 'form',
+        cells: [
+            <code key="prop">name / form / required</code>,
+            <code key="type">string / string / boolean</code>,
+            '- / - / false',
+            '날짜를 yyyy-MM-dd 형식으로 FormData에 제출하고 필수 조건을 지정합니다.',
+        ],
+    },
+    {
+        key: 'invalid',
+        cells: [
+            <code key="prop">onInvalid</code>,
+            <code key="type">FormEventHandler&lt;HTMLInputElement&gt;</code>,
+            '-',
+            'required 검증 실패 시 오류 상태를 갱신합니다. 포커스는 실제 트리거로 이동합니다.',
+        ],
+    },
+    {
+        key: 'placeholder',
+        cells: [
+            <code key="prop">placeholder</code>,
+            <code key="type">string</code>,
+            '연도-월-일',
+            '값이 없을 때 표시하며 FieldLabel을 대신할 수 없습니다.',
+        ],
+    },
+    {
+        key: 'state',
+        cells: [
+            <code key="prop">disabled / readOnly</code>,
+            <code key="type">boolean</code>,
+            'false',
+            '비활성 또는 읽기전용 상태를 지정합니다.',
+        ],
+    },
+    {
+        key: 'a11y',
+        cells: [
+            <code key="prop">id / aria-invalid / aria-describedby</code>,
+            <code key="type">string / boolean / string</code>,
+            '-',
+            'FieldLabel과 오류 또는 설명 메시지를 트리거에 연결합니다.',
+        ],
+    },
+] as const
 
 const DatePickerGuidePage = () => (
     <GuidePageShell
         title="데이트피커 (DatePicker)"
-        description="InputGroup·Popover·Calendar를 조합한 날짜 입력 컴포넌트입니다."
+        description="달력에서 단일 날짜를 선택하고 yyyy-MM-dd 형식으로 표시·제출하는 날짜 입력 컴포넌트입니다."
     >
-        <BaseCard>
-            <section aria-labelledby="date-picker-demo" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="date-picker-demo" className="typo-h4-bold">
-                        사용 예시
+        <BaseCard variant="outlined">
+            <section aria-labelledby="date-picker-basic" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="date-picker-basic" className="typo-h4-bold">
+                        기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">Field</code> 안에 <code className="font-mono">FieldLabel</code>,{' '}
-                        <code className="font-mono">DatePicker</code>,{' '}
-                        <code className="font-mono">FieldDescription</code>을 조합합니다. 트리거는{' '}
-                        <code className="font-mono">InputGroup</code>을 사용해 Input과 같은 스타일을 공유하며, 선택값은{' '}
-                        <code className="font-mono">yyyy-MM-dd</code>로 표시됩니다.
+                        <code>FieldLabel</code>의 <code>htmlFor</code>와 DatePicker의 <code>id</code>를 연결합니다.{' '}
+                        <code>value + onChange</code>는 제어 방식, <code>defaultValue</code>는 비제어 방식입니다.
                     </p>
                 </div>
                 <DatePickerDemo />
-                <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+                <CodeBlock code={BASIC_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="date-picker-state" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="date-picker-state" className="typo-h4-bold">
-                        상태 (State)
+            <section aria-labelledby="date-picker-size" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="date-picker-size" className="typo-h4-bold">
+                        Size 선택
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        기본·값 입력됨·오류·읽기전용·비활성 상태입니다. 오류가 있으면 동일 Field 안에{' '}
-                        <code className="font-mono">FieldError</code>를 추가합니다.{' '}
-                        <code className="font-mono">readOnly</code>는 값은 그대로 보이되 달력이 열리지 않고,{' '}
-                        <code className="font-mono">disabled</code>는 클릭과 포커스가 막힙니다. 프로젝트 DatePicker는
-                        Input과 같은 48px 높이로 고정되어 별도의 size prop을 제공하지 않습니다.
+                        Select와 같은 높이 축을 사용합니다. 같은 폼 행에서는 인접한 컨트롤과 동일한 size를 선택합니다.
                     </p>
                 </div>
-                <DatePickerStatesDemo />
+                <Table caption="DatePicker size 사용 기준" columns={SIZE_COLUMNS} rows={SIZE_ROWS} size="md" />
+                <DatePickerSizesDemo />
+                <CodeBlock code={SIZE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="date-picker-interaction" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="date-picker-interaction" className="typo-h4-bold">
-                        동작·포커스
+            <section aria-labelledby="date-picker-state" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="date-picker-state" className="typo-h4-bold">
+                        상태와 오류
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">구현과 연동 시 확인할 핵심 동작입니다.</p>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        기본·값 입력됨·오류·읽기전용·비활성 상태를 비교합니다. 포커스링은 라벨을 제외한 트리거에만
+                        표시됩니다.
+                    </p>
                 </div>
-                <dl className="grid gap-4 md:grid-cols-2">
-                    {INTERACTION_ITEMS.map((item) => (
-                        <div
-                            key={item.title}
-                            className="border-border bg-muted flex flex-col gap-1 rounded-lg border p-4"
-                        >
-                            <dt className="typo-body-xl-bold text-foreground">{item.title}</dt>
-                            <dd className="typo-body-l-regular text-muted-foreground">{item.description}</dd>
-                        </div>
-                    ))}
-                </dl>
+                <Table caption="DatePicker 상태 처리 기준" columns={STATE_COLUMNS} rows={STATE_ROWS} size="md" />
+                <DatePickerStatesDemo />
+                <CodeBlock code={STATE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="date-picker-form" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="date-picker-form" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="date-picker-form" className="typo-h4-bold">
                         폼 제출
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">name</code>을 지정하면 선택 날짜가{' '}
-                        <code className="font-mono">yyyy-MM-dd</code> 문자열로 FormData에 포함됩니다. 예시는 필수 날짜를
-                        네이티브 <code className="font-mono">required</code>로 검증하고{' '}
-                        <code className="font-mono">onInvalid</code>로 <code className="font-mono">FieldError</code>를
-                        노출합니다. 검증이 실패하면 실제 조작 요소인 DatePicker 트리거로 포커스가 이동합니다. readOnly
-                        날짜는 제출되지만 disabled 날짜는 제출되지 않습니다.
+                        <code>name</code>이 있으면 날짜가 <code>yyyy-MM-dd</code>로 제출됩니다. <code>required</code>{' '}
+                        검증 실패는 <code>onInvalid</code>로 처리하며, 읽기전용 값은 제출되고 비활성 값은 제외됩니다.
                     </p>
                 </div>
                 <DatePickerFormDemo />
@@ -219,55 +274,16 @@ const DatePickerGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="date-picker-props" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="date-picker-props" className="typo-h4-bold">
-                        Props
+            <section aria-labelledby="date-picker-api" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="date-picker-api" className="typo-h4-bold">
+                        Props API
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">DatePicker 에 넘기는 속성입니다.</p>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        날짜 선택, 폼 제출, 상태와 접근성 연결에 필요한 속성입니다.
+                    </p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">Props 목록</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Description
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Default
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Control
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {PROPS_ITEMS.map((prop) => (
-                                <tr key={prop.name} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                                    >
-                                        {prop.name}
-                                    </th>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">{prop.desc}</td>
-                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {prop.def}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs">
-                                            {prop.control}
-                                        </span>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table caption="DatePicker Props API" columns={API_COLUMNS} rows={API_ROWS} size="md" />
             </section>
         </BaseCard>
     </GuidePageShell>

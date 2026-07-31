@@ -1,8 +1,6 @@
 'use client'
 
 import {useState} from 'react'
-import {cn} from '@/lib/utils'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
 import {DatePicker} from '@/components/composite/date-picker'
 import {Button} from '@/components/ui/button'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
@@ -29,7 +27,7 @@ const DatePickerFormDemo = () => {
                 )
             }}
         >
-            <Field data-invalid={visitDateError || undefined} className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field data-invalid={visitDateError || undefined} className="max-w-90">
                 <FieldLabel htmlFor="form-visit-date" className="text-foreground gap-1 font-bold">
                     방문 예정일
                     <span aria-hidden="true" className="text-error-500">
@@ -55,7 +53,7 @@ const DatePickerFormDemo = () => {
                 ) : null}
             </Field>
 
-            <Field className={cn('max-w-90', FIELD_FOCUS_RING)}>
+            <Field className="max-w-90">
                 <FieldLabel htmlFor="form-application-date" className="text-foreground font-bold">
                     신청일
                 </FieldLabel>
