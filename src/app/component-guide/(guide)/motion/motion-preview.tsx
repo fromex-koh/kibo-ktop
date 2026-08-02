@@ -6,8 +6,7 @@ import AnimatedCounter from '@/components/custom/animated-counter'
 import {Button} from '@/components/ui/button'
 
 // 미리보기 도형 종류 — 실제 유틸리티를 그대로 붙여 원본과 같은 시간·가속도로 움직인다.
-export type MotionPreviewKind =
-    'scale' | 'line' | 'progress' | 'enter' | 'marquee' | 'counter' | 'menu-close' | 'menu-return'
+export type MotionPreviewKind = 'scale' | 'line' | 'progress' | 'enter' | 'counter' | 'menu-close' | 'menu-return'
 
 // 정지 조작이 필요한 이유
 //  · 한 번만 도는 애니메이션(7s·5s·600ms)은 페이지를 연 순간 끝나 버려, 표까지 내려오면 이미 멈춰 있다.
@@ -62,16 +61,6 @@ const PreviewShape = ({kind, isPaused}: {kind: MotionPreviewKind; isPaused: bool
                     data-paused={isPaused}
                     className={`bg-primary animate-tech-enter block size-full rounded-md ${PAUSABLE}`}
                 />
-            </span>
-        )
-    }
-    if (kind === 'marquee') {
-        return (
-            <span className="block h-12 w-40 overflow-hidden">
-                <span data-paused={isPaused} className={`animate-marquee flex h-full w-max items-center ${PAUSABLE}`}>
-                    <span className="typo-body-m-bold text-muted-foreground pr-6 whitespace-nowrap">K-TOP</span>
-                    <span className="typo-body-m-bold text-muted-foreground pr-6 whitespace-nowrap">K-TOP</span>
-                </span>
             </span>
         )
     }

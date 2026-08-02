@@ -79,13 +79,6 @@ const ANIMATIONS = [
         source: 'custom/tech-eval-section.tsx',
         preview: 'enter',
     },
-    {
-        name: 'animate-marquee',
-        value: 'main-marquee 40s linear infinite',
-        usage: '푸터 위 장식 문구 밴드가 왼쪽으로 끝없이 흐른다.',
-        source: 'custom/marquee-band.tsx',
-        preview: 'marquee',
-    },
 ] as const satisfies readonly {
     name: string
     value: string

@@ -119,17 +119,6 @@
             transform: translateY(0);
         }
     }
-
-    /* 마키(marquee-band.tsx) — 같은 문구 두 벌을 이어 붙여 왼쪽으로 무한히 흐른다 */
-    --animate-marquee: main-marquee 40s linear infinite;
-    @keyframes main-marquee {
-        from {
-            transform: translateX(0);
-        }
-        to {
-            transform: translateX(-50%);
-        }
-    }
 }
 
 @theme inline {
