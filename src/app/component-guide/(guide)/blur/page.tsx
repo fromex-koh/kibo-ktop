@@ -16,16 +16,17 @@ const BLUR_CLASS_BY_NAME = new Map<string, string>(Object.entries(BLUR_CLASS))
 
 // 흐림 — 흐림 토큰(--ds-blur-*)을 blur-* 유틸리티로 적용. 공통 OG 이미지와 같은 navy 계열의 추상 이미지로 강도를 시각화한다.
 const BlurGuidePage = () => (
-    <GuidePageShell title="흐림 (Blur)" description="이미지와 장식 요소에 적용하는 blur-* 효과 토큰입니다.">
+    <GuidePageShell title="흐림 (Blur)" description="요소 자체를 흐리게 만드는 blur-* 효과 토큰입니다.">
         <BaseCard>
             <section aria-labelledby="blur-scale" className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <h2 id="blur-scale" className="typo-h4-bold text-foreground">
-                        Blur scale
+                        흐림 강도
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        sm·md·lg 세 단계로 흐림 강도를 구분합니다. 실제 콘텐츠를 가리는 배경 효과에는 Overlay 토큰을
-                        함께 검토합니다.
+                        장식 이미지에 <code className="font-mono">blur-sm/md/lg</code>를 적용합니다. 콘텐츠 위 레이어의
+                        배경을 어둡게 할 때는 Blur 대신 Overlay 토큰을 사용합니다. 값은{' '}
+                        <code className="font-mono">tokens.json</code>에서만 변경합니다.
                     </p>
                 </div>
                 <ul className="grid gap-5 md:grid-cols-3">
