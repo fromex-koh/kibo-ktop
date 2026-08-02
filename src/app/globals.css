@@ -1,0 +1,281 @@
+@import 'tailwindcss'; /* 유틸리티 엔진 */
+@import './tokens.css'; /* 디자인 토큰 — 생성물, 수정은 tokens.json → yarn tokens */
+@import 'tw-animate-css'; /* shadcn 애니메이션 */
+@import 'shadcn/tailwind.css'; /* shadcn 상태 변형 */
+
+/* ═════ § 1 · 커스텀 변형 — JSX 프리픽스(pager-on:z-1). 추가하면 /component-guide/breakpoint 에 기록 ═══ */
+
+/* 색은 .light/.dark/.mainpage 스코프가 토큰으로 내려주므로 사용처에서 dark: 로 다시 분기하지 않는다.
+   이 두 변형은 로고 이미지 교체처럼 토큰으로 표현할 수 없는 경우에만 쓴다. [PB-06] */
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant mainpage (&:where(.mainpage, .mainpage *));
+@custom-variant interactive (&:not(:disabled):not([aria-disabled='true'])); /* enabled: 가 못 거르는 aria-disabled 제외 */
+/* 높이 기준 변형(pager-on·pager-off·short·landscape·stack-fallback)은 tokens.json 의
+   breakpoint.md · breakpointHeight 에서 생성된다 — 임계값은 거기서만 바꾼다. */
+
+/* ═════ § 2 · 테마 값 확장 — tokens.json 이 다루지 않는 값만 ══════════════════════════════════════ */
+
+@theme {
+    /* 섹션 전환·지표 롤러 가속도 — ease-stack · ease-roll 유틸리티로 생성된다 */
+    --ease-stack: cubic-bezier(0.5, 0, 0, 1);
+    --ease-roll: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* 메인페이지 애니메이션 — animate-* 유틸리티로 생성된다. 사용처는 각 컴포넌트 className.
+       모션 최소화는 사용처에서 motion-reduce:animate-none 으로 끈다. [KWCAG 6.3.1] */
+    /* scale 프로퍼티를 쓰는 이유 — 사용처가 scale-120 으로 시작 배율을 잡는데, Tailwind 의 scale-*
+       는 transform 이 아니라 scale 을 세팅한다. 키프레임이 transform 이면 둘이 곱해져 1.44 로 커진다. */
+    --animate-hero-zoom-out: main-hero-zoom-out 7s ease both;
+    @keyframes main-hero-zoom-out {
+        0% {
+            scale: 1.2;
+        }
+        95%,
+        100% {
+            scale: 1;
+        }
+    }
+
+    /* 시간은 비워 둔다 — animated-counter.tsx 가 인라인 animation-duration/delay 로 주입한다.
+       theme 변수 안의 var() 는 :root 에서 해석돼 요소별 값을 받을 수 없다. */
+    --animate-counter-roll: animated-counter-roll ease both;
+    @keyframes animated-counter-roll {
+        0% {
+            transform: translateY(0);
+        }
+        100% {
+            transform: translateY(var(--counter-end));
+        }
+    }
+
+    --animate-scroll-line: main-scroll-line-fill 1.5s ease-in-out infinite;
+    @keyframes main-scroll-line-fill {
+        0% {
+            opacity: 1;
+            transform: scaleY(0);
+        }
+        80% {
+            opacity: 1;
+            transform: scaleY(1);
+        }
+        100% {
+            opacity: 0;
+            transform: scaleY(1);
+        }
+    }
+
+    /* 헤더 전체 메뉴 — X는 대칭 형태라 단순 180도 회전만으로 움직임이 잘 보이지 않는다.
+       회전·확대·오버슈트를 한 번에 묶어 열린 상태를 짧고 분명하게 알린다. */
+    --animate-header-menu-close-enter: header-menu-close-enter 420ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    @keyframes header-menu-close-enter {
+        0% {
+            opacity: 0;
+            transform: rotate(-225deg) scale(0.55);
+        }
+        70% {
+            opacity: 1;
+            transform: rotate(12deg) scale(1.12);
+        }
+        100% {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+        }
+    }
+
+    /* 전체 메뉴 닫힘 — 최초 렌더가 아니라 X에서 Menu로 돌아올 때만 컴포넌트가 이 모션을 붙인다. */
+    --animate-header-menu-trigger-return: header-menu-trigger-return 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    @keyframes header-menu-trigger-return {
+        0% {
+            opacity: 0;
+            transform: rotate(90deg) scale(0.6);
+        }
+        72% {
+            opacity: 1;
+            transform: rotate(-7deg) scale(1.08);
+        }
+        100% {
+            opacity: 1;
+            transform: rotate(0) scale(1);
+        }
+    }
+
+    --animate-tech-progress: tech-service-progress 5s linear forwards;
+    @keyframes tech-service-progress {
+        from {
+            transform: scaleY(0);
+        }
+        to {
+            transform: scaleY(1);
+        }
+    }
+
+    --animate-tech-enter: tech-service-content-enter 600ms ease both;
+    @keyframes tech-service-content-enter {
+        from {
+            opacity: 0;
+            transform: translateY(1rem);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+}
+
+@theme inline {
+    /* next/font 변수를 Tailwind 슬롯에 연결 */
+    --font-sans:
+        var(--font-pretendard), 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, system-ui,
+        sans-serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* 헤더·푸터 로고 — 배경 명도에 맞는 한 장만 표시한다(모든 화면).
+   dark: 가 아니라 변수인 이유 — 테마를 중첩 고정한 가이드 미리보기에서도 가장 가까운 스코프를 따르게. */
+:root,
+.light {
+    --logo-on-light: block;
+    --logo-on-dark: none;
+}
+.dark,
+.mainpage {
+    --logo-on-light: none;
+    --logo-on-dark: block;
+}
+
+/* ═════ § 3 · 전역 기본값 — 모든 화면에 적용되는 브라우저·preflight 보정 ═════════════════════════ */
+
+@layer base {
+    button:not(:disabled),
+    [role='button']:not(:disabled) {
+        cursor: pointer; /* preflight 가 지운 포인터 커서 복원(shadcn 권장) */
+    }
+
+    html {
+        overscroll-behavior: none; /* macOS 고무줄 바운스 제거 */
+        scrollbar-gutter: stable; /* 스크롤바 자리 예약 → 페이지 이동 시 레이아웃 시프트 방지 */
+    }
+
+    html:has(body[data-scroll-locked]) {
+        scrollbar-gutter: auto; /* 팝오버 스크롤 잠금 중에는 해제 — 라이브러리 보정과 겹쳐 덜컹인다 */
+    }
+
+    /* 스크롤바 커스텀 (WebKit/Blink 전용). 표준 scrollbar-width 는 두지 않는다 — 예약 폭과 어긋난다 [PB-16] */
+    ::-webkit-scrollbar {
+        width: var(--ds-spacing-scrollbar-w);
+        height: var(--ds-spacing-scrollbar-w);
+        background-color: var(--ds-scroll-track);
+    }
+    ::-webkit-scrollbar-thumb {
+        border-radius: var(--ds-radius-sm);
+        background-color: var(--ds-scroll-thumb);
+    }
+    ::-webkit-scrollbar-track {
+        border-radius: var(--ds-radius-sm);
+        background-color: var(--ds-scroll-track);
+    }
+
+    /* 네이티브 증감 스피너 제거 — 단위·아이콘 애드온과 겹친다 */
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+        margin: 0;
+        appearance: none;
+    }
+    input[type='number'] {
+        appearance: textfield;
+    }
+
+    /* 네이티브 X 버튼 제거 — 키보드 접근을 보장할 수 없어 SearchBar 가 자체 버튼으로 대체 [KWCAG 6.1.1] */
+    input[type='search']::-webkit-search-cancel-button,
+    input[type='search']::-webkit-search-decoration {
+        appearance: none;
+    }
+}
+
+/* ═════ § 4 · 커스텀 유틸리티 — Tailwind 에 없어 직접 만든 클래스 ═══════════════════════════════ */
+
+@layer utilities {
+    /* 메인 StackPager 헤더 — active-page는 접근성·입력 처리용으로 전환 시작 즉시 바뀐다.
+       header-page는 배경 페이드가 새 섹션 도착과 맞도록 보정한 시각 상태다. 자식 선택자는
+       페이지 전용 상태 연결이라 유틸리티 조합 대신 이곳에서 한 번만 관리한다. */
+    [data-stack-pager][data-header-page='1'] > header,
+    [data-stack-pager][data-header-page='2'] > header {
+        background-color: var(--ds-background);
+    }
+
+    /* 메인 헤더 배경 — StackPager 전환(600ms)과 겹쳐도 급격해 보이지 않도록 500ms 동안
+       완만하게 들어온다. 이 규칙은 Header 내부의 짧은 일반 전환과 독립적으로 유지한다. */
+    [data-stack-pager] > header {
+        transition: background-color 500ms ease-in-out;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        [data-stack-pager] > header {
+            transition: none;
+        }
+    }
+
+    /* 2섹션의 조리개 — StackPager가 비활성 레이어의 안쪽 스크롤 위치를 먼저 맞추는 동안
+       scale 전환이 재생되면, 화면 전환 중 이미지가 시작했다 멈추는 것처럼 보인다. 이전·다음
+       레이어에서는 값을 즉시 확정하고, active가 된 뒤에만 조리개 모션을 재생한다. */
+    [data-stack-page][data-stack-state='previous'] [data-intro-aperture-panel],
+    [data-stack-page][data-stack-state='next'] [data-intro-aperture-panel] {
+        transition: none;
+    }
+
+    /* 메인 히어로 SCROLL 표시 — 54279a4의 원본 구현.
+       고정 트랙 위 ::after 선이 위에서 아래로 채워진 뒤 사라지며 반복된다. */
+    .main-scroll-line-fill::after {
+        position: absolute;
+        inset: 0;
+        background-color: currentColor;
+        content: '';
+        transform: scaleY(0);
+        transform-origin: center top;
+        animation: main-scroll-line-fill 1.5s ease-in-out infinite;
+    }
+
+    /* 스크롤바만 숨기고 스크롤은 유지 — 화살표로 스크롤 신호를 주는 곳에서만 쓴다 [PB-16 예외] */
+    .scrollbar-hidden {
+        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none; /* 구형 Edge/IE */
+    }
+    .scrollbar-hidden::-webkit-scrollbar {
+        display: none; /* Chrome/Safari/새 Edge */
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .main-scroll-line-fill::after {
+        opacity: 1;
+        transform: scaleY(1);
+        animation: none;
+    }
+}
+
+/* ═════ § 5 · 유틸리티로 못 쓰는 규칙 — 여러 선택자를 묶어야 하는 것 ═══════════════════════════ */
+
+/* @/components/composite/segmented-control.tsx (solid) — 항목 사이 구분선.
+   가상요소나 :has() 는 변형이 있어 문제가 아니다 — 선택 상태에 따라 "그 항목과 다음 형제"가 바뀌어
+   어느 요소에 클래스를 붙일지 정할 수 없고, 조건 4개를 콤마로 묶어야 해서 유틸리티로 표현할 수 없다. */
+[data-slot='segmented-control'][data-variant='solid'] > [data-slot='segmented-control-item']:not(:first-child)::before {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 1px;
+    height: --spacing(3); /* 12px */
+    background: var(--color-subtle-2);
+    content: '';
+    transform: translateY(-50%);
+}
+[data-slot='segmented-control'][data-variant='solid']
+    > [data-slot='segmented-control-item'][aria-current='page']::before,
+[data-slot='segmented-control'][data-variant='solid']
+    > [data-slot='segmented-control-item']:has([data-state='checked'])::before,
+[data-slot='segmented-control'][data-variant='solid']
+    > [data-slot='segmented-control-item'][aria-current='page']
+    + [data-slot='segmented-control-item']::before,
+[data-slot='segmented-control'][data-variant='solid']
+    > [data-slot='segmented-control-item']:has([data-state='checked'])
+    + [data-slot='segmented-control-item']::before {
+    display: none; /* 선택된 navy 면 양옆은 모서리에 선이 겹쳐 숨긴다 */
+}

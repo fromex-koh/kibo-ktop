@@ -1,0 +1,599 @@
+'use client'
+
+import Link from 'next/link'
+import {Check, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
+import {useMemo, useState} from 'react'
+import {
+    USER_TYPE_VALUES,
+    isStructureBranch,
+    PUBLISHING_INDEX_CONTENT,
+    SCREEN_REGISTRY,
+    STATUS_VALUES,
+    type UserType,
+    type Status,
+    type StructureGroup,
+    type StructureNode,
+} from '@/content/publishing-guide'
+import {Badge} from '@/components/ui/badge'
+import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
+import {BaseCard} from '@/components/composite/base-card'
+import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
+import {ListMarker} from '@/components/custom/list-marker'
+
+// isCurrent(이번 릴리스에서 변경됨) 하이라이트는 자산 표·공통 레이아웃 표·화면 표가 모두 같은
+// 방식(배경색 + 아이콘 + sr-only 텍스트)을 쓰므로, 버전 셀 하나를 공용 컴포넌트로 뺀다.
+const VersionCell = ({version, isCurrent}: {version: string; isCurrent: boolean}) => (
+    <>
+        <span className="inline-flex items-center gap-1">
+            {isCurrent && <Sparkles aria-hidden="true" className="size-3 shrink-0" />}
+            {version}
+        </span>
+        {isCurrent && <span className="sr-only"> (이번 릴리스에서 변경됨)</span>}
+    </>
+)
+
+// 릴리스 초안에서 명시한 컴포넌트 가이드 내부 링크만 새 창 링크로 변환한다.
+// 그 외 Markdown 문법이나 외부 주소는 일반 문자열로 남겨 임의 링크가 화면에 생성되지 않게 한다.
+const RELEASE_NOTE_LINK_PATTERN = /\[([^\]]+)\]\((\/component-guide\/[^)\s]+)\)/g
+
+const ReleaseNoteChange = ({change}: {change: string}) => {
+    const parts: React.ReactNode[] = []
+    let cursor = 0
+
+    for (const match of change.matchAll(RELEASE_NOTE_LINK_PATTERN)) {
+        const [source, label, href] = match
+        const index = match.index
+
+        if (index > cursor) parts.push(change.slice(cursor, index))
+        parts.push(
+            <a
+                key={`${href}-${index}`}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-foreground focus-visible:ring-ring inline-flex items-center gap-0.5 underline underline-offset-4 hover:no-underline focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none"
+            >
+                {label}
+                <ExternalLink aria-hidden="true" className="size-3.5 shrink-0" />
+                <span className="sr-only"> (새 창)</span>
+            </a>,
+        )
+        cursor = index + source.length
+    }
+
+    if (cursor < change.length) parts.push(change.slice(cursor))
+    return <span className="min-w-0">{parts.length > 0 ? parts : change}</span>
+}
+
+// 퍼블리싱 진행 상태 인덱스 데모. 데이터는 src/content/publishing-guide/publishing-index.json 단일 소스에서 온다.
+// 이 컴포넌트는 '표현'(상태 색·아이콘 매핑, 뎁스별 rowSpan 계산, 레이아웃, 사용자 유형 필터)만 담당한다.
+
+// 현재 릴리스 버전 — next.config.ts가 주입(src/app/page.tsx의 BUILD_VERSION과 같은 소스).
+// 화면(leaf)의 수동 기입 버전이 이 값과 같으면 "이번 릴리스에서 반영됨"으로 하이라이트한다.
+const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev'
+
+// 상태별 Badge 색·변형 — 색만으로 구분하지 않도록 상태명을 항상 함께 표기한다. [KWCAG 5.3.1]
+// success/warning 은 kit Badge 가 제공하는 색으로 매핑(진행=info·보완=warning·완료=success).
+// 완료·최종완료는 같은 success 라, 최종완료만 solid 변형을 써서 완료(solid-pastel)와 시각적으로 겹치지 않게 한다.
+const STATUS_BADGE: Record<Status, {color: 'neutral' | 'info' | 'warning' | 'success' | 'error'; variant?: 'solid'}> = {
+    대기중: {color: 'neutral'},
+    진행중: {color: 'info'},
+    수정요청: {color: 'error'},
+    보완: {color: 'warning'},
+    완료: {color: 'success'},
+    최종완료: {color: 'success', variant: 'solid'},
+}
+
+const StatusTag = ({status}: {status: Status}) => (
+    <Badge color={STATUS_BADGE[status].color} variant={STATUS_BADGE[status].variant} shape="round">
+        {status === '최종완료' && <CircleCheckBig aria-hidden="true" />}
+        {status === '완료' && <Check aria-hidden="true" />}
+        {status}
+    </Badge>
+)
+
+// 사이트 구조는 뎁스 제한 없는 트리라, 표에 그리려면 각 leaf(실제 화면)를 "뿌리부터 자신까지의
+// 라벨 경로"로 펼쳐야 한다. 이 펼친 목록 + 뎁스별 rowSpan 계산이 표 렌더링의 핵심이다.
+type FlatLeaf = {
+    rowKey: string
+    registryKey?: string
+    path: string[] // index 0 = 1뎁스(그룹명) ... 마지막 = leaf 자신의 라벨
+    screenId: string | null
+    status: Status
+    version: string
+    userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 공통(기업·기관 둘 다).
+}
+
+const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
+    // inherited = 상위(그룹·브랜치)에서 내려온 userType. 노드에 자체 userType 가 있으면 그것이 우선한다.
+    const walk = (node: StructureNode, path: string[], inherited?: UserType): FlatLeaf[] => {
+        // 라벨이 바로 위 뎁스와 같으면(예: '홈' 그룹의 유일한 화면도 라벨이 '홈') 실질적으로
+        // 추가 뎁스가 아니므로 경로에 다시 넣지 않는다 — 컬럼마다 같은 텍스트가 반복되지 않는다.
+        const last = path[path.length - 1]
+        const nextPath = node.label === last ? path : [...path, node.label]
+        if (isStructureBranch(node)) {
+            const branchUserType = node.userType ?? inherited
+            // branch 자신도 독립된 화면(screen)일 수 있다 — 예: '(1) 고객정보활용동의' 자체가
+            // 화면이면서 하위에 상세보기·전자서명을 더 갖는 경우. 있으면 그 행을 먼저 넣는다.
+            // screen.label 이 있으면(예: '목록') 자기 화면을 한 뎁스 더 내려간 항목으로 취급해,
+            // 하위 뎁스 빈 칸('-')이 그 라벨 한 칸으로 병합돼 보이게 한다.
+            const screenPath = node.screen?.label ? [...nextPath, node.screen.label] : nextPath
+            const ownScreen: FlatLeaf[] = node.screen
+                ? [
+                      {
+                          rowKey: screenPath.join(' > '),
+                          ...(node.screen.key !== undefined ? {registryKey: node.screen.key} : {}),
+                          path: screenPath,
+                          screenId: node.screen.screenId,
+                          status: node.screen.status,
+                          version: node.screen.version,
+                          userType: node.screen.userType ?? branchUserType,
+                      },
+                  ]
+                : []
+            return [...ownScreen, ...node.children.flatMap((child) => walk(child, nextPath, branchUserType))]
+        }
+        return [
+            {
+                rowKey: nextPath.join(' > '),
+                ...(node.key !== undefined ? {registryKey: node.key} : {}),
+                path: nextPath,
+                screenId: node.screenId,
+                status: node.status,
+                version: node.version,
+                userType: node.userType ?? inherited,
+            },
+        ]
+    }
+    return group.children.flatMap((child) => walk(child, [group.name], group.userType))
+}
+
+// depth 컬럼에서 두 leaf 를 "같은 상위 아래" 로 볼지 판단하는 키. depth 가 leaf 의 실제 경로보다
+// 깊으면(그 leaf 는 거기까지 내려가지 않으면) null — rowSpan 병합 대상이 아니다.
+const pathKeyAt = (leaf: FlatLeaf, depth: number): string | null =>
+    depth < leaf.path.length ? leaf.path.slice(0, depth + 1).join(' ') : null
+
+const spanAt = (leaves: FlatLeaf[], index: number, depth: number): number => {
+    const key = pathKeyAt(leaves[index], depth)
+    const rest = leaves.slice(index + 1)
+    const breakOffset = rest.findIndex((leaf) => pathKeyAt(leaf, depth) !== key)
+    return breakOffset === -1 ? rest.length + 1 : breakOffset + 1
+}
+
+type DepthCell =
+    | {kind: 'span'; label: string; rowSpan: number; colSpan: number}
+    | {kind: 'continued'} // 이전 행의 rowSpan 이 덮고 있거나, 같은 행의 colSpan 에 흡수됨 — 렌더하지 않음
+    | {kind: 'empty'; colSpan: number} // 이 화면에서 사용하지 않는 나머지 뎁스를 한 칸으로 병합.
+
+// 같은 접두사의 화면이 모두 끝나는 뎁스는 마지막 라벨을 남은 칸까지 병합한다. 메뉴 자체도 화면이면서
+// 하위 화면이 더 있는 경우에는 라벨 셀의 rowSpan을 유지하고, 자기 화면 행에서만 남은 빈 뎁스를 하나의
+// "해당 없음" 셀로 병합한다. 따라서 하위 행의 실제 뎁스는 보존하면서 '-'가 여러 번 반복되지 않는다.
+const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
+    leaves.map((leaf, i) => {
+        const cells: DepthCell[] = Array.from({length: maxDepth}, () => ({kind: 'continued'}))
+        let depth = 0
+        while (depth < maxDepth) {
+            if (depth >= leaf.path.length) {
+                const colSpan = maxDepth - depth
+                cells[depth] = {kind: 'empty', colSpan}
+                depth += colSpan
+                continue
+            }
+            const key = pathKeyAt(leaf, depth)
+            const prevKey = i > 0 ? pathKeyAt(leaves[i - 1], depth) : null
+            if (key === prevKey) {
+                depth += 1 // 위 rowSpan 이 덮음 — 'continued' 유지
+                continue
+            }
+            const span = spanAt(leaves, i, depth)
+            const noneDeeper = leaves.slice(i, i + span).every((l) => l.path.length <= depth + 1)
+            const colSpan = noneDeeper ? maxDepth - depth : 1
+            cells[depth] = {kind: 'span', label: leaf.path[depth], rowSpan: span, colSpan}
+            depth += colSpan // colSpan 만큼 건너뛴다 — 그 칸들은 이미 이 셀에 흡수됐다(재처리 방지)
+        }
+        return cells
+    })
+
+// IA 원문이 기업용·기관용으로 각각 관리되므로 사용자 유형별 인덱스도 서로 섞지 않는다.
+// 같은 메뉴명이라도 역할과 동작이 다를 수 있어 공통 화면으로 합치지 않는다.
+type UserTypeFilter = UserType
+const USER_TYPE_FILTERS: readonly UserTypeFilter[] = USER_TYPE_VALUES
+// SegmentedControl radio 타입이 넘겨주는 문자열 value를 UserTypeFilter로 좁히는 타입가드([ST-002] as 회피).
+const isUserTypeFilter = (value: string): value is UserTypeFilter => USER_TYPE_FILTERS.some((f) => f === value)
+
+const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean => leaf.userType === filter
+
+const {releaseNotes, assetVersions, commonLayouts, structureGroups} = PUBLISHING_INDEX_CONTENT
+
+// 전체 화면(트리를 펼친 leaf) — 필터·카운트는 이 목록을 기준으로 컴포넌트 안에서 파생한다.
+const ALL_LEAVES = structureGroups.flatMap(collectLeaves)
+const SCREEN_REGISTRY_BY_KEY = new Map(SCREEN_REGISTRY.map((screen) => [screen.key, screen]))
+
+const PublishingIndex = () => {
+    const [filter, setFilter] = useState<UserTypeFilter>('기업')
+
+    // 선택된 사용자 유형에 맞는 화면만 남기고, 그 부분집합으로 뎁스 컬럼·rowSpan·카운트를 다시 계산한다.
+    const leaves = useMemo(() => ALL_LEAVES.filter((leaf) => matchesUserType(leaf, filter)), [filter])
+    const maxDepth = useMemo(() => leaves.reduce((max, leaf) => Math.max(max, leaf.path.length), 0), [leaves])
+    const depthCells = useMemo(() => buildDepthCells(leaves, maxDepth), [leaves, maxDepth])
+    const depthHeaders = useMemo(() => Array.from({length: maxDepth}, (_, depth) => `${depth + 1}뎁스`), [maxDepth])
+
+    const screenCount = leaves.length
+    // 작업 진척률 — '최종완료'된 화면 수 / (필터된) 전체 화면 수.
+    const doneCount = useMemo(() => leaves.filter((leaf) => leaf.status === '최종완료').length, [leaves])
+    const progressPercent = screenCount === 0 ? 0 : Math.round((doneCount / screenCount) * 100)
+
+    return (
+        <section aria-label="퍼블리싱 현황" className="flex flex-col gap-4">
+            <BaseCard>
+                <div className="flex flex-col gap-8">
+                    <div className="flex flex-col gap-3">
+                        <SectionHeader>
+                            <SectionHeaderTitle id="release-notes-title">버전 업데이트</SectionHeaderTitle>
+                            <SectionHeaderDescription>
+                                버전별 주요 개선 사항과 변경 내용을 최신순으로 안내합니다.
+                            </SectionHeaderDescription>
+                        </SectionHeader>
+
+                        <div className="bg-background border-border overflow-hidden rounded-md border">
+                            <div
+                                role="region"
+                                aria-labelledby="release-notes-title"
+                                className="overflow-x-auto overscroll-contain"
+                            >
+                                <table className="w-full min-w-2xl table-fixed text-left">
+                                    <caption className="sr-only">버전별 릴리스 날짜와 주요 변경사항</caption>
+                                    <thead className="bg-muted relative z-10 block">
+                                        <tr className="border-border [display:table] w-full table-fixed border-b">
+                                            <th scope="col" className="typo-body-l-medium w-28 px-4 py-3">
+                                                버전
+                                            </th>
+                                            <th scope="col" className="typo-body-l-medium w-32 px-4 py-3">
+                                                릴리스
+                                            </th>
+                                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                                변경사항
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-surface block max-h-52 overflow-y-auto overscroll-contain">
+                                        {releaseNotes.map((release, index) => (
+                                            <tr
+                                                key={release.version}
+                                                className={`border-border [display:table] w-full table-fixed border-b last:border-b-0 ${
+                                                    index === 0 ? 'bg-primary-subtle' : ''
+                                                }`}
+                                            >
+                                                <th
+                                                    scope="row"
+                                                    className={`typo-body-l-medium w-28 px-4 py-3 ${
+                                                        index === 0 ? 'text-primary' : 'text-foreground'
+                                                    }`}
+                                                >
+                                                    {release.version}
+                                                </th>
+                                                <td className="typo-body-l-regular text-muted-foreground w-32 px-4 py-3">
+                                                    <time dateTime={release.releasedAt}>{release.releasedAt}</time>
+                                                </td>
+                                                <td className="typo-body-l-regular text-foreground-subtle px-4 py-3">
+                                                    <ul className="flex list-none flex-col gap-1">
+                                                        {release.changes.map((change) => (
+                                                            <li key={change} className="flex">
+                                                                <ListMarker />
+                                                                <ReleaseNoteChange change={change} />
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                        <SectionHeader>
+                            <SectionHeaderTitle id="frontend-handoff-assets-title">
+                                프론트엔드 인계 자산
+                            </SectionHeaderTitle>
+                            <SectionHeaderDescription>
+                                전달 프로젝트를 생성하는 원본 경로와 마지막 반영 버전입니다. 이번 버전에 반영된 항목은
+                                강조해 표시합니다.
+                            </SectionHeaderDescription>
+                        </SectionHeader>
+
+                        {/* 프론트엔드 개발자에게 인계할 자산과 마지막 반영 버전 */}
+                        <div className="bg-background border-border overflow-hidden rounded-md border">
+                            <div
+                                role="region"
+                                aria-labelledby="frontend-handoff-assets-title"
+                                className="overflow-x-auto overscroll-contain"
+                            >
+                                <table className="w-full min-w-3xl table-fixed text-left">
+                                    <caption className="sr-only">프론트엔드 인계 자산별 역할과 반영 버전</caption>
+                                    <thead className="bg-muted relative z-10 block">
+                                        <tr className="border-border [display:table] w-full table-fixed border-b">
+                                            <th scope="col" className="typo-body-l-medium w-24 px-4 py-3">
+                                                구분
+                                            </th>
+                                            <th scope="col" className="typo-body-l-medium w-1/3 px-4 py-3">
+                                                원본 경로
+                                            </th>
+                                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                                역할
+                                            </th>
+                                            <th scope="col" className="typo-body-l-medium w-28 px-4 py-3">
+                                                반영 버전
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-surface block max-h-88 overflow-y-auto overscroll-contain">
+                                        {assetVersions.map((asset) => (
+                                            <tr
+                                                key={asset.name}
+                                                className={`border-border [display:table] w-full table-fixed border-b last:border-b-0 ${
+                                                    asset.isCurrent ? 'bg-primary-subtle' : ''
+                                                }`}
+                                            >
+                                                <td className="typo-body-l-regular text-muted-foreground w-24 px-4 py-3">
+                                                    <span className="inline-flex items-center gap-1.5">
+                                                        {asset.kind === 'folder' ? (
+                                                            <Folder aria-hidden="true" className="size-3.5 shrink-0" />
+                                                        ) : (
+                                                            <File aria-hidden="true" className="size-3.5 shrink-0" />
+                                                        )}
+                                                        {asset.kind === 'folder' ? '폴더' : '파일'}
+                                                    </span>
+                                                </td>
+                                                <th
+                                                    scope="row"
+                                                    className="typo-body-l-medium text-primary w-1/3 px-4 py-3"
+                                                >
+                                                    {asset.name}
+                                                </th>
+                                                <td className="typo-body-l-regular text-foreground-subtle min-w-64 px-4 py-3">
+                                                    {asset.description}
+                                                </td>
+                                                <td
+                                                    className={`typo-body-l-regular w-28 px-4 py-3 ${
+                                                        asset.isCurrent
+                                                            ? 'text-primary font-semibold'
+                                                            : 'text-muted-foreground'
+                                                    }`}
+                                                >
+                                                    <VersionCell version={asset.version} isCurrent={asset.isCurrent} />
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col gap-3">
+                        <SectionHeader>
+                            <SectionHeaderTitle id="section-publishing-index">퍼블리싱 인덱스</SectionHeaderTitle>
+                            <SectionHeaderDescription>
+                                기업·기관 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다. 메뉴 자체가 화면인 행의
+                                미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시합니다.
+                            </SectionHeaderDescription>
+                        </SectionHeader>
+                        {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 기업/기관 IA 한 벌씩 걸러 보여준다.
+          위 공통 레이아웃 표와 구분되도록 간격을 더 둔다. */}
+                        {/* 사용자 유형 필터 — 라디오 기반 단일 선택이다. 비어 있는 값은 무시해 항상 하나가 선택된 상태를
+                    유지한다. 화살표 키·역할은 Radix 담당. */}
+                        <SegmentedControl
+                            type="radio"
+                            value={filter}
+                            onValueChange={(value) => {
+                                if (isUserTypeFilter(value)) setFilter(value)
+                            }}
+                            aria-label="사용자 유형별 화면"
+                            className="w-fit"
+                        >
+                            {USER_TYPE_FILTERS.map((f) => (
+                                <SegmentedControlItem
+                                    key={f}
+                                    value={f}
+                                    className="has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground px-4"
+                                >
+                                    {f}
+                                </SegmentedControlItem>
+                            ))}
+                        </SegmentedControl>
+
+                        {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
+            진척률은 '최종완료' 화면 비율이라 상태값이 바뀔 때마다 자동으로 갱신된다. */}
+                        <p aria-live="polite" className="typo-body-l-regular text-muted-foreground">
+                            {filter} 화면 본수: <span className="text-foreground font-semibold">{screenCount}개</span>
+                            {' · '}작업 진척률:{' '}
+                            <span className="text-foreground font-semibold">{progressPercent}%</span> (최종완료{' '}
+                            {doneCount}/{screenCount})
+                        </p>
+                        {/* 아래 화면 목록에서 사용하는 진행 상태 범례 */}
+                        <ul aria-label="화면 진행 상태 범례" className="flex flex-wrap items-center gap-2">
+                            {STATUS_VALUES.map((status) => (
+                                <li key={status}>
+                                    <StatusTag status={status} />
+                                </li>
+                            ))}
+                        </ul>
+                        {/* 여러 화면이 공유하는 레이아웃은 개별 화면과 구분해 별도 표로 표시한다. */}
+                        <div className="bg-background border-border overflow-x-auto rounded-md border">
+                            <table className="w-full text-left">
+                                <caption className="sr-only">공통 레이아웃 상태·버전</caption>
+                                <thead>
+                                    <tr className="border-border bg-muted/25 border-b">
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            공통 레이아웃
+                                        </th>
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            상태
+                                        </th>
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            버전
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-surface">
+                                    {commonLayouts.map((layout) => {
+                                        const isCurrent = layout.version === BUILD_VERSION
+                                        return (
+                                            <tr
+                                                key={layout.label}
+                                                className={`border-border border-b last:border-b-0 ${
+                                                    isCurrent ? 'bg-primary-subtle' : 'bg-surface'
+                                                }`}
+                                            >
+                                                <th
+                                                    scope="row"
+                                                    className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
+                                                >
+                                                    <span className="inline-flex items-center gap-2">
+                                                        <LayoutGrid
+                                                            aria-hidden="true"
+                                                            className="text-muted-foreground size-4 shrink-0"
+                                                        />
+                                                        {'href' in layout && typeof layout.href === 'string' ? (
+                                                            <Link
+                                                                href={layout.href}
+                                                                className="text-primary focus-visible:ring-ring rounded-xs font-medium underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:outline-none"
+                                                            >
+                                                                {layout.label}
+                                                            </Link>
+                                                        ) : (
+                                                            layout.label
+                                                        )}
+                                                    </span>
+                                                </th>
+                                                <td className="px-4 py-3">
+                                                    <StatusTag status={layout.status} />
+                                                </td>
+                                                <td
+                                                    className={`typo-caption-regular px-4 py-3 ${
+                                                        isCurrent
+                                                            ? 'text-primary font-semibold'
+                                                            : 'text-muted-foreground'
+                                                    }`}
+                                                >
+                                                    <VersionCell version={layout.version} isCurrent={isCurrent} />
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                        {/* 사이트 구조 정보 (선택된 사용자 유형으로 필터된 표) — 표의 caption 이 표 자체를 설명한다. */}
+                        <div className="bg-background border-border overflow-x-auto rounded-md border">
+                            <table className="w-full text-left">
+                                <caption className="sr-only">사이트 구조별 상태·버전 예시</caption>
+                                <thead>
+                                    <tr className="border-border bg-muted/25 border-b">
+                                        {depthHeaders.map((header) => (
+                                            <th key={header} scope="col" className="typo-body-l-medium px-4 py-3">
+                                                {header}
+                                            </th>
+                                        ))}
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            상태
+                                        </th>
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            버전
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-surface">
+                                    {leaves.map((leaf, i) => {
+                                        const registeredScreen =
+                                            leaf.registryKey !== undefined
+                                                ? SCREEN_REGISTRY_BY_KEY.get(leaf.registryKey)
+                                                : undefined
+                                        const displayedVersion = registeredScreen?.version ?? leaf.version
+                                        const isCurrent =
+                                            registeredScreen?.isCurrent ?? displayedVersion === BUILD_VERSION
+                                        const effectiveStatus =
+                                            leaf.status === '대기중' && registeredScreen?.implemented
+                                                ? '진행중'
+                                                : leaf.status
+                                        return (
+                                            <tr
+                                                key={leaf.rowKey}
+                                                className={`border-border border-b last:border-b-0 ${
+                                                    isCurrent ? 'bg-primary-subtle' : 'bg-surface'
+                                                }`}
+                                            >
+                                                {depthCells[i].map((cell, depth) => {
+                                                    if (cell.kind === 'continued') return null
+                                                    if (cell.kind === 'empty') {
+                                                        return (
+                                                            <th
+                                                                key={depth}
+                                                                scope="row"
+                                                                colSpan={cell.colSpan}
+                                                                className="typo-caption-regular text-muted-foreground border-border border-r px-4 py-3 align-top font-normal"
+                                                            >
+                                                                <span aria-hidden="true">-</span>
+                                                                <span className="sr-only">해당 없음</span>
+                                                            </th>
+                                                        )
+                                                    }
+                                                    const isScreenLink =
+                                                        depth === leaf.path.length - 1 && registeredScreen?.implemented
+                                                    return (
+                                                        <th
+                                                            key={depth}
+                                                            scope="row"
+                                                            rowSpan={cell.rowSpan}
+                                                            colSpan={cell.colSpan}
+                                                            className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
+                                                        >
+                                                            <span className="inline-flex items-center gap-2">
+                                                                <Badge aria-hidden="true" type="number" color="primary">
+                                                                    {depth + 1}
+                                                                </Badge>
+                                                                <span className="sr-only">{depth + 1}뎁스 </span>
+                                                                {isScreenLink ? (
+                                                                    <Link
+                                                                        href={registeredScreen.path}
+                                                                        className="text-primary focus-visible:ring-ring rounded-xs underline underline-offset-4 hover:no-underline focus-visible:ring-2 focus-visible:outline-none"
+                                                                    >
+                                                                        {cell.label}
+                                                                        <span className="sr-only"> 화면으로 이동</span>
+                                                                    </Link>
+                                                                ) : (
+                                                                    cell.label
+                                                                )}
+                                                            </span>
+                                                        </th>
+                                                    )
+                                                })}
+                                                <td className="px-4 py-3">
+                                                    <StatusTag status={effectiveStatus} />
+                                                </td>
+                                                <td
+                                                    className={`typo-caption-regular px-4 py-3 ${
+                                                        isCurrent
+                                                            ? 'text-primary font-semibold'
+                                                            : 'text-muted-foreground'
+                                                    }`}
+                                                >
+                                                    <VersionCell version={displayedVersion} isCurrent={isCurrent} />
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </BaseCard>
+        </section>
+    )
+}
+
+export default PublishingIndex

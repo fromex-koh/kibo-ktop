@@ -1,0 +1,2368 @@
+{
+    "//": "퍼블리싱 인덱스 데이터 — 이 파일만 수정하면 화면에 반영된다. status 는 types.ts 의 STATUS_VALUES 중 하나. 상태 색·아이콘 매핑은 컴포넌트가 담당한다.",
+    "//key": "실제 서비스 경로가 확정된 화면만 영구 key를 가지며, screen-registry.json의 동일한 key와 연결한다. 화면명이나 화면 ID가 바뀌어도 key는 유지한다.",
+    "//screenId": "현재 화면 ID는 모두 미발급 상태이므로 null로 관리한다. 임시 ID를 만들지 않으며, 공식 화면 ID가 발급된 화면만 해당 문자열로 교체한다.",
+    "//assetVersions": "Vercel 배포와 frontend-handoff에 함께 포함되는 컴포넌트·스타일·런타임·설정·에셋만 추적한다. 퍼블리싱 가이드 전용 제작 도구와 전달 프로젝트에서 실행하지 않는 생성·검사 스크립트는 제외한다. version 은 직접 적지 않고 path 기준 git 히스토리로 자동 계산한다. 인계 기준선은 v0.1.3이며 src/app/fonts만 기존 v0.1.0 이력을 유지한다. 이후에는 마지막 변경을 포함하는 최초 태그가 버전이며 아직 태그에 포함되지 않았으면 '미배포'다.",
+    "//commonLayouts": "화면이 아니라 여러 화면이 공유하는 '화면을 찍어내는 틀' 단위 레이아웃(메인 레이아웃·서브 레이아웃, 내부 콘텐츠만 바뀌는 틀). Header·Footer 는 이 틀에 이미 포함되므로 개별 행으로 두지 않는다. 독립 화면이 아니라 screenId 가 없고, 별도 표로 렌더링된다. version 은 leaf.version 과 동일한 규칙(수동 기입, 미배포/현재 HEAD 버전과 같으면 하이라이트).",
+    "//structureGroups": "2026-07-20 기업·기관 FO IA를 각각 독립된 트리로 반영한다. 기업 128건, 기관 107건이며 기관 IA 83번 평가검증이력 조회는 화면 Type 미정이라 제외한다. leaf.version은 아직 작업 전이면 미배포다.",
+    "//userType": "기업·기관 IA는 메뉴명이 같아도 역할과 노출 조건이 다를 수 있으므로 공통으로 병합하지 않는다. 모든 그룹에 기업 또는 기관 userType을 지정하고 Segmented Control에서 한 벌씩 조회한다.",
+    "assetVersions": [
+        {
+            "name": "src/app",
+            "path": "src/app",
+            "kind": "folder",
+            "description": "서비스 화면·퍼블리싱 인덱스·컴포넌트 가이드 라우트"
+        },
+        {
+            "name": "src/components/ui",
+            "path": "src/components/ui",
+            "kind": "folder",
+            "description": "shadcn primitive와 프로젝트 스타일 연결"
+        },
+        {
+            "name": "src/components/theme",
+            "path": "src/components/theme",
+            "kind": "folder",
+            "description": "컴포넌트별 프로젝트 variant와 상태 스타일"
+        },
+        {
+            "name": "src/components/composite",
+            "path": "src/components/composite",
+            "kind": "folder",
+            "description": "shadcn/ui primitive를 조합한 프로젝트 공통 패턴"
+        },
+        {
+            "name": "src/components/custom",
+            "path": "src/components/custom",
+            "kind": "folder",
+            "description": "프로젝트 고유 UI와 기능 컴포넌트"
+        },
+        {
+            "name": "src/components/theme-provider.tsx",
+            "path": "src/components/theme-provider.tsx",
+            "kind": "file",
+            "description": "라이트·다크 테마 런타임 연결"
+        },
+        {
+            "name": "src/constants/theme.ts",
+            "path": "src/constants/theme.ts",
+            "kind": "file",
+            "description": "테마 저장 키와 공통 설정"
+        },
+        {
+            "name": "src/constants/publishing-guide.ts",
+            "path": "src/constants/publishing-guide.ts",
+            "kind": "file",
+            "description": "퍼블리싱 인덱스와 컴포넌트 가이드 공통 설정"
+        },
+        {
+            "name": "src/content/publishing-guide",
+            "path": "src/content/publishing-guide",
+            "kind": "folder",
+            "description": "전달 시점의 릴리스·인계 자산·화면 현황 데이터"
+        },
+        {
+            "name": "src/lib/utils.ts",
+            "path": "src/lib/utils.ts",
+            "kind": "file",
+            "description": "cn 기반 className 병합"
+        },
+        {
+            "name": "src/hooks/use-mobile.ts",
+            "path": "src/hooks/use-mobile.ts",
+            "kind": "file",
+            "description": "반응형 컴포넌트 동작 기준"
+        },
+        {
+            "name": "src/hooks/use-theme-toggle.ts",
+            "path": "src/hooks/use-theme-toggle.ts",
+            "kind": "file",
+            "description": "라이트·다크 테마 전환 상태와 동작"
+        },
+        {
+            "name": "src/types",
+            "path": "src/types",
+            "kind": "folder",
+            "description": "컴포넌트가 사용하는 외부 라이브러리 타입 선언"
+        },
+        {
+            "name": "tokens.json",
+            "path": "tokens.json",
+            "kind": "file",
+            "description": "가이드와 컴포넌트가 참조하는 디자인 토큰 원본"
+        },
+        {
+            "name": "src/app/tokens.css",
+            "path": "src/app/tokens.css",
+            "kind": "file",
+            "description": "검증을 마친 디자인 토큰 CSS 결과물"
+        },
+        {
+            "name": "scripts/build-tokens.mjs",
+            "path": "scripts/build-tokens.mjs",
+            "kind": "file",
+            "description": "전달본에서 tokens.json을 검증하고 tokens.css로 생성"
+        },
+        {
+            "name": "src/app/globals.css",
+            "path": "src/app/globals.css",
+            "kind": "file",
+            "description": "Tailwind·토큰·전역 스타일 진입점"
+        },
+        {
+            "name": "postcss.config.mjs",
+            "path": "postcss.config.mjs",
+            "kind": "file",
+            "description": "Tailwind CSS v4 PostCSS 파이프라인"
+        },
+        {
+            "name": "src/app/layout.tsx",
+            "path": "src/app/layout.tsx",
+            "kind": "file",
+            "description": "전역 CSS·폰트·ThemeProvider 적용"
+        },
+        {
+            "name": "components.json",
+            "path": "components.json",
+            "kind": "file",
+            "description": "shadcn 스타일·alias·아이콘 설정"
+        },
+        {
+            "name": "tsconfig.json",
+            "path": "tsconfig.json",
+            "kind": "file",
+            "description": "TypeScript strict와 경로 alias 설정"
+        },
+        {
+            "name": "package.json",
+            "path": "package.json",
+            "kind": "file",
+            "description": "실행 의존성만 선별해 전달용 명령으로 재구성"
+        },
+        {
+            "name": "yarn.lock",
+            "path": "yarn.lock",
+            "kind": "file",
+            "description": "설치 의존성의 실제 고정 버전"
+        },
+        {
+            "name": "THIRD_PARTY_LICENSES.md",
+            "path": "THIRD_PARTY_LICENSES.md",
+            "kind": "file",
+            "description": "운영 의존성과 번들 폰트의 제3자 저작권·라이선스 고지"
+        },
+        {
+            "name": "next.config.ts",
+            "path": "next.config.ts",
+            "kind": "file",
+            "description": "빌드 버전 주입과 Next.js 공통 설정"
+        },
+        {
+            "name": ".env.example",
+            "path": ".env.example",
+            "kind": "file",
+            "description": "사이트·저장소 등 실행 환경변수 작성 기준"
+        },
+        {
+            "name": "public",
+            "path": "public",
+            "kind": "folder",
+            "description": "컴포넌트가 참조하는 정적 에셋"
+        },
+        {
+            "name": "vendor/shadcn-baseline",
+            "path": "vendor/shadcn-baseline",
+            "kind": "folder",
+            "description": "프로젝트 variant와 비교하는 shadcn 원본 기준"
+        },
+        {
+            "name": "src/app/fonts",
+            "path": "src/app/fonts",
+            "kind": "folder",
+            "description": "프로젝트 로컬 폰트 파일"
+        }
+    ],
+    "commonLayouts": [
+        {
+            "label": "메인 레이아웃 (Header + Content + Footer)",
+            "href": "/component-guide/main-layout",
+            "status": "대기중",
+            "version": "미배포"
+        },
+        {
+            "label": "서브 레이아웃 (Header + Content + Footer)",
+            "status": "대기중",
+            "version": "미배포"
+        }
+    ],
+    "structureGroups": [
+        {
+            "name": "홈",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "홈",
+                    "key": "corp-home",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포"
+                }
+            ]
+        },
+        {
+            "name": "전체메뉴",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "전체메뉴",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-full-menu"
+                }
+            ]
+        },
+        {
+            "name": "로그인/회원가입",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "로그인/회원가입",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-auth"
+                }
+            ]
+        },
+        {
+            "name": "이용안내",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "이용안내",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-guide"
+                }
+            ]
+        },
+        {
+            "name": "가격 정책",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "가격 정책",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-pricing"
+                }
+            ]
+        },
+        {
+            "name": "플랫폼 소개",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "플랫폼 소개",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-platform"
+                },
+                {
+                    "label": "기술평가",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-platform-technology-evaluation"
+                },
+                {
+                    "label": "특허평가",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-platform-patent-evaluation"
+                },
+                {
+                    "label": "K-BIGx 보고서",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-platform-k-bigx-report"
+                },
+                {
+                    "label": "탄소중립",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-platform-carbon-neutrality"
+                }
+            ]
+        },
+        {
+            "name": "기술평가",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "신속표준모형(KTRS-FM)",
+                    "children": [
+                        {
+                            "label": "(1) 고객정보활용동의",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-ktrs-fm-customer-consent"
+                            },
+                            "children": [
+                                {
+                                    "label": "필수/선택 동의 팝업",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-customer-consent-consent-popup"
+                                },
+                                {
+                                    "label": "개별 상세 보기",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-customer-consent-detail"
+                                },
+                                {
+                                    "label": "전자서명",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(2) 기업·기술정보 입력",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-ktrs-fm-company-technology-info"
+                        },
+                        {
+                            "label": "2-1 기업정보",
+                            "children": [
+                                {
+                                    "label": "업종코드 조회",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-company-info-industry-code-search"
+                                },
+                                {
+                                    "label": "주소 찾기",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-company-info-address-search"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "2-2 대표자 경력사항",
+                            "children": [
+                                {
+                                    "label": "입력도우미",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-representative-career-input-helper"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "2-3 기업기타정보",
+                            "children": [
+                                {
+                                    "label": "실적인정 지식재산",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip"
+                                },
+                                {
+                                    "label": "거래유형 설명",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-transaction-type-guide"
+                                },
+                                {
+                                    "label": "전문기술/숙련기술 정의",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-technology-definition"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(3) 체크리스트 입력",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-ktrs-fm-checklist"
+                            },
+                            "children": [
+                                {
+                                    "label": "피인용 확인 메뉴얼",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual"
+                                },
+                                {
+                                    "label": "보증제한 업종",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-checklist-restricted-industries"
+                                },
+                                {
+                                    "label": "TRL 확인",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-checklist-trl-guide"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(4) 최종 확인",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-ktrs-fm-final-review"
+                        },
+                        {
+                            "label": "(5) 완료 화면",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-ktrs-fm-complete"
+                            },
+                            "children": [
+                                {
+                                    "label": "은행 전송",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer"
+                                },
+                                {
+                                    "label": "보증 신청",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-ktrs-fm-complete-guarantee-application"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "label": "Tech-Index",
+                    "children": [
+                        {
+                            "label": "(0) 선택 화면",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-tech-index-selection"
+                        },
+                        {
+                            "label": "일반용",
+                            "children": [
+                                {
+                                    "label": "(1) 고객정보활용동의",
+                                    "screen": {
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포",
+                                        "key": "corp-technology-evaluation-tech-index-general-customer-consent"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "필수/선택 동의 팝업",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-customer-consent-consent-popup"
+                                        },
+                                        {
+                                            "label": "개별 상세 보기",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-customer-consent-detail"
+                                        },
+                                        {
+                                            "label": "전자서명",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "(2) 기업·기술정보 입력",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-general-company-technology-info"
+                                },
+                                {
+                                    "label": "2-1 기업정보",
+                                    "children": [
+                                        {
+                                            "label": "업종코드 조회",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-company-info-industry-code-search"
+                                        },
+                                        {
+                                            "label": "주소 찾기",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-company-info-address-search"
+                                        },
+                                        {
+                                            "label": "기술분류",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-company-info-technology-category"
+                                        },
+                                        {
+                                            "label": "품목설명",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-company-info-item-description"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "(4) 최종 확인",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-general-final-review"
+                                },
+                                {
+                                    "label": "(5) 완료 화면",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-general-complete"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "창업용",
+                            "children": [
+                                {
+                                    "label": "(1) 고객정보활용동의",
+                                    "screen": {
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포",
+                                        "key": "corp-technology-evaluation-tech-index-startup-customer-consent"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "필수/선택 동의 팝업",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-consent-popup"
+                                        },
+                                        {
+                                            "label": "개별 상세 보기",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-detail"
+                                        },
+                                        {
+                                            "label": "전자서명",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "(2) 기업·기술정보 입력",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-startup-company-technology-info"
+                                },
+                                {
+                                    "label": "2-1 기업정보",
+                                    "children": [
+                                        {
+                                            "label": "업종코드 조회",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-company-info-industry-code-search"
+                                        },
+                                        {
+                                            "label": "주소 찾기",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-company-info-address-search"
+                                        },
+                                        {
+                                            "label": "기술분류",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-company-info-technology-category"
+                                        },
+                                        {
+                                            "label": "품목설명",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-company-info-item-description"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "(4) 최종 확인",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-startup-final-review"
+                                },
+                                {
+                                    "label": "(5) 완료 화면",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-tech-index-startup-complete"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "label": "투자모형",
+                    "children": [
+                        {
+                            "label": "(1) 고객정보활용동의",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-investment-model-customer-consent"
+                            },
+                            "children": [
+                                {
+                                    "label": "필수/선택 동의 팝업",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-customer-consent-consent-popup"
+                                },
+                                {
+                                    "label": "개별 상세 보기",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-customer-consent-detail"
+                                },
+                                {
+                                    "label": "전자서명",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(2) 기업·기술정보 입력",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-investment-model-company-technology-info"
+                        },
+                        {
+                            "label": "2-1 기업정보",
+                            "children": [
+                                {
+                                    "label": "업종코드 조회",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-company-info-industry-code-search"
+                                },
+                                {
+                                    "label": "주소 찾기",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-company-info-address-search"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "2-3 기업기타정보",
+                            "children": [
+                                {
+                                    "label": "거래유형 설명",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-additional-company-info-transaction-type-guide"
+                                },
+                                {
+                                    "label": "전문기술/숙련기술 정의",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-additional-company-info-technology-definition"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(3) 체크리스트 입력",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-investment-model-checklist"
+                            },
+                            "children": [
+                                {
+                                    "label": "피인용 확인 메뉴얼",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-checklist-citation-manual"
+                                },
+                                {
+                                    "label": "보증제한 업종",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-checklist-restricted-industries"
+                                },
+                                {
+                                    "label": "TRL 확인",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-checklist-trl-guide"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(4) 최종 확인",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-investment-model-final-review"
+                        },
+                        {
+                            "label": "(5) 완료 화면",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-technology-evaluation-investment-model-complete"
+                        }
+                    ]
+                },
+                {
+                    "label": "결과조회",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-technology-evaluation-results"
+                }
+            ]
+        },
+        {
+            "name": "특허평가",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "특허등급평가 조회",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "corp-patent-evaluation-patent-grade-list"
+                    },
+                    "children": [
+                        {
+                            "label": "특허등급평가 결과",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result"
+                            },
+                            "children": [
+                                {
+                                    "label": "보고서",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "K-BIGx 보고서",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "기업혁신성장보고서 조회",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "corp-k-bigx-report-innovation-growth-report"
+                    },
+                    "children": [
+                        {
+                            "label": "정보 이용 동의",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-information-consent"
+                        },
+                        {
+                            "label": "보고서 검색 결과",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "corp-k-bigx-report-innovation-growth-report-report-search-results"
+                            },
+                            "children": [
+                                {
+                                    "label": "보고서 생성",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create"
+                                },
+                                {
+                                    "label": "보고서 결제",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-payment"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "진단브리핑",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing"
+                        },
+                        {
+                            "label": "기업현황",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-company-overview"
+                        },
+                        {
+                            "label": "기업혁신정보",
+                            "children": [
+                                {
+                                    "label": "기술분야개요",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-technology-overview"
+                                },
+                                {
+                                    "label": "재무정보",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-financial-info"
+                                },
+                                {
+                                    "label": "기술부문",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-technology"
+                                },
+                                {
+                                    "label": "R&D부문",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-rnd"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "Tech-Index",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-tech-index"
+                        },
+                        {
+                            "label": "신용/재무정보",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info"
+                        },
+                        {
+                            "label": "활동성정보",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-activity-info"
+                        },
+                        {
+                            "label": "인쇄 출력물 선택",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection"
+                        },
+                        {
+                            "label": "보고서 출력",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-report-print"
+                        }
+                    ]
+                },
+                {
+                    "label": "보고서 이력 조회",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "corp-k-bigx-report-report-history"
+                    },
+                    "children": [
+                        {
+                            "label": "보고서 보기",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-report-history-report-view"
+                        },
+                        {
+                            "label": "보고서 출력",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-report-history-report-print"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "탄소중립",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "탄소중립",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-carbon-neutrality"
+                }
+            ]
+        },
+        {
+            "name": "마이페이지",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "내 정보",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "corp-mypage-profile"
+                    },
+                    "children": [
+                        {
+                            "label": "업종코드 조회",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-profile-industry-code-search"
+                        },
+                        {
+                            "label": "주소 찾기",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-profile-address-search"
+                        }
+                    ]
+                },
+                {
+                    "label": "평가결과조회",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "corp-mypage-evaluation-results"
+                    },
+                    "children": [
+                        {
+                            "label": "일반분석",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-evaluation-results-general-analysis"
+                        },
+                        {
+                            "label": "심층분석",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-evaluation-results-in-depth-analysis"
+                        },
+                        {
+                            "label": "은행전송",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-evaluation-results-bank-transfer"
+                        },
+                        {
+                            "label": "기관전송",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-evaluation-results-institution-transfer"
+                        },
+                        {
+                            "label": "전송내역",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-evaluation-results-transfer-history"
+                        }
+                    ]
+                },
+                {
+                    "label": "K-BIGx 보고서 이력",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "corp-mypage-k-bigx-report-history"
+                    },
+                    "children": [
+                        {
+                            "label": "보고서 보기",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-k-bigx-report-history-report-view"
+                        },
+                        {
+                            "label": "보고서 출력",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-k-bigx-report-history-report-print"
+                        }
+                    ]
+                },
+                {
+                    "label": "유료 서비스 관리",
+                    "children": [
+                        {
+                            "label": "결제내역",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "corp-mypage-paid-services-payment-history"
+                            },
+                            "children": [
+                                {
+                                    "label": "이용내역",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-usage-history"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "환불내역",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-paid-services-refund-history"
+                        },
+                        {
+                            "label": "명세서",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-paid-services-statement"
+                        },
+                        {
+                            "label": "환불 사유 입력",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "corp-mypage-paid-services-refund-reason"
+                            },
+                            "children": [
+                                {
+                                    "label": "환불 및 결제 취소 완료",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-refund-reason-refund-complete"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "label": "1:1 문의내역",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "corp-mypage-inquiry-history"
+                    },
+                    "children": [
+                        {
+                            "label": "문의하기 상세",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-mypage-inquiry-history-inquiry-detail"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "알림마당",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "공지사항",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "corp-notice-announcements"
+                    },
+                    "children": [
+                        {
+                            "label": "상세",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-notice-announcements-detail"
+                        }
+                    ]
+                },
+                {
+                    "label": "자주 묻는 질문",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-notice-faq"
+                },
+                {
+                    "label": "1:1 문의 등록",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "corp-notice-inquiry-create"
+                    },
+                    "children": [
+                        {
+                            "label": "문의 완료",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-notice-inquiry-create-inquiry-complete"
+                        },
+                        {
+                            "label": "개인정보 수집 및 이용 안내",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-notice-inquiry-create-privacy-consent-guide"
+                        }
+                    ]
+                },
+                {
+                    "label": "자료실",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-notice-resources"
+                }
+            ]
+        },
+        {
+            "name": "기술혁신정보 이용동의",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "기술혁신정보 이용동의",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-technology-information-consent"
+                }
+            ]
+        },
+        {
+            "name": "결제 완료",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "결제 완료",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-payment-complete"
+                }
+            ]
+        },
+        {
+            "name": "404 에러 화면",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "404 에러 화면",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-not-found"
+                }
+            ]
+        },
+        {
+            "name": "500 에러 화면",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "500 에러 화면",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-server-error"
+                }
+            ]
+        },
+        {
+            "name": "정기점검 화면",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "정기점검 화면",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-maintenance"
+                }
+            ]
+        },
+        {
+            "name": "이용약관",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "이용약관",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-terms"
+                }
+            ]
+        },
+        {
+            "name": "개인정보 처리방침",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "개인정보 처리방침",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-privacy-policy"
+                },
+                {
+                    "label": "알기 쉬운 개인처리방침",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-privacy-policy-easy-privacy-policy"
+                }
+            ]
+        },
+        {
+            "name": "로그인 연장",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "로그인 연장",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-session-extension"
+                }
+            ]
+        },
+        {
+            "name": "로그아웃 종료",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "로그아웃 종료",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-logout"
+                }
+            ]
+        },
+        {
+            "name": "홈",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "홈",
+                    "key": "org-home",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포"
+                }
+            ]
+        },
+        {
+            "name": "전체메뉴",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "전체메뉴",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-full-menu"
+                }
+            ]
+        },
+        {
+            "name": "로그인/회원가입",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "로그인/회원가입",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-auth"
+                }
+            ]
+        },
+        {
+            "name": "이용안내",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "이용안내",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-guide"
+                }
+            ]
+        },
+        {
+            "name": "가격 정책",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "가격 정책",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-pricing"
+                }
+            ]
+        },
+        {
+            "name": "플랫폼 소개",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "플랫폼 소개",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-platform"
+                },
+                {
+                    "label": "기술평가",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-platform-technology-evaluation"
+                },
+                {
+                    "label": "특허평가",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-platform-patent-evaluation"
+                },
+                {
+                    "label": "K-BIGx 보고서",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-platform-k-bigx-report"
+                },
+                {
+                    "label": "탄소중립",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-platform-carbon-neutrality"
+                }
+            ]
+        },
+        {
+            "name": "개별평가",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "평가검증 진행확인",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-individual-evaluation-verification-progress"
+                },
+                {
+                    "label": "신속표준모형(KTRS-FM)",
+                    "children": [
+                        {
+                            "label": "(1) 고객정보활용동의",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-ktrs-fm-customer-consent"
+                        },
+                        {
+                            "label": "(2) 기업·기술정보 입력",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-ktrs-fm-company-technology-info"
+                        },
+                        {
+                            "label": "2-1 기업정보",
+                            "children": [
+                                {
+                                    "label": "업종코드 조회",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-company-info-industry-code-search"
+                                },
+                                {
+                                    "label": "주소 찾기",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-company-info-address-search"
+                                },
+                                {
+                                    "label": "기업정보 관리",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-company-info-company-management"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "2-2 대표자 역량 및 경력사항",
+                            "children": [
+                                {
+                                    "label": "입력도우미",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-representative-capability-career-input-helper"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "2-3 기업기타정보",
+                            "children": [
+                                {
+                                    "label": "실적인정 지식재산",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-additional-company-info-recognized-ip"
+                                },
+                                {
+                                    "label": "거래유형 설명",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-additional-company-info-transaction-type-guide"
+                                },
+                                {
+                                    "label": "전문기술/숙련기술 정의",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-additional-company-info-technology-definition"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(3) 체크리스트 입력",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "org-individual-evaluation-ktrs-fm-checklist"
+                            },
+                            "children": [
+                                {
+                                    "label": "피인용 확인 메뉴얼",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-checklist-citation-manual"
+                                },
+                                {
+                                    "label": "보증제한 업종",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-checklist-restricted-industries"
+                                },
+                                {
+                                    "label": "TRL 확인",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-checklist-trl-guide"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(4) 최종 확인",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-ktrs-fm-final-review"
+                        },
+                        {
+                            "label": "(5) 완료 화면",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "org-individual-evaluation-ktrs-fm-complete"
+                            },
+                            "children": [
+                                {
+                                    "label": "은행 전송",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-complete-bank-transfer"
+                                },
+                                {
+                                    "label": "보증 신청",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-ktrs-fm-complete-guarantee-application"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "label": "Tech-Index",
+                    "children": [
+                        {
+                            "label": "(0) 선택 화면",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-selection"
+                        },
+                        {
+                            "label": "(1) 고객정보활용동의",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-customer-consent"
+                        },
+                        {
+                            "label": "(2) 기업·기술정보 입력",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-company-technology-info"
+                        },
+                        {
+                            "label": "2-1 기업정보",
+                            "children": [
+                                {
+                                    "label": "업종코드 조회",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-company-info-industry-code-search"
+                                },
+                                {
+                                    "label": "주소 찾기",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-company-info-address-search"
+                                },
+                                {
+                                    "label": "기술분류",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-company-info-technology-category"
+                                },
+                                {
+                                    "label": "품목설명",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-company-info-item-description"
+                                },
+                                {
+                                    "label": "기업정보 관리",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-company-info-company-management"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(3) 평가 신청하기",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-evaluation-application"
+                        },
+                        {
+                            "label": "(4) 최종 확인",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-final-review"
+                        },
+                        {
+                            "label": "(5) 완료 화면",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-tech-index-complete"
+                        }
+                    ]
+                },
+                {
+                    "label": "투자모형",
+                    "children": [
+                        {
+                            "label": "(1) 고객정보활용동의",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-investment-model-customer-consent"
+                        },
+                        {
+                            "label": "(2) 기업·기술정보 입력",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-investment-model-company-technology-info"
+                        },
+                        {
+                            "label": "2-1 기업정보",
+                            "children": [
+                                {
+                                    "label": "업종코드 조회",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-company-info-industry-code-search"
+                                },
+                                {
+                                    "label": "주소 찾기",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-company-info-address-search"
+                                },
+                                {
+                                    "label": "기술분류",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-company-info-technology-category"
+                                },
+                                {
+                                    "label": "품목설명",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-company-info-item-description"
+                                },
+                                {
+                                    "label": "기업정보 관리",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-company-info-company-management"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "2-2 대표자 역량 및 경력사항",
+                            "children": [
+                                {
+                                    "label": "입력도우미",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-representative-capability-career-input-helper"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "2-3 기업기타정보",
+                            "children": [
+                                {
+                                    "label": "거래유형 설명",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-additional-company-info-transaction-type-guide"
+                                },
+                                {
+                                    "label": "전문기술/숙련기술 정의",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-investment-model-additional-company-info-technology-definition"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(3) 평가 신청하기",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-investment-model-evaluation-application"
+                        },
+                        {
+                            "label": "(4) 최종 확인",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-investment-model-final-review"
+                        },
+                        {
+                            "label": "(5) 완료 화면",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-individual-evaluation-investment-model-complete"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "일괄평가",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "(1) Tech-Index 선택",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-batch-evaluation-tech-index-selection"
+                },
+                {
+                    "label": "(2) 평가내역조회/일괄평가 진행 선택",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "org-batch-evaluation-evaluation-history-or-batch"
+                    },
+                    "children": [
+                        {
+                            "label": "(3) 대량정보 조회 신청",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-bulk-data-request"
+                        },
+                        {
+                            "label": "(4) 대량정보 조회 신청 완료",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-bulk-data-complete"
+                        },
+                        {
+                            "label": "(3) 일괄평가 진행 신청",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-batch-evaluation-request"
+                        },
+                        {
+                            "label": "(4) 일괄평가 신청 완료",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-batch-evaluation-complete"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "특허평가",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "특허등급평가 조회",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "org-patent-evaluation-patent-grade-list"
+                    },
+                    "children": [
+                        {
+                            "label": "특허등급평가 결과",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "org-patent-evaluation-patent-grade-list-patent-grade-result"
+                            },
+                            "children": [
+                                {
+                                    "label": "보고서",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-patent-evaluation-patent-grade-list-patent-grade-result-report"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "K-BIGx 보고서",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "기업혁신성장보고서 조회",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "org-k-bigx-report-innovation-growth-report"
+                    },
+                    "children": [
+                        {
+                            "label": "정보 이용 동의",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-information-consent"
+                        },
+                        {
+                            "label": "진단브리핑",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing"
+                        },
+                        {
+                            "label": "기업현황",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-company-overview"
+                        },
+                        {
+                            "label": "기업혁신정보",
+                            "children": [
+                                {
+                                    "label": "기술분야개요",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-technology-overview"
+                                },
+                                {
+                                    "label": "재무정보",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-financial-info"
+                                },
+                                {
+                                    "label": "기술부문",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-technology"
+                                },
+                                {
+                                    "label": "R&D부문",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-rnd"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "Tech-Index",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-tech-index"
+                        },
+                        {
+                            "label": "신용/재무정보",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info"
+                        },
+                        {
+                            "label": "활동성정보",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-activity-info"
+                        },
+                        {
+                            "label": "인쇄 출력물 선택",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-print-output-selection"
+                        },
+                        {
+                            "label": "보고서 출력",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-innovation-growth-report-report-print"
+                        }
+                    ]
+                },
+                {
+                    "label": "보고서 이력 조회",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "org-k-bigx-report-report-history"
+                    },
+                    "children": [
+                        {
+                            "label": "보고서 보기",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-report-history-report-view"
+                        },
+                        {
+                            "label": "보고서 출력",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-k-bigx-report-report-history-report-print"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "탄소중립",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "탄소중립",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-carbon-neutrality"
+                }
+            ]
+        },
+        {
+            "name": "마이페이지",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "내 정보 수정",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "org-mypage-profile-edit"
+                    },
+                    "children": [
+                        {
+                            "label": "업종코드 조회",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-mypage-profile-edit-industry-code-search"
+                        },
+                        {
+                            "label": "주소 찾기",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-mypage-profile-edit-address-search"
+                        }
+                    ]
+                },
+                {
+                    "label": "평가이력 조회",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-mypage-evaluation-history"
+                },
+                {
+                    "label": "K-BIGx 보고서 이력",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "org-mypage-k-bigx-report-history"
+                    },
+                    "children": [
+                        {
+                            "label": "보고서 보기",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-mypage-k-bigx-report-history-report-view"
+                        },
+                        {
+                            "label": "보고서 출력",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-mypage-k-bigx-report-history-report-print"
+                        }
+                    ]
+                },
+                {
+                    "label": "하위 계정 진행 현황",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-mypage-sub-account-progress"
+                },
+                {
+                    "label": "1:1 문의 내역",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "org-mypage-inquiry-history"
+                    },
+                    "children": [
+                        {
+                            "label": "문의하기 상세",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-mypage-inquiry-history-inquiry-detail"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "알림마당",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "공지사항",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "org-notice-announcements"
+                    },
+                    "children": [
+                        {
+                            "label": "상세",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-notice-announcements-detail"
+                        }
+                    ]
+                },
+                {
+                    "label": "자주 묻는 질문",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-notice-faq"
+                },
+                {
+                    "label": "1:1 문의 등록",
+                    "screen": {
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포",
+                        "key": "org-notice-inquiry-create"
+                    },
+                    "children": [
+                        {
+                            "label": "문의 완료",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-notice-inquiry-create-inquiry-complete"
+                        },
+                        {
+                            "label": "개인정보 수집 및 이용 안내",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-notice-inquiry-create-privacy-consent-guide"
+                        }
+                    ]
+                },
+                {
+                    "label": "자료실",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-notice-resources"
+                }
+            ]
+        },
+        {
+            "name": "기술혁신정보 이용동의",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "기술혁신정보 이용동의",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-technology-information-consent"
+                }
+            ]
+        },
+        {
+            "name": "404 에러 화면",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "404 에러 화면",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-not-found"
+                }
+            ]
+        },
+        {
+            "name": "500 에러 화면",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "500 에러 화면",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-server-error"
+                }
+            ]
+        },
+        {
+            "name": "정기점검 화면",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "정기점검 화면",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-maintenance"
+                }
+            ]
+        },
+        {
+            "name": "우편번호 검색",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "우편번호 검색",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-postcode-search"
+                }
+            ]
+        },
+        {
+            "name": "분기별 비밀번호 변경",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "분기별 비밀번호 변경",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-quarterly-password-change"
+                }
+            ]
+        },
+        {
+            "name": "이용약관",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "이용약관",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-terms"
+                }
+            ]
+        },
+        {
+            "name": "개인정보 처리방침",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "개인정보 처리방침",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-privacy-policy"
+                },
+                {
+                    "label": "알기 쉬운 개인처리방침",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-privacy-policy-easy-privacy-policy"
+                }
+            ]
+        },
+        {
+            "name": "최초 비밀번호 변경",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "최초 비밀번호 변경",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-initial-password-change"
+                }
+            ]
+        },
+        {
+            "name": "로그인 연장",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "로그인 연장",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-session-extension"
+                }
+            ]
+        },
+        {
+            "name": "로그아웃 종료",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "로그아웃 종료",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-logout"
+                }
+            ]
+        }
+    ]
+}

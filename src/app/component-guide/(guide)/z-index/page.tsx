@@ -1,0 +1,108 @@
+import type {Metadata} from 'next'
+import {BaseCard} from '@/components/composite/base-card'
+import CopyChip from '@/components/custom/copy-chip'
+import GuidePageShell from '@/components/custom/guide-page-shell'
+import {Table} from '@/components/custom/table'
+import tokens from '@tokens'
+
+export const metadata: Metadata = {title: '쌓임 순서 (Z-index)'}
+
+// 각 z 토큰의 용도 큐레이션 — 값(순서)만으로는 의미가 안 드러나므로 어디에 쓰는지 함께 적는다.
+// 키 타입이 tokens.z 라, 토큰을 추가하고 설명을 빠뜨리면 typecheck 가 실패한다(표에 빈칸으로 나가지 않게).
+const Z_USAGE: Record<keyof typeof tokens.z, string> = {
+    base: '기본 흐름 — 별도 레이어 없음(0).',
+    dropdown: '드롭다운·셀렉트 메뉴.',
+    sticky: '일반 고정 요소 — 툴바·섹션 헤더 등.',
+    header: '프로젝트 상단 헤더(sticky 상단 바).',
+    'drawer-backdrop': '드로어·모달 뒤 반투명 배경(백드롭).',
+    drawer: '오프캔버스 사이드 드로어.',
+    modal: '모달 다이얼로그.',
+    popover: '팝오버 등 부유 콘텐츠.',
+    toast: '토스트·스낵바 알림.',
+    tooltip: '툴팁 — 거의 최상위.',
+    skiplink: '스킵 링크 — 포커스 시 모든 것 위.',
+    'stack-inactive': '스택 페이저에서 화면 밖으로 밀린 섹션 — 활성 섹션 아래.',
+    'stack-active': '스택 페이저에서 현재 보이는 섹션 — 이전·다음 섹션 위.',
+}
+// 표는 tokens.z 순서로 그리므로 조회는 문자열 키로 한다(위 객체가 누락 검사를 맡는다).
+const Z_USAGE_BY_NAME = new Map<string, string>(Object.entries(Z_USAGE))
+
+// 겹침 시연용 큐레이션 subset(값 오름차순). 클래스명은 리터럴로 둬야 Tailwind 가 z-* 유틸을 생성한다.
+const STACK_DEMO = [
+    {z: 'z-dropdown', label: '드롭다운', value: tokens.z.dropdown, pos: 'top-0 left-0'},
+    {z: 'z-sticky', label: '헤더(sticky)', value: tokens.z.sticky, pos: 'top-5 left-8'},
+    {z: 'z-drawer', label: '드로어', value: tokens.z.drawer, pos: 'top-10 left-16'},
+    {z: 'z-modal', label: '모달', value: tokens.z.modal, pos: 'top-15 left-24'},
+    {z: 'z-toast', label: '토스트', value: tokens.z.toast, pos: 'top-20 left-32'},
+]
+
+const Z_COLUMNS = [
+    {key: 'class', header: '클래스', align: 'start', rowHeader: true},
+    {key: 'value', header: '값', align: 'start'},
+    {key: 'usage', header: '용도', align: 'start', wrap: true},
+] as const
+
+// 쌓임 순서 (Z-index) — 겹치는 UI의 우선순위를 정하는 토큰. 값 자체보다 '순서'가 의미.
+const ZIndexGuidePage = () => (
+    <GuidePageShell title="쌓임 순서 (Z-index)" description="겹치는 UI의 우선순위를 관리하는 z-* 레이어 토큰입니다.">
+        {/* 겹침 시연 — 값이 큰 카드가 위에 그려진다 */}
+        <BaseCard>
+            <section aria-labelledby="z-demo" className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                    <h2 id="z-demo" className="typo-h4-bold">
+                        레이어 우선순위
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        용도에 맞는 <code className="font-mono">z-*</code>를 사용하고 임의 숫자는 작성하지 않습니다.
+                        값이 큰 레이어가 위에 표시됩니다.
+                    </p>
+                </div>
+                {/* 겹침을 보이려면 positioned 요소가 필요해 데모에 한해 absolute 를 쓴다(ST-005 예외). */}
+                <div className="border-border bg-background relative h-52 overflow-hidden rounded-xl border">
+                    {STACK_DEMO.map((card) => (
+                        <div
+                            key={card.z}
+                            className={`${card.z} ${card.pos} border-border bg-card shadow-1 absolute flex w-36 flex-col gap-1 rounded-lg border p-3`}
+                        >
+                            <span className="typo-body-l-medium">{card.label}</span>
+                            <span className="typo-body-l-regular text-muted-foreground font-mono">
+                                {card.z} · {card.value}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            </section>
+        </BaseCard>
+
+        {/* 전체 토큰 레퍼런스 */}
+        <BaseCard>
+            <section aria-labelledby="z-tokens" className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                    <h2 id="z-tokens" className="typo-h4-bold">
+                        토큰 목록
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        값과 용도는 <code className="font-mono">tokens.json</code>에서 관리하며 정수는 rem으로 변환하지
+                        않습니다.
+                    </p>
+                </div>
+                <Table
+                    caption="z-* 레이어 토큰의 값과 용도"
+                    columns={Z_COLUMNS}
+                    rows={Object.entries(tokens.z).map(([name, value]) => ({
+                        key: name,
+                        cells: [
+                            <CopyChip key="class" value={`z-${name}`} />,
+                            <span key="value" className="font-mono">
+                                {value}
+                            </span>,
+                            Z_USAGE_BY_NAME.get(name) ?? '—',
+                        ],
+                    }))}
+                />
+            </section>
+        </BaseCard>
+    </GuidePageShell>
+)
+
+export default ZIndexGuidePage

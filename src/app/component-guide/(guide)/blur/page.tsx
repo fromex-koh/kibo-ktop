@@ -1,0 +1,59 @@
+import type {Metadata} from 'next'
+import Image from 'next/image'
+import {BaseCard} from '@/components/composite/base-card'
+import CopyChip from '@/components/custom/copy-chip'
+import GuidePageShell from '@/components/custom/guide-page-shell'
+import tokens from '@tokens'
+
+export const metadata: Metadata = {title: '흐림 (Blur)'}
+
+// Tailwind 는 className 에 리터럴로 등장하는 클래스명만 스캔해서 CSS 를 생성한다 — tokens.effect.blur
+// 의 키(k)를 템플릿 리터럴로 조합해 넘기면(예: `blur-${k}`) 스캔되지 않아 유틸리티가 아예 안 만들어진다.
+// 그래서 실제 blur-sm/md/lg 리터럴 문자열을 고정 Record 로 두고 그 값을 그대로 className 에 쓴다.
+const BLUR_CLASS: Record<keyof typeof tokens.effect.blur, string> = {sm: 'blur-sm', md: 'blur-md', lg: 'blur-lg'}
+// 표는 tokens.json 순서로 그리므로 조회는 문자열 키로 한다(위 객체가 누락 검사를 맡는다).
+const BLUR_CLASS_BY_NAME = new Map<string, string>(Object.entries(BLUR_CLASS))
+
+// 흐림 — 흐림 토큰(--ds-blur-*)을 blur-* 유틸리티로 적용. 공통 OG 이미지와 같은 navy 계열의 추상 이미지로 강도를 시각화한다.
+const BlurGuidePage = () => (
+    <GuidePageShell title="흐림 (Blur)" description="요소 자체를 흐리게 만드는 blur-* 효과 토큰입니다.">
+        <BaseCard>
+            <section aria-labelledby="blur-scale" className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1">
+                    <h2 id="blur-scale" className="typo-h4-bold text-foreground">
+                        흐림 강도
+                    </h2>
+                    <p className="typo-body-l-regular text-foreground-subtle">
+                        장식 이미지에 <code className="font-mono">blur-sm/md/lg</code>를 적용합니다. 콘텐츠 위 레이어의
+                        배경을 어둡게 할 때는 Blur 대신 Overlay 토큰을 사용합니다. 값은{' '}
+                        <code className="font-mono">tokens.json</code>에서만 변경합니다.
+                    </p>
+                </div>
+                <ul className="grid gap-5 md:grid-cols-3">
+                    {Object.entries(tokens.effect.blur).map(([k, px]) => (
+                        <li key={k} className="border-border overflow-hidden rounded-xl border">
+                            <div className="relative aspect-video overflow-hidden">
+                                <Image
+                                    src="/blur-sample.png"
+                                    alt="navy 격자 위에 빛나는 중심 큐브가 있는 추상 기술 이미지"
+                                    draggable={false}
+                                    fill
+                                    sizes="(min-width: 768px) 33vw, 100vw"
+                                    className={`object-cover ${BLUR_CLASS_BY_NAME.get(k) ?? ''}`}
+                                />
+                            </div>
+                            <div className="border-border flex flex-col gap-1 border-t px-4 py-3">
+                                <CopyChip value={`blur-${k}`} />
+                                <span className="typo-body-l-regular text-muted-foreground font-mono">
+                                    --ds-blur-{k} · {px}px
+                                </span>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </section>
+        </BaseCard>
+    </GuidePageShell>
+)
+
+export default BlurGuidePage
