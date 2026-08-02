@@ -1,9 +1,9 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
-import {remLiteralsToPx} from '@/lib/token-format'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '폰트 (Primitive)'}
@@ -11,6 +11,9 @@ export const metadata: Metadata = {title: '폰트 (Primitive)'}
 // 폰트 원시값 — 굵기·행간·자간·크기의 raw 값. 색상 primitive(--raw-blue-*)와 같은 티어로, 직접 쓰지
 // 않고 typo-* 클래스(semantic)가 이 원시들을 묶어 참조한다. 미리보기 표본.
 const PREVIEW_SAMPLE = '가나다 Ag 12'
+const TYPO_TABLET_BREAKPOINT = tokens.typographyBreakpoints.tablet
+const TYPO_PC_BREAKPOINT = tokens.typographyBreakpoints.pc
+const BREAKPOINTS: Record<string, number> = tokens.breakpoint
 
 // 크기 tier — typo 이름 <tier>-<weight> 에서 굵기 접미사를 뗀다(생성기 tierOf 와 동일 규칙). 굵기와
 // 무관해 tier 하나가 한 --raw-font-size-<tier> 를 공유하므로, tier 별 첫 항목의 크기만 큐레이션한다.
@@ -19,14 +22,13 @@ const tierOf = (name: string): string => {
     const w = WEIGHT_KEYS.find((key) => name.endsWith(`-${key}`))
     return w ? name.slice(0, -(w.length + 1)) : name
 }
-// px 숫자는 rem 환산까지, 문자열 값(마키 밴드의 유동 clamp 등)은 안의 rem 을 px 로 되돌려 함께 보여준다.
-const formatFontSize = (value: number | string): string =>
-    typeof value === 'number' ? `${value}px → ${value / tokens.remBase}rem` : `${remLiteralsToPx(value)} → ${value}`
-const FONT_SIZE_TIERS: {tier: string; mobile: number | string; pc: number | string}[] = []
+// tokens.json의 px 숫자가 생성 시 어떤 rem 값이 되는지 함께 보여준다.
+const formatFontSize = (value: number): string => `${value}px → ${value / tokens.remBase}rem`
+const FONT_SIZE_TIERS: {tier: string; mobile: number; tablet: number; pc: number}[] = []
 for (const [name, t] of Object.entries(tokens.typography)) {
     const tier = tierOf(name)
     if (!FONT_SIZE_TIERS.some((item) => item.tier === tier)) {
-        FONT_SIZE_TIERS.push({tier, mobile: t.size.mobile, pc: t.size.pc})
+        FONT_SIZE_TIERS.push({tier, mobile: t.size.mobile, tablet: t.size.tablet, pc: t.size.pc})
     }
 }
 
@@ -38,7 +40,7 @@ const PRIMITIVE_TABLE_COLUMNS = [
     {key: 'preview', header: '미리보기', align: 'start'},
 ] as const
 
-// 한 원시 그룹 = 독립 테이블(변수·값·미리보기). 변수 칩을 클릭하면 이름이 복사된다.
+// 한 원시 그룹 = 독립 테이블(변수·값·미리보기).
 const PrimitiveTable = ({title, hint, rows}: {title: string; hint: string; rows: PrimitiveRow[]}) => (
     <BaseCard>
         <section className="flex flex-col gap-4">
@@ -72,27 +74,26 @@ const PrimitiveTable = ({title, hint, rows}: {title: string; hint: string; rows:
 const FONT_SIZE_TABLE_COLUMNS = [
     {key: 'tier', header: 'Tier', align: 'start', rowHeader: true},
     {key: 'mobile', header: '모바일 변수·값', align: 'start'},
+    {key: 'tablet', header: '태블릿 변수·값', align: 'start'},
     {key: 'pc', header: 'PC 변수·값', align: 'start'},
-    {key: 'preview', header: '미리보기', align: 'start'},
+    {key: 'preview', header: '모바일 미리보기', align: 'start'},
 ] as const
 
-// font-size는 모바일·PC 변수가 한 쌍이다. 값이 같아도 -pc 변수를 생성해 typo-*가 같은 구조로 참조하며,
-// 생성 CSS에서는 중복 리터럴 대신 모바일 변수를 다시 가리킨다.
+// font-size는 모바일·태블릿·PC 변수를 한 세트로 생성한다. 인접 구간 값이 같으면 앞 구간 변수를 참조한다.
 const FontSizeTable = () => (
     <BaseCard>
         <section className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
                 <h2 className="typo-h4-bold">크기 (font-size)</h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    tier별 모바일·PC 원시 변수를 생성합니다. tokens.json에는 px 숫자로 입력하고 CSS에는 rem으로
-                    출력합니다.
+                    tier별 모바일·태블릿·PC 원시 변수를 생성합니다. px 숫자로 입력하고 CSS에는 rem으로 출력합니다.
                 </p>
             </div>
             <Table
                 size="md"
-                caption="font-size tier별 모바일·PC 원시 변수와 값"
+                caption="font-size tier별 모바일·태블릿·PC 원시 변수와 값"
                 columns={FONT_SIZE_TABLE_COLUMNS}
-                rows={FONT_SIZE_TIERS.map(({tier, mobile, pc}) => ({
+                rows={FONT_SIZE_TIERS.map(({tier, mobile, tablet, pc}) => ({
                     key: tier,
                     cells: [
                         <span key="tier" className="text-foreground font-mono">
@@ -102,6 +103,11 @@ const FontSizeTable = () => (
                             <span className="text-foreground">--raw-font-size-{tier}</span>
                             <br />
                             {formatFontSize(mobile)}
+                        </span>,
+                        <span key="tablet" className="text-muted-foreground font-mono whitespace-nowrap">
+                            <span className="text-foreground">--raw-font-size-{tier}-tablet</span>
+                            <br />
+                            {formatFontSize(tablet)}
                         </span>,
                         <span key="pc" className="text-muted-foreground font-mono whitespace-nowrap">
                             <span className="text-foreground">--raw-font-size-{tier}-pc</span>
@@ -118,54 +124,93 @@ const FontSizeTable = () => (
     </BaseCard>
 )
 
-const TYPOGRAPHY_COUNT = Object.keys(tokens.typography).length
-const FONT_SIZE_TIER_COUNT = FONT_SIZE_TIERS.length
-
 // 폰트 (Primitive) — Tier 1 원시 하위값(굵기·행간·자간·크기). typo-* 가 이들을 묶어 참조한다.
 const FontPrimitiveGuidePage = () => (
     <GuidePageShell
         title="폰트 (Primitive)"
-        description="tokens.json의 폰트 원시값입니다. 일반 UI에서는 개별 값을 조합하지 말고 크기·굵기·행간·자간을 묶은 typo-* 클래스를 우선하세요."
+        description="typo-* 유틸리티의 기반 값입니다. 앱 코드에서는 원시값 대신 역할에 맞는 typo-* 클래스 하나를 사용합니다."
     >
         <div className="flex flex-col gap-12">
             <BaseCard>
-                <section aria-labelledby="font-primitive-rule" className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-1">
+                <section aria-labelledby="font-primitive-rule" className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
                         <h2 id="font-primitive-rule" className="typo-h4-bold text-foreground">
-                            구조와 사용 원칙
+                            개발자 사용 기준
                         </h2>
                         <p className="typo-body-l-regular text-foreground-subtle">
-                            font-size·font-weight·line-height·letter-spacing 원시값을 조합해 하나의 typo-* 복합
-                            유틸리티를 생성합니다.
+                            텍스트에는 <code className="font-mono">typo-body-xl-regular</code>처럼 크기·굵기·행간·자간을
+                            묶은 복합 유틸리티 하나를 사용합니다.
                         </p>
+                        <Link
+                            href="/component-guide/typography"
+                            className="text-primary focus-visible:ring-ring w-fit rounded-sm underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                        >
+                            타이포그래피 클래스와 실제 미리보기 보기
+                        </Link>
                     </div>
-                    <div className="grid gap-4 md:grid-cols-3">
-                        <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">단일 원본</strong>
+
+                    <div className="grid gap-6 md:grid-cols-3">
+                        <div className="flex flex-col gap-2">
+                            <strong className="text-foreground">기본 원칙</strong>
                             <p className="text-foreground-subtle">
-                                값과 조합은 <code className="font-mono">tokens.json</code>에서 관리합니다.
+                                기존 <code className="font-mono">typo-*</code>가 있으면 font-size·font-weight·
+                                line-height·letter-spacing을 개별 유틸리티로 다시 조합하지 않습니다.
                             </p>
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">단위 변환</strong>
+                        <div className="flex flex-col gap-2">
+                            <strong className="text-foreground">Raw 허용 범위</strong>
                             <p className="text-foreground-subtle">
-                                크기·자간의 px 입력값은 <code className="font-mono">yarn tokens</code>에서 rem으로
-                                변환됩니다.
+                                <code className="font-mono">--raw-font-*</code>는 토큰 생성기·문서·검증에서만
+                                사용합니다. 새 조합이 필요하면 <code className="font-mono">typo-*</code> 토큰을
+                                추가합니다.
                             </p>
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">사용 계층</strong>
+                        <div className="flex flex-col gap-2">
+                            <strong className="text-foreground">금지 사항</strong>
                             <p className="text-foreground-subtle">
-                                원시 변수 → <code className="font-mono">typo-*</code> → 컴포넌트 순서로 적용합니다.
+                                컴포넌트에 px/rem 리터럴을 직접 넣거나 자동 생성 파일인{' '}
+                                <code className="font-mono">src/app/tokens.css</code>를 수정하지 않습니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="border-border grid gap-4 border-t pt-6 md:grid-cols-2">
+                        <div className="flex flex-col gap-2">
+                            <strong className="text-foreground">토큰 변경 절차</strong>
+                            <ol className="text-foreground-subtle list-decimal space-y-1 pl-5">
+                                <li>
+                                    <code className="font-mono">tokens.json</code>에서 원시값 또는 조합을 변경합니다.
+                                </li>
+                                <li>
+                                    <code className="font-mono">yarn tokens</code>로 CSS를 다시 생성합니다.
+                                </li>
+                                <li>
+                                    <code className="font-mono">yarn verify</code>로 참조·포맷·타입을 검증합니다.
+                                </li>
+                            </ol>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <strong className="text-foreground">크기와 반응형 규칙</strong>
+                            <p className="text-foreground-subtle">
+                                크기는 px로 입력하고 CSS에는 rem으로 생성합니다. 모바일 기본값에서{' '}
+                                <code className="font-mono">
+                                    {TYPO_TABLET_BREAKPOINT} ({BREAKPOINTS[TYPO_TABLET_BREAKPOINT]}px)
+                                </code>
+                                부터 태블릿,{' '}
+                                <code className="font-mono">
+                                    {TYPO_PC_BREAKPOINT} ({BREAKPOINTS[TYPO_PC_BREAKPOINT]}px)
+                                </code>
+                                부터 PC 값을 적용합니다.
                             </p>
                         </div>
                     </div>
                 </section>
             </BaseCard>
 
+            <FontSizeTable />
             <PrimitiveTable
                 title="굵기 (font-weight)"
-                hint="typo-* 이름의 -regular/-medium/-semibold/-bold 접미사가 아래 원시값을 참조합니다."
+                hint="typo-* 이름의 regular·medium·semibold·bold 접미사와 연결됩니다."
                 rows={Object.entries(tokens.fontWeight).map(([name, weight]) => ({
                     cssVar: `var(--raw-font-weight-${name})`,
                     value: weight,
@@ -174,7 +219,7 @@ const FontPrimitiveGuidePage = () => (
             />
             <PrimitiveTable
                 title="행간 (line-height)"
-                hint={`현재 ${Object.keys(tokens.lineHeight).length}개의 공유 원시값을 typography 조합에서 이름으로 참조합니다.`}
+                hint="여러 typo-* 조합이 같은 행간 값을 이름으로 공유합니다."
                 rows={Object.entries(tokens.lineHeight).map(([name, value]) => ({
                     cssVar: `var(--raw-line-height-${name})`,
                     value,
@@ -182,19 +227,12 @@ const FontPrimitiveGuidePage = () => (
             />
             <PrimitiveTable
                 title="자간 (letter-spacing)"
-                hint={`현재 ${Object.keys(tokens.letterSpacing).length}개의 공유 원시값을 typography 조합에서 이름으로 참조합니다.`}
+                hint="여러 typo-* 조합이 같은 자간 값을 이름으로 공유합니다."
                 rows={Object.entries(tokens.letterSpacing).map(([name, value]) => ({
                     cssVar: `var(--raw-letter-spacing-${name})`,
                     value,
                 }))}
             />
-            <FontSizeTable />
-
-            <p className="typo-caption-regular text-muted-foreground">
-                현재 font-size tier {FONT_SIZE_TIER_COUNT}개와 typo-* 조합 {TYPOGRAPHY_COUNT}개를{' '}
-                <code className="font-mono">tokens.json</code>에서 자동 큐레이션합니다. 실제 복합 클래스와 프로젝트 전용{' '}
-                <code className="font-mono">tracking-control-label</code>은 타이포그래피 가이드에서 확인합니다.
-            </p>
         </div>
     </GuidePageShell>
 )
