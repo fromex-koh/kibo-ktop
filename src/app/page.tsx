@@ -17,6 +17,7 @@ const GuideIcon = ICON_REGISTRY[guide.icon]
 
 // 저장소 링크에 URL 자체를 노출해 보는 사람이 주소를 확인할 수 있게 한다(스킴은 생략해 간결하게).
 const REPOSITORY_URL_LABEL = REPOSITORY_URL.replace(/^https?:\/\//, '')
+const FRONTEND_HANDOFF_URL = `${REPOSITORY_URL.replace(/\/$/, '')}/tree/frontend-handoff`
 
 // 현재 버전·빌드 시각 — next.config.ts가 커밋된 릴리스 메타데이터와 빌드 시각을 주입한다.
 // 로컬 개발 등 값이 없을 때만 폴백을 쓴다. (MD-003)
@@ -65,6 +66,24 @@ const Home = () => {
                                         <GitBranch aria-hidden="true" className="size-4 shrink-0" />
                                         {REPOSITORY_URL_LABEL}
                                         <span className="text-muted-foreground whitespace-nowrap">(main 브랜치)</span>
+                                        <span className="sr-only"> (새 창에서 열림)</span>
+                                    </a>
+                                </dd>
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <dt className="text-muted-foreground w-16 shrink-0">FE 전달용</dt>
+                                <dd>
+                                    <a
+                                        href={FRONTEND_HANDOFF_URL}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-primary focus-visible:ring-ring focus-visible:ring-offset-background inline-flex items-center gap-1.5 rounded font-medium break-all hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                                    >
+                                        <GitBranch aria-hidden="true" className="size-4 shrink-0" />
+                                        {REPOSITORY_URL_LABEL}
+                                        <span className="text-muted-foreground whitespace-nowrap">
+                                            (frontend-handoff 브랜치)
+                                        </span>
                                         <span className="sr-only"> (새 창에서 열림)</span>
                                     </a>
                                 </dd>

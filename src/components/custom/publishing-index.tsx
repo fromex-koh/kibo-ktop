@@ -298,9 +298,19 @@ const PublishingIndex = () => {
                             <SectionHeaderTitle id="frontend-handoff-assets-title">
                                 프론트엔드 인계 자산
                             </SectionHeaderTitle>
-                            <SectionHeaderDescription>
-                                전달 프로젝트를 생성하는 원본 경로와 마지막 반영 버전입니다. 이번 버전에 반영된 항목은
-                                강조해 표시합니다.
+                            <SectionHeaderDescription asChild>
+                                <ul className="flex list-disc flex-col gap-1 pl-5">
+                                    <li>
+                                        <code className="text-foreground font-mono">main</code>은 퍼블리싱 제작·검수용
+                                        브랜치입니다. 프론트엔드 개발은 검증된 결과만 제공하는{' '}
+                                        <code className="text-foreground font-mono">frontend-handoff</code> 브랜치를
+                                        내려받아 시작합니다.
+                                    </li>
+                                    <li>
+                                        아래 표는 전달 자산의 원본 경로와 마지막 반영 버전이며, 이번 버전에 반영된
+                                        항목은 강조해 표시합니다.
+                                    </li>
+                                </ul>
                             </SectionHeaderDescription>
                         </SectionHeader>
 
