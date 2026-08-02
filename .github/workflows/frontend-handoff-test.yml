@@ -56,18 +56,40 @@ jobs:
               working-directory: ${{ runner.temp }}/frontend-handoff
               run: yarn build
 
-            - name: Publish independent test branch
-              working-directory: ${{ runner.temp }}/frontend-handoff
+            - name: Publish test handoff with history
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
                   SOURCE_COMMIT: ${{ github.sha }}
               shell: bash
               run: |
-                  rm -rf .next
-                  git init
-                  git config user.name 'github-actions[bot]'
-                  git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-                  git add --all
-                  git commit -m "chore: sync frontend handoff test from ${SOURCE_COMMIT}"
-                  git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-                  git push --force origin HEAD:frontend-handoff-test
+                  source_dir="$RUNNER_TEMP/frontend-handoff"
+                  publish_dir="$RUNNER_TEMP/frontend-handoff-publish"
+                  target_branch="frontend-handoff-test"
+                  repository="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+                  if git ls-remote --exit-code --heads "$repository" "$target_branch" > /dev/null; then
+                      git clone --branch "$target_branch" --single-branch "$repository" "$publish_dir"
+                  else
+                      mkdir -p "$publish_dir"
+                      git -C "$publish_dir" init
+                      git -C "$publish_dir" switch --orphan "$target_branch"
+                      git -C "$publish_dir" remote add origin "$repository"
+                  fi
+
+                  rsync -a --delete \
+                      --exclude='.git/' \
+                      --exclude='.next/' \
+                      --exclude='node_modules/' \
+                      "$source_dir/" "$publish_dir/"
+
+                  git -C "$publish_dir" config user.name 'github-actions[bot]'
+                  git -C "$publish_dir" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+                  git -C "$publish_dir" add --all
+
+                  if git -C "$publish_dir" diff --cached --quiet; then
+                      echo '변경된 frontend handoff 파일이 없습니다.'
+                      exit 0
+                  fi
+
+                  git -C "$publish_dir" commit -m "chore: sync frontend handoff test from ${SOURCE_COMMIT}"
+                  git -C "$publish_dir" push origin "HEAD:${target_branch}"
