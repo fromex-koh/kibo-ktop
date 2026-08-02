@@ -44,23 +44,17 @@ const Z_COLUMNS = [
 
 // 쌓임 순서 (Z-index) — 겹치는 UI의 우선순위를 정하는 토큰. 값 자체보다 '순서'가 의미.
 const ZIndexGuidePage = () => (
-    <GuidePageShell
-        title="쌓임 순서 (Z-index)"
-        description={
-            <>
-                겹치는 UI의 <strong>쌓임 순서</strong>를 일관되게 관리하는 {Object.keys(tokens.z).length}개 토큰입니다.
-            </>
-        }
-    >
+    <GuidePageShell title="쌓임 순서 (Z-index)" description="겹치는 UI의 우선순위를 관리하는 z-* 레이어 토큰입니다.">
         {/* 겹침 시연 — 값이 큰 카드가 위에 그려진다 */}
         <BaseCard>
             <section aria-labelledby="z-demo" className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <h2 id="z-demo" className="typo-h4-bold">
-                        쌓임 순서 미리보기
+                        레이어 우선순위
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        아래 카드는 값이 큰 순서대로 위에 겹칩니다 — 토큰 값이 곧 우선순위입니다.
+                        용도에 맞는 <code className="font-mono">z-*</code>를 사용하고 임의 숫자는 작성하지 않습니다.
+                        값이 큰 레이어가 위에 표시됩니다.
                     </p>
                 </div>
                 {/* 겹침을 보이려면 positioned 요소가 필요해 데모에 한해 absolute 를 쓴다(ST-005 예외). */}
@@ -85,10 +79,11 @@ const ZIndexGuidePage = () => (
             <section aria-labelledby="z-tokens" className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <h2 id="z-tokens" className="typo-h4-bold">
-                        Z-index 토큰
+                        토큰 목록
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        정수라 rem 변환하지 않습니다. 클래스 칩을 클릭하면 이름이 복사됩니다.
+                        값과 용도는 <code className="font-mono">tokens.json</code>에서 관리하며 정수는 rem으로 변환하지
+                        않습니다.
                     </p>
                 </div>
                 <Table
