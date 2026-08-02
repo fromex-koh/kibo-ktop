@@ -4,7 +4,7 @@ import {useState} from 'react'
 import {cn} from '@/lib/utils'
 import {Button} from '@/components/ui/button'
 import {Switch} from '@/components/composite/control-switch'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
+import {FIELD_FOCUS_RING} from '@/constants/publishing-guide'
 import {Field, FieldDescription, FieldLabel} from '@/components/ui/field'
 
 const SwitchFormDemo = () => {

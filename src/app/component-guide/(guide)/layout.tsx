@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import type {ReactNode} from 'react'
-import {GUIDE_NAV_SECTIONS} from '@/constants/guide-nav'
+import {GUIDE_NAV_SECTIONS} from '@/constants/publishing-guide'
 import SidebarLayout from '@/components/composite/sidebar-layout'
 import {ScrollToTopButton} from '@/components/composite/scroll-to-top-button'
 

@@ -28,7 +28,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/c
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Checkbox} from '@/components/ui/checkbox'
-import {SELF_DIAGNOSIS_STEPS} from '@/constants/self-diagnosis'
+import {SELF_DIAGNOSIS_STEPS} from '@/constants/publishing-guide'
 
 export const metadata: Metadata = {title: '체크리스트 입력'}
 

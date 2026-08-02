@@ -5,11 +5,11 @@ import ThemeToggle from '@/components/composite/theme-toggle'
 import {BaseCard} from '@/components/composite/base-card'
 import {Button} from '@/components/ui/button'
 import {Badge} from '@/components/ui/badge'
-import {ICON_REGISTRY} from '@/constants/icon-registry'
-import {HOME_CONTENT} from '@/content'
-import {REPOSITORY_URL, SITE_NAME} from '@/constants/site'
+import {ICON_REGISTRY} from '@/constants/publishing-guide'
+import {HOME_CONTENT} from '@/content/publishing-guide'
+import {REPOSITORY_URL, SITE_NAME} from '@/constants/publishing-guide'
 
-// 화면 콘텐츠(텍스트·아이콘 이름·링크)는 src/content/home.json 단일 소스에서 온다.
+// 화면 콘텐츠(텍스트·아이콘 이름·링크)는 src/content/publishing-guide/home.json 단일 소스에서 온다.
 // 저장소 URL 은 환경변수(NEXT_PUBLIC_REPOSITORY_URL), 타이틀은 SITE_NAME 을 재사용한다.
 const {badge, projectInfo, guide} = HOME_CONTENT
 const ProjectInfoIcon = ICON_REGISTRY[projectInfo.icon]

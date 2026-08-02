@@ -2,7 +2,7 @@
 
 import {useState, type ComponentProps} from 'react'
 import {cn} from '@/lib/utils'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
+import {FIELD_FOCUS_RING} from '@/constants/publishing-guide'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Field, FieldGroup, FieldLabel} from '@/components/ui/field'
 

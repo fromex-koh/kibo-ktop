@@ -21,7 +21,7 @@ yarn dev        # ← 실행 전에 디자인 토큰 CSS를 자동 생성합니�
 | -------------------- | ----------------------------------------- | ------------- |
 | `src/app/tokens.css` | 디자인 토큰(색·타이포·간격·그리드…) → CSS | `yarn tokens` |
 
-`yarn dev`·`yarn build`는 실행 직전에 `yarn tokens`를 자동으로 실행합니다. `src/content/asset-versions.generated.json`은 GitHub Actions가 릴리스할 때 확정해 커밋하는 파일이므로 클론·Vercel 빌드에서 다시 만들지 않습니다.
+`yarn dev`·`yarn build`는 실행 직전에 `yarn tokens`를 자동으로 실행합니다. `src/content/publishing-guide/asset-versions.generated.json`은 GitHub Actions가 릴리스할 때 확정해 커밋하는 파일이므로 클론·Vercel 빌드에서 다시 만들지 않습니다.
 
 > `src/app/tokens.css`가 없는 최초 클론에서는 `yarn dev` 또는 `yarn build`를 먼저 실행하면 됩니다.
 
@@ -117,26 +117,26 @@ postcss.config.mjs · components.json · .husky/       # 빌드·린트·포맷�
 
 # ── 생성물 (직접 편집 금지) ──
 src/app/tokens.css                          # git 미추적 · yarn dev/build 전 자동 생성
-src/content/asset-versions.generated.json   # git 추적 · GitHub Actions 릴리스 커밋에서 생성
+src/content/publishing-guide/asset-versions.generated.json   # git 추적 · GitHub Actions 릴리스 커밋에서 생성
 ```
 
 ### 유지보수자 파일 맵
 
 화면·스타일·원본 기준선을 수정할 때 아래 책임 경계를 먼저 확인한다.
 
-| 경로                                         | 책임                                  | 변경 기준                                                               |
-| -------------------------------------------- | ------------------------------------- | ----------------------------------------------------------------------- |
-| `src/app/page.tsx`                           | 시작 페이지 조합                      | 프로젝트 카드·Badge·링크·퍼블리싱 인덱스 배치만 수정                    |
-| `src/content/home.json`                      | 시작 페이지 텍스트·아이콘·링크 데이터 | 화면 문구나 링크 변경 시 우선 수정                                      |
-| `src/components/ui/`                         | shadcn primitive 셸                   | 구조·props·동작·접근성은 원본 유지; 스타일은 theme import만 허용        |
-| `src/components/theme/`                      | 프로젝트 전용 CVA·스타일 토큰         | 디자인 스타일 변경의 유일한 작업 위치                                   |
-| `src/components/composite/`                  | primitive 조합 컴포넌트               | 여러 primitive를 조합하거나 프로젝트 기능을 확장할 때 수정              |
-| `src/components/custom/publishing-index.tsx` | 퍼블리싱 인덱스 화면 전용 표현·필터   | 시작 페이지 인덱스 UI와 필터 동작 수정                                  |
-| `src/content/publishing-index.json`          | 퍼블리싱 인덱스 화면·상태·버전 데이터 | 인덱스 행이나 상태 변경 시 수정                                         |
-| `src/app/component-guide/(guide)/`           | 컴포넌트 가이드·사용 예시             | 컴포넌트 API·스타일 변경 시 가이드도 함께 갱신                          |
-| `vendor/shadcn-baseline/`                    | 수정 셸의 바닐라 스타일 기준선        | theme import가 있는 `ui` 셸만 대응하며 앱에서는 import하지 않음         |
-| `tokens.json`                                | 디자인 토큰 원본                      | 색상·간격·타이포·효과 변경 시 직접 수정 후 토큰 생성                    |
-| `THIRD_PARTY_LICENSES.md`                    | 제3자 라이선스 통합 고지              | 의존성 변경 후 `yarn license-notices`로 갱신하고 인계·배포 시 함께 유지 |
+| 경로                                                 | 책임                                  | 변경 기준                                                               |
+| ---------------------------------------------------- | ------------------------------------- | ----------------------------------------------------------------------- |
+| `src/app/page.tsx`                                   | 시작 페이지 조합                      | 프로젝트 카드·Badge·링크·퍼블리싱 인덱스 배치만 수정                    |
+| `src/content/publishing-guide/home.json`             | 시작 페이지 텍스트·아이콘·링크 데이터 | 화면 문구나 링크 변경 시 우선 수정                                      |
+| `src/components/ui/`                                 | shadcn primitive 셸                   | 구조·props·동작·접근성은 원본 유지; 스타일은 theme import만 허용        |
+| `src/components/theme/`                              | 프로젝트 전용 CVA·스타일 토큰         | 디자인 스타일 변경의 유일한 작업 위치                                   |
+| `src/components/composite/`                          | primitive 조합 컴포넌트               | 여러 primitive를 조합하거나 프로젝트 기능을 확장할 때 수정              |
+| `src/components/custom/publishing-index.tsx`         | 퍼블리싱 인덱스 화면 전용 표현·필터   | 시작 페이지 인덱스 UI와 필터 동작 수정                                  |
+| `src/content/publishing-guide/publishing-index.json` | 퍼블리싱 인덱스 화면·상태·버전 데이터 | 인덱스 행이나 상태 변경 시 수정                                         |
+| `src/app/component-guide/(guide)/`                   | 컴포넌트 가이드·사용 예시             | 컴포넌트 API·스타일 변경 시 가이드도 함께 갱신                          |
+| `vendor/shadcn-baseline/`                            | 수정 셸의 바닐라 스타일 기준선        | theme import가 있는 `ui` 셸만 대응하며 앱에서는 import하지 않음         |
+| `tokens.json`                                        | 디자인 토큰 원본                      | 색상·간격·타이포·효과 변경 시 직접 수정 후 토큰 생성                    |
+| `THIRD_PARTY_LICENSES.md`                            | 제3자 라이선스 통합 고지              | 의존성 변경 후 `yarn license-notices`로 갱신하고 인계·배포 시 함께 유지 |
 
 ## 문서
 

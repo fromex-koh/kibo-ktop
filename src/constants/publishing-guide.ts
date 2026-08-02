@@ -1,3 +1,8 @@
+import {Info, LayoutGrid, type LucideIcon} from 'lucide-react'
+
+// [퍼블리싱 가이드 전용] 이 파일은 퍼블리싱 시작 페이지와 /component-guide 예시에서만 사용한다.
+// 해당 페이지를 이식하지 않으면 파일 전체를 삭제할 수 있다.
+
 // 컴포넌트 가이드(/component-guide)의 사이드 내비게이션 = 화면 내 섹션(#s-*) 목차.
 // 사이드바 레이아웃을 쓰는 가이드 페이지와 레이아웃 데모가 같은 목차를 공유하도록 한 곳에 둔다.
 // 섹션을 추가·리네임하면 여기 href(#s-*)와 페이지의 aria-labelledby id 를 함께 맞춘다.
@@ -177,3 +182,36 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         ],
     },
 ]
+
+// checkbox·radio·switch 등 horizontal Field 예시의 wrapper 포커스링.
+export const FIELD_FOCUS_RING =
+    'data-[orientation=horizontal]:has-[:focus-visible]:outline-2 data-[orientation=horizontal]:has-[:focus-visible]:outline-solid data-[orientation=horizontal]:has-[:focus-visible]:outline-ring data-[orientation=horizontal]:has-[:focus-visible]:outline-offset-2 data-[orientation=horizontal]:[&_:focus-visible]:outline-none has-[[data-slot=checkbox]]:rounded-2xs has-[[data-slot=radio-group-item]]:rounded-full has-[[data-slot=switch]]:rounded-full has-[[data-slot=field-content]]:rounded-sm'
+
+export const SELF_DIAGNOSIS_STEPS = [
+    '고객 정보 활용 동의',
+    '기업·기술정보 입력',
+    '체크리스트 입력',
+    '제출 완료',
+] as const
+
+// 퍼블리싱 시작 페이지의 콘텐츠 JSON 아이콘 이름을 실제 lucide 컴포넌트로 연결한다.
+export const ICON_REGISTRY = {
+    Info,
+    LayoutGrid,
+} satisfies Record<string, LucideIcon>
+
+export type IconName = keyof typeof ICON_REGISTRY
+
+export const isIconName = (value: string): value is IconName =>
+    Object.keys(ICON_REGISTRY).some((name) => name === value)
+
+export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://example.com'
+export const REPOSITORY_URL = process.env.NEXT_PUBLIC_REPOSITORY_URL ?? 'https://github.com/fromex-koh/kibo-ktop'
+export const SITE_NAME = '[채널계] 기술평가 통합 플랫폼 퍼블리싱 가이드'
+export const SITE_DESCRIPTION =
+    '기술평가 통합 플랫폼(채널계)의 프론트엔드 퍼블리싱 가이드. 웹 접근성(KWCAG 2.1)과 표준 코드 컨벤션을 준수한 마크업·컴포넌트·화면 페이지 기준을 제공합니다.'
+
+// /component-guide/main-page 예시에서 tokens.css 의 .mainpage 스킨을 강제 적용한다.
+// 가이드 페이지를 이식하지 않으면 theme-provider.tsx 의 관련 분기와 함께 삭제한다.
+export const MAIN_PAGE_THEME = 'mainpage'
+export const MAIN_PAGE_PATH = '/component-guide/main-page'

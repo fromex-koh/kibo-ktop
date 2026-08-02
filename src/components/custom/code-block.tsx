@@ -9,7 +9,7 @@ import {cn} from '@/lib/utils'
 // 페이지와 코드블럭의 명암을 반대로 둔다: 라이트 페이지에는 oneDark, 다크 페이지에는 vsLight.
 // vsLight 의 attr-name 순수 빨강(rgb(255,0,0))만 흰 배경에서 4.0:1이라, 같은 계열의 진한 빨강으로
 // 보정해 일반 텍스트 최소 대비 4.5:1을 넘긴다. 나머지는 라이브러리 내장 팔레트를 그대로 쓴다.
-type CodeBlockProps = {code: string; language?: Language; copyLabel?: string}
+type CodeBlockProps = {code: string; language?: Language; copyLabel?: string; accentLines?: number[]}
 
 const accessibleVsLight: PrismTheme = {
     ...themes.vsLight,
@@ -24,10 +24,11 @@ const subscribeToHydration = () => () => undefined
 const getClientSnapshot = () => true
 const getServerSnapshot = () => false
 
-const CodeBlock = ({code, language = 'tsx'}: CodeBlockProps) => {
+const CodeBlock = ({code, language = 'tsx', accentLines = []}: CodeBlockProps) => {
     const {resolvedTheme} = useTheme()
     const isHydrated = useSyncExternalStore(subscribeToHydration, getClientSnapshot, getServerSnapshot)
     const codeTheme = isHydrated && resolvedTheme === 'dark' ? accessibleVsLight : themes.oneDark
+    const accentColor = isHydrated && resolvedTheme === 'dark' ? 'var(--color-primary)' : 'rgb(125, 211, 252)'
 
     return (
         <div className="border-border relative overflow-hidden rounded-md border">
@@ -39,12 +40,29 @@ const CodeBlock = ({code, language = 'tsx'}: CodeBlockProps) => {
                         <code>
                             {tokens.map((line, lineIndex) => {
                                 const {className: lineClassName, ...lineProps} = getLineProps({line})
+                                const isAccented = accentLines.includes(lineIndex + 1)
 
                                 return (
-                                    <span key={lineIndex} className={cn('block', lineClassName)} {...lineProps}>
-                                        {line.map((token, tokenIndex) => (
-                                            <span key={tokenIndex} {...getTokenProps({token})} />
-                                        ))}
+                                    <span
+                                        key={lineIndex}
+                                        className={cn('block', isAccented && 'font-semibold', lineClassName)}
+                                        {...lineProps}
+                                    >
+                                        {line.map((token, tokenIndex) => {
+                                            const tokenProps = getTokenProps({token})
+
+                                            return (
+                                                <span
+                                                    key={tokenIndex}
+                                                    {...tokenProps}
+                                                    style={
+                                                        isAccented
+                                                            ? {...tokenProps.style, color: accentColor}
+                                                            : tokenProps.style
+                                                    }
+                                                />
+                                            )
+                                        })}
                                     </span>
                                 )
                             })}

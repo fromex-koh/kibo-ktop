@@ -5,7 +5,7 @@ import {Switch} from '@/components/composite/control-switch'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
+import {FIELD_FOCUS_RING} from '@/constants/publishing-guide'
 import {Field, FieldLabel} from '@/components/ui/field'
 import SwitchFormDemo from './switch-form-demo'
 

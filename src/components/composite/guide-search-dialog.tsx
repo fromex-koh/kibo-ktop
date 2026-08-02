@@ -3,7 +3,7 @@
 import {useEffect, useMemo, useState, useSyncExternalStore} from 'react'
 import Link from 'next/link'
 import {ArrowRight, Search} from 'lucide-react'
-import type {GuideNavItem, GuideNavItemGroup, GuideNavSection} from '@/constants/guide-nav'
+import type {GuideNavItem, GuideNavItemGroup, GuideNavSection} from '@/constants/publishing-guide'
 import {
     Dialog,
     DialogContent,

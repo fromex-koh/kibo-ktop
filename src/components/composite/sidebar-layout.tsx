@@ -17,7 +17,7 @@ import {
     Sparkles,
 } from 'lucide-react'
 import type {LucideIcon} from 'lucide-react'
-import type {GuideNavIconKey, GuideNavItem, GuideNavItemGroup, GuideNavSection} from '@/constants/guide-nav'
+import type {GuideNavIconKey, GuideNavItem, GuideNavItemGroup, GuideNavSection} from '@/constants/publishing-guide'
 import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbPage} from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'

@@ -2,7 +2,7 @@ import type {Metadata, Viewport} from 'next'
 import localFont from 'next/font/local'
 import ThemeProvider from '@/components/theme-provider'
 import {Toaster} from '@/components/ui/sonner'
-import {SITE_DESCRIPTION, SITE_NAME, SITE_URL} from '@/constants/site'
+import {SITE_DESCRIPTION, SITE_NAME, SITE_URL} from '@/constants/publishing-guide'
 import './globals.css'
 
 // 로컬 폰트: Pretendard (가변 폰트, weight 100~900)

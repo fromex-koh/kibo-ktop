@@ -1,5 +1,5 @@
 import type {NextConfig} from 'next'
-import releaseMetadata from './src/content/asset-versions.generated.json'
+import releaseMetadata from './src/content/publishing-guide/asset-versions.generated.json'
 
 // GitHub Actions가 릴리스 커밋에 확정해 둔 버전과 현재 빌드 시각을 화면에 주입한다.
 // Vercel의 얕은 git clone에서도 태그 조회 결과가 달라지지 않도록 빌드 중에는 git을 사용하지 않는다.

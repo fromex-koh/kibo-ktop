@@ -130,7 +130,7 @@ feat(publishing-index): 사이트 구조 정보에 3뎁스 계층 지원
 refactor(content): 홈·퍼블리싱 인덱스 데이터를 JSON 단일 소스로 분리
 
 컴포넌트에 하드코딩돼 있던 텍스트·아이콘·화면 데이터를
-src/content/*.json 으로 옮기고 타입가드로 검증. 프론트 개발자가
+src/content/publishing-guide/*.json 으로 옮기고 타입가드로 검증. 프론트 개발자가
 코드를 건드리지 않고 JSON만 수정해 화면 내용을 관리할 수 있게 함.
 ```
 
@@ -159,7 +159,7 @@ row.screenId 로 이름이 바뀜. 기존 데이터를 쓰는 곳이 있다면
 
 ## 버전 관리 (SemVer + 자동 패치 태그)
 
-버전의 원본은 GitHub Actions가 생성하는 git 태그이며, 배포 화면의 단일 소스는 같은 릴리스 커밋에 포함된 `src/content/asset-versions.generated.json`이다(`package.json`의 `version`이 아님). Vercel은 빌드 중 git을 다시 조회하지 않는다.
+버전의 원본은 GitHub Actions가 생성하는 git 태그이며, 배포 화면의 단일 소스는 같은 릴리스 커밋에 포함된 `src/content/publishing-guide/asset-versions.generated.json`이다(`package.json`의 `version`이 아님). Vercel은 빌드 중 git을 다시 조회하지 않는다.
 
 ### 버전 체계 — `vMAJOR.MINOR.PATCH` (예 `v1.4.9`)
 
@@ -189,7 +189,7 @@ v0.1.0 → v0.1.1 → v0.1.2
 
 ### 퍼블리싱 인덱스의 자산별 버전 — git 히스토리에서 자동 계산
 
-`퍼블리싱 인덱스` 표의 자산 버전(`components`·`cn(lib/utils)`·`tokens.json`·`globals.css`·`public`·`fonts` 등 — 목록은 `publishing-index.json` 의 `assetVersions` 가 단일 소스)은 **손으로 적지 않는다.** GitHub Actions가 전체 git 이력과 다음 릴리스 버전으로 계산해 `src/content/asset-versions.generated.json`에 쓰고, 릴리스 커밋에 함께 포함한다. Vercel·로컬 빌드는 이 파일을 다시 생성하지 않는다.
+`퍼블리싱 인덱스` 표의 자산 버전(`components`·`cn(lib/utils)`·`tokens.json`·`globals.css`·`public`·`fonts` 등 — 목록은 `publishing-index.json` 의 `assetVersions` 가 단일 소스)은 **손으로 적지 않는다.** GitHub Actions가 전체 git 이력과 다음 릴리스 버전으로 계산해 `src/content/publishing-guide/asset-versions.generated.json`에 쓰고, 릴리스 커밋에 함께 포함한다. Vercel·로컬 빌드는 이 파일을 다시 생성하지 않는다.
 
 - 그 경로가 **마지막으로 바뀐 커밋**을 찾고, **그 변경을 포함하는 가장 가까운 태그**를 버전으로 표시한다.
 - Vercel 이전 배포의 git 조회 실패를 정리하기 위해 인계 자산의 최소 기준선은 `v0.1.3`이며, 폰트만 기존 `v0.1.0` 이력을 유지한다.

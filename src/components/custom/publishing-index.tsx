@@ -13,7 +13,7 @@ import {
     type Status,
     type StructureGroup,
     type StructureNode,
-} from '@/content'
+} from '@/content/publishing-guide'
 import {Badge} from '@/components/ui/badge'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
 import {BaseCard} from '@/components/composite/base-card'
@@ -65,7 +65,7 @@ const ReleaseNoteChange = ({change}: {change: string}) => {
     return <span className="min-w-0">{parts.length > 0 ? parts : change}</span>
 }
 
-// 퍼블리싱 진행 상태 인덱스 데모. 데이터는 src/content/publishing-index.json 단일 소스에서 온다.
+// 퍼블리싱 진행 상태 인덱스 데모. 데이터는 src/content/publishing-guide/publishing-index.json 단일 소스에서 온다.
 // 이 컴포넌트는 '표현'(상태 색·아이콘 매핑, 뎁스별 rowSpan 계산, 레이아웃, 사용자 유형 필터)만 담당한다.
 
 // 현재 릴리스 버전 — next.config.ts가 주입(src/app/page.tsx의 BUILD_VERSION과 같은 소스).

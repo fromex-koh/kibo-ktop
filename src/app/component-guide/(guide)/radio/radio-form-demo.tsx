@@ -2,7 +2,7 @@
 
 import {useRef, useState} from 'react'
 import {cn} from '@/lib/utils'
-import {FIELD_FOCUS_RING} from '@/constants/field-focus'
+import {FIELD_FOCUS_RING} from '@/constants/publishing-guide'
 import {Button} from '@/components/ui/button'
 import {
     Field,

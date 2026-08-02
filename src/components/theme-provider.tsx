@@ -2,7 +2,12 @@
 
 import {usePathname} from 'next/navigation'
 import {ThemeProvider as NextThemesProvider} from 'next-themes'
-import {MAIN_PAGE_PATH, MAIN_PAGE_THEME, THEME_STORAGE_KEY} from '@/constants/theme'
+import {MAIN_PAGE_PATH, MAIN_PAGE_THEME} from '@/constants/publishing-guide'
+import {THEME_STORAGE_KEY} from '@/constants/theme'
+
+// [퍼블리싱 가이드 전용] MAIN_PAGE_PATH 라우트의 .mainpage 강제 스킨 처리.
+// 가이드 페이지를 이식하지 않으면 usePathname·MAIN_PAGE_* import, forcedTheme 계산,
+// themes 의 MAIN_PAGE_THEME 항목과 forcedTheme prop을 삭제하고 light/dark 처리만 유지한다.
 
 /**
  * next-themes 래퍼 — .dark 클래스 기반 전환(PB-06 semantic 토큰 자동 반사) + FOUC 방지 스크립트를

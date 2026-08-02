@@ -1,8 +1,10 @@
 import type {Metadata} from 'next'
 import Link from 'next/link'
+import {Info, TriangleAlert} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
 import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
 import CodeBlock from '@/components/custom/code-block'
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
 
 export const metadata: Metadata = {
     title: {absolute: '컴포넌트 가이드'},
@@ -43,6 +45,7 @@ const TRANSFER_TREE = `kibo-ktop/
 ├── package.json                        # 실행·빌드 의존성과 프로젝트 명령
 ├── yarn.lock                           # 검증된 의존성 버전 고정
 ├── THIRD_PARTY_LICENSES.md             # 사용 중인 오픈소스 저작권·라이선스 고지
+├── README.md                            # [퍼블리싱 가이드] 저장소 설치·실행·문서 탐색
 ├── .env.example                        # 사이트·저장소·API 환경변수 작성 기준
 ├── .gitignore                          # 빌드 결과·로컬 환경변수 등 추적 제외
 ├── .prettierrc.cjs                     # 프로젝트 코드 포맷 규칙
@@ -52,29 +55,35 @@ const TRANSFER_TREE = `kibo-ktop/
 ├── next.config.ts                      # Next.js 이미지·빌드 설정
 ├── postcss.config.mjs                  # Tailwind CSS v4 빌드 연결
 ├── components.json                    # shadcn 스타일·CSS 경로·alias 설정
+├── docs/
+│   ├── CODE_CONVENTION.md              # 채널계 프론트엔드 개발 표준 가이드
+│   ├── ACCESSIBILITY.md                # KWCAG 기반 접근성 구현 기준
+│   ├── PUBLISHING_CONVENTION.md        # 토큰·반응형·퍼블리싱 규칙
+│   ├── SHADCN.md                       # shadcn 셸·theme 관리 기준
+│   └── GIT_CONVENTION.md               # [퍼블리싱 가이드] 브랜치·커밋 작업 규칙
 ├── scripts/
 │   ├── build-tokens.mjs                # tokens.json → tokens.css 생성
-│   ├── build-screen-registry.mjs       # 페이지 경로 상태 데이터 생성
+│   ├── build-screen-registry.mjs       # [퍼블리싱 가이드] 페이지 경로 상태 데이터 생성
 │   ├── generate-third-party-licenses.mjs # 오픈소스 라이선스 고지 생성·검사
 │   └── check-conventions.mjs           # 프로젝트 컴포넌트 작성 규칙 검사
 ├── public/                             # 화면이 참조하는 이미지·아이콘·정적 파일
 ├── vendor/
-│   └── shadcn-baseline/                # 프로젝트 variant와 비교할 shadcn 원본 기준선
+│   └── shadcn-baseline/                # [shadcn 원본] theme/*.variants.ts 변경 비교용 기준 파일
 └── src/
     ├── app/
     │   ├── layout.tsx                  # 전역 CSS·폰트·ThemeProvider 연결
-    │   ├── page.tsx                    # 프로젝트 시작 페이지
+    │   ├── page.tsx                    # [퍼블리싱 가이드] 정보·가이드 링크·현황 인덱스
     │   ├── globals.css                 # Tailwind·토큰·전역 variant 진입점
     │   ├── tokens.css                  # 생성 파일 — 복사하지 않고 다시 생성
     │   ├── manifest.ts                 # 웹 앱 메타데이터
-    │   ├── robots.ts                   # 검색 엔진 크롤링 정책
+    │   ├── robots.ts                   # [퍼블리싱 가이드] 전체 검색 크롤러 차단
     │   ├── favicon.ico                 # 브라우저 파비콘
     │   ├── icon.svg                    # 기본 앱 아이콘
     │   ├── apple-icon.png              # Apple 기기 앱 아이콘
     │   ├── fonts/
     │   │   ├── PretendardVariable.woff2 # 프로젝트 기본 웹폰트
     │   │   └── LICENSE-PRETENDARD.txt  # Pretendard 저작권·라이선스 고지
-    │   ├── component-guide/            # 컴포넌트 가이드와 화면 예시 전체
+    │   ├── component-guide/            # [퍼블리싱 가이드] 문서와 화면 예시 전체
     │   ├── corp/                       # 기업용 프로젝트 페이지
     │   └── org/                        # 기관용 프로젝트 페이지
     ├── components/
@@ -82,23 +91,53 @@ const TRANSFER_TREE = `kibo-ktop/
     │   ├── theme/                      # variant·size·상태별 프로젝트 스타일
     │   ├── composite/                  # primitive를 조합한 공통 컴포넌트
     │   ├── custom/                     # 프로젝트 고유 컴포넌트
-    │   ├── guide/                      # 가이드 페이지 전용 표현 컴포넌트
+    │   │   └── publishing-index.tsx    # [퍼블리싱 가이드] 현황 인덱스
+    │   ├── guide/                      # [퍼블리싱 가이드] 문서 전용 표현 컴포넌트
     │   └── theme-provider.tsx          # 라이트·다크 테마 상태와 저장소 연결
     ├── hooks/
-    │   ├── use-mobile.ts               # Sidebar의 모바일 구간 판별
+    │   ├── use-mobile.ts               # [shadcn 원본] Sidebar의 모바일 구간 판별
     │   └── use-theme-toggle.ts         # Header·ThemeToggle의 테마 전환
     ├── constants/
-    │   ├── field-focus.ts              # 폼 오류 발생 시 포커스 이동 기준
-    │   ├── guide-nav.ts                # 컴포넌트 가이드 사이드바 구조
-    │   ├── icon-registry.ts            # 프로젝트 아이콘 등록 정보
-    │   ├── self-diagnosis.ts           # 자가진단 화면 공통 설정
-    │   ├── site.ts                     # 사이트명·URL·메타데이터 상수
-    │   └── theme.ts                    # 테마 이름·저장소 키·경로 상수
-    ├── content/                        # 페이지 문구·현황·생성 데이터와 타입
+    │   ├── publishing-guide.ts         # [퍼블리싱 가이드] 시작·문서·화면 예시 상수
+    │   └── theme.ts                    # 공통 라이트·다크 테마 저장소 키
+    ├── content/
+    │   └── publishing-guide/           # [퍼블리싱 가이드] 시작·현황·릴리스 데이터
     ├── types/
     │   └── cytoscape-fcose.d.ts        # 그래프 레이아웃 플러그인 타입 선언
     └── lib/
         └── utils.ts                    # cn 등 공통 유틸리티`
+
+const REPOSITORY_ONLY_ACCENT_LINES = TRANSFER_TREE.split('\n').flatMap((line, index) =>
+    line.includes('[퍼블리싱 가이드]') ? [index + 1] : [],
+)
+
+const CONTENT_EXCLUSION_CODE = `import type {NextConfig} from 'next'
+
+// src/content/publishing-guide/ 제외 시 삭제 ①
+// import releaseMetadata from './src/content/publishing-guide/asset-versions.generated.json'
+
+// src/content/publishing-guide/ 제외 시 삭제 ② — resolveBuildTime 함수 전체
+// const resolveBuildTime = (): string => {
+//     ...
+// }
+
+const nextConfig: NextConfig = {
+    // src/content/publishing-guide/ 제외 시 삭제 ③
+    // env: {
+    //     NEXT_PUBLIC_BUILD_VERSION: releaseMetadata.version,
+    //     NEXT_PUBLIC_BUILD_TIME: resolveBuildTime(),
+    // },
+
+    // 검색 색인 차단 등 프로젝트에 필요한 나머지 설정은 유지
+    headers: async () => [
+        {
+            source: '/:path*',
+            headers: [{key: 'X-Robots-Tag', value: 'noindex, nofollow'}],
+        },
+    ],
+}
+
+export default nextConfig`
 
 const WORKFLOW = [
     {
@@ -233,13 +272,48 @@ const ComponentGuidePage = () => (
             <BaseCard>
                 <SectionHeader className="mb-6">
                     <SectionHeaderTitle id="transfer-title">다른 저장소로 이식</SectionHeaderTitle>
-                    <SectionHeaderDescription>
-                        이 프로젝트의 모든 컴포넌트와 페이지를 다른 저장소에서 동일하게 실행하려면 아래 소스, 설정,
-                        토큰과 에셋을 하나의 세트로 이식합니다.
+                    <SectionHeaderDescription asChild>
+                        <ul className="flex list-disc flex-col gap-1 pl-5">
+                            <li>
+                                이 프로젝트의 모든 컴포넌트와 페이지를 다른 저장소에서 동일하게 실행하려면 아래 소스,
+                                설정, 토큰과 에셋을 하나의 세트로 이식합니다.
+                            </li>
+                            <li>
+                                <span className="text-primary font-semibold">강조된 경로</span>는 퍼블리싱 시작 페이지와
+                                컴포넌트 가이드 전용 파일로, 다른 저장소에서 화면 개발을 시작할 때 가져가지 않아도
+                                됩니다.
+                            </li>
+                        </ul>
                     </SectionHeaderDescription>
                 </SectionHeader>
 
-                <CodeBlock code={TRANSFER_TREE} language="bash" />
+                <CodeBlock code={TRANSFER_TREE} language="bash" accentLines={REPOSITORY_ONLY_ACCENT_LINES} />
+
+                <Alert variant="outline" color="info" className="mt-4">
+                    <Info aria-hidden="true" />
+                    <AlertTitle>src/content/publishing-guide/ 제외 시 설정 변경</AlertTitle>
+                    <AlertDescription>
+                        <code className="font-mono">src/content/publishing-guide/</code>는 공통 컴포넌트나 프로젝트
+                        화면에서 사용하지 않습니다. 이 폴더를 제외할 때는{' '}
+                        <code className="font-mono">next.config.ts</code>의{' '}
+                        <code className="font-mono">asset-versions.generated.json</code> import와 빌드 버전 주입 설정도
+                        제거합니다.
+                    </AlertDescription>
+                </Alert>
+                <div className="mt-4">
+                    <CodeBlock code={CONTENT_EXCLUSION_CODE} language="tsx" />
+                </div>
+                <Alert variant="outline" color="warning" className="mt-4">
+                    <TriangleAlert aria-hidden="true" />
+                    <AlertTitle>운영 배포 전 검색 정책 변경</AlertTitle>
+                    <AlertDescription>
+                        현재 <code className="font-mono">X-Robots-Tag: noindex, nofollow</code>와{' '}
+                        <code className="font-mono">robots.ts</code>의 전체 경로 차단은 퍼블리싱 가이드 저장소용
+                        설정입니다. 운영 서비스에서는 <code className="font-mono">next.config.ts</code>의 차단 헤더를
+                        제거하고, <code className="font-mono">robots.ts</code>를 서비스의 검색 노출 정책에 맞게
+                        변경합니다.
+                    </AlertDescription>
+                </Alert>
 
                 <div className="bg-muted mt-6 rounded-md p-4">
                     <h3 className="text-foreground font-semibold">대상 저장소에서 연결</h3>
