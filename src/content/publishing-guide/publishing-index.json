@@ -164,6 +164,12 @@
             "description": "사이트·저장소 등 실행 환경변수 작성 기준"
         },
         {
+            "name": ".gitignore",
+            "path": ".gitignore",
+            "kind": "file",
+            "description": "전달본의 토큰 결과·설치·빌드 파일 추적 기준"
+        },
+        {
             "name": "public",
             "path": "public",
             "kind": "folder",
