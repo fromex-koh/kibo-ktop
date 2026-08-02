@@ -1,0 +1,73 @@
+name: Frontend handoff test
+
+on:
+    push:
+        branches:
+            - handoff-test
+
+permissions:
+    contents: write
+
+concurrency:
+    group: frontend-handoff-test
+    cancel-in-progress: false
+
+jobs:
+    handoff:
+        name: Build and publish test handoff
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout full history
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: yarn
+
+            - name: Install source dependencies
+              run: yarn install --frozen-lockfile
+
+            - name: Verify source
+              run: yarn verify
+
+            - name: Build source
+              run: yarn build
+
+            - name: Generate frontend handoff
+              env:
+                  HANDOFF_SOURCE_BRANCH: ${{ github.ref_name }}
+                  HANDOFF_SOURCE_COMMIT: ${{ github.sha }}
+                  HANDOFF_GENERATED_AT: ${{ github.event.head_commit.timestamp }}
+              run: node scripts/build-frontend-handoff.mjs "$RUNNER_TEMP/frontend-handoff"
+
+            - name: Install handoff dependencies
+              working-directory: ${{ runner.temp }}/frontend-handoff
+              run: yarn install --frozen-lockfile
+
+            - name: Verify handoff types
+              working-directory: ${{ runner.temp }}/frontend-handoff
+              run: yarn typecheck
+
+            - name: Build handoff
+              working-directory: ${{ runner.temp }}/frontend-handoff
+              run: yarn build
+
+            - name: Publish independent test branch
+              working-directory: ${{ runner.temp }}/frontend-handoff
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  SOURCE_COMMIT: ${{ github.sha }}
+              shell: bash
+              run: |
+                  rm -rf .next
+                  git init
+                  git config user.name 'github-actions[bot]'
+                  git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+                  git add --all
+                  git commit -m "chore: sync frontend handoff test from ${SOURCE_COMMIT}"
+                  git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+                  git push --force origin HEAD:frontend-handoff-test

@@ -299,8 +299,8 @@ const PublishingIndex = () => {
                                 프론트엔드 인계 자산
                             </SectionHeaderTitle>
                             <SectionHeaderDescription>
-                                현재 배포와 프론트엔드 전달 프로젝트에 포함되는 주요 개발 자산의 반영 버전을 안내합니다.
-                                이번 버전에 반영된 항목은 강조해 표시합니다.
+                                전달 프로젝트를 생성하는 원본 경로와 마지막 반영 버전입니다. 이번 버전에 반영된 항목은
+                                강조해 표시합니다.
                             </SectionHeaderDescription>
                         </SectionHeader>
 
@@ -319,7 +319,7 @@ const PublishingIndex = () => {
                                                 구분
                                             </th>
                                             <th scope="col" className="typo-body-l-medium w-1/3 px-4 py-3">
-                                                경로
+                                                원본 경로
                                             </th>
                                             <th scope="col" className="typo-body-l-medium px-4 py-3">
                                                 역할
