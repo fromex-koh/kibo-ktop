@@ -49,19 +49,16 @@ const ShadowList = ({entries}: {entries: typeof shadowEntries}) => (
 )
 
 const ShadowGuidePage = () => (
-    <GuidePageShell
-        title="그림자 (Shadow)"
-        description="프로젝트 표면과 shadcn primitive에서 사용하는 box-shadow 토큰입니다."
-    >
+    <GuidePageShell title="그림자 (Shadow)" description="표면의 높이와 구분을 표현하는 shadow-* 토큰입니다.">
         <BaseCard>
             <section aria-labelledby="project-shadow" className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <h2 id="project-shadow" className="typo-h4-bold text-foreground">
-                        프로젝트 그림자
+                        프로젝트 기본
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        프로젝트 화면에서 직접 선택하는 그림자입니다. 현재 <code className="font-mono">shadow-1</code>을
-                        사용합니다.
+                        새 UI에는 <code className="font-mono">shadow-1</code>을 우선 사용합니다. 수치와 테마별 색상은{' '}
+                        <code className="font-mono">tokens.json</code>에서 관리합니다.
                     </p>
                 </div>
                 <ShadowList entries={projectEntries} />
@@ -72,11 +69,11 @@ const ShadowGuidePage = () => (
             <section aria-labelledby="compatibility-shadow" className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <h2 id="compatibility-shadow" className="typo-h4-bold text-foreground">
-                        shadcn 호환 그림자
+                        shadcn 호환
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        shadcn primitive가 참조하는 표준 유틸리티 이름을 유지합니다. 프로젝트 화면에서는 먼저 shadow-1을
-                        검토합니다.
+                        <code className="font-mono">shadow-sm/md/lg</code>는 shadcn primitive 호환용입니다. 새 UI의 임의
+                        단계 선택에는 사용하지 않습니다.
                     </p>
                 </div>
                 <ShadowList entries={compatibilityEntries} />
