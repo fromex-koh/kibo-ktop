@@ -39,18 +39,17 @@ const RADIUS_COLUMNS = [
 // 모서리 반경 — Figma '05 Radius' 정의를 반경 토큰(--ds-radius-*)으로 반영. rounded-* 유틸로 쓰며
 // 정의된 9개 키(2xs·xs·sm·md·lg·xl·2xl·3xl·full)만 사용한다. '클래스' 칩을 클릭하면 이름이 복사된다.
 const RadiusGuidePage = () => (
-    <GuidePageShell
-        title="모서리 반경 (Radius)"
-        description={<>base {tokens.radiusBase}px ± 오프셋(작은 쪽 2px·큰 쪽 4px 간격) 스케일의 반경 토큰입니다.</>}
-    >
+    <GuidePageShell title="모서리 반경 (Radius)" description="컴포넌트 형태에 적용하는 rounded-* 반경 토큰입니다.">
         <BaseCard>
             <section aria-labelledby="radius-scale" className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <h2 id="radius-scale" className="typo-h4-bold text-foreground">
-                        Radius scale
+                        반경 선택
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        lg를 기준값으로 사용하며 작은 단계는 2px, 큰 단계는 4px 간격으로 구성합니다.
+                        <code className="font-mono">rounded-*</code>만 사용합니다. 값은{' '}
+                        <code className="font-mono">tokens.json</code>의 base {tokens.radiusBase}px와 단계별 오프셋으로
+                        관리하며, CSS 리터럴은 직접 입력하지 않습니다.
                     </p>
                 </div>
                 <Table
