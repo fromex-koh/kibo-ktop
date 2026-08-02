@@ -557,7 +557,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="semantic-rule" className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h2 id="semantic-rule" className="typo-h4-bold text-foreground">
-                            구조와 사용 원칙
+                            시맨틱 색상 적용 방식
                         </h2>
                         <p className="typo-body-l-regular text-foreground-subtle">
                             색상값이나 단계가 아니라 UI에서 맡는 역할을 기준으로 클래스를 선택합니다.
@@ -624,7 +624,7 @@ const SemanticColorGuidePage = () => (
 
                         <div className="grid gap-4 md:grid-cols-2">
                             <div className="flex flex-col gap-2">
-                                <strong className="text-foreground">개발자는 클래스 하나만 사용</strong>
+                                <strong className="text-foreground">클래스 하나로 테마 대응</strong>
                                 <p className="text-foreground-subtle">
                                     예를 들어 <code className="font-mono">bg-primary</code>는 현재 상위 테마의{' '}
                                     <code className="font-mono">--ds-primary</code> 값을 자동으로 사용합니다.

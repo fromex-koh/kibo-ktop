@@ -178,7 +178,7 @@ const TypographyGuidePage = () => (
         <TypographySectionCard aria-labelledby="typo-overview" className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
                 <h2 id="typo-overview" className="typo-h4-bold">
-                    구조와 사용 원칙
+                    typo-* 적용 방식
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
                     개별 text·font·leading·tracking 유틸리티를 조합하지 않고, 역할에 맞는 typo-* 클래스 하나를
@@ -187,11 +187,11 @@ const TypographyGuidePage = () => (
             </div>
             <div className="border-border bg-card grid gap-4 rounded-xl border p-5 md:grid-cols-3">
                 <div className="flex flex-col gap-1">
-                    <strong className="text-foreground">복합 속성</strong>
+                    <strong className="text-foreground">한 클래스</strong>
                     <p className="text-foreground-subtle">크기·굵기·행간·자간을 한 클래스에서 함께 적용합니다.</p>
                 </div>
                 <div className="flex flex-col gap-1">
-                    <strong className="text-foreground">반응형 구조</strong>
+                    <strong className="text-foreground">3단계 크기</strong>
                     <p className="text-foreground-subtle">
                         모바일 기본, <code className="font-mono">{tokens.typographyBreakpoints.tablet}:</code>부터
                         태블릿, <code className="font-mono">{tokens.typographyBreakpoints.pc}:</code>부터 PC 크기를
@@ -199,7 +199,7 @@ const TypographyGuidePage = () => (
                     </p>
                 </div>
                 <div className="flex flex-col gap-1">
-                    <strong className="text-foreground">현재 구성</strong>
+                    <strong className="text-foreground">토큰 범위</strong>
                     <p className="text-foreground-subtle">
                         크기 tier {TYPOGRAPHY_TIER_COUNT}개와 typo-* 조합 {TYPOGRAPHY_COUNT}개를 제공합니다.
                     </p>

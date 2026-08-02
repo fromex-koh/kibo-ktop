@@ -128,18 +128,18 @@ const FontSizeTable = () => (
 const FontPrimitiveGuidePage = () => (
     <GuidePageShell
         title="폰트 (Primitive)"
-        description="typo-* 유틸리티의 기반 값입니다. 앱 코드에서는 원시값 대신 역할에 맞는 typo-* 클래스 하나를 사용합니다."
+        description="typo-* 클래스가 참조하는 폰트 원시 토큰입니다. 컴포넌트에서는 아래 변수를 직접 사용하지 않습니다."
     >
         <div className="flex flex-col gap-12">
             <BaseCard>
-                <section aria-labelledby="font-primitive-rule" className="flex flex-col gap-6">
+                <section aria-labelledby="font-primitive-rule" className="flex flex-col gap-5">
                     <div className="flex flex-col gap-2">
                         <h2 id="font-primitive-rule" className="typo-h4-bold text-foreground">
-                            개발자 사용 기준
+                            Primitive와 typo-*의 관계
                         </h2>
                         <p className="typo-body-l-regular text-foreground-subtle">
-                            텍스트에는 <code className="font-mono">typo-body-xl-regular</code>처럼 크기·굵기·행간·자간을
-                            묶은 복합 유틸리티 하나를 사용합니다.
+                            크기·굵기·행간·자간은 <code className="font-mono">typo-body-xl-regular</code>처럼 하나의{' '}
+                            <code className="font-mono">typo-*</code> 클래스로 적용합니다.
                         </p>
                         <Link
                             href="/component-guide/typography"
@@ -149,58 +149,41 @@ const FontPrimitiveGuidePage = () => (
                         </Link>
                     </div>
 
-                    <div className="grid gap-6 md:grid-cols-3">
+                    <div className="border-border grid gap-5 border-t pt-5 md:grid-cols-2">
                         <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">기본 원칙</strong>
+                            <strong className="text-foreground">사용</strong>
                             <p className="text-foreground-subtle">
-                                기존 <code className="font-mono">typo-*</code>가 있으면 font-size·font-weight·
-                                line-height·letter-spacing을 개별 유틸리티로 다시 조합하지 않습니다.
+                                역할에 맞는 <code className="font-mono">typo-*</code>를 선택합니다. 필요한 조합이 없으면{' '}
+                                <code className="font-mono">tokens.json</code>에 새 토큰을 추가합니다.
                             </p>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">Raw 허용 범위</strong>
+                            <strong className="text-foreground">금지</strong>
                             <p className="text-foreground-subtle">
-                                <code className="font-mono">--raw-font-*</code>는 토큰 생성기·문서·검증에서만
-                                사용합니다. 새 조합이 필요하면 <code className="font-mono">typo-*</code> 토큰을
-                                추가합니다.
+                                컴포넌트에서 <code className="font-mono">--raw-font-*</code>, px/rem 리터럴을 직접
+                                쓰거나 <code className="font-mono">src/app/tokens.css</code>를 수정하지 않습니다.
                             </p>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">금지 사항</strong>
+                            <strong className="text-foreground">반응형</strong>
                             <p className="text-foreground-subtle">
-                                컴포넌트에 px/rem 리터럴을 직접 넣거나 자동 생성 파일인{' '}
-                                <code className="font-mono">src/app/tokens.css</code>를 수정하지 않습니다.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="border-border grid gap-4 border-t pt-6 md:grid-cols-2">
-                        <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">토큰 변경 절차</strong>
-                            <ol className="text-foreground-subtle list-decimal space-y-1 pl-5">
-                                <li>
-                                    <code className="font-mono">tokens.json</code>에서 원시값 또는 조합을 변경합니다.
-                                </li>
-                                <li>
-                                    <code className="font-mono">yarn tokens</code>로 CSS를 다시 생성합니다.
-                                </li>
-                                <li>
-                                    <code className="font-mono">yarn verify</code>로 참조·포맷·타입을 검증합니다.
-                                </li>
-                            </ol>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">크기와 반응형 규칙</strong>
-                            <p className="text-foreground-subtle">
-                                크기는 px로 입력하고 CSS에는 rem으로 생성합니다. 모바일 기본값에서{' '}
+                                <code className="font-mono">mobile</code> 기본,{' '}
                                 <code className="font-mono">
                                     {TYPO_TABLET_BREAKPOINT} ({BREAKPOINTS[TYPO_TABLET_BREAKPOINT]}px)
-                                </code>
-                                부터 태블릿,{' '}
+                                </code>{' '}
+                                태블릿,{' '}
                                 <code className="font-mono">
                                     {TYPO_PC_BREAKPOINT} ({BREAKPOINTS[TYPO_PC_BREAKPOINT]}px)
-                                </code>
-                                부터 PC 값을 적용합니다.
+                                </code>{' '}
+                                PC 값을 각각 명시합니다.
+                            </p>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <strong className="text-foreground">변경</strong>
+                            <p className="text-foreground-subtle">
+                                <code className="font-mono">tokens.json</code> 수정 →{' '}
+                                <code className="font-mono">yarn tokens</code> 생성 →{' '}
+                                <code className="font-mono">yarn verify</code> 검증 순서로 진행합니다.
                             </p>
                         </div>
                     </div>

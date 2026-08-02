@@ -125,7 +125,7 @@ const ColorGuidePage = () => (
                 <section aria-labelledby="primitive-rule-title" className="flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
                         <h2 id="primitive-rule-title" className="typo-h4-bold text-foreground">
-                            개발자 사용 기준
+                            Primitive와 시맨틱의 역할
                         </h2>
                         <p className="typo-body-l-regular text-foreground-subtle">
                             컴포넌트에는 <code className="font-mono">bg-surface</code>,{' '}
@@ -143,21 +143,21 @@ const ColorGuidePage = () => (
 
                     <div className="grid gap-6 md:grid-cols-3">
                         <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">기본 원칙</strong>
+                            <strong className="text-foreground">앱 코드</strong>
                             <p className="text-foreground-subtle">
                                 UI에서는 <code className="font-mono">--ds-*</code> 기반 유틸리티를 사용합니다. 테마별
                                 값은 자동으로 전환됩니다.
                             </p>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">Raw 허용 범위</strong>
+                            <strong className="text-foreground">Primitive 범위</strong>
                             <p className="text-foreground-subtle">
                                 <code className="font-mono">--raw-*</code>는 시맨틱 매핑, 토큰 문서, 색상 검증처럼
                                 원시값 자체가 필요한 코드에서만 사용합니다.
                             </p>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">금지 사항</strong>
+                            <strong className="text-foreground">수정 금지</strong>
                             <p className="text-foreground-subtle">
                                 색상 리터럴과 raw 변수를 컴포넌트에 직접 넣거나, 자동 생성 파일인{' '}
                                 <code className="font-mono">src/app/tokens.css</code>를 수정하지 않습니다.
@@ -167,7 +167,7 @@ const ColorGuidePage = () => (
 
                     <div className="border-border grid gap-4 border-t pt-6 md:grid-cols-2">
                         <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">토큰 변경 절차</strong>
+                            <strong className="text-foreground">변경 흐름</strong>
                             <ol className="text-foreground-subtle list-decimal space-y-1 pl-5">
                                 <li>
                                     <code className="font-mono">tokens.json</code>에서 원본 값을 변경합니다.
@@ -181,7 +181,7 @@ const ColorGuidePage = () => (
                             </ol>
                         </div>
                         <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">Common · Alpha 경계</strong>
+                            <strong className="text-foreground">경계값 관리</strong>
                             <p className="text-foreground-subtle">
                                 완전 투명과 불투명 색은 <code className="font-mono">common</code>, 실제 반투명 값
                                 (1~99%)은 <code className="font-mono">alpha</code>에서 관리합니다. 따라서{' '}
