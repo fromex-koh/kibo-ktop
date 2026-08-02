@@ -23,17 +23,17 @@ const OVERLAY_CLASS_BY_NAME = new Map<string, string>(Object.entries(OVERLAY_CLA
 const OverlayGuidePage = () => (
     <GuidePageShell
         title="오버레이 (Overlay)"
-        description="Dialog·Sheet 등 현재 콘텐츠 위에 새 레이어가 열릴 때 사용하는 반투명 배경 토큰입니다."
+        description="Dialog·Sheet 뒤의 콘텐츠를 분리하는 반투명 배경 토큰입니다."
     >
         <BaseCard>
             <section aria-labelledby="overlay-scale" className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <h2 id="overlay-scale" className="typo-h4-bold text-foreground">
-                        Overlay scale
+                        오버레이 강도
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        sm부터 xl까지 불투명도가 높아집니다. 라이트 모드는 black alpha, 다크 모드는 white alpha를
-                        사용합니다.
+                        배경에는 <code className="font-mono">bg-overlay-sm/md/lg/xl</code>만 사용합니다. 단계가 커질수록
+                        불투명도가 높아지고, 라이트·다크 색상은 자동 전환됩니다. Raw alpha는 직접 적용하지 않습니다.
                     </p>
                 </div>
                 <ul className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
