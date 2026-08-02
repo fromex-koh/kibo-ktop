@@ -210,7 +210,7 @@ const FontPrimitiveGuidePage = () => (
             <FontSizeTable />
             <PrimitiveTable
                 title="굵기 (font-weight)"
-                hint="typo-* 이름의 regular·medium·semibold·bold 접미사와 연결됩니다."
+                hint="typo-* 이름의 regular·medium·bold·black 접미사와 연결됩니다."
                 rows={Object.entries(tokens.fontWeight).map(([name, weight]) => ({
                     cssVar: `var(--raw-font-weight-${name})`,
                     value: weight,

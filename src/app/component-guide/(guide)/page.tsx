@@ -133,7 +133,7 @@ const PathList = ({items}: {items: typeof REQUIRED_PATHS}) => (
 const ComponentGuidePage = () => (
     <div className="max-w-content mx-auto flex w-full flex-col gap-10 px-6 py-12 md:py-16">
         <header className="flex flex-col gap-3">
-            <h1 className="typo-display-m-bold text-foreground text-balance">컴포넌트 가이드</h1>
+            <h1 className="typo-display-s-bold text-foreground text-balance">컴포넌트 가이드</h1>
             <p className="typo-body-xl-regular text-foreground-subtle max-w-3xl">
                 프로젝트의 디자인 토큰, UI 설계 원칙과 공통 컴포넌트 사용법을 확인하는 기준 문서입니다.
             </p>

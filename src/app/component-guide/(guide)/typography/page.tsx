@@ -77,7 +77,7 @@ const TYPOGRAPHY_SCALE_COLUMNS = [
 // 클래스 칩을 클릭하면 이름이 복사된다.
 const TypographyScaleTable = ({title, entries}: {title: string; entries: TypographyEntry[]}) => (
     <div className="flex flex-col gap-3">
-        <h3 className="typo-title-m-semibold text-foreground">{title}</h3>
+        <h3 className="typo-title-m-bold text-foreground">{title}</h3>
         <Table
             size="sm"
             caption={`${title} typo-* 클래스별 미리보기·크기·굵기·행간·자간`}

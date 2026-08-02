@@ -18,7 +18,7 @@ const PageTitleBar = ({title, badge, breadcrumb, className, ...props}: PageTitle
         {...props}
     >
         <div data-slot="page-title-bar-heading" className="flex items-center gap-4">
-            <h1 className="typo-display-xl-bold text-foreground text-balance">{title}</h1>
+            <h1 className="typo-display-l-bold text-foreground text-balance">{title}</h1>
             {badge}
         </div>
         {breadcrumb ? (

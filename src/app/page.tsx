@@ -35,7 +35,7 @@ const Home = () => {
                     <Badge color="info" shape="round" size="lg">
                         {badge}
                     </Badge>
-                    <h1 className="typo-display-m-bold">{SITE_NAME}</h1>
+                    <h1 className="typo-display-s-bold">{SITE_NAME}</h1>
                     {/* 현재 버전·빌드 시각 (자리만 잡은 placeholder — 위 BUILD_VERSION/BUILD_TIME 참조) */}
                     <p className="typo-body-l-regular text-muted-foreground">
                         현재 버전: <span className="text-foreground font-semibold">{BUILD_VERSION}</span> / {BUILD_TIME}

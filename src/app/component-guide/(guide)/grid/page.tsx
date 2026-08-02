@@ -39,7 +39,7 @@ const GridPreviewPage = () => (
             <BaseCard>
                 <section aria-labelledby="grid-title" className="flex flex-col gap-3">
                     <div className="flex items-start justify-between gap-4">
-                        <h1 id="grid-title" className="typo-display-m-bold">
+                        <h1 id="grid-title" className="typo-display-s-bold">
                             레이아웃 그리드 (Grid)
                         </h1>
                     </div>

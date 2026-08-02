@@ -294,7 +294,7 @@ const HeaderMenu = ({
                                 <Link
                                     ref={index === 0 ? firstMenuLinkRef : undefined}
                                     href={link.href}
-                                    className="typo-title-m-semibold border-border hover:bg-muted focus-visible:ring-ring flex min-h-11 items-center gap-1 rounded-md px-3 focus:outline-none focus-visible:ring-2 md:min-h-20 md:items-start md:rounded-none md:border-t md:px-1 md:py-4 xl:min-h-24 xl:py-5"
+                                    className="typo-title-m-bold border-border hover:bg-muted focus-visible:ring-ring flex min-h-11 items-center gap-1 rounded-md px-3 focus:outline-none focus-visible:ring-2 md:min-h-20 md:items-start md:rounded-none md:border-t md:px-1 md:py-4 xl:min-h-24 xl:py-5"
                                     {...(link.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
                                 >
                                     {link.label}

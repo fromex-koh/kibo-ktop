@@ -106,7 +106,7 @@ const FruitOptions = () => (
 const ContrastCheckPage = () => (
     <div className="max-w-content mx-auto flex w-full flex-col gap-10 px-6 py-12 md:py-16">
         <header className="flex flex-col gap-2">
-            <h1 className="typo-display-m-bold text-foreground">웹 접근성 명도 대비 검사</h1>
+            <h1 className="typo-display-s-bold text-foreground">웹 접근성 명도 대비 검사</h1>
             <ul className="typo-body-l-regular text-foreground-subtle flex list-none flex-col gap-1">
                 <li className="flex items-start">
                     <ListMarker type="unordered" level={1} />

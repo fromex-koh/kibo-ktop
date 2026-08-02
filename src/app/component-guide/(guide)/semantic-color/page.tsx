@@ -420,7 +420,7 @@ const SemanticTable = ({
     note?: ReactNode
 }) => (
     <section className="border-border flex flex-col gap-4 border-b pb-8 last:border-b-0 last:pb-0">
-        <h3 className="typo-title-m-semibold text-foreground">{title}</h3>
+        <h3 className="typo-title-m-bold text-foreground">{title}</h3>
         {usage && <p className="typo-body-l-regular text-muted-foreground">{usage}</p>}
         {note && <p className="typo-body-l-regular text-muted-foreground">{note}</p>}
         <Table
