@@ -1,6 +1,7 @@
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import ActiveBreakpointTag from '@/components/custom/active-breakpoint-tag'
+import {Table} from '@/components/custom/table'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '레이아웃 그리드 (Grid)'}
@@ -30,6 +31,14 @@ const GRID_RANGE_LABELS_BY_KEY = new Map<string, string>(Object.entries(GRID_RAN
 // grid.container 가 container 토큰 키(예: "content")면 실제 px 로 되찾아 표에 보여준다(값 단일 소스).
 const CONTAINER_PX: Record<string, number> = tokens.container
 
+const GRID_COLUMNS = [
+    {key: 'range', header: '구간', align: 'start', rowHeader: true},
+    {key: 'columns', header: 'columns', align: 'start'},
+    {key: 'gutter', header: 'gutter', align: 'start'},
+    {key: 'container', header: 'container', align: 'start'},
+    {key: 'margin', header: 'margin (최소)', align: 'start'},
+] as const
+
 // 레이아웃 그리드 — 가이드 사이드바 안에서 본문 폭을 기준으로 컬럼·거터·여백을 확인한다.
 // main 과 테마 토글은 가이드 레이아웃이 제공하므로 페이지에서 다시 만들지 않는다.
 const GridPreviewPage = () => (
@@ -44,8 +53,8 @@ const GridPreviewPage = () => (
                         </h1>
                     </div>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        브라우저 폭에 따라 컬럼 수가 4 → 8 → 12로 바뀝니다. 가장자리 여백과 거터가 실제 레이아웃
-                        규칙대로 적용되는지 확인합니다.
+                        일반 콘텐츠는 <code className="font-mono">grid-layout</code>을 사용합니다. 컬럼 없이 최대 폭만
+                        필요한 풀블리드 요소는 <code className="font-mono">content-layout</code>을 사용합니다.
                     </p>
                 </section>
             </BaseCard>
@@ -72,75 +81,52 @@ const GridPreviewPage = () => (
                 <section aria-labelledby="grid-reference" className="flex flex-col gap-4">
                     <div className="flex flex-col gap-1">
                         <h2 id="grid-reference" className="typo-h4-bold text-foreground">
-                            Grid reference
+                            구간별 설정
                         </h2>
                         <p className="typo-body-l-regular text-foreground-subtle">
-                            각 구간의 컬럼 수, 거터, 컨테이너 폭과 최소 바깥 여백을 확인합니다.
+                            컬럼·거터·컨테이너·최소 여백은 <code className="font-mono">tokens.json</code>에서
+                            관리합니다.
                         </p>
                     </div>
-                    <div className="border-border overflow-x-auto rounded-xl border">
-                        <table className="w-full text-left">
-                            <caption className="sr-only">
-                                브레이크포인트별 그리드 columns·gutter·container·margin
-                            </caption>
-                            <thead>
-                                <tr className="border-border bg-card border-b">
-                                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                        구간
-                                    </th>
-                                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                        columns
-                                    </th>
-                                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                        gutter
-                                    </th>
-                                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                        container
-                                    </th>
-                                    <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                        margin (최소)
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {(() => {
-                                    const order = ['mobile', ...Object.keys(tokens.breakpoint)]
-                                    const rows = Object.entries(tokens.grid).sort(
-                                        ([a], [b]) => order.indexOf(a) - order.indexOf(b),
-                                    )
-                                    return rows.map(([key, g]) => (
-                                        <tr key={key} className="border-border border-b last:border-b-0">
-                                            <td className="typo-body-l-regular px-4 py-3">
-                                                <span className="inline-flex items-center gap-2">
-                                                    {GRID_RANGE_LABELS_BY_KEY.get(key) ?? key}
-                                                    <ActiveBreakpointTag targetKey={key} />
-                                                </span>
-                                            </td>
-                                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                                {g.columns}
-                                            </td>
-                                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                                {g.gutter}px
-                                            </td>
-                                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                                {key === 'mobile'
-                                                    ? `${REFERENCE_VIEWPORT.mobile - 2 * g.margin}px (${REFERENCE_VIEWPORT.mobile}px 기준)`
-                                                    : `${typeof g.container === 'number' ? g.container : CONTAINER_PX[g.container]}px (${REFERENCE_VIEWPORT_BY_KEY.get(key)}px 기준)`}
-                                            </td>
-                                            <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                                {g.margin}px
-                                            </td>
-                                        </tr>
-                                    ))
-                                })()}
-                            </tbody>
-                        </table>
-                    </div>
+                    <Table
+                        size="md"
+                        caption="브레이크포인트별 그리드 columns·gutter·container·margin"
+                        columns={GRID_COLUMNS}
+                        rows={(() => {
+                            const order = ['mobile', ...Object.keys(tokens.breakpoint)]
+                            return Object.entries(tokens.grid)
+                                .sort(([a], [b]) => order.indexOf(a) - order.indexOf(b))
+                                .map(([key, g]) => ({
+                                    key,
+                                    cells: [
+                                        <span key="range" className="inline-flex items-center gap-2">
+                                            {GRID_RANGE_LABELS_BY_KEY.get(key) ?? key}
+                                            <ActiveBreakpointTag targetKey={key} />
+                                        </span>,
+                                        <span key="columns" className="text-muted-foreground font-mono">
+                                            {g.columns}
+                                        </span>,
+                                        <span key="gutter" className="text-muted-foreground font-mono">
+                                            {g.gutter}px
+                                        </span>,
+                                        <span
+                                            key="container"
+                                            className="text-muted-foreground font-mono whitespace-nowrap"
+                                        >
+                                            {key === 'mobile'
+                                                ? `${REFERENCE_VIEWPORT.mobile - 2 * g.margin}px (${REFERENCE_VIEWPORT.mobile}px 기준)`
+                                                : `${typeof g.container === 'number' ? g.container : CONTAINER_PX[g.container]}px (${REFERENCE_VIEWPORT_BY_KEY.get(key)}px 기준)`}
+                                        </span>,
+                                        <span key="margin" className="text-muted-foreground font-mono">
+                                            {g.margin}px
+                                        </span>,
+                                    ],
+                                }))
+                        })()}
+                    />
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        컬럼 없이 폭만 공유하는 <code className="font-mono">.content-layout</code> 유틸리티도 제공합니다
-                        — 콘텐츠 최대 폭(max-w-content) 상한과 위 margin(최소 바깥 여백)을 그대로 쓰되, 구간별 container
-                        캡핑 없이 항상 콘텐츠 폭까지 넓어집니다. 메인페이지 헤더처럼 그리드 티어보다 넓게 유지해야 하는
-                        풀블리드 요소에 사용합니다.
+                        <code className="font-mono">content-layout</code>은 컬럼 없이 콘텐츠 최대 폭과 최소 여백만
+                        적용합니다. 헤더처럼 그리드보다 넓게 유지할 요소에 사용합니다.
                     </p>
                 </section>
             </BaseCard>
