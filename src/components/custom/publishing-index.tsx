@@ -299,8 +299,8 @@ const PublishingIndex = () => {
                                 프론트엔드 인계 자산
                             </SectionHeaderTitle>
                             <SectionHeaderDescription>
-                                서비스 화면과 공통 기능에 영향을 주는 주요 개발 자산의 반영 현황을 안내합니다. 최신
-                                버전에서 변경된 항목은 강조해 표시합니다.
+                                현재 배포와 프론트엔드 전달 프로젝트에 포함되는 주요 개발 자산의 반영 버전을 안내합니다.
+                                이번 버전에 반영된 항목은 강조해 표시합니다.
                             </SectionHeaderDescription>
                         </SectionHeader>
 
@@ -312,7 +312,7 @@ const PublishingIndex = () => {
                                 className="overflow-x-auto overscroll-contain"
                             >
                                 <table className="w-full min-w-3xl table-fixed text-left">
-                                    <caption className="sr-only">프론트엔드 인계 자산별 변경 영향과 반영 버전</caption>
+                                    <caption className="sr-only">프론트엔드 인계 자산별 역할과 반영 버전</caption>
                                     <thead className="bg-muted relative z-10 block">
                                         <tr className="border-border [display:table] w-full table-fixed border-b">
                                             <th scope="col" className="typo-body-l-medium w-24 px-4 py-3">
@@ -322,7 +322,7 @@ const PublishingIndex = () => {
                                                 경로
                                             </th>
                                             <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                                변경 영향
+                                                역할
                                             </th>
                                             <th scope="col" className="typo-body-l-medium w-28 px-4 py-3">
                                                 반영 버전
