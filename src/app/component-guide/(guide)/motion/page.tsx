@@ -140,19 +140,42 @@ const EasingCurve = ({points}: {points: readonly [number, number, number, number
 const MotionGuidePage = () => (
     <GuidePageShell
         title="모션 (Motion)"
-        description="화면 전환과 장식 애니메이션에 쓰는 ease-* · animate-* 유틸리티입니다."
+        description="프로젝트에서 재사용하는 ease-* 가속도와 animate-* 애니메이션입니다."
     >
         <BaseCard>
-            <section aria-labelledby="motion-rule" className="flex flex-col gap-2">
-                <h2 id="motion-rule" className="typo-h4-bold text-foreground">
-                    사용 원칙
-                </h2>
-                <p className="typo-body-l-regular text-foreground-subtle">
-                    값은 <code>src/app/globals.css</code>의 <code>@theme</code>이 단일 소스입니다(색·간격과 달리{' '}
-                    <code>tokens.json</code>이 다루지 않습니다 — <code>@keyframes</code>와 한 몸이라 CSS에 둡니다). 모든
-                    애니메이션은 사용처에서 <code>motion-reduce:animate-none</code>으로 끄고, 1초에 3~50회 범위의
-                    번쩍임은 만들지 않습니다. [KWCAG 6.3.1]
-                </p>
+            <section aria-labelledby="motion-rule" className="flex flex-col gap-5">
+                <div className="flex flex-col gap-1">
+                    <h2 id="motion-rule" className="typo-h4-bold text-foreground">
+                        모션 적용 방식
+                    </h2>
+                    <p className="typo-body-l-regular text-foreground-subtle">
+                        기존 <code className="font-mono">ease-*</code>·<code className="font-mono">animate-*</code>를
+                        재사용하고, 같은 값을 컴포넌트에 다시 작성하지 않습니다.
+                    </p>
+                </div>
+                <div className="grid gap-5 md:grid-cols-3">
+                    <div className="flex flex-col gap-1">
+                        <strong className="text-foreground">원본</strong>
+                        <p className="text-foreground-subtle">
+                            값과 keyframes는 <code className="font-mono">src/app/globals.css</code>의{' '}
+                            <code className="font-mono">@theme</code>에서 관리합니다.
+                        </p>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <strong className="text-foreground">접근성</strong>
+                        <p className="text-foreground-subtle">
+                            사용처에 <code className="font-mono">motion-reduce:animate-none</code>을 적용하고 반복
+                            모션은 정지 수단을 제공합니다.
+                        </p>
+                    </div>
+                    <div className="flex flex-col gap-1">
+                        <strong className="text-foreground">변경</strong>
+                        <p className="text-foreground-subtle">
+                            CSS와 이 목록을 함께 수정한 뒤 <code className="font-mono">yarn verify</code>로 동기화를
+                            확인합니다.
+                        </p>
+                    </div>
+                </div>
             </section>
         </BaseCard>
 
