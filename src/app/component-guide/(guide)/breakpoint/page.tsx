@@ -56,19 +56,19 @@ const BreakpointGuidePage = () => (
         title="브레이크포인트 (Breakpoint)"
         description={
             <>
-                모바일 퍼스트입니다. <strong>Tailwind 기본 브레이크포인트</strong>를 그대로 쓰고, 프로젝트의 주 티어는{' '}
-                <code>md:</code>(≥{tokens.breakpoint.md}px) · <code>xl:</code>(≥{tokens.breakpoint.xl}px)입니다.
+                모바일 퍼스트 반응형 기준입니다. 주 구간은 <code>md:</code>(≥{tokens.breakpoint.md}px)와{' '}
+                <code>xl:</code>(≥{tokens.breakpoint.xl}px)입니다.
             </>
         }
     >
         <BaseCard>
             <section aria-labelledby="s-bp-rule" className="flex flex-col gap-2">
                 <h2 id="s-bp-rule" className="typo-h4-bold text-foreground">
-                    사용 원칙
+                    반응형 적용 방식
                 </h2>
                 <p className="typo-body-l-regular text-foreground-subtle">
-                    기본 스타일은 모바일 구간에 작성하고 md·xl에서 확장합니다. Tailwind 기본 sm·lg·2xl도 사용할 수
-                    있지만 공통 레이아웃은 프로젝트 주 티어를 우선합니다.
+                    프리픽스 없는 모바일 스타일을 먼저 작성하고 <code>md:</code>·<code>xl:</code>에서 확장합니다. 공통
+                    레이아웃은 이 두 구간을 우선하며, 임계값은 <code>tokens.json</code>에서만 변경합니다.
                 </p>
             </section>
         </BaseCard>
@@ -118,10 +118,10 @@ const BreakpointGuidePage = () => (
             <section aria-labelledby="s-bp-reference" className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <h2 id="s-bp-reference" className="typo-h4-bold text-foreground">
-                        Breakpoint reference
+                        너비 구간
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        범위와 대표 기기는 레이아웃 검수 기준이며 실제 기기에서는 CSS viewport를 기준으로 확인합니다.
+                        기기명이 아니라 CSS viewport 너비를 기준으로 적용됩니다.
                     </p>
                 </div>
                 <Table
@@ -186,12 +186,9 @@ const BreakpointGuidePage = () => (
                         높이 축 변형
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        Tailwind 기본 브레이크포인트는 너비만 다룹니다. 한 화면을 꽉 채우는 풀스크린 전환 화면은
-                        &ldquo;세로가 충분한가&rdquo;가 레이아웃을 가르므로, 높이 조건에 이름을 붙여 같은 유틸리티
-                        문법으로 씁니다. 임계값은 <code>tokens.json</code>의 <code>breakpoint.md</code>·
-                        <code>breakpointHeight</code>가 단일 소스이고, 생성기가 <code>@custom-variant</code>를 만듭니다.{' '}
-                        <code>stack-pager.tsx</code>의 <code>STACK_PAGER_QUERY</code>가 어긋나면{' '}
-                        <code>yarn tokens</code>가 빌드를 세웁니다.
+                        풀스크린 전환 화면에서만 높이 변형을 사용합니다. 임계값은 <code>tokens.json</code>의{' '}
+                        <code>breakpointHeight</code>에서 관리하고 생성기가 <code>@custom-variant</code>를 만듭니다.{' '}
+                        <code>STACK_PAGER_QUERY</code>와 값이 다르면 토큰 생성이 실패합니다.
                     </p>
                 </div>
 
