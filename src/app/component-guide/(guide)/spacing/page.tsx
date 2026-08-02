@@ -49,20 +49,16 @@ const resolveSizePx = (value: number | string, depth = 0): number | undefined =>
 const SpacingGuidePage = () => (
     <GuidePageShell
         title="간격 (Spacing)"
-        description={
-            <>
-                {tokens.spacingBase}px 배수 간격과 <code>tokens.json</code>의 고정 크기 토큰을 자동으로 큐레이션합니다.
-            </>
-        }
+        description={<>{tokens.spacingBase}px 배수 간격과 의미가 있는 고정 크기 토큰입니다.</>}
     >
         <BaseCard variant="outlined">
             <section aria-labelledby="spacing-usage" className="flex flex-col gap-4">
                 <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="spacing-usage" className="typo-h4-bold text-foreground">
-                        사용 기준
+                        간격과 크기 구분
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        용도에 따라 숫자 간격과 이름이 있는 크기 토큰을 구분해 사용합니다.
+                        여백은 숫자 유틸리티, 컴포넌트 크기는 이름이 있는 토큰을 사용합니다.
                     </p>
                 </div>
                 <dl className="grid gap-3 md:grid-cols-3">
@@ -79,9 +75,10 @@ const SpacingGuidePage = () => (
                         </dd>
                     </div>
                     <div className="border-border flex flex-col gap-2 rounded-md border p-4">
-                        <dt className="typo-body-l-medium text-foreground">직접 계산이 필요한 경우</dt>
+                        <dt className="typo-body-l-medium text-foreground">CSS 계산</dt>
                         <dd className="typo-body-l-regular text-foreground-subtle">
-                            유틸리티로 표현할 수 없을 때만 <code>var(--ds-spacing-토큰명)</code>을 참조합니다.
+                            복합 계산식에서만 <code>var(--ds-spacing-토큰명)</code>을 참조합니다. px 리터럴은 추가하지
+                            않습니다.
                         </dd>
                     </div>
                 </dl>
@@ -95,8 +92,7 @@ const SpacingGuidePage = () => (
                         간격 유틸리티
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        숫자 하나는 {tokens.spacingBase}px입니다. 아래 표에서 1~20 구간의 padding·margin·gap 클래스를
-                        바로 복사할 수 있습니다.
+                        숫자 하나는 {tokens.spacingBase}px입니다. padding·margin·gap에 같은 배수 규칙을 적용합니다.
                     </p>
                 </div>
                 <Table
