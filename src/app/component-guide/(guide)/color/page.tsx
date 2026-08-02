@@ -1,5 +1,6 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
@@ -18,7 +19,7 @@ const hexToRgba = (hex: string): string => {
 // 표시값 — hex 는 rgba 로 변환, 그 외(transparent 등)는 그대로.
 const display = (v: string): string => (v.startsWith('#') ? hexToRgba(v) : v)
 
-// alpha 스텝(0~100) → rgba 문자열.
+// alpha 스텝(1~99) → rgba 문자열. 완전 투명/불투명 경계값은 common 에서 관리한다.
 const alphaRgba = (color: string, step: number): string =>
     `rgba(${color === 'black' ? '0, 0, 0' : '255, 255, 255'}, ${step / 100})`
 
@@ -107,9 +108,6 @@ const primitive: Record<string, Record<string, string>> = tokens.primitive
 const primitiveGroups: Record<string, string[]> = tokens.primitiveGroups
 const common: Record<string, string> = tokens.common
 const alpha: Record<string, number[]> = tokens.alpha
-const PRIMITIVE_COLOR_COUNT = Object.values(primitive).reduce((count, steps) => count + Object.keys(steps).length, 0)
-const COMMON_COLOR_COUNT = Object.keys(common).length
-const ALPHA_COLOR_COUNT = Object.values(alpha).reduce((count, steps) => count + steps.length, 0)
 
 // 색상 — Tier 1 프리미티브 팔레트. Figma(Mode 1) 의 "01 Primitive" 정의를 그룹별 표로 옮긴다.
 const ColorGuidePage = () => (
@@ -117,43 +115,78 @@ const ColorGuidePage = () => (
         title="색상 (Primitive)"
         description={
             <>
-                Figma 변수 정의를 JSON으로 추출해 <code className="font-mono">tokens.json</code>에 반영하고, primitive{' '}
-                {PRIMITIVE_COLOR_COUNT}개·common {COMMON_COLOR_COUNT}개·alpha {ALPHA_COLOR_COUNT}개를 자동
-                큐레이션합니다. 화면에서는 원시값 대신 역할이 드러나는 시맨틱 색상 유틸리티를 우선하세요.
+                시맨틱 색상의 기반이 되는 고정 팔레트입니다. 앱 코드에서는 아래 값을 직접 사용하지 말고 역할 기반 색상
+                유틸리티를 사용하세요.
             </>
         }
     >
         <div className="flex flex-col gap-12">
             <BaseCard>
-                <section aria-labelledby="primitive-rule-title" className="flex flex-col gap-4">
-                    <div className="flex flex-col gap-1">
+                <section aria-labelledby="primitive-rule-title" className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
                         <h2 id="primitive-rule-title" className="typo-h4-bold text-foreground">
-                            구조와 사용 원칙
+                            개발자 사용 기준
                         </h2>
                         <p className="typo-body-l-regular text-foreground-subtle">
-                            원시값은 시맨틱 토큰이 참조하는 기반 값이며, 화면에서는 bg-primary·text-foreground처럼
-                            용도가 드러나는 클래스를 사용합니다.
+                            컴포넌트에는 <code className="font-mono">bg-surface</code>,{' '}
+                            <code className="font-mono">text-foreground</code>,{' '}
+                            <code className="font-mono">border-border</code>처럼 역할이 드러나는 시맨틱 유틸리티를
+                            사용합니다.
                         </p>
+                        <Link
+                            href="/component-guide/semantic-color"
+                            className="text-primary focus-visible:ring-ring w-fit rounded-sm underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                        >
+                            시맨틱 색상과 사용 가능한 유틸리티 보기
+                        </Link>
                     </div>
-                    <div className="grid gap-4 md:grid-cols-3">
-                        <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">단일 원본</strong>
+
+                    <div className="grid gap-6 md:grid-cols-3">
+                        <div className="flex flex-col gap-2">
+                            <strong className="text-foreground">기본 원칙</strong>
                             <p className="text-foreground-subtle">
-                                값 변경은 <code className="font-mono">tokens.json</code>에서만 진행합니다.
+                                UI에서는 <code className="font-mono">--ds-*</code> 기반 유틸리티를 사용합니다. 테마별
+                                값은 자동으로 전환됩니다.
                             </p>
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">생성 과정</strong>
+                        <div className="flex flex-col gap-2">
+                            <strong className="text-foreground">Raw 허용 범위</strong>
                             <p className="text-foreground-subtle">
-                                <code className="font-mono">yarn tokens</code>가 raw·ds 변수와 색상 유틸리티를
-                                생성합니다.
+                                <code className="font-mono">--raw-*</code>는 시맨틱 매핑, 토큰 문서, 색상 검증처럼
+                                원시값 자체가 필요한 코드에서만 사용합니다.
                             </p>
                         </div>
-                        <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">다크 모드</strong>
+                        <div className="flex flex-col gap-2">
+                            <strong className="text-foreground">금지 사항</strong>
                             <p className="text-foreground-subtle">
-                                raw 값은 고정되고 ds 스케일은 단계 위치를 반사합니다. 시맨틱 페이지에서 실제 매핑을
-                                확인합니다.
+                                색상 리터럴과 raw 변수를 컴포넌트에 직접 넣거나, 자동 생성 파일인{' '}
+                                <code className="font-mono">src/app/tokens.css</code>를 수정하지 않습니다.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="border-border grid gap-4 border-t pt-6 md:grid-cols-2">
+                        <div className="flex flex-col gap-2">
+                            <strong className="text-foreground">토큰 변경 절차</strong>
+                            <ol className="text-foreground-subtle list-decimal space-y-1 pl-5">
+                                <li>
+                                    <code className="font-mono">tokens.json</code>에서 원본 값을 변경합니다.
+                                </li>
+                                <li>
+                                    <code className="font-mono">yarn tokens</code>로 CSS를 다시 생성합니다.
+                                </li>
+                                <li>
+                                    <code className="font-mono">yarn verify</code>로 참조·대비·타입을 검증합니다.
+                                </li>
+                            </ol>
+                        </div>
+                        <div className="flex flex-col gap-2">
+                            <strong className="text-foreground">Common · Alpha 경계</strong>
+                            <p className="text-foreground-subtle">
+                                완전 투명과 불투명 색은 <code className="font-mono">common</code>, 실제 반투명 값
+                                (1~99%)은 <code className="font-mono">alpha</code>에서 관리합니다. 따라서{' '}
+                                <code className="font-mono">a0</code>·<code className="font-mono">a100</code> 토큰은
+                                만들지 않습니다.
                             </p>
                         </div>
                     </div>
@@ -204,7 +237,7 @@ const ColorGuidePage = () => (
                             Common · Alpha
                         </h2>
                         <p className="typo-caption-regular text-muted-foreground">
-                            스케일 밖의 고정 앵커와 오버레이·그림자 등에 사용하는 투명도 원시값입니다.
+                            Common은 불투명·완전 투명 앵커, Alpha는 오버레이·그림자용 1~99% 반투명 값입니다.
                         </p>
                     </div>
                     <div className="grid gap-8 xl:grid-cols-2">

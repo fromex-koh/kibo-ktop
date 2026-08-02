@@ -7,8 +7,8 @@ const ROOT = process.cwd()
 const OUT = resolve(ROOT, 'src/app/tokens.css')
 const tokens = JSON.parse(readFileSync(resolve(ROOT, 'tokens.json'), 'utf8'))
 const {scale, primitive, semantic} = tokens
-const common = tokens.common ?? {} // 스케일 밖 단일값 앵커 (white/black) → --raw-common-white 등
-const alpha = tokens.alpha ?? {} // 반투명 프리미티브 (white/black × alpha% → --raw-white-a5 등)
+const common = tokens.common ?? {} // 스케일 밖 경계값 앵커 (불투명색/transparent) → --raw-common-white 등
+const alpha = tokens.alpha ?? {} // 실제 반투명 프리미티브 (white/black × 1~99%) → --raw-white-a5 등
 
 // 디자인 토큰 (px 숫자로 입력 → rem 출력)
 const remBase = tokens.remBase ?? 16
@@ -156,11 +156,13 @@ if (Object.keys(grid).length) {
         }
     }
 }
-// alpha 프리미티브: white/black 만, 스텝은 1~100 숫자 배열
+// alpha 프리미티브: white/black 만, 경계값(0/100)을 제외한 1~99 고유 정수 배열.
+// 0은 common.transparent, 100은 common의 불투명 색으로 관리해 같은 색의 중복 토큰 생성을 막는다.
 for (const [name, steps] of Object.entries(alpha)) {
     if (name !== 'white' && name !== 'black') errors.push(`alpha.${name} — white/black 만 지원`)
-    if (!Array.isArray(steps) || steps.some((s) => typeof s !== 'number' || s < 0 || s > 100))
-        errors.push(`alpha.${name} 는 0~100 숫자 배열이어야 함`)
+    if (!Array.isArray(steps) || steps.some((s) => !Number.isInteger(s) || s <= 0 || s >= 100))
+        errors.push(`alpha.${name} 는 경계값을 제외한 1~99 정수 배열이어야 함`)
+    else if (new Set(steps).size !== steps.length) errors.push(`alpha.${name} 에 중복 스텝이 있음`)
 }
 // overlay: {light,dark} 각각 alpha 프리미티브 참조("black.5" → --raw-black-a5)
 const alphaHas = (ref) => {
@@ -324,15 +326,15 @@ for (const hue of hues) {
     L.push(`  /* raw ${hue} */`)
     for (const s of scale) L.push(`  --raw-${hue}-${s}: ${primitive[hue][String(s)]};`)
 }
-// raw alpha 프리미티브 (white/black × alpha%) → --raw-white-a5: rgba(255,255,255,0.05)
+// raw alpha 프리미티브 (white/black × 1~99%) → --raw-white-a5: rgba(255,255,255,0.05)
 const alphaRgb = {white: '255, 255, 255', black: '0, 0, 0'}
 for (const [name, steps] of Object.entries(alpha)) {
     L.push('', `  /* raw ${name} alpha */`)
     for (const s of steps) L.push(`  --raw-${name}-a${s}: rgba(${alphaRgb[name]}, ${s / 100});`)
 }
-// raw common (스케일 밖 단일값 앵커 — 모드 무관 고정) → --raw-common-white 등
+// raw common (스케일 밖 경계값 앵커 — 모드 무관 고정) → --raw-common-white 등
 if (Object.keys(common).length) {
-    L.push('', '  /* raw common (스케일 밖 단일값 — white/black 앵커) */')
+    L.push('', '  /* raw common (스케일 밖 불투명색/transparent 앵커) */')
     for (const [k, v] of Object.entries(common)) L.push(`  --raw-common-${k}: ${v};`)
 }
 // alpha 참조("black.5") → var(--raw-black-a5)
