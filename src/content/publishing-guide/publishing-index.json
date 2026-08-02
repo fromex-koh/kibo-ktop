@@ -29,7 +29,7 @@
             "name": "src/components/composite",
             "path": "src/components/composite",
             "kind": "folder",
-            "description": "primitive를 조합한 프로젝트 공통 패턴"
+            "description": "shadcn/ui primitive를 조합한 프로젝트 공통 패턴"
         },
         {
             "name": "src/components/custom",
@@ -96,6 +96,12 @@
             "path": "src/app/tokens.css",
             "kind": "file",
             "description": "검증을 마친 디자인 토큰 CSS 결과물"
+        },
+        {
+            "name": "scripts/build-tokens.mjs",
+            "path": "scripts/build-tokens.mjs",
+            "kind": "file",
+            "description": "전달본에서 tokens.json을 검증하고 tokens.css로 생성"
         },
         {
             "name": "src/app/globals.css",

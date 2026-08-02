@@ -31,6 +31,7 @@ for (const path of [
     'next.config.ts',
     'postcss.config.mjs',
     'public',
+    'scripts/build-tokens.mjs',
     'src',
     'THIRD_PARTY_LICENSES.md',
     'tokens.json',
@@ -44,6 +45,14 @@ for (const path of [
 for (const path of ['src/.DS_Store', 'src/app/.DS_Store']) {
     rmSync(resolve(outputDirectory, path), {force: true})
 }
+
+// 전달본은 생성된 tokens.css를 초기 결과물로 커밋하고, tokens.json 수정 시 같은 스크립트로 갱신한다.
+const handoffGitignorePath = resolve(outputDirectory, '.gitignore')
+const handoffGitignore = readFileSync(handoffGitignorePath, 'utf8')
+    .split('\n')
+    .filter((line) => line.trim() !== '/src/app/tokens.css')
+    .join('\n')
+writeFileSync(handoffGitignorePath, handoffGitignore)
 
 // 원본 배포의 인덱스 화면은 전달본에서도 유지하되, 서비스가 사용할 루트 경로는 비워 둔다.
 const publishingGuideDirectory = resolve(outputDirectory, 'src/app/publishing-guide')
@@ -86,6 +95,9 @@ const handoffPackage = {
     private: true,
     packageManager: sourcePackage.packageManager,
     scripts: {
+        tokens: 'node scripts/build-tokens.mjs',
+        predev: 'yarn tokens',
+        prebuild: 'yarn tokens',
         dev: 'next dev',
         build: 'next build',
         start: 'next start',
@@ -136,6 +148,10 @@ yarn dev
 - \`/\`: 서비스 메인 화면으로 교체할 최소 시작 페이지
 - \`/publishing-guide\`: 원본 저장소의 퍼블리싱 인덱스
 - \`/component-guide\`: 컴포넌트 가이드
+
+## 디자인 토큰
+
+\`src/app/tokens.css\`는 검증된 초기 결과물로 포함됩니다. \`tokens.json\`을 수정한 뒤 \`yarn tokens\`로 다시 생성할 수 있으며, \`yarn dev\`와 \`yarn build\` 실행 전에도 자동으로 갱신됩니다.
 `,
 )
 
