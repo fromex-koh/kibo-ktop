@@ -112,7 +112,7 @@ const Table = ({caption, columns, rows, variant = 'line', size = 'lg', className
     const sizeSlots = TABLE_SIZE_SLOTS[size]
 
     return (
-        <div className={cn('overflow-x-auto', slots.container, className)}>
+        <div className={cn('relative overflow-x-auto', slots.container, className)}>
             <table className="w-full">
                 <caption className="sr-only">{caption}</caption>
                 <thead>

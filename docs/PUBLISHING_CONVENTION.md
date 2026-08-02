@@ -77,7 +77,7 @@ arbitrary value의 허용 범위, 반복 시 승격 기준, `ui/` 원본 예외�
     - 기본 클래스는 모바일 스타일이며 `sm:`(640), `md:`(768), `lg:`(1024), `xl:`(1280), `2xl:`(1536)로 확장한다.
     - 프로젝트 주 티어는 `md:`와 `xl:`이다. 새 레이아웃은 두 티어를 우선하되 필요한 경우 다른 기본 티어도 사용할 수 있다.
     - 콘텐츠 폭 상한은 `max-w-content`(현재 1200px)와 `mx-auto`를 사용한다.
-    - 프로젝트 티어 값은 `tokens.json`의 `breakpoint`, `container`, `typographyBreakpoint`에서 관리한다.
+    - 프로젝트 티어 값은 `tokens.json`의 `breakpoint`, `container`, `typographyBreakpoints`에서 관리한다.
 - **[PB-19] 손으로 쓰는 CSS 의 간격 값은 `--spacing(n)`(MUST)** — 직접 작성하는 CSS(`globals.css`·`src/styles/*.css`)에서 간격·크기를 `rem` 으로 바로 적지 않는다. Tailwind 의 `--spacing(n)` 함수를 쓰면 `n` 이 JSX 의 `p-n`·`gap-n` 과 같은 단위가 되고(1n = `spacingBase` = 현재 4px), 값의 출처가 `tokens.json` 하나로 유지된다. `clamp()` 안에서도 쓸 수 있다. 읽는 사람이 px 을 바로 알 수 있도록 `/* 52px */` 형태의 주석을 함께 적고 값을 고칠 때 같이 고친다.
     - `font-size` 는 간격 스케일이 아니므로 대상이 아니다 — `rem` 을 유지하고 px 주석만 병기한다.
     - 예: `padding-top: --spacing(13); /* 52px */` · `height: clamp(--spacing(26), 31dvh, --spacing(29)); /* clamp(104px, 31dvh, 116px) */`

@@ -4,7 +4,7 @@ import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
-import {remLiteralsToPx} from '@/lib/token-format'
+import {cn} from '@/lib/utils'
 import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '타이포그래피 (Typography)'}
@@ -21,8 +21,7 @@ const WIDTH_DEMO_LINES = ['iiiii', 'WWWWW']
 // weight/lineHeight/letterSpacing 는 primitive 맵(tokens.fontWeight 등)의 키를 이름으로 참조한다.
 // 표에는 이름이 아니라 실제 값(700·1.5·0)을 그 맵에서 되찾아 보여준다.
 type TypographyToken = {
-    // 숫자는 px, 문자열은 변환하지 않는 값(마키 밴드의 유동 clamp 처럼 단위 변환 대상이 아닌 것). [PB-03]
-    size: {mobile: number | string; pc: number | string}
+    size: {mobile: number; tablet: number; pc: number}
     weight: string
     lineHeight: string
     letterSpacing: string
@@ -46,9 +45,7 @@ const TYPOGRAPHY_GROUPS: {name: string; match: (n: string) => boolean}[] = [
     {name: 'Micro', match: (n) => n.startsWith('micro-')},
     {name: '화면 전용', match: () => true},
 ]
-// 숫자는 px 를 붙이고, 문자열 값(유동 clamp 등)은 안의 rem 을 px 로 되돌려 다른 행과 단위를 맞춘다.
-const formatFontSize = (value: number | string): string =>
-    typeof value === 'number' ? `${value}px` : remLiteralsToPx(value)
+const formatFontSize = (value: number): string => `${value}px`
 const groupNameOfTypo = (name: string): string =>
     TYPOGRAPHY_GROUPS.find((group) => group.match(name))?.name ?? '화면 전용'
 const TYPOGRAPHY_ENTRIES: TypographyEntry[] = Object.entries(tokens.typography)
@@ -68,6 +65,7 @@ const TYPOGRAPHY_SCALE_COLUMNS = [
     {key: 'preview', header: '미리보기', align: 'start'},
     {key: 'class', header: '클래스', align: 'start', rowHeader: true},
     {key: 'mobile', header: '크기 (모바일)', align: 'start'},
+    {key: 'tablet', header: '크기 (태블릿)', align: 'start'},
     {key: 'pc', header: '크기 (PC)', align: 'start'},
     {key: 'weight', header: '굵기', align: 'start'},
     {key: 'lineHeight', header: '행간', align: 'start'},
@@ -93,6 +91,9 @@ const TypographyScaleTable = ({title, entries}: {title: string; entries: Typogra
                     <CopyChip key="class" value={`typo-${name}`} />,
                     <span key="mobile" className="text-muted-foreground font-mono">
                         {formatFontSize(t.size.mobile)}
+                    </span>,
+                    <span key="tablet" className="text-muted-foreground font-mono">
+                        {formatFontSize(t.size.tablet)}
                     </span>,
                     <span key="pc" className="text-muted-foreground font-mono">
                         {formatFontSize(t.size.pc)}
@@ -160,9 +161,11 @@ const SANS_STACK = [
 ]
 
 // 페이지의 최상위 문서 그룹을 실제 프로젝트 Card로 구분한다.
-const TypographySectionCard = ({children, ...props}: ComponentPropsWithoutRef<'section'>) => (
+const TypographySectionCard = ({children, className, ...props}: ComponentPropsWithoutRef<'section'>) => (
     <BaseCard>
-        <section {...props}>{children}</section>
+        <section className={cn('min-w-0', className)} {...props}>
+            {children}
+        </section>
     </BaseCard>
 )
 
@@ -190,8 +193,9 @@ const TypographyGuidePage = () => (
                 <div className="flex flex-col gap-1">
                     <strong className="text-foreground">반응형 구조</strong>
                     <p className="text-foreground-subtle">
-                        모바일을 기본으로 하고 <code className="font-mono">{tokens.typographyBreakpoint}:</code>부터 PC
-                        크기를 적용합니다.
+                        모바일 기본, <code className="font-mono">{tokens.typographyBreakpoints.tablet}:</code>부터
+                        태블릿, <code className="font-mono">{tokens.typographyBreakpoints.pc}:</code>부터 PC 크기를
+                        적용합니다.
                     </p>
                 </div>
                 <div className="flex flex-col gap-1">
@@ -369,8 +373,8 @@ const TypographyGuidePage = () => (
                     해당 클래스가 실제 적용되며 클래스 칩을 선택하면 이름이 복사됩니다.
                 </p>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    현재 모바일과 PC 크기는 동일하지만 반응형 구조는 유지합니다. 향후 <code>tokens.json</code>의 PC 값만
-                    변경하면 {tokens.typographyBreakpoint} breakpoint부터 자동으로 적용됩니다.
+                    현재 모바일·태블릿·PC 크기는 동일하지만 세 값을 독립적으로 관리합니다. <code>tokens.json</code>의
+                    구간별 값을 변경하면 각 breakpoint부터 자동으로 적용됩니다.
                 </p>
             </div>
             <div className="flex flex-col gap-8">

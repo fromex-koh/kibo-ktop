@@ -39,9 +39,11 @@ const container = tokens.container ?? {} // 콘텐츠 최대 폭(px) → max-w-*
 // 높이 임계값(px) → 높이 기준 @custom-variant 생성. 너비 breakpoint 로는 표현할 수 없는 축이다.
 const breakpointHeight = tokens.breakpointHeight ?? {}
 const grid = tokens.grid ?? {} // 브레이크포인트별 레이아웃 그리드(columns/gutter/margin) → .grid-layout
-// 타이포 모바일→PC 전환점: breakpoint 키 참조("md") 또는 px 숫자
-const typoBpRaw = tokens.typographyBreakpoint ?? 'md'
-const typoBp = typeof typoBpRaw === 'number' ? typoBpRaw : (breakpoint[typoBpRaw] ?? 768)
+// 타이포 3구간 전환점: breakpoint 키 참조 또는 px 숫자. mobile < tablet(md) < pc(xl).
+const typoBpRefs = tokens.typographyBreakpoints ?? {tablet: 'md', pc: 'xl'}
+const resolveTypoBp = (ref, fallback) => (typeof ref === 'number' ? ref : (breakpoint[ref] ?? fallback))
+const typoTabletBp = resolveTypoBp(typoBpRefs.tablet, 768)
+const typoPcBp = resolveTypoBp(typoBpRefs.pc, 1280)
 
 // px 숫자 → rem. 문자열(%, em, 특수값 등)은 그대로, 0은 무단위.
 const toRem = (v) => (typeof v === 'string' ? v : v === 0 ? '0' : `${+(v / remBase).toFixed(4)}rem`)
@@ -125,12 +127,18 @@ for (const [k, v] of Object.entries(effect.blur ?? {}))
     if (!numOrStr(v)) errors.push(`effect.blur.${k} 는 숫자(px) 또는 문자열이어야 함`)
 // z-index: 정수(레이어 순서). 값이 아니라 순서라 음수 허용(예: 배경 뒤로 보내기).
 for (const [k, v] of Object.entries(z)) if (!Number.isInteger(v)) errors.push(`z.${k} 는 정수(z-index)여야 함`)
-// breakpoint·container: px 숫자. typographyBreakpoint 는 breakpoint 키(또는 px 숫자)
+// breakpoint·container: px 숫자. typographyBreakpoints 는 breakpoint 키(또는 px 숫자)
 for (const [group, obj] of Object.entries({breakpoint, container})) {
     for (const [k, v] of Object.entries(obj)) if (typeof v !== 'number') errors.push(`${group}.${k} 는 숫자(px)여야 함`)
 }
-if (typeof typoBpRaw === 'string' && breakpoint[typoBpRaw] === undefined)
-    errors.push(`typographyBreakpoint="${typoBpRaw}" — breakpoint 에 해당 키 없음`)
+for (const mode of ['tablet', 'pc']) {
+    const ref = typoBpRefs[mode]
+    if (typeof ref === 'string' && breakpoint[ref] === undefined)
+        errors.push(`typographyBreakpoints.${mode}="${ref}" — breakpoint 에 해당 키 없음`)
+    else if (typeof ref !== 'string' && typeof ref !== 'number')
+        errors.push(`typographyBreakpoints.${mode} 는 breakpoint 키 또는 px 숫자여야 함`)
+}
+if (typoTabletBp >= typoPcBp) errors.push(`typographyBreakpoints 는 tablet(${typoTabletBp}) < pc(${typoPcBp}) 여야 함`)
 // grid: 키가 'mobile' + breakpoint 키와 정확히 1:1 대응해야 함 (브레이크포인트 리네임 시 함께 갱신 강제)
 if (Object.keys(grid).length) {
     const gridExpectedKeys = ['mobile', ...Object.keys(breakpoint)]
@@ -194,8 +202,8 @@ for (const [k, v] of Object.entries(effect.shadow ?? {})) {
                 errors.push(`effect.shadow.${k}.color.${mode}="${v.color[mode]}" — alpha 프리미티브 없음`)
 }
 for (const [name, t] of Object.entries(typography)) {
-    if (t.size?.mobile === undefined || t.size?.pc === undefined)
-        errors.push(`typography.${name}.size.{mobile,pc} 누락`)
+    if (t.size?.mobile === undefined || t.size?.tablet === undefined || t.size?.pc === undefined)
+        errors.push(`typography.${name}.size.{mobile,tablet,pc} 누락`)
     // weight/lineHeight/letterSpacing 는 primitive 맵의 키를 이름으로 참조해야 한다(없는 키면 빌드 실패).
     if (!(t.weight in fontWeight)) errors.push(`typography.${name}.weight="${t.weight}" — fontWeight 에 없는 키`)
     if (!(t.lineHeight in lineHeight))
@@ -208,7 +216,7 @@ for (const [name, t] of Object.entries(typography)) {
 const tierSize = {}
 for (const [name, t] of Object.entries(typography)) {
     const tier = tierOf(name)
-    const key = `${t.size?.mobile}/${t.size?.pc}`
+    const key = `${t.size?.mobile}/${t.size?.tablet}/${t.size?.pc}`
     if (tierSize[tier] === undefined) tierSize[tier] = key
     else if (tierSize[tier] !== key)
         errors.push(
@@ -584,7 +592,7 @@ for (const k of Object.keys(blur)) L.push(`  --blur-${k}: var(--ds-blur-${k});`)
 for (const [k, v] of Object.entries(tracking)) L.push(`  --tracking-${k}: ${toRem(v)};`)
 L.push('}', '')
 
-// typography — 복합 토큰 → .typo-* (모바일 기본 + PC 미디어쿼리), Tailwind 의 utilities 레이어에 배치.
+// typography — 복합 토큰 → .typo-* (모바일 기본 + 태블릿/PC 미디어쿼리), Tailwind utilities 레이어.
 // @theme 의 --text-* 는 font-size+line-height 만 짝지을 수 있고 font-weight·letter-spacing 은 별도
 // 네임스페이스라 한 클래스로 못 묶는다(PB-07/08 이 요구하는 "typo-* 하나만" 원칙과 안 맞음) — 그래서
 // 커스텀 클래스로 4개 속성 + 반응형을 한 클래스에 담는다.
@@ -608,17 +616,18 @@ if (typoNames.length) {
     // 2) font-size primitive — 크기도 원시 스케일값이라 --raw-font-size-*(색상 스케일 --raw-blue-* 와 동렬).
     //    굵기·행간·자간은 위 primitive 라 이 변수는 크기만 담는다. 크기는 굵기와 무관해 tier(display-xl
     //    등) 로 공유한다: display-xl-bold/medium/regular 3개가 --raw-font-size-display-xl 하나를 참조 →
-    //    변수 1/3. -pc 는 PC(≥typoBp) 크기. mobile/pc 페어는 반응형 타이포 대비 항상 낸다. 단, pc==mobile
-    //    이면 값 리터럴을 반복하지 않고 -pc 가 base 를 참조 → 값 단일 소스. typo(세트)는 .typo-* 클래스에만.
+    //    변수 1/3. -tablet/-pc 는 각 구간 크기다. 앞 구간과 값이 같으면 변수를 참조해 리터럴 중복을 막는다.
     L.push(':root {')
-    L.push('  /* font-size primitive → --raw-font-size-<tier>(모바일) · -pc(PC), 굵기 무관·tier 공유 */')
+    L.push('  /* font-size primitive → 기본(모바일) · -tablet · -pc, 굵기 무관·tier 공유 */')
     const emittedTiers = new Set()
     for (const [name, t] of Object.entries(typography)) {
         const tier = tierOf(name)
         if (emittedTiers.has(tier)) continue
         emittedTiers.add(tier)
         L.push(`  --raw-font-size-${tier}: ${toRem(t.size.mobile)};`)
-        const pc = t.size.pc === t.size.mobile ? `var(--raw-font-size-${tier})` : toRem(t.size.pc)
+        const tablet = t.size.tablet === t.size.mobile ? `var(--raw-font-size-${tier})` : toRem(t.size.tablet)
+        const pc = t.size.pc === t.size.tablet ? `var(--raw-font-size-${tier}-tablet)` : toRem(t.size.pc)
+        L.push(`  --raw-font-size-${tier}-tablet: ${tablet};`)
         L.push(`  --raw-font-size-${tier}-pc: ${pc};`)
     }
     L.push('}', '')
@@ -626,7 +635,7 @@ if (typoNames.length) {
     // 3) .typo-* 클래스 = 타이포의 semantic 층 — 네 원시(primitive)를 한 세트로 묶는다(색상 semantic 이
     //    --raw-* 를 참조하는 것과 동일 구조). font-size 는 tier, 나머지는 공유 primitive.
     L.push(`@layer utilities {`)
-    L.push(`  /* typography → .typo-* (모바일 기본, ${typoBp}px↑ = PC) */`)
+    L.push(`  /* typography → .typo-* (모바일 기본, ${typoTabletBp}px↑ 태블릿, ${typoPcBp}px↑ PC) */`)
     for (const [name, t] of Object.entries(typography)) {
         const tier = tierOf(name)
         L.push(`  .typo-${name} {`)
@@ -634,7 +643,10 @@ if (typoNames.length) {
         L.push(`    font-weight: var(--raw-font-weight-${t.weight});`)
         L.push(`    line-height: var(--raw-line-height-${t.lineHeight});`)
         if (t.letterSpacing !== undefined) L.push(`    letter-spacing: var(--raw-letter-spacing-${t.letterSpacing});`)
-        L.push(`    @media (min-width: ${typoBp}px) {`)
+        L.push(`    @media (min-width: ${typoTabletBp}px) {`)
+        L.push(`      font-size: var(--raw-font-size-${tier}-tablet);`)
+        L.push('    }')
+        L.push(`    @media (min-width: ${typoPcBp}px) {`)
         L.push(`      font-size: var(--raw-font-size-${tier}-pc);`)
         L.push('    }')
         L.push('  }')
