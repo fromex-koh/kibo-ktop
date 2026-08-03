@@ -1,0 +1,48 @@
+import Link from 'next/link'
+import {ArrowRight} from 'lucide-react'
+import {Button} from '@/components/ui/button'
+import {
+    TECH_EVAL_CTA_FILL_CLASS,
+    TECH_EVAL_SERVICES,
+    TechEvalServiceVisual,
+} from '@/components/custom/tech-eval-services'
+import {cn} from '@/lib/utils'
+
+// 모바일 2섹션은 자동 전환 없이 네 가지 서비스를 문서 순서대로 모두 펼쳐 읽는다.
+const MobileTechEvalContent = () => (
+    <div className="grid-layout w-full">
+        <div className="col-span-4 flex min-w-0 flex-col">
+            {TECH_EVAL_SERVICES.map((service, index) => (
+                <article
+                    key={service.title}
+                    aria-labelledby={`mobile-tech-eval-title-${index}`}
+                    className="border-border flex flex-col gap-6 border-b py-12 first:pt-0 last:border-b-0 last:pb-0"
+                >
+                    <div className="flex flex-col items-start gap-5">
+                        <p className="text-main-accent text-lg leading-normal font-bold">{service.title}</p>
+                        <h2
+                            id={`mobile-tech-eval-title-${index}`}
+                            className="text-foreground text-3xl leading-normal font-bold break-keep"
+                        >
+                            {service.headline}
+                        </h2>
+                        {/* aria-label — 보이는 문구가 "시작하기" 뿐이라 링크만 훑을 때 무엇을 시작하는지
+                            알 수 없다. 서비스명을 붙여 목적을 드러낸다. [KWCAG 6.4.3] */}
+                        <Button size="lg" asChild className={cn(TECH_EVAL_CTA_FILL_CLASS, 'text-base')}>
+                            <Link href={service.ctaHref} aria-label={`${service.title} 시작하기`}>
+                                시작하기
+                                <ArrowRight aria-hidden="true" />
+                            </Link>
+                        </Button>
+                    </div>
+
+                    <div className="flex flex-col gap-5">
+                        <TechEvalServiceVisual service={service} />
+                    </div>
+                </article>
+            ))}
+        </div>
+    </div>
+)
+
+export default MobileTechEvalContent
