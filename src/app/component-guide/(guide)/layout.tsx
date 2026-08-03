@@ -4,8 +4,7 @@ import {GUIDE_NAV_SECTIONS} from '@/constants/publishing-guide'
 import SidebarLayout from '@/components/composite/sidebar-layout'
 import {ScrollToTopButton} from '@/components/composite/scroll-to-top-button'
 
-// 하위 섹션 페이지들이 공유하는 사이드바 셸 — 라우트 이동 사이에 네비/드로어 상태가 유지된다.
-// 각 페이지 제목 뒤에 '· 컴포넌트 가이드'를 붙여 탭 제목에서 맥락이 유지되도록 템플릿을 둔다.
+// (guide) 하위 페이지에 공유되는 사이드바 셸과 페이지 제목 템플릿.
 export const metadata: Metadata = {
     title: {
         default: '컴포넌트 가이드',
@@ -13,8 +12,7 @@ export const metadata: Metadata = {
     },
 }
 
-// ScrollToTopButton 을 셸 레벨에 한 번 마운트 — 각 섹션 페이지가 길어지면(예: Button 가이드) 어디서든
-// 공통으로 쓸 수 있게 모든 가이드 페이지에 전역 적용한다.
+// 모든 가이드 페이지에서 공유하는 맨 위로 이동 버튼은 셸에 한 번만 마운트한다.
 const ComponentGuideLayout = ({children}: {children: ReactNode}) => (
     <SidebarLayout
         title="컴포넌트 가이드"
