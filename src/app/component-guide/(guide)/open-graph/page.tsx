@@ -6,7 +6,7 @@ import GuidePageShell from '@/components/custom/guide-page-shell'
 
 export const metadata: Metadata = {title: 'Open Graph 미리보기'}
 
-const SERVICE_IMAGE = '/images/og/k-top-service-preview.png'
+const SERVICE_IMAGE = '/images/og-sample/k-top-service-preview.png'
 
 const OPEN_GRAPH_CODE = `export const metadata: Metadata = {
   openGraph: {
