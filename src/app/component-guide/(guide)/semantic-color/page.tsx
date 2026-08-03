@@ -183,6 +183,11 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'main-intro-foreground-subtle': 'bg-main-intro-foreground-subtle',
     'main-intro-accent': 'bg-main-intro-accent',
     'main-intro-border': 'bg-main-intro-border',
+    'menu-overlay': 'bg-menu-overlay',
+    'menu-overlay-foreground': 'bg-menu-overlay-foreground',
+    'menu-overlay-foreground-subtle': 'bg-menu-overlay-foreground-subtle',
+    'menu-overlay-accent': 'bg-menu-overlay-accent',
+    'menu-overlay-border': 'bg-menu-overlay-border',
     'cta-surface': 'bg-cta-surface',
     'pastel-info': 'bg-pastel-info',
     'pastel-info-foreground': 'bg-pastel-info-foreground',
@@ -364,6 +369,7 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
     {name: 'main-accent / main-accent-bright', match: (n) => n.startsWith('main-accent')},
     {name: 'main-intro (메인 2섹션)', match: (n) => n.startsWith('main-intro-')},
+    {name: 'menu-overlay (전체 메뉴)', match: (n) => n.startsWith('menu-overlay')},
     {name: 'pagination', match: (n) => n.startsWith('pagination-')},
     {name: 'calendar (일요일 / 토요일)', match: (n) => n.startsWith('calendar-')},
     {name: 'select-selected-foreground', match: (n) => n === 'select-selected-foreground'},
@@ -520,6 +526,18 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             ([PB-06]) 세 테마에 같은 값을 넣은 전용 슬롯을 씁니다. surface는 섹션 배경, accent는 단계 번호·진행 표식,
             foreground/foreground-subtle은 제목·레이블/본문, border는 진행 레일입니다. 현재 시안은 다크 면에 흰 텍스트와
             민트 강조라 foreground와 foreground-subtle이 같은 값이며, 본문 계조가 생기면 subtle만 낮춥니다.
+        </>
+    ),
+    'menu-overlay (전체 메뉴)': (
+        <>
+            헤더 햄버거 버튼으로 여는 전체 메뉴의 색입니다. 화면을 통째로 덮는 면이라 페이지 배경과 같은 방향으로
+            뒤집히며, 사용처에서 <code className="font-mono">dark:</code>로 분기하지 않도록([PB-06]) 테마별 값을 이
+            슬롯에 모아 둡니다. 시안([공통] 전체메뉴)이 어두운 면 기준이라 dark와 mainpage가 같은 값이고 light만 밝은
+            면·어두운 글자로 뒤집힙니다. surface 역할의 menu-overlay는 메뉴 배경, foreground는 1뎁스 제목과 그룹 레이블,
+            foreground-subtle은 하위 항목, accent는 링크 hover와 현재 위치 표시, border는 하단 그룹의 항목 구분선입니다.
+            메뉴는 화면을 덮는 최상위 면이라 light 에서는 본문 면과 같은 흰색을 쓴다 — 페이지 배경(gray.50)을 쓰면 덮는
+            면이 덮이는 면보다 어두워진다. accent만 light에서 색상 계열이 바뀝니다 — 민트는 흰 면 위 대비가 1.6:1로 본문
+            기준에 못 미쳐 primary 계열 blue.600(5.1:1)을 씁니다([5.3.3]).
         </>
     ),
     pagination: (
