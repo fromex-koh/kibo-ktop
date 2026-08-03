@@ -1,6 +1,15 @@
 {
     "releases": [
         {
+            "version": "v0.1.10",
+            "releasedAt": "2026-08-03",
+            "changes": [
+                "프론트엔드 전달 프로젝트 자동 생성·독립 빌드 및 브랜치 이력 관리 체계 구축",
+                "전달 프로젝트에 디자인 토큰 재생성 환경과 컴포넌트·퍼블리싱 가이드 포함",
+                "시작 페이지와 [컴포넌트 가이드](/component-guide)에 `frontend-handoff` 브랜치 사용 기준 안내"
+            ]
+        },
+        {
             "version": "v0.1.9",
             "releasedAt": "2026-07-30",
             "changes": [
