@@ -9,7 +9,7 @@ import {TriangleAlert} from 'lucide-react'
 
 export const metadata: Metadata = {title: '헤더 (Header)'}
 
-// 사용법 스니펫 — 메뉴 외관은 하나이며, 화면 위 오버레이 여부와 테마 버튼 노출만 사용처가 정한다.
+// 사용법 스니펫 — 로그인 전에는 토글을 노출하고, 로그인 후에는 확정된 userType을 전달해 토글을 숨긴다.
 const USAGE_CODE = `import Header from '@/components/composite/header'
 
 // 어두운 메인 히어로 위에 고정: overlay=true, 테마 버튼 숨김이 기본값입니다.
@@ -18,7 +18,7 @@ const USAGE_CODE = `import Header from '@/components/composite/header'
 // 서브페이지: 문서 흐름에 sticky로 두고 테마 버튼을 표시합니다.
 <Header overlay={false} showThemeToggle />
 
-// 사용자 유형별 메뉴를 URL의 ?userType=corp|org 상태에 맞춰 주입합니다.
+// 사용자 유형별 메뉴를 주입합니다. 로그인 전에는 URL의 ?userType=corp|org로 토글합니다.
 const navigationByUserType = {
   corp: [
     {label: '기술평가', href: '/evaluation'},
@@ -32,6 +32,13 @@ const navigationByUserType = {
 
 <Header navigationByUserType={navigationByUserType} />`
 
+const AUTHENTICATED_USAGE_CODE = `// 로그인 후에는 확정된 userType을 고정하고 화면 유형 토글을 숨깁니다.
+<Header
+  userType="corp"
+  showUserTypeToggle={false}
+  navigationByUserType={navigationByUserType}
+/>`
+
 const USER_TYPE_USAGE_CODE = `const navigationByUserType = {
   corp: [
     {label: '자가진단', href: '/self-check'},
@@ -43,7 +50,11 @@ const USER_TYPE_USAGE_CODE = `const navigationByUserType = {
   ],
 } satisfies HeaderNavigationByUserType
 
-<Header navigationByUserType={navigationByUserType} />`
+// 로그인 전: URL의 ?userType으로 기업·기관 메뉴를 전환하고 토글을 노출합니다.
+<Header navigationByUserType={navigationByUserType} />
+
+// 로그인 후: 확정된 userType을 고정하고 토글을 숨깁니다.
+<Header userType="corp" showUserTypeToggle={false} navigationByUserType={navigationByUserType} />`
 
 const DEMO_NAVIGATION = {
     corp: [
@@ -79,8 +90,22 @@ const PROPS = [
     ],
     [
         'Header',
+        'showUserTypeToggle',
+        '로그인 전에는 기업·기관 토글을 노출하고, 로그인 후 userType이 확정되면 false로 숨깁니다.',
+        'true',
+        'boolean',
+    ],
+    [
+        'Header',
+        'userType',
+        '로그인 후 확정된 사용자 유형입니다. 전달하면 URL 쿼리보다 우선해 해당 유형의 메뉴를 표시합니다.',
+        'undefined',
+        'UserType',
+    ],
+    [
+        'Header',
         'navigationByUserType',
-        '기업(corp)·기관(org)의 링크 배열을 주입합니다. 현재 userType 쿼리에 해당하는 배열만 표시합니다.',
+        '기업(corp)·기관(org)의 링크 배열을 주입합니다. userType prop이 없으면 URL 쿼리의 유형을 사용합니다.',
         '기본 메뉴',
         'HeaderNavigationByUserType',
     ],
@@ -102,11 +127,11 @@ const COMPOSITION = [
     },
     {
         name: '화면 유형 (Segmented Control)',
-        desc: '헤더 상단에서 기업/기관 화면으로 이동하는 link 타입 세그먼티드 컨트롤. URL의 userType을 단일 상태 원천으로 사용해 데스크톱 주 메뉴와 전체 메뉴의 링크 구성을 함께 갱신한다.',
+        desc: '로그인 전에는 헤더 상단에서 기업·기관 화면을 전환한다. 로그인 후에는 확정된 userType을 전달하고 토글을 숨긴다.',
     },
     {
         name: 'navigationByUserType',
-        desc: '사용처가 corp·org 링크 배열을 데이터로 주입한다. Header는 선택 상태에 해당하는 배열을 데스크톱 주 메뉴와 전체 메뉴에 동일하게 렌더링한다.',
+        desc: '사용처가 corp·org 링크 배열을 주입한다. Header는 선택된 userType의 배열을 데스크톱 주 메뉴와 전체 메뉴에 동일하게 렌더링한다.',
     },
     {name: '유틸 링크', desc: '로그인/회원가입·이용안내·기술보증기금(외부 링크↗). 상단 유틸바에 우측 정렬.'},
     {
@@ -166,13 +191,14 @@ const HeaderGuidePage = () => (
                         Preview
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        상단 유틸바(화면 유형 링크·유틸 링크)와 메인 내비(로고·주 메뉴·테마 전환·전체 메뉴) 2줄
-                        구성입니다. 헤더에서 선택한 기업/기관 유형은 주 메뉴와 전체 메뉴에 함께 반영되며, 전체 메뉴
-                        안에는 화면 유형 컨트롤을 중복 배치하지 않습니다. 화면 폭을 lg(≥1024) 미만으로 줄이면 주 메뉴와
-                        유틸 링크는 전체 메뉴로 이동합니다. 테마 전환은 showThemeToggle prop으로 노출 여부를 정하며,
-                        라이트 모드에서는 달, 다크 모드에서는 해 아이콘으로 다음 전환 상태를 안내합니다. 전체 메뉴는
-                        화면 전체를 덮고 트리거는 Menu에서 X로 전환됩니다. 트리거는 열린 메뉴보다 높은 위계를 유지해
-                        같은 위치에서 다시 눌러 닫을 수 있으며, 모션 축소 설정에서는 애니메이션 없이 상태만 바뀝니다.
+                        상단 유틸바(로그인 전 화면 유형 링크·유틸 링크)와 메인 내비(로고·주 메뉴·테마 전환·전체 메뉴)
+                        2줄 구성입니다. 로그인 전 선택한 기업/기관 유형은 주 메뉴와 전체 메뉴에 함께 반영되며, 로그인
+                        후에는 확정된 userType을 전달하고 showUserTypeToggle={false}로 토글을 숨깁니다. 전체 메뉴 안에는
+                        화면 유형 컨트롤을 중복 배치하지 않습니다. 화면 폭을 lg(≥1024) 미만으로 줄이면 주 메뉴와 유틸
+                        링크는 전체 메뉴로 이동합니다. 테마 전환은 showThemeToggle prop으로 노출 여부를 정하며, 라이트
+                        모드에서는 달, 다크 모드에서는 해 아이콘으로 다음 전환 상태를 안내합니다. 전체 메뉴는 화면
+                        전체를 덮고 트리거는 Menu에서 X로 전환됩니다. 트리거는 열린 메뉴보다 높은 위계를 유지해 같은
+                        위치에서 다시 눌러 닫을 수 있으며, 모션 축소 설정에서는 애니메이션 없이 상태만 바뀝니다.
                     </p>
                 </div>
                 <HeaderDemo />
@@ -231,19 +257,24 @@ const HeaderGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         기업·기관처럼 사용자 유형에 따라 정보 구조가 달라질 때{' '}
                         <code className="font-mono">navigationByUserType</code>으로 유형별 링크 배열을 주입합니다. 아래
-                        Header에서 기업과 기관을 선택하면 URL의 <code className="font-mono">?userType=corp|org</code>가
-                        변경되고, 선택된 유형의 주 메뉴가 즉시 표시됩니다.
+                        Header에서 기업과 기관을 선택하면 로그인 전 URL의{' '}
+                        <code className="font-mono">?userType=corp|org</code>가 변경되고, 선택된 유형의 주 메뉴가 즉시
+                        표시됩니다. 로그인 후에는 확정된 <code className="font-mono">userType</code>을 전달하고{' '}
+                        <code className="font-mono">showUserTypeToggle={'{false}'}</code>로 토글을 숨깁니다.
                     </p>
                     <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-1 pl-5">
                         <li>
-                            URL 쿼리를 선택 상태의 단일 원천으로 사용하므로 새로고침하거나 링크를 공유해도 유지됩니다.
+                            로그인 전에는 URL 쿼리를 선택 상태의 원천으로 사용하므로 새로고침하거나 링크를 공유해도
+                            유지됩니다.
                         </li>
                         <li>같은 메뉴 데이터를 데스크톱 주 메뉴와 반응형 전체 메뉴(Sheet)에 함께 사용합니다.</li>
+                        <li>로그인 후에는 확정된 userType을 prop으로 전달하고 화면 유형 토글을 숨깁니다.</li>
                         <li>메뉴명과 이동 경로는 Header 내부가 아니라 각 서비스 페이지에서 관리합니다.</li>
                     </ul>
                 </div>
                 <HeaderDemo navigationByUserType={DEMO_NAVIGATION} />
                 <CodeBlock code={USER_TYPE_USAGE_CODE} language="tsx" copyLabel="사용자 유형별 메뉴 코드 복사" />
+                <CodeBlock code={AUTHENTICATED_USAGE_CODE} language="tsx" copyLabel="로그인 후 Header 코드 복사" />
             </section>
         </BaseCard>
 
@@ -254,8 +285,9 @@ const HeaderGuidePage = () => (
                         Props
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        메뉴 데이터는 Header 바깥에서 관리하고, 선택된 사용자 유형은 URL의{' '}
-                        <code className="font-mono">userType</code> 쿼리로 유지합니다.
+                        메뉴 데이터는 Header 바깥에서 관리합니다. 로그인 전에는 URL의{' '}
+                        <code className="font-mono">userType</code> 쿼리를 사용하고, 로그인 후에는 확정된{' '}
+                        <code className="font-mono">userType</code> prop을 전달합니다.
                     </p>
                 </div>
                 <PropsTable items={PROPS} caption="Header와 HeaderNavLink props" />

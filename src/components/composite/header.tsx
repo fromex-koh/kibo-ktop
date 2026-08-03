@@ -18,10 +18,9 @@ import {headerIconButtonClassName, headerIconGroupClassName} from '@/components/
 import {useThemeToggle} from '@/hooks/use-theme-toggle'
 import {cn} from '@/lib/utils'
 
-// PROJECT-COMPOSITE: Header primitive가 없어 NavigationMenu·SegmentedControl·Sheet·Button을 조합한 사이트 상단 합성 컴포넌트.
-// PROJECT-STYLE: 로고는 h1 > a > img 구조를 유지하고 테마 클래스에 맞는 에셋을 노출한다.
-// 유틸 링크는 Button text variant 위에 Header 전용 자간만 보정한다.
-type UserType = 'corp' | 'org'
+// 데스크톱 GNB와 모바일 전체 메뉴(Sheet)를 함께 렌더링하는 사이트 Header.
+// navigationByUserType를 전달하면 GNB와 전체 메뉴가 같은 userType별 링크 목록을 공유한다.
+export type UserType = 'corp' | 'org'
 
 export type HeaderNavLink = {
     label: string
@@ -49,7 +48,7 @@ const USER_TYPES = ['corp', 'org'] satisfies readonly UserType[]
 
 const isUserType = (value: string | null): value is UserType => value === 'corp' || value === 'org'
 
-// 헤더 상단에서 기업/기관 화면 유형을 전환하는 링크 세그먼티드.
+// query string으로 기업·기관 화면 유형을 전환한다.
 const MemberTypeToggle = ({userType, searchParams}: {userType: UserType; searchParams: string}) => {
     const getHref = (nextUserType: UserType) => {
         const nextParams = new URLSearchParams(searchParams)
@@ -74,9 +73,6 @@ const MemberTypeToggle = ({userType, searchParams}: {userType: UserType; searchP
     )
 }
 
-// 링크 의미는 유지하고 Button text variant의 토큰/포커스 스타일을 재사용한다.
-// 시안 상단 유틸바는 14px Medium(행간 21)이다 — text 계열에서 그 크기는 sm 이다.
-// (button_text 시안 기준 xs 12 · sm 14 · md 16 · lg 18)
 const UtilityLink = ({label, external, className}: {label: string; external?: boolean; className?: string}) => (
     <Button
         variant="text"
@@ -91,13 +87,12 @@ const UtilityLink = ({label, external, className}: {label: string; external?: bo
     </Button>
 )
 
-// 로고는 모든 화면에 반복되는 사이트 식별자라 제목(h1)이 아니다. h1 은 화면마다 하나뿐인 본문
-// 제목(PageTitleBar·히어로 등)의 몫이다. 데모처럼 이동 경로가 정해진 사용처만 logoHref 를 전달한다. [KWCAG 6.4.2]
+// 로고는 페이지 제목이 아니므로 h1로 사용하지 않는다. logoHref가 있는 화면에서만 링크로 렌더링한다.
 const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
     const image = (
         <>
+            {/* overlay는 어두운 배경용 흰색 로고, 일반 헤더는 테마 CSS 변수로 로고를 교체한다. */}
             {overlay ? (
-                // 메인페이지는 항상 어두운 배경이라 화이트 로고 한 장만 둔다.
                 <Image
                     src="/images/logo-ktop-white.svg"
                     alt=""
@@ -108,8 +103,6 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
                     className="h-8 w-35 shrink-0"
                 />
             ) : (
-                // 두 장을 두고 --logo-on-*(globals.css) 로 배경 명도에 맞는 쪽만 표시한다.
-                // dark: 변형은 중첩 고정한 테마 미리보기에서 틀린 쪽을 고른다 — Footer 와 같은 방식.
                 <>
                     <Image
                         src="/images/logo-ktop.svg"
@@ -134,9 +127,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
         </>
     )
 
-    // 이름은 감싸는 요소의 sr-only 텍스트가 갖고 로고 이미지는 모두 alt="" 로 둔다 — 두 장에 같은 대체
-    // 텍스트를 주면 보조기기에 같은 이름이 겹쳐 읽히고(WAVE "A nearby image has the same alternative text"),
-    // 한쪽에만 alt 를 주면 테마가 바뀌어 그쪽이 display:none 이 될 때 이름이 사라진다. [KWCAG 5.1.1/6.4.3]
+    // 두 테마용 이미지는 장식으로 두고, sr-only 텍스트를 한 번만 제공해 보조기기 중복 읽기를 막는다.
     return (
         <p className="shrink-0">
             {href ? (
@@ -154,9 +145,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
     )
 }
 
-// 실제 Header와 가이드 데모가 공유하는 본문.
-// 헤더의 테마 전환 — 시안대로 아이콘만 둔다(가이드 앱바에서 쓰는 ThemeToggle 은 버튼 면이 있는 별개 컴포넌트).
-// 마운트 전에는 아이콘과 같은 크기의 자리표시자를 그려 하이드레이션 불일치·레이아웃 시프트를 피한다.
+// 테마 토글은 마운트 전에도 같은 크기의 placeholder를 렌더링해 hydration 불일치와 레이아웃 이동을 막는다.
 const HeaderThemeToggle = () => {
     const {isMounted, isDark, label, toggleTheme} = useThemeToggle()
 
@@ -327,6 +316,7 @@ const HeaderContent = ({
     overlay,
     compact,
     showThemeToggle,
+    showUserTypeToggle,
     navigationByUserType,
     logoHref,
     userType,
@@ -336,6 +326,7 @@ const HeaderContent = ({
     overlay: boolean
     compact: boolean
     showThemeToggle: boolean
+    showUserTypeToggle: boolean
     navigationByUserType?: HeaderNavigationByUserType
     logoHref?: string
     userType: UserType
@@ -346,15 +337,14 @@ const HeaderContent = ({
 
     return (
         <div className="flex flex-col">
-            {/* 주 메뉴가 한 줄에 들어가는 lg(1024)부터 PC 헤더로 전환하고, xl(1280)부터 항목 간격을
-                넓힌다. lg 미만에서는 유틸바·주 메뉴를 숨겨 로고+햄버거만 남긴다(링크는 전체 메뉴 Sheet에 유지). */}
+            {/* lg 이상은 데스크톱 GNB, 미만은 로고와 햄버거 메뉴만 표시한다. */}
             <div
                 className={cn('hidden justify-end lg:flex', menuOpen && 'invisible')}
                 inert={menuOpen || undefined}
                 aria-hidden={menuOpen || undefined}
             >
                 <div className="flex items-center gap-2 py-2 xl:gap-4">
-                    <MemberTypeToggle userType={userType} searchParams={searchParams} />
+                    {showUserTypeToggle ? <MemberTypeToggle userType={userType} searchParams={searchParams} /> : null}
                     {UTILITY_LINKS.map((link) => (
                         <UtilityLink key={link.label} {...link} />
                     ))}
@@ -425,6 +415,9 @@ const HeaderContent = ({
 type HeaderProps = {
     overlay?: boolean
     showThemeToggle?: boolean
+    // 로그인 전에는 userType 토글을 노출하고, 로그인 후 userType이 확정되면 숨긴다.
+    showUserTypeToggle?: boolean
+    userType?: UserType
     navigationByUserType?: HeaderNavigationByUserType
     logoHref?: string
 }
@@ -434,6 +427,8 @@ const ResolvedHeaderContent = ({
     overlay,
     compact,
     showThemeToggle,
+    showUserTypeToggle,
+    userType: fixedUserType,
     navigationByUserType,
     logoHref,
 }: {
@@ -441,12 +436,14 @@ const ResolvedHeaderContent = ({
     overlay: boolean
     compact: boolean
     showThemeToggle: boolean
+    showUserTypeToggle: boolean
+    userType?: UserType
     navigationByUserType?: HeaderNavigationByUserType
     logoHref?: string
 }) => {
     const searchParams = useSearchParams()
     const userTypeParam = searchParams.get('userType')
-    const userType = isUserType(userTypeParam) ? userTypeParam : 'corp'
+    const userType = fixedUserType ?? (isUserType(userTypeParam) ? userTypeParam : 'corp')
 
     return (
         <HeaderContent
@@ -454,6 +451,7 @@ const ResolvedHeaderContent = ({
             overlay={overlay}
             compact={compact}
             showThemeToggle={showThemeToggle}
+            showUserTypeToggle={showUserTypeToggle}
             navigationByUserType={navigationByUserType}
             logoHref={logoHref}
             userType={userType}
@@ -462,7 +460,14 @@ const ResolvedHeaderContent = ({
     )
 }
 
-const Header = ({overlay = true, showThemeToggle = false, navigationByUserType, logoHref}: HeaderProps) => {
+const Header = ({
+    overlay = true,
+    showThemeToggle = false,
+    showUserTypeToggle = true,
+    userType,
+    navigationByUserType,
+    logoHref,
+}: HeaderProps) => {
     return (
         <header
             className={cn(
@@ -470,8 +475,7 @@ const Header = ({overlay = true, showThemeToggle = false, navigationByUserType, 
                 overlay ? 'fixed' : 'bg-card sticky',
             )}
         >
-            {/* 헤더 콘텐츠 열은 화면 본문과 같은 content-layout 을 쓴다 — 좌우 여백을 헤더 안쪽 px 로 주면
-                로고·메뉴가 본문 시작선보다 안으로 들어가 어긋난다(좁은 화면의 가장자리 여백은 content-layout 이 담당). */}
+            {/* 본문과 같은 content-layout을 사용해 헤더와 콘텐츠의 정렬선을 맞춘다. */}
             <div className="content-layout">
                 <Suspense
                     fallback={
@@ -480,9 +484,10 @@ const Header = ({overlay = true, showThemeToggle = false, navigationByUserType, 
                             overlay={overlay}
                             compact={false}
                             showThemeToggle={showThemeToggle}
+                            showUserTypeToggle={showUserTypeToggle}
                             navigationByUserType={navigationByUserType}
                             logoHref={logoHref}
-                            userType="corp"
+                            userType={userType ?? 'corp'}
                             searchParams=""
                         />
                     }
@@ -492,6 +497,8 @@ const Header = ({overlay = true, showThemeToggle = false, navigationByUserType, 
                         overlay={overlay}
                         compact={false}
                         showThemeToggle={showThemeToggle}
+                        showUserTypeToggle={showUserTypeToggle}
+                        userType={userType}
                         navigationByUserType={navigationByUserType}
                         logoHref={logoHref}
                     />
@@ -501,7 +508,7 @@ const Header = ({overlay = true, showThemeToggle = false, navigationByUserType, 
     )
 }
 
-// 컴포넌트 가이드 카드 안에서 쓰는 데모. fixed 배치는 카드 안에서 재현할 수 없어 로고·테마 조합만 보여준다.
+// 컴포넌트 가이드에서 Header의 로고·테마·메뉴 상태를 확인하는 데모용 래퍼.
 export const HeaderDemo = ({
     overlay = false,
     showThemeToggle = true,
@@ -519,6 +526,7 @@ export const HeaderDemo = ({
                     overlay={overlay}
                     compact
                     showThemeToggle={showThemeToggle}
+                    showUserTypeToggle
                     navigationByUserType={navigationByUserType}
                     userType="corp"
                     searchParams=""
@@ -530,6 +538,7 @@ export const HeaderDemo = ({
                 overlay={overlay}
                 compact
                 showThemeToggle={showThemeToggle}
+                showUserTypeToggle
                 navigationByUserType={navigationByUserType}
             />
         </Suspense>
