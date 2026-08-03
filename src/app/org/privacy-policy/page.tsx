@@ -12,7 +12,7 @@ import PrivacyPolicyTabs from '@/components/custom/privacy-policy-tabs'
 
 export const metadata: Metadata = {title: '개인정보 처리방침'}
 
-// 바탕을 bg-surface로 덮는 이유 — body 기본색(bg-background)을 그대로 두면 같은 색인 본문 영역이 묻힌다.
+// SkipNav의 #main 도착 대상이며 tabIndex={-1}로 키보드 포커스를 받을 수 있다.
 const OrgPrivacyPolicyPage = () => (
     <main id="main" tabIndex={-1} className="bg-surface flex-1">
         <div className="content-layout flex flex-col gap-10 pt-10 pb-25">
