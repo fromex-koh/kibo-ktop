@@ -171,6 +171,8 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'segmented-solid-active-foreground': 'bg-segmented-solid-active-foreground',
     'pagination-active': 'bg-pagination-active',
     'pagination-active-foreground': 'bg-pagination-active-foreground',
+    'tab-pill-active': 'bg-tab-pill-active',
+    'tab-pill-active-foreground': 'bg-tab-pill-active-foreground',
     'select-selected-foreground': 'bg-select-selected-foreground',
     'calendar-sunday': 'bg-calendar-sunday',
     'calendar-saturday': 'bg-calendar-saturday',
