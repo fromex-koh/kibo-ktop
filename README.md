@@ -135,6 +135,7 @@ src/content/publishing-guide/asset-versions.generated.json   # git 추적 · Git
 | `src/components/custom/publishing-index.tsx`         | 퍼블리싱 인덱스 화면 전용 표현·필터   | 시작 페이지 인덱스 UI와 필터 동작 수정                                  |
 | `src/content/publishing-guide/publishing-index.json` | 퍼블리싱 인덱스 화면·상태·버전 데이터 | 인덱스 행이나 상태 변경 시 수정                                         |
 | `src/app/component-guide/(guide)/`                   | 컴포넌트 가이드·사용 예시             | 컴포넌트 API·스타일 변경 시 가이드도 함께 갱신                          |
+| `src/app/component-guide/(demo)/`                    | 완성 화면·서비스 흐름 예시            | 데모 화면·화면 흐름 변경 시 관련 컴포넌트와 함께 갱신                   |
 | `vendor/shadcn-baseline/`                            | 수정 셸의 바닐라 스타일 기준선        | theme import가 있는 `ui` 셸만 대응하며 앱에서는 import하지 않음         |
 | `tokens.json`                                        | 디자인 토큰 원본                      | 색상·간격·타이포·효과 변경 시 직접 수정 후 토큰 생성                    |
 | `THIRD_PARTY_LICENSES.md`                            | 제3자 라이선스 통합 고지              | 의존성 변경 후 `yarn license-notices`로 갱신하고 인계·배포 시 함께 유지 |

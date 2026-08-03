@@ -79,14 +79,6 @@ const handoffGitignore = readFileSync(handoffGitignorePath, 'utf8')
     .join('\n')
 writeFileSync(handoffGitignorePath, handoffGitignore)
 
-// 전달하지 않는 환경변수 예시는 가이드의 프로젝트 구조 예시에서도 제외한다.
-const componentGuidePagePath = resolve(outputDirectory, 'src/app/component-guide/(guide)/page.tsx')
-const componentGuidePage = readFileSync(componentGuidePagePath, 'utf8')
-writeFileSync(
-    componentGuidePagePath,
-    componentGuidePage.replace('├── .env.example                        # 서비스 환경변수 작성 기준\n', ''),
-)
-
 // 원본 배포의 인덱스 화면은 전달본에서도 유지하되, 서비스가 사용할 루트 경로는 비워 둔다.
 const publishingGuideDirectory = resolve(outputDirectory, 'src/app/publishing-guide')
 mkdirSync(publishingGuideDirectory, {recursive: true})

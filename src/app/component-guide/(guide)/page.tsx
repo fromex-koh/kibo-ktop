@@ -43,7 +43,6 @@ const HANDOFF_TREE = `frontend-handoff/
 ├── yarn.lock                           # 검증된 의존성 버전 고정
 ├── THIRD_PARTY_LICENSES.md             # 전달 시점 오픈소스 라이선스 고지
 ├── README.md                            # 전달 버전·실행 방법과 원본 커밋 안내
-├── .env.example                        # 서비스 환경변수 작성 기준
 ├── .gitignore                          # 로컬 환경변수·빌드 결과 제외
 ├── tsconfig.json                       # TypeScript와 경로 별칭
 ├── next.config.ts                      # 서비스용 Next.js 설정
