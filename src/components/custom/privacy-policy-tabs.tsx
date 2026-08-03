@@ -26,7 +26,7 @@ const POLICY_VIEWS = [
 // 함께 적어 두 계층이 각각 동작하는지 화면에서 바로 확인할 수 있게 한다(원문 반영 시 이 줄은 삭제).
 const PlaceholderPanel = ({viewLabel, sectionLabel}: {viewLabel: string; sectionLabel: string}) => (
     <div className="bg-background flex min-h-100 flex-col items-center justify-center gap-2 px-6">
-        <p className="typo-title-l-bold text-center break-keep">내용 추후 업데이트</p>
+        <h2 className="typo-title-l-bold text-center break-keep">내용 추후 업데이트</h2>
         <p className="typo-body-xl-regular text-foreground-subtle text-center break-keep">
             {viewLabel} · {sectionLabel}
         </p>
