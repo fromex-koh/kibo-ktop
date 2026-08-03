@@ -21,6 +21,8 @@ const POLICY_VIEWS = [
     {value: 'easy', label: '알기 쉬운 개인정보 처리방침'},
 ] as const
 
+type PrivacyPolicyView = (typeof POLICY_VIEWS)[number]['value']
+
 // 개인정보처리방침 원문 연동 전까지 표시하는 임시 패널.
 const PlaceholderPanel = ({viewLabel, sectionLabel}: {viewLabel: string; sectionLabel: string}) => (
     <div className="bg-background flex min-h-100 flex-col items-center justify-center gap-2 px-6">
@@ -49,8 +51,8 @@ const PolicySectionTabs = ({viewValue, viewLabel}: {viewValue: string; viewLabel
     </Tabs>
 )
 
-const PrivacyPolicyTabs = () => (
-    <Tabs defaultValue={POLICY_VIEWS[0].value} className="gap-6">
+const PrivacyPolicyTabs = ({defaultView = POLICY_VIEWS[0].value}: {defaultView?: PrivacyPolicyView}) => (
+    <Tabs defaultValue={defaultView} className="gap-6">
         {/* 1뎁스 제목이 긴 모바일 화면은 TabsScrollArea로 가로 스크롤을 제공한다. */}
         <TabsScrollArea aria-label="개인정보 처리방침 보기 방식">
             {POLICY_VIEWS.map((view) => (
