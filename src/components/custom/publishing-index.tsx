@@ -51,7 +51,7 @@ const ReleaseNoteChange = ({change}: {change: string}) => {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-foreground focus-visible:ring-ring inline-flex items-center gap-0.5 underline underline-offset-4 hover:no-underline focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none"
+                className="text-foreground focus-visible:ring-ring inline-flex items-center gap-0.5 underline underline-offset-4 focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none"
             >
                 {label}
                 <ExternalLink aria-hidden="true" className="size-3.5 shrink-0" />
@@ -470,7 +470,7 @@ const PublishingIndex = () => {
                                                         {'href' in layout && typeof layout.href === 'string' ? (
                                                             <Link
                                                                 href={layout.href}
-                                                                className="text-primary focus-visible:ring-ring rounded-xs font-medium underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:outline-none"
+                                                                className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
                                                             >
                                                                 {layout.label}
                                                             </Link>
@@ -569,7 +569,7 @@ const PublishingIndex = () => {
                                                                 {isScreenLink ? (
                                                                     <Link
                                                                         href={registeredScreen.path}
-                                                                        className="text-primary focus-visible:ring-ring rounded-xs underline underline-offset-4 hover:no-underline focus-visible:ring-2 focus-visible:outline-none"
+                                                                        className="text-primary focus-visible:ring-ring rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
                                                                     >
                                                                         {cell.label}
                                                                         <span className="sr-only"> 화면으로 이동</span>
