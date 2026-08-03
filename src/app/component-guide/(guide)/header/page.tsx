@@ -32,12 +32,17 @@ const navigationByUserType = {
 
 <Header navigationByUserType={navigationByUserType} />`
 
-const AUTHENTICATED_USAGE_CODE = `// 로그인 후에는 확정된 userType을 고정하고 화면 유형 토글을 숨깁니다.
+const AUTHENTICATED_USAGE_CODE = `// 로그인 후에는 확정된 userType을 고정하고 user를 전달합니다.
+// 화면 유형 토글 자리에 그 유형의 배지(기업=파랑 / 기관=보라)와 이름이 들어갑니다.
 <Header
   userType="corp"
   showUserTypeToggle={false}
+  user={{name: '홍길동', sessionRemaining: '30:00'}}
   navigationByUserType={navigationByUserType}
 />`
+
+// 로그인 후 상단 유틸리티 데모용 목업 회원. 남은 시간은 표시 형식 그대로 받는다.
+const DEMO_USER = {name: '홍길동', sessionRemaining: '30:00'}
 
 const USER_TYPE_USAGE_CODE = `const navigationByUserType = {
   corp: [
@@ -274,6 +279,19 @@ const HeaderGuidePage = () => (
                 </div>
                 <HeaderDemo navigationByUserType={DEMO_NAVIGATION} />
                 <CodeBlock code={USER_TYPE_USAGE_CODE} language="tsx" copyLabel="사용자 유형별 메뉴 코드 복사" />
+
+                <div className="flex flex-col gap-2">
+                    <h3 className="typo-title-m-bold">로그인 후 — 유형 배지</h3>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">user</code>를 전달하면 화면 유형 토글 자리에 로그인한 유형의 배지
+                        하나와 이름, 남은 로그인 유지 시간·연장이 들어가고 첫 링크가 로그아웃으로 바뀝니다. 배지는
+                        기업이면 파랑(info), 기관이면 보라(purple)입니다.
+                    </p>
+                </div>
+                <div className="flex flex-col gap-4">
+                    <HeaderDemo navigationByUserType={DEMO_NAVIGATION} userType="corp" user={DEMO_USER} />
+                    <HeaderDemo navigationByUserType={DEMO_NAVIGATION} userType="org" user={DEMO_USER} />
+                </div>
                 <CodeBlock code={AUTHENTICATED_USAGE_CODE} language="tsx" copyLabel="로그인 후 Header 코드 복사" />
             </section>
         </BaseCard>
