@@ -11,8 +11,8 @@ import {PageTitleBar} from '@/components/composite/page-title-bar'
 
 export const metadata: Metadata = {title: '이용약관'}
 
-// 시안([공통] 이용약관)의 본문 영역은 약관 원문 확정 전까지 자리만 잡아 둔 상태다.
-// 바탕을 bg-surface로 덮는 이유 — body 기본색(bg-background)을 그대로 두면 같은 색인 안내 영역이 묻힌다.
+// SkipNav의 #main 도착 대상이며 tabIndex={-1}로 키보드 포커스를 받을 수 있다.
+// 약관 원문 연동 전까지 표시하는 임시 섹션은 실제 약관 콘텐츠로 교체한다.
 const OrgTermsPage = () => (
     <main id="main" tabIndex={-1} className="bg-surface flex-1">
         <div className="content-layout flex flex-col gap-10 pt-10 pb-25">
