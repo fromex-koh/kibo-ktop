@@ -3,7 +3,7 @@ import FinalSubmitNavigation from './final-submit-navigation'
 import type {ReactNode} from 'react'
 import {ChevronRight} from 'lucide-react'
 import {type HeaderNavigationByUserType} from '@/components/composite/header'
-import SelfDiagnosisInputHeader from '@/app/component-guide/self-diagnosis/_components/self-diagnosis-input-header'
+import SelfDiagnosisInputHeader from '@/app/component-guide/(demo)/self-diagnosis/_components/self-diagnosis-input-header'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
 import {

@@ -95,7 +95,7 @@ const norm = (p) => p.replace(/^src[/\\]/, '').replace(/\\/g, '/')
 const SKIP_FILES = new Set(['lib/utils.ts', 'hooks/use-mobile.ts'])
 // 메인페이지는 풀스크린 스택·뷰포트 비례 레이아웃이라 토큰만으로 표현할 수 없는 페이지 전용 계산을 허용한다.
 // 다른 규칙과 다른 파일의 SC-01 검사는 그대로 유지한다.
-const RULE_FILE_EXCEPTIONS = new Map([['SC-01', new Set(['app/component-guide/main-page/page.tsx'])]])
+const RULE_FILE_EXCEPTIONS = new Map([['SC-01', new Set(['app/component-guide/(demo)/main-page/page.tsx'])]])
 const UI_DIR_PREFIX = 'components/ui/'
 const isVanillaUiFile = (full) =>
     norm(full).startsWith(UI_DIR_PREFIX) && !readFileSync(full, 'utf8').includes("from '@/components/theme/")

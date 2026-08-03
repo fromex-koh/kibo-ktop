@@ -7,7 +7,7 @@ import HeroSection from '@/components/custom/hero-section'
 import MainSecondSection from '@/components/custom/main-second-section'
 import TechEvalSection from '@/components/custom/tech-eval-section'
 import MobileTechEvalContent from '@/components/custom/mobile-tech-eval-content'
-import MainPageHeaderState from '@/app/component-guide/main-page/main-page-header-state'
+import MainPageHeaderState from '@/app/component-guide/(demo)/main-page/main-page-header-state'
 
 export const metadata: Metadata = {title: '메인페이지'}
 
