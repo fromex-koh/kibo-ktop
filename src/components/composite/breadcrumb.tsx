@@ -28,9 +28,18 @@ const BreadcrumbItem = ({className, ...props}: ComponentProps<typeof BreadcrumbI
     <BreadcrumbItemPrimitive className={cn(breadcrumbItemClassName, className)} {...props} />
 )
 
-const BreadcrumbLink = ({className, ...props}: ComponentProps<typeof BreadcrumbLinkPrimitive>) => (
-    <BreadcrumbLinkPrimitive className={cn(breadcrumbLinkClassName, className)} {...props} />
-)
+const BreadcrumbLink = ({className, href, children, ...props}: ComponentProps<typeof BreadcrumbLinkPrimitive>) => {
+    // 전역 Header·Sidebar가 이미 / 홈 링크를 제공하므로 루트 링크는 중복 링크를 만들지 않도록 텍스트로 표시한다.
+    if (href === '/') {
+        return <span className={cn(breadcrumbLinkClassName, className)}>{children}</span>
+    }
+
+    return (
+        <BreadcrumbLinkPrimitive className={cn(breadcrumbLinkClassName, className)} href={href} {...props}>
+            {children}
+        </BreadcrumbLinkPrimitive>
+    )
+}
 
 const BreadcrumbPage = ({className, ...props}: ComponentProps<typeof BreadcrumbPagePrimitive>) => (
     <BreadcrumbPagePrimitive className={cn(breadcrumbPageClassName, className)} {...props} />
