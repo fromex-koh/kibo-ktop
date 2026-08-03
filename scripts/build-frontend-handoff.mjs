@@ -21,11 +21,18 @@ const copy = (source, destination = source) => {
     cpSync(sourcePath, resolve(outputDirectory, destination), {recursive: true})
 }
 
+const copyRequiredHandoffAsset = (source, destination) => {
+    const sourcePath = resolve(repositoryRoot, source)
+    if (!existsSync(sourcePath)) {
+        throw new Error(`handoff 전용 파일이 없습니다: ${source}`)
+    }
+    cpSync(sourcePath, resolve(outputDirectory, destination), {recursive: true})
+}
+
 rmSync(outputDirectory, {recursive: true, force: true})
 mkdirSync(outputDirectory, {recursive: true})
 
 for (const path of [
-    '.env.example',
     '.gitignore',
     'components.json',
     'next.config.ts',
@@ -46,13 +53,39 @@ for (const path of ['src/.DS_Store', 'src/app/.DS_Store']) {
     rmSync(resolve(outputDirectory, path), {force: true})
 }
 
+// 원본 사이트 정보와 handoff 사이트 정보는 별도로 관리한다.
+copyRequiredHandoffAsset('handoff/site.ts', 'src/constants/site.ts')
+
+// handoff는 사이트 설정을 constants/site.ts에서 관리하므로 환경변수 예시 파일을 전달하지 않는다.
+const publishingIndexPath = resolve(outputDirectory, 'src/content/publishing-guide/publishing-index.json')
+const publishingIndex = JSON.parse(readFileSync(publishingIndexPath, 'utf8'))
+publishingIndex.assetVersions = publishingIndex.assetVersions.filter((asset) => asset.name !== '.env.example')
+writeFileSync(publishingIndexPath, `${JSON.stringify(publishingIndex, null, 4)}\n`)
+
+const assetVersionsPath = resolve(outputDirectory, 'src/content/publishing-guide/asset-versions.generated.json')
+const assetVersions = JSON.parse(readFileSync(assetVersionsPath, 'utf8'))
+assetVersions.assets = assetVersions.assets.filter((asset) => asset.name !== '.env.example')
+writeFileSync(assetVersionsPath, `${JSON.stringify(assetVersions, null, 4)}\n`)
+
+// 원본 OG 이미지는 전달하지 않는다. handoff/og-image.png가 있을 때만 handoff 이미지로 교체한다.
+rmSync(resolve(outputDirectory, 'public/og-image.png'), {force: true})
+copy('handoff/og-image.png', 'public/og-image.png')
+
 // 전달본은 생성된 tokens.css를 초기 결과물로 커밋하고, tokens.json 수정 시 같은 스크립트로 갱신한다.
 const handoffGitignorePath = resolve(outputDirectory, '.gitignore')
 const handoffGitignore = readFileSync(handoffGitignorePath, 'utf8')
     .split('\n')
-    .filter((line) => line.trim() !== '/src/app/tokens.css')
+    .filter((line) => !['/src/app/tokens.css', '!.env.example'].includes(line.trim()))
     .join('\n')
 writeFileSync(handoffGitignorePath, handoffGitignore)
+
+// 전달하지 않는 환경변수 예시는 가이드의 프로젝트 구조 예시에서도 제외한다.
+const componentGuidePagePath = resolve(outputDirectory, 'src/app/component-guide/(guide)/page.tsx')
+const componentGuidePage = readFileSync(componentGuidePagePath, 'utf8')
+writeFileSync(
+    componentGuidePagePath,
+    componentGuidePage.replace('├── .env.example                        # 서비스 환경변수 작성 기준\n', ''),
+)
 
 // 원본 배포의 인덱스 화면은 전달본에서도 유지하되, 서비스가 사용할 루트 경로는 비워 둔다.
 const publishingGuideDirectory = resolve(outputDirectory, 'src/app/publishing-guide')
@@ -221,6 +254,12 @@ yarn dev
 - \`/\`: 서비스 메인 화면으로 교체할 최소 시작 페이지
 - \`/publishing-guide\`: 원본 저장소의 퍼블리싱 인덱스
 - \`/component-guide\`: 컴포넌트 가이드
+
+## 사이트 메타데이터
+
+\`src/constants/site.ts\`는 handoff 전용 사이트명, 설명, URL과 저장소 URL을 관리합니다. handoff 생성 전에는 저장소의 \`handoff/site.ts\`를 수정합니다.
+
+OG 이미지 경로는 \`/og-image.png\`로 유지하며, 디자인 작업 완료 후 \`handoff/og-image.png\`를 추가하면 자동으로 적용됩니다.
 
 ## 디자인 토큰
 

@@ -2,7 +2,14 @@ import type {Metadata, Viewport} from 'next'
 import localFont from 'next/font/local'
 import ThemeProvider from '@/components/theme-provider'
 import {Toaster} from '@/components/ui/sonner'
-import {SITE_DESCRIPTION, SITE_NAME, SITE_URL} from '@/constants/publishing-guide'
+import {
+    SITE_ALLOW_INDEXING,
+    SITE_DESCRIPTION,
+    SITE_NAME,
+    SITE_OG_IMAGE,
+    SITE_OG_IMAGE_ALT,
+    SITE_URL,
+} from '@/constants/publishing-guide'
 import './globals.css'
 
 // 로컬 폰트: Pretendard (가변 폰트, weight 100~900)
@@ -22,12 +29,16 @@ export const metadata: Metadata = {
     },
     description: SITE_DESCRIPTION,
     alternates: {canonical: '/'},
-    // 내부용 — 검색엔진 색인 차단 [noindex]
-    robots: {
-        index: false,
-        follow: false,
-        googleBot: {index: false, follow: false},
-    },
+    ...(SITE_ALLOW_INDEXING
+        ? {}
+        : {
+              // 내부용 — 검색엔진 색인 차단 [noindex]
+              robots: {
+                  index: false,
+                  follow: false,
+                  googleBot: {index: false, follow: false},
+              },
+          }),
     openGraph: {
         type: 'website',
         locale: 'ko_KR',
@@ -35,14 +46,18 @@ export const metadata: Metadata = {
         siteName: SITE_NAME,
         title: SITE_NAME,
         description: SITE_DESCRIPTION,
-        images: [
-            {
-                url: '/og-image.png',
-                width: 1200,
-                height: 630,
-                alt: '기술평가 통합 플랫폼 퍼블리싱 가이드',
-            },
-        ],
+        ...(SITE_OG_IMAGE
+            ? {
+                  images: [
+                      {
+                          url: SITE_OG_IMAGE,
+                          width: 1200,
+                          height: 630,
+                          alt: SITE_OG_IMAGE_ALT,
+                      },
+                  ],
+              }
+            : {}),
     },
 }
 
