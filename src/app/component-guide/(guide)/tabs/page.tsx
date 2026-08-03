@@ -190,7 +190,8 @@ const TabsGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         언더라인 탭 안에서 한 단계 더 나누는 2뎁스 탭입니다. 선택 항목은 navy 면에 흰 굵은 글자, 비선택
-                        항목은 옅은 회색 면입니다. 항목이 폭을 넘으면 다음 줄로 넘어갑니다.
+                        항목은 페이지 배경 면으로 표시해 다크모드에서도 본문 표면과 구분합니다. 항목이 폭을 넘으면 다음
+                        줄로 넘어갑니다.
                     </p>
                 </div>
                 <Tabs defaultValue="full" className="gap-6">
