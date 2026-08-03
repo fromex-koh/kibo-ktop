@@ -1,6 +1,8 @@
 import type {ReactNode} from 'react'
 import Footer, {type FooterVariant} from '@/components/composite/footer'
 import Header, {type UserType} from '@/components/composite/header'
+import RouteScrollReset from '@/components/composite/route-scroll-reset'
+import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 
 type PageLayoutVariant = 'main' | 'sub'
 
@@ -19,6 +21,8 @@ type PageLayoutProps = {
 type PageLayoutBaseProps = PageLayoutProps & {
     variant: PageLayoutVariant
 }
+
+const PAGE_LAYOUT_SKIP_LINKS: readonly SkipLinkItem[] = [{href: '#main', label: '본문 바로가기'}]
 
 const LAYOUT_PRESETS = {
     main: {
@@ -41,6 +45,9 @@ const PageLayoutBase = ({variant, userType, showUserTypeToggle, children}: PageL
 
     return (
         <div className="flex min-h-dvh flex-col">
+            <RouteScrollReset />
+            {/* 첫 번째 Tab 대상. Header·반복 영역을 건너뛰어 각 페이지의 #main으로 이동한다. */}
+            <SkipNav links={PAGE_LAYOUT_SKIP_LINKS} />
             <Header
                 overlay={preset.overlay}
                 showThemeToggle={preset.showThemeToggle}
