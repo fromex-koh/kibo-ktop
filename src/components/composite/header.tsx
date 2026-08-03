@@ -87,7 +87,7 @@ const UtilityLink = ({label, external, className}: {label: string; external?: bo
     </Button>
 )
 
-// 로고는 페이지 제목이 아니므로 h1로 사용하지 않는다. logoHref가 있는 화면에서만 링크로 렌더링한다.
+// 로고는 페이지 제목이 아니므로 h1로 사용하지 않는다. 기본적으로 루트(/)로 이동하며 logoHref로 경로를 바꾼다.
 const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
     const image = (
         <>
@@ -466,7 +466,7 @@ const Header = ({
     showUserTypeToggle = true,
     userType,
     navigationByUserType,
-    logoHref,
+    logoHref = '/',
 }: HeaderProps) => {
     return (
         <header

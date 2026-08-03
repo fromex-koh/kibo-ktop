@@ -12,7 +12,7 @@ export const metadata: Metadata = {title: '헤더 (Header)'}
 // 사용법 스니펫 — 로그인 전에는 토글을 노출하고, 로그인 후에는 확정된 userType을 전달해 토글을 숨긴다.
 const USAGE_CODE = `import Header from '@/components/composite/header'
 
-// 어두운 메인 히어로 위에 고정: overlay=true, 테마 버튼 숨김이 기본값입니다.
+// 어두운 메인 히어로 위에 고정: overlay=true, 테마 버튼 숨김이 기본값입니다. 로고는 기본적으로 /로 이동합니다.
 <Header />
 
 // 서브페이지: 문서 흐름에 sticky로 두고 테마 버튼을 표시합니다.
@@ -109,7 +109,7 @@ const PROPS = [
         '기본 메뉴',
         'HeaderNavigationByUserType',
     ],
-    ['Header', 'logoHref', '로고를 링크로 사용할 화면에서 이동 경로를 주입합니다.', 'undefined', 'string'],
+    ['Header', 'logoHref', '로고 클릭 시 이동 경로입니다. 생략하면 루트(/)로 이동합니다.', '/', 'string'],
     ['HeaderNavLink', 'label', '화면에 표시할 메뉴명입니다.', '—', 'string'],
     ['HeaderNavLink', 'href', 'Next.js Link가 이동할 내부 또는 외부 경로입니다.', '—', 'string'],
     ['HeaderNavLink', 'external', '새 창 링크와 외부 링크 아이콘을 적용합니다.', 'false', 'boolean'],
@@ -119,7 +119,7 @@ const PROPS = [
 const COMPOSITION = [
     {
         name: '로고',
-        desc: '사이트 식별 로고. logoHref를 전달한 사용처에서만 링크가 되며 이미지는 기술보증기금 alt 값을 제공한다.',
+        desc: '사이트 식별 로고. 기본적으로 루트(/)로 이동하며 logoHref로 경로를 바꿀 수 있다. 이미지는 기술보증기금 alt 값을 제공한다.',
     },
     {
         name: '주 메뉴 (NavigationMenu)',
