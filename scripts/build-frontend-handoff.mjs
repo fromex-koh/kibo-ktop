@@ -122,6 +122,78 @@ writeFileSync(resolve(outputDirectory, 'package.json'), `${JSON.stringify(handof
 const sourceCommit = process.env.HANDOFF_SOURCE_COMMIT ?? 'local'
 const sourceBranch = process.env.HANDOFF_SOURCE_BRANCH ?? 'local'
 const generatedAt = process.env.HANDOFF_GENERATED_AT ?? new Date().toISOString()
+const previousReadmePath = process.env.HANDOFF_PREVIOUS_README
+
+const stripCodeSpan = (value) => value.trim().replace(/^`(.*)`$/, '$1')
+
+const parseHistoryRow = (line) => {
+    const cells = line
+        .trim()
+        .replace(/^\|/, '')
+        .replace(/\|$/, '')
+        .split('|')
+        .map((cell) => stripCodeSpan(cell.replaceAll('\\|', '|')))
+
+    if (
+        cells.length !== 4 ||
+        cells.some((cell) => cell.length === 0) ||
+        cells[0] === '버전' ||
+        /^[-:]+$/.test(cells[0])
+    ) {
+        return undefined
+    }
+
+    return {
+        version: cells[0],
+        sourceBranch: cells[1],
+        sourceCommit: cells[2],
+        generatedAt: cells[3],
+    }
+}
+
+const parsePreviousHistory = (readme) => {
+    const historyHeading = readme.indexOf('## 버전 이력')
+    const historySection = historyHeading === -1 ? '' : readme.slice(historyHeading)
+    const history = historySection
+        .split('\n')
+        .map((line) => (line.startsWith('|') ? parseHistoryRow(line) : undefined))
+        .filter((record) => record && record.version !== '버전')
+
+    const legacyVersion = readme.match(/^- 전달 버전:\s*(.+)$/m)?.[1]
+    if (!legacyVersion) return history
+
+    const legacyRecord = {
+        version: legacyVersion.trim(),
+        sourceBranch: readme.match(/^- 원본 브랜치:\s*(.+)$/m)?.[1]?.trim() ?? '-',
+        sourceCommit: readme.match(/^- 원본 커밋:\s*(.+)$/m)?.[1]?.trim() ?? '-',
+        generatedAt: readme.match(/^- 생성 시각:\s*(.+)$/m)?.[1]?.trim() ?? '-',
+    }
+
+    return [legacyRecord, ...history]
+}
+
+const previousHistory =
+    previousReadmePath && existsSync(previousReadmePath)
+        ? parsePreviousHistory(readFileSync(previousReadmePath, 'utf8'))
+        : []
+const currentHistoryRecord = {
+    version: `v${releaseVersion}`,
+    sourceBranch,
+    sourceCommit,
+    generatedAt,
+}
+const versionHistory = [currentHistoryRecord, ...previousHistory].filter(
+    (record, index, records) => records.findIndex((candidate) => candidate.version === record.version) === index,
+)
+
+const formatTableCell = (value) => String(value).replaceAll('|', '\\|').replaceAll('\n', ' ')
+const formatHistoryRow = ({version, sourceBranch: branch, sourceCommit: commit, generatedAt: time}) =>
+    `| ${formatTableCell(version)} | ${formatTableCell(branch)} | ${formatTableCell(`\`${commit}\``)} | ${formatTableCell(time)} |`
+const versionHistoryTable = [
+    '| 버전 | 원본 브랜치 | 원본 커밋 | 생성 시각 |',
+    '| --- | --- | --- | --- |',
+    ...versionHistory.map(formatHistoryRow),
+].join('\n')
 
 writeFileSync(
     resolve(outputDirectory, 'README.md'),
@@ -129,10 +201,11 @@ writeFileSync(
 
 현재 저장소의 검증을 통과한 프론트엔드 실행 소스입니다. 프로젝트 화면과 컴포넌트는 원본 배포와 같은 코드를 사용합니다.
 
-- 전달 버전: v${releaseVersion}
-- 원본 브랜치: ${sourceBranch}
-- 원본 커밋: ${sourceCommit}
-- 생성 시각: ${generatedAt}
+## 버전 이력
+
+최신 전달본이 위에 표시됩니다. 각 행에서 전달 버전, 원본 브랜치와 커밋, 생성 시각을 확인할 수 있습니다.
+
+${versionHistoryTable}
 
 ## 실행
 

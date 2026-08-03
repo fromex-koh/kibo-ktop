@@ -71,6 +71,7 @@ jobs:
 
             - name: Create tagged release commit
               if: steps.released.outputs.value == 'false'
+              id: release_commit
               env:
                   RELEASE_VERSION: ${{ steps.version.outputs.value }}
               shell: bash
@@ -80,4 +81,97 @@ jobs:
                   git add RELEASE_NOTES_DRAFT.md src/content/publishing-guide/asset-versions.generated.json src/content/publishing-guide/release-notes.generated.json src/content/publishing-guide/screen-registry.generated.json
                   git commit -m "chore(release): ${RELEASE_VERSION}"
                   git tag -a "$RELEASE_VERSION" -m "$RELEASE_VERSION"
-                  git push origin HEAD:main "refs/tags/${RELEASE_VERSION}"
+                  echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+                  echo "time=$(git show -s --format=%cI HEAD)" >> "$GITHUB_OUTPUT"
+
+            - name: Build release source
+              if: steps.released.outputs.value == 'false'
+              run: yarn build
+
+            - name: Verify clean release result
+              if: steps.released.outputs.value == 'false'
+              run: git diff --exit-code
+
+            - name: Prepare frontend handoff history
+              if: steps.released.outputs.value == 'false'
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              shell: bash
+              run: |
+                  publish_dir="$RUNNER_TEMP/frontend-handoff-publish"
+                  target_branch="frontend-handoff"
+                  repository="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+                  if git ls-remote --exit-code --heads "$repository" "$target_branch" > /dev/null; then
+                      git clone --branch "$target_branch" --single-branch "$repository" "$publish_dir"
+                  else
+                      mkdir -p "$publish_dir"
+                      git -C "$publish_dir" init
+                      git -C "$publish_dir" switch --orphan "$target_branch"
+                      git -C "$publish_dir" remote add origin "$repository"
+                  fi
+
+                  if [ -f "$publish_dir/README.md" ]; then
+                      cp "$publish_dir/README.md" "$RUNNER_TEMP/frontend-handoff-previous-readme.md"
+                  fi
+
+            - name: Generate frontend handoff
+              if: steps.released.outputs.value == 'false'
+              env:
+                  HANDOFF_SOURCE_BRANCH: main
+                  HANDOFF_SOURCE_COMMIT: ${{ steps.release_commit.outputs.sha }}
+                  HANDOFF_GENERATED_AT: ${{ steps.release_commit.outputs.time }}
+                  HANDOFF_PREVIOUS_README: ${{ runner.temp }}/frontend-handoff-previous-readme.md
+              run: node scripts/build-frontend-handoff.mjs "$RUNNER_TEMP/frontend-handoff"
+
+            - name: Install handoff dependencies
+              if: steps.released.outputs.value == 'false'
+              working-directory: ${{ runner.temp }}/frontend-handoff
+              run: yarn install --frozen-lockfile
+
+            - name: Verify handoff types
+              if: steps.released.outputs.value == 'false'
+              working-directory: ${{ runner.temp }}/frontend-handoff
+              run: yarn typecheck
+
+            - name: Build handoff
+              if: steps.released.outputs.value == 'false'
+              working-directory: ${{ runner.temp }}/frontend-handoff
+              run: yarn build
+
+            - name: Publish release
+              if: steps.released.outputs.value == 'false'
+              env:
+                  RELEASE_VERSION: ${{ steps.version.outputs.value }}
+              run: git push origin HEAD:main "refs/tags/${RELEASE_VERSION}"
+
+            - name: Publish frontend handoff with history
+              if: steps.released.outputs.value == 'false'
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  RELEASE_VERSION: ${{ steps.version.outputs.value }}
+                  SOURCE_COMMIT: ${{ steps.release_commit.outputs.sha }}
+              shell: bash
+              run: |
+                  source_dir="$RUNNER_TEMP/frontend-handoff"
+                  publish_dir="$RUNNER_TEMP/frontend-handoff-publish"
+                  target_branch="frontend-handoff"
+                  repository="https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+
+                  rsync -a --delete \
+                      --exclude='.git/' \
+                      --exclude='.next/' \
+                      --exclude='node_modules/' \
+                      "$source_dir/" "$publish_dir/"
+
+                  git -C "$publish_dir" config user.name 'github-actions[bot]'
+                  git -C "$publish_dir" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+                  git -C "$publish_dir" add --all
+
+                  if git -C "$publish_dir" diff --cached --quiet; then
+                      echo '변경된 frontend handoff 파일이 없습니다.'
+                      exit 0
+                  fi
+
+                  git -C "$publish_dir" commit -m "chore: sync frontend handoff ${RELEASE_VERSION} from ${SOURCE_COMMIT}"
+                  git -C "$publish_dir" push origin "HEAD:${target_branch}"
