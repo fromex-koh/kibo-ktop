@@ -111,7 +111,6 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {
                 title: '페이지 구조',
                 items: [
-                    {label: 'MainPageLayout', href: '/component-guide/main-layout'},
                     {label: 'SubPageLayout', href: '/component-guide/sub-page-layout'},
                     {label: 'Header', href: '/component-guide/header'},
                     {label: 'FullPageServiceStatus', href: '/component-guide/full-page-service-status'},

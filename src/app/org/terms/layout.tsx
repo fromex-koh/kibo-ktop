@@ -8,7 +8,7 @@ import {SubPageLayout} from '@/components/composite/page-layout'
 // 예:
 // const userType = user?.userType
 // <SubPageLayout userType={userType} showUserTypeToggle={userType === undefined}>{children}</SubPageLayout>
-// 값은 PageLayoutBase를 거쳐 Header의 유형별 메뉴·배지·토글 상태를 결정한다.
+// 값은 SubPageLayout을 거쳐 Header의 유형별 메뉴·배지·토글 상태를 결정한다.
 // 로그인 전에는 userType을 전달하지 않아 기업/기관 토글을 노출하고, 로그인 후에는 확정 유형으로 고정한다.
 const OrgTermsLayout = ({children}: {children: ReactNode}) => <SubPageLayout>{children}</SubPageLayout>
 

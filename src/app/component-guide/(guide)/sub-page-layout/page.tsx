@@ -178,10 +178,7 @@ const SubPageLayoutGuidePage = () => (
                         유형의 GNB와 전체 메뉴를 고정합니다.
                     </li>
                     <li>Header·Footer가 없는 404·500·정기점검 같은 풀페이지 상태 화면에는 사용하지 않습니다.</li>
-                    <li>
-                        메인페이지는 오버레이 Header와 mainpage Footer가 필요한{' '}
-                        <code className="font-mono">MainPageLayout</code>을 사용합니다.
-                    </li>
+                    <li>메인 랜딩페이지는 인터랙션 구조에 맞춰 전용 Shell 또는 page.tsx에서 직접 구성합니다.</li>
                 </ul>
             </section>
         </BaseCard>
