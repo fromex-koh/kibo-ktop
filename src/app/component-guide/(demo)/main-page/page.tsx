@@ -1,7 +1,8 @@
 import type {Metadata} from 'next'
-import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
-import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
+import {DEFAULT_HEADER_NAVIGATION} from '@/components/composite/header'
 import Footer from '@/components/composite/footer'
+import {MainPageLayout} from '@/components/composite/page-layout'
+import type {SkipLinkItem} from '@/components/composite/skip-nav'
 import StackPager from '@/components/custom/stack-pager'
 import HeroSection from '@/components/custom/hero-section'
 import MainSecondSection from '@/components/custom/main-second-section'
@@ -11,7 +12,7 @@ import MainPageHeaderState from '@/app/component-guide/(demo)/main-page/main-pag
 
 export const metadata: Metadata = {title: '메인페이지'}
 
-// 비활성 스택 페이지는 inert 라 앵커 이동이 막힌다. StackPager 가 클릭을 받아 대상 페이지를 먼저 켠다.
+// 반복 영역을 건너뛸 수 있도록 각 섹션과 사이트 정보 영역의 이동 대상을 등록한다.
 const SKIP_LINKS: readonly SkipLinkItem[] = [
     {href: '#hero', label: '본문 바로가기'},
     {href: '#service-intro', label: '두 번째 섹션 바로가기'},
@@ -19,59 +20,39 @@ const SKIP_LINKS: readonly SkipLinkItem[] = [
     {href: '#site-info', label: '사이트 정보 바로가기'},
 ]
 
-// GNB — href 는 이동 대상이 정해지기 전 목업 값이다. 실제 경로가 나오면 여기서 교체한다.
-const MAIN_HEADER_NAVIGATION = {
-    corp: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '기술평가', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-    org: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '개별평가', href: '#'},
-        {label: '일괄평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-} satisfies HeaderNavigationByUserType
-
-// 헤더 배경 — 1섹션에서 투명, 2섹션 진입 시 불투명. 현재 섹션 판단은 두 갈래다.
-// 페이저가 켜진 화면은 StackPager 의 header-page(배경 페이드 보정 시점), 꺼진 화면은
-// MainPageHeaderState 가 쓰는 natural-page. active-page는 접근성·입력 처리용이라 전환 시작과
-// 동시에 바뀌므로 헤더 배경 기준으로 쓰지 않는다.
-// 헤더는 어느 섹션에서도 위로 밀어 올리지 않고 상단에 붙어 있는다 — 배경색만 바뀐다.
+// 첫 섹션에서는 투명, 이후 섹션에서는 배경색이 있는 Header를 표시한다.
+// 자연 스크롤 상태는 MainPageHeaderState가 data-natural-page로 동기화한다.
 const MAIN_PAGE_CLASS = ['[&_header]:bg-transparent', 'data-[natural-page=1]:[&_header]:bg-background'].join(' ')
 
-// 메인페이지 목업 — 히어로·신규 서비스 소개·기술평가 세 섹션을 StackPager 로 넘긴다.
-// · 전환: 화면이 충분하면 고정 레이어(cover = 이전 섹션은 제자리, 다음 섹션이 위를 덮음), 아니면 스크롤 스냅.
-//   갈리는 기준은 stack-pager.tsx 의 STACK_PAGER_QUERY.
-// · 반응형: 각 섹션이 자기 것을 갖는다(hero-* 클래스는 globals.css). 여기엔 페이지 전용 조정만 둔다.
-// · 테마: theme-provider 가 이 라우트를 mainpage 스킨으로 고정한다. Header 는
-//   테마 토글을 숨기므로(showThemeToggle 기본값) 이 화면에는 라이트·다크 전환 수단이 없다.
+// 메인 랜딩페이지 전용 조합. MainPageLayout이 Header와 Skip Navigation을 구성하고, Footer는 마지막 섹션에 둔다.
+// StackPager는 화면 조건에 따라 섹션 전환 방식을 선택하고, 각 섹션 컴포넌트가 본문을 담당한다.
 const MainPage = () => (
     <StackPager transition="cover" className={`bg-background relative min-h-dvh ${MAIN_PAGE_CLASS}`}>
-        <MainPageHeaderState />
-        <SkipNav links={SKIP_LINKS} />
-        <Header logoHref="/component-guide/main-page" navigationByUserType={MAIN_HEADER_NAVIGATION} />
-        {/* id·tabIndex 는 스킵 링크 도착점용 — 포커스만 받고 링은 그리지 않는다(#site-info 도 같다). */}
-        <main id="main" tabIndex={-1}>
-            <HeroSection />
-            <MainSecondSection />
-            <TechEvalSection
-                mobileContent={<MobileTechEvalContent />}
-                bottomContent={
-                    // md 이상 — 시안(1920×1080)에서 태그 줄 아래부터 푸터까지가 108px 이다. 그중 100px 은
-                    // 3섹션 첫 화면이 이미 아래 여백으로 갖고 있어(세로 레일 끝 아래 100), 여기서는 나머지
-                    // 8px 만 더한다. 모바일은 흐름대로 쌓이므로 기존 간격(112)을 유지한다.
-                    <div id="site-info" tabIndex={-1} className="bg-background relative mt-auto w-full pt-28 md:pt-2">
-                        <Footer variant="mainpage" />
-                    </div>
-                }
-            />
-        </main>
+        <MainPageLayout
+            skipLinks={SKIP_LINKS}
+            logoHref="/component-guide/main-page"
+            navigationByUserType={DEFAULT_HEADER_NAVIGATION}
+        >
+            <MainPageHeaderState />
+            {/* main은 Skip Navigation의 본문 이동 대상이다. */}
+            <main id="main" tabIndex={-1}>
+                <HeroSection />
+                <MainSecondSection />
+                <TechEvalSection
+                    mobileContent={<MobileTechEvalContent />}
+                    bottomContent={
+                        // 마지막 섹션의 사이트 정보 이동 대상과 메인페이지용 Footer를 함께 배치한다.
+                        <div
+                            id="site-info"
+                            tabIndex={-1}
+                            className="bg-background relative mt-auto w-full pt-28 md:pt-2"
+                        >
+                            <Footer variant="mainpage" />
+                        </div>
+                    }
+                />
+            </main>
+        </MainPageLayout>
     </StackPager>
 )
 

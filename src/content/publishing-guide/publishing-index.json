@@ -194,6 +194,12 @@
             "href": "/component-guide/sub-page-layout",
             "path": "src/components/composite/page-layout.tsx",
             "status": "완료"
+        },
+        {
+            "label": "메인페이지 레이아웃 (Overlay Header + Content)",
+            "href": "/component-guide/main-page-layout",
+            "path": "src/components/composite/page-layout.tsx",
+            "status": "완료"
         }
     ],
     "structureGroups": [
