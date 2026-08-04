@@ -36,7 +36,9 @@ export const headerIconGroupClassName =
 // 걸어 두어 키보드로 들어가도 어디에 있는지 보이지 않았다[6.1.2]. 셸 규칙과 같은 자손 조건(**:)으로
 // 써야 특이도가 맞고, focus-visible 이 focus 보다 뒤에 생성돼 이긴다.
 export const headerNavDropdownClassName =
-    'flex min-w-36 flex-col gap-6 p-6 whitespace-nowrap group-data-[viewport=false]/navigation-menu:mt-3 group-data-[viewport=false]/navigation-menu:rounded-sm group-data-[viewport=false]/navigation-menu:shadow-md group-data-[viewport=false]/navigation-menu:ring-0 data-[motion^=from-]:[--tw-enter-translate-x:0] data-[motion^=to-]:[--tw-exit-translate-x:0] group-data-[viewport=false]/navigation-menu:data-open:[--tw-enter-scale:1] group-data-[viewport=false]/navigation-menu:data-closed:[--tw-exit-scale:1] **:data-[slot=navigation-menu-link]:focus-visible:outline-2 **:data-[slot=navigation-menu-link]:focus-visible:outline-offset-2 **:data-[slot=navigation-menu-link]:focus-visible:outline-solid'
+    // mainpage 전체 스킨은 다크 기반이지만 GNB 드롭다운은 라이트 시안 색상을 사용한다.
+    // gray 스케일도 mainpage에서 반사되므로, 드롭다운 텍스트는 라이트 모드의 raw 색상값을 직접 사용한다.
+    'flex min-w-36 flex-col gap-6 p-6 whitespace-nowrap group-data-[viewport=false]/navigation-menu:mt-3 group-data-[viewport=false]/navigation-menu:rounded-sm group-data-[viewport=false]/navigation-menu:shadow-md group-data-[viewport=false]/navigation-menu:ring-0 mainpage:!bg-white mainpage:!text-[var(--raw-gray-900)] mainpage:!ring-[var(--raw-gray-900)]/10 data-[motion^=from-]:[--tw-enter-translate-x:0] data-[motion^=to-]:[--tw-exit-translate-x:0] group-data-[viewport=false]/navigation-menu:data-open:[--tw-enter-scale:1] group-data-[viewport=false]/navigation-menu:data-closed:[--tw-exit-scale:1] **:data-[slot=navigation-menu-link]:focus-visible:outline-2 **:data-[slot=navigation-menu-link]:focus-visible:outline-offset-2 **:data-[slot=navigation-menu-link]:focus-visible:outline-solid'
 
 // 드롭다운 항목 — 기본은 16px Medium(label-foreground)이고, 시안처럼 hover·현재 위치를 굵기로 구분한다
 // (foreground + Bold). typo-* 는 variant 를 못 받는 plain 클래스라 굵기만 font-bold 로 덮는다(pagination 과 같은 방식).
@@ -46,7 +48,7 @@ export const headerNavDropdownClassName =
 // outline-ring 은 평상시에도 지정한다 — outline-color 기본값이 currentColor 라 포커스 순간 글자색에서
 // 링 색으로 번지듯 전환된다(button.variants 와 같은 이유).
 export const headerNavDropdownItemClassName =
-    'typo-body-xl-medium text-label-foreground outline-ring hover:text-foreground focus-visible:text-foreground aria-[current=page]:text-foreground w-fit in-data-[slot=navigation-menu-content]:rounded-2xs p-0 outline-none hover:bg-transparent focus:bg-transparent hover:font-bold focus-visible:font-bold aria-[current=page]:font-bold'
+    'typo-body-xl-medium text-label-foreground outline-ring hover:text-foreground focus-visible:text-foreground aria-[current=page]:text-foreground mainpage:!text-[var(--raw-gray-700)] mainpage:hover:!text-[var(--raw-gray-900)] mainpage:focus-visible:!text-[var(--raw-gray-900)] mainpage:aria-[current=page]:!text-[var(--raw-gray-900)] w-fit in-data-[slot=navigation-menu-content]:rounded-2xs p-0 outline-none hover:bg-transparent focus:bg-transparent hover:font-bold focus-visible:font-bold aria-[current=page]:font-bold'
 
 // GNB 트리거 — 하위 메뉴가 있는 항목은 링크가 아니라 버튼이 된다. 셸이 붙이는 컨트롤 외형(높이·면·여백)과
 // 기본 chevron 아이콘은 시안에 없으므로 지운다. 글자 크기는 사용처에서 typo 클래스로 덧붙인다.
