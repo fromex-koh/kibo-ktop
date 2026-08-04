@@ -45,7 +45,7 @@ const OrgNoticeResourcesPage = () => (
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="#">알림마당</BreadcrumbLink>
+                                <span>알림마당</span>
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>

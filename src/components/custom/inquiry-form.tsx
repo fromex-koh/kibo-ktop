@@ -73,6 +73,8 @@ const RequiredMark = () => (
 type InquiryFormProps = {
     // 취소 확인 후 이동할 경로.
     cancelHref: string
+    // 개인정보 안내 화면에서 동의 모달을 처음부터 연다.
+    consentDialogDefaultOpen?: boolean
     // action, method, encType, onSubmit 등 기본 form 속성을 전달한다.
 } & Omit<ComponentProps<'form'>, 'children'>
 
@@ -132,7 +134,7 @@ const InquiryFormActions = ({cancelHref}: {cancelHref: string}) => {
 }
 
 // 폼 상태는 Client Component인 InquiryForm에서 관리한다.
-const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFormProps) => {
+const InquiryForm = ({cancelHref, consentDialogDefaultOpen, className, onSubmit, ...formProps}: InquiryFormProps) => {
     const formRef = useRef<HTMLFormElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [attachmentName, setAttachmentName] = useState<string>()
@@ -369,7 +371,7 @@ const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFor
                         </FieldLabel>
                     </Field>
                     {/* 약관 동의 결과를 체크박스 상태에 반영한다. */}
-                    <Dialog>
+                    <Dialog defaultOpen={consentDialogDefaultOpen}>
                         <DialogTrigger asChild>
                             <Button type="button" variant="text-underline" size="md" className="shrink-0 font-normal">
                                 내용보기

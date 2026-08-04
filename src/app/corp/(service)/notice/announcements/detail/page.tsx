@@ -40,15 +40,11 @@ const CorpNoticeAnnouncementDetailPage = () => (
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbLink href="#">알림마당</BreadcrumbLink>
+                                <span>알림마당</span>
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbLink href={LIST_HREF}>공지사항</BreadcrumbLink>
-                            </BreadcrumbItem>
-                            <BreadcrumbDotSeparator />
-                            <BreadcrumbItem>
-                                <BreadcrumbPage>상세</BreadcrumbPage>
+                                <BreadcrumbPage>공지사항</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
