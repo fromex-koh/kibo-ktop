@@ -27,7 +27,7 @@ import {
 import {useThemeToggle} from '@/hooks/use-theme-toggle'
 import {cn} from '@/lib/utils'
 
-// 데스크톱 GNB와 모바일 전체 메뉴를 함께 렌더링한다. navigationByUserType로 userType별 메뉴를 주입할 수 있다.
+// 데스크톱 GNB와 모바일 전체 메뉴를 렌더링한다. navigationByUserType로 기업·기관별 메뉴를 주입한다.
 export type UserType = 'corp' | 'org'
 
 export type HeaderNavLink = {
@@ -69,7 +69,7 @@ const PLATFORM_INTRO_ITEMS: readonly HeaderNavLink[] = [
     {label: '탄소중립', href: '#'},
 ]
 
-// navigationByUserType를 전달하지 않은 화면과 메인페이지 데모가 함께 사용하는 기본 메뉴.
+// 로그인 전 화면에서 사용하는 기본 메뉴. 로그인 후에는 navigationByUserType로 유형별 메뉴를 주입한다.
 export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {
     corp: [
         {label: '플랫폼 소개', href: '#', items: PLATFORM_INTRO_ITEMS},
@@ -88,7 +88,7 @@ export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {
     ],
 }
 
-// 모바일 전체 메뉴 하단 서비스 그룹.
+// 모바일 전체 메뉴 하단에 표시하는 서비스 그룹.
 type MenuServiceGroup = {label: string; items: readonly string[]}
 
 const NOTICE_SERVICE_GROUP: MenuServiceGroup = {
@@ -121,7 +121,7 @@ const MENU_SERVICE_GROUPS: Record<UserType, readonly MenuServiceGroup[]> = {
     ],
 }
 
-// 로그인 상태에 따라 인증 전·후 유틸리티 링크를 선택한다.
+// 로그인 전·후 상단 유틸리티 링크.
 const UTILITY_LINKS: {label: string; external?: boolean}[] = [
     {label: '로그인/회원가입'},
     {label: '이용안내'},
@@ -134,19 +134,19 @@ const AUTHENTICATED_UTILITY_LINKS: {label: string; external?: boolean}[] = [
     {label: '기술보증기금', external: true},
 ]
 
-// 로그인 후 확정된 userType의 배지와 이름을 표시한다.
+// 로그인 후 확정된 userType을 표시하는 배지.
 const USER_TYPE_BADGE = {
     corp: {label: '기업', color: 'info'},
     org: {label: '기관', color: 'secondary-purple'},
 } as const satisfies Record<UserType, {label: string; color: NonNullable<ComponentProps<typeof Badge>['color']>}>
 
-// 로그인 사용자 정보. sessionRemaining은 표시용 문자열이다.
+// 로그인 상태 표시와 세션 연장에 필요한 사용자 정보.
 export type HeaderUser = {
     name: string
     sessionRemaining: string
 }
 
-// 메뉴 닫힘 애니메이션 종료 후 오버레이 상태를 해제하는 시간.
+// 전체 메뉴 닫힘 애니메이션과 헤더 상태를 동기화하는 시간.
 const MENU_EXIT_DURATION_MS = 200
 
 const USER_TYPES = ['corp', 'org'] satisfies readonly UserType[]
@@ -177,7 +177,7 @@ const MemberTypeToggle = ({
     </SegmentedControl>
 )
 
-// 로그인한 회원의 userType 배지와 이름.
+// 로그인한 회원의 userType 배지.
 const UserTypeBadge = ({userType}: {userType: UserType}) => {
     const badge = USER_TYPE_BADGE[userType]
 
@@ -223,11 +223,11 @@ const focusOpenDropdownFirstItem = (nav: HTMLElement | null) => {
     )?.focus()
 }
 
-// 로고는 h1이 아니며 기본적으로 루트(/)로 이동한다. logoHref로 경로를 변경할 수 있다.
+// 로고 링크 기본값은 루트(/)이며 logoHref로 경로를 변경할 수 있다.
 const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
     const image = (
         <>
-            {/* overlay는 흰색 로고를 사용하고, 일반 헤더는 테마에 맞는 로고를 표시한다. */}
+            {/* 오버레이 헤더는 흰색 로고, 고정 헤더는 현재 테마에 맞는 로고를 표시한다. */}
             {overlay ? (
                 <Image
                     src="/images/logo-ktop-white.svg"
@@ -263,7 +263,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
         </>
     )
 
-    // 테마별 이미지 중 하나만 표시하고, 보조기기용 브랜드명은 한 번만 제공한다.
+    // 테마별 로고는 하나만 표시하고 브랜드명은 보조기기에 한 번만 제공한다.
     return (
         <p className="shrink-0">
             {href ? (
@@ -281,7 +281,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
     )
 }
 
-// 마운트 전 placeholder로 hydration 불일치와 레이아웃 이동을 방지한다.
+// 마운트 전 placeholder를 표시해 테마 확인에 따른 hydration 불일치와 레이아웃 이동을 막는다.
 const HeaderThemeToggle = () => {
     const {isMounted, isDark, label, toggleTheme} = useThemeToggle()
 
@@ -302,7 +302,7 @@ const HeaderThemeToggle = () => {
     )
 }
 
-// 전체 메뉴 링크. 외부 링크는 새 창과 외부 링크 아이콘을 사용한다.
+// 전체 메뉴 링크. external이면 새 창과 외부 링크 아이콘을 사용한다.
 const MenuLink = ({label, href, external, className}: HeaderNavLink & {className?: string}) => (
     <Link
         href={href}
@@ -331,7 +331,7 @@ const HeaderMenu = ({
     const triggerRef = useRef<HTMLButtonElement>(null)
     const menuContentRef = useRef<HTMLDivElement>(null)
     const [isClosing, setIsClosing] = useState(false)
-    // 닫힘 애니메이션이 끝날 때까지 메뉴 오버레이를 표시한다.
+    // 닫힘 애니메이션이 끝날 때까지 메뉴 오버레이를 유지한다.
     const [isSheetVisible, setIsSheetVisible] = useState(false)
 
     useEffect(() => {
@@ -435,7 +435,7 @@ const HeaderMenu = ({
                     <SheetTitle>전체 메뉴</SheetTitle>
                 </SheetHeader>
 
-                {/* 고정 헤더 영역을 비워 메뉴 콘텐츠가 헤더와 겹치지 않게 한다. */}
+                {/* 고정 헤더 영역만큼 여백을 두어 메뉴 콘텐츠가 헤더와 겹치지 않게 한다. */}
                 <div aria-hidden="true" className="h-28 shrink-0 xl:h-30" />
 
                 {/* 메뉴 본문만 스크롤한다. */}
@@ -528,6 +528,7 @@ const HeaderContent = ({
     user?: HeaderUser
     onUserTypeChange: (userType: UserType) => void
 }) => {
+    // 전달받은 userType의 메뉴를 데스크톱 GNB와 모바일 전체 메뉴에 동일하게 적용한다.
     const navLinks = (navigationByUserType ?? DEFAULT_HEADER_NAVIGATION)[userType]
     const [menuOpen, setMenuOpen] = useState(false)
 
@@ -561,7 +562,7 @@ const HeaderContent = ({
 
     return (
         <div className="flex flex-col">
-            {/* 데스크톱은 GNB, 모바일은 로고·햄버거 메뉴를 표시한다. 모바일 전체 메뉴가 열리면 상단 유틸리티도 표시한다. */}
+            {/* 데스크톱은 GNB, 모바일은 로고와 전체 메뉴를 표시한다. 전체 메뉴가 열리면 상단 유틸리티도 표시한다. */}
             <div
                 className={cn(
                     'flex justify-end overflow-hidden transition-[max-height,opacity] duration-200 ease-in-out motion-reduce:transition-none',
@@ -711,11 +712,12 @@ const HeaderContent = ({
 type HeaderProps = {
     overlay?: boolean
     showThemeToggle?: boolean
-    // 로그인 전에는 userType 토글을 노출하고, 로그인 후 userType이 확정되면 숨긴다.
+    // 로그인 전에는 기업·기관 토글을 표시하고, 로그인 후에는 확정된 유형으로 메뉴를 고정한다.
     showUserTypeToggle?: boolean
     userType?: UserType
-    // 전달하면 상단 유틸리티가 로그인 후 구성(유형 배지·이름·남은 시간·로그아웃)으로 바뀐다.
+    // 전달하면 상단 유틸리티가 로그인 상태(유형 배지·이름·남은 시간·로그아웃)로 바뀐다.
     user?: HeaderUser
+    // 전달하지 않으면 DEFAULT_HEADER_NAVIGATION을 사용한다.
     navigationByUserType?: HeaderNavigationByUserType
     logoHref?: string
 }
@@ -741,6 +743,7 @@ const ResolvedHeaderContent = ({
     navigationByUserType?: HeaderNavigationByUserType
     logoHref?: string
 }) => {
+    // userType prop가 있으면 로그인 후 확정된 유형으로 고정하고, 없으면 로그인 전 내부 state를 사용한다.
     const [selectedUserType, setSelectedUserType] = useState<UserType>(fixedUserType ?? 'corp')
     const userType = fixedUserType ?? selectedUserType
 
