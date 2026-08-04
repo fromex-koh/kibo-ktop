@@ -1,10 +1,10 @@
 import type {ReactNode} from 'react'
 import {SubPageLayout} from '@/components/composite/page-layout'
 
-// 이용약관·개인정보 처리방침은 기업·기관이 함께 쓰는 공통 화면이다. /corp와 /org 양쪽에 같은 화면을
-// 두는 이유는 화면정의서 본수를 경로별로 세기 위해서일 뿐, 화면 내용은 유형에 따라 갈리지 않는다.
-// 그래서 userType을 고정하지 않고 Header를 로그인 전 구성(기업·기관 토글 노출)으로 둔다 —
-// userType을 넘기면 토글이 숨어 로그인 후 화면처럼 보인다.
+// 서버 세션·인증 API에서 조회한 user의 userType을 SubPageLayout의 userType prop으로 전달한다.
+// userType이 없으면 showUserTypeToggle=true로 기업/기관 토글을 표시하고, 있으면 Header의 GNB·전체 메뉴를 해당 유형으로 고정한다.
+// 예: <SubPageLayout userType={user?.userType} showUserTypeToggle={user?.userType === undefined}>{children}</SubPageLayout>
+// 자세한 Props와 사용 예시는 /component-guide/sub-page-layout에서 확인한다.
 const OrgPrivacyPolicyLayout = ({children}: {children: ReactNode}) => <SubPageLayout>{children}</SubPageLayout>
 
 export default OrgPrivacyPolicyLayout
