@@ -55,6 +55,7 @@ type PaginationProps = {
     boundaryCount?: number
     prevLabel?: string
     nextLabel?: string
+    compact?: boolean
     'aria-label'?: string
     className?: string
 }
@@ -67,6 +68,7 @@ const Pagination = ({
     boundaryCount = 1,
     prevLabel = '이전',
     nextLabel = '다음',
+    compact = false,
     'aria-label': ariaLabel = '페이지 이동',
     className,
 }: PaginationProps) => {
@@ -78,14 +80,14 @@ const Pagination = ({
 
     return (
         <PaginationRoot aria-label={ariaLabel} className={className}>
-            <PaginationContent className="gap-2">
+            <PaginationContent className={cn('gap-2', compact && 'gap-1')}>
                 <PaginationItem>
                     <button
                         type="button"
                         onClick={() => goTo(page - 1)}
                         disabled={page <= 1}
                         aria-label="이전 페이지"
-                        className={paginationNavClassName}
+                        className={cn(paginationNavClassName, compact && 'size-8 justify-center gap-0 p-0')}
                     >
                         <ChevronLeft aria-hidden="true" className="size-icon-md" />
                         {prevLabel}
@@ -95,7 +97,7 @@ const Pagination = ({
                 {items.map((item, index) =>
                     item === 'ellipsis-left' || item === 'ellipsis-right' ? (
                         <PaginationItem key={`${item}-${index}`}>
-                            <PaginationEllipsis className={paginationEllipsisClassName} />
+                            <PaginationEllipsis className={cn(paginationEllipsisClassName, compact && 'size-8')} />
                         </PaginationItem>
                     ) : (
                         <PaginationItem key={item}>
@@ -104,7 +106,7 @@ const Pagination = ({
                                 onClick={() => goTo(item)}
                                 aria-label={`${item} 페이지`}
                                 aria-current={item === page ? 'page' : undefined}
-                                className={paginationItemClassName}
+                                className={cn(paginationItemClassName, compact && 'size-8')}
                             >
                                 {item}
                             </button>
@@ -118,7 +120,11 @@ const Pagination = ({
                         onClick={() => goTo(page + 1)}
                         disabled={page >= total}
                         aria-label="다음 페이지"
-                        className={cn(paginationNavClassName, 'flex-row-reverse')}
+                        className={cn(
+                            paginationNavClassName,
+                            'flex-row-reverse',
+                            compact && 'size-8 justify-center gap-0 p-0',
+                        )}
                     >
                         <ChevronRight aria-hidden="true" className="size-icon-md" />
                         {nextLabel}

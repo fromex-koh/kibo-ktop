@@ -780,15 +780,15 @@
         },
         {
             "key": "corp-notice-announcements",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
             "key": "corp-notice-announcements-detail",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -1515,15 +1515,15 @@
         },
         {
             "key": "org-notice-announcements",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
             "key": "org-notice-announcements-detail",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },

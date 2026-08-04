@@ -38,6 +38,7 @@ const PROPS_ITEMS = [
     ['siblingCount', '현재 페이지 양옆에 항상 노출할 페이지 수.', '1', 'number'],
     ['boundaryCount', '처음·끝에 항상 노출할 페이지 수.', '1', 'number'],
     ['prevLabel · nextLabel', '이전·다음 버튼 텍스트.', "'이전' · '다음'", 'string'],
+    ['compact', '좁은 화면에서 페이지 버튼·간격을 줄여 한 줄에 맞춘다.', 'false', 'boolean'],
     ['aria-label · className', '내비게이션 이름과 루트 클래스.', "'페이지 이동'", 'string'],
 ] as const
 
