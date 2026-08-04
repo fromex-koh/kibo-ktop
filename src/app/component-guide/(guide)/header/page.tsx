@@ -23,7 +23,7 @@ const navigationByUserType = {
   ],
 } satisfies HeaderNavigationByUserType
 
-// 로그인 전: userType을 생략하면 URL의 ?userType=corp|org를 사용한다.
+// 로그인 전: userType을 생략하면 Header 내부 state로 기업·기관 메뉴를 전환한다.
 <Header
   overlay={false}
   showThemeToggle
@@ -45,7 +45,7 @@ const userType = user?.userType
 />`
 
 const SUB_PAGE_LAYOUT_CODE = `// 일반 서비스 페이지는 Header를 직접 반복하지 않고
-// route layout.tsx에서 SubPageLayout을 사용한다.
+// (service)/layout.tsx에서 SubPageLayout을 사용한다.
 <SubPageLayout
   userType={user?.userType}
   showUserTypeToggle={user?.userType === undefined}
@@ -97,7 +97,7 @@ const PROPS = [
     [
         'Header',
         'userType',
-        '현재 화면의 사용자 유형입니다. 전달하면 URL 쿼리보다 우선해 해당 유형의 GNB와 전체 메뉴를 표시합니다.',
+        '확정된 사용자 유형입니다. 전달하면 Header 내부의 로그인 전 선택 state보다 우선해 해당 유형의 GNB와 전체 메뉴를 표시합니다.',
         'undefined',
         'UserType | undefined',
     ],
@@ -190,8 +190,8 @@ const HeaderGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         <code className="font-mono">navigationByUserType</code>에 기업과 기관의 메뉴를 각각 정의합니다.
-                        로그인 전에는 <code className="font-mono">?userType=corp|org</code>로 선택 유형을 바꾸고, 선택된
-                        메뉴를 GNB와 전체 메뉴에 동일하게 표시합니다.
+                        로그인 전에는 Header 내부 state로 기업·기관 메뉴를 전환하고, 선택된 메뉴를 GNB와 전체 메뉴에
+                        동일하게 표시합니다. 이 선택 상태는 URL에 기록하지 않습니다.
                     </p>
                     <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-1 pl-5">
                         <li>메뉴명과 경로는 Header 내부가 아니라 화면 또는 메뉴 데이터에서 관리합니다.</li>

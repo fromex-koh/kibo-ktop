@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import Image from 'next/image'
-import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
+import Header, {DEFAULT_HEADER_NAVIGATION} from '@/components/composite/header'
 import Footer from '@/components/composite/footer'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
@@ -21,25 +21,6 @@ const SKIP_LINKS: readonly SkipLinkItem[] = [
     {href: '#main', label: '본문 바로가기'},
     {href: '#evaluation-models', label: '평가모형 목록 바로가기'},
 ]
-
-// 메인페이지 목업과 같은 주 메뉴 구성(시안 GNB). 실제 경로는 화면 목업이라 '#' 로 둔다.
-const PLATFORM_NAVIGATION = {
-    corp: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '기술평가', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-    org: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '개별평가', href: '#'},
-        {label: '일괄평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-} satisfies HeaderNavigationByUserType
 
 // 평가모형 카드 — 시안의 두 모형. 일러스트는 OptionCard 가이드와 같은 경로 규약을 따른다.
 // description 을 문장 단위 배열로 두는 이유 — 시안은 두 문장을 각자 한 줄에 놓는다(문장 사이 줄바꿈).
@@ -86,7 +67,7 @@ const EvaluationModelPage = () => (
             overlay={false}
             showThemeToggle
             logoHref="/component-guide/main-page"
-            navigationByUserType={PLATFORM_NAVIGATION}
+            navigationByUserType={DEFAULT_HEADER_NAVIGATION}
         />
 
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다.

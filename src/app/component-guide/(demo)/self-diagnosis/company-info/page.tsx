@@ -2,8 +2,8 @@ import type {Metadata} from 'next'
 import type {ReactNode} from 'react'
 import Link from 'next/link'
 import {CircleCheck, Lock, Plus, X} from 'lucide-react'
-import {type HeaderNavigationByUserType} from '@/components/composite/header'
 import SelfDiagnosisInputHeader from '@/app/component-guide/(demo)/self-diagnosis/_components/self-diagnosis-input-header'
+import {DEFAULT_HEADER_NAVIGATION} from '@/components/composite/header'
 import AutosaveToast from '@/app/component-guide/(demo)/self-diagnosis/_components/autosave-toast'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
@@ -43,25 +43,6 @@ const SKIP_LINKS: readonly SkipLinkItem[] = [
     {href: '#main', label: '본문 바로가기'},
     {href: '#company-form', label: '입력 폼 바로가기'},
 ]
-
-// 메인페이지 목업과 같은 주 메뉴 구성(시안 GNB). 실제 경로는 화면 목업이라 '#' 로 둔다.
-const PLATFORM_NAVIGATION = {
-    corp: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '기술평가', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-    org: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '개별평가', href: '#'},
-        {label: '일괄평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-} satisfies HeaderNavigationByUserType
 
 const CONSENT_PATH = '/component-guide/self-diagnosis/customer-consent'
 
@@ -465,7 +446,7 @@ const CompanyInfoPage = () => (
             overlay={false}
             showThemeToggle
             logoHref="/component-guide/main-page"
-            navigationByUserType={PLATFORM_NAVIGATION}
+            navigationByUserType={DEFAULT_HEADER_NAVIGATION}
         />
 
         {/* 자동저장 토스트 — 시안의 토스트 노출 예시. 화면을 열면 한 번 뜬다(렌더 결과는 없음). */}

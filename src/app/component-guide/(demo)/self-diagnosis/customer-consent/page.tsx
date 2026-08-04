@@ -2,8 +2,8 @@ import type {Metadata} from 'next'
 import type {ReactNode} from 'react'
 import Link from 'next/link'
 import {ChevronRight} from 'lucide-react'
-import {type HeaderNavigationByUserType} from '@/components/composite/header'
 import SelfDiagnosisInputHeader from '@/app/component-guide/(demo)/self-diagnosis/_components/self-diagnosis-input-header'
+import {DEFAULT_HEADER_NAVIGATION} from '@/components/composite/header'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
 import {
@@ -35,25 +35,6 @@ const SKIP_LINKS: readonly SkipLinkItem[] = [
     {href: '#main', label: '본문 바로가기'},
     {href: '#consent-forms', label: '동의서 바로가기'},
 ]
-
-// 메인페이지 목업과 같은 주 메뉴 구성(시안 GNB). 실제 경로는 화면 목업이라 '#' 로 둔다.
-const PLATFORM_NAVIGATION = {
-    corp: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '기술평가', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-    org: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '개별평가', href: '#'},
-        {label: '일괄평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-} satisfies HeaderNavigationByUserType
 
 // [기업] 동의서 — 안내 문구 없이 제목만 있는 행이다.
 const CORP_CONSENTS = [
@@ -140,7 +121,7 @@ const CustomerConsentPage = () => (
             overlay={false}
             showThemeToggle
             logoHref="/component-guide/main-page"
-            navigationByUserType={PLATFORM_NAVIGATION}
+            navigationByUserType={DEFAULT_HEADER_NAVIGATION}
         />
 
         {/* 바로가기 대상 — 컨테이너는 포커스만 받고(tabIndex={-1}) 링은 그리지 않는다. */}

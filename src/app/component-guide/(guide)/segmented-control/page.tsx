@@ -34,6 +34,7 @@ const USAGE_VARIANTS = `{/* Subtle: 기본 회색 트랙 */}
   <SegmentedControlItem value="all">전체</SegmentedControlItem>
 </SegmentedControl>`
 
+// type="link"은 페이지 이동 상태를 URL에 남기는 별도 패턴이다. Header의 기업·기관 토글은 type="radio"와 내부 state를 사용한다.
 const USAGE_LINK_TYPE = `<SegmentedControl type="link" aria-label="화면 유형">
   <SegmentedControlItem
     href="/service?userType=corp"

@@ -1,7 +1,7 @@
 import type {Metadata} from 'next'
 import Link from 'next/link'
 import {SquareArrowOutUpRight} from 'lucide-react'
-import Header, {type HeaderNavigationByUserType} from '@/components/composite/header'
+import Header, {DEFAULT_HEADER_NAVIGATION} from '@/components/composite/header'
 import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
 import {
@@ -22,25 +22,6 @@ import {Button} from '@/components/ui/button'
 export const metadata: Metadata = {title: '제출 완료'}
 
 const SKIP_LINKS: readonly SkipLinkItem[] = [{href: '#main', label: '본문 바로가기'}]
-
-// 메인페이지 목업과 같은 주 메뉴 구성(시안 GNB). 실제 경로는 화면 목업이라 '#' 로 둔다.
-const PLATFORM_NAVIGATION = {
-    corp: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '기술평가', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-    org: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '개별평가', href: '#'},
-        {label: '일괄평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-} satisfies HeaderNavigationByUserType
 
 const MAIN_PAGE_PATH = '/component-guide/main-page'
 
@@ -65,7 +46,7 @@ const SelfDiagnosisCompletePage = () => (
                     overlay={false}
                     showThemeToggle
                     logoHref="/component-guide/main-page"
-                    navigationByUserType={PLATFORM_NAVIGATION}
+                    navigationByUserType={DEFAULT_HEADER_NAVIGATION}
                 />
             </>
         }

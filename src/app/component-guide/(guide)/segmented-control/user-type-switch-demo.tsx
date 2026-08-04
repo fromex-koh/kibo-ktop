@@ -16,6 +16,8 @@ type UserTypeSwitchDemoProps = {
     showContent?: boolean
 }
 
+// type="link" 동작을 보여주는 데모라 선택 상태를 URL 쿼리로 유지한다. Header 토글은 내부 state를 사용한다.
+
 const USER_TYPE_CONTENT: Record<UserType, {title: string; description: string}> = {
     corp: {
         title: '기업용 서비스',

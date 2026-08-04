@@ -2,8 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import {Suspense, useEffect, useRef, useState, type ComponentProps, type KeyboardEvent} from 'react'
-import {useSearchParams} from 'next/navigation'
+import {useEffect, useRef, useState, type ComponentProps, type KeyboardEvent} from 'react'
 import {ExternalLink, Menu, Moon, Sun, TimerReset, X} from 'lucide-react'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
@@ -35,7 +34,7 @@ export type HeaderNavLink = {
     label: string
     href: string
     external?: boolean
-    // 모바일 전체 메뉴에서만 사용하는 하위 항목.
+    // 데스크톱 GNB 드롭다운과 모바일 전체 메뉴에서 사용하는 하위 항목.
     items?: readonly HeaderNavLink[]
 }
 
@@ -70,8 +69,8 @@ const PLATFORM_INTRO_ITEMS: readonly HeaderNavLink[] = [
     {label: '탄소중립', href: '#'},
 ]
 
-// navigationByUserType를 전달하지 않은 화면에서 사용하는 userType별 기본 메뉴.
-const DEFAULT_NAVIGATION: HeaderNavigationByUserType = {
+// navigationByUserType를 전달하지 않은 화면과 메인페이지 데모가 함께 사용하는 기본 메뉴.
+export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {
     corp: [
         {label: '플랫폼 소개', href: '#', items: PLATFORM_INTRO_ITEMS},
         {label: '기술평가', href: '#', items: EVALUATION_MODEL_ITEMS},
@@ -154,30 +153,29 @@ const USER_TYPES = ['corp', 'org'] satisfies readonly UserType[]
 
 const isUserType = (value: string | null): value is UserType => value === 'corp' || value === 'org'
 
-// query string으로 기업·기관 화면 유형을 전환한다.
-const MemberTypeToggle = ({userType, searchParams}: {userType: UserType; searchParams: string}) => {
-    const getHref = (nextUserType: UserType) => {
-        const nextParams = new URLSearchParams(searchParams)
-        nextParams.set('userType', nextUserType)
-        return `?${nextParams.toString()}`
-    }
-
-    return (
-        <SegmentedControl type="link" aria-label="화면 유형">
-            {USER_TYPES.map((value) => (
-                <SegmentedControlItem
-                    key={value}
-                    href={getHref(value)}
-                    replace
-                    scroll={false}
-                    aria-current={userType === value ? 'page' : undefined}
-                >
-                    {value === 'corp' ? '기업' : '기관'}
-                </SegmentedControlItem>
-            ))}
-        </SegmentedControl>
-    )
-}
+// 로그인 전 기업·기관 메뉴를 Header 내부 state로 전환한다. URL에는 선택 상태를 남기지 않는다.
+const MemberTypeToggle = ({
+    userType,
+    onUserTypeChange,
+}: {
+    userType: UserType
+    onUserTypeChange: (userType: UserType) => void
+}) => (
+    <SegmentedControl
+        type="radio"
+        value={userType}
+        onValueChange={(value) => {
+            if (isUserType(value)) onUserTypeChange(value)
+        }}
+        aria-label="화면 유형"
+    >
+        {USER_TYPES.map((value) => (
+            <SegmentedControlItem key={value} value={value}>
+                {value === 'corp' ? '기업' : '기관'}
+            </SegmentedControlItem>
+        ))}
+    </SegmentedControl>
+)
 
 // 로그인한 회원의 userType 배지와 이름.
 const UserTypeBadge = ({userType}: {userType: UserType}) => {
@@ -517,7 +515,7 @@ const HeaderContent = ({
     logoHref,
     userType,
     user,
-    searchParams,
+    onUserTypeChange,
 }: {
     navLabel: string
     overlay: boolean
@@ -528,9 +526,9 @@ const HeaderContent = ({
     logoHref?: string
     userType: UserType
     user?: HeaderUser
-    searchParams: string
+    onUserTypeChange: (userType: UserType) => void
 }) => {
-    const navLinks = (navigationByUserType ?? DEFAULT_NAVIGATION)[userType]
+    const navLinks = (navigationByUserType ?? DEFAULT_HEADER_NAVIGATION)[userType]
     const [menuOpen, setMenuOpen] = useState(false)
 
     // GNB 드롭다운이 열릴 때 포커스를 패널 안으로 이동한다.
@@ -580,7 +578,7 @@ const HeaderContent = ({
                             <SessionTimer remaining={user.sessionRemaining} />
                         </>
                     ) : showUserTypeToggle ? (
-                        <MemberTypeToggle userType={userType} searchParams={searchParams} />
+                        <MemberTypeToggle userType={userType} onUserTypeChange={onUserTypeChange} />
                     ) : null}
                     <div className="flex flex-wrap items-center gap-4">
                         {(user ? AUTHENTICATED_UTILITY_LINKS : UTILITY_LINKS).map((link) => (
@@ -743,9 +741,8 @@ const ResolvedHeaderContent = ({
     navigationByUserType?: HeaderNavigationByUserType
     logoHref?: string
 }) => {
-    const searchParams = useSearchParams()
-    const userTypeParam = searchParams.get('userType')
-    const userType = fixedUserType ?? (isUserType(userTypeParam) ? userTypeParam : 'corp')
+    const [selectedUserType, setSelectedUserType] = useState<UserType>(fixedUserType ?? 'corp')
+    const userType = fixedUserType ?? selectedUserType
 
     return (
         <HeaderContent
@@ -758,7 +755,7 @@ const ResolvedHeaderContent = ({
             logoHref={logoHref}
             userType={userType}
             user={user}
-            searchParams={searchParams.toString()}
+            onUserTypeChange={setSelectedUserType}
         />
     )
 }
@@ -784,34 +781,17 @@ const Header = ({
         >
             {/* 본문과 같은 content-layout으로 정렬선을 맞춘다. */}
             <div className="content-layout">
-                <Suspense
-                    fallback={
-                        <HeaderContent
-                            navLabel="주 메뉴"
-                            overlay={overlay}
-                            compact={false}
-                            showThemeToggle={showThemeToggle}
-                            showUserTypeToggle={showUserTypeToggle}
-                            navigationByUserType={navigationByUserType}
-                            logoHref={logoHref}
-                            userType={userType ?? 'corp'}
-                            user={user}
-                            searchParams=""
-                        />
-                    }
-                >
-                    <ResolvedHeaderContent
-                        navLabel="주 메뉴"
-                        overlay={overlay}
-                        compact={false}
-                        showThemeToggle={showThemeToggle}
-                        showUserTypeToggle={showUserTypeToggle}
-                        userType={userType}
-                        user={user}
-                        navigationByUserType={navigationByUserType}
-                        logoHref={logoHref}
-                    />
-                </Suspense>
+                <ResolvedHeaderContent
+                    navLabel="주 메뉴"
+                    overlay={overlay}
+                    compact={false}
+                    showThemeToggle={showThemeToggle}
+                    showUserTypeToggle={showUserTypeToggle}
+                    navigationByUserType={navigationByUserType}
+                    logoHref={logoHref}
+                    userType={userType}
+                    user={user}
+                />
             </div>
         </header>
     )
