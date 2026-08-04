@@ -9,6 +9,7 @@ import {Pagination} from '@/components/composite/pagination'
 import {SectionHeader, SectionHeaderTitle} from '@/components/composite/section-header'
 import {Badge} from '@/components/ui/badge'
 import {Separator} from '@/components/ui/separator'
+import {NOTICE_CATEGORY, type NoticeItem} from '@/components/custom/notice-category'
 import {useIsMobile} from '@/hooks/use-mobile'
 
 // 공지사항 목록 — 시안 "[알림마당] 공지사항"(40006759:28042).
@@ -16,21 +17,6 @@ import {useIsMobile} from '@/hooks/use-mobile'
 // Separator(항목 구분선) · Pagination(페이지 이동).
 // 페이지 상태를 들고 있어야 해서 client 로 두고, 화면(page.tsx)은 서버 컴포넌트로 유지한다.
 // 목록 데이터는 page.tsx에서 items props로 전달받고, pageSize 기준으로 현재 페이지 항목을 잘라 표시한다.
-
-// 공지 분류 — 색은 시안 배지와 1:1 로 맞춘 기존 팔레트다(중요공지 error · 일반공고 info · 사업공고 purple).
-const NOTICE_CATEGORY = {
-    important: {label: '중요공지', color: 'error'},
-    general: {label: '일반공고', color: 'info'},
-    business: {label: '사업공고', color: 'secondary-purple'},
-} as const
-
-export type NoticeCategory = keyof typeof NOTICE_CATEGORY
-
-export type NoticeItem = {
-    id: string
-    category: NoticeCategory
-    title: string
-}
 
 type NoticeListProps = {
     items: readonly NoticeItem[]
@@ -134,3 +120,4 @@ const NoticeList = ({items, detailHref, pageSize = 10}: NoticeListProps) => {
 
 export {NoticeList}
 export type {NoticeListProps}
+export type {NoticeCategory, NoticeItem} from '@/components/custom/notice-category'
