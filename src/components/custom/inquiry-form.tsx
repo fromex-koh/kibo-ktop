@@ -1,6 +1,14 @@
 'use client'
 
-import {useEffect, useRef, useState, type ChangeEvent, type ComponentProps, type FormEvent} from 'react'
+import {
+    useEffect,
+    useRef,
+    useState,
+    type ChangeEvent,
+    type ComponentProps,
+    type FormEvent,
+    type SubmitEvent,
+} from 'react'
 import {useFormStatus} from 'react-dom'
 import {LoaderCircle, Paperclip, X} from 'lucide-react'
 import {ActionBar, ActionBarCenter} from '@/components/composite/action-bar'
@@ -125,7 +133,7 @@ const InquiryFormActions = ({cancelHref}: {cancelHref: string}) => {
     )
 }
 
-const InquiryForm = ({cancelHref, className, ...formProps}: InquiryFormProps) => {
+const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFormProps) => {
     const formRef = useRef<HTMLFormElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
     const [attachmentName, setAttachmentName] = useState<string>()
@@ -168,8 +176,9 @@ const InquiryForm = ({cancelHref, className, ...formProps}: InquiryFormProps) =>
     const clearError = (name: string) =>
         setErrors((previous) => {
             if (!previous[name]) return previous
-            const {[name]: _removed, ...rest} = previous
-            return rest
+            const next = {...previous}
+            delete next[name]
+            return next
         })
 
     const handleFormChange = (event: FormEvent<HTMLFormElement>) => {
@@ -183,6 +192,26 @@ const InquiryForm = ({cancelHref, className, ...formProps}: InquiryFormProps) =>
         setAttachmentName(event.currentTarget.files?.[0]?.name)
     }
 
+    // 실제 전송 전 FormData에 담긴 값을 확인하기 위한 개발용 로그.
+    const handleFormSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+        // 아직 제출 대상이 없는 퍼블리싱 확인 단계에서는 새로고침을 막고 콘솔만 확인한다.
+        if (!formProps.action) event.preventDefault()
+
+        const formData = new FormData(event.currentTarget)
+        const values = Object.fromEntries(
+            Array.from(formData.entries()).map(([name, value]) => [
+                name,
+                value instanceof File ? {name: value.name, type: value.type, size: value.size} : value,
+            ]),
+        )
+
+        if (process.env.NODE_ENV === 'development') {
+            console.log('[InquiryForm] 제출 데이터', values)
+        }
+
+        onSubmit?.(event)
+    }
+
     const clearAttachment = () => {
         setAttachmentName(undefined)
         // 같은 파일을 다시 선택해도 change 이벤트가 발생하도록 input 값을 비운다.
@@ -194,6 +223,7 @@ const InquiryForm = ({cancelHref, className, ...formProps}: InquiryFormProps) =>
             ref={formRef}
             onChange={handleFormChange}
             {...formProps}
+            onSubmit={handleFormSubmit}
             className={cn('flex flex-col gap-10', className)}
         >
             <div className="flex flex-col gap-4">
