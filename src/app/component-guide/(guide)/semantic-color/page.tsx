@@ -159,6 +159,7 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'icon-solid-subtle': 'bg-icon-solid-subtle',
     'icon-solid-subtle-foreground': 'bg-icon-solid-subtle-foreground',
     'accent-subtle': 'bg-accent-subtle',
+    'surface-subtle': 'bg-surface-subtle',
     'field-error-foreground': 'bg-field-error-foreground',
     'icon-interactive-hover': 'bg-icon-interactive-hover',
     'step-progress-inactive': 'bg-step-progress-inactive',
@@ -317,6 +318,8 @@ const STANDARD_GROUPS: Group[] = [
 ]
 const CUSTOM_GROUPS: Group[] = [
     {name: 'surface', match: (n) => n === 'surface'},
+    // 카드 안에 한 단계 들어간 옅은 면 — 공지 상세의 첨부파일 줄처럼 흰 카드 위 영역을 구분한다.
+    {name: 'surface-subtle', match: (n) => n === 'surface-subtle'},
     {name: 'table-surface', match: (n) => n === 'table-surface'},
     // 토스트 면은 시안이 테마와 무관하게 한 벌(반투명 검정 + 흰 글자)이라 세 테마 값이 모두 같다.
     {name: 'toast / toast-foreground', match: (n) => n === 'toast' || n === 'toast-foreground'},
