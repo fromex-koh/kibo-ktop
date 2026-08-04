@@ -110,6 +110,7 @@ const NoticeList = ({items, detailHref, pageSize = 4}: NoticeListProps) => {
                     siblingCount={isMobile ? 0 : 1}
                     prevLabel={isMobile ? '' : '이전'}
                     nextLabel={isMobile ? '' : '다음'}
+                    maxVisibleItems={isMobile ? 5 : 10}
                     compact={isMobile}
                     className="justify-center"
                 />
