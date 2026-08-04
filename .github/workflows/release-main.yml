@@ -47,16 +47,14 @@ jobs:
               if: steps.released.outputs.value == 'false'
               run: yarn verify
 
-            - name: Resolve next patch version
+            - name: Resolve next release version
               if: steps.released.outputs.value == 'false'
               id: version
               shell: bash
               run: |
                   latest=$(git tag --list 'v[0-9]*.[0-9]*.[0-9]*' --sort=-v:refname | head -n 1)
                   latest=${latest:-v0.0.0}
-                  version=${latest#v}
-                  IFS='.' read -r major minor patch <<< "$version"
-                  next="v${major}.${minor}.$((patch + 1))"
+                  next=$(node scripts/resolve-release-version.mjs "$latest")
                   echo "value=$next" >> "$GITHUB_OUTPUT"
 
             - name: Generate release metadata
