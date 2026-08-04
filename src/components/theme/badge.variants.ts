@@ -1,12 +1,15 @@
 import {cva} from 'class-variance-authority'
 
 export const badgeVariants = cva(
-    'group/badge inline-flex w-fit shrink-0 items-center justify-center border border-transparent font-medium whitespace-nowrap transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 [&>svg]:pointer-events-none',
+    // 타이포는 base 가 아니라 type·size 조합이 가진다 — 라벨 배지는 typo-body-l-medium(14/21),
+    // 숫자 배지는 typo-body-l-bold 로 서로 다른 굵기를 쓰기 때문이다. base 에 font-medium 을 두면
+    // 같은 속성을 두 번 지정하게 되고([PB-08]) 어느 쪽이 이길지 CSS 순서에 맡기게 된다.
+    'group/badge inline-flex w-fit shrink-0 items-center justify-center border border-transparent whitespace-nowrap transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 [&>svg]:pointer-events-none',
     {
         variants: {
             variant: {'solid-pastel': '', outline: 'bg-card', solid: 'text-badge-solid-fg'},
             type: {label: '', number: 'typo-body-l-bold h-6 min-w-7 rounded-full px-2'},
-            size: {sm: 'h-7 gap-1 text-sm [&>svg]:size-3.5', lg: 'h-10 gap-1.5 text-base [&>svg]:size-4'},
+            size: {sm: 'h-7 gap-1 [&>svg]:size-3.5', lg: 'h-10 gap-1.5 [&>svg]:size-4'},
             color: {
                 info: '',
                 success: '',
@@ -76,11 +79,15 @@ export const badgeVariants = cva(
             {variant: 'solid', color: 'secondary-purple', class: 'bg-purple-600'},
             {type: 'number', color: 'primary', class: 'bg-primary text-primary-foreground'},
             {type: 'number', color: 'new', class: 'bg-number-badge-new text-badge-solid-fg'},
-            // PROJECT-STYLE: badge sm(28px)는 좌우 여백 12px + 최소 너비 60px 이다. 화면 인스턴스에서
-            // "확인"(글자 28px)은 60px 로 벌어지고 "성장초기"(글자 49px)는 49+24=73px 로 늘어난다.
+            // PROJECT-STYLE: badge sm(28px)는 글자 14/21(typo-body-l-medium) + 최소 너비 60px 이고,
+            // 좌우 여백은 모양에 따라 다르다 — pill 12px · round 8px(Figma badge 컴포넌트 세트, 그리고
+            // 실제 인스턴스 "KTRS-FM" 61+16=77px). 화면 인스턴스에서 "확인"(글자 28px)은 최소 너비 60px 로
+            // 벌어지고 "성장초기"(글자 49px)는 pill 이면 49+24=73px 로 늘어난다.
             // lg(40px)는 Figma 에 없는 프로젝트 확장이라 기존 16px 여백을 유지한다.
-            {type: 'label', size: 'sm', class: 'min-w-15 px-3'},
-            {type: 'label', size: 'lg', class: 'px-4'},
+            {type: 'label', size: 'sm', class: 'typo-body-l-medium min-w-15'},
+            {type: 'label', size: 'sm', shape: 'pill', class: 'px-3'},
+            {type: 'label', size: 'sm', shape: 'round', class: 'px-2'},
+            {type: 'label', size: 'lg', class: 'typo-body-xl-medium px-4'},
             // PROJECT-STYLE: 숫자 배지는 Figma 28×24 라 size 의 높이(h-7)를 덮어 24px 를 유지한다.
             // Figma 숫자 배지는 테두리가 없다 — 공통 base 의 투명 1px 테두리를 지워 안쪽 폭을
             // 시안(12px)과 같게 맞추고, 배율에 따라 좌우 테두리가 다르게 반올림되는 것도 막는다.
