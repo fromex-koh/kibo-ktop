@@ -1,10 +1,15 @@
 import type {ReactNode} from 'react'
 import {SubPageLayout} from '@/components/composite/page-layout'
 
-// 이용약관·개인정보 처리방침은 기업·기관이 함께 쓰는 공통 화면이다. /corp와 /org 양쪽에 같은 화면을
-// 두는 이유는 화면정의서 본수를 경로별로 세기 위해서일 뿐, 화면 내용은 유형에 따라 갈리지 않는다.
-// 그래서 userType을 고정하지 않고 Header를 로그인 전 구성(기업·기관 토글 노출)으로 둔다 —
-// userType을 넘기면 토글이 숨어 로그인 후 화면처럼 보인다.
+// 실제 인증 연동 시 서버 세션·인증 API에서 조회한 userType을 SubPageLayout에 전달한다.
+// user는 서버 세션·인증 API에서 조회한 로그인 사용자 정보다.
+// userType이 없으면 기업/기관 토글을 노출하고, 있으면 해당 유형으로 Header를 고정한다.
+// SubPageLayout 사용법과 Props는 /component-guide/sub-page-layout 가이드에서 확인한다.
+// 예:
+// const userType = user?.userType
+// <SubPageLayout userType={userType} showUserTypeToggle={userType === undefined}>{children}</SubPageLayout>
+// 값은 PageLayoutBase를 거쳐 Header의 유형별 메뉴·배지·토글 상태를 결정한다.
+// 로그인 전에는 userType을 전달하지 않아 기업/기관 토글을 노출하고, 로그인 후에는 확정 유형으로 고정한다.
 const CorpTermsLayout = ({children}: {children: ReactNode}) => <SubPageLayout>{children}</SubPageLayout>
 
 export default CorpTermsLayout

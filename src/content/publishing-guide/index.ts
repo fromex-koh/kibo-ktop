@@ -188,6 +188,7 @@ const parseCommonLayout = (raw: (typeof publishingIndexJson)['commonLayouts'][nu
     }
     return {
         label: raw.label,
+        ...(typeof raw.href === 'string' ? {href: raw.href} : {}),
         status: raw.status,
         version: raw.version,
     }

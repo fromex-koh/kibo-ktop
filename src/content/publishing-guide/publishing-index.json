@@ -197,6 +197,7 @@
         },
         {
             "label": "서브 레이아웃 (Header + Content + Footer)",
+            "href": "/component-guide/sub-page-layout",
             "status": "대기중",
             "version": "미배포"
         }

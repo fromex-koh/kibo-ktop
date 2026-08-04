@@ -135,6 +135,7 @@ export type StructureGroup = {
 // 화면을 찍어내는 틀(내부 콘텐츠만 바뀌는 공통 레이아웃) — 독립 화면이 아니라 screenId 가 없다.
 export type CommonLayout = {
     label: string
+    href?: string
     status: Status
     version: string
 }
