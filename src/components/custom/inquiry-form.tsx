@@ -45,11 +45,11 @@ import {cn} from '@/lib/utils'
 // 필수값은 브라우저 검증과 INVALID_FIELDS 메시지로 처리하고, 제출 중 상태는 useFormStatus가 관리한다.
 
 const INQUIRY_TYPES = [
-    {value: 'service', label: '서비스 이용'},
-    {value: 'evaluation', label: '기술평가 신청'},
-    {value: 'report', label: 'K-BIGx 보고서'},
-    {value: 'account', label: '회원·계정'},
-    {value: 'etc', label: '기타'},
+    {value: '평가', label: '평가'},
+    {value: 'K-BIGx', label: 'K-BIGx'},
+    {value: '유료/결제', label: '유료/결제'},
+    {value: '회원 문의', label: '회원 문의'},
+    {value: '기타', label: '기타'},
 ] as const
 
 const CONTENT_MAX_LENGTH = 500
