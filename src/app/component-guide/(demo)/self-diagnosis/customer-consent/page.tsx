@@ -156,7 +156,7 @@ const CustomerConsentPage = () => (
 
             <StepHeader
                 title="고객 정보 활용 동의"
-                description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해주세요."
+                description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해 주세요."
                 steps={SELF_DIAGNOSIS_STEPS}
                 current={1}
             />
@@ -226,7 +226,7 @@ const CustomerConsentPage = () => (
                 </SelectableCard>
             </div>
 
-            <FormCard title="부분발송 이메일등록" subtitle="안내문을 추가로 받으실 이메일 주소를 입력해주세요.">
+            <FormCard title="부분발송 이메일등록" subtitle="안내문을 추가로 받으실 이메일 주소를 입력해 주세요.">
                 <div className="flex flex-wrap items-center gap-6">
                     {/* 아이디 @ 도메인 — 시안은 @ 를 입력 칸 안이 아니라 두 칸 사이에 둔다(칸 사이 8px). */}
                     <div className="flex min-w-0 flex-1 items-center gap-2">
@@ -249,7 +249,7 @@ const CustomerConsentPage = () => (
                     </div>
                     <Select name="emailDomainPreset" defaultValue="direct">
                         <SelectTrigger className="w-70" aria-label="이메일 도메인 선택">
-                            <SelectValue placeholder="선택해주세요" />
+                            <SelectValue placeholder="선택해 주세요" />
                         </SelectTrigger>
                         <SelectContent>
                             {EMAIL_DOMAINS.map((domain) => (

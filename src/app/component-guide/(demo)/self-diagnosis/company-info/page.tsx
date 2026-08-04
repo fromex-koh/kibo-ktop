@@ -265,7 +265,7 @@ const CompanyInfoForm = () => (
                     <Field id="corp-type" label="기업형태" required>
                         <Select name="corpType" required>
                             <SelectTrigger id="corp-type" className="w-full">
-                                <SelectValue placeholder="선택해주세요" />
+                                <SelectValue placeholder="선택해 주세요" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="corp">주식회사</SelectItem>
@@ -302,7 +302,7 @@ const CompanyInfoForm = () => (
                         <ClearableInput
                             id="ceo-name"
                             name="ceoName"
-                            placeholder="대표자명을 입력해주세요"
+                            placeholder="대표자명을 입력해 주세요"
                             autoComplete="off"
                         />
                     </Field>
@@ -484,7 +484,7 @@ const CompanyInfoPage = () => (
 
             <StepHeader
                 title="기업·기술정보 입력"
-                description="평가에 필요한 기업 및 기술 정보를 입력해주세요."
+                description="평가에 필요한 기업 및 기술 정보를 입력해 주세요."
                 steps={SELF_DIAGNOSIS_STEPS}
                 current={2}
             />

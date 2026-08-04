@@ -338,7 +338,7 @@ const ContrastCheckPage = () => (
                 </FieldLabel>
                 <Select>
                     <SelectTrigger id="contrast-select-default" className="w-full">
-                        <SelectValue placeholder="선택해주세요" />
+                        <SelectValue placeholder="선택해 주세요" />
                     </SelectTrigger>
                     <SelectContent>
                         <FruitOptions />
@@ -351,7 +351,7 @@ const ContrastCheckPage = () => (
                 </FieldLabel>
                 <Select defaultValue="apple">
                     <SelectTrigger id="contrast-select-completed" className="w-full">
-                        <SelectValue placeholder="선택해주세요" />
+                        <SelectValue placeholder="선택해 주세요" />
                     </SelectTrigger>
                     <SelectContent>
                         <FruitOptions />
@@ -369,7 +369,7 @@ const ContrastCheckPage = () => (
                         aria-describedby="contrast-select-error-message"
                         className="w-full"
                     >
-                        <SelectValue placeholder="선택해주세요" />
+                        <SelectValue placeholder="선택해 주세요" />
                     </SelectTrigger>
                     <SelectContent>
                         <FruitOptions />
@@ -383,7 +383,7 @@ const ContrastCheckPage = () => (
                 </FieldLabel>
                 <Select defaultValue="apple" readOnly>
                     <SelectTrigger id="contrast-select-readonly" className="w-full">
-                        <SelectValue placeholder="선택해주세요" />
+                        <SelectValue placeholder="선택해 주세요" />
                     </SelectTrigger>
                     <SelectContent>
                         <FruitOptions />

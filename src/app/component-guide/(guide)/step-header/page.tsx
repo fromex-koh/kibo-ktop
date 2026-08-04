@@ -19,7 +19,7 @@ const USAGE_CODE = `const STEPS = [
   title="고객 정보 활용 동의"
   steps={STEPS}
   current={1}
-  description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해주세요."
+  description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해 주세요."
 />`
 
 // 단계별 케이스 — 제목·설명은 Figma 자가진단 화면 헤더 문구를 그대로 쓴다.
@@ -28,13 +28,13 @@ const STEP_CASES = [
     {
         current: 1,
         title: '고객 정보 활용 동의',
-        description: '자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해주세요.',
+        description: '자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해 주세요.',
     },
-    {current: 2, title: '기업·기술정보 입력', description: '평가에 필요한 기업 및 기술 정보를 입력해주세요.'},
+    {current: 2, title: '기업·기술정보 입력', description: '평가에 필요한 기업 및 기술 정보를 입력해 주세요.'},
     {
         current: 3,
         title: '체크리스트 입력',
-        description: '평가 항목별 체크리스트를 작성해주세요. 해당사항에 맞게 선택해 주십시오.',
+        description: '평가 항목별 체크리스트를 작성해 주세요. 해당사항에 맞게 선택해 주십시오.',
     },
     {current: 4, title: '제출 완료', description: '자가진단 제출이 완료되었습니다.'},
 ] as const
@@ -130,7 +130,7 @@ const StepHeaderGuidePage = () => (
                         title="고객 정보 활용 동의"
                         steps={SELF_DIAGNOSIS_STEPS}
                         current={1}
-                        description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해주세요."
+                        description="자가진단 진행을 위해 기업의 정보제공 동의 여부를 확인해 주세요."
                     />
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />

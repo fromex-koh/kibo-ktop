@@ -296,7 +296,7 @@ const Checklist = () => (
                     <QuestionItem align="control" contentClassName="w-full">
                         <Select name="evaluationItem">
                             <SelectTrigger size="md" aria-label="해당 항목 선택" className="w-full">
-                                <SelectValue placeholder="선택해주세요" />
+                                <SelectValue placeholder="선택해 주세요" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="technology">기술성</SelectItem>
@@ -370,7 +370,7 @@ const ChecklistPage = () => (
 
             <StepHeader
                 title="체크리스트 입력"
-                description="평가 항목별 체크리스트를 작성해주세요. 해당사항에 맞게 선택해 주십시오."
+                description="평가 항목별 체크리스트를 작성해 주세요. 해당사항에 맞게 선택해 주십시오."
                 steps={SELF_DIAGNOSIS_STEPS}
                 current={3}
             />

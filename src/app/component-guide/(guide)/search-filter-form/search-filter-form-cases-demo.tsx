@@ -28,15 +28,15 @@ export const MinimalFilterCaseDemo = () => (
 )
 
 // 케이스 B — 입력 + 한 줄 2열 Select(placeholder). (Figma 두·세 번째 프레임)
-// SearchFilterRow 로 조회유형·유/무료를 md 이상에서 나란히 두고, 기본값을 비워 "선택해주세요"를 노출한다.
+// SearchFilterRow 로 조회유형·유/무료를 md 이상에서 나란히 두고, 기본값을 비워 "선택해 주세요"를 노출한다.
 export const TwoColumnFilterCaseDemo = () => (
     <SearchFilterForm aria-label="상세 조회 필터" onSubmit={(event) => event.preventDefault()} onReset={() => {}}>
         <SearchFilterFields>
             <DateRangeField />
             <CompanyNameField label="기업명" placeholder="내용을 입력하세요" />
             <SearchFilterRow>
-                <SearchTypeField label="조회유형" defaultValue="" placeholder="선택해주세요" />
-                <PaymentTypeField label="유/무료" defaultValue="" placeholder="선택해주세요" />
+                <SearchTypeField label="조회유형" defaultValue="" placeholder="선택해 주세요" />
+                <PaymentTypeField label="유/무료" defaultValue="" placeholder="선택해 주세요" />
             </SearchFilterRow>
         </SearchFilterFields>
         <SearchFilterActions>

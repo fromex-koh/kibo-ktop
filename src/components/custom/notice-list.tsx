@@ -80,6 +80,7 @@ const NoticeList = ({items, detailHref, pageSize = 10}: NoticeListProps) => {
                                         {index > 0 ? <Separator className="my-6" /> : null}
                                         <Link
                                             href={detailHref}
+                                            scroll={false}
                                             className="group/notice outline-ring rounded-2xs flex items-center gap-2 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid"
                                         >
                                             <Badge color={category.color} shape="round">

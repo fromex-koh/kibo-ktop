@@ -33,8 +33,8 @@ const SearchFilterFormDemo = ({showResult = true}: {showResult?: boolean}) => {
                     <DateRangeField />
                     <CompanyNameField label="기업명" placeholder="내용을 입력하세요" />
                     <SearchFilterRow>
-                        <SearchTypeField label="조회유형" defaultValue="" placeholder="선택해주세요" />
-                        <PaymentTypeField label="유/무료" defaultValue="" placeholder="선택해주세요" />
+                        <SearchTypeField label="조회유형" defaultValue="" placeholder="선택해 주세요" />
+                        <PaymentTypeField label="유/무료" defaultValue="" placeholder="선택해 주세요" />
                     </SearchFilterRow>
                 </SearchFilterFields>
 

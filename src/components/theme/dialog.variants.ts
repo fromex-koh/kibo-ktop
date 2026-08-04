@@ -28,7 +28,9 @@ export const dialogHeaderClassName = 'col-start-1 row-start-1 flex flex-col gap-
 // 본문이 이 여백 아래로 들어가며 잘린다. 모바일에서는 세로로 쌓고 주 동작을 위에 둔다.
 // 행은 지정하지 않는다 — 제목(row 1)·본문(row 2)이 자리를 잡고 나면 자동 배치가 마지막 행에 놓는다.
 // row-start-3 을 박으면 머리가 없는 모달(grid-rows-none)에서도 3행이 생겨 빈 행이 남는다.
-export const dialogFooterClassName = 'flex flex-col-reverse gap-4 px-10 pt-5 pb-6 sm:flex-row sm:[&>button]:flex-1'
+// 폭을 나누는 대상은 button 이 아니라 '직속 자식 전체'다 — CTA 가 이동이면 Button asChild 로 <a> 가
+// 렌더되는데(예: "나가기"), button 만 노리면 그 링크만 내용 폭으로 남아 두 버튼 폭이 어긋난다.
+export const dialogFooterClassName = 'flex flex-col-reverse gap-4 px-10 pt-5 pb-6 sm:flex-row sm:*:flex-1'
 
 // 본문 구획 — 머리와 CTA 사이의 가운데 행. 화면이 낮아 카드가 max-h 에 걸리면 이 상자만 줄어들고
 // 스크롤이 여기 생긴다(머리·CTA 는 고정). min-h-0 이 없으면 grid 행이 줄어도 상자가 따라 줄지 않는다.

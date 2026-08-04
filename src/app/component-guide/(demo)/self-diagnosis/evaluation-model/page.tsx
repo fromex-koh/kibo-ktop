@@ -90,7 +90,7 @@ const EvaluationModelPage = () => (
                         </Breadcrumb>
                     }
                 />
-                <p className="typo-title-l-medium text-foreground">기술평가를 진행할 평가모형을 선택해주세요.</p>
+                <p className="typo-title-l-medium text-foreground">기술평가를 진행할 평가모형을 선택해 주세요.</p>
             </div>
 
             <section id="evaluation-models" aria-labelledby="evaluation-models-title" tabIndex={-1}>

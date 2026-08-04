@@ -10,7 +10,20 @@ const RouteScrollReset = () => {
 
     useLayoutEffect(() => {
         if (window.location.hash) return
-        window.scrollTo({top: 0, left: 0, behavior: 'auto'})
+
+        // 라우트 전환 직후에는 Next의 새 화면 반영과 브라우저 스크롤 복원이 순서대로 일어날 수 있다.
+        // 한 프레임 뒤 다시 초기화해 이전 화면의 위치가 새 페이지에 남는 경우를 막는다.
+        const reset = () => window.scrollTo({top: 0, left: 0, behavior: 'auto'})
+        let secondFrame: number | undefined
+        const firstFrame = window.requestAnimationFrame(() => {
+            reset()
+            secondFrame = window.requestAnimationFrame(reset)
+        })
+
+        return () => {
+            window.cancelAnimationFrame(firstFrame)
+            if (secondFrame !== undefined) window.cancelAnimationFrame(secondFrame)
+        }
     }, [pathname])
 
     return null

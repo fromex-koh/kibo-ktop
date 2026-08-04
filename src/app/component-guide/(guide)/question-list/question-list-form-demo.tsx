@@ -175,7 +175,7 @@ const QuestionListFormDemo = () => {
                     <QuestionItem align="control" contentClassName="w-full">
                         <Select name="evaluationItem" defaultValue="technology">
                             <SelectTrigger size="md" className="w-full" aria-label="평가 항목 선택">
-                                <SelectValue placeholder="선택해주세요" />
+                                <SelectValue placeholder="선택해 주세요" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="technology">기술성</SelectItem>

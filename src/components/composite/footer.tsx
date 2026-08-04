@@ -161,7 +161,7 @@ const FooterContent = ({variant = 'mainpage', portalTheme, className, ...props}:
                     <p className="typo-body-l-regular">{CONTACT.copyright}</p>
                     {/* 관련 사이트 — 가이드의 Select 를 그대로 쓴다. 폭과 면 처리는 시안이 variant 별로 달라
                     FOOTER_STYLE.familySite 에서 넘기고, 그 밖의 색은 Select 기본 시맨틱 토큰이 페이지 테마를 따른다. */}
-                    <Select>
+                    <Select name="familySite">
                         <SelectTrigger aria-label="관련 사이트" className={style.familySite}>
                             <SelectValue placeholder="관련사이트" />
                         </SelectTrigger>
