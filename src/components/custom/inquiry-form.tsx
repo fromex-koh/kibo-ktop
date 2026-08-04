@@ -6,9 +6,10 @@ import {
     useState,
     type ChangeEvent,
     type ComponentProps,
-    type FormEvent,
     type SubmitEvent,
+    type SyntheticEvent,
 } from 'react'
+import {useRouter} from 'next/navigation'
 import {useFormStatus} from 'react-dom'
 import {LoaderCircle, Paperclip, X} from 'lucide-react'
 import {ActionBar, ActionBarCenter} from '@/components/composite/action-bar'
@@ -38,11 +39,8 @@ import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 import {Input} from '@/components/ui/input'
 import {cn} from '@/lib/utils'
 
-// 1:1 문의 등록 폼. 첨부파일·동의·필수값 검증 상태를 관리하므로 Client Component로 둔다.
-// 화면에서는 action(서버 액션 또는 API 경로)과 cancelHref를 전달한다.
-// 제출 데이터: inquiryType · title · content · attachment · consent.
-// 일반 POST로 연결할 때는 method="post"와 encType="multipart/form-data"를 함께 전달한다.
-// 필수값은 브라우저 검증과 INVALID_FIELDS 메시지로 처리하고, 제출 중 상태는 useFormStatus가 관리한다.
+// 문의 유형·제목·내용·첨부파일·동의 여부를 관리하는 Client Component.
+// 서버 액션/API 연결에 필요한 form 속성과 취소 경로는 props로 전달한다.
 
 const INQUIRY_TYPES = [
     {value: '평가', label: '평가'},
@@ -54,8 +52,7 @@ const INQUIRY_TYPES = [
 
 const CONTENT_MAX_LENGTH = 500
 
-// 필수값 오류 메시지와 포커스 대상. 키는 전송되는 input name이며, focusId는 화면에 보이는 컨트롤의 id다.
-// Select·Checkbox처럼 실제 입력이 숨겨진 컨트롤도 사용자가 오류 위치를 바로 확인할 수 있게 한다. [KWCAG 7.4.2]
+// input name별 오류 메시지와 오류 발생 시 포커스할 컨트롤을 매핑한다.
 const INVALID_FIELDS: Record<string, {message: string; focusId: string}> = {
     inquiryType: {message: '문의 유형을 선택해 주세요.', focusId: 'inquiry-type'},
     title: {message: '제목을 입력해 주세요.', focusId: 'inquiry-title'},
@@ -63,7 +60,7 @@ const INVALID_FIELDS: Record<string, {message: string; focusId: string}> = {
     consent: {message: '개인정보 수집 및 이용에 동의해 주세요.', focusId: 'inquiry-consent'},
 }
 
-// 필수 표시. 별표는 숨기고 보조기기에는 "(필수)"로 전달한다. [KWCAG 7.4.1]
+// 별표는 시각적으로만 표시하고, 스크린 리더에는 필수 정보를 전달한다.
 const RequiredMark = () => (
     <>
         <span aria-hidden="true" className="text-error-500">
@@ -74,20 +71,20 @@ const RequiredMark = () => (
 )
 
 type InquiryFormProps = {
-    // 작성 취소 확인 후 이동할 경로.
+    // 취소 확인 후 이동할 경로.
     cancelHref: string
-    // action·method·encType·onSubmit 등 기본 form 속성은 그대로 전달된다.
+    // action, method, encType, onSubmit 등 기본 form 속성을 전달한다.
 } & Omit<ComponentProps<'form'>, 'children'>
 
-// useFormStatus는 form의 자식 컴포넌트에서만 동작하므로 제출 액션을 별도 컴포넌트로 분리한다.
-// pending일 때 등록·취소 버튼을 비활성화하고 등록 중 상태를 표시한다.
+// useFormStatus는 form 내부 자식에서만 사용할 수 있어 제출 액션을 분리한다.
 const InquiryFormActions = ({cancelHref}: {cancelHref: string}) => {
+    const router = useRouter()
     const {pending} = useFormStatus()
 
     return (
         <ActionBar>
             <ActionBarCenter className="gap-4">
-                {/* 작성 중인 내용이 사라지므로 취소 전에 확인하고, 확인하면 cancelHref로 이동한다. */}
+                {/* 작성 중인 내용과 첨부파일 유실을 방지하는 취소 확인 모달. */}
                 <Dialog>
                     <DialogTrigger asChild>
                         <Button type="button" variant="tertiary" size="xl" disabled={pending}>
@@ -112,8 +109,9 @@ const InquiryFormActions = ({cancelHref}: {cancelHref: string}) => {
                                     계속 작성
                                 </Button>
                             </DialogClose>
-                            <Button asChild size="xl">
-                                <a href={cancelHref}>나가기</a>
+                            {/* 작성 중인 폼을 취소하고 cancelHref로 이동한다. */}
+                            <Button type="button" size="xl" onClick={() => router.replace(cancelHref)}>
+                                나가기
                             </Button>
                         </DialogFooter>
                     </DialogContent>
@@ -133,6 +131,7 @@ const InquiryFormActions = ({cancelHref}: {cancelHref: string}) => {
     )
 }
 
+// 폼 상태는 Client Component인 InquiryForm에서 관리한다.
 const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFormProps) => {
     const formRef = useRef<HTMLFormElement>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
@@ -140,13 +139,13 @@ const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFor
     const [isConsentChecked, setIsConsentChecked] = useState(false)
     const [errors, setErrors] = useState<Record<string, string>>({})
 
-    // required 검증을 가로채 기본 말풍선 대신 FieldError를 표시하고 첫 오류 컨트롤에 포커스를 둔다.
+    // 브라우저의 required 검증을 FieldError로 대체하고 첫 오류 컨트롤에 포커스한다.
     // invalid 이벤트는 버블링하지 않으므로 캡처 단계에서 처리한다.
     useEffect(() => {
         const form = formRef.current
         if (!form) return
 
-        // 한 번의 제출에서는 첫 오류 항목으로만 포커스를 이동한다.
+        // 여러 invalid 이벤트가 발생해도 첫 오류에만 포커스를 이동한다.
         let hasMovedFocus = false
 
         const handleInvalid = (event: Event) => {
@@ -172,7 +171,7 @@ const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFor
         return () => form.removeEventListener('invalid', handleInvalid, true)
     }, [])
 
-    // 입력이 변경되면 해당 필드의 오류만 지운다.
+    // 값이 변경된 필드의 오류만 지운다.
     const clearError = (name: string) =>
         setErrors((previous) => {
             if (!previous[name]) return previous
@@ -181,7 +180,7 @@ const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFor
             return next
         })
 
-    const handleFormChange = (event: FormEvent<HTMLFormElement>) => {
+    const handleFormChange = (event: SyntheticEvent<HTMLFormElement>) => {
         const control = event.target
         if (control instanceof HTMLElement) clearError(control.getAttribute('name') ?? '')
     }
@@ -192,9 +191,9 @@ const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFor
         setAttachmentName(event.currentTarget.files?.[0]?.name)
     }
 
-    // 실제 전송 전 FormData에 담긴 값을 확인하기 위한 개발용 로그.
+    // [폼 제출 진입점]
+    // 현재는 action 미설정 시 제출을 막고 FormData를 로그한다. 실제 연동 시 API 요청 또는 form action을 연결한다.
     const handleFormSubmit = (event: SubmitEvent<HTMLFormElement>) => {
-        // 아직 제출 대상이 없는 퍼블리싱 확인 단계에서는 새로고침을 막고 콘솔만 확인한다.
         if (!formProps.action) event.preventDefault()
 
         const formData = new FormData(event.currentTarget)
@@ -214,7 +213,7 @@ const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFor
 
     const clearAttachment = () => {
         setAttachmentName(undefined)
-        // 같은 파일을 다시 선택해도 change 이벤트가 발생하도록 input 값을 비운다.
+        // 같은 파일을 다시 선택해도 change 이벤트가 발생하도록 input을 초기화한다.
         if (fileInputRef.current) fileInputRef.current.value = ''
     }
 
@@ -281,7 +280,7 @@ const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFor
                                 문의 내용
                                 <RequiredMark />
                             </FieldLabel>
-                            {/* 입력 오류는 글자 수 카운터와 같은 footer 영역에 표시한다. */}
+                            {/* 오류 메시지를 글자 수 카운터와 같은 footer에 표시한다. */}
                             <TextareaCounter
                                 id="inquiry-content"
                                 name="content"
@@ -294,7 +293,7 @@ const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFor
                             />
                         </Field>
 
-                        {/* 파일 input은 숨기고 별도 버튼으로 열며, 선택 후 파일명과 제거 버튼을 표시한다. */}
+                        {/* 파일 input은 숨기고 버튼으로 열어 선택한 파일명과 제거 버튼을 표시한다. */}
                         <div>
                             <input
                                 ref={fileInputRef}
@@ -369,7 +368,7 @@ const InquiryForm = ({cancelHref, className, onSubmit, ...formProps}: InquiryFor
                             <FieldError id="inquiry-consent-error">{errors.consent}</FieldError>
                         </FieldLabel>
                     </Field>
-                    {/* 약관 모달에서 동의하면 이 화면의 체크박스도 선택 상태로 동기화한다. */}
+                    {/* 약관 동의 결과를 체크박스 상태에 반영한다. */}
                     <Dialog>
                         <DialogTrigger asChild>
                             <Button type="button" variant="text-underline" size="md" className="shrink-0 font-normal">

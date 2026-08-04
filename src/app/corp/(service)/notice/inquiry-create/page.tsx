@@ -13,9 +13,9 @@ import {InquiryForm} from '@/components/custom/inquiry-form'
 
 export const metadata: Metadata = {title: '문의하기'}
 
-const LIST_HREF = '/corp/notice/announcements'
+// 취소 후 이동할 문의 목록 경로.
+const LIST_HREF = '/'
 
-// SkipNav의 #main 도착 대상. 입력·첨부 상태는 client 인 InquiryForm이 담당한다.
 const CorpNoticeInquiryCreatePage = () => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
         <div className="content-layout flex flex-col gap-10 pt-10 pb-25">
@@ -40,13 +40,13 @@ const CorpNoticeInquiryCreatePage = () => (
                 }
             />
             <div className="flex flex-col gap-6">
-                {/* 제목과 안내 문구 간격은 시안 4px 이라 SectionHeader 기본 간격(6)을 좁힌다. */}
                 <SectionHeader className="gap-y-1">
                     <SectionHeaderTitle>무엇이든 물어보세요</SectionHeaderTitle>
                     <SectionHeaderDescription>
                         답변이 완료되면 마이페이지 또는 이메일로 확인할 수 있어요
                     </SectionHeaderDescription>
                 </SectionHeader>
+                {/* 문의 작성 폼. 취소 시 LIST_HREF로 이동한다. */}
                 <InquiryForm cancelHref={LIST_HREF} />
             </div>
         </div>
