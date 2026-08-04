@@ -28,7 +28,7 @@ const MOCK_NOTICE_ITEMS: readonly NoticeItem[] = [
     {id: 'corp-notice-012', category: 'business', title: '기술평가 관련 설명회 일정을 안내드립니다.'},
 ]
 
-const MOCK_NOTICE_PAGE_SIZE = 4
+const MOCK_NOTICE_PAGE_SIZE = 10
 
 // SkipNav의 #main 도착 대상. page의 목업 데이터를 NoticeList에 전달한다.
 const CorpNoticeAnnouncementsPage = () => (
