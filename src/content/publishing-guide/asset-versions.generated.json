@@ -31,5 +31,13 @@
         {"name": "public", "version": "v0.1.8", "isCurrent": false},
         {"name": "vendor/shadcn-baseline", "version": "v0.1.10", "isCurrent": true},
         {"name": "src/app/fonts", "version": "v0.1.4", "isCurrent": false}
+    ],
+    "commonLayouts": [
+        {
+            "label": "서브페이지 레이아웃 (Header + Content + Footer)",
+            "path": "src/components/composite/page-layout.tsx",
+            "version": "v0.1.10",
+            "isCurrent": false
+        }
     ]
 }

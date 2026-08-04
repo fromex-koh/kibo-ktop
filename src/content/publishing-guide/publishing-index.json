@@ -3,7 +3,7 @@
     "//key": "실제 서비스 경로가 확정된 화면만 영구 key를 가지며, screen-registry.json의 동일한 key와 연결한다. 화면명이나 화면 ID가 바뀌어도 key는 유지한다.",
     "//screenId": "현재 화면 ID는 모두 미발급 상태이므로 null로 관리한다. 임시 ID를 만들지 않으며, 공식 화면 ID가 발급된 화면만 해당 문자열로 교체한다.",
     "//assetVersions": "Vercel 배포와 frontend-handoff에 함께 포함되는 컴포넌트·스타일·런타임·설정·에셋만 추적한다. 퍼블리싱 가이드 전용 제작 도구와 전달 프로젝트에서 실행하지 않는 생성·검사 스크립트는 제외한다. version 은 직접 적지 않고 path 기준 git 히스토리로 자동 계산한다. 인계 기준선은 v0.1.3이며 src/app/fonts만 기존 v0.1.0 이력을 유지한다. 이후에는 마지막 변경을 포함하는 최초 태그가 버전이며 아직 태그에 포함되지 않았으면 '미배포'다.",
-    "//commonLayouts": "화면이 아니라 여러 화면이 공유하는 '화면을 찍어내는 틀' 단위 레이아웃(메인 레이아웃·서브 레이아웃, 내부 콘텐츠만 바뀌는 틀). Header·Footer 는 이 틀에 이미 포함되므로 개별 행으로 두지 않는다. 독립 화면이 아니라 screenId 가 없고, 별도 표로 렌더링된다. version 은 leaf.version 과 동일한 규칙(수동 기입, 미배포/현재 HEAD 버전과 같으면 하이라이트).",
+    "//commonLayouts": "화면이 아니라 여러 화면이 공유하는 '화면을 찍어내는 틀' 단위 레이아웃(서브 레이아웃, 내부 콘텐츠만 바뀌는 틀). Header·Footer 는 이 틀에 이미 포함되므로 개별 행으로 두지 않는다. 독립 화면이 아니라 screenId 가 없고, 별도 표로 렌더링된다. path 기준 Git 이력으로 version 을 자동 계산하며 아직 태그에 포함되지 않았으면 '미배포'다.",
     "//structureGroups": "2026-07-20 기업·기관 FO IA를 각각 독립된 트리로 반영한다. 기업 128건, 기관 107건이며 기관 IA 83번 평가검증이력 조회는 화면 Type 미정이라 제외한다. leaf.version은 아직 작업 전이면 미배포다.",
     "//userType": "기업·기관 IA는 메뉴명이 같아도 역할과 노출 조건이 다를 수 있으므로 공통으로 병합하지 않는다. 모든 그룹에 기업 또는 기관 userType을 지정하고 Segmented Control에서 한 벌씩 조회한다.",
     "assetVersions": [
@@ -190,16 +190,10 @@
     ],
     "commonLayouts": [
         {
-            "label": "메인 레이아웃 (Header + Content + Footer)",
-            "href": "/component-guide/main-layout",
-            "status": "대기중",
-            "version": "미배포"
-        },
-        {
-            "label": "서브 레이아웃 (Header + Content + Footer)",
+            "label": "서브페이지 레이아웃 (Header + Content + Footer)",
             "href": "/component-guide/sub-page-layout",
-            "status": "대기중",
-            "version": "미배포"
+            "path": "src/components/composite/page-layout.tsx",
+            "status": "완료"
         }
     ],
     "structureGroups": [

@@ -174,23 +174,29 @@ const parseHomeContent = (raw: typeof homeJson): HomeContent => ({
     },
 })
 
-// version·isCurrent는 publishing-index.json이 아니라 GitHub Actions가 릴리스 커밋에 확정한
-// asset-versions.generated.json에서 가져온다. [MD-003]
+// asset·공통 레이아웃의 version·isCurrent는 publishing-index.json이 아니라 GitHub Actions가 릴리스 커밋에
+// 확정한 asset-versions.generated.json에서 가져온다. [MD-003]
 const findGeneratedVersion = (name: string): {version: string; isCurrent: boolean} => {
     const found = assetVersionsGenerated.assets.find((a) => a.name === name)
     return {version: found?.version ?? '-', isCurrent: found?.isCurrent ?? false}
 }
+
+const findGeneratedCommonLayoutVersion = (path: string): string =>
+    assetVersionsGenerated.commonLayouts?.find((layout) => layout.path === path)?.version ?? '미배포'
 
 const parseCommonLayout = (raw: (typeof publishingIndexJson)['commonLayouts'][number]): CommonLayout => {
     const where = `publishing-index.json > commonLayouts > ${raw.label}`
     if (!isStatus(raw.status)) {
         throw new Error(`[content] ${where}: status "${raw.status}" 이(가) 유효하지 않습니다.`)
     }
+    if (typeof raw.path !== 'string' || raw.path.length === 0) {
+        throw new Error(`[content] ${where}: path 가 필요합니다.`)
+    }
     return {
         label: raw.label,
         ...(typeof raw.href === 'string' ? {href: raw.href} : {}),
         status: raw.status,
-        version: raw.version,
+        version: findGeneratedCommonLayoutVersion(raw.path),
     }
 }
 

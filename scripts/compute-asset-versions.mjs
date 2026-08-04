@@ -60,7 +60,7 @@ const applyBaselineVersion = (version, path) => {
     return version
 }
 
-const {assetVersions} = JSON.parse(readFileSync(SOURCE, 'utf8'))
+const {assetVersions, commonLayouts} = JSON.parse(readFileSync(SOURCE, 'utf8'))
 const screenRegistry = JSON.parse(readFileSync(SCREEN_REGISTRY_SOURCE, 'utf8'))
 
 const generated = assetVersions.map(({name, path}) => {
@@ -71,7 +71,13 @@ const generated = assetVersions.map(({name, path}) => {
     return {name, version, isCurrent: version === releaseVersion}
 })
 
-const metadata = {version: releaseVersion, assets: generated}
+const generatedCommonLayouts = commonLayouts.map(({label, path}) => {
+    const resolvedVersion = applyBaselineVersion(resolvePathVersion(path), path)
+    const version = resolvedVersion === '미배포' ? releaseVersion : resolvedVersion
+    return {label, path, version, isCurrent: version === releaseVersion}
+})
+
+const metadata = {version: releaseVersion, assets: generated, commonLayouts: generatedCommonLayouts}
 writeFileSync(OUTPUT, await formatJson(metadata, OUTPUT))
 
 const PAGE_EXTENSIONS = ['tsx', 'ts', 'jsx', 'js']
