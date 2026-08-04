@@ -89,11 +89,29 @@ export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {
 }
 
 // 모바일 전체 메뉴 하단에 표시하는 서비스 그룹.
-type MenuServiceGroup = {label: string; items: readonly string[]}
+type MenuServiceItem = string | Pick<HeaderNavLink, 'label' | 'href' | 'external'>
+type MenuServiceGroup = {label: string; items: readonly MenuServiceItem[]}
 
-const NOTICE_SERVICE_GROUP: MenuServiceGroup = {
-    label: '알림마당',
-    items: ['공지사항', 'FAQ', '1:1문의', '자료실'],
+// 알림마당의 문의 작성 경로는 사용자 유형별로 다르다.
+const NOTICE_SERVICE_GROUPS: Record<UserType, MenuServiceGroup> = {
+    corp: {
+        label: '알림마당',
+        items: [
+            {label: '공지사항', href: '/corp/notice/announcements'},
+            {label: 'FAQ', href: '#'},
+            {label: '1:1문의', href: '/corp/notice/inquiry-create'},
+            {label: '자료실', href: '/corp/notice/resources'},
+        ],
+    },
+    org: {
+        label: '알림마당',
+        items: [
+            {label: '공지사항', href: '/org/notice/announcements'},
+            {label: 'FAQ', href: '#'},
+            {label: '1:1문의', href: '/org/notice/inquiry-create'},
+            {label: '자료실', href: '/org/notice/resources'},
+        ],
+    },
 }
 
 // userType별 모바일 마이페이지 메뉴.
@@ -110,14 +128,14 @@ const MENU_SERVICE_GROUPS: Record<UserType, readonly MenuServiceGroup[]> = {
                 '1:1문의내역',
             ],
         },
-        NOTICE_SERVICE_GROUP,
+        NOTICE_SERVICE_GROUPS.corp,
     ],
     org: [
         {
             label: '마이페이지',
             items: ['내 정보 수정', '평가이력 조회', 'K-BIGx 보고서 이력', '하위 계정 진행 현황', '1:1 문의 내역'],
         },
-        NOTICE_SERVICE_GROUP,
+        NOTICE_SERVICE_GROUPS.org,
     ],
 }
 
@@ -501,20 +519,24 @@ const HeaderMenu = ({
                                 >
                                     <h3 className="typo-body-xl-bold md:w-30 md:shrink-0">{group.label}</h3>
                                     <ul className="typo-body-xl-regular text-menu-overlay-foreground-subtle flex flex-wrap items-center gap-x-6 gap-y-2">
-                                        {group.items.map((item, index) => (
-                                            <li key={item} className="flex items-center gap-x-6">
-                                                {/* 장식용 구분선은 보조기기에서 제외한다. */}
-                                                {index > 0 ? (
-                                                    <span
-                                                        aria-hidden="true"
-                                                        className="bg-menu-overlay-border h-3 w-px shrink-0"
-                                                    />
-                                                ) : null}
-                                                <SheetClose asChild>
-                                                    <MenuLink label={item} href="#" />
-                                                </SheetClose>
-                                            </li>
-                                        ))}
+                                        {group.items.map((item, index) => {
+                                            const menuItem = typeof item === 'string' ? {label: item, href: '#'} : item
+
+                                            return (
+                                                <li key={menuItem.label} className="flex items-center gap-x-6">
+                                                    {/* 장식용 구분선은 보조기기에서 제외한다. */}
+                                                    {index > 0 ? (
+                                                        <span
+                                                            aria-hidden="true"
+                                                            className="bg-menu-overlay-border h-3 w-px shrink-0"
+                                                        />
+                                                    ) : null}
+                                                    <SheetClose asChild>
+                                                        <MenuLink {...menuItem} />
+                                                    </SheetClose>
+                                                </li>
+                                            )
+                                        })}
                                     </ul>
                                 </div>
                             ))}
