@@ -2,10 +2,11 @@
 // 결과 파일은 릴리스 커밋에 포함되며, Vercel·로컬 빌드는 git을 다시 조회하지 않고 이 스냅샷만 읽는다.
 // ⚠️ 직접 실행할 때도 RELEASE_VERSION=vX.Y.Z 가 반드시 필요하다.
 
-import {existsSync, readFileSync, writeFileSync} from 'node:fs'
+import {readFileSync, writeFileSync} from 'node:fs'
 import {execFileSync} from 'node:child_process'
 import {format, resolveConfig} from 'prettier'
 import {resolvePathVersion} from './git-info.mjs'
+import {findAppPage} from './find-app-page.mjs'
 
 const SOURCE = 'src/content/publishing-guide/publishing-index.json'
 const OUTPUT = 'src/content/publishing-guide/asset-versions.generated.json'
@@ -80,11 +81,8 @@ const generatedCommonLayouts = commonLayouts.map(({label, path}) => {
 const metadata = {version: releaseVersion, assets: generated, commonLayouts: generatedCommonLayouts}
 writeFileSync(OUTPUT, await formatJson(metadata, OUTPUT))
 
-const PAGE_EXTENSIONS = ['tsx', 'ts', 'jsx', 'js']
 const generatedScreens = screenRegistry.screens.map((screen) => {
-    const pagePath = PAGE_EXTENSIONS.map(
-        (extension) => `src/app${screen.path === '/' ? '' : screen.path}/page.${extension}`,
-    ).find((candidate) => existsSync(candidate))
+    const pagePath = findAppPage(process.cwd(), screen.path)
     const implemented = pagePath !== undefined
     const resolvedVersion = implemented ? resolvePathVersion(pagePath) : '미배포'
     const version = implemented && resolvedVersion === '미배포' ? releaseVersion : resolvedVersion
