@@ -21,8 +21,8 @@ export const headerIconGroupClassName =
 
 // PROJECT-STYLE: GNB 드롭다운 패널 — 시안 "메뉴"(40006715:25214) 기준.
 // 흰 면(popover)·radius 8(rounded-sm)·안쪽 여백 24(p-6)·항목 간격 24(gap-6)·최소 폭 144(min-w-36).
-// 위치는 트리거 글자의 왼쪽선에 맞춰 헤더 아래에 붙는다 — 시안의 패널 x가 GNB 텍스트 x와 같고(62709),
-// 패널 y가 헤더 하단(84548)과 같다. 트리거 상자가 헤더 아래보다 12px 위에서 끝나므로 mt-3으로 채운다.
+// 위치는 트리거 글자의 왼쪽선에 맞추고 헤더 하단과 16px 간격을 둔다 — 배경이 있는 헤더에서도 패널이
+// 헤더에 붙어 보이지 않도록 mt-4를 사용한다.
 // 셸(ui/navigation-menu)의 기본 패널 스타일은 group-data-[viewport=false] 접두사가 붙어 있어,
 // 같은 접두사로 써야 덮인다(접두사 없는 유틸은 특이도에서 밀린다).
 // 폭은 항목을 감싸는 만큼(min 144) 늘어난다 — 셸 기본값으로는 긴 항목이 줄바꿈된다.
@@ -38,7 +38,7 @@ export const headerIconGroupClassName =
 export const headerNavDropdownClassName =
     // mainpage 전체 스킨은 다크 기반이지만 GNB 드롭다운은 라이트 시안 색상을 사용한다.
     // gray 스케일도 mainpage에서 반사되므로, 드롭다운 텍스트는 라이트 모드의 raw 색상값을 직접 사용한다.
-    'flex min-w-36 flex-col gap-6 p-6 whitespace-nowrap group-data-[viewport=false]/navigation-menu:mt-3 group-data-[viewport=false]/navigation-menu:rounded-sm group-data-[viewport=false]/navigation-menu:shadow-md group-data-[viewport=false]/navigation-menu:ring-0 mainpage:!bg-white mainpage:!text-[var(--raw-gray-900)] mainpage:!ring-[var(--raw-gray-900)]/10 data-[motion^=from-]:[--tw-enter-translate-x:0] data-[motion^=to-]:[--tw-exit-translate-x:0] group-data-[viewport=false]/navigation-menu:data-open:[--tw-enter-scale:1] group-data-[viewport=false]/navigation-menu:data-closed:[--tw-exit-scale:1] **:data-[slot=navigation-menu-link]:focus-visible:outline-2 **:data-[slot=navigation-menu-link]:focus-visible:outline-offset-2 **:data-[slot=navigation-menu-link]:focus-visible:outline-solid'
+    'flex min-w-36 flex-col gap-6 p-6 whitespace-nowrap group-data-[viewport=false]/navigation-menu:mt-4 group-data-[viewport=false]/navigation-menu:rounded-sm group-data-[viewport=false]/navigation-menu:shadow-md group-data-[viewport=false]/navigation-menu:ring-0 mainpage:!bg-white mainpage:!text-[var(--raw-gray-900)] mainpage:!ring-[var(--raw-gray-900)]/10 data-[motion^=from-]:[--tw-enter-translate-x:0] data-[motion^=to-]:[--tw-exit-translate-x:0] group-data-[viewport=false]/navigation-menu:data-open:[--tw-enter-scale:1] group-data-[viewport=false]/navigation-menu:data-closed:[--tw-exit-scale:1] **:data-[slot=navigation-menu-link]:focus-visible:outline-2 **:data-[slot=navigation-menu-link]:focus-visible:outline-offset-2 **:data-[slot=navigation-menu-link]:focus-visible:outline-solid'
 
 // 드롭다운 항목 — 기본은 16px Medium(label-foreground)이고, 시안처럼 hover·현재 위치를 굵기로 구분한다
 // (foreground + Bold). typo-* 는 variant 를 못 받는 plain 클래스라 굵기만 font-bold 로 덮는다(pagination 과 같은 방식).

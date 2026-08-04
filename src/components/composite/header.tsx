@@ -15,7 +15,20 @@ import {
     NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/ui/sheet'
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
+import {dialogBodyClassName} from '@/components/theme/dialog.variants'
+import {DEFAULT_HEADER_NAVIGATION, MENU_SERVICE_GROUPS, UTILITY_LINKS} from '@/constants/header-navigation'
+import type {HeaderNavLink, HeaderNavigationByUserType, UserType} from '@/constants/header-navigation'
 import {
     headerHiddenWhenMenuOpenClassName,
     headerIconButtonClassName,
@@ -27,130 +40,9 @@ import {
 import {useThemeToggle} from '@/hooks/use-theme-toggle'
 import {cn} from '@/lib/utils'
 
-// 데스크톱 GNB와 모바일 전체 메뉴를 렌더링한다. navigationByUserType로 기업·기관별 메뉴를 주입한다.
-export type UserType = 'corp' | 'org'
-
-export type HeaderNavLink = {
-    label: string
-    href: string
-    external?: boolean
-    // 데스크톱 GNB 드롭다운과 모바일 전체 메뉴에서 사용하는 하위 항목.
-    items?: readonly HeaderNavLink[]
-}
-
-export type HeaderNavigationByUserType = Record<UserType, readonly HeaderNavLink[]>
-
-// K-BIGx 보고서 하위 메뉴. 기관은 대량정보조회를 추가로 제공한다.
-const CORP_REPORT_ITEMS: readonly HeaderNavLink[] = [
-    {label: '기업혁신성장보고서 조회', href: '#'},
-    {label: '보고서 이력 조회', href: '#'},
-]
-
-const ORG_REPORT_ITEMS: readonly HeaderNavLink[] = [
-    {label: '기업혁신성장보고서 조회', href: '#'},
-    {label: '대량정보조회', href: '#'},
-    {label: '보고서 이력 조회', href: '#'},
-]
-
-// 기업 기술평가·기관 개별평가에서 공통으로 사용하는 하위 메뉴.
-const EVALUATION_MODEL_ITEMS: readonly HeaderNavLink[] = [
-    {label: 'KTRS-FM', href: '#'},
-    {label: 'Tech-Index', href: '#'},
-    {label: '투자모형', href: '#'},
-    {label: '평가결과 조회', href: '#'},
-]
-
-// 기업·기관 공통 플랫폼 소개 하위 메뉴.
-const PLATFORM_INTRO_ITEMS: readonly HeaderNavLink[] = [
-    {label: '플랫폼 소개', href: '#'},
-    {label: '기술평가', href: '#'},
-    {label: '특허평가', href: '#'},
-    {label: 'K-BIGx 보고서', href: '#'},
-    {label: '탄소중립', href: '#'},
-]
-
-// 로그인 전 화면에서 사용하는 기본 메뉴. 로그인 후에는 navigationByUserType로 유형별 메뉴를 주입한다.
-export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {
-    corp: [
-        {label: '플랫폼 소개', href: '#', items: PLATFORM_INTRO_ITEMS},
-        {label: '기술평가', href: '#', items: EVALUATION_MODEL_ITEMS},
-        {label: '특허평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#', items: CORP_REPORT_ITEMS},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-    org: [
-        {label: '플랫폼 소개', href: '#', items: PLATFORM_INTRO_ITEMS},
-        {label: '개별평가', href: '#', items: EVALUATION_MODEL_ITEMS},
-        {label: '일괄평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#', items: ORG_REPORT_ITEMS},
-        {label: '특허평가', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-}
-
-// 모바일 전체 메뉴 하단에 표시하는 서비스 그룹.
-type MenuServiceItem = string | Pick<HeaderNavLink, 'label' | 'href' | 'external'>
-type MenuServiceGroup = {label: string; items: readonly MenuServiceItem[]}
-
-// 알림마당의 문의 작성 경로는 사용자 유형별로 다르다.
-const NOTICE_SERVICE_GROUPS: Record<UserType, MenuServiceGroup> = {
-    corp: {
-        label: '알림마당',
-        items: [
-            {label: '공지사항', href: '/corp/notice/announcements'},
-            {label: 'FAQ', href: '#'},
-            {label: '1:1문의', href: '/corp/notice/inquiry-create'},
-            {label: '자료실', href: '/corp/notice/resources'},
-        ],
-    },
-    org: {
-        label: '알림마당',
-        items: [
-            {label: '공지사항', href: '/org/notice/announcements'},
-            {label: 'FAQ', href: '#'},
-            {label: '1:1문의', href: '/org/notice/inquiry-create'},
-            {label: '자료실', href: '/org/notice/resources'},
-        ],
-    },
-}
-
-// userType별 모바일 마이페이지 메뉴.
-const MENU_SERVICE_GROUPS: Record<UserType, readonly MenuServiceGroup[]> = {
-    corp: [
-        {
-            label: '마이페이지',
-            items: [
-                '내 정보',
-                '대표자(경영자) 역량 및 경력',
-                '평가결과 조회',
-                'K-BIGx 보고서 이력',
-                '유료 서비스 관리',
-                '1:1문의내역',
-            ],
-        },
-        NOTICE_SERVICE_GROUPS.corp,
-    ],
-    org: [
-        {
-            label: '마이페이지',
-            items: ['내 정보 수정', '평가이력 조회', 'K-BIGx 보고서 이력', '하위 계정 진행 현황', '1:1 문의 내역'],
-        },
-        NOTICE_SERVICE_GROUPS.org,
-    ],
-}
-
-// 로그인 전·후 상단 유틸리티 링크.
-const UTILITY_LINKS: {label: string; external?: boolean}[] = [
-    {label: '로그인/회원가입'},
-    {label: '이용안내'},
-    {label: '기술보증기금', external: true},
-]
-
-const AUTHENTICATED_UTILITY_LINKS: {label: string; external?: boolean}[] = [
-    {label: '로그아웃'},
-    {label: '이용안내'},
-    {label: '기술보증기금', external: true},
-]
+// 기존 Header export를 유지해 외부 사용처의 import 경로를 보존한다.
+export {DEFAULT_HEADER_NAVIGATION}
+export type {HeaderNavLink, HeaderNavigationByUserType, UserType}
 
 // 로그인 후 확정된 userType을 표시하는 배지.
 const USER_TYPE_BADGE = {
@@ -206,7 +98,7 @@ const UserTypeBadge = ({userType}: {userType: UserType}) => {
     )
 }
 
-// 남은 세션 시간과 연장 버튼. 실제 연장 동작은 서비스에서 연결한다.
+// 로그인 후 남은 시간과 연장 안내 모달을 표시한다. 실제 세션 연장 동작은 서비스에서 연결한다.
 const SessionTimer = ({remaining}: {remaining: string}) => (
     <div className="flex items-center gap-1">
         <p className="tracking-control-label flex items-center gap-1 text-sm font-medium">
@@ -214,24 +106,93 @@ const SessionTimer = ({remaining}: {remaining: string}) => (
             <span className="sr-only">로그인 유지 시간</span>
             {remaining}
         </p>
-        <Button variant="text-underline" size="sm" type="button" className="font-normal">
-            연장
-        </Button>
+        <Dialog>
+            <DialogTrigger asChild>
+                <Button variant="text-underline" size="sm" type="button" className="font-normal">
+                    연장
+                </Button>
+            </DialogTrigger>
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>로그인 연장</DialogTitle>
+                </DialogHeader>
+                <div className={cn(dialogBodyClassName, 'gap-4')}>
+                    <DialogDescription>
+                        로그아웃까지 남은 시간 : <strong className="text-primary font-bold">{remaining}</strong>
+                    </DialogDescription>
+                    <p className="typo-body-xl-regular text-label-foreground">
+                        10분 동안 서비스를 이용하지 않아 잠시 후 자동으로 로그아웃될 예정입니다.
+                        <br />
+                        로그인 시간을 연장하시겠어요?
+                    </p>
+                </div>
+                <DialogFooter>
+                    <DialogClose asChild>
+                        <Button variant="tertiary" size="xl">
+                            로그아웃
+                        </Button>
+                    </DialogClose>
+                    <Button size="xl">로그인 연장</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </div>
 )
 
-const UtilityLink = ({label, external, className}: {label: string; external?: boolean; className?: string}) => (
+const UtilityLink = ({
+    label,
+    href,
+    external,
+    className,
+}: {
+    label: string
+    href: string
+    external?: boolean
+    className?: string
+}) => (
     <Button
         variant="text"
         size="sm"
         asChild
         className={cn('tracking-control-label font-medium', external ? 'gap-0.5' : undefined, className)}
     >
-        <Link href="#" {...(external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}>
+        <Link href={href} {...(external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}>
             {label}
             {external ? <ExternalLink aria-hidden="true" className="size-icon-sm" /> : null}
         </Link>
     </Button>
+)
+
+// 로그인 후 로그아웃 확인 모달. 실제 로그아웃 처리는 서비스에서 연결한다.
+const LogoutDialog = ({className}: {className?: string}) => (
+    <Dialog>
+        <DialogTrigger asChild>
+            <Button
+                variant="text"
+                size="sm"
+                type="button"
+                className={cn('tracking-control-label font-medium', className)}
+            >
+                로그아웃
+            </Button>
+        </DialogTrigger>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>로그아웃 안내</DialogTitle>
+            </DialogHeader>
+            <div className={cn(dialogBodyClassName, 'gap-4')}>
+                <DialogDescription>로그아웃 하시겠어요?</DialogDescription>
+                <p className="typo-body-xl-regular text-label-foreground">
+                    현재 계정에서 로그아웃됩니다.
+                    <br />
+                    다시 이용하시려면 로그인해 주세요.
+                </p>
+            </div>
+            <DialogFooter>
+                <Button size="xl">로그아웃</Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
 )
 
 // 열린 GNB 드롭다운의 첫 링크로 포커스를 이동한다.
@@ -512,7 +473,7 @@ const HeaderMenu = ({
                         </nav>
 
                         <div className="mt-15 flex flex-col gap-6 xl:mt-25">
-                            {MENU_SERVICE_GROUPS[userType].map((group) => (
+                            {MENU_SERVICE_GROUPS[userType].groups.map((group) => (
                                 <div
                                     key={group.label}
                                     className="flex flex-col gap-2 md:flex-row md:items-center md:gap-0"
@@ -625,16 +586,18 @@ const HeaderContent = ({
                         <MemberTypeToggle userType={userType} onUserTypeChange={onUserTypeChange} />
                     ) : null}
                     <div className="flex flex-wrap items-center gap-4">
-                        {(user ? AUTHENTICATED_UTILITY_LINKS : UTILITY_LINKS).map((link) => (
-                            <UtilityLink
-                                key={link.label}
-                                {...link}
-                                className={cn(
-                                    'transition-colors duration-200 ease-in-out motion-reduce:transition-none',
-                                    menuOpen && 'text-menu-overlay-foreground',
-                                )}
-                            />
-                        ))}
+                        {(user ? MENU_SERVICE_GROUPS[userType].utilityLinks : UTILITY_LINKS).map((link) => {
+                            const className = cn(
+                                'transition-colors duration-200 ease-in-out motion-reduce:transition-none',
+                                menuOpen && 'text-menu-overlay-foreground',
+                            )
+
+                            return link.label === '로그아웃' ? (
+                                <LogoutDialog key={link.label} className={className} />
+                            ) : (
+                                <UtilityLink key={link.label} {...link} className={className} />
+                            )
+                        })}
                     </div>
                 </div>
             </div>

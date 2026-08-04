@@ -15,7 +15,7 @@ const HeaderDemo = ({
     user?: HeaderUser
 }) => (
     // 가이드 셸의 sticky 앱바와 데모 Header가 화면 상단에서 겹치지 않도록 미리보기에서만 문서 흐름에 둔다.
-    <div className="border-border bg-background overflow-hidden rounded-lg border [&>header]:!static [&>header]:!inset-auto [&>header]:!z-auto">
+    <div className="border-border bg-background min-h-96 overflow-hidden rounded-lg border [&>header]:!static [&>header]:!inset-auto [&>header]:!z-auto">
         <Header
             overlay={overlay}
             showThemeToggle={showThemeToggle}

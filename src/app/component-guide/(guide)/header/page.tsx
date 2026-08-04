@@ -1,5 +1,5 @@
 import type {Metadata} from 'next'
-import type {HeaderNavigationByUserType} from '@/components/composite/header'
+import {DEFAULT_HEADER_NAVIGATION} from '@/components/composite/header'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
@@ -55,22 +55,8 @@ const SUB_PAGE_LAYOUT_CODE = `// 일반 서비스 페이지는 Header를 직접 
 
 const DEMO_USER = {name: '홍길동', sessionRemaining: '30:00'}
 
-const DEMO_NAVIGATION = {
-    corp: [
-        {label: '자가진단', href: '#'},
-        {label: '전문가 평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '탄소중립', href: '#'},
-    ],
-    org: [
-        {label: '플랫폼 소개', href: '#'},
-        {label: '개별평가', href: '#'},
-        {label: '일괄평가', href: '#'},
-        {label: 'K-BIGx 보고서', href: '#'},
-        {label: '특허평가', href: '#'},
-        {label: '탄소중립', href: '#', external: true},
-    ],
-} satisfies HeaderNavigationByUserType
+// 실제 Header와 동일한 최신 메뉴·하위 메뉴를 미리보기에 사용한다.
+const DEMO_NAVIGATION = DEFAULT_HEADER_NAVIGATION
 
 const PROPS = [
     [
