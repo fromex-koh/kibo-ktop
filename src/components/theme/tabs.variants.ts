@@ -8,7 +8,9 @@ const tabsListVariants = cva(
         variants: {
             variant: {
                 default: 'bg-muted w-fit rounded-lg p-1 group-data-horizontal/tabs:h-8 group-data-vertical/tabs:h-fit',
-                line: 'h-tab-line-h border-subtle-2 w-full justify-start gap-4 rounded-none border-b bg-transparent p-0',
+                // 타이포는 pill 과 같은 이유로 트리거가 아니라 목록에 둔다(바로 아래 pill 주석 참고).
+                // 시안 tap_1depth 는 20px/30 이므로 typo-title-l-regular(=title-l · line-height 1.5)를 쓴다.
+                line: 'typo-title-l-regular h-tab-line-h border-subtle-2 w-full justify-start gap-4 rounded-none border-b bg-transparent p-0',
                 // PROJECT-STYLE: pill — line 탭 아래에 오는 2뎁스 탭이다(Figma "[공통] 개인정보 처리방침"
                 // tap_2depth). 트랙 없이 알약 버튼만 12px 간격으로 늘어서고, 항목이 많으면 다음 줄로 넘어간다.
                 // 타이포 토큰을 트리거가 아니라 목록에 두는 이유 — typo-* 는 생성기가 찍는 plain 클래스라
@@ -31,8 +33,9 @@ const tabsTriggerClassName =
 // 비활성 = 20px Regular · foreground-subtle(gray.500), 인디케이터(4px)·활성 텍스트 = label-foreground(gray.700),
 // 트랙 = border-subtle-2(gray.200), 높이 = tab-line-h(46px, Figma 전용 size 토큰).
 // shadcn 원본의 24px·foreground(gray.900)·normal·h-control-h-lg(52)·2px 인디케이터와 다른 지점이다.
+// 글자 크기·기본 굵기·행간은 위 line 목록의 typo-title-l-regular 를 상속받고, 여기서는 굵기만 상태로 덮는다.
 const tabsTriggerLineClassName =
-    'group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground after:bg-label-foreground after:absolute after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:-bottom-1 group-data-horizontal/tabs:after:h-1 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-1 group-data-[variant=line]/tabs-list:data-active:after:opacity-100 group-data-[variant=line]/tabs-list:h-tab-line-h group-data-[variant=line]/tabs-list:text-foreground-subtle group-data-[variant=line]/tabs-list:data-active:text-label-foreground group-data-[variant=line]/tabs-list:data-active:font-bold group-data-[variant=line]/tabs-list:flex-none group-data-[variant=line]/tabs-list:justify-start group-data-[variant=line]/tabs-list:gap-0 group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:border-0 group-data-[variant=line]/tabs-list:px-6 group-data-[variant=line]/tabs-list:py-0 group-data-[variant=line]/tabs-list:text-xl group-data-[variant=line]/tabs-list:font-normal group-data-[variant=line]/tabs-list:after:bottom-0'
+    'group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent data-active:bg-background data-active:text-foreground after:bg-label-foreground after:absolute after:opacity-0 after:transition-opacity group-data-horizontal/tabs:after:inset-x-0 group-data-horizontal/tabs:after:-bottom-1 group-data-horizontal/tabs:after:h-1 group-data-vertical/tabs:after:inset-y-0 group-data-vertical/tabs:after:-right-1 group-data-vertical/tabs:after:w-1 group-data-[variant=line]/tabs-list:data-active:after:opacity-100 group-data-[variant=line]/tabs-list:h-tab-line-h group-data-[variant=line]/tabs-list:text-foreground-subtle group-data-[variant=line]/tabs-list:data-active:text-label-foreground group-data-[variant=line]/tabs-list:data-active:font-bold group-data-[variant=line]/tabs-list:flex-none group-data-[variant=line]/tabs-list:justify-start group-data-[variant=line]/tabs-list:gap-0 group-data-[variant=line]/tabs-list:rounded-none group-data-[variant=line]/tabs-list:border-0 group-data-[variant=line]/tabs-list:px-6 group-data-[variant=line]/tabs-list:py-0 group-data-[variant=line]/tabs-list:after:bottom-0'
 // PROJECT-STYLE: pill 탭은 Figma tap_2depth 사양이다 — 높이 48(control-h-md)·라운드 8(rounded-sm)·
 // 좌우 24(px-6). 글자 크기·기본 굵기는 위 pill 목록의 typo-body-xl-medium 을 상속받는다.
 // 선택 = navy 면(tab-pill-active) + 흰 굵은 글자, 비선택 = 페이지 배경(bg-background) 면 + foreground-subtle.
