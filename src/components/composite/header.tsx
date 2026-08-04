@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import {useEffect, useRef, useState, type ComponentProps, type KeyboardEvent} from 'react'
+import {useEffect, useLayoutEffect, useRef, useState, type ComponentProps, type KeyboardEvent} from 'react'
 import {ExternalLink, Menu, Moon, Sun, TimerReset, X} from 'lucide-react'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
@@ -331,8 +331,25 @@ const HeaderMenu = ({
     const triggerRef = useRef<HTMLButtonElement>(null)
     const menuContentRef = useRef<HTMLDivElement>(null)
     const [isClosing, setIsClosing] = useState(false)
+    const [headerHeight, setHeaderHeight] = useState(0)
     // 닫힘 애니메이션이 끝날 때까지 메뉴 오버레이를 유지한다.
     const [isSheetVisible, setIsSheetVisible] = useState(false)
+
+    // 모바일에서 상단 유틸리티가 여러 줄로 늘어날 수 있으므로 실제 헤더 높이를 메뉴 시작 위치에 반영한다.
+    useLayoutEffect(() => {
+        if (!open) return
+
+        const header = triggerRef.current?.closest('header')
+        if (!header) return
+
+        const updateHeaderHeight = () => setHeaderHeight(Math.ceil(header.getBoundingClientRect().height))
+        const observer = new ResizeObserver(updateHeaderHeight)
+
+        updateHeaderHeight()
+        observer.observe(header)
+
+        return () => observer.disconnect()
+    }, [open])
 
     useEffect(() => {
         if (open) return
@@ -436,7 +453,11 @@ const HeaderMenu = ({
                 </SheetHeader>
 
                 {/* 고정 헤더 영역만큼 여백을 두어 메뉴 콘텐츠가 헤더와 겹치지 않게 한다. */}
-                <div aria-hidden="true" className="h-28 shrink-0 xl:h-30" />
+                <div
+                    aria-hidden="true"
+                    className="h-28 shrink-0 xl:h-30"
+                    style={headerHeight > 0 ? {height: `${headerHeight}px`} : undefined}
+                />
 
                 {/* 메뉴 본문만 스크롤한다. */}
                 <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
@@ -566,7 +587,7 @@ const HeaderContent = ({
             <div
                 className={cn(
                     'flex justify-end overflow-hidden transition-[max-height,opacity] duration-200 ease-in-out motion-reduce:transition-none',
-                    menuOpen ? 'max-h-14 opacity-100' : 'max-h-0 opacity-0 lg:max-h-14 lg:opacity-100',
+                    menuOpen ? 'max-h-dvh opacity-100' : 'max-h-0 opacity-0 lg:max-h-14 lg:opacity-100',
                 )}
             >
                 <div className="flex flex-wrap items-center justify-end gap-4 py-2 xl:gap-10">
