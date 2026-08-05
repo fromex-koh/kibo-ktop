@@ -31,8 +31,8 @@ import {
     <CompanyNameField label="기업명" placeholder="내용을 입력하세요" />
     {/* 짧은 Select 두 개는 SearchFilterRow 로 2열 배치, defaultValue="" 로 placeholder 노출 */}
     <SearchFilterRow>
-      <SearchTypeField label="조회유형" defaultValue="" placeholder="선택해주세요" />
-      <PaymentTypeField label="유/무료" defaultValue="" placeholder="선택해주세요" />
+      <SearchTypeField label="조회유형" defaultValue="" placeholder="선택해 주세요" />
+      <PaymentTypeField label="유/무료" defaultValue="" placeholder="선택해 주세요" />
     </SearchFilterRow>
   </SearchFilterFields>
 
@@ -56,14 +56,14 @@ const USAGE_MINIMAL = `{/* 화면에 필요한 필드만 골라 넣는다. 순�
 
 // 케이스 B — 입력 + 한 줄 2열 Select(placeholder).
 const USAGE_TWO_COLUMN = `{/* SearchFilterRow 로 두 필드를 md 이상에서 나란히 두고,
-    defaultValue="" 로 "선택해주세요" placeholder 를 노출한다. */}
+    defaultValue="" 로 "선택해 주세요" placeholder 를 노출한다. */}
 <SearchFilterForm onSubmit={handleSubmit}>
   <SearchFilterFields>
     <DateRangeField />
     <CompanyNameField label="기업명" placeholder="내용을 입력하세요" />
     <SearchFilterRow>
-      <SearchTypeField label="조회유형" defaultValue="" placeholder="선택해주세요" />
-      <PaymentTypeField label="유/무료" defaultValue="" placeholder="선택해주세요" />
+      <SearchTypeField label="조회유형" defaultValue="" placeholder="선택해 주세요" />
+      <PaymentTypeField label="유/무료" defaultValue="" placeholder="선택해 주세요" />
     </SearchFilterRow>
   </SearchFilterFields>
   <SearchFilterActions>
@@ -157,7 +157,7 @@ const PROPS_ITEMS = [
         'SearchTypeField / PaymentTypeField',
         'name · label · defaultValue · placeholder',
         '제출 키·라벨·기본 선택값·미선택 placeholder. defaultValue=""면 placeholder 노출.',
-        "'all' · '선택해주세요'",
+        "'all' · '선택해 주세요'",
         'string',
     ],
     ['SearchFilterRow', 'children · className', '필드 2개를 md 이상 2열로 나란히 배치.', '-', "ComponentProps<'div'>"],
@@ -190,7 +190,7 @@ const SearchFilterFormGuidePage = () => (
                         조회기간(빠른 기간 토글 + 기간 선택)·기업명 입력과, 짧은 Select 두 개(조회유형·유/무료)를{' '}
                         <code className="font-mono">SearchFilterRow</code>로 md 이상 2열 배치한 대표 예시입니다.
                         Select은 <code className="font-mono">defaultValue=&quot;&quot;</code>로{' '}
-                        <strong className="text-foreground">선택해주세요</strong> placeholder를 노출합니다.{' '}
+                        <strong className="text-foreground">선택해 주세요</strong> placeholder를 노출합니다.{' '}
                         <strong className="text-foreground">조회</strong>를 누르면 각 필드 값이 name에 맞춰 FormData로
                         제출되고, <strong className="text-foreground">초기화</strong>는 모든 필드를 기본값으로
                         되돌립니다. md 미만에서는 라벨이 컨트롤 위로 쌓입니다.
@@ -255,7 +255,7 @@ const SearchFilterFormGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         기업명 입력과 함께 짧은 Select 두 개를 <code className="font-mono">SearchFilterRow</code>로 md
                         이상 나란히 둡니다. <code className="font-mono">defaultValue=&quot;&quot;</code>로 기본값을
-                        비우면 <strong className="text-foreground">선택해주세요</strong> placeholder가
+                        비우면 <strong className="text-foreground">선택해 주세요</strong> placeholder가
                         노출됩니다(기본값을 주면 해당 옵션이 선택된 상태로 시작).
                     </p>
                     <TwoColumnFilterCaseDemo />

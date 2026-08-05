@@ -17,7 +17,7 @@ export const metadata: Metadata = {title: '섹션 헤더 (SectionHeader)'}
 const USAGE_CODE = `<SectionHeader>
   <SectionHeaderTitle>부분발송 이메일등록</SectionHeaderTitle>
   <SectionHeaderDescription>
-    안내문을 추가로 받으실 이메일 주소를 입력해주세요.
+    안내문을 추가로 받으실 이메일 주소를 입력해 주세요.
   </SectionHeaderDescription>
 </SectionHeader>`
 
@@ -120,7 +120,7 @@ const SectionHeaderGuidePage = () => (
                     <SectionHeader>
                         <SectionHeaderTitle>부분발송 이메일등록</SectionHeaderTitle>
                         <SectionHeaderDescription>
-                            안내문을 추가로 받으실 이메일 주소를 입력해주세요.
+                            안내문을 추가로 받으실 이메일 주소를 입력해 주세요.
                         </SectionHeaderDescription>
                     </SectionHeader>
                 </div>

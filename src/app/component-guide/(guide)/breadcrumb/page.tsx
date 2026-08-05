@@ -56,7 +56,10 @@ const COMPOSITION = [
     ['Breadcrumb', 'nav[aria-label="breadcrumb"]로 렌더링되는 위치 내비게이션입니다.'],
     ['BreadcrumbList', '경로 항목과 구분자를 순서대로 담는 ol 요소입니다.'],
     ['BreadcrumbItem', '링크 또는 현재 위치 하나를 감싸는 li 요소입니다.'],
-    ['BreadcrumbLink', '이동 가능한 상위 경로입니다. href 또는 asChild를 사용할 수 있습니다.'],
+    [
+        'BreadcrumbLink',
+        '이동 가능한 상위 경로입니다. 단 href="/"은 전역 홈 링크와 중복되지 않도록 텍스트로 렌더링합니다.',
+    ],
     ['BreadcrumbPage', '이동하지 않는 마지막 항목이며 aria-current="page"가 적용됩니다.'],
     ['BreadcrumbDotSeparator', '프로젝트 표준 4px 점 구분자이며 접근성 트리에서는 제외됩니다.'],
 ] as const
@@ -87,7 +90,7 @@ const PROPS_ITEMS = [
     [
         'BreadcrumbLink',
         'anchor props',
-        'href, target과 className 등 링크 속성을 전달합니다.',
+        'href, target과 className 등 링크 속성을 전달합니다. href="/"은 중복 링크 방지를 위해 링크를 만들지 않습니다.',
         'undefined',
         'AnchorHTMLAttributes',
     ],
@@ -228,6 +231,7 @@ const BreadcrumbGuidePage = () => (
                 <ul className="typo-body-l-regular text-muted-foreground list-disc space-y-2 pl-6">
                     <li>Breadcrumb는 이름이 있는 nav, BreadcrumbList는 순서가 있는 ol로 렌더링됩니다.</li>
                     <li>이동할 수 있는 상위 경로만 BreadcrumbLink로 제공하고 마지막 항목은 링크로 만들지 않습니다.</li>
+                    <li>루트 경로(/) 홈은 Header·Sidebar의 홈 링크와 중복되지 않도록 텍스트로 표시합니다.</li>
                     <li>
                         현재 위치는 굵은 글자뿐 아니라 <code className="font-mono">aria-current=&quot;page&quot;</code>
                         로도 전달됩니다.

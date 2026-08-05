@@ -19,16 +19,18 @@ export const dialogOverlayClassName =
 // 높이보다 작게 잡히고(500 화면에서 380), 모바일 주소창 개폐에도 흔들린다.
 export const dialogContentClassName =
     'bg-popover text-popover-foreground data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 fixed inset-x-4 top-1/2 z-modal grid max-h-modal-max-h w-auto -translate-y-1/2 grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden rounded-2xl p-0 text-base duration-100 outline-none sm:left-1/2 sm:w-full sm:max-w-modal sm:-translate-x-1/2'
-// 머리 구획 — 제목이 사는 첫 행이자 자기 여백(위 40 · 좌우 40 · 아래 24)의 주인.
+// 머리 구획 — 제목이 사는 첫 행이자 자기 여백(모바일 위·좌우 24, sm 이상 40 · 아래 20)의 주인.
 // 닫기(X)는 셸이 Content 직속으로 렌더하므로 이 상자 안에 들어오지 못한다. 같은 행·같은 칸에 겹쳐
 // 두고 오른쪽 끝으로 밀어 배치한다(dialogCloseClassName).
-export const dialogHeaderClassName = 'col-start-1 row-start-1 flex flex-col gap-6 px-10 pt-10 pb-5'
+export const dialogHeaderClassName = 'col-start-1 row-start-1 flex flex-col gap-6 px-6 pt-6 pb-5 sm:px-10 sm:pt-10'
 // CTA 구획 — 버튼이 본문 폭을 나눠 채운다(둘이면 246+246·간격 16, 하나면 508 전체).
-// 자기 여백(위 24 · 좌우 40 · 아래 24)을 갖는다. 위 24 가 본문과의 간격이고, 스크롤 영역 바깥이라
+// 자기 여백(위 20 · 모바일 좌우 24, sm 이상 40 · 아래 24)을 갖는다. 위 20 가 본문과의 간격이고, 스크롤 영역 바깥이라
 // 본문이 이 여백 아래로 들어가며 잘린다. 모바일에서는 세로로 쌓고 주 동작을 위에 둔다.
 // 행은 지정하지 않는다 — 제목(row 1)·본문(row 2)이 자리를 잡고 나면 자동 배치가 마지막 행에 놓는다.
 // row-start-3 을 박으면 머리가 없는 모달(grid-rows-none)에서도 3행이 생겨 빈 행이 남는다.
-export const dialogFooterClassName = 'flex flex-col-reverse gap-4 px-10 pt-5 pb-6 sm:flex-row sm:[&>button]:flex-1'
+// 폭을 나누는 대상은 button 이 아니라 '직속 자식 전체'다 — CTA 가 이동이면 Button asChild 로 <a> 가
+// 렌더되는데(예: "나가기"), button 만 노리면 그 링크만 내용 폭으로 남아 두 버튼 폭이 어긋난다.
+export const dialogFooterClassName = 'flex flex-col-reverse gap-4 px-6 pt-5 pb-6 sm:flex-row sm:px-10 sm:*:flex-1'
 
 // 본문 구획 — 머리와 CTA 사이의 가운데 행. 화면이 낮아 카드가 max-h 에 걸리면 이 상자만 줄어들고
 // 스크롤이 여기 생긴다(머리·CTA 는 고정). min-h-0 이 없으면 grid 행이 줄어도 상자가 따라 줄지 않는다.
@@ -38,7 +40,7 @@ export const dialogFooterClassName = 'flex flex-col-reverse gap-4 px-10 pt-5 pb-
 // 포커스가 가면 링(outline 2 + offset 2 = 4)이 잘린다. 그만큼 머리의 pb 와 CTA 의 pt 에서 덜어내
 // 구획 사이 24 는 그대로 둔다(머리 pb-5 + 본문 py-1 = 24). scroll-py-1 은 브라우저가 탭 이동으로
 // 요소를 보이게 스크롤할 때 그 4 를 남기도록 알려준다 — 없으면 요소가 가장자리에 딱 붙어 링이 잘린다.
-export const dialogBodyClassName = 'row-start-2 flex min-h-0 flex-col overflow-y-auto scroll-py-1 px-10 py-1'
+export const dialogBodyClassName = 'row-start-2 flex min-h-0 flex-col overflow-y-auto scroll-py-1 px-6 py-1 sm:px-10'
 // PROJECT-STYLE: shadcn 원본은 text-lg leading-none font-semibold 이지만,
 // 시안 모달 제목은 24px Bold·행간 36 이므로
 // typo-h4-bold 를 사용한다.
@@ -50,7 +52,7 @@ export const dialogTitleClassName = 'typo-h4-bold text-foreground pe-14'
 // typo-title-l-bold 와 text-foreground 를 사용한다.
 export const dialogDescriptionClassName = 'typo-title-l-bold text-foreground *:[a]:underline *:[a]:underline-offset-3'
 
-// 닫기(X) — 시안은 32px 아이콘만 두고 배경·테두리·호버 면이 없다(모달 우상단, 아이콘 오른쪽 여백 40).
+// 닫기(X) — 시안은 32px 아이콘만 두고 배경·테두리·호버 면이 없다(모바일 오른쪽 여백 24, sm 이상 40).
 // 배경 없이 상자를 아이콘 크기로 두는 규칙은 Button 의 plain variant 가 공통으로 관리한다.
 //
 // 시안의 '타이틀' 프레임처럼 제목과 같은 행에 놓는다 — Content 가 grid 이고 헤더가 display:contents 라
@@ -61,5 +63,5 @@ export const dialogDescriptionClassName = 'typo-title-l-bold text-foreground *:[
 // 그대로 남는다 — self-center 로 두면 행 전체(두 줄)의 한가운데로 내려간다.
 export const dialogCloseClassName = cn(
     buttonVariants({variant: 'plain', size: 'icon-lg'}),
-    'col-start-1 row-start-1 mt-10 me-10 h-9 self-start justify-self-end',
+    'col-start-1 row-start-1 mt-6 me-6 h-9 self-start justify-self-end sm:mt-10 sm:me-10',
 )

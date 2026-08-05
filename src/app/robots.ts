@@ -1,10 +1,10 @@
 import type {MetadataRoute} from 'next'
+import {SITE_ALLOW_INDEXING} from '@/constants/publishing-guide'
 
-// 내부용 — 모든 크롤러 차단. sitemap 도 노출하지 않는다. [noindex]
 const robots = (): MetadataRoute.Robots => ({
     rules: {
         userAgent: '*',
-        disallow: '/',
+        ...(SITE_ALLOW_INDEXING ? {allow: '/'} : {disallow: '/'}),
     },
 })
 

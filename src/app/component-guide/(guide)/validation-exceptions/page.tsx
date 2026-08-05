@@ -32,6 +32,15 @@ const WAVE_EXCEPTIONS = [
         evidence:
             '폼 연동용 보조 input은 aria-hidden="true"·tabindex="-1"이며 실제 버튼은 연결된 FieldLabel로 접근 가능한 이름을 제공',
     },
+    {
+        component: 'Select',
+        route: '/corp/notice/inquiry-create',
+        owner: 'shadcn/ui → Radix UI Select',
+        role: 'select[aria-hidden="true"]',
+        message: 'Missing form label',
+        evidence:
+            '폼 연동용 숨은 native select는 aria-hidden="true"·tabindex="-1"이며, 화면에 표시되는 SelectTrigger는 연결된 FieldLabel로 접근 가능한 이름을 제공',
+    },
 ] as const
 
 const VALIDATION_RESULTS = [
@@ -314,6 +323,29 @@ const ValidationExceptionsPage = () => (
                         초과합니다. 화면 작성자가 별도 input을 추가한 결과는 아닙니다.
                     </p>
                 </section>
+
+                <section aria-labelledby="validation-radix-id" className="flex flex-col gap-2">
+                    <SectionHeader>
+                        <SectionHeaderTitle id="validation-radix-id">
+                            4. id 값 공백 오류 — NavigationMenu 값과 Radix 생성 ID
+                        </SectionHeaderTitle>
+                        <SectionHeaderDescription>화면 라벨을 메뉴 value로 사용한 결과</SectionHeaderDescription>
+                    </SectionHeader>
+                    <CodeBlock
+                        code={
+                            'Bad value “...trigger-플랫폼 소개” for attribute id on element button: An ID must not contain whitespace.'
+                        }
+                        language="text"
+                    />
+                    <p>
+                        <code className="font-mono">header.tsx</code>에서{' '}
+                        <code className="font-mono">NavigationMenuItem</code>의 <code className="font-mono">value</code>
+                        에 “플랫폼 소개”, “K-BIGx 보고서” 같은 화면 라벨을 전달합니다. Radix NavigationMenu가 이 값을
+                        trigger <code className="font-mono">id</code>에 포함하면서 공백이 들어간 ID가 생성됩니다. 화면
+                        라벨과 메뉴 식별자 값을 분리해야 하며, Radix가 생성한 최종 DOM에서 오류가 나타나지만 원인은
+                        프로젝트의 value 지정입니다.
+                    </p>
+                </section>
             </div>
         </BaseCard>
 
@@ -359,9 +391,9 @@ const ValidationExceptionsPage = () => (
         <BaseCard title="WAVE 자동 검사 예외" subtitle="숨은 폼 연동 요소에서 발생하는 Missing form label">
             <div className="flex flex-col gap-5">
                 <p className="typo-body-m-regular text-foreground-subtle">
-                    아래 항목은 Radix가 폼 데이터와 이벤트 전달을 위해 자동 생성한 보조 input에서 탐지됩니다. 보조
-                    input은 접근성 트리와 키보드 탐색에서 제외되고, 실제 조작 요소는 FieldLabel을 통해 접근 가능한
-                    이름을 제공하므로 자동 검사 오탐으로 분류합니다.
+                    아래 항목은 Radix가 폼 데이터와 이벤트 전달을 위해 자동 생성한 보조 폼 요소에서 탐지됩니다. 보조
+                    요소는 접근성 트리와 키보드 탐색에서 제외되고, 화면에 표시되는 조작 요소는 FieldLabel을 통해 접근
+                    가능한 이름을 제공하므로 자동 검사 오탐으로 분류합니다.
                 </p>
                 <Table className="min-w-240">
                     <TableCaption className="sr-only">WAVE Missing form label 자동 검사 예외 목록</TableCaption>
@@ -371,7 +403,7 @@ const ValidationExceptionsPage = () => (
                             <TableHead scope="col">대표 경로</TableHead>
                             <TableHead scope="col">생성 주체</TableHead>
                             <TableHead scope="col">WAVE 메시지</TableHead>
-                            <TableHead scope="col">실제 조작 요소</TableHead>
+                            <TableHead scope="col">검사 대상 요소</TableHead>
                             <TableHead scope="col">판정 근거</TableHead>
                         </TableRow>
                     </TableHeader>
@@ -427,7 +459,7 @@ const ValidationExceptionsPage = () => (
 
         <BaseCard
             title="렌더된 DOM 직렬화 검사에서만 나타나는 메시지 판정"
-            subtitle="charset 위치 · CSS Parse Error — 2026-07-31 실측"
+            subtitle="charset 위치 · CSS Parse Error · style type 경고 — 2026-07-31 실측"
         >
             <div className="flex flex-col gap-5">
                 <p>
@@ -481,10 +513,30 @@ const ValidationExceptionsPage = () => (
                     </p>
                 </section>
 
+                <section aria-labelledby="validation-dom-style-type" className="flex flex-col gap-2">
+                    <SectionHeader>
+                        <SectionHeaderTitle id="validation-dom-style-type">
+                            3. style type 경고 — sonner 동적 스타일
+                        </SectionHeaderTitle>
+                        <SectionHeaderDescription>HTML5 기본값과 중복되는 속성</SectionHeaderDescription>
+                    </SectionHeader>
+                    <CodeBlock
+                        code="Warning: The type attribute for the style element is not needed and should be omitted."
+                        language="text"
+                    />
+                    <p>
+                        sonner가 브라우저에서 <code className="font-mono">style</code> 요소를 동적으로 만들면서{' '}
+                        <code className="font-mono">type=&quot;text/css&quot;</code>를 설정합니다. HTML5에서{' '}
+                        <code className="font-mono">style</code>의 기본 타입은 CSS이므로 해당 속성은 불필요하다는
+                        warning이 발생합니다. 프로젝트 JSX가 아니라 sonner 생성 DOM에서 발생하며, 브라우저 동작이나
+                        접근성에는 영향을 주지 않습니다.
+                    </p>
+                </section>
+
                 <div className="flex items-start gap-2">
                     <CircleCheck aria-hidden="true" className="text-success size-icon-md mt-0.5 shrink-0" />
                     <p>
-                        판정 — 두 메시지 모두 서버 전송 HTML 기준 검사에서는 발생하지 않음을 실측으로 확인했습니다(문서
+                        판정 — 위 메시지들은 서버 전송 HTML 기준 검사에서는 발생하지 않음을 실측으로 확인했습니다(문서
                         상단 검증 기준과 동일 방식). 서드파티 원본 보존 원칙에 따라 라이브러리(sonner)를 수정하지
                         않으며, DOM 직렬화본 검사 결과가 제출된 경우 본 항목으로 소명합니다.
                     </p>

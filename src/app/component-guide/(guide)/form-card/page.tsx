@@ -21,7 +21,7 @@ const USAGE_CODE = `<FormCard
       <Label htmlFor="corp-type" className="text-foreground gap-1 font-bold">기업형태 <span aria-hidden="true" className="text-error-500">*</span><span className="sr-only"> (필수)</span></Label>
       <Select required>
         <SelectTrigger id="corp-type" className="w-full">
-          <SelectValue placeholder="선택해주세요" />
+          <SelectValue placeholder="선택해 주세요" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="corp">주식회사</SelectItem>
@@ -89,7 +89,7 @@ const FormCardGuidePage = () => (
                         </Label>
                         <Select required>
                             <SelectTrigger id="corp-type" className="w-full">
-                                <SelectValue placeholder="선택해주세요" />
+                                <SelectValue placeholder="선택해 주세요" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="corp">주식회사</SelectItem>

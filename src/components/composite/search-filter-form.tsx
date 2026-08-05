@@ -153,7 +153,7 @@ const CompanyNameField = ({
 
 type SelectOption = {value: string; label: string}
 
-// 라벨·옵션·placeholder 를 받는 공통 Select 필드. 기본값을 비우면 placeholder(선택해주세요)가 보인다.
+// 라벨·옵션·placeholder 를 받는 공통 Select 필드. 기본값을 비우면 placeholder(선택해 주세요)가 보인다.
 type SelectFilterFieldProps = {
     label: string
     name: string
@@ -203,7 +203,7 @@ const SearchTypeField = ({
     name = 'searchType',
     label = '검색유형',
     defaultValue = 'all',
-    placeholder = '선택해주세요',
+    placeholder = '선택해 주세요',
 }: SelectFieldProps) => (
     <SelectFilterField
         label={label}
@@ -225,7 +225,7 @@ const PaymentTypeField = ({
     name = 'paymentType',
     label = '유/무료',
     defaultValue = 'all',
-    placeholder = '선택해주세요',
+    placeholder = '선택해 주세요',
 }: SelectFieldProps) => (
     <SelectFilterField
         label={label}

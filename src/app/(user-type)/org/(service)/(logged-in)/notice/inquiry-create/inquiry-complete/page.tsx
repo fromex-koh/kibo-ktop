@@ -1,0 +1,44 @@
+import type {Metadata} from 'next'
+import {
+    Breadcrumb,
+    BreadcrumbItem,
+    BreadcrumbLink,
+    BreadcrumbList,
+    BreadcrumbPage,
+} from '@/components/composite/breadcrumb'
+import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
+import {PageTitleBar} from '@/components/composite/page-title-bar'
+import {InquiryComplete} from '@/components/custom/inquiry-complete'
+
+export const metadata: Metadata = {title: '문의 완료'}
+
+// SkipNav의 #main 도착 대상. 등록 처리 후 이 화면으로 이동한다(전송 연결은 InquiryForm 주석 참고).
+const OrgNoticeInquiryCompletePage = () => (
+    <main id="main" tabIndex={-1} className="bg-background flex-1">
+        <div className="content-layout flex flex-col gap-10 pt-10 pb-25">
+            <PageTitleBar
+                title="문의하기"
+                breadcrumb={
+                    <Breadcrumb>
+                        <BreadcrumbList>
+                            <BreadcrumbItem>
+                                <BreadcrumbLink href="/">홈</BreadcrumbLink>
+                            </BreadcrumbItem>
+                            <BreadcrumbDotSeparator />
+                            <BreadcrumbItem>
+                                <span>알림마당</span>
+                            </BreadcrumbItem>
+                            <BreadcrumbDotSeparator />
+                            <BreadcrumbItem>
+                                <BreadcrumbPage>문의하기</BreadcrumbPage>
+                            </BreadcrumbItem>
+                        </BreadcrumbList>
+                    </Breadcrumb>
+                }
+            />
+            <InquiryComplete myPageHref="/org/mypage/inquiry-history" />
+        </div>
+    </main>
+)
+
+export default OrgNoticeInquiryCompletePage

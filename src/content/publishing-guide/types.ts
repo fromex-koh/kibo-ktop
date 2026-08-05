@@ -133,8 +133,10 @@ export type StructureGroup = {
 }
 
 // 화면을 찍어내는 틀(내부 콘텐츠만 바뀌는 공통 레이아웃) — 독립 화면이 아니라 screenId 가 없다.
+// version은 릴리스 시 path 기준 Git 이력으로 생성된 메타데이터에서 가져온다.
 export type CommonLayout = {
     label: string
+    href?: string
     status: Status
     version: string
 }

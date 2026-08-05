@@ -1,5 +1,6 @@
 import type {NextConfig} from 'next'
 import releaseMetadata from './src/content/publishing-guide/asset-versions.generated.json'
+import {SITE_ALLOW_INDEXING} from './src/constants/site'
 
 // GitHub Actions가 릴리스 커밋에 확정해 둔 버전과 현재 빌드 시각을 화면에 주입한다.
 // Vercel의 얕은 git clone에서도 태그 조회 결과가 달라지지 않도록 빌드 중에는 git을 사용하지 않는다.
@@ -25,13 +26,16 @@ const nextConfig: NextConfig = {
         NEXT_PUBLIC_BUILD_VERSION: releaseMetadata.version,
         NEXT_PUBLIC_BUILD_TIME: resolveBuildTime(),
     },
-    // 내부용 — 모든 응답에 검색 색인 차단 헤더 부착 (HTML 외 리소스까지 커버). [noindex]
-    headers: async () => [
-        {
-            source: '/:path*',
-            headers: [{key: 'X-Robots-Tag', value: 'noindex, nofollow'}],
-        },
-    ],
+    // 원본 프로젝트는 모든 응답에 검색 색인 차단 헤더를 부착한다. handoff에서는 site.ts 설정으로 해제한다.
+    headers: async () =>
+        SITE_ALLOW_INDEXING
+            ? []
+            : [
+                  {
+                      source: '/:path*',
+                      headers: [{key: 'X-Robots-Tag', value: 'noindex, nofollow'}],
+                  },
+              ],
 }
 
 export default nextConfig

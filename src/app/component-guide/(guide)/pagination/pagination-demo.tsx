@@ -3,7 +3,7 @@
 import {useState} from 'react'
 import {Pagination} from '@/components/composite/pagination'
 
-// 기본 데모 — 9페이지가 모두 보이는 시안 구성. siblingCount=2 면 9페이지까지는 생략 없이 노출된다.
+// 기본 데모 — 9페이지가 모두 보이는 시안 구성. PC 페이지 영역은 번호·말줄임표 최대 10개까지 노출된다.
 export const PaginationBasicDemo = () => {
     const [page, setPage] = useState(1)
     return (

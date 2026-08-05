@@ -111,7 +111,10 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {
                 title: '페이지 구조',
                 items: [
+                    {label: 'SubPageLayout', href: '/component-guide/sub-page-layout'},
+                    {label: 'MainPageLayout', href: '/component-guide/main-page-layout'},
                     {label: 'Header', href: '/component-guide/header'},
+                    {label: 'FullPageServiceStatus', href: '/component-guide/full-page-service-status'},
                     {label: 'ViewportFitLayout', href: '/component-guide/viewport-fit-layout'},
                     {label: 'StickySidebar', href: '/component-guide/sticky-sidebar'},
                     {label: 'Footer', href: '/component-guide/footer'},
@@ -148,6 +151,10 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'FormTabs', href: '/component-guide/form-tabs'},
                     {label: 'Tabs', href: '/component-guide/tabs'},
                 ],
+            },
+            {
+                title: '펼침',
+                items: [{label: 'Accordion', href: '/component-guide/accordion'}],
             },
             {
                 title: '데이터 표시',
@@ -205,11 +212,17 @@ export type IconName = keyof typeof ICON_REGISTRY
 export const isIconName = (value: string): value is IconName =>
     Object.keys(ICON_REGISTRY).some((name) => name === value)
 
-export const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://example.com'
-export const REPOSITORY_URL = process.env.NEXT_PUBLIC_REPOSITORY_URL ?? 'https://github.com/fromex-koh/kibo-ktop'
-export const SITE_NAME = '[채널계] 기술평가 통합 플랫폼 퍼블리싱 가이드'
-export const SITE_DESCRIPTION =
-    '기술평가 통합 플랫폼(채널계)의 프론트엔드 퍼블리싱 가이드. 웹 접근성(KWCAG 2.1)과 표준 코드 컨벤션을 준수한 마크업·컴포넌트·화면 페이지 기준을 제공합니다.'
+// 기존 퍼블리싱 가이드 import 호환성을 위해 사이트 설정을 재-export한다.
+export {
+    REPOSITORY_URL,
+    SITE_ALLOW_INDEXING,
+    SITE_DESCRIPTION,
+    SITE_NAME,
+    SITE_OG_IMAGE,
+    SITE_OG_IMAGE_ALT,
+    SITE_SHORT_NAME,
+    SITE_URL,
+} from './site'
 
 // /component-guide/main-page 예시에서 tokens.css 의 .mainpage 스킨을 강제 적용한다.
 // 가이드 페이지를 이식하지 않으면 theme-provider.tsx 의 관련 분기와 함께 삭제한다.

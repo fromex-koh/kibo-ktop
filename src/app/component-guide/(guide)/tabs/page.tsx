@@ -3,7 +3,7 @@ import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
-import {Tabs, TabsTrigger, TabsContent} from '@/components/ui/tabs'
+import {Tabs, TabsList, TabsTrigger, TabsContent} from '@/components/ui/tabs'
 import {TabsScrollArea} from '@/components/composite/tabs-scroll-area'
 
 export const metadata: Metadata = {title: '탭 (Tabs)'}
@@ -58,6 +58,24 @@ const SCROLL_AREA_CODE = `<Tabs defaultValue="tab1">
   {/* ... */}
 </Tabs>`
 
+const PILL_USAGE_CODE = `<Tabs defaultValue="full">
+  <TabsList variant="line" aria-label="보기 방식">
+    <TabsTrigger value="full">개인정보 처리방침</TabsTrigger>
+    <TabsTrigger value="easy">알기 쉬운 개인정보 처리방침</TabsTrigger>
+  </TabsList>
+  <TabsContent value="full">
+    <Tabs defaultValue="collection">
+      <TabsList variant="pill" aria-label="처리방침 항목">
+        <TabsTrigger value="collection">개인정보 수집</TabsTrigger>
+        <TabsTrigger value="usage">개인정보 이용</TabsTrigger>
+      </TabsList>
+      <TabsContent value="collection">개인정보 수집 내용</TabsContent>
+      <TabsContent value="usage">개인정보 이용 내용</TabsContent>
+    </Tabs>
+  </TabsContent>
+  {/* ... */}
+</Tabs>`
+
 // 조합 API 설명 — [컴포넌트, 이름, 설명, 기본값, 타입]
 const PROPS_ITEMS = [
     ['Tabs', 'defaultValue', '비제어 방식의 초기 활성 탭 값입니다.', 'undefined', 'string'],
@@ -69,7 +87,13 @@ const PROPS_ITEMS = [
         'string · (value: string) => void',
     ],
     ['Tabs', 'orientation', '탭 이동 방향과 레이아웃 방향입니다.', "'horizontal'", "'horizontal' | 'vertical'"],
-    ['TabsList', 'variant', '세그먼트 기본형 또는 프로젝트 언더라인형입니다.', "'default'", "'default' | 'line'"],
+    [
+        'TabsList',
+        'variant',
+        '세그먼트 기본형·프로젝트 언더라인형·2뎁스 알약형입니다.',
+        "'default'",
+        "'default' | 'line' | 'pill'",
+    ],
     ['TabsList', 'aria-label', '탭 목록의 접근 가능한 이름입니다.', 'undefined', 'string'],
     ['TabsTrigger', 'value', '같은 값을 가진 TabsContent와 연결되는 고유 값입니다.', '-', 'string'],
     ['TabsTrigger', 'disabled', '개별 탭을 비활성화합니다.', 'false', 'boolean'],
@@ -155,6 +179,61 @@ const TabsGuidePage = () => (
                     </TabsContent>
                 </Tabs>
                 <CodeBlock code={TWO_TAB_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="tabs-pill" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="tabs-pill" className="typo-h4-bold">
+                        탭 안의 탭 — 알약 (pill)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        언더라인 탭 안에서 한 단계 더 나누는 2뎁스 탭입니다. 선택 항목은 navy 면에 흰 굵은 글자, 비선택
+                        항목은 페이지 배경 면으로 표시해 다크모드에서도 본문 표면과 구분합니다. 항목이 폭을 넘으면 다음
+                        줄로 넘어갑니다.
+                    </p>
+                </div>
+                <Tabs defaultValue="full" className="gap-6">
+                    <TabsList variant="line" aria-label="보기 방식">
+                        <TabsTrigger value="full">개인정보 처리방침</TabsTrigger>
+                        <TabsTrigger value="easy">알기 쉬운 개인정보 처리방침</TabsTrigger>
+                    </TabsList>
+                    {[
+                        ['full', '처리방침'],
+                        ['easy', '알기 쉬운 처리방침'],
+                    ].map(([view, viewLabel]) => (
+                        <TabsContent key={view} value={view}>
+                            <Tabs defaultValue={`${view}-collection`} className="gap-6">
+                                <TabsList variant="pill" aria-label={`${viewLabel} 항목`}>
+                                    {[
+                                        ['collection', '개인정보 수집'],
+                                        ['usage', '개인정보 이용'],
+                                        ['provision', '개인정보 제공'],
+                                    ].map(([section, sectionLabel]) => (
+                                        <TabsTrigger key={section} value={`${view}-${section}`}>
+                                            {sectionLabel}
+                                        </TabsTrigger>
+                                    ))}
+                                </TabsList>
+                                {[
+                                    ['collection', '개인정보 수집'],
+                                    ['usage', '개인정보 이용'],
+                                    ['provision', '개인정보 제공'],
+                                ].map(([section, sectionLabel]) => (
+                                    <TabsContent
+                                        key={section}
+                                        value={`${view}-${section}`}
+                                        className="typo-body-l-regular text-muted-foreground"
+                                    >
+                                        {viewLabel} · {sectionLabel} 내용
+                                    </TabsContent>
+                                ))}
+                            </Tabs>
+                        </TabsContent>
+                    ))}
+                </Tabs>
+                <CodeBlock code={PILL_USAGE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 

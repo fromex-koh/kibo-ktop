@@ -55,7 +55,7 @@ const STYLE_CODE = `<header
   {breadcrumb ? (
     <div
       data-slot="page-title-bar-nav"
-      className="inline-flex items-center rounded-full bg-surface px-10 py-4 shadow-1"
+      className="inline-flex items-center rounded-full bg-surface px-6 py-3 shadow-1"
     >
       {breadcrumb}
     </div>

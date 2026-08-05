@@ -2,102 +2,222 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import {Suspense, useRef, useState} from 'react'
-import {useSearchParams} from 'next/navigation'
-import {ExternalLink, Menu, Moon, Sun, X} from 'lucide-react'
+import {usePathname} from 'next/navigation'
+import {useEffect, useLayoutEffect, useRef, useState, type ComponentProps, type KeyboardEvent} from 'react'
+import {ExternalLink, Menu, Moon, Sun, TimerReset, X} from 'lucide-react'
+import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {
     NavigationMenu,
+    NavigationMenuContent,
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
+    NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
 import {Sheet, SheetClose, SheetContent, SheetHeader, SheetTitle, SheetTrigger} from '@/components/ui/sheet'
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
-import {headerIconButtonClassName, headerIconGroupClassName} from '@/components/theme/header.variants'
+import {dialogBodyClassName} from '@/components/theme/dialog.variants'
+import {DEFAULT_HEADER_NAVIGATION, MENU_SERVICE_GROUPS, UTILITY_LINKS} from '@/constants/header-navigation'
+import type {HeaderNavLink, HeaderNavigationByUserType, UserType} from '@/constants/header-navigation'
+import {
+    headerHiddenWhenMenuOpenClassName,
+    headerIconButtonClassName,
+    headerIconGroupClassName,
+    headerNavDropdownClassName,
+    headerNavDropdownItemClassName,
+    headerNavTriggerClassName,
+} from '@/components/theme/header.variants'
 import {useThemeToggle} from '@/hooks/use-theme-toggle'
 import {cn} from '@/lib/utils'
 
-// PROJECT-COMPOSITE: Header primitive가 없어 NavigationMenu·SegmentedControl·Sheet·Button을 조합한 사이트 상단 합성 컴포넌트.
-// PROJECT-STYLE: 로고는 h1 > a > img 구조를 유지하고 테마 클래스에 맞는 에셋을 노출한다.
-// 유틸 링크는 Button text variant 위에 Header 전용 자간만 보정한다.
-type UserType = 'corp' | 'org'
+// 기존 Header export를 유지해 외부 사용처의 import 경로를 보존한다.
+export {DEFAULT_HEADER_NAVIGATION}
+export type {HeaderNavLink, HeaderNavigationByUserType, UserType}
 
-export type HeaderNavLink = {
-    label: string
-    href: string
-    external?: boolean
+// 로그인 후 확정된 userType을 표시하는 배지.
+const USER_TYPE_BADGE = {
+    corp: {label: '기업', color: 'info'},
+    org: {label: '기관', color: 'secondary-purple'},
+} as const satisfies Record<UserType, {label: string; color: NonNullable<ComponentProps<typeof Badge>['color']>}>
+
+// 로그인 상태 표시와 세션 연장에 필요한 사용자 정보.
+export type HeaderUser = {
+    name: string
+    sessionRemaining: string
 }
 
-export type HeaderNavigationByUserType = Record<UserType, readonly HeaderNavLink[]>
-
-const DEFAULT_NAV_LINKS: readonly HeaderNavLink[] = [
-    {label: '플랫폼 소개', href: '#'},
-    {label: '기술평가', href: '#'},
-    {label: '특허평가', href: '#'},
-    {label: 'K-BIGx 보고서', href: '#'},
-    {label: '탄소중립', href: '#', external: true},
-]
-
-const UTILITY_LINKS: {label: string; external?: boolean}[] = [
-    {label: '로그인/회원가입'},
-    {label: '이용안내'},
-    {label: '기술보증기금', external: true},
-]
+// 전체 메뉴 닫힘 애니메이션과 헤더 상태를 동기화하는 시간.
+const MENU_EXIT_DURATION_MS = 200
 
 const USER_TYPES = ['corp', 'org'] satisfies readonly UserType[]
 
 const isUserType = (value: string | null): value is UserType => value === 'corp' || value === 'org'
 
-// 헤더 상단에서 기업/기관 화면 유형을 전환하는 링크 세그먼티드.
-const MemberTypeToggle = ({userType, searchParams}: {userType: UserType; searchParams: string}) => {
-    const getHref = (nextUserType: UserType) => {
-        const nextParams = new URLSearchParams(searchParams)
-        nextParams.set('userType', nextUserType)
-        return `?${nextParams.toString()}`
-    }
+// 로그인 전 기업·기관 메뉴를 Header 내부 state로 전환한다. URL에는 선택 상태를 남기지 않는다.
+const MemberTypeToggle = ({
+    userType,
+    onUserTypeChange,
+}: {
+    userType: UserType
+    onUserTypeChange: (userType: UserType) => void
+}) => (
+    <SegmentedControl
+        type="radio"
+        value={userType}
+        onValueChange={(value) => {
+            if (isUserType(value)) onUserTypeChange(value)
+        }}
+        aria-label="화면 유형"
+    >
+        {USER_TYPES.map((value) => (
+            <SegmentedControlItem key={value} value={value}>
+                {value === 'corp' ? '기업' : '기관'}
+            </SegmentedControlItem>
+        ))}
+    </SegmentedControl>
+)
+
+// 로그인한 회원의 userType 배지.
+const UserTypeBadge = ({userType}: {userType: UserType}) => {
+    const badge = USER_TYPE_BADGE[userType]
 
     return (
-        <SegmentedControl type="link" aria-label="화면 유형">
-            {USER_TYPES.map((value) => (
-                <SegmentedControlItem
-                    key={value}
-                    href={getHref(value)}
-                    replace
-                    scroll={false}
-                    aria-current={userType === value ? 'page' : undefined}
-                >
-                    {value === 'corp' ? '기업' : '기관'}
-                </SegmentedControlItem>
-            ))}
-        </SegmentedControl>
+        <Badge variant="solid" color={badge.color} shape="pill" size="sm" className="mr-2 min-w-0 shrink-0">
+            {badge.label}
+        </Badge>
     )
 }
 
-// 링크 의미는 유지하고 Button text variant의 토큰/포커스 스타일을 재사용한다.
-// 시안 상단 유틸바는 14px Medium(행간 21)이다 — text 계열에서 그 크기는 sm 이다.
-// (button_text 시안 기준 xs 12 · sm 14 · md 16 · lg 18)
-const UtilityLink = ({label, external, className}: {label: string; external?: boolean; className?: string}) => (
+// 로그인 후 남은 시간과 연장 안내 모달을 표시한다. 실제 세션 연장 동작은 서비스에서 연결한다.
+const SessionExtensionButton = () => (
+    // 버튼 클릭 시 로그인 유지 시간을 초기화하는 기능 연결이 필요하다.
+    <Button variant="text-underline" size="sm" type="button" className="font-normal">
+        연장
+    </Button>
+)
+
+const SessionTimer = ({remaining, showExtensionAction = true}: {remaining: string; showExtensionAction?: boolean}) => (
+    <div className="flex items-center gap-1">
+        <p className="tracking-control-label flex items-center gap-1 text-sm font-medium">
+            <TimerReset aria-hidden="true" className="size-icon-sm shrink-0" />
+            <span className="sr-only">로그인 유지 시간</span>
+            {remaining}
+        </p>
+        {showExtensionAction ? (
+            <Dialog>
+                <DialogTrigger asChild>
+                    <SessionExtensionButton />
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>로그인 연장</DialogTitle>
+                    </DialogHeader>
+                    <div className={cn(dialogBodyClassName, 'gap-4')}>
+                        <DialogDescription>
+                            로그아웃까지 남은 시간 : <strong className="text-primary font-bold">{remaining}</strong>
+                        </DialogDescription>
+                        <p className="typo-body-xl-regular text-label-foreground">
+                            10분 동안 서비스를 이용하지 않아 잠시 후 자동으로 로그아웃될 예정입니다.
+                            <br />
+                            로그인 시간을 연장하시겠어요?
+                        </p>
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="tertiary" size="xl">
+                                로그아웃
+                            </Button>
+                        </DialogClose>
+                        <Button size="xl">로그인 연장</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        ) : (
+            <SessionExtensionButton />
+        )}
+    </div>
+)
+
+const UtilityLink = ({
+    label,
+    href,
+    external,
+    className,
+}: {
+    label: string
+    href: string
+    external?: boolean
+    className?: string
+}) => (
     <Button
         variant="text"
         size="sm"
         asChild
         className={cn('tracking-control-label font-medium', external ? 'gap-0.5' : undefined, className)}
     >
-        <Link href="#" {...(external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}>
+        <Link href={href} {...(external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}>
             {label}
             {external ? <ExternalLink aria-hidden="true" className="size-icon-sm" /> : null}
         </Link>
     </Button>
 )
 
-// 로고는 모든 화면에 반복되는 사이트 식별자라 제목(h1)이 아니다. h1 은 화면마다 하나뿐인 본문
-// 제목(PageTitleBar·히어로 등)의 몫이다. 데모처럼 이동 경로가 정해진 사용처만 logoHref 를 전달한다. [KWCAG 6.4.2]
+// 로그인 후 로그아웃 확인 모달. 실제 로그아웃 처리는 서비스에서 연결한다.
+const LogoutDialog = ({className}: {className?: string}) => (
+    <Dialog>
+        <DialogTrigger asChild>
+            <Button
+                variant="text"
+                size="sm"
+                type="button"
+                className={cn('tracking-control-label font-medium', className)}
+            >
+                로그아웃
+            </Button>
+        </DialogTrigger>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>로그아웃 안내</DialogTitle>
+            </DialogHeader>
+            <div className={cn(dialogBodyClassName, 'gap-4')}>
+                <DialogDescription>로그아웃 하시겠어요?</DialogDescription>
+                <p className="typo-body-xl-regular text-label-foreground">
+                    현재 계정에서 로그아웃됩니다.
+                    <br />
+                    다시 이용하시려면 로그인해 주세요.
+                </p>
+            </div>
+            <DialogFooter>
+                <Button size="xl">로그아웃</Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+)
+
+// 열린 GNB 드롭다운의 첫 링크로 포커스를 이동한다.
+const focusOpenDropdownFirstItem = (nav: HTMLElement | null) => {
+    nav?.querySelector<HTMLElement>(
+        '[data-slot="navigation-menu-content"][data-state="open"] a[href], [data-slot="navigation-menu-content"] a[href]',
+    )?.focus()
+}
+
+// 로고 링크 기본값은 루트(/)이며 logoHref로 경로를 변경할 수 있다.
 const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
     const image = (
         <>
+            {/* 오버레이 헤더는 흰색 로고, 고정 헤더는 현재 테마에 맞는 로고를 표시한다. */}
             {overlay ? (
-                // 메인페이지는 항상 어두운 배경이라 화이트 로고 한 장만 둔다.
                 <Image
                     src="/images/logo-ktop-white.svg"
                     alt=""
@@ -108,8 +228,6 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
                     className="h-8 w-35 shrink-0"
                 />
             ) : (
-                // 두 장을 두고 --logo-on-*(globals.css) 로 배경 명도에 맞는 쪽만 표시한다.
-                // dark: 변형은 중첩 고정한 테마 미리보기에서 틀린 쪽을 고른다 — Footer 와 같은 방식.
                 <>
                     <Image
                         src="/images/logo-ktop.svg"
@@ -134,9 +252,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
         </>
     )
 
-    // 이름은 감싸는 요소의 sr-only 텍스트가 갖고 로고 이미지는 모두 alt="" 로 둔다 — 두 장에 같은 대체
-    // 텍스트를 주면 보조기기에 같은 이름이 겹쳐 읽히고(WAVE "A nearby image has the same alternative text"),
-    // 한쪽에만 alt 를 주면 테마가 바뀌어 그쪽이 display:none 이 될 때 이름이 사라진다. [KWCAG 5.1.1/6.4.3]
+    // 테마별 로고는 하나만 표시하고 브랜드명은 보조기기에 한 번만 제공한다.
     return (
         <p className="shrink-0">
             {href ? (
@@ -154,9 +270,7 @@ const Logo = ({overlay, href}: {overlay: boolean; href?: string}) => {
     )
 }
 
-// 실제 Header와 가이드 데모가 공유하는 본문.
-// 헤더의 테마 전환 — 시안대로 아이콘만 둔다(가이드 앱바에서 쓰는 ThemeToggle 은 버튼 면이 있는 별개 컴포넌트).
-// 마운트 전에는 아이콘과 같은 크기의 자리표시자를 그려 하이드레이션 불일치·레이아웃 시프트를 피한다.
+// 마운트 전 placeholder를 표시해 테마 확인에 따른 hydration 불일치와 레이아웃 이동을 막는다.
 const HeaderThemeToggle = () => {
     const {isMounted, isDark, label, toggleTheme} = useThemeToggle()
 
@@ -177,24 +291,74 @@ const HeaderThemeToggle = () => {
     )
 }
 
+// 전체 메뉴 링크. external이면 새 창과 외부 링크 아이콘을 사용한다.
+const MenuLink = ({
+    label,
+    href,
+    external,
+    className,
+    onClick,
+}: HeaderNavLink & {className?: string; onClick?: () => void}) => (
+    <Link
+        href={href}
+        className={cn(
+            'hover:text-menu-overlay-accent aria-[current=page]:text-menu-overlay-accent inline-flex w-fit items-center gap-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid',
+            className,
+        )}
+        onClick={onClick}
+        {...(external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
+    >
+        {label}
+        {external ? <ExternalLink aria-hidden="true" className="size-icon-md -translate-y-0.5" /> : null}
+    </Link>
+)
+
 const HeaderMenu = ({
     navLinks,
+    userType,
     open,
     onOpenChange,
 }: {
     navLinks: readonly HeaderNavLink[]
+    userType: UserType
     open: boolean
     onOpenChange: (open: boolean) => void
 }) => {
     const triggerRef = useRef<HTMLButtonElement>(null)
     const menuContentRef = useRef<HTMLDivElement>(null)
-    const firstMenuLinkRef = useRef<HTMLAnchorElement>(null)
     const [isClosing, setIsClosing] = useState(false)
+    const [headerHeight, setHeaderHeight] = useState(0)
+    // 닫힘 애니메이션이 끝날 때까지 메뉴 오버레이를 유지한다.
+    const [isSheetVisible, setIsSheetVisible] = useState(false)
+
+    // 모바일에서 상단 유틸리티가 여러 줄로 늘어날 수 있으므로 실제 헤더 높이를 메뉴 시작 위치에 반영한다.
+    useLayoutEffect(() => {
+        if (!open) return
+
+        const header = triggerRef.current?.closest('header')
+        if (!header) return
+
+        const updateHeaderHeight = () => setHeaderHeight(Math.ceil(header.getBoundingClientRect().height))
+        const observer = new ResizeObserver(updateHeaderHeight)
+
+        updateHeaderHeight()
+        observer.observe(header)
+
+        return () => observer.disconnect()
+    }, [open])
+
+    useEffect(() => {
+        if (open) return
+
+        const timeoutId = setTimeout(() => setIsSheetVisible(false), MENU_EXIT_DURATION_MS)
+        return () => clearTimeout(timeoutId)
+    }, [open])
     const label = open ? '전체 메뉴 닫기' : '전체 메뉴 열기'
     const menuIconMotionClassName =
         'absolute inset-0 transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none'
     const closeIconMotionClassName =
         'absolute inset-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none'
+    const closeMenu = () => onOpenChange(false)
 
     return (
         <Sheet
@@ -202,6 +366,7 @@ const HeaderMenu = ({
             open={open}
             onOpenChange={(nextOpen) => {
                 setIsClosing(open && !nextOpen)
+                if (nextOpen) setIsSheetVisible(true)
                 onOpenChange(nextOpen)
             }}
         >
@@ -211,22 +376,24 @@ const HeaderMenu = ({
                     type="button"
                     className={headerIconButtonClassName}
                     data-header-menu-trigger
+                    // 닫힘 애니메이션 중에도 헤더를 오버레이 위에 유지하기 위한 상태 표식.
+                    data-menu-visible={open || isSheetVisible || undefined}
                     aria-label={label}
                     aria-expanded={open}
                     title={label}
                     onKeyDown={(event) => {
                         if (!open || event.key !== 'Tab') return
 
-                        event.preventDefault()
-                        if (!event.shiftKey) {
-                            firstMenuLinkRef.current?.focus()
-                            return
-                        }
+                        // Tab으로 메뉴를 열었을 때 첫 메뉴 항목으로 이동한다.
+                        if (event.shiftKey) return
 
-                        const focusableItems = menuContentRef.current?.querySelectorAll<HTMLElement>(
-                            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-                        )
-                        focusableItems?.[focusableItems.length - 1]?.focus()
+                        event.preventDefault()
+                        // DOM 순서상 첫 번째 포커스 가능 요소를 선택한다.
+                        menuContentRef.current
+                            ?.querySelector<HTMLElement>(
+                                'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+                            )
+                            ?.focus()
                     }}
                 >
                     <span aria-hidden="true" className="size-icon-lg relative">
@@ -275,46 +442,84 @@ const HeaderMenu = ({
                         triggerRef.current?.focus()
                     }
                 }}
-                className="data-[side=right]:data-closed:slide-out-to-right-0 data-[side=right]:data-open:slide-in-from-right-0 h-dvh max-w-none gap-0 overflow-y-auto overscroll-y-contain border-0 data-[side=right]:w-screen data-[side=right]:border-0 data-[side=right]:sm:max-w-none"
+                className="bg-menu-overlay text-menu-overlay-foreground outline-menu-overlay-foreground h-dvh max-w-none gap-0 overflow-hidden border-0 data-[side=right]:right-auto data-[side=right]:left-0 data-[side=right]:w-screen data-[side=right]:border-0 data-[side=right]:data-closed:[--tw-exit-translate-x:0] data-[side=right]:data-open:[--tw-enter-translate-x:0] data-[side=right]:sm:max-w-none"
             >
-                <SheetHeader className="content-layout gap-0 px-0 py-0">
-                    <div aria-hidden="true" className="hidden h-14 lg:block" />
-                    <div className="flex h-14 items-center">
-                        <SheetTitle className="typo-h4-bold">전체 메뉴</SheetTitle>
-                    </div>
+                {/* SheetTitle은 스크린리더에 전체 메뉴 이름을 제공한다. */}
+                <SheetHeader className="sr-only">
+                    <SheetTitle>전체 메뉴</SheetTitle>
                 </SheetHeader>
 
-                <div className="content-layout flex flex-1 flex-col pt-6 pb-10 md:pt-8 landscape:pt-4">
-                    <nav
-                        aria-label="전체 메뉴"
-                        className="grid grid-cols-1 gap-1 md:grid-cols-2 md:gap-x-6 xl:grid-cols-3"
-                    >
-                        {navLinks.map((link, index) => (
-                            <SheetClose asChild key={link.label}>
-                                <Link
-                                    ref={index === 0 ? firstMenuLinkRef : undefined}
-                                    href={link.href}
-                                    className="typo-title-m-bold border-border hover:bg-muted focus-visible:ring-ring flex min-h-11 items-center gap-1 rounded-md px-3 focus:outline-none focus-visible:ring-2 md:min-h-20 md:items-start md:rounded-none md:border-t md:px-1 md:py-4 xl:min-h-24 xl:py-5"
-                                    {...(link.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
-                                >
-                                    {link.label}
-                                    {link.external ? (
-                                        <ExternalLink aria-hidden="true" className="size-icon-sm" />
-                                    ) : null}
-                                </Link>
-                            </SheetClose>
-                        ))}
-                    </nav>
+                {/* 고정 헤더 영역만큼 여백을 두어 메뉴 콘텐츠가 헤더와 겹치지 않게 한다. */}
+                <div
+                    aria-hidden="true"
+                    className="h-28 shrink-0 xl:h-30"
+                    style={headerHeight > 0 ? {height: `${headerHeight}px`} : undefined}
+                />
 
-                    <div className="border-border mt-6 flex flex-col gap-1 border-t pt-4 md:mt-8 md:flex-row md:flex-wrap md:gap-x-6 landscape:mt-4">
-                        {UTILITY_LINKS.map((link) => (
-                            <SheetClose asChild key={link.label}>
-                                <UtilityLink
-                                    {...link}
-                                    className="not-disabled:hover:bg-navy-50 not-disabled:hover:text-navy-600 min-h-11 w-full justify-start rounded-md px-3 md:w-auto"
-                                />
-                            </SheetClose>
-                        ))}
+                {/* 메뉴 본문만 스크롤한다. */}
+                <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+                    <div className="content-layout flex flex-col pb-10">
+                        <nav
+                            aria-label="전체 메뉴"
+                            className="grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-3 md:gap-y-10 xl:grid-cols-5 xl:gap-x-0"
+                        >
+                            {navLinks.map((link) => (
+                                <div key={link.label} className="flex flex-col">
+                                    {/* 메뉴 그룹은 h3, 하위 메뉴는 목록으로 구성한다. */}
+                                    <h3 className="typo-h4-bold">
+                                        {link.items?.length ? (
+                                            link.label
+                                        ) : (
+                                            <SheetClose asChild>
+                                                <MenuLink {...link} onClick={closeMenu} />
+                                            </SheetClose>
+                                        )}
+                                    </h3>
+                                    {link.items?.length ? (
+                                        <ul className="typo-body-xl-medium text-menu-overlay-foreground-subtle mt-4 flex flex-col gap-4 md:mt-6 md:gap-6 xl:mt-12">
+                                            {link.items.map((item) => (
+                                                <li key={item.label}>
+                                                    <SheetClose asChild>
+                                                        <MenuLink {...item} onClick={closeMenu} />
+                                                    </SheetClose>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : null}
+                                </div>
+                            ))}
+                        </nav>
+
+                        <div className="mt-15 flex flex-col gap-6 xl:mt-25">
+                            {MENU_SERVICE_GROUPS[userType].groups.map((group) => (
+                                <div
+                                    key={group.label}
+                                    className="flex flex-col gap-2 md:flex-row md:items-center md:gap-0"
+                                >
+                                    <h3 className="typo-body-xl-bold md:w-30 md:shrink-0">{group.label}</h3>
+                                    <ul className="typo-body-xl-regular text-menu-overlay-foreground-subtle flex flex-wrap items-center gap-x-6 gap-y-2">
+                                        {group.items.map((item, index) => {
+                                            const menuItem = typeof item === 'string' ? {label: item, href: '#'} : item
+
+                                            return (
+                                                <li key={menuItem.label} className="flex items-center gap-x-6">
+                                                    {/* 장식용 구분선은 보조기기에서 제외한다. */}
+                                                    {index > 0 ? (
+                                                        <span
+                                                            aria-hidden="true"
+                                                            className="bg-menu-overlay-border h-3 w-px shrink-0"
+                                                        />
+                                                    ) : null}
+                                                    <SheetClose asChild>
+                                                        <MenuLink {...menuItem} onClick={closeMenu} />
+                                                    </SheetClose>
+                                                </li>
+                                            )
+                                        })}
+                                    </ul>
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </SheetContent>
@@ -327,43 +532,113 @@ const HeaderContent = ({
     overlay,
     compact,
     showThemeToggle,
+    showUserTypeToggle,
     navigationByUserType,
     logoHref,
     userType,
-    searchParams,
+    user,
+    onUserTypeChange,
 }: {
     navLabel: string
     overlay: boolean
     compact: boolean
     showThemeToggle: boolean
+    showUserTypeToggle: boolean
     navigationByUserType?: HeaderNavigationByUserType
     logoHref?: string
     userType: UserType
-    searchParams: string
+    user?: HeaderUser
+    onUserTypeChange: (userType: UserType) => void
 }) => {
-    const navLinks = navigationByUserType?.[userType] ?? DEFAULT_NAV_LINKS
+    // 전달받은 userType의 메뉴를 데스크톱 GNB와 모바일 전체 메뉴에 동일하게 적용한다.
+    const navLinks = (navigationByUserType ?? DEFAULT_HEADER_NAVIGATION)[userType]
     const [menuOpen, setMenuOpen] = useState(false)
+    const isSessionExtensionPage = usePathname().replace(/\/$/, '').endsWith('/session-extension')
+
+    // GNB 드롭다운이 열릴 때 포커스를 패널 안으로 이동한다.
+    const [openNavMenu, setOpenNavMenu] = useState('')
+    const shouldEnterDropdownRef = useRef(false)
+
+    const enterDropdownOnMount = (node: HTMLDivElement | null) => {
+        if (!node || !shouldEnterDropdownRef.current) return
+
+        shouldEnterDropdownRef.current = false
+        node.querySelector<HTMLElement>('a[href]')?.focus()
+    }
+
+    // ArrowDown으로 드롭다운을 열고 첫 항목으로 이동한다.
+    const handleDropdownEntryKeyDown = (event: KeyboardEvent<HTMLButtonElement>, value: string) => {
+        if (event.key !== 'ArrowDown') return
+
+        event.preventDefault()
+        event.stopPropagation()
+
+        // 이미 열린 메뉴는 즉시 첫 항목으로 이동한다.
+        if (openNavMenu === value) {
+            focusOpenDropdownFirstItem(event.currentTarget.closest('[data-slot="navigation-menu"]'))
+            return
+        }
+
+        shouldEnterDropdownRef.current = true
+        setOpenNavMenu(value)
+    }
 
     return (
         <div className="flex flex-col">
-            {/* 주 메뉴가 한 줄에 들어가는 lg(1024)부터 PC 헤더로 전환하고, xl(1280)부터 항목 간격을
-                넓힌다. lg 미만에서는 유틸바·주 메뉴를 숨겨 로고+햄버거만 남긴다(링크는 전체 메뉴 Sheet에 유지). */}
+            {/* 데스크톱은 GNB, 모바일은 로고와 전체 메뉴를 표시한다. 전체 메뉴가 열리면 상단 유틸리티도 표시한다. */}
             <div
-                className={cn('hidden justify-end lg:flex', menuOpen && 'invisible')}
-                inert={menuOpen || undefined}
-                aria-hidden={menuOpen || undefined}
+                className={cn(
+                    'flex justify-end overflow-hidden transition-[max-height,opacity] duration-200 ease-in-out motion-reduce:transition-none',
+                    menuOpen ? 'max-h-dvh opacity-100' : 'max-h-0 opacity-0 lg:max-h-14 lg:opacity-100',
+                )}
             >
-                <div className="flex items-center gap-2 py-2 xl:gap-4">
-                    <MemberTypeToggle userType={userType} searchParams={searchParams} />
-                    {UTILITY_LINKS.map((link) => (
-                        <UtilityLink key={link.label} {...link} />
-                    ))}
+                {/* 묶음 사이 간격은 시안 40(xl)이다. 좁아질수록 줄이되 묶음 안쪽 간격(16)보다는 항상 크게 두어
+                    [배지+이름·남은 시간]과 [링크]가 서로 다른 묶음으로 읽히게 한다. */}
+                <div className="flex flex-wrap items-center justify-end gap-4 py-2 lg:gap-8 xl:gap-10">
+                    {user ? (
+                        // 시안에서 [배지+이름]과 [남은 시간+연장]은 한 묶음(간격 16)이고, 그 묶음과 링크 사이가 40 이다.
+                        // 부모 간격(xl 40)을 그대로 받으면 이름과 시간이 링크만큼 벌어져 두 묶음이 구분되지 않는다.
+                        <div className="flex min-w-0 flex-wrap items-center justify-end gap-4">
+                            <div className="grid w-fit max-w-full min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center">
+                                <UserTypeBadge userType={userType} />
+                                <p className="tracking-control-label flex w-max max-w-full min-w-0 items-center text-sm font-medium">
+                                    <span
+                                        className="block w-max max-w-full min-w-0 shrink truncate sm:max-w-46"
+                                        title={user.name}
+                                    >
+                                        {user.name}
+                                    </span>
+                                    <span className="ml-1 shrink-0 whitespace-nowrap">님</span>
+                                </p>
+                            </div>
+                            <SessionTimer
+                                remaining={user.sessionRemaining}
+                                showExtensionAction={!isSessionExtensionPage}
+                            />
+                        </div>
+                    ) : showUserTypeToggle ? (
+                        <MemberTypeToggle userType={userType} onUserTypeChange={onUserTypeChange} />
+                    ) : null}
+                    <div className="flex flex-wrap items-center gap-4">
+                        {(user ? MENU_SERVICE_GROUPS[userType].utilityLinks : UTILITY_LINKS).map((link) => {
+                            const className = cn(
+                                'transition-colors duration-200 ease-in-out motion-reduce:transition-none',
+                                menuOpen && 'text-menu-overlay-foreground',
+                            )
+
+                            return link.label === '로그아웃' ? (
+                                <LogoutDialog key={link.label} className={className} />
+                            ) : (
+                                <UtilityLink key={link.label} {...link} className={className} />
+                            )
+                        })}
+                    </div>
                 </div>
             </div>
 
             <div className={cn('flex items-center py-3', compact ? 'gap-5' : 'gap-6 xl:gap-10')}>
                 <div
-                    className={cn('shrink-0', menuOpen && 'invisible')}
+                    className={cn('shrink-0', headerHiddenWhenMenuOpenClassName, menuOpen && 'opacity-0')}
                     inert={menuOpen || undefined}
                     aria-hidden={menuOpen || undefined}
                 >
@@ -371,32 +646,83 @@ const HeaderContent = ({
                 </div>
 
                 <div
-                    className={cn('hidden lg:flex', menuOpen && 'invisible')}
+                    className={cn('hidden lg:flex', headerHiddenWhenMenuOpenClassName, menuOpen && 'opacity-0')}
                     inert={menuOpen || undefined}
                     aria-hidden={menuOpen || undefined}
                 >
-                    <NavigationMenu aria-label={navLabel} viewport={false} className="hidden lg:flex">
+                    <NavigationMenu
+                        aria-label={navLabel}
+                        viewport={false}
+                        value={openNavMenu}
+                        onValueChange={setOpenNavMenu}
+                        className="hidden lg:flex"
+                    >
                         <NavigationMenuList className={compact ? 'gap-5' : 'gap-6 xl:gap-10'}>
                             {navLinks.map((link) => (
-                                <NavigationMenuItem key={link.label}>
-                                    <NavigationMenuLink
-                                        asChild
-                                        className={cn(
-                                            'text-foreground min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent',
-                                            compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
-                                        )}
-                                    >
-                                        <Link
-                                            href={link.href}
-                                            className="flex items-center gap-1"
-                                            {...(link.external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
+                                <NavigationMenuItem key={link.label} value={link.label}>
+                                    {link.items?.length ? (
+                                        // 하위 메뉴는 트리거와 드롭다운으로 구성한다.
+                                        <>
+                                            <NavigationMenuTrigger
+                                                onKeyDown={(event) => handleDropdownEntryKeyDown(event, link.label)}
+                                                className={cn(
+                                                    headerNavTriggerClassName,
+                                                    compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
+                                                )}
+                                            >
+                                                {link.label}
+                                            </NavigationMenuTrigger>
+                                            <NavigationMenuContent
+                                                ref={enterDropdownOnMount}
+                                                className={headerNavDropdownClassName}
+                                            >
+                                                {link.items.map((item) => (
+                                                    <NavigationMenuLink
+                                                        key={item.label}
+                                                        asChild
+                                                        className={headerNavDropdownItemClassName}
+                                                    >
+                                                        <Link
+                                                            href={item.href}
+                                                            className="flex items-center gap-1"
+                                                            {...(item.external
+                                                                ? {target: '_blank', rel: 'noopener noreferrer'}
+                                                                : {})}
+                                                        >
+                                                            {item.label}
+                                                            {item.external ? (
+                                                                <ExternalLink
+                                                                    aria-hidden="true"
+                                                                    className="size-icon-sm"
+                                                                />
+                                                            ) : null}
+                                                        </Link>
+                                                    </NavigationMenuLink>
+                                                ))}
+                                            </NavigationMenuContent>
+                                        </>
+                                    ) : (
+                                        <NavigationMenuLink
+                                            asChild
+                                            className={cn(
+                                                'text-foreground min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent',
+                                                compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
+                                            )}
                                         >
-                                            {link.label}
-                                            {link.external ? (
-                                                <ExternalLink aria-hidden="true" className="size-icon-lg" />
-                                            ) : null}
-                                        </Link>
-                                    </NavigationMenuLink>
+                                            <Link
+                                                href={link.href}
+                                                className="flex items-center gap-1"
+                                                {...(link.external
+                                                    ? {target: '_blank', rel: 'noopener noreferrer'}
+                                                    : {})}
+                                            >
+                                                {link.label}
+                                                {link.external ? (
+                                                    <ExternalLink aria-hidden="true" className="size-icon-lg" />
+                                                ) : null}
+                                            </Link>
+                                        </NavigationMenuLink>
+                                    )}
                                 </NavigationMenuItem>
                             ))}
                         </NavigationMenuList>
@@ -407,15 +733,16 @@ const HeaderContent = ({
                     <div
                         className={cn(
                             'size-icon-lg flex shrink-0 items-center justify-center',
+                            headerHiddenWhenMenuOpenClassName,
                             !showThemeToggle && 'hidden',
-                            menuOpen && 'invisible',
+                            menuOpen && 'opacity-0',
                         )}
                         inert={menuOpen || undefined}
                         aria-hidden={menuOpen || undefined}
                     >
                         {showThemeToggle ? <HeaderThemeToggle /> : null}
                     </div>
-                    <HeaderMenu navLinks={navLinks} open={menuOpen} onOpenChange={setMenuOpen} />
+                    <HeaderMenu navLinks={navLinks} userType={userType} open={menuOpen} onOpenChange={setMenuOpen} />
                 </div>
             </div>
         </div>
@@ -425,6 +752,12 @@ const HeaderContent = ({
 type HeaderProps = {
     overlay?: boolean
     showThemeToggle?: boolean
+    // 로그인 전에는 기업·기관 토글을 표시하고, 로그인 후에는 확정된 유형으로 메뉴를 고정한다.
+    showUserTypeToggle?: boolean
+    userType?: UserType
+    // 전달하면 상단 유틸리티가 로그인 상태(유형 배지·이름·남은 시간·로그아웃)로 바뀐다.
+    user?: HeaderUser
+    // 전달하지 않으면 DEFAULT_HEADER_NAVIGATION을 사용한다.
     navigationByUserType?: HeaderNavigationByUserType
     logoHref?: string
 }
@@ -434,6 +767,9 @@ const ResolvedHeaderContent = ({
     overlay,
     compact,
     showThemeToggle,
+    showUserTypeToggle,
+    userType: fixedUserType,
+    user,
     navigationByUserType,
     logoHref,
 }: {
@@ -441,12 +777,15 @@ const ResolvedHeaderContent = ({
     overlay: boolean
     compact: boolean
     showThemeToggle: boolean
+    showUserTypeToggle: boolean
+    userType?: UserType
+    user?: HeaderUser
     navigationByUserType?: HeaderNavigationByUserType
     logoHref?: string
 }) => {
-    const searchParams = useSearchParams()
-    const userTypeParam = searchParams.get('userType')
-    const userType = isUserType(userTypeParam) ? userTypeParam : 'corp'
+    // userType prop가 있으면 로그인 후 확정된 유형으로 고정하고, 없으면 로그인 전 내부 state를 사용한다.
+    const [selectedUserType, setSelectedUserType] = useState<UserType>(fixedUserType ?? 'corp')
+    const userType = fixedUserType ?? selectedUserType
 
     return (
         <HeaderContent
@@ -454,86 +793,51 @@ const ResolvedHeaderContent = ({
             overlay={overlay}
             compact={compact}
             showThemeToggle={showThemeToggle}
+            showUserTypeToggle={showUserTypeToggle}
             navigationByUserType={navigationByUserType}
             logoHref={logoHref}
             userType={userType}
-            searchParams={searchParams.toString()}
+            user={user}
+            onUserTypeChange={setSelectedUserType}
         />
     )
 }
 
-const Header = ({overlay = true, showThemeToggle = false, navigationByUserType, logoHref}: HeaderProps) => {
+const Header = ({
+    overlay = true,
+    showThemeToggle = false,
+    showUserTypeToggle = true,
+    userType,
+    user,
+    navigationByUserType,
+    logoHref = '/',
+}: HeaderProps) => {
     return (
         <header
             className={cn(
-                'z-header has-[[data-header-menu-trigger][aria-expanded=true]]:z-popover inset-x-0 top-0 has-[[data-header-menu-trigger][aria-expanded=true]]:bg-transparent! has-[[data-header-menu-trigger][aria-expanded=true]]:transition-none!',
+                // 메뉴 닫힘 애니메이션이 끝날 때까지 헤더를 오버레이 위에 유지한다.
+                'z-header has-[[data-header-menu-trigger][data-menu-visible]]:z-popover inset-x-0 top-0',
+                // 헤더 배경은 메뉴 열림 상태와 함께 전환한다.
+                'transition-colors duration-200 ease-in-out has-[[data-header-menu-trigger][aria-expanded=true]]:bg-transparent! motion-reduce:transition-none',
                 overlay ? 'fixed' : 'bg-card sticky',
             )}
         >
-            {/* 헤더 콘텐츠 열은 화면 본문과 같은 content-layout 을 쓴다 — 좌우 여백을 헤더 안쪽 px 로 주면
-                로고·메뉴가 본문 시작선보다 안으로 들어가 어긋난다(좁은 화면의 가장자리 여백은 content-layout 이 담당). */}
+            {/* 본문과 같은 content-layout으로 정렬선을 맞춘다. */}
             <div className="content-layout">
-                <Suspense
-                    fallback={
-                        <HeaderContent
-                            navLabel="주 메뉴"
-                            overlay={overlay}
-                            compact={false}
-                            showThemeToggle={showThemeToggle}
-                            navigationByUserType={navigationByUserType}
-                            logoHref={logoHref}
-                            userType="corp"
-                            searchParams=""
-                        />
-                    }
-                >
-                    <ResolvedHeaderContent
-                        navLabel="주 메뉴"
-                        overlay={overlay}
-                        compact={false}
-                        showThemeToggle={showThemeToggle}
-                        navigationByUserType={navigationByUserType}
-                        logoHref={logoHref}
-                    />
-                </Suspense>
+                <ResolvedHeaderContent
+                    navLabel="주 메뉴"
+                    overlay={overlay}
+                    compact={false}
+                    showThemeToggle={showThemeToggle}
+                    showUserTypeToggle={showUserTypeToggle}
+                    navigationByUserType={navigationByUserType}
+                    logoHref={logoHref}
+                    userType={userType}
+                    user={user}
+                />
             </div>
         </header>
     )
 }
-
-// 컴포넌트 가이드 카드 안에서 쓰는 데모. fixed 배치는 카드 안에서 재현할 수 없어 로고·테마 조합만 보여준다.
-export const HeaderDemo = ({
-    overlay = false,
-    showThemeToggle = true,
-    navigationByUserType,
-}: {
-    overlay?: boolean
-    showThemeToggle?: boolean
-    navigationByUserType?: HeaderNavigationByUserType
-}) => (
-    <div className="border-border bg-background overflow-hidden rounded-lg border">
-        <Suspense
-            fallback={
-                <HeaderContent
-                    navLabel="헤더 데모 메뉴"
-                    overlay={overlay}
-                    compact
-                    showThemeToggle={showThemeToggle}
-                    navigationByUserType={navigationByUserType}
-                    userType="corp"
-                    searchParams=""
-                />
-            }
-        >
-            <ResolvedHeaderContent
-                navLabel="헤더 데모 메뉴"
-                overlay={overlay}
-                compact
-                showThemeToggle={showThemeToggle}
-                navigationByUserType={navigationByUserType}
-            />
-        </Suspense>
-    </div>
-)
 
 export default Header

@@ -799,14 +799,14 @@
             "screenId": null,
             "userType": "기업",
             "path": "/corp/notice/faq",
-            "name": "자주 묻는 질문"
+            "name": "FAQ"
         },
         {
             "key": "corp-notice-inquiry-create",
             "screenId": null,
             "userType": "기업",
             "path": "/corp/notice/inquiry-create",
-            "name": "1:1 문의 등록"
+            "name": "문의하기"
         },
         {
             "key": "corp-notice-inquiry-create-inquiry-complete",
@@ -821,6 +821,13 @@
             "userType": "기업",
             "path": "/corp/notice/inquiry-create/privacy-consent-guide",
             "name": "개인정보 수집 및 이용 안내"
+        },
+        {
+            "key": "corp-notice-inquiry-create-inquiry-cancel",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/notice/inquiry-create/inquiry-cancel",
+            "name": "문의 취소"
         },
         {
             "key": "corp-notice-resources",
@@ -886,6 +893,13 @@
             "name": "알기 쉬운 개인처리방침"
         },
         {
+            "key": "corp-login-guide",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/login-guide",
+            "name": "로그인 안내"
+        },
+        {
             "key": "corp-session-extension",
             "screenId": null,
             "userType": "기업",
@@ -896,8 +910,15 @@
             "key": "corp-logout",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/logout",
-            "name": "로그아웃 종료"
+            "path": "/corp/login-end",
+            "name": "로그인 종료"
+        },
+        {
+            "key": "corp-real-name-verification",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/real-name-verification",
+            "name": "실명인증"
         },
         {
             "key": "org-home",
@@ -1534,14 +1555,14 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/notice/faq",
-            "name": "자주 묻는 질문"
+            "name": "FAQ"
         },
         {
             "key": "org-notice-inquiry-create",
             "screenId": null,
             "userType": "기관",
             "path": "/org/notice/inquiry-create",
-            "name": "1:1 문의 등록"
+            "name": "문의하기"
         },
         {
             "key": "org-notice-inquiry-create-inquiry-complete",
@@ -1556,6 +1577,13 @@
             "userType": "기관",
             "path": "/org/notice/inquiry-create/privacy-consent-guide",
             "name": "개인정보 수집 및 이용 안내"
+        },
+        {
+            "key": "org-notice-inquiry-create-inquiry-cancel",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/notice/inquiry-create/inquiry-cancel",
+            "name": "문의 취소"
         },
         {
             "key": "org-notice-resources",
@@ -1600,13 +1628,6 @@
             "name": "우편번호 검색"
         },
         {
-            "key": "org-quarterly-password-change",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/quarterly-password-change",
-            "name": "분기별 비밀번호 변경"
-        },
-        {
             "key": "org-terms",
             "screenId": null,
             "userType": "기관",
@@ -1635,6 +1656,13 @@
             "name": "최초 비밀번호 변경"
         },
         {
+            "key": "org-login-guide",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/login-guide",
+            "name": "로그인 안내"
+        },
+        {
             "key": "org-session-extension",
             "screenId": null,
             "userType": "기관",
@@ -1645,8 +1673,8 @@
             "key": "org-logout",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/logout",
-            "name": "로그아웃 종료"
+            "path": "/org/login-end",
+            "name": "로그인 종료"
         }
     ]
 }

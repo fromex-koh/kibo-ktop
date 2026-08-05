@@ -8,6 +8,7 @@
 
 | 버전 | 원본 브랜치 | 원본 커밋 | 생성 시각 |
 | --- | --- | --- | --- |
+| v1.0.0 | main | `7ec83fd01a129d54a0fc9d4b4fe69e025ceef44b` | 2026-08-05T08:25:58Z |
 | v0.1.10 | main | `8c3414ac546400cdb221715ce6488e65be1e1e5f` | 2026-08-03T00:36:40Z |
 
 ## 실행
@@ -24,6 +25,12 @@ yarn dev
 - `/`: 서비스 메인 화면으로 교체할 최소 시작 페이지
 - `/publishing-guide`: 원본 저장소의 퍼블리싱 인덱스
 - `/component-guide`: 컴포넌트 가이드
+
+## 사이트 메타데이터
+
+`src/constants/site.ts`는 handoff 전용 사이트명, 설명, URL과 저장소 URL을 관리합니다. handoff 생성 전에는 저장소의 `handoff/site.ts`를 수정합니다.
+
+OG 이미지 경로는 `/og-image.png`로 유지하며, 디자인 작업 완료 후 `handoff/og-image.png`를 추가하면 자동으로 적용됩니다.
 
 ## 디자인 토큰
 

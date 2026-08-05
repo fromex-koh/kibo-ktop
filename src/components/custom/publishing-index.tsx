@@ -51,7 +51,7 @@ const ReleaseNoteChange = ({change}: {change: string}) => {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-foreground focus-visible:ring-ring inline-flex items-center gap-0.5 underline underline-offset-4 hover:no-underline focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none"
+                className="text-foreground focus-visible:ring-ring inline-flex items-center gap-0.5 underline underline-offset-4 focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none"
             >
                 {label}
                 <ExternalLink aria-hidden="true" className="size-3.5 shrink-0" />
@@ -219,8 +219,11 @@ const PublishingIndex = () => {
     const depthHeaders = useMemo(() => Array.from({length: maxDepth}, (_, depth) => `${depth + 1}뎁스`), [maxDepth])
 
     const screenCount = leaves.length
-    // 작업 진척률 — '최종완료'된 화면 수 / (필터된) 전체 화면 수.
-    const doneCount = useMemo(() => leaves.filter((leaf) => leaf.status === '최종완료').length, [leaves])
+    // 작업 진척률 — '완료' 또는 '최종완료'된 화면 수 / (필터된) 전체 화면 수.
+    const doneCount = useMemo(
+        () => leaves.filter((leaf) => leaf.status === '완료' || leaf.status === '최종완료').length,
+        [leaves],
+    )
     const progressPercent = screenCount === 0 ? 0 : Math.round((doneCount / screenCount) * 100)
 
     return (
@@ -416,12 +419,12 @@ const PublishingIndex = () => {
                         </SegmentedControl>
 
                         {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
-            진척률은 '최종완료' 화면 비율이라 상태값이 바뀔 때마다 자동으로 갱신된다. */}
+            '완료'와 '최종완료' 상태를 모두 완료 작업으로 집계한다. */}
                         <p aria-live="polite" className="typo-body-l-regular text-muted-foreground">
                             {filter} 화면 본수: <span className="text-foreground font-semibold">{screenCount}개</span>
                             {' · '}작업 진척률:{' '}
-                            <span className="text-foreground font-semibold">{progressPercent}%</span> (최종완료{' '}
-                            {doneCount}/{screenCount})
+                            <span className="text-foreground font-semibold">{progressPercent}%</span> (완료 {doneCount}/
+                            {screenCount})
                         </p>
                         {/* 아래 화면 목록에서 사용하는 진행 상태 범례 */}
                         <ul aria-label="화면 진행 상태 범례" className="flex flex-wrap items-center gap-2">
@@ -470,7 +473,7 @@ const PublishingIndex = () => {
                                                         {'href' in layout && typeof layout.href === 'string' ? (
                                                             <Link
                                                                 href={layout.href}
-                                                                className="text-primary focus-visible:ring-ring rounded-xs font-medium underline-offset-4 hover:underline focus-visible:ring-2 focus-visible:outline-none"
+                                                                className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
                                                             >
                                                                 {layout.label}
                                                             </Link>
@@ -569,7 +572,7 @@ const PublishingIndex = () => {
                                                                 {isScreenLink ? (
                                                                     <Link
                                                                         href={registeredScreen.path}
-                                                                        className="text-primary focus-visible:ring-ring rounded-xs underline underline-offset-4 hover:no-underline focus-visible:ring-2 focus-visible:outline-none"
+                                                                        className="text-primary focus-visible:ring-ring rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
                                                                     >
                                                                         {cell.label}
                                                                         <span className="sr-only"> 화면으로 이동</span>

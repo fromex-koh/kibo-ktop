@@ -353,6 +353,7 @@
   --ds-icon-solid-neutral-foreground: var(--raw-common-white);
   --ds-icon-solid-subtle: var(--raw-gray-200);
   --ds-accent-subtle: var(--raw-gray-50);
+  --ds-surface-subtle: var(--raw-gray-10);
   --ds-field-error-foreground: var(--raw-error-500);
   --ds-icon-solid-subtle-foreground: var(--raw-common-white);
   --ds-icon-interactive-hover: var(--raw-gray-300);
@@ -366,6 +367,8 @@
   --ds-segmented-solid-active-foreground: var(--raw-common-white);
   --ds-pagination-active: var(--raw-navy-500);
   --ds-pagination-active-foreground: var(--raw-common-white);
+  --ds-tab-pill-active: var(--raw-navy-500);
+  --ds-tab-pill-active-foreground: var(--raw-common-white);
   --ds-select-selected-foreground: var(--raw-navy-600);
   --ds-calendar-sunday: var(--raw-error-500);
   --ds-calendar-saturday: var(--raw-blue-600);
@@ -376,6 +379,11 @@
   --ds-main-intro-foreground-subtle: var(--raw-common-white);
   --ds-main-intro-accent: var(--raw-mint-500);
   --ds-main-intro-border: var(--raw-white-a25);
+  --ds-menu-overlay: var(--raw-common-white);
+  --ds-menu-overlay-foreground: var(--raw-gray-900);
+  --ds-menu-overlay-foreground-subtle: var(--raw-gray-500);
+  --ds-menu-overlay-accent: var(--raw-blue-600);
+  --ds-menu-overlay-border: var(--raw-black-a25);
   --ds-cta-surface: var(--raw-white-a75);
   --ds-pastel-info: var(--raw-info-50);
   --ds-pastel-info-foreground: var(--raw-info-600);
@@ -615,6 +623,7 @@
   --ds-icon-solid-neutral-foreground: var(--raw-common-white);
   --ds-icon-solid-subtle: var(--raw-gray-200);
   --ds-accent-subtle: var(--raw-gray-50);
+  --ds-surface-subtle: var(--raw-gray-10);
   --ds-field-error-foreground: var(--raw-error-500);
   --ds-icon-solid-subtle-foreground: var(--raw-common-white);
   --ds-icon-interactive-hover: var(--raw-gray-300);
@@ -628,6 +637,8 @@
   --ds-segmented-solid-active-foreground: var(--raw-common-white);
   --ds-pagination-active: var(--raw-navy-500);
   --ds-pagination-active-foreground: var(--raw-common-white);
+  --ds-tab-pill-active: var(--raw-navy-500);
+  --ds-tab-pill-active-foreground: var(--raw-common-white);
   --ds-select-selected-foreground: var(--raw-navy-600);
   --ds-calendar-sunday: var(--raw-error-500);
   --ds-calendar-saturday: var(--raw-blue-600);
@@ -638,6 +649,11 @@
   --ds-main-intro-foreground-subtle: var(--raw-common-white);
   --ds-main-intro-accent: var(--raw-mint-500);
   --ds-main-intro-border: var(--raw-white-a25);
+  --ds-menu-overlay: var(--raw-common-white);
+  --ds-menu-overlay-foreground: var(--raw-gray-900);
+  --ds-menu-overlay-foreground-subtle: var(--raw-gray-500);
+  --ds-menu-overlay-accent: var(--raw-blue-600);
+  --ds-menu-overlay-border: var(--raw-black-a25);
   --ds-cta-surface: var(--raw-white-a75);
   --ds-pastel-info: var(--raw-info-50);
   --ds-pastel-info-foreground: var(--raw-info-600);
@@ -877,6 +893,7 @@
   --ds-icon-solid-neutral-foreground: var(--raw-gray-900);
   --ds-icon-solid-subtle: var(--raw-gray-600);
   --ds-accent-subtle: var(--raw-gray-800);
+  --ds-surface-subtle: var(--raw-gray-700);
   --ds-field-error-foreground: var(--raw-error-300);
   --ds-icon-solid-subtle-foreground: var(--raw-gray-10);
   --ds-icon-interactive-hover: var(--raw-gray-200);
@@ -890,6 +907,8 @@
   --ds-segmented-solid-active-foreground: var(--raw-purple-900);
   --ds-pagination-active: var(--raw-navy-500);
   --ds-pagination-active-foreground: var(--raw-common-white);
+  --ds-tab-pill-active: var(--raw-navy-500);
+  --ds-tab-pill-active-foreground: var(--raw-common-white);
   --ds-select-selected-foreground: var(--raw-navy-200);
   --ds-calendar-sunday: var(--raw-error-300);
   --ds-calendar-saturday: var(--raw-blue-200);
@@ -900,6 +919,11 @@
   --ds-main-intro-foreground-subtle: var(--raw-common-white);
   --ds-main-intro-accent: var(--raw-mint-500);
   --ds-main-intro-border: var(--raw-white-a25);
+  --ds-menu-overlay: var(--raw-gray-900);
+  --ds-menu-overlay-foreground: var(--raw-common-white);
+  --ds-menu-overlay-foreground-subtle: var(--raw-gray-50);
+  --ds-menu-overlay-accent: var(--raw-mint-500);
+  --ds-menu-overlay-border: var(--raw-white-a25);
   --ds-cta-surface: var(--raw-white-a10);
   --ds-pastel-info: var(--raw-gray-700);
   --ds-pastel-info-foreground: var(--raw-info-100);
@@ -1139,6 +1163,7 @@
   --ds-icon-solid-neutral-foreground: var(--raw-gray-900);
   --ds-icon-solid-subtle: var(--raw-gray-600);
   --ds-accent-subtle: var(--raw-gray-800);
+  --ds-surface-subtle: var(--raw-gray-700);
   --ds-field-error-foreground: var(--raw-error-300);
   --ds-icon-solid-subtle-foreground: var(--raw-gray-10);
   --ds-icon-interactive-hover: var(--raw-gray-200);
@@ -1152,6 +1177,8 @@
   --ds-segmented-solid-active-foreground: var(--raw-common-white);
   --ds-pagination-active: var(--raw-navy-500);
   --ds-pagination-active-foreground: var(--raw-common-white);
+  --ds-tab-pill-active: var(--raw-navy-500);
+  --ds-tab-pill-active-foreground: var(--raw-common-white);
   --ds-select-selected-foreground: var(--raw-navy-200);
   --ds-calendar-sunday: var(--raw-error-300);
   --ds-calendar-saturday: var(--raw-blue-200);
@@ -1162,6 +1189,11 @@
   --ds-main-intro-foreground-subtle: var(--raw-common-white);
   --ds-main-intro-accent: var(--raw-mint-500);
   --ds-main-intro-border: var(--raw-white-a25);
+  --ds-menu-overlay: var(--raw-gray-900);
+  --ds-menu-overlay-foreground: var(--raw-common-white);
+  --ds-menu-overlay-foreground-subtle: var(--raw-gray-50);
+  --ds-menu-overlay-accent: var(--raw-mint-500);
+  --ds-menu-overlay-border: var(--raw-white-a25);
   --ds-cta-surface: var(--raw-white-a10);
   --ds-pastel-info: var(--raw-gray-700);
   --ds-pastel-info-foreground: var(--raw-info-100);
@@ -1282,6 +1314,7 @@
   --color-icon-solid-neutral-foreground: var(--ds-icon-solid-neutral-foreground);
   --color-icon-solid-subtle: var(--ds-icon-solid-subtle);
   --color-accent-subtle: var(--ds-accent-subtle);
+  --color-surface-subtle: var(--ds-surface-subtle);
   --color-field-error-foreground: var(--ds-field-error-foreground);
   --color-icon-solid-subtle-foreground: var(--ds-icon-solid-subtle-foreground);
   --color-icon-interactive-hover: var(--ds-icon-interactive-hover);
@@ -1295,6 +1328,8 @@
   --color-segmented-solid-active-foreground: var(--ds-segmented-solid-active-foreground);
   --color-pagination-active: var(--ds-pagination-active);
   --color-pagination-active-foreground: var(--ds-pagination-active-foreground);
+  --color-tab-pill-active: var(--ds-tab-pill-active);
+  --color-tab-pill-active-foreground: var(--ds-tab-pill-active-foreground);
   --color-select-selected-foreground: var(--ds-select-selected-foreground);
   --color-calendar-sunday: var(--ds-calendar-sunday);
   --color-calendar-saturday: var(--ds-calendar-saturday);
@@ -1305,6 +1340,11 @@
   --color-main-intro-foreground-subtle: var(--ds-main-intro-foreground-subtle);
   --color-main-intro-accent: var(--ds-main-intro-accent);
   --color-main-intro-border: var(--ds-main-intro-border);
+  --color-menu-overlay: var(--ds-menu-overlay);
+  --color-menu-overlay-foreground: var(--ds-menu-overlay-foreground);
+  --color-menu-overlay-foreground-subtle: var(--ds-menu-overlay-foreground-subtle);
+  --color-menu-overlay-accent: var(--ds-menu-overlay-accent);
+  --color-menu-overlay-border: var(--ds-menu-overlay-border);
   --color-cta-surface: var(--ds-cta-surface);
   --color-pastel-info: var(--ds-pastel-info);
   --color-pastel-info-foreground: var(--ds-pastel-info-foreground);
@@ -1626,8 +1666,8 @@
   --raw-font-size-display-xl: 3.75rem;
   --raw-font-size-display-xl-tablet: var(--raw-font-size-display-xl);
   --raw-font-size-display-xl-pc: var(--raw-font-size-display-xl-tablet);
-  --raw-font-size-display-l: 3rem;
-  --raw-font-size-display-l-tablet: var(--raw-font-size-display-l);
+  --raw-font-size-display-l: 2.375rem;
+  --raw-font-size-display-l-tablet: 3rem;
   --raw-font-size-display-l-pc: var(--raw-font-size-display-l-tablet);
   --raw-font-size-display-m: 2.5rem;
   --raw-font-size-display-m-tablet: var(--raw-font-size-display-m);

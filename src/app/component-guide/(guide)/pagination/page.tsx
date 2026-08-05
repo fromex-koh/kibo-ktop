@@ -15,8 +15,8 @@ const [page, setPage] = useState(1)
 {/* siblingCount=2 면 9페이지까지 생략 없이 모두 노출한다(시안 구성). */}
 <Pagination page={page} total={9} onPageChange={setPage} siblingCount={2} />`
 
-const USAGE_ELLIPSIS = `{/* 페이지가 많으면 경계(boundaryCount)와 현재 주변(siblingCount)만 남기고 생략한다. */}
-<Pagination page={page} total={24} onPageChange={setPage} siblingCount={1} boundaryCount={1} />`
+const USAGE_ELLIPSIS = `{/* 페이지 번호·말줄임표는 최대 10개, 이전·다음 포함 최대 12개까지 노출한다. */}
+<Pagination page={page} total={24} onPageChange={setPage} siblingCount={1} boundaryCount={1} maxVisibleItems={10} />`
 
 const COMPOSITION = [
     {
@@ -38,6 +38,13 @@ const PROPS_ITEMS = [
     ['siblingCount', '현재 페이지 양옆에 항상 노출할 페이지 수.', '1', 'number'],
     ['boundaryCount', '처음·끝에 항상 노출할 페이지 수.', '1', 'number'],
     ['prevLabel · nextLabel', '이전·다음 버튼 텍스트.', "'이전' · '다음'", 'string'],
+    [
+        'maxVisibleItems',
+        '페이지 번호·말줄임표의 최대 노출 개수. 좌우 버튼은 별도라 전체 컨트롤은 최대 12개다.',
+        '10',
+        'number',
+    ],
+    ['compact', '좁은 화면에서 페이지 버튼·간격을 줄여 한 줄에 맞춘다.', 'false', 'boolean'],
     ['aria-label · className', '내비게이션 이름과 루트 클래스.', "'페이지 이동'", 'string'],
 ] as const
 

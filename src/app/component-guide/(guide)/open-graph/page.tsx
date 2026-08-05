@@ -6,7 +6,7 @@ import GuidePageShell from '@/components/custom/guide-page-shell'
 
 export const metadata: Metadata = {title: 'Open Graph 미리보기'}
 
-const SERVICE_IMAGE = '/images/og/k-top-service-preview.png'
+const SERVICE_IMAGE = '/images/og-sample/k-top-service-preview.png'
 
 const OPEN_GRAPH_CODE = `export const metadata: Metadata = {
   openGraph: {
@@ -29,7 +29,7 @@ const PREVIEW_CONTENT = {
     description: '기업의 혁신성장역량 평가, 기술사업성 평가, 원천기술 평가를 제공하는 개방형 기술평가 플랫폼입니다.',
 }
 
-const PreviewLogo = ({className = ''}: {className?: string}) => (
+const PreviewLogo = ({className = '', loading = 'lazy'}: {className?: string; loading?: 'eager' | 'lazy'}) => (
     <div className={`relative overflow-hidden ${className}`} aria-hidden="true">
         <Image
             src={SERVICE_IMAGE}
@@ -37,6 +37,7 @@ const PreviewLogo = ({className = ''}: {className?: string}) => (
             draggable={false}
             fill
             sizes="(min-width: 1024px) 40vw, 100vw"
+            loading={loading}
             className="object-cover"
         />
     </div>
@@ -93,7 +94,7 @@ const OpenGraphGuidePage = () => (
                         <span className="typo-caption-regular text-muted-foreground">네이버·X</span>
                     </div>
                     <div className="bg-surface border-subtle-3 flex min-h-32 overflow-hidden rounded-md border">
-                        <PreviewLogo className="w-40 shrink-0" />
+                        <PreviewLogo className="w-40 shrink-0" loading="eager" />
                         <div className="bg-surface flex min-w-0 flex-col justify-center gap-1 px-4 py-3">
                             <p className="typo-caption-regular text-muted-foreground">{PREVIEW_CONTENT.domain}</p>
                             <p className="typo-body-l-medium line-clamp-1">{PREVIEW_CONTENT.title}</p>

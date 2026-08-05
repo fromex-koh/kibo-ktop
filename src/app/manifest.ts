@@ -1,10 +1,10 @@
 import type {MetadataRoute} from 'next'
-import {SITE_DESCRIPTION, SITE_NAME} from '@/constants/publishing-guide'
+import {SITE_DESCRIPTION, SITE_NAME, SITE_SHORT_NAME} from '@/constants/publishing-guide'
 
 // PWA 매니페스트. background_color/theme_color 는 매니페스트 규격상 실제 색상값이라 CSS 변수 불가.
 const manifest = (): MetadataRoute.Manifest => ({
     name: SITE_NAME,
-    short_name: '퍼블리싱 가이드',
+    short_name: SITE_SHORT_NAME,
     description: SITE_DESCRIPTION,
     start_url: '/',
     display: 'standalone',

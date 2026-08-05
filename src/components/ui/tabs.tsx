@@ -3,7 +3,7 @@
 import * as React from 'react'
 import {type VariantProps} from 'class-variance-authority'
 import {Tabs as TabsPrimitive} from 'radix-ui'
-import {tabsContentClassName, tabsListVariants, tabsTriggerClassName, tabsTriggerLineClassName} from '@/components/theme/tabs.variants'
+import {tabsContentClassName, tabsListVariants, tabsTriggerClassName, tabsTriggerLineClassName, tabsTriggerPillClassName, tabsTriggerPillOutlineClassName} from '@/components/theme/tabs.variants'
 import {cn} from '@/lib/utils'
 
 function Tabs({className, orientation = 'horizontal', ...props}: React.ComponentProps<typeof TabsPrimitive.Root>) {
@@ -13,7 +13,7 @@ function TabsList({className, variant = 'default', ...props}: React.ComponentPro
     return <TabsPrimitive.List data-slot="tabs-list" data-variant={variant} className={cn(tabsListVariants({variant}), className)} {...props} />
 }
 function TabsTrigger({className, ...props}: React.ComponentProps<typeof TabsPrimitive.Trigger>) {
-    return <TabsPrimitive.Trigger data-slot="tabs-trigger" className={cn(tabsTriggerClassName, tabsTriggerLineClassName, className)} {...props} />
+    return <TabsPrimitive.Trigger data-slot="tabs-trigger" className={cn(tabsTriggerClassName, tabsTriggerLineClassName, tabsTriggerPillClassName, tabsTriggerPillOutlineClassName, className)} {...props} />
 }
 function TabsContent({className, ...props}: React.ComponentProps<typeof TabsPrimitive.Content>) {
     return <TabsPrimitive.Content data-slot="tabs-content" className={cn(tabsContentClassName, className)} {...props} />

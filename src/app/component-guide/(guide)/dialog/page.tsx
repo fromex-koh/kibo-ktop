@@ -6,7 +6,7 @@ import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {cn} from '@/lib/utils'
-import {CONSENT_QUESTION, CONSENT_SECTIONS, CONSENT_TITLE, type ConsentSection} from './consent-terms'
+import {ConsentTermsDialogContent} from '@/components/composite/consent-terms-dialog'
 import {Button} from '@/components/ui/button'
 import {
     Dialog,
@@ -121,45 +121,6 @@ const CASE_SPECS = [
         when: '약관처럼 본문이 긴 경우. 제목과 CTA 는 고정하고 본문만 스크롤해 닫기·확인을 항상 보이게 한다.',
     },
 ] as const
-
-// 내부 스크롤 케이스의 본문 — 시안의 '필수 동의사항'(40006522:18538) 전문을 consent-terms 에서 가져온다.
-// 섹션 사이 24, 섹션 안의 블록 사이 16 은 시안 실측값이다.
-const consentSectionBlocks = (section: ConsentSection) => (
-    <div key={section.heading} className="flex flex-col gap-4">
-        <h3 className="typo-title-l-bold text-foreground">{section.heading}</h3>
-        {section.blocks.map((block) => (
-            <div key={block.heading} className="flex flex-col gap-2">
-                <h4 className="typo-title-m-bold text-foreground">{block.heading}</h4>
-                {(section.heading === '1.수집, 이용에 관한 사항 (필수 사항)' && block.heading === '수집·이용 목적') ||
-                (section.heading === '3.조회에 관한 사항 (필수 사항)' && block.heading === '조회 목적') ||
-                (section.heading === '4.수집, 이용에 관한 사항 (필수 사항)' && block.heading === '수집·이용 목적') ||
-                (section.heading === '6.조회에 관한 사항 (필수 사항)' && block.heading === '조회 목적') ? (
-                    <ul className="flex flex-col gap-2">
-                        {block.lines.map((line, lineIndex) => (
-                            <li key={lineIndex} className="typo-body-xl-regular text-label-foreground flex">
-                                <ListMarker type="unordered" level={1} />
-                                <span>{line.text}</span>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    // 같은 문구가 한 블록 안에서 되풀이되는 약관이라(제공받는 자별 항목 등) 본문은 순번을 키로 쓴다.
-                    block.lines.map((line, lineIndex) =>
-                        line.kind === 'label' ? (
-                            <p key={lineIndex} className="typo-body-xl-medium text-foreground">
-                                {line.text}
-                            </p>
-                        ) : (
-                            <p key={lineIndex} className="typo-body-xl-regular text-label-foreground">
-                                {line.text}
-                            </p>
-                        ),
-                    )
-                )}
-            </div>
-        ))}
-    </div>
-)
 
 // 카드의 세 구획 — 여백을 카드가 통째로 갖지 않고 구획이 각자 갖는다. 그래야 본문이 스크롤될 때 글이
 // 머리·CTA 의 여백 아래로 들어가며 잘린다(가장자리에서 뚝 끊기지 않는다).
@@ -460,10 +421,10 @@ const DialogGuidePage = () => (
                             <DialogFooter>
                                 <DialogClose asChild>
                                     <Button variant="tertiary" size="xl">
-                                        다음에 하기
+                                        취소
                                     </Button>
                                 </DialogClose>
-                                <Button size="xl">로그인</Button>
+                                <Button size="xl">로그인하기</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
@@ -609,7 +570,7 @@ const DialogGuidePage = () => (
                             </DialogHeader>
                             {/* 본문 구획 — 소제목과 입력 묶음(간격 24). 화면이 낮으면 여기만 스크롤된다. */}
                             <div className={cn(dialogBodyClassName, 'gap-6')}>
-                                <DialogDescription>주민등록번호를 입력해주세요</DialogDescription>
+                                <DialogDescription>주민등록번호를 입력해 주세요</DialogDescription>
                                 {/* 시안의 li 프레임 — 레이블→입력 16, 한 줄 안의 두 칸과 구분자 사이는 각각 8. */}
                                 <div className="flex flex-col gap-4">
                                     <Label htmlFor="dlg-rrn-front" className="text-foreground font-bold">
@@ -671,29 +632,8 @@ const DialogGuidePage = () => (
                         <DialogTrigger asChild>
                             <Button size="md">필수 동의사항 (내부 스크롤)</Button>
                         </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>{CONSENT_TITLE}</DialogTitle>
-                                <DialogDescription className="sr-only">
-                                    필수 동의사항 전문을 스크롤하며 확인합니다.
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div className={cn(dialogBodyClassName, 'max-h-112 gap-6 pr-3')}>
-                                {CONSENT_SECTIONS.map(consentSectionBlocks)}
-                                {/* 마무리 질문 — 시안은 이 줄만 가운데 정렬이다(본문 508 폭 기준). */}
-                                <p className="typo-title-l-bold text-foreground text-center">{CONSENT_QUESTION}</p>
-                            </div>
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button variant="tertiary" size="xl">
-                                        동의하지 않음
-                                    </Button>
-                                </DialogClose>
-                                <DialogClose asChild>
-                                    <Button size="xl">동의함</Button>
-                                </DialogClose>
-                            </DialogFooter>
-                        </DialogContent>
+                        {/* 본문·CTA 는 composite/consent-terms-dialog 가 갖는다 — 문의 등록 화면의 "내용보기"와 같은 내용이다. */}
+                        <ConsentTermsDialogContent />
                     </Dialog>
                 </div>
             </section>

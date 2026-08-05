@@ -2,7 +2,14 @@ import type {Metadata, Viewport} from 'next'
 import localFont from 'next/font/local'
 import ThemeProvider from '@/components/theme-provider'
 import {Toaster} from '@/components/ui/sonner'
-import {SITE_DESCRIPTION, SITE_NAME, SITE_URL} from '@/constants/publishing-guide'
+import {
+    SITE_ALLOW_INDEXING,
+    SITE_DESCRIPTION,
+    SITE_NAME,
+    SITE_OG_IMAGE,
+    SITE_OG_IMAGE_ALT,
+    SITE_URL,
+} from '@/constants/publishing-guide'
 import './globals.css'
 
 // 로컬 폰트: Pretendard (가변 폰트, weight 100~900)
@@ -13,7 +20,7 @@ const pretendard = localFont({
     variable: '--font-pretendard',
 })
 
-// SEO 필수 메타데이터만 구성 (viewport·charset 은 Next.js 가 기본 제공).
+// 전역 사이트 메타데이터와 Open Graph. 값은 constants/site.ts에서 프로젝트·handoff별로 관리한다.
 export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
     title: {
@@ -22,12 +29,16 @@ export const metadata: Metadata = {
     },
     description: SITE_DESCRIPTION,
     alternates: {canonical: '/'},
-    // 내부용 — 검색엔진 색인 차단 [noindex]
-    robots: {
-        index: false,
-        follow: false,
-        googleBot: {index: false, follow: false},
-    },
+    // 원본 프로젝트는 noindex를 적용하고, handoff는 SITE_ALLOW_INDEXING=true로 이 설정을 생략한다.
+    ...(SITE_ALLOW_INDEXING
+        ? {}
+        : {
+              robots: {
+                  index: false,
+                  follow: false,
+                  googleBot: {index: false, follow: false},
+              },
+          }),
     openGraph: {
         type: 'website',
         locale: 'ko_KR',
@@ -35,20 +46,22 @@ export const metadata: Metadata = {
         siteName: SITE_NAME,
         title: SITE_NAME,
         description: SITE_DESCRIPTION,
-        images: [
-            {
-                url: '/og-image.png',
-                width: 1200,
-                height: 630,
-                alt: '기술평가 통합 플랫폼 퍼블리싱 가이드',
-            },
-        ],
+        ...(SITE_OG_IMAGE
+            ? {
+                  images: [
+                      {
+                          url: SITE_OG_IMAGE,
+                          width: 1200,
+                          height: 630,
+                          alt: SITE_OG_IMAGE_ALT,
+                      },
+                  ],
+              }
+            : {}),
     },
 }
 
-// 브라우저 툴바/크롬 색(theme-color) — 최상단 헤더 표면(bg-card)에 맞춘다: 라이트 흰색, 다크 gray.800.
-// prefers-color-scheme(OS 설정) 기준이라 앱 내 수동 테마 토글과는 별개로 동작한다.
-// 매니페스트처럼 규격상 리터럴 색상값만 허용되므로 hex 를 직접 쓴다(semantic card 토큰과 동일 값, manifest.ts 와 같은 예외).
+// themeColor는 페이지 배경이 아닌 브라우저 UI 색상이며 OS의 라이트·다크 설정을 따른다.
 export const viewport: Viewport = {
     themeColor: [
         {media: '(prefers-color-scheme: light)', color: '#ffffff'},

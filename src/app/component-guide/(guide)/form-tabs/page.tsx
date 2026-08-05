@@ -71,7 +71,7 @@ const CompanyForm = () => (
                 </FieldLabel>
                 <Select required>
                     <SelectTrigger id="ft-corp-type" className="w-full">
-                        <SelectValue placeholder="선택해주세요" />
+                        <SelectValue placeholder="선택해 주세요" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="corp">주식회사</SelectItem>
@@ -185,10 +185,10 @@ const ITEMS: readonly FormTabItem[] = [
                         <DatePicker id="ft-career-end" />
                     </Field>
                     <Field id="ft-career-company" label="회사명" required>
-                        <Input id="ft-career-company" placeholder="입력해주세요" />
+                        <Input id="ft-career-company" placeholder="입력해 주세요" />
                     </Field>
                     <Field id="ft-career-position" label="직위" required>
-                        <Input id="ft-career-position" placeholder="입력해주세요" />
+                        <Input id="ft-career-position" placeholder="입력해 주세요" />
                     </Field>
                 </RepeatSection>
             </FormCard>
@@ -210,16 +210,16 @@ const ITEMS: readonly FormTabItem[] = [
             >
                 <RepeatSection title="핵심 인력 1">
                     <Field id="ft-staff-name" label="성명" required>
-                        <Input id="ft-staff-name" placeholder="입력해주세요" />
+                        <Input id="ft-staff-name" placeholder="입력해 주세요" />
                     </Field>
                     <Field id="ft-staff-position" label="직위" required>
-                        <Input id="ft-staff-position" placeholder="입력해주세요" />
+                        <Input id="ft-staff-position" placeholder="입력해 주세요" />
                     </Field>
                     <Field id="ft-staff-join" label="입사 년월" required>
                         <DatePicker id="ft-staff-join" />
                     </Field>
                     <Field id="ft-staff-tech" label="주요 담당 기술" required>
-                        <Input id="ft-staff-tech" placeholder="입력해주세요" />
+                        <Input id="ft-staff-tech" placeholder="입력해 주세요" />
                     </Field>
                 </RepeatSection>
             </FormCard>
@@ -233,12 +233,12 @@ const ITEMS: readonly FormTabItem[] = [
             <FormCard title="기업 기타 정보" subtitle={<BulletNote>최근 결산 기준으로 입력해주십시오.</BulletNote>}>
                 <div className="grid grid-cols-1 gap-x-6 gap-y-4 md:grid-cols-2">
                     <Field id="ft-etc-client" label="주요 거래처" required>
-                        <Input id="ft-etc-client" placeholder="입력해주세요" />
+                        <Input id="ft-etc-client" placeholder="입력해 주세요" />
                     </Field>
                     <Field id="ft-etc-export" label="수출 여부" required>
                         <Select required>
                             <SelectTrigger id="ft-etc-export" className="w-full">
-                                <SelectValue placeholder="선택해주세요" />
+                                <SelectValue placeholder="선택해 주세요" />
                             </SelectTrigger>
                             <SelectContent>
                                 <SelectItem value="yes">있음</SelectItem>
@@ -266,7 +266,7 @@ const ITEMS: readonly FormTabItem[] = [
             >
                 <RepeatSection title="개발 실적 1">
                     <Field id="ft-rnd-name" label="개발 과제명" required>
-                        <Input id="ft-rnd-name" placeholder="입력해주세요" />
+                        <Input id="ft-rnd-name" placeholder="입력해 주세요" />
                     </Field>
                     <Field id="ft-rnd-done" label="개발 완료일" required>
                         <DatePicker id="ft-rnd-done" />
