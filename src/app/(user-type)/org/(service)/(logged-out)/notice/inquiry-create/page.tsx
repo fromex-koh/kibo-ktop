@@ -13,7 +13,7 @@ import {InquiryForm} from '@/components/custom/inquiry-form'
 
 export const metadata: Metadata = {title: '문의하기'}
 
-// 취소 후 이동할 문의 목록 경로.
+// 나가기 클릭 시 이동할 메인페이지 경로.
 const LIST_HREF = '/'
 
 const OrgNoticeInquiryCreatePage = () => (
@@ -46,7 +46,7 @@ const OrgNoticeInquiryCreatePage = () => (
                         답변이 완료되면 마이페이지 또는 이메일로 확인할 수 있어요
                     </SectionHeaderDescription>
                 </SectionHeader>
-                {/* 문의 작성 폼. 취소 시 LIST_HREF로 이동한다. */}
+                {/* 나가기 클릭 시 메인페이지로 이동한다. */}
                 <InquiryForm cancelHref={LIST_HREF} />
             </div>
         </div>
