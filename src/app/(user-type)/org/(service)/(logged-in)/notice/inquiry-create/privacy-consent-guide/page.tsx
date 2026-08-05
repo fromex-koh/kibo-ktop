@@ -16,7 +16,7 @@ export const metadata: Metadata = {title: '문의하기'}
 // 취소 후 이동할 문의 목록 경로.
 const LIST_HREF = '/'
 
-const CorpNoticeInquiryPrivacyConsentGuidePage = () => (
+const OrgNoticeInquiryPrivacyConsentGuidePage = () => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
         <div className="content-layout flex flex-col gap-10 pt-10 pb-25">
             <PageTitleBar
@@ -46,11 +46,11 @@ const CorpNoticeInquiryPrivacyConsentGuidePage = () => (
                         답변이 완료되면 마이페이지 또는 이메일로 확인할 수 있어요
                     </SectionHeaderDescription>
                 </SectionHeader>
-                {/* 2뎁스 화면 확인을 위해 개인정보 안내 모달을 열어 둔다. 본문은 1:1 문의 등록 화면과 동일하다. */}
+                {/* 2뎁스 화면 확인을 위해 개인정보 안내 모달을 열어 둔다. 본문은 문의하기 화면과 동일하다. */}
                 <InquiryForm cancelHref={LIST_HREF} consentDialogDefaultOpen />
             </div>
         </div>
     </main>
 )
 
-export default CorpNoticeInquiryPrivacyConsentGuidePage
+export default OrgNoticeInquiryPrivacyConsentGuidePage

@@ -1211,14 +1211,14 @@
                     ]
                 },
                 {
-                    "label": "자주 묻는 질문",
+                    "label": "FAQ",
                     "screenId": null,
                     "status": "대기중",
                     "version": "미배포",
                     "key": "corp-notice-faq"
                 },
                 {
-                    "label": "1:1 문의 등록",
+                    "label": "문의하기",
                     "screen": {
                         "screenId": null,
                         "status": "대기중",
@@ -2194,14 +2194,14 @@
                     ]
                 },
                 {
-                    "label": "자주 묻는 질문",
+                    "label": "FAQ",
                     "screenId": null,
                     "status": "대기중",
                     "version": "미배포",
                     "key": "org-notice-faq"
                 },
                 {
-                    "label": "1:1 문의 등록",
+                    "label": "문의하기",
                     "screen": {
                         "screenId": null,
                         "status": "대기중",

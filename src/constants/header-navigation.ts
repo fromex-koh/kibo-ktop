@@ -71,14 +71,7 @@ export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {
 }
 
 const MY_PAGE_ITEMS: Record<UserType, readonly string[]> = {
-    corp: [
-        '내 정보',
-        '대표자(경영자) 역량 및 경력',
-        '평가결과 조회',
-        'K-BIGx 보고서 이력',
-        '유료 서비스 관리',
-        '1:1문의내역',
-    ],
+    corp: ['내 정보', '대표자 이력', '평가결과 조회', 'K-BIGx 보고서 이력', '유료 서비스 관리', '1:1문의내역'],
     org: ['내 정보 수정', '평가이력 조회', 'K-BIGx 보고서 이력', '하위 계정 진행 현황', '1:1 문의 내역'],
 }
 
@@ -88,7 +81,7 @@ const createNoticeServiceGroup = (userType: UserType): MenuServiceGroup => ({
     items: [
         {label: '공지사항', href: `/${userType}/notice/announcements`},
         {label: 'FAQ', href: '#'},
-        {label: '1:1문의', href: `/${userType}/notice/inquiry-create`},
+        {label: '문의하기', href: `/${userType}/notice/inquiry-create`},
         {label: '자료실', href: `/${userType}/notice/resources`},
     ],
 })

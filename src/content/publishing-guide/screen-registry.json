@@ -799,14 +799,14 @@
             "screenId": null,
             "userType": "기업",
             "path": "/corp/notice/faq",
-            "name": "자주 묻는 질문"
+            "name": "FAQ"
         },
         {
             "key": "corp-notice-inquiry-create",
             "screenId": null,
             "userType": "기업",
             "path": "/corp/notice/inquiry-create",
-            "name": "1:1 문의 등록"
+            "name": "문의하기"
         },
         {
             "key": "corp-notice-inquiry-create-inquiry-complete",
@@ -1541,14 +1541,14 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/notice/faq",
-            "name": "자주 묻는 질문"
+            "name": "FAQ"
         },
         {
             "key": "org-notice-inquiry-create",
             "screenId": null,
             "userType": "기관",
             "path": "/org/notice/inquiry-create",
-            "name": "1:1 문의 등록"
+            "name": "문의하기"
         },
         {
             "key": "org-notice-inquiry-create-inquiry-complete",

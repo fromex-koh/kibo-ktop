@@ -5,7 +5,7 @@ import {ActionCheck} from '@/components/custom/action-check'
 import {ListMarker} from '@/components/custom/list-marker'
 import {Button} from '@/components/ui/button'
 
-// 1:1 문의 등록 완료 — 시안 "[알림마당] 문의하기_완료"(40006769:24553).
+// 문의하기 완료 — 시안 "[알림마당] 문의하기_완료"(40006769:24553).
 // 기존 컴포넌트 조합이다: ActionCheck(완료 애니메이션) · BaseCard(안내) · ListMarker(글머리) · ActionBar/Button(CTA).
 // 시안의 success-check 이미지는 프로젝트의 완료 애니메이션으로 대체한다 — 화면 진입 시 한 번 재생하고
 // 체크 프레임에서 멈추며, 모션 감소 설정이면 완료 프레임만 바로 보여준다.
