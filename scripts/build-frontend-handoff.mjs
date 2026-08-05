@@ -56,6 +56,9 @@ for (const path of ['src/.DS_Store', 'src/app/.DS_Store']) {
 // 원본 사이트 정보와 handoff 사이트 정보는 별도로 관리한다.
 copyRequiredHandoffAsset('handoff/site.ts', 'src/constants/site.ts')
 
+// handoff의 실제 서비스·퍼블리싱 인덱스 경로에 맞는 테마 기준을 전달한다.
+copyRequiredHandoffAsset('handoff/theme-routes.ts', 'src/constants/theme-routes.ts')
+
 // handoff는 사이트 설정을 constants/site.ts에서 관리하므로 환경변수 예시 파일을 전달하지 않는다.
 const publishingIndexPath = resolve(outputDirectory, 'src/content/publishing-guide/publishing-index.json')
 const publishingIndex = JSON.parse(readFileSync(publishingIndexPath, 'utf8'))

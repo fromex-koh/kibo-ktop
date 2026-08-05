@@ -421,10 +421,10 @@ const DialogGuidePage = () => (
                             <DialogFooter>
                                 <DialogClose asChild>
                                     <Button variant="tertiary" size="xl">
-                                        다음에 하기
+                                        취소
                                     </Button>
                                 </DialogClose>
-                                <Button size="xl">로그인</Button>
+                                <Button size="xl">로그인하기</Button>
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
