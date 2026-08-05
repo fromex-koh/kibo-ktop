@@ -782,57 +782,57 @@
             "key": "corp-notice-announcements",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-faq",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-inquiry-create",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-inquiry-create-inquiry-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-inquiry-create-privacy-consent-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-inquiry-create-inquiry-cancel",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-information-consent",
@@ -852,71 +852,71 @@
             "key": "corp-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-server-error",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-maintenance",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-terms",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-privacy-policy-easy-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-login-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-session-extension",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-logout",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-real-name-verification",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-home",
@@ -1538,57 +1538,57 @@
             "key": "org-notice-announcements",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-faq",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-inquiry-create",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-inquiry-create-inquiry-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-inquiry-create-privacy-consent-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-inquiry-create-inquiry-cancel",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-technology-information-consent",
@@ -1601,78 +1601,78 @@
             "key": "org-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-server-error",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-maintenance",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-postcode-search",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-terms",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-privacy-policy-easy-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-initial-password-change",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-login-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-session-extension",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-logout",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v1.0.0",
+            "isCurrent": true
         }
     ]
 }
