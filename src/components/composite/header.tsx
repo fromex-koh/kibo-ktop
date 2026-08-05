@@ -92,7 +92,7 @@ const UserTypeBadge = ({userType}: {userType: UserType}) => {
     const badge = USER_TYPE_BADGE[userType]
 
     return (
-        <Badge variant="solid" color={badge.color} shape="pill" size="sm" className="min-w-0">
+        <Badge variant="solid" color={badge.color} shape="pill" size="sm" className="mr-2 min-w-0 shrink-0">
             {badge.label}
         </Badge>
     )
@@ -576,9 +576,17 @@ const HeaderContent = ({
                 <div className="flex flex-wrap items-center justify-end gap-4 py-2 xl:gap-10">
                     {user ? (
                         <>
-                            <div className="flex items-center gap-2">
+                            <div className="grid w-fit max-w-full min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center">
                                 <UserTypeBadge userType={userType} />
-                                <p className="tracking-control-label text-sm font-medium">{user.name} 님</p>
+                                <p
+                                    className="tracking-control-label min-w-0 truncate text-sm font-medium"
+                                    title={user.name}
+                                >
+                                    {user.name}
+                                </p>
+                                <span className="tracking-control-label text-sm font-medium whitespace-nowrap">
+                                    {' 님'}
+                                </span>
                             </div>
                             <SessionTimer remaining={user.sessionRemaining} />
                         </>
