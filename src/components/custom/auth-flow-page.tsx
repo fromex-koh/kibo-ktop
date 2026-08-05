@@ -1,5 +1,6 @@
 'use client'
 
+import type {ReactNode} from 'react'
 import {Button} from '@/components/ui/button'
 import {
     Dialog,
@@ -16,9 +17,9 @@ import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {cn} from '@/lib/utils'
 
 // 로그인 흐름 화면의 콘텐츠 영역만 비워 둔다. 실제 화면 내용은 서비스 연동 시 추가한다.
-const AuthFlowPage = () => (
+const AuthFlowPage = ({children}: {children?: ReactNode}) => (
     <main id="main" tabIndex={-1} className="bg-surface flex-1">
-        <div className="content-layout min-h-full" />
+        <div className="content-layout min-h-full">{children}</div>
     </main>
 )
 
@@ -154,7 +155,12 @@ const RealNameVerificationDialog = () => (
 
 const RealNameVerificationPage = () => (
     <>
-        <AuthFlowPage />
+        <AuthFlowPage>
+            <p className="typo-body-xl-regular text-label-foreground py-10">
+                기업 회원이 회원가입 후 처음으로 기술평가 &gt; 모델 선택 &gt; 고객정보활용동의 페이지에 진입하면
+                노출되는 모달입니다.
+            </p>
+        </AuthFlowPage>
         <RealNameVerificationDialog />
     </>
 )
