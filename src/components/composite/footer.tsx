@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import type {ComponentProps} from 'react'
+import {useState, type ComponentProps} from 'react'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import {cn} from '@/lib/utils'
 
@@ -21,35 +21,10 @@ const UTILITY_LINKS: (FooterLink & {emphasized?: boolean})[] = [
 
 // 관련사이트 목록. 선택하면 해당 외부 사이트를 새 창으로 연다.
 const FAMILY_SITES = [
-    {value: 'cyber-helpdesk', label: '사이버 헬프데스크', href: 'https://www.kibo.or.kr/HELP0101/helpDesk'},
-    {value: 'tcb-evaluation', label: 'TCB 평가서', href: 'https://cyber.kibo.or.kr/org/kibo/cbr/mp/main/index.jsp'},
-    {
-        value: 'non-executive-director',
-        label: '비상임이사 전용공간',
-        href: 'https://www.kibo.or.kr/dbranch/loginView?referer=/main/board/boardType40?auty=2',
-    },
-    {value: 'venture-in', label: '벤처공시확인사이트', href: 'http://www.venturein.or.kr/'},
-    {value: 'kibo-alumni', label: '기보동우회', href: 'https://www.kibo.or.kr/dongwoo/index'},
-    {value: 'kibo-union', label: '노동조합', href: 'http://www.imkibonojo.or.kr/'},
-    {value: 'innobiz', label: '이노비즈넷', href: 'https://www.innobiz.net/index.asp'},
-    {value: 'ntb', label: 'NTB 기술은행', href: 'http://www.ntb.or.kr/'},
-    {value: 'bizinfo', label: '기업마당', href: 'https://www.bizinfo.go.kr/web/index'},
-    {value: 'kipa', label: '한국발명진흥회', href: 'http://www.kipa.org/'},
-    {value: 'kosbi', label: '중소기업연구원', href: 'https://www.kosbi.re.kr/'},
-    {value: 'kocca', label: '한국콘텐츠진흥원', href: 'http://www.kocca.or.kr/'},
-    {value: 'kodata', label: '한국기업데이터', href: 'http://www.kodata.co.kr/ci/CIINT01R0'},
-    {value: 'nipa', label: '정보통신산업진흥원', href: 'https://www.nipa.kr/index.jsp'},
-    {
-        value: 'acrc-report',
-        label: '국민권익위원회 부패신고',
-        href: 'https://www.acrc.go.kr/acrc/board?command=searchDetail&menuId=050201',
-    },
+    {value: 'mss', label: '중소기업벤처기업부', href: 'https://www.mss.go.kr/site/smba/main.do'},
+    {value: 'tipa', label: '중소기업기술정보진흥원', href: 'https://www.tipa.or.kr/'},
+    {value: 'kised', label: '창업진흥원', href: 'https://www.kised.or.kr/'},
 ]
-
-const handleFamilySiteChange = (value: string) => {
-    const site = FAMILY_SITES.find((item) => item.value === value)
-    if (site) window.open(site.href, '_blank', 'noopener,noreferrer')
-}
 
 const CONTACT = {
     number: '1544-1120',
@@ -100,6 +75,15 @@ type FooterContentProps = FooterProps & {
 
 const FooterContent = ({variant = 'mainpage', portalTheme, className, ...props}: FooterContentProps) => {
     const style = FOOTER_STYLE[variant]
+    const [selectedFamilySite, setSelectedFamilySite] = useState('')
+
+    const handleFamilySiteChange = (value: string) => {
+        const site = FAMILY_SITES.find((item) => item.value === value)
+        if (site) window.open(site.href, '_blank', 'noopener,noreferrer')
+
+        // 외부 사이트로 이동한 뒤 Select를 placeholder 상태로 되돌린다.
+        setSelectedFamilySite('')
+    }
 
     return (
         <footer
@@ -174,7 +158,7 @@ const FooterContent = ({variant = 'mainpage', portalTheme, className, ...props}:
                 <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                     <p className="typo-body-l-regular">{CONTACT.copyright}</p>
                     {/* 관련 사이트를 선택하면 해당 외부 URL을 새 창으로 연다. */}
-                    <Select name="familySite" onValueChange={handleFamilySiteChange}>
+                    <Select name="familySite" value={selectedFamilySite} onValueChange={handleFamilySiteChange}>
                         <SelectTrigger aria-label="관련 사이트" className={style.familySite}>
                             <SelectValue placeholder="관련사이트" />
                         </SelectTrigger>
