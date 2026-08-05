@@ -51,6 +51,25 @@ const INQUIRY_TYPES = [
 ] as const
 
 const CONTENT_MAX_LENGTH = 500
+const ATTACHMENT_EXTENSIONS = ['hwp', 'xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'pdf', 'jpg', 'jpeg', 'gif', 'png']
+const ATTACHMENT_ACCEPT = ATTACHMENT_EXTENSIONS.map((extension) => `.${extension}`).join(',')
+const ATTACHMENT_MAX_SIZE = 30 * 1024 * 1024
+
+const getAttachmentError = (files: File[]) => {
+    if (files.length > 1) return '첨부파일은 1개만 업로드할 수 있습니다.'
+
+    const [file] = files
+    if (!file) return undefined
+
+    const extension = file.name.split('.').pop()?.toLowerCase()
+    if (!extension || !ATTACHMENT_EXTENSIONS.includes(extension)) {
+        return '첨부 가능한 파일 형식은 hwp, xls, xlsx, doc, docx, ppt, pptx, pdf, jpg, jpeg, gif, png입니다.'
+    }
+
+    if (file.size > ATTACHMENT_MAX_SIZE) return '파일 1개당 최대 30MB까지 첨부할 수 있습니다.'
+
+    return undefined
+}
 
 // input name별 오류 메시지와 오류 발생 시 포커스할 컨트롤을 매핑한다.
 const INVALID_FIELDS: Record<string, {message: string; focusId: string}> = {
@@ -184,21 +203,46 @@ const InquiryForm = ({cancelHref, consentDialogDefaultOpen, className, onSubmit,
 
     const handleFormChange = (event: SyntheticEvent<HTMLFormElement>) => {
         const control = event.target
-        if (control instanceof HTMLElement) clearError(control.getAttribute('name') ?? '')
+        if (control instanceof HTMLElement) {
+            const name = control.getAttribute('name') ?? ''
+            if (name !== 'attachment') clearError(name)
+        }
     }
 
     const describedBy = (name: string) => (errors[name] ? `inquiry-${name}-error` : undefined)
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setAttachmentName(event.currentTarget.files?.[0]?.name)
+        const input = event.currentTarget
+        const files = Array.from(input.files ?? [])
+        const errorMessage = getAttachmentError(files)
+
+        if (errorMessage) {
+            setAttachmentName(undefined)
+            setErrors((previous) => ({...previous, attachment: errorMessage}))
+            input.value = ''
+            return
+        }
+
+        setAttachmentName(files[0]?.name)
+        clearError('attachment')
     }
 
     // [폼 제출 진입점]
     // 현재는 action 미설정 시 제출을 막고 FormData를 로그한다. 실제 연동 시 API 요청 또는 form action을 연결한다.
     const handleFormSubmit = (event: SubmitEvent<HTMLFormElement>) => {
+        const formData = new FormData(event.currentTarget)
+        const attachment = formData.get('attachment')
+        const attachmentError =
+            attachment instanceof File && attachment.name ? getAttachmentError([attachment]) : undefined
+
+        if (attachmentError) {
+            event.preventDefault()
+            setErrors((previous) => ({...previous, attachment: attachmentError}))
+            return
+        }
+
         if (!formProps.action) event.preventDefault()
 
-        const formData = new FormData(event.currentTarget)
         const values = Object.fromEntries(
             Array.from(formData.entries()).map(([name, value]) => [
                 name,
@@ -296,14 +340,17 @@ const InquiryForm = ({cancelHref, consentDialogDefaultOpen, className, onSubmit,
                         </Field>
 
                         {/* 파일 input은 숨기고 버튼으로 열어 선택한 파일명과 제거 버튼을 표시한다. */}
-                        <div>
+                        <Field data-invalid={errors.attachment ? true : undefined}>
                             <input
                                 ref={fileInputRef}
                                 type="file"
                                 id="inquiry-attachment"
                                 name="attachment"
+                                accept={ATTACHMENT_ACCEPT}
                                 tabIndex={-1}
                                 aria-hidden="true"
+                                aria-invalid={errors.attachment ? true : undefined}
+                                aria-describedby={describedBy('attachment')}
                                 className="hidden"
                                 onChange={handleFileChange}
                             />
@@ -336,7 +383,8 @@ const InquiryForm = ({cancelHref, consentDialogDefaultOpen, className, onSubmit,
                                     </Button>
                                 </div>
                             )}
-                        </div>
+                            <FieldError id="inquiry-attachment-error">{errors.attachment}</FieldError>
+                        </Field>
                     </div>
                 </BaseCard>
 
