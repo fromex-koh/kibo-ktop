@@ -1350,6 +1350,19 @@
             ]
         },
         {
+            "name": "로그인 안내",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "로그인 안내",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-login-guide"
+                }
+            ]
+        },
+        {
             "name": "로그인 연장",
             "userType": "기업",
             "children": [
@@ -2342,6 +2355,19 @@
                     "status": "대기중",
                     "version": "미배포",
                     "key": "org-initial-password-change"
+                }
+            ]
+        },
+        {
+            "name": "로그인 안내",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "로그인 안내",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-login-guide"
                 }
             ]
         },

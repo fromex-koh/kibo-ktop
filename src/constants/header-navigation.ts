@@ -1,3 +1,5 @@
+import {KIBO_SITE_URL} from '@/constants/site'
+
 // Header에서 사용하는 사용자 유형과 메뉴 데이터의 단일 원본.
 export type UserType = 'corp' | 'org'
 
@@ -80,7 +82,7 @@ const createNoticeServiceGroup = (userType: UserType): MenuServiceGroup => ({
     label: '알림마당',
     items: [
         {label: '공지사항', href: `/${userType}/notice/announcements`},
-        {label: 'FAQ', href: '#'},
+        {label: 'FAQ', href: `/${userType}/notice/faq`},
         {label: '문의하기', href: `/${userType}/notice/inquiry-create`},
         {label: '자료실', href: `/${userType}/notice/resources`},
     ],
@@ -89,7 +91,7 @@ const createNoticeServiceGroup = (userType: UserType): MenuServiceGroup => ({
 // 추후 외부 URL만 교체할 수 있도록 기술보증기금 링크를 공통 원본으로 관리한다.
 const KIBO_EXTERNAL_LINK: Pick<HeaderNavLink, 'label' | 'href' | 'external'> = {
     label: '기술보증기금',
-    href: '#',
+    href: KIBO_SITE_URL,
     external: true,
 }
 

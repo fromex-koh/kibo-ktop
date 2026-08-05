@@ -886,6 +886,13 @@
             "name": "알기 쉬운 개인처리방침"
         },
         {
+            "key": "corp-login-guide",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/login-guide",
+            "name": "로그인 안내"
+        },
+        {
             "key": "corp-session-extension",
             "screenId": null,
             "userType": "기업",
@@ -1633,6 +1640,13 @@
             "userType": "기관",
             "path": "/org/initial-password-change",
             "name": "최초 비밀번호 변경"
+        },
+        {
+            "key": "org-login-guide",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/login-guide",
+            "name": "로그인 안내"
         },
         {
             "key": "org-session-extension",

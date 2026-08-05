@@ -8,5 +8,8 @@ export const SITE_OG_IMAGE = '/og-image.png'
 export const SITE_OG_IMAGE_ALT = '기술평가 통합 플랫폼 퍼블리싱 가이드'
 export const SITE_ALLOW_INDEXING = false
 
+// 기술보증기금 대표 사이트 — 헤더·전체 메뉴의 외부 링크가 함께 쓴다.
+export const KIBO_SITE_URL = 'https://www.kibo.or.kr/index.do'
+
 // 퍼블리싱 인덱스의 저장소·FE 전달용 링크 전용 설정 (Open Graph·사이트 메타데이터와 무관)
 export const REPOSITORY_URL = process.env.NEXT_PUBLIC_REPOSITORY_URL ?? 'https://github.com/fromex-koh/kibo-ktop'

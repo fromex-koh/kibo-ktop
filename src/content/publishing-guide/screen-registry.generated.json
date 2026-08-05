@@ -794,8 +794,8 @@
         },
         {
             "key": "corp-notice-faq",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -878,6 +878,13 @@
         },
         {
             "key": "corp-privacy-policy-easy-privacy-policy",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-login-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "미배포",
@@ -1536,8 +1543,8 @@
         },
         {
             "key": "org-notice-faq",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -1627,6 +1634,13 @@
         },
         {
             "key": "org-initial-password-change",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-login-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "미배포",

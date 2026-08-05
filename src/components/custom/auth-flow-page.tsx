@@ -104,6 +104,41 @@ const SessionExtensionPage = () => (
     </>
 )
 
+const LoginGuideDialog = () => (
+    // 비로그인 상태에서 보호된 메뉴를 선택했을 때의 안내 모달을 화면 확인용으로 연다.
+    <Dialog defaultOpen>
+        <DialogContent showCloseButton={false}>
+            <DialogHeader className="p-0">
+                <DialogTitle className="sr-only">회원가입/로그인</DialogTitle>
+            </DialogHeader>
+            <div className={cn(dialogBodyClassName, 'pt-0')}>
+                <DialogDescription className="py-8 text-center">
+                    로그인이 필요한 서비스입니다. 로그인하시겠습니까?
+                </DialogDescription>
+            </div>
+            <DialogFooter>
+                <DialogClose asChild>
+                    <Button variant="tertiary" size="xl">
+                        취소
+                    </Button>
+                </DialogClose>
+                <Button size="xl">로그인하기</Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+)
+
+const LoginGuidePage = () => (
+    <>
+        <AuthFlowPage>
+            <p className="typo-body-xl-regular text-label-foreground py-10">
+                로그인해야 볼 수 있는 메뉴를 비로그인 상태에서 클릭하면 노출되는 모달입니다.
+            </p>
+        </AuthFlowPage>
+        <LoginGuideDialog />
+    </>
+)
+
 const LoginEndPage = () => (
     <>
         <AuthFlowPage />
@@ -165,4 +200,4 @@ const RealNameVerificationPage = () => (
     </>
 )
 
-export {InitialPasswordChangePage, LoginEndPage, RealNameVerificationPage, SessionExtensionPage}
+export {InitialPasswordChangePage, LoginEndPage, LoginGuidePage, RealNameVerificationPage, SessionExtensionPage}
