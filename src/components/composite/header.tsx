@@ -596,8 +596,8 @@ const HeaderContent = ({
                                 >
                                     {user.name}
                                 </p>
-                                <span className="tracking-control-label text-sm font-medium whitespace-nowrap">
-                                    {' 님'}
+                                <span className="tracking-control-label ml-1 text-sm font-medium whitespace-nowrap">
+                                    님
                                 </span>
                             </div>
                             <SessionTimer remaining={user.sessionRemaining} />
