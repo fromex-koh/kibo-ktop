@@ -153,6 +153,10 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 ],
             },
             {
+                title: '펼침',
+                items: [{label: 'Accordion', href: '/component-guide/accordion'}],
+            },
+            {
                 title: '데이터 표시',
                 items: [
                     {label: 'ProgressBar', href: '/component-guide/progress-bar'},

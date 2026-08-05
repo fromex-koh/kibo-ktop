@@ -1239,6 +1239,13 @@
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-notice-inquiry-create-privacy-consent-guide"
+                        },
+                        {
+                            "label": "문의 취소",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-notice-inquiry-create-inquiry-cancel"
                         }
                     ]
                 },
@@ -2235,6 +2242,13 @@
                             "status": "대기중",
                             "version": "미배포",
                             "key": "org-notice-inquiry-create-privacy-consent-guide"
+                        },
+                        {
+                            "label": "문의 취소",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-notice-inquiry-create-inquiry-cancel"
                         }
                     ]
                 },

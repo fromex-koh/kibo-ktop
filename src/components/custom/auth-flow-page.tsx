@@ -1,6 +1,10 @@
 'use client'
 
 import type {ReactNode} from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import serviceStatusIllustration from '@public/images/service-status/service-status-illustration.webp'
+import {ActionBar, ActionBarCenter} from '@/components/composite/action-bar'
 import {Button} from '@/components/ui/button'
 import {
     Dialog,
@@ -47,28 +51,6 @@ const SessionExtensionDialog = () => (
                     </Button>
                 </DialogClose>
                 <Button size="xl">로그인 연장</Button>
-            </DialogFooter>
-        </DialogContent>
-    </Dialog>
-)
-
-const LogoutDialog = () => (
-    // 화면 확인을 위해 로그아웃 모달을 열어 둔다.
-    <Dialog defaultOpen>
-        <DialogContent>
-            <DialogHeader>
-                <DialogTitle>로그아웃 안내</DialogTitle>
-            </DialogHeader>
-            <div className={cn(dialogBodyClassName, 'gap-4')}>
-                <DialogDescription>로그아웃 하시겠어요?</DialogDescription>
-                <p className="typo-body-xl-regular text-label-foreground">
-                    현재 계정에서 로그아웃됩니다.
-                    <br />
-                    다시 이용하시려면 로그인해 주세요.
-                </p>
-            </div>
-            <DialogFooter>
-                <Button size="xl">로그아웃</Button>
             </DialogFooter>
         </DialogContent>
     </Dialog>
@@ -139,17 +121,81 @@ const LoginGuidePage = () => (
     </>
 )
 
+// 로그인 종료 — 시안 "[공통] 로그인 종료"(40006805:26258).
+// 기존 컴포넌트·이미지 조합이다: 서비스 상태 일러스트(404·500·정기점검과 같은 파일) · ActionBar · Button.
+// 자동 로그아웃된 뒤의 화면이라 Header 는 로그인 전 구성으로 둔다((logged-out) 그룹).
+// 로그인 경로는 인증 연동 시 실제 로그인 화면으로 연결한다.
 const LoginEndPage = () => (
-    <>
-        <AuthFlowPage />
-        <LogoutDialog />
-    </>
+    <AuthFlowPage>
+        {/* 세로 간격은 시안 그대로다 — 헤더 아래 80, 일러스트↔제목 40, 제목↔설명 8, 설명↔버튼 60. */}
+        <div className="flex flex-col items-center gap-15 py-20">
+            <div className="flex flex-col items-center gap-10">
+                <Image
+                    src={serviceStatusIllustration}
+                    alt=""
+                    priority
+                    sizes="320px"
+                    className="h-auto w-full max-w-80"
+                />
+                <div className="flex flex-col items-center gap-2 text-center">
+                    <h1 className="typo-h1-bold text-foreground text-balance break-keep">자동 로그아웃 되었어요</h1>
+                    <p className="typo-title-m-regular text-foreground-subtle break-keep">
+                        회원님의 안전한 서비스 이용을 위해 일정시간 동안 서비스 이용이 없는 경우 자동 로그아웃 됩니다.
+                    </p>
+                </div>
+            </div>
+            <ActionBar>
+                <ActionBarCenter className="gap-4">
+                    <Button asChild variant="tertiary" size="xl">
+                        <Link href="/">홈으로 이동</Link>
+                    </Button>
+                    <Button asChild size="xl">
+                        <Link href="#">로그인</Link>
+                    </Button>
+                </ActionBarCenter>
+            </ActionBar>
+        </div>
+    </AuthFlowPage>
 )
 
 const InitialPasswordChangePage = () => (
     <>
         <AuthFlowPage />
         <InitialPasswordChangeDialog />
+    </>
+)
+
+// 우편번호 검색 — 시안 "modal"(40006806:26429). 카드 588 · 여백 40 · 제목 24 는 Dialog 의 기본값 그대로다.
+// 시안이 "내용 추후 업데이트"로 비워 둔 자리에 Kakao(다음) 우편번호 위젯이 들어온다. 그 자리를 같은
+// 크기(최소 400)의 안내 면으로 표시해 두었으니, 연동할 때 이 면을 위젯 컨테이너로 바꾸면 된다.
+//
+// 시안 아래쪽에 겹쳐 있는 CTA 두 개(placeholder "버튼명" · 다른 모달에서 복사된 "비밀번호 확인")는
+// 카드 높이(540 = 40+36+24+400+40) 밖으로 벗어나 있는 남은 요소라 옮기지 않는다. 주소를 고르면 닫히는
+// 흐름이라 닫기(X)로 충분하다.
+const PostcodeSearchDialog = () => (
+    // 화면 확인을 위해 모달을 열어 둔다.
+    <Dialog defaultOpen>
+        {/* 위젯이 들어올 자리라 설명 문단이 없다 — radix 에 설명 없음을 알린다. */}
+        <DialogContent aria-describedby={undefined}>
+            <DialogHeader>
+                <DialogTitle>우편번호 검색</DialogTitle>
+            </DialogHeader>
+            {/* CTA 가 없으므로 아래 여백 40 은 본문이 갖는다. */}
+            <div className={cn(dialogBodyClassName, 'pb-10')}>
+                <p className="bg-accent-subtle typo-title-l-bold text-foreground flex min-h-100 items-center justify-center text-center">
+                    Kakao(다음) 우편번호 검색 영역
+                </p>
+            </div>
+        </DialogContent>
+    </Dialog>
+)
+
+const PostcodeSearchPage = () => (
+    <>
+        <AuthFlowPage>
+            <p className="typo-body-xl-regular text-label-foreground py-10">Kakao(다음) 우편번호 API를 사용한다.</p>
+        </AuthFlowPage>
+        <PostcodeSearchDialog />
     </>
 )
 
@@ -200,4 +246,12 @@ const RealNameVerificationPage = () => (
     </>
 )
 
-export {InitialPasswordChangePage, LoginEndPage, LoginGuidePage, RealNameVerificationPage, SessionExtensionPage}
+export {
+    AuthFlowPage,
+    InitialPasswordChangePage,
+    LoginEndPage,
+    LoginGuidePage,
+    PostcodeSearchPage,
+    RealNameVerificationPage,
+    SessionExtensionPage,
+}

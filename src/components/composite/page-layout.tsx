@@ -6,6 +6,9 @@ import SkipNav, {type SkipLinkItem} from '@/components/composite/skip-nav'
 
 type PageLayoutProps = {
     userType?: UserType
+    // 퍼블리싱 인덱스에서 비로그인 Header와 userType별 Footer를 함께 확인하기 위한 화면 전용 prop이다.
+    // 실제 서비스에서는 사용하지 않으며, 공지사항·개인정보처리방침을 실제 링크로 연결한다.
+    footerUserType?: UserType
     user?: HeaderUser
     showUserTypeToggle?: boolean
     navigationByUserType?: HeaderNavigationByUserType
@@ -17,7 +20,7 @@ type PageLayoutProps = {
 const PAGE_LAYOUT_SKIP_LINKS: readonly SkipLinkItem[] = [{href: '#main', label: '본문 바로가기'}]
 const MAIN_PAGE_SKIP_LINKS: readonly SkipLinkItem[] = [{href: '#main', label: '본문 바로가기'}]
 
-type PageLayoutBaseProps = Omit<PageLayoutProps, 'children' | 'skipLinks'> & {
+type PageLayoutBaseProps = Omit<PageLayoutProps, 'children' | 'skipLinks' | 'footerUserType'> & {
     overlay: boolean
     showThemeToggle: boolean
     skipLinks: readonly SkipLinkItem[]
@@ -58,12 +61,12 @@ const PageLayoutBase = ({
 
 // 일반 서비스 서브페이지가 공유하는 Header·Footer 조합.
 // userType·user를 전달하면 Header의 유형별 메뉴와 로그인 상태를 고정한다.
-const SubPageLayout = ({skipLinks = PAGE_LAYOUT_SKIP_LINKS, children, ...props}: PageLayoutProps) => (
+const SubPageLayout = ({skipLinks = PAGE_LAYOUT_SKIP_LINKS, footerUserType, children, ...props}: PageLayoutProps) => (
     <div className="flex min-h-dvh flex-col">
         <PageLayoutBase {...props} overlay={false} showThemeToggle skipLinks={skipLinks}>
             {children}
         </PageLayoutBase>
-        <Footer variant="subpage" />
+        <Footer variant="subpage" userType={footerUserType ?? props.userType} />
     </div>
 )
 

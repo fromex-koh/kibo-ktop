@@ -821,6 +821,13 @@
             "isCurrent": false
         },
         {
+            "key": "corp-notice-inquiry-create-inquiry-cancel",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "corp-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -1570,6 +1577,13 @@
             "isCurrent": false
         },
         {
+            "key": "org-notice-inquiry-create-inquiry-cancel",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "org-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -1606,8 +1620,8 @@
         },
         {
             "key": "org-postcode-search",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },

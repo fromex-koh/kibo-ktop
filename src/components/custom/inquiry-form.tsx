@@ -97,52 +97,66 @@ type InquiryFormProps = {
     // action, method, encType, onSubmit 등 기본 form 속성을 전달한다.
 } & Omit<ComponentProps<'form'>, 'children'>
 
+type InquiryCancelDialogProps = {
+    cancelHref: string
+    defaultOpen?: boolean
+    showTrigger?: boolean
+    disabled?: boolean
+}
+
+// 문의 취소 확인 모달. 폼에서는 취소 버튼으로 열고, 인덱스 화면에서는 defaultOpen으로 확인한다.
+const InquiryCancelDialog = ({
+    cancelHref,
+    defaultOpen = false,
+    showTrigger = true,
+    disabled = false,
+}: InquiryCancelDialogProps) => {
+    const router = useRouter()
+
+    return (
+        <Dialog defaultOpen={defaultOpen}>
+            {showTrigger ? (
+                <DialogTrigger asChild>
+                    <Button type="button" variant="tertiary" size="xl" className="w-full sm:w-auto" disabled={disabled}>
+                        취소
+                    </Button>
+                </DialogTrigger>
+            ) : null}
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>작성 취소</DialogTitle>
+                </DialogHeader>
+                <div className={cn(dialogBodyClassName, 'gap-4')}>
+                    <DialogDescription>문의 작성을 취소하시겠습니까?</DialogDescription>
+                    <p className="typo-body-xl-regular text-label-foreground">
+                        지금까지 작성한 내용과 첨부파일은 저장되지 않습니다.
+                        <br />
+                        화면을 나가면 다시 작성해야 합니다.
+                    </p>
+                </div>
+                <DialogFooter>
+                    <DialogClose asChild>
+                        <Button variant="tertiary" size="xl">
+                            계속 작성
+                        </Button>
+                    </DialogClose>
+                    <Button type="button" size="xl" onClick={() => router.replace(cancelHref)}>
+                        나가기
+                    </Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
 // useFormStatus는 form 내부 자식에서만 사용할 수 있어 제출 액션을 분리한다.
 const InquiryFormActions = ({cancelHref}: {cancelHref: string}) => {
-    const router = useRouter()
     const {pending} = useFormStatus()
 
     return (
         <ActionBar>
             <ActionBarCenter className="gap-4 max-sm:col-span-3 max-sm:col-start-1 max-sm:w-full max-sm:flex-col">
-                {/* 작성 중인 내용과 첨부파일 유실을 방지하는 취소 확인 모달. */}
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button
-                            type="button"
-                            variant="tertiary"
-                            size="xl"
-                            className="w-full sm:w-auto"
-                            disabled={pending}
-                        >
-                            취소
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>작성 취소</DialogTitle>
-                        </DialogHeader>
-                        <div className={cn(dialogBodyClassName, 'gap-4')}>
-                            <DialogDescription>문의 작성을 취소하시겠습니까?</DialogDescription>
-                            <p className="typo-body-xl-regular text-label-foreground">
-                                지금까지 작성한 내용과 첨부파일은 저장되지 않습니다.
-                                <br />
-                                화면을 나가면 다시 작성해야 합니다.
-                            </p>
-                        </div>
-                        <DialogFooter>
-                            <DialogClose asChild>
-                                <Button variant="tertiary" size="xl">
-                                    계속 작성
-                                </Button>
-                            </DialogClose>
-                            {/* 작성 중인 폼을 취소하고 cancelHref로 이동한다. */}
-                            <Button type="button" size="xl" onClick={() => router.replace(cancelHref)}>
-                                나가기
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
+                <InquiryCancelDialog cancelHref={cancelHref} disabled={pending} />
                 <Button type="submit" size="xl" className="w-full sm:w-auto" disabled={pending} aria-busy={pending}>
                     {pending ? (
                         <>
@@ -446,5 +460,5 @@ const InquiryForm = ({cancelHref, consentDialogDefaultOpen, className, onSubmit,
     )
 }
 
-export {InquiryForm}
-export type {InquiryFormProps}
+export {InquiryCancelDialog, InquiryForm}
+export type {InquiryCancelDialogProps, InquiryFormProps}

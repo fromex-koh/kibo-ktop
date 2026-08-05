@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {useState, type ComponentProps} from 'react'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
+import type {UserType} from '@/components/composite/header'
 import {cn} from '@/lib/utils'
 
 // Footer 합성 컴포넌트. mainpage/subpage variant와 현재 테마를 따른다.
@@ -11,12 +12,12 @@ import {cn} from '@/lib/utils'
 
 type FooterLink = {label: string; href: string; external?: boolean}
 
-// 푸터 하단 유틸 링크. 개인정보처리방침만 강조한다.
-const UTILITY_LINKS: (FooterLink & {emphasized?: boolean})[] = [
+// 푸터 하단 유틸 링크. 서비스 userType이 있으면 해당 서비스 경로로 연결한다.
+const createUtilityLinks = (userType?: UserType): (FooterLink & {emphasized?: boolean})[] => [
     {label: '이용약관', href: '#'},
     {label: '가격 정책', href: '#'},
-    {label: '개인정보처리방침', href: '#', emphasized: true},
-    {label: '공지사항', href: '#'},
+    {label: '개인정보처리방침', href: userType ? `/${userType}/privacy-policy` : '#', emphasized: true},
+    {label: '공지사항', href: userType ? `/${userType}/notice/announcements` : '#'},
 ]
 
 // 관련사이트 목록. 선택하면 해당 외부 사이트를 새 창으로 연다.
@@ -67,15 +68,17 @@ const FOOTER_STYLE = {
 // mainpage는 메인 푸터, subpage는 서비스 푸터다.
 type FooterProps = ComponentProps<'footer'> & {
     variant?: FooterVariant
+    userType?: UserType
 }
 
 type FooterContentProps = FooterProps & {
     portalTheme?: FooterTheme
 }
 
-const FooterContent = ({variant = 'mainpage', portalTheme, className, ...props}: FooterContentProps) => {
+const FooterContent = ({variant = 'mainpage', userType, portalTheme, className, ...props}: FooterContentProps) => {
     const style = FOOTER_STYLE[variant]
     const [selectedFamilySite, setSelectedFamilySite] = useState('')
+    const utilityLinks = createUtilityLinks(userType)
 
     const handleFamilySiteChange = (value: string) => {
         const site = FAMILY_SITES.find((item) => item.value === value)
@@ -123,7 +126,7 @@ const FooterContent = ({variant = 'mainpage', portalTheme, className, ...props}:
                         </div>
                         <nav aria-label="푸터 유틸 메뉴">
                             <ul className="flex flex-wrap items-center gap-6">
-                                {UTILITY_LINKS.map((link) => (
+                                {utilityLinks.map((link) => (
                                     <li key={link.label}>
                                         <Link
                                             href={link.href}
@@ -178,8 +181,13 @@ const FooterContent = ({variant = 'mainpage', portalTheme, className, ...props}:
     )
 }
 
-const Footer = ({variant = 'mainpage', ...props}: FooterProps) => (
-    <FooterContent variant={variant} portalTheme={variant === 'mainpage' ? 'mainpage' : undefined} {...props} />
+const Footer = ({variant = 'mainpage', userType, ...props}: FooterProps) => (
+    <FooterContent
+        variant={variant}
+        userType={userType}
+        portalTheme={variant === 'mainpage' ? 'mainpage' : undefined}
+        {...props}
+    />
 )
 
 // 컴포넌트 가이드에서 드롭다운까지 지정 테마로 확인한다.

@@ -17,6 +17,11 @@ const tabsListVariants = cva(
                 // group-data-[variant=pill]/tabs-list: 같은 variant 접두사를 받지 못한다. 목록에 두면
                 // preflight 의 button { font-size:100%; font-weight:inherit } 로 트리거가 그대로 상속받는다.
                 pill: 'typo-body-xl-medium h-auto w-full flex-wrap justify-start gap-3 rounded-none bg-transparent p-0',
+                // PROJECT-STYLE: pill-outline — 같은 알약 탭이지만 비선택이 '흰 면 + 옅은 테두리'다
+                // (Figma "[알림마당] 자주 묻는 질문" tap_2depth). 카드 목록 위에 놓여 회색 면(pill)으로는
+                // 배경과 구분되지 않기 때문이다. 간격도 8 로 좁다.
+                'pill-outline':
+                    'typo-body-xl-medium h-auto w-full flex-wrap justify-start gap-2 rounded-none bg-transparent p-0',
                 // plain — 구조만 남기고 표면 스타일을 비운다. FormTabs 처럼 탭 모양이 전혀 다른
                 // composite 가 자기 디자인을 그대로 얹을 때 쓴다(기본 스타일과 싸우지 않게).
                 plain: 'h-auto w-full items-stretch rounded-none bg-transparent p-0',
@@ -43,6 +48,11 @@ const tabsTriggerLineClassName =
 // 굵기만 상태로 갈리므로 선택 상태에서 font-bold 로 덮는다(pagination 의 aria-current 처리와 같은 방식).
 const tabsTriggerPillClassName =
     'group-data-[variant=pill]/tabs-list:h-control-h-md group-data-[variant=pill]/tabs-list:bg-background group-data-[variant=pill]/tabs-list:text-foreground-subtle group-data-[variant=pill]/tabs-list:flex-none group-data-[variant=pill]/tabs-list:justify-center group-data-[variant=pill]/tabs-list:rounded-sm group-data-[variant=pill]/tabs-list:border-0 group-data-[variant=pill]/tabs-list:px-6 group-data-[variant=pill]/tabs-list:py-0 group-data-[variant=pill]/tabs-list:not-data-[state=active]:hover:text-foreground group-data-[variant=pill]/tabs-list:data-active:bg-tab-pill-active group-data-[variant=pill]/tabs-list:data-active:text-tab-pill-active-foreground group-data-[variant=pill]/tabs-list:data-active:font-bold group-data-[variant=pill]/tabs-list:data-active:shadow-none'
+// PROJECT-STYLE: pill-outline 탭 — 크기·라운드·여백은 pill 과 같고(48·8·24) 비선택 표현만 다르다.
+// 비선택 = 흰 면(bg-surface) + 테두리 subtle-3(gray.100) + foreground-subtle, 선택 = navy 면 + 흰 굵은 글자.
+// 선택 상태에서는 테두리를 투명으로 돌려 면 색만 남긴다.
+const tabsTriggerPillOutlineClassName =
+    'group-data-[variant=pill-outline]/tabs-list:h-control-h-md group-data-[variant=pill-outline]/tabs-list:bg-surface group-data-[variant=pill-outline]/tabs-list:border group-data-[variant=pill-outline]/tabs-list:border-subtle-3 group-data-[variant=pill-outline]/tabs-list:text-foreground-subtle group-data-[variant=pill-outline]/tabs-list:flex-none group-data-[variant=pill-outline]/tabs-list:justify-center group-data-[variant=pill-outline]/tabs-list:rounded-sm group-data-[variant=pill-outline]/tabs-list:px-6 group-data-[variant=pill-outline]/tabs-list:py-0 group-data-[variant=pill-outline]/tabs-list:not-data-[state=active]:hover:text-foreground group-data-[variant=pill-outline]/tabs-list:data-active:border-transparent group-data-[variant=pill-outline]/tabs-list:data-active:bg-tab-pill-active group-data-[variant=pill-outline]/tabs-list:data-active:text-tab-pill-active-foreground group-data-[variant=pill-outline]/tabs-list:data-active:font-bold group-data-[variant=pill-outline]/tabs-list:data-active:shadow-none'
 // PROJECT-STYLE: shadcn 원본 패널은 outline-none 만 있어 포커스 표시가 없다. 탭 패널은 ARIA 탭 패턴대로
 // 탭 순서에 포함되므로(Radix 가 tabindex=0 부여) 탭 다음 Tab 키에서 여기로 포커스가 온다 —
 // 대체 포커스 링이 없으면 키보드 사용자에게 포커스가 사라진 것처럼 보인다[6.1.2].
@@ -55,4 +65,5 @@ export {
     tabsTriggerClassName,
     tabsTriggerLineClassName,
     tabsTriggerPillClassName,
+    tabsTriggerPillOutlineClassName,
 }
