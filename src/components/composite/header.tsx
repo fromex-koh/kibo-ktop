@@ -282,13 +282,20 @@ const HeaderThemeToggle = () => {
 }
 
 // 전체 메뉴 링크. external이면 새 창과 외부 링크 아이콘을 사용한다.
-const MenuLink = ({label, href, external, className}: HeaderNavLink & {className?: string}) => (
+const MenuLink = ({
+    label,
+    href,
+    external,
+    className,
+    onClick,
+}: HeaderNavLink & {className?: string; onClick?: () => void}) => (
     <Link
         href={href}
         className={cn(
             'hover:text-menu-overlay-accent aria-[current=page]:text-menu-overlay-accent inline-flex w-fit items-center gap-1 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid',
             className,
         )}
+        onClick={onClick}
         {...(external ? {target: '_blank', rel: 'noopener noreferrer'} : {})}
     >
         {label}
@@ -341,6 +348,7 @@ const HeaderMenu = ({
         'absolute inset-0 transition-[opacity,transform] duration-200 ease-out motion-reduce:transition-none'
     const closeIconMotionClassName =
         'absolute inset-0 transition-[opacity,transform] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] motion-reduce:transition-none'
+    const closeMenu = () => onOpenChange(false)
 
     return (
         <Sheet
@@ -453,7 +461,7 @@ const HeaderMenu = ({
                                             link.label
                                         ) : (
                                             <SheetClose asChild>
-                                                <MenuLink {...link} />
+                                                <MenuLink {...link} onClick={closeMenu} />
                                             </SheetClose>
                                         )}
                                     </h3>
@@ -462,7 +470,7 @@ const HeaderMenu = ({
                                             {link.items.map((item) => (
                                                 <li key={item.label}>
                                                     <SheetClose asChild>
-                                                        <MenuLink {...item} />
+                                                        <MenuLink {...item} onClick={closeMenu} />
                                                     </SheetClose>
                                                 </li>
                                             ))}
@@ -493,7 +501,7 @@ const HeaderMenu = ({
                                                         />
                                                     ) : null}
                                                     <SheetClose asChild>
-                                                        <MenuLink {...menuItem} />
+                                                        <MenuLink {...menuItem} onClick={closeMenu} />
                                                     </SheetClose>
                                                 </li>
                                             )
@@ -573,9 +581,13 @@ const HeaderContent = ({
                     menuOpen ? 'max-h-dvh opacity-100' : 'max-h-0 opacity-0 lg:max-h-14 lg:opacity-100',
                 )}
             >
-                <div className="flex flex-wrap items-center justify-end gap-4 py-2 xl:gap-10">
+                {/* 묶음 사이 간격은 시안 40(xl)이다. 좁아질수록 줄이되 묶음 안쪽 간격(16)보다는 항상 크게 두어
+                    [배지+이름·남은 시간]과 [링크]가 서로 다른 묶음으로 읽히게 한다. */}
+                <div className="flex flex-wrap items-center justify-end gap-4 py-2 lg:gap-8 xl:gap-10">
                     {user ? (
-                        <>
+                        // 시안에서 [배지+이름]과 [남은 시간+연장]은 한 묶음(간격 16)이고, 그 묶음과 링크 사이가 40 이다.
+                        // 부모 간격(xl 40)을 그대로 받으면 이름과 시간이 링크만큼 벌어져 두 묶음이 구분되지 않는다.
+                        <div className="flex min-w-0 flex-wrap items-center justify-end gap-4">
                             <div className="grid w-fit max-w-full min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center">
                                 <UserTypeBadge userType={userType} />
                                 <p
@@ -589,7 +601,7 @@ const HeaderContent = ({
                                 </span>
                             </div>
                             <SessionTimer remaining={user.sessionRemaining} />
-                        </>
+                        </div>
                     ) : showUserTypeToggle ? (
                         <MemberTypeToggle userType={userType} onUserTypeChange={onUserTypeChange} />
                     ) : null}
