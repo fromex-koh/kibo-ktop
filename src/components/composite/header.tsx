@@ -100,6 +100,12 @@ const UserTypeBadge = ({userType}: {userType: UserType}) => {
 }
 
 // 로그인 후 남은 시간과 연장 안내 모달을 표시한다. 실제 세션 연장 동작은 서비스에서 연결한다.
+const SessionExtensionButton = () => (
+    <Button variant="text-underline" size="sm" type="button" className="font-normal">
+        연장
+    </Button>
+)
+
 const SessionTimer = ({remaining, showExtensionAction = true}: {remaining: string; showExtensionAction?: boolean}) => (
     <div className="flex items-center gap-1">
         <p className="tracking-control-label flex items-center gap-1 text-sm font-medium">
@@ -110,9 +116,7 @@ const SessionTimer = ({remaining, showExtensionAction = true}: {remaining: strin
         {showExtensionAction ? (
             <Dialog>
                 <DialogTrigger asChild>
-                    <Button variant="text-underline" size="sm" type="button" className="font-normal">
-                        연장
-                    </Button>
+                    <SessionExtensionButton />
                 </DialogTrigger>
                 <DialogContent>
                     <DialogHeader>
@@ -138,7 +142,9 @@ const SessionTimer = ({remaining, showExtensionAction = true}: {remaining: strin
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
-        ) : null}
+        ) : (
+            <SessionExtensionButton />
+        )}
     </div>
 )
 

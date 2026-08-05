@@ -1598,13 +1598,6 @@
             "isCurrent": false
         },
         {
-            "key": "org-quarterly-password-change",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
             "key": "org-terms",
             "implemented": true,
             "implementationStatus": "in-progress",

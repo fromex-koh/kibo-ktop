@@ -2287,19 +2287,6 @@
             ]
         },
         {
-            "name": "분기별 비밀번호 변경",
-            "userType": "기관",
-            "children": [
-                {
-                    "label": "분기별 비밀번호 변경",
-                    "screenId": null,
-                    "status": "대기중",
-                    "version": "미배포",
-                    "key": "org-quarterly-password-change"
-                }
-            ]
-        },
-        {
             "name": "이용약관",
             "userType": "기관",
             "children": [

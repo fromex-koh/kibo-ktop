@@ -1600,13 +1600,6 @@
             "name": "우편번호 검색"
         },
         {
-            "key": "org-quarterly-password-change",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/quarterly-password-change",
-            "name": "분기별 비밀번호 변경"
-        },
-        {
             "key": "org-terms",
             "screenId": null,
             "userType": "기관",
