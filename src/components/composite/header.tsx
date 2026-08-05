@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import {usePathname} from 'next/navigation'
 import {useEffect, useLayoutEffect, useRef, useState, type ComponentProps, type KeyboardEvent} from 'react'
 import {ExternalLink, Menu, Moon, Sun, TimerReset, X} from 'lucide-react'
 import {Badge} from '@/components/ui/badge'
@@ -99,43 +100,45 @@ const UserTypeBadge = ({userType}: {userType: UserType}) => {
 }
 
 // 로그인 후 남은 시간과 연장 안내 모달을 표시한다. 실제 세션 연장 동작은 서비스에서 연결한다.
-const SessionTimer = ({remaining}: {remaining: string}) => (
+const SessionTimer = ({remaining, showExtensionAction = true}: {remaining: string; showExtensionAction?: boolean}) => (
     <div className="flex items-center gap-1">
         <p className="tracking-control-label flex items-center gap-1 text-sm font-medium">
             <TimerReset aria-hidden="true" className="size-icon-sm shrink-0" />
             <span className="sr-only">로그인 유지 시간</span>
             {remaining}
         </p>
-        <Dialog>
-            <DialogTrigger asChild>
-                <Button variant="text-underline" size="sm" type="button" className="font-normal">
-                    연장
-                </Button>
-            </DialogTrigger>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>로그인 연장</DialogTitle>
-                </DialogHeader>
-                <div className={cn(dialogBodyClassName, 'gap-4')}>
-                    <DialogDescription>
-                        로그아웃까지 남은 시간 : <strong className="text-primary font-bold">{remaining}</strong>
-                    </DialogDescription>
-                    <p className="typo-body-xl-regular text-label-foreground">
-                        10분 동안 서비스를 이용하지 않아 잠시 후 자동으로 로그아웃될 예정입니다.
-                        <br />
-                        로그인 시간을 연장하시겠어요?
-                    </p>
-                </div>
-                <DialogFooter>
-                    <DialogClose asChild>
-                        <Button variant="tertiary" size="xl">
-                            로그아웃
-                        </Button>
-                    </DialogClose>
-                    <Button size="xl">로그인 연장</Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
+        {showExtensionAction ? (
+            <Dialog>
+                <DialogTrigger asChild>
+                    <Button variant="text-underline" size="sm" type="button" className="font-normal">
+                        연장
+                    </Button>
+                </DialogTrigger>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>로그인 연장</DialogTitle>
+                    </DialogHeader>
+                    <div className={cn(dialogBodyClassName, 'gap-4')}>
+                        <DialogDescription>
+                            로그아웃까지 남은 시간 : <strong className="text-primary font-bold">{remaining}</strong>
+                        </DialogDescription>
+                        <p className="typo-body-xl-regular text-label-foreground">
+                            10분 동안 서비스를 이용하지 않아 잠시 후 자동으로 로그아웃될 예정입니다.
+                            <br />
+                            로그인 시간을 연장하시겠어요?
+                        </p>
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="tertiary" size="xl">
+                                로그아웃
+                            </Button>
+                        </DialogClose>
+                        <Button size="xl">로그인 연장</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        ) : null}
     </div>
 )
 
@@ -543,6 +546,7 @@ const HeaderContent = ({
     // 전달받은 userType의 메뉴를 데스크톱 GNB와 모바일 전체 메뉴에 동일하게 적용한다.
     const navLinks = (navigationByUserType ?? DEFAULT_HEADER_NAVIGATION)[userType]
     const [menuOpen, setMenuOpen] = useState(false)
+    const isSessionExtensionPage = usePathname().replace(/\/$/, '').endsWith('/session-extension')
 
     // GNB 드롭다운이 열릴 때 포커스를 패널 안으로 이동한다.
     const [openNavMenu, setOpenNavMenu] = useState('')
@@ -588,19 +592,22 @@ const HeaderContent = ({
                         // 시안에서 [배지+이름]과 [남은 시간+연장]은 한 묶음(간격 16)이고, 그 묶음과 링크 사이가 40 이다.
                         // 부모 간격(xl 40)을 그대로 받으면 이름과 시간이 링크만큼 벌어져 두 묶음이 구분되지 않는다.
                         <div className="flex min-w-0 flex-wrap items-center justify-end gap-4">
-                            <div className="grid w-fit max-w-full min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center">
+                            <div className="grid w-fit max-w-full min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center">
                                 <UserTypeBadge userType={userType} />
-                                <p
-                                    className="tracking-control-label min-w-0 truncate text-sm font-medium"
-                                    title={user.name}
-                                >
-                                    {user.name}
+                                <p className="tracking-control-label flex w-max max-w-full min-w-0 items-center text-sm font-medium">
+                                    <span
+                                        className="block w-max max-w-full min-w-0 shrink truncate sm:max-w-46"
+                                        title={user.name}
+                                    >
+                                        {user.name}
+                                    </span>
+                                    <span className="ml-1 shrink-0 whitespace-nowrap">님</span>
                                 </p>
-                                <span className="tracking-control-label ml-1 text-sm font-medium whitespace-nowrap">
-                                    님
-                                </span>
                             </div>
-                            <SessionTimer remaining={user.sessionRemaining} />
+                            <SessionTimer
+                                remaining={user.sessionRemaining}
+                                showExtensionAction={!isSessionExtensionPage}
+                            />
                         </div>
                     ) : showUserTypeToggle ? (
                         <MemberTypeToggle userType={userType} onUserTypeChange={onUserTypeChange} />

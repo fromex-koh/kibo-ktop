@@ -21,7 +21,7 @@ const AuthFlowPage = () => (
 )
 
 const SessionExtensionDialog = () => (
-    // 화면 확인을 위해 모달을 열어 둔다. 실제 서비스에서는 Header의 연장 버튼 클릭 시 노출한다.
+    // 화면 확인을 위해 모달을 열어 둔다.
     <Dialog defaultOpen>
         <DialogContent>
             <DialogHeader>
@@ -50,7 +50,7 @@ const SessionExtensionDialog = () => (
 )
 
 const LogoutDialog = () => (
-    // 화면 확인을 위해 로그아웃 모달을 열어 둔다. 실 프로젝트에서는 Header의 로그아웃 버튼 클릭 시 노출한다.
+    // 화면 확인을 위해 로그아웃 모달을 열어 둔다.
     <Dialog defaultOpen>
         <DialogContent>
             <DialogHeader>
