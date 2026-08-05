@@ -104,11 +104,17 @@ const InquiryFormActions = ({cancelHref}: {cancelHref: string}) => {
 
     return (
         <ActionBar>
-            <ActionBarCenter className="gap-4">
+            <ActionBarCenter className="gap-4 max-sm:col-span-3 max-sm:col-start-1 max-sm:w-full max-sm:flex-col">
                 {/* 작성 중인 내용과 첨부파일 유실을 방지하는 취소 확인 모달. */}
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button type="button" variant="tertiary" size="xl" disabled={pending}>
+                        <Button
+                            type="button"
+                            variant="tertiary"
+                            size="xl"
+                            className="w-full sm:w-auto"
+                            disabled={pending}
+                        >
                             취소
                         </Button>
                     </DialogTrigger>
@@ -137,7 +143,7 @@ const InquiryFormActions = ({cancelHref}: {cancelHref: string}) => {
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
-                <Button type="submit" size="xl" disabled={pending} aria-busy={pending}>
+                <Button type="submit" size="xl" className="w-full sm:w-auto" disabled={pending} aria-busy={pending}>
                     {pending ? (
                         <>
                             <LoaderCircle aria-hidden="true" className="animate-spin" />
