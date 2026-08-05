@@ -1363,11 +1363,11 @@
             ]
         },
         {
-            "name": "로그아웃 종료",
+            "name": "로그인 종료",
             "userType": "기업",
             "children": [
                 {
-                    "label": "로그아웃 종료",
+                    "label": "로그인 종료",
                     "screenId": null,
                     "status": "대기중",
                     "version": "미배포",
@@ -2359,11 +2359,11 @@
             ]
         },
         {
-            "name": "로그아웃 종료",
+            "name": "로그인 종료",
             "userType": "기관",
             "children": [
                 {
-                    "label": "로그아웃 종료",
+                    "label": "로그인 종료",
                     "screenId": null,
                     "status": "대기중",
                     "version": "미배포",

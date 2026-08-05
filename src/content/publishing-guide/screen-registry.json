@@ -896,8 +896,8 @@
             "key": "corp-logout",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/logout",
-            "name": "로그아웃 종료"
+            "path": "/corp/login-end",
+            "name": "로그인 종료"
         },
         {
             "key": "corp-real-name-verification",
@@ -1645,8 +1645,8 @@
             "key": "org-logout",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/logout",
-            "name": "로그아웃 종료"
+            "path": "/org/login-end",
+            "name": "로그인 종료"
         }
     ]
 }

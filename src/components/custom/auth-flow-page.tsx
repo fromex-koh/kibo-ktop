@@ -104,7 +104,7 @@ const SessionExtensionPage = () => (
     </>
 )
 
-const LogoutPage = () => (
+const LoginEndPage = () => (
     <>
         <AuthFlowPage />
         <LogoutDialog />
@@ -165,4 +165,4 @@ const RealNameVerificationPage = () => (
     </>
 )
 
-export {InitialPasswordChangePage, LogoutPage, RealNameVerificationPage, SessionExtensionPage}
+export {InitialPasswordChangePage, LoginEndPage, RealNameVerificationPage, SessionExtensionPage}

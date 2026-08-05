@@ -43,10 +43,10 @@ import {cn} from '@/lib/utils'
 // 서버 액션/API 연결에 필요한 form 속성과 취소 경로는 props로 전달한다.
 
 const INQUIRY_TYPES = [
-    {value: '평가', label: '평가'},
-    {value: 'K-BIGx', label: 'K-BIGx'},
+    {value: '회원정보', label: '회원정보'},
     {value: '유료/결제', label: '유료/결제'},
-    {value: '회원 문의', label: '회원 문의'},
+    {value: '기술평가', label: '기술평가'},
+    {value: 'K-BIGx', label: 'K-BIGx'},
     {value: '기타', label: '기타'},
 ] as const
 
