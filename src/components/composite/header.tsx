@@ -101,6 +101,7 @@ const UserTypeBadge = ({userType}: {userType: UserType}) => {
 
 // 로그인 후 남은 시간과 연장 안내 모달을 표시한다. 실제 세션 연장 동작은 서비스에서 연결한다.
 const SessionExtensionButton = () => (
+    // 버튼 클릭 시 로그인 유지 시간을 초기화하는 기능 연결이 필요하다.
     <Button variant="text-underline" size="sm" type="button" className="font-normal">
         연장
     </Button>

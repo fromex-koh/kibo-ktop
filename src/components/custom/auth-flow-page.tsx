@@ -10,6 +10,8 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog'
+import {Input} from '@/components/ui/input'
+import {Label} from '@/components/ui/label'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {cn} from '@/lib/utils'
 
@@ -71,6 +73,29 @@ const LogoutDialog = () => (
     </Dialog>
 )
 
+const InitialPasswordChangeDialog = () => (
+    // 화면 확인을 위해 모달을 열어 둔다.
+    <Dialog defaultOpen>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>내 정보 확인</DialogTitle>
+            </DialogHeader>
+            <div className={cn(dialogBodyClassName, 'gap-6')}>
+                <DialogDescription>회원님의 소중한 정보를 보호하기 위해 비밀번호를 변경해 주세요.</DialogDescription>
+                <div className="flex flex-col gap-4">
+                    <Label htmlFor="initial-password" className="text-foreground font-bold">
+                        비밀번호
+                    </Label>
+                    <Input id="initial-password" type="password" placeholder="비밀번호를 입력해 주세요" />
+                </div>
+            </div>
+            <DialogFooter>
+                <Button size="xl">비밀번호 확인</Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+)
+
 const SessionExtensionPage = () => (
     <>
         <AuthFlowPage />
@@ -85,4 +110,11 @@ const LogoutPage = () => (
     </>
 )
 
-export {LogoutPage, SessionExtensionPage}
+const InitialPasswordChangePage = () => (
+    <>
+        <AuthFlowPage />
+        <InitialPasswordChangeDialog />
+    </>
+)
+
+export {InitialPasswordChangePage, LogoutPage, SessionExtensionPage}
