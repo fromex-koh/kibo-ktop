@@ -900,6 +900,13 @@
             "name": "로그아웃 종료"
         },
         {
+            "key": "corp-real-name-verification",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/real-name-verification",
+            "name": "실명인증"
+        },
+        {
             "key": "org-home",
             "screenId": null,
             "userType": "기관",

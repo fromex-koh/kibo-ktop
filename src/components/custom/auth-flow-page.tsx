@@ -117,4 +117,46 @@ const InitialPasswordChangePage = () => (
     </>
 )
 
-export {InitialPasswordChangePage, LogoutPage, SessionExtensionPage}
+const RealNameVerificationDialog = () => (
+    // 화면 확인을 위해 모달을 열어 둔다.
+    <Dialog defaultOpen>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>본인 인증</DialogTitle>
+            </DialogHeader>
+            <div className={cn(dialogBodyClassName, 'gap-6')}>
+                <DialogDescription>주민등록번호를 입력해 주세요</DialogDescription>
+                <div className="flex flex-col gap-4">
+                    <Label htmlFor="real-name-rrn-front" className="text-foreground font-bold">
+                        주민등록번호
+                    </Label>
+                    <div className="flex items-center gap-2">
+                        <Input id="real-name-rrn-front" inputMode="numeric" placeholder="901231" />
+                        <span aria-hidden="true" className="text-foreground">
+                            -
+                        </span>
+                        <Input
+                            id="real-name-rrn-back"
+                            type="password"
+                            inputMode="numeric"
+                            aria-label="주민등록번호 뒷자리"
+                            placeholder="*******"
+                        />
+                    </div>
+                </div>
+            </div>
+            <DialogFooter>
+                <Button size="xl">본인 확인</Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+)
+
+const RealNameVerificationPage = () => (
+    <>
+        <AuthFlowPage />
+        <RealNameVerificationDialog />
+    </>
+)
+
+export {InitialPasswordChangePage, LogoutPage, RealNameVerificationPage, SessionExtensionPage}

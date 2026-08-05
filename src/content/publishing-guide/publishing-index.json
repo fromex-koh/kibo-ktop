@@ -1376,6 +1376,19 @@
             ]
         },
         {
+            "name": "실명인증",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "실명인증",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-real-name-verification"
+                }
+            ]
+        },
+        {
             "name": "홈",
             "userType": "기관",
             "children": [

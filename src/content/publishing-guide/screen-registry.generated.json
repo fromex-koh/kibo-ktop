@@ -898,6 +898,13 @@
             "isCurrent": false
         },
         {
+            "key": "corp-real-name-verification",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "org-home",
             "implemented": false,
             "implementationStatus": "planned",
