@@ -97,6 +97,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                         title: '프로젝트 폼 패턴',
                         items: [
                             {label: 'Chip', href: '/component-guide/chip'},
+                            {label: 'EmailField', href: '/component-guide/email-field'},
                             {label: 'QuestionGroupHeader', href: '/component-guide/question-group-header'},
                             {label: 'QuestionList', href: '/component-guide/question-list'},
                             {label: 'SelectableCard', href: '/component-guide/selectable-card'},
