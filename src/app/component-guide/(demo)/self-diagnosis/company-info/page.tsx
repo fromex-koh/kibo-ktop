@@ -35,7 +35,7 @@ import {InputGroup, InputGroupAddon, InputGroupInput} from '@/components/ui/inpu
 import {Label} from '@/components/ui/label'
 import {Separator} from '@/components/ui/separator'
 import {ListMarker} from '@/components/custom/list-marker'
-import {SELF_DIAGNOSIS_STEPS} from '@/constants/publishing-guide'
+import {SELF_DIAGNOSIS_STEPS} from '@/constants/technology-evaluation'
 
 export const metadata: Metadata = {title: '기업·기술정보 입력'}
 

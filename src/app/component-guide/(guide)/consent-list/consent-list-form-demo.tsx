@@ -6,7 +6,7 @@ import {ConsentItem, ConsentList} from '@/components/composite/consent-list'
 import {Button} from '@/components/ui/button'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
-import {FIELD_FOCUS_RING} from '@/constants/publishing-guide'
+import {FIELD_FOCUS_RING} from '@/constants/form'
 import {cn} from '@/lib/utils'
 
 // 동의 목록 폼 데모 — 실제 자가진단 1단계처럼 필수 동의를 검증하고 FormData 로 제출한다.

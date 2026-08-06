@@ -25,8 +25,8 @@ import {Button} from '@/components/ui/button'
 import {Field, FieldLabel} from '@/components/ui/field'
 import {Input} from '@/components/ui/input'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
-import {FIELD_FOCUS_RING} from '@/constants/publishing-guide'
-import {SELF_DIAGNOSIS_STEPS} from '@/constants/publishing-guide'
+import {FIELD_FOCUS_RING} from '@/constants/form'
+import {SELF_DIAGNOSIS_STEPS} from '@/constants/technology-evaluation'
 import {cn} from '@/lib/utils'
 
 export const metadata: Metadata = {title: '고객 정보 활용 동의'}
