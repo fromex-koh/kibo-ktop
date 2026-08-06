@@ -3,6 +3,7 @@
 import {useEffect, useRef, useState} from 'react'
 import Image from 'next/image'
 import faqQuestionMark from '@public/images/faq/faq-question-mark.webp'
+import {EmptyState} from '@/components/composite/empty-state'
 import {Pagination} from '@/components/composite/pagination'
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
@@ -54,38 +55,47 @@ const FaqPanel = ({items, pageSize}: {items: readonly FaqItem[]; pageSize: numbe
 
     return (
         <div className="flex flex-col gap-10">
-            {/* 카드 모양·간격·구분선은 Accordion 의 프로젝트 기본 스타일이 갖는다(theme/accordion.variants). */}
-            <Accordion type="single" collapsible>
-                {visibleItems.map((item) => (
-                    <AccordionItem key={item.id} value={item.id}>
-                        <AccordionTrigger>
-                            <span className="flex min-w-0 items-center gap-2">
-                                {/* 질문 표시는 시안의 'Q.' 이미지다. 질문 글이 바로 옆에 있어 장식으로 둔다. */}
-                                <Image src={faqQuestionMark} alt="" sizes="24px" className="size-icon-lg shrink-0" />
-                                <span className="min-w-0 break-keep">{item.question}</span>
-                            </span>
-                        </AccordionTrigger>
-                        <AccordionContent>
-                            {/* 답변 최소 높이 200 은 시안 표기다. 줄바꿈은 원문 그대로 살린다. */}
-                            <div className="min-h-50 break-keep whitespace-pre-line">{item.answer}</div>
-                        </AccordionContent>
-                    </AccordionItem>
-                ))}
-            </Accordion>
+            {items.length === 0 ? (
+                <EmptyState title="등록된 FAQ가 없습니다." />
+            ) : (
+                <>
+                    {/* 카드 모양·간격·구분선은 Accordion 의 프로젝트 기본 스타일이 갖는다(theme/accordion.variants). */}
+                    <Accordion type="single" collapsible>
+                        {visibleItems.map((item) => (
+                            <AccordionItem key={item.id} value={item.id}>
+                                <AccordionTrigger>
+                                    <span className="flex min-w-0 items-center gap-2">
+                                        {/* 질문 표시는 시안의 'Q.' 이미지다. 질문 글이 바로 옆에 있어 장식으로 둔다. */}
+                                        <Image
+                                            src={faqQuestionMark}
+                                            alt=""
+                                            sizes="24px"
+                                            className="size-icon-lg shrink-0"
+                                        />
+                                        <span className="min-w-0 break-keep">{item.question}</span>
+                                    </span>
+                                </AccordionTrigger>
+                                <AccordionContent>
+                                    {/* 답변 최소 높이 200 은 시안 표기다. 줄바꿈은 원문 그대로 살린다. */}
+                                    <div className="min-h-50 break-keep whitespace-pre-line">{item.answer}</div>
+                                </AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
 
-            {items.length > 0 ? (
-                <Pagination
-                    page={currentPage}
-                    total={totalPages}
-                    onPageChange={setPage}
-                    siblingCount={isMobile ? 0 : 1}
-                    prevLabel={isMobile ? '' : '이전'}
-                    nextLabel={isMobile ? '' : '다음'}
-                    maxVisibleItems={isMobile ? 5 : 10}
-                    compact={isMobile}
-                    className="justify-center"
-                />
-            ) : null}
+                    <Pagination
+                        page={currentPage}
+                        total={totalPages}
+                        onPageChange={setPage}
+                        siblingCount={isMobile ? 0 : 1}
+                        prevLabel={isMobile ? '' : '이전'}
+                        nextLabel={isMobile ? '' : '다음'}
+                        maxVisibleItems={isMobile ? 5 : 10}
+                        compact={isMobile}
+                        className="justify-center"
+                    />
+                </>
+            )}
         </div>
     )
 }
