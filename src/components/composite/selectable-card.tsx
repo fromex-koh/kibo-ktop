@@ -65,30 +65,17 @@ const SelectableCard = (props: SelectableCardProps) => {
                 className,
             })}
         >
-            {/* Figma 선택 카드 — 뱃지와 라벨이 왼쪽에 오고 선택 컨트롤이 카드 오른쪽 끝에 붙는다.
-                DOM 순서(뱃지 → 라벨 → 컨트롤) = 시각 순서라 읽기 순서도 일치한다([7.3.1]).
-                뱃지는 항목의 성격(필수·선택)을 알려주므로 접근 가능한 이름에도 라벨과 함께 넣는다. */}
+            {/* Figma 선택 카드 — 선택 컨트롤이 왼쪽 끝에 오고 라벨이 이어지며 뱃지가 카드 오른쪽 끝에 붙는다.
+                DOM 순서(컨트롤 → 라벨 → 뱃지) = 시각 순서라 읽기 순서도 일치한다([7.3.1]).
+                뱃지는 항목의 성격(필수·선택)을 알려주므로 접근 가능한 이름에도 라벨과 함께(라벨 다음에) 넣는다.
+                뱃지를 오른쪽 끝으로 미는 건 사이의 FieldContent(flex-1)다. */}
             <Field orientation="horizontal" className={selectableCardFieldClassName}>
-                {badges ? (
-                    <span id={badgesId} className={selectableCardBadgesClassName}>
-                        {badges}
-                    </span>
-                ) : null}
-                <FieldContent className={selectableCardContentClassName}>
-                    <span
-                        id={labelId}
-                        data-slot="selectable-card-title"
-                        className={cn(selectableCardTitleVariants({control}), labelClassName)}
-                    >
-                        {children}
-                    </span>
-                </FieldContent>
                 {props.control === 'radio' ? (
                     <RadioGroupItem
                         id={controlId}
                         value={props.value}
                         disabled={disabled}
-                        aria-labelledby={badges ? `${badgesId} ${labelId}` : labelId}
+                        aria-labelledby={badges ? `${labelId} ${badgesId}` : labelId}
                         className={selectableCardControlClassName}
                     />
                 ) : (
@@ -102,10 +89,24 @@ const SelectableCard = (props: SelectableCardProps) => {
                         required={props.required}
                         form={props.form}
                         disabled={disabled}
-                        aria-labelledby={badges ? `${badgesId} ${labelId}` : labelId}
+                        aria-labelledby={badges ? `${labelId} ${badgesId}` : labelId}
                         className={selectableCardControlClassName}
                     />
                 )}
+                <FieldContent className={selectableCardContentClassName}>
+                    <span
+                        id={labelId}
+                        data-slot="selectable-card-title"
+                        className={cn(selectableCardTitleVariants({control}), labelClassName)}
+                    >
+                        {children}
+                    </span>
+                </FieldContent>
+                {badges ? (
+                    <span id={badgesId} className={selectableCardBadgesClassName}>
+                        {badges}
+                    </span>
+                ) : null}
             </Field>
         </FieldLabel>
     )

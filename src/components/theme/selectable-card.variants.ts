@@ -38,7 +38,7 @@ const selectableCardTitleVariants = cva('text-current', {
 const selectableCardFieldClassName = 'items-center gap-2 has-[>[data-slot=field-content]]:items-center'
 const selectableCardControlClassName = 'focus-visible:outline-none'
 const selectableCardContentClassName = 'gap-0'
-// 뱃지는 라벨 왼쪽에 붙고 뱃지끼리는 4px(gap-1) 간격이다(Figma "타이틀+뱃지").
+// 뱃지는 카드 오른쪽 끝에 붙고 뱃지끼리는 4px(gap-1) 간격이다(Figma "타이틀+뱃지").
 const selectableCardBadgesClassName = 'flex shrink-0 items-center gap-1'
 
 export {
