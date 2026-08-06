@@ -783,34 +783,34 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-notice-faq",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-notice-inquiry-create",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-notice-inquiry-create-inquiry-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "isCurrent": true
         },
         {
@@ -818,21 +818,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-notice-inquiry-create-inquiry-cancel",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-information-consent",
@@ -853,70 +853,70 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-server-error",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-maintenance",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-terms",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-privacy-policy-easy-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-login-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-session-extension",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-logout",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-real-name-verification",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-home",
@@ -1539,34 +1539,34 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-notice-faq",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-notice-inquiry-create",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-notice-inquiry-create-inquiry-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "isCurrent": true
         },
         {
@@ -1574,21 +1574,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-notice-inquiry-create-inquiry-cancel",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-technology-information-consent",
@@ -1602,77 +1602,77 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-server-error",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-maintenance",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-postcode-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-terms",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-privacy-policy-easy-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-initial-password-change",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-login-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-session-extension",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-logout",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         }
     ]
 }
