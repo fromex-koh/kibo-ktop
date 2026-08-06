@@ -37,11 +37,12 @@ const StepNavigation = ({appearance = 'bar', prev, next, className, ...props}: S
         )}
         {...props}
     >
-        {/* 시안: 마지막 콘텐츠와 버튼 사이 40px, 버튼 아래 40px. bar 는 상단 경계선이 있어 24px 를 유지한다. */}
-        <div className={cn('content-layout', appearance === 'bar' ? 'py-6' : 'py-10')}>
+        {/* 시안: 마지막 콘텐츠와 버튼 사이 40px, 버튼 아래 60px. bar 는 상단 경계선이 있어 24px 를 유지한다. */}
+        <div className={cn('content-layout', appearance === 'bar' ? 'py-6' : 'pt-10 pb-15')}>
             <ActionBar>
                 {prev || next ? (
-                    <ActionBarCenter>
+                    // 시안의 CTA 짝은 16 간격이다(ActionBar 기본 8보다 넓다).
+                    <ActionBarCenter className="gap-4">
                         {prev ? <Button variant="tertiary" size="xl" {...prev} /> : null}
                         {next ? <Button variant="default" size="xl" {...next} /> : null}
                     </ActionBarCenter>
