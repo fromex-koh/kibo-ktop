@@ -51,7 +51,11 @@ const PLATFORM_INTRO_ITEMS: readonly HeaderNavLink[] = [
 
 const PLATFORM_INTRO_LINK: HeaderNavLink = {label: '플랫폼 소개', href: '#', items: PLATFORM_INTRO_ITEMS}
 const PATENT_EVALUATION_LINK: HeaderNavLink = {label: '특허평가', href: '#'}
-const CARBON_NEUTRAL_LINK: HeaderNavLink = {label: '탄소중립', href: '#', external: true}
+const CARBON_NEUTRAL_LINK: HeaderNavLink = {
+    label: '탄소중립',
+    href: 'https://www.kibo.or.kr/carbon/home',
+    external: true,
+}
 
 // 로그인 전 화면에서 사용하는 기본 메뉴. 로그인 후에는 navigationByUserType로 유형별 메뉴를 주입한다.
 export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {

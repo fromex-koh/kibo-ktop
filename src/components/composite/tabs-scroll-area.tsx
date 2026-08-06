@@ -7,9 +7,10 @@ import {Button} from '@/components/ui/button'
 import {TabsList} from '@/components/ui/tabs'
 import {cn} from '@/lib/utils'
 
-// 좌우 스크롤 탭(TabsScrollArea) — 탭이 많아 폭을 넘칠 때, 좌우 화살표 버튼으로 넘겨보는 TabsList(variant="line")
-// 래퍼. radix/shadcn 어디에도 없는 동작(스크롤 위치 추적·화살표 활성/비활성·활성 탭 중앙정렬)이라 kit 셸을
-// 건드리지 않고 composite 에서 kit 프리미티브(TabsList·Button)를 조합해 만든다([SC-04] 기능은 composite 레이어에서).
+// 좌우 스크롤 탭(TabsScrollArea) — 탭이 많아 폭을 넘칠 때, 좌우 화살표 버튼으로 넘겨보는 1뎁스 TabsList
+// (variant="line" 또는 "text") 래퍼. radix/shadcn 어디에도 없는 동작(스크롤 위치 추적·화살표 활성/비활성·활성 탭
+// 중앙정렬)이라 kit 셸을 건드리지 않고 composite 에서 kit 프리미티브(TabsList·Button)를 조합해 만든다
+// ([SC-04] 기능은 composite 레이어에서).
 //
 // 스크롤은 네이티브 overflow-x-auto 를 가진 div(scrollRef)로 직접 제어한다 — 화살표가 스크롤 신호를 이미 주므로
 // 네이티브 스크롤바는 globals.css 의 scrollbar-hidden 으로 숨긴다(중복 방지).
@@ -17,6 +18,7 @@ import {cn} from '@/lib/utils'
 // 폭: TabsList 를 w-max + min-w-full → 실제 폭 = max(내용, 부모 100%). 안 넘칠 땐 부모 풀폭이라 하단 밑줄이
 // 끝까지 이어지고(안 그러면 내용 폭까지만 그어져 잘림), 넘칠 땐 내용 폭이라 스크롤이 생긴다. w-max 는 kit line
 // variant 기본 w-full 을 이기려 같은 접두사로 특이도를 맞춘다(min-w-full 은 경쟁 규칙이 없어 접두사 불필요).
+// 변형별로 접두사가 달라 둘 다 얹는다 — 각 규칙은 자기 variant 목록 안에서만 켜진다.
 //
 // 화살표: 탭 제목이 모두 노출되면 렌더하지 않고, 실제로 overflow 가 생길 때만 노출한다. 노출된 뒤에는 그 방향으로
 // 더 이동할 수 없는 버튼만 aria-disabled + 흐림 처리한다 — 네이티브 disabled 는 포커스를 못 가져 포커스된 채
@@ -37,7 +39,7 @@ const DIMMED_ARROW_CLASS = 'opacity-50'
 
 type TabsScrollAreaProps = ComponentPropsWithoutRef<typeof TabsList>
 
-const TabsScrollArea = ({className, children, ...props}: TabsScrollAreaProps) => {
+const TabsScrollArea = ({className, children, variant = 'line', ...props}: TabsScrollAreaProps) => {
     const scrollRef = useRef<HTMLDivElement>(null)
     const [isOverflowing, setIsOverflowing] = useState(false)
     const [canScrollLeft, setCanScrollLeft] = useState(false)
@@ -121,8 +123,8 @@ const TabsScrollArea = ({className, children, ...props}: TabsScrollAreaProps) =>
             <div className="relative min-w-0 flex-1">
                 <div ref={scrollRef} className="scrollbar-hidden overflow-x-auto">
                     <TabsList
-                        variant="line"
-                        className={cn('min-w-full data-[variant=line]:w-max', className)}
+                        variant={variant}
+                        className={cn('min-w-full data-[variant=line]:w-max data-[variant=text]:w-max', className)}
                         {...props}
                     >
                         {children}

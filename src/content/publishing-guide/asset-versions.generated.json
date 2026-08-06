@@ -1,35 +1,35 @@
 {
-    "version": "v1.0.0",
+    "version": "v1.0.1",
     "assets": [
         {
             "name": "src/app",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "isCurrent": true
         },
         {
             "name": "src/components/ui",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "isCurrent": true
         },
         {
             "name": "src/components/theme",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "isCurrent": true
         },
         {
             "name": "src/components/composite",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "isCurrent": true
         },
         {
             "name": "src/components/theme-provider.tsx",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/constants/theme.ts",
@@ -39,11 +39,11 @@
         {
             "name": "src/constants/publishing-guide.ts",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/content/publishing-guide",
-            "version": "v1.0.0",
+            "version": "v1.0.1",
             "isCurrent": true
         },
         {
@@ -64,12 +64,12 @@
         {
             "name": "src/types",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "tokens.json",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/app/tokens.css",
@@ -94,7 +94,7 @@
         {
             "name": "src/app/layout.tsx",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "components.json",
@@ -124,7 +124,7 @@
         {
             "name": "next.config.ts",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": ".gitignore",
@@ -134,12 +134,12 @@
         {
             "name": "public",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "vendor/shadcn-baseline",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/app/fonts",
@@ -152,13 +152,13 @@
             "label": "서브페이지 레이아웃 (Header + Content + Footer)",
             "path": "src/components/composite/page-layout.tsx",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "label": "메인페이지 레이아웃 (Overlay Header + Content)",
             "path": "src/components/composite/page-layout.tsx",
             "version": "v1.0.0",
-            "isCurrent": true
+            "isCurrent": false
         }
     ]
 }

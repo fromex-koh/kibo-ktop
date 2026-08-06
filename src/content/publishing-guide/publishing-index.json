@@ -1190,7 +1190,7 @@
                     "label": "공지사항",
                     "screen": {
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "corp-notice-announcements"
                     },
@@ -1198,7 +1198,7 @@
                         {
                             "label": "상세",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-announcements-detail"
                         }
@@ -1207,7 +1207,7 @@
                 {
                     "label": "FAQ",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-notice-faq"
                 },
@@ -1215,7 +1215,7 @@
                     "label": "문의하기",
                     "screen": {
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "corp-notice-inquiry-create"
                     },
@@ -1223,21 +1223,21 @@
                         {
                             "label": "문의 완료",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-inquiry-create-inquiry-complete"
                         },
                         {
                             "label": "개인정보 수집 및 이용 안내",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-inquiry-create-privacy-consent-guide"
                         },
                         {
                             "label": "문의 취소",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-inquiry-create-inquiry-cancel"
                         }
@@ -1246,7 +1246,7 @@
                 {
                     "label": "자료실",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-notice-resources"
                 }
@@ -1285,7 +1285,7 @@
                 {
                     "label": "404 에러 화면",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-not-found"
                 }
@@ -1298,7 +1298,7 @@
                 {
                     "label": "500 에러 화면",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-server-error"
                 }
@@ -1311,7 +1311,7 @@
                 {
                     "label": "정기점검 화면",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-maintenance"
                 }
@@ -1357,7 +1357,7 @@
                 {
                     "label": "로그인 안내",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-login-guide"
                 }
@@ -1370,7 +1370,7 @@
                 {
                     "label": "로그인 연장",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-session-extension"
                 }
@@ -1383,7 +1383,7 @@
                 {
                     "label": "로그인 종료",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-logout"
                 }
@@ -1396,7 +1396,7 @@
                 {
                     "label": "실명인증",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-real-name-verification"
                 }
@@ -2193,7 +2193,7 @@
                     "label": "공지사항",
                     "screen": {
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "org-notice-announcements"
                     },
@@ -2201,7 +2201,7 @@
                         {
                             "label": "상세",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-notice-announcements-detail"
                         }
@@ -2210,7 +2210,7 @@
                 {
                     "label": "FAQ",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-notice-faq"
                 },
@@ -2218,7 +2218,7 @@
                     "label": "문의하기",
                     "screen": {
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "org-notice-inquiry-create"
                     },
@@ -2226,21 +2226,21 @@
                         {
                             "label": "문의 완료",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-notice-inquiry-create-inquiry-complete"
                         },
                         {
                             "label": "개인정보 수집 및 이용 안내",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-notice-inquiry-create-privacy-consent-guide"
                         },
                         {
                             "label": "문의 취소",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-notice-inquiry-create-inquiry-cancel"
                         }
@@ -2249,7 +2249,7 @@
                 {
                     "label": "자료실",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-notice-resources"
                 }
@@ -2275,7 +2275,7 @@
                 {
                     "label": "404 에러 화면",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-not-found"
                 }
@@ -2288,7 +2288,7 @@
                 {
                     "label": "500 에러 화면",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-server-error"
                 }
@@ -2301,7 +2301,7 @@
                 {
                     "label": "정기점검 화면",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-maintenance"
                 }
@@ -2314,7 +2314,7 @@
                 {
                     "label": "우편번호 검색",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-postcode-search"
                 }
@@ -2360,7 +2360,7 @@
                 {
                     "label": "최초 비밀번호 변경",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-initial-password-change"
                 }
@@ -2373,7 +2373,7 @@
                 {
                     "label": "로그인 안내",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-login-guide"
                 }
@@ -2386,7 +2386,7 @@
                 {
                     "label": "로그인 연장",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-session-extension"
                 }
@@ -2399,7 +2399,7 @@
                 {
                     "label": "로그인 종료",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-logout"
                 }
