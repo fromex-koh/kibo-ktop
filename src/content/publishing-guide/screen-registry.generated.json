@@ -73,8 +73,8 @@
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
