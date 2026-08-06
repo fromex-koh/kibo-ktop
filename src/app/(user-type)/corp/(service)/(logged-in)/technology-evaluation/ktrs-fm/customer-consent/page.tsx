@@ -10,16 +10,15 @@ import {
 } from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import {ConsentItem, ConsentList} from '@/components/composite/consent-list'
+import {EmailField} from '@/components/composite/email-field'
 import {FormCard} from '@/components/composite/form-card'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
 import {SelectableCard, SelectableCardGroup} from '@/components/composite/selectable-card'
 import {StepHeader} from '@/components/composite/step-header'
 import {StepNavigation} from '@/components/composite/step-navigation'
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Field, FieldLabel} from '@/components/ui/field'
-import {Input} from '@/components/ui/input'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {FIELD_FOCUS_RING, SELF_DIAGNOSIS_STEPS} from '@/constants/publishing-guide'
 import {cn} from '@/lib/utils'
@@ -45,13 +44,6 @@ const PERSONAL_CONSENTS = [
         description: '위 고유식별정보 제공에 동의하십니까? (단, ①②⑤에 한함)',
     },
     {name: 'personalInquiry', title: '3. 조회에 관한 사항', description: '위 고유식별정보 조회에 동의하십니까?'},
-] as const
-
-const EMAIL_DOMAINS = [
-    {value: 'direct', label: '직접입력'},
-    {value: 'naver.com', label: 'naver.com'},
-    {value: 'gmail.com', label: 'gmail.com'},
-    {value: 'daum.net', label: 'daum.net'},
 ] as const
 
 // 시안 button_text — 16px(medium) · 글자 폭만 덮는 1px 밑줄 · 오른쪽 16px 화살표.
@@ -202,37 +194,9 @@ const CorpKtrsFmCustomerConsentPage = () => (
             </div>
 
             <FormCard title="부분발송 이메일등록" subtitle="안내문을 추가로 받으실 이메일 주소를 입력해 주세요.">
-                <div className="flex flex-wrap items-center gap-6">
-                    <div className="flex min-w-0 flex-1 items-center gap-2">
-                        <Input
-                            name="emailId"
-                            placeholder="이메일 아이디"
-                            aria-label="이메일 아이디"
-                            autoComplete="off"
-                            className="min-w-0 flex-1"
-                        />
-                        <span className="typo-body-xl-regular text-label-foreground shrink-0">@</span>
-                        <Input
-                            name="emailDomain"
-                            placeholder="도메인 직접입력"
-                            aria-label="이메일 도메인"
-                            autoComplete="off"
-                            className="min-w-0 flex-1"
-                        />
-                    </div>
-                    <Select name="emailDomainPreset" defaultValue="direct">
-                        <SelectTrigger className="w-70" aria-label="이메일 도메인 선택">
-                            <SelectValue placeholder="선택해 주세요" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {EMAIL_DOMAINS.map((domain) => (
-                                <SelectItem key={domain.value} value={domain.value}>
-                                    {domain.label}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
+                {/* 서버에는 합친 주소 하나가 간다 — 아이디·도메인 분리는 입력 편의일 뿐이다.
+                    위 확인동의의 noticeEmail(안내문 발송 동의 여부)과는 다른 값이라 이름을 나눠 둔다. */}
+                <EmailField name="additionalNoticeEmail" />
             </FormCard>
         </div>
 
