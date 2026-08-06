@@ -1007,7 +1007,7 @@
                 {
                     "label": "탄소중립",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-carbon-neutrality"
                 }
@@ -2097,7 +2097,7 @@
                 {
                     "label": "탄소중립",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-carbon-neutrality"
                 }
