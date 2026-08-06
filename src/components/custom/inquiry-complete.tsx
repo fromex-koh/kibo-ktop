@@ -24,11 +24,10 @@ type InquiryCompleteProps = {
 }
 
 const InquiryComplete = ({myPageHref, homeHref = '/'}: InquiryCompleteProps) => (
-    // 제목바에서 완료 표시까지는 시안이 100 이다 — 화면 공통 간격(40)에 60 을 더한다.
-    <div className="flex flex-col gap-15 pt-15">
-        <div className="flex flex-col items-center gap-6">
+    <div className="flex flex-col gap-[clamp(--spacing(4),3.7dvh,--spacing(10))] pt-[clamp(--spacing(2),2dvh,--spacing(15))] [--viewport-fit-decorative-size:clamp(var(--spacing-viewport-fit-decorative-min),14dvh,var(--spacing-action-check))]">
+        <div className="flex flex-col items-center gap-[clamp(--spacing(2),1.5dvh,--spacing(6))]">
             {/* 애니메이션은 장식이다 — 완료 사실은 바로 아래 제목이 글로 전달한다. */}
-            <ActionCheck decorative size={150} />
+            <ActionCheck decorative />
             <div className="flex flex-col items-center gap-2 text-center">
                 <h2 className="typo-h2-bold text-foreground break-keep">문의가 등록되었어요</h2>
                 <p className="typo-title-m-regular text-foreground-subtle break-keep">
@@ -37,8 +36,11 @@ const InquiryComplete = ({myPageHref, homeHref = '/'}: InquiryCompleteProps) => 
             </div>
         </div>
 
-        {/* 안내 카드 여백은 시안대로 좌우 40 · 위아래 32 다. */}
-        <BaseCard variant="outlined" className="py-8 [--card-spacing:--spacing(10)]">
+        {/* 화면 높이가 낮아지면 안내 카드의 상하 여백을 줄여 한 화면에 배치한다. */}
+        <BaseCard
+            variant="outlined"
+            className="shrink-0 py-[clamp(--spacing(4),3dvh,--spacing(8))] [--card-spacing:--spacing(10)]"
+        >
             <div className="flex flex-col gap-4">
                 <h3 className="typo-title-l-bold text-foreground">알려드려요</h3>
                 <ul className="flex flex-col gap-2">
@@ -52,12 +54,12 @@ const InquiryComplete = ({myPageHref, homeHref = '/'}: InquiryCompleteProps) => 
             </div>
         </BaseCard>
 
-        <ActionBar>
-            <ActionBarCenter className="gap-4">
-                <Button asChild variant="tertiary" size="xl">
+        <ActionBar className="shrink-0">
+            <ActionBarCenter className="gap-4 max-sm:col-span-3 max-sm:col-start-1 max-sm:w-full max-sm:flex-col">
+                <Button asChild variant="tertiary" size="xl" className="w-full sm:w-auto">
                     <Link href={homeHref}>홈으로 이동</Link>
                 </Button>
-                <Button asChild size="xl">
+                <Button asChild size="xl" className="w-full sm:w-auto">
                     <Link href={myPageHref}>마이페이지로 이동</Link>
                 </Button>
             </ActionBarCenter>
