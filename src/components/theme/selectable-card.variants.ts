@@ -35,7 +35,12 @@ const selectableCardTitleVariants = cva('text-current', {
     defaultVariants: {control: 'checkbox'},
 })
 
-const selectableCardFieldClassName = 'items-center gap-2 has-[>[data-slot=field-content]]:items-center'
+// 시안은 컨트롤(24)과 글자 줄(라디오 30 · 체크박스 24)의 세로 중심이 정확히 맞는다.
+// 가로 Field 는 안에 field-content 가 있으면 items-start 로 바뀌고 컨트롤을 1px 내려(mt-px) 여러 줄 라벨의
+// 첫 줄에 맞추는데, 이 카드는 한 줄짜리라 가운데 정렬로 되돌린다. 그때 남는 mt-px 가 컨트롤을 0.5px
+// 아래로 밀어 중심이 어긋나므로 같은 선택자로 mt-0 을 덮어 지운다(cn 의 twMerge 가 mt-px 를 걷어낸다).
+const selectableCardFieldClassName =
+    'items-center gap-2 has-[>[data-slot=field-content]]:items-center has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-0'
 const selectableCardControlClassName = 'focus-visible:outline-none'
 const selectableCardContentClassName = 'gap-0'
 // 뱃지는 카드 오른쪽 끝에 붙고 뱃지끼리는 4px(gap-1) 간격이다(Figma "타이틀+뱃지").
