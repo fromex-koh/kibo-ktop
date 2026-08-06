@@ -5,14 +5,82 @@
 // label = 항목 묶음의 이름(16 Medium), text = 본문 한 줄(16 Regular)
 type ConsentLine = {kind: 'label' | 'text'; text: string}
 type ConsentBlock = {heading: string; lines: readonly ConsentLine[]}
-type ConsentSection = {heading: string; blocks: readonly ConsentBlock[]}
+// 화면에서 항목 하나만 골라 보여줄 수 있도록 섹션마다 id 를 둔다.
+// 필수는 앞 세 개가 기업(신용)정보, 뒤 세 개가 개인(고유식별)정보 사항이고, corp-tax 는 선택 사항이다.
+type ConsentSectionId =
+    | 'corp-collect'
+    | 'corp-provide'
+    | 'corp-inquiry'
+    | 'personal-collect'
+    | 'personal-provide'
+    | 'personal-inquiry'
+    | 'corp-tax'
+// question — 그 절 하나만 여는 '내용보기' 모달 맨 아래에 큰 글자로 묻는 한 줄.
+// 전문을 통째로 보는 모달은 절마다 묻지 않고 끝에서 한 번만 묻는다(CONSENT_QUESTION).
+type ConsentSection = {
+    id: ConsentSectionId
+    heading: string
+    question: string
+    blocks: readonly ConsentBlock[]
+}
 
 const CONSENT_TITLE = '필수 동의사항'
 const CONSENT_QUESTION = '모든 필수 항목 제공에 동의하십니까?'
 
+// 선택 동의사항 — 필수 동의를 마친 뒤 이어서 묻는다. 화면의 '4.세무회계자료의 온라인 제출에 관한 사항'
+// 항목이 여기에 해당하며, 그 항목의 '내용보기'도 같은 절을 보여준다.
+const OPTIONAL_CONSENT_TITLE = '선택 동의사항'
+const OPTIONAL_CONSENT_QUESTION = '모든 선택 항목 제공에 동의하십니까?'
+
+const OPTIONAL_CONSENT_SECTIONS: readonly ConsentSection[] = [
+    {
+        id: 'corp-tax',
+        heading: '1.세무회계자료의 온라인 제출에 관한 사항 (선택 사항)',
+        question: '위 세무회계자료의 온라인 제출에 동의하십니까?',
+        blocks: [
+            {
+                heading: '제출목적',
+                lines: [
+                    {kind: 'text', text: '기술평가 등 진행'},
+                    {kind: 'text', text: '분쟁 해결, 민원 처리, 법령상 의무이행, 통계업무'},
+                ],
+            },
+            {
+                heading: '동의의 효력기간',
+                lines: [{kind: 'text', text: '기술평가가 완료된 날부터 5년까지'}],
+            },
+            {
+                heading: '거부 권리 및 불이익',
+                lines: [
+                    {
+                        kind: 'text',
+                        text: '기업은 동의를 거부할 권리가 있으며, 동의를 거부한 경우에는 고객께서 관련 서류를 직접 발급받아 제출하셔야 합니다.',
+                    },
+                ],
+            },
+            {
+                heading: '제출항목',
+                lines: [{kind: 'text', text: '결산확정 재무제표, 표준재무제표증명 등'}],
+            },
+            {
+                heading: '동의내용',
+                lines: [
+                    {
+                        kind: 'text',
+                        text: '위 업무의 처리를 위해 기보가 세무회계자료의 온라인 제출을 요청한 경우, 귀사가 직접 또는 귀사의 별도 동의없이 귀사의 기장 대행 세무사(회계사)가 기보에 세무회계자료를 전송',
+                    },
+                    {kind: 'text', text: '온라인 제출과 관련하여 비용이 발생하는 경우 귀사가 수수료를 부담'},
+                ],
+            },
+        ],
+    },
+]
+
 const CONSENT_SECTIONS: readonly ConsentSection[] = [
     {
+        id: 'corp-collect',
         heading: '1.수집, 이용에 관한 사항 (필수 사항)',
+        question: '위 기업(신용)정보 수집·이용에 동의하십니까?',
         blocks: [
             {
                 heading: '수집·이용 목적',
@@ -68,7 +136,9 @@ const CONSENT_SECTIONS: readonly ConsentSection[] = [
         ],
     },
     {
+        id: 'corp-provide',
         heading: '2.제공에 관한 사항 (필수 사항)',
+        question: '위 기업(신용)정보 제공에 동의하십니까?',
         blocks: [
             {
                 heading: '제공받는 자',
@@ -174,7 +244,9 @@ const CONSENT_SECTIONS: readonly ConsentSection[] = [
         ],
     },
     {
+        id: 'corp-inquiry',
         heading: '3.조회에 관한 사항 (필수 사항)',
+        question: '위 기업(신용)정보 조회에 동의하십니까?',
         blocks: [
             {
                 heading: '조회 대상 기관',
@@ -217,7 +289,9 @@ const CONSENT_SECTIONS: readonly ConsentSection[] = [
         ],
     },
     {
+        id: 'personal-collect',
         heading: '4.수집, 이용에 관한 사항 (필수 사항)',
+        question: '위 고유식별정보 수집·이용에 동의하십니까?',
         blocks: [
             {
                 heading: '수집·이용 목적',
@@ -262,7 +336,9 @@ const CONSENT_SECTIONS: readonly ConsentSection[] = [
         ],
     },
     {
+        id: 'personal-provide',
         heading: '5.제공에 관한 사항 (필수 사항)',
+        question: '위 고유식별정보 제공에 동의하십니까? (단, ①②⑤에 한함)',
         blocks: [
             {
                 heading: '제공받는 자',
@@ -355,7 +431,9 @@ const CONSENT_SECTIONS: readonly ConsentSection[] = [
         ],
     },
     {
+        id: 'personal-inquiry',
         heading: '6.조회에 관한 사항 (필수 사항)',
+        question: '위 고유식별정보 조회에 동의하십니까?',
         blocks: [
             {
                 heading: '조회 대상 기관',
@@ -401,5 +479,22 @@ const CONSENT_SECTIONS: readonly ConsentSection[] = [
     },
 ]
 
-export type {ConsentBlock, ConsentLine, ConsentSection}
-export {CONSENT_QUESTION, CONSENT_SECTIONS, CONSENT_TITLE}
+// 항목 하나짜리 '내용보기' 모달이 쓰는 조회 함수. 필수·선택 어느 쪽 절이든 찾는다.
+const findConsentSection = (id: ConsentSectionId) =>
+    [...CONSENT_SECTIONS, ...OPTIONAL_CONSENT_SECTIONS].find((section) => section.id === id)
+
+// 그 절이 선택 사항인지 — 모달 제목을 '필수 동의사항'과 '선택 동의사항' 중에서 고르는 데 쓴다.
+const isOptionalConsentSection = (id: ConsentSectionId) =>
+    OPTIONAL_CONSENT_SECTIONS.some((section) => section.id === id)
+
+export type {ConsentBlock, ConsentLine, ConsentSection, ConsentSectionId}
+export {
+    CONSENT_QUESTION,
+    CONSENT_SECTIONS,
+    CONSENT_TITLE,
+    OPTIONAL_CONSENT_QUESTION,
+    OPTIONAL_CONSENT_SECTIONS,
+    OPTIONAL_CONSENT_TITLE,
+    findConsentSection,
+    isOptionalConsentSection,
+}

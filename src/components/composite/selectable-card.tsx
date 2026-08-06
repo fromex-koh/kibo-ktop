@@ -26,6 +26,9 @@ type SelectableCardBaseProps = {
     id?: string
     className?: string
     children: ReactNode
+    // 카드를 누를 때마다 실행할 처리. 이미 선택된 카드를 다시 눌러도 불리므로(값이 안 바뀌면
+    // 그룹의 onValueChange 는 불리지 않는다) '누르면 안내 모달을 연다' 같은 동작에 쓴다.
+    onClick?: () => void
 }
 
 type SelectableCardRadioProps = SelectableCardBaseProps & {
@@ -48,7 +51,7 @@ type SelectableCardCheckboxProps = SelectableCardBaseProps & {
 type SelectableCardProps = SelectableCardRadioProps | SelectableCardCheckboxProps
 
 const SelectableCard = (props: SelectableCardProps) => {
-    const {disabled, badges, labelClassName, id, className, children} = props
+    const {disabled, badges, labelClassName, id, className, children, onClick} = props
     const control = props.control ?? 'checkbox'
     const generatedId = useId()
     const controlId = id ?? generatedId
@@ -59,6 +62,7 @@ const SelectableCard = (props: SelectableCardProps) => {
         <FieldLabel
             data-slot="selectable-card"
             data-disabled={disabled || undefined}
+            onClick={onClick}
             className={selectableCardVariants({
                 disabled: Boolean(disabled),
                 control,

@@ -6,7 +6,7 @@ import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {cn} from '@/lib/utils'
-import {ConsentTermsDialogContent} from '@/components/composite/consent-terms-dialog'
+import {ConsentTermsDialogContent, OptionalConsentTermsDialogContent} from '@/components/composite/consent-terms-dialog'
 import {Button} from '@/components/ui/button'
 import {
     Dialog,
@@ -119,6 +119,14 @@ const CASE_SPECS = [
         cta: '보조 + 주 · 반씩(246)',
         close: '있음',
         when: '약관처럼 본문이 긴 경우. 제목과 CTA 는 고정하고 본문만 스크롤해 닫기·확인을 항상 보이게 한다.',
+    },
+    {
+        key: 'optional-scroll',
+        label: '선택 동의사항',
+        slots: '필수 동의사항과 동일',
+        cta: '보조 + 주 · 반씩(246)',
+        close: '있음',
+        when: '필수 동의를 마친 뒤 이어서 묻는 선택 항목. 구성은 같고 제목·본문·질문만 다르다.',
     },
 ] as const
 
@@ -634,6 +642,15 @@ const DialogGuidePage = () => (
                         </DialogTrigger>
                         {/* 본문·CTA 는 composite/consent-terms-dialog 가 갖는다 — 문의 등록 화면의 "내용보기"와 같은 내용이다. */}
                         <ConsentTermsDialogContent />
+                    </Dialog>
+
+                    {/* 선택 동의사항 — 필수 동의를 마친 뒤 이어서 여는 같은 모양의 모달이다.
+                        고객 정보 활용 동의 화면의 '전체 항목 동의'가 이 두 모달을 차례로 보여준다. */}
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size="md">선택 동의사항</Button>
+                        </DialogTrigger>
+                        <OptionalConsentTermsDialogContent />
                     </Dialog>
                 </div>
             </section>
