@@ -82,7 +82,8 @@ const EmailField = ({
     }
 
     return (
-        <div className={cn('flex flex-wrap items-center gap-6', className)}>
+        // 모바일(768 미만) 시안은 [아이디 @ 도메인] 아래 줄에 셀렉트가 전체 폭으로 오고 간격이 8 이다.
+        <div className={cn('flex flex-wrap items-center gap-2 md:gap-6', className)}>
             <div className="flex min-w-0 flex-1 items-center gap-2">
                 <Input
                     id={`${fieldId}-local-part`}
@@ -109,7 +110,8 @@ const EmailField = ({
                 />
             </div>
             <Select value={preset} onValueChange={handlePresetChange}>
-                <SelectTrigger className="w-70" aria-label="이메일 도메인 선택">
+                {/* 시안 폭 — 모바일 전체 폭 · md 228 · xl 280. 남는 폭은 앞의 아이디·도메인 칸이 나눠 갖는다. */}
+                <SelectTrigger className="w-full md:w-57 xl:w-70" aria-label="이메일 도메인 선택">
                     <SelectValue />
                 </SelectTrigger>
                 <SelectContent onCloseAutoFocus={handleCloseAutoFocus}>
