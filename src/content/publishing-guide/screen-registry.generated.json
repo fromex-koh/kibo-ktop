@@ -674,28 +674,7 @@
             "isCurrent": false
         },
         {
-            "key": "corp-mypage-evaluation-results-in-depth-analysis",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
             "key": "corp-mypage-evaluation-results-bank-transfer",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
-            "key": "corp-mypage-evaluation-results-institution-transfer",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
-            "key": "corp-mypage-evaluation-results-transfer-history",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",

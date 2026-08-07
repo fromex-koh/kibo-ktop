@@ -1059,32 +1059,11 @@
                             "key": "corp-mypage-evaluation-results-general-analysis"
                         },
                         {
-                            "label": "심층분석",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-mypage-evaluation-results-in-depth-analysis"
-                        },
-                        {
                             "label": "은행전송",
                             "screenId": null,
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-mypage-evaluation-results-bank-transfer"
-                        },
-                        {
-                            "label": "기관전송",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-mypage-evaluation-results-institution-transfer"
-                        },
-                        {
-                            "label": "전송내역",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-mypage-evaluation-results-transfer-history"
                         }
                     ]
                 },

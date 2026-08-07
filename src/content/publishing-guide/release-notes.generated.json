@@ -4,10 +4,6 @@
             "version": "v1.0.1",
             "releasedAt": "2026-08-06",
             "changes": [
-                "문의 완료 화면 반응형 개선",
-                "개인정보 처리방침 디자인 누락 반영",
-                "Header 탄소중립 외부 링크 연결",
-                "FAQ 빈 상태(EmptyState) 처리",
                 "덮어쓰기: `src/app/(user-type)/corp/(service)/(logged-in)/notice/inquiry-create/inquiry-complete`, `src/app/(user-type)/org/(service)/(logged-in)/notice/inquiry-create/inquiry-complete`, `src/components/custom/inquiry-complete`",
                 "덮어쓰기: `src/app/component-guide`, `src/constants/header-navigation.ts`",
                 "덮어쓰기: `src/components`, `src/components/custom/faq-list.tsx`"

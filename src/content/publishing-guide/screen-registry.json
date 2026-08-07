@@ -676,32 +676,11 @@
             "name": "일반분석"
         },
         {
-            "key": "corp-mypage-evaluation-results-in-depth-analysis",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/mypage/evaluation-results/in-depth-analysis",
-            "name": "심층분석"
-        },
-        {
             "key": "corp-mypage-evaluation-results-bank-transfer",
             "screenId": null,
             "userType": "기업",
             "path": "/corp/mypage/evaluation-results/bank-transfer",
             "name": "은행전송"
-        },
-        {
-            "key": "corp-mypage-evaluation-results-institution-transfer",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/mypage/evaluation-results/institution-transfer",
-            "name": "기관전송"
-        },
-        {
-            "key": "corp-mypage-evaluation-results-transfer-history",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/mypage/evaluation-results/transfer-history",
-            "name": "전송내역"
         },
         {
             "key": "corp-mypage-k-bigx-report-history",

@@ -21,6 +21,8 @@ import {
     type CommonLayout,
     type HomeContent,
     type PublishingIndexContent,
+    type ReleaseNoteChange,
+    type ReleaseNoteHandoffMode,
     type ReleaseNote,
     type ScreenRegistryItem,
     type ScreenInfo,
@@ -200,11 +202,46 @@ const parseCommonLayout = (raw: (typeof publishingIndexJson)['commonLayouts'][nu
     }
 }
 
+const RELEASE_NOTE_HANDOFF_MODES: readonly ReleaseNoteHandoffMode[] = ['diff', 'new', 'overwrite']
+
+// 릴리즈 노트는 일반 문자열과 프론트엔드 전달 카드 객체를 함께 지원한다.
+const parseReleaseNoteChange = (value: unknown, where: string): ReleaseNoteChange => {
+    if (typeof value === 'string') return value
+    if (!isRecord(value) || value.type !== 'handoff') {
+        throw new Error(`[content] ${where}: 문자열 또는 handoff 객체여야 합니다.`)
+    }
+    if (typeof value.mode !== 'string' || !RELEASE_NOTE_HANDOFF_MODES.includes(value.mode as ReleaseNoteHandoffMode)) {
+        throw new Error(`[content] ${where} > mode: diff|new|overwrite 중 하나여야 합니다.`)
+    }
+    if (typeof value.title !== 'string' || value.title.length === 0) {
+        throw new Error(`[content] ${where} > title: 비어 있지 않은 문자열이어야 합니다.`)
+    }
+    if (!Array.isArray(value.details)) {
+        throw new Error(`[content] ${where} > details: 배열이어야 합니다.`)
+    }
+
+    const details = value.details.map((detail, index) => {
+        if (!isRecord(detail) || typeof detail.label !== 'string' || typeof detail.value !== 'string') {
+            throw new Error(`[content] ${where} > details[${index}]: label·value 문자열이 필요합니다.`)
+        }
+        return {label: detail.label, value: detail.value}
+    })
+
+    return {
+        type: 'handoff',
+        mode: value.mode as ReleaseNoteHandoffMode,
+        title: value.title,
+        details,
+    }
+}
+
 const parsePublishingIndexContent = (raw: typeof publishingIndexJson): PublishingIndexContent => ({
     releaseNotes: releaseNotesGenerated.releases.map((release): ReleaseNote => ({
         version: release.version,
         releasedAt: release.releasedAt,
-        changes: release.changes,
+        changes: release.changes.map((change, index) =>
+            parseReleaseNoteChange(change, `releaseNotes > ${release.version} > changes[${index}]`),
+        ),
     })),
     assetVersions: raw.assetVersions.map((asset): AssetVersion => {
         const {version, isCurrent} = findGeneratedVersion(asset.name)
@@ -332,6 +369,8 @@ export {USER_TYPE_VALUES, isStructureBranch, SCREEN_IMPLEMENTATION_STATUS_VALUES
 export type {
     UserType,
     CommonLayout,
+    ReleaseNoteChange,
+    ReleaseNoteHandoff,
     ScreenImplementationStatus,
     ScreenRegistryItem,
     Status,
