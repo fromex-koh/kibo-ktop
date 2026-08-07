@@ -33,7 +33,7 @@ const MOCK_NOTICE_PAGE_SIZE = 10
 // SkipNav의 #main 도착 대상. page의 목업 데이터를 NoticeList에 전달한다.
 const CorpNoticeAnnouncementsPage = () => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
-        <div className="content-layout flex flex-col gap-10 pt-10 pb-25">
+        <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
             <PageTitleBar
                 title="공지사항"
                 breadcrumb={
