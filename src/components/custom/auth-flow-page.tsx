@@ -23,7 +23,7 @@ import {cn} from '@/lib/utils'
 // 로그인 흐름 화면의 콘텐츠 영역만 비워 둔다. 실제 화면 내용은 서비스 연동 시 추가한다.
 const AuthFlowPage = ({children}: {children?: ReactNode}) => (
     <main id="main" tabIndex={-1} className="bg-surface flex-1">
-        <div className="content-layout min-h-full">{children}</div>
+        <div className="grid-layout *:col-span-full">{children}</div>
     </main>
 )
 
@@ -145,11 +145,11 @@ const LoginEndPage = () => (
                 </div>
             </div>
             <ActionBar>
-                <ActionBarCenter className="gap-4">
-                    <Button asChild variant="tertiary" size="xl">
+                <ActionBarCenter className="col-span-3 col-start-1 w-full flex-col gap-4 md:col-span-1 md:col-start-2 md:w-auto md:flex-row">
+                    <Button asChild variant="tertiary" size="xl" className="w-full md:w-auto">
                         <Link href="/">홈으로 이동</Link>
                     </Button>
-                    <Button asChild size="xl">
+                    <Button asChild size="xl" className="w-full md:w-auto">
                         <Link href="#">로그인</Link>
                     </Button>
                 </ActionBarCenter>
