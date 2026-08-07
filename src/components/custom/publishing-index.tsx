@@ -67,16 +67,19 @@ const ReleaseNoteChange = ({change}: {change: string}) => {
     return <span className="min-w-0">{parts.length > 0 ? parts : change}</span>
 }
 
-const RELEASE_NOTE_COMMIT_MARKDOWN_LINK_PATTERN = /^\[([^\]]+)\]\((https:\/\/github\.com\/[^)\s]+)\)$/
+const RELEASE_NOTE_COMMIT_MARKDOWN_LINK_PATTERN = /\[([^\]]+)\]\((https:\/\/github\.com\/[^)\s]+)\)/g
 
-const getReleaseNoteCommitLink = (label: string, value: string): {href: string; text: string} | undefined => {
-    if (!['커밋', 'GitHub Diff', 'Diff 링크'].includes(label)) return undefined
+const getReleaseNoteCommitLinks = (label: string, value: string): {href: string; text: string}[] => {
+    if (!['커밋', 'GitHub Diff', 'Diff 링크'].includes(label)) return []
 
-    const markdownLink = RELEASE_NOTE_COMMIT_MARKDOWN_LINK_PATTERN.exec(value)
-    if (markdownLink) return {href: markdownLink[2], text: markdownLink[1]}
-    if (value.startsWith('https://github.com/')) return {href: value, text: '변경사항 보기'}
+    const markdownLinks = Array.from(value.matchAll(RELEASE_NOTE_COMMIT_MARKDOWN_LINK_PATTERN), (match) => ({
+        href: match[2],
+        text: match[1],
+    }))
+    if (markdownLinks.length > 0) return markdownLinks
+    if (value.startsWith('https://github.com/')) return [{href: value, text: '변경사항 보기'}]
 
-    return undefined
+    return []
 }
 
 const ReleaseNoteDetailValue = ({label, value}: {label: string; value: string}) => {
@@ -92,20 +95,27 @@ const ReleaseNoteDetailValue = ({label, value}: {label: string; value: string}) 
         )
     }
 
-    const commitLink = getReleaseNoteCommitLink(label, value)
+    const commitLinks = getReleaseNoteCommitLinks(label, value)
 
-    if (commitLink) {
+    if (commitLinks.length > 0) {
         return (
-            <a
-                href={commitLink.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-foreground focus-visible:ring-ring inline-flex max-w-full items-center gap-1 underline underline-offset-4 focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none"
-            >
-                <span className="truncate">{commitLink.text}</span>
-                <ExternalLink aria-hidden="true" className="size-3.5 shrink-0" />
-                <span className="sr-only"> (새 창)</span>
-            </a>
+            <span className="inline-flex max-w-full flex-wrap items-center">
+                {commitLinks.map((commitLink, index) => (
+                    <span key={`${commitLink.href}-${index}`} className="inline-flex min-w-0 items-center">
+                        <a
+                            href={commitLink.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-foreground focus-visible:ring-ring inline-flex max-w-full items-center gap-1 underline underline-offset-4 focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none"
+                        >
+                            <span className="truncate">{commitLink.text}</span>
+                            <ExternalLink aria-hidden="true" className="size-3.5 shrink-0" />
+                            <span className="sr-only"> (새 창)</span>
+                        </a>
+                        {index < commitLinks.length - 1 && <span className="mx-2">·</span>}
+                    </span>
+                ))}
+            </span>
         )
     }
 
