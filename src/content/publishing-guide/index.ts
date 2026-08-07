@@ -204,13 +204,17 @@ const parseCommonLayout = (raw: (typeof publishingIndexJson)['commonLayouts'][nu
 
 const RELEASE_NOTE_HANDOFF_MODES: readonly ReleaseNoteHandoffMode[] = ['diff', 'new', 'overwrite']
 
+const isReleaseNoteHandoffMode = (value: string): value is ReleaseNoteHandoffMode =>
+    RELEASE_NOTE_HANDOFF_MODES.some((mode) => mode === value)
+
 // 릴리즈 노트는 일반 문자열과 프론트엔드 전달 카드 객체를 함께 지원한다.
 const parseReleaseNoteChange = (value: unknown, where: string): ReleaseNoteChange => {
     if (typeof value === 'string') return value
     if (!isRecord(value) || value.type !== 'handoff') {
         throw new Error(`[content] ${where}: 문자열 또는 handoff 객체여야 합니다.`)
     }
-    if (typeof value.mode !== 'string' || !RELEASE_NOTE_HANDOFF_MODES.includes(value.mode as ReleaseNoteHandoffMode)) {
+    const mode = value.mode
+    if (typeof mode !== 'string' || !isReleaseNoteHandoffMode(mode)) {
         throw new Error(`[content] ${where} > mode: diff|new|overwrite 중 하나여야 합니다.`)
     }
     if (typeof value.title !== 'string' || value.title.length === 0) {
@@ -229,7 +233,7 @@ const parseReleaseNoteChange = (value: unknown, where: string): ReleaseNoteChang
 
     return {
         type: 'handoff',
-        mode: value.mode as ReleaseNoteHandoffMode,
+        mode,
         title: value.title,
         details,
     }
