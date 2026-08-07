@@ -15,7 +15,7 @@ export const metadata: Metadata = {title: '개인정보 처리방침'}
 // SkipNav의 #main 도착 대상이며 tabIndex={-1}로 키보드 포커스를 받을 수 있다.
 const OrgEasyPrivacyPolicyPage = () => (
     <main id="main" tabIndex={-1} className="bg-surface flex-1">
-        <div className="content-layout flex flex-col gap-10 pt-10 pb-25">
+        <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
             <PageTitleBar
                 title="개인정보 처리방침"
                 breadcrumb={
