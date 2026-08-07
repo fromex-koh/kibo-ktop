@@ -34,7 +34,7 @@ const MOCK_RESOURCE_PAGE_SIZE = 10
 // SkipNav의 #main 도착 대상. 목록·페이지 상태는 client 인 ResourceList가 담당한다.
 const CorpNoticeResourcesPage = () => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
-        <div className="content-layout flex flex-col gap-10 pt-10 pb-25">
+        <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
             <PageTitleBar
                 title="자료실"
                 breadcrumb={
