@@ -51,7 +51,7 @@ const FOOTER_STYLE = {
         phoneRow: 'gap-2',
         bodyTone: 'text-foreground',
         // mainpage는 어두운 푸터에 맞춘 solid Select를 사용한다.
-        familySite: 'bg-muted border-transparent w-70',
+        familySite: 'bg-muted border-transparent w-full md:w-70',
     },
     subpage: {
         root: 'gap-8 pt-10 pb-10',
@@ -61,7 +61,7 @@ const FOOTER_STYLE = {
         phoneRow: 'gap-2',
         bodyTone: 'text-label-foreground',
         // subpage는 Select 기본 배경과 테두리를 사용한다.
-        familySite: 'w-70',
+        familySite: 'w-full md:w-70',
     },
 } satisfies Record<FooterVariant, Record<string, string>>
 
@@ -99,9 +99,14 @@ const FooterContent = ({variant = 'mainpage', userType, portalTheme, className, 
             )}
             aria-label="사이트 정보"
         >
-            <div className={cn('content-layout flex flex-col', style.root)}>
+            <div
+                className={cn(
+                    'grid-layout *:col-span-full md:[--ds-grid-container:var(--container-content)]',
+                    style.root,
+                )}
+            >
                 <div className={cn('flex flex-col', style.topBlock)}>
-                    <div className="flex flex-wrap items-center justify-between gap-6">
+                    <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
                         {/* 현재 테마에 맞는 KIBO 로고만 표시한다. */}
                         <div className="flex w-fit items-center">
                             <span className="sr-only">기술보증기금</span>
