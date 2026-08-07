@@ -19,8 +19,30 @@ const RELEASE_NOTES_DRAFT = 'RELEASE_NOTES_DRAFT.md'
 const EMPTY_RELEASE_NOTES_DRAFT = `# 다음 릴리스 변경사항
 
 <!--
-main 병합 전에 노출할 내용을 아래에 불릿(-)으로 작성하세요.
-항목이 많을 때는 \`[적용 화면 또는 작업 영역] 변경사항\` 형식으로 구분하며, 개수는 제한하지 않습니다.
+일반 변경사항은 불릿(-)으로 작성하세요.
+아래 예시는 형식 안내용 주석이며 실제 릴리즈 내용으로 수집되지 않습니다.
+프론트엔드 전달 항목은 ## 구분자, ### 작업명, - 라벨: 내용 순서로 작성하세요.
+
+## [Diff 확인]
+
+### Header 반응형 개선
+- 대상: src/components/composite/header.tsx
+- 변경: 사용자 정보 영역 breakpoint 조정
+- 결과: 768px 이상에서 사용자 정보 표시
+- 커밋: [변경사항 보기](https://github.com/{organization}/{repository}/commit/{commit-hash})
+
+## [신규 추가]
+
+### EmailField 컴포넌트
+- 대상: src/components/composite/email-field.tsx
+- 적용: 신규 파일 추가
+
+## [덮어쓰기]
+
+### 문의 완료 화면
+- 대상: src/components/custom/inquiry-complete
+- 적용: 지정한 파일만 교체
+
 컴포넌트 가이드 페이지는 \`[페이지 제목](/component-guide/경로)\` 형식으로 작성하면 새 창 링크로 표시됩니다.
 릴리스 성공 후 내용은 자동으로 비워집니다.
 -->
@@ -111,10 +133,52 @@ const commitSubjects = git('log', releaseRange, '--format=%s', '--no-merges')
 const summarizeSubject = (subject) =>
     subject.replace(/^(?:feat|fix|docs|refactor|perf|test|build|ci|chore|style)(?:\([^)]*\))?!?:\s*/i, '').trim()
 
-const draftChanges = readFileSync(RELEASE_NOTES_DRAFT, 'utf8')
-    .split('\n')
-    .map((line) => /^-\s+(.+)$/.exec(line.trim())?.[1]?.trim())
-    .filter(Boolean)
+const parseDraftChanges = (draft) => {
+    const changes = []
+    const lines = draft.replace(/<!--[\s\S]*?-->/g, '').split('\n')
+    let handoffMode
+    let handoff
+
+    const flushHandoff = () => {
+        if (handoff !== undefined) changes.push(handoff)
+        handoff = undefined
+    }
+
+    for (const line of lines) {
+        const modeMatch = /^##\s+\[(Diff 확인|신규 추가|덮어쓰기)\]\s*$/.exec(line.trim())
+        if (modeMatch) {
+            flushHandoff()
+            handoffMode = modeMatch[1] === 'Diff 확인' ? 'diff' : modeMatch[1] === '신규 추가' ? 'new' : 'overwrite'
+            continue
+        }
+
+        const titleMatch = /^###\s+(.+)$/.exec(line.trim())
+        if (titleMatch && handoffMode !== undefined) {
+            flushHandoff()
+            handoff = {
+                type: 'handoff',
+                mode: handoffMode,
+                title: titleMatch[1].trim(),
+                details: [],
+            }
+            continue
+        }
+
+        const detailMatch = /^-\s+([^:]+):\s*(.+)$/.exec(line.trim())
+        if (detailMatch && handoff !== undefined) {
+            handoff.details.push({label: detailMatch[1].trim(), value: detailMatch[2].trim()})
+            continue
+        }
+
+        const changeMatch = /^-\s+(.+)$/.exec(line.trim())
+        if (changeMatch && handoffMode === undefined) changes.push(changeMatch[1].trim())
+    }
+
+    flushHandoff()
+    return changes
+}
+
+const draftChanges = parseDraftChanges(readFileSync(RELEASE_NOTES_DRAFT, 'utf8'))
 const automaticChanges = [...new Set(commitSubjects.map(summarizeSubject).filter(Boolean))].slice(0, 8)
 const changes = draftChanges.length > 0 ? draftChanges : automaticChanges
 const releasedAt = git('log', '-1', '--format=%cs', 'HEAD')
