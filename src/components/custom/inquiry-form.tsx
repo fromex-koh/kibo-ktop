@@ -117,7 +117,7 @@ const InquiryCancelDialog = ({
         <Dialog defaultOpen={defaultOpen}>
             {showTrigger ? (
                 <DialogTrigger asChild>
-                    <Button type="button" variant="tertiary" size="xl" className="w-full sm:w-auto" disabled={disabled}>
+                    <Button type="button" variant="tertiary" size="xl" className="w-full md:w-auto" disabled={disabled}>
                         취소
                     </Button>
                 </DialogTrigger>
@@ -155,9 +155,9 @@ const InquiryFormActions = ({cancelHref}: {cancelHref: string}) => {
 
     return (
         <ActionBar>
-            <ActionBarCenter className="gap-4 max-sm:col-span-3 max-sm:col-start-1 max-sm:w-full max-sm:flex-col">
+            <ActionBarCenter className="col-span-3 col-start-1 w-full flex-col gap-4 md:col-span-1 md:col-start-2 md:w-auto md:flex-row">
                 <InquiryCancelDialog cancelHref={cancelHref} disabled={pending} />
-                <Button type="submit" size="xl" className="w-full sm:w-auto" disabled={pending} aria-busy={pending}>
+                <Button type="submit" size="xl" className="w-full md:w-auto" disabled={pending} aria-busy={pending}>
                     {pending ? (
                         <>
                             <LoaderCircle aria-hidden="true" className="animate-spin" />
