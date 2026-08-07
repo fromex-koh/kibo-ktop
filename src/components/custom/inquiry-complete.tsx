@@ -55,11 +55,11 @@ const InquiryComplete = ({myPageHref, homeHref = '/'}: InquiryCompleteProps) => 
         </BaseCard>
 
         <ActionBar className="shrink-0">
-            <ActionBarCenter className="gap-4 max-sm:col-span-3 max-sm:col-start-1 max-sm:w-full max-sm:flex-col">
-                <Button asChild variant="tertiary" size="xl" className="w-full sm:w-auto">
+            <ActionBarCenter className="col-span-3 col-start-1 w-full flex-col gap-4 md:col-span-1 md:col-start-2 md:w-auto md:flex-row">
+                <Button asChild variant="tertiary" size="xl" className="w-full md:w-auto">
                     <Link href={homeHref}>홈으로 이동</Link>
                 </Button>
-                <Button asChild size="xl" className="w-full sm:w-auto">
+                <Button asChild size="xl" className="w-full md:w-auto">
                     <Link href={myPageHref}>마이페이지로 이동</Link>
                 </Button>
             </ActionBarCenter>
