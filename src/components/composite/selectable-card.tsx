@@ -6,6 +6,8 @@ import {Field, FieldContent, FieldLabel} from '@/components/ui/field'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {
     selectableCardBadgesClassName,
+    selectableCardCheckboxContentClassName,
+    selectableCardCheckboxFieldClassName,
     selectableCardContentClassName,
     selectableCardControlClassName,
     selectableCardFieldClassName,
@@ -14,8 +16,8 @@ import {
 } from '@/components/theme/selectable-card.variants'
 import {cn} from '@/lib/utils'
 
-// PROJECT-COMPOSITE: shadcn Choice Card 패턴(FieldLabel > Field + Radio/Checkbox)을 프로젝트 선택 카드로 조합한다.
-// PROJECT-STYLE: 카드와 상태 스타일은 theme/selectable-card.variants.ts에서 관리한다.
+// 라디오·체크박스 컨트롤과 라벨·뱃지를 하나의 선택 카드로 제공한다.
+// 카드와 상태 스타일은 theme/selectable-card.variants.ts에서 관리한다.
 
 const SelectableCardGroup = (props: ComponentProps<typeof RadioGroup>) => <RadioGroup {...props} />
 
@@ -26,8 +28,7 @@ type SelectableCardBaseProps = {
     id?: string
     className?: string
     children: ReactNode
-    // 카드를 누를 때마다 실행할 처리. 이미 선택된 카드를 다시 눌러도 불리므로(값이 안 바뀌면
-    // 그룹의 onValueChange 는 불리지 않는다) '누르면 안내 모달을 연다' 같은 동작에 쓴다.
+    // 카드 클릭 시 실행한다. 선택값 변경 여부와 관계없이 호출된다.
     onClick?: () => void
 }
 
@@ -40,7 +41,7 @@ type SelectableCardCheckboxProps = SelectableCardBaseProps & {
     control?: 'checkbox'
     value?: string
     checked?: boolean
-    // 비제어(uncontrolled) 초기 선택 — 상태를 들고 있지 않아도 되는 화면에서 기본 체크를 표현한다.
+    // 비제어 방식의 초기 선택 상태.
     defaultChecked?: boolean
     onCheckedChange?: (checked: boolean) => void
     name?: string
@@ -69,11 +70,14 @@ const SelectableCard = (props: SelectableCardProps) => {
                 className,
             })}
         >
-            {/* Figma 선택 카드 — 선택 컨트롤이 왼쪽 끝에 오고 라벨이 이어지며 뱃지가 카드 오른쪽 끝에 붙는다.
-                DOM 순서(컨트롤 → 라벨 → 뱃지) = 시각 순서라 읽기 순서도 일치한다([7.3.1]).
-                뱃지는 항목의 성격(필수·선택)을 알려주므로 접근 가능한 이름에도 라벨과 함께(라벨 다음에) 넣는다.
-                뱃지를 오른쪽 끝으로 미는 건 사이의 FieldContent(flex-1)다. */}
-            <Field orientation="horizontal" className={selectableCardFieldClassName}>
+            {/* 컨트롤·라벨·뱃지를 aria-labelledby로 연결해 카드의 접근 가능한 이름을 구성한다. */}
+            <Field
+                orientation="horizontal"
+                className={cn(
+                    selectableCardFieldClassName,
+                    control === 'checkbox' && selectableCardCheckboxFieldClassName,
+                )}
+            >
                 {props.control === 'radio' ? (
                     <RadioGroupItem
                         id={controlId}
@@ -97,7 +101,12 @@ const SelectableCard = (props: SelectableCardProps) => {
                         className={selectableCardControlClassName}
                     />
                 )}
-                <FieldContent className={selectableCardContentClassName}>
+                <FieldContent
+                    className={cn(
+                        selectableCardContentClassName,
+                        control === 'checkbox' && selectableCardCheckboxContentClassName,
+                    )}
+                >
                     <span
                         id={labelId}
                         data-slot="selectable-card-title"
