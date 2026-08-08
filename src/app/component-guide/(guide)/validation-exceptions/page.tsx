@@ -323,29 +323,6 @@ const ValidationExceptionsPage = () => (
                         초과합니다. 화면 작성자가 별도 input을 추가한 결과는 아닙니다.
                     </p>
                 </section>
-
-                <section aria-labelledby="validation-radix-id" className="flex flex-col gap-2">
-                    <SectionHeader>
-                        <SectionHeaderTitle id="validation-radix-id">
-                            4. id 값 공백 오류 — NavigationMenu 값과 Radix 생성 ID
-                        </SectionHeaderTitle>
-                        <SectionHeaderDescription>화면 라벨을 메뉴 value로 사용한 결과</SectionHeaderDescription>
-                    </SectionHeader>
-                    <CodeBlock
-                        code={
-                            'Bad value “...trigger-플랫폼 소개” for attribute id on element button: An ID must not contain whitespace.'
-                        }
-                        language="text"
-                    />
-                    <p>
-                        <code className="font-mono">header.tsx</code>에서{' '}
-                        <code className="font-mono">NavigationMenuItem</code>의 <code className="font-mono">value</code>
-                        에 “플랫폼 소개”, “K-BIGx 보고서” 같은 화면 라벨을 전달합니다. Radix NavigationMenu가 이 값을
-                        trigger <code className="font-mono">id</code>에 포함하면서 공백이 들어간 ID가 생성됩니다. 화면
-                        라벨과 메뉴 식별자 값을 분리해야 하며, Radix가 생성한 최종 DOM에서 오류가 나타나지만 원인은
-                        프로젝트의 value 지정입니다.
-                    </p>
-                </section>
             </div>
         </BaseCard>
 
@@ -510,6 +487,12 @@ const ValidationExceptionsPage = () => (
                         <code className="font-mono">--scale: var(--toasts-before) * 0.05 + 1</code>(CSS Variables Level
                         1 유효 — 커스텀 프로퍼티 값은 임의 토큰열)로, 전 브라우저가 정상 해석합니다. HTML 문법 오류가
                         아니므로 KWCAG 8.1.1 위반에도 해당하지 않습니다.
+                    </p>
+                    <p>
+                        같은 스타일시트의 <code className="font-mono">[data-icon] &gt; svg</code>,{' '}
+                        <code className="font-mono">[data-icon] &gt; *</code>,{' '}
+                        <code className="font-mono">[data-sonner-toast] &gt; *</code> 선택자도 동일한 sonner 주입 CSS에
+                        포함되어 있어 같은 Parse Error로 분류합니다.
                     </p>
                 </section>
 
