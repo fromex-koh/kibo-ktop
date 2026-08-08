@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import {createContext, useContext, useRef, useState, type ReactNode} from 'react'
 import {ConsentItem, ConsentList} from '@/components/composite/consent-list'
 import {ConsentTermsDetailButton} from '@/components/composite/consent-terms-detail-button'
@@ -395,7 +396,7 @@ const CustomerConsentStepNavigation = () => {
     return (
         <StepNavigation
             appearance="plain"
-            prev={{children: '이전'}}
+            prev={{asChild: true, children: <Link href="/">이전</Link>}}
             next={{children: '동의 후 인증서명', disabled: !isComplete}}
         />
     )
