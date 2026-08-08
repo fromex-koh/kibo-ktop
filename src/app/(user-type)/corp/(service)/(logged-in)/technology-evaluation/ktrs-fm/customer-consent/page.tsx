@@ -26,7 +26,7 @@ const CorpKtrsFmCustomerConsentPage = () => (
         {/* 동의서와 하단 CTA가 동의 상태를 공유한다. */}
         <CustomerConsentProvider>
             {/* 콘텐츠 폭은 공통 grid-layout을 따르고, 하단 여백은 StepNavigation이 담당한다. */}
-            <div className="grid-layout gap-y-10 pt-10 *:col-span-full">
+            <div className="grid-layout gap-y-10 pt-7 *:col-span-full md:pt-10">
                 <PageTitleBar
                     title="신속표준모형"
                     badge={
