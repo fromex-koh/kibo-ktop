@@ -2,7 +2,7 @@
 
 import {useId, type ComponentProps, type ReactNode} from 'react'
 import {Checkbox} from '@/components/ui/checkbox'
-import {Field, FieldContent, FieldLabel} from '@/components/ui/field'
+import {FieldLabel} from '@/components/ui/field'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {
     selectableCardBadgesClassName,
@@ -63,6 +63,7 @@ const SelectableCard = (props: SelectableCardProps) => {
         <FieldLabel
             data-slot="selectable-card"
             data-disabled={disabled || undefined}
+            htmlFor={controlId}
             onClick={onClick}
             className={selectableCardVariants({
                 disabled: Boolean(disabled),
@@ -71,9 +72,12 @@ const SelectableCard = (props: SelectableCardProps) => {
             })}
         >
             {/* 컨트롤·라벨·뱃지를 aria-labelledby로 연결해 카드의 접근 가능한 이름을 구성한다. */}
-            <Field
-                orientation="horizontal"
+            <span
+                role="group"
+                data-orientation="horizontal"
+                data-slot="field"
                 className={cn(
+                    'flex w-full flex-row gap-2',
                     selectableCardFieldClassName,
                     control === 'checkbox' && selectableCardCheckboxFieldClassName,
                 )}
@@ -101,8 +105,10 @@ const SelectableCard = (props: SelectableCardProps) => {
                         className={selectableCardControlClassName}
                     />
                 )}
-                <FieldContent
+                <span
+                    data-slot="field-content"
                     className={cn(
+                        'flex flex-1 flex-col gap-0.5 leading-snug',
                         selectableCardContentClassName,
                         control === 'checkbox' && selectableCardCheckboxContentClassName,
                     )}
@@ -114,13 +120,13 @@ const SelectableCard = (props: SelectableCardProps) => {
                     >
                         {children}
                     </span>
-                </FieldContent>
+                </span>
                 {badges ? (
                     <span id={badgesId} className={selectableCardBadgesClassName}>
                         {badges}
                     </span>
                 ) : null}
-            </Field>
+            </span>
         </FieldLabel>
     )
 }
