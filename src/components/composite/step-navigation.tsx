@@ -42,9 +42,23 @@ const StepNavigation = ({appearance = 'bar', prev, next, className, ...props}: S
             <ActionBar>
                 {prev || next ? (
                     // 시안의 CTA 짝은 16 간격이다(ActionBar 기본 8보다 넓다).
-                    <ActionBarCenter className="gap-4">
-                        {prev ? <Button variant="tertiary" size="xl" {...prev} /> : null}
-                        {next ? <Button variant="default" size="xl" {...next} /> : null}
+                    <ActionBarCenter className="col-span-3 col-start-1 w-full flex-col gap-4 md:col-span-1 md:col-start-2 md:w-auto md:flex-row">
+                        {prev ? (
+                            <Button
+                                variant="tertiary"
+                                size="xl"
+                                {...prev}
+                                className={cn('w-full md:w-auto', prev.className)}
+                            />
+                        ) : null}
+                        {next ? (
+                            <Button
+                                variant="default"
+                                size="xl"
+                                {...next}
+                                className={cn('w-full md:w-auto', next.className)}
+                            />
+                        ) : null}
                     </ActionBarCenter>
                 ) : null}
             </ActionBar>
