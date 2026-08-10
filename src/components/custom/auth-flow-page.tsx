@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import serviceStatusIllustration from '@public/images/service-status/service-status-illustration.webp'
 import {ActionBar, ActionBarCenter} from '@/components/composite/action-bar'
+import {PostcodeSearchDialog} from '@/components/composite/postcode-search-dialog'
 import {Button} from '@/components/ui/button'
 import {
     Dialog,
@@ -172,30 +173,13 @@ const InitialPasswordChangePage = () => (
 // 시안 아래쪽에 겹쳐 있는 CTA 두 개(placeholder "버튼명" · 다른 모달에서 복사된 "비밀번호 확인")는
 // 카드 높이(540 = 40+36+24+400+40) 밖으로 벗어나 있는 남은 요소라 옮기지 않는다. 주소를 고르면 닫히는
 // 흐름이라 닫기(X)로 충분하다.
-const PostcodeSearchDialog = () => (
-    // 화면 확인을 위해 모달을 열어 둔다.
-    <Dialog defaultOpen>
-        {/* 위젯이 들어올 자리라 설명 문단이 없다 — radix 에 설명 없음을 알린다. */}
-        <DialogContent aria-describedby={undefined}>
-            <DialogHeader>
-                <DialogTitle>우편번호 검색</DialogTitle>
-            </DialogHeader>
-            {/* CTA 가 없으므로 아래 여백 40 은 본문이 갖는다. */}
-            <div className={cn(dialogBodyClassName, 'pb-10')}>
-                <p className="bg-accent-subtle typo-title-l-bold text-foreground flex min-h-100 items-center justify-center text-center">
-                    Kakao(다음) 우편번호 검색 영역
-                </p>
-            </div>
-        </DialogContent>
-    </Dialog>
-)
-
 const PostcodeSearchPage = () => (
     <>
         <AuthFlowPage>
             <p className="typo-body-xl-regular text-label-foreground py-10">Kakao(다음) 우편번호 API를 사용한다.</p>
         </AuthFlowPage>
-        <PostcodeSearchDialog />
+        {/* 화면 확인을 위해 모달을 열어 둔다 — 실제 화면에서는 "주소 검색" 버튼이 연다. */}
+        <PostcodeSearchDialog defaultOpen />
     </>
 )
 
