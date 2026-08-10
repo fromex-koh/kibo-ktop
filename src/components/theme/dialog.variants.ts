@@ -6,8 +6,13 @@ export const dialogOverlayClassName =
 // 모달은 머리(제목+닫기) · 본문 · CTA 세 구획이다. grid-rows 로 그 세 행을 고정하고 가운데 행만
 // minmax(0,1fr) 로 둔다 — 카드가 화면보다 짧으면 1fr 이 max-content 로 풀려 자기 높이 그대로 나오고,
 // 화면이 더 낮아 max-h 에 걸리면 가운데 행만 줄어 머리와 CTA 는 제자리에 남는다(본문만 스크롤).
-// 제목과 본문은 row-start 로 직접 배치하고 CTA 는 자동 배치에 맡긴다. overflow-hidden 은 줄어든
+// 제목과 본문은 row-start 로 직접 배치하고 CTA 는 자동 배치에 맡긴다. overflow-clip 은 줄어든
 // 가운데 행의 내용이 카드 밖으로 비어져 나오지 않게 한다.
+//
+// hidden 이 아니라 clip 인 이유 — overflow:hidden 은 화면에 스크롤바가 없을 뿐 스크롤 컨테이너다.
+// 그래서 카드 안에서 포커스가 옮겨 가거나 scrollIntoView 가 불리면 브라우저가 카드까지 굴려, 제목이
+// 위로 잘리고 CTA 아래에 그만큼 빈 자리가 생긴다. clip 은 스크롤 컨테이너를 만들지 않으므로 그런 일이
+// 없고, 스크롤은 본문 구획에서만 일어난다(잘라내는 효과와 라운드 처리는 hidden 과 같다).
 //
 // 여백은 카드가 통째로 갖지 않고 세 구획이 각자 갖는다(p-0 · gap-0). 그래야 본문이 스크롤될 때 글이
 // 머리·CTA 의 여백 아래로 들어가며 잘려, 맨 가장자리에서 뚝 끊기지 않는다. 구획 사이 24 도 gap 이
@@ -18,7 +23,7 @@ export const dialogOverlayClassName =
 // %(max-h-4/5)가 아니라 dvh 인 이유 — % 는 초기 컨테이닝 블록 기준이라 가로 스크롤바가 있으면 화면
 // 높이보다 작게 잡히고(500 화면에서 380), 모바일 주소창 개폐에도 흔들린다.
 export const dialogContentClassName =
-    'bg-popover text-popover-foreground data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 fixed inset-x-4 top-1/2 z-modal grid max-h-modal-max-h w-auto -translate-y-1/2 grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-hidden rounded-2xl p-0 text-base duration-100 outline-none sm:left-1/2 sm:w-full sm:max-w-modal sm:-translate-x-1/2'
+    'bg-popover text-popover-foreground data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95 fixed inset-x-4 top-1/2 z-modal grid max-h-modal-max-h w-auto -translate-y-1/2 grid-rows-[auto_minmax(0,1fr)_auto] gap-0 overflow-clip rounded-2xl p-0 text-base duration-100 outline-none sm:left-1/2 sm:w-full sm:max-w-modal sm:-translate-x-1/2'
 // 머리 구획 — 제목이 사는 첫 행이자 자기 여백(모바일 위·좌우 24, sm 이상 40 · 아래 20)의 주인.
 // 닫기(X)는 셸이 Content 직속으로 렌더하므로 이 상자 안에 들어오지 못한다. 같은 행·같은 칸에 겹쳐
 // 두고 오른쪽 끝으로 밀어 배치한다(dialogCloseClassName).
