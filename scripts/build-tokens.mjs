@@ -247,6 +247,23 @@ try {
     errors.push(`${STACK_PAGER_SOURCE} 를 읽을 수 없음 — STACK_PAGER_QUERY 동기화 검증 불가`)
 }
 
+// FormTabs 도 같은 이유로 JS 조건이 브레이크포인트와 한 세트다 —
+// xl 부터 가로 탭, md~xl 은 펼침 목록, md 미만은 고정 한 줄 + 항목 모달.
+const FORM_TABS_SOURCE = 'src/components/composite/form-tabs.tsx'
+try {
+    const src = readFileSync(resolve(ROOT, FORM_TABS_SOURCE), 'utf8')
+    const expectedQueries = [
+        ['FORM_TABS_QUERY', `(min-width: ${breakpoint.xl}px)`, 'breakpoint.xl'],
+        ['FORM_TABS_MOBILE_QUERY', `(max-width: ${breakpoint.md - 1}px)`, 'breakpoint.md'],
+    ]
+    for (const [name, expected, token] of expectedQueries) {
+        if (!src.includes(`${name} = '${expected}'`))
+            errors.push(`${FORM_TABS_SOURCE} 의 ${name} 가 토큰과 다름 — 기대값 "${expected}" (${token} 과 한 세트)`)
+    }
+} catch {
+    errors.push(`${FORM_TABS_SOURCE} 를 읽을 수 없음 — FormTabs 미디어쿼리 동기화 검증 불가`)
+}
+
 if (errors.length) {
     console.error('❌ tokens.json 검증 실패:\n' + errors.map((e) => '  - ' + e).join('\n'))
     process.exit(1)
