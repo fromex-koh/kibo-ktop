@@ -4,7 +4,7 @@ import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
 import DatePickerFormDemo from './date-picker-form-demo'
-import DatePickerDemo, {DatePickerSizesDemo, DatePickerStatesDemo} from './date-picker-demo'
+import DatePickerDemo, {DatePickerMonthDemo, DatePickerSizesDemo, DatePickerStatesDemo} from './date-picker-demo'
 
 export const metadata: Metadata = {title: '데이트피커 (DatePicker)'}
 
@@ -25,6 +25,16 @@ const BASIC_CODE = `const [date, setDate] = useState<Date>()
     달력에서 날짜를 선택해 주세요.
   </FieldDescription>
 </Field>`
+
+const MONTH_CODE = `{/* 연-월만 고르는 칸 — 달력 자리에 12개월 격자가 열린다 */}
+<DatePicker granularity="month" name="startMonth" />
+
+{/* 값은 그 달의 1일(Date)로 다루고, 표시·제출은 연월까지만 한다
+    화면 2026-05 · 제출 "2026-05" · 폼 전달 입력은 type="month" */}
+
+{/* 두 칸을 짝지어 기간으로 쓸 때 — 서로의 경계가 된다 */}
+<DatePicker granularity="month" value={start} onChange={setStart} maxDate={end} />
+<DatePicker granularity="month" value={end} onChange={setEnd} minDate={start} />`
 
 const SIZE_CODE = `{/* 일반 폼: 48px */}
 <DatePicker size="lg" />
@@ -78,6 +88,35 @@ const [visitDateError, setVisitDateError] = useState(false)
 
   <Button type="submit">날짜 선택 확인</Button>
 </form>`
+
+const GRANULARITY_COLUMNS = [
+    {key: 'granularity', header: 'granularity', align: 'start', rowHeader: true},
+    {key: 'panel', header: '열리는 것', align: 'start'},
+    {key: 'display', header: '표시·제출', align: 'start', wrap: true},
+] as const
+
+const GRANULARITY_ROWS = [
+    {
+        key: 'day',
+        cells: [
+            <code key="g">day</code>,
+            '날짜 달력',
+            <span key="d">
+                2026-05-13 · 폼 전달 입력 <code>type=&quot;date&quot;</code>
+            </span>,
+        ],
+    },
+    {
+        key: 'month',
+        cells: [
+            <code key="g">month</code>,
+            '12개월 격자',
+            <span key="d">
+                2026-05 · 폼 전달 입력 <code>type=&quot;month&quot;</code>
+            </span>,
+        ],
+    },
+] as const
 
 const SIZE_COLUMNS = [
     {key: 'size', header: 'Size', align: 'start', rowHeader: true},
@@ -148,6 +187,15 @@ const API_ROWS = [
         ],
     },
     {
+        key: 'granularity',
+        cells: [
+            <code key="prop">granularity</code>,
+            <code key="type">day | month</code>,
+            <code key="default">day</code>,
+            'month면 날짜 달력 대신 12개월 격자가 열리고, 값·표시·제출을 연월까지만 다룹니다.',
+        ],
+    },
+    {
         key: 'size',
         cells: [
             <code key="prop">size</code>,
@@ -162,7 +210,7 @@ const API_ROWS = [
             <code key="prop">name / form / required</code>,
             <code key="type">string / string / boolean</code>,
             '- / - / false',
-            '날짜를 yyyy-MM-dd 형식으로 FormData에 제출하고 필수 조건을 지정합니다.',
+            '날짜를 yyyy-MM-dd(연-월 단위는 yyyy-MM) 형식으로 FormData에 제출하고 필수 조건을 지정합니다.',
         ],
     },
     {
@@ -179,8 +227,26 @@ const API_ROWS = [
         cells: [
             <code key="prop">placeholder</code>,
             <code key="type">string</code>,
-            '연도-월-일',
+            '연도-월-일 (month: 연도-월)',
             '값이 없을 때 표시하며 FieldLabel을 대신할 수 없습니다.',
+        ],
+    },
+    {
+        key: 'range',
+        cells: [
+            <code key="prop">minDate / maxDate</code>,
+            <code key="type">Date</code>,
+            '-',
+            '고를 수 있는 범위입니다. 범위 밖은 달력에서 눌리지 않고 월·연도 목록에서도 빠지며, 폼 전달 입력의 min·max로도 걸립니다.',
+        ],
+    },
+    {
+        key: 'validationMessage',
+        cells: [
+            <code key="prop">validationMessage</code>,
+            <code key="type">string</code>,
+            '-',
+            '고를 수는 있지만 제출은 막아야 하는 사유입니다. 값을 주면 그 문구가 브라우저 검사 메시지가 됩니다(setCustomValidity).',
         ],
     },
     {
@@ -206,7 +272,7 @@ const API_ROWS = [
 const DatePickerGuidePage = () => (
     <GuidePageShell
         title="데이트피커 (DatePicker)"
-        description="달력에서 단일 날짜를 선택하고 yyyy-MM-dd 형식으로 표시·제출하는 날짜 입력 컴포넌트입니다."
+        description='달력에서 단일 날짜를 선택하고 yyyy-MM-dd 형식으로 표시·제출하는 날짜 입력 컴포넌트입니다. 연-월만 고르는 단위(granularity="month")도 같은 컴포넌트로 씁니다.'
     >
         <BaseCard variant="outlined">
             <section aria-labelledby="date-picker-basic" className="flex flex-col gap-6">
@@ -221,6 +287,40 @@ const DatePickerGuidePage = () => (
                 </div>
                 <DatePickerDemo />
                 <CodeBlock code={BASIC_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="date-picker-granularity" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="date-picker-granularity" className="typo-h4-bold">
+                        연-월 단위
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        라벨이 &ldquo;년월&rdquo;인 칸(근무 시작·종료 연월 등)은 일까지 고를 이유가 없습니다.{' '}
+                        <code>granularity=&quot;month&quot;</code>를 주면 같은 입력 상자·팝오버를 그대로 쓰면서 안의
+                        달력만 12개월 격자로 바뀝니다. 연도는 이전·다음 버튼과 목록에서 고릅니다 — 20년 전 일을 적는
+                        칸도 있기 때문입니다.
+                    </p>
+                </div>
+                <Table size="md" caption="고르는 단위별 차이" columns={GRANULARITY_COLUMNS} rows={GRANULARITY_ROWS} />
+                <DatePickerMonthDemo />
+                <CodeBlock code={MONTH_CODE} language="tsx" copyLabel="복사" />
+                <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-1 pl-5">
+                    <li>
+                        값은 두 단위 모두 <code>Date</code>로 다룹니다. 연-월 단위는 그 달의 1일로 담기므로 기간 계산에
+                        그대로 쓸 수 있습니다.
+                    </li>
+                    <li>
+                        범위 밖의 달은 <strong>그 달이 통째로 벗어날 때만</strong> 잠깁니다 — 오늘이 낀 이번 달은 상한이
+                        오늘이어도 고를 수 있습니다.
+                    </li>
+                    <li>
+                        고를 수는 있게 두고 제출만 막아야 하는 규칙(두 칸의 앞뒤 순서 등)은{' '}
+                        <code>validationMessage</code>로 겁니다. 달력에서 아예 막으면 사용자는 왜 안 눌리는지 모른 채
+                        고장으로 읽습니다.
+                    </li>
+                </ul>
             </section>
         </BaseCard>
 

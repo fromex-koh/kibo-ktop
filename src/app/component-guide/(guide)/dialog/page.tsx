@@ -7,6 +7,7 @@ import {Table} from '@/components/custom/table'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {cn} from '@/lib/utils'
 import {ConsentTermsDialogContent, OptionalConsentTermsDialogContent} from '@/components/composite/consent-terms-dialog'
+import {IndustryCodeDialog} from '@/components/composite/industry-code-dialog'
 import {Button} from '@/components/ui/button'
 import {
     Dialog,
@@ -111,6 +112,14 @@ const CASE_SPECS = [
         cta: '주 1개 · 폭 전체(508)',
         close: '있음',
         when: '확인용 한 칸. 시안은 필수 표시(*)를 꺼 둔 상태다.',
+    },
+    {
+        key: 'industry-code',
+        label: '검색 + 결과',
+        slots: 'Title + 안내 패널 + 검색 줄 + 결과(빈 상태)',
+        cta: '보조 + 주 · 반씩(246)',
+        close: '있음',
+        when: '코드·주소처럼 목록에서 골라야 하는 값. 위에 고르는 기준을 알리고, 검색해 나온 결과에서 하나를 골라 저장한다.',
     },
     {
         key: 'scroll',
@@ -401,7 +410,7 @@ const DialogGuidePage = () => (
                         케이스 큐레이션
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        자주 쓰는 8가지 구성입니다. 표에서 어떤 슬롯 조합인지 확인하고, 아래 같은 이름의 버튼을 눌러
+                        자주 쓰는 9가지 구성입니다. 표에서 어떤 슬롯 조합인지 확인하고, 아래 같은 이름의 버튼을 눌러
                         실제 동작을 보세요. 폭 588 · 반경 24 · 여백 40/40/24 는 모든 케이스가 공유합니다.
                     </p>
                 </div>
@@ -436,6 +445,12 @@ const DialogGuidePage = () => (
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
+
+                    {/* 검색 + 결과 — 목록에서 값을 골라 오는 모달. 실제 화면(자가진단 기업정보의 업종코드)이
+                        쓰는 composite 를 그대로 띄운다. */}
+                    <IndustryCodeDialog>
+                        <Button size="md">검색 + 결과</Button>
+                    </IndustryCodeDialog>
 
                     {/* 확인 — 주 동작 하나를 폭 전체로 */}
                     <Dialog>

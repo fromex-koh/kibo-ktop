@@ -21,6 +21,60 @@ const DatePickerDemo = () => {
     )
 }
 
+// 연-월 단위 — 라벨이 "년월" 인 칸(근무 시작·종료 등)처럼 일까지 고를 이유가 없는 자리에 쓴다.
+export const DatePickerMonthDemo = () => {
+    const [month, setMonth] = useState<Date | undefined>(undefined)
+    const [rangeStart, setRangeStart] = useState<Date | undefined>(undefined)
+    const [rangeEnd, setRangeEnd] = useState<Date | undefined>(undefined)
+
+    return (
+        <div className="flex flex-col gap-6">
+            <Field className={FIELD_DEMO_CLASS}>
+                <FieldLabel htmlFor="demo-month" className={FIELD_LABEL_CLASS}>
+                    기준 연월
+                </FieldLabel>
+                <DatePicker
+                    id="demo-month"
+                    granularity="month"
+                    value={month}
+                    onChange={setMonth}
+                    aria-describedby="demo-month-help"
+                />
+                <FieldDescription id="demo-month-help">
+                    12개월 격자에서 고릅니다. 값은 그 달의 1일로 담기고 표시·제출은 연월까지만 합니다.
+                </FieldDescription>
+            </Field>
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                {/* 시작에 값이 생기면 종료의 하한이, 종료에 값이 생기면 시작의 상한이 된다. */}
+                <Field className={FIELD_DEMO_CLASS}>
+                    <FieldLabel htmlFor="demo-month-start" className={FIELD_LABEL_CLASS}>
+                        시작 연월
+                    </FieldLabel>
+                    <DatePicker
+                        id="demo-month-start"
+                        granularity="month"
+                        value={rangeStart}
+                        onChange={setRangeStart}
+                        maxDate={rangeEnd}
+                    />
+                </Field>
+                <Field className={FIELD_DEMO_CLASS}>
+                    <FieldLabel htmlFor="demo-month-end" className={FIELD_LABEL_CLASS}>
+                        종료 연월
+                    </FieldLabel>
+                    <DatePicker
+                        id="demo-month-end"
+                        granularity="month"
+                        value={rangeEnd}
+                        onChange={setRangeEnd}
+                        minDate={rangeStart}
+                    />
+                </Field>
+            </div>
+        </div>
+    )
+}
+
 export const DatePickerSizesDemo = () => {
     const [lgDate, setLgDate] = useState<Date | undefined>(undefined)
     const [mdDate, setMdDate] = useState<Date | undefined>(undefined)

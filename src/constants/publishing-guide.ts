@@ -142,6 +142,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 items: [
                     {label: 'BaseCard', href: '/component-guide/base-card'},
                     {label: 'FormCard', href: '/component-guide/form-card'},
+                    {label: 'RepeatCard', href: '/component-guide/repeat-card'},
                     {label: 'OptionCard', href: '/component-guide/option-card'},
                     {label: 'Separator', href: '/component-guide/separator'},
                 ],
