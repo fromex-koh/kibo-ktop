@@ -279,13 +279,7 @@ const HeaderThemeToggle = () => {
     }
 
     return (
-        <button
-            type="button"
-            className={headerIconButtonClassName}
-            onClick={toggleTheme}
-            aria-label={label}
-            title={label}
-        >
+        <button type="button" className={headerIconButtonClassName} onClick={toggleTheme} aria-label={label}>
             {isDark ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </button>
     )
@@ -380,7 +374,6 @@ const HeaderMenu = ({
                     data-menu-visible={open || isSheetVisible || undefined}
                     aria-label={label}
                     aria-expanded={open}
-                    title={label}
                     onKeyDown={(event) => {
                         if (!open || event.key !== 'Tab') return
 
@@ -602,10 +595,7 @@ const HeaderContent = ({
                             <div className="grid w-fit max-w-full min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center">
                                 <UserTypeBadge userType={userType} />
                                 <p className="tracking-control-label flex w-max max-w-full min-w-0 items-center text-sm font-medium">
-                                    <span
-                                        className="block w-max max-w-full min-w-0 shrink truncate sm:max-w-46"
-                                        title={user.name}
-                                    >
+                                    <span className="block w-max max-w-full min-w-0 shrink truncate sm:max-w-46">
                                         {user.name}
                                     </span>
                                     <span className="ml-1 shrink-0 whitespace-nowrap">님</span>
@@ -658,73 +648,77 @@ const HeaderContent = ({
                         className="hidden xl:flex"
                     >
                         <NavigationMenuList className={compact ? 'gap-5' : 'gap-6 xl:gap-10'}>
-                            {navLinks.map((link) => (
-                                <NavigationMenuItem key={link.label} value={link.label}>
-                                    {link.items?.length ? (
-                                        // 하위 메뉴는 트리거와 드롭다운으로 구성한다.
-                                        <>
-                                            <NavigationMenuTrigger
-                                                onKeyDown={(event) => handleDropdownEntryKeyDown(event, link.label)}
+                            {navLinks.map((link, index) => {
+                                const navValue = `nav-${index}`
+
+                                return (
+                                    <NavigationMenuItem key={link.label} value={navValue}>
+                                        {link.items?.length ? (
+                                            // 하위 메뉴는 트리거와 드롭다운으로 구성한다.
+                                            <>
+                                                <NavigationMenuTrigger
+                                                    onKeyDown={(event) => handleDropdownEntryKeyDown(event, navValue)}
+                                                    className={cn(
+                                                        headerNavTriggerClassName,
+                                                        compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
+                                                    )}
+                                                >
+                                                    {link.label}
+                                                </NavigationMenuTrigger>
+                                                <NavigationMenuContent
+                                                    ref={enterDropdownOnMount}
+                                                    className={headerNavDropdownClassName}
+                                                >
+                                                    {link.items.map((item) => (
+                                                        <NavigationMenuLink
+                                                            key={item.label}
+                                                            asChild
+                                                            className={headerNavDropdownItemClassName}
+                                                        >
+                                                            <Link
+                                                                href={item.href}
+                                                                className="flex items-center gap-1"
+                                                                {...(item.external
+                                                                    ? {target: '_blank', rel: 'noopener noreferrer'}
+                                                                    : {})}
+                                                            >
+                                                                {item.label}
+                                                                {item.external ? (
+                                                                    <ExternalLink
+                                                                        aria-hidden="true"
+                                                                        className="size-icon-sm"
+                                                                    />
+                                                                ) : null}
+                                                            </Link>
+                                                        </NavigationMenuLink>
+                                                    ))}
+                                                </NavigationMenuContent>
+                                            </>
+                                        ) : (
+                                            <NavigationMenuLink
+                                                asChild
                                                 className={cn(
-                                                    headerNavTriggerClassName,
+                                                    'text-foreground min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent',
                                                     compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
                                                 )}
                                             >
-                                                {link.label}
-                                            </NavigationMenuTrigger>
-                                            <NavigationMenuContent
-                                                ref={enterDropdownOnMount}
-                                                className={headerNavDropdownClassName}
-                                            >
-                                                {link.items.map((item) => (
-                                                    <NavigationMenuLink
-                                                        key={item.label}
-                                                        asChild
-                                                        className={headerNavDropdownItemClassName}
-                                                    >
-                                                        <Link
-                                                            href={item.href}
-                                                            className="flex items-center gap-1"
-                                                            {...(item.external
-                                                                ? {target: '_blank', rel: 'noopener noreferrer'}
-                                                                : {})}
-                                                        >
-                                                            {item.label}
-                                                            {item.external ? (
-                                                                <ExternalLink
-                                                                    aria-hidden="true"
-                                                                    className="size-icon-sm"
-                                                                />
-                                                            ) : null}
-                                                        </Link>
-                                                    </NavigationMenuLink>
-                                                ))}
-                                            </NavigationMenuContent>
-                                        </>
-                                    ) : (
-                                        <NavigationMenuLink
-                                            asChild
-                                            className={cn(
-                                                'text-foreground min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent',
-                                                compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
-                                            )}
-                                        >
-                                            <Link
-                                                href={link.href}
-                                                className="flex items-center gap-1"
-                                                {...(link.external
-                                                    ? {target: '_blank', rel: 'noopener noreferrer'}
-                                                    : {})}
-                                            >
-                                                {link.label}
-                                                {link.external ? (
-                                                    <ExternalLink aria-hidden="true" className="size-icon-lg" />
-                                                ) : null}
-                                            </Link>
-                                        </NavigationMenuLink>
-                                    )}
-                                </NavigationMenuItem>
-                            ))}
+                                                <Link
+                                                    href={link.href}
+                                                    className="flex items-center gap-1"
+                                                    {...(link.external
+                                                        ? {target: '_blank', rel: 'noopener noreferrer'}
+                                                        : {})}
+                                                >
+                                                    {link.label}
+                                                    {link.external ? (
+                                                        <ExternalLink aria-hidden="true" className="size-icon-lg" />
+                                                    ) : null}
+                                                </Link>
+                                            </NavigationMenuLink>
+                                        )}
+                                    </NavigationMenuItem>
+                                )
+                            })}
                         </NavigationMenuList>
                     </NavigationMenu>
                 </div>
