@@ -27,6 +27,11 @@ const datePickerCalendarPopoverClassName = 'border-subtle-2 z-popover w-auto rou
 // (Calendar 도 같은 처리를 한다: in-data-[slot=popover-content]:bg-transparent).
 const datePickerMonthPanelClassName =
     'bg-surface in-data-[slot=popover-content]:bg-transparent flex w-90 flex-col gap-4 p-6'
+// 모바일 모달 안 — 카드 폭에 맞춰 늘어나고, 바깥 여백은 모달 본문이 이미 갖고 있어 없앤다.
+const datePickerMobilePanelClassName = 'w-full bg-transparent p-0'
+// 날짜 달력도 같은 이유로 자기 여백을 없애고 폭을 맡긴다. 날짜 버튼의 최소 폭(44)은 풀어 준다 —
+// 7칸 × 44 는 360 화면에 들어가지 않는다. 셀 높이(--cell-size 40)는 그대로라 누르기에 무리가 없다.
+const datePickerMobileCalendarClassName = 'w-full p-0 [&_td_button]:min-w-0'
 const datePickerMonthHeaderClassName = 'flex items-center justify-between gap-2'
 // 3열 × 4행 — 312px 을 셋으로 나눠 한 칸이 100 남짓이라 "12월" 이 여유 있게 들어간다.
 const datePickerMonthGridClassName = 'grid grid-cols-3 gap-2'
@@ -41,6 +46,8 @@ export {
     datePickerMonthCellClassName,
     datePickerMonthGridClassName,
     datePickerMonthHeaderClassName,
+    datePickerMobileCalendarClassName,
+    datePickerMobilePanelClassName,
     datePickerMonthPanelClassName,
     datePickerGroupClassName,
     datePickerSizeClassName,

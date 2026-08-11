@@ -36,6 +36,12 @@ const MONTH_CODE = `{/* 연-월만 고르는 칸 — 달력 자리에 12개월 �
 <DatePicker granularity="month" value={start} onChange={setStart} maxDate={end} />
 <DatePicker granularity="month" value={end} onChange={setEnd} minDate={start} />`
 
+const RESPONSIVE_CODE = `{/* 화면 폭에 따라 여는 방식이 바뀐다 — 쓰는 쪽 코드는 그대로다 */}
+<DatePicker name="foundDate" />                    // md 이상: 트리거 옆 팝오버
+<DatePicker name="startMonth" granularity="month" /> // md 미만: 모달(연월 선택)
+
+{/* 모달 제목은 고르는 단위를 따라간다 — 날짜 선택 / 연월 선택 */}`
+
 const SIZE_CODE = `{/* 일반 폼: 48px */}
 <DatePicker size="lg" />
 
@@ -117,6 +123,16 @@ const GRANULARITY_ROWS = [
         ],
     },
 ] as const
+
+const RESPONSIVE_COLUMNS = [
+    {key: 'width', header: '화면 폭', align: 'start', rowHeader: true},
+    {key: 'shape', header: '여는 방식', align: 'start', wrap: true},
+] as const
+
+const RESPONSIVE_ROWS = [
+    {key: 'desktop', cells: ['md 이상 (768~)', '트리거 바로 아래에 붙는 팝오버 (Popover)']},
+    {key: 'mobile', cells: ['md 미만 (~767)', '화면 가운데 모달 — 제목 + 달력 (Dialog)']},
+]
 
 const SIZE_COLUMNS = [
     {key: 'size', header: 'Size', align: 'start', rowHeader: true},
@@ -298,9 +314,9 @@ const DatePickerGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         라벨이 &ldquo;년월&rdquo;인 칸(근무 시작·종료 연월 등)은 일까지 고를 이유가 없습니다.{' '}
-                        <code>granularity=&quot;month&quot;</code>를 주면 같은 입력 상자·팝오버를 그대로 쓰면서 안의
-                        달력만 12개월 격자로 바뀝니다. 연도는 이전·다음 버튼과 목록에서 고릅니다 — 20년 전 일을 적는
-                        칸도 있기 때문입니다.
+                        <code>granularity=&quot;month&quot;</code>를 주면 같은 입력 상자와 여는 방식(팝오버 · 모바일은
+                        모달)을 그대로 쓰면서 안의 달력만 12개월 격자로 바뀝니다. 연도는 이전·다음 버튼과 목록에서
+                        고릅니다 — 20년 전 일을 적는 칸도 있기 때문입니다.
                     </p>
                 </div>
                 <Table size="md" caption="고르는 단위별 차이" columns={GRANULARITY_COLUMNS} rows={GRANULARITY_ROWS} />
@@ -319,6 +335,45 @@ const DatePickerGuidePage = () => (
                         고를 수는 있게 두고 제출만 막아야 하는 규칙(두 칸의 앞뒤 순서 등)은{' '}
                         <code>validationMessage</code>로 겁니다. 달력에서 아예 막으면 사용자는 왜 안 눌리는지 모른 채
                         고장으로 읽습니다.
+                    </li>
+                </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="date-picker-responsive" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="date-picker-responsive" className="typo-h4-bold">
+                        반응형 — 모바일은 모달
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        md(768) 이상은 트리거 옆 팝오버로, 그 아래에서는 화면 가운데 모달로 엽니다. 좁은 화면에서
+                        팝오버는 화면 밖으로 밀리거나 뒤 내용을 가린 채 어디를 누르는지 알기 어렵기 때문입니다. 담기는
+                        내용(달력 · 12개월 격자)과 고르면 바로 닫히는 동작은 두 형태가 같아, 쓰는 쪽 코드는 달라지지
+                        않습니다.
+                    </p>
+                </div>
+                <Table
+                    caption="화면 폭에 따른 DatePicker 형태"
+                    columns={RESPONSIVE_COLUMNS}
+                    rows={RESPONSIVE_ROWS}
+                    size="md"
+                />
+                <CodeBlock code={RESPONSIVE_CODE} language="tsx" copyLabel="복사" />
+                <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        모달에는 이름이 필요해 고르는 단위에 따라 제목이 붙습니다 — 날짜는{' '}
+                        <strong className="text-foreground font-medium">날짜 선택</strong>, 연월은{' '}
+                        <strong className="text-foreground font-medium">연월 선택</strong>. 확인 버튼은 없습니다(고르면
+                        닫힙니다).
+                    </li>
+                    <li>
+                        포커스 트랩 · Esc · 바깥 클릭 · 포커스 복귀 · 배경 스크롤 잠금은 radix Dialog 가 맡습니다
+                        [8.2.1].
+                    </li>
+                    <li>
+                        모달 안에서는 달력이 카드 폭에 맞춰 줄어듭니다 — 7칸 × 44 는 360 화면에 들어가지 않아 날짜
+                        버튼의 최소 폭을 풀었습니다. 셀 높이(40)는 그대로입니다.
                     </li>
                 </ul>
             </section>

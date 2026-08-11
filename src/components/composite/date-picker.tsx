@@ -1,6 +1,6 @@
 'use client'
 
-import type {ChangeEvent, ComponentPropsWithoutRef, MouseEvent} from 'react'
+import type {ChangeEvent, ComponentPropsWithoutRef, MouseEvent, ReactNode} from 'react'
 import {Children, isValidElement, useEffect, useRef, useState} from 'react'
 import {addYears, endOfMonth, format, isSameMonth, setMonth, startOfMonth} from 'date-fns'
 import {ko} from 'date-fns/locale'
@@ -9,11 +9,16 @@ import {Calendar} from '@/components/ui/calendar'
 import {calendarNavButtonClassName} from '@/components/theme/calendar.variants'
 import {Button} from '@/components/ui/button'
 import {ChevronLeft, ChevronRight} from 'lucide-react'
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from '@/components/ui/dialog'
+import {dialogBodyClassName} from '@/components/theme/dialog.variants'
+import {useIsMobile} from '@/hooks/use-mobile'
 import {InputGroup} from '@/components/ui/input-group'
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
 import {SelectText, type SelectTextOption} from '@/components/composite/select-text'
 import {
     datePickerCalendarPopoverClassName,
+    datePickerMobileCalendarClassName,
+    datePickerMobilePanelClassName,
     datePickerMonthCellClassName,
     datePickerMonthGridClassName,
     datePickerMonthHeaderClassName,
@@ -118,6 +123,7 @@ const MonthGrid = ({
     isMonthDisabled,
     minDate,
     maxDate,
+    className,
 }: {
     month: Date
     selected?: Date
@@ -126,6 +132,7 @@ const MonthGrid = ({
     isMonthDisabled: (month: Date) => boolean
     minDate?: Date
     maxDate?: Date
+    className?: string
 }) => {
     const today = new Date()
     const months = Array.from({length: MONTHS_PER_YEAR}, (_, index) => setMonth(startOfMonth(month), index))
@@ -135,7 +142,7 @@ const MonthGrid = ({
     const shiftYear = (step: number) => onMonthChange(addYears(month, step))
 
     return (
-        <div className={datePickerMonthPanelClassName}>
+        <div className={cn(datePickerMonthPanelClassName, className)}>
             <div className={datePickerMonthHeaderClassName}>
                 <Button
                     type="button"
@@ -253,88 +260,118 @@ const DatePicker = ({
         setOpen(next)
     }
 
+    // 모바일에서는 팝오버 대신 모달로 띄운다 — 좁은 화면에서 달력이 트리거 옆에 뜨면 화면 밖으로
+    // 밀리거나 뒤 내용을 가린 채 어디를 누르는지 알기 어렵다. 모달은 화면 가운데에 서고, 포커스 트랩·
+    // Esc·바깥 클릭·포커스 복귀·배경 스크롤 잠금을 radix 가 맡는다[8.2.1].
+    const isMobile = useIsMobile()
+
+    const trigger = (
+        <button
+            ref={triggerRef}
+            type="button"
+            id={id}
+            disabled={disabled}
+            data-slot="input-group-control"
+            data-readonly={readOnly || undefined}
+            className={datePickerTriggerClassName}
+            {...props}
+        >
+            <span
+                className={cn(
+                    selectedDate ? datePickerValueClassName : datePickerPlaceholderClassName,
+                    disabled && datePickerDisabledValueClassName,
+                )}
+            >
+                {selectedDate ? format(selectedDate, valueFormat) : emptyText}
+            </span>
+            <CalendarIcon aria-hidden="true" className={datePickerIconClassName} />
+        </button>
+    )
+
+    // 달력 본체 — 팝오버든 모달이든 같은 것을 담는다.
+    const calendar = isMonthly ? (
+        <MonthGrid
+            month={calendarMonth}
+            selected={selectedDate}
+            onMonthChange={setCalendarMonth}
+            onSelect={handleSelectMonth}
+            isMonthDisabled={isMonthDisabled}
+            minDate={minDate}
+            maxDate={maxDate}
+            className={isMobile ? datePickerMobilePanelClassName : undefined}
+        />
+    ) : (
+        <Calendar
+            className={isMobile ? datePickerMobileCalendarClassName : undefined}
+            mode="single"
+            selected={selectedDate}
+            onSelect={handleSelect}
+            month={calendarMonth}
+            onMonthChange={setCalendarMonth}
+            disabled={disabledDays.length ? disabledDays : undefined}
+            startMonth={minDate}
+            endMonth={maxDate}
+            locale={ko}
+            // 시안 헤더는 [이전] 07월▾ 2026년▾ [다음] 이다 — 월·연도를 각각 고르는 두 드롭다운이라
+            // captionLayout="dropdown" 을 쓰고, 표기만 시안대로(월 2자리·연도 뒤 '년') 맞춘다.
+            navLayout="around"
+            captionLayout="dropdown"
+            formatters={{
+                formatMonthDropdown: (date) => format(date, 'MM월'),
+                formatYearDropdown: (year) => format(year, 'yyyy년'),
+            }}
+            // 드롭다운 접근성 이름은 라이브러리 기본값이 영어라 한국어로 바꾼다. [KWCAG 5.1.1]
+            labels={{
+                labelMonthDropdown: () => '월 선택',
+                labelYearDropdown: () => '연도 선택',
+            }}
+            classNames={{
+                dropdown_root: 'static rounded-none has-[:focus]:outline-0',
+                dropdown: 'static inset-auto opacity-100',
+                caption_label: 'sr-only',
+            }}
+            // react-day-picker 는 연도를 먼저 그리는데 시안은 월이 앞이다.
+            // 보기만 뒤집으면 읽는 순서가 어긋나므로(DOM 순서 = 읽기 순서 [KWCAG 7.3.1])
+            // 자식 순서 자체를 바꾼다.
+            components={{
+                Select: CalendarDropdownSelect,
+                PreviousMonthButton: CalendarNavigationButton,
+                NextMonthButton: CalendarNavigationButton,
+                DropdownNav: ({children, ...navProps}) => (
+                    <div {...navProps}>{Children.toArray(children).reverse()}</div>
+                ),
+            }}
+        />
+    )
+
+    const group = (triggerNode: ReactNode) => (
+        <InputGroup className={cn(datePickerGroupClassName, datePickerSizeClassName[size], className)}>
+            {triggerNode}
+        </InputGroup>
+    )
+
     return (
         <>
-            <Popover open={open} onOpenChange={handleOpenChange}>
-                <InputGroup className={cn(datePickerGroupClassName, datePickerSizeClassName[size], className)}>
-                    <PopoverTrigger asChild>
-                        <button
-                            ref={triggerRef}
-                            type="button"
-                            id={id}
-                            disabled={disabled}
-                            data-slot="input-group-control"
-                            data-readonly={readOnly || undefined}
-                            className={datePickerTriggerClassName}
-                            {...props}
-                        >
-                            <span
-                                className={cn(
-                                    selectedDate ? datePickerValueClassName : datePickerPlaceholderClassName,
-                                    disabled && datePickerDisabledValueClassName,
-                                )}
-                            >
-                                {selectedDate ? format(selectedDate, valueFormat) : emptyText}
-                            </span>
-                            <CalendarIcon aria-hidden="true" className={datePickerIconClassName} />
-                        </button>
-                    </PopoverTrigger>
-                </InputGroup>
-                <PopoverContent className={datePickerCalendarPopoverClassName} align="start">
-                    {isMonthly ? (
-                        <MonthGrid
-                            month={calendarMonth}
-                            selected={selectedDate}
-                            onMonthChange={setCalendarMonth}
-                            onSelect={handleSelectMonth}
-                            isMonthDisabled={isMonthDisabled}
-                            minDate={minDate}
-                            maxDate={maxDate}
-                        />
-                    ) : (
-                        <Calendar
-                            mode="single"
-                            selected={selectedDate}
-                            onSelect={handleSelect}
-                            month={calendarMonth}
-                            onMonthChange={setCalendarMonth}
-                            disabled={disabledDays.length ? disabledDays : undefined}
-                            startMonth={minDate}
-                            endMonth={maxDate}
-                            locale={ko}
-                            // 시안 헤더는 [이전] 07월▾ 2026년▾ [다음] 이다 — 월·연도를 각각 고르는 두 드롭다운이라
-                            // captionLayout="dropdown" 을 쓰고, 표기만 시안대로(월 2자리·연도 뒤 '년') 맞춘다.
-                            navLayout="around"
-                            captionLayout="dropdown"
-                            formatters={{
-                                formatMonthDropdown: (date) => format(date, 'MM월'),
-                                formatYearDropdown: (year) => format(year, 'yyyy년'),
-                            }}
-                            // 드롭다운 접근성 이름은 라이브러리 기본값이 영어라 한국어로 바꾼다. [KWCAG 5.1.1]
-                            labels={{
-                                labelMonthDropdown: () => '월 선택',
-                                labelYearDropdown: () => '연도 선택',
-                            }}
-                            classNames={{
-                                dropdown_root: 'static rounded-none has-[:focus]:outline-0',
-                                dropdown: 'static inset-auto opacity-100',
-                                caption_label: 'sr-only',
-                            }}
-                            // react-day-picker 는 연도를 먼저 그리는데 시안은 월이 앞이다.
-                            // 보기만 뒤집으면 읽는 순서가 어긋나므로(DOM 순서 = 읽기 순서 [KWCAG 7.3.1])
-                            // 자식 순서 자체를 바꾼다.
-                            components={{
-                                Select: CalendarDropdownSelect,
-                                PreviousMonthButton: CalendarNavigationButton,
-                                NextMonthButton: CalendarNavigationButton,
-                                DropdownNav: ({children, ...navProps}) => (
-                                    <div {...navProps}>{Children.toArray(children).reverse()}</div>
-                                ),
-                            }}
-                        />
-                    )}
-                </PopoverContent>
-            </Popover>
+            {isMobile ? (
+                <Dialog open={open} onOpenChange={handleOpenChange}>
+                    {group(<DialogTrigger asChild>{trigger}</DialogTrigger>)}
+                    {/* 달력이 본문 전체라 설명 문단이 없다 — radix 에 설명 없음을 알린다. */}
+                    <DialogContent aria-describedby={undefined}>
+                        <DialogHeader>
+                            <DialogTitle>{isMonthly ? '연월 선택' : '날짜 선택'}</DialogTitle>
+                        </DialogHeader>
+                        {/* CTA 가 없으므로 아래 여백 40 은 본문이 갖는다. 고른 즉시 닫히므로 확인 버튼이 없다. */}
+                        <div className={cn(dialogBodyClassName, 'items-center pb-10')}>{calendar}</div>
+                    </DialogContent>
+                </Dialog>
+            ) : (
+                <Popover open={open} onOpenChange={handleOpenChange}>
+                    {group(<PopoverTrigger asChild>{trigger}</PopoverTrigger>)}
+                    <PopoverContent className={datePickerCalendarPopoverClassName} align="start">
+                        {calendar}
+                    </PopoverContent>
+                </Popover>
+            )}
             {name ? (
                 <input
                     ref={valueInputRef}
