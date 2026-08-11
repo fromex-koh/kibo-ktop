@@ -15,9 +15,11 @@ const major = Number(majorString)
 const minor = Number(minorString)
 const patch = Number(patchString)
 
-// 기존 v0.1.x 릴리스에서 정식 v1.0.0 릴리스로 한 번 전환한다.
+// 기존 릴리스에서 정식 메이저 버전으로 전환하는 일회성 기준을 먼저 처리한다.
 if (latestVersion === 'v0.1.10') {
     console.log('v1.0.0')
+} else if (latestVersion === 'v1.0.1') {
+    console.log('v2.0.0')
 } else if (patch >= 9) {
     // PATCH를 한 자리로 유지하고, 9 다음 릴리스는 MINOR를 올린다.
     console.log(`v${major}.${minor + 1}.0`)
