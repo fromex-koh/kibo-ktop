@@ -71,7 +71,7 @@ const CONSENT_USAGE_CODE = `{/* 동의 항목처럼 하나만 고르는 자리 �
 const CHECKBOX_USAGE_CODE = `{/* 문장 인라인 — 번호·Badge·본문 열 정렬은 QuestionList가 담당한다.
     align="control"로 번호·배지가 40px 칩 라인 중앙에 맞고, 문장+칩을 ChipCheckboxGroup
     하나로 감싸 줄바꿈 시 두 번째 줄이 배지 뒤부터 정렬(hanging indent)된다. */}
-<QuestionList start={17}>
+<QuestionList>
   <QuestionItem
     align="control"
     badge={<Badge variant="solid-pastel" color="secondary-green" shape="round">제조</Badge>}
@@ -457,7 +457,7 @@ const ChipGuidePage = () => (
                     </p>
                 </div>
                 <div className="border-border rounded-xl border p-6">
-                    <QuestionList start={17}>
+                    <QuestionList>
                         <QuestionItem
                             align="control"
                             badge={
