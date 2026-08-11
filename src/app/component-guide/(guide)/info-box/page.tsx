@@ -24,6 +24,13 @@ const USAGE_CODE = `import {InfoBox, InfoBoxItem} from '@/components/composite/i
 const PROPS_ITEMS = [
     ['InfoBox', 'variant', '외형 스타일. filled(회색 채움)·outline(테두리).', "'filled'", "'filled' | 'outline'"],
     ['InfoBox', 'title', '상단 제목. 생략하면 목록만 렌더합니다.', 'undefined', 'ReactNode'],
+    [
+        'InfoBox',
+        'headingLevel',
+        '제목의 헤딩 단계입니다. 쓰는 화면의 앞 제목보다 한 단계 낮춰 건너뛰지 않게 합니다.',
+        '3',
+        '2 | 3 | 4',
+    ],
     ['InfoBox', 'icon', '제목 앞 선택 아이콘(24px). size-6 아이콘을 넘깁니다.', 'undefined', 'ReactNode'],
     [
         'InfoBox',
@@ -101,6 +108,12 @@ const InfoBoxGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         같은 컴포넌트로 안내형(알려드려요)·확인형(꼭 확인해 주세요)을 표현합니다. 항목은 한 개부터 여러
                         개까지 자유롭게 쌓입니다.
+                    </p>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        제목은 글자만 큰 문단이 아니라 실제 헤딩(<code className="font-mono">h3</code> 기본)으로
+                        렌더합니다. 앞 제목이 <code className="font-mono">h3</code>인 자리에 놓을 때는{' '}
+                        <code className="font-mono">headingLevel=&#123;4&#125;</code>로 낮춰 단계를 건너뛰지 않게
+                        합니다.
                     </p>
                 </div>
                 <div className="flex flex-col gap-4">

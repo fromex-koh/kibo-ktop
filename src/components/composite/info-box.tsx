@@ -18,6 +18,11 @@ import {cn} from '@/lib/utils'
 
 type InfoBoxVariant = 'filled' | 'outline'
 
+// 제목의 헤딩 단계. 안내 상자는 화면 안의 한 구획이라 제목도 실제 헤딩으로 읽혀야 한다[6.4.2] —
+// 크기만 큰 <p> 로 두면 WAVE 가 "Possible heading" 으로 잡고, 스크린리더의 제목 이동에서도 빠진다.
+// 기본 3(페이지 h1 → 구획 h2 → 안내 상자 h3). 앞 제목이 h3 인 자리에서는 4 로 낮춘다.
+type InfoBoxHeadingLevel = 2 | 3 | 4
+
 const infoBoxBaseClassName = 'flex w-full flex-col gap-4 rounded-lg px-10 py-8'
 
 const INFO_BOX_VARIANT: Record<InfoBoxVariant, string> = {
@@ -32,29 +37,36 @@ type InfoBoxProps = {
     variant?: InfoBoxVariant
     // 상단 제목. 생략하면 목록만 렌더한다.
     title?: ReactNode
+    // 제목의 헤딩 단계(2~4). 기본 3 — 쓰는 화면의 앞 제목보다 한 단계 낮춰 건너뛰지 않게 한다.
+    headingLevel?: InfoBoxHeadingLevel
     // 제목 앞 선택적 아이콘(Figma "아이콘+타이틀" 슬롯). size-6(24px) 아이콘을 넘긴다.
     icon?: ReactNode
     // 목록 항목(InfoBoxItem) 들.
     children: ReactNode
 } & Omit<ComponentPropsWithoutRef<'div'>, 'title'>
 
-const InfoBox = ({variant = 'filled', title, icon, className, children, ...props}: InfoBoxProps) => (
-    <div data-slot="info-box" className={cn(infoBoxBaseClassName, INFO_BOX_VARIANT[variant], className)} {...props}>
-        {title != null ? (
-            <div data-slot="info-box-header" className="flex items-center gap-2">
-                {icon != null ? (
-                    <span data-slot="info-box-icon" aria-hidden="true" className="shrink-0 [&_svg]:size-6">
-                        {icon}
-                    </span>
-                ) : null}
-                <p className="typo-title-l-bold text-foreground">{title}</p>
-            </div>
-        ) : null}
-        <ul data-slot="info-box-list" className="flex list-none flex-col gap-2">
-            {children}
-        </ul>
-    </div>
-)
+const InfoBox = ({variant = 'filled', title, headingLevel = 3, icon, className, children, ...props}: InfoBoxProps) => {
+    const Heading = `h${headingLevel}` as const
+
+    return (
+        <div data-slot="info-box" className={cn(infoBoxBaseClassName, INFO_BOX_VARIANT[variant], className)} {...props}>
+            {title != null ? (
+                <div data-slot="info-box-header" className="flex items-center gap-2">
+                    {icon != null ? (
+                        <span data-slot="info-box-icon" aria-hidden="true" className="shrink-0 [&_svg]:size-6">
+                            {icon}
+                        </span>
+                    ) : null}
+                    {/* 헤딩 단계만 바뀌고 글자 크기는 시안 그대로다 — 크기는 typo 토큰이 정한다[6.4.2]. */}
+                    <Heading className="typo-title-l-bold text-foreground">{title}</Heading>
+                </div>
+            ) : null}
+            <ul data-slot="info-box-list" className="flex list-none flex-col gap-2">
+                {children}
+            </ul>
+        </div>
+    )
+}
 
 const InfoBoxItem = ({className, children, ...props}: ComponentPropsWithoutRef<'li'>) => (
     <li data-slot="info-box-item" className={cn('flex', className)} {...props}>
@@ -64,4 +76,4 @@ const InfoBoxItem = ({className, children, ...props}: ComponentPropsWithoutRef<'
 )
 
 export {InfoBox, InfoBoxItem}
-export type {InfoBoxProps, InfoBoxVariant}
+export type {InfoBoxHeadingLevel, InfoBoxProps, InfoBoxVariant}
