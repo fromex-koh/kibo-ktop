@@ -1,6 +1,6 @@
 'use client'
 
-import type {ComponentProps} from 'react'
+import type {ComponentProps, ReactNode} from 'react'
 import {Checkbox as CheckboxPrimitive, RadioGroup as RadioGroupPrimitive} from 'radix-ui'
 import type {VariantProps} from 'class-variance-authority'
 import {CheckIcon} from 'lucide-react'
@@ -34,8 +34,26 @@ const ChipRadio = ({
     />
 )
 
-const ChipCheckboxGroup = ({className, ...props}: ComponentProps<'div'>) => (
-    <div data-slot="chip-checkbox-group" role="group" className={cn(chipGroupClassName, className)} {...props} />
+type ChipCheckboxGroupProps = Omit<ComponentProps<'fieldset'>, 'children'> & {
+    children: ReactNode
+    legend?: ReactNode
+}
+
+const ChipCheckboxGroup = ({
+    className,
+    children,
+    legend,
+    'aria-label': ariaLabel,
+    ...props
+}: ChipCheckboxGroupProps) => (
+    <fieldset
+        data-slot="chip-checkbox-group"
+        className={cn('m-0 min-w-0 border-0 p-0', chipGroupClassName, className)}
+        {...props}
+    >
+        <legend className="sr-only">{legend ?? ariaLabel ?? '항목 선택'}</legend>
+        {children}
+    </fieldset>
 )
 
 const ChipCheckbox = ({
@@ -57,3 +75,4 @@ const ChipCheckbox = ({
 )
 
 export {ChipRadioGroup, ChipRadio, ChipCheckboxGroup, ChipCheckbox}
+export type {ChipCheckboxGroupProps}

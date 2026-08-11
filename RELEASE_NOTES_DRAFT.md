@@ -203,6 +203,11 @@
 - 대상: src/components/custom/list-marker.tsx
 - 적용: 목록 마커의 기본 본문 타이포그래피를 유지하거나 부모 요소의 타이포그래피를 상속할 수 있도록 옵션 추가
 
+### [Chip 접근성] 체크박스 그룹 구조 개선
+
+- 대상: src/components/composite/chip.tsx
+- 적용: 같은 이름의 체크박스 묶음을 fieldset과 시각적으로 숨긴 legend로 구성해 그룹 이름을 제공하고 WAVE의 Missing fieldset 경고 해결
+
 ### [Chip 반응형] 여러 줄 라벨 높이·정렬 개선
 
 - 대상: src/components/theme/chip.variants.ts
