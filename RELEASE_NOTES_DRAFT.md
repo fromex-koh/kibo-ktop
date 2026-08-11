@@ -266,10 +266,10 @@
     - src/components/theme/textarea.variants.ts
 - 적용: aria-invalid 상태의 입력 필드가 마우스 제출 후에도 포커스 표시를 유지하도록 하고, Select 목록이 모달 위에 표시되며 옵션이 많을 때 최대 높이 안에서 스크롤되도록 스타일 교체
 
-### [선택 카드] SelectableCard 라벨 정렬·중복 클릭 방지
+### [선택 카드] SelectableCard 라벨 정렬·클릭·마크업 개선
 
 - 대상: src/components/composite/selectable-card.tsx
-- 적용: 체크박스와 1·2줄 라벨의 세로 정렬 기준을 교체하고, Radix 폼 연동용 숨은 input의 클릭이 카드 onClick으로 중복 전달되지 않도록 처리
+- 적용: 체크박스와 1·2줄 라벨의 세로 정렬 기준을 교체하고, Radix 폼 연동용 숨은 input의 클릭이 카드 onClick으로 중복 전달되지 않도록 처리하며, 최상위 label을 일반 컨테이너로 변경해 하나의 label 안에 버튼과 숨은 input이 중복 포함되던 마크업 오류 해결
 
 ### 퍼블리싱 인덱스 화면
 
@@ -335,7 +335,7 @@
 ### EmailField 컴포넌트
 
 - 대상: src/components/composite/email-field.tsx
-- 적용: 아이디·도메인 입력과 프리셋 선택을 조합해 완성된 이메일 주소를 폼 데이터로 전달하고, 도메인 선택 컨트롤의 폼 식별 이름을 제공하는 신규 컴포넌트 추가
+- 적용: 아이디·도메인 입력과 프리셋 선택을 조합해 완성된 이메일 주소를 폼 데이터로 전달하고, 도메인 선택 컨트롤의 폼 식별 이름과 Radix가 생성하는 native select의 접근 가능한 이름이 유지되도록 처리한 신규 컴포넌트 추가
 
 ### 기술평가 상수
 

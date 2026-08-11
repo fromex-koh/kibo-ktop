@@ -1,8 +1,7 @@
 'use client'
 
-import {useId, type ComponentProps, type MouseEvent, type ReactNode} from 'react'
+import {useId, useRef, type ComponentProps, type PointerEvent, type ReactNode} from 'react'
 import {Checkbox} from '@/components/ui/checkbox'
-import {FieldLabel} from '@/components/ui/field'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {
     selectableCardBadgesClassName,
@@ -53,14 +52,16 @@ type SelectableCardProps = SelectableCardRadioProps | SelectableCardCheckboxProp
 
 const SelectableCard = (props: SelectableCardProps) => {
     const {disabled, badges, labelClassName, id, className, children, onClick} = props
-    // Radix 는 폼 전송용으로 숨은 input 을 하나 두고, 값이 바뀌면 그 input 에 click 을 쏘아 맞춘다.
-    // 그 클릭이 라벨까지 올라오면 사용자가 카드를 다시 누른 것으로 읽혀 onClick 이 잘못 불린다
-    // (동의 범위가 확정되는 순간 동의 모달이 다시 열리던 원인). 보이는 컨트롤은 button 이므로
-    // input 에서 올라온 클릭만 걸러낸다.
-    const handleClick = (event: MouseEvent<HTMLLabelElement>) => {
-        if (event.target instanceof HTMLInputElement) return
+    const controlRef = useRef<HTMLButtonElement>(null)
 
-        onClick?.()
+    const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
+        const controlElement = controlRef.current
+        if (!controlElement) return
+
+        // 실제 컨트롤과 링크 등은 자체 동작을 유지하고, 카드의 빈 영역만 컨트롤 클릭으로 전달한다.
+        if (event.target instanceof Node && controlElement.contains(event.target)) return
+        if (event.target instanceof Element && event.target.closest('a, button, input, select, textarea')) return
+        controlElement.click()
     }
     const control = props.control ?? 'checkbox'
     const generatedId = useId()
@@ -69,11 +70,10 @@ const SelectableCard = (props: SelectableCardProps) => {
     const badgesId = `${controlId}-badges`
 
     return (
-        <FieldLabel
+        <div
             data-slot="selectable-card"
             data-disabled={disabled || undefined}
-            htmlFor={controlId}
-            onClick={handleClick}
+            onPointerUp={handlePointerUp}
             className={selectableCardVariants({
                 disabled: Boolean(disabled),
                 control,
@@ -93,14 +93,17 @@ const SelectableCard = (props: SelectableCardProps) => {
             >
                 {props.control === 'radio' ? (
                     <RadioGroupItem
+                        ref={controlRef}
                         id={controlId}
                         value={props.value}
                         disabled={disabled}
+                        onClick={onClick}
                         aria-labelledby={badges ? `${labelId} ${badgesId}` : labelId}
                         className={selectableCardControlClassName}
                     />
                 ) : (
                     <Checkbox
+                        ref={controlRef}
                         id={controlId}
                         name={props.name}
                         value={props.value}
@@ -110,6 +113,7 @@ const SelectableCard = (props: SelectableCardProps) => {
                         required={props.required}
                         form={props.form}
                         disabled={disabled}
+                        onClick={onClick}
                         aria-labelledby={badges ? `${labelId} ${badgesId}` : labelId}
                         className={selectableCardControlClassName}
                     />
@@ -136,7 +140,7 @@ const SelectableCard = (props: SelectableCardProps) => {
                     </span>
                 ) : null}
             </span>
-        </FieldLabel>
+        </div>
     )
 }
 
