@@ -23,7 +23,13 @@ const USAGE_CODE = `<ul className="flex list-none flex-col gap-2">
       {text}
     </li>
   ))}
-</ol>`
+</ol>
+
+{/* 제목 줄의 순번 — 문장의 글자를 그대로 따른다 */}
+<p className="typo-title-m-bold text-foreground flex">
+  <ListMarker type="ordered" level={1} index={1} typography="inherit" />
+  <span className="min-w-0">KIPRIS 에 접속해 특허·실용신안 메뉴를 클릭합니다.</span>
+</p>`
 
 // 4개 변형 — [type, level, 설명, 예]
 const VARIANTS = [
@@ -64,6 +70,13 @@ const PROPS_ITEMS = [
     ['ListMarker', 'type', '불릿 계열과 순서 계열을 선택합니다.', "'unordered'", "'unordered' | 'ordered'"],
     ['ListMarker', 'level', '1은 점·숫자, 2는 대시·소문자로 표시합니다.', '1', '1 | 2'],
     ['ListMarker', 'index', 'ordered 순번입니다. level 2는 1–26을 a–z로 표시합니다.', '1', 'number'],
+    [
+        'ListMarker',
+        'typography',
+        "ordered 순번의 글자 사양입니다. 'inherit'은 감싼 문장의 글자를 그대로 따릅니다(제목 줄의 순번).",
+        "'body'",
+        "'body' | 'inherit'",
+    ],
     ['ListMarker', 'className', '마커 바깥 span에 추가할 클래스입니다.', 'undefined', 'string'],
 ] as const
 
@@ -126,7 +139,10 @@ const ListMarkerGuidePage = () => (
                     <p className="typo-body-l-regular text-muted-foreground">
                         본문 앞에 마커를 두어 목록·안내 문구를 구성합니다. 순서 목록은{' '}
                         <code className="font-mono">index</code>로 순번을 넘깁니다. 목록 의미는{' '}
-                        <code className="font-mono">ul/ol &gt; li</code> 구조가 담당합니다.
+                        <code className="font-mono">ul/ol &gt; li</code> 구조가 담당합니다. 본문이 아닌 줄(제목 등)에
+                        순번을 붙일 때는 <code className="font-mono">typography=&quot;inherit&quot;</code>으로 감싼
+                        문장의 글자를 따르게 합니다 — 같은 요소에 <code className="font-mono">typo-*</code>를 겹쳐 쓰지
+                        않습니다.
                     </p>
                 </div>
                 <div className="grid gap-6 md:grid-cols-2">
@@ -156,6 +172,11 @@ const ListMarkerGuidePage = () => (
                         <li className="typo-body-xl-regular text-foreground flex">
                             <ListMarker type="ordered" level={2} index={2} />
                             세부 항목: 연락처
+                        </li>
+                        {/* 제목 줄의 순번 — 마커가 문장의 글자(18px Bold)를 그대로 따른다. */}
+                        <li className="typo-title-m-bold text-foreground flex">
+                            <ListMarker type="ordered" level={1} index={3} typography="inherit" />
+                            제목 줄에 붙는 순번 (typography=&quot;inherit&quot;)
                         </li>
                     </ol>
                 </div>
