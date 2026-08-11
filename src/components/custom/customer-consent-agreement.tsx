@@ -1,7 +1,7 @@
 'use client'
 
 import {useRouter} from 'next/navigation'
-import {createContext, useContext, useRef, useState, type FormEvent, type ReactNode} from 'react'
+import {createContext, useContext, useRef, useState, type ReactNode, type SubmitEvent} from 'react'
 import {ConsentItem, ConsentList} from '@/components/composite/consent-list'
 import {ConsentTermsDetailButton} from '@/components/composite/consent-terms-detail-button'
 import {ConsentTermsStepDialogContent} from '@/components/composite/consent-terms-dialog'
@@ -412,7 +412,7 @@ const NEXT_PATH = '/corp/technology-evaluation/ktrs-fm/company-technology-info'
 const CustomerConsentForm = ({formId, children}: {formId: string; children: ReactNode}) => {
     const router = useRouter()
 
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault()
         // FormData 의 값은 문자열 또는 File 이라, 문자열만 골라 넘긴다(이 폼엔 파일 입력이 없다).
         const values = Object.fromEntries(

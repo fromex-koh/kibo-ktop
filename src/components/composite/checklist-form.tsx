@@ -1,6 +1,6 @@
 'use client'
 
-import {Fragment, useId, useRef, useState, type ComponentProps, type FormEvent, type ReactNode} from 'react'
+import {Fragment, useId, useRef, useState, type ComponentProps, type ReactNode, type SubmitEvent} from 'react'
 import {useRouter} from 'next/navigation'
 import {ChevronRight} from 'lucide-react'
 import {ChipCheckbox, ChipCheckboxGroup, ChipRadio, ChipRadioGroup} from '@/components/composite/chip'
@@ -396,7 +396,7 @@ const ChecklistForm = ({data, id, formId, completeHref}: ChecklistFormProps) => 
 
     // [다음] 은 이 폼의 제출 버튼이다. 고르지 않은 컨트롤이 있으면 넘어가지 않고 그 자리에 안내 문구를 띄운다.
     // 통과하면 모은 값을 콘솔에 찍고(연동 전 확인용) 최종 확인 모달을 띄운다.
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault()
         setIsSubmitted(true)
         if (!isComplete) {

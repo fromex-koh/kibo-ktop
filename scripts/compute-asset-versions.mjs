@@ -138,10 +138,12 @@ const parseDraftChanges = (draft) => {
     const lines = draft.replace(/<!--[\s\S]*?-->/g, '').split('\n')
     let handoffMode
     let handoff
+    let handoffDetail
 
     const flushHandoff = () => {
         if (handoff !== undefined) changes.push(handoff)
         handoff = undefined
+        handoffDetail = undefined
     }
 
     for (const line of lines) {
@@ -161,12 +163,20 @@ const parseDraftChanges = (draft) => {
                 title: titleMatch[1].trim(),
                 details: [],
             }
+            handoffDetail = undefined
             continue
         }
 
-        const detailMatch = /^-\s+([^:]+):\s*(.+)$/.exec(line.trim())
+        const nestedDetailMatch = /^\s{2,}-\s+(.+)$/.exec(line)
+        if (nestedDetailMatch && handoffDetail !== undefined) {
+            handoffDetail.value = [handoffDetail.value, nestedDetailMatch[1].trim()].filter(Boolean).join('\n')
+            continue
+        }
+
+        const detailMatch = /^-\s+([^:]+):\s*(.*)$/.exec(line.trim())
         if (detailMatch && handoff !== undefined) {
-            handoff.details.push({label: detailMatch[1].trim(), value: detailMatch[2].trim()})
+            handoffDetail = {label: detailMatch[1].trim(), value: detailMatch[2].trim()}
+            handoff.details.push(handoffDetail)
             continue
         }
 
@@ -192,7 +202,9 @@ const releases = [
     ...previousReleaseNotes.filter((release) => release.version !== releaseVersion),
 ].slice(0, 30)
 writeFileSync(RELEASE_NOTES_OUTPUT, await formatJson({releases}, RELEASE_NOTES_OUTPUT))
-writeFileSync(RELEASE_NOTES_DRAFT, EMPTY_RELEASE_NOTES_DRAFT)
+if (process.env.PRESERVE_RELEASE_NOTES_DRAFT !== 'true') {
+    writeFileSync(RELEASE_NOTES_DRAFT, EMPTY_RELEASE_NOTES_DRAFT)
+}
 
 const updated = generated.filter((a) => a.isCurrent).map((a) => a.name)
 const updatedScreens = generatedScreens.filter((screen) => screen.isCurrent).map((screen) => screen.key)
