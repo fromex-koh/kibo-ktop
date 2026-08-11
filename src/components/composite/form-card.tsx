@@ -1,6 +1,10 @@
 import type {ReactNode} from 'react'
-import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
-import {FormSectionHeaderAction} from '@/components/composite/form-section-collapse'
+import {
+    SectionHeader,
+    SectionHeaderAction,
+    SectionHeaderDescription,
+    SectionHeaderTitle,
+} from '@/components/composite/section-header'
 import {Card, CardContent} from '@/components/ui/card'
 import {cn} from '@/lib/utils'
 
@@ -20,10 +24,10 @@ const FormCard = ({title, subtitle, action, children, className}: FormCardProps)
             <SectionHeader className="px-4 md:px-10 xl:px-25.5">
                 {title ? <SectionHeaderTitle>{title}</SectionHeaderTitle> : null}
                 {subtitle ? <SectionHeaderDescription>{subtitle}</SectionHeaderDescription> : null}
-                {/* 액션 자리 — 접히는 섹션(FormTabs 태블릿 목록) 안에서는 여기에 접기 버튼이 함께 붙는다. */}
-                <FormSectionHeaderAction label={typeof title === 'string' ? title : undefined}>
-                    {action}
-                </FormSectionHeaderAction>
+                {/* 액션이 없으면 자리를 만들지 않는다 — SectionHeader 가 이 슬롯의 유무로 2열 여부를 정한다. */}
+                {action ? (
+                    <SectionHeaderAction className="flex items-center gap-4">{action}</SectionHeaderAction>
+                ) : null}
             </SectionHeader>
         ) : null}
         <CardContent className="px-4 md:px-10 xl:px-25.5">{children}</CardContent>

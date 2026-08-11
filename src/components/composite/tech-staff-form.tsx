@@ -61,7 +61,15 @@ const StaffEntry = ({id, label, isAdded, focusOnMount, isLastCard, onDelete, car
     const field = (name: string) => staffField(id, name)
 
     return (
-        <RepeatCard ref={cardRef} title={label} focusOnMount={focusOnMount} clearOnly={isLastCard} onDelete={onDelete}>
+        <RepeatCard
+            ref={cardRef}
+            title={label}
+            // 이 탭은 폼 카드 제목(h2) 아래에 카드가 바로 온다 — 소제목이 없으므로 카드 제목이 h3 다.
+            headingLevel={3}
+            focusOnMount={focusOnMount}
+            clearOnly={isLastCard}
+            onDelete={onDelete}
+        >
             <FormCardScope namePrefix={`staff-${id}-`} alwaysRequired={isAdded}>
                 <FieldRow3>
                     <Field id={field('category')} label="구분" required>

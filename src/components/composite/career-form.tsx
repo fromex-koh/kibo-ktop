@@ -3,6 +3,7 @@
 import {useState} from 'react'
 import {differenceInMonths, parseISO} from 'date-fns'
 import {Plus} from 'lucide-react'
+import {CareerInputHelpDialog} from '@/components/composite/career-input-help-dialog'
 import {FormCard} from '@/components/composite/form-card'
 import {SubSectionHeader, SubSectionHeaderTitle} from '@/components/composite/sub-section-header'
 import {Button} from '@/components/ui/button'
@@ -216,10 +217,13 @@ const CareerForm = () => {
             title="대표자 경력사항"
             // 시안은 이 줄에 불릿을 두지 않는다(같은 리스트의 다른 줄과 달리 점 레이어가 꺼져 있다).
             subtitle="대표자의 경력사항을 현 직장 근무경력을 포함하여 최근 경력부터 과거순으로 차례대로 입력해주십시오."
+            // 버튼 이름은 열리는 모달의 제목과 같게 둔다 — 눌러서 무엇이 나오는지 그대로 읽힌다[6.4.3].
             action={
-                <Button type="button" variant="secondary" size="sm">
-                    입력도우미
-                </Button>
+                <CareerInputHelpDialog>
+                    <Button type="button" variant="secondary" size="sm">
+                        입력 도움말
+                    </Button>
+                </CareerInputHelpDialog>
             }
         >
             <div className="flex flex-col gap-6">

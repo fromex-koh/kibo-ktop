@@ -21,7 +21,7 @@ import {
     useFieldError,
     useFormValues,
 } from '@/components/composite/form-values'
-import {Field, FieldGrid, LockedField, LookupField} from '@/components/composite/form-fields'
+import {Field, FieldGrid, LockedField, LookupField, RequiredFieldsNotice} from '@/components/composite/form-fields'
 import {DateField} from '@/components/composite/date-field'
 
 // 마이페이지(회원정보)에서 그대로 받아 오는 값 — 읽기 전용으로 보여 주기만 한다.
@@ -49,6 +49,8 @@ const AddressDetailError = () => {
 }
 
 const INDUSTRY_CODE_FIELD = 'industry-code'
+const ADDRESS_FIELD = 'address'
+const ADDRESS_DETAIL_FIELD = 'address-detail'
 
 // 기업정보 탭 본문 — Figma "기업정보" 탭 컨텐츠(1200×1274) 전체.
 // 자가진단 입력 화면과 FormTabs 컴포넌트 가이드가 같은 것을 보도록 여기 한 벌만 둔다.
@@ -60,8 +62,16 @@ const CompanyInfoForm = () => {
         clearFieldError(INDUSTRY_CODE_FIELD)
     }
 
+    // 고른 주소는 "(우편번호) 도로명주소" 로 한 칸에 담는다 — 시안의 주소 칸이 한 줄이다.
+    // 주소를 채우고 나면 곧바로 상세주소를 쓰게 되므로 그 칸으로 포커스를 옮긴다.
+    const handleAddressSelect = ({zonecode, roadAddress}: {zonecode: string; roadAddress: string}) => {
+        setValue(ADDRESS_FIELD, `(${zonecode}) ${roadAddress}`)
+        clearFieldError(ADDRESS_FIELD)
+        document.getElementById(ADDRESS_DETAIL_FIELD)?.focus()
+    }
+
     return (
-        <FormCard title="기업정보" subtitle="* 표시 항목은 필수 입력 항목입니다.">
+        <FormCard title="기업정보" subtitle={<RequiredFieldsNotice />}>
             {/* id 는 화면의 "입력 폼 바로가기" 스킵 링크가 가리키는 자리다[6.4.1]. */}
             <div id="company-form" className="flex flex-col gap-10">
                 <div className="flex flex-col gap-4">
@@ -139,7 +149,7 @@ const CompanyInfoForm = () => {
                         {/* 주소 — 검색 결과 입력과 상세주소가 한 라벨 아래 두 줄로 묶인다(시안 "input 2줄").
                         상세주소는 시안에 별도 라벨이 없어 aria-label 로 이름을 준다[7.4.1]. */}
                         <Field
-                            id="address"
+                            id={ADDRESS_FIELD}
                             label="주소"
                             required
                             className="md:col-span-2"
@@ -148,8 +158,8 @@ const CompanyInfoForm = () => {
                             <div className="flex flex-col gap-2">
                                 <div className="flex items-start gap-2">
                                     <Input
-                                        id="address"
-                                        name="address"
+                                        id={ADDRESS_FIELD}
+                                        name={ADDRESS_FIELD}
                                         readOnly
                                         required
                                         autoComplete="off"
@@ -157,7 +167,9 @@ const CompanyInfoForm = () => {
                                         className="min-w-0 flex-1"
                                     />
                                     {/* 실제 주소는 이 모달(Kakao 우편번호)에서 고른다 — 회원가입 흐름과 같은 모달이다. */}
-                                    <PostcodeSearchDialog title="주소 검색">
+                                    {/* 이 화면은 고른 주소가 아래 칸에 채워지는 것까지 보여야 해서 임시 검색 UI를 켠다.
+                                        모달만 보여 주는 화면(주소 찾기)은 위젯 자리를 비운 기본 모습을 쓴다. */}
+                                    <PostcodeSearchDialog mockSearch title="주소 검색" onSelect={handleAddressSelect}>
                                         <Button type="button" variant="tertiary" size="md" className="shrink-0">
                                             주소 검색
                                         </Button>
@@ -166,7 +178,7 @@ const CompanyInfoForm = () => {
                                 {/* 주소와 라벨을 공유하지만 값은 따로 담기는 칸이라, 검사 메시지도 이 자리에 따로 붙인다.
                                 Field 는 자기 id(address) 의 메시지만 그리기 때문이다. */}
                                 <ClearableInput
-                                    id="address-detail"
+                                    id={ADDRESS_DETAIL_FIELD}
                                     name="addressDetail"
                                     required
                                     aria-label="상세주소"

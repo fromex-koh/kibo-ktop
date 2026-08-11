@@ -46,6 +46,35 @@ export const dialogFooterClassName = 'flex flex-col-reverse gap-4 px-6 pt-5 pb-6
 // 구획 사이 24 는 그대로 둔다(머리 pb-5 + 본문 py-1 = 24). scroll-py-1 은 브라우저가 탭 이동으로
 // 요소를 보이게 스크롤할 때 그 4 를 남기도록 알려준다 — 없으면 요소가 가장자리에 딱 붙어 링이 잘린다.
 export const dialogBodyClassName = 'row-start-2 flex min-h-0 flex-col overflow-y-auto scroll-py-1 px-6 py-1 sm:px-10'
+// 안내 모달(설명·표·그림만 있는 모달)의 본문 — 아이 요소가 줄어들지 않게 막는다.
+// 세로 flex 안에서 아이 요소는 남는 높이에 맞춰 찌그러진다. 표 상자(ui/table 의 overflow-x-auto)나
+// 그림처럼 자기 안에서 스크롤될 수 있는 요소가 그렇게 눌리면, 본문 대신 그 안이 스크롤돼 표가 중간에
+// 잘리고 아래 여백도 사라진 것처럼 보인다. 줄어들지 않게 두면 본문이 넘쳐 본문 구획이 스크롤된다.
+export const dialogInfoBodyClassName = cn(dialogBodyClassName, '*:shrink-0')
+// 표가 있는 안내 모달의 본문 — 좁은 화면에서는 표(min-w-125)가 본문보다 넓어져 좌우 스크롤이 필요하다.
+// 그 스크롤을 표 상자가 맡으면 가로 막대가 긴 표의 맨 아래에 붙어, 위쪽을 보고 있는 동안에는 좌우로 볼
+// 수 있다는 것 자체가 화면에 드러나지 않는다. 그래서 셸(ui/table)이 표 상자에 주는 overflow-x-auto 를
+// 여기서만 끄고 본문이 좌우 스크롤을 맡는다 — 막대가 늘 화면 안(세로 막대와 같은 상자)에 보인다.
+//
+// 스크롤 막대는 스크롤 상자의 가장자리에 그려지므로, 카드 여백을 본문의 padding 으로 주면 막대가 그
+// 여백을 지나 카드 끝에 붙는다. 그래서 좌우·아래 여백을 본문 바깥(margin)으로 옮겨 상자 자체를 안쪽으로
+// 들여놓는다 — 막대가 여백 안쪽에 생겨 내용과 같은 세로선에서 시작하고 끝난다.
+// 좌우 24(sm 40) = mx-5(20)+px-1(4) · sm mx-9(36)+px-1(4). px-1 은 맨 왼쪽·오른쪽 요소의 포커스 링
+// (outline 2 + offset 2)이 상자에 잘리지 않게 남기는 자리다(위아래 py-1 과 같은 이유).
+// 아래 40 = pb-5(20) + mb-5(20) — 가로 막대가 내용에도 카드 끝에도 붙지 않고 그 사이에 뜬다.
+// 이 여백을 본문이 직접 가지므로 표 모달에는 아래 여백 구획(dialogBodyEndClassName)을 두지 않는다.
+// 표가 본문보다 넓으면 그 px-1 은 그냥 두면 사라진다(넘친 표가 padding-right 를 밀고 나간다) —
+// 표 상자를 w-fit 으로 두면 상자 자체가 넘치는 아이가 되어 오른쪽 여백이 스크롤 끝에 그대로 남는다.
+// 표는 여전히 min-w-125(500)이라 폭은 달라지지 않는다.
+export const dialogTableBodyClassName = cn(
+    dialogInfoBodyClassName,
+    'mx-5 mb-5 overflow-x-auto px-1 pb-5 sm:mx-9 sm:px-1 [&_[data-slot=table-container]]:w-fit [&_[data-slot=table-container]]:overflow-visible',
+)
+// 아래 여백 구획 — CTA 가 없는 안내 모달이 CTA 자리에 두는 빈 자리(시안 카드 아래 여백 40 에서 본문이
+// 이미 가진 py-1 의 4 를 뺀 36). 이 여백을 본문의 pb 로 주면 여백까지 함께 스크롤돼, 스크롤 도중에는
+// 글이 카드 맨 가장자리에서 뚝 끊긴다. 스크롤 영역 밖에 두면 CTA 가 있는 모달과 똑같이 글이 이 여백
+// 아래로 들어가며 잘리고, 가운데 본문만 줄어든다(세 행 그리드의 마지막 행).
+export const dialogBodyEndClassName = 'h-9'
 // PROJECT-STYLE: shadcn 원본은 text-lg leading-none font-semibold 이지만,
 // 시안 모달 제목은 24px Bold·행간 36 이므로
 // typo-h4-bold 를 사용한다.

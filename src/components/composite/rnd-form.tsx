@@ -80,7 +80,15 @@ const RndEntry = ({id, label, isAdded, focusOnMount, isLastCard, onDelete, cardR
     const field = (name: string) => rndField(id, name)
 
     return (
-        <RepeatCard ref={cardRef} title={label} focusOnMount={focusOnMount} clearOnly={isLastCard} onDelete={onDelete}>
+        <RepeatCard
+            ref={cardRef}
+            title={label}
+            // 이 탭은 폼 카드 제목(h2) 아래에 카드가 바로 온다 — 소제목이 없으므로 카드 제목이 h3 다.
+            headingLevel={3}
+            focusOnMount={focusOnMount}
+            clearOnly={isLastCard}
+            onDelete={onDelete}
+        >
             <FormCardScope namePrefix={`rnd-${id}-`} alwaysRequired={isAdded}>
                 <FieldRow3>
                     <SelectField id={field('category')} label="구분" options={RND_CATEGORIES} />

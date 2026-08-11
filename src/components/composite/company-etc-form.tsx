@@ -2,6 +2,9 @@
 
 import type {ReactNode} from 'react'
 import {FormCard} from '@/components/composite/form-card'
+import {RecognizedIpDialog} from '@/components/composite/recognized-ip-dialog'
+import {TechnologyDefinitionDialog} from '@/components/composite/technology-definition-dialog'
+import {TradeTypeGuideDialog} from '@/components/composite/trade-type-guide-dialog'
 import {
     SubSectionHeader,
     SubSectionHeaderAction,
@@ -37,6 +40,9 @@ import {Field, FieldGrid, FieldRow3} from '@/components/composite/form-fields'
 // 시안에는 `*` 레이어가 전부 꺼져 있었지만, 필수 처리는 업무 규칙으로 확정된 것이다.
 // 예외는 연간 환산 매출액 하나다 — 계산 결과라 사용자가 채울 수 없어 필수로 두면 채울 방법 없이 막힌다.
 // 구획 오른쪽 보조 버튼은 지식재산권·거래유형 및 매출처·신청기술 구분 세 곳에서만 켜져 있다.
+// 자가사업장 보유 — 화면에 보이는 제목이 라디오 묶음의 이름이 된다(아래 사용처 주석 참고).
+const OWN_WORKPLACE_LABEL_ID = 'own-workplace-label'
+
 const TECH_SUMMARY_NAME = 'techSummary'
 const TECH_SUMMARY_MAX_LENGTH = 1000
 
@@ -183,10 +189,14 @@ const UnitField = ({
 const RadioRow = ({
     name,
     label,
+    labelledBy,
     options,
 }: {
     name: string
-    label: string
+    /** 묶음의 이름을 글자로 줄 때. 화면에 보이는 제목이 따로 있으면 labelledBy 를 쓴다. */
+    label?: string
+    /** 화면에 보이는 제목의 id — 그 글이 곧 묶음의 이름이 된다. label 보다 우선한다[7.4.1]. */
+    labelledBy?: string
     options: readonly {value: string; label: string}[]
 }) => (
     <LabellessField id={name}>
@@ -197,7 +207,8 @@ const RadioRow = ({
             name={name}
             required
             tabIndex={-1}
-            aria-label={label}
+            aria-label={labelledBy ? undefined : label}
+            aria-labelledby={labelledBy}
             className="flex flex-wrap items-center gap-x-10 gap-y-4"
         >
             {options.map((option) => (
@@ -251,9 +262,11 @@ const CompanyEtcForm = () => {
                         </>
                     }
                     action={
-                        <Button type="button" variant="secondary" size="xs">
-                            실적인정 지식재산
-                        </Button>
+                        <RecognizedIpDialog>
+                            <Button type="button" variant="secondary" size="xs">
+                                실적인정 지식재산
+                            </Button>
+                        </RecognizedIpDialog>
                     }
                 >
                     <FieldRow3>
@@ -294,9 +307,11 @@ const CompanyEtcForm = () => {
                     title="거래유형 및 매출처"
                     description="거래형태가 중복될 시 가장 매출에 크게 기여하는 거래 유형 1개를 선택 바랍니다."
                     action={
-                        <Button type="button" variant="secondary" size="xs">
-                            거래유형 설명
-                        </Button>
+                        <TradeTypeGuideDialog>
+                            <Button type="button" variant="secondary" size="xs">
+                                거래유형 설명
+                            </Button>
+                        </TradeTypeGuideDialog>
                     }
                 >
                     <RadioRow
@@ -317,11 +332,17 @@ const CompanyEtcForm = () => {
                     <FieldGrid>
                         <UnitField id="employeeCount" label="상시근로자수" unit="명" />
                         <div className="flex flex-col gap-4">
-                            <Label className="text-foreground font-bold">자가사업장 보유</Label>
+                            {/* <label> 은 컨트롤 하나만 가리킬 수 있어 라디오 '묶음'의 이름이 될 수 없다.
+                                그래서 label 요소로 두면 어느 컨트롤과도 이어지지 않은 라벨이 된다
+                                (WAVE "Orphaned form label"). 생김새는 그대로 두고 요소만 바꾼 뒤,
+                                묶음이 aria-labelledby 로 이 글을 가리켜 이름을 가져간다[7.4.1]. */}
+                            <Label asChild className="text-foreground cursor-auto font-bold">
+                                <span id={OWN_WORKPLACE_LABEL_ID}>자가사업장 보유</span>
+                            </Label>
                             <div className="h-control-h-md flex items-center">
                                 <RadioRow
                                     name="ownWorkplace"
-                                    label="자가사업장 보유"
+                                    labelledBy={OWN_WORKPLACE_LABEL_ID}
                                     options={[
                                         {value: 'yes', label: '여'},
                                         {value: 'no', label: '부'},
@@ -337,9 +358,11 @@ const CompanyEtcForm = () => {
                 <Section
                     title="신청기술 구분"
                     action={
-                        <Button type="button" variant="secondary" size="xs">
-                            전문기술/숙련기술 정의
-                        </Button>
+                        <TechnologyDefinitionDialog>
+                            <Button type="button" variant="secondary" size="xs">
+                                전문기술/숙련기술 정의
+                            </Button>
+                        </TechnologyDefinitionDialog>
                     }
                 >
                     <RadioRow

@@ -25,6 +25,18 @@ const FieldLabel = ({htmlFor, children, required}: {htmlFor: string; children: s
     </BaseFieldLabel>
 )
 
+// 필수 항목 안내 — 카드 제목 아래에 놓인다(FormCard 의 subtitle). 라벨의 필수 표시와 같은 별표를
+// 가리키는 문장이라 별표도 같은 색으로 둔다 — 색이 다르면 무엇을 가리키는 말인지 이어지지 않는다.
+// 별표는 라벨에서와 마찬가지로 장식이라 aria-hidden 이고, 읽어 줄 때만 "별표"로 대신 읽힌다[5.3.1].
+const RequiredFieldsNotice = () => (
+    <>
+        <span aria-hidden="true" className="text-error-500">
+            *
+        </span>
+        <span className="sr-only">별표</span> 표시 항목은 필수 입력 항목입니다.
+    </>
+)
+
 // 라벨 + 입력 한 칸 — 공통 Field 로 감싼다. 간격(라벨 아래 16 · 입력 아래 8)과 메시지 타이포는
 // theme/field.variants 가 시안 값으로 들고 있으므로 여기서 다시 정하지 않는다.
 //
@@ -156,4 +168,4 @@ const FieldRow3 = ({children}: {children: ReactNode}) => (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">{children}</div>
 )
 
-export {Field, FieldGrid, FieldLabel, FieldRow3, LockedField, LookupField}
+export {Field, FieldGrid, FieldLabel, FieldRow3, LockedField, LookupField, RequiredFieldsNotice}
