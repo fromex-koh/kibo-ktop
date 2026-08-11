@@ -16,9 +16,13 @@ import {cn} from '@/lib/utils'
 // 잠금은 disabled 가 아니라 readOnly 다. disabled 는 값이 폼 전송에서 빠지고 포커스도 못 받아
 // 스크린리더가 건너뛴다. 잠긴 표면색(bg-field-disabled)은 Input 의 read-only 스타일이 이미 갖고 있다.
 //
-// 전송은 hidden input 하나(name=email)로 한다. 보이는 세 컨트롤에는 name 을 두지 않아 폼 데이터에
-// 조각이 섞이지 않는다 — 개발자는 UI 를 건드리지 않고 submit 만 붙이면 FormData 에 최종 주소가 들어 있다.
+// 전송은 hidden input 하나(name=email)로 한다. 아이디·도메인 두 칸에는 name 을 두지 않아 폼 데이터에
+// 주소 조각이 섞이지 않는다 — 개발자는 UI 를 건드리지 않고 submit 만 붙이면 FormData 에 최종 주소가 들어 있다.
 // 백엔드 스펙이 아이디·도메인을 따로 받는다면 그때 name 을 나눠 단다.
+//
+// 도메인 셀렉트만 name 을 갖는다. radix 는 폼 안에 있는 Select 마다 전송용 숨은 select 를 하나 만드는데,
+// name 이 없으면 브라우저가 "id 도 name 도 없는 입력" 으로 보고 자동완성 대상에서 제외한다(DevTools 안내).
+// 주소 조각이 아니라 '도메인 칸의 모드' 값이라 받는 쪽은 무시해도 된다.
 
 // 도메인을 직접 입력하는 모드. 실제 도메인 값과 겹치지 않도록 도메인 형식이 아닌 값을 쓴다.
 const DIRECT_INPUT = 'direct'
@@ -109,7 +113,7 @@ const EmailField = ({
                     className="min-w-0 flex-1"
                 />
             </div>
-            <Select value={preset} onValueChange={handlePresetChange}>
+            <Select name={`${name}Preset`} value={preset} onValueChange={handlePresetChange}>
                 {/* 시안 폭 — 모바일 전체 폭 · md 228 · xl 280. 남는 폭은 앞의 아이디·도메인 칸이 나눠 갖는다. */}
                 <SelectTrigger className="w-full md:w-57 xl:w-70" aria-label="이메일 도메인 선택">
                     <SelectValue />

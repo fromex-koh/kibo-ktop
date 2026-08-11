@@ -11,11 +11,12 @@ const USAGE_CODE = `<FormCard title="부분발송 이메일등록" subtitle="안
   <EmailField name="additionalNoticeEmail" />
 </FormCard>`
 
-const SUBMIT_CODE = `{/* 실제로 폼에 실리는 값은 hidden input 하나다 */}
+const SUBMIT_CODE = `{/* 주소는 hidden input 하나로 실린다 */}
 <input type="hidden" name="additionalNoticeEmail" value="abc@naver.com" />
 
 const handleSubmit = (formData: FormData) => {
-  formData.get('additionalNoticeEmail') // 'abc@naver.com'
+  formData.get('additionalNoticeEmail')        // 'abc@naver.com'
+  formData.get('additionalNoticeEmailPreset')  // 'naver.com' — 도메인 칸의 모드. 받는 쪽은 무시해도 된다
 }`
 
 const DOMAINS_CODE = `{/* 화면에 맞춰 목록을 갈아 끼운다. '직접입력'은 항상 맨 앞에 자동으로 들어간다 */}
@@ -148,9 +149,11 @@ const EmailFieldGuidePage = () => (
                         서버 전송 — 합친 값 하나
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        보이는 세 컨트롤에는 <code className="font-mono">name</code>을 두지 않고, hidden input 하나에
+                        아이디·도메인 두 칸에는 <code className="font-mono">name</code>을 두지 않고, hidden input 하나에
                         합친 주소를 담습니다. UI 를 건드리지 않고 submit 만 붙이면 FormData 에 최종 주소가 들어
-                        있습니다.
+                        있습니다. 도메인 셀렉트만 <code className="font-mono">{'{name}Preset'}</code> 이름을 갖습니다 —
+                        radix 가 폼 안의 Select 마다 만드는 전송용 숨은 select 에 이름이 없으면 브라우저가 자동완성
+                        대상에서 빼기 때문입니다. 주소 조각이 아니라 도메인 칸의 모드 값이라 받는 쪽은 무시해도 됩니다.
                     </p>
                 </div>
                 <CodeBlock code={SUBMIT_CODE} language="tsx" copyLabel="복사" />
