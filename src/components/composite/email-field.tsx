@@ -1,8 +1,9 @@
 'use client'
 
-import {useEffect, useId, useRef, useState} from 'react'
+import {useEffect, useId, useRef, useState, type InvalidEvent} from 'react'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import {Input} from '@/components/ui/input'
+import {FieldError} from '@/components/ui/field'
 import {cn} from '@/lib/utils'
 
 // 이메일 입력(EmailField) — 아이디 · @ · 도메인 · 도메인 셀렉트로 나눠 받고, 서버에는 합친 값 하나를 보낸다.
@@ -26,6 +27,7 @@ import {cn} from '@/lib/utils'
 
 // 도메인을 직접 입력하는 모드. 실제 도메인 값과 겹치지 않도록 도메인 형식이 아닌 값을 쓴다.
 const DIRECT_INPUT = 'direct'
+const DOMAIN_PATTERN = /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z]{2,63}$/i
 
 const DEFAULT_EMAIL_DOMAINS = ['naver.com', 'gmail.com', 'daum.net', 'hanmail.net', 'nate.com'] as const
 
@@ -51,9 +53,11 @@ const EmailField = ({
 }: EmailFieldProps) => {
     const fieldId = useId()
     const fieldRef = useRef<HTMLDivElement>(null)
+    const localPartRef = useRef<HTMLInputElement>(null)
     const domainRef = useRef<HTMLInputElement>(null)
     const [localPart, setLocalPart] = useState(defaultLocalPart)
     const [domain, setDomain] = useState(defaultDomain)
+    const [showValidation, setShowValidation] = useState(false)
     // 처음 값이 목록에 있는 도메인이면 그 항목을, 아니면 직접입력을 고른 상태로 시작한다.
     const [preset, setPreset] = useState(domains.includes(defaultDomain) ? defaultDomain : DIRECT_INPUT)
 
@@ -64,6 +68,32 @@ const EmailField = ({
     const trimmedLocalPart = localPart.trim()
     const trimmedDomain = domain.trim().toLowerCase()
     const email = trimmedLocalPart && trimmedDomain ? `${trimmedLocalPart}@${trimmedDomain}` : ''
+    const hasAnyValue = Boolean(trimmedLocalPart || trimmedDomain)
+    const shouldValidate = Boolean(required || hasAnyValue)
+    const localPartError = shouldValidate && !trimmedLocalPart ? '이메일 아이디를 입력해 주세요.' : ''
+    const domainError = shouldValidate
+        ? !trimmedDomain
+            ? '이메일 도메인을 입력해 주세요.'
+            : isDirectInput && !DOMAIN_PATTERN.test(trimmedDomain)
+              ? '올바른 이메일 도메인을 입력해 주세요.'
+              : ''
+        : ''
+    const validationError = localPartError || domainError
+    const errorId = `${fieldId}-error`
+
+    useEffect(() => {
+        const localPartInput = localPartRef.current
+        const domainInput = domainRef.current
+        if (!localPartInput || !domainInput) return
+
+        localPartInput.setCustomValidity(localPartError)
+        domainInput.setCustomValidity(domainError)
+    }, [domainError, localPartError])
+
+    const handleInvalid = (event: InvalidEvent<HTMLInputElement>) => {
+        event.preventDefault()
+        setShowValidation(true)
+    }
 
     // 직접입력을 고른 '이번 닫힘'에만 포커스를 옮기려는 표시. 값 변경과 목록 닫힘이 따로 일어나서
     // 상태가 아니라 ref 로 넘긴다 — 값을 바꾸지 않고 Esc·바깥 클릭으로 닫은 경우까지 포커스를 가로채면 안 된다.
@@ -109,12 +139,16 @@ const EmailField = ({
         <div ref={fieldRef} className={cn('flex flex-wrap items-center gap-2 md:gap-6', className)}>
             <div className="flex min-w-0 flex-1 items-center gap-2">
                 <Input
+                    ref={localPartRef}
                     id={`${fieldId}-local-part`}
                     value={localPart}
                     onChange={(event) => setLocalPart(event.target.value)}
+                    onInvalid={handleInvalid}
                     required={required}
                     placeholder="이메일 아이디"
                     aria-label="이메일 아이디"
+                    aria-invalid={showValidation && Boolean(localPartError)}
+                    aria-describedby={showValidation && localPartError ? errorId : undefined}
                     autoComplete="off"
                     className="min-w-0 flex-1"
                 />
@@ -124,10 +158,13 @@ const EmailField = ({
                     id={`${fieldId}-domain`}
                     value={domain}
                     onChange={(event) => setDomain(event.target.value)}
+                    onInvalid={handleInvalid}
                     readOnly={!isDirectInput}
                     required={required}
                     placeholder="도메인 직접입력"
                     aria-label="이메일 도메인"
+                    aria-invalid={showValidation && Boolean(domainError)}
+                    aria-describedby={showValidation && domainError ? errorId : undefined}
                     autoComplete="off"
                     className="min-w-0 flex-1"
                 />
@@ -146,6 +183,11 @@ const EmailField = ({
                     ))}
                 </SelectContent>
             </Select>
+            {showValidation && validationError ? (
+                <FieldError id={errorId} className="basis-full">
+                    {validationError}
+                </FieldError>
+            ) : null}
             {/* 실제로 전송되는 값. 유효성 검사도 조각이 아니라 이 합친 주소를 기준으로 한다. */}
             <input type="hidden" name={name} value={email} />
         </div>

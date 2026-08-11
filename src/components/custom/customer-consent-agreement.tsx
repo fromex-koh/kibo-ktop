@@ -414,6 +414,8 @@ const CustomerConsentForm = ({formId, children}: {formId: string; children: Reac
 
     const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault()
+        if (!event.currentTarget.reportValidity()) return
+
         // FormData 의 값은 문자열 또는 File 이라, 문자열만 골라 넘긴다(이 폼엔 파일 입력이 없다).
         const values = Object.fromEntries(
             [...new FormData(event.currentTarget).entries()].filter(
