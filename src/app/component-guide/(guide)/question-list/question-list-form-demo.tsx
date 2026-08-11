@@ -30,7 +30,7 @@ const QuestionListFormDemo = () => {
         >
             <fieldset className="flex flex-col gap-4">
                 <legend className="sr-only">생산 및 제작 방식 문항</legend>
-                <QuestionList start={17}>
+                <QuestionList>
                     <QuestionItem
                         align="control"
                         badge={
@@ -76,7 +76,7 @@ const QuestionListFormDemo = () => {
 
             <fieldset>
                 <legend className="sr-only">기술 유형 및 확장성 문항</legend>
-                <QuestionList start={11}>
+                <QuestionList>
                     <QuestionItem align="control">
                         신청기술은
                         <Select name="technologyType" defaultValue="product">
@@ -103,7 +103,7 @@ const QuestionListFormDemo = () => {
 
             <fieldset>
                 <legend className="sr-only">기술성숙도 및 지식재산권 문항</legend>
-                <QuestionList start={8}>
+                <QuestionList>
                     <QuestionItem
                         align="control"
                         helper={
@@ -171,7 +171,7 @@ const QuestionListFormDemo = () => {
                         숙련기술 (생산·품질 등 숙련 노하우 기반)
                     </ChipRadio>
                 </ChipRadioGroup>
-                <QuestionList start={23}>
+                <QuestionList>
                     <QuestionItem align="control" contentClassName="w-full">
                         <Select name="evaluationItem" defaultValue="technology">
                             <SelectTrigger size="md" className="w-full" aria-label="평가 항목 선택">

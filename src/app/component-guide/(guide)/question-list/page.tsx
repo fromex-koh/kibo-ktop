@@ -22,7 +22,7 @@ import QuestionListFormDemo from './question-list-form-demo'
 export const metadata: Metadata = {title: '문항 목록 (QuestionList)'}
 
 const BADGE_CODE = `{/* 문장+칩을 ChipCheckboxGroup 하나로 감싸 두 번째 줄이 배지 뒤부터 정렬(hanging indent)됩니다. */}
-<QuestionList start={17}>
+<QuestionList>
   <QuestionItem
     align="control"
     badge={<Badge variant="solid-pastel" color="secondary-green" shape="round">제조</Badge>}
@@ -49,7 +49,7 @@ const BADGE_CODE = `{/* 문장+칩을 ChipCheckboxGroup 하나로 감싸 두 번
   </QuestionItem>
 </QuestionList>`
 
-const BASIC_CODE = `<QuestionList start={11}>
+const BASIC_CODE = `<QuestionList>
   <QuestionItem align="control">
     신청기술은
     <Select>
@@ -67,7 +67,7 @@ const BASIC_CODE = `<QuestionList start={11}>
 </QuestionList>`
 
 const SELECT_ANSWER_CODE = `{/* 문장 안 [ ] 에 현재 선택값이 primary 색으로 표시되고, 값이 바뀌면 함께 바뀐다 */}
-<QuestionList start={8}>
+<QuestionList>
   <QuestionItem helper={<Button variant="text-underline" size="md">TRL 확인 <ChevronRight /></Button>}>
     <QuestionSelect
       name="trl"
@@ -89,7 +89,7 @@ const SELECT_ANSWER_CODE = `{/* 문장 안 [ ] 에 현재 선택값이 primary �
   options={[{value: 'product', label: '제품'}, {value: 'service', label: '서비스'}]}
 />`
 
-const OPTION_CODE = `<QuestionList start={8}>
+const OPTION_CODE = `<QuestionList>
   <QuestionItem align="control" helper={<Button variant="text-underline" size="md" asChild><Link href="#trl-help">TRL 확인 <ChevronRight /></Link></Button>}>
     신청기술의 기술성숙도(TRL)는 <Select>{/* ... */}</Select> 단계에 해당한다.
   </QuestionItem>
@@ -114,7 +114,7 @@ const BRANCH_CODE = `<div className="flex flex-col gap-6">
     <ChipRadio size="md" value="expert">전문기술 (R&D·지식재산권·기술성숙도(TRL) 기반)</ChipRadio>
     <ChipRadio size="md" value="skilled">숙련기술 (생산·품질 등 숙련 노하우 기반)</ChipRadio>
   </ChipRadioGroup>
-  <QuestionList start={8}>
+  <QuestionList>
     <QuestionItem align="control">
       신청기술의 기술성숙도(TRL)는 <Select>{/* ... */}</Select> 단계에 해당한다.
     </QuestionItem>
@@ -126,7 +126,7 @@ const BLOCK_CODE = `<div className="flex flex-col gap-6">
     <QuestionGroupHeaderTitle>아래 중 동사에 해당하는 항목을 선택해 주세요. (택1)</QuestionGroupHeaderTitle>
     <QuestionGroupHeaderDescription>기술구분(전문/숙련)·[10]·[11] 응답에 따라 위 보기가 자동으로 달라집니다.</QuestionGroupHeaderDescription>
   </QuestionGroupHeader>
-  <QuestionList start={23}>
+  <QuestionList>
     <QuestionItem align="control" contentClassName="w-full">
       <Select>
         <SelectTrigger size="md" className="w-full" aria-label="평가 항목 선택">
@@ -139,7 +139,7 @@ const BLOCK_CODE = `<div className="flex flex-col gap-6">
 </div>`
 
 const FORM_CODE = `<form onSubmit={handleSubmit}>
-  <QuestionList start={11}>
+  <QuestionList>
     <QuestionItem align="control">
       신청기술은
       <Select name="technologyType" defaultValue="product">{/* ... */}</Select>
@@ -184,7 +184,6 @@ const GUIDE_TECHNOLOGY_TYPE_OPTIONS = [
 ] as const
 
 const PROPS_ITEMS = [
-    ['QuestionList', 'start', '첫 문항 번호이며 이후 QuestionItem 번호를 자동으로 계산합니다.', '1', 'number'],
     ['QuestionList', 'children', 'QuestionItem 목록입니다.', '-', 'ReactNode'],
     [
         'QuestionList',
@@ -194,15 +193,14 @@ const PROPS_ITEMS = [
         'OlHTMLAttributes',
     ],
     ['QuestionItem', 'children', '문항 본문과 인라인 입력 컴포넌트를 조합합니다.', '-', 'ReactNode'],
-    ['QuestionItem', 'badge', '번호 다음 열에 배치할 분류 Badge입니다.', 'undefined', 'ReactNode'],
-    ['QuestionItem', 'control', '문항 우측에 배치할 Checkbox 등의 컨트롤입니다.', 'undefined', 'ReactNode'],
+    ['QuestionItem', 'badge', '체크박스 다음, 본문 앞에 배치할 분류 Badge입니다.', 'undefined', 'ReactNode'],
+    ['QuestionItem', 'control', '문항 맨 앞에 배치할 Checkbox 등의 컨트롤입니다.', 'undefined', 'ReactNode'],
     ['QuestionItem', 'description', '본문 아래 부가 설명입니다.', 'undefined', 'ReactNode'],
     ['QuestionItem', 'helper', '본문 아래 도움말 링크 또는 보조 액션입니다.', 'undefined', 'ReactNode'],
-    ['QuestionItem', 'number', '자동 번호 대신 표시할 문항 번호입니다.', 'undefined', 'number | string'],
     [
         'QuestionItem',
         'align',
-        "본문 첫 줄 기준 번호·컨트롤 세로 정렬입니다. 'control'은 인라인 Select 등 40px 컨트롤 라인 중앙에 맞춥니다.",
+        "본문 첫 줄 기준 컨트롤·배지 세로 정렬입니다. 'control'은 인라인 Select 등 40px 컨트롤 라인 중앙에 맞춥니다.",
         "'start'",
         "'start' | 'control'",
     ],
@@ -214,18 +212,25 @@ const PROPS_ITEMS = [
         'undefined',
         'LiHTMLAttributes',
     ],
-    ['QuestionOptionList', 'start', '첫 하위 항목 번호입니다.', '1', 'number'],
     ['QuestionOptionList', 'children', 'QuestionOption 목록입니다.', '-', 'ReactNode'],
     ['QuestionOptionList', 'className · ol props', '하위 목록 속성을 전달합니다.', 'undefined', 'OlHTMLAttributes'],
     ['QuestionOption', 'children', '하위 선택 항목 내용입니다.', '-', 'ReactNode'],
-    ['QuestionOption', 'control', '항목 우측의 Checkbox 등의 컨트롤입니다.', 'undefined', 'ReactNode'],
+    ['QuestionOption', 'control', '항목 맨 앞의 Checkbox 등의 컨트롤입니다.', 'undefined', 'ReactNode'],
+    ['QuestionOption', 'badge', '컨트롤 다음, 본문 앞에 배치할 분류 Badge입니다.', 'undefined', 'ReactNode'],
+    [
+        'QuestionOption',
+        'align',
+        '본문 첫 줄 기준 컨트롤·배지 세로 정렬입니다. QuestionItem 과 같습니다.',
+        "'start'",
+        "'start' | 'control'",
+    ],
     ['QuestionOption', 'className · li props', '하위 항목 속성을 전달합니다.', 'undefined', 'LiHTMLAttributes'],
 ] as const
 
 const QuestionListGuidePage = () => (
     <GuidePageShell
         title="문항 목록 (QuestionList)"
-        description="번호·본문·설명·도움말·우측 컨트롤을 정렬하는 문항용 compound component입니다. Select와 Checkbox의 기능은 기존 컴포넌트를 조합해 사용합니다."
+        description="체크박스·분류 배지·본문·설명·도움말을 왼쪽부터 한 줄로 정렬하는 문항용 compound component입니다. 문항 앞에 번호를 찍지 않으며(시안), 순서의 의미는 목록 마크업(ol)이 갖습니다. Select와 Checkbox의 기능은 기존 컴포넌트를 조합해 사용합니다."
     >
         <BaseCard>
             <section aria-labelledby="question-badge" className="flex flex-col gap-4">
@@ -234,13 +239,13 @@ const QuestionListGuidePage = () => (
                         분류 Badge와 문장형 선택
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        Badge가 있는 문항은 목록 전체에서 같은 열을 공유하므로 본문 시작점이 동일하게 정렬됩니다. 함께
-                        고를 수 있는 문장 속 선택은 ChipCheckbox를 쓰고, 문장 전체를 ChipCheckboxGroup으로 감싸 줄바꿈
-                        시 두 번째 줄이 배지 뒤부터 정렬되게 합니다.
+                        체크박스가 없는 문항은 배지가 맨 앞자리를 그대로 차지합니다(시안). 함께 고를 수 있는 문장 속
+                        선택은 ChipCheckbox를 쓰고, 문장 전체를 ChipCheckboxGroup으로 감싸 줄바꿈 시 두 번째 줄이 배지
+                        뒤부터 정렬되게 합니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 rounded-md border p-6">
-                    <QuestionList start={17}>
+                    <QuestionList>
                         <QuestionItem
                             align="control"
                             badge={
@@ -294,11 +299,11 @@ const QuestionListGuidePage = () => (
                         인라인 입력과 부가 설명
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        문장 안 Select, 부가 설명과 우측 Checkbox를 같은 문항 구조로 조합합니다.
+                        문장 안 Select, 부가 설명과 앞쪽 Checkbox를 같은 문항 구조로 조합합니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 rounded-md border p-6">
-                    <QuestionList start={11}>
+                    <QuestionList>
                         <QuestionItem align="control">
                             신청기술은
                             <Select>
@@ -343,7 +348,7 @@ const QuestionListGuidePage = () => (
                     </p>
                 </div>
                 <div className="border-subtle-3 rounded-md border p-6">
-                    <QuestionList start={8}>
+                    <QuestionList>
                         <QuestionItem
                             helper={
                                 <Button variant="text-underline" size="md" className="gap-1">
@@ -362,7 +367,7 @@ const QuestionListGuidePage = () => (
                             />
                         </QuestionItem>
                     </QuestionList>
-                    <QuestionList start={11} className="mt-6">
+                    <QuestionList className="mt-6">
                         <QuestionItem>
                             <QuestionSelect
                                 name="guide-technology-type"
@@ -389,7 +394,7 @@ const QuestionListGuidePage = () => (
                     </p>
                 </div>
                 <div className="border-subtle-3 rounded-md border p-6">
-                    <QuestionList start={8}>
+                    <QuestionList>
                         <QuestionItem
                             align="control"
                             helper={
@@ -441,7 +446,7 @@ const QuestionListGuidePage = () => (
                     </p>
                 </div>
                 <div className="border-subtle-3 rounded-md border p-6">
-                    <QuestionList start={7}>
+                    <QuestionList>
                         <QuestionItem
                             helper={
                                 <Link
@@ -467,8 +472,8 @@ const QuestionListGuidePage = () => (
                         선택 안내와 분기 문항
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        번호 없는 안내 제목·캡션과 ChipRadio 선택을 목록 위에 두고, 선택에 따라 노출되는 문항을
-                        QuestionList로 이어 구성합니다.
+                        안내 제목·캡션과 ChipRadio 선택을 목록 위에 두고, 선택에 따라 노출되는 문항을 QuestionList로
+                        이어 구성합니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 rounded-md border p-6">
@@ -487,7 +492,7 @@ const QuestionListGuidePage = () => (
                                 숙련기술 (생산·품질 등 숙련 노하우 기반)
                             </ChipRadio>
                         </ChipRadioGroup>
-                        <QuestionList start={8}>
+                        <QuestionList>
                             <QuestionItem align="control">
                                 신청기술의 기술성숙도(TRL)는
                                 <Select>
@@ -516,8 +521,8 @@ const QuestionListGuidePage = () => (
                         전체 너비 입력
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        문장 대신 입력 컴포넌트만 두면 본문 열의 전체 너비를 사용합니다. 번호 없는 안내 제목·캡션은 목록
-                        위에 함께 배치할 수 있습니다.
+                        문장 대신 입력 컴포넌트만 두면 본문이 전체 너비를 사용합니다. 안내 제목·캡션은 목록 위에 함께
+                        배치할 수 있습니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 rounded-md border p-6">
@@ -530,7 +535,7 @@ const QuestionListGuidePage = () => (
                                 기술구분(전문/숙련)·[10]·[11] 응답에 따라 위 보기가 자동으로 달라집니다.
                             </QuestionGroupHeaderDescription>
                         </QuestionGroupHeader>
-                        <QuestionList start={23}>
+                        <QuestionList>
                             <QuestionItem align="control" contentClassName="w-full">
                                 <Select>
                                     <SelectTrigger size="md" aria-label="평가 항목" className="w-full">
