@@ -10,7 +10,7 @@ import RepeatCardListDemo from './repeat-card-list-demo'
 
 export const metadata: Metadata = {title: '반복 입력 카드 (RepeatCard)'}
 
-const USAGE_CODE = `<RepeatCard title="경력1">
+const USAGE_CODE = `<RepeatCard title="경력1" headingLevel={3}>
   <FieldGrid>
     <Field id="career-1-company" label="근무처">
       <ClearableInput id="career-1-company" name="career-1-company" placeholder="근무처" />
@@ -93,6 +93,18 @@ const PROPS_ROWS = [
             '마지막 한 칸처럼 지울 수 없을 때 씁니다. 버튼을 감추지 않고 비활성으로 두어 자리가 흔들리지 않습니다.',
             <span key="t" className="font-mono">
                 boolean
+            </span>,
+        ],
+    },
+    {
+        key: 'headingLevel',
+        cells: [
+            <span key="k" className="text-primary font-mono">
+                headingLevel
+            </span>,
+            '카드 제목의 헤딩 레벨입니다. 기본값 4 는 카드 위에 소제목(h3)이 있을 때고, 폼 카드 제목(h2) 아래에 카드가 바로 오면 3 을 줍니다 — 레벨을 건너뛰면 스크린리더의 제목 목록에서 한 단계가 비어 보입니다.',
+            <span key="t" className="font-mono">
+                3 | 4
             </span>,
         ],
     },

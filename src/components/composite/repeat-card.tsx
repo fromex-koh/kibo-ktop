@@ -59,6 +59,9 @@ type RepeatCardProps = {
     // 지워도 칸이 사라지지 않고 값만 비워지는 상태(마지막 한 칸). 버튼 이름이 하는 일에 맞게 바뀐다.
     // 카드가 하나도 없는 화면을 만들지 않으면서, 사용자가 "이 칸은 안 쓴다" 로 되돌아갈 수 있게 한다.
     clearOnly?: boolean
+    // 제목의 헤딩 레벨. 카드 위에 소제목(h3)이 있으면 기본값 4 를 그대로 두고, 폼 카드 제목(h2) 아래에
+    // 카드가 바로 오면 3 을 준다 — 레벨을 건너뛰면 스크린리더의 제목 목록에서 한 단계가 비어 보인다[6.4.2].
+    headingLevel?: 3 | 4
     // 방금 추가된 칸 — 눌렀던 "행추가" 버튼이 아니라 새로 생긴 칸으로 포커스를 옮긴다[6.1.2].
     // (DOM 의 autoFocus 가 아니라 이 컴포넌트가 마운트 직후 한 번 제목에 포커스를 준다.)
     focusOnMount?: boolean
@@ -71,12 +74,14 @@ const RepeatCard = ({
     onDelete,
     deleteDisabled,
     clearOnly,
+    headingLevel = 4,
     focusOnMount,
     className,
     children,
     ...props
 }: RepeatCardProps) => {
     const titleRef = useRef<HTMLHeadingElement>(null)
+    const Heading = headingLevel === 3 ? 'h3' : 'h4'
 
     useEffect(() => {
         if (!focusOnMount) return
@@ -96,9 +101,14 @@ const RepeatCard = ({
         >
             <div className={repeatCardHeaderClassName}>
                 {/* 칸을 지웠을 때 사용처가 이웃 칸으로 포커스를 옮길 수 있도록 표식과 tabIndex 를 둔다. */}
-                <h4 ref={titleRef} data-slot="repeat-card-title" tabIndex={-1} className={repeatCardTitleClassName}>
+                <Heading
+                    ref={titleRef}
+                    data-slot="repeat-card-title"
+                    tabIndex={-1}
+                    className={repeatCardTitleClassName}
+                >
                     {title}
-                </h4>
+                </Heading>
                 <div className={repeatCardActionsClassName}>
                     <CollapsibleTrigger className={repeatCardToggleClassName}>
                         <span className={repeatCardToggleOpenOnlyClassName}>접기</span>

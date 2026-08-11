@@ -18,6 +18,8 @@ const RepeatCardListDemo = () => {
                     key={id}
                     ref={setCardRef(id)}
                     title={`경력${index + 1}`}
+                    // 가이드는 h2 섹션 바로 아래에 카드를 두므로 카드 제목이 h3 다[6.4.2].
+                    headingLevel={3}
                     focusOnMount={id === addedId}
                     deleteDisabled={isDeleteDisabled}
                     onDelete={() => removeCard(id)}
