@@ -1,6 +1,6 @@
 'use client'
 
-import {useId, type ComponentProps, type ReactNode} from 'react'
+import {useId, type ComponentProps, type MouseEvent, type ReactNode} from 'react'
 import {Checkbox} from '@/components/ui/checkbox'
 import {FieldLabel} from '@/components/ui/field'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
@@ -28,7 +28,7 @@ type SelectableCardBaseProps = {
     id?: string
     className?: string
     children: ReactNode
-    // 카드 클릭 시 실행한다. 선택값 변경 여부와 관계없이 호출된다.
+    // 카드 클릭 시 실행한다. 선택값 변경 여부와 관계없이 호출된다(이미 고른 카드를 다시 눌러도).
     onClick?: () => void
 }
 
@@ -53,6 +53,15 @@ type SelectableCardProps = SelectableCardRadioProps | SelectableCardCheckboxProp
 
 const SelectableCard = (props: SelectableCardProps) => {
     const {disabled, badges, labelClassName, id, className, children, onClick} = props
+    // Radix 는 폼 전송용으로 숨은 input 을 하나 두고, 값이 바뀌면 그 input 에 click 을 쏘아 맞춘다.
+    // 그 클릭이 라벨까지 올라오면 사용자가 카드를 다시 누른 것으로 읽혀 onClick 이 잘못 불린다
+    // (동의 범위가 확정되는 순간 동의 모달이 다시 열리던 원인). 보이는 컨트롤은 button 이므로
+    // input 에서 올라온 클릭만 걸러낸다.
+    const handleClick = (event: MouseEvent<HTMLLabelElement>) => {
+        if (event.target instanceof HTMLInputElement) return
+
+        onClick?.()
+    }
     const control = props.control ?? 'checkbox'
     const generatedId = useId()
     const controlId = id ?? generatedId
@@ -64,7 +73,7 @@ const SelectableCard = (props: SelectableCardProps) => {
             data-slot="selectable-card"
             data-disabled={disabled || undefined}
             htmlFor={controlId}
-            onClick={onClick}
+            onClick={handleClick}
             className={selectableCardVariants({
                 disabled: Boolean(disabled),
                 control,
