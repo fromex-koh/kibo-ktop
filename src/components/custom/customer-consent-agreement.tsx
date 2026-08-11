@@ -1,10 +1,10 @@
 'use client'
 
-import Link from 'next/link'
-import {createContext, useContext, useRef, useState, type ReactNode} from 'react'
+import {useRouter} from 'next/navigation'
+import {createContext, useContext, useRef, useState, type FormEvent, type ReactNode} from 'react'
 import {ConsentItem, ConsentList} from '@/components/composite/consent-list'
 import {ConsentTermsDetailButton} from '@/components/composite/consent-terms-detail-button'
-import {ConsentTermsDialogContent, OptionalConsentTermsDialogContent} from '@/components/composite/consent-terms-dialog'
+import {ConsentTermsStepDialogContent} from '@/components/composite/consent-terms-dialog'
 import {FormCard} from '@/components/composite/form-card'
 import {SelectableCard, SelectableCardGroup} from '@/components/composite/selectable-card'
 import {StepNavigation} from '@/components/composite/step-navigation'
@@ -143,7 +143,8 @@ type CustomerConsentContextValue = {
     setAnswer: (name: string, value: string) => void
     confirmations: Record<string, boolean>
     setConfirmation: (name: string, checked: boolean) => void
-    termsStep: TermsStep | null
+    termsStep: TermsStep
+    isTermsOpen: boolean
     isAllScopePending: boolean
     handleRequiredAgree: () => void
     handleOptionalAgree: () => void
@@ -166,7 +167,10 @@ const CustomerConsentProvider = ({children}: {children: ReactNode}) => {
     const [scope, setScope] = useState<string>(NO_SCOPE)
     // pendingScope는 모달에서 확인 중인 범위이며, termsStep이 모달 단계를 나타낸다.
     const [pendingScope, setPendingScope] = useState<string | null>(null)
-    const [termsStep, setTermsStep] = useState<TermsStep | null>(null)
+    // 여는 여부와 단계를 따로 둔다 — 닫을 때 단계까지 되돌리면, 사라지는 카드에 첫 단계(필수) 내용이
+    // 잠깐 그려져 모달이 한 번 더 뜬 것처럼 보인다. 단계는 다음에 열 때 다시 정한다.
+    const [termsStep, setTermsStep] = useState<TermsStep>(REQUIRED_STEP)
+    const [isTermsOpen, setIsTermsOpen] = useState(false)
     // 모달을 동의로 닫았는지 확인해 일반 닫기와 구분한다.
     const hasAgreedRef = useRef(false)
     const [answers, setAnswers] = useState<ConsentAnswers>({})
@@ -174,9 +178,12 @@ const CustomerConsentProvider = ({children}: {children: ReactNode}) => {
     const [confirmations, setConfirmations] = useState<Record<string, boolean>>({})
 
     // 범위 선택 시 필수 동의 모달을 연다.
+    // 카드 한 번 누르면 라벨(onClick)과 라디오 선택(onValueChange) 양쪽에서 알려 오므로, 이미 열려 있으면
+    // 그대로 둔다 — 앞선 값을 덮어써 단계가 처음으로 되돌아가지 않게 하기 위해서다.
     const requestScope = (nextScope: string) => {
         setPendingScope(nextScope)
         setTermsStep(REQUIRED_STEP)
+        setIsTermsOpen(true)
     }
 
     const setAnswer = (name: string, value: string) => setAnswers((prev) => ({...prev, [name]: value}))
@@ -215,13 +222,14 @@ const CustomerConsentProvider = ({children}: {children: ReactNode}) => {
         applyScope(ALL_SCOPE)
     }
 
-    // 동의하지 않고 모달을 닫으면 범위와 진행 단계를 초기화한다.
+    // 동의하지 않고 모달을 닫으면 범위를 초기화한다. 단계(termsStep)는 그대로 두어 닫히는 동안 보던
+    // 내용이 유지되게 한다 — 다음에 열 때 requestScope 가 필수 단계로 되돌린다.
     const handleTermsOpenChange = (open: boolean) => {
         if (open) return
         if (!hasAgreedRef.current) setScope(NO_SCOPE)
         hasAgreedRef.current = false
         setPendingScope(null)
-        setTermsStep(null)
+        setIsTermsOpen(false)
     }
 
     const setConfirmation = (name: string, checked: boolean) => setConfirmations((prev) => ({...prev, [name]: checked}))
@@ -240,6 +248,7 @@ const CustomerConsentProvider = ({children}: {children: ReactNode}) => {
                 confirmations,
                 setConfirmation,
                 termsStep,
+                isTermsOpen,
                 isAllScopePending: pendingScope === ALL_SCOPE,
                 handleRequiredAgree,
                 handleOptionalAgree,
@@ -262,12 +271,14 @@ const CustomerConsentAgreement = () => {
         confirmations,
         setConfirmation,
         termsStep,
+        isTermsOpen,
         isAllScopePending,
         handleRequiredAgree,
         handleOptionalAgree,
         handleDecline,
         handleTermsOpenChange,
     } = useCustomerConsent()
+    const isOptionalStep = termsStep === OPTIONAL_STEP
 
     return (
         <div className="flex flex-col gap-10">
@@ -373,33 +384,65 @@ const CustomerConsentAgreement = () => {
                 ))}
             </div>
 
-            {/* 전체 동의는 하나의 Dialog에서 필수 → 선택 단계로 이어진다. */}
-            <Dialog open={termsStep !== null} onOpenChange={handleTermsOpenChange}>
-                {termsStep === OPTIONAL_STEP ? (
-                    <OptionalConsentTermsDialogContent onAgree={handleOptionalAgree} onDecline={handleDecline} />
-                ) : (
-                    <ConsentTermsDialogContent
-                        onAgree={handleRequiredAgree}
-                        onDecline={handleDecline}
-                        closeOnAgree={!isAllScopePending}
-                    />
-                )}
+            {/* 전체 동의는 하나의 Dialog에서 필수 → 선택 단계로 이어진다.
+                두 단계를 같은 컴포넌트로 그린다 — 단계마다 다른 컴포넌트를 쓰면 카드가 통째로 교체되며
+                등장 애니메이션이 다시 돌아 화면이 번쩍인다. */}
+            <Dialog open={isTermsOpen} onOpenChange={handleTermsOpenChange}>
+                <ConsentTermsStepDialogContent
+                    step={isOptionalStep ? OPTIONAL_STEP : REQUIRED_STEP}
+                    onAgree={isOptionalStep ? handleOptionalAgree : handleRequiredAgree}
+                    onDecline={handleDecline}
+                    closeOnAgree={isOptionalStep || !isAllScopePending}
+                />
             </Dialog>
         </div>
     )
 }
 
+// 동의를 마치고 넘어가는 다음 화면.
+// 버튼 이름은 "동의 후 인증서명" 이고 화면정의서에도 전자서명 화면이 따로 있지만 아직 만들어지지 않았다.
+// 그 화면이 생기면 이 경로만 전자서명으로 바꾸고, 전자서명이 끝난 뒤 2단계로 잇는다.
+const NEXT_PATH = '/corp/technology-evaluation/ktrs-fm/company-technology-info'
+
+// 동의 값을 한곳에서 넘기는 폼 — 화면의 모든 컨트롤(동의 범위·항목별 동의·확인 체크·추가 이메일)이
+// name 을 갖고 있어 FormData 하나로 모인다. 값을 따로 모으는 상태를 만들지 않는 이유다.
+//
+// [프론트엔드 연동] 아래 console.log 자리만 저장 API 호출로 바꾸면 된다. 검사(필수 동의 여부)와
+// 다음 화면 이동은 그대로 두면 되고, 화면(JSX)은 손댈 것이 없다.
+const CustomerConsentForm = ({formId, children}: {formId: string; children: ReactNode}) => {
+    const router = useRouter()
+
+    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        // FormData 의 값은 문자열 또는 File 이라, 문자열만 골라 넘긴다(이 폼엔 파일 입력이 없다).
+        const values = Object.fromEntries(
+            [...new FormData(event.currentTarget).entries()].filter(
+                (entry): entry is [string, string] => typeof entry[1] === 'string',
+            ),
+        )
+        console.log('[고객 정보 활용 동의] 제출 데이터', values)
+        router.push(NEXT_PATH)
+    }
+
+    return (
+        <form id={formId} noValidate onSubmit={handleSubmit}>
+            {children}
+        </form>
+    )
+}
+
 // 필수 항목과 확인 항목을 모두 동의한 경우에만 다음 단계로 이동할 수 있다.
-const CustomerConsentStepNavigation = () => {
+// 버튼이 폼 바깥(화면 맨 아래 CTA)에 있어 form 속성으로 위 폼과 잇는다 — HTML 표준 연결이다.
+// 1단계라 되돌아갈 앞 단계가 없어 [이전]을 두지 않는다 — 다음 버튼만 가운데에 온다.
+const CustomerConsentStepNavigation = ({formId}: {formId: string}) => {
     const {isComplete} = useCustomerConsent()
 
     return (
         <StepNavigation
             appearance="plain"
-            prev={{asChild: true, children: <Link href="/">이전</Link>}}
-            next={{children: '동의 후 인증서명', disabled: !isComplete}}
+            next={{type: 'submit', form: formId, children: '동의 후 인증서명', disabled: !isComplete}}
         />
     )
 }
 
-export {CustomerConsentAgreement, CustomerConsentProvider, CustomerConsentStepNavigation}
+export {CustomerConsentAgreement, CustomerConsentForm, CustomerConsentProvider, CustomerConsentStepNavigation}

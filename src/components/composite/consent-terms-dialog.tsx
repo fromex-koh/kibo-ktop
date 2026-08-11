@@ -85,80 +85,82 @@ type ConsentTermsDialogContentProps = {
     closeOnAgree?: boolean
 }
 
-const ConsentTermsDialogContent = ({
+// 두 단계(필수·선택)의 다른 점은 제목·본문·물음뿐이라 한 벌로 둔다.
+// 한 컴포넌트로 묶는 이유 — 필수 → 선택으로 넘어갈 때 카드가 다시 그려지지 않아야 한다. 서로 다른
+// 컴포넌트로 나눠 두면 단계가 바뀔 때 DialogContent 가 통째로 교체되면서 등장 애니메이션이 다시 돌아
+// 화면이 한 번 번쩍인다. 같은 컴포넌트면 글자만 바뀐다.
+const CONSENT_TERMS_STEPS = {
+    required: {
+        title: CONSENT_TITLE,
+        description: '필수 동의사항 전문을 스크롤하며 확인합니다.',
+        sections: CONSENT_SECTIONS,
+        question: CONSENT_QUESTION,
+    },
+    optional: {
+        title: OPTIONAL_CONSENT_TITLE,
+        description: '선택 동의사항 전문을 스크롤하며 확인합니다.',
+        sections: OPTIONAL_CONSENT_SECTIONS,
+        question: OPTIONAL_CONSENT_QUESTION,
+    },
+} as const
+
+type ConsentTermsStep = keyof typeof CONSENT_TERMS_STEPS
+
+const ConsentTermsStepDialogContent = ({
+    step,
     onAgree,
     onDecline,
     agreeLabel = '동의함',
     declineLabel = '동의하지 않음',
     closeOnAgree = true,
-}: ConsentTermsDialogContentProps) => (
-    <DialogContent>
-        <DialogHeader>
-            <DialogTitle>{CONSENT_TITLE}</DialogTitle>
-            <DialogDescription className="sr-only">필수 동의사항 전문을 스크롤하며 확인합니다.</DialogDescription>
-        </DialogHeader>
-        {/* 약관 본문만 스크롤하고 제목·버튼 영역은 고정한다. */}
-        <div className={cn(dialogBodyClassName, 'max-h-112 [scrollbar-gutter:stable_both-edges] gap-6')}>
-            {CONSENT_SECTIONS.map((section) => (
-                <ConsentTermsSection key={section.heading} section={section} />
-            ))}
-            <p className="typo-title-l-bold text-foreground text-center">{CONSENT_QUESTION}</p>
-        </div>
-        <DialogFooter>
-            <DialogClose asChild>
-                <Button variant="tertiary" size="xl" onClick={onDecline}>
-                    {declineLabel}
-                </Button>
-            </DialogClose>
-            {closeOnAgree ? (
+}: ConsentTermsDialogContentProps & {step: ConsentTermsStep}) => {
+    const {title, description, sections, question} = CONSENT_TERMS_STEPS[step]
+
+    return (
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>{title}</DialogTitle>
+                <DialogDescription className="sr-only">{description}</DialogDescription>
+            </DialogHeader>
+            {/* 약관 본문만 스크롤하고 제목·버튼 영역은 고정한다. */}
+            <div className={cn(dialogBodyClassName, 'max-h-112 [scrollbar-gutter:stable_both-edges] gap-6')}>
+                {sections.map((section) => (
+                    <ConsentTermsSection key={section.id} section={section} />
+                ))}
+                <p className="typo-title-l-bold text-foreground text-center">{question}</p>
+            </div>
+            <DialogFooter>
                 <DialogClose asChild>
+                    <Button variant="tertiary" size="xl" onClick={onDecline}>
+                        {declineLabel}
+                    </Button>
+                </DialogClose>
+                {closeOnAgree ? (
+                    <DialogClose asChild>
+                        <Button size="xl" onClick={onAgree}>
+                            {agreeLabel}
+                        </Button>
+                    </DialogClose>
+                ) : (
                     <Button size="xl" onClick={onAgree}>
                         {agreeLabel}
                     </Button>
-                </DialogClose>
-            ) : (
-                <Button size="xl" onClick={onAgree}>
-                    {agreeLabel}
-                </Button>
-            )}
-        </DialogFooter>
-    </DialogContent>
+                )}
+            </DialogFooter>
+        </DialogContent>
+    )
+}
+
+// 단계를 따로 부르는 화면(개별 팝업·가이드)을 위한 이름. 내용은 위와 같다.
+const ConsentTermsDialogContent = (props: ConsentTermsDialogContentProps) => (
+    <ConsentTermsStepDialogContent step="required" {...props} />
 )
 
 // 필수 동의 후 이어지는 선택 동의 모달.
-const OptionalConsentTermsDialogContent = ({
-    onAgree,
-    onDecline,
-    agreeLabel = '동의함',
-    declineLabel = '동의하지 않음',
-}: ConsentTermsDialogContentProps) => (
-    <DialogContent>
-        <DialogHeader>
-            <DialogTitle>{OPTIONAL_CONSENT_TITLE}</DialogTitle>
-            <DialogDescription className="sr-only">선택 동의사항 전문을 스크롤하며 확인합니다.</DialogDescription>
-        </DialogHeader>
-        <div className={cn(dialogBodyClassName, 'max-h-112 [scrollbar-gutter:stable_both-edges] gap-6')}>
-            {OPTIONAL_CONSENT_SECTIONS.map((section) => (
-                <ConsentTermsSection key={section.id} section={section} />
-            ))}
-            <p className="typo-title-l-bold text-foreground text-center">{OPTIONAL_CONSENT_QUESTION}</p>
-        </div>
-        <DialogFooter>
-            <DialogClose asChild>
-                <Button variant="tertiary" size="xl" onClick={onDecline}>
-                    {declineLabel}
-                </Button>
-            </DialogClose>
-            <DialogClose asChild>
-                <Button size="xl" onClick={onAgree}>
-                    {agreeLabel}
-                </Button>
-            </DialogClose>
-        </DialogFooter>
-    </DialogContent>
+const OptionalConsentTermsDialogContent = (props: ConsentTermsDialogContentProps) => (
+    <ConsentTermsStepDialogContent step="optional" {...props} />
 )
 
-// 개별 동의 항목의 약관 본문과 동의 결과를 보여주는 모달.
 const ConsentTermsSectionDialogContent = ({
     section,
     headingNumber,
@@ -205,5 +207,10 @@ const ConsentTermsSectionDialogContent = ({
     </DialogContent>
 )
 
-export {ConsentTermsDialogContent, ConsentTermsSectionDialogContent, OptionalConsentTermsDialogContent}
-export type {ConsentTermsDialogContentProps}
+export {
+    ConsentTermsDialogContent,
+    ConsentTermsSectionDialogContent,
+    ConsentTermsStepDialogContent,
+    OptionalConsentTermsDialogContent,
+}
+export type {ConsentTermsDialogContentProps, ConsentTermsStep}
