@@ -173,13 +173,14 @@ const InitialPasswordChangePage = () => (
 // 시안 아래쪽에 겹쳐 있는 CTA 두 개(placeholder "버튼명" · 다른 모달에서 복사된 "비밀번호 확인")는
 // 카드 높이(540 = 40+36+24+400+40) 밖으로 벗어나 있는 남은 요소라 옮기지 않는다. 주소를 고르면 닫히는
 // 흐름이라 닫기(X)로 충분하다.
-const PostcodeSearchPage = () => (
+// 같은 모달을 자가진단(기업정보 > 주소 찾기)도 쓴다 — 내용은 같고 제목만 그 화면의 버튼 이름을 따른다.
+const PostcodeSearchPage = ({title}: {title?: string}) => (
     <>
         <AuthFlowPage>
             <p className="typo-body-xl-regular text-label-foreground py-10">Kakao(다음) 우편번호 API를 사용한다.</p>
         </AuthFlowPage>
         {/* 화면 확인을 위해 모달을 열어 둔다 — 실제 화면에서는 "주소 검색" 버튼이 연다. */}
-        <PostcodeSearchDialog defaultOpen />
+        <PostcodeSearchDialog defaultOpen title={title} />
     </>
 )
 
