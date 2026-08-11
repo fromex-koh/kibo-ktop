@@ -34,12 +34,12 @@ const WAVE_EXCEPTIONS = [
     },
     {
         component: 'Select',
-        route: '/corp/notice/inquiry-create',
+        route: '/component-guide/select',
         owner: 'shadcn/ui → Radix UI Select',
         role: 'select[aria-hidden="true"]',
         message: 'Missing form label',
         evidence:
-            '폼 연동용 숨은 native select는 aria-hidden="true"·tabindex="-1"이며, 화면에 표시되는 SelectTrigger는 연결된 FieldLabel로 접근 가능한 이름을 제공',
+            '폼 연동용 숨은 native select는 aria-hidden="true"·tabindex="-1"이며, 화면에 표시되는 SelectTrigger는 연결된 FieldLabel로 접근 가능한 이름을 제공. 숨은 요소에는 라벨을 붙일 자리가 없고 DOM으로 직접 aria-label을 넣어도 radix가 다시 그릴 때 지워진다(2026-08-10 확인)',
     },
 ] as const
 
@@ -493,6 +493,19 @@ const ValidationExceptionsPage = () => (
                         <code className="font-mono">[data-icon] &gt; *</code>,{' '}
                         <code className="font-mono">[data-sonner-toast] &gt; *</code> 선택자도 동일한 sonner 주입 CSS에
                         포함되어 있어 같은 Parse Error로 분류합니다.
+                    </p>
+                    <p>
+                        <code className="font-mono">--scale</code> 을 쓰는 뒤 선언들도 같은 규칙 안에서 잇달아
+                        보고됩니다 — <code className="font-mono">scale(calc(-1 * var(--scale)))</code> 와{' '}
+                        <code className="font-mono">height: var(--front-toast-height)</code> 입니다. 검사기가 앞의
+                        커스텀 프로퍼티에서 파싱을 멈춘 뒤 같은 블록의 남은 선언을 함께 오류로 표시하는 것이라, 원인은
+                        위와 하나입니다. 2026-08-10{' '}
+                        <code className="font-mono">/corp/technology-evaluation/ktrs-fm/company-technology-info</code>{' '}
+                        에서 재확인했습니다 — <code className="font-mono">next build</code> 산출물(289KB)에{' '}
+                        <code className="font-mono">type=&quot;text/css&quot;</code> ·{' '}
+                        <code className="font-mono">data-sonner-toast</code> ·{' '}
+                        <code className="font-mono">front-toast-height</code> 가 모두 0건이고, 렌더 후 DOM 의 sonner
+                        스타일(14,859자)에만 존재합니다.
                     </p>
                 </section>
 
