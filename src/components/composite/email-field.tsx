@@ -1,6 +1,6 @@
 'use client'
 
-import {useId, useRef, useState} from 'react'
+import {useEffect, useId, useRef, useState} from 'react'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import {Input} from '@/components/ui/input'
 import {cn} from '@/lib/utils'
@@ -50,6 +50,7 @@ const EmailField = ({
     className,
 }: EmailFieldProps) => {
     const fieldId = useId()
+    const fieldRef = useRef<HTMLDivElement>(null)
     const domainRef = useRef<HTMLInputElement>(null)
     const [localPart, setLocalPart] = useState(defaultLocalPart)
     const [domain, setDomain] = useState(defaultDomain)
@@ -85,9 +86,27 @@ const EmailField = ({
         domainRef.current?.focus()
     }
 
+    useEffect(() => {
+        const field = fieldRef.current
+        if (!field) return
+
+        // Radix가 옵션 등록 과정에서 native select를 교체하므로 새로 생성된 요소에도 이름을 다시 연결한다.
+        const labelNativeSelect = () => {
+            field
+                .querySelectorAll<HTMLSelectElement>('select[aria-hidden="true"]')
+                .forEach((select) => select.setAttribute('aria-label', '이메일 도메인 선택'))
+        }
+
+        labelNativeSelect()
+        const observer = new MutationObserver(labelNativeSelect)
+        observer.observe(field, {childList: true, subtree: true})
+
+        return () => observer.disconnect()
+    }, [])
+
     return (
         // 모바일(768 미만) 시안은 [아이디 @ 도메인] 아래 줄에 셀렉트가 전체 폭으로 오고 간격이 8 이다.
-        <div className={cn('flex flex-wrap items-center gap-2 md:gap-6', className)}>
+        <div ref={fieldRef} className={cn('flex flex-wrap items-center gap-2 md:gap-6', className)}>
             <div className="flex min-w-0 flex-1 items-center gap-2">
                 <Input
                     id={`${fieldId}-local-part`}
