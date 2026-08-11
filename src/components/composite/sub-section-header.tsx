@@ -21,11 +21,7 @@ const SubSectionHeader = ({className, ...props}: ComponentPropsWithoutRef<'div'>
 )
 
 const SubSectionHeaderTitle = ({className, children, ...props}: ComponentPropsWithoutRef<'h3'>) => (
-    <h3
-        data-slot="sub-section-header-title"
-        className={cn('typo-title-l-bold text-foreground text-balance', className)}
-        {...props}
-    >
+    <h3 data-slot="sub-section-header-title" className={cn('typo-title-l-bold text-foreground', className)} {...props}>
         {children}
     </h3>
 )
