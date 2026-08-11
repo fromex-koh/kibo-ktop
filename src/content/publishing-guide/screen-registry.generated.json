@@ -75,22 +75,22 @@
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-consent-popup",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature",
@@ -103,106 +103,106 @@
             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-info-industry-code-search",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-info-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-representative-career-input-helper",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-transaction-type-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-technology-definition",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-restricted-industries",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-trl-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete-guarantee-application",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-selection",
@@ -761,43 +761,43 @@
             "key": "corp-notice-announcements",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-faq",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-inquiry-create",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-inquiry-create-inquiry-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.1",
+            "version": "v2.0.0",
             "isCurrent": true
         },
         {
             "key": "corp-notice-inquiry-create-privacy-consent-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-inquiry-create-inquiry-cancel",
@@ -810,8 +810,8 @@
             "key": "corp-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-information-consent",
@@ -852,22 +852,22 @@
             "key": "corp-terms",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-privacy-policy-easy-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-login-guide",
@@ -1517,43 +1517,43 @@
             "key": "org-notice-announcements",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-faq",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-inquiry-create",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-inquiry-create-inquiry-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.1",
+            "version": "v2.0.0",
             "isCurrent": true
         },
         {
             "key": "org-notice-inquiry-create-privacy-consent-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-inquiry-create-inquiry-cancel",
@@ -1566,8 +1566,8 @@
             "key": "org-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-technology-information-consent",
@@ -1608,22 +1608,22 @@
             "key": "org-terms",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-privacy-policy-easy-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-initial-password-change",
