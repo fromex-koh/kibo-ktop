@@ -311,7 +311,7 @@
 ### 고객정보활용동의 컴포넌트
 
 - 대상: src/components/custom/customer-consent-agreement.tsx
-- 적용: 동의 범위 선택, 필수·선택 동의 모달, 제출 데이터 수집 및 하단 CTA 연동을 포함한 신규 컴포넌트 추가
+- 적용: 동의 범위 선택, 필수·선택 동의 모달, 제출 데이터 수집 및 하단 CTA 연동을 포함하고, 폼 제출 이벤트 타입을 `SubmitEvent`로 적용한 신규 컴포넌트 추가
 
 ### 고객정보활용동의 필수·선택 동의 팝업 화면
 
@@ -397,7 +397,7 @@
     - src/components/composite/trl-guide-dialog.tsx
     - src/components/composite/trl-stages.ts
     - src/content/technology-evaluation/ktrs-fm-checklist.ts
-- 적용: KTRS-FM 체크리스트 데이터와 입력 폼, TRL·피인용 확인 안내, 최종 제출 확인 다이얼로그 및 전체 흐름을 확인하는 데모 화면 추가
+- 적용: KTRS-FM 체크리스트 데이터와 입력 폼, TRL·피인용 확인 안내, 최종 제출 확인 다이얼로그 및 전체 흐름을 확인하는 데모 화면을 추가하고, 폼 제출 이벤트 타입을 `SubmitEvent`로 적용
 
 ### KTRS-FM 체크리스트 서비스·안내 화면
 
