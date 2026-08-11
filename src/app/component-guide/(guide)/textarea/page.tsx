@@ -58,7 +58,7 @@ const FORM_CODE = `const inquiryRef = useRef<HTMLTextAreaElement>(null)
 const [inquiry, setInquiry] = useState('')
 const [inquiryError, setInquiryError] = useState(false)
 
-const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
   event.preventDefault()
   const nextError = inquiry.trim() === ''
   setInquiryError(nextError)

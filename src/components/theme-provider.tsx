@@ -3,8 +3,7 @@
 import {useEffect, useRef, useState} from 'react'
 import {usePathname} from 'next/navigation'
 import {ThemeProvider as NextThemesProvider, useTheme} from 'next-themes'
-import {MAIN_PAGE_THEME} from '@/constants/publishing-guide'
-import {THEME_STORAGE_KEY} from '@/constants/theme'
+import {MAIN_PAGE_THEME, THEME_STORAGE_KEY} from '@/constants/theme'
 import {THEME_ROUTE_CONFIG} from '@/constants/theme-routes'
 
 // 메인페이지에만 mainpage 테마를 적용한다.

@@ -124,7 +124,7 @@ const FORM_CODE = `const nameRef = useRef<HTMLInputElement>(null)
 const [nameError, setNameError] = useState(false)
 const [submittedData, setSubmittedData] = useState('')
 
-const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
   event.preventDefault()
   const formData = new FormData(event.currentTarget)
   const nextNameError = String(formData.get('applicantName') ?? '').trim() === ''

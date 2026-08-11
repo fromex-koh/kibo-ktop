@@ -102,7 +102,7 @@ const MOCK_FAQ_ITEMS: readonly FaqItem[] = [
 
 const CorpNoticeFaqPage = () => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
-        <div className="content-layout flex flex-col gap-10 pt-10 pb-25">
+        <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
             <PageTitleBar
                 title="자주 묻는 질문"
                 breadcrumb={

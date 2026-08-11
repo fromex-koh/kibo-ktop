@@ -279,3 +279,26 @@
     + [data-slot='segmented-control-item']::before {
     display: none; /* 선택된 navy 면 양옆은 모서리에 선이 겹쳐 숨긴다 */
 }
+
+/* 사용처: @/components/theme/sonner.variants.ts — sonner 가 600px 이하에서만 따로 주는 폭을 되돌린다.
+   유틸리티로 못 잡는 이유 — sonner 는 자기 CSS 를 레이어 없이 넣는데, 레이어 밖 규칙은 명시도와 무관하게
+   @layer 안의 유틸리티를 항상 이긴다. 그래서 같은 '레이어 없음' 자리에서 맞선다.
+   확인 버전 sonner 2.0.7(node_modules/sonner/dist/styles.css) — 라이브러리가 이 폭을 고치면 함께 지운다. */
+@media (max-width: 600px) {
+    /* 선택자를 두 번 적은 건 오타가 아니다 — sonner 는 자기 <style> 을 런타임에 넣어 우리 CSS 뒤에 오므로,
+       같은 명시도면 그쪽이 이긴다. 속성을 한 번 더 적어 명시도만 한 단 올린다([CD-001] !important 금지). */
+
+    /* 토스터 상자 — sonner 는 left·right(각 16)와 width:100% 를 함께 준다. 셋이 함께 지정되면 브라우저가
+       right 를 버려 상자가 화면 오른쪽으로 16 넘치고, 그만큼 토스트가 화면 가운데에서 밀린다.
+       폭을 auto 로 되돌리면 left·right 가 둘 다 살아 상자가 화면 안에 맞는다. */
+    [data-sonner-toaster][data-sonner-toaster] {
+        width: auto;
+    }
+
+    /* 토스트 — sonner 는 좁은 화면에서 토스트를 상자 폭만큼 늘인다. 시안의 토스트는 넓이가 내용만큼인
+       알약이라(theme 의 w-fit) 화면 폭과 무관하게 그 폭을 유지한다. 남는 자리는 theme 의 mx-auto 가
+       좌우로 나눠 가운데에 세운다. */
+    [data-sonner-toaster] [data-sonner-toast][data-sonner-toast] {
+        width: fit-content;
+    }
+}

@@ -44,40 +44,28 @@
             "description": "라이트·다크 테마 런타임 연결"
         },
         {
-            "name": "src/constants/theme.ts",
-            "path": "src/constants/theme.ts",
-            "kind": "file",
-            "description": "테마 저장 키와 공통 설정"
-        },
-        {
-            "name": "src/constants/publishing-guide.ts",
-            "path": "src/constants/publishing-guide.ts",
-            "kind": "file",
-            "description": "퍼블리싱 인덱스와 컴포넌트 가이드 공통 설정"
-        },
-        {
-            "name": "src/content/publishing-guide",
-            "path": "src/content/publishing-guide",
+            "name": "src/constants",
+            "path": "src/constants",
             "kind": "folder",
-            "description": "전달 시점의 릴리스·인계 자산·화면 현황 데이터"
+            "description": "테마·폼·기술평가·내비게이션 등 공통 상수"
         },
         {
-            "name": "src/lib/utils.ts",
-            "path": "src/lib/utils.ts",
-            "kind": "file",
-            "description": "cn 기반 className 병합"
+            "name": "src/content",
+            "path": "src/content",
+            "kind": "folder",
+            "description": "서비스 콘텐츠와 퍼블리싱 인덱스·화면 현황 데이터"
         },
         {
-            "name": "src/hooks/use-mobile.ts",
-            "path": "src/hooks/use-mobile.ts",
-            "kind": "file",
-            "description": "반응형 컴포넌트 동작 기준"
+            "name": "src/lib",
+            "path": "src/lib",
+            "kind": "folder",
+            "description": "className 병합·전화번호 포맷 등 공통 유틸리티"
         },
         {
-            "name": "src/hooks/use-theme-toggle.ts",
-            "path": "src/hooks/use-theme-toggle.ts",
-            "kind": "file",
-            "description": "라이트·다크 테마 전환 상태와 동작"
+            "name": "src/hooks",
+            "path": "src/hooks",
+            "kind": "folder",
+            "description": "반응형·테마 등 공통 상태와 동작 훅"
         },
         {
             "name": "src/types",
@@ -314,7 +302,7 @@
                             "label": "(1) 고객정보활용동의",
                             "screen": {
                                 "screenId": null,
-                                "status": "대기중",
+                                "status": "완료",
                                 "version": "미배포",
                                 "key": "corp-technology-evaluation-ktrs-fm-customer-consent"
                             },
@@ -322,14 +310,14 @@
                                 {
                                     "label": "필수/선택 동의 팝업",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-customer-consent-consent-popup"
                                 },
                                 {
                                     "label": "개별 상세 보기",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-customer-consent-detail"
                                 },
@@ -345,7 +333,7 @@
                         {
                             "label": "(2) 기업·기술정보 입력",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info"
                         },
@@ -355,14 +343,14 @@
                                 {
                                     "label": "업종코드 조회",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-company-info-industry-code-search"
                                 },
                                 {
                                     "label": "주소 찾기",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-company-info-address-search"
                                 }
@@ -374,7 +362,7 @@
                                 {
                                     "label": "입력도우미",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-representative-career-input-helper"
                                 }
@@ -386,21 +374,21 @@
                                 {
                                     "label": "실적인정 지식재산",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip"
                                 },
                                 {
                                     "label": "거래유형 설명",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-transaction-type-guide"
                                 },
                                 {
                                     "label": "전문기술/숙련기술 정의",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-technology-definition"
                                 }
@@ -410,7 +398,7 @@
                             "label": "(3) 체크리스트 입력",
                             "screen": {
                                 "screenId": null,
-                                "status": "대기중",
+                                "status": "완료",
                                 "version": "미배포",
                                 "key": "corp-technology-evaluation-ktrs-fm-checklist"
                             },
@@ -418,21 +406,21 @@
                                 {
                                     "label": "피인용 확인 메뉴얼",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual"
                                 },
                                 {
                                     "label": "보증제한 업종",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-checklist-restricted-industries"
                                 },
                                 {
                                     "label": "TRL 확인",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-checklist-trl-guide"
                                 }
@@ -441,7 +429,7 @@
                         {
                             "label": "(4) 최종 확인",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-technology-evaluation-ktrs-fm-final-review"
                         },
@@ -449,7 +437,7 @@
                             "label": "(5) 완료 화면",
                             "screen": {
                                 "screenId": null,
-                                "status": "대기중",
+                                "status": "완료",
                                 "version": "미배포",
                                 "key": "corp-technology-evaluation-ktrs-fm-complete"
                             },
@@ -457,14 +445,14 @@
                                 {
                                     "label": "은행 전송",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer"
                                 },
                                 {
                                     "label": "보증 신청",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-complete-guarantee-application"
                                 }
@@ -1001,7 +989,7 @@
                 {
                     "label": "탄소중립",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-carbon-neutrality"
                 }
@@ -1053,32 +1041,11 @@
                             "key": "corp-mypage-evaluation-results-general-analysis"
                         },
                         {
-                            "label": "심층분석",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-mypage-evaluation-results-in-depth-analysis"
-                        },
-                        {
                             "label": "은행전송",
                             "screenId": null,
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-mypage-evaluation-results-bank-transfer"
-                        },
-                        {
-                            "label": "기관전송",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-mypage-evaluation-results-institution-transfer"
-                        },
-                        {
-                            "label": "전송내역",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-mypage-evaluation-results-transfer-history"
                         }
                     ]
                 },
@@ -2091,7 +2058,7 @@
                 {
                     "label": "탄소중립",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-carbon-neutrality"
                 }

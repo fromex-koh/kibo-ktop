@@ -34,12 +34,12 @@ const WAVE_EXCEPTIONS = [
     },
     {
         component: 'Select',
-        route: '/corp/notice/inquiry-create',
+        route: '/component-guide/select',
         owner: 'shadcn/ui → Radix UI Select',
         role: 'select[aria-hidden="true"]',
         message: 'Missing form label',
         evidence:
-            '폼 연동용 숨은 native select는 aria-hidden="true"·tabindex="-1"이며, 화면에 표시되는 SelectTrigger는 연결된 FieldLabel로 접근 가능한 이름을 제공',
+            '폼 연동용 숨은 native select는 aria-hidden="true"·tabindex="-1"이며, 화면에 표시되는 SelectTrigger는 연결된 FieldLabel로 접근 가능한 이름을 제공. 숨은 요소에는 라벨을 붙일 자리가 없고 DOM으로 직접 aria-label을 넣어도 radix가 다시 그릴 때 지워진다(2026-08-10 확인)',
     },
 ] as const
 
@@ -323,29 +323,6 @@ const ValidationExceptionsPage = () => (
                         초과합니다. 화면 작성자가 별도 input을 추가한 결과는 아닙니다.
                     </p>
                 </section>
-
-                <section aria-labelledby="validation-radix-id" className="flex flex-col gap-2">
-                    <SectionHeader>
-                        <SectionHeaderTitle id="validation-radix-id">
-                            4. id 값 공백 오류 — NavigationMenu 값과 Radix 생성 ID
-                        </SectionHeaderTitle>
-                        <SectionHeaderDescription>화면 라벨을 메뉴 value로 사용한 결과</SectionHeaderDescription>
-                    </SectionHeader>
-                    <CodeBlock
-                        code={
-                            'Bad value “...trigger-플랫폼 소개” for attribute id on element button: An ID must not contain whitespace.'
-                        }
-                        language="text"
-                    />
-                    <p>
-                        <code className="font-mono">header.tsx</code>에서{' '}
-                        <code className="font-mono">NavigationMenuItem</code>의 <code className="font-mono">value</code>
-                        에 “플랫폼 소개”, “K-BIGx 보고서” 같은 화면 라벨을 전달합니다. Radix NavigationMenu가 이 값을
-                        trigger <code className="font-mono">id</code>에 포함하면서 공백이 들어간 ID가 생성됩니다. 화면
-                        라벨과 메뉴 식별자 값을 분리해야 하며, Radix가 생성한 최종 DOM에서 오류가 나타나지만 원인은
-                        프로젝트의 value 지정입니다.
-                    </p>
-                </section>
             </div>
         </BaseCard>
 
@@ -510,6 +487,25 @@ const ValidationExceptionsPage = () => (
                         <code className="font-mono">--scale: var(--toasts-before) * 0.05 + 1</code>(CSS Variables Level
                         1 유효 — 커스텀 프로퍼티 값은 임의 토큰열)로, 전 브라우저가 정상 해석합니다. HTML 문법 오류가
                         아니므로 KWCAG 8.1.1 위반에도 해당하지 않습니다.
+                    </p>
+                    <p>
+                        같은 스타일시트의 <code className="font-mono">[data-icon] &gt; svg</code>,{' '}
+                        <code className="font-mono">[data-icon] &gt; *</code>,{' '}
+                        <code className="font-mono">[data-sonner-toast] &gt; *</code> 선택자도 동일한 sonner 주입 CSS에
+                        포함되어 있어 같은 Parse Error로 분류합니다.
+                    </p>
+                    <p>
+                        <code className="font-mono">--scale</code> 을 쓰는 뒤 선언들도 같은 규칙 안에서 잇달아
+                        보고됩니다 — <code className="font-mono">scale(calc(-1 * var(--scale)))</code> 와{' '}
+                        <code className="font-mono">height: var(--front-toast-height)</code> 입니다. 검사기가 앞의
+                        커스텀 프로퍼티에서 파싱을 멈춘 뒤 같은 블록의 남은 선언을 함께 오류로 표시하는 것이라, 원인은
+                        위와 하나입니다. 2026-08-10{' '}
+                        <code className="font-mono">/corp/technology-evaluation/ktrs-fm/company-technology-info</code>{' '}
+                        에서 재확인했습니다 — <code className="font-mono">next build</code> 산출물(289KB)에{' '}
+                        <code className="font-mono">type=&quot;text/css&quot;</code> ·{' '}
+                        <code className="font-mono">data-sonner-toast</code> ·{' '}
+                        <code className="font-mono">front-toast-height</code> 가 모두 0건이고, 렌더 후 DOM 의 sonner
+                        스타일(14,859자)에만 존재합니다.
                     </p>
                 </section>
 

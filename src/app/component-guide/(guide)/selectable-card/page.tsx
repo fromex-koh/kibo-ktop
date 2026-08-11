@@ -239,7 +239,7 @@ const PROPS = [
         component: 'SelectableCard',
         name: 'badges',
         description:
-            '라벨 왼쪽에 Badge 등 보조 요소를 표시하는 슬롯입니다. 뱃지 텍스트도 컨트롤의 접근 가능한 이름에 포함됩니다.',
+            '카드 오른쪽 끝에 Badge 등 보조 요소를 표시하는 슬롯입니다. 뱃지 텍스트도 컨트롤의 접근 가능한 이름에 포함됩니다.',
         defaultValue: '-',
         control: 'ReactNode',
     },
@@ -291,7 +291,7 @@ const GuideCase = ({title, description, code, children}: GuideCaseProps) => (
 const SelectableCardGuidePage = () => (
     <GuidePageShell
         title="선택 카드 (SelectableCard)"
-        description="카드 전체가 하나의 선택 대상인 컨트롤입니다. 카드 어디를 눌러도 선택되고, 뱃지와 라벨이 왼쪽, 선택 컨트롤이 오른쪽 끝에 붙습니다. control 로 단일 선택(radio)과 독립 선택(checkbox)을 정하며 라벨 타이포도 함께 결정됩니다."
+        description="카드 전체가 하나의 선택 대상인 컨트롤입니다. 카드 어디를 눌러도 선택되고, 선택 컨트롤과 라벨이 왼쪽, 뱃지가 오른쪽 끝에 붙습니다. control 로 단일 선택(radio)과 독립 선택(checkbox)을 정하며 라벨 타이포도 함께 결정됩니다."
     >
         <BaseCard>
             <section aria-labelledby="sc-radio" className="flex flex-col gap-6">
@@ -330,7 +330,7 @@ const SelectableCardGuidePage = () => (
                     title="뱃지"
                     description={
                         <>
-                            항목의 성격을 알리는 뱃지를 라벨 왼쪽에 1개 또는 2개 붙입니다.{' '}
+                            항목의 성격을 알리는 뱃지를 카드 오른쪽 끝에 1개 또는 2개 붙입니다.{' '}
                             <code className="font-mono">badges</code> 슬롯으로 넘기며, 뱃지 텍스트도 라디오의 접근
                             가능한 이름에 포함됩니다.
                         </>

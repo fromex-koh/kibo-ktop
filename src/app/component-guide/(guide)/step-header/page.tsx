@@ -4,7 +4,7 @@ import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
 import {BaseCard} from '@/components/composite/base-card'
 import {StepHeader} from '@/components/composite/step-header'
-import {SELF_DIAGNOSIS_STEPS} from '@/constants/publishing-guide'
+import {SELF_DIAGNOSIS_STEPS} from '@/constants/technology-evaluation'
 
 export const metadata: Metadata = {title: '스텝 헤더 (StepHeader)'}
 

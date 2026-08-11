@@ -6,7 +6,8 @@ import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {cn} from '@/lib/utils'
-import {ConsentTermsDialogContent} from '@/components/composite/consent-terms-dialog'
+import {ConsentTermsDialogContent, OptionalConsentTermsDialogContent} from '@/components/composite/consent-terms-dialog'
+import {IndustryCodeDialog} from '@/components/composite/industry-code-dialog'
 import {Button} from '@/components/ui/button'
 import {
     Dialog,
@@ -113,12 +114,28 @@ const CASE_SPECS = [
         when: '확인용 한 칸. 시안은 필수 표시(*)를 꺼 둔 상태다.',
     },
     {
+        key: 'industry-code',
+        label: '검색 + 결과',
+        slots: 'Title + 안내 패널 + 검색 줄 + 결과(빈 상태)',
+        cta: '보조 + 주 · 반씩(246)',
+        close: '있음',
+        when: '코드·주소처럼 목록에서 골라야 하는 값. 위에 고르는 기준을 알리고, 검색해 나온 결과에서 하나를 골라 저장한다.',
+    },
+    {
         key: 'scroll',
         label: '필수 동의사항 (내부 스크롤)',
         slots: 'Title + 본문 스크롤 박스(440 고정)',
         cta: '보조 + 주 · 반씩(246)',
         close: '있음',
         when: '약관처럼 본문이 긴 경우. 제목과 CTA 는 고정하고 본문만 스크롤해 닫기·확인을 항상 보이게 한다.',
+    },
+    {
+        key: 'optional-scroll',
+        label: '선택 동의사항',
+        slots: '필수 동의사항과 동일',
+        cta: '보조 + 주 · 반씩(246)',
+        close: '있음',
+        when: '필수 동의를 마친 뒤 이어서 묻는 선택 항목. 구성은 같고 제목·본문·질문만 다르다.',
     },
 ] as const
 
@@ -393,7 +410,7 @@ const DialogGuidePage = () => (
                         케이스 큐레이션
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        자주 쓰는 8가지 구성입니다. 표에서 어떤 슬롯 조합인지 확인하고, 아래 같은 이름의 버튼을 눌러
+                        자주 쓰는 9가지 구성입니다. 표에서 어떤 슬롯 조합인지 확인하고, 아래 같은 이름의 버튼을 눌러
                         실제 동작을 보세요. 폭 588 · 반경 24 · 여백 40/40/24 는 모든 케이스가 공유합니다.
                     </p>
                 </div>
@@ -428,6 +445,12 @@ const DialogGuidePage = () => (
                             </DialogFooter>
                         </DialogContent>
                     </Dialog>
+
+                    {/* 검색 + 결과 — 목록에서 값을 골라 오는 모달. 실제 화면(자가진단 기업정보의 업종코드)이
+                        쓰는 composite 를 그대로 띄운다. */}
+                    <IndustryCodeDialog>
+                        <Button size="md">검색 + 결과</Button>
+                    </IndustryCodeDialog>
 
                     {/* 확인 — 주 동작 하나를 폭 전체로 */}
                     <Dialog>
@@ -634,6 +657,15 @@ const DialogGuidePage = () => (
                         </DialogTrigger>
                         {/* 본문·CTA 는 composite/consent-terms-dialog 가 갖는다 — 문의 등록 화면의 "내용보기"와 같은 내용이다. */}
                         <ConsentTermsDialogContent />
+                    </Dialog>
+
+                    {/* 선택 동의사항 — 필수 동의를 마친 뒤 이어서 여는 같은 모양의 모달이다.
+                        고객 정보 활용 동의 화면의 '전체 항목 동의'가 이 두 모달을 차례로 보여준다. */}
+                    <Dialog>
+                        <DialogTrigger asChild>
+                            <Button size="md">선택 동의사항</Button>
+                        </DialogTrigger>
+                        <OptionalConsentTermsDialogContent />
                     </Dialog>
                 </div>
             </section>

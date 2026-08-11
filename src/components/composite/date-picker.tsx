@@ -1,16 +1,28 @@
 'use client'
 
-import type {ChangeEvent, ComponentPropsWithoutRef, MouseEvent} from 'react'
-import {Children, isValidElement, useRef, useState} from 'react'
-import {format} from 'date-fns'
+import type {ChangeEvent, ComponentPropsWithoutRef, MouseEvent, ReactNode} from 'react'
+import {Children, isValidElement, useEffect, useRef, useState} from 'react'
+import {addYears, endOfMonth, format, isSameMonth, setMonth, startOfMonth} from 'date-fns'
 import {ko} from 'date-fns/locale'
 import {CalendarIcon} from 'lucide-react'
 import {Calendar} from '@/components/ui/calendar'
+import {calendarNavButtonClassName} from '@/components/theme/calendar.variants'
+import {Button} from '@/components/ui/button'
+import {ChevronLeft, ChevronRight} from 'lucide-react'
+import {Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from '@/components/ui/dialog'
+import {dialogBodyClassName} from '@/components/theme/dialog.variants'
+import {useIsMobile} from '@/hooks/use-mobile'
 import {InputGroup} from '@/components/ui/input-group'
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
 import {SelectText, type SelectTextOption} from '@/components/composite/select-text'
 import {
     datePickerCalendarPopoverClassName,
+    datePickerMobileCalendarClassName,
+    datePickerMobilePanelClassName,
+    datePickerMonthCellClassName,
+    datePickerMonthGridClassName,
+    datePickerMonthHeaderClassName,
+    datePickerMonthPanelClassName,
     datePickerDisabledValueClassName,
     datePickerGroupClassName,
     datePickerIconClassName,
@@ -21,6 +33,13 @@ import {
 } from '@/components/theme/date-picker.variants'
 import {cn} from '@/lib/utils'
 
+// 고르는 단위 — 'day' 는 날짜 달력, 'month' 는 12개월 격자다. 라벨이 "년월" 인 칸(근무 시작·종료 등)은
+// 일까지 고를 이유가 없어 month 를 쓴다. 값은 그 달의 1일로 담고 화면과 제출에는 연월만 쓴다.
+type DatePickerGranularity = 'day' | 'month'
+
+const MONTHS_PER_YEAR = 12
+const YEAR_RANGE = 100
+
 type DatePickerProps = {
     // 제어 사용: value 를 넘기면 표시 값은 항상 이 값이다.
     value?: Date
@@ -30,11 +49,22 @@ type DatePickerProps = {
     placeholder?: string
     disabled?: boolean
     readOnly?: boolean
+    /** 고를 수 있는 가장 이른 날 · 가장 늦은 날. 범위 밖의 날은 달력에서 눌리지 않고 월·연도 목록에도 나오지 않는다. */
+    minDate?: Date
+    maxDate?: Date
+    /**
+     * 고를 수는 있지만 폼 검사에서 걸리게 할 사유. 두 칸의 앞뒤 순서처럼 "왜 안 되는지" 를 알려 줘야 하는
+     * 규칙에 쓴다 — 달력에서 아예 막으면 사용자는 이유를 모른 채 고장으로 읽는다.
+     * 값을 주면 제출이 막히고, 그 문구가 브라우저 검사 메시지가 된다(setCustomValidity).
+     */
+    validationMessage?: string
     id?: string
     name?: string
     form?: string
     required?: boolean
     onInvalid?: ComponentPropsWithoutRef<'input'>['onInvalid']
+    /** 고르는 단위. month 면 달력 대신 12개월 격자가 열리고 값도 연월까지만 다룬다. */
+    granularity?: DatePickerGranularity
     /** 시안 date_input 의 large(48px) · medium(40px). Select 와 같은 축이다. */
     size?: 'lg' | 'md'
     className?: string
@@ -83,13 +113,99 @@ const CalendarNavigationButton = ({onClick, ...props}: ComponentPropsWithoutRef<
     return <button onClick={handleClick} {...props} />
 }
 
+// 12개월 격자 — 날짜 달력 자리에 들어가며 헤더 구성(이전/연도/다음)과 셀 크기를 달력과 맞춘다.
+// 경력처럼 20년 전 일을 적는 칸이 있어 연도는 버튼만으로 옮기지 않고 목록에서도 고를 수 있게 둔다.
+const MonthGrid = ({
+    month,
+    selected,
+    onMonthChange,
+    onSelect,
+    isMonthDisabled,
+    minDate,
+    maxDate,
+    className,
+}: {
+    month: Date
+    selected?: Date
+    onMonthChange: (month: Date) => void
+    onSelect: (month: Date) => void
+    isMonthDisabled: (month: Date) => boolean
+    minDate?: Date
+    maxDate?: Date
+    className?: string
+}) => {
+    const today = new Date()
+    const months = Array.from({length: MONTHS_PER_YEAR}, (_, index) => setMonth(startOfMonth(month), index))
+    const firstYear = (minDate ?? addYears(today, -YEAR_RANGE)).getFullYear()
+    const lastYear = (maxDate ?? addYears(today, YEAR_RANGE)).getFullYear()
+    const years = Array.from({length: Math.max(1, lastYear - firstYear + 1)}, (_, index) => firstYear + index)
+    const shiftYear = (step: number) => onMonthChange(addYears(month, step))
+
+    return (
+        <div className={cn(datePickerMonthPanelClassName, className)}>
+            <div className={datePickerMonthHeaderClassName}>
+                <Button
+                    type="button"
+                    variant="tertiary"
+                    size="icon-xs"
+                    aria-label="이전 연도"
+                    disabled={month.getFullYear() <= firstYear}
+                    className={calendarNavButtonClassName}
+                    onClick={() => shiftYear(-1)}
+                >
+                    <ChevronLeft aria-hidden="true" />
+                </Button>
+                <SelectText
+                    size="sm"
+                    aria-label="연도 선택"
+                    value={String(month.getFullYear())}
+                    options={years.map((year) => ({value: String(year), label: `${year}년`}))}
+                    onChange={(event) =>
+                        onMonthChange(addYears(month, Number(event.target.value) - month.getFullYear()))
+                    }
+                />
+                <Button
+                    type="button"
+                    variant="tertiary"
+                    size="icon-xs"
+                    aria-label="다음 연도"
+                    disabled={month.getFullYear() >= lastYear}
+                    className={calendarNavButtonClassName}
+                    onClick={() => shiftYear(1)}
+                >
+                    <ChevronRight aria-hidden="true" />
+                </Button>
+            </div>
+            <div className={datePickerMonthGridClassName}>
+                {months.map((candidate) => (
+                    <button
+                        key={candidate.getMonth()}
+                        type="button"
+                        disabled={isMonthDisabled(candidate)}
+                        data-selected={selected && isSameMonth(candidate, selected) ? true : undefined}
+                        data-current={isSameMonth(candidate, today) ? true : undefined}
+                        className={datePickerMonthCellClassName}
+                        onClick={() => onSelect(candidate)}
+                    >
+                        {format(candidate, 'MM월')}
+                    </button>
+                ))}
+            </div>
+        </div>
+    )
+}
+
 const DatePicker = ({
     value,
     defaultValue,
     onChange,
-    placeholder = '연도-월-일',
+    granularity = 'day',
+    placeholder,
     disabled,
     readOnly,
+    minDate,
+    maxDate,
+    validationMessage,
     id,
     name,
     form,
@@ -101,6 +217,12 @@ const DatePicker = ({
 }: DatePickerProps) => {
     const [open, setOpen] = useState(false)
     const triggerRef = useRef<HTMLButtonElement>(null)
+    // 폼에 값을 전달하는 입력 — 여기에 사유를 걸어야 브라우저 검사(checkValidity)가 함께 걸린다.
+    const valueInputRef = useRef<HTMLInputElement>(null)
+
+    useEffect(() => {
+        valueInputRef.current?.setCustomValidity(validationMessage ?? '')
+    }, [validationMessage])
     // 제어/비제어 겸용 — value 를 넘기면 그 값을, 안 넘기면 내부 상태를 쓴다.
     // (value 없이 쓰면 선택한 날짜가 화면에도, name 으로 제출되는 값에도 반영되지 않던 문제를 막는다.)
     const [internalDate, setInternalDate] = useState<Date | undefined>(defaultValue)
@@ -109,6 +231,20 @@ const DatePicker = ({
     // 패널을 다시 열면 이전 탐색 위치가 아니라 현재 선택값이 속한 월부터 보여준다.
     const [calendarMonth, setCalendarMonth] = useState(() => selectedDate ?? new Date())
 
+    // 범위 밖의 날은 달력에서 눌리지 않게 막는다 — 두 조건은 각각의 matcher 라 배열로 넘긴다
+    // (한 객체에 before·after 를 같이 넣으면 "두 날짜 사이" 라는 다른 뜻이 된다).
+    const disabledDays = [...(minDate ? [{before: minDate}] : []), ...(maxDate ? [{after: maxDate}] : [])]
+
+    // 단위에 따라 표시·제출 형식이 함께 바뀐다. 월 단위 값은 그 달의 1일로 담고 연월까지만 쓴다.
+    const isMonthly = granularity === 'month'
+    const valueFormat = isMonthly ? 'yyyy-MM' : 'yyyy-MM-dd'
+    const emptyText = placeholder ?? (isMonthly ? '연도-월' : '연도-월-일')
+    const toInputValue = (date?: Date) => (date ? format(date, valueFormat) : undefined)
+
+    // 월 칸이 고를 수 있는지 — 그 달이 통째로 범위 밖일 때만 막는다(오늘이 낀 달은 고를 수 있다).
+    const isMonthDisabled = (month: Date) =>
+        Boolean((minDate && endOfMonth(month) < minDate) || (maxDate && startOfMonth(month) > maxDate))
+
     const handleSelect = (date?: Date) => {
         if (!isControlled) setInternalDate(date)
         if (date) setCalendarMonth(date)
@@ -116,82 +252,130 @@ const DatePicker = ({
         setOpen(false)
     }
 
+    const handleSelectMonth = (month: Date) => handleSelect(startOfMonth(month))
+
     const handleOpenChange = (next: boolean) => {
         if (readOnly) return
         if (next && selectedDate) setCalendarMonth(selectedDate)
         setOpen(next)
     }
 
+    // 모바일에서는 팝오버 대신 모달로 띄운다 — 좁은 화면에서 달력이 트리거 옆에 뜨면 화면 밖으로
+    // 밀리거나 뒤 내용을 가린 채 어디를 누르는지 알기 어렵다. 모달은 화면 가운데에 서고, 포커스 트랩·
+    // Esc·바깥 클릭·포커스 복귀·배경 스크롤 잠금을 radix 가 맡는다[8.2.1].
+    const isMobile = useIsMobile()
+
+    const trigger = (
+        <button
+            ref={triggerRef}
+            type="button"
+            id={id}
+            disabled={disabled}
+            data-slot="input-group-control"
+            data-readonly={readOnly || undefined}
+            className={datePickerTriggerClassName}
+            {...props}
+        >
+            <span
+                className={cn(
+                    selectedDate ? datePickerValueClassName : datePickerPlaceholderClassName,
+                    disabled && datePickerDisabledValueClassName,
+                )}
+            >
+                {selectedDate ? format(selectedDate, valueFormat) : emptyText}
+            </span>
+            <CalendarIcon aria-hidden="true" className={datePickerIconClassName} />
+        </button>
+    )
+
+    // 달력 본체 — 팝오버든 모달이든 같은 것을 담는다.
+    const calendar = isMonthly ? (
+        <MonthGrid
+            month={calendarMonth}
+            selected={selectedDate}
+            onMonthChange={setCalendarMonth}
+            onSelect={handleSelectMonth}
+            isMonthDisabled={isMonthDisabled}
+            minDate={minDate}
+            maxDate={maxDate}
+            className={isMobile ? datePickerMobilePanelClassName : undefined}
+        />
+    ) : (
+        <Calendar
+            className={isMobile ? datePickerMobileCalendarClassName : undefined}
+            mode="single"
+            selected={selectedDate}
+            onSelect={handleSelect}
+            month={calendarMonth}
+            onMonthChange={setCalendarMonth}
+            disabled={disabledDays.length ? disabledDays : undefined}
+            startMonth={minDate}
+            endMonth={maxDate}
+            locale={ko}
+            // 시안 헤더는 [이전] 07월▾ 2026년▾ [다음] 이다 — 월·연도를 각각 고르는 두 드롭다운이라
+            // captionLayout="dropdown" 을 쓰고, 표기만 시안대로(월 2자리·연도 뒤 '년') 맞춘다.
+            navLayout="around"
+            captionLayout="dropdown"
+            formatters={{
+                formatMonthDropdown: (date) => format(date, 'MM월'),
+                formatYearDropdown: (year) => format(year, 'yyyy년'),
+            }}
+            // 드롭다운 접근성 이름은 라이브러리 기본값이 영어라 한국어로 바꾼다. [KWCAG 5.1.1]
+            labels={{
+                labelMonthDropdown: () => '월 선택',
+                labelYearDropdown: () => '연도 선택',
+            }}
+            classNames={{
+                dropdown_root: 'static rounded-none has-[:focus]:outline-0',
+                dropdown: 'static inset-auto opacity-100',
+                caption_label: 'sr-only',
+            }}
+            // react-day-picker 는 연도를 먼저 그리는데 시안은 월이 앞이다.
+            // 보기만 뒤집으면 읽는 순서가 어긋나므로(DOM 순서 = 읽기 순서 [KWCAG 7.3.1])
+            // 자식 순서 자체를 바꾼다.
+            components={{
+                Select: CalendarDropdownSelect,
+                PreviousMonthButton: CalendarNavigationButton,
+                NextMonthButton: CalendarNavigationButton,
+                DropdownNav: ({children, ...navProps}) => (
+                    <div {...navProps}>{Children.toArray(children).reverse()}</div>
+                ),
+            }}
+        />
+    )
+
+    const group = (triggerNode: ReactNode) => (
+        <InputGroup className={cn(datePickerGroupClassName, datePickerSizeClassName[size], className)}>
+            {triggerNode}
+        </InputGroup>
+    )
+
     return (
         <>
-            <Popover open={open} onOpenChange={handleOpenChange}>
-                <InputGroup className={cn(datePickerGroupClassName, datePickerSizeClassName[size], className)}>
-                    <PopoverTrigger asChild>
-                        <button
-                            ref={triggerRef}
-                            type="button"
-                            id={id}
-                            disabled={disabled}
-                            data-slot="input-group-control"
-                            data-readonly={readOnly || undefined}
-                            className={datePickerTriggerClassName}
-                            {...props}
-                        >
-                            <span
-                                className={cn(
-                                    selectedDate ? datePickerValueClassName : datePickerPlaceholderClassName,
-                                    disabled && datePickerDisabledValueClassName,
-                                )}
-                            >
-                                {selectedDate ? format(selectedDate, 'yyyy-MM-dd') : placeholder}
-                            </span>
-                            <CalendarIcon aria-hidden="true" className={datePickerIconClassName} />
-                        </button>
-                    </PopoverTrigger>
-                </InputGroup>
-                <PopoverContent className={datePickerCalendarPopoverClassName} align="start">
-                    <Calendar
-                        mode="single"
-                        selected={selectedDate}
-                        onSelect={handleSelect}
-                        month={calendarMonth}
-                        onMonthChange={setCalendarMonth}
-                        locale={ko}
-                        // 시안 헤더는 [이전] 07월▾ 2026년▾ [다음] 이다 — 월·연도를 각각 고르는 두 드롭다운이라
-                        // captionLayout="dropdown" 을 쓰고, 표기만 시안대로(월 2자리·연도 뒤 '년') 맞춘다.
-                        navLayout="around"
-                        captionLayout="dropdown"
-                        formatters={{
-                            formatMonthDropdown: (date) => format(date, 'MM월'),
-                            formatYearDropdown: (year) => format(year, 'yyyy년'),
-                        }}
-                        // 드롭다운 접근성 이름은 라이브러리 기본값이 영어라 한국어로 바꾼다. [KWCAG 5.1.1]
-                        labels={{
-                            labelMonthDropdown: () => '월 선택',
-                            labelYearDropdown: () => '연도 선택',
-                        }}
-                        classNames={{
-                            dropdown_root: 'static rounded-none has-[:focus]:outline-0',
-                            dropdown: 'static inset-auto opacity-100',
-                            caption_label: 'sr-only',
-                        }}
-                        // react-day-picker 는 연도를 먼저 그리는데 시안은 월이 앞이다.
-                        // 보기만 뒤집으면 읽는 순서가 어긋나므로(DOM 순서 = 읽기 순서 [KWCAG 7.3.1])
-                        // 자식 순서 자체를 바꾼다.
-                        components={{
-                            Select: CalendarDropdownSelect,
-                            PreviousMonthButton: CalendarNavigationButton,
-                            NextMonthButton: CalendarNavigationButton,
-                            DropdownNav: ({children, ...navProps}) => (
-                                <div {...navProps}>{Children.toArray(children).reverse()}</div>
-                            ),
-                        }}
-                    />
-                </PopoverContent>
-            </Popover>
+            {isMobile ? (
+                <Dialog open={open} onOpenChange={handleOpenChange}>
+                    {group(<DialogTrigger asChild>{trigger}</DialogTrigger>)}
+                    {/* 달력이 본문 전체라 설명 문단이 없다 — radix 에 설명 없음을 알린다. */}
+                    <DialogContent aria-describedby={undefined}>
+                        <DialogHeader>
+                            <DialogTitle>{isMonthly ? '연월 선택' : '날짜 선택'}</DialogTitle>
+                        </DialogHeader>
+                        {/* CTA 가 없으므로 아래 여백 40 은 본문이 갖는다. 고른 즉시 닫히므로 확인 버튼이 없다. */}
+                        <div className={cn(dialogBodyClassName, 'items-center pb-10')}>{calendar}</div>
+                    </DialogContent>
+                </Dialog>
+            ) : (
+                <Popover open={open} onOpenChange={handleOpenChange}>
+                    {group(<PopoverTrigger asChild>{trigger}</PopoverTrigger>)}
+                    <PopoverContent className={datePickerCalendarPopoverClassName} align="start">
+                        {calendar}
+                    </PopoverContent>
+                </Popover>
+            )}
             {name ? (
                 <input
-                    type="date"
+                    ref={valueInputRef}
+                    type={isMonthly ? 'month' : 'date'}
                     name={name}
                     form={form}
                     // 화면에 보이는 컨트롤의 값을 폼에 전달만 하는 입력이라 브라우저 자동완성 대상이 아니다.
@@ -199,10 +383,12 @@ const DatePicker = ({
                     required={required}
                     disabled={disabled}
                     readOnly={readOnly}
+                    min={toInputValue(minDate)}
+                    max={toInputValue(maxDate)}
                     tabIndex={-1}
-                    aria-label={placeholder}
+                    aria-label={emptyText}
                     className="sr-only"
-                    value={selectedDate ? format(selectedDate, 'yyyy-MM-dd') : ''}
+                    value={selectedDate ? format(selectedDate, valueFormat) : ''}
                     onChange={() => undefined}
                     onInvalid={(event) => {
                         onInvalid?.(event)

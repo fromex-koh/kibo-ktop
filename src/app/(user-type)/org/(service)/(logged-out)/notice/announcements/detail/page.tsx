@@ -29,7 +29,7 @@ const MOCK_NOTICE_DETAIL = {
 // SkipNav의 #main 도착 대상. 상세 본문은 NoticeDetail이 담당한다.
 const OrgNoticeAnnouncementDetailPage = () => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
-        <div className="content-layout flex flex-col gap-10 pt-10 pb-25">
+        <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
             <PageTitleBar
                 title="공지사항"
                 breadcrumb={

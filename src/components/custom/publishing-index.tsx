@@ -11,6 +11,8 @@ import {
     STATUS_VALUES,
     type UserType,
     type Status,
+    type ReleaseNoteChange,
+    type ReleaseNoteHandoff,
     type StructureGroup,
     type StructureNode,
 } from '@/content/publishing-guide'
@@ -63,6 +65,138 @@ const ReleaseNoteChange = ({change}: {change: string}) => {
 
     if (cursor < change.length) parts.push(change.slice(cursor))
     return <span className="min-w-0">{parts.length > 0 ? parts : change}</span>
+}
+
+const RELEASE_NOTE_COMMIT_MARKDOWN_LINK_PATTERN = /\[([^\]]+)\]\((https:\/\/github\.com\/[^)\s]+)\)/g
+
+const getReleaseNoteCommitLinks = (label: string, value: string): {href: string; text: string}[] => {
+    if (!['커밋', 'GitHub Diff', 'Diff 링크'].includes(label)) return []
+
+    const markdownLinks = Array.from(value.matchAll(RELEASE_NOTE_COMMIT_MARKDOWN_LINK_PATTERN), (match) => ({
+        href: match[2],
+        text: match[1],
+    }))
+    if (markdownLinks.length > 0) return markdownLinks
+    if (value.startsWith('https://github.com/')) return [{href: value, text: '변경사항 보기'}]
+
+    return []
+}
+
+const ReleaseNoteDetailValue = ({label, value}: {label: string; value: string}) => {
+    if (label === '대상' && value.includes('\n')) {
+        return (
+            <div className="flex min-w-0 flex-col gap-1">
+                {value.split('\n').map((target) => (
+                    <span key={target} className="block min-w-0 break-all">
+                        {target}
+                    </span>
+                ))}
+            </div>
+        )
+    }
+
+    const commitLinks = getReleaseNoteCommitLinks(label, value)
+
+    if (commitLinks.length > 0) {
+        return (
+            <span className="inline-flex max-w-full flex-wrap items-center">
+                {commitLinks.map((commitLink, index) => (
+                    <span key={`${commitLink.href}-${index}`} className="inline-flex min-w-0 items-center">
+                        <a
+                            href={commitLink.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-foreground focus-visible:ring-ring inline-flex max-w-full items-center gap-1 underline underline-offset-4 focus-visible:rounded-xs focus-visible:ring-2 focus-visible:outline-none"
+                        >
+                            <span className="truncate">{commitLink.text}</span>
+                            <ExternalLink aria-hidden="true" className="size-3.5 shrink-0" />
+                            <span className="sr-only"> (새 창)</span>
+                        </a>
+                        {index < commitLinks.length - 1 && <span className="mx-2">·</span>}
+                    </span>
+                ))}
+            </span>
+        )
+    }
+
+    return <ReleaseNoteChange change={value} />
+}
+
+const ReleaseNoteHandoff = ({change}: {change: ReleaseNoteHandoff}) => {
+    const handoffPresentation = {
+        diff: {label: 'Diff 확인', color: 'info'},
+        new: {label: '신규 추가', color: 'success'},
+        overwrite: {label: '덮어쓰기', color: 'secondary-purple'},
+    } as const
+    const {label, color} = handoffPresentation[change.mode]
+
+    return (
+        <div className="border-border bg-background/60 flex min-w-0 flex-col gap-2 rounded-sm border p-3">
+            <div className="flex min-w-0 flex-wrap items-center gap-2">
+                <Badge variant="solid-pastel" color={color} shape="round" size="sm">
+                    {label}
+                </Badge>
+                <strong className="typo-body-l-medium text-foreground min-w-0">{change.title}</strong>
+            </div>
+            <dl className="text-muted-foreground grid min-w-0 gap-1.5">
+                {change.details.map((detail) => (
+                    <div
+                        key={`${detail.label}-${detail.value}`}
+                        className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] gap-x-2"
+                    >
+                        <dt className="text-foreground-subtle shrink-0">{detail.label}</dt>
+                        <dd className="min-w-0 break-words">
+                            <ReleaseNoteDetailValue label={detail.label} value={detail.value} />
+                        </dd>
+                    </div>
+                ))}
+            </dl>
+        </div>
+    )
+}
+
+const isReleaseNoteHandoff = (change: ReleaseNoteChange): change is ReleaseNoteHandoff => typeof change !== 'string'
+
+const createOverwriteChange = (title: string, targets: string[]): ReleaseNoteHandoff => ({
+    type: 'handoff',
+    mode: 'overwrite',
+    title,
+    details: [
+        {label: '대상', value: targets.join('\n')},
+        {label: '적용', value: '지정된 경로를 현재 작업본으로 교체'},
+    ],
+})
+
+// 이전 릴리즈의 "덮어쓰기: 경로" 문장도 변경 이유별 전달 카드로 표시한다.
+const normalizeReleaseNoteChange = (change: ReleaseNoteChange): ReleaseNoteChange[] => {
+    if (typeof change !== 'string' || !change.startsWith('덮어쓰기:')) return [change]
+
+    const targets = change
+        .slice('덮어쓰기:'.length)
+        .split(',')
+        .map((target) => target.trim().replace(/^`|`$/g, ''))
+        .filter(Boolean)
+
+    if (targets.length === 0) return [change]
+
+    if (targets.some((target) => target.endsWith('/inquiry-complete'))) {
+        return [createOverwriteChange('문의 완료 화면 반응형 개선', targets)]
+    }
+
+    if (targets.includes('src/app/component-guide') && targets.includes('src/constants/header-navigation.ts')) {
+        return [
+            createOverwriteChange('개인정보 처리방침 디자인 누락 반영에 따른 컴포넌트 가이드 문서 업데이트', [
+                'src/app/component-guide',
+            ]),
+            createOverwriteChange('Header 탄소중립 외부 링크 연결', ['src/constants/header-navigation.ts']),
+        ]
+    }
+
+    if (targets.includes('src/components/custom/faq-list.tsx')) {
+        return [createOverwriteChange('FAQ 빈 상태(EmptyState) 처리 및 디자인 누락 반영', ['src/components'])]
+    }
+
+    return [createOverwriteChange('변경사항 반영 대상', targets)]
 }
 
 // 퍼블리싱 진행 상태 인덱스 데모. 데이터는 src/content/publishing-guide/publishing-index.json 단일 소스에서 온다.
@@ -269,23 +403,49 @@ const PublishingIndex = () => {
                                             >
                                                 <th
                                                     scope="row"
-                                                    className={`typo-body-l-medium w-28 px-4 py-3 ${
+                                                    className={`typo-body-l-medium w-28 px-4 py-3 align-top ${
                                                         index === 0 ? 'text-primary' : 'text-foreground'
                                                     }`}
                                                 >
                                                     {release.version}
                                                 </th>
-                                                <td className="typo-body-l-regular text-muted-foreground w-32 px-4 py-3">
+                                                <td className="typo-body-l-regular text-muted-foreground w-32 px-4 py-3 align-top">
                                                     <time dateTime={release.releasedAt}>{release.releasedAt}</time>
                                                 </td>
                                                 <td className="typo-body-l-regular text-foreground-subtle px-4 py-3">
-                                                    <ul className="flex list-none flex-col gap-1">
-                                                        {release.changes.map((change) => (
-                                                            <li key={change} className="flex">
-                                                                <ListMarker />
-                                                                <ReleaseNoteChange change={change} />
-                                                            </li>
-                                                        ))}
+                                                    <ul className="flex list-none flex-col gap-2">
+                                                        {release.changes
+                                                            .flatMap(normalizeReleaseNoteChange)
+                                                            .map((displayChange, changeIndex) => {
+                                                                const key =
+                                                                    typeof displayChange === 'string'
+                                                                        ? displayChange
+                                                                        : `${displayChange.mode}-${displayChange.title}`
+
+                                                                return (
+                                                                    <li
+                                                                        key={`${key}-${changeIndex}`}
+                                                                        className={
+                                                                            isReleaseNoteHandoff(displayChange)
+                                                                                ? ''
+                                                                                : 'flex'
+                                                                        }
+                                                                    >
+                                                                        {isReleaseNoteHandoff(displayChange) ? (
+                                                                            <ReleaseNoteHandoff
+                                                                                change={displayChange}
+                                                                            />
+                                                                        ) : (
+                                                                            <>
+                                                                                <ListMarker />
+                                                                                <ReleaseNoteChange
+                                                                                    change={displayChange}
+                                                                                />
+                                                                            </>
+                                                                        )}
+                                                                    </li>
+                                                                )
+                                                            })}
                                                     </ul>
                                                 </td>
                                             </tr>

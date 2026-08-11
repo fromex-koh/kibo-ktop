@@ -5,7 +5,7 @@ import {cva} from 'class-variance-authority'
 // 선택 시 Bold 로 바뀌는데, typo-* 는 variant 를 붙일 수 없는 일반 클래스라 카드 루트에서
 // title 슬롯을 내려 찍는다(선택자 특정성이 typo-* 보다 높아 순서와 무관하게 이긴다).
 const selectableCardVariants = cva(
-    'bg-surface flex cursor-pointer items-center gap-2 rounded-lg border-2 border-transparent px-10 py-6 transition-colors has-[>[data-slot=field]]:border-2 *:data-[slot=field]:p-0 has-data-checked:border-primary has-data-checked:bg-primary-subtle has-[:focus-visible]:outline-ring has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-solid',
+    'bg-surface flex cursor-pointer items-center gap-2 rounded-lg border-2 border-transparent px-4 py-6 md:px-10 transition-colors has-[>[data-slot=field]]:border-2 *:data-[slot=field]:p-0 has-data-checked:border-primary has-data-checked:bg-primary-subtle has-[:focus-visible]:outline-ring has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-solid',
     {
         variants: {
             disabled: {
@@ -35,17 +35,25 @@ const selectableCardTitleVariants = cva('text-current', {
     defaultVariants: {control: 'checkbox'},
 })
 
-const selectableCardFieldClassName = 'items-center gap-2 has-[>[data-slot=field-content]]:items-center'
+// 기본 라디오 카드는 컨트롤과 라벨을 중앙 정렬한다.
+const selectableCardFieldClassName =
+    'items-center gap-2 has-[>[data-slot=field-content]]:items-center has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-0'
+// 체크박스 라벨은 상단 정렬한다. 한 줄 라벨은 최소 높이를 컨트롤과 맞추고, 여러 줄 라벨은 첫 줄 상단에 맞춘다.
+const selectableCardCheckboxFieldClassName =
+    'items-start has-[>[data-slot=field-content]]:items-start has-[>[data-slot=field-content]]:[&>[role=checkbox],[role=radio]]:mt-0'
 const selectableCardControlClassName = 'focus-visible:outline-none'
 const selectableCardContentClassName = 'gap-0'
-// 뱃지는 라벨 왼쪽에 붙고 뱃지끼리는 4px(gap-1) 간격이다(Figma "타이틀+뱃지").
+const selectableCardCheckboxContentClassName = 'min-h-6 gap-0'
+// 뱃지는 카드 오른쪽 끝에 붙고 뱃지끼리는 4px(gap-1) 간격이다(Figma "타이틀+뱃지").
 const selectableCardBadgesClassName = 'flex shrink-0 items-center gap-1'
 
 export {
     selectableCardVariants,
     selectableCardFieldClassName,
+    selectableCardCheckboxFieldClassName,
     selectableCardControlClassName,
     selectableCardContentClassName,
+    selectableCardCheckboxContentClassName,
     selectableCardTitleVariants,
     selectableCardBadgesClassName,
 }

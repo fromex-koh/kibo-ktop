@@ -10,6 +10,7 @@ const READONLY_DATE = new Date(2026, 6, 13)
 const DatePickerFormDemo = () => {
     const [visitDate, setVisitDate] = useState<Date>()
     const [visitDateError, setVisitDateError] = useState(false)
+    const [startMonth, setStartMonth] = useState<Date>()
     const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
 
     return (
@@ -23,6 +24,7 @@ const DatePickerFormDemo = () => {
                     JSON.stringify({
                         visitDate: formData.get('visitDate'),
                         applicationDate: formData.get('applicationDate'),
+                        startMonth: formData.get('startMonth'),
                     }),
                 )
             }}
@@ -60,13 +62,27 @@ const DatePickerFormDemo = () => {
                 <DatePicker id="form-application-date" name="applicationDate" value={READONLY_DATE} readOnly />
             </Field>
 
+            {/* 연-월 칸 — 같은 폼에서 날짜 칸과 나란히 두어 제출 값 형식이 어떻게 다른지 함께 본다. */}
+            <Field className="max-w-90">
+                <FieldLabel htmlFor="form-start-month" className="text-foreground font-bold">
+                    시작 연월
+                </FieldLabel>
+                <DatePicker
+                    id="form-start-month"
+                    name="startMonth"
+                    granularity="month"
+                    value={startMonth}
+                    onChange={setStartMonth}
+                />
+            </Field>
+
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
                     <Button type="submit" variant="default" size="sm">
                         날짜 선택 확인
                     </Button>
                     <span className="typo-body-l-regular text-muted-foreground">
-                        선택 날짜와 readOnly 날짜가 yyyy-MM-dd 형식으로 제출됩니다.
+                        날짜 칸은 yyyy-MM-dd, 연-월 칸은 yyyy-MM 형식으로 제출됩니다.
                     </span>
                 </div>
                 <output

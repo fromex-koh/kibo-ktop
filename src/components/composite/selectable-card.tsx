@@ -1,11 +1,12 @@
 'use client'
 
-import {useId, type ComponentProps, type ReactNode} from 'react'
+import {useId, useRef, type ComponentProps, type PointerEvent, type ReactNode} from 'react'
 import {Checkbox} from '@/components/ui/checkbox'
-import {Field, FieldContent, FieldLabel} from '@/components/ui/field'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {
     selectableCardBadgesClassName,
+    selectableCardCheckboxContentClassName,
+    selectableCardCheckboxFieldClassName,
     selectableCardContentClassName,
     selectableCardControlClassName,
     selectableCardFieldClassName,
@@ -14,8 +15,8 @@ import {
 } from '@/components/theme/selectable-card.variants'
 import {cn} from '@/lib/utils'
 
-// PROJECT-COMPOSITE: shadcn Choice Card 패턴(FieldLabel > Field + Radio/Checkbox)을 프로젝트 선택 카드로 조합한다.
-// PROJECT-STYLE: 카드와 상태 스타일은 theme/selectable-card.variants.ts에서 관리한다.
+// 라디오·체크박스 컨트롤과 라벨·뱃지를 하나의 선택 카드로 제공한다.
+// 카드와 상태 스타일은 theme/selectable-card.variants.ts에서 관리한다.
 
 const SelectableCardGroup = (props: ComponentProps<typeof RadioGroup>) => <RadioGroup {...props} />
 
@@ -26,6 +27,8 @@ type SelectableCardBaseProps = {
     id?: string
     className?: string
     children: ReactNode
+    // 카드 클릭 시 실행한다. 선택값 변경 여부와 관계없이 호출된다(이미 고른 카드를 다시 눌러도).
+    onClick?: () => void
 }
 
 type SelectableCardRadioProps = SelectableCardBaseProps & {
@@ -37,7 +40,7 @@ type SelectableCardCheckboxProps = SelectableCardBaseProps & {
     control?: 'checkbox'
     value?: string
     checked?: boolean
-    // 비제어(uncontrolled) 초기 선택 — 상태를 들고 있지 않아도 되는 화면에서 기본 체크를 표현한다.
+    // 비제어 방식의 초기 선택 상태.
     defaultChecked?: boolean
     onCheckedChange?: (checked: boolean) => void
     name?: string
@@ -48,7 +51,18 @@ type SelectableCardCheckboxProps = SelectableCardBaseProps & {
 type SelectableCardProps = SelectableCardRadioProps | SelectableCardCheckboxProps
 
 const SelectableCard = (props: SelectableCardProps) => {
-    const {disabled, badges, labelClassName, id, className, children} = props
+    const {disabled, badges, labelClassName, id, className, children, onClick} = props
+    const controlRef = useRef<HTMLButtonElement>(null)
+
+    const handlePointerUp = (event: PointerEvent<HTMLDivElement>) => {
+        const controlElement = controlRef.current
+        if (!controlElement) return
+
+        // 실제 컨트롤과 링크 등은 자체 동작을 유지하고, 카드의 빈 영역만 컨트롤 클릭으로 전달한다.
+        if (event.target instanceof Node && controlElement.contains(event.target)) return
+        if (event.target instanceof Element && event.target.closest('a, button, input, select, textarea')) return
+        controlElement.click()
+    }
     const control = props.control ?? 'checkbox'
     const generatedId = useId()
     const controlId = id ?? generatedId
@@ -56,43 +70,40 @@ const SelectableCard = (props: SelectableCardProps) => {
     const badgesId = `${controlId}-badges`
 
     return (
-        <FieldLabel
+        <div
             data-slot="selectable-card"
             data-disabled={disabled || undefined}
+            onPointerUp={handlePointerUp}
             className={selectableCardVariants({
                 disabled: Boolean(disabled),
                 control,
                 className,
             })}
         >
-            {/* Figma 선택 카드 — 뱃지와 라벨이 왼쪽에 오고 선택 컨트롤이 카드 오른쪽 끝에 붙는다.
-                DOM 순서(뱃지 → 라벨 → 컨트롤) = 시각 순서라 읽기 순서도 일치한다([7.3.1]).
-                뱃지는 항목의 성격(필수·선택)을 알려주므로 접근 가능한 이름에도 라벨과 함께 넣는다. */}
-            <Field orientation="horizontal" className={selectableCardFieldClassName}>
-                {badges ? (
-                    <span id={badgesId} className={selectableCardBadgesClassName}>
-                        {badges}
-                    </span>
-                ) : null}
-                <FieldContent className={selectableCardContentClassName}>
-                    <span
-                        id={labelId}
-                        data-slot="selectable-card-title"
-                        className={cn(selectableCardTitleVariants({control}), labelClassName)}
-                    >
-                        {children}
-                    </span>
-                </FieldContent>
+            {/* 컨트롤·라벨·뱃지를 aria-labelledby로 연결해 카드의 접근 가능한 이름을 구성한다. */}
+            <span
+                role="group"
+                data-orientation="horizontal"
+                data-slot="field"
+                className={cn(
+                    'flex w-full flex-row gap-2',
+                    selectableCardFieldClassName,
+                    control === 'checkbox' && selectableCardCheckboxFieldClassName,
+                )}
+            >
                 {props.control === 'radio' ? (
                     <RadioGroupItem
+                        ref={controlRef}
                         id={controlId}
                         value={props.value}
                         disabled={disabled}
-                        aria-labelledby={badges ? `${badgesId} ${labelId}` : labelId}
+                        onClick={onClick}
+                        aria-labelledby={badges ? `${labelId} ${badgesId}` : labelId}
                         className={selectableCardControlClassName}
                     />
                 ) : (
                     <Checkbox
+                        ref={controlRef}
                         id={controlId}
                         name={props.name}
                         value={props.value}
@@ -102,12 +113,34 @@ const SelectableCard = (props: SelectableCardProps) => {
                         required={props.required}
                         form={props.form}
                         disabled={disabled}
-                        aria-labelledby={badges ? `${badgesId} ${labelId}` : labelId}
+                        onClick={onClick}
+                        aria-labelledby={badges ? `${labelId} ${badgesId}` : labelId}
                         className={selectableCardControlClassName}
                     />
                 )}
-            </Field>
-        </FieldLabel>
+                <span
+                    data-slot="field-content"
+                    className={cn(
+                        'flex flex-1 flex-col gap-0.5 leading-snug',
+                        selectableCardContentClassName,
+                        control === 'checkbox' && selectableCardCheckboxContentClassName,
+                    )}
+                >
+                    <span
+                        id={labelId}
+                        data-slot="selectable-card-title"
+                        className={cn(selectableCardTitleVariants({control}), labelClassName)}
+                    >
+                        {children}
+                    </span>
+                </span>
+                {badges ? (
+                    <span id={badgesId} className={selectableCardBadgesClassName}>
+                        {badges}
+                    </span>
+                ) : null}
+            </span>
+        </div>
     )
 }
 

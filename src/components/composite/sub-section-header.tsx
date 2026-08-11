@@ -3,8 +3,9 @@ import {Slot} from 'radix-ui'
 import {cn} from '@/lib/utils'
 
 // 섹션 안의 더 작은 하위 구획 제목+설명(+선택적 액션) 묶음 — SectionHeader 와 구조·색상·액션 유무
-// 조건은 동일하고 타이포만 다르다(SectionHeader: Heading/H4/bold → SubSectionHeader: Title/L/bold,
-// 한 단계 더 작음). 헤딩 레벨도 SectionHeader(h2) 보다 한 단계 아래인 h3. 텍스트 색은 동일하게
+// 조건은 동일하고 타이포만 한 단계씩 작다(제목 Heading/H4/bold → Title/L/bold, 설명 Body/XL → Body/L).
+// 제목만 낮추고 설명을 상위와 같은 크기로 두면 두 위계가 같은 무게로 읽혀 구획이 구분되지 않는다.
+// 헤딩 레벨도 SectionHeader(h2) 보다 한 단계 아래인 h3. 텍스트 색은 동일하게
 // text-foreground(제목)·text-foreground-subtle(설명). SubSectionHeaderAction 유무는 SectionHeader
 // 와 같은 방식(has-data-[slot=...] CSS 선택자)으로 처리한다.
 
@@ -20,11 +21,7 @@ const SubSectionHeader = ({className, ...props}: ComponentPropsWithoutRef<'div'>
 )
 
 const SubSectionHeaderTitle = ({className, children, ...props}: ComponentPropsWithoutRef<'h3'>) => (
-    <h3
-        data-slot="sub-section-header-title"
-        className={cn('typo-title-l-bold text-foreground text-balance', className)}
-        {...props}
-    >
+    <h3 data-slot="sub-section-header-title" className={cn('typo-title-l-bold text-foreground', className)} {...props}>
         {children}
     </h3>
 )
@@ -41,7 +38,7 @@ const SubSectionHeaderDescription = ({
     return (
         <Comp
             data-slot="sub-section-header-description"
-            className={cn('typo-body-xl-regular text-foreground-subtle', className)}
+            className={cn('typo-body-l-regular text-foreground-subtle', className)}
             {...props}
         />
     )

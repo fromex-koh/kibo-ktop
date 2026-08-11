@@ -14,11 +14,17 @@ import {cn} from '@/lib/utils'
 type ListMarkerType = 'unordered' | 'ordered'
 type ListMarkerLevel = 1 | 2
 
+type ListMarkerTypography = 'body' | 'inherit'
+
 type ListMarkerProps = {
     type?: ListMarkerType
     level?: ListMarkerLevel
     // ordered 일 때의 순번(1부터). level 1 은 숫자("3."), level 2 는 문자("c.")로 표기한다. unordered 는 무시.
     index?: number
+    // ordered 순번의 글자 사양. 기본 'body' 는 본문(body-xl·regular) 옆에 놓일 때고,
+    // 'inherit' 은 감싼 문장의 글자를 그대로 따른다 — 제목처럼 본문이 아닌 줄의 순번에 쓴다
+    // (같은 요소에 typo-* 를 두 개 겹치면 어느 쪽이 이길지 알 수 없다[PB-08]). unordered 는 무시.
+    typography?: ListMarkerTypography
     className?: string
 }
 
@@ -28,15 +34,24 @@ const ALPHABET_SIZE = 26
 const toAlpha = (index: number): string =>
     index >= 1 && index <= ALPHABET_SIZE ? String.fromCharCode(ALPHABET_START + index) : String(index)
 
-const ListMarker = ({type = 'unordered', level = 1, index = 1, className}: ListMarkerProps) => {
+const ListMarker = ({type = 'unordered', level = 1, index = 1, typography = 'body', className}: ListMarkerProps) => {
     // 24px(본문 행간) 높이 칸 — 글리프를 세로 중앙에 두어 옆 본문과 정렬한다.
     const box = 'inline-flex h-6 shrink-0 items-center select-none'
 
     if (type === 'ordered') {
         const label = level === 1 ? `${index}.` : `${toAlpha(index)}.`
         // 순번 글자 뒤 8px 여백까지 마커가 가진다(Figma 마커 폭 = 글자 폭 + 8).
+        // inherit 이면 글자 사양(크기·굵기·색)을 감싼 문장에서 받는다 — 칸 높이만 유지한다.
         return (
-            <span aria-hidden="true" className={cn(box, 'typo-body-xl-regular text-label-foreground pr-2', className)}>
+            <span
+                aria-hidden="true"
+                className={cn(
+                    box,
+                    typography === 'body' && 'typo-body-xl-regular text-label-foreground',
+                    'pr-2',
+                    className,
+                )}
+            >
                 {label}
             </span>
         )
@@ -56,4 +71,4 @@ const ListMarker = ({type = 'unordered', level = 1, index = 1, className}: ListM
 }
 
 export {ListMarker}
-export type {ListMarkerProps, ListMarkerType, ListMarkerLevel}
+export type {ListMarkerProps, ListMarkerType, ListMarkerLevel, ListMarkerTypography}

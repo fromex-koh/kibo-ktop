@@ -6,8 +6,11 @@
 // 갖고 있어 지우기만 해서는 안 되고 같은 변형에서 명시적으로 덮어야 한다.
 // 목록에서 고르는 컨트롤이라 값이 비어도 '선택해 주세요' 자체가 안내 문구 역할을 한다는 판단으로 보인다.
 // disabled 일 때만 흐려지도록 disabled:data-placeholder:text-disabled 는 남긴다.
+// PROJECT-STYLE: 검사에 걸린 칸(aria-invalid)은 focus-visible 이 아니라 focus 에도 포커스 표시를 낸다.
+// 제출 버튼을 마우스로 누른 뒤 첫 오류 칸으로 포커스를 옮기면 브라우저가 :focus-visible 을 켜지 않아
+// 표시가 보이지 않는다 — 어디로 이동했는지 알 수 없으면 안 된다[6.1.2].
 const selectTriggerClassName =
-    'group/select-trigger border-control bg-surface text-label-foreground focus-visible:border-primary outline-ring focus-visible:outline-ring data-[state=open]:border-primary data-[state=open]:outline-ring aria-invalid:border-destructive data-placeholder:text-label-foreground data-[size=default]:data-[project-size=lg]:h-control-h-md aria-readonly:bg-field-disabled disabled:border-control disabled:bg-field-disabled disabled:text-disabled disabled:data-placeholder:text-disabled disabled:hover:bg-field-disabled dark:disabled:hover:bg-field-disabled data-[size=default]:data-[project-size=md]:h-control-h-sm flex items-center justify-between gap-1.5 rounded-sm border whitespace-nowrap typo-body-xl-regular transition-colors outline-none select-none focus-visible:ring-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid disabled:cursor-not-allowed disabled:opacity-100 aria-invalid:ring-0 data-[size=default]:px-4 data-[project-size=md]:px-4 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 data-[state=open]:outline-2 data-[state=open]:outline-offset-2 data-[state=open]:outline-solid [&>svg]:size-5 [&_svg]:text-foreground disabled:[&_svg]:text-disabled [&_svg]:pointer-events-none [&_svg]:shrink-0'
+    'group/select-trigger border-control bg-surface text-label-foreground focus-visible:border-primary outline-ring focus-visible:outline-ring data-[state=open]:border-primary data-[state=open]:outline-ring aria-invalid:border-destructive data-placeholder:text-label-foreground data-[size=default]:data-[project-size=lg]:h-control-h-md aria-readonly:bg-field-disabled disabled:border-control disabled:bg-field-disabled disabled:text-disabled disabled:data-placeholder:text-disabled disabled:hover:bg-field-disabled dark:disabled:hover:bg-field-disabled data-[size=default]:data-[project-size=md]:h-control-h-sm flex items-center justify-between gap-1.5 rounded-sm border whitespace-nowrap typo-body-xl-regular transition-colors outline-none select-none focus-visible:ring-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid aria-invalid:focus:outline-2 aria-invalid:focus:outline-offset-2 aria-invalid:focus:outline-solid disabled:cursor-not-allowed disabled:opacity-100 aria-invalid:ring-0 data-[size=default]:px-4 data-[project-size=md]:px-4 *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-1.5 data-[state=open]:outline-2 data-[state=open]:outline-offset-2 data-[state=open]:outline-solid [&>svg]:size-5 [&_svg]:text-foreground disabled:[&_svg]:text-disabled [&_svg]:pointer-events-none [&_svg]:shrink-0'
 // PROJECT-STYLE: 시안 select_text(40006671:23491) — 면·테두리 없이 글자와 화살표만 두는 선택 컨트롤.
 // 목록은 시스템 드롭다운(네이티브 select)이 그리므로 여기서는 트리거 겉모습만 정의한다.
 // 상자 높이 대신 글자 줄 높이가 크기를 정한다 — lg 24/36 Bold · md 20/30 Medium · sm 16/24 Medium,
@@ -29,8 +32,14 @@ const selectTextIconClassName =
 // min-width 를 걸어 두는데, 그러면 패널이 그 위에 안쪽 여백 16 + 테두리 2 만큼 더 넓어진다(378).
 // 뷰포트의 min-width 를 풀고 패널 자체를 트리거 폭으로 잡아 시안과 맞춘다.
 // [SC-01] 예외: --radix-select-trigger-width 는 Radix 가 런타임에 재는 값이라 토큰으로 대체할 수 없다.
+// 목록은 Portal 로 body 끝에 붙는다 — 셸 기본 z-50 이면 모달(z-modal 1500) 위에서 열 때 카드 뒤로 숨는다.
+// 헤더(1200)·모달(1500)보다 위인 z-popover(1600)를 쓴다(DatePicker 달력과 같은 자리)[CD-002].
+//
+// 높이 — 시안(40006952:36462)의 목록은 208(위아래 여백 8 + 항목 48 × 4)이다. 항목이 더 많으면 그 높이에서
+// 멈추고 목록 안에서 스크롤한다. 화면 아래 공간이 208 보다 좁을 때는 radix 가 알려주는 남은 높이를 따른다 —
+// 둘 중 작은 값이라 화면 밖으로 밀려나지 않는다([SC-01] 예외: 토큰 --spacing 과 radix 런타임 변수를 묶는 계산).
 const selectContentClassName =
-    'border-subtle-2 w-(--radix-select-trigger-width) rounded-sm border p-2 ring-0 [&_[data-position=popper]]:min-w-0'
+    'border-subtle-2 z-popover max-h-[min(--spacing(52),var(--radix-select-content-available-height))] w-(--radix-select-trigger-width) rounded-sm border p-2 ring-0 [&_[data-position=popper]]:min-w-0'
 // PROJECT-STYLE: 옵션은 Figma 스펙(높이 48 · radius 8 · 좌우 여백 8 · 16px Regular)을 따른다.
 // hover/키보드 하이라이트는 primary-subtle(blue.50) 면, 선택된 옵션은 배경 없이
 // select-selected-foreground(navy.600) + Medium 로만 구분한다. 시안에 체크 아이콘이 없어

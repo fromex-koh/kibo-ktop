@@ -1,9 +1,11 @@
 'use client'
 
-import {useState} from 'react'
+import {useId, useState, type ReactNode} from 'react'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
+import {FieldError} from '@/components/ui/field'
 import {
     questionSelectClassName,
+    questionSelectSentenceClassName,
     questionSelectTriggerClassName,
     questionSelectValueClassName,
 } from '@/components/theme/question-list.variants'
@@ -29,9 +31,16 @@ type QuestionSelectProps = {
     before: string
     after: string
     name?: string
+    // 선택값을 바깥에서 들고 있을 때 쓴다(둘 다 넘기면 제어 컴포넌트로 동작한다).
+    value?: string
+    onValueChange?: (value: string) => void
     defaultValue?: string
     // 미선택 상태의 문구 — 문장 속 [ ] 와 트리거에 함께 쓴다.
     placeholder?: string
+    // 문장 끝에 이어 붙는 인라인 액션(예: "TRL 확인" 안내 버튼) — 시안은 같은 줄에 8 간격으로 둔다.
+    action?: ReactNode
+    // 검사에 걸렸을 때의 안내 문구 — 선택 상자 아래에 놓이고 컨트롤과 aria 로 이어진다[7.4.2].
+    error?: string
     className?: string
     triggerClassName?: string
 }
@@ -42,28 +51,43 @@ const QuestionSelect = ({
     before,
     after,
     name,
+    value: valueProp,
+    onValueChange,
     defaultValue = '',
     placeholder = '선택',
+    action,
+    error,
     className,
     triggerClassName,
 }: QuestionSelectProps) => {
-    const [value, setValue] = useState(defaultValue)
+    const errorId = useId()
+    const [internalValue, setInternalValue] = useState(defaultValue)
+    const value = valueProp ?? internalValue
+    const handleValueChange = (next: string) => {
+        setInternalValue(next)
+        onValueChange?.(next)
+    }
     const selected = options.find((option) => option.value === value)
     const selectedToken = selected ? (selected.token ?? selected.label) : placeholder
 
     return (
         <span data-slot="question-select" className={cn(questionSelectClassName, className)}>
-            <span>
-                {before}{' '}
-                <span data-slot="question-select-value" className={questionSelectValueClassName}>
-                    {`[${selectedToken}]`}
+            <span className={questionSelectSentenceClassName}>
+                <span>
+                    {before}{' '}
+                    <span data-slot="question-select-value" className={questionSelectValueClassName}>
+                        {`[${selectedToken}]`}
+                    </span>
+                    {after}
                 </span>
-                {after}
+                {action}
             </span>
-            <Select name={name} value={value} onValueChange={setValue}>
+            <Select name={name} value={value} onValueChange={handleValueChange}>
                 <SelectTrigger
                     size="md"
                     aria-label={label}
+                    aria-invalid={error ? true : undefined}
+                    aria-describedby={error ? errorId : undefined}
                     className={cn(questionSelectTriggerClassName, triggerClassName)}
                 >
                     <SelectValue placeholder={placeholder} />
@@ -76,6 +100,7 @@ const QuestionSelect = ({
                     ))}
                 </SelectContent>
             </Select>
+            {error ? <FieldError id={errorId}>{error}</FieldError> : null}
         </span>
     )
 }

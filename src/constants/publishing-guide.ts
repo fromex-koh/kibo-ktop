@@ -97,6 +97,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                         title: '프로젝트 폼 패턴',
                         items: [
                             {label: 'Chip', href: '/component-guide/chip'},
+                            {label: 'EmailField', href: '/component-guide/email-field'},
                             {label: 'QuestionGroupHeader', href: '/component-guide/question-group-header'},
                             {label: 'QuestionList', href: '/component-guide/question-list'},
                             {label: 'SelectableCard', href: '/component-guide/selectable-card'},
@@ -141,6 +142,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 items: [
                     {label: 'BaseCard', href: '/component-guide/base-card'},
                     {label: 'FormCard', href: '/component-guide/form-card'},
+                    {label: 'RepeatCard', href: '/component-guide/repeat-card'},
                     {label: 'OptionCard', href: '/component-guide/option-card'},
                     {label: 'Separator', href: '/component-guide/separator'},
                 ],
@@ -190,17 +192,6 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
     },
 ]
 
-// checkbox·radio·switch 등 horizontal Field 예시의 wrapper 포커스링.
-export const FIELD_FOCUS_RING =
-    'data-[orientation=horizontal]:has-[:focus-visible]:outline-2 data-[orientation=horizontal]:has-[:focus-visible]:outline-solid data-[orientation=horizontal]:has-[:focus-visible]:outline-ring data-[orientation=horizontal]:has-[:focus-visible]:outline-offset-2 data-[orientation=horizontal]:[&_:focus-visible]:outline-none has-[[data-slot=checkbox]]:rounded-2xs has-[[data-slot=radio-group-item]]:rounded-full has-[[data-slot=switch]]:rounded-full has-[[data-slot=field-content]]:rounded-sm'
-
-export const SELF_DIAGNOSIS_STEPS = [
-    '고객 정보 활용 동의',
-    '기업·기술정보 입력',
-    '체크리스트 입력',
-    '제출 완료',
-] as const
-
 // 퍼블리싱 시작 페이지의 콘텐츠 JSON 아이콘 이름을 실제 lucide 컴포넌트로 연결한다.
 export const ICON_REGISTRY = {
     Info,
@@ -224,7 +215,4 @@ export {
     SITE_URL,
 } from './site'
 
-// /component-guide/main-page 예시에서 tokens.css 의 .mainpage 스킨을 강제 적용한다.
-// 가이드 페이지를 이식하지 않으면 theme-provider.tsx 의 관련 분기와 함께 삭제한다.
-export const MAIN_PAGE_THEME = 'mainpage'
 export const MAIN_PAGE_PATH = '/component-guide/main-page'

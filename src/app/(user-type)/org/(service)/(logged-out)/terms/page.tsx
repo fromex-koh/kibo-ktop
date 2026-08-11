@@ -15,7 +15,7 @@ export const metadata: Metadata = {title: '이용약관'}
 // 약관 원문 연동 전까지 표시하는 임시 섹션은 실제 약관 콘텐츠로 교체한다.
 const OrgTermsPage = () => (
     <main id="main" tabIndex={-1} className="bg-surface flex-1">
-        <div className="content-layout flex flex-col gap-10 pt-10 pb-25">
+        <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
             <PageTitleBar
                 title="이용약관"
                 breadcrumb={

@@ -21,11 +21,7 @@ const SectionHeader = ({className, ...props}: ComponentPropsWithoutRef<'div'>) =
 )
 
 const SectionHeaderTitle = ({className, children, ...props}: ComponentPropsWithoutRef<'h2'>) => (
-    <h2
-        data-slot="section-header-title"
-        className={cn('typo-h4-bold text-foreground text-balance', className)}
-        {...props}
-    >
+    <h2 data-slot="section-header-title" className={cn('typo-h4-bold text-foreground', className)} {...props}>
         {children}
     </h2>
 )

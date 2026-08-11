@@ -124,7 +124,7 @@ const WORKFLOW = [
 const ComponentGuidePage = () => (
     <div className="max-w-content mx-auto flex w-full flex-col gap-10 px-6 py-12 md:py-16">
         <header className="flex flex-col gap-3">
-            <h1 className="typo-display-s-bold text-foreground text-balance">컴포넌트 가이드</h1>
+            <h1 className="typo-display-s-bold text-foreground">컴포넌트 가이드</h1>
             <p className="typo-body-xl-regular text-foreground-subtle max-w-3xl text-pretty">
                 디자인 토큰과 공통 컴포넌트의 실제 구현 기준을 확인합니다. 필요한 항목을 찾고, 적용 가능한 API와 상태를
                 검증하는 문서입니다.

@@ -115,7 +115,7 @@ const SubSectionHeaderGuidePage = () => (
                         사용 예시
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        Title/L/bold 제목 + Body/XL/Regular 설명, 간격은 gap-y-1.5(6px)입니다.
+                        Title/L/bold 제목 + Body/L/Regular 설명, 간격은 gap-y-1.5(6px)입니다.
                     </p>
                 </div>
                 <div className="border-border rounded-xl border p-6">
@@ -260,8 +260,9 @@ const SubSectionHeaderGuidePage = () => (
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
                         SectionHeader와 같은 CSS <code className="font-mono">has-data-[slot=...]</code> 조합 레이아웃을
-                        사용하지만, 하위 구획에 맞춰 제목은 Title/L/bold·h3, 액션은 tertiary/xs로 구성합니다. 설명은
-                        Body/XL/Regular과 foreground-subtle 토큰을 사용합니다.
+                        사용하지만, 하위 구획에 맞춰 제목은 Title/L/bold·h3, 액션은 tertiary/xs로 구성합니다. 설명도 한
+                        단계 작은 Body/L/Regular과 foreground-subtle 토큰을 사용합니다 — 상위 SectionHeader의 설명
+                        (Body/XL/Regular)과 같은 크기로 두면 두 위계가 같은 무게로 읽힙니다.
                     </p>
                 </div>
                 <CodeBlock code={STYLE_CODE} language="tsx" copyLabel="복사" />

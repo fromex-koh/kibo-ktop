@@ -47,6 +47,18 @@ toast('왼쪽 위에 표시됩니다.', {
 // 모든 토스트의 기본 위치를 지정하려면 Toaster에 전달합니다.
 <Toaster position="bottom-center" />`
 
+const AUTOSAVE_CODE = `// 자동저장 안내 — 문구·위치·아이콘·노출 시간은 컴포넌트가 갖고 있다.
+// 저장 요청이 끝날 때마다 저장된 시각만 넘기면 된다.
+import {showAutosaveToast} from '@/components/custom/autosave-toast'
+
+const saveDraft = async () => {
+  await api.saveCompanyTechnologyInfo(values)
+  showAutosaveToast(new Date())        // "오전 11:20 자동저장"
+}
+
+// 저장 기능이 붙기 전 화면 확인용 — 진입 시 한 번 띄운다.
+<AutosaveToast />`
+
 const COMPOSITION_CODE = `toast('새로운 알림이 있습니다.', {
   icon: <Bell aria-hidden="true" />,
 })
@@ -223,6 +235,24 @@ const ToastGuidePage = () => (
                 </div>
                 <ToastPositionDemo />
                 <CodeBlock code={POSITION_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="toast-autosave" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="toast-autosave" className="typo-h4-bold">
+                        화면에서 쓰는 예 — 자동저장 안내
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        자가진단 2단계(기업·기술정보 입력)의 자동저장 토스트입니다. 같은 모양을 여러 곳에서 쓰게 되므로{' '}
+                        <code className="font-mono">toast()</code> 를 화면마다 다시 조합하지 않고{' '}
+                        <code className="font-mono">showAutosaveToast()</code> 한 곳에 모아 두었습니다 — 문구 형식(오전
+                        11:20 자동저장) · 위치(상단 가운데, 헤더 아래 40) · 아이콘 · 노출 시간(1.5초)이 그 안에
+                        있습니다. 부르는 쪽은 저장이 끝난 시각만 넘깁니다.
+                    </p>
+                </div>
+                <CodeBlock code={AUTOSAVE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 

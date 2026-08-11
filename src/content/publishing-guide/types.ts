@@ -75,11 +75,23 @@ export type AssetVersion = {
     isCurrent: boolean // 이번 릴리스(최신 버전)에서 바뀐 자산이면 true — 하이라이트 표시에 쓰인다.
 }
 
-// main 릴리스마다 GitHub Actions가 누적하는 간략 변경 내역.
+// 릴리즈 노트의 일반 변경사항 또는 프론트엔드 전달 항목.
+export type ReleaseNoteHandoffMode = 'diff' | 'overwrite' | 'new'
+
+export type ReleaseNoteHandoff = {
+    type: 'handoff'
+    mode: ReleaseNoteHandoffMode
+    title: string
+    details: {label: string; value: string}[]
+}
+
+export type ReleaseNoteChange = string | ReleaseNoteHandoff
+
+// main 릴리스마다 GitHub Actions가 누적하는 변경 내역.
 export type ReleaseNote = {
     version: string
     releasedAt: string
-    changes: string[]
+    changes: ReleaseNoteChange[]
 }
 
 // publishing-index.json 원본의 assetVersions 항목 형태 — path 는 버전 계산용이라 화면엔 노출하지 않는다.

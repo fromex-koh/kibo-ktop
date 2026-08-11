@@ -5,7 +5,7 @@ import {SelectableCard, SelectableCardGroup} from '@/components/composite/select
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 
-// 라벨 왼쪽 뱃지 — 필수(파란 아웃라인)·선택(회색 아웃라인).
+// 카드 오른쪽 끝 뱃지 — 필수(파란 아웃라인)·선택(회색 아웃라인).
 const RequiredBadge = () => (
     <Badge variant="outline" color="info" shape="round">
         필수
@@ -45,7 +45,7 @@ export const RadioBasicDemo = () => {
     )
 }
 
-// 뱃지 — 라벨 왼쪽에 1개(필수) 또는 2개(필수·선택)를 붙인다.
+// 뱃지 — 카드 오른쪽 끝에 1개(필수) 또는 2개(필수·선택)를 붙인다.
 export const RadioBadgeDemo = () => {
     const [value, setValue] = useState('required')
     return (

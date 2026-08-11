@@ -1,6 +1,6 @@
 import type {Metadata} from 'next'
 import {cn} from '@/lib/utils'
-import {FIELD_FOCUS_RING} from '@/constants/publishing-guide'
+import {FIELD_FOCUS_RING} from '@/constants/form'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'

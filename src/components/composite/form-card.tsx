@@ -8,11 +8,8 @@ import {
 import {Card, CardContent} from '@/components/ui/card'
 import {cn} from '@/lib/utils'
 
-// 폼 카드 — kit Card 를 감싼 넓은 폼 섹션 카드(L2 composite). 패딩이 24px 인 일반 카드는 BaseCard 를 쓴다.
-// PROJECT-STYLE: shadcn Card의 로컬 spacing 변수(--card-spacing)를 사용해
-// Header/Content/Footer 간격과 상하 패딩을 FormCard 사양(40px)으로 맞춘다.
-// 좌우 102px 패딩은 FormCard 전용 레이아웃 사양이라 SectionHeader/CardContent 에서 별도로 확장한다.
-// 헤더는 SectionHeader 를 재사용해 타이포·색·액션 배치를 동일하게 유지한다.
+// 폼 섹션의 제목·설명·액션과 본문을 하나의 카드로 묶는다.
+// SectionHeader와 CardContent 간격은 --card-spacing으로 공유하며, 내부 여백은 화면 폭에 따라 조정한다.
 type FormCardProps = {
     title?: ReactNode
     subtitle?: ReactNode
@@ -22,15 +19,18 @@ type FormCardProps = {
 }
 
 const FormCard = ({title, subtitle, action, children, className}: FormCardProps) => (
-    <Card className={cn('[--card-spacing:--spacing(10)]', className)}>
+    <Card className={cn('py-6 [--card-spacing:--spacing(10)] md:py-10', className)}>
         {title || subtitle || action ? (
-            <SectionHeader className="px-25.5">
+            <SectionHeader className="px-4 md:px-10 xl:px-25.5">
                 {title ? <SectionHeaderTitle>{title}</SectionHeaderTitle> : null}
                 {subtitle ? <SectionHeaderDescription>{subtitle}</SectionHeaderDescription> : null}
-                {action ? <SectionHeaderAction>{action}</SectionHeaderAction> : null}
+                {/* 액션이 없으면 자리를 만들지 않는다 — SectionHeader 가 이 슬롯의 유무로 2열 여부를 정한다. */}
+                {action ? (
+                    <SectionHeaderAction className="flex items-center gap-4">{action}</SectionHeaderAction>
+                ) : null}
             </SectionHeader>
         ) : null}
-        <CardContent className="px-25.5">{children}</CardContent>
+        <CardContent className="px-4 md:px-10 xl:px-25.5">{children}</CardContent>
     </Card>
 )
 

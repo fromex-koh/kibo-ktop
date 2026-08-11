@@ -28,7 +28,8 @@ const buttonVariants = cva(
                 plain: 'border-0 text-current interactive:hover:text-icon-interactive-hover interactive:active:not-aria-[haspopup]:translate-y-0 focus-visible:outline-offset-4 disabled:text-disabled disabled:opacity-100',
                 destructive:
                     'bg-destructive text-destructive-foreground interactive:hover:bg-destructive/90 interactive:active:bg-destructive/80 disabled:border-disabled-subtle disabled:bg-control-disabled disabled:text-disabled',
-                // 밑줄 없는 기본 텍스트 버튼 — 헤더 유틸 링크·"내용보기"처럼 본문에 얹히는 인라인 액션에 쓴다.
+                // 밑줄 없는 기본 텍스트 버튼 — 헤더 유틸 링크처럼 본문에 얹히는 인라인 액션에 쓴다.
+                // 같은 "내용보기"라도 화면마다 밑줄 유무가 달라 시안을 보고 text/text-underline 을 고른다.
                 // PROJECT-STYLE: 눌림 시 1px 내려가는 base 동작은 되돌린다 — 시안(40006650:30781~30790)의
                 // pressed 는 default 와 완전히 같고, 면이 없어 글자만 흔들리는 것처럼 보인다(plain 과 같은 이유).
                 text: 'text-label-foreground no-underline interactive:active:not-aria-[haspopup]:translate-y-0 disabled:text-disabled-subtle disabled:opacity-100',

@@ -13,7 +13,7 @@ type GuidePageShellProps = {
 const GuidePageShell = ({title, description, children}: GuidePageShellProps) => (
     <div className="max-w-content mx-auto flex w-full flex-col gap-10 px-6 py-12 md:py-16">
         <header className="flex flex-col gap-y-1">
-            <h1 className="typo-display-s-bold text-foreground text-balance">{title}</h1>
+            <h1 className="typo-display-s-bold text-foreground">{title}</h1>
             <p className="typo-title-l-regular text-foreground-subtle">{description}</p>
         </header>
         {children}

@@ -279,13 +279,7 @@ const HeaderThemeToggle = () => {
     }
 
     return (
-        <button
-            type="button"
-            className={headerIconButtonClassName}
-            onClick={toggleTheme}
-            aria-label={label}
-            title={label}
-        >
+        <button type="button" className={headerIconButtonClassName} onClick={toggleTheme} aria-label={label}>
             {isDark ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}
         </button>
     )
@@ -380,7 +374,6 @@ const HeaderMenu = ({
                     data-menu-visible={open || isSheetVisible || undefined}
                     aria-label={label}
                     aria-expanded={open}
-                    title={label}
                     onKeyDown={(event) => {
                         if (!open || event.key !== 'Tab') return
 
@@ -458,7 +451,7 @@ const HeaderMenu = ({
 
                 {/* 메뉴 본문만 스크롤한다. */}
                 <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain">
-                    <div className="content-layout flex flex-col pb-10">
+                    <div className="grid-layout pb-10 *:col-span-full">
                         <nav
                             aria-label="전체 메뉴"
                             className="grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-3 md:gap-y-10 xl:grid-cols-5 xl:gap-x-0"
@@ -589,12 +582,12 @@ const HeaderContent = ({
             <div
                 className={cn(
                     'flex justify-end overflow-hidden transition-[max-height,opacity] duration-200 ease-in-out motion-reduce:transition-none',
-                    menuOpen ? 'max-h-dvh opacity-100' : 'max-h-0 opacity-0 lg:max-h-14 lg:opacity-100',
+                    menuOpen ? 'max-h-dvh opacity-100' : 'max-h-0 opacity-0 md:max-h-14 md:opacity-100',
                 )}
             >
                 {/* 묶음 사이 간격은 시안 40(xl)이다. 좁아질수록 줄이되 묶음 안쪽 간격(16)보다는 항상 크게 두어
                     [배지+이름·남은 시간]과 [링크]가 서로 다른 묶음으로 읽히게 한다. */}
-                <div className="flex flex-wrap items-center justify-end gap-4 py-2 lg:gap-8 xl:gap-10">
+                <div className="flex flex-wrap items-center justify-end gap-4 py-2 md:gap-8 xl:gap-10">
                     {user ? (
                         // 시안에서 [배지+이름]과 [남은 시간+연장]은 한 묶음(간격 16)이고, 그 묶음과 링크 사이가 40 이다.
                         // 부모 간격(xl 40)을 그대로 받으면 이름과 시간이 링크만큼 벌어져 두 묶음이 구분되지 않는다.
@@ -602,10 +595,7 @@ const HeaderContent = ({
                             <div className="grid w-fit max-w-full min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center">
                                 <UserTypeBadge userType={userType} />
                                 <p className="tracking-control-label flex w-max max-w-full min-w-0 items-center text-sm font-medium">
-                                    <span
-                                        className="block w-max max-w-full min-w-0 shrink truncate sm:max-w-46"
-                                        title={user.name}
-                                    >
+                                    <span className="block w-max max-w-full min-w-0 shrink truncate sm:max-w-46">
                                         {user.name}
                                     </span>
                                     <span className="ml-1 shrink-0 whitespace-nowrap">님</span>
@@ -646,7 +636,7 @@ const HeaderContent = ({
                 </div>
 
                 <div
-                    className={cn('hidden lg:flex', headerHiddenWhenMenuOpenClassName, menuOpen && 'opacity-0')}
+                    className={cn('hidden xl:flex', headerHiddenWhenMenuOpenClassName, menuOpen && 'opacity-0')}
                     inert={menuOpen || undefined}
                     aria-hidden={menuOpen || undefined}
                 >
@@ -655,76 +645,80 @@ const HeaderContent = ({
                         viewport={false}
                         value={openNavMenu}
                         onValueChange={setOpenNavMenu}
-                        className="hidden lg:flex"
+                        className="hidden xl:flex"
                     >
                         <NavigationMenuList className={compact ? 'gap-5' : 'gap-6 xl:gap-10'}>
-                            {navLinks.map((link) => (
-                                <NavigationMenuItem key={link.label} value={link.label}>
-                                    {link.items?.length ? (
-                                        // 하위 메뉴는 트리거와 드롭다운으로 구성한다.
-                                        <>
-                                            <NavigationMenuTrigger
-                                                onKeyDown={(event) => handleDropdownEntryKeyDown(event, link.label)}
+                            {navLinks.map((link, index) => {
+                                const navValue = `nav-${index}`
+
+                                return (
+                                    <NavigationMenuItem key={link.label} value={navValue}>
+                                        {link.items?.length ? (
+                                            // 하위 메뉴는 트리거와 드롭다운으로 구성한다.
+                                            <>
+                                                <NavigationMenuTrigger
+                                                    onKeyDown={(event) => handleDropdownEntryKeyDown(event, navValue)}
+                                                    className={cn(
+                                                        headerNavTriggerClassName,
+                                                        compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
+                                                    )}
+                                                >
+                                                    {link.label}
+                                                </NavigationMenuTrigger>
+                                                <NavigationMenuContent
+                                                    ref={enterDropdownOnMount}
+                                                    className={headerNavDropdownClassName}
+                                                >
+                                                    {link.items.map((item) => (
+                                                        <NavigationMenuLink
+                                                            key={item.label}
+                                                            asChild
+                                                            className={headerNavDropdownItemClassName}
+                                                        >
+                                                            <Link
+                                                                href={item.href}
+                                                                className="flex items-center gap-1"
+                                                                {...(item.external
+                                                                    ? {target: '_blank', rel: 'noopener noreferrer'}
+                                                                    : {})}
+                                                            >
+                                                                {item.label}
+                                                                {item.external ? (
+                                                                    <ExternalLink
+                                                                        aria-hidden="true"
+                                                                        className="size-icon-sm"
+                                                                    />
+                                                                ) : null}
+                                                            </Link>
+                                                        </NavigationMenuLink>
+                                                    ))}
+                                                </NavigationMenuContent>
+                                            </>
+                                        ) : (
+                                            <NavigationMenuLink
+                                                asChild
                                                 className={cn(
-                                                    headerNavTriggerClassName,
+                                                    'text-foreground min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent',
                                                     compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
                                                 )}
                                             >
-                                                {link.label}
-                                            </NavigationMenuTrigger>
-                                            <NavigationMenuContent
-                                                ref={enterDropdownOnMount}
-                                                className={headerNavDropdownClassName}
-                                            >
-                                                {link.items.map((item) => (
-                                                    <NavigationMenuLink
-                                                        key={item.label}
-                                                        asChild
-                                                        className={headerNavDropdownItemClassName}
-                                                    >
-                                                        <Link
-                                                            href={item.href}
-                                                            className="flex items-center gap-1"
-                                                            {...(item.external
-                                                                ? {target: '_blank', rel: 'noopener noreferrer'}
-                                                                : {})}
-                                                        >
-                                                            {item.label}
-                                                            {item.external ? (
-                                                                <ExternalLink
-                                                                    aria-hidden="true"
-                                                                    className="size-icon-sm"
-                                                                />
-                                                            ) : null}
-                                                        </Link>
-                                                    </NavigationMenuLink>
-                                                ))}
-                                            </NavigationMenuContent>
-                                        </>
-                                    ) : (
-                                        <NavigationMenuLink
-                                            asChild
-                                            className={cn(
-                                                'text-foreground min-h-11 rounded-none px-0 py-0 whitespace-nowrap hover:bg-transparent focus:bg-transparent',
-                                                compact ? 'typo-title-l-bold' : 'typo-title-xl-bold',
-                                            )}
-                                        >
-                                            <Link
-                                                href={link.href}
-                                                className="flex items-center gap-1"
-                                                {...(link.external
-                                                    ? {target: '_blank', rel: 'noopener noreferrer'}
-                                                    : {})}
-                                            >
-                                                {link.label}
-                                                {link.external ? (
-                                                    <ExternalLink aria-hidden="true" className="size-icon-lg" />
-                                                ) : null}
-                                            </Link>
-                                        </NavigationMenuLink>
-                                    )}
-                                </NavigationMenuItem>
-                            ))}
+                                                <Link
+                                                    href={link.href}
+                                                    className="flex items-center gap-1"
+                                                    {...(link.external
+                                                        ? {target: '_blank', rel: 'noopener noreferrer'}
+                                                        : {})}
+                                                >
+                                                    {link.label}
+                                                    {link.external ? (
+                                                        <ExternalLink aria-hidden="true" className="size-icon-lg" />
+                                                    ) : null}
+                                                </Link>
+                                            </NavigationMenuLink>
+                                        )}
+                                    </NavigationMenuItem>
+                                )
+                            })}
                         </NavigationMenuList>
                     </NavigationMenu>
                 </div>
@@ -823,7 +817,7 @@ const Header = ({
             )}
         >
             {/* 본문과 같은 content-layout으로 정렬선을 맞춘다. */}
-            <div className="content-layout">
+            <div className="grid-layout *:col-span-full">
                 <ResolvedHeaderContent
                     navLabel="주 메뉴"
                     overlay={overlay}

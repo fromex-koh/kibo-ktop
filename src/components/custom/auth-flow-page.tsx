@@ -5,6 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import serviceStatusIllustration from '@public/images/service-status/service-status-illustration.webp'
 import {ActionBar, ActionBarCenter} from '@/components/composite/action-bar'
+import {PostcodeSearchDialog} from '@/components/composite/postcode-search-dialog'
 import {Button} from '@/components/ui/button'
 import {
     Dialog,
@@ -23,7 +24,7 @@ import {cn} from '@/lib/utils'
 // 로그인 흐름 화면의 콘텐츠 영역만 비워 둔다. 실제 화면 내용은 서비스 연동 시 추가한다.
 const AuthFlowPage = ({children}: {children?: ReactNode}) => (
     <main id="main" tabIndex={-1} className="bg-surface flex-1">
-        <div className="content-layout min-h-full">{children}</div>
+        <div className="grid-layout *:col-span-full">{children}</div>
     </main>
 )
 
@@ -145,11 +146,11 @@ const LoginEndPage = () => (
                 </div>
             </div>
             <ActionBar>
-                <ActionBarCenter className="gap-4">
-                    <Button asChild variant="tertiary" size="xl">
+                <ActionBarCenter className="col-span-3 col-start-1 w-full flex-col gap-4 md:col-span-1 md:col-start-2 md:w-auto md:flex-row">
+                    <Button asChild variant="tertiary" size="xl" className="w-full md:w-auto">
                         <Link href="/">홈으로 이동</Link>
                     </Button>
-                    <Button asChild size="xl">
+                    <Button asChild size="xl" className="w-full md:w-auto">
                         <Link href="#">로그인</Link>
                     </Button>
                 </ActionBarCenter>
@@ -172,30 +173,14 @@ const InitialPasswordChangePage = () => (
 // 시안 아래쪽에 겹쳐 있는 CTA 두 개(placeholder "버튼명" · 다른 모달에서 복사된 "비밀번호 확인")는
 // 카드 높이(540 = 40+36+24+400+40) 밖으로 벗어나 있는 남은 요소라 옮기지 않는다. 주소를 고르면 닫히는
 // 흐름이라 닫기(X)로 충분하다.
-const PostcodeSearchDialog = () => (
-    // 화면 확인을 위해 모달을 열어 둔다.
-    <Dialog defaultOpen>
-        {/* 위젯이 들어올 자리라 설명 문단이 없다 — radix 에 설명 없음을 알린다. */}
-        <DialogContent aria-describedby={undefined}>
-            <DialogHeader>
-                <DialogTitle>우편번호 검색</DialogTitle>
-            </DialogHeader>
-            {/* CTA 가 없으므로 아래 여백 40 은 본문이 갖는다. */}
-            <div className={cn(dialogBodyClassName, 'pb-10')}>
-                <p className="bg-accent-subtle typo-title-l-bold text-foreground flex min-h-100 items-center justify-center text-center">
-                    Kakao(다음) 우편번호 검색 영역
-                </p>
-            </div>
-        </DialogContent>
-    </Dialog>
-)
-
-const PostcodeSearchPage = () => (
+// 같은 모달을 자가진단(기업정보 > 주소 찾기)도 쓴다 — 내용은 같고 제목만 그 화면의 버튼 이름을 따른다.
+const PostcodeSearchPage = ({title}: {title?: string}) => (
     <>
         <AuthFlowPage>
             <p className="typo-body-xl-regular text-label-foreground py-10">Kakao(다음) 우편번호 API를 사용한다.</p>
         </AuthFlowPage>
-        <PostcodeSearchDialog />
+        {/* 화면 확인을 위해 모달을 열어 둔다 — 실제 화면에서는 "주소 검색" 버튼이 연다. */}
+        <PostcodeSearchDialog defaultOpen title={title} />
     </>
 )
 
