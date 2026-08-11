@@ -5,7 +5,12 @@ import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
 import {FormTabTitle, type FormTabStatus} from '@/components/composite/form-tab-title'
-import {formTabsPickerPanelClassName, formTabsPickerRowClassName} from '@/components/theme/form-tabs.variants'
+import {
+    formTabsPickerCurrentRowClassName,
+    formTabsPickerPanelClassName,
+    formTabsTabletBarClassName,
+} from '@/components/theme/form-tabs.variants'
+import {cn} from '@/lib/utils'
 import FormTabsFormDemo from './form-tabs-form-demo'
 
 export const metadata: Metadata = {title: '폼 탭 (FormTabs)'}
@@ -160,15 +165,12 @@ const RESPONSIVE_ROWS = [
         key: 'md',
         cells: [
             'md~xl (768~1279)',
-            '세로 펼침 목록 — 접힌 섹션은 탭 행, 펼친 섹션은 행이 사라지고 폼 카드만 남습니다. (Collapsible)',
+            '현재 섹션 한 줄이 콘텐츠 열 안의 카드로 놓이고, 그 줄을 누르면 바로 아래로 항목 목록이 열립니다. (Popover)',
         ],
     },
     {
         key: 'mobile',
-        cells: [
-            'md 미만 (~767)',
-            '현재 섹션 한 줄이 헤더 아래에 고정되고, 그 줄을 누르면 바로 아래로 항목 목록이 열립니다. (Popover)',
-        ],
+        cells: ['md 미만 (~767)', '같은 방식이되 줄이 화면 폭을 채우고 헤더 아래에 고정됩니다. (Popover)'],
     },
 ]
 
@@ -520,31 +522,47 @@ const FormTabsGuidePage = () => (
                         반응형
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        화면 폭에 따라 세 가지 모양이 됩니다. <code className="font-mono">items</code> 는 셋 모두 같아
+                        화면 폭에 따라 두 가지 모양이 됩니다. <code className="font-mono">items</code> 는 둘 다 같아
                         화면 코드는 그대로입니다. 보이는 위젯이 달라지므로 기반 컴포넌트도 함께 바뀝니다 — 같은 마크업에
                         CSS 만 씌우면 생김새와 역할(<code className="font-mono">role</code> · 키보드 조작)이
                         어긋납니다[8.2.1].
                     </p>
                 </div>
                 <Table size="md" caption="FormTabs 반응형 동작" columns={RESPONSIVE_COLUMNS} rows={RESPONSIVE_ROWS} />
-                <h3 className="typo-body-xl-bold">태블릿 (md~xl) — 세로 펼침 목록</h3>
+                <h3 className="typo-body-xl-bold">태블릿 (md~xl) — 한 줄 카드 + 항목 목록</h3>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    접힌 섹션은 탭 행 한 줄로 보이고, 펼치면 그 행이 사라지면서 폼 카드만 남습니다. 다시 접는 버튼은
-                    카드 제목 오른쪽에 붙습니다.
+                    모바일과 같은 방식입니다. 현재 섹션 한 줄만 콘텐츠 열 안의 카드로 놓이고, 본문은 그 섹션만 보입니다.
+                    줄의 아래 여백 20px 을 폼 카드가 덮고 올라와 한 덩어리로 읽힙니다. 목록은 제목 바로 아래(4px)에서
+                    열리고 폭은 제목 묶음과 같습니다.
                 </p>
-                {/* 태블릿 행은 768 이상에서만 쓰이므로 좁은 가이드 화면에 맞춰 줄이지 않고 가로 스크롤한다. */}
+                {/* 태블릿 줄은 768 이상에서만 쓰이므로 좁은 가이드 화면에 맞춰 줄이지 않고 가로 스크롤한다.
+                    Popover 는 눌러야 열리므로 여기서는 같은 조각으로 결과만 재현한다. */}
                 <div className="overflow-x-auto">
-                    <div className="bg-background border-subtle-3 min-w-content flex flex-col gap-2 rounded-md border p-6">
-                        {TITLE_CASES.map((item) => (
+                    <div className="bg-background border-subtle-3 min-w-content flex flex-col rounded-md border p-6">
+                        <div className={formTabsTabletBarClassName}>
                             <FormTabTitle
-                                key={item.status}
+                                active
                                 chevron
-                                variant="row"
-                                title={item.title}
-                                status={item.status}
-                                active={item.status === 'writing'}
+                                variant="bar"
+                                title={TITLE_CASES[1]?.title}
+                                status={TITLE_CASES[1]?.status}
                             />
-                        ))}
+                        </div>
+                        <div className={cn(formTabsPickerPanelClassName, 'mx-10 -mt-9')}>
+                            {TITLE_CASES.map((item) => (
+                                <FormTabTitle
+                                    key={item.status}
+                                    variant="row"
+                                    title={item.title}
+                                    status={item.status}
+                                    className={
+                                        item.status === TITLE_CASES[1]?.status
+                                            ? formTabsPickerCurrentRowClassName
+                                            : undefined
+                                    }
+                                />
+                            ))}
+                        </div>
                     </div>
                 </div>
                 <h3 className="typo-body-xl-bold">모바일 (md 미만) — 고정 한 줄 + 항목 목록</h3>
@@ -572,10 +590,13 @@ const FormTabsGuidePage = () => (
                                 <FormTabTitle
                                     key={item.status}
                                     variant="row"
-                                    className={formTabsPickerRowClassName}
                                     title={item.title}
                                     status={item.status}
-                                    active={item.status === TITLE_CASES[1]?.status}
+                                    className={
+                                        item.status === TITLE_CASES[1]?.status
+                                            ? formTabsPickerCurrentRowClassName
+                                            : undefined
+                                    }
                                 />
                             ))}
                         </div>
@@ -588,6 +609,10 @@ const FormTabsGuidePage = () => (
                     <li>
                         목록은 눌린 줄이 아니라 고정 줄(흰 면) 아래로 4px 떨어져 열리고, 폭은 줄과 같습니다. 여는 방향과
                         위치는 Popover 가 화면 여백을 보고 정하므로 아래 공간이 부족하면 위로 열립니다.
+                    </li>
+                    <li>
+                        태블릿 줄은 고정하지 않습니다 — 화면 폭을 채우는 띠가 아니라 콘텐츠 열 안의 카드라 시안대로
+                        본문과 함께 흐릅니다.
                     </li>
                     <li>Esc·바깥 클릭으로 닫히고 포커스는 눌렀던 줄로 돌아옵니다 — Radix 가 맡습니다[8.2.1].</li>
                 </ul>
@@ -725,13 +750,12 @@ const FormTabsGuidePage = () => (
                 </div>
                 <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-1 pl-5">
                     <li>
-                        화면 폭에 따라 기반 컴포넌트가 바뀝니다(Tabs · Collapsible · Popover). 같은 마크업에 CSS 만
-                        씌우지 않는 이유는 보이는 위젯과 역할·키보드 조작을 맞추기 위해서입니다[8.2.1].
+                        화면 폭에 따라 기반 컴포넌트가 바뀝니다(Tabs · Popover). 같은 마크업에 CSS 만 씌우지 않는 이유는
+                        보이는 위젯과 역할·키보드 조작을 맞추기 위해서입니다[8.2.1].
                     </li>
                     <li>
-                        태블릿에서 섹션을 펼치면 눌렀던 행이 사라지므로 카드 헤더의 접기 버튼으로, 접으면 다시 나타난
-                        행으로 포커스를 넘깁니다. 모바일 목록은 Popover(Radix)라 Esc·바깥 클릭으로 닫히고 포커스가
-                        눌렀던 줄로 돌아옵니다[6.1.2].
+                        xl 미만의 항목 목록은 Popover(Radix)라 Esc·바깥 클릭으로 닫히고 포커스가 눌렀던 줄로
+                        돌아옵니다[6.1.2]. 누른 줄이 그대로 남아 있어 포커스를 옮겨 줄 자리가 따로 없습니다.
                     </li>
                     <li>
                         오류 메시지는 <code className="font-mono">role=&quot;alert&quot;</code> 로 그 자리에서 읽히고,

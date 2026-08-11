@@ -12,15 +12,17 @@ import {cva} from 'class-variance-authority'
 // data-active 를 모두 받으므로(shadcn/tailwind.css) 탭 안팎에서 같은 클래스가 그대로 동작한다.
 // 화면 폭에 따라 같은 내용이 세 가지 모양으로 놓인다 — 면·여백·폭만 다르고 안쪽 구성은 같다.
 //   · tab : 가로 탭 한 칸(xl 이상)
-//   · row : 세로 펼침 목록의 흰 카드 행(태블릿, Figma "Tablet_2단계_기업정보" 792×104 · 좌우 여백 40)
-//   · bar : 면도 여백도 없는 한 줄(모바일 sticky 헤더, Figma "Mobile_…" 328×44)
+//   · row : 섹션 목록의 행(xl 미만에서 줄을 눌렀을 때 열리는 목록 — 상태 아이콘이 행 오른쪽 끝에 붙는다)
+//   · bar : 면도 여백도 없는 한 줄(현재 섹션 줄 — 태블릿 카드·모바일 sticky 헤더가 함께 쓴다)
 const formTabTitleVariants = cva(
     'group/form-tab text-label-foreground outline-ring focus-visible:outline-ring data-active:text-foreground relative flex flex-col items-start justify-start text-left whitespace-normal transition-colors focus-visible:-outline-offset-2 focus-visible:outline-2 focus-visible:outline-solid data-active:[&_[data-slot=form-tab-title-text]]:font-bold',
     {
         variants: {
             variant: {
                 tab: 'bg-surface-subtle border-subtle-3 data-active:bg-card data-active:border-transparent min-w-0 flex-1 rounded-t-sm border border-b-0 px-5 pt-5 pb-10',
-                row: 'bg-card w-full flex-none rounded-lg border border-transparent px-10 pt-5 pb-10',
+                // 목록 행 — 시안 실측 좌우 8 · 위아래 12. 눌러서 고르는 자리라 hover 면을 준다
+                // (Figma hover #f3f8ff = blue.50 = primary-subtle · Select 드롭다운 항목과 같은 면).
+                row: 'interactive:hover:bg-primary-subtle w-full flex-none rounded-sm px-2 py-3',
                 bar: 'w-full flex-none',
             },
         },
@@ -41,13 +43,14 @@ const formTabTitleAccentClassName =
 const formTabTitleChevronClassName =
     'text-label-foreground size-icon-lg group-data-active/form-tab:text-foreground ml-auto shrink-0 self-center'
 
-// 제목 묶음 — 가로 탭에서는 남는 폭을 채워 상태 아이콘을 칸 오른쪽 끝으로 밀고(flex-1),
-// 세로 목록·한 줄에서는 내용만큼만 차지해 아이콘이 제목 바로 옆에 붙는다(시안과 동일).
+// 제목 묶음 — 가로 탭과 목록 행에서는 남는 폭을 채워 상태 아이콘을 오른쪽 끝으로 밀고(flex-1),
+// 한 줄(bar)에서는 내용만큼만 차지해 아이콘이 제목 바로 옆에 붙는다. 셋 다 시안 그대로다
+// (Figma 태블릿 프레임: 목록 행은 아이콘이 행 오른쪽 끝, 현재 섹션 줄은 제목 옆 — 오른쪽 끝은 펼침 아이콘 자리).
 const formTabTitleColumnVariants = cva('flex min-w-0 flex-col', {
     variants: {
         variant: {
             tab: 'flex-1',
-            row: 'flex-initial',
+            row: 'flex-1',
             bar: 'flex-initial',
         },
     },
