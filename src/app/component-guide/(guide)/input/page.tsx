@@ -78,7 +78,7 @@ const STATE_CODE = `{/* 기본 */}
   <FieldLabel htmlFor="corporate-number" className="font-bold text-foreground">
     법인번호
   </FieldLabel>
-  <Input id="corporate-number" name="corporateNumber" value="11222-1234567" readOnly />
+  <Input id="corporate-number" name="corporateNumber" value="110111-1234567" readOnly />
 </Field>`
 
 const COMPOSITE_CODE = `{/* 일반 입력: end action 없음 */}
@@ -105,7 +105,7 @@ const ADDON_CODE = `{/* 읽기전용 상태 아이콘 */}
 <InputGroup>
   <InputGroupInput
     name="corporateNumber"
-    value="11222-1234567"
+    value="110111-1234567"
     readOnly
     aria-label="법인번호"
   />
@@ -433,7 +433,7 @@ const InputGuidePage = () => (
                         <FieldLabel htmlFor="input-state-readonly" className="text-foreground font-bold">
                             읽기전용
                         </FieldLabel>
-                        <Input id="input-state-readonly" name="corporateNumber" value="11222-1234567" readOnly />
+                        <Input id="input-state-readonly" name="corporateNumber" value="110111-1234567" readOnly />
                     </Field>
                 </div>
                 <CodeBlock code={STATE_CODE} language="tsx" copyLabel="복사" />
@@ -460,7 +460,7 @@ const InputGuidePage = () => (
                             <InputGroupInput
                                 id="input-corporate-number"
                                 name="corporateNumber"
-                                value="11222-1234567"
+                                value="110111-1234567"
                                 readOnly
                                 aria-label="법인번호"
                             />

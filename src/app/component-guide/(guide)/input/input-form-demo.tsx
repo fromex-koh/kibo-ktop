@@ -129,7 +129,7 @@ const InputFormDemo = () => {
                         placeholder="법인번호"
                         name="corporateNumber"
                         readOnly
-                        defaultValue="11222-1234567"
+                        defaultValue="110111-1234567"
                     />
                     <InputGroupAddon align="inline-end" className="text-foreground">
                         <Lock aria-hidden="true" className="size-5" />
