@@ -8,16 +8,20 @@ const run = (command) =>
         .toString()
         .trim()
 
+const resolveLastCommit = (path) => {
+    try {
+        return run(`git log -1 --format=%H -- "${path}"`)
+    } catch {
+        return undefined
+    }
+}
+
 // 주어진 경로(파일·폴더)가 마지막으로 바뀐 시점을 '그 변경을 포함하는 가장 가까운 태그'로 표현한다.
 // 예: v0.1.0 이후 globals.css 만 바뀌었다면 → v0.1.0 은 그 변경을 포함하지 않으므로,
 //     다음 태그(v0.2.0)가 만들어져야 그 값이 나온다. 아직 태그되지 않았으면 '미배포'.
 export const resolvePathVersion = (path) => {
-    let lastCommit
-    try {
-        lastCommit = run(`git log -1 --format=%H -- "${path}"`)
-    } catch {
-        return '-'
-    }
+    const lastCommit = resolveLastCommit(path)
+    if (lastCommit === undefined) return '-'
     if (!lastCommit) return '-'
 
     try {
@@ -27,4 +31,21 @@ export const resolvePathVersion = (path) => {
     } catch {
         return '미배포' // 어떤 태그에도 포함되지 않음 = 마지막 릴리스 이후 변경, 아직 공유 전
     }
+}
+
+// 공통 레이아웃 동기화 커밋이 실제 화면 릴리스로 오인된 경우에만 사용하는 예외다.
+// throughCommit 이후 page 파일이 다시 변경되면 예외를 자동으로 해제해 새 릴리스 버전을 계산한다.
+export const resolveVersionOverride = (path, override) => {
+    if (override === undefined) return undefined
+
+    if (
+        typeof override !== 'object' ||
+        override === null ||
+        !/^v\d+\.\d+\.\d+$/.test(override.version) ||
+        !/^[0-9a-f]{40}$/.test(override.throughCommit)
+    ) {
+        throw new Error(`화면 버전 예외 형식이 올바르지 않습니다: ${path}`)
+    }
+
+    return resolveLastCommit(path) === override.throughCommit ? override.version : undefined
 }

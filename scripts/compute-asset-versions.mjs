@@ -5,7 +5,7 @@
 import {readFileSync, writeFileSync} from 'node:fs'
 import {execFileSync} from 'node:child_process'
 import {format, resolveConfig} from 'prettier'
-import {resolvePathVersion} from './git-info.mjs'
+import {resolvePathVersion, resolveVersionOverride} from './git-info.mjs'
 import {findAppPage} from './find-app-page.mjs'
 
 const SOURCE = 'src/content/publishing-guide/publishing-index.json'
@@ -14,7 +14,7 @@ const RELEASE_NOTES_OUTPUT = 'src/content/publishing-guide/release-notes.generat
 const SCREEN_REGISTRY_SOURCE = 'src/content/publishing-guide/screen-registry.json'
 const SCREEN_REGISTRY_OUTPUT = 'src/content/publishing-guide/screen-registry.generated.json'
 const SCREEN_REGISTRY_GENERATED_NOTICE =
-    '자동 생성 파일 — 직접 수정하지 않습니다. 경로·화면 정보는 screen-registry.json에서 관리하며, page 파일 존재 여부는 dev·build·verify 시 자동 반영되고 릴리스 버전은 main 릴리스에서 Git 이력으로 확정됩니다.'
+    '자동 생성 파일 — 직접 수정하지 않습니다. 경로·화면 정보와 필요한 화면 버전 예외는 screen-registry.json에서 관리하며, page 파일 존재 여부는 dev·build·verify 시 자동 반영되고 릴리스 버전은 main 릴리스에서 Git 이력으로 확정됩니다.'
 const RELEASE_NOTES_DRAFT = 'RELEASE_NOTES_DRAFT.md'
 const EMPTY_RELEASE_NOTES_DRAFT = `# 다음 릴리스 변경사항
 
@@ -85,6 +85,14 @@ const applyBaselineVersion = (version, path) => {
 
 const {assetVersions, commonLayouts} = JSON.parse(readFileSync(SOURCE, 'utf8'))
 const screenRegistry = JSON.parse(readFileSync(SCREEN_REGISTRY_SOURCE, 'utf8'))
+const screenVersionOverrides = screenRegistry.versionOverrides ?? {}
+const registeredScreenKeys = new Set(screenRegistry.screens.map((screen) => screen.key))
+
+for (const key of Object.keys(screenVersionOverrides)) {
+    if (!registeredScreenKeys.has(key)) {
+        throw new Error(`screen-registry.json의 versionOverrides에 등록되지 않은 화면 key가 있습니다: ${key}`)
+    }
+}
 
 const generated = assetVersions.map(({name, path}) => {
     const resolvedVersion = applyBaselineVersion(resolvePathVersion(path), path)
@@ -106,7 +114,10 @@ writeFileSync(OUTPUT, await formatJson(metadata, OUTPUT))
 const generatedScreens = screenRegistry.screens.map((screen) => {
     const pagePath = findAppPage(process.cwd(), screen.path)
     const implemented = pagePath !== undefined
-    const resolvedVersion = implemented ? resolvePathVersion(pagePath) : '미배포'
+    const overriddenVersion = implemented
+        ? resolveVersionOverride(pagePath, screenVersionOverrides[screen.key])
+        : undefined
+    const resolvedVersion = overriddenVersion ?? (implemented ? resolvePathVersion(pagePath) : '미배포')
     const version = implemented && resolvedVersion === '미배포' ? releaseVersion : resolvedVersion
 
     return {
