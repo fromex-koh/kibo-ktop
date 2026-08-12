@@ -35,7 +35,7 @@ const MEMBER_COMPANY_FIELDS = [
     {id: 'corp-name', label: '기업명', value: '(주)테크놀로지', autoComplete: 'organization'},
     {id: 'biz-no', label: '사업자번호', value: '123-45-67890'},
     // 법인이 아닌 기업(개인사업자 등)은 이 값이 비어 오고, 그때는 이 칸이 화면에 나오지 않는다.
-    {id: 'corp-no', label: '법인번호', value: '11222-1234567'},
+    {id: 'corp-no', label: '법인번호', value: '110111-1234567'},
 ] as const
 
 // 값이 있는 항목만 화면에 둔다 — 위 [미노출 규칙].

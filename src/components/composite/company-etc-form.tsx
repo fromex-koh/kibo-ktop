@@ -386,7 +386,7 @@ const CompanyEtcForm = () => {
                             required
                             autoComplete="off"
                             aria-label="평가기술명"
-                            placeholder="평가 대상 기술명을 입력해주세요"
+                            placeholder="평가 대상 기술명을 입력해 주세요"
                         />
                     </LabellessField>
                 </Section>
@@ -415,7 +415,7 @@ const CompanyEtcForm = () => {
                             required
                             aria-label="신청기술 개요"
                             aria-describedby="tech-summary-helper"
-                            placeholder="신청 기술의 주요 내용, 특징, 활용 분야 등을 입력해주세요"
+                            placeholder="신청 기술의 주요 내용, 특징, 활용 분야 등을 입력해 주세요"
                             className="min-h-30"
                         />
                     </LabellessField>
