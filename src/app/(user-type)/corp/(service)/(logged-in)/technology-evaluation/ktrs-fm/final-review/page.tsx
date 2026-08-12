@@ -1,5 +1,6 @@
 import type {Metadata} from 'next'
 import {SubmitConfirmDialog} from '@/components/composite/submit-confirm-dialog'
+import {PopupPreviewNote, popupPreviewMainClassName} from '@/components/custom/popup-preview-note'
 
 export const metadata: Metadata = {title: '최종 확인'}
 
@@ -8,7 +9,9 @@ export const metadata: Metadata = {title: '최종 확인'}
 // 본문이 만들어지면 이 자리에 요약을 채우고, 화면 맨 아래 [제출] 이 모달을 열도록 잇는다.
 const CorpKtrsFmFinalReviewPage = () => (
     <>
-        <main id="main" tabIndex={-1} className="bg-background flex-1" />
+        <main id="main" tabIndex={-1} className={popupPreviewMainClassName}>
+            <PopupPreviewNote title="최종 확인">화면 맨 아래 [제출]이 호출하는 확인 팝업</PopupPreviewNote>
+        </main>
         <SubmitConfirmDialog defaultOpen />
     </>
 )

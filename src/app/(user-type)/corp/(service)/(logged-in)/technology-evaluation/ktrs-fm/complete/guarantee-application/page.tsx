@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import {PopupPreviewNote, popupPreviewMainClassName} from '@/components/custom/popup-preview-note'
 import {GuaranteeApplicationDialog} from '@/components/composite/guarantee-application-dialog'
 
 export const metadata: Metadata = {title: '보증 신청'}
@@ -8,7 +9,9 @@ export const metadata: Metadata = {title: '보증 신청'}
 // 완료 화면의 [보증신청] 버튼과는 아직 잇지 않았다(보증신청 흐름 미정).
 const CorpKtrsFmGuaranteeApplicationPage = () => (
     <>
-        <main id="main" tabIndex={-1} className="bg-background flex-1" />
+        <main id="main" tabIndex={-1} className={popupPreviewMainClassName}>
+            <PopupPreviewNote title="보증 신청">완료 화면의 [보증신청]이 호출하는 팝업</PopupPreviewNote>
+        </main>
         <GuaranteeApplicationDialog defaultOpen />
     </>
 )

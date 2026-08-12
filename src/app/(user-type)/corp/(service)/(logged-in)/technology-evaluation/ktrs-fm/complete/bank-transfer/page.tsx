@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import {PopupPreviewNote, popupPreviewMainClassName} from '@/components/custom/popup-preview-note'
 import {BankTransferDialog} from '@/components/composite/bank-transfer-dialog'
 
 export const metadata: Metadata = {title: '은행 전송'}
@@ -8,7 +9,9 @@ export const metadata: Metadata = {title: '은행 전송'}
 // 완료 화면의 [은행전송] 버튼과는 아직 잇지 않았다(전송 흐름 미정).
 const CorpKtrsFmBankTransferPage = () => (
     <>
-        <main id="main" tabIndex={-1} className="bg-background flex-1" />
+        <main id="main" tabIndex={-1} className={popupPreviewMainClassName}>
+            <PopupPreviewNote title="은행 전송">완료 화면의 [은행전송]이 호출하는 팝업</PopupPreviewNote>
+        </main>
         <BankTransferDialog defaultOpen />
     </>
 )

@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import {PopupPreviewNote, popupPreviewMainClassName} from '@/components/custom/popup-preview-note'
 import {TechnologyDefinitionDialog} from '@/components/composite/technology-definition-dialog'
 
 export const metadata: Metadata = {title: '전문기술/숙련기술 정의'}
@@ -8,7 +9,11 @@ export const metadata: Metadata = {title: '전문기술/숙련기술 정의'}
 // 이 화면은 모달만 확인하는 자리라 뒤 배경을 비우고 모달을 열어 둔다 — 다른 모달 단독 화면과 같은 방식이다.
 const CorpKtrsFmTechnologyDefinitionPage = () => (
     <>
-        <main id="main" tabIndex={-1} className="bg-background flex-1" />
+        <main id="main" tabIndex={-1} className={popupPreviewMainClassName}>
+            <PopupPreviewNote title="전문기술/숙련기술 정의">
+                기업 기타 정보의 신청기술 구분 구획에서 호출하는 팝업
+            </PopupPreviewNote>
+        </main>
         <TechnologyDefinitionDialog defaultOpen />
     </>
 )
