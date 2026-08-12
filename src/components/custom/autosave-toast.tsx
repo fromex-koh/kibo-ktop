@@ -1,8 +1,6 @@
 'use client'
 
-import {useEffect} from 'react'
-import {toast} from 'sonner'
-import {showCheckToast} from '@/components/custom/check-toast'
+import {CheckToastOnMount, showCheckToast, type CheckToastOptions} from '@/components/custom/check-toast'
 
 // 자동저장 토스트 — 시안([신속표준모형 KTRS-FM] 2단계 기업·기술정보 입력)의 문구·위치를 담는다.
 //
@@ -26,14 +24,11 @@ const formatSavedAt = (savedAt: Date) =>
 // 같은 id 를 주어 개발 모드의 이중 마운트에서도 토스트가 두 개 쌓이지 않게 한다.
 const AUTOSAVE_TOAST_ID = 'self-diagnosis-autosave'
 
-// 루트 Toaster가 children 뒤에서 마운트되므로, 전체 새로고침에서도 구독이 준비된 뒤 호출한다.
-// requestAnimationFrame 한 번만 기다리면 느린 환경에서는 Toaster보다 먼저 실행될 수 있다.
-const TOASTER_MOUNT_DELAY_MS = 100
-
 // 저장이 끝난 시각을 받아 토스트를 띄운다. 시각을 넘기지 않으면 시안 문구를 그대로 쓴다(화면 확인용).
 // 체크 동그라미·위치·노출 시간은 공통 완료 토스트(showCheckToast)가 갖는다.
-const showAutosaveToast = (savedAt?: Date) =>
-    showCheckToast(savedAt ? formatSavedAt(savedAt) : AUTOSAVE_MESSAGE, {id: AUTOSAVE_TOAST_ID})
+// duration 은 화면 확인용 단독 페이지가 토스트를 띄운 채 두려고 넘긴다 — 실제 저장 호출은 넘기지 않는다.
+const showAutosaveToast = (savedAt?: Date, options?: Pick<CheckToastOptions, 'duration'>) =>
+    showCheckToast(savedAt ? formatSavedAt(savedAt) : AUTOSAVE_MESSAGE, {...options, id: AUTOSAVE_TOAST_ID})
 
 type AutosaveToastProps = {
     /**
@@ -41,38 +36,22 @@ type AutosaveToastProps = {
      * 서버 컴포넌트에서 넘겨도 된다 — 그때 정해진 값이 그대로 전달되므로 hydration 이 어긋나지 않는다.
      */
     savedAt?: Date
+    /**
+     * 노출 시간(ms). 넘기지 않으면 공통 완료 토스트의 기본값(4초)을 쓴다.
+     * Number.POSITIVE_INFINITY 를 넘기면 사라지지 않는다 — 토스트만 확인하는 단독 화면에서 쓴다.
+     */
+    duration?: number
 }
 
-const AutosaveToast = ({savedAt}: AutosaveToastProps) => {
-    // Date 는 렌더마다 다른 객체일 수 있어 시각(ms)으로 비교한다 — 같은 시각이면 다시 띄우지 않는다.
-    const savedAtTime = savedAt?.getTime()
-
-    useEffect(() => {
-        let timer = 0
-        let isCancelled = false
-        const show = () => {
-            if (isCancelled) return
-
-            timer = window.setTimeout(() => {
-                showAutosaveToast(savedAtTime === undefined ? undefined : new Date(savedAtTime))
-            }, TOASTER_MOUNT_DELAY_MS)
-        }
-
-        // 글꼴을 기다린 뒤에 띄운다 — 웹폰트가 늦게 오면 위쪽 제목의 높이가 달라져, 그 전에 잰 고정 영역의
-        // 아래끝이 실제와 어긋난다(토스트가 고정 영역을 파고든다). 저장 후 호출은 화면이 이미 자리를 잡은
-        // 뒤라 이 대기가 필요 없다 — 진입 시 한 번 띄우는 이 확인용 컴포넌트에만 둔다.
-        if (document.fonts) document.fonts.ready.then(show)
-        else show()
-
-        return () => {
-            isCancelled = true
-            window.clearTimeout(timer)
-            toast.dismiss(AUTOSAVE_TOAST_ID)
-        }
-    }, [savedAtTime])
-
-    return null
-}
+// 띄우는 시점(글꼴 대기·Toaster 마운트 대기)과 떠날 때 닫는 처리는 공통 조각이 갖는다 —
+// 완료 토스트만 확인하는 다른 단독 화면과 같은 동작이어야 하기 때문이다.
+const AutosaveToast = ({savedAt, duration}: AutosaveToastProps) => (
+    <CheckToastOnMount
+        message={savedAt ? formatSavedAt(savedAt) : AUTOSAVE_MESSAGE}
+        id={AUTOSAVE_TOAST_ID}
+        duration={duration}
+    />
+)
 
 export default AutosaveToast
 export {showAutosaveToast}

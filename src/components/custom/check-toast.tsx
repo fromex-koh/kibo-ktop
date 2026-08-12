@@ -1,5 +1,6 @@
 'use client'
 
+import {useEffect} from 'react'
 import {toast} from 'sonner'
 import {Check} from 'lucide-react'
 
@@ -83,5 +84,44 @@ const showCheckToast = (message: string, {id, duration = CHECK_TOAST_DURATION_MS
         style: getHeaderOffsetStyle(),
     })
 
-export {showCheckToast}
-export type {CheckToastOptions}
+// 루트 Toaster 가 children 뒤에서 마운트되므로, 전체 새로고침에서도 구독이 준비된 뒤 호출한다.
+// requestAnimationFrame 한 번만 기다리면 느린 환경에서는 Toaster 보다 먼저 실행될 수 있다.
+const TOASTER_MOUNT_DELAY_MS = 100
+
+type CheckToastOnMountProps = CheckToastOptions & {
+    /** 띄울 문구. */
+    message: string
+}
+
+// 화면에 들어오자마자 완료 토스트를 한 번 띄우는 조각 — 렌더 결과는 없다.
+// 실제 서비스 흐름에서는 저장·신청이 끝난 자리에서 showCheckToast 를 부르면 된다. 이 조각은 그 흐름이
+// 붙기 전, 또는 토스트만 확인하는 단독 화면(화면정의서의 하위 화면)에서 토스트를 보여 주려고 쓴다.
+// duration 에 Number.POSITIVE_INFINITY 를 넘기면 사라지지 않는다.
+const CheckToastOnMount = ({message, id, duration}: CheckToastOnMountProps) => {
+    useEffect(() => {
+        let timer = 0
+        let isCancelled = false
+        const show = () => {
+            if (isCancelled) return
+
+            timer = window.setTimeout(() => showCheckToast(message, {id, duration}), TOASTER_MOUNT_DELAY_MS)
+        }
+
+        // 글꼴을 기다린 뒤에 띄운다 — 웹폰트가 늦게 오면 위쪽 제목의 높이가 달라져, 그 전에 잰 고정 영역의
+        // 아래끝이 실제와 어긋난다(토스트가 고정 영역을 파고든다). 완료 후 호출은 화면이 이미 자리를 잡은
+        // 뒤라 이 대기가 필요 없다 — 진입 시 한 번 띄우는 이 조각에만 둔다.
+        if (document.fonts) document.fonts.ready.then(show)
+        else show()
+
+        return () => {
+            isCancelled = true
+            window.clearTimeout(timer)
+            if (id) toast.dismiss(id)
+        }
+    }, [message, id, duration])
+
+    return null
+}
+
+export {CheckToastOnMount, showCheckToast}
+export type {CheckToastOnMountProps, CheckToastOptions}
