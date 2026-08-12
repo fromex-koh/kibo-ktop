@@ -43,6 +43,8 @@ const YEAR_RANGE = 100
 type DatePickerProps = {
     // 제어 사용: value 를 넘기면 표시 값은 항상 이 값이다.
     value?: Date
+    /** 빈 값(undefined)도 제어 값으로 다뤄야 하는 폼 연결용 플래그. */
+    controlled?: boolean
     // 비제어 사용: 초기값만 주고 선택 값은 내부 상태로 관리한다(폼에 그대로 꽂아 쓰는 경우).
     defaultValue?: Date
     onChange?: (date?: Date) => void
@@ -197,6 +199,7 @@ const MonthGrid = ({
 
 const DatePicker = ({
     value,
+    controlled,
     defaultValue,
     onChange,
     granularity = 'day',
@@ -226,7 +229,9 @@ const DatePicker = ({
     // 제어/비제어 겸용 — value 를 넘기면 그 값을, 안 넘기면 내부 상태를 쓴다.
     // (value 없이 쓰면 선택한 날짜가 화면에도, name 으로 제출되는 값에도 반영되지 않던 문제를 막는다.)
     const [internalDate, setInternalDate] = useState<Date | undefined>(defaultValue)
-    const isControlled = value !== undefined
+    // 폼 필드는 값을 지울 때 value가 undefined가 된다. 이때 비제어형으로 전환하면 내부에 저장된
+    // 이전 선택값이 다시 나타나므로, 폼 연결 시에는 빈 값도 제어 값으로 유지한다.
+    const isControlled = controlled ?? value !== undefined
     const selectedDate = isControlled ? value : internalDate
     // 패널을 다시 열면 이전 탐색 위치가 아니라 현재 선택값이 속한 월부터 보여준다.
     const [calendarMonth, setCalendarMonth] = useState(() => selectedDate ?? new Date())
