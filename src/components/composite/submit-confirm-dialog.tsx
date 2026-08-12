@@ -6,14 +6,11 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog'
-import {dialogBodyClassName} from '@/components/theme/dialog.variants'
-import {cn} from '@/lib/utils'
 
 // 제출 전 최종 확인 모달 — 제출을 되돌릴 수 없으므로 한 번 더 묻는다
 // (Figma "[신속표준모형 KTRS-FM] m_제출 전 최종 확인"). 4단계 최종 확인 화면의 [제출] 이 연다.
@@ -39,16 +36,21 @@ type SubmitConfirmDialogProps = {
 const SubmitConfirmDialog = ({children, defaultOpen, open, onOpenChange, onSubmit}: SubmitConfirmDialogProps) => (
     <Dialog defaultOpen={defaultOpen} open={open} onOpenChange={onOpenChange}>
         {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
-        <DialogContent showCloseButton={false}>
-            <DialogHeader className="p-0">
-                <DialogTitle className="sr-only">제출 확인</DialogTitle>
-            </DialogHeader>
-            <div className={cn(dialogBodyClassName, 'pt-0')}>
-                {/* 시안의 물음은 20px Bold 가운데 정렬이다 — 안내 문장이 아니라 물음이라 본문색을 쓴다. */}
-                <DialogDescription className="typo-title-l-bold text-foreground py-8 text-center">
+        {/* 설명 없이 제목(물음)과 버튼뿐이라 aria-describedby 를 비운다 — 넘기지 않으면 Radix 가 설명이
+            빠졌다고 경고한다. */}
+        <DialogContent showCloseButton={false} aria-describedby={undefined}>
+            {/* 물음은 머리 구획(첫 행)에 둔다 — CTA 는 행을 지정하지 않고 자동 배치라(dialog.variants 참고),
+                머리를 빼면 CTA 가 첫 행으로 올라와 버튼이 물음 위에 놓인다.
+                여백은 시안의 물음 블록(위아래 32)에 맞춘다. */}
+            <DialogHeader className="px-6 py-8 sm:px-10">
+                {/* 시안의 물음은 20px Bold 가운데 정렬이다 — 안내 문장이 아니라 물음이라 본문색을 쓴다.
+                    이 물음이 곧 모달의 제목이라 DialogTitle(h2)로 둔다 — 크기·굵기만 제목처럼인 문단으로
+                    두면 "제목처럼 보이는데 제목이 아닌 글"이 된다(WAVE "Possible heading").
+                    pe-0 은 닫기(X) 자리를 비우는 기본 여백을 되돌린다(이 모달은 X 를 두지 않는다). */}
+                <DialogTitle className="typo-title-l-bold text-foreground pe-0 text-center">
                     {SUBMIT_QUESTION}
-                </DialogDescription>
-            </div>
+                </DialogTitle>
+            </DialogHeader>
             <DialogFooter>
                 <DialogClose asChild>
                     <Button variant="tertiary" size="xl">

@@ -7,7 +7,6 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -27,6 +26,9 @@ const GUARANTEE_DONE_MESSAGE = '보증 신청이 완료되었습니다'
 const GUARANTEE_TOAST_ID = 'guarantee-application-done'
 
 // 물음 뒤에 붙는 안내 — 시안은 두 줄이고, 두 문장이 각각 다른 사실을 말하므로 줄을 나눠 둔다.
+// 모달의 설명이 되는 안내 상자의 id — 한 화면에 이 모달은 하나뿐이라 고정값으로 둔다.
+const GUARANTEE_NOTES_ID = 'guarantee-application-notes'
+
 const GUARANTEE_NOTES: readonly string[] = [
     '관할 기술평가 센터에서 평가를 진행합니다.',
     "평가 완료 시, '보증신청 결과' 탭에서 결과를 확인 할 수 있습니다.",
@@ -57,16 +59,18 @@ const GuaranteeApplicationDialog = ({children, defaultOpen, onConfirm}: Guarante
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
-            <DialogContent>
+            {/* 물음이 제목이 되므로 설명은 그 아래 안내 두 줄이 맡는다 — 그 상자를 aria-describedby 로 잇는다. */}
+            <DialogContent aria-describedby={GUARANTEE_NOTES_ID}>
                 <DialogHeader>
                     <DialogTitle>보증신청</DialogTitle>
                 </DialogHeader>
                 {/* 물음과 안내 사이 16(시안). 안내 두 줄은 붙여 둔다. */}
                 <div className={cn(dialogBodyClassName, 'gap-4')}>
-                    <DialogDescription className="typo-title-l-bold text-foreground">
-                        보증신청을 진행하시겠습니까?
-                    </DialogDescription>
-                    <div className="flex flex-col">
+                    {/* 물음은 아래 안내와 [예]·[아니오] 를 이끄는 머리라 heading 으로 둔다 — 크기·굵기만
+                        제목처럼인 문단으로 두면 "제목처럼 보이는데 제목이 아닌 글"이 된다
+                        (WAVE "Possible heading"). 모달 제목(h2) 아래 단계라 h3 이다[6.4.2]. */}
+                    <h3 className="typo-title-l-bold text-foreground">보증신청을 진행하시겠습니까?</h3>
+                    <div id={GUARANTEE_NOTES_ID} className="flex flex-col">
                         {GUARANTEE_NOTES.map((note) => (
                             <p key={note} className="typo-body-xl-regular text-foreground">
                                 {note}
@@ -89,5 +93,7 @@ const GuaranteeApplicationDialog = ({children, defaultOpen, onConfirm}: Guarante
     )
 }
 
-export {GuaranteeApplicationDialog}
+// 완료 문구·토스트 id 는 신청 완료 단독 화면(complete/guarantee-application/application-complete)도
+// 그대로 쓴다 — 같은 완료 안내를 두 곳에서 따로 적지 않는다.
+export {GUARANTEE_DONE_MESSAGE, GUARANTEE_TOAST_ID, GuaranteeApplicationDialog}
 export type {GuaranteeApplicationDialogProps}
