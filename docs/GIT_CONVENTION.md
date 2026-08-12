@@ -204,6 +204,8 @@ v1.0.1 → v2.0.0 → v2.0.1
 - 확정된 버전이 **이번 릴리스 버전과 같으면**(`isCurrent: true`) 표에서 하이라이트된다.
 - 시작 페이지의 현재 버전도 같은 파일의 `version`을 사용하므로 Vercel의 얕은 clone 여부와 무관하다.
 
+화면 버전은 기본적으로 page 파일의 마지막 커밋을 기준으로 계산한다. 다만 공통 레이아웃·콘텐츠 동기화 커밋이 실제 화면 신규 전달로 오인될 수 있으므로, 그런 화면은 `screen-registry.json`의 `versionOverrides`에 이전 버전과 `throughCommit`을 함께 기록한다. 해당 page 파일이 다시 변경되면 예외가 자동 해제되어 새 릴리스 버전을 계산하므로, 예외를 영구적인 화면 버전 고정값으로 사용하지 않는다.
+
 새 자산을 표에 추가하려면 `publishing-index.json` 에 `{ name, path, kind }` 만 추가하면 된다(버전은 자동).
 
 `yarn asset-versions`는 `RELEASE_VERSION=vX.Y.Z`를 제공하는 GitHub Actions 릴리스 단계 전용이다.

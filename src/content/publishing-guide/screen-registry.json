@@ -2,6 +2,89 @@
     "//": "실제 서비스 화면의 경로 레지스트리. 페이지가 생성되기 전에도 경로를 먼저 정의하며, 공식 화면 ID가 발급되기 전에는 screenId를 null로 유지한다.",
     "//path": "userType이 기업이면 /corp, 기관이면 /org로 시작한다. 공통 화면으로 합치지 않고 사용자 유형별 화면을 각각 등록한다.",
     "//usage": "이 파일은 현재 저장소에서 화면 작업 위치를 찾고 자동 현황을 생성하기 위한 보조 정보다. 화면 작업 시 key·userType·name으로 대상을 찾고 path에 대응하는 src/app/.../page.tsx를 생성한다. 생성한 페이지는 이 파일을 import하거나 런타임에 의존하지 않아야 하므로 다른 저장소로 page.tsx만 옮길 수 있다.",
+    "//versionOverrides": "공통 레이아웃·콘텐츠 동기화 커밋이 화면 신규 릴리스로 오인된 경우에만 등록한다. throughCommit 이후 page 파일이 변경되면 릴리스 생성기가 예외를 자동 해제하므로 실제 화면을 새 버전으로 전달할 때 별도 수동 복구가 필요 없다.",
+    "versionOverrides": {
+        "corp-notice-announcements": {
+            "version": "v1.0.0",
+            "throughCommit": "bfe460b3c0602f7bb6f96120f6fca04cfa18147c"
+        },
+        "corp-notice-announcements-detail": {
+            "version": "v1.0.0",
+            "throughCommit": "d00fe1a2777bbdafbcaa918bdd5f4d135f228cc3"
+        },
+        "corp-notice-faq": {
+            "version": "v1.0.0",
+            "throughCommit": "7382db44280d409327c825a59b965ec314f7b9c8"
+        },
+        "corp-notice-inquiry-create": {
+            "version": "v1.0.0",
+            "throughCommit": "287efd037f971ddd4f047c536ad1a8720aa1c044"
+        },
+        "corp-notice-inquiry-create-inquiry-complete": {
+            "version": "v1.0.1",
+            "throughCommit": "8820fe666ab3a84bddacfb00587fbafc3d4ae446"
+        },
+        "corp-notice-inquiry-create-privacy-consent-guide": {
+            "version": "v1.0.0",
+            "throughCommit": "e14c1b88c4048b116b9d943bf9ae2742c9dd3370"
+        },
+        "corp-notice-resources": {
+            "version": "v1.0.0",
+            "throughCommit": "412ba15c5c3e8ba8cdbc01f3848c69d484e4ab1b"
+        },
+        "corp-terms": {
+            "version": "v1.0.0",
+            "throughCommit": "80d13d44f9939cb0fa339ad242ca84e0866c0e94"
+        },
+        "corp-privacy-policy": {
+            "version": "v1.0.0",
+            "throughCommit": "5ec3741edd241aa5888d8a0bcf1d6524db3e6088"
+        },
+        "corp-privacy-policy-easy-privacy-policy": {
+            "version": "v1.0.0",
+            "throughCommit": "31d51703a3ac4f1f17dc988f12ad46da18f2391d"
+        },
+        "org-notice-announcements": {
+            "version": "v1.0.0",
+            "throughCommit": "bfe460b3c0602f7bb6f96120f6fca04cfa18147c"
+        },
+        "org-notice-announcements-detail": {
+            "version": "v1.0.0",
+            "throughCommit": "d00fe1a2777bbdafbcaa918bdd5f4d135f228cc3"
+        },
+        "org-notice-faq": {
+            "version": "v1.0.0",
+            "throughCommit": "7382db44280d409327c825a59b965ec314f7b9c8"
+        },
+        "org-notice-inquiry-create": {
+            "version": "v1.0.0",
+            "throughCommit": "287efd037f971ddd4f047c536ad1a8720aa1c044"
+        },
+        "org-notice-inquiry-create-inquiry-complete": {
+            "version": "v1.0.1",
+            "throughCommit": "8820fe666ab3a84bddacfb00587fbafc3d4ae446"
+        },
+        "org-notice-inquiry-create-privacy-consent-guide": {
+            "version": "v1.0.0",
+            "throughCommit": "e14c1b88c4048b116b9d943bf9ae2742c9dd3370"
+        },
+        "org-notice-resources": {
+            "version": "v1.0.0",
+            "throughCommit": "412ba15c5c3e8ba8cdbc01f3848c69d484e4ab1b"
+        },
+        "org-terms": {
+            "version": "v1.0.0",
+            "throughCommit": "80d13d44f9939cb0fa339ad242ca84e0866c0e94"
+        },
+        "org-privacy-policy": {
+            "version": "v1.0.0",
+            "throughCommit": "5ec3741edd241aa5888d8a0bcf1d6524db3e6088"
+        },
+        "org-privacy-policy-easy-privacy-policy": {
+            "version": "v1.0.0",
+            "throughCommit": "31d51703a3ac4f1f17dc988f12ad46da18f2391d"
+        }
+    },
     "screens": [
         {
             "key": "corp-home",
@@ -127,7 +210,7 @@
             "screenId": null,
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/representative-career/input-helper",
-            "name": "입력도우미"
+            "name": "입력 도움말"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip",
@@ -974,7 +1057,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/verification-progress",
-            "name": "평가검증 진행확인"
+            "name": "평가결과 조회"
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-customer-consent",
@@ -1264,13 +1347,6 @@
             "name": "(5) 완료 화면"
         },
         {
-            "key": "org-batch-evaluation-tech-index-selection",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/batch-evaluation/tech-index-selection",
-            "name": "(1) Tech-Index 선택"
-        },
-        {
             "key": "org-batch-evaluation-evaluation-history-or-batch",
             "screenId": null,
             "userType": "기관",
@@ -1423,20 +1499,6 @@
             "userType": "기관",
             "path": "/org/k-bigx-report/report-history",
             "name": "보고서 이력 조회"
-        },
-        {
-            "key": "org-k-bigx-report-report-history-report-view",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/k-bigx-report/report-history/report-view",
-            "name": "보고서 보기"
-        },
-        {
-            "key": "org-k-bigx-report-report-history-report-print",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/k-bigx-report/report-history/report-print",
-            "name": "보고서 출력"
         },
         {
             "key": "org-carbon-neutrality",
@@ -1635,13 +1697,6 @@
             "name": "최초 비밀번호 변경"
         },
         {
-            "key": "org-login-guide",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/login-guide",
-            "name": "로그인 안내"
-        },
-        {
             "key": "org-session-extension",
             "screenId": null,
             "userType": "기관",
@@ -1653,7 +1708,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/login-end",
-            "name": "로그인 종료"
+            "name": "로그아웃 종료"
         }
     ]
 }

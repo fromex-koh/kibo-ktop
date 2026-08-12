@@ -232,21 +232,29 @@ type FlatLeaf = {
     rowKey: string
     registryKey?: string
     path: string[] // index 0 = 1뎁스(그룹명) ... 마지막 = leaf 자신의 라벨
+    subtotalDepths: number[] // 소계/구분 브랜치의 뎁스 인덱스 — 표에서 뎁스 배지를 숨긴다.
     screenId: string | null
     status: Status
     version: string
+    isRed?: boolean
     userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 공통(기업·기관 둘 다).
 }
 
 const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
     // inherited = 상위(그룹·브랜치)에서 내려온 userType. 노드에 자체 userType 가 있으면 그것이 우선한다.
-    const walk = (node: StructureNode, path: string[], inherited?: UserType): FlatLeaf[] => {
+    const walk = (
+        node: StructureNode,
+        path: string[],
+        inherited?: UserType,
+        subtotalDepths: number[] = [],
+    ): FlatLeaf[] => {
         // 라벨이 바로 위 뎁스와 같으면(예: '홈' 그룹의 유일한 화면도 라벨이 '홈') 실질적으로
         // 추가 뎁스가 아니므로 경로에 다시 넣지 않는다 — 컬럼마다 같은 텍스트가 반복되지 않는다.
         const last = path[path.length - 1]
         const nextPath = node.label === last ? path : [...path, node.label]
         if (isStructureBranch(node)) {
             const branchUserType = node.userType ?? inherited
+            const nextSubtotalDepths = node.isSubtotal ? [...subtotalDepths, nextPath.length - 1] : subtotalDepths
             // branch 자신도 독립된 화면(screen)일 수 있다 — 예: '(1) 고객정보활용동의' 자체가
             // 화면이면서 하위에 상세보기·전자서명을 더 갖는 경우. 있으면 그 행을 먼저 넣는다.
             // screen.label 이 있으면(예: '목록') 자기 화면을 한 뎁스 더 내려간 항목으로 취급해,
@@ -258,23 +266,30 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           rowKey: screenPath.join(' > '),
                           ...(node.screen.key !== undefined ? {registryKey: node.screen.key} : {}),
                           path: screenPath,
+                          subtotalDepths: nextSubtotalDepths,
                           screenId: node.screen.screenId,
                           status: node.screen.status,
                           version: node.screen.version,
+                          ...(node.screen.isRed ? {isRed: true} : {}),
                           userType: node.screen.userType ?? branchUserType,
                       },
                   ]
                 : []
-            return [...ownScreen, ...node.children.flatMap((child) => walk(child, nextPath, branchUserType))]
+            return [
+                ...ownScreen,
+                ...node.children.flatMap((child) => walk(child, nextPath, branchUserType, nextSubtotalDepths)),
+            ]
         }
         return [
             {
                 rowKey: nextPath.join(' > '),
                 ...(node.key !== undefined ? {registryKey: node.key} : {}),
                 path: nextPath,
+                subtotalDepths,
                 screenId: node.screenId,
                 status: node.status,
                 version: node.version,
+                ...(node.isRed ? {isRed: true} : {}),
                 userType: node.userType ?? inherited,
             },
         ]
@@ -332,12 +347,17 @@ const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
 // 같은 메뉴명이라도 역할과 동작이 다를 수 있어 공통 화면으로 합치지 않는다.
 type UserTypeFilter = UserType
 const USER_TYPE_FILTERS: readonly UserTypeFilter[] = USER_TYPE_VALUES
+// 상태·릴리스 배지에서 이미 사용하는 색상과 겹치지 않는 분류용 보조색을 IA 유형에 사용한다.
+const IA_BADGE_COLOR: Record<UserTypeFilter, 'secondary-orange' | 'secondary-green'> = {
+    기업: 'secondary-orange',
+    기관: 'secondary-green',
+}
 // SegmentedControl radio 타입이 넘겨주는 문자열 value를 UserTypeFilter로 좁히는 타입가드([ST-002] as 회피).
 const isUserTypeFilter = (value: string): value is UserTypeFilter => USER_TYPE_FILTERS.some((f) => f === value)
 
 const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean => leaf.userType === filter
 
-const {releaseNotes, assetVersions, commonLayouts, structureGroups} = PUBLISHING_INDEX_CONTENT
+const {releaseNotes, assetVersions, commonLayouts, iaVersions, structureGroups} = PUBLISHING_INDEX_CONTENT
 
 // 전체 화면(트리를 펼친 leaf) — 필터·카운트는 이 목록을 기준으로 컴포넌트 안에서 파생한다.
 const ALL_LEAVES = structureGroups.flatMap(collectLeaves)
@@ -376,12 +396,12 @@ const PublishingIndex = () => {
                             <div
                                 role="region"
                                 aria-labelledby="release-notes-title"
-                                className="overflow-x-auto overscroll-contain"
+                                className="max-h-100 overflow-auto overscroll-contain"
                             >
                                 <table className="w-full min-w-2xl table-fixed text-left">
                                     <caption className="sr-only">버전별 릴리스 날짜와 주요 변경사항</caption>
-                                    <thead className="bg-muted relative z-10 block">
-                                        <tr className="border-border [display:table] w-full table-fixed border-b">
+                                    <thead className="bg-muted sticky top-0 z-10">
+                                        <tr className="border-border border-b">
                                             <th scope="col" className="typo-body-l-medium w-28 px-4 py-3">
                                                 버전
                                             </th>
@@ -393,11 +413,11 @@ const PublishingIndex = () => {
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-surface block max-h-52 overflow-y-auto overscroll-contain">
+                                    <tbody className="bg-surface">
                                         {releaseNotes.map((release, index) => (
                                             <tr
                                                 key={release.version}
-                                                className={`border-border [display:table] w-full table-fixed border-b last:border-b-0 ${
+                                                className={`border-border border-b last:border-b-0 ${
                                                     index === 0 ? 'bg-primary-subtle' : ''
                                                 }`}
                                             >
@@ -482,12 +502,12 @@ const PublishingIndex = () => {
                             <div
                                 role="region"
                                 aria-labelledby="frontend-handoff-assets-title"
-                                className="overflow-x-auto overscroll-contain"
+                                className="max-h-100 overflow-auto overscroll-contain"
                             >
                                 <table className="w-full min-w-3xl table-fixed text-left">
                                     <caption className="sr-only">프론트엔드 인계 자산별 역할과 반영 버전</caption>
-                                    <thead className="bg-muted relative z-10 block">
-                                        <tr className="border-border [display:table] w-full table-fixed border-b">
+                                    <thead className="bg-muted sticky top-0 z-10">
+                                        <tr className="border-border border-b">
                                             <th scope="col" className="typo-body-l-medium w-24 px-4 py-3">
                                                 구분
                                             </th>
@@ -502,11 +522,11 @@ const PublishingIndex = () => {
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-surface block max-h-88 overflow-y-auto overscroll-contain">
+                                    <tbody className="bg-surface">
                                         {assetVersions.map((asset) => (
                                             <tr
                                                 key={asset.name}
-                                                className={`border-border [display:table] w-full table-fixed border-b last:border-b-0 ${
+                                                className={`border-border border-b last:border-b-0 ${
                                                     asset.isCurrent ? 'bg-primary-subtle' : ''
                                                 }`}
                                             >
@@ -548,10 +568,24 @@ const PublishingIndex = () => {
 
                     <div className="flex flex-col gap-3">
                         <SectionHeader>
-                            <SectionHeaderTitle id="section-publishing-index">퍼블리싱 인덱스</SectionHeaderTitle>
+                            <SectionHeaderTitle
+                                id="section-publishing-index"
+                                className="flex flex-wrap items-center gap-2"
+                            >
+                                <span>퍼블리싱 인덱스</span>
+                                <Badge
+                                    color={IA_BADGE_COLOR[filter]}
+                                    shape="round"
+                                    size="sm"
+                                    aria-label={`${filter} IA 버전 ${iaVersions[filter]}`}
+                                >
+                                    {filter} IA {iaVersions[filter]}
+                                </Badge>
+                            </SectionHeaderTitle>
                             <SectionHeaderDescription>
                                 기업·기관 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다. 메뉴 자체가 화면인 행의
-                                미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시합니다.
+                                미사용 하위 뎁스는 병합된 &apos;-&apos;로, IA 원본의 꺾쇠·빨간색 항목은 같은 표기로
+                                표시합니다.
                             </SectionHeaderDescription>
                         </SectionHeader>
                         {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 기업/기관 IA 한 벌씩 걸러 보여준다.
@@ -716,6 +750,9 @@ const PublishingIndex = () => {
                                                     }
                                                     const isScreenLink =
                                                         depth === leaf.path.length - 1 && registeredScreen?.implemented
+                                                    const isRedLabel =
+                                                        leaf.isRed === true && depth === leaf.path.length - 1
+                                                    const displayLabel = isRedLabel ? `<${cell.label}>` : cell.label
                                                     return (
                                                         <th
                                                             key={depth}
@@ -725,20 +762,38 @@ const PublishingIndex = () => {
                                                             className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
                                                         >
                                                             <span className="inline-flex items-center gap-2">
-                                                                <Badge aria-hidden="true" type="number" color="primary">
-                                                                    {depth + 1}
-                                                                </Badge>
-                                                                <span className="sr-only">{depth + 1}뎁스 </span>
+                                                                {!leaf.subtotalDepths.includes(depth) && (
+                                                                    <>
+                                                                        <Badge
+                                                                            aria-hidden="true"
+                                                                            type="number"
+                                                                            color="primary"
+                                                                        >
+                                                                            {depth + 1}
+                                                                        </Badge>
+                                                                        <span className="sr-only">
+                                                                            {depth + 1}뎁스{' '}
+                                                                        </span>
+                                                                    </>
+                                                                )}
                                                                 {isScreenLink ? (
                                                                     <Link
                                                                         href={registeredScreen.path}
-                                                                        className="text-primary focus-visible:ring-ring rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                                                                        className={`${
+                                                                            isRedLabel ? 'text-error' : 'text-primary'
+                                                                        } focus-visible:ring-ring rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none`}
                                                                     >
-                                                                        {cell.label}
+                                                                        {displayLabel}
                                                                         <span className="sr-only"> 화면으로 이동</span>
                                                                     </Link>
                                                                 ) : (
-                                                                    cell.label
+                                                                    <span
+                                                                        className={
+                                                                            isRedLabel ? 'text-error' : undefined
+                                                                        }
+                                                                    >
+                                                                        {displayLabel}
+                                                                    </span>
                                                                 )}
                                                             </span>
                                                         </th>
