@@ -98,6 +98,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                         items: [
                             {label: 'Chip', href: '/component-guide/chip'},
                             {label: 'EmailField', href: '/component-guide/email-field'},
+                            {label: 'FileUpload', href: '/component-guide/file-upload'},
                             {label: 'QuestionGroupHeader', href: '/component-guide/question-group-header'},
                             {label: 'QuestionList', href: '/component-guide/question-list'},
                             {label: 'SelectableCard', href: '/component-guide/selectable-card'},

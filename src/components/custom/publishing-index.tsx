@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import {Check, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
-import {useMemo, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {
     USER_TYPE_VALUES,
     isStructureBranch,
@@ -355,6 +355,35 @@ const IA_BADGE_COLOR: Record<UserTypeFilter, 'secondary-orange' | 'secondary-gre
 // SegmentedControl radio 타입이 넘겨주는 문자열 value를 UserTypeFilter로 좁히는 타입가드([ST-002] as 회피).
 const isUserTypeFilter = (value: string): value is UserTypeFilter => USER_TYPE_FILTERS.some((f) => f === value)
 
+type UserTypeControlProps = {
+    filter: UserTypeFilter
+    label: string
+    onFilterChange: (filter: UserTypeFilter) => void
+}
+
+// 시작페이지 상단 필터와 스크롤 추적 퀵메뉴가 같은 선택 상태를 공유한다.
+const UserTypeControl = ({filter, label, onFilterChange}: UserTypeControlProps) => (
+    <SegmentedControl
+        type="radio"
+        value={filter}
+        onValueChange={(value) => {
+            if (isUserTypeFilter(value)) onFilterChange(value)
+        }}
+        aria-label={label}
+        className="w-fit"
+    >
+        {USER_TYPE_FILTERS.map((userType) => (
+            <SegmentedControlItem
+                key={userType}
+                value={userType}
+                className="has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground px-4"
+            >
+                {userType}
+            </SegmentedControlItem>
+        ))}
+    </SegmentedControl>
+)
+
 const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean => leaf.userType === filter
 
 const {releaseNotes, assetVersions, commonLayouts, iaVersions, structureGroups} = PUBLISHING_INDEX_CONTENT
@@ -365,6 +394,20 @@ const SCREEN_REGISTRY_BY_KEY = new Map(SCREEN_REGISTRY.map((screen) => [screen.k
 
 const PublishingIndex = () => {
     const [filter, setFilter] = useState<UserTypeFilter>('기업')
+    const [isQuickMenuVisible, setIsQuickMenuVisible] = useState(false)
+    const userTypeControlRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const userTypeControl = userTypeControlRef.current
+        if (!userTypeControl) return
+
+        const observer = new IntersectionObserver(([entry]) => {
+            setIsQuickMenuVisible(!entry.isIntersecting)
+        })
+
+        observer.observe(userTypeControl)
+        return () => observer.disconnect()
+    }, [])
 
     // 선택된 사용자 유형에 맞는 화면만 남기고, 그 부분집합으로 뎁스 컬럼·rowSpan·카운트를 다시 계산한다.
     const leaves = useMemo(() => ALL_LEAVES.filter((leaf) => matchesUserType(leaf, filter)), [filter])
@@ -382,6 +425,27 @@ const PublishingIndex = () => {
 
     return (
         <section aria-label="퍼블리싱 현황" className="flex flex-col gap-4">
+            {/* 시작페이지 전용 퀵메뉴. 긴 IA 표를 내려보는 중에도 기업·기관 화면을 즉시 전환한다. */}
+            <aside
+                aria-label="사용자 유형 빠른 전환"
+                aria-hidden={!isQuickMenuVisible}
+                inert={!isQuickMenuVisible}
+                className={`border-border bg-background/95 fixed right-4 bottom-4 z-40 flex max-w-[calc(100vw-(var(--spacing)*8))] flex-col gap-2 rounded-lg border p-3 shadow-lg backdrop-blur-sm transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none md:right-6 md:bottom-6 ${
+                    isQuickMenuVisible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'
+                }`}
+            >
+                <span className="typo-caption-medium text-muted-foreground px-1">화면 유형 빠른 전환</span>
+                <Badge
+                    color={IA_BADGE_COLOR[filter]}
+                    shape="round"
+                    size="sm"
+                    className="w-fit"
+                    aria-label={`${filter} IA 버전 ${iaVersions[filter]}`}
+                >
+                    {filter} IA {iaVersions[filter]}
+                </Badge>
+                <UserTypeControl filter={filter} label="사용자 유형 빠른 전환" onFilterChange={setFilter} />
+            </aside>
             <BaseCard>
                 <div className="flex flex-col gap-8">
                     <div className="flex flex-col gap-3">
@@ -396,7 +460,7 @@ const PublishingIndex = () => {
                             <div
                                 role="region"
                                 aria-labelledby="release-notes-title"
-                                className="max-h-100 overflow-auto overscroll-contain"
+                                className="max-h-100 overflow-auto overscroll-contain [contain:layout_paint]"
                             >
                                 <table className="w-full min-w-2xl table-fixed text-left">
                                     <caption className="sr-only">버전별 릴리스 날짜와 주요 변경사항</caption>
@@ -502,7 +566,7 @@ const PublishingIndex = () => {
                             <div
                                 role="region"
                                 aria-labelledby="frontend-handoff-assets-title"
-                                className="max-h-100 overflow-auto overscroll-contain"
+                                className="max-h-100 overflow-auto overscroll-contain [contain:layout_paint]"
                             >
                                 <table className="w-full min-w-3xl table-fixed text-left">
                                     <caption className="sr-only">프론트엔드 인계 자산별 역할과 반영 버전</caption>
@@ -584,33 +648,17 @@ const PublishingIndex = () => {
                             </SectionHeaderTitle>
                             <SectionHeaderDescription>
                                 기업·기관 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다. 메뉴 자체가 화면인 행의
-                                미사용 하위 뎁스는 병합된 &apos;-&apos;로, IA 원본의 꺾쇠·빨간색 항목은 같은 표기로
-                                표시합니다.
+                                미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시하며, 취소선 항목은 기존에 있었지만 삭제된
+                                내용입니다.
                             </SectionHeaderDescription>
                         </SectionHeader>
                         {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 기업/기관 IA 한 벌씩 걸러 보여준다.
           위 공통 레이아웃 표와 구분되도록 간격을 더 둔다. */}
                         {/* 사용자 유형 필터 — 라디오 기반 단일 선택이다. 비어 있는 값은 무시해 항상 하나가 선택된 상태를
                     유지한다. 화살표 키·역할은 Radix 담당. */}
-                        <SegmentedControl
-                            type="radio"
-                            value={filter}
-                            onValueChange={(value) => {
-                                if (isUserTypeFilter(value)) setFilter(value)
-                            }}
-                            aria-label="사용자 유형별 화면"
-                            className="w-fit"
-                        >
-                            {USER_TYPE_FILTERS.map((f) => (
-                                <SegmentedControlItem
-                                    key={f}
-                                    value={f}
-                                    className="has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground px-4"
-                                >
-                                    {f}
-                                </SegmentedControlItem>
-                            ))}
-                        </SegmentedControl>
+                        <div ref={userTypeControlRef} className="w-fit">
+                            <UserTypeControl filter={filter} label="사용자 유형별 화면" onFilterChange={setFilter} />
+                        </div>
 
                         {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
             '완료'와 '최종완료' 상태를 모두 완료 작업으로 집계한다. */}
@@ -752,7 +800,16 @@ const PublishingIndex = () => {
                                                         depth === leaf.path.length - 1 && registeredScreen?.implemented
                                                     const isRedLabel =
                                                         leaf.isRed === true && depth === leaf.path.length - 1
-                                                    const displayLabel = isRedLabel ? `<${cell.label}>` : cell.label
+                                                    // 삭제된 항목은 취소선으로 표시한다(IA 원본의 꺾쇠는 옮기지 않는다).
+                                                    // 취소선·색만으로는 무엇을 뜻하는지 읽어 주지 못하므로 말로도 알린다[5.3.1].
+                                                    const displayLabel = isRedLabel ? (
+                                                        <s>
+                                                            {cell.label}
+                                                            <span className="sr-only"> (삭제된 항목)</span>
+                                                        </s>
+                                                    ) : (
+                                                        cell.label
+                                                    )
                                                     return (
                                                         <th
                                                             key={depth}

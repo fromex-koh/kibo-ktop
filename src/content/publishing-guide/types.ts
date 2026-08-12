@@ -110,7 +110,7 @@ export type StructureLeaf = {
     screenId: string | null
     status: Status
     version: string
-    // IA 원본에서 꺾쇠·빨간색으로 표시한 참고 항목 — 인덱스에는 포함하되 같은 표기로 렌더링한다.
+    // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목 — 인덱스에는 포함하되 취소선·빨간색으로 표시한다.
     isRed?: boolean
     userType?: UserType // 없으면 상위에서 상속(최종적으로 없으면 공통).
 }
@@ -124,7 +124,7 @@ export type ScreenInfo = {
     status: Status
     version: string
     label?: string
-    // IA 원본에서 꺾쇠·빨간색으로 표시한 참고 항목.
+    // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목.
     isRed?: boolean
     userType?: UserType
 }
