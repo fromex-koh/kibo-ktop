@@ -1,9 +1,9 @@
 {
-    "version": "v2.0.0",
+    "version": "v2.0.1",
     "assets": [
         {
             "name": "src/app",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "isCurrent": true
         },
         {
@@ -13,37 +13,37 @@
         },
         {
             "name": "src/components/theme",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "isCurrent": true
         },
         {
             "name": "src/components/composite",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "isCurrent": true
         },
         {
             "name": "src/components/theme-provider.tsx",
             "version": "v2.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/constants",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "isCurrent": true
         },
         {
             "name": "src/content",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "isCurrent": true
         },
         {
             "name": "src/lib",
-            "version": "v2.0.0",
+            "version": "v2.0.1",
             "isCurrent": true
         },
         {
@@ -58,8 +58,8 @@
         },
         {
             "name": "tokens.json",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v2.0.1",
+            "isCurrent": true
         },
         {
             "name": "src/app/tokens.css",
@@ -69,12 +69,12 @@
         {
             "name": "scripts/build-tokens.mjs",
             "version": "v2.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/app/globals.css",
             "version": "v2.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "postcss.config.mjs",
@@ -124,7 +124,7 @@
         {
             "name": "public",
             "version": "v2.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "vendor/shadcn-baseline",

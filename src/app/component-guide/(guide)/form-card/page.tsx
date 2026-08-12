@@ -121,7 +121,7 @@ const FormCardGuidePage = () => (
                         <Label htmlFor="corp-corp-no" className="text-foreground gap-1 font-bold">
                             법인번호
                         </Label>
-                        <Input id="corp-corp-no" defaultValue="11222-1234567" />
+                        <Input id="corp-corp-no" defaultValue="110111-1234567" />
                     </div>
                 </div>
             </FormCard>

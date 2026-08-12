@@ -116,12 +116,16 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
     if (typeof value.version !== 'string') {
         throw new Error(`[content] ${where}: version 이 필요합니다.`)
     }
+    if (value.isRed !== undefined && typeof value.isRed !== 'boolean') {
+        throw new Error(`[content] ${where}: isRed 는 boolean 이어야 합니다.`)
+    }
     const userType = parseUserType(value.userType, `${where} > userType`)
     return {
         ...(typeof value.key === 'string' ? {key: value.key} : {}),
         screenId: value.screenId,
         status: value.status,
         version: value.version,
+        ...(value.isRed === true ? {isRed: true} : {}),
         ...(userType !== undefined ? {userType} : {}),
     }
 }
@@ -141,6 +145,10 @@ const parseStructureNode = (value: unknown, path: string): StructureNode => {
         }
         const children = value.children.map((child, i) => parseStructureNode(child, `${where}[${i}]`))
         const userType = parseUserType(value.userType, `${where} > userType`)
+        if (value.isSubtotal !== undefined && typeof value.isSubtotal !== 'boolean') {
+            throw new Error(`[content] ${where} > isSubtotal: boolean 이어야 합니다.`)
+        }
+        const isSubtotal = value.isSubtotal === true
         if (value.screen !== undefined) {
             if (!isRecord(value.screen)) {
                 throw new Error(`[content] ${where} > screen: 객체여야 합니다.`)
@@ -152,9 +160,20 @@ const parseStructureNode = (value: unknown, path: string): StructureNode => {
                 throw new Error(`[content] ${where} > screen > label: 문자열이어야 합니다.`)
             }
             const screen: ScreenInfo = screenLabel !== undefined ? {...screenBase, label: screenLabel} : screenBase
-            return {label, children, screen, ...(userType !== undefined ? {userType} : {})}
+            return {
+                label,
+                children,
+                screen,
+                ...(isSubtotal ? {isSubtotal: true} : {}),
+                ...(userType !== undefined ? {userType} : {}),
+            }
         }
-        return {label, children, ...(userType !== undefined ? {userType} : {})}
+        return {
+            label,
+            children,
+            ...(isSubtotal ? {isSubtotal: true} : {}),
+            ...(userType !== undefined ? {userType} : {}),
+        }
     }
 
     return {label, ...parseScreenInfo(value, where)}
@@ -200,6 +219,18 @@ const parseCommonLayout = (raw: (typeof publishingIndexJson)['commonLayouts'][nu
         status: raw.status,
         version: findGeneratedCommonLayoutVersion(raw.path),
     }
+}
+
+const parseIaVersions = (raw: typeof publishingIndexJson): Record<UserType, string> => {
+    const corpVersion = raw.iaVersions.기업
+    const orgVersion = raw.iaVersions.기관
+    if (typeof corpVersion !== 'string' || corpVersion.length === 0) {
+        throw new Error('[content] publishing-index.json > iaVersions > 기업: 비어 있지 않은 문자열이어야 합니다.')
+    }
+    if (typeof orgVersion !== 'string' || orgVersion.length === 0) {
+        throw new Error('[content] publishing-index.json > iaVersions > 기관: 비어 있지 않은 문자열이어야 합니다.')
+    }
+    return {기업: corpVersion, 기관: orgVersion}
 }
 
 const RELEASE_NOTE_HANDOFF_MODES: readonly ReleaseNoteHandoffMode[] = ['diff', 'new', 'overwrite']
@@ -258,6 +289,7 @@ const parsePublishingIndexContent = (raw: typeof publishingIndexJson): Publishin
         }
     }),
     commonLayouts: raw.commonLayouts.map(parseCommonLayout),
+    iaVersions: parseIaVersions(raw),
     structureGroups: raw.structureGroups.map((group) => {
         const userType = parseUserType(
             'userType' in group ? group.userType : undefined,

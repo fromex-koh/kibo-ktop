@@ -174,9 +174,13 @@ const InitialPasswordChangePage = () => (
 // 카드 높이(540 = 40+36+24+400+40) 밖으로 벗어나 있는 남은 요소라 옮기지 않는다. 주소를 고르면 닫히는
 // 흐름이라 닫기(X)로 충분하다.
 // 같은 모달을 자가진단(기업정보 > 주소 찾기)도 쓴다 — 내용은 같고 제목만 그 화면의 버튼 이름을 따른다.
-const PostcodeSearchPage = ({title}: {title?: string}) => (
+const PostcodeSearchPage = ({title = '우편번호 검색'}: {title?: string}) => (
     <>
         <AuthFlowPage>
+            {/* 모달만 확인하는 화면이라 시안에 보이는 제목이 없다 — 제목이 하나도 없으면 제목 구조가 없는
+                페이지가 되므로(WAVE "Missing first level heading") 화면 이름을 h1 으로 두되 sr-only 로
+                감춘다[6.4.2]. 이름은 모달 제목과 같은 말을 쓴다. */}
+            <h1 className="sr-only">{title}</h1>
             <p className="typo-body-xl-regular text-label-foreground py-10">Kakao(다음) 우편번호 API를 사용한다.</p>
         </AuthFlowPage>
         {/* 화면 확인을 위해 모달을 열어 둔다 — 실제 화면에서는 "주소 검색" 버튼이 연다. */}

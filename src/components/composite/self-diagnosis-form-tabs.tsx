@@ -4,6 +4,7 @@ import CareerForm from '@/components/composite/career-form'
 import CompanyEtcForm from '@/components/composite/company-etc-form'
 import TechStaffForm from '@/components/composite/tech-staff-form'
 import RndForm from '@/components/composite/rnd-form'
+import OrgCompanyInfoForm from '@/components/composite/org-company-info-form'
 
 // 자가진단 2단계(기업·기술정보 입력)의 탭 구성 — 제목과 순서는 시안 값 그대로다.
 // 실제 화면과 FormTabs 컴포넌트 가이드가 같은 것을 보도록 여기 한 벌만 둔다.
@@ -18,4 +19,9 @@ const SELF_DIAGNOSIS_FORM_TABS: readonly FormTabItem[] = [
     {value: 'rnd', title: '기술 개발 실적', content: <RndForm />},
 ]
 
-export {SELF_DIAGNOSIS_FORM_TABS}
+// 기관 개별평가의 탭 구성 — 기업정보 탭만 기관용(직접 입력 + 기업형태 분기)으로 바꾸고 나머지는 같다.
+const ORG_SELF_DIAGNOSIS_FORM_TABS: readonly FormTabItem[] = SELF_DIAGNOSIS_FORM_TABS.map((tab) =>
+    tab.value === 'company' ? {...tab, content: <OrgCompanyInfoForm />} : tab,
+)
+
+export {ORG_SELF_DIAGNOSIS_FORM_TABS, SELF_DIAGNOSIS_FORM_TABS}

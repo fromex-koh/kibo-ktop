@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import {Check, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
-import {useMemo, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {
     USER_TYPE_VALUES,
     isStructureBranch,
@@ -232,21 +232,29 @@ type FlatLeaf = {
     rowKey: string
     registryKey?: string
     path: string[] // index 0 = 1뎁스(그룹명) ... 마지막 = leaf 자신의 라벨
+    subtotalDepths: number[] // 소계/구분 브랜치의 뎁스 인덱스 — 표에서 뎁스 배지를 숨긴다.
     screenId: string | null
     status: Status
     version: string
+    isRed?: boolean
     userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 공통(기업·기관 둘 다).
 }
 
 const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
     // inherited = 상위(그룹·브랜치)에서 내려온 userType. 노드에 자체 userType 가 있으면 그것이 우선한다.
-    const walk = (node: StructureNode, path: string[], inherited?: UserType): FlatLeaf[] => {
+    const walk = (
+        node: StructureNode,
+        path: string[],
+        inherited?: UserType,
+        subtotalDepths: number[] = [],
+    ): FlatLeaf[] => {
         // 라벨이 바로 위 뎁스와 같으면(예: '홈' 그룹의 유일한 화면도 라벨이 '홈') 실질적으로
         // 추가 뎁스가 아니므로 경로에 다시 넣지 않는다 — 컬럼마다 같은 텍스트가 반복되지 않는다.
         const last = path[path.length - 1]
         const nextPath = node.label === last ? path : [...path, node.label]
         if (isStructureBranch(node)) {
             const branchUserType = node.userType ?? inherited
+            const nextSubtotalDepths = node.isSubtotal ? [...subtotalDepths, nextPath.length - 1] : subtotalDepths
             // branch 자신도 독립된 화면(screen)일 수 있다 — 예: '(1) 고객정보활용동의' 자체가
             // 화면이면서 하위에 상세보기·전자서명을 더 갖는 경우. 있으면 그 행을 먼저 넣는다.
             // screen.label 이 있으면(예: '목록') 자기 화면을 한 뎁스 더 내려간 항목으로 취급해,
@@ -258,23 +266,30 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           rowKey: screenPath.join(' > '),
                           ...(node.screen.key !== undefined ? {registryKey: node.screen.key} : {}),
                           path: screenPath,
+                          subtotalDepths: nextSubtotalDepths,
                           screenId: node.screen.screenId,
                           status: node.screen.status,
                           version: node.screen.version,
+                          ...(node.screen.isRed ? {isRed: true} : {}),
                           userType: node.screen.userType ?? branchUserType,
                       },
                   ]
                 : []
-            return [...ownScreen, ...node.children.flatMap((child) => walk(child, nextPath, branchUserType))]
+            return [
+                ...ownScreen,
+                ...node.children.flatMap((child) => walk(child, nextPath, branchUserType, nextSubtotalDepths)),
+            ]
         }
         return [
             {
                 rowKey: nextPath.join(' > '),
                 ...(node.key !== undefined ? {registryKey: node.key} : {}),
                 path: nextPath,
+                subtotalDepths,
                 screenId: node.screenId,
                 status: node.status,
                 version: node.version,
+                ...(node.isRed ? {isRed: true} : {}),
                 userType: node.userType ?? inherited,
             },
         ]
@@ -332,12 +347,46 @@ const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
 // 같은 메뉴명이라도 역할과 동작이 다를 수 있어 공통 화면으로 합치지 않는다.
 type UserTypeFilter = UserType
 const USER_TYPE_FILTERS: readonly UserTypeFilter[] = USER_TYPE_VALUES
+// 상태·릴리스 배지에서 이미 사용하는 색상과 겹치지 않는 분류용 보조색을 IA 유형에 사용한다.
+const IA_BADGE_COLOR: Record<UserTypeFilter, 'secondary-orange' | 'secondary-green'> = {
+    기업: 'secondary-orange',
+    기관: 'secondary-green',
+}
 // SegmentedControl radio 타입이 넘겨주는 문자열 value를 UserTypeFilter로 좁히는 타입가드([ST-002] as 회피).
 const isUserTypeFilter = (value: string): value is UserTypeFilter => USER_TYPE_FILTERS.some((f) => f === value)
 
+type UserTypeControlProps = {
+    filter: UserTypeFilter
+    label: string
+    onFilterChange: (filter: UserTypeFilter) => void
+}
+
+// 시작페이지 상단 필터와 스크롤 추적 퀵메뉴가 같은 선택 상태를 공유한다.
+const UserTypeControl = ({filter, label, onFilterChange}: UserTypeControlProps) => (
+    <SegmentedControl
+        type="radio"
+        value={filter}
+        onValueChange={(value) => {
+            if (isUserTypeFilter(value)) onFilterChange(value)
+        }}
+        aria-label={label}
+        className="w-fit"
+    >
+        {USER_TYPE_FILTERS.map((userType) => (
+            <SegmentedControlItem
+                key={userType}
+                value={userType}
+                className="has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground px-4"
+            >
+                {userType}
+            </SegmentedControlItem>
+        ))}
+    </SegmentedControl>
+)
+
 const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean => leaf.userType === filter
 
-const {releaseNotes, assetVersions, commonLayouts, structureGroups} = PUBLISHING_INDEX_CONTENT
+const {releaseNotes, assetVersions, commonLayouts, iaVersions, structureGroups} = PUBLISHING_INDEX_CONTENT
 
 // 전체 화면(트리를 펼친 leaf) — 필터·카운트는 이 목록을 기준으로 컴포넌트 안에서 파생한다.
 const ALL_LEAVES = structureGroups.flatMap(collectLeaves)
@@ -345,6 +394,20 @@ const SCREEN_REGISTRY_BY_KEY = new Map(SCREEN_REGISTRY.map((screen) => [screen.k
 
 const PublishingIndex = () => {
     const [filter, setFilter] = useState<UserTypeFilter>('기업')
+    const [isQuickMenuVisible, setIsQuickMenuVisible] = useState(false)
+    const userTypeControlRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const userTypeControl = userTypeControlRef.current
+        if (!userTypeControl) return
+
+        const observer = new IntersectionObserver(([entry]) => {
+            setIsQuickMenuVisible(!entry.isIntersecting)
+        })
+
+        observer.observe(userTypeControl)
+        return () => observer.disconnect()
+    }, [])
 
     // 선택된 사용자 유형에 맞는 화면만 남기고, 그 부분집합으로 뎁스 컬럼·rowSpan·카운트를 다시 계산한다.
     const leaves = useMemo(() => ALL_LEAVES.filter((leaf) => matchesUserType(leaf, filter)), [filter])
@@ -362,6 +425,27 @@ const PublishingIndex = () => {
 
     return (
         <section aria-label="퍼블리싱 현황" className="flex flex-col gap-4">
+            {/* 시작페이지 전용 퀵메뉴. 긴 IA 표를 내려보는 중에도 기업·기관 화면을 즉시 전환한다. */}
+            <aside
+                aria-label="사용자 유형 빠른 전환"
+                aria-hidden={!isQuickMenuVisible}
+                inert={!isQuickMenuVisible}
+                className={`border-border bg-background/95 fixed right-4 bottom-4 z-40 flex max-w-[calc(100vw-(var(--spacing)*8))] flex-col gap-2 rounded-lg border p-3 shadow-lg backdrop-blur-sm transition-[opacity,transform] duration-300 ease-out motion-reduce:transition-none md:right-6 md:bottom-6 ${
+                    isQuickMenuVisible ? 'translate-y-0 opacity-100' : 'pointer-events-none translate-y-3 opacity-0'
+                }`}
+            >
+                <span className="typo-caption-medium text-muted-foreground px-1">화면 유형 빠른 전환</span>
+                <Badge
+                    color={IA_BADGE_COLOR[filter]}
+                    shape="round"
+                    size="sm"
+                    className="w-fit"
+                    aria-label={`${filter} IA 버전 ${iaVersions[filter]}`}
+                >
+                    {filter} IA {iaVersions[filter]}
+                </Badge>
+                <UserTypeControl filter={filter} label="사용자 유형 빠른 전환" onFilterChange={setFilter} />
+            </aside>
             <BaseCard>
                 <div className="flex flex-col gap-8">
                     <div className="flex flex-col gap-3">
@@ -376,12 +460,12 @@ const PublishingIndex = () => {
                             <div
                                 role="region"
                                 aria-labelledby="release-notes-title"
-                                className="overflow-x-auto overscroll-contain"
+                                className="max-h-100 overflow-auto overscroll-contain [contain:layout_paint]"
                             >
                                 <table className="w-full min-w-2xl table-fixed text-left">
                                     <caption className="sr-only">버전별 릴리스 날짜와 주요 변경사항</caption>
-                                    <thead className="bg-muted relative z-10 block">
-                                        <tr className="border-border [display:table] w-full table-fixed border-b">
+                                    <thead className="bg-muted sticky top-0 z-10">
+                                        <tr className="border-border border-b">
                                             <th scope="col" className="typo-body-l-medium w-28 px-4 py-3">
                                                 버전
                                             </th>
@@ -393,11 +477,11 @@ const PublishingIndex = () => {
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-surface block max-h-52 overflow-y-auto overscroll-contain">
+                                    <tbody className="bg-surface">
                                         {releaseNotes.map((release, index) => (
                                             <tr
                                                 key={release.version}
-                                                className={`border-border [display:table] w-full table-fixed border-b last:border-b-0 ${
+                                                className={`border-border border-b last:border-b-0 ${
                                                     index === 0 ? 'bg-primary-subtle' : ''
                                                 }`}
                                             >
@@ -482,12 +566,12 @@ const PublishingIndex = () => {
                             <div
                                 role="region"
                                 aria-labelledby="frontend-handoff-assets-title"
-                                className="overflow-x-auto overscroll-contain"
+                                className="max-h-100 overflow-auto overscroll-contain [contain:layout_paint]"
                             >
                                 <table className="w-full min-w-3xl table-fixed text-left">
                                     <caption className="sr-only">프론트엔드 인계 자산별 역할과 반영 버전</caption>
-                                    <thead className="bg-muted relative z-10 block">
-                                        <tr className="border-border [display:table] w-full table-fixed border-b">
+                                    <thead className="bg-muted sticky top-0 z-10">
+                                        <tr className="border-border border-b">
                                             <th scope="col" className="typo-body-l-medium w-24 px-4 py-3">
                                                 구분
                                             </th>
@@ -502,11 +586,11 @@ const PublishingIndex = () => {
                                             </th>
                                         </tr>
                                     </thead>
-                                    <tbody className="bg-surface block max-h-88 overflow-y-auto overscroll-contain">
+                                    <tbody className="bg-surface">
                                         {assetVersions.map((asset) => (
                                             <tr
                                                 key={asset.name}
-                                                className={`border-border [display:table] w-full table-fixed border-b last:border-b-0 ${
+                                                className={`border-border border-b last:border-b-0 ${
                                                     asset.isCurrent ? 'bg-primary-subtle' : ''
                                                 }`}
                                             >
@@ -548,35 +632,33 @@ const PublishingIndex = () => {
 
                     <div className="flex flex-col gap-3">
                         <SectionHeader>
-                            <SectionHeaderTitle id="section-publishing-index">퍼블리싱 인덱스</SectionHeaderTitle>
+                            <SectionHeaderTitle
+                                id="section-publishing-index"
+                                className="flex flex-wrap items-center gap-2"
+                            >
+                                <span>퍼블리싱 인덱스</span>
+                                <Badge
+                                    color={IA_BADGE_COLOR[filter]}
+                                    shape="round"
+                                    size="sm"
+                                    aria-label={`${filter} IA 버전 ${iaVersions[filter]}`}
+                                >
+                                    {filter} IA {iaVersions[filter]}
+                                </Badge>
+                            </SectionHeaderTitle>
                             <SectionHeaderDescription>
                                 기업·기관 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다. 메뉴 자체가 화면인 행의
-                                미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시합니다.
+                                미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시하며, 취소선 항목은 기존에 있었지만 삭제된
+                                내용입니다.
                             </SectionHeaderDescription>
                         </SectionHeader>
                         {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 기업/기관 IA 한 벌씩 걸러 보여준다.
           위 공통 레이아웃 표와 구분되도록 간격을 더 둔다. */}
                         {/* 사용자 유형 필터 — 라디오 기반 단일 선택이다. 비어 있는 값은 무시해 항상 하나가 선택된 상태를
                     유지한다. 화살표 키·역할은 Radix 담당. */}
-                        <SegmentedControl
-                            type="radio"
-                            value={filter}
-                            onValueChange={(value) => {
-                                if (isUserTypeFilter(value)) setFilter(value)
-                            }}
-                            aria-label="사용자 유형별 화면"
-                            className="w-fit"
-                        >
-                            {USER_TYPE_FILTERS.map((f) => (
-                                <SegmentedControlItem
-                                    key={f}
-                                    value={f}
-                                    className="has-[[data-state=checked]]:bg-primary has-[[data-state=checked]]:text-primary-foreground px-4"
-                                >
-                                    {f}
-                                </SegmentedControlItem>
-                            ))}
-                        </SegmentedControl>
+                        <div ref={userTypeControlRef} className="w-fit">
+                            <UserTypeControl filter={filter} label="사용자 유형별 화면" onFilterChange={setFilter} />
+                        </div>
 
                         {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
             '완료'와 '최종완료' 상태를 모두 완료 작업으로 집계한다. */}
@@ -716,6 +798,18 @@ const PublishingIndex = () => {
                                                     }
                                                     const isScreenLink =
                                                         depth === leaf.path.length - 1 && registeredScreen?.implemented
+                                                    const isRedLabel =
+                                                        leaf.isRed === true && depth === leaf.path.length - 1
+                                                    // 삭제된 항목은 취소선으로 표시한다(IA 원본의 꺾쇠는 옮기지 않는다).
+                                                    // 취소선·색만으로는 무엇을 뜻하는지 읽어 주지 못하므로 말로도 알린다[5.3.1].
+                                                    const displayLabel = isRedLabel ? (
+                                                        <s>
+                                                            {cell.label}
+                                                            <span className="sr-only"> (삭제된 항목)</span>
+                                                        </s>
+                                                    ) : (
+                                                        cell.label
+                                                    )
                                                     return (
                                                         <th
                                                             key={depth}
@@ -725,20 +819,38 @@ const PublishingIndex = () => {
                                                             className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
                                                         >
                                                             <span className="inline-flex items-center gap-2">
-                                                                <Badge aria-hidden="true" type="number" color="primary">
-                                                                    {depth + 1}
-                                                                </Badge>
-                                                                <span className="sr-only">{depth + 1}뎁스 </span>
+                                                                {!leaf.subtotalDepths.includes(depth) && (
+                                                                    <>
+                                                                        <Badge
+                                                                            aria-hidden="true"
+                                                                            type="number"
+                                                                            color="primary"
+                                                                        >
+                                                                            {depth + 1}
+                                                                        </Badge>
+                                                                        <span className="sr-only">
+                                                                            {depth + 1}뎁스{' '}
+                                                                        </span>
+                                                                    </>
+                                                                )}
                                                                 {isScreenLink ? (
                                                                     <Link
                                                                         href={registeredScreen.path}
-                                                                        className="text-primary focus-visible:ring-ring rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                                                                        className={`${
+                                                                            isRedLabel ? 'text-error' : 'text-primary'
+                                                                        } focus-visible:ring-ring rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none`}
                                                                     >
-                                                                        {cell.label}
+                                                                        {displayLabel}
                                                                         <span className="sr-only"> 화면으로 이동</span>
                                                                     </Link>
                                                                 ) : (
-                                                                    cell.label
+                                                                    <span
+                                                                        className={
+                                                                            isRedLabel ? 'text-error' : undefined
+                                                                        }
+                                                                    >
+                                                                        {displayLabel}
+                                                                    </span>
                                                                 )}
                                                             </span>
                                                         </th>

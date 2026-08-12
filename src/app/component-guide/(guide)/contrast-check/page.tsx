@@ -295,7 +295,7 @@ const ContrastCheckPage = () => (
                     값 입력됨 (completed)
                 </FieldLabel>
                 <InputGroup>
-                    <InputGroupInput id="contrast-addon-completed" defaultValue="11222-1234567" />
+                    <InputGroupInput id="contrast-addon-completed" defaultValue="110111-1234567" />
                     <InputGroupAddon align="inline-end" className="text-foreground">
                         <Lock aria-hidden="true" className="size-5" />
                     </InputGroupAddon>

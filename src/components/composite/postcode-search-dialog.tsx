@@ -179,9 +179,12 @@ const PostcodeSearchDialog = ({
                 ) : (
                     // 위젯이 들어올 빈 자리 — 연동 지점을 그대로 보여 준다.
                     <div className={cn(dialogBodyClassName, 'pb-10')}>
-                        <p className="bg-accent-subtle typo-title-l-bold text-foreground flex min-h-100 items-center justify-center text-center">
+                        {/* 위젯이 들어올 구획의 이름이라 heading 으로 둔다 — 크기·굵기만 제목처럼인 문단으로
+                            두면 "제목처럼 보이는데 제목이 아닌 글"이 된다(WAVE "Possible heading").
+                            위젯을 붙일 때 이 자리 표시와 함께 사라진다. */}
+                        <h3 className="bg-accent-subtle typo-title-l-bold text-foreground flex min-h-100 items-center justify-center text-center">
                             Kakao(다음) 우편번호 검색 영역
-                        </p>
+                        </h3>
                     </div>
                 )}
             </DialogContent>

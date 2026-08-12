@@ -18,6 +18,8 @@ import {Input as BaseInput} from '@/components/ui/input'
 import {InputGroupInput as BaseInputGroupInput} from '@/components/ui/input-group'
 import {RadioGroup as BaseRadioGroup} from '@/components/ui/radio-group'
 import {Textarea as BaseTextarea} from '@/components/ui/textarea'
+import {BUSINESS_NUMBER_PATTERN, formatBusinessNumber} from '@/lib/business-number'
+import {CORPORATE_NUMBER_PATTERN, formatCorporateNumber} from '@/lib/corporate-number'
 import {formatPhoneNumber} from '@/lib/phone'
 
 // 폼 값 보관소(FormValues) — 입력값을 `name` 을 키로 한 객체 하나에 모아 둔다.
@@ -401,6 +403,34 @@ const TelInput = (props: Omit<ClearableInputProps, 'format' | 'type' | 'maxLengt
     <ClearableInput inputMode="tel" {...props} format={formatPhoneNumber} />
 )
 
+// 사업자등록번호 입력 — 숫자만 받아 3-2-5 로 하이픈을 넣는다(123-45-67890). TelInput 과 같은 구조다.
+// 형식이 덜 채워진 채로 제출되는 것은 pattern 이 막고, 그때 띄울 문구는 data-pattern-message 로 함께 준다
+// (브라우저 기본 문구는 무엇이 어긋났는지 알려 주지 않는다 — form-tabs-submit 참고).
+const BUSINESS_NUMBER_MESSAGE = '사업자번호 10자리를 모두 입력해 주세요. (예: 123-45-67890)'
+
+const BusinessNumberInput = (props: Omit<ClearableInputProps, 'format' | 'type' | 'maxLength' | 'pattern'>) => (
+    <ClearableInput
+        inputMode="numeric"
+        {...props}
+        pattern={BUSINESS_NUMBER_PATTERN}
+        data-pattern-message={BUSINESS_NUMBER_MESSAGE}
+        format={formatBusinessNumber}
+    />
+)
+
+// 법인등록번호 입력 — 숫자만 받아 6-7 로 하이픈을 넣는다(110111-1234567). BusinessNumberInput 과 같은 구조다.
+const CORPORATE_NUMBER_MESSAGE = '법인번호 13자리를 모두 입력해 주세요. (예: 110111-1234567)'
+
+const CorporateNumberInput = (props: Omit<ClearableInputProps, 'format' | 'type' | 'maxLength' | 'pattern'>) => (
+    <ClearableInput
+        inputMode="numeric"
+        {...props}
+        pattern={CORPORATE_NUMBER_PATTERN}
+        data-pattern-message={CORPORATE_NUMBER_MESSAGE}
+        format={formatCorporateNumber}
+    />
+)
+
 type DatePickerProps = Parameters<typeof BaseDatePicker>[0]
 
 // 날짜는 상태에 문자열(yyyy-MM-dd)로 담고 여기서 Date 로 되돌린다 — 상태 한 벌로 값을 다루기 위해서다.
@@ -420,6 +450,7 @@ const DatePicker = ({name, onChange, ...props}: DatePickerProps) => {
     return (
         <BaseDatePicker
             {...props}
+            controlled={Boolean(field)}
             required={required}
             {...validation.props}
             name={name}
@@ -543,7 +574,9 @@ const Select = ({name, onValueChange, ...props}: SelectProps) => {
 }
 
 export {
+    BusinessNumberInput,
     ClearableInput,
+    CorporateNumberInput,
     DatePicker,
     FormCardScope,
     FormFieldSection,

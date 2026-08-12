@@ -217,6 +217,8 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'alert-success-border': 'bg-alert-success-border',
     'alert-warning-border': 'bg-alert-warning-border',
     'alert-error-border': 'bg-alert-error-border',
+    'file-upload-complete': 'bg-file-upload-complete',
+    'file-upload-complete-border': 'bg-file-upload-complete-border',
     'table-surface': 'bg-table-surface',
     toast: 'bg-toast',
     'toast-foreground': 'bg-toast-foreground',
@@ -292,7 +294,7 @@ const STANDARD_SLOTS = new Set([
 // 컴포넌트 전용 레시피 토큰은 일반 색 슬롯이 아니라 특정 컴포넌트 내부에서만 쓰는 값이라
 // 표준·커스텀 슬롯 표에서 제외하고 하단의 레시피 표에 모아 노출한다.
 const isComponentRecipe = (n: string): boolean =>
-    /^(action-check|alert|button|checkbox|radio|badge|number-badge|chip|icon|selectable-card|step-progress|segmented)-/.test(
+    /^(action-check|alert|button|checkbox|radio|badge|number-badge|chip|file-upload|icon|selectable-card|step-progress|segmented)-/.test(
         n,
     )
 

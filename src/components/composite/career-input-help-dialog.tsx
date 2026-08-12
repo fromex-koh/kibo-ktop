@@ -36,7 +36,10 @@ const CareerInputHelpDialog = ({children, defaultOpen}: CareerInputHelpDialogPro
                 <DialogTitle>입력 도움말</DialogTitle>
             </DialogHeader>
             <div className={cn(dialogInfoBodyClassName, 'gap-2')}>
-                <p className="typo-title-m-bold text-foreground">{EXAMPLE_TITLE}</p>
+                {/* 예시 제목은 아래 목록을 이끄는 머리라 heading 으로 둔다 — 크기·굵기만 제목처럼인 문단으로
+                    두면 "제목처럼 보이는데 제목이 아닌 글"이 된다(WAVE "Possible heading").
+                    모달 제목(DialogTitle=h2) 아래 단계라 h3 이다[6.4.2]. */}
+                <h3 className="typo-title-m-bold text-foreground">{EXAMPLE_TITLE}</h3>
                 {/* 항목 사이 8 — 시안 실측(줄 높이 24 · 줄 간격 32). */}
                 <ol className="flex list-none flex-col gap-2">
                     {EXAMPLE_ITEMS.map((item, index) => (

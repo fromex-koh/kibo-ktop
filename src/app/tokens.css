@@ -412,6 +412,8 @@
   --ds-alert-success-border: var(--raw-success-100);
   --ds-alert-warning-border: var(--raw-warning-100);
   --ds-alert-error-border: var(--raw-error-100);
+  --ds-file-upload-complete: var(--raw-blue-50);
+  --ds-file-upload-complete-border: var(--raw-navy-200);
   --ds-table-surface: var(--raw-common-white);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
@@ -682,6 +684,8 @@
   --ds-alert-success-border: var(--raw-success-100);
   --ds-alert-warning-border: var(--raw-warning-100);
   --ds-alert-error-border: var(--raw-error-100);
+  --ds-file-upload-complete: var(--raw-blue-50);
+  --ds-file-upload-complete-border: var(--raw-navy-200);
   --ds-table-surface: var(--raw-common-white);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
@@ -952,6 +956,8 @@
   --ds-alert-success-border: var(--raw-success-400);
   --ds-alert-warning-border: var(--raw-warning-400);
   --ds-alert-error-border: var(--raw-error-400);
+  --ds-file-upload-complete: var(--raw-blue-800);
+  --ds-file-upload-complete-border: var(--raw-blue-700);
   --ds-table-surface: var(--raw-gray-900);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
@@ -1222,6 +1228,8 @@
   --ds-alert-success-border: var(--raw-success-400);
   --ds-alert-warning-border: var(--raw-warning-400);
   --ds-alert-error-border: var(--raw-error-400);
+  --ds-file-upload-complete: var(--raw-blue-800);
+  --ds-file-upload-complete-border: var(--raw-blue-700);
   --ds-table-surface: var(--raw-gray-900);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
@@ -1373,6 +1381,8 @@
   --color-alert-success-border: var(--ds-alert-success-border);
   --color-alert-warning-border: var(--ds-alert-warning-border);
   --color-alert-error-border: var(--ds-alert-error-border);
+  --color-file-upload-complete: var(--ds-file-upload-complete);
+  --color-file-upload-complete-border: var(--ds-file-upload-complete-border);
   --color-table-surface: var(--ds-table-surface);
   --color-toast: var(--ds-toast);
   --color-toast-foreground: var(--ds-toast-foreground);

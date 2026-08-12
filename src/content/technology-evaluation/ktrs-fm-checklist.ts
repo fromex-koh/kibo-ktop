@@ -272,7 +272,7 @@ const KTRS_FM_CHECKLIST: ChecklistData = {
             },
             name: 'revenueCapability',
             label: '수익창출역량 선택',
-            placeholder: '선택해주세요',
+            placeholder: '선택해 주세요',
             optionsByBranch: {
                 expert: [
                     {value: '1', label: REVENUE_OPTION.competitive},

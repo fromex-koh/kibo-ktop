@@ -59,10 +59,15 @@ const CitationManualDialog = ({children, defaultOpen}: CitationManualDialogProps
                 <ol className="flex list-none flex-col gap-6">
                     {MANUAL_STEPS.map((step, index) => (
                         <li key={step.instruction} className="flex flex-col gap-4">
-                            <p className="typo-title-m-bold text-foreground flex">
+                            {/* 순서 문장은 그 아래 그림까지 아우르는 단계의 머리라 heading 으로 둔다 —
+                                크기·굵기만 제목처럼인 문단으로 두면 "제목처럼 보이는데 제목이 아닌 글"이 되고
+                                (WAVE "Possible heading"), 스크린리더에서 단계 사이를 제목으로 건너뛸 수도 없다.
+                                모달 제목(DialogTitle=h2) 아래 단계라 h3 이다[6.4.2]. 순번은 장식이라
+                                (ListMarker=aria-hidden) 제목 이름에는 문장만 남는다. */}
+                            <h3 className="typo-title-m-bold text-foreground flex">
                                 <ListMarker type="ordered" level={1} index={index + 1} typography="inherit" />
                                 <span className="min-w-0">{step.instruction}</span>
-                            </p>
+                            </h3>
                             {/* 정해진 폭 안에서 원본 비율대로 줄어든다 — 정적 import 라 크기를 알고 있어
                                 레이아웃이 흔들리지 않는다[NA-005]. */}
                             <Image src={step.image} alt={step.alt} sizes="508px" className="h-auto w-full" />

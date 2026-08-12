@@ -103,6 +103,9 @@ const getValidationMessage = (control: HTMLInputElement | HTMLSelectElement | HT
     }
     if (validity.typeMismatch && control.type === 'email')
         return '이메일 형식이 올바르지 않습니다. (예: user@example.com)'
+    // 형식(pattern)이 어긋난 칸 — 무엇을 어떻게 적어야 하는지는 칸마다 다르다. 브라우저 기본 문구는
+    // "요청한 형식과 일치시키세요" 라 도움이 되지 않으므로, 칸이 적어 둔 안내(data-pattern-message)를 쓴다.
+    if (validity.patternMismatch && control.dataset.patternMessage) return control.dataset.patternMessage
     if (validity.rangeOverflow && control.type === 'date') return '오늘 이후 날짜는 선택할 수 없습니다.'
 
     return control.validationMessage
