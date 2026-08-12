@@ -450,6 +450,7 @@ const DatePicker = ({name, onChange, ...props}: DatePickerProps) => {
     return (
         <BaseDatePicker
             {...props}
+            controlled={Boolean(field)}
             required={required}
             {...validation.props}
             name={name}
