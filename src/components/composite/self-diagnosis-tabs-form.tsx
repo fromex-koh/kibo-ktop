@@ -7,6 +7,7 @@ import {FormTabs} from '@/components/composite/form-tabs'
 import {useFormTabsSubmit} from '@/components/composite/form-tabs-submit'
 import {FormValuesProvider} from '@/components/composite/form-values'
 import {SELF_DIAGNOSIS_FORM_TABS} from '@/components/composite/self-diagnosis-form-tabs'
+import type {FormTabItem} from '@/components/composite/form-tabs'
 
 // 자가진단 입력 폼. 하단 CTA는 formId로 이 폼과 연결된다.
 // 모든 탭의 검사를 통과하면 값을 콘솔에 찍고 nextHref 로 이동한다 — 저장 API 는 그 console.log 자리에 붙인다.
@@ -16,12 +17,19 @@ type SelfDiagnosisTabsFormProps = {
     stickyHeader?: ReactNode
     // 검사를 통과했을 때 갈 다음 단계. 넘기지 않으면 이동하지 않는다.
     nextHref?: string
+    // 탭 구성. 기본은 기업 자가진단이고, 기관 개별평가는 기업정보 탭만 다른 한 벌을 넘긴다.
+    tabs?: readonly FormTabItem[]
 }
 
-const SelfDiagnosisTabsFormFields = ({formId, stickyHeader, nextHref}: SelfDiagnosisTabsFormProps) => {
+const SelfDiagnosisTabsFormFields = ({
+    formId,
+    stickyHeader,
+    nextHref,
+    tabs = SELF_DIAGNOSIS_FORM_TABS,
+}: SelfDiagnosisTabsFormProps) => {
     const router = useRouter()
     const {currentTab, setCurrentTab, handleSubmit} = useFormTabsSubmit({
-        defaultTab: SELF_DIAGNOSIS_FORM_TABS[0]?.value ?? '',
+        defaultTab: tabs[0]?.value ?? '',
     })
 
     const submit = (event: SubmitEvent<HTMLFormElement>) => {
@@ -37,7 +45,7 @@ const SelfDiagnosisTabsFormFields = ({formId, stickyHeader, nextHref}: SelfDiagn
             {/* 탭과 스텝 헤더 사이는 60px(시안) — 바깥 gap-y-10(40) 에 20 을 더한다.
                 모바일에는 그 헤더가 없고 고정 줄이 화면 위쪽에 붙으므로 간격을 두지 않는다. */}
             <FormTabs
-                items={SELF_DIAGNOSIS_FORM_TABS}
+                items={tabs}
                 value={currentTab}
                 onValueChange={setCurrentTab}
                 stickyHeader={stickyHeader}
@@ -48,9 +56,9 @@ const SelfDiagnosisTabsFormFields = ({formId, stickyHeader, nextHref}: SelfDiagn
 }
 
 // 탭을 이동해도 입력값이 유지되도록 공용 폼 상태를 연결한다.
-const SelfDiagnosisTabsForm = ({formId, stickyHeader, nextHref}: SelfDiagnosisTabsFormProps) => (
+const SelfDiagnosisTabsForm = ({formId, stickyHeader, nextHref, tabs}: SelfDiagnosisTabsFormProps) => (
     <FormValuesProvider defaultValues={COMPANY_ETC_DEFAULT_VALUES}>
-        <SelfDiagnosisTabsFormFields formId={formId} stickyHeader={stickyHeader} nextHref={nextHref} />
+        <SelfDiagnosisTabsFormFields formId={formId} stickyHeader={stickyHeader} nextHref={nextHref} tabs={tabs} />
     </FormValuesProvider>
 )
 
