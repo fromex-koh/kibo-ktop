@@ -223,8 +223,8 @@ const CompanyTelField = () => (
     </Field>
 )
 
-// 업종코드 — 시안의 이 칸은 직접 입력도 되고 [조회] 모달로도 채운다(기업 화면은 조회 전용).
-const IndustryCodeField = () => {
+// 업종코드 — 기업 화면과 동일하게 직접 입력하지 않고 [조회] 모달에서 선택한 값만 채운다.
+const IndustryCodeField = ({fullWidth = false}: {fullWidth?: boolean}) => {
     const {setValue, clearFieldError} = useFormValues()
     // 모달에서 고른 업종을 입력 칸에 담는다. 값의 키와 칸의 id 가 같아 메시지도 같은 키로 거둔다.
     const handleSelect = ({label}: {label: string}) => {
@@ -236,9 +236,11 @@ const IndustryCodeField = () => {
         <LookupField
             id={INDUSTRY_CODE_FIELD}
             label="업종코드"
-            placeholder="업종코드 입력"
+            placeholder="[조회] 버튼을 눌러 선택해 주세요"
             action="조회"
+            readOnly
             required
+            className={fullWidth ? 'md:col-span-2' : undefined}
             wrapAction={(button) => <IndustryCodeDialog onSelect={handleSelect}>{button}</IndustryCodeDialog>}
         />
     )
@@ -271,7 +273,7 @@ const AddressField = () => {
                         readOnly
                         required
                         autoComplete="off"
-                        placeholder="[주소 검색] 버튼으로 자동 입력됩니다."
+                        placeholder="[주소 검색] 버튼으로 자동 입력됩니다"
                         className="min-w-0 flex-1"
                     />
                     {/* 실제 주소는 이 모달(Kakao 우편번호)에서 고른다 — 회원가입 흐름과 같은 모달이다. */}
@@ -387,8 +389,8 @@ const OrgCompanyInfoForm = () => {
                             </FieldGrid>
                         </>
                     ) : (
-                        // 법인 전용 두 칸이 빠진 만큼 뒤 칸이 당겨져 채운다 — 한 그리드에 이어 놓으면
-                        // 남는 칸이 줄 중간이 아니라 마지막 줄 끝(업종코드 오른쪽)에 온다.
+                        // 법인 전용 두 칸이 빠진 만큼 뒤 칸이 당겨져 채워지고, 홀수로 남는 마지막 업종코드는
+                        // 빈 절반 칸을 만들지 않도록 2열 전체를 사용한다.
                         <FieldGrid>
                             <CorpTypeField />
                             <BusinessNumberField />
@@ -396,7 +398,7 @@ const OrgCompanyInfoForm = () => {
                             <FoundDateField />
                             <CeoNameField />
                             <CompanyTelField />
-                            <IndustryCodeField />
+                            <IndustryCodeField fullWidth />
                         </FieldGrid>
                     )}
 
