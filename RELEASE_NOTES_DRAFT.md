@@ -64,8 +64,11 @@
     - src/components/composite/self-diagnosis-form-tabs.tsx
     - src/components/composite/self-diagnosis-tabs-form.tsx
 - 변경: 사업자·법인번호 형식 검사와 기관용 기업정보 탭 구성을 기존 공통 폼 흐름에서 선택해 사용할 수 있도록 확장
+- 추가 변경: 반복 카드의 마지막 항목을 초기화할 때 근무 시작·종료 연월도 함께 비워지도록 폼 날짜 필드를 빈 값에서도 제어 상태로 연결
 - 결과: 기존 기업용 폼 동작을 유지하면서 기관 개별평가에 필요한 입력값 처리와 탭 구성 변경사항을 비교 반영
+- 함께 적용: 덮어쓰기 카드의 src/components/composite/date-picker.tsx를 먼저 적용한 뒤 이 파일의 추가 변경사항을 반영
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f32b540)
+- 추가 수정 커밋: [날짜 초기화 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e0b9a73)
 
 ### 공통 컴포넌트·테마 접근성 보완
 
@@ -79,6 +82,11 @@
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/cbcbc29)
 
 ## [덮어쓰기]
+
+### 날짜 선택 컴포넌트
+
+- 대상: src/components/composite/date-picker.tsx
+- 적용: 폼에서 날짜 값을 초기화할 때 이전 선택값이 다시 노출되지 않도록 빈 값도 제어 상태로 유지하는 최신 날짜 선택 컴포넌트로 교체
 
 ### 퍼블리싱 인덱스 화면
 
