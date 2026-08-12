@@ -14,7 +14,9 @@
 const optionCardClassName =
     'group border-subtle-3 bg-card hover:border-primary hover:bg-blue-10 focus-visible:border-primary focus-visible:bg-blue-10 flex h-full w-full flex-col gap-2 rounded-lg border-2 px-10 pt-8 pb-6 outline-none transition-colors focus-visible:outline-2 focus-visible:outline-solid outline-ring focus-visible:outline-ring focus-visible:outline-offset-2'
 const optionCardBodyClassName = 'flex flex-1 flex-col gap-3'
-const optionCardHeaderClassName = 'flex items-start justify-between gap-4'
+// 제목 묶음과 일러스트는 md 부터 좌우로 나란히 놓고, 모바일에서는 세로로 쌓는다 — 좁은 폭에서 옆에 붙이면
+// 일러스트(148 고정)가 폭을 가져가 제목·설명이 잘린다. 읽기 순서(제목 → 일러스트)는 두 배치 모두 같다[7.3.1].
+const optionCardHeaderClassName = 'flex flex-col items-start gap-4 md:flex-row md:justify-between'
 const optionCardHeadingGroupClassName = 'flex min-w-0 flex-col gap-3'
 const optionCardBadgeClassName = 'flex'
 const optionCardTitleGroupClassName = 'flex min-w-0 flex-col'

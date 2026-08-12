@@ -49,8 +49,10 @@ const buttonVariants = cva(
                 default: 'h-control-h-sm min-h-11 gap-2 px-4',
                 xl: "h-control-h-xl min-h-11 min-w-control-min-w-lg gap-2 rounded-sm px-6 text-lg font-bold [&_svg:not([class*='size-'])]:size-6",
                 lg: "h-control-h-lg min-h-11 gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
-                md: "h-control-h-md min-h-11 min-w-control-min-w-sm gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-6",
-                sm: "h-control-h-sm min-w-control-min-w-sm gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-5",
+                md: "h-control-h-md min-h-11 min-w-control-min-w-sm gap-2 rounded-sm px-6 text-base font-medium [&_svg:not([class*='size-'])]:size-5",
+                // PROJECT-STYLE: 시안 button 컴포넌트셋(40006995:44347)의 small 은 세 type 모두 14px/Medium 이고
+                // 아이콘은 16 이다 — 40px 상자에 16px 글자를 넣던 이전 시안에서 바뀐 값이다.
+                sm: "h-control-h-sm min-w-control-min-w-sm gap-2 rounded-sm px-6 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
                 xs: "h-control-h-xs min-w-control-min-w-xs gap-1 rounded-2xs px-3 text-sm font-medium [&_svg:not([class*='size-'])]:size-4",
                 'icon-xl': "size-control-h-xl min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-xl",
                 'icon-lg': "size-control-h-lg min-h-11 min-w-11 rounded-sm [&_svg:not([class*='size-'])]:size-icon-xl",
@@ -65,7 +67,6 @@ const buttonVariants = cva(
             {variant: 'secondary', size: 'lg', class: 'min-w-control-min-w-sm'},
             {variant: 'tertiary', size: 'lg', class: 'min-w-control-min-w-sm'},
             {variant: 'default', size: 'md', class: 'font-bold disabled:font-medium'},
-            {variant: 'default', size: 'sm', class: 'font-bold disabled:font-medium'},
             // PROJECT-STYLE: text 계열은 Figma button_text 를 따르므로 컨트롤 상자를 통째로 벗긴다.
             // 높이·최소 크기·패딩·테두리를 걷어내면 아래 size 별 블록의 leading-* 가 상자 높이를 정한다.
             // gap-1 — button_text 의 텍스트↔아이콘 간격은 네 size 모두 4px 인데 size 축이 8px 를 얹는다.
