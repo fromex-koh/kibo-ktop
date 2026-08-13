@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import {Check, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
+import {Check, ChevronUp, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {
     USER_TYPE_VALUES,
@@ -17,6 +17,7 @@ import {
     type StructureNode,
 } from '@/content/publishing-guide'
 import {Badge} from '@/components/ui/badge'
+import {Button} from '@/components/ui/button'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
 import {BaseCard} from '@/components/composite/base-card'
 import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
@@ -249,6 +250,7 @@ type FlatLeaf = {
     subtotalDepths: number[] // 소계/구분 브랜치의 뎁스 인덱스 — 표에서 뎁스 배지를 숨긴다.
     screenId: string | null
     status: Status
+    application2Status: Status
     version: string
     isRed?: boolean
     userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 공통(기업·기관 둘 다).
@@ -283,6 +285,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           subtotalDepths: nextSubtotalDepths,
                           screenId: node.screen.screenId,
                           status: node.screen.status,
+                          application2Status: node.screen.application2Status ?? '대기중',
                           version: node.screen.version,
                           ...(node.screen.isRed ? {isRed: true} : {}),
                           userType: node.screen.userType ?? branchUserType,
@@ -302,6 +305,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 subtotalDepths,
                 screenId: node.screenId,
                 status: node.status,
+                application2Status: node.application2Status ?? '대기중',
                 version: node.version,
                 ...(node.isRed ? {isRed: true} : {}),
                 userType: node.userType ?? inherited,
@@ -430,12 +434,24 @@ const PublishingIndex = () => {
     const depthHeaders = useMemo(() => Array.from({length: maxDepth}, (_, depth) => `${depth + 1}뎁스`), [maxDepth])
 
     const screenCount = leaves.length
-    // 작업 진척률 — '완료' 또는 '최종완료'된 화면 수 / (필터된) 전체 화면 수.
-    const doneCount = useMemo(
+    // UIUX·응용2 진척률 — 각 상태에서 '완료' 또는 '최종완료'된 화면 수 / 전체 화면 수.
+    const uiuxDoneCount = useMemo(
         () => leaves.filter((leaf) => leaf.status === '완료' || leaf.status === '최종완료').length,
         [leaves],
     )
-    const progressPercent = screenCount === 0 ? 0 : Math.round((doneCount / screenCount) * 100)
+    const application2DoneCount = useMemo(
+        () =>
+            leaves.filter((leaf) => leaf.application2Status === '완료' || leaf.application2Status === '최종완료')
+                .length,
+        [leaves],
+    )
+    const uiuxProgressPercent = screenCount === 0 ? 0 : Math.round((uiuxDoneCount / screenCount) * 100)
+    const application2ProgressPercent = screenCount === 0 ? 0 : Math.round((application2DoneCount / screenCount) * 100)
+
+    const scrollToTop = () => {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        window.scrollTo({top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth'})
+    }
 
     return (
         <section aria-label="퍼블리싱 현황" className="flex flex-col gap-4">
@@ -459,6 +475,10 @@ const PublishingIndex = () => {
                     {filter} IA {iaVersions[filter]}
                 </Badge>
                 <UserTypeControl filter={filter} label="사용자 유형 빠른 전환" onFilterChange={setFilter} />
+                <Button type="button" variant="secondary" size="sm" className="w-full" onClick={scrollToTop}>
+                    맨 위로
+                    <ChevronUp aria-hidden="true" />
+                </Button>
             </aside>
             <BaseCard>
                 <div className="flex flex-col gap-8">
@@ -670,14 +690,23 @@ const PublishingIndex = () => {
                             <UserTypeControl filter={filter} label="사용자 유형별 화면" onFilterChange={setFilter} />
                         </div>
 
-                        {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
-            '완료'와 '최종완료' 상태를 모두 완료 작업으로 집계한다. */}
-                        <p aria-live="polite" className="typo-body-l-regular text-muted-foreground">
-                            {filter} 화면 본수: <span className="text-foreground font-semibold">{screenCount}개</span>
-                            {' · '}작업 진척률:{' '}
-                            <span className="text-foreground font-semibold">{progressPercent}%</span> (완료 {doneCount}/
-                            {screenCount})
-                        </p>
+                        {/* 역할별 전체 화면 수와 UIUX·응용2 진척률을 같은 기준으로 나란히 비교한다. */}
+                        <div aria-live="polite" className="grid gap-3 sm:grid-cols-2">
+                            <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
+                                <span className="typo-caption-medium text-muted-foreground">응용2 진척률</span>
+                                <strong className="typo-h4-bold text-foreground">{application2ProgressPercent}%</strong>
+                                <span className="typo-caption-regular text-muted-foreground">
+                                    완료 {application2DoneCount}/{screenCount} · {filter} 화면 {screenCount}개
+                                </span>
+                            </div>
+                            <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
+                                <span className="typo-caption-medium text-muted-foreground">UIUX 진척률</span>
+                                <strong className="typo-h4-bold text-foreground">{uiuxProgressPercent}%</strong>
+                                <span className="typo-caption-regular text-muted-foreground">
+                                    완료 {uiuxDoneCount}/{screenCount} · {filter} 화면 {screenCount}개
+                                </span>
+                            </div>
+                        </div>
                         {/* 아래 화면 목록에서 사용하는 진행 상태 범례 */}
                         <ul aria-label="화면 진행 상태 범례" className="flex flex-wrap items-center gap-2">
                             {STATUS_VALUES.map((status) => (
@@ -696,7 +725,7 @@ const PublishingIndex = () => {
                                             공통 레이아웃
                                         </th>
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                            상태
+                                            UIUX
                                         </th>
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
                                             버전
@@ -764,7 +793,10 @@ const PublishingIndex = () => {
                                             </th>
                                         ))}
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                            상태
+                                            응용2
+                                        </th>
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            UIUX
                                         </th>
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
                                             버전
@@ -866,6 +898,9 @@ const PublishingIndex = () => {
                                                         </th>
                                                     )
                                                 })}
+                                                <td className="px-4 py-3">
+                                                    <StatusTag status={leaf.application2Status} />
+                                                </td>
                                                 <td className="px-4 py-3">
                                                     <StatusTag status={effectiveStatus} />
                                                 </td>
