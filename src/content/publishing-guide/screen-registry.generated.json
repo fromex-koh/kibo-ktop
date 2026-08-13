@@ -104,7 +104,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature",
@@ -118,7 +118,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info",
@@ -132,7 +132,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-info-address-search",
@@ -160,21 +160,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-technology-definition",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist",
@@ -188,35 +188,35 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-restricted-industries",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-trl-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete",
@@ -230,35 +230,35 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer-transfer-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete-guarantee-application",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete-guarantee-application-application-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.2",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
@@ -272,21 +272,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature",
@@ -307,14 +307,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-technology-category",
@@ -328,28 +328,28 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-complete",
@@ -370,21 +370,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature",
@@ -405,14 +405,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-technology-category",
@@ -426,28 +426,28 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-complete",
@@ -468,21 +468,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature",
@@ -503,28 +503,28 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-info-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-additional-company-info-transaction-type-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-additional-company-info-technology-definition",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist",
@@ -538,42 +538,42 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-restricted-industries",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-trl-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-complete",
@@ -762,21 +762,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-profile-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-consent-popup",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-representative-history",
@@ -804,7 +804,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-evaluation-results",
@@ -825,28 +825,28 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-evaluation-results-bank-transfer-transfer-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-evaluation-results-guarantee-application",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-evaluation-results-guarantee-application-application-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-k-bigx-report-history",
@@ -1154,21 +1154,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-technology-info-self-diagnosis-result",
@@ -1182,14 +1182,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-info-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-info-company-management",
@@ -1203,91 +1203,91 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-additional-company-info-recognized-ip",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-additional-company-info-transaction-type-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-additional-company-info-technology-definition",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-citation-manual",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-restricted-industries",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-trl-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-complete-bank-transfer",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-complete-guarantee-application",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.2",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-customer-consent",
@@ -1308,14 +1308,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-technology-category",
@@ -1329,7 +1329,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-company-management",
@@ -1392,14 +1392,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-technology-category",
@@ -1413,7 +1413,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-company-management",
@@ -1427,21 +1427,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-additional-company-info-transaction-type-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-additional-company-info-technology-definition",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-evaluation-application",
@@ -1637,14 +1637,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-profile-edit-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history",
