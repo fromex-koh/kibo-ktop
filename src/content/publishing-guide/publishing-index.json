@@ -540,7 +540,7 @@
                         {
                             "label": "(0) 평가 모형 선택 화면",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-technology-evaluation-tech-index-selection"
                         },
@@ -1868,7 +1868,7 @@
                         {
                             "label": "(1) 평가 모형 선택 화면",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-individual-evaluation-tech-index-selection"
                         },

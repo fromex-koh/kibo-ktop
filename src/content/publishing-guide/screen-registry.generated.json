@@ -241,8 +241,8 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-selection",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -1242,8 +1242,8 @@
         },
         {
             "key": "org-individual-evaluation-tech-index-selection",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
