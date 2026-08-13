@@ -199,6 +199,20 @@ const normalizeReleaseNoteChange = (change: ReleaseNoteChange): ReleaseNoteChang
     return [createOverwriteChange('변경사항 반영 대상', targets)]
 }
 
+// 릴리즈 초안의 섹션 작성 순서와 관계없이 인계 카드는 개발자가 적용 방식을 빠르게 훑을 수 있도록
+// Diff 확인 → 덮어쓰기 → 신규 추가 순으로 고정한다. 같은 분류 안에서는 초안 작성 순서를 유지한다.
+const RELEASE_NOTE_HANDOFF_ORDER = {diff: 0, overwrite: 1, new: 2} as const
+const sortReleaseNoteChanges = (changes: ReleaseNoteChange[]) =>
+    changes
+        .map((change, index) => ({change, index}))
+        .sort((left, right) => {
+            const leftOrder = isReleaseNoteHandoff(left.change) ? RELEASE_NOTE_HANDOFF_ORDER[left.change.mode] : -1
+            const rightOrder = isReleaseNoteHandoff(right.change) ? RELEASE_NOTE_HANDOFF_ORDER[right.change.mode] : -1
+
+            return leftOrder - rightOrder || left.index - right.index
+        })
+        .map(({change}) => change)
+
 // 퍼블리싱 진행 상태 인덱스 데모. 데이터는 src/content/publishing-guide/publishing-index.json 단일 소스에서 온다.
 // 이 컴포넌트는 '표현'(상태 색·아이콘 매핑, 뎁스별 rowSpan 계산, 레이아웃, 사용자 유형 필터)만 담당한다.
 
@@ -498,38 +512,34 @@ const PublishingIndex = () => {
                                                 </td>
                                                 <td className="typo-body-l-regular text-foreground-subtle px-4 py-3">
                                                     <ul className="flex list-none flex-col gap-2">
-                                                        {release.changes
-                                                            .flatMap(normalizeReleaseNoteChange)
-                                                            .map((displayChange, changeIndex) => {
-                                                                const key =
-                                                                    typeof displayChange === 'string'
-                                                                        ? displayChange
-                                                                        : `${displayChange.mode}-${displayChange.title}`
+                                                        {sortReleaseNoteChanges(
+                                                            release.changes.flatMap(normalizeReleaseNoteChange),
+                                                        ).map((displayChange, changeIndex) => {
+                                                            const key =
+                                                                typeof displayChange === 'string'
+                                                                    ? displayChange
+                                                                    : `${displayChange.mode}-${displayChange.title}`
 
-                                                                return (
-                                                                    <li
-                                                                        key={`${key}-${changeIndex}`}
-                                                                        className={
-                                                                            isReleaseNoteHandoff(displayChange)
-                                                                                ? ''
-                                                                                : 'flex'
-                                                                        }
-                                                                    >
-                                                                        {isReleaseNoteHandoff(displayChange) ? (
-                                                                            <ReleaseNoteHandoff
-                                                                                change={displayChange}
-                                                                            />
-                                                                        ) : (
-                                                                            <>
-                                                                                <ListMarker />
-                                                                                <ReleaseNoteChange
-                                                                                    change={displayChange}
-                                                                                />
-                                                                            </>
-                                                                        )}
-                                                                    </li>
-                                                                )
-                                                            })}
+                                                            return (
+                                                                <li
+                                                                    key={`${key}-${changeIndex}`}
+                                                                    className={
+                                                                        isReleaseNoteHandoff(displayChange)
+                                                                            ? ''
+                                                                            : 'flex'
+                                                                    }
+                                                                >
+                                                                    {isReleaseNoteHandoff(displayChange) ? (
+                                                                        <ReleaseNoteHandoff change={displayChange} />
+                                                                    ) : (
+                                                                        <>
+                                                                            <ListMarker />
+                                                                            <ReleaseNoteChange change={displayChange} />
+                                                                        </>
+                                                                    )}
+                                                                </li>
+                                                            )
+                                                        })}
                                                     </ul>
                                                 </td>
                                             </tr>
