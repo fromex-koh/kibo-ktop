@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import {Check, ChevronUp, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
+import {toast} from 'sonner'
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {
     USER_TYPE_VALUES,
@@ -240,6 +241,34 @@ const StatusTag = ({status}: {status: Status}) => (
         {status}
     </Badge>
 )
+
+// 실제 화면의 마지막 뎁스 배지는 페이지 구현 여부와 관계없이 publishing-index에서 검색할 고유 키를 복사한다.
+// 상위 메뉴 뎁스는 여러 화면을 대표할 수 있으므로 복사 버튼으로 만들지 않는다.
+const KeyCopyDepthBadge = ({depth, screenKey}: {depth: number; screenKey: string}) => {
+    const copyKey = async () => {
+        try {
+            await navigator.clipboard.writeText(screenKey)
+            toast('키값이 복사되었습니다.', {position: 'top-center'})
+        } catch {
+            // 클립보드 권한이 없으면 상태를 바꾸지 않는다.
+        }
+    }
+
+    const label = `${screenKey} 키값 복사`
+
+    return (
+        <Badge
+            asChild
+            type="number"
+            color="primary"
+            className="hover:ring-primary/40 cursor-pointer transition-shadow focus-within:ring-2 hover:ring-2"
+        >
+            <button type="button" onClick={copyKey} title={label} aria-label={label}>
+                {depth}
+            </button>
+        </Badge>
+    )
+}
 
 // 사이트 구조는 뎁스 제한 없는 트리라, 표에 그리려면 각 leaf(실제 화면)를 "뿌리부터 자신까지의
 // 라벨 경로"로 펼쳐야 한다. 이 펼친 목록 + 뎁스별 rowSpan 계산이 표 렌더링의 핵심이다.
@@ -485,8 +514,10 @@ const PublishingIndex = () => {
                     <div className="flex flex-col gap-3">
                         <SectionHeader>
                             <SectionHeaderTitle id="release-notes-title">버전 업데이트</SectionHeaderTitle>
-                            <SectionHeaderDescription>
-                                버전별 주요 개선 사항과 변경 내용을 최신순으로 안내합니다.
+                            <SectionHeaderDescription asChild>
+                                <ul className="list-disc pl-5">
+                                    <li>버전별 주요 개선 사항과 변경 내용을 최신순으로 안내합니다.</li>
+                                </ul>
                             </SectionHeaderDescription>
                         </SectionHeader>
 
@@ -676,10 +707,14 @@ const PublishingIndex = () => {
                                     {filter} IA {iaVersions[filter]}
                                 </Badge>
                             </SectionHeaderTitle>
-                            <SectionHeaderDescription>
-                                기업·기관 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다. 메뉴 자체가 화면인 행의
-                                미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시하며, 취소선 항목은 기존에 있었지만 삭제된
-                                내용입니다.
+                            <SectionHeaderDescription asChild>
+                                <ul className="flex list-disc flex-col gap-1 pl-5">
+                                    <li>기업·기관 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다.</li>
+                                    <li>
+                                        메뉴 자체가 화면인 행의 미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시합니다.
+                                    </li>
+                                    <li>취소선 항목은 기존에 있었지만 삭제된 내용입니다.</li>
+                                </ul>
                             </SectionHeaderDescription>
                         </SectionHeader>
                         {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 기업/기관 IA 한 벌씩 걸러 보여준다.
@@ -714,6 +749,42 @@ const PublishingIndex = () => {
                                     <StatusTag status={status} />
                                 </li>
                             ))}
+                        </ul>
+                        <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-1.5 pl-5">
+                            <li>
+                                <strong className="text-foreground font-medium">작업 브랜치:</strong> 최신{' '}
+                                <code className="text-foreground font-mono">work</code>에서 별도 브랜치를 생성하고, 완료
+                                후 <code className="text-foreground font-mono">work</code>를 대상으로 PR을 보냅니다.
+                            </li>
+                            <li>
+                                <strong className="text-foreground font-medium">화면 찾기:</strong> 실제 화면명의 뎁스
+                                배지를 눌러 고유 키를 복사한 뒤,{' '}
+                                <code className="text-foreground font-mono">publishing-index.json</code>에서 해당 키를
+                                바로 검색합니다.
+                            </li>
+                            <li>
+                                <strong className="text-foreground font-medium">수정 파일:</strong>{' '}
+                                <code className="text-foreground font-mono">
+                                    src/content/publishing-guide/publishing-index.json
+                                </code>
+                            </li>
+                            <li>
+                                <strong className="text-foreground font-medium">수정 방법:</strong> 해당 화면의 기존
+                                UIUX <code className="text-foreground font-mono">status</code> 키는 유지하고, 바로
+                                아래에 <code className="text-foreground font-mono">application2Status</code> 키를
+                                추가하거나 값을 수정합니다.
+                            </li>
+                            <li>
+                                <strong className="text-foreground font-medium">입력 가능 상태:</strong>{' '}
+                                <code className="text-foreground font-mono">
+                                    대기중, 진행중, 수정요청, 보완, 완료, 최종완료
+                                </code>
+                                . 키가 없으면 대기중으로 표시됩니다.
+                            </li>
+                            <li>
+                                <strong className="text-foreground font-medium">최종완료 기준:</strong> 더 이상
+                                수정사항이 발생하지 않을 것으로 확정된 화면에만 표시합니다.
+                            </li>
                         </ul>
                         {/* 여러 화면이 공유하는 레이아웃은 개별 화면과 구분해 별도 표로 표시한다. */}
                         <div className="bg-background border-border overflow-x-auto rounded-md border">
@@ -863,13 +934,21 @@ const PublishingIndex = () => {
                                                             <span className="inline-flex items-center gap-2">
                                                                 {!leaf.subtotalDepths.includes(depth) && (
                                                                     <>
-                                                                        <Badge
-                                                                            aria-hidden="true"
-                                                                            type="number"
-                                                                            color="primary"
-                                                                        >
-                                                                            {depth + 1}
-                                                                        </Badge>
+                                                                        {depth === leaf.path.length - 1 &&
+                                                                        registeredScreen ? (
+                                                                            <KeyCopyDepthBadge
+                                                                                depth={depth + 1}
+                                                                                screenKey={registeredScreen.key}
+                                                                            />
+                                                                        ) : (
+                                                                            <Badge
+                                                                                aria-hidden="true"
+                                                                                type="number"
+                                                                                color="primary"
+                                                                            >
+                                                                                {depth + 1}
+                                                                            </Badge>
+                                                                        )}
                                                                         <span className="sr-only">
                                                                             {depth + 1}뎁스{' '}
                                                                         </span>

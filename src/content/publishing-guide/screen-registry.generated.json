@@ -9,6 +9,20 @@
             "isCurrent": false
         },
         {
+            "key": "corp-home-technology-evaluation-model-selection",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-home-technology-evaluation-model-selection-tech-index",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "corp-full-menu",
             "implemented": false,
             "implementationStatus": "planned",
@@ -765,6 +779,27 @@
             "isCurrent": true
         },
         {
+            "key": "corp-mypage-representative-history",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "corp-mypage-representative-history-customer-consent-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -1032,6 +1067,13 @@
         },
         {
             "key": "org-home",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-home-technology-evaluation-selection",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
@@ -1332,6 +1374,20 @@
             "isCurrent": false
         },
         {
+            "key": "org-individual-evaluation-investment-model-company-technology-info-self-diagnosis-result",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-investment-model-checklist",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "org-individual-evaluation-investment-model-company-info-industry-code-search",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -1598,6 +1654,34 @@
             "isCurrent": false
         },
         {
+            "key": "org-mypage-evaluation-history-general-analysis",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-deep-analysis",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation-complete",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "org-mypage-verification-application",
             "implemented": false,
             "implementationStatus": "planned",
@@ -1641,6 +1725,13 @@
         },
         {
             "key": "org-mypage-inquiry-history-inquiry-detail",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-inquiry-history-inquiry-create",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
