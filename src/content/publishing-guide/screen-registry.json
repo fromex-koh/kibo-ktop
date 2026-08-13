@@ -94,6 +94,20 @@
             "name": "홈"
         },
         {
+            "key": "corp-home-technology-evaluation-model-selection",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/home/technology-evaluation-model-selection",
+            "name": "기술평가 모형 선택"
+        },
+        {
+            "key": "corp-home-technology-evaluation-model-selection-tech-index",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/home/technology-evaluation-model-selection/tech-index",
+            "name": "테크인덱스(일반/창업) 선택"
+        },
+        {
             "key": "corp-full-menu",
             "screenId": null,
             "userType": "기업",
@@ -850,6 +864,27 @@
             "name": "필수/선택 동의 팝업"
         },
         {
+            "key": "corp-mypage-representative-history",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history",
+            "name": "대표자 이력"
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/customer-consent",
+            "name": "고객정보활용동의"
+        },
+        {
+            "key": "corp-mypage-representative-history-customer-consent-electronic-signature",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/customer-consent/electronic-signature",
+            "name": "전자서명"
+        },
+        {
             "key": "corp-mypage-representative-history-customer-consent-detail",
             "screenId": null,
             "userType": "기업",
@@ -1121,6 +1156,13 @@
             "userType": "기관",
             "path": "/org/home",
             "name": "홈"
+        },
+        {
+            "key": "org-home-technology-evaluation-selection",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/home/technology-evaluation-selection",
+            "name": "기술평가 선택"
         },
         {
             "key": "org-full-menu",
@@ -1417,6 +1459,20 @@
             "name": "(2) 기업·기술정보 입력"
         },
         {
+            "key": "org-individual-evaluation-investment-model-company-technology-info-self-diagnosis-result",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/investment-model/company-technology-info/self-diagnosis-result",
+            "name": "자가진단 결과보기"
+        },
+        {
+            "key": "org-individual-evaluation-investment-model-checklist",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/investment-model/checklist",
+            "name": "(3) 체크리스트"
+        },
+        {
             "key": "org-individual-evaluation-investment-model-company-info-industry-code-search",
             "screenId": null,
             "userType": "기관",
@@ -1683,6 +1739,34 @@
             "name": "평가이력 조회"
         },
         {
+            "key": "org-mypage-evaluation-history-general-analysis",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/general-analysis",
+            "name": "일반분석"
+        },
+        {
+            "key": "org-mypage-evaluation-history-deep-analysis",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/deep-analysis",
+            "name": "심층분석"
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/guarantee-recommendation",
+            "name": "보증추천"
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation-complete",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/guarantee-recommendation/complete",
+            "name": "보증추천완료"
+        },
+        {
             "key": "org-mypage-verification-application",
             "screenId": null,
             "userType": "기관",
@@ -1730,6 +1814,13 @@
             "userType": "기관",
             "path": "/org/mypage/inquiry-history/inquiry-detail",
             "name": "문의하기 상세"
+        },
+        {
+            "key": "org-mypage-inquiry-history-inquiry-create",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/inquiry-history/inquiry-create",
+            "name": "1:1 문의 등록"
         },
         {
             "key": "org-notice-announcements",
