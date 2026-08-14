@@ -19,6 +19,9 @@ type SelfDiagnosisTabsFormProps = {
     nextHref?: string
     // 탭 구성. 기본은 기업 자가진단이고, 기관 개별평가는 기업정보 탭만 다른 한 벌을 넘긴다.
     tabs?: readonly FormTabItem[]
+    // 화면을 열 때 이미 들어 있는 값(수량 칸의 0 등). 탭 구성과 짝이라 그 한 벌과 함께 넘긴다.
+    // 넘기지 않으면 기업 자가진단의 기본값(기업 기타 정보의 0)을 쓴다.
+    defaultValues?: Record<string, string>
 }
 
 const SelfDiagnosisTabsFormFields = ({
@@ -56,8 +59,14 @@ const SelfDiagnosisTabsFormFields = ({
 }
 
 // 탭을 이동해도 입력값이 유지되도록 공용 폼 상태를 연결한다.
-const SelfDiagnosisTabsForm = ({formId, stickyHeader, nextHref, tabs}: SelfDiagnosisTabsFormProps) => (
-    <FormValuesProvider defaultValues={COMPANY_ETC_DEFAULT_VALUES}>
+const SelfDiagnosisTabsForm = ({
+    formId,
+    stickyHeader,
+    nextHref,
+    tabs,
+    defaultValues = COMPANY_ETC_DEFAULT_VALUES,
+}: SelfDiagnosisTabsFormProps) => (
+    <FormValuesProvider defaultValues={defaultValues}>
         <SelfDiagnosisTabsFormFields formId={formId} stickyHeader={stickyHeader} nextHref={nextHref} tabs={tabs} />
     </FormValuesProvider>
 )

@@ -20,6 +20,7 @@ import {RadioGroup as BaseRadioGroup} from '@/components/ui/radio-group'
 import {Textarea as BaseTextarea} from '@/components/ui/textarea'
 import {BUSINESS_NUMBER_PATTERN, formatBusinessNumber} from '@/lib/business-number'
 import {CORPORATE_NUMBER_PATTERN, formatCorporateNumber} from '@/lib/corporate-number'
+import {PATENT_NUMBER_PATTERN, formatPatentNumber} from '@/lib/patent-number'
 import {formatPhoneNumber} from '@/lib/phone'
 
 // 폼 값 보관소(FormValues) — 입력값을 `name` 을 키로 한 객체 하나에 모아 둔다.
@@ -34,6 +35,13 @@ import {formatPhoneNumber} from '@/lib/phone'
 //      register/Controller 로 바꾸면 된다.
 // 화면(JSX)은 손대지 않아도 된다 — 화면은 이 래퍼들을 `name` 만 주고 쓰기 때문이다.
 // 값의 키는 각 입력의 `name` 이라 FormData 로 제출했을 때의 키와 정확히 같다.
+//
+// ⚠️ 검사 기준이 두 갈래라는 점에 유의 — 탭의 작성 상태(미작성·작성중·작성완료)는 이 보관소의
+// 등록 정보(useRegisterField)를 보고, [다음] 의 제출 검사(form-tabs-submit)는 DOM 의 required·validity 를
+// 본다. 지금은 모든 컨트롤이 이 파일의 래퍼를 거치며 두 곳에 같은 정보를 심으므로 어긋나지 않지만,
+// 래퍼를 거치지 않은 컨트롤(ui/input 직접 사용 등)을 탭 화면에 추가하면 "제출은 통과하는데 탭은
+// 작성중" 같은 어긋남이 생긴다. 탭 화면의 입력은 반드시 이 래퍼를 쓰고, 폼 라이브러리 이관 시에는
+// 스키마 하나(react-hook-form + zod 등)에서 두 검사가 함께 파생되도록 통합할 것.
 type FormValuesState = {
     values: Record<string, string>
     // 화면이 처음 열릴 때 들어 있던 값(기업 기타 정보의 0 등) — 작성 상태에서 "손댄 칸" 을 가릴 때 쓴다.
@@ -47,6 +55,9 @@ type FormValuesState = {
     // 키는 입력의 id 다(라벨의 htmlFor 가 가리키는 그 id) — 메시지를 그 칸 바로 밑에 붙여야 하기 때문이다.
     errors: Record<string, string>
     setFieldErrors: (errors: Record<string, string>) => void
+    // 한 칸의 메시지만 더한다 — 칸을 벗어날 때(blur) 형식 검사에 걸린 칸이 스스로 붙일 때 쓴다.
+    // setFieldErrors 는 제출이 전체를 갈아끼우는 용도라, 개별 칸이 쓰면 다른 칸의 메시지가 지워진다.
+    setFieldError: (id: string, message: string) => void
     clearFieldError: (id: string) => void
 }
 
@@ -136,6 +147,9 @@ const FormValuesProvider = ({
             previous[id] ? Object.fromEntries(Object.entries(previous).filter(([key]) => key !== id)) : previous,
         )
     }, [])
+    const setFieldError = useCallback((id: string, message: string) => {
+        setErrors((previous) => (previous[id] === message ? previous : {...previous, [id]: message}))
+    }, [])
     const state = useMemo(
         () => ({
             values,
@@ -145,9 +159,10 @@ const FormValuesProvider = ({
             fields,
             errors,
             setFieldErrors: setErrors,
+            setFieldError,
             clearFieldError,
         }),
-        [values, initialValues, setValue, clearValues, fields, errors, clearFieldError],
+        [values, initialValues, setValue, clearValues, fields, errors, setFieldError, clearFieldError],
     )
 
     return <FormValuesContext.Provider value={state}>{children}</FormValuesContext.Provider>
@@ -189,12 +204,18 @@ const FormCardScope = ({
 }
 
 // 이 칸에 실제로 걸리는 필수 여부 — 카드 밖에서는 받은 값을 그대로 쓴다.
+//
+// "손댔다" 의 기준은 빈칸이 아닌 것이 아니라 처음 값과 달라진 것이다. 카드 안에 처음부터 값이 들어 있는
+// 칸이 있으면(특허 카드의 수량 0) 그 값 때문에 카드가 손댄 것으로 잡혀, 아무것도 하지 않은 사용자에게
+// 나머지 칸이 모두 필수가 된다 — 쓸 특허가 없는 기업이 빈 카드 하나 때문에 막히면 안 된다.
 const useCardRequired = (required?: boolean) => {
     const scope = useContext(FormCardScopeContext)
-    const values = useContext(FormValuesContext)?.values
+    const state = useContext(FormValuesContext)
     if (!required || !scope || scope.alwaysRequired) return required
 
-    return Object.entries(values ?? {}).some(([name, value]) => name.startsWith(scope.namePrefix) && value !== '')
+    return Object.entries(state?.values ?? {}).some(
+        ([name, value]) => name.startsWith(scope.namePrefix) && value !== '' && value !== state?.defaultValues[name],
+    )
 }
 
 // 값을 담는 칸을 섹션 목록에 등록한다. 보관소 밖(단독 예시)이나 섹션 밖에서는 아무것도 하지 않는다.
@@ -300,7 +321,22 @@ const applyFormat = (value: string, previousValue: string, format?: FormatValue)
 // checkValidity() 는 invalid 이벤트를 함께 쏘므로 부작용 없는 validity.valid 를 본다.
 const useInvalidState = () => {
     const [invalid, setInvalid] = useState(false)
-    const check = (control: HTMLInputElement | HTMLTextAreaElement) => setInvalid(!control.validity.valid)
+    // format 이 있는 입력은 브라우저가 받은 원본 값과 화면에 저장될 보정값이 다를 수 있다.
+    // 등록번호처럼 숫자를 입력한 뒤 하이픈을 붙이는 칸을 원본 값으로 검사하면, 화면 값은 정상이어도
+    // 중간 입력 상태의 patternMismatch 가 남아 탭이 계속 "작성중" 으로 표시된다.
+    const check = (control: HTMLInputElement | HTMLTextAreaElement, formattedValue = control.value) => {
+        if (formattedValue === control.value) {
+            setInvalid(!control.validity.valid)
+
+            return
+        }
+
+        const originalValue = control.value
+        control.value = formattedValue
+        const nextInvalid = !control.validity.valid
+        control.value = originalValue
+        setInvalid(nextInvalid)
+    }
 
     return {invalid, check}
 }
@@ -325,25 +361,46 @@ const useClearFieldError = (id?: string) => {
 
 // 메시지가 있는 동안 입력에 붙일 것들 — 오류 표시와 메시지 연결[7.4.2].
 // clear 는 값을 고치는 순간 메시지를 거두는 데 쓴다(고쳤는데 빨간 문구가 남아 있으면 안 된다).
+// 이메일 형식 문구 — blur 검사와 제출 검사(form-tabs-submit)가 같은 문장을 쓴다.
+const EMAIL_FORMAT_MESSAGE = '이메일 형식이 올바르지 않습니다. (예: user@example.com)'
+
 const useFieldValidation = (id?: string, describedBy?: string) => {
     const state = useContext(FormValuesContext)
     const message = id ? state?.errors[id] : undefined
     const clearFieldError = state?.clearFieldError
+    const setFieldError = state?.setFieldError
     const clear = useCallback(() => {
         if (id) clearFieldError?.(id)
     }, [id, clearFieldError])
+
+    // 칸을 벗어날 때(blur) 형식 검사 — 값은 채웠는데 형식이 어긋난 칸은 제출 전까지 아무 표시가 없어,
+    // 화면상으로는 다 채운 것 같은데 탭만 [작성중] 으로 남는다("1월" 처럼 자릿수가 모자란 등록 월 등).
+    // 그 칸을 떠나는 순간 무엇이 어긋났는지 바로 알려 준다[7.4.2]. 빈 칸은 여기서 다루지 않는다 —
+    // "필수" 는 아직 쓰는 중일 수 있어, 제출할 때 한꺼번에 검사한다(form-tabs-submit).
+    // 값을 고치기 시작하면 메시지는 걷힌다(onChange 의 clear).
+    const checkOnBlur = useCallback(
+        (control: HTMLInputElement | HTMLTextAreaElement) => {
+            if (!id || !setFieldError || !control.value || control.validity.valid) return
+
+            const patternMessage = control.dataset.patternMessage
+            if (control.validity.patternMismatch && patternMessage) setFieldError(id, patternMessage)
+            else if (control.validity.typeMismatch && control.type === 'email') setFieldError(id, EMAIL_FORMAT_MESSAGE)
+        },
+        [id, setFieldError],
+    )
 
     return {
         props: message
             ? {'aria-invalid': true, 'aria-describedby': [describedBy, `${id}-error`].filter(Boolean).join(' ')}
             : {},
         clear,
+        checkOnBlur,
     }
 }
 
 type InputProps = Parameters<typeof BaseInput>[0] & {format?: FormatValue}
 
-const Input = ({name, format, onChange, ...props}: InputProps) => {
+const Input = ({name, format, onChange, onBlur, ...props}: InputProps) => {
     const field = useFieldValue(name)
     const invalidState = useInvalidState()
     const required = useCardRequired(props.required)
@@ -358,10 +415,15 @@ const Input = ({name, format, onChange, ...props}: InputProps) => {
             name={name}
             value={field ? field.value : props.value}
             onChange={(event) => {
-                field?.setValue(applyFormat(event.currentTarget.value, field.value, format))
-                invalidState.check(event.currentTarget)
+                const nextValue = applyFormat(event.currentTarget.value, field?.value ?? '', format)
+                field?.setValue(nextValue)
+                invalidState.check(event.currentTarget, nextValue)
                 validation.clear()
                 onChange?.(event)
+            }}
+            onBlur={(event) => {
+                validation.checkOnBlur(event.currentTarget)
+                onBlur?.(event)
             }}
         />
     )
@@ -369,7 +431,7 @@ const Input = ({name, format, onChange, ...props}: InputProps) => {
 
 type ClearableInputProps = Parameters<typeof BaseClearableInput>[0] & {format?: FormatValue}
 
-const ClearableInput = ({name, format, onChange, ...props}: ClearableInputProps) => {
+const ClearableInput = ({name, format, onChange, onBlur, ...props}: ClearableInputProps) => {
     const field = useFieldValue(name)
     const invalidState = useInvalidState()
     const required = useCardRequired(props.required)
@@ -384,10 +446,15 @@ const ClearableInput = ({name, format, onChange, ...props}: ClearableInputProps)
             name={name}
             value={field ? field.value : props.value}
             onChange={(event) => {
-                field?.setValue(applyFormat(event.currentTarget.value, field.value, format))
-                invalidState.check(event.currentTarget)
+                const nextValue = applyFormat(event.currentTarget.value, field?.value ?? '', format)
+                field?.setValue(nextValue)
+                invalidState.check(event.currentTarget, nextValue)
                 validation.clear()
                 onChange?.(event)
+            }}
+            onBlur={(event) => {
+                validation.checkOnBlur(event.currentTarget)
+                onBlur?.(event)
             }}
         />
     )
@@ -431,6 +498,19 @@ const CorporateNumberInput = (props: Omit<ClearableInputProps, 'format' | 'type'
     />
 )
 
+// 특허번호 입력 — 숫자만 받아 2-4-7 로 하이픈을 넣는다(10-2023-0000001). 위 둘과 같은 구조다.
+const PATENT_NUMBER_MESSAGE = '등록번호 13자리를 모두 입력해 주세요. (예: 10-2023-0000001)'
+
+const PatentNumberInput = (props: Omit<ClearableInputProps, 'format' | 'type' | 'maxLength' | 'pattern'>) => (
+    <ClearableInput
+        inputMode="numeric"
+        {...props}
+        pattern={PATENT_NUMBER_PATTERN}
+        data-pattern-message={PATENT_NUMBER_MESSAGE}
+        format={formatPatentNumber}
+    />
+)
+
 type DatePickerProps = Parameters<typeof BaseDatePicker>[0]
 
 // 날짜는 상태에 문자열(yyyy-MM-dd)로 담고 여기서 Date 로 되돌린다 — 상태 한 벌로 값을 다루기 위해서다.
@@ -467,7 +547,7 @@ const DatePicker = ({name, onChange, ...props}: DatePickerProps) => {
 type InputGroupInputProps = Parameters<typeof BaseInputGroupInput>[0] & {format?: FormatValue}
 
 // 단위(명·건·백만원)가 붙는 입력 — 상자 안 오른쪽에 단위를 두는 InputGroup 안에서 쓴다.
-const InputGroupInput = ({name, format, onChange, ...props}: InputGroupInputProps) => {
+const InputGroupInput = ({name, format, onChange, onBlur, ...props}: InputGroupInputProps) => {
     const field = useFieldValue(name)
     const invalidState = useInvalidState()
     const required = useCardRequired(props.required)
@@ -482,10 +562,15 @@ const InputGroupInput = ({name, format, onChange, ...props}: InputGroupInputProp
             name={name}
             value={field ? field.value : props.value}
             onChange={(event) => {
-                field?.setValue(applyFormat(event.currentTarget.value, field.value, format))
-                invalidState.check(event.currentTarget)
+                const nextValue = applyFormat(event.currentTarget.value, field?.value ?? '', format)
+                field?.setValue(nextValue)
+                invalidState.check(event.currentTarget, nextValue)
                 validation.clear()
                 onChange?.(event)
+            }}
+            onBlur={(event) => {
+                validation.checkOnBlur(event.currentTarget)
+                onBlur?.(event)
             }}
         />
     )
@@ -576,7 +661,9 @@ const Select = ({name, onValueChange, ...props}: SelectProps) => {
 export {
     BusinessNumberInput,
     ClearableInput,
+    EMAIL_FORMAT_MESSAGE,
     CorporateNumberInput,
+    PatentNumberInput,
     DatePicker,
     FormCardScope,
     FormFieldSection,
