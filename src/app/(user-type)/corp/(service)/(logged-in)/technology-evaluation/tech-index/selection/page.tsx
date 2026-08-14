@@ -22,9 +22,9 @@ export const metadata: Metadata = {title: '평가모형 선택'}
 // KTRS-FM 카드에서 복제된 흔적으로 보고 "Tech-Index"로 맞췄다(뱃지와 같은 값). 시안 확정 시 재확인 필요.
 const EVALUATION_MODELS = [
     {
-        // 이동할 화면(기술평가 > Tech-Index > 일반용 > (1) 고객정보활용동의 —
-        // corp-technology-evaluation-tech-index-general-customer-consent)이 아직 없어 '#' 로 둔다.
-        href: '#',
+        // 기술평가 > Tech-Index > 일반용 > (1) 고객정보활용동의
+        // (corp-technology-evaluation-tech-index-general-customer-consent).
+        href: '/corp/technology-evaluation/tech-index/general/customer-consent',
         badge: 'Tech-Index',
         title: '혁신성장지수 (일반)',
         subtitle: 'Tech-Index',
@@ -35,9 +35,9 @@ const EVALUATION_MODELS = [
         illustration: '/images/option-card/growth-index.webp',
     },
     {
-        // 이동할 화면(기술평가 > Tech-Index > 창업용 > (1) 고객정보활용동의 —
-        // corp-technology-evaluation-tech-index-startup-customer-consent)이 아직 없어 '#' 로 둔다.
-        href: '#',
+        // 기술평가 > Tech-Index > 창업용 > (1) 고객정보활용동의
+        // (corp-technology-evaluation-tech-index-startup-customer-consent).
+        href: '/corp/technology-evaluation/tech-index/startup/customer-consent',
         badge: 'Tech-Index',
         title: '혁신성장지수 (창업)',
         subtitle: 'Tech-Index',
