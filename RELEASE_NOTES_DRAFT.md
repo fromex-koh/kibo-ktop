@@ -56,6 +56,11 @@
 - 함께 적용: 신규 추가 카드의 기술분류 데이터·공통 모달·단독 화면과 같은 커밋 단위로 적용
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f6f5813)
 
+### 퍼블리싱 인덱스 화면 상태
+
+- 대상: src/content/publishing-guide/publishing-index.json
+- 적용: 기업 Tech-Index 일반용·창업용과 기관 기술분류 화면의 UIUX 진행 상태를 최신 작업 현황으로 교체
+
 ## [신규 추가]
 
 ### 특허번호 입력·공통 안내 다이얼로그
