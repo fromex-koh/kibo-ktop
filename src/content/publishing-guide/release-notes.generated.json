@@ -1,6 +1,28 @@
 {
     "releases": [
         {
+            "version": "v2.0.3",
+            "releasedAt": "2026-08-14",
+            "changes": [
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "응용2 화면 상태 반영",
+                    "details": [
+                        {"label": "대상", "value": "src/content/publishing-guide/publishing-index.json"},
+                        {
+                            "label": "적용",
+                            "value": "화면별 application2Status 58개를 반영한 최신 퍼블리싱 인덱스 관리 데이터로 교체. 응용2 상태는 완료 51개·진행중 7개이며 기존 UIUX status와 IA 구조는 유지"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/a50403c)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v2.0.2",
             "releasedAt": "2026-08-14",
             "changes": [

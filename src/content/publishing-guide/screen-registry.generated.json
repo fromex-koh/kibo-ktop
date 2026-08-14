@@ -258,7 +258,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.2",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
@@ -1287,7 +1287,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.2",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-customer-consent",
