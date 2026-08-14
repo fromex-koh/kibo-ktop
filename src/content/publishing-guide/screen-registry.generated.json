@@ -89,8 +89,8 @@
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.0",
-            "isCurrent": false
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-consent-popup",
@@ -257,15 +257,15 @@
             "key": "corp-technology-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.2",
-            "isCurrent": false
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-consent-popup",
@@ -297,10 +297,10 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-technology-info",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-industry-code-search",
@@ -318,17 +318,17 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-technology-category",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-item-description",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.1",
-            "isCurrent": false
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-cancel-confirm",
@@ -353,17 +353,17 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-complete",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-consent-popup",
@@ -395,10 +395,10 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-technology-info",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-industry-code-search",
@@ -416,10 +416,10 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-technology-category",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-item-description",
@@ -451,10 +451,10 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-complete",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent",
@@ -1319,17 +1319,17 @@
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-technology-category",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-item-description",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.1",
-            "isCurrent": false
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-company-management",
@@ -1403,10 +1403,10 @@
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-technology-category",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v2.0.4",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-item-description",
