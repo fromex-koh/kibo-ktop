@@ -1,6 +1,228 @@
 {
     "releases": [
         {
+            "version": "v2.0.4",
+            "releasedAt": "2026-08-14",
+            "changes": [
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "Tech-Index 폼 상태·제출 연동 기반",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/form-values.tsx\nsrc/components/composite/form-tabs-submit.ts\nsrc/components/composite/self-diagnosis-tabs-form.tsx\nsrc/components/custom/customer-consent-agreement.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "탭 간 폼 값 보관, blur 형식 검사, 필드 오류 설정, 특허번호 입력, 이메일 검증 문구, 탭 제출 흐름과 고객정보 활용동의 상태 처리 보완"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "프론트엔드의 기존 폼·API 연동 로직은 유지하고 변경된 입력 검증과 제출 흐름을 비교 반영"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/aa3c88cfa89808f31771f1c0b7ab148b504d03a5)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "Tech-Index 2단계 탭 구성 연동",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/self-diagnosis-form-tabs.tsx"},
+                        {
+                            "label": "변경",
+                            "value": "Tech-Index 일반용 6개·창업용 7개 탭의 본문 컴포넌트, 기술인력 입력 옵션과 화면별 기본값 구성을 연결"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "기존 KTRS-FM·기관 탭 구성을 유지하면서 Tech-Index 일반용·창업용의 기업·기술정보 입력 흐름을 비교 반영"
+                        },
+                        {
+                            "label": "커밋 단위",
+                            "value": "이 파일만 단독 적용할 수 없으며, 신규 추가 카드의 탭 본문 컴포넌트 7개와 일반용·창업용 화면 2개를 포함한 총 10개 파일을 한 번에 적용"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/064f15d)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "평가모형·고객동의 경로 연결",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/customer-consent/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/selection/page.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "KTRS-FM 고객동의 완료 후 기업·기술정보 화면으로 이동하는 경로와 Tech-Index 일반용·창업용 평가모형 카드의 고객동의 화면 링크 연결"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "기존 동의·평가모형 선택 화면을 유지하면서 각 평가 흐름의 실제 다음 화면 경로를 비교 반영"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/de2ac9e)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "Tech-Index 공통 폼 UI·입력 규칙",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/form-card.tsx\nsrc/components/composite/repeat-card.tsx\nsrc/components/theme/form-tabs.variants.ts\nsrc/components/composite/career-form.tsx\nsrc/components/composite/company-etc-form.tsx\nsrc/components/composite/tech-staff-form.tsx\nsrc/constants/technology-evaluation.ts"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "폼 카드와 반복 카드, 반응형 탭 선택기, 대표자 경력·기업 기타정보·기술인력 입력, Tech-Index 기본값과 특허·기술실적 상수를 포함한 최신 공통 폼 기반으로 교체"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "기술분류 모달 테이블 스타일",
+                    "details": [
+                        {"label": "대상", "value": "src/components/theme/dialog-table.variants.ts"},
+                        {
+                            "label": "적용",
+                            "value": "기술분류·품목설명 모달에서 함께 사용하는 표 셀·헤더 스타일을 최신 규격으로 교체"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/2be6fd0)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "품목설명 모달 및 확인 페이지",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/item-description-dialog.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/general/company-info/item-description/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/company-info/item-description/page.tsx"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "선택 품목의 카테고리 경로와 예시 구조를 표시하는 품목설명 모달, 기업·기관 Tech-Index 단독 확인 페이지를 최신 UI로 교체"
+                        },
+                        {
+                            "label": "함께 적용",
+                            "value": "신규 추가 카드의 기술분류 데이터·공통 모달·단독 화면과 같은 커밋 단위로 적용"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f6f5813)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "퍼블리싱 인덱스 화면 상태",
+                    "details": [
+                        {"label": "대상", "value": "src/content/publishing-guide/publishing-index.json"},
+                        {
+                            "label": "적용",
+                            "value": "기업 Tech-Index 일반용·창업용과 기관 기술분류 화면의 UIUX 진행 상태를 최신 작업 현황으로 교체"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "특허번호 입력·공통 안내 다이얼로그",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/lib/patent-number.ts\nsrc/components/composite/notice-dialog.tsx"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "특허번호 2-4-7 자동 포맷·검증 유틸리티와 특허·재무 탭의 처리 결과를 표시하는 공통 안내 다이얼로그 신규 추가"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "기술분류 데이터·공통 모달·단독 화면",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/service/technology-categories.ts\nsrc/components/composite/technology-category-dialog.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/general/company-info/technology-category/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/startup/company-info/technology-category/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/company-info/technology-category/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/investment-model/company-info/technology-category/page.tsx"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "기술분류 선택 데이터와 공통 선택 모달, 기업 일반용·창업용 및 기관 Tech-Index·투자모형의 기술분류 단독 확인 화면 신규 추가"
+                        },
+                        {
+                            "label": "함께 적용",
+                            "value": "덮어쓰기 카드의 품목설명 모달 및 확인 페이지와 같은 커밋 단위로 적용"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f6f5813)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "Tech-Index 2단계 탭 본문·일반용·창업용 화면",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/tech-index-company-info-form.tsx\nsrc/components/composite/tech-index-representative-capability.tsx\nsrc/components/composite/tech-index-staff-summary.tsx\nsrc/components/composite/tech-index-patent-form.tsx\nsrc/components/composite/tech-index-record-form.tsx\nsrc/components/composite/tech-index-finance-form.tsx\nsrc/components/composite/tech-index-management-form.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/general/company-technology-info/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/startup/company-technology-info/page.tsx"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "기업정보·대표자 역량·기술인력 합계·특허·기술실적·재무정보·경영진 역량 탭 본문과 Tech-Index 일반용·창업용 기업·기술정보 입력 화면 신규 추가"
+                        },
+                        {
+                            "label": "커밋 단위",
+                            "value": "Diff 확인 카드의 Tech-Index 2단계 탭 구성 연동 파일을 포함한 총 10개 파일을 한 번에 적용"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/064f15d)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "기업 Tech-Index 고객동의·완료 화면",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/general/customer-consent/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/startup/customer-consent/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/general/complete/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/startup/complete/page.tsx"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "Tech-Index 일반용·창업용의 고객정보 활용동의와 평가 완료 화면을 각각 신규 추가하고, 평가모형 선택부터 기업·기술정보 입력 및 완료 단계까지 이어지는 경로 구성"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/ca2f0cf)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v2.0.3",
             "releasedAt": "2026-08-14",
             "changes": [

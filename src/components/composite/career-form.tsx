@@ -1,23 +1,14 @@
 'use client'
 
-import {useState} from 'react'
+import {useState, type ReactNode} from 'react'
 import {differenceInMonths, parseISO} from 'date-fns'
 import {Plus} from 'lucide-react'
 import {CareerInputHelpDialog} from '@/components/composite/career-input-help-dialog'
 import {FormCard} from '@/components/composite/form-card'
+import {NoticeDialog} from '@/components/composite/notice-dialog'
 import {SubSectionHeader, SubSectionHeaderTitle} from '@/components/composite/sub-section-header'
 import {Button} from '@/components/ui/button'
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-} from '@/components/ui/dialog'
-import {dialogBodyClassName} from '@/components/theme/dialog.variants'
-import {cn} from '@/lib/utils'
+import {Separator} from '@/components/ui/separator'
 import {
     ClearableInput,
     FormCardScope,
@@ -178,30 +169,14 @@ const CareerEntry = ({
     )
 }
 
-// 어긋난 연월을 고른 순간 알리는 팝업 — 로그인 안내 화면의 "로그인이 필요한 서비스입니다" 모달과 같은
-// 구성이다. 보이는 제목과 닫기(X) 없이 문장 하나와 버튼만 둔다.
-// 제목은 화면에서 빼되 스크린리더에는 남긴다 — 대화상자에는 이름이 있어야 한다[8.2.1].
-const RangeAlertDialog = ({violation, onClose}: {violation: RangeViolation | null; onClose: () => void}) => (
-    <Dialog open={violation !== null} onOpenChange={(open) => (open ? undefined : onClose())}>
-        <DialogContent showCloseButton={false}>
-            <DialogHeader className="p-0">
-                <DialogTitle className="sr-only">근무기간 확인</DialogTitle>
-            </DialogHeader>
-            <div className={cn(dialogBodyClassName, 'pt-0')}>
-                <DialogDescription className="py-8 text-center">
-                    {violation ? RANGE_ALERT_MESSAGE[violation] : null}
-                </DialogDescription>
-            </div>
-            <DialogFooter>
-                <DialogClose asChild>
-                    <Button size="xl">확인</Button>
-                </DialogClose>
-            </DialogFooter>
-        </DialogContent>
-    </Dialog>
-)
+type CareerFormProps = {
+    /** 카드 제목. 앞에 구획이 더 붙는 모형은 제목이 달라진다(Tech-Index "대표자 역량 및 경력사항"). */
+    title?: string
+    /** 경력사항 구획 앞에 오는 내용. Tech-Index 는 [대표자 역량] 구획이 먼저 온다. */
+    leading?: ReactNode
+}
 
-const CareerForm = () => {
+const CareerForm = ({title = '대표자 경력사항', leading}: CareerFormProps) => {
     const {values, clearValues} = useFormValues()
     // 카드가 여러 개여도 팝업은 한 벌만 둔다 — 한 번에 하나만 뜬다.
     const [rangeViolation, setRangeViolation] = useState<RangeViolation | null>(null)
@@ -214,7 +189,7 @@ const CareerForm = () => {
 
     return (
         <FormCard
-            title="대표자 경력사항"
+            title={title}
             // 시안은 이 줄에 불릿을 두지 않는다(같은 리스트의 다른 줄과 달리 점 레이어가 꺼져 있다).
             subtitle="대표자의 경력사항을 현 직장 근무경력을 포함하여 최근 경력부터 과거순으로 차례대로 입력해주십시오."
             // 버튼 이름은 열리는 모달의 제목과 같게 둔다 — 눌러서 무엇이 나오는지 그대로 읽힌다[6.4.3].
@@ -227,6 +202,13 @@ const CareerForm = () => {
             }
         >
             <div className="flex flex-col gap-6">
+                {/* 모형에 따라 앞에 오는 구획(Tech-Index 의 [대표자 역량]). 넘기지 않으면 경력사항만 그린다. */}
+                {leading ? (
+                    <>
+                        {leading}
+                        <Separator />
+                    </>
+                ) : null}
                 {/* 구획 제목 옆에 합계가 붙는다 — 입력한 근무 기간을 더한 값이라 입력에 따라 바뀐다. */}
                 <SubSectionHeader>
                     <SubSectionHeaderTitle className="flex flex-wrap items-baseline gap-2">
@@ -256,9 +238,16 @@ const CareerForm = () => {
                     <Plus aria-hidden="true" />
                 </Button>
             </div>
-            <RangeAlertDialog violation={rangeViolation} onClose={() => setRangeViolation(null)} />
+            {/* 어긋난 연월을 고른 순간 알리는 팝업 — 안내만 하고 고를 것이 없어 공용 안내 모달을 쓴다. */}
+            <NoticeDialog
+                title="근무기간 확인"
+                message={rangeViolation ? RANGE_ALERT_MESSAGE[rangeViolation] : null}
+                open={rangeViolation !== null}
+                onOpenChange={(open) => (open ? undefined : setRangeViolation(null))}
+            />
         </FormCard>
     )
 }
 
 export default CareerForm
+export type {CareerFormProps}

@@ -572,7 +572,7 @@
                                     "label": "(1) 고객정보활용동의",
                                     "screen": {
                                         "screenId": null,
-                                        "status": "대기중",
+                                        "status": "완료",
                                         "version": "미배포",
                                         "key": "corp-technology-evaluation-tech-index-general-customer-consent"
                                     },
@@ -610,7 +610,7 @@
                                 {
                                     "label": "(2) 기업·기술정보 입력",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-general-company-technology-info"
                                 },
@@ -634,7 +634,7 @@
                                         {
                                             "label": "기술분류",
                                             "screenId": null,
-                                            "status": "대기중",
+                                            "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-technology-category"
                                         },
@@ -671,7 +671,7 @@
                                 {
                                     "label": "(3) 완료 화면",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-general-complete"
                                 }
@@ -685,7 +685,7 @@
                                     "label": "(1) 고객정보활용동의",
                                     "screen": {
                                         "screenId": null,
-                                        "status": "대기중",
+                                        "status": "완료",
                                         "version": "미배포",
                                         "key": "corp-technology-evaluation-tech-index-startup-customer-consent"
                                     },
@@ -723,7 +723,7 @@
                                 {
                                     "label": "(2) 기업·기술정보 입력",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-startup-company-technology-info"
                                 },
@@ -747,7 +747,7 @@
                                         {
                                             "label": "기술분류",
                                             "screenId": null,
-                                            "status": "대기중",
+                                            "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-technology-category"
                                         },
@@ -784,7 +784,7 @@
                                 {
                                     "label": "(4) 완료 화면",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-startup-complete"
                                 }
@@ -1957,7 +1957,7 @@
                                 {
                                     "label": "기술분류",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-company-info-technology-category"
                                 },
@@ -2048,7 +2048,7 @@
                                 {
                                     "label": "기술분류",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-company-info-technology-category"
                                 },

@@ -158,7 +158,7 @@ const useRepeatCards = ({
     // 넣을 수 있는 최대 칸 수 — 다 채우면 "행추가" 를 비활성으로 둔다. 기본은 제한 없음.
     maxCount?: number
     // 칸을 지울 때 함께 정리할 것 — 보통 그 칸의 입력값을 버린다.
-    onRemove?: (id: number) => void
+    onRemove?: (id: number, isLastCard: boolean) => void
 } = {}) => {
     const [ids, setIds] = useState<readonly number[]>(() => Array.from({length: initialCount}, (_, index) => index + 1))
     // 방금 추가한 칸 — 그 칸으로 포커스를 넘기는 데만 쓴다.
@@ -212,7 +212,7 @@ const useRepeatCards = ({
         // 마지막 한 칸은 없애지 않고 값만 비운다 — 지울 칸이 없어서 처음 상태로 못 돌아가는 일을 막는다.
         // (DatePicker·Select 는 한 번 고르면 스스로 플레이스홀더로 돌아갈 수단이 없다.)
         if (ids.length <= minCount) {
-            onRemove?.(id)
+            onRemove?.(id, true)
 
             return
         }
@@ -223,7 +223,7 @@ const useRepeatCards = ({
 
         setIds((previous) => previous.filter((currentId) => currentId !== id))
         cardRefs.current.delete(id)
-        onRemove?.(id)
+        onRemove?.(id, false)
     }
 
     const setCardRef = (id: number) => (node: HTMLDivElement | null) => {

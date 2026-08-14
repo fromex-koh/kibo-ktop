@@ -1,7 +1,7 @@
 'use client'
 
 import {useEffect, useRef, useState, type SubmitEvent} from 'react'
-import {useFormValues} from '@/components/composite/form-values'
+import {EMAIL_FORMAT_MESSAGE, useFormValues} from '@/components/composite/form-values'
 
 // FormTabs 폼의 제출 관문 — 먼저 검사하고, 모두 통과했을 때만 값을 넘긴다.
 //
@@ -101,8 +101,7 @@ const getValidationMessage = (control: HTMLInputElement | HTMLSelectElement | HT
     if (validity.valueMissing && label) {
         return `${withObjectParticle(label)} ${isChoiceControl(control) ? '선택' : '입력'}해 주세요.`
     }
-    if (validity.typeMismatch && control.type === 'email')
-        return '이메일 형식이 올바르지 않습니다. (예: user@example.com)'
+    if (validity.typeMismatch && control.type === 'email') return EMAIL_FORMAT_MESSAGE
     // 형식(pattern)이 어긋난 칸 — 무엇을 어떻게 적어야 하는지는 칸마다 다르다. 브라우저 기본 문구는
     // "요청한 형식과 일치시키세요" 라 도움이 되지 않으므로, 칸이 적어 둔 안내(data-pattern-message)를 쓴다.
     if (validity.patternMismatch && control.dataset.patternMessage) return control.dataset.patternMessage

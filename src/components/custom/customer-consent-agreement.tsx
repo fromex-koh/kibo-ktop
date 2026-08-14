@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import {useRouter} from 'next/navigation'
 import {createContext, useContext, useRef, useState, type ReactNode, type SubmitEvent} from 'react'
 import {ConsentItem, ConsentList} from '@/components/composite/consent-list'
@@ -399,17 +400,26 @@ const CustomerConsentAgreement = () => {
     )
 }
 
-// 동의를 마치고 넘어가는 다음 화면.
+// 동의를 마치고 넘어가는 다음 화면은 사용처가 정한다(nextHref) — 이 동의서를 KTRS-FM 과 Tech-Index 가
+// 함께 쓰는데 각자의 2단계 경로가 다르기 때문이다. 기관 동의 폼(org-customer-consent-form)과 같은 방식이다.
 // 버튼 이름은 "동의 후 인증서명" 이고 화면정의서에도 전자서명 화면이 따로 있지만 아직 만들어지지 않았다.
-// 그 화면이 생기면 이 경로만 전자서명으로 바꾸고, 전자서명이 끝난 뒤 2단계로 잇는다.
-const NEXT_PATH = '/corp/technology-evaluation/ktrs-fm/company-technology-info'
+// 그 화면이 생기면 사용처의 nextHref 를 전자서명으로 바꾸고, 전자서명이 끝난 뒤 2단계로 잇는다.
 
 // 동의 값을 한곳에서 넘기는 폼 — 화면의 모든 컨트롤(동의 범위·항목별 동의·확인 체크·추가 이메일)이
 // name 을 갖고 있어 FormData 하나로 모인다. 값을 따로 모으는 상태를 만들지 않는 이유다.
 //
 // [프론트엔드 연동] 아래 console.log 자리만 저장 API 호출로 바꾸면 된다. 검사(필수 동의 여부)와
 // 다음 화면 이동은 그대로 두면 되고, 화면(JSX)은 손댈 것이 없다.
-const CustomerConsentForm = ({formId, children}: {formId: string; children: ReactNode}) => {
+const CustomerConsentForm = ({
+    formId,
+    nextHref,
+    children,
+}: {
+    formId: string
+    // 검사를 통과했을 때 갈 다음 단계. 넘기지 않으면 이동하지 않는다.
+    nextHref?: string
+    children: ReactNode
+}) => {
     const router = useRouter()
 
     const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
@@ -422,8 +432,9 @@ const CustomerConsentForm = ({formId, children}: {formId: string; children: Reac
                 (entry): entry is [string, string] => typeof entry[1] === 'string',
             ),
         )
+        // [프론트엔드 연동] 이 줄을 저장 API 호출로 바꾼다 — 성공한 뒤에 다음 단계로 보낸다.
         console.log('[고객 정보 활용 동의] 제출 데이터', values)
-        router.push(NEXT_PATH)
+        if (nextHref) router.push(nextHref)
     }
 
     return (
@@ -435,13 +446,17 @@ const CustomerConsentForm = ({formId, children}: {formId: string; children: Reac
 
 // 필수 항목과 확인 항목을 모두 동의한 경우에만 다음 단계로 이동할 수 있다.
 // 버튼이 폼 바깥(화면 맨 아래 CTA)에 있어 form 속성으로 위 폼과 잇는다 — HTML 표준 연결이다.
-// 1단계라 되돌아갈 앞 단계가 없어 [이전]을 두지 않는다 — 다음 버튼만 가운데에 온다.
-const CustomerConsentStepNavigation = ({formId}: {formId: string}) => {
+//
+// [이전]은 앞 화면이 있는 흐름에서만 둔다 — prevHref 를 넘기면 링크 버튼으로 그리고, 생략하면 다음 버튼만
+// 가운데에 온다. 같은 1단계라도 앞이 다르다: KTRS-FM 은 이 화면이 흐름의 시작이라 돌아갈 곳이 없고,
+// Tech-Index 는 앞에 평가 모형 선택 화면이 있다.
+const CustomerConsentStepNavigation = ({formId, prevHref}: {formId: string; prevHref?: string}) => {
     const {isComplete} = useCustomerConsent()
 
     return (
         <StepNavigation
             appearance="plain"
+            prev={prevHref !== undefined ? {asChild: true, children: <Link href={prevHref}>이전</Link>} : undefined}
             next={{type: 'submit', form: formId, children: '동의 후 인증서명', disabled: !isComplete}}
         />
     )

@@ -200,13 +200,17 @@ const RadioRow = ({
     options: readonly {value: string; label: string}[]
 }) => (
     <LabellessField id={name}>
-        {/* 묶음에 id 와 tabIndex 를 두는 이유 — 값을 나르는 radio input 은 숨어 있어 검사 메시지를 붙일
-            자리도, 포커스를 보낼 자리도 없다. 묶음이 그 역할을 대신한다. */}
+        {/* 묶음에 id 를 두는 이유 — 값을 나르는 radio input 은 숨어 있어 검사 메시지를 붙일 자리도,
+            포커스를 보낼 자리도 없다. 묶음이 그 역할을 대신한다(form-tabs-submit 이 이 id 로 포커스를 옮긴다).
+
+            tabIndex 는 주지 않는다. Radix RadioGroup 은 roving tabindex 를 쓴다 — 아무것도 고르지 않은
+            동안에는 묶음(root)이 유일한 탭 정지점이고, 포커스가 들어오면 그때 개별 항목으로 넘긴다.
+            여기에 tabIndex={-1} 을 주면 그 유일한 정지점이 사라져 Tab 으로 라디오에 아예 닿지 못한다[6.1.1].
+            빼도 Radix 가 root 에 0 을 주므로 위 검사 포커스는 그대로 동작한다. */}
         <RadioGroup
             id={name}
             name={name}
             required
-            tabIndex={-1}
             aria-label={labelledBy ? undefined : label}
             aria-labelledby={labelledBy}
             className="flex flex-wrap items-center gap-x-10 gap-y-4"
