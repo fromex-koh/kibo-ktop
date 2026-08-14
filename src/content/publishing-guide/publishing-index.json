@@ -333,6 +333,7 @@
                             "label": "(1) 고객정보활용동의",
                             "screen": {
                                 "screenId": null,
+                                "application2Status" : "완료",
                                 "status": "완료",
                                 "version": "미배포",
                                 "key": "corp-technology-evaluation-ktrs-fm-customer-consent"
@@ -341,6 +342,7 @@
                                 {
                                     "label": "필수/선택 동의 팝업",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-customer-consent-consent-popup"
@@ -348,6 +350,7 @@
                                 {
                                     "label": "개별 상세 보기",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-customer-consent-detail"
@@ -362,6 +365,7 @@
                                 {
                                     "label": "이어서 작성 안내",
                                     "screenId": null,
+                                    "application2Status" : "진행중",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-customer-consent-resume-notice"
@@ -371,6 +375,7 @@
                         {
                             "label": "(2) 기업·기술정보 입력",
                             "screenId": null,
+                            "application2Status" : "완료",
                             "status": "완료",
                             "version": "미배포",
                             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info"
@@ -381,6 +386,7 @@
                                 {
                                     "label": "업종코드 조회",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-company-info-industry-code-search"
@@ -388,6 +394,7 @@
                                 {
                                     "label": "주소 찾기",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-company-info-address-search"
@@ -400,6 +407,7 @@
                                 {
                                     "label": "입력 도움말",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-representative-career-input-helper"
@@ -412,6 +420,7 @@
                                 {
                                     "label": "실적인정 지식재산",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip"
@@ -419,6 +428,7 @@
                                 {
                                     "label": "거래유형 설명",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-transaction-type-guide"
@@ -426,6 +436,7 @@
                                 {
                                     "label": "전문기술/숙련기술 정의",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-technology-definition"
@@ -433,6 +444,7 @@
                                 {
                                     "label": "자동저장",
                                     "screenId": null,
+                                    "application2Status" : "진행중",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-autosave"
@@ -443,6 +455,7 @@
                             "label": "(3) 체크리스트 입력",
                             "screen": {
                                 "screenId": null,
+                                "application2Status" : "완료",
                                 "status": "완료",
                                 "version": "미배포",
                                 "key": "corp-technology-evaluation-ktrs-fm-checklist"
@@ -451,6 +464,7 @@
                                 {
                                     "label": "피인용 확인 메뉴얼",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual"
@@ -458,6 +472,7 @@
                                 {
                                     "label": "보증제한 업종",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-checklist-restricted-industries"
@@ -465,6 +480,7 @@
                                 {
                                     "label": "TRL 확인",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-checklist-trl-guide"
@@ -472,6 +488,7 @@
                                 {
                                     "label": "제출 전 최종 확인",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-final-review"
@@ -479,6 +496,7 @@
                                 {
                                     "label": "작성 취소",
                                     "screenId": null,
+                                    "application2Status" : "진행중",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-checklist-cancel-confirm"
@@ -489,6 +507,7 @@
                             "label": "(4) 완료 화면",
                             "screen": {
                                 "screenId": null,
+                                "application2Status" : "완료",
                                 "status": "완료",
                                 "version": "미배포",
                                 "key": "corp-technology-evaluation-ktrs-fm-complete"
@@ -498,6 +517,7 @@
                                     "label": "은행 전송",
                                     "screen": {
                                         "screenId": null,
+                                        "application2Status" : "진행중",
                                         "status": "완료",
                                         "version": "미배포",
                                         "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer"
@@ -506,6 +526,7 @@
                                         {
                                             "label": "은행 전송완료",
                                             "screenId": null,
+                                            "application2Status" : "완료",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer-transfer-complete"
@@ -516,6 +537,7 @@
                                     "label": "보증신청",
                                     "screen": {
                                         "screenId": null,
+                                        "application2Status" : "완료",
                                         "status": "완료",
                                         "version": "미배포",
                                         "key": "corp-technology-evaluation-ktrs-fm-complete-guarantee-application"
@@ -524,6 +546,7 @@
                                         {
                                             "label": "보증신청 완료",
                                             "screenId": null,
+                                            "application2Status" : "완료",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-ktrs-fm-complete-guarantee-application-application-complete"
@@ -1365,6 +1388,7 @@
                     "label": "공지사항",
                     "screen": {
                         "screenId": null,
+                        "application2Status" : "완료",
                         "status": "완료",
                         "version": "미배포",
                         "key": "corp-notice-announcements"
@@ -1373,6 +1397,7 @@
                         {
                             "label": "상세",
                             "screenId": null,
+                            "application2Status" : "완료",
                             "status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-announcements-detail"
@@ -1382,6 +1407,7 @@
                 {
                     "label": "자주 묻는 질문",
                     "screenId": null,
+                    "application2Status" : "완료",
                     "status": "완료",
                     "version": "미배포",
                     "key": "corp-notice-faq"
@@ -1390,6 +1416,7 @@
                     "label": "문의하기",
                     "screen": {
                         "screenId": null,
+                        "application2Status" : "완료",
                         "status": "완료",
                         "version": "미배포",
                         "key": "corp-notice-inquiry-create"
@@ -1398,6 +1425,7 @@
                         {
                             "label": "문의 완료",
                             "screenId": null,
+                            "application2Status" : "완료",
                             "status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-inquiry-create-inquiry-complete"
@@ -1405,6 +1433,7 @@
                         {
                             "label": "개인정보 수집 및 이용안내",
                             "screenId": null,
+                            "application2Status" : "완료",
                             "status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-inquiry-create-privacy-consent-guide"
@@ -1412,6 +1441,7 @@
                         {
                             "label": "문의 취소",
                             "screenId": null,
+                            "application2Status" : "완료",
                             "status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-inquiry-create-inquiry-cancel"
@@ -1421,6 +1451,7 @@
                 {
                     "label": "자료실",
                     "screenId": null,
+                    "application2Status" : "완료",
                     "status": "완료",
                     "version": "미배포",
                     "key": "corp-notice-resources"
@@ -1459,6 +1490,7 @@
             "children": [
                 {
                     "label": "404 에러 화면",
+                    "application2Status" : "완료",
                     "screenId": null,
                     "status": "완료",
                     "version": "미배포",
@@ -1472,6 +1504,7 @@
             "children": [
                 {
                     "label": "500 에러 화면",
+                    "application2Status" : "완료",
                     "screenId": null,
                     "status": "완료",
                     "version": "미배포",
@@ -1485,6 +1518,7 @@
             "children": [
                 {
                     "label": "정기점검 화면",
+                    "application2Status" : "완료",
                     "screenId": null,
                     "status": "완료",
                     "version": "미배포",
@@ -1531,6 +1565,7 @@
             "children": [
                 {
                     "label": "로그인 안내",
+                    "application2Status" : "진행중",
                     "screenId": null,
                     "status": "완료",
                     "version": "미배포",
@@ -1544,6 +1579,7 @@
             "children": [
                 {
                     "label": "로그인 연장",
+                    "application2Status" : "진행중",
                     "screenId": null,
                     "status": "완료",
                     "version": "미배포",
@@ -1557,6 +1593,7 @@
             "children": [
                 {
                     "label": "로그아웃 종료",
+                    "application2Status" : "진행중",
                     "screenId": null,
                     "status": "완료",
                     "version": "미배포",
@@ -1703,6 +1740,7 @@
                         {
                             "label": "진행방식 선택",
                             "screenId": null,
+                            "application2Status" : "완료",
                             "status": "완료",
                             "version": "미배포",
                             "key": "org-individual-evaluation-ktrs-fm-selection"
@@ -1710,6 +1748,7 @@
                         {
                             "label": "(1) 고객정보활용동의",
                             "screenId": null,
+                            "application2Status" : "완료",
                             "status": "완료",
                             "version": "미배포",
                             "key": "org-individual-evaluation-ktrs-fm-customer-consent"
@@ -1718,6 +1757,7 @@
                             "label": "(2) 기업·기술정보 입력",
                             "screen": {
                                 "screenId": null,
+                                "application2Status" : "완료",
                                 "status": "완료",
                                 "version": "미배포",
                                 "key": "org-individual-evaluation-ktrs-fm-company-technology-info"
@@ -1738,6 +1778,7 @@
                                 {
                                     "label": "업종코드 조회",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-company-info-industry-code-search"
@@ -1745,6 +1786,7 @@
                                 {
                                     "label": "주소 찾기",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-company-info-address-search"
@@ -1764,6 +1806,7 @@
                                 {
                                     "label": "입력도우미",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-representative-capability-career-input-helper"
@@ -1776,6 +1819,7 @@
                                 {
                                     "label": "실적인정 지식재산",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-additional-company-info-recognized-ip"
@@ -1783,6 +1827,7 @@
                                 {
                                     "label": "거래유형 설명",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-additional-company-info-transaction-type-guide"
@@ -1790,6 +1835,7 @@
                                 {
                                     "label": "전문기술/숙련기술 정의",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-additional-company-info-technology-definition"
@@ -1800,6 +1846,7 @@
                             "label": "(3) 체크리스트 입력",
                             "screen": {
                                 "screenId": null,
+                                "application2Status" : "완료",
                                 "status": "완료",
                                 "version": "미배포",
                                 "key": "org-individual-evaluation-ktrs-fm-checklist"
@@ -1808,6 +1855,7 @@
                                 {
                                     "label": "피인용 확인 메뉴얼",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-checklist-citation-manual"
@@ -1815,6 +1863,7 @@
                                 {
                                     "label": "보증제한 업종",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-checklist-restricted-industries"
@@ -1822,6 +1871,7 @@
                                 {
                                     "label": "TRL 확인",
                                     "screenId": null,
+                                    "application2Status" : "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-checklist-trl-guide"
@@ -2460,6 +2510,7 @@
                     "label": "공지사항",
                     "screen": {
                         "screenId": null,
+                        "application2Status" : "완료",
                         "status": "완료",
                         "version": "미배포",
                         "key": "org-notice-announcements"
@@ -2468,6 +2519,7 @@
                         {
                             "label": "상세",
                             "screenId": null,
+                            "application2Status" : "완료",
                             "status": "완료",
                             "version": "미배포",
                             "key": "org-notice-announcements-detail"
@@ -2477,6 +2529,7 @@
                 {
                     "label": "자주 묻는 질문",
                     "screenId": null,
+                    "application2Status" : "완료",
                     "status": "완료",
                     "version": "미배포",
                     "key": "org-notice-faq"
@@ -2484,6 +2537,7 @@
                 {
                     "label": "1:1 문의 등록",
                     "screenId": null,
+                    "application2Status" : "완료",
                     "status": "완료",
                     "version": "미배포",
                     "key": "org-notice-inquiry-create"
@@ -2491,6 +2545,7 @@
                 {
                     "label": "자료실",
                     "screenId": null,
+                    "application2Status" : "완료",
                     "status": "완료",
                     "version": "미배포",
                     "key": "org-notice-resources"
@@ -2517,6 +2572,7 @@
                 {
                     "label": "404 에러 화면",
                     "screenId": null,
+                    "application2Status" : "완료",
                     "status": "완료",
                     "version": "미배포",
                     "key": "org-not-found"
@@ -2530,6 +2586,7 @@
                 {
                     "label": "500 에러 화면",
                     "screenId": null,
+                    "application2Status" : "완료",
                     "status": "완료",
                     "version": "미배포",
                     "key": "org-server-error"
@@ -2543,6 +2600,7 @@
                 {
                     "label": "정기점검 화면",
                     "screenId": null,
+                    "application2Status" : "완료",
                     "status": "완료",
                     "version": "미배포",
                     "key": "org-maintenance"
