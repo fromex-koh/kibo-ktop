@@ -1,0 +1,9 @@
+import type {Metadata} from 'next'
+import {TechIndexCompleteScreen} from '../../complete-screen'
+
+export const metadata: Metadata = {title: '제출 완료'}
+
+// 기관 개별평가 Tech-Index 창업용 (5) 완료 화면 — 화면 구성은 공유 셸이 갖는다.
+const OrgTechIndexStartupCompletePage = () => <TechIndexCompleteScreen model="startup" />
+
+export default OrgTechIndexStartupCompletePage

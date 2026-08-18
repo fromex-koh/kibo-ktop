@@ -1946,79 +1946,164 @@
                             "key": "org-individual-evaluation-tech-index-selection"
                         },
                         {
-                            "label": "(2) 고객정보활용동의",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-individual-evaluation-tech-index-customer-consent"
-                        },
-                        {
-                            "label": "(3) 기업·기술정보 입력",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-individual-evaluation-tech-index-company-technology-info"
-                        },
-                        {
-                            "label": "3-1 기업정보",
+                            "label": "일반용",
                             "children": [
                                 {
-                                    "label": "업종코드 조회",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "org-individual-evaluation-tech-index-company-info-industry-code-search"
-                                },
-                                {
-                                    "label": "주소 찾기",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "org-individual-evaluation-tech-index-company-info-address-search"
-                                },
-                                {
-                                    "label": "기술분류",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "org-individual-evaluation-tech-index-company-info-technology-category"
-                                },
-                                {
-                                    "label": "품목설명",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "org-individual-evaluation-tech-index-company-info-item-description"
-                                },
-                                {
-                                    "label": "기업정보 관리",
+                                    "label": "(2) 고객정보활용동의",
                                     "screenId": null,
                                     "status": "대기중",
                                     "version": "미배포",
-                                    "key": "org-individual-evaluation-tech-index-company-info-company-management"
+                                    "key": "org-individual-evaluation-tech-index-general-customer-consent"
+                                },
+                                {
+                                    "label": "(3) 기업·기술정보 입력",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-general-company-technology-info"
+                                },
+                                {
+                                    "label": "3-1 기업정보",
+                                    "children": [
+                                        {
+                                            "label": "업종코드 조회",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-tech-index-general-company-info-industry-code-search"
+                                        },
+                                        {
+                                            "label": "주소 찾기",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-tech-index-general-company-info-address-search"
+                                        },
+                                        {
+                                            "label": "기술분류",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-tech-index-general-company-info-technology-category"
+                                        },
+                                        {
+                                            "label": "품목설명",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-tech-index-general-company-info-item-description"
+                                        },
+                                        {
+                                            "label": "기업정보 관리",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-tech-index-general-company-info-company-management"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "(4) 평가 신청하기",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-general-evaluation-application"
+                                },
+                                {
+                                    "label": "(4) 최종 확인",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-general-final-review"
+                                },
+                                {
+                                    "label": "(5) 완료 화면",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-general-complete"
                                 }
                             ]
                         },
                         {
-                            "label": "(4) 평가 신청하기",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-individual-evaluation-tech-index-evaluation-application"
-                        },
-                        {
-                            "label": "(4) 최종 확인",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-individual-evaluation-tech-index-final-review"
-                        },
-                        {
-                            "label": "(5) 완료 화면",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-individual-evaluation-tech-index-complete"
+                            "label": "창업용",
+                            "children": [
+                                {
+                                    "label": "(2) 고객정보활용동의",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-startup-customer-consent"
+                                },
+                                {
+                                    "label": "(3) 기업·기술정보 입력",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-startup-company-technology-info"
+                                },
+                                {
+                                    "label": "3-1 기업정보",
+                                    "children": [
+                                        {
+                                            "label": "업종코드 조회",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-tech-index-startup-company-info-industry-code-search"
+                                        },
+                                        {
+                                            "label": "주소 찾기",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-tech-index-startup-company-info-address-search"
+                                        },
+                                        {
+                                            "label": "기술분류",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-tech-index-startup-company-info-technology-category"
+                                        },
+                                        {
+                                            "label": "품목설명",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-tech-index-startup-company-info-item-description"
+                                        },
+                                        {
+                                            "label": "기업정보 관리",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-tech-index-startup-company-info-company-management"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "(4) 평가 신청하기",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-startup-evaluation-application"
+                                },
+                                {
+                                    "label": "(4) 최종 확인",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-startup-final-review"
+                                },
+                                {
+                                    "label": "(5) 완료 화면",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-individual-evaluation-tech-index-startup-complete"
+                                }
+                            ]
                         }
                     ]
                 },
@@ -2346,13 +2431,10 @@
                 },
                 {
                     "label": "보고서 이력 조회",
-                    "screen": {
-                        "screenId": null,
-                        "status": "대기중",
-                        "version": "미배포",
-                        "key": "org-k-bigx-report-report-history"
-                    },
-                    "children": []
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-k-bigx-report-report-history"
                 }
             ]
         },

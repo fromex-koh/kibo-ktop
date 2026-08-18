@@ -1,5 +1,6 @@
 'use client'
 
+import type {ReactNode} from 'react'
 import Link from 'next/link'
 import {DateField} from '@/components/composite/date-field'
 import {
@@ -333,7 +334,9 @@ const CorpTypeField = () => {
     )
 }
 
-const OrgCompanyInfoForm = () => {
+// trailing — 카드 마지막에 이어 붙는 구획. 기관 Tech-Index 기업정보 탭이 [기업 상세 정보] 구획을
+// 이 자리에 넘긴다(넘기지 않으면 지금까지처럼 담당자 정보에서 끝난다).
+const OrgCompanyInfoForm = ({trailing}: {trailing?: ReactNode} = {}) => {
     const corpType = useFieldValue(CORP_TYPE_FIELD)?.value ?? ''
     const isCorporation = corpType === CORP_TYPE_CORPORATION
 
@@ -457,6 +460,8 @@ const OrgCompanyInfoForm = () => {
                         </Field>
                     </FieldGrid>
                 </div>
+
+                {trailing}
             </div>
         </FormCard>
     )

@@ -1290,72 +1290,142 @@
             "isCurrent": false
         },
         {
-            "key": "org-individual-evaluation-tech-index-customer-consent",
+            "key": "org-individual-evaluation-tech-index-general-customer-consent",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-general-company-technology-info",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-general-company-info-industry-code-search",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-general-company-info-address-search",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-general-company-info-technology-category",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-general-company-info-item-description",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-general-company-info-company-management",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "org-individual-evaluation-tech-index-company-technology-info",
+            "key": "org-individual-evaluation-tech-index-general-evaluation-application",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-general-final-review",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-general-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-customer-consent",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-technology-info",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-industry-code-search",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-address-search",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-technology-category",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-item-description",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-company-management",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "org-individual-evaluation-tech-index-company-info-industry-code-search",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "key": "org-individual-evaluation-tech-index-startup-evaluation-application",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "org-individual-evaluation-tech-index-company-info-address-search",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "key": "org-individual-evaluation-tech-index-startup-final-review",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "org-individual-evaluation-tech-index-company-info-technology-category",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
-            "key": "org-individual-evaluation-tech-index-company-info-item-description",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
-            "key": "org-individual-evaluation-tech-index-company-info-company-management",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
-            "key": "org-individual-evaluation-tech-index-evaluation-application",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
-            "key": "org-individual-evaluation-tech-index-final-review",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
-            "key": "org-individual-evaluation-tech-index-complete",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "key": "org-individual-evaluation-tech-index-startup-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },

@@ -10,7 +10,9 @@ import CompanyEtcForm from '@/components/composite/company-etc-form'
 import TechStaffForm, {TECH_INDEX_STAFF_CATEGORIES} from '@/components/composite/tech-staff-form'
 import RndForm from '@/components/composite/rnd-form'
 import OrgCompanyInfoForm from '@/components/composite/org-company-info-form'
-import TechIndexCompanyInfoForm from '@/components/composite/tech-index-company-info-form'
+import TechIndexCompanyInfoForm, {
+    TechIndexCompanyDetailSection,
+} from '@/components/composite/tech-index-company-info-form'
 import TechIndexRepresentativeCapability from '@/components/composite/tech-index-representative-capability'
 import TechIndexStaffSummary from '@/components/composite/tech-index-staff-summary'
 import TechIndexPatentForm from '@/components/composite/tech-index-patent-form'
@@ -80,6 +82,25 @@ const TECH_INDEX_GENERAL_DEFAULT_VALUES: Record<string, string> = {
     ...TECH_INDEX_RECORD_DEFAULT_VALUES,
 }
 
+// 기관 개별평가 Tech-Index 의 탭 구성 — 기업정보 탭만 기관용(OrgCompanyInfoForm)으로 바꾸고 나머지는
+// 일반용과 같다(ORG_SELF_DIAGNOSIS_FORM_TABS 가 KTRS-FM 에서 하는 것과 같은 치환).
+// 기관은 KTRS-FM 2단계와 같은 기업정보 탭(기업정보 · 기업 담당자 정보, 직접 입력 + 기업형태 분기)을 쓰되,
+// Tech-Index 모형에만 있는 [기업 상세 정보] 구획을 카드 맨 아래에 그대로 이어 붙인다.
+const ORG_TECH_INDEX_GENERAL_FORM_TABS: readonly FormTabItem[] = TECH_INDEX_GENERAL_FORM_TABS.map((tab) =>
+    tab.value === 'company'
+        ? {...tab, content: <OrgCompanyInfoForm trailing={<TechIndexCompanyDetailSection />} />}
+        : tab,
+)
+
+// 창업용 — 위 일반용에 [경영진 역량 및 구성] 탭(창업 모형에만 있다)을 [기술 인력 현황] 다음에 더한다.
+// 어느 세트를 쓸지는 화면이 (0) 평가모형 선택에서 고른 값으로 정한다.
+const ORG_TECH_INDEX_STARTUP_FORM_TABS: readonly FormTabItem[] = ORG_TECH_INDEX_GENERAL_FORM_TABS.flatMap(
+    (tab): readonly FormTabItem[] =>
+        tab.value === 'staff'
+            ? [tab, {value: 'management', title: '경영진 역량 및 구성', content: <TechIndexManagementForm />}]
+            : [tab],
+)
+
 // Tech-Index 창업용 2단계의 탭 구성 — Figma "[혁신성장지수 (창업) Tech-Index] 2단계_기업정보".
 // 일반용 여섯 탭에 [경영진 역량 및 구성] 이 더해져 일곱이고, 자리도 시안 그대로 [기술 인력 현황] 다음이다.
 //
@@ -138,6 +159,8 @@ const TECH_INDEX_STARTUP_DEFAULT_VALUES: Record<string, string> = {
 
 export {
     ORG_SELF_DIAGNOSIS_FORM_TABS,
+    ORG_TECH_INDEX_GENERAL_FORM_TABS,
+    ORG_TECH_INDEX_STARTUP_FORM_TABS,
     SELF_DIAGNOSIS_FORM_TABS,
     TECH_INDEX_GENERAL_DEFAULT_VALUES,
     TECH_INDEX_GENERAL_FORM_TABS,
