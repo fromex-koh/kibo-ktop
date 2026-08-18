@@ -1,7 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import {Check, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
+import {Check, ChevronUp, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
+import {toast} from 'sonner'
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {
     USER_TYPE_VALUES,
@@ -17,6 +18,7 @@ import {
     type StructureNode,
 } from '@/content/publishing-guide'
 import {Badge} from '@/components/ui/badge'
+import {Button} from '@/components/ui/button'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
 import {BaseCard} from '@/components/composite/base-card'
 import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
@@ -199,6 +201,20 @@ const normalizeReleaseNoteChange = (change: ReleaseNoteChange): ReleaseNoteChang
     return [createOverwriteChange('변경사항 반영 대상', targets)]
 }
 
+// 릴리즈 초안의 섹션 작성 순서와 관계없이 인계 카드는 개발자가 적용 방식을 빠르게 훑을 수 있도록
+// Diff 확인 → 덮어쓰기 → 신규 추가 순으로 고정한다. 같은 분류 안에서는 초안 작성 순서를 유지한다.
+const RELEASE_NOTE_HANDOFF_ORDER = {diff: 0, overwrite: 1, new: 2} as const
+const sortReleaseNoteChanges = (changes: ReleaseNoteChange[]) =>
+    changes
+        .map((change, index) => ({change, index}))
+        .sort((left, right) => {
+            const leftOrder = isReleaseNoteHandoff(left.change) ? RELEASE_NOTE_HANDOFF_ORDER[left.change.mode] : -1
+            const rightOrder = isReleaseNoteHandoff(right.change) ? RELEASE_NOTE_HANDOFF_ORDER[right.change.mode] : -1
+
+            return leftOrder - rightOrder || left.index - right.index
+        })
+        .map(({change}) => change)
+
 // 퍼블리싱 진행 상태 인덱스 데모. 데이터는 src/content/publishing-guide/publishing-index.json 단일 소스에서 온다.
 // 이 컴포넌트는 '표현'(상태 색·아이콘 매핑, 뎁스별 rowSpan 계산, 레이아웃, 사용자 유형 필터)만 담당한다.
 
@@ -226,6 +242,34 @@ const StatusTag = ({status}: {status: Status}) => (
     </Badge>
 )
 
+// 실제 화면의 마지막 뎁스 배지는 페이지 구현 여부와 관계없이 publishing-index에서 검색할 고유 키를 복사한다.
+// 상위 메뉴 뎁스는 여러 화면을 대표할 수 있으므로 복사 버튼으로 만들지 않는다.
+const KeyCopyDepthBadge = ({depth, screenKey}: {depth: number; screenKey: string}) => {
+    const copyKey = async () => {
+        try {
+            await navigator.clipboard.writeText(screenKey)
+            toast('키값이 복사되었습니다.', {position: 'top-center'})
+        } catch {
+            // 클립보드 권한이 없으면 상태를 바꾸지 않는다.
+        }
+    }
+
+    const label = `${screenKey} 키값 복사`
+
+    return (
+        <Badge
+            asChild
+            type="number"
+            color="primary"
+            className="hover:ring-primary/40 cursor-pointer transition-shadow focus-within:ring-2 hover:ring-2"
+        >
+            <button type="button" onClick={copyKey} title={label} aria-label={label}>
+                {depth}
+            </button>
+        </Badge>
+    )
+}
+
 // 사이트 구조는 뎁스 제한 없는 트리라, 표에 그리려면 각 leaf(실제 화면)를 "뿌리부터 자신까지의
 // 라벨 경로"로 펼쳐야 한다. 이 펼친 목록 + 뎁스별 rowSpan 계산이 표 렌더링의 핵심이다.
 type FlatLeaf = {
@@ -235,6 +279,7 @@ type FlatLeaf = {
     subtotalDepths: number[] // 소계/구분 브랜치의 뎁스 인덱스 — 표에서 뎁스 배지를 숨긴다.
     screenId: string | null
     status: Status
+    application2Status: Status
     version: string
     isRed?: boolean
     userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 공통(기업·기관 둘 다).
@@ -269,6 +314,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           subtotalDepths: nextSubtotalDepths,
                           screenId: node.screen.screenId,
                           status: node.screen.status,
+                          application2Status: node.screen.application2Status ?? '대기중',
                           version: node.screen.version,
                           ...(node.screen.isRed ? {isRed: true} : {}),
                           userType: node.screen.userType ?? branchUserType,
@@ -288,6 +334,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 subtotalDepths,
                 screenId: node.screenId,
                 status: node.status,
+                application2Status: node.application2Status ?? '대기중',
                 version: node.version,
                 ...(node.isRed ? {isRed: true} : {}),
                 userType: node.userType ?? inherited,
@@ -416,12 +463,24 @@ const PublishingIndex = () => {
     const depthHeaders = useMemo(() => Array.from({length: maxDepth}, (_, depth) => `${depth + 1}뎁스`), [maxDepth])
 
     const screenCount = leaves.length
-    // 작업 진척률 — '완료' 또는 '최종완료'된 화면 수 / (필터된) 전체 화면 수.
-    const doneCount = useMemo(
+    // UIUX·응용2 진척률 — 각 상태에서 '완료' 또는 '최종완료'된 화면 수 / 전체 화면 수.
+    const uiuxDoneCount = useMemo(
         () => leaves.filter((leaf) => leaf.status === '완료' || leaf.status === '최종완료').length,
         [leaves],
     )
-    const progressPercent = screenCount === 0 ? 0 : Math.round((doneCount / screenCount) * 100)
+    const application2DoneCount = useMemo(
+        () =>
+            leaves.filter((leaf) => leaf.application2Status === '완료' || leaf.application2Status === '최종완료')
+                .length,
+        [leaves],
+    )
+    const uiuxProgressPercent = screenCount === 0 ? 0 : Math.round((uiuxDoneCount / screenCount) * 100)
+    const application2ProgressPercent = screenCount === 0 ? 0 : Math.round((application2DoneCount / screenCount) * 100)
+
+    const scrollToTop = () => {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        window.scrollTo({top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth'})
+    }
 
     return (
         <section aria-label="퍼블리싱 현황" className="flex flex-col gap-4">
@@ -445,14 +504,20 @@ const PublishingIndex = () => {
                     {filter} IA {iaVersions[filter]}
                 </Badge>
                 <UserTypeControl filter={filter} label="사용자 유형 빠른 전환" onFilterChange={setFilter} />
+                <Button type="button" variant="secondary" size="sm" className="w-full" onClick={scrollToTop}>
+                    맨 위로
+                    <ChevronUp aria-hidden="true" />
+                </Button>
             </aside>
             <BaseCard>
                 <div className="flex flex-col gap-8">
                     <div className="flex flex-col gap-3">
                         <SectionHeader>
                             <SectionHeaderTitle id="release-notes-title">버전 업데이트</SectionHeaderTitle>
-                            <SectionHeaderDescription>
-                                버전별 주요 개선 사항과 변경 내용을 최신순으로 안내합니다.
+                            <SectionHeaderDescription asChild>
+                                <ul className="list-disc pl-5">
+                                    <li>버전별 주요 개선 사항과 변경 내용을 최신순으로 안내합니다.</li>
+                                </ul>
                             </SectionHeaderDescription>
                         </SectionHeader>
 
@@ -498,38 +563,34 @@ const PublishingIndex = () => {
                                                 </td>
                                                 <td className="typo-body-l-regular text-foreground-subtle px-4 py-3">
                                                     <ul className="flex list-none flex-col gap-2">
-                                                        {release.changes
-                                                            .flatMap(normalizeReleaseNoteChange)
-                                                            .map((displayChange, changeIndex) => {
-                                                                const key =
-                                                                    typeof displayChange === 'string'
-                                                                        ? displayChange
-                                                                        : `${displayChange.mode}-${displayChange.title}`
+                                                        {sortReleaseNoteChanges(
+                                                            release.changes.flatMap(normalizeReleaseNoteChange),
+                                                        ).map((displayChange, changeIndex) => {
+                                                            const key =
+                                                                typeof displayChange === 'string'
+                                                                    ? displayChange
+                                                                    : `${displayChange.mode}-${displayChange.title}`
 
-                                                                return (
-                                                                    <li
-                                                                        key={`${key}-${changeIndex}`}
-                                                                        className={
-                                                                            isReleaseNoteHandoff(displayChange)
-                                                                                ? ''
-                                                                                : 'flex'
-                                                                        }
-                                                                    >
-                                                                        {isReleaseNoteHandoff(displayChange) ? (
-                                                                            <ReleaseNoteHandoff
-                                                                                change={displayChange}
-                                                                            />
-                                                                        ) : (
-                                                                            <>
-                                                                                <ListMarker />
-                                                                                <ReleaseNoteChange
-                                                                                    change={displayChange}
-                                                                                />
-                                                                            </>
-                                                                        )}
-                                                                    </li>
-                                                                )
-                                                            })}
+                                                            return (
+                                                                <li
+                                                                    key={`${key}-${changeIndex}`}
+                                                                    className={
+                                                                        isReleaseNoteHandoff(displayChange)
+                                                                            ? ''
+                                                                            : 'flex'
+                                                                    }
+                                                                >
+                                                                    {isReleaseNoteHandoff(displayChange) ? (
+                                                                        <ReleaseNoteHandoff change={displayChange} />
+                                                                    ) : (
+                                                                        <>
+                                                                            <ListMarker />
+                                                                            <ReleaseNoteChange change={displayChange} />
+                                                                        </>
+                                                                    )}
+                                                                </li>
+                                                            )
+                                                        })}
                                                     </ul>
                                                 </td>
                                             </tr>
@@ -646,10 +707,14 @@ const PublishingIndex = () => {
                                     {filter} IA {iaVersions[filter]}
                                 </Badge>
                             </SectionHeaderTitle>
-                            <SectionHeaderDescription>
-                                기업·기관 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다. 메뉴 자체가 화면인 행의
-                                미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시하며, 취소선 항목은 기존에 있었지만 삭제된
-                                내용입니다.
+                            <SectionHeaderDescription asChild>
+                                <ul className="flex list-disc flex-col gap-1 pl-5">
+                                    <li>기업·기관 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다.</li>
+                                    <li>
+                                        메뉴 자체가 화면인 행의 미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시합니다.
+                                    </li>
+                                    <li>취소선 항목은 기존에 있었지만 삭제된 내용입니다.</li>
+                                </ul>
                             </SectionHeaderDescription>
                         </SectionHeader>
                         {/* 사용자 유형 필터 + 요약 — 아래 사이트 구조 표를 기업/기관 IA 한 벌씩 걸러 보여준다.
@@ -660,14 +725,23 @@ const PublishingIndex = () => {
                             <UserTypeControl filter={filter} label="사용자 유형별 화면" onFilterChange={setFilter} />
                         </div>
 
-                        {/* 총 화면 본수·작업 진척률 — 선택된 필터 기준으로 갱신되고, 탭 전환을 스크린리더에 알린다.
-            '완료'와 '최종완료' 상태를 모두 완료 작업으로 집계한다. */}
-                        <p aria-live="polite" className="typo-body-l-regular text-muted-foreground">
-                            {filter} 화면 본수: <span className="text-foreground font-semibold">{screenCount}개</span>
-                            {' · '}작업 진척률:{' '}
-                            <span className="text-foreground font-semibold">{progressPercent}%</span> (완료 {doneCount}/
-                            {screenCount})
-                        </p>
+                        {/* 역할별 전체 화면 수와 UIUX·응용2 진척률을 같은 기준으로 나란히 비교한다. */}
+                        <div aria-live="polite" className="grid gap-3 sm:grid-cols-2">
+                            <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
+                                <span className="typo-caption-medium text-muted-foreground">응용2 진척률</span>
+                                <strong className="typo-h4-bold text-foreground">{application2ProgressPercent}%</strong>
+                                <span className="typo-caption-regular text-muted-foreground">
+                                    완료 {application2DoneCount}/{screenCount} · {filter} 화면 {screenCount}개
+                                </span>
+                            </div>
+                            <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
+                                <span className="typo-caption-medium text-muted-foreground">UIUX 진척률</span>
+                                <strong className="typo-h4-bold text-foreground">{uiuxProgressPercent}%</strong>
+                                <span className="typo-caption-regular text-muted-foreground">
+                                    완료 {uiuxDoneCount}/{screenCount} · {filter} 화면 {screenCount}개
+                                </span>
+                            </div>
+                        </div>
                         {/* 아래 화면 목록에서 사용하는 진행 상태 범례 */}
                         <ul aria-label="화면 진행 상태 범례" className="flex flex-wrap items-center gap-2">
                             {STATUS_VALUES.map((status) => (
@@ -675,6 +749,42 @@ const PublishingIndex = () => {
                                     <StatusTag status={status} />
                                 </li>
                             ))}
+                        </ul>
+                        <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-1.5 pl-5">
+                            <li>
+                                <strong className="text-foreground font-medium">작업 브랜치:</strong> 최신{' '}
+                                <code className="text-foreground font-mono">work</code>에서 별도 브랜치를 생성하고, 완료
+                                후 <code className="text-foreground font-mono">work</code>를 대상으로 PR을 보냅니다.
+                            </li>
+                            <li>
+                                <strong className="text-foreground font-medium">화면 찾기:</strong> 실제 화면명의 뎁스
+                                배지를 눌러 고유 키를 복사한 뒤,{' '}
+                                <code className="text-foreground font-mono">publishing-index.json</code>에서 해당 키를
+                                바로 검색합니다.
+                            </li>
+                            <li>
+                                <strong className="text-foreground font-medium">수정 파일:</strong>{' '}
+                                <code className="text-foreground font-mono">
+                                    src/content/publishing-guide/publishing-index.json
+                                </code>
+                            </li>
+                            <li>
+                                <strong className="text-foreground font-medium">수정 방법:</strong> 해당 화면의 기존
+                                UIUX <code className="text-foreground font-mono">status</code> 키는 유지하고, 바로
+                                아래에 <code className="text-foreground font-mono">application2Status</code> 키를
+                                추가하거나 값을 수정합니다.
+                            </li>
+                            <li>
+                                <strong className="text-foreground font-medium">입력 가능 상태:</strong>{' '}
+                                <code className="text-foreground font-mono">
+                                    대기중, 진행중, 수정요청, 보완, 완료, 최종완료
+                                </code>
+                                . 키가 없으면 대기중으로 표시됩니다.
+                            </li>
+                            <li>
+                                <strong className="text-foreground font-medium">최종완료 기준:</strong> 더 이상
+                                수정사항이 발생하지 않을 것으로 확정된 화면에만 표시합니다.
+                            </li>
                         </ul>
                         {/* 여러 화면이 공유하는 레이아웃은 개별 화면과 구분해 별도 표로 표시한다. */}
                         <div className="bg-background border-border overflow-x-auto rounded-md border">
@@ -686,7 +796,7 @@ const PublishingIndex = () => {
                                             공통 레이아웃
                                         </th>
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                            상태
+                                            UIUX
                                         </th>
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
                                             버전
@@ -754,7 +864,10 @@ const PublishingIndex = () => {
                                             </th>
                                         ))}
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                            상태
+                                            응용2
+                                        </th>
+                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                            UIUX
                                         </th>
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
                                             버전
@@ -821,13 +934,21 @@ const PublishingIndex = () => {
                                                             <span className="inline-flex items-center gap-2">
                                                                 {!leaf.subtotalDepths.includes(depth) && (
                                                                     <>
-                                                                        <Badge
-                                                                            aria-hidden="true"
-                                                                            type="number"
-                                                                            color="primary"
-                                                                        >
-                                                                            {depth + 1}
-                                                                        </Badge>
+                                                                        {depth === leaf.path.length - 1 &&
+                                                                        registeredScreen ? (
+                                                                            <KeyCopyDepthBadge
+                                                                                depth={depth + 1}
+                                                                                screenKey={registeredScreen.key}
+                                                                            />
+                                                                        ) : (
+                                                                            <Badge
+                                                                                aria-hidden="true"
+                                                                                type="number"
+                                                                                color="primary"
+                                                                            >
+                                                                                {depth + 1}
+                                                                            </Badge>
+                                                                        )}
                                                                         <span className="sr-only">
                                                                             {depth + 1}뎁스{' '}
                                                                         </span>
@@ -856,6 +977,9 @@ const PublishingIndex = () => {
                                                         </th>
                                                     )
                                                 })}
+                                                <td className="px-4 py-3">
+                                                    <StatusTag status={leaf.application2Status} />
+                                                </td>
                                                 <td className="px-4 py-3">
                                                     <StatusTag status={effectiveStatus} />
                                                 </td>

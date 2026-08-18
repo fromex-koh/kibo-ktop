@@ -109,6 +109,7 @@ export type StructureLeaf = {
     key?: string // 경로가 확정된 화면은 screen-registry.json과 연결하는 영구 key를 가진다.
     screenId: string | null
     status: Status
+    application2Status?: Status // 응용2 진행 상태. 미지정 시 대기중으로 표시한다.
     version: string
     // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목 — 인덱스에는 포함하되 취소선·빨간색으로 표시한다.
     isRed?: boolean
@@ -122,6 +123,7 @@ export type ScreenInfo = {
     key?: string
     screenId: string | null
     status: Status
+    application2Status?: Status
     version: string
     label?: string
     // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목.

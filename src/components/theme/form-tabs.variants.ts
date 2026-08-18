@@ -44,7 +44,7 @@ const formTabsPickerCurrentRowClassName = 'text-select-selected-foreground'
 // 폭은 눌린 줄과 같게 맞춘다 — Radix 가 알려주는 트리거 폭을 그대로 쓴다.
 // 순정 PopoverContent 의 고정 폭(w-72)·라운드(lg)·여백(2.5)·그림자를 시안 값으로 덮는다.
 const formTabsPickerPanelClassName =
-    'border-control bg-card w-(--radix-popover-trigger-width) gap-0 rounded-sm border p-2 shadow-none ring-0'
+    'z-sticky border-control bg-card w-(--radix-popover-trigger-width) gap-0 rounded-sm border p-2 shadow-none ring-0'
 
 export {
     formTabsContentClassName,

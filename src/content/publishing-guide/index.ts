@@ -113,6 +113,14 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
     if (typeof value.status !== 'string' || !isStatus(value.status)) {
         throw new Error(`[content] ${where}: status "${String(value.status)}" 이(가) 유효하지 않습니다.`)
     }
+    if (
+        value.application2Status !== undefined &&
+        (typeof value.application2Status !== 'string' || !isStatus(value.application2Status))
+    ) {
+        throw new Error(
+            `[content] ${where}: application2Status "${String(value.application2Status)}" 이(가) 유효하지 않습니다.`,
+        )
+    }
     if (typeof value.version !== 'string') {
         throw new Error(`[content] ${where}: version 이 필요합니다.`)
     }
@@ -124,6 +132,9 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
         ...(typeof value.key === 'string' ? {key: value.key} : {}),
         screenId: value.screenId,
         status: value.status,
+        ...(typeof value.application2Status === 'string' && isStatus(value.application2Status)
+            ? {application2Status: value.application2Status}
+            : {}),
         version: value.version,
         ...(value.isRed === true ? {isRed: true} : {}),
         ...(userType !== undefined ? {userType} : {}),
