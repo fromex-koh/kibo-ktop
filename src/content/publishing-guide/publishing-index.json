@@ -1951,14 +1951,14 @@
                                 {
                                     "label": "(2) 고객정보활용동의",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-general-customer-consent"
                                 },
                                 {
                                     "label": "(3) 기업·기술정보 입력",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-general-company-technology-info"
                                 },
@@ -2005,21 +2005,21 @@
                                 {
                                     "label": "(4) 평가 신청하기",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-general-evaluation-application"
                                 },
                                 {
                                     "label": "(4) 최종 확인",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-general-final-review"
                                 },
                                 {
                                     "label": "(5) 완료 화면",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-general-complete"
                                 }
@@ -2031,14 +2031,14 @@
                                 {
                                     "label": "(2) 고객정보활용동의",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-startup-customer-consent"
                                 },
                                 {
                                     "label": "(3) 기업·기술정보 입력",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-startup-company-technology-info"
                                 },
@@ -2085,21 +2085,21 @@
                                 {
                                     "label": "(4) 평가 신청하기",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-startup-evaluation-application"
                                 },
                                 {
                                     "label": "(4) 최종 확인",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-startup-final-review"
                                 },
                                 {
                                     "label": "(5) 완료 화면",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-startup-complete"
                                 }
@@ -2252,7 +2252,7 @@
                 {
                     "label": "(1) Tech-Index 선택\n(2) 평가내역조회/일괄평가 진행 선택",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-batch-evaluation-evaluation-history-or-batch"
                 },
@@ -2263,7 +2263,7 @@
                             "label": "(3) 대량정보 조회 신청",
                             "screen": {
                                 "screenId": null,
-                                "status": "대기중",
+                                "status": "완료",
                                 "version": "미배포",
                                 "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request"
                             },
@@ -2271,7 +2271,7 @@
                                 {
                                     "label": "제출 전 최종 확인",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request-final-review"
                                 }
@@ -2280,21 +2280,21 @@
                         {
                             "label": "(4) 대량정보 조회 신청 완료",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-complete"
                         },
                         {
                             "label": "(3) 일괄평가 진행 신청",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-request"
                         },
                         {
                             "label": "(4) 일괄평가 신청 완료",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-complete"
                         }
@@ -2307,7 +2307,7 @@
                             "label": "(3) 대량정보 조회 신청",
                             "screen": {
                                 "screenId": null,
-                                "status": "대기중",
+                                "status": "완료",
                                 "version": "미배포",
                                 "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request"
                             },
@@ -2315,7 +2315,7 @@
                                 {
                                     "label": "제출 전 최종 확인",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request-final-review"
                                 }
@@ -2324,21 +2324,21 @@
                         {
                             "label": "(4) 대량정보 조회 신청 완료",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-complete"
                         },
                         {
                             "label": "(3) 일괄평가 진행 신청",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-request"
                         },
                         {
                             "label": "(4) 일괄평가 신청 완료",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-complete"
                         }

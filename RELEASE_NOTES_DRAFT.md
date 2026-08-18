@@ -5,41 +5,6 @@
 아래 예시는 형식 안내용 주석이며 실제 릴리즈 내용으로 수집되지 않습니다.
 프론트엔드 전달 항목은 ## 구분자, ### 작업명, - 라벨: 내용 순서로 작성하세요.
 
-### 기관 KTRS-FM 진행방식 선택 폼
-
-- 대상: src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/selection/evaluation-method-form.tsx
-- 적용: [평가검증 하기]·[개별평가 하기] 중 하나를 RadioCard 로 선택하고 [다음]으로 이동하는 진행방식 선택 폼 신규 추가. 선택 전에는 [다음]이 비활성화되고, 평가검증은 마이페이지 > 평가검증 신청 조회로, 개별평가는 (1) 고객정보활용동의로 이동
-
-### FileUploadField·FileUploadResult 컴포넌트
-
-- 대상: src/components/composite/file-upload-field.tsx
-    - src/components/composite/file-upload-result.tsx
-    - src/lib/file.ts
-    - src/app/component-guide/(guide)/file-upload/file-upload-result-demo.tsx
-- 적용: 기존 공통 FileUpload 와 독립된 업로드 필드 컴포넌트 신규 추가. 선택 전 박스·업로드 성공·오류 세 상태를 가지며, 성공·오류 결과 패널(FileUploadSuccess·FileUploadError)에 다운로드 버튼을 제공. 오류는 첨부 정책 위반과 표준 양식 포맷 위반(hasFormatError, 행·열 오류 목록) 두 케이스를 지원하고 파일 용량은 formatFileSize 유틸로 표기. [FileUpload / Field / Result](/component-guide/file-upload) 가이드에 사용법·문구 규칙 추가
-- 참고: 기존 공통 FileUpload 를 쓰는 화면은 영향 없음
-
-### AttachField 컴포넌트
-
-- 대상: src/components/composite/attach-field.tsx
-    - src/app/component-guide/(guide)/attach-field/page.tsx
-- 적용: 라벨·첨부 버튼·선택된 파일(삭제 버튼 포함)·안내 문구를 한 줄로 배치하는 첨부 필드 컴포넌트와 [AttachField](/component-guide/attach-field) 가이드 페이지 신규 추가. 기관 Tech-Index 평가 신청하기 화면의 첨부서류 입력에 사용
-
-### 기관 Tech-Index 일반/창업 플로우 화면 일체
-
-- 대상: src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/model-meta.ts
-    - src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/selection/tech-index-model-form.tsx
-    - src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/ 공용 스크린 7개 (customer-consent·company-technology-info·evaluation-application·final-review·complete 스크린과 evaluation-application-form·final-review-confirm)
-    - src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/general/ 및 startup/ 전체
-- 적용: 기관 개별평가 Tech-Index 를 일반용/창업용 두 경로로 분리해 전체 플로우를 신설. 제목·완료 문구·경로는 model-meta 가 모형별로 결정하고("혁신성장지수 (일반)/(창업)" + Tech-Index 뱃지), 얇은 page 가 공용 스크린에 model 만 넘기는 구조. 플로우는 (1) 고객정보활용동의 → (2) 기업·기술정보 입력(이어서 작성 안내 포함) → (3) 평가 신청하기(AttachField 첨부서류) → 제출 전 최종 확인 모달 → (4) 제출 완료
-
-### 기관 일괄평가 플로우 화면 일체
-
-- 대상: src/app/(user-type)/org/(service)/(logged-in)/batch-evaluation/evaluation-history-or-batch/ 전체
-    - page.tsx(1단계 선택)·batch-model-meta.ts·폼 3종(batch-evaluation-form·bulk-data-request-form·batch-evaluation-request-form)·스크린 4종
-    - general/ 및 startup/ 분기 페이지 전체(대량정보 조회 신청 + 제출 전 최종 확인·신청 완료·일괄평가 진행 신청·신청 완료)
-- 적용: 기관 일괄평가 플로우 신설. 1단계에서 Tech-Index 평가모형(일반/창업, RadioCard)과 진행할 업무(대량정보 조회/일괄평가 진행, RadioChip)를 모두 선택해야 [다음]이 활성화되고, 선택에 따라 일반용/창업용 분기 경로로 이동. 2단계는 평가내역조회용 표준엑셀·개인정보활용동의서를 FileUploadField 로 업로드하고(표준 양식 포맷 오류 케이스 지원) 유효성 통과 시 제출 전 최종 확인 모달을 거쳐 신청 완료로 이동. 화면 제목은 batch-model-meta 가 "혁신성장지수 평가 (일반/창업) Tech-Index" 로 결정
-
 ## [Diff 확인]
 
 ### Header 반응형 개선
@@ -84,6 +49,41 @@
     - src/components/theme/radio-chip.variants.ts
     - src/app/component-guide/(guide)/radio-chip/page.tsx
 - 적용: 칩 전체가 라디오 선택지로 동작하는 낮은 높이의 선택 칩 컴포넌트와 스타일, [RadioChip](/component-guide/radio-chip) 가이드 페이지 신규 추가. RadioCard 와 같은 hover·선택 스타일(파란 테두리·연한 파란 배경)을 공유하며, 기관 일괄평가의 진행할 업무 선택처럼 카드보다 가벼운 선택 UI 에 사용
+
+### 기관 KTRS-FM 진행방식 선택 폼
+
+- 대상: src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/selection/evaluation-method-form.tsx
+- 적용: [평가검증 하기]·[개별평가 하기] 중 하나를 RadioCard 로 선택하고 [다음]으로 이동하는 진행방식 선택 폼 신규 추가. 선택 전에는 [다음]이 비활성화되고, 평가검증은 마이페이지 > 평가검증 신청 조회로, 개별평가는 (1) 고객정보활용동의로 이동
+
+### FileUploadField·FileUploadResult 컴포넌트
+
+- 대상: src/components/composite/file-upload-field.tsx
+    - src/components/composite/file-upload-result.tsx
+    - src/lib/file.ts
+    - src/app/component-guide/(guide)/file-upload/file-upload-result-demo.tsx
+- 적용: 기존 공통 FileUpload 와 독립된 업로드 필드 컴포넌트 신규 추가. 선택 전 박스·업로드 성공·오류 세 상태를 가지며, 성공·오류 결과 패널(FileUploadSuccess·FileUploadError)에 다운로드 버튼을 제공. 오류는 첨부 정책 위반과 표준 양식 포맷 위반(hasFormatError, 행·열 오류 목록) 두 케이스를 지원하고 파일 용량은 formatFileSize 유틸로 표기. [FileUpload / Field / Result](/component-guide/file-upload) 가이드에 사용법·문구 규칙 추가
+- 참고: 기존 공통 FileUpload 를 쓰는 화면은 영향 없음
+
+### AttachField 컴포넌트
+
+- 대상: src/components/composite/attach-field.tsx
+    - src/app/component-guide/(guide)/attach-field/page.tsx
+- 적용: 라벨·첨부 버튼·선택된 파일(삭제 버튼 포함)·안내 문구를 한 줄로 배치하는 첨부 필드 컴포넌트와 [AttachField](/component-guide/attach-field) 가이드 페이지 신규 추가. 기관 Tech-Index 평가 신청하기 화면의 첨부서류 입력에 사용
+
+### 기관 Tech-Index 일반/창업 플로우 화면 일체
+
+- 대상: src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/model-meta.ts
+    - src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/selection/tech-index-model-form.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/ 공용 스크린 7개 (customer-consent·company-technology-info·evaluation-application·final-review·complete 스크린과 evaluation-application-form·final-review-confirm)
+    - src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/general/ 및 startup/ 전체
+- 적용: 기관 개별평가 Tech-Index 를 일반용/창업용 두 경로로 분리해 전체 플로우를 신설. 제목·완료 문구·경로는 model-meta 가 모형별로 결정하고("혁신성장지수 (일반)/(창업)" + Tech-Index 뱃지), 얇은 page 가 공용 스크린에 model 만 넘기는 구조. 플로우는 (1) 고객정보활용동의 → (2) 기업·기술정보 입력(이어서 작성 안내 포함) → (3) 평가 신청하기(AttachField 첨부서류) → 제출 전 최종 확인 모달 → (4) 제출 완료
+
+### 기관 일괄평가 플로우 화면 일체
+
+- 대상: src/app/(user-type)/org/(service)/(logged-in)/batch-evaluation/evaluation-history-or-batch/ 전체
+    - page.tsx(1단계 선택)·batch-model-meta.ts·폼 3종(batch-evaluation-form·bulk-data-request-form·batch-evaluation-request-form)·스크린 4종
+    - general/ 및 startup/ 분기 페이지 전체(대량정보 조회 신청 + 제출 전 최종 확인·신청 완료·일괄평가 진행 신청·신청 완료)
+- 적용: 기관 일괄평가 플로우 신설. 1단계에서 Tech-Index 평가모형(일반/창업, RadioCard)과 진행할 업무(대량정보 조회/일괄평가 진행, RadioChip)를 모두 선택해야 [다음]이 활성화되고, 선택에 따라 일반용/창업용 분기 경로로 이동. 2단계는 평가내역조회용 표준엑셀·개인정보활용동의서를 FileUploadField 로 업로드하고(표준 양식 포맷 오류 케이스 지원) 유효성 통과 시 제출 전 최종 확인 모달을 거쳐 신청 완료로 이동. 화면 제목은 batch-model-meta 가 "혁신성장지수 평가 (일반/창업) Tech-Index" 로 결정
 
 ## [Diff 확인]
 
@@ -175,3 +175,10 @@
 - 변경: 선택 화면 아래 단일 목록이던 일괄평가 화면 key 4개를 일반용/창업용 그룹의 분기별 10개(제출 전 최종 확인 포함)로 교체하고, 트리를 selection + 일반용/창업용 그룹으로 재구성
 - 결과: 기관 IA 에서 일괄평가가 개별평가 Tech-Index 와 같은 일반용/창업용 그룹 구조로 노출되며, 그룹 라벨 행에는 화면 이동 버튼을 두지 않음
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c2c2aaa7a059239d1155689e82b07141b194f09c)
+
+## [덮어쓰기]
+
+### 퍼블리싱 인덱스 화면 상태
+
+- 대상: src/content/publishing-guide/publishing-index.json
+- 적용: 기관 Tech-Index 일반용·창업용 플로우 화면 10개와 일괄평가 화면 11개(선택 화면 포함), 총 21개의 UIUX 진행 상태를 완료로 교체
