@@ -34,7 +34,7 @@ import {
 // Figma "[혁신성장지수 (일반) Tech-Index] 2단계_특허 보유현황".
 //
 // 화면은 두 층이다.
-//   위: 합계 요약 7칸. [출원중인 특허] 만 사람이 적고 나머지는 아래 특허 목록에서 계산해 채운다(읽기 전용).
+//   위: 합계 요약 7칸. [등록 특허 · 출원 특허]를 포함한 합계는 아래 특허 목록에서 계산해 채운다(읽기 전용).
 //   아래: 특허 카드 반복. 카드마다 [특허정보 조회] 로 채우는 [자동 인입 항목] 묶음이 딸려 있다.
 //
 // [연동 지점] 지금은 화면만 있다. 실제로는 아래 두 가지가 붙는다.
@@ -50,12 +50,12 @@ const PATENT_TYPES = [
 
 // 상태 — [등록] 인 카드 수가 위 [등록 특허] 합계가 된다(시안 안내 문구).
 // [출원] 은 아직 등록되지 않은 건이라 등록번호·등록일이 아직 없다(카드 안내의 "미등록건 입력생략").
-// 위 요약의 [출원중인 특허] 칸과는 무관하다 — 그 칸은 사람이 직접 적는 수량이고, 이 상태에서 세지 않는다.
+// 위 요약의 [출원 특허] 합계는 이 상태의 카드 수로 계산한다.
 const PATENT_STATUS_REGISTERED = 'registered'
 const PATENT_STATUS_APPLIED = 'applied'
 const PATENT_STATUSES = [
     {value: PATENT_STATUS_REGISTERED, label: '등록'},
-    {value: PATENT_STATUS_APPLIED, label: '출원중'},
+    {value: PATENT_STATUS_APPLIED, label: '출원'},
 ] as const
 
 // 등록 정보 칸 — 상태가 [출원] 이면 아직 없는 값이라 선택 항목이 된다.
@@ -537,10 +537,12 @@ const usePatentTotals = (ids: readonly number[]) => {
     const {values} = useFormValues()
     const sum = (name: string) => ids.reduce((total, id) => total + toCount(values[patentField(id, name)]), 0)
     const registeredCount = ids.filter((id) => values[patentField(id, 'status')] === PATENT_STATUS_REGISTERED).length
+    const appliedCount = ids.filter((id) => values[patentField(id, 'status')] === PATENT_STATUS_APPLIED).length
     const durationTotal = sum(AUTO_FIELDS.duration)
 
     return {
         registeredCount,
+        appliedCount,
         claimTotal: sum(AUTO_FIELDS.claim),
         // 평균은 등록된 특허를 기준으로 낸다 — 등록되지 않은 건은 소요기간이 아직 없다.
         averageDuration: registeredCount > 0 ? Math.round(durationTotal / registeredCount) : 0,
@@ -553,7 +555,7 @@ const usePatentTotals = (ids: readonly number[]) => {
 // 시안 안내 문구 — 카드 제목 아래에 불릿 목록으로 온다.
 const NOTICES = [
     '법인 소유 특허만 입력해 주세요.',
-    '국내 등록특허 및 출원특허 수량을 입력해주세요.',
+    '국내 등록특허 및 출원 특허 수량을 입력해주세요.',
     'PCT 및 해외 특허의 인정 여부는 평가 기준에 따라 달라질 수 있습니다.',
     '동일 기술에 대한 중복 특허는 1건으로 인정될 수 있습니다.',
     "등록 특허 건수는 아래 개별 특허 목록에서 상태가 '등록'인 건수로 자동 계산됩니다. (등록번호·등록일은 미등록건 입력 생략)",
@@ -562,7 +564,7 @@ const NOTICES = [
 type TechIndexPatentFormProps = {
     /**
      * 위 요약에 [특허정보 조회]로 채워지는 항목의 합계 다섯 칸(청구항 수·평균 소요기간·인용·피인용·IPC)을 둘지.
-     * 일반용 시안에는 있고 창업용 시안에는 없다 — 창업용은 [등록 특허 · 출원중인 특허] 두 칸만 둔다.
+     * 일반용 시안에는 있고 창업용 시안에는 없다 — 창업용은 [등록 특허 · 출원 특허] 두 칸만 둔다.
      * 카드 안의 [자동 인입 항목] 다섯 칸은 두 모형 모두 그대로 있다(합계만 다르다).
      */
     showLookupTotals?: boolean
@@ -573,12 +575,11 @@ const TechIndexPatentForm = ({showLookupTotals = true}: TechIndexPatentFormProps
     const {ids, addedId, addCard, removeCard, setCardRef, addButtonRef, isLastCard} = useRepeatCards({
         // 지운 칸의 값도 함께 버린다 — 남겨두면 제출 데이터에 유령 값이 섞인다.
         // 마지막 카드의 X는 탭 전체를 처음 상태로 되돌리는 동작이다. 사용자가 직접 적는 상단
-        // [출원중인 특허]도 0으로 복원하고, 첫 카드의 자동 인입 항목은 최초 기본값과 같은 0을 다시 담는다.
+        // 첫 카드의 자동 인입 항목은 최초 기본값과 같은 0을 다시 담는다.
         onRemove: (id, isLastCard) => {
             clearValues(`patent-${id}-`)
             if (!isLastCard) return
 
-            setValue(TECH_INDEX_PATENT_APPLIED_FIELD, TECH_INDEX_PATENT_COUNT_DEFAULT)
             if (id === 1)
                 TECH_INDEX_PATENT_CARD_COUNT_FIELDS.forEach((name) =>
                     setValue(techIndexPatentField(id, name), TECH_INDEX_PATENT_COUNT_DEFAULT),
@@ -608,8 +609,12 @@ const TechIndexPatentForm = ({showLookupTotals = true}: TechIndexPatentFormProps
                         label="등록 특허"
                         value={totals.registeredCount}
                     />
-                    {/* 출원중인 특허만 사람이 적는다 — 나머지 합계는 아래 카드에서 계산된다. */}
-                    <CountField id="applied-patent-count" name="appliedPatentCount" label="출원중인 특허" required />
+                    <TotalField
+                        id="applied-patent-total"
+                        name={TECH_INDEX_PATENT_APPLIED_FIELD}
+                        label="출원 특허"
+                        value={totals.appliedCount}
+                    />
                     {showLookupTotals ? (
                         <TotalField
                             id="claim-total"
