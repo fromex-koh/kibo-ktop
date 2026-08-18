@@ -1,13 +1,30 @@
 # 다음 릴리스 변경사항
 
+<!--
+일반 변경사항은 불릿(-)으로 작성하세요.
+아래 예시는 형식 안내용 주석이며 실제 릴리즈 내용으로 수집되지 않습니다.
+프론트엔드 전달 항목은 ## 구분자, ### 작업명, - 라벨: 내용 순서로 작성하세요.
+
 ## [Diff 확인]
 
-### Tech-Index 출원 특허 상태·합계 연동
+### Header 반응형 개선
+- 대상: src/components/composite/header.tsx
+- 변경: 사용자 정보 영역 breakpoint 조정
+- 결과: 768px 이상에서 사용자 정보 표시
+- 커밋: [변경사항 보기](https://github.com/{organization}/{repository}/commit/{commit-hash})
 
-- 대상:
-    - src/components/composite/tech-index-patent-form.tsx
-    - src/components/composite/self-diagnosis-form-tabs.tsx
-    - src/constants/technology-evaluation.ts
-- 변경: 일반용·창업용 특허 보유현황의 상태 옵션을 `등록`·`출원`으로 정리하고, `출원 특허`를 직접 입력 방식에서 카드 상태 기반 읽기 전용 자동 합계로 변경
-- 결과: 기존 폼·제출 연동은 유지하면서 `appliedPatentCount`가 상태가 `출원`인 특허 카드 수와 일치하도록 비교 반영
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f3bca572042ea8b9a545bf2edb57fba68ce6a627)
+## [신규 추가]
+
+### EmailField 컴포넌트
+- 대상: src/components/composite/email-field.tsx
+- 적용: 신규 파일 추가
+
+## [덮어쓰기]
+
+### 문의 완료 화면
+- 대상: src/components/custom/inquiry-complete
+- 적용: 지정한 파일만 교체
+
+컴포넌트 가이드 페이지는 `[페이지 제목](/component-guide/경로)` 형식으로 작성하면 새 창 링크로 표시됩니다.
+릴리스 성공 후 내용은 자동으로 비워집니다.
+-->
