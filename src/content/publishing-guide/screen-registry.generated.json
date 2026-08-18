@@ -90,7 +90,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-consent-popup",
@@ -258,14 +258,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-consent-popup",
@@ -300,7 +300,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-industry-code-search",
@@ -321,14 +321,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-item-description",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-cancel-confirm",
@@ -356,14 +356,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-consent-popup",
@@ -398,7 +398,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-industry-code-search",
@@ -419,7 +419,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-item-description",
@@ -454,7 +454,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent",
@@ -1322,14 +1322,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-item-description",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-company-management",
@@ -1406,7 +1406,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-item-description",

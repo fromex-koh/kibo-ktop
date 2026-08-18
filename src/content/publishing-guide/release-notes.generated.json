@@ -1,6 +1,35 @@
 {
     "releases": [
         {
+            "version": "v2.0.5",
+            "releasedAt": "2026-08-18",
+            "changes": [
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "Tech-Index 출원 특허 상태·합계 연동",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/tech-index-patent-form.tsx\nsrc/components/composite/self-diagnosis-form-tabs.tsx\nsrc/constants/technology-evaluation.ts"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "일반용·창업용 특허 보유현황의 상태 옵션을 `등록`·`출원`으로 정리하고, `출원 특허`를 직접 입력 방식에서 카드 상태 기반 읽기 전용 자동 합계로 변경"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "기존 폼·제출 연동은 유지하면서 `appliedPatentCount`가 상태가 `출원`인 특허 카드 수와 일치하도록 비교 반영"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f3bca572042ea8b9a545bf2edb57fba68ce6a627)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v2.0.4",
             "releasedAt": "2026-08-14",
             "changes": [
