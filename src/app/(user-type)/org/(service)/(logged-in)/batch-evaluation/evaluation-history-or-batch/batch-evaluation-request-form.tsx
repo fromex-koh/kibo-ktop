@@ -3,6 +3,7 @@
 import {useId, useState, type SubmitEvent} from 'react'
 import {useRouter} from 'next/navigation'
 import {FileUploadField} from '@/components/composite/file-upload-field'
+import {SubmitConfirmDialog} from '@/components/composite/submit-confirm-dialog'
 import {FormCard} from '@/components/composite/form-card'
 import {Field} from '@/components/composite/form-fields'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
@@ -80,6 +81,7 @@ const BatchEvaluationRequestForm = ({formId, completePath}: BatchEvaluationReque
     const [excelFile, setExcelFile] = useState<File | null>(null)
     const [consentFile, setConsentFile] = useState<File | null>(null)
     const [isSubmitted, setIsSubmitted] = useState(false)
+    const [isConfirmOpen, setIsConfirmOpen] = useState(false)
 
     // 제출을 눌러 본 뒤에만 안내를 띄운다 — 입력 전부터 빨간 문구가 깔리지 않게 한다[7.4.2].
     const isDirectPurpose = businessTask === DIRECT_PURPOSE
@@ -135,6 +137,12 @@ const BatchEvaluationRequestForm = ({formId, completePath}: BatchEvaluationReque
             [EXCEL_FILE_NAME]: excelFile,
             [CONSENT_FILE_NAME]: consentFile,
         })
+        setIsConfirmOpen(true)
+    }
+
+    // 모달의 [제출] — 제출 API 를 부르고 완료 화면으로 넘어가는 자리다.
+    const handleConfirmSubmit = () => {
+        console.log('[프론트엔드 연동][제출] 기관 일괄평가 진행 신청 최종 제출 — 이 자리에서 제출 API 를 호출한다')
         router.push(completePath)
     }
 
@@ -267,6 +275,9 @@ const BatchEvaluationRequestForm = ({formId, completePath}: BatchEvaluationReque
                     />
                 </div>
             </FormCard>
+
+            {/* 제출 전 최종 확인 — 검사를 통과한 제출이 이 모달을 연다. [취소]는 닫고 화면에 남는다. */}
+            <SubmitConfirmDialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen} onSubmit={handleConfirmSubmit} />
         </form>
     )
 }

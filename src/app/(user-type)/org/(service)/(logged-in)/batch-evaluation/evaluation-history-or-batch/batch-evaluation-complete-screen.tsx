@@ -23,8 +23,7 @@ const NOTICES = [
 
 // 기관 일괄평가 (4) 일괄평가 신청 완료 — Figma "[일괄평가] 3단계_일괄평가 신청 완료".
 // 구성은 다른 완료 화면과 같다(완료 알림 · 안내 · 다음 행동) — 화면마다 다른 것은 문구와 경로뿐이다.
-// 배지 — 시안은 "대량정보 조회"이지만 이 화면은 일괄평가 진행 갈래라 복제 잔여로 보고,
-// 신청 화면과 같은 "일괄평가 신청"으로 맞춘다.
+// 배지 — 시안대로 "대량정보 조회"를 쓴다(일괄평가 진행 신청 화면의 배지와 같은 값).
 //
 // 한 화면에 담는다 — 완료 화면은 읽고 다음 행동을 고르는 자리라, 버튼까지 스크롤 없이 보여야 한다.
 // main 이 남은 높이를 채우고, 그 안의 간격·여백이 화면 높이에 비례해 함께 줄어든다. 세로 간격의 기준은
@@ -37,7 +36,7 @@ const BatchEvaluationCompleteScreen = ({model}: {model: BatchEvaluationModel}) =
                 title={BATCH_MODEL_META[model].title}
                 badge={
                     <Badge variant="solid" color="info" shape="round">
-                        일괄평가 신청
+                        대량정보 조회
                     </Badge>
                 }
                 breadcrumb={
