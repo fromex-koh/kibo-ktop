@@ -176,6 +176,14 @@
 - 결과: 기관 IA 에서 일괄평가가 개별평가 Tech-Index 와 같은 일반용/창업용 그룹 구조로 노출되며, 그룹 라벨 행에는 화면 이동 버튼을 두지 않음
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c2c2aaa7a059239d1155689e82b07141b194f09c)
 
+### 일괄평가 진행 신청 제출 흐름·완료 배지 보완
+
+- 대상: src/app/(user-type)/org/(service)/(logged-in)/batch-evaluation/evaluation-history-or-batch/batch-evaluation-request-form.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/batch-evaluation/evaluation-history-or-batch/batch-evaluation-complete-screen.tsx
+- 변경: 일괄평가 진행 신청이 유효성 통과 시 완료 화면으로 바로 이동하던 것을 대량정보 조회 신청과 같은 제출 전 최종 확인 모달을 거치도록 연결하고, 일괄평가 신청 완료 화면의 배지를 시안대로 "대량정보 조회"로 교체
+- 결과: 두 신청 갈래 모두 [신청] → 제출 전 최종 확인 → 완료 흐름으로 동작하며, 일반/창업 공용 스크린이라 양쪽 갈래에 함께 반영
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/08f7ec8bd55649ea4e547f5e32c66e32344c244c)
+
 ## [덮어쓰기]
 
 ### 퍼블리싱 인덱스 화면 상태
