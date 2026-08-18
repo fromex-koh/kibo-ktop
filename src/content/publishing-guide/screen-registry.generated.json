@@ -114,10 +114,10 @@
             "isCurrent": false
         },
         {
-            "key": "corp-technology-evaluation-ktrs-fm-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-ktrs-fm-company-technology-info-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.1",
+            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -282,10 +282,10 @@
             "isCurrent": false
         },
         {
-            "key": "corp-technology-evaluation-tech-index-general-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-tech-index-general-company-technology-info-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.1",
+            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -380,10 +380,10 @@
             "isCurrent": false
         },
         {
-            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-tech-index-startup-company-technology-info-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.1",
+            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -478,10 +478,10 @@
             "isCurrent": false
         },
         {
-            "key": "corp-technology-evaluation-investment-model-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-investment-model-company-technology-info-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.1",
+            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -1305,30 +1305,30 @@
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-industry-code-search",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v2.0.1",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
             "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-address-search",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v2.0.1",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
             "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-technology-category",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v2.0.4",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
             "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-company-info-item-description",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v2.0.4",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -1466,8 +1466,8 @@
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },

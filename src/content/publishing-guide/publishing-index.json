@@ -364,24 +364,28 @@
                                     "status": "대기중",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature"
-                                },
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(2) 기업·기술정보 입력",
+                            "children": [
                                 {
                                     "label": "이어서 작성 안내",
                                     "screenId": null,
                                     "status": "완료",
                                     "application2Status": "진행중",
                                     "version": "미배포",
-                                    "key": "corp-technology-evaluation-ktrs-fm-customer-consent-resume-notice"
+                                    "key": "corp-technology-evaluation-ktrs-fm-company-technology-info-resume-notice"
                                 }
-                            ]
-                        },
-                        {
-                            "label": "(2) 기업·기술정보 입력",
-                            "screenId": null,
-                            "status": "완료",
-                            "application2Status": "완료",
-                            "version": "미배포",
-                            "key": "corp-technology-evaluation-ktrs-fm-company-technology-info"
+                            ],
+                            "screen": {
+                                "screenId": null,
+                                "status": "완료",
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-ktrs-fm-company-technology-info",
+                                "application2Status": "완료"
+                            }
                         },
                         {
                             "label": "2-1 기업정보",
@@ -603,22 +607,26 @@
                                             "status": "대기중",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature"
-                                        },
-                                        {
-                                            "label": "이어서 작성 안내",
-                                            "screenId": null,
-                                            "status": "완료",
-                                            "version": "미배포",
-                                            "key": "corp-technology-evaluation-tech-index-general-customer-consent-resume-notice"
                                         }
                                     ]
                                 },
                                 {
                                     "label": "(2) 기업·기술정보 입력",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "corp-technology-evaluation-tech-index-general-company-technology-info"
+                                    "children": [
+                                        {
+                                            "label": "이어서 작성 안내",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-company-technology-info-resume-notice"
+                                        }
+                                    ],
+                                    "screen": {
+                                        "screenId": null,
+                                        "status": "완료",
+                                        "version": "미배포",
+                                        "key": "corp-technology-evaluation-tech-index-general-company-technology-info"
+                                    }
                                 },
                                 {
                                     "label": "2-1 기업정보",
@@ -716,22 +724,26 @@
                                             "status": "대기중",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature"
-                                        },
-                                        {
-                                            "label": "이어서 작성 안내",
-                                            "screenId": null,
-                                            "status": "완료",
-                                            "version": "미배포",
-                                            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-resume-notice"
                                         }
                                     ]
                                 },
                                 {
                                     "label": "(2) 기업·기술정보 입력",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "corp-technology-evaluation-tech-index-startup-company-technology-info"
+                                    "children": [
+                                        {
+                                            "label": "이어서 작성 안내",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-company-technology-info-resume-notice"
+                                        }
+                                    ],
+                                    "screen": {
+                                        "screenId": null,
+                                        "status": "완료",
+                                        "version": "미배포",
+                                        "key": "corp-technology-evaluation-tech-index-startup-company-technology-info"
+                                    }
                                 },
                                 {
                                     "label": "3-1 기업정보",
@@ -830,22 +842,26 @@
                                     "status": "대기중",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature"
-                                },
-                                {
-                                    "label": "이어서 작성 안내",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "corp-technology-evaluation-investment-model-customer-consent-resume-notice"
                                 }
                             ]
                         },
                         {
                             "label": "(2) 기업·기술정보 입력",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-technology-evaluation-investment-model-company-technology-info"
+                            "children": [
+                                {
+                                    "label": "이어서 작성 안내",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-company-technology-info-resume-notice"
+                                }
+                            ],
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "corp-technology-evaluation-investment-model-company-technology-info"
+                            }
                         },
                         {
                             "label": "2-1 기업정보",

@@ -199,10 +199,10 @@
             "name": "전자서명"
         },
         {
-            "key": "corp-technology-evaluation-ktrs-fm-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-ktrs-fm-company-technology-info-resume-notice",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/ktrs-fm/customer-consent/resume-notice",
+            "path": "/corp/technology-evaluation/ktrs-fm/company-technology-info/resume-notice",
             "name": "이어서 작성 안내"
         },
         {
@@ -367,10 +367,10 @@
             "name": "개별 상세 보기"
         },
         {
-            "key": "corp-technology-evaluation-tech-index-general-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-tech-index-general-company-technology-info-resume-notice",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/tech-index/general/customer-consent/resume-notice",
+            "path": "/corp/technology-evaluation/tech-index/general/company-technology-info/resume-notice",
             "name": "이어서 작성 안내"
         },
         {
@@ -465,10 +465,10 @@
             "name": "개별 상세 보기"
         },
         {
-            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-tech-index-startup-company-technology-info-resume-notice",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/tech-index/startup/customer-consent/resume-notice",
+            "path": "/corp/technology-evaluation/tech-index/startup/company-technology-info/resume-notice",
             "name": "이어서 작성 안내"
         },
         {
@@ -563,10 +563,10 @@
             "name": "개별 상세 보기"
         },
         {
-            "key": "corp-technology-evaluation-investment-model-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-investment-model-company-technology-info-resume-notice",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/investment-model/customer-consent/resume-notice",
+            "path": "/corp/technology-evaluation/investment-model/company-technology-info/resume-notice",
             "name": "이어서 작성 안내"
         },
         {
