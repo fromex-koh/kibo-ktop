@@ -146,6 +146,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'RepeatCard', href: '/component-guide/repeat-card'},
                     {label: 'OptionCard', href: '/component-guide/option-card'},
                     {label: 'RadioCard', href: '/component-guide/radio-card'},
+                    {label: 'RadioChip', href: '/component-guide/radio-chip'},
                     {label: 'Separator', href: '/component-guide/separator'},
                 ],
             },
