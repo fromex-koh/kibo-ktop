@@ -356,6 +356,7 @@
   --ds-surface-subtle: var(--raw-gray-10);
   --ds-field-error-foreground: var(--raw-error-500);
   --ds-icon-solid-subtle-foreground: var(--raw-common-white);
+  --ds-icon-solid-error: var(--raw-error-500);
   --ds-icon-interactive-hover: var(--raw-gray-300);
   --ds-step-progress-inactive: var(--raw-gray-200);
   --ds-number-badge-new: var(--raw-error-500);
@@ -628,6 +629,7 @@
   --ds-surface-subtle: var(--raw-gray-10);
   --ds-field-error-foreground: var(--raw-error-500);
   --ds-icon-solid-subtle-foreground: var(--raw-common-white);
+  --ds-icon-solid-error: var(--raw-error-500);
   --ds-icon-interactive-hover: var(--raw-gray-300);
   --ds-step-progress-inactive: var(--raw-gray-200);
   --ds-number-badge-new: var(--raw-error-500);
@@ -900,6 +902,7 @@
   --ds-surface-subtle: var(--raw-gray-700);
   --ds-field-error-foreground: var(--raw-error-300);
   --ds-icon-solid-subtle-foreground: var(--raw-gray-10);
+  --ds-icon-solid-error: var(--raw-error-300);
   --ds-icon-interactive-hover: var(--raw-gray-200);
   --ds-step-progress-inactive: var(--raw-gray-600);
   --ds-number-badge-new: var(--raw-error-300);
@@ -1172,6 +1175,7 @@
   --ds-surface-subtle: var(--raw-gray-700);
   --ds-field-error-foreground: var(--raw-error-300);
   --ds-icon-solid-subtle-foreground: var(--raw-gray-10);
+  --ds-icon-solid-error: var(--raw-error-300);
   --ds-icon-interactive-hover: var(--raw-gray-200);
   --ds-step-progress-inactive: var(--raw-gray-600);
   --ds-number-badge-new: var(--raw-error-300);
@@ -1325,6 +1329,7 @@
   --color-surface-subtle: var(--ds-surface-subtle);
   --color-field-error-foreground: var(--ds-field-error-foreground);
   --color-icon-solid-subtle-foreground: var(--ds-icon-solid-subtle-foreground);
+  --color-icon-solid-error: var(--ds-icon-solid-error);
   --color-icon-interactive-hover: var(--ds-icon-interactive-hover);
   --color-step-progress-inactive: var(--ds-step-progress-inactive);
   --color-number-badge-new: var(--ds-number-badge-new);

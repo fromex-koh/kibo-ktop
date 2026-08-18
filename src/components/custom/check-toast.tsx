@@ -5,10 +5,11 @@ import {toast} from 'sonner'
 import {Check} from 'lucide-react'
 
 // 완료 안내 토스트 — 체크 동그라미 + 화면 위(헤더 아래) 자리를 담는다.
-// 시안의 자동저장 토스트([신속표준모형 KTRS-FM] 2단계)와 같은 모양이라, 완료를 알리는 다른 자리
-// (보증 신청 완료 등)도 이 함수를 쓴다. 부르는 쪽은 문구만 넘긴다.
+// 시안의 자동저장 토스트([신속표준모형 KTRS-FM] 2단계)와 같은 모양이라, 완료를 알리는 다른 자리도
+// 이 함수를 쓸 수 있다. 부르는 쪽은 문구만 넘긴다. (보증신청 완료는 토스트에서 모달로 바뀌어
+// 지금은 자동저장 토스트만 쓴다 — guarantee-application-dialog.tsx 참조.)
 //
-//   showCheckToast('보증 신청이 완료되었습니다')
+//   showCheckToast('임시저장 되었습니다')
 
 // 시안 위치는 콘텐츠 가운데(제목 줄 높이)라 여섯 위치 중 top-center 를 쓴다.
 const CHECK_TOAST_POSITION = 'top-center'

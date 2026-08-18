@@ -199,10 +199,10 @@
             "name": "전자서명"
         },
         {
-            "key": "corp-technology-evaluation-ktrs-fm-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-ktrs-fm-company-technology-info-resume-notice",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/ktrs-fm/customer-consent/resume-notice",
+            "path": "/corp/technology-evaluation/ktrs-fm/company-technology-info/resume-notice",
             "name": "이어서 작성 안내"
         },
         {
@@ -367,10 +367,10 @@
             "name": "개별 상세 보기"
         },
         {
-            "key": "corp-technology-evaluation-tech-index-general-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-tech-index-general-company-technology-info-resume-notice",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/tech-index/general/customer-consent/resume-notice",
+            "path": "/corp/technology-evaluation/tech-index/general/company-technology-info/resume-notice",
             "name": "이어서 작성 안내"
         },
         {
@@ -465,10 +465,10 @@
             "name": "개별 상세 보기"
         },
         {
-            "key": "corp-technology-evaluation-tech-index-startup-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-tech-index-startup-company-technology-info-resume-notice",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/tech-index/startup/customer-consent/resume-notice",
+            "path": "/corp/technology-evaluation/tech-index/startup/company-technology-info/resume-notice",
             "name": "이어서 작성 안내"
         },
         {
@@ -563,10 +563,10 @@
             "name": "개별 상세 보기"
         },
         {
-            "key": "corp-technology-evaluation-investment-model-customer-consent-resume-notice",
+            "key": "corp-technology-evaluation-investment-model-company-technology-info-resume-notice",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/investment-model/customer-consent/resume-notice",
+            "path": "/corp/technology-evaluation/investment-model/company-technology-info/resume-notice",
             "name": "이어서 작성 안내"
         },
         {
@@ -1375,73 +1375,143 @@
             "name": "(0) 선택 화면"
         },
         {
-            "key": "org-individual-evaluation-tech-index-customer-consent",
+            "key": "org-individual-evaluation-tech-index-general-customer-consent",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/tech-index/customer-consent",
-            "name": "(1) 고객정보활용동의"
+            "path": "/org/individual-evaluation/tech-index/general/customer-consent",
+            "name": "(2) 고객정보활용동의"
         },
         {
-            "key": "org-individual-evaluation-tech-index-company-technology-info",
+            "key": "org-individual-evaluation-tech-index-general-company-technology-info",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/tech-index/company-technology-info",
-            "name": "(2) 기업·기술정보 입력"
+            "path": "/org/individual-evaluation/tech-index/general/company-technology-info",
+            "name": "(3) 기업·기술정보 입력"
         },
         {
-            "key": "org-individual-evaluation-tech-index-company-info-industry-code-search",
+            "key": "org-individual-evaluation-tech-index-general-company-info-industry-code-search",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/tech-index/company-info/industry-code-search",
+            "path": "/org/individual-evaluation/tech-index/general/company-info/industry-code-search",
             "name": "업종코드 조회"
         },
         {
-            "key": "org-individual-evaluation-tech-index-company-info-address-search",
+            "key": "org-individual-evaluation-tech-index-general-company-info-address-search",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/tech-index/company-info/address-search",
+            "path": "/org/individual-evaluation/tech-index/general/company-info/address-search",
             "name": "주소 찾기"
         },
         {
-            "key": "org-individual-evaluation-tech-index-company-info-technology-category",
+            "key": "org-individual-evaluation-tech-index-general-company-info-technology-category",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/tech-index/company-info/technology-category",
+            "path": "/org/individual-evaluation/tech-index/general/company-info/technology-category",
             "name": "기술분류"
         },
         {
-            "key": "org-individual-evaluation-tech-index-company-info-item-description",
+            "key": "org-individual-evaluation-tech-index-general-company-info-item-description",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/tech-index/company-info/item-description",
+            "path": "/org/individual-evaluation/tech-index/general/company-info/item-description",
             "name": "품목설명"
         },
         {
-            "key": "org-individual-evaluation-tech-index-company-info-company-management",
+            "key": "org-individual-evaluation-tech-index-general-company-info-company-management",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/tech-index/company-info/company-management",
+            "path": "/org/individual-evaluation/tech-index/general/company-info/company-management",
             "name": "기업정보 관리"
         },
         {
-            "key": "org-individual-evaluation-tech-index-evaluation-application",
+            "key": "org-individual-evaluation-tech-index-general-evaluation-application",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/tech-index/evaluation-application",
-            "name": "(3) 평가 신청하기"
+            "path": "/org/individual-evaluation/tech-index/general/evaluation-application",
+            "name": "(4) 평가 신청하기"
         },
         {
-            "key": "org-individual-evaluation-tech-index-final-review",
+            "key": "org-individual-evaluation-tech-index-general-final-review",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/tech-index/final-review",
+            "path": "/org/individual-evaluation/tech-index/general/final-review",
             "name": "(4) 최종 확인"
         },
         {
-            "key": "org-individual-evaluation-tech-index-complete",
+            "key": "org-individual-evaluation-tech-index-general-complete",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/tech-index/complete",
+            "path": "/org/individual-evaluation/tech-index/general/complete",
+            "name": "(5) 완료 화면"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-customer-consent",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/customer-consent",
+            "name": "(2) 고객정보활용동의"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-technology-info",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/company-technology-info",
+            "name": "(3) 기업·기술정보 입력"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-industry-code-search",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/company-info/industry-code-search",
+            "name": "업종코드 조회"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-address-search",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/company-info/address-search",
+            "name": "주소 찾기"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-technology-category",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/company-info/technology-category",
+            "name": "기술분류"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-item-description",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/company-info/item-description",
+            "name": "품목설명"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-company-management",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/company-info/company-management",
+            "name": "기업정보 관리"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-evaluation-application",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/evaluation-application",
+            "name": "(4) 평가 신청하기"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-final-review",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/final-review",
+            "name": "(4) 최종 확인"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-complete",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/complete",
             "name": "(5) 완료 화면"
         },
         {
@@ -1557,31 +1627,73 @@
             "name": "(2) 평가내역조회/일괄평가 진행 선택"
         },
         {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-bulk-data-request",
+            "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/batch-evaluation/evaluation-history-or-batch/bulk-data-request",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/general/bulk-data-request",
             "name": "(3) 대량정보 조회 신청"
         },
         {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-bulk-data-complete",
+            "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request-final-review",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/batch-evaluation/evaluation-history-or-batch/bulk-data-complete",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/general/bulk-data-request/final-review",
+            "name": "제출 전 최종 확인"
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-complete",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/general/bulk-data-complete",
             "name": "(4) 대량정보 조회 신청 완료"
         },
         {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-batch-evaluation-request",
+            "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-request",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/batch-evaluation/evaluation-history-or-batch/batch-evaluation-request",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/general/batch-evaluation-request",
             "name": "(3) 일괄평가 진행 신청"
         },
         {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-batch-evaluation-complete",
+            "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-complete",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/batch-evaluation/evaluation-history-or-batch/batch-evaluation-complete",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/general/batch-evaluation-complete",
+            "name": "(4) 일괄평가 신청 완료"
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request",
+            "name": "(3) 대량정보 조회 신청"
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request-final-review",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request/final-review",
+            "name": "제출 전 최종 확인"
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-complete",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-complete",
+            "name": "(4) 대량정보 조회 신청 완료"
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-request",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/batch-evaluation-request",
+            "name": "(3) 일괄평가 진행 신청"
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-complete",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/batch-evaluation-complete",
             "name": "(4) 일괄평가 신청 완료"
         },
         {

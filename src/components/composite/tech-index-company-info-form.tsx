@@ -264,8 +264,124 @@ const CheckboxField = ({
     </fieldset>
 )
 
-const TechIndexCompanyInfoForm = () => {
+// [기업 상세 정보] 구획 — Tech-Index 기업정보 탭의 마지막 구획(기업규모 · 상장구분 · 산업분야 코드 ·
+// 기업형태 · 기술분류 · 대표기술 · 대표기술제품). 위 구획과의 구분선까지 한 덩이로 갖는다.
+// 기관 개별평가 Tech-Index 기업정보 탭이 KTRS-FM 형 기업정보 카드 아래에 이 구획만 이어 붙여 쓰므로
+// 본문에서 떼어 내 공유한다 — 값은 같은 FormValues 보관소에 담겨 어느 카드에서든 함께 제출된다.
+const TechIndexCompanyDetailSection = () => {
     const {values, setValue, clearFieldError} = useFormValues()
+
+    // 기술분류 — 1번에는 임시 코드, 고른 품목명은 2번부터 담는다(임시 최대 3개).
+    // 이미 담긴 품목은 다시 담지 않는다 — 임시 화면이라 별도 오류 검증은 표시하지 않는다.
+    const handleTechCategorySelect = (item: string) => {
+        if (TECH_CATEGORY_LABEL_FIELDS.some((name) => values[name] === item)) return
+
+        const emptyField = TECH_CATEGORY_LABEL_FIELDS.find((name) => !values[name])
+        if (!emptyField) return
+
+        setValue(TECH_CATEGORY_FIELD, TECH_CATEGORY_TEMP_CODE)
+        setValue(emptyField, item)
+        clearFieldError(TECH_CATEGORY_FIELD)
+        clearFieldError(emptyField)
+    }
+
+    return (
+        <>
+            <Separator />
+
+            <div className="flex flex-col gap-4">
+                <SubSectionHeader>
+                    <SubSectionHeaderTitle>기업 상세 정보</SubSectionHeaderTitle>
+                </SubSectionHeader>
+                <FieldGrid>
+                    <RadioField name="companySize" label="기업규모" options={COMPANY_SIZE_OPTIONS} required />
+                    <RadioField name="listingType" label="상장구분" options={LISTING_OPTIONS} required spread />
+                    {/* 산업분야 코드 — 앞의 분류를 고르고 뒤 칸에 코드를 적는다(시안 "input+selectbox"). */}
+                    <Field id="industry-field" label="산업분야 코드">
+                        <div className="flex items-start gap-2">
+                            <Select name="industryField">
+                                <SelectTrigger id="industry-field" className="w-full min-w-0 flex-1">
+                                    <SelectValue placeholder="선택" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {INDUSTRY_FIELD_OPTIONS.map((option) => (
+                                        <SelectItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <ClearableInput
+                                id="industry-field-code"
+                                name="industryFieldCode"
+                                aria-label="산업분야 코드"
+                                placeholder="산업분야 코드"
+                                autoComplete="off"
+                                className="min-w-0 flex-1"
+                            />
+                        </div>
+                    </Field>
+                    <CheckboxField name="companyType" label="기업형태" options={COMPANY_TYPE_OPTIONS} spread />
+                    {/* 기술분류 — 기획·개발 확정 전까지 1번은 임시 코드 0000, 선택 품목명은 2~4번에 담는다.
+                        [조회] 는 혁신성장영위기업 분류근거 모달을 열고, 고른 품목명은 2번부터 빈 칸에 담긴다. */}
+                    <Field id={TECH_CATEGORY_FIELD} label="기술분류" className="md:col-span-2">
+                        <div className="flex flex-col gap-2">
+                            <div className="flex items-start gap-2">
+                                <ClearableInput
+                                    id={TECH_CATEGORY_FIELD}
+                                    name={TECH_CATEGORY_FIELD}
+                                    readOnly
+                                    placeholder="기술분류 1"
+                                    autoComplete="off"
+                                    className="min-w-0 flex-1"
+                                />
+                                <TechnologyCategoryDialog onSelect={handleTechCategorySelect}>
+                                    <Button type="button" variant="tertiary" size="md" className="shrink-0">
+                                        조회
+                                    </Button>
+                                </TechnologyCategoryDialog>
+                            </div>
+                            <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
+                                {TECH_CATEGORY_EXTRA_FIELDS.map((order) => (
+                                    <ClearableInput
+                                        key={order}
+                                        id={`${TECH_CATEGORY_FIELD}-${order}`}
+                                        name={`${TECH_CATEGORY_FIELD}-${order}`}
+                                        readOnly
+                                        aria-label={`기술분류 ${order}`}
+                                        placeholder={`기술분류 ${order}`}
+                                        autoComplete="off"
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                    </Field>
+                    <Field id="main-tech" label="대표기술" required>
+                        <ClearableInput
+                            id="main-tech"
+                            name="mainTech"
+                            placeholder="대표기술을 입력해주세요"
+                            required
+                            autoComplete="off"
+                        />
+                    </Field>
+                    <Field id="main-tech-product" label="대표기술제품 (서비스)" required>
+                        <ClearableInput
+                            id="main-tech-product"
+                            name="mainTechProduct"
+                            placeholder="대표기술제품(서비스)을 입력해주세요"
+                            required
+                            autoComplete="off"
+                        />
+                    </Field>
+                </FieldGrid>
+            </div>
+        </>
+    )
+}
+
+const TechIndexCompanyInfoForm = () => {
+    const {setValue, clearFieldError} = useFormValues()
     // 기업형태는 회원정보에서 잠겨 오므로 화면에서 바뀌지 않는다 — 그 값이 법인 전용 칸의 노출을 가른다.
     const isCorporation =
         MEMBER_COMMON_FIELDS.find((field) => field.id === CORP_TYPE_FIELD)?.value === CORP_TYPE_CORPORATION
@@ -286,20 +402,6 @@ const TechIndexCompanyInfoForm = () => {
     const handleIndustryCodeSelect = ({label}: {label: string}) => {
         setValue(INDUSTRY_CODE_FIELD, label)
         clearFieldError(INDUSTRY_CODE_FIELD)
-    }
-
-    // 기술분류 — 1번에는 임시 코드, 고른 품목명은 2번부터 담는다(임시 최대 3개).
-    // 이미 담긴 품목은 다시 담지 않는다 — 임시 화면이라 별도 오류 검증은 표시하지 않는다.
-    const handleTechCategorySelect = (item: string) => {
-        if (TECH_CATEGORY_LABEL_FIELDS.some((name) => values[name] === item)) return
-
-        const emptyField = TECH_CATEGORY_LABEL_FIELDS.find((name) => !values[name])
-        if (!emptyField) return
-
-        setValue(TECH_CATEGORY_FIELD, TECH_CATEGORY_TEMP_CODE)
-        setValue(emptyField, item)
-        clearFieldError(TECH_CATEGORY_FIELD)
-        clearFieldError(emptyField)
     }
 
     return (
@@ -469,98 +571,11 @@ const TechIndexCompanyInfoForm = () => {
                     </FieldGrid>
                 </div>
 
-                <Separator />
-
-                <div className="flex flex-col gap-4">
-                    <SubSectionHeader>
-                        <SubSectionHeaderTitle>기업 상세 정보</SubSectionHeaderTitle>
-                    </SubSectionHeader>
-                    <FieldGrid>
-                        <RadioField name="companySize" label="기업규모" options={COMPANY_SIZE_OPTIONS} required />
-                        <RadioField name="listingType" label="상장구분" options={LISTING_OPTIONS} required spread />
-                        {/* 산업분야 코드 — 앞의 분류를 고르고 뒤 칸에 코드를 적는다(시안 "input+selectbox"). */}
-                        <Field id="industry-field" label="산업분야 코드">
-                            <div className="flex items-start gap-2">
-                                <Select name="industryField">
-                                    <SelectTrigger id="industry-field" className="w-full min-w-0 flex-1">
-                                        <SelectValue placeholder="선택" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {INDUSTRY_FIELD_OPTIONS.map((option) => (
-                                            <SelectItem key={option.value} value={option.value}>
-                                                {option.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <ClearableInput
-                                    id="industry-field-code"
-                                    name="industryFieldCode"
-                                    aria-label="산업분야 코드"
-                                    placeholder="산업분야 코드"
-                                    autoComplete="off"
-                                    className="min-w-0 flex-1"
-                                />
-                            </div>
-                        </Field>
-                        <CheckboxField name="companyType" label="기업형태" options={COMPANY_TYPE_OPTIONS} spread />
-                        {/* 기술분류 — 기획·개발 확정 전까지 1번은 임시 코드 0000, 선택 품목명은 2~4번에 담는다.
-                        [조회] 는 혁신성장영위기업 분류근거 모달을 열고, 고른 품목명은 2번부터 빈 칸에 담긴다. */}
-                        <Field id={TECH_CATEGORY_FIELD} label="기술분류" className="md:col-span-2">
-                            <div className="flex flex-col gap-2">
-                                <div className="flex items-start gap-2">
-                                    <ClearableInput
-                                        id={TECH_CATEGORY_FIELD}
-                                        name={TECH_CATEGORY_FIELD}
-                                        readOnly
-                                        placeholder="기술분류 1"
-                                        autoComplete="off"
-                                        className="min-w-0 flex-1"
-                                    />
-                                    <TechnologyCategoryDialog onSelect={handleTechCategorySelect}>
-                                        <Button type="button" variant="tertiary" size="md" className="shrink-0">
-                                            조회
-                                        </Button>
-                                    </TechnologyCategoryDialog>
-                                </div>
-                                <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
-                                    {TECH_CATEGORY_EXTRA_FIELDS.map((order) => (
-                                        <ClearableInput
-                                            key={order}
-                                            id={`${TECH_CATEGORY_FIELD}-${order}`}
-                                            name={`${TECH_CATEGORY_FIELD}-${order}`}
-                                            readOnly
-                                            aria-label={`기술분류 ${order}`}
-                                            placeholder={`기술분류 ${order}`}
-                                            autoComplete="off"
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                        </Field>
-                        <Field id="main-tech" label="대표기술" required>
-                            <ClearableInput
-                                id="main-tech"
-                                name="mainTech"
-                                placeholder="대표기술을 입력해주세요"
-                                required
-                                autoComplete="off"
-                            />
-                        </Field>
-                        <Field id="main-tech-product" label="대표기술제품 (서비스)" required>
-                            <ClearableInput
-                                id="main-tech-product"
-                                name="mainTechProduct"
-                                placeholder="대표기술제품(서비스)을 입력해주세요"
-                                required
-                                autoComplete="off"
-                            />
-                        </Field>
-                    </FieldGrid>
-                </div>
+                <TechIndexCompanyDetailSection />
             </div>
         </FormCard>
     )
 }
 
 export default TechIndexCompanyInfoForm
+export {TechIndexCompanyDetailSection}
