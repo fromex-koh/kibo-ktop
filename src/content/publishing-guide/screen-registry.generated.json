@@ -1542,30 +1542,72 @@
             "isCurrent": false
         },
         {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-bulk-data-request",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-bulk-data-complete",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request-final-review",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-batch-evaluation-request",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-batch-evaluation-complete",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-request",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request-final-review",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-request",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },

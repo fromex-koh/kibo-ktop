@@ -2251,40 +2251,96 @@
             "children": [
                 {
                     "label": "(1) Tech-Index 선택\n(2) 평가내역조회/일괄평가 진행 선택",
-                    "screen": {
-                        "screenId": null,
-                        "status": "대기중",
-                        "version": "미배포",
-                        "key": "org-batch-evaluation-evaluation-history-or-batch"
-                    },
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-batch-evaluation-evaluation-history-or-batch"
+                },
+                {
+                    "label": "일반용",
                     "children": [
                         {
                             "label": "(3) 대량정보 조회 신청",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-batch-evaluation-evaluation-history-or-batch-bulk-data-request"
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request"
+                            },
+                            "children": [
+                                {
+                                    "label": "제출 전 최종 확인",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request-final-review"
+                                }
+                            ]
                         },
                         {
                             "label": "(4) 대량정보 조회 신청 완료",
                             "screenId": null,
                             "status": "대기중",
                             "version": "미배포",
-                            "key": "org-batch-evaluation-evaluation-history-or-batch-bulk-data-complete"
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-complete"
                         },
                         {
                             "label": "(3) 일괄평가 진행 신청",
                             "screenId": null,
                             "status": "대기중",
                             "version": "미배포",
-                            "key": "org-batch-evaluation-evaluation-history-or-batch-batch-evaluation-request"
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-request"
                         },
                         {
                             "label": "(4) 일괄평가 신청 완료",
                             "screenId": null,
                             "status": "대기중",
                             "version": "미배포",
-                            "key": "org-batch-evaluation-evaluation-history-or-batch-batch-evaluation-complete"
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-complete"
+                        }
+                    ]
+                },
+                {
+                    "label": "창업용",
+                    "children": [
+                        {
+                            "label": "(3) 대량정보 조회 신청",
+                            "screen": {
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포",
+                                "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request"
+                            },
+                            "children": [
+                                {
+                                    "label": "제출 전 최종 확인",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request-final-review"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(4) 대량정보 조회 신청 완료",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-complete"
+                        },
+                        {
+                            "label": "(3) 일괄평가 진행 신청",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-request"
+                        },
+                        {
+                            "label": "(4) 일괄평가 신청 완료",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-complete"
                         }
                     ]
                 }
