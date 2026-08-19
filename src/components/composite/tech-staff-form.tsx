@@ -87,6 +87,10 @@ type StaffEntryProps = {
     categories: readonly {value: string; label: string}[]
     /** [전공과 평가대상 기술 분야 일치여부] 칸을 둘지 — Tech-Index 창업용 시안에만 있다. */
     showMajorMatch?: boolean
+    /** [구분] 셀렉트를 둘지 — 투자모형 시안에는 이 칸이 없다. */
+    showCategory?: boolean
+    /** 동업종 종사경력을 햇수와 개월 두 칸으로 받을지 — 투자모형 시안이 두 칸이다. */
+    showIndustryCareerMonth?: boolean
     /** 동업종 종사경력의 단위 — 주면 그 칸이 숫자 칸이 되고 단위가 상자 안 오른쪽에 붙는다("년"). */
     industryCareerUnit?: string
 }
@@ -102,6 +106,8 @@ const StaffEntry = ({
     categories,
     showMajorMatch,
     industryCareerUnit,
+    showCategory = true,
+    showIndustryCareerMonth,
 }: StaffEntryProps) => {
     const field = (name: string) => staffField(id, name)
     const {values, clearFieldError, setValue} = useFormValues()
@@ -131,6 +137,47 @@ const StaffEntry = ({
     // 동업종 종사경력 — 단위를 받으면 햇수를 적는 숫자 칸이 된다(시안은 값을 오른쪽에 붙이고 단위를 안에 둔다).
     // 그때는 지워서 비운 칸을 벗어날 때 0 으로 돌려놓는다 — 자리 안내가 "0" 이라 비워 두면 화면에는 0 으로
     // 보이는데 값은 비어 있어, 다 채운 것처럼 보이는데도 탭이 [작성중] 으로 남는다.
+    const nameEntry = (
+        <Field id={field('name')} label="이름" required>
+            <ClearableInput id={field('name')} name={field('name')} required autoComplete="off" placeholder="이름" />
+        </Field>
+    )
+    const roleEntry = (
+        <Field id={field('role')} label="역할" required>
+            <ClearableInput id={field('role')} name={field('role')} required autoComplete="off" placeholder="역할" />
+        </Field>
+    )
+    // 투자모형은 햇수와 개월을 나눠 받는다 — 라벨도 시안대로 단위를 함께 적는다.
+    const industryCareerMonthsEntry = (
+        <Field id={field('industryCareer')} label="동업종 종사경력 (년/월)" required>
+            <div className="flex items-start gap-2">
+                {[
+                    {name: 'industryCareer', unit: '년'},
+                    {name: 'industryCareerMonth', unit: '개월'},
+                ].map((part) => (
+                    <InputGroup key={part.name} className="min-w-0 flex-1">
+                        <InputGroupInput
+                            id={field(part.name)}
+                            name={field(part.name)}
+                            required
+                            inputMode="numeric"
+                            autoComplete="off"
+                            placeholder={YEARS_PLACEHOLDER}
+                            format={formatYears}
+                            aria-label={`동업종 종사경력 ${part.unit}`}
+                            onBlur={(event) => {
+                                if (!event.currentTarget.value) setValue(field(part.name), YEARS_PLACEHOLDER)
+                            }}
+                            className="text-right"
+                        />
+                        <InputGroupAddon align="inline-end" className="text-foreground">
+                            {part.unit}
+                        </InputGroupAddon>
+                    </InputGroup>
+                ))}
+            </div>
+        </Field>
+    )
     const industryCareerEntry = (
         <Field id={field('industryCareer')} label="동업종 종사경력" required>
             {industryCareerUnit ? (
@@ -175,40 +222,33 @@ const StaffEntry = ({
             onDelete={onDelete}
         >
             <FormCardScope namePrefix={`staff-${id}-`} alwaysRequired={isAdded}>
-                <FieldRow3>
-                    <Field id={field('category')} label="구분" required>
-                        <Select name={field('category')} required>
-                            <SelectTrigger id={field('category')} className="w-full">
-                                <SelectValue placeholder="선택" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {categories.map((category) => (
-                                    <SelectItem key={category.value} value={category.value}>
-                                        {category.label}
-                                    </SelectItem>
-                                ))}
-                            </SelectContent>
-                        </Select>
-                    </Field>
-                    <Field id={field('name')} label="이름" required>
-                        <ClearableInput
-                            id={field('name')}
-                            name={field('name')}
-                            required
-                            autoComplete="off"
-                            placeholder="이름"
-                        />
-                    </Field>
-                    <Field id={field('role')} label="역할" required>
-                        <ClearableInput
-                            id={field('role')}
-                            name={field('role')}
-                            required
-                            autoComplete="off"
-                            placeholder="역할"
-                        />
-                    </Field>
-                </FieldRow3>
+                {/* 구분 칸이 없는 모형(투자모형)은 시안대로 [이름 · 역할] 이 2열 줄이 된다. */}
+                {showCategory ? null : (
+                    <FieldGrid>
+                        {nameEntry}
+                        {roleEntry}
+                    </FieldGrid>
+                )}
+                {showCategory ? (
+                    <FieldRow3>
+                        <Field id={field('category')} label="구분" required>
+                            <Select name={field('category')} required>
+                                <SelectTrigger id={field('category')} className="w-full">
+                                    <SelectValue placeholder="선택" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {categories.map((category) => (
+                                        <SelectItem key={category.value} value={category.value}>
+                                            {category.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </Field>
+                        {nameEntry}
+                        {roleEntry}
+                    </FieldRow3>
+                ) : null}
                 <FieldGrid>
                     <Field id={field('position')} label="직위" required>
                         <ClearableInput
@@ -235,7 +275,7 @@ const StaffEntry = ({
                     </Field>
                     {/* 일치여부 칸이 없는 모형은 시안대로 [전공 · 동업종 종사경력] 이 이 2열 줄에 이어 붙는다. */}
                     {showMajorMatch ? null : majorEntry}
-                    {showMajorMatch ? null : industryCareerEntry}
+                    {showMajorMatch ? null : showIndustryCareerMonth ? industryCareerMonthsEntry : industryCareerEntry}
                 </FieldGrid>
                 {/* 일치여부 칸이 있는 모형은 시안대로 마지막 줄이 [전공 · 일치여부 · 동업종 종사경력] 세 칸이다. */}
                 {showMajorMatch ? (
@@ -278,6 +318,10 @@ type TechStaffFormProps = {
     showMajorMatch?: boolean
     /** 동업종 종사경력의 단위. 주면 그 칸이 숫자 칸이 된다(Tech-Index 창업용 시안은 "년"). */
     industryCareerUnit?: string
+    /** [구분] 셀렉트를 둘지 — 투자모형 시안에는 이 칸이 없다(카드 제목의 "구분N" 은 그대로다). */
+    showCategory?: boolean
+    /** 동업종 종사경력을 햇수와 개월 두 칸으로 받을지 — 투자모형 시안이 "0년 · 0개월" 두 칸이다. */
+    showIndustryCareerMonth?: boolean
 }
 
 const TechStaffForm = ({
@@ -288,6 +332,8 @@ const TechStaffForm = ({
     categories = STAFF_CATEGORIES,
     showMajorMatch,
     industryCareerUnit,
+    showCategory = true,
+    showIndustryCareerMonth,
 }: TechStaffFormProps) => {
     const {clearValues} = useFormValues()
     const {ids, addedId, addCard, removeCard, setCardRef, addButtonRef, isLastCard, isAddDisabled} = useRepeatCards({
@@ -309,6 +355,8 @@ const TechStaffForm = ({
                         categories={categories}
                         showMajorMatch={showMajorMatch}
                         industryCareerUnit={industryCareerUnit}
+                        showCategory={showCategory}
+                        showIndustryCareerMonth={showIndustryCareerMonth}
                         label={`구분${index + 1}`}
                         isAdded={index > 0}
                         focusOnMount={id === addedId}

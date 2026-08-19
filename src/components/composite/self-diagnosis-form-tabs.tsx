@@ -1,4 +1,5 @@
 import {
+    INVESTMENT_MODEL_COMPANY_ETC_DEFAULT_VALUES,
     TECH_INDEX_PATENT_DEFAULT_VALUES,
     TECH_INDEX_RECORD_DEFAULT_VALUES,
     TECH_INDEX_STAFF_SUMMARY_DEFAULT_VALUES,
@@ -9,6 +10,10 @@ import CareerForm from '@/components/composite/career-form'
 import CompanyEtcForm from '@/components/composite/company-etc-form'
 import TechStaffForm, {TECH_INDEX_STAFF_CATEGORIES} from '@/components/composite/tech-staff-form'
 import RndForm from '@/components/composite/rnd-form'
+import InvestmentModelCompanyEtcForm from '@/components/composite/investment-model-company-etc-form'
+import InvestmentModelCompanyInfoForm from '@/components/composite/investment-model-company-info-form'
+import InvestmentModelFinanceForm from '@/components/composite/investment-model-finance-form'
+import InvestmentModelRepresentativeCapability from '@/components/composite/investment-model-representative-capability'
 import OrgCompanyInfoForm from '@/components/composite/org-company-info-form'
 import TechIndexCompanyInfoForm, {
     TechIndexCompanyDetailSection,
@@ -157,7 +162,80 @@ const TECH_INDEX_STARTUP_DEFAULT_VALUES: Record<string, string> = {
     ...TECH_INDEX_RECORD_DEFAULT_VALUES,
 }
 
+// 투자모형 [핵심 기술 인력 현황] 은 시안 안내대로 대표자 제외 3명까지다(KTRS-FM 은 2명).
+const INVESTMENT_MODEL_MAX_STAFF_COUNT = 3
+
+// 기업 투자모형 2단계의 탭 구성 — Figma "투자모형_2단계_기업·기술정보 입력_기업정보".
+// 여섯 탭이고 순서도 시안 그대로다(KTRS-FM 다섯 개·Tech-Index 여섯 개와 항목이 다르다).
+//
+// 여섯 탭 모두 시안이 확인되어 채워져 있다. 같은 이름의 탭이 다른 모형에 있어도 항목이 다르면 모형
+// 전용 조각으로 두고, 같으면 그 조각을 그대로 쓴다(Tech-Index 창업용을 채울 때와 같은 기준).
+//   기업정보 — 확인됨. KTRS-FM·Tech-Index 와 달리 [기업 담당자 정보] 구획이 없고 필수(*)가 넷뿐이라
+//     모형 전용 조각(investment-model-company-info-form)으로 둔다.
+//   대표자 역량 및 경력사항 — 확인됨. 경력 카드·행추가·총 경력 연수·입력 도움말은 KTRS-FM 과 같은
+//     CareerForm 이고, 앞에 붙는 [대표자 역량] 구획만 이 모형의 칸(최종학력(취득학위)·전공·일치여부·
+//     기술자격증)이라 모형 전용 조각으로 둔다.
+//   기업 기타 정보 — 확인됨. 구획 순서는 KTRS-FM 과 비슷하지만 칸이 달라 모형 전용 조각으로 둔다.
+//   핵심 기술 인력 현황 — 확인됨. 카드·행추가는 KTRS-FM 과 같은 TechStaffForm 이고, 이 모형 시안에는
+//     [구분] 칸이 없고 동업종 종사경력이 [년·개월] 두 칸이라 그 두 모양을 옵션으로 켠다(최대 3명).
+//   경영진 역량 및 구성 — 확인됨. 칸·인원(5명)·전문분야 중복 제한이 Tech-Index 창업용과 같아 그 조각
+//     (tech-index-management-form)을 그대로 쓰고, 시안대로 부제만 짧은 문장으로 바꾼다.
+//   재무정보 — 확인됨. Tech-Index 의 3개년 계정 묶음과 달리 당기·전기 금액 다섯 칸뿐이라 모형 전용
+//     조각으로 둔다. 필수를 두지 않고 처음 값도 넣지 않는 것까지 Tech-Index 재무정보 탭과 같다
+//     (그래야 0 을 그대로 적어도 [작성완료] 가 된다). 여섯 탭이 모두 채워져 [작업 중] 표시는 걷어냈다.
+const INVESTMENT_MODEL_FORM_TABS: readonly FormTabItem[] = [
+    {value: 'company', title: '기업정보', content: <InvestmentModelCompanyInfoForm />},
+    {
+        value: 'ceo',
+        title: '대표자 역량 및 경력사항',
+        content: <CareerForm title="대표자 역량 및 경력사항" leading={<InvestmentModelRepresentativeCapability />} />,
+    },
+    {value: 'etc', title: '기업 기타 정보', content: <InvestmentModelCompanyEtcForm />},
+    {
+        value: 'staff',
+        title: '핵심 기술 인력 현황',
+        content: (
+            <TechStaffForm
+                subtitle="대표자 제외 최대 3명 입력"
+                maxCount={INVESTMENT_MODEL_MAX_STAFF_COUNT}
+                showCategory={false}
+                showIndustryCareerMonth
+            />
+        ),
+    },
+    {
+        value: 'management',
+        title: '경영진 역량 및 구성',
+        content: <TechIndexManagementForm subtitle="대표자 제외 최대 5명 / 전문분야 중복 선택 불가" />,
+    },
+    {value: 'finance', title: '재무정보', content: <InvestmentModelFinanceForm />},
+]
+
+// 투자모형 탭이 화면을 열 때 이미 들고 있어야 하는 값 — 기업 기타 정보의 수량 칸 0 이다.
+// "해당 사항 없음" 의 답이 빈칸이 아니라 0 인 칸들이라 처음부터 0 이 들어 있어야 한다.
+const INVESTMENT_MODEL_DEFAULT_VALUES: Record<string, string> = {
+    ...INVESTMENT_MODEL_COMPANY_ETC_DEFAULT_VALUES,
+}
+
+// 기관 개별평가 투자모형 2단계의 탭 구성 — 탭 이름·순서는 기업 투자모형과 같고(여섯 개),
+// 기업정보 탭만 기관용이다(ORG_TECH_INDEX_GENERAL_FORM_TABS 가 하는 것과 같은 치환).
+// 기관은 평가 대상 기업의 정보를 직접 입력하고 기업형태에 따라 칸이 갈리며, 이 모형 시안에는
+// [기업 담당자 정보] 구획과 [기업 자가진단 결과보기] 버튼이 없어 그 두 곳을 끈다.
+//
+// 나머지 다섯 탭은 기업 투자모형 것을 그대로 쓴다 — 묻는 것이 평가 대상 기업의 사정과 사람이라,
+// 누가 대신 적느냐(기업·기관)에 따라 달라지지 않는다. 인원 제한(기술 인력 3명 · 경영진 5명)과
+// 재무정보의 필수·기본값 없음까지 같다. 그래서 화면이 들고 있어야 하는 값도 기업 쪽과 같은
+// INVESTMENT_MODEL_DEFAULT_VALUES 를 그대로 쓴다.
+const ORG_INVESTMENT_MODEL_FORM_TABS: readonly FormTabItem[] = INVESTMENT_MODEL_FORM_TABS.map((tab) =>
+    tab.value === 'company'
+        ? {...tab, content: <OrgCompanyInfoForm showManagerInfo={false} showSelfDiagnosisResult={false} />}
+        : tab,
+)
+
 export {
+    INVESTMENT_MODEL_DEFAULT_VALUES,
+    INVESTMENT_MODEL_FORM_TABS,
+    ORG_INVESTMENT_MODEL_FORM_TABS,
     ORG_SELF_DIAGNOSIS_FORM_TABS,
     ORG_TECH_INDEX_GENERAL_FORM_TABS,
     ORG_TECH_INDEX_STARTUP_FORM_TABS,

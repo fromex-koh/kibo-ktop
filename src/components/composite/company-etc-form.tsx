@@ -88,16 +88,32 @@ const Section = ({
     title,
     description,
     action,
+    required,
     children,
 }: {
     title: string
     description?: ReactNode
     action?: ReactNode
+    /** 구획 제목이 곧 칸의 이름인 자리(라벨이 따로 없는 단일 입력)에서 필수 표시를 제목에 붙인다.
+        라벨이 있는 칸은 그 라벨이 표시를 갖고 있으므로 켜지 않는다. */
+    required?: boolean
     children: ReactNode
 }) => (
     <div className="flex flex-col gap-6">
         <SubSectionHeader>
-            <SubSectionHeaderTitle>{title}</SubSectionHeaderTitle>
+            <SubSectionHeaderTitle>
+                {title}
+                {/* 별표는 장식이라 aria-hidden 이고, 읽어 줄 때는 뒤의 문장으로 대신 읽힌다[5.3.1]
+                    — 라벨의 필수 표시(form-fields 의 FieldLabel)와 같은 방식·같은 색이다. */}
+                {required ? (
+                    <>
+                        <span aria-hidden="true" className="text-error-500 ml-1">
+                            *
+                        </span>
+                        <span className="sr-only"> (필수)</span>
+                    </>
+                ) : null}
+            </SubSectionHeaderTitle>
             {description ? <SubSectionHeaderDescription>{description}</SubSectionHeaderDescription> : null}
             {action ? <SubSectionHeaderAction>{action}</SubSectionHeaderAction> : null}
         </SubSectionHeader>
@@ -145,6 +161,8 @@ const UnitField = ({
     label,
     unit,
     readOnly,
+    required,
+    labelHidden,
     helper,
     className,
 }: {
@@ -152,35 +170,47 @@ const UnitField = ({
     label: string
     unit: string
     readOnly?: boolean
+    /** 필수 여부. 넘기지 않으면 읽기 전용이 아닌 칸은 필수다(KTRS-FM 시안 기준). */
+    required?: boolean
+    /** 구획 제목이 곧 이 칸의 이름일 때 켠다 — 라벨을 화면에 두지 않고 aria-label 로만 준다[7.4.1]. */
+    labelHidden?: boolean
     helper?: string
     className?: string
 }) => {
     const {setValue} = useFormValues()
+    // 읽기 전용 칸은 계산 결과라 사용자가 채울 수 없다 — 필수로 두면 채울 방법 없이 막힌다.
+    const isRequired = readOnly ? false : (required ?? true)
+    const input = (
+        <InputGroup>
+            <InputGroupInput
+                id={id}
+                name={id}
+                readOnly={readOnly}
+                required={isRequired}
+                inputMode="numeric"
+                autoComplete="off"
+                placeholder={NUMBER_DEFAULT}
+                format={formatCount}
+                // 지워서 비운 칸은 벗어날 때 0 으로 돌려놓는다 — 이 칸의 "없음" 은 0 이다.
+                onBlur={(event) => {
+                    if (!event.currentTarget.value) setValue(id, NUMBER_DEFAULT)
+                }}
+                // 라벨을 화면에 두지 않는 칸은 구획 제목이 곧 이름이라 그 글을 aria-label 로 준다[7.4.1].
+                aria-label={labelHidden ? label : undefined}
+                aria-describedby={helper ? `${id}-helper` : undefined}
+                className="text-right"
+            />
+            <InputGroupAddon align="inline-end" className="text-foreground">
+                {unit}
+            </InputGroupAddon>
+        </InputGroup>
+    )
 
-    return (
-        // 읽기 전용 칸은 계산 결과라 사용자가 채울 수 없다 — 필수로 두면 채울 방법 없이 막힌다.
-        <Field id={id} label={label} required={!readOnly} helper={helper} className={className}>
-            <InputGroup>
-                <InputGroupInput
-                    id={id}
-                    name={id}
-                    readOnly={readOnly}
-                    required={!readOnly}
-                    inputMode="numeric"
-                    autoComplete="off"
-                    placeholder={NUMBER_DEFAULT}
-                    format={formatCount}
-                    // 지워서 비운 칸은 벗어날 때 0 으로 돌려놓는다 — 이 칸의 "없음" 은 0 이다.
-                    onBlur={(event) => {
-                        if (!event.currentTarget.value) setValue(id, NUMBER_DEFAULT)
-                    }}
-                    aria-describedby={helper ? `${id}-helper` : undefined}
-                    className="text-right"
-                />
-                <InputGroupAddon align="inline-end" className="text-foreground">
-                    {unit}
-                </InputGroupAddon>
-            </InputGroup>
+    return labelHidden ? (
+        <LabellessField id={id}>{input}</LabellessField>
+    ) : (
+        <Field id={id} label={label} required={isRequired} helper={helper} className={className}>
+            {input}
         </Field>
     )
 }
@@ -191,6 +221,7 @@ const RadioRow = ({
     label,
     labelledBy,
     options,
+    required = true,
 }: {
     name: string
     /** 묶음의 이름을 글자로 줄 때. 화면에 보이는 제목이 따로 있으면 labelledBy 를 쓴다. */
@@ -198,6 +229,8 @@ const RadioRow = ({
     /** 화면에 보이는 제목의 id — 그 글이 곧 묶음의 이름이 된다. label 보다 우선한다[7.4.1]. */
     labelledBy?: string
     options: readonly {value: string; label: string}[]
+    /** 필수 여부. 시안에 필수 표시가 없는 모형(투자모형)은 꺼서 쓴다. */
+    required?: boolean
 }) => (
     <LabellessField id={name}>
         {/* 묶음에 id 를 두는 이유 — 값을 나르는 radio input 은 숨어 있어 검사 메시지를 붙일 자리도,
@@ -210,7 +243,7 @@ const RadioRow = ({
         <RadioGroup
             id={name}
             name={name}
-            required
+            required={required}
             aria-label={labelledBy ? undefined : label}
             aria-labelledby={labelledBy}
             className="flex flex-wrap items-center gap-x-10 gap-y-4"
@@ -449,4 +482,6 @@ const CompanyEtcForm = () => {
 }
 
 export default CompanyEtcForm
-export {COMPANY_ETC_DEFAULT_VALUES}
+// 구획·입력 조각은 모형별 [기업 기타 정보] 폼이 함께 쓴다(투자모형은 항목이 달라 폼을 따로 두되,
+// 구획 제목 줄·단위 입력·라디오 줄·라벨 없는 칸의 생김새와 처리는 같아야 한다).
+export {COMPANY_ETC_DEFAULT_VALUES, LabellessField, NUMBER_DEFAULT, RadioRow, Section, UnitField}
