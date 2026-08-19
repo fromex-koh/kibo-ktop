@@ -30,9 +30,8 @@ const FINANCE_YEAR_COUNT = 3
 
 // 한 해에 적는 계정 여덟 칸 — 시안의 2열 순서 그대로다(왼쪽 → 오른쪽, 위 → 아래).
 //
-// [확인 필요] 시안에 [복리후생비] 가 한 해 안에서 두 번 나온다(2행 오른쪽 · 4행 오른쪽). 보이는 이름이
-// 같아 무엇으로 구분되는 값인지 시안만으로는 알 수 없어, 보이는 글자는 시안 그대로 두고 값 이름만
-// 순서로 구분한다(welfareExpense · welfareExpense2). 구분이 확정되면 두 이름을 그 뜻으로 바꾼다.
+// 연구개발비는 어느 표에서 온 값인지에 따라 두 칸으로 나뉜다(제조원가명세서 · 손익계산서).
+// 보이는 이름이 서로 달라 화면에서 구분되므로 값 이름도 출처를 그대로 따른다.
 const FINANCE_ACCOUNTS = [
     {key: 'intangibleAssets', label: '무형자산'},
     {key: 'salary', label: '급여'},
@@ -40,8 +39,8 @@ const FINANCE_ACCOUNTS = [
     {key: 'welfareExpense', label: '복리후생비'},
     {key: 'advertisingExpense', label: '광고선전비'},
     {key: 'developmentCost', label: '개발비 (대차대조표)'},
-    {key: 'researchDevelopmentCost', label: '연구개발비 (제조원가명세서)'},
-    {key: 'welfareExpense2', label: '복리후생비'},
+    {key: 'manufacturingResearchDevelopmentCost', label: '연구개발비 (제조원가명세서)'},
+    {key: 'incomeStatementResearchDevelopmentCost', label: '연구개발비 (손익계산서)'},
 ] as const
 
 // 값 이름·컨트롤 id — 연도가 이름에 들어간다. 기준일을 바꿔 대상 연도가 달라져도 이미 적은 해의 값은
