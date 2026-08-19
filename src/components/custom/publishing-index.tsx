@@ -308,7 +308,8 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
             const ownScreen: FlatLeaf[] = node.screen
                 ? [
                       {
-                          rowKey: screenPath.join(' > '),
+                          // 같은 상위 뎁스에 동일한 화면명이 반복될 수 있으므로 화면 경로보다 영구 key를 우선한다.
+                          rowKey: node.screen.key ?? screenPath.join(' > '),
                           ...(node.screen.key !== undefined ? {registryKey: node.screen.key} : {}),
                           path: screenPath,
                           subtotalDepths: nextSubtotalDepths,
@@ -328,7 +329,8 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
         }
         return [
             {
-                rowKey: nextPath.join(' > '),
+                // IA 화면명은 중복될 수 있지만 레지스트리 key는 고유하므로 React 행 identity로 사용할 수 있다.
+                rowKey: node.key ?? nextPath.join(' > '),
                 ...(node.key !== undefined ? {registryKey: node.key} : {}),
                 path: nextPath,
                 subtotalDepths,
