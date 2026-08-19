@@ -16,7 +16,8 @@ type SelfDiagnosisTabsFormProps = {
     // 모바일에서 섹션 줄과 함께 고정되는 내용(단계·제목). 그 폭에서는 화면이 제목을 따로 두지 않는다.
     stickyHeader?: ReactNode
     // 검사를 통과했을 때 갈 다음 단계. 넘기지 않으면 이동하지 않는다.
-    nextHref?: string
+    // 입력값에 따라 갈 곳이 달라지는 화면(투자모형 2단계 → 업종코드별 체크리스트)은 함수를 넘긴다.
+    nextHref?: string | ((values: Record<string, string>) => string)
     // 탭 구성. 기본은 기업 자가진단이고, 기관 개별평가는 기업정보 탭만 다른 한 벌을 넘긴다.
     tabs?: readonly FormTabItem[]
     // 화면을 열 때 이미 들어 있는 값(수량 칸의 0 등). 탭 구성과 짝이라 그 한 벌과 함께 넘긴다.
@@ -39,7 +40,8 @@ const SelfDiagnosisTabsFormFields = ({
         handleSubmit(event, (values) => {
             // [프론트엔드 연동] 이 줄을 저장 API 호출로 바꾼다 — 성공한 뒤에 다음 단계로 보낸다.
             console.log('[기업·기술정보 입력] 제출 데이터', values)
-            if (nextHref) router.push(nextHref)
+            const href = typeof nextHref === 'function' ? nextHref(values) : nextHref
+            if (href) router.push(href)
         })
     }
 

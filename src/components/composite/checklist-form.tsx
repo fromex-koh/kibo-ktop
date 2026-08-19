@@ -71,6 +71,16 @@ type ChecklistItem = ChecklistItemBase &
               guide?: ChecklistGuide
           }
         | {
+              // 체크하면 아래에 보기 칩이 나오는 문항 — 체크 전에는 칩을 두지 않는다.
+              type: 'check-chips'
+              name: string
+              text: string
+              // 칩 묶음의 값 이름과 접근 이름(화면에 라벨을 두지 않아 이름을 따로 준다[7.4.1]).
+              chipName: string
+              chipLabel: string
+              chips: ChecklistOption[]
+          }
+        | {
               // 한 문항이 여러 줄로 갈리는 경우((1)(2) 또는 제조·서비스).
               type: 'check-list'
               options: {name: string; text: string; sector?: ChecklistSector}[]
@@ -176,6 +186,42 @@ const QuestionCheckbox = ({name, label}: {name: string; label: string}) => (
     <Checkbox name={name} value="yes" aria-label={label} />
 )
 
+// 체크하면 아래에 보기 칩이 나오는 문항. 체크 여부는 이 문항 안에서만 쓰는 값이라 여기서 들고 있는다
+// (제출 값은 체크박스·칩이 각자 name 으로 내보낸다).
+const CheckWithChips = ({
+    item,
+}: {
+    item: {name: string; text: string; chipName: string; chipLabel: string; chips: ChecklistOption[]}
+}) => {
+    const [checked, setChecked] = useState(false)
+
+    return (
+        <QuestionItem
+            control={
+                <Checkbox
+                    name={item.name}
+                    value="yes"
+                    aria-label={item.text}
+                    checked={checked}
+                    onCheckedChange={(next) => setChecked(next === true)}
+                />
+            }
+        >
+            <span>{item.text}</span>
+            {/* 체크를 풀면 칩도 함께 사라진다 — 고른 값이 화면에 없는 채로 제출에 남지 않는다. */}
+            {checked ? (
+                <ChipRadioGroup aria-label={item.chipLabel} name={item.chipName} className="mt-2">
+                    {item.chips.map((chip) => (
+                        <ChipRadio key={chip.value} size="md" value={chip.value} className="flex-1">
+                            {chip.label}
+                        </ChipRadio>
+                    ))}
+                </ChipRadioGroup>
+            ) : null}
+        </QuestionItem>
+    )
+}
+
 const ChecklistGroupHeaderBlock = ({header, className}: {header: ChecklistGroupHeader; className?: string}) => (
     <QuestionGroupHeader className={className}>
         <QuestionGroupHeaderTitle>{header.title}</QuestionGroupHeaderTitle>
@@ -224,6 +270,10 @@ const ChecklistQuestion = ({
                 {item.guide ? renderGuide(item.guide) : null}
             </QuestionItem>
         )
+    }
+
+    if (item.type === 'check-chips') {
+        return <CheckWithChips item={item} />
     }
 
     if (item.type === 'check-list') {
