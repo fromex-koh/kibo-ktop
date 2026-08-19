@@ -1995,6 +1995,7 @@
                             "label": "(4) 최종 확인",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-individual-evaluation-ktrs-fm-final-review"
                         },
@@ -2003,6 +2004,7 @@
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
+                                "application2Status": "완료",
                                 "version": "미배포",
                                 "key": "org-individual-evaluation-ktrs-fm-complete"
                             },
@@ -2232,6 +2234,7 @@
                                     "label": "업종코드 조회",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-company-info-industry-code-search"
                                 },
@@ -2239,6 +2242,7 @@
                                     "label": "주소 찾기",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-company-info-address-search"
                                 },
@@ -2246,6 +2250,7 @@
                                     "label": "기술분류",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "진행중",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-company-info-technology-category"
                                 },
@@ -2253,6 +2258,7 @@
                                     "label": "품목설명",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-company-info-item-description"
                                 },
@@ -2284,6 +2290,7 @@
                                     "label": "거래유형 설명",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-additional-company-info-transaction-type-guide"
                                 },
@@ -2291,6 +2298,7 @@
                                     "label": "전문기술/숙련기술 정의",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-additional-company-info-technology-definition"
                                 }
@@ -2614,6 +2622,7 @@
                             "label": "업종코드 조회",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-mypage-profile-edit-industry-code-search"
                         },
@@ -2621,6 +2630,7 @@
                             "label": "주소 찾기",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-mypage-profile-edit-address-search"
                         }
@@ -2736,6 +2746,7 @@
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
+                                "application2Status": "완료",
                                 "version": "미배포",
                                 "key": "org-notice-inquiry-create-privacy-consent-guide"
                             },
@@ -2744,6 +2755,7 @@
                                     "label": "문의 완료",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-notice-inquiry-create-inquiry-complete"
                                 },
@@ -2751,6 +2763,7 @@
                                     "label": "문의 취소",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-notice-inquiry-create-inquiry-cancel"
                                 }
@@ -2953,6 +2966,7 @@
                     "label": "로그인 연장",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-session-extension"
                 }
@@ -2966,6 +2980,7 @@
                     "label": "로그아웃 종료",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-logout"
                 }
