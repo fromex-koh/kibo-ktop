@@ -135,7 +135,11 @@ export type StructureBranch = {
     label: string
     children: StructureNode[]
     // 화면이 아닌 소계/구분 행이면 표에서 뎁스 배지를 숨긴다(예: 일반용·창업용).
+    // 이 행도 하나의 뎁스로 세므로 아래 화면의 뎁스 번호는 그만큼 내려간다.
     isSubtotal?: boolean
+    // 뎁스가 아니라 보기 좋게 묶기만 한 행이면 배지를 숨기고 뎁스 번호에서도 빼 준다
+    // (예: 페이지 두 갈래를 모달 목록과 구분하려고 묶은 '업종코드 선택').
+    isGroupOnly?: boolean
     // branch 자신도 독립된 화면인 경우 채운다(예: '(1) 고객정보활용동의' 자체가 화면이면서
     // 하위에 상세보기·전자서명을 더 갖는 경우). 없으면 순수 메뉴 그룹(화면이 아님).
     screen?: ScreenInfo

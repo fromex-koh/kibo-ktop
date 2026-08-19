@@ -29,6 +29,7 @@ import {
     useFormValues,
 } from '@/components/composite/form-values'
 import {IndustryCodeDialog} from '@/components/composite/industry-code-dialog'
+import {SELECTED_INDUSTRY_CODE_FIELD} from '@/constants/technology-evaluation'
 import {PostcodeSearchDialog} from '@/components/composite/postcode-search-dialog'
 import {SubSectionHeader, SubSectionHeaderTitle} from '@/components/composite/sub-section-header'
 import {Badge} from '@/components/ui/badge'
@@ -227,23 +228,30 @@ const CompanyTelField = () => (
 // 업종코드 — 기업 화면과 동일하게 직접 입력하지 않고 [조회] 모달에서 선택한 값만 채운다.
 const IndustryCodeField = ({fullWidth = false}: {fullWidth?: boolean}) => {
     const {setValue, clearFieldError} = useFormValues()
+    // 제출 값은 FormData 로 모으므로, 화면에 칸이 없는 업종코드는 숨은 입력으로 함께 실어 보낸다
+    // (이 값이 다음 단계에서 제조·서비스 체크리스트를 가른다).
+    const industryCode = useFieldValue(SELECTED_INDUSTRY_CODE_FIELD)?.value ?? ''
     // 모달에서 고른 업종을 입력 칸에 담는다. 값의 키와 칸의 id 가 같아 메시지도 같은 키로 거둔다.
-    const handleSelect = ({label}: {label: string}) => {
+    const handleSelect = ({code, label}: {code: string; label: string}) => {
         setValue(INDUSTRY_CODE_FIELD, label)
+        setValue(SELECTED_INDUSTRY_CODE_FIELD, code)
         clearFieldError(INDUSTRY_CODE_FIELD)
     }
 
     return (
-        <LookupField
-            id={INDUSTRY_CODE_FIELD}
-            label="업종코드"
-            placeholder="[조회] 버튼을 눌러 선택해 주세요"
-            action="조회"
-            readOnly
-            required
-            className={fullWidth ? 'md:col-span-2' : undefined}
-            wrapAction={(button) => <IndustryCodeDialog onSelect={handleSelect}>{button}</IndustryCodeDialog>}
-        />
+        <>
+            <input type="hidden" name={SELECTED_INDUSTRY_CODE_FIELD} value={industryCode} />
+            <LookupField
+                id={INDUSTRY_CODE_FIELD}
+                label="업종코드"
+                placeholder="[조회] 버튼을 눌러 선택해 주세요"
+                action="조회"
+                readOnly
+                required
+                className={fullWidth ? 'md:col-span-2' : undefined}
+                wrapAction={(button) => <IndustryCodeDialog onSelect={handleSelect}>{button}</IndustryCodeDialog>}
+            />
+        </>
     )
 }
 
@@ -336,9 +344,21 @@ const CorpTypeField = () => {
 
 // trailing — 카드 마지막에 이어 붙는 구획. 기관 Tech-Index 기업정보 탭이 [기업 상세 정보] 구획을
 // 이 자리에 넘긴다(넘기지 않으면 지금까지처럼 담당자 정보에서 끝난다).
-const OrgCompanyInfoForm = ({trailing}: {trailing?: ReactNode} = {}) => {
+//
+// showManagerInfo·showSelfDiagnosisResult — 모형마다 다른 두 곳만 끈다. 기관 투자모형 시안에는
+// [기업 담당자 정보] 구획과 [기업 자가진단 결과보기] 버튼이 없다(기업 투자모형 기업정보 탭에도
+// 담당자 정보가 없는 것과 같다). 위쪽 칸 구성·기업형태 분기·주소는 세 모형이 모두 같아 그대로 쓴다.
+const OrgCompanyInfoForm = ({
+    trailing,
+    showManagerInfo = true,
+    showSelfDiagnosisResult = true,
+}: {trailing?: ReactNode; showManagerInfo?: boolean; showSelfDiagnosisResult?: boolean} = {}) => {
     const corpType = useFieldValue(CORP_TYPE_FIELD)?.value ?? ''
     const isCorporation = corpType === CORP_TYPE_CORPORATION
+    // 노출 조건 안내도 실제로 보이는 버튼만 남긴다 — 없는 버튼의 조건이 남으면 화면과 어긋난다.
+    const visibleButtonNotes = showSelfDiagnosisResult
+        ? BUTTON_CASE_NOTES
+        : BUTTON_CASE_NOTES.filter((note) => note.label === COMPANY_MANAGEMENT_LABEL)
 
     return (
         <FormCard
@@ -353,14 +373,18 @@ const OrgCompanyInfoForm = ({trailing}: {trailing?: ReactNode} = {}) => {
                         <Button type="button" variant="secondary" size="sm">
                             {COMPANY_MANAGEMENT_LABEL}
                         </Button>
-                        <Button asChild variant="secondary" size="sm">
-                            <Link href={SELF_DIAGNOSIS_RESULT_ACTION.href}>{SELF_DIAGNOSIS_RESULT_ACTION.label}</Link>
-                        </Button>
+                        {showSelfDiagnosisResult && (
+                            <Button asChild variant="secondary" size="sm">
+                                <Link href={SELF_DIAGNOSIS_RESULT_ACTION.href}>
+                                    {SELF_DIAGNOSIS_RESULT_ACTION.label}
+                                </Link>
+                            </Button>
+                        )}
                     </div>
                     {/* 시안 메모 "버튼은 case별로 노출됨" 을 화면에서 바로 읽을 수 있게 조건을 적어 둔다.
                         노출 조건이 실제로 붙으면 이 안내는 걷어낸다. */}
                     <ul className="flex list-none flex-col gap-1 text-right">
-                        {BUTTON_CASE_NOTES.map((note) => (
+                        {visibleButtonNotes.map((note) => (
                             <li key={note.label} className="typo-body-l-regular text-foreground-subtle break-keep">
                                 [{note.label}] {note.when}
                             </li>
@@ -408,58 +432,62 @@ const OrgCompanyInfoForm = ({trailing}: {trailing?: ReactNode} = {}) => {
                     <AddressField />
                 </div>
 
-                <Separator />
+                {showManagerInfo && (
+                    <>
+                        <Separator />
 
-                <div className="flex flex-col gap-4">
-                    <SubSectionHeader>
-                        <SubSectionHeaderTitle>기업 담당자 정보</SubSectionHeaderTitle>
-                    </SubSectionHeader>
-                    <FieldGrid>
-                        <Field id="manager-name" label="이름" required>
-                            <ClearableInput
-                                id="manager-name"
-                                name="managerName"
-                                placeholder="담당자명"
-                                required
-                                autoComplete="name"
-                            />
-                        </Field>
-                        <Field id="manager-position" label="직위" required>
-                            <ClearableInput
-                                id="manager-position"
-                                name="managerPosition"
-                                placeholder="직위"
-                                required
-                                autoComplete="organization-title"
-                            />
-                        </Field>
-                        <Field
-                            id="manager-tel"
-                            label="연락처"
-                            required
-                            helper="※ 서류안내, 현장실사 협의 등 평가 진행사항을 안내받을 담당자 정보(휴대폰)를 입력해 주십시오."
-                        >
-                            <TelInput
-                                id="manager-tel"
-                                name="managerTel"
-                                placeholder="담당자 연락처를 입력해 주세요"
-                                required
-                                autoComplete="tel"
-                                aria-describedby="manager-tel-helper"
-                            />
-                        </Field>
-                        <Field id="manager-email" label="이메일" required>
-                            <ClearableInput
-                                id="manager-email"
-                                name="managerEmail"
-                                type="email"
-                                placeholder="example@email.com"
-                                autoComplete="email"
-                                required
-                            />
-                        </Field>
-                    </FieldGrid>
-                </div>
+                        <div className="flex flex-col gap-4">
+                            <SubSectionHeader>
+                                <SubSectionHeaderTitle>기업 담당자 정보</SubSectionHeaderTitle>
+                            </SubSectionHeader>
+                            <FieldGrid>
+                                <Field id="manager-name" label="이름" required>
+                                    <ClearableInput
+                                        id="manager-name"
+                                        name="managerName"
+                                        placeholder="담당자명"
+                                        required
+                                        autoComplete="name"
+                                    />
+                                </Field>
+                                <Field id="manager-position" label="직위" required>
+                                    <ClearableInput
+                                        id="manager-position"
+                                        name="managerPosition"
+                                        placeholder="직위"
+                                        required
+                                        autoComplete="organization-title"
+                                    />
+                                </Field>
+                                <Field
+                                    id="manager-tel"
+                                    label="연락처"
+                                    required
+                                    helper="※ 서류안내, 현장실사 협의 등 평가 진행사항을 안내받을 담당자 정보(휴대폰)를 입력해 주십시오."
+                                >
+                                    <TelInput
+                                        id="manager-tel"
+                                        name="managerTel"
+                                        placeholder="담당자 연락처를 입력해 주세요"
+                                        required
+                                        autoComplete="tel"
+                                        aria-describedby="manager-tel-helper"
+                                    />
+                                </Field>
+                                <Field id="manager-email" label="이메일" required>
+                                    <ClearableInput
+                                        id="manager-email"
+                                        name="managerEmail"
+                                        type="email"
+                                        placeholder="example@email.com"
+                                        autoComplete="email"
+                                        required
+                                    />
+                                </Field>
+                            </FieldGrid>
+                        </div>
+                    </>
+                )}
 
                 {trailing}
             </div>

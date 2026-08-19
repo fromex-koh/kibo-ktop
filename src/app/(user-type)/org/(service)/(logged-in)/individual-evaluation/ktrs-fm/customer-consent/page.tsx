@@ -13,7 +13,7 @@ import {StepHeader} from '@/components/composite/step-header'
 import {StepNavigation} from '@/components/composite/step-navigation'
 import {Badge} from '@/components/ui/badge'
 import {SELF_DIAGNOSIS_STEPS} from '@/constants/technology-evaluation'
-import {OrgCustomerConsentForm} from './org-customer-consent-form'
+import {OrgCustomerConsentForm} from '@/components/composite/org-customer-consent-form'
 
 export const metadata: Metadata = {title: '고객정보활용동의'}
 

@@ -1,9 +1,9 @@
 {
-    "version": "v2.0.6",
+    "version": "v2.0.7",
     "assets": [
         {
             "name": "src/app",
-            "version": "v2.0.6",
+            "version": "v2.0.7",
             "isCurrent": true
         },
         {
@@ -14,16 +14,16 @@
         {
             "name": "src/components/theme",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/composite",
-            "version": "v2.0.6",
+            "version": "v2.0.7",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v2.0.6",
+            "version": "v2.0.7",
             "isCurrent": true
         },
         {
@@ -33,18 +33,18 @@
         },
         {
             "name": "src/constants",
-            "version": "v2.0.6",
+            "version": "v2.0.7",
             "isCurrent": true
         },
         {
             "name": "src/content",
-            "version": "v2.0.6",
+            "version": "v2.0.7",
             "isCurrent": true
         },
         {
             "name": "src/lib",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/hooks",
@@ -59,7 +59,7 @@
         {
             "name": "tokens.json",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/app/tokens.css",

@@ -277,6 +277,8 @@ type FlatLeaf = {
     registryKey?: string
     path: string[] // index 0 = 1뎁스(그룹명) ... 마지막 = leaf 자신의 라벨
     subtotalDepths: number[] // 소계/구분 브랜치의 뎁스 인덱스 — 표에서 뎁스 배지를 숨긴다.
+    // 뎁스가 아니라 묶기만 한 행의 뎁스 인덱스 — 배지를 숨기고, 아래 화면의 뎁스 번호에서도 빼 준다.
+    groupOnlyDepths: number[]
     screenId: string | null
     status: Status
     application2Status: Status
@@ -292,6 +294,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
         path: string[],
         inherited?: UserType,
         subtotalDepths: number[] = [],
+        groupOnlyDepths: number[] = [],
     ): FlatLeaf[] => {
         // 라벨이 바로 위 뎁스와 같으면(예: '홈' 그룹의 유일한 화면도 라벨이 '홈') 실질적으로
         // 추가 뎁스가 아니므로 경로에 다시 넣지 않는다 — 컬럼마다 같은 텍스트가 반복되지 않는다.
@@ -300,6 +303,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
         if (isStructureBranch(node)) {
             const branchUserType = node.userType ?? inherited
             const nextSubtotalDepths = node.isSubtotal ? [...subtotalDepths, nextPath.length - 1] : subtotalDepths
+            const nextGroupOnlyDepths = node.isGroupOnly ? [...groupOnlyDepths, nextPath.length - 1] : groupOnlyDepths
             // branch 자신도 독립된 화면(screen)일 수 있다 — 예: '(1) 고객정보활용동의' 자체가
             // 화면이면서 하위에 상세보기·전자서명을 더 갖는 경우. 있으면 그 행을 먼저 넣는다.
             // screen.label 이 있으면(예: '목록') 자기 화면을 한 뎁스 더 내려간 항목으로 취급해,
@@ -308,10 +312,12 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
             const ownScreen: FlatLeaf[] = node.screen
                 ? [
                       {
-                          rowKey: screenPath.join(' > '),
+                          // 같은 상위 뎁스에 동일한 화면명이 반복될 수 있으므로 화면 경로보다 영구 key를 우선한다.
+                          rowKey: node.screen.key ?? screenPath.join(' > '),
                           ...(node.screen.key !== undefined ? {registryKey: node.screen.key} : {}),
                           path: screenPath,
                           subtotalDepths: nextSubtotalDepths,
+                          groupOnlyDepths: nextGroupOnlyDepths,
                           screenId: node.screen.screenId,
                           status: node.screen.status,
                           application2Status: node.screen.application2Status ?? '대기중',
@@ -323,15 +329,19 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 : []
             return [
                 ...ownScreen,
-                ...node.children.flatMap((child) => walk(child, nextPath, branchUserType, nextSubtotalDepths)),
+                ...node.children.flatMap((child) =>
+                    walk(child, nextPath, branchUserType, nextSubtotalDepths, nextGroupOnlyDepths),
+                ),
             ]
         }
         return [
             {
-                rowKey: nextPath.join(' > '),
+                // IA 화면명은 중복될 수 있지만 레지스트리 key는 고유하므로 React 행 identity로 사용할 수 있다.
+                rowKey: node.key ?? nextPath.join(' > '),
                 ...(node.key !== undefined ? {registryKey: node.key} : {}),
                 path: nextPath,
                 subtotalDepths,
+                groupOnlyDepths,
                 screenId: node.screenId,
                 status: node.status,
                 application2Status: node.application2Status ?? '대기중',
@@ -911,6 +921,11 @@ const PublishingIndex = () => {
                                                     }
                                                     const isScreenLink =
                                                         depth === leaf.path.length - 1 && registeredScreen?.implemented
+                                                    // 묶기만 한 행은 뎁스로 세지 않는다 — 앞쪽의 묶음 수만큼 번호를 당긴다.
+                                                    const depthNumber =
+                                                        depth +
+                                                        1 -
+                                                        leaf.groupOnlyDepths.filter((index) => index < depth).length
                                                     const isRedLabel =
                                                         leaf.isRed === true && depth === leaf.path.length - 1
                                                     // 삭제된 항목은 취소선으로 표시한다(IA 원본의 꺾쇠는 옮기지 않는다).
@@ -932,28 +947,29 @@ const PublishingIndex = () => {
                                                             className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
                                                         >
                                                             <span className="inline-flex items-center gap-2">
-                                                                {!leaf.subtotalDepths.includes(depth) && (
-                                                                    <>
-                                                                        {depth === leaf.path.length - 1 &&
-                                                                        registeredScreen ? (
-                                                                            <KeyCopyDepthBadge
-                                                                                depth={depth + 1}
-                                                                                screenKey={registeredScreen.key}
-                                                                            />
-                                                                        ) : (
-                                                                            <Badge
-                                                                                aria-hidden="true"
-                                                                                type="number"
-                                                                                color="primary"
-                                                                            >
-                                                                                {depth + 1}
-                                                                            </Badge>
-                                                                        )}
-                                                                        <span className="sr-only">
-                                                                            {depth + 1}뎁스{' '}
-                                                                        </span>
-                                                                    </>
-                                                                )}
+                                                                {!leaf.subtotalDepths.includes(depth) &&
+                                                                    !leaf.groupOnlyDepths.includes(depth) && (
+                                                                        <>
+                                                                            {depth === leaf.path.length - 1 &&
+                                                                            registeredScreen ? (
+                                                                                <KeyCopyDepthBadge
+                                                                                    depth={depthNumber}
+                                                                                    screenKey={registeredScreen.key}
+                                                                                />
+                                                                            ) : (
+                                                                                <Badge
+                                                                                    aria-hidden="true"
+                                                                                    type="number"
+                                                                                    color="primary"
+                                                                                >
+                                                                                    {depthNumber}
+                                                                                </Badge>
+                                                                            )}
+                                                                            <span className="sr-only">
+                                                                                {depthNumber}뎁스{' '}
+                                                                            </span>
+                                                                        </>
+                                                                    )}
                                                                 {isScreenLink ? (
                                                                     <Link
                                                                         href={registeredScreen.path}

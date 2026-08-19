@@ -1,6 +1,7 @@
 'use client'
 
 import {useEffect, useRef, useState, type ReactNode} from 'react'
+import INDUSTRY_CODE_GROUPS from '@/content/technology-evaluation/industry-codes.json'
 import {ListMarker} from '@/components/custom/list-marker'
 import {EmptyState} from '@/components/composite/empty-state'
 import {Button} from '@/components/ui/button'
@@ -32,76 +33,9 @@ import {cn} from '@/lib/utils'
 type IndustrySubCode = {code: string; name: string}
 type IndustryCode = IndustrySubCode & {items: IndustrySubCode[]}
 
-// 목업 — 한국표준산업분류(KSIC)의 중분류와 그 아래 소분류 일부. 실제 목록은 API 가 준다.
-const INDUSTRY_CODES: IndustryCode[] = [
-    {
-        code: '01',
-        name: '농업',
-        items: [
-            {code: '011', name: '작물 재배업'},
-            {code: '012', name: '축산업'},
-            {code: '013', name: '작물재배 및 축산 복합농업'},
-            {code: '014', name: '작물재배 및 축산 관련 서비스업'},
-            {code: '015', name: '수렵 및 관련 서비스업'},
-        ],
-    },
-    {code: '02', name: '임업', items: [{code: '020', name: '임업'}]},
-    {
-        code: '03',
-        name: '어업',
-        items: [
-            {code: '031', name: '어로 어업'},
-            {code: '032', name: '양식 어업 및 어업 관련 서비스업'},
-        ],
-    },
-    {
-        code: '05',
-        name: '석탄, 원유 및 천연가스 광업',
-        items: [
-            {code: '051', name: '석탄 광업'},
-            {code: '052', name: '원유 및 천연가스 채굴업'},
-        ],
-    },
-    {
-        code: '06',
-        name: '금속 광업',
-        items: [
-            {code: '061', name: '철 광업'},
-            {code: '062', name: '비철금속 광업'},
-        ],
-    },
-    {
-        code: '26',
-        name: '전자부품, 컴퓨터, 영상, 음향 및 통신장비 제조업',
-        items: [
-            {code: '261', name: '반도체 제조업'},
-            {code: '262', name: '전자부품 제조업'},
-            {code: '264', name: '영상 및 음향기기 제조업'},
-            {code: '265', name: '통신 및 방송 장비 제조업'},
-        ],
-    },
-    {
-        code: '58',
-        name: '출판업',
-        items: [
-            {code: '581', name: '서적, 잡지 및 기타 인쇄물 출판업'},
-            {code: '582', name: '소프트웨어 개발 및 공급업'},
-        ],
-    },
-    {
-        code: '62',
-        name: '컴퓨터 프로그래밍, 시스템 통합 및 관리업',
-        items: [{code: '620', name: '컴퓨터 프로그래밍, 시스템 통합 및 관리업'}],
-    },
-    {
-        code: '72',
-        name: '연구개발업',
-        items: [
-            {code: '721', name: '자연과학 및 공학 연구개발업'},
-            {code: '722', name: '인문 및 사회과학 연구개발업'},
-        ],
-    },
-]
+// 목업 — 한국표준산업분류(KSIC)의 중분류와 그 아래 세세분류 전체(중분류 77 · 하위 1205).
+// 실제 목록은 API 가 준다 — 응답이 같은 모양이면 이 import 만 호출로 바꾸면 화면은 그대로다.
+const INDUSTRY_CODES: IndustryCode[] = INDUSTRY_CODE_GROUPS
 
 // 검색 — 중분류나 그 아래 업종 중 하나라도 코드·이름이 맞으면 그 중분류를 결과에 담는다.
 // 검색어가 비면 전체를 보여 준다(무엇이 있는지 훑어볼 수 있어야 한다).

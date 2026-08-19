@@ -226,7 +226,14 @@ const ManagementEntry = ({
     )
 }
 
-const TechIndexManagementForm = () => {
+type TechIndexManagementFormProps = {
+    /** 카드 제목 아래 안내. 모형마다 문장이 다르다(투자모형 시안은 앞 문장 없이 인원·중복 규칙만 적는다). */
+    subtitle?: string
+}
+
+const TechIndexManagementForm = ({
+    subtitle = '현재 귀사에 재직중인 기술인력의 최종학력, 동업종 경력년수를 입력해 주세요. 대표자 제외 최대 5명 / 전문분야 중복 선택 불가',
+}: TechIndexManagementFormProps = {}) => {
     const {values, clearValues} = useFormValues()
     const {ids, addedId, addCard, removeCard, setCardRef, addButtonRef, isLastCard, isAddDisabled} = useRepeatCards({
         maxCount: MAX_MANAGEMENT_COUNT,
@@ -246,10 +253,7 @@ const TechIndexManagementForm = () => {
         )
 
     return (
-        <FormCard
-            title="경영진 역량 및 구성"
-            subtitle="현재 귀사에 재직중인 기술인력의 최종학력, 동업종 경력년수를 입력해 주세요. 대표자 제외 최대 5명 / 전문분야 중복 선택 불가"
-        >
+        <FormCard title="경영진 역량 및 구성" subtitle={subtitle}>
             <div className="flex flex-col gap-6">
                 {ids.map((id, index) => (
                     <ManagementEntry

@@ -159,7 +159,11 @@ const parseStructureNode = (value: unknown, path: string): StructureNode => {
         if (value.isSubtotal !== undefined && typeof value.isSubtotal !== 'boolean') {
             throw new Error(`[content] ${where} > isSubtotal: boolean 이어야 합니다.`)
         }
+        if (value.isGroupOnly !== undefined && typeof value.isGroupOnly !== 'boolean') {
+            throw new Error(`[content] ${where} > isGroupOnly: boolean 이어야 합니다.`)
+        }
         const isSubtotal = value.isSubtotal === true
+        const isGroupOnly = value.isGroupOnly === true
         if (value.screen !== undefined) {
             if (!isRecord(value.screen)) {
                 throw new Error(`[content] ${where} > screen: 객체여야 합니다.`)
@@ -176,6 +180,7 @@ const parseStructureNode = (value: unknown, path: string): StructureNode => {
                 children,
                 screen,
                 ...(isSubtotal ? {isSubtotal: true} : {}),
+                ...(isGroupOnly ? {isGroupOnly: true} : {}),
                 ...(userType !== undefined ? {userType} : {}),
             }
         }
@@ -183,6 +188,7 @@ const parseStructureNode = (value: unknown, path: string): StructureNode => {
             label,
             children,
             ...(isSubtotal ? {isSubtotal: true} : {}),
+            ...(isGroupOnly ? {isGroupOnly: true} : {}),
             ...(userType !== undefined ? {userType} : {}),
         }
     }

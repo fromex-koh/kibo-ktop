@@ -9,7 +9,7 @@ import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {FIELD_FOCUS_RING} from '@/constants/form'
 import {cn} from '@/lib/utils'
 
-// 기관 개별평가 KTRS-FM 1단계 입력 묶음 — Figma "1단계_고객정보활용동의".
+// 기관 개별평가 1단계 입력 묶음 — Figma "1단계_고객정보활용동의"(KTRS-FM·투자모형 공용).
 // 카드 두 장이 한 폼이고, 화면 하단의 [다음]이 form 속성으로 이 폼을 제출한다.
 //
 // 기업 화면(corp)의 같은 단계는 약관 동의서를 화면에서 직접 받지만, 기관은 업체에서 이미 받은
@@ -23,6 +23,11 @@ const CONSENT_OPTIONS = [
     {value: 'no', label: '아니요'},
 ] as const
 
+// [아니요] 를 고르면 물음 아래에 뜨는 안내 — 동의를 받지 않은 채로 진행할 때의 결과를 알려 준다.
+// 세 모형(KTRS-FM·Tech-Index·투자모형)이 같은 절차라 문구도 한 벌만 둔다.
+const CONSENT_DECLINE_NOTICE =
+    '정보제공 동의를 받지 않은 경우, 평가 진행이 제한될 수 있습니다. 반드시 사전에 동의를 획득하시기 바랍니다.'
+
 const CONSENT_NAME = 'informationConsentReceived'
 const CONSENT_FILE_NAME = 'informationConsentFile'
 // 첨부 정책 — PDF·ZIP·RAR·7Z 4종, 1개, 1개당 최대 50MB.
@@ -35,9 +40,15 @@ type OrgCustomerConsentFormProps = {
     formId: string
     // 제출을 통과하면 이동할 다음 단계.
     nextHref: string
+    /** 제출 데이터를 콘솔에 찍을 때 앞에 붙는 이름. */
+    logLabel?: string
 }
 
-const OrgCustomerConsentForm = ({formId, nextHref}: OrgCustomerConsentFormProps) => {
+const OrgCustomerConsentForm = ({
+    formId,
+    nextHref,
+    logLabel = '기관 개별평가 KTRS-FM',
+}: OrgCustomerConsentFormProps) => {
     const router = useRouter()
     const questionId = useId()
     const consentErrorId = useId()
@@ -63,7 +74,7 @@ const OrgCustomerConsentForm = ({formId, nextHref}: OrgCustomerConsentFormProps)
 
         const formData = new FormData(event.currentTarget)
         // 첨부 파일은 File 그대로 둔다 — 콘솔에서 이름·용량·형식을 펼쳐 볼 수 있다.
-        console.log('[기관 개별평가 KTRS-FM] 1단계 고객정보활용동의 제출 데이터', Object.fromEntries(formData))
+        console.log(`[${logLabel}] 1단계 고객정보활용동의 제출 데이터`, Object.fromEntries(formData))
         router.push(nextHref)
     }
 
@@ -112,6 +123,10 @@ const OrgCustomerConsentForm = ({formId, nextHref}: OrgCustomerConsentFormProps)
                     <FieldError id={consentErrorId} className="mt-2">
                         정보제공 동의 여부를 선택해 주세요.
                     </FieldError>
+                ) : null}
+                {/* [아니요] 를 고른 뒤에만 나오는 안내 — 고르기 전부터 깔아 두면 경고처럼 읽힌다. */}
+                {consent === 'no' ? (
+                    <p className="typo-body-l-regular text-foreground-subtle mt-4">{CONSENT_DECLINE_NOTICE}</p>
                 ) : null}
             </FormCard>
 

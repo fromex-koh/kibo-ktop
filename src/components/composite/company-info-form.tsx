@@ -19,10 +19,12 @@ import {
     SelectValue,
     TelInput,
     useFieldError,
+    useFieldValue,
     useFormValues,
 } from '@/components/composite/form-values'
 import {Field, FieldGrid, LockedField, LookupField, RequiredFieldsNotice} from '@/components/composite/form-fields'
 import {DateField} from '@/components/composite/date-field'
+import {SELECTED_INDUSTRY_CODE_FIELD} from '@/constants/technology-evaluation'
 
 // 마이페이지(회원정보)에서 그대로 받아 오는 값 — 읽기 전용으로 보여 주기만 한다.
 // 아래 value 는 목업이다. 연동할 때 마이페이지 응답으로 바꾸면 된다.
@@ -56,9 +58,13 @@ const ADDRESS_DETAIL_FIELD = 'address-detail'
 // 자가진단 입력 화면과 FormTabs 컴포넌트 가이드가 같은 것을 보도록 여기 한 벌만 둔다.
 const CompanyInfoForm = () => {
     const {setValue, clearFieldError} = useFormValues()
+    // 제출 값은 FormData 로 모으므로, 화면에 칸이 없는 업종코드는 숨은 입력으로 함께 실어 보낸다.
+    const industryCode = useFieldValue(SELECTED_INDUSTRY_CODE_FIELD)?.value ?? ''
     // 모달에서 고른 업종을 읽기 전용 칸에 담는다. 값의 키와 칸의 id 가 같아 메시지도 같은 키로 거둔다.
-    const handleIndustryCodeSelect = ({label}: {label: string}) => {
+    const handleIndustryCodeSelect = ({code, label}: {code: string; label: string}) => {
         setValue(INDUSTRY_CODE_FIELD, label)
+        // 코드도 함께 담는다 — 다음 단계에서 제조·서비스 체크리스트를 가르는 값이다(화면에는 보이지 않는다).
+        setValue(SELECTED_INDUSTRY_CODE_FIELD, code)
         clearFieldError(INDUSTRY_CODE_FIELD)
     }
 
@@ -146,6 +152,7 @@ const CompanyInfoForm = () => {
                                 <IndustryCodeDialog onSelect={handleIndustryCodeSelect}>{button}</IndustryCodeDialog>
                             )}
                         />
+                        <input type="hidden" name={SELECTED_INDUSTRY_CODE_FIELD} value={industryCode} />
                         {/* 주소 — 검색 결과 입력과 상세주소가 한 라벨 아래 두 줄로 묶인다(시안 "input 2줄").
                         상세주소는 시안에 별도 라벨이 없어 aria-label 로 이름을 준다[7.4.1]. */}
                         <Field

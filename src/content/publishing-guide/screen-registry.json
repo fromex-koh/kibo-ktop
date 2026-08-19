@@ -262,11 +262,25 @@
             "name": "자동저장"
         },
         {
-            "key": "corp-technology-evaluation-ktrs-fm-checklist",
+            "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-cancel-confirm",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/ktrs-fm/checklist",
-            "name": "(3) 체크리스트 입력"
+            "path": "/corp/technology-evaluation/ktrs-fm/additional-company-info/cancel-confirm",
+            "name": "작성 취소"
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-checklist-manufacturing",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/ktrs-fm/checklist/manufacturing",
+            "name": "업종코드 제조 선택"
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-checklist-service",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/ktrs-fm/checklist/service",
+            "name": "업종코드 서비스 선택"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual",
@@ -612,11 +626,32 @@
             "name": "전문기술/숙련기술 정의"
         },
         {
-            "key": "corp-technology-evaluation-investment-model-checklist",
+            "key": "corp-technology-evaluation-investment-model-additional-company-info-autosave",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/investment-model/checklist",
-            "name": "(3) 체크리스트 입력"
+            "path": "/corp/technology-evaluation/investment-model/additional-company-info/autosave",
+            "name": "자동저장"
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-additional-company-info-cancel-confirm",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/investment-model/additional-company-info/cancel-confirm",
+            "name": "작성 취소"
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-checklist-manufacturing",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/investment-model/checklist/manufacturing",
+            "name": "업종코드 제조 선택"
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-checklist-service",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/investment-model/checklist/service",
+            "name": "업종코드 서비스 선택"
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-citation-manual",
@@ -710,11 +745,11 @@
             "name": "정보 이용 동의"
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-report-search-results",
+            "key": "corp-k-bigx-report-innovation-growth-report-legal-basis",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/k-bigx-report/innovation-growth-report/report-search-results",
-            "name": "보고서 검색 결과"
+            "path": "/corp/k-bigx-report/innovation-growth-report/legal-basis",
+            "name": "기업정보 수집제공 근거"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create",
@@ -724,11 +759,11 @@
             "name": "보고서 생성"
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-payment",
+            "key": "corp-k-bigx-report-innovation-growth-report-pass-purchase-guide",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/k-bigx-report/innovation-growth-report/report-search-results/report-payment",
-            "name": "보고서 결제"
+            "path": "/corp/k-bigx-report/innovation-growth-report/pass-purchase-guide",
+            "name": "이용권구매 안내"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
@@ -815,11 +850,11 @@
             "name": "보고서 이력 조회"
         },
         {
-            "key": "corp-k-bigx-report-report-history-report-view",
+            "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/k-bigx-report/report-history/report-view",
-            "name": "보고서 보기"
+            "path": "/corp/k-bigx-report/innovation-growth-report/terms-of-service",
+            "name": "이용약관"
         },
         {
             "key": "corp-k-bigx-report-report-history-report-print",
@@ -948,11 +983,11 @@
             "name": "보고서 보기"
         },
         {
-            "key": "corp-mypage-k-bigx-report-history-report-print",
+            "key": "corp-k-bigx-report-innovation-growth-report-view-count-deduction",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/mypage/k-bigx-report-history/report-print",
-            "name": "보고서 출력"
+            "path": "/corp/k-bigx-report/innovation-growth-report/view-count-deduction",
+            "name": "조회횟수 차감안내"
         },
         {
             "key": "corp-mypage-paid-services-payment-history",
@@ -1067,11 +1102,11 @@
             "name": "자료실"
         },
         {
-            "key": "corp-technology-information-consent",
+            "key": "corp-k-bigx-report-innovation-growth-report-marketing-consent",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-information-consent",
-            "name": "기술혁신정보 이용동의"
+            "path": "/corp/k-bigx-report/innovation-growth-report/marketing-consent",
+            "name": "마케팅 알림 수신동의"
         },
         {
             "key": "corp-payment-complete",
@@ -1162,7 +1197,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/home/technology-evaluation-selection",
-            "name": "기술평가 선택"
+            "name": "평가모형 선택"
         },
         {
             "key": "org-full-menu",
@@ -1204,42 +1239,35 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/platform/technology-evaluation",
-            "name": "기술평가"
+            "name": "기술평가 소개"
         },
         {
             "key": "org-platform-patent-evaluation",
             "screenId": null,
             "userType": "기관",
             "path": "/org/platform/patent-evaluation",
-            "name": "특허평가"
+            "name": "특허평가 소개"
         },
         {
             "key": "org-platform-k-bigx-report",
             "screenId": null,
             "userType": "기관",
             "path": "/org/platform/k-bigx-report",
-            "name": "K-BIGx 보고서"
+            "name": "K-BIGx 보고서 소개"
         },
         {
             "key": "org-platform-carbon-neutrality",
             "screenId": null,
             "userType": "기관",
             "path": "/org/platform/carbon-neutrality",
-            "name": "탄소중립"
+            "name": "탄소중립 소개"
         },
         {
             "key": "org-individual-evaluation-verification-progress",
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/verification-progress",
-            "name": "평가결과 조회"
-        },
-        {
-            "key": "org-individual-evaluation-ktrs-fm-selection",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/individual-evaluation/ktrs-fm/selection",
-            "name": "진행방식 선택"
+            "name": "평가검증 진행확인"
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-customer-consent",
@@ -1288,7 +1316,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/ktrs-fm/representative-capability-career/input-helper",
-            "name": "입력도우미"
+            "name": "입력도움말"
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-additional-company-info-recognized-ip",
@@ -1312,11 +1340,18 @@
             "name": "전문기술/숙련기술 정의"
         },
         {
-            "key": "org-individual-evaluation-ktrs-fm-checklist",
+            "key": "org-individual-evaluation-ktrs-fm-checklist-manufacturing",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/ktrs-fm/checklist",
-            "name": "(3) 체크리스트 입력"
+            "path": "/org/individual-evaluation/ktrs-fm/checklist/manufacturing",
+            "name": "업종코드 제조 선택"
+        },
+        {
+            "key": "org-individual-evaluation-ktrs-fm-checklist-service",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/ktrs-fm/checklist/service",
+            "name": "업종코드 서비스 선택"
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-citation-manual",
@@ -1344,28 +1379,14 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/ktrs-fm/final-review",
-            "name": "(4) 최종 확인"
+            "name": "제출 전 최종 확인"
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-complete",
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/ktrs-fm/complete",
-            "name": "(5) 완료 화면"
-        },
-        {
-            "key": "org-individual-evaluation-ktrs-fm-complete-bank-transfer",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/individual-evaluation/ktrs-fm/complete/bank-transfer",
-            "name": "은행 전송"
-        },
-        {
-            "key": "org-individual-evaluation-ktrs-fm-complete-guarantee-application",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/individual-evaluation/ktrs-fm/complete/guarantee-application",
-            "name": "보증 신청"
+            "name": "(4) 완료 화면"
         },
         {
             "key": "org-individual-evaluation-tech-index-selection",
@@ -1379,14 +1400,14 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/tech-index/general/customer-consent",
-            "name": "(2) 고객정보활용동의"
+            "name": "(1) 고객정보활용동의"
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-technology-info",
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/tech-index/general/company-technology-info",
-            "name": "(3) 기업·기술정보 입력"
+            "name": "(2) 기업·기술정보 입력"
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-industry-code-search",
@@ -1428,35 +1449,35 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/tech-index/general/evaluation-application",
-            "name": "(4) 평가 신청하기"
+            "name": "(3) 평가 신청하기"
         },
         {
             "key": "org-individual-evaluation-tech-index-general-final-review",
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/tech-index/general/final-review",
-            "name": "(4) 최종 확인"
+            "name": "제출 전 최종 확인"
         },
         {
             "key": "org-individual-evaluation-tech-index-general-complete",
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/tech-index/general/complete",
-            "name": "(5) 완료 화면"
+            "name": "(4) 완료 화면"
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-customer-consent",
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/tech-index/startup/customer-consent",
-            "name": "(2) 고객정보활용동의"
+            "name": "(1) 고객정보활용동의"
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-technology-info",
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/tech-index/startup/company-technology-info",
-            "name": "(3) 기업·기술정보 입력"
+            "name": "(2) 기업·기술정보 입력"
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-info-industry-code-search",
@@ -1498,21 +1519,21 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/tech-index/startup/evaluation-application",
-            "name": "(4) 평가 신청하기"
+            "name": "(3) 평가 신청하기"
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-final-review",
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/tech-index/startup/final-review",
-            "name": "(4) 최종 확인"
+            "name": "제출 전 최종 확인"
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-complete",
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/tech-index/startup/complete",
-            "name": "(5) 완료 화면"
+            "name": "(4) 완료 화면"
         },
         {
             "key": "org-individual-evaluation-investment-model-customer-consent",
@@ -1529,18 +1550,18 @@
             "name": "(2) 기업·기술정보 입력"
         },
         {
-            "key": "org-individual-evaluation-investment-model-company-technology-info-self-diagnosis-result",
+            "key": "org-individual-evaluation-investment-model-checklist-manufacturing",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/investment-model/company-technology-info/self-diagnosis-result",
-            "name": "자가진단 결과보기"
+            "path": "/org/individual-evaluation/investment-model/checklist/manufacturing",
+            "name": "업종코드 제조 선택"
         },
         {
-            "key": "org-individual-evaluation-investment-model-checklist",
+            "key": "org-individual-evaluation-investment-model-checklist-service",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/investment-model/checklist",
-            "name": "(3) 체크리스트"
+            "path": "/org/individual-evaluation/investment-model/checklist/service",
+            "name": "업종코드 서비스 선택"
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-industry-code-search",
@@ -1582,7 +1603,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/investment-model/representative-capability-career/input-helper",
-            "name": "입력도우미"
+            "name": "입력도움말"
         },
         {
             "key": "org-individual-evaluation-investment-model-additional-company-info-transaction-type-guide",
@@ -1603,14 +1624,14 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/investment-model/evaluation-application",
-            "name": "(3) 평가 신청하기"
+            "name": "(4) 평가 신청하기"
         },
         {
             "key": "org-individual-evaluation-investment-model-final-review",
             "screenId": null,
             "userType": "기관",
             "path": "/org/individual-evaluation/investment-model/final-review",
-            "name": "(4) 최종 확인"
+            "name": "제출 전 최종 확인"
         },
         {
             "key": "org-individual-evaluation-investment-model-complete",
@@ -1638,7 +1659,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/batch-evaluation/evaluation-history-or-batch/general/bulk-data-request/final-review",
-            "name": "제출 전 최종 확인"
+            "name": "제출전 최종확인"
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-complete",
@@ -1659,41 +1680,6 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/batch-evaluation/evaluation-history-or-batch/general/batch-evaluation-complete",
-            "name": "(4) 일괄평가 신청 완료"
-        },
-        {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request",
-            "name": "(3) 대량정보 조회 신청"
-        },
-        {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request-final-review",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request/final-review",
-            "name": "제출 전 최종 확인"
-        },
-        {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-complete",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-complete",
-            "name": "(4) 대량정보 조회 신청 완료"
-        },
-        {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-request",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/batch-evaluation-request",
-            "name": "(3) 일괄평가 진행 신청"
-        },
-        {
-            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-complete",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/batch-evaluation-complete",
             "name": "(4) 일괄평가 신청 완료"
         },
         {
@@ -1723,13 +1709,6 @@
             "userType": "기관",
             "path": "/org/k-bigx-report/innovation-growth-report",
             "name": "기업혁신성장보고서 조회"
-        },
-        {
-            "key": "org-k-bigx-report-innovation-growth-report-information-consent",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/k-bigx-report/innovation-growth-report/information-consent",
-            "name": "정보 이용 동의"
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing",
@@ -1848,7 +1827,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/evaluation-history",
-            "name": "평가이력 조회"
+            "name": "평가결과 조회"
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis",
@@ -1893,13 +1872,6 @@
             "name": "K-BIGx 보고서 이력"
         },
         {
-            "key": "org-mypage-k-bigx-report-history-report-view",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/mypage/k-bigx-report-history/report-view",
-            "name": "보고서 보기"
-        },
-        {
             "key": "org-mypage-k-bigx-report-history-report-print",
             "screenId": null,
             "userType": "기관",
@@ -1911,7 +1883,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/sub-account-progress",
-            "name": "하위 계정 진행 현황"
+            "name": "하위 계정 현황"
         },
         {
             "key": "org-mypage-inquiry-history",
@@ -1926,13 +1898,6 @@
             "userType": "기관",
             "path": "/org/mypage/inquiry-history/inquiry-detail",
             "name": "문의하기 상세"
-        },
-        {
-            "key": "org-mypage-inquiry-history-inquiry-create",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/mypage/inquiry-history/inquiry-create",
-            "name": "1:1 문의 등록"
         },
         {
             "key": "org-notice-announcements",
@@ -1953,14 +1918,14 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/notice/faq",
-            "name": "FAQ"
+            "name": "자주 묻는 질문"
         },
         {
             "key": "org-notice-inquiry-create",
             "screenId": null,
             "userType": "기관",
             "path": "/org/notice/inquiry-create",
-            "name": "문의하기"
+            "name": "1:1 문의 등록"
         },
         {
             "key": "org-notice-inquiry-create-inquiry-complete",
@@ -1989,13 +1954,6 @@
             "userType": "기관",
             "path": "/org/notice/resources",
             "name": "자료실"
-        },
-        {
-            "key": "org-technology-information-consent",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/technology-information-consent",
-            "name": "기술혁신정보 이용동의"
         },
         {
             "key": "org-not-found",
@@ -2066,6 +2024,209 @@
             "userType": "기관",
             "path": "/org/login-end",
             "name": "로그아웃 종료"
+        },
+        {
+            "key": "org-home-technology-evaluation-selection-tech-index",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/home/technology-evaluation-selection/tech-index",
+            "name": "Tech-Index 선택 화면"
+        },
+        {
+            "key": "org-individual-evaluation-ktrs-fm-company-technology-info-resume-notice",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/ktrs-fm/company-technology-info/resume-notice",
+            "name": "이어서 작성 안내"
+        },
+        {
+            "key": "org-individual-evaluation-ktrs-fm-additional-company-info-autosave",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/ktrs-fm/additional-company-info/autosave",
+            "name": "자동저장"
+        },
+        {
+            "key": "org-individual-evaluation-ktrs-fm-additional-company-info-cancel-confirm",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/ktrs-fm/additional-company-info/cancel-confirm",
+            "name": "작성 취소"
+        },
+        {
+            "key": "org-individual-evaluation-ktrs-fm-checklist-cancel-confirm",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/ktrs-fm/checklist/cancel-confirm",
+            "name": "작성 취소"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-general-company-technology-info-resume-notice",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/general/company-technology-info/resume-notice",
+            "name": "이어서 작성 안내"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-general-company-info-cancel-confirm",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/general/company-info/cancel-confirm",
+            "name": "작성 취소"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-general-company-info-autosave",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/general/company-info/autosave",
+            "name": "자동저장"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-technology-info-resume-notice",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/company-technology-info/resume-notice",
+            "name": "이어서 작성 안내"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-cancel-confirm",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/company-info/cancel-confirm",
+            "name": "작성 취소"
+        },
+        {
+            "key": "org-individual-evaluation-tech-index-startup-company-info-autosave",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/tech-index/startup/company-info/autosave",
+            "name": "자동저장"
+        },
+        {
+            "key": "org-individual-evaluation-investment-model-additional-company-info-autosave",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/investment-model/additional-company-info/autosave",
+            "name": "자동저장"
+        },
+        {
+            "key": "org-individual-evaluation-investment-model-additional-company-info-cancel-confirm",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/investment-model/additional-company-info/cancel-confirm",
+            "name": "작성 취소"
+        },
+        {
+            "key": "org-individual-evaluation-investment-model-checklist-autosave",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/investment-model/checklist/autosave",
+            "name": "자동저장"
+        },
+        {
+            "key": "org-individual-evaluation-investment-model-checklist-cancel-confirm",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/investment-model/checklist/cancel-confirm",
+            "name": "작성 취소"
+        },
+        {
+            "key": "org-batch-evaluation-tech-index-selection",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/tech-index-selection",
+            "name": "(1) Tech-Index 선택"
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-request-final-review",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/general/batch-evaluation-request/final-review",
+            "name": "제출전 최종확인"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-legal-basis",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/legal-basis",
+            "name": "기업정보 제공법적 근거"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-pass-purchase-guide",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/pass-purchase-guide",
+            "name": "이용권 구매 안내"
+        },
+        {
+            "key": "org-k-bigx-report-bulk-data-search",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/bulk-data-search",
+            "name": "대량정보조회"
+        },
+        {
+            "key": "org-k-bigx-report-bulk-data-search-complete",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/bulk-data-search/complete",
+            "name": "대량정보조회 완료"
+        },
+        {
+            "key": "org-k-bigx-report-report-history-report-print",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/report-history/report-print",
+            "name": "보고서 출력"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-create",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/create",
+            "name": "하위계정 등록"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-detail",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/detail",
+            "name": "하위계정 상세"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-edit",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/edit",
+            "name": "하위계정 수정"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-password-reset",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/password-reset",
+            "name": "하위계정 비밀번호 초기화"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-status-change",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/status-change",
+            "name": "상태 변경"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-delete",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/delete",
+            "name": "하위 계정 삭제"
+        },
+        {
+            "key": "org-login-guide",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/login-guide",
+            "name": "로그인 안내"
         }
     ]
 }

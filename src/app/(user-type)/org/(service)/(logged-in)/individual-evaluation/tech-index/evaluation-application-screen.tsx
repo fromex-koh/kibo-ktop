@@ -12,7 +12,7 @@ import {StepHeader} from '@/components/composite/step-header'
 import {StepNavigation} from '@/components/composite/step-navigation'
 import {Badge} from '@/components/ui/badge'
 import {ORG_TECH_INDEX_STEPS} from '@/constants/technology-evaluation'
-import {EvaluationApplicationForm} from './evaluation-application-form'
+import {EvaluationApplicationForm} from '@/components/composite/evaluation-application-form'
 import {TECH_INDEX_MODEL_META, type TechIndexModel} from './model-meta'
 
 // 폼 바깥(화면 맨 아래)에 있는 [제출] 버튼을 form 속성으로 잇는 이름.
