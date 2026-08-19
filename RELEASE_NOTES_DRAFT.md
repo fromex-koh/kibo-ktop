@@ -70,10 +70,11 @@
 
 ## [덮어쓰기]
 
-### 퍼블리싱 인덱스 FO IA V1.21_260818 반영
+### 퍼블리싱 인덱스 FO IA V1.21_260818·응용2팀 진척 상태 반영
 
 - 대상: src/content/publishing-guide/publishing-index.json
     - src/content/publishing-guide/screen-registry.json
     - src/content/publishing-guide/screen-registry.generated.json
 - 적용: 지정한 파일만 교체. 세 파일은 반드시 함께 교체해야 한다 — 콘텐츠 관문(src/content/publishing-guide/index.ts)이 빌드 시점에 두 JSON 의 화면 key 를 양방향으로 교차검증하므로, 하나만 바꾸면 빌드가 실패한다
 - 변경: 기업 155건·기관 147건 기준으로 IA 트리와 화면 경로 레지스트리를 갱신. 화면명 정정(기술평가 → 기술평가 소개, 입력도우미 → 입력도움말 등), 단계 번호 재정렬, 기관 개별평가·일괄평가 화면 추가와 삭제 항목 정리 포함
+- 상태: 응용2팀 화면 진척 상태(application2Status) 62건을 함께 반영. 완료 처리 59건(미설정 → 완료 53, 진행중 → 완료 6)과 진행중 전환 3건이며, 퍼블리싱 인덱스의 응용2 진척률과 표의 응용2 상태가 이 값으로 갱신된다
