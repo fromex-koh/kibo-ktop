@@ -98,7 +98,8 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                         items: [
                             {label: 'Chip', href: '/component-guide/chip'},
                             {label: 'EmailField', href: '/component-guide/email-field'},
-                            {label: 'FileUpload', href: '/component-guide/file-upload'},
+                            {label: 'FileUpload / Field / Result', href: '/component-guide/file-upload'},
+                            {label: 'AttachField', href: '/component-guide/attach-field'},
                             {label: 'QuestionGroupHeader', href: '/component-guide/question-group-header'},
                             {label: 'QuestionList', href: '/component-guide/question-list'},
                             {label: 'SelectableCard', href: '/component-guide/selectable-card'},
@@ -145,6 +146,8 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'FormCard', href: '/component-guide/form-card'},
                     {label: 'RepeatCard', href: '/component-guide/repeat-card'},
                     {label: 'OptionCard', href: '/component-guide/option-card'},
+                    {label: 'RadioCard', href: '/component-guide/radio-card'},
+                    {label: 'RadioChip', href: '/component-guide/radio-chip'},
                     {label: 'Separator', href: '/component-guide/separator'},
                 ],
             },

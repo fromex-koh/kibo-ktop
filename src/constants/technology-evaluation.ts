@@ -9,6 +9,15 @@ export const SELF_DIAGNOSIS_STEPS = [
 // Tech-Index(혁신성장지수) 단계명 — 체크리스트 입력 단계가 없어 3단계다(시안 진행바 "1 / 3").
 export const TECH_INDEX_STEPS = ['고객 정보 활용 동의', '기업·기술정보 입력', '제출 완료'] as const
 
+// 기관 개별평가 Tech-Index 단계명 — 기업 흐름과 달리 첨부서류를 받는 [평가 신청하기] 단계가 하나 더 있다
+// (화면정의서 (1)~(5): 동의 → 입력 → 평가 신청 → 최종 확인 → 완료. 최종 확인은 검토 화면이라 진행바에는
+// 넣지 않는다 — KTRS-FM 이 체크리스트까지만 바에 두는 것과 같은 기준).
+export const ORG_TECH_INDEX_STEPS = ['고객 정보 활용 동의', '기업·기술정보 입력', '평가 신청하기', '제출 완료'] as const
+
+// 기관 일괄평가 단계명 — 1단계에서 평가모형과 진행할 업무를 고르고, 2단계에서 표준엑셀·동의서를 올린다
+// (시안 "[일괄평가] 2단계_대량정보 조회 신청" 진행바 "2 / 3"). 대량정보 조회·일괄평가 진행 두 갈래가 같은 단계를 쓴다.
+export const BATCH_EVALUATION_STEPS = ['평가모형 선택', '표준엑셀·동의서 업로드', '신청완료'] as const
+
 // Tech-Index [기술 인력 현황] 탭 맨 위 인원 요약의 값 이름과 처음 값.
 //
 // 화면(tech-index-staff-summary)과 탭 구성(self-diagnosis-form-tabs)이 함께 봐야 해서 여기 둔다.
@@ -45,7 +54,7 @@ export const TECH_INDEX_RECORD_DEFAULT_VALUES: Record<string, string> = Object.f
 // Tech-Index [특허 보유현황] 탭의 수량 칸 — 위 인원 요약과 같은 이유로 여기 둔다.
 // 합계 칸(읽기 전용)은 카드 값을 더해 그리므로 여기 두지 않는다 — 카드가 0 이면 합계도 0 이 된다.
 export const TECH_INDEX_PATENT_COUNT_DEFAULT = '0'
-// 사람이 적는 유일한 합계 칸.
+// 카드 상태에서 계산한 출원 특허 합계의 제출 필드.
 export const TECH_INDEX_PATENT_APPLIED_FIELD = 'appliedPatentCount'
 // 카드마다 [특허정보 조회] 로 채워지는 수량 칸(카드 번호를 뺀 이름). 조회 전에도 0 으로 보인다.
 export const TECH_INDEX_PATENT_CARD_COUNT_FIELDS = [
@@ -61,7 +70,6 @@ export const techIndexPatentField = (cardId: number, name: string) => `patent-${
 const PATENT_FIRST_CARD_ID = 1
 
 export const TECH_INDEX_PATENT_DEFAULT_VALUES: Record<string, string> = {
-    [TECH_INDEX_PATENT_APPLIED_FIELD]: TECH_INDEX_PATENT_COUNT_DEFAULT,
     ...Object.fromEntries(
         TECH_INDEX_PATENT_CARD_COUNT_FIELDS.map((name) => [
             techIndexPatentField(PATENT_FIRST_CARD_ID, name),

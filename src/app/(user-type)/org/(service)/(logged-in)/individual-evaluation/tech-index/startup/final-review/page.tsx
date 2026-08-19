@@ -1,0 +1,9 @@
+import type {Metadata} from 'next'
+import {TechIndexFinalReviewScreen} from '../../final-review-screen'
+
+export const metadata: Metadata = {title: '최종 확인'}
+
+// 기관 개별평가 Tech-Index 창업용 (4) 최종 확인 — 화면 구성은 공유 셸이 갖는다.
+const OrgTechIndexStartupFinalReviewPage = () => <TechIndexFinalReviewScreen model="startup" />
+
+export default OrgTechIndexStartupFinalReviewPage
