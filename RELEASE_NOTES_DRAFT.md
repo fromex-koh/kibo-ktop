@@ -38,6 +38,13 @@
 - 결과: 같은 상위 뎁스에 이름이 같은 화면이 여러 개 있어도 행 identity 가 겹치지 않아 필터 전환·정렬 시 행 내용이 섞이지 않음. 화면 key 가 없는 노드는 기존 경로 방식을 그대로 사용
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/68d4a78a2e364c69e5fbd4cd71ce422bf64a2c0a)
 
+### Tech-Index 재무정보 연도 카드 계정 정정
+
+- 대상: src/components/composite/tech-index-finance-form.tsx
+- 변경: 연도 카드 여덟 번째 칸의 이름을 [복리후생비] 에서 [연구개발비 (손익계산서)] 로 바로잡고, 값 이름도 출처를 따라 정리(welfareExpense2 → incomeStatementResearchDevelopmentCost, researchDevelopmentCost → manufacturingResearchDevelopmentCost)
+- 결과: 한 해 카드에 [복리후생비] 가 두 번 나오던 중복이 사라지고, 연구개발비가 제조원가명세서·손익계산서 두 칸으로 구분됨. 재무정보 탭을 쓰는 기업·기관 Tech-Index 일반/창업 네 화면에 함께 반영
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/6323aafb61b4e57b3aa9c8c2ffc2372dd6efc613)
+
 ## [신규 추가]
 
 ### 기업 KTRS-FM·투자모형 기업기타정보 부가 화면
