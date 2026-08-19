@@ -376,9 +376,9 @@
                                 {
                                     "label": "이어서 작성 안내",
                                     "screenId": null,
-                                    "application2Status" : "진행중",
+                                    "application2Status" : "완료",
                                     "status": "완료",
-                                    "application2Status": "진행중",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-company-technology-info-resume-notice"
                                 }
@@ -461,9 +461,9 @@
                                 {
                                     "label": "자동저장",
                                     "screenId": null,
-                                    "application2Status" : "진행중",
+                                    "application2Status" : "완료",
                                     "status": "완료",
-                                    "application2Status": "진행중",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-autosave"
                                 }
@@ -519,9 +519,9 @@
                                 {
                                     "label": "작성 취소",
                                     "screenId": null,
-                                    "application2Status" : "진행중",
+                                    "application2Status" : "완료",
                                     "status": "완료",
-                                    "application2Status": "진행중",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-checklist-cancel-confirm"
                                 }
@@ -542,9 +542,9 @@
                                     "label": "은행 전송",
                                     "screen": {
                                         "screenId": null,
-                                        "application2Status" : "진행중",
+                                        "application2Status" : "완료",
                                         "status": "완료",
-                                        "application2Status": "진행중",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer"
                                     },
@@ -613,6 +613,7 @@
                                             "label": "필수/선택 동의 팝업",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-customer-consent-consent-popup"
                                         },
@@ -620,6 +621,7 @@
                                             "label": "개별 상세 보기",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-customer-consent-detail"
                                         },
@@ -639,6 +641,7 @@
                                             "label": "이어서 작성 안내",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-technology-info-resume-notice"
                                         }
@@ -657,6 +660,7 @@
                                             "label": "업종코드 조회",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-industry-code-search"
                                         },
@@ -664,6 +668,7 @@
                                             "label": "주소 찾기",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-address-search"
                                         },
@@ -671,6 +676,7 @@
                                             "label": "기술분류",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "진행중",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-technology-category"
                                         },
@@ -678,6 +684,7 @@
                                             "label": "품목설명",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-item-description"
                                         },
@@ -685,6 +692,7 @@
                                             "label": "제출 전 최종 확인",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-final-review"
                                         },
@@ -692,6 +700,7 @@
                                             "label": "작성 취소",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-cancel-confirm"
                                         },
@@ -699,6 +708,7 @@
                                             "label": "자동저장",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-autosave"
                                         }
@@ -708,6 +718,7 @@
                                     "label": "(3) 완료 화면",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-general-complete"
                                 }
@@ -730,6 +741,7 @@
                                             "label": "필수/선택 동의 팝업",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-consent-popup"
                                         },
@@ -737,6 +749,7 @@
                                             "label": "개별 상세 보기",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-detail"
                                         },
@@ -756,6 +769,7 @@
                                             "label": "이어서 작성 안내",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-technology-info-resume-notice"
                                         }
@@ -774,6 +788,7 @@
                                             "label": "업종코드 조회",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-industry-code-search"
                                         },
@@ -781,6 +796,7 @@
                                             "label": "주소 찾기",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-address-search"
                                         },
@@ -788,6 +804,7 @@
                                             "label": "기술분류",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "진행중",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-technology-category"
                                         },
@@ -795,6 +812,7 @@
                                             "label": "품목설명",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-item-description"
                                         },
@@ -802,6 +820,7 @@
                                             "label": "제출 전 최종 확인",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-final-review"
                                         },
@@ -809,6 +828,7 @@
                                             "label": "작성 취소",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-cancel-confirm"
                                         },
@@ -816,6 +836,7 @@
                                             "label": "자동저장",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-autosave"
                                         }
@@ -825,6 +846,7 @@
                                     "label": "(4) 완료 화면",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-startup-complete"
                                 }
@@ -848,6 +870,7 @@
                                     "label": "필수/선택 동의 팝업",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-customer-consent-consent-popup"
                                 },
@@ -855,6 +878,7 @@
                                     "label": "개별 상세 보기",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-customer-consent-detail"
                                 },
@@ -874,6 +898,7 @@
                                     "label": "이어서 작성 안내",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-company-technology-info-resume-notice"
                                 }
@@ -892,6 +917,7 @@
                                     "label": "업종코드 조회",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-company-info-industry-code-search"
                                 },
@@ -899,6 +925,7 @@
                                     "label": "주소 찾기",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-company-info-address-search"
                                 }
@@ -911,6 +938,7 @@
                                     "label": "거래유형 설명",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-additional-company-info-transaction-type-guide"
                                 },
@@ -918,6 +946,7 @@
                                     "label": "전문기술/숙련기술 정의",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-additional-company-info-technology-definition"
                                 }
@@ -936,6 +965,7 @@
                                     "label": "피인용 확인 메뉴얼",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-checklist-citation-manual"
                                 },
@@ -943,6 +973,7 @@
                                     "label": "보증제한 업종",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-checklist-restricted-industries"
                                 },
@@ -950,6 +981,7 @@
                                     "label": "TRL 확인",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-checklist-trl-guide"
                                 },
@@ -957,6 +989,7 @@
                                     "label": "제출 전 최종 확인",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-final-review"
                                 },
@@ -964,6 +997,7 @@
                                     "label": "작성 취소",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-checklist-cancel-confirm"
                                 },
@@ -971,6 +1005,7 @@
                                     "label": "자동저장",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-checklist-autosave"
                                 }
@@ -1249,6 +1284,7 @@
                                     "label": "필수/선택 동의 팝업",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-representative-history-customer-consent-consent-popup"
                                 },
@@ -1256,6 +1292,7 @@
                                     "label": "개별 상세 보기",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-representative-history-customer-consent-detail"
                                 },
@@ -1291,6 +1328,7 @@
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
+                                "application2Status": "완료",
                                 "version": "미배포",
                                 "key": "corp-mypage-evaluation-results-bank-transfer"
                             },
@@ -1299,6 +1337,7 @@
                                     "label": "은행전송완료",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-evaluation-results-bank-transfer-transfer-complete"
                                 }
@@ -1309,6 +1348,7 @@
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
+                                "application2Status": "완료",
                                 "version": "미배포",
                                 "key": "corp-mypage-evaluation-results-guarantee-application"
                             },
@@ -1317,6 +1357,7 @@
                                     "label": "보증신청완료",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-evaluation-results-guarantee-application-application-complete"
                                 }
@@ -1635,10 +1676,10 @@
             "children": [
                 {
                     "label": "로그인 연장",
-                    "application2Status" : "진행중",
+                    "application2Status" : "완료",
                     "screenId": null,
                     "status": "완료",
-                    "application2Status": "진행중",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-session-extension"
                 }
@@ -1650,10 +1691,10 @@
             "children": [
                 {
                     "label": "로그아웃 종료",
-                    "application2Status" : "진행중",
+                    "application2Status" : "완료",
                     "screenId": null,
                     "status": "완료",
-                    "application2Status": "진행중",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-logout"
                 }
