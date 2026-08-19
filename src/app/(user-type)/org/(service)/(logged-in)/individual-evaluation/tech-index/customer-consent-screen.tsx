@@ -12,7 +12,7 @@ import {StepHeader} from '@/components/composite/step-header'
 import {StepNavigation} from '@/components/composite/step-navigation'
 import {Badge} from '@/components/ui/badge'
 import {ORG_TECH_INDEX_STEPS} from '@/constants/technology-evaluation'
-import {OrgCustomerConsentForm} from '../ktrs-fm/customer-consent/org-customer-consent-form'
+import {OrgCustomerConsentForm} from '@/components/composite/org-customer-consent-form'
 import {TECH_INDEX_MODEL_META, TECH_INDEX_SELECTION_PATH, type TechIndexModel} from './model-meta'
 
 // 폼 바깥(화면 맨 아래)에 있는 [다음] 버튼을 form 속성으로 잇는 이름.
