@@ -118,14 +118,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.0",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-info-industry-code-search",
@@ -180,22 +180,22 @@
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-manufacturing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-service",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual",
@@ -265,14 +265,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
@@ -300,7 +300,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature",
@@ -398,7 +398,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature",
@@ -474,8 +474,8 @@
             "key": "corp-technology-evaluation-investment-model-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent-consent-popup",
@@ -496,7 +496,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature",
@@ -509,8 +509,8 @@
             "key": "corp-technology-evaluation-investment-model-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-info-industry-code-search",
@@ -544,29 +544,29 @@
             "key": "corp-technology-evaluation-investment-model-additional-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-investment-model-additional-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-manufacturing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-service",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-citation-manual",
@@ -614,8 +614,8 @@
             "key": "corp-technology-evaluation-investment-model-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-results",
@@ -1188,15 +1188,15 @@
             "key": "org-individual-evaluation-ktrs-fm-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.1",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.1",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-technology-info-self-diagnosis-result",
@@ -1258,15 +1258,15 @@
             "key": "org-individual-evaluation-ktrs-fm-checklist-manufacturing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-service",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-citation-manual",
@@ -1308,49 +1308,49 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-industry-code-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-technology-category",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-item-description",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-company-management",
@@ -1364,63 +1364,63 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-info-industry-code-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-info-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-info-technology-category",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-info-item-description",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-info-company-management",
@@ -1434,49 +1434,49 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-checklist-manufacturing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-checklist-service",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-industry-code-search",
@@ -1497,14 +1497,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-item-description",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-company-management",
@@ -1538,64 +1538,64 @@
             "key": "org-individual-evaluation-investment-model-evaluation-application",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-request",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-patent-evaluation-patent-grade-list",
@@ -1951,113 +1951,113 @@
             "key": "org-individual-evaluation-ktrs-fm-company-technology-info-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-additional-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-additional-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-technology-info-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-technology-info-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-additional-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-additional-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-checklist-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-checklist-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-batch-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-request-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v2.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-legal-basis",
@@ -2140,7 +2140,7 @@
             "key": "org-login-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
+            "version": "v1.0.0",
             "isCurrent": false
         }
     ]
