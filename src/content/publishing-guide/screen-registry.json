@@ -269,11 +269,18 @@
             "name": "작성 취소"
         },
         {
-            "key": "corp-technology-evaluation-ktrs-fm-checklist",
+            "key": "corp-technology-evaluation-ktrs-fm-checklist-manufacturing",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/ktrs-fm/checklist",
-            "name": "(3) 체크리스트 입력"
+            "path": "/corp/technology-evaluation/ktrs-fm/checklist/manufacturing",
+            "name": "업종코드 제조 선택"
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-checklist-service",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/ktrs-fm/checklist/service",
+            "name": "업종코드 서비스 선택"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual",
@@ -633,11 +640,18 @@
             "name": "작성 취소"
         },
         {
-            "key": "corp-technology-evaluation-investment-model-checklist",
+            "key": "corp-technology-evaluation-investment-model-checklist-manufacturing",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/investment-model/checklist",
-            "name": "(3) 체크리스트 입력"
+            "path": "/corp/technology-evaluation/investment-model/checklist/manufacturing",
+            "name": "업종코드 제조 선택"
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-checklist-service",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/investment-model/checklist/service",
+            "name": "업종코드 서비스 선택"
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-citation-manual",
@@ -731,11 +745,11 @@
             "name": "정보 이용 동의"
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-report-search-results",
+            "key": "corp-k-bigx-report-innovation-growth-report-legal-basis",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/k-bigx-report/innovation-growth-report/report-search-results",
-            "name": "보고서 검색 결과"
+            "path": "/corp/k-bigx-report/innovation-growth-report/legal-basis",
+            "name": "기업정보 수집제공 근거"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create",
@@ -745,11 +759,11 @@
             "name": "보고서 생성"
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-payment",
+            "key": "corp-k-bigx-report-innovation-growth-report-pass-purchase-guide",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/k-bigx-report/innovation-growth-report/report-search-results/report-payment",
-            "name": "보고서 결제"
+            "path": "/corp/k-bigx-report/innovation-growth-report/pass-purchase-guide",
+            "name": "이용권구매 안내"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
@@ -836,11 +850,11 @@
             "name": "보고서 이력 조회"
         },
         {
-            "key": "corp-k-bigx-report-report-history-report-view",
+            "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/k-bigx-report/report-history/report-view",
-            "name": "보고서 보기"
+            "path": "/corp/k-bigx-report/innovation-growth-report/terms-of-service",
+            "name": "이용약관"
         },
         {
             "key": "corp-k-bigx-report-report-history-report-print",
@@ -969,11 +983,11 @@
             "name": "보고서 보기"
         },
         {
-            "key": "corp-mypage-k-bigx-report-history-report-print",
+            "key": "corp-k-bigx-report-innovation-growth-report-view-count-deduction",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/mypage/k-bigx-report-history/report-print",
-            "name": "보고서 출력"
+            "path": "/corp/k-bigx-report/innovation-growth-report/view-count-deduction",
+            "name": "조회횟수 차감안내"
         },
         {
             "key": "corp-mypage-paid-services-payment-history",
@@ -1088,11 +1102,11 @@
             "name": "자료실"
         },
         {
-            "key": "corp-technology-information-consent",
+            "key": "corp-k-bigx-report-innovation-growth-report-marketing-consent",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-information-consent",
-            "name": "기술혁신정보 이용동의"
+            "path": "/corp/k-bigx-report/innovation-growth-report/marketing-consent",
+            "name": "마케팅 알림 수신동의"
         },
         {
             "key": "corp-payment-complete",
@@ -1326,11 +1340,18 @@
             "name": "전문기술/숙련기술 정의"
         },
         {
-            "key": "org-individual-evaluation-ktrs-fm-checklist",
+            "key": "org-individual-evaluation-ktrs-fm-checklist-manufacturing",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/ktrs-fm/checklist",
-            "name": "(3) 체크리스트 입력"
+            "path": "/org/individual-evaluation/ktrs-fm/checklist/manufacturing",
+            "name": "업종코드 제조 선택"
+        },
+        {
+            "key": "org-individual-evaluation-ktrs-fm-checklist-service",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/ktrs-fm/checklist/service",
+            "name": "업종코드 서비스 선택"
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-citation-manual",
@@ -1529,11 +1550,18 @@
             "name": "(2) 기업·기술정보 입력"
         },
         {
-            "key": "org-individual-evaluation-investment-model-checklist",
+            "key": "org-individual-evaluation-investment-model-checklist-manufacturing",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/investment-model/checklist",
-            "name": "(3) 체크리스트 입력"
+            "path": "/org/individual-evaluation/investment-model/checklist/manufacturing",
+            "name": "업종코드 제조 선택"
+        },
+        {
+            "key": "org-individual-evaluation-investment-model-checklist-service",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/individual-evaluation/investment-model/checklist/service",
+            "name": "업종코드 서비스 선택"
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-industry-code-search",

@@ -184,10 +184,17 @@
             "isCurrent": false
         },
         {
-            "key": "corp-technology-evaluation-ktrs-fm-checklist",
+            "key": "corp-technology-evaluation-ktrs-fm-checklist-manufacturing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.0",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-checklist-service",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -465,8 +472,8 @@
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -500,8 +507,8 @@
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-technology-info",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -548,9 +555,16 @@
             "isCurrent": false
         },
         {
-            "key": "corp-technology-evaluation-investment-model-checklist",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "key": "corp-technology-evaluation-investment-model-checklist-manufacturing",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-checklist-service",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -598,8 +612,8 @@
         },
         {
             "key": "corp-technology-evaluation-investment-model-complete",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -646,7 +660,7 @@
             "isCurrent": false
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-report-search-results",
+            "key": "corp-k-bigx-report-innovation-growth-report-legal-basis",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
@@ -660,7 +674,7 @@
             "isCurrent": false
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-payment",
+            "key": "corp-k-bigx-report-innovation-growth-report-pass-purchase-guide",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
@@ -751,7 +765,7 @@
             "isCurrent": false
         },
         {
-            "key": "corp-k-bigx-report-report-history-report-view",
+            "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
@@ -884,7 +898,7 @@
             "isCurrent": false
         },
         {
-            "key": "corp-mypage-k-bigx-report-history-report-print",
+            "key": "corp-k-bigx-report-innovation-growth-report-view-count-deduction",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
@@ -1003,7 +1017,7 @@
             "isCurrent": false
         },
         {
-            "key": "corp-technology-information-consent",
+            "key": "corp-k-bigx-report-innovation-growth-report-marketing-consent",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
@@ -1241,10 +1255,17 @@
             "isCurrent": false
         },
         {
-            "key": "org-individual-evaluation-ktrs-fm-checklist",
+            "key": "org-individual-evaluation-ktrs-fm-checklist-manufacturing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.1",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-ktrs-fm-checklist-service",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -1431,22 +1452,29 @@
         },
         {
             "key": "org-individual-evaluation-investment-model-customer-consent",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-company-technology-info",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "org-individual-evaluation-investment-model-checklist",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "key": "org-individual-evaluation-investment-model-checklist-manufacturing",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-individual-evaluation-investment-model-checklist-service",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -1508,8 +1536,8 @@
         },
         {
             "key": "org-individual-evaluation-investment-model-evaluation-application",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -1522,8 +1550,8 @@
         },
         {
             "key": "org-individual-evaluation-investment-model-complete",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
