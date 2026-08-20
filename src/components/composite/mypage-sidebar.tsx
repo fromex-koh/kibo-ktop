@@ -51,7 +51,7 @@ const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
     corp: [
         {icon: User, label: '내 정보', href: '/corp/mypage/profile'},
         {icon: BriefcaseBusiness, label: '대표자(경영자) 역량 및 경력', href: '/corp/mypage/representative-history'},
-        {icon: FileSearch, label: '평가결과 조회', href: '#'},
+        {icon: FileSearch, label: '평가결과 조회', href: '/corp/mypage/evaluation-results'},
         {icon: NotepadText, label: 'K-BIGx 보고서 이력', href: '#'},
         {icon: CreditCard, label: '유료 서비스 관리', href: '#'},
         {icon: MessageCircleMore, label: '1:1 문의', href: '/corp/mypage/inquiry-history'},

@@ -170,6 +170,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'Skeleton / ChartSkeleton', href: '/component-guide/skeleton'},
                     {label: 'Table', href: '/component-guide/table'},
                     {label: 'ReviewList', href: '/component-guide/review-list'},
+                    {label: 'HistoryList', href: '/component-guide/history-list'},
                     {label: 'SummaryList', href: '/component-guide/summary-list'},
                     {label: 'SelectableSummaryList', href: '/component-guide/selectable-summary-list'},
                 ],

@@ -84,7 +84,7 @@ const SIZE_SPECS = [
     {
         size: 'md',
         label: 'Md',
-        desc: '카드·폼 안에서 기본으로 쓰는 중간 크기입니다. solid는 이 크기가 시안(토글) 기준입니다.',
+        desc: '카드·폼 안에서 기본으로 쓰는 중간 크기입니다. solid 는 이 크기가 시안(조회기간) 기준입니다.',
     },
     {size: 'lg', label: 'Lg', desc: '넓은 영역에서 옵션의 시각적 위계를 높일 때 쓰는 큰 크기입니다.'},
 ] as const
@@ -121,7 +121,7 @@ const USAGE_FORM = `// 세그먼티드는 토글 성격이라 기본값을 두�
 
   <Field className="items-start">
     <FieldLabel id="period-label" htmlFor="period-today">조회 기간</FieldLabel>
-    {/* solid 은 항목 폭만큼만 차지하므로 w-fit 로 감싼다 */}
+    {/* solid 은 낱개 상자가 나란히 놓이는 외형이라 항목 폭만큼만 차지한다 */}
     <div className="w-fit">
       <SegmentedControl
         type="radio"
@@ -353,11 +353,12 @@ const SegmentedControlGuidePage = () => (
                             Solid
                         </h3>
                         <p className="typo-body-l-regular text-muted-foreground mt-2">
-                            흰 표면 위에서 선택 항목을 진한 인디고(
-                            <code className="font-mono">segmented-solid-active</code>)로 강조하고, 비선택 항목 사이에는
-                            얇은 회색 구분선(<code className="font-mono">subtle-2</code>)을 둡니다. 선택된 인디고 면에
-                            닿는 구분선은 숨겨, 항목이 2개일 때는 인디고 면 자체가 두 옵션을 나눕니다. 필터·기간 전환
-                            토글에 쓰며 시안(Figma 토글) 기준 크기는 <code className="font-mono">md</code>입니다.
+                            항목을 감싸는 트랙 없이 낱개 상자가 4px 간격으로 놓입니다. 흰 카드 위에 그대로 올라가는
+                            필터에 쓰는 외형이라, 트랙을 두면 면이 겹쳐 보이기 때문입니다. 고른 항목만 네이비(
+                            <code className="font-mono">segmented-solid-active</code>)로 테두리까지 함께 채우고 글자를
+                            흰색·굵게 둡니다. 상자 폭은 글자 길이와 무관하게 같아(시안 72) 나란히 놓인 선택지가
+                            들쭉날쭉해 보이지 않고, 높이는 함께 놓이는 날짜 입력과 같은 컨트롤 높이입니다. 조회 필터의
+                            기간 선택이 기준이며 시안 기준 크기는 <code className="font-mono">md</code>입니다.
                         </p>
                     </div>
                     <div aria-labelledby="tg-variant-solid-radio" className="flex flex-col gap-3">
