@@ -47,3 +47,21 @@
 - 변경: 레이아웃 파일에 직접 적혀 있던 목업 회원 객체를 지우고 `@/constants/preview-user` 를 import 하도록 교체. 레이아웃이 넘기는 props 와 화면 구조는 그대로다
 - 결과: 헤더의 회원명과 마이페이지의 회원 정보가 같은 값을 본다. 두 곳에 따로 적어 두어 한쪽만 고쳤을 때 같은 화면에서 다른 기업 이름이 보이던 문제를 막는다. 기업 목업 이름은 `한국미래기술혁신성장기업주식회사` 에서 `(주)한국미래기술혁신성장테크놀로지` 로 바뀌었고, 헤더 이름 칸(184px)에서 잘리는지 확인하기 위한 폭은 종전과 같다
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/fbe0c893d69445836d81a2949434c55628955907)
+
+## [덮어쓰기]
+
+### [SectionHeader] 제목·설명 크기 축 추가
+
+- 대상: src/components/composite/section-header.tsx
+- 적용: SectionHeaderTitle·SectionHeaderDescription 에 `size` 를 추가한 파일로 교체. 기본값 `md` 는 종전 타이포(제목 `typo-h4-bold` · 설명 `typo-body-xl-regular`) 그대로라 기존 사용처는 손대지 않아도 같게 보인다
+- 사용: 페이지 제목 아래에 화면 제목이 한 단계 더 있는 구성(마이페이지 등)에서 `size="lg"` 를 쓴다 — 제목 `typo-h1-bold` · 설명 `typo-title-m-regular` 로, 단계형 화면의 StepHeader 와 같은 타이포 짝이다
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e0594e92ad06346d8c4bcdb8f5c976b4787be2f6)
+
+### [StickySidebar 접근성] 이름 헤딩 단계 지원
+
+- 대상: src/components/composite/sticky-sidebar.tsx
+    - src/app/component-guide/(guide)/sticky-sidebar/page.tsx
+- 적용: StickySidebarProfile 의 이름을 문단이 아닌 실제 헤딩으로 렌더링하고, 화면의 제목 구조에 맞춰 2~4단계를 고를 수 있는 `headingLevel`(기본 2)을 추가한 파일로 교체
+- 사용: 쓰는 화면의 앞 제목보다 한 단계 낮춘다 — 페이지 h1 아래면 2, 앞 제목이 h2 인 자리면 3. 크기만 큰 문단으로 두면 WAVE 가 "Possible heading" 으로 잡고 스크린리더의 제목 이동에서도 빠진다[6.4.2]
+- 가이드: [StickySidebar](/component-guide/sticky-sidebar) Props 표에 `headingLevel` 추가
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e0594e92ad06346d8c4bcdb8f5c976b4787be2f6)
