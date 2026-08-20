@@ -113,3 +113,35 @@
 - 적용: 신규 파일 추가
 - 내용: 좌측 LNB 고정 + 우측 본문의 2단 배치다(시안 실측 344 + 64 + 792 = 1200). 페이지 컬럼 그리드가 아니라 사이드바 폭이 정해진 구성이며, 좁은 화면에서는 한 열로 떨어지고 사이드바가 위로 온다 — 메뉴가 본문보다 먼저 읽히는 순서다[7.3.1]. 수정 취소 · 저장 전 최종 확인 모달은 단독으로 열어 볼 수 있는 확인 경로를 함께 둔다
 - 함께 적용: 위 두 신규 추가 카드와 같은 커밋 단위로 적용
+
+## [덮어쓰기]
+
+### [InputGroup] 오른쪽 끝을 채우는 버튼 배치 추가
+
+- 대상: src/components/theme/input-group.variants.ts
+- 적용: `InputGroupAddon` 의 `align` 에 `inline-end-fill` 을 더한 파일로 교체. 기존 `inline-start` · `inline-end` · `block-start` · `block-end` 는 그대로다
+- 사용: 비밀번호 표시/숨김처럼 입력 칸에 붙는 조작 버튼에 쓴다. 상자의 오른쪽 여백을 없애고 버튼이 상자 높이를 채우며 왼쪽 모서리만 각져, hover 면이 상자 위에 얹힌 조각이 아니라 상자의 한 구역으로 읽힌다. [지우기](ClearableInput)처럼 작고 동그란 버튼에는 쓰지 않는다 — 기존 `inline-end` 를 그대로 쓴다
+
+## [신규 추가]
+
+### 기관 마이페이지 내 정보 공통 셸 · 입력 폼
+
+- 대상: src/components/composite/org-mypage-profile-screen.tsx
+    - src/components/composite/org-mypage-profile-form.tsx
+- 적용: 신규 파일 추가
+- 내용: 회원 유형 세 화면이 함께 쓰는 조각이다. `OrgMypageProfileScreen` 은 기업 [내 정보]와 같은 2단 구성을 갖고, 유형마다 달라지는 회원 정보 · 브레드크럼 · 폼만 화면(page)에서 받는다. `OrgMypageProfileForm` 은 `variant` 로 [기본 정보] 구성을 바꾸고, 하위 계정일 때만 [이용권 정보] 구획을 더 그린다
+- 잠긴 값: 고칠 수 없는 값(ID · 기관구분 · 상위 마스터 기관 · 사업기간 등)은 입력 칸 모양을 유지한 채 잠근다. 배분받은 이용권은 고칠 수 없는 값이라 입력 칸이 아니라 목록으로 둔다
+- 연동: 계정 정보와 이용권은 화면(page)이 읽어 폼에 내려 준다 — 조회 코드를 폼 안에서 찾아다니지 않아도 된다
+- 함께 적용: 아래 신규 추가 카드의 화면들과 같은 커밋 단위로 적용
+
+### 기관 마이페이지 내 정보 화면 — 회원 유형 3종
+
+- 대상: src/app/(user-type)/org/(service)/(member-partner-bank)/**
+    - src/app/(user-type)/org/(service)/(member-partner-agency)/**
+    - src/app/(user-type)/org/(service)/(member-sub-account)/**
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/profile-edit/cancel-confirm/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/profile-edit/save-confirm/page.tsx
+- 적용: 신규 파일 추가
+- 내용: 협약은행 · 협약기관 · 기관회원(하위 계정) 세 화면과, 수정 취소 · 저장 전 최종 확인 모달의 단독 확인 경로. 하위 계정은 상위 마스터 기관이 만들어 준 계정이라 묻는 칸이 다르고 [이용권 정보] 구획이 더 있다
+- 구조: 세 화면은 유형별 경로 그룹 안에 있다. 헤더에 보이는 기관명이 유형마다 다른데 레이아웃은 자식이 값을 올려 줄 수 없어, 유형별 레이아웃을 나란히 두었다. 경로 그룹은 주소에 드러나지 않으므로 URL 은 `/org/mypage/profile-edit/<유형>` 그대로다
+- 연동: 마이페이지 LNB 의 기관 [내 정보] 는 협약기관 화면으로 이어 두었다. 실제로는 로그인한 회원 유형의 화면으로 보내면 된다
