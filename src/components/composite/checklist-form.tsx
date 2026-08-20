@@ -206,18 +206,24 @@ const CheckWithChips = ({
                     onCheckedChange={(next) => setChecked(next === true)}
                 />
             }
+            below={
+                checked ? (
+                    <ChipRadioGroup
+                        aria-label={item.chipLabel}
+                        name={item.chipName}
+                        className="grid w-full grid-cols-1 gap-2 sm:grid-cols-3"
+                    >
+                        {item.chips.map((chip) => (
+                            <ChipRadio key={chip.value} size="md" value={chip.value} className="w-full">
+                                {chip.label}
+                            </ChipRadio>
+                        ))}
+                    </ChipRadioGroup>
+                ) : undefined
+            }
         >
             <span>{item.text}</span>
-            {/* 체크를 풀면 칩도 함께 사라진다 — 고른 값이 화면에 없는 채로 제출에 남지 않는다. */}
-            {checked ? (
-                <ChipRadioGroup aria-label={item.chipLabel} name={item.chipName} className="mt-2">
-                    {item.chips.map((chip) => (
-                        <ChipRadio key={chip.value} size="md" value={chip.value} className="flex-1">
-                            {chip.label}
-                        </ChipRadio>
-                    ))}
-                </ChipRadioGroup>
-            ) : null}
+            {/* 체크를 풀면 하단 칩도 함께 사라진다 — 고른 값이 화면에 없는 채로 제출에 남지 않는다. */}
         </QuestionItem>
     )
 }
