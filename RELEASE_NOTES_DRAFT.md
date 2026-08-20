@@ -225,3 +225,58 @@
 - 대상: src/components/custom/inquiry-form.tsx
 - 적용: 파일 안에 두었던 문의 유형 목록을 지우고 `@/constants/inquiry` 를 가져다 쓰는 파일로 교체. 화면 구성과 입력 규칙은 종전과 같다
 - 이유: 같은 목록을 마이페이지 1:1 문의 목록 · 상세가 함께 본다. 한 벌만 두어 한쪽만 고쳐 두 화면의 분류가 달라지는 일을 막는다
+
+## [덮어쓰기]
+
+### 색 토큰 — 평가완료 상태색 추가 · 세그먼티드 활성색 교정
+
+- 대상: tokens.json
+    - src/app/component-guide/(guide)/semantic-color/page.tsx
+- 적용: `status-evaluated` 시맨틱 토큰을 더하고, `segmented-solid-active` 계열을 시안 색으로 맞춘 파일로 교체
+- 내용: 조회 목록의 [평가완료] 글자색은 팔레트 밖 값이라 `common` 앵커(`status-blue`)에 두고 시맨틱으로 이었다. 세그먼티드 컨트롤의 고른 항목 색은 purple 계열에서 navy 로 바꿨다(시안)
+- 순서: `tokens.json` 과 시맨틱 색상 가이드는 함께 받아야 한다 — 가이드의 설명 표가 토큰 이름을 모두 갖고 있어야 해서, 한쪽만 반영하면 타입 오류가 난다
+
+### [SegmentedControl] solid 외형을 필터 사양으로 교체
+
+- 대상: src/components/theme/segmented-control.variants.ts
+    - src/app/globals.css
+    - src/app/component-guide/(guide)/segmented-control/page.tsx
+- 적용: `solid` 를 트랙 없는 낱개 상자 외형으로 바꾼 파일로 교체. `subtle` 은 그대로다
+- 내용: 항목을 감싸던 트랙과 항목 사이 구분선을 걷어내고, 낱개 상자가 4px 간격으로 놓이며 각자 테두리와 흰 면을 갖는다. 고른 항목은 테두리까지 함께 채워 한 덩어리로 보인다. 상자 폭은 글자 길이와 무관하게 같고(시안), 높이는 함께 놓이는 날짜 입력과 같은 컨트롤 높이다
+- 정리: 구분선을 그리던 전역 CSS 규칙(`globals.css`)을 지웠다 — 낱개 상자에는 필요 없다. 도달할 수 없게 남아 있던 `outline` 상태 클래스도 함께 걷어냈다
+- 가이드: [SegmentedControl](/component-guide/segmented-control) 의 Solid 설명을 새 외형에 맞게 고쳤다
+
+### [SearchFilterForm] 배치 · 표면 · 액션 슬롯 확장
+
+- 대상: src/components/composite/search-filter-form.tsx
+- 적용: `layout` · `surface` 와 기간 필드의 액션 슬롯을 더한 파일로 교체. 기존 사용처는 기본값(`layout="row"` · `surface="muted"`)이라 종전과 같다
+- 내용: `layout="stack"` 은 라벨을 컨트롤 위로 올린다 — 사이드바 옆처럼 폭이 좁은 자리에 쓴다. `surface="card"` 는 필터 면을 카드와 같은 색으로 둔다. `DateRangeField` 는 `action` 으로 [조회] 버튼을 기간 줄 오른쪽에 받고, `defaultFrom` · `defaultTo` 로 처음 기간을 정한다
+- 정리: 보이는 카드는 공통 `BaseCard` 가 그린다 — `form` 은 제출을 받는 껍데기라 면 · 모서리 · 여백을 직접 갖지 않고, 다른 카드들과 한곳에서 관리된다
+
+## [신규 추가]
+
+### 이력 목록 (HistoryList)
+
+- 대상: src/components/composite/history-list.tsx
+    - src/app/component-guide/(guide)/history-list/page.tsx
+    - src/constants/publishing-guide.ts
+- 적용: 신규 파일 추가(가이드 내비게이션 항목 포함)
+- 내용: 날짜 · 상태로 시작해 제목 · 액션으로 이어지는 한 줄짜리 이력 항목의 목록이다. 마이페이지의 조회 화면들(평가결과 조회 · K-BIGx 보고서 이력 · 평가검증 신청 조회)이 같은 짜임을 쓴다. 목록 맨 위에는 굵은 선, 항목 사이에는 얇은 선이 온다(시안)
+- 사용: 카드에 담지 않고 배경 위에 놓인다 — 카드가 필요한 목록(공지사항 · 1:1 문의)은 사용처에서 `BaseCard` 로 감싼다. 위쪽 선이 필요 없는 자리는 `border-t-0` 으로 끈다. 상태(필터 · 페이지)는 이 목록을 쓰는 화면이 갖는다
+- 가이드: [HistoryList](/component-guide/history-list) — 기본 · 액션 버튼 · 모형 배지 · 아직 볼 것이 없는 항목 · 제목만 · 카드 안에 담기 · Props
+
+### 평가결과 조회 목록 컴포넌트 · 공통 값
+
+- 대상: src/components/custom/evaluation-result-list.tsx
+    - src/constants/evaluation-result.ts
+- 적용: 신규 파일 추가
+- 내용: 조회 조건(모형 · 진행상태 · 조회기간) · 건수와 정렬 · 결과 목록 · 페이지 이동을 한 벌로 그린다. 진행 상태는 `evaluated`(평가완료) · `analyzed`(분석완료) · `inProgress`(진행중) 세 가지이며, 배지가 아니라 글자 색으로만 구분하되 색만으로 전달하지 않고 글자를 함께 둔다[5.3.1]
+- 상수 위치: 상태 표는 서버 컴포넌트(화면)와 클라이언트 컴포넌트(목록)가 함께 읽어야 해 `src/constants/evaluation-result.ts` 에 둔다 — `'use client'` 파일의 상수를 서버에서 import 하면 실제 값이 아니라 빈 참조가 넘어온다
+- 함께 적용: 아래 신규 추가 카드의 화면과 같은 커밋 단위로 적용
+
+### 기업 평가결과 조회 화면
+
+- 대상: src/app/(user-type)/corp/(service)/(logged-in)/mypage/evaluation-results/page.tsx
+- 적용: 신규 파일 추가
+- 내용: 마이페이지 2단 배치의 조회 화면이다. 각 건에는 [은행전송] · [기관전송] · [전송내역] · [보증신청] 동작이 붙는다
+- 연동: 화면이 쓰는 값은 page.tsx 의 상수뿐이고 목록 컴포넌트는 넘겨받은 것만 그린다. 결과가 아직 나오지 않아 눌러도 볼 것이 없는 건은 `disabled` 로 넘긴다 — 버튼과 링크가 함께 잠긴다. 각 동작이 여는 화면도 건마다 다르므로 항목이 들고 있고, 아직 만들지 않은 화면은 `'#'` 이다. 빈 배열을 넘기면 빈 상태 안내가 나온다
