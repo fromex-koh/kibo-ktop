@@ -1,6 +1,610 @@
 {
     "releases": [
         {
+            "version": "v3.0.0",
+            "releasedAt": "2026-08-20",
+            "changes": [
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "로그인 목업 회원 상수",
+                    "details": [
+                        {"label": "대상", "value": "src/constants/preview-user.ts"},
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "로그인 상태 화면이 공유하는 목업 회원 정보를 한 파일로 모음. 기업 1건(법인 표기와 원본 기업명을 나눠 두어 헤더용 완성형과 마이페이지 [기업명] 칸 값을 한 값에서 만든다), 기관 회원 유형 3종(협약은행 · 협약기관 · 하위 계정), 유형이 정해지지 않은 기관 화면이 쓰는 기본 회원 1건"
+                        },
+                        {
+                            "label": "연동",
+                            "value": "로그인 세션(회원정보) 응답으로 교체하는 자리다. 회원명과 잔여 시간 모두 서버 값을 넣으면 된다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "로그인 레이아웃의 목업 회원 참조 전환",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/layout.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/layout.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "레이아웃 파일에 직접 적혀 있던 목업 회원 객체를 지우고 `@/constants/preview-user` 를 import 하도록 교체. 레이아웃이 넘기는 props 와 화면 구조는 그대로다"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "헤더의 회원명과 마이페이지의 회원 정보가 같은 값을 본다. 두 곳에 따로 적어 두어 한쪽만 고쳤을 때 같은 화면에서 다른 기업 이름이 보이던 문제를 막는다. 기업 목업 이름은 `한국미래기술혁신성장기업주식회사` 에서 `(주)한국미래기술혁신성장테크놀로지` 로 바뀌었고, 헤더 이름 칸(184px)에서 잘리는지 확인하기 위한 폭은 종전과 같다"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/fbe0c893d69445836d81a2949434c55628955907)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[SectionHeader] 제목·설명 크기 축 추가",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/section-header.tsx"},
+                        {
+                            "label": "적용",
+                            "value": "SectionHeaderTitle·SectionHeaderDescription 에 `size` 를 추가한 파일로 교체. 기본값 `md` 는 종전 타이포(제목 `typo-h4-bold` · 설명 `typo-body-xl-regular`) 그대로라 기존 사용처는 손대지 않아도 같게 보인다"
+                        },
+                        {
+                            "label": "사용",
+                            "value": "페이지 제목 아래에 화면 제목이 한 단계 더 있는 구성(마이페이지 등)에서 `size=\"lg\"` 를 쓴다 — 제목 `typo-h1-bold` · 설명 `typo-title-m-regular` 로, 단계형 화면의 StepHeader 와 같은 타이포 짝이다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[StickySidebar 접근성] 이름 헤딩 단계 지원",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/sticky-sidebar.tsx\nsrc/app/component-guide/(guide)/sticky-sidebar/page.tsx"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "StickySidebarProfile 의 이름을 문단이 아닌 실제 헤딩으로 렌더링하고, 화면의 제목 구조에 맞춰 2~4단계를 고를 수 있는 `headingLevel`(기본 2)을 추가한 파일로 교체"
+                        },
+                        {
+                            "label": "사용",
+                            "value": "쓰는 화면의 앞 제목보다 한 단계 낮춘다 — 페이지 h1 아래면 2, 앞 제목이 h2 인 자리면 3. 크기만 큰 문단으로 두면 WAVE 가 \"Possible heading\" 으로 잡고 스크린리더의 제목 이동에서도 빠진다[6.4.2]"
+                        },
+                        {
+                            "label": "가이드",
+                            "value": "[StickySidebar](/component-guide/sticky-sidebar) Props 표에 `headingLevel` 추가"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "대표자 역량 학력 선택지 상수",
+                    "details": [
+                        {"label": "대상", "value": "src/constants/representative-capability.ts"},
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "최종학력 · 학교구분 · 수학상태 · 학위취득 선택지와, 전공을 받지 않는 학력 값(고졸), 졸업년도 입력 규칙(숫자만 네 자리로 정리 · `pattern` · 자릿수가 모자랄 때 띄울 안내 문구)"
+                        },
+                        {
+                            "label": "연동",
+                            "value": "선택지의 `value` 는 화면에 보이지 않는 제출용 키라 영문 소문자로 두었다. 실제 코드값이 정해지면 이 키만 바꾸면 된다"
+                        },
+                        {
+                            "label": "함께 적용",
+                            "value": "덮어쓰기 카드의 Tech-Index 대표자 역량 구획과 같은 커밋 단위로 적용"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "Tech-Index 대표자 역량 구획 상수 참조 전환",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/tech-index-representative-capability.tsx"},
+                        {
+                            "label": "적용",
+                            "value": "파일 안에 두었던 학력 선택지와 졸업년도 규칙을 지우고 `@/constants/representative-capability` 를 가져다 쓰는 파일로 교체. 화면 구성과 입력 규칙은 종전과 같다"
+                        },
+                        {
+                            "label": "이유",
+                            "value": "마이페이지 [대표자(경영자) 역량 및 경력] 화면이 같은 목록을 쓴다. 학력 구분은 화면마다 달라질 값이 아니라 한 벌만 두고, 한쪽만 고쳐 두 화면의 선택지가 달라지는 일을 막는다"
+                        },
+                        {"label": "함께 적용", "value": "신규 추가 카드의 상수 파일과 같은 커밋 단위로 적용"}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "마이페이지 공통 셸 — LNB · 구획 카드 · 확인 모달",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/mypage-sidebar.tsx\nsrc/components/composite/mypage-form-card.tsx\nsrc/components/composite/edit-cancel-confirm-dialog.tsx\nsrc/components/composite/save-confirm-dialog.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "마이페이지의 모든 화면이 함께 쓰는 조각이다. `MypageSidebar` 는 기업·기관 메뉴를 한 벌로 들고 화면에서는 어느 쪽인지(`userType`)만 넘긴다 — 아이콘이 함수라 서버에서 클라이언트로 넘길 수 없어 목록을 이 파일에 둔다. `MypageFormCard` 는 공통 FormCard 에 마이페이지 카드 폭(792)에 맞춘 안쪽 여백만 정한 조각이다. `EditCancelConfirmDialog`(수정 취소) · `SaveConfirmDialog`(저장 전 최종 확인)는 되돌릴 수 없는 동작 앞에서 한 번 더 묻는다"
+                        },
+                        {
+                            "label": "반응형",
+                            "value": "사이드바는 폭에 따라 셋으로 그린다 — `xl` 이상은 본문 옆에 붙어 따라오는 카드, `md~xl` 은 콘텐츠 열 안에서 현재 메뉴 한 줄만 두고 눌러서 여는 목록, `md` 미만은 같은 줄을 화면 폭으로 넓혀 헤더 아래 고정. 기업·기술정보 입력(FormTabs)의 탭이 좁은 화면에서 바뀌는 방식과 같고, 임계값도 같은 상수를 가져다 쓴다"
+                        },
+                        {
+                            "label": "연동",
+                            "value": "아직 만들지 않은 화면의 메뉴 경로는 `'#'` 이다(경로가 타입으로 검사되어 없는 주소를 미리 적어 둘 수 없다). 해당 화면이 생기면 그 경로로 바꾼다 — 현재 `'#'` 인 곳은 기업 [K-BIGx 보고서 이력] · [유료 서비스 관리], 기관 [평가결과 조회] · [평가검증 신청 조회] · [K-BIGx 보고서 이력] · [하위 계정 현황]"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "기업 마이페이지 내 정보 입력 폼 · 회원정보 데이터",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/mypage-profile-form.tsx\nsrc/constants/mypage-profile.ts"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "[기업정보] · [기업 담당자 정보] 두 구획의 입력 폼이다. 기업형태(개인 · 법인 · 기타)에 따라 법인 전용 칸이 열리고 닫히며, 기업명 표기(앞 · 뒤)를 고르면 완성형 이름을 바로 보여 준다. 업종코드 · 주소는 기존 검색 화면으로 이어진다. 칸 이름과 목업 회원정보는 상수 파일로 나눠 두었다"
+                        },
+                        {
+                            "label": "연동",
+                            "value": "회원정보 조회는 한 번이다. 그 응답을 `MYPAGE_MEMBER_PROFILE` 자리에 넣으면 사이드바(이름 · 회원 구분)와 폼이 같은 값을 함께 받는다 — 화면이 값을 두 경로로 받지 않는다. 법인 전용 칸은 개인 · 기타로 되돌릴 때 값을 지운다(개인사업자인데 법인번호가 담기는 일을 막는다)"
+                        },
+                        {"label": "함께 적용", "value": "신규 추가 카드의 마이페이지 공통 셸과 같은 커밋 단위로 적용"}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "기업 마이페이지 내 정보 화면",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/mypage/profile/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/mypage/profile/cancel-confirm/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/mypage/profile/save-confirm/page.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "좌측 LNB 고정 + 우측 본문의 2단 배치다(시안 실측 344 + 64 + 792 = 1200). 페이지 컬럼 그리드가 아니라 사이드바 폭이 정해진 구성이며, 좁은 화면에서는 한 열로 떨어지고 사이드바가 위로 온다 — 메뉴가 본문보다 먼저 읽히는 순서다[7.3.1]. 수정 취소 · 저장 전 최종 확인 모달은 단독으로 열어 볼 수 있는 확인 경로를 함께 둔다"
+                        },
+                        {"label": "함께 적용", "value": "위 두 신규 추가 카드와 같은 커밋 단위로 적용"}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[InputGroup] 오른쪽 끝을 채우는 버튼 배치 추가",
+                    "details": [
+                        {"label": "대상", "value": "src/components/theme/input-group.variants.ts"},
+                        {
+                            "label": "적용",
+                            "value": "`InputGroupAddon` 의 `align` 에 `inline-end-fill` 을 더한 파일로 교체. 기존 `inline-start` · `inline-end` · `block-start` · `block-end` 는 그대로다"
+                        },
+                        {
+                            "label": "사용",
+                            "value": "비밀번호 표시/숨김처럼 입력 칸에 붙는 조작 버튼에 쓴다. 상자의 오른쪽 여백을 없애고 버튼이 상자 높이를 채우며 왼쪽 모서리만 각져, hover 면이 상자 위에 얹힌 조각이 아니라 상자의 한 구역으로 읽힌다. [지우기](ClearableInput)처럼 작고 동그란 버튼에는 쓰지 않는다 — 기존 `inline-end` 를 그대로 쓴다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "기관 마이페이지 내 정보 공통 셸 · 입력 폼",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/org-mypage-profile-screen.tsx\nsrc/components/composite/org-mypage-profile-form.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "회원 유형 세 화면이 함께 쓰는 조각이다. `OrgMypageProfileScreen` 은 기업 [내 정보]와 같은 2단 구성을 갖고, 유형마다 달라지는 회원 정보 · 브레드크럼 · 폼만 화면(page)에서 받는다. `OrgMypageProfileForm` 은 `variant` 로 [기본 정보] 구성을 바꾸고, 하위 계정일 때만 [이용권 정보] 구획을 더 그린다"
+                        },
+                        {
+                            "label": "잠긴 값",
+                            "value": "고칠 수 없는 값(ID · 기관구분 · 상위 마스터 기관 · 사업기간 등)은 입력 칸 모양을 유지한 채 잠근다. 배분받은 이용권은 고칠 수 없는 값이라 입력 칸이 아니라 목록으로 둔다"
+                        },
+                        {
+                            "label": "연동",
+                            "value": "계정 정보와 이용권은 화면(page)이 읽어 폼에 내려 준다 — 조회 코드를 폼 안에서 찾아다니지 않아도 된다"
+                        },
+                        {"label": "함께 적용", "value": "아래 신규 추가 카드의 화면들과 같은 커밋 단위로 적용"}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "기관 마이페이지 내 정보 화면 — 회원 유형 3종",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/org/(service)/(member-partner-bank)/**\nsrc/app/(user-type)/org/(service)/(member-partner-agency)/**\nsrc/app/(user-type)/org/(service)/(member-sub-account)/**\nsrc/app/(user-type)/org/(service)/(logged-in)/mypage/profile-edit/cancel-confirm/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/mypage/profile-edit/save-confirm/page.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "협약은행 · 협약기관 · 기관회원(하위 계정) 세 화면과, 수정 취소 · 저장 전 최종 확인 모달의 단독 확인 경로. 하위 계정은 상위 마스터 기관이 만들어 준 계정이라 묻는 칸이 다르고 [이용권 정보] 구획이 더 있다"
+                        },
+                        {
+                            "label": "구조",
+                            "value": "세 화면은 유형별 경로 그룹 안에 있다. 헤더에 보이는 기관명이 유형마다 다른데 레이아웃은 자식이 값을 올려 줄 수 없어, 유형별 레이아웃을 나란히 두었다. 경로 그룹은 주소에 드러나지 않으므로 URL 은 `/org/mypage/profile-edit/<유형>` 그대로다"
+                        },
+                        {
+                            "label": "연동",
+                            "value": "마이페이지 LNB 의 기관 [내 정보] 는 협약기관 화면으로 이어 두었다. 실제로는 로그인한 회원 유형의 화면으로 보내면 된다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "기업 대표자 역량 및 경력 입력 폼 · 이력 데이터",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/mypage-representative-history-form.tsx\nsrc/constants/mypage-representative-history.ts"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "[경영자 역량] · [대표자 경력사항] 두 구획의 입력 폼이다. 같은 칸이 기술평가 신청의 [대표자 역량 및 경력사항] 탭에도 있지만 화면이 다르다 — 탭이 없고, 두 구획이 각각 카드가 되며, 총 경력 연수를 세지 않는다. 그래서 낮은 조각(Field · FieldGrid · RepeatCard)만 함께 쓰고 배치는 이 화면이 갖는다. 학력 선택지는 신청 화면과 같은 공통 상수를 가져다 쓴다"
+                        },
+                        {
+                            "label": "필수 규칙",
+                            "value": "두 구획의 모든 칸이 필수다. 전공만 최종학력이 [고졸] 일 때 풀린다. 경력은 카드 단위로 본다 — 완전히 빈 카드는 검사하지 않고(적을 경력이 없는 대표자가 빈 카드 한 장 때문에 저장하지 못하면 안 된다), 한 칸이라도 채우면 그때부터 그 카드의 나머지 칸이 모두 필수가 된다. 라벨의 `*` 는 늘 보여 어떤 칸이 필수가 될지 미리 알려 준다"
+                        },
+                        {
+                            "label": "제출",
+                            "value": "빈 경력 카드는 제출 데이터에서 걷어내고, 남는 카드의 번호를 화면에 보이는 순서(경력1 · 경력2…)로 다시 매긴다. 카드 번호는 값이 섞이지 않도록 붙인 고유 번호라 가운데 카드를 지우면 1 · 3 이 남는데, 화면은 경력1 · 경력2 인데 데이터만 1 · 3 이면 읽는 쪽이 헷갈린다"
+                        },
+                        {
+                            "label": "연동",
+                            "value": "대표자 이력 조회 응답을 `REPRESENTATIVE_HISTORY` 자리에 넣으면 폼이 그 값으로 열리고, 경력은 응답 건수만큼 카드가 그려진다(등록된 경력이 없으면 빈 카드 한 장). [취소] 는 값뿐 아니라 지운 경력 카드까지 처음 상태로 되돌린다 — 카드 수는 값이 아니라 목록의 상태라 따로 되돌린다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "기업 대표자 역량 및 경력 화면",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/cancel-confirm/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/save-confirm/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/input-helper/page.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "기업 [내 정보]와 같은 2단 배치의 마이페이지 화면이다. 평가 신청 때 받아 둔 대표자 이력을 여기서 확인하고 고친다. 수정 취소 · 저장 전 최종 확인 모달과, [대표자 경력사항] 제목 옆 물음표가 여는 [입력 도움말] 모달의 단독 확인 경로를 함께 둔다 — 입력 도움말 내용은 신청 화면의 것과 같다"
+                        },
+                        {"label": "함께 적용", "value": "위 신규 추가 카드의 폼 · 데이터와 같은 커밋 단위로 적용"}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "대표자 이력 고객 정보 활용 동의 화면",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/mypage/representative-history/customer-consent/page.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "기술평가 신청 1단계의 고객정보활용동의와 같은 화면이다. 동의서 본문뿐 아니라 화면 구성(단계 머리 · 동의서 · 부분발송 이메일등록 · 하단 CTA)도 그대로 쓴다. 필수 · 선택 동의 팝업과 개별 상세의 단독 확인 경로는 앞서 전달한 것을 그대로 쓴다"
+                        },
+                        {
+                            "label": "원본과 다른 점",
+                            "value": "화면 제목 줄(PageTitleBar)을 두지 않는다 · 단계 진행 표시(StepProgress)를 두지 않는다(5단계 신청 흐름 안의 화면이 아니다) · 앞뒤로 잇는 화면이 신청 흐름이 아니라 대표자 이력이다. 마이페이지의 두 열(LNB + 본문)에도 넣지 않는다 — 메뉴를 오가는 자리가 아니라 앞뒤가 정해진 한 단계다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "기업 기술평가 신청 대표자 역량 입력 도움말 화면 3건",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/general/representative-capability-career/input-helper/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/startup/representative-capability-career/input-helper/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/investment-model/representative-capability-career/input-helper/page.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "Tech-Index 2단계 [대표자 역량 및 경력사항] 탭의 [입력 도움말] 버튼이 여는 모달을, 화면정의서의 하위 화면으로 따로 확인하는 경로다. 뒤 배경을 비우고 모달만 열어 둔다 — 다른 모달 단독 화면과 같은 방식이다"
+                        },
+                        {
+                            "label": "구조",
+                            "value": "내용이 셋 다 같아 일반용에 한 벌만 두고, 창업기업용 · 투자모형은 그 화면을 다시 내보낸다. 모달 자체는 기존 `CareerInputHelpDialog` 를 그대로 쓴다 — 새로 만든 모달이 아니다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "인라인 구분선 (InlineSeparator)",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/inline-separator.tsx\nsrc/app/component-guide/(guide)/separator/page.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "한 줄 안에서 값과 값을 가르는 세로선이다(시안 divider 1×12). 1:1 문의의 [분류 │ 제목], 평가결과 조회의 [일시 │ 상태 │ 등급]처럼 나란히 놓인 값 사이에 쓴다. 세로 Separator 를 쓸 때마다 되풀이되던 손질 두 가지를 이 조각이 갖는다 — 셸이 세로 방향에 `self-stretch` 를 걸어 두어 높이를 12 로 묶으면 줄 위쪽에 붙는 것, 그리고 제목처럼 글자만 담을 수 있는 자리에는 블록 요소를 넣을 수 없는 것[8.1.1]"
+                        },
+                        {
+                            "label": "사용",
+                            "value": "기본은 좌우 여백 12 다. 제목 안에 넣을 때는 `inline` 을 켠다 — `asChild` 로 같은 스타일을 `span` 에 씌워 글 흐름에 놓는다"
+                        },
+                        {
+                            "label": "가이드",
+                            "value": "[Separator](/component-guide/separator) 에 인라인 구분선 사용 예시 추가"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "1:1 문의 목록 · 상세 컴포넌트 · 공통 값",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/inquiry-list.tsx\nsrc/components/custom/inquiry-detail.tsx\nsrc/constants/inquiry.ts"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "기업 · 기관이 같은 컴포넌트를 쓴다 — 다른 것은 목록 데이터와 이동 경로뿐이라 화면(page)이 넘긴다. 목록은 공지사항 목록과 같은 틀이고(BaseCard · 구분선 · Badge · Pagination) 한 줄에 담기는 것만 다르다. 상세는 카드 한 장에 [문의 요약 · 문의 내용 · 첨부파일 · 답변]이 구분선으로 나뉘어 들어간다"
+                        },
+                        {
+                            "label": "상태 · 유형",
+                            "value": "답변 상태는 `waiting`(답변대기) · `answered`(답변완료) 두 가지이며 색만으로 전달하지 않고 글자를 함께 둔다[5.3.1]. 문의 유형은 알림마당 > 문의하기의 [유형 선택]과 같은 목록을 본다. 두 값은 서버 컴포넌트(상세)와 클라이언트 컴포넌트(목록)가 함께 읽어야 해 `src/constants/inquiry.ts` 에 둔다 — `'use client'` 파일의 상수를 서버에서 import 하면 실제 값이 아니라 빈 참조가 넘어온다"
+                        },
+                        {
+                            "label": "첨부파일",
+                            "value": "파일 이름 한 벌로 받고 그릴 때만 이름과 확장자로 나눈다. 자리가 모자라면 이름만 줄이고 확장자는 남긴다 — 이름째 말줄임하면 무슨 형식의 파일인지가 먼저 사라진다"
+                        },
+                        {"label": "답변", "value": "답변 본문을 넘기지 않으면 그 자리에 대기 안내가 대신 보인다"}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "기업 · 기관 1:1 문의 화면 (목록 · 상세)",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/mypage/inquiry-history/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/mypage/inquiry-history/inquiry-detail/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/mypage/inquiry-history/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/mypage/inquiry-history/inquiry-detail/page.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "마이페이지 2단 배치의 목록 화면과 상세 화면이다. [문의 등록] 은 각 회원 유형의 알림마당 > 문의하기로 이어진다"
+                        },
+                        {
+                            "label": "연동",
+                            "value": "화면이 쓰는 값은 모두 page.tsx 의 상수뿐이고 컴포넌트는 넘겨받은 것만 그린다 — 조회 코드를 컴포넌트 안에서 찾아다니지 않아도 된다. 항목마다 `href` 를 들고 있어 퍼블리싱에서는 모두 같은 상세 화면을 가리키지만, 연동할 때 이 값만 문의별 주소로 바꾸면 화면은 손댈 것이 없다. 목록에 빈 배열을 넘기면 빈 상태 안내가 나온다 — 조회 결과가 없을 때의 화면을 따로 만들 필요가 없다"
+                        },
+                        {"label": "함께 적용", "value": "위 두 신규 추가 카드와 같은 커밋 단위로 적용"}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "문의하기 폼의 유형 목록 공통 상수 참조 전환",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/inquiry-form.tsx"},
+                        {
+                            "label": "적용",
+                            "value": "파일 안에 두었던 문의 유형 목록을 지우고 `@/constants/inquiry` 를 가져다 쓰는 파일로 교체. 화면 구성과 입력 규칙은 종전과 같다"
+                        },
+                        {
+                            "label": "이유",
+                            "value": "같은 목록을 마이페이지 1:1 문의 목록 · 상세가 함께 본다. 한 벌만 두어 한쪽만 고쳐 두 화면의 분류가 달라지는 일을 막는다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "색 토큰 — 평가완료 상태색 추가 · 세그먼티드 활성색 교정",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "tokens.json\nsrc/app/component-guide/(guide)/semantic-color/page.tsx"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "`status-evaluated` 시맨틱 토큰을 더하고, `segmented-solid-active` 계열을 시안 색으로 맞춘 파일로 교체"
+                        },
+                        {
+                            "label": "내용",
+                            "value": "조회 목록의 [평가완료] 글자색은 팔레트 밖 값이라 `common` 앵커(`status-blue`)에 두고 시맨틱으로 이었다. 세그먼티드 컨트롤의 고른 항목 색은 purple 계열에서 navy 로 바꿨다(시안)"
+                        },
+                        {
+                            "label": "순서",
+                            "value": "`tokens.json` 과 시맨틱 색상 가이드는 함께 받아야 한다 — 가이드의 설명 표가 토큰 이름을 모두 갖고 있어야 해서, 한쪽만 반영하면 타입 오류가 난다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[SegmentedControl] solid 외형을 필터 사양으로 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/theme/segmented-control.variants.ts\nsrc/app/globals.css\nsrc/app/component-guide/(guide)/segmented-control/page.tsx"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "`solid` 를 트랙 없는 낱개 상자 외형으로 바꾼 파일로 교체. `subtle` 은 그대로다"
+                        },
+                        {
+                            "label": "내용",
+                            "value": "항목을 감싸던 트랙과 항목 사이 구분선을 걷어내고, 낱개 상자가 4px 간격으로 놓이며 각자 테두리와 흰 면을 갖는다. 고른 항목은 테두리까지 함께 채워 한 덩어리로 보인다. 상자 폭은 글자 길이와 무관하게 같고(시안), 높이는 함께 놓이는 날짜 입력과 같은 컨트롤 높이다"
+                        },
+                        {
+                            "label": "정리",
+                            "value": "구분선을 그리던 전역 CSS 규칙(`globals.css`)을 지웠다 — 낱개 상자에는 필요 없다. 도달할 수 없게 남아 있던 `outline` 상태 클래스도 함께 걷어냈다"
+                        },
+                        {
+                            "label": "가이드",
+                            "value": "[SegmentedControl](/component-guide/segmented-control) 의 Solid 설명을 새 외형에 맞게 고쳤다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[SearchFilterForm] 배치 · 표면 · 액션 슬롯 확장",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/search-filter-form.tsx"},
+                        {
+                            "label": "적용",
+                            "value": "`layout` · `surface` 와 기간 필드의 액션 슬롯을 더한 파일로 교체. 기존 사용처는 기본값(`layout=\"row\"` · `surface=\"muted\"`)이라 종전과 같다"
+                        },
+                        {
+                            "label": "내용",
+                            "value": "`layout=\"stack\"` 은 라벨을 컨트롤 위로 올린다 — 사이드바 옆처럼 폭이 좁은 자리에 쓴다. `surface=\"card\"` 는 필터 면을 카드와 같은 색으로 둔다. `DateRangeField` 는 `action` 으로 [조회] 버튼을 기간 줄 오른쪽에 받고, `defaultFrom` · `defaultTo` 로 처음 기간을 정한다"
+                        },
+                        {
+                            "label": "정리",
+                            "value": "보이는 카드는 공통 `BaseCard` 가 그린다 — `form` 은 제출을 받는 껍데기라 면 · 모서리 · 여백을 직접 갖지 않고, 다른 카드들과 한곳에서 관리된다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "이력 목록 (HistoryList)",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/history-list.tsx\nsrc/app/component-guide/(guide)/history-list/page.tsx\nsrc/constants/publishing-guide.ts"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가(가이드 내비게이션 항목 포함)"},
+                        {
+                            "label": "내용",
+                            "value": "날짜 · 상태로 시작해 제목 · 액션으로 이어지는 한 줄짜리 이력 항목의 목록이다. 마이페이지의 조회 화면들(평가결과 조회 · K-BIGx 보고서 이력 · 평가검증 신청 조회)이 같은 짜임을 쓴다. 목록 맨 위에는 굵은 선, 항목 사이에는 얇은 선이 온다(시안)"
+                        },
+                        {
+                            "label": "사용",
+                            "value": "카드에 담지 않고 배경 위에 놓인다 — 카드가 필요한 목록(공지사항 · 1:1 문의)은 사용처에서 `BaseCard` 로 감싼다. 위쪽 선이 필요 없는 자리는 `border-t-0` 으로 끈다. 상태(필터 · 페이지)는 이 목록을 쓰는 화면이 갖는다"
+                        },
+                        {
+                            "label": "가이드",
+                            "value": "[HistoryList](/component-guide/history-list) — 기본 · 액션 버튼 · 모형 배지 · 아직 볼 것이 없는 항목 · 제목만 · 카드 안에 담기 · Props"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "평가결과 조회 목록 컴포넌트 · 공통 값",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/evaluation-result-list.tsx\nsrc/constants/evaluation-result.ts"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "조회 조건(모형 · 진행상태 · 조회기간) · 건수와 정렬 · 결과 목록 · 페이지 이동을 한 벌로 그린다. 진행 상태는 `evaluated`(평가완료) · `analyzed`(분석완료) · `inProgress`(진행중) 세 가지이며, 배지가 아니라 글자 색으로만 구분하되 색만으로 전달하지 않고 글자를 함께 둔다[5.3.1]"
+                        },
+                        {
+                            "label": "상수 위치",
+                            "value": "상태 표는 서버 컴포넌트(화면)와 클라이언트 컴포넌트(목록)가 함께 읽어야 해 `src/constants/evaluation-result.ts` 에 둔다 — `'use client'` 파일의 상수를 서버에서 import 하면 실제 값이 아니라 빈 참조가 넘어온다"
+                        },
+                        {"label": "함께 적용", "value": "아래 신규 추가 카드의 화면과 같은 커밋 단위로 적용"}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "기업 평가결과 조회 화면",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/mypage/evaluation-results/page.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "마이페이지 2단 배치의 조회 화면이다. 각 건에는 [은행전송] · [기관전송] · [전송내역] · [보증신청] 동작이 붙는다"
+                        },
+                        {
+                            "label": "연동",
+                            "value": "화면이 쓰는 값은 page.tsx 의 상수뿐이고 목록 컴포넌트는 넘겨받은 것만 그린다. 결과가 아직 나오지 않아 눌러도 볼 것이 없는 건은 `disabled` 로 넘긴다 — 버튼과 링크가 함께 잠긴다. 각 동작이 여는 화면도 건마다 다르므로 항목이 들고 있고, 아직 만들지 않은 화면은 `'#'` 이다. 빈 배열을 넘기면 빈 상태 안내가 나온다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "퍼블리싱 인덱스 — 마이페이지 화면 · 모달 등록과 상태 갱신",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/publishing-guide/publishing-index.json\nsrc/content/publishing-guide/screen-registry.json\nsrc/content/publishing-guide/screen-registry.generated.json"
+                        },
+                        {"label": "적용", "value": "이번에 전달하는 화면을 등록하고 진행 상태를 갱신한 파일로 교체"},
+                        {
+                            "label": "등록",
+                            "value": "화면 13건을 새로 넣었다 — 대표자 역량 입력 도움말 3건(Tech-Index 일반 · 창업 · 투자모형), 기업 [내 정보]의 수정 취소 · 저장 확인 모달, 대표자 이력의 입력 도움말 · 수정 취소 · 저장 확인 모달, 기관 [내 정보] 회원 유형 3종과 그 수정 취소 · 저장 확인 모달"
+                        },
+                        {
+                            "label": "구조 변경",
+                            "value": "기관 [내 정보]는 한 항목이던 `org-mypage-profile-edit` 를 회원 유형 3건(`-partner-bank` · `-partner-agency` · `-sub-account`)으로 나눴다. 유형마다 묻는 칸이 달라 한 화면으로 묶어 둘 수 없다 — 기존 키를 참조하는 곳이 있다면 함께 바꿔야 한다"
+                        },
+                        {
+                            "label": "상태 갱신",
+                            "value": "마이페이지 화면 일체와 1:1 문의 목록 · 상세, 이용약관 · 개인정보 처리방침(기업 · 기관), 기관 로그인 안내를 완료로 올렸다"
+                        },
+                        {
+                            "label": "순서",
+                            "value": "세 파일은 서로 키를 맞춰 검사하므로 함께 받아야 한다. 한쪽만 반영하면 화면이 뜨지 않는다"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "기관 기업정보 구획 — 되읽는 안내 문구 삭제",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/org-company-info-form.tsx"},
+                        {
+                            "label": "적용",
+                            "value": "[기업정보 관리] 의 노출 조건 안내를 지운 파일로 교체. 버튼과 입력 칸, 나머지 화면 구성은 종전과 같다"
+                        },
+                        {
+                            "label": "이유",
+                            "value": "시안 메모가 \"기업·기술정보 입력 > 기업정보 화면에서 노출\" 인데, 이 구획이 놓이는 자리가 세 모형 모두 바로 그 화면이다 — 보고 있는 화면을 조건으로 되읽는 문장이라 읽는 사람에게 새로 알려 주는 것이 없다"
+                        },
+                        {
+                            "label": "남는 안내",
+                            "value": "[기업 자가진단 결과보기] 의 노출 조건 하나뿐이라 목록이 아니라 한 줄로 그린다. 그 버튼이 보이지 않는 화면에서는 안내도 나오지 않는다. 노출 조건이 실제 동작으로 붙으면 이 안내도 걷어낸다"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v2.0.8",
             "releasedAt": "2026-08-20",
             "changes": [
