@@ -174,3 +174,14 @@
 - 적용: 신규 파일 추가
 - 내용: 기술평가 신청 1단계의 고객정보활용동의와 같은 화면이다. 동의서 본문뿐 아니라 화면 구성(단계 머리 · 동의서 · 부분발송 이메일등록 · 하단 CTA)도 그대로 쓴다. 필수 · 선택 동의 팝업과 개별 상세의 단독 확인 경로는 앞서 전달한 것을 그대로 쓴다
 - 원본과 다른 점: 화면 제목 줄(PageTitleBar)을 두지 않는다 · 단계 진행 표시(StepProgress)를 두지 않는다(5단계 신청 흐름 안의 화면이 아니다) · 앞뒤로 잇는 화면이 신청 흐름이 아니라 대표자 이력이다. 마이페이지의 두 열(LNB + 본문)에도 넣지 않는다 — 메뉴를 오가는 자리가 아니라 앞뒤가 정해진 한 단계다
+
+## [신규 추가]
+
+### 기업 기술평가 신청 대표자 역량 입력 도움말 화면 3건
+
+- 대상: src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/general/representative-capability-career/input-helper/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/startup/representative-capability-career/input-helper/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/investment-model/representative-capability-career/input-helper/page.tsx
+- 적용: 신규 파일 추가
+- 내용: Tech-Index 2단계 [대표자 역량 및 경력사항] 탭의 [입력 도움말] 버튼이 여는 모달을, 화면정의서의 하위 화면으로 따로 확인하는 경로다. 뒤 배경을 비우고 모달만 열어 둔다 — 다른 모달 단독 화면과 같은 방식이다
+- 구조: 내용이 셋 다 같아 일반용에 한 벌만 두고, 창업기업용 · 투자모형은 그 화면을 다시 내보낸다. 모달 자체는 기존 `CareerInputHelpDialog` 를 그대로 쓴다 — 새로 만든 모달이 아니다
