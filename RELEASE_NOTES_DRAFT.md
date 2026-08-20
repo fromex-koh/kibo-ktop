@@ -55,7 +55,6 @@
 - 대상: src/components/composite/section-header.tsx
 - 적용: SectionHeaderTitle·SectionHeaderDescription 에 `size` 를 추가한 파일로 교체. 기본값 `md` 는 종전 타이포(제목 `typo-h4-bold` · 설명 `typo-body-xl-regular`) 그대로라 기존 사용처는 손대지 않아도 같게 보인다
 - 사용: 페이지 제목 아래에 화면 제목이 한 단계 더 있는 구성(마이페이지 등)에서 `size="lg"` 를 쓴다 — 제목 `typo-h1-bold` · 설명 `typo-title-m-regular` 로, 단계형 화면의 StepHeader 와 같은 타이포 짝이다
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e0594e92ad06346d8c4bcdb8f5c976b4787be2f6)
 
 ### [StickySidebar 접근성] 이름 헤딩 단계 지원
 
@@ -64,4 +63,22 @@
 - 적용: StickySidebarProfile 의 이름을 문단이 아닌 실제 헤딩으로 렌더링하고, 화면의 제목 구조에 맞춰 2~4단계를 고를 수 있는 `headingLevel`(기본 2)을 추가한 파일로 교체
 - 사용: 쓰는 화면의 앞 제목보다 한 단계 낮춘다 — 페이지 h1 아래면 2, 앞 제목이 h2 인 자리면 3. 크기만 큰 문단으로 두면 WAVE 가 "Possible heading" 으로 잡고 스크린리더의 제목 이동에서도 빠진다[6.4.2]
 - 가이드: [StickySidebar](/component-guide/sticky-sidebar) Props 표에 `headingLevel` 추가
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e0594e92ad06346d8c4bcdb8f5c976b4787be2f6)
+
+## [신규 추가]
+
+### 대표자 역량 학력 선택지 상수
+
+- 대상: src/constants/representative-capability.ts
+- 적용: 신규 파일 추가
+- 내용: 최종학력 · 학교구분 · 수학상태 · 학위취득 선택지와, 전공을 받지 않는 학력 값(고졸), 졸업년도 입력 규칙(숫자만 네 자리로 정리 · `pattern` · 자릿수가 모자랄 때 띄울 안내 문구)
+- 연동: 선택지의 `value` 는 화면에 보이지 않는 제출용 키라 영문 소문자로 두었다. 실제 코드값이 정해지면 이 키만 바꾸면 된다
+- 함께 적용: 덮어쓰기 카드의 Tech-Index 대표자 역량 구획과 같은 커밋 단위로 적용
+
+## [덮어쓰기]
+
+### Tech-Index 대표자 역량 구획 상수 참조 전환
+
+- 대상: src/components/composite/tech-index-representative-capability.tsx
+- 적용: 파일 안에 두었던 학력 선택지와 졸업년도 규칙을 지우고 `@/constants/representative-capability` 를 가져다 쓰는 파일로 교체. 화면 구성과 입력 규칙은 종전과 같다
+- 이유: 마이페이지 [대표자(경영자) 역량 및 경력] 화면이 같은 목록을 쓴다. 학력 구분은 화면마다 달라질 값이 아니라 한 벌만 두고, 한쪽만 고쳐 두 화면의 선택지가 달라지는 일을 막는다
+- 함께 적용: 신규 추가 카드의 상수 파일과 같은 커밋 단위로 적용
