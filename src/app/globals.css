@@ -254,32 +254,6 @@
 
 /* ═════ § 5 · 유틸리티로 못 쓰는 규칙 — 여러 선택자를 묶어야 하는 것 ═══════════════════════════ */
 
-/* @/components/composite/segmented-control.tsx (solid) — 항목 사이 구분선.
-   가상요소나 :has() 는 변형이 있어 문제가 아니다 — 선택 상태에 따라 "그 항목과 다음 형제"가 바뀌어
-   어느 요소에 클래스를 붙일지 정할 수 없고, 조건 4개를 콤마로 묶어야 해서 유틸리티로 표현할 수 없다. */
-[data-slot='segmented-control'][data-variant='solid'] > [data-slot='segmented-control-item']:not(:first-child)::before {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 1px;
-    height: --spacing(3); /* 12px */
-    background: var(--color-subtle-2);
-    content: '';
-    transform: translateY(-50%);
-}
-[data-slot='segmented-control'][data-variant='solid']
-    > [data-slot='segmented-control-item'][aria-current='page']::before,
-[data-slot='segmented-control'][data-variant='solid']
-    > [data-slot='segmented-control-item']:has([data-state='checked'])::before,
-[data-slot='segmented-control'][data-variant='solid']
-    > [data-slot='segmented-control-item'][aria-current='page']
-    + [data-slot='segmented-control-item']::before,
-[data-slot='segmented-control'][data-variant='solid']
-    > [data-slot='segmented-control-item']:has([data-state='checked'])
-    + [data-slot='segmented-control-item']::before {
-    display: none; /* 선택된 navy 면 양옆은 모서리에 선이 겹쳐 숨긴다 */
-}
-
 /* 사용처: @/components/theme/sonner.variants.ts — sonner 가 600px 이하에서만 따로 주는 폭을 되돌린다.
    유틸리티로 못 잡는 이유 — sonner 는 자기 CSS 를 레이어 없이 넣는데, 레이어 밖 규칙은 명시도와 무관하게
    @layer 안의 유틸리티를 항상 이긴다. 그래서 같은 '레이어 없음' 자리에서 맞선다.

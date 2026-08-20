@@ -317,6 +317,13 @@
             "isCurrent": false
         },
         {
+            "key": "corp-technology-evaluation-tech-index-general-representative-capability-career-input-helper",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
+        },
+        {
             "key": "corp-technology-evaluation-tech-index-general-company-info-industry-code-search",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -415,6 +422,13 @@
             "isCurrent": false
         },
         {
+            "key": "corp-technology-evaluation-tech-index-startup-representative-capability-career-input-helper",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
+        },
+        {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-industry-code-search",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -511,6 +525,13 @@
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
             "isCurrent": false
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-representative-capability-career-input-helper",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-info-industry-code-search",
@@ -787,10 +808,10 @@
         },
         {
             "key": "corp-mypage-profile",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-profile-industry-code-search",
@@ -807,6 +828,20 @@
             "isCurrent": false
         },
         {
+            "key": "corp-mypage-profile-cancel-confirm",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-mypage-profile-save-confirm",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
+        },
+        {
             "key": "corp-mypage-representative-history-customer-consent-consent-popup",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -815,17 +850,38 @@
         },
         {
             "key": "corp-mypage-representative-history",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-mypage-representative-history-input-helper",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-mypage-representative-history-cancel-confirm",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-mypage-representative-history-save-confirm",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-representative-history-customer-consent",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-electronic-signature",
@@ -843,10 +899,10 @@
         },
         {
             "key": "corp-mypage-evaluation-results",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis",
@@ -948,17 +1004,17 @@
         },
         {
             "key": "corp-mypage-inquiry-history",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-inquiry-history-inquiry-detail",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-announcements",
@@ -1717,11 +1773,25 @@
             "isCurrent": false
         },
         {
-            "key": "org-mypage-profile-edit",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "key": "org-mypage-profile-edit-partner-bank",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
+        },
+        {
+            "key": "org-mypage-profile-edit-partner-agency",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
+        },
+        {
+            "key": "org-mypage-profile-edit-sub-account",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-profile-edit-industry-code-search",
@@ -1736,6 +1806,20 @@
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
             "isCurrent": false
+        },
+        {
+            "key": "org-mypage-profile-edit-cancel-confirm",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
+        },
+        {
+            "key": "org-mypage-profile-edit-save-confirm",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-evaluation-history",
@@ -1802,17 +1886,17 @@
         },
         {
             "key": "org-mypage-inquiry-history",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-inquiry-history-inquiry-detail",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.0",
+            "isCurrent": true
         },
         {
             "key": "org-notice-announcements",

@@ -156,6 +156,7 @@
   --raw-common-pure-black: #000000;
   --raw-common-transparent: transparent;
   --raw-common-mint: #17ca94;
+  --raw-common-status-blue: #007aff;
 
   /* scale (라이트 = raw identity) */
   --ds-blue-10: var(--raw-blue-10);
@@ -320,6 +321,7 @@
   --ds-warning: var(--raw-warning-700);
   --ds-error: var(--raw-error-700);
   --ds-info: var(--raw-info-700);
+  --ds-status-evaluated: var(--raw-common-status-blue);
   --ds-primary-subtle: var(--raw-blue-50);
   --ds-action-check-halo: var(--raw-blue-200);
   --ds-action-fill-hover: var(--raw-common-pure-black);
@@ -364,7 +366,7 @@
   --ds-segmented-track: var(--raw-gray-100);
   --ds-segmented-foreground: var(--raw-gray-700);
   --ds-segmented-active: var(--raw-common-white);
-  --ds-segmented-solid-active: var(--raw-purple-900);
+  --ds-segmented-solid-active: var(--raw-navy-500);
   --ds-segmented-solid-active-foreground: var(--raw-common-white);
   --ds-pagination-active: var(--raw-navy-500);
   --ds-pagination-active-foreground: var(--raw-common-white);
@@ -593,6 +595,7 @@
   --ds-warning: var(--raw-warning-700);
   --ds-error: var(--raw-error-700);
   --ds-info: var(--raw-info-700);
+  --ds-status-evaluated: var(--raw-common-status-blue);
   --ds-primary-subtle: var(--raw-blue-50);
   --ds-action-check-halo: var(--raw-blue-200);
   --ds-action-fill-hover: var(--raw-common-pure-black);
@@ -637,7 +640,7 @@
   --ds-segmented-track: var(--raw-gray-100);
   --ds-segmented-foreground: var(--raw-gray-700);
   --ds-segmented-active: var(--raw-common-white);
-  --ds-segmented-solid-active: var(--raw-purple-900);
+  --ds-segmented-solid-active: var(--raw-navy-500);
   --ds-segmented-solid-active-foreground: var(--raw-common-white);
   --ds-pagination-active: var(--raw-navy-500);
   --ds-pagination-active-foreground: var(--raw-common-white);
@@ -866,6 +869,7 @@
   --ds-warning: var(--raw-warning-100);
   --ds-error: var(--raw-error-100);
   --ds-info: var(--raw-info-100);
+  --ds-status-evaluated: var(--raw-blue-300);
   --ds-primary-subtle: var(--raw-blue-800);
   --ds-action-check-halo: var(--raw-blue-800);
   --ds-action-fill-hover: var(--raw-common-pure-black);
@@ -910,8 +914,8 @@
   --ds-segmented-track: var(--raw-gray-700);
   --ds-segmented-foreground: var(--raw-gray-100);
   --ds-segmented-active: var(--raw-gray-800);
-  --ds-segmented-solid-active: var(--raw-purple-300);
-  --ds-segmented-solid-active-foreground: var(--raw-purple-900);
+  --ds-segmented-solid-active: var(--raw-navy-300);
+  --ds-segmented-solid-active-foreground: var(--raw-navy-800);
   --ds-pagination-active: var(--raw-navy-500);
   --ds-pagination-active-foreground: var(--raw-common-white);
   --ds-tab-pill-active: var(--raw-navy-500);
@@ -1139,6 +1143,7 @@
   --ds-warning: var(--raw-warning-100);
   --ds-error: var(--raw-error-100);
   --ds-info: var(--raw-info-100);
+  --ds-status-evaluated: var(--raw-common-status-blue);
   --ds-primary-subtle: var(--raw-blue-800);
   --ds-action-check-halo: var(--raw-blue-800);
   --ds-action-fill-hover: var(--raw-common-pure-black);
@@ -1183,7 +1188,7 @@
   --ds-segmented-track: var(--raw-gray-100);
   --ds-segmented-foreground: var(--raw-gray-700);
   --ds-segmented-active: var(--raw-common-white);
-  --ds-segmented-solid-active: var(--raw-purple-900);
+  --ds-segmented-solid-active: var(--raw-navy-500);
   --ds-segmented-solid-active-foreground: var(--raw-common-white);
   --ds-pagination-active: var(--raw-navy-500);
   --ds-pagination-active-foreground: var(--raw-common-white);
@@ -1311,6 +1316,7 @@
   --color-warning: var(--ds-warning);
   --color-error: var(--ds-error);
   --color-info: var(--ds-info);
+  --color-status-evaluated: var(--ds-status-evaluated);
   --color-primary-subtle: var(--ds-primary-subtle);
   --color-action-check-halo: var(--ds-action-check-halo);
   --color-action-fill-hover: var(--ds-action-fill-hover);

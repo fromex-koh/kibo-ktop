@@ -402,6 +402,13 @@
             "name": "(2) 기업·기술정보 입력"
         },
         {
+            "key": "corp-technology-evaluation-tech-index-general-representative-capability-career-input-helper",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/tech-index/general/representative-capability-career/input-helper",
+            "name": "입력 도움말"
+        },
+        {
             "key": "corp-technology-evaluation-tech-index-general-company-info-industry-code-search",
             "screenId": null,
             "userType": "기업",
@@ -500,6 +507,13 @@
             "name": "(2) 기업·기술정보 입력"
         },
         {
+            "key": "corp-technology-evaluation-tech-index-startup-representative-capability-career-input-helper",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/tech-index/startup/representative-capability-career/input-helper",
+            "name": "입력 도움말"
+        },
+        {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-industry-code-search",
             "screenId": null,
             "userType": "기업",
@@ -596,6 +610,13 @@
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/company-technology-info",
             "name": "(2) 기업·기술정보 입력"
+        },
+        {
+            "key": "corp-technology-evaluation-investment-model-representative-capability-career-input-helper",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/technology-evaluation/investment-model/representative-capability-career/input-helper",
+            "name": "입력 도움말"
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-info-industry-code-search",
@@ -892,6 +913,20 @@
             "name": "주소 찾기"
         },
         {
+            "key": "corp-mypage-profile-cancel-confirm",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/profile/cancel-confirm",
+            "name": "수정 취소"
+        },
+        {
+            "key": "corp-mypage-profile-save-confirm",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/profile/save-confirm",
+            "name": "저장 전 최종 확인"
+        },
+        {
             "key": "corp-mypage-representative-history-customer-consent-consent-popup",
             "screenId": null,
             "userType": "기업",
@@ -904,6 +939,27 @@
             "userType": "기업",
             "path": "/corp/mypage/representative-history",
             "name": "대표자 이력"
+        },
+        {
+            "key": "corp-mypage-representative-history-input-helper",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/input-helper",
+            "name": "입력 도움말"
+        },
+        {
+            "key": "corp-mypage-representative-history-cancel-confirm",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/cancel-confirm",
+            "name": "수정 취소"
+        },
+        {
+            "key": "corp-mypage-representative-history-save-confirm",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/representative-history/save-confirm",
+            "name": "저장 전 최종 확인"
         },
         {
             "key": "corp-mypage-representative-history-customer-consent",
@@ -1802,11 +1858,25 @@
             "name": "탄소중립"
         },
         {
-            "key": "org-mypage-profile-edit",
+            "key": "org-mypage-profile-edit-partner-bank",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/mypage/profile-edit",
-            "name": "내 정보 수정"
+            "path": "/org/mypage/profile-edit/partner-bank",
+            "name": "협약은행"
+        },
+        {
+            "key": "org-mypage-profile-edit-partner-agency",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/profile-edit/partner-agency",
+            "name": "협약기관"
+        },
+        {
+            "key": "org-mypage-profile-edit-sub-account",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/profile-edit/sub-account",
+            "name": "기관회원 (하위계정)"
         },
         {
             "key": "org-mypage-profile-edit-industry-code-search",
@@ -1821,6 +1891,20 @@
             "userType": "기관",
             "path": "/org/mypage/profile-edit/address-search",
             "name": "주소 찾기"
+        },
+        {
+            "key": "org-mypage-profile-edit-cancel-confirm",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/profile-edit/cancel-confirm",
+            "name": "수정 취소"
+        },
+        {
+            "key": "org-mypage-profile-edit-save-confirm",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/profile-edit/save-confirm",
+            "name": "저장 전 최종 확인"
         },
         {
             "key": "org-mypage-evaluation-history",

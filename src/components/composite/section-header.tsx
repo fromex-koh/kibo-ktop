@@ -20,8 +20,31 @@ const SectionHeader = ({className, ...props}: ComponentPropsWithoutRef<'div'>) =
     />
 )
 
-const SectionHeaderTitle = ({className, children, ...props}: ComponentPropsWithoutRef<'h2'>) => (
-    <h2 data-slot="section-header-title" className={cn('typo-h4-bold text-foreground', className)} {...props}>
+// 크기 — 기본은 섹션 제목(24). lg 는 화면 제목(32)으로, 마이페이지처럼 페이지 제목 아래에 화면 제목이
+// 한 단계 더 있는 구성에서 쓴다(단계형 화면의 StepHeader 와 같은 타이포 짝이다).
+type SectionHeaderSize = 'md' | 'lg'
+
+const SECTION_HEADER_TITLE_TYPO: Record<SectionHeaderSize, string> = {
+    md: 'typo-h4-bold',
+    lg: 'typo-h1-bold',
+}
+
+const SECTION_HEADER_DESCRIPTION_TYPO: Record<SectionHeaderSize, string> = {
+    md: 'typo-body-xl-regular',
+    lg: 'typo-title-m-regular',
+}
+
+const SectionHeaderTitle = ({
+    size = 'md',
+    className,
+    children,
+    ...props
+}: ComponentPropsWithoutRef<'h2'> & {size?: SectionHeaderSize}) => (
+    <h2
+        data-slot="section-header-title"
+        className={cn(SECTION_HEADER_TITLE_TYPO[size], 'text-foreground', className)}
+        {...props}
+    >
         {children}
     </h2>
 )
@@ -29,16 +52,17 @@ const SectionHeaderTitle = ({className, children, ...props}: ComponentPropsWitho
 // asChild 로 <ul> 등 다른 요소에 설명 스타일을 씌운다 — 여러 줄 안내가 필요하면
 // ul + ListMarker 리스트로 조합한다(Figma "리스트형 설명"). 기본은 <p>.
 const SectionHeaderDescription = ({
+    size = 'md',
     className,
     asChild = false,
     ...props
-}: ComponentPropsWithoutRef<'p'> & {asChild?: boolean}) => {
+}: ComponentPropsWithoutRef<'p'> & {asChild?: boolean; size?: SectionHeaderSize}) => {
     const Comp = asChild ? Slot.Root : 'p'
 
     return (
         <Comp
             data-slot="section-header-description"
-            className={cn('typo-body-xl-regular text-foreground-subtle', className)}
+            className={cn(SECTION_HEADER_DESCRIPTION_TYPO[size], 'text-foreground-subtle', className)}
             {...props}
         />
     )
@@ -54,3 +78,4 @@ const SectionHeaderAction = ({className, ...props}: ComponentPropsWithoutRef<'di
 )
 
 export {SectionHeader, SectionHeaderTitle, SectionHeaderDescription, SectionHeaderAction}
+export type {SectionHeaderSize}

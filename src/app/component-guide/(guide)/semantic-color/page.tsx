@@ -125,6 +125,7 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     warning: 'bg-warning',
     error: 'bg-error',
     info: 'bg-info',
+    'status-evaluated': 'bg-status-evaluated',
     'primary-subtle': 'bg-primary-subtle',
     'action-check-halo': 'bg-action-check-halo',
     'action-fill-hover': 'bg-action-fill-hover',
@@ -372,6 +373,8 @@ const CUSTOM_GROUPS: Group[] = [
         name: '상태 (success / warning / error / info)',
         match: (n) => ['success', 'warning', 'error', 'info'].some((s) => n === s || n === `${s}-foreground`),
     },
+    // 조회 목록의 진행 상태 글자색 — 팔레트 밖 값이라 common 앵커(status-blue)를 가리킨다.
+    {name: 'status-evaluated (평가완료)', match: (n) => n === 'status-evaluated'},
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
     {name: 'main-accent / main-accent-bright', match: (n) => n.startsWith('main-accent')},
     {name: 'main-intro (메인 2섹션)', match: (n) => n.startsWith('main-intro-')},
