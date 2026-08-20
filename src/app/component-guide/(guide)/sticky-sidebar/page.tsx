@@ -27,6 +27,7 @@ import {Badge} from '@/components/ui/badge'
 
 <StickySidebar>
   <StickySidebarProfile
+    headingLevel={3}
     name="(주)케이탑테크놀로지"
     badge={
       <Badge variant="outline" color="secondary-purple" shape="round" size="sm">
@@ -74,6 +75,9 @@ const DemoSidebar = ({name, navLabel, className}: {name: string; navLabel: strin
     <StickySidebar className={cn('w-86 max-w-full', className)}>
         <StickySidebarProfile
             name={name}
+            // 이 페이지의 구획 제목이 h2 라 데모의 이름은 h3 로 낮춘다 — 가이드의 제목 목록에
+            // 데모 이름이 구획과 같은 단계로 끼어들지 않게 한다.
+            headingLevel={3}
             badge={
                 <Badge variant="outline" color="secondary-purple" shape="round" size="sm">
                     기업회원
@@ -124,6 +128,13 @@ const PROPS_ITEMS = [
         "ComponentProps<'aside'>",
     ],
     ['StickySidebarProfile', 'name', '기업 또는 사용자 이름입니다. 긴 이름은 여러 줄로 표시됩니다.', '-', 'ReactNode'],
+    [
+        'StickySidebarProfile',
+        'headingLevel',
+        '이름을 그릴 헤딩 단계입니다. 쓰는 화면의 앞 제목보다 한 단계 낮춰 건너뛰지 않게 합니다.',
+        '2',
+        '2 | 3 | 4',
+    ],
     ['StickySidebarProfile', 'badge', '이름 위에 표시하는 Badge 슬롯입니다.', 'undefined', 'ReactNode'],
     [
         'StickySidebarNav',

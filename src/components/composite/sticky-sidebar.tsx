@@ -34,20 +34,31 @@ const StickySidebar = ({className, children, ...props}: ComponentPropsWithoutRef
     </aside>
 )
 
+// 이름의 헤딩 단계. 사이드바는 화면 안의 한 구획이고 그 이름이 곧 이 구획의 제목이라 실제 헤딩으로
+// 읽혀야 한다[6.4.2] — 크기만 큰 <p> 로 두면 WAVE 가 "Possible heading" 으로 잡고, 스크린리더의
+// 제목 이동에서도 빠진다. 기본 2(페이지 h1 → 사이드바 h2). 앞 제목이 h2 인 자리에서는 3 으로 낮춘다.
+type StickySidebarHeadingLevel = 2 | 3 | 4
+
 type StickySidebarProfileProps = {
     // 기업/사용자 이름.
     name: ReactNode
+    // 이름의 헤딩 단계(2~4). 기본 2 — 쓰는 화면의 앞 제목보다 한 단계 낮춰 건너뛰지 않게 한다.
+    headingLevel?: StickySidebarHeadingLevel
     // 이름 위 회원 배지(예: <Badge variant="outline" color="secondary-purple" shape="round" size="sm">기업회원</Badge>).
     badge?: ReactNode
 } & ComponentPropsWithoutRef<'div'>
 
 // 시안은 배지를 기업명 위에 두고 왼쪽 맞춤이다. DOM 순서도 시각 순서(배지 → 이름)를 따른다([7.3.1]).
-const StickySidebarProfile = ({name, badge, className, ...props}: StickySidebarProfileProps) => (
-    <div data-slot="sticky-sidebar-profile" className={cn('flex flex-col items-start gap-1', className)} {...props}>
-        {badge}
-        <p className="typo-title-l-bold text-foreground">{name}</p>
-    </div>
-)
+const StickySidebarProfile = ({name, headingLevel = 2, badge, className, ...props}: StickySidebarProfileProps) => {
+    const Heading = `h${headingLevel}` as const
+
+    return (
+        <div data-slot="sticky-sidebar-profile" className={cn('flex flex-col items-start gap-1', className)} {...props}>
+            {badge}
+            <Heading className="typo-title-l-bold text-foreground">{name}</Heading>
+        </div>
+    )
+}
 
 const StickySidebarNav = ({className, children, ...props}: ComponentPropsWithoutRef<'nav'>) => (
     <nav data-slot="sticky-sidebar-nav" className={cn('flex flex-col', className)} {...props}>
@@ -141,4 +152,4 @@ export {
     StickySidebarDivider,
     StickySidebarContact,
 }
-export type {StickySidebarProfileProps, StickySidebarNavItemProps, StickySidebarContactProps}
+export type {StickySidebarHeadingLevel, StickySidebarProfileProps, StickySidebarNavItemProps, StickySidebarContactProps}
