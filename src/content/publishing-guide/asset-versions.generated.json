@@ -1,10 +1,10 @@
 {
-    "version": "v2.0.7",
+    "version": "v2.0.8",
     "assets": [
         {
             "name": "src/app",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/ui",
@@ -18,13 +18,13 @@
         },
         {
             "name": "src/components/composite",
-            "version": "v2.0.7",
+            "version": "v2.0.8",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/theme-provider.tsx",
@@ -34,12 +34,12 @@
         {
             "name": "src/constants",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/content",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/lib",

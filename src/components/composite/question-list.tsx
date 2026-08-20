@@ -27,6 +27,8 @@ type QuestionItemProps = Omit<ComponentPropsWithoutRef<'li'>, 'children'> & {
     children: ReactNode
     badge?: ReactNode
     control?: ReactNode
+    // 체크박스·본문 아래에서 문항 전체 너비를 쓰는 추가 영역(예: 조건부 선택 칩).
+    below?: ReactNode
     description?: ReactNode
     helper?: ReactNode
     align?: QuestionItemAlign
@@ -50,6 +52,7 @@ const QuestionItem = ({
     children,
     badge,
     control,
+    below,
     description,
     helper,
     align = 'start',
@@ -60,7 +63,7 @@ const QuestionItem = ({
     const isControlLine = align === 'control'
 
     return (
-        <li data-slot="question-item" className={cn(questionItemClassName, className)} {...props}>
+        <li data-slot="question-item" className={cn(questionItemClassName, below && 'flex-wrap', className)} {...props}>
             {control ? (
                 <div
                     data-slot="question-control"
@@ -92,6 +95,11 @@ const QuestionItem = ({
                     </div>
                 ) : null}
             </div>
+            {below ? (
+                <div data-slot="question-below" className="w-full basis-full">
+                    {below}
+                </div>
+            ) : null}
         </li>
     )
 }
