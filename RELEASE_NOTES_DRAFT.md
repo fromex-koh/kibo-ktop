@@ -191,6 +191,7 @@
 ### 인라인 구분선 (InlineSeparator)
 
 - 대상: src/components/composite/inline-separator.tsx
+    - src/app/component-guide/(guide)/separator/page.tsx
 - 적용: 신규 파일 추가
 - 내용: 한 줄 안에서 값과 값을 가르는 세로선이다(시안 divider 1×12). 1:1 문의의 [분류 │ 제목], 평가결과 조회의 [일시 │ 상태 │ 등급]처럼 나란히 놓인 값 사이에 쓴다. 세로 Separator 를 쓸 때마다 되풀이되던 손질 두 가지를 이 조각이 갖는다 — 셸이 세로 방향에 `self-stretch` 를 걸어 두어 높이를 12 로 묶으면 줄 위쪽에 붙는 것, 그리고 제목처럼 글자만 담을 수 있는 자리에는 블록 요소를 넣을 수 없는 것[8.1.1]
 - 사용: 기본은 좌우 여백 12 다. 제목 안에 넣을 때는 `inline` 을 켠다 — `asChild` 로 같은 스타일을 `span` 에 씌워 글 흐름에 놓는다
