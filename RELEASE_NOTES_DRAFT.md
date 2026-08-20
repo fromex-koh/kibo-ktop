@@ -82,3 +82,34 @@
 - 적용: 파일 안에 두었던 학력 선택지와 졸업년도 규칙을 지우고 `@/constants/representative-capability` 를 가져다 쓰는 파일로 교체. 화면 구성과 입력 규칙은 종전과 같다
 - 이유: 마이페이지 [대표자(경영자) 역량 및 경력] 화면이 같은 목록을 쓴다. 학력 구분은 화면마다 달라질 값이 아니라 한 벌만 두고, 한쪽만 고쳐 두 화면의 선택지가 달라지는 일을 막는다
 - 함께 적용: 신규 추가 카드의 상수 파일과 같은 커밋 단위로 적용
+
+## [신규 추가]
+
+### 마이페이지 공통 셸 — LNB · 구획 카드 · 확인 모달
+
+- 대상: src/components/composite/mypage-sidebar.tsx
+    - src/components/composite/mypage-form-card.tsx
+    - src/components/composite/edit-cancel-confirm-dialog.tsx
+    - src/components/composite/save-confirm-dialog.tsx
+- 적용: 신규 파일 추가
+- 내용: 마이페이지의 모든 화면이 함께 쓰는 조각이다. `MypageSidebar` 는 기업·기관 메뉴를 한 벌로 들고 화면에서는 어느 쪽인지(`userType`)만 넘긴다 — 아이콘이 함수라 서버에서 클라이언트로 넘길 수 없어 목록을 이 파일에 둔다. `MypageFormCard` 는 공통 FormCard 에 마이페이지 카드 폭(792)에 맞춘 안쪽 여백만 정한 조각이다. `EditCancelConfirmDialog`(수정 취소) · `SaveConfirmDialog`(저장 전 최종 확인)는 되돌릴 수 없는 동작 앞에서 한 번 더 묻는다
+- 반응형: 사이드바는 폭에 따라 셋으로 그린다 — `xl` 이상은 본문 옆에 붙어 따라오는 카드, `md~xl` 은 콘텐츠 열 안에서 현재 메뉴 한 줄만 두고 눌러서 여는 목록, `md` 미만은 같은 줄을 화면 폭으로 넓혀 헤더 아래 고정. 기업·기술정보 입력(FormTabs)의 탭이 좁은 화면에서 바뀌는 방식과 같고, 임계값도 같은 상수를 가져다 쓴다
+- 연동: 아직 만들지 않은 화면의 메뉴 경로는 `'#'` 이다(경로가 타입으로 검사되어 없는 주소를 미리 적어 둘 수 없다). 해당 화면이 생기면 그 경로로 바꾼다 — 현재 `'#'` 인 곳은 기업 [K-BIGx 보고서 이력] · [유료 서비스 관리], 기관 [평가결과 조회] · [평가검증 신청 조회] · [K-BIGx 보고서 이력] · [하위 계정 현황]
+
+### 기업 마이페이지 내 정보 입력 폼 · 회원정보 데이터
+
+- 대상: src/components/composite/mypage-profile-form.tsx
+    - src/constants/mypage-profile.ts
+- 적용: 신규 파일 추가
+- 내용: [기업정보] · [기업 담당자 정보] 두 구획의 입력 폼이다. 기업형태(개인 · 법인 · 기타)에 따라 법인 전용 칸이 열리고 닫히며, 기업명 표기(앞 · 뒤)를 고르면 완성형 이름을 바로 보여 준다. 업종코드 · 주소는 기존 검색 화면으로 이어진다. 칸 이름과 목업 회원정보는 상수 파일로 나눠 두었다
+- 연동: 회원정보 조회는 한 번이다. 그 응답을 `MYPAGE_MEMBER_PROFILE` 자리에 넣으면 사이드바(이름 · 회원 구분)와 폼이 같은 값을 함께 받는다 — 화면이 값을 두 경로로 받지 않는다. 법인 전용 칸은 개인 · 기타로 되돌릴 때 값을 지운다(개인사업자인데 법인번호가 담기는 일을 막는다)
+- 함께 적용: 신규 추가 카드의 마이페이지 공통 셸과 같은 커밋 단위로 적용
+
+### 기업 마이페이지 내 정보 화면
+
+- 대상: src/app/(user-type)/corp/(service)/(logged-in)/mypage/profile/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/mypage/profile/cancel-confirm/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/mypage/profile/save-confirm/page.tsx
+- 적용: 신규 파일 추가
+- 내용: 좌측 LNB 고정 + 우측 본문의 2단 배치다(시안 실측 344 + 64 + 792 = 1200). 페이지 컬럼 그리드가 아니라 사이드바 폭이 정해진 구성이며, 좁은 화면에서는 한 열로 떨어지고 사이드바가 위로 온다 — 메뉴가 본문보다 먼저 읽히는 순서다[7.3.1]. 수정 취소 · 저장 전 최종 확인 모달은 단독으로 열어 볼 수 있는 확인 경로를 함께 둔다
+- 함께 적용: 위 두 신규 추가 카드와 같은 커밋 단위로 적용
