@@ -54,7 +54,7 @@ const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
         {icon: FileSearch, label: '평가결과 조회', href: '#'},
         {icon: NotepadText, label: 'K-BIGx 보고서 이력', href: '#'},
         {icon: CreditCard, label: '유료 서비스 관리', href: '#'},
-        {icon: MessageCircleMore, label: '1:1 문의', href: '#'},
+        {icon: MessageCircleMore, label: '1:1 문의', href: '/corp/mypage/inquiry-history'},
     ],
     org: [
         // 기관 [내 정보] 는 회원 유형별로 화면이 나뉜다 — 실제로는 로그인한 유형의 화면으로 간다.
@@ -63,7 +63,7 @@ const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
         {icon: ClipboardCheck, label: '평가검증 신청 조회', href: '#'},
         {icon: NotepadText, label: 'K-BIGx 보고서 이력', href: '#'},
         {icon: Users, label: '하위 계정 현황', href: '#'},
-        {icon: MessageCircleMore, label: '1:1 문의 내역', href: '#'},
+        {icon: MessageCircleMore, label: '1:1 문의 내역', href: '/org/mypage/inquiry-history'},
     ],
 }
 

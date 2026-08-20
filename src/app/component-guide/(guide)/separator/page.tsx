@@ -1,6 +1,7 @@
 import type {Metadata} from 'next'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import {InlineSeparator} from '@/components/composite/inline-separator'
 import {Table} from '@/components/custom/table'
 import {BaseCard} from '@/components/composite/base-card'
 import {Separator} from '@/components/ui/separator'
@@ -39,6 +40,21 @@ const DIVIDER_CLASS = 'my-10'
 const USAGE_CODE = `<p>위 콘텐츠</p>
 <Separator className="my-10" />
 <p>아래 콘텐츠</p>`
+
+const INLINE_CODE = `{/* 한 줄 안에서 값과 값을 가르는 세로선(시안 divider 1×12).
+    세로 Separator 를 그대로 쓰면 셸의 self-stretch 때문에 줄 위쪽에 붙는데, 이 조각이 그 손질을 갖는다 */}
+<div className="flex items-center">
+  <span>2026-05-15 14:30:12</span>
+  <InlineSeparator />
+  <span className="text-primary-strong font-bold">평가완료</span>
+  <InlineSeparator />
+  <span className="text-purple-600 font-bold">AA</span>
+</div>
+
+{/* 제목(h3)처럼 글자만 담을 수 있는 자리에는 inline 을 켠다 — div 대신 span 으로 그린다 */}
+<h3 className="typo-title-m-medium">
+  평가<InlineSeparator inline />평가 신청 오류 문의
+</h3>`
 
 const PROPS_ITEMS = [
     ['orientation', '구분선 방향입니다.', "'horizontal'", "'horizontal' | 'vertical'"],
@@ -84,6 +100,38 @@ const SeparatorGuidePage = () => (
                     </p>
                 </div>
                 <Table caption="클래스 레시피 목록" columns={RECIPE_COLUMNS} rows={RECIPE_ROWS} />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="dv-inline" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="dv-inline" className="typo-h4-bold">
+                        인라인 구분선 (InlineSeparator)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        [일시│상태│등급], [분류│제목]처럼 한 줄 안에서 값과 값을 가르는 세로선입니다. 세로{' '}
+                        <code className="font-mono">Separator</code> 를 그대로 쓰면 셸이{' '}
+                        <code className="font-mono">self-stretch</code> 를 걸어 두어 높이를 12 로 묶는 순간 줄 위쪽에
+                        붙는데, 그 손질과 좌우 여백(12)을 이 조각이 갖습니다. 제목처럼 글자만 담을 수 있는 자리에는{' '}
+                        <code className="font-mono">inline</code> 을 켜서 span 으로 그립니다.
+                    </p>
+                </div>
+                <div className="border-border flex flex-col gap-4 rounded-md border p-6">
+                    <div className="typo-body-l-regular flex items-center">
+                        <span className="text-foreground-subtle">2026-05-15 14:30:12</span>
+                        <InlineSeparator />
+                        <span className="text-primary-strong font-bold">평가완료</span>
+                        <InlineSeparator />
+                        <span className="font-bold text-purple-600">AA</span>
+                    </div>
+                    <h3 className="typo-title-m-medium text-foreground">
+                        <span className="typo-body-xl-regular text-label-foreground align-middle">평가</span>
+                        <InlineSeparator inline />
+                        평가 신청 오류 문의
+                    </h3>
+                </div>
+                <CodeBlock code={INLINE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 

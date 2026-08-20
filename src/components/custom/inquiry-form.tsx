@@ -37,18 +37,11 @@ import {Button} from '@/components/ui/button'
 import {Checkbox} from '@/components/ui/checkbox'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 import {Input} from '@/components/ui/input'
+import {INQUIRY_TYPES} from '@/constants/inquiry'
 import {cn} from '@/lib/utils'
 
 // 문의 유형·제목·내용·첨부파일·동의 여부를 관리하는 Client Component.
 // 서버 액션/API 연결에 필요한 form 속성과 취소 경로는 props로 전달한다.
-
-const INQUIRY_TYPES = [
-    {value: '회원정보', label: '회원정보'},
-    {value: '유료/결제', label: '유료/결제'},
-    {value: '기술평가', label: '기술평가'},
-    {value: 'K-BIGx', label: 'K-BIGx'},
-    {value: '기타', label: '기타'},
-] as const
 
 const CONTENT_MAX_LENGTH = 500
 const ATTACHMENT_EXTENSIONS = ['hwp', 'xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'pdf', 'jpg', 'jpeg', 'gif', 'png']
