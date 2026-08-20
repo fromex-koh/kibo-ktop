@@ -185,3 +185,43 @@
 - 적용: 신규 파일 추가
 - 내용: Tech-Index 2단계 [대표자 역량 및 경력사항] 탭의 [입력 도움말] 버튼이 여는 모달을, 화면정의서의 하위 화면으로 따로 확인하는 경로다. 뒤 배경을 비우고 모달만 열어 둔다 — 다른 모달 단독 화면과 같은 방식이다
 - 구조: 내용이 셋 다 같아 일반용에 한 벌만 두고, 창업기업용 · 투자모형은 그 화면을 다시 내보낸다. 모달 자체는 기존 `CareerInputHelpDialog` 를 그대로 쓴다 — 새로 만든 모달이 아니다
+
+## [신규 추가]
+
+### 인라인 구분선 (InlineSeparator)
+
+- 대상: src/components/composite/inline-separator.tsx
+- 적용: 신규 파일 추가
+- 내용: 한 줄 안에서 값과 값을 가르는 세로선이다(시안 divider 1×12). 1:1 문의의 [분류 │ 제목], 평가결과 조회의 [일시 │ 상태 │ 등급]처럼 나란히 놓인 값 사이에 쓴다. 세로 Separator 를 쓸 때마다 되풀이되던 손질 두 가지를 이 조각이 갖는다 — 셸이 세로 방향에 `self-stretch` 를 걸어 두어 높이를 12 로 묶으면 줄 위쪽에 붙는 것, 그리고 제목처럼 글자만 담을 수 있는 자리에는 블록 요소를 넣을 수 없는 것[8.1.1]
+- 사용: 기본은 좌우 여백 12 다. 제목 안에 넣을 때는 `inline` 을 켠다 — `asChild` 로 같은 스타일을 `span` 에 씌워 글 흐름에 놓는다
+- 가이드: [Separator](/component-guide/separator) 에 인라인 구분선 사용 예시 추가
+
+### 1:1 문의 목록 · 상세 컴포넌트 · 공통 값
+
+- 대상: src/components/custom/inquiry-list.tsx
+    - src/components/custom/inquiry-detail.tsx
+    - src/constants/inquiry.ts
+- 적용: 신규 파일 추가
+- 내용: 기업 · 기관이 같은 컴포넌트를 쓴다 — 다른 것은 목록 데이터와 이동 경로뿐이라 화면(page)이 넘긴다. 목록은 공지사항 목록과 같은 틀이고(BaseCard · 구분선 · Badge · Pagination) 한 줄에 담기는 것만 다르다. 상세는 카드 한 장에 [문의 요약 · 문의 내용 · 첨부파일 · 답변]이 구분선으로 나뉘어 들어간다
+- 상태 · 유형: 답변 상태는 `waiting`(답변대기) · `answered`(답변완료) 두 가지이며 색만으로 전달하지 않고 글자를 함께 둔다[5.3.1]. 문의 유형은 알림마당 > 문의하기의 [유형 선택]과 같은 목록을 본다. 두 값은 서버 컴포넌트(상세)와 클라이언트 컴포넌트(목록)가 함께 읽어야 해 `src/constants/inquiry.ts` 에 둔다 — `'use client'` 파일의 상수를 서버에서 import 하면 실제 값이 아니라 빈 참조가 넘어온다
+- 첨부파일: 파일 이름 한 벌로 받고 그릴 때만 이름과 확장자로 나눈다. 자리가 모자라면 이름만 줄이고 확장자는 남긴다 — 이름째 말줄임하면 무슨 형식의 파일인지가 먼저 사라진다
+- 답변: 답변 본문을 넘기지 않으면 그 자리에 대기 안내가 대신 보인다
+
+### 기업 · 기관 1:1 문의 화면 (목록 · 상세)
+
+- 대상: src/app/(user-type)/corp/(service)/(logged-in)/mypage/inquiry-history/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/mypage/inquiry-history/inquiry-detail/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/inquiry-history/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/inquiry-history/inquiry-detail/page.tsx
+- 적용: 신규 파일 추가
+- 내용: 마이페이지 2단 배치의 목록 화면과 상세 화면이다. [문의 등록] 은 각 회원 유형의 알림마당 > 문의하기로 이어진다
+- 연동: 화면이 쓰는 값은 모두 page.tsx 의 상수뿐이고 컴포넌트는 넘겨받은 것만 그린다 — 조회 코드를 컴포넌트 안에서 찾아다니지 않아도 된다. 항목마다 `href` 를 들고 있어 퍼블리싱에서는 모두 같은 상세 화면을 가리키지만, 연동할 때 이 값만 문의별 주소로 바꾸면 화면은 손댈 것이 없다. 목록에 빈 배열을 넘기면 빈 상태 안내가 나온다 — 조회 결과가 없을 때의 화면을 따로 만들 필요가 없다
+- 함께 적용: 위 두 신규 추가 카드와 같은 커밋 단위로 적용
+
+## [덮어쓰기]
+
+### 문의하기 폼의 유형 목록 공통 상수 참조 전환
+
+- 대상: src/components/custom/inquiry-form.tsx
+- 적용: 파일 안에 두었던 문의 유형 목록을 지우고 `@/constants/inquiry` 를 가져다 쓰는 파일로 교체. 화면 구성과 입력 규칙은 종전과 같다
+- 이유: 같은 목록을 마이페이지 1:1 문의 목록 · 상세가 함께 본다. 한 벌만 두어 한쪽만 고쳐 두 화면의 분류가 달라지는 일을 막는다
