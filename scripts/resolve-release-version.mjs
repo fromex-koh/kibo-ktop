@@ -20,6 +20,8 @@ if (latestVersion === 'v0.1.10') {
     console.log('v1.0.0')
 } else if (latestVersion === 'v1.0.1') {
     console.log('v2.0.0')
+} else if (latestVersion === 'v2.0.8') {
+    console.log('v3.0.0')
 } else if (patch >= 9) {
     // PATCH를 한 자리로 유지하고, 9 다음 릴리스는 MINOR를 올린다.
     console.log(`v${major}.${minor + 1}.0`)
