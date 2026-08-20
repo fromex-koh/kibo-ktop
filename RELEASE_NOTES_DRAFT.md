@@ -1,15 +1,5 @@
 # 다음 릴리스 변경사항
 
-## [Diff 확인]
-
-### 체크리스트 조건부 Chip 하단 배치
-
-- 대상: src/components/composite/checklist-form.tsx
-    - src/components/composite/question-list.tsx
-- 변경: 투자 유치 실적 문항을 체크했을 때 노출되는 `30억 이상`·`30억 미만`·`해당없음` Chip을 체크박스 라벨 오른쪽이 아닌 다음 줄에 동일 너비 3열로 배치
-- 결과: 공통 `ChecklistForm`을 사용하는 기업·기관의 KTRS-FM·투자모형 제조/서비스 체크리스트 8개 화면에 동일하게 반영
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e6244bf41abee4a90ae60aa8a7aef333dedc482c)
-
 <!--
 일반 변경사항은 불릿(-)으로 작성하세요.
 아래 예시는 형식 안내용 주석이며 실제 릴리즈 내용으로 수집되지 않습니다.

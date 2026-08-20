@@ -125,7 +125,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-info-industry-code-search",
@@ -181,21 +181,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-manufacturing",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-service",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual",
@@ -475,7 +475,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent-consent-popup",
@@ -510,7 +510,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-info-industry-code-search",
@@ -545,28 +545,28 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-additional-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-manufacturing",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-service",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-citation-manual",
@@ -615,7 +615,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-results",
@@ -1189,14 +1189,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-technology-info-self-diagnosis-result",
@@ -1259,14 +1259,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-service",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-citation-manual",
@@ -1455,28 +1455,28 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-checklist-manufacturing",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-checklist-service",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-industry-code-search",
@@ -1539,21 +1539,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch",
@@ -1952,112 +1952,112 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-additional-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-additional-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-technology-info-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-technology-info-resume-notice",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-additional-company-info-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-additional-company-info-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-checklist-autosave",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-checklist-cancel-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-batch-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-request-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-legal-basis",
