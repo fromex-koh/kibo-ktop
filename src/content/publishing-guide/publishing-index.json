@@ -697,6 +697,18 @@
                                     ]
                                 },
                                 {
+                                    "label": "2-2 대표자 역량 및 경력사항",
+                                    "children": [
+                                        {
+                                            "label": "입력도움말",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-general-representative-capability-career-input-helper"
+                                        }
+                                    ]
+                                },
+                                {
                                     "label": "(3) 완료 화면",
                                     "screenId": null,
                                     "status": "완료",
@@ -821,6 +833,18 @@
                                     ]
                                 },
                                 {
+                                    "label": "2-2 대표자 역량 및 경력사항",
+                                    "children": [
+                                        {
+                                            "label": "입력도움말",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-tech-index-startup-representative-capability-career-input-helper"
+                                        }
+                                    ]
+                                },
+                                {
                                     "label": "(3) 완료 화면",
                                     "screenId": null,
                                     "status": "완료",
@@ -902,6 +926,18 @@
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-company-info-address-search",
                                     "application2Status": "완료"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "2-2 대표자 역량 및 경력사항",
+                            "children": [
+                                {
+                                    "label": "입력도움말",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-technology-evaluation-investment-model-representative-capability-career-input-helper"
                                 }
                             ]
                         },
@@ -1253,7 +1289,7 @@
                     "label": "내 정보 수정",
                     "screen": {
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "corp-mypage-profile"
                     },
@@ -1271,6 +1307,20 @@
                             "status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-profile-address-search"
+                        },
+                        {
+                            "label": "수정 취소",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "corp-mypage-profile-cancel-confirm"
+                        },
+                        {
+                            "label": "저장 전 최종 확인",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "corp-mypage-profile-save-confirm"
                         }
                     ]
                 },
@@ -1279,7 +1329,7 @@
                     "screen": {
                         "key": "corp-mypage-representative-history",
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포"
                     },
                     "children": [
@@ -1288,7 +1338,7 @@
                             "screen": {
                                 "key": "corp-mypage-representative-history-customer-consent",
                                 "screenId": null,
-                                "status": "대기중",
+                                "status": "완료",
                                 "version": "미배포"
                             },
                             "children": [
@@ -1316,6 +1366,27 @@
                                     "key": "corp-mypage-representative-history-customer-consent-electronic-signature"
                                 }
                             ]
+                        },
+                        {
+                            "label": "입력 도움말",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "corp-mypage-representative-history-input-helper"
+                        },
+                        {
+                            "label": "수정 취소",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "corp-mypage-representative-history-cancel-confirm"
+                        },
+                        {
+                            "label": "저장 전 최종 확인",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "corp-mypage-representative-history-save-confirm"
                         }
                     ]
                 },
@@ -1454,7 +1525,7 @@
                     "label": "1:1 문의내역",
                     "screen": {
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "corp-mypage-inquiry-history"
                     },
@@ -1462,7 +1533,7 @@
                         {
                             "label": "문의하기 상세",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-inquiry-history-inquiry-detail"
                         }
@@ -1610,7 +1681,7 @@
                 {
                     "label": "이용약관",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-terms"
                 }
@@ -1623,14 +1694,14 @@
                 {
                     "label": "개인정보 처리방침",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-privacy-policy"
                 },
                 {
                     "label": "알기 쉬운 개인처리방침",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-privacy-policy-easy-privacy-policy"
                 }
@@ -2717,13 +2788,34 @@
             "children": [
                 {
                     "label": "내 정보 수정",
-                    "screen": {
-                        "screenId": null,
-                        "status": "대기중",
-                        "version": "미배포",
-                        "key": "org-mypage-profile-edit"
-                    },
                     "children": [
+                        {
+                            "label": "회원 유형별 페이지",
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "협약은행",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-profile-edit-partner-bank"
+                                },
+                                {
+                                    "label": "협약기관",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-profile-edit-partner-agency"
+                                },
+                                {
+                                    "label": "기관회원 (하위계정)",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-profile-edit-sub-account"
+                                }
+                            ]
+                        },
                         {
                             "label": "업종코드 조회",
                             "screenId": null,
@@ -2739,6 +2831,20 @@
                             "version": "미배포",
                             "key": "org-mypage-profile-edit-address-search",
                             "application2Status": "완료"
+                        },
+                        {
+                            "label": "수정 취소",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "org-mypage-profile-edit-cancel-confirm"
+                        },
+                        {
+                            "label": "저장 전 최종 확인",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "org-mypage-profile-edit-save-confirm"
                         }
                     ]
                 },
@@ -2867,7 +2973,7 @@
                     "label": "1:1 문의 내역",
                     "screen": {
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "org-mypage-inquiry-history"
                     },
@@ -2875,7 +2981,7 @@
                         {
                             "label": "문의하기 상세",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-mypage-inquiry-history-inquiry-detail"
                         }
@@ -3023,7 +3129,7 @@
                 {
                     "label": "이용약관",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-terms"
                 }
@@ -3036,14 +3142,14 @@
                 {
                     "label": "개인정보 처리방침",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-privacy-policy"
                 },
                 {
                     "label": "알기 쉬운 개인처리방침",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-privacy-policy-easy-privacy-policy"
                 }
@@ -3056,7 +3162,7 @@
                 {
                     "label": "로그인 안내",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-login-guide"
                 }
