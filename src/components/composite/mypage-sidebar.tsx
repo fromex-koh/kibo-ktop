@@ -50,7 +50,7 @@ type MypageMenuItem = {icon: LucideIcon; label: string; href: string}
 const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
     corp: [
         {icon: User, label: '내 정보', href: '/corp/mypage/profile'},
-        {icon: BriefcaseBusiness, label: '대표자(경영자) 역량 및 경력', href: '#'},
+        {icon: BriefcaseBusiness, label: '대표자(경영자) 역량 및 경력', href: '/corp/mypage/representative-history'},
         {icon: FileSearch, label: '평가결과 조회', href: '#'},
         {icon: NotepadText, label: 'K-BIGx 보고서 이력', href: '#'},
         {icon: CreditCard, label: '유료 서비스 관리', href: '#'},
