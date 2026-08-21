@@ -56,7 +56,7 @@ const HeroSection = () => (
                 'relative flex items-center motion-safe:[transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] motion-safe:[opacity:calc(1-var(--hero-scroll-progress,0))]',
             )}
         >
-            <div className={cn(heroGridClassName, 'grid-layout content-layout w-full items-start')}>
+            <div className={cn(heroGridClassName, 'grid-layout w-full items-start')}>
                 {/* 좌측 카피. xl(1280)부터 6열, 2xl(1536)부터 7열로 넓힌다. min-w-0로 그리드 셀이 콘텐츠에 밀려
                     넘치지 않게 한다. */}
                 <div className={cn(heroCopyClassName, 'col-span-4 flex min-w-0 flex-col xl:col-span-6 2xl:col-span-7')}>

@@ -574,9 +574,9 @@ const MainSecondSection = () => {
                     {/* 고정 헤더 자리 — md 56px · lg 이상 112px. 여기만 줄어들지 않는다. */}
                     <div aria-hidden="true" className="h-14 shrink-0 lg:h-28" />
                     <div aria-hidden="true" className="h-[clamp(--spacing(6),9.26vh,--spacing(25))]" />
-                    {/* content-layout — 헤더·1섹션·3섹션과 같은 콘텐츠 폭 셸. grid-layout 만 쓰면 md 티어에서
-                        그리드 자체 container(792)로 좁아져 헤더와 좌우 시작선이 어긋난다. */}
-                    <div className="grid-layout content-layout min-h-0 w-full gap-y-12 md:grid-rows-1 md:gap-y-0">
+                    {/* 헤더·1섹션·3섹션과 같은 grid-layout 을 쓴다 — md 티어에서 함께 container(792)로
+                        좁아져야 헤더와 좌우 시작선이 맞는다. */}
+                    <div className="grid-layout min-h-0 w-full gap-y-12 md:grid-rows-1 md:gap-y-0">
                         {/* 왼쪽 셀 — 첫 화면에서 카피가 보이는 쪽. 사진은 처음부터 전체 면적으로 합성해
                             두고 표면색 패널만 연다. 카피는 패널보다 위에서 함께 페이드하므로 초기
                             레이아웃을 가리지 않는다. 스크롤하면 패널이 열리며 사진으로 바뀐다. */}

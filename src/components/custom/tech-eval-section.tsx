@@ -73,7 +73,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                 data-rolling-tech-content
                 className="w-full max-md:hidden md:pt-[calc(--spacing(28)+clamp(--spacing(6),7.4vh,--spacing(20)))] md:pb-[clamp(--spacing(8),9.26vh,--spacing(25))]"
             >
-                <div className="grid-layout content-layout w-full items-start gap-y-16">
+                <div className="grid-layout w-full items-start gap-y-16">
                     {/* 좌: 세로 레일 + 서비스 목차. 각 서비스는 레일 전체 높이를 진행 바로 쓰고,
                     채움이 끝나면 다음 서비스로 전환되며 채움은 처음부터 다시 시작한다(key 리셋).
                     레일은 ul 밖에 둔다 — ul 은 li 만 자식으로 가질 수 있어 안에 넣으면 마크업 오류다. [KWCAG 8.1.1] */}
