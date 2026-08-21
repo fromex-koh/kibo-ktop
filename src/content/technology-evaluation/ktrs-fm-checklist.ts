@@ -53,6 +53,7 @@ const KTRS_FM_CHECKLIST: ChecklistData = {
                 {
                     name: 'q3-1',
                     text: '(1) 경영주는 과거 사업자 대표자로 창업한 경력 또는 업력 1년 미만 창업기업의 임직원으로 근무한 경력이 있고,',
+                    guide: 'restricted-industries',
                 },
                 {name: 'q3-2', text: '(2) 해당 경력 중 매출을 시현한 경험이 있다.'},
             ],
@@ -200,7 +201,6 @@ const KTRS_FM_CHECKLIST: ChecklistData = {
             type: 'chip-rows',
             rows: [
                 {
-                    sector: 'manufacturing',
                     name: 'q17-manufacturing',
                     before: '신청기술이 적용된 제품 생산 시, 생산과정이',
                     between: '또는',
@@ -211,7 +211,6 @@ const KTRS_FM_CHECKLIST: ChecklistData = {
                     ],
                 },
                 {
-                    sector: 'service',
                     name: 'q17-service',
                     before: '신청기술이 적용된 제품/서비스 제작 시, 제작과정이',
                     between: '또는',
@@ -228,12 +227,10 @@ const KTRS_FM_CHECKLIST: ChecklistData = {
             type: 'check-list',
             options: [
                 {
-                    sector: 'manufacturing',
                     name: 'q18-manufacturing',
                     text: '원자재에 석유·화학 원료(가격 변동성), 금속/광물 원자재(희토류 포함 중금속 등), 농산물(기후조건 등에 의한 생산량 변동) 등 수급에 크게 영향을 받는 비품/품목이 있다.',
                 },
                 {
-                    sector: 'service',
                     name: 'q18-service',
                     text: '원자재에 미디어 콘텐츠, 소프트웨어 제품, IT서비스 등 가격·수량 측면에서 수급에 크게 영향을 받는 비품/품목이 있다.',
                 },

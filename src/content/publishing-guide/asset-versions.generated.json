@@ -1,9 +1,9 @@
 {
-    "version": "v3.0.0",
+    "version": "v3.0.1",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.0.0",
+            "version": "v3.0.1",
             "isCurrent": true
         },
         {
@@ -14,17 +14,17 @@
         {
             "name": "src/components/theme",
             "version": "v3.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/composite",
-            "version": "v3.0.0",
+            "version": "v3.0.1",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
             "version": "v3.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/theme-provider.tsx",
@@ -34,11 +34,11 @@
         {
             "name": "src/constants",
             "version": "v3.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/content",
-            "version": "v3.0.0",
+            "version": "v3.0.1",
             "isCurrent": true
         },
         {
@@ -59,7 +59,7 @@
         {
             "name": "tokens.json",
             "version": "v3.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/app/tokens.css",
@@ -74,7 +74,7 @@
         {
             "name": "src/app/globals.css",
             "version": "v3.0.0",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "postcss.config.mjs",

@@ -269,18 +269,11 @@
             "name": "작성 취소"
         },
         {
-            "key": "corp-technology-evaluation-ktrs-fm-checklist-manufacturing",
+            "key": "corp-technology-evaluation-ktrs-fm-checklist",
             "screenId": null,
             "userType": "기업",
-            "path": "/corp/technology-evaluation/ktrs-fm/checklist/manufacturing",
-            "name": "업종코드 제조 선택"
-        },
-        {
-            "key": "corp-technology-evaluation-ktrs-fm-checklist-service",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/technology-evaluation/ktrs-fm/checklist/service",
-            "name": "업종코드 서비스 선택"
+            "path": "/corp/technology-evaluation/ktrs-fm/checklist",
+            "name": "(3) 체크리스트 입력"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual",
@@ -1396,18 +1389,11 @@
             "name": "전문기술/숙련기술 정의"
         },
         {
-            "key": "org-individual-evaluation-ktrs-fm-checklist-manufacturing",
+            "key": "org-individual-evaluation-ktrs-fm-checklist",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/individual-evaluation/ktrs-fm/checklist/manufacturing",
-            "name": "업종코드 제조 선택"
-        },
-        {
-            "key": "org-individual-evaluation-ktrs-fm-checklist-service",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/individual-evaluation/ktrs-fm/checklist/service",
-            "name": "업종코드 서비스 선택"
+            "path": "/org/individual-evaluation/ktrs-fm/checklist",
+            "name": "(3) 체크리스트 입력"
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-citation-manual",

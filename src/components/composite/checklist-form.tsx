@@ -1,6 +1,6 @@
 'use client'
 
-import {Fragment, useId, useRef, useState, type ComponentProps, type ReactNode, type SubmitEvent} from 'react'
+import {Fragment, useId, useRef, useState, type ComponentProps, type SubmitEvent} from 'react'
 import {useRouter} from 'next/navigation'
 import {ChevronRight} from 'lucide-react'
 import {ChipCheckbox, ChipCheckboxGroup, ChipRadio, ChipRadioGroup} from '@/components/composite/chip'
@@ -13,10 +13,10 @@ import {
 } from '@/components/composite/question-group-header'
 import {QuestionItem, QuestionList, QuestionOption, QuestionOptionList} from '@/components/composite/question-list'
 import {QuestionSelect} from '@/components/composite/question-select'
+import {RestrictedIndustriesDialog} from '@/components/composite/restricted-industries-dialog'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import {SubmitConfirmDialog} from '@/components/composite/submit-confirm-dialog'
 import {TrlGuideDialog} from '@/components/composite/trl-guide-dialog'
-import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Checkbox} from '@/components/ui/checkbox'
 import {FieldError} from '@/components/ui/field'
@@ -34,10 +34,7 @@ import {cn} from '@/lib/utils'
 // 문항 글에 포함돼 있다. 체크박스의 이름도 번호가 아니라 문항 글 자체다[7.4.1].
 
 // 안내 버튼이 여는 모달 — 데이터에는 이름만 담고, 실제 모달은 여기서 잇는다.
-type ChecklistGuide = 'citation-manual' | 'trl'
-
-// 제조·서비스 배지가 붙는 행.
-type ChecklistSector = 'manufacturing' | 'service'
+type ChecklistGuide = 'citation-manual' | 'trl' | 'restricted-industries'
 
 type ChecklistOption = {
     value: string
@@ -81,15 +78,14 @@ type ChecklistItem = ChecklistItemBase &
               chips: ChecklistOption[]
           }
         | {
-              // 한 문항이 여러 줄로 갈리는 경우((1)(2) 또는 제조·서비스).
+              // 한 문항이 여러 줄로 갈리는 경우((1)(2) 또는 업종별 문장).
               type: 'check-list'
-              options: {name: string; text: string; sector?: ChecklistSector}[]
+              options: {name: string; text: string; guide?: ChecklistGuide}[]
           }
         | {
-              // 문장 안에 칩을 끼워 고르는 행(제조·서비스).
+              // 문장 안에 칩을 끼워 고르는 행.
               type: 'chip-rows'
               rows: {
-                  sector: ChecklistSector
                   name: string
                   before: string
                   between: string
@@ -141,19 +137,6 @@ type ChecklistData = {
     common: ChecklistItem[]
 }
 
-const SECTOR_BADGE: Record<ChecklistSector, ReactNode> = {
-    manufacturing: (
-        <Badge variant="solid-pastel" color="secondary-green" shape="round">
-            제조
-        </Badge>
-    ),
-    service: (
-        <Badge variant="solid-pastel" color="secondary-purple" shape="round">
-            서비스
-        </Badge>
-    ),
-}
-
 // 문장 끝에 붙는 안내 버튼(피인용 확인 메뉴얼·TRL 확인) — 시안 button_text 사양:
 // 1px 밑줄(text-underline) · 14px 텍스트 · 16px 아이콘 · 높이 21px(= 텍스트 버튼 size sm).
 // 모달을 여는 버튼이라 각 모달 컴포넌트의 트리거로 넘긴다 — 열기 동작과 aria 는 radix 가 얹는다.
@@ -168,18 +151,16 @@ const GuideButton = ({children, className, ...props}: ComponentProps<typeof Butt
 const GUIDE_LABEL: Record<ChecklistGuide, string> = {
     'citation-manual': '피인용 확인 메뉴얼',
     trl: 'TRL 확인',
+    'restricted-industries': '보증제한 업종',
 }
 
-const renderGuide = (guide: ChecklistGuide) =>
-    guide === 'citation-manual' ? (
-        <CitationManualDialog>
-            <GuideButton>{GUIDE_LABEL[guide]}</GuideButton>
-        </CitationManualDialog>
-    ) : (
-        <TrlGuideDialog>
-            <GuideButton>{GUIDE_LABEL[guide]}</GuideButton>
-        </TrlGuideDialog>
-    )
+const renderGuide = (guide: ChecklistGuide) => {
+    const trigger = <GuideButton>{GUIDE_LABEL[guide]}</GuideButton>
+
+    if (guide === 'citation-manual') return <CitationManualDialog>{trigger}</CitationManualDialog>
+    if (guide === 'restricted-industries') return <RestrictedIndustriesDialog>{trigger}</RestrictedIndustriesDialog>
+    return <TrlGuideDialog>{trigger}</TrlGuideDialog>
+}
 
 // 문항 체크박스 — 접근 가능한 이름은 문항 글 그대로다(화면에 번호가 없어 "n번 문항"으로 부를 수 없다).
 const QuestionCheckbox = ({name, label}: {name: string; label: string}) => (
@@ -289,10 +270,17 @@ const ChecklistQuestion = ({
                     {item.options.map((option) => (
                         <QuestionOption
                             key={option.name}
-                            badge={option.sector ? SECTOR_BADGE[option.sector] : undefined}
                             control={<QuestionCheckbox name={option.name} label={option.text} />}
                         >
-                            {option.text}
+                            {/* 안내 버튼이 붙는 줄은 문장과 버튼이 한 줄로 흐르고, 좁으면 아래로 접힌다. */}
+                            {option.guide ? (
+                                <span className="flex flex-wrap items-center gap-2">
+                                    <span>{option.text}</span>
+                                    {renderGuide(option.guide)}
+                                </span>
+                            ) : (
+                                option.text
+                            )}
                         </QuestionOption>
                     ))}
                 </QuestionOptionList>
@@ -305,7 +293,7 @@ const ChecklistQuestion = ({
             <QuestionItem align="control">
                 <QuestionOptionList>
                     {item.rows.map((row) => (
-                        <QuestionOption key={row.name} align="control" badge={SECTOR_BADGE[row.sector]}>
+                        <QuestionOption key={row.name} align="control">
                             <ChipCheckboxGroup aria-label={`${row.before} ${row.after}`} className="items-center">
                                 {row.before}
                                 {row.chips.map((chip, chipIndex) => (
@@ -547,5 +535,4 @@ export type {
     ChecklistGuide,
     ChecklistItem,
     ChecklistOption,
-    ChecklistSector,
 }
