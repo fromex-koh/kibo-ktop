@@ -1,6 +1,6 @@
 'use client'
 
-import {Fragment, useId, useRef, useState, type ComponentProps, type ReactNode, type SubmitEvent} from 'react'
+import {Fragment, useId, useRef, useState, type ComponentProps, type SubmitEvent} from 'react'
 import {useRouter} from 'next/navigation'
 import {ChevronRight} from 'lucide-react'
 import {ChipCheckbox, ChipCheckboxGroup, ChipRadio, ChipRadioGroup} from '@/components/composite/chip'
@@ -16,7 +16,6 @@ import {QuestionSelect} from '@/components/composite/question-select'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import {SubmitConfirmDialog} from '@/components/composite/submit-confirm-dialog'
 import {TrlGuideDialog} from '@/components/composite/trl-guide-dialog'
-import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Checkbox} from '@/components/ui/checkbox'
 import {FieldError} from '@/components/ui/field'
@@ -35,9 +34,6 @@ import {cn} from '@/lib/utils'
 
 // 안내 버튼이 여는 모달 — 데이터에는 이름만 담고, 실제 모달은 여기서 잇는다.
 type ChecklistGuide = 'citation-manual' | 'trl'
-
-// 제조·서비스 배지가 붙는 행.
-type ChecklistSector = 'manufacturing' | 'service'
 
 type ChecklistOption = {
     value: string
@@ -81,15 +77,14 @@ type ChecklistItem = ChecklistItemBase &
               chips: ChecklistOption[]
           }
         | {
-              // 한 문항이 여러 줄로 갈리는 경우((1)(2) 또는 제조·서비스).
+              // 한 문항이 여러 줄로 갈리는 경우((1)(2) 또는 업종별 문장).
               type: 'check-list'
-              options: {name: string; text: string; sector?: ChecklistSector}[]
+              options: {name: string; text: string}[]
           }
         | {
-              // 문장 안에 칩을 끼워 고르는 행(제조·서비스).
+              // 문장 안에 칩을 끼워 고르는 행.
               type: 'chip-rows'
               rows: {
-                  sector: ChecklistSector
                   name: string
                   before: string
                   between: string
@@ -139,19 +134,6 @@ type ChecklistData = {
     branch: ChecklistBranch
     // 기술 구분 뒤의 공통 문항.
     common: ChecklistItem[]
-}
-
-const SECTOR_BADGE: Record<ChecklistSector, ReactNode> = {
-    manufacturing: (
-        <Badge variant="solid-pastel" color="secondary-green" shape="round">
-            제조
-        </Badge>
-    ),
-    service: (
-        <Badge variant="solid-pastel" color="secondary-purple" shape="round">
-            서비스
-        </Badge>
-    ),
 }
 
 // 문장 끝에 붙는 안내 버튼(피인용 확인 메뉴얼·TRL 확인) — 시안 button_text 사양:
@@ -289,7 +271,6 @@ const ChecklistQuestion = ({
                     {item.options.map((option) => (
                         <QuestionOption
                             key={option.name}
-                            badge={option.sector ? SECTOR_BADGE[option.sector] : undefined}
                             control={<QuestionCheckbox name={option.name} label={option.text} />}
                         >
                             {option.text}
@@ -305,7 +286,7 @@ const ChecklistQuestion = ({
             <QuestionItem align="control">
                 <QuestionOptionList>
                     {item.rows.map((row) => (
-                        <QuestionOption key={row.name} align="control" badge={SECTOR_BADGE[row.sector]}>
+                        <QuestionOption key={row.name} align="control">
                             <ChipCheckboxGroup aria-label={`${row.before} ${row.after}`} className="items-center">
                                 {row.before}
                                 {row.chips.map((chip, chipIndex) => (
@@ -547,5 +528,4 @@ export type {
     ChecklistGuide,
     ChecklistItem,
     ChecklistOption,
-    ChecklistSector,
 }
