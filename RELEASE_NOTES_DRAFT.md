@@ -47,12 +47,6 @@
 - 대상: src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/page.tsx
     - src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/page.tsx
 - 적용: 업종코드로 갈리기 전의 단일 체크리스트 입력 화면을 다시 추가. 문항은 `KTRS_FM_CHECKLIST` 한 벌이며 제출 검사·제출 전 최종 확인 모달·완료 화면 이동은 종전과 같다
-- 삭제: 아래 여섯 파일을 함께 삭제해야 한다. 업종코드로 갈린 두 화면과 그 갈림을 판단하던 조각이며, 이제 진입 경로가 없다
-    - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/manufacturing/page.tsx
-    - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/service/page.tsx
-    - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/company-technology-info/checklist-step-form.tsx
-    - src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/manufacturing/page.tsx
-    - src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/service/page.tsx
-    - src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/company-technology-info/checklist-step-form.tsx
+- 삭제: 기업 `src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/` 와 기관 `src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/` 아래에서 각각 `checklist/manufacturing/page.tsx` · `checklist/service/page.tsx` · `company-technology-info/checklist-step-form.tsx` 세 파일, 모두 여섯 파일을 함께 삭제해야 한다. 업종코드로 갈린 두 화면과 그 갈림을 판단하던 조각이며, 이제 진입 경로가 없다
 - 주의: 추가·삭제와 위 [Diff 확인] 변경은 한 번에 반영해야 한다. 링크 경로가 타입으로 검사되어 한쪽만 반영하면 빌드가 실패한다
 - 범위: 투자모형(기업·기관)의 업종코드별 체크리스트 화면은 그대로다. 이번 되돌림은 KTRS-FM 두 모형에만 해당한다
