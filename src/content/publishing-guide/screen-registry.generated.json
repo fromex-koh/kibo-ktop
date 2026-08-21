@@ -184,17 +184,10 @@
             "isCurrent": false
         },
         {
-            "key": "corp-technology-evaluation-ktrs-fm-checklist-manufacturing",
+            "key": "corp-technology-evaluation-ktrs-fm-checklist",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.7",
-            "isCurrent": false
-        },
-        {
-            "key": "corp-technology-evaluation-ktrs-fm-checklist-service",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v2.0.7",
+            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -1311,17 +1304,10 @@
             "isCurrent": false
         },
         {
-            "key": "org-individual-evaluation-ktrs-fm-checklist-manufacturing",
+            "key": "org-individual-evaluation-ktrs-fm-checklist",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.7",
-            "isCurrent": false
-        },
-        {
-            "key": "org-individual-evaluation-ktrs-fm-checklist-service",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v2.0.7",
+            "version": "미배포",
             "isCurrent": false
         },
         {
