@@ -1,9 +1,9 @@
 {
-    "version": "v3.0.1",
+    "version": "v3.0.2",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "isCurrent": true
         },
         {
@@ -19,7 +19,7 @@
         {
             "name": "src/components/composite",
             "version": "v3.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/custom",
@@ -38,7 +38,7 @@
         },
         {
             "name": "src/content",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "isCurrent": true
         },
         {

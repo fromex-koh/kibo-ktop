@@ -15,7 +15,7 @@ import {StepNavigation} from '@/components/composite/step-navigation'
 import {Badge} from '@/components/ui/badge'
 import {SELF_DIAGNOSIS_STEPS} from '@/constants/technology-evaluation'
 // 문항·보기 목업 — 연동 시 같은 모양(ChecklistData)의 API 응답으로 교체한다.
-import {KTRS_FM_CHECKLIST} from '@/content/technology-evaluation/ktrs-fm-checklist'
+import {KTRS_FM_SERVICE_CHECKLIST} from '@/content/technology-evaluation/ktrs-fm-checklist'
 
 export const metadata: Metadata = {title: '체크리스트 입력'}
 
@@ -24,7 +24,8 @@ const COMPLETE_PATH = '/org/individual-evaluation/ktrs-fm/complete'
 // 폼 바깥에 있는 [다음] 버튼을 form 속성으로 잇는 이름.
 const FORM_ID = 'checklist-form'
 
-// 기관 개별평가 KTRS-FM 3단계 체크리스트 입력 — 기업 화면과 같은 구성이다(문항·검사·제출 흐름 동일).
+// 기관 개별평가 KTRS-FM (3) 체크리스트 입력 — 업종코드가 서비스일 때의 화면.
+// 기업 화면과 같은 구성이고 문항도 같다.
 // 기관 시안이 나오면 이 화면부터 조정한다 — 지금은 기업 화면을 그대로 옮기고 경로·브레드크럼만 기관 IA 로 바꿨다.
 //
 // - 데이터: data prop 하나로 들어간다. 문항·보기·안내 문구 변경은 데이터에서만 한다.
@@ -32,7 +33,7 @@ const FORM_ID = 'checklist-form'
 //   통과하면 모은 값을 console.log 로 찍고 최종 확인 모달을 띄우며, [제출] 을 누르면 completeHref 로 간다.
 //   저장 API 는 ChecklistForm 의 handleSubmit(console.log 자리)에 붙인다.
 // - 값: 체크박스·칩은 name 만 가진 폼 요소다 — FormData 로 읽는다.
-const OrgKtrsFmChecklistPage = () => (
+const OrgKtrsFmChecklistServicePage = () => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
         {/* 폭·좌우 여백은 grid-layout 이 정한다. 카드 위 60 = gap-y-10(40) + 카드 mt-5(20). */}
         <div className="grid-layout gap-y-10 pt-10 *:col-span-full">
@@ -72,7 +73,12 @@ const OrgKtrsFmChecklistPage = () => (
 
             {/* id 는 바로가기(SkipNav) 대상이다. */}
             <div className="mt-5">
-                <ChecklistForm data={KTRS_FM_CHECKLIST} id="checklist" formId={FORM_ID} completeHref={COMPLETE_PATH} />
+                <ChecklistForm
+                    data={KTRS_FM_SERVICE_CHECKLIST}
+                    id="checklist"
+                    formId={FORM_ID}
+                    completeHref={COMPLETE_PATH}
+                />
             </div>
         </div>
 
@@ -85,4 +91,4 @@ const OrgKtrsFmChecklistPage = () => (
     </main>
 )
 
-export default OrgKtrsFmChecklistPage
+export default OrgKtrsFmChecklistServicePage

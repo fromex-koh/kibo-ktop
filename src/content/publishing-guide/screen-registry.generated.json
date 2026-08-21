@@ -124,7 +124,7 @@
             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "isCurrent": true
         },
         {
@@ -184,10 +184,17 @@
             "isCurrent": false
         },
         {
-            "key": "corp-technology-evaluation-ktrs-fm-checklist",
+            "key": "corp-technology-evaluation-ktrs-fm-checklist-manufacturing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-technology-evaluation-ktrs-fm-checklist-service",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.2",
             "isCurrent": true
         },
         {
@@ -202,7 +209,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-trl-guide",
@@ -1244,7 +1251,7 @@
             "key": "org-individual-evaluation-ktrs-fm-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
             "isCurrent": true
         },
         {
@@ -1304,10 +1311,17 @@
             "isCurrent": false
         },
         {
-            "key": "org-individual-evaluation-ktrs-fm-checklist",
+            "key": "org-individual-evaluation-ktrs-fm-checklist-manufacturing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.1",
+            "version": "v3.0.2",
+            "isCurrent": true
+        },
+        {
+            "key": "org-individual-evaluation-ktrs-fm-checklist-service",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.0.2",
             "isCurrent": true
         },
         {

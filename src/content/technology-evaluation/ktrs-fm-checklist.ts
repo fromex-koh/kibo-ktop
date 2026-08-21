@@ -1,4 +1,4 @@
-import type {ChecklistData} from '@/components/composite/checklist-form'
+import type {ChecklistData, ChecklistOption} from '@/components/composite/checklist-form'
 
 // 신속표준모형 3단계 체크리스트의 목업 데이터 — 문항·보기·안내 문구가 모두 여기 있다.
 // 연동하면 이 상수를 API 응답으로 바꾸기만 하면 된다(화면은 이 모양 그대로 컴포넌트에 내려 준다).
@@ -32,7 +32,53 @@ const REVENUE_OPTION = {
     none: '⑤ 해당 없음',
 }
 
-const KTRS_FM_CHECKLIST: ChecklistData = {
+// 업종코드로 갈리는 두 문항 — 시안이 제조용·서비스용으로 문장과 값 이름만 다르다.
+// 화면에는 2단계에서 고른 업종의 줄만 남는다(예전처럼 두 줄을 함께 두고 배지로 구분하지 않는다).
+const MANUFACTURING = 'manufacturing'
+const SERVICE = 'service'
+
+type IndustrySector = typeof MANUFACTURING | typeof SERVICE
+
+// 생산·제작 과정 — 문장 안에 칩 두 개를 끼워 고른다.
+const PRODUCTION_PROCESS_ROWS: Record<
+    IndustrySector,
+    {name: string; before: string; between: string; after: string; chips: ChecklistOption[]}
+> = {
+    [MANUFACTURING]: {
+        name: 'q17-manufacturing',
+        before: '신청기술이 적용된 제품 생산 시, 생산과정이',
+        between: '또는',
+        after: '을 통해 이루어진다.',
+        chips: [
+            {value: 'outsourced', label: '외주가공'},
+            {value: 'inhouse', label: '자체제작'},
+        ],
+    },
+    [SERVICE]: {
+        name: 'q17-service',
+        before: '신청기술이 적용된 제품/서비스 제작 시, 제작과정이',
+        between: '또는',
+        after: '을 통해 이루어진다.',
+        chips: [
+            {value: 'outsourced', label: '외주인력'},
+            {value: 'inhouse', label: '자체인력'},
+        ],
+    },
+}
+
+// 원자재 수급 — 체크 한 줄.
+const MATERIAL_SUPPLY_OPTIONS: Record<IndustrySector, {name: string; text: string}> = {
+    [MANUFACTURING]: {
+        name: 'q18-manufacturing',
+        text: '원자재에 석유·화학 원료(가격 변동성), 금속/광물 원자재(희토류 포함 중금속 등), 농산물(기후조건 등에 의한 생산량 변동) 등 수급에 크게 영향을 받는 비품/품목이 있다.',
+    },
+    [SERVICE]: {
+        name: 'q18-service',
+        text: '원자재에 미디어 콘텐츠, 소프트웨어 제품, IT서비스 등 가격·수량 측면에서 수급에 크게 영향을 받는 비품/품목이 있다.',
+    },
+}
+
+const buildChecklist = (sector: IndustrySector): ChecklistData => ({
     lead: [
         {
             id: 'patent',
@@ -199,42 +245,12 @@ const KTRS_FM_CHECKLIST: ChecklistData = {
         {
             id: 'production-process',
             type: 'chip-rows',
-            rows: [
-                {
-                    name: 'q17-manufacturing',
-                    before: '신청기술이 적용된 제품 생산 시, 생산과정이',
-                    between: '또는',
-                    after: '을 통해 이루어진다.',
-                    chips: [
-                        {value: 'outsourced', label: '외주가공'},
-                        {value: 'inhouse', label: '자체제작'},
-                    ],
-                },
-                {
-                    name: 'q17-service',
-                    before: '신청기술이 적용된 제품/서비스 제작 시, 제작과정이',
-                    between: '또는',
-                    after: '을 통해 이루어진다.',
-                    chips: [
-                        {value: 'outsourced', label: '외주인력'},
-                        {value: 'inhouse', label: '자체인력'},
-                    ],
-                },
-            ],
+            rows: [PRODUCTION_PROCESS_ROWS[sector]],
         },
         {
             id: 'material-supply',
             type: 'check-list',
-            options: [
-                {
-                    name: 'q18-manufacturing',
-                    text: '원자재에 석유·화학 원료(가격 변동성), 금속/광물 원자재(희토류 포함 중금속 등), 농산물(기후조건 등에 의한 생산량 변동) 등 수급에 크게 영향을 받는 비품/품목이 있다.',
-                },
-                {
-                    name: 'q18-service',
-                    text: '원자재에 미디어 콘텐츠, 소프트웨어 제품, IT서비스 등 가격·수량 측면에서 수급에 크게 영향을 받는 비품/품목이 있다.',
-                },
-            ],
+            options: [MATERIAL_SUPPLY_OPTIONS[sector]],
         },
         {
             id: 'quality-manual',
@@ -305,6 +321,9 @@ const KTRS_FM_CHECKLIST: ChecklistData = {
             text: '전년도 및 평가기준일이 속한 연도에 걸쳐 2년 연속 매출을 시현하고 있는 매출처가 있다.',
         },
     ],
-}
+})
 
-export {KTRS_FM_CHECKLIST}
+const KTRS_FM_MANUFACTURING_CHECKLIST = buildChecklist(MANUFACTURING)
+const KTRS_FM_SERVICE_CHECKLIST = buildChecklist(SERVICE)
+
+export {KTRS_FM_MANUFACTURING_CHECKLIST, KTRS_FM_SERVICE_CHECKLIST}
