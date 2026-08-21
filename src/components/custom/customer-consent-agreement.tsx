@@ -6,6 +6,7 @@ import {createContext, useContext, useRef, useState, type ReactNode, type Submit
 import {ConsentItem, ConsentList} from '@/components/composite/consent-list'
 import {ConsentTermsDetailButton} from '@/components/composite/consent-terms-detail-button'
 import {ConsentTermsStepDialogContent} from '@/components/composite/consent-terms-dialog'
+import {ESignatureDialog} from '@/components/composite/e-signature-dialog'
 import {FormCard} from '@/components/composite/form-card'
 import {SelectableCard, SelectableCardGroup} from '@/components/composite/selectable-card'
 import {StepNavigation} from '@/components/composite/step-navigation'
@@ -402,8 +403,12 @@ const CustomerConsentAgreement = () => {
 
 // 동의를 마치고 넘어가는 다음 화면은 사용처가 정한다(nextHref) — 이 동의서를 KTRS-FM 과 Tech-Index 가
 // 함께 쓰는데 각자의 2단계 경로가 다르기 때문이다. 기관 동의 폼(org-customer-consent-form)과 같은 방식이다.
-// 버튼 이름은 "동의 후 인증서명" 이고 화면정의서에도 전자서명 화면이 따로 있지만 아직 만들어지지 않았다.
-// 그 화면이 생기면 사용처의 nextHref 를 전자서명으로 바꾸고, 전자서명이 끝난 뒤 2단계로 잇는다.
+// [동의 후 인증서명] 은 바로 다음 단계로 가지 않고 약정서 전자서명 모달을 연다 — 화면정의서의 전자서명이
+// 이 자리다. 전자서명이 끝나면 그때 nextHref 로 간다.
+
+// 모달의 [법인인증]·[개인인증] 은 둘 다 다음 단계로 넘어간다 — 화면 흐름만 잇는 자리다.
+// [프론트엔드 연동] 두 인증 모두 외부 인증 연동 자리다. 인증 절차(법인·개인 각각의 인증서, 둘 다
+// 마쳐야 완료되는 규칙)는 연동 때 여기서 처리하고, 성공한 뒤에 지금의 이동을 그대로 쓰면 된다.
 
 // 동의 값을 한곳에서 넘기는 폼 — 화면의 모든 컨트롤(동의 범위·항목별 동의·확인 체크·추가 이메일)이
 // name 을 갖고 있어 FormData 하나로 모인다. 값을 따로 모으는 상태를 만들지 않는 이유다.
@@ -421,6 +426,13 @@ const CustomerConsentForm = ({
     children: ReactNode
 }) => {
     const router = useRouter()
+    const [isSignatureOpen, setIsSignatureOpen] = useState(false)
+
+    // 인증을 마쳤을 때 — 모달을 닫고 다음 단계로 간다.
+    const handleSigned = () => {
+        setIsSignatureOpen(false)
+        if (nextHref) router.push(nextHref)
+    }
 
     const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -432,15 +444,23 @@ const CustomerConsentForm = ({
                 (entry): entry is [string, string] => typeof entry[1] === 'string',
             ),
         )
-        // [프론트엔드 연동] 이 줄을 저장 API 호출로 바꾼다 — 성공한 뒤에 다음 단계로 보낸다.
+        // [프론트엔드 연동] 이 줄을 저장 API 호출로 바꾼다 — 성공한 뒤에 전자서명을 연다.
         console.log('[고객 정보 활용 동의] 제출 데이터', values)
-        if (nextHref) router.push(nextHref)
+        setIsSignatureOpen(true)
     }
 
     return (
-        <form id={formId} noValidate onSubmit={handleSubmit}>
-            {children}
-        </form>
+        <>
+            <form id={formId} noValidate onSubmit={handleSubmit}>
+                {children}
+            </form>
+            <ESignatureDialog
+                open={isSignatureOpen}
+                onOpenChange={setIsSignatureOpen}
+                onCorporate={handleSigned}
+                onPersonal={handleSigned}
+            />
+        </>
     )
 }
 
