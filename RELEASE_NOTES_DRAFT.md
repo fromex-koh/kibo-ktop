@@ -63,3 +63,23 @@
 - 적용: 이전/다음 버튼의 좌우 여백을 12px 에서 8px 로 고친 파일로 교체
 - 변경: Figma `pagination_item` 의 pre/next 폭이 68px(여백 8 + 아이콘 20 + 간격 4 + 글자 28 + 여백 8)인데 76px 로 그려지고 있었다. 번호 버튼(40×40)·색·라운드는 시안과 이미 같아 그대로다
 - 결과: 페이지네이션을 쓰는 목록 화면에서 [이전]·[다음] 버튼이 좌우로 4px 씩 좁아진다
+
+## [Diff 확인]
+
+### 메인페이지 1~3섹션 컨테이너 폭을 헤더와 같게 맞춤
+
+- 대상: src/components/custom/hero-section.tsx
+    - src/components/custom/main-second-section.tsx
+    - src/components/custom/tech-eval-section.tsx
+- 변경: 세 섹션의 그리드에서 `content-layout` 을 걷어내고 헤더와 같은 `grid-layout` 만 쓰도록 교체. 컬럼 수·칸 배분은 손대지 않았다
+- 결과: 1280px 미만에서 헤더가 792px 로 좁아질 때 본문 세 섹션도 함께 792px 가 되어 좌우 시작선이 맞는다. 1280px 이상은 종전과 같은 1200px 이다
+- 이유: `content-layout` 은 폭 상한을 항상 콘텐츠 폭(1200)으로 잡아, md 티어에서 헤더만 그리드 container(792)로 좁아지고 본문은 넓게 남아 있었다
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/093086a0a516d7e45db965f5484211767213f5b4)
+
+### 메인페이지 히어로 제목 — 태블릿 크기를 1279px 까지 적용
+
+- 대상: src/components/theme/hero-section.variants.ts
+- 변경: 제목 크기 분기를 `max-lg:` 에서 `max-xl:` 로 넓힘(값은 종전과 같은 `clamp(32px, 24px + 2.1vw, 44px)`)
+- 결과: 1024~1279px 구간이 PC 크기(48px)를 쓰던 것을 태블릿 크기로 바꿔, 위 컨테이너 폭 변경과 같은 지점(1280px)에서 함께 갈린다. 1280px 이상 48px 과 1024px 미만은 종전 그대로다
+- 함께: 위 컨테이너 폭 변경과 한 벌로 반영한다 — 폭만 좁히고 제목을 48px 로 두면 카피 칸(384px)에서 글자가 지나치게 접힌다
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/48596f63edb3a808db364c9ddc39471edbef7805)
