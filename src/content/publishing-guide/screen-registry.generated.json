@@ -108,8 +108,8 @@
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -304,8 +304,8 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -409,8 +409,8 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -514,8 +514,8 @@
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -885,8 +885,8 @@
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-electronic-signature",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
