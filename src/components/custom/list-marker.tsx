@@ -11,7 +11,7 @@ import {cn} from '@/lib/utils'
 // (unordered 12px 칸, ordered 는 순번 글자 + 8px). 본문은 마커 칸 오른쪽에서 바로 시작하므로
 // 사용처의 행(li)에는 gap 을 주지 않는다 — 주면 시안보다 들여쓰기가 그만큼 넓어진다.
 
-type ListMarkerType = 'unordered' | 'ordered'
+type ListMarkerType = 'unordered' | 'unordered-small' | 'ordered'
 type ListMarkerLevel = 1 | 2
 
 type ListMarkerTypography = 'body' | 'inherit'
@@ -53,6 +53,16 @@ const ListMarker = ({type = 'unordered', level = 1, index = 1, typography = 'bod
                 )}
             >
                 {label}
+            </span>
+        )
+    }
+
+    // unordered-small — 작은 본문(13px·행간 20) 옆에 놓이는 점. 칸 높이 20, 점 3×3(Figma
+    // list_atomic_bullet 의 type=unordered_small). 폭은 일반 점과 같은 12px 라 들여쓰기가 어긋나지 않는다.
+    if (type === 'unordered-small') {
+        return (
+            <span aria-hidden="true" className={cn('inline-flex h-5 w-3 shrink-0 items-center select-none', className)}>
+                <span className="bg-foreground-subtle size-list-dot-sm rounded-full" />
             </span>
         )
     }
