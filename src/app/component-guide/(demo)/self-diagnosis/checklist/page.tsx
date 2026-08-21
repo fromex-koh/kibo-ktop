@@ -14,7 +14,8 @@ import {
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import {StepHeader} from '@/components/composite/step-header'
 import {ChecklistForm} from '@/components/composite/checklist-form'
-import {KTRS_FM_CHECKLIST} from '@/content/technology-evaluation/ktrs-fm-checklist'
+// 업종코드가 제조일 때의 한 벌 — 목업 화면이라 갈래 하나만 보여 준다.
+import {KTRS_FM_MANUFACTURING_CHECKLIST} from '@/content/technology-evaluation/ktrs-fm-checklist'
 import {Badge} from '@/components/ui/badge'
 import {SELF_DIAGNOSIS_STEPS} from '@/constants/technology-evaluation'
 
@@ -80,7 +81,7 @@ const ChecklistPage = () => (
 
             {/* 카드와 스텝 헤더 사이는 60px(시안) — main 의 gap-10(40) 에 20 을 더한다. */}
             <div className="mt-5">
-                <ChecklistForm data={KTRS_FM_CHECKLIST} id="checklist" />
+                <ChecklistForm data={KTRS_FM_MANUFACTURING_CHECKLIST} id="checklist" />
             </div>
         </main>
 
