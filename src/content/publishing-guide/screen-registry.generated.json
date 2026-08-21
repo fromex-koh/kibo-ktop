@@ -110,8 +110,8 @@
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.3",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info-resume-notice",
@@ -125,7 +125,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.2",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-info-industry-code-search",
@@ -188,14 +188,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.2",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-service",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.2",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual",
@@ -306,8 +306,8 @@
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.3",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-technology-info",
@@ -411,8 +411,8 @@
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.3",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-technology-info",
@@ -516,8 +516,8 @@
             "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.3",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-technology-info",
@@ -887,8 +887,8 @@
             "key": "corp-mypage-representative-history-customer-consent-electronic-signature",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.3",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-detail",
@@ -1252,7 +1252,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.2",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-technology-info-self-diagnosis-result",
@@ -1315,14 +1315,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.2",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-service",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.2",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-checklist-citation-manual",
