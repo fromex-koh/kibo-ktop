@@ -53,6 +53,7 @@ const KTRS_FM_CHECKLIST: ChecklistData = {
                 {
                     name: 'q3-1',
                     text: '(1) 경영주는 과거 사업자 대표자로 창업한 경력 또는 업력 1년 미만 창업기업의 임직원으로 근무한 경력이 있고,',
+                    guide: 'restricted-industries',
                 },
                 {name: 'q3-2', text: '(2) 해당 경력 중 매출을 시현한 경험이 있다.'},
             ],
