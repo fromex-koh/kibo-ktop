@@ -9,7 +9,7 @@ export const badgeVariants = cva(
         variants: {
             variant: {'solid-pastel': '', outline: 'bg-card', solid: 'text-badge-solid-fg'},
             type: {label: '', number: 'typo-body-l-bold h-6 min-w-7 rounded-full px-2'},
-            size: {sm: 'h-7 gap-1 [&>svg]:size-3.5', lg: 'h-10 gap-1.5 [&>svg]:size-4'},
+            size: {xs: 'h-6 gap-1 [&>svg]:size-3', sm: 'h-7 gap-1 [&>svg]:size-3.5', lg: 'h-10 gap-1.5 [&>svg]:size-4'},
             color: {
                 info: '',
                 success: '',
@@ -84,6 +84,13 @@ export const badgeVariants = cva(
             // 실제 인스턴스 "KTRS-FM" 61+16=77px). 화면 인스턴스에서 "확인"(글자 28px)은 최소 너비 60px 로
             // 벌어지고 "성장초기"(글자 49px)는 pill 이면 49+24=73px 로 늘어난다.
             // lg(40px)는 Figma 에 없는 프로젝트 확장이라 기존 16px 여백을 유지한다.
+            // PROJECT-STYLE: xs(24px)는 Figma badge 세트의 size=small 이다 — 글자 12/18(typo-caption-medium),
+            // 좌우 여백 8px, 라운드 8px. 시안은 이 크기를 round 로만 그려 두었고 최소 너비도 정하지 않아
+            // (인스턴스 폭 42px 는 글자 폭에 여백을 더한 값이다) 글자만큼만 차지하게 둔다. pill 여백은
+            // 다른 크기와 같은 12px 를 따른다. Figma 의 size=large 는 프로젝트 sm(28px)에 해당한다.
+            {type: 'label', size: 'xs', class: 'typo-caption-medium'},
+            {type: 'label', size: 'xs', shape: 'pill', class: 'px-3'},
+            {type: 'label', size: 'xs', shape: 'round', class: 'px-2'},
             {type: 'label', size: 'sm', class: 'typo-body-l-medium min-w-15'},
             {type: 'label', size: 'sm', shape: 'pill', class: 'px-3'},
             {type: 'label', size: 'sm', shape: 'round', class: 'px-2'},

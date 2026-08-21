@@ -90,9 +90,9 @@ const PROPS_ITEMS = [
     [
         'Badge',
         'size',
-        'sm은 28px 높이(좌우 여백 12px · 최소 너비 60px), lg는 40px 높이(좌우 여백 16px)입니다. number는 28×24입니다.',
+        'xs는 24px 높이(좌우 여백 round 8px · pill 12px), sm은 28px 높이(좌우 여백 12px · 최소 너비 60px), lg는 40px 높이(좌우 여백 16px)입니다. number는 28×24입니다.',
         "'sm'",
-        "'sm' | 'lg'",
+        "'xs' | 'sm' | 'lg'",
     ],
     ['Badge', 'asChild', '자식 요소에 Badge 스타일과 속성을 합성합니다.', 'false', 'boolean'],
     ['Badge', 'children', '표시할 라벨·숫자·아이콘 콘텐츠입니다.', '-', 'ReactNode'],
@@ -213,12 +213,23 @@ const BadgeGuidePage = () => (
                         Size
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        Figma 두 크기입니다 — <code className="font-mono">sm</code>(기본, 28px·14px)과{' '}
-                        <code className="font-mono">lg</code>(40px·16px). 페이지 타이틀 바처럼 큰 제목 옆에는{' '}
-                        <code className="font-mono">lg</code> 를 씁니다.
+                        <code className="font-mono">xs</code>(24px·12px) · <code className="font-mono">sm</code>
+                        (기본, 28px·14px) · <code className="font-mono">lg</code>(40px·16px) 세 크기입니다. Figma badge
+                        세트의 <code className="font-mono">size=small</code> 이 xs,{' '}
+                        <code className="font-mono">size=large</code> 가 sm 에 해당합니다. 페이지 타이틀 바처럼 큰 제목
+                        옆에는 <code className="font-mono">lg</code> 를 씁니다.
                     </p>
                 </div>
                 <div className="flex flex-col gap-3">
+                    <div className="flex items-center gap-3">
+                        <span className="typo-caption-regular text-muted-foreground w-16 font-mono">xs</span>
+                        <Badge color="navy" variant="solid" shape="round" size="xs">
+                            KTRS-FM 평가
+                        </Badge>
+                        <Badge color="info" size="xs">
+                            진행중
+                        </Badge>
+                    </div>
                     <div className="flex items-center gap-3">
                         <span className="typo-caption-regular text-muted-foreground w-16 font-mono">sm</span>
                         <Badge color="navy" variant="solid" shape="round" size="sm">
