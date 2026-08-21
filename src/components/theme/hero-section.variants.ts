@@ -40,7 +40,7 @@ export const heroCopyClassName = [
 // typo-* 는 생성기가 찍는 plain 클래스라 반응형 변형을 못 받는다(SHADCN.md 타이포 유틸 예외).
 export const heroTitleClassName = [
     'text-5xl leading-normal', // 48px / 1.5
-    'max-lg:not-landscape:text-[clamp(--spacing(8),calc(--spacing(6)+2.1vw),--spacing(11))]', // 32~44px
+    'max-xl:not-landscape:text-[clamp(--spacing(8),calc(--spacing(6)+2.1vw),--spacing(11))]', // 32~44px
     'max-md:landscape:text-[clamp(--spacing(5),3.6vw,--spacing(6))]', // 20~24px
     'md:landscape:text-[--spacing(8)]', // 32px
     'max-md:not-short:leading-[1.3] max-md:short:leading-[1.25] md:landscape:leading-[1.3]',
