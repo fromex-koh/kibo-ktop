@@ -463,14 +463,27 @@
                         },
                         {
                             "label": "(3) 체크리스트 입력",
-                            "screen": {
-                                "screenId": null,
-                                "status": "완료",
-                                "application2Status": "완료",
-                                "version": "미배포",
-                                "key": "corp-technology-evaluation-ktrs-fm-checklist"
-                            },
                             "children": [
+                                {
+                                    "label": "선택한 업종코드별 페이지",
+                                    "isGroupOnly": true,
+                                    "children": [
+                                        {
+                                            "label": "업종코드 제조 선택",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-ktrs-fm-checklist-manufacturing"
+                                        },
+                                        {
+                                            "label": "업종코드 서비스 선택",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "corp-technology-evaluation-ktrs-fm-checklist-service"
+                                        }
+                                    ]
+                                },
                                 {
                                     "label": "피인용 확인 메뉴얼",
                                     "screenId": null,
@@ -2015,14 +2028,27 @@
                         },
                         {
                             "label": "(3) 체크리스트 입력",
-                            "screen": {
-                                "screenId": null,
-                                "status": "완료",
-                                "application2Status": "완료",
-                                "version": "미배포",
-                                "key": "org-individual-evaluation-ktrs-fm-checklist"
-                            },
                             "children": [
+                                {
+                                    "label": "선택한 업종코드별 페이지",
+                                    "isGroupOnly": true,
+                                    "children": [
+                                        {
+                                            "label": "업종코드 제조 선택",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-ktrs-fm-checklist-manufacturing"
+                                        },
+                                        {
+                                            "label": "업종코드 서비스 선택",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "org-individual-evaluation-ktrs-fm-checklist-service"
+                                        }
+                                    ]
+                                },
                                 {
                                     "label": "피인용 확인 메뉴얼",
                                     "screenId": null,
