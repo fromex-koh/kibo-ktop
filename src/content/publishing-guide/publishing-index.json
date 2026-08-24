@@ -206,7 +206,7 @@
                     "screen": {
                         "key": "corp-home",
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포"
                     },
                     "children": [
@@ -215,14 +215,14 @@
                             "screen": {
                                 "key": "corp-home-technology-evaluation-model-selection",
                                 "screenId": null,
-                                "status": "대기중",
+                                "status": "완료",
                                 "version": "미배포"
                             },
                             "children": [
                                 {
                                     "label": "Tech-Index 선택 화면",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-home-technology-evaluation-model-selection-tech-index"
                                 }
@@ -1771,7 +1771,7 @@
                     "screen": {
                         "key": "org-home",
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포"
                     },
                     "children": [
@@ -1779,7 +1779,7 @@
                             "label": "평가모형 선택",
                             "screen": {
                                 "screenId": null,
-                                "status": "대기중",
+                                "status": "완료",
                                 "version": "미배포",
                                 "key": "org-home-technology-evaluation-selection"
                             },
@@ -1787,7 +1787,7 @@
                                 {
                                     "label": "Tech-Index 선택 화면",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-home-technology-evaluation-selection-tech-index"
                                 }
