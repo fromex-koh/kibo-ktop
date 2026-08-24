@@ -93,7 +93,7 @@
 - 대상: src/app/(user-type)/corp/home/page.tsx
     - src/app/(user-type)/org/home/page.tsx
 - 적용: 위 공통 컴포넌트에 경로 두 개만 넘기는 얇은 화면 신규 추가. 기업 홈은 `/corp/home`, 기관 홈은 `/org/home` 이며 화면정의서에 이미 등록돼 있던 경로다
-- 화면: 로고를 누르면 자기 홈으로 돌아오고, 3섹션 [기술평가] 시작하기는 기업 홈이 `/corp/technology-evaluation/tech-index/selection`, 기관 홈이 `/org/individual-evaluation/tech-index/selection` 로 간다
+- 화면: 로고를 누르면 시작 페이지(`/`)로 가고, 3섹션 [기술평가] 시작하기는 기업 홈이 `/corp/technology-evaluation/tech-index/selection`, 기관 홈이 `/org/individual-evaluation/tech-index/selection` 로 간다
 - 위치: 라우트 그룹 밖(`corp/home`·`org/home`)에 둔다 — `(logged-in)`·`(logged-out)` 레이아웃 안에 두면 그 레이아웃의 Header 와 메인페이지 Header 가 겹친다
 
 ## [덮어쓰기]
