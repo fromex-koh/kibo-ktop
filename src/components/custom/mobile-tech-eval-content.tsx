@@ -3,16 +3,17 @@ import {ArrowRight} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {
     TECH_EVAL_CTA_FILL_CLASS,
-    TECH_EVAL_SERVICES,
     TechEvalServiceVisual,
+    buildTechEvalServices,
 } from '@/components/custom/tech-eval-services'
 import {cn} from '@/lib/utils'
 
 // 모바일 2섹션은 자동 전환 없이 네 가지 서비스를 문서 순서대로 모두 펼쳐 읽는다.
-const MobileTechEvalContent = () => (
+// [기술평가] 시작하기 CTA 가 갈 곳은 PC 배치와 같이 사용처가 정한다.
+const MobileTechEvalContent = ({technologyEvaluationHref}: {technologyEvaluationHref: string}) => (
     <div className="grid-layout w-full">
         <div className="col-span-4 flex min-w-0 flex-col">
-            {TECH_EVAL_SERVICES.map((service, index) => (
+            {buildTechEvalServices(technologyEvaluationHref).map((service, index) => (
                 <article
                     key={service.title}
                     aria-labelledby={`mobile-tech-eval-title-${index}`}

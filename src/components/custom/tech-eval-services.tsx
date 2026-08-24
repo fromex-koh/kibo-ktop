@@ -14,8 +14,11 @@ export type TechEvalService = {
     ctaHref: string
 }
 
-// 기술평가 진입 화면(평가모형 선택) 목업 경로. [MD-010]
-const EVALUATION_MODEL_PATH = '/component-guide/self-diagnosis/evaluation-model'
+// [기술평가] 카드의 제목 — 이 항목만 CTA 경로를 화면마다 다르게 받는다. [MD-010]
+const TECHNOLOGY_EVALUATION_TITLE = '기술평가'
+
+// 목업이 없는 서비스의 CTA. [MD-010]
+const NO_LINK = '#'
 
 // "시작하기" CTA가 PC 롤링·모바일 정적 배치에서 공유하는 좌→우 배경 채움 효과.
 export const TECH_EVAL_CTA_FILL_CLASS =
@@ -36,7 +39,7 @@ export const TECH_EVAL_SERVICES: TechEvalService[] = [
             'K-TOP 기술평가는 기술사업성 평가부터 혁신역량 진단, 투자 적합성 분석까지 3개 평가모형을 통합 제공합니다. 신청 목적에 맞는 모형을 선택하면 하나의 입력 절차로 평가가 진행됩니다.',
         tags: ['기술력 진단', '기술등급', '성장 가능성', '기업평가', '보증·투자 연계'],
         image: techEvaluationVisual,
-        ctaHref: EVALUATION_MODEL_PATH,
+        ctaHref: NO_LINK,
     },
     {
         title: '특허평가',
@@ -51,7 +54,7 @@ export const TECH_EVAL_SERVICES: TechEvalService[] = [
             '특허번호 입력만으로 특허의 기술성·권리성·시장성을 종합 분석하여 전체 특허 대비 상대적 위치를 AAA~C 9개 등급으로 산출합니다.',
         tags: ['특허가치', '특허등급', '기술가치평가', '온라인 평가', 'K-PAS'],
         image: patentEvaluationVisual,
-        ctaHref: '#',
+        ctaHref: NO_LINK,
     },
     {
         title: 'K-BIGx 보고서',
@@ -67,7 +70,7 @@ export const TECH_EVAL_SERVICES: TechEvalService[] = [
         tags: ['기업 분석', '산업 분석', '기술 분석', '특허 분석', '데이터 보고서'],
         // 전용 비주얼 미확보 — 확보 전까지 앞의 두 비주얼을 번갈아 재사용한다.
         image: techEvaluationVisual,
-        ctaHref: '#',
+        ctaHref: NO_LINK,
     },
     {
         // 시안 목차의 4번째 항목 — 활성 상태 시안이 아직 없어 콘텐츠는 임시값이다.
@@ -84,7 +87,7 @@ export const TECH_EVAL_SERVICES: TechEvalService[] = [
         tags: ['탄소중립', '온실가스 진단', '감축 전략', 'ESG'],
         // 전용 비주얼 미확보 — 확보 전까지 앞의 두 비주얼을 번갈아 재사용한다.
         image: patentEvaluationVisual,
-        ctaHref: '#',
+        ctaHref: NO_LINK,
     },
 ]
 
@@ -126,3 +129,10 @@ export const TechEvalServiceVisual = ({service}: {service: TechEvalService}) => 
         </div>
     </>
 )
+
+// [기술평가] 시작하기 CTA 는 이 메인 화면을 쓰는 경로가 갈 곳을 정한다 — 기업 홈은 기업 Tech-Index
+// 선택 화면, 기관 홈은 기관 것으로 간다. 나머지 서비스는 목업이 없어 그대로 둔다.
+export const buildTechEvalServices = (technologyEvaluationHref: string): TechEvalService[] =>
+    TECH_EVAL_SERVICES.map((service) =>
+        service.title === TECHNOLOGY_EVALUATION_TITLE ? {...service, ctaHref: technologyEvaluationHref} : service,
+    )

@@ -7,19 +7,29 @@ import {Button} from '@/components/ui/button'
 import {cn} from '@/lib/utils'
 import Reveal from './reveal'
 import {useStackPagerActivePage} from './stack-pager'
-import {TECH_EVAL_CTA_FILL_CLASS, TECH_EVAL_SERVICES, TechEvalServiceVisual} from './tech-eval-services'
+import {TECH_EVAL_CTA_FILL_CLASS, TechEvalServiceVisual, buildTechEvalServices} from './tech-eval-services'
 import {stackPageClassName} from '@/components/theme/stack-pager.variants'
 
 // 두 번째 화면. 세로 레일의 진행 바가 완료되면 다음 서비스로 전환하며 마지막 이후 처음부터 반복한다.
 // 일시정지 컨트롤은 시안 확정으로 제거됨(KWCAG 6.2.2 자동 전환 정지 수단은 검수 단계에서 재논의).
-const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactNode; mobileContent?: ReactNode}) => {
+const TechEvalSection = ({
+    technologyEvaluationHref,
+    bottomContent,
+    mobileContent,
+}: {
+    // [기술평가] 시작하기 CTA 가 갈 곳 — 기업 홈·기관 홈이 각자의 Tech-Index 선택 화면을 넘긴다.
+    technologyEvaluationHref: string
+    bottomContent?: ReactNode
+    mobileContent?: ReactNode
+}) => {
+    const services = buildTechEvalServices(technologyEvaluationHref)
     const stackPage = useStackPagerActivePage()
     const [activeIndex, setActiveIndex] = useState(0)
     const [entrySequence, setEntrySequence] = useState(0)
     const previousStackPageRef = useRef(stackPage)
     // 목차·CTA 버튼에 호버/포커스 중이면 진행 바를 멈추고, 벗어나면 멈춘 지점부터 이어서 재생한다.
     const [isPaused, setIsPaused] = useState(false)
-    const activeService = TECH_EVAL_SERVICES[activeIndex]
+    const activeService = services[activeIndex]
 
     // 두 번째 섹션에 새로 진입할 때만 첫 서비스와 진행 시간을 초기화한다.
     // 실제 스크롤 위치나 StackPager 전환 상태는 변경하지 않아 페이지 이동과 독립적으로 동작한다.
@@ -36,7 +46,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
     }, [stackPage])
 
     const showNextService = () => {
-        setActiveIndex((current) => (current + 1) % TECH_EVAL_SERVICES.length)
+        setActiveIndex((current) => (current + 1) % services.length)
     }
 
     return (
@@ -84,14 +94,14 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                         >
                             <span
                                 className="bg-main-accent absolute inset-x-0 top-0"
-                                style={{height: `${(activeIndex / TECH_EVAL_SERVICES.length) * 100}%`}}
+                                style={{height: `${(activeIndex / services.length) * 100}%`}}
                             />
                             <span
                                 key={`${entrySequence}-${activeIndex}`}
                                 data-paused={isPaused}
                                 style={{
-                                    top: `${(activeIndex / TECH_EVAL_SERVICES.length) * 100}%`,
-                                    height: `${100 / TECH_EVAL_SERVICES.length}%`,
+                                    top: `${(activeIndex / services.length) * 100}%`,
+                                    height: `${100 / services.length}%`,
                                 }}
                                 onAnimationEnd={showNextService}
                                 // 진행바 정지 — 목차 버튼 호버/포커스 중이거나, 이 섹션이 비활성 스택 페이지일 때.
@@ -102,7 +112,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                         {/* h-full + 활성 항목 grow — 남는 높이를 활성 항목 아래(=다음 목차와의 사이)로 몰아
                             세로 레일이 컬럼 끝까지 닿게 한다. 나머지 항목 간격은 gap-6 로 고정이다. */}
                         <ul className="flex h-full flex-col gap-6 pl-11">
-                            {TECH_EVAL_SERVICES.map((service, index) => {
+                            {services.map((service, index) => {
                                 const isActive = index === activeIndex
 
                                 return (
@@ -142,7 +152,7 @@ const TechEvalSection = ({bottomContent, mobileContent}: {bottomContent?: ReactN
                                             <Reveal
                                                 className={cn(
                                                     'mt-4 flex flex-col items-start gap-6',
-                                                    index < TECH_EVAL_SERVICES.length - 1 &&
+                                                    index < services.length - 1 &&
                                                         'mb-[clamp(--spacing(4),calc(83.34vh---spacing(127)),--spacing(39.25))]',
                                                 )}
                                             >
