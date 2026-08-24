@@ -57,7 +57,7 @@ const RouteThemeSynchronizer = ({
 
 const ThemeProvider = ({children}: {children: React.ReactNode}) => {
     const pathname = usePathname()
-    const isMainPagePath = pathname === THEME_ROUTE_CONFIG.mainPagePath
+    const isMainPagePath = THEME_ROUTE_CONFIG.mainPagePaths.some((mainPagePath) => mainPagePath === pathname)
     const defaultTheme: ThemeMode = 'dark'
     const forcedTheme = isMainPagePath ? MAIN_PAGE_THEME : undefined
     const routeThemeScope = isMainPagePath ? 'mainpage' : 'default'
