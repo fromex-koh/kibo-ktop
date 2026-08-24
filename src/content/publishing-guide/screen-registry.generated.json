@@ -5,8 +5,8 @@
             "key": "corp-home",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.4",
+            "isCurrent": true
         },
         {
             "key": "corp-home-technology-evaluation-model-selection",
@@ -111,7 +111,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info-resume-notice",
@@ -307,7 +307,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-technology-info",
@@ -412,7 +412,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-technology-info",
@@ -517,7 +517,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-technology-info",
@@ -888,7 +888,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-detail",
@@ -1160,8 +1160,8 @@
             "key": "org-home",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.4",
+            "isCurrent": true
         },
         {
             "key": "org-home-technology-evaluation-selection",
