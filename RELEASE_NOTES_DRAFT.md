@@ -71,11 +71,9 @@
 - 대상: src/components/custom/hero-section.tsx
     - src/components/custom/main-second-section.tsx
     - src/components/custom/tech-eval-section.tsx
-- 변경: 세 섹션의 그리드에서 `content-layout` 을 걷어내고 헤더와 같은 `grid-layout` 만 쓰도록 교체. 컬럼 수·칸 배분은 손대지 않았다
-- 결과: 1280px 미만에서 헤더가 792px 로 좁아질 때 본문 세 섹션도 함께 792px 가 되어 좌우 시작선이 맞는다. 1280px 이상은 종전과 같은 1200px 이다
-- 이유: `content-layout` 은 폭 상한을 항상 콘텐츠 폭(1200)으로 잡아, md 티어에서 헤더만 그리드 container(792)로 좁아지고 본문은 넓게 남아 있었다
-- 중복: 이 카드의 파일 중 둘은 다른 카드에도 나온다 — `tech-eval-section.tsx` 는 [덮어쓰기] `메인페이지 3섹션 서비스 CTA 경로`·`메인페이지 3섹션 — 화면 폭에 맞는 한 벌만 렌더`, `main-second-section.tsx` 는 [덮어쓰기] `메인페이지 2섹션 — 제목 마크업·진행 레일 정리`. 카드마다 다른 버전이 있는 것이 아니라, 같은 릴리스의 변경이 모두 담긴 파일 하나를 받으면 된다
-- 함께: [덮어쓰기] `[히어로] 제목의 태블릿 크기를 1279px 까지 적용` 과 한 벌로 반영한다 — 폭만 좁히면 카피 칸에서 제목이 지나치게 접힌다
+- 변경: 세 섹션의 그리드를 헤더와 같은 `grid-layout` 으로 통일. 1280px 미만에서 본문도 792px 로 좁아져 헤더와 좌우 시작선이 맞는다(1280px 이상은 종전과 같은 1200px)
+- 함께: [덮어쓰기] `[히어로] 제목의 태블릿 크기를 1279px 까지 적용` 과 한 벌로 반영한다
+- 중복: `tech-eval-section.tsx`·`main-second-section.tsx` 는 다른 카드에도 나온다 — 같은 릴리스의 변경이 모두 담긴 파일 하나를 받으면 된다
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/093086a0a516d7e45db965f5484211767213f5b4)
 
 ## [신규 추가]
@@ -162,12 +160,13 @@
 - 검증: `TECH_EVAL_DESKTOP_QUERY` 가 `tokens.json` 의 `breakpoint.md` 와 어긋나면 `yarn tokens` 가 빌드를 세운다(`STACK_PAGER_QUERY`·`FORM_TABS_QUERY` 와 같은 방식) — 값이 갈리면 두 벌이 함께 보이거나 둘 다 사라진다
 - 중복: 이 파일은 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭`·[덮어쓰기] `메인페이지 3섹션 서비스 CTA 경로` 카드에도 나온다. 세 변경이 모두 담긴 파일 하나를 받으면 된다
 
-### 퍼블리싱 인덱스 — 홈·평가모형 선택 화면 상태
+### 퍼블리싱 인덱스 — 화면 상태 갱신
 
 - 대상: src/content/publishing-guide/publishing-index.json
     - src/content/publishing-guide/screen-registry.generated.json
 - 적용: 지정한 파일만 교체. 화면 경로 정보(`screen-registry.json`)는 이번에 바뀌지 않았다 — 여섯 경로 모두 이미 등록돼 있었다
-- 변경: 기업·기관 `홈` 2건과 그 아래 `평가모형 선택`·`Tech-Index 선택 화면` 4건의 상태를 대기중에서 완료로 바꾼다
+- 변경: 기업·기관 `홈` 2건과 그 아래 `평가모형 선택`·`Tech-Index 선택 화면` 4건의 퍼블리싱 상태를 대기중에서 완료로 바꾼다
+- 함께: 응용2팀이 직접 갱신한 15개 화면의 `application2Status`(약관·개인정보 처리방침·로그인 안내·실명인증·KTRS-FM 하위 화면 등)가 같은 파일에 담겨 있다. 퍼블리싱이 손댄 값이 아니라 표의 응용2 열에만 반영된다
 - 참고: 아래 4건은 화면정의서에서 같은 화면을 홈 트리에 한 번 더 적어 둔 행이라 자기 경로의 page 파일이 없다. 표에서 이동 버튼 없이 라벨만 나오는 것이 정상이며, 실제 화면은 기술평가 트리의 `Tech-Index > (0) 선택 화면` 에 연결돼 있다
 
 ### 마크업 검증 문서
