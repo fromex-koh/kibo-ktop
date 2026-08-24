@@ -253,16 +253,18 @@ const IntroImageCover = ({mode}: {mode: keyof typeof COVER_SCALE_CLASS}) => (
 // 모바일은 흐름대로 한 칸씩 쌓아 사진과 번갈아 배치한다.
 const IntroLead = ({screen, headingId}: {screen: IntroScreen; headingId?: string}) => (
     <div className="flex flex-col">
-        <p className="typo-title-m-bold text-main-intro-foreground">{screen.label}</p>
-        {/* 크기는 28~36px 사이에서 유동 축소한다(시안 36px). 굵기는 시안대로 ExtraBold(800) 다.
+        {/* 대상(중소벤쳐기업·금융·기관)은 아래 제목의 머리말이라 제목 안에 둔다 — 밖에 굵은 문단으로
+            두면 제목처럼 보이는데 제목이 아닌 글이 되어 WAVE 가 "Possible heading" 으로 잡고,
+            스크린리더의 제목 이동에서도 빠진다[6.4.2]. 크기·굵기는 시안 그대로다.
+            크기는 28~36px 사이에서 유동 축소한다(시안 36px). 굵기는 시안대로 ExtraBold(800) 다.
             typo-* 는 반응형 variant 를 못 받는다 — SHADCN.md 타이포 유틸 예외(메인페이지 목업 한시적 허용). */}
-        <h2
-            id={headingId}
-            className="text-main-intro-foreground mt-8 text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(9))] leading-normal font-extrabold break-keep max-xl:text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(8))]"
-        >
-            {screen.title[0]}
-            <br />
-            {screen.title[1]}
+        <h2 id={headingId} className="text-main-intro-foreground flex flex-col">
+            <span className="typo-title-m-bold block">{screen.label}</span>
+            <span className="mt-8 block text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(9))] leading-normal font-extrabold break-keep max-xl:text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(8))]">
+                {screen.title[0]}
+                <br />
+                {screen.title[1]}
+            </span>
         </h2>
         <p className="typo-body-xl-medium text-main-intro-foreground-subtle mt-4 break-keep">{screen.description}</p>
     </div>
