@@ -1682,6 +1682,7 @@
                     "label": "이용약관",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-terms"
                 }
@@ -1695,6 +1696,7 @@
                     "label": "개인정보 처리방침",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-privacy-policy"
                 },
@@ -1715,7 +1717,7 @@
                     "label": "로그인 안내",
                     "screenId": null,
                     "status": "완료",
-                    "application2Status": "진행중",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-login-guide"
                 }
@@ -1757,6 +1759,7 @@
                     "label": "실명인증",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-real-name-verification"
                 }
@@ -1918,6 +1921,7 @@
                                     "label": "이어서 작성 안내",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-company-technology-info-resume-notice"
                                 }
@@ -2014,6 +2018,7 @@
                                     "label": "자동저장",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-additional-company-info-autosave"
                                 },
@@ -2021,6 +2026,7 @@
                                     "label": "작성 취소",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-additional-company-info-cancel-confirm"
                                 }
@@ -2037,6 +2043,7 @@
                                             "label": "업종코드 제조 선택",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-ktrs-fm-checklist-manufacturing"
                                         },
@@ -2044,6 +2051,7 @@
                                             "label": "업종코드 서비스 선택",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-ktrs-fm-checklist-service"
                                         }
@@ -2085,6 +2093,7 @@
                                     "label": "작성 취소",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-checklist-cancel-confirm"
                                 }
@@ -3117,6 +3126,7 @@
                     "label": "우편번호 검색",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-postcode-search"
                 }
@@ -3130,6 +3140,7 @@
                     "label": "이용약관",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-terms"
                 }
@@ -3143,6 +3154,7 @@
                     "label": "개인정보 처리방침",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-privacy-policy"
                 },
@@ -3163,6 +3175,7 @@
                     "label": "로그인 안내",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-login-guide"
                 }
@@ -3176,6 +3189,7 @@
                     "label": "최초 비밀번호 변경",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-initial-password-change"
                 }
