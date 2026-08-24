@@ -96,6 +96,11 @@
 - 화면: 로고를 누르면 시작 페이지(`/`)로 가고, 3섹션 [기술평가] 시작하기는 기업 홈이 `/corp/technology-evaluation/tech-index/selection`, 기관 홈이 `/org/individual-evaluation/tech-index/selection` 로 간다
 - 위치: 라우트 그룹 밖(`corp/home`·`org/home`)에 둔다 — `(logged-in)`·`(logged-out)` 레이아웃 안에 두면 그 레이아웃의 Header 와 메인페이지 Header 가 겹친다
 
+### 마크업 검증 결과 데이터
+
+- 대상: src/app/component-guide/(guide)/validation-exceptions/screen-markup-results.ts
+- 적용: 신규 파일 추가. 아래 [덮어쓰기] `마크업 검증 문서` 가 import 하므로 함께 반영한다
+
 ## [덮어쓰기]
 
 ### [히어로] 제목의 태블릿 크기를 1279px 까지 적용
@@ -164,3 +169,9 @@
 - 적용: 지정한 파일만 교체. 화면 경로 정보(`screen-registry.json`)는 이번에 바뀌지 않았다 — 여섯 경로 모두 이미 등록돼 있었다
 - 변경: 기업·기관 `홈` 2건과 그 아래 `평가모형 선택`·`Tech-Index 선택 화면` 4건의 상태를 대기중에서 완료로 바꾼다
 - 참고: 아래 4건은 화면정의서에서 같은 화면을 홈 트리에 한 번 더 적어 둔 행이라 자기 경로의 page 파일이 없다. 표에서 이동 버튼 없이 라벨만 나오는 것이 정상이며, 실제 화면은 기술평가 트리의 `Tech-Index > (0) 선택 화면` 에 연결돼 있다
+
+### 마크업 검증 문서
+
+- 대상: src/app/component-guide/(guide)/validation-exceptions/page.tsx
+- 적용: 파일 교체. 위 [신규 추가] 데이터 파일과 함께 반영한다
+- 변경: 서비스 화면 217개 전수 검사 결과로 문서를 다시 작성. 감리 제출용 가이드 페이지라 서비스 화면 동작에는 영향이 없다
