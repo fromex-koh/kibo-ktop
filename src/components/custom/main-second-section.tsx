@@ -84,12 +84,16 @@ const COVER_SCALE_CLASS = {
 
 // 진행 레일 — 앞의 조리개가 다 열린 뒤에 이어서 단계별로 재생한다. 카피가 여러 번 쓰이는데
 // 각자 앞에 오는 조리개가 달라, 조리개를 움직이는 바로 그 변수를 --rail-on(0=비움 / 1=채움)으로 받는다.
-//  · entry — 진입 리빌. 조리개가 닫혀 있으면(--intro-entry-cover:1) 0, 다 열리면 1
+//  · entry — 진입 리빌. 조리개가 닫혀 있으면(--intro-entry-cover:1) 0, 다 열리면 1.
+//            여기에 교차 진행도까지 곱한다 — 첫 화면은 교차로 넘어가면 보이지 않으므로 레일도 함께
+//            비우고, 되돌아오면 처음부터 다시 재생한다. 곱하지 않으면 두 번째 화면에 갔다 돌아왔을 때
+//            이미 다 채워진 레일이 그대로 남는다. 교차가 없는 화면(모바일)은 진행도가 늘 0 이라
+//            (1 - 0) = 1 로 종전과 같다.
 //  · swap  — 좌우 교차. --intro-progress 를 그대로 쓴다
 // 커버·카피 페이드와 같은 변수를 보므로 상태가 어긋날 수 없고, 조리개가 없는 화면(페이저 off·모션
 // 최소화)에서는 두 변수 모두 채움 쪽 값이라 처음부터 채워진 상태다. [KWCAG 6.3.1]
 const RAIL_ON_CLASS = {
-    entry: '[--rail-on:calc(1_-_var(--intro-entry-cover))]',
+    entry: '[--rail-on:calc((1_-_var(--intro-entry-cover))_*_(1_-_var(--intro-progress)))]',
     swap: '[--rail-on:var(--intro-progress)]',
 } as const
 
@@ -97,19 +101,37 @@ const RAIL_ON_CLASS = {
 // 순으로 한 마디씩 넘어간다. 한 단계는 0.6초 간격이고, 마디(0.5초)가 다음 표식(0.3초)에 살짝
 // 겹치게 두어 마디 사이가 끊겨 보이지 않게 한다. 마지막 마디는 2.35초에 시작해 2.85초에 끝난다.
 //
-// 지연에 --rail-on 을 곱하는 이유 — 비우는 방향(0)에서는 지연이 0 이 되어 즉시 되감긴다. 되돌아가는
-// 길에도 지연이 걸리면 레일을 비우는 데 3초 가까이 걸려, 섹션을 다시 방문했을 때 이미 채워진 채로
-// 남아 재생을 못 본다.
+// 지연은 방향마다 다르다 — transition-delay 는 바뀐 뒤 상태의 값을 쓰므로, --rail-on 으로 두 값을
+// 섞으면 한 클래스로 양방향을 적을 수 있다: 채울 때(1)는 앞의 값, 비울 때(0)는 뒤의 값이 남는다.
+//
+// 비우는 쪽은 채우는 순서를 거꾸로 되감는다 — 마지막 마디가 먼저 사라지고 첫 표식이 마지막에 꺼진다.
+// 되감기 값은 채우기 시간표를 뒤집어 얻는다(끝나는 시각 2850ms 기준: 지연 = 2850 - (시작 + 길이)).
+// 조리개를 기다릴 필요가 없어 되감기는 1.85초에 끝난다.
+//
+// 단, 되감기는 섹션 안에서 좌우로 교차할 때만이다. 섹션을 아예 벗어나면(조리개가 다시 닫혀
+// --intro-entry-cover 가 1) 되감기 지연과 길이를 모두 0 으로 만들어 그 자리에서 리셋한다 —
+// 되감는 1.85초 안에 사용자가 다시 들어오면 반쯤 지워진 레일에서 이어져 버벅이기 때문이다.
+// 되감기 항의 (1 - --intro-entry-cover) 가 "섹션 안에서만 되감는다"를 만든다. 클래스 이름은 Tailwind 가
+// 소스에서 그대로 찾아 만들어야 해서 문자열을 쪼개 조립하지 않고 통째로 적는다.
 const RAIL_MARKER_DELAY_CLASS = [
-    '[transition-delay:calc(var(--rail-on)*1000ms)]',
-    '[transition-delay:calc(var(--rail-on)*1600ms)]',
-    '[transition-delay:calc(var(--rail-on)*2200ms)]',
+    '[transition-delay:calc(var(--rail-on)*1000ms_+_(1_-_var(--rail-on))*(1_-_var(--intro-entry-cover))*1550ms)]',
+    '[transition-delay:calc(var(--rail-on)*1600ms_+_(1_-_var(--rail-on))*(1_-_var(--intro-entry-cover))*950ms)]',
+    '[transition-delay:calc(var(--rail-on)*2200ms_+_(1_-_var(--rail-on))*(1_-_var(--intro-entry-cover))*350ms)]',
 ] as const
 const RAIL_SEGMENT_DELAY_CLASS = [
-    '[transition-delay:calc(var(--rail-on)*1150ms)]',
-    '[transition-delay:calc(var(--rail-on)*1750ms)]',
+    '[transition-delay:calc(var(--rail-on)*1150ms_+_(1_-_var(--rail-on))*(1_-_var(--intro-entry-cover))*1200ms)]',
+    '[transition-delay:calc(var(--rail-on)*1750ms_+_(1_-_var(--rail-on))*(1_-_var(--intro-entry-cover))*600ms)]',
     '[transition-delay:calc(var(--rail-on)*2350ms)]',
 ] as const
+
+// 전환 길이도 같은 규칙이다 — 다만 "채우는 쪽"은 조리개 상태와 무관하게 항상 제 길이를 쓴다.
+// 조리개만 보고 0 으로 만들면, 아래(3섹션)에서 올라와 2-2 로 들어올 때 교차 진행도가 조리개보다
+// 먼저 켜지는 순간 레일이 통째로 튀어 계단식 재생이 사라진다. 비우는 쪽만, 그것도 섹션을 벗어난
+// 경우에만 0 이 된다.
+const RAIL_MARKER_DURATION_CLASS =
+    '[transition-duration:calc((var(--rail-on)_+_(1_-_var(--rail-on))*(1_-_var(--intro-entry-cover)))*300ms)]'
+const RAIL_SEGMENT_DURATION_CLASS =
+    '[transition-duration:calc((var(--rail-on)_+_(1_-_var(--rail-on))*(1_-_var(--intro-entry-cover)))*500ms)]'
 
 // 채움 마디의 폭 — 표식은 단계 그리드의 컬럼 시작점에 있으므로, 앞의 두 마디는 컬럼 사이 간격
 // (gap-x-3.5 = 14px)까지 건너야 다음 표식에 닿는다. 마지막 마디는 레일 끝까지 간다.
@@ -253,16 +275,18 @@ const IntroImageCover = ({mode}: {mode: keyof typeof COVER_SCALE_CLASS}) => (
 // 모바일은 흐름대로 한 칸씩 쌓아 사진과 번갈아 배치한다.
 const IntroLead = ({screen, headingId}: {screen: IntroScreen; headingId?: string}) => (
     <div className="flex flex-col">
-        <p className="typo-title-m-bold text-main-intro-foreground">{screen.label}</p>
-        {/* 크기는 28~36px 사이에서 유동 축소한다(시안 36px). 굵기는 시안대로 ExtraBold(800) 다.
+        {/* 대상(중소벤쳐기업·금융·기관)은 아래 제목의 머리말이라 제목 안에 둔다 — 밖에 굵은 문단으로
+            두면 제목처럼 보이는데 제목이 아닌 글이 되어 WAVE 가 "Possible heading" 으로 잡고,
+            스크린리더의 제목 이동에서도 빠진다[6.4.2]. 크기·굵기는 시안 그대로다.
+            크기는 28~36px 사이에서 유동 축소한다(시안 36px). 굵기는 시안대로 ExtraBold(800) 다.
             typo-* 는 반응형 variant 를 못 받는다 — SHADCN.md 타이포 유틸 예외(메인페이지 목업 한시적 허용). */}
-        <h2
-            id={headingId}
-            className="text-main-intro-foreground mt-8 text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(9))] leading-normal font-extrabold break-keep max-xl:text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(8))]"
-        >
-            {screen.title[0]}
-            <br />
-            {screen.title[1]}
+        <h2 id={headingId} className="text-main-intro-foreground flex flex-col">
+            <span className="typo-title-m-bold block">{screen.label}</span>
+            <span className="mt-8 block text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(9))] leading-normal font-extrabold break-keep max-xl:text-[clamp(--spacing(7),calc(--spacing(4)+2vw),--spacing(8))]">
+                {screen.title[0]}
+                <br />
+                {screen.title[1]}
+            </span>
         </h2>
         <p className="typo-body-xl-medium text-main-intro-foreground-subtle mt-4 break-keep">{screen.description}</p>
     </div>
@@ -287,7 +311,8 @@ const IntroProcessRail = ({screen, trigger}: {screen: IntroScreen; trigger: keyo
                                 'bg-main-intro-accent absolute top-1/2 left-0 h-0.5 origin-left -translate-y-1/2',
                                 RAIL_SEGMENT_WIDTH_CLASS[index],
                                 'scale-x-[var(--rail-on)]',
-                                'transition-[scale] duration-500 ease-out motion-reduce:transition-none',
+                                'transition-[scale] ease-out motion-reduce:transition-none',
+                                RAIL_SEGMENT_DURATION_CLASS,
                                 RAIL_SEGMENT_DELAY_CLASS[index],
                             )}
                         />
@@ -296,7 +321,8 @@ const IntroProcessRail = ({screen, trigger}: {screen: IntroScreen; trigger: keyo
                             className={cn(
                                 'bg-main-intro-accent absolute top-0 left-0 size-2 rounded-full',
                                 'scale-[calc(0.5_+_0.5_*_var(--rail-on))] [opacity:var(--rail-on)]',
-                                'transition-[opacity,scale] duration-300 ease-out motion-reduce:transition-none',
+                                'transition-[opacity,scale] ease-out motion-reduce:transition-none',
+                                RAIL_MARKER_DURATION_CLASS,
                                 RAIL_MARKER_DELAY_CLASS[index],
                             )}
                         />
@@ -574,9 +600,9 @@ const MainSecondSection = () => {
                     {/* 고정 헤더 자리 — md 56px · lg 이상 112px. 여기만 줄어들지 않는다. */}
                     <div aria-hidden="true" className="h-14 shrink-0 lg:h-28" />
                     <div aria-hidden="true" className="h-[clamp(--spacing(6),9.26vh,--spacing(25))]" />
-                    {/* content-layout — 헤더·1섹션·3섹션과 같은 콘텐츠 폭 셸. grid-layout 만 쓰면 md 티어에서
-                        그리드 자체 container(792)로 좁아져 헤더와 좌우 시작선이 어긋난다. */}
-                    <div className="grid-layout content-layout min-h-0 w-full gap-y-12 md:grid-rows-1 md:gap-y-0">
+                    {/* 헤더·1섹션·3섹션과 같은 grid-layout 을 쓴다 — md 티어에서 함께 container(792)로
+                        좁아져야 헤더와 좌우 시작선이 맞는다. */}
+                    <div className="grid-layout min-h-0 w-full gap-y-12 md:grid-rows-1 md:gap-y-0">
                         {/* 왼쪽 셀 — 첫 화면에서 카피가 보이는 쪽. 사진은 처음부터 전체 면적으로 합성해
                             두고 표면색 패널만 연다. 카피는 패널보다 위에서 함께 페이드하므로 초기
                             레이아웃을 가리지 않는다. 스크롤하면 패널이 열리며 사진으로 바뀐다. */}

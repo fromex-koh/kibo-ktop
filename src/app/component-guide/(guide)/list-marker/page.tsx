@@ -31,9 +31,15 @@ const USAGE_CODE = `<ul className="flex list-none flex-col gap-2">
   <span className="min-w-0">KIPRIS 에 접속해 특허·실용신안 메뉴를 클릭합니다.</span>
 </p>`
 
-// 4개 변형 — [type, level, 설명, 예]
+// 5개 변형 — [type, level, 설명, 예]
 const VARIANTS = [
     {type: 'unordered', level: 1, desc: '점(•) — 기본 불릿', label: 'unordered · level 1'},
+    {
+        type: 'unordered-small',
+        level: 1,
+        desc: '작은 점(•) — 13px 본문용 불릿',
+        label: 'unordered-small · level 1',
+    },
     {type: 'unordered', level: 2, desc: '대시(–) — 2뎁스 불릿', label: 'unordered · level 2'},
     {type: 'ordered', level: 1, desc: '숫자(1.) — 순서 목록', label: 'ordered · level 1'},
     {type: 'ordered', level: 2, desc: '문자(a.) — 2뎁스 순서 목록', label: 'ordered · level 2'},
@@ -53,6 +59,15 @@ const SPEC_ROWS = [
         cells: ['unordered · level 1', '점 4×4, 원형', '12px (글리프 4 + 여백 8)', 'foreground-subtle'],
     },
     {
+        key: 'unordered-small-1',
+        cells: [
+            'unordered-small · level 1',
+            '점 3×3, 원형',
+            '12px (글리프 3 + 여백 9) · 칸 높이 20',
+            'foreground-subtle',
+        ],
+    },
+    {
         key: 'unordered-2',
         cells: ['unordered · level 2', '대시 6×1.5, 직사각형', '12px (글리프 6 + 여백 6)', 'foreground-subtle'],
     },
@@ -67,7 +82,13 @@ const SPEC_ROWS = [
 ]
 
 const PROPS_ITEMS = [
-    ['ListMarker', 'type', '불릿 계열과 순서 계열을 선택합니다.', "'unordered'", "'unordered' | 'ordered'"],
+    [
+        'ListMarker',
+        'type',
+        '불릿 계열과 순서 계열을 선택합니다. unordered-small 은 칸 높이 20px·점 3×3 으로, 13px 본문 옆에 놓을 때 씁니다(level 은 무시).',
+        "'unordered'",
+        "'unordered' | 'unordered-small' | 'ordered'",
+    ],
     ['ListMarker', 'level', '1은 점·숫자, 2는 대시·소문자로 표시합니다.', '1', '1 | 2'],
     ['ListMarker', 'index', 'ordered 순번입니다. level 2는 1–26을 a–z로 표시합니다.', '1', 'number'],
     [
@@ -93,7 +114,7 @@ const ListMarkerGuidePage = () => (
                         변형
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">type</code>(unordered·ordered) ×{' '}
+                        <code className="font-mono">type</code>(unordered·unordered-small·ordered) ×{' '}
                         <code className="font-mono">level</code>
                         (1·2) 의 4가지입니다.
                     </p>

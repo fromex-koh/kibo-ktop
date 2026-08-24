@@ -102,7 +102,10 @@ const HeroStatsRoller = ({stats}: {stats: HeroStat[]}) => {
                                 'flex flex-col justify-start gap-0 md:items-end md:text-right',
                             )}
                         >
-                            <p
+                            {/* 문단이 아니라 수치 한 줄의 이름표라 span 으로 둔다 — 본문보다 큰 짧은 <p> 는
+                                제목처럼 보이는데 제목이 아닌 글이라 WAVE 가 "Possible heading" 으로 잡는다.
+                                줄의 뜻(목록의 한 항목)은 감싸는 li 가 이미 전한다[6.4.2]. */}
+                            <span
                                 className={cn(
                                     heroStatTitleClassName,
                                     'text-foreground flex items-center gap-1 break-keep md:whitespace-nowrap',
@@ -118,8 +121,8 @@ const HeroStatsRoller = ({stats}: {stats: HeroStat[]}) => {
                                     )}
                                 </strong>
                                 {stat.label}
-                            </p>
-                            <p className="typo-caption-medium text-foreground-subtle">{stat.note}</p>
+                            </span>
+                            <span className="typo-caption-medium text-foreground-subtle block">{stat.note}</span>
                         </li>
                     )
                 })}

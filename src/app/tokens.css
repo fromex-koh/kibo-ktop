@@ -10,7 +10,7 @@
   --raw-blue-200: #c8ddff;
   --raw-blue-300: #9ec1ff;
   --raw-blue-400: #6f9ef7;
-  --raw-blue-500: #3f7deb;
+  --raw-blue-500: #3172e2;
   --raw-blue-600: #3568d6;
   --raw-blue-700: #2c55b3;
   --raw-blue-800: #22418c;
@@ -130,7 +130,7 @@
   --raw-info-200: #a3bfee;
   --raw-info-300: #78a2e6;
   --raw-info-400: #5e90e1;
-  --raw-info-500: #3674da;
+  --raw-info-500: #3172e2;
   --raw-info-600: #316ac6;
   --raw-info-700: #26529b;
   --raw-info-800: #1e4078;
@@ -1549,6 +1549,7 @@
   --ds-spacing-sidebar-pl: var(--ds-spacing-sidebar-w);
   --ds-spacing-tab-line-h: 2.875rem;
   --ds-spacing-list-dash-h: 0.0938rem;
+  --ds-spacing-list-dot-sm: 0.1875rem;
   --ds-spacing-modal-max-h: 80dvh;
   /* radius — base ± 오프셋(shadcn 컨벤션: 단일 --radius + calc 파생) */
   --ds-radius-base: 1rem;
@@ -1651,6 +1652,7 @@
   --spacing-sidebar-pl: var(--ds-spacing-sidebar-pl);
   --spacing-tab-line-h: var(--ds-spacing-tab-line-h);
   --spacing-list-dash-h: var(--ds-spacing-list-dash-h);
+  --spacing-list-dot-sm: var(--ds-spacing-list-dot-sm);
   --spacing-modal-max-h: var(--ds-spacing-modal-max-h);
   --radius-2xs: var(--ds-radius-2xs);
   --radius-xs: var(--ds-radius-xs);

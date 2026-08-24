@@ -264,6 +264,20 @@ try {
     errors.push(`${FORM_TABS_SOURCE} 를 읽을 수 없음 — FormTabs 미디어쿼리 동기화 검증 불가`)
 }
 
+// 메인 3섹션도 같은 이유다 — 롤링(md 이상)과 모바일 목록 중 한 벌만 그리는 JS 조건이
+// max-md:hidden · md:hidden 과 어긋나면 두 벌이 함께 보이거나 둘 다 사라진다.
+const TECH_EVAL_SOURCE = 'src/components/custom/tech-eval-section.tsx'
+try {
+    const src = readFileSync(resolve(ROOT, TECH_EVAL_SOURCE), 'utf8')
+    const expected = `(min-width: ${breakpoint.md}px)`
+    if (!src.includes(`TECH_EVAL_DESKTOP_QUERY = '${expected}'`))
+        errors.push(
+            `${TECH_EVAL_SOURCE} 의 TECH_EVAL_DESKTOP_QUERY 가 토큰과 다름 — 기대값 "${expected}" (breakpoint.md 와 한 세트)`,
+        )
+} catch {
+    errors.push(`${TECH_EVAL_SOURCE} 를 읽을 수 없음 — TECH_EVAL_DESKTOP_QUERY 동기화 검증 불가`)
+}
+
 if (errors.length) {
     console.error('❌ tokens.json 검증 실패:\n' + errors.map((e) => '  - ' + e).join('\n'))
     process.exit(1)
