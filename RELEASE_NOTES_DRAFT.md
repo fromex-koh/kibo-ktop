@@ -74,12 +74,66 @@
 - 변경: 세 섹션의 그리드에서 `content-layout` 을 걷어내고 헤더와 같은 `grid-layout` 만 쓰도록 교체. 컬럼 수·칸 배분은 손대지 않았다
 - 결과: 1280px 미만에서 헤더가 792px 로 좁아질 때 본문 세 섹션도 함께 792px 가 되어 좌우 시작선이 맞는다. 1280px 이상은 종전과 같은 1200px 이다
 - 이유: `content-layout` 은 폭 상한을 항상 콘텐츠 폭(1200)으로 잡아, md 티어에서 헤더만 그리드 container(792)로 좁아지고 본문은 넓게 남아 있었다
+- 중복: `tech-eval-section.tsx` 는 [덮어쓰기] `메인페이지 3섹션 서비스 CTA 경로` 카드에도 나온다. 같은 릴리스라 두 변경이 모두 담긴 파일 하나를 받으면 되고, 따로 합칠 필요는 없다
+- 함께: [덮어쓰기] `[히어로] 제목의 태블릿 크기를 1279px 까지 적용` 과 한 벌로 반영한다 — 폭만 좁히면 카피 칸에서 제목이 지나치게 접힌다
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/093086a0a516d7e45db965f5484211767213f5b4)
 
-### 메인페이지 히어로 제목 — 태블릿 크기를 1279px 까지 적용
+## [신규 추가]
+
+### 메인 랜딩 화면 공통 컴포넌트
+
+- 대상: src/components/custom/main-page-screen.tsx
+    - src/components/custom/main-page-header-state.tsx
+- 적용: 메인 랜딩 화면 한 벌을 공통 자리에 신규 추가. 기업 홈·기관 홈·컴포넌트 가이드 목업이 같은 화면을 쓰므로, 화면마다 다른 값 두 개(`logoHref` · `technologyEvaluationHref`)만 prop 으로 받는다
+- 삭제: src/app/component-guide/(demo)/main-page/main-page-header-state.tsx 를 함께 삭제해야 한다. 가이드 폴더 안에 있던 같은 파일을 공통 자리로 옮긴 것이며, 내용은 바뀌지 않았다
+- 주의: 이 컴포넌트가 있어야 [덮어쓰기] `컴포넌트 가이드 메인페이지 목업` 과 [신규 추가] `기업 홈·기관 홈 화면` 이 동작한다 — 셋을 한 번에 반영한다
+
+### 기업 홈·기관 홈 화면
+
+- 대상: src/app/(user-type)/corp/home/page.tsx
+    - src/app/(user-type)/org/home/page.tsx
+- 적용: 위 공통 컴포넌트에 경로 두 개만 넘기는 얇은 화면 신규 추가. 기업 홈은 `/corp/home`, 기관 홈은 `/org/home` 이며 화면정의서에 이미 등록돼 있던 경로다
+- 화면: 로고를 누르면 자기 홈으로 돌아오고, 3섹션 [기술평가] 시작하기는 기업 홈이 `/corp/technology-evaluation/tech-index/selection`, 기관 홈이 `/org/individual-evaluation/tech-index/selection` 로 간다
+- 위치: 라우트 그룹 밖(`corp/home`·`org/home`)에 둔다 — `(logged-in)`·`(logged-out)` 레이아웃 안에 두면 그 레이아웃의 Header 와 메인페이지 Header 가 겹친다
+
+## [덮어쓰기]
+
+### [히어로] 제목의 태블릿 크기를 1279px 까지 적용
 
 - 대상: src/components/theme/hero-section.variants.ts
-- 변경: 제목 크기 분기를 `max-lg:` 에서 `max-xl:` 로 넓힘(값은 종전과 같은 `clamp(32px, 24px + 2.1vw, 44px)`)
-- 결과: 1024~1279px 구간이 PC 크기(48px)를 쓰던 것을 태블릿 크기로 바꿔, 위 컨테이너 폭 변경과 같은 지점(1280px)에서 함께 갈린다. 1280px 이상 48px 과 1024px 미만은 종전 그대로다
-- 함께: 위 컨테이너 폭 변경과 한 벌로 반영한다 — 폭만 좁히고 제목을 48px 로 두면 카피 칸(384px)에서 글자가 지나치게 접힌다
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/48596f63edb3a808db364c9ddc39471edbef7805)
+- 적용: 제목 크기 분기를 `max-lg:` 에서 `max-xl:` 로 넓힌 파일로 교체. 값은 종전과 같은 `clamp(32px, 24px + 2.1vw, 44px)` 이고 여백·간격 등 나머지 구간도 그대로다
+- 결과: 1024~1279px 구간이 PC 크기(48px)를 쓰던 것을 태블릿 크기로 바꿔, 컨테이너 폭이 갈리는 지점(1280px)에서 함께 갈린다. 1280px 이상 48px 과 1024px 미만은 종전 그대로다
+- 함께: 위 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭` 과 한 벌로 반영한다 — 폭만 좁히고 제목을 48px 로 두면 카피 칸(384px)에서 글자가 지나치게 접힌다
+
+### 메인페이지 3섹션 서비스 CTA 경로를 사용처가 정하도록 변경
+
+- 대상: src/components/custom/tech-eval-services.tsx
+    - src/components/custom/tech-eval-section.tsx
+    - src/components/custom/mobile-tech-eval-content.tsx
+- 적용: `[기술평가]` 카드의 시작하기 경로를 데이터에 박아 두던 것을, 사용처가 넘긴 값으로 갈아끼우는 `buildTechEvalServices(href)` 방식으로 교체. 나머지 세 서비스(특허평가·K-BIGx·탄소중립)는 목업이 없어 종전대로 `#` 이다
+- 변경: 섹션 컴포넌트 둘(PC 롤링·모바일 정적)이 `technologyEvaluationHref` 를 받는다. 두 배치가 같은 경로를 쓰므로 화면마다 한 번만 정하면 된다
+- 주의: `tech-eval-section.tsx` 는 위 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭` 카드에도 나온다. 같은 릴리스라 두 변경이 모두 담긴 파일 하나를 받으면 된다
+- 순서: 위 [신규 추가] 공통 컴포넌트와 함께 반영한다 — `technologyEvaluationHref` 는 필수 값이라 한쪽만 넣으면 타입이 맞지 않는다
+
+### 컴포넌트 가이드 메인페이지 목업 — 공통 컴포넌트 사용
+
+- 대상: src/app/component-guide/(demo)/main-page/page.tsx
+- 적용: 화면을 직접 조립하던 것을 공통 `MainPageScreen` 에 경로 두 개만 넘기는 얇은 page 로 교체
+- 결과: **화면에 보이는 것과 동작은 종전과 완전히 같다** — 로고 링크·시작하기 경로·Skip Link·섹션 구성 모두 그대로다. 조립 코드를 기업 홈·기관 홈과 공유하려고 옮긴 것뿐이다
+- 순서: 위 [신규 추가] `메인 랜딩 화면 공통 컴포넌트` 와 함께 반영한다
+
+### mainpage 테마를 적용할 경로 목록
+
+- 대상: src/components/theme-provider.tsx
+    - src/constants/theme-routes.ts
+- 적용: 메인페이지 경로를 하나만 두고 `===` 로 비교하던 것을, 목록에 있는지 확인하는 방식으로 교체. 상수 이름이 `mainPagePath` 에서 `mainPagePaths` 로 바뀌므로 두 파일을 함께 받아야 한다
+- 이유: 같은 메인 랜딩 화면이 기업 홈·기관 홈·가이드 목업 세 경로에 있는데, 경로가 하나뿐이라 기업 홈·기관 홈이 mainpage 스킨을 받지 못하고 기본 테마로 떨어졌다
+- 설정: 목록에 있는 경로만 mainpage 로 고정되고 나머지는 기본 테마를 쓴다. 서비스에서 이 화면을 루트(`/`)에도 두면 `/` 를 목록에 추가한다
+
+### 퍼블리싱 인덱스 — 홈·평가모형 선택 화면 상태
+
+- 대상: src/content/publishing-guide/publishing-index.json
+    - src/content/publishing-guide/screen-registry.generated.json
+- 적용: 지정한 파일만 교체. 화면 경로 정보(`screen-registry.json`)는 이번에 바뀌지 않았다 — 여섯 경로 모두 이미 등록돼 있었다
+- 변경: 기업·기관 `홈` 2건과 그 아래 `평가모형 선택`·`Tech-Index 선택 화면` 4건의 상태를 대기중에서 완료로 바꾼다
+- 참고: 아래 4건은 화면정의서에서 같은 화면을 홈 트리에 한 번 더 적어 둔 행이라 자기 경로의 page 파일이 없다. 표에서 이동 버튼 없이 라벨만 나오는 것이 정상이며, 실제 화면은 기술평가 트리의 `Tech-Index > (0) 선택 화면` 에 연결돼 있다
