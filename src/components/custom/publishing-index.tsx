@@ -284,7 +284,7 @@ type FlatLeaf = {
     application2Status: Status
     version: string
     isRed?: boolean
-    userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 공통(기업·기관 둘 다).
+    userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 어느 필터에도 걸리지 않는다.
 }
 
 const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
@@ -405,9 +405,10 @@ const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
 type UserTypeFilter = UserType
 const USER_TYPE_FILTERS: readonly UserTypeFilter[] = USER_TYPE_VALUES
 // 상태·릴리스 배지에서 이미 사용하는 색상과 겹치지 않는 분류용 보조색을 IA 유형에 사용한다.
-const IA_BADGE_COLOR: Record<UserTypeFilter, 'secondary-orange' | 'secondary-green'> = {
+const IA_BADGE_COLOR: Record<UserTypeFilter, 'secondary-orange' | 'secondary-green' | 'secondary-purple'> = {
     기업: 'secondary-orange',
     기관: 'secondary-green',
+    탄소: 'secondary-purple',
 }
 // SegmentedControl radio 타입이 넘겨주는 문자열 value를 UserTypeFilter로 좁히는 타입가드([ST-002] as 회피).
 const isUserTypeFilter = (value: string): value is UserTypeFilter => USER_TYPE_FILTERS.some((f) => f === value)
@@ -719,7 +720,11 @@ const PublishingIndex = () => {
                             </SectionHeaderTitle>
                             <SectionHeaderDescription asChild>
                                 <ul className="flex list-disc flex-col gap-1 pl-5">
-                                    <li>기업·기관 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다.</li>
+                                    <li>기업·기관·탄소 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다.</li>
+                                    <li>
+                                        탄소는 별도 프로젝트(탄소중립 플랫폼 FO)의 IA입니다 — 이 저장소에서 화면을
+                                        만들지 않고 구조와 화면 주소만 관리합니다.
+                                    </li>
                                     <li>
                                         메뉴 자체가 화면인 행의 미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시합니다.
                                     </li>

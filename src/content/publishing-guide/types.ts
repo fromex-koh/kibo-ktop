@@ -12,11 +12,20 @@ export const STATUS_VALUES: readonly Status[] = ['대기중', '진행중', '수�
 export const isStatus = (value: string): value is Status => STATUS_VALUES.some((status) => status === value)
 
 // ── 사용자 유형(화면을 볼 수 있는 대상) ──
-// 없으면 공통(기업·기관 둘 다 노출). 그룹·브랜치에 지정하면 하위 화면이 상속하고,
-// 하위에서 다시 지정하면 그 값이 우선한다. 화면 필터(전체/기업/기관)의 기준이 된다.
-export type UserType = '기업' | '기관'
+// 그룹·브랜치에 지정하면 하위 화면이 상속하고, 하위에서 다시 지정하면 그 값이 우선한다.
+// 화면 필터(기업/기관/탄소)의 기준이 된다.
+//
+// 탄소는 이 저장소가 퍼블리싱하는 화면이 아니라 별도 프로젝트(탄소중립 플랫폼 FO)의 IA다 —
+// 화면을 만들지 않고 인덱스에 구조와 key 만 둔다.
+export type UserType = '기업' | '기관' | '탄소'
 
-export const USER_TYPE_VALUES: readonly UserType[] = ['기업', '기관']
+export const USER_TYPE_VALUES: readonly UserType[] = ['기업', '기관', '탄소']
+
+// 화면을 이 저장소에서 만들지 않는 사용자 유형 — 경로 레지스트리와 짝을 맞추지 않는다.
+export const EXTERNAL_USER_TYPES: readonly UserType[] = ['탄소']
+
+export const isExternalUserType = (userType: UserType): boolean =>
+    EXTERNAL_USER_TYPES.some((external) => external === userType)
 
 export const isUserType = (value: string): value is UserType => USER_TYPE_VALUES.some((userType) => userType === value)
 
