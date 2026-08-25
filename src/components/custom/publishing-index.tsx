@@ -285,6 +285,8 @@ type FlatLeaf = {
     version: string
     isRed?: boolean
     userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 어느 필터에도 걸리지 않는다.
+    // 외부 프로젝트 화면의 주소(탄소) — 있으면 화면명을 새 창 링크로 연다.
+    externalHref?: string
 }
 
 const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
@@ -324,6 +326,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           version: node.screen.version,
                           ...(node.screen.isRed ? {isRed: true} : {}),
                           userType: node.screen.userType ?? branchUserType,
+                          ...(node.screen.externalHref !== undefined ? {externalHref: node.screen.externalHref} : {}),
                       },
                   ]
                 : []
@@ -348,6 +351,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 version: node.version,
                 ...(node.isRed ? {isRed: true} : {}),
                 userType: node.userType ?? inherited,
+                ...(node.externalHref !== undefined ? {externalHref: node.externalHref} : {}),
             },
         ]
     }
@@ -926,6 +930,9 @@ const PublishingIndex = () => {
                                                     }
                                                     const isScreenLink =
                                                         depth === leaf.path.length - 1 && registeredScreen?.implemented
+                                                    // 외부 프로젝트 화면(탄소)은 이 저장소에 경로가 없어 새 창으로 연다.
+                                                    const externalHref =
+                                                        depth === leaf.path.length - 1 ? leaf.externalHref : undefined
                                                     // 묶기만 한 행은 뎁스로 세지 않는다 — 앞쪽의 묶음 수만큼 번호를 당긴다.
                                                     const depthNumber =
                                                         depth +
@@ -985,6 +992,25 @@ const PublishingIndex = () => {
                                                                         {displayLabel}
                                                                         <span className="sr-only"> 화면으로 이동</span>
                                                                     </Link>
+                                                                ) : externalHref !== undefined ? (
+                                                                    <a
+                                                                        href={externalHref}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className={`${
+                                                                            isRedLabel ? 'text-error' : 'text-primary'
+                                                                        } focus-visible:ring-ring inline-flex items-center gap-1 rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none`}
+                                                                    >
+                                                                        {displayLabel}
+                                                                        <ExternalLink
+                                                                            aria-hidden="true"
+                                                                            className="size-3.5 shrink-0"
+                                                                        />
+                                                                        <span className="sr-only">
+                                                                            {' '}
+                                                                            화면으로 이동 (새 창)
+                                                                        </span>
+                                                                    </a>
                                                                 ) : (
                                                                     <span
                                                                         className={

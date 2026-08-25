@@ -134,6 +134,9 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
         throw new Error(`[content] ${where}: isRed 는 boolean 이어야 합니다.`)
     }
     const userType = parseUserType(value.userType, `${where} > userType`)
+    if (value.externalHref !== undefined && typeof value.externalHref !== 'string') {
+        throw new Error(`[content] ${where}: externalHref 는 문자열이어야 합니다.`)
+    }
     return {
         ...(typeof value.key === 'string' ? {key: value.key} : {}),
         screenId: value.screenId,
@@ -144,6 +147,7 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
         version: value.version,
         ...(value.isRed === true ? {isRed: true} : {}),
         ...(userType !== undefined ? {userType} : {}),
+        ...(typeof value.externalHref === 'string' ? {externalHref: value.externalHref} : {}),
     }
 }
 
@@ -419,7 +423,7 @@ SCREEN_REGISTRY.forEach((registeredScreen) => {
 })
 
 INDEXED_SCREEN_REFERENCES.forEach((indexedScreen) => {
-    // 외부 프로젝트 IA(탄소)는 이 저장소가 화면을 만들지 않는다 — key 만 두고 경로는 따로 연결한다.
+    // 외부 프로젝트 IA(탄소)는 이 저장소가 화면을 만들지 않는다 — key 만 두고 경로는 externalHref 로 연결한다.
     if (isExternalUserType(indexedScreen.userType)) return
     if (!SCREEN_REGISTRY.some((registeredScreen) => registeredScreen.key === indexedScreen.key)) {
         throw new Error(

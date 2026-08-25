@@ -16,7 +16,7 @@ export const isStatus = (value: string): value is Status => STATUS_VALUES.some((
 // 화면 필터(기업/기관/탄소)의 기준이 된다.
 //
 // 탄소는 이 저장소가 퍼블리싱하는 화면이 아니라 별도 프로젝트(탄소중립 플랫폼 FO)의 IA다 —
-// 화면을 만들지 않고 인덱스에 구조와 key 만 둔다.
+// 화면을 만들지 않고 인덱스에 구조와 key 만 두며, 각 화면은 externalHref 로 그 프로젝트를 가리킨다.
 export type UserType = '기업' | '기관' | '탄소'
 
 export const USER_TYPE_VALUES: readonly UserType[] = ['기업', '기관', '탄소']
@@ -123,6 +123,7 @@ export type StructureLeaf = {
     // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목 — 인덱스에는 포함하되 취소선·빨간색으로 표시한다.
     isRed?: boolean
     userType?: UserType // 없으면 상위에서 상속(최종적으로 없으면 공통).
+    externalHref?: string // 외부 프로젝트 화면의 주소 — 이 저장소에 화면이 없는 유형(탄소)에서 쓴다.
 }
 
 // 화면(leaf)의 상세 정보 — StructureLeaf 와 StructureBranch.screen 이 공유하는 형태.
@@ -138,6 +139,7 @@ export type ScreenInfo = {
     // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목.
     isRed?: boolean
     userType?: UserType
+    externalHref?: string // 외부 프로젝트 화면의 주소 — 이 저장소에 화면이 없는 유형(탄소)에서 쓴다.
 }
 
 export type StructureBranch = {
