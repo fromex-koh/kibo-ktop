@@ -197,6 +197,15 @@
             "status": "완료"
         }
     ],
+    "//externalProjects": "이 저장소가 아니라 다른 저장소에서 만드는 IA(탄소)의 출처. 해당 유형을 선택하면 진척률 아래에 프로젝트 정보로 표시한다. userType 은 외부 유형(types.ts 의 EXTERNAL_USER_TYPES)이어야 한다.",
+    "externalProjects": [
+        {
+            "userType": "탄소",
+            "name": "탄소중립 플랫폼 FO",
+            "repositoryUrl": "https://github.com/fromex-koh/fromex-carbon",
+            "handoffUrl": "https://github.com/fromex-koh/fromex-carbon/tree/frontend-handoff"
+        }
+    ],
     "structureGroups": [
         {
             "name": "홈",

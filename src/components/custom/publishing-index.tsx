@@ -1,7 +1,18 @@
 'use client'
 
 import Link from 'next/link'
-import {Check, ChevronUp, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
+import {
+    Check,
+    ChevronUp,
+    CircleCheckBig,
+    ExternalLink,
+    File,
+    Folder,
+    GitBranch,
+    Info,
+    LayoutGrid,
+    Sparkles,
+} from 'lucide-react'
 import {toast} from 'sonner'
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {
@@ -12,6 +23,7 @@ import {
     SCREEN_REGISTRY,
     STATUS_VALUES,
     type UserType,
+    type ExternalProject,
     type Status,
     type ReleaseNoteChange,
     type ReleaseNoteHandoff,
@@ -449,10 +461,47 @@ const UserTypeControl = ({filter, label, onFilterChange}: UserTypeControlProps) 
 
 const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean => leaf.userType === filter
 
-const {releaseNotes, assetVersions, commonLayouts, iaVersions, structureGroups} = PUBLISHING_INDEX_CONTENT
+const {releaseNotes, assetVersions, commonLayouts, iaVersions, externalProjects, structureGroups} =
+    PUBLISHING_INDEX_CONTENT
 
 // 전체 화면(트리를 펼친 leaf) — 필터·카운트는 이 목록을 기준으로 컴포넌트 안에서 파생한다.
 const ALL_LEAVES = structureGroups.flatMap(collectLeaves)
+// 외부 저장소에서 만드는 IA(탄소)를 고르면, 그 프로젝트의 저장소를 진척률 아래에 배지로 나열한다 —
+// 진행 상태 범례와 같은 배지 줄이라 화면에서 한 덩어리로 읽힌다.
+const RepositoryBadge = ({href, label, branch}: {href: string; label: string; branch: string}) => (
+    <Badge asChild variant="outline" color="info" shape="round" className="hover:ring-ring/40 hover:ring-2">
+        <a href={href} target="_blank" rel="noopener noreferrer">
+            <GitBranch aria-hidden="true" />
+            {label}
+            <span className="text-muted-foreground">({branch} 브랜치)</span>
+            <ExternalLink aria-hidden="true" />
+            <span className="sr-only"> (새 창에서 열림)</span>
+        </a>
+    </Badge>
+)
+
+const ExternalProjectInfo = ({project}: {project: ExternalProject}) => {
+    // 스킴은 빼고 주소만 보여 준다(홈 화면 '프로젝트 정보'와 같은 표기).
+    const repositoryLabel = project.repositoryUrl.replace(/^https?:\/\//, '')
+
+    return (
+        <div className="flex flex-col gap-2">
+            <span className="typo-caption-medium text-muted-foreground flex items-center gap-1.5">
+                <Info aria-hidden="true" className="text-primary size-4 shrink-0" />
+                프로젝트 정보 · {project.name} — 화면은 이 저장소가 아니라 아래 저장소에서 만듭니다.
+            </span>
+            <ul aria-label={`${project.name} 저장소`} className="flex flex-wrap items-center gap-2">
+                <li>
+                    <RepositoryBadge href={project.repositoryUrl} label={repositoryLabel} branch="main" />
+                </li>
+                <li>
+                    <RepositoryBadge href={project.handoffUrl} label={repositoryLabel} branch="frontend-handoff" />
+                </li>
+            </ul>
+        </div>
+    )
+}
+
 const SCREEN_REGISTRY_BY_KEY = new Map(SCREEN_REGISTRY.map((screen) => [screen.key, screen]))
 
 const PublishingIndex = () => {
@@ -495,6 +544,7 @@ const PublishingIndex = () => {
     // 응용2는 이 저장소가 넘긴 화면의 후속 작업 상태다 — 화면을 넘기지 않는 외부 IA(탄소)에는
     // 해당하는 진행이 없으므로 진척률 카드와 표의 열을 함께 감춘다(빈 값을 대기중으로 보여 주지 않는다).
     const showsApplication2 = !isExternalUserType(filter)
+    const externalProject = externalProjects.find((project) => project.userType === filter)
 
     const scrollToTop = () => {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -769,6 +819,7 @@ const PublishingIndex = () => {
                                 </span>
                             </div>
                         </div>
+                        {externalProject && <ExternalProjectInfo project={externalProject} />}
                         {/* 아래 화면 목록에서 사용하는 진행 상태 범례 */}
                         <ul aria-label="화면 진행 상태 범례" className="flex flex-wrap items-center gap-2">
                             {STATUS_VALUES.map((status) => (

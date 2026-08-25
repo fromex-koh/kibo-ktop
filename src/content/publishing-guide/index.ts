@@ -21,6 +21,7 @@ import {
     type AssetVersion,
     type UserType,
     type CommonLayout,
+    type ExternalProject,
     type HomeContent,
     type PublishingIndexContent,
     type ReleaseNoteChange,
@@ -262,6 +263,34 @@ const parseIaVersions = (raw: typeof publishingIndexJson): Record<UserType, stri
     return {기업: readVersion('기업'), 기관: readVersion('기관'), 탄소: readVersion('탄소')}
 }
 
+// 외부 저장소에서 만드는 IA(탄소)의 출처. 주소는 그 프로젝트의 것이라 콘텐츠 JSON 에서 관리한다.
+const parseExternalProject = (value: unknown, index: number): ExternalProject => {
+    const where = `publishing-index.json > externalProjects[${index}]`
+    if (!isRecord(value)) {
+        throw new Error(`[content] ${where}: 객체여야 합니다.`)
+    }
+    const userType = parseUserType(value.userType, `${where} > userType`)
+    if (userType === undefined) {
+        throw new Error(`[content] ${where}: userType 이 필요합니다.`)
+    }
+    if (!isExternalUserType(userType)) {
+        throw new Error(`[content] ${where}: "${userType}" 은(는) 외부 프로젝트 유형이 아닙니다.`)
+    }
+    const readText = (field: 'name' | 'repositoryUrl' | 'handoffUrl'): string => {
+        const text: unknown = value[field]
+        if (typeof text !== 'string' || text.length === 0) {
+            throw new Error(`[content] ${where} > ${field}: 비어 있지 않은 문자열이어야 합니다.`)
+        }
+        return text
+    }
+    return {
+        userType,
+        name: readText('name'),
+        repositoryUrl: readText('repositoryUrl'),
+        handoffUrl: readText('handoffUrl'),
+    }
+}
+
 const RELEASE_NOTE_HANDOFF_MODES: readonly ReleaseNoteHandoffMode[] = ['diff', 'new', 'overwrite']
 
 const isReleaseNoteHandoffMode = (value: string): value is ReleaseNoteHandoffMode =>
@@ -319,6 +348,7 @@ const parsePublishingIndexContent = (raw: typeof publishingIndexJson): Publishin
     }),
     commonLayouts: raw.commonLayouts.map(parseCommonLayout),
     iaVersions: parseIaVersions(raw),
+    externalProjects: raw.externalProjects.map(parseExternalProject),
     structureGroups: raw.structureGroups.map((group) => {
         const userType = parseUserType(
             'userType' in group ? group.userType : undefined,
@@ -442,6 +472,7 @@ export {
 export type {
     UserType,
     CommonLayout,
+    ExternalProject,
     ReleaseNoteChange,
     ReleaseNoteHandoff,
     ScreenImplementationStatus,

@@ -176,10 +176,19 @@ export type CommonLayout = {
     version: string
 }
 
+// 이 저장소가 아니라 다른 저장소에서 만드는 IA(탄소)의 출처 — 인덱스에서 그 저장소를 바로 열 수 있게 한다.
+export type ExternalProject = {
+    userType: UserType
+    name: string
+    repositoryUrl: string
+    handoffUrl: string
+}
+
 export type PublishingIndexContent = {
     releaseNotes: ReleaseNote[]
     assetVersions: AssetVersion[]
     commonLayouts: CommonLayout[]
     iaVersions: Record<UserType, string>
+    externalProjects: ExternalProject[]
     structureGroups: StructureGroup[]
 }
