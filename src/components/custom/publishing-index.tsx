@@ -1,16 +1,30 @@
 'use client'
 
 import Link from 'next/link'
-import {Check, ChevronUp, CircleCheckBig, ExternalLink, File, Folder, LayoutGrid, Sparkles} from 'lucide-react'
+import {
+    Check,
+    ChevronUp,
+    CircleCheckBig,
+    ExternalLink,
+    File,
+    Folder,
+    GitBranch,
+    Globe,
+    Info,
+    LayoutGrid,
+    Sparkles,
+} from 'lucide-react'
 import {toast} from 'sonner'
 import {useEffect, useMemo, useRef, useState} from 'react'
 import {
     USER_TYPE_VALUES,
+    isExternalUserType,
     isStructureBranch,
     PUBLISHING_INDEX_CONTENT,
     SCREEN_REGISTRY,
     STATUS_VALUES,
     type UserType,
+    type ExternalProject,
     type Status,
     type ReleaseNoteChange,
     type ReleaseNoteHandoff,
@@ -243,6 +257,7 @@ const StatusTag = ({status}: {status: Status}) => (
 )
 
 // 실제 화면의 마지막 뎁스 배지는 페이지 구현 여부와 관계없이 publishing-index에서 검색할 고유 키를 복사한다.
+// 이 저장소에 화면이 없는 외부 IA(탄소)도 인덱스에는 key 가 있으므로 똑같이 복사할 수 있다.
 // 상위 메뉴 뎁스는 여러 화면을 대표할 수 있으므로 복사 버튼으로 만들지 않는다.
 const KeyCopyDepthBadge = ({depth, screenKey}: {depth: number; screenKey: string}) => {
     const copyKey = async () => {
@@ -284,7 +299,9 @@ type FlatLeaf = {
     application2Status: Status
     version: string
     isRed?: boolean
-    userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 공통(기업·기관 둘 다).
+    userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 어느 필터에도 걸리지 않는다.
+    // 외부 프로젝트 화면의 주소(탄소) — 있으면 화면명을 새 창 링크로 연다.
+    externalHref?: string
 }
 
 const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
@@ -324,6 +341,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           version: node.screen.version,
                           ...(node.screen.isRed ? {isRed: true} : {}),
                           userType: node.screen.userType ?? branchUserType,
+                          ...(node.screen.externalHref !== undefined ? {externalHref: node.screen.externalHref} : {}),
                       },
                   ]
                 : []
@@ -348,6 +366,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 version: node.version,
                 ...(node.isRed ? {isRed: true} : {}),
                 userType: node.userType ?? inherited,
+                ...(node.externalHref !== undefined ? {externalHref: node.externalHref} : {}),
             },
         ]
     }
@@ -405,9 +424,10 @@ const buildDepthCells = (leaves: FlatLeaf[], maxDepth: number): DepthCell[][] =>
 type UserTypeFilter = UserType
 const USER_TYPE_FILTERS: readonly UserTypeFilter[] = USER_TYPE_VALUES
 // 상태·릴리스 배지에서 이미 사용하는 색상과 겹치지 않는 분류용 보조색을 IA 유형에 사용한다.
-const IA_BADGE_COLOR: Record<UserTypeFilter, 'secondary-orange' | 'secondary-green'> = {
+const IA_BADGE_COLOR: Record<UserTypeFilter, 'secondary-orange' | 'secondary-green' | 'secondary-purple'> = {
     기업: 'secondary-orange',
     기관: 'secondary-green',
+    탄소: 'secondary-purple',
 }
 // SegmentedControl radio 타입이 넘겨주는 문자열 value를 UserTypeFilter로 좁히는 타입가드([ST-002] as 회피).
 const isUserTypeFilter = (value: string): value is UserTypeFilter => USER_TYPE_FILTERS.some((f) => f === value)
@@ -443,10 +463,75 @@ const UserTypeControl = ({filter, label, onFilterChange}: UserTypeControlProps) 
 
 const matchesUserType = (leaf: FlatLeaf, filter: UserTypeFilter): boolean => leaf.userType === filter
 
-const {releaseNotes, assetVersions, commonLayouts, iaVersions, structureGroups} = PUBLISHING_INDEX_CONTENT
+const {releaseNotes, assetVersions, commonLayouts, iaVersions, externalProjects, structureGroups} =
+    PUBLISHING_INDEX_CONTENT
 
 // 전체 화면(트리를 펼친 leaf) — 필터·카운트는 이 목록을 기준으로 컴포넌트 안에서 파생한다.
 const ALL_LEAVES = structureGroups.flatMap(collectLeaves)
+// 탄소 FO처럼 다른 저장소에서 만드는 IA를 고르면, 그 프로젝트의 저장소와 배포 주소를 진척률 아래에
+// 배지로 나열한다 — 진행 상태 범례와 같은 배지 줄이라 화면에서 한 덩어리로 읽힌다.
+type ProjectLinkBadgeProps = {
+    href: string
+    label: string
+    /** 같은 주소의 어느 갈래인지 — 브랜치명이나 '배포'. */
+    note: string
+    icon: typeof GitBranch
+}
+
+const ProjectLinkBadge = ({href, label, note, icon: Icon}: ProjectLinkBadgeProps) => (
+    <Badge asChild variant="outline" color="info" shape="round" className="hover:ring-ring/40 hover:ring-2">
+        <a href={href} target="_blank" rel="noopener noreferrer">
+            <Icon aria-hidden="true" />
+            {label}
+            <span className="text-muted-foreground">({note})</span>
+            <ExternalLink aria-hidden="true" />
+            <span className="sr-only"> (새 창에서 열림)</span>
+        </a>
+    </Badge>
+)
+
+// 주소는 스킴을 빼고 보여 준다(홈 화면 '프로젝트 정보'와 같은 표기).
+const toAddressLabel = (url: string) => url.replace(/^https?:\/\//, '').replace(/\/$/, '')
+
+const ExternalProjectInfo = ({project}: {project: ExternalProject}) => {
+    const repositoryLabel = toAddressLabel(project.repositoryUrl)
+
+    return (
+        <div className="flex flex-col gap-2">
+            <span className="typo-caption-medium text-muted-foreground flex items-center gap-1.5">
+                <Info aria-hidden="true" className="text-primary size-4 shrink-0" />
+                프로젝트 정보 · {project.name} — 화면은 이 저장소가 아니라 아래 저장소에서 만듭니다.
+            </span>
+            <ul aria-label={`${project.name} 저장소와 배포 주소`} className="flex flex-wrap items-center gap-2">
+                <li>
+                    <ProjectLinkBadge
+                        href={project.repositoryUrl}
+                        label={repositoryLabel}
+                        note="main 브랜치"
+                        icon={GitBranch}
+                    />
+                </li>
+                <li>
+                    <ProjectLinkBadge
+                        href={project.handoffUrl}
+                        label={repositoryLabel}
+                        note="frontend-handoff 브랜치"
+                        icon={GitBranch}
+                    />
+                </li>
+                <li>
+                    <ProjectLinkBadge
+                        href={project.deploymentUrl}
+                        label={toAddressLabel(project.deploymentUrl)}
+                        note="퍼블리싱 인덱스 배포"
+                        icon={Globe}
+                    />
+                </li>
+            </ul>
+        </div>
+    )
+}
+
 const SCREEN_REGISTRY_BY_KEY = new Map(SCREEN_REGISTRY.map((screen) => [screen.key, screen]))
 
 const PublishingIndex = () => {
@@ -486,6 +571,10 @@ const PublishingIndex = () => {
     )
     const uiuxProgressPercent = screenCount === 0 ? 0 : Math.round((uiuxDoneCount / screenCount) * 100)
     const application2ProgressPercent = screenCount === 0 ? 0 : Math.round((application2DoneCount / screenCount) * 100)
+    // 응용2는 이 저장소가 넘긴 화면의 후속 작업 상태다 — 화면을 넘기지 않는 외부 IA(탄소)에는
+    // 해당하는 진행이 없으므로 진척률 카드와 표의 열을 함께 감춘다(빈 값을 대기중으로 보여 주지 않는다).
+    const showsApplication2 = !isExternalUserType(filter)
+    const externalProject = externalProjects.find((project) => project.userType === filter)
 
     const scrollToTop = () => {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -719,7 +808,11 @@ const PublishingIndex = () => {
                             </SectionHeaderTitle>
                             <SectionHeaderDescription asChild>
                                 <ul className="flex list-disc flex-col gap-1 pl-5">
-                                    <li>기업·기관 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다.</li>
+                                    <li>기업·기관·탄소 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다.</li>
+                                    <li>
+                                        탄소는 탄소 FO의 IA입니다 — 이 저장소에서 화면을 만들지 않고 구조와 화면 주소만
+                                        관리합니다.
+                                    </li>
                                     <li>
                                         메뉴 자체가 화면인 행의 미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시합니다.
                                     </li>
@@ -736,14 +829,18 @@ const PublishingIndex = () => {
                         </div>
 
                         {/* 역할별 전체 화면 수와 UIUX·응용2 진척률을 같은 기준으로 나란히 비교한다. */}
-                        <div aria-live="polite" className="grid gap-3 sm:grid-cols-2">
-                            <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
-                                <span className="typo-caption-medium text-muted-foreground">응용2 진척률</span>
-                                <strong className="typo-h4-bold text-foreground">{application2ProgressPercent}%</strong>
-                                <span className="typo-caption-regular text-muted-foreground">
-                                    완료 {application2DoneCount}/{screenCount} · {filter} 화면 {screenCount}개
-                                </span>
-                            </div>
+                        <div aria-live="polite" className={`grid gap-3 ${showsApplication2 ? 'sm:grid-cols-2' : ''}`}>
+                            {showsApplication2 && (
+                                <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
+                                    <span className="typo-caption-medium text-muted-foreground">응용2 진척률</span>
+                                    <strong className="typo-h4-bold text-foreground">
+                                        {application2ProgressPercent}%
+                                    </strong>
+                                    <span className="typo-caption-regular text-muted-foreground">
+                                        완료 {application2DoneCount}/{screenCount} · {filter} 화면 {screenCount}개
+                                    </span>
+                                </div>
+                            )}
                             <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
                                 <span className="typo-caption-medium text-muted-foreground">UIUX 진척률</span>
                                 <strong className="typo-h4-bold text-foreground">{uiuxProgressPercent}%</strong>
@@ -752,6 +849,7 @@ const PublishingIndex = () => {
                                 </span>
                             </div>
                         </div>
+                        {externalProject && <ExternalProjectInfo project={externalProject} />}
                         {/* 아래 화면 목록에서 사용하는 진행 상태 범례 */}
                         <ul aria-label="화면 진행 상태 범례" className="flex flex-wrap items-center gap-2">
                             {STATUS_VALUES.map((status) => (
@@ -760,108 +858,119 @@ const PublishingIndex = () => {
                                 </li>
                             ))}
                         </ul>
-                        <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-1.5 pl-5">
-                            <li>
-                                <strong className="text-foreground font-medium">작업 브랜치:</strong> 최신{' '}
-                                <code className="text-foreground font-mono">work</code>에서 별도 브랜치를 생성하고, 완료
-                                후 <code className="text-foreground font-mono">work</code>를 대상으로 PR을 보냅니다.
-                            </li>
-                            <li>
-                                <strong className="text-foreground font-medium">화면 찾기:</strong> 실제 화면명의 뎁스
-                                배지를 눌러 고유 키를 복사한 뒤,{' '}
-                                <code className="text-foreground font-mono">publishing-index.json</code>에서 해당 키를
-                                바로 검색합니다.
-                            </li>
-                            <li>
-                                <strong className="text-foreground font-medium">수정 파일:</strong>{' '}
-                                <code className="text-foreground font-mono">
-                                    src/content/publishing-guide/publishing-index.json
-                                </code>
-                            </li>
-                            <li>
-                                <strong className="text-foreground font-medium">수정 방법:</strong> 해당 화면의 기존
-                                UIUX <code className="text-foreground font-mono">status</code> 키는 유지하고, 바로
-                                아래에 <code className="text-foreground font-mono">application2Status</code> 키를
-                                추가하거나 값을 수정합니다.
-                            </li>
-                            <li>
-                                <strong className="text-foreground font-medium">입력 가능 상태:</strong>{' '}
-                                <code className="text-foreground font-mono">
-                                    대기중, 진행중, 수정요청, 보완, 완료, 최종완료
-                                </code>
-                                . 키가 없으면 대기중으로 표시됩니다.
-                            </li>
-                            <li>
-                                <strong className="text-foreground font-medium">최종완료 기준:</strong> 더 이상
-                                수정사항이 발생하지 않을 것으로 확정된 화면에만 표시합니다.
-                            </li>
-                        </ul>
-                        {/* 여러 화면이 공유하는 레이아웃은 개별 화면과 구분해 별도 표로 표시한다. */}
-                        <div className="bg-background border-border overflow-x-auto rounded-md border">
-                            <table className="w-full text-left">
-                                <caption className="sr-only">공통 레이아웃 상태·버전</caption>
-                                <thead>
-                                    <tr className="border-border bg-muted/25 border-b">
-                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                            공통 레이아웃
-                                        </th>
-                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                            UIUX
-                                        </th>
-                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                            버전
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-surface">
-                                    {commonLayouts.map((layout) => {
-                                        const isCurrent = layout.version === BUILD_VERSION
-                                        return (
-                                            <tr
-                                                key={layout.label}
-                                                className={`border-border border-b last:border-b-0 ${
-                                                    isCurrent ? 'bg-primary-subtle' : 'bg-surface'
-                                                }`}
-                                            >
-                                                <th
-                                                    scope="row"
-                                                    className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
-                                                >
-                                                    <span className="inline-flex items-center gap-2">
-                                                        <LayoutGrid
-                                                            aria-hidden="true"
-                                                            className="text-muted-foreground size-4 shrink-0"
-                                                        />
-                                                        {'href' in layout && typeof layout.href === 'string' ? (
-                                                            <Link
-                                                                href={layout.href}
-                                                                className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
-                                                            >
-                                                                {layout.label}
-                                                            </Link>
-                                                        ) : (
-                                                            layout.label
-                                                        )}
-                                                    </span>
+                        {/* 응용2 상태 갱신 안내와 공통 레이아웃 표는 이 저장소가 만드는 화면에만 해당한다 —
+                            외부 IA(탄소)에서는 따라 할 일이 없으므로 함께 감춘다. */}
+                        {showsApplication2 && (
+                            <>
+                                <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-1.5 pl-5">
+                                    <li>
+                                        <strong className="text-foreground font-medium">작업 브랜치:</strong> 최신{' '}
+                                        <code className="text-foreground font-mono">work</code>에서 별도 브랜치를
+                                        생성하고, 완료 후 <code className="text-foreground font-mono">work</code>를
+                                        대상으로 PR을 보냅니다.
+                                    </li>
+                                    <li>
+                                        <strong className="text-foreground font-medium">화면 찾기:</strong> 실제
+                                        화면명의 뎁스 배지를 눌러 고유 키를 복사한 뒤,{' '}
+                                        <code className="text-foreground font-mono">publishing-index.json</code>에서
+                                        해당 키를 바로 검색합니다.
+                                    </li>
+                                    <li>
+                                        <strong className="text-foreground font-medium">수정 파일:</strong>{' '}
+                                        <code className="text-foreground font-mono">
+                                            src/content/publishing-guide/publishing-index.json
+                                        </code>
+                                    </li>
+                                    <li>
+                                        <strong className="text-foreground font-medium">수정 방법:</strong> 해당 화면의
+                                        기존 UIUX <code className="text-foreground font-mono">status</code> 키는
+                                        유지하고, 바로 아래에{' '}
+                                        <code className="text-foreground font-mono">application2Status</code> 키를
+                                        추가하거나 값을 수정합니다.
+                                    </li>
+                                    <li>
+                                        <strong className="text-foreground font-medium">입력 가능 상태:</strong>{' '}
+                                        <code className="text-foreground font-mono">
+                                            대기중, 진행중, 수정요청, 보완, 완료, 최종완료
+                                        </code>
+                                        . 키가 없으면 대기중으로 표시됩니다.
+                                    </li>
+                                    <li>
+                                        <strong className="text-foreground font-medium">최종완료 기준:</strong> 더 이상
+                                        수정사항이 발생하지 않을 것으로 확정된 화면에만 표시합니다.
+                                    </li>
+                                </ul>
+                                {/* 여러 화면이 공유하는 레이아웃은 개별 화면과 구분해 별도 표로 표시한다. */}
+                                <div className="bg-background border-border overflow-x-auto rounded-md border">
+                                    <table className="w-full text-left">
+                                        <caption className="sr-only">공통 레이아웃 상태·버전</caption>
+                                        <thead>
+                                            <tr className="border-border bg-muted/25 border-b">
+                                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                                    공통 레이아웃
                                                 </th>
-                                                <td className="px-4 py-3">
-                                                    <StatusTag status={layout.status} />
-                                                </td>
-                                                <td
-                                                    className={`typo-caption-regular px-4 py-3 ${
-                                                        isCurrent
-                                                            ? 'text-primary font-semibold'
-                                                            : 'text-muted-foreground'
-                                                    }`}
-                                                >
-                                                    <VersionCell version={layout.version} isCurrent={isCurrent} />
-                                                </td>
+                                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                                    UIUX
+                                                </th>
+                                                <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                                    버전
+                                                </th>
                                             </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
-                        </div>
+                                        </thead>
+                                        <tbody className="bg-surface">
+                                            {commonLayouts.map((layout) => {
+                                                const isCurrent = layout.version === BUILD_VERSION
+                                                return (
+                                                    <tr
+                                                        key={layout.label}
+                                                        className={`border-border border-b last:border-b-0 ${
+                                                            isCurrent ? 'bg-primary-subtle' : 'bg-surface'
+                                                        }`}
+                                                    >
+                                                        <th
+                                                            scope="row"
+                                                            className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
+                                                        >
+                                                            <span className="inline-flex items-center gap-2">
+                                                                <LayoutGrid
+                                                                    aria-hidden="true"
+                                                                    className="text-muted-foreground size-4 shrink-0"
+                                                                />
+                                                                {'href' in layout && typeof layout.href === 'string' ? (
+                                                                    <Link
+                                                                        href={layout.href}
+                                                                        className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                                                                    >
+                                                                        {layout.label}
+                                                                    </Link>
+                                                                ) : (
+                                                                    layout.label
+                                                                )}
+                                                            </span>
+                                                        </th>
+                                                        <td className="px-4 py-3">
+                                                            <StatusTag status={layout.status} />
+                                                        </td>
+                                                        <td
+                                                            className={`typo-caption-regular px-4 py-3 ${
+                                                                isCurrent
+                                                                    ? 'text-primary font-semibold'
+                                                                    : 'text-muted-foreground'
+                                                            }`}
+                                                        >
+                                                            <VersionCell
+                                                                version={layout.version}
+                                                                isCurrent={isCurrent}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </>
+                        )}
                         {/* 사이트 구조 정보 (선택된 사용자 유형으로 필터된 표) — 표의 caption 이 표 자체를 설명한다. */}
                         <div className="bg-background border-border overflow-x-auto rounded-md border">
                             <table className="w-full text-left">
@@ -873,9 +982,11 @@ const PublishingIndex = () => {
                                                 {header}
                                             </th>
                                         ))}
-                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                            응용2
-                                        </th>
+                                        {showsApplication2 && (
+                                            <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                                응용2
+                                            </th>
+                                        )}
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
                                             UIUX
                                         </th>
@@ -921,6 +1032,9 @@ const PublishingIndex = () => {
                                                     }
                                                     const isScreenLink =
                                                         depth === leaf.path.length - 1 && registeredScreen?.implemented
+                                                    // 외부 프로젝트 화면(탄소)은 이 저장소에 경로가 없어 새 창으로 연다.
+                                                    const externalHref =
+                                                        depth === leaf.path.length - 1 ? leaf.externalHref : undefined
                                                     // 묶기만 한 행은 뎁스로 세지 않는다 — 앞쪽의 묶음 수만큼 번호를 당긴다.
                                                     const depthNumber =
                                                         depth +
@@ -951,10 +1065,10 @@ const PublishingIndex = () => {
                                                                     !leaf.groupOnlyDepths.includes(depth) && (
                                                                         <>
                                                                             {depth === leaf.path.length - 1 &&
-                                                                            registeredScreen ? (
+                                                                            leaf.registryKey !== undefined ? (
                                                                                 <KeyCopyDepthBadge
                                                                                     depth={depthNumber}
-                                                                                    screenKey={registeredScreen.key}
+                                                                                    screenKey={leaf.registryKey}
                                                                                 />
                                                                             ) : (
                                                                                 <Badge
@@ -980,6 +1094,25 @@ const PublishingIndex = () => {
                                                                         {displayLabel}
                                                                         <span className="sr-only"> 화면으로 이동</span>
                                                                     </Link>
+                                                                ) : externalHref !== undefined ? (
+                                                                    <a
+                                                                        href={externalHref}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
+                                                                        className={`${
+                                                                            isRedLabel ? 'text-error' : 'text-primary'
+                                                                        } focus-visible:ring-ring inline-flex items-center gap-1 rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none`}
+                                                                    >
+                                                                        {displayLabel}
+                                                                        <ExternalLink
+                                                                            aria-hidden="true"
+                                                                            className="size-3.5 shrink-0"
+                                                                        />
+                                                                        <span className="sr-only">
+                                                                            {' '}
+                                                                            화면으로 이동 (새 창)
+                                                                        </span>
+                                                                    </a>
                                                                 ) : (
                                                                     <span
                                                                         className={
@@ -993,9 +1126,11 @@ const PublishingIndex = () => {
                                                         </th>
                                                     )
                                                 })}
-                                                <td className="px-4 py-3">
-                                                    <StatusTag status={leaf.application2Status} />
-                                                </td>
+                                                {showsApplication2 && (
+                                                    <td className="px-4 py-3">
+                                                        <StatusTag status={leaf.application2Status} />
+                                                    </td>
+                                                )}
                                                 <td className="px-4 py-3">
                                                     <StatusTag status={effectiveStatus} />
                                                 </td>

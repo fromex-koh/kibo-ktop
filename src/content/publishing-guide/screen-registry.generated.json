@@ -6,7 +6,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-home-technology-evaluation-model-selection",
@@ -1161,7 +1161,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-home-technology-evaluation-selection",

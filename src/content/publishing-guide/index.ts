@@ -11,7 +11,9 @@ import publishingIndexJson from './publishing-index.json'
 import screenRegistryGenerated from './screen-registry.generated.json'
 import screenRegistryJson from './screen-registry.json'
 import {
+    USER_TYPE_VALUES,
     isAssetKind,
+    isExternalUserType,
     isScreenImplementationStatus,
     isUserType,
     isStatus,
@@ -19,6 +21,7 @@ import {
     type AssetVersion,
     type UserType,
     type CommonLayout,
+    type ExternalProject,
     type HomeContent,
     type PublishingIndexContent,
     type ReleaseNoteChange,
@@ -52,14 +55,18 @@ const parseUserType = (value: unknown, where: string): UserType | undefined => {
         return undefined
     }
     if (typeof value !== 'string' || !isUserType(value)) {
-        throw new Error(`[content] ${where}: userType "${String(value)}" 은(는) 기업|기관 이어야 합니다.`)
+        throw new Error(
+            `[content] ${where}: userType "${String(value)}" 은(는) ${USER_TYPE_VALUES.join('|')} 중 하나여야 합니다.`,
+        )
     }
     return value
 }
 
+// 탄소는 외부 프로젝트라 이 저장소에 화면과 레지스트리 항목이 없다 — 접두사는 형식상 자리만 채운다.
 const USER_TYPE_PATH_PREFIX: Record<UserType, string> = {
     기업: '/corp',
     기관: '/org',
+    탄소: '/carbon',
 }
 
 type ScreenRegistrySourceItem = Omit<
@@ -128,6 +135,9 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
         throw new Error(`[content] ${where}: isRed 는 boolean 이어야 합니다.`)
     }
     const userType = parseUserType(value.userType, `${where} > userType`)
+    if (value.externalHref !== undefined && typeof value.externalHref !== 'string') {
+        throw new Error(`[content] ${where}: externalHref 는 문자열이어야 합니다.`)
+    }
     return {
         ...(typeof value.key === 'string' ? {key: value.key} : {}),
         screenId: value.screenId,
@@ -138,6 +148,7 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
         version: value.version,
         ...(value.isRed === true ? {isRed: true} : {}),
         ...(userType !== undefined ? {userType} : {}),
+        ...(typeof value.externalHref === 'string' ? {externalHref: value.externalHref} : {}),
     }
 }
 
@@ -238,16 +249,47 @@ const parseCommonLayout = (raw: (typeof publishingIndexJson)['commonLayouts'][nu
     }
 }
 
+// 반환 타입이 Record<UserType, string> 이라 유형이 늘면 여기서 빌드가 먼저 멈춘다.
 const parseIaVersions = (raw: typeof publishingIndexJson): Record<UserType, string> => {
-    const corpVersion = raw.iaVersions.기업
-    const orgVersion = raw.iaVersions.기관
-    if (typeof corpVersion !== 'string' || corpVersion.length === 0) {
-        throw new Error('[content] publishing-index.json > iaVersions > 기업: 비어 있지 않은 문자열이어야 합니다.')
+    const readVersion = (userType: UserType): string => {
+        const version: unknown = raw.iaVersions[userType]
+        if (typeof version !== 'string' || version.length === 0) {
+            throw new Error(
+                `[content] publishing-index.json > iaVersions > ${userType}: 비어 있지 않은 문자열이어야 합니다.`,
+            )
+        }
+        return version
     }
-    if (typeof orgVersion !== 'string' || orgVersion.length === 0) {
-        throw new Error('[content] publishing-index.json > iaVersions > 기관: 비어 있지 않은 문자열이어야 합니다.')
+    return {기업: readVersion('기업'), 기관: readVersion('기관'), 탄소: readVersion('탄소')}
+}
+
+// 외부 저장소에서 만드는 IA(탄소)의 출처. 주소는 그 프로젝트의 것이라 콘텐츠 JSON 에서 관리한다.
+const parseExternalProject = (value: unknown, index: number): ExternalProject => {
+    const where = `publishing-index.json > externalProjects[${index}]`
+    if (!isRecord(value)) {
+        throw new Error(`[content] ${where}: 객체여야 합니다.`)
     }
-    return {기업: corpVersion, 기관: orgVersion}
+    const userType = parseUserType(value.userType, `${where} > userType`)
+    if (userType === undefined) {
+        throw new Error(`[content] ${where}: userType 이 필요합니다.`)
+    }
+    if (!isExternalUserType(userType)) {
+        throw new Error(`[content] ${where}: "${userType}" 은(는) 외부 프로젝트 유형이 아닙니다.`)
+    }
+    const readText = (field: 'name' | 'repositoryUrl' | 'handoffUrl' | 'deploymentUrl'): string => {
+        const text: unknown = value[field]
+        if (typeof text !== 'string' || text.length === 0) {
+            throw new Error(`[content] ${where} > ${field}: 비어 있지 않은 문자열이어야 합니다.`)
+        }
+        return text
+    }
+    return {
+        userType,
+        name: readText('name'),
+        repositoryUrl: readText('repositoryUrl'),
+        handoffUrl: readText('handoffUrl'),
+        deploymentUrl: readText('deploymentUrl'),
+    }
 }
 
 const RELEASE_NOTE_HANDOFF_MODES: readonly ReleaseNoteHandoffMode[] = ['diff', 'new', 'overwrite']
@@ -307,6 +349,7 @@ const parsePublishingIndexContent = (raw: typeof publishingIndexJson): Publishin
     }),
     commonLayouts: raw.commonLayouts.map(parseCommonLayout),
     iaVersions: parseIaVersions(raw),
+    externalProjects: raw.externalProjects.map(parseExternalProject),
     structureGroups: raw.structureGroups.map((group) => {
         const userType = parseUserType(
             'userType' in group ? group.userType : undefined,
@@ -411,6 +454,8 @@ SCREEN_REGISTRY.forEach((registeredScreen) => {
 })
 
 INDEXED_SCREEN_REFERENCES.forEach((indexedScreen) => {
+    // 외부 프로젝트 IA(탄소)는 이 저장소가 화면을 만들지 않는다 — key 만 두고 경로는 externalHref 로 연결한다.
+    if (isExternalUserType(indexedScreen.userType)) return
     if (!SCREEN_REGISTRY.some((registeredScreen) => registeredScreen.key === indexedScreen.key)) {
         throw new Error(
             `[content] publishing-index.json: key "${indexedScreen.key}"에 대응하는 화면 경로가 등록되지 않았습니다.`,
@@ -418,10 +463,17 @@ INDEXED_SCREEN_REFERENCES.forEach((indexedScreen) => {
     }
 })
 
-export {USER_TYPE_VALUES, isStructureBranch, SCREEN_IMPLEMENTATION_STATUS_VALUES, STATUS_VALUES} from './types'
+export {
+    USER_TYPE_VALUES,
+    isExternalUserType,
+    isStructureBranch,
+    SCREEN_IMPLEMENTATION_STATUS_VALUES,
+    STATUS_VALUES,
+} from './types'
 export type {
     UserType,
     CommonLayout,
+    ExternalProject,
     ReleaseNoteChange,
     ReleaseNoteHandoff,
     ScreenImplementationStatus,

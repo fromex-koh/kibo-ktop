@@ -1,16 +1,17 @@
 {
     "//": "퍼블리싱 인덱스 데이터 — 이 파일만 수정하면 화면에 반영된다. status는 UIUX 상태, application2Status는 응용2 상태이며 types.ts의 STATUS_VALUES 중 하나를 사용한다. application2Status 미지정 시 대기중으로 표시한다. 상태 색·아이콘 매핑은 컴포넌트가 담당한다.",
     "//application2Status": "응용2 상태를 변경할 화면에서 기존 status 키는 수정하지 않고, 그 바로 아래에 application2Status 키를 추가하거나 값을 변경한다. 사용 가능한 값은 대기중, 진행중, 수정요청, 보완, 완료, 최종완료이며 키가 없으면 대기중으로 표시한다. 예시: \"status\": \"완료\", \"application2Status\": \"진행중\".",
-    "//key": "실제 서비스 경로가 확정된 화면만 영구 key를 가지며, screen-registry.json의 동일한 key와 연결한다. 화면명이나 화면 ID가 바뀌어도 key는 유지한다.",
+    "//key": "실제 서비스 경로가 확정된 화면만 영구 key를 가지며, screen-registry.json의 동일한 key와 연결한다. 화면명이나 화면 ID가 바뀌어도 key는 유지한다. 외부 프로젝트(탄소) 화면은 이 저장소에 경로가 없으므로 key만 두고, 확정되는 대로 각 화면의 externalHref에 주소를 적는다.",
     "//screenId": "현재 화면 ID는 모두 미발급 상태이므로 null로 관리한다. 임시 ID를 만들지 않으며, 공식 화면 ID가 발급된 화면만 해당 문자열로 교체한다.",
     "//assetVersions": "Vercel 배포와 frontend-handoff에 함께 포함되는 컴포넌트·스타일·런타임·설정·에셋만 추적한다. 퍼블리싱 가이드 전용 제작 도구와 전달 프로젝트에서 실행하지 않는 생성·검사 스크립트는 제외한다. version 은 직접 적지 않고 path 기준 git 히스토리로 자동 계산한다. 인계 기준선은 v0.1.3이며 src/app/fonts만 기존 v0.1.0 이력을 유지한다. 이후에는 마지막 변경을 포함하는 최초 태그가 버전이며 아직 태그에 포함되지 않았으면 '미배포'다.",
     "//commonLayouts": "화면이 아니라 여러 화면이 공유하는 '화면을 찍어내는 틀' 단위 레이아웃(서브 레이아웃, 내부 콘텐츠만 바뀌는 틀). Header·Footer 는 이 틀에 이미 포함되므로 개별 행으로 두지 않는다. 독립 화면이 아니라 screenId 가 없고, 별도 표로 렌더링된다. path 기준 Git 이력으로 version 을 자동 계산하며 아직 태그에 포함되지 않았으면 '미배포'다.",
-    "//iaVersions": "IA 원본 시트 파일명 기준 버전. 기업·기관 segmented control 선택에 따라 퍼블리싱 인덱스 제목 옆 배지에 표시한다.",
-    "//structureGroups": "2026-08-18 FO IA를 기준으로 기업 155건(No. 기재 153건 + No. 미기재 작성 취소 2건), 기관은 원본 150건 중 빨간색·취소선 3건을 제외한 147건을 각각 독립된 트리로 반영한다. 기관 제외 항목은 정보 이용 동의, 이용약관, 마케팅 알림 수신동의다. leaf.version은 아직 작업 전이면 미배포다.",
-    "//userType": "기업·기관 IA는 메뉴명이 같아도 역할과 노출 조건이 다를 수 있으므로 공통으로 병합하지 않는다. 모든 그룹에 기업 또는 기관 userType을 지정하고 Segmented Control에서 한 벌씩 조회한다.",
+    "//iaVersions": "IA 원본 시트 파일명 기준 버전. 기업·기관·탄소 segmented control 선택에 따라 퍼블리싱 인덱스 제목 옆 배지에 표시한다.",
+    "//structureGroups": "2026-08-18 FO IA를 기준으로 기업 155건(No. 기재 153건 + No. 미기재 작성 취소 2건), 기관은 원본 150건 중 빨간색·취소선 3건을 제외한 147건을 각각 독립된 트리로 반영한다. 기관 제외 항목은 정보 이용 동의, 이용약관, 마케팅 알림 수신동의다. leaf.version은 아직 작업 전이면 미배포다. 탄소는 2026-08-18 FO_탄소중립 IA 56건을 원본 뎁스 그대로 반영한다(탄소 FO가 만드는 화면이라 여기서는 만들지 않는다).",
+    "//userType": "기업·기관 IA는 메뉴명이 같아도 역할과 노출 조건이 다를 수 있으므로 공통으로 병합하지 않는다. 모든 그룹에 기업·기관·탄소 중 하나의 userType을 지정하고 Segmented Control에서 한 벌씩 조회한다. 탄소는 이 저장소가 아니라 탄소 FO가 만드는 화면이라 key만 두고 경로 레지스트리와 짝을 맞추지 않으며, 화면 주소는 각 화면의 externalHref로 연결한다.",
     "iaVersions": {
         "기업": "V1.21_260818",
-        "기관": "V1.21_260818"
+        "기관": "V1.21_260818",
+        "탄소": "V1.21_260818"
     },
     "assetVersions": [
         {
@@ -190,6 +191,16 @@
             "status": "완료"
         }
     ],
+    "//externalProjects": "이 저장소가 아니라 탄소 FO처럼 다른 저장소에서 만드는 IA의 출처와 배포 주소. 해당 유형을 선택하면 진척률 아래에 프로젝트 정보로 표시한다. userType 은 외부 유형(types.ts 의 EXTERNAL_USER_TYPES)이어야 한다.",
+    "externalProjects": [
+        {
+            "userType": "탄소",
+            "name": "탄소 FO",
+            "repositoryUrl": "https://github.com/fromex-koh/fromex-carbon",
+            "handoffUrl": "https://github.com/fromex-koh/fromex-carbon/tree/frontend-handoff",
+            "deploymentUrl": "https://fromex-carbon.vercel.app/"
+        }
+    ],
     "structureGroups": [
         {
             "name": "홈",
@@ -200,6 +211,7 @@
                     "screen": {
                         "key": "corp-home",
                         "screenId": null,
+                        "application2Status": "완료",
                         "status": "완료",
                         "version": "미배포"
                     },
@@ -209,6 +221,7 @@
                             "screen": {
                                 "key": "corp-home-technology-evaluation-model-selection",
                                 "screenId": null,
+                                "application2Status": "완료",
                                 "status": "완료",
                                 "version": "미배포"
                             },
@@ -216,6 +229,7 @@
                                 {
                                     "label": "Tech-Index 선택 화면",
                                     "screenId": null,
+                                    "application2Status": "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-home-technology-evaluation-model-selection-tech-index"
@@ -356,6 +370,7 @@
                                     "label": "전자서명",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature"
                                 },
@@ -466,6 +481,7 @@
                                             "label": "업종코드 제조 선택",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-ktrs-fm-checklist-manufacturing"
                                         },
@@ -473,6 +489,7 @@
                                             "label": "업종코드 서비스 선택",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-ktrs-fm-checklist-service"
                                         }
@@ -573,6 +590,7 @@
                             "label": "(0) 선택 화면",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-technology-evaluation-tech-index-selection"
                         },
@@ -585,6 +603,7 @@
                                     "screen": {
                                         "screenId": null,
                                         "status": "완료",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "key": "corp-technology-evaluation-tech-index-general-customer-consent"
                                     },
@@ -609,6 +628,7 @@
                                             "label": "전자서명",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature"
                                         },
@@ -654,7 +674,7 @@
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-technology-category",
-                                            "application2Status": "진행중"
+                                            "application2Status": "완료"
                                         },
                                         {
                                             "label": "품목설명",
@@ -698,7 +718,8 @@
                                             "screenId": null,
                                             "status": "완료",
                                             "version": "미배포",
-                                            "key": "corp-technology-evaluation-tech-index-general-representative-capability-career-input-helper"
+                                            "key": "corp-technology-evaluation-tech-index-general-representative-capability-career-input-helper",
+                                            "application2Status": "완료"
                                         }
                                     ]
                                 },
@@ -721,6 +742,7 @@
                                     "screen": {
                                         "screenId": null,
                                         "status": "완료",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "key": "corp-technology-evaluation-tech-index-startup-customer-consent"
                                     },
@@ -745,6 +767,7 @@
                                             "label": "전자서명",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature"
                                         },
@@ -762,6 +785,7 @@
                                     "label": "(2) 기업·기술정보 입력",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-startup-company-technology-info"
                                 },
@@ -790,7 +814,7 @@
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-technology-category",
-                                            "application2Status": "진행중"
+                                            "application2Status": "완료"
                                         },
                                         {
                                             "label": "품목설명",
@@ -834,7 +858,8 @@
                                             "screenId": null,
                                             "status": "완료",
                                             "version": "미배포",
-                                            "key": "corp-technology-evaluation-tech-index-startup-representative-capability-career-input-helper"
+                                            "key": "corp-technology-evaluation-tech-index-startup-representative-capability-career-input-helper",
+                                            "application2Status": "완료"
                                         }
                                     ]
                                 },
@@ -858,6 +883,7 @@
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
+                                "application2Status": "완료",
                                 "version": "미배포",
                                 "key": "corp-technology-evaluation-investment-model-customer-consent"
                             },
@@ -883,7 +909,8 @@
                                     "screenId": null,
                                     "status": "완료",
                                     "version": "미배포",
-                                    "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature"
+                                    "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature",
+                                    "application2Status": "완료"
                                 },
                                 {
                                     "label": "이어서 작성 안내",
@@ -899,6 +926,7 @@
                             "label": "(2) 기업·기술정보 입력",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-technology-evaluation-investment-model-company-technology-info"
                         },
@@ -930,6 +958,7 @@
                                     "label": "입력도움말",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-representative-capability-career-input-helper"
                                 }
@@ -958,6 +987,7 @@
                                     "label": "자동저장",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-additional-company-info-autosave"
                                 },
@@ -965,6 +995,7 @@
                                     "label": "작성 취소",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-additional-company-info-cancel-confirm"
                                 }
@@ -980,6 +1011,7 @@
                                             "label": "업종코드 제조 선택",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-investment-model-checklist-manufacturing"
                                         },
@@ -987,6 +1019,7 @@
                                             "label": "업종코드 서비스 선택",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-investment-model-checklist-service"
                                         }
@@ -1698,6 +1731,7 @@
                     "label": "알기 쉬운 개인처리방침",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-privacy-policy-easy-privacy-policy"
                 }
@@ -1768,6 +1802,7 @@
                     "screen": {
                         "key": "org-home",
                         "screenId": null,
+                        "application2Status": "완료",
                         "status": "완료",
                         "version": "미배포"
                     },
@@ -1777,6 +1812,7 @@
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
+                                "application2Status": "완료",
                                 "version": "미배포",
                                 "key": "org-home-technology-evaluation-selection"
                             },
@@ -1785,6 +1821,7 @@
                                     "label": "Tech-Index 선택 화면",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-home-technology-evaluation-selection-tech-index"
                                 }
@@ -2110,6 +2147,7 @@
                             "label": "(0) 선택 화면",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-individual-evaluation-tech-index-selection"
                         },
@@ -2121,6 +2159,7 @@
                                     "screen": {
                                         "screenId": null,
                                         "status": "완료",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "key": "org-individual-evaluation-tech-index-general-customer-consent"
                                     },
@@ -2129,6 +2168,7 @@
                                             "label": "이어서 작성 안내",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-company-technology-info-resume-notice"
                                         }
@@ -2138,6 +2178,7 @@
                                     "label": "(2) 기업·기술정보 입력",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-general-company-technology-info"
                                 },
@@ -2148,6 +2189,7 @@
                                             "label": "업종코드 조회",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-company-info-industry-code-search"
                                         },
@@ -2155,6 +2197,7 @@
                                             "label": "주소 찾기",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-company-info-address-search"
                                         },
@@ -2162,6 +2205,7 @@
                                             "label": "기술분류",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-company-info-technology-category"
                                         },
@@ -2169,6 +2213,7 @@
                                             "label": "품목설명",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-company-info-item-description"
                                         },
@@ -2183,6 +2228,7 @@
                                             "label": "작성 취소",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-company-info-cancel-confirm"
                                         },
@@ -2190,6 +2236,7 @@
                                             "label": "자동저장",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-company-info-autosave"
                                         }
@@ -2309,6 +2356,7 @@
                                     "screen": {
                                         "screenId": null,
                                         "status": "완료",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "key": "org-individual-evaluation-tech-index-startup-evaluation-application"
                                     },
@@ -2317,6 +2365,7 @@
                                             "label": "제출 전 최종 확인",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-final-review"
                                         }
@@ -2326,6 +2375,7 @@
                                     "label": "(4) 완료 화면",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-startup-complete"
                                 }
@@ -2340,6 +2390,7 @@
                             "label": "(1) 고객정보활용동의",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-individual-evaluation-investment-model-customer-consent"
                         },
@@ -2347,6 +2398,7 @@
                             "label": "(2) 기업·기술정보 입력",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-individual-evaluation-investment-model-company-technology-info"
                         },
@@ -2375,7 +2427,7 @@
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-company-info-technology-category",
-                                    "application2Status": "진행중"
+                                    "application2Status": "완료"
                                 },
                                 {
                                     "label": "품목설명",
@@ -2401,6 +2453,7 @@
                                     "label": "입력도움말",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-representative-capability-career-input-helper"
                                 }
@@ -2429,6 +2482,7 @@
                                     "label": "자동저장",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-additional-company-info-autosave"
                                 },
@@ -2436,6 +2490,7 @@
                                     "label": "작성 취소",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-additional-company-info-cancel-confirm"
                                 }
@@ -2452,6 +2507,7 @@
                                             "label": "업종코드 제조 선택",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-investment-model-checklist-manufacturing"
                                         },
@@ -2459,6 +2515,7 @@
                                             "label": "업종코드 서비스 선택",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-investment-model-checklist-service"
                                         }
@@ -2468,6 +2525,7 @@
                                     "label": "자동저장",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-checklist-autosave"
                                 },
@@ -2475,6 +2533,7 @@
                                     "label": "작성 취소",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-checklist-cancel-confirm"
                                 }
@@ -2485,6 +2544,7 @@
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
+                                "application2Status": "완료",
                                 "version": "미배포",
                                 "key": "org-individual-evaluation-investment-model-evaluation-application"
                             },
@@ -2493,6 +2553,7 @@
                                     "label": "제출 전 최종 확인",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-final-review"
                                 }
@@ -3156,6 +3217,7 @@
                     "label": "알기 쉬운 개인처리방침",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-privacy-policy-easy-privacy-policy"
                 }
@@ -3214,6 +3276,496 @@
                     "version": "미배포",
                     "key": "org-logout",
                     "application2Status": "완료"
+                }
+            ]
+        },
+        {
+            "name": "메인 홈",
+            "userType": "탄소",
+            "children": [
+                {
+                    "label": "메인 화면",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "carbon-home"
+                },
+                {
+                    "label": "탄소중립 선도기업",
+                    "screen": {
+                        "key": "carbon-leading-company",
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포"
+                    },
+                    "children": [
+                        {
+                            "label": "자가진단",
+                            "children": [
+                                {
+                                    "label": "기업 정보 입력",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-leading-company-self-diagnosis-company-info"
+                                },
+                                {
+                                    "label": "인벤토리 배출량 산정",
+                                    "screen": {
+                                        "key": "carbon-leading-company-self-diagnosis-inventory-emissions",
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "항목 선택",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-self-diagnosis-inventory-emissions-item-select"
+                                        },
+                                        {
+                                            "label": "Scope설명",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-self-diagnosis-inventory-emissions-scope-guide"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "감축잠재량 산정",
+                                    "screen": {
+                                        "key": "carbon-leading-company-self-diagnosis-reduction-potential",
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "삭제 확인 팝업",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-self-diagnosis-reduction-potential-delete-confirm"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "감축목표 설정",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-leading-company-self-diagnosis-reduction-target"
+                                },
+                                {
+                                    "label": "평가지표 작성",
+                                    "screen": {
+                                        "key": "carbon-leading-company-self-diagnosis-evaluation-indicators",
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "탄소중립·환경·에너지 분야 관련 의무 교육",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-self-diagnosis-evaluation-indicators-mandatory-training"
+                                        },
+                                        {
+                                            "label": "(예시) 중소기업 온실가스 배출원 (Scope 1, 2, 3)",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-self-diagnosis-evaluation-indicators-ghg-emission-sources"
+                                        },
+                                        {
+                                            "label": "국가에서 관리하는 환경분야 인증 종류",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-self-diagnosis-evaluation-indicators-national-certifications"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "결과 확인",
+                                    "screen": {
+                                        "key": "carbon-leading-company-self-diagnosis-result",
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "결과 확인서",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-self-diagnosis-result-report"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "label": "선도기업 신청 1차",
+                            "children": [
+                                {
+                                    "label": "신청서 작성",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-leading-company-application-1st-form"
+                                },
+                                {
+                                    "label": "서류 제출",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-leading-company-application-1st-documents"
+                                },
+                                {
+                                    "label": "최종 확인",
+                                    "screen": {
+                                        "key": "carbon-leading-company-application-1st-final-check",
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "제출 확인 팝업",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-1st-final-check-submit-confirm"
+                                        },
+                                        {
+                                            "label": "결과 확인",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-1st-final-check-result"
+                                        },
+                                        {
+                                            "label": "신청서",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-1st-final-check-application-download"
+                                        },
+                                        {
+                                            "label": "결과 확인서",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-1st-final-check-result-report"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "label": "선도기업 신청 2차",
+                            "children": [
+                                {
+                                    "label": "신청서 작성",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-leading-company-application-2nd-form"
+                                },
+                                {
+                                    "label": "서류 제출",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-leading-company-application-2nd-documents"
+                                },
+                                {
+                                    "label": "최종 확인",
+                                    "screen": {
+                                        "key": "carbon-leading-company-application-2nd-final-check",
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "제출 확인 팝업",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-2nd-final-check-submit-confirm"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "결과 확인",
+                                    "screen": {
+                                        "key": "carbon-leading-company-application-2nd-result",
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "신청서",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-2nd-result-application-download"
+                                        },
+                                        {
+                                            "label": "결과 확인서",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-2nd-result-report"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "label": "선도기업 신청 3차",
+                            "children": [
+                                {
+                                    "label": "신청서 작성",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-leading-company-application-3rd-form"
+                                },
+                                {
+                                    "label": "인벤토리 배출량 산정",
+                                    "screen": {
+                                        "key": "carbon-leading-company-application-3rd-inventory-emissions",
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "항목 선택",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-3rd-inventory-emissions-item-select"
+                                        },
+                                        {
+                                            "label": "Scope설명",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-3rd-inventory-emissions-scope-guide"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "목표달성 평가",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-leading-company-application-3rd-target-achievement"
+                                },
+                                {
+                                    "label": "서류 제출",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-leading-company-application-3rd-documents"
+                                },
+                                {
+                                    "label": "최종 확인",
+                                    "screen": {
+                                        "key": "carbon-leading-company-application-3rd-final-check",
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "제출 확인 팝업",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-3rd-final-check-submit-confirm"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "결과 확인",
+                                    "screen": {
+                                        "key": "carbon-leading-company-application-3rd-result",
+                                        "screenId": null,
+                                        "status": "대기중",
+                                        "version": "미배포"
+                                    },
+                                    "children": [
+                                        {
+                                            "label": "신청서",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-3rd-result-application-download"
+                                        },
+                                        {
+                                            "label": "결과 확인서",
+                                            "screenId": null,
+                                            "status": "대기중",
+                                            "version": "미배포",
+                                            "key": "carbon-leading-company-application-3rd-result-report"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "label": "신청내역 확인 및 확인서 발급",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "carbon-leading-company-application-history"
+                        }
+                    ]
+                },
+                {
+                    "label": "K-택소노미 적합성평가",
+                    "screen": {
+                        "key": "carbon-taxonomy",
+                        "screenId": null,
+                        "status": "대기중",
+                        "version": "미배포"
+                    },
+                    "children": [
+                        {
+                            "label": "찾아보기",
+                            "screen": {
+                                "key": "carbon-taxonomy-browse",
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포"
+                            },
+                            "children": [
+                                {
+                                    "label": "결과확인",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-taxonomy-browse-result"
+                                },
+                                {
+                                    "label": "분류 결과",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-taxonomy-browse-classification"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "자가진단",
+                            "screen": {
+                                "key": "carbon-taxonomy-self-diagnosis",
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포"
+                            },
+                            "children": [
+                                {
+                                    "label": "상세 질문",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-taxonomy-self-diagnosis-questions"
+                                },
+                                {
+                                    "label": "결과확인",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-taxonomy-self-diagnosis-result"
+                                },
+                                {
+                                    "label": "분류 결과",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-taxonomy-self-diagnosis-classification"
+                                }
+                            ]
+                        },
+                        {
+                            "label": "전문평가",
+                            "screen": {
+                                "key": "carbon-taxonomy-expert-evaluation",
+                                "screenId": null,
+                                "status": "대기중",
+                                "version": "미배포"
+                            },
+                            "children": [
+                                {
+                                    "label": "사전정보입력",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-taxonomy-expert-evaluation-preliminary-info"
+                                },
+                                {
+                                    "label": "적합성 평가",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "carbon-taxonomy-expert-evaluation-conformity"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "label": "현황조회",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "carbon-status"
+                }
+            ]
+        },
+        {
+            "name": "공통",
+            "userType": "탄소",
+            "children": [
+                {
+                    "label": "로그인",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "carbon-login"
+                },
+                {
+                    "label": "회원가입",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "carbon-signup"
+                }
+            ]
+        },
+        {
+            "name": "푸터",
+            "userType": "탄소",
+            "children": [
+                {
+                    "label": "푸터",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "carbon-footer"
                 }
             ]
         }

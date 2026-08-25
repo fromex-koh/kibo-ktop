@@ -12,11 +12,20 @@ export const STATUS_VALUES: readonly Status[] = ['대기중', '진행중', '수�
 export const isStatus = (value: string): value is Status => STATUS_VALUES.some((status) => status === value)
 
 // ── 사용자 유형(화면을 볼 수 있는 대상) ──
-// 없으면 공통(기업·기관 둘 다 노출). 그룹·브랜치에 지정하면 하위 화면이 상속하고,
-// 하위에서 다시 지정하면 그 값이 우선한다. 화면 필터(전체/기업/기관)의 기준이 된다.
-export type UserType = '기업' | '기관'
+// 그룹·브랜치에 지정하면 하위 화면이 상속하고, 하위에서 다시 지정하면 그 값이 우선한다.
+// 화면 필터(기업/기관/탄소)의 기준이 된다.
+//
+// 탄소는 이 저장소가 퍼블리싱하는 화면이 아니라 탄소 FO(탄소중립 플랫폼)의 IA다 —
+// 화면을 만들지 않고 인덱스에 구조와 key 만 두며, 각 화면은 externalHref 로 그 프로젝트를 가리킨다.
+export type UserType = '기업' | '기관' | '탄소'
 
-export const USER_TYPE_VALUES: readonly UserType[] = ['기업', '기관']
+export const USER_TYPE_VALUES: readonly UserType[] = ['기업', '기관', '탄소']
+
+// 화면을 이 저장소에서 만들지 않는 사용자 유형 — 경로 레지스트리와 짝을 맞추지 않는다.
+export const EXTERNAL_USER_TYPES: readonly UserType[] = ['탄소']
+
+export const isExternalUserType = (userType: UserType): boolean =>
+    EXTERNAL_USER_TYPES.some((external) => external === userType)
 
 export const isUserType = (value: string): value is UserType => USER_TYPE_VALUES.some((userType) => userType === value)
 
@@ -114,6 +123,7 @@ export type StructureLeaf = {
     // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목 — 인덱스에는 포함하되 취소선·빨간색으로 표시한다.
     isRed?: boolean
     userType?: UserType // 없으면 상위에서 상속(최종적으로 없으면 공통).
+    externalHref?: string // 외부 프로젝트 화면의 주소 — 이 저장소에 화면이 없는 유형(탄소)에서 쓴다.
 }
 
 // 화면(leaf)의 상세 정보 — StructureLeaf 와 StructureBranch.screen 이 공유하는 형태.
@@ -129,6 +139,7 @@ export type ScreenInfo = {
     // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목.
     isRed?: boolean
     userType?: UserType
+    externalHref?: string // 외부 프로젝트 화면의 주소 — 이 저장소에 화면이 없는 유형(탄소)에서 쓴다.
 }
 
 export type StructureBranch = {
@@ -165,10 +176,21 @@ export type CommonLayout = {
     version: string
 }
 
+// 이 저장소가 아니라 다른 저장소에서 만드는 IA(탄소)의 출처 — 인덱스에서 그 저장소를 바로 열 수 있게 한다.
+export type ExternalProject = {
+    userType: UserType
+    name: string
+    repositoryUrl: string
+    handoffUrl: string
+    /** 그 프로젝트의 퍼블리싱 인덱스 배포 주소 — 화면을 직접 열어 볼 수 있는 곳이다. */
+    deploymentUrl: string
+}
+
 export type PublishingIndexContent = {
     releaseNotes: ReleaseNote[]
     assetVersions: AssetVersion[]
     commonLayouts: CommonLayout[]
     iaVersions: Record<UserType, string>
+    externalProjects: ExternalProject[]
     structureGroups: StructureGroup[]
 }
