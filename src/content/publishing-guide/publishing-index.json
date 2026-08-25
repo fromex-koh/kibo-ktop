@@ -217,7 +217,7 @@
                     "screen": {
                         "key": "corp-home",
                         "screenId": null,
-                        "application2Status":"완료",
+                        "application2Status": "완료",
                         "status": "완료",
                         "version": "미배포"
                     },
@@ -235,7 +235,7 @@
                                 {
                                     "label": "Tech-Index 선택 화면",
                                     "screenId": null,
-                                    "application2Status":"완료",
+                                    "application2Status": "완료",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-home-technology-evaluation-model-selection-tech-index"
