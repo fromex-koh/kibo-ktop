@@ -15,7 +15,7 @@ export const isStatus = (value: string): value is Status => STATUS_VALUES.some((
 // 그룹·브랜치에 지정하면 하위 화면이 상속하고, 하위에서 다시 지정하면 그 값이 우선한다.
 // 화면 필터(기업/기관/탄소)의 기준이 된다.
 //
-// 탄소는 이 저장소가 퍼블리싱하는 화면이 아니라 별도 프로젝트(탄소중립 플랫폼 FO)의 IA다 —
+// 탄소는 이 저장소가 퍼블리싱하는 화면이 아니라 탄소 FO(탄소중립 플랫폼)의 IA다 —
 // 화면을 만들지 않고 인덱스에 구조와 key 만 두며, 각 화면은 externalHref 로 그 프로젝트를 가리킨다.
 export type UserType = '기업' | '기관' | '탄소'
 
@@ -182,6 +182,8 @@ export type ExternalProject = {
     name: string
     repositoryUrl: string
     handoffUrl: string
+    /** 그 프로젝트의 퍼블리싱 인덱스 배포 주소 — 화면을 직접 열어 볼 수 있는 곳이다. */
+    deploymentUrl: string
 }
 
 export type PublishingIndexContent = {

@@ -9,6 +9,7 @@ import {
     File,
     Folder,
     GitBranch,
+    Globe,
     Info,
     LayoutGrid,
     Sparkles,
@@ -467,23 +468,33 @@ const {releaseNotes, assetVersions, commonLayouts, iaVersions, externalProjects,
 
 // 전체 화면(트리를 펼친 leaf) — 필터·카운트는 이 목록을 기준으로 컴포넌트 안에서 파생한다.
 const ALL_LEAVES = structureGroups.flatMap(collectLeaves)
-// 외부 저장소에서 만드는 IA(탄소)를 고르면, 그 프로젝트의 저장소를 진척률 아래에 배지로 나열한다 —
-// 진행 상태 범례와 같은 배지 줄이라 화면에서 한 덩어리로 읽힌다.
-const RepositoryBadge = ({href, label, branch}: {href: string; label: string; branch: string}) => (
+// 탄소 FO처럼 다른 저장소에서 만드는 IA를 고르면, 그 프로젝트의 저장소와 배포 주소를 진척률 아래에
+// 배지로 나열한다 — 진행 상태 범례와 같은 배지 줄이라 화면에서 한 덩어리로 읽힌다.
+type ProjectLinkBadgeProps = {
+    href: string
+    label: string
+    /** 같은 주소의 어느 갈래인지 — 브랜치명이나 '배포'. */
+    note: string
+    icon: typeof GitBranch
+}
+
+const ProjectLinkBadge = ({href, label, note, icon: Icon}: ProjectLinkBadgeProps) => (
     <Badge asChild variant="outline" color="info" shape="round" className="hover:ring-ring/40 hover:ring-2">
         <a href={href} target="_blank" rel="noopener noreferrer">
-            <GitBranch aria-hidden="true" />
+            <Icon aria-hidden="true" />
             {label}
-            <span className="text-muted-foreground">({branch} 브랜치)</span>
+            <span className="text-muted-foreground">({note})</span>
             <ExternalLink aria-hidden="true" />
             <span className="sr-only"> (새 창에서 열림)</span>
         </a>
     </Badge>
 )
 
+// 주소는 스킴을 빼고 보여 준다(홈 화면 '프로젝트 정보'와 같은 표기).
+const toAddressLabel = (url: string) => url.replace(/^https?:\/\//, '').replace(/\/$/, '')
+
 const ExternalProjectInfo = ({project}: {project: ExternalProject}) => {
-    // 스킴은 빼고 주소만 보여 준다(홈 화면 '프로젝트 정보'와 같은 표기).
-    const repositoryLabel = project.repositoryUrl.replace(/^https?:\/\//, '')
+    const repositoryLabel = toAddressLabel(project.repositoryUrl)
 
     return (
         <div className="flex flex-col gap-2">
@@ -491,12 +502,30 @@ const ExternalProjectInfo = ({project}: {project: ExternalProject}) => {
                 <Info aria-hidden="true" className="text-primary size-4 shrink-0" />
                 프로젝트 정보 · {project.name} — 화면은 이 저장소가 아니라 아래 저장소에서 만듭니다.
             </span>
-            <ul aria-label={`${project.name} 저장소`} className="flex flex-wrap items-center gap-2">
+            <ul aria-label={`${project.name} 저장소와 배포 주소`} className="flex flex-wrap items-center gap-2">
                 <li>
-                    <RepositoryBadge href={project.repositoryUrl} label={repositoryLabel} branch="main" />
+                    <ProjectLinkBadge
+                        href={project.repositoryUrl}
+                        label={repositoryLabel}
+                        note="main 브랜치"
+                        icon={GitBranch}
+                    />
                 </li>
                 <li>
-                    <RepositoryBadge href={project.handoffUrl} label={repositoryLabel} branch="frontend-handoff" />
+                    <ProjectLinkBadge
+                        href={project.handoffUrl}
+                        label={repositoryLabel}
+                        note="frontend-handoff 브랜치"
+                        icon={GitBranch}
+                    />
+                </li>
+                <li>
+                    <ProjectLinkBadge
+                        href={project.deploymentUrl}
+                        label={toAddressLabel(project.deploymentUrl)}
+                        note="퍼블리싱 인덱스 배포"
+                        icon={Globe}
+                    />
                 </li>
             </ul>
         </div>
@@ -781,8 +810,8 @@ const PublishingIndex = () => {
                                 <ul className="flex list-disc flex-col gap-1 pl-5">
                                     <li>기업·기관·탄소 IA를 역할별로 분리해 화면 상태와 버전을 추적합니다.</li>
                                     <li>
-                                        탄소는 별도 프로젝트(탄소중립 플랫폼 FO)의 IA입니다 — 이 저장소에서 화면을
-                                        만들지 않고 구조와 화면 주소만 관리합니다.
+                                        탄소는 탄소 FO의 IA입니다 — 이 저장소에서 화면을 만들지 않고 구조와 화면 주소만
+                                        관리합니다.
                                     </li>
                                     <li>
                                         메뉴 자체가 화면인 행의 미사용 하위 뎁스는 병합된 &apos;-&apos;로 표시합니다.

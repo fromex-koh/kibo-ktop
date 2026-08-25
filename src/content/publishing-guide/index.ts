@@ -276,7 +276,7 @@ const parseExternalProject = (value: unknown, index: number): ExternalProject =>
     if (!isExternalUserType(userType)) {
         throw new Error(`[content] ${where}: "${userType}" 은(는) 외부 프로젝트 유형이 아닙니다.`)
     }
-    const readText = (field: 'name' | 'repositoryUrl' | 'handoffUrl'): string => {
+    const readText = (field: 'name' | 'repositoryUrl' | 'handoffUrl' | 'deploymentUrl'): string => {
         const text: unknown = value[field]
         if (typeof text !== 'string' || text.length === 0) {
             throw new Error(`[content] ${where} > ${field}: 비어 있지 않은 문자열이어야 합니다.`)
@@ -288,6 +288,7 @@ const parseExternalProject = (value: unknown, index: number): ExternalProject =>
         name: readText('name'),
         repositoryUrl: readText('repositoryUrl'),
         handoffUrl: readText('handoffUrl'),
+        deploymentUrl: readText('deploymentUrl'),
     }
 }
 
