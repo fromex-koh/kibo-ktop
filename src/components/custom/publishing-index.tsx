@@ -256,6 +256,7 @@ const StatusTag = ({status}: {status: Status}) => (
 )
 
 // 실제 화면의 마지막 뎁스 배지는 페이지 구현 여부와 관계없이 publishing-index에서 검색할 고유 키를 복사한다.
+// 이 저장소에 화면이 없는 외부 IA(탄소)도 인덱스에는 key 가 있으므로 똑같이 복사할 수 있다.
 // 상위 메뉴 뎁스는 여러 화면을 대표할 수 있으므로 복사 버튼으로 만들지 않는다.
 const KeyCopyDepthBadge = ({depth, screenKey}: {depth: number; screenKey: string}) => {
     const copyKey = async () => {
@@ -1035,10 +1036,10 @@ const PublishingIndex = () => {
                                                                     !leaf.groupOnlyDepths.includes(depth) && (
                                                                         <>
                                                                             {depth === leaf.path.length - 1 &&
-                                                                            registeredScreen ? (
+                                                                            leaf.registryKey !== undefined ? (
                                                                                 <KeyCopyDepthBadge
                                                                                     depth={depthNumber}
-                                                                                    screenKey={registeredScreen.key}
+                                                                                    screenKey={leaf.registryKey}
                                                                                 />
                                                                             ) : (
                                                                                 <Badge
