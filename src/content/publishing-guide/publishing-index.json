@@ -471,6 +471,7 @@
                                     "label": "작성 취소",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-cancel-confirm"
                                 }
@@ -652,6 +653,7 @@
                                     "label": "(2) 기업·기술정보 입력",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-general-company-technology-info"
                                 },
@@ -1086,6 +1088,7 @@
                             "label": "(4) 완료 화면",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-technology-evaluation-investment-model-complete"
                         }
@@ -1309,6 +1312,7 @@
                     "label": "탄소중립",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-carbon-neutrality"
                 }
@@ -1559,6 +1563,7 @@
                     "screen": {
                         "screenId": null,
                         "status": "완료",
+                        "application2Status": "완료",
                         "version": "미배포",
                         "key": "corp-mypage-inquiry-history"
                     },
@@ -1567,6 +1572,7 @@
                             "label": "문의하기 상세",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-inquiry-history-inquiry-detail"
                         }
@@ -2253,6 +2259,7 @@
                                     "screen": {
                                         "screenId": null,
                                         "status": "완료",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "key": "org-individual-evaluation-tech-index-general-evaluation-application"
                                     },
@@ -2261,6 +2268,7 @@
                                             "label": "제출 전 최종 확인",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-final-review"
                                         }
@@ -2270,6 +2278,7 @@
                                     "label": "(4) 완료 화면",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-general-complete"
                                 }
@@ -2283,6 +2292,7 @@
                                     "screen": {
                                         "screenId": null,
                                         "status": "완료",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "key": "org-individual-evaluation-tech-index-startup-customer-consent"
                                     },
@@ -2291,6 +2301,7 @@
                                             "label": "이어서 작성 안내",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-company-technology-info-resume-notice"
                                         }
@@ -2300,6 +2311,7 @@
                                     "label": "(2) 기업·기술정보 입력",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-startup-company-technology-info"
                                 },
@@ -2310,6 +2322,7 @@
                                             "label": "업종코드 조회",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-company-info-industry-code-search"
                                         },
@@ -2317,6 +2330,7 @@
                                             "label": "주소 찾기",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-company-info-address-search"
                                         },
@@ -2324,6 +2338,7 @@
                                             "label": "기술분류",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-company-info-technology-category"
                                         },
@@ -2331,6 +2346,7 @@
                                             "label": "품목설명",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-company-info-item-description"
                                         },
@@ -2345,6 +2361,7 @@
                                             "label": "작성 취소",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-company-info-cancel-confirm"
                                         },
@@ -2352,6 +2369,7 @@
                                             "label": "자동저장",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-company-info-autosave"
                                         }
@@ -2569,6 +2587,7 @@
                             "label": "(5) 완료 화면",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-individual-evaluation-investment-model-complete"
                         }
@@ -2847,6 +2866,7 @@
                     "label": "탄소중립",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-carbon-neutrality"
                 }
@@ -3044,6 +3064,7 @@
                     "screen": {
                         "screenId": null,
                         "status": "완료",
+                        "application2Status": "완료",
                         "version": "미배포",
                         "key": "org-mypage-inquiry-history"
                     },
@@ -3052,6 +3073,7 @@
                             "label": "문의하기 상세",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-mypage-inquiry-history-inquiry-detail"
                         }
