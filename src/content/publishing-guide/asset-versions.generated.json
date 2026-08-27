@@ -1,5 +1,5 @@
 {
-    "version": "v3.0.5",
+    "version": "v3.0.6",
     "assets": [
         {
             "name": "src/app",
@@ -24,7 +24,7 @@
         {
             "name": "src/components/custom",
             "version": "v3.0.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/theme-provider.tsx",
@@ -38,7 +38,7 @@
         },
         {
             "name": "src/content",
-            "version": "v3.0.5",
+            "version": "v3.0.6",
             "isCurrent": true
         },
         {
