@@ -254,6 +254,7 @@
                     "label": "전체메뉴",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-full-menu"
                 }
@@ -280,6 +281,7 @@
                     "label": "이용안내",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-guide"
                 }
@@ -293,6 +295,7 @@
                     "label": "가격 정책",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-pricing"
                 }
@@ -306,6 +309,7 @@
                     "label": "플랫폼 소개",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-platform"
                 },
@@ -313,6 +317,7 @@
                     "label": "기술평가 소개",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-platform-technology-evaluation"
                 },
@@ -320,6 +325,7 @@
                     "label": "특허평가 소개",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-platform-patent-evaluation"
                 },
@@ -327,6 +333,7 @@
                     "label": "K-BIGx 보고서 소개",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-platform-k-bigx-report"
                 },
@@ -334,6 +341,7 @@
                     "label": "탄소중립 소개",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-platform-carbon-neutrality"
                 }
@@ -1327,6 +1335,7 @@
                     "screen": {
                         "screenId": null,
                         "status": "완료",
+                        "application2Status": "완료",
                         "version": "미배포",
                         "key": "corp-mypage-profile"
                     },
@@ -1335,6 +1344,7 @@
                             "label": "업종코드 조회",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-profile-industry-code-search"
                         },
@@ -1342,6 +1352,7 @@
                             "label": "주소 찾기",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-profile-address-search"
                         },
@@ -1349,6 +1360,7 @@
                             "label": "수정 취소",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-profile-cancel-confirm"
                         },
@@ -1356,6 +1368,7 @@
                             "label": "저장 전 최종 확인",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-profile-save-confirm"
                         }
@@ -1367,6 +1380,7 @@
                         "key": "corp-mypage-representative-history",
                         "screenId": null,
                         "status": "완료",
+                        "application2Status": "완료",
                         "version": "미배포"
                     },
                     "children": [
@@ -1399,6 +1413,7 @@
                                     "label": "전자서명",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-representative-history-customer-consent-electronic-signature"
                                 }
@@ -1408,6 +1423,7 @@
                             "label": "입력 도움말",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-representative-history-input-helper"
                         },
@@ -1415,6 +1431,7 @@
                             "label": "수정 취소",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-representative-history-cancel-confirm"
                         },
@@ -1422,6 +1439,7 @@
                             "label": "저장 전 최종 확인",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-representative-history-save-confirm"
                         }
@@ -1851,6 +1869,7 @@
                     "label": "전체메뉴",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-full-menu"
                 }
@@ -1877,6 +1896,7 @@
                     "label": "이용안내",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-guide"
                 }
@@ -1890,6 +1910,7 @@
                     "label": "가격 정책",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-pricing"
                 }
@@ -1903,6 +1924,7 @@
                     "label": "플랫폼 소개",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-platform"
                 },
@@ -1910,6 +1932,7 @@
                     "label": "기술평가 소개",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-platform-technology-evaluation"
                 },
@@ -1917,6 +1940,7 @@
                     "label": "특허평가 소개",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-platform-patent-evaluation"
                 },
@@ -1924,6 +1948,7 @@
                     "label": "K-BIGx 보고서 소개",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-platform-k-bigx-report"
                 },
@@ -1931,6 +1956,7 @@
                     "label": "탄소중립 소개",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-platform-carbon-neutrality"
                 }
@@ -2603,6 +2629,7 @@
                     "label": "(1) Tech-Index 선택",
                     "screenId": null,
                     "status": "완료",
+                    "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-batch-evaluation-tech-index-selection"
                 },
@@ -2611,6 +2638,7 @@
                     "screen": {
                         "screenId": null,
                         "status": "완료",
+                        "application2Status": "완료",
                         "version": "미배포",
                         "key": "org-batch-evaluation-evaluation-history-or-batch"
                     },
@@ -2620,6 +2648,7 @@
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
+                                "application2Status": "완료",
                                 "version": "미배포",
                                 "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request"
                             },
@@ -2628,6 +2657,7 @@
                                     "label": "제출전 최종확인",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request-final-review"
                                 },
@@ -2635,6 +2665,7 @@
                                     "label": "(4) 대량정보 조회 신청 완료",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-complete"
                                 }
@@ -2645,6 +2676,7 @@
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
+                                "application2Status": "완료",
                                 "version": "미배포",
                                 "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-request"
                             },
@@ -2653,6 +2685,7 @@
                                     "label": "제출전 최종확인",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-request-final-review"
                                 },
@@ -2660,6 +2693,7 @@
                                     "label": "(4) 일괄평가 신청 완료",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-complete"
                                 }
@@ -2887,6 +2921,7 @@
                                     "label": "협약은행",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-profile-edit-partner-bank"
                                 },
@@ -2894,6 +2929,7 @@
                                     "label": "협약기관",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-profile-edit-partner-agency"
                                 },
@@ -2901,6 +2937,7 @@
                                     "label": "기관회원 (하위계정)",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-profile-edit-sub-account"
                                 }
@@ -2926,6 +2963,7 @@
                             "label": "수정 취소",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-mypage-profile-edit-cancel-confirm"
                         },
@@ -2933,6 +2971,7 @@
                             "label": "저장 전 최종 확인",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-mypage-profile-edit-save-confirm"
                         }
