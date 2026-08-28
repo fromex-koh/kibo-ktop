@@ -253,7 +253,7 @@
                 {
                     "label": "전체메뉴",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-full-menu"
                 }
@@ -279,7 +279,7 @@
                 {
                     "label": "이용안내",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-guide"
                 }
@@ -292,7 +292,7 @@
                 {
                     "label": "가격 정책",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-pricing"
                 }
@@ -305,35 +305,35 @@
                 {
                     "label": "플랫폼 소개",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-platform"
                 },
                 {
                     "label": "기술평가 소개",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-platform-technology-evaluation"
                 },
                 {
                     "label": "특허평가 소개",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-platform-patent-evaluation"
                 },
                 {
                     "label": "K-BIGx 보고서 소개",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-platform-k-bigx-report"
                 },
                 {
                     "label": "탄소중립 소개",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-platform-carbon-neutrality"
                 }
@@ -1850,7 +1850,7 @@
                 {
                     "label": "전체메뉴",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-full-menu"
                 }
@@ -1876,7 +1876,7 @@
                 {
                     "label": "이용안내",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-guide"
                 }
@@ -1889,7 +1889,7 @@
                 {
                     "label": "가격 정책",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-pricing"
                 }
@@ -1902,35 +1902,35 @@
                 {
                     "label": "플랫폼 소개",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-platform"
                 },
                 {
                     "label": "기술평가 소개",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-platform-technology-evaluation"
                 },
                 {
                     "label": "특허평가 소개",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-platform-patent-evaluation"
                 },
                 {
                     "label": "K-BIGx 보고서 소개",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-platform-k-bigx-report"
                 },
                 {
                     "label": "탄소중립 소개",
                     "screenId": null,
-                    "status": "진행중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-platform-carbon-neutrality"
                 }
