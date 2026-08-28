@@ -26,8 +26,8 @@
             "key": "corp-full-menu",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-auth",
@@ -40,50 +40,50 @@
             "key": "corp-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-pricing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-platform",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-technology-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-patent-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-k-bigx-report",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-carbon-neutrality",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent",
@@ -1174,8 +1174,8 @@
             "key": "org-full-menu",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-auth",
@@ -1188,50 +1188,50 @@
             "key": "org-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-pricing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-platform",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-platform-technology-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-platform-patent-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-platform-k-bigx-report",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-platform-carbon-neutrality",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.0.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-verification-progress",
