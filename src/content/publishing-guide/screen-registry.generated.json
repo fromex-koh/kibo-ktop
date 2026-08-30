@@ -27,7 +27,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-auth",
@@ -41,49 +41,49 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-pricing",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-platform",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-platform-technology-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-platform-patent-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-platform-k-bigx-report",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-platform-carbon-neutrality",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent",
@@ -1175,7 +1175,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-auth",
@@ -1189,49 +1189,49 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-pricing",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-platform",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-platform-technology-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-platform-patent-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-platform-k-bigx-report",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-platform-carbon-neutrality",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.0.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-verification-progress",
