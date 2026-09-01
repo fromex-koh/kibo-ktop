@@ -3579,9 +3579,10 @@
                                         {
                                             "label": "부적정",
                                             "screenId": null,
-                                            "status": "진행중",
+                                            "status": "완료",
                                             "version": "미배포",
-                                            "key": "carbon-leader-self-check-result-unfit"
+                                            "key": "carbon-leader-self-check-result-unfit",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/result/unfit"
                                         },
                                         {
                                             "label": "결과 확인서 (다운로드)",
@@ -3881,7 +3882,7 @@
                     "screen": {
                         "key": "carbon-my-page",
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포"
                     },
                     "children": [
@@ -3890,28 +3891,56 @@
                             "screen": {
                                 "key": "carbon-my-page-sub-account",
                                 "screenId": null,
-                                "status": "대기중",
-                                "version": "미배포"
+                                "status": "완료",
+                                "version": "미배포",
+                                "externalHref": "https://fromex-carbon.vercel.app/my-page/sub-account"
                             },
                             "children": [
                                 {
                                     "label": "하위계정 등록",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
-                                    "key": "carbon-my-page-sub-account-register"
+                                    "key": "carbon-my-page-sub-account-register",
+                                    "externalHref": "https://fromex-carbon.vercel.app/my-page/sub-account/register"
                                 }
                             ]
                         },
                         {
                             "label": "회원정보 수정",
-                            "screen": {
-                                "key": "carbon-my-page-profile-edit",
-                                "screenId": null,
-                                "status": "대기중",
-                                "version": "미배포"
-                            },
                             "children": [
+                                {
+                                    "label": "기관회원",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "carbon-my-page-profile-edit",
+                                    "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit"
+                                },
+                                {
+                                    "label": "기업회원",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "carbon-my-page-profile-edit-company",
+                                    "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit/company"
+                                },
+                                {
+                                    "label": "수정 취소 확인",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "carbon-my-page-profile-edit-cancel-confirm",
+                                    "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit/cancel-confirm"
+                                },
+                                {
+                                    "label": "저장 확인",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "carbon-my-page-profile-edit-save-confirm",
+                                    "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit/save-confirm"
+                                },
                                 {
                                     "label": "주소검색",
                                     "screenId": null,
@@ -3927,16 +3956,34 @@
                             "screen": {
                                 "key": "carbon-my-page-status",
                                 "screenId": null,
-                                "status": "대기중",
-                                "version": "미배포"
+                                "status": "완료",
+                                "version": "미배포",
+                                "externalHref": "https://fromex-carbon.vercel.app/my-page/status"
                             },
                             "children": [
                                 {
-                                    "label": "보안요청",
+                                    "label": "보완요청",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
-                                    "key": "carbon-my-page-status-security-request"
+                                    "key": "carbon-my-page-status-supplement-request",
+                                    "externalHref": "https://fromex-carbon.vercel.app/my-page/status/supplement-request"
+                                },
+                                {
+                                    "label": "내역 없음",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "carbon-my-page-status-empty",
+                                    "externalHref": "https://fromex-carbon.vercel.app/my-page/status/empty"
+                                },
+                                {
+                                    "label": "삭제 확인",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "carbon-my-page-status-delete-confirm",
+                                    "externalHref": "https://fromex-carbon.vercel.app/my-page/status/delete-confirm"
                                 }
                             ]
                         }
