@@ -7,7 +7,7 @@
     "//commonLayouts": "화면이 아니라 여러 화면이 공유하는 '화면을 찍어내는 틀' 단위 레이아웃(서브 레이아웃, 내부 콘텐츠만 바뀌는 틀). Header·Footer 는 이 틀에 이미 포함되므로 개별 행으로 두지 않는다. 독립 화면이 아니라 screenId 가 없고, 별도 표로 렌더링된다. path 기준 Git 이력으로 version 을 자동 계산하며 아직 태그에 포함되지 않았으면 '미배포'다.",
     "//iaVersions": "IA 원본 시트 파일명 기준 버전. 기업·기관·탄소 segmented control 선택에 따라 퍼블리싱 인덱스 제목 옆 배지에 표시한다.",
     "//structureGroups": "2026-08-18 FO IA를 기준으로 기업 155건(No. 기재 153건 + No. 미기재 작성 취소 2건), 기관은 원본 150건 중 빨간색·취소선 3건을 제외한 147건을 각각 독립된 트리로 반영한다. 기관 제외 항목은 정보 이용 동의, 이용약관, 마케팅 알림 수신동의다. leaf.version은 아직 작업 전이면 미배포다. 탄소는 탄소 FO 저장소의 퍼블리싱 인덱스(IA V1.3_260826) 60건을 그 표의 뎁스 그대로 반영한다. 화면은 탄소 FO가 만들고 여기서는 만들지 않으므로, 각 화면의 externalHref가 배포된 화면을 가리킨다.",
-    "//userType": "기업·기관 IA는 메뉴명이 같아도 역할과 노출 조건이 다를 수 있으므로 공통으로 병합하지 않는다. 모든 그룹에 기업·기관·탄소 중 하나의 userType을 지정하고 Segmented Control에서 한 벌씩 조회한다. 탄소는 이 저장소가 아니라 탄소 FO가 만드는 화면이라 key만 두고 경로 레지스트리와 짝을 맞추지 않으며, 화면 주소는 각 화면의 externalHref로 연결한다.",
+    "//userType": "기업·기관 IA는 메뉴명이 같아도 역할과 노출 조건이 다를 수 있으므로 공통으로 병합하지 않는다. 모든 그룹에 기업·기관·탄소 중 하나의 userType을 지정하고 Segmented Control에서 한 벌씩 조회한다. 탄소는 이 저장소가 아니라 탄소 FO가 만드는 화면이라 key만 두고 경로 레지스트리와 짝을 맞추지 않으며, 화면 주소는 각 화면의 externalHref로 연결한다. 탄소 FO 의 '개발 수정완료' 상태는 우리 상태 집합에 없고 퍼블리싱이 끝난 행이므로 완료로 옮겨 센다.",
     "iaVersions": {
         "기업": "V1.21_260818",
         "기관": "V1.21_260818",
@@ -3808,10 +3808,48 @@
                                 },
                                 {
                                     "label": "목표달성 평가",
-                                    "screenId": null,
-                                    "status": "대기중",
-                                    "version": "미배포",
-                                    "key": "carbon-leader-application-3-target-achievement"
+                                    "children": [
+                                        {
+                                            "label": "일반기업 · 달성",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "carbon-leader-application-3-target-achievement",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-3/target-achievement"
+                                        },
+                                        {
+                                            "label": "일반기업 · 미달성",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "carbon-leader-application-3-target-achievement-general-unmet",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-3/target-achievement/general-unmet"
+                                        },
+                                        {
+                                            "label": "목표관리업체 · 달성",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "carbon-leader-application-3-target-achievement-target-management",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-3/target-achievement/target-management"
+                                        },
+                                        {
+                                            "label": "목표관리업체 · 절대배출량 달성",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "carbon-leader-application-3-target-achievement-target-management-unmet",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-3/target-achievement/target-management-unmet"
+                                        },
+                                        {
+                                            "label": "목표관리업체 · 전 기준 미달",
+                                            "screenId": null,
+                                            "status": "완료",
+                                            "version": "미배포",
+                                            "key": "carbon-leader-application-3-target-achievement-target-management-all-unmet",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-3/target-achievement/target-management-all-unmet"
+                                        }
+                                    ]
                                 },
                                 {
                                     "label": "서류 제출",
