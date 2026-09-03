@@ -3442,16 +3442,18 @@
                                     "screen": {
                                         "key": "carbon-leader-self-check-inventory-emission",
                                         "screenId": null,
-                                        "status": "대기중",
-                                        "version": "미배포"
+                                        "status": "완료",
+                                        "version": "미배포",
+                                        "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/inventory-emission"
                                     },
                                     "children": [
                                         {
                                             "label": "항목 선택",
                                             "screenId": null,
-                                            "status": "대기중",
+                                            "status": "완료",
                                             "version": "미배포",
-                                            "key": "carbon-leader-self-check-inventory-emission-item-select"
+                                            "key": "carbon-leader-self-check-inventory-emission-item-select",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/inventory-emission/item-select"
                                         },
                                         {
                                             "label": "Scope설명",
@@ -3464,9 +3466,10 @@
                                         {
                                             "label": "상세 입력",
                                             "screenId": null,
-                                            "status": "대기중",
+                                            "status": "완료",
                                             "version": "미배포",
-                                            "key": "carbon-leader-self-check-inventory-emission-detail-input"
+                                            "key": "carbon-leader-self-check-inventory-emission-detail-input",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/inventory-emission/detail-input"
                                         }
                                     ]
                                 },
