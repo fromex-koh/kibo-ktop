@@ -3362,6 +3362,7 @@
                                         "key": "carbon-leader-application-initial",
                                         "screenId": null,
                                         "status": "완료",
+                                        "application2Status":"완료",
                                         "version": "미배포",
                                         "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application/initial"
                                     },
