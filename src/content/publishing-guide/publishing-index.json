@@ -3371,7 +3371,7 @@
                                             "label": "자가진단 등급 \"미달\", 자가진단 \"작성중\" 회원 진입 모달",
                                             "screenId": null,
                                             "status": "완료",
-                                            "application2Status":"완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-initial-not-eligible",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application/initial/not-eligible"
@@ -3429,7 +3429,7 @@
                                         "key": "carbon-leader-self-check-company-info",
                                         "screenId": null,
                                         "status": "완료",
-                                        "application2Status":"완료",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/company-info"
                                     },
@@ -3438,7 +3438,7 @@
                                             "label": "이어서 작성하기 팝업",
                                             "screenId": null,
                                             "status": "완료",
-                                            "application2Status":"완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-self-check-company-info-resume",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/company-info/resume"
@@ -3447,7 +3447,7 @@
                                             "label": "업종코드 조회",
                                             "screenId": null,
                                             "status": "완료",
-                                            "application2Status":"완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-self-check-company-info-industry-code-search",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/company-info/industry-code-search"
@@ -3478,7 +3478,7 @@
                                             "label": "Scope설명",
                                             "screenId": null,
                                             "status": "완료",
-                                            "application2Status":"완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-self-check-inventory-emission-scope-guide",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/inventory-emission/scope-guide"
