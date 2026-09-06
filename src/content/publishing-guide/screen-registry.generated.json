@@ -145,15 +145,15 @@
             "key": "corp-technology-evaluation-ktrs-fm-representative-career-input-helper",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-transaction-type-guide",
@@ -271,8 +271,8 @@
             "key": "corp-technology-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.6",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
@@ -992,29 +992,29 @@
             "key": "corp-mypage-inquiry-history",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-inquiry-history-inquiry-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-announcements",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-faq",
@@ -1055,8 +1055,8 @@
             "key": "corp-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-marketing-consent",
@@ -1888,15 +1888,15 @@
             "key": "org-notice-announcements",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "org-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "org-notice-faq",
@@ -1937,8 +1937,8 @@
             "key": "org-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "org-not-found",
