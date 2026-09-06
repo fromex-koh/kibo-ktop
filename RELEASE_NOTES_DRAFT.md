@@ -53,6 +53,17 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [기업·기관 로그인 연장](https://github.com/fromex-koh/kibo-ktop/commit/322bfe71dbb404a6f8de8836368c45e3e77aa7e6)
     - [기업·기관 로그인 안내](https://github.com/fromex-koh/kibo-ktop/commit/5cc9f83404a9d52be4efd3e68eef1484eb34a0be)
 
+### 기업·기관 문의 취소 — 제목 구조 접근성 보완
+
+- 대상: src/components/custom/inquiry-form.tsx
+- 적용: `InquiryCancelDialog`의 제목·안내 문장 두 곳을 Diff로 반영합니다. 기업·기관 문의 취소 화면과 문의 작성 폼에서 여는 취소 모달에 함께 적용됩니다.
+- 변경:
+    - ‘작성 취소’를 `DialogTitle asChild` + H1으로 변경해 최상위 제목 누락을 보완했습니다.
+    - ‘문의 작성을 취소하시겠습니까?’를 `DialogDescription asChild` + 블록 span으로 변경해 Possible heading 경고의 원인을 수정했습니다.
+- 유지: 문구·디자인·취소 확인 및 이동 동작은 그대로입니다.
+- 검증: 타입·린트 검증을 통과했습니다. WAVE의 H1 누락·Possible heading 재검사는 필요합니다.
+- 커밋: [문의 취소 접근성 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/5cdd08cc547a3822b9578a6eab49ed3ac58dd406)
+
 ## [덮어쓰기]
 
 ### 퍼블리싱 인덱스 — 화면 ID·진척률·행 구분 안내 개선
@@ -79,8 +90,10 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/content/publishing-guide/screen-registry.json
     - src/content/publishing-guide/screen-registry.generated.json
 - 적용: 세 파일과 위 인덱스 표시·콘텐츠 처리 파일 세 개를 함께 덮어씁니다.
-- 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
-- 상태 변경 커밋: [기업 로그인 연장·안내 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b9f51e61ee46f8406ddaad217b4a585b5bad5c9c)
+- 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
+- 상태 변경 커밋:
+    - [기업 로그인 연장·안내 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b9f51e61ee46f8406ddaad217b4a585b5bad5c9c)
+    - [기업 문의 취소 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/a977b5052241bcf288cde9d8161fce1d35beca02)
 - 기준: 기업·기관 IA를 `V1.23_260831`로 갱신하고 화면 ID·메뉴명·유료 서비스 관리 하위 구조를 반영했습니다.
 - 추가 14개:
     - 기업·기관 공통: 기관 로그인, K-BIGx 이용약관, 메인 공지사항 팝업, 신용정보 활용체제를 각각 추가했습니다(8개).
