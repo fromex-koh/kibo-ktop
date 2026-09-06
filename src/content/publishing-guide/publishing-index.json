@@ -1811,7 +1811,7 @@
                         {
                             "label": "문의 취소",
                             "screenId": "SB-FOTA-CP1-0014",
-                            "status": "완료",
+                            "status": "보완",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-inquiry-create-inquiry-cancel",
