@@ -43,12 +43,12 @@ const SaveConfirmDialog = ({children, defaultOpen, open, onOpenChange, onSave}: 
         <DialogContent showCloseButton={false} aria-describedby={undefined}>
             {/* 물음은 머리 구획(첫 행)에 둔다 — CTA 는 행을 지정하지 않고 자동 배치라, 머리를 빼면
                 버튼이 물음 위로 올라온다. pe-0 은 닫기(X) 자리를 비우는 기본 여백을 되돌린다. */}
-            <DialogHeader className="px-6 py-8 sm:px-10">
+            <DialogHeader className="px-6 py-8 sm:px-10 sm:pt-18">
                 <DialogTitle className="typo-title-l-bold text-foreground pe-0 text-center">
                     {SAVE_QUESTION}
                 </DialogTitle>
             </DialogHeader>
-            <DialogFooter>
+            <DialogFooter className="pt-6">
                 <DialogClose asChild>
                     <Button variant="tertiary" size="xl">
                         취소
