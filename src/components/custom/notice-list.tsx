@@ -98,30 +98,23 @@ const NoticeList = ({items, pageSize = 10}: NoticeListProps) => {
                                                 {/* 좌우 16 은 이 구분선의 기본 여백 12 와 줄의 gap 4 가 합쳐진 값이다.
                                                     줄이 갈라지는 좁은 화면에는 가를 것이 없어 감춘다. */}
                                                 <InlineSeparator className="max-md:hidden" />
-                                                {/* 제목과 표시는 분류가 윗줄로 빠져도 서로 붙어 다닌다. 넓은 화면은 시안대로
-                                                    한 줄 말줄임이다. 좁은 화면에서는 배지를 옆 칸에 세우지 않고 제목 글 흐름에
-                                                    이어 붙여 두 줄까지 늘인다 — 칸을 나누면 제목이 배지 폭만큼 좁아진 채 두 줄이
-                                                    되고, 짧아진 글 옆에 배지만 덩그러니 뜬다. */}
-                                                <span className="min-w-0 max-md:line-clamp-2 md:flex md:items-center md:gap-x-1">
-                                                    <span className="typo-title-m-medium text-foreground min-w-0 group-hover/notice:underline md:truncate">
+                                                {/* 모든 화면에서 제목 전체와 뱃지를 글 흐름으로 이어 표시한다. */}
+                                                <span className="min-w-0 wrap-anywhere">
+                                                    <span className="typo-title-m-medium text-foreground group-hover/notice:underline">
                                                         {item.title}
                                                     </span>
                                                     {item.isImportant ? (
                                                         <Badge
                                                             color="error"
                                                             shape="round"
-                                                            className="max-md:ml-1 max-md:align-middle"
+                                                            className="ml-1 align-middle"
                                                         >
                                                             중요공지
                                                         </Badge>
                                                     ) : null}
                                                     {/* 새 글 표시 — 글자 N 만으로는 뜻이 전해지지 않아 말로도 알린다[5.1.1]. */}
                                                     {item.isNew ? (
-                                                        <Badge
-                                                            type="number"
-                                                            color="new"
-                                                            className="max-md:ml-1 max-md:align-middle"
-                                                        >
+                                                        <Badge type="number" color="new" className="ml-1 align-middle">
                                                             <span aria-hidden="true">N</span>
                                                             <span className="sr-only">새 글</span>
                                                         </Badge>

@@ -89,27 +89,39 @@ const NoticeDetail = ({
                 <BaseCard className="py-8">
                     <article className="flex flex-col">
                         <header className="flex flex-col gap-2">
-                            {/* 분류·제목·표시가 한 줄이다(시안) — 목록의 한 줄과 같은 구성이라 같은 값이 같은 자리에 온다.
-                                다만 상세는 제목을 말줄임하지 않는다(읽으러 들어온 글이다) — 길면 줄을 늘린다. */}
-                            <div className="flex flex-wrap items-center gap-x-1 gap-y-2">
+                            {/* 모바일은 목록처럼 분류를 윗줄에 두고 제목과 뱃지를 글 흐름으로 이어 붙인다.
+                                상세 제목은 말줄임 없이 전체 내용을 표시한다. */}
+                            <div className="flex flex-col gap-y-1 md:flex-row md:flex-wrap md:items-center md:gap-x-1 md:gap-y-2">
                                 <span className="typo-body-xl-regular text-label-foreground shrink-0">
                                     {categoryLabel}
                                 </span>
                                 {/* 좌우 16 은 이 구분선의 기본 여백 12 와 줄의 gap 4 가 합쳐진 값이다. */}
-                                <InlineSeparator />
-                                <h2 className="typo-title-m-medium text-foreground min-w-0 break-keep">{title}</h2>
-                                {isImportant ? (
-                                    <Badge color="error" shape="round" className="shrink-0">
-                                        중요공지
-                                    </Badge>
-                                ) : null}
-                                {/* 새 글 표시 — 글자 N 만으로는 뜻이 전해지지 않아 말로도 알린다[5.1.1]. */}
-                                {isNew ? (
-                                    <Badge type="number" color="new" className="shrink-0">
-                                        <span aria-hidden="true">N</span>
-                                        <span className="sr-only">새 글</span>
-                                    </Badge>
-                                ) : null}
+                                <InlineSeparator className="max-md:hidden" />
+                                <div className="min-w-0 md:contents">
+                                    <h2 className="typo-title-m-medium text-foreground min-w-0 break-keep max-md:inline">
+                                        {title}
+                                    </h2>
+                                    {isImportant ? (
+                                        <Badge
+                                            color="error"
+                                            shape="round"
+                                            className="shrink-0 max-md:ml-1 max-md:align-middle"
+                                        >
+                                            중요공지
+                                        </Badge>
+                                    ) : null}
+                                    {/* 새 글 표시 — 글자 N 만으로는 뜻이 전해지지 않아 말로도 알린다[5.1.1]. */}
+                                    {isNew ? (
+                                        <Badge
+                                            type="number"
+                                            color="new"
+                                            className="shrink-0 max-md:ml-1 max-md:align-middle"
+                                        >
+                                            <span aria-hidden="true">N</span>
+                                            <span className="sr-only">새 글</span>
+                                        </Badge>
+                                    ) : null}
+                                </div>
                             </div>
                             <time dateTime={publishedAt} className="typo-body-l-regular text-foreground-subtle">
                                 {publishedAt}
