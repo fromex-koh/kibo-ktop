@@ -33,11 +33,15 @@ const SessionExtensionDialog = () => (
     <Dialog defaultOpen>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>로그인 연장</DialogTitle>
+                <DialogTitle asChild>
+                    <h1>로그인 연장</h1>
+                </DialogTitle>
             </DialogHeader>
             <div className={cn(dialogBodyClassName, 'gap-4')}>
-                <DialogDescription>
-                    로그아웃까지 남은 시간 : <strong className="text-primary font-bold">30:00</strong>
+                <DialogDescription asChild>
+                    <span className="block">
+                        로그아웃까지 남은 시간 : <strong className="text-primary font-bold">30:00</strong>
+                    </span>
                 </DialogDescription>
                 <p className="typo-body-xl-regular text-label-foreground">
                     10분 동안 서비스를 이용하지 않아 잠시 후 자동으로 로그아웃될 예정입니다.
