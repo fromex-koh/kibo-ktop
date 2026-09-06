@@ -33,43 +33,25 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 
 ## [Diff 확인]
 
-### 기관 최초 비밀번호 변경 — 제목 구조 접근성 보완
+### 인증 모달 — 제목 구조 접근성 보완
 
 - 대상: src/components/custom/auth-flow-page.tsx
-- 적용: `InitialPasswordChangeDialog`의 제목·안내 문장 두 곳만 Diff로 반영합니다.
-- 제목: `DialogTitle asChild` 안에 H1을 넣어 ‘내 정보 확인’을 화면의 최상위 제목으로 지정했습니다.
-- 안내 문장: `DialogDescription asChild` 안에 블록 span을 사용해 굵은 설명 문단이 제목으로 의심되는 원인을 수정했습니다.
-- 유지: 문구·디자인·비밀번호 입력·버튼 동작은 그대로입니다. 다른 인증 모달은 변경하지 않았습니다.
+- 적용: 아래 네 모달의 제목·안내 문장 변경을 Diff로 반영합니다.
+- 적용 범위:
+    - 기관 최초 비밀번호 변경: `InitialPasswordChangeDialog`의 ‘내 정보 확인’ 제목과 안내 문장입니다.
+    - 기업 실명인증: `RealNameVerificationDialog`의 ‘본인 인증’ 제목과 주민등록번호 입력 안내입니다.
+    - 기업·기관 로그인 연장: `SessionExtensionDialog`의 ‘로그인 연장’ 제목과 남은 시간 안내입니다.
+    - 기업·기관 로그인 안내: `LoginGuideDialog`의 ‘회원가입/로그인’ 제목과 로그인 안내 문장입니다.
+- 공통 변경:
+    - 제목을 `DialogTitle asChild` + H1으로 변경해 최상위 제목 누락을 보완했습니다. 로그인 안내 제목은 `sr-only`를 유지해 화면에 표시하지 않습니다.
+    - 안내 문장을 `DialogDescription asChild` + 블록 span으로 변경해 Possible heading 경고의 원인을 수정했습니다.
+- 유지: 문구·디자인·입력 항목·시간 표시·버튼 동작은 그대로입니다.
 - 검증: 타입·린트 검증을 통과했습니다. WAVE의 H1 누락·Possible heading 재검사는 필요합니다.
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/cc2320f713a3ee7d7402d148dbe75ffa1583e1b9)
-
-### 기업 실명인증 — 제목 구조 접근성 보완
-
-- 대상: src/components/custom/auth-flow-page.tsx
-- 적용: `RealNameVerificationDialog`의 제목·안내 문장 두 곳만 Diff로 반영합니다. 같은 파일의 기관 최초 비밀번호 변경 수정은 위 카드에서 별도로 안내합니다.
-- 제목: ‘본인 인증’을 `DialogTitle asChild` + H1으로 변경해 최상위 제목 누락을 보완했습니다.
-- 안내 문장: ‘주민등록번호를 입력해 주세요’를 `DialogDescription asChild` + 블록 span으로 변경해 Possible heading 경고의 원인을 수정했습니다.
-- 유지: 문구·디자인·주민등록번호 입력·본인 확인 버튼 동작은 그대로입니다.
-- 검증: 타입·린트 검증을 통과했습니다. WAVE의 H1 누락·Possible heading 재검사는 필요합니다.
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/4031ed078db424e08af91334af2e6625612d35a1)
-
-### 기업·기관 로그인 연장 — 제목 구조 접근성 보완
-
-- 대상: src/components/custom/auth-flow-page.tsx
-- 적용: `SessionExtensionDialog`의 제목·남은 시간 안내 두 곳을 Diff로 반영합니다. 기업·기관 로그인 연장 화면에 함께 적용됩니다.
-- 제목: ‘로그인 연장’을 `DialogTitle asChild` + H1으로 변경해 최상위 제목 누락을 보완했습니다.
-- 안내: 남은 시간 안내를 `DialogDescription asChild` + 블록 span으로 변경해 Possible heading 경고의 원인을 수정했습니다. 문구·디자인·시간 표시·버튼 동작은 그대로입니다.
-- 검증: 타입·린트 검증을 통과했습니다. WAVE 재검사는 필요합니다.
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/322bfe71dbb404a6f8de8836368c45e3e77aa7e6)
-
-### 기업·기관 로그인 안내 — 제목 구조 접근성 보완
-
-- 대상: src/components/custom/auth-flow-page.tsx
-- 적용: `LoginGuideDialog`의 제목·안내 문장 두 곳을 Diff로 반영합니다. 기업·기관 로그인 안내 화면에 함께 적용됩니다.
-- 제목: 화면에서 숨긴 ‘회원가입/로그인’ 제목을 `DialogTitle asChild` + H1으로 변경했습니다. `sr-only`를 유지해 화면에는 표시하지 않습니다.
-- 안내: 로그인 안내 문장을 `DialogDescription asChild` + 블록 span으로 변경해 Possible heading 경고의 원인을 수정했습니다. 문구·디자인·버튼 동작은 그대로입니다.
-- 검증: 타입·린트 검증을 통과했습니다. WAVE 재검사는 필요합니다.
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/5cc9f83404a9d52be4efd3e68eef1484eb34a0be)
+- 커밋:
+    - [기관 최초 비밀번호 변경](https://github.com/fromex-koh/kibo-ktop/commit/cc2320f713a3ee7d7402d148dbe75ffa1583e1b9)
+    - [기업 실명인증](https://github.com/fromex-koh/kibo-ktop/commit/4031ed078db424e08af91334af2e6625612d35a1)
+    - [기업·기관 로그인 연장](https://github.com/fromex-koh/kibo-ktop/commit/322bfe71dbb404a6f8de8836368c45e3e77aa7e6)
+    - [기업·기관 로그인 안내](https://github.com/fromex-koh/kibo-ktop/commit/5cc9f83404a9d52be4efd3e68eef1484eb34a0be)
 
 ## [덮어쓰기]
 
