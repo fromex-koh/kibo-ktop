@@ -117,10 +117,14 @@ const InquiryCancelDialog = ({
             ) : null}
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>작성 취소</DialogTitle>
+                    <DialogTitle asChild>
+                        <h1>작성 취소</h1>
+                    </DialogTitle>
                 </DialogHeader>
                 <div className={cn(dialogBodyClassName, 'gap-4')}>
-                    <DialogDescription>문의 작성을 취소하시겠습니까?</DialogDescription>
+                    <DialogDescription asChild>
+                        <span className="block">문의 작성을 취소하시겠습니까?</span>
+                    </DialogDescription>
                     <p className="typo-body-xl-regular text-label-foreground">
                         지금까지 작성한 내용과 첨부파일은 저장되지 않습니다.
                         <br />
