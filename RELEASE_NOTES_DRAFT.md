@@ -69,6 +69,20 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [문의 작성 — 파일 첨부 레이블 추가](https://github.com/fromex-koh/kibo-ktop/commit/c7ab0c06f2ae94a7271415eaaf7bc62946f747da)
     - [문의 취소 — 제목·안내 문장 보완](https://github.com/fromex-koh/kibo-ktop/commit/5cdd08cc547a3822b9578a6eab49ed3ac58dd406)
 
+### 기업 문의 내역·상세 — 중복 링크 및 목록 복귀 개선
+
+- 대상:
+    - src/app/(user-type)/corp/(service)/(logged-in)/mypage/inquiry-history/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/mypage/inquiry-history/inquiry-detail/page.tsx
+- 적용: 목록의 항목별 링크·복귀 대상 제목과 상세의 목록 복귀 주소를 함께 Diff로 반영합니다.
+- 목록 링크: 예제 문의 13개의 상세 링크를 `?id=corp-inquiry-001`처럼 문의별로 구분했습니다. 첫 페이지의 동일 주소 링크 10개에서 발생하던 Redundant link 경고 원인을 제거했습니다.
+- 상세 복귀:
+    - ‘목록으로 돌아가기’는 `/corp/mypage/inquiry-history#inquiry-history-title`로 이동합니다. 사이드바의 ‘1:1 문의’는 기존 목록 주소를 유지합니다.
+    - 목록 제목에 `id="inquiry-history-title"`·`tabIndex={-1}`를 추가해, 하단 복귀 링크로 이동하면 제목에 포커스가 도착하도록 했습니다.
+- 연동 확인: 상세 본문은 기존 목업입니다. 실제 연동에서는 URL의 `id`로 문의를 조회하고, 목록 제목의 앵커 ID를 유지해야 합니다.
+- 검증: 타입·린트 검증을 통과했습니다. 목록 링크 10개가 서로 다른 것을 확인했고, 상세는 WAVE와 동일한 규칙에서 중복 링크 0건 및 목록 제목 이동·포커스를 확인했습니다.
+- 커밋: [문의 내역·상세 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/4e864d974b9f2f591c51b95d2bda6cb0c36d8361)
+
 ### 기업·기관 공지사항 — 분류·뱃지·상세 링크·반응형 개선
 
 - 대상:
@@ -154,8 +168,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/content/publishing-guide/screen-registry.json
     - src/content/publishing-guide/screen-registry.generated.json
 - 적용: 세 파일과 위 인덱스 표시·콘텐츠 처리 파일 세 개를 함께 덮어씁니다.
-- 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)·공지사항 목록(`corp-notice-announcements`)·공지사항 상세(`corp-notice-announcements-detail`)·자료실(`corp-notice-resources`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
+- 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)·공지사항 목록(`corp-notice-announcements`)·공지사항 상세(`corp-notice-announcements-detail`)·자료실(`corp-notice-resources`)·문의 내역(`corp-mypage-inquiry-history`)·문의 상세(`corp-mypage-inquiry-history-inquiry-detail`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
 - 상태 변경 커밋:
+    - [기업 문의 내역·상세 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/112d0ce1acae9a203e1685526a0612f7771b7888)
     - [기업 자료실 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/9bdd48defb84cce6399ac7b73dc2e13d0f749886)
     - [기업 공지사항 상세 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/bfdb058a8c64b7bfa20cbde55ecba4a1b79c423d)
     - [기업 공지사항 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b8d69ab0f8b973ebf0772e0ea0a31086f6b306fc)
