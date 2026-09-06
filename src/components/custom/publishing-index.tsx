@@ -154,15 +154,21 @@ const ReleaseNoteHandoff = ({change}: {change: ReleaseNoteHandoff}) => {
                 </Badge>
                 <strong className="typo-body-l-medium text-foreground min-w-0">{change.title}</strong>
             </div>
-            <dl className="text-muted-foreground grid min-w-0 gap-1.5">
+            <dl className="text-muted-foreground grid min-w-0 gap-3">
                 {change.details.map((detail) => (
-                    <div
-                        key={`${detail.label}-${detail.value}`}
-                        className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] gap-x-2"
-                    >
-                        <dt className="text-foreground-subtle shrink-0">{detail.label}</dt>
-                        <dd className="min-w-0 break-words">
-                            <ReleaseNoteDetailValue label={detail.label} value={detail.value} />
+                    <div key={`${detail.label}-${detail.value}`} className="grid min-w-0 gap-1">
+                        <dt className="text-foreground-subtle font-medium">{detail.label}</dt>
+                        <dd className="min-w-0">
+                            <ul className="flex min-w-0 list-disc flex-col gap-1 pl-5">
+                                {detail.value
+                                    .split('\n')
+                                    .filter(Boolean)
+                                    .map((value, index) => (
+                                        <li key={`${index}-${value}`} className="min-w-0 break-words">
+                                            <ReleaseNoteDetailValue label={detail.label} value={value} />
+                                        </li>
+                                    ))}
+                            </ul>
                         </dd>
                     </div>
                 ))}
@@ -563,37 +569,28 @@ const PublishingIndex = () => {
     const depthCells = useMemo(() => buildDepthCells(leaves, maxDepth), [leaves, maxDepth])
     const depthHeaders = useMemo(() => Array.from({length: maxDepth}, (_, depth) => `${depth + 1}뎁스`), [maxDepth])
 
-    // 기업·기관은 엑셀 원본 행을 기준으로 집계하며 취소선 화면도 포함한다.
-    // 탄소는 별도 FO 인덱스의 기존 퍼블리싱 행 기준을 유지한다.
-    const countedScreens = useMemo(() => {
-        if (filter === '탄소') return leaves.map((leaf) => [leaf])
-        const rows = new Map<number, FlatLeaf[]>()
-        for (const leaf of leaves) {
-            if (leaf.iaRow === undefined) continue
-            rows.set(leaf.iaRow, [...(rows.get(leaf.iaRow) ?? []), leaf])
-        }
-        return [...rows.values()]
-    }, [filter, leaves])
-    const screenCount = countedScreens.length
-    const deletedScreenCount = countedScreens.filter((rows) => rows.some((leaf) => leaf.isRed)).length
+    // 취소선 행은 표에 유지하되 진척률의 분자·분모에서 모두 제외한다.
+    const screenCount = leaves.length
+    const progressLeaves = useMemo(() => leaves.filter((leaf) => !leaf.isRed), [leaves])
+    const progressScreenCount = progressLeaves.length
+    const iaScreenCount = new Set(leaves.flatMap((leaf) => (leaf.iaRow === undefined ? [] : [leaf.iaRow]))).size
+    const deletedScreenCount = leaves.filter((leaf) => leaf.isRed).length
     const supplementalCount = leaves.filter((leaf) => leaf.iaRow === undefined).length
-    const splitCount = leaves.length - supplementalCount - screenCount
-    // 한 IA 화면을 나눈 모든 퍼블리싱 행이 완료되어야 원본 화면을 완료로 집계한다.
+    const splitCount = screenCount - supplementalCount - iaScreenCount
     const uiuxDoneCount = useMemo(
-        () =>
-            countedScreens.filter((rows) => rows.every((leaf) => leaf.status === '완료' || leaf.status === '최종완료'))
-                .length,
-        [countedScreens],
+        () => progressLeaves.filter((leaf) => leaf.status === '완료' || leaf.status === '최종완료').length,
+        [progressLeaves],
     )
     const application2DoneCount = useMemo(
         () =>
-            countedScreens.filter((rows) =>
-                rows.every((leaf) => leaf.application2Status === '완료' || leaf.application2Status === '최종완료'),
+            progressLeaves.filter(
+                (leaf) => leaf.application2Status === '완료' || leaf.application2Status === '최종완료',
             ).length,
-        [countedScreens],
+        [progressLeaves],
     )
-    const uiuxProgressPercent = screenCount === 0 ? 0 : Math.round((uiuxDoneCount / screenCount) * 100)
-    const application2ProgressPercent = screenCount === 0 ? 0 : Math.round((application2DoneCount / screenCount) * 100)
+    const uiuxProgressPercent = progressScreenCount === 0 ? 0 : Math.round((uiuxDoneCount / progressScreenCount) * 100)
+    const application2ProgressPercent =
+        progressScreenCount === 0 ? 0 : Math.round((application2DoneCount / progressScreenCount) * 100)
     // 공통 레이아웃은 이 저장소가 화면을 찍어내는 틀이라, 화면을 만들지 않는 외부 IA(탄소)에는
     // 해당하는 것이 없어 그 표만 감춘다. 응용2 상태는 유형과 무관하게 모든 화면이 갖는다.
     const showsCommonLayouts = !isExternalUserType(filter)
@@ -858,17 +855,27 @@ const PublishingIndex = () => {
                                 aria-live="polite"
                             >
                                 <strong className="typo-body-l-medium">
-                                    {filter} IA 전체 화면 {screenCount}개 (취소선 {deletedScreenCount}개 포함)
+                                    {filter} 퍼블리싱 전체 {screenCount}개 행 (취소선 {deletedScreenCount}개 포함)
                                 </strong>
-                                <p className="typo-caption-regular text-muted-foreground">
-                                    엑셀 V1.23의 집계 기준과 같습니다. 기업 156개 + 기관 151개 = 총 307개입니다.
-                                </p>
-                                <p className="typo-caption-regular text-muted-foreground">
-                                    아래 퍼블리싱 표는 {leaves.length}개 행입니다. 같은 IA 화면을 업종·회원 유형·상세
-                                    탭별로 분리한 {splitCount}개 행과 IA 외 추가 화면 {supplementalCount}개 행을
-                                    포함합니다. 진척률은 IA 화면 기준이며, 분리된 행이 모두 완료되어야 해당 화면을
-                                    완료로 집계합니다.
-                                </p>
+                                <ul className="typo-caption-regular text-muted-foreground flex list-disc flex-col gap-1.5 pl-5">
+                                    <li>
+                                        <strong className="text-foreground font-medium">엑셀 IA:</strong> {filter}{' '}
+                                        {iaScreenCount}개 — 기업 156개·기관 151개, 총 307개(취소선 포함)입니다.
+                                    </li>
+                                    <li>
+                                        <strong className="text-foreground font-medium">표의 행 수:</strong>{' '}
+                                        {screenCount}개 = IA {iaScreenCount}개 + 화면 분리로 늘어난 {splitCount}개 + IA
+                                        외 {supplementalCount}개입니다.
+                                    </li>
+                                    <li>
+                                        <strong className="text-foreground font-medium">진척률:</strong> 취소선을 제외한
+                                        완료 행 ÷ 집계 대상 {progressScreenCount}개 행입니다.
+                                        {deletedScreenCount > 0 && (
+                                            <> 취소선 {deletedScreenCount}개는 완료 수와 전체 수에서 모두 제외합니다.</>
+                                        )}{' '}
+                                        분리·추가 화면도 각각 계산합니다.
+                                    </li>
+                                </ul>
                             </div>
                         )}
                         <div aria-live="polite" className="grid gap-3 sm:grid-cols-2">
@@ -876,16 +883,16 @@ const PublishingIndex = () => {
                                 <span className="typo-caption-medium text-muted-foreground">응용2 진척률</span>
                                 <strong className="typo-h4-bold text-foreground">{application2ProgressPercent}%</strong>
                                 <span className="typo-caption-regular text-muted-foreground">
-                                    완료 {application2DoneCount}/{screenCount} · {filter}{' '}
-                                    {filter !== '탄소' ? 'IA ' : ''}화면 {screenCount}개
+                                    완료 {application2DoneCount}/{progressScreenCount} · {filter} 집계 대상{' '}
+                                    {progressScreenCount}개 행
                                 </span>
                             </div>
                             <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
                                 <span className="typo-caption-medium text-muted-foreground">UIUX 진척률</span>
                                 <strong className="typo-h4-bold text-foreground">{uiuxProgressPercent}%</strong>
                                 <span className="typo-caption-regular text-muted-foreground">
-                                    완료 {uiuxDoneCount}/{screenCount} · {filter} {filter !== '탄소' ? 'IA ' : ''}화면{' '}
-                                    {screenCount}개
+                                    완료 {uiuxDoneCount}/{progressScreenCount} · {filter} 집계 대상{' '}
+                                    {progressScreenCount}개 행
                                 </span>
                             </div>
                         </div>
@@ -938,7 +945,7 @@ const PublishingIndex = () => {
                             다만 공통 레이아웃은 이 저장소가 화면을 찍어내는 틀이라, 화면을 만들지 않는
                             외부 IA(탄소)에는 해당하는 것이 없어 그 표만 감춘다. */}
                         {showsCommonLayouts && (
-                            <div className="bg-background border-border overflow-x-auto rounded-md border">
+                            <div className="bg-background border-border mb-6 overflow-x-auto rounded-md border">
                                 <table className="w-full text-left">
                                     <caption className="sr-only">공통 레이아웃 상태·버전</caption>
                                     <thead>
@@ -1005,15 +1012,40 @@ const PublishingIndex = () => {
                             </div>
                         )}
                         {/* 사이트 구조 정보 (선택된 사용자 유형으로 필터된 표) — 표의 caption 이 표 자체를 설명한다. */}
+                        {filter !== '탄소' && supplementalCount > 0 && (
+                            <p className="typo-caption-regular text-muted-foreground flex items-center gap-2">
+                                <span
+                                    aria-hidden="true"
+                                    className="border-border bg-mint-200 size-4 shrink-0 rounded border"
+                                />
+                                <span>
+                                    <strong className="text-foreground font-medium">
+                                        밝은 민트색 {supplementalCount}개 행 — 최신 IA 미기재
+                                    </strong>
+                                    <span className="block">
+                                        이전 IA(260731)에 있던 화면 또는 개발 완료 화면 중 최신 IA({iaVersions[filter]}
+                                        )에 없는 항목입니다. 삭제·누락 여부 확인이 필요하며, 전체 행 수와 진척률에
+                                        포함합니다.
+                                    </span>
+                                </span>
+                            </p>
+                        )}
                         {leaves.some((leaf) => leaf.isRestored) && (
                             <p className="typo-caption-regular text-muted-foreground flex items-center gap-2">
                                 <span
                                     aria-hidden="true"
-                                    className="bg-warning-50 border-border size-4 rounded border"
+                                    className="bg-warning-50 border-border size-4 shrink-0 rounded border"
                                 />
-                                주황색·취소선 6개 행: Tech-Index 일반용·창업용과 투자모형의 평가 신청하기 및 제출 전
-                                최종 확인입니다. 최신 IA에서 삭제 표시되었지만 응용2 완료 이력과 화면 링크를 유지하며,
-                                엑셀과 동일하게 전체 화면 수에 포함합니다.
+                                <span>
+                                    <strong className="text-foreground font-medium">
+                                        주황색·취소선 6개 행 — IA 삭제 표시
+                                    </strong>
+                                    <span className="block">
+                                        Tech-Index 일반용·창업용 및 투자모형의 평가 신청·최종 확인 화면입니다. 응용2
+                                        완료 이력과 링크는 유지하며, 전체 행 수에는 포함하고 진척률 계산에서는
+                                        제외합니다.
+                                    </span>
+                                </span>
                             </p>
                         )}
                         <div className="bg-background border-border overflow-x-auto rounded-md border">
@@ -1055,6 +1087,7 @@ const PublishingIndex = () => {
                                             leaf.registryKey !== undefined
                                                 ? SCREEN_REGISTRY_BY_KEY.get(leaf.registryKey)
                                                 : undefined
+                                        const isSupplemental = filter !== '탄소' && leaf.iaRow === undefined
                                         const displayedVersion = registeredScreen?.version ?? leaf.version
                                         const isCurrent =
                                             registeredScreen?.isCurrent ?? displayedVersion === BUILD_VERSION
@@ -1066,15 +1099,22 @@ const PublishingIndex = () => {
                                             <tr
                                                 key={leaf.rowKey}
                                                 data-restored={leaf.isRestored || undefined}
+                                                data-supplemental={isSupplemental || undefined}
                                                 title={
-                                                    leaf.isRestored ? '작업 이력 확인을 위해 복원한 화면' : undefined
+                                                    leaf.isRestored
+                                                        ? '작업 이력 확인을 위해 복원한 화면'
+                                                        : isSupplemental
+                                                          ? `이전 IA(260731)에서 최신 IA(${iaVersions[filter]})로 변경되며 사라졌거나 프로젝트에는 존재하여 개발 작업이 완료되었으나 최신 IA에서 누락된 화면 — 삭제 의도 또는 누락 여부 확인 필요`
+                                                          : undefined
                                                 }
                                                 className={`border-border border-b last:border-b-0 ${
                                                     leaf.isRestored
                                                         ? 'bg-warning-50! [&>td]:bg-warning-50! [&>th]:bg-warning-50!'
-                                                        : isCurrent
-                                                          ? 'bg-primary-subtle'
-                                                          : 'bg-surface'
+                                                        : isSupplemental
+                                                          ? 'bg-mint-200! [&>td]:bg-mint-200! [&>th]:bg-mint-200!'
+                                                          : isCurrent
+                                                            ? 'bg-primary-subtle'
+                                                            : 'bg-surface'
                                                 }`}
                                             >
                                                 {depthCells[i].map((cell, depth) => {
