@@ -133,6 +133,17 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 검증: 360·768·1280px에서 제목 말줄임 제거와 가로 넘침이 없음을 확인했습니다. 모바일의 모든 다운로드 버튼이 아래 왼쪽에 표시되는 것도 확인했습니다.
 - 커밋: [자료실 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/71f93a57434ba8fccd25181aa3724d16afe591a6)
 
+### 제출 전 최종 확인 — 공통 모달 여백 조정
+
+- 대상: src/components/composite/submit-confirm-dialog.tsx
+- 적용: `SubmitConfirmDialog`의 `DialogHeader`·`DialogFooter` 클래스 변경 두 곳을 Diff로 반영합니다.
+- 여백 변경:
+    - 헤더에 `sm:pt-18`을 추가해 sm 이상에서 상단 여백을 32px에서 72px로 늘렸습니다. 모바일 상단 여백은 기존 32px입니다.
+    - 푸터에 `pt-6`을 추가해 버튼 영역 위 여백을 24px로 지정했습니다.
+- 적용 범위: 기업·기관의 KTRS-FM·Tech-Index 일반용·창업용·투자모형 최종 확인과, 같은 모달을 사용하는 기관 일괄평가·일괄 자료 요청 화면에 함께 적용됩니다.
+- 유지: ‘제출하시겠습니까?’ 문구·모달 제목 연결·취소/제출 버튼·`onSubmit`·열림 상태 제어는 그대로입니다. 실제 제출 처리는 사용처의 `onSubmit`에서 연결합니다.
+- 커밋: [공통 모달 여백 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/90a81b7b878ac0159f965fcd34fef666426a7e79)
+
 ### 공통 페이지 이동 — 중복 navigation 역할 제거
 
 - 대상: src/components/composite/pagination.tsx
@@ -169,7 +180,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/content/publishing-guide/screen-registry.generated.json
 - 적용: 세 파일과 위 인덱스 표시·콘텐츠 처리 파일 세 개를 함께 덮어씁니다.
 - 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)·공지사항 목록(`corp-notice-announcements`)·공지사항 상세(`corp-notice-announcements-detail`)·자료실(`corp-notice-resources`)·문의 내역(`corp-mypage-inquiry-history`)·문의 상세(`corp-mypage-inquiry-history-inquiry-detail`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
+- 최종 확인 상태: 기업·기관 각각 KTRS-FM·Tech-Index 일반용·창업용·투자모형의 제출 전 최종 확인 4개씩, 총 8개 화면의 UIUX 뱃지를 보완으로 변경했습니다. 응용2 완료 상태는 유지하며, 기관 취소선 행의 진척률 제외 기준도 유지합니다.
 - 상태 변경 커밋:
+    - [기업·기관 최종 확인 8개 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/ee88c218a18b1412108c226aa276e2eb2a2bf00f)
     - [기업 문의 내역·상세 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/112d0ce1acae9a203e1685526a0612f7771b7888)
     - [기업 자료실 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/9bdd48defb84cce6399ac7b73dc2e13d0f749886)
     - [기업 공지사항 상세 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/bfdb058a8c64b7bfa20cbde55ecba4a1b79c423d)
