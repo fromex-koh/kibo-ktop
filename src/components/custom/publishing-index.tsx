@@ -245,6 +245,8 @@ const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev'
 // 상태별 Badge 색·변형 — 색만으로 구분하지 않도록 상태명을 항상 함께 표기한다. [KWCAG 5.3.1]
 // success/warning 은 kit Badge 가 제공하는 색으로 매핑(진행=info·보완=warning·완료=success).
 // 완료·최종완료는 같은 success 라, 최종완료만 solid 변형을 써서 완료(solid-pastel)와 시각적으로 겹치지 않게 한다.
+const countsAsDone = (status: Status): boolean => status === '완료' || status === '최종완료' || status === '보완'
+
 const STATUS_BADGE: Record<Status, {color: 'neutral' | 'info' | 'warning' | 'success' | 'error'; variant?: 'solid'}> = {
     대기중: {color: 'neutral'},
     진행중: {color: 'info'},
@@ -578,14 +580,11 @@ const PublishingIndex = () => {
     const supplementalCount = leaves.filter((leaf) => leaf.iaRow === undefined).length
     const splitCount = screenCount - supplementalCount - iaScreenCount
     const uiuxDoneCount = useMemo(
-        () => progressLeaves.filter((leaf) => leaf.status === '완료' || leaf.status === '최종완료').length,
+        () => progressLeaves.filter((leaf) => countsAsDone(leaf.status)).length,
         [progressLeaves],
     )
     const application2DoneCount = useMemo(
-        () =>
-            progressLeaves.filter(
-                (leaf) => leaf.application2Status === '완료' || leaf.application2Status === '최종완료',
-            ).length,
+        () => progressLeaves.filter((leaf) => countsAsDone(leaf.application2Status)).length,
         [progressLeaves],
     )
     const uiuxProgressPercent = progressScreenCount === 0 ? 0 : Math.round((uiuxDoneCount / progressScreenCount) * 100)
@@ -883,7 +882,7 @@ const PublishingIndex = () => {
                                 <span className="typo-caption-medium text-muted-foreground">응용2 진척률</span>
                                 <strong className="typo-h4-bold text-foreground">{application2ProgressPercent}%</strong>
                                 <span className="typo-caption-regular text-muted-foreground">
-                                    완료 {application2DoneCount}/{progressScreenCount} · {filter} 집계 대상{' '}
+                                    완료(보완 포함) {application2DoneCount}/{progressScreenCount} · {filter} 집계 대상{' '}
                                     {progressScreenCount}개 행
                                 </span>
                             </div>
@@ -891,7 +890,7 @@ const PublishingIndex = () => {
                                 <span className="typo-caption-medium text-muted-foreground">UIUX 진척률</span>
                                 <strong className="typo-h4-bold text-foreground">{uiuxProgressPercent}%</strong>
                                 <span className="typo-caption-regular text-muted-foreground">
-                                    완료 {uiuxDoneCount}/{progressScreenCount} · {filter} 집계 대상{' '}
+                                    완료(보완 포함) {uiuxDoneCount}/{progressScreenCount} · {filter} 집계 대상{' '}
                                     {progressScreenCount}개 행
                                 </span>
                             </div>
@@ -935,6 +934,11 @@ const PublishingIndex = () => {
                                     대기중, 진행중, 수정요청, 보완, 완료, 최종완료
                                 </code>
                                 . 키가 없으면 대기중으로 표시됩니다.
+                            </li>
+                            <li>
+                                <strong className="text-foreground font-medium">진척률 집계:</strong>{' '}
+                                완료·최종완료·보완은 모두 완료 수에 포함하며, 취소선 행은 완료 수와 집계 대상 수에서
+                                제외합니다.
                             </li>
                             <li>
                                 <strong className="text-foreground font-medium">최종완료 기준:</strong> 더 이상
