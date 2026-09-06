@@ -3720,7 +3720,7 @@
                 {
                     "label": "최초 비밀번호 변경",
                     "screenId": "SB-FOTA-OM5-0016",
-                    "status": "보완",
+                    "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-initial-password-change",

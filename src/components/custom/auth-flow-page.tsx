@@ -1,6 +1,6 @@
 'use client'
 
-import {useState, type FormEvent, type ReactNode} from 'react'
+import type {ReactNode} from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import serviceStatusIllustration from '@public/images/service-status/service-status-illustration.webp'
@@ -16,7 +16,6 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/components/ui/dialog'
-import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
@@ -58,131 +57,28 @@ const SessionExtensionDialog = () => (
     </Dialog>
 )
 
-// 비밀번호 규칙 — 자리글에 적힌 "영문, 숫자, 특수문자 포함 10~20자 이내" 와 같은 기준이다.
-// 한쪽만 바꾸면 화면 안내와 검사가 어긋난다.
-const PASSWORD_MIN_LENGTH = 10
-const PASSWORD_MAX_LENGTH = 20
-const PASSWORD_RULE = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S+$/
-
-const getPasswordError = (value: string) => {
-    if (!value) return '비밀번호를 입력해 주세요.'
-    if (value.length < PASSWORD_MIN_LENGTH || value.length > PASSWORD_MAX_LENGTH) {
-        return `비밀번호는 ${PASSWORD_MIN_LENGTH}~${PASSWORD_MAX_LENGTH}자로 입력해 주세요.`
-    }
-    if (!PASSWORD_RULE.test(value)) return '영문, 숫자, 특수문자를 모두 포함해 주세요.'
-
-    return ''
-}
-
-const getPasswordConfirmError = (value: string, password: string) => {
-    if (!value) return '비밀번호를 한 번 더 입력해 주세요.'
-    if (value !== password) return '비밀번호가 일치하지 않습니다.'
-
-    return ''
-}
-
-// 제출 버튼이 푸터에 있어 form 밖이다 — id 로 잇는다. 푸터를 form 안에 넣으면 DialogContent 의 행 배치가 깨진다.
-const INITIAL_PASSWORD_FORM_ID = 'initial-password-change-form'
-
-const InitialPasswordChangeDialog = () => {
-    const [password, setPassword] = useState('')
-    const [passwordConfirm, setPasswordConfirm] = useState('')
-    // 메시지는 blur 에 붙이고 change 에 지운다 — 프로젝트의 다른 폼(form-values)과 같은 시점이다.
-    const [passwordError, setPasswordError] = useState('')
-    const [passwordConfirmError, setPasswordConfirmError] = useState('')
-
-    // [프론트엔드 연동] 지금은 검사만 하고 멈춘다 — 변경 API 가 붙으면 이 자리에서 호출한다.
-    const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        const nextPasswordError = getPasswordError(password)
-        const nextConfirmError = getPasswordConfirmError(passwordConfirm, password)
-        setPasswordError(nextPasswordError)
-        setPasswordConfirmError(nextConfirmError)
-        if (nextPasswordError || nextConfirmError) return
-
-        console.log('[최초 비밀번호 변경] 제출')
-    }
-
-    return (
-        // 화면 확인을 위해 모달을 열어 둔다.
-        <Dialog defaultOpen>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle asChild>
-                        <h1>비밀번호 변경</h1>
-                    </DialogTitle>
-                </DialogHeader>
-                <form
-                    id={INITIAL_PASSWORD_FORM_ID}
-                    noValidate
-                    onSubmit={handleSubmit}
-                    className={cn(dialogBodyClassName, 'gap-6')}
-                >
-                    <DialogDescription asChild>
-                        <span className="block">회원님의 소중한 정보를 보호하기 위해 비밀번호를 변경해 주세요.</span>
-                    </DialogDescription>
-                    <div className="flex flex-col gap-4">
-                        <Field data-invalid={passwordError ? true : undefined}>
-                            <FieldLabel htmlFor="initial-password" className="text-foreground font-bold">
-                                비밀번호
-                            </FieldLabel>
-                            <Input
-                                id="initial-password"
-                                name="password"
-                                type="password"
-                                autoComplete="new-password"
-                                placeholder="영문, 숫자, 특수문자 포함 10~20자 이내"
-                                value={password}
-                                aria-invalid={passwordError ? true : undefined}
-                                aria-describedby={passwordError ? 'initial-password-error' : undefined}
-                                onChange={(event) => {
-                                    setPassword(event.currentTarget.value)
-                                    setPasswordError('')
-                                }}
-                                onBlur={(event) => setPasswordError(getPasswordError(event.currentTarget.value))}
-                            />
-                            {passwordError ? (
-                                <FieldError id="initial-password-error">{passwordError}</FieldError>
-                            ) : null}
-                        </Field>
-                        <Field data-invalid={passwordConfirmError ? true : undefined}>
-                            <FieldLabel htmlFor="initial-password-confirm" className="text-foreground font-bold">
-                                비밀번호 확인
-                            </FieldLabel>
-                            <Input
-                                id="initial-password-confirm"
-                                name="passwordConfirm"
-                                type="password"
-                                autoComplete="new-password"
-                                placeholder="비밀번호를 다시 입력해 주세요"
-                                value={passwordConfirm}
-                                aria-invalid={passwordConfirmError ? true : undefined}
-                                aria-describedby={passwordConfirmError ? 'initial-password-confirm-error' : undefined}
-                                onChange={(event) => {
-                                    setPasswordConfirm(event.currentTarget.value)
-                                    setPasswordConfirmError('')
-                                }}
-                                onBlur={(event) =>
-                                    setPasswordConfirmError(
-                                        getPasswordConfirmError(event.currentTarget.value, password),
-                                    )
-                                }
-                            />
-                            {passwordConfirmError ? (
-                                <FieldError id="initial-password-confirm-error">{passwordConfirmError}</FieldError>
-                            ) : null}
-                        </Field>
-                    </div>
-                </form>
-                <DialogFooter>
-                    <Button type="submit" form={INITIAL_PASSWORD_FORM_ID} size="xl">
-                        비밀번호 변경
-                    </Button>
-                </DialogFooter>
-            </DialogContent>
-        </Dialog>
-    )
-}
+const InitialPasswordChangeDialog = () => (
+    // 화면 확인을 위해 모달을 열어 둔다.
+    <Dialog defaultOpen>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>내 정보 확인</DialogTitle>
+            </DialogHeader>
+            <div className={cn(dialogBodyClassName, 'gap-6')}>
+                <DialogDescription>회원님의 소중한 정보를 보호하기 위해 비밀번호를 변경해 주세요.</DialogDescription>
+                <div className="flex flex-col gap-4">
+                    <Label htmlFor="initial-password" className="text-foreground font-bold">
+                        비밀번호
+                    </Label>
+                    <Input id="initial-password" type="password" placeholder="비밀번호를 입력해 주세요" />
+                </div>
+            </div>
+            <DialogFooter>
+                <Button size="xl">비밀번호 확인</Button>
+            </DialogFooter>
+        </DialogContent>
+    </Dialog>
+)
 
 const SessionExtensionPage = () => (
     <>
