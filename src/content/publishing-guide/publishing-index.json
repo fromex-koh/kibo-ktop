@@ -1752,7 +1752,7 @@
                     "label": "공지사항",
                     "screen": {
                         "screenId": "SB-FOTA-CM0-0013",
-                        "status": "완료",
+                        "status": "보완",
                         "application2Status": "완료",
                         "version": "미배포",
                         "key": "corp-notice-announcements",
