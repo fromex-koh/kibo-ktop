@@ -1783,7 +1783,7 @@
                     "label": "문의하기",
                     "screen": {
                         "screenId": "SB-FOTA-CM0-0014",
-                        "status": "완료",
+                        "status": "보완",
                         "application2Status": "완료",
                         "version": "미배포",
                         "key": "corp-notice-inquiry-create",
