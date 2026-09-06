@@ -33,9 +33,13 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 
 ## [Diff 확인]
 
-### 인증 모달 — 제목 구조 접근성 보완
+### [접근성 보완] 인증 모달 — 제목 구조
 
 - 대상: src/components/custom/auth-flow-page.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [실명인증](/corp/real-name-verification)
+    - [로그인 연장](/corp/session-extension)
+    - [로그인 안내](/corp/login-guide)
 - 적용: 아래 네 모달의 제목·안내 문장 변경을 Diff로 반영합니다.
 - 적용 범위:
     - 기관 최초 비밀번호 변경: `InitialPasswordChangeDialog`의 ‘내 정보 확인’ 제목과 안내 문장입니다.
@@ -46,16 +50,18 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 제목을 `DialogTitle asChild` + H1으로 변경해 최상위 제목 누락을 보완했습니다. 로그인 안내 제목은 `sr-only`를 유지해 화면에 표시하지 않습니다.
     - 안내 문장을 `DialogDescription asChild` + 블록 span으로 변경해 Possible heading 경고의 원인을 수정했습니다.
 - 유지: 문구·디자인·입력 항목·시간 표시·버튼 동작은 그대로입니다.
-- 검증: 타입·린트 검증을 통과했습니다. WAVE의 H1 누락·Possible heading 재검사는 필요합니다.
 - 커밋:
     - [기관 최초 비밀번호 변경](https://github.com/fromex-koh/kibo-ktop/commit/cc2320f713a3ee7d7402d148dbe75ffa1583e1b9)
     - [기업 실명인증](https://github.com/fromex-koh/kibo-ktop/commit/4031ed078db424e08af91334af2e6625612d35a1)
     - [기업·기관 로그인 연장](https://github.com/fromex-koh/kibo-ktop/commit/322bfe71dbb404a6f8de8836368c45e3e77aa7e6)
     - [기업·기관 로그인 안내](https://github.com/fromex-koh/kibo-ktop/commit/5cc9f83404a9d52be4efd3e68eef1484eb34a0be)
 
-### 기업·기관 문의 작성·취소 — 접근성 보완
+### [접근성 보완] 기업·기관 문의 작성·취소
 
 - 대상: src/components/custom/inquiry-form.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [문의하기](/corp/notice/inquiry-create)
+    - [문의하기 > 문의 취소](/corp/notice/inquiry-create/inquiry-cancel)
 - 적용: 아래 두 컴포넌트의 변경을 Diff로 반영합니다. 기업·기관 공통 폼에 적용됩니다.
 - 문의 작성 (`InquiryForm`):
     - 숨김 파일 input `#inquiry-attachment`에 `aria-label="문의 첨부파일"`을 추가했습니다.
@@ -64,26 +70,27 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - ‘작성 취소’를 `DialogTitle asChild` + H1으로 변경해 최상위 제목 누락을 보완했습니다.
     - ‘문의 작성을 취소하시겠습니까?’를 `DialogDescription asChild` + 블록 span으로 변경해 Possible heading 경고의 원인을 수정했습니다.
 - 유지: 화면 문구·디자인·파일 첨부 및 폼 제출·취소 확인 및 이동 동작은 그대로입니다.
-- 검증: 타입·린트 검증을 통과했습니다. 파일 첨부 레이블 반영을 확인했으며, 문의 취소의 WAVE H1 누락·Possible heading 재검사는 필요합니다.
 - 커밋:
     - [문의 작성 — 파일 첨부 레이블 추가](https://github.com/fromex-koh/kibo-ktop/commit/c7ab0c06f2ae94a7271415eaaf7bc62946f747da)
     - [문의 취소 — 제목·안내 문장 보완](https://github.com/fromex-koh/kibo-ktop/commit/5cdd08cc547a3822b9578a6eab49ed3ac58dd406)
 
-### 기업 문의 내역·상세 — 중복 링크 및 목록 복귀 개선
+### [접근성 보완] 기업 문의 내역·상세 — 중복 링크 및 목록 복귀
 
 - 대상:
     - src/app/(user-type)/corp/(service)/(logged-in)/mypage/inquiry-history/page.tsx
     - src/app/(user-type)/corp/(service)/(logged-in)/mypage/inquiry-history/inquiry-detail/page.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [나의 문의내역](/corp/mypage/inquiry-history)
+    - [나의 문의내역 > 문의하기 상세](/corp/mypage/inquiry-history/inquiry-detail)
 - 적용: 목록의 항목별 링크·복귀 대상 제목과 상세의 목록 복귀 주소를 함께 Diff로 반영합니다.
 - 목록 링크: 예제 문의 13개의 상세 링크를 `?id=corp-inquiry-001`처럼 문의별로 구분했습니다. 첫 페이지의 동일 주소 링크 10개에서 발생하던 Redundant link 경고 원인을 제거했습니다.
 - 상세 복귀:
     - ‘목록으로 돌아가기’는 `/corp/mypage/inquiry-history#inquiry-history-title`로 이동합니다. 사이드바의 ‘1:1 문의’는 기존 목록 주소를 유지합니다.
     - 목록 제목에 `id="inquiry-history-title"`·`tabIndex={-1}`를 추가해, 하단 복귀 링크로 이동하면 제목에 포커스가 도착하도록 했습니다.
 - 연동 확인: 상세 본문은 기존 목업입니다. 실제 연동에서는 URL의 `id`로 문의를 조회하고, 목록 제목의 앵커 ID를 유지해야 합니다.
-- 검증: 타입·린트 검증을 통과했습니다. 목록 링크 10개가 서로 다른 것을 확인했고, 상세는 WAVE와 동일한 규칙에서 중복 링크 0건 및 목록 제목 이동·포커스를 확인했습니다.
 - 커밋: [문의 내역·상세 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/4e864d974b9f2f591c51b95d2bda6cb0c36d8361)
 
-### 기업·기관 공지사항 — 분류·뱃지·상세 링크·반응형 개선
+### [마크업/스타일] 기업·기관 공지사항 — 분류·뱃지·상세 링크·반응형 개선
 
 - 대상:
     - src/components/custom/notice-category.ts
@@ -93,6 +100,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/app/(user-type)/corp/(service)/(logged-out)/notice/announcements/detail/page.tsx
     - src/app/(user-type)/org/(service)/(logged-out)/notice/announcements/page.tsx
     - src/app/(user-type)/org/(service)/(logged-out)/notice/announcements/detail/page.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [공지사항](/corp/notice/announcements)
+    - [공지사항 > 상세](/corp/notice/announcements/detail)
 - 적용: 공통 데이터 타입·목록·상세 컴포넌트와 기업·기관 사용처를 함께 Diff로 반영합니다.
 - 데이터·연동:
     - `category`를 `system`·`etc`·`service`·`payment`·`evaluation`으로 변경했습니다. 기존 `important`·`general`·`business` 값은 새 분류에 맞게 매핑해야 합니다.
@@ -109,18 +119,19 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 긴 제목은 말줄임 없이 줄바꿈합니다. 모바일은 목록처럼 분류를 윗줄로 옮기고 구분선을 숨기며, 제목과 뱃지를 글 흐름으로 이어 표시합니다.
     - 새 글 표시는 스크린리더에 ‘새 글’로 전달합니다. 본문·첨부파일·이전/다음 글·목록 이동은 그대로입니다.
     - 기업·기관 상세 예제는 `category: 'system'`, `isImportant: true`, `isNew: true`로 변경했습니다. 상세 표시·props 변경은 `notice-detail.tsx`와 기업·기관 상세 `page.tsx`에, 이후 반응형 보완은 `notice-list.tsx`·`notice-detail.tsx`에 반영했습니다.
-- 검증: 타입·린트 검증을 통과했습니다. 기업 공지사항의 실제 DOM에서 `span` 안의 `div`가 없는 것을 확인했습니다.
 - 커밋:
     - [목록·공통 데이터 — 분류·표시·상세 링크 및 마크업 개선](https://github.com/fromex-koh/kibo-ktop/commit/94c2a8b8b867b0ad1056172f6aea8de3863cf3b6)
     - [상세 — 분류·제목·중요공지·새 글 표시 개선](https://github.com/fromex-koh/kibo-ktop/commit/94318f43e855403f4ceffa6441fb050c90f178ac)
     - [목록·상세 — 말줄임 제거 및 모바일 배치 보완](https://github.com/fromex-koh/kibo-ktop/commit/b75cab9f97bd8df22452d8c735d1cb96f7af3474)
 
-### 기업·기관 자료실 — 분류·전체 제목·모바일 다운로드 배치 개선
+### [마크업/스타일] 기업·기관 자료실 — 분류·전체 제목·모바일 다운로드 배치 개선
 
 - 대상:
     - src/components/custom/resource-list.tsx
     - src/app/(user-type)/corp/(service)/(logged-out)/notice/resources/page.tsx
     - src/app/(user-type)/org/(service)/(logged-out)/notice/resources/page.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [자료실](/corp/notice/resources)
 - 적용: 공통 목록 컴포넌트와 기업·기관 사용처를 함께 Diff로 반영합니다.
 - 데이터·연동:
     - `ResourceItem`에 필수 `category`를 추가했습니다. `guide`는 ‘이용안내’, `form`은 ‘신청서식’이며 기존 데이터에도 값을 지정해야 합니다.
@@ -130,12 +141,14 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 모바일에서는 모든 항목을 ‘분류 → 제목 → 다운로드 버튼’ 순서로 배치합니다. 제목은 전체 너비를 사용하고 버튼은 아래 왼쪽에 표시합니다.
     - 태블릿·PC는 분류·세로 구분선·제목을 가로로 배치하고 다운로드 버튼은 오른쪽에 유지합니다.
 - 유지: 다운로드 링크·접근 가능한 버튼 이름·페이지 이동 동작은 그대로입니다.
-- 검증: 360·768·1280px에서 제목 말줄임 제거와 가로 넘침이 없음을 확인했습니다. 모바일의 모든 다운로드 버튼이 아래 왼쪽에 표시되는 것도 확인했습니다.
 - 커밋: [자료실 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/71f93a57434ba8fccd25181aa3724d16afe591a6)
 
-### 은행 전송완료 — 완료 아이콘·본문 배치·여백 개선
+### [마크업/스타일] 은행 전송완료 — 완료 아이콘·본문 배치·여백 개선
 
 - 대상: src/components/composite/bank-transfer-dialog.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [KTRS-FM > (4) 완료 화면 > 은행 전송완료](/corp/technology-evaluation/ktrs-fm/complete/bank-transfer/transfer-complete)
+    - [평가결과 조회 > 은행전송 > 은행전송완료](/corp/mypage/evaluation-results/bank-transfer/transfer-complete)
 - 적용: `Check` 아이콘 import와 `BankTransferResultDialog`의 JSX·클래스를 Diff로 반영합니다. 같은 파일의 `BankTransferDialog`는 설명 주석만 정리했습니다.
 - 완료 표시:
     - 60px 원형 배경의 체크 아이콘을 추가하고 ‘결과가 전송되었습니다.’ 문구 위에 배치했습니다. 아이콘은 장식으로 처리해 스크린리더에서 제외합니다.
@@ -145,9 +158,14 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 유지: 은행 목록·지점 입력·전송 처리·`onSubmit`·열림 상태 제어·확인 버튼의 닫기 동작은 그대로입니다. 모달 이름은 기존 `DialogTitle`로 유지합니다.
 - 커밋: [은행 전송완료 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c682c9d77b694f64ce1e0b08b1ac83daaf487005)
 
-### 제출 전 최종 확인 — 공통 모달 여백 조정
+### [마크업/스타일] 제출 전 최종 확인 — 공통 모달 여백 조정
 
 - 대상: src/components/composite/submit-confirm-dialog.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [KTRS-FM > (3) 체크리스트 입력 > 제출 전 최종확인](/corp/technology-evaluation/ktrs-fm/final-review)
+    - [Tech-Index > 일반용 > 제출 전 최종확인](/corp/technology-evaluation/tech-index/general/final-review)
+    - [Tech-Index > 창업용 > 제출 전 최종확인](/corp/technology-evaluation/tech-index/startup/final-review)
+    - [투자모형 > (3) 체크리스트 입력 > 제출 전 최종확인](/corp/technology-evaluation/investment-model/final-review)
 - 적용: `SubmitConfirmDialog`의 `DialogHeader`·`DialogFooter` 클래스 변경 두 곳을 Diff로 반영합니다.
 - 여백 변경:
     - 헤더에 `sm:pt-18`을 추가해 sm 이상에서 상단 여백을 32px에서 72px로 늘렸습니다. 모바일 상단 여백은 기존 32px입니다.
@@ -156,18 +174,23 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 유지: ‘제출하시겠습니까?’ 문구·모달 제목 연결·취소/제출 버튼·`onSubmit`·열림 상태 제어는 그대로입니다. 실제 제출 처리는 사용처의 `onSubmit`에서 연결합니다.
 - 커밋: [공통 모달 여백 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/90a81b7b878ac0159f965fcd34fef666426a7e79)
 
-### 공통 페이지 이동 — 중복 navigation 역할 제거
+### [접근성 보완] 공통 페이지 이동 — 중복 navigation 역할 제거
 
 - 대상: src/components/composite/pagination.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [공지사항](/corp/notice/announcements)
+    - [자료실](/corp/notice/resources)
+    - [나의 문의내역](/corp/mypage/inquiry-history)
 - 적용: `PaginationRoot`에 `role={undefined}`를 지정한 한 곳을 Diff로 반영합니다.
 - 변경: `nav` 자체의 탐색 역할과 중복되는 `role="navigation"`을 제거해 HTML 검사 경고를 해결했습니다. 공통 페이지 이동 컴포넌트를 사용하는 화면에 함께 적용됩니다.
 - 유지: ‘페이지 이동’ 레이블·버튼·디자인·페이지 전환 동작은 그대로입니다.
-- 검증: 타입·린트 검증을 통과했으며, 실제 DOM에서 중복 role이 제거된 것을 확인했습니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/cddc6d787898b769ad79ffe7d689b59b26592e5a)
 
-### 공통 작성 취소 모달 — 최종 확인 모달과 여백 통일
+### [마크업/스타일] 공통 작성 취소 모달 — 최종 확인 모달과 여백 통일
 
 - 대상: src/components/composite/cancel-confirm-dialog.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [투자모형 > (3) 체크리스트 입력 > 작성 취소](/corp/technology-evaluation/investment-model/checklist/cancel-confirm)
 - 적용: `CancelConfirmDialog`의 `DialogHeader`·`DialogFooter` 클래스 변경 두 곳을 Diff로 반영합니다.
 - 여백 변경:
     - 헤더에 `sm:pt-18`을 추가해 sm 이상에서 상단 여백을 32px에서 72px로 늘렸습니다. 모바일 상단 여백은 기존 32px입니다.
@@ -175,20 +198,20 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 결과 치수는 최종 확인 모달과 같습니다. 카드 588×242, 물음 72~102, 버튼 158부터 246×60이며 좌측 40·302에 놓입니다.
 - 적용 범위: 기업·기관의 KTRS-FM·Tech-Index 일반용·창업용·투자모형 체크리스트와 기업정보 작성 취소 화면 11개에 함께 적용됩니다.
 - 유지: ‘평가 진행을 중단하시겠습니까?’ 문구·모달 제목 연결·계속작성/저장하고 나가기 버튼·`onSaveAndExit`·열림 상태 제어는 그대로입니다.
-- 검증: 타입·린트 검증을 통과했으며, 실제 화면에서 최종 확인 모달과 치수가 같은 것을 확인했습니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/2b57661c1b869ff1a9e7257cad9dee296e735127)
 
-### 공통 전체메뉴 — 끊긴 ARIA 참조 제거
+### [접근성 보완] 공통 전체메뉴 — 끊긴 ARIA 참조 제거
 
 - 대상: src/components/composite/header.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [전체메뉴](/corp/full-menu)
 - 적용: 전체메뉴 `SheetContent`에 `aria-describedby={undefined}`를 지정한 한 곳을 Diff로 반영합니다.
 - 변경: 전체메뉴에는 이름(`SheetTitle`)만 두고 설명을 두지 않는데, 지정하지 않으면 라이브러리가 존재하지 않는 설명 id를 자동으로 가리켜 참조가 끊깁니다. WAVE의 Broken ARIA reference 오류 원인을 제거했습니다.
 - 적용 범위: 기업·기관 전체메뉴 화면과 헤더 메뉴를 여는 모든 화면에 함께 적용됩니다.
 - 유지: 전체메뉴의 이름(‘전체 메뉴’)·디자인·열기/닫기·포커스 이동 동작은 그대로입니다.
-- 검증: 타입·린트 검증을 통과했으며, 실제 DOM에서 끊긴 ARIA 참조가 0건임을 확인했습니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/d4396aa2a820fa6ff39c1e86a6a4a332c0e37df0)
 
-### 기업 기술평가 — 모달·선택 화면 제목 구조 보완
+### [접근성 보완] 기업 기술평가 — 모달·선택 화면 제목 구조
 
 - 대상:
     - src/components/composite/career-input-help-dialog.tsx
@@ -196,24 +219,30 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/representative-career/input-helper/page.tsx
     - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/additional-company-info/recognized-ip/page.tsx
     - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/selection/page.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [KTRS-FM > 2-2 대표자 경력사항 > 입력도움말](/corp/technology-evaluation/ktrs-fm/representative-career/input-helper)
+    - [KTRS-FM > 2-3 기업기타정보 > 실적인정 지식재산](/corp/technology-evaluation/ktrs-fm/additional-company-info/recognized-ip)
+    - [Tech-Index > (0) 선택 화면](/corp/technology-evaluation/tech-index/selection)
 - 적용:
     - 입력 도움말·실적인정 지식재산 모달에 `headingLevel`을 추가하고, 단독 화면에서는 모달 제목을 H1으로 표시했습니다.
     - 입력 도움말의 예시 제목은 단독 화면에서 H2, 일반 폼 안의 모달에서는 기존 H3 구조를 유지합니다.
     - Tech-Index 선택 화면의 ‘알려드려요’를 H2로 변경해 H1 다음 제목 단계가 건너뛰지 않도록 했습니다.
 - 결과: 입력 도움말·실적인정 지식재산의 WAVE Missing first level heading과 Tech-Index 선택 화면의 Skipped heading level 원인을 해결했습니다.
 - 유지: 모달 문구·표·버튼 동작과 평가모형 선택·이동 동작은 그대로입니다.
-- 검증: 실제 DOM에서 단독 모달의 H1 및 하위 H2, 선택 화면의 H1→H2 구조와 대화상자 이름 연결을 확인했으며 전체 검증을 통과했습니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8a5fe4ab06958ed5543213596b088c3fa50869a6)
 
-### 공통 저장 확인 모달 — 작성 취소 모달과 여백 통일
+### [마크업/스타일] 공통 저장 확인 모달 — 작성 취소 모달과 여백 통일
 
 - 대상: src/components/composite/save-confirm-dialog.tsx
+- 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
+    - [내 정보](/corp/mypage/profile)
+    - [내 정보 > 저장 전 최종 확인](/corp/mypage/profile/save-confirm)
+    - [대표자 이력 > 저장 전 최종 확인](/corp/mypage/representative-history/save-confirm)
 - 적용:
     - sm 이상에서 제목 영역 상단 여백을 32px에서 72px로 늘렸습니다.
     - 버튼 영역 위 여백을 24px로 지정했습니다.
 - 적용 범위: 기업 내 정보·대표자 이력과 기관 내 정보의 저장 확인 모달에 함께 적용됩니다.
 - 유지: ‘저장하시겠습니까?’ 문구·취소/저장 버튼·저장 및 열림 상태 제어는 그대로입니다.
-- 검증: 실제 화면에서 제목 영역 72px·버튼 영역 24px을 확인했으며 전체 검증을 통과했습니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/734b4ecd67fb8ba17c54f3816ca42070566a9cad)
 
 ## [덮어쓰기]
