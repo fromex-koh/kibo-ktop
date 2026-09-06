@@ -588,7 +588,7 @@
                                 {
                                     "label": "제출 전 최종확인",
                                     "screenId": "SB-FOTA-CP13-0003",
-                                    "status": "완료",
+                                    "status": "보완",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-final-review",
@@ -772,7 +772,7 @@
                                         {
                                             "label": "제출 전 최종확인",
                                             "screenId": "SB-FOTA-CP13-0103",
-                                            "status": "완료",
+                                            "status": "보완",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-final-review",
                                             "application2Status": "완료",
@@ -926,7 +926,7 @@
                                         {
                                             "label": "제출 전 최종확인",
                                             "screenId": "SB-FOTA-CP13-0203",
-                                            "status": "완료",
+                                            "status": "보완",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-final-review",
                                             "application2Status": "완료",
@@ -1173,7 +1173,7 @@
                                 {
                                     "label": "제출 전 최종확인",
                                     "screenId": "SB-FOTA-CP13-0303",
-                                    "status": "완료",
+                                    "status": "보완",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-final-review",
                                     "application2Status": "완료",
@@ -2397,7 +2397,7 @@
                                 {
                                     "label": "제출 전 최종 확인",
                                     "screenId": null,
-                                    "status": "완료",
+                                    "status": "보완",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-final-review",
                                     "application2Status": "완료",
@@ -2554,7 +2554,7 @@
                                         {
                                             "label": "제출 전 최종 확인",
                                             "screenId": null,
-                                            "status": "완료",
+                                            "status": "보완",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-final-review",
@@ -2692,7 +2692,7 @@
                                         {
                                             "label": "제출 전 최종 확인",
                                             "screenId": null,
-                                            "status": "완료",
+                                            "status": "보완",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-final-review",
@@ -2903,7 +2903,7 @@
                                 {
                                     "label": "제출 전 최종 확인",
                                     "screenId": null,
-                                    "status": "완료",
+                                    "status": "보완",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-final-review",
