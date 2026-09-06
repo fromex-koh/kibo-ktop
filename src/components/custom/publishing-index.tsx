@@ -975,18 +975,30 @@ const PublishingIndex = () => {
                         )}
                         <div className="bg-background border-border overflow-x-auto rounded-md border">
                             <table className="w-full text-left">
-                                <caption className="sr-only">사이트 구조별 상태·버전 예시</caption>
+                                <caption className="sr-only">사이트 구조별 화면 ID·상태·버전</caption>
                                 <thead>
                                     <tr className="border-border bg-muted/25 border-b">
                                         {depthHeaders.map((header) => (
-                                            <th key={header} scope="col" className="typo-body-l-medium px-4 py-3">
+                                            <th
+                                                key={header}
+                                                scope="col"
+                                                className="typo-body-l-medium border-border border-r px-4 py-3"
+                                            >
                                                 {header}
                                             </th>
                                         ))}
+                                        {filter !== '탄소' && (
+                                            <th
+                                                scope="col"
+                                                className="typo-body-l-medium border-border border-r px-4 py-3 whitespace-nowrap"
+                                            >
+                                                화면 ID
+                                            </th>
+                                        )}
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
                                             응용2
                                         </th>
-                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                        <th scope="col" className="typo-body-l-medium border-border border-r px-4 py-3">
                                             UIUX
                                         </th>
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
@@ -1133,10 +1145,15 @@ const PublishingIndex = () => {
                                                         </th>
                                                     )
                                                 })}
+                                                {filter !== '탄소' && (
+                                                    <td className="typo-caption-regular text-muted-foreground border-border border-r px-4 py-3 whitespace-nowrap">
+                                                        {leaf.screenId ?? '미지정'}
+                                                    </td>
+                                                )}
                                                 <td className="px-4 py-3">
                                                     <StatusTag status={leaf.application2Status} />
                                                 </td>
-                                                <td className="px-4 py-3">
+                                                <td className="border-border border-r px-4 py-3">
                                                     <StatusTag status={effectiveStatus} />
                                                 </td>
                                                 <td
