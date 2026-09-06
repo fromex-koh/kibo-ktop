@@ -134,6 +134,9 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
     if (value.isRed !== undefined && typeof value.isRed !== 'boolean') {
         throw new Error(`[content] ${where}: isRed 는 boolean 이어야 합니다.`)
     }
+    if (value.isRestored !== undefined && typeof value.isRestored !== 'boolean') {
+        throw new Error(`[content] ${where}: isRestored 는 boolean 이어야 합니다.`)
+    }
     const userType = parseUserType(value.userType, `${where} > userType`)
     if (value.externalHref !== undefined && typeof value.externalHref !== 'string') {
         throw new Error(`[content] ${where}: externalHref 는 문자열이어야 합니다.`)
@@ -147,6 +150,7 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
             : {}),
         version: value.version,
         ...(value.isRed === true ? {isRed: true} : {}),
+        ...(value.isRestored === true ? {isRestored: true} : {}),
         ...(userType !== undefined ? {userType} : {}),
         ...(typeof value.externalHref === 'string' ? {externalHref: value.externalHref} : {}),
     }

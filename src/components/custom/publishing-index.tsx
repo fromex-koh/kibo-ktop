@@ -299,6 +299,7 @@ type FlatLeaf = {
     application2Status: Status
     version: string
     isRed?: boolean
+    isRestored?: boolean
     userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 어느 필터에도 걸리지 않는다.
     // 외부 프로젝트 화면의 주소(탄소) — 있으면 화면명을 새 창 링크로 연다.
     externalHref?: string
@@ -340,6 +341,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           application2Status: node.screen.application2Status ?? '대기중',
                           version: node.screen.version,
                           ...(node.screen.isRed ? {isRed: true} : {}),
+                          ...(node.screen.isRestored ? {isRestored: true} : {}),
                           userType: node.screen.userType ?? branchUserType,
                           ...(node.screen.externalHref !== undefined ? {externalHref: node.screen.externalHref} : {}),
                       },
@@ -363,6 +365,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 screenId: node.screenId,
                 status: node.status,
                 application2Status: node.application2Status ?? '대기중',
+                ...(node.isRestored ? {isRestored: true} : {}),
                 version: node.version,
                 ...(node.isRed ? {isRed: true} : {}),
                 userType: node.userType ?? inherited,
@@ -961,6 +964,15 @@ const PublishingIndex = () => {
                             </div>
                         )}
                         {/* 사이트 구조 정보 (선택된 사용자 유형으로 필터된 표) — 표의 caption 이 표 자체를 설명한다. */}
+                        {leaves.some((leaf) => leaf.isRestored) && (
+                            <p className="typo-caption-regular text-muted-foreground flex items-center gap-2">
+                                <span
+                                    aria-hidden="true"
+                                    className="bg-warning-50 border-border size-4 rounded border"
+                                />
+                                황색 행: IA에서 제외되었으나 작업 이력 확인을 위해 복원한 화면
+                            </p>
+                        )}
                         <div className="bg-background border-border overflow-x-auto rounded-md border">
                             <table className="w-full text-left">
                                 <caption className="sr-only">사이트 구조별 상태·버전 예시</caption>
@@ -998,8 +1010,16 @@ const PublishingIndex = () => {
                                         return (
                                             <tr
                                                 key={leaf.rowKey}
+                                                data-restored={leaf.isRestored || undefined}
+                                                title={
+                                                    leaf.isRestored ? '작업 이력 확인을 위해 복원한 화면' : undefined
+                                                }
                                                 className={`border-border border-b last:border-b-0 ${
-                                                    isCurrent ? 'bg-primary-subtle' : 'bg-surface'
+                                                    leaf.isRestored
+                                                        ? 'bg-warning-50! [&>td]:bg-warning-50! [&>th]:bg-warning-50!'
+                                                        : isCurrent
+                                                          ? 'bg-primary-subtle'
+                                                          : 'bg-surface'
                                                 }`}
                                             >
                                                 {depthCells[i].map((cell, depth) => {

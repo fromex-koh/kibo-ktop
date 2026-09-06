@@ -119,6 +119,7 @@ export type StructureLeaf = {
     screenId: string | null
     status: Status
     application2Status?: Status // 응용2 진행 상태. 미지정 시 대기중으로 표시한다.
+    isRestored?: boolean // IA에서 제외되었으나 작업 이력 확인을 위해 복원한 화면.
     version: string
     // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목 — 인덱스에는 포함하되 취소선·빨간색으로 표시한다.
     isRed?: boolean
@@ -134,6 +135,7 @@ export type ScreenInfo = {
     screenId: string | null
     status: Status
     application2Status?: Status
+    isRestored?: boolean
     version: string
     label?: string
     // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목.
