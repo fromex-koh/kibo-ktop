@@ -115,10 +115,12 @@ export type AssetVersionSource = {
 // leaf 만 screenId·status·version 을 가진다. 화면 ID가 발급되기 전에는 null로 관리한다.
 export type StructureLeaf = {
     label: string
+    iaRow?: number // 원본 IA 시트의 행 번호. 분리한 화면을 같은 IA 화면으로 집계한다.
     key?: string // 경로가 확정된 화면은 screen-registry.json과 연결하는 영구 key를 가진다.
     screenId: string | null
     status: Status
     application2Status?: Status // 응용2 진행 상태. 미지정 시 대기중으로 표시한다.
+    isRestored?: boolean // IA에서 제외되었으나 작업 이력 확인을 위해 복원한 화면.
     version: string
     // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목 — 인덱스에는 포함하되 취소선·빨간색으로 표시한다.
     isRed?: boolean
@@ -130,10 +132,12 @@ export type StructureLeaf = {
 // label 은 branch.screen(하이브리드) 전용 — branch 자신의 화면을 하위 뎁스 칸에 어떤 이름으로
 // 보여줄지 정한다(예: 결과조회 branch 의 자기 화면은 '목록'). 없으면 빈 칸이 '-' 로 남는다.
 export type ScreenInfo = {
+    iaRow?: number
     key?: string
     screenId: string | null
     status: Status
     application2Status?: Status
+    isRestored?: boolean
     version: string
     label?: string
     // IA 원본에서 꺾쇠·빨간색으로 표시한 삭제 항목.

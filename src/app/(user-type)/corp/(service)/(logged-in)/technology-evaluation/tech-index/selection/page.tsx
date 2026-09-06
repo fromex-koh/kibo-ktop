@@ -55,7 +55,7 @@ const CorpTechIndexSelectionPage = () => (
 
             {/* 시안 순서 — 평가모형 카드 → 안내 상자 → [다음]. 카드와 버튼이 한 폼이라 사이의 안내를 넘겨 받는다. */}
             <TechIndexModelForm labelledBy={MODELS_TITLE_ID}>
-                <InfoBox title="알려드려요">
+                <InfoBox title="알려드려요" headingLevel={2}>
                     {NOTICES.map((notice) => (
                         <InfoBoxItem key={notice}>{notice}</InfoBoxItem>
                     ))}

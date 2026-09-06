@@ -88,168 +88,168 @@
     "screens": [
         {
             "key": "corp-home",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0001",
             "userType": "기업",
             "path": "/corp/home",
             "name": "홈"
         },
         {
             "key": "corp-home-technology-evaluation-model-selection",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM5-0001",
             "userType": "기업",
             "path": "/corp/home/technology-evaluation-model-selection",
             "name": "기술평가 모형 선택"
         },
         {
             "key": "corp-home-technology-evaluation-model-selection-tech-index",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM6-0001",
             "userType": "기업",
             "path": "/corp/home/technology-evaluation-model-selection/tech-index",
             "name": "테크인덱스(일반/창업) 선택"
         },
         {
             "key": "corp-full-menu",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP0-0001",
             "userType": "기업",
             "path": "/corp/full-menu",
             "name": "전체메뉴"
         },
         {
             "key": "corp-auth",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0001",
             "userType": "기업",
             "path": "/corp/auth",
-            "name": "로그인/회원가입"
+            "name": "기업 로그인"
         },
         {
             "key": "corp-guide",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM3-0001",
             "userType": "기업",
             "path": "/corp/guide",
             "name": "이용안내"
         },
         {
             "key": "corp-pricing",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM4-0001",
             "userType": "기업",
             "path": "/corp/pricing",
             "name": "가격 정책"
         },
         {
             "key": "corp-platform",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0002",
             "userType": "기업",
             "path": "/corp/platform",
             "name": "플랫폼 소개"
         },
         {
             "key": "corp-platform-technology-evaluation",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0002",
             "userType": "기업",
             "path": "/corp/platform/technology-evaluation",
             "name": "기술평가"
         },
         {
             "key": "corp-platform-patent-evaluation",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM6-0002",
             "userType": "기업",
             "path": "/corp/platform/patent-evaluation",
             "name": "특허평가"
         },
         {
             "key": "corp-platform-k-bigx-report",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM4-0002",
             "userType": "기업",
             "path": "/corp/platform/k-bigx-report",
             "name": "K-BIGx 보고서"
         },
         {
             "key": "corp-platform-carbon-neutrality",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM5-0002",
             "userType": "기업",
             "path": "/corp/platform/carbon-neutrality",
             "name": "탄소중립"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/customer-consent",
             "name": "(1) 고객정보활용동의"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-consent-popup",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP2-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/customer-consent/consent-popup",
             "name": "필수/선택 동의 팝업"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-detail",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP0-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/customer-consent/detail",
             "name": "개별 상세 보기"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent-e-signature",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP1-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/customer-consent/e-signature",
             "name": "전자서명"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info-resume-notice",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP3-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/company-technology-info/resume-notice",
             "name": "이어서 작성 안내"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM2-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/company-technology-info",
             "name": "(2) 기업·기술정보 입력"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-info-industry-code-search",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP4-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/company-info/industry-code-search",
             "name": "업종코드 조회"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-company-info-address-search",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP5-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/company-info/address-search",
             "name": "주소 찾기"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-representative-career-input-helper",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP6-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/representative-career/input-helper",
             "name": "입력 도움말"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP7-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/additional-company-info/recognized-ip",
             "name": "실적인정 지식재산"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-transaction-type-guide",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP8-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/additional-company-info/transaction-type-guide",
             "name": "거래유형 설명"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-technology-definition",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP9-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/additional-company-info/technology-definition",
             "name": "전문기술/숙련기술 정의"
@@ -263,140 +263,140 @@
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-cancel-confirm",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP14-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/additional-company-info/cancel-confirm",
             "name": "작성 취소"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-manufacturing",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM3-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/checklist/manufacturing",
             "name": "업종코드 제조 선택"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-service",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM3-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/checklist/service",
             "name": "업종코드 서비스 선택"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-citation-manual",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP10-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/checklist/citation-manual",
             "name": "피인용 확인 메뉴얼"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-restricted-industries",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP11-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/checklist/restricted-industries",
             "name": "보증제한 업종"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-trl-guide",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP12-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/checklist/trl-guide",
             "name": "TRL 확인"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-checklist-cancel-confirm",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP14-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/checklist/cancel-confirm",
             "name": "작성 취소"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-final-review",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP13-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/final-review",
             "name": "(4) 최종 확인"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM5-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/complete",
             "name": "(5) 완료 화면"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP15-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/complete/bank-transfer",
             "name": "은행 전송"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer-transfer-complete",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP16-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/complete/bank-transfer/transfer-complete",
             "name": "은행 전송완료"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete-guarantee-application",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP17-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/complete/guarantee-application",
             "name": "보증 신청"
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-complete-guarantee-application-application-complete",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP18-0003",
             "userType": "기업",
             "path": "/corp/technology-evaluation/ktrs-fm/complete/guarantee-application/application-complete",
             "name": "보증신청 완료"
         },
         {
             "key": "corp-technology-evaluation-tech-index-selection",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/selection",
             "name": "(0) 선택 화면"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/customer-consent",
             "name": "(1) 고객정보활용동의"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-consent-popup",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP2-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/customer-consent/consent-popup",
             "name": "필수/선택 동의 팝업"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-detail",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP0-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/customer-consent/detail",
             "name": "개별 상세 보기"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-technology-info-resume-notice",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP3-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/company-technology-info/resume-notice",
             "name": "이어서 작성 안내"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-e-signature",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP1-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/customer-consent/e-signature",
             "name": "전자서명"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-technology-info",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM2-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/company-technology-info",
             "name": "(2) 기업·기술정보 입력"
@@ -410,35 +410,35 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-industry-code-search",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP4-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/company-info/industry-code-search",
             "name": "업종코드 조회"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-address-search",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP5-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/company-info/address-search",
             "name": "주소 찾기"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-technology-category",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP6-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/company-info/technology-category",
             "name": "기술분류"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-item-description",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP7-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/company-info/item-description",
             "name": "품목설명"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-cancel-confirm",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP14-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/company-info/cancel-confirm",
             "name": "작성 취소"
@@ -452,56 +452,56 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-final-review",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP13-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/final-review",
             "name": "(4) 최종 확인"
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-complete",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM5-0103",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/general/complete",
             "name": "(5) 완료 화면"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/customer-consent",
             "name": "(1) 고객정보활용동의"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-consent-popup",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP2-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/customer-consent/consent-popup",
             "name": "필수/선택 동의 팝업"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-detail",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP0-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/customer-consent/detail",
             "name": "개별 상세 보기"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-technology-info-resume-notice",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP3-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/company-technology-info/resume-notice",
             "name": "이어서 작성 안내"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-e-signature",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP1-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/customer-consent/e-signature",
             "name": "전자서명"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-technology-info",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM2-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/company-technology-info",
             "name": "(2) 기업·기술정보 입력"
@@ -515,35 +515,35 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-industry-code-search",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP4-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/company-info/industry-code-search",
             "name": "업종코드 조회"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-address-search",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP5-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/company-info/address-search",
             "name": "주소 찾기"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-technology-category",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP6-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/company-info/technology-category",
             "name": "기술분류"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-item-description",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP7-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/company-info/item-description",
             "name": "품목설명"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-company-info-cancel-confirm",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP14-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/company-info/cancel-confirm",
             "name": "작성 취소"
@@ -557,35 +557,35 @@
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-final-review",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP13-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/final-review",
             "name": "(4) 최종 확인"
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-complete",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM5-0203",
             "userType": "기업",
             "path": "/corp/technology-evaluation/tech-index/startup/complete",
             "name": "(5) 완료 화면"
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/customer-consent",
             "name": "(1) 고객정보활용동의"
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent-consent-popup",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP2-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/customer-consent/consent-popup",
             "name": "필수/선택 동의 팝업"
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent-detail",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP0-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/customer-consent/detail",
             "name": "개별 상세 보기"
@@ -599,14 +599,14 @@
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP1-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/customer-consent/e-signature",
             "name": "전자서명"
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-technology-info",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM2-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/company-technology-info",
             "name": "(2) 기업·기술정보 입력"
@@ -620,28 +620,28 @@
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-info-industry-code-search",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP4-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/company-info/industry-code-search",
             "name": "업종코드 조회"
         },
         {
             "key": "corp-technology-evaluation-investment-model-company-info-address-search",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP5-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/company-info/address-search",
             "name": "주소 찾기"
         },
         {
             "key": "corp-technology-evaluation-investment-model-additional-company-info-transaction-type-guide",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP8-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/additional-company-info/transaction-type-guide",
             "name": "거래유형 설명"
         },
         {
             "key": "corp-technology-evaluation-investment-model-additional-company-info-technology-definition",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP9-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/additional-company-info/technology-definition",
             "name": "전문기술/숙련기술 정의"
@@ -655,49 +655,49 @@
         },
         {
             "key": "corp-technology-evaluation-investment-model-additional-company-info-cancel-confirm",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP14-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/additional-company-info/cancel-confirm",
             "name": "작성 취소"
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-manufacturing",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM3-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/checklist/manufacturing",
             "name": "업종코드 제조 선택"
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-service",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM3-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/checklist/service",
             "name": "업종코드 서비스 선택"
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-citation-manual",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP10-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/checklist/citation-manual",
             "name": "피인용 확인 메뉴얼"
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-restricted-industries",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP11-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/checklist/restricted-industries",
             "name": "보증제한 업종"
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-trl-guide",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP12-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/checklist/trl-guide",
             "name": "TRL 확인"
         },
         {
             "key": "corp-technology-evaluation-investment-model-checklist-cancel-confirm",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP14-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/checklist/cancel-confirm",
             "name": "작성 취소"
@@ -711,14 +711,14 @@
         },
         {
             "key": "corp-technology-evaluation-investment-model-final-review",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP13-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/final-review",
             "name": "(4) 최종 확인"
         },
         {
             "key": "corp-technology-evaluation-investment-model-complete",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM5-0303",
             "userType": "기업",
             "path": "/corp/technology-evaluation/investment-model/complete",
             "name": "(5) 완료 화면"
@@ -732,133 +732,133 @@
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0030",
             "userType": "기업",
             "path": "/corp/patent-evaluation/patent-grade-list",
             "name": "특허등급평가 조회"
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0030",
             "userType": "기업",
             "path": "/corp/patent-evaluation/patent-grade-list/patent-grade-result",
             "name": "특허등급평가 결과"
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP0-0030",
             "userType": "기업",
             "path": "/corp/patent-evaluation/patent-grade-list/patent-grade-result/report",
             "name": "보고서"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report",
             "name": "기업혁신성장보고서 조회"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-information-consent",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP0-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/information-consent",
             "name": "정보 이용 동의"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-legal-basis",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP2-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/legal-basis",
             "name": "기업정보 수집제공 근거"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP5-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/report-search-results/report-create",
             "name": "보고서 생성"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-pass-purchase-guide",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP6-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/pass-purchase-guide",
             "name": "이용권구매 안내"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
-            "screenId": null,
+            "screenId": "SB-FOTA-CS0-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing",
             "name": "진단브리핑"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-company-overview",
-            "screenId": null,
+            "screenId": "SB-FOTA-CS1-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/company-overview",
             "name": "기업현황"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-technology-overview",
-            "screenId": null,
+            "screenId": "SB-FOTA-CS2-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/company-innovation-info/technology-overview",
             "name": "기술분야개요"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-financial-info",
-            "screenId": null,
+            "screenId": "SB-FOTA-CS2-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/company-innovation-info/financial-info",
             "name": "재무정보"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-technology",
-            "screenId": null,
+            "screenId": "SB-FOTA-CS2-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/company-innovation-info/technology",
             "name": "기술부문"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-rnd",
-            "screenId": null,
+            "screenId": "SB-FOTA-CS2-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/company-innovation-info/rnd",
             "name": "R&D부문"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-tech-index",
-            "screenId": null,
+            "screenId": "SB-FOTA-CS3-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/tech-index",
             "name": "Tech-Index"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info",
-            "screenId": null,
+            "screenId": "SB-FOTA-CS4-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/credit-finance-info",
             "name": "신용/재무정보"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-activity-info",
-            "screenId": null,
+            "screenId": "SB-FOTA-CS5-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/activity-info",
             "name": "활동성정보"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP1-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/print-output-selection",
             "name": "인쇄 출력물 선택"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP7-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/report-print",
             "name": "보고서 출력"
@@ -872,7 +872,7 @@
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP3-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/terms-of-service",
             "name": "이용약관"
@@ -893,21 +893,21 @@
         },
         {
             "key": "corp-mypage-profile",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0009",
             "userType": "기업",
             "path": "/corp/mypage/profile",
             "name": "내 정보"
         },
         {
             "key": "corp-mypage-profile-industry-code-search",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP5-0009",
             "userType": "기업",
             "path": "/corp/mypage/profile/industry-code-search",
             "name": "업종코드 조회"
         },
         {
             "key": "corp-mypage-profile-address-search",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP6-0009",
             "userType": "기업",
             "path": "/corp/mypage/profile/address-search",
             "name": "주소 찾기"
@@ -928,14 +928,14 @@
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-consent-popup",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP2-0009",
             "userType": "기업",
             "path": "/corp/mypage/representative-history/customer-consent/consent-popup",
             "name": "필수/선택 동의 팝업"
         },
         {
             "key": "corp-mypage-representative-history",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0009",
             "userType": "기업",
             "path": "/corp/mypage/representative-history",
             "name": "대표자 이력"
@@ -963,70 +963,70 @@
         },
         {
             "key": "corp-mypage-representative-history-customer-consent",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP1-0009",
             "userType": "기업",
             "path": "/corp/mypage/representative-history/customer-consent",
             "name": "고객정보활용동의"
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-electronic-signature",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP4-0009",
             "userType": "기업",
             "path": "/corp/mypage/representative-history/customer-consent/electronic-signature",
             "name": "전자서명"
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-detail",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP3-0009",
             "userType": "기업",
             "path": "/corp/mypage/representative-history/customer-consent/detail",
             "name": "개별 상세 보기"
         },
         {
             "key": "corp-mypage-evaluation-results",
-            "screenId": null,
+            "screenId": "SB-FOTA-OM0-0010",
             "userType": "기업",
             "path": "/corp/mypage/evaluation-results",
             "name": "평가결과조회"
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP0-0010",
             "userType": "기업",
             "path": "/corp/mypage/evaluation-results/general-analysis",
             "name": "일반분석"
         },
         {
             "key": "corp-mypage-evaluation-results-bank-transfer",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP1-0010",
             "userType": "기업",
             "path": "/corp/mypage/evaluation-results/bank-transfer",
             "name": "은행전송"
         },
         {
             "key": "corp-mypage-evaluation-results-bank-transfer-transfer-complete",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP2-0010",
             "userType": "기업",
             "path": "/corp/mypage/evaluation-results/bank-transfer/transfer-complete",
             "name": "은행전송완료"
         },
         {
             "key": "corp-mypage-evaluation-results-guarantee-application",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP3-0010",
             "userType": "기업",
             "path": "/corp/mypage/evaluation-results/guarantee-application",
             "name": "보증신청"
         },
         {
             "key": "corp-mypage-evaluation-results-guarantee-application-application-complete",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP4-0010",
             "userType": "기업",
             "path": "/corp/mypage/evaluation-results/guarantee-application/application-complete",
             "name": "보증신청완료"
         },
         {
             "key": "corp-mypage-k-bigx-report-history",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0017",
             "userType": "기업",
             "path": "/corp/mypage/k-bigx-report-history",
             "name": "K-BIGx 보고서 이력"
@@ -1047,196 +1047,182 @@
         },
         {
             "key": "corp-mypage-paid-services-payment-history",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM2-0011",
             "userType": "기업",
             "path": "/corp/mypage/paid-services/payment-history",
-            "name": "결제내역"
+            "name": "결제정보"
         },
         {
             "key": "corp-mypage-paid-services-payment-history-usage-history",
-            "screenId": null,
+            "screenId": "SB-FOTA-CS3-0011",
             "userType": "기업",
             "path": "/corp/mypage/paid-services/payment-history/usage-history",
             "name": "이용내역"
-        },
-        {
-            "key": "corp-mypage-paid-services-refund-history",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/mypage/paid-services/refund-history",
-            "name": "환불내역"
-        },
-        {
-            "key": "corp-mypage-paid-services-statement",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/mypage/paid-services/statement",
-            "name": "명세서"
         },
         {
             "key": "corp-mypage-paid-services-refund-reason",
             "screenId": null,
             "userType": "기업",
             "path": "/corp/mypage/paid-services/refund-reason",
-            "name": "환불 사유 입력"
+            "name": "환불하기"
         },
         {
             "key": "corp-mypage-paid-services-refund-reason-refund-complete",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0011",
             "userType": "기업",
             "path": "/corp/mypage/paid-services/refund-reason/refund-complete",
             "name": "환불 및 결제 취소 완료"
         },
         {
             "key": "corp-mypage-inquiry-history",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0012",
             "userType": "기업",
             "path": "/corp/mypage/inquiry-history",
-            "name": "1:1 문의내역"
+            "name": "나의 문의내역"
         },
         {
             "key": "corp-mypage-inquiry-history-inquiry-detail",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0012",
             "userType": "기업",
             "path": "/corp/mypage/inquiry-history/inquiry-detail",
             "name": "문의하기 상세"
         },
         {
             "key": "corp-notice-announcements",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0013",
             "userType": "기업",
             "path": "/corp/notice/announcements",
             "name": "공지사항"
         },
         {
             "key": "corp-notice-announcements-detail",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0013",
             "userType": "기업",
             "path": "/corp/notice/announcements/detail",
             "name": "상세"
         },
         {
             "key": "corp-notice-faq",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0018",
             "userType": "기업",
             "path": "/corp/notice/faq",
             "name": "FAQ"
         },
         {
             "key": "corp-notice-inquiry-create",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0014",
             "userType": "기업",
             "path": "/corp/notice/inquiry-create",
             "name": "문의하기"
         },
         {
             "key": "corp-notice-inquiry-create-inquiry-complete",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0014",
             "userType": "기업",
             "path": "/corp/notice/inquiry-create/inquiry-complete",
             "name": "문의 완료"
         },
         {
             "key": "corp-notice-inquiry-create-privacy-consent-guide",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP0-0014",
             "userType": "기업",
             "path": "/corp/notice/inquiry-create/privacy-consent-guide",
             "name": "개인정보 수집 및 이용 안내"
         },
         {
             "key": "corp-notice-inquiry-create-inquiry-cancel",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP1-0014",
             "userType": "기업",
             "path": "/corp/notice/inquiry-create/inquiry-cancel",
             "name": "문의 취소"
         },
         {
             "key": "corp-notice-resources",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0015",
             "userType": "기업",
             "path": "/corp/notice/resources",
             "name": "자료실"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-marketing-consent",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP4-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/marketing-consent",
             "name": "마케팅 알림 수신동의"
         },
         {
             "key": "corp-payment-complete",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM6-0016",
             "userType": "기업",
             "path": "/corp/payment-complete",
             "name": "결제 완료"
         },
         {
             "key": "corp-not-found",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM0-0016",
             "userType": "기업",
             "path": "/corp/not-found",
             "name": "404 에러 화면"
         },
         {
             "key": "corp-server-error",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM1-0016",
             "userType": "기업",
             "path": "/corp/server-error",
             "name": "500 에러 화면"
         },
         {
             "key": "corp-maintenance",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM2-0016",
             "userType": "기업",
             "path": "/corp/maintenance",
             "name": "정기점검 화면"
         },
         {
             "key": "corp-terms",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM3-0016",
             "userType": "기업",
             "path": "/corp/terms",
             "name": "이용약관"
         },
         {
             "key": "corp-privacy-policy",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM4-0016",
             "userType": "기업",
             "path": "/corp/privacy-policy",
             "name": "개인정보 처리방침"
         },
         {
             "key": "corp-privacy-policy-easy-privacy-policy",
-            "screenId": null,
+            "screenId": "SB-FOTA-CS0-0016",
             "userType": "기업",
             "path": "/corp/privacy-policy/easy-privacy-policy",
             "name": "알기 쉬운 개인처리방침"
         },
         {
             "key": "corp-login-guide",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP2-0016",
             "userType": "기업",
             "path": "/corp/login-guide",
             "name": "로그인 안내"
         },
         {
             "key": "corp-session-extension",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP0-0016",
             "userType": "기업",
             "path": "/corp/session-extension",
             "name": "로그인 연장"
         },
         {
             "key": "corp-logout",
-            "screenId": null,
+            "screenId": "SB-FOTA-CM5-0016",
             "userType": "기업",
             "path": "/corp/login-end",
             "name": "로그인 종료"
         },
         {
             "key": "corp-real-name-verification",
-            "screenId": null,
+            "screenId": "SB-FOTA-CP3-0016",
             "userType": "기업",
             "path": "/corp/real-name-verification",
             "name": "실명인증"
@@ -1267,7 +1253,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/auth",
-            "name": "로그인/회원가입"
+            "name": "기업 로그인"
         },
         {
             "key": "org-guide",
@@ -1715,7 +1701,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/batch-evaluation/evaluation-history-or-batch/general/bulk-data-request/final-review",
-            "name": "제출전 최종확인"
+            "name": "최종 제출 전 확인"
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-complete",
@@ -1943,7 +1929,7 @@
         },
         {
             "key": "org-mypage-verification-application",
-            "screenId": null,
+            "screenId": "SB-FOTA-OM0-0022",
             "userType": "기관",
             "path": "/org/mypage/verification-application",
             "name": "평가검증 신청 조회"
@@ -2041,28 +2027,28 @@
         },
         {
             "key": "org-not-found",
-            "screenId": null,
+            "screenId": "SB-FOTA-OM0-0016",
             "userType": "기관",
             "path": "/org/not-found",
             "name": "404 에러 화면"
         },
         {
             "key": "org-server-error",
-            "screenId": null,
+            "screenId": "SB-FOTA-OM1-0016",
             "userType": "기관",
             "path": "/org/server-error",
             "name": "500 에러 화면"
         },
         {
             "key": "org-maintenance",
-            "screenId": null,
+            "screenId": "SB-FOTA-OM2-0016",
             "userType": "기관",
             "path": "/org/maintenance",
             "name": "정기점검 화면"
         },
         {
             "key": "org-postcode-search",
-            "screenId": null,
+            "screenId": "SB-FOTA-OM3-0016",
             "userType": "기관",
             "path": "/org/postcode-search",
             "name": "우편번호 검색"
@@ -2076,7 +2062,7 @@
         },
         {
             "key": "org-privacy-policy",
-            "screenId": null,
+            "screenId": "SB-FOTA-OS0-0016",
             "userType": "기관",
             "path": "/org/privacy-policy",
             "name": "개인정보 처리방침"
@@ -2090,21 +2076,21 @@
         },
         {
             "key": "org-initial-password-change",
-            "screenId": null,
+            "screenId": "SB-FOTA-OM5-0016",
             "userType": "기관",
             "path": "/org/initial-password-change",
             "name": "최초 비밀번호 변경"
         },
         {
             "key": "org-session-extension",
-            "screenId": null,
+            "screenId": "SB-FOTA-OP3-0016",
             "userType": "기관",
             "path": "/org/session-extension",
             "name": "로그인 연장"
         },
         {
             "key": "org-logout",
-            "screenId": null,
+            "screenId": "SB-FOTA-OP4-0016",
             "userType": "기관",
             "path": "/org/login-end",
             "name": "로그아웃 종료"
@@ -2226,7 +2212,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/batch-evaluation/evaluation-history-or-batch/general/batch-evaluation-request/final-review",
-            "name": "제출전 최종확인"
+            "name": "최종 제출 전 확인"
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-legal-basis",
@@ -2271,6 +2257,13 @@
             "name": "하위계정 등록"
         },
         {
+            "key": "org-mypage-sub-account-progress-create-complete-toast",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/create/complete-toast",
+            "name": "하위계정 등록 완료 토스트"
+        },
+        {
             "key": "org-mypage-sub-account-progress-detail",
             "screenId": null,
             "userType": "기관",
@@ -2285,11 +2278,25 @@
             "name": "하위계정 수정"
         },
         {
+            "key": "org-mypage-sub-account-progress-edit-complete-toast",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/edit/complete-toast",
+            "name": "하위계정 저장 완료 토스트"
+        },
+        {
             "key": "org-mypage-sub-account-progress-password-reset",
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/sub-account-progress/password-reset",
             "name": "하위계정 비밀번호 초기화"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-password-reset-complete-toast",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/password-reset/complete-toast",
+            "name": "비밀번호 초기화 완료 토스트"
         },
         {
             "key": "org-mypage-sub-account-progress-status-change",
@@ -2299,18 +2306,88 @@
             "name": "상태 변경"
         },
         {
-            "key": "org-mypage-sub-account-progress-delete",
+            "key": "org-mypage-sub-account-progress-status-change-complete-toast",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/mypage/sub-account-progress/delete",
-            "name": "하위 계정 삭제"
+            "path": "/org/mypage/sub-account-progress/status-change/complete-toast",
+            "name": "상태 변경 완료 토스트"
         },
         {
             "key": "org-login-guide",
-            "screenId": null,
+            "screenId": "SB-FOTA-OP0-0016",
             "userType": "기관",
             "path": "/org/login-guide",
             "name": "로그인 안내"
+        },
+        {
+            "key": "corp-auth-org-login",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/auth/org-login",
+            "name": "기관 로그인"
+        },
+        {
+            "key": "corp-terms-k-bigx",
+            "screenId": "SB-FOTA-CP3-0007",
+            "userType": "기업",
+            "path": "/corp/terms/k-bigx",
+            "name": "K-BIGx 이용약관"
+        },
+        {
+            "key": "corp-home-notice-popup",
+            "screenId": "SB-FOTA-CP4-0016",
+            "userType": "기업",
+            "path": "/corp/home-notice-popup",
+            "name": "메인 공지사항 팝업"
+        },
+        {
+            "key": "corp-credit-information-policy",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/credit-information-policy",
+            "name": "신용정보 활용체제"
+        },
+        {
+            "key": "org-auth-org-login",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/auth/org-login",
+            "name": "기관 로그인"
+        },
+        {
+            "key": "org-terms-k-bigx",
+            "screenId": "SB-FOTA-OM4-0016",
+            "userType": "기관",
+            "path": "/org/terms/k-bigx",
+            "name": "K-BIGx 이용약관"
+        },
+        {
+            "key": "org-home-notice-popup",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/home-notice-popup",
+            "name": "메인 공지사항 팝업"
+        },
+        {
+            "key": "org-credit-information-policy",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/credit-information-policy",
+            "name": "신용정보 활용체제"
+        },
+        {
+            "key": "corp-pricing-payment",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/pricing/payment",
+            "name": "결제하기"
+        },
+        {
+            "key": "corp-mypage-paid-services-refund-unavailable",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/refund-unavailable",
+            "name": "환불 불가 안내"
         }
     ]
 }

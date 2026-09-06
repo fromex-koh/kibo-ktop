@@ -50,9 +50,9 @@ const VersionCell = ({version, isCurrent}: {version: string; isCurrent: boolean}
     </>
 )
 
-// 릴리스 초안에서 명시한 컴포넌트 가이드 내부 링크만 새 창 링크로 변환한다.
+// 릴리스 초안에서 명시한 이 사이트 내부 링크(컴포넌트 가이드·기업·기관 화면)만 새 창 링크로 변환한다.
 // 그 외 Markdown 문법이나 외부 주소는 일반 문자열로 남겨 임의 링크가 화면에 생성되지 않게 한다.
-const RELEASE_NOTE_LINK_PATTERN = /\[([^\]]+)\]\((\/component-guide\/[^)\s]+)\)/g
+const RELEASE_NOTE_LINK_PATTERN = /\[([^\]]+)\]\((\/(?:component-guide|corp|org)\/[^)\s]+)\)/g
 
 const ReleaseNoteChange = ({change}: {change: string}) => {
     const parts: React.ReactNode[] = []
@@ -145,6 +145,10 @@ const ReleaseNoteHandoff = ({change}: {change: ReleaseNoteHandoff}) => {
         overwrite: {label: '덮어쓰기', color: 'secondary-purple'},
     } as const
     const {label, color} = handoffPresentation[change.mode]
+    // 제목 앞의 [태그]는 그 카드의 성격을 한눈에 알리는 표시다 — 굵게 떼어 그리고 나머지가 제목이다.
+    const titleMatch = /^\[([^\]]+)\]\s*(.+)$/.exec(change.title)
+    const titleTag = titleMatch?.[1]
+    const titleText = titleMatch?.[2] ?? change.title
 
     return (
         <div className="border-border bg-background/60 flex min-w-0 flex-col gap-2 rounded-sm border p-3">
@@ -152,17 +156,26 @@ const ReleaseNoteHandoff = ({change}: {change: ReleaseNoteHandoff}) => {
                 <Badge variant="solid-pastel" color={color} shape="round" size="sm">
                     {label}
                 </Badge>
-                <strong className="typo-body-l-medium text-foreground min-w-0">{change.title}</strong>
+                <strong className="typo-body-l-medium text-foreground min-w-0">
+                    {titleTag ? <span className="typo-body-l-bold">[{titleTag}] </span> : null}
+                    {titleText}
+                </strong>
             </div>
-            <dl className="text-muted-foreground grid min-w-0 gap-1.5">
+            <dl className="text-muted-foreground grid min-w-0 gap-3">
                 {change.details.map((detail) => (
-                    <div
-                        key={`${detail.label}-${detail.value}`}
-                        className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] gap-x-2"
-                    >
-                        <dt className="text-foreground-subtle shrink-0">{detail.label}</dt>
-                        <dd className="min-w-0 break-words">
-                            <ReleaseNoteDetailValue label={detail.label} value={detail.value} />
+                    <div key={`${detail.label}-${detail.value}`} className="grid min-w-0 gap-1">
+                        <dt className="text-foreground-subtle font-medium">{detail.label}</dt>
+                        <dd className="min-w-0">
+                            <ul className="flex min-w-0 list-disc flex-col gap-1 pl-5">
+                                {detail.value
+                                    .split('\n')
+                                    .filter(Boolean)
+                                    .map((value, index) => (
+                                        <li key={`${index}-${value}`} className="min-w-0 break-words">
+                                            <ReleaseNoteDetailValue label={detail.label} value={value} />
+                                        </li>
+                                    ))}
+                            </ul>
                         </dd>
                     </div>
                 ))}
@@ -239,6 +252,8 @@ const BUILD_VERSION = process.env.NEXT_PUBLIC_BUILD_VERSION ?? 'dev'
 // 상태별 Badge 색·변형 — 색만으로 구분하지 않도록 상태명을 항상 함께 표기한다. [KWCAG 5.3.1]
 // success/warning 은 kit Badge 가 제공하는 색으로 매핑(진행=info·보완=warning·완료=success).
 // 완료·최종완료는 같은 success 라, 최종완료만 solid 변형을 써서 완료(solid-pastel)와 시각적으로 겹치지 않게 한다.
+const countsAsDone = (status: Status): boolean => status === '완료' || status === '최종완료' || status === '보완'
+
 const STATUS_BADGE: Record<Status, {color: 'neutral' | 'info' | 'warning' | 'success' | 'error'; variant?: 'solid'}> = {
     대기중: {color: 'neutral'},
     진행중: {color: 'info'},
@@ -288,6 +303,7 @@ const KeyCopyDepthBadge = ({depth, screenKey}: {depth: number; screenKey: string
 // 사이트 구조는 뎁스 제한 없는 트리라, 표에 그리려면 각 leaf(실제 화면)를 "뿌리부터 자신까지의
 // 라벨 경로"로 펼쳐야 한다. 이 펼친 목록 + 뎁스별 rowSpan 계산이 표 렌더링의 핵심이다.
 type FlatLeaf = {
+    iaRow?: number
     rowKey: string
     registryKey?: string
     path: string[] // index 0 = 1뎁스(그룹명) ... 마지막 = leaf 자신의 라벨
@@ -299,6 +315,7 @@ type FlatLeaf = {
     application2Status: Status
     version: string
     isRed?: boolean
+    isRestored?: boolean
     userType?: UserType // 상위에서 상속된 최종 사용자 유형. 없으면 어느 필터에도 걸리지 않는다.
     // 외부 프로젝트 화면의 주소(탄소) — 있으면 화면명을 새 창 링크로 연다.
     externalHref?: string
@@ -336,10 +353,12 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           subtotalDepths: nextSubtotalDepths,
                           groupOnlyDepths: nextGroupOnlyDepths,
                           screenId: node.screen.screenId,
+                          iaRow: node.screen.iaRow,
                           status: node.screen.status,
                           application2Status: node.screen.application2Status ?? '대기중',
                           version: node.screen.version,
                           ...(node.screen.isRed ? {isRed: true} : {}),
+                          ...(node.screen.isRestored ? {isRestored: true} : {}),
                           userType: node.screen.userType ?? branchUserType,
                           ...(node.screen.externalHref !== undefined ? {externalHref: node.screen.externalHref} : {}),
                       },
@@ -361,8 +380,10 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 subtotalDepths,
                 groupOnlyDepths,
                 screenId: node.screenId,
+                iaRow: node.iaRow,
                 status: node.status,
                 application2Status: node.application2Status ?? '대기중',
+                ...(node.isRestored ? {isRestored: true} : {}),
                 version: node.version,
                 ...(node.isRed ? {isRed: true} : {}),
                 userType: node.userType ?? inherited,
@@ -557,20 +578,25 @@ const PublishingIndex = () => {
     const depthCells = useMemo(() => buildDepthCells(leaves, maxDepth), [leaves, maxDepth])
     const depthHeaders = useMemo(() => Array.from({length: maxDepth}, (_, depth) => `${depth + 1}뎁스`), [maxDepth])
 
+    // 취소선 행은 표에 유지하되 진척률의 분자·분모에서 모두 제외한다.
     const screenCount = leaves.length
-    // UIUX·응용2 진척률 — 각 상태에서 '완료' 또는 '최종완료'된 화면 수 / 전체 화면 수.
+    const progressLeaves = useMemo(() => leaves.filter((leaf) => !leaf.isRed), [leaves])
+    const progressScreenCount = progressLeaves.length
+    const iaScreenCount = new Set(leaves.flatMap((leaf) => (leaf.iaRow === undefined ? [] : [leaf.iaRow]))).size
+    const deletedScreenCount = leaves.filter((leaf) => leaf.isRed).length
+    const supplementalCount = leaves.filter((leaf) => leaf.iaRow === undefined).length
+    const splitCount = screenCount - supplementalCount - iaScreenCount
     const uiuxDoneCount = useMemo(
-        () => leaves.filter((leaf) => leaf.status === '완료' || leaf.status === '최종완료').length,
-        [leaves],
+        () => progressLeaves.filter((leaf) => countsAsDone(leaf.status)).length,
+        [progressLeaves],
     )
     const application2DoneCount = useMemo(
-        () =>
-            leaves.filter((leaf) => leaf.application2Status === '완료' || leaf.application2Status === '최종완료')
-                .length,
-        [leaves],
+        () => progressLeaves.filter((leaf) => countsAsDone(leaf.application2Status)).length,
+        [progressLeaves],
     )
-    const uiuxProgressPercent = screenCount === 0 ? 0 : Math.round((uiuxDoneCount / screenCount) * 100)
-    const application2ProgressPercent = screenCount === 0 ? 0 : Math.round((application2DoneCount / screenCount) * 100)
+    const uiuxProgressPercent = progressScreenCount === 0 ? 0 : Math.round((uiuxDoneCount / progressScreenCount) * 100)
+    const application2ProgressPercent =
+        progressScreenCount === 0 ? 0 : Math.round((application2DoneCount / progressScreenCount) * 100)
     // 공통 레이아웃은 이 저장소가 화면을 찍어내는 틀이라, 화면을 만들지 않는 외부 IA(탄소)에는
     // 해당하는 것이 없어 그 표만 감춘다. 응용2 상태는 유형과 무관하게 모든 화면이 갖는다.
     const showsCommonLayouts = !isExternalUserType(filter)
@@ -829,19 +855,50 @@ const PublishingIndex = () => {
                         </div>
 
                         {/* 역할별 전체 화면 수와 UIUX·응용2 진척률을 같은 기준으로 나란히 비교한다. */}
+                        {filter !== '탄소' && (
+                            <div
+                                className="border-border bg-surface flex flex-col gap-2 rounded-md border p-4"
+                                aria-live="polite"
+                            >
+                                <strong className="typo-body-l-medium">
+                                    {filter} 퍼블리싱 전체 {screenCount}개 행 (취소선 {deletedScreenCount}개 포함)
+                                </strong>
+                                <ul className="typo-caption-regular text-muted-foreground flex list-disc flex-col gap-1.5 pl-5">
+                                    <li>
+                                        <strong className="text-foreground font-medium">엑셀 IA:</strong> {filter}{' '}
+                                        {iaScreenCount}개 — 기업 156개·기관 151개, 총 307개(취소선 포함)입니다.
+                                    </li>
+                                    <li>
+                                        <strong className="text-foreground font-medium">표의 행 수:</strong>{' '}
+                                        {screenCount}개 = IA {iaScreenCount}개 + 화면 분리로 늘어난 {splitCount}개 + IA
+                                        외 {supplementalCount}개입니다.
+                                    </li>
+                                    <li>
+                                        <strong className="text-foreground font-medium">진척률:</strong> 취소선을 제외한
+                                        완료 행 ÷ 집계 대상 {progressScreenCount}개 행입니다.
+                                        {deletedScreenCount > 0 && (
+                                            <> 취소선 {deletedScreenCount}개는 완료 수와 전체 수에서 모두 제외합니다.</>
+                                        )}{' '}
+                                        분리·추가 화면도 각각 계산합니다.
+                                    </li>
+                                </ul>
+                            </div>
+                        )}
                         <div aria-live="polite" className="grid gap-3 sm:grid-cols-2">
                             <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
                                 <span className="typo-caption-medium text-muted-foreground">응용2 진척률</span>
                                 <strong className="typo-h4-bold text-foreground">{application2ProgressPercent}%</strong>
                                 <span className="typo-caption-regular text-muted-foreground">
-                                    완료 {application2DoneCount}/{screenCount} · {filter} 화면 {screenCount}개
+                                    완료(보완 포함) {application2DoneCount}/{progressScreenCount} · {filter} 집계 대상{' '}
+                                    {progressScreenCount}개 행
                                 </span>
                             </div>
                             <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
                                 <span className="typo-caption-medium text-muted-foreground">UIUX 진척률</span>
                                 <strong className="typo-h4-bold text-foreground">{uiuxProgressPercent}%</strong>
                                 <span className="typo-caption-regular text-muted-foreground">
-                                    완료 {uiuxDoneCount}/{screenCount} · {filter} 화면 {screenCount}개
+                                    완료(보완 포함) {uiuxDoneCount}/{progressScreenCount} · {filter} 집계 대상{' '}
+                                    {progressScreenCount}개 행
                                 </span>
                             </div>
                         </div>
@@ -886,6 +943,11 @@ const PublishingIndex = () => {
                                 . 키가 없으면 대기중으로 표시됩니다.
                             </li>
                             <li>
+                                <strong className="text-foreground font-medium">진척률 집계:</strong>{' '}
+                                완료·최종완료·보완은 모두 완료 수에 포함하며, 취소선 행은 완료 수와 집계 대상 수에서
+                                제외합니다.
+                            </li>
+                            <li>
                                 <strong className="text-foreground font-medium">최종완료 기준:</strong> 더 이상
                                 수정사항이 발생하지 않을 것으로 확정된 화면에만 표시합니다.
                             </li>
@@ -894,7 +956,7 @@ const PublishingIndex = () => {
                             다만 공통 레이아웃은 이 저장소가 화면을 찍어내는 틀이라, 화면을 만들지 않는
                             외부 IA(탄소)에는 해당하는 것이 없어 그 표만 감춘다. */}
                         {showsCommonLayouts && (
-                            <div className="bg-background border-border overflow-x-auto rounded-md border">
+                            <div className="bg-background border-border mb-6 overflow-x-auto rounded-md border">
                                 <table className="w-full text-left">
                                     <caption className="sr-only">공통 레이아웃 상태·버전</caption>
                                     <thead>
@@ -961,20 +1023,68 @@ const PublishingIndex = () => {
                             </div>
                         )}
                         {/* 사이트 구조 정보 (선택된 사용자 유형으로 필터된 표) — 표의 caption 이 표 자체를 설명한다. */}
+                        {filter !== '탄소' && supplementalCount > 0 && (
+                            <p className="typo-caption-regular text-muted-foreground flex items-center gap-2">
+                                <span
+                                    aria-hidden="true"
+                                    className="border-border bg-mint-200 size-4 shrink-0 rounded border"
+                                />
+                                <span>
+                                    <strong className="text-foreground font-medium">
+                                        밝은 민트색 {supplementalCount}개 행 — 최신 IA 미기재
+                                    </strong>
+                                    <span className="block">
+                                        이전 IA(260731)에 있던 화면 또는 개발 완료 화면 중 최신 IA({iaVersions[filter]}
+                                        )에 없는 항목입니다. 삭제·누락 여부 확인이 필요하며, 전체 행 수와 진척률에
+                                        포함합니다.
+                                    </span>
+                                </span>
+                            </p>
+                        )}
+                        {leaves.some((leaf) => leaf.isRestored) && (
+                            <p className="typo-caption-regular text-muted-foreground flex items-center gap-2">
+                                <span
+                                    aria-hidden="true"
+                                    className="bg-warning-50 border-border size-4 shrink-0 rounded border"
+                                />
+                                <span>
+                                    <strong className="text-foreground font-medium">
+                                        주황색·취소선 6개 행 — IA 삭제 표시
+                                    </strong>
+                                    <span className="block">
+                                        Tech-Index 일반용·창업용 및 투자모형의 평가 신청·최종 확인 화면입니다. 응용2
+                                        완료 이력과 링크는 유지하며, 전체 행 수에는 포함하고 진척률 계산에서는
+                                        제외합니다.
+                                    </span>
+                                </span>
+                            </p>
+                        )}
                         <div className="bg-background border-border overflow-x-auto rounded-md border">
                             <table className="w-full text-left">
-                                <caption className="sr-only">사이트 구조별 상태·버전 예시</caption>
+                                <caption className="sr-only">사이트 구조별 화면 ID·상태·버전</caption>
                                 <thead>
                                     <tr className="border-border bg-muted/25 border-b">
                                         {depthHeaders.map((header) => (
-                                            <th key={header} scope="col" className="typo-body-l-medium px-4 py-3">
+                                            <th
+                                                key={header}
+                                                scope="col"
+                                                className="typo-body-l-medium border-border border-r px-4 py-3"
+                                            >
                                                 {header}
                                             </th>
                                         ))}
+                                        {filter !== '탄소' && (
+                                            <th
+                                                scope="col"
+                                                className="typo-body-l-medium border-border border-r px-4 py-3 whitespace-nowrap"
+                                            >
+                                                화면 ID
+                                            </th>
+                                        )}
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
                                             응용2
                                         </th>
-                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                        <th scope="col" className="typo-body-l-medium border-border border-r px-4 py-3">
                                             UIUX
                                         </th>
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
@@ -988,6 +1098,7 @@ const PublishingIndex = () => {
                                             leaf.registryKey !== undefined
                                                 ? SCREEN_REGISTRY_BY_KEY.get(leaf.registryKey)
                                                 : undefined
+                                        const isSupplemental = filter !== '탄소' && leaf.iaRow === undefined
                                         const displayedVersion = registeredScreen?.version ?? leaf.version
                                         const isCurrent =
                                             registeredScreen?.isCurrent ?? displayedVersion === BUILD_VERSION
@@ -998,8 +1109,23 @@ const PublishingIndex = () => {
                                         return (
                                             <tr
                                                 key={leaf.rowKey}
+                                                data-restored={leaf.isRestored || undefined}
+                                                data-supplemental={isSupplemental || undefined}
+                                                title={
+                                                    leaf.isRestored
+                                                        ? '작업 이력 확인을 위해 복원한 화면'
+                                                        : isSupplemental
+                                                          ? `이전 IA(260731)에서 최신 IA(${iaVersions[filter]})로 변경되며 사라졌거나 프로젝트에는 존재하여 개발 작업이 완료되었으나 최신 IA에서 누락된 화면 — 삭제 의도 또는 누락 여부 확인 필요`
+                                                          : undefined
+                                                }
                                                 className={`border-border border-b last:border-b-0 ${
-                                                    isCurrent ? 'bg-primary-subtle' : 'bg-surface'
+                                                    leaf.isRestored
+                                                        ? 'bg-warning-50! [&>td]:bg-warning-50! [&>th]:bg-warning-50!'
+                                                        : isSupplemental
+                                                          ? 'bg-mint-200! [&>td]:bg-mint-200! [&>th]:bg-mint-200!'
+                                                          : isCurrent
+                                                            ? 'bg-primary-subtle'
+                                                            : 'bg-surface'
                                                 }`}
                                             >
                                                 {depthCells[i].map((cell, depth) => {
@@ -1113,10 +1239,15 @@ const PublishingIndex = () => {
                                                         </th>
                                                     )
                                                 })}
+                                                {filter !== '탄소' && (
+                                                    <td className="typo-caption-regular text-muted-foreground border-border border-r px-4 py-3 whitespace-nowrap">
+                                                        {leaf.screenId ?? '미지정'}
+                                                    </td>
+                                                )}
                                                 <td className="px-4 py-3">
                                                     <StatusTag status={leaf.application2Status} />
                                                 </td>
-                                                <td className="px-4 py-3">
+                                                <td className="border-border border-r px-4 py-3">
                                                     <StatusTag status={effectiveStatus} />
                                                 </td>
                                                 <td

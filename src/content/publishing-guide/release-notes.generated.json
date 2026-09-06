@@ -1,6 +1,510 @@
 {
     "releases": [
         {
+            "version": "v3.1.7",
+            "releasedAt": "2026-09-06",
+            "changes": [
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[접근성 보완] 인증 모달 — 제목 구조",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/auth-flow-page.tsx"},
+                        {
+                            "label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)",
+                            "value": "[실명인증](/corp/real-name-verification)\n[로그인 연장](/corp/session-extension)\n[로그인 안내](/corp/login-guide)"
+                        },
+                        {"label": "적용", "value": "아래 네 모달의 제목·안내 문장 변경을 Diff로 반영합니다."},
+                        {
+                            "label": "적용 범위",
+                            "value": "기관 최초 비밀번호 변경: `InitialPasswordChangeDialog`의 ‘내 정보 확인’ 제목과 안내 문장입니다.\n기업 실명인증: `RealNameVerificationDialog`의 ‘본인 인증’ 제목과 주민등록번호 입력 안내입니다.\n기업·기관 로그인 연장: `SessionExtensionDialog`의 ‘로그인 연장’ 제목과 남은 시간 안내입니다.\n기업·기관 로그인 안내: `LoginGuideDialog`의 ‘회원가입/로그인’ 제목과 로그인 안내 문장입니다."
+                        },
+                        {
+                            "label": "공통 변경",
+                            "value": "제목을 `DialogTitle asChild` + H1으로 변경해 최상위 제목 누락을 보완했습니다. 로그인 안내 제목은 `sr-only`를 유지해 화면에 표시하지 않습니다.\n안내 문장을 `DialogDescription asChild` + 블록 span으로 변경해 Possible heading 경고의 원인을 수정했습니다."
+                        },
+                        {"label": "유지", "value": "문구·디자인·입력 항목·시간 표시·버튼 동작은 그대로입니다."},
+                        {
+                            "label": "커밋",
+                            "value": "[기관 최초 비밀번호 변경](https://github.com/fromex-koh/kibo-ktop/commit/cc2320f713a3ee7d7402d148dbe75ffa1583e1b9)\n[기업 실명인증](https://github.com/fromex-koh/kibo-ktop/commit/4031ed078db424e08af91334af2e6625612d35a1)\n[기업·기관 로그인 연장](https://github.com/fromex-koh/kibo-ktop/commit/322bfe71dbb404a6f8de8836368c45e3e77aa7e6)\n[기업·기관 로그인 안내](https://github.com/fromex-koh/kibo-ktop/commit/5cc9f83404a9d52be4efd3e68eef1484eb34a0be)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[접근성 보완] 기업·기관 문의 작성·취소",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/inquiry-form.tsx"},
+                        {
+                            "label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)",
+                            "value": "[문의하기](/corp/notice/inquiry-create)\n[문의하기 > 문의 취소](/corp/notice/inquiry-create/inquiry-cancel)"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "아래 두 컴포넌트의 변경을 Diff로 반영합니다. 기업·기관 공통 폼에 적용됩니다."
+                        },
+                        {
+                            "label": "문의 작성 (`InquiryForm`)",
+                            "value": "숨김 파일 input `#inquiry-attachment`에 `aria-label=\"문의 첨부파일\"`을 추가했습니다.\n문의 작성·개인정보 동의 안내 화면에서 발생한 파일 첨부의 Missing form label 오류를 해결했습니다."
+                        },
+                        {
+                            "label": "문의 취소 (`InquiryCancelDialog`)",
+                            "value": "‘작성 취소’를 `DialogTitle asChild` + H1으로 변경해 최상위 제목 누락을 보완했습니다.\n‘문의 작성을 취소하시겠습니까?’를 `DialogDescription asChild` + 블록 span으로 변경해 Possible heading 경고의 원인을 수정했습니다."
+                        },
+                        {
+                            "label": "유지",
+                            "value": "화면 문구·디자인·파일 첨부 및 폼 제출·취소 확인 및 이동 동작은 그대로입니다."
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[문의 작성 — 파일 첨부 레이블 추가](https://github.com/fromex-koh/kibo-ktop/commit/c7ab0c06f2ae94a7271415eaaf7bc62946f747da)\n[문의 취소 — 제목·안내 문장 보완](https://github.com/fromex-koh/kibo-ktop/commit/5cdd08cc547a3822b9578a6eab49ed3ac58dd406)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[접근성 보완] 기업 문의 내역·상세 — 중복 링크 및 목록 복귀",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/mypage/inquiry-history/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/mypage/inquiry-history/inquiry-detail/page.tsx"
+                        },
+                        {
+                            "label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)",
+                            "value": "[나의 문의내역](/corp/mypage/inquiry-history)\n[나의 문의내역 > 문의하기 상세](/corp/mypage/inquiry-history/inquiry-detail)"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "목록의 항목별 링크·복귀 대상 제목과 상세의 목록 복귀 주소를 함께 Diff로 반영합니다."
+                        },
+                        {
+                            "label": "목록 링크",
+                            "value": "예제 문의 13개의 상세 링크를 `?id=corp-inquiry-001`처럼 문의별로 구분했습니다. 첫 페이지의 동일 주소 링크 10개에서 발생하던 Redundant link 경고 원인을 제거했습니다."
+                        },
+                        {
+                            "label": "상세 복귀",
+                            "value": "‘목록으로 돌아가기’는 `/corp/mypage/inquiry-history#inquiry-history-title`로 이동합니다. 사이드바의 ‘1:1 문의’는 기존 목록 주소를 유지합니다.\n목록 제목에 `id=\"inquiry-history-title\"`·`tabIndex={-1}`를 추가해, 하단 복귀 링크로 이동하면 제목에 포커스가 도착하도록 했습니다."
+                        },
+                        {
+                            "label": "연동 확인",
+                            "value": "상세 본문은 기존 목업입니다. 실제 연동에서는 URL의 `id`로 문의를 조회하고, 목록 제목의 앵커 ID를 유지해야 합니다."
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[문의 내역·상세 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/4e864d974b9f2f591c51b95d2bda6cb0c36d8361)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업/스타일] 기업·기관 공지사항 — 분류·뱃지·상세 링크·반응형 개선",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/notice-category.ts\nsrc/components/custom/notice-list.tsx\nsrc/components/custom/notice-detail.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/notice/announcements/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/notice/announcements/detail/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/notice/announcements/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/notice/announcements/detail/page.tsx"
+                        },
+                        {
+                            "label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)",
+                            "value": "[공지사항](/corp/notice/announcements)\n[공지사항 > 상세](/corp/notice/announcements/detail)"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "공통 데이터 타입·목록·상세 컴포넌트와 기업·기관 사용처를 함께 Diff로 반영합니다."
+                        },
+                        {
+                            "label": "데이터·연동",
+                            "value": "`category`를 `system`·`etc`·`service`·`payment`·`evaluation`으로 변경했습니다. 기존 `important`·`general`·`business` 값은 새 분류에 맞게 매핑해야 합니다.\n중요공지·새 글 여부를 `isImportant`·`isNew`로 분리하고, 항목별 필수 `href`를 추가했습니다. `NoticeList`의 공통 `detailHref` prop은 제거했습니다.\n예제 링크에 글별 `?id=...`를 지정했습니다. 상세 본문은 아직 목업이므로 실제 연동에서는 해당 ID로 조회한 데이터를 연결해야 합니다."
+                        },
+                        {
+                            "label": "목록 표시",
+                            "value": "분류는 텍스트로, 중요공지·새 글은 제목 옆 뱃지로 표시합니다. 새 글 표시는 스크린리더에 ‘새 글’로 전달합니다.\n모바일·태블릿·PC 모두 제목을 말줄임·줄 수 제한 없이 표시합니다. 중요공지·새 글 뱃지는 제목 뒤에서 함께 줄바꿈되어 잘리지 않습니다.\n모바일은 분류를 윗줄에 두고 세로 구분선을 숨깁니다. 태블릿·PC는 분류·구분선·제목을 가로로 배치하며, 화살표 간격도 화면 폭에 맞췄습니다.\n구분선을 감싼 `span`을 `div`로 변경해 목록 10개에서 반복된 잘못된 중첩 오류를 해결했습니다."
+                        },
+                        {
+                            "label": "상세 표시·연동",
+                            "value": "`NoticeDetail`에 선택 props `isImportant`·`isNew`를 추가했습니다. 상세 조회 결과를 전달하며, 생략하면 해당 뱃지는 표시하지 않습니다.\n분류를 무채색 뱃지에서 텍스트로 바꾸고, 분류·구분선·제목·중요공지·새 글 순서로 배치했습니다. 등록일은 다음 줄에 표시합니다.\n긴 제목은 말줄임 없이 줄바꿈합니다. 모바일은 목록처럼 분류를 윗줄로 옮기고 구분선을 숨기며, 제목과 뱃지를 글 흐름으로 이어 표시합니다.\n새 글 표시는 스크린리더에 ‘새 글’로 전달합니다. 본문·첨부파일·이전/다음 글·목록 이동은 그대로입니다.\n기업·기관 상세 예제는 `category: 'system'`, `isImportant: true`, `isNew: true`로 변경했습니다. 상세 표시·props 변경은 `notice-detail.tsx`와 기업·기관 상세 `page.tsx`에, 이후 반응형 보완은 `notice-list.tsx`·`notice-detail.tsx`에 반영했습니다."
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[목록·공통 데이터 — 분류·표시·상세 링크 및 마크업 개선](https://github.com/fromex-koh/kibo-ktop/commit/94c2a8b8b867b0ad1056172f6aea8de3863cf3b6)\n[상세 — 분류·제목·중요공지·새 글 표시 개선](https://github.com/fromex-koh/kibo-ktop/commit/94318f43e855403f4ceffa6441fb050c90f178ac)\n[목록·상세 — 말줄임 제거 및 모바일 배치 보완](https://github.com/fromex-koh/kibo-ktop/commit/b75cab9f97bd8df22452d8c735d1cb96f7af3474)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업/스타일] 기업·기관 자료실 — 분류·전체 제목·모바일 다운로드 배치 개선",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/resource-list.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/notice/resources/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/notice/resources/page.tsx"
+                        },
+                        {
+                            "label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)",
+                            "value": "[자료실](/corp/notice/resources)"
+                        },
+                        {"label": "적용", "value": "공통 목록 컴포넌트와 기업·기관 사용처를 함께 Diff로 반영합니다."},
+                        {
+                            "label": "데이터·연동",
+                            "value": "`ResourceItem`에 필수 `category`를 추가했습니다. `guide`는 ‘이용안내’, `form`은 ‘신청서식’이며 기존 데이터에도 값을 지정해야 합니다.\n기업·기관 예제 데이터에 분류를 반영했습니다. 예제 `href`는 여전히 `#`이므로 실제 다운로드 파일 URL로 연결해야 합니다."
+                        },
+                        {
+                            "label": "화면 표시",
+                            "value": "모바일·태블릿·PC 모두 제목을 말줄임 없이 줄바꿈해 전체 표시합니다.\n모바일에서는 모든 항목을 ‘분류 → 제목 → 다운로드 버튼’ 순서로 배치합니다. 제목은 전체 너비를 사용하고 버튼은 아래 왼쪽에 표시합니다.\n태블릿·PC는 분류·세로 구분선·제목을 가로로 배치하고 다운로드 버튼은 오른쪽에 유지합니다."
+                        },
+                        {
+                            "label": "유지",
+                            "value": "다운로드 링크·접근 가능한 버튼 이름·페이지 이동 동작은 그대로입니다."
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[자료실 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/71f93a57434ba8fccd25181aa3724d16afe591a6)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업/스타일] 은행 전송완료 — 완료 아이콘·본문 배치·여백 개선",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/bank-transfer-dialog.tsx"},
+                        {
+                            "label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)",
+                            "value": "[KTRS-FM > (4) 완료 화면 > 은행 전송완료](/corp/technology-evaluation/ktrs-fm/complete/bank-transfer/transfer-complete)\n[평가결과 조회 > 은행전송 > 은행전송완료](/corp/mypage/evaluation-results/bank-transfer/transfer-complete)"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "`Check` 아이콘 import와 `BankTransferResultDialog`의 JSX·클래스를 Diff로 반영합니다. 같은 파일의 `BankTransferDialog`는 설명 주석만 정리했습니다."
+                        },
+                        {
+                            "label": "완료 표시",
+                            "value": "60px 원형 배경의 체크 아이콘을 추가하고 ‘결과가 전송되었습니다.’ 문구 위에 배치했습니다. 아이콘은 장식으로 처리해 스크린리더에서 제외합니다.\n완료 문구와 은행·지점 정보를 하나의 묶음으로 정리했습니다. 아이콘과 문구 묶음 사이는 16px, 문구와 은행·지점 사이는 8px입니다."
+                        },
+                        {
+                            "label": "여백",
+                            "value": "`min-h-68`을 제거하고 헤더·본문 하단에 32px, 푸터 상단에 24px 여백을 지정했습니다."
+                        },
+                        {
+                            "label": "적용 범위",
+                            "value": "기업·기관 KTRS-FM 완료 화면의 은행 전송 후 표시되는 결과 모달과, 이 컴포넌트를 사용하는 전송완료 단독 화면에 함께 적용됩니다."
+                        },
+                        {
+                            "label": "유지",
+                            "value": "은행 목록·지점 입력·전송 처리·`onSubmit`·열림 상태 제어·확인 버튼의 닫기 동작은 그대로입니다. 모달 이름은 기존 `DialogTitle`로 유지합니다."
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[은행 전송완료 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c682c9d77b694f64ce1e0b08b1ac83daaf487005)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업/스타일] 제출 전 최종 확인 — 공통 모달 여백 조정",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/submit-confirm-dialog.tsx"},
+                        {
+                            "label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)",
+                            "value": "[KTRS-FM > (3) 체크리스트 입력 > 제출 전 최종확인](/corp/technology-evaluation/ktrs-fm/final-review)\n[Tech-Index > 일반용 > 제출 전 최종확인](/corp/technology-evaluation/tech-index/general/final-review)\n[Tech-Index > 창업용 > 제출 전 최종확인](/corp/technology-evaluation/tech-index/startup/final-review)\n[투자모형 > (3) 체크리스트 입력 > 제출 전 최종확인](/corp/technology-evaluation/investment-model/final-review)"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "`SubmitConfirmDialog`의 `DialogHeader`·`DialogFooter` 클래스 변경 두 곳을 Diff로 반영합니다."
+                        },
+                        {
+                            "label": "여백 변경",
+                            "value": "헤더에 `sm:pt-18`을 추가해 sm 이상에서 상단 여백을 32px에서 72px로 늘렸습니다. 모바일 상단 여백은 기존 32px입니다.\n푸터에 `pt-6`을 추가해 버튼 영역 위 여백을 24px로 지정했습니다."
+                        },
+                        {
+                            "label": "적용 범위",
+                            "value": "기업·기관의 KTRS-FM·Tech-Index 일반용·창업용·투자모형 최종 확인과, 같은 모달을 사용하는 기관 일괄평가·일괄 자료 요청 화면에 함께 적용됩니다."
+                        },
+                        {
+                            "label": "유지",
+                            "value": "‘제출하시겠습니까?’ 문구·모달 제목 연결·취소/제출 버튼·`onSubmit`·열림 상태 제어는 그대로입니다. 실제 제출 처리는 사용처의 `onSubmit`에서 연결합니다."
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[공통 모달 여백 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/90a81b7b878ac0159f965fcd34fef666426a7e79)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[접근성 보완] 공통 페이지 이동 — 중복 navigation 역할 제거",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/pagination.tsx"},
+                        {
+                            "label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)",
+                            "value": "[공지사항](/corp/notice/announcements)\n[자료실](/corp/notice/resources)\n[나의 문의내역](/corp/mypage/inquiry-history)"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "`PaginationRoot`에 `role={undefined}`를 지정한 한 곳을 Diff로 반영합니다."
+                        },
+                        {
+                            "label": "변경",
+                            "value": "`nav` 자체의 탐색 역할과 중복되는 `role=\"navigation\"`을 제거해 HTML 검사 경고를 해결했습니다. 공통 페이지 이동 컴포넌트를 사용하는 화면에 함께 적용됩니다."
+                        },
+                        {"label": "유지", "value": "‘페이지 이동’ 레이블·버튼·디자인·페이지 전환 동작은 그대로입니다."},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/cddc6d787898b769ad79ffe7d689b59b26592e5a)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업/스타일] 공통 작성 취소 모달 — 최종 확인 모달과 여백 통일",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/cancel-confirm-dialog.tsx"},
+                        {
+                            "label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)",
+                            "value": "[투자모형 > (3) 체크리스트 입력 > 작성 취소](/corp/technology-evaluation/investment-model/checklist/cancel-confirm)"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "`CancelConfirmDialog`의 `DialogHeader`·`DialogFooter` 클래스 변경 두 곳을 Diff로 반영합니다."
+                        },
+                        {
+                            "label": "여백 변경",
+                            "value": "헤더에 `sm:pt-18`을 추가해 sm 이상에서 상단 여백을 32px에서 72px로 늘렸습니다. 모바일 상단 여백은 기존 32px입니다.\n푸터에 `pt-6`을 추가해 버튼 영역 위 여백을 24px로 지정했습니다.\n결과 치수는 최종 확인 모달과 같습니다. 카드 588×242, 물음 72~102, 버튼 158부터 246×60이며 좌측 40·302에 놓입니다."
+                        },
+                        {
+                            "label": "적용 범위",
+                            "value": "기업·기관의 KTRS-FM·Tech-Index 일반용·창업용·투자모형 체크리스트와 기업정보 작성 취소 화면 11개에 함께 적용됩니다."
+                        },
+                        {
+                            "label": "유지",
+                            "value": "‘평가 진행을 중단하시겠습니까?’ 문구·모달 제목 연결·계속작성/저장하고 나가기 버튼·`onSaveAndExit`·열림 상태 제어는 그대로입니다."
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/2b57661c1b869ff1a9e7257cad9dee296e735127)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[접근성 보완] 공통 전체메뉴 — 끊긴 ARIA 참조 제거",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/header.tsx"},
+                        {"label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)", "value": "[전체메뉴](/corp/full-menu)"},
+                        {
+                            "label": "적용",
+                            "value": "전체메뉴 `SheetContent`에 `aria-describedby={undefined}`를 지정한 한 곳을 Diff로 반영합니다."
+                        },
+                        {
+                            "label": "변경",
+                            "value": "전체메뉴에는 이름(`SheetTitle`)만 두고 설명을 두지 않는데, 지정하지 않으면 라이브러리가 존재하지 않는 설명 id를 자동으로 가리켜 참조가 끊깁니다. WAVE의 Broken ARIA reference 오류 원인을 제거했습니다."
+                        },
+                        {
+                            "label": "적용 범위",
+                            "value": "기업·기관 전체메뉴 화면과 헤더 메뉴를 여는 모든 화면에 함께 적용됩니다."
+                        },
+                        {
+                            "label": "유지",
+                            "value": "전체메뉴의 이름(‘전체 메뉴’)·디자인·열기/닫기·포커스 이동 동작은 그대로입니다."
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/d4396aa2a820fa6ff39c1e86a6a4a332c0e37df0)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[접근성 보완] 기업 기술평가 — 모달·선택 화면 제목 구조",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/career-input-help-dialog.tsx\nsrc/components/composite/recognized-ip-dialog.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/representative-career/input-helper/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/additional-company-info/recognized-ip/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/selection/page.tsx"
+                        },
+                        {
+                            "label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)",
+                            "value": "[KTRS-FM > 2-2 대표자 경력사항 > 입력도움말](/corp/technology-evaluation/ktrs-fm/representative-career/input-helper)\n[KTRS-FM > 2-3 기업기타정보 > 실적인정 지식재산](/corp/technology-evaluation/ktrs-fm/additional-company-info/recognized-ip)\n[Tech-Index > (0) 선택 화면](/corp/technology-evaluation/tech-index/selection)"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "입력 도움말·실적인정 지식재산 모달에 `headingLevel`을 추가하고, 단독 화면에서는 모달 제목을 H1으로 표시했습니다.\n입력 도움말의 예시 제목은 단독 화면에서 H2, 일반 폼 안의 모달에서는 기존 H3 구조를 유지합니다.\nTech-Index 선택 화면의 ‘알려드려요’를 H2로 변경해 H1 다음 제목 단계가 건너뛰지 않도록 했습니다."
+                        },
+                        {
+                            "label": "결과",
+                            "value": "입력 도움말·실적인정 지식재산의 WAVE Missing first level heading과 Tech-Index 선택 화면의 Skipped heading level 원인을 해결했습니다."
+                        },
+                        {"label": "유지", "value": "모달 문구·표·버튼 동작과 평가모형 선택·이동 동작은 그대로입니다."},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8a5fe4ab06958ed5543213596b088c3fa50869a6)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업/스타일] 공통 저장 확인 모달 — 작성 취소 모달과 여백 통일",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/save-confirm-dialog.tsx"},
+                        {
+                            "label": "관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지)",
+                            "value": "[내 정보](/corp/mypage/profile)\n[내 정보 > 저장 전 최종 확인](/corp/mypage/profile/save-confirm)\n[대표자 이력 > 저장 전 최종 확인](/corp/mypage/representative-history/save-confirm)"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "sm 이상에서 제목 영역 상단 여백을 32px에서 72px로 늘렸습니다.\n버튼 영역 위 여백을 24px로 지정했습니다."
+                        },
+                        {
+                            "label": "적용 범위",
+                            "value": "기업 내 정보·대표자 이력과 기관 내 정보의 저장 확인 모달에 함께 적용됩니다."
+                        },
+                        {
+                            "label": "유지",
+                            "value": "‘저장하시겠습니까?’ 문구·취소/저장 버튼·저장 및 열림 상태 제어는 그대로입니다."
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/734b4ecd67fb8ba17c54f3816ca42070566a9cad)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "퍼블리싱 인덱스 — 화면 ID·진척률·행 구분 안내 개선",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/publishing-index.tsx\nsrc/content/publishing-guide/types.ts\nsrc/content/publishing-guide/index.ts"
+                        },
+                        {"label": "적용", "value": "세 파일과 아래 IA 데이터 파일 세 개를 함께 덮어씁니다."},
+                        {
+                            "label": "화면 ID·구분선",
+                            "value": "기업·기관에 엑셀 화면 ID와 칼럼 구분선을 추가했습니다. ID가 없으면 미지정이며, 탄소 ID 열과 응용2–UIUX 사이 구분선은 없습니다."
+                        },
+                        {
+                            "label": "행 수 안내",
+                            "value": "IA 수·표 행 수·진척률 기준을 dot list로 정리했습니다. 기업은 156개→169행, 기관은 151개→160행이며, 취소선도 표에 유지합니다."
+                        },
+                        {
+                            "label": "진척률 계산",
+                            "value": "취소선을 뺀 완료 행 ÷ 집계 대상 행입니다. 완료·최종완료·보완을 완료 수로 세며, IA 외 화면과 업종·회원 유형별 분리 화면도 각각 포함합니다."
+                        },
+                        {
+                            "label": "보완 집계",
+                            "value": "응용2·UIUX 모두 보완을 완료 수에 포함합니다. 진척률 카드는 ‘완료(보완 포함)’로 표시하고, 집계 기준을 표 위 안내 목록에 적었습니다. 취소선 제외 기준은 그대로입니다. 최초 비밀번호 변경·실명인증·로그인 연장·로그인 안내 화면은 완료에서 보완으로 변경해도 완료 수에 계속 포함되어 진척률이 유지됩니다."
+                        },
+                        {
+                            "label": "응용2 결과",
+                            "value": "기업 127/169(75%) · 기관 104/154(68%)입니다. 기관은 대기중 7개 추가·미완료 1개 제외 및 완료 상태인 취소선 6개의 집계 제외로, 최초 110/153(72%)에서 104/154(68%)로 변경되었습니다."
+                        },
+                        {
+                            "label": "민트색 10행",
+                            "value": "기업 8개·기관 2개로, 이전 IA(260731)에 있던 화면 또는 개발 완료 화면 중 최신 IA(V1.23_260831)에 없는 항목입니다. 삭제·누락 확인 대상으로 안내하며, 행 수·진척률에 포함합니다."
+                        },
+                        {
+                            "label": "주황색·취소선 6행",
+                            "value": "최신 IA에서 삭제 표시된 기관 평가 신청·최종 확인 화면입니다. 응용2 완료 뱃지·링크·표의 행 수는 유지하고, 진척률 분자·분모에서 제외합니다."
+                        },
+                        {
+                            "label": "강조 순서",
+                            "value": "주황색 > 밝은 민트색 > 업데이트 색상입니다. 행과 각 셀에 적용합니다."
+                        },
+                        {
+                            "label": "안내·간격",
+                            "value": "릴리즈 카드의 대상·적용·기준 등 항목명 아래에 상세 내용을 dot list로 표시합니다. 색상 설명을 굵은 제목과 짧은 문장으로 정리하고, 공통 레이아웃 표 아래 여백을 24px 늘렸습니다."
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "퍼블리싱 인덱스 — 기업·기관 IA V1.23 데이터 반영",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/publishing-guide/publishing-index.json\nsrc/content/publishing-guide/screen-registry.json\nsrc/content/publishing-guide/screen-registry.generated.json"
+                        },
+                        {
+                            "label": "적용",
+                            "value": "세 파일과 위 인덱스 표시·콘텐츠 처리 파일 세 개를 함께 덮어씁니다."
+                        },
+                        {
+                            "label": "상태 변경",
+                            "value": "기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)·공지사항 목록(`corp-notice-announcements`)·공지사항 상세(`corp-notice-announcements-detail`)·자료실(`corp-notice-resources`)·문의 내역(`corp-mypage-inquiry-history`)·문의 상세(`corp-mypage-inquiry-history-inquiry-detail`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다."
+                        },
+                        {
+                            "label": "최종 확인 상태",
+                            "value": "기업 KTRS-FM·Tech-Index 일반용·창업용·투자모형의 제출 전 최종 확인 4개는 보완으로 유지하고, 기관의 동일 화면 4개는 완료로 되돌렸습니다. 응용2 완료 상태와 기관 취소선 행의 진척률 제외 기준은 유지합니다."
+                        },
+                        {
+                            "label": "은행 전송완료 상태",
+                            "value": "기업 KTRS-FM 완료 하위 화면(`corp-technology-evaluation-ktrs-fm-complete-bank-transfer-transfer-complete`)과 마이페이지 평가결과 하위 화면(`corp-mypage-evaluation-results-bank-transfer-transfer-complete`)의 UIUX 뱃지를 보완으로 변경했습니다. 응용2 완료 상태와 진척률은 유지됩니다."
+                        },
+                        {
+                            "label": "작성 취소·전체메뉴 상태",
+                            "value": "기업 투자모형 체크리스트 작성 취소(`corp-technology-evaluation-investment-model-checklist-cancel-confirm`)와 기업 전체메뉴(`corp-full-menu`)의 UIUX 뱃지를 보완으로 변경했습니다. 기관 전체메뉴(`org-full-menu`)는 완료로 되돌렸습니다. 응용2 완료 상태와 진척률은 유지됩니다."
+                        },
+                        {
+                            "label": "이번 보완 상태",
+                            "value": "기업 입력 도움말·실적인정 지식재산·Tech-Index 선택·내 정보·내 정보 저장 확인·대표자 이력 저장 확인 6개 화면을 보완으로 변경했습니다. 기관의 보완 상태 6개는 모두 완료로 되돌렸으며, 응용2 완료 상태와 진척률은 유지됩니다."
+                        },
+                        {
+                            "label": "상태 변경 커밋",
+                            "value": "[투자모형 작성 취소·전체메뉴 3개 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/923a590df822eecd7c13d7550d665b80ab836d06)\n[기업 은행 전송완료 2개 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b1d40b9286e76b2671f6d40a20a21455b6d43d7c)\n[기업·기관 최종 확인 8개 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/ee88c218a18b1412108c226aa276e2eb2a2bf00f)\n[기업 문의 내역·상세 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/112d0ce1acae9a203e1685526a0612f7771b7888)\n[기업 자료실 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/9bdd48defb84cce6399ac7b73dc2e13d0f749886)\n[기업 공지사항 상세 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/bfdb058a8c64b7bfa20cbde55ecba4a1b79c423d)\n[기업 공지사항 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b8d69ab0f8b973ebf0772e0ea0a31086f6b306fc)\n[기업 문의 작성 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/2b1d6e564b7b31ef94ad0043a631131d51513371)\n[기업 로그인 연장·안내 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b9f51e61ee46f8406ddaad217b4a585b5bad5c9c)\n[기업 문의 취소 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/a977b5052241bcf288cde9d8161fce1d35beca02)\n[기업 보완 6개·기관 완료 복귀 6개 보기](https://github.com/fromex-koh/kibo-ktop/commit/f41a2b43796b54e861fba630b50e6e2941cb3a90)"
+                        },
+                        {
+                            "label": "기준",
+                            "value": "기업·기관 IA를 `V1.23_260831`로 갱신하고 화면 ID·메뉴명·유료 서비스 관리 하위 구조를 반영했습니다."
+                        },
+                        {
+                            "label": "추가 14개",
+                            "value": "기업·기관 공통: 기관 로그인, K-BIGx 이용약관, 메인 공지사항 팝업, 신용정보 활용체제를 각각 추가했습니다(8개).\n기업: 가격 정책의 결제하기와 유료 서비스 관리의 환불 불가 안내를 추가했습니다(2개).\n기관: 하위 계정 등록·저장·비밀번호 초기화·상태 변경 완료 토스트를 추가했습니다(4개). 메뉴명(Depth)이 비어 있어도 화면 Type이 있으면 집계에 포함합니다.\n추가 항목은 대기중으로 등록했습니다."
+                        },
+                        {
+                            "label": "제외 3개",
+                            "value": "기업 > 마이페이지 > 유료 서비스 관리 > 환불내역·명세서: V1.22 개정이력에 삭제가 명시되어 제외했습니다(2개).\n기관 > 마이페이지 > 하위 계정 현황 > 하위 계정 삭제: 최신 IA에 항목이 없어 제외했습니다(1개)."
+                        },
+                        {
+                            "label": "취소선 6개 유지",
+                            "value": "기관 > 개별평가 > Tech-Index > 일반용: (3) 평가 신청하기, 제출 전 최종 확인입니다.\n기관 > 개별평가 > Tech-Index > 창업용: (3) 평가 신청하기, 제출 전 최종 확인입니다.\n기관 > 개별평가 > 투자모형: (4) 평가 신청하기, 제출 전 최종 확인입니다.\n최신 IA에서는 삭제 표시된 항목이지만 응용2 완료 이력을 확인하도록 유지합니다. Tech-Index 4개는 v2.0.6, 투자모형 2개는 v2.0.7이며 기존 링크를 유지합니다."
+                        },
+                        {
+                            "label": "행 수 차이",
+                            "value": "IA 전체는 기업 156개·기관 151개입니다. 퍼블리싱 표는 분리된 화면과 IA 외 추가 화면을 포함해 기업 169개·기관 160개입니다. 기업·기관의 차이 22개는 화면 분리로 늘어난 12개 행과 IA 외 추가 화면 10개 행입니다."
+                        },
+                        {
+                            "label": "최초 대비",
+                            "value": "전체 퍼블리싱 행은 392개에서 14개 추가·3개 제외되어 403개입니다(기업 169개·기관 160개·탄소 74개). 제외한 3개는 기존 응용2 상태가 미지정이었으며, 기존 응용2 완료 257개는 모두 유지합니다. 위에 명시한 UIUX 상태 변경 외 기존 작업 상태·링크·버전과 탄소 데이터는 유지하며, 실제 페이지 파일은 삭제하지 않았습니다."
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "버전 업데이트 — 기존 릴리즈 설명 말투 통일",
+                    "details": [
+                        {"label": "대상", "value": "src/content/publishing-guide/release-notes.generated.json"},
+                        {"label": "적용", "value": "지정한 파일을 덮어씁니다."},
+                        {
+                            "label": "변경",
+                            "value": "기존 30개 릴리스의 설명 문구 231개를 입니다·합니다체로 통일했습니다."
+                        },
+                        {
+                            "label": "유지",
+                            "value": "설명의 의미와 버전·날짜·수치·파일 경로·링크·코드·인용된 화면 문구는 그대로 유지합니다."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v3.1.6",
             "releasedAt": "2026-09-04",
             "changes": [
@@ -13,15 +517,15 @@
                         {"label": "적용", "value": "지정한 파일만 교체"},
                         {
                             "label": "변경",
-                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄다. 화면 추가·삭제·경로 변경은 없고 `자가진단 > 감축잠재량 산정` 이 수정요청에서 완료로 올라갔다 — 탄소 FO 에서 개발 수정요청이던 행이 개발 수정완료가 됐다. 이제 탄소에 수정요청 화면은 없다"
+                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄습니다. 화면 추가·삭제·경로 변경은 없고 `자가진단 > 감축잠재량 산정` 이 수정요청에서 완료로 올라갔습니다 — 탄소 FO 에서 개발 수정요청이던 행이 개발 수정완료가 됐습니다. 이제 탄소에 수정요청 화면은 없습니다"
                         },
                         {
                             "label": "응용2",
-                            "value": "응용2 상태는 이 저장소에서 손으로 채우는 값이라 동기화가 건드리지 않는다. 20건을 그대로 물려받아 진척률 27%(20/74)가 유지된다"
+                            "value": "응용2 상태는 이 저장소에서 손으로 채우는 값이라 동기화가 건드리지 않습니다. 20건을 그대로 물려받아 진척률 27%(20/74)가 유지됩니다"
                         },
                         {
                             "label": "결과",
-                            "value": "탄소 UIUX 진척률이 95% → 96%(71/74)로 오른다. 기업·기관은 변동 없다"
+                            "value": "탄소 UIUX 진척률이 95% → 96%(71/74)로 오릅니다. 기업·기관은 변동 없습니다"
                         }
                     ]
                 }
@@ -40,11 +544,11 @@
                         {"label": "적용", "value": "지정한 파일만 교체"},
                         {
                             "label": "변경",
-                            "value": "응용2팀이 탄소 화면 19건의 `application2Status` 를 완료로 올렸다. 자가진단 갈래가 대부분이고(기업 정보 입력·인벤토리 배출량 산정·감축목표 설정·평가지표 작성·결과 확인) IA 구조와 퍼블리싱 상태(UIUX)는 그대로다"
+                            "value": "응용2팀이 탄소 화면 19건의 `application2Status` 를 완료로 올렸습니다. 자가진단 갈래가 대부분이고(기업 정보 입력·인벤토리 배출량 산정·감축목표 설정·평가지표 작성·결과 확인) IA 구조와 퍼블리싱 상태(UIUX)는 그대로입니다"
                         },
                         {
                             "label": "결과",
-                            "value": "탄소 응용2 진척률이 1% → 27%(20/74)로 오른다. 기업(77%)·기관(72%)은 변동 없다"
+                            "value": "탄소 응용2 진척률이 1% → 27%(20/74)로 오릅니다. 기업(77%)·기관(72%)은 변동 없습니다"
                         }
                     ]
                 }
@@ -63,9 +567,12 @@
                         {"label": "적용", "value": "지정한 파일만 교체"},
                         {
                             "label": "변경",
-                            "value": "응용2팀이 `선도기업 신청 > 최초 진입` 의 `application2Status` 를 완료로 올렸다. 지난 릴리스에서 연 탄소 응용2 열의 첫 값이다. IA 구조와 퍼블리싱 상태(UIUX)는 그대로다"
+                            "value": "응용2팀이 `선도기업 신청 > 최초 진입` 의 `application2Status` 를 완료로 올렸습니다. 지난 릴리스에서 연 탄소 응용2 열의 첫 값입니다. IA 구조와 퍼블리싱 상태(UIUX)는 그대로입니다"
                         },
-                        {"label": "결과", "value": "탄소 응용2 진척률이 0% → 1%(1/74)로 잡힌다. 기업·기관은 변동 없다"}
+                        {
+                            "label": "결과",
+                            "value": "탄소 응용2 진척률이 0% → 1%(1/74)로 잡힙니다. 기업·기관은 변동 없습니다"
+                        }
                     ]
                 }
             ]
@@ -83,19 +590,19 @@
                         {"label": "적용", "value": "지정한 파일만 교체"},
                         {
                             "label": "변경",
-                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄다. 화면 1건이 늘고(선도기업 신청 최초 진입의 회원 진입 모달) 선도기업 신청 2·3차 6건이 완료로 올라갔다. 삭제·경로 변경은 없다"
+                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄습니다. 화면 1건이 늘고(선도기업 신청 최초 진입의 회원 진입 모달) 선도기업 신청 2·3차 6건이 완료로 올라갔습니다. 삭제·경로 변경은 없습니다"
                         },
                         {
                             "label": "상태",
-                            "value": "탄소 FO 의 `개발 수정요청` 은 아직 손볼 것이 남은 행이라 `수정요청` 으로 옮긴다 — 완료로 세지 않는다. `개발 수정완료`(7건)는 종전대로 완료다. 이번에 `자가진단 > 감축잠재량 산정` 이 완료에서 수정요청으로 내려갔다"
+                            "value": "탄소 FO 의 `개발 수정요청` 은 아직 손볼 것이 남은 행이라 `수정요청` 으로 옮깁니다 — 완료로 세지 않습니다. `개발 수정완료`(7건)는 종전대로 완료입니다. 이번에 `자가진단 > 감축잠재량 산정` 이 완료에서 수정요청으로 내려갔습니다"
                         },
                         {
                             "label": "링크",
-                            "value": "기준을 진행 상태에서 화면 유무로 바꾼다. 탄소 FO 에 화면이 있으면 상태와 무관하게 주소를 달아 65건이 된다 — 링크는 주소가 열리는지의 문제라, 수정요청이어도 열어 볼 수 있으면 여는 편이 낫다"
+                            "value": "기준을 진행 상태에서 화면 유무로 바꿉니다. 탄소 FO 에 화면이 있으면 상태와 무관하게 주소를 달아 65건이 됩니다 — 링크는 주소가 열리는지의 문제라, 수정요청이어도 열어 볼 수 있으면 여는 편이 낫습니다"
                         },
                         {
                             "label": "결과",
-                            "value": "탄소가 73건에서 74건이 되고 UIUX 진척률이 86% → 95%(70/74)로 오른다. 응용2는 아직 값이 없어 0%(0/74)다"
+                            "value": "탄소가 73건에서 74건이 되고 UIUX 진척률이 86% → 95%(70/74)로 오릅니다. 응용2는 아직 값이 없어 0%(0/74)입니다"
                         }
                     ]
                 }
@@ -114,15 +621,15 @@
                         {"label": "적용", "value": "파일 교체"},
                         {
                             "label": "변경",
-                            "value": "응용2 진척률 카드·표의 응용2 열·상태 갱신 안내를 탄소 탭에서도 보여 준다. 감추는 것은 공통 레이아웃 표 하나로 줄였다 — 이 저장소가 화면을 찍어내는 틀이라 탄소에는 해당하는 것이 없다"
+                            "value": "응용2 진척률 카드·표의 응용2 열·상태 갱신 안내를 탄소 탭에서도 보여 줍니다. 감추는 것은 공통 레이아웃 표 하나로 줄였습니다 — 이 저장소가 화면을 찍어내는 틀이라 탄소에는 해당하는 것이 없습니다"
                         },
                         {
                             "label": "이유",
-                            "value": "탄소 화면도 응용2 상태를 기업·기관과 똑같이 이 저장소에서 관리한다. 표에 열이 없으면 어느 화면이 남았는지 볼 자리가 없다"
+                            "value": "탄소 화면도 응용2 상태를 기업·기관과 똑같이 이 저장소에서 관리합니다. 표에 열이 없으면 어느 화면이 남았는지 볼 자리가 없습니다"
                         },
                         {
                             "label": "사용",
-                            "value": "응용2팀은 유형과 관계없이 같은 방법으로 고친다 — 뎁스 배지를 눌러 키를 복사하고 `publishing-index.json` 에서 그 키를 찾아 `application2Status` 를 적는다"
+                            "value": "응용2팀은 유형과 관계없이 같은 방법으로 고칩니다 — 뎁스 배지를 눌러 키를 복사하고 `publishing-index.json` 에서 그 키를 찾아 `application2Status` 를 적습니다"
                         }
                     ]
                 },
@@ -135,11 +642,11 @@
                         {"label": "적용", "value": "지정한 파일만 교체"},
                         {
                             "label": "변경",
-                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄다. 화면 추가·삭제는 없고 `자가진단 > 인벤토리 배출량 산정` 3건(자신·항목 선택·상세 입력)이 완료로 올라갔다"
+                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄습니다. 화면 추가·삭제는 없고 `자가진단 > 인벤토리 배출량 산정` 3건(자신·항목 선택·상세 입력)이 완료로 올라갔습니다"
                         },
                         {
                             "label": "결과",
-                            "value": "탄소 UIUX 진척률이 82% → 86%(63/73)로 오르고 화면 주소가 54건에서 57건이 된다. 응용2는 아직 값이 없어 0%(0/73)에서 시작한다"
+                            "value": "탄소 UIUX 진척률이 82% → 86%(63/73)로 오르고 화면 주소가 54건에서 57건이 됩니다. 응용2는 아직 값이 없어 0%(0/73)에서 시작합니다"
                         }
                     ]
                 }
@@ -158,19 +665,19 @@
                         {"label": "적용", "value": "지정한 파일만 교체"},
                         {
                             "label": "변경",
-                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄다. 선도기업 신청 3차 `목표달성 평가` 갈래가 4건 늘고(일반기업 미달성, 목표관리업체 달성·절대배출량 달성·전 기준 미달) `일반기업 · 달성` 1건이 완료로 올라갔다. 삭제된 화면은 없다"
+                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄습니다. 선도기업 신청 3차 `목표달성 평가` 갈래가 4건 늘고(일반기업 미달성, 목표관리업체 달성·절대배출량 달성·전 기준 미달) `일반기업 · 달성` 1건이 완료로 올라갔습니다. 삭제된 화면은 없습니다"
                         },
                         {
                             "label": "상태",
-                            "value": "탄소 FO 의 `개발 수정완료` 는 우리 상태 집합에 없는 값이라 완료로 옮겨 센다 — 이번에는 `자가진단 > 평가지표 작성` 1건이 해당한다"
+                            "value": "탄소 FO 의 `개발 수정완료` 는 우리 상태 집합에 없는 값이라 완료로 옮겨 셉니다 — 이번에는 `자가진단 > 평가지표 작성` 1건이 해당합니다"
                         },
                         {
                             "label": "링크",
-                            "value": "완료된 화면 중 탄소 FO 에 실제로 화면이 있는 54건에만 주소를 단다. 완료 60건 가운데 다운로드용 `Link` 5건과 하위 화면만 있는 `마이페이지` 는 그쪽에도 화면이 없어 링크를 두지 않는다"
+                            "value": "완료된 화면 중 탄소 FO 에 실제로 화면이 있는 54건에만 주소를 답니다. 완료 60건 가운데 다운로드용 `Link` 5건과 하위 화면만 있는 `마이페이지` 는 그쪽에도 화면이 없어 링크를 두지 않습니다"
                         },
                         {
                             "label": "결과",
-                            "value": "탄소가 69건에서 73건이 되고 UIUX 진척률이 80% → 82%(60/73)로 오른다"
+                            "value": "탄소가 69건에서 73건이 되고 UIUX 진척률이 80% → 82%(60/73)로 오릅니다"
                         }
                     ]
                 }
@@ -189,15 +696,15 @@
                         {"label": "적용", "value": "지정한 파일만 교체"},
                         {
                             "label": "변경",
-                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄다. 마이페이지 갈래가 6건 늘고(회원정보 수정 3건·현황조회 3건) 6건이 완료로 올라갔다. `현황조회 > 보안요청` 은 `보완요청` 으로 바뀌어 이전 항목이 빠진다"
+                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄습니다. 마이페이지 갈래가 6건 늘고(회원정보 수정 3건·현황조회 3건) 6건이 완료로 올라갔습니다. `현황조회 > 보안요청` 은 `보완요청` 으로 바뀌어 이전 항목이 빠집니다"
                         },
                         {
                             "label": "링크",
-                            "value": "완료된 화면 중 탄소 FO 에 실제로 화면이 있는 49건에만 주소를 단다. 완료 55건 가운데 다운로드용 `Link` 5건과 하위 화면만 있는 `마이페이지` 는 그쪽에도 화면이 없어 링크를 두지 않는다"
+                            "value": "완료된 화면 중 탄소 FO 에 실제로 화면이 있는 49건에만 주소를 답니다. 완료 55건 가운데 다운로드용 `Link` 5건과 하위 화면만 있는 `마이페이지` 는 그쪽에도 화면이 없어 링크를 두지 않습니다"
                         },
                         {
                             "label": "결과",
-                            "value": "탄소가 64건에서 69건이 되고 UIUX 진척률이 67% → 80%(55/69)로 오른다. 진행중이던 1건이 마감돼 남은 것은 완료 55·대기중 14다"
+                            "value": "탄소가 64건에서 69건이 되고 UIUX 진척률이 67% → 80%(55/69)로 오릅니다. 진행중이던 1건이 마감돼 남은 것은 완료 55·대기중 14입니다"
                         }
                     ]
                 }
@@ -216,15 +723,15 @@
                         {"label": "적용", "value": "지정한 파일만 교체"},
                         {
                             "label": "변경",
-                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄다. 화면 4건이 늘고(자가진단 상세 입력·결과 확인 적정/부적정, 3차 상세 입력) 21건이 완료로 올라갔다. 삭제된 화면은 없고 기업·기관 IA 도 그대로다"
+                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄습니다. 화면 4건이 늘고(자가진단 상세 입력·결과 확인 적정/부적정, 3차 상세 입력) 21건이 완료로 올라갔습니다. 삭제된 화면은 없고 기업·기관 IA 도 그대로입니다"
                         },
                         {
                             "label": "링크",
-                            "value": "완료된 화면 중 탄소 FO 에 실제로 화면이 있는 38건에만 주소를 단다. 완료 43건 가운데 다운로드용 `Link` 5건은 그쪽에도 화면이 없어 링크를 두지 않는다"
+                            "value": "완료된 화면 중 탄소 FO 에 실제로 화면이 있는 38건에만 주소를 답니다. 완료 43건 가운데 다운로드용 `Link` 5건은 그쪽에도 화면이 없어 링크를 두지 않습니다"
                         },
                         {
                             "label": "결과",
-                            "value": "탄소가 60건에서 64건이 되고 UIUX 진척률이 35% → 67%(43/64)로 오른다. 진행중 1건이 처음 잡힌다"
+                            "value": "탄소가 60건에서 64건이 되고 UIUX 진척률이 35% → 67%(43/64)로 오릅니다. 진행중 1건이 처음 잡힙니다"
                         }
                     ]
                 }
@@ -240,18 +747,18 @@
                     "title": "퍼블리싱 인덱스 — 응용2 상태 39건 갱신 · 탄소 FO IA 현행화",
                     "details": [
                         {"label": "대상", "value": "src/content/publishing-guide/publishing-index.json"},
-                        {"label": "적용", "value": "지정한 파일만 교체 — 두 변경이 한 파일에 담긴다"},
+                        {"label": "적용", "value": "지정한 파일만 교체 — 두 변경이 한 파일에 담깁니다"},
                         {
                             "label": "응용2",
-                            "value": "응용2팀이 화면 39건의 `application2Status` 를 완료로 올렸다(기업 18 · 기관 21). 지난 릴리스에서 연 소개·전체메뉴 16건이 그대로 들어 있다"
+                            "value": "응용2팀이 화면 39건의 `application2Status` 를 완료로 올렸습니다(기업 18 · 기관 21). 지난 릴리스에서 연 소개·전체메뉴 16건이 그대로 들어 있습니다"
                         },
                         {
                             "label": "탄소",
-                            "value": "탄소 FO 저장소의 현행 IA(`V1.3_260826`) 60건으로 갈아끼우고, 완료된 21건에 배포 화면 주소(`externalHref`)를 달았다 — 나머지 39건은 탄소 FO 에도 아직 화면이 없어 링크를 두지 않는다. K-택소노미 적합성평가·공통·푸터가 빠지고 선도기업 신청 진입 6건과 마이페이지 갈래가 들어왔다"
+                            "value": "탄소 FO 저장소의 현행 IA(`V1.3_260826`) 60건으로 갈아끼우고, 완료된 21건에 배포 화면 주소(`externalHref`)를 달았습니다 — 나머지 39건은 탄소 FO 에도 아직 화면이 없어 링크를 두지 않습니다. K-택소노미 적합성평가·공통·푸터가 빠지고 선도기업 신청 진입 6건과 마이페이지 갈래가 들어왔습니다"
                         },
                         {
                             "label": "결과",
-                            "value": "응용2 진척률이 기업 66% → 77%, 기관 58% → 72% 로 오르고, 탄소는 56건에서 60건이 되며 UIUX 35%(21/60)가 처음 잡힌다. 기업·기관 IA 구조와 UIUX 상태는 그대로다"
+                            "value": "응용2 진척률이 기업 66% → 77%, 기관 58% → 72% 로 오르고, 탄소는 56건에서 60건이 되며 UIUX 35%(21/60)가 처음 잡힙니다. 기업·기관 IA 구조와 UIUX 상태는 그대로입니다"
                         }
                     ]
                 }
@@ -270,14 +777,14 @@
                             "label": "대상",
                             "value": "src/app/(user-type)/corp/(service)/(logged-out)/guide/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/pricing/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/platform/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/platform/technology-evaluation/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/platform/patent-evaluation/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/platform/k-bigx-report/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/platform/carbon-neutrality/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/guide/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/pricing/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/platform/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/platform/technology-evaluation/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/platform/patent-evaluation/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/platform/k-bigx-report/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/platform/carbon-neutrality/page.tsx"
                         },
-                        {"label": "적용", "value": "신규 파일 추가. 기업·기관 각 7건이고 다른 파일에 영향이 없다"},
+                        {"label": "적용", "value": "신규 파일 추가. 기업·기관 각 7건이고 다른 파일에 영향이 없습니다"},
                         {
                             "label": "화면",
-                            "value": "이용약관과 같은 짜임(PageTitleBar + 임시 섹션)이고, 화면마다 다른 것은 제목과 브레드크럼뿐이다. 원고를 받기 전이라 본문은 `내용 추후 업데이트` 한 줄이다"
+                            "value": "이용약관과 같은 짜임(PageTitleBar + 임시 섹션)이고, 화면마다 다른 것은 제목과 브레드크럼뿐입니다. 원고를 받기 전이라 본문은 `내용 추후 업데이트` 한 줄입니다"
                         },
                         {
                             "label": "참고",
-                            "value": "화면명은 화면정의서 라벨을 따랐다(`기술평가 소개`). 헤더 메뉴의 `기술평가` 와 다르다"
+                            "value": "화면명은 화면정의서 라벨을 따랐습니다(`기술평가 소개`). 헤더 메뉴의 `기술평가` 와 다릅니다"
                         }
                     ]
                 },
@@ -290,18 +797,18 @@
                             "label": "대상",
                             "value": "src/app/(user-type)/corp/full-menu/page.tsx\nsrc/app/(user-type)/org/full-menu/page.tsx\nsrc/components/custom/full-menu-auto-open.tsx"
                         },
-                        {"label": "적용", "value": "신규 파일 추가. 세 파일을 함께 받는다"},
+                        {"label": "적용", "value": "신규 파일 추가. 세 파일을 함께 받습니다"},
                         {
                             "label": "화면",
-                            "value": "홈과 같은 메인 랜딩 화면을 그대로 두고 전체 메뉴만 연 상태로 시작한다. 메뉴를 닫으면 그 아래 홈이 드러난다"
+                            "value": "홈과 같은 메인 랜딩 화면을 그대로 두고 전체 메뉴만 연 상태로 시작합니다. 메뉴를 닫으면 그 아래 홈이 드러납니다"
                         },
                         {
                             "label": "방식",
-                            "value": "여는 일은 화면 쪽 조각(`FullMenuAutoOpen`)이 헤더의 메뉴 버튼을 한 번 눌러 맡는다 — Header·PageLayout·MainPageScreen 은 손대지 않았으므로 다른 화면은 하나도 변하지 않는다"
+                            "value": "여는 일은 화면 쪽 조각(`FullMenuAutoOpen`)이 헤더의 메뉴 버튼을 한 번 눌러 맡습니다 — Header·PageLayout·MainPageScreen 은 손대지 않았으므로 다른 화면은 하나도 변하지 않습니다"
                         },
                         {
                             "label": "위치",
-                            "value": "홈과 같은 이유로 라우트 그룹 밖(`corp/full-menu`·`org/full-menu`)에 둔다 — 레이아웃 안에 두면 Header 가 겹친다"
+                            "value": "홈과 같은 이유로 라우트 그룹 밖(`corp/full-menu`·`org/full-menu`)에 둡니다 — 레이아웃 안에 두면 Header 가 겹칩니다"
                         }
                     ]
                 },
@@ -313,11 +820,11 @@
                         {"label": "대상", "value": "src/constants/theme-routes.ts"},
                         {
                             "label": "적용",
-                            "value": "지정한 파일만 교체. 위 [신규 추가] `전체메뉴 화면 2건` 과 함께 반영한다"
+                            "value": "지정한 파일만 교체. 위 [신규 추가] `전체메뉴 화면 2건` 과 함께 반영합니다"
                         },
                         {
                             "label": "변경",
-                            "value": "mainpage 테마 경로에 `/corp/full-menu`·`/org/full-menu` 를 더한다. 빠지면 홈과 같은 화면인데 그 두 경로만 기본 테마로 떨어진다"
+                            "value": "mainpage 테마 경로에 `/corp/full-menu`·`/org/full-menu` 를 더합니다. 빠지면 홈과 같은 화면인데 그 두 경로만 기본 테마로 떨어집니다"
                         }
                     ]
                 },
@@ -332,11 +839,11 @@
                         },
                         {
                             "label": "적용",
-                            "value": "지정한 파일만 교체. 화면 경로 정보(`screen-registry.json`)는 바뀌지 않았다 — 16건 모두 이미 등록돼 있었다"
+                            "value": "지정한 파일만 교체. 화면 경로 정보(`screen-registry.json`)는 바뀌지 않았습니다 — 16건 모두 이미 등록돼 있었습니다"
                         },
                         {
                             "label": "변경",
-                            "value": "이번에 연 16건의 UIUX 상태를 대기중에서 완료로 바꾼다. 응용2 상태와 IA 구조는 그대로다"
+                            "value": "이번에 연 16건의 UIUX 상태를 대기중에서 완료로 바꿉니다. 응용2 상태와 IA 구조는 그대로입니다"
                         }
                     ]
                 }
@@ -355,9 +862,9 @@
                         {"label": "적용", "value": "지정한 파일만 교체"},
                         {
                             "label": "변경",
-                            "value": "응용2팀이 화면 22건의 `application2Status` 를 완료로 올렸다(기업 6 · 기관 16). IA 구조와 퍼블리싱 상태(UIUX)는 그대로다"
+                            "value": "응용2팀이 화면 22건의 `application2Status` 를 완료로 올렸습니다(기업 6 · 기관 16). IA 구조와 퍼블리싱 상태(UIUX)는 그대로입니다"
                         },
-                        {"label": "결과", "value": "응용2 진척률이 기업 62% → 66%, 기관 48% → 58% 로 오른다"}
+                        {"label": "결과", "value": "응용2 진척률이 기업 62% → 66%, 기관 48% → 58% 로 오릅니다"}
                     ]
                 }
             ]
@@ -375,10 +882,10 @@
                             "label": "대상",
                             "value": "src/content/publishing-guide/types.ts\nsrc/content/publishing-guide/index.ts"
                         },
-                        {"label": "적용", "value": "두 파일을 함께 교체한다 — 타입과 파서가 한 세트다"},
+                        {"label": "적용", "value": "두 파일을 함께 교체합니다 — 타입과 파서가 한 세트입니다"},
                         {
                             "label": "변경",
-                            "value": "`UserType` 에 `탄소` 추가. 화면 주소를 적는 `externalHref` 와 탄소 FO 저장소·배포 주소를 적는 `ExternalProject` 를 더했다"
+                            "value": "`UserType` 에 `탄소` 추가. 화면 주소를 적는 `externalHref` 와 탄소 FO 저장소·배포 주소를 적는 `ExternalProject` 를 더했습니다"
                         }
                     ]
                 },
@@ -391,9 +898,9 @@
                         {"label": "적용", "value": "지정한 파일만 교체"},
                         {
                             "label": "변경",
-                            "value": "탄소 FO IA 56건과 저장소·배포 주소를 더하고, 응용2팀이 화면 54건의 `application2Status` 를 완료로 올렸다(기업 25 · 기관 29). 기업·기관 IA 구조와 퍼블리싱 상태(UIUX)는 그대로다"
+                            "value": "탄소 FO IA 56건과 저장소·배포 주소를 더하고, 응용2팀이 화면 54건의 `application2Status` 를 완료로 올렸습니다(기업 25 · 기관 29). 기업·기관 IA 구조와 퍼블리싱 상태(UIUX)는 그대로입니다"
                         },
-                        {"label": "결과", "value": "응용2 진척률이 기업 47% → 62%, 기관 29% → 48% 로 오른다"}
+                        {"label": "결과", "value": "응용2 진척률이 기업 47% → 62%, 기관 29% → 48% 로 오릅니다"}
                     ]
                 },
                 {
@@ -402,10 +909,10 @@
                     "title": "퍼블리싱 인덱스 화면 — 탄소 탭",
                     "details": [
                         {"label": "대상", "value": "src/components/custom/publishing-index.tsx"},
-                        {"label": "적용", "value": "파일 교체. 위 스키마·데이터 카드와 한 벌로 반영한다"},
+                        {"label": "적용", "value": "파일 교체. 위 스키마·데이터 카드와 한 벌로 반영합니다"},
                         {
                             "label": "변경",
-                            "value": "유형 필터에 탄소를 더하고, 탄소 탭에서 응용2·공통 레이아웃 표를 감춘다. 저장소·배포 배지와 `externalHref` 링크·뎁스 배지 키 복사가 함께 동작한다"
+                            "value": "유형 필터에 탄소를 더하고, 탄소 탭에서 응용2·공통 레이아웃 표를 감춥니다. 저장소·배포 배지와 `externalHref` 링크·뎁스 배지 키 복사가 함께 동작합니다"
                         }
                     ]
                 }
@@ -423,19 +930,19 @@
                         {"label": "대상", "value": "tokens.json"},
                         {
                             "label": "적용",
-                            "value": "지정한 파일만 교체한 뒤 `yarn tokens` 로 `src/app/tokens.css` 를 다시 생성한다. 생성물은 저장소에 두지 않으므로 파일만 받으면 된다(`predev`·`prebuild` 에 포함돼 있어 dev·build 시 자동 생성)"
+                            "value": "지정한 파일만 교체한 뒤 `yarn tokens` 로 `src/app/tokens.css` 를 다시 생성합니다. 생성물은 저장소에 두지 않으므로 파일만 받으면 됩니다(`predev`·`prebuild` 에 포함돼 있어 dev·build 시 자동 생성)"
                         },
                         {
                             "label": "변경",
-                            "value": "Figma 색 변수 전체(brand 7계열·system 4계열·common)를 대조해 달라진 두 값을 반영 — `blue.500` `#3f7deb → #3172e2`, `info.500` `#3674da → #3172e2`. 나머지 값은 모두 같았고 새로 생긴 색은 없다"
+                            "value": "Figma 색 변수 전체(brand 7계열·system 4계열·common)를 대조해 달라진 두 값을 반영 — `blue.500` `#3f7deb → #3172e2`, `info.500` `#3674da → #3172e2`. 나머지 값은 모두 같았고 새로 생긴 색은 없습니다"
                         },
                         {
                             "label": "결과",
-                            "value": "라이트 모드에서 `--ds-primary`·`--ds-ring`·`--ds-secondary-strong`·`--ds-chart-1`·`--ds-sidebar-ring` 과 배지의 `badge-solid-info`·`border-info-500` 이 함께 이동한다. 다크·메인페이지는 `blue.300`·`info.300` 을 쓰므로 영향 없음"
+                            "value": "라이트 모드에서 `--ds-primary`·`--ds-ring`·`--ds-secondary-strong`·`--ds-chart-1`·`--ds-sidebar-ring` 과 배지의 `badge-solid-info`·`border-info-500` 이 함께 이동합니다. 다크·메인페이지는 `blue.300`·`info.300` 을 쓰므로 영향 없음"
                         },
                         {
                             "label": "함께",
-                            "value": "아래 ListMarker 가 쓰는 `size.list-dot-sm`(3px)도 이 파일에 함께 들어 있다 — 토큰 없이 컴포넌트만 받으면 점 크기가 지정되지 않으므로 이 파일을 먼저 반영한다"
+                            "value": "아래 ListMarker 가 쓰는 `size.list-dot-sm`(3px)도 이 파일에 함께 들어 있습니다 — 토큰 없이 컴포넌트만 받으면 점 크기가 지정되지 않으므로 이 파일을 먼저 반영합니다"
                         }
                     ]
                 },
@@ -450,15 +957,15 @@
                         },
                         {
                             "label": "적용",
-                            "value": "`size` 에 `xs` 를 더한 파일로 교체. 기존 `sm`(28px)·`lg`(40px)는 종전과 같아 지금 쓰고 있는 배지는 하나도 변하지 않는다"
+                            "value": "`size` 에 `xs` 를 더한 파일로 교체. 기존 `sm`(28px)·`lg`(40px)는 종전과 같아 지금 쓰고 있는 배지는 하나도 변하지 않습니다"
                         },
                         {
                             "label": "변경",
-                            "value": "`xs` 는 높이 24px · 글자 12/18(`typo-caption-medium`) · 라운드 8px · 좌우 여백 round 8px·pill 12px. Figma badge 세트의 `size=small` 이며, Figma 의 `size=large` 가 프로젝트 `sm` 에 해당한다"
+                            "value": "`xs` 는 높이 24px · 글자 12/18(`typo-caption-medium`) · 라운드 8px · 좌우 여백 round 8px·pill 12px. Figma badge 세트의 `size=small` 이며, Figma 의 `size=large` 가 프로젝트 `sm` 에 해당합니다"
                         },
                         {
                             "label": "참고",
-                            "value": "시안이 이 크기를 round 로만 그려 두어 pill 여백은 다른 크기와 같은 12px 를 따랐고, 최소 너비는 두지 않았다(`sm` 의 60px 는 유지)"
+                            "value": "시안이 이 크기를 round 로만 그려 두어 pill 여백은 다른 크기와 같은 12px 를 따랐고, 최소 너비는 두지 않았습니다(`sm` 의 60px 는 유지)"
                         },
                         {
                             "label": "가이드",
@@ -477,13 +984,13 @@
                         },
                         {
                             "label": "적용",
-                            "value": "`type` 에 `unordered-small` 을 더한 파일로 교체. 기존 `unordered`·`ordered` 는 종전과 같다"
+                            "value": "`type` 에 `unordered-small` 을 더한 파일로 교체. 기존 `unordered`·`ordered` 는 종전과 같습니다"
                         },
                         {
                             "label": "변경",
-                            "value": "칸 12×20 · 점 3×3 원형 · 색 `foreground-subtle`. Figma `list_atomic_bullet` 의 `type=unordered_small` 이며, 13px 본문 옆에 놓는 작은 불릿이다(폭은 일반 점과 같은 12px 라 들여쓰기가 어긋나지 않는다)"
+                            "value": "칸 12×20 · 점 3×3 원형 · 색 `foreground-subtle`. Figma `list_atomic_bullet` 의 `type=unordered_small` 이며, 13px 본문 옆에 놓는 작은 불릿입니다(폭은 일반 점과 같은 12px 라 들여쓰기가 어긋나지 않습니다)"
                         },
-                        {"label": "순서", "value": "위 토큰 파일(`size.list-dot-sm`)을 함께 반영해야 한다"},
+                        {"label": "순서", "value": "위 토큰 파일(`size.list-dot-sm`)을 함께 반영해야 합니다"},
                         {
                             "label": "가이드",
                             "value": "[ListMarker](/component-guide/list-marker) 의 변형 목록·규격 표·Props 에 추가"
@@ -499,11 +1006,11 @@
                         {"label": "적용", "value": "이전/다음 버튼의 좌우 여백을 12px 에서 8px 로 고친 파일로 교체"},
                         {
                             "label": "변경",
-                            "value": "Figma `pagination_item` 의 pre/next 폭이 68px(여백 8 + 아이콘 20 + 간격 4 + 글자 28 + 여백 8)인데 76px 로 그려지고 있었다. 번호 버튼(40×40)·색·라운드는 시안과 이미 같아 그대로다"
+                            "value": "Figma `pagination_item` 의 pre/next 폭이 68px(여백 8 + 아이콘 20 + 간격 4 + 글자 28 + 여백 8)인데 76px 로 그려지고 있었습니다. 번호 버튼(40×40)·색·라운드는 시안과 이미 같아 그대로입니다"
                         },
                         {
                             "label": "결과",
-                            "value": "페이지네이션을 쓰는 목록 화면에서 [이전]·[다음] 버튼이 좌우로 4px 씩 좁아진다"
+                            "value": "페이지네이션을 쓰는 목록 화면에서 [이전]·[다음] 버튼이 좌우로 4px 씩 좁아집니다"
                         }
                     ]
                 },
@@ -518,15 +1025,15 @@
                         },
                         {
                             "label": "변경",
-                            "value": "세 섹션의 그리드를 헤더와 같은 `grid-layout` 으로 통일. 1280px 미만에서 본문도 792px 로 좁아져 헤더와 좌우 시작선이 맞는다(1280px 이상은 종전과 같은 1200px)"
+                            "value": "세 섹션의 그리드를 헤더와 같은 `grid-layout` 으로 통일. 1280px 미만에서 본문도 792px 로 좁아져 헤더와 좌우 시작선이 맞습니다(1280px 이상은 종전과 같은 1200px)"
                         },
                         {
                             "label": "함께",
-                            "value": "[덮어쓰기] `[히어로] 제목의 태블릿 크기를 1279px 까지 적용` 과 한 벌로 반영한다"
+                            "value": "[덮어쓰기] `[히어로] 제목의 태블릿 크기를 1279px 까지 적용` 과 한 벌로 반영합니다"
                         },
                         {
                             "label": "중복",
-                            "value": "`tech-eval-section.tsx`·`main-second-section.tsx` 는 다른 카드에도 나온다 — 같은 릴리스의 변경이 모두 담긴 파일 하나를 받으면 된다"
+                            "value": "`tech-eval-section.tsx`·`main-second-section.tsx` 는 다른 카드에도 나옵니다 — 같은 릴리스의 변경이 모두 담긴 파일 하나를 받으면 됩니다"
                         },
                         {
                             "label": "커밋",
@@ -545,15 +1052,15 @@
                         },
                         {
                             "label": "적용",
-                            "value": "메인 랜딩 화면 한 벌을 공통 자리에 신규 추가. 기업 홈·기관 홈·컴포넌트 가이드 목업이 같은 화면을 쓰므로, 화면마다 다른 값 두 개(`logoHref` · `technologyEvaluationHref`)만 prop 으로 받는다"
+                            "value": "메인 랜딩 화면 한 벌을 공통 자리에 신규 추가. 기업 홈·기관 홈·컴포넌트 가이드 목업이 같은 화면을 쓰므로, 화면마다 다른 값 두 개(`logoHref` · `technologyEvaluationHref`)만 prop 으로 받습니다"
                         },
                         {
                             "label": "삭제",
-                            "value": "src/app/component-guide/(demo)/main-page/main-page-header-state.tsx 를 함께 삭제해야 한다. 가이드 폴더 안에 있던 같은 파일을 공통 자리로 옮긴 것이며, 내용은 바뀌지 않았다"
+                            "value": "src/app/component-guide/(demo)/main-page/main-page-header-state.tsx 를 함께 삭제해야 합니다. 가이드 폴더 안에 있던 같은 파일을 공통 자리로 옮긴 것이며, 내용은 바뀌지 않았습니다"
                         },
                         {
                             "label": "주의",
-                            "value": "이 컴포넌트가 있어야 [덮어쓰기] `컴포넌트 가이드 메인페이지 목업` 과 [신규 추가] `기업 홈·기관 홈 화면` 이 동작한다 — 셋을 한 번에 반영한다"
+                            "value": "이 컴포넌트가 있어야 [덮어쓰기] `컴포넌트 가이드 메인페이지 목업` 과 [신규 추가] `기업 홈·기관 홈 화면` 이 동작합니다 — 셋을 한 번에 반영합니다"
                         }
                     ]
                 },
@@ -568,15 +1075,15 @@
                         },
                         {
                             "label": "적용",
-                            "value": "위 공통 컴포넌트에 경로 두 개만 넘기는 얇은 화면 신규 추가. 기업 홈은 `/corp/home`, 기관 홈은 `/org/home` 이며 화면정의서에 이미 등록돼 있던 경로다"
+                            "value": "위 공통 컴포넌트에 경로 두 개만 넘기는 얇은 화면 신규 추가. 기업 홈은 `/corp/home`, 기관 홈은 `/org/home` 이며 화면정의서에 이미 등록돼 있던 경로입니다"
                         },
                         {
                             "label": "화면",
-                            "value": "로고를 누르면 시작 페이지(`/`)로 가고, 3섹션 [기술평가] 시작하기는 기업 홈이 `/corp/technology-evaluation/tech-index/selection`, 기관 홈이 `/org/individual-evaluation/tech-index/selection` 로 간다"
+                            "value": "로고를 누르면 시작 페이지(`/`)로 가고, 3섹션 [기술평가] 시작하기는 기업 홈이 `/corp/technology-evaluation/tech-index/selection`, 기관 홈이 `/org/individual-evaluation/tech-index/selection` 로 갑니다"
                         },
                         {
                             "label": "위치",
-                            "value": "라우트 그룹 밖(`corp/home`·`org/home`)에 둔다 — `(logged-in)`·`(logged-out)` 레이아웃 안에 두면 그 레이아웃의 Header 와 메인페이지 Header 가 겹친다"
+                            "value": "라우트 그룹 밖(`corp/home`·`org/home`)에 둡니다 — `(logged-in)`·`(logged-out)` 레이아웃 안에 두면 그 레이아웃의 Header 와 메인페이지 Header 가 겹칩니다"
                         }
                     ]
                 },
@@ -591,7 +1098,7 @@
                         },
                         {
                             "label": "적용",
-                            "value": "신규 파일 추가. 아래 [덮어쓰기] `마크업 검증 문서` 가 import 하므로 함께 반영한다"
+                            "value": "신규 파일 추가. 아래 [덮어쓰기] `마크업 검증 문서` 가 import 하므로 함께 반영합니다"
                         }
                     ]
                 },
@@ -603,15 +1110,15 @@
                         {"label": "대상", "value": "src/components/theme/hero-section.variants.ts"},
                         {
                             "label": "적용",
-                            "value": "제목 크기 분기를 `max-lg:` 에서 `max-xl:` 로 넓힌 파일로 교체. 값은 종전과 같은 `clamp(32px, 24px + 2.1vw, 44px)` 이고 여백·간격 등 나머지 구간도 그대로다"
+                            "value": "제목 크기 분기를 `max-lg:` 에서 `max-xl:` 로 넓힌 파일로 교체. 값은 종전과 같은 `clamp(32px, 24px + 2.1vw, 44px)` 이고 여백·간격 등 나머지 구간도 그대로입니다"
                         },
                         {
                             "label": "결과",
-                            "value": "1024~1279px 구간이 PC 크기(48px)를 쓰던 것을 태블릿 크기로 바꿔, 컨테이너 폭이 갈리는 지점(1280px)에서 함께 갈린다. 1280px 이상 48px 과 1024px 미만은 종전 그대로다"
+                            "value": "1024~1279px 구간이 PC 크기(48px)를 쓰던 것을 태블릿 크기로 바꿔, 컨테이너 폭이 갈리는 지점(1280px)에서 함께 갈립니다. 1280px 이상 48px 과 1024px 미만은 종전 그대로입니다"
                         },
                         {
                             "label": "함께",
-                            "value": "위 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭` 과 한 벌로 반영한다 — 폭만 좁히고 제목을 48px 로 두면 카피 칸(384px)에서 글자가 지나치게 접힌다"
+                            "value": "위 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭` 과 한 벌로 반영합니다 — 폭만 좁히고 제목을 48px 로 두면 카피 칸(384px)에서 글자가 지나치게 접힙니다"
                         }
                     ]
                 },
@@ -626,19 +1133,19 @@
                         },
                         {
                             "label": "적용",
-                            "value": "`[기술평가]` 카드의 시작하기 경로를 데이터에 박아 두던 것을, 사용처가 넘긴 값으로 갈아끼우는 `buildTechEvalServices(href)` 방식으로 교체. 나머지 세 서비스(특허평가·K-BIGx·탄소중립)는 목업이 없어 종전대로 `#` 이다"
+                            "value": "`[기술평가]` 카드의 시작하기 경로를 데이터에 박아 두던 것을, 사용처가 넘긴 값으로 갈아끼우는 `buildTechEvalServices(href)` 방식으로 교체. 나머지 세 서비스(특허평가·K-BIGx·탄소중립)는 목업이 없어 종전대로 `#` 입니다"
                         },
                         {
                             "label": "변경",
-                            "value": "섹션 컴포넌트 둘(PC 롤링·모바일 정적)이 `technologyEvaluationHref` 를 받는다. 두 배치가 같은 경로를 쓰므로 화면마다 한 번만 정하면 된다"
+                            "value": "섹션 컴포넌트 둘(PC 롤링·모바일 정적)이 `technologyEvaluationHref` 를 받습니다. 두 배치가 같은 경로를 쓰므로 화면마다 한 번만 정하면 됩니다"
                         },
                         {
                             "label": "중복",
-                            "value": "`tech-eval-section.tsx` 는 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭`·[덮어쓰기] `메인페이지 3섹션 — 화면 폭에 맞는 한 벌만 렌더` 에도, `mobile-tech-eval-content.tsx` 는 [덮어쓰기] `제목처럼 읽히던 문단 정리` 에도 나온다. 카드마다 다른 버전이 있는 것이 아니라, 변경이 모두 담긴 파일 하나를 받으면 된다"
+                            "value": "`tech-eval-section.tsx` 는 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭`·[덮어쓰기] `메인페이지 3섹션 — 화면 폭에 맞는 한 벌만 렌더` 에도, `mobile-tech-eval-content.tsx` 는 [덮어쓰기] `제목처럼 읽히던 문단 정리` 에도 나옵니다. 카드마다 다른 버전이 있는 것이 아니라, 변경이 모두 담긴 파일 하나를 받으면 됩니다"
                         },
                         {
                             "label": "순서",
-                            "value": "위 [신규 추가] 공통 컴포넌트와 함께 반영한다 — `technologyEvaluationHref` 는 필수 값이라 한쪽만 넣으면 타입이 맞지 않는다"
+                            "value": "위 [신규 추가] 공통 컴포넌트와 함께 반영합니다 — `technologyEvaluationHref` 는 필수 값이라 한쪽만 넣으면 타입이 맞지 않습니다"
                         }
                     ]
                 },
@@ -654,9 +1161,9 @@
                         },
                         {
                             "label": "결과",
-                            "value": "**화면에 보이는 것과 동작은 종전과 완전히 같다** — 로고 링크·시작하기 경로·Skip Link·섹션 구성 모두 그대로다. 조립 코드를 기업 홈·기관 홈과 공유하려고 옮긴 것뿐이다"
+                            "value": "**화면에 보이는 것과 동작은 종전과 완전히 같다** — 로고 링크·시작하기 경로·Skip Link·섹션 구성 모두 그대로입니다. 조립 코드를 기업 홈·기관 홈과 공유하려고 옮긴 것뿐입니다"
                         },
-                        {"label": "순서", "value": "위 [신규 추가] `메인 랜딩 화면 공통 컴포넌트` 와 함께 반영한다"}
+                        {"label": "순서", "value": "위 [신규 추가] `메인 랜딩 화면 공통 컴포넌트` 와 함께 반영합니다"}
                     ]
                 },
                 {
@@ -667,15 +1174,15 @@
                         {"label": "대상", "value": "src/components/theme-provider.tsx\nsrc/constants/theme-routes.ts"},
                         {
                             "label": "적용",
-                            "value": "메인페이지 경로를 하나만 두고 `===` 로 비교하던 것을, 목록에 있는지 확인하는 방식으로 교체. 상수 이름이 `mainPagePath` 에서 `mainPagePaths` 로 바뀌므로 두 파일을 함께 받아야 한다"
+                            "value": "메인페이지 경로를 하나만 두고 `===` 로 비교하던 것을, 목록에 있는지 확인하는 방식으로 교체. 상수 이름이 `mainPagePath` 에서 `mainPagePaths` 로 바뀌므로 두 파일을 함께 받아야 합니다"
                         },
                         {
                             "label": "이유",
-                            "value": "같은 메인 랜딩 화면이 기업 홈·기관 홈·가이드 목업 세 경로에 있는데, 경로가 하나뿐이라 기업 홈·기관 홈이 mainpage 스킨을 받지 못하고 기본 테마로 떨어졌다"
+                            "value": "같은 메인 랜딩 화면이 기업 홈·기관 홈·가이드 목업 세 경로에 있는데, 경로가 하나뿐이라 기업 홈·기관 홈이 mainpage 스킨을 받지 못하고 기본 테마로 떨어졌습니다"
                         },
                         {
                             "label": "설정",
-                            "value": "목록에 있는 경로만 mainpage 로 고정되고 나머지는 기본 테마를 쓴다. 서비스에서 이 화면을 루트(`/`)에도 두면 `/` 를 목록에 추가한다"
+                            "value": "목록에 있는 경로만 mainpage 로 고정되고 나머지는 기본 테마를 씁니다. 서비스에서 이 화면을 루트(`/`)에도 두면 `/` 를 목록에 추가합니다"
                         }
                     ]
                 },
@@ -687,19 +1194,19 @@
                         {"label": "대상", "value": "src/components/custom/main-second-section.tsx"},
                         {
                             "label": "제목",
-                            "value": "대상 머리말(`중소벤쳐기업`·`금융·기관`)을 제목 밖 굵은 문단에서 `<h2>` 안의 줄로 옮긴다. 크기·굵기·간격은 시안 그대로이고, 제목처럼 보이는데 제목이 아닌 글이 사라져 WAVE `Possible heading` 이 걸리지 않는다[6.4.2]"
+                            "value": "대상 머리말(`중소벤쳐기업`·`금융·기관`)을 제목 밖 굵은 문단에서 `<h2>` 안의 줄로 옮깁니다. 크기·굵기·간격은 시안 그대로이고, 제목처럼 보이는데 제목이 아닌 글이 사라져 WAVE `Possible heading` 이 걸리지 않습니다[6.4.2]"
                         },
                         {
                             "label": "레일",
-                            "value": "진행 레일이 세 상태로 갈린다 — ① 화면에 들어오면 좌→우 계단식으로 채우고 ② 섹션 안에서 좌우로 교차하면 채운 순서를 거꾸로 되감고(1.85초) ③ 섹션을 아예 벗어나면 지연·길이 0 으로 그 자리에서 리셋한다"
+                            "value": "진행 레일이 세 상태로 갈립니다 — ① 화면에 들어오면 좌→우 계단식으로 채우고 ② 섹션 안에서 좌우로 교차하면 채운 순서를 거꾸로 되감고(1.85초) ③ 섹션을 아예 벗어나면 지연·길이 0 으로 그 자리에서 리셋합니다"
                         },
                         {
                             "label": "이유",
-                            "value": "첫 화면 레일이 교차 진행도를 보지 않아 두 번째 화면에 갔다 돌아와도 다 채워진 채였고, 되감는 1.85초 안에 다시 들어오면 반쯤 지워진 레일에서 이어져 버벅였다. 채우는 쪽은 조리개 상태와 무관하게 제 길이를 유지해, 3섹션에서 올라와 두 번째 화면으로 들어올 때도 계단식 재생이 살아 있다"
+                            "value": "첫 화면 레일이 교차 진행도를 보지 않아 두 번째 화면에 갔다 돌아와도 다 채워진 채였고, 되감는 1.85초 안에 다시 들어오면 반쯤 지워진 레일에서 이어져 버벅였습니다. 채우는 쪽은 조리개 상태와 무관하게 제 길이를 유지해, 3섹션에서 올라와 두 번째 화면으로 들어올 때도 계단식 재생이 살아 있습니다"
                         },
                         {
                             "label": "중복",
-                            "value": "이 파일은 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭` 카드에도 나온다. 카드마다 다른 버전이 있는 것이 아니라, 두 변경이 모두 담긴 파일 하나를 받으면 된다"
+                            "value": "이 파일은 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭` 카드에도 나옵니다. 카드마다 다른 버전이 있는 것이 아니라, 두 변경이 모두 담긴 파일 하나를 받으면 됩니다"
                         }
                     ]
                 },
@@ -714,19 +1221,19 @@
                         },
                         {
                             "label": "적용",
-                            "value": "본문보다 크거나 굵은 짧은 `<p>` 를 걷어낸 파일로 교체. 보이는 글·크기·굵기는 그대로다"
+                            "value": "본문보다 크거나 굵은 짧은 `<p>` 를 걷어낸 파일로 교체. 보이는 글·크기·굵기는 그대로입니다"
                         },
                         {
                             "label": "변경",
-                            "value": "히어로 지표 줄(`1,350,000 건의 특허분석`)과 기준 문구는 문단이 아니라 수치 한 줄의 이름표라 블록 `<span>` 으로 두고(목록 항목이라는 뜻은 감싸는 `<li>` 가 전한다), 모바일 3섹션의 서비스 이름은 아래 제목의 머리말이라 `<h2>` 안으로 옮긴다"
+                            "value": "히어로 지표 줄(`1,350,000 건의 특허분석`)과 기준 문구는 문단이 아니라 수치 한 줄의 이름표라 블록 `<span>` 으로 두고(목록 항목이라는 뜻은 감싸는 `<li>` 가 전합니다), 모바일 3섹션의 서비스 이름은 아래 제목의 머리말이라 `<h2>` 안으로 옮깁니다"
                         },
                         {
                             "label": "이유",
-                            "value": "WAVE 는 본문보다 크거나 굵은 짧은 `<p>` 를 `Possible heading`(제목처럼 보이는데 제목이 아닌 글)으로 짚는다. 가짜 제목 레벨을 만들지 않아 헤딩 계층(h1 → h2 → h3)은 그대로다"
+                            "value": "WAVE 는 본문보다 크거나 굵은 짧은 `<p>` 를 `Possible heading`(제목처럼 보이는데 제목이 아닌 글)으로 짚습니다. 가짜 제목 레벨을 만들지 않아 헤딩 계층(h1 → h2 → h3)은 그대로입니다"
                         },
                         {
                             "label": "중복",
-                            "value": "`mobile-tech-eval-content.tsx` 는 [덮어쓰기] `메인페이지 3섹션 서비스 CTA 경로` 카드에도 나온다. 두 변경이 모두 담긴 파일 하나를 받으면 된다"
+                            "value": "`mobile-tech-eval-content.tsx` 는 [덮어쓰기] `메인페이지 3섹션 서비스 CTA 경로` 카드에도 나옵니다. 두 변경이 모두 담긴 파일 하나를 받으면 됩니다"
                         }
                     ]
                 },
@@ -741,23 +1248,23 @@
                         },
                         {
                             "label": "적용",
-                            "value": "두 파일을 함께 교체한다 — 새 미디어쿼리 상수와 그 값을 검증하는 생성기가 한 세트다"
+                            "value": "두 파일을 함께 교체합니다 — 새 미디어쿼리 상수와 그 값을 검증하는 생성기가 한 세트입니다"
                         },
                         {
                             "label": "변경",
-                            "value": "PC 목차와 모바일 목록을 둘 다 그린 뒤 CSS 로 한쪽만 감추던 것을, 마운트 후 화면 폭에 맞는 한 벌만 그리도록 바꾼다. 첫 그림에서는 종전처럼 두 벌을 두어(판정 전) 반대 배치가 한 프레임 보이는 일을 막고, 판정이 끝나면 맞는 쪽만 남는다"
+                            "value": "PC 목차와 모바일 목록을 둘 다 그린 뒤 CSS 로 한쪽만 감추던 것을, 마운트 후 화면 폭에 맞는 한 벌만 그리도록 바꿉니다. 첫 그림에서는 종전처럼 두 벌을 두어(판정 전) 반대 배치가 한 프레임 보이는 일을 막고, 판정이 끝나면 맞는 쪽만 남습니다"
                         },
                         {
                             "label": "이유",
-                            "value": "같은 주소·같은 이름의 `[기술평가] 시작하기` 링크가 DOM 에 두 벌 있어 WAVE 가 `Redundant link` 로 짚었다. 감춰진 쪽까지 링크로 세기 때문이다"
+                            "value": "같은 주소·같은 이름의 `[기술평가] 시작하기` 링크가 DOM 에 두 벌 있어 WAVE 가 `Redundant link` 로 짚었습니다. 감춰진 쪽까지 링크로 세기 때문입니다"
                         },
                         {
                             "label": "검증",
-                            "value": "`TECH_EVAL_DESKTOP_QUERY` 가 `tokens.json` 의 `breakpoint.md` 와 어긋나면 `yarn tokens` 가 빌드를 세운다(`STACK_PAGER_QUERY`·`FORM_TABS_QUERY` 와 같은 방식) — 값이 갈리면 두 벌이 함께 보이거나 둘 다 사라진다"
+                            "value": "`TECH_EVAL_DESKTOP_QUERY` 가 `tokens.json` 의 `breakpoint.md` 와 어긋나면 `yarn tokens` 가 빌드를 세웁니다(`STACK_PAGER_QUERY`·`FORM_TABS_QUERY` 와 같은 방식) — 값이 갈리면 두 벌이 함께 보이거나 둘 다 사라집니다"
                         },
                         {
                             "label": "중복",
-                            "value": "이 파일은 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭`·[덮어쓰기] `메인페이지 3섹션 서비스 CTA 경로` 카드에도 나온다. 세 변경이 모두 담긴 파일 하나를 받으면 된다"
+                            "value": "이 파일은 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭`·[덮어쓰기] `메인페이지 3섹션 서비스 CTA 경로` 카드에도 나옵니다. 세 변경이 모두 담긴 파일 하나를 받으면 됩니다"
                         }
                     ]
                 },
@@ -772,19 +1279,19 @@
                         },
                         {
                             "label": "적용",
-                            "value": "지정한 파일만 교체. 화면 경로 정보(`screen-registry.json`)는 이번에 바뀌지 않았다 — 여섯 경로 모두 이미 등록돼 있었다"
+                            "value": "지정한 파일만 교체. 화면 경로 정보(`screen-registry.json`)는 이번에 바뀌지 않았습니다 — 여섯 경로 모두 이미 등록돼 있었습니다"
                         },
                         {
                             "label": "변경",
-                            "value": "기업·기관 `홈` 2건과 그 아래 `평가모형 선택`·`Tech-Index 선택 화면` 4건의 퍼블리싱 상태를 대기중에서 완료로 바꾼다"
+                            "value": "기업·기관 `홈` 2건과 그 아래 `평가모형 선택`·`Tech-Index 선택 화면` 4건의 퍼블리싱 상태를 대기중에서 완료로 바꿉니다"
                         },
                         {
                             "label": "함께",
-                            "value": "응용2팀이 직접 갱신한 15개 화면의 `application2Status`(약관·개인정보 처리방침·로그인 안내·실명인증·KTRS-FM 하위 화면 등)가 같은 파일에 담겨 있다. 퍼블리싱이 손댄 값이 아니라 표의 응용2 열에만 반영된다"
+                            "value": "응용2팀이 직접 갱신한 15개 화면의 `application2Status`(약관·개인정보 처리방침·로그인 안내·실명인증·KTRS-FM 하위 화면 등)가 같은 파일에 담겨 있습니다. 퍼블리싱이 손댄 값이 아니라 표의 응용2 열에만 반영됩니다"
                         },
                         {
                             "label": "참고",
-                            "value": "아래 4건은 화면정의서에서 같은 화면을 홈 트리에 한 번 더 적어 둔 행이라 자기 경로의 page 파일이 없다. 표에서 이동 버튼 없이 라벨만 나오는 것이 정상이며, 실제 화면은 기술평가 트리의 `Tech-Index > (0) 선택 화면` 에 연결돼 있다"
+                            "value": "아래 4건은 화면정의서에서 같은 화면을 홈 트리에 한 번 더 적어 둔 행이라 자기 경로의 page 파일이 없습니다. 표에서 이동 버튼 없이 라벨만 나오는 것이 정상이며, 실제 화면은 기술평가 트리의 `Tech-Index > (0) 선택 화면` 에 연결돼 있습니다"
                         }
                     ]
                 },
@@ -794,10 +1301,10 @@
                     "title": "마크업 검증 문서",
                     "details": [
                         {"label": "대상", "value": "src/app/component-guide/(guide)/validation-exceptions/page.tsx"},
-                        {"label": "적용", "value": "파일 교체. 위 [신규 추가] 데이터 파일과 함께 반영한다"},
+                        {"label": "적용", "value": "파일 교체. 위 [신규 추가] 데이터 파일과 함께 반영합니다"},
                         {
                             "label": "변경",
-                            "value": "서비스 화면 217개 전수 검사 결과로 문서를 다시 작성. 감리 제출용 가이드 페이지라 서비스 화면 동작에는 영향이 없다"
+                            "value": "서비스 화면 217개 전수 검사 결과로 문서를 다시 작성. 감리 제출용 가이드 페이지라 서비스 화면 동작에는 영향이 없습니다"
                         }
                     ]
                 }
@@ -815,15 +1322,15 @@
                         {"label": "대상", "value": "src/components/custom/customer-consent-agreement.tsx"},
                         {
                             "label": "변경",
-                            "value": "[동의 후 인증서명]이 곧바로 다음 단계로 가던 것을, 저장 뒤 약정서 전자서명 모달을 열도록 교체. 모달의 [법인인증]·[개인인증]은 둘 다 모달을 닫고 다음 단계로 보낸다"
+                            "value": "[동의 후 인증서명]이 곧바로 다음 단계로 가던 것을, 저장 뒤 약정서 전자서명 모달을 열도록 교체. 모달의 [법인인증]·[개인인증]은 둘 다 모달을 닫고 다음 단계로 보냅니다"
                         },
                         {
                             "label": "결과",
-                            "value": "동의 폼을 함께 쓰는 다섯 화면(기술평가 KTRS-FM·투자모형·Tech-Index 일반/창업, 마이페이지 대표자 이력)에 한 번에 반영된다. 각 화면의 다음 단계 경로(nextHref)는 종전과 같다"
+                            "value": "동의 폼을 함께 쓰는 다섯 화면(기술평가 KTRS-FM·투자모형·Tech-Index 일반/창업, 마이페이지 대표자 이력)에 한 번에 반영됩니다. 각 화면의 다음 단계 경로(nextHref)는 종전과 같습니다"
                         },
                         {
                             "label": "연동",
-                            "value": "두 인증은 외부 인증 연동 자리다. 법인·개인 각각의 인증서 절차와 \"둘 다 마쳐야 완료\" 규칙은 연동 때 이 자리에서 처리하고, 성공한 뒤 지금의 이동을 그대로 쓰면 된다"
+                            "value": "두 인증은 외부 인증 연동 자리입니다. 법인·개인 각각의 인증서 절차와 \"둘 다 마쳐야 완료\" 규칙은 연동 때 이 자리에서 처리하고, 성공한 뒤 지금의 이동을 그대로 쓰면 됩니다"
                         },
                         {
                             "label": "커밋",
@@ -843,7 +1350,7 @@
                         },
                         {
                             "label": "사용",
-                            "value": "다섯 화면이 같은 모달을 써서 화면마다 두지 않고 공통 자리에 둔다. 트리거로 열 때는 children 을, 단독 화면처럼 처음부터 열어 둘 때는 defaultOpen 을, 바깥에서 여닫을 때는 open·onOpenChange 를 넘긴다"
+                            "value": "다섯 화면이 같은 모달을 써서 화면마다 두지 않고 공통 자리에 둡니다. 트리거로 열 때는 children 을, 단독 화면처럼 처음부터 열어 둘 때는 defaultOpen 을, 바깥에서 여닫을 때는 open·onOpenChange 를 넘깁니다"
                         }
                     ]
                 },
@@ -858,11 +1365,11 @@
                         },
                         {
                             "label": "적용",
-                            "value": "화면정의서에 있으나 비어 있던 전자서명 하위 화면 다섯 개를 신규 추가. KTRS-FM 것이 본체이고 나머지 넷은 그 page 를 재수출하는 얇은 화면이라 구현 파일은 하나다"
+                            "value": "화면정의서에 있으나 비어 있던 전자서명 하위 화면 다섯 개를 신규 추가. KTRS-FM 것이 본체이고 나머지 넷은 그 page 를 재수출하는 얇은 화면이라 구현 파일은 하나입니다"
                         },
                         {
                             "label": "주의",
-                            "value": "위 [신규 추가] 모달 컴포넌트가 함께 있어야 한다 — 다섯 화면이 모두 그 컴포넌트를 가져다 쓴다"
+                            "value": "위 [신규 추가] 모달 컴포넌트가 함께 있어야 합니다 — 다섯 화면이 모두 그 컴포넌트를 가져다 씁니다"
                         }
                     ]
                 },
@@ -877,7 +1384,7 @@
                         },
                         {
                             "label": "적용",
-                            "value": "지정한 파일만 교체. 화면 경로 정보(screen-registry.json)는 이번에 바뀌지 않았다 — 다섯 경로는 이미 등록돼 있었고 화면만 없던 상태였다"
+                            "value": "지정한 파일만 교체. 화면 경로 정보(screen-registry.json)는 이번에 바뀌지 않았습니다 — 다섯 경로는 이미 등록돼 있었고 화면만 없던 상태였습니다"
                         },
                         {
                             "label": "변경",
@@ -885,7 +1392,7 @@
                         },
                         {
                             "label": "순서",
-                            "value": "위 [신규 추가] 화면과 함께 반영해야 한다. 화면 없이 인덱스만 반영하면 완료로 표시된 행이 실제로는 비어 있다"
+                            "value": "위 [신규 추가] 화면과 함께 반영해야 합니다. 화면 없이 인덱스만 반영하면 완료로 표시된 행이 실제로는 비어 있습니다"
                         }
                     ]
                 }
@@ -906,11 +1413,11 @@
                         },
                         {
                             "label": "변경",
-                            "value": "탭 폼에 체크리스트 경로를 문자열로 넘기던 것을, 값을 보고 갈 곳을 정하는 얇은 클라이언트 조각(`checklist-step-form`)으로 감싸도록 교체. 기관 화면의 기관용 탭 구성(`ORG_SELF_DIAGNOSIS_FORM_TABS`)은 그 조각이 들고 간다"
+                            "value": "탭 폼에 체크리스트 경로를 문자열로 넘기던 것을, 값을 보고 갈 곳을 정하는 얇은 클라이언트 조각(`checklist-step-form`)으로 감싸도록 교체. 기관 화면의 기관용 탭 구성(`ORG_SELF_DIAGNOSIS_FORM_TABS`)은 그 조각이 들고 갑니다"
                         },
                         {
                             "label": "결과",
-                            "value": "[다음]을 누르면 기업정보 탭에서 고른 업종코드에 따라 제조용·서비스용 체크리스트로 갈린다. 판정 기준(`isManufacturingIndustryCode`, KSIC 중분류 10~34)은 투자모형과 같은 공통 상수라 네 모형이 함께 쓴다"
+                            "value": "[다음]을 누르면 기업정보 탭에서 고른 업종코드에 따라 제조용·서비스용 체크리스트로 갈립니다. 판정 기준(`isManufacturingIndustryCode`, KSIC 중분류 10~34)은 투자모형과 같은 공통 상수라 네 모형이 함께 씁니다"
                         },
                         {
                             "label": "커밋",
@@ -926,11 +1433,11 @@
                         {"label": "대상", "value": "src/app/component-guide/(demo)/self-diagnosis/checklist/page.tsx"},
                         {
                             "label": "변경",
-                            "value": "데이터 import 를 `KTRS_FM_CHECKLIST` 에서 `KTRS_FM_MANUFACTURING_CHECKLIST` 로 교체. 화면 구성은 종전과 같다"
+                            "value": "데이터 import 를 `KTRS_FM_CHECKLIST` 에서 `KTRS_FM_MANUFACTURING_CHECKLIST` 로 교체. 화면 구성은 종전과 같습니다"
                         },
                         {
                             "label": "결과",
-                            "value": "목업 화면이라 업종 갈래 하나만 보여 준다. 문항 데이터가 두 벌로 갈리면서 이름이 바뀐 것을 따라간 것이고, 화면에서 달라지는 것은 생산·제작 과정과 원자재 수급 두 문항이 제조용 문장 한 줄로 보이는 점뿐이다"
+                            "value": "목업 화면이라 업종 갈래 하나만 보여 줍니다. 문항 데이터가 두 벌로 갈리면서 이름이 바뀐 것을 따라간 것이고, 화면에서 달라지는 것은 생산·제작 과정과 원자재 수급 두 문항이 제조용 문장 한 줄로 보이는 점뿐입니다"
                         },
                         {
                             "label": "커밋",
@@ -949,19 +1456,19 @@
                         },
                         {
                             "label": "적용",
-                            "value": "체크리스트 입력 화면을 업종코드별 두 화면으로 나눠 신규 추가하고, 2단계에서 갈 곳을 정하는 조각을 각 모형에 추가. 두 화면은 제목·단계·이전/다음 흐름이 같고 받는 문항 데이터만 다르다"
+                            "value": "체크리스트 입력 화면을 업종코드별 두 화면으로 나눠 신규 추가하고, 2단계에서 갈 곳을 정하는 조각을 각 모형에 추가. 두 화면은 제목·단계·이전/다음 흐름이 같고 받는 문항 데이터만 다릅니다"
                         },
                         {
                             "label": "삭제",
-                            "value": "업종코드로 갈리기 전의 단일 체크리스트 화면이라 진입 경로가 없어졌다. src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/page.tsx · src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/page.tsx 두 파일을 함께 삭제해야 한다"
+                            "value": "업종코드로 갈리기 전의 단일 체크리스트 화면이라 진입 경로가 없어졌습니다. src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/page.tsx · src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/page.tsx 두 파일을 함께 삭제해야 합니다"
                         },
                         {
                             "label": "주의",
-                            "value": "추가·삭제와 위 [Diff 확인]·[덮어쓰기] 항목은 한 번에 반영해야 한다. 링크 경로와 데이터 이름이 타입으로 검사되어 한쪽만 반영하면 빌드가 실패한다"
+                            "value": "추가·삭제와 위 [Diff 확인]·[덮어쓰기] 항목은 한 번에 반영해야 합니다. 링크 경로와 데이터 이름이 타입으로 검사되어 한쪽만 반영하면 빌드가 실패합니다"
                         },
                         {
                             "label": "범위",
-                            "value": "투자모형(기업·기관)은 종전과 같다. 이번 분리는 KTRS-FM 두 모형에만 해당하며, 투자모형이 쓰는 `industry-checklist.ts` 는 손대지 않았다"
+                            "value": "투자모형(기업·기관)은 종전과 같습니다. 이번 분리는 KTRS-FM 두 모형에만 해당하며, 투자모형이 쓰는 `industry-checklist.ts` 는 손대지 않았습니다"
                         }
                     ]
                 },
@@ -973,15 +1480,15 @@
                         {"label": "대상", "value": "src/content/technology-evaluation/ktrs-fm-checklist.ts"},
                         {
                             "label": "적용",
-                            "value": "문항 한 벌을 내보내던 파일을 업종코드별 두 벌(`KTRS_FM_MANUFACTURING_CHECKLIST`·`KTRS_FM_SERVICE_CHECKLIST`)을 내보내는 파일로 교체. 문항 글·보기·분기는 종전과 같다"
+                            "value": "문항 한 벌을 내보내던 파일을 업종코드별 두 벌(`KTRS_FM_MANUFACTURING_CHECKLIST`·`KTRS_FM_SERVICE_CHECKLIST`)을 내보내는 파일로 교체. 문항 글·보기·분기는 종전과 같습니다"
                         },
                         {
                             "label": "변경",
-                            "value": "시안에서 업종별로 갈리는 문항은 생산·제작 과정(`q17`)과 원자재 수급(`q18`) 둘뿐이라, 두 문장을 갈래별로 두고 나머지 문항은 한 벌을 두 데이터가 함께 쓴다(투자모형 `industry-checklist.ts` 와 같은 구조). 화면에는 고른 업종의 줄만 남는다"
+                            "value": "시안에서 업종별로 갈리는 문항은 생산·제작 과정(`q17`)과 원자재 수급(`q18`) 둘뿐이라, 두 문장을 갈래별로 두고 나머지 문항은 한 벌을 두 데이터가 함께 씁니다(투자모형 `industry-checklist.ts` 와 같은 구조). 화면에는 고른 업종의 줄만 남습니다"
                         },
                         {
                             "label": "이유",
-                            "value": "예전에는 두 줄을 한 화면에 함께 두고 제조·서비스 배지로 구분했는데, 배지를 걷어낸 뒤로는 해당 없는 업종의 문항까지 답하게 된다. 값 이름(`q17-manufacturing` 등)은 그대로라 제출 데이터의 모양은 바뀌지 않는다"
+                            "value": "예전에는 두 줄을 한 화면에 함께 두고 제조·서비스 배지로 구분했는데, 배지를 걷어낸 뒤로는 해당 없는 업종의 문항까지 답하게 됩니다. 값 이름(`q17-manufacturing` 등)은 그대로라 제출 데이터의 모양은 바뀌지 않습니다"
                         }
                     ]
                 },
@@ -996,17 +1503,17 @@
                         },
                         {
                             "label": "적용",
-                            "value": "지정한 파일만 교체. 세 파일은 반드시 함께 교체해야 한다 — 콘텐츠 관문이 빌드 시점에 두 JSON 의 화면 key 를 양방향으로 교차검증하므로, 하나만 바꾸면 빌드가 실패한다"
+                            "value": "지정한 파일만 교체. 세 파일은 반드시 함께 교체해야 합니다 — 콘텐츠 관문이 빌드 시점에 두 JSON 의 화면 key 를 양방향으로 교차검증하므로, 하나만 바꾸면 빌드가 실패합니다"
                         },
                         {
                             "label": "변경",
-                            "value": "기업·기관 KTRS-FM 의 (3) 체크리스트 입력 한 행을 [업종코드 제조 선택]·[업종코드 서비스 선택] 두 행으로 나누고, 두 행을 [선택한 업종코드별 페이지] 묶음 아래에 둔다. 이 묶음은 아래 모달 목록과 구분하기 위한 것이라 뎁스 번호를 차지하지 않는다(isGroupOnly). 화면 경로 레지스트리도 모형마다 체크리스트 1건에서 제조·서비스 2건이 된다"
+                            "value": "기업·기관 KTRS-FM 의 (3) 체크리스트 입력 한 행을 [업종코드 제조 선택]·[업종코드 서비스 선택] 두 행으로 나누고, 두 행을 [선택한 업종코드별 페이지] 묶음 아래에 둡니다. 이 묶음은 아래 모달 목록과 구분하기 위한 것이라 뎁스 번호를 차지하지 않습니다(isGroupOnly). 화면 경로 레지스트리도 모형마다 체크리스트 1건에서 제조·서비스 2건이 됩니다"
                         },
                         {
                             "label": "순서",
-                            "value": "위 [신규 추가] 화면과 함께 반영해야 표의 화면 이동 버튼이 실제 화면으로 간다. 화면 없이 인덱스만 반영하면 두 행이 미구현으로 표시된다"
+                            "value": "위 [신규 추가] 화면과 함께 반영해야 표의 화면 이동 버튼이 실제 화면으로 갑니다. 화면 없이 인덱스만 반영하면 두 행이 미구현으로 표시됩니다"
                         },
-                        {"label": "범위", "value": "투자모형(기업·기관)의 같은 묶음은 종전과 같다"}
+                        {"label": "범위", "value": "투자모형(기업·기관)의 같은 묶음은 종전과 같습니다"}
                     ]
                 }
             ]
@@ -1026,15 +1533,15 @@
                         },
                         {
                             "label": "변경",
-                            "value": "업종코드를 보고 갈 곳을 정하던 얇은 클라이언트 조각(`checklist-step-form`) 사용을 걷어내고, 탭 폼(`SelfDiagnosisTabsForm`)에 체크리스트 경로를 문자열로 다시 넘김. 기관 화면은 기관용 탭 구성(`ORG_SELF_DIAGNOSIS_FORM_TABS`)을 화면에서 직접 넘긴다"
+                            "value": "업종코드를 보고 갈 곳을 정하던 얇은 클라이언트 조각(`checklist-step-form`) 사용을 걷어내고, 탭 폼(`SelfDiagnosisTabsForm`)에 체크리스트 경로를 문자열로 다시 넘김. 기관 화면은 기관용 탭 구성(`ORG_SELF_DIAGNOSIS_FORM_TABS`)을 화면에서 직접 넘깁니다"
                         },
                         {
                             "label": "결과",
-                            "value": "[다음]을 누르면 업종코드와 관계없이 `/…/ktrs-fm/checklist` 한 화면으로 간다"
+                            "value": "[다음]을 누르면 업종코드와 관계없이 `/…/ktrs-fm/checklist` 한 화면으로 갑니다"
                         },
                         {
                             "label": "유지",
-                            "value": "업종코드 공통 상수(`industryCode`·`isManufacturingIndustryCode`), 기업정보 탭의 숨은 입력, 함수형 `nextHref` 는 그대로 둔다 — 투자모형(기업·기관)이 계속 쓴다"
+                            "value": "업종코드 공통 상수(`industryCode`·`isManufacturingIndustryCode`), 기업정보 탭의 숨은 입력, 함수형 `nextHref` 는 그대로 둡니다 — 투자모형(기업·기관)이 계속 씁니다"
                         },
                         {
                             "label": "커밋",
@@ -1057,11 +1564,11 @@
                         },
                         {
                             "label": "결과",
-                            "value": "한 화면에 제조·서비스 문장이 함께 놓여도 문장이 대상을 밝히므로 배지 없이 읽히고, 퍼블리싱 인덱스에만 있던 보증제한 업종 모달이 체크리스트에서 열린다. 기존 문항 유형의 렌더는 바뀌지 않는다"
+                            "value": "한 화면에 제조·서비스 문장이 함께 놓여도 문장이 대상을 밝히므로 배지 없이 읽히고, 퍼블리싱 인덱스에만 있던 보증제한 업종 모달이 체크리스트에서 열립니다. 기존 문항 유형의 렌더는 바뀌지 않습니다"
                         },
                         {
                             "label": "참고",
-                            "value": "투자모형 체크리스트 데이터는 `sector` 를 쓰지 않아 표시 변화가 없다"
+                            "value": "투자모형 체크리스트 데이터는 `sector` 를 쓰지 않아 표시 변화가 없습니다"
                         },
                         {
                             "label": "커밋",
@@ -1080,19 +1587,19 @@
                         },
                         {
                             "label": "적용",
-                            "value": "업종코드로 갈리기 전의 단일 체크리스트 입력 화면을 다시 추가. 문항은 `KTRS_FM_CHECKLIST` 한 벌이며 제출 검사·제출 전 최종 확인 모달·완료 화면 이동은 종전과 같다"
+                            "value": "업종코드로 갈리기 전의 단일 체크리스트 입력 화면을 다시 추가. 문항은 `KTRS_FM_CHECKLIST` 한 벌이며 제출 검사·제출 전 최종 확인 모달·완료 화면 이동은 종전과 같습니다"
                         },
                         {
                             "label": "삭제",
-                            "value": "업종코드로 갈린 두 화면과 그 갈림을 판단하던 조각이라 진입 경로가 없어졌다. src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/manufacturing/page.tsx · src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/service/page.tsx · src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/company-technology-info/checklist-step-form.tsx · src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/manufacturing/page.tsx · src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/service/page.tsx · src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/company-technology-info/checklist-step-form.tsx 여섯 파일을 함께 삭제해야 한다"
+                            "value": "업종코드로 갈린 두 화면과 그 갈림을 판단하던 조각이라 진입 경로가 없어졌습니다. src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/manufacturing/page.tsx · src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/service/page.tsx · src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/company-technology-info/checklist-step-form.tsx · src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/manufacturing/page.tsx · src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/service/page.tsx · src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/company-technology-info/checklist-step-form.tsx 여섯 파일을 함께 삭제해야 합니다"
                         },
                         {
                             "label": "주의",
-                            "value": "추가·삭제와 위 [Diff 확인] 변경은 한 번에 반영해야 한다. 링크 경로가 타입으로 검사되어 한쪽만 반영하면 빌드가 실패한다"
+                            "value": "추가·삭제와 위 [Diff 확인] 변경은 한 번에 반영해야 합니다. 링크 경로가 타입으로 검사되어 한쪽만 반영하면 빌드가 실패합니다"
                         },
                         {
                             "label": "범위",
-                            "value": "투자모형(기업·기관)의 업종코드별 체크리스트 화면은 그대로다. 이번 되돌림은 KTRS-FM 두 모형에만 해당한다"
+                            "value": "투자모형(기업·기관)의 업종코드별 체크리스트 화면은 그대로입니다. 이번 되돌림은 KTRS-FM 두 모형에만 해당합니다"
                         }
                     ]
                 },
@@ -1107,13 +1614,16 @@
                         },
                         {
                             "label": "적용",
-                            "value": "지정한 파일만 교체. 세 파일은 반드시 함께 교체해야 한다 — 콘텐츠 관문이 빌드 시점에 두 JSON 의 화면 key 를 양방향으로 교차검증하므로, 하나만 바꾸면 빌드가 실패한다"
+                            "value": "지정한 파일만 교체. 세 파일은 반드시 함께 교체해야 합니다 — 콘텐츠 관문이 빌드 시점에 두 JSON 의 화면 key 를 양방향으로 교차검증하므로, 하나만 바꾸면 빌드가 실패합니다"
                         },
                         {
                             "label": "변경",
-                            "value": "기업·기관 KTRS-FM 의 (3) 체크리스트 입력이 다시 자기 화면을 갖고, 그 아래 [선택한 업종코드별 페이지] 묶음(업종코드 제조 선택·업종코드 서비스 선택)을 걷어낸다. 화면 경로 레지스트리도 모형마다 2건에서 체크리스트 1건으로 되돌린다"
+                            "value": "기업·기관 KTRS-FM 의 (3) 체크리스트 입력이 다시 자기 화면을 갖고, 그 아래 [선택한 업종코드별 페이지] 묶음(업종코드 제조 선택·업종코드 서비스 선택)을 걷어냅니다. 화면 경로 레지스트리도 모형마다 2건에서 체크리스트 1건으로 되돌립니다"
                         },
-                        {"label": "범위", "value": "투자모형(기업·기관)의 [선택한 업종코드별 페이지] 묶음은 그대로다"}
+                        {
+                            "label": "범위",
+                            "value": "투자모형(기업·기관)의 [선택한 업종코드별 페이지] 묶음은 그대로입니다"
+                        }
                     ]
                 }
             ]
@@ -1131,11 +1641,11 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "로그인 상태 화면이 공유하는 목업 회원 정보를 한 파일로 모음. 기업 1건(법인 표기와 원본 기업명을 나눠 두어 헤더용 완성형과 마이페이지 [기업명] 칸 값을 한 값에서 만든다), 기관 회원 유형 3종(협약은행 · 협약기관 · 하위 계정), 유형이 정해지지 않은 기관 화면이 쓰는 기본 회원 1건"
+                            "value": "로그인 상태 화면이 공유하는 목업 회원 정보를 한 파일로 모음. 기업 1건(법인 표기와 원본 기업명을 나눠 두어 헤더용 완성형과 마이페이지 [기업명] 칸 값을 한 값에서 만듭니다), 기관 회원 유형 3종(협약은행 · 협약기관 · 하위 계정), 유형이 정해지지 않은 기관 화면이 쓰는 기본 회원 1건"
                         },
                         {
                             "label": "연동",
-                            "value": "로그인 세션(회원정보) 응답으로 교체하는 자리다. 회원명과 잔여 시간 모두 서버 값을 넣으면 된다"
+                            "value": "로그인 세션(회원정보) 응답으로 교체하는 자리입니다. 회원명과 잔여 시간 모두 서버 값을 넣으면 됩니다"
                         }
                     ]
                 },
@@ -1150,11 +1660,11 @@
                         },
                         {
                             "label": "변경",
-                            "value": "레이아웃 파일에 직접 적혀 있던 목업 회원 객체를 지우고 `@/constants/preview-user` 를 import 하도록 교체. 레이아웃이 넘기는 props 와 화면 구조는 그대로다"
+                            "value": "레이아웃 파일에 직접 적혀 있던 목업 회원 객체를 지우고 `@/constants/preview-user` 를 import 하도록 교체. 레이아웃이 넘기는 props 와 화면 구조는 그대로입니다"
                         },
                         {
                             "label": "결과",
-                            "value": "헤더의 회원명과 마이페이지의 회원 정보가 같은 값을 본다. 두 곳에 따로 적어 두어 한쪽만 고쳤을 때 같은 화면에서 다른 기업 이름이 보이던 문제를 막는다. 기업 목업 이름은 `한국미래기술혁신성장기업주식회사` 에서 `(주)한국미래기술혁신성장테크놀로지` 로 바뀌었고, 헤더 이름 칸(184px)에서 잘리는지 확인하기 위한 폭은 종전과 같다"
+                            "value": "헤더의 회원명과 마이페이지의 회원 정보가 같은 값을 봅니다. 두 곳에 따로 적어 두어 한쪽만 고쳤을 때 같은 화면에서 다른 기업 이름이 보이던 문제를 막습니다. 기업 목업 이름은 `한국미래기술혁신성장기업주식회사` 에서 `(주)한국미래기술혁신성장테크놀로지` 로 바뀌었고, 헤더 이름 칸(184px)에서 잘리는지 확인하기 위한 폭은 종전과 같습니다"
                         },
                         {
                             "label": "커밋",
@@ -1170,11 +1680,11 @@
                         {"label": "대상", "value": "src/components/composite/section-header.tsx"},
                         {
                             "label": "적용",
-                            "value": "SectionHeaderTitle·SectionHeaderDescription 에 `size` 를 추가한 파일로 교체. 기본값 `md` 는 종전 타이포(제목 `typo-h4-bold` · 설명 `typo-body-xl-regular`) 그대로라 기존 사용처는 손대지 않아도 같게 보인다"
+                            "value": "SectionHeaderTitle·SectionHeaderDescription 에 `size` 를 추가한 파일로 교체. 기본값 `md` 는 종전 타이포(제목 `typo-h4-bold` · 설명 `typo-body-xl-regular`) 그대로라 기존 사용처는 손대지 않아도 같게 보입니다"
                         },
                         {
                             "label": "사용",
-                            "value": "페이지 제목 아래에 화면 제목이 한 단계 더 있는 구성(마이페이지 등)에서 `size=\"lg\"` 를 쓴다 — 제목 `typo-h1-bold` · 설명 `typo-title-m-regular` 로, 단계형 화면의 StepHeader 와 같은 타이포 짝이다"
+                            "value": "페이지 제목 아래에 화면 제목이 한 단계 더 있는 구성(마이페이지 등)에서 `size=\"lg\"` 를 씁니다 — 제목 `typo-h1-bold` · 설명 `typo-title-m-regular` 로, 단계형 화면의 StepHeader 와 같은 타이포 짝입니다"
                         }
                     ]
                 },
@@ -1193,7 +1703,7 @@
                         },
                         {
                             "label": "사용",
-                            "value": "쓰는 화면의 앞 제목보다 한 단계 낮춘다 — 페이지 h1 아래면 2, 앞 제목이 h2 인 자리면 3. 크기만 큰 문단으로 두면 WAVE 가 \"Possible heading\" 으로 잡고 스크린리더의 제목 이동에서도 빠진다[6.4.2]"
+                            "value": "쓰는 화면의 앞 제목보다 한 단계 낮춥니다 — 페이지 h1 아래면 2, 앞 제목이 h2 인 자리면 3. 크기만 큰 문단으로 두면 WAVE 가 \"Possible heading\" 으로 잡고 스크린리더의 제목 이동에서도 빠집니다[6.4.2]"
                         },
                         {
                             "label": "가이드",
@@ -1214,7 +1724,7 @@
                         },
                         {
                             "label": "연동",
-                            "value": "선택지의 `value` 는 화면에 보이지 않는 제출용 키라 영문 소문자로 두었다. 실제 코드값이 정해지면 이 키만 바꾸면 된다"
+                            "value": "선택지의 `value` 는 화면에 보이지 않는 제출용 키라 영문 소문자로 두었습니다. 실제 코드값이 정해지면 이 키만 바꾸면 됩니다"
                         },
                         {
                             "label": "함께 적용",
@@ -1230,11 +1740,11 @@
                         {"label": "대상", "value": "src/components/composite/tech-index-representative-capability.tsx"},
                         {
                             "label": "적용",
-                            "value": "파일 안에 두었던 학력 선택지와 졸업년도 규칙을 지우고 `@/constants/representative-capability` 를 가져다 쓰는 파일로 교체. 화면 구성과 입력 규칙은 종전과 같다"
+                            "value": "파일 안에 두었던 학력 선택지와 졸업년도 규칙을 지우고 `@/constants/representative-capability` 를 가져다 쓰는 파일로 교체. 화면 구성과 입력 규칙은 종전과 같습니다"
                         },
                         {
                             "label": "이유",
-                            "value": "마이페이지 [대표자(경영자) 역량 및 경력] 화면이 같은 목록을 쓴다. 학력 구분은 화면마다 달라질 값이 아니라 한 벌만 두고, 한쪽만 고쳐 두 화면의 선택지가 달라지는 일을 막는다"
+                            "value": "마이페이지 [대표자(경영자) 역량 및 경력] 화면이 같은 목록을 씁니다. 학력 구분은 화면마다 달라질 값이 아니라 한 벌만 두고, 한쪽만 고쳐 두 화면의 선택지가 달라지는 일을 막습니다"
                         },
                         {"label": "함께 적용", "value": "신규 추가 카드의 상수 파일과 같은 커밋 단위로 적용"}
                     ]
@@ -1251,15 +1761,15 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "마이페이지의 모든 화면이 함께 쓰는 조각이다. `MypageSidebar` 는 기업·기관 메뉴를 한 벌로 들고 화면에서는 어느 쪽인지(`userType`)만 넘긴다 — 아이콘이 함수라 서버에서 클라이언트로 넘길 수 없어 목록을 이 파일에 둔다. `MypageFormCard` 는 공통 FormCard 에 마이페이지 카드 폭(792)에 맞춘 안쪽 여백만 정한 조각이다. `EditCancelConfirmDialog`(수정 취소) · `SaveConfirmDialog`(저장 전 최종 확인)는 되돌릴 수 없는 동작 앞에서 한 번 더 묻는다"
+                            "value": "마이페이지의 모든 화면이 함께 쓰는 조각입니다. `MypageSidebar` 는 기업·기관 메뉴를 한 벌로 들고 화면에서는 어느 쪽인지(`userType`)만 넘깁니다 — 아이콘이 함수라 서버에서 클라이언트로 넘길 수 없어 목록을 이 파일에 둡니다. `MypageFormCard` 는 공통 FormCard 에 마이페이지 카드 폭(792)에 맞춘 안쪽 여백만 정한 조각입니다. `EditCancelConfirmDialog`(수정 취소) · `SaveConfirmDialog`(저장 전 최종 확인)는 되돌릴 수 없는 동작 앞에서 한 번 더 묻습니다"
                         },
                         {
                             "label": "반응형",
-                            "value": "사이드바는 폭에 따라 셋으로 그린다 — `xl` 이상은 본문 옆에 붙어 따라오는 카드, `md~xl` 은 콘텐츠 열 안에서 현재 메뉴 한 줄만 두고 눌러서 여는 목록, `md` 미만은 같은 줄을 화면 폭으로 넓혀 헤더 아래 고정. 기업·기술정보 입력(FormTabs)의 탭이 좁은 화면에서 바뀌는 방식과 같고, 임계값도 같은 상수를 가져다 쓴다"
+                            "value": "사이드바는 폭에 따라 셋으로 그립니다 — `xl` 이상은 본문 옆에 붙어 따라오는 카드, `md~xl` 은 콘텐츠 열 안에서 현재 메뉴 한 줄만 두고 눌러서 여는 목록, `md` 미만은 같은 줄을 화면 폭으로 넓혀 헤더 아래 고정. 기업·기술정보 입력(FormTabs)의 탭이 좁은 화면에서 바뀌는 방식과 같고, 임계값도 같은 상수를 가져다 씁니다"
                         },
                         {
                             "label": "연동",
-                            "value": "아직 만들지 않은 화면의 메뉴 경로는 `'#'` 이다(경로가 타입으로 검사되어 없는 주소를 미리 적어 둘 수 없다). 해당 화면이 생기면 그 경로로 바꾼다 — 현재 `'#'` 인 곳은 기업 [K-BIGx 보고서 이력] · [유료 서비스 관리], 기관 [평가결과 조회] · [평가검증 신청 조회] · [K-BIGx 보고서 이력] · [하위 계정 현황]"
+                            "value": "아직 만들지 않은 화면의 메뉴 경로는 `'#'` 입니다(경로가 타입으로 검사되어 없는 주소를 미리 적어 둘 수 없습니다). 해당 화면이 생기면 그 경로로 바꿉니다 — 현재 `'#'` 인 곳은 기업 [K-BIGx 보고서 이력] · [유료 서비스 관리], 기관 [평가결과 조회] · [평가검증 신청 조회] · [K-BIGx 보고서 이력] · [하위 계정 현황]"
                         }
                     ]
                 },
@@ -1275,11 +1785,11 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "[기업정보] · [기업 담당자 정보] 두 구획의 입력 폼이다. 기업형태(개인 · 법인 · 기타)에 따라 법인 전용 칸이 열리고 닫히며, 기업명 표기(앞 · 뒤)를 고르면 완성형 이름을 바로 보여 준다. 업종코드 · 주소는 기존 검색 화면으로 이어진다. 칸 이름과 목업 회원정보는 상수 파일로 나눠 두었다"
+                            "value": "[기업정보] · [기업 담당자 정보] 두 구획의 입력 폼입니다. 기업형태(개인 · 법인 · 기타)에 따라 법인 전용 칸이 열리고 닫히며, 기업명 표기(앞 · 뒤)를 고르면 완성형 이름을 바로 보여 줍니다. 업종코드 · 주소는 기존 검색 화면으로 이어집니다. 칸 이름과 목업 회원정보는 상수 파일로 나눠 두었습니다"
                         },
                         {
                             "label": "연동",
-                            "value": "회원정보 조회는 한 번이다. 그 응답을 `MYPAGE_MEMBER_PROFILE` 자리에 넣으면 사이드바(이름 · 회원 구분)와 폼이 같은 값을 함께 받는다 — 화면이 값을 두 경로로 받지 않는다. 법인 전용 칸은 개인 · 기타로 되돌릴 때 값을 지운다(개인사업자인데 법인번호가 담기는 일을 막는다)"
+                            "value": "회원정보 조회는 한 번입니다. 그 응답을 `MYPAGE_MEMBER_PROFILE` 자리에 넣으면 사이드바(이름 · 회원 구분)와 폼이 같은 값을 함께 받습니다 — 화면이 값을 두 경로로 받지 않습니다. 법인 전용 칸은 개인 · 기타로 되돌릴 때 값을 지웁니다(개인사업자인데 법인번호가 담기는 일을 막습니다)"
                         },
                         {"label": "함께 적용", "value": "신규 추가 카드의 마이페이지 공통 셸과 같은 커밋 단위로 적용"}
                     ]
@@ -1296,7 +1806,7 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "좌측 LNB 고정 + 우측 본문의 2단 배치다(시안 실측 344 + 64 + 792 = 1200). 페이지 컬럼 그리드가 아니라 사이드바 폭이 정해진 구성이며, 좁은 화면에서는 한 열로 떨어지고 사이드바가 위로 온다 — 메뉴가 본문보다 먼저 읽히는 순서다[7.3.1]. 수정 취소 · 저장 전 최종 확인 모달은 단독으로 열어 볼 수 있는 확인 경로를 함께 둔다"
+                            "value": "좌측 LNB 고정 + 우측 본문의 2단 배치입니다(시안 실측 344 + 64 + 792 = 1200). 페이지 컬럼 그리드가 아니라 사이드바 폭이 정해진 구성이며, 좁은 화면에서는 한 열로 떨어지고 사이드바가 위로 옵니다 — 메뉴가 본문보다 먼저 읽히는 순서입니다[7.3.1]. 수정 취소 · 저장 전 최종 확인 모달은 단독으로 열어 볼 수 있는 확인 경로를 함께 둡니다"
                         },
                         {"label": "함께 적용", "value": "위 두 신규 추가 카드와 같은 커밋 단위로 적용"}
                     ]
@@ -1309,11 +1819,11 @@
                         {"label": "대상", "value": "src/components/theme/input-group.variants.ts"},
                         {
                             "label": "적용",
-                            "value": "`InputGroupAddon` 의 `align` 에 `inline-end-fill` 을 더한 파일로 교체. 기존 `inline-start` · `inline-end` · `block-start` · `block-end` 는 그대로다"
+                            "value": "`InputGroupAddon` 의 `align` 에 `inline-end-fill` 을 더한 파일로 교체. 기존 `inline-start` · `inline-end` · `block-start` · `block-end` 는 그대로입니다"
                         },
                         {
                             "label": "사용",
-                            "value": "비밀번호 표시/숨김처럼 입력 칸에 붙는 조작 버튼에 쓴다. 상자의 오른쪽 여백을 없애고 버튼이 상자 높이를 채우며 왼쪽 모서리만 각져, hover 면이 상자 위에 얹힌 조각이 아니라 상자의 한 구역으로 읽힌다. [지우기](ClearableInput)처럼 작고 동그란 버튼에는 쓰지 않는다 — 기존 `inline-end` 를 그대로 쓴다"
+                            "value": "비밀번호 표시/숨김처럼 입력 칸에 붙는 조작 버튼에 씁니다. 상자의 오른쪽 여백을 없애고 버튼이 상자 높이를 채우며 왼쪽 모서리만 각져, hover 면이 상자 위에 얹힌 조각이 아니라 상자의 한 구역으로 읽힙니다. [지우기](ClearableInput)처럼 작고 동그란 버튼에는 쓰지 않습니다 — 기존 `inline-end` 를 그대로 씁니다"
                         }
                     ]
                 },
@@ -1329,15 +1839,15 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "회원 유형 세 화면이 함께 쓰는 조각이다. `OrgMypageProfileScreen` 은 기업 [내 정보]와 같은 2단 구성을 갖고, 유형마다 달라지는 회원 정보 · 브레드크럼 · 폼만 화면(page)에서 받는다. `OrgMypageProfileForm` 은 `variant` 로 [기본 정보] 구성을 바꾸고, 하위 계정일 때만 [이용권 정보] 구획을 더 그린다"
+                            "value": "회원 유형 세 화면이 함께 쓰는 조각입니다. `OrgMypageProfileScreen` 은 기업 [내 정보]와 같은 2단 구성을 갖고, 유형마다 달라지는 회원 정보 · 브레드크럼 · 폼만 화면(page)에서 받습니다. `OrgMypageProfileForm` 은 `variant` 로 [기본 정보] 구성을 바꾸고, 하위 계정일 때만 [이용권 정보] 구획을 더 그립니다"
                         },
                         {
                             "label": "잠긴 값",
-                            "value": "고칠 수 없는 값(ID · 기관구분 · 상위 마스터 기관 · 사업기간 등)은 입력 칸 모양을 유지한 채 잠근다. 배분받은 이용권은 고칠 수 없는 값이라 입력 칸이 아니라 목록으로 둔다"
+                            "value": "고칠 수 없는 값(ID · 기관구분 · 상위 마스터 기관 · 사업기간 등)은 입력 칸 모양을 유지한 채 잠급니다. 배분받은 이용권은 고칠 수 없는 값이라 입력 칸이 아니라 목록으로 둡니다"
                         },
                         {
                             "label": "연동",
-                            "value": "계정 정보와 이용권은 화면(page)이 읽어 폼에 내려 준다 — 조회 코드를 폼 안에서 찾아다니지 않아도 된다"
+                            "value": "계정 정보와 이용권은 화면(page)이 읽어 폼에 내려 줍니다 — 조회 코드를 폼 안에서 찾아다니지 않아도 됩니다"
                         },
                         {"label": "함께 적용", "value": "아래 신규 추가 카드의 화면들과 같은 커밋 단위로 적용"}
                     ]
@@ -1354,15 +1864,15 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "협약은행 · 협약기관 · 기관회원(하위 계정) 세 화면과, 수정 취소 · 저장 전 최종 확인 모달의 단독 확인 경로. 하위 계정은 상위 마스터 기관이 만들어 준 계정이라 묻는 칸이 다르고 [이용권 정보] 구획이 더 있다"
+                            "value": "협약은행 · 협약기관 · 기관회원(하위 계정) 세 화면과, 수정 취소 · 저장 전 최종 확인 모달의 단독 확인 경로. 하위 계정은 상위 마스터 기관이 만들어 준 계정이라 묻는 칸이 다르고 [이용권 정보] 구획이 더 있습니다"
                         },
                         {
                             "label": "구조",
-                            "value": "세 화면은 유형별 경로 그룹 안에 있다. 헤더에 보이는 기관명이 유형마다 다른데 레이아웃은 자식이 값을 올려 줄 수 없어, 유형별 레이아웃을 나란히 두었다. 경로 그룹은 주소에 드러나지 않으므로 URL 은 `/org/mypage/profile-edit/<유형>` 그대로다"
+                            "value": "세 화면은 유형별 경로 그룹 안에 있습니다. 헤더에 보이는 기관명이 유형마다 다른데 레이아웃은 자식이 값을 올려 줄 수 없어, 유형별 레이아웃을 나란히 두었습니다. 경로 그룹은 주소에 드러나지 않으므로 URL 은 `/org/mypage/profile-edit/<유형>` 그대로입니다"
                         },
                         {
                             "label": "연동",
-                            "value": "마이페이지 LNB 의 기관 [내 정보] 는 협약기관 화면으로 이어 두었다. 실제로는 로그인한 회원 유형의 화면으로 보내면 된다"
+                            "value": "마이페이지 LNB 의 기관 [내 정보] 는 협약기관 화면으로 이어 두었습니다. 실제로는 로그인한 회원 유형의 화면으로 보내면 됩니다"
                         }
                     ]
                 },
@@ -1378,19 +1888,19 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "[경영자 역량] · [대표자 경력사항] 두 구획의 입력 폼이다. 같은 칸이 기술평가 신청의 [대표자 역량 및 경력사항] 탭에도 있지만 화면이 다르다 — 탭이 없고, 두 구획이 각각 카드가 되며, 총 경력 연수를 세지 않는다. 그래서 낮은 조각(Field · FieldGrid · RepeatCard)만 함께 쓰고 배치는 이 화면이 갖는다. 학력 선택지는 신청 화면과 같은 공통 상수를 가져다 쓴다"
+                            "value": "[경영자 역량] · [대표자 경력사항] 두 구획의 입력 폼입니다. 같은 칸이 기술평가 신청의 [대표자 역량 및 경력사항] 탭에도 있지만 화면이 다릅니다 — 탭이 없고, 두 구획이 각각 카드가 되며, 총 경력 연수를 세지 않습니다. 그래서 낮은 조각(Field · FieldGrid · RepeatCard)만 함께 쓰고 배치는 이 화면이 갖습니다. 학력 선택지는 신청 화면과 같은 공통 상수를 가져다 씁니다"
                         },
                         {
                             "label": "필수 규칙",
-                            "value": "두 구획의 모든 칸이 필수다. 전공만 최종학력이 [고졸] 일 때 풀린다. 경력은 카드 단위로 본다 — 완전히 빈 카드는 검사하지 않고(적을 경력이 없는 대표자가 빈 카드 한 장 때문에 저장하지 못하면 안 된다), 한 칸이라도 채우면 그때부터 그 카드의 나머지 칸이 모두 필수가 된다. 라벨의 `*` 는 늘 보여 어떤 칸이 필수가 될지 미리 알려 준다"
+                            "value": "두 구획의 모든 칸이 필수입니다. 전공만 최종학력이 [고졸] 일 때 풀립니다. 경력은 카드 단위로 봅니다 — 완전히 빈 카드는 검사하지 않고(적을 경력이 없는 대표자가 빈 카드 한 장 때문에 저장하지 못하면 안 됩니다), 한 칸이라도 채우면 그때부터 그 카드의 나머지 칸이 모두 필수가 됩니다. 라벨의 `*` 는 늘 보여 어떤 칸이 필수가 될지 미리 알려 줍니다"
                         },
                         {
                             "label": "제출",
-                            "value": "빈 경력 카드는 제출 데이터에서 걷어내고, 남는 카드의 번호를 화면에 보이는 순서(경력1 · 경력2…)로 다시 매긴다. 카드 번호는 값이 섞이지 않도록 붙인 고유 번호라 가운데 카드를 지우면 1 · 3 이 남는데, 화면은 경력1 · 경력2 인데 데이터만 1 · 3 이면 읽는 쪽이 헷갈린다"
+                            "value": "빈 경력 카드는 제출 데이터에서 걷어내고, 남는 카드의 번호를 화면에 보이는 순서(경력1 · 경력2…)로 다시 매깁니다. 카드 번호는 값이 섞이지 않도록 붙인 고유 번호라 가운데 카드를 지우면 1 · 3 이 남는데, 화면은 경력1 · 경력2 인데 데이터만 1 · 3 이면 읽는 쪽이 헷갈립니다"
                         },
                         {
                             "label": "연동",
-                            "value": "대표자 이력 조회 응답을 `REPRESENTATIVE_HISTORY` 자리에 넣으면 폼이 그 값으로 열리고, 경력은 응답 건수만큼 카드가 그려진다(등록된 경력이 없으면 빈 카드 한 장). [취소] 는 값뿐 아니라 지운 경력 카드까지 처음 상태로 되돌린다 — 카드 수는 값이 아니라 목록의 상태라 따로 되돌린다"
+                            "value": "대표자 이력 조회 응답을 `REPRESENTATIVE_HISTORY` 자리에 넣으면 폼이 그 값으로 열리고, 경력은 응답 건수만큼 카드가 그려집니다(등록된 경력이 없으면 빈 카드 한 장). [취소] 는 값뿐 아니라 지운 경력 카드까지 처음 상태로 되돌립니다 — 카드 수는 값이 아니라 목록의 상태라 따로 되돌립니다"
                         }
                     ]
                 },
@@ -1406,7 +1916,7 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "기업 [내 정보]와 같은 2단 배치의 마이페이지 화면이다. 평가 신청 때 받아 둔 대표자 이력을 여기서 확인하고 고친다. 수정 취소 · 저장 전 최종 확인 모달과, [대표자 경력사항] 제목 옆 물음표가 여는 [입력 도움말] 모달의 단독 확인 경로를 함께 둔다 — 입력 도움말 내용은 신청 화면의 것과 같다"
+                            "value": "기업 [내 정보]와 같은 2단 배치의 마이페이지 화면입니다. 평가 신청 때 받아 둔 대표자 이력을 여기서 확인하고 고칩니다. 수정 취소 · 저장 전 최종 확인 모달과, [대표자 경력사항] 제목 옆 물음표가 여는 [입력 도움말] 모달의 단독 확인 경로를 함께 둡니다 — 입력 도움말 내용은 신청 화면의 것과 같습니다"
                         },
                         {"label": "함께 적용", "value": "위 신규 추가 카드의 폼 · 데이터와 같은 커밋 단위로 적용"}
                     ]
@@ -1423,11 +1933,11 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "기술평가 신청 1단계의 고객정보활용동의와 같은 화면이다. 동의서 본문뿐 아니라 화면 구성(단계 머리 · 동의서 · 부분발송 이메일등록 · 하단 CTA)도 그대로 쓴다. 필수 · 선택 동의 팝업과 개별 상세의 단독 확인 경로는 앞서 전달한 것을 그대로 쓴다"
+                            "value": "기술평가 신청 1단계의 고객정보활용동의와 같은 화면입니다. 동의서 본문뿐 아니라 화면 구성(단계 머리 · 동의서 · 부분발송 이메일등록 · 하단 CTA)도 그대로 씁니다. 필수 · 선택 동의 팝업과 개별 상세의 단독 확인 경로는 앞서 전달한 것을 그대로 씁니다"
                         },
                         {
                             "label": "원본과 다른 점",
-                            "value": "화면 제목 줄(PageTitleBar)을 두지 않는다 · 단계 진행 표시(StepProgress)를 두지 않는다(5단계 신청 흐름 안의 화면이 아니다) · 앞뒤로 잇는 화면이 신청 흐름이 아니라 대표자 이력이다. 마이페이지의 두 열(LNB + 본문)에도 넣지 않는다 — 메뉴를 오가는 자리가 아니라 앞뒤가 정해진 한 단계다"
+                            "value": "화면 제목 줄(PageTitleBar)을 두지 않습니다 · 단계 진행 표시(StepProgress)를 두지 않습니다(5단계 신청 흐름 안의 화면이 아니다) · 앞뒤로 잇는 화면이 신청 흐름이 아니라 대표자 이력입니다. 마이페이지의 두 열(LNB + 본문)에도 넣지 않습니다 — 메뉴를 오가는 자리가 아니라 앞뒤가 정해진 한 단계입니다"
                         }
                     ]
                 },
@@ -1443,11 +1953,11 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "Tech-Index 2단계 [대표자 역량 및 경력사항] 탭의 [입력 도움말] 버튼이 여는 모달을, 화면정의서의 하위 화면으로 따로 확인하는 경로다. 뒤 배경을 비우고 모달만 열어 둔다 — 다른 모달 단독 화면과 같은 방식이다"
+                            "value": "Tech-Index 2단계 [대표자 역량 및 경력사항] 탭의 [입력 도움말] 버튼이 여는 모달을, 화면정의서의 하위 화면으로 따로 확인하는 경로입니다. 뒤 배경을 비우고 모달만 열어 둡니다 — 다른 모달 단독 화면과 같은 방식입니다"
                         },
                         {
                             "label": "구조",
-                            "value": "내용이 셋 다 같아 일반용에 한 벌만 두고, 창업기업용 · 투자모형은 그 화면을 다시 내보낸다. 모달 자체는 기존 `CareerInputHelpDialog` 를 그대로 쓴다 — 새로 만든 모달이 아니다"
+                            "value": "내용이 셋 다 같아 일반용에 한 벌만 두고, 창업기업용 · 투자모형은 그 화면을 다시 내보냅니다. 모달 자체는 기존 `CareerInputHelpDialog` 를 그대로 씁니다 — 새로 만든 모달이 아니다"
                         }
                     ]
                 },
@@ -1463,11 +1973,11 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "한 줄 안에서 값과 값을 가르는 세로선이다(시안 divider 1×12). 1:1 문의의 [분류 │ 제목], 평가결과 조회의 [일시 │ 상태 │ 등급]처럼 나란히 놓인 값 사이에 쓴다. 세로 Separator 를 쓸 때마다 되풀이되던 손질 두 가지를 이 조각이 갖는다 — 셸이 세로 방향에 `self-stretch` 를 걸어 두어 높이를 12 로 묶으면 줄 위쪽에 붙는 것, 그리고 제목처럼 글자만 담을 수 있는 자리에는 블록 요소를 넣을 수 없는 것[8.1.1]"
+                            "value": "한 줄 안에서 값과 값을 가르는 세로선입니다(시안 divider 1×12). 1:1 문의의 [분류 │ 제목], 평가결과 조회의 [일시 │ 상태 │ 등급]처럼 나란히 놓인 값 사이에 씁니다. 세로 Separator 를 쓸 때마다 되풀이되던 손질 두 가지를 이 조각이 갖습니다 — 셸이 세로 방향에 `self-stretch` 를 걸어 두어 높이를 12 로 묶으면 줄 위쪽에 붙는 것, 그리고 제목처럼 글자만 담을 수 있는 자리에는 블록 요소를 넣을 수 없는 것[8.1.1]"
                         },
                         {
                             "label": "사용",
-                            "value": "기본은 좌우 여백 12 다. 제목 안에 넣을 때는 `inline` 을 켠다 — `asChild` 로 같은 스타일을 `span` 에 씌워 글 흐름에 놓는다"
+                            "value": "기본은 좌우 여백 12 다. 제목 안에 넣을 때는 `inline` 을 켭니다 — `asChild` 로 같은 스타일을 `span` 에 씌워 글 흐름에 놓습니다"
                         },
                         {
                             "label": "가이드",
@@ -1487,17 +1997,17 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "기업 · 기관이 같은 컴포넌트를 쓴다 — 다른 것은 목록 데이터와 이동 경로뿐이라 화면(page)이 넘긴다. 목록은 공지사항 목록과 같은 틀이고(BaseCard · 구분선 · Badge · Pagination) 한 줄에 담기는 것만 다르다. 상세는 카드 한 장에 [문의 요약 · 문의 내용 · 첨부파일 · 답변]이 구분선으로 나뉘어 들어간다"
+                            "value": "기업 · 기관이 같은 컴포넌트를 씁니다 — 다른 것은 목록 데이터와 이동 경로뿐이라 화면(page)이 넘깁니다. 목록은 공지사항 목록과 같은 틀이고(BaseCard · 구분선 · Badge · Pagination) 한 줄에 담기는 것만 다릅니다. 상세는 카드 한 장에 [문의 요약 · 문의 내용 · 첨부파일 · 답변]이 구분선으로 나뉘어 들어갑니다"
                         },
                         {
                             "label": "상태 · 유형",
-                            "value": "답변 상태는 `waiting`(답변대기) · `answered`(답변완료) 두 가지이며 색만으로 전달하지 않고 글자를 함께 둔다[5.3.1]. 문의 유형은 알림마당 > 문의하기의 [유형 선택]과 같은 목록을 본다. 두 값은 서버 컴포넌트(상세)와 클라이언트 컴포넌트(목록)가 함께 읽어야 해 `src/constants/inquiry.ts` 에 둔다 — `'use client'` 파일의 상수를 서버에서 import 하면 실제 값이 아니라 빈 참조가 넘어온다"
+                            "value": "답변 상태는 `waiting`(답변대기) · `answered`(답변완료) 두 가지이며 색만으로 전달하지 않고 글자를 함께 둡니다[5.3.1]. 문의 유형은 알림마당 > 문의하기의 [유형 선택]과 같은 목록을 봅니다. 두 값은 서버 컴포넌트(상세)와 클라이언트 컴포넌트(목록)가 함께 읽어야 해 `src/constants/inquiry.ts` 에 둡니다 — `'use client'` 파일의 상수를 서버에서 import 하면 실제 값이 아니라 빈 참조가 넘어옵니다"
                         },
                         {
                             "label": "첨부파일",
-                            "value": "파일 이름 한 벌로 받고 그릴 때만 이름과 확장자로 나눈다. 자리가 모자라면 이름만 줄이고 확장자는 남긴다 — 이름째 말줄임하면 무슨 형식의 파일인지가 먼저 사라진다"
+                            "value": "파일 이름 한 벌로 받고 그릴 때만 이름과 확장자로 나눕니다. 자리가 모자라면 이름만 줄이고 확장자는 남깁니다 — 이름째 말줄임하면 무슨 형식의 파일인지가 먼저 사라집니다"
                         },
-                        {"label": "답변", "value": "답변 본문을 넘기지 않으면 그 자리에 대기 안내가 대신 보인다"}
+                        {"label": "답변", "value": "답변 본문을 넘기지 않으면 그 자리에 대기 안내가 대신 보입니다"}
                     ]
                 },
                 {
@@ -1512,11 +2022,11 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "마이페이지 2단 배치의 목록 화면과 상세 화면이다. [문의 등록] 은 각 회원 유형의 알림마당 > 문의하기로 이어진다"
+                            "value": "마이페이지 2단 배치의 목록 화면과 상세 화면입니다. [문의 등록] 은 각 회원 유형의 알림마당 > 문의하기로 이어집니다"
                         },
                         {
                             "label": "연동",
-                            "value": "화면이 쓰는 값은 모두 page.tsx 의 상수뿐이고 컴포넌트는 넘겨받은 것만 그린다 — 조회 코드를 컴포넌트 안에서 찾아다니지 않아도 된다. 항목마다 `href` 를 들고 있어 퍼블리싱에서는 모두 같은 상세 화면을 가리키지만, 연동할 때 이 값만 문의별 주소로 바꾸면 화면은 손댈 것이 없다. 목록에 빈 배열을 넘기면 빈 상태 안내가 나온다 — 조회 결과가 없을 때의 화면을 따로 만들 필요가 없다"
+                            "value": "화면이 쓰는 값은 모두 page.tsx 의 상수뿐이고 컴포넌트는 넘겨받은 것만 그립니다 — 조회 코드를 컴포넌트 안에서 찾아다니지 않아도 됩니다. 항목마다 `href` 를 들고 있어 퍼블리싱에서는 모두 같은 상세 화면을 가리키지만, 연동할 때 이 값만 문의별 주소로 바꾸면 화면은 손댈 것이 없습니다. 목록에 빈 배열을 넘기면 빈 상태 안내가 나옵니다 — 조회 결과가 없을 때의 화면을 따로 만들 필요가 없습니다"
                         },
                         {"label": "함께 적용", "value": "위 두 신규 추가 카드와 같은 커밋 단위로 적용"}
                     ]
@@ -1529,11 +2039,11 @@
                         {"label": "대상", "value": "src/components/custom/inquiry-form.tsx"},
                         {
                             "label": "적용",
-                            "value": "파일 안에 두었던 문의 유형 목록을 지우고 `@/constants/inquiry` 를 가져다 쓰는 파일로 교체. 화면 구성과 입력 규칙은 종전과 같다"
+                            "value": "파일 안에 두었던 문의 유형 목록을 지우고 `@/constants/inquiry` 를 가져다 쓰는 파일로 교체. 화면 구성과 입력 규칙은 종전과 같습니다"
                         },
                         {
                             "label": "이유",
-                            "value": "같은 목록을 마이페이지 1:1 문의 목록 · 상세가 함께 본다. 한 벌만 두어 한쪽만 고쳐 두 화면의 분류가 달라지는 일을 막는다"
+                            "value": "같은 목록을 마이페이지 1:1 문의 목록 · 상세가 함께 봅니다. 한 벌만 두어 한쪽만 고쳐 두 화면의 분류가 달라지는 일을 막습니다"
                         }
                     ]
                 },
@@ -1552,11 +2062,11 @@
                         },
                         {
                             "label": "내용",
-                            "value": "조회 목록의 [평가완료] 글자색은 팔레트 밖 값이라 `common` 앵커(`status-blue`)에 두고 시맨틱으로 이었다. 세그먼티드 컨트롤의 고른 항목 색은 purple 계열에서 navy 로 바꿨다(시안)"
+                            "value": "조회 목록의 [평가완료] 글자색은 팔레트 밖 값이라 `common` 앵커(`status-blue`)에 두고 시맨틱으로 이었습니다. 세그먼티드 컨트롤의 고른 항목 색은 purple 계열에서 navy 로 바꿨습니다(시안)"
                         },
                         {
                             "label": "순서",
-                            "value": "`tokens.json` 과 시맨틱 색상 가이드는 함께 받아야 한다 — 가이드의 설명 표가 토큰 이름을 모두 갖고 있어야 해서, 한쪽만 반영하면 타입 오류가 난다"
+                            "value": "`tokens.json` 과 시맨틱 색상 가이드는 함께 받아야 합니다 — 가이드의 설명 표가 토큰 이름을 모두 갖고 있어야 해서, 한쪽만 반영하면 타입 오류가 납니다"
                         }
                     ]
                 },
@@ -1571,19 +2081,19 @@
                         },
                         {
                             "label": "적용",
-                            "value": "`solid` 를 트랙 없는 낱개 상자 외형으로 바꾼 파일로 교체. `subtle` 은 그대로다"
+                            "value": "`solid` 를 트랙 없는 낱개 상자 외형으로 바꾼 파일로 교체. `subtle` 은 그대로입니다"
                         },
                         {
                             "label": "내용",
-                            "value": "항목을 감싸던 트랙과 항목 사이 구분선을 걷어내고, 낱개 상자가 4px 간격으로 놓이며 각자 테두리와 흰 면을 갖는다. 고른 항목은 테두리까지 함께 채워 한 덩어리로 보인다. 상자 폭은 글자 길이와 무관하게 같고(시안), 높이는 함께 놓이는 날짜 입력과 같은 컨트롤 높이다"
+                            "value": "항목을 감싸던 트랙과 항목 사이 구분선을 걷어내고, 낱개 상자가 4px 간격으로 놓이며 각자 테두리와 흰 면을 갖습니다. 고른 항목은 테두리까지 함께 채워 한 덩어리로 보입니다. 상자 폭은 글자 길이와 무관하게 같고(시안), 높이는 함께 놓이는 날짜 입력과 같은 컨트롤 높이입니다"
                         },
                         {
                             "label": "정리",
-                            "value": "구분선을 그리던 전역 CSS 규칙(`globals.css`)을 지웠다 — 낱개 상자에는 필요 없다. 도달할 수 없게 남아 있던 `outline` 상태 클래스도 함께 걷어냈다"
+                            "value": "구분선을 그리던 전역 CSS 규칙(`globals.css`)을 지웠습니다 — 낱개 상자에는 필요 없습니다. 도달할 수 없게 남아 있던 `outline` 상태 클래스도 함께 걷어냈습니다"
                         },
                         {
                             "label": "가이드",
-                            "value": "[SegmentedControl](/component-guide/segmented-control) 의 Solid 설명을 새 외형에 맞게 고쳤다"
+                            "value": "[SegmentedControl](/component-guide/segmented-control) 의 Solid 설명을 새 외형에 맞게 고쳤습니다"
                         }
                     ]
                 },
@@ -1595,15 +2105,15 @@
                         {"label": "대상", "value": "src/components/composite/search-filter-form.tsx"},
                         {
                             "label": "적용",
-                            "value": "`layout` · `surface` 와 기간 필드의 액션 슬롯을 더한 파일로 교체. 기존 사용처는 기본값(`layout=\"row\"` · `surface=\"muted\"`)이라 종전과 같다"
+                            "value": "`layout` · `surface` 와 기간 필드의 액션 슬롯을 더한 파일로 교체. 기존 사용처는 기본값(`layout=\"row\"` · `surface=\"muted\"`)이라 종전과 같습니다"
                         },
                         {
                             "label": "내용",
-                            "value": "`layout=\"stack\"` 은 라벨을 컨트롤 위로 올린다 — 사이드바 옆처럼 폭이 좁은 자리에 쓴다. `surface=\"card\"` 는 필터 면을 카드와 같은 색으로 둔다. `DateRangeField` 는 `action` 으로 [조회] 버튼을 기간 줄 오른쪽에 받고, `defaultFrom` · `defaultTo` 로 처음 기간을 정한다"
+                            "value": "`layout=\"stack\"` 은 라벨을 컨트롤 위로 올립니다 — 사이드바 옆처럼 폭이 좁은 자리에 씁니다. `surface=\"card\"` 는 필터 면을 카드와 같은 색으로 둡니다. `DateRangeField` 는 `action` 으로 [조회] 버튼을 기간 줄 오른쪽에 받고, `defaultFrom` · `defaultTo` 로 처음 기간을 정합니다"
                         },
                         {
                             "label": "정리",
-                            "value": "보이는 카드는 공통 `BaseCard` 가 그린다 — `form` 은 제출을 받는 껍데기라 면 · 모서리 · 여백을 직접 갖지 않고, 다른 카드들과 한곳에서 관리된다"
+                            "value": "보이는 카드는 공통 `BaseCard` 가 그립니다 — `form` 은 제출을 받는 껍데기라 면 · 모서리 · 여백을 직접 갖지 않고, 다른 카드들과 한곳에서 관리됩니다"
                         }
                     ]
                 },
@@ -1619,11 +2129,11 @@
                         {"label": "적용", "value": "신규 파일 추가(가이드 내비게이션 항목 포함)"},
                         {
                             "label": "내용",
-                            "value": "날짜 · 상태로 시작해 제목 · 액션으로 이어지는 한 줄짜리 이력 항목의 목록이다. 마이페이지의 조회 화면들(평가결과 조회 · K-BIGx 보고서 이력 · 평가검증 신청 조회)이 같은 짜임을 쓴다. 목록 맨 위에는 굵은 선, 항목 사이에는 얇은 선이 온다(시안)"
+                            "value": "날짜 · 상태로 시작해 제목 · 액션으로 이어지는 한 줄짜리 이력 항목의 목록입니다. 마이페이지의 조회 화면들(평가결과 조회 · K-BIGx 보고서 이력 · 평가검증 신청 조회)이 같은 짜임을 씁니다. 목록 맨 위에는 굵은 선, 항목 사이에는 얇은 선이 옵니다(시안)"
                         },
                         {
                             "label": "사용",
-                            "value": "카드에 담지 않고 배경 위에 놓인다 — 카드가 필요한 목록(공지사항 · 1:1 문의)은 사용처에서 `BaseCard` 로 감싼다. 위쪽 선이 필요 없는 자리는 `border-t-0` 으로 끈다. 상태(필터 · 페이지)는 이 목록을 쓰는 화면이 갖는다"
+                            "value": "카드에 담지 않고 배경 위에 놓입니다 — 카드가 필요한 목록(공지사항 · 1:1 문의)은 사용처에서 `BaseCard` 로 감쌉니다. 위쪽 선이 필요 없는 자리는 `border-t-0` 으로 끕니다. 상태(필터 · 페이지)는 이 목록을 쓰는 화면이 갖습니다"
                         },
                         {
                             "label": "가이드",
@@ -1643,11 +2153,11 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "조회 조건(모형 · 진행상태 · 조회기간) · 건수와 정렬 · 결과 목록 · 페이지 이동을 한 벌로 그린다. 진행 상태는 `evaluated`(평가완료) · `analyzed`(분석완료) · `inProgress`(진행중) 세 가지이며, 배지가 아니라 글자 색으로만 구분하되 색만으로 전달하지 않고 글자를 함께 둔다[5.3.1]"
+                            "value": "조회 조건(모형 · 진행상태 · 조회기간) · 건수와 정렬 · 결과 목록 · 페이지 이동을 한 벌로 그립니다. 진행 상태는 `evaluated`(평가완료) · `analyzed`(분석완료) · `inProgress`(진행중) 세 가지이며, 배지가 아니라 글자 색으로만 구분하되 색만으로 전달하지 않고 글자를 함께 둡니다[5.3.1]"
                         },
                         {
                             "label": "상수 위치",
-                            "value": "상태 표는 서버 컴포넌트(화면)와 클라이언트 컴포넌트(목록)가 함께 읽어야 해 `src/constants/evaluation-result.ts` 에 둔다 — `'use client'` 파일의 상수를 서버에서 import 하면 실제 값이 아니라 빈 참조가 넘어온다"
+                            "value": "상태 표는 서버 컴포넌트(화면)와 클라이언트 컴포넌트(목록)가 함께 읽어야 해 `src/constants/evaluation-result.ts` 에 둡니다 — `'use client'` 파일의 상수를 서버에서 import 하면 실제 값이 아니라 빈 참조가 넘어옵니다"
                         },
                         {"label": "함께 적용", "value": "아래 신규 추가 카드의 화면과 같은 커밋 단위로 적용"}
                     ]
@@ -1664,11 +2174,11 @@
                         {"label": "적용", "value": "신규 파일 추가"},
                         {
                             "label": "내용",
-                            "value": "마이페이지 2단 배치의 조회 화면이다. 각 건에는 [은행전송] · [기관전송] · [전송내역] · [보증신청] 동작이 붙는다"
+                            "value": "마이페이지 2단 배치의 조회 화면입니다. 각 건에는 [은행전송] · [기관전송] · [전송내역] · [보증신청] 동작이 붙습니다"
                         },
                         {
                             "label": "연동",
-                            "value": "화면이 쓰는 값은 page.tsx 의 상수뿐이고 목록 컴포넌트는 넘겨받은 것만 그린다. 결과가 아직 나오지 않아 눌러도 볼 것이 없는 건은 `disabled` 로 넘긴다 — 버튼과 링크가 함께 잠긴다. 각 동작이 여는 화면도 건마다 다르므로 항목이 들고 있고, 아직 만들지 않은 화면은 `'#'` 이다. 빈 배열을 넘기면 빈 상태 안내가 나온다"
+                            "value": "화면이 쓰는 값은 page.tsx 의 상수뿐이고 목록 컴포넌트는 넘겨받은 것만 그립니다. 결과가 아직 나오지 않아 눌러도 볼 것이 없는 건은 `disabled` 로 넘깁니다 — 버튼과 링크가 함께 잠깁니다. 각 동작이 여는 화면도 건마다 다르므로 항목이 들고 있고, 아직 만들지 않은 화면은 `'#'` 입니다. 빈 배열을 넘기면 빈 상태 안내가 나옵니다"
                         }
                     ]
                 },
@@ -1684,19 +2194,19 @@
                         {"label": "적용", "value": "이번에 전달하는 화면을 등록하고 진행 상태를 갱신한 파일로 교체"},
                         {
                             "label": "등록",
-                            "value": "화면 13건을 새로 넣었다 — 대표자 역량 입력 도움말 3건(Tech-Index 일반 · 창업 · 투자모형), 기업 [내 정보]의 수정 취소 · 저장 확인 모달, 대표자 이력의 입력 도움말 · 수정 취소 · 저장 확인 모달, 기관 [내 정보] 회원 유형 3종과 그 수정 취소 · 저장 확인 모달"
+                            "value": "화면 13건을 새로 넣었습니다 — 대표자 역량 입력 도움말 3건(Tech-Index 일반 · 창업 · 투자모형), 기업 [내 정보]의 수정 취소 · 저장 확인 모달, 대표자 이력의 입력 도움말 · 수정 취소 · 저장 확인 모달, 기관 [내 정보] 회원 유형 3종과 그 수정 취소 · 저장 확인 모달"
                         },
                         {
                             "label": "구조 변경",
-                            "value": "기관 [내 정보]는 한 항목이던 `org-mypage-profile-edit` 를 회원 유형 3건(`-partner-bank` · `-partner-agency` · `-sub-account`)으로 나눴다. 유형마다 묻는 칸이 달라 한 화면으로 묶어 둘 수 없다 — 기존 키를 참조하는 곳이 있다면 함께 바꿔야 한다"
+                            "value": "기관 [내 정보]는 한 항목이던 `org-mypage-profile-edit` 를 회원 유형 3건(`-partner-bank` · `-partner-agency` · `-sub-account`)으로 나눴습니다. 유형마다 묻는 칸이 달라 한 화면으로 묶어 둘 수 없습니다 — 기존 키를 참조하는 곳이 있다면 함께 바꿔야 합니다"
                         },
                         {
                             "label": "상태 갱신",
-                            "value": "마이페이지 화면 일체와 1:1 문의 목록 · 상세, 이용약관 · 개인정보 처리방침(기업 · 기관), 기관 로그인 안내를 완료로 올렸다"
+                            "value": "마이페이지 화면 일체와 1:1 문의 목록 · 상세, 이용약관 · 개인정보 처리방침(기업 · 기관), 기관 로그인 안내를 완료로 올렸습니다"
                         },
                         {
                             "label": "순서",
-                            "value": "세 파일은 서로 키를 맞춰 검사하므로 함께 받아야 한다. 한쪽만 반영하면 화면이 뜨지 않는다"
+                            "value": "세 파일은 서로 키를 맞춰 검사하므로 함께 받아야 합니다. 한쪽만 반영하면 화면이 뜨지 않습니다"
                         }
                     ]
                 },
@@ -1708,15 +2218,15 @@
                         {"label": "대상", "value": "src/components/composite/org-company-info-form.tsx"},
                         {
                             "label": "적용",
-                            "value": "[기업정보 관리] 의 노출 조건 안내를 지운 파일로 교체. 버튼과 입력 칸, 나머지 화면 구성은 종전과 같다"
+                            "value": "[기업정보 관리] 의 노출 조건 안내를 지운 파일로 교체. 버튼과 입력 칸, 나머지 화면 구성은 종전과 같습니다"
                         },
                         {
                             "label": "이유",
-                            "value": "시안 메모가 \"기업·기술정보 입력 > 기업정보 화면에서 노출\" 인데, 이 구획이 놓이는 자리가 세 모형 모두 바로 그 화면이다 — 보고 있는 화면을 조건으로 되읽는 문장이라 읽는 사람에게 새로 알려 주는 것이 없다"
+                            "value": "시안 메모가 \"기업·기술정보 입력 > 기업정보 화면에서 노출\" 인데, 이 구획이 놓이는 자리가 세 모형 모두 바로 그 화면입니다 — 보고 있는 화면을 조건으로 되읽는 문장이라 읽는 사람에게 새로 알려 주는 것이 없습니다"
                         },
                         {
                             "label": "남는 안내",
-                            "value": "[기업 자가진단 결과보기] 의 노출 조건 하나뿐이라 목록이 아니라 한 줄로 그린다. 그 버튼이 보이지 않는 화면에서는 안내도 나오지 않는다. 노출 조건이 실제 동작으로 붙으면 이 안내도 걷어낸다"
+                            "value": "[기업 자가진단 결과보기] 의 노출 조건 하나뿐이라 목록이 아니라 한 줄로 그립니다. 그 버튼이 보이지 않는 화면에서는 안내도 나오지 않습니다. 노출 조건이 실제 동작으로 붙으면 이 안내도 걷어냅니다"
                         }
                     ]
                 }
@@ -1807,7 +2317,7 @@
                         },
                         {
                             "label": "결과",
-                            "value": "화면 코드와 코드값이 분리되어 업종 분류가 개정되면 JSON 만 교체하면 된다. 모달을 쓰는 쪽(`onSelect` 로 `{code, label}` 을 받는 계약)은 그대로라 기업정보 탭을 가진 화면들은 수정 대상이 아니다"
+                            "value": "화면 코드와 코드값이 분리되어 업종 분류가 개정되면 JSON 만 교체하면 됩니다. 모달을 쓰는 쪽(`onSelect` 로 `{code, label}` 을 받는 계약)은 그대로라 기업정보 탭을 가진 화면들은 수정 대상이 아니다"
                         },
                         {
                             "label": "커밋",
@@ -1830,7 +2340,7 @@
                         },
                         {
                             "label": "결과",
-                            "value": "[다음]을 누르면 기업정보 탭에서 고른 업종코드에 따라 제조용·서비스용 체크리스트로 갈린다. 서버 화면에서 클라이언트로 함수를 넘길 수 없어 판단을 조각으로 분리했으므로, 연동 시 판정 기준만 `isManufacturingIndustryCode` 에서 고치면 네 모형에 함께 반영된다"
+                            "value": "[다음]을 누르면 기업정보 탭에서 고른 업종코드에 따라 제조용·서비스용 체크리스트로 갈립니다. 서버 화면에서 클라이언트로 함수를 넘길 수 없어 판단을 조각으로 분리했으므로, 연동 시 판정 기준만 `isManufacturingIndustryCode` 에서 고치면 네 모형에 함께 반영됩니다"
                         },
                         {
                             "label": "커밋",
@@ -1846,11 +2356,11 @@
                         {"label": "대상", "value": "src/components/composite/checklist-form.tsx"},
                         {
                             "label": "변경",
-                            "value": "문항 유형에 `check-chips` 를 추가. 체크했을 때만 보기 칩 묶음이 펼쳐지는 문항을 그린다"
+                            "value": "문항 유형에 `check-chips` 를 추가. 체크했을 때만 보기 칩 묶음이 펼쳐지는 문항을 그립니다"
                         },
                         {
                             "label": "결과",
-                            "value": "업종코드별 체크리스트의 \"해당 항목을 고르세요\" 형태 문항이 기존 체크·선택 문항과 같은 데이터 구조로 표현된다. 기존 문항 유형의 렌더는 바뀌지 않아 KTRS-FM 기존 체크리스트에 영향 없음"
+                            "value": "업종코드별 체크리스트의 \"해당 항목을 고르세요\" 형태 문항이 기존 체크·선택 문항과 같은 데이터 구조로 표현됩니다. 기존 문항 유형의 렌더는 바뀌지 않아 KTRS-FM 기존 체크리스트에 영향 없음"
                         },
                         {
                             "label": "커밋",
@@ -1873,7 +2383,7 @@
                         },
                         {
                             "label": "결과",
-                            "value": "모형마다 조금씩 다른 항목을 조각 복사 없이 옵션으로 표현한다. 기본값이 기존 동작이라 KTRS-FM·Tech-Index 화면의 렌더는 바뀌지 않는다"
+                            "value": "모형마다 조금씩 다른 항목을 조각 복사 없이 옵션으로 표현합니다. 기본값이 기존 동작이라 KTRS-FM·Tech-Index 화면의 렌더는 바뀌지 않습니다"
                         },
                         {
                             "label": "커밋",
@@ -1892,15 +2402,15 @@
                         },
                         {
                             "label": "변경",
-                            "value": "고객정보활용동의 폼과 평가 신청하기 폼이 KTRS-FM·Tech-Index 폴더 안에 있어 import 경로가 모형을 가로지르고 있었다. 두 폼을 `@/components/composite` 로 옮기고 세 화면의 import 경로만 교체"
+                            "value": "고객정보활용동의 폼과 평가 신청하기 폼이 KTRS-FM·Tech-Index 폴더 안에 있어 import 경로가 모형을 가로지르고 있었습니다. 두 폼을 `@/components/composite` 로 옮기고 세 화면의 import 경로만 교체"
                         },
                         {
                             "label": "결과",
-                            "value": "화면 렌더와 동작은 그대로이며 import 경로만 바뀐다. 다른 모형이 같은 폼을 쓸 때 남의 모형 폴더를 참조하지 않는다"
+                            "value": "화면 렌더와 동작은 그대로이며 import 경로만 바뀝니다. 다른 모형이 같은 폼을 쓸 때 남의 모형 폴더를 참조하지 않습니다"
                         },
                         {
                             "label": "함께",
-                            "value": "고객정보활용동의에서 [아니요] 를 고르면 \"정보제공 동의를 받지 않은 경우, 평가 진행이 제한될 수 있습니다. 반드시 사전에 동의를 획득하시기 바랍니다.\" 안내가 물음 아래에 나온다. Tech-Index 에만 있던 문구를 세 모형이 같은 절차이므로 공통으로 올렸다. 고르기 전에는 나오지 않는다"
+                            "value": "고객정보활용동의에서 [아니요] 를 고르면 \"정보제공 동의를 받지 않은 경우, 평가 진행이 제한될 수 있습니다. 반드시 사전에 동의를 획득하시기 바랍니다.\" 안내가 물음 아래에 나옵니다. Tech-Index 에만 있던 문구를 세 모형이 같은 절차이므로 공통으로 올렸습니다. 고르기 전에는 나오지 않습니다"
                         },
                         {
                             "label": "커밋",
@@ -1919,11 +2429,11 @@
                         },
                         {
                             "label": "변경",
-                            "value": "IA 노드에 `isGroupOnly` 옵션을 추가하고 콘텐츠 검증에 boolean 타입 검사를 더했다. 표는 이 옵션이 붙은 행의 뎁스 배지를 숨기고, 그 아래 화면들의 뎁스 번호를 셀 때도 그 행을 빼고 센다"
+                            "value": "IA 노드에 `isGroupOnly` 옵션을 추가하고 콘텐츠 검증에 boolean 타입 검사를 더했습니다. 표는 이 옵션이 붙은 행의 뎁스 배지를 숨기고, 그 아래 화면들의 뎁스 번호를 셀 때도 그 행을 빼고 셉니다"
                         },
                         {
                             "label": "결과",
-                            "value": "실제 계층이 아니라 보기 좋게 묶기만 한 행(예: 페이지 두 갈래를 모달 목록과 구분하려고 묶은 \"선택한 업종코드별 페이지\")을 표에 둘 수 있고, 그 아래 화면이 원래 뎁스 번호를 그대로 유지한다. 옵션을 쓰지 않은 기존 IA 데이터의 뎁스 번호는 바뀌지 않는다"
+                            "value": "실제 계층이 아니라 보기 좋게 묶기만 한 행(예: 페이지 두 갈래를 모달 목록과 구분하려고 묶은 \"선택한 업종코드별 페이지\")을 표에 둘 수 있고, 그 아래 화면이 원래 뎁스 번호를 그대로 유지합니다. 옵션을 쓰지 않은 기존 IA 데이터의 뎁스 번호는 바뀌지 않습니다"
                         },
                         {
                             "label": "커밋",
@@ -1942,15 +2452,15 @@
                         },
                         {
                             "label": "적용",
-                            "value": "(1) 고객정보활용동의부터 (5) 완료 화면까지 신규 추가. 기업 투자모형과 달리 평가 신청하기가 있어 다섯 단계다"
+                            "value": "(1) 고객정보활용동의부터 (5) 완료 화면까지 신규 추가. 기업 투자모형과 달리 평가 신청하기가 있어 다섯 단계입니다"
                         },
                         {
                             "label": "화면",
-                            "value": "1단계와 4단계는 기관 공통 폼을 그대로 쓴다(동의 묶음 · 첨부 서류 세 종). 2단계는 탭 여섯 개이며 기업정보 탭만 기관용이고(평가 대상 기업 정보를 직접 입력, 기업형태에 따라 법인번호·기업명 표기가 갈림, [기업 담당자 정보] 구획 없음) 나머지 다섯 탭은 기업 투자모형 것을 그대로 쓴다. 3단계 체크리스트는 2단계에서 고른 업종코드로 제조용·서비스용이 갈리고, 5단계 완료 화면은 모형 코드 뱃지 없이 안내가 두 줄이다"
+                            "value": "1단계와 4단계는 기관 공통 폼을 그대로 씁니다(동의 묶음 · 첨부 서류 세 종). 2단계는 탭 여섯 개이며 기업정보 탭만 기관용이고(평가 대상 기업 정보를 직접 입력, 기업형태에 따라 법인번호·기업명 표기가 갈림, [기업 담당자 정보] 구획 없음) 나머지 다섯 탭은 기업 투자모형 것을 그대로 씁니다. 3단계 체크리스트는 2단계에서 고른 업종코드로 제조용·서비스용이 갈리고, 5단계 완료 화면은 모형 코드 뱃지 없이 안내가 두 줄입니다"
                         },
                         {
                             "label": "주의",
-                            "value": "링크 경로가 타입으로 검사되므로 일곱 파일을 한 번에 반영해야 한다. 2단계와 체크리스트가 서로를 가리켜, 나눠 넣으면 어느 쪽을 먼저 넣어도 빌드가 실패한다"
+                            "value": "링크 경로가 타입으로 검사되므로 일곱 파일을 한 번에 반영해야 합니다. 2단계와 체크리스트가 서로를 가리켜, 나눠 넣으면 어느 쪽을 먼저 넣어도 빌드가 실패합니다"
                         }
                     ]
                 },
@@ -1965,15 +2475,15 @@
                         },
                         {
                             "label": "적용",
-                            "value": "고객정보활용동의 입력 묶음과 평가 신청하기 첨부파일 묶음을 공통 자리에 신규 추가. 동의 폼은 콘솔에 찍는 이름만 모형별로 받도록 옵션을 두었고, 첨부 폼은 세 서류(대표자 건강보험 자격 득실 확인서 · 4대 사회보험 사업장 가입자 명부 · 특허등록증)가 모형 공통이라 그대로 쓴다"
+                            "value": "고객정보활용동의 입력 묶음과 평가 신청하기 첨부파일 묶음을 공통 자리에 신규 추가. 동의 폼은 콘솔에 찍는 이름만 모형별로 받도록 옵션을 두었고, 첨부 폼은 세 서류(대표자 건강보험 자격 득실 확인서 · 4대 사회보험 사업장 가입자 명부 · 특허등록증)가 모형 공통이라 그대로 씁니다"
                         },
                         {
                             "label": "삭제",
-                            "value": "src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/customer-consent/org-customer-consent-form.tsx 와 src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/evaluation-application-form.tsx 를 함께 삭제해야 한다. 위 두 파일로 자리를 옮긴 같은 폼이며, 남겨 두면 같은 폼이 두 벌이 된다"
+                            "value": "src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/customer-consent/org-customer-consent-form.tsx 와 src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/evaluation-application-form.tsx 를 함께 삭제해야 합니다. 위 두 파일로 자리를 옮긴 같은 폼이며, 남겨 두면 같은 폼이 두 벌이 됩니다"
                         },
                         {
                             "label": "주의",
-                            "value": "추가·삭제와 위 [Diff 확인] 의 import 경로 교체는 한 번에 반영해야 한다"
+                            "value": "추가·삭제와 위 [Diff 확인] 의 import 경로 교체는 한 번에 반영해야 합니다"
                         },
                         {
                             "label": "커밋",
@@ -1992,7 +2502,7 @@
                         },
                         {
                             "label": "적용",
-                            "value": "이 모형에만 있는 네 조각 신규 추가. 기업정보는 [기업 담당자 정보] 구획이 없고 회원정보에서 오는 값이 잠긴 채 표시되며 법인일 때만 법인번호가 필수다. 대표자 역량은 최종학력·전공·기술분야 일치여부·기술자격증 네 칸이고 고졸을 고르면 전공이 선택값으로 바뀐다. 기업 기타 정보는 지식재산 11칸을 포함한 10개 구획이며 수량 칸의 처음 값은 0 이다. 재무정보는 당기·전기 금액 다섯 칸이고 필수도 처음 값도 두지 않아, 0 을 그대로 적어도 [작성완료]로 바뀐다"
+                            "value": "이 모형에만 있는 네 조각 신규 추가. 기업정보는 [기업 담당자 정보] 구획이 없고 회원정보에서 오는 값이 잠긴 채 표시되며 법인일 때만 법인번호가 필수입니다. 대표자 역량은 최종학력·전공·기술분야 일치여부·기술자격증 네 칸이고 고졸을 고르면 전공이 선택값으로 바뀝니다. 기업 기타 정보는 지식재산 11칸을 포함한 10개 구획이며 수량 칸의 처음 값은 0 입니다. 재무정보는 당기·전기 금액 다섯 칸이고 필수도 처음 값도 두지 않아, 0 을 그대로 적어도 [작성완료]로 바뀝니다"
                         }
                     ]
                 },
@@ -2007,7 +2517,7 @@
                         },
                         {
                             "label": "적용",
-                            "value": "(1) 고객정보활용동의부터 (5) 완료 화면까지 신규 추가. 2단계는 탭 여섯 개(기업정보 · 대표자 역량 및 경력사항 · 기업 기타 정보 · 핵심 기술 인력 현황 · 경영진 역량 및 구성 · 재무정보)가 한 화면이고, 3단계 체크리스트는 2단계에서 고른 업종코드로 제조용·서비스용이 갈린다. 완료 화면은 시안에 모형 코드 뱃지가 없고 안내가 두 줄이라 KTRS-FM 완료 화면과 여백 비율이 다르다"
+                            "value": "(1) 고객정보활용동의부터 (5) 완료 화면까지 신규 추가. 2단계는 탭 여섯 개(기업정보 · 대표자 역량 및 경력사항 · 기업 기타 정보 · 핵심 기술 인력 현황 · 경영진 역량 및 구성 · 재무정보)가 한 화면이고, 3단계 체크리스트는 2단계에서 고른 업종코드로 제조용·서비스용이 갈립니다. 완료 화면은 시안에 모형 코드 뱃지가 없고 안내가 두 줄이라 KTRS-FM 완료 화면과 여백 비율이 다릅니다"
                         }
                     ]
                 },
@@ -2019,7 +2529,7 @@
                         {"label": "대상", "value": "src/content/technology-evaluation/industry-checklist.ts"},
                         {
                             "label": "적용",
-                            "value": "제조용·서비스용 체크리스트 문항을 함께 담은 데이터 파일 신규 추가. 앞부분 공통 문항과 뒷부분 공통 문항은 두 업종이 같고 가운데 [생산 방식](자체생산·외주생산) 분기만 다르므로, 한 벌의 뼈대에 자체생산 문항만 갈아 끼워 두 벌을 만든다. 연동 시 같은 모양의 API 응답으로 교체한다"
+                            "value": "제조용·서비스용 체크리스트 문항을 함께 담은 데이터 파일 신규 추가. 앞부분 공통 문항과 뒷부분 공통 문항은 두 업종이 같고 가운데 [생산 방식](자체생산·외주생산) 분기만 다르므로, 한 벌의 뼈대에 자체생산 문항만 갈아 끼워 두 벌을 만듭니다. 연동 시 같은 모양의 API 응답으로 교체합니다"
                         }
                     ]
                 },
@@ -2038,11 +2548,11 @@
                         },
                         {
                             "label": "삭제",
-                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/page.tsx 와 src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/page.tsx 를 함께 삭제해야 한다. 업종코드로 갈리기 전의 단일 체크리스트 화면이며, 이제 진입 경로가 없다"
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/page.tsx 와 src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/page.tsx 를 함께 삭제해야 합니다. 업종코드로 갈리기 전의 단일 체크리스트 화면이며, 이제 진입 경로가 없습니다"
                         },
                         {
                             "label": "주의",
-                            "value": "추가·삭제·위 [Diff 확인] 변경은 한 번에 반영해야 한다. 링크 경로가 타입으로 검사되어 한쪽만 반영하면 빌드가 실패한다"
+                            "value": "추가·삭제·위 [Diff 확인] 변경은 한 번에 반영해야 합니다. 링크 경로가 타입으로 검사되어 한쪽만 반영하면 빌드가 실패합니다"
                         },
                         {
                             "label": "커밋",
@@ -2058,7 +2568,7 @@
                         {"label": "대상", "value": "src/content/technology-evaluation/industry-codes.json"},
                         {
                             "label": "적용",
-                            "value": "한국표준산업분류(KSIC) 중분류 77개와 그 하위 1,205개를 담은 데이터 파일 신규 추가. 연동 시 업종코드 조회 API 응답으로 교체할 자리이며, 지금은 조회 모달과 다음 단계의 제조·서비스 체크리스트 분기가 이 값을 사용한다"
+                            "value": "한국표준산업분류(KSIC) 중분류 77개와 그 하위 1,205개를 담은 데이터 파일 신규 추가. 연동 시 업종코드 조회 API 응답으로 교체할 자리이며, 지금은 조회 모달과 다음 단계의 제조·서비스 체크리스트 분기가 이 값을 사용합니다"
                         }
                     ]
                 },
@@ -2103,7 +2613,7 @@
                         },
                         {
                             "label": "적용",
-                            "value": "IA 에서 분리된 (1) Tech-Index 선택 화면과 일괄평가 진행 신청의 [제출전 최종확인] 화면 신규 추가. 두 화면 모두 새 UI 없이 기존 화면·공통 모달에 경로만 연결한다"
+                            "value": "IA 에서 분리된 (1) Tech-Index 선택 화면과 일괄평가 진행 신청의 [제출전 최종확인] 화면 신규 추가. 두 화면 모두 새 UI 없이 기존 화면·공통 모달에 경로만 연결합니다"
                         },
                         {
                             "label": "화면",
@@ -2122,7 +2632,7 @@
                         },
                         {
                             "label": "적용",
-                            "value": "지정한 파일만 교체. 세 파일은 반드시 함께 교체해야 한다 — 콘텐츠 관문(src/content/publishing-guide/index.ts)이 빌드 시점에 두 JSON 의 화면 key 를 양방향으로 교차검증하므로, 하나만 바꾸면 빌드가 실패한다"
+                            "value": "지정한 파일만 교체. 세 파일은 반드시 함께 교체해야 합니다 — 콘텐츠 관문(src/content/publishing-guide/index.ts)이 빌드 시점에 두 JSON 의 화면 key 를 양방향으로 교차검증하므로, 하나만 바꾸면 빌드가 실패합니다"
                         },
                         {
                             "label": "변경",
@@ -2130,23 +2640,23 @@
                         },
                         {
                             "label": "상태",
-                            "value": "응용2팀 화면 진척 상태(application2Status) 62건을 함께 반영. 완료 처리 59건(미설정 → 완료 53, 진행중 → 완료 6)과 진행중 전환 3건이며, 퍼블리싱 인덱스의 응용2 진척률과 표의 응용2 상태가 이 값으로 갱신된다"
+                            "value": "응용2팀 화면 진척 상태(application2Status) 62건을 함께 반영. 완료 처리 59건(미설정 → 완료 53, 진행중 → 완료 6)과 진행중 전환 3건이며, 퍼블리싱 인덱스의 응용2 진척률과 표의 응용2 상태가 이 값으로 갱신됩니다"
                         },
                         {
                             "label": "분리",
-                            "value": "업종코드별로 갈리는 체크리스트를 네 모형(기업·기관 KTRS-FM, 기업·기관 투자모형)에 반영. 각 모형의 (3) 체크리스트 입력 한 행을 [업종코드 제조 선택]·[업종코드 서비스 선택] 두 행으로 나누고, 두 행을 [선택한 업종코드별 페이지] 묶음 아래에 둔다. 이 묶음은 아래 모달 목록과 구분하기 위한 것이라 뎁스 번호를 차지하지 않는다(isGroupOnly — 표가 이 옵션을 읽으려면 같은 릴리스의 [Diff 확인] 항목이 함께 반영되어야 한다)"
+                            "value": "업종코드별로 갈리는 체크리스트를 네 모형(기업·기관 KTRS-FM, 기업·기관 투자모형)에 반영. 각 모형의 (3) 체크리스트 입력 한 행을 [업종코드 제조 선택]·[업종코드 서비스 선택] 두 행으로 나누고, 두 행을 [선택한 업종코드별 페이지] 묶음 아래에 둡니다. 이 묶음은 아래 모달 목록과 구분하기 위한 것이라 뎁스 번호를 차지하지 않습니다(isGroupOnly — 표가 이 옵션을 읽으려면 같은 릴리스의 [Diff 확인] 항목이 함께 반영되어야 합니다)"
                         },
                         {
                             "label": "추가",
-                            "value": "기관 투자모형 (1) 고객정보활용동의 ~ (5) 완료 화면의 항목과 경로를 채웠다. 화면 leaf 는 302건에서 306건이 된다"
+                            "value": "기관 투자모형 (1) 고객정보활용동의 ~ (5) 완료 화면의 항목과 경로를 채웠습니다. 화면 leaf 는 302건에서 306건이 됩니다"
                         },
                         {
                             "label": "정정",
-                            "value": "K-BIGx 혁신성장리포트 하위 다섯 행(기업정보 수집제공 근거 · 이용약관 · 마케팅 알림 수신동의 · 이용권구매 안내 · 조회횟수 차감안내)이 없어진 화면의 key 를 물려쓰고 있어, 표에 남의 경로와 화면명이 붙어 있었다. 다섯 행에 제 key·경로·화면명을 부여했다. 그중 [조회횟수 차감안내]는 작업하지 않은 화면인데 [완료]로 표시되던 것을 [대기중]으로 되돌렸다"
+                            "value": "K-BIGx 혁신성장리포트 하위 다섯 행(기업정보 수집제공 근거 · 이용약관 · 마케팅 알림 수신동의 · 이용권구매 안내 · 조회횟수 차감안내)이 없어진 화면의 key 를 물려쓰고 있어, 표에 남의 경로와 화면명이 붙어 있었습니다. 다섯 행에 제 key·경로·화면명을 부여했습니다. 그중 [조회횟수 차감안내]는 작업하지 않은 화면인데 [완료]로 표시되던 것을 [대기중]으로 되돌렸습니다"
                         },
                         {
                             "label": "완료",
-                            "value": "이번 릴리스에서 만든 화면을 완료 처리해 퍼블리싱 완료가 172건에서 184건이 된다(업종코드별 체크리스트 8건, 기업 투자모형 3건, 기관 투자모형 5건 등). 표의 화면 경로 상태는 page 파일 존재 여부로 자동 계산되며 구현 189건이다"
+                            "value": "이번 릴리스에서 만든 화면을 완료 처리해 퍼블리싱 완료가 172건에서 184건이 됩니다(업종코드별 체크리스트 8건, 기업 투자모형 3건, 기관 투자모형 5건 등). 표의 화면 경로 상태는 page 파일 존재 여부로 자동 계산되며 구현 189건입니다"
                         }
                     ]
                 }
@@ -4211,17 +4721,6 @@
                 "프론트엔드 전달 프로젝트 자동 생성·독립 빌드 및 브랜치 이력 관리 체계 구축",
                 "전달 프로젝트에 디자인 토큰 재생성 환경과 컴포넌트·퍼블리싱 가이드 포함",
                 "시작 페이지와 [컴포넌트 가이드](/component-guide)에 `frontend-handoff` 브랜치 사용 기준 안내"
-            ]
-        },
-        {
-            "version": "v0.1.9",
-            "releasedAt": "2026-07-30",
-            "changes": [
-                "제출 완료 안내의 이동 경로를 시안대로 강조",
-                "텍스트 버튼의 글자·아이콘 간격을 시안 컴포넌트 값으로 맞춤",
-                "모형 카드 설명문 줄바꿈을 시안에 맞춤",
-                "자동저장 토스트 노출 시간 단축",
-                "자가진단 서브페이지 헤더 스티키 적용"
             ]
         }
     ]

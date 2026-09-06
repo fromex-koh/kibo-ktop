@@ -33,11 +33,15 @@ const SessionExtensionDialog = () => (
     <Dialog defaultOpen>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>로그인 연장</DialogTitle>
+                <DialogTitle asChild>
+                    <h1>로그인 연장</h1>
+                </DialogTitle>
             </DialogHeader>
             <div className={cn(dialogBodyClassName, 'gap-4')}>
-                <DialogDescription>
-                    로그아웃까지 남은 시간 : <strong className="text-primary font-bold">30:00</strong>
+                <DialogDescription asChild>
+                    <span className="block">
+                        로그아웃까지 남은 시간 : <strong className="text-primary font-bold">30:00</strong>
+                    </span>
                 </DialogDescription>
                 <p className="typo-body-xl-regular text-label-foreground">
                     10분 동안 서비스를 이용하지 않아 잠시 후 자동으로 로그아웃될 예정입니다.
@@ -62,10 +66,14 @@ const InitialPasswordChangeDialog = () => (
     <Dialog defaultOpen>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>내 정보 확인</DialogTitle>
+                <DialogTitle asChild>
+                    <h1>내 정보 확인</h1>
+                </DialogTitle>
             </DialogHeader>
             <div className={cn(dialogBodyClassName, 'gap-6')}>
-                <DialogDescription>회원님의 소중한 정보를 보호하기 위해 비밀번호를 변경해 주세요.</DialogDescription>
+                <DialogDescription asChild>
+                    <span className="block">회원님의 소중한 정보를 보호하기 위해 비밀번호를 변경해 주세요.</span>
+                </DialogDescription>
                 <div className="flex flex-col gap-4">
                     <Label htmlFor="initial-password" className="text-foreground font-bold">
                         비밀번호
@@ -92,11 +100,13 @@ const LoginGuideDialog = () => (
     <Dialog defaultOpen>
         <DialogContent showCloseButton={false}>
             <DialogHeader className="p-0">
-                <DialogTitle className="sr-only">회원가입/로그인</DialogTitle>
+                <DialogTitle asChild className="sr-only">
+                    <h1>회원가입/로그인</h1>
+                </DialogTitle>
             </DialogHeader>
             <div className={cn(dialogBodyClassName, 'pt-0')}>
-                <DialogDescription className="py-8 text-center">
-                    로그인이 필요한 서비스입니다. 로그인하시겠습니까?
+                <DialogDescription asChild className="py-8 text-center">
+                    <span className="block">로그인이 필요한 서비스입니다. 로그인하시겠습니까?</span>
                 </DialogDescription>
             </div>
             <DialogFooter>
@@ -193,10 +203,14 @@ const RealNameVerificationDialog = () => (
     <Dialog defaultOpen>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>본인 인증</DialogTitle>
+                <DialogTitle asChild>
+                    <h1>본인 인증</h1>
+                </DialogTitle>
             </DialogHeader>
             <div className={cn(dialogBodyClassName, 'gap-6')}>
-                <DialogDescription>주민등록번호를 입력해 주세요</DialogDescription>
+                <DialogDescription asChild>
+                    <span className="block">주민등록번호를 입력해 주세요</span>
+                </DialogDescription>
                 <div className="flex flex-col gap-4">
                     <Label htmlFor="real-name-rrn-front" className="text-foreground font-bold">
                         주민등록번호

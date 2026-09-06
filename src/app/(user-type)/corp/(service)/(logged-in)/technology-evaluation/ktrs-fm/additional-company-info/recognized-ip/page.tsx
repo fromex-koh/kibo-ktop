@@ -9,7 +9,7 @@ export const metadata: Metadata = {title: '실적인정 지식재산'}
 const CorpKtrsFmRecognizedIpPage = () => (
     <>
         <main id="main" tabIndex={-1} className="bg-background flex-1" />
-        <RecognizedIpDialog defaultOpen />
+        <RecognizedIpDialog defaultOpen headingLevel={1} />
     </>
 )
 

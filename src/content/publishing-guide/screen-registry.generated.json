@@ -145,15 +145,15 @@
             "key": "corp-technology-evaluation-ktrs-fm-representative-career-input-helper",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-transaction-type-guide",
@@ -271,8 +271,8 @@
             "key": "corp-technology-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.6",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
@@ -975,20 +975,6 @@
             "isCurrent": false
         },
         {
-            "key": "corp-mypage-paid-services-refund-history",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
-            "key": "corp-mypage-paid-services-statement",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
             "key": "corp-mypage-paid-services-refund-reason",
             "implemented": false,
             "implementationStatus": "planned",
@@ -1006,29 +992,29 @@
             "key": "corp-mypage-inquiry-history",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-inquiry-history-inquiry-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-announcements",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-notice-faq",
@@ -1069,8 +1055,8 @@
             "key": "corp-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-marketing-consent",
@@ -1902,15 +1888,15 @@
             "key": "org-notice-announcements",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "org-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "org-notice-faq",
@@ -1951,8 +1937,8 @@
             "key": "org-notice-resources",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.1.7",
+            "isCurrent": true
         },
         {
             "key": "org-not-found",
@@ -2186,6 +2172,13 @@
             "isCurrent": false
         },
         {
+            "key": "org-mypage-sub-account-progress-create-complete-toast",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "org-mypage-sub-account-progress-detail",
             "implemented": false,
             "implementationStatus": "planned",
@@ -2200,7 +2193,21 @@
             "isCurrent": false
         },
         {
+            "key": "org-mypage-sub-account-progress-edit-complete-toast",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "org-mypage-sub-account-progress-password-reset",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-sub-account-progress-password-reset-complete-toast",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
@@ -2214,7 +2221,7 @@
             "isCurrent": false
         },
         {
-            "key": "org-mypage-sub-account-progress-delete",
+            "key": "org-mypage-sub-account-progress-status-change-complete-toast",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
@@ -2225,6 +2232,76 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v1.0.0",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-auth-org-login",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-terms-k-bigx",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-home-notice-popup",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-credit-information-policy",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-auth-org-login",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-terms-k-bigx",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-home-notice-popup",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-credit-information-policy",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-pricing-payment",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-refund-unavailable",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
             "isCurrent": false
         }
     ]

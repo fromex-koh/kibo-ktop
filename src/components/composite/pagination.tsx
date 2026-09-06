@@ -110,7 +110,7 @@ const Pagination = ({
     }
 
     return (
-        <PaginationRoot aria-label={ariaLabel} className={className}>
+        <PaginationRoot role={undefined} aria-label={ariaLabel} className={className}>
             <PaginationContent className={cn('gap-2', compact && 'gap-1')}>
                 <PaginationItem>
                     <button

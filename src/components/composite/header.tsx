@@ -408,10 +408,13 @@ const HeaderMenu = ({
                     </span>
                 </button>
             </SheetTrigger>
+            {/* 메뉴 이름(SheetTitle) 외에 설명은 두지 않으므로 aria-describedby 를 비운다 — 넘기지 않으면
+                Radix 가 있지도 않은 설명 id 를 가리켜 참조가 끊긴다(WAVE "Broken ARIA reference"). */}
             <SheetContent
                 ref={menuContentRef}
                 side="right"
                 showCloseButton={false}
+                aria-describedby={undefined}
                 onOpenAutoFocus={(event) => {
                     event.preventDefault()
                     triggerRef.current?.focus()

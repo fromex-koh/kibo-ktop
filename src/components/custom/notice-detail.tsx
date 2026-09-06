@@ -1,13 +1,15 @@
 import Link from 'next/link'
 import {ChevronDown, ChevronUp, Paperclip} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
+import {InlineSeparator} from '@/components/composite/inline-separator'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Separator} from '@/components/ui/separator'
 import {NOTICE_CATEGORY, type NoticeCategory} from '@/components/custom/notice-category'
 
-// 공지사항 상세 — 시안 "[알림마당] 공지사항_상세"(40006769:23841).
-// 기존 컴포넌트 조합이다: BaseCard(흰 면·radius 16) · Badge(분류) · Separator(구분선) · Button(목록으로 돌아가기).
+// 공지사항 상세 — 시안 "[알림마당] 공지사항_상세"(40007386:80228).
+// 기존 컴포넌트 조합이다: BaseCard(흰 면·radius 16) · InlineSeparator(분류│제목) · Badge(중요공지) ·
+// Separator(구분선) · Button(목록으로 돌아가기).
 // 상태가 없어 서버 컴포넌트로 둔다. 본문·첨부파일·이웃 글은 화면(page.tsx)이 props 로 넘긴다.
 
 type NoticeAttachment = {
@@ -23,6 +25,10 @@ type NoticeSibling = {
 type NoticeDetailProps = {
     category: NoticeCategory
     title: string
+    // 중요공지 표시 — 목록과 같은 배지가 제목 뒤에 붙는다.
+    isImportant?: boolean
+    // 새 글 표시(N) — 중요공지 배지 다음에 이어 붙는다(목록과 같은 순서).
+    isNew?: boolean
     // 화면에 그대로 노출하는 등록일(YYYY-MM-DD).
     publishedAt: string
     content: string
@@ -64,6 +70,8 @@ const NoticeSiblingRow = ({
 const NoticeDetail = ({
     category,
     title,
+    isImportant,
+    isNew,
     publishedAt,
     content,
     attachments,
@@ -71,7 +79,7 @@ const NoticeDetail = ({
     next,
     listHref,
 }: NoticeDetailProps) => {
-    const badge = NOTICE_CATEGORY[category]
+    const categoryLabel = NOTICE_CATEGORY[category]
     const hasSiblings = prev != null || next != null
 
     return (
@@ -81,15 +89,43 @@ const NoticeDetail = ({
                 <BaseCard className="py-8">
                     <article className="flex flex-col">
                         <header className="flex flex-col gap-2">
-                            <h2 className="typo-title-m-medium text-foreground break-keep">{title}</h2>
-                            <div className="flex flex-wrap items-center gap-2">
-                                <Badge color={badge.color} shape="round">
-                                    {badge.label}
-                                </Badge>
-                                <time dateTime={publishedAt} className="typo-body-l-regular text-foreground-subtle">
-                                    {publishedAt}
-                                </time>
+                            {/* 모바일은 목록처럼 분류를 윗줄에 두고 제목과 뱃지를 글 흐름으로 이어 붙인다.
+                                상세 제목은 말줄임 없이 전체 내용을 표시한다. */}
+                            <div className="flex flex-col gap-y-1 md:flex-row md:flex-wrap md:items-center md:gap-x-1 md:gap-y-2">
+                                <span className="typo-body-xl-regular text-label-foreground shrink-0">
+                                    {categoryLabel}
+                                </span>
+                                {/* 좌우 16 은 이 구분선의 기본 여백 12 와 줄의 gap 4 가 합쳐진 값이다. */}
+                                <InlineSeparator className="max-md:hidden" />
+                                <div className="min-w-0 md:contents">
+                                    <h2 className="typo-title-m-medium text-foreground min-w-0 break-keep max-md:inline">
+                                        {title}
+                                    </h2>
+                                    {isImportant ? (
+                                        <Badge
+                                            color="error"
+                                            shape="round"
+                                            className="shrink-0 max-md:ml-1 max-md:align-middle"
+                                        >
+                                            중요공지
+                                        </Badge>
+                                    ) : null}
+                                    {/* 새 글 표시 — 글자 N 만으로는 뜻이 전해지지 않아 말로도 알린다[5.1.1]. */}
+                                    {isNew ? (
+                                        <Badge
+                                            type="number"
+                                            color="new"
+                                            className="shrink-0 max-md:ml-1 max-md:align-middle"
+                                        >
+                                            <span aria-hidden="true">N</span>
+                                            <span className="sr-only">새 글</span>
+                                        </Badge>
+                                    ) : null}
+                                </div>
                             </div>
+                            <time dateTime={publishedAt} className="typo-body-l-regular text-foreground-subtle">
+                                {publishedAt}
+                            </time>
                         </header>
 
                         <Separator className="my-6" />

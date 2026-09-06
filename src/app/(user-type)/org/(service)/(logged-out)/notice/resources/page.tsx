@@ -15,18 +15,18 @@ export const metadata: Metadata = {title: '자료실'}
 // API 연동 전 화면 확인용 목업 데이터. 실제 작업에서는 이 배열을 조회 결과로 교체하고
 // href 를 파일 서버 경로로 연결한다.
 const MOCK_RESOURCE_ITEMS: readonly ResourceItem[] = [
-    {id: 'org-resource-001', title: 'K-TOP 서비스 이용 안내서', href: '#'},
-    {id: 'org-resource-002', title: '기술평가 신청 절차 안내서', href: '#'},
-    {id: 'org-resource-003', title: 'KTRS-FM 평가모형 설명자료', href: '#'},
-    {id: 'org-resource-004', title: 'Tech-Index 평가모형 설명자료', href: '#'},
-    {id: 'org-resource-005', title: '투자모형 평가 안내서', href: '#'},
-    {id: 'org-resource-006', title: 'K-BIGx 보고서 활용 가이드', href: '#'},
-    {id: 'org-resource-007', title: '특허등급평가 안내서', href: '#'},
-    {id: 'org-resource-008', title: '개인정보 활용 동의서 양식', href: '#'},
-    {id: 'org-resource-009', title: '기술혁신정보 이용동의 양식', href: '#'},
-    {id: 'org-resource-010', title: '자주 묻는 질문 모음집', href: '#'},
-    {id: 'org-resource-011', title: '탄소중립 평가 안내서', href: '#'},
-    {id: 'org-resource-012', title: '유료 서비스 이용 안내서', href: '#'},
+    {id: 'org-resource-001', category: 'guide', title: 'K-TOP 서비스 이용 안내서', href: '#'},
+    {id: 'org-resource-002', category: 'guide', title: '기술평가 신청 절차 안내서', href: '#'},
+    {id: 'org-resource-003', category: 'guide', title: 'KTRS-FM 평가모형 설명자료', href: '#'},
+    {id: 'org-resource-004', category: 'guide', title: 'Tech-Index 평가모형 설명자료', href: '#'},
+    {id: 'org-resource-005', category: 'guide', title: '투자모형 평가 안내서', href: '#'},
+    {id: 'org-resource-006', category: 'guide', title: 'K-BIGx 보고서 활용 가이드', href: '#'},
+    {id: 'org-resource-007', category: 'guide', title: '특허등급평가 안내서', href: '#'},
+    {id: 'org-resource-008', category: 'form', title: '개인정보 활용 동의서 양식', href: '#'},
+    {id: 'org-resource-009', category: 'form', title: '기술혁신정보 이용동의 양식', href: '#'},
+    {id: 'org-resource-010', category: 'guide', title: '자주 묻는 질문 모음집', href: '#'},
+    {id: 'org-resource-011', category: 'guide', title: '탄소중립 평가 안내서', href: '#'},
+    {id: 'org-resource-012', category: 'form', title: '유료 서비스 이용 안내서', href: '#'},
 ]
 
 const MOCK_RESOURCE_PAGE_SIZE = 10
