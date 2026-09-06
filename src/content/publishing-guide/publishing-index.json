@@ -1992,7 +1992,7 @@
                 {
                     "label": "실명인증",
                     "screenId": "SB-FOTA-CP3-0016",
-                    "status": "완료",
+                    "status": "보완",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-real-name-verification",
