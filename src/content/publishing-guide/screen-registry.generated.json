@@ -975,20 +975,6 @@
             "isCurrent": false
         },
         {
-            "key": "corp-mypage-paid-services-refund-history",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
-            "key": "corp-mypage-paid-services-statement",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
             "key": "corp-mypage-paid-services-refund-reason",
             "implemented": false,
             "implementationStatus": "planned",
@@ -2214,17 +2200,80 @@
             "isCurrent": false
         },
         {
-            "key": "org-mypage-sub-account-progress-delete",
+            "key": "org-login-guide",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v1.0.0",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-auth-org-login",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "org-login-guide",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v1.0.0",
+            "key": "corp-terms-k-bigx",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-home-notice-popup",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-credit-information-policy",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-auth-org-login",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-terms-k-bigx",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-home-notice-popup",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-credit-information-policy",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-pricing-payment",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-refund-unavailable",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
             "isCurrent": false
         }
     ]

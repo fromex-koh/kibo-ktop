@@ -6,11 +6,11 @@
     "//assetVersions": "Vercel 배포와 frontend-handoff에 함께 포함되는 컴포넌트·스타일·런타임·설정·에셋만 추적한다. 퍼블리싱 가이드 전용 제작 도구와 전달 프로젝트에서 실행하지 않는 생성·검사 스크립트는 제외한다. version 은 직접 적지 않고 path 기준 git 히스토리로 자동 계산한다. 인계 기준선은 v0.1.3이며 src/app/fonts만 기존 v0.1.0 이력을 유지한다. 이후에는 마지막 변경을 포함하는 최초 태그가 버전이며 아직 태그에 포함되지 않았으면 '미배포'다.",
     "//commonLayouts": "화면이 아니라 여러 화면이 공유하는 '화면을 찍어내는 틀' 단위 레이아웃(서브 레이아웃, 내부 콘텐츠만 바뀌는 틀). Header·Footer 는 이 틀에 이미 포함되므로 개별 행으로 두지 않는다. 독립 화면이 아니라 screenId 가 없고, 별도 표로 렌더링된다. path 기준 Git 이력으로 version 을 자동 계산하며 아직 태그에 포함되지 않았으면 '미배포'다.",
     "//iaVersions": "IA 원본 시트 파일명 기준 버전. 기업·기관·탄소 segmented control 선택에 따라 퍼블리싱 인덱스 제목 옆 배지에 표시한다.",
-    "//structureGroups": "2026-08-18 FO IA를 기준으로 기업 155건(No. 기재 153건 + No. 미기재 작성 취소 2건), 기관은 원본 150건 중 빨간색·취소선 3건을 제외한 147건을 각각 독립된 트리로 반영한다. 기관 제외 항목은 정보 이용 동의, 이용약관, 마케팅 알림 수신동의다. leaf.version은 아직 작업 전이면 미배포다. 탄소는 탄소 FO 저장소의 퍼블리싱 인덱스(IA V1.3_260826) 60건을 그 표의 뎁스 그대로 반영한다. 화면은 탄소 FO가 만들고 여기서는 만들지 않으므로, 각 화면의 externalHref가 배포된 화면을 가리킨다.",
+    "//structureGroups": "2026-08-31 FO IA V1.23의 기업 156건·기관 141건(취소선 6건 제외)을 기준으로 반영한다. 체크리스트 업종별 화면, 회원 유형별 화면과 구현 과정에서 추가된 상세 화면은 별도 행으로 유지한다. 기업 환불내역·명세서 및 기관 하위 계정 삭제는 최신 IA에서 제외되어 인덱스에서도 제외한다. 기관 개별평가 신청·제출 전 확인 6건은 응용2 완료 이력을 확인할 수 있도록 복원하고 별도 행 색상으로 표시한다. 기존 화면의 key·경로·작업 상태·버전은 유지하며 추가 화면은 대기중으로 등록한다. 탄소는 별도 탄소 FO 저장소의 IA V1.3_260826 기반 인덱스와 외부 링크를 유지한다.",
     "//userType": "기업·기관 IA는 메뉴명이 같아도 역할과 노출 조건이 다를 수 있으므로 공통으로 병합하지 않는다. 모든 그룹에 기업·기관·탄소 중 하나의 userType을 지정하고 Segmented Control에서 한 벌씩 조회한다. 탄소는 이 저장소가 아니라 탄소 FO가 만드는 화면이라 key만 두고 경로 레지스트리와 짝을 맞추지 않으며, 화면 주소는 각 화면의 externalHref로 연결한다. 탄소 FO 의 '개발 수정완료' 상태는 우리 상태 집합에 없고 퍼블리싱이 끝난 행이므로 완료로 옮겨 센다. 탄소 FO 의 '개발 수정요청' 은 아직 손볼 것이 남은 행이라 수정요청으로 옮긴다(완료로 세지 않는다).",
     "iaVersions": {
-        "기업": "V1.21_260818",
-        "기관": "V1.21_260818",
+        "기업": "V1.23_260831",
+        "기관": "V1.23_260831",
         "탄소": "V1.3_260826"
     },
     "assetVersions": [
@@ -216,7 +216,7 @@
                     "label": "홈",
                     "screen": {
                         "key": "corp-home",
-                        "screenId": null,
+                        "screenId": "SB-FOTA-CM0-0001",
                         "application2Status": "완료",
                         "status": "완료",
                         "version": "미배포"
@@ -226,7 +226,7 @@
                             "label": "기술평가 평가모형 선택",
                             "screen": {
                                 "key": "corp-home-technology-evaluation-model-selection",
-                                "screenId": null,
+                                "screenId": "SB-FOTA-CM5-0001",
                                 "application2Status": "완료",
                                 "status": "완료",
                                 "version": "미배포"
@@ -234,7 +234,7 @@
                             "children": [
                                 {
                                     "label": "Tech-Index 선택 화면",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CM6-0001",
                                     "application2Status": "완료",
                                     "status": "완료",
                                     "version": "미배포",
@@ -252,7 +252,7 @@
             "children": [
                 {
                     "label": "전체메뉴",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CP0-0001",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -265,11 +265,18 @@
             "userType": "기업",
             "children": [
                 {
-                    "label": "로그인/회원가입",
-                    "screenId": null,
+                    "label": "기업 로그인",
+                    "screenId": "SB-FOTA-CM1-0001",
                     "status": "대기중",
                     "version": "미배포",
                     "key": "corp-auth"
+                },
+                {
+                    "label": "기관 로그인",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-auth-org-login"
                 }
             ]
         },
@@ -279,7 +286,7 @@
             "children": [
                 {
                     "label": "이용안내",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM3-0001",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -293,11 +300,22 @@
             "children": [
                 {
                     "label": "가격 정책",
-                    "screenId": null,
-                    "status": "완료",
-                    "application2Status": "완료",
-                    "version": "미배포",
-                    "key": "corp-pricing"
+                    "screen": {
+                        "screenId": "SB-FOTA-CM4-0001",
+                        "status": "완료",
+                        "application2Status": "완료",
+                        "version": "미배포",
+                        "key": "corp-pricing"
+                    },
+                    "children": [
+                        {
+                            "label": "결제하기",
+                            "screenId": null,
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-pricing-payment"
+                        }
+                    ]
                 }
             ]
         },
@@ -307,7 +325,7 @@
             "children": [
                 {
                     "label": "플랫폼 소개",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM0-0002",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -315,7 +333,7 @@
                 },
                 {
                     "label": "기술평가 소개",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM1-0002",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -323,7 +341,7 @@
                 },
                 {
                     "label": "특허평가 소개",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM6-0002",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -331,7 +349,7 @@
                 },
                 {
                     "label": "K-BIGx 보고서 소개",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM4-0002",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -339,7 +357,7 @@
                 },
                 {
                     "label": "탄소중립 소개",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM5-0002",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -357,7 +375,7 @@
                         {
                             "label": "(1) 고객정보활용동의",
                             "screen": {
-                                "screenId": null,
+                                "screenId": "SB-FOTA-CM1-0003",
                                 "status": "완료",
                                 "application2Status": "완료",
                                 "version": "미배포",
@@ -366,7 +384,7 @@
                             "children": [
                                 {
                                     "label": "필수/선택 동의 팝업",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP2-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -374,7 +392,7 @@
                                 },
                                 {
                                     "label": "개별 상세 보기",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP0-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -382,7 +400,7 @@
                                 },
                                 {
                                     "label": "전자서명",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP1-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -390,7 +408,7 @@
                                 },
                                 {
                                     "label": "이어서 작성 안내",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP3-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -400,7 +418,7 @@
                         },
                         {
                             "label": "(2) 기업·기술정보 입력",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CM2-0003",
                             "status": "완료",
                             "version": "미배포",
                             "key": "corp-technology-evaluation-ktrs-fm-company-technology-info",
@@ -411,7 +429,7 @@
                             "children": [
                                 {
                                     "label": "업종코드 조회",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP4-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -419,7 +437,7 @@
                                 },
                                 {
                                     "label": "주소 찾기",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP5-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -432,7 +450,7 @@
                             "children": [
                                 {
                                     "label": "입력도움말",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP6-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -445,7 +463,7 @@
                             "children": [
                                 {
                                     "label": "실적인정 지식재산",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP7-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -453,7 +471,7 @@
                                 },
                                 {
                                     "label": "거래유형 설명",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP8-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -461,7 +479,7 @@
                                 },
                                 {
                                     "label": "전문기술/숙련기술 정의",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP9-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -477,7 +495,7 @@
                                 },
                                 {
                                     "label": "작성 취소",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP14-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -494,7 +512,7 @@
                                     "children": [
                                         {
                                             "label": "업종코드 제조 선택",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CM3-0003",
                                             "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
@@ -502,7 +520,7 @@
                                         },
                                         {
                                             "label": "업종코드 서비스 선택",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CM3-0003",
                                             "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
@@ -512,7 +530,7 @@
                                 },
                                 {
                                     "label": "피인용 확인 메뉴얼",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP10-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -520,7 +538,7 @@
                                 },
                                 {
                                     "label": "보증제한 업종",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP11-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -528,7 +546,7 @@
                                 },
                                 {
                                     "label": "TRL 확인",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP12-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -536,7 +554,7 @@
                                 },
                                 {
                                     "label": "제출 전 최종확인",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP13-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -544,7 +562,7 @@
                                 },
                                 {
                                     "label": "작성 취소",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP14-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -555,7 +573,7 @@
                         {
                             "label": "(4) 완료 화면",
                             "screen": {
-                                "screenId": null,
+                                "screenId": "SB-FOTA-CM5-0003",
                                 "status": "완료",
                                 "application2Status": "완료",
                                 "version": "미배포",
@@ -564,7 +582,7 @@
                             "children": [
                                 {
                                     "label": "은행 전송",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP15-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -572,7 +590,7 @@
                                 },
                                 {
                                     "label": "은행 전송완료",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP16-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -580,7 +598,7 @@
                                 },
                                 {
                                     "label": "보증 신청",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP17-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -588,7 +606,7 @@
                                 },
                                 {
                                     "label": "보증신청 완료",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP18-0003",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -603,7 +621,7 @@
                     "children": [
                         {
                             "label": "(0) 선택 화면",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CM0-0103",
                             "status": "완료",
                             "application2Status": "완료",
                             "version": "미배포",
@@ -616,7 +634,7 @@
                                 {
                                     "label": "(1) 고객정보활용동의",
                                     "screen": {
-                                        "screenId": null,
+                                        "screenId": "SB-FOTA-CM1-0103",
                                         "status": "완료",
                                         "application2Status": "완료",
                                         "version": "미배포",
@@ -625,7 +643,7 @@
                                     "children": [
                                         {
                                             "label": "필수/선택 동의 팝업",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP2-0103",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-customer-consent-consent-popup",
@@ -633,7 +651,7 @@
                                         },
                                         {
                                             "label": "개별 상세 보기",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP0-0103",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-customer-consent-detail",
@@ -641,7 +659,7 @@
                                         },
                                         {
                                             "label": "전자서명",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP1-0103",
                                             "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
@@ -649,7 +667,7 @@
                                         },
                                         {
                                             "label": "이어서 작성 안내",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP3-0103",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-technology-info-resume-notice",
@@ -659,7 +677,7 @@
                                 },
                                 {
                                     "label": "(2) 기업·기술정보 입력",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CM2-0103",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -670,7 +688,7 @@
                                     "children": [
                                         {
                                             "label": "업종코드 조회",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP4-0103",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-industry-code-search",
@@ -678,7 +696,7 @@
                                         },
                                         {
                                             "label": "주소 찾기",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP5-0103",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-address-search",
@@ -686,7 +704,7 @@
                                         },
                                         {
                                             "label": "기술분류",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP6-0103",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-technology-category",
@@ -694,7 +712,7 @@
                                         },
                                         {
                                             "label": "품목설명",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP7-0103",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-item-description",
@@ -702,7 +720,7 @@
                                         },
                                         {
                                             "label": "제출 전 최종확인",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP13-0103",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-final-review",
@@ -710,7 +728,7 @@
                                         },
                                         {
                                             "label": "작성 취소",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP14-0103",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-cancel-confirm",
@@ -741,7 +759,7 @@
                                 },
                                 {
                                     "label": "(3) 완료 화면",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CM5-0103",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-general-complete",
@@ -756,7 +774,7 @@
                                 {
                                     "label": "(1) 고객정보활용동의",
                                     "screen": {
-                                        "screenId": null,
+                                        "screenId": "SB-FOTA-CM1-0203",
                                         "status": "완료",
                                         "application2Status": "완료",
                                         "version": "미배포",
@@ -765,7 +783,7 @@
                                     "children": [
                                         {
                                             "label": "필수/선택 동의 팝업",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP2-0203",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-consent-popup",
@@ -773,7 +791,7 @@
                                         },
                                         {
                                             "label": "개별 상세 보기",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP0-0203",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-detail",
@@ -781,7 +799,7 @@
                                         },
                                         {
                                             "label": "전자서명",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP1-0203",
                                             "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
@@ -789,7 +807,7 @@
                                         },
                                         {
                                             "label": "이어서 작성 안내",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP3-0203",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-technology-info-resume-notice",
@@ -799,7 +817,7 @@
                                 },
                                 {
                                     "label": "(2) 기업·기술정보 입력",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CM2-0203",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -810,7 +828,7 @@
                                     "children": [
                                         {
                                             "label": "업종코드 조회",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP4-0203",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-industry-code-search",
@@ -818,7 +836,7 @@
                                         },
                                         {
                                             "label": "주소 찾기",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP5-0203",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-address-search",
@@ -826,7 +844,7 @@
                                         },
                                         {
                                             "label": "기술분류",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP6-0203",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-technology-category",
@@ -834,7 +852,7 @@
                                         },
                                         {
                                             "label": "품목설명",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP7-0203",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-item-description",
@@ -842,7 +860,7 @@
                                         },
                                         {
                                             "label": "제출 전 최종확인",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP13-0203",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-final-review",
@@ -850,7 +868,7 @@
                                         },
                                         {
                                             "label": "작성 취소",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CP14-0203",
                                             "status": "완료",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-cancel-confirm",
@@ -881,7 +899,7 @@
                                 },
                                 {
                                     "label": "(3) 완료 화면",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CM5-0203",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-startup-complete",
@@ -897,7 +915,7 @@
                         {
                             "label": "(1) 고객정보활용동의",
                             "screen": {
-                                "screenId": null,
+                                "screenId": "SB-FOTA-CM1-0303",
                                 "status": "완료",
                                 "application2Status": "완료",
                                 "version": "미배포",
@@ -906,7 +924,7 @@
                             "children": [
                                 {
                                     "label": "필수/선택 동의 팝업",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP2-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-customer-consent-consent-popup",
@@ -914,7 +932,7 @@
                                 },
                                 {
                                     "label": "개별 상세 보기",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP0-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-customer-consent-detail",
@@ -922,7 +940,7 @@
                                 },
                                 {
                                     "label": "전자서명",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP1-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-customer-consent-e-signature",
@@ -940,7 +958,7 @@
                         },
                         {
                             "label": "(2) 기업·기술정보 입력",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CM2-0303",
                             "status": "완료",
                             "application2Status": "완료",
                             "version": "미배포",
@@ -951,7 +969,7 @@
                             "children": [
                                 {
                                     "label": "업종코드 조회",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP4-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-company-info-industry-code-search",
@@ -959,7 +977,7 @@
                                 },
                                 {
                                     "label": "주소 찾기",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP5-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-company-info-address-search",
@@ -985,7 +1003,7 @@
                             "children": [
                                 {
                                     "label": "거래유형 설명",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP8-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-additional-company-info-transaction-type-guide",
@@ -993,7 +1011,7 @@
                                 },
                                 {
                                     "label": "전문기술/숙련기술 정의",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP9-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-additional-company-info-technology-definition",
@@ -1009,7 +1027,7 @@
                                 },
                                 {
                                     "label": "작성 취소",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP14-0303",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -1025,7 +1043,7 @@
                                     "children": [
                                         {
                                             "label": "업종코드 제조 선택",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CM3-0303",
                                             "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
@@ -1033,7 +1051,7 @@
                                         },
                                         {
                                             "label": "업종코드 서비스 선택",
-                                            "screenId": null,
+                                            "screenId": "SB-FOTA-CM3-0303",
                                             "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
@@ -1044,7 +1062,7 @@
                                 },
                                 {
                                     "label": "피인용 확인 메뉴얼",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP10-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-checklist-citation-manual",
@@ -1052,7 +1070,7 @@
                                 },
                                 {
                                     "label": "보증제한 업종",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP11-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-checklist-restricted-industries",
@@ -1060,7 +1078,7 @@
                                 },
                                 {
                                     "label": "TRL 확인",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP12-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-checklist-trl-guide",
@@ -1068,7 +1086,7 @@
                                 },
                                 {
                                     "label": "제출 전 최종확인",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP13-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-final-review",
@@ -1084,7 +1102,7 @@
                                 },
                                 {
                                     "label": "작성 취소",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP14-0303",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-checklist-cancel-confirm",
@@ -1094,7 +1112,7 @@
                         },
                         {
                             "label": "(4) 완료 화면",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CM5-0303",
                             "status": "완료",
                             "application2Status": "완료",
                             "version": "미배포",
@@ -1118,7 +1136,7 @@
                 {
                     "label": "특허등급평가 조회",
                     "screen": {
-                        "screenId": null,
+                        "screenId": "SB-FOTA-CM0-0030",
                         "status": "대기중",
                         "version": "미배포",
                         "key": "corp-patent-evaluation-patent-grade-list"
@@ -1127,7 +1145,7 @@
                         {
                             "label": "특허등급평가 결과",
                             "screen": {
-                                "screenId": null,
+                                "screenId": "SB-FOTA-CM1-0030",
                                 "status": "대기중",
                                 "version": "미배포",
                                 "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result"
@@ -1135,7 +1153,7 @@
                             "children": [
                                 {
                                     "label": "보고서",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP0-0030",
                                     "status": "대기중",
                                     "version": "미배포",
                                     "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report"
@@ -1153,7 +1171,7 @@
                 {
                     "label": "기업혁신성장보고서 조회",
                     "screen": {
-                        "screenId": null,
+                        "screenId": "SB-FOTA-CM0-0007",
                         "status": "대기중",
                         "version": "미배포",
                         "key": "corp-k-bigx-report-innovation-growth-report"
@@ -1161,42 +1179,42 @@
                     "children": [
                         {
                             "label": "기업정보 수집제공 근거",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP2-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-legal-basis"
                         },
                         {
                             "label": "정보 이용 동의",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP0-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-information-consent"
                         },
                         {
                             "label": "이용약관",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP3-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service"
                         },
                         {
                             "label": "마케팅 알림 수신동의",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP4-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-marketing-consent"
                         },
                         {
                             "label": "보고서 생성",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP5-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create"
                         },
                         {
                             "label": "이용권구매 안내",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP6-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-pass-purchase-guide"
@@ -1210,14 +1228,14 @@
                         },
                         {
                             "label": "진단브리핑",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CS0-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing"
                         },
                         {
                             "label": "기업현황",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CS1-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-company-overview"
@@ -1227,28 +1245,28 @@
                             "children": [
                                 {
                                     "label": "기술분야개요",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CS2-0007",
                                     "status": "대기중",
                                     "version": "미배포",
                                     "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-technology-overview"
                                 },
                                 {
                                     "label": "재무정보",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CS2-0007",
                                     "status": "대기중",
                                     "version": "미배포",
                                     "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-financial-info"
                                 },
                                 {
                                     "label": "기술부문",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CS2-0007",
                                     "status": "대기중",
                                     "version": "미배포",
                                     "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-technology"
                                 },
                                 {
                                     "label": "R&D부문",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CS2-0007",
                                     "status": "대기중",
                                     "version": "미배포",
                                     "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-rnd"
@@ -1257,35 +1275,35 @@
                         },
                         {
                             "label": "Tech-Index",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CS3-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-tech-index"
                         },
                         {
                             "label": "신용/재무정보",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CS4-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info"
                         },
                         {
                             "label": "활동성정보",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CS5-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-activity-info"
                         },
                         {
                             "label": "인쇄 출력물 선택",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP1-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection"
                         },
                         {
                             "label": "보고서 출력",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP7-0007",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-report-print"
@@ -1331,9 +1349,9 @@
             "userType": "기업",
             "children": [
                 {
-                    "label": "내 정보 수정",
+                    "label": "내 정보",
                     "screen": {
-                        "screenId": null,
+                        "screenId": "SB-FOTA-CM0-0009",
                         "status": "완료",
                         "application2Status": "완료",
                         "version": "미배포",
@@ -1342,7 +1360,7 @@
                     "children": [
                         {
                             "label": "업종코드 조회",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP5-0009",
                             "status": "완료",
                             "application2Status": "완료",
                             "version": "미배포",
@@ -1350,7 +1368,7 @@
                         },
                         {
                             "label": "주소 찾기",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP6-0009",
                             "status": "완료",
                             "application2Status": "완료",
                             "version": "미배포",
@@ -1378,7 +1396,7 @@
                     "label": "대표자 이력",
                     "screen": {
                         "key": "corp-mypage-representative-history",
-                        "screenId": null,
+                        "screenId": "SB-FOTA-CM1-0009",
                         "status": "완료",
                         "application2Status": "완료",
                         "version": "미배포"
@@ -1388,14 +1406,14 @@
                             "label": "고객정보활용동의",
                             "screen": {
                                 "key": "corp-mypage-representative-history-customer-consent",
-                                "screenId": null,
+                                "screenId": "SB-FOTA-CP1-0009",
                                 "status": "완료",
                                 "version": "미배포"
                             },
                             "children": [
                                 {
                                     "label": "필수/선택 동의 팝업",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP2-0009",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-representative-history-customer-consent-consent-popup",
@@ -1403,7 +1421,7 @@
                                 },
                                 {
                                     "label": "개별 상세 보기",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP3-0009",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-representative-history-customer-consent-detail",
@@ -1411,7 +1429,7 @@
                                 },
                                 {
                                     "label": "전자서명",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP4-0009",
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
@@ -1448,7 +1466,7 @@
                 {
                     "label": "평가결과 조회",
                     "screen": {
-                        "screenId": null,
+                        "screenId": "SB-FOTA-OM0-0010",
                         "status": "대기중",
                         "version": "미배포",
                         "key": "corp-mypage-evaluation-results"
@@ -1456,7 +1474,7 @@
                     "children": [
                         {
                             "label": "자가진단 결과",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP0-0010",
                             "status": "대기중",
                             "version": "미배포",
                             "key": "corp-mypage-evaluation-results-general-analysis"
@@ -1464,7 +1482,7 @@
                         {
                             "label": "은행전송",
                             "screen": {
-                                "screenId": null,
+                                "screenId": "SB-FOTA-CP1-0010",
                                 "status": "완료",
                                 "version": "미배포",
                                 "key": "corp-mypage-evaluation-results-bank-transfer",
@@ -1473,7 +1491,7 @@
                             "children": [
                                 {
                                     "label": "은행전송완료",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP2-0010",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-evaluation-results-bank-transfer-transfer-complete",
@@ -1484,7 +1502,7 @@
                         {
                             "label": "보증신청",
                             "screen": {
-                                "screenId": null,
+                                "screenId": "SB-FOTA-CP3-0010",
                                 "status": "완료",
                                 "version": "미배포",
                                 "key": "corp-mypage-evaluation-results-guarantee-application",
@@ -1493,7 +1511,7 @@
                             "children": [
                                 {
                                     "label": "보증신청완료",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CP4-0010",
                                     "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-evaluation-results-guarantee-application-application-complete",
@@ -1506,7 +1524,7 @@
                 {
                     "label": "K-BIGx 보고서 이력",
                     "screen": {
-                        "screenId": null,
+                        "screenId": "SB-FOTA-CM0-0017",
                         "status": "대기중",
                         "version": "미배포",
                         "key": "corp-mypage-k-bigx-report-history"
@@ -1525,9 +1543,9 @@
                     "label": "유료 서비스 관리",
                     "children": [
                         {
-                            "label": "결제내역",
+                            "label": "결제정보",
                             "screen": {
-                                "screenId": null,
+                                "screenId": "SB-FOTA-CM2-0011",
                                 "status": "대기중",
                                 "version": "미배포",
                                 "key": "corp-mypage-paid-services-payment-history"
@@ -1535,39 +1553,28 @@
                             "children": [
                                 {
                                     "label": "이용내역",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CS3-0011",
                                     "status": "대기중",
                                     "version": "미배포",
                                     "key": "corp-mypage-paid-services-payment-history-usage-history"
-                                }
-                            ]
-                        },
-                        {
-                            "label": "환불내역",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-mypage-paid-services-refund-history"
-                        },
-                        {
-                            "label": "명세서",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-mypage-paid-services-statement"
-                        },
-                        {
-                            "label": "환불 사유 입력",
-                            "screen": {
-                                "screenId": null,
-                                "status": "대기중",
-                                "version": "미배포",
-                                "key": "corp-mypage-paid-services-refund-reason"
-                            },
-                            "children": [
+                                },
+                                {
+                                    "label": "환불하기",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-refund-reason"
+                                },
+                                {
+                                    "label": "환불 불가 안내",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-refund-unavailable"
+                                },
                                 {
                                     "label": "환불 및 결제 취소 완료",
-                                    "screenId": null,
+                                    "screenId": "SB-FOTA-CM1-0011",
                                     "status": "대기중",
                                     "version": "미배포",
                                     "key": "corp-mypage-paid-services-refund-reason-refund-complete"
@@ -1577,9 +1584,9 @@
                     ]
                 },
                 {
-                    "label": "1:1 문의내역",
+                    "label": "나의 문의내역",
                     "screen": {
-                        "screenId": null,
+                        "screenId": "SB-FOTA-CM0-0012",
                         "status": "완료",
                         "application2Status": "완료",
                         "version": "미배포",
@@ -1588,7 +1595,7 @@
                     "children": [
                         {
                             "label": "문의하기 상세",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CM1-0012",
                             "status": "완료",
                             "application2Status": "완료",
                             "version": "미배포",
@@ -1605,7 +1612,7 @@
                 {
                     "label": "공지사항",
                     "screen": {
-                        "screenId": null,
+                        "screenId": "SB-FOTA-CM0-0013",
                         "status": "완료",
                         "application2Status": "완료",
                         "version": "미배포",
@@ -1614,7 +1621,7 @@
                     "children": [
                         {
                             "label": "상세",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CM1-0013",
                             "status": "완료",
                             "application2Status": "완료",
                             "version": "미배포",
@@ -1624,7 +1631,7 @@
                 },
                 {
                     "label": "자주 묻는 질문",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM0-0018",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -1633,7 +1640,7 @@
                 {
                     "label": "문의하기",
                     "screen": {
-                        "screenId": null,
+                        "screenId": "SB-FOTA-CM0-0014",
                         "status": "완료",
                         "application2Status": "완료",
                         "version": "미배포",
@@ -1642,7 +1649,7 @@
                     "children": [
                         {
                             "label": "문의 완료",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CM1-0014",
                             "status": "완료",
                             "application2Status": "완료",
                             "version": "미배포",
@@ -1650,7 +1657,7 @@
                         },
                         {
                             "label": "개인정보 수집 및 이용 안내",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP0-0014",
                             "status": "완료",
                             "application2Status": "완료",
                             "version": "미배포",
@@ -1658,7 +1665,7 @@
                         },
                         {
                             "label": "문의 취소",
-                            "screenId": null,
+                            "screenId": "SB-FOTA-CP1-0014",
                             "status": "완료",
                             "application2Status": "완료",
                             "version": "미배포",
@@ -1668,7 +1675,7 @@
                 },
                 {
                     "label": "자료실",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM0-0015",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -1682,7 +1689,7 @@
             "children": [
                 {
                     "label": "결제 완료",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM6-0016",
                     "status": "대기중",
                     "version": "미배포",
                     "key": "corp-payment-complete"
@@ -1695,7 +1702,7 @@
             "children": [
                 {
                     "label": "404 에러 화면",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM0-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -1709,7 +1716,7 @@
             "children": [
                 {
                     "label": "500 에러 화면",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM1-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -1723,7 +1730,7 @@
             "children": [
                 {
                     "label": "정기점검 화면",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM2-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -1737,11 +1744,22 @@
             "children": [
                 {
                     "label": "이용약관",
-                    "screenId": null,
-                    "status": "완료",
-                    "application2Status": "완료",
-                    "version": "미배포",
-                    "key": "corp-terms"
+                    "screen": {
+                        "screenId": "SB-FOTA-CM3-0016",
+                        "status": "완료",
+                        "application2Status": "완료",
+                        "version": "미배포",
+                        "key": "corp-terms"
+                    },
+                    "children": [
+                        {
+                            "label": "K-BIGx 이용약관",
+                            "screenId": "SB-FOTA-CP3-0007",
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "corp-terms-k-bigx"
+                        }
+                    ]
                 }
             ]
         },
@@ -1751,7 +1769,7 @@
             "children": [
                 {
                     "label": "개인정보 처리방침",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM4-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -1759,7 +1777,7 @@
                 },
                 {
                     "label": "알기 쉬운 개인처리방침",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CS0-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -1773,7 +1791,7 @@
             "children": [
                 {
                     "label": "로그인 안내",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CP2-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -1787,7 +1805,7 @@
             "children": [
                 {
                     "label": "로그인 연장",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CP0-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -1801,7 +1819,7 @@
             "children": [
                 {
                     "label": "로그아웃 종료",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CM5-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -1815,11 +1833,37 @@
             "children": [
                 {
                     "label": "실명인증",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-CP3-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-real-name-verification"
+                }
+            ]
+        },
+        {
+            "name": "메인 공지사항 팝업",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "메인 공지사항 팝업",
+                    "screenId": "SB-FOTA-CP4-0016",
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-home-notice-popup"
+                }
+            ]
+        },
+        {
+            "name": "신용정보 활용체제",
+            "userType": "기업",
+            "children": [
+                {
+                    "label": "신용정보 활용체제",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "corp-credit-information-policy"
                 }
             ]
         },
@@ -1880,11 +1924,18 @@
             "userType": "기관",
             "children": [
                 {
-                    "label": "로그인/회원가입",
+                    "label": "기업 로그인",
                     "screenId": null,
                     "status": "대기중",
                     "version": "미배포",
                     "key": "org-auth"
+                },
+                {
+                    "label": "기관 로그인",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-auth-org-login"
                 }
             ]
         },
@@ -2287,7 +2338,8 @@
                                         "status": "완료",
                                         "application2Status": "완료",
                                         "version": "미배포",
-                                        "key": "org-individual-evaluation-tech-index-general-evaluation-application"
+                                        "key": "org-individual-evaluation-tech-index-general-evaluation-application",
+                                        "isRestored": true
                                     },
                                     "children": [
                                         {
@@ -2296,7 +2348,8 @@
                                             "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
-                                            "key": "org-individual-evaluation-tech-index-general-final-review"
+                                            "key": "org-individual-evaluation-tech-index-general-final-review",
+                                            "isRestored": true
                                         }
                                     ]
                                 },
@@ -2408,7 +2461,8 @@
                                         "status": "완료",
                                         "application2Status": "완료",
                                         "version": "미배포",
-                                        "key": "org-individual-evaluation-tech-index-startup-evaluation-application"
+                                        "key": "org-individual-evaluation-tech-index-startup-evaluation-application",
+                                        "isRestored": true
                                     },
                                     "children": [
                                         {
@@ -2417,7 +2471,8 @@
                                             "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
-                                            "key": "org-individual-evaluation-tech-index-startup-final-review"
+                                            "key": "org-individual-evaluation-tech-index-startup-final-review",
+                                            "isRestored": true
                                         }
                                     ]
                                 },
@@ -2596,7 +2651,8 @@
                                 "status": "완료",
                                 "application2Status": "완료",
                                 "version": "미배포",
-                                "key": "org-individual-evaluation-investment-model-evaluation-application"
+                                "key": "org-individual-evaluation-investment-model-evaluation-application",
+                                "isRestored": true
                             },
                             "children": [
                                 {
@@ -2605,7 +2661,8 @@
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
-                                    "key": "org-individual-evaluation-investment-model-final-review"
+                                    "key": "org-individual-evaluation-investment-model-final-review",
+                                    "isRestored": true
                                 }
                             ]
                         },
@@ -2654,7 +2711,7 @@
                             },
                             "children": [
                                 {
-                                    "label": "제출전 최종확인",
+                                    "label": "최종 제출 전 확인",
                                     "screenId": null,
                                     "status": "완료",
                                     "application2Status": "완료",
@@ -2682,7 +2739,7 @@
                             },
                             "children": [
                                 {
-                                    "label": "제출전 최종확인",
+                                    "label": "최종 제출 전 확인",
                                     "screenId": null,
                                     "status": "완료",
                                     "application2Status": "완료",
@@ -3022,7 +3079,7 @@
                 },
                 {
                     "label": "평가검증 신청 조회",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-OM0-0022",
                     "status": "대기중",
                     "version": "미배포",
                     "key": "org-mypage-verification-application"
@@ -3088,13 +3145,6 @@
                             "status": "대기중",
                             "version": "미배포",
                             "key": "org-mypage-sub-account-progress-status-change"
-                        },
-                        {
-                            "label": "하위 계정 삭제",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-mypage-sub-account-progress-delete"
                         }
                     ]
                 },
@@ -3204,7 +3254,7 @@
             "children": [
                 {
                     "label": "404 에러 화면",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-OM0-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -3218,7 +3268,7 @@
             "children": [
                 {
                     "label": "500 에러 화면",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-OM1-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -3232,7 +3282,7 @@
             "children": [
                 {
                     "label": "정기점검 화면",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-OM2-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -3246,7 +3296,7 @@
             "children": [
                 {
                     "label": "우편번호 검색",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-OM3-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -3260,11 +3310,22 @@
             "children": [
                 {
                     "label": "이용약관",
-                    "screenId": null,
-                    "status": "완료",
-                    "application2Status": "완료",
-                    "version": "미배포",
-                    "key": "org-terms"
+                    "screen": {
+                        "screenId": null,
+                        "status": "완료",
+                        "application2Status": "완료",
+                        "version": "미배포",
+                        "key": "org-terms"
+                    },
+                    "children": [
+                        {
+                            "label": "K-BIGx 이용약관",
+                            "screenId": "SB-FOTA-OM4-0016",
+                            "status": "대기중",
+                            "version": "미배포",
+                            "key": "org-terms-k-bigx"
+                        }
+                    ]
                 }
             ]
         },
@@ -3274,7 +3335,7 @@
             "children": [
                 {
                     "label": "개인정보 처리방침",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-OS0-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -3296,7 +3357,7 @@
             "children": [
                 {
                     "label": "로그인 안내",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-OP0-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -3310,7 +3371,7 @@
             "children": [
                 {
                     "label": "최초 비밀번호 변경",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-OM5-0016",
                     "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
@@ -3324,7 +3385,7 @@
             "children": [
                 {
                     "label": "로그인 연장",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-OP3-0016",
                     "status": "완료",
                     "version": "미배포",
                     "key": "org-session-extension",
@@ -3338,11 +3399,37 @@
             "children": [
                 {
                     "label": "로그아웃 종료",
-                    "screenId": null,
+                    "screenId": "SB-FOTA-OP4-0016",
                     "status": "완료",
                     "version": "미배포",
                     "key": "org-logout",
                     "application2Status": "완료"
+                }
+            ]
+        },
+        {
+            "name": "메인 공지사항 팝업",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "메인 공지사항 팝업",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-home-notice-popup"
+                }
+            ]
+        },
+        {
+            "name": "신용정보 활용체제",
+            "userType": "기관",
+            "children": [
+                {
+                    "label": "신용정보 활용체제",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "org-credit-information-policy"
                 }
             ]
         },
@@ -4077,5 +4164,7 @@
                 }
             ]
         }
-    ]
+    ],
+    "//screenIds": "공식 화면 ID는 IA V1.23의 D열 값을 반영한다. 미기재 ID는 null이며 같은 IA 화면을 업종별 또는 상세 탭별로 나눈 행은 원본 화면 ID를 공유한다.",
+    "//isRestored": "IA에서 제외된 화면 중 작업 이력 확인을 위해 복원한 행. 업데이트 강조색과 구분되는 황색 배경으로 표시하며 기존 작업 상태와 릴리스 버전을 유지한다."
 }
