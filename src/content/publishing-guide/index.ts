@@ -111,6 +111,12 @@ const parseScreenRegistryItem = (value: unknown, index: number): ScreenRegistryS
 
 // leaf 든, branch 의 screen 필드든, '화면 1건'의 형태는 동일하다 — 한 곳에서 검증한다.
 const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenInfo => {
+    if (
+        value.iaRow !== undefined &&
+        (typeof value.iaRow !== 'number' || !Number.isInteger(value.iaRow) || value.iaRow < 6)
+    ) {
+        throw new Error(`[content] ${where}: iaRow 는 원본 IA의 6 이상 정수 행 번호여야 합니다.`)
+    }
     if (value.key !== undefined && (typeof value.key !== 'string' || value.key.length === 0)) {
         throw new Error(`[content] ${where}: key 는 비어 있지 않은 문자열이어야 합니다.`)
     }
@@ -143,6 +149,7 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
     }
     return {
         ...(typeof value.key === 'string' ? {key: value.key} : {}),
+        ...(typeof value.iaRow === 'number' ? {iaRow: value.iaRow} : {}),
         screenId: value.screenId,
         status: value.status,
         ...(typeof value.application2Status === 'string' && isStatus(value.application2Status)

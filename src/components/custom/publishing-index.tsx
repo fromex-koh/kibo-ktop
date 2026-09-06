@@ -288,6 +288,7 @@ const KeyCopyDepthBadge = ({depth, screenKey}: {depth: number; screenKey: string
 // 사이트 구조는 뎁스 제한 없는 트리라, 표에 그리려면 각 leaf(실제 화면)를 "뿌리부터 자신까지의
 // 라벨 경로"로 펼쳐야 한다. 이 펼친 목록 + 뎁스별 rowSpan 계산이 표 렌더링의 핵심이다.
 type FlatLeaf = {
+    iaRow?: number
     rowKey: string
     registryKey?: string
     path: string[] // index 0 = 1뎁스(그룹명) ... 마지막 = leaf 자신의 라벨
@@ -337,6 +338,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           subtotalDepths: nextSubtotalDepths,
                           groupOnlyDepths: nextGroupOnlyDepths,
                           screenId: node.screen.screenId,
+                          iaRow: node.screen.iaRow,
                           status: node.screen.status,
                           application2Status: node.screen.application2Status ?? '대기중',
                           version: node.screen.version,
@@ -363,6 +365,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 subtotalDepths,
                 groupOnlyDepths,
                 screenId: node.screenId,
+                iaRow: node.iaRow,
                 status: node.status,
                 application2Status: node.application2Status ?? '대기중',
                 ...(node.isRestored ? {isRestored: true} : {}),
@@ -560,17 +563,34 @@ const PublishingIndex = () => {
     const depthCells = useMemo(() => buildDepthCells(leaves, maxDepth), [leaves, maxDepth])
     const depthHeaders = useMemo(() => Array.from({length: maxDepth}, (_, depth) => `${depth + 1}뎁스`), [maxDepth])
 
-    const screenCount = leaves.length
-    // UIUX·응용2 진척률 — 각 상태에서 '완료' 또는 '최종완료'된 화면 수 / 전체 화면 수.
+    // 기업·기관은 엑셀 원본 행을 기준으로 집계하며 취소선 화면도 포함한다.
+    // 탄소는 별도 FO 인덱스의 기존 퍼블리싱 행 기준을 유지한다.
+    const countedScreens = useMemo(() => {
+        if (filter === '탄소') return leaves.map((leaf) => [leaf])
+        const rows = new Map<number, FlatLeaf[]>()
+        for (const leaf of leaves) {
+            if (leaf.iaRow === undefined) continue
+            rows.set(leaf.iaRow, [...(rows.get(leaf.iaRow) ?? []), leaf])
+        }
+        return [...rows.values()]
+    }, [filter, leaves])
+    const screenCount = countedScreens.length
+    const deletedScreenCount = countedScreens.filter((rows) => rows.some((leaf) => leaf.isRed)).length
+    const supplementalCount = leaves.filter((leaf) => leaf.iaRow === undefined).length
+    const splitCount = leaves.length - supplementalCount - screenCount
+    // 한 IA 화면을 나눈 모든 퍼블리싱 행이 완료되어야 원본 화면을 완료로 집계한다.
     const uiuxDoneCount = useMemo(
-        () => leaves.filter((leaf) => leaf.status === '완료' || leaf.status === '최종완료').length,
-        [leaves],
+        () =>
+            countedScreens.filter((rows) => rows.every((leaf) => leaf.status === '완료' || leaf.status === '최종완료'))
+                .length,
+        [countedScreens],
     )
     const application2DoneCount = useMemo(
         () =>
-            leaves.filter((leaf) => leaf.application2Status === '완료' || leaf.application2Status === '최종완료')
-                .length,
-        [leaves],
+            countedScreens.filter((rows) =>
+                rows.every((leaf) => leaf.application2Status === '완료' || leaf.application2Status === '최종완료'),
+            ).length,
+        [countedScreens],
     )
     const uiuxProgressPercent = screenCount === 0 ? 0 : Math.round((uiuxDoneCount / screenCount) * 100)
     const application2ProgressPercent = screenCount === 0 ? 0 : Math.round((application2DoneCount / screenCount) * 100)
@@ -832,19 +852,40 @@ const PublishingIndex = () => {
                         </div>
 
                         {/* 역할별 전체 화면 수와 UIUX·응용2 진척률을 같은 기준으로 나란히 비교한다. */}
+                        {filter !== '탄소' && (
+                            <div
+                                className="border-border bg-surface flex flex-col gap-2 rounded-md border p-4"
+                                aria-live="polite"
+                            >
+                                <strong className="typo-body-l-medium">
+                                    {filter} IA 전체 화면 {screenCount}개 (취소선 {deletedScreenCount}개 포함)
+                                </strong>
+                                <p className="typo-caption-regular text-muted-foreground">
+                                    엑셀 V1.23의 집계 기준과 같습니다. 기업 156개 + 기관 151개 = 총 307개입니다.
+                                </p>
+                                <p className="typo-caption-regular text-muted-foreground">
+                                    아래 퍼블리싱 표는 {leaves.length}개 행입니다. 같은 IA 화면을 업종·회원 유형·상세
+                                    탭별로 분리한 {splitCount}개 행과 IA 외 추가 화면 {supplementalCount}개 행을
+                                    포함합니다. 진척률은 IA 화면 기준이며, 분리된 행이 모두 완료되어야 해당 화면을
+                                    완료로 집계합니다.
+                                </p>
+                            </div>
+                        )}
                         <div aria-live="polite" className="grid gap-3 sm:grid-cols-2">
                             <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
                                 <span className="typo-caption-medium text-muted-foreground">응용2 진척률</span>
                                 <strong className="typo-h4-bold text-foreground">{application2ProgressPercent}%</strong>
                                 <span className="typo-caption-regular text-muted-foreground">
-                                    완료 {application2DoneCount}/{screenCount} · {filter} 화면 {screenCount}개
+                                    완료 {application2DoneCount}/{screenCount} · {filter}{' '}
+                                    {filter !== '탄소' ? 'IA ' : ''}화면 {screenCount}개
                                 </span>
                             </div>
                             <div className="border-border bg-surface flex flex-col gap-1 rounded-md border p-4">
                                 <span className="typo-caption-medium text-muted-foreground">UIUX 진척률</span>
                                 <strong className="typo-h4-bold text-foreground">{uiuxProgressPercent}%</strong>
                                 <span className="typo-caption-regular text-muted-foreground">
-                                    완료 {uiuxDoneCount}/{screenCount} · {filter} 화면 {screenCount}개
+                                    완료 {uiuxDoneCount}/{screenCount} · {filter} {filter !== '탄소' ? 'IA ' : ''}화면{' '}
+                                    {screenCount}개
                                 </span>
                             </div>
                         </div>
@@ -970,7 +1011,9 @@ const PublishingIndex = () => {
                                     aria-hidden="true"
                                     className="bg-warning-50 border-border size-4 rounded border"
                                 />
-                                황색 행: IA에서 제외되었으나 작업 이력 확인을 위해 복원한 화면
+                                주황색·취소선 6개 행: Tech-Index 일반용·창업용과 투자모형의 평가 신청하기 및 제출 전
+                                최종 확인입니다. 최신 IA에서 삭제 표시되었지만 응용2 완료 이력과 화면 링크를 유지하며,
+                                엑셀과 동일하게 전체 화면 수에 포함합니다.
                             </p>
                         )}
                         <div className="bg-background border-border overflow-x-auto rounded-md border">

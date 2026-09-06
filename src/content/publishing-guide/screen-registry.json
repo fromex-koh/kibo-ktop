@@ -2257,6 +2257,13 @@
             "name": "하위계정 등록"
         },
         {
+            "key": "org-mypage-sub-account-progress-create-complete-toast",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/create/complete-toast",
+            "name": "하위계정 등록 완료 토스트"
+        },
+        {
             "key": "org-mypage-sub-account-progress-detail",
             "screenId": null,
             "userType": "기관",
@@ -2271,6 +2278,13 @@
             "name": "하위계정 수정"
         },
         {
+            "key": "org-mypage-sub-account-progress-edit-complete-toast",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/edit/complete-toast",
+            "name": "하위계정 저장 완료 토스트"
+        },
+        {
             "key": "org-mypage-sub-account-progress-password-reset",
             "screenId": null,
             "userType": "기관",
@@ -2278,11 +2292,25 @@
             "name": "하위계정 비밀번호 초기화"
         },
         {
+            "key": "org-mypage-sub-account-progress-password-reset-complete-toast",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/password-reset/complete-toast",
+            "name": "비밀번호 초기화 완료 토스트"
+        },
+        {
             "key": "org-mypage-sub-account-progress-status-change",
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/sub-account-progress/status-change",
             "name": "상태 변경"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-status-change-complete-toast",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/status-change/complete-toast",
+            "name": "상태 변경 완료 토스트"
         },
         {
             "key": "org-login-guide",
