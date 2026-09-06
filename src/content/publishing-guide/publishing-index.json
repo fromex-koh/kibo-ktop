@@ -1762,7 +1762,7 @@
                         {
                             "label": "상세",
                             "screenId": "SB-FOTA-CM1-0013",
-                            "status": "완료",
+                            "status": "보완",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-announcements-detail",
