@@ -1822,7 +1822,7 @@
                 {
                     "label": "자료실",
                     "screenId": "SB-FOTA-CM0-0015",
-                    "status": "완료",
+                    "status": "보완",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-notice-resources",
