@@ -31,7 +31,8 @@ const MOCK_INQUIRY: InquiryDetailItem = {
     attachments: [{name: '평가오류 캡처.png'}],
 }
 
-const INQUIRY_LIST_PATH = '/corp/mypage/inquiry-history'
+// 사이드바는 마이페이지 상단으로, 하단 복귀 링크는 문의 목록 제목으로 이동한다.
+const INQUIRY_LIST_PATH = '/corp/mypage/inquiry-history#inquiry-history-title'
 
 // corp 마이페이지 · 1:1 문의 상세 — Figma "[마이페이지] 1:1 문의내역_상세".
 // 두 열 배치·간격은 마이페이지의 다른 화면과 같다(사이드바 344 + 64 + 본문 792 = 1200).
