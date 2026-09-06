@@ -69,6 +69,38 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [문의 작성 — 파일 첨부 레이블 추가](https://github.com/fromex-koh/kibo-ktop/commit/c7ab0c06f2ae94a7271415eaaf7bc62946f747da)
     - [문의 취소 — 제목·안내 문장 보완](https://github.com/fromex-koh/kibo-ktop/commit/5cdd08cc547a3822b9578a6eab49ed3ac58dd406)
 
+### 기업·기관 공지사항 — 분류·표시·상세 링크 및 마크업 개선
+
+- 대상:
+    - src/components/custom/notice-category.ts
+    - src/components/custom/notice-list.tsx
+    - src/components/custom/notice-detail.tsx
+    - src/app/(user-type)/corp/(service)/(logged-out)/notice/announcements/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-out)/notice/announcements/detail/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-out)/notice/announcements/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-out)/notice/announcements/detail/page.tsx
+- 적용: 공통 데이터 타입·목록·상세 컴포넌트와 기업·기관 사용처를 함께 Diff로 반영합니다.
+- 데이터·연동:
+    - `category`를 `system`·`etc`·`service`·`payment`·`evaluation`으로 변경했습니다. 기존 `important`·`general`·`business` 값은 새 분류에 맞게 매핑해야 합니다.
+    - 중요공지·새 글 여부를 `isImportant`·`isNew`로 분리하고, 항목별 필수 `href`를 추가했습니다. `NoticeList`의 공통 `detailHref` prop은 제거했습니다.
+    - 예제 링크에 글별 `?id=...`를 지정했습니다. 상세 본문은 아직 목업이므로 실제 연동에서는 해당 ID로 조회한 데이터를 연결해야 합니다.
+- 목록 표시:
+    - 분류는 텍스트로, 중요공지·새 글은 제목 옆 뱃지로 표시합니다. 새 글 표시는 스크린리더에 ‘새 글’로 전달합니다.
+    - PC는 분류·제목을 한 줄로, 모바일은 분류를 윗줄에 두고 제목을 최대 두 줄로 표시합니다. 구분선과 화살표 간격도 화면 폭에 맞췄습니다.
+    - 구분선을 감싼 `span`을 `div`로 변경해 목록 10개에서 반복된 잘못된 중첩 오류를 해결했습니다.
+- 상세 표시: 새 분류명을 무채색 뱃지로 표시하고, 기업·기관 상세 예제의 분류를 `service`로 변경했습니다.
+- 검증: 타입·린트 검증을 통과했습니다. 기업 공지사항의 실제 DOM에서 `span` 안의 `div`가 없는 것을 확인했습니다.
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/94c2a8b8b867b0ad1056172f6aea8de3863cf3b6)
+
+### 공통 페이지 이동 — 중복 navigation 역할 제거
+
+- 대상: src/components/composite/pagination.tsx
+- 적용: `PaginationRoot`에 `role={undefined}`를 지정한 한 곳을 Diff로 반영합니다.
+- 변경: `nav` 자체의 탐색 역할과 중복되는 `role="navigation"`을 제거해 HTML 검사 경고를 해결했습니다. 공통 페이지 이동 컴포넌트를 사용하는 화면에 함께 적용됩니다.
+- 유지: ‘페이지 이동’ 레이블·버튼·디자인·페이지 전환 동작은 그대로입니다.
+- 검증: 타입·린트 검증을 통과했으며, 실제 DOM에서 중복 role이 제거된 것을 확인했습니다.
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/cddc6d787898b769ad79ffe7d689b59b26592e5a)
+
 ## [덮어쓰기]
 
 ### 퍼블리싱 인덱스 — 화면 ID·진척률·행 구분 안내 개선
@@ -95,8 +127,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/content/publishing-guide/screen-registry.json
     - src/content/publishing-guide/screen-registry.generated.json
 - 적용: 세 파일과 위 인덱스 표시·콘텐츠 처리 파일 세 개를 함께 덮어씁니다.
-- 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
+- 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)·공지사항 목록(`corp-notice-announcements`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
 - 상태 변경 커밋:
+    - [기업 공지사항 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b8d69ab0f8b973ebf0772e0ea0a31086f6b306fc)
     - [기업 문의 작성 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/2b1d6e564b7b31ef94ad0043a631131d51513371)
     - [기업 로그인 연장·안내 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b9f51e61ee46f8406ddaad217b4a585b5bad5c9c)
     - [기업 문의 취소 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/a977b5052241bcf288cde9d8161fce1d35beca02)
