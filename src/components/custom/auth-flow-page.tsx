@@ -197,10 +197,14 @@ const RealNameVerificationDialog = () => (
     <Dialog defaultOpen>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>본인 인증</DialogTitle>
+                <DialogTitle asChild>
+                    <h1>본인 인증</h1>
+                </DialogTitle>
             </DialogHeader>
             <div className={cn(dialogBodyClassName, 'gap-6')}>
-                <DialogDescription>주민등록번호를 입력해 주세요</DialogDescription>
+                <DialogDescription asChild>
+                    <span className="block">주민등록번호를 입력해 주세요</span>
+                </DialogDescription>
                 <div className="flex flex-col gap-4">
                     <Label htmlFor="real-name-rrn-front" className="text-foreground font-bold">
                         주민등록번호
