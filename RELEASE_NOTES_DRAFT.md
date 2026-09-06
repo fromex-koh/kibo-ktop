@@ -188,6 +188,34 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 검증: 타입·린트 검증을 통과했으며, 실제 DOM에서 끊긴 ARIA 참조가 0건임을 확인했습니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/d4396aa2a820fa6ff39c1e86a6a4a332c0e37df0)
 
+### 기업 기술평가 — 모달·선택 화면 제목 구조 보완
+
+- 대상:
+    - src/components/composite/career-input-help-dialog.tsx
+    - src/components/composite/recognized-ip-dialog.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/representative-career/input-helper/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/additional-company-info/recognized-ip/page.tsx
+    - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/selection/page.tsx
+- 적용:
+    - 입력 도움말·실적인정 지식재산 모달에 `headingLevel`을 추가하고, 단독 화면에서는 모달 제목을 H1으로 표시했습니다.
+    - 입력 도움말의 예시 제목은 단독 화면에서 H2, 일반 폼 안의 모달에서는 기존 H3 구조를 유지합니다.
+    - Tech-Index 선택 화면의 ‘알려드려요’를 H2로 변경해 H1 다음 제목 단계가 건너뛰지 않도록 했습니다.
+- 결과: 입력 도움말·실적인정 지식재산의 WAVE Missing first level heading과 Tech-Index 선택 화면의 Skipped heading level 원인을 해결했습니다.
+- 유지: 모달 문구·표·버튼 동작과 평가모형 선택·이동 동작은 그대로입니다.
+- 검증: 실제 DOM에서 단독 모달의 H1 및 하위 H2, 선택 화면의 H1→H2 구조와 대화상자 이름 연결을 확인했으며 전체 검증을 통과했습니다.
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8a5fe4ab06958ed5543213596b088c3fa50869a6)
+
+### 공통 저장 확인 모달 — 작성 취소 모달과 여백 통일
+
+- 대상: src/components/composite/save-confirm-dialog.tsx
+- 적용:
+    - sm 이상에서 제목 영역 상단 여백을 32px에서 72px로 늘렸습니다.
+    - 버튼 영역 위 여백을 24px로 지정했습니다.
+- 적용 범위: 기업 내 정보·대표자 이력과 기관 내 정보의 저장 확인 모달에 함께 적용됩니다.
+- 유지: ‘저장하시겠습니까?’ 문구·취소/저장 버튼·저장 및 열림 상태 제어는 그대로입니다.
+- 검증: 실제 화면에서 제목 영역 72px·버튼 영역 24px을 확인했으며 전체 검증을 통과했습니다.
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/734b4ecd67fb8ba17c54f3816ca42070566a9cad)
+
 ## [덮어쓰기]
 
 ### 퍼블리싱 인덱스 — 화면 ID·진척률·행 구분 안내 개선
@@ -214,10 +242,11 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/content/publishing-guide/screen-registry.json
     - src/content/publishing-guide/screen-registry.generated.json
 - 적용: 세 파일과 위 인덱스 표시·콘텐츠 처리 파일 세 개를 함께 덮어씁니다.
-- 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)·공지사항 목록(`corp-notice-announcements`)·공지사항 상세(`corp-notice-announcements-detail`)·자료실(`corp-notice-resources`)·문의 내역(`corp-mypage-inquiry-history`)·문의 상세(`corp-mypage-inquiry-history-inquiry-detail`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
-- 최종 확인 상태: 기업·기관 각각 KTRS-FM·Tech-Index 일반용·창업용·투자모형의 제출 전 최종 확인 4개씩, 총 8개 화면의 UIUX 뱃지를 보완으로 변경했습니다. 응용2 완료 상태는 유지하며, 기관 취소선 행의 진척률 제외 기준도 유지합니다.
+- 상태 변경: 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)·공지사항 목록(`corp-notice-announcements`)·공지사항 상세(`corp-notice-announcements-detail`)·자료실(`corp-notice-resources`)·문의 내역(`corp-mypage-inquiry-history`)·문의 상세(`corp-mypage-inquiry-history-inquiry-detail`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
+- 최종 확인 상태: 기업 KTRS-FM·Tech-Index 일반용·창업용·투자모형의 제출 전 최종 확인 4개는 보완으로 유지하고, 기관의 동일 화면 4개는 완료로 되돌렸습니다. 응용2 완료 상태와 기관 취소선 행의 진척률 제외 기준은 유지합니다.
 - 은행 전송완료 상태: 기업 KTRS-FM 완료 하위 화면(`corp-technology-evaluation-ktrs-fm-complete-bank-transfer-transfer-complete`)과 마이페이지 평가결과 하위 화면(`corp-mypage-evaluation-results-bank-transfer-transfer-complete`)의 UIUX 뱃지를 보완으로 변경했습니다. 응용2 완료 상태와 진척률은 유지됩니다.
-- 작성 취소·전체메뉴 상태: 기업 투자모형 체크리스트 작성 취소(`corp-technology-evaluation-investment-model-checklist-cancel-confirm`)와 기업·기관 전체메뉴(`corp-full-menu`·`org-full-menu`)의 UIUX 뱃지를 보완으로 변경했습니다. 응용2 완료 상태와 진척률은 유지됩니다.
+- 작성 취소·전체메뉴 상태: 기업 투자모형 체크리스트 작성 취소(`corp-technology-evaluation-investment-model-checklist-cancel-confirm`)와 기업 전체메뉴(`corp-full-menu`)의 UIUX 뱃지를 보완으로 변경했습니다. 기관 전체메뉴(`org-full-menu`)는 완료로 되돌렸습니다. 응용2 완료 상태와 진척률은 유지됩니다.
+- 이번 보완 상태: 기업 입력 도움말·실적인정 지식재산·Tech-Index 선택·내 정보·내 정보 저장 확인·대표자 이력 저장 확인 6개 화면을 보완으로 변경했습니다. 기관의 보완 상태 6개는 모두 완료로 되돌렸으며, 응용2 완료 상태와 진척률은 유지됩니다.
 - 상태 변경 커밋:
     - [투자모형 작성 취소·전체메뉴 3개 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/923a590df822eecd7c13d7550d665b80ab836d06)
     - [기업 은행 전송완료 2개 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b1d40b9286e76b2671f6d40a20a21455b6d43d7c)
@@ -229,6 +258,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [기업 문의 작성 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/2b1d6e564b7b31ef94ad0043a631131d51513371)
     - [기업 로그인 연장·안내 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b9f51e61ee46f8406ddaad217b4a585b5bad5c9c)
     - [기업 문의 취소 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/a977b5052241bcf288cde9d8161fce1d35beca02)
+    - [기업 보완 6개·기관 완료 복귀 6개 보기](https://github.com/fromex-koh/kibo-ktop/commit/f41a2b43796b54e861fba630b50e6e2941cb3a90)
 - 기준: 기업·기관 IA를 `V1.23_260831`로 갱신하고 화면 ID·메뉴명·유료 서비스 관리 하위 구조를 반영했습니다.
 - 추가 14개:
     - 기업·기관 공통: 기관 로그인, K-BIGx 이용약관, 메인 공지사항 팝업, 신용정보 활용체제를 각각 추가했습니다(8개).
