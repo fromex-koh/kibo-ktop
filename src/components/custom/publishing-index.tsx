@@ -50,9 +50,9 @@ const VersionCell = ({version, isCurrent}: {version: string; isCurrent: boolean}
     </>
 )
 
-// 릴리스 초안에서 명시한 컴포넌트 가이드 내부 링크만 새 창 링크로 변환한다.
+// 릴리스 초안에서 명시한 이 사이트 내부 링크(컴포넌트 가이드·기업·기관 화면)만 새 창 링크로 변환한다.
 // 그 외 Markdown 문법이나 외부 주소는 일반 문자열로 남겨 임의 링크가 화면에 생성되지 않게 한다.
-const RELEASE_NOTE_LINK_PATTERN = /\[([^\]]+)\]\((\/component-guide\/[^)\s]+)\)/g
+const RELEASE_NOTE_LINK_PATTERN = /\[([^\]]+)\]\((\/(?:component-guide|corp|org)\/[^)\s]+)\)/g
 
 const ReleaseNoteChange = ({change}: {change: string}) => {
     const parts: React.ReactNode[] = []
@@ -145,6 +145,10 @@ const ReleaseNoteHandoff = ({change}: {change: ReleaseNoteHandoff}) => {
         overwrite: {label: '덮어쓰기', color: 'secondary-purple'},
     } as const
     const {label, color} = handoffPresentation[change.mode]
+    // 제목 앞의 [태그]는 그 카드의 성격을 한눈에 알리는 표시다 — 굵게 떼어 그리고 나머지가 제목이다.
+    const titleMatch = /^\[([^\]]+)\]\s*(.+)$/.exec(change.title)
+    const titleTag = titleMatch?.[1]
+    const titleText = titleMatch?.[2] ?? change.title
 
     return (
         <div className="border-border bg-background/60 flex min-w-0 flex-col gap-2 rounded-sm border p-3">
@@ -152,7 +156,10 @@ const ReleaseNoteHandoff = ({change}: {change: ReleaseNoteHandoff}) => {
                 <Badge variant="solid-pastel" color={color} shape="round" size="sm">
                     {label}
                 </Badge>
-                <strong className="typo-body-l-medium text-foreground min-w-0">{change.title}</strong>
+                <strong className="typo-body-l-medium text-foreground min-w-0">
+                    {titleTag ? <span className="typo-body-l-bold">[{titleTag}] </span> : null}
+                    {titleText}
+                </strong>
             </div>
             <dl className="text-muted-foreground grid min-w-0 gap-3">
                 {change.details.map((detail) => (
