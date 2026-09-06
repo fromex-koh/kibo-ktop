@@ -473,7 +473,7 @@
                                 {
                                     "label": "입력도움말",
                                     "screenId": "SB-FOTA-CP6-0003",
-                                    "status": "완료",
+                                    "status": "보완",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-representative-career-input-helper",
@@ -487,7 +487,7 @@
                                 {
                                     "label": "실적인정 지식재산",
                                     "screenId": "SB-FOTA-CP7-0003",
-                                    "status": "완료",
+                                    "status": "보완",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip",
@@ -662,7 +662,7 @@
                         {
                             "label": "(0) 선택 화면",
                             "screenId": "SB-FOTA-CM0-0103",
-                            "status": "완료",
+                            "status": "보완",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-technology-evaluation-tech-index-selection",
@@ -1468,7 +1468,7 @@
                     "label": "내 정보",
                     "screen": {
                         "screenId": "SB-FOTA-CM0-0009",
-                        "status": "완료",
+                        "status": "보완",
                         "application2Status": "완료",
                         "version": "미배포",
                         "key": "corp-mypage-profile",
@@ -1504,7 +1504,7 @@
                         {
                             "label": "저장 전 최종 확인",
                             "screenId": null,
-                            "status": "완료",
+                            "status": "보완",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-profile-save-confirm"
@@ -1580,7 +1580,7 @@
                         {
                             "label": "저장 전 최종 확인",
                             "screenId": null,
-                            "status": "완료",
+                            "status": "보완",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-representative-history-save-confirm"
@@ -2076,7 +2076,7 @@
                 {
                     "label": "전체메뉴",
                     "screenId": null,
-                    "status": "보완",
+                    "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-full-menu",
@@ -2397,7 +2397,7 @@
                                 {
                                     "label": "제출 전 최종 확인",
                                     "screenId": null,
-                                    "status": "보완",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-final-review",
                                     "application2Status": "완료",
@@ -2554,7 +2554,7 @@
                                         {
                                             "label": "제출 전 최종 확인",
                                             "screenId": null,
-                                            "status": "보완",
+                                            "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-final-review",
@@ -2692,7 +2692,7 @@
                                         {
                                             "label": "제출 전 최종 확인",
                                             "screenId": null,
-                                            "status": "보완",
+                                            "status": "완료",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-final-review",
@@ -2903,7 +2903,7 @@
                                 {
                                     "label": "제출 전 최종 확인",
                                     "screenId": null,
-                                    "status": "보완",
+                                    "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-final-review",
@@ -3720,7 +3720,7 @@
                 {
                     "label": "최초 비밀번호 변경",
                     "screenId": "SB-FOTA-OM5-0016",
-                    "status": "보완",
+                    "status": "완료",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-initial-password-change",
