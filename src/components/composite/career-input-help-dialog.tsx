@@ -25,40 +25,47 @@ type CareerInputHelpDialogProps = {
     children?: ReactNode
     /** 트리거 없이 처음부터 열어 둘 때(모달 단독 화면). */
     defaultOpen?: boolean
+    /** 모달 단독 화면에서는 제목을 페이지의 최상위 제목으로 사용한다. */
+    headingLevel?: 1 | 2
 }
 
-const CareerInputHelpDialog = ({children, defaultOpen}: CareerInputHelpDialogProps) => (
-    <Dialog defaultOpen={defaultOpen}>
-        {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
-        {/* 예시 목록이 본문 전체라 설명 문단이 없다 — radix 에 설명 없음을 알린다. */}
-        <DialogContent aria-describedby={undefined}>
-            <DialogHeader>
-                <DialogTitle>입력 도움말</DialogTitle>
-            </DialogHeader>
-            <div className={cn(dialogInfoBodyClassName, 'gap-2')}>
-                {/* 예시 제목은 아래 목록을 이끄는 머리라 heading 으로 둔다 — 크기·굵기만 제목처럼인 문단으로
-                    두면 "제목처럼 보이는데 제목이 아닌 글"이 된다(WAVE "Possible heading").
-                    모달 제목(DialogTitle=h2) 아래 단계라 h3 이다[6.4.2]. */}
-                <h3 className="typo-title-m-bold text-foreground">{EXAMPLE_TITLE}</h3>
-                {/* 항목 사이 8 — 시안 실측(줄 높이 24 · 줄 간격 32). */}
-                <ol className="flex list-none flex-col gap-2">
-                    {EXAMPLE_ITEMS.map((item, index) => (
-                        <li key={item.period} className="flex">
-                            <ListMarker type="ordered" level={1} index={index + 1} />
-                            {/* 기간과 설명 사이는 시안 실측 8 — 좁은 화면에서는 설명이 다음 줄로 내려간다. */}
-                            <span className="typo-body-xl-regular text-foreground flex min-w-0 flex-wrap gap-x-2">
-                                <span className="tabular-nums">{item.period}</span>
-                                {item.note ? <span>{item.note}</span> : null}
-                            </span>
-                        </li>
-                    ))}
-                </ol>
-            </div>
-            {/* CTA 가 없어도 아래 여백은 스크롤 영역 밖에 둔다 — 본문이 카드 맨 가장자리에서 끊기지 않는다. */}
-            <div aria-hidden="true" className={dialogBodyEndClassName} />
-        </DialogContent>
-    </Dialog>
-)
+const CareerInputHelpDialog = ({children, defaultOpen, headingLevel = 2}: CareerInputHelpDialogProps) => {
+    const TitleHeading = headingLevel === 1 ? 'h1' : 'h2'
+    const ExampleHeading = headingLevel === 1 ? 'h2' : 'h3'
+
+    return (
+        <Dialog defaultOpen={defaultOpen}>
+            {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
+            {/* 예시 목록이 본문 전체라 설명 문단이 없다 — radix 에 설명 없음을 알린다. */}
+            <DialogContent aria-describedby={undefined}>
+                <DialogHeader>
+                    <DialogTitle asChild>
+                        <TitleHeading>입력 도움말</TitleHeading>
+                    </DialogTitle>
+                </DialogHeader>
+                <div className={cn(dialogInfoBodyClassName, 'gap-2')}>
+                    {/* 예시 제목은 모달 제목 바로 아래 단계의 제목으로 둔다. */}
+                    <ExampleHeading className="typo-title-m-bold text-foreground">{EXAMPLE_TITLE}</ExampleHeading>
+                    {/* 항목 사이 8 — 시안 실측(줄 높이 24 · 줄 간격 32). */}
+                    <ol className="flex list-none flex-col gap-2">
+                        {EXAMPLE_ITEMS.map((item, index) => (
+                            <li key={item.period} className="flex">
+                                <ListMarker type="ordered" level={1} index={index + 1} />
+                                {/* 기간과 설명 사이는 시안 실측 8 — 좁은 화면에서는 설명이 다음 줄로 내려간다. */}
+                                <span className="typo-body-xl-regular text-foreground flex min-w-0 flex-wrap gap-x-2">
+                                    <span className="tabular-nums">{item.period}</span>
+                                    {item.note ? <span>{item.note}</span> : null}
+                                </span>
+                            </li>
+                        ))}
+                    </ol>
+                </div>
+                {/* CTA 가 없어도 아래 여백은 스크롤 영역 밖에 둔다 — 본문이 카드 맨 가장자리에서 끊기지 않는다. */}
+                <div aria-hidden="true" className={dialogBodyEndClassName} />
+            </DialogContent>
+        </Dialog>
+    )
+}
 
 export {CareerInputHelpDialog}
 export type {CareerInputHelpDialogProps}

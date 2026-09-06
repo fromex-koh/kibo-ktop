@@ -9,7 +9,7 @@ export const metadata: Metadata = {title: '입력 도움말'}
 const CorpKtrsFmCareerInputHelperPage = () => (
     <>
         <main id="main" tabIndex={-1} className="bg-background flex-1" />
-        <CareerInputHelpDialog defaultOpen />
+        <CareerInputHelpDialog defaultOpen headingLevel={1} />
     </>
 )
 

@@ -55,15 +55,19 @@ type RecognizedIpDialogProps = {
     children?: ReactNode
     /** 트리거 없이 처음부터 열어 둘 때(모달 단독 화면). */
     defaultOpen?: boolean
+    /** 모달 단독 화면에서는 제목을 페이지의 최상위 제목으로 사용한다. */
+    headingLevel?: 1 | 2
 }
 
-const RecognizedIpDialog = ({children, defaultOpen}: RecognizedIpDialogProps) => (
+const RecognizedIpDialog = ({children, defaultOpen, headingLevel = 2}: RecognizedIpDialogProps) => (
     <Dialog defaultOpen={defaultOpen}>
         {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
         {/* 표가 본문 전체라 설명 문단이 없다 — radix 에 설명 없음을 알린다. */}
         <DialogContent aria-describedby={undefined}>
             <DialogHeader>
-                <DialogTitle>실적인정 지식재산</DialogTitle>
+                <DialogTitle asChild>
+                    {headingLevel === 1 ? <h1>실적인정 지식재산</h1> : <h2>실적인정 지식재산</h2>}
+                </DialogTitle>
             </DialogHeader>
             <div className={cn(dialogTableBodyClassName, 'gap-2')}>
                 {/* 테두리는 셀이 갖는다 — 표 기본값(border-collapse)이라 맞닿은 선이 하나로 합쳐진다.
