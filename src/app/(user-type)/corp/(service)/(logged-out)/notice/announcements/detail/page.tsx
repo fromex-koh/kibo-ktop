@@ -17,7 +17,7 @@ const LIST_HREF = '/corp/notice/announcements'
 // API 연동 전 화면 확인용 목업. 실제 작업에서는 상세 조회 결과로 교체한다.
 // 첨부파일이 없는 글은 attachments 를 넘기지 않으면 되고, 첫 글·마지막 글은 prev·next 를 비우면 된다.
 const MOCK_NOTICE_DETAIL = {
-    category: 'important',
+    category: 'service',
     title: '가장 최신 공지사항 제목이 출력됩니다.',
     publishedAt: '2026-08-03',
     content: '공지사항 상세내용이 출력되는 영역입니다.\n최소높이는 200px 입니다.',

@@ -7,6 +7,7 @@ import {BaseCard} from '@/components/composite/base-card'
 import {EmptyState} from '@/components/composite/empty-state'
 import {Pagination} from '@/components/composite/pagination'
 import {SectionHeader, SectionHeaderTitle} from '@/components/composite/section-header'
+import {InlineSeparator} from '@/components/composite/inline-separator'
 import {Badge} from '@/components/ui/badge'
 import {Separator} from '@/components/ui/separator'
 import {NOTICE_CATEGORY, type NoticeItem} from '@/components/custom/notice-category'
@@ -20,16 +21,19 @@ import {useIsMobile} from '@/hooks/use-mobile'
 
 type NoticeListProps = {
     items: readonly NoticeItem[]
-    detailHref: string
     pageSize?: number
 }
 
-const NoticeList = ({items, detailHref, pageSize = 10}: NoticeListProps) => {
+const NoticeList = ({items, pageSize = 10}: NoticeListProps) => {
     const [page, setPage] = useState(1)
     const resolvedPageSize = Math.max(pageSize, 1)
     const totalPages = Math.max(Math.ceil(items.length / resolvedPageSize), 1)
     const currentPage = Math.min(page, totalPages)
-    const visibleItems = items.slice((currentPage - 1) * resolvedPageSize, currentPage * resolvedPageSize)
+    // 중요공지는 첫 페이지 맨 위로 올린다 — 게시판 목록의 일반적인 동작이다. 나머지는 받은 순서를
+    // 그대로 둔다(sort 는 안정 정렬이라 최신순이 유지된다).
+    // [프론트엔드 연동] 조회 API 가 이미 중요공지를 위로 정렬해 준다면 이 줄은 지워도 된다.
+    const sortedItems = [...items].sort((left, right) => Number(right.isImportant) - Number(left.isImportant))
+    const visibleItems = sortedItems.slice((currentPage - 1) * resolvedPageSize, currentPage * resolvedPageSize)
 
     // 시안(1200px)의 페이지 이동을 좁은 화면에 그대로 두면 한 줄을 넘겨 가로 스크롤이 생긴다.
     // 작은 화면에서는 현재 페이지 양옆 번호를 줄이고 이전·다음은 화살표만 남긴다.
@@ -72,23 +76,58 @@ const NoticeList = ({items, detailHref, pageSize = 10}: NoticeListProps) => {
                     <BaseCard className="py-8">
                         <ul className="flex flex-col">
                             {visibleItems.map((item, index) => {
-                                const category = NOTICE_CATEGORY[item.category]
-
                                 return (
                                     <li key={item.id} className="flex flex-col">
                                         {/* 구분선은 항목 사이에만 둔다 — 마지막 항목 아래 선은 카드 여백이 대신한다. */}
                                         {index > 0 ? <Separator className="my-6" /> : null}
+                                        {/* 글 묶음과 화살표 사이 40(시안). 제목이 길어 말줄임될 때도 이 간격은
+                                            줄지 않는다 — 배지가 화살표에 붙지 않도록 글 묶음이 대신 좁아진다.
+                                            좁은 화면에서는 40 을 그대로 두면 그만큼이 제목에서 빠지므로 16 으로 줄인다. */}
                                         <Link
-                                            href={detailHref}
+                                            href={item.href}
                                             scroll={false}
-                                            className="group/notice outline-ring rounded-2xs flex items-center gap-2 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid"
+                                            className="group/notice outline-ring rounded-2xs flex items-center gap-4 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid md:gap-10"
                                         >
-                                            <Badge color={category.color} shape="round">
-                                                {category.label}
-                                            </Badge>
-                                            <span className="typo-title-m-medium text-foreground min-w-0 flex-1 truncate group-hover/notice:underline">
-                                                {item.title}
-                                            </span>
+                                            {/* 넓은 화면에서는 분류·제목·표시가 한 줄이다(시안). 좁은 화면(360)에서는 분류와
+                                                구분선이 가로폭을 70 남짓 가져가, 배지까지 붙은 글은 제목이 몇 글자만 남는다 —
+                                                분류를 윗줄로 빼서 제목에 한 줄을 통째로 내준다. */}
+                                            <div className="flex min-w-0 flex-1 flex-col gap-y-1 md:flex-row md:items-center md:gap-x-1">
+                                                <span className="typo-body-xl-regular text-label-foreground shrink-0">
+                                                    {NOTICE_CATEGORY[item.category]}
+                                                </span>
+                                                {/* 좌우 16 은 이 구분선의 기본 여백 12 와 줄의 gap 4 가 합쳐진 값이다.
+                                                    줄이 갈라지는 좁은 화면에는 가를 것이 없어 감춘다. */}
+                                                <InlineSeparator className="max-md:hidden" />
+                                                {/* 제목과 표시는 분류가 윗줄로 빠져도 서로 붙어 다닌다. 넓은 화면은 시안대로
+                                                    한 줄 말줄임이다. 좁은 화면에서는 배지를 옆 칸에 세우지 않고 제목 글 흐름에
+                                                    이어 붙여 두 줄까지 늘인다 — 칸을 나누면 제목이 배지 폭만큼 좁아진 채 두 줄이
+                                                    되고, 짧아진 글 옆에 배지만 덩그러니 뜬다. */}
+                                                <span className="min-w-0 max-md:line-clamp-2 md:flex md:items-center md:gap-x-1">
+                                                    <span className="typo-title-m-medium text-foreground min-w-0 group-hover/notice:underline md:truncate">
+                                                        {item.title}
+                                                    </span>
+                                                    {item.isImportant ? (
+                                                        <Badge
+                                                            color="error"
+                                                            shape="round"
+                                                            className="max-md:ml-1 max-md:align-middle"
+                                                        >
+                                                            중요공지
+                                                        </Badge>
+                                                    ) : null}
+                                                    {/* 새 글 표시 — 글자 N 만으로는 뜻이 전해지지 않아 말로도 알린다[5.1.1]. */}
+                                                    {item.isNew ? (
+                                                        <Badge
+                                                            type="number"
+                                                            color="new"
+                                                            className="max-md:ml-1 max-md:align-middle"
+                                                        >
+                                                            <span aria-hidden="true">N</span>
+                                                            <span className="sr-only">새 글</span>
+                                                        </Badge>
+                                                    ) : null}
+                                                </span>
+                                            </div>
                                             <ChevronRight aria-hidden="true" className="size-icon-md shrink-0" />
                                         </Link>
                                     </li>

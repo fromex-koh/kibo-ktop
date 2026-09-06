@@ -71,7 +71,8 @@ const NoticeDetail = ({
     next,
     listHref,
 }: NoticeDetailProps) => {
-    const badge = NOTICE_CATEGORY[category]
+    // 분류는 시안에서 색 없는 이름이 됐다 — 상세 시안을 따로 받기 전까지 무채색 배지로 둔다.
+    const categoryLabel = NOTICE_CATEGORY[category]
     const hasSiblings = prev != null || next != null
 
     return (
@@ -83,8 +84,8 @@ const NoticeDetail = ({
                         <header className="flex flex-col gap-2">
                             <h2 className="typo-title-m-medium text-foreground break-keep">{title}</h2>
                             <div className="flex flex-wrap items-center gap-2">
-                                <Badge color={badge.color} shape="round">
-                                    {badge.label}
+                                <Badge color="neutral" shape="round">
+                                    {categoryLabel}
                                 </Badge>
                                 <time dateTime={publishedAt} className="typo-body-l-regular text-foreground-subtle">
                                     {publishedAt}
