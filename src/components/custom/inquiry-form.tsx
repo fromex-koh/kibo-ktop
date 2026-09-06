@@ -363,6 +363,7 @@ const InquiryForm = ({cancelHref, consentDialogDefaultOpen, className, onSubmit,
                                 type="file"
                                 id="inquiry-attachment"
                                 name="attachment"
+                                aria-label="문의 첨부파일"
                                 accept={ATTACHMENT_ACCEPT}
                                 tabIndex={-1}
                                 aria-hidden="true"
