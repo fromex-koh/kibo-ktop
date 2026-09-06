@@ -62,10 +62,14 @@ const InitialPasswordChangeDialog = () => (
     <Dialog defaultOpen>
         <DialogContent>
             <DialogHeader>
-                <DialogTitle>내 정보 확인</DialogTitle>
+                <DialogTitle asChild>
+                    <h1>내 정보 확인</h1>
+                </DialogTitle>
             </DialogHeader>
             <div className={cn(dialogBodyClassName, 'gap-6')}>
-                <DialogDescription>회원님의 소중한 정보를 보호하기 위해 비밀번호를 변경해 주세요.</DialogDescription>
+                <DialogDescription asChild>
+                    <span className="block">회원님의 소중한 정보를 보호하기 위해 비밀번호를 변경해 주세요.</span>
+                </DialogDescription>
                 <div className="flex flex-col gap-4">
                     <Label htmlFor="initial-password" className="text-foreground font-bold">
                         비밀번호
