@@ -165,6 +165,29 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 검증: 타입·린트 검증을 통과했으며, 실제 DOM에서 중복 role이 제거된 것을 확인했습니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/cddc6d787898b769ad79ffe7d689b59b26592e5a)
 
+### 공통 작성 취소 모달 — 최종 확인 모달과 여백 통일
+
+- 대상: src/components/composite/cancel-confirm-dialog.tsx
+- 적용: `CancelConfirmDialog`의 `DialogHeader`·`DialogFooter` 클래스 변경 두 곳을 Diff로 반영합니다.
+- 여백 변경:
+    - 헤더에 `sm:pt-18`을 추가해 sm 이상에서 상단 여백을 32px에서 72px로 늘렸습니다. 모바일 상단 여백은 기존 32px입니다.
+    - 푸터에 `pt-6`을 추가해 버튼 영역 위 여백을 24px로 지정했습니다.
+    - 결과 치수는 최종 확인 모달과 같습니다. 카드 588×242, 물음 72~102, 버튼 158부터 246×60이며 좌측 40·302에 놓입니다.
+- 적용 범위: 기업·기관의 KTRS-FM·Tech-Index 일반용·창업용·투자모형 체크리스트와 기업정보 작성 취소 화면 11개에 함께 적용됩니다.
+- 유지: ‘평가 진행을 중단하시겠습니까?’ 문구·모달 제목 연결·계속작성/저장하고 나가기 버튼·`onSaveAndExit`·열림 상태 제어는 그대로입니다.
+- 검증: 타입·린트 검증을 통과했으며, 실제 화면에서 최종 확인 모달과 치수가 같은 것을 확인했습니다.
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/2b57661c1b869ff1a9e7257cad9dee296e735127)
+
+### 공통 전체메뉴 — 끊긴 ARIA 참조 제거
+
+- 대상: src/components/composite/header.tsx
+- 적용: 전체메뉴 `SheetContent`에 `aria-describedby={undefined}`를 지정한 한 곳을 Diff로 반영합니다.
+- 변경: 전체메뉴에는 이름(`SheetTitle`)만 두고 설명을 두지 않는데, 지정하지 않으면 라이브러리가 존재하지 않는 설명 id를 자동으로 가리켜 참조가 끊깁니다. WAVE의 Broken ARIA reference 오류 원인을 제거했습니다.
+- 적용 범위: 기업·기관 전체메뉴 화면과 헤더 메뉴를 여는 모든 화면에 함께 적용됩니다.
+- 유지: 전체메뉴의 이름(‘전체 메뉴’)·디자인·열기/닫기·포커스 이동 동작은 그대로입니다.
+- 검증: 타입·린트 검증을 통과했으며, 실제 DOM에서 끊긴 ARIA 참조가 0건임을 확인했습니다.
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/d4396aa2a820fa6ff39c1e86a6a4a332c0e37df0)
+
 ## [덮어쓰기]
 
 ### 퍼블리싱 인덱스 — 화면 ID·진척률·행 구분 안내 개선
@@ -194,7 +217,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)·공지사항 목록(`corp-notice-announcements`)·공지사항 상세(`corp-notice-announcements-detail`)·자료실(`corp-notice-resources`)·문의 내역(`corp-mypage-inquiry-history`)·문의 상세(`corp-mypage-inquiry-history-inquiry-detail`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
 - 최종 확인 상태: 기업·기관 각각 KTRS-FM·Tech-Index 일반용·창업용·투자모형의 제출 전 최종 확인 4개씩, 총 8개 화면의 UIUX 뱃지를 보완으로 변경했습니다. 응용2 완료 상태는 유지하며, 기관 취소선 행의 진척률 제외 기준도 유지합니다.
 - 은행 전송완료 상태: 기업 KTRS-FM 완료 하위 화면(`corp-technology-evaluation-ktrs-fm-complete-bank-transfer-transfer-complete`)과 마이페이지 평가결과 하위 화면(`corp-mypage-evaluation-results-bank-transfer-transfer-complete`)의 UIUX 뱃지를 보완으로 변경했습니다. 응용2 완료 상태와 진척률은 유지됩니다.
+- 작성 취소·전체메뉴 상태: 기업 투자모형 체크리스트 작성 취소(`corp-technology-evaluation-investment-model-checklist-cancel-confirm`)와 기업·기관 전체메뉴(`corp-full-menu`·`org-full-menu`)의 UIUX 뱃지를 보완으로 변경했습니다. 응용2 완료 상태와 진척률은 유지됩니다.
 - 상태 변경 커밋:
+    - [투자모형 작성 취소·전체메뉴 3개 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/923a590df822eecd7c13d7550d665b80ab836d06)
     - [기업 은행 전송완료 2개 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b1d40b9286e76b2671f6d40a20a21455b6d43d7c)
     - [기업·기관 최종 확인 8개 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/ee88c218a18b1412108c226aa276e2eb2a2bf00f)
     - [기업 문의 내역·상세 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/112d0ce1acae9a203e1685526a0612f7771b7888)
