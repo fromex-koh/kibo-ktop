@@ -628,7 +628,7 @@
                                 {
                                     "label": "은행 전송완료",
                                     "screenId": "SB-FOTA-CP16-0003",
-                                    "status": "완료",
+                                    "status": "보완",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer-transfer-complete",
@@ -1619,7 +1619,7 @@
                                 {
                                     "label": "은행전송완료",
                                     "screenId": "SB-FOTA-CP2-0010",
-                                    "status": "완료",
+                                    "status": "보완",
                                     "version": "미배포",
                                     "key": "corp-mypage-evaluation-results-bank-transfer-transfer-complete",
                                     "application2Status": "완료",
