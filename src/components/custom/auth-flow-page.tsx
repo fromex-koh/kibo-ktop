@@ -100,11 +100,13 @@ const LoginGuideDialog = () => (
     <Dialog defaultOpen>
         <DialogContent showCloseButton={false}>
             <DialogHeader className="p-0">
-                <DialogTitle className="sr-only">회원가입/로그인</DialogTitle>
+                <DialogTitle asChild className="sr-only">
+                    <h1>회원가입/로그인</h1>
+                </DialogTitle>
             </DialogHeader>
             <div className={cn(dialogBodyClassName, 'pt-0')}>
-                <DialogDescription className="py-8 text-center">
-                    로그인이 필요한 서비스입니다. 로그인하시겠습니까?
+                <DialogDescription asChild className="py-8 text-center">
+                    <span className="block">로그인이 필요한 서비스입니다. 로그인하시겠습니까?</span>
                 </DialogDescription>
             </div>
             <DialogFooter>
