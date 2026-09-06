@@ -1947,7 +1947,7 @@
                 {
                     "label": "로그인 안내",
                     "screenId": "SB-FOTA-CP2-0016",
-                    "status": "완료",
+                    "status": "보완",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-login-guide",
@@ -1962,7 +1962,7 @@
                 {
                     "label": "로그인 연장",
                     "screenId": "SB-FOTA-CP0-0016",
-                    "status": "완료",
+                    "status": "보완",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-session-extension",
