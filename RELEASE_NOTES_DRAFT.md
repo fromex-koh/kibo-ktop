@@ -133,6 +133,18 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 검증: 360·768·1280px에서 제목 말줄임 제거와 가로 넘침이 없음을 확인했습니다. 모바일의 모든 다운로드 버튼이 아래 왼쪽에 표시되는 것도 확인했습니다.
 - 커밋: [자료실 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/71f93a57434ba8fccd25181aa3724d16afe591a6)
 
+### 은행 전송완료 — 완료 아이콘·본문 배치·여백 개선
+
+- 대상: src/components/composite/bank-transfer-dialog.tsx
+- 적용: `Check` 아이콘 import와 `BankTransferResultDialog`의 JSX·클래스를 Diff로 반영합니다. 같은 파일의 `BankTransferDialog`는 설명 주석만 정리했습니다.
+- 완료 표시:
+    - 60px 원형 배경의 체크 아이콘을 추가하고 ‘결과가 전송되었습니다.’ 문구 위에 배치했습니다. 아이콘은 장식으로 처리해 스크린리더에서 제외합니다.
+    - 완료 문구와 은행·지점 정보를 하나의 묶음으로 정리했습니다. 아이콘과 문구 묶음 사이는 16px, 문구와 은행·지점 사이는 8px입니다.
+- 여백: `min-h-68`을 제거하고 헤더·본문 하단에 32px, 푸터 상단에 24px 여백을 지정했습니다.
+- 적용 범위: 기업·기관 KTRS-FM 완료 화면의 은행 전송 후 표시되는 결과 모달과, 이 컴포넌트를 사용하는 전송완료 단독 화면에 함께 적용됩니다.
+- 유지: 은행 목록·지점 입력·전송 처리·`onSubmit`·열림 상태 제어·확인 버튼의 닫기 동작은 그대로입니다. 모달 이름은 기존 `DialogTitle`로 유지합니다.
+- 커밋: [은행 전송완료 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c682c9d77b694f64ce1e0b08b1ac83daaf487005)
+
 ### 제출 전 최종 확인 — 공통 모달 여백 조정
 
 - 대상: src/components/composite/submit-confirm-dialog.tsx
@@ -181,7 +193,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 적용: 세 파일과 위 인덱스 표시·콘텐츠 처리 파일 세 개를 함께 덮어씁니다.
 - 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)·공지사항 목록(`corp-notice-announcements`)·공지사항 상세(`corp-notice-announcements-detail`)·자료실(`corp-notice-resources`)·문의 내역(`corp-mypage-inquiry-history`)·문의 상세(`corp-mypage-inquiry-history-inquiry-detail`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
 - 최종 확인 상태: 기업·기관 각각 KTRS-FM·Tech-Index 일반용·창업용·투자모형의 제출 전 최종 확인 4개씩, 총 8개 화면의 UIUX 뱃지를 보완으로 변경했습니다. 응용2 완료 상태는 유지하며, 기관 취소선 행의 진척률 제외 기준도 유지합니다.
+- 은행 전송완료 상태: 기업 KTRS-FM 완료 하위 화면(`corp-technology-evaluation-ktrs-fm-complete-bank-transfer-transfer-complete`)과 마이페이지 평가결과 하위 화면(`corp-mypage-evaluation-results-bank-transfer-transfer-complete`)의 UIUX 뱃지를 보완으로 변경했습니다. 응용2 완료 상태와 진척률은 유지됩니다.
 - 상태 변경 커밋:
+    - [기업 은행 전송완료 2개 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b1d40b9286e76b2671f6d40a20a21455b6d43d7c)
     - [기업·기관 최종 확인 8개 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/ee88c218a18b1412108c226aa276e2eb2a2bf00f)
     - [기업 문의 내역·상세 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/112d0ce1acae9a203e1685526a0612f7771b7888)
     - [기업 자료실 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/9bdd48defb84cce6399ac7b73dc2e13d0f749886)
