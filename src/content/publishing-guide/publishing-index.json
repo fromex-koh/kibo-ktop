@@ -256,7 +256,7 @@
                 {
                     "label": "전체메뉴",
                     "screenId": "SB-FOTA-CP0-0001",
-                    "status": "완료",
+                    "status": "보완",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-full-menu",
@@ -1191,7 +1191,7 @@
                                 {
                                     "label": "작성 취소",
                                     "screenId": "SB-FOTA-CP14-0303",
-                                    "status": "완료",
+                                    "status": "보완",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-checklist-cancel-confirm",
                                     "application2Status": "완료",
@@ -2076,7 +2076,7 @@
                 {
                     "label": "전체메뉴",
                     "screenId": null,
-                    "status": "완료",
+                    "status": "보완",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-full-menu",
