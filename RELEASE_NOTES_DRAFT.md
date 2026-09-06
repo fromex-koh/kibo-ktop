@@ -69,7 +69,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [문의 작성 — 파일 첨부 레이블 추가](https://github.com/fromex-koh/kibo-ktop/commit/c7ab0c06f2ae94a7271415eaaf7bc62946f747da)
     - [문의 취소 — 제목·안내 문장 보완](https://github.com/fromex-koh/kibo-ktop/commit/5cdd08cc547a3822b9578a6eab49ed3ac58dd406)
 
-### 기업·기관 공지사항 — 분류·표시·상세 링크 및 마크업 개선
+### 기업·기관 공지사항 — 분류·뱃지·상세 링크·반응형 개선
 
 - 대상:
     - src/components/custom/notice-category.ts
@@ -86,17 +86,38 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 예제 링크에 글별 `?id=...`를 지정했습니다. 상세 본문은 아직 목업이므로 실제 연동에서는 해당 ID로 조회한 데이터를 연결해야 합니다.
 - 목록 표시:
     - 분류는 텍스트로, 중요공지·새 글은 제목 옆 뱃지로 표시합니다. 새 글 표시는 스크린리더에 ‘새 글’로 전달합니다.
-    - PC는 분류·제목을 한 줄로, 모바일은 분류를 윗줄에 두고 제목을 최대 두 줄로 표시합니다. 구분선과 화살표 간격도 화면 폭에 맞췄습니다.
+    - 모바일·태블릿·PC 모두 제목을 말줄임·줄 수 제한 없이 표시합니다. 중요공지·새 글 뱃지는 제목 뒤에서 함께 줄바꿈되어 잘리지 않습니다.
+    - 모바일은 분류를 윗줄에 두고 세로 구분선을 숨깁니다. 태블릿·PC는 분류·구분선·제목을 가로로 배치하며, 화살표 간격도 화면 폭에 맞췄습니다.
     - 구분선을 감싼 `span`을 `div`로 변경해 목록 10개에서 반복된 잘못된 중첩 오류를 해결했습니다.
 - 상세 표시·연동:
     - `NoticeDetail`에 선택 props `isImportant`·`isNew`를 추가했습니다. 상세 조회 결과를 전달하며, 생략하면 해당 뱃지는 표시하지 않습니다.
     - 분류를 무채색 뱃지에서 텍스트로 바꾸고, 분류·구분선·제목·중요공지·새 글 순서로 배치했습니다. 등록일은 다음 줄에 표시합니다.
-    - 긴 제목은 말줄임 없이 줄바꿈하며, 새 글 표시는 스크린리더에 ‘새 글’로 전달합니다. 본문·첨부파일·이전/다음 글·목록 이동은 그대로입니다.
-    - 기업·기관 상세 예제는 `category: 'system'`, `isImportant: true`, `isNew: true`로 변경했습니다. 이번 상세 수정은 `notice-detail.tsx`와 기업·기관 상세 `page.tsx` 세 파일입니다.
+    - 긴 제목은 말줄임 없이 줄바꿈합니다. 모바일은 목록처럼 분류를 윗줄로 옮기고 구분선을 숨기며, 제목과 뱃지를 글 흐름으로 이어 표시합니다.
+    - 새 글 표시는 스크린리더에 ‘새 글’로 전달합니다. 본문·첨부파일·이전/다음 글·목록 이동은 그대로입니다.
+    - 기업·기관 상세 예제는 `category: 'system'`, `isImportant: true`, `isNew: true`로 변경했습니다. 상세 표시·props 변경은 `notice-detail.tsx`와 기업·기관 상세 `page.tsx`에, 이후 반응형 보완은 `notice-list.tsx`·`notice-detail.tsx`에 반영했습니다.
 - 검증: 타입·린트 검증을 통과했습니다. 기업 공지사항의 실제 DOM에서 `span` 안의 `div`가 없는 것을 확인했습니다.
 - 커밋:
     - [목록·공통 데이터 — 분류·표시·상세 링크 및 마크업 개선](https://github.com/fromex-koh/kibo-ktop/commit/94c2a8b8b867b0ad1056172f6aea8de3863cf3b6)
     - [상세 — 분류·제목·중요공지·새 글 표시 개선](https://github.com/fromex-koh/kibo-ktop/commit/94318f43e855403f4ceffa6441fb050c90f178ac)
+    - [목록·상세 — 말줄임 제거 및 모바일 배치 보완](https://github.com/fromex-koh/kibo-ktop/commit/b75cab9f97bd8df22452d8c735d1cb96f7af3474)
+
+### 기업·기관 자료실 — 분류·전체 제목·모바일 다운로드 배치 개선
+
+- 대상:
+    - src/components/custom/resource-list.tsx
+    - src/app/(user-type)/corp/(service)/(logged-out)/notice/resources/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-out)/notice/resources/page.tsx
+- 적용: 공통 목록 컴포넌트와 기업·기관 사용처를 함께 Diff로 반영합니다.
+- 데이터·연동:
+    - `ResourceItem`에 필수 `category`를 추가했습니다. `guide`는 ‘이용안내’, `form`은 ‘신청서식’이며 기존 데이터에도 값을 지정해야 합니다.
+    - 기업·기관 예제 데이터에 분류를 반영했습니다. 예제 `href`는 여전히 `#`이므로 실제 다운로드 파일 URL로 연결해야 합니다.
+- 화면 표시:
+    - 모바일·태블릿·PC 모두 제목을 말줄임 없이 줄바꿈해 전체 표시합니다.
+    - 모바일에서는 모든 항목을 ‘분류 → 제목 → 다운로드 버튼’ 순서로 배치합니다. 제목은 전체 너비를 사용하고 버튼은 아래 왼쪽에 표시합니다.
+    - 태블릿·PC는 분류·세로 구분선·제목을 가로로 배치하고 다운로드 버튼은 오른쪽에 유지합니다.
+- 유지: 다운로드 링크·접근 가능한 버튼 이름·페이지 이동 동작은 그대로입니다.
+- 검증: 360·768·1280px에서 제목 말줄임 제거와 가로 넘침이 없음을 확인했습니다. 모바일의 모든 다운로드 버튼이 아래 왼쪽에 표시되는 것도 확인했습니다.
+- 커밋: [자료실 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/71f93a57434ba8fccd25181aa3724d16afe591a6)
 
 ### 공통 페이지 이동 — 중복 navigation 역할 제거
 
@@ -133,8 +154,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/content/publishing-guide/screen-registry.json
     - src/content/publishing-guide/screen-registry.generated.json
 - 적용: 세 파일과 위 인덱스 표시·콘텐츠 처리 파일 세 개를 함께 덮어씁니다.
-- 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)·공지사항 목록(`corp-notice-announcements`)·공지사항 상세(`corp-notice-announcements-detail`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
+- 상태 변경: 기관 최초 비밀번호 변경(`org-initial-password-change`), 기업 실명인증(`corp-real-name-verification`)·로그인 연장(`corp-session-extension`)·로그인 안내(`corp-login-guide`)·문의 취소(`corp-notice-inquiry-create-inquiry-cancel`)·문의 작성(`corp-notice-inquiry-create`)·공지사항 목록(`corp-notice-announcements`)·공지사항 상세(`corp-notice-announcements-detail`)·자료실(`corp-notice-resources`)의 UIUX 뱃지를 완료에서 보완으로 변경했습니다. 응용2는 모두 완료를 유지하며, 보완도 완료 수에 포함하므로 진척률은 유지됩니다.
 - 상태 변경 커밋:
+    - [기업 자료실 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/9bdd48defb84cce6399ac7b73dc2e13d0f749886)
     - [기업 공지사항 상세 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/bfdb058a8c64b7bfa20cbde55ecba4a1b79c423d)
     - [기업 공지사항 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/b8d69ab0f8b973ebf0772e0ea0a31086f6b306fc)
     - [기업 문의 작성 뱃지 변경 보기](https://github.com/fromex-koh/kibo-ktop/commit/2b1d6e564b7b31ef94ad0043a631131d51513371)
