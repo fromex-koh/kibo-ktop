@@ -37,10 +37,10 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 
 - 대상: src/components/composite/org-customer-consent-form.tsx
 - 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
-    - [기관 KTRS-FM 고객정보활용동의](/org/individual-evaluation/ktrs-fm/customer-consent)
-    - [기관 Tech-Index 일반용 고객정보활용동의](/org/individual-evaluation/tech-index/general/customer-consent)
-    - [기관 Tech-Index 창업용 고객정보활용동의](/org/individual-evaluation/tech-index/startup/customer-consent)
-    - [기관 투자모형 고객정보활용동의](/org/individual-evaluation/investment-model/customer-consent)
+    - [기관 KTRS-FM 고객정보활용동의](/org/individual-evaluation/ktrs-fm/customer-consent) — 보완(09/08)
+    - [기관 Tech-Index 일반용 고객정보활용동의](/org/individual-evaluation/tech-index/general/customer-consent) — 보완(09/08)
+    - [기관 Tech-Index 창업용 고객정보활용동의](/org/individual-evaluation/tech-index/startup/customer-consent) — 보완(09/08)
+    - [기관 투자모형 고객정보활용동의](/org/individual-evaluation/investment-model/customer-consent) — 보완(09/08)
 - 적용: `OrgCustomerConsentForm`의 `FormCard` 한 곳에 `action` 을 추가한 변경을 Diff로 반영합니다.
 - 변경: [정보이용동의서 업로드] 카드 제목 오른쪽에 [동의서 양식 다운로드] 버튼을 두었습니다. 일괄평가 신청 화면의 같은 버튼과 동일한 `variant="secondary" size="xs"` 입니다.
 - 연동 확인: 아직 동작이 없는 버튼입니다. 양식 파일 경로가 정해지면 `// [프론트엔드 연동]` 주석 자리에 연결합니다.
@@ -54,10 +54,10 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/components/composite/tech-staff-form.tsx
     - src/components/composite/form-fields.tsx
 - 관련 화면(퍼블리싱 인덱스 UIUX 보완 뱃지):
-    - [기업 Tech-Index 일반용 기업·기술정보 입력](/corp/technology-evaluation/tech-index/general/company-technology-info)
-    - [기업 Tech-Index 창업용 기업·기술정보 입력](/corp/technology-evaluation/tech-index/startup/company-technology-info)
-    - [기관 Tech-Index 일반용 기업·기술정보 입력](/org/individual-evaluation/tech-index/general/company-technology-info)
-    - [기관 Tech-Index 창업용 기업·기술정보 입력](/org/individual-evaluation/tech-index/startup/company-technology-info)
+    - [기업 Tech-Index 일반용 기업·기술정보 입력](/corp/technology-evaluation/tech-index/general/company-technology-info) — 보완(09/08)
+    - [기업 Tech-Index 창업용 기업·기술정보 입력](/corp/technology-evaluation/tech-index/startup/company-technology-info) — 보완(09/08)
+    - [기관 Tech-Index 일반용 기업·기술정보 입력](/org/individual-evaluation/tech-index/general/company-technology-info) — 보완(09/08)
+    - [기관 Tech-Index 창업용 기업·기술정보 입력](/org/individual-evaluation/tech-index/startup/company-technology-info) — 보완(09/08)
 - 적용: 세 파일을 함께 Diff로 반영합니다. 탭 설정·인력 카드·필드 행 세 곳의 변경이 한 묶음입니다.
 - 입력 칸 변경: Tech-Index 일반용·창업용 탭에 `showIndustryCareerMonth` 를 켜고 창업용의 `industryCareerUnit="년"` 을 지웠습니다. 제출값이 한 칸(`staff-N-industryCareer`)에서 두 칸(`+ staff-N-industryCareerMonth`)으로 늘어납니다. KTRS-FM·투자모형은 이미 두 칸이라 변화가 없습니다.
 - 3열 줄 보완: 일치여부 칸이 있는 줄(창업용)이 한 칸 변형만 그리고 있어 두 칸 변형도 쓰도록 고쳤습니다. 이 수정이 없으면 창업용은 오히려 글자 한 칸으로 되돌아갑니다.
