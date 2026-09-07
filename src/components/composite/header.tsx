@@ -42,7 +42,7 @@ import {useThemeToggle} from '@/hooks/use-theme-toggle'
 import {cn} from '@/lib/utils'
 
 // 기존 Header export를 유지해 외부 사용처의 import 경로를 보존한다.
-export {DEFAULT_HEADER_NAVIGATION}
+export {DEFAULT_HEADER_NAVIGATION, UserTypeBadge}
 export type {HeaderNavLink, HeaderNavigationByUserType, UserType}
 
 // 로그인 후 확정된 userType을 표시하는 배지.
@@ -88,7 +88,7 @@ const MemberTypeToggle = ({
     </SegmentedControl>
 )
 
-// 로그인한 회원의 userType 배지.
+// 로그인한 회원의 userType 배지. 마이페이지 LNB 도 같은 배지를 쓴다(색이 곧 회원 유형이다).
 const UserTypeBadge = ({userType}: {userType: UserType}) => {
     const badge = USER_TYPE_BADGE[userType]
 

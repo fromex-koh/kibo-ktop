@@ -48,18 +48,13 @@ const CorpMypageProfilePage = () => (
             <div className="flex flex-col gap-10 pb-15 xl:flex-row xl:gap-16">
                 {/* 회원정보는 이 화면이 한 번 읽어 사이드바와 폼에 함께 내린다 — 두 곳이 값을 따로
                     가져가면 같은 화면에서 다른 기업 이름이 보인다(연동 시에도 조회는 한 번이다). */}
-                <MypageSidebar
-                    userType="corp"
-                    current="내 정보"
-                    companyName={MYPAGE_MEMBER.companyName}
-                    memberType={MYPAGE_MEMBER.memberType}
-                />
+                <MypageSidebar userType="corp" current="내 정보" companyName={MYPAGE_MEMBER.companyName} />
 
                 <div className="flex min-w-0 flex-1 flex-col gap-10">
                     <SectionHeader>
                         <SectionHeaderTitle size="lg">내 정보</SectionHeaderTitle>
                         <SectionHeaderDescription size="lg">
-                            등록된 회원 정보를 확인하고 수정할 수 있습니다.
+                            등록된 회원 정보를 수정한 후 저장 버튼을 눌러주세요.
                         </SectionHeaderDescription>
                     </SectionHeader>
 

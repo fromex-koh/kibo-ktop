@@ -50,14 +50,17 @@ type FilterRowProps = {
     label: string
     labelId: string
     htmlFor?: string
+    /** 라벨을 화면에서 감춘다 — 무엇을 고르는 줄인지 생김새로 알 수 있는 시안에서 쓴다.
+        지우지 않고 감추는 이유는 스크린리더에는 그 이름이 남아야 하기 때문이다[7.4.1]. */
+    labelHidden?: boolean
     children: ReactNode
 }
 
-const FilterRow = ({label, labelId, htmlFor, children}: FilterRowProps) => {
+const FilterRow = ({label, labelId, htmlFor, labelHidden, children}: FilterRowProps) => {
     const isGroup = htmlFor === undefined
     const layout = useContext(LayoutContext)
     const isRow = layout === 'row'
-    const labelClassName = cn(filterLabelClassName, isRow && filterRowLabelClassName)
+    const labelClassName = cn(filterLabelClassName, isRow && filterRowLabelClassName, labelHidden && 'sr-only')
 
     return (
         <div
@@ -77,6 +80,8 @@ const FilterRow = ({label, labelId, htmlFor, children}: FilterRowProps) => {
         </div>
     )
 }
+
+type SelectOption = {value: string; label: string}
 
 const DATE_RANGE_PRESETS = [
     {value: 'today', label: '오늘'},
@@ -99,6 +104,10 @@ type DateRangeFieldProps = {
      * 이 자리에서는 글자 폭만큼만 차지한다(아래 *:min-w-0).
      */
     action?: ReactNode
+    /** 라벨을 화면에서 감춘다(스크린리더에는 남는다). */
+    labelHidden?: boolean
+    /** 날짜 칸 높이 — 기본은 40(md)이고, 시안이 48 인 화면은 lg 를 준다. */
+    size?: 'lg' | 'md'
 }
 
 // 조회기간 — 빠른 기간 선택(SegmentedControl solid) + 시작·종료 DatePicker 범위(컨트롤 그룹).
@@ -109,9 +118,16 @@ const DateRangeField = ({
     defaultFrom,
     defaultTo,
     action,
+    labelHidden,
+    size = 'md',
 }: DateRangeFieldProps) => {
     const labelId = useId()
+    // 폼 안의 컨트롤은 모두 id 나 name 을 가져야 한다(HTML 검사기 "A form field element should have an id or
+    // name attribute") — 기간 칩과 날짜 칸의 실제 조작 요소는 button 이라 name 이 붙지 않으므로 id 를 준다.
+    const controlId = useId()
     const [preset, setPreset] = useState(defaultPreset)
+    // 두 날짜 칸은 빈 값도 이 폼이 쥐고 있어야 한다(controlled) — 값을 비웠을 때 DatePicker 가 비제어로
+    // 돌아가면 직전에 고른 날짜가 내부 상태에서 되살아나 [초기화]가 듣지 않는다.
     const [from, setFrom] = useState<Date | undefined>(defaultFrom)
     const [to, setTo] = useState<Date | undefined>(defaultTo)
 
@@ -122,7 +138,9 @@ const DateRangeField = ({
     })
 
     return (
-        <FilterRow label={label} labelId={labelId}>
+        <FilterRow label={label} labelId={labelId} labelHidden={labelHidden}>
+            {/* 기간 칩은 폭이 고정(72)이라 넷을 나란히 두면 360 폭 카드를 넘어선다 — 좁은 화면에서는
+                한 줄을 고르게 나눠 갖게 한다(칩 하나하나가 카드 안에 들어온다). */}
             <SegmentedControl
                 type="radio"
                 variant="solid"
@@ -131,40 +149,117 @@ const DateRangeField = ({
                 value={preset}
                 onValueChange={setPreset}
                 aria-labelledby={labelId}
+                className="max-sm:w-full max-sm:*:w-auto max-sm:*:flex-1"
             >
                 {DATE_RANGE_PRESETS.map((option) => (
-                    <SegmentedControlItem key={option.value} value={option.value}>
+                    <SegmentedControlItem key={option.value} id={`${controlId}-${option.value}`} value={option.value}>
                         {option.label}
                     </SegmentedControlItem>
                 ))}
             </SegmentedControl>
-            <div className="flex flex-wrap items-center gap-2">
+            {/* 좁은 화면(sm 미만)에서는 날짜 두 칸을 위아래로 쌓는다 — 360 폭에서 한 줄에 두 칸을 두면
+                한 칸이 120 남짓이라 "연도-월-일" 자리가 모자라 글자가 두 줄로 접힌다.
+                쌓인 뒤에도 사이의 ~ 는 그대로 두 칸 사이 가운데에 둔다(시작~종료 한 쌍임을 보여 준다). */}
+            <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center">
                 {/* 같은 줄의 기간 칩·[조회] 버튼과 같은 컨트롤 높이(40)를 쓴다 — 한 줄에 선 컨트롤의
                     높이가 다르면 줄이 어긋나 보인다. */}
+                {/* flex-1 은 가로로 나눌 때만 준다 — 세로로 쌓인 상태에서는 flex-basis 가 높이를 0 으로
+                    잡아 칸이 눌린다. 쌓였을 때는 카드 폭을 그대로 쓴다. */}
                 <DatePicker
+                    id={`${controlId}-from`}
                     value={from}
+                    controlled
                     onChange={setFrom}
                     name={`${name}From`}
                     aria-label="조회 시작일"
-                    size="md"
-                    className="flex-1"
+                    size={size}
+                    className="w-full sm:flex-1"
                 />
-                <span aria-hidden="true" className="text-foreground shrink-0">
+                <span aria-hidden="true" className="text-foreground shrink-0 max-sm:self-center">
                     ~
                 </span>
                 <DatePicker
+                    id={`${controlId}-to`}
                     value={to}
+                    controlled
                     onChange={setTo}
                     name={`${name}To`}
                     aria-label="조회 종료일"
-                    size="md"
-                    className="flex-1"
+                    size={size}
+                    className="w-full sm:flex-1"
                 />
                 {/* 인라인 액션은 글자 폭만큼만 차지한다. Button 의 size 축에는 홀로 서는 CTA 가 너무
                     좁아지지 않도록 최소 폭(sm 90)이 들어 있는데, 입력 옆에 붙는 버튼에서는 그 여백이
                     그대로 남아 넓어 보인다(시안 73). 자리에서 오는 제약이라 사용처마다 풀지 않고
                     이 슬롯이 한 번 푼다. */}
                 {action ? <div className="flex shrink-0 items-center gap-2 *:min-w-0">{action}</div> : null}
+            </div>
+        </FilterRow>
+    )
+}
+
+// 검색 대상(Select) + 검색어(Input) 한 줄 — 무엇으로 찾을지 고르고 그 값을 적는다(시안 "조회").
+// 두 칸이 한 쌍이라 한 줄(FilterRow)에 함께 두고, 이름은 <name>Type · <name>Keyword 로 제출한다.
+// 좁은 화면에서는 위아래로 쌓인다 — 한 줄에 두 칸을 두면 고른 대상도 적은 값도 읽기 어려워진다.
+type KeywordSearchFieldProps = {
+    name?: string
+    label?: string
+    /** 검색 대상 목록. 첫 항목이 기본값이다. */
+    options: readonly SelectOption[]
+    placeholder?: string
+    /** 라벨을 화면에서 감춘다(스크린리더에는 남는다). */
+    labelHidden?: boolean
+    /** 칸 높이 — 기본은 48(lg). */
+    size?: 'lg' | 'md'
+}
+
+const KeywordSearchField = ({
+    name = 'search',
+    label = '검색어',
+    options,
+    placeholder,
+    labelHidden,
+    size = 'lg',
+}: KeywordSearchFieldProps) => {
+    const id = useId()
+    const labelId = `${id}-label`
+    const targetId = `${id}-target`
+    const keywordId = `${id}-keyword`
+    const [target, setTarget] = useState(options[0].value)
+    const [keyword, setKeyword] = useState('')
+
+    useResetSignal(() => {
+        setTarget(options[0].value)
+        setKeyword('')
+    })
+
+    const targetLabel = options.find((option) => option.value === target)?.label ?? label
+
+    return (
+        <FilterRow label={label} labelId={labelId} labelHidden={labelHidden}>
+            <div className="grid gap-2 sm:grid-cols-2">
+                {/* 두 칸은 각자 무엇을 고르고 적는 자리인지 이름을 갖는다 — 라벨을 감춘 줄이라
+                    보이는 글자만으로는 전해지지 않는다[7.4.1]. */}
+                <Select name={`${name}Type`} value={target} onValueChange={setTarget}>
+                    <SelectTrigger id={targetId} size={size} aria-label={`${label} 대상`} className="w-full">
+                        <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {options.map((option) => (
+                            <SelectItem key={option.value} value={option.value}>
+                                {option.label}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+                <ClearableInput
+                    id={keywordId}
+                    name={`${name}Keyword`}
+                    value={keyword}
+                    onChange={(event) => setKeyword(event.target.value)}
+                    aria-label={label}
+                    placeholder={placeholder ?? `${targetLabel} 입력`}
+                />
             </div>
         </FilterRow>
     )
@@ -195,8 +290,6 @@ const CompanyNameField = ({
         </FilterRow>
     )
 }
-
-type SelectOption = {value: string; label: string}
 
 // 라벨·옵션·placeholder 를 받는 공통 Select 필드. 기본값을 비우면 placeholder(선택해 주세요)가 보인다.
 type SelectFilterFieldProps = {
@@ -343,12 +436,13 @@ const SearchFilterForm = ({
                             SEARCH_FILTER_SURFACE[surface],
                             // 좌우 여백 40 은 폼 카드의 값이다(BaseCard 기본 24 보다 넓다 — 시안).
                             'md:[&_[data-slot=card-content]]:px-10',
-                            // stack 배치는 라벨·컨트롤이 한 덩어리로 쌓여 세로가 짧다 — 위아래 여백을 24 로
-                            // 두어 카드가 필요 이상으로 높아지지 않게 한다(시안).
-                            layout === 'row' ? 'md:py-10' : undefined,
+                            // 위아래 여백은 배치마다 다르다(시안) — row 는 40, stack 은 32.
+                            layout === 'row' ? 'md:py-10' : 'md:py-8',
                         )}
                     >
-                        <div className={cn('flex flex-col', layout === 'row' ? 'gap-8' : 'gap-6')}>{children}</div>
+                        {/* stack 배치의 세로 간격 16 은 시안(평가결과 조회 조회 카드)의 값이다 —
+                            날짜 줄과 [초기화·조회] 줄이 한 덩어리로 붙는다. */}
+                        <div className={cn('flex flex-col', layout === 'row' ? 'gap-8' : 'gap-4')}>{children}</div>
                     </BaseCard>
                 </form>
             </ResetSignalContext.Provider>
@@ -356,13 +450,14 @@ const SearchFilterForm = ({
     )
 }
 
-export type {SearchFilterLayout, SearchFilterFormProps, DateRangeFieldProps}
+export type {SearchFilterLayout, SearchFilterFormProps, DateRangeFieldProps, KeywordSearchFieldProps}
 export {
     SearchFilterForm,
     SearchFilterFields,
     SearchFilterActions,
     SearchFilterRow,
     DateRangeField,
+    KeywordSearchField,
     CompanyNameField,
     SearchTypeField,
     PaymentTypeField,

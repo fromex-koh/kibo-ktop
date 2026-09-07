@@ -88,6 +88,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                             {label: 'Select', href: '/component-guide/select'},
                             {label: 'Combobox', href: '/component-guide/combobox'},
                             {label: 'DatePicker', href: '/component-guide/date-picker'},
+                            {label: 'DateField', href: '/component-guide/date-field'},
                             {label: 'Checkbox', href: '/component-guide/checkbox'},
                             {label: 'Radio', href: '/component-guide/radio'},
                             {label: 'Switch', href: '/component-guide/switch'},
@@ -96,6 +97,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {
                         title: '프로젝트 폼 패턴',
                         items: [
+                            {label: 'Field / FieldGrid', href: '/component-guide/form-fields'},
                             {label: 'Chip', href: '/component-guide/chip'},
                             {label: 'EmailField', href: '/component-guide/email-field'},
                             {label: 'FileUpload / Field / Result', href: '/component-guide/file-upload'},
@@ -120,6 +122,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'FullPageServiceStatus', href: '/component-guide/full-page-service-status'},
                     {label: 'ViewportFitLayout', href: '/component-guide/viewport-fit-layout'},
                     {label: 'StickySidebar', href: '/component-guide/sticky-sidebar'},
+                    {label: 'MypageSidebar / FormCard', href: '/component-guide/mypage-shell'},
                     {label: 'Footer', href: '/component-guide/footer'},
                     {label: 'PageTitleBar', href: '/component-guide/page-title-bar'},
                     {label: 'Breadcrumb', href: '/component-guide/breadcrumb'},
@@ -156,6 +159,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 items: [
                     {label: 'FormTabs', href: '/component-guide/form-tabs'},
                     {label: 'Tabs', href: '/component-guide/tabs'},
+                    {label: 'TextTabs', href: '/component-guide/text-tabs'},
                 ],
             },
             {
@@ -173,6 +177,8 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'HistoryList', href: '/component-guide/history-list'},
                     {label: 'SummaryList', href: '/component-guide/summary-list'},
                     {label: 'SelectableSummaryList', href: '/component-guide/selectable-summary-list'},
+                    {label: '목록 패턴 (List)', href: '/component-guide/list-patterns'},
+                    {label: 'EmptyState', href: '/component-guide/empty-state'},
                 ],
             },
             {
@@ -181,6 +187,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'Icon', href: '/component-guide/icon'},
                     {label: 'ListMarker', href: '/component-guide/list-marker'},
                     {label: 'Badge', href: '/component-guide/badge'},
+                    {label: 'ThemeToggle', href: '/component-guide/theme-toggle'},
                 ],
             },
             {
@@ -190,6 +197,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'Alert', href: '/component-guide/alert'},
                     {label: 'InfoBox', href: '/component-guide/info-box'},
                     {label: 'Toast', href: '/component-guide/toast'},
+                    {label: 'CheckToast', href: '/component-guide/check-toast'},
                     {label: 'Dialog', href: '/component-guide/dialog'},
                 ],
             },

@@ -1,9 +1,9 @@
 {
-    "version": "v3.1.7",
+    "version": "v3.1.8",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.1.7",
+            "version": "v3.1.8",
             "isCurrent": true
         },
         {
@@ -18,12 +18,12 @@
         },
         {
             "name": "src/components/composite",
-            "version": "v3.1.7",
+            "version": "v3.1.8",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v3.1.7",
+            "version": "v3.1.8",
             "isCurrent": true
         },
         {
@@ -33,12 +33,12 @@
         },
         {
             "name": "src/constants",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "name": "src/content",
-            "version": "v3.1.7",
+            "version": "v3.1.8",
             "isCurrent": true
         },
         {

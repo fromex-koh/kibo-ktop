@@ -22,14 +22,11 @@ import {cn} from '@/lib/utils'
 
 const GUARANTEE_DONE_MESSAGE = '보증신청이 완료되었습니다.'
 
-// 물음 뒤에 붙는 안내 — 시안은 두 줄이고, 두 문장이 각각 다른 사실을 말하므로 줄을 나눠 둔다.
-// 모달의 설명이 되는 안내 상자의 id — 한 화면에 이 모달은 하나뿐이라 고정값으로 둔다.
+// 물음 뒤에 붙는 안내 — 어디서 평가하는지와 신청 뒤 무엇이 달라지는지를 잇달아 말하는 한 문단이다(시안).
+// 모달의 설명이 되는 안내 문단의 id — 한 화면에 이 모달은 하나뿐이라 고정값으로 둔다.
 const GUARANTEE_NOTES_ID = 'guarantee-application-notes'
 
-const GUARANTEE_NOTES: readonly string[] = [
-    '관할 기술평가 센터에서 평가를 진행합니다.',
-    "평가 완료 시, '보증신청 결과' 탭에서 결과를 확인 할 수 있습니다.",
-]
+const GUARANTEE_NOTE = "관할 기술평가 센터에서 평가를 진행합니다. 신청 완료 시 진행상태가 '보증신청 완료'로 표시됩니다."
 
 type GuaranteeApplicationDialogProps = {
     /** 모달을 여는 버튼. Radix 가 이 요소에 열기 동작과 aria 를 얹는다. */
@@ -103,29 +100,25 @@ const GuaranteeApplicationDialog = ({children, defaultOpen, onConfirm}: Guarante
         <>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
-                {/* 물음이 제목이 되므로 설명은 그 아래 안내 두 줄이 맡는다 — 그 상자를 aria-describedby 로 잇는다. */}
+                {/* 물음이 제목이 되므로 설명은 그 아래 안내 문단이 맡는다 — 그 문단을 aria-describedby 로 잇는다. */}
                 <DialogContent aria-describedby={GUARANTEE_NOTES_ID}>
                     <DialogHeader>
                         <DialogTitle>보증신청</DialogTitle>
                     </DialogHeader>
-                    {/* 물음과 안내 사이 16(시안). 안내 두 줄은 붙여 둔다. */}
+                    {/* 물음과 안내 사이 16(시안). */}
                     <div className={cn(dialogBodyClassName, 'gap-4')}>
                         {/* 물음은 아래 안내와 [예]·[아니오] 를 이끄는 머리라 heading 으로 둔다 — 크기·굵기만
                         제목처럼인 문단으로 두면 "제목처럼 보이는데 제목이 아닌 글"이 된다
                         (WAVE "Possible heading"). 모달 제목(h2) 아래 단계라 h3 이다[6.4.2]. */}
                         <h3 className="typo-title-l-bold text-foreground">보증신청을 진행하시겠습니까?</h3>
-                        <div id={GUARANTEE_NOTES_ID} className="flex flex-col">
-                            {GUARANTEE_NOTES.map((note) => (
-                                <p key={note} className="typo-body-xl-regular text-foreground">
-                                    {note}
-                                </p>
-                            ))}
-                        </div>
+                        <p id={GUARANTEE_NOTES_ID} className="typo-body-xl-regular text-label-foreground">
+                            {GUARANTEE_NOTE}
+                        </p>
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
                             <Button variant="tertiary" size="xl">
-                                아니오
+                                아니요
                             </Button>
                         </DialogClose>
                         <Button size="xl" onClick={handleConfirm}>

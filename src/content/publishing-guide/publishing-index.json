@@ -251,6 +251,7 @@
                     "label": "전체메뉴",
                     "screenId": "SB-FOTA-CP0-0001",
                     "status": "보완",
+                    "statusDate": "09/07",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-full-menu",
@@ -468,6 +469,7 @@
                                     "label": "입력도움말",
                                     "screenId": "SB-FOTA-CP6-0003",
                                     "status": "보완",
+                                    "statusDate": "09/07",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-representative-career-input-helper",
@@ -482,6 +484,7 @@
                                     "label": "실적인정 지식재산",
                                     "screenId": "SB-FOTA-CP7-0003",
                                     "status": "보완",
+                                    "statusDate": "09/07",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip",
@@ -583,6 +586,7 @@
                                     "label": "제출 전 최종확인",
                                     "screenId": "SB-FOTA-CP13-0003",
                                     "status": "보완",
+                                    "statusDate": "09/07",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-final-review",
@@ -623,6 +627,7 @@
                                     "label": "은행 전송완료",
                                     "screenId": "SB-FOTA-CP16-0003",
                                     "status": "보완",
+                                    "statusDate": "09/07",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-complete-bank-transfer-transfer-complete",
@@ -657,6 +662,7 @@
                             "label": "(0) 선택 화면",
                             "screenId": "SB-FOTA-CM0-0103",
                             "status": "보완",
+                            "statusDate": "09/07",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-technology-evaluation-tech-index-selection",
@@ -718,7 +724,8 @@
                                 {
                                     "label": "(2) 기업·기술정보 입력",
                                     "screenId": "SB-FOTA-CM2-0103",
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/08",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-general-company-technology-info",
@@ -767,6 +774,7 @@
                                             "label": "제출 전 최종확인",
                                             "screenId": "SB-FOTA-CP13-0103",
                                             "status": "보완",
+                                            "statusDate": "09/07",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-final-review",
                                             "application2Status": "완료",
@@ -872,7 +880,8 @@
                                 {
                                     "label": "(2) 기업·기술정보 입력",
                                     "screenId": "SB-FOTA-CM2-0203",
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/08",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-tech-index-startup-company-technology-info",
@@ -921,6 +930,7 @@
                                             "label": "제출 전 최종확인",
                                             "screenId": "SB-FOTA-CP13-0203",
                                             "status": "보완",
+                                            "statusDate": "09/07",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-final-review",
                                             "application2Status": "완료",
@@ -1168,6 +1178,7 @@
                                     "label": "제출 전 최종확인",
                                     "screenId": "SB-FOTA-CP13-0303",
                                     "status": "보완",
+                                    "statusDate": "09/07",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-final-review",
                                     "application2Status": "완료",
@@ -1186,6 +1197,7 @@
                                     "label": "작성 취소",
                                     "screenId": "SB-FOTA-CP14-0303",
                                     "status": "보완",
+                                    "statusDate": "09/07",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-checklist-cancel-confirm",
                                     "application2Status": "완료",
@@ -1463,6 +1475,7 @@
                     "screen": {
                         "screenId": "SB-FOTA-CM0-0009",
                         "status": "보완",
+                        "statusDate": "09/08",
                         "application2Status": "완료",
                         "version": "미배포",
                         "key": "corp-mypage-profile",
@@ -1499,9 +1512,17 @@
                             "label": "저장 전 최종 확인",
                             "screenId": null,
                             "status": "보완",
+                            "statusDate": "09/07",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-profile-save-confirm"
+                        },
+                        {
+                            "label": "본인확인",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "corp-mypage-profile-identity-verification"
                         }
                     ]
                 },
@@ -1510,7 +1531,8 @@
                     "screen": {
                         "key": "corp-mypage-representative-history",
                         "screenId": "SB-FOTA-CM1-0009",
-                        "status": "완료",
+                        "status": "보완",
+                        "statusDate": "09/08",
                         "application2Status": "완료",
                         "version": "미배포",
                         "iaRow": 120
@@ -1575,6 +1597,7 @@
                             "label": "저장 전 최종 확인",
                             "screenId": null,
                             "status": "보완",
+                            "statusDate": "09/07",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-representative-history-save-confirm"
@@ -1585,7 +1608,8 @@
                     "label": "평가결과 조회",
                     "screen": {
                         "screenId": "SB-FOTA-OM0-0010",
-                        "status": "대기중",
+                        "status": "보완",
+                        "statusDate": "09/08",
                         "version": "미배포",
                         "key": "corp-mypage-evaluation-results",
                         "iaRow": 125
@@ -1614,6 +1638,7 @@
                                     "label": "은행전송완료",
                                     "screenId": "SB-FOTA-CP2-0010",
                                     "status": "보완",
+                                    "statusDate": "09/07",
                                     "version": "미배포",
                                     "key": "corp-mypage-evaluation-results-bank-transfer-transfer-complete",
                                     "application2Status": "완료",
@@ -1625,7 +1650,8 @@
                             "label": "보증신청",
                             "screen": {
                                 "screenId": "SB-FOTA-CP3-0010",
-                                "status": "완료",
+                                "status": "보완",
+                                "statusDate": "09/08",
                                 "version": "미배포",
                                 "key": "corp-mypage-evaluation-results-guarantee-application",
                                 "application2Status": "완료",
@@ -1719,6 +1745,7 @@
                     "screen": {
                         "screenId": "SB-FOTA-CM0-0012",
                         "status": "보완",
+                        "statusDate": "09/07",
                         "application2Status": "완료",
                         "version": "미배포",
                         "key": "corp-mypage-inquiry-history",
@@ -1729,6 +1756,7 @@
                             "label": "문의하기 상세",
                             "screenId": "SB-FOTA-CM1-0012",
                             "status": "보완",
+                            "statusDate": "09/07",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-inquiry-history-inquiry-detail",
@@ -1747,6 +1775,7 @@
                     "screen": {
                         "screenId": "SB-FOTA-CM0-0013",
                         "status": "보완",
+                        "statusDate": "09/07",
                         "application2Status": "완료",
                         "version": "미배포",
                         "key": "corp-notice-announcements",
@@ -1757,6 +1786,7 @@
                             "label": "상세",
                             "screenId": "SB-FOTA-CM1-0013",
                             "status": "보완",
+                            "statusDate": "09/07",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-announcements-detail",
@@ -1778,6 +1808,7 @@
                     "screen": {
                         "screenId": "SB-FOTA-CM0-0014",
                         "status": "보완",
+                        "statusDate": "09/07",
                         "application2Status": "완료",
                         "version": "미배포",
                         "key": "corp-notice-inquiry-create",
@@ -1806,6 +1837,7 @@
                             "label": "문의 취소",
                             "screenId": "SB-FOTA-CP1-0014",
                             "status": "보완",
+                            "statusDate": "09/07",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-notice-inquiry-create-inquiry-cancel",
@@ -1817,6 +1849,7 @@
                     "label": "자료실",
                     "screenId": "SB-FOTA-CM0-0015",
                     "status": "보완",
+                    "statusDate": "09/07",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-notice-resources",
@@ -1942,6 +1975,7 @@
                     "label": "로그인 안내",
                     "screenId": "SB-FOTA-CP2-0016",
                     "status": "보완",
+                    "statusDate": "09/07",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-login-guide",
@@ -1957,6 +1991,7 @@
                     "label": "로그인 연장",
                     "screenId": "SB-FOTA-CP0-0016",
                     "status": "보완",
+                    "statusDate": "09/07",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-session-extension",
@@ -1987,6 +2022,7 @@
                     "label": "실명인증",
                     "screenId": "SB-FOTA-CP3-0016",
                     "status": "보완",
+                    "statusDate": "09/07",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-real-name-verification",
@@ -2200,7 +2236,8 @@
                             "label": "(1) 고객정보활용동의",
                             "screen": {
                                 "screenId": null,
-                                "status": "완료",
+                                "status": "보완",
+                                "statusDate": "09/08",
                                 "application2Status": "완료",
                                 "version": "미배포",
                                 "key": "org-individual-evaluation-ktrs-fm-customer-consent",
@@ -2438,7 +2475,8 @@
                                     "label": "(1) 고객정보활용동의",
                                     "screen": {
                                         "screenId": null,
-                                        "status": "완료",
+                                        "status": "보완",
+                                        "statusDate": "09/08",
                                         "application2Status": "완료",
                                         "version": "미배포",
                                         "key": "org-individual-evaluation-tech-index-general-customer-consent",
@@ -2459,7 +2497,8 @@
                                 {
                                     "label": "(2) 기업·기술정보 입력",
                                     "screenId": null,
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/08",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-general-company-technology-info",
@@ -2576,7 +2615,8 @@
                                     "label": "(1) 고객정보활용동의",
                                     "screen": {
                                         "screenId": null,
-                                        "status": "완료",
+                                        "status": "보완",
+                                        "statusDate": "09/08",
                                         "application2Status": "완료",
                                         "version": "미배포",
                                         "key": "org-individual-evaluation-tech-index-startup-customer-consent",
@@ -2597,7 +2637,8 @@
                                 {
                                     "label": "(2) 기업·기술정보 입력",
                                     "screenId": null,
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/08",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-tech-index-startup-company-technology-info",
@@ -2715,7 +2756,8 @@
                         {
                             "label": "(1) 고객정보활용동의",
                             "screenId": null,
-                            "status": "완료",
+                            "status": "보완",
+                            "statusDate": "09/08",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-individual-evaluation-investment-model-customer-consent",
@@ -3249,25 +3291,42 @@
                                 {
                                     "label": "협약은행",
                                     "screenId": null,
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/08",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-profile-edit-partner-bank",
                                     "iaRow": 112
                                 },
                                 {
-                                    "label": "협약기관",
+                                    "label": "비협약 은행",
                                     "screenId": null,
                                     "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-profile-edit-non-partner-bank"
+                                },
+                                {
+                                    "label": "협약기관",
+                                    "screenId": null,
+                                    "status": "보완",
+                                    "statusDate": "09/08",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-profile-edit-partner-agency",
                                     "iaRow": 112
                                 },
                                 {
-                                    "label": "기관회원 (하위계정)",
+                                    "label": "비협약 기관",
                                     "screenId": null,
                                     "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-profile-edit-non-partner-agency"
+                                },
+                                {
+                                    "label": "기관회원 (하위계정)",
+                                    "screenId": null,
+                                    "status": "보완",
+                                    "statusDate": "09/08",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-profile-edit-sub-account",
@@ -3308,6 +3367,13 @@
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-mypage-profile-edit-save-confirm"
+                        },
+                        {
+                            "label": "본인확인",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "org-mypage-profile-edit-identity-verification"
                         }
                     ]
                 },
@@ -3315,7 +3381,7 @@
                     "label": "평가결과 조회",
                     "screen": {
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "org-mypage-evaluation-history",
                         "iaRow": 115
@@ -3342,7 +3408,7 @@
                             "screen": {
                                 "key": "org-mypage-evaluation-history-guarantee-recommendation",
                                 "screenId": null,
-                                "status": "대기중",
+                                "status": "완료",
                                 "version": "미배포",
                                 "iaRow": 118
                             },
@@ -3350,12 +3416,40 @@
                                 {
                                     "label": "보증추천완료",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-evaluation-history-guarantee-recommendation-complete",
                                     "iaRow": 119
+                                },
+                                {
+                                    "label": "기술평가센터 검색",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-evaluation-history-guarantee-recommendation-center-search"
+                                },
+                                {
+                                    "label": "은행 검색",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-search"
+                                },
+                                {
+                                    "label": "영업점 검색",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-branch-search"
                                 }
                             ]
+                        },
+                        {
+                            "label": "보증이력",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "org-mypage-evaluation-history-guarantee-history"
                         }
                     ]
                 },

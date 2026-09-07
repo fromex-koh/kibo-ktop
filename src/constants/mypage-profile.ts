@@ -48,9 +48,9 @@ export const COMPANY_NAME_PLACEHOLDER = '기업명'
 export {CORPORATION_PREFIX}
 
 // 사이드바에 보이는 회원 — 이름은 헤더가 쓰는 값과 같다.
+// 유형 배지(기업·기관)는 헤더의 UserTypeBadge 가 갖는다 — 여기서 글자를 따로 두지 않는다.
 export const MYPAGE_MEMBER = {
     companyName: CORP_PREVIEW_USER.name,
-    memberType: '기업회원',
 } as const
 
 // 화면을 열 때 이미 들어 있는 값 — 가입할 때 받은 회원정보다.
@@ -84,10 +84,12 @@ export const ORG_MYPAGE_MEMBERS = {
     // 배지는 회원 구분(기관회원)이다 — 협약 형태(협약은행·협약기관)는 폼의 [기관구분] 칸이 알린다.
     // default 는 유형을 가르지 않는 기관 마이페이지 화면이 쓴다 — 이름은 (logged-in) 레이아웃이
     // 헤더에 넣는 계정과 같아야 한다.
-    default: {companyName: ORG_PREVIEW_USER.name, memberType: '기관회원'},
-    partnerBank: {companyName: ORG_PREVIEW_USERS.partnerBank.name, memberType: '기관회원'},
-    partnerAgency: {companyName: ORG_PREVIEW_USERS.partnerAgency.name, memberType: '기관회원'},
-    subAccount: {companyName: ORG_PREVIEW_USERS.subAccount.name, memberType: '기관회원'},
+    default: {companyName: ORG_PREVIEW_USER.name},
+    partnerBank: {companyName: ORG_PREVIEW_USERS.partnerBank.name},
+    nonPartnerBank: {companyName: ORG_PREVIEW_USERS.nonPartnerBank.name},
+    partnerAgency: {companyName: ORG_PREVIEW_USERS.partnerAgency.name},
+    nonPartnerAgency: {companyName: ORG_PREVIEW_USERS.nonPartnerAgency.name},
+    subAccount: {companyName: ORG_PREVIEW_USERS.subAccount.name},
 } as const
 
 // 기관 회원정보 — 칸 구성은 기업과 같고 값만 그 기관의 것이다. 유형마다 다른 기관이라 값도 다르다.
@@ -173,7 +175,9 @@ export const ORG_MEMBER_JOINED_AT_FIELD = 'orgJoinedAt'
 // 기관구분·상태는 회원이 고르는 값이 아니라 보여 주는 값이다 — 목록은 어떤 값이 올 수 있는지 알리는 용도다.
 export const ORG_MEMBER_KINDS = [
     {value: 'partner-bank', label: '협약은행'},
+    {value: 'non-partner-bank', label: '비협약 은행'},
     {value: 'partner-agency', label: '협약기관'},
+    {value: 'non-partner-agency', label: '비협약 기관'},
     {value: 'sub-account', label: '기관회원 (하위계정)'},
 ] as const
 
@@ -203,6 +207,19 @@ export const ORG_MEMBER_ACCOUNTS: Record<string, Record<string, string>> = {
         [ORG_MEMBER_ID_FIELD]: 'bnk_seomyeon',
         // 실제 비밀번호는 조회로 내려오지 않는다 — 화면에는 자릿수만 채운 가림표가 보인다.
         [ORG_MEMBER_PASSWORD_FIELD]: 'Bnk#2026seo',
+        // 협약을 맺을 때 정해진 평가사업 — 협약 유형(은행·기관)에만 있는 칸이다(시안 케이스 B).
+        [ORG_MEMBER_PROGRAM_FIELD]: 'seoul-startup',
+    },
+    // 비협약 유형은 협약 때 정해지는 [평가사업 선택] 칸이 없다 — 그 값을 두지 않으면 칸도 생기지 않는다.
+    nonPartnerBank: {
+        [ORG_MEMBER_NAME_FIELD]: ORG_PREVIEW_USERS.nonPartnerBank.name,
+        [ORG_MEMBER_BIZ_NO_FIELD]: '410-81-00520',
+        [ORG_MEMBER_MANAGER_FIELD]: '정하늘',
+        [ORG_MEMBER_TEL_FIELD]: '062-221-5400',
+        [ORG_MEMBER_KIND_FIELD]: 'non-partner-bank',
+        [ORG_MEMBER_STATUS_FIELD]: 'active',
+        [ORG_MEMBER_ID_FIELD]: 'kjb_sangmu',
+        [ORG_MEMBER_PASSWORD_FIELD]: 'Kjb#2026sma',
     },
     partnerAgency: {
         [ORG_MEMBER_NAME_FIELD]: ORG_PREVIEW_USERS.partnerAgency.name,
@@ -214,6 +231,16 @@ export const ORG_MEMBER_ACCOUNTS: Record<string, Record<string, string>> = {
         [ORG_MEMBER_ID_FIELD]: 'sba_master01',
         [ORG_MEMBER_PASSWORD_FIELD]: 'Sba#2026mst',
         [ORG_MEMBER_PROGRAM_FIELD]: 'seoul-growth',
+    },
+    nonPartnerAgency: {
+        [ORG_MEMBER_NAME_FIELD]: ORG_PREVIEW_USERS.nonPartnerAgency.name,
+        [ORG_MEMBER_BIZ_NO_FIELD]: '124-82-07711',
+        [ORG_MEMBER_MANAGER_FIELD]: '오지훈',
+        [ORG_MEMBER_TEL_FIELD]: '031-500-3000',
+        [ORG_MEMBER_KIND_FIELD]: 'non-partner-agency',
+        [ORG_MEMBER_STATUS_FIELD]: 'active',
+        [ORG_MEMBER_ID_FIELD]: 'gtp_master01',
+        [ORG_MEMBER_PASSWORD_FIELD]: 'Gtp#2026mst',
     },
     subAccount: {
         [ORG_MEMBER_NAME_FIELD]: ORG_PREVIEW_USERS.subAccount.name,

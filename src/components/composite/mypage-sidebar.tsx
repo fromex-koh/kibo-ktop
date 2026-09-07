@@ -5,24 +5,24 @@ import type {LucideIcon} from 'lucide-react'
 import {
     BriefcaseBusiness,
     ChevronDown,
-    ClipboardCheck,
     CreditCard,
     FileSearch,
+    FolderSearch,
     MessageCircleMore,
     NotepadText,
     User,
-    Users,
+    UserSearch,
 } from 'lucide-react'
 // 폭 임계값은 FormTabs 가 쓰는 것과 같은 값이다(md·xl). 토큰과 어긋나면 yarn tokens 가 빌드를 세우는데
 // 그 검사가 form-tabs.tsx 를 보므로, 같은 상수를 가져다 써서 기준을 한 곳에만 둔다.
 import {FORM_TABS_MOBILE_QUERY, FORM_TABS_QUERY} from '@/components/composite/form-tabs'
+import {UserTypeBadge} from '@/components/composite/header'
 import {
     StickySidebar,
     StickySidebarNav,
     StickySidebarNavItem,
     StickySidebarProfile,
 } from '@/components/composite/sticky-sidebar'
-import {Badge} from '@/components/ui/badge'
 import {Popover, PopoverContent, PopoverTrigger} from '@/components/ui/popover'
 import {cn} from '@/lib/utils'
 
@@ -50,7 +50,7 @@ type MypageMenuItem = {icon: LucideIcon; label: string; href: string}
 const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
     corp: [
         {icon: User, label: '내 정보', href: '/corp/mypage/profile'},
-        {icon: BriefcaseBusiness, label: '대표자(경영자) 역량 및 경력', href: '/corp/mypage/representative-history'},
+        {icon: BriefcaseBusiness, label: '대표자 이력', href: '/corp/mypage/representative-history'},
         {icon: FileSearch, label: '평가결과 조회', href: '/corp/mypage/evaluation-results'},
         {icon: NotepadText, label: 'K-BIGx 보고서 이력', href: '#'},
         {icon: CreditCard, label: '유료 서비스 관리', href: '#'},
@@ -59,11 +59,11 @@ const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
     org: [
         // 기관 [내 정보] 는 회원 유형별로 화면이 나뉜다 — 실제로는 로그인한 유형의 화면으로 간다.
         {icon: User, label: '내 정보', href: '/org/mypage/profile-edit/partner-agency'},
-        {icon: FileSearch, label: '평가결과 조회', href: '#'},
-        {icon: ClipboardCheck, label: '평가검증 신청 조회', href: '#'},
+        {icon: FileSearch, label: '평가결과 조회', href: '/org/mypage/evaluation-history'},
+        {icon: FolderSearch, label: '평가검증 신청 조회', href: '#'},
         {icon: NotepadText, label: 'K-BIGx 보고서 이력', href: '#'},
-        {icon: Users, label: '하위 계정 현황', href: '#'},
-        {icon: MessageCircleMore, label: '1:1 문의 내역', href: '/org/mypage/inquiry-history'},
+        {icon: UserSearch, label: '하위계정 현황', href: '#'},
+        {icon: MessageCircleMore, label: '1:1 문의', href: '/org/mypage/inquiry-history'},
     ],
 }
 
@@ -84,15 +84,9 @@ const getLayout = () => {
 const useMypageSidebarLayout = () => useSyncExternalStore(subscribeToQueries, getLayout, () => 'mobile' as const)
 
 // 회원 배지 + 기업명 — 세 형태가 모두 같은 묶음을 쓴다.
-const MypageProfile = ({companyName, memberType}: {companyName: ReactNode; memberType: string}) => (
-    <StickySidebarProfile
-        name={companyName}
-        badge={
-            <Badge variant="outline" color="secondary-purple" shape="round" size="sm">
-                {memberType}
-            </Badge>
-        }
-    />
+// 배지는 헤더가 쓰는 유형 배지 그대로다 — 글자(기업·기관)와 색이 한 곳에서만 정해진다.
+const MypageProfile = ({userType, companyName}: {userType: 'corp' | 'org'; companyName: ReactNode}) => (
+    <StickySidebarProfile name={companyName} badge={<UserTypeBadge userType={userType} />} />
 )
 
 type MypageSidebarProps = {
@@ -102,12 +96,9 @@ type MypageSidebarProps = {
     current: string
     // 기업명. 연동 시 회원정보 응답으로 바꾼다.
     companyName: ReactNode
-    // 회원 구분 배지 글(예: "기업회원"). 값의 출처는 화면(page)이다 — 여기에 기본값을 두면
-    // 회원정보가 두 곳에서 오게 되어, 한쪽만 바뀌었을 때 화면과 어긋난다.
-    memberType: string
 } & Omit<ComponentPropsWithoutRef<typeof StickySidebar>, 'children'>
 
-const MypageSidebar = ({userType, current, companyName, memberType, className, ...props}: MypageSidebarProps) => {
+const MypageSidebar = ({userType, current, companyName, className, ...props}: MypageSidebarProps) => {
     const menu = MYPAGE_MENU[userType]
     const layout = useMypageSidebarLayout()
     const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -135,7 +126,7 @@ const MypageSidebar = ({userType, current, companyName, memberType, className, .
                         className,
                     )}
                 >
-                    <MypageProfile companyName={companyName} memberType={memberType} />
+                    <MypageProfile userType={userType} companyName={companyName} />
                     <PopoverTrigger
                         className={cn(
                             'border-control bg-surface text-foreground flex min-h-14 items-center gap-2 rounded-sm border px-6 py-4',
@@ -180,7 +171,7 @@ const MypageSidebar = ({userType, current, companyName, memberType, className, .
         // top-34 — 헤더(xl 에서 112)가 sticky top-0 이라 그 아래 24 를 띄운다. 컴포넌트 기본값(top-6)으로
         // 두면 카드 윗부분이 헤더에 가린다.
         <StickySidebar className={cn('top-34 w-86 self-start', className)} {...props}>
-            <MypageProfile companyName={companyName} memberType={memberType} />
+            <MypageProfile userType={userType} companyName={companyName} />
             <StickySidebarNav aria-label="마이페이지 메뉴">
                 {menu.map(({icon, label, href}) => (
                     <StickySidebarNavItem key={label} icon={icon} href={href} active={label === current}>

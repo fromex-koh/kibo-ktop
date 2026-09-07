@@ -294,7 +294,10 @@ const CompanyInfoSection = () => {
 }
 
 const ManagerInfoSection = () => (
-    <MypageFormCard title="기업 담당자 정보">
+    <MypageFormCard
+        title="기업담당자"
+        subtitle="서류안내, 현장실사 협의 등 평가 진행사항을 안내받을 담당자 정보(휴대폰)를 입력해 주십시오."
+    >
         <FieldGrid>
             <Field id="manager-name" label="이름" required>
                 <ClearableInput
@@ -305,6 +308,15 @@ const ManagerInfoSection = () => (
                     autoComplete="name"
                 />
             </Field>
+            <Field id="manager-tel" label="연락처" required>
+                <TelInput
+                    id="manager-tel"
+                    name="managerTel"
+                    placeholder="담당자 연락처를 입력해 주세요"
+                    required
+                    autoComplete="tel"
+                />
+            </Field>
             <Field id="manager-position" label="직위" required>
                 <ClearableInput
                     id="manager-position"
@@ -312,21 +324,6 @@ const ManagerInfoSection = () => (
                     placeholder="직위"
                     required
                     autoComplete="organization-title"
-                />
-            </Field>
-            <Field
-                id="manager-tel"
-                label="연락처"
-                required
-                helper="※ 서류안내, 현장실사 협의 등 평가 진행사항을 안내받을 담당자 정보(휴대폰)를 입력해 주십시오."
-            >
-                <TelInput
-                    id="manager-tel"
-                    name="managerTel"
-                    placeholder="담당자 연락처를 입력해 주세요"
-                    required
-                    autoComplete="tel"
-                    aria-describedby="manager-tel-helper"
                 />
             </Field>
             <Field id="manager-email" label="이메일" required>
@@ -449,8 +446,8 @@ const MypageProfileForm = ({defaultValues}: {defaultValues: Record<string, strin
                 <ManagerInfoSection />
             </div>
 
-            {/* 시안: 마지막 칸과 CTA 사이 100(=구획 간격 60 + 40), 버튼 짝은 16 간격이다. */}
-            <ActionBar className="mt-25">
+            {/* 시안: 카드와 CTA 사이 40(마지막 칸 기준으로는 카드 아래 여백 60 을 더해 100), 버튼 짝은 16 간격이다. */}
+            <ActionBar className="mt-10">
                 <ActionBarCenter className="gap-4">
                     <CancelButton />
                     <SaveButton />

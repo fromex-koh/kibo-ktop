@@ -119,6 +119,7 @@ export type StructureLeaf = {
     key?: string // 경로가 확정된 화면은 screen-registry.json과 연결하는 영구 key를 가진다.
     screenId: string | null
     status: Status
+    statusDate?: string // 상태를 바꾼 날짜(MM/DD) — 뱃지에 "보완(09/08)" 처럼 함께 표시한다.
     application2Status?: Status // 응용2 진행 상태. 미지정 시 대기중으로 표시한다.
     isRestored?: boolean // IA에서 제외되었으나 작업 이력 확인을 위해 복원한 화면.
     version: string
@@ -136,6 +137,7 @@ export type ScreenInfo = {
     key?: string
     screenId: string | null
     status: Status
+    statusDate?: string // 상태를 바꾼 날짜(MM/DD) — 뱃지에 "보완(09/08)" 처럼 함께 표시한다.
     application2Status?: Status
     isRestored?: boolean
     version: string
