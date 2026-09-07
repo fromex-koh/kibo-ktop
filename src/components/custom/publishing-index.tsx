@@ -1031,7 +1031,7 @@ const PublishingIndex = () => {
                             <p className="typo-caption-regular text-muted-foreground flex items-center gap-2">
                                 <span
                                     aria-hidden="true"
-                                    className="border-border bg-mint-200 size-4 shrink-0 rounded border"
+                                    className="border-border bg-mint-50 size-4 shrink-0 rounded border"
                                 />
                                 <span>
                                     <strong className="text-foreground font-medium">
@@ -1122,13 +1122,16 @@ const PublishingIndex = () => {
                                                           ? `이전 IA(260731)에서 최신 IA(${iaVersions[filter]})로 변경되며 사라졌거나 프로젝트에는 존재하여 개발 작업이 완료되었으나 최신 IA에서 누락된 화면 — 삭제 의도 또는 누락 여부 확인 필요`
                                                           : undefined
                                                 }
+                                                // 이번 릴리스에서 배포된 행은 다른 표시보다 먼저 눈에 들어와야 한다 —
+                                                // 이번에 무엇이 나갔는지가 이 표를 여는 첫 이유라, 최신 IA 미기재(민트)보다
+                                                // 앞선다. 복원한 행만 그보다 앞에 둔다(그 행은 IA·배포와 무관한 예외다).
                                                 className={`border-border border-b last:border-b-0 ${
                                                     leaf.isRestored
                                                         ? 'bg-warning-50! [&>td]:bg-warning-50! [&>th]:bg-warning-50!'
-                                                        : isSupplemental
-                                                          ? 'bg-mint-200! [&>td]:bg-mint-200! [&>th]:bg-mint-200!'
-                                                          : isCurrent
-                                                            ? 'bg-primary-subtle'
+                                                        : isCurrent
+                                                          ? 'bg-primary-subtle! [&>td]:bg-primary-subtle! [&>th]:bg-primary-subtle!'
+                                                          : isSupplemental
+                                                            ? 'bg-mint-50! [&>td]:bg-mint-50! [&>th]:bg-mint-50!'
                                                             : 'bg-surface'
                                                 }`}
                                             >

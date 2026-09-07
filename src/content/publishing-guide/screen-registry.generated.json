@@ -821,6 +821,13 @@
             "isCurrent": false
         },
         {
+            "key": "corp-mypage-profile-identity-verification",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "corp-mypage-profile-address-search",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -1773,6 +1780,20 @@
             "isCurrent": false
         },
         {
+            "key": "org-mypage-profile-edit-non-partner-bank",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-profile-edit-non-partner-agency",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "org-mypage-profile-edit-sub-account",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -1784,6 +1805,13 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-profile-edit-identity-verification",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -1809,8 +1837,8 @@
         },
         {
             "key": "org-mypage-evaluation-history",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -1830,15 +1858,43 @@
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation-complete",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation-center-search",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-search",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-branch-search",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-history",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },

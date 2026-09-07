@@ -906,6 +906,13 @@
             "name": "업종코드 조회"
         },
         {
+            "key": "corp-mypage-profile-identity-verification",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/profile/identity-verification",
+            "name": "본인확인"
+        },
+        {
             "key": "corp-mypage-profile-address-search",
             "screenId": "SB-FOTA-CP6-0009",
             "userType": "기업",
@@ -1858,6 +1865,20 @@
             "name": "협약기관"
         },
         {
+            "key": "org-mypage-profile-edit-non-partner-bank",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/profile-edit/non-partner-bank",
+            "name": "비협약 은행"
+        },
+        {
+            "key": "org-mypage-profile-edit-non-partner-agency",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/profile-edit/non-partner-agency",
+            "name": "비협약 기관"
+        },
+        {
             "key": "org-mypage-profile-edit-sub-account",
             "screenId": null,
             "userType": "기관",
@@ -1870,6 +1891,13 @@
             "userType": "기관",
             "path": "/org/mypage/profile-edit/industry-code-search",
             "name": "업종코드 조회"
+        },
+        {
+            "key": "org-mypage-profile-edit-identity-verification",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/profile-edit/identity-verification",
+            "name": "본인확인"
         },
         {
             "key": "org-mypage-profile-edit-address-search",
@@ -1926,6 +1954,34 @@
             "userType": "기관",
             "path": "/org/mypage/evaluation-history/guarantee-recommendation/complete",
             "name": "보증추천완료"
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation-center-search",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/guarantee-recommendation/center-search",
+            "name": "기술평가센터 검색"
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-search",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/guarantee-recommendation/bank-search",
+            "name": "은행 검색"
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-branch-search",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/guarantee-recommendation/bank-branch-search",
+            "name": "영업점 검색"
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-history",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/guarantee-history",
+            "name": "보증이력"
         },
         {
             "key": "org-mypage-verification-application",
