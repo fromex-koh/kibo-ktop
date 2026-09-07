@@ -263,11 +263,12 @@ const STATUS_BADGE: Record<Status, {color: 'neutral' | 'info' | 'warning' | 'suc
     최종완료: {color: 'success', variant: 'solid'},
 }
 
-const StatusTag = ({status}: {status: Status}) => (
+// date 를 주면 상태 뒤에 그 날짜를 붙인다("보완(09/08)") — 언제 바뀐 상태인지 표에서 바로 읽히게 한다.
+const StatusTag = ({status, date}: {status: Status; date?: string}) => (
     <Badge color={STATUS_BADGE[status].color} variant={STATUS_BADGE[status].variant} shape="round">
         {status === '최종완료' && <CircleCheckBig aria-hidden="true" />}
         {status === '완료' && <Check aria-hidden="true" />}
-        {status}
+        {date ? `${status}(${date})` : status}
     </Badge>
 )
 
@@ -312,6 +313,7 @@ type FlatLeaf = {
     groupOnlyDepths: number[]
     screenId: string | null
     status: Status
+    statusDate?: string
     application2Status: Status
     version: string
     isRed?: boolean
@@ -355,6 +357,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           screenId: node.screen.screenId,
                           iaRow: node.screen.iaRow,
                           status: node.screen.status,
+                          ...(node.screen.statusDate !== undefined ? {statusDate: node.screen.statusDate} : {}),
                           application2Status: node.screen.application2Status ?? '대기중',
                           version: node.screen.version,
                           ...(node.screen.isRed ? {isRed: true} : {}),
@@ -382,6 +385,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 screenId: node.screenId,
                 iaRow: node.iaRow,
                 status: node.status,
+                ...(node.statusDate !== undefined ? {statusDate: node.statusDate} : {}),
                 application2Status: node.application2Status ?? '대기중',
                 ...(node.isRestored ? {isRestored: true} : {}),
                 version: node.version,
@@ -1248,7 +1252,7 @@ const PublishingIndex = () => {
                                                     <StatusTag status={leaf.application2Status} />
                                                 </td>
                                                 <td className="border-border border-r px-4 py-3">
-                                                    <StatusTag status={effectiveStatus} />
+                                                    <StatusTag status={effectiveStatus} date={leaf.statusDate} />
                                                 </td>
                                                 <td
                                                     className={`typo-caption-regular px-4 py-3 ${
