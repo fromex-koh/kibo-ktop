@@ -27,7 +27,9 @@ export const CORP_PREVIEW_USER = {
 // 유형별 화면(마이페이지 내 정보)은 각자 이 값을 헤더에 넣는다.
 export const ORG_PREVIEW_USERS = {
     partnerBank: {name: '부산은행 서면지점', sessionRemaining: '30:00'},
+    nonPartnerBank: {name: '광주은행 상무지점', sessionRemaining: '30:00'},
     partnerAgency: {name: '서울산업진흥원', sessionRemaining: '30:00'},
+    nonPartnerAgency: {name: '경기테크노파크', sessionRemaining: '30:00'},
     subAccount: {name: '서울산업진흥원 창업지원팀', sessionRemaining: '30:00'},
 } as const
 

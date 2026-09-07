@@ -17,7 +17,7 @@ import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/com
 
 type OrgMypageProfileScreenProps = {
     // 사이드바에 보이는 회원 — 기관명과 유형 배지. 이름은 그 화면의 헤더와 같은 값이다.
-    member: {companyName: string; memberType: string}
+    member: {companyName: string}
     // 본문 폼. 회원 유형마다 묻는 것이 달라 화면(page)이 넘긴다.
     form: ReactNode
     // 화면 제목 아래 안내.
@@ -27,7 +27,7 @@ type OrgMypageProfileScreenProps = {
 const OrgMypageProfileScreen = ({
     member,
     form,
-    description = '등록된 회원 정보를 수정한 후 저장 버튼을 눌러주세요.',
+    description = '기관회원 정보는 가입 시 담당자가 등록·관리합니다. 회원이 직접 수정할 수 있는 항목은 담당자 · 전화번호 · 비밀번호(PW)이며, 그 외 항목의 변경이 필요할 경우 담당자에게 요청해 주세요.',
 }: OrgMypageProfileScreenProps) => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
         <div className="grid-layout gap-y-10 pt-10 *:col-span-full">
@@ -57,12 +57,7 @@ const OrgMypageProfileScreen = ({
             <div className="flex flex-col gap-10 pb-15 xl:flex-row xl:gap-16">
                 {/* 회원정보는 이 화면이 한 번 읽어 사이드바와 폼에 함께 내린다 — 두 곳이 값을 따로
                     가져가면 같은 화면에서 다른 이름이 보인다(연동 시에도 조회는 한 번이다). */}
-                <MypageSidebar
-                    userType="org"
-                    current="내 정보"
-                    companyName={member.companyName}
-                    memberType={member.memberType}
-                />
+                <MypageSidebar userType="org" current="내 정보" companyName={member.companyName} />
 
                 <div className="flex min-w-0 flex-1 flex-col gap-10">
                     <SectionHeader>

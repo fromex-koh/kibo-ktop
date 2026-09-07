@@ -1,11 +1,17 @@
 'use client'
 
 import {useMemo, useRef, useState, type ReactNode} from 'react'
-import {CircleCheck, Eye, EyeOff} from 'lucide-react'
+import {Eye, EyeOff} from 'lucide-react'
 import {ActionBar, ActionBarCenter} from '@/components/composite/action-bar'
 import {EditCancelConfirmDialog} from '@/components/composite/edit-cancel-confirm-dialog'
-import {Field, FieldGrid, LockedField} from '@/components/composite/form-fields'
+import {Field, FieldGrid, FieldRow3, LockedField} from '@/components/composite/form-fields'
+import {
+    SubSectionHeader,
+    SubSectionHeaderDescription,
+    SubSectionHeaderTitle,
+} from '@/components/composite/sub-section-header'
 import {FormCard} from '@/components/composite/form-card'
+import {SummaryList, SummaryListItem} from '@/components/composite/summary-list'
 import {useFormTabsSubmit} from '@/components/composite/form-tabs-submit'
 import {
     ClearableInput,
@@ -22,7 +28,6 @@ import {
     useFormValues,
 } from '@/components/composite/form-values'
 import {SaveConfirmDialog} from '@/components/composite/save-confirm-dialog'
-import {Alert, AlertDescription} from '@/components/ui/alert'
 import {Button} from '@/components/ui/button'
 import {InputGroupButton} from '@/components/ui/input-group'
 import {
@@ -128,20 +133,10 @@ const ProfileCard = ({title, children}: {title: string; children: ReactNode}) =>
     </FormCard>
 )
 
+// 잠긴 칸이 왜 잠겨 있는지는 화면 제목 아래 안내가 알린다 — 같은 문장을 카드 안에 한 번 더 두지 않는다.
 const BasicSection = ({account}: {account: Record<string, string>}) => (
     <ProfileCard title="기본 정보">
         <div className="flex flex-col gap-4">
-            {/* 무엇을 고칠 수 있는지 먼저 알린다 — 잠긴 칸이 여섯이라, 안내가 없으면 화면이 고장 난 것으로
-                읽힌다. 잠긴 칸을 설명하는 안내라 기업 기업정보 탭의 "자동 입력되며 수정할 수 없습니다"
-                안내와 같은 모양을 쓴다. */}
-            <Alert variant="solid" color="info">
-                <CircleCheck aria-hidden="true" />
-                <AlertDescription>
-                    기관회원 정보는 가입 시 담당자가 등록·관리합니다. 회원이 직접 수정할 수 있는 항목은 담당자 ·
-                    전화번호 · 비밀번호(PW)이며, 그 외 항목의 변경이 필요할 경우 담당자에게 요청해 주세요.
-                </AlertDescription>
-            </Alert>
-
             <FieldGrid>
                 <LockedField
                     id={ORG_MEMBER_NAME_FIELD}
@@ -149,12 +144,8 @@ const BasicSection = ({account}: {account: Record<string, string>}) => (
                     value={account[ORG_MEMBER_NAME_FIELD]}
                     required
                 />
-                <LockedField
-                    id={ORG_MEMBER_BIZ_NO_FIELD}
-                    label="사업자번호"
-                    value={account[ORG_MEMBER_BIZ_NO_FIELD]}
-                    required
-                />
+                {/* 사업자번호만 필수 표시가 없다(시안) — 협약 때 받아 둔 값이라 회원이 채울 칸이 아니다. */}
+                <LockedField id={ORG_MEMBER_BIZ_NO_FIELD} label="사업자번호" value={account[ORG_MEMBER_BIZ_NO_FIELD]} />
 
                 <Field id={ORG_MEMBER_MANAGER_FIELD} label="담당자" required>
                     <ClearableInput
@@ -195,8 +186,9 @@ const BasicSection = ({account}: {account: Record<string, string>}) => (
                 <LockedField id={ORG_MEMBER_ID_FIELD} label="ID" value={account[ORG_MEMBER_ID_FIELD]} required />
                 <PasswordField />
 
-                {/* 평가사업 선택 — 협약기관에만 있는 칸이다. 값이 없는 유형(협약은행 등)에서는 자리도
-                    만들지 않는다 — 빈 칸을 잠긴 채로 두면 "있는데 안 채운 칸"으로 읽힌다. */}
+                {/* 평가사업 선택 — 협약 유형(협약은행·협약기관)에만 있는 칸이다. 값이 없는 비협약 유형에서는
+                    자리도 만들지 않는다 — 빈 칸을 잠긴 채로 두면 "있는데 안 채운 칸"으로 읽힌다.
+                    협약할 때 정해져 오는 값이라 다른 잠긴 칸과 같이 고를 수 없게 둔다. */}
                 {account[ORG_MEMBER_PROGRAM_FIELD] ? (
                     <LockedSelect
                         id={ORG_MEMBER_PROGRAM_FIELD}
@@ -214,42 +206,32 @@ const BasicSection = ({account}: {account: Record<string, string>}) => (
 
 // 하위 계정 구획 — 상위 마스터 기관이 만들어 준 계정이라 보여 주는 칸이 다르다.
 // 사업자번호·상태·평가사업 대신 [상위 마스터 기관]·[사업기간]·[가입/생성 일시]가 온다.
+// 잠긴 칸이 왜 잠겨 있는지는 화면 제목 아래 안내가 알린다(sub-account 화면의 description).
 const SubAccountBasicSection = ({account}: {account: Record<string, string>}) => (
     <div className="flex flex-col gap-4">
-        <Alert variant="solid" color="info">
-            <CircleCheck aria-hidden="true" />
-            <AlertDescription>
-                하위 계정 정보는 상위 마스터 기관의 담당자가 등록·관리합니다. 이용권·사업기간은 상위 마스터 기관을
-                따르며, 회원이 직접 수정할 수 있는 항목은 담당자 · 전화번호 · 비밀번호(PW)입니다.
-            </AlertDescription>
-        </Alert>
-
+        {/* 잠긴 여섯 칸에는 필수 표시를 두지 않는다(시안) — 회원이 채울 칸이 아니라 상위 기관이 정한 값이다. */}
         <FieldGrid>
-            <LockedField id={ORG_MEMBER_NAME_FIELD} label="기관명" value={account[ORG_MEMBER_NAME_FIELD]} required />
+            <LockedField id={ORG_MEMBER_NAME_FIELD} label="기관명" value={account[ORG_MEMBER_NAME_FIELD]} />
             {/* 기관구분은 상위 기관을 따르는 값이라 고르는 칸이 아니다 — 글자로만 보여 준다. */}
-            <LockedField id={ORG_MEMBER_KIND_FIELD} label="기관구분" value={account[ORG_MEMBER_KIND_FIELD]} required />
+            <LockedField id={ORG_MEMBER_KIND_FIELD} label="기관구분" value={account[ORG_MEMBER_KIND_FIELD]} />
 
-            <LockedField id={ORG_MEMBER_ID_FIELD} label="ID" value={account[ORG_MEMBER_ID_FIELD]} required />
+            <LockedField id={ORG_MEMBER_ID_FIELD} label="ID" value={account[ORG_MEMBER_ID_FIELD]} />
             <LockedField
                 id={ORG_MEMBER_MASTER_FIELD}
                 label="상위 마스터 기관"
                 value={account[ORG_MEMBER_MASTER_FIELD]}
-                required
             />
 
-            <LockedField
-                id={ORG_MEMBER_PERIOD_FIELD}
-                label="사업기간"
-                value={account[ORG_MEMBER_PERIOD_FIELD]}
-                required
-            />
+            <LockedField id={ORG_MEMBER_PERIOD_FIELD} label="사업기간" value={account[ORG_MEMBER_PERIOD_FIELD]} />
             <LockedField
                 id={ORG_MEMBER_JOINED_AT_FIELD}
                 label="가입/생성 일시"
                 value={account[ORG_MEMBER_JOINED_AT_FIELD]}
-                required
             />
+        </FieldGrid>
 
+        {/* 고칠 수 있는 세 칸은 한 줄에 온다(시안) — 잠긴 칸과 눈으로도 갈린다. */}
+        <FieldRow3>
             <Field id={ORG_MEMBER_MANAGER_FIELD} label="담당자" required>
                 <ClearableInput
                     id={ORG_MEMBER_MANAGER_FIELD}
@@ -268,9 +250,8 @@ const SubAccountBasicSection = ({account}: {account: Record<string, string>}) =>
                     autoComplete="tel"
                 />
             </Field>
-
             <PasswordField />
-        </FieldGrid>
+        </FieldRow3>
     </div>
 )
 
@@ -278,28 +259,23 @@ const SubAccountBasicSection = ({account}: {account: Record<string, string>}) =>
 // 계정마다 다른 조회 값이라 화면(page)이 읽어 내려 준다 — 폼은 값의 출처를 알지 않는다.
 const VoucherSection = ({vouchers}: {vouchers: readonly OrgMemberVoucher[]}) => (
     <div className="flex flex-col gap-4">
-        <Alert variant="solid" color="info">
-            <CircleCheck aria-hidden="true" />
-            <AlertDescription>
+        <SubSectionHeader>
+            <SubSectionHeaderTitle>이용권 정보</SubSectionHeaderTitle>
+            <SubSectionHeaderDescription>
                 상위 마스터 기관으로부터 배분받은 모형별 지급 이용건입니다. 하위 계정은 마스터 계정이 배분한 건수만큼
                 이용할 수 있습니다.
-            </AlertDescription>
-        </Alert>
+            </SubSectionHeaderDescription>
+        </SubSectionHeader>
 
-        {/* 모형과 건수가 짝을 이루는 목록이라 dl 로 둔다 — 표로 만들 만큼 열이 많지 않다. */}
-        <dl className="border-subtle-3 divide-subtle-3 divide-y rounded-sm border">
+        {/* 모형(왼쪽)과 건수(오른쪽)가 짝을 이루는 읽기 전용 목록이라 SummaryList 를 그대로 쓴다 —
+            흰 면·gray.100 테두리·radius 12·안쪽 24·줄 간격 12 가 시안 값과 같다. */}
+        <SummaryList>
             {vouchers.map(({model, count}) => (
-                <div key={model} className="flex items-center justify-between gap-4 px-6 py-4">
-                    <dt className="typo-body-xl-bold text-foreground">{model}</dt>
-                    <dd className="typo-body-l-regular text-foreground-subtle flex items-baseline gap-1">
-                        지급 이용건
-                        {/* 건수는 강조하되 본문 크기(16)를 넘기지 않는다 — 짧고 굵고 큰 글은 제목이 아닌데도
-                            제목으로 읽혀(WAVE "Possible heading") 문서 구조를 어지럽힌다. */}
-                        <span className="typo-body-xl-bold text-primary tabular-nums">{count}</span>건
-                    </dd>
-                </div>
+                <SummaryListItem key={model} term={model}>
+                    지급 이용건 <span className="text-primary tabular-nums">{count}</span>건
+                </SummaryListItem>
             ))}
-        </dl>
+        </SummaryList>
     </div>
 )
 
@@ -395,20 +371,19 @@ const OrgMypageProfileForm = ({
         <OrgProfileFormBody>
             {variant === 'sub-account' ? (
                 // 구획 사이 60 — 기업 마이페이지의 [기업정보]·[기업 담당자 정보] 두 카드와 같은 간격이다.
-                <div className="flex flex-col gap-15">
-                    <ProfileCard title="기본 정보">
+                // 시안은 [기본 정보] 카드 하나 안에 이용권 구획까지 들어간다 — 카드를 나누지 않는다.
+                <ProfileCard title="기본 정보">
+                    <div className="flex flex-col gap-10">
                         <SubAccountBasicSection account={account} />
-                    </ProfileCard>
-                    <ProfileCard title="이용권 정보">
                         <VoucherSection vouchers={vouchers} />
-                    </ProfileCard>
-                </div>
+                    </div>
+                </ProfileCard>
             ) : (
                 <BasicSection account={account} />
             )}
 
-            {/* 시안: 마지막 칸과 CTA 사이 100, 버튼 짝은 16 간격이다. */}
-            <ActionBar className="mt-25">
+            {/* 시안: 카드와 CTA 사이 40, 버튼 짝은 16 간격이다. */}
+            <ActionBar className="mt-10">
                 <ActionBarCenter className="gap-4">
                     <CancelButton />
                     <SaveButton />
