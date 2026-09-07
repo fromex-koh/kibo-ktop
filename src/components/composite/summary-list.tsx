@@ -34,8 +34,17 @@ type SummaryListItemProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & 
 // 개별 행 — 라벨(dt, 좌) + 값(dd, 우 정렬). <dl> 안에서 <div> 로 dt/dd 쌍을 묶는다(HTML5.2 허용).
 const SummaryListItem = ({term, children, empty = false, className, ...props}: SummaryListItemProps) => (
     <div data-slot="summary-list-item" className={cn('flex items-start justify-between gap-4', className)} {...props}>
-        <dt className="typo-body-xl-regular text-foreground-subtle">{term}</dt>
-        <dd className={cn('typo-body-xl-medium m-0 text-right', empty ? 'text-subtle-1' : 'text-label-foreground')}>
+        {/* 라벨은 줄어들지 않는다 — 좁은 화면에서 값이 길면 라벨이 먼저 눌려 "이 / 메 / 일" 처럼 한 글자씩
+            쪼개진다. 붙여 쓰는 말(이메일)은 그대로 두고 띄어 쓴 말(사업장 주소)만 그 사이에서 접히도록
+            break-keep 을 함께 둔다. */}
+        <dt className="typo-body-xl-regular text-foreground-subtle shrink-0 break-keep">{term}</dt>
+        {/* 값은 남는 폭 안에서 접힌다 — 이메일처럼 띄어쓰기가 없는 긴 값도 상자를 넘지 않는다. */}
+        <dd
+            className={cn(
+                'typo-body-xl-medium m-0 min-w-0 text-right break-words',
+                empty ? 'text-subtle-1' : 'text-label-foreground',
+            )}
+        >
             {children}
         </dd>
     </div>
