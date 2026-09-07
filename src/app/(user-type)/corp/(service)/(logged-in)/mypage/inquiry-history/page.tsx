@@ -166,12 +166,7 @@ const CorpMypageInquiryHistoryPage = () => (
             />
 
             <div className="flex flex-col gap-10 pb-15 xl:flex-row xl:gap-16">
-                <MypageSidebar
-                    userType="corp"
-                    current="1:1 문의"
-                    companyName={MYPAGE_MEMBER.companyName}
-                    memberType={MYPAGE_MEMBER.memberType}
-                />
+                <MypageSidebar userType="corp" current="1:1 문의" companyName={MYPAGE_MEMBER.companyName} />
 
                 <div className="flex min-w-0 flex-1 flex-col gap-10">
                     <SectionHeader>

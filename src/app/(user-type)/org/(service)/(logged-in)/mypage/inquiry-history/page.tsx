@@ -166,12 +166,7 @@ const OrgMypageInquiryHistoryPage = () => (
             />
 
             <div className="flex flex-col gap-10 pb-15 xl:flex-row xl:gap-16">
-                <MypageSidebar
-                    userType="org"
-                    current="1:1 문의 내역"
-                    companyName={ORG_MYPAGE_MEMBERS.default.companyName}
-                    memberType={ORG_MYPAGE_MEMBERS.default.memberType}
-                />
+                <MypageSidebar userType="org" current="1:1 문의" companyName={ORG_MYPAGE_MEMBERS.default.companyName} />
 
                 <div className="flex min-w-0 flex-1 flex-col gap-10">
                     <SectionHeader>
