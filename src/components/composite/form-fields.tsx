@@ -5,6 +5,7 @@ import {Button} from '@/components/ui/button'
 import {Field as BaseField, FieldDescription, FieldError, FieldLabel as BaseFieldLabel} from '@/components/ui/field'
 import {InputGroup, InputGroupInput} from '@/components/ui/input-group'
 import {Input, useFieldError} from '@/components/composite/form-values'
+import {cn} from '@/lib/utils'
 
 // 자가진단 입력 화면들이 함께 쓰는 필드 조각 — 라벨·그리드·자동입력 필드처럼 화면마다 반복되는 구성이다.
 // 입력 자체는 form-values 의 래퍼를 쓰므로 name 만 주면 값이 한 곳에 모인다.
@@ -164,8 +165,10 @@ const FieldGrid = ({children}: {children: ReactNode}) => (
 )
 
 // 3열 필드 행 — 시안의 [동업종 여부 · 담당업무 · 최종직급] 처럼 한 줄에 세 칸이 오는 구성.
-const FieldRow3 = ({children}: {children: ReactNode}) => (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">{children}</div>
+// className 은 칸 수를 화면 폭별로 조절해야 하는 줄에서만 쓴다 — 라벨이 긴 칸이 섞여 있으면 태블릿
+// 폭에서 셋으로 나눌 때 그 칸만 라벨이 두 줄로 접혀 입력 상자 줄이 어긋난다(tech-staff-form 참고).
+const FieldRow3 = ({children, className}: {children: ReactNode; className?: string}) => (
+    <div className={cn('grid grid-cols-1 gap-6 md:grid-cols-3', className)}>{children}</div>
 )
 
 export {Field, FieldGrid, FieldLabel, FieldRow3, LockedField, LookupField, RequiredFieldsNotice}
