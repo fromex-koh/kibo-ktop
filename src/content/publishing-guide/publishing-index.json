@@ -4184,6 +4184,7 @@
                                             "label": "주소 검색",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-2-application-form-address-search",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-2/application-form/address-search"
@@ -4194,6 +4195,7 @@
                                     "label": "서류 제출",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-leader-application-2-document-submit",
                                     "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-2/document-submit"
@@ -4204,6 +4206,7 @@
                                         "key": "carbon-leader-application-2-final-confirm",
                                         "screenId": null,
                                         "status": "완료",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-2/final-confirm"
                                     },
@@ -4212,6 +4215,7 @@
                                             "label": "제출 확인 팝업",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-2-final-confirm-submit-confirm",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-2/final-confirm/submit-confirm"
@@ -4224,6 +4228,7 @@
                                         "key": "carbon-leader-application-2-result",
                                         "screenId": null,
                                         "status": "완료",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-2/result"
                                     },
