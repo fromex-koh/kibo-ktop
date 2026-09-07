@@ -102,6 +102,103 @@ const VARIANT_ROWS = VARIANTS.map((variant) => ({
     ],
 }))
 
+// 비활성(disabled) 스타일 — 시안 button 컴포넌트 세트(40007392:152457)의 state=disabled 열이다.
+// variant 마다 잠긴 모습이 다르다: 면을 채우는 것(primary·secondary)과 면을 그대로 두는 것(tertiary·text).
+// 색은 모두 잠김 전용 시맨틱 토큰이라 사용처에서 따로 줄 것이 없다 — disabled 속성만 켜면 된다.
+const DISABLED_VARIANTS = [
+    {
+        key: 'default',
+        label: 'Primary',
+        surface: 'bg-control-disabled (gray.100 · #e6e8ea)',
+        border: '면과 같은 색 — 테두리가 보이지 않는다',
+        label2: 'text-disabled (gray.300 · #848b94)',
+        note: '시안 정의',
+    },
+    {
+        key: 'secondary',
+        label: 'Secondary',
+        surface: 'bg-control-disabled (gray.100 · #e6e8ea)',
+        border: 'border-disabled-subtle (gray.200 · #b7bbbf)',
+        label2: 'text-disabled (gray.300 · #848b94)',
+        note: '시안 정의',
+    },
+    {
+        key: 'tertiary',
+        label: 'Tertiary',
+        surface: 'bg-control-disabled-subtle (흰 면 그대로)',
+        border: 'border-disabled-subtle (gray.200 · #b7bbbf)',
+        label2: 'text-disabled-subtle (gray.200 · #b7bbbf)',
+        note: '시안 정의 — 면이 흰색이라 글자를 한 단계 더 옅게 둔다',
+    },
+    {
+        key: 'text-underline',
+        label: 'Text underline',
+        surface: '없음',
+        border: '없음',
+        label2: 'text-disabled-subtle (gray.200 · #b7bbbf)',
+        note: '시안 정의(button_text) — 밑줄도 글자색을 따라 함께 옅어진다',
+    },
+    {
+        key: 'text',
+        label: 'Text',
+        surface: '없음',
+        border: '없음',
+        label2: 'text-disabled-subtle (gray.200 · #b7bbbf)',
+        note: '프로젝트 확장 — 밑줄만 없는 같은 규칙',
+    },
+    {
+        key: 'destructive',
+        label: 'Destructive',
+        surface: 'bg-control-disabled (gray.100 · #e6e8ea)',
+        border: 'border-disabled-subtle (gray.200 · #b7bbbf)',
+        label2: 'text-disabled (gray.300 · #848b94)',
+        note: '프로젝트 확장 — primary 와 같은 잠김 모습',
+    },
+    {
+        key: 'outline',
+        label: 'Outline',
+        surface: 'bg-control-disabled (gray.100 · #e6e8ea)',
+        border: 'border-disabled-subtle (gray.200 · #b7bbbf)',
+        label2: 'text-disabled (gray.300 · #848b94)',
+        note: '프로젝트 확장 — 다이얼로그·시트 내부 UI',
+    },
+    {
+        key: 'ghost',
+        label: 'Ghost',
+        surface: 'bg-control-disabled (gray.100 · #e6e8ea)',
+        border: '없음',
+        label2: 'text-disabled (gray.300 · #848b94)',
+        note: '프로젝트 확장 — 사이드바 등 내부 UI',
+    },
+] as const
+
+const DISABLED_COLUMNS = [
+    {key: 'variant', header: 'Variant', align: 'start', rowHeader: true},
+    {key: 'default', header: '기본', align: 'start'},
+    {key: 'disabled', header: '비활성', align: 'start'},
+    {key: 'surface', header: '면', align: 'start', wrap: true},
+    {key: 'border', header: '테두리', align: 'start', wrap: true},
+    {key: 'label', header: '글자', align: 'start', wrap: true},
+    {key: 'note', header: '비고', align: 'start', wrap: true},
+] as const
+
+const DISABLED_ROWS = DISABLED_VARIANTS.map((variant) => ({
+    key: variant.key,
+    cells: [
+        <code key="variant">{variant.key}</code>,
+        <Button key="default" type="button" variant={variant.key} size="md">
+            {variant.label}
+        </Button>,
+        <Button key="disabled" type="button" variant={variant.key} size="md" disabled>
+            {variant.label}
+        </Button>,
+        variant.surface,
+        variant.border,
+        variant.label2,
+        variant.note,
+    ],
+}))
+
 const SIZE_COLUMNS = [
     {key: 'size', header: '텍스트 버튼', align: 'start', rowHeader: true},
     {key: 'height', header: '높이', align: 'start'},
@@ -263,6 +360,46 @@ const ButtonGuidePage = () => (
                     </p>
                 </div>
                 <Table caption="Button variant와 사용 기준" columns={VARIANT_COLUMNS} rows={VARIANT_ROWS} size="md" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="button-disabled" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="button-disabled" className="typo-h4-bold">
+                        비활성(disabled) 스타일
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        잠긴 모습은 variant 마다 다릅니다. 면을 채워 잠그는 것(<code>default</code> ·{' '}
+                        <code>secondary</code>)과 면을 그대로 두고 색만 옅게 하는 것(<code>tertiary</code> ·{' '}
+                        <code>text</code>)으로 나뉩니다. 색은 모두 잠김 전용 시맨틱 토큰이라 사용처에서는{' '}
+                        <code>disabled</code> 속성만 켜면 됩니다.
+                    </p>
+                </div>
+                <Table
+                    caption="Button variant별 비활성 스타일"
+                    columns={DISABLED_COLUMNS}
+                    rows={DISABLED_ROWS}
+                    size="md"
+                />
+                <ul className="typo-body-l-regular text-muted-foreground flex max-w-4xl list-disc flex-col gap-2 pl-5">
+                    <li>
+                        투명도로 흐리게 만들지 않습니다(<code>disabled:opacity-100</code>) — 겹친 배경에 따라 색이
+                        달라지지 않도록 잠김 색을 직접 지정합니다.
+                    </li>
+                    <li>
+                        잠긴 버튼은 <code>cursor-not-allowed</code>이며 키보드 포커스도 받지 않습니다. 링크를 잠가야
+                        하면 <code>asChild</code> 대신 <code>button</code>으로 그립니다.
+                    </li>
+                    <li>
+                        <code>default</code>의 <code>md</code>는 기본이 굵은 글자라 잠김에서는 보통 굵기로 돌아갑니다(
+                        <code>disabled:font-medium</code>).
+                    </li>
+                    <li>
+                        진행 중을 알릴 때는 <code>disabled</code>에 <code>aria-busy</code>를 함께 둡니다 — 아래
+                        &quot;상태 표현&quot; 참고.
+                    </li>
+                </ul>
             </section>
         </BaseCard>
 
