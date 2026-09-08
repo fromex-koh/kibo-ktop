@@ -912,10 +912,31 @@
             "isCurrent": false
         },
         {
-            "key": "corp-mypage-evaluation-results-general-analysis",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "key": "corp-mypage-evaluation-results-general-analysis-ktrs-fm",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-evaluation-results-general-analysis-tech-index",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-evaluation-results-general-analysis-startup-tech-index",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-evaluation-results-general-analysis-investment-model",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
             "isCurrent": false
         },
         {
@@ -1843,17 +1864,59 @@
             "isCurrent": false
         },
         {
-            "key": "org-mypage-evaluation-history-general-analysis",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "key": "org-mypage-evaluation-history-general-analysis-ktrs-fm",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
             "isCurrent": false
         },
         {
-            "key": "org-mypage-evaluation-history-deep-analysis",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "key": "org-mypage-evaluation-history-general-analysis-tech-index",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-general-analysis-startup-tech-index",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-general-analysis-investment-model",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-deep-analysis-ktrs-fm",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-deep-analysis-tech-index",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-deep-analysis-startup-tech-index",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "org-mypage-evaluation-history-deep-analysis-investment-model",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
             "isCurrent": false
         },
         {

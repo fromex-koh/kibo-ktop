@@ -2,6 +2,7 @@
     "//": "실제 서비스 화면의 경로 레지스트리. 페이지가 생성되기 전에도 경로를 먼저 정의하며, 공식 화면 ID가 발급되기 전에는 screenId를 null로 유지한다.",
     "//path": "userType이 기업이면 /corp, 기관이면 /org로 시작한다. 공통 화면으로 합치지 않고 사용자 유형별 화면을 각각 등록한다.",
     "//usage": "이 파일은 현재 저장소에서 화면 작업 위치를 찾고 자동 현황을 생성하기 위한 보조 정보다. 화면 작업 시 key·userType·name으로 대상을 찾고 path에 대응하는 src/app/.../page.tsx를 생성한다. 생성한 페이지는 이 파일을 import하거나 런타임에 의존하지 않아야 하므로 다른 저장소로 page.tsx만 옮길 수 있다.",
+    "//placeholder": "주소와 퍼블리싱 인덱스 행만 먼저 잡아 둔 빈 화면. 시안이 없어 내용이 없는 page 파일이므로 구현으로 세지 않는다 — 인덱스 상태가 대기중으로 남고 화면 이동 링크도 붙지 않는다. 시안이 나와 화면을 채우면 이 키를 지운다.",
     "//versionOverrides": "공통 레이아웃·콘텐츠 동기화 커밋이 화면 신규 릴리스로 오인된 경우에만 등록한다. throughCommit 이후 page 파일이 변경되면 릴리스 생성기가 예외를 자동 해제하므로 실제 화면을 새 버전으로 전달할 때 별도 수동 복구가 필요 없다.",
     "versionOverrides": {
         "corp-notice-announcements": {
@@ -997,11 +998,35 @@
             "name": "평가결과조회"
         },
         {
-            "key": "corp-mypage-evaluation-results-general-analysis",
+            "key": "corp-mypage-evaluation-results-general-analysis-ktrs-fm",
             "screenId": "SB-FOTA-CP0-0010",
             "userType": "기업",
-            "path": "/corp/mypage/evaluation-results/general-analysis",
-            "name": "일반분석"
+            "path": "/corp/mypage/evaluation-results/general-analysis/ktrs-fm",
+            "name": "KTRS-FM 심층분석"
+        },
+        {
+            "key": "corp-mypage-evaluation-results-general-analysis-tech-index",
+            "screenId": "SB-FOTA-CP0-0010",
+            "userType": "기업",
+            "path": "/corp/mypage/evaluation-results/general-analysis/tech-index",
+            "name": "Tech-Index 심층분석",
+            "placeholder": true
+        },
+        {
+            "key": "corp-mypage-evaluation-results-general-analysis-startup-tech-index",
+            "screenId": "SB-FOTA-CP0-0010",
+            "userType": "기업",
+            "path": "/corp/mypage/evaluation-results/general-analysis/startup-tech-index",
+            "name": "창업용 Tech-Index 심층분석",
+            "placeholder": true
+        },
+        {
+            "key": "corp-mypage-evaluation-results-general-analysis-investment-model",
+            "screenId": "SB-FOTA-CP0-0010",
+            "userType": "기업",
+            "path": "/corp/mypage/evaluation-results/general-analysis/investment-model",
+            "name": "개방형투자용평가모형평가 일반 평가",
+            "placeholder": true
         },
         {
             "key": "corp-mypage-evaluation-results-bank-transfer",
@@ -1928,18 +1953,66 @@
             "name": "평가결과 조회"
         },
         {
-            "key": "org-mypage-evaluation-history-general-analysis",
+            "key": "org-mypage-evaluation-history-general-analysis-ktrs-fm",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/mypage/evaluation-history/general-analysis",
-            "name": "일반분석"
+            "path": "/org/mypage/evaluation-history/general-analysis/ktrs-fm",
+            "name": "KTRS-FM 일반분석"
         },
         {
-            "key": "org-mypage-evaluation-history-deep-analysis",
+            "key": "org-mypage-evaluation-history-general-analysis-tech-index",
             "screenId": null,
             "userType": "기관",
-            "path": "/org/mypage/evaluation-history/deep-analysis",
-            "name": "심층분석"
+            "path": "/org/mypage/evaluation-history/general-analysis/tech-index",
+            "name": "Tech-Index 일반분석",
+            "placeholder": true
+        },
+        {
+            "key": "org-mypage-evaluation-history-general-analysis-startup-tech-index",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/general-analysis/startup-tech-index",
+            "name": "창업용 Tech-Index 일반분석",
+            "placeholder": true
+        },
+        {
+            "key": "org-mypage-evaluation-history-general-analysis-investment-model",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/general-analysis/investment-model",
+            "name": "투자모형 일반분석",
+            "placeholder": true
+        },
+        {
+            "key": "org-mypage-evaluation-history-deep-analysis-ktrs-fm",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/deep-analysis/ktrs-fm",
+            "name": "KTRS-FM 심층분석"
+        },
+        {
+            "key": "org-mypage-evaluation-history-deep-analysis-tech-index",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/deep-analysis/tech-index",
+            "name": "Tech-Index 심층분석",
+            "placeholder": true
+        },
+        {
+            "key": "org-mypage-evaluation-history-deep-analysis-startup-tech-index",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/deep-analysis/startup-tech-index",
+            "name": "창업용 Tech-Index 심층분석",
+            "placeholder": true
+        },
+        {
+            "key": "org-mypage-evaluation-history-deep-analysis-investment-model",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/evaluation-history/deep-analysis/investment-model",
+            "name": "개방형투자용평가모형평가 일반 평가",
+            "placeholder": true
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation",

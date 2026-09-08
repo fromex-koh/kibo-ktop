@@ -17,7 +17,9 @@ if (!Array.isArray(registry.screens)) {
 
 const screens = registry.screens.map((screen) => {
     const pageFile = findAppPage(ROOT, screen.path)
-    const implemented = pageFile !== undefined
+    // placeholder 는 주소와 인덱스 행만 먼저 잡아 둔 빈 화면이다 — page 파일은 있지만 내용이 없어
+    // 구현으로 세지 않는다(인덱스에서 대기중으로 남는다). 화면을 채울 때 레지스트리에서 키를 지운다.
+    const implemented = pageFile !== undefined && screen.placeholder !== true
     const previous = previousOutput.screens.find((item) => item.key === screen.key)
     const previousVersion = typeof previous?.version === 'string' ? previous.version : undefined
     const version = implemented
