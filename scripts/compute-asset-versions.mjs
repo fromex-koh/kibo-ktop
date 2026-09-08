@@ -115,7 +115,10 @@ writeFileSync(OUTPUT, await formatJson(metadata, OUTPUT))
 
 const generatedScreens = screenRegistry.screens.map((screen) => {
     const pagePath = findAppPage(process.cwd(), screen.path)
-    const implemented = pagePath !== undefined
+    // placeholder 는 주소와 인덱스 행만 잡아 둔 빈 화면이라 page 파일이 있어도 구현으로 세지 않는다.
+    // build-screen-registry.mjs 와 같은 규칙이어야 한다 — 릴리스가 이 파일을 만든 뒤 빌드가 다시
+    // 만들 때 내용이 달라지면 워크플로의 "릴리스 결과가 깨끗한지" 검사에서 멈춘다.
+    const implemented = pagePath !== undefined && screen.placeholder !== true
     const overriddenVersion = implemented
         ? resolveVersionOverride(pagePath, screenVersionOverrides[screen.key])
         : undefined
