@@ -66,6 +66,11 @@ export type EvaluationResultAction = {
     done?: boolean
     /** 화면으로 가지 않고 모달을 여는 버튼이면 그 모달의 이름. 목록이 이 값을 보고 트리거로 감싼다. */
     opens?: 'guarantee-recommendation' | 'guarantee-history'
+    /**
+     * 같은 창이 아니라 새 창으로 여는 버튼. 인쇄용 리포트처럼 폭이 정해진 문서에 쓴다 —
+     * 창 크기는 constants/evaluation-report.ts 의 문서 폭을 따른다.
+     */
+    newWindow?: boolean
 }
 
 // 결과 한 건 = 카드 한 장. 평가결과 조회 응답을 이 모양으로 맞추면 화면은 그대로 그린다.

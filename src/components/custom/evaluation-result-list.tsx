@@ -12,8 +12,10 @@ import {
     SearchFilterFields,
     SearchFilterForm,
 } from '@/components/composite/search-filter-form'
+import {NewWindowLink} from '@/components/composite/new-window-link'
 import {TextTabs} from '@/components/composite/text-tabs'
 import {Button} from '@/components/ui/button'
+import {EVALUATION_REPORT_WINDOW_HEIGHT, EVALUATION_REPORT_WINDOW_WIDTH} from '@/constants/evaluation-report'
 import type {EvaluationGradeUnit, EvaluationModelTab, EvaluationResultItem} from '@/constants/evaluation-result'
 import {useIsMobile} from '@/hooks/use-mobile'
 import {cn} from '@/lib/utils'
@@ -100,7 +102,20 @@ const EvaluationResultCard = ({
                                 size="sm"
                                 className={cn(isSingleAction && 'sm:w-45')}
                             >
-                                <Link href={action.href}>{action.label}</Link>
+                                {action.newWindow ? (
+                                    // 인쇄용 리포트는 시안 폭에 맞춘 새 창으로 연다 — 같은 이름으로 열어
+                                    // 여러 번 눌러도 창이 쌓이지 않는다.
+                                    <NewWindowLink
+                                        href={action.href}
+                                        width={EVALUATION_REPORT_WINDOW_WIDTH}
+                                        height={EVALUATION_REPORT_WINDOW_HEIGHT}
+                                        windowName="evaluation-report"
+                                    >
+                                        {action.label}
+                                    </NewWindowLink>
+                                ) : (
+                                    <Link href={action.href}>{action.label}</Link>
+                                )}
                             </Button>
                         ),
                     )}

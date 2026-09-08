@@ -1,4 +1,4 @@
-import type {EvaluationResultItem} from '@/constants/evaluation-result'
+import type {EvaluationModel, EvaluationResultAction, EvaluationResultItem} from '@/constants/evaluation-result'
 
 // 평가결과 조회 데이터.
 //
@@ -12,10 +12,17 @@ import type {EvaluationResultItem} from '@/constants/evaluation-result'
 // 조회 조건(모형 탭·조회기간)은 지금 목록 컴포넌트가 화면 안에서 거른다. 서버 조회로 넘길 때는
 // getEvaluationResults 에 조건을 받는 인자를 열고 목록의 [프론트엔드 연동] 주석 자리에서 부른다.
 
-// 카드 버튼이 여는 화면. 아직 화면이 없는 [자가진단 결과]만 자리를 비워 둔다.
+// 카드 버튼이 여는 화면. [자가진단 결과]는 같은 창이 아니라 시안 폭에 맞춘 새 창(인쇄용 리포트)으로 열고,
+// 리포트 화면은 모형마다 따로 있다 — 카드의 모형을 그대로 주소에 쓴다.
+const GENERAL_ANALYSIS_PATH = '/corp/mypage/evaluation-results/general-analysis'
 const BANK_TRANSFER_PATH = '/corp/mypage/evaluation-results/bank-transfer'
 const GUARANTEE_PATH = '/corp/mypage/evaluation-results/guarantee-application'
-const NOT_READY_PATH = '#'
+
+const selfDiagnosisResult = (model: EvaluationModel): EvaluationResultAction => ({
+    label: '자가진단 결과',
+    href: `${GENERAL_ANALYSIS_PATH}/${model}`,
+    newWindow: true,
+})
 
 // 시안 "평가결과 조회 case" 의 모형별 케이스를 그대로 담았다 — 탭을 눌러 넷을 각각 확인할 수 있다.
 //   · KTRS-FM        : 등급(AA 등) · [자가진단 결과·은행 전송·보증신청] 셋
@@ -32,7 +39,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'AA',
         evaluatedAt: '2026-05-15',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -43,7 +50,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'A',
         evaluatedAt: '2026-04-28',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
             {label: '보증신청', href: GUARANTEE_PATH, done: true},
         ],
@@ -54,7 +61,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'AAA',
         evaluatedAt: '2026-04-10',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -65,7 +72,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'BBB',
         evaluatedAt: '2026-03-27',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
             {label: '보증신청', href: GUARANTEE_PATH, done: true},
         ],
@@ -76,7 +83,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'A',
         evaluatedAt: '2026-03-05',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -87,7 +94,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'AA',
         evaluatedAt: '2026-02-19',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
             {label: '보증신청', href: GUARANTEE_PATH, done: true},
         ],
@@ -98,7 +105,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'BB',
         evaluatedAt: '2026-01-30',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -109,7 +116,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'A',
         evaluatedAt: '2026-01-12',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -120,7 +127,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'BBB',
         evaluatedAt: '2025-12-22',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
             {label: '보증신청', href: GUARANTEE_PATH, done: true},
         ],
@@ -131,7 +138,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'AA',
         evaluatedAt: '2025-11-28',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -142,7 +149,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'B',
         evaluatedAt: '2025-11-06',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -153,7 +160,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'A',
         evaluatedAt: '2025-10-15',
         actions: [
-            {label: '자가진단 결과', href: NOT_READY_PATH},
+            selfDiagnosisResult('ktrs-fm'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
             {label: '보증신청', href: GUARANTEE_PATH, done: true},
         ],
@@ -163,28 +170,28 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'tech-index',
         grade: '6.6',
         evaluatedAt: '2026-05-15',
-        actions: [{label: '자가진단 결과', href: NOT_READY_PATH}],
+        actions: [selfDiagnosisResult('tech-index')],
     },
     {
         id: 'corp-evaluation-102',
         model: 'tech-index',
         grade: '7.1',
         evaluatedAt: '2026-03-18',
-        actions: [{label: '자가진단 결과', href: NOT_READY_PATH}],
+        actions: [selfDiagnosisResult('tech-index')],
     },
     {
         id: 'corp-evaluation-201',
         model: 'startup-tech-index',
         grade: '8.4',
         evaluatedAt: '2026-05-15',
-        actions: [{label: '자가진단 결과', href: NOT_READY_PATH}],
+        actions: [selfDiagnosisResult('startup-tech-index')],
     },
     {
         id: 'corp-evaluation-301',
         model: 'investment-model',
         grade: 'B+',
         evaluatedAt: '2026-05-15',
-        actions: [{label: '자가진단 결과', href: NOT_READY_PATH}],
+        actions: [selfDiagnosisResult('investment-model')],
     },
 ]
 
