@@ -23,7 +23,16 @@ type LineChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     curveType?: 'linear' | 'monotone'
     data: LineChartItem[]
     series: LineChartSeries[]
+    /** 축·눈금선. 항목 이름과 값을 표가 따로 보여 줄 때는 끈다(선만 남는다). */
+    showAxes?: boolean
+    /**
+     * 값 위에 올렸을 때 뜨는 말풍선. 끄면 호버 때 나타나는 강조(점·막대 색)도 함께 사라진다 —
+     * 인쇄용 문서처럼 손이 닿지 않는 자리에서는 둘 다 필요 없다.
+     */
+    showTooltip?: boolean
     showLegend?: boolean
+    /** 선을 점선으로 그린다(예: '4 4'). 실제 측정값이 아니라 흐름을 보이는 선일 때 쓴다. */
+    strokeDasharray?: string
     showValueLabels?: boolean
     unit?: string
     valueFractionDigits?: number
@@ -35,7 +44,10 @@ type LineChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
 const LineChart = ({
     data,
     series,
+    showAxes = true,
     showLegend = true,
+    showTooltip = true,
+    strokeDasharray,
     showValueLabels = false,
     unit,
     axisValueSuffix = '',
@@ -56,7 +68,10 @@ const LineChart = ({
     const config = Object.fromEntries(
         series.map((item) => [item.key, {label: item.label, color: item.color}]),
     ) satisfies ChartConfig
-    const chartData = data.map((item) => ({id: item.id, label: item.label, ...item.values}))
+    // recharts 는 자료 한 줄의 속성을 그린 도형에 그대로 옮긴다 — id 를 담아 보내면 배경 막대·계열 막대가
+    // 모두 같은 id 를 달아 문서에 같은 id 가 여러 번 생긴다[8.1.1]. id 는 아래 숨김 표의 key 로만 쓰므로
+    // 차트로는 넘기지 않는다.
+    const chartData = data.map((item) => ({label: item.label, ...item.values}))
     const values = data.flatMap((item) => series.map(({key}) => item.values[key] ?? 0))
     const minimumValue = Math.min(0, ...values)
     const maximumValue = Math.max(0, ...values)
@@ -91,61 +106,76 @@ const LineChart = ({
                     <ComposedChart
                         accessibilityLayer
                         data={chartData}
-                        margin={{top: 40, right: 16, bottom: 8, left: 8}}
+                        margin={
+                            showAxes ? {top: 40, right: 16, bottom: 8, left: 8} : {top: 8, right: 0, bottom: 0, left: 0}
+                        }
                     >
-                        <CartesianGrid
-                            vertical={false}
-                            stroke="var(--ds-subtle-2)"
-                            strokeDasharray="4 4"
-                            horizontalCoordinatesGenerator={({yAxis}) =>
-                                yAxisTicks
-                                    ?.map((value) => yAxis?.scale?.map(value))
-                                    .filter((coordinate): coordinate is number => typeof coordinate === 'number') ?? []
-                            }
-                        />
-                        <XAxis
-                            dataKey="label"
-                            tickLine={false}
-                            axisLine={{stroke: 'var(--ds-foreground-subtle)', strokeWidth: 1.2}}
-                            tick={{fill: 'var(--ds-foreground)', fontSize: 12}}
-                            tickMargin={10}
-                            interval={0}
-                        />
-                        <YAxis
-                            domain={[domainMinimum, domainMaximum]}
-                            ticks={yAxisTicks}
-                            tickLine={false}
-                            axisLine={{stroke: 'var(--ds-foreground-subtle)', strokeWidth: 1.2}}
-                            tick={{fill: 'var(--ds-foreground)', fontSize: 12}}
-                            tickMargin={8}
-                            tickFormatter={(value: number) => `${valueFormatter.format(value)}${axisValueSuffix}`}
-                            width={64}
-                        />
-                        <ChartTooltip
-                            cursor={false}
-                            content={
-                                <ChartTooltipContent
-                                    hideIndicator
-                                    labelKey="label"
-                                    formatter={(value, name) => (
-                                        <div className="flex w-full items-center justify-between gap-6">
-                                            <span className="flex items-center gap-1.5">
-                                                <span
-                                                    className="size-2.5 shrink-0 rounded-full"
-                                                    style={{backgroundColor: config[String(name)]?.color}}
-                                                    aria-hidden="true"
-                                                />
-                                                {config[String(name)]?.label}
-                                            </span>
-                                            <strong className="text-foreground tabular-nums">
-                                                {valueFormatter.format(Number(value))}
-                                                {unit ? ` ${unit}` : ''}
-                                            </strong>
-                                        </div>
-                                    )}
-                                />
-                            }
-                        />
+                        {showAxes ? (
+                            <CartesianGrid
+                                key="grid"
+                                vertical={false}
+                                stroke="var(--ds-subtle-2)"
+                                strokeDasharray="4 4"
+                                horizontalCoordinatesGenerator={({yAxis}) =>
+                                    yAxisTicks
+                                        ?.map((value) => yAxis?.scale?.map(value))
+                                        .filter((coordinate): coordinate is number => typeof coordinate === 'number') ??
+                                    []
+                                }
+                            />
+                        ) : null}
+                        {showAxes ? (
+                            <XAxis
+                                key="x-axis"
+                                dataKey="label"
+                                tickLine={false}
+                                axisLine={{stroke: 'var(--ds-foreground-subtle)', strokeWidth: 1.2}}
+                                tick={{fill: 'var(--ds-foreground)', fontSize: 12}}
+                                tickMargin={10}
+                                interval={0}
+                            />
+                        ) : null}
+                        {showAxes ? (
+                            <YAxis
+                                key="y-axis"
+                                domain={[domainMinimum, domainMaximum]}
+                                ticks={yAxisTicks}
+                                tickLine={false}
+                                axisLine={{stroke: 'var(--ds-foreground-subtle)', strokeWidth: 1.2}}
+                                tick={{fill: 'var(--ds-foreground)', fontSize: 12}}
+                                tickMargin={8}
+                                tickFormatter={(value: number) => `${valueFormatter.format(value)}${axisValueSuffix}`}
+                                width={64}
+                            />
+                        ) : null}
+                        {showTooltip ? (
+                            <ChartTooltip
+                                key="tooltip"
+                                cursor={false}
+                                content={
+                                    <ChartTooltipContent
+                                        hideIndicator
+                                        labelKey="label"
+                                        formatter={(value, name) => (
+                                            <div className="flex w-full items-center justify-between gap-6">
+                                                <span className="flex items-center gap-1.5">
+                                                    <span
+                                                        className="size-2.5 shrink-0 rounded-full"
+                                                        style={{backgroundColor: config[String(name)]?.color}}
+                                                        aria-hidden="true"
+                                                    />
+                                                    {config[String(name)]?.label}
+                                                </span>
+                                                <strong className="text-foreground tabular-nums">
+                                                    {valueFormatter.format(Number(value))}
+                                                    {unit ? ` ${unit}` : ''}
+                                                </strong>
+                                            </div>
+                                        )}
+                                    />
+                                }
+                            />
+                        ) : null}
                         {series.map((item) => {
                             const labels = showValueLabels ? (
                                 <LabelList
@@ -167,6 +197,7 @@ const LineChart = ({
                                     name={item.key}
                                     stroke={`var(--color-${item.key})`}
                                     strokeWidth={2.5}
+                                    strokeDasharray={strokeDasharray}
                                     fill={`var(--color-${item.key})`}
                                     fillOpacity={0.1}
                                     dot={{
@@ -176,12 +207,14 @@ const LineChart = ({
                                         stroke: `var(--color-${item.key})`,
                                         strokeWidth: 2,
                                     }}
-                                    activeDot={{
-                                        r: 6,
-                                        fill: `var(--color-${item.key})`,
-                                        fillOpacity: 1,
-                                        strokeWidth: 0,
-                                    }}
+                                    activeDot={
+                                        showTooltip && {
+                                            r: 6,
+                                            fill: `var(--color-${item.key})`,
+                                            fillOpacity: 1,
+                                            strokeWidth: 0,
+                                        }
+                                    }
                                 >
                                     {labels}
                                 </Area>
@@ -193,6 +226,7 @@ const LineChart = ({
                                     name={item.key}
                                     stroke={`var(--color-${item.key})`}
                                     strokeWidth={2.5}
+                                    strokeDasharray={strokeDasharray}
                                     dot={{
                                         r: 6,
                                         fill: 'var(--ds-background)',
@@ -200,12 +234,14 @@ const LineChart = ({
                                         stroke: `var(--color-${item.key})`,
                                         strokeWidth: 2,
                                     }}
-                                    activeDot={{
-                                        r: 6,
-                                        fill: `var(--color-${item.key})`,
-                                        fillOpacity: 1,
-                                        strokeWidth: 0,
-                                    }}
+                                    activeDot={
+                                        showTooltip && {
+                                            r: 6,
+                                            fill: `var(--color-${item.key})`,
+                                            fillOpacity: 1,
+                                            strokeWidth: 0,
+                                        }
+                                    }
                                 >
                                     {labels}
                                 </Line>
