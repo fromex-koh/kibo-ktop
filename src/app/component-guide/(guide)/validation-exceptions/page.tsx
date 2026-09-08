@@ -274,6 +274,78 @@ const SONNER_ISSUES = [
     },
 ] as const
 
+// 차트가 있는 화면에서만 나오는 메시지 — 평가결과 리포트(심층분석)가 유일하다. 위 총계의 217화면에는
+// 차트가 없어 그 회차에는 잡히지 않는다. 아래 건수는 차트 4개(레이더 1 · 선 1 · 막대 2)가 들어 있는
+// /org/mypage/evaluation-history/deep-analysis/ktrs-fm 한 화면에서 잰 값이다.
+//
+// 서버가 보내는 문서에는 12건(wrapper div 8 · style 4)만 있고, 나머지 228건은 브라우저에서 차트가
+// 그려진 뒤에 생긴다 — 전송 문서를 검사하면 12건, 렌더된 DOM 을 검사하면 240건이다.
+// 차트가 들어간 화면 — 지금은 리포트 두 갈래뿐이고, 기업·기관이 같은 문서를 쓴다.
+const CHART_SCREEN_ROUTES = [
+    '/org/mypage/evaluation-history/deep-analysis/ktrs-fm',
+    '/corp/mypage/evaluation-results/general-analysis/ktrs-fm',
+] as const
+
+const CHART_ISSUES = [
+    {
+        level: 'error',
+        message: 'Attribute “x” / “y” / “width” / “height” not allowed on element “path”.',
+        count: 100,
+        screens: 0,
+        owner: 'recharts Rectangle(막대)',
+        verdict: '막대를 rect 가 아니라 path 로 그리면서 사각형 좌표·크기를 그대로 붙인다',
+    },
+    {
+        level: 'error',
+        message:
+            'Attribute “cx” / “cy” / “radius” / “angle” / “orientation” not allowed on element “path” / “line” / “text”.',
+        count: 96,
+        screens: 0,
+        owner: 'recharts 극좌표(레이더)',
+        verdict: '격자·축을 그릴 때 쓴 중심·반지름·각도 계산값이 그린 요소에 남는다',
+    },
+    {
+        level: 'error',
+        message: 'Attribute “width” / “height” not allowed on element “circle”.',
+        count: 18,
+        screens: 0,
+        owner: 'recharts Dot(선 차트의 점)',
+        verdict: '점 하나에 차트 폭·높이를 함께 붙인다. circle 은 r·cx·cy 만 받는다',
+    },
+    {
+        level: 'error',
+        message: 'Attribute “name” not allowed on element “path” / “circle”.',
+        count: 12,
+        screens: 0,
+        owner: 'recharts 계열 이름',
+        verdict: '계열 key(company·average·maturity)를 도형에 남긴다. name 은 SVG 도형 속성이 아니다',
+    },
+    {
+        level: 'error',
+        message: 'Attribute “width” / “height” not allowed on element “div”.',
+        count: 8,
+        screens: 0,
+        owner: 'recharts 바깥 상자(.recharts-wrapper)',
+        verdict: '크기를 style 과 속성 양쪽에 쓴다. div 는 전역 속성만 받는다',
+    },
+    {
+        level: 'error',
+        message: 'Element “style” not allowed as child of element “div” in this context.',
+        count: 4,
+        screens: 0,
+        owner: 'shadcn/ui chart 셸(ChartStyle)',
+        verdict: '차트 색 변수를 넣으려고 div 안에 style 을 그린다. style 은 head 에만 올 수 있다',
+    },
+    {
+        level: 'error',
+        message: 'Attribute “cx” / “cy” not allowed on element “svg”.',
+        count: 2,
+        screens: 0,
+        owner: 'recharts RadarChart',
+        verdict: '극좌표 중심값을 루트 svg 에까지 붙인다. cx·cy 는 circle 전용이다',
+    },
+] as const
+
 // 종류별 표 — 같은 컬럼을 세 곳(외부·프로젝트·sonner)에서 쓰므로 한 조각으로 둔다.
 type IssueTableRow = {
     level: 'error' | 'warning'
@@ -876,6 +948,98 @@ const ValidationExceptionsPage = () => (
                                                         붙이는데, HTML5 에서는 그게 기본값이라 없어도 된다는 안내입니다.
                                                     </span>
                                                 </li>
+                                            </ul>
+                                        ),
+                                    },
+                                ]}
+                            />
+                        </section>
+
+                        <section
+                            aria-labelledby="library-chart"
+                            className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                        >
+                            <SectionHeader>
+                                <SectionHeaderTitle className="typo-title-l-bold" id="library-chart">
+                                    {sectionHeading('recharts · shadcn chart', 'SVG 속성 · div 안의 style')}
+                                </SectionHeaderTitle>
+                                <SectionHeaderDescription>
+                                    차트가 있는 화면에서만 나옵니다 — 평가결과 리포트(심층분석)가 유일합니다
+                                </SectionHeaderDescription>
+                            </SectionHeader>
+                            <IssueTable
+                                caption="차트가 만든 마크업에서 나오는 메시지와 화면당 건수"
+                                issues={CHART_ISSUES}
+                                countHeader="화면당 건수"
+                                showScreens={false}
+                            />
+                            <DetailList
+                                rows={[
+                                    {
+                                        term: '왜 생기나',
+                                        body: (
+                                            <ul className="flex list-none flex-col gap-2">
+                                                <li className="flex">
+                                                    <ListMarker type="unordered-small" />
+                                                    <span className="min-w-0">
+                                                        recharts 는 차트를 계산할 때 쓴 값(중심·반지름·각도·좌표·계열
+                                                        이름)을 <strong>그린 SVG 요소에 그대로 남깁니다.</strong> SVG
+                                                        규격에 없는 속성이라 검사기가 하나하나 오류로 셉니다.
+                                                    </span>
+                                                </li>
+                                                <li className="flex">
+                                                    <ListMarker type="unordered-small" />
+                                                    <span className="min-w-0">
+                                                        shadcn <code className="font-mono">ui/chart.tsx</code> 의
+                                                        ChartStyle 은 차트 색 변수를 넣으려고{' '}
+                                                        <code className="font-mono">&lt;div&gt;</code> 안에{' '}
+                                                        <code className="font-mono">&lt;style&gt;</code> 을 그립니다.
+                                                        style 은 head 에만 올 수 있습니다.
+                                                    </span>
+                                                </li>
+                                                <li className="flex">
+                                                    <ListMarker type="unordered-small" />
+                                                    <span className="min-w-0">
+                                                        <strong>전송 문서에는 12건뿐입니다</strong> — 바깥 상자의 크기
+                                                        속성 8건과 style 4건입니다. 나머지 228건은 브라우저에서 차트가
+                                                        그려진 뒤에 생기므로, 렌더된 DOM 을 넣으면 240건이 됩니다.
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        ),
+                                    },
+                                    {
+                                        term: '영향',
+                                        body: (
+                                            <p>
+                                                브라우저는 모르는 속성을 무시하므로 화면과 접근성에는 영향이 없습니다.
+                                                차트에는 이미 <code className="font-mono">role=&quot;img&quot;</code> 과
+                                                이름이 있고, 같은 값을 담은 숨김 데이터표를 함께 두었습니다.
+                                            </p>
+                                        ),
+                                    },
+                                    {
+                                        term: '조치',
+                                        body: (
+                                            <p>
+                                                <strong>고칠 자리가 없습니다</strong> — 우리 코드에는 그 마크업이
+                                                없습니다. recharts 가 그리는 것이고, shadcn 셸의 구조는 수정하지
+                                                않는다는 규칙([SC-02])에 해당합니다. 없애려면 차트를 직접 SVG 로 그려야
+                                                합니다.
+                                            </p>
+                                        ),
+                                    },
+                                    {
+                                        term: '해당 화면',
+                                        body: (
+                                            <ul className="flex flex-wrap gap-2">
+                                                {CHART_SCREEN_ROUTES.map((route) => (
+                                                    <li key={route}>
+                                                        <Badge variant="solid-pastel" color="success" size="xs">
+                                                            <code className="font-mono">{route}</code>
+                                                        </Badge>
+                                                    </li>
+                                                ))}
                                             </ul>
                                         ),
                                     },

@@ -1617,11 +1617,40 @@
                     "children": [
                         {
                             "label": "자가진단 결과",
-                            "screenId": "SB-FOTA-CP0-0010",
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-mypage-evaluation-results-general-analysis",
-                            "iaRow": 126
+                            "children": [
+                                {
+                                    "label": "KTRS-FM",
+                                    "screenId": "SB-FOTA-CP0-0010",
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-evaluation-results-general-analysis-ktrs-fm",
+                                    "iaRow": 126
+                                },
+                                {
+                                    "label": "Tech-Index",
+                                    "screenId": "SB-FOTA-CP0-0010",
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-evaluation-results-general-analysis-tech-index",
+                                    "iaRow": 126
+                                },
+                                {
+                                    "label": "창업용 Tech-Index",
+                                    "screenId": "SB-FOTA-CP0-0010",
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-evaluation-results-general-analysis-startup-tech-index",
+                                    "iaRow": 126
+                                },
+                                {
+                                    "label": "투자모형",
+                                    "screenId": "SB-FOTA-CP0-0010",
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-evaluation-results-general-analysis-investment-model",
+                                    "iaRow": 126
+                                }
+                            ]
                         },
                         {
                             "label": "은행전송",
@@ -3389,19 +3418,77 @@
                     "children": [
                         {
                             "label": "일반분석",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-mypage-evaluation-history-general-analysis",
-                            "iaRow": 116
+                            "children": [
+                                {
+                                    "label": "KTRS-FM",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-evaluation-history-general-analysis-ktrs-fm",
+                                    "iaRow": 116
+                                },
+                                {
+                                    "label": "Tech-Index",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-mypage-evaluation-history-general-analysis-tech-index",
+                                    "iaRow": 116
+                                },
+                                {
+                                    "label": "창업용 Tech-Index",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-mypage-evaluation-history-general-analysis-startup-tech-index",
+                                    "iaRow": 116
+                                },
+                                {
+                                    "label": "투자모형",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-mypage-evaluation-history-general-analysis-investment-model",
+                                    "iaRow": 116
+                                }
+                            ]
                         },
                         {
                             "label": "심층분석",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-mypage-evaluation-history-deep-analysis",
-                            "iaRow": 117
+                            "children": [
+                                {
+                                    "label": "KTRS-FM",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-evaluation-history-deep-analysis-ktrs-fm",
+                                    "iaRow": 117
+                                },
+                                {
+                                    "label": "Tech-Index",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-mypage-evaluation-history-deep-analysis-tech-index",
+                                    "iaRow": 117
+                                },
+                                {
+                                    "label": "창업용 Tech-Index",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-mypage-evaluation-history-deep-analysis-startup-tech-index",
+                                    "iaRow": 117
+                                },
+                                {
+                                    "label": "투자모형",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-mypage-evaluation-history-deep-analysis-investment-model",
+                                    "iaRow": 117
+                                }
+                            ]
                         },
                         {
                             "label": "보증추천",
@@ -4531,6 +4618,7 @@
                         "key": "carbon-my-page",
                         "screenId": null,
                         "status": "완료",
+                        "application2Status": "완료",
                         "version": "미배포"
                     },
                     "children": [
@@ -4540,6 +4628,7 @@
                                 "key": "carbon-my-page-sub-account",
                                 "screenId": null,
                                 "status": "완료",
+                                "application2Status": "완료",
                                 "version": "미배포",
                                 "externalHref": "https://fromex-carbon.vercel.app/my-page/sub-account"
                             },
@@ -4548,6 +4637,7 @@
                                     "label": "하위계정 등록",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-sub-account-register",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/sub-account/register"
@@ -4561,6 +4651,7 @@
                                     "label": "기관회원",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-profile-edit",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit"
@@ -4569,6 +4660,7 @@
                                     "label": "기업회원",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-profile-edit-company",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit/company"
@@ -4577,6 +4669,7 @@
                                     "label": "수정 취소 확인",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-profile-edit-cancel-confirm",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit/cancel-confirm"
@@ -4585,6 +4678,7 @@
                                     "label": "저장 확인",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-profile-edit-save-confirm",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit/save-confirm"
@@ -4593,6 +4687,7 @@
                                     "label": "주소검색",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-profile-edit-address-search",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit/address-search"
@@ -4605,6 +4700,7 @@
                                 "key": "carbon-my-page-status",
                                 "screenId": null,
                                 "status": "완료",
+                                "application2Status": "완료",
                                 "version": "미배포",
                                 "externalHref": "https://fromex-carbon.vercel.app/my-page/status"
                             },
@@ -4613,6 +4709,7 @@
                                     "label": "보완요청",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-status-supplement-request",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/status/supplement-request"
@@ -4621,6 +4718,7 @@
                                     "label": "내역 없음",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-status-empty",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/status/empty"
@@ -4629,6 +4727,7 @@
                                     "label": "삭제 확인",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-status-delete-confirm",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/status/delete-confirm"

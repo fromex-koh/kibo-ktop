@@ -1624,6 +1624,7 @@
   /* container(max-width) — Tailwind 기본 스케일 유지 + 프로젝트 키(content) 추가 */
   --container-content: 75rem;
   --container-modal: 36.75rem;
+  --container-report: 37.1875rem;
 }
 
 @theme inline {

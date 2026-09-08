@@ -129,6 +129,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'Pagination', href: '/component-guide/pagination'},
                     {label: 'SkipNav', href: '/component-guide/skip-nav'},
                     {label: 'ScrollToTopButton', href: '/component-guide/scroll-to-top-button'},
+                    {label: 'NewWindowLink / PrintButton', href: '/component-guide/new-window-link'},
                 ],
             },
             {

@@ -39,6 +39,7 @@ const PROPS_ITEMS = [
         'string',
     ],
     ['ProgressBar', 'showValue', '프로그레스바 위에 백분율 텍스트를 표시합니다.', 'true', 'boolean'],
+    ['ProgressBar', 'trackClassName', '막대가 지나갈 배경 띠의 굵기·색을 화면에 맞춰 덮어씁니다.', '-', 'string'],
     ['ProgressBar', 'valueFractionDigits', '표시하는 백분율의 소수점 자릿수를 지정합니다.', '1', 'number'],
     [
         'ProgressBar',

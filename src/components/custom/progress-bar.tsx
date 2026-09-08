@@ -6,6 +6,8 @@ import {cn} from '@/lib/utils'
 
 type ProgressBarProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     indicatorClassName?: string
+    /** 막대가 지나갈 배경 띠. 굵기·색을 화면에 맞출 때 쓴다. */
+    trackClassName?: string
     label: string
     max?: number
     showValue?: boolean
@@ -16,6 +18,7 @@ type ProgressBarProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
 const ProgressBar = ({
     label,
     indicatorClassName,
+    trackClassName,
     max = 100,
     showValue = true,
     value,
@@ -37,6 +40,7 @@ const ProgressBar = ({
                 </span>
             ) : null}
             <Progress
+                className={trackClassName}
                 value={percentage}
                 max={100}
                 aria-label={label}
