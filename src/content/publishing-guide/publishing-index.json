@@ -4525,6 +4525,7 @@
                             "label": "신청내역 확인 및 확인서 발급",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "carbon-leader-application-history"
                         }
