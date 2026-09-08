@@ -1,6 +1,33 @@
 {
     "releases": [
         {
+            "version": "v3.1.9",
+            "releasedAt": "2026-09-08",
+            "changes": [
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "퍼블리싱 인덱스 — 응용2팀 탄소중립 선도기업 화면 상태 반영",
+                    "details": [
+                        {"label": "대상", "value": "src/content/publishing-guide/publishing-index.json"},
+                        {
+                            "label": "적용",
+                            "value": "응용2팀이 올린 상태값을 그대로 받은 것이라 파일을 통째로 덮어씁니다."
+                        },
+                        {
+                            "label": "변경",
+                            "value": "탄소중립 선도기업 화면 17개에 응용2 상태 `완료` 가 새로 붙었습니다. 값이 없던 화면에 추가된 것이고 기존 값을 고친 것은 없습니다.\n선도기업 신청 — 자가진단 완료 · 1차 신청 완료 · 중간점검 접수 · 중간점검 완료 · 최종점검 완료\n자가진단 — 감축방법론 변경 확인 팝업\n선도기업 신청 1차 — 신청서 작성 · 주소 검색 · 서류 제출 · 최종 확인 · 제출 확인 팝업 · 신청결과 확인\n선도기업 신청 2차 — 주소 검색 · 서류 제출 · 최종 확인 · 제출 확인 팝업 · 신청결과 확인"
+                        },
+                        {
+                            "label": "진척률",
+                            "value": "응용2 집계 대상이 257개에서 274개로 늘고 모두 완료라 응용2 진척률은 100% 그대로입니다."
+                        },
+                        {"label": "유지", "value": "UIUX 상태·상태 변경일·버전·링크는 한 건도 바뀌지 않았습니다."}
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v3.1.8",
             "releasedAt": "2026-09-07",
             "changes": [
@@ -5257,15 +5284,6 @@
                 "덮어쓰기: `src/app/(user-type)/corp/(service)/(logged-in)/notice/inquiry-create/inquiry-complete`, `src/app/(user-type)/org/(service)/(logged-in)/notice/inquiry-create/inquiry-complete`, `src/components/custom/inquiry-complete`",
                 "덮어쓰기: `src/app/component-guide`, `src/constants/header-navigation.ts`",
                 "덮어쓰기: `src/components`, `src/components/custom/faq-list.tsx`"
-            ]
-        },
-        {
-            "version": "v1.0.0",
-            "releasedAt": "2026-08-05",
-            "changes": [
-                "정적 화면 작업: 알림마당, 404·500·정기점검, 이용약관, 개인정보 처리방침, 로그인 안내·연장·종료, 실명인증, 최초 비밀번호 변경, 우편번호 검색",
-                "개인정보 처리방침·이용약관 콘텐츠 추후 작성, 화면 레이아웃 선 구성",
-                "기본 테마를 다크 모드로 변경"
             ]
         }
     ]

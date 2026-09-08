@@ -811,7 +811,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-profile-industry-code-search",
@@ -825,7 +825,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-profile-address-search",
@@ -860,7 +860,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-representative-history-input-helper",
@@ -909,7 +909,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis",
@@ -1000,14 +1000,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-inquiry-history-inquiry-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-notice-announcements",
@@ -1784,21 +1784,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-profile-edit-non-partner-agency",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-profile-edit-sub-account",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-profile-edit-industry-code-search",
@@ -1812,7 +1812,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-profile-edit-address-search",
@@ -1840,7 +1840,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis",
@@ -1861,42 +1861,42 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation-center-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-branch-search",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-history",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-verification-application",
@@ -1931,14 +1931,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-inquiry-history-inquiry-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-notice-announcements",
