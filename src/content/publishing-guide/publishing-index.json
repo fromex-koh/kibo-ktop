@@ -4657,6 +4657,7 @@
                                     "label": "기관회원",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-profile-edit",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit"
@@ -4665,6 +4666,7 @@
                                     "label": "기업회원",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-profile-edit-company",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit/company"
@@ -4673,6 +4675,7 @@
                                     "label": "수정 취소 확인",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-profile-edit-cancel-confirm",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit/cancel-confirm"
@@ -4681,6 +4684,7 @@
                                     "label": "저장 확인",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-profile-edit-save-confirm",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit/save-confirm"
@@ -4689,6 +4693,7 @@
                                     "label": "주소검색",
                                     "screenId": null,
                                     "status": "완료",
+                                    "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "carbon-my-page-profile-edit-address-search",
                                     "externalHref": "https://fromex-carbon.vercel.app/my-page/profile-edit/address-search"
