@@ -134,6 +134,12 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
             `[content] ${where}: application2Status "${String(value.application2Status)}" 이(가) 유효하지 않습니다.`,
         )
     }
+    if (
+        value.statusDate !== undefined &&
+        (typeof value.statusDate !== 'string' || !/^\d{2}\/\d{2}$/.test(value.statusDate))
+    ) {
+        throw new Error(`[content] ${where}: statusDate 는 "09/08" 형태의 MM/DD 문자열이어야 합니다.`)
+    }
     if (typeof value.version !== 'string') {
         throw new Error(`[content] ${where}: version 이 필요합니다.`)
     }
@@ -152,6 +158,7 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
         ...(typeof value.iaRow === 'number' ? {iaRow: value.iaRow} : {}),
         screenId: value.screenId,
         status: value.status,
+        ...(typeof value.statusDate === 'string' ? {statusDate: value.statusDate} : {}),
         ...(typeof value.application2Status === 'string' && isStatus(value.application2Status)
             ? {application2Status: value.application2Status}
             : {}),

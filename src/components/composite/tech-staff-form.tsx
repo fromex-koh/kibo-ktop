@@ -278,8 +278,10 @@ const StaffEntry = ({
                     {showMajorMatch ? null : showIndustryCareerMonth ? industryCareerMonthsEntry : industryCareerEntry}
                 </FieldGrid>
                 {/* 일치여부 칸이 있는 모형은 시안대로 마지막 줄이 [전공 · 일치여부 · 동업종 종사경력] 세 칸이다. */}
+                {/* 태블릿에서는 두 칸으로 둔다 — 셋으로 나누면 [전공과 평가대상 기술 분야 일치여부] 라벨이
+                    두 줄로 접혀 그 칸의 셀렉트만 한 줄 아래로 내려간다. 시안 폭(xl)에서는 세 칸 그대로다. */}
                 {showMajorMatch ? (
-                    <FieldRow3>
+                    <FieldRow3 className="md:grid-cols-2 xl:grid-cols-3">
                         {majorEntry}
                         <Field id={field('majorMatch')} label="전공과 평가대상 기술 분야 일치여부" required>
                             <Select name={field('majorMatch')} required>
@@ -295,7 +297,7 @@ const StaffEntry = ({
                                 </SelectContent>
                             </Select>
                         </Field>
-                        {industryCareerEntry}
+                        {showIndustryCareerMonth ? industryCareerMonthsEntry : industryCareerEntry}
                     </FieldRow3>
                 ) : null}
             </FormCardScope>

@@ -4,6 +4,7 @@ import {useId, useRef, useState, type SubmitEvent} from 'react'
 import {useRouter} from 'next/navigation'
 import {FileUpload} from '@/components/composite/file-upload'
 import {FormCard} from '@/components/composite/form-card'
+import {Button} from '@/components/ui/button'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {FIELD_FOCUS_RING} from '@/constants/form'
@@ -130,7 +131,15 @@ const OrgCustomerConsentForm = ({
                 ) : null}
             </FormCard>
 
-            <FormCard title="정보이용동의서 업로드">
+            <FormCard
+                title="정보이용동의서 업로드"
+                // [프론트엔드 연동] 실제 양식 파일 경로를 연결한다.
+                action={
+                    <Button type="button" variant="secondary" size="xs">
+                        동의서 양식 다운로드
+                    </Button>
+                }
+            >
                 <FileUpload
                     name={CONSENT_FILE_NAME}
                     accept={CONSENT_FILE_ACCEPT}

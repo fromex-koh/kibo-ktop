@@ -34,7 +34,8 @@ const SELF_DIAGNOSIS_FORM_TABS: readonly FormTabItem[] = [
     {value: 'company', title: '기업정보', content: <CompanyInfoForm />},
     {value: 'ceo', title: '대표자 경력사항', content: <CareerForm />},
     {value: 'etc', title: '기업 기타 정보', content: <CompanyEtcForm />},
-    {value: 'staff', title: '핵심 기술 인력 현황', content: <TechStaffForm />},
+    // 동업종 종사경력은 투자모형과 같이 [년 · 개월] 두 칸으로 받는다.
+    {value: 'staff', title: '핵심 기술 인력 현황', content: <TechStaffForm showIndustryCareerMonth />},
     {value: 'rnd', title: '기술 개발 실적', content: <RndForm />},
 ]
 
@@ -70,6 +71,7 @@ const TECH_INDEX_GENERAL_FORM_TABS: readonly FormTabItem[] = [
                 leading={<TechIndexStaffSummary />}
                 maxCount={Number.POSITIVE_INFINITY}
                 categories={TECH_INDEX_STAFF_CATEGORIES}
+                showIndustryCareerMonth
             />
         ),
     },
@@ -143,7 +145,7 @@ const TECH_INDEX_STARTUP_FORM_TABS: readonly FormTabItem[] = [
                 maxCount={Number.POSITIVE_INFINITY}
                 categories={TECH_INDEX_STAFF_CATEGORIES}
                 showMajorMatch
-                industryCareerUnit="년"
+                showIndustryCareerMonth
             />
         ),
     },

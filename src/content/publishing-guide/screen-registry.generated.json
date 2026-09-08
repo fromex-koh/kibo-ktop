@@ -146,14 +146,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-recognized-ip",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-additional-company-info-transaction-type-guide",
@@ -272,7 +272,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
@@ -810,8 +810,8 @@
             "key": "corp-mypage-profile",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.0",
-            "isCurrent": false
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-profile-industry-code-search",
@@ -819,6 +819,13 @@
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
             "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-profile-identity-verification",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-profile-address-search",
@@ -852,8 +859,8 @@
             "key": "corp-mypage-representative-history",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.0",
-            "isCurrent": false
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-representative-history-input-helper",
@@ -901,8 +908,8 @@
             "key": "corp-mypage-evaluation-results",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.0",
-            "isCurrent": false
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis",
@@ -992,14 +999,14 @@
             "key": "corp-mypage-inquiry-history",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.1.7",
+            "version": "v3.1.8",
             "isCurrent": true
         },
         {
             "key": "corp-mypage-inquiry-history-inquiry-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.1.7",
+            "version": "v3.1.8",
             "isCurrent": true
         },
         {
@@ -1007,14 +1014,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-notice-faq",
@@ -1056,7 +1063,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-marketing-consent",
@@ -1773,11 +1780,25 @@
             "isCurrent": false
         },
         {
+            "key": "org-mypage-profile-edit-non-partner-bank",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.1.8",
+            "isCurrent": true
+        },
+        {
+            "key": "org-mypage-profile-edit-non-partner-agency",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.1.8",
+            "isCurrent": true
+        },
+        {
             "key": "org-mypage-profile-edit-sub-account",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.0",
-            "isCurrent": false
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-profile-edit-industry-code-search",
@@ -1785,6 +1806,13 @@
             "implementationStatus": "in-progress",
             "version": "v2.0.1",
             "isCurrent": false
+        },
+        {
+            "key": "org-mypage-profile-edit-identity-verification",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-profile-edit-address-search",
@@ -1809,10 +1837,10 @@
         },
         {
             "key": "org-mypage-evaluation-history",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis",
@@ -1830,17 +1858,45 @@
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation-complete",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.1.8",
+            "isCurrent": true
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation-center-search",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.1.8",
+            "isCurrent": true
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-search",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.1.8",
+            "isCurrent": true
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-branch-search",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.1.8",
+            "isCurrent": true
+        },
+        {
+            "key": "org-mypage-evaluation-history-guarantee-history",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-verification-application",
@@ -1874,29 +1930,29 @@
             "key": "org-mypage-inquiry-history",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.0",
-            "isCurrent": false
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-inquiry-history-inquiry-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.0",
-            "isCurrent": false
+            "version": "v3.1.8",
+            "isCurrent": true
         },
         {
             "key": "org-notice-announcements",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-notice-announcements-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-notice-faq",
@@ -1938,7 +1994,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.1.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-not-found",

@@ -13,6 +13,9 @@ export const metadata: Metadata = {title: '내 정보'}
 const OrgMypageProfileSubAccountPage = () => (
     <OrgMypageProfileScreen
         member={ORG_MYPAGE_MEMBERS.subAccount}
+        // 하위 계정은 상위 마스터 기관이 만들어 준 계정이라 안내가 다르다 — 다른 기관 화면과 같은
+        // 자리(제목 아래)에 두고, 카드 안에 같은 말을 한 번 더 두지 않는다.
+        description="하위 계정 정보는 상위 마스터 기관의 담당자가 등록·관리합니다. 이용권·사업기간은 상위 마스터 기관을 따르며, 회원이 직접 수정할 수 있는 항목은 담당자 · 전화번호 · 비밀번호(PW)입니다."
         form={
             <OrgMypageProfileForm
                 account={ORG_MEMBER_ACCOUNTS.subAccount}

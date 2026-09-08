@@ -24,6 +24,11 @@ import {
     useFormValues,
 } from '@/components/composite/form-values'
 import {MypageFormCard} from '@/components/composite/mypage-form-card'
+import {
+    SubSectionHeader,
+    SubSectionHeaderDescription,
+    SubSectionHeaderTitle,
+} from '@/components/composite/sub-section-header'
 import {SaveConfirmDialog} from '@/components/composite/save-confirm-dialog'
 import {Button} from '@/components/ui/button'
 import {
@@ -82,7 +87,11 @@ const CapabilitySection = () => {
     }
 
     return (
-        <MypageFormCard title="경영자 역량" subtitle="대표자의 최종학력을 기입해주세요.">
+        <section className="flex flex-col gap-6">
+            <SubSectionHeader>
+                <SubSectionHeaderTitle>경영자 역량</SubSectionHeaderTitle>
+                <SubSectionHeaderDescription>대표자의 최종학력을 기입해주세요.</SubSectionHeaderDescription>
+            </SubSectionHeader>
             <FieldGrid>
                 <Field id="final-education" label="최종학력" required>
                     <Select name={EDUCATION_FIELD} required onValueChange={handleEducationChange}>
@@ -192,7 +201,7 @@ const CapabilitySection = () => {
                     </Select>
                 </Field>
             </FieldGrid>
-        </MypageFormCard>
+        </section>
     )
 }
 
@@ -239,11 +248,11 @@ const CareerEntry = ({
     const isFilled = useIsCardFilled(namePrefix)
 
     return (
-        // 카드 제목(h2) 아래 바로 오는 카드라 제목은 h3 다 — 레벨을 건너뛰지 않는다[6.4.2].
+        // [대표자 경력사항] 구획 제목(h3) 아래 오는 카드라 제목은 h4 다 — 레벨을 건너뛰지 않는다[6.4.2].
         <RepeatCard
             ref={cardRef}
             title={label}
-            headingLevel={3}
+            headingLevel={4}
             focusOnMount={focusOnMount}
             clearOnly={isLastCard}
             onDelete={onDelete}
@@ -347,20 +356,21 @@ const CareerSection = () => {
     })
 
     return (
-        <MypageFormCard
-            // 제목 옆 물음표는 카드 제목(h2) 안에 함께 놓인다 — 시안의 "툴팁" 묶음 그대로다.
-            title={
-                <span className="flex flex-wrap items-center gap-2">
+        <section className="flex flex-col gap-6">
+            <SubSectionHeader>
+                {/* 제목 옆 물음표는 구획 제목 안에 함께 놓인다 — 시안의 "툴팁" 묶음 그대로다. */}
+                <SubSectionHeaderTitle className="flex flex-wrap items-center gap-2">
                     대표자 경력사항
                     <CareerInputHelpDialog>
                         <Button type="button" variant="plain" size="icon-md" aria-label="경력 입력 도움말">
                             <CircleQuestionMark aria-hidden="true" />
                         </Button>
                     </CareerInputHelpDialog>
-                </span>
-            }
-            subtitle="대표자의 경력사항을 현 직장 근무경력을 포함하여 최근 경력부터 과거순으로 차례대로 입력해주십시오."
-        >
+                </SubSectionHeaderTitle>
+                <SubSectionHeaderDescription>
+                    대표자의 경력사항을 현 직장 근무경력을 포함하여 최근 경력부터 과거순으로 차례대로 입력해주십시오.
+                </SubSectionHeaderDescription>
+            </SubSectionHeader>
             <div className="flex flex-col gap-6">
                 {ids.map((id, index) => (
                     <CareerEntry
@@ -379,7 +389,7 @@ const CareerSection = () => {
                     <Plus aria-hidden="true" />
                 </Button>
             </div>
-        </MypageFormCard>
+        </section>
     )
 }
 
@@ -473,14 +483,19 @@ const HistoryFormBody = () => {
             onSubmit={(event) => handleSubmit(event, handleValid)}
             className="flex flex-col"
         >
-            {/* 구획 사이 60 — 시안 실측. */}
-            <div className="flex flex-col gap-15">
-                <CapabilitySection />
-                <CareerSection key={careerResetKey} />
-            </div>
+            {/* 시안은 [대표자 이력] 카드 하나 안에 두 구획이 들어간다 — 구획 사이 60. */}
+            <MypageFormCard
+                title="대표자 이력"
+                subtitle="본 화면의 정보는 개인정보 수집·이용 동의에 따라 수집·관리되는 대표자 개인정보입니다."
+            >
+                <div className="flex flex-col gap-15">
+                    <CapabilitySection />
+                    <CareerSection key={careerResetKey} />
+                </div>
+            </MypageFormCard>
 
-            {/* 시안: 마지막 칸과 CTA 사이 100(=구획 간격 60 + 40), 버튼 짝은 16 간격이다. */}
-            <ActionBar className="mt-25">
+            {/* 시안: 카드와 CTA 사이 40(마지막 칸 기준으로는 카드 아래 여백 60 을 더해 100), 버튼 짝은 16 간격이다. */}
+            <ActionBar className="mt-10">
                 <ActionBarCenter className="gap-4">
                     <CancelButton onRestore={() => setCareerResetKey((key) => key + 1)} />
                     <SaveButton />

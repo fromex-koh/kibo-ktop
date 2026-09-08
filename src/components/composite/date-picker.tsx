@@ -1,11 +1,11 @@
 'use client'
 
 import type {ChangeEvent, ComponentPropsWithoutRef, MouseEvent, ReactNode} from 'react'
-import {Children, isValidElement, useEffect, useRef, useState} from 'react'
+import {Children, isValidElement, useEffect, useId, useRef, useState} from 'react'
 import {addYears, endOfMonth, format, isSameMonth, setMonth, startOfMonth} from 'date-fns'
 import {ko} from 'date-fns/locale'
 import {CalendarIcon} from 'lucide-react'
-import {Calendar} from '@/components/ui/calendar'
+import {Calendar, CalendarDayButton} from '@/components/ui/calendar'
 import {calendarNavButtonClassName} from '@/components/theme/calendar.variants'
 import {Button} from '@/components/ui/button'
 import {ChevronLeft, ChevronRight} from 'lucide-react'
@@ -75,6 +75,9 @@ type DatePickerProps = {
 // react-day-picker는 월·연도 변경 시 select DOM을 다시 렌더링해 네이티브 포커스가 body로 빠진다.
 // primitive를 수정하지 않고 Select 슬롯에서 새 DOM이 연결된 다음 동일 컨트롤로 포커스를 복원한다.
 const CalendarDropdownSelect = ({onChange, children, className, ...props}: ComponentPropsWithoutRef<'select'>) => {
+    // 폼 요소는 id 나 name 을 가져야 한다(HTML 검사기 "A form field element should have an id or name
+    // attribute") — 달력의 월·연도 선택은 값을 제출하지 않으므로 name 대신 id 만 둔다.
+    const selectId = useId()
     const options = Children.toArray(children).flatMap<SelectTextOption>((child) => {
         if (!isValidElement<ComponentPropsWithoutRef<'option'>>(child)) return []
         return [
@@ -97,10 +100,20 @@ const CalendarDropdownSelect = ({onChange, children, className, ...props}: Compo
         })
     }
 
-    return <SelectText {...props} options={options} size="sm" selectClassName={className} onChange={handleChange} />
+    return (
+        <SelectText
+            {...props}
+            id={selectId}
+            options={options}
+            size="sm"
+            selectClassName={className}
+            onChange={handleChange}
+        />
+    )
 }
 
 const CalendarNavigationButton = ({onClick, ...props}: ComponentPropsWithoutRef<'button'>) => {
+    const buttonId = useId()
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
         const accessibleName = event.currentTarget.getAttribute('aria-label')
         onClick?.(event)
@@ -112,7 +125,16 @@ const CalendarNavigationButton = ({onClick, ...props}: ComponentPropsWithoutRef<
         })
     }
 
-    return <button onClick={handleClick} {...props} />
+    return <button id={buttonId} onClick={handleClick} {...props} />
+}
+
+// 날짜 한 칸 — 셸의 DayButton(스타일·포커스 이동)을 그대로 쓰고 id 만 얹는다.
+// 달력은 폼 안에 놓일 수 있고 폼 요소는 id 나 name 을 가져야 하는데(HTML 검사기), 날짜 칸은 값을
+// 제출하지 않으므로 id 만 둔다. 달을 옮기면 칸이 다시 그려지며 새 id 를 받는다.
+const CalendarDayCell = (props: ComponentPropsWithoutRef<typeof CalendarDayButton>) => {
+    const dayId = useId()
+
+    return <CalendarDayButton {...props} id={dayId} locale={ko} />
 }
 
 // 12개월 격자 — 날짜 달력 자리에 들어가며 헤더 구성(이전/연도/다음)과 셀 크기를 달력과 맞춘다.
@@ -136,6 +158,8 @@ const MonthGrid = ({
     maxDate?: Date
     className?: string
 }) => {
+    // 날짜 달력과 같은 이유로 격자의 조작 요소에도 id 를 둔다(값은 제출하지 않는다).
+    const gridId = useId()
     const today = new Date()
     const months = Array.from({length: MONTHS_PER_YEAR}, (_, index) => setMonth(startOfMonth(month), index))
     const firstYear = (minDate ?? addYears(today, -YEAR_RANGE)).getFullYear()
@@ -147,6 +171,7 @@ const MonthGrid = ({
         <div className={cn(datePickerMonthPanelClassName, className)}>
             <div className={datePickerMonthHeaderClassName}>
                 <Button
+                    id={`${gridId}-prev-year`}
                     type="button"
                     variant="tertiary"
                     size="icon-xs"
@@ -158,6 +183,7 @@ const MonthGrid = ({
                     <ChevronLeft aria-hidden="true" />
                 </Button>
                 <SelectText
+                    id={`${gridId}-year`}
                     size="sm"
                     aria-label="연도 선택"
                     value={String(month.getFullYear())}
@@ -167,6 +193,7 @@ const MonthGrid = ({
                     }
                 />
                 <Button
+                    id={`${gridId}-next-year`}
                     type="button"
                     variant="tertiary"
                     size="icon-xs"
@@ -182,6 +209,7 @@ const MonthGrid = ({
                 {months.map((candidate) => (
                     <button
                         key={candidate.getMonth()}
+                        id={`${gridId}-month-${candidate.getMonth()}`}
                         type="button"
                         disabled={isMonthDisabled(candidate)}
                         data-selected={selected && isSameMonth(candidate, selected) ? true : undefined}
@@ -342,6 +370,7 @@ const DatePicker = ({
                 Select: CalendarDropdownSelect,
                 PreviousMonthButton: CalendarNavigationButton,
                 NextMonthButton: CalendarNavigationButton,
+                DayButton: CalendarDayCell,
                 DropdownNav: ({children, ...navProps}) => (
                     <div {...navProps}>{Children.toArray(children).reverse()}</div>
                 ),
