@@ -1,4 +1,9 @@
-import {GUARANTEE_RECOMMENDATION_FIELD, type OrgEvaluationHistoryItem} from '@/constants/evaluation-result'
+import {
+    GUARANTEE_RECOMMENDATION_FIELD,
+    type EvaluationModel,
+    type EvaluationResultAction,
+    type OrgEvaluationHistoryItem,
+} from '@/constants/evaluation-result'
 
 // 기관 평가결과 조회 데이터.
 //
@@ -12,11 +17,25 @@ import {GUARANTEE_RECOMMENDATION_FIELD, type OrgEvaluationHistoryItem} from '@/c
 // 조회 조건(모형·평가 방식·조회기간·검색어)은 지금 목록 컴포넌트가 화면 안에서 거른다. 서버 조회로
 // 넘길 때는 이 함수에 조건을 받는 인자를 열고 목록의 [프론트엔드 연동] 주석 자리에서 부른다.
 
-// 카드 버튼이 여는 화면 — 일반분석·심층분석·보증추천은 아직 화면이 없어 자리를 비워 둔다.
+// 카드 버튼이 여는 화면 — 보증추천은 아직 화면이 없어 자리를 비워 둔다.
+// [개별평가 일반 결과]·[개별평가 심층 결과]는 같은 창이 아니라 시안 폭에 맞춘 새 창(인쇄용 리포트)으로 연다.
 const NOT_READY_PATH = '#'
+const GENERAL_ANALYSIS_PATH = '/org/mypage/evaluation-history/general-analysis'
+const DEEP_ANALYSIS_PATH = '/org/mypage/evaluation-history/deep-analysis'
 
-const GENERAL_RESULT = {label: '개별평가 일반 결과', href: NOT_READY_PATH}
-const DEEP_RESULT = {label: '개별평가 심층 결과', href: NOT_READY_PATH}
+// 결과 리포트는 모형마다 화면이 따로 있다 — 카드의 모형을 그대로 주소에 쓴다.
+// 일반 결과는 자가진단 평가결과 한 벌이고, 심층 결과는 거기에 기술평가서와 세부내역이 더 붙는다.
+const generalResult = (model: EvaluationModel): EvaluationResultAction => ({
+    label: '개별평가 일반 결과',
+    href: `${GENERAL_ANALYSIS_PATH}/${model}`,
+    newWindow: true,
+})
+
+const deepResult = (model: EvaluationModel): EvaluationResultAction => ({
+    label: '개별평가 심층 결과',
+    href: `${DEEP_ANALYSIS_PATH}/${model}`,
+    newWindow: true,
+})
 // 보증추천은 입력을 마치면 버튼 이름이 [보증이력]으로 바뀐다(시안 주석) — 어느 이름을 보일지는
 // 응답이 정하므로 화면이 아니라 이 데이터가 들고 있다.
 // [보증추천]은 화면 이동이 아니라 모달을 연다(opens).
@@ -57,7 +76,7 @@ const MOCK_ORG_EVALUATION_HISTORY: readonly OrgEvaluationHistoryItem[] = [
         companyName: '(주)테크놀로지',
         businessNumber: '683-68-00428',
         requestedBy: '부산은행 울산지점',
-        actions: [GENERAL_RESULT, DEEP_RESULT, GUARANTEE_RECOMMEND],
+        actions: [generalResult('ktrs-fm'), deepResult('ktrs-fm'), GUARANTEE_RECOMMEND],
     },
     {
         // 보증추천 입력을 마친 건 — 마지막 버튼이 [보증이력]으로 바뀐다
@@ -69,7 +88,7 @@ const MOCK_ORG_EVALUATION_HISTORY: readonly OrgEvaluationHistoryItem[] = [
         companyName: '(주)테크놀로지',
         businessNumber: '683-68-00428',
         requestedBy: '부산은행 울산지점',
-        actions: [GENERAL_RESULT, DEEP_RESULT, GUARANTEE_HISTORY],
+        actions: [generalResult('ktrs-fm'), deepResult('ktrs-fm'), GUARANTEE_HISTORY],
     },
 
     // ── Tech-Index · 개별평가 (시안 1장)
@@ -82,7 +101,7 @@ const MOCK_ORG_EVALUATION_HISTORY: readonly OrgEvaluationHistoryItem[] = [
         companyName: '(주)테크놀로지',
         businessNumber: '683-68-00428',
         requestedBy: '부산은행 울산지점',
-        actions: [GENERAL_RESULT, DEEP_RESULT],
+        actions: [generalResult('tech-index'), deepResult('tech-index')],
     },
 
     // ── Tech-Index · 일괄평가 (시안 3장 — 반려 · 승인대기중 · 승인완료)
@@ -172,7 +191,7 @@ const MOCK_ORG_EVALUATION_HISTORY: readonly OrgEvaluationHistoryItem[] = [
         companyName: '(주)테크놀로지',
         businessNumber: '683-68-00428',
         requestedBy: '부산은행 울산지점',
-        actions: [GENERAL_RESULT, DEEP_RESULT],
+        actions: [generalResult('startup-tech-index'), deepResult('startup-tech-index')],
     },
 
     // ── 창업용 Tech-Index · 일괄평가 (시안 3장)
@@ -261,7 +280,7 @@ const MOCK_ORG_EVALUATION_HISTORY: readonly OrgEvaluationHistoryItem[] = [
         companyName: '(주)테크놀로지',
         businessNumber: '683-68-00428',
         requestedBy: '부산은행 울산지점',
-        actions: [GENERAL_RESULT, DEEP_RESULT],
+        actions: [generalResult('investment-model'), deepResult('investment-model')],
     },
 ]
 
