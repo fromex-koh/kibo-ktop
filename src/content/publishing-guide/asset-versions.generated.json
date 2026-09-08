@@ -1,5 +1,5 @@
 {
-    "version": "v3.1.9",
+    "version": "v3.2.0",
     "assets": [
         {
             "name": "src/app",
@@ -38,7 +38,7 @@
         },
         {
             "name": "src/content",
-            "version": "v3.1.9",
+            "version": "v3.2.0",
             "isCurrent": true
         },
         {

@@ -1,6 +1,36 @@
 {
     "releases": [
         {
+            "version": "v3.2.0",
+            "releasedAt": "2026-09-08",
+            "changes": [
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "퍼블리싱 인덱스 — 응용2팀 탄소중립 선도기업 2·3차 신청 화면 상태 반영",
+                    "details": [
+                        {"label": "대상", "value": "src/content/publishing-guide/publishing-index.json"},
+                        {
+                            "label": "적용",
+                            "value": "응용2팀이 올린 상태값을 그대로 받은 것이라 파일을 통째로 덮어씁니다."
+                        },
+                        {
+                            "label": "변경",
+                            "value": "탄소중립 선도기업 화면 17개에 응용2 상태 `완료` 가 새로 붙었습니다. 값이 없던 화면에 붙은 것이고 이미 있던 값을 고친 것은 없습니다.\n선도기업 신청 2차 — 신청서 작성\n선도기업 신청 3차 — 신청서 작성 · 주소 검색\n선도기업 신청 3차 — 인벤토리 배출량 산정 · 항목 선택 · Scope설명 · 상세 입력\n선도기업 신청 3차 — 목표달성 평가(일반기업 달성·미달성, 목표관리업체 달성·절대배출량 달성·전 기준 미달)\n선도기업 신청 3차 — 서류 제출 · 최종 확인 · 제출 확인 팝업 · 신청결과 확인\n신청내역 확인 및 확인서 발급"
+                        },
+                        {
+                            "label": "진척률",
+                            "value": "탄소 응용2 진척률이 50%(37/74)에서 73%(54/74)로 올랐습니다. 기관·기업 화면 수치는 그대로입니다."
+                        },
+                        {
+                            "label": "유지",
+                            "value": "UIUX 상태·상태 변경일·버전·링크는 한 건도 바뀌지 않았고, 화면이 새로 늘거나 빠진 것도 없습니다."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v3.1.9",
             "releasedAt": "2026-09-08",
             "changes": [
@@ -5275,15 +5305,6 @@
                         }
                     ]
                 }
-            ]
-        },
-        {
-            "version": "v1.0.1",
-            "releasedAt": "2026-08-06",
-            "changes": [
-                "덮어쓰기: `src/app/(user-type)/corp/(service)/(logged-in)/notice/inquiry-create/inquiry-complete`, `src/app/(user-type)/org/(service)/(logged-in)/notice/inquiry-create/inquiry-complete`, `src/components/custom/inquiry-complete`",
-                "덮어쓰기: `src/app/component-guide`, `src/constants/header-navigation.ts`",
-                "덮어쓰기: `src/components`, `src/components/custom/faq-list.tsx`"
             ]
         }
     ]
