@@ -915,8 +915,8 @@
             "key": "corp-mypage-evaluation-results-general-analysis-ktrs-fm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.2.1",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis-tech-index",
@@ -1867,8 +1867,8 @@
             "key": "org-mypage-evaluation-history-general-analysis-ktrs-fm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.2.1",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis-tech-index",
@@ -1895,8 +1895,8 @@
             "key": "org-mypage-evaluation-history-deep-analysis-ktrs-fm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.2.1",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-evaluation-history-deep-analysis-tech-index",
