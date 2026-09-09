@@ -33,7 +33,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 
 ## [Diff 확인]
 
-### 보증추천 — 은행·영업점명을 한 줄에 두고 [검색] 버튼을 하나로
+### [레이아웃] 보증추천 — 은행·영업점명을 한 줄에 두고 [검색] 버튼을 하나로
 
 - 대상: src/components/composite/guarantee-recommendation-dialog.tsx
 - 변경: 세로로 쌓여 있던 [은행]·[영업점명] 두 칸을 한 줄에 두고, 각 칸에 있던 [검색] 버튼을 영업점명 쪽 하나만 남겼습니다. 두 값이 한 모달에서 함께 정해지므로 버튼이 둘일 이유가 없습니다.
@@ -43,7 +43,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 유지: 칸 이름(`guaranteeBankName`·`guaranteeBankBranch`)과 제출값, 검사 관문, [임시저장]·[보증 추천] 흐름은 그대로입니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/4ce45813)
 
-### 보증추천 — 라디오 묶음의 물음을 묶음 이름으로
+### [접근성] 보증추천 — 라디오 묶음의 물음을 묶음 이름으로
 
 - 대상: src/components/composite/guarantee-recommendation-dialog.tsx
 - 이전: 물음 [현재 다른 보증기관 이용 여부] 가 `<label htmlFor>` 로 첫 보기에 묶여, 그 보기가 "부" 대신 물음 전체로 읽히고 둘째 보기는 물음 없이 "여" 로만 읽혔습니다.
@@ -52,7 +52,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 주의: label 을 그대로 두고 `htmlFor` 만 지우면 가리키는 컨트롤이 없는 라벨이 되어 검사기가 다시 잡습니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/4ce45813)
 
-### 기술평가센터 검색 — 시안 반영
+### [스타일] 기술평가센터 검색 — 시안 반영
 
 - 대상: src/components/composite/search-select-dialog.tsx
     - src/components/composite/guarantee-search-dialogs.tsx
@@ -63,7 +63,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 확인 방법: [기관 기술평가센터 검색](/org/mypage/evaluation-history/guarantee-recommendation/center-search)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f2c71fb1)
 
-### 검색 모달 — 목록은 [검색]을 눌렀을 때만 바뀝니다(동작 변경)
+### [동작] 검색 모달 — 목록은 [검색]을 눌렀을 때만 바뀝니다
 
 - 대상: src/components/composite/search-select-dialog.tsx
     - src/components/composite/bank-branch-search-dialog.tsx
@@ -72,7 +72,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 확인 방법: 두 모달에서 글자를 쳐도 목록이 그대로인지 → [검색]을 누르면 걸러지는지 봅니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f2c71fb1)
 
-### 업종코드 조회 — 안내 패널과 표 머리 선
+### [스타일] 업종코드 조회 — 안내 패널과 표 머리 선
 
 - 대상: src/components/composite/industry-code-dialog.tsx
 - 안내 패널: 파일 안에 있던 "회색 면 + 불릿" 패널을 공통 조각(DialogNotice)으로 바꿨습니다. 문구·목록은 그대로이고, 불릿이 본문 크기(14/21)에 맞는 작은 점으로 바뀌어 글줄 가운데에 옵니다.
@@ -83,7 +83,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 인덱스: 위 10개 화면을 `보완(09/10)` 으로 두었습니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/08e4b0e4)
 
-### Tech-Index 평가모형 선택 — 안내 상자의 제목 단계
+### [접근성] Tech-Index 평가모형 선택 — 안내 상자의 제목 단계
 
 - 대상: src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/selection/page.tsx
 - 원인: 화면 제목(h1) 다음에 h2 없이 InfoBox 의 기본 제목(h3)이 와서 제목 단계를 건너뛰었습니다[6.4.2].
@@ -92,7 +92,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 인덱스: 위 화면을 `보완(09/10)` 으로 두었습니다. 기업 쪽 같은 화면은 이미 h2 라 바뀐 것이 없습니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8297cc94)
 
-### 문의 내역 — 목록 한 줄의 구분선을 inline 으로
+### [마크업] 문의 내역 — 목록 한 줄의 구분선을 inline 으로
 
 - 대상: src/components/custom/inquiry-list.tsx
 - 원인: 목록 한 줄을 span 으로 감쌌는데 그 안의 `InlineSeparator` 가 기본형(div)이었습니다. div 는 span 안에 올 수 없어 검사기가 그 지점에서 아래 트리 검사를 멈췄습니다.
