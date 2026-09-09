@@ -1,8 +1,8 @@
 {
-    "checkedAt": "2026-09-09T08:32:37.791Z",
-    "commit": "ea652dbda61b049c640377b09be934c30a0e1310",
-    "sourceHash": "d6546cdf1b0773f94b0adbfdc4040bb9cb9bafa3acc38a3947e0cdfc476a8791",
-    "validatorVersion": "26.8.21 (d58f7e9)",
+    "checkedAt": "2026-09-09T23:44:39.321Z",
+    "commit": "28e76a4be12d114cee989fc69cd5ec98728161d7",
+    "sourceHash": "03316059f93f33e287f2178382abd99cb37e7395ef57d38a32cf25f30294ddf5",
+    "validatorVersion": "26.9.7 (d73d94b)",
     "screens": [
         {
             "path": "/corp/home",
