@@ -4,6 +4,7 @@
     "private": true,
     "packageManager": "yarn@1.22.22",
     "scripts": {
+        "audit:accessibility": "node scripts/audit-accessibility.mjs",
         "tokens": "node scripts/build-tokens.mjs",
         "screen-registry": "node scripts/build-screen-registry.mjs",
         "license-notices": "node scripts/generate-third-party-licenses.mjs",
