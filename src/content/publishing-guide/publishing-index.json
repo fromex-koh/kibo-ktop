@@ -3501,7 +3501,8 @@
                             "screen": {
                                 "key": "org-mypage-evaluation-history-guarantee-recommendation",
                                 "screenId": null,
-                                "status": "완료",
+                                "status": "보완",
+                                "statusDate": "09/10",
                                 "version": "미배포",
                                 "iaRow": 118
                             },
@@ -3517,21 +3518,16 @@
                                 {
                                     "label": "기술평가센터 검색",
                                     "screenId": null,
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/10",
                                     "version": "미배포",
                                     "key": "org-mypage-evaluation-history-guarantee-recommendation-center-search"
                                 },
                                 {
-                                    "label": "은행 검색",
+                                    "label": "은행 영업점 조회",
                                     "screenId": null,
-                                    "status": "대기중",
-                                    "version": "미배포",
-                                    "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-search"
-                                },
-                                {
-                                    "label": "영업점 검색",
-                                    "screenId": null,
-                                    "status": "대기중",
+                                    "status": "보완",
+                                    "statusDate": "09/10",
                                     "version": "미배포",
                                     "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-branch-search"
                                 }
