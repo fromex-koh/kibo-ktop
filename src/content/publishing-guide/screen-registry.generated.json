@@ -1944,8 +1944,8 @@
             "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-branch-search",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.1.8",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-history",
