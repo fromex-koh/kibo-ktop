@@ -11,6 +11,16 @@ export const STATUS_VALUES: readonly Status[] = ['대기중', '진행중', '수�
 
 export const isStatus = (value: string): value is Status => STATUS_VALUES.some((status) => status === value)
 
+// ── 상태 뱃지의 꼬리말 ──
+// 상태·날짜만으로는 "이번 회차에 프론트가 다시 볼 것이 있는지" 가 구분되지 않는다.
+// 퍼블리싱 예시 화면(모달만 띄워 두는 화면)처럼 전달본 파일은 바뀌었지만 개발이 손댈 것이 없는 회차를
+// 같은 보완 뱃지 안에서 구분하기 위한 값이다 — 회차마다 붙였다 떼는 값이라 statusDate 와 짝을 이룬다.
+export type StatusNote = '개발수정X'
+
+export const STATUS_NOTE_VALUES: readonly StatusNote[] = ['개발수정X']
+
+export const isStatusNote = (value: string): value is StatusNote => STATUS_NOTE_VALUES.some((note) => note === value)
+
 // ── 사용자 유형(화면을 볼 수 있는 대상) ──
 // 그룹·브랜치에 지정하면 하위 화면이 상속하고, 하위에서 다시 지정하면 그 값이 우선한다.
 // 화면 필터(기업/기관/탄소)의 기준이 된다.
@@ -119,7 +129,10 @@ export type StructureLeaf = {
     key?: string // 경로가 확정된 화면은 screen-registry.json과 연결하는 영구 key를 가진다.
     screenId: string | null
     status: Status
-    statusDate?: string // 상태를 바꾼 날짜(MM/DD) — 뱃지에 "보완(09/08)" 처럼 함께 표시한다.
+    // 상태를 바꾼 날짜(MM/DD) — 뱃지에 "보완(09/08)" 처럼 함께 표시한다. 한 화면이 여러 회차에 걸쳐
+    // 같은 상태로 손을 탄 경우 배열로 적으면 회차 수만큼 뱃지가 선다(예: ["09/07", "09/10"]).
+    statusDate?: string | readonly string[]
+    statusNote?: StatusNote // 뱃지 꼬리말 — "보완(09/10, 개발수정X)" 처럼 날짜 뒤에 붙는다.
     application2Status?: Status // 응용2 진행 상태. 미지정 시 대기중으로 표시한다.
     isRestored?: boolean // IA에서 제외되었으나 작업 이력 확인을 위해 복원한 화면.
     version: string
@@ -137,7 +150,10 @@ export type ScreenInfo = {
     key?: string
     screenId: string | null
     status: Status
-    statusDate?: string // 상태를 바꾼 날짜(MM/DD) — 뱃지에 "보완(09/08)" 처럼 함께 표시한다.
+    // 상태를 바꾼 날짜(MM/DD) — 뱃지에 "보완(09/08)" 처럼 함께 표시한다. 한 화면이 여러 회차에 걸쳐
+    // 같은 상태로 손을 탄 경우 배열로 적으면 회차 수만큼 뱃지가 선다(예: ["09/07", "09/10"]).
+    statusDate?: string | readonly string[]
+    statusNote?: StatusNote // 뱃지 꼬리말 — "보완(09/10, 개발수정X)" 처럼 날짜 뒤에 붙는다.
     application2Status?: Status
     isRestored?: boolean
     version: string
