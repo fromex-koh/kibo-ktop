@@ -4264,6 +4264,7 @@
                                             "label": "결과 확인서 (다운로드)",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-self-check-result-result-certificate",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/result/result-certificate"
@@ -4343,6 +4344,7 @@
                                             "label": "신청서 (다운로드)",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-1-result-application-download",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-1/result/application-download"
@@ -4351,6 +4353,7 @@
                                             "label": "결과 확인서",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-1-result-result-certificate",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-1/result/result-certificate"
@@ -4430,6 +4433,7 @@
                                             "label": "신청서 (다운로드)",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-2-result-application-download",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-2/result/application-download"
@@ -4438,6 +4442,7 @@
                                             "label": "결과 확인서",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-2-result-result-certificate",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-2/result/result-certificate"
@@ -4607,6 +4612,7 @@
                                             "label": "신청서 (다운로드)",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-3-result-application-download",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-3/result/application-download"
@@ -4615,6 +4621,7 @@
                                             "label": "결과 확인서",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-3-result-result-certificate",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-3/result/result-certificate"
