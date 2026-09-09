@@ -1,8 +1,8 @@
 'use client'
 
 import {useState, type ReactNode} from 'react'
-import {Check} from 'lucide-react'
 import {ClearableInput} from '@/components/composite/clearable-input'
+import {DialogNotice} from '@/components/composite/dialog-notice'
 import {EmptyState} from '@/components/composite/empty-state'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import {Button} from '@/components/ui/button'
@@ -55,6 +55,8 @@ const rowClassName =
 type SearchSelectDialogProps = {
     /** 모달 제목. */
     title: string
+    /** 모달 맨 위 안내 — 무엇을 하는 자리인지 한두 줄로 알린다(시안 "인포"). */
+    notices?: readonly string[]
     /** ①② 줄에 적는 안내. */
     steps: {search: string; list: string}
     /** 왼쪽 셀렉트. 묶음이 없는 목록(은행 등)에서는 넘기지 않는다. */
@@ -80,6 +82,7 @@ type SearchSelectDialogProps = {
 
 const SearchSelectDialog = ({
     title,
+    notices,
     steps,
     groupFilter,
     groupSuffix = '',
@@ -102,18 +105,9 @@ const SearchSelectDialog = ({
         setSelected(null)
     }
 
+    // 목록은 [검색] 을 눌렀을 때만 바뀐다 — 묶음을 고르거나 글자를 치는 동안 목록이 저 혼자 바뀌면
+    // 무엇을 눌러 나온 결과인지 알기 어렵다. 찾는 동작이 버튼 하나로 모인다.
     const search = () => applySearch(group, keyword)
-
-    // 묶음은 고르는 즉시 걸러진다 — 고른 뒤에도 [검색] 을 눌러야 목록이 바뀌면 고장으로 읽힌다.
-    const handleGroupChange = (nextGroup: string) => {
-        setGroup(nextGroup)
-        applySearch(nextGroup, keyword)
-    }
-
-    const handleKeywordChange = (nextKeyword: string) => {
-        setKeyword(nextKeyword)
-        applySearch(group, nextKeyword)
-    }
 
     // 닫을 때 처음 상태로 되돌린다 — 다음에 열었을 때 지난 검색과 선택이 남아 있으면 혼란스럽다.
     const handleOpenChange = (nextOpen: boolean) => {
@@ -149,20 +143,21 @@ const SearchSelectDialog = ({
                         붙은 링(outline 2 + offset 2)이 잘린다. 상자를 4 넓히고 같은 값만큼 안쪽 여백을
                         주어 내용 폭은 그대로 두면서 링이 상자 안에 들어온다(dialogBodyClassName 의 py-1 과 같은 이유). */}
                     <div className="-mx-1 flex min-h-0 flex-1 flex-col gap-6 overflow-y-auto px-1">
+                        {notices ? <DialogNotice notices={notices} /> : null}
                         <section className="flex shrink-0 flex-col gap-3">
                             <h3 className="typo-body-xl-bold text-foreground">{steps.search}</h3>
-                            {/* 묶음을 고르고 이름으로 좁힌다. Enter 로도 검색되게 한다 —
-                            검색창에서 가장 먼저 눌러 보는 키다. */}
+                            {/* 묶음을 고르고 이름으로 좁힌 뒤 [검색] 을 누른다. Enter 로도 같은 일이
+                            되게 한다 — 검색창에서 가장 먼저 눌러 보는 키다. */}
                             <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
                                 {groupFilter ? (
-                                    <Select name="searchSelectGroup" value={group} onValueChange={handleGroupChange}>
+                                    <Select name="searchSelectGroup" value={group} onValueChange={setGroup}>
                                         {/* 옆에 선 입력·[검색] 버튼과 같은 컨트롤 높이(48)를 쓴다 — 한 줄에
                                         선 컨트롤의 높이가 다르면 줄이 어긋나 보인다. */}
                                         <SelectTrigger
                                             id="search-select-group"
                                             size="lg"
                                             aria-label={groupFilter.label}
-                                            className="w-full sm:w-45"
+                                            className="w-full sm:w-52"
                                         >
                                             <SelectValue />
                                         </SelectTrigger>
@@ -184,7 +179,7 @@ const SearchSelectDialog = ({
                                         aria-label={keywordField.label}
                                         placeholder={keywordField.placeholder}
                                         value={keyword}
-                                        onChange={(event) => handleKeywordChange(event.currentTarget.value)}
+                                        onChange={(event) => setKeyword(event.currentTarget.value)}
                                         onKeyDown={(event) => {
                                             if (event.key !== 'Enter') return
 
@@ -193,7 +188,15 @@ const SearchSelectDialog = ({
                                         }}
                                         className="min-w-0 flex-1"
                                     />
-                                    <Button type="button" size="md" className="shrink-0" onClick={search}>
+                                    {/* 시안의 [검색]은 흰 면에 회색 테두리(tertiary)다 — 모달의 주된 행동은
+                                        아래 [선택 완료]라, 검색은 한 단계 낮은 버튼으로 둔다. */}
+                                    <Button
+                                        type="button"
+                                        variant="tertiary"
+                                        size="md"
+                                        className="shrink-0"
+                                        onClick={search}
+                                    >
                                         검색
                                     </Button>
                                 </div>
@@ -208,12 +211,16 @@ const SearchSelectDialog = ({
                                 <fieldset className="flex min-h-0 min-w-0 flex-auto flex-col">
                                     <legend className="sr-only">{steps.list}</legend>
                                     {/* 머리 줄 — 업종코드 조회와 같다(진한 윗선 + 옅은 파랑 면). 각 줄의 이름이
-                                        이미 두 칸을 담고 있어 읽어 줄 필요가 없으므로 장식으로 둔다. */}
+                                        이미 두 칸을 담고 있어 읽어 줄 필요가 없으므로 장식으로 둔다.
+                                        묶음 칸은 시안 200 이고, 모달이 화면 폭을 따르는 좁은 화면에서는 140 으로
+                                        줄인다 — 200 을 그대로 두면 이름 칸에 남는 자리가 없어 글자가 접힌다. */}
                                     <div
                                         aria-hidden="true"
                                         className={cn(
-                                            'border-foreground-subtle bg-primary-subtle typo-body-l-bold text-foreground border-subtle-3 border-t border-b',
-                                            columns.group ? 'grid grid-cols-[--spacing(35)_1fr]' : 'flex flex-col',
+                                            'border-t-foreground-subtle border-b-subtle-3 bg-primary-subtle typo-body-l-bold text-foreground border-t border-b',
+                                            columns.group
+                                                ? 'grid grid-cols-[--spacing(35)_1fr] sm:grid-cols-[--spacing(50)_1fr]'
+                                                : 'flex flex-col',
                                         )}
                                     >
                                         {columns.group ? (
@@ -228,7 +235,9 @@ const SearchSelectDialog = ({
                                                 key={item.code}
                                                 className={cn(
                                                     rowClassName,
-                                                    item.group ? 'grid grid-cols-[--spacing(35)_1fr]' : 'flex',
+                                                    item.group
+                                                        ? 'grid grid-cols-[--spacing(35)_1fr] sm:grid-cols-[--spacing(50)_1fr]'
+                                                        : 'flex',
                                                     item.code === selected?.code
                                                         ? 'bg-secondary'
                                                         : 'interactive:hover:bg-surface-subtle',
@@ -266,24 +275,13 @@ const SearchSelectDialog = ({
                         </section>
                     </div>
 
-                    {/* 고른 값 — 목록이 길어 스크롤하면 어느 줄을 골랐는지 화면에서 사라진다. 목록 아래에
-                        한 줄로 남겨 [선택 완료] 를 누르기 전에 무엇이 담기는지 확인하게 한다.
-                        고르기 전에는 두지 않는다 — 빈 안내가 자리만 차지해 낮은 화면에서 목록이 눌린다.
-                        고른 직후 나타나는 자리라 화면을 보지 않아도 알 수 있게 알림으로 읽힌다[8.2.1]. */}
+                    {/* 고른 줄은 표에서 파란 면으로 남는다(시안) — 목록 아래에 요약 줄을 따로 두지 않는다.
+                        화면을 보지 않는 사람에게는 고른 직후 이 알림이 대신 읽어 준다[8.2.1]. */}
                     <p role="status" aria-live="polite" className="sr-only">
                         {selected
                             ? `${selected.group ? `${selected.group}${groupSuffix} ` : ''}${selected.name} 선택함`
                             : ''}
                     </p>
-                    {selected ? (
-                        <p className="bg-primary-subtle border-secondary-strong typo-body-l-bold text-primary-strong flex shrink-0 items-center gap-2 rounded-sm border px-5 py-4">
-                            <Check aria-hidden="true" className="size-icon-sm shrink-0" />
-                            <span>
-                                선택 : {selected.group ? `${selected.group}${groupSuffix} › ` : ''}
-                                {selected.name}
-                            </span>
-                        </p>
-                    ) : null}
                 </div>
                 <DialogFooter>
                     <DialogClose asChild>
