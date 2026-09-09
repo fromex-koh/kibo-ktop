@@ -14,11 +14,8 @@ import {
 import {useFormTabsSubmit} from '@/components/composite/form-tabs-submit'
 import {IndustryCodeDialog} from '@/components/composite/industry-code-dialog'
 import {PostcodeSearchDialog} from '@/components/composite/postcode-search-dialog'
-import {
-    BankBranchSearchDialog,
-    BankSearchDialog,
-    TechEvaluationCenterDialog,
-} from '@/components/composite/guarantee-search-dialogs'
+import {BankBranchSearchDialog} from '@/components/composite/bank-branch-search-dialog'
+import {TechEvaluationCenterDialog} from '@/components/composite/guarantee-search-dialogs'
 import {Button} from '@/components/ui/button'
 import {
     Dialog,
@@ -29,11 +26,12 @@ import {
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog'
-import {Field as BaseField} from '@/components/ui/field'
+import {Field as BaseField, FieldDescription} from '@/components/ui/field'
 import {InputGroup, InputGroupAddon, InputGroupInput} from '@/components/ui/input-group'
 import {RadioGroupItem} from '@/components/ui/radio-group'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {GUARANTEE_RECOMMENDATION_FIELD as FIELD} from '@/constants/evaluation-result'
+import type {BankBranch} from '@/content/service/tech-evaluation-centers'
 import {FIELD_FOCUS_RING} from '@/constants/form'
 import {cn} from '@/lib/utils'
 
@@ -191,15 +189,25 @@ const LoanAmountGroup = () => (
 )
 
 // 현재 다른 보증기관 이용 여부 — 라디오 두 개가 한 줄에 선다(시안).
+const OTHER_GUARANTEE_QUESTION_ID = `${FIELD.otherGuarantee}-question`
+
 const OtherGuaranteeField = () => (
     <BaseField>
-        <FieldLabel htmlFor={`${FIELD.otherGuarantee}-${OTHER_GUARANTEE_OPTIONS[0].value}`} required>
+        {/* 물음은 보기 하나가 아니라 묶음 전체의 이름이다 — label 로 두고 첫 보기에 htmlFor 로 이으면
+            그 보기의 이름이 "부" 가 아니라 물음 전체가 되고, 나머지 보기는 물음 없이 홀로 읽힌다.
+            글자만 두고 묶음(radiogroup)에 aria-labelledby 로 잇는다[7.4.1] — 기관 고객정보활용동의의
+            동의 여부 물음과 같은 방식이다. */}
+        <p id={OTHER_GUARANTEE_QUESTION_ID} className="typo-body-xl-bold text-foreground flex w-fit items-center gap-1">
             현재 다른 보증기관 이용 여부
-        </FieldLabel>
+            <span aria-hidden="true" className="text-error-500">
+                *
+            </span>
+            <span className="sr-only"> (필수)</span>
+        </p>
         <RadioGroup
             name={FIELD.otherGuarantee}
             required
-            aria-label="현재 다른 보증기관 이용 여부"
+            aria-labelledby={OTHER_GUARANTEE_QUESTION_ID}
             className="flex w-fit flex-row gap-6"
         >
             {OTHER_GUARANTEE_OPTIONS.map((option) => (
@@ -251,54 +259,49 @@ const GuaranteeRecommendationCompleteDialog = ({
     </Dialog>
 )
 
-// 은행 · 영업점명 — 추천 영업점과 같은 방식으로 검색 모달에서 고른 값만 채운다.
-const BankField = () => {
+// 은행 · 영업점명 — 두 칸이 같은 [은행 영업점 조회] 모달을 연다. 영업점은 어느 은행의 것인지가 함께
+// 정해지므로 고른 한 줄이 두 칸을 함께 채운다 — 어느 칸에서 열어도 결과는 같다.
+const useBankBranchSelect = () => {
     const {setValue, clearFieldError} = useFormValues()
 
-    return (
-        <LookupField
-            id={FIELD.bankName}
-            label="은행"
-            placeholder="은행을 검색하세요"
-            action="검색"
-            readOnly
-            required
-            wrapAction={(button) => (
-                <BankSearchDialog
-                    onSelect={({label}) => {
-                        setValue(FIELD.bankName, label)
-                        clearFieldError(FIELD.bankName)
-                    }}
-                >
-                    {button}
-                </BankSearchDialog>
-            )}
-        />
-    )
+    return ({bankName, name}: BankBranch) => {
+        setValue(FIELD.bankName, bankName)
+        setValue(FIELD.bankBranch, name)
+        clearFieldError(FIELD.bankName)
+        clearFieldError(FIELD.bankBranch)
+    }
 }
 
-const BankBranchField = () => {
-    const {setValue, clearFieldError} = useFormValues()
+// 시안은 두 칸을 한 줄에 두고 [검색] 버튼은 영업점명 쪽에만 둔다 — 어차피 한 모달에서 둘을 함께 고르므로
+// 버튼이 둘일 이유가 없다. 칸 폭도 시안대로 은행 208 · 영업점명(입력+버튼) 나머지로 나눈다.
+// 좁은 화면에서는 한 줄에 세 컨트롤이 들어가지 않아 위아래로 쌓는다.
+const BankBranchFields = () => {
+    const selectBranch = useBankBranchSelect()
 
     return (
-        <LookupField
-            id={FIELD.bankBranch}
-            label="영업점명"
-            placeholder="영업점을 검색하세요"
-            action="검색"
-            readOnly
-            required
-            wrapAction={(button) => (
-                <BankBranchSearchDialog
-                    onSelect={({label}) => {
-                        setValue(FIELD.bankBranch, label)
-                        clearFieldError(FIELD.bankBranch)
-                    }}
-                >
-                    {button}
-                </BankBranchSearchDialog>
-            )}
-        />
+        <div className="flex flex-col gap-2 sm:grid sm:grid-cols-[--spacing(52)_1fr] sm:items-start">
+            <Field id={FIELD.bankName} label="은행" required>
+                <Input
+                    id={FIELD.bankName}
+                    name={FIELD.bankName}
+                    readOnly
+                    required
+                    autoComplete="off"
+                    placeholder="은행을 검색하세요"
+                />
+            </Field>
+            <LookupField
+                id={FIELD.bankBranch}
+                label="영업점명"
+                placeholder="영업점을 검색하세요"
+                action="검색"
+                readOnly
+                required
+                wrapAction={(button) => (
+                    <BankBranchSearchDialog onSelect={selectBranch}>{button}</BankBranchSearchDialog>
+                )}
+            />
+        </div>
     )
 }
 
@@ -437,8 +440,12 @@ const GuaranteeRecommendationBody = ({onValid}: {onValid: () => void}) => {
                                 placeholder="직위를 입력하세요"
                             />
                         </Field>
-                        <BankField />
-                        <BankBranchField />
+                        <BankBranchFields />
+                        {/* 시안이 구획 끝에 두는 안내 — 담당자 칸 전체에 걸리는 말이라 한 칸에 붙이지 않고
+                            구획 아래에 한 줄로 둔다(기업정보의 같은 문구와 같은 타이포). */}
+                        <FieldDescription>
+                            ※ 서류안내, 현장실사 협의 등 평가 진행사항을 안내받을 담당자 정보(휴대폰)를 입력해 주십시오.
+                        </FieldDescription>
                     </Section>
                 </form>
             </div>

@@ -341,15 +341,15 @@
             "key": "corp-technology-evaluation-tech-index-general-company-info-technology-category",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.4",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-item-description",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.4",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-company-info-cancel-confirm",
@@ -1377,8 +1377,8 @@
             "key": "org-individual-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.6",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-general-customer-consent",
@@ -1412,15 +1412,15 @@
             "key": "org-individual-evaluation-tech-index-general-company-info-technology-category",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.6",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-item-description",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.6",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-company-management",
@@ -1941,18 +1941,11 @@
             "isCurrent": false
         },
         {
-            "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-search",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.1.8",
-            "isCurrent": false
-        },
-        {
             "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-branch-search",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.1.8",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-history",

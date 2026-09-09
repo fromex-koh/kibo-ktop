@@ -2,7 +2,7 @@
 
 import {useEffect, useRef, useState, type ReactNode} from 'react'
 import INDUSTRY_CODE_GROUPS from '@/content/technology-evaluation/industry-codes.json'
-import {ListMarker} from '@/components/custom/list-marker'
+import {DialogNotice} from '@/components/composite/dialog-notice'
 import {EmptyState} from '@/components/composite/empty-state'
 import {Button} from '@/components/ui/button'
 import {ClearableInput} from '@/components/composite/clearable-input'
@@ -57,20 +57,6 @@ const NOTICES = [
     '업종을 전환하는 기업은 현재 실제로 영위중인 업종선택',
 ]
 
-// 안내 패널 — 페이지 하단의 InfoBox 와 같은 "회색 면 + 불릿" 이지만 모달 규격이 달라 여기서 만든다.
-// (시안: 반경 8 · 여백 20 · 본문 14/21 · 제목 없음 / InfoBox: 반경 16 · 여백 40·32 · 본문 16/24 · 제목 있음)
-// 같은 규격이 다른 모달에도 나오면 그때 InfoBox 에 크기를 더한다.
-const IndustryCodeNotice = () => (
-    <ul className="bg-background flex list-none flex-col gap-2 rounded-sm p-5">
-        {NOTICES.map((notice) => (
-            <li key={notice} className="flex">
-                <ListMarker type="unordered" level={1} />
-                <span className="typo-body-l-regular text-foreground-subtle min-w-0">{notice}</span>
-            </li>
-        ))}
-    </ul>
-)
-
 // 표 한 벌 — 생김새는 표지만 하는 일은 "여럿 중 하나 고르기" 라서 라디오 묶음으로 만든다.
 // <table> 대신 라디오를 쓰는 이유 — 줄 전체가 눌리는 표를 <table> 로 만들면 tr 에 클릭을 달아야 하고
 // 키보드 조작을 직접 구현해야 한다. 라벨로 감싼 라디오는 클릭·화살표 이동·읽어 주기가 전부 기본 동작이다
@@ -99,7 +85,7 @@ const CodeTable = ({name, legend, codeHeader, rows, selectedCode, onSelect}: Cod
         {/* 머리 줄 — 시안의 표 위 진한 선(1px gray.500)과 옅은 파랑 배경. */}
         <div
             aria-hidden="true"
-            className="border-foreground-subtle bg-primary-subtle typo-body-l-bold text-foreground border-subtle-3 grid grid-cols-[--spacing(25)_1fr] border-t border-b"
+            className="border-t-foreground-subtle border-b-subtle-3 bg-primary-subtle typo-body-l-bold text-foreground grid grid-cols-[--spacing(25)_1fr] border-t border-b"
         >
             <span className="px-4 py-3 text-center">{codeHeader}</span>
             <span className="px-4 py-3 text-center">업종명</span>
@@ -214,7 +200,7 @@ const IndustryCodeDialog = ({children, defaultOpen, onSelect}: IndustryCodeDialo
                     <DialogTitle>업종코드 조회</DialogTitle>
                 </DialogHeader>
                 <div ref={bodyRef} className={cn(dialogBodyClassName, 'gap-6')}>
-                    <IndustryCodeNotice />
+                    <DialogNotice notices={NOTICES} />
                     {/* 검색 줄 — 입력이 남는 폭을 갖고 버튼은 글자 폭 그대로다(시안 404 + 76).
                         Enter 로도 검색되게 한다 — 검색창에서 가장 먼저 눌러 보는 키다. */}
                     <div className="flex items-start gap-2">

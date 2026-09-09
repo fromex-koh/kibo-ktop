@@ -23,6 +23,7 @@ const resolveBuildTime = (): string => {
 
 const nextConfig: NextConfig = {
     env: {
+        NEXT_PUBLIC_ACCESSIBILITY_HANDOFF: 'true',
         NEXT_PUBLIC_BUILD_VERSION: releaseMetadata.version,
         NEXT_PUBLIC_BUILD_TIME: resolveBuildTime(),
     },

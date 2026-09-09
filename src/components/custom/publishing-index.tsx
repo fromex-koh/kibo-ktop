@@ -26,6 +26,7 @@ import {
     type UserType,
     type ExternalProject,
     type Status,
+    type StatusNote,
     type ReleaseNoteChange,
     type ReleaseNoteHandoff,
     type StructureGroup,
@@ -143,6 +144,8 @@ const ReleaseNoteHandoff = ({change}: {change: ReleaseNoteHandoff}) => {
         diff: {label: 'Diff 확인', color: 'info'},
         new: {label: '신규 추가', color: 'success'},
         overwrite: {label: '덮어쓰기', color: 'secondary-purple'},
+        // 지울 파일은 더하거나 바꾸는 카드와 섞이면 놓치기 쉽다 — 경고 색으로 따로 세운다.
+        delete: {label: '삭제', color: 'error'},
     } as const
     const {label, color} = handoffPresentation[change.mode]
     // 제목 앞의 [태그]는 그 카드의 성격을 한눈에 알리는 표시다 — 굵게 떼어 그리고 나머지가 제목이다.
@@ -229,8 +232,9 @@ const normalizeReleaseNoteChange = (change: ReleaseNoteChange): ReleaseNoteChang
 }
 
 // 릴리즈 초안의 섹션 작성 순서와 관계없이 인계 카드는 개발자가 적용 방식을 빠르게 훑을 수 있도록
-// Diff 확인 → 덮어쓰기 → 신규 추가 순으로 고정한다. 같은 분류 안에서는 초안 작성 순서를 유지한다.
-const RELEASE_NOTE_HANDOFF_ORDER = {diff: 0, overwrite: 1, new: 2} as const
+// Diff 확인 → 덮어쓰기 → 신규 추가 → 삭제 순으로 고정한다. 같은 분류 안에서는 초안 작성 순서를 유지한다.
+// 삭제는 맨 뒤에 둔다 — 더하고 바꾼 뒤 마지막에 지우는 것이 순서상 안전하다.
+const RELEASE_NOTE_HANDOFF_ORDER = {diff: 0, overwrite: 1, new: 2, delete: 3} as const
 const sortReleaseNoteChanges = (changes: ReleaseNoteChange[]) =>
     changes
         .map((change, index) => ({change, index}))
@@ -264,13 +268,42 @@ const STATUS_BADGE: Record<Status, {color: 'neutral' | 'info' | 'warning' | 'suc
 }
 
 // date 를 주면 상태 뒤에 그 날짜를 붙인다("보완(09/08)") — 언제 바뀐 상태인지 표에서 바로 읽히게 한다.
-const StatusTag = ({status, date}: {status: Status; date?: string}) => (
-    <Badge color={STATUS_BADGE[status].color} variant={STATUS_BADGE[status].variant} shape="round">
+// note 까지 주면 날짜 뒤에 꼬리말이 붙는다("보완(09/10, 개발수정X)") — 같은 회차의 보완 중에서
+// 프론트가 다시 볼 것이 없는 행을 가려낸다. 색이 아니라 글자로 구분해 색만으로 정보를 전달하지 않는다[5.3.1].
+const STATUS_NOTE_DESCRIPTION: Record<StatusNote, string> = {
+    개발수정X: '퍼블리싱 예시 화면만 바뀐 회차로, 프론트엔드에서 고칠 것이 없습니다.',
+}
+
+const StatusTag = ({status, date, note}: {status: Status; date?: string; note?: StatusNote}) => (
+    <Badge
+        color={STATUS_BADGE[status].color}
+        variant={STATUS_BADGE[status].variant}
+        shape="round"
+        // 꼬리말이 붙으면 한 줄이 길어져 상태 칸이 뎁스 칸의 폭을 가져간다 — 칸이 좁아지면 두 줄로 접히도록
+        // 배지의 한 줄 고정(whitespace-nowrap·h-7)을 이때만 푼다.
+        className={note ? 'h-auto min-h-7 py-1 text-center whitespace-normal' : undefined}
+    >
         {status === '최종완료' && <CircleCheckBig aria-hidden="true" />}
         {status === '완료' && <Check aria-hidden="true" />}
-        {date ? `${status}(${date})` : status}
+        {date ? `${status}(${date}${note ? `, ${note}` : ''})` : status}
+        {note && <span className="sr-only"> — {STATUS_NOTE_DESCRIPTION[note]}</span>}
     </Badge>
 )
+
+// 한 화면이 여러 회차에 걸쳐 같은 상태로 손을 타면 회차마다 뱃지를 세운다("보완(09/07)" · "보완(09/10)").
+// 날짜를 하나로 밀면 이전 회차 이력이 사라지므로, 지우지 않고 아래로 쌓는다.
+const StatusTags = ({status, date, note}: {status: Status; date?: string | readonly string[]; note?: StatusNote}) => {
+    const dates = date === undefined ? [] : typeof date === 'string' ? [date] : date
+    if (dates.length <= 1) return <StatusTag status={status} date={dates[0]} note={note} />
+
+    return (
+        <span className="flex flex-col items-start gap-1">
+            {dates.map((one) => (
+                <StatusTag key={one} status={status} date={one} />
+            ))}
+        </span>
+    )
+}
 
 // 실제 화면의 마지막 뎁스 배지는 페이지 구현 여부와 관계없이 publishing-index에서 검색할 고유 키를 복사한다.
 // 이 저장소에 화면이 없는 외부 IA(탄소)도 인덱스에는 key 가 있으므로 똑같이 복사할 수 있다.
@@ -313,7 +346,8 @@ type FlatLeaf = {
     groupOnlyDepths: number[]
     screenId: string | null
     status: Status
-    statusDate?: string
+    statusDate?: string | readonly string[]
+    statusNote?: StatusNote
     application2Status: Status
     version: string
     isRed?: boolean
@@ -358,6 +392,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                           iaRow: node.screen.iaRow,
                           status: node.screen.status,
                           ...(node.screen.statusDate !== undefined ? {statusDate: node.screen.statusDate} : {}),
+                          ...(node.screen.statusNote !== undefined ? {statusNote: node.screen.statusNote} : {}),
                           application2Status: node.screen.application2Status ?? '대기중',
                           version: node.screen.version,
                           ...(node.screen.isRed ? {isRed: true} : {}),
@@ -386,6 +421,7 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
                 iaRow: node.iaRow,
                 status: node.status,
                 ...(node.statusDate !== undefined ? {statusDate: node.statusDate} : {}),
+                ...(node.statusNote !== undefined ? {statusNote: node.statusNote} : {}),
                 application2Status: node.application2Status ?? '대기중',
                 ...(node.isRestored ? {isRestored: true} : {}),
                 version: node.version,
@@ -955,6 +991,14 @@ const PublishingIndex = () => {
                                 <strong className="text-foreground font-medium">최종완료 기준:</strong> 더 이상
                                 수정사항이 발생하지 않을 것으로 확정된 화면에만 표시합니다.
                             </li>
+                            {/* 같은 회차의 보완 중에서 프론트엔드가 다시 볼 것이 없는 행을 가려내는 꼬리말이라,
+                                상태 범례와 같은 자리에서 뜻을 밝힌다. */}
+                            <li>
+                                <strong className="text-foreground font-medium">개발수정X:</strong> 상태 뱃지에{' '}
+                                <code className="text-foreground font-mono">보완(09/10, 개발수정X)</code>처럼 이
+                                꼬리말이 붙은 화면은 모달만 띄워 두는 퍼블리싱 예시 화면이라, 전달본 파일은 바뀌었지만
+                                프론트엔드에서 고칠 것이 없습니다.
+                            </li>
                         </ul>
                         {/* 여러 화면이 공유하는 레이아웃은 개별 화면과 구분해 별도 표로 표시한다.
                             다만 공통 레이아웃은 이 저장소가 화면을 찍어내는 틀이라, 화면을 만들지 않는
@@ -1085,10 +1129,15 @@ const PublishingIndex = () => {
                                                 화면 ID
                                             </th>
                                         )}
-                                        <th scope="col" className="typo-body-l-medium px-4 py-3">
+                                        {/* 상태 두 칸은 같은 폭으로 묶어 둔다 — 뱃지 글자 길이에 따라 칸이
+                                            늘어나면 뎁스 칸이 그만큼 좁아진다. 긴 뱃지는 두 줄로 접힌다. */}
+                                        <th scope="col" className="typo-body-l-medium w-28 px-2 py-3">
                                             응용2
                                         </th>
-                                        <th scope="col" className="typo-body-l-medium border-border border-r px-4 py-3">
+                                        <th
+                                            scope="col"
+                                            className="typo-body-l-medium border-border w-28 border-r px-2 py-3"
+                                        >
                                             UIUX
                                         </th>
                                         <th scope="col" className="typo-body-l-medium px-4 py-3">
@@ -1251,11 +1300,15 @@ const PublishingIndex = () => {
                                                         {leaf.screenId ?? '미지정'}
                                                     </td>
                                                 )}
-                                                <td className="px-4 py-3">
+                                                <td className="px-2 py-3">
                                                     <StatusTag status={leaf.application2Status} />
                                                 </td>
-                                                <td className="border-border border-r px-4 py-3">
-                                                    <StatusTag status={effectiveStatus} date={leaf.statusDate} />
+                                                <td className="border-border border-r px-2 py-3">
+                                                    <StatusTags
+                                                        status={effectiveStatus}
+                                                        date={leaf.statusDate}
+                                                        note={leaf.statusNote}
+                                                    />
                                                 </td>
                                                 <td
                                                     className={`typo-caption-regular px-4 py-3 ${

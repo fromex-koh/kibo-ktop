@@ -1,10 +1,10 @@
 {
-    "version": "v3.2.2",
+    "version": "v3.2.3",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.2.1",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "name": "src/components/ui",
@@ -18,13 +18,13 @@
         },
         {
             "name": "src/components/composite",
-            "version": "v3.2.1",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v3.2.1",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "name": "src/components/theme-provider.tsx",
@@ -33,12 +33,12 @@
         },
         {
             "name": "src/constants",
-            "version": "v3.2.1",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "name": "src/content",
-            "version": "v3.2.2",
+            "version": "v3.2.3",
             "isCurrent": true
         },
         {
@@ -98,8 +98,8 @@
         },
         {
             "name": "package.json",
-            "version": "v0.1.10",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "name": "yarn.lock",
@@ -113,8 +113,8 @@
         },
         {
             "name": "next.config.ts",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.2.3",
+            "isCurrent": true
         },
         {
             "name": ".gitignore",

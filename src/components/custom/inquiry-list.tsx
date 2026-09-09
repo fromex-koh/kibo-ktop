@@ -109,7 +109,10 @@ const InquiryList = ({items, createHref, pageSize = 10}: InquiryListProps) => {
                                                         {item.category}
                                                     </span>
                                                     {/* 좌우 16 은 이 구분선의 기본 여백 12 와 줄의 gap 4 가 합쳐진 값이다. */}
-                                                    <InlineSeparator />
+                                                    <InlineSeparator
+                                                        inline
+                                                        className="mx-3 data-vertical:self-center"
+                                                    />
                                                     <span className="typo-title-m-medium text-foreground min-w-0 truncate group-hover/inquiry:underline">
                                                         {item.title}
                                                     </span>

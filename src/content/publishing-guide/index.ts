@@ -17,6 +17,7 @@ import {
     isScreenImplementationStatus,
     isUserType,
     isStatus,
+    isStatusNote,
     type AssetKind,
     type AssetVersion,
     type UserType,
@@ -109,6 +110,25 @@ const parseScreenRegistryItem = (value: unknown, index: number): ScreenRegistryS
     }
 }
 
+const STATUS_DATE_PATTERN = /^\d{2}\/\d{2}$/
+
+// statusDate 는 "09/08" 하나 또는 ["09/07", "09/10"] 처럼 여러 건을 받는다.
+// 뒤쪽 코드가 갈래를 다시 따지지 않도록 여기서 배열 하나로 좁혀 둔다(없으면 빈 배열).
+const parseStatusDates = (value: unknown, where: string): readonly string[] => {
+    if (value === undefined) return []
+
+    const dates = Array.isArray(value) ? value : [value]
+    if (dates.length === 0) {
+        throw new Error(`[content] ${where}: statusDate 배열은 비어 있을 수 없습니다.`)
+    }
+    const invalid = dates.find((date) => typeof date !== 'string' || !STATUS_DATE_PATTERN.test(date))
+    if (invalid !== undefined) {
+        throw new Error(`[content] ${where}: statusDate 는 "09/08" 형태의 MM/DD 문자열이어야 합니다.`)
+    }
+
+    return dates.filter((date) => typeof date === 'string')
+}
+
 // leaf 든, branch 의 screen 필드든, '화면 1건'의 형태는 동일하다 — 한 곳에서 검증한다.
 const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenInfo => {
     if (
@@ -134,11 +154,13 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
             `[content] ${where}: application2Status "${String(value.application2Status)}" 이(가) 유효하지 않습니다.`,
         )
     }
-    if (
-        value.statusDate !== undefined &&
-        (typeof value.statusDate !== 'string' || !/^\d{2}\/\d{2}$/.test(value.statusDate))
-    ) {
-        throw new Error(`[content] ${where}: statusDate 는 "09/08" 형태의 MM/DD 문자열이어야 합니다.`)
+    // 한 화면이 여러 회차에 걸쳐 같은 상태로 손을 탈 수 있어 날짜는 문자열 하나 또는 배열로 받는다.
+    const statusDates = parseStatusDates(value.statusDate, where)
+    if (value.statusNote !== undefined && (typeof value.statusNote !== 'string' || !isStatusNote(value.statusNote))) {
+        throw new Error(`[content] ${where}: statusNote "${String(value.statusNote)}" 이(가) 유효하지 않습니다.`)
+    }
+    if (value.statusNote !== undefined && statusDates.length !== 1) {
+        throw new Error(`[content] ${where}: statusNote 는 statusDate 한 건과 함께 지정해야 합니다.`)
     }
     if (typeof value.version !== 'string') {
         throw new Error(`[content] ${where}: version 이 필요합니다.`)
@@ -158,7 +180,10 @@ const parseScreenInfo = (value: Record<string, unknown>, where: string): ScreenI
         ...(typeof value.iaRow === 'number' ? {iaRow: value.iaRow} : {}),
         screenId: value.screenId,
         status: value.status,
-        ...(typeof value.statusDate === 'string' ? {statusDate: value.statusDate} : {}),
+        ...(statusDates.length > 0 ? {statusDate: statusDates.length === 1 ? statusDates[0] : statusDates} : {}),
+        ...(typeof value.statusNote === 'string' && isStatusNote(value.statusNote)
+            ? {statusNote: value.statusNote}
+            : {}),
         ...(typeof value.application2Status === 'string' && isStatus(value.application2Status)
             ? {application2Status: value.application2Status}
             : {}),
@@ -310,7 +335,7 @@ const parseExternalProject = (value: unknown, index: number): ExternalProject =>
     }
 }
 
-const RELEASE_NOTE_HANDOFF_MODES: readonly ReleaseNoteHandoffMode[] = ['diff', 'new', 'overwrite']
+const RELEASE_NOTE_HANDOFF_MODES: readonly ReleaseNoteHandoffMode[] = ['diff', 'new', 'overwrite', 'delete']
 
 const isReleaseNoteHandoffMode = (value: string): value is ReleaseNoteHandoffMode =>
     RELEASE_NOTE_HANDOFF_MODES.some((mode) => mode === value)
@@ -323,7 +348,7 @@ const parseReleaseNoteChange = (value: unknown, where: string): ReleaseNoteChang
     }
     const mode = value.mode
     if (typeof mode !== 'string' || !isReleaseNoteHandoffMode(mode)) {
-        throw new Error(`[content] ${where} > mode: diff|new|overwrite 중 하나여야 합니다.`)
+        throw new Error(`[content] ${where} > mode: diff|new|overwrite|delete 중 하나여야 합니다.`)
     }
     if (typeof value.title !== 'string' || value.title.length === 0) {
         throw new Error(`[content] ${where} > title: 비어 있지 않은 문자열이어야 합니다.`)
@@ -497,6 +522,7 @@ export type {
     ScreenImplementationStatus,
     ScreenRegistryItem,
     Status,
+    StatusNote,
     StructureGroup,
     StructureNode,
 } from './types'

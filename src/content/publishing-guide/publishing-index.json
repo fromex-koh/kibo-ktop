@@ -445,7 +445,8 @@
                                 {
                                     "label": "업종코드 조회",
                                     "screenId": "SB-FOTA-CP4-0003",
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/10",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-ktrs-fm-company-info-industry-code-search",
@@ -737,7 +738,8 @@
                                         {
                                             "label": "업종코드 조회",
                                             "screenId": "SB-FOTA-CP4-0103",
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-industry-code-search",
                                             "application2Status": "완료",
@@ -755,7 +757,9 @@
                                         {
                                             "label": "기술분류",
                                             "screenId": "SB-FOTA-CP6-0103",
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
+                                            "statusNote": "개발수정X",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-technology-category",
                                             "application2Status": "완료",
@@ -764,7 +768,9 @@
                                         {
                                             "label": "품목설명",
                                             "screenId": "SB-FOTA-CP7-0103",
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
+                                            "statusNote": "개발수정X",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-general-company-info-item-description",
                                             "application2Status": "완료",
@@ -893,7 +899,8 @@
                                         {
                                             "label": "업종코드 조회",
                                             "screenId": "SB-FOTA-CP4-0203",
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-industry-code-search",
                                             "application2Status": "완료",
@@ -911,7 +918,9 @@
                                         {
                                             "label": "기술분류",
                                             "screenId": "SB-FOTA-CP6-0203",
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
+                                            "statusNote": "개발수정X",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-technology-category",
                                             "application2Status": "완료",
@@ -920,7 +929,9 @@
                                         {
                                             "label": "품목설명",
                                             "screenId": "SB-FOTA-CP7-0203",
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
+                                            "statusNote": "개발수정X",
                                             "version": "미배포",
                                             "key": "corp-technology-evaluation-tech-index-startup-company-info-item-description",
                                             "application2Status": "완료",
@@ -1049,7 +1060,8 @@
                                 {
                                     "label": "업종코드 조회",
                                     "screenId": "SB-FOTA-CP4-0303",
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/10",
                                     "version": "미배포",
                                     "key": "corp-technology-evaluation-investment-model-company-info-industry-code-search",
                                     "application2Status": "완료",
@@ -1485,7 +1497,8 @@
                         {
                             "label": "업종코드 조회",
                             "screenId": "SB-FOTA-CP5-0009",
-                            "status": "완료",
+                            "status": "보완",
+                            "statusDate": "09/10",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-profile-industry-code-search",
@@ -1774,7 +1787,10 @@
                     "screen": {
                         "screenId": "SB-FOTA-CM0-0012",
                         "status": "보완",
-                        "statusDate": "09/07",
+                        "statusDate": [
+                            "09/07",
+                            "09/10"
+                        ],
                         "application2Status": "완료",
                         "version": "미배포",
                         "key": "corp-mypage-inquiry-history",
@@ -2311,7 +2327,8 @@
                                 {
                                     "label": "업종코드 조회",
                                     "screenId": null,
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/10",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-company-info-industry-code-search",
@@ -2491,7 +2508,8 @@
                         {
                             "label": "(0) 선택 화면",
                             "screenId": null,
-                            "status": "완료",
+                            "status": "보완",
+                            "statusDate": "09/10",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-individual-evaluation-tech-index-selection",
@@ -2539,7 +2557,8 @@
                                         {
                                             "label": "업종코드 조회",
                                             "screenId": null,
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-company-info-industry-code-search",
@@ -2557,7 +2576,9 @@
                                         {
                                             "label": "기술분류",
                                             "screenId": null,
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
+                                            "statusNote": "개발수정X",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-company-info-technology-category",
@@ -2566,7 +2587,9 @@
                                         {
                                             "label": "품목설명",
                                             "screenId": null,
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
+                                            "statusNote": "개발수정X",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-company-info-item-description",
@@ -2679,7 +2702,8 @@
                                         {
                                             "label": "업종코드 조회",
                                             "screenId": null,
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-company-info-industry-code-search",
@@ -2697,7 +2721,9 @@
                                         {
                                             "label": "기술분류",
                                             "screenId": null,
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
+                                            "statusNote": "개발수정X",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-company-info-technology-category",
@@ -2706,7 +2732,9 @@
                                         {
                                             "label": "품목설명",
                                             "screenId": null,
-                                            "status": "완료",
+                                            "status": "보완",
+                                            "statusDate": "09/10",
+                                            "statusNote": "개발수정X",
                                             "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-company-info-item-description",
@@ -2807,7 +2835,8 @@
                                 {
                                     "label": "업종코드 조회",
                                     "screenId": null,
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/10",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-company-info-industry-code-search",
                                     "application2Status": "완료",
@@ -2825,7 +2854,9 @@
                                 {
                                     "label": "기술분류",
                                     "screenId": null,
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/10",
+                                    "statusNote": "개발수정X",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-company-info-technology-category",
                                     "application2Status": "완료",
@@ -2834,7 +2865,9 @@
                                 {
                                     "label": "품목설명",
                                     "screenId": null,
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/10",
+                                    "statusNote": "개발수정X",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-company-info-item-description",
                                     "application2Status": "완료",
@@ -3366,7 +3399,8 @@
                         {
                             "label": "업종코드 조회",
                             "screenId": null,
-                            "status": "완료",
+                            "status": "보완",
+                            "statusDate": "09/10",
                             "version": "미배포",
                             "key": "org-mypage-profile-edit-industry-code-search",
                             "application2Status": "완료",
@@ -3495,7 +3529,8 @@
                             "screen": {
                                 "key": "org-mypage-evaluation-history-guarantee-recommendation",
                                 "screenId": null,
-                                "status": "완료",
+                                "status": "보완",
+                                "statusDate": "09/10",
                                 "version": "미배포",
                                 "iaRow": 118
                             },
@@ -3511,21 +3546,16 @@
                                 {
                                     "label": "기술평가센터 검색",
                                     "screenId": null,
-                                    "status": "완료",
+                                    "status": "보완",
+                                    "statusDate": "09/10",
                                     "version": "미배포",
                                     "key": "org-mypage-evaluation-history-guarantee-recommendation-center-search"
                                 },
                                 {
-                                    "label": "은행 검색",
+                                    "label": "은행 영업점 조회",
                                     "screenId": null,
-                                    "status": "대기중",
-                                    "version": "미배포",
-                                    "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-search"
-                                },
-                                {
-                                    "label": "영업점 검색",
-                                    "screenId": null,
-                                    "status": "대기중",
+                                    "status": "보완",
+                                    "statusDate": "09/10",
                                     "version": "미배포",
                                     "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-branch-search"
                                 }
@@ -3656,7 +3686,8 @@
                     "label": "1:1 문의 내역",
                     "screen": {
                         "screenId": null,
-                        "status": "완료",
+                        "status": "보완",
+                        "statusDate": "09/10",
                         "application2Status": "완료",
                         "version": "미배포",
                         "key": "org-mypage-inquiry-history",
@@ -4258,6 +4289,7 @@
                                             "label": "결과 확인서 (다운로드)",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-self-check-result-result-certificate",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/result/result-certificate"
@@ -4337,6 +4369,7 @@
                                             "label": "신청서 (다운로드)",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-1-result-application-download",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-1/result/application-download"
@@ -4345,6 +4378,7 @@
                                             "label": "결과 확인서",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-1-result-result-certificate",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-1/result/result-certificate"
@@ -4424,6 +4458,7 @@
                                             "label": "신청서 (다운로드)",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-2-result-application-download",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-2/result/application-download"
@@ -4432,6 +4467,7 @@
                                             "label": "결과 확인서",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-2-result-result-certificate",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-2/result/result-certificate"
@@ -4601,6 +4637,7 @@
                                             "label": "신청서 (다운로드)",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-3-result-application-download",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-3/result/application-download"
@@ -4609,6 +4646,7 @@
                                             "label": "결과 확인서",
                                             "screenId": null,
                                             "status": "완료",
+                                            "application2Status": "완료",
                                             "version": "미배포",
                                             "key": "carbon-leader-application-3-result-result-certificate",
                                             "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-3/result/result-certificate"
