@@ -67,6 +67,20 @@ jobs:
               if: steps.released.outputs.value == 'false'
               run: yarn prettier --check RELEASE_NOTES_DRAFT.md src/content/publishing-guide/asset-versions.generated.json src/content/publishing-guide/release-notes.generated.json src/content/publishing-guide/screen-registry.generated.json
 
+            - name: Set up Java for markup audit
+              if: steps.released.outputs.value == 'false'
+              uses: actions/setup-java@v4
+              with:
+                  distribution: temurin
+                  java-version: '21'
+
+            - name: Audit release HTML
+              if: steps.released.outputs.value == 'false'
+              shell: bash
+              run: |
+                  curl --fail --location --retry 3 https://github.com/validator/validator/releases/download/latest/vnu.jar -o "$RUNNER_TEMP/vnu.jar"
+                  VNU_JAR="$RUNNER_TEMP/vnu.jar" yarn audit:accessibility
+
             - name: Create tagged release commit
               if: steps.released.outputs.value == 'false'
               id: release_commit
@@ -76,7 +90,7 @@ jobs:
               run: |
                   git config user.name 'github-actions[bot]'
                   git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-                  git add RELEASE_NOTES_DRAFT.md src/content/publishing-guide/asset-versions.generated.json src/content/publishing-guide/release-notes.generated.json src/content/publishing-guide/screen-registry.generated.json
+                  git add src/content/publishing-guide/accessibility-audit.json RELEASE_NOTES_DRAFT.md src/content/publishing-guide/asset-versions.generated.json src/content/publishing-guide/release-notes.generated.json src/content/publishing-guide/screen-registry.generated.json
                   git commit -m "chore(release): ${RELEASE_VERSION}"
                   git tag -a "$RELEASE_VERSION" -m "$RELEASE_VERSION"
                   echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"

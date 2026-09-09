@@ -31,6 +31,8 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         items: [
             {label: 'Open Graph', href: '/component-guide/open-graph'},
             {label: '명도 대비 확인', href: '/component-guide/contrast-check'},
+            // 접근성 증적 검토 페이지를 외부에 안내할 때 아래 메뉴를 다시 노출한다.
+            // {label: '접근성 검사 예외사항', href: '/component-guide/accessibility-exceptions'},
         ],
     },
     {

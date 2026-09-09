@@ -5,7 +5,17 @@
 
 // 오류·경고 종류를 짧은 코드로 둔다 — 화면마다 같은 문장을 되풀이하지 않고, 종류별 판정은 한 곳에서 한다.
 export type MarkupIssueKind =
-    'empty-option' | 'select-required' | 'div-in-span' | 'span-type' | 'span-role' | 'heading-skip' | 'nav-role'
+    | 'chart-style'
+    | 'chart-width'
+    | 'chart-height'
+    | 'unknown'
+    | 'empty-option'
+    | 'select-required'
+    | 'div-in-span'
+    | 'span-type'
+    | 'span-role'
+    | 'heading-skip'
+    | 'nav-role'
 
 export type ScreenMarkupResult = {
     path: string

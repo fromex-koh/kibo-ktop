@@ -2036,18 +2036,11 @@
             "name": "기술평가센터 검색"
         },
         {
-            "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-search",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/mypage/evaluation-history/guarantee-recommendation/bank-search",
-            "name": "은행 검색"
-        },
-        {
             "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-branch-search",
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/evaluation-history/guarantee-recommendation/bank-branch-search",
-            "name": "영업점 검색"
+            "name": "은행 영업점 조회"
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-history",

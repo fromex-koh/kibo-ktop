@@ -49,6 +49,16 @@ for (const path of [
     copy(path)
 }
 
+// 전달본은 검사 결과만 제공하며 로컬 검사 실행·소스 지문 계산은 포함하지 않습니다.
+const handoffNextConfigPath = resolve(outputDirectory, 'next.config.ts')
+const handoffNextConfig = readFileSync(handoffNextConfigPath, 'utf8')
+    .replace("import {accessibilitySourceHash} from './scripts/accessibility-source.mjs'\n", '')
+    .replace(
+        'NEXT_PUBLIC_ACCESSIBILITY_SOURCE: accessibilitySourceHash(),',
+        "NEXT_PUBLIC_ACCESSIBILITY_HANDOFF: 'true',",
+    )
+writeFileSync(handoffNextConfigPath, handoffNextConfig)
+
 for (const path of ['src/.DS_Store', 'src/app/.DS_Store']) {
     rmSync(resolve(outputDirectory, path), {force: true})
 }

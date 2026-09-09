@@ -24,6 +24,7 @@ const EMPTY_RELEASE_NOTES_DRAFT = `# 다음 릴리스 변경사항
 프론트엔드 전달 항목은 ## 구분자, ### 작업명, - 라벨: 내용 순서로 작성하세요.
 frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 프로젝트 서비스 페이지가 아닌 퍼블리싱 가이드 관련 파일은 [덮어쓰기]로 분류하세요.
+지워야 하는 파일·화면은 [삭제]로 따로 적으세요.
 
 ## [Diff 확인]
 
@@ -163,10 +164,17 @@ const parseDraftChanges = (draft) => {
     }
 
     for (const line of lines) {
-        const modeMatch = /^##\s+\[(Diff 확인|신규 추가|덮어쓰기)\]\s*$/.exec(line.trim())
+        const modeMatch = /^##\s+\[(Diff 확인|신규 추가|덮어쓰기|삭제)\]\s*$/.exec(line.trim())
         if (modeMatch) {
             flushHandoff()
-            handoffMode = modeMatch[1] === 'Diff 확인' ? 'diff' : modeMatch[1] === '신규 추가' ? 'new' : 'overwrite'
+            handoffMode =
+                modeMatch[1] === 'Diff 확인'
+                    ? 'diff'
+                    : modeMatch[1] === '신규 추가'
+                      ? 'new'
+                      : modeMatch[1] === '삭제'
+                        ? 'delete'
+                        : 'overwrite'
             continue
         }
 

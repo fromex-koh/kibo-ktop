@@ -1,4 +1,5 @@
 import type {NextConfig} from 'next'
+import {accessibilitySourceHash} from './scripts/accessibility-source.mjs'
 import releaseMetadata from './src/content/publishing-guide/asset-versions.generated.json'
 import {SITE_ALLOW_INDEXING} from './src/constants/site'
 
@@ -23,6 +24,7 @@ const resolveBuildTime = (): string => {
 
 const nextConfig: NextConfig = {
     env: {
+        NEXT_PUBLIC_ACCESSIBILITY_SOURCE: accessibilitySourceHash(),
         NEXT_PUBLIC_BUILD_VERSION: releaseMetadata.version,
         NEXT_PUBLIC_BUILD_TIME: resolveBuildTime(),
     },
