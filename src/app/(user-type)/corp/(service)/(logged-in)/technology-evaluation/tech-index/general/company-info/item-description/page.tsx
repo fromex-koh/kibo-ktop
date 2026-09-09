@@ -17,7 +17,9 @@ const CorpTechIndexItemDescriptionPage = () => (
         </main>
         {/* 이 화면에는 고른 값을 담을 폼이 없어 onSelect 를 넘기지 않는다 — 누르면 창만 닫힌다. */}
         <TechnologyCategoryDialog defaultOpen defaultOpenItemNo={FIRST_TECHNOLOGY_CATEGORY_ITEM.no}>
-            <span className="sr-only">기술분류 조회</span>
+            <button type="button" className="sr-only">
+                기술분류 조회
+            </button>
         </TechnologyCategoryDialog>
     </>
 )
