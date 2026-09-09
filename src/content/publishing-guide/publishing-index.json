@@ -4126,6 +4126,7 @@
                                         "key": "carbon-leader-self-check-reduction-potential",
                                         "screenId": null,
                                         "status": "완료",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/reduction-potential"
                                     },
