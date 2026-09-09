@@ -281,6 +281,45 @@ const SONNER_ISSUES = [
 // 서버가 보내는 문서에는 12건(wrapper div 8 · style 4)만 있고, 나머지 228건은 브라우저에서 차트가
 // 그려진 뒤에 생긴다 — 전송 문서를 검사하면 12건, 렌더된 DOM 을 검사하면 240건이다.
 // 차트가 들어간 화면 — 지금은 리포트 두 갈래뿐이고, 기업·기관이 같은 문서를 쓴다.
+// WAVE — 보증추천 모달을 연 화면에서 나온 오류. 두 건 모두 Radix 가 만든 숨은 입력이다.
+const WAVE_SCREEN_ROUTES = ['/org/mypage/evaluation-history/guarantee-recommendation'] as const
+
+const WAVE_ISSUES = [
+    {
+        level: 'error',
+        message: 'Missing form label (2)',
+        count: 2,
+        screens: 1,
+        owner: 'Radix RadioGroup 의 숨은 라디오 input',
+        verdict: '값을 폼에 담으려고 두는 input 이라 aria-hidden·tabindex="-1" 이 붙어 있고 라벨이 없다',
+    },
+] as const
+
+// 모달을 연 화면에서만 나오는 것들 — 모달 단독 확인 화면이 대표 예다.
+const DIALOG_SCREEN_ROUTES = [
+    '/org/mypage/evaluation-history/guarantee-recommendation/center-search',
+    '/org/mypage/evaluation-history/guarantee-recommendation/bank-branch-search',
+] as const
+
+const DIALOG_ISSUES = [
+    {
+        level: 'warning',
+        message: 'Attribute “aria-hidden” is unnecessary for elements that have attribute “hidden”.',
+        count: 1,
+        screens: 0,
+        owner: 'aria-hidden 패키지(Radix 모달의 배경 감춤)',
+        verdict: 'Next.js 가 남긴 <div hidden> 자리표시자에 모달이 aria-hidden 을 덧붙여 두 표시가 겹친다',
+    },
+    {
+        level: 'warning',
+        message: 'The “type” attribute for the “style” element is not needed and should be omitted.',
+        count: 1,
+        screens: 0,
+        owner: 'react-style-singleton(react-remove-scroll)',
+        verdict: '모달이 배경 스크롤을 잠그며 넣는 스타일에 type="text/css" 가 붙는다 — sonner 와 같은 종류다',
+    },
+] as const
+
 const CHART_SCREEN_ROUTES = [
     '/org/mypage/evaluation-history/deep-analysis/ktrs-fm',
     '/corp/mypage/evaluation-results/general-analysis/ktrs-fm',
@@ -956,6 +995,99 @@ const ValidationExceptionsPage = () => (
                         </section>
 
                         <section
+                            aria-labelledby="library-dialog"
+                            className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                        >
+                            <SectionHeader>
+                                <SectionHeaderTitle className="typo-title-l-bold" id="library-dialog">
+                                    {sectionHeading('Radix 모달', '배경 감춤 · 스크롤 잠금 스타일')}
+                                </SectionHeaderTitle>
+                                <SectionHeaderDescription>
+                                    모달이 열린 화면에서만 나옵니다 — 모달 단독 확인 화면이 대표 예입니다
+                                </SectionHeaderDescription>
+                            </SectionHeader>
+                            <IssueTable
+                                caption="모달이 열렸을 때 생기는 메시지와 화면당 건수"
+                                issues={DIALOG_ISSUES}
+                                countHeader="화면당 건수"
+                                showScreens={false}
+                            />
+                            <DetailList
+                                rows={[
+                                    {
+                                        term: '왜 생기나',
+                                        body: (
+                                            <ul className="flex list-none flex-col gap-2">
+                                                <li className="flex">
+                                                    <ListMarker type="unordered-small" />
+                                                    <span className="min-w-0">
+                                                        모달이 열리면 Radix 는 읽어 주는 기계가 뒤 배경을 읽지 않도록{' '}
+                                                        <strong>본문의 형제 요소마다 aria-hidden 을 붙입니다.</strong>{' '}
+                                                        그 대상 중 하나가 Next.js 가 남긴{' '}
+                                                        <code className="font-mono">&lt;div hidden&gt;</code>{' '}
+                                                        자리표시자라, 이미 숨겨진 요소에 표시가 하나 더 붙습니다.
+                                                    </span>
+                                                </li>
+                                                <li className="flex">
+                                                    <ListMarker type="unordered-small" />
+                                                    <span className="min-w-0">
+                                                        같은 순간 모달은 배경 스크롤을 잠그며 스타일 한 벌을 문서에 끼워
+                                                        넣습니다(react-remove-scroll). 그 요소에{' '}
+                                                        <code className="font-mono">type=&quot;text/css&quot;</code> 가
+                                                        붙어 sonner 와 같은 안내가 한 건 더 나옵니다.
+                                                    </span>
+                                                </li>
+                                                <li className="flex">
+                                                    <ListMarker type="unordered-small" />
+                                                    <span className="min-w-0">
+                                                        <strong>서버가 보내는 문서에는 둘 다 없습니다</strong> — 전송
+                                                        문서에는 자리표시자만 있고 aria-hidden 도, 주입된 스타일도
+                                                        없습니다. 브라우저에서 모달이 열린 뒤의 화면을 복사해 넣을 때만
+                                                        나옵니다.
+                                                    </span>
+                                                </li>
+                                            </ul>
+                                        ),
+                                    },
+                                    {
+                                        term: '영향',
+                                        body: (
+                                            <p>
+                                                화면과 접근성에는 영향이 없습니다. 겹친 두 표시는 뜻이 같아 (&quot;읽지
+                                                않는다&quot;) 서로 어긋나지 않고, 스크롤 잠금 스타일은 모달을 닫으면
+                                                사라집니다.
+                                            </p>
+                                        ),
+                                    },
+                                    {
+                                        term: '조치',
+                                        body: (
+                                            <p>
+                                                <strong>고칠 자리가 없습니다</strong> — 우리 코드에는 그 마크업이
+                                                없습니다. 모달의 배경 감춤·스크롤 잠금은 Radix 가 맡는 동작이라 셸에서
+                                                손대지 않는다는 규칙([SC-02])에 해당합니다.
+                                            </p>
+                                        ),
+                                    },
+                                    {
+                                        term: '해당 화면',
+                                        body: (
+                                            <ul className="flex flex-wrap gap-2">
+                                                {DIALOG_SCREEN_ROUTES.map((route) => (
+                                                    <li key={route}>
+                                                        <Badge variant="solid-pastel" color="success" size="xs">
+                                                            <code className="font-mono">{route}</code>
+                                                        </Badge>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        ),
+                                    },
+                                ]}
+                            />
+                        </section>
+
+                        <section
                             aria-labelledby="library-chart"
                             className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
                         >
@@ -1210,8 +1342,167 @@ const ValidationExceptionsPage = () => (
                     </Accordion>
                 </BaseCard>
             </TabsContent>
-            {/* WAVE 는 아직 이번 회차 결과가 없다 — 검사한 뒤 이 자리에 카드를 채운다. */}
-            <TabsContent value="wave" className="flex flex-col gap-10" />
+            <TabsContent value="wave" className="flex flex-col gap-10">
+                <BaseCard
+                    title={cardHeading('라이브러리 원인')}
+                    subtitle="라이브러리가 만든 DOM 에서 나옵니다. 화면 코드에는 라벨이 빠진 컨트롤이 없습니다"
+                    action={<Badge color="warning">수정 불가</Badge>}
+                >
+                    <section aria-labelledby="wave-radio" className="flex flex-col gap-3">
+                        <SectionHeader>
+                            <SectionHeaderTitle className="typo-title-l-bold" id="wave-radio">
+                                {sectionHeading('Radix RadioGroup', 'Missing form label')}
+                            </SectionHeaderTitle>
+                            <SectionHeaderDescription>
+                                라디오 묶음이 있는 화면에서 보기 수만큼 나옵니다
+                            </SectionHeaderDescription>
+                        </SectionHeader>
+                        <IssueTable caption="WAVE 가 보고한 메시지와 건수" issues={WAVE_ISSUES} />
+                        <DetailList
+                            rows={[
+                                {
+                                    term: '왜 생기나',
+                                    body: (
+                                        <ul className="flex list-none flex-col gap-2">
+                                            <li className="flex">
+                                                <ListMarker type="unordered-small" />
+                                                <span className="min-w-0">
+                                                    Radix 라디오는 눈에 보이는 컨트롤을{' '}
+                                                    <code className="font-mono">button[role=radio]</code> 로 그리고,
+                                                    고른 값이 폼 제출에 담기도록{' '}
+                                                    <strong>보기마다 숨은 input 을 하나씩 더 둡니다.</strong>
+                                                </span>
+                                            </li>
+                                            <li className="flex">
+                                                <ListMarker type="unordered-small" />
+                                                <span className="min-w-0">
+                                                    그 input 에는{' '}
+                                                    <code className="font-mono">aria-hidden=&quot;true&quot;</code> 와{' '}
+                                                    <code className="font-mono">tabindex=&quot;-1&quot;</code> 이 붙어
+                                                    읽어 주는 기계와 키보드 모두 닿지 않습니다. WAVE 는 그래도 폼
+                                                    컨트롤로 세어 라벨이 없다고 알립니다.
+                                                </span>
+                                            </li>
+                                            <li className="flex">
+                                                <ListMarker type="unordered-small" />
+                                                <span className="min-w-0">
+                                                    <strong>보이는 컨트롤에는 라벨이 있습니다</strong> — 보기마다{' '}
+                                                    <code className="font-mono">label[for]</code> 이 붙고(&quot;여&quot;
+                                                    ·&quot;부&quot;), 물음은 묶음(radiogroup)의 이름으로 잇습니다.
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    ),
+                                },
+                                {
+                                    term: '조치',
+                                    body: (
+                                        <p>
+                                            <strong>고칠 자리가 없습니다</strong> — 우리 코드에는 그 input 이 없습니다.
+                                            Radix 가 폼 제출을 위해 만드는 것이고, 셸의 구조는 수정하지 않는다는
+                                            규칙([SC-02])에 해당합니다.
+                                        </p>
+                                    ),
+                                },
+                                {
+                                    term: '해당 화면',
+                                    body: (
+                                        <ul className="flex flex-wrap gap-2">
+                                            {WAVE_SCREEN_ROUTES.map((route) => (
+                                                <li key={route}>
+                                                    <Badge variant="solid-pastel" color="success" size="xs">
+                                                        <code className="font-mono">{route}</code>
+                                                    </Badge>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ),
+                                },
+                            ]}
+                        />
+                    </section>
+                </BaseCard>
+
+                <BaseCard
+                    title={cardHeading('프로젝트 원인')}
+                    subtitle="우리 마크업에서 나왔고 같은 회차에 고친 것입니다"
+                    action={<Badge color="success">수정 완료</Badge>}
+                >
+                    <section aria-labelledby="wave-radio-label" className="flex flex-col gap-3">
+                        <SectionHeader>
+                            <SectionHeaderTitle className="typo-title-l-bold" id="wave-radio-label">
+                                {sectionHeading('라디오 묶음', '물음이 첫 보기의 이름이 됨')}
+                            </SectionHeaderTitle>
+                            <SectionHeaderDescription>
+                                검사기 메시지로는 잡히지 않고, 읽어 주는 이름을 직접 확인해야 드러납니다
+                            </SectionHeaderDescription>
+                        </SectionHeader>
+                        <DetailList
+                            rows={[
+                                {
+                                    term: '무엇이 문제였나',
+                                    body: (
+                                        <ul className="flex list-none flex-col gap-2">
+                                            <li className="flex">
+                                                <ListMarker type="unordered-small" />
+                                                <span className="min-w-0">
+                                                    묶음 전체의 물음(&quot;현재 다른 보증기관 이용 여부&quot;)을{' '}
+                                                    <code className="font-mono">
+                                                        &lt;label htmlFor=&quot;…-no&quot;&gt;
+                                                    </code>{' '}
+                                                    로 두어 <strong>첫 보기 하나에 묶여 있었습니다.</strong>
+                                                </span>
+                                            </li>
+                                            <li className="flex">
+                                                <ListMarker type="unordered-small" />
+                                                <span className="min-w-0">
+                                                    그래서 첫 보기의 이름이 &quot;부&quot; 가 아니라 물음 전체가 되고,
+                                                    둘째 보기(&quot;여&quot;)는 무엇을 묻는지 없이 홀로 읽혔습니다
+                                                    [7.4.1].
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    ),
+                                },
+                                {
+                                    term: '원인 파일',
+                                    body: (
+                                        <code className="font-mono break-all">
+                                            src/components/composite/guarantee-recommendation-dialog.tsx
+                                        </code>
+                                    ),
+                                },
+                                {
+                                    term: '조치',
+                                    body: (
+                                        <p>
+                                            물음을 <code className="font-mono">id</code> 를 가진 글자로 두고 묶음
+                                            (radiogroup)에 <code className="font-mono">aria-labelledby</code> 로
+                                            이었습니다 — 기관 고객정보활용동의의 동의 여부 물음과 같은 방식입니다. label
+                                            을 그대로 두고 htmlFor 만 지우면 가리키는 컨트롤이 없는 라벨이 되어 검사기가
+                                            다시 잡습니다.
+                                        </p>
+                                    ),
+                                },
+                                {
+                                    term: '해당 화면',
+                                    body: (
+                                        <ul className="flex flex-wrap gap-2">
+                                            {WAVE_SCREEN_ROUTES.map((route) => (
+                                                <li key={route}>
+                                                    <Badge variant="solid-pastel" color="success" size="xs">
+                                                        <code className="font-mono">{route}</code>
+                                                    </Badge>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ),
+                                },
+                            ]}
+                        />
+                    </section>
+                </BaseCard>
+            </TabsContent>
         </Tabs>
     </GuidePageShell>
 )
