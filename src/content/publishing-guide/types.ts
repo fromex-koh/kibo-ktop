@@ -85,7 +85,7 @@ export type AssetVersion = {
 }
 
 // 릴리즈 노트의 일반 변경사항 또는 프론트엔드 전달 항목.
-export type ReleaseNoteHandoffMode = 'diff' | 'overwrite' | 'new'
+export type ReleaseNoteHandoffMode = 'diff' | 'overwrite' | 'new' | 'delete'
 
 export type ReleaseNoteHandoff = {
     type: 'handoff'

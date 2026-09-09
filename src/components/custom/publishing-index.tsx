@@ -143,6 +143,8 @@ const ReleaseNoteHandoff = ({change}: {change: ReleaseNoteHandoff}) => {
         diff: {label: 'Diff 확인', color: 'info'},
         new: {label: '신규 추가', color: 'success'},
         overwrite: {label: '덮어쓰기', color: 'secondary-purple'},
+        // 지울 파일은 더하거나 바꾸는 카드와 섞이면 놓치기 쉽다 — 경고 색으로 따로 세운다.
+        delete: {label: '삭제', color: 'error'},
     } as const
     const {label, color} = handoffPresentation[change.mode]
     // 제목 앞의 [태그]는 그 카드의 성격을 한눈에 알리는 표시다 — 굵게 떼어 그리고 나머지가 제목이다.
@@ -229,8 +231,9 @@ const normalizeReleaseNoteChange = (change: ReleaseNoteChange): ReleaseNoteChang
 }
 
 // 릴리즈 초안의 섹션 작성 순서와 관계없이 인계 카드는 개발자가 적용 방식을 빠르게 훑을 수 있도록
-// Diff 확인 → 덮어쓰기 → 신규 추가 순으로 고정한다. 같은 분류 안에서는 초안 작성 순서를 유지한다.
-const RELEASE_NOTE_HANDOFF_ORDER = {diff: 0, overwrite: 1, new: 2} as const
+// Diff 확인 → 덮어쓰기 → 신규 추가 → 삭제 순으로 고정한다. 같은 분류 안에서는 초안 작성 순서를 유지한다.
+// 삭제는 맨 뒤에 둔다 — 더하고 바꾼 뒤 마지막에 지우는 것이 순서상 안전하다.
+const RELEASE_NOTE_HANDOFF_ORDER = {diff: 0, overwrite: 1, new: 2, delete: 3} as const
 const sortReleaseNoteChanges = (changes: ReleaseNoteChange[]) =>
     changes
         .map((change, index) => ({change, index}))

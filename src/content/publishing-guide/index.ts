@@ -310,7 +310,7 @@ const parseExternalProject = (value: unknown, index: number): ExternalProject =>
     }
 }
 
-const RELEASE_NOTE_HANDOFF_MODES: readonly ReleaseNoteHandoffMode[] = ['diff', 'new', 'overwrite']
+const RELEASE_NOTE_HANDOFF_MODES: readonly ReleaseNoteHandoffMode[] = ['diff', 'new', 'overwrite', 'delete']
 
 const isReleaseNoteHandoffMode = (value: string): value is ReleaseNoteHandoffMode =>
     RELEASE_NOTE_HANDOFF_MODES.some((mode) => mode === value)
@@ -323,7 +323,7 @@ const parseReleaseNoteChange = (value: unknown, where: string): ReleaseNoteChang
     }
     const mode = value.mode
     if (typeof mode !== 'string' || !isReleaseNoteHandoffMode(mode)) {
-        throw new Error(`[content] ${where} > mode: diff|new|overwrite 중 하나여야 합니다.`)
+        throw new Error(`[content] ${where} > mode: diff|new|overwrite|delete 중 하나여야 합니다.`)
     }
     if (typeof value.title !== 'string' || value.title.length === 0) {
         throw new Error(`[content] ${where} > title: 비어 있지 않은 문자열이어야 합니다.`)
