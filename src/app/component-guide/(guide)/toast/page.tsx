@@ -302,10 +302,10 @@ const ToastGuidePage = () => (
                     <code className="font-mono">CSS: Parse Error</code>와 charset 1024바이트 초과 메시지가 나타날 수
                     있습니다. 서버 전송 HTML에는 없는 오탐이며, 실측 근거와 판정은{' '}
                     <Link
-                        href="/component-guide/validation-exceptions"
+                        href="/component-guide/accessibility-exceptions"
                         className="text-primary underline underline-offset-4"
                     >
-                        마크업 검증
+                        접근성 검사 예외사항
                     </Link>{' '}
                     페이지의 &ldquo;렌더된 DOM 직렬화 검사에서만 나타나는 메시지 판정&rdquo; 항목에 기록되어 있습니다.
                 </p>
