@@ -3966,6 +3966,13 @@
             "userType": "탄소",
             "children": [
                 {
+                    "label": "로그인",
+                    "screenId": null,
+                    "status": "대기중",
+                    "version": "미배포",
+                    "key": "carbon-login"
+                },
+                {
                     "label": "탄소중립 선도기업",
                     "children": [
                         {
@@ -4120,6 +4127,7 @@
                                         "key": "carbon-leader-self-check-reduction-potential",
                                         "screenId": null,
                                         "status": "완료",
+                                        "application2Status": "완료",
                                         "version": "미배포",
                                         "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/reduction-potential"
                                     },
@@ -4251,7 +4259,8 @@
                                             "screenId": null,
                                             "status": "완료",
                                             "version": "미배포",
-                                            "key": "carbon-leader-self-check-result-result-certificate"
+                                            "key": "carbon-leader-self-check-result-result-certificate",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/self-check/result/result-certificate"
                                         }
                                     ]
                                 }
@@ -4329,14 +4338,16 @@
                                             "screenId": null,
                                             "status": "완료",
                                             "version": "미배포",
-                                            "key": "carbon-leader-application-1-result-application-download"
+                                            "key": "carbon-leader-application-1-result-application-download",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-1/result/application-download"
                                         },
                                         {
                                             "label": "결과 확인서",
                                             "screenId": null,
-                                            "status": "대기중",
+                                            "status": "완료",
                                             "version": "미배포",
-                                            "key": "carbon-leader-application-1-result-result-certificate"
+                                            "key": "carbon-leader-application-1-result-result-certificate",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-1/result/result-certificate"
                                         }
                                     ]
                                 }
@@ -4414,14 +4425,16 @@
                                             "screenId": null,
                                             "status": "완료",
                                             "version": "미배포",
-                                            "key": "carbon-leader-application-2-result-application-download"
+                                            "key": "carbon-leader-application-2-result-application-download",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-2/result/application-download"
                                         },
                                         {
                                             "label": "결과 확인서",
                                             "screenId": null,
-                                            "status": "대기중",
+                                            "status": "완료",
                                             "version": "미배포",
-                                            "key": "carbon-leader-application-2-result-result-certificate"
+                                            "key": "carbon-leader-application-2-result-result-certificate",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-2/result/result-certificate"
                                         }
                                     ]
                                 }
@@ -4589,14 +4602,16 @@
                                             "screenId": null,
                                             "status": "완료",
                                             "version": "미배포",
-                                            "key": "carbon-leader-application-3-result-application-download"
+                                            "key": "carbon-leader-application-3-result-application-download",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-3/result/application-download"
                                         },
                                         {
                                             "label": "결과 확인서",
                                             "screenId": null,
-                                            "status": "대기중",
+                                            "status": "완료",
                                             "version": "미배포",
-                                            "key": "carbon-leader-application-3-result-result-certificate"
+                                            "key": "carbon-leader-application-3-result-result-certificate",
+                                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-3/result/result-certificate"
                                         }
                                     ]
                                 }
@@ -4608,7 +4623,8 @@
                             "status": "완료",
                             "application2Status": "완료",
                             "version": "미배포",
-                            "key": "carbon-leader-application-history"
+                            "key": "carbon-leader-application-history",
+                            "externalHref": "https://fromex-carbon.vercel.app/carbon-leader/application-history"
                         }
                     ]
                 },
@@ -4619,7 +4635,8 @@
                         "screenId": null,
                         "status": "완료",
                         "application2Status": "완료",
-                        "version": "미배포"
+                        "version": "미배포",
+                        "externalHref": "https://fromex-carbon.vercel.app/my-page"
                     },
                     "children": [
                         {
