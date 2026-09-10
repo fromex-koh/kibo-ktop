@@ -3448,7 +3448,8 @@
                     "label": "평가결과 조회",
                     "screen": {
                         "screenId": null,
-                        "status": "완료",
+                        "status": "보완",
+                        "statusDate": "09/11",
                         "version": "미배포",
                         "key": "org-mypage-evaluation-history",
                         "iaRow": 115
@@ -3577,7 +3578,7 @@
                 {
                     "label": "평가검증 신청 조회",
                     "screenId": "SB-FOTA-OM0-0022",
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-mypage-verification-application",
                     "iaRow": 120
