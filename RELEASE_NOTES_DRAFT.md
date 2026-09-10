@@ -145,3 +145,161 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 대상: src/components/composite/mypage-sidebar.tsx
 - 적용: 지정한 파일만 교체합니다.
 - 변경: 기관 메뉴의 `평가검증 신청 조회` 가 `#` 였던 것을 새 화면 주소로 연결했습니다.
+
+## [Diff 확인]
+
+### [마크업] 조회 필터 — 상태 셀렉트에 라벨 감추기·칸 높이 옵션
+
+- 대상: src/components/composite/search-filter-form.tsx
+- 변경: `SelectFilterField` 에 `labelHidden`(라벨을 화면에서만 감춤)과 `size`(칸 높이 40/48)를 더하고 이 조각을 export 했습니다. 시안에 라벨이 보이지 않고 칸이 48인 필터에 씁니다.
+- 유지: 두 값을 넘기지 않으면 이전과 똑같습니다 — 이 조각을 쓰던 기존 화면은 변화가 없습니다.
+- 영향 화면: [기관 하위계정 현황](/org/mypage/sub-account-progress) `완료` — 이번 회차에 새로 만든 화면이 첫 사용처입니다.
+
+### [마크업] 조회 버튼 필드 — 그 자리에서 확인하는 버튼과 형식 검사
+
+- 대상: src/components/composite/form-fields.tsx
+- 변경: `LookupField` 에 네 가지를 더했습니다.
+    - `onAction` — 모달을 열지 않고 그 자리에서 확인하는 버튼(중복확인 등)의 동작
+    - `actionPending`·`actionPendingLabel` — 서버에 물어보는 동안 버튼이 도는 표시로 바뀌고 다시 눌리지 않습니다(`aria-busy`)
+    - `pattern`·`patternMessage` — 형식이 어긋나면 칸 밑에 그 문구가 뜹니다. 브라우저 기본 문구는 무엇을 고쳐야 하는지 알려 주지 않습니다[7.4.2]
+- 유지: 넘기지 않으면 이전과 똑같습니다 — 업종코드 조회처럼 모달을 여는 기존 사용처는 변화가 없습니다.
+- 영향 화면: [기관 하위 계정 등록](/org/mypage/sub-account-progress/create) `완료`
+
+## [신규 추가]
+
+### 기관 하위계정 현황 화면 — 회원 유형 4케이스
+
+- 대상: src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/tech-partner/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/k-bigx-non-partner/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/k-bigx-partner/page.tsx
+    - src/components/custom/org-sub-account-progress-screen.tsx
+    - src/components/custom/org-sub-account-list.tsx
+    - src/components/custom/sub-account-card.tsx
+    - src/components/custom/sub-account-summary.tsx
+    - src/constants/sub-account.ts
+    - src/content/service/org-sub-accounts.ts
+- 적용: 화면 4개·셸·목록·카드·협약 정보·타입·데이터 모두 신규 추가입니다.
+- 화면 구성: 협약 정보(매칭 사업·사업기간·이용서비스 + 계정 수 3칸) → 조회 필터(상태 · 검색 대상 · 검색어) → `총 N건`·정렬·[하위계정 등록] → 계정 카드 → 페이지 이동.
+- 4케이스: 협약 여부와 기술평가부 여부에 따라 협약 정보의 [이용서비스]가 달라집니다. 화면 구성은 넷이 같고, 무엇이 다른지는 `SUB_ACCOUNT_AGREEMENT_CASES` 한 곳이 정합니다.
+    - [K-BIGx] 비협약 은행/기관 — `K-BIGx`
+    - [K-BIGx] 협약 은행/기관 — `K-BIGx`
+    - [기술평가부] 비협약 은행/기관 — `KTRS-FM, Tech-Index, 창업용 Tech-Index, 투자모형`
+    - [기술평가부] 협약 은행/기관 — `KTRS-FM, 투자모형`
+- 비협약: 맺은 사업이 없어 매칭 사업·사업기간 줄이 통째로 빠지고 이용서비스만 남습니다. `-` 를 채우지 않는 이유는 없는 항목이지 아직 안 정해진 값이 아니기 때문입니다.
+- 정렬: [보고서 출력순 정렬]은 누를 때마다 기본 ⇅ → 적은 순 ↑ → 많은 순 ↓ 로 돕니다. 지금 어느 순서인지는 화살표로 보이고 읽어 주기에는 버튼 이름에 붙습니다[6.4.3].
+- 빈 상태: `하위계정 내역이 없습니다.` — 조회 결과가 없을 때만이 아니라 아직 등록하지 않았을 때·마지막 계정을 지웠을 때도 같은 자리가 비어서, 세 경우에 모두 맞는 말로 두었습니다.
+- 연동 지점: 화면은 `getOrgSubAccountOverview()` 하나만 부릅니다. 목업을 지우고 조회 API 응답을 그대로 돌려주면 화면·목록은 고치지 않아도 됩니다. 케이스도 그때는 로그인한 기관의 속성이라 서버가 정합니다(지금의 `caseKey` 인자는 목업을 보기 위한 것입니다).
+- 아직 비어 있는 것: [⋮] > [수정]이 갈 화면이 없어 주소를 `#` 로 두었습니다.
+- 목업 참고: 마지막 카드 한 장은 시안에 없습니다 — 계정 ID·담당자 이름이 칸을 넘는 경우를 화면에서 바로 보려고 둔 것이라 실제 데이터로 바꿀 때 지웁니다.
+- 확인 방법: [기술평가부 · 비협약 은행/기관](/org/mypage/sub-account-progress) `완료` · [기술평가부 · 협약 은행/기관](/org/mypage/sub-account-progress/tech-partner) `완료` · [K-BIGx · 비협약 은행/기관](/org/mypage/sub-account-progress/k-bigx-non-partner) `완료` · [K-BIGx · 협약 은행/기관](/org/mypage/sub-account-progress/k-bigx-partner) `완료`
+
+### 하위 계정 상세정보 모달
+
+- 대상: src/components/composite/sub-account-detail-dialog.tsx
+    - src/components/composite/sub-account-status-badge.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/detail/page.tsx
+- 적용: 모달·상태 배지·단독 확인 화면 신규 추가입니다.
+- 내용: 계정 요약(옅은 파랑 카드) → 서비스별 배분 이용건수(2열) → 내역 갈래(접속 일시 / 활동) 순입니다. 이용건수는 그 기관의 이용서비스에서 나오므로, K-BIGx 만 쓰는 기관은 칸도 하나만 섭니다.
+- 빈 상태: 기록이 없는 계정도 있어 갈래별로 `접속 일시 내역이 없습니다.` · `활동 내역이 없습니다.` 가 같은 자리를 대신합니다.
+- 상태 배지: 목록 카드와 모달이 `SubAccountStatusBadge` 하나를 함께 씁니다 — 색은 한 곳에서만 정해지고(사용 하늘색 · 사용정지 회색), 놓이는 자리에 따라 채운 면(목록)과 테두리(모달) 두 모습이 있습니다. 모달이 테두리인 이유는 옅은 파랑 카드 위에서 면을 채우면 카드와 뭉개지기 때문입니다.
+- 확인 방법: [기관 하위계정 상세](/org/mypage/sub-account-progress/detail) `완료`
+
+### 하위 계정 등록 모달 — 유효성 검사와 중복확인
+
+- 대상: src/components/composite/sub-account-create-dialog.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/create/page.tsx
+- 적용: 모달·단독 확인 화면 신규 추가입니다.
+- 입력 칸: 계정 ID(+[중복확인]) · 비밀번호 · 담당자 이름 · 구분/소속 · 상태 · 메모 순입니다.
+- 검사: 다른 폼 화면과 같은 공통 관문(`useFormTabsSubmit`)이 맡아 오류 문구의 말투가 화면마다 달라지지 않습니다. 기준은 화면에 적어 둔 `required`·`pattern` 입니다.
+    - 계정 ID `영문으로 시작하는 4~20자, 숫자·_ 허용` — 칸을 벗어날 때와 제출할 때 모두 봅니다
+    - 비밀번호 `비밀번호를 8자 이상 입력해 주세요.`
+    - 중복확인 전에는 제출을 세웁니다(`계정 ID 중복확인을 해 주세요.`). 단, 계정 ID 자체가 비었거나 형식이 어긋났으면 그 문구가 먼저입니다
+- 중복확인: 누르면 버튼이 `확인 중`(도는 표시·`aria-busy`)으로 바뀌고, 끝나면 칸 밑에 `사용할 수 있는 계정 ID 입니다.` 가 붙습니다. ID 를 고치면 다시 확인해야 합니다.
+- 연동 지점: 등록 API 와 계정 ID 중복 확인 API 두 곳입니다(`// [프론트엔드 연동]` 주석 자리). 지금은 목업이 0.8초 뒤 통과한 것처럼 답합니다.
+- 시안과 다르게 둔 것: 메모 라벨에 필수 표시(`*`)가 남아 있지만 안내 글이 `메모 입력 (선택)` 이라 선택 입력으로 두었습니다 — 컴포넌트 기본값이 지워지지 않은 것으로 봤습니다. 실제 정책이 필수면 `required` 만 켜면 됩니다.
+- 확인 방법: [기관 하위 계정 등록](/org/mypage/sub-account-progress/create) `완료`
+
+### 확인 모달 공통 조각과 하위계정 확인 모달 3종
+
+- 대상: src/components/composite/confirm-dialog.tsx
+    - src/components/composite/delete-confirm-dialog.tsx
+    - src/components/composite/sub-account-delete-dialog.tsx
+    - src/components/composite/sub-account-password-reset-dialog.tsx
+    - src/components/composite/sub-account-status-change-dialog.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/delete/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/password-reset/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/status-change/page.tsx
+- 적용: 공통 조각·모달 3종·단독 확인 화면 3개 신규 추가입니다.
+- 공통 조각(`ConfirmDialog`): 되묻고 실행하는 자리를 하나로 모았습니다. 생김새는 이미 있던 확인 모달([기업 수정 취소](/corp/mypage/profile/cancel-confirm))을 그대로 따릅니다 — 닫기(X) 없음 · 가운데 정렬 · 굵은 첫 줄(20) + 옅은 물음(16) + 같은 크기의 덧붙임(16) · [취소](tertiary)/[확인] 두 칸.
+- 문구: 물음에는 지울·바꿀 대상을 굵게 드러냅니다 — 목록에서 여러 건을 다룰 때 엉뚱한 것을 고르지 않기 위해서입니다.
+    - 계정 삭제 — `계정 sub_002(이영희)을(를) 삭제하시겠습니까?` / `삭제된 계정은 복구할 수 없습니다.`
+    - 비밀번호 초기화 — `…의 비밀번호를 초기화하시겠습니까?` / `초기화 후 임시 비밀번호가 등록된 이메일(…)로 발송됩니다.`
+    - 상태 변경 — `…의 상태를 사용정지로 변경하시겠습니까?` (조사는 상태 이름의 받침에 맞춰 `사용으로`·`사용정지로` 로 붙습니다)
+- 목록에서의 동작: [확인]이 실제로 일합니다 — 삭제는 카드가 사라지고, 상태 변경은 배지와 [⋮] 메뉴 이름이 함께 뒤집힙니다.
+- 확인 방법: [기관 하위계정 삭제 확인](/org/mypage/sub-account-progress/delete) `완료` · [기관 하위계정 비밀번호 초기화](/org/mypage/sub-account-progress/password-reset) `완료` · [기관 하위계정 상태 변경](/org/mypage/sub-account-progress/status-change) `완료`
+
+### 하위계정 완료 토스트 3종
+
+- 대상: src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/create/complete-toast/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/password-reset/complete-toast/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/status-change/complete-toast/page.tsx
+- 적용: 단독 확인 화면 3개 신규 추가입니다. 문구는 `src/constants/sub-account.ts` 가 들고 있습니다.
+- 내용: 이미 있던 공통 완료 토스트([확인 토스트](/component-guide/check-toast))를 그대로 씁니다 — 새로 만든 것은 문구뿐이라 생김새·위치·노출 시간이 자동저장 토스트와 같습니다.
+    - `하위계정이 등록되었습니다.`
+    - `비밀번호가 초기화되었습니다.`
+    - `계정 상태가 사용정지로 변경되었습니다.` — 바뀐 뒤의 상태가 문구에 들어갑니다
+- 실제 흐름: 목록 화면에서도 뜹니다 — 등록 모달의 [저장하기], 초기화·상태 변경 확인 모달의 [확인]이 각각 띄웁니다.
+- 삭제에는 토스트가 없습니다 — 지운 카드가 목록에서 사라지는 것이 그 자체로 결과를 알리고, 화면정의서에도 없습니다.
+- 확인 방법: [하위계정 등록 완료 토스트](/org/mypage/sub-account-progress/create/complete-toast) `완료` · [비밀번호 초기화 완료 토스트](/org/mypage/sub-account-progress/password-reset/complete-toast) `완료` · [상태 변경 완료 토스트](/org/mypage/sub-account-progress/status-change/complete-toast) `완료`
+
+### 드롭다운 메뉴 (DropdownMenu)
+
+- 대상: src/components/ui/dropdown-menu.tsx
+    - src/components/theme/dropdown-menu.variants.ts
+    - vendor/shadcn-baseline/dropdown-menu.variants.ts
+- 적용: shadcn 셸을 새로 받고 프로젝트 스타일을 theme 으로 분리했습니다. 밀려난 바닐라 스타일은 vendor 기준선에 보관합니다([SC-02]/[SC-04]).
+- 스타일: 시안의 [⋮] 패널에 맞춰 면·테두리·반경·그림자와 항목 높이(48)·글자·hover 면을 두었습니다. 항목에 `cursor: pointer` 를 둡니다.
+- 첫 사용처: 하위계정 카드의 [⋮] 관리 메뉴(수정 · 비밀번호 초기화 · 상태 변경 · 삭제)입니다.
+
+## [덮어쓰기]
+
+### 퍼블리싱 인덱스 — 하위계정 현황 회차 반영
+
+- 대상: src/content/publishing-guide/publishing-index.json
+    - src/content/publishing-guide/screen-registry.json
+- 적용: 지정한 파일만 교체합니다.
+- 화면 나누기: `하위 계정 현황` 한 행을 회원 유형 4케이스로 나눴습니다(내 정보 수정과 같은 방식). 네 행의 `iaRow` 가 같아 화면정의서에서는 여전히 한 행으로 집계됩니다.
+- 묶기: 그 아래 화면들을 동작별로 묶었습니다 — `등록` · `수정` · `비밀번호 초기화` · `사용정지` · `삭제`. 묶음 행은 뎁스로 세지 않으므로(`isGroupOnly`) 아래 화면의 뎁스 번호와 행 수·진척률은 그대로입니다. `하위계정 상세`는 [상세정보] 버튼이 여는 별도 동작이라 묶지 않고 목록 화면 바로 아래에 둡니다.
+- 상태 변경: 이번에 만든 10개 화면을 `완료`로 올렸습니다(케이스 4 · 상세 · 등록 · 비밀번호 초기화 · 상태 변경 · 삭제 확인과 완료 토스트 3). 남은 `대기중`은 `하위계정 수정`과 그 짝인 `하위계정 저장 완료 토스트` 둘입니다.
+- 유지: 응용2 상태값은 한 건도 바꾸지 않았습니다.
+
+### 퍼블리싱 인덱스 화면 — 1뎁스 열 세로쓰기
+
+- 대상: src/components/custom/publishing-index.tsx
+- 적용: 지정한 파일만 교체합니다.
+- 변경: 아래 뎁스가 있는 1뎁스 칸을 세로쓰기로 두어 열 폭이 98 → 53 이 되고, 그만큼이 아래 뎁스·화면명으로 넘어갑니다. 열 머리(`1뎁스`)와 뎁스 뱃지는 가로로 둡니다 — 읽는 자리와 기호는 눕히지 않습니다.
+- 예외: 아래 뎁스가 없는 칸(`404 에러`처럼 1뎁스가 곧 화면인 행)은 나머지 뎁스 열을 통째로 쓰므로 돌리지 않습니다.
+- 이 파일 하나로 끝납니다: `writing-mode` 는 Tailwind 에 유틸리티가 없지만, 이 표에서만 쓰는 값 두 개라 `globals.css` 나 화면 전용 CSS 를 만들지 않고 쓰는 자리에 그대로 얹었습니다. 서비스 화면의 CSS 에는 한 줄도 늘지 않습니다.
+
+### 버전 업데이트 카드 — 항목명과 내용을 두 칸으로
+
+- 대상: src/components/custom/publishing-index.tsx
+- 적용: 지정한 파일만 교체합니다.
+- 이전: 항목명이 내용 위에 얹혀 카드 하나가 두 배로 길었고, 한 줄짜리 항목에도 점이 찍혀 카드가 온통 점으로 덮였습니다.
+- 지금: 항목명과 내용이 두 칸으로 서서 값의 시작점이 한 줄로 맞습니다. 항목명 칸은 그 카드에서 가장 긴 이름에 맞춰지고(`max-content`), 좁은 화면에서는 예전처럼 위아래로 쌓습니다. 점은 내용이 여러 줄일 때만 찍습니다.
+- 대상 경로: 파일 경로라 고정폭 글꼴로 두고 한 단 작게 둡니다 — 글 사이에서 경로가 바로 구분됩니다.
+- 유지: 카드 내용·순서·배지·링크는 그대로입니다.
+
+### 접근성 검사 예외사항 — Radix Select 의 WAVE 예외 추가
+
+- 대상: src/app/component-guide/(guide)/accessibility-exceptions/page.tsx
+- 적용: 문서 화면이라 지정한 파일만 교체합니다.
+- 내용: 조회 필터가 있는 목록 화면에서 나오는 `Missing form label`(오류)·`Select missing label`(경고)의 원인을 `WAVE` 탭 › 라이브러리 원인에 적었습니다. Radix 셀렉트가 폼 제출용으로 만드는 숨은 native `select` 가 원인이고, `aria-hidden`·`tabindex="-1"` 이라 스크린리더·키보드는 닿지 않습니다. 실제 컨트롤에는 이름이 있습니다.
+- 조치: 고칠 자리가 없습니다 — 우리 코드에 그 `select` 가 없고 이름을 넣을 prop 도 없어, 고치려면 셸을 손대야 합니다([SC-02]).
+
+### 마이페이지 사이드바 — 하위계정 현황 링크 연결
+
+- 대상: src/components/composite/mypage-sidebar.tsx
+- 적용: 지정한 파일만 교체합니다.
+- 변경: 기관 메뉴의 `하위계정 현황` 이 `#` 였던 것을 새 화면 주소로 연결했습니다.
