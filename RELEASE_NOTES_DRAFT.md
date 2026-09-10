@@ -68,7 +68,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 ### 퍼블리싱 인덱스 — 이번 회차 화면 상태 반영
 
 - 대상: src/content/publishing-guide/publishing-index.json
-- 적용: 퍼블리싱 가이드 관련 파일이라 지정한 파일만 교체합니다.
+    - src/content/publishing-guide/screen-registry.generated.json
+- 적용: 퍼블리싱 가이드 관련 파일이라 지정한 파일만 교체합니다. 두 파일은 함께 교체해야 합니다 — 콘텐츠 관문이 빌드 시점에 두 파일의 화면 key 를 교차검증합니다.
+- 경로 레지스트리: 평가검증 신청 조회의 page 파일이 생겨 `implemented` 가 켜집니다(생성물이라 `yarn verify` 가 다시 만듭니다).
 - 상태: 이번에 손댄 5개 화면을 `보완(09/11)` 로 두었습니다 — [기업 문의 상세](/corp/mypage/inquiry-history/inquiry-detail) · [기관 문의 상세](/org/mypage/inquiry-history/inquiry-detail) · [기업 자주 묻는 질문](/corp/notice/faq) · [기관 자주 묻는 질문](/org/notice/faq) · [기관 평가결과 조회](/org/mypage/evaluation-history).
 - 신규 화면: [기관 평가검증 신청 조회](/org/mypage/verification-application) 는 이번에 처음 만든 화면이라 `대기중` 에서 `완료` 로 올렸습니다 — 고친 것이 아니라 새로 생긴 화면이라 `보완` 을 붙이지 않습니다.
 - 기존 뱃지 유지: 기업 문의 상세는 09/07 회차에도 손을 타 날짜를 배열로 두어 `보완(09/07)`·`보완(09/11)` 두 뱃지를 함께 남깁니다.
