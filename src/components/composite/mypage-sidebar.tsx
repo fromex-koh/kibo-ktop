@@ -62,7 +62,7 @@ const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
         {icon: FileSearch, label: '평가결과 조회', href: '/org/mypage/evaluation-history'},
         {icon: FolderSearch, label: '평가검증 신청 조회', href: '/org/mypage/verification-application'},
         {icon: NotepadText, label: 'K-BIGx 보고서 이력', href: '#'},
-        {icon: UserSearch, label: '하위계정 현황', href: '#'},
+        {icon: UserSearch, label: '하위계정 현황', href: '/org/mypage/sub-account-progress'},
         {icon: MessageCircleMore, label: '1:1 문의', href: '/org/mypage/inquiry-history'},
     ],
 }
