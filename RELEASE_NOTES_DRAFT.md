@@ -154,6 +154,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 변경: `SelectFilterField` 에 `labelHidden`(라벨을 화면에서만 감춤)과 `size`(칸 높이 40/48)를 더하고 이 조각을 export 했습니다. 시안에 라벨이 보이지 않고 칸이 48인 필터에 씁니다.
 - 유지: 두 값을 넘기지 않으면 이전과 똑같습니다 — 이 조각을 쓰던 기존 화면은 변화가 없습니다.
 - 영향 화면: [기관 하위계정 현황](/org/mypage/sub-account-progress) `완료` — 이번 회차에 새로 만든 화면이 첫 사용처입니다.
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e1f4ec42)
 
 ### [마크업] 조회 버튼 필드 — 그 자리에서 확인하는 버튼과 형식 검사
 
@@ -164,6 +165,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - `pattern`·`patternMessage` — 형식이 어긋나면 칸 밑에 그 문구가 뜹니다. 브라우저 기본 문구는 무엇을 고쳐야 하는지 알려 주지 않습니다[7.4.2]
 - 유지: 넘기지 않으면 이전과 똑같습니다 — 업종코드 조회처럼 모달을 여는 기존 사용처는 변화가 없습니다.
 - 영향 화면: [기관 하위 계정 등록](/org/mypage/sub-account-progress/create) `완료`
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/df531679)
 
 ## [신규 추가]
 
