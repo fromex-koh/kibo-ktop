@@ -1,10 +1,9 @@
 'use client'
 
 import {useEffect, useRef, useState} from 'react'
-import Image from 'next/image'
-import faqQuestionMark from '@public/images/faq/faq-question-mark.webp'
 import {EmptyState} from '@/components/composite/empty-state'
 import {Pagination} from '@/components/composite/pagination'
+import {QaMark} from '@/components/custom/qa-mark'
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from '@/components/ui/accordion'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 import {useIsMobile} from '@/hooks/use-mobile'
@@ -65,19 +64,19 @@ const FaqPanel = ({items, pageSize}: {items: readonly FaqItem[]; pageSize: numbe
                             <AccordionItem key={item.id} value={item.id}>
                                 <AccordionTrigger>
                                     <span className="flex min-w-0 items-center gap-2">
-                                        {/* 질문 표시는 시안의 'Q.' 이미지다. 질문 글이 바로 옆에 있어 장식으로 둔다. */}
-                                        <Image
-                                            src={faqQuestionMark}
-                                            alt=""
-                                            sizes="24px"
-                                            className="size-icon-lg shrink-0"
-                                        />
+                                        {/* 질문 표시는 시안의 'Q.' 그림이다. 질문 글이 바로 옆에 있어 장식으로 둔다. */}
+                                        <QaMark type="question" />
                                         <span className="min-w-0 break-keep">{item.question}</span>
                                     </span>
                                 </AccordionTrigger>
                                 <AccordionContent>
-                                    {/* 답변 최소 높이 200 은 시안 표기다. 줄바꿈은 원문 그대로 살린다. */}
-                                    <div className="min-h-50 break-keep whitespace-pre-line">{item.answer}</div>
+                                    {/* 답변 최소 높이 200 은 시안 표기다. 줄바꿈은 원문 그대로 살린다.
+                                        시안은 답변에도 'A.' 그림을 두고, 그 옆 글이 질문 글과 같은 세로선에서
+                                        시작한다(그림 24 + 사이 8). 그림은 장식이라 감춘다. */}
+                                    <div className="flex min-h-50 gap-2">
+                                        <QaMark type="answer" />
+                                        <p className="min-w-0 flex-1 break-keep whitespace-pre-line">{item.answer}</p>
+                                    </div>
                                 </AccordionContent>
                             </AccordionItem>
                         ))}

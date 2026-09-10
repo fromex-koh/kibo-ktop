@@ -5,6 +5,7 @@ import {BaseCard} from '@/components/composite/base-card'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {InlineSeparator} from '@/components/composite/inline-separator'
+import {QaMark, type QaMarkType} from '@/components/custom/qa-mark'
 import {Separator} from '@/components/ui/separator'
 import {INQUIRY_STATUS, type InquiryStatus, type InquiryType} from '@/constants/inquiry'
 
@@ -51,14 +52,11 @@ const splitFileName = (name: string) => {
     return {baseName: name.slice(0, dotIndex), extension: name.slice(dotIndex)}
 }
 
-// Q.·A. 표시 — 시안은 24×24 아이콘이지만 그려진 것이 글자 "Q." 라서 글자로 둔다.
-// 아이콘으로 만들면 스크린리더에서 사라지고, 단일 아이콘 라이브러리 원칙([NA-008])과도 어긋난다.
-// 표시 자체는 장식이라 감추고, 무엇을 가리키는 묶음인지는 옆의 sr-only 문구가 알린다.
-const QaMarker = ({mark, label, children}: {mark: string; label: string; children: string}) => (
+// 문답 한 덩이 — 시안의 24×24 그림(QaMark) 옆에 본문이 온다(그림과 글 사이 8).
+// 그림은 장식이라 무엇을 가리키는 묶음인지는 sr-only 문구가 알린다[5.1.1].
+const QaMarker = ({mark, label, children}: {mark: QaMarkType; label: string; children: string}) => (
     <div className="flex gap-2">
-        <span aria-hidden="true" className="typo-title-l-bold w-6 shrink-0 text-blue-800">
-            {mark}
-        </span>
+        <QaMark type={mark} />
         <p className="typo-body-xl-regular text-label-foreground min-w-0 flex-1 whitespace-pre-line">
             <span className="sr-only">{label} </span>
             {children}
@@ -98,7 +96,7 @@ const InquiryDetail = ({inquiry, listHref}: InquiryDetailProps) => {
 
                 <Separator className="my-6" />
 
-                <QaMarker mark="Q." label="문의 내용">
+                <QaMarker mark="question" label="문의 내용">
                     {inquiry.question}
                 </QaMarker>
 
@@ -131,16 +129,11 @@ const InquiryDetail = ({inquiry, listHref}: InquiryDetailProps) => {
 
                 <Separator className="my-6" />
 
-                {inquiry.answer ? (
-                    <QaMarker mark="A." label="답변">
-                        {inquiry.answer}
-                    </QaMarker>
-                ) : (
-                    // 답변 전 안내 — 시안에는 Q. 같은 표시가 없고 본문과 같은 자리에서 시작한다.
-                    <p className="typo-body-xl-regular text-label-foreground whitespace-pre-line">
-                        {ANSWER_WAITING_NOTICE}
-                    </p>
-                )}
+                {/* 답변 자리 — 시안은 답변대기 상태에도 A. 표시를 두고 그 옆에 안내 문구를 놓는다.
+                    답변이 달리면 같은 자리에 답변 본문이 들어간다. */}
+                <QaMarker mark="answer" label="답변">
+                    {inquiry.answer ?? ANSWER_WAITING_NOTICE}
+                </QaMarker>
             </BaseCard>
 
             {/* 시안: 카드와 CTA 사이 40. */}
