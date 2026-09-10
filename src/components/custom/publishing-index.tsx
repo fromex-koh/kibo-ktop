@@ -164,24 +164,37 @@ const ReleaseNoteHandoff = ({change}: {change: ReleaseNoteHandoff}) => {
                     {titleText}
                 </strong>
             </div>
-            <dl className="text-muted-foreground grid min-w-0 gap-3">
-                {change.details.map((detail) => (
-                    <div key={`${detail.label}-${detail.value}`} className="grid min-w-0 gap-1">
-                        <dt className="text-foreground-subtle font-medium">{detail.label}</dt>
-                        <dd className="min-w-0">
-                            <ul className="flex min-w-0 list-disc flex-col gap-1 pl-5">
-                                {detail.value
-                                    .split('\n')
-                                    .filter(Boolean)
-                                    .map((value, index) => (
-                                        <li key={`${index}-${value}`} className="min-w-0 break-words">
-                                            <ReleaseNoteDetailValue label={detail.label} value={value} />
-                                        </li>
-                                    ))}
-                            </ul>
-                        </dd>
-                    </div>
-                ))}
+            {/* 항목명과 내용을 두 칸으로 세운다 — 항목명이 위에 얹히면 카드 하나가 두 배로 길어지고,
+                어느 내용이 어느 항목의 것인지 눈으로 되짚어야 한다. 항목명 칸은 그 카드에서 가장 긴
+                이름에 맞춰지므로(max-content) 길이가 제각각인 이름도 잘리지 않는다.
+                좁은 화면에서는 두 칸이 설 자리가 없어 예전처럼 위아래로 쌓는다(sm 미만). */}
+            <dl className="text-muted-foreground border-border grid min-w-0 gap-3 border-t pt-3 sm:grid-cols-[max-content_minmax(0,1fr)] sm:gap-x-5 sm:gap-y-2">
+                {change.details.map((detail) => {
+                    // 줄이 하나뿐인 항목까지 점을 찍으면 카드가 온통 점으로 덮인다 — 여럿일 때만 목록으로 둔다.
+                    const values = detail.value.split('\n').filter(Boolean)
+                    // 대상은 파일 경로라 고정폭 글꼴로 둔다 — 글 사이에서 경로가 바로 구분된다. 고정폭 글꼴은
+                    // 같은 크기에서도 글자가 커 보여, 옆 설명글과 눈높이가 맞도록 한 단 줄인다.
+                    const valueClassName = detail.label === '대상' ? 'min-w-0 font-mono text-xs break-all' : 'min-w-0'
+
+                    return (
+                        <div key={`${detail.label}-${detail.value}`} className="grid min-w-0 gap-1 sm:contents">
+                            <dt className="text-foreground-subtle font-medium break-keep">{detail.label}</dt>
+                            <dd className={valueClassName}>
+                                {values.length > 1 ? (
+                                    <ul className="flex min-w-0 list-disc flex-col gap-1 pl-5">
+                                        {values.map((value, index) => (
+                                            <li key={`${index}-${value}`} className="min-w-0 break-words">
+                                                <ReleaseNoteDetailValue label={detail.label} value={value} />
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <ReleaseNoteDetailValue label={detail.label} value={values[0] ?? detail.value} />
+                                )}
+                            </dd>
+                        </div>
+                    )
+                })}
             </dl>
         </div>
     )
@@ -436,6 +449,17 @@ const collectLeaves = (group: StructureGroup): FlatLeaf[] => {
 
 // depth 컬럼에서 두 leaf 를 "같은 상위 아래" 로 볼지 판단하는 키. depth 가 leaf 의 실제 경로보다
 // 깊으면(그 leaf 는 거기까지 내려가지 않으면) null — rowSpan 병합 대상이 아니다.
+// writing-mode 는 Tailwind 에 유틸리티가 없고 이 표의 1뎁스 열에서만 쓴다. 전역 CSS 에 두면 서비스
+// 화면 번들에도 실리고, 화면 전용 CSS 파일로 빼면 클래스 정의가 이 파일 밖에 떨어져 나가므로,
+// 값 두 개를 쓰는 자리에 그대로 얹는다.
+//
+// 세로쓰기 — 글이 위 → 아래로 흐르고 줄은 오른쪽 → 왼쪽으로 쌓인다. text-orientation: mixed 는 기본값이지만
+// 명시해 둔다(한글은 바로 서고 영문·숫자는 누워 가로쓰기와 같은 모양이 된다).
+const VERTICAL_WRITING_STYLE = {writingMode: 'vertical-rl', textOrientation: 'mixed'} as const
+// 세로쓰기 칸 안에서 이 조각만 가로로 되돌린다 — 세로쓰기는 상속돼서 글이 아니라 기호로 읽히는 것
+// (뎁스 숫자 뱃지)까지 함께 눕는다.
+const HORIZONTAL_WRITING_STYLE = {writingMode: 'horizontal-tb'} as const
+
 const pathKeyAt = (leaf: FlatLeaf, depth: number): string | null =>
     depth < leaf.path.length ? leaf.path.slice(0, depth + 1).join(' ') : null
 
@@ -1112,11 +1136,15 @@ const PublishingIndex = () => {
                                 <caption className="sr-only">사이트 구조별 화면 ID·상태·버전</caption>
                                 <thead>
                                     <tr className="border-border bg-muted/25 border-b">
-                                        {depthHeaders.map((header) => (
+                                        {depthHeaders.map((header, depth) => (
                                             <th
                                                 key={header}
                                                 scope="col"
-                                                className="typo-body-l-medium border-border border-r px-4 py-3"
+                                                // 1뎁스 칸은 세로쓰기지만 머리는 가로로 둔다 — 어느 열인지
+                                                // 읽는 자리라, 좌우 여백만 줄여 열 폭을 아낀다.
+                                                className={`typo-body-l-medium border-border border-r py-3 whitespace-nowrap ${
+                                                    depth === 0 ? 'px-2' : 'px-4'
+                                                }`}
                                             >
                                                 {header}
                                             </th>
@@ -1221,18 +1249,41 @@ const PublishingIndex = () => {
                                                     ) : (
                                                         cell.label
                                                     )
+                                                    // 1뎁스 열은 세로쓰기로 두어 폭을 글자 높이만큼만 쓴다 —
+                                                    // 표 전체 폭이 모자라 아래 뎁스·화면명이 자주 접히기 때문이다.
+                                                    // 아래 뎁스가 없는 칸(404 에러처럼 1뎁스가 곧 화면인 행)은
+                                                    // 나머지 뎁스 열을 통째로 쓰므로 돌리지 않는다 — 돌리면
+                                                    // 가로로 넓은 칸 안에서 글자만 세로로 서서 읽기 어렵다.
+                                                    const isVerticalDepth = depth === 0 && cell.colSpan === 1
+
                                                     return (
                                                         <th
                                                             key={depth}
                                                             scope="row"
                                                             rowSpan={cell.rowSpan}
                                                             colSpan={cell.colSpan}
-                                                            className="typo-body-l-regular border-border border-r px-4 py-3 align-top font-normal"
+                                                            style={isVerticalDepth ? VERTICAL_WRITING_STYLE : undefined}
+                                                            className={`typo-body-l-regular border-border border-r py-3 align-top font-normal ${
+                                                                isVerticalDepth ? 'px-2' : 'px-4'
+                                                            }`}
                                                         >
                                                             <span className="inline-flex items-center gap-2">
                                                                 {!leaf.subtotalDepths.includes(depth) &&
                                                                     !leaf.groupOnlyDepths.includes(depth) && (
-                                                                        <>
+                                                                        // 세로쓰기는 상속되므로 뱃지의 숫자까지
+                                                                        // 함께 눕는다 — 뱃지만 가로로 되돌린다.
+                                                                        // 그 밖에는 감싸는 상자가 없던 때와
+                                                                        // 같도록 display:contents 로 둔다.
+                                                                        <span
+                                                                            style={
+                                                                                isVerticalDepth
+                                                                                    ? HORIZONTAL_WRITING_STYLE
+                                                                                    : undefined
+                                                                            }
+                                                                            className={
+                                                                                isVerticalDepth ? undefined : 'contents'
+                                                                            }
+                                                                        >
                                                                             {depth === leaf.path.length - 1 &&
                                                                             leaf.registryKey !== undefined ? (
                                                                                 <KeyCopyDepthBadge
@@ -1251,7 +1302,7 @@ const PublishingIndex = () => {
                                                                             <span className="sr-only">
                                                                                 {depthNumber}뎁스{' '}
                                                                             </span>
-                                                                        </>
+                                                                        </span>
                                                                     )}
                                                                 {isScreenLink ? (
                                                                     <Link
