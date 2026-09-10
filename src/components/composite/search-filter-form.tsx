@@ -265,13 +265,20 @@ const KeywordSearchField = ({
     )
 }
 
-type CompanyNameFieldProps = {name?: string; label?: string; placeholder?: string}
+type CompanyNameFieldProps = {
+    name?: string
+    label?: string
+    placeholder?: string
+    /** 라벨을 화면에서 감춘다(스크린리더에는 남는다) — 시안에 라벨이 보이지 않는 필터에 쓴다. */
+    labelHidden?: boolean
+}
 
 // 회사(기업)명 — 텍스트 입력.
 const CompanyNameField = ({
     name = 'companyName',
     label = '회사명',
     placeholder = '회사명을 입력하세요',
+    labelHidden,
 }: CompanyNameFieldProps) => {
     const id = useId()
     const labelId = `${id}-label`
@@ -279,7 +286,7 @@ const CompanyNameField = ({
     useResetSignal(() => setValue(''))
 
     return (
-        <FilterRow label={label} labelId={labelId} htmlFor={id}>
+        <FilterRow label={label} labelId={labelId} htmlFor={id} labelHidden={labelHidden}>
             <ClearableInput
                 id={id}
                 name={name}
@@ -450,7 +457,13 @@ const SearchFilterForm = ({
     )
 }
 
-export type {SearchFilterLayout, SearchFilterFormProps, DateRangeFieldProps, KeywordSearchFieldProps}
+export type {
+    SearchFilterLayout,
+    SearchFilterFormProps,
+    DateRangeFieldProps,
+    KeywordSearchFieldProps,
+    CompanyNameFieldProps,
+}
 export {
     SearchFilterForm,
     SearchFilterFields,
