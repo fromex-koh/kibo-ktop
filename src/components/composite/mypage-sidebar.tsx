@@ -60,7 +60,7 @@ const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
         // 기관 [내 정보] 는 회원 유형별로 화면이 나뉜다 — 실제로는 로그인한 유형의 화면으로 간다.
         {icon: User, label: '내 정보', href: '/org/mypage/profile-edit/partner-agency'},
         {icon: FileSearch, label: '평가결과 조회', href: '/org/mypage/evaluation-history'},
-        {icon: FolderSearch, label: '평가검증 신청 조회', href: '#'},
+        {icon: FolderSearch, label: '평가검증 신청 조회', href: '/org/mypage/verification-application'},
         {icon: NotepadText, label: 'K-BIGx 보고서 이력', href: '#'},
         {icon: UserSearch, label: '하위계정 현황', href: '#'},
         {icon: MessageCircleMore, label: '1:1 문의', href: '/org/mypage/inquiry-history'},
