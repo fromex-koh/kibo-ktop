@@ -2086,7 +2086,7 @@
                 {
                     "label": "메인 공지사항 팝업",
                     "screenId": "SB-FOTA-CP4-0016",
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-home-notice-popup",
                     "iaRow": 160
@@ -2100,7 +2100,7 @@
                 {
                     "label": "신용정보 활용체제",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-credit-information-policy",
                     "iaRow": 161
@@ -4047,7 +4047,7 @@
                 {
                     "label": "메인 공지사항 팝업",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-home-notice-popup",
                     "iaRow": 155
@@ -4061,7 +4061,7 @@
                 {
                     "label": "신용정보 활용체제",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-credit-information-policy",
                     "iaRow": 156
