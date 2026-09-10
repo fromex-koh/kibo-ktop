@@ -1804,7 +1804,7 @@
                             "label": "문의하기 상세",
                             "screenId": "SB-FOTA-CM1-0012",
                             "status": "보완",
-                            "statusDate": "09/07",
+                            "statusDate": ["09/07", "09/11"],
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "corp-mypage-inquiry-history-inquiry-detail",
@@ -1845,7 +1845,8 @@
                 {
                     "label": "자주 묻는 질문",
                     "screenId": "SB-FOTA-CM0-0018",
-                    "status": "완료",
+                    "status": "보완",
+                    "statusDate": "09/11",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "corp-notice-faq",
@@ -3700,7 +3701,8 @@
                         {
                             "label": "문의하기 상세",
                             "screenId": null,
-                            "status": "완료",
+                            "status": "보완",
+                            "statusDate": "09/11",
                             "application2Status": "완료",
                             "version": "미배포",
                             "key": "org-mypage-inquiry-history-inquiry-detail",
@@ -3739,7 +3741,8 @@
                 {
                     "label": "자주 묻는 질문",
                     "screenId": null,
-                    "status": "완료",
+                    "status": "보완",
+                    "statusDate": "09/11",
                     "application2Status": "완료",
                     "version": "미배포",
                     "key": "org-notice-faq",
