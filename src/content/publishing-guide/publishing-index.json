@@ -3605,85 +3605,154 @@
                 },
                 {
                     "label": "하위 계정 현황",
-                    "screen": {
-                        "screenId": null,
-                        "status": "대기중",
-                        "version": "미배포",
-                        "key": "org-mypage-sub-account-progress",
-                        "iaRow": 123
-                    },
                     "children": [
                         {
-                            "label": "하위계정 등록",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-mypage-sub-account-progress-create",
-                            "iaRow": 124
-                        },
-                        {
-                            "label": "하위계정 등록 완료 토스트",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-mypage-sub-account-progress-create-complete-toast",
-                            "iaRow": 125
+                            "label": "회원 유형별 페이지",
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "[K-BIGx] 비협약 은행/기관",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-k-bigx-non-partner",
+                                    "iaRow": 123
+                                },
+                                {
+                                    "label": "[K-BIGx] 협약 은행/기관",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-k-bigx-partner",
+                                    "iaRow": 123
+                                },
+                                {
+                                    "label": "[기술평가부] 비협약 은행/기관",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress",
+                                    "iaRow": 123
+                                },
+                                {
+                                    "label": "[기술평가부] 협약 은행/기관",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-tech-partner",
+                                    "iaRow": 123
+                                }
+                            ]
                         },
                         {
                             "label": "하위계정 상세",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-mypage-sub-account-progress-detail",
                             "iaRow": 126
                         },
                         {
-                            "label": "하위계정 수정",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-mypage-sub-account-progress-edit",
-                            "iaRow": 127
+                            "label": "등록",
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "하위계정 등록",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-create",
+                                    "iaRow": 124
+                                },
+                                {
+                                    "label": "하위계정 등록 완료 토스트",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-create-complete-toast",
+                                    "iaRow": 125
+                                }
+                            ]
                         },
                         {
-                            "label": "하위계정 저장 완료 토스트",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-mypage-sub-account-progress-edit-complete-toast",
-                            "iaRow": 128
+                            "label": "수정",
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "하위계정 수정",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-edit",
+                                    "iaRow": 127
+                                },
+                                {
+                                    "label": "하위계정 저장 완료 토스트",
+                                    "screenId": null,
+                                    "status": "대기중",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-edit-complete-toast",
+                                    "iaRow": 128
+                                }
+                            ]
                         },
                         {
-                            "label": "하위계정 비밀번호 초기화",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-mypage-sub-account-progress-password-reset",
-                            "iaRow": 129
+                            "label": "비밀번호 초기화",
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "하위계정 비밀번호 초기화",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-password-reset",
+                                    "iaRow": 129
+                                },
+                                {
+                                    "label": "비밀번호 초기화 완료 토스트",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-password-reset-complete-toast",
+                                    "iaRow": 130
+                                }
+                            ]
                         },
                         {
-                            "label": "비밀번호 초기화 완료 토스트",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-mypage-sub-account-progress-password-reset-complete-toast",
-                            "iaRow": 130
+                            "label": "사용정지",
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "상태 변경",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-status-change",
+                                    "iaRow": 131
+                                },
+                                {
+                                    "label": "상태 변경 완료 토스트",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-status-change-complete-toast",
+                                    "iaRow": 132
+                                }
+                            ]
                         },
                         {
-                            "label": "상태 변경",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-mypage-sub-account-progress-status-change",
-                            "iaRow": 131
-                        },
-                        {
-                            "label": "상태 변경 완료 토스트",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "org-mypage-sub-account-progress-status-change-complete-toast",
-                            "iaRow": 132
+                            "label": "삭제",
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "하위계정 삭제 확인",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-delete",
+                                    "iaRow": 123
+                                }
+                            ]
                         }
                     ]
                 },
