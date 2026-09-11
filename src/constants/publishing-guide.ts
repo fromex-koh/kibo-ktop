@@ -178,6 +178,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'Table', href: '/component-guide/table'},
                     {label: 'ReviewList', href: '/component-guide/review-list'},
                     {label: 'HistoryList', href: '/component-guide/history-list'},
+                    {label: 'EvaluationCard', href: '/component-guide/evaluation-card'},
                     {label: 'SummaryList', href: '/component-guide/summary-list'},
                     {label: 'SelectableSummaryList', href: '/component-guide/selectable-summary-list'},
                     {label: '목록 패턴 (List)', href: '/component-guide/list-patterns'},

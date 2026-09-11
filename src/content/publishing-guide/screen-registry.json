@@ -2075,7 +2075,28 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/sub-account-progress",
-            "name": "하위 계정 현황"
+            "name": "[기술평가부] 비협약 은행/기관"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-tech-partner",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/tech-partner",
+            "name": "[기술평가부] 협약 은행/기관"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-k-bigx-non-partner",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/k-bigx-non-partner",
+            "name": "[K-BIGx] 비협약 은행/기관"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-k-bigx-partner",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/k-bigx-partner",
+            "name": "[K-BIGx] 협약 은행/기관"
         },
         {
             "key": "org-mypage-inquiry-history",
@@ -2433,6 +2454,13 @@
             "userType": "기관",
             "path": "/org/mypage/sub-account-progress/status-change/complete-toast",
             "name": "상태 변경 완료 토스트"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-delete",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/delete",
+            "name": "하위계정 삭제 확인"
         },
         {
             "key": "org-login-guide",

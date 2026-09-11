@@ -1,29 +1,29 @@
 {
-    "version": "v3.2.3",
+    "version": "v3.2.4",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.2.3",
+            "version": "v3.2.4",
             "isCurrent": true
         },
         {
             "name": "src/components/ui",
-            "version": "v1.0.1",
-            "isCurrent": false
+            "version": "v3.2.4",
+            "isCurrent": true
         },
         {
             "name": "src/components/theme",
-            "version": "v3.0.4",
-            "isCurrent": false
+            "version": "v3.2.4",
+            "isCurrent": true
         },
         {
             "name": "src/components/composite",
-            "version": "v3.2.3",
+            "version": "v3.2.4",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v3.2.3",
+            "version": "v3.2.4",
             "isCurrent": true
         },
         {
@@ -33,12 +33,12 @@
         },
         {
             "name": "src/constants",
-            "version": "v3.2.3",
+            "version": "v3.2.4",
             "isCurrent": true
         },
         {
             "name": "src/content",
-            "version": "v3.2.3",
+            "version": "v3.2.4",
             "isCurrent": true
         },
         {
@@ -99,7 +99,7 @@
         {
             "name": "package.json",
             "version": "v3.2.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "yarn.lock",
@@ -114,7 +114,7 @@
         {
             "name": "next.config.ts",
             "version": "v3.2.3",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": ".gitignore",
@@ -123,13 +123,13 @@
         },
         {
             "name": "public",
-            "version": "v2.0.0",
-            "isCurrent": false
+            "version": "v3.2.4",
+            "isCurrent": true
         },
         {
             "name": "vendor/shadcn-baseline",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.2.4",
+            "isCurrent": true
         },
         {
             "name": "src/app/fonts",

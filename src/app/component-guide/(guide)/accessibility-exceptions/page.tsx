@@ -360,6 +360,31 @@ const WAVE_ISSUES = [
     },
 ] as const
 
+// WAVE — 조회 필터(SelectFilterField·KeywordSearchField)가 있는 목록 화면이면 어디서나 나오는 두 건.
+// Radix Select 가 고른 값을 폼에 담으려고 만드는 숨은 native select 가 원인이고, 셀렉트 한 칸에 하나씩
+// 생긴다. 아래 건수는 셀렉트 두 칸(상태·검색 대상)이 있는 하위계정 현황에서 잰 값이다.
+const WAVE_SELECT_SCREEN_ROUTES = ['/org/mypage/sub-account-progress'] as const
+
+const WAVE_SELECT_ISSUES = [
+    {
+        level: 'error',
+        message: 'Missing form label (1)',
+        count: 1,
+        screens: 1,
+        owner: 'Radix Select 의 숨은 native select',
+        verdict: '값을 폼에 담으려고 두는 select 라 aria-hidden·tabindex="-1" 이 붙어 있고 라벨이 없다',
+    },
+    {
+        // WAVE 는 이 등급을 Alert 으로 적는다 — 이 표의 경고와 같은 자리다.
+        level: 'warning',
+        message: 'Select missing label (1)',
+        count: 1,
+        screens: 1,
+        owner: 'Radix Select 의 숨은 native select',
+        verdict: '위와 같은 종류의 요소를 두고 WAVE 가 등급만 달리 매긴 것이다',
+    },
+] as const
+
 // 모달을 연 화면에서만 나오는 것들 — 모달 단독 확인 화면이 대표 예다.
 const DIALOG_SCREEN_ROUTES = [
     '/org/mypage/evaluation-history/guarantee-recommendation/center-search',
@@ -1591,6 +1616,84 @@ const AccessibilityExceptionsPage = () => (
                                     body: (
                                         <ul className="flex flex-wrap gap-2">
                                             {WAVE_SCREEN_ROUTES.map((route) => (
+                                                <li key={route}>
+                                                    <Badge variant="solid-pastel" color="success" size="xs">
+                                                        <code className="font-mono">{route}</code>
+                                                    </Badge>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ),
+                                },
+                            ]}
+                        />
+                    </section>
+
+                    <section aria-labelledby="wave-select" className="flex flex-col gap-3">
+                        <SectionHeader>
+                            <SectionHeaderTitle className="typo-title-l-bold" id="wave-select">
+                                {sectionHeading('Radix Select', 'Missing form label · Select missing label')}
+                            </SectionHeaderTitle>
+                            <SectionHeaderDescription>
+                                조회 필터의 셀렉트 한 칸마다 하나씩 나옵니다
+                            </SectionHeaderDescription>
+                        </SectionHeader>
+                        <IssueTable caption="WAVE 가 보고한 메시지와 건수" issues={WAVE_SELECT_ISSUES} />
+                        <DetailList
+                            rows={[
+                                {
+                                    term: '왜 생기나',
+                                    body: (
+                                        <ul className="flex list-none flex-col gap-2">
+                                            <li className="flex">
+                                                <ListMarker type="unordered-small" />
+                                                <span className="min-w-0">
+                                                    Radix 셀렉트는 눈에 보이는 컨트롤을{' '}
+                                                    <code className="font-mono">button[role=combobox]</code> 로 그리고,
+                                                    고른 값이 폼 제출에 담기도록{' '}
+                                                    <strong>
+                                                        칸마다 숨은 <code className="font-mono">select</code> 를 하나씩
+                                                        더 둡니다.
+                                                    </strong>
+                                                </span>
+                                            </li>
+                                            <li className="flex">
+                                                <ListMarker type="unordered-small" />
+                                                <span className="min-w-0">
+                                                    그 <code className="font-mono">select</code> 에는{' '}
+                                                    <code className="font-mono">aria-hidden=&quot;true&quot;</code> ·{' '}
+                                                    <code className="font-mono">tabindex=&quot;-1&quot;</code> 이 붙어
+                                                    있어 스크린리더도 키보드도 닿지 않습니다. WAVE 는 그 두 속성을 보지
+                                                    않고 라벨 유무만 셉니다.
+                                                </span>
+                                            </li>
+                                            <li className="flex">
+                                                <ListMarker type="unordered-small" />
+                                                <span className="min-w-0">
+                                                    사용자가 실제로 쓰는 컨트롤에는 이름이 있습니다 — 상태 칸은{' '}
+                                                    <code className="font-mono">label[for]</code>(감춘 라벨), 검색 대상
+                                                    칸은 <code className="font-mono">aria-label</code> 입니다[7.4.1].
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    ),
+                                },
+                                {
+                                    term: '조치',
+                                    body: (
+                                        <p>
+                                            <strong>고칠 자리가 없습니다</strong> — 우리 코드에는 그{' '}
+                                            <code className="font-mono">select</code> 가 없습니다. Radix 가 폼 제출을
+                                            위해 만드는 것이고 이름을 넣을 prop 도 열려 있지 않아, 고치려면 셸을 손대야
+                                            합니다([SC-02]).
+                                        </p>
+                                    ),
+                                },
+                                {
+                                    term: '해당 화면',
+                                    body: (
+                                        <ul className="flex flex-wrap gap-2">
+                                            {WAVE_SELECT_SCREEN_ROUTES.map((route) => (
                                                 <li key={route}>
                                                     <Badge variant="solid-pastel" color="success" size="xs">
                                                         <code className="font-mono">{route}</code>

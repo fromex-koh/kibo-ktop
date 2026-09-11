@@ -1,6 +1,7 @@
 'use client'
 
 import type {ReactNode} from 'react'
+import {LoaderCircle} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {Field as BaseField, FieldDescription, FieldError, FieldLabel as BaseFieldLabel} from '@/components/ui/field'
 import {InputGroup, InputGroupInput} from '@/components/ui/input-group'
@@ -119,6 +120,11 @@ const LookupField = ({
     readOnly,
     className,
     helper,
+    pattern,
+    patternMessage,
+    onAction,
+    actionPending,
+    actionPendingLabel,
     wrapAction,
 }: {
     id: string
@@ -130,13 +136,40 @@ const LookupField = ({
     readOnly?: boolean
     className?: string
     helper?: string
+    /** 값의 형식(HTML pattern). 어긋나면 아래 patternMessage 를 칸 밑에 띄운다. */
+    pattern?: string
+    /** 형식이 어긋났을 때의 안내 — 브라우저 기본 문구는 무엇을 고쳐야 하는지 알려 주지 않는다[7.4.2]. */
+    patternMessage?: string
+    /** 버튼을 눌렀을 때 — 모달을 열지 않고 그 자리에서 확인하는 버튼(중복확인 등)에 쓴다. */
+    onAction?: () => void
+    /** 서버에 물어보는 중 — 버튼이 돌아가는 표시로 바뀌고 다시 눌리지 않는다. */
+    actionPending?: boolean
+    /** 물어보는 동안 버튼에 보일 글자. 기본은 원래 이름 그대로다. */
+    actionPendingLabel?: string
     /** 버튼을 감싸 모달 트리거로 만들 때 쓴다 — 감싼 결과를 돌려준다(업종코드 조회 모달 등).
         버튼을 사용처에서 통째로 만들지 않는 이유는, 버튼 글자·모양을 이 조각 한 곳에 두기 위해서다. */
     wrapAction?: (button: ReactNode) => ReactNode
 }) => {
+    // 서버에 물어보는 동안에는 돌아가는 표시를 함께 둔다 — 누른 것이 먹혔는지 화면에서 알 수 있어야 한다.
+    // 표시는 장식이라 읽히지 않게 하고, 진행 중이라는 사실은 aria-busy 가 전한다[8.2.1].
     const actionButton = (
-        <Button type="button" variant="tertiary" size="md" className="shrink-0">
-            {action}
+        <Button
+            type="button"
+            variant="tertiary"
+            size="md"
+            className="shrink-0"
+            onClick={onAction}
+            disabled={actionPending}
+            aria-busy={actionPending}
+        >
+            {actionPending ? (
+                <>
+                    <LoaderCircle aria-hidden="true" className="animate-spin" />
+                    {actionPendingLabel ?? action}
+                </>
+            ) : (
+                action
+            )}
         </Button>
     )
 
@@ -150,6 +183,8 @@ const LookupField = ({
                     required={required}
                     autoComplete="off"
                     placeholder={placeholder}
+                    pattern={pattern}
+                    data-pattern-message={patternMessage}
                     aria-describedby={helper ? `${id}-helper` : undefined}
                     className="min-w-0 flex-1"
                 />

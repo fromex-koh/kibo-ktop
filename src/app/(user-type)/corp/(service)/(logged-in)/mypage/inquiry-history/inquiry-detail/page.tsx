@@ -19,7 +19,7 @@ export const metadata: Metadata = {title: '문의하기 상세'}
 // 것만 그린다.
 //   · MOCK_INQUIRY   → 문의 한 건 조회 응답으로 교체한다. status 는 'waiting'(답변대기) ·
 //                      'answered'(답변완료) 두 가지이고, answer 를 넘기면 답변 자리에 그 내용이
-//                      A. 표시와 함께 들어간다(넘기지 않으면 대기 안내가 보인다 — 시안 상태).
+//                      A. 그림과 함께 들어간다(넘기지 않으면 같은 자리에 대기 안내가 보인다 — 시안 상태).
 //   · INQUIRY_LIST_PATH → [목록으로 돌아가기] 가 가는 화면 경로.
 const MOCK_INQUIRY: InquiryDetailItem = {
     category: '기술평가',

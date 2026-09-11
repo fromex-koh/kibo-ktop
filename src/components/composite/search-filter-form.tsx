@@ -265,13 +265,20 @@ const KeywordSearchField = ({
     )
 }
 
-type CompanyNameFieldProps = {name?: string; label?: string; placeholder?: string}
+type CompanyNameFieldProps = {
+    name?: string
+    label?: string
+    placeholder?: string
+    /** 라벨을 화면에서 감춘다(스크린리더에는 남는다) — 시안에 라벨이 보이지 않는 필터에 쓴다. */
+    labelHidden?: boolean
+}
 
 // 회사(기업)명 — 텍스트 입력.
 const CompanyNameField = ({
     name = 'companyName',
     label = '회사명',
     placeholder = '회사명을 입력하세요',
+    labelHidden,
 }: CompanyNameFieldProps) => {
     const id = useId()
     const labelId = `${id}-label`
@@ -279,7 +286,7 @@ const CompanyNameField = ({
     useResetSignal(() => setValue(''))
 
     return (
-        <FilterRow label={label} labelId={labelId} htmlFor={id}>
+        <FilterRow label={label} labelId={labelId} htmlFor={id} labelHidden={labelHidden}>
             <ClearableInput
                 id={id}
                 name={name}
@@ -298,9 +305,21 @@ type SelectFilterFieldProps = {
     options: readonly SelectOption[]
     defaultValue?: string
     placeholder?: string
+    /** 라벨을 화면에서 감춘다(스크린리더에는 남는다) — 시안에 라벨이 보이지 않는 필터에 쓴다. */
+    labelHidden?: boolean
+    /** 칸 높이 — 기본은 40(md)이고, 시안이 48 인 화면은 lg 를 준다. */
+    size?: 'lg' | 'md'
 }
 
-const SelectFilterField = ({label, name, options, defaultValue = '', placeholder}: SelectFilterFieldProps) => {
+const SelectFilterField = ({
+    label,
+    name,
+    options,
+    defaultValue = '',
+    placeholder,
+    labelHidden,
+    size,
+}: SelectFilterFieldProps) => {
     const id = useId()
     const labelId = `${id}-label`
     const [value, setValue] = useState(defaultValue)
@@ -310,9 +329,9 @@ const SelectFilterField = ({label, name, options, defaultValue = '', placeholder
     // hidden native <select>(aria-hidden)에는 라벨을 붙일 방법이 없어 WAVE "Missing form label"이 남는데,
     // 이는 shadcn/Radix 구조에서 비롯된 오탐이라 컴포넌트 가이드의 "WAVE 예외"에 사유를 문서화한다.
     return (
-        <FilterRow label={label} labelId={labelId} htmlFor={id}>
+        <FilterRow label={label} labelId={labelId} htmlFor={id} labelHidden={labelHidden}>
             <Select name={name} value={value} onValueChange={setValue}>
-                <SelectTrigger id={id} className="w-full">
+                <SelectTrigger id={id} size={size} className="w-full">
                     <SelectValue placeholder={placeholder} />
                 </SelectTrigger>
                 <SelectContent>
@@ -450,7 +469,14 @@ const SearchFilterForm = ({
     )
 }
 
-export type {SearchFilterLayout, SearchFilterFormProps, DateRangeFieldProps, KeywordSearchFieldProps}
+export type {
+    SearchFilterLayout,
+    SearchFilterFormProps,
+    DateRangeFieldProps,
+    KeywordSearchFieldProps,
+    CompanyNameFieldProps,
+    SelectFilterFieldProps,
+}
 export {
     SearchFilterForm,
     SearchFilterFields,
@@ -459,6 +485,7 @@ export {
     DateRangeField,
     KeywordSearchField,
     CompanyNameField,
+    SelectFilterField,
     SearchTypeField,
     PaymentTypeField,
 }
