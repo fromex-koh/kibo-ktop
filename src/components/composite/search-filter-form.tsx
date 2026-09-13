@@ -149,7 +149,9 @@ const DateRangeField = ({
                 value={preset}
                 onValueChange={setPreset}
                 aria-labelledby={labelId}
-                className="max-sm:w-full max-sm:*:w-auto max-sm:*:flex-1"
+                // 좁은 화면에서는 네 칩이 한 줄을 고르게 나눈다. 그때 좌우 여백까지 그대로 두면 칸(360 에서 63)이
+                // 글자에 필요한 폭(75)보다 좁아져 "3개월" 이 잘린다 — 여백만 줄여 글자가 온전히 들어가게 한다.
+                className="max-sm:w-full max-sm:*:w-auto max-sm:*:flex-1 max-sm:*:px-2"
             >
                 {DATE_RANGE_PRESETS.map((option) => (
                     <SegmentedControlItem key={option.value} id={`${controlId}-${option.value}`} value={option.value}>
@@ -271,6 +273,8 @@ type CompanyNameFieldProps = {
     placeholder?: string
     /** 라벨을 화면에서 감춘다(스크린리더에는 남는다) — 시안에 라벨이 보이지 않는 필터에 쓴다. */
     labelHidden?: boolean
+    /** 칸 높이 — 기본은 40(md)이고, 시안이 48 인 화면은 lg 를 준다(같은 줄의 셀렉트와 높이를 맞춘다). */
+    size?: 'lg' | 'md'
 }
 
 // 회사(기업)명 — 텍스트 입력.
@@ -279,6 +283,7 @@ const CompanyNameField = ({
     label = '회사명',
     placeholder = '회사명을 입력하세요',
     labelHidden,
+    size,
 }: CompanyNameFieldProps) => {
     const id = useId()
     const labelId = `${id}-label`
@@ -293,6 +298,9 @@ const CompanyNameField = ({
                 value={value}
                 onChange={(event) => setValue(event.target.value)}
                 placeholder={placeholder}
+                // 셀렉트의 size="lg" 가 48(h-control-h-md)이라 같은 값을 쓴다 — 한 줄에 나란히 서는
+                // 칸끼리 높이가 어긋나지 않게 한다.
+                className={size === 'lg' ? 'h-control-h-md' : undefined}
             />
         </FilterRow>
     )
