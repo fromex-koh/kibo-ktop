@@ -1,10 +1,10 @@
 'use client'
 
 import {useEffect, useRef, useState, type FormEvent} from 'react'
-import {useRouter} from 'next/navigation'
 import {ArrowDown, ArrowUp, ArrowUpDown, RotateCcw, Search} from 'lucide-react'
 import {SubAccountCreateDialog} from '@/components/composite/sub-account-create-dialog'
 import {SubAccountDeleteDialog} from '@/components/composite/sub-account-delete-dialog'
+import {SubAccountEditDialog} from '@/components/composite/sub-account-edit-dialog'
 import {SubAccountPasswordResetDialog} from '@/components/composite/sub-account-password-reset-dialog'
 import {SubAccountStatusChangeDialog} from '@/components/composite/sub-account-status-change-dialog'
 import {EmptyState} from '@/components/composite/empty-state'
@@ -33,7 +33,6 @@ import {
     type SubAccountMenuAction,
     type SubAccountSortOrder,
 } from '@/constants/sub-account'
-import {SUB_ACCOUNT_ROUTES} from '@/content/service/org-sub-accounts'
 import {useIsMobile} from '@/hooks/use-mobile'
 
 // 기관 하위계정 목록 — Figma "마이페이지_하위계정 현황".
@@ -42,15 +41,6 @@ import {useIsMobile} from '@/hooks/use-mobile'
 // 고른 값과 정렬 방향을 들고 있어야 해서 client 로 두고, 화면(page.tsx)은 서버 컴포넌트로 유지한다.
 // 데이터는 받아서 그리기만 한다 — 목업과 조회 API 의 교체 지점은 content/service/org-sub-accounts.ts 다.
 
-// [⋮] 에서 화면으로 가는 일. 어느 계정인지는 쿼리(id)로 넘긴다.
-// 비밀번호 초기화·상태 변경·삭제는 여기 없다 — 화면 이동이 아니라 이 화면에서 되묻는 모달이다.
-const MENU_ROUTES = {
-    edit: SUB_ACCOUNT_ROUTES.edit,
-} as const satisfies Partial<Record<SubAccountMenuAction, string>>
-
-// [⋮] 에서 고르면 되묻는 모달이 뜨는 일 — 되묻는 대상 계정을 상태 하나로 들고 있는다.
-type SubAccountConfirmAction = Exclude<SubAccountMenuAction, keyof typeof MENU_ROUTES>
-
 type OrgSubAccountListProps = {
     /** 조회된 하위계정 전체. 정렬·페이지 나누기는 이 목록 안에서 처리한다. */
     items: readonly SubAccountItem[]
@@ -58,14 +48,15 @@ type OrgSubAccountListProps = {
 }
 
 const OrgSubAccountList = ({items, pageSize = 10}: OrgSubAccountListProps) => {
-    const router = useRouter()
     const [page, setPage] = useState(1)
-    // 지운 계정은 목록에서 사라진다.
-    // [프론트엔드 연동] 연동 후에는 삭제 요청을 보내고 목록을 다시 받아 오면 되므로 이 상태는 없어진다.
+    // 지운 계정은 목록에서 사라지고, 고친 계정은 그 자리의 카드가 바뀐다.
+    // [프론트엔드 연동] 연동 후에는 요청을 보내고 목록을 다시 받아 오면 되므로 이 상태는 없어진다.
     const [accounts, setAccounts] = useState<readonly SubAccountItem[]>(items)
-    // 되묻는 중인 계정과 그 일 — 없으면 세 모달이 모두 닫혀 있다.
-    // 카드마다 모달을 두지 않고 목록이 하나씩만 들고 있는다(지운 카드가 사라지면 그 카드의 모달도 사라진다).
-    const [confirmTarget, setConfirmTarget] = useState<{action: SubAccountConfirmAction; item: SubAccountItem}>()
+    // [⋮] 에서 고른 일과 그 계정 — 고른 일이 없으면 네 모달이 모두 닫혀 있다.
+    // 카드마다 모달을 두지 않고 목록이 하나씩만 들고 있는다. 계정은 모달이 닫혀도 놓지 않는다 —
+    // 닫히며 사라지는 동안 모달의 물음·입력 칸이 비어 보이지 않게 한다.
+    const [menuAction, setMenuAction] = useState<SubAccountMenuAction>()
+    const [menuItem, setMenuItem] = useState<SubAccountItem>()
     // 정렬 — 누를 때마다 오름차순 → 내림차순 → 기본으로 돌아간다. 기본은 받은 순서 그대로라 정렬하지 않는다.
     const [sortOrder, setSortOrder] = useState<SubAccountSortOrder>('none')
 
@@ -112,49 +103,46 @@ const OrgSubAccountList = ({items, pageSize = 10}: OrgSubAccountListProps) => {
     // [초기화] — 폼이 조회 조건을 기본값으로 되돌리고, 목록은 첫 페이지로 돌아간다.
     const handleReset = () => setPage(1)
 
-    // [⋮] 에서 고른 일 — 수정만 그 일을 하는 화면으로 보내고, 나머지는 이 화면에서 되묻는다.
-    // 아직 자리만 잡은 화면은 주소가 비어 있어 움직이지 않는다.
+    // [⋮] 에서 고른 일 — 넷 다 화면을 옮기지 않고 이 화면에서 모달로 연다.
     const handleMenuSelect = (action: SubAccountMenuAction, item: SubAccountItem) => {
-        if (action === 'edit') {
-            const href = MENU_ROUTES[action]
-            if (href === '#') return
-
-            router.push(`${href}?id=${item.id}`)
-
-            return
-        }
-
-        setConfirmTarget({action, item})
+        setMenuItem(item)
+        setMenuAction(action)
     }
 
-    // 되묻는 모달이 닫힐 때 — 어느 모달이 닫히든 들고 있던 대상을 놓는다.
-    const closeConfirm = (open: boolean) => {
-        if (!open) setConfirmTarget(undefined)
+    // 모달이 닫힐 때 — 어느 모달이 닫히든 고른 일을 거둔다.
+    const closeMenuDialog = (open: boolean) => {
+        if (!open) setMenuAction(undefined)
+    }
+
+    // [저장하기] — 고친 계정으로 그 자리의 카드를 바꿔 끼우고(이름·상태 배지·계정 ID·담당자가 함께 바뀐다)
+    // 끝났다는 것을 토스트로 알린다. 모달은 저장한 뒤 스스로 닫힌다(closeMenuDialog).
+    // [프론트엔드 연동] 연동 후에는 수정 요청이 성공했을 때만 목록을 다시 받아 오고 토스트를 띄운다.
+    const handleEditSubmit = (updated: SubAccountItem) => {
+        setAccounts((current) => current.map((account) => (account.id === updated.id ? updated : account)))
+        showCheckToast(SUB_ACCOUNT_TOAST.edit.message, {id: SUB_ACCOUNT_TOAST.edit.id})
     }
 
     // [확인] — 그 계정을 목록에서 지우고 모달을 닫는다. 마지막 장의 하나를 지우면 남은 마지막 장으로
     // 내려간다(currentPage 가 totalPages 를 넘지 않도록 아래에서 이미 좁혀 준다).
     const handleDeleteConfirm = () => {
-        if (!confirmTarget) return
+        if (!menuItem) return
 
-        const {item} = confirmTarget
-        setAccounts((current) => current.filter((account) => account.id !== item.id))
-        setConfirmTarget(undefined)
+        setAccounts((current) => current.filter((account) => account.id !== menuItem.id))
+        setMenuAction(undefined)
     }
 
     // [확인] — 그 계정의 상태를 반대로 뒤집는다(사용 ↔ 사용정지). 카드의 배지와 [⋮] 메뉴 이름이 함께 바뀐다.
     // [프론트엔드 연동] 연동 후에는 변경 요청을 보내고 목록을 다시 받아 오면 된다.
     const handleStatusChangeConfirm = () => {
-        if (!confirmTarget) return
+        if (!menuItem) return
 
-        const {item} = confirmTarget
         setAccounts((current) =>
             current.map((account) =>
-                account.id === item.id ? {...account, status: nextSubAccountStatus(account.status)} : account,
+                account.id === menuItem.id ? {...account, status: nextSubAccountStatus(account.status)} : account,
             ),
         )
-        setConfirmTarget(undefined)
-        showCheckToast(SUB_ACCOUNT_TOAST.statusChange.message(nextSubAccountStatus(item.status)), {
+        setMenuAction(undefined)
+        showCheckToast(SUB_ACCOUNT_TOAST.statusChange.message(nextSubAccountStatus(menuItem.status)), {
             id: SUB_ACCOUNT_TOAST.statusChange.id,
         })
     }
@@ -163,7 +151,7 @@ const OrgSubAccountList = ({items, pageSize = 10}: OrgSubAccountListProps) => {
     // 토스트만 알린다.
     // [프론트엔드 연동] 연동 후에는 초기화 요청을 보내고, 성공했을 때만 토스트를 띄운다.
     const handlePasswordResetConfirm = () => {
-        setConfirmTarget(undefined)
+        setMenuAction(undefined)
         showCheckToast(SUB_ACCOUNT_TOAST.passwordReset.message, {id: SUB_ACCOUNT_TOAST.passwordReset.id})
     }
 
@@ -295,24 +283,30 @@ const OrgSubAccountList = ({items, pageSize = 10}: OrgSubAccountListProps) => {
                 ) : null}
             </div>
 
-            {/* [⋮] 가 여는 세 모달 — 셋 다 같은 확인 모달(ConfirmDialog)이라 생김새가 같고, 고른 일에
-                따라 하나만 열린다. 어느 계정인지는 위 confirmTarget 하나가 들고 있다. */}
+            {/* [⋮] 가 여는 네 모달 — 고른 일에 따라 하나만 열리고, 어느 계정인지는 위 menuItem 하나가 들고 있다.
+                수정은 입력 모달이고, 나머지 셋은 같은 확인 모달(ConfirmDialog)이라 생김새가 같다. */}
+            <SubAccountEditDialog
+                open={menuAction === 'edit'}
+                onOpenChange={closeMenuDialog}
+                item={menuItem}
+                onSubmit={handleEditSubmit}
+            />
             <SubAccountPasswordResetDialog
-                open={confirmTarget?.action === 'password-reset'}
-                onOpenChange={closeConfirm}
-                item={confirmTarget?.item}
+                open={menuAction === 'password-reset'}
+                onOpenChange={closeMenuDialog}
+                item={menuItem}
                 onConfirm={handlePasswordResetConfirm}
             />
             <SubAccountStatusChangeDialog
-                open={confirmTarget?.action === 'status-change'}
-                onOpenChange={closeConfirm}
-                item={confirmTarget?.item}
+                open={menuAction === 'status-change'}
+                onOpenChange={closeMenuDialog}
+                item={menuItem}
                 onConfirm={handleStatusChangeConfirm}
             />
             <SubAccountDeleteDialog
-                open={confirmTarget?.action === 'delete'}
-                onOpenChange={closeConfirm}
-                item={confirmTarget?.item}
+                open={menuAction === 'delete'}
+                onOpenChange={closeMenuDialog}
+                item={menuItem}
                 onConfirm={handleDeleteConfirm}
             />
         </div>

@@ -62,6 +62,7 @@ export const SUB_ACCOUNT_STATUS_PARTICLE = {
  */
 export const SUB_ACCOUNT_TOAST = {
     create: {id: 'sub-account-create', message: '하위계정이 등록되었습니다.'},
+    edit: {id: 'sub-account-edit', message: '하위계정 정보가 수정되었습니다.'},
     passwordReset: {id: 'sub-account-password-reset', message: '비밀번호가 초기화되었습니다.'},
     // 상태 변경만 문구가 결과에 따라 달라진다 — 무엇이 바뀌었는지가 아니라 "무엇으로" 바뀌었는지가
     // 토스트만 보고도 읽혀야 한다("사용정지로 변경되었습니다."). 바뀐 뒤의 상태를 넘긴다.
@@ -119,7 +120,7 @@ export const SUB_ACCOUNT_SORT_ORDER_LABEL = {
 export const nextSubAccountSortOrder = (order: SubAccountSortOrder): SubAccountSortOrder =>
     SUB_ACCOUNT_SORT_ORDERS[(SUB_ACCOUNT_SORT_ORDERS.indexOf(order) + 1) % SUB_ACCOUNT_SORT_ORDERS.length]
 
-/** [⋮] 메뉴에서 고를 수 있는 일 — 가는 화면은 화면(page)이 정한다. */
+/** [⋮] 메뉴에서 고를 수 있는 일 — 넷 다 화면을 옮기지 않고 목록 화면에서 모달로 연다. */
 export type SubAccountMenuAction = 'edit' | 'password-reset' | 'status-change' | 'delete'
 
 /** 협약 정보 — 이 기관이 맺은 협약 한 건. */
@@ -145,6 +146,8 @@ export type SubAccountServiceUsage = {
     /** 서비스 이름(KTRS-FM 평가 · 혁신성장지수 평가 (Tech-Index) 등). */
     service: string
     count: number
+    /** 이용기간(YYYY.MM.DD ~ YYYY.MM.DD) — 수정 모달의 건수 칸 오른쪽 위에 나온다. 평가사업이 정한다. */
+    period: string
 }
 
 /** 접속 일시 내역 한 건. */
