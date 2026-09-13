@@ -971,8 +971,8 @@
             "key": "corp-mypage-k-bigx-report-history",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.2.5",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-k-bigx-report-history-report-view",
@@ -1028,7 +1028,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-notice-announcements",
@@ -1959,14 +1959,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-k-bigx-report-history",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.2.5",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-k-bigx-report-history-report-print",
@@ -1980,28 +1980,28 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-tech-partner",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-k-bigx-non-partner",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-k-bigx-partner",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-inquiry-history",
@@ -2015,7 +2015,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-notice-announcements",
@@ -2302,70 +2302,70 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-create-complete-toast",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-edit",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.2.5",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-sub-account-progress-edit-complete-toast",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.2.5",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-sub-account-progress-password-reset",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-password-reset-complete-toast",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-status-change",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-status-change-complete-toast",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-delete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-login-guide",
@@ -2393,14 +2393,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-credit-information-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-auth-org-login",
@@ -2421,14 +2421,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-credit-information-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-pricing-payment",
