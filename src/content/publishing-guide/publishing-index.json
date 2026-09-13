@@ -1723,7 +1723,7 @@
                     "label": "K-BIGx 보고서 이력",
                     "screen": {
                         "screenId": "SB-FOTA-CM0-0017",
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "corp-mypage-k-bigx-report-history",
                         "iaRow": 131
@@ -3587,7 +3587,7 @@
                     "label": "K-BIGx 보고서 이력",
                     "screen": {
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "org-mypage-k-bigx-report-history",
                         "iaRow": 121
@@ -3681,15 +3681,15 @@
                                 {
                                     "label": "하위계정 수정",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-sub-account-progress-edit",
                                     "iaRow": 127
                                 },
                                 {
-                                    "label": "하위계정 저장 완료 토스트",
+                                    "label": "하위계정 수정 완료 토스트",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-sub-account-progress-edit-complete-toast",
                                     "iaRow": 128

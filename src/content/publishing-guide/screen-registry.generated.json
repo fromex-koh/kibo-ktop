@@ -969,8 +969,8 @@
         },
         {
             "key": "corp-mypage-k-bigx-report-history",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -1963,8 +1963,8 @@
         },
         {
             "key": "org-mypage-k-bigx-report-history",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -2320,15 +2320,15 @@
         },
         {
             "key": "org-mypage-sub-account-progress-edit",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-edit-complete-toast",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
