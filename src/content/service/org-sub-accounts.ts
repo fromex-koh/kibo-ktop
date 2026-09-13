@@ -18,27 +18,27 @@ import {
 //   3) 협약 정보·계정 수 요약·계정 목록을 그대로 돌려준다.
 // 케이스(협약 여부·기술평가부 여부)는 지금 화면이 인자로 정하지만, 연동 후에는 로그인한 기관의 속성이라
 // 서버가 정한다 — 그때는 caseKey 인자를 지우고 응답의 이용서비스를 그대로 쓰면 된다.
-// 계정 목록이 빈 배열이면 목록 자리에 "검색내역이 없습니다." 안내가 나온다.
+// 계정 목록이 빈 배열이면 목록 자리에 "하위계정 내역이 없습니다." 안내가 나온다.
 //
 // 조회 조건(상태·검색 대상·검색어)과 정렬은 지금 목록 컴포넌트가 화면 안에서 처리한다. 서버로 넘길 때는
 // 이 함수에 조건을 받는 인자를 열고 목록의 [프론트엔드 연동] 주석 자리에서 부른다.
 
-// 아직 화면이 없는 버튼은 자리를 비워 둔다.
-const NOT_READY_PATH = '#'
+// 이용기간 — 시안 값 그대로다. 평가사업이 서비스마다 정하는 값이라 칸마다 따로 들고 있는다.
+const MOCK_USAGE_PERIOD = '2026.01.01 ~ 2026.12.31'
 
 // 상세정보 모달이 보여 주는 값 — 시안 "하위 계정 상세정보" 그대로다.
 // 서비스별 배분 이용건수는 그 기관이 쓰는 이용서비스에서 나온다 — 협약 정보의 [이용서비스] 와 같은
 // 목록이라, K-BIGx 만 쓰는 기관은 칸도 하나만 선다.
 // 내역이 비어 있는 계정도 있다 — 방금 만든 계정은 접속·활동 기록이 없다. 그때 모달은 같은 자리에
 // "…이 없습니다." 안내를 보여 준다. hasLogs 를 false 로 두면 그 모습을 화면에서 볼 수 있다.
-// 이용서비스 한 가지가 상세정보 모달에서 차지하는 칸 — 화면에 쓰는 이름이 협약 정보의 이름과 조금 다르고
+// 이용서비스 한 가지가 상세정보·수정 모달에서 차지하는 칸 — 화면에 쓰는 이름이 협약 정보의 이름과 조금 다르고
 // (KTRS-FM → "KTRS-FM 평가") 건수도 서비스마다 다르다. 이용서비스에 없는 서비스는 칸도 생기지 않는다.
 const SERVICE_USAGE = {
-    'K-BIGx': {service: 'K-BIGx 보고서', count: 38},
-    'KTRS-FM': {service: 'KTRS-FM 평가', count: 20},
-    'Tech-Index': {service: '혁신성장지수 평가 (Tech-Index)', count: 10},
-    '창업용 Tech-Index': {service: '창업용 Tech-Index', count: 5},
-    투자모형: {service: '투자 모형', count: 3},
+    'K-BIGx': {service: 'K-BIGx 보고서', count: 38, period: MOCK_USAGE_PERIOD},
+    'KTRS-FM': {service: 'KTRS-FM 평가', count: 20, period: MOCK_USAGE_PERIOD},
+    'Tech-Index': {service: '혁신성장지수 평가 (Tech-Index)', count: 10, period: MOCK_USAGE_PERIOD},
+    '창업용 Tech-Index': {service: '창업용 Tech-Index', count: 5, period: MOCK_USAGE_PERIOD},
+    투자모형: {service: '투자 모형', count: 3, period: MOCK_USAGE_PERIOD},
 } as const satisfies Record<SubAccountService, SubAccountServiceUsage>
 
 const mockDetail = (services: readonly SubAccountService[], memo: string, hasLogs = true): SubAccountDetail => ({
@@ -115,7 +115,10 @@ const getSubAccounts = (services: readonly SubAccountService[]): readonly SubAcc
         managerName: '이영희',
         email: 'ulsan@bb-bank.com',
         reportCount: 15,
-        detail: mockDetail(services, '메모내용이 들어갑니다'),
+        detail: mockDetail(
+            services,
+            '울산지점 기업금융팀 공용 계정입니다. 담당자가 바뀌면 비밀번호를 초기화한 뒤 새 담당자에게 전달해 주세요.',
+        ),
     },
     {
         id: 'sub-account-2',
@@ -125,7 +128,10 @@ const getSubAccounts = (services: readonly SubAccountService[]): readonly SubAcc
         managerName: '이영희',
         email: 'seoul@bb-bank.com',
         reportCount: 32,
-        detail: mockDetail(services, '메모내용이 들어갑니다'),
+        detail: mockDetail(
+            services,
+            '상반기 인사이동으로 사용정지했습니다. 후임 담당자가 정해지면 다시 사용으로 바꿀 예정입니다.',
+        ),
     },
     {
         id: 'sub-account-3',
@@ -145,7 +151,10 @@ const getSubAccounts = (services: readonly SubAccountService[]): readonly SubAcc
         managerName: '알렉산드라크리스티나요한손',
         email: 'gwangju.branch.manager@bb-bank.co.kr',
         reportCount: 24,
-        detail: mockDetail(services, '계정 ID·담당자 이름이 긴 경우를 보는 계정입니다'),
+        detail: mockDetail(
+            services,
+            '광주지점 여신심사부 계정입니다. 매월 말 서비스별 배분 건수를 점검하고, 남은 건수가 5건 이하이면 본부 담당자에게 추가 배분을 요청합니다.',
+        ),
     },
 ]
 
@@ -164,11 +173,5 @@ const getOrgSubAccountOverview = async (
     return {agreement, summaries: MOCK_SUMMARIES, accounts: getSubAccounts(agreement.services)}
 }
 
-// 카드의 [⋮] 메뉴가 가는 화면. 아직 만들지 않은 화면은 자리만 비워 둔다.
-// 등록·비밀번호 초기화·상태 변경·삭제는 여기 없다 — 화면으로 가지 않고 이 화면에서 뜨는 모달이다.
-const SUB_ACCOUNT_ROUTES = {
-    edit: NOT_READY_PATH,
-} as const
-
-export {getOrgSubAccountOverview, SUB_ACCOUNT_ROUTES}
+export {getOrgSubAccountOverview}
 export type {OrgSubAccountOverview}

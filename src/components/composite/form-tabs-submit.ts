@@ -98,6 +98,9 @@ const getValidationMessage = (control: HTMLInputElement | HTMLSelectElement | HT
     if (control.checkValidity()) return null
 
     const {validity} = control
+    // 빈 칸 — 칸이 따로 적어 둔 안내(data-required-message)가 있으면 그것을 쓴다. 라벨만 넣은 문장으로는
+    // 무엇을 적어야 하는지 드러나지 않는 칸이 있다(서비스 이름이 라벨인 배분 건수 칸 등).
+    if (validity.valueMissing && control.dataset.requiredMessage) return control.dataset.requiredMessage
     if (validity.valueMissing && label) {
         return `${withObjectParticle(label)} ${isChoiceControl(control) ? '선택' : '입력'}해 주세요.`
     }

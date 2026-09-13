@@ -2425,7 +2425,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/sub-account-progress/edit/complete-toast",
-            "name": "하위계정 저장 완료 토스트"
+            "name": "하위계정 수정 완료 토스트"
         },
         {
             "key": "org-mypage-sub-account-progress-password-reset",

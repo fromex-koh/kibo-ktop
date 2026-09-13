@@ -301,10 +301,12 @@ const OrgEvaluationHistoryList = ({items, modelTabs, defaultPeriod, pageSize = 1
 
             <div id={panelId} role="tabpanel" className="flex flex-col gap-10">
                 {/* 건수와 목록은 한 덩어리로 붙고(16), 페이지 이동만 멀리 떨어진다(40) — 시안. */}
-                {/* 붙어 있는 상단 바 높이만큼 자리를 비워 둔다 — 페이지를 넘겨 이 자리로 굴러올 때
-                    목록 머리가 바 아래에 가려지지 않는다. 바는 좁은 화면에서 56, xl 에서 상단 메뉴 줄까지
-                    최대 112 라 각각 여유를 더해 80·128 로 둔다. */}
-                <div ref={listRef} className="flex scroll-mt-20 flex-col gap-4 xl:scroll-mt-32">
+                {/* 화면 위에 붙어 있는 것들의 높이만큼 자리를 비워 둔다 — 페이지를 넘겨 이 자리로 굴러올 때
+                    목록 머리가 그 아래에 가려지지 않는다. 붙어 있는 높이는 폭마다 다르다(K-BIGx 보고서 이력 목록과 같은 값).
+                      · md 미만 — 헤더(56) 아래에 마이페이지 메뉴 드롭다운 줄(152)까지 붙어 208 → 224(scroll-mt-56)
+                      · md~xl — 드롭다운 줄은 붙지 않고 헤더(100)만 → 112(scroll-mt-28)
+                      · xl 이상 — 헤더(112) → 128(scroll-mt-32) */}
+                <div ref={listRef} className="flex scroll-mt-56 flex-col gap-4 md:scroll-mt-28 xl:scroll-mt-32">
                     {/* 건수만 굵고 브랜드 색이다 — 몇 건인지가 이 줄에서 읽을 값이다. */}
                     <p className="typo-body-xl-regular text-foreground">
                         총 <span className="typo-body-xl-bold text-primary-strong">{filteredItems.length}</span>건

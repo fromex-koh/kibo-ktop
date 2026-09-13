@@ -1,29 +1,29 @@
 {
-    "version": "v3.2.4",
+    "version": "v3.2.5",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.2.4",
+            "version": "v3.2.5",
             "isCurrent": true
         },
         {
             "name": "src/components/ui",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/theme",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/components/composite",
-            "version": "v3.2.4",
+            "version": "v3.2.5",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v3.2.4",
+            "version": "v3.2.5",
             "isCurrent": true
         },
         {
@@ -33,12 +33,12 @@
         },
         {
             "name": "src/constants",
-            "version": "v3.2.4",
+            "version": "v3.2.5",
             "isCurrent": true
         },
         {
             "name": "src/content",
-            "version": "v3.2.4",
+            "version": "v3.2.5",
             "isCurrent": true
         },
         {
@@ -124,12 +124,12 @@
         {
             "name": "public",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "vendor/shadcn-baseline",
             "version": "v3.2.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/app/fonts",
