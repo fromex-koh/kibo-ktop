@@ -21,12 +21,21 @@ if (accessibilitySourceHash(root) !== sourceHash) throw new Error('빌드 중 �
 const git = spawnSync('git', ['rev-parse', 'HEAD'], {encoding: 'utf8'})
 const commit = git.status === 0 ? git.stdout.trim() : null
 const registry = JSON.parse(readFileSync('src/content/publishing-guide/screen-registry.json', 'utf8'))
+const publishingIndex = JSON.parse(readFileSync('src/content/publishing-guide/publishing-index.json', 'utf8'))
+const crossedOutKeys = new Set()
+const collectCrossedOutKeys = (value) => {
+    if (!value || typeof value !== 'object') return
+    if (value.isRed === true && typeof value.key === 'string') crossedOutKeys.add(value.key)
+    Object.values(value).forEach(collectCrossedOutKeys)
+}
+collectCrossedOutKeys(publishingIndex.structureGroups)
 const screens = [
     ...new Map(
         registry.screens
             .filter(
                 (screen) =>
                     /^\/(corp|org)\//.test(screen.path) &&
+                    !crossedOutKeys.has(screen.key) &&
                     screen.placeholder !== true &&
                     findAppPage(root, screen.path),
             )
