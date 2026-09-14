@@ -50,9 +50,6 @@ const HeroStatsRoller = ({stats}: {stats: HeroStat[]}) => {
     // 이벤트가 먼저 도착하면 상태 변경 → 재렌더 → cleanup 으로 타이머가 취소된다.
     const activeValue = orderedStats[0].value
     useEffect(() => {
-        // 리듀스드 모션에서는 애니메이션 없이 정적 목록을 유지하므로 자동 진행하지 않는다. [KWCAG 6.3.1]
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
         const delay = isRolling
             ? ROLLING_TRANSITION_MS + FALLBACK_BUFFER_MS
             : counterTotalDurationMs(activeValue) + FALLBACK_BUFFER_MS

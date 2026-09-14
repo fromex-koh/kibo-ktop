@@ -19,7 +19,6 @@ export const heroStatsTrackClassName = [
     'group/track h-[120%] translate-y-0',
     'max-md:h-[300%] landscape:h-[300%]',
     'data-[rolling=true]:ease-roll data-[rolling=true]:-translate-y-1/6 data-[rolling=true]:transition-[translate] data-[rolling=true]:duration-700',
-    'motion-reduce:transition-none motion-reduce:data-[rolling=true]:translate-y-0',
 ].join(' ')
 
 export const heroStatRowClassName = 'group/row h-1/6 max-md:gap-y-2'

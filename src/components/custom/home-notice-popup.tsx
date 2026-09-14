@@ -17,7 +17,7 @@ import {cn} from '@/lib/utils'
 // 아래 점이 맡는다.
 //
 // 넘기는 모습은 띠(track)를 옆으로 밀어서 만든다 — 한 장씩 갈아 끼우면 어느 쪽으로 넘어갔는지 알 수
-// 없다. 동작을 줄이도록 설정한 사용자에게는 밀리지 않고 바로 바뀐다[6.3.1].
+// 없다.
 //
 // [프론트엔드 연동] 목업은 content/service/home-notices.ts 에 있다. [오늘 하루 열지 않기]는 지금 화면에서
 // 창만 닫는다 — 실제로는 그 값을 하루짜리 쿠키·localStorage 에 적고, 다음 방문 때 이 컴포넌트를 아예
@@ -57,7 +57,7 @@ const HomeNoticePopup = ({items, detailHref}: HomeNoticePopupProps) => {
                         <ul
                             id={trackId}
                             style={{transform: `translateX(-${current * 100}%)`}}
-                            className="flex items-stretch transition-transform motion-safe:duration-300 motion-reduce:transition-none"
+                            className="flex items-stretch transition-transform duration-300"
                         >
                             {items.map((notice, noticeIndex) => (
                                 <li

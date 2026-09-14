@@ -53,7 +53,7 @@ const HeroSection = () => (
         <div
             className={cn(
                 heroFrameClassName,
-                'relative flex items-center motion-safe:[transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] motion-safe:[opacity:calc(1-var(--hero-scroll-progress,0))]',
+                'relative flex [transform:translate3d(0,calc(var(--hero-scroll-progress,0)*-3rem),0)] items-center [opacity:calc(1-var(--hero-scroll-progress,0))]',
             )}
         >
             <div className={cn(heroGridClassName, 'grid-layout w-full items-start')}>

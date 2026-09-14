@@ -85,7 +85,7 @@ const StackPager = ({
     // 맞춰야 하므로 별도 상태를 둔다. 헤더의 300ms 색상 페이드는 새 화면이 도착하는 시점에 끝난다.
     const [headerPage, setHeaderPage] = useState(0)
 
-    const movePage = useCallback((direction: 1 | -1, pageCount: number, reducedMotion: boolean) => {
+    const movePage = useCallback((direction: 1 | -1, pageCount: number) => {
         if (isTransitioningRef.current || !isGestureArmedRef.current) return
 
         const nextPage = Math.min(pageCount - 1, Math.max(0, activePageRef.current + direction))
@@ -114,14 +114,11 @@ const StackPager = ({
         window.clearTimeout(headerTimerRef.current)
         headerTimerRef.current = window.setTimeout(
             () => setHeaderPage(nextPage),
-            reducedMotion ? 0 : STACK_PAGER_TRANSITION_DURATION_MS - HEADER_BACKGROUND_TRANSITION_MS,
+            STACK_PAGER_TRANSITION_DURATION_MS - HEADER_BACKGROUND_TRANSITION_MS,
         )
-        transitionTimerRef.current = window.setTimeout(
-            () => {
-                isTransitioningRef.current = false
-            },
-            reducedMotion ? 0 : STACK_PAGER_TRANSITION_DURATION_MS,
-        )
+        transitionTimerRef.current = window.setTimeout(() => {
+            isTransitioningRef.current = false
+        }, STACK_PAGER_TRANSITION_DURATION_MS)
     }, [])
 
     const goToPage = useCallback(
@@ -158,7 +155,6 @@ const StackPager = ({
         if (!container) return
 
         const desktopQuery = window.matchMedia(mediaQuery)
-        const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
         const pages = Array.from(container.querySelectorAll<HTMLElement>('[data-stack-page]'))
 
         // 페이지 안에서 먼저 스크롤할지 판단할 때 overflow 를 함께 본다 — overflow:hidden 페이지도
@@ -225,7 +221,7 @@ const StackPager = ({
 
             const direction = accumulatedDeltaRef.current > 0 ? 1 : -1
             event.preventDefault()
-            movePage(direction, pages.length, reducedMotionQuery.matches)
+            movePage(direction, pages.length)
             armAfterGestureEnds()
         }
 
@@ -276,7 +272,7 @@ const StackPager = ({
             event.preventDefault()
             isTouchTracking = false
             isGestureArmedRef.current = true
-            movePage(direction, pages.length, reducedMotionQuery.matches)
+            movePage(direction, pages.length)
         }
 
         const handleTouchEnd = () => {
@@ -307,7 +303,7 @@ const StackPager = ({
             if (direction === null) return
             event.preventDefault()
             isGestureArmedRef.current = true
-            movePage(direction, pages.length, reducedMotionQuery.matches)
+            movePage(direction, pages.length)
         }
 
         const handleDesktopChange = () => {

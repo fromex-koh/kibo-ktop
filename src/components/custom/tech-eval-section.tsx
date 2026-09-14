@@ -136,7 +136,7 @@ const TechEvalSection = ({
                                     }}
                                     onAnimationEnd={showNextService}
                                     // 진행바 정지 — 목차 버튼 호버/포커스 중이거나, 이 섹션이 비활성 스택 페이지일 때.
-                                    className="animate-tech-progress bg-main-accent pager-on:[[data-stack-page]:not([data-stack-state=active])_&]:[animation-play-state:paused] absolute inset-x-0 origin-top data-[paused=true]:[animation-play-state:paused] motion-reduce:scale-y-100 motion-reduce:animate-none"
+                                    className="animate-tech-progress bg-main-accent pager-on:[[data-stack-page]:not([data-stack-state=active])_&]:[animation-play-state:paused] absolute inset-x-0 origin-top data-[paused=true]:[animation-play-state:paused]"
                                 />
                             </div>
 
@@ -223,7 +223,7 @@ const TechEvalSection = ({
                                                     {/* 모바일(md 미만): 이미지+설명을 버튼 바로 아래에 둔다. md 이상은 우측 컬럼이 담당. */}
                                                     <div
                                                         key={`visual-mobile-${entrySequence}-${activeIndex}`}
-                                                        className="animate-tech-enter flex w-full flex-col gap-5 motion-reduce:animate-none md:hidden"
+                                                        className="animate-tech-enter flex w-full flex-col gap-5 md:hidden"
                                                     >
                                                         <TechEvalServiceVisual service={service} />
                                                     </div>
@@ -236,10 +236,10 @@ const TechEvalSection = ({
                         </div>
 
                         {/* 우측 비주얼은 md 이상에서만 표시(md 미만은 활성 목차의 버튼 아래 배치가 담당). */}
-                        <Reveal className="hidden flex-col gap-5 motion-safe:delay-150 md:col-span-4 md:flex xl:col-span-6 xl:col-start-7">
+                        <Reveal className="hidden flex-col gap-5 delay-150 md:col-span-4 md:flex xl:col-span-6 xl:col-start-7">
                             <div
                                 key={`visual-${entrySequence}-${activeIndex}`}
-                                className="animate-tech-enter flex flex-col gap-5 motion-reduce:animate-none"
+                                className="animate-tech-enter flex flex-col gap-5"
                             >
                                 <TechEvalServiceVisual service={activeService} />
                             </div>

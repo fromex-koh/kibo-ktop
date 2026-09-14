@@ -55,7 +55,7 @@ const AnimatedCounter = ({value, onComplete}: {value: number | string; onComplet
                             className="inline-block h-[1em] overflow-hidden align-[-0.08em] leading-none"
                         >
                             <span
-                                className="animate-counter-roll flex flex-col leading-none motion-reduce:translate-y-(--counter-end) motion-reduce:animate-none"
+                                className="animate-counter-roll flex flex-col leading-none"
                                 style={style}
                                 onAnimationEnd={index === lastDigitIndex ? onComplete : undefined}
                             >
