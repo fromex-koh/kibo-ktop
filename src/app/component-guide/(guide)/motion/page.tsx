@@ -1,8 +1,10 @@
 import type {Metadata} from 'next'
+import {TriangleAlert} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
+import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
 import MotionPreview, {type MotionPreviewKind} from './motion-preview'
 
 export const metadata: Metadata = {title: '모션 (Motion)'}
@@ -164,8 +166,8 @@ const MotionGuidePage = () => (
                     <div className="flex flex-col gap-1">
                         <strong className="text-foreground">접근성</strong>
                         <p className="text-foreground-subtle">
-                            사용처에 <code className="font-mono">motion-reduce:animate-none</code>을 적용하고 반복
-                            모션은 정지 수단을 제공합니다.
+                            기본은 사용처에 <code className="font-mono">motion-reduce:animate-none</code>을 적용해 PC
+                            설정의 동작 줄이기 혹은 애니메이션 줄이기를 따르고, 반복 모션은 정지 수단을 제공합니다.
                         </p>
                     </div>
                     <div className="flex flex-col gap-1">
@@ -176,6 +178,16 @@ const MotionGuidePage = () => (
                         </p>
                     </div>
                 </div>
+                {/* 기본 규칙에서 벗어나는 자리라 표 위 설명에 묻히지 않게 따로 띄운다. 페이지를 열 때마다
+                    읽어 주는 알림이 아니라 늘 놓여 있는 안내라 role 을 note 로 둔다. */}
+                <Alert color="warning" role="note">
+                    <TriangleAlert aria-hidden="true" />
+                    <AlertTitle>예외 — 메인페이지는 동작 줄이기를 적용하지 않습니다</AlertTitle>
+                    <AlertDescription>
+                        메인페이지는 PC 설정의 동작 줄이기 혹은 애니메이션 줄이기를 켜면 화면에 내용이 아예 노출되지
+                        않는 경우가 있어 동작 줄이기에서 제외했고, 설정과 관계없이 원본 모션을 그대로 재생합니다.
+                    </AlertDescription>
+                </Alert>
             </section>
         </BaseCard>
 
