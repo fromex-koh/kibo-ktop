@@ -65,6 +65,54 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 유지: 기관 메뉴와 나머지 항목·순서·아이콘은 그대로입니다.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c68c4bc0)
 
+### [접근성] 파일 첨부 — 숨은 파일 선택 칸에 이름 연결
+
+- 대상: src/components/composite/file-upload.tsx
+    - src/components/composite/file-upload-field.tsx
+    - src/components/composite/org-customer-consent-form.tsx
+- 이전: 화면에 보이지 않는 `<input type="file">` 에 이름이 없어, 자동 검사에서 무엇을 올리는 칸인지 알 수 없었습니다.
+- 지금: `FileUpload` 에 `inputLabel`(기본값 `'첨부파일'`) prop 을 더해 숨은 입력의 `aria-label` 로 씁니다. `FileUploadField` 는 보이는 라벨을 `aria-labelledby` 로 연결합니다. 기관 고객정보활용동의는 `inputLabel="정보이용동의서 첨부파일"` 을 넘깁니다.
+- 영향 화면: [기관 고객정보활용동의 (KTRS-FM)](/org/individual-evaluation/ktrs-fm/customer-consent) `보완(09/08)` · [투자모형](/org/individual-evaluation/investment-model/customer-consent) `보완(09/08)` · [Tech-Index 일반](/org/individual-evaluation/tech-index/general/customer-consent) `보완(09/08)` · [Tech-Index 창업](/org/individual-evaluation/tech-index/startup/customer-consent) `보완(09/08)` · [일괄평가 진행 신청](/org/batch-evaluation/evaluation-history-or-batch/general/batch-evaluation-request) `완료` · [대량정보 조회 신청](/org/batch-evaluation/evaluation-history-or-batch/general/bulk-data-request) `완료`
+- 유지: 파일 선택·확장자와 크기 검사·안내 문구와 모양은 그대로입니다.
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b8ab3d9f)
+
+### [접근성] 문의하기 — 개인정보 수집 동의 체크박스에 이름 연결
+
+- 대상: src/components/custom/inquiry-form.tsx
+- 이전: 개인정보 수집 동의 체크박스가 라벨의 `htmlFor` 연결로만 이름을 얻었습니다.
+- 지금: 라벨에 `id="inquiry-consent-label"` 을 주고 체크박스에 `aria-labelledby` 로 직접 연결했습니다.
+- 영향 화면: [기업 문의하기](/corp/notice/inquiry-create) `보완(09/07)` · [기관 1:1 문의 등록](/org/notice/inquiry-create) `완료` · [기업 개인정보 수집 및 이용 안내](/corp/notice/inquiry-create/privacy-consent-guide) `완료` · [기관 개인정보 수집 및 이용 안내](/org/notice/inquiry-create/privacy-consent-guide) `완료`
+- 유지: 동의 여부 검사와 오류 문구는 그대로입니다.
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/13e76f03)
+
+### [마크업] 기관 1:1 문의 내역 — 문의마다 다른 상세 주소, 목록 복귀는 목록 제목으로
+
+- 대상: src/app/(user-type)/org/(service)/(logged-in)/mypage/inquiry-history/page.tsx
+    - src/app/(user-type)/org/(service)/(logged-in)/mypage/inquiry-history/inquiry-detail/page.tsx
+- 이전: 13건 모두 같은 상세 주소(`/org/mypage/inquiry-history/inquiry-detail`)를 가리켜 같은 주소 링크가 여러 개였고, 상세의 [목록으로 돌아가기] 는 목록 화면 맨 위로 갔습니다.
+- 지금: 항목마다 `?id=문의번호` 를 붙여 주소를 구분합니다. [목록으로 돌아가기] 는 `#inquiry-history-title` 로 가서 목록 제목(`tabIndex={-1}`)에 닿습니다.
+- 연동: 상세 본문은 아직 목업입니다. 실제로는 `id` 로 조회한 문의를 연결합니다.
+- 영향 화면: [1:1 문의 내역](/org/mypage/inquiry-history) `보완(09/10)` · [문의하기 상세](/org/mypage/inquiry-history/inquiry-detail) `보완(09/11)`
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/cdc61c90)
+
+### [마크업] 기업 평가결과 조회 — 자가진단 결과 링크에 평가 건 번호
+
+- 대상: src/content/service/evaluation-results.ts
+- 이전: 같은 모형의 카드가 여러 장이면 [자가진단 결과] 링크가 모두 같은 주소(`/corp/mypage/evaluation-results/general-analysis/ktrs-fm` 등)였습니다.
+- 지금: `selfDiagnosisResult(model, id)` 로 평가 건 id 를 받아 `?id=` 를 붙입니다. 기관 평가결과·평가검증 목록과 같은 형식이고, 연동 후에는 조회 결과의 건 번호가 들어갑니다.
+- 영향 화면: [평가결과조회](/corp/mypage/evaluation-results) `보완(09/08)`
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f99483ed)
+
+### [동작] 하위계정 현황 — 삭제 후 완료 토스트 추가
+
+- 대상: src/components/custom/org-sub-account-list.tsx
+    - src/constants/sub-account.ts
+- 이전: [⋮] > [삭제] 확인 모달에서 [확인] 을 누르면 카드만 목록에서 사라지고 토스트가 없었습니다. 등록·수정·비밀번호 초기화·상태 변경은 완료 토스트가 있었습니다.
+- 지금: 다른 흐름과 같이 삭제한 뒤 "하위계정이 삭제되었습니다." 토스트를 띄웁니다. 문구와 id 는 `SUB_ACCOUNT_TOAST.delete` 에 두었습니다.
+- 영향 화면: [하위계정 현황 · 기술평가부 비협약](/org/mypage/sub-account-progress) `완료` · [기술평가부 협약](/org/mypage/sub-account-progress/tech-partner) `완료` · [K-BIGx 비협약](/org/mypage/sub-account-progress/k-bigx-non-partner) `완료` · [K-BIGx 협약](/org/mypage/sub-account-progress/k-bigx-partner) `완료`
+- 유지: 삭제 확인 모달의 문구와 목록에서 지우는 동작은 그대로입니다.
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/6f4e52a8)
+
 ## [신규 추가]
 
 ### 유료 서비스 관리 화면과 팝업 확인 화면 (기업)
@@ -114,6 +162,13 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 적용: 신규 파일 추가
 - 내용: 미니멈(M) · 베이직(B) · 스탠다드(S) · 프리미엄(P) 코인 이미지(104×104 webp)입니다. 이용권 카드에 52 크기로 들어가며, 파일 이름은 `ticket-grade-<등급>.webp` 입니다.
 
+### 하위계정 삭제 완료 토스트 화면
+
+- 대상: src/app/(user-type)/org/(service)/(logged-in)/mypage/sub-account-progress/delete/complete-toast/page.tsx
+- 적용: 신규 파일 추가
+- 내용: 삭제 확인 모달의 [확인] 이 띄우는 "하위계정이 삭제되었습니다." 토스트를 단독으로 확인하는 화면입니다. 다른 완료 토스트 화면과 같이 노출 시간을 무한으로 두어 사라지지 않습니다(이 화면에서만).
+- 영향 화면: [하위계정 삭제 완료 토스트](/org/mypage/sub-account-progress/delete/complete-toast) `완료`
+
 ## [덮어쓰기]
 
 ### 모션 가이드 — 메인페이지 동작 줄이기 예외 안내
@@ -124,7 +179,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 영향 화면: [모션 (Motion)](/component-guide/motion)
 - 유지: 표의 미리보기 도형은 지금도 동작 줄이기 설정을 따릅니다 — 설정을 켜면 메인 애니메이션도 이 표에서는 멈춰 보입니다.
 
-### 퍼블리싱 인덱스 — 유료 서비스 관리 회차 반영
+### 퍼블리싱 인덱스 — 유료 서비스 관리 · 하위계정 삭제 완료 토스트 반영
 
 - 대상: src/content/publishing-guide/publishing-index.json
     - src/content/publishing-guide/screen-registry.json
@@ -132,3 +187,16 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 적용: 퍼블리싱 가이드 관련 파일이라 지정한 파일만 교체합니다. 세 파일은 함께 교체해야 합니다 — 콘텐츠 관문이 빌드 시점에 화면 key 를 교차검증합니다.
 - 신규 화면: [결제정보](/corp/mypage/paid-services/payment-history) · [이용내역](/corp/mypage/paid-services/payment-history/usage-history) · [환불하기](/corp/mypage/paid-services/refund-reason) · [환불 및 결제 취소 완료](/corp/mypage/paid-services/refund-reason/refund-complete) 를 `대기중` 에서 `완료` 로 올리고, [환불 진행중](/corp/mypage/paid-services/refund-reason/refund-processing) 행을 새로 더했습니다(`완료`, 경로 레지스트리에도 추가).
 - 환불 불가 안내: 화면이 없어 `대기중` 그대로 둡니다. IA 원본에서 삭제로 표시된 항목(`isRed`, 취소선·빨간색)이지만 작업 이력 확인을 위해 되살린 행(`isRestored`)으로 표시했습니다.
+- 하위계정 삭제: [삭제] 묶음에 [하위계정 삭제 완료 토스트](/org/mypage/sub-account-progress/delete/complete-toast) 행을 더했습니다(`완료`, 경로 레지스트리에도 추가). 등록·수정·비밀번호 초기화·사용정지 묶음과 같은 짜임입니다.
+
+### 접근성 검사 예외사항 — 기업·기관별 최근 검사 요약과 최신 검사 결과
+
+- 대상: src/app/component-guide/(guide)/accessibility-exceptions/page.tsx
+    - src/app/component-guide/(guide)/accessibility-exceptions/latest-audit.tsx
+    - src/app/component-guide/(guide)/accessibility-exceptions/audit-summary-metadata.tsx
+    - src/content/publishing-guide/accessibility-audit.json
+- 적용: 퍼블리싱 가이드 관련 파일이라 지정한 파일만 교체합니다. `audit-summary-metadata.tsx` 는 새 파일입니다.
+- 내용: 최근 검사 요약을 기업·기관으로 나눠 보여 주고, 검사 시각은 보는 사람의 브라우저 시간대로 표시합니다(`AuditSummaryMetadata`). 외부 프로젝트인 탄소 화면은 결과 데이터에 섞여 있어도 모든 집계에서 뺍니다. 라이브러리 원인 항목(Radix Select 의 빈 option·필수 select, nav role, 차트)은 설명 자리로 연결하고 발생 원인 설명을 고쳤으며, WAVE 예외는 라디오 · 체크박스 · 셀렉트 오류 · 셀렉트 경고로 나눴습니다.
+- 검사 결과: 2026-09-14 커밋 `7d9d2e4f` 운영 빌드 기준으로 새로 검사했습니다 — 기업 136화면 오류 192건 · 기관 130화면 오류 195건, 경고 0건.
+- 참고: 검사 스크립트(`scripts/audit-accessibility.mjs`)와 안내 문서는 전달본에 들어가지 않아 대상에서 뺐습니다. 이번 검사부터 퍼블리싱 인덱스에서 취소선(`isRed`)으로 표시된 화면은 검사하지 않습니다.
+- 영향 화면: [접근성 검사 예외사항](/component-guide/accessibility-exceptions)
