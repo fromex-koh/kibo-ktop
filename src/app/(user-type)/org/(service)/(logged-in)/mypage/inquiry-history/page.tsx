@@ -21,9 +21,8 @@ export const metadata: Metadata = {title: '1:1 문의 내역'}
 //                            'answered'(답변완료) 두 가지이고, category 는 문의하기 화면의
 //                            [유형 선택]과 같은 값이다(constants/inquiry 의 INQUIRY_TYPES).
 //   · MOCK_INQUIRY_PAGE_SIZE → 한 페이지에 보여 줄 건수.
-//   · 각 항목의 href → 그 문의의 상세 화면 경로다. 문의마다 다른 주소라 목록이 아니라 항목이
-//                       들고 있다. 퍼블리싱에서는 상세 화면이 한 벌이라 모두 같은 주소를 가리키지만,
-//                       연동할 때 이 값만 문의별 주소로 바꾸면 화면은 손댈 것이 없다.
+//   · 각 항목의 href → 그 문의의 상세 화면 경로다. 예제는 ?id=문의번호로 각 문의를 구분한다. 상세
+//                       본문은 아직 목업이며, 실제 연동 시 해당 ID로 조회한 문의 데이터를 연결한다.
 //   · INQUIRY_CREATE_PATH → [문의 등록] 이 가는 화면 경로.
 // 빈 배열을 넘기면 목록 자리에 빈 상태 안내가 나온다(InquiryList 가 처리한다) — 조회 결과가 없을 때의
 // 화면을 따로 만들 필요가 없고, 이 배열을 비워 보면 그대로 확인할 수 있다.
@@ -34,7 +33,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '평가검증 신청 오류 문의',
         status: 'waiting',
         date: '2026-05-15',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-001',
     },
     {
         id: 'org-inquiry-002',
@@ -42,7 +41,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '개별평가 결과 오류 문의',
         status: 'answered',
         date: '2026-05-14',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-002',
     },
     {
         id: 'org-inquiry-003',
@@ -50,7 +49,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '이용권 배분 관련 문의',
         status: 'answered',
         date: '2026-05-12',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-003',
     },
     {
         id: 'org-inquiry-004',
@@ -58,7 +57,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '하위 계정 생성 문의',
         status: 'waiting',
         date: '2026-05-11',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-004',
     },
     {
         id: 'org-inquiry-005',
@@ -66,7 +65,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '일괄평가 신청 방법 문의',
         status: 'answered',
         date: '2026-05-08',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-005',
     },
     {
         id: 'org-inquiry-006',
@@ -74,7 +73,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: 'K-BIGx 보고서 열람 권한 문의',
         status: 'answered',
         date: '2026-05-07',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-006',
     },
     {
         id: 'org-inquiry-007',
@@ -82,7 +81,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '협약 기관 등록 절차 문의',
         status: 'answered',
         date: '2026-05-04',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-007',
     },
     {
         id: 'org-inquiry-008',
@@ -90,7 +89,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '담당자 변경 절차 문의',
         status: 'answered',
         date: '2026-04-29',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-008',
     },
     {
         id: 'org-inquiry-009',
@@ -98,7 +97,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '이용권 잔여 건수 문의',
         status: 'answered',
         date: '2026-04-27',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-009',
     },
     {
         id: 'org-inquiry-010',
@@ -106,7 +105,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '평가검증 반려 사유 문의',
         status: 'answered',
         date: '2026-04-22',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-010',
     },
     {
         id: 'org-inquiry-011',
@@ -114,7 +113,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '비밀번호 초기화 문의',
         status: 'answered',
         date: '2026-04-18',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-011',
     },
     {
         id: 'org-inquiry-012',
@@ -122,7 +121,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '보고서 일괄 내려받기 문의',
         status: 'answered',
         date: '2026-04-15',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-012',
     },
     {
         id: 'org-inquiry-013',
@@ -130,7 +129,7 @@ const MOCK_INQUIRY_ITEMS: readonly InquiryItem[] = [
         title: '서비스 이용 방법 문의',
         status: 'answered',
         date: '2026-04-11',
-        href: '/org/mypage/inquiry-history/inquiry-detail',
+        href: '/org/mypage/inquiry-history/inquiry-detail?id=org-inquiry-013',
     },
 ]
 
@@ -170,7 +169,9 @@ const OrgMypageInquiryHistoryPage = () => (
 
                 <div className="flex min-w-0 flex-1 flex-col gap-10">
                     <SectionHeader>
-                        <SectionHeaderTitle size="lg">1:1 문의 내역</SectionHeaderTitle>
+                        <SectionHeaderTitle id="inquiry-history-title" tabIndex={-1} size="lg">
+                            1:1 문의 내역
+                        </SectionHeaderTitle>
                         <SectionHeaderDescription size="lg">
                             문의사항을 등록하고 답변 상태를 확인할 수 있습니다.
                         </SectionHeaderDescription>
