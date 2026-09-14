@@ -142,6 +142,7 @@ const OrgCustomerConsentForm = ({
             >
                 <FileUpload
                     name={CONSENT_FILE_NAME}
+                    inputLabel="정보이용동의서 첨부파일"
                     accept={CONSENT_FILE_ACCEPT}
                     maxSizeMb={CONSENT_FILE_MAX_SIZE_MB}
                     hint="PDF, ZIP, RAR, 7Z 파일 1개 첨부 가능 (파일당 최대 50MB)"
