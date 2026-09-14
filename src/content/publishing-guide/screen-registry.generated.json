@@ -2375,6 +2375,13 @@
             "isCurrent": false
         },
         {
+            "key": "org-mypage-sub-account-progress-delete-complete-toast",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "org-login-guide",
             "implemented": true,
             "implementationStatus": "in-progress",

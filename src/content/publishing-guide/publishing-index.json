@@ -3760,6 +3760,14 @@
                                     "version": "미배포",
                                     "key": "org-mypage-sub-account-progress-delete",
                                     "iaRow": 123
+                                },
+                                {
+                                    "label": "하위계정 삭제 완료 토스트",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-mypage-sub-account-progress-delete-complete-toast",
+                                    "iaRow": 123
                                 }
                             ]
                         }

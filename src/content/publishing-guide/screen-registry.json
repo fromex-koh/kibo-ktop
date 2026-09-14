@@ -2470,6 +2470,13 @@
             "name": "하위계정 삭제 확인"
         },
         {
+            "key": "org-mypage-sub-account-progress-delete-complete-toast",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/delete/complete-toast",
+            "name": "하위계정 삭제 완료 토스트"
+        },
+        {
             "key": "org-login-guide",
             "screenId": "SB-FOTA-OP0-0016",
             "userType": "기관",
