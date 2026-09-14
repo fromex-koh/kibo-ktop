@@ -18,9 +18,11 @@ const GENERAL_ANALYSIS_PATH = '/corp/mypage/evaluation-results/general-analysis'
 const BANK_TRANSFER_PATH = '/corp/mypage/evaluation-results/bank-transfer'
 const GUARANTEE_PATH = '/corp/mypage/evaluation-results/guarantee-application'
 
-const selfDiagnosisResult = (model: EvaluationModel): EvaluationResultAction => ({
+// 같은 모형의 평가 카드가 여러 장이어도 링크가 같은 주소가 되지 않도록 평가 건 ID를 함께 넘긴다.
+// 기관 평가결과·평가검증 목록과 같은 형식이며, 연동 후에는 조회 결과의 건 번호가 id 자리에 들어간다.
+const selfDiagnosisResult = (model: EvaluationModel, id: string): EvaluationResultAction => ({
     label: '자가진단 결과',
-    href: `${GENERAL_ANALYSIS_PATH}/${model}`,
+    href: `${GENERAL_ANALYSIS_PATH}/${model}?id=${id}`,
     newWindow: true,
 })
 
@@ -39,7 +41,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'AA',
         evaluatedAt: '2026-05-15',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-001'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -50,7 +52,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'A',
         evaluatedAt: '2026-04-28',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-002'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
             {label: '보증신청', href: GUARANTEE_PATH, done: true},
         ],
@@ -61,7 +63,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'AAA',
         evaluatedAt: '2026-04-10',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-003'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -72,7 +74,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'BBB',
         evaluatedAt: '2026-03-27',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-004'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
             {label: '보증신청', href: GUARANTEE_PATH, done: true},
         ],
@@ -83,7 +85,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'A',
         evaluatedAt: '2026-03-05',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-005'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -94,7 +96,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'AA',
         evaluatedAt: '2026-02-19',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-006'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
             {label: '보증신청', href: GUARANTEE_PATH, done: true},
         ],
@@ -105,7 +107,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'BB',
         evaluatedAt: '2026-01-30',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-007'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -116,7 +118,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'A',
         evaluatedAt: '2026-01-12',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-008'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -127,7 +129,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'BBB',
         evaluatedAt: '2025-12-22',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-009'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
             {label: '보증신청', href: GUARANTEE_PATH, done: true},
         ],
@@ -138,7 +140,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'AA',
         evaluatedAt: '2025-11-28',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-010'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -149,7 +151,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'B',
         evaluatedAt: '2025-11-06',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-011'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH},
             {label: '보증신청', href: GUARANTEE_PATH},
         ],
@@ -160,7 +162,7 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         grade: 'A',
         evaluatedAt: '2025-10-15',
         actions: [
-            selfDiagnosisResult('ktrs-fm'),
+            selfDiagnosisResult('ktrs-fm', 'corp-evaluation-012'),
             {label: '은행 전송', href: BANK_TRANSFER_PATH, done: true},
             {label: '보증신청', href: GUARANTEE_PATH, done: true},
         ],
@@ -170,28 +172,28 @@ const MOCK_EVALUATION_RESULTS: readonly EvaluationResultItem[] = [
         model: 'tech-index',
         grade: '6.6',
         evaluatedAt: '2026-05-15',
-        actions: [selfDiagnosisResult('tech-index')],
+        actions: [selfDiagnosisResult('tech-index', 'corp-evaluation-101')],
     },
     {
         id: 'corp-evaluation-102',
         model: 'tech-index',
         grade: '7.1',
         evaluatedAt: '2026-03-18',
-        actions: [selfDiagnosisResult('tech-index')],
+        actions: [selfDiagnosisResult('tech-index', 'corp-evaluation-102')],
     },
     {
         id: 'corp-evaluation-201',
         model: 'startup-tech-index',
         grade: '8.4',
         evaluatedAt: '2026-05-15',
-        actions: [selfDiagnosisResult('startup-tech-index')],
+        actions: [selfDiagnosisResult('startup-tech-index', 'corp-evaluation-201')],
     },
     {
         id: 'corp-evaluation-301',
         model: 'investment-model',
         grade: 'B+',
         evaluatedAt: '2026-05-15',
-        actions: [selfDiagnosisResult('investment-model')],
+        actions: [selfDiagnosisResult('investment-model', 'corp-evaluation-301')],
     },
 ]
 
