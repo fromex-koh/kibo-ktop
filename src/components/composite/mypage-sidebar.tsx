@@ -53,7 +53,7 @@ const MYPAGE_MENU: Record<'corp' | 'org', readonly MypageMenuItem[]> = {
         {icon: BriefcaseBusiness, label: '대표자 이력', href: '/corp/mypage/representative-history'},
         {icon: FileSearch, label: '평가결과 조회', href: '/corp/mypage/evaluation-results'},
         {icon: NotepadText, label: 'K-BIGx 보고서 이력', href: '/corp/mypage/k-bigx-report-history'},
-        {icon: CreditCard, label: '유료 서비스 관리', href: '#'},
+        {icon: CreditCard, label: '유료 서비스 관리', href: '/corp/mypage/paid-services/payment-history'},
         {icon: MessageCircleMore, label: '1:1 문의', href: '/corp/mypage/inquiry-history'},
     ],
     org: [
