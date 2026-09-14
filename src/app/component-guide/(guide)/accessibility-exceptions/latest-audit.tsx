@@ -18,7 +18,10 @@ export type Audit = {
 
 export default function LatestAudit() {
     const audit: Audit = auditData
-    const hasResult = Boolean(audit.checkedAt && audit.sourceHash && audit.screens.length)
+    const auditedScreens = audit.screens.filter(
+        (screen) => screen.path.startsWith('/corp/') || screen.path.startsWith('/org/'),
+    )
+    const hasResult = Boolean(audit.checkedAt && audit.sourceHash && auditedScreens.length)
     const handoff = process.env.NEXT_PUBLIC_ACCESSIBILITY_HANDOFF === 'true'
     const current = hasResult && audit.sourceHash === process.env.NEXT_PUBLIC_ACCESSIBILITY_SOURCE
     return (
@@ -61,10 +64,9 @@ export default function LatestAudit() {
                             검사일 {audit.checkedAt} · 커밋 {audit.commit?.slice(0, 7)} · Nu Html Checker{' '}
                             {audit.validatorVersion}
                         </p>
-                        <p>
-                            {audit.screens.length}개 화면 · 오류{' '}
-                            {audit.screens.reduce((sum, screen) => sum + screen.errors, 0)}건 · 경고{' '}
-                            {audit.screens.reduce((sum, screen) => sum + screen.warnings, 0)}건
+                        <p className="text-foreground-subtle">
+                            기업·기관별 검사 건수와 원인은 아래 최근 검사 요약에서 확인합니다. 탄소 화면은 외부
+                            프로젝트이므로 검사 대상에서 제외합니다.
                         </p>
                     </>
                 ) : (

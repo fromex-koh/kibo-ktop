@@ -23,5 +23,4 @@ export const stackPageClassName = [
     // 페이저가 꺼졌지만 모바일도 아닌 띠에서는 섹션의 최소 설계 높이를 유지해 콘텐츠 겹침을 막는다.
     // 480px 미만(모바일 가로)은 섹션이 밀도를 낮춰 뷰포트에 맞추므로 이 구간에서 제외한다.
     'stack-fallback:min-h-180',
-    'motion-reduce:transition-none',
 ].join(' ')

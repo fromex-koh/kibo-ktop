@@ -50,7 +50,7 @@ const SWAP_THRESHOLD = 0.05
 // 진입 상태 — 사진 자체를 자르지 않고 사진 위의 단색 패널 네 장을 여닫는다. 섹션 활성 직후에는
 // cover=1이고, 이미지 준비 뒤 data-entry-ready를 켜면 0으로 열린다. 사진은 패널 아래에서 처음부터
 // 전체 렌더링되므로 최초 clip 해제 순간의 래스터링 번쩍임이 생기지 않는다.
-// 페이저가 꺼진 화면과 모션 최소화 환경에서는 규칙이 적용되지 않아 늘 0(열린 상태)이다. [KWCAG 6.3.1]
+// 페이저가 꺼진 화면에서는 규칙이 적용되지 않아 늘 0(열린 상태)이다.
 //
 // 조리개를 쓰는 사진은 오른쪽 셀 하나지만 변수는 섹션에 둔다 — 진행 레일이 "조리개가 다 열렸는가"를
 // 같은 변수로 읽어야 하고, 그 레일은 왼쪽 카피와 모바일 흐름에도 있다.
@@ -58,7 +58,7 @@ const SWAP_THRESHOLD = 0.05
 // 규칙이 걸리지 않는다(자기 자신은 자기 후손이 아니다).
 const ENTRY_STATE_CLASS = [
     '[--intro-entry-cover:0]',
-    'motion-safe:pager-on:[&:not([data-entry-ready=true])]:[--intro-entry-cover:1]',
+    'pager-on:[&:not([data-entry-ready=true])]:[--intro-entry-cover:1]',
 ].join(' ')
 
 // 사진은 교차 내내 전체 크기로 합성해 두고, 진입·교차 양쪽 모두 IntroImageCover가 담당한다.
@@ -66,7 +66,7 @@ const ENTRY_STATE_CLASS = [
 // 라운딩은 사진 자체에만 둔다. 커버 패널이 같은 라운딩에 잘리면 안티에일리어싱 경계가 드러난다.
 const STATIC_ROUND_CLASS = '[clip-path:inset(0_round_var(--mask-radius))]'
 const ENTRY_COVER_PANEL_CLASS =
-    'bg-main-intro-surface absolute opacity-[0.999] will-change-[scale] transition-[scale] duration-1000 ease-stack motion-reduce:transition-none'
+    'bg-main-intro-surface absolute opacity-[0.999] will-change-[scale] transition-[scale] duration-1000 ease-stack'
 const COVER_SCALE_CLASS = {
     entry: {
         vertical: 'scale-y-[var(--intro-entry-cover)]',
@@ -90,8 +90,8 @@ const COVER_SCALE_CLASS = {
 //            이미 다 채워진 레일이 그대로 남는다. 교차가 없는 화면(모바일)은 진행도가 늘 0 이라
 //            (1 - 0) = 1 로 종전과 같다.
 //  · swap  — 좌우 교차. --intro-progress 를 그대로 쓴다
-// 커버·카피 페이드와 같은 변수를 보므로 상태가 어긋날 수 없고, 조리개가 없는 화면(페이저 off·모션
-// 최소화)에서는 두 변수 모두 채움 쪽 값이라 처음부터 채워진 상태다. [KWCAG 6.3.1]
+// 커버·카피 페이드와 같은 변수를 보므로 상태가 어긋날 수 없고, 조리개가 없는 화면(페이저 off)에서는
+// 두 변수 모두 채움 쪽 값이라 처음부터 채워진 상태다.
 const RAIL_ON_CLASS = {
     entry: '[--rail-on:calc((1_-_var(--intro-entry-cover))_*_(1_-_var(--intro-progress)))]',
     swap: '[--rail-on:var(--intro-progress)]',
@@ -143,10 +143,8 @@ const RAIL_SEGMENT_WIDTH_CLASS = [
 
 // 사진 아래에 깔리는 카피 — 진입 중에는 사진이 접혀 있어 그대로 두면 밑의 카피가 드러난다. 교차
 // 진행도에 맞춰 페이드해 진입 때는 감춰 두고, 사진이 줄어드는 동안 함께 나타나게 한다.
-const BASE_COPY_FADE_CLASS =
-    '[opacity:var(--intro-progress)] motion-safe:transition-opacity motion-safe:duration-1000 motion-safe:ease-stack'
-const SWAP_COPY_FADE_CLASS =
-    '[opacity:calc(1_-_var(--intro-progress))] motion-safe:transition-opacity motion-safe:duration-1000 motion-safe:ease-stack'
+const BASE_COPY_FADE_CLASS = '[opacity:var(--intro-progress)] transition-opacity duration-1000 ease-stack'
+const SWAP_COPY_FADE_CLASS = '[opacity:calc(1_-_var(--intro-progress))] transition-opacity duration-1000 ease-stack'
 
 // 셀 — 시안의 588×640 사각형. 두 겹(아래/위)이 이 상자를 같이 채운다.
 // 라운딩·클리핑을 두지 않는다 — 모서리는 위층 사진의 clip-path 가 혼자 만든다(위 주석 참고).
@@ -311,7 +309,7 @@ const IntroProcessRail = ({screen, trigger}: {screen: IntroScreen; trigger: keyo
                                 'bg-main-intro-accent absolute top-1/2 left-0 h-0.5 origin-left -translate-y-1/2',
                                 RAIL_SEGMENT_WIDTH_CLASS[index],
                                 'scale-x-[var(--rail-on)]',
-                                'transition-[scale] ease-out motion-reduce:transition-none',
+                                'transition-[scale] ease-out',
                                 RAIL_SEGMENT_DURATION_CLASS,
                                 RAIL_SEGMENT_DELAY_CLASS[index],
                             )}
@@ -321,7 +319,7 @@ const IntroProcessRail = ({screen, trigger}: {screen: IntroScreen; trigger: keyo
                             className={cn(
                                 'bg-main-intro-accent absolute top-0 left-0 size-2 rounded-full',
                                 'scale-[calc(0.5_+_0.5_*_var(--rail-on))] [opacity:var(--rail-on)]',
-                                'transition-[opacity,scale] ease-out motion-reduce:transition-none',
+                                'transition-[opacity,scale] ease-out',
                                 RAIL_MARKER_DURATION_CLASS,
                                 RAIL_MARKER_DELAY_CLASS[index],
                             )}

@@ -972,7 +972,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-k-bigx-report-history-report-view",
@@ -990,31 +990,38 @@
         },
         {
             "key": "corp-mypage-paid-services-payment-history",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.6",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-usage-history",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.6",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-refund-reason",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.6",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-mypage-paid-services-refund-reason-refund-processing",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.6",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-refund-reason-refund-complete",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.6",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-inquiry-history",
@@ -1966,7 +1973,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-k-bigx-report-history-report-print",
@@ -2007,15 +2014,15 @@
             "key": "org-mypage-inquiry-history",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.1.8",
-            "isCurrent": false
+            "version": "v3.2.6",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-inquiry-history-inquiry-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.2.4",
-            "isCurrent": false
+            "version": "v3.2.6",
+            "isCurrent": true
         },
         {
             "key": "org-notice-announcements",
@@ -2323,14 +2330,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-edit-complete-toast",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-sub-account-progress-password-reset",
@@ -2366,6 +2373,13 @@
             "implementationStatus": "in-progress",
             "version": "v3.2.4",
             "isCurrent": false
+        },
+        {
+            "key": "org-mypage-sub-account-progress-delete-complete-toast",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.6",
+            "isCurrent": true
         },
         {
             "key": "org-login-guide",

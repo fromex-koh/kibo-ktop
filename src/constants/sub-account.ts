@@ -58,12 +58,12 @@ export const SUB_ACCOUNT_STATUS_PARTICLE = {
 /**
  * 하위계정 관련 작업이 끝났을 때 띄우는 완료 토스트 — 목록 화면과 토스트 단독 화면이 같은 말을 쓴다.
  * id 는 같은 토스트가 겹쳐 쌓이지 않게 하는 식별자다(연달아 부르면 앞의 것을 대체한다).
- * 삭제는 여기 없다 — 지운 카드가 목록에서 사라지는 것이 그 자체로 결과를 알린다(화면정의서에도 토스트가 없다).
  */
 export const SUB_ACCOUNT_TOAST = {
     create: {id: 'sub-account-create', message: '하위계정이 등록되었습니다.'},
     edit: {id: 'sub-account-edit', message: '하위계정 정보가 수정되었습니다.'},
     passwordReset: {id: 'sub-account-password-reset', message: '비밀번호가 초기화되었습니다.'},
+    delete: {id: 'sub-account-delete', message: '하위계정이 삭제되었습니다.'},
     // 상태 변경만 문구가 결과에 따라 달라진다 — 무엇이 바뀌었는지가 아니라 "무엇으로" 바뀌었는지가
     // 토스트만 보고도 읽혀야 한다("사용정지로 변경되었습니다."). 바뀐 뒤의 상태를 넘긴다.
     statusChange: {

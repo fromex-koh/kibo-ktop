@@ -122,13 +122,15 @@ const OrgSubAccountList = ({items, pageSize = 10}: OrgSubAccountListProps) => {
         showCheckToast(SUB_ACCOUNT_TOAST.edit.message, {id: SUB_ACCOUNT_TOAST.edit.id})
     }
 
-    // [확인] — 그 계정을 목록에서 지우고 모달을 닫는다. 마지막 장의 하나를 지우면 남은 마지막 장으로
-    // 내려간다(currentPage 가 totalPages 를 넘지 않도록 아래에서 이미 좁혀 준다).
+    // [확인] — 그 계정을 목록에서 지우고 모달을 닫은 뒤, 끝났다는 것을 토스트로 알린다. 마지막 장의 하나를
+    // 지우면 남은 마지막 장으로 내려간다(currentPage 가 totalPages 를 넘지 않도록 아래에서 이미 좁혀 준다).
+    // [프론트엔드 연동] 연동 후에는 삭제 요청이 성공했을 때만 목록을 다시 받아 오고 토스트를 띄운다.
     const handleDeleteConfirm = () => {
         if (!menuItem) return
 
         setAccounts((current) => current.filter((account) => account.id !== menuItem.id))
         setMenuAction(undefined)
+        showCheckToast(SUB_ACCOUNT_TOAST.delete.message, {id: SUB_ACCOUNT_TOAST.delete.id})
     }
 
     // [확인] — 그 계정의 상태를 반대로 뒤집는다(사용 ↔ 사용정지). 카드의 배지와 [⋮] 메뉴 이름이 함께 바뀐다.

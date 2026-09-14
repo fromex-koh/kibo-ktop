@@ -43,6 +43,8 @@ const getExtension = (fileName: string): string => fileName.split('.').pop()?.to
 type FileUploadProps = {
     // 폼에 담길 이름. 제출값은 선택된 File 이다.
     name: string
+    // 숨은 file input의 접근 가능한 이름. 자동 검사에서도 업로드 목적을 식별할 수 있게 한다.
+    inputLabel?: string
     // 받을 확장자·MIME(<input accept>). 아래 hint 는 사람이 읽는 안내라 따로 적는다.
     // 확장자(.pdf 형태)를 적어 두면 고른 파일의 확장자도 같은 목록으로 검사한다.
     accept?: string
@@ -65,6 +67,7 @@ type FileUploadProps = {
 
 const FileUpload = ({
     name,
+    inputLabel = '첨부파일',
     accept,
     maxSizeMb,
     required,
@@ -162,6 +165,7 @@ const FileUpload = ({
                 type="file"
                 hidden
                 name={name}
+                aria-label={inputLabel}
                 accept={accept}
                 required={required}
                 onChange={(event) => applyFile(event.target.files?.[0] ?? null)}

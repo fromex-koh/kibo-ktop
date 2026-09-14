@@ -26,7 +26,6 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
         const scrollContainer = root?.closest<HTMLElement>('[data-stack-pager]')
         if (!root || !section || !scrollContainer) return
 
-        const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
         let frame = 0
 
         const updateScrollProgress = () => {
@@ -38,7 +37,7 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
         }
 
         const startRotation = () => {
-            if (reducedMotionQuery.matches || slides.length < 2) return undefined
+            if (slides.length < 2) return undefined
             return window.setInterval(() => {
                 setTransition((current) => ({
                     activeIndex: (current.activeIndex + 1) % slides.length,
@@ -47,21 +46,15 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
             }, CHANGE_INTERVAL_MS)
         }
 
-        let rotationTimer = startRotation()
-        const restartRotation = () => {
-            if (rotationTimer) window.clearInterval(rotationTimer)
-            rotationTimer = startRotation()
-        }
+        const rotationTimer = startRotation()
 
         scrollContainer.addEventListener('scroll', updateScrollProgress, {passive: true})
-        reducedMotionQuery.addEventListener('change', restartRotation)
         updateScrollProgress()
 
         return () => {
             cancelAnimationFrame(frame)
             if (rotationTimer) window.clearInterval(rotationTimer)
             scrollContainer.removeEventListener('scroll', updateScrollProgress)
-            reducedMotionQuery.removeEventListener('change', restartRotation)
             section.style.removeProperty('--hero-scroll-progress')
         }
     }, [slides.length])
@@ -70,7 +63,7 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
         <div
             ref={rootRef}
             aria-hidden="true"
-            className="absolute -inset-px [backface-visibility:hidden] motion-safe:[transform:scale(calc(1+var(--hero-scroll-progress,0)*0.035))]"
+            className="absolute -inset-px [transform:scale(calc(1+var(--hero-scroll-progress,0)*0.035))] [backface-visibility:hidden]"
         >
             {slides.map((slide, index) => {
                 const isActive = activeIndex === index
@@ -80,8 +73,8 @@ const HeroBackground = ({slides}: {slides: HeroBackgroundSlide[]}) => {
                     <div
                         key={`${slide.position}-${index}`}
                         className={cn(
-                            'after:to-background/75 absolute inset-0 scale-120 transition-opacity duration-500 [transition-timing-function:ease] after:absolute after:inset-0 after:z-2 after:bg-linear-to-b after:from-transparent motion-reduce:scale-100 motion-reduce:transition-none',
-                            isActive && 'animate-hero-zoom-out motion-reduce:animate-none',
+                            'after:to-background/75 absolute inset-0 scale-120 transition-opacity duration-500 [transition-timing-function:ease] after:absolute after:inset-0 after:z-2 after:bg-linear-to-b after:from-transparent',
+                            isActive && 'animate-hero-zoom-out',
                             isActive ? 'z-1 opacity-100' : 'z-0 opacity-0',
                         )}
                         // 페이드아웃 중인 이전 슬라이드는 줌아웃이 끝난 배율을 유지한다.

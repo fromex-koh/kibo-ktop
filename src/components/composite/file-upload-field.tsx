@@ -276,6 +276,7 @@ const FileUploadField = ({
                 ref={inputRef}
                 type="file"
                 hidden
+                aria-labelledby={labelId}
                 name={name}
                 accept={accept}
                 required={required}

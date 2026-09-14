@@ -1099,6 +1099,13 @@
             "name": "환불하기"
         },
         {
+            "key": "corp-mypage-paid-services-refund-reason-refund-processing",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/refund-reason/refund-processing",
+            "name": "환불 진행중"
+        },
+        {
             "key": "corp-mypage-paid-services-refund-reason-refund-complete",
             "screenId": "SB-FOTA-CM1-0011",
             "userType": "기업",
@@ -2461,6 +2468,13 @@
             "userType": "기관",
             "path": "/org/mypage/sub-account-progress/delete",
             "name": "하위계정 삭제 확인"
+        },
+        {
+            "key": "org-mypage-sub-account-progress-delete-complete-toast",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/mypage/sub-account-progress/delete/complete-toast",
+            "name": "하위계정 삭제 완료 토스트"
         },
         {
             "key": "org-login-guide",

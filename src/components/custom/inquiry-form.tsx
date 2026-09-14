@@ -424,10 +424,15 @@ const InquiryForm = ({cancelHref, consentDialogDefaultOpen, className, onSubmit,
                                 if (checked === true) clearError('consent')
                             }}
                             aria-invalid={errors.consent ? true : undefined}
+                            aria-labelledby="inquiry-consent-label"
                             aria-describedby={describedBy('consent')}
                             className="mt-0.5"
                         />
-                        <FieldLabel htmlFor="inquiry-consent" className="flex-col items-start gap-1">
+                        <FieldLabel
+                            id="inquiry-consent-label"
+                            htmlFor="inquiry-consent"
+                            className="flex-col items-start gap-1"
+                        >
                             <span className="typo-body-xl-bold text-foreground">[필수] 개인정보 수집 및 이용동의</span>
                             <span className="typo-body-xl-regular text-label-foreground break-keep">
                                 고객님에게는 동의를 거부할 권리가 있으나, 개인정보 수집 및 이용에 동의하셔야 상담
