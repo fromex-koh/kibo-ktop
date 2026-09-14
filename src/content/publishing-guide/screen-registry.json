@@ -1099,6 +1099,13 @@
             "name": "환불하기"
         },
         {
+            "key": "corp-mypage-paid-services-refund-reason-refund-processing",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/refund-reason/refund-processing",
+            "name": "환불 진행중"
+        },
+        {
             "key": "corp-mypage-paid-services-refund-reason-refund-complete",
             "screenId": "SB-FOTA-CM1-0011",
             "userType": "기업",

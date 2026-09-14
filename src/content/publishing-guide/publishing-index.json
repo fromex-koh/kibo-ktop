@@ -1746,7 +1746,7 @@
                             "label": "결제정보",
                             "screen": {
                                 "screenId": "SB-FOTA-CM2-0011",
-                                "status": "대기중",
+                                "status": "완료",
                                 "version": "미배포",
                                 "key": "corp-mypage-paid-services-payment-history",
                                 "iaRow": 133
@@ -1755,7 +1755,7 @@
                                 {
                                     "label": "이용내역",
                                     "screenId": "SB-FOTA-CS3-0011",
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-paid-services-payment-history-usage-history",
                                     "iaRow": 134
@@ -1763,10 +1763,17 @@
                                 {
                                     "label": "환불하기",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-paid-services-refund-reason",
                                     "iaRow": 135
+                                },
+                                {
+                                    "label": "환불 진행중",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-refund-reason-refund-processing"
                                 },
                                 {
                                     "label": "환불 불가 안내",
@@ -1774,12 +1781,14 @@
                                     "status": "대기중",
                                     "version": "미배포",
                                     "key": "corp-mypage-paid-services-refund-unavailable",
-                                    "iaRow": 136
+                                    "iaRow": 136,
+                                    "isRestored": true,
+                                    "isRed": true
                                 },
                                 {
                                     "label": "환불 및 결제 취소 완료",
                                     "screenId": "SB-FOTA-CM1-0011",
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-paid-services-refund-reason-refund-complete",
                                     "iaRow": 137
