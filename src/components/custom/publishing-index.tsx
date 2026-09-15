@@ -1305,14 +1305,20 @@ const PublishingIndex = () => {
                                                                         </span>
                                                                     )}
                                                                 {isScreenLink ? (
+                                                                    // 인덱스를 보면서 화면을 하나씩 대조하므로 새 창으로 연다.
                                                                     <Link
                                                                         href={registeredScreen.path}
+                                                                        target="_blank"
+                                                                        rel="noopener noreferrer"
                                                                         className={`${
                                                                             isRedLabel ? 'text-error' : 'text-primary'
                                                                         } focus-visible:ring-ring rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none`}
                                                                     >
                                                                         {displayLabel}
-                                                                        <span className="sr-only"> 화면으로 이동</span>
+                                                                        <span className="sr-only">
+                                                                            {' '}
+                                                                            화면으로 이동 (새 창)
+                                                                        </span>
                                                                     </Link>
                                                                 ) : externalHref !== undefined ? (
                                                                     <a
