@@ -81,8 +81,30 @@ type BatchEvaluationFormProps = {
 const BatchEvaluationForm = ({modelsLabelledBy, tasksLabelledBy, tasksTitle, children}: BatchEvaluationFormProps) => {
     const router = useRouter()
     const formId = useId()
+    const tasksId = useId()
+    const nextButtonId = useId()
     const [model, setModel] = useState('')
     const [task, setTask] = useState('')
+
+    // 고르면 다음에 할 일로 내려 준다 — 평가모형(카드)을 고르면 진행할 업무로, 업무를 고르면 [다음]으로 간다.
+    // 포커스는 고른 자리에 그대로 둔다([7.2.1]). 동작을 줄이도록 설정한 사용자에게는 즉시 이동한다([6.3.1]).
+    const scrollIntoViewById = (id: string, block: ScrollLogicalPosition) => {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        document.getElementById(id)?.scrollIntoView({block, behavior: prefersReducedMotion ? 'auto' : 'smooth'})
+    }
+
+    const handleModelChange = (value: string) => {
+        setModel(value)
+        // start — 업무 구획의 제목을 화면 위(고정 헤더 바로 아래)에 올린다. 'nearest' 는 구획의 아래 끝만 화면에
+        // 걸치게 해 위의 모형 카드가 그대로 보여, 업무 선택으로 넘어갔다는 것이 드러나지 않는다.
+        scrollIntoViewById(tasksId, 'start')
+    }
+
+    const handleTaskChange = (value: string) => {
+        setTask(value)
+        // nearest — [다음]이 화면 밖에 있을 때만 보이는 자리까지 내리고, 이미 보이면 움직이지 않는다.
+        scrollIntoViewById(nextButtonId, 'nearest')
+    }
 
     const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -102,7 +124,7 @@ const BatchEvaluationForm = ({modelsLabelledBy, tasksLabelledBy, tasksTitle, chi
                 <RadioCardGroup
                     name={MODEL_FIELD}
                     value={model}
-                    onValueChange={setModel}
+                    onValueChange={handleModelChange}
                     required
                     aria-labelledby={modelsLabelledBy}
                 >
@@ -134,12 +156,14 @@ const BatchEvaluationForm = ({modelsLabelledBy, tasksLabelledBy, tasksTitle, chi
                     ))}
                 </RadioCardGroup>
 
-                <div className="flex flex-col gap-6">
+                {/* scroll-mt-* — 스크롤로 올렸을 때 제목이 고정 헤더(56 · md 100 · xl 112)에 가리지 않게 자리를 둔다.
+                    값은 같은 헤더를 피하는 목록 화면들(org-verification-application-list 등)과 맞춘다. */}
+                <div id={tasksId} className="flex scroll-mt-20 flex-col gap-6 md:scroll-mt-28 xl:scroll-mt-32">
                     {tasksTitle}
                     <RadioChipGroup
                         name={TASK_FIELD}
                         value={task}
-                        onValueChange={setTask}
+                        onValueChange={handleTaskChange}
                         required
                         aria-labelledby={tasksLabelledBy}
                     >
@@ -166,7 +190,15 @@ const BatchEvaluationForm = ({modelsLabelledBy, tasksLabelledBy, tasksTitle, chi
                 appearance="plain"
                 // 이 화면에서는 그리드 안에 놓이므로 바깥 여백은 그리드에 맡긴다.
                 className="[&>div]:max-w-none [&>div]:px-0 [&>div]:pt-0 [&>div]:pb-15"
-                next={{type: 'submit', form: formId, disabled: !model || !task, children: '다음'}}
+                // scroll-mb-6 — 스크롤로 내려왔을 때 버튼이 화면 아래 끝에 붙지 않도록 24px 여유를 둔다.
+                next={{
+                    id: nextButtonId,
+                    type: 'submit',
+                    form: formId,
+                    disabled: !model || !task,
+                    className: 'scroll-mb-6',
+                    children: '다음',
+                }}
             />
         </>
     )
