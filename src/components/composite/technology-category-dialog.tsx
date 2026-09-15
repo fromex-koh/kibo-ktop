@@ -275,9 +275,10 @@ const TechnologyCategoryDialog = ({
                             </TableHeader>
                             <TableBody>
                                 {rows.map((row) => (
+                                    // 줄 hover 면 — 업종코드 조회 모달에서 고른 줄·기업정보 불러오기 모달의 줄과 같은 색(secondary)이다.
                                     <TableRow
                                         key={`${row.field}-${row.item.no}`}
-                                        className="border-0 hover:bg-transparent"
+                                        className="hover:bg-secondary border-0"
                                     >
                                         {row.themeRowSpan > 0 ? (
                                             <TableHead
