@@ -1,8 +1,9 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
 import Link from 'next/link'
-import {ExternalLink, Info} from 'lucide-react'
+import {ExternalLink, Info, TriangleAlert} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
+import {EmptyState} from '@/components/composite/empty-state'
 import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
@@ -250,12 +251,6 @@ const screenTotals = (screens: typeof SCREEN_MARKUP_RESULTS) => ({
     warnings: screens.reduce((sum, screen) => sum + screen.warnings, 0),
 })
 
-// 화면별 표는 이용자 구분으로 나눈다 — 두 묶음은 서로 다른 화면이라 한 표에 붙여 두면
-// 찾는 쪽 화면을 만나기까지 반대편 100여 줄을 지나야 한다.
-const SCREEN_GROUPS = [
-    {key: 'corp', label: '기업', screens: SCREEN_MARKUP_RESULTS.filter((screen) => screen.userType === '기업')},
-    {key: 'org', label: '기관', screens: SCREEN_MARKUP_RESULTS.filter((screen) => screen.userType === '기관')},
-] as const
 const SCREEN_TOTALS = screenTotals(SCREEN_MARKUP_RESULTS)
 
 type IndexedAuditScreen = {
@@ -311,10 +306,45 @@ const SCREEN_REGISTRY_BY_PATH = new Map(SCREEN_REGISTRY.map((screen) => [screen.
 const INDEXED_AUDIT_SCREEN_BY_KEY = new Map(
     INDEXED_AUDIT_SCREENS.filter((screen) => screen.registryKey).map((screen) => [screen.registryKey, screen]),
 )
-const waveScreenLabel = (route: string) => {
+
+// 화면별 검사 기록의 줄 순서 — 퍼블리싱 인덱스에 나오는 순서를 따른다. 검사 JSON 은 검사기가 돈 순서라
+// 인덱스에서 보던 화면을 표에서 다시 찾기 어렵다. 인덱스에 없는 화면은 그 묶음 끝에 원래 순서대로 둔다.
+// 같은 화면 key 가 인덱스에 두 번 나오면 처음 나온 자리를 쓴다.
+const INDEX_ORDER_BY_KEY = INDEXED_AUDIT_SCREENS.reduce((order, screen, index) => {
+    if (screen.registryKey && !order.has(screen.registryKey)) order.set(screen.registryKey, index)
+    return order
+}, new Map<string, number>())
+const indexOrder = (path: string) =>
+    INDEX_ORDER_BY_KEY.get(SCREEN_REGISTRY_BY_PATH.get(path)?.key ?? '') ?? Number.POSITIVE_INFINITY
+const sortByIndexOrder = <T extends {path: string}>(screens: readonly T[]) =>
+    [...screens].sort((a, b) => {
+        const orderA = indexOrder(a.path)
+        const orderB = indexOrder(b.path)
+        // 둘 다 인덱스에 없으면(Infinity − Infinity) 순서를 바꾸지 않는다 — 정렬은 안정적이다.
+        return orderA === orderB ? 0 : orderA - orderB
+    })
+
+// 화면별 표는 이용자 구분으로 나눈다 — 두 묶음은 서로 다른 화면이라 한 표에 붙여 두면
+// 찾는 쪽 화면을 만나기까지 반대편 100여 줄을 지나야 한다.
+const SCREEN_GROUPS = [
+    {
+        key: 'corp',
+        label: '기업',
+        screens: sortByIndexOrder(SCREEN_MARKUP_RESULTS.filter((screen) => screen.userType === '기업')),
+    },
+    {
+        key: 'org',
+        label: '기관',
+        screens: sortByIndexOrder(SCREEN_MARKUP_RESULTS.filter((screen) => screen.userType === '기관')),
+    },
+] as const
+// 화면 표시 이름 — 퍼블리싱 인덱스의 메뉴 뎁스를 " > " 로 이어 어느 메뉴 아래 화면인지 드러낸다
+// (예: 마이페이지 > 하위 계정 현황 > 회원 유형별 페이지 > [기술평가부] 비협약 은행/기관).
+// 인덱스에 없는 화면은 넘겨받은 이름 → 경로 레지스트리 이름 → 경로 순으로 대신 쓴다.
+const screenMenuLabel = (route: string, fallbackName?: string) => {
     const registryKey = SCREEN_REGISTRY_BY_PATH.get(route)?.key
     const menuPath = registryKey ? INDEXED_AUDIT_SCREEN_BY_KEY.get(registryKey)?.path : undefined
-    return menuPath?.join(' > ') ?? SCREEN_REGISTRY_BY_PATH.get(route)?.name ?? route
+    return menuPath?.join(' > ') ?? fallbackName ?? SCREEN_REGISTRY_BY_PATH.get(route)?.name ?? route
 }
 const AUDIT_SCOPE_NOTES = SCREEN_GROUPS.map((group) => {
     const indexedScreens = INDEXED_AUDIT_SCREENS.filter((screen) => screen.userType === group.label)
@@ -549,9 +579,9 @@ const WAVE_SCREEN_ROUTES = [
 const WAVE_ISSUES = [
     {
         level: 'error',
-        message: 'Missing form label (204)',
-        count: 204,
-        screens: 36,
+        message: 'Missing form label (206)',
+        count: 206,
+        screens: 37,
         owner: 'Radix RadioGroup의 숨은 input',
         verdict: '값을 폼에 담는 input이라 aria-hidden·tabindex="-1"이 붙어 있고 라벨이 없다',
     },
@@ -665,6 +695,8 @@ const WAVE_SELECT_SCREEN_ROUTES = [
     '/org/mypage/sub-account-progress/edit',
     '/org/notice/inquiry-create',
     '/org/notice/inquiry-create/privacy-consent-guide',
+    '/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request',
+    '/org/batch-evaluation/evaluation-history-or-batch/startup/batch-evaluation-request',
 ] as const
 
 const WAVE_SELECT_ISSUES = [
@@ -672,7 +704,7 @@ const WAVE_SELECT_ISSUES = [
         level: 'error',
         message: 'Missing form label (115)',
         count: 115,
-        screens: 25,
+        screens: 26,
         owner: 'Radix Select 의 숨은 native select',
         verdict: '값을 폼에 담으려고 두는 select 라 aria-hidden·tabindex="-1" 이 붙어 있고 라벨이 없다',
     },
@@ -714,8 +746,10 @@ const WAVE_TECH_INDEX_STARTUP_COMPANY_SELECT_ISSUES = [
 const WAVE_INVESTMENT_COMPANY_SELECT_ISSUES = [
     {...WAVE_SELECT_ISSUES[0], message: 'Missing form label (9)', count: 9, screens: 1},
 ] as const
+// 기업정보의 Missing form label 2건은 Select 가 아니라 RadioGroup(숨은 radio 2개) 에서 나온다 —
+// 화면에 남는 숨은 select 는 1개이고 그 1개가 Select missing label 경고다.
 const WAVE_PROFILE_SELECT_ISSUES = [
-    {...WAVE_SELECT_ISSUES[0], message: 'Missing form label (2)', count: 2, screens: 1},
+    {...WAVE_ISSUES[0], message: 'Missing form label (2)', count: 2, screens: 1},
     {...WAVE_SELECT_ISSUES[1], message: 'Select missing label (1)', count: 1, screens: 1},
 ] as const
 const WAVE_REPRESENTATIVE_SELECT_ISSUES = [
@@ -1193,12 +1227,25 @@ const WAVE_SCREEN_RESULTS = [
         issues: WAVE_SUB_ACCOUNT_EDIT_SELECT_ISSUES,
         kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
     },
+    // 창업 갈래는 일반과 같은 신청 폼이라 숨은 select 1개로 같은 건수가 나온다.
+    {
+        name: '기관 일괄평가 · 대량정보 조회 신청 (창업)',
+        path: WAVE_SELECT_SCREEN_ROUTES[33],
+        issues: WAVE_BULK_DATA_REQUEST_SELECT_ISSUES,
+        kinds: [{label: 'Missing form label · Select 1건', level: 'error', target: 'wave-select-error'}],
+    },
+    {
+        name: '기관 일괄평가 · 평가 신청 (창업)',
+        path: WAVE_SELECT_SCREEN_ROUTES[34],
+        issues: WAVE_BATCH_EVALUATION_REQUEST_SELECT_ISSUES,
+        kinds: [{label: 'Missing form label · Select 1건', level: 'error', target: 'wave-select-error'}],
+    },
     {
         name: '기업 마이페이지 · 기업정보',
         path: WAVE_SELECT_SCREEN_ROUTES[7],
         issues: WAVE_PROFILE_SELECT_ISSUES,
         kinds: [
-            {label: 'Missing form label · Select 2건', level: 'error', target: 'wave-select-error'},
+            {label: 'Missing form label · RadioGroup 2건', level: 'error', target: 'wave-radio'},
             {label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'},
         ],
     },
@@ -1245,15 +1292,6 @@ const WAVE_SELECT_ERROR_SCREEN_ROUTES = WAVE_SCREEN_RECORDS.filter((screen) =>
 const WAVE_SELECT_WARNING_SCREEN_ROUTES = WAVE_SCREEN_RECORDS.filter((screen) =>
     screen.issues.some((issue) => issue.owner.startsWith('Radix Select') && issue.level === 'warning'),
 ).map((screen) => screen.path)
-
-const WAVE_TOTALS = WAVE_SCREEN_RECORDS.reduce(
-    (totals, screen) => ({
-        screens: totals.screens + 1,
-        errors: totals.errors + screen.errors,
-        warnings: totals.warnings + screen.warnings,
-    }),
-    {screens: 0, errors: 0, warnings: 0},
-)
 
 const WAVE_SUMMARY_GROUPS = [
     {key: 'corp', label: '기업', screens: WAVE_SCREEN_RECORDS.filter((screen) => screen.path.startsWith('/corp/'))},
@@ -1329,6 +1367,60 @@ const WAVE_SUMMARY_GROUPS = [
         ).length,
     },
 }))
+
+// 화면별 검사 기록은 W3C 탭과 같은 화면 목록(저장된 전수검사의 기업·기관 화면)과 순서를 쓴다.
+// WAVE 는 사례가 나온 화면만 수동으로 기록하므로 기록이 없는 화면은 오류·경고 0건으로 채운다 —
+// 그래야 두 탭의 화면 수가 같고, 검사 대상인데 목록에서 빠진 화면이 생기지 않는다.
+// 전수검사 목록에 없는 경로의 기록도 버리지 않고 함께 담아, W3C 탭과 같은 퍼블리싱 인덱스 순서로 줄을 세운다.
+type WaveScreenRecord = (typeof WAVE_SCREEN_RECORDS)[number]
+type WaveScreenRow = {
+    name: string
+    path: string
+    errors: number
+    warnings: number
+    kinds: readonly WaveScreenRecord['kinds'][number][]
+    messages: readonly WaveScreenRecord['messages'][number][]
+}
+
+const WAVE_SCREEN_RECORD_BY_PATH = new Map<string, WaveScreenRecord>(
+    WAVE_SCREEN_RECORDS.map((screen) => [screen.path, screen]),
+)
+const waveScreenRow = ({name, path}: {name: string; path: string}): WaveScreenRow => {
+    const record = WAVE_SCREEN_RECORD_BY_PATH.get(path)
+    return {
+        name: record?.name ?? name,
+        path,
+        errors: record?.errors ?? 0,
+        warnings: record?.warnings ?? 0,
+        kinds: record?.kinds ?? [],
+        messages: record?.messages ?? [],
+    }
+}
+const WAVE_RECORD_GROUPS = SCREEN_GROUPS.map((group) => {
+    const auditedPaths = new Set(group.screens.map((screen) => screen.path))
+    const unauditedRecords = WAVE_SCREEN_RECORDS.filter(
+        (screen) => screen.path.startsWith(`/${group.key}/`) && !auditedPaths.has(screen.path),
+    )
+    const screens = sortByIndexOrder([...group.screens, ...unauditedRecords]).map(waveScreenRow)
+    return {
+        key: group.key,
+        label: group.label,
+        screens,
+        totals: {
+            errors: screens.reduce((sum, screen) => sum + screen.errors, 0),
+            warnings: screens.reduce((sum, screen) => sum + screen.warnings, 0),
+        },
+    }
+})
+const WAVE_RECORD_TOTALS = {
+    screens: WAVE_RECORD_GROUPS.reduce((sum, group) => sum + group.screens.length, 0),
+    errors: WAVE_RECORD_GROUPS.reduce((sum, group) => sum + group.totals.errors, 0),
+    warnings: WAVE_RECORD_GROUPS.reduce((sum, group) => sum + group.totals.warnings, 0),
+}
+// 최근 검사 요약의 화면 수도 화면별 검사 기록과 같은 전체 화면 수를 쓴다. 오류·경고 건수는 기록 그대로다.
+const WAVE_SCREEN_COUNT_BY_GROUP = new Map<string, number>(
+    WAVE_RECORD_GROUPS.map((group) => [group.key, group.screens.length]),
+)
 
 // 모달을 연 화면에서만 나오는 것들 — 모달 단독 확인 화면이 대표 예다.
 const DIALOG_SCREEN_ROUTES = [
@@ -1534,6 +1626,11 @@ const LibraryDetailAccordion = ({rows}: {rows: readonly DetailRow[]}) => (
     </Accordion>
 )
 
+// 링크는 이 문서를 보면서 대상 화면·원문과 대조하도록 새 창으로 연다(단순 앵커 이동 # 은 제외).
+// 새 창에서 열린다는 사실은 눈으로만 알 수 있으므로 읽어 줄 말을 함께 둔다[6.4.3].
+const NEW_WINDOW_LINK_PROPS = {target: '_blank', rel: 'noopener noreferrer'} as const
+const NEW_WINDOW_LABEL = ' (새 창에서 열림)'
+
 const OccurrenceScreensAccordion = ({routes}: {routes: readonly string[]}) => (
     <Accordion type="single" collapsible className="gap-0">
         <AccordionItem value="screens" className="border-subtle-3 rounded-sm border bg-transparent px-3 py-2">
@@ -1543,8 +1640,9 @@ const OccurrenceScreensAccordion = ({routes}: {routes: readonly string[]}) => (
                     {routes.map((route) => (
                         <li key={route} className="flex min-w-0 items-start">
                             <ListMarker type="unordered-small" />
-                            <Link className="text-primary min-w-0 underline" href={route}>
-                                {waveScreenLabel(route)}
+                            <Link {...NEW_WINDOW_LINK_PROPS} className="text-primary min-w-0 underline" href={route}>
+                                {screenMenuLabel(route)}
+                                <span className="sr-only">{NEW_WINDOW_LABEL}</span>
                             </Link>
                         </li>
                     ))}
@@ -1569,13 +1667,12 @@ const cardHeading = (text: string) => <span className="typo-h4-bold">{text}</spa
 const ReferenceLink = ({href, children}: {href: string; children: string}) => (
     <a
         href={href}
-        target="_blank"
-        rel="noopener noreferrer"
+        {...NEW_WINDOW_LINK_PROPS}
         className="text-primary inline-flex items-center gap-1 underline underline-offset-4"
     >
         {children}
         <ExternalLink aria-hidden="true" className="size-icon-xs" />
-        <span className="sr-only"> (새 창에서 열림)</span>
+        <span className="sr-only">{NEW_WINDOW_LABEL}</span>
     </a>
 )
 
@@ -1627,7 +1724,7 @@ const AccessibilityExceptionsPage = () => (
             </div>
         </BaseCard>
 
-        <Alert variant="outline" color="warning">
+        <Alert variant="outline" color="info">
             <Info aria-hidden="true" />
             <AlertDescription className="flex flex-col gap-0.5">
                 <strong className="block">현재 회차 화면 수 메모</strong>
@@ -1728,9 +1825,10 @@ const AccessibilityExceptionsPage = () => (
                                                         </div>
                                                         <div className="self-center">
                                                             {cause.reasons.length === 0 ? (
-                                                                <p className="text-foreground-subtle">
-                                                                    발생한 오류가 없습니다.
-                                                                </p>
+                                                                <EmptyState
+                                                                    title="발생한 오류가 없습니다."
+                                                                    className="min-h-0 px-0 py-2"
+                                                                />
                                                             ) : (
                                                                 <ul className="text-foreground-subtle flex list-none flex-col gap-2">
                                                                     {cause.reasons.map((reason) => (
@@ -1997,10 +2095,14 @@ const AccessibilityExceptionsPage = () => (
                                                                         </TableCell>
                                                                         <TableCell className="align-top whitespace-normal">
                                                                             <Link
+                                                                                {...NEW_WINDOW_LINK_PROPS}
                                                                                 href={screen.path}
                                                                                 className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
                                                                             >
                                                                                 {screen.name}
+                                                                                <span className="sr-only">
+                                                                                    {NEW_WINDOW_LABEL}
+                                                                                </span>
                                                                             </Link>
                                                                         </TableCell>
                                                                         <TableCell className="align-top whitespace-normal">
@@ -2194,10 +2296,12 @@ const AccessibilityExceptionsPage = () => (
                                                         <ListMarker type="unordered-small" />
                                                         <span className="min-w-0">
                                                             <Link
+                                                                {...NEW_WINDOW_LINK_PROPS}
                                                                 href={screen.path}
                                                                 className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
                                                             >
                                                                 {screen.name}
+                                                                <span className="sr-only">{NEW_WINDOW_LABEL}</span>
                                                             </Link>{' '}
                                                             · {screen.userType} · {screen.requiredSelectCount}건
                                                         </span>
@@ -2563,8 +2667,9 @@ const AccessibilityExceptionsPage = () => (
                                                 {DIALOG_SCREEN_ROUTES.map((route) => (
                                                     <li key={route}>
                                                         <Badge variant="solid-pastel" color="success" size="xs" asChild>
-                                                            <Link href={route}>
+                                                            <Link {...NEW_WINDOW_LINK_PROPS} href={route}>
                                                                 <code className="font-mono">{route}</code>
+                                                                <span className="sr-only">{NEW_WINDOW_LABEL}</span>
                                                             </Link>
                                                         </Badge>
                                                     </li>
@@ -2789,8 +2894,9 @@ const AccessibilityExceptionsPage = () => (
                                                 {CHART_SCREEN_ROUTES.map((route) => (
                                                     <li key={route}>
                                                         <Badge variant="solid-pastel" color="success" size="xs" asChild>
-                                                            <Link href={route}>
+                                                            <Link {...NEW_WINDOW_LINK_PROPS} href={route}>
                                                                 <code className="font-mono">{route}</code>
+                                                                <span className="sr-only">{NEW_WINDOW_LABEL}</span>
                                                             </Link>
                                                         </Badge>
                                                     </li>
@@ -2849,7 +2955,9 @@ const AccessibilityExceptionsPage = () => (
                         </Badge>
                     }
                 >
-                    {ACTIVE_PROJECT_ISSUES.length === 0 ? <p>발생한 프로젝트 오류가 없습니다.</p> : null}
+                    {ACTIVE_PROJECT_ISSUES.length === 0 ? (
+                        <EmptyState title="발생한 프로젝트 오류가 없습니다." className="min-h-52" />
+                    ) : null}
                     {/* 원인이 여럿이라 간격만으로는 경계가 흐려진다 — 절마다 구분선과 40px 여백을 둔다. */}
                     <div className="divide-subtle-3 flex flex-col divide-y">
                         {ACTIVE_PROJECT_ISSUES.map((issue, index) => (
@@ -2937,7 +3045,10 @@ const AccessibilityExceptionsPage = () => (
                                                         {group.label} 화면별 마크업 검사 오류·경고 건수와 종류
                                                     </TableCaption>
                                                     <TableHeader>
-                                                        <TableRow className="bg-muted hover:bg-muted">
+                                                        {/* 행 선은 색을 주지 않으면 글자색(currentColor)을 따라 아코디언 본문의
+                                                            label-foreground 로 진하게 그려진다 — 페이지의 다른 구분선과 같은
+                                                            border-subtle-3 로 맞춘다. */}
+                                                        <TableRow className="border-subtle-3 bg-muted hover:bg-muted">
                                                             <TableHead scope="col" className="text-center">
                                                                 번호
                                                             </TableHead>
@@ -2958,21 +3069,25 @@ const AccessibilityExceptionsPage = () => (
                                                     </TableHeader>
                                                     <TableBody>
                                                         {group.screens.map((screen, index) => (
-                                                            <TableRow key={screen.path}>
+                                                            <TableRow key={screen.path} className="border-subtle-3">
                                                                 <TableCell className="text-foreground-subtle text-center align-top tabular-nums">
                                                                     {index + 1}
                                                                 </TableCell>
                                                                 {/* 화면명이 그 화면으로 가는 링크다 — 경로 문자열보다 이름이 눈에 먼저 들어온다. */}
                                                                 <TableCell className="max-w-60 align-top whitespace-normal">
                                                                     <Link
+                                                                        {...NEW_WINDOW_LINK_PROPS}
                                                                         href={screen.path}
-                                                                        className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                                                                        className="typo-body-m-medium text-primary focus-visible:ring-ring rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
                                                                     >
-                                                                        {screen.name}
+                                                                        {screenMenuLabel(screen.path, screen.name)}
+                                                                        <span className="sr-only">
+                                                                            {NEW_WINDOW_LABEL}
+                                                                        </span>
                                                                     </Link>
                                                                 </TableCell>
                                                                 <TableCell className="max-w-70 align-top whitespace-normal">
-                                                                    <code className="font-mono break-all">
+                                                                    <code className="typo-caption-regular font-mono break-all">
                                                                         {screen.path}
                                                                     </code>
                                                                 </TableCell>
@@ -3041,7 +3156,7 @@ const AccessibilityExceptionsPage = () => (
                                                                                 className="rounded-none bg-transparent p-0"
                                                                             >
                                                                                 <AccordionTrigger
-                                                                                    aria-label={`${screen.name} 오류·경고 상세`}
+                                                                                    aria-label={`${screenMenuLabel(screen.path, screen.name)} 오류·경고 상세`}
                                                                                     className="text-foreground-subtle **:data-[slot=accordion-trigger-icon]:size-icon-xs flex-none items-center justify-start gap-1 py-1 text-xs! leading-5! font-normal! **:data-[slot=accordion-trigger-icon]:ml-0"
                                                                                 >
                                                                                     오류·경고 상세
@@ -3105,7 +3220,7 @@ const AccessibilityExceptionsPage = () => (
             <TabsContent value="wave" className="flex flex-col gap-10">
                 <div className="flex flex-col gap-5">
                     <Alert variant="outline" color="warning">
-                        <Info aria-hidden="true" />
+                        <TriangleAlert aria-hidden="true" />
                         <AlertDescription>
                             <strong>수동 검사 결과</strong> — WAVE는 자동 수집하지 않으며, 브라우저에서 화면별로 검사한
                             사례를 수동으로 기록합니다.
@@ -3113,13 +3228,13 @@ const AccessibilityExceptionsPage = () => (
                     </Alert>
                     <BaseCard
                         title={cardHeading('최근 검사 요약')}
-                        subtitle="현재 페이지에 수동으로 기록된 WAVE 검사 사례입니다."
+                        subtitle="화면 수는 W3C 마크업 검사와 같은 전체 화면 기준이고, 오류·경고는 수동으로 기록된 WAVE 검사 사례를 모은 값입니다."
                     >
                         <Tabs defaultValue="wave-corp">
                             <TabsList variant="pill" aria-label="검사 대상 구분">
                                 {WAVE_SUMMARY_GROUPS.map((group) => (
                                     <TabsTrigger key={group.key} value={`wave-${group.key}`}>
-                                        {group.label} {group.totals.screens}개
+                                        {group.label} {WAVE_SCREEN_COUNT_BY_GROUP.get(group.key) ?? 0}개
                                     </TabsTrigger>
                                 ))}
                             </TabsList>
@@ -3132,7 +3247,7 @@ const AccessibilityExceptionsPage = () => (
                                                     검사한 화면
                                                 </dt>
                                                 <dd className="typo-title-l-bold text-foreground">
-                                                    {group.totals.screens}개
+                                                    {WAVE_SCREEN_COUNT_BY_GROUP.get(group.key) ?? 0}개
                                                 </dd>
                                             </div>
                                             <div className="flex min-w-0 flex-col gap-1">
@@ -3211,7 +3326,10 @@ const AccessibilityExceptionsPage = () => (
                                                     <p className="typo-title-l-bold">0건</p>
                                                 </div>
                                                 <div className="self-center">
-                                                    <p className="text-foreground-subtle">발생한 오류가 없습니다.</p>
+                                                    <EmptyState
+                                                        title="발생한 오류가 없습니다."
+                                                        className="min-h-0 px-0 py-2"
+                                                    />
                                                 </div>
                                             </section>
                                             <section className="grid gap-3 py-5 md:grid-cols-[14rem_1fr]">
@@ -3223,7 +3341,10 @@ const AccessibilityExceptionsPage = () => (
                                                     <p className="typo-title-l-bold">0건</p>
                                                 </div>
                                                 <div className="self-center">
-                                                    <p className="text-foreground-subtle">발생한 오류가 없습니다.</p>
+                                                    <EmptyState
+                                                        title="발생한 오류가 없습니다."
+                                                        className="min-h-0 px-0 py-2"
+                                                    />
                                                 </div>
                                             </section>
                                         </div>
@@ -3236,7 +3357,7 @@ const AccessibilityExceptionsPage = () => (
                 <BaseCard
                     title={cardHeading('외부 라이브러리 원인')}
                     subtitle="라이브러리가 생성한 숨김 요소의 검사 사례입니다. 사용자 조작 요소의 라벨 연결은 별도로 확인합니다."
-                    action={<Badge color="warning">예외 검토</Badge>}
+                    action={<Badge color="success">예외 검토</Badge>}
                 >
                     <div className="divide-subtle-3 flex flex-col divide-y">
                         <section
@@ -3582,24 +3703,24 @@ const AccessibilityExceptionsPage = () => (
 
                 <BaseCard
                     title={cardHeading('화면별 검사 기록')}
-                    subtitle="현재 수동으로 기록된 WAVE 화면별 검사 결과입니다."
+                    subtitle="W3C 마크업 검사와 같은 화면 목록입니다. 수동으로 기록한 WAVE 사례가 없는 화면은 오류·경고 0건으로 표시합니다."
                 >
                     <Accordion type="multiple">
                         <AccordionItem value="screens">
                             <AccordionTrigger>
-                                서비스 화면 {WAVE_TOTALS.screens}개 — 오류 {WAVE_TOTALS.errors}건 · 경고{' '}
-                                {WAVE_TOTALS.warnings}건
+                                서비스 화면 {WAVE_RECORD_TOTALS.screens}개 — 오류 {WAVE_RECORD_TOTALS.errors}건 · 경고{' '}
+                                {WAVE_RECORD_TOTALS.warnings}건
                             </AccordionTrigger>
                             <AccordionContent>
                                 <Tabs defaultValue="wave-records-corp">
                                     <TabsList variant="pill" aria-label="WAVE 화면별 검사 대상 구분">
-                                        {WAVE_SUMMARY_GROUPS.map((group) => (
+                                        {WAVE_RECORD_GROUPS.map((group) => (
                                             <TabsTrigger key={group.key} value={`wave-records-${group.key}`}>
-                                                {group.label} {group.totals.screens}개
+                                                {group.label} {group.screens.length}개
                                             </TabsTrigger>
                                         ))}
                                     </TabsList>
-                                    {WAVE_SUMMARY_GROUPS.map((group) => (
+                                    {WAVE_RECORD_GROUPS.map((group) => (
                                         <TabsContent key={group.key} value={`wave-records-${group.key}`}>
                                             <Table className="min-w-240 table-fixed">
                                                 <colgroup>
@@ -3614,7 +3735,8 @@ const AccessibilityExceptionsPage = () => (
                                                     WAVE {group.label} 화면별 접근성 검사 오류·경고 건수와 종류
                                                 </TableCaption>
                                                 <TableHeader>
-                                                    <TableRow className="bg-muted hover:bg-muted">
+                                                    {/* 행 선 색은 W3C 화면별 검사 기록 표와 같이 border-subtle-3 로 맞춘다. */}
+                                                    <TableRow className="border-subtle-3 bg-muted hover:bg-muted">
                                                         <TableHead scope="col" className="text-center">
                                                             번호
                                                         </TableHead>
@@ -3633,20 +3755,22 @@ const AccessibilityExceptionsPage = () => (
                                                 </TableHeader>
                                                 <TableBody>
                                                     {group.screens.map((screen, index) => (
-                                                        <TableRow key={screen.path}>
+                                                        <TableRow key={screen.path} className="border-subtle-3">
                                                             <TableCell className="text-foreground-subtle text-center align-top tabular-nums">
                                                                 {index + 1}
                                                             </TableCell>
                                                             <TableCell className="max-w-60 align-top whitespace-normal">
                                                                 <Link
+                                                                    {...NEW_WINDOW_LINK_PROPS}
                                                                     href={screen.path}
-                                                                    className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                                                                    className="typo-body-m-medium text-primary focus-visible:ring-ring rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
                                                                 >
-                                                                    {screen.name}
+                                                                    {screenMenuLabel(screen.path, screen.name)}
+                                                                    <span className="sr-only">{NEW_WINDOW_LABEL}</span>
                                                                 </Link>
                                                             </TableCell>
                                                             <TableCell className="max-w-70 align-top whitespace-normal">
-                                                                <code className="font-mono break-all">
+                                                                <code className="typo-caption-regular font-mono break-all">
                                                                     {screen.path}
                                                                 </code>
                                                             </TableCell>
@@ -3657,74 +3781,104 @@ const AccessibilityExceptionsPage = () => (
                                                                 {screen.warnings}
                                                             </TableCell>
                                                             <TableCell className="max-w-90 align-top whitespace-normal">
-                                                                <ul className="flex flex-col items-start gap-1">
-                                                                    {screen.kinds.map((kind) => (
-                                                                        <li
-                                                                            key={`${kind.level}-${kind.target}-${kind.label}`}
-                                                                        >
-                                                                            <Badge
-                                                                                size="xs"
-                                                                                color={
-                                                                                    kind.level === 'error'
-                                                                                        ? 'error'
-                                                                                        : 'warning'
-                                                                                }
-                                                                                asChild
-                                                                            >
-                                                                                <Link
-                                                                                    href={`#${kind.target}`}
-                                                                                    aria-label={`${kind.label} 외부 라이브러리 원인 확인`}
+                                                                {screen.kinds.length ? (
+                                                                    <>
+                                                                        <ul className="flex flex-col items-start gap-1">
+                                                                            {screen.kinds.map((kind) => (
+                                                                                <li
+                                                                                    key={`${kind.level}-${kind.target}-${kind.label}`}
                                                                                 >
-                                                                                    {kind.label}
-                                                                                </Link>
-                                                                            </Badge>
-                                                                        </li>
-                                                                    ))}
-                                                                </ul>
-                                                                <Accordion type="single" collapsible className="mt-2">
-                                                                    <AccordionItem
-                                                                        value="messages"
-                                                                        className="rounded-none bg-transparent p-0"
-                                                                    >
-                                                                        <AccordionTrigger
-                                                                            aria-label={`${screen.name} 오류·경고 상세`}
-                                                                            className="text-foreground-subtle **:data-[slot=accordion-trigger-icon]:size-icon-xs flex-none items-center justify-start gap-1 py-1 text-xs! leading-5! font-normal! **:data-[slot=accordion-trigger-icon]:ml-0"
-                                                                        >
-                                                                            오류·경고 상세
-                                                                        </AccordionTrigger>
-                                                                        <AccordionContent className="pt-2 text-xs! leading-5! font-normal!">
-                                                                            <ul className="flex flex-col gap-3">
-                                                                                {screen.messages.map((message) => (
-                                                                                    <li
-                                                                                        key={`${message.level}-${message.control}-${message.message}`}
-                                                                                        className="flex flex-col items-start gap-1"
+                                                                                    <Badge
+                                                                                        size="xs"
+                                                                                        color={
+                                                                                            kind.level === 'error'
+                                                                                                ? 'error'
+                                                                                                : 'warning'
+                                                                                        }
+                                                                                        asChild
                                                                                     >
-                                                                                        <IssueBadge
-                                                                                            level={message.level}
-                                                                                        />
-                                                                                        <p className="font-bold break-words">
-                                                                                            <span lang="en">
-                                                                                                {message.message}
-                                                                                            </span>{' '}
-                                                                                            · {message.control}{' '}
-                                                                                            {message.count}건
-                                                                                        </p>
-                                                                                        <dl className="text-foreground-subtle grid gap-x-2 gap-y-0.5 sm:grid-cols-[4rem_1fr]">
-                                                                                            <dt className="font-bold">
-                                                                                                발생 요소
-                                                                                            </dt>
-                                                                                            <dd>{message.owner}</dd>
-                                                                                            <dt className="font-bold">
-                                                                                                상세
-                                                                                            </dt>
-                                                                                            <dd>{message.verdict}</dd>
-                                                                                        </dl>
-                                                                                    </li>
-                                                                                ))}
-                                                                            </ul>
-                                                                        </AccordionContent>
-                                                                    </AccordionItem>
-                                                                </Accordion>
+                                                                                        <Link
+                                                                                            href={`#${kind.target}`}
+                                                                                            aria-label={`${kind.label} 외부 라이브러리 원인 확인`}
+                                                                                        >
+                                                                                            {kind.label}
+                                                                                        </Link>
+                                                                                    </Badge>
+                                                                                </li>
+                                                                            ))}
+                                                                        </ul>
+                                                                        <Accordion
+                                                                            type="single"
+                                                                            collapsible
+                                                                            className="mt-2"
+                                                                        >
+                                                                            <AccordionItem
+                                                                                value="messages"
+                                                                                className="rounded-none bg-transparent p-0"
+                                                                            >
+                                                                                <AccordionTrigger
+                                                                                    aria-label={`${screenMenuLabel(screen.path, screen.name)} 오류·경고 상세`}
+                                                                                    className="text-foreground-subtle **:data-[slot=accordion-trigger-icon]:size-icon-xs flex-none items-center justify-start gap-1 py-1 text-xs! leading-5! font-normal! **:data-[slot=accordion-trigger-icon]:ml-0"
+                                                                                >
+                                                                                    오류·경고 상세
+                                                                                </AccordionTrigger>
+                                                                                <AccordionContent className="pt-2 text-xs! leading-5! font-normal!">
+                                                                                    <ul className="flex flex-col gap-3">
+                                                                                        {screen.messages.map(
+                                                                                            (message) => (
+                                                                                                <li
+                                                                                                    key={`${message.level}-${message.control}-${message.message}`}
+                                                                                                    className="flex flex-col items-start gap-1"
+                                                                                                >
+                                                                                                    <IssueBadge
+                                                                                                        level={
+                                                                                                            message.level
+                                                                                                        }
+                                                                                                    />
+                                                                                                    <p className="font-bold break-words">
+                                                                                                        <span lang="en">
+                                                                                                            {
+                                                                                                                message.message
+                                                                                                            }
+                                                                                                        </span>{' '}
+                                                                                                        ·{' '}
+                                                                                                        {
+                                                                                                            message.control
+                                                                                                        }{' '}
+                                                                                                        {message.count}
+                                                                                                        건
+                                                                                                    </p>
+                                                                                                    <dl className="text-foreground-subtle grid gap-x-2 gap-y-0.5 sm:grid-cols-[4rem_1fr]">
+                                                                                                        <dt className="font-bold">
+                                                                                                            발생 요소
+                                                                                                        </dt>
+                                                                                                        <dd>
+                                                                                                            {
+                                                                                                                message.owner
+                                                                                                            }
+                                                                                                        </dd>
+                                                                                                        <dt className="font-bold">
+                                                                                                            상세
+                                                                                                        </dt>
+                                                                                                        <dd>
+                                                                                                            {
+                                                                                                                message.verdict
+                                                                                                            }
+                                                                                                        </dd>
+                                                                                                    </dl>
+                                                                                                </li>
+                                                                                            ),
+                                                                                        )}
+                                                                                    </ul>
+                                                                                </AccordionContent>
+                                                                            </AccordionItem>
+                                                                        </Accordion>
+                                                                    </>
+                                                                ) : (
+                                                                    <Badge size="xs" color="success">
+                                                                        없음
+                                                                    </Badge>
+                                                                )}
                                                             </TableCell>
                                                         </TableRow>
                                                     ))}
