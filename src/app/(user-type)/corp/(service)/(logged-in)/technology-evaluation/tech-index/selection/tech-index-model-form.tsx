@@ -60,7 +60,20 @@ type TechIndexModelFormProps = {
 const TechIndexModelForm = ({labelledBy, children}: TechIndexModelFormProps) => {
     const router = useRouter()
     const formId = useId()
+    const nextButtonId = useId()
     const [model, setModel] = useState('')
+
+    // 카드를 고르면 [다음]이 화면 밖에 있을 때 보이는 자리까지 내려 준다 — 다음 할 일을 바로 찾게 한다.
+    // block: 'nearest' 라 버튼이 이미 다 보이면 움직이지 않고, 포커스는 카드에 그대로 둔다([7.2.1]).
+    // 동작을 줄이도록 설정한 사용자에게는 즉시 이동한다([6.3.1]).
+    const handleModelChange = (value: string) => {
+        setModel(value)
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        document
+            .getElementById(nextButtonId)
+            ?.scrollIntoView({block: 'nearest', behavior: prefersReducedMotion ? 'auto' : 'smooth'})
+    }
 
     const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -77,7 +90,7 @@ const TechIndexModelForm = ({labelledBy, children}: TechIndexModelFormProps) => 
                 <RadioCardGroup
                     name={MODEL_FIELD}
                     value={model}
-                    onValueChange={setModel}
+                    onValueChange={handleModelChange}
                     required
                     aria-labelledby={labelledBy}
                 >
@@ -118,7 +131,15 @@ const TechIndexModelForm = ({labelledBy, children}: TechIndexModelFormProps) => 
                 appearance="plain"
                 // 이 화면에서는 그리드 안에 놓이므로 바깥 여백은 그리드에 맡긴다.
                 className="[&>div]:max-w-none [&>div]:px-0 [&>div]:pt-0 [&>div]:pb-15"
-                next={{type: 'submit', form: formId, disabled: !model, children: '다음'}}
+                // scroll-mb-6 — 스크롤로 내려왔을 때 버튼이 화면 아래 끝에 붙지 않도록 24px 여유를 둔다.
+                next={{
+                    id: nextButtonId,
+                    type: 'submit',
+                    form: formId,
+                    disabled: !model,
+                    className: 'scroll-mb-6',
+                    children: '다음',
+                }}
             />
         </>
     )
