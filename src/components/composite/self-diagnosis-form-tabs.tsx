@@ -95,17 +95,32 @@ const TECH_INDEX_GENERAL_DEFAULT_VALUES: Record<string, string> = {
 // Tech-Index 모형에만 있는 [기업 상세 정보] 구획을 카드 맨 아래에 그대로 이어 붙인다.
 const ORG_TECH_INDEX_GENERAL_FORM_TABS: readonly FormTabItem[] = TECH_INDEX_GENERAL_FORM_TABS.map((tab) =>
     tab.value === 'company'
-        ? {...tab, content: <OrgCompanyInfoForm trailing={<TechIndexCompanyDetailSection />} />}
+        ? {
+              ...tab,
+              content: <OrgCompanyInfoForm trailing={<TechIndexCompanyDetailSection />} model="tech-index-general" />,
+          }
         : tab,
 )
 
 // 창업용 — 위 일반용에 [경영진 역량 및 구성] 탭(창업 모형에만 있다)을 [기술 인력 현황] 다음에 더한다.
 // 어느 세트를 쓸지는 화면이 (0) 평가모형 선택에서 고른 값으로 정한다.
+// 기업정보 탭은 칸이 일반용과 같지만 [기업정보 관리] 모달이 창업 모형의 기업정보를 불러오므로 다시 끼운다.
 const ORG_TECH_INDEX_STARTUP_FORM_TABS: readonly FormTabItem[] = ORG_TECH_INDEX_GENERAL_FORM_TABS.flatMap(
-    (tab): readonly FormTabItem[] =>
-        tab.value === 'staff'
+    (tab): readonly FormTabItem[] => {
+        if (tab.value === 'company') {
+            return [
+                {
+                    ...tab,
+                    content: (
+                        <OrgCompanyInfoForm trailing={<TechIndexCompanyDetailSection />} model="tech-index-startup" />
+                    ),
+                },
+            ]
+        }
+        return tab.value === 'staff'
             ? [tab, {value: 'management', title: '경영진 역량 및 구성', content: <TechIndexManagementForm />}]
-            : [tab],
+            : [tab]
+    },
 )
 
 // Tech-Index 창업용 2단계의 탭 구성 — Figma "[혁신성장지수 (창업) Tech-Index] 2단계_기업정보".
@@ -222,7 +237,7 @@ const INVESTMENT_MODEL_DEFAULT_VALUES: Record<string, string> = {
 // 기관 개별평가 투자모형 2단계의 탭 구성 — 탭 이름·순서는 기업 투자모형과 같고(여섯 개),
 // 기업정보 탭만 기관용이다(ORG_TECH_INDEX_GENERAL_FORM_TABS 가 하는 것과 같은 치환).
 // 기관은 평가 대상 기업의 정보를 직접 입력하고 기업형태에 따라 칸이 갈리며, 이 모형 시안에는
-// [기업 담당자 정보] 구획과 [기업 자가진단 결과보기] 버튼이 없어 그 두 곳을 끈다.
+// [기업 담당자 정보] 구획이 없어 그곳만 끈다. [기업 자가진단 결과보기] 버튼은 세 모형 모두와 같이 둔다.
 //
 // 나머지 다섯 탭은 기업 투자모형 것을 그대로 쓴다 — 묻는 것이 평가 대상 기업의 사정과 사람이라,
 // 누가 대신 적느냐(기업·기관)에 따라 달라지지 않는다. 인원 제한(기술 인력 3명 · 경영진 5명)과
@@ -230,7 +245,10 @@ const INVESTMENT_MODEL_DEFAULT_VALUES: Record<string, string> = {
 // INVESTMENT_MODEL_DEFAULT_VALUES 를 그대로 쓴다.
 const ORG_INVESTMENT_MODEL_FORM_TABS: readonly FormTabItem[] = INVESTMENT_MODEL_FORM_TABS.map((tab) =>
     tab.value === 'company'
-        ? {...tab, content: <OrgCompanyInfoForm showManagerInfo={false} showSelfDiagnosisResult={false} />}
+        ? {
+              ...tab,
+              content: <OrgCompanyInfoForm showManagerInfo={false} model="investment-model" />,
+          }
         : tab,
 )
 

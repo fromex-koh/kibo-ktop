@@ -993,35 +993,35 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-usage-history",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-refund-reason",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-refund-reason-refund-processing",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-refund-reason-refund-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-inquiry-history",
@@ -1256,17 +1256,17 @@
         },
         {
             "key": "org-individual-evaluation-verification-progress",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.7",
-            "isCurrent": false
+            "version": "v3.2.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-technology-info",
@@ -1298,10 +1298,10 @@
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-info-company-management",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-representative-capability-career-input-helper",
@@ -1431,10 +1431,10 @@
         },
         {
             "key": "org-individual-evaluation-tech-index-general-company-info-company-management",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-general-evaluation-application",
@@ -1501,10 +1501,10 @@
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-company-info-company-management",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-evaluation-application",
@@ -1585,10 +1585,10 @@
         },
         {
             "key": "org-individual-evaluation-investment-model-company-info-company-management",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.7",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-representative-capability-career-input-helper",
@@ -2015,14 +2015,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-inquiry-history-inquiry-detail",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-notice-announcements",
@@ -2379,7 +2379,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-login-guide",

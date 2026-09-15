@@ -28,7 +28,13 @@ import {
     useFieldValue,
     useFormValues,
 } from '@/components/composite/form-values'
+import {CompanyInfoLoadDialog} from '@/components/composite/company-info-load-dialog'
 import {IndustryCodeDialog} from '@/components/composite/industry-code-dialog'
+import {
+    getCompanyInfoLoadResult,
+    type CompanyInfoLoadItem,
+    type CompanyInfoLoadModel,
+} from '@/content/service/company-info-load'
 import {SELECTED_INDUSTRY_CODE_FIELD} from '@/constants/technology-evaluation'
 import {PostcodeSearchDialog} from '@/components/composite/postcode-search-dialog'
 import {SubSectionHeader, SubSectionHeaderTitle} from '@/components/composite/sub-section-header'
@@ -80,6 +86,21 @@ const ADDRESS_DETAIL_FIELD = 'address-detail'
 // 법인 전용 칸 — 개인·기타로 되돌릴 때 이 이름들의 값을 지운다.
 const CORPORATION_ONLY_FIELDS = [COMPANY_NAME_MARK_FIELD, CORP_NO_FIELD] as const
 
+// [기업정보 관리] 로 채우는 칸들의 id — 채운 뒤 남아 있던 검사 메시지를 이 id 로 거둔다(메시지는 name 이 아니라 id 에 붙는다).
+const COMPANY_INFO_FIELD_IDS = [
+    CORP_TYPE_FIELD,
+    COMPANY_NAME_MARK_FIELD,
+    'biz-no',
+    'corp-no',
+    'company-name',
+    'found-date',
+    'ceo-name',
+    'company-tel',
+    INDUSTRY_CODE_FIELD,
+    ADDRESS_FIELD,
+    ADDRESS_DETAIL_FIELD,
+] as const
+
 // 기업명 표기 — 법인 접두어를 기업명 앞에 붙일지 뒤에 붙일지 고른다.
 const COMPANY_NAME_MARKS = [
     {value: 'prefix', label: '앞'},
@@ -93,17 +114,13 @@ const COMPANY_NAME_PLACEHOLDER = '기업명'
 // 카드 상단 버튼. 시안 메모("버튼은 case별로 노출됨")대로 노출 조건은 연동 시 정해진다 —
 // 지금은 두 버튼을 모두 보여 준다.
 //
-// [기업정보 관리] 는 화면 이동이 아니라 이 화면에서 처리하는 동작이라 <button> 이다 — 붙일 동작이
-// 정해지기 전까지는 아무 일도 하지 않는다. [기업 자가진단 결과보기] 는 다른 화면으로 나가므로 링크다[NA-006].
+// [기업정보 관리] 는 화면 이동이 아니라 이 화면에서 여는 모달이라 <button> 이다 — 기업정보 불러오기 모달
+// (CompanyInfoLoadDialog)을 연다. [기업 자가진단 결과보기] 는 다른 화면으로 나가므로 링크다[NA-006].
 const COMPANY_MANAGEMENT_LABEL = '기업정보 관리'
 
-// 버튼이 언제 나오는지 — 화면만 봐서는 알 수 없어 버튼 아래에 그대로 적어 둔다.
-// [기업정보 관리] 의 조건은 적지 않는다. 시안 메모는 "기업·기술정보 입력 > 기업정보 화면에서 노출" 인데,
-// 이 구획이 놓이는 자리가 바로 그 화면이라(세 모형 모두) 보고 있는 화면을 조건으로 되읽는 문장이 된다.
 const SELF_DIAGNOSIS_RESULT_ACTION = {
     label: '기업 자가진단 결과보기',
     href: '/org/individual-evaluation/ktrs-fm/company-technology-info/self-diagnosis-result',
-    when: '평가진행방식 선택에서 [평가검증 하기] → 평가검증 신청 조회의 회사별 [평가검증 하기]로 들어왔을 때 노출',
 } as const
 
 // 상세주소의 검사 메시지 — 주소 Field 안에 있지만 id 가 달라 Field 가 대신 그려 주지 못한다.
@@ -341,16 +358,53 @@ const CorpTypeField = () => {
 // trailing — 카드 마지막에 이어 붙는 구획. 기관 Tech-Index 기업정보 탭이 [기업 상세 정보] 구획을
 // 이 자리에 넘긴다(넘기지 않으면 지금까지처럼 담당자 정보에서 끝난다).
 //
-// showManagerInfo·showSelfDiagnosisResult — 모형마다 다른 두 곳만 끈다. 기관 투자모형 시안에는
-// [기업 담당자 정보] 구획과 [기업 자가진단 결과보기] 버튼이 없다(기업 투자모형 기업정보 탭에도
-// 담당자 정보가 없는 것과 같다). 위쪽 칸 구성·기업형태 분기·주소는 세 모형이 모두 같아 그대로 쓴다.
+// showManagerInfo — 기관 투자모형 시안에는 [기업 담당자 정보] 구획이 없어 그 모형만 끈다(기업 투자모형
+// 기업정보 탭에도 담당자 정보가 없는 것과 같다). 위쪽 칸 구성·기업형태 분기·주소는 세 모형이 모두 같아 그대로 쓴다.
+//
+// showSelfDiagnosisResult — [기업 자가진단 결과보기] 버튼. KTRS-FM · Tech-Index · 투자모형 모두 켠다(기본값).
+// 퍼블리싱에서는 두 버튼을 함께 보여 준다. 연동 시에는 [기관] 마이페이지 > 평가검증 신청 조회 > [평가검증 하기]로
+// 들어왔을 때 [기업정보 관리] 대신 같은 자리에 [기업 자가진단 결과보기]를 노출한다(둘 중 하나만 보인다).
+//
+// model — [기업정보 관리] 모달이 어느 평가모형의 기업정보를 불러오는지(키). 결과 줄의 모형 이름은 조회 응답이
+// 내려 준다(KTRS-FM · Tech-Index (일반) · Tech-Index (창업) · 투자모형).
 const OrgCompanyInfoForm = ({
     trailing,
     showManagerInfo = true,
     showSelfDiagnosisResult = true,
-}: {trailing?: ReactNode; showManagerInfo?: boolean; showSelfDiagnosisResult?: boolean} = {}) => {
+    model = 'ktrs-fm',
+}: {
+    trailing?: ReactNode
+    showManagerInfo?: boolean
+    showSelfDiagnosisResult?: boolean
+    model?: CompanyInfoLoadModel
+} = {}) => {
     const corpType = useFieldValue(CORP_TYPE_FIELD)?.value ?? ''
     const isCorporation = corpType === CORP_TYPE_CORPORATION
+    const {setValue, clearFieldError} = useFormValues()
+
+    // [기업정보 관리] 모달에서 고른 기업으로 칸을 채운다 — 값은 칸의 name 으로 넣고, 채운 칸에 남아 있던
+    // 검사 메시지는 칸의 id 로 거둔다. 기업형태를 함께 넣으므로 법인 전용 칸(기업명 표기·법인번호)은
+    // 법인일 때만 채우고 아니면 비운다 — 기업형태 칸을 직접 바꿨을 때(CorpTypeField)와 같은 결과다.
+    const fillCompanyInfo = ({companyInfo: info}: CompanyInfoLoadItem) => {
+        const isCorporationInfo = info.corpType === CORP_TYPE_CORPORATION
+        const companyNameMark = info.companyNameMark === '' ? DEFAULT_COMPANY_NAME_MARK : info.companyNameMark
+        const values: Record<string, string> = {
+            [CORP_TYPE_FIELD]: info.corpType,
+            [COMPANY_NAME_MARK_FIELD]: isCorporationInfo ? companyNameMark : '',
+            bizNo: info.bizNo,
+            [CORP_NO_FIELD]: isCorporationInfo ? info.corpNo : '',
+            [COMPANY_NAME_FIELD]: info.companyName,
+            foundDate: info.foundDate,
+            ceoName: info.ceoName,
+            companyTel: info.companyTel,
+            [INDUSTRY_CODE_FIELD]: `${info.industryCode} ${info.industryName}`,
+            [SELECTED_INDUSTRY_CODE_FIELD]: info.industryCode,
+            [ADDRESS_FIELD]: info.address,
+            addressDetail: info.addressDetail,
+        }
+        Object.entries(values).forEach(([name, value]) => setValue(name, value))
+        COMPANY_INFO_FIELD_IDS.forEach((id) => clearFieldError(id))
+    }
 
     return (
         <FormCard
@@ -358,27 +412,25 @@ const OrgCompanyInfoForm = ({
             subtitle={<RequiredFieldsNotice />}
             // 시안의 이 버튼들은 파란 외곽선(secondary) · 높이 40(small) 이고, 버튼 사이 간격은 제목↔버튼과
             // 같은 24 다 — FormCard 액션 슬롯의 기본 간격(16)보다 넓어 이 줄에서만 다시 묶는다.
-            // 폭이 좁아지면 두 줄로 접히게 둔다 — 버튼 이름이 길어 한 줄에 밀어 넣으면 카드 밖으로 나간다.
+            // 모바일(md 미만)에서는 버튼 두 개가 오른쪽 칸을 넓혀 제목 칸이 눌리므로(글자가 세로로 쌓인다)
+            // 버튼 줄을 제목·안내 아래로 내리고 왼쪽에 붙인다. 폭이 모자라면 두 줄로 접힌다.
+            stackActionOnMobile
             action={
-                <div className="flex flex-col items-end gap-2">
-                    <div className="flex flex-wrap items-center justify-end gap-6">
+                <div className="flex flex-wrap items-center justify-end gap-6 max-md:justify-start max-md:gap-2">
+                    {/* [프론트엔드 연동] 처음 보여 줄 결과는 content/service/company-info-load.ts 가 준다. */}
+                    <CompanyInfoLoadDialog
+                        model={model}
+                        initialResult={getCompanyInfoLoadResult(model)}
+                        onSelect={fillCompanyInfo}
+                    >
                         <Button type="button" variant="secondary" size="sm">
                             {COMPANY_MANAGEMENT_LABEL}
                         </Button>
-                        {showSelfDiagnosisResult && (
-                            <Button asChild variant="secondary" size="sm">
-                                <Link href={SELF_DIAGNOSIS_RESULT_ACTION.href}>
-                                    {SELF_DIAGNOSIS_RESULT_ACTION.label}
-                                </Link>
-                            </Button>
-                        )}
-                    </div>
-                    {/* 시안 메모 "버튼은 case별로 노출됨" 을 화면에서 바로 읽을 수 있게 조건을 적어 둔다.
-                        노출 조건이 실제로 붙으면 이 안내는 걷어낸다. */}
+                    </CompanyInfoLoadDialog>
                     {showSelfDiagnosisResult && (
-                        <p className="typo-body-l-regular text-foreground-subtle text-right break-keep">
-                            [{SELF_DIAGNOSIS_RESULT_ACTION.label}] {SELF_DIAGNOSIS_RESULT_ACTION.when}
-                        </p>
+                        <Button asChild variant="secondary" size="sm">
+                            <Link href={SELF_DIAGNOSIS_RESULT_ACTION.href}>{SELF_DIAGNOSIS_RESULT_ACTION.label}</Link>
+                        </Button>
                     )}
                 </div>
             }

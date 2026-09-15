@@ -334,6 +334,9 @@ const CHECKS = [
         kind: '중립 solid 아이콘',
     },
     {fg: 'badge-solid-fg', bg: 'number-badge-new', min: TEXT, kind: '신규 숫자 배지'},
+    // 토스트 체크 원 안의 흰 체크(그래픽). 원과 토스트 면의 대비는 면이 반투명(black 75%)이라
+    // 아래 단색 비교로 잴 수 없어 여기서 검사하지 않는다.
+    {fg: 'toast-foreground', bg: 'toast-icon', min: UI, kind: '토스트 체크 아이콘'},
     {fg: 'success', bg: 'background', min: TEXT, kind: '성공 상태 텍스트'},
     {fg: 'warning', bg: 'background', min: TEXT, kind: '경고 상태 텍스트'},
     {fg: 'error', bg: 'background', min: TEXT, kind: '오류 상태 텍스트'},

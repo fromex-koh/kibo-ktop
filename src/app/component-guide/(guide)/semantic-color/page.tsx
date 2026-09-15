@@ -224,6 +224,7 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'table-surface': 'bg-table-surface',
     toast: 'bg-toast',
     'toast-foreground': 'bg-toast-foreground',
+    'toast-icon': 'bg-toast-icon',
 }
 // 표는 tokens.json 순서로 그리므로 조회는 문자열 키로 한다(위 객체가 누락 검사를 맡는다).
 const LIVE_SWATCH_BY_NAME = new Map<string, string>(Object.entries(LIVE_SWATCH_CLASS))
@@ -325,8 +326,11 @@ const CUSTOM_GROUPS: Group[] = [
     // 카드 안에 한 단계 들어간 옅은 면 — 공지 상세의 첨부파일 줄처럼 흰 카드 위 영역을 구분한다.
     {name: 'surface-subtle', match: (n) => n === 'surface-subtle'},
     {name: 'table-surface', match: (n) => n === 'table-surface'},
-    // 토스트 면은 시안이 테마와 무관하게 한 벌(반투명 검정 + 흰 글자)이라 세 테마 값이 모두 같다.
-    {name: 'toast / toast-foreground', match: (n) => n === 'toast' || n === 'toast-foreground'},
+    // 토스트 면은 시안이 테마와 무관하게 한 벌(반투명 검정 + 흰 글자 + 초록 체크 원)이라 세 테마 값이 모두 같다.
+    {
+        name: 'toast / toast-foreground / toast-icon',
+        match: (n) => n === 'toast' || n === 'toast-foreground' || n === 'toast-icon',
+    },
     // 옅은 채움 — 배지 solid-pastel·등급 표가 공유한다. 다크는 중립 표면 위 상태색 글자로 뒤집힌다.
     {name: 'pastel (옅은 채움 배경 / 글자)', match: (n) => n.startsWith('pastel-')},
     {name: 'foreground-subtle', match: (n) => n === 'foreground-subtle'},

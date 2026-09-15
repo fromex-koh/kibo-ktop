@@ -420,6 +420,7 @@
   --ds-table-surface: var(--raw-common-white);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
+  --ds-toast-icon: var(--raw-success-500);
 
   /* overlay (라이트 = 검정 alpha, primitive 참조) */
   --ds-overlay-sm: var(--raw-black-a10);
@@ -694,6 +695,7 @@
   --ds-table-surface: var(--raw-common-white);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
+  --ds-toast-icon: var(--raw-success-500);
 
   /* overlay */
   --ds-overlay-sm: var(--raw-black-a10);
@@ -968,6 +970,7 @@
   --ds-table-surface: var(--raw-gray-900);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
+  --ds-toast-icon: var(--raw-success-500);
 
   /* overlay override (다크 = 흰색 alpha, primitive 참조) */
   --ds-overlay-sm: var(--raw-white-a10);
@@ -1242,6 +1245,7 @@
   --ds-table-surface: var(--raw-gray-900);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
+  --ds-toast-icon: var(--raw-success-500);
 
   /* overlay override (다크 = 흰색 alpha, primitive 참조) */
   --ds-overlay-sm: var(--raw-white-a10);
@@ -1397,6 +1401,7 @@
   --color-table-surface: var(--ds-table-surface);
   --color-toast: var(--ds-toast);
   --color-toast-foreground: var(--ds-toast-foreground);
+  --color-toast-icon: var(--ds-toast-icon);
 
   /* 컬러 팔레트 (raw 스케일) — 시맨틱 슬롯의 원재료. 화면 코드에서 직접 사용 지양, 슬롯을 거칠 것(PB-05) */
   --color-blue-10: var(--ds-blue-10);

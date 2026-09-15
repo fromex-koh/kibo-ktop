@@ -2282,7 +2282,7 @@
                 {
                     "label": "평가검증 진행확인",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-individual-evaluation-verification-progress",
                     "iaRow": 19
@@ -2359,7 +2359,7 @@
                                 {
                                     "label": "기업정보 관리",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-ktrs-fm-company-info-company-management",
                                     "iaRow": 26
@@ -2611,7 +2611,7 @@
                                         {
                                             "label": "기업정보 관리",
                                             "screenId": null,
-                                            "status": "대기중",
+                                            "status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-general-company-info-company-management",
                                             "iaRow": 48
@@ -2756,7 +2756,7 @@
                                         {
                                             "label": "기업정보 관리",
                                             "screenId": null,
-                                            "status": "대기중",
+                                            "status": "완료",
                                             "version": "미배포",
                                             "key": "org-individual-evaluation-tech-index-startup-company-info-company-management",
                                             "iaRow": 61
@@ -2889,7 +2889,7 @@
                                 {
                                     "label": "기업정보 관리",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-individual-evaluation-investment-model-company-info-company-management",
                                     "iaRow": 73

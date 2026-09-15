@@ -60,11 +60,11 @@ const getHeaderOffsetStyle = () => {
     return {marginTop: `${Math.max(0, Math.round(anchorBottom + gap - toasterOffset))}px`}
 }
 
-// 시안의 체크 표식 — 파란 원 안에 흰 체크. 문구가 완료를 이미 알리므로 장식으로 둔다[5.1.1].
+// 시안의 체크 표식 — 초록 원 안에 흰 체크. 문구가 완료를 이미 알리므로 장식으로 둔다[5.1.1].
 const CheckToastIcon = (
     <span
         aria-hidden="true"
-        className="bg-primary text-primary-foreground size-icon-md flex shrink-0 items-center justify-center rounded-full"
+        className="bg-toast-icon text-toast-foreground size-icon-md flex shrink-0 items-center justify-center rounded-full"
     >
         <Check className="scale-75" strokeWidth={3} />
     </span>

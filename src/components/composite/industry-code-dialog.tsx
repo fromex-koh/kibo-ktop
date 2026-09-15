@@ -92,27 +92,39 @@ const CodeTable = ({name, legend, codeHeader, rows, selectedCode, onSelect}: Cod
         </div>
         {/* 다섯 줄까지 보이고 그 아래는 이 안에서 스크롤한다 — 시안 225(45×5)를 간격 스케일에 맞춰 224 로 둔다. */}
         <div className="max-h-56 overflow-y-auto">
-            {rows.map((row) => (
-                <label
-                    key={row.code}
-                    className={cn(
-                        codeTableRowClassName,
-                        // 고른 줄 — 시안은 옅은 파랑 면으로만 구분한다(글자색은 그대로).
-                        row.code === selectedCode ? 'bg-secondary' : 'interactive:hover:bg-surface-subtle',
-                    )}
-                >
-                    <input
-                        type="radio"
-                        name={name}
-                        value={row.code}
-                        checked={row.code === selectedCode}
-                        onChange={() => onSelect(row)}
-                        className="sr-only"
-                    />
-                    <span className="typo-body-l-regular text-label-foreground px-4 py-3 text-center">{row.code}</span>
-                    <span className="typo-body-l-regular text-label-foreground px-4 py-3">{row.name}</span>
-                </label>
-            ))}
+            {rows.map((row) => {
+                const isSelected = row.code === selectedCode
+                // 밑줄은 글자 칸(span)에 직접 준다 — 줄(label)은 grid 라 밑줄을 줄에 주면 칸마다 그어질지가
+                // 브라우저의 상속 규칙에 달린다. 줄에 올리면(group-hover) 코드·업종명에 밑줄이 서고,
+                // 고른 줄은 손을 뗀 뒤에도 밑줄이 남아 어느 줄을 골랐는지 보인다(기업정보 불러오기 모달의 줄과 같다).
+                const cellTextClassName = cn(
+                    'typo-body-l-regular text-label-foreground px-4 py-3 group-hover:underline',
+                    isSelected && 'underline',
+                )
+
+                return (
+                    <label
+                        key={row.code}
+                        className={cn(
+                            codeTableRowClassName,
+                            'group',
+                            // 고른 줄 — 시안은 옅은 파랑 면으로 구분한다(글자색은 그대로).
+                            isSelected ? 'bg-secondary' : 'interactive:hover:bg-surface-subtle',
+                        )}
+                    >
+                        <input
+                            type="radio"
+                            name={name}
+                            value={row.code}
+                            checked={isSelected}
+                            onChange={() => onSelect(row)}
+                            className="sr-only"
+                        />
+                        <span className={cn(cellTextClassName, 'text-center')}>{row.code}</span>
+                        <span className={cellTextClassName}>{row.name}</span>
+                    </label>
+                )
+            })}
         </div>
     </fieldset>
 )

@@ -17,7 +17,7 @@ import {OrgCustomerConsentForm} from '@/components/composite/org-customer-consen
 
 export const metadata: Metadata = {title: '고객정보활용동의'}
 
-const SELECTION_PATH = '/org/individual-evaluation/ktrs-fm/selection'
+const SELECTION_PATH = '/org/individual-evaluation/verification-progress'
 const COMPANY_TECHNOLOGY_INFO_PATH = '/org/individual-evaluation/ktrs-fm/company-technology-info'
 // 폼 바깥(화면 맨 아래)에 있는 [다음] 버튼을 form 속성으로 잇는 이름.
 const FORM_ID = 'org-customer-consent-form'

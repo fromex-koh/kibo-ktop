@@ -28,7 +28,7 @@ const EVALUATION_METHODS = [
         title: '평가검증 하기',
         description: [
             '기업이 은행으로 전송한 자가진단 입력정보를 수정하여 평가검증을 진행합니다.',
-            '평가검증 신청 조회 화면으로 이동합니다.',
+            '선택 시 평가검증 신청 조회 화면으로 이동합니다.',
         ],
         illustration: '/images/option-card/ktrs-fm.webp',
     },
@@ -39,7 +39,7 @@ const EVALUATION_METHODS = [
         title: '개별평가 하기',
         description: [
             '기업의 자가진단 전송 내역과 관계없이 새로운 KTRS-FM 개별평가를 신청합니다.',
-            '고객정보활용동의 단계로 이동합니다.',
+            '선택 시 고객정보활용동의 단계로 이동합니다.',
         ],
         illustration: '/images/option-card/startup-tech-index.webp',
     },
@@ -55,7 +55,20 @@ type EvaluationMethodFormProps = {
 const EvaluationMethodForm = ({labelledBy, children}: EvaluationMethodFormProps) => {
     const router = useRouter()
     const formId = useId()
+    const nextButtonId = useId()
     const [method, setMethod] = useState('')
+
+    // 카드를 고르면 [다음]이 화면 밖에 있을 때 보이는 자리까지 내려 준다 — 다음 할 일을 바로 찾게 한다.
+    // block: 'nearest' 라 버튼이 이미 다 보이면 움직이지 않고, 포커스는 카드에 그대로 둔다([7.2.1]).
+    // 동작을 줄이도록 설정한 사용자에게는 즉시 이동한다([6.3.1]).
+    const handleMethodChange = (value: string) => {
+        setMethod(value)
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        document
+            .getElementById(nextButtonId)
+            ?.scrollIntoView({block: 'nearest', behavior: prefersReducedMotion ? 'auto' : 'smooth'})
+    }
 
     const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
         event.preventDefault()
@@ -72,7 +85,7 @@ const EvaluationMethodForm = ({labelledBy, children}: EvaluationMethodFormProps)
                 <RadioCardGroup
                     name={METHOD_FIELD}
                     value={method}
-                    onValueChange={setMethod}
+                    onValueChange={handleMethodChange}
                     required
                     aria-labelledby={labelledBy}
                 >
@@ -112,7 +125,15 @@ const EvaluationMethodForm = ({labelledBy, children}: EvaluationMethodFormProps)
                 appearance="plain"
                 // 이 화면에서는 그리드 안에 놓이므로 바깥 여백은 그리드에 맡긴다.
                 className="[&>div]:max-w-none [&>div]:px-0 [&>div]:pt-0 [&>div]:pb-15"
-                next={{type: 'submit', form: formId, disabled: !method, children: '다음'}}
+                // scroll-mb-6 — 스크롤로 내려왔을 때 버튼이 화면 아래 끝에 붙지 않도록 24px 여유를 둔다.
+                next={{
+                    id: nextButtonId,
+                    type: 'submit',
+                    form: formId,
+                    disabled: !method,
+                    className: 'scroll-mb-6',
+                    children: '다음',
+                }}
             />
         </>
     )
