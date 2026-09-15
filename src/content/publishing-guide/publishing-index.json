@@ -2282,7 +2282,7 @@
                 {
                     "label": "평가검증 진행확인",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-individual-evaluation-verification-progress",
                     "iaRow": 19
