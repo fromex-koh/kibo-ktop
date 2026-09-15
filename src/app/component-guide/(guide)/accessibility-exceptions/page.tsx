@@ -543,14 +543,15 @@ const WAVE_SCREEN_ROUTES = [
     '/org/mypage/k-bigx-report-history',
     '/org/notice/inquiry-create',
     '/org/notice/inquiry-create/privacy-consent-guide',
+    '/org/individual-evaluation/verification-progress',
 ] as const
 
 const WAVE_ISSUES = [
     {
         level: 'error',
-        message: 'Missing form label (202)',
-        count: 202,
-        screens: 35,
+        message: 'Missing form label (204)',
+        count: 204,
+        screens: 36,
         owner: 'Radix RadioGroup의 숨은 input',
         verdict: '값을 폼에 담는 input이라 aria-hidden·tabindex="-1"이 붙어 있고 라벨이 없다',
     },
@@ -1109,6 +1110,13 @@ const WAVE_SCREEN_RESULTS = [
             {label: 'Missing form label · Checkbox 1건', level: 'error', target: 'wave-checkbox'},
             {label: 'Missing form label · Select 1건', level: 'error', target: 'wave-select-error'},
         ],
+    },
+    {
+        // 카드 두 장이 RadioGroup 한 묶음이라 Tech-Index 평가모형 선택과 같은 2건이다.
+        name: '기관 개별평가 · 평가진행방식 선택',
+        path: WAVE_SCREEN_ROUTES[39],
+        issues: WAVE_TECH_INDEX_SELECTION_ISSUES,
+        kinds: [{label: 'Missing form label · RadioGroup 2건', level: 'error', target: 'wave-radio'}],
     },
     {
         name: '기관 일괄평가 · 대량정보 조회 신청',
