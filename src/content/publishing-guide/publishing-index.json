@@ -3062,7 +3062,7 @@
                     },
                     "children": [
                         {
-                            "label": "(3) 대량정보 조회 신청",
+                            "label": "(3) 평가내역조회(구: 대량정보조회)",
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
@@ -3082,7 +3082,7 @@
                                     "iaRow": 88
                                 },
                                 {
-                                    "label": "(4) 대량정보 조회 신청 완료",
+                                    "label": "(4) 평가내역조회 완료(구: 대량정보조회 완료)",
                                     "screenId": null,
                                     "status": "완료",
                                     "application2Status": "완료",
