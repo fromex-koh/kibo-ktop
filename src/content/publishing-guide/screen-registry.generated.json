@@ -271,15 +271,15 @@
             "key": "corp-technology-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.1.7",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.4",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent-consent-popup",
@@ -313,8 +313,8 @@
             "key": "corp-technology-evaluation-tech-index-general-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.4",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-representative-capability-career-input-helper",
@@ -376,15 +376,15 @@
             "key": "corp-technology-evaluation-tech-index-general-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.4",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.4",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-customer-consent-consent-popup",
@@ -418,8 +418,8 @@
             "key": "corp-technology-evaluation-tech-index-startup-company-technology-info",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.4",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-startup-representative-capability-career-input-helper",
@@ -481,8 +481,8 @@
             "key": "corp-technology-evaluation-tech-index-startup-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.4",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-investment-model-customer-consent",
@@ -1259,14 +1259,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-company-technology-info",
@@ -1301,7 +1301,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-representative-capability-career-input-helper",
@@ -1384,8 +1384,8 @@
             "key": "org-individual-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.2.3",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-general-customer-consent",
@@ -1434,7 +1434,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-general-evaluation-application",
@@ -1504,7 +1504,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-tech-index-startup-evaluation-application",
@@ -1531,8 +1531,8 @@
             "key": "org-individual-evaluation-investment-model-customer-consent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.7",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-investment-model-company-technology-info",
@@ -1588,7 +1588,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.2.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-individual-evaluation-investment-model-representative-capability-career-input-helper",
@@ -1643,8 +1643,8 @@
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.6",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request-final-review",
@@ -1657,8 +1657,8 @@
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.6",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-request",
@@ -1825,8 +1825,8 @@
             "key": "org-mypage-profile-edit-sub-account",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.1.8",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "org-mypage-profile-edit-industry-code-search",
@@ -2273,35 +2273,35 @@
             "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request-final-review",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
+            "version": "v2.0.6",
             "isCurrent": false
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-request",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
+            "version": "v2.0.6",
             "isCurrent": false
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
+            "version": "v2.0.6",
             "isCurrent": false
         },
         {
