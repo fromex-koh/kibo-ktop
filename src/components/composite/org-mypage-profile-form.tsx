@@ -4,7 +4,7 @@ import {useMemo, useRef, useState, type ReactNode} from 'react'
 import {Eye, EyeOff} from 'lucide-react'
 import {ActionBar, ActionBarCenter} from '@/components/composite/action-bar'
 import {EditCancelConfirmDialog} from '@/components/composite/edit-cancel-confirm-dialog'
-import {Field, FieldGrid, FieldRow3, LockedField} from '@/components/composite/form-fields'
+import {Field, FieldGrid, LockedField} from '@/components/composite/form-fields'
 import {
     SubSectionHeader,
     SubSectionHeaderDescription,
@@ -230,8 +230,9 @@ const SubAccountBasicSection = ({account}: {account: Record<string, string>}) =>
             />
         </FieldGrid>
 
-        {/* 고칠 수 있는 세 칸은 한 줄에 온다(시안) — 잠긴 칸과 눈으로도 갈린다. */}
-        <FieldRow3>
+        {/* 고칠 수 있는 두 칸은 한 줄에 온다(시안) — 잠긴 칸과 눈으로도 갈린다.
+            전화번호는 두지 않는다 — 하위 계정을 등록할 때 받지 않는 값이라 채울 자리가 없다. */}
+        <FieldGrid>
             <Field id={ORG_MEMBER_MANAGER_FIELD} label="담당자" required>
                 <ClearableInput
                     id={ORG_MEMBER_MANAGER_FIELD}
@@ -241,17 +242,8 @@ const SubAccountBasicSection = ({account}: {account: Record<string, string>}) =>
                     autoComplete="name"
                 />
             </Field>
-            <Field id={ORG_MEMBER_TEL_FIELD} label="전화번호" required>
-                <TelInput
-                    id={ORG_MEMBER_TEL_FIELD}
-                    name={ORG_MEMBER_TEL_FIELD}
-                    placeholder="전화번호를 입력해 주세요"
-                    required
-                    autoComplete="tel"
-                />
-            </Field>
             <PasswordField />
-        </FieldRow3>
+        </FieldGrid>
     </div>
 )
 
