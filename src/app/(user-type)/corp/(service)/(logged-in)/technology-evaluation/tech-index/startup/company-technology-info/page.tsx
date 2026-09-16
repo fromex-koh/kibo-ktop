@@ -29,8 +29,8 @@ const COMPLETE_PATH = '/corp/technology-evaluation/tech-index/startup/complete'
 // 폼과 [다음] 버튼을 잇는 이름 — 버튼이 폼 바깥(화면 맨 아래 CTA)에 있어 form 속성으로 연결한다.
 const FORM_ID = 'company-technology-info-form'
 
-// 기업 Tech-Index 창업용 2단계 — Figma "[혁신성장지수 (창업) Tech-Index] 2단계_기업정보".
-// 화면 뼈대(제목·스텝·탭·CTA)는 일반용과 같고, 다른 것은 제목(혁신성장지수 (창업))과 탭 구성이다 —
+// 기업 Tech-Index 창업용 2단계 — Figma "[혁신성장역량지수 (창업) Tech-Index] 2단계_기업정보".
+// 화면 뼈대(제목·스텝·탭·CTA)는 일반용과 같고, 다른 것은 제목(혁신성장역량지수 (창업))과 탭 구성이다 —
 // 일반용 여섯 탭에 [경영진 역량 및 구성] 이 더해져 일곱이다.
 //
 // 탭 본문은 composite/self-diagnosis-form-tabs 의 TECH_INDEX_STARTUP_FORM_TABS 가 갖는다 — 지금은 시안이
@@ -47,7 +47,7 @@ const CorpTechIndexStartupCompanyTechnologyInfoPage = () => (
         <div className="grid-layout gap-y-10 pt-0 *:col-span-full md:pt-10">
             <PageTitleBar
                 className="hidden md:flex"
-                title="혁신성장지수 (창업)"
+                title="혁신성장역량지수 (창업)"
                 badge={
                     <Badge variant="solid" color="info" shape="round">
                         Tech-Index

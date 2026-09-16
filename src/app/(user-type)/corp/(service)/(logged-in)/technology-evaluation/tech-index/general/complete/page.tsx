@@ -19,7 +19,7 @@ export const metadata: Metadata = {title: '제출 완료'}
 // 시안(알려드려요)은 안내 문장 중 이동 경로만 본문(gray.500)보다 진한 foreground(gray.900)로 강조한다.
 const ResultPath = () => <span className="text-foreground">마이페이지 &gt; 평가결과 조회</span>
 
-// 기업 Tech-Index 일반용 (5) 완료 화면 — Figma "[혁신성장지수 (일반) Tech-Index] 3단계_제출 완료".
+// 기업 Tech-Index 일반용 (5) 완료 화면 — Figma "[혁신성장역량지수 (일반) Tech-Index] 3단계_제출 완료".
 // 구성은 KTRS-FM 완료 화면과 같고(완료 알림 · 안내 · 다음 행동) 문구와 안내 줄 수만 다르다 —
 // 이 모형의 시안에는 은행전송·보증신청 안내가 없어 [알려드려요] 가 두 줄이다.
 //
@@ -32,7 +32,7 @@ const CorpTechIndexGeneralCompletePage = () => (
         <div className="grid-layout min-h-0 flex-1 gap-0 pt-0 pb-[clamp(--spacing(6),3.5dvh,--spacing(15))] [--viewport-fit-decorative-size:clamp(var(--spacing-viewport-fit-decorative-min),14dvh,var(--spacing-action-check))] *:col-span-full [&>:not([aria-hidden])]:shrink-0">
             <div aria-hidden="true" className="h-[clamp(--spacing(2),3.7dvh,--spacing(10))]" />
             <PageTitleBar
-                title="혁신성장지수 (일반)"
+                title="혁신성장역량지수 (일반)"
                 badge={
                     <Badge variant="solid" color="info" shape="round">
                         Tech-Index

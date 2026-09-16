@@ -67,7 +67,7 @@ const HeroSection = () => (
                     </h1>
                     {/* PC(md+)는 typo-title-l-bold 과 동일(20px·행간 1.5). 단계별 크기는 heroDescClassName. */}
                     <p className={cn(heroDescClassName, 'text-foreground-subtle font-bold')}>
-                        기술사업평가, 혁신성장지수, 투자모형, K-BIGx 보고서, 탄소중립 평가 등{' '}
+                        기술사업평가, 혁신성장역량지수, 투자모형, K-BIGx 보고서, 탄소중립 평가 등{' '}
                         <br className="max-md:hidden" />
                         다양한 기술평가 서비스를 통합 제공하는 플랫폼
                     </p>

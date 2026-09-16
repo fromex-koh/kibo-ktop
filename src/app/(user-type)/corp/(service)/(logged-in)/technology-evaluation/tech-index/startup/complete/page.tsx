@@ -19,8 +19,8 @@ export const metadata: Metadata = {title: '제출 완료'}
 // 시안(알려드려요)은 안내 문장 중 이동 경로만 본문(gray.500)보다 진한 foreground(gray.900)로 강조한다.
 const ResultPath = () => <span className="text-foreground">마이페이지 &gt; 평가결과 조회</span>
 
-// 기업 Tech-Index 창업용 (5) 완료 화면 — Figma "[혁신성장지수 (창업) Tech-Index] 3단계_제출 완료".
-// 시안은 일반용 완료 화면과 제목(혁신성장지수 (창업))만 다르고 완료 문구·안내 두 줄·CTA 가 모두 같다.
+// 기업 Tech-Index 창업용 (5) 완료 화면 — Figma "[혁신성장역량지수 (창업) Tech-Index] 3단계_제출 완료".
+// 시안은 일반용 완료 화면과 제목(혁신성장역량지수 (창업))만 다르고 완료 문구·안내 두 줄·CTA 가 모두 같다.
 //
 // 한 화면에 담는다 — 완료 화면은 읽고 다음 행동을 고르는 자리라, 버튼까지 스크롤 없이 보여야 한다
 // (문의 완료 화면과 같은 방식). main 이 남은 높이를 채우고, 그 안의 간격·여백이 화면 높이에 비례해
@@ -31,7 +31,7 @@ const CorpTechIndexStartupCompletePage = () => (
         <div className="grid-layout min-h-0 flex-1 gap-0 pt-0 pb-[clamp(--spacing(6),3.5dvh,--spacing(15))] [--viewport-fit-decorative-size:clamp(var(--spacing-viewport-fit-decorative-min),14dvh,var(--spacing-action-check))] *:col-span-full [&>:not([aria-hidden])]:shrink-0">
             <div aria-hidden="true" className="h-[clamp(--spacing(2),3.7dvh,--spacing(10))]" />
             <PageTitleBar
-                title="혁신성장지수 (창업)"
+                title="혁신성장역량지수 (창업)"
                 badge={
                     <Badge variant="solid" color="info" shape="round">
                         Tech-Index

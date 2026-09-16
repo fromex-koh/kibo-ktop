@@ -5,11 +5,11 @@ type BatchEvaluationModel = 'general' | 'startup'
 
 const BATCH_MODEL_META = {
     general: {
-        title: '혁신성장지수 평가 (일반) Tech-Index',
+        title: '일반 Tech-Index',
         base: '/org/batch-evaluation/evaluation-history-or-batch/general',
     },
     startup: {
-        title: '혁신성장지수 평가 (창업) Tech-Index',
+        title: '창업 Tech-Index',
         base: '/org/batch-evaluation/evaluation-history-or-batch/startup',
     },
 } as const satisfies Record<BatchEvaluationModel, {title: string; base: string}>
