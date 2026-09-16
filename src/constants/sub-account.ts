@@ -143,7 +143,7 @@ export type SubAccountSummary = {
 
 /** 서비스별 배분 이용건수 한 칸 — 케이스별로 노출 내용이 다르다(시안 주석). 받은 것만 그린다. */
 export type SubAccountServiceUsage = {
-    /** 서비스 이름(KTRS-FM 평가 · 혁신성장지수 평가 (Tech-Index) 등). */
+    /** 서비스 이름(KTRS-FM 평가 · 혁신성장역량지수 평가 (Tech-Index) 등). */
     service: string
     count: number
     /** 이용기간(YYYY.MM.DD ~ YYYY.MM.DD) — 수정 모달의 건수 칸 오른쪽 위에 나온다. 평가사업이 정한다. */

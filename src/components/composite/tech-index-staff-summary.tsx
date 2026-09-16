@@ -10,7 +10,7 @@ import {
 } from '@/constants/technology-evaluation'
 
 // Tech-Index 일반용 [기술 인력 현황] 탭 상단의 인원 요약 —
-// Figma "[혁신성장지수 (일반) Tech-Index] 2단계_기술 인력 현황".
+// Figma "[혁신성장역량지수 (일반) Tech-Index] 2단계_기술 인력 현황".
 // KTRS-FM 의 핵심 기술 인력 현황 탭에는 없고 이 모형에만 있는 줄이라, 인력 카드 본문(tech-staff-form) 위에
 // 끼워 넣는 조각으로 따로 둔다. 카드·행추가는 그쪽이 그대로 갖는다.
 //

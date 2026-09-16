@@ -7,7 +7,7 @@ import {InputGroup, InputGroupAddon} from '@/components/ui/input-group'
 import {TECH_INDEX_RECORD_COUNT_DEFAULT, TECH_INDEX_RECORD_FIELDS} from '@/constants/technology-evaluation'
 
 // Tech-Index 일반용 [기술실적 및 인증실적] 탭 본문 —
-// Figma "[혁신성장지수 (일반) Tech-Index] 2단계_기술실적 및 인증실적".
+// Figma "[혁신성장역량지수 (일반) Tech-Index] 2단계_기술실적 및 인증실적".
 //
 // 시안은 두 층이다.
 //   위: 무엇을 실적으로 인정하는지 알려 주는 안내 네 줄(카드 제목 아래 불릿 목록).

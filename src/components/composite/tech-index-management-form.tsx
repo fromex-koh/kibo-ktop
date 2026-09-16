@@ -20,7 +20,7 @@ import {RepeatCard, useRepeatCards} from '@/components/composite/repeat-card'
 import {Button} from '@/components/ui/button'
 
 // Tech-Index 창업용 [경영진 역량 및 구성] 탭 본문 —
-// Figma "[혁신성장지수 (창업) Tech-Index] 2단계_경영진 역량 및 구성".
+// Figma "[혁신성장역량지수 (창업) Tech-Index] 2단계_경영진 역량 및 구성".
 //
 // 인력 카드가 반복되는 모양은 [기술 인력 현황](tech-staff-form)과 같지만 카드 안의 칸이 전혀 달라
 // (이름 · 전문분야 · 최종학력 · 일치여부 · 자격증 · 경력년수) 별도 조각으로 둔다.

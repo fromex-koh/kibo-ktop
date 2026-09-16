@@ -31,7 +31,7 @@ import {RadioGroupItem} from '@/components/ui/radio-group'
 import {Separator} from '@/components/ui/separator'
 import {cn} from '@/lib/utils'
 
-// Tech-Index 일반용 기업정보 탭 본문 — Figma "[혁신성장지수 (일반) Tech-Index] 2단계_기업정보".
+// Tech-Index 일반용 기업정보 탭 본문 — Figma "[혁신성장역량지수 (일반) Tech-Index] 2단계_기업정보".
 // KTRS-FM 의 기업정보 탭(company-info-form)과 앞 두 구획(기업정보 · 기업 담당자 정보)은 같은 구성이지만
 // 아래 두 가지가 달라 별도 파일로 둔다 — 공용 폼에 분기를 넣으면 두 모형의 시안이 바뀔 때마다 서로를 건드린다.
 //   · 필수 항목이 다르다: 설립일·대표자명·회사전화번호·주소가 이 모형에서는 선택이다.

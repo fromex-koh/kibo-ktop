@@ -22,7 +22,7 @@ const NOTICES = [
 
 const MODELS_TITLE_ID = 'evaluation-models-title'
 
-// 기업 기술평가 Tech-Index 평가모형 선택 — Figma "[혁신성장지수 평가 Tech-Index]".
+// 기업 기술평가 Tech-Index 평가모형 선택 — Figma "[혁신성장역량지수 평가 Tech-Index]".
 // 화면 구성은 기존 컴포넌트 조합이다: PageTitleBar(+Breadcrumb) · RadioCard · InfoBox · StepNavigation.
 // 카드는 링크가 아니라 라디오이고, 고르는 것과 이동은 TechIndexModelForm 이 갖는다(기관 화면과 같은 구성).
 const CorpTechIndexSelectionPage = () => (
