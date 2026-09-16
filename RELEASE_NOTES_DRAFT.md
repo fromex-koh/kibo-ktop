@@ -161,6 +161,17 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 영향 화면: [평가내역조회(구: 대량정보조회) — 창업](/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request) · [일괄평가 진행 신청(일반)](/org/batch-evaluation/evaluation-history-or-batch/general/batch-evaluation-request) 과 두 갈래의 완료 화면
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/a6bf7ebb)
 
+### [기능] 기관 내 정보(하위 계정) — 전화번호 칸 삭제
+
+- 대상: src/components/composite/org-mypage-profile-form.tsx
+    - src/app/(user-type)/org/(service)/(member-sub-account)/mypage/profile-edit/sub-account/page.tsx
+- 이전: [기본 정보]에 고칠 수 있는 칸이 담당자 · 전화번호 · PW 세 칸이었습니다.
+- 지금: 전화번호 칸을 지워 담당자 · PW 두 칸입니다. 하위 계정을 등록할 때 전화번호를 받지 않아 채울 값이 없는 칸이었습니다. 세 칸 줄(`FieldRow3`)이 두 칸 줄(`FieldGrid`)로 바뀝니다.
+- 함께 반영: 제목 아래 안내에서도 전화번호를 뺐습니다 — "회원이 직접 수정할 수 있는 항목은 담당자 · 비밀번호(PW)입니다."
+- 유지: 잠긴 여섯 칸(기관명 · 기관구분 · ID · 상위 마스터 기관 · 사업기간 · 가입/생성 일시)과 [이용권 정보] 구획은 그대로입니다. 하위 계정이 아닌 기관 회원 화면(협약·비협약 은행/기관)의 전화번호 칸도 그대로입니다.
+- 영향 화면: [기관 내 정보 — 기관회원(하위계정)](/org/mypage/profile-edit/sub-account)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/d6f8c5e7)
+
 ## [덮어쓰기]
 
 ### 컴포넌트 가이드 RadioCard 데모 — 평가모형 이름 반영
