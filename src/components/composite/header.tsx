@@ -74,6 +74,9 @@ const MemberTypeToggle = ({
 }) => (
     <SegmentedControl
         type="radio"
+        // 전체 메뉴가 열려 있을 때도 유형을 바꿀 수 있도록 표시를 남긴다 — 메뉴(Sheet)는 이 표시가 붙은
+        // 자리에서 시작한 바깥 조작이면 닫히지 않는다(아래 HeaderMenu 의 onInteractOutside).
+        data-header-user-type-toggle=""
         value={userType}
         onValueChange={(value) => {
             if (isUserType(value)) onUserTypeChange(value)
@@ -420,6 +423,13 @@ const HeaderMenu = ({
                     triggerRef.current?.focus()
                 }}
                 onFocusOutside={(event) => event.preventDefault()}
+                // 기업·기관 토글은 메뉴 밖(헤더)에 있지만 메뉴 내용을 바꾸는 조작이라, 이것만은 바깥 조작으로
+                // 보지 않는다 — 누르면 메뉴가 닫히고 바뀐 메뉴를 다시 열어야 했다.
+                onInteractOutside={(event) => {
+                    if (event.target instanceof Element && event.target.closest('[data-header-user-type-toggle]')) {
+                        event.preventDefault()
+                    }
+                }}
                 onKeyDown={(event) => {
                     if (event.key !== 'Tab') return
 
