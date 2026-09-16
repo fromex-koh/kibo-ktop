@@ -22,16 +22,18 @@ const PageTitleBar = ({title, badge, breadcrumb, className, ...props}: PageTitle
         )}
         {...props}
     >
-        {/* md 이상 — 뱃지는 제목과 8 떨어져 제목 첫 줄 위쪽에 붙는다(시안 "타이틀+뱃지" — 제목 상자 위에서 12).
-            items-center 로 두면 제목이 두 줄이 될 때 뱃지가 줄 사이로 내려가므로 items-start 로 첫 줄에 고정한다.
+        {/* md 이상 — 뱃지는 제목 글자 뒤에 이어 붙는다(시안 "타이틀+뱃지"). 제목을 flex 칸으로 두면 제목이
+            줄바꿈될 때 뱃지가 줄 끝이 아니라 상자 오른쪽 끝으로 밀리므로, 제목을 inline 으로 흘려 마지막
+            글자 뒤에 오게 한다.
             모바일 — 시안은 뱃지가 제목 위에 온다. DOM 은 제목 → 뱃지 순서를 유지하고(읽기 순서 [7.3.1])
             flex-col-reverse 로 보이는 순서만 뒤집는다. */}
-        <div
-            data-slot="page-title-bar-heading"
-            className="flex flex-col-reverse items-start gap-2 md:flex-row md:items-start"
-        >
-            <h1 className="typo-display-l-bold text-foreground">{title}</h1>
-            {badge ? <span className="shrink-0 md:mt-3">{badge}</span> : null}
+        <div data-slot="page-title-bar-heading" className="flex flex-col-reverse items-start gap-2 md:block">
+            {/* break-keep — 좁은 화면에서 낱말 가운데가 아니라 낱말 사이에서만 줄이 바뀐다
+                ("혁신성장역량지수 (일반)"이 "(일 / 반)"으로 쪼개지지 않고 괄호째 다음 줄로 내려간다). */}
+            <h1 className="typo-display-l-bold text-foreground break-keep md:inline">{title}</h1>
+            {/* align-top + mt-3 — 시안은 뱃지 윗변이 제목 글자 윗변에 맞는다(제목 줄 상자 위에서 12).
+                가운데 정렬로 두면 제목 줄 높이가 커서 뱃지가 글자보다 아래로 내려앉는다. */}
+            {badge ? <span className="shrink-0 md:mt-3 md:ml-2 md:inline-block md:align-top">{badge}</span> : null}
         </div>
         {breadcrumb ? (
             <div data-slot="page-title-bar-nav" className={breadcrumbPillClassName}>

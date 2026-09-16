@@ -36,7 +36,7 @@ const MOCK_USAGE_PERIOD = '2026.01.01 ~ 2026.12.31'
 const SERVICE_USAGE = {
     'K-BIGx': {service: 'K-BIGx 보고서', count: 38, period: MOCK_USAGE_PERIOD},
     'KTRS-FM': {service: 'KTRS-FM 평가', count: 20, period: MOCK_USAGE_PERIOD},
-    'Tech-Index': {service: '혁신성장지수 평가 (Tech-Index)', count: 10, period: MOCK_USAGE_PERIOD},
+    'Tech-Index': {service: '혁신성장역량지수 평가 (Tech-Index)', count: 10, period: MOCK_USAGE_PERIOD},
     '창업용 Tech-Index': {service: '창업용 Tech-Index', count: 5, period: MOCK_USAGE_PERIOD},
     투자모형: {service: '투자 모형', count: 3, period: MOCK_USAGE_PERIOD},
 } as const satisfies Record<SubAccountService, SubAccountServiceUsage>

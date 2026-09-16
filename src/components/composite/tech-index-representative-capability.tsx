@@ -29,7 +29,7 @@ import {
     STUDY_STATUS_OPTIONS,
 } from '@/constants/representative-capability'
 
-// Tech-Index 일반용 [대표자 역량] 구획 — Figma "[혁신성장지수 (일반) Tech-Index] 2단계_대표자 역량 및 경력사항".
+// Tech-Index 일반용 [대표자 역량] 구획 — Figma "[혁신성장역량지수 (일반) Tech-Index] 2단계_대표자 역량 및 경력사항".
 // KTRS-FM 의 대표자 경력사항 탭에는 없고 이 모형에만 있는 구획이라, 경력사항 본문(career-form)에 끼워 넣는
 // 조각으로 따로 둔다. 경력 카드·행추가·총 경력 연수는 그쪽이 그대로 갖는다.
 //

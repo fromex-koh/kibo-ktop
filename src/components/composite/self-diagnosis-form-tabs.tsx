@@ -123,7 +123,7 @@ const ORG_TECH_INDEX_STARTUP_FORM_TABS: readonly FormTabItem[] = ORG_TECH_INDEX_
     },
 )
 
-// Tech-Index 창업용 2단계의 탭 구성 — Figma "[혁신성장지수 (창업) Tech-Index] 2단계_기업정보".
+// Tech-Index 창업용 2단계의 탭 구성 — Figma "[혁신성장역량지수 (창업) Tech-Index] 2단계_기업정보".
 // 일반용 여섯 탭에 [경영진 역량 및 구성] 이 더해져 일곱이고, 자리도 시안 그대로 [기술 인력 현황] 다음이다.
 //
 // [작업 중] 시안이 확인된 탭만 채운다. 나머지는 비워 두고, 시안이 나오는 대로 content 를 하나씩 채운다.

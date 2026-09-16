@@ -3062,7 +3062,7 @@
                     },
                     "children": [
                         {
-                            "label": "(3) 대량정보 조회 신청",
+                            "label": "(3) [일반] 평가내역조회(구: 대량정보조회)",
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
@@ -3082,7 +3082,7 @@
                                     "iaRow": 88
                                 },
                                 {
-                                    "label": "(4) 대량정보 조회 신청 완료",
+                                    "label": "(4) [일반] 평가내역조회 완료(구: 대량정보조회 완료)",
                                     "screenId": null,
                                     "status": "완료",
                                     "application2Status": "완료",
@@ -3093,7 +3093,7 @@
                             ]
                         },
                         {
-                            "label": "(3) 일괄평가 진행 신청",
+                            "label": "(3) [일반] 일괄평가 진행 신청",
                             "screen": {
                                 "screenId": null,
                                 "status": "완료",
@@ -3113,12 +3113,65 @@
                                     "iaRow": 91
                                 },
                                 {
-                                    "label": "(4) 일괄평가 신청 완료",
+                                    "label": "(4) [일반] 일괄평가 신청 완료",
                                     "screenId": null,
                                     "status": "완료",
                                     "application2Status": "완료",
                                     "version": "미배포",
                                     "key": "org-batch-evaluation-evaluation-history-or-batch-general-batch-evaluation-complete",
+                                    "iaRow": 92
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(3) [창업] 평가내역조회",
+                            "screen": {
+                                "screenId": null,
+                                "status": "완료",
+                                "application2Status": "완료",
+                                "version": "미배포",
+                                "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request",
+                                "iaRow": 87
+                            },
+                            "children": [
+                                {
+                                    "label": "최종 제출 전 확인",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "application2Status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request-final-review",
+                                    "iaRow": 88
+                                },
+                                {
+                                    "label": "(4) [창업] 평가내역조회 완료",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "application2Status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-complete",
+                                    "iaRow": 89
+                                }
+                            ]
+                        },
+                        {
+                            "label": "(3) [창업] 일괄평가 진행 신청",
+                            "screen": {
+                                "screenId": null,
+                                "status": "완료",
+                                "application2Status": "완료",
+                                "version": "미배포",
+                                "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-request",
+                                "iaRow": 90
+                            },
+                            "children": [
+                                {
+                                    "label": "(4) [창업] 일괄평가 신청 완료",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "application2Status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-complete",
                                     "iaRow": 92
                                 }
                             ]

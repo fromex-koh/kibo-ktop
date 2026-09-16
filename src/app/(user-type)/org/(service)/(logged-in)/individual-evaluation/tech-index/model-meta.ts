@@ -5,12 +5,12 @@ type TechIndexModel = 'general' | 'startup'
 
 const TECH_INDEX_MODEL_META = {
     general: {
-        title: '혁신성장지수 (일반)',
+        title: '혁신성장역량지수 (일반)',
         completeMessage: '개별평가 - 일반용 Tech-Index가 완료되었습니다.',
         base: '/org/individual-evaluation/tech-index/general',
     },
     startup: {
-        title: '혁신성장지수 (창업)',
+        title: '혁신성장역량지수 (창업)',
         completeMessage: '개별평가 - 창업용 Tech-Index가 완료되었습니다.',
         base: '/org/individual-evaluation/tech-index/startup',
     },

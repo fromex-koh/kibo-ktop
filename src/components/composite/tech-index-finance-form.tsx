@@ -11,7 +11,7 @@ import {InputGroup, InputGroupAddon} from '@/components/ui/input-group'
 import {repeatCardClassName, repeatCardTitleClassName} from '@/components/theme/repeat-card.variants'
 
 // Tech-Index 일반용 [재무정보] 탭 본문 —
-// Figma "[혁신성장지수 (일반) Tech-Index] 2단계_재무정보".
+// Figma "[혁신성장역량지수 (일반) Tech-Index] 2단계_재무정보".
 //
 // 화면은 두 층이다.
 //   위: [최근 재무기준일] 한 줄. 연·월을 적고 [기준일 적용] 을 누르면 아래 연도 묶음이 그 기준으로 다시 잡히고,

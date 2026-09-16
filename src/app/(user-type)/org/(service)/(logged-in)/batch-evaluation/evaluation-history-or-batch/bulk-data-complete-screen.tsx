@@ -19,7 +19,7 @@ import {Badge} from '@/components/ui/badge'
 // 신청 결과를 받아 그 값으로 바꾼다. 지금은 시안 문구를 그대로 둔다.
 const NOTICES = [
     '값이 없는 항목 노출 방식은 [평균값 적용]으로 신청되었습니다. 값이 없는 항목은 대량정보의 평균값으로 노출됩니다.',
-    '신청하신 대량정보 조회는 접수 후 내부 검토 절차를 거쳐 진행됩니다.',
+    '신청하신 평가내역조회는 접수 후 내부 검토 절차를 거쳐 진행됩니다.',
     "조회 결과는 '대량정보 조회' 화면에서 확인하실 수 있습니다.",
     '추가 자료 요청이 있을 경우, 담당자가 별도 연락을 드릴 예정입니다.',
 ] as const
@@ -68,7 +68,7 @@ const BulkDataCompleteScreen = ({model}: {model: BatchEvaluationModel}) => (
             <div className="flex flex-col items-center">
                 <ActionCheck decorative />
                 <h2 className="typo-h2-bold text-foreground text-center break-keep">
-                    평가내역조회 - 혁신성장지수 평가 Tech-Index 신청이 완료되었습니다.
+                    평가내역조회 - 혁신성장역량지수 평가 Tech-Index 신청이 완료되었습니다.
                 </h2>
             </div>
 

@@ -31,8 +31,8 @@ const COMPANY_TECHNOLOGY_INFO_PATH = '/corp/technology-evaluation/tech-index/sta
 // 폼과 CTA를 잇는 이름 — [동의 후 인증서명] 이 폼 바깥(화면 맨 아래)에 있어 form 속성으로 연결한다.
 const FORM_ID = 'customer-consent-form'
 
-// 기업 Tech-Index 창업용 (1) 고객정보활용동의 — Figma "[혁신성장지수 (창업) Tech-Index] 1단계_고객정보활용동의".
-// 시안은 일반용 1단계와 제목(혁신성장지수 (창업))만 다르고 동의서·확인 체크·이메일등록·CTA·진행 단계가 모두 같다.
+// 기업 Tech-Index 창업용 (1) 고객정보활용동의 — Figma "[혁신성장역량지수 (창업) Tech-Index] 1단계_고객정보활용동의".
+// 시안은 일반용 1단계와 제목(혁신성장역량지수 (창업))만 다르고 동의서·확인 체크·이메일등록·CTA·진행 단계가 모두 같다.
 // 동의서 본문은 KTRS-FM 1단계와 같은 동의서라 custom/customer-consent-agreement 를 그대로 쓴다.
 const CorpTechIndexStartupCustomerConsentPage = () => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
@@ -42,7 +42,7 @@ const CorpTechIndexStartupCustomerConsentPage = () => (
             <CustomerConsentForm formId={FORM_ID} nextHref={COMPANY_TECHNOLOGY_INFO_PATH}>
                 <div className="grid-layout gap-y-10 pt-7 *:col-span-full md:pt-10">
                     <PageTitleBar
-                        title="혁신성장지수 (창업)"
+                        title="혁신성장역량지수 (창업)"
                         badge={
                             <Badge variant="solid" color="info" shape="round">
                                 Tech-Index

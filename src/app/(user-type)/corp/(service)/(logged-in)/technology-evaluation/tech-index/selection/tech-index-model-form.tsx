@@ -6,7 +6,7 @@ import {useRouter} from 'next/navigation'
 import {RadioCard, RadioCardGroup} from '@/components/composite/radio-card'
 import {StepNavigation} from '@/components/composite/step-navigation'
 
-// Tech-Index 평가모형 선택 — 두 모형 중 하나를 고르고 [다음]을 누른다(시안 "[혁신성장지수 평가 Tech-Index]").
+// Tech-Index 평가모형 선택 — 두 모형 중 하나를 고르고 [다음]을 누른다(시안 "[혁신성장역량지수 평가 Tech-Index]").
 // 카드는 링크가 아니라 라디오다 — 고르는 것만으로는 넘어가지 않고, 아래 [다음]을 눌러야 이동한다.
 // 필수값이라 고르기 전에는 [다음]이 비활성이다. 시안의 CTA 문구는 [신청]이지만 뒤에 고객정보활용동의·입력
 // 단계가 이어지므로 [다음]으로 둔다(기관 화면과 같은 판단).
@@ -28,7 +28,7 @@ const EVALUATION_MODELS = [
         // (corp-technology-evaluation-tech-index-general-customer-consent).
         href: '/corp/technology-evaluation/tech-index/general/customer-consent',
         badge: 'Tech-Index',
-        title: '혁신성장지수 (일반)',
+        title: '혁신성장역량지수 (일반)',
         description: [
             '일반 혁신성장기업의 미래 성장 가능성을 측정하는 지수형 평가 모형입니다.',
             '기술혁신성, 시장확장성, 성장 잠재력을 중심으로 평가합니다.',
@@ -41,7 +41,7 @@ const EVALUATION_MODELS = [
         // (corp-technology-evaluation-tech-index-startup-customer-consent).
         href: '/corp/technology-evaluation/tech-index/startup/customer-consent',
         badge: 'Tech-Index',
-        title: '혁신성장지수 (창업)',
+        title: '혁신성장역량지수 (창업)',
         description: [
             '창업 초기 기업의 특성에 맞춰 설계된 평가모형입니다.',
             '보유 기술의 혁신성과 향후 성장 잠재력을 중점적으로 분석합니다.',

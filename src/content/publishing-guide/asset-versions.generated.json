@@ -1,9 +1,9 @@
 {
-    "version": "v3.2.7",
+    "version": "v3.2.8",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "isCurrent": true
         },
         {
@@ -13,17 +13,17 @@
         },
         {
             "name": "src/components/theme",
-            "version": "v3.2.6",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "name": "src/components/composite",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "isCurrent": true
         },
         {
@@ -33,12 +33,12 @@
         },
         {
             "name": "src/constants",
-            "version": "v3.2.6",
-            "isCurrent": false
+            "version": "v3.2.8",
+            "isCurrent": true
         },
         {
             "name": "src/content",
-            "version": "v3.2.7",
+            "version": "v3.2.8",
             "isCurrent": true
         },
         {
@@ -59,7 +59,7 @@
         {
             "name": "tokens.json",
             "version": "v3.2.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/app/tokens.css",
@@ -69,7 +69,7 @@
         {
             "name": "scripts/build-tokens.mjs",
             "version": "v3.2.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "name": "src/app/globals.css",

@@ -6,7 +6,7 @@ export const SELF_DIAGNOSIS_STEPS = [
     '제출 완료',
 ] as const
 
-// Tech-Index(혁신성장지수) 단계명 — 체크리스트 입력 단계가 없어 3단계다(시안 진행바 "1 / 3").
+// Tech-Index(혁신성장역량지수) 단계명 — 체크리스트 입력 단계가 없어 3단계다(시안 진행바 "1 / 3").
 export const TECH_INDEX_STEPS = ['고객 정보 활용 동의', '기업·기술정보 입력', '제출 완료'] as const
 
 // 기관 개별평가 Tech-Index 단계명 — 기업 흐름과 달리 첨부서류를 받는 [평가 신청하기] 단계가 하나 더 있다

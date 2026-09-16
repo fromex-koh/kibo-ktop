@@ -31,7 +31,7 @@ import {
 } from '@/constants/technology-evaluation'
 
 // Tech-Index 일반용 [특허 보유현황] 탭 본문 —
-// Figma "[혁신성장지수 (일반) Tech-Index] 2단계_특허 보유현황".
+// Figma "[혁신성장역량지수 (일반) Tech-Index] 2단계_특허 보유현황".
 //
 // 화면은 두 층이다.
 //   위: 합계 요약 7칸. [등록 특허 · 출원 특허]를 포함한 합계는 아래 특허 목록에서 계산해 채운다(읽기 전용).

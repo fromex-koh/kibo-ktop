@@ -66,7 +66,7 @@ const BatchEvaluationCompleteScreen = ({model}: {model: BatchEvaluationModel}) =
             <div className="flex flex-col items-center">
                 <ActionCheck decorative />
                 <h2 className="typo-h2-bold text-foreground text-center break-keep">
-                    일괄평가 - 혁신성장지수 평가 Tech-Index 신청이 완료되었습니다.
+                    일괄평가 - 혁신성장역량지수 평가 Tech-Index 신청이 완료되었습니다.
                 </h2>
             </div>
 

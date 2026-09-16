@@ -40,6 +40,32 @@ const EVALUATION_MODEL_ITEMS: readonly HeaderNavLink[] = [
     {label: '평가결과 조회', href: '#'},
 ]
 
+// 평가모형의 시작 화면은 유형마다 다르다 — KTRS-FM 은 기업이 신청 첫 단계인 고객정보활용동의, 기관은
+// 평가검증과 개별평가 중 어느 쪽으로 갈지 고르는 평가진행방식 선택이고, Tech-Index 는 양쪽 모두 평가모형
+// 선택이다. 헤더의 기업·기관 토글이 가리키는 유형의 메뉴가 그대로 GNB 드롭다운과 전체 메뉴에 쓰이므로,
+// 토글을 바꾸면 이 링크도 그 유형의 화면으로 바뀐다. 아직 화면이 없는 모형은 '#' 으로 남겨 둔다.
+const EVALUATION_MODEL_START_PATHS: Record<UserType, Readonly<Record<string, string>>> = {
+    corp: {
+        'KTRS-FM': '/corp/technology-evaluation/ktrs-fm/customer-consent',
+        'Tech-Index': '/corp/technology-evaluation/tech-index/selection',
+        투자모형: '/corp/technology-evaluation/investment-model/customer-consent',
+        '평가결과 조회': '/corp/mypage/evaluation-results',
+    },
+    org: {
+        'KTRS-FM': '/org/individual-evaluation/verification-progress',
+        'Tech-Index': '/org/individual-evaluation/tech-index/selection',
+        투자모형: '/org/individual-evaluation/investment-model/customer-consent',
+        '평가결과 조회': '/org/mypage/evaluation-history',
+    },
+}
+
+const createEvaluationModelItems = (userType: UserType): readonly HeaderNavLink[] =>
+    EVALUATION_MODEL_ITEMS.map((item) => {
+        const startPath = EVALUATION_MODEL_START_PATHS[userType][item.label]
+
+        return startPath ? {...item, href: startPath} : item
+    })
+
 // 기업·기관 공통 플랫폼 소개 하위 메뉴.
 const PLATFORM_INTRO_ITEMS: readonly HeaderNavLink[] = [
     {label: '플랫폼 소개', href: '#'},
@@ -61,14 +87,14 @@ const CARBON_NEUTRAL_LINK: HeaderNavLink = {
 export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {
     corp: [
         PLATFORM_INTRO_LINK,
-        {label: '기술평가', href: '#', items: EVALUATION_MODEL_ITEMS},
+        {label: '기술평가', href: '#', items: createEvaluationModelItems('corp')},
         PATENT_EVALUATION_LINK,
         {label: 'K-BIGx 보고서', href: '#', items: CORP_REPORT_ITEMS},
         CARBON_NEUTRAL_LINK,
     ],
     org: [
         PLATFORM_INTRO_LINK,
-        {label: '개별평가', href: '#', items: EVALUATION_MODEL_ITEMS},
+        {label: '개별평가', href: '#', items: createEvaluationModelItems('org')},
         {label: '일괄평가', href: '#'},
         {label: 'K-BIGx 보고서', href: '#', items: ORG_REPORT_ITEMS},
         PATENT_EVALUATION_LINK,
@@ -76,9 +102,26 @@ export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {
     ],
 }
 
-const MY_PAGE_ITEMS: Record<UserType, readonly string[]> = {
-    corp: ['내 정보', '대표자 이력', '평가결과 조회', 'K-BIGx 보고서 이력', '유료 서비스 관리', '1:1문의내역'],
-    org: ['내 정보 수정', '평가이력 조회', 'K-BIGx 보고서 이력', '하위 계정 진행 현황', '1:1 문의 내역'],
+// 화면이 있는 항목은 경로를 걸고, 아직 없는 항목은 이름만 둔다(경로 없이 '#').
+const MY_PAGE_ITEMS: Record<UserType, readonly MenuServiceItem[]> = {
+    // 기업은 여섯 항목 모두 화면이 있어 경로를 건다. 유료 서비스 관리는 결제내역이 첫 화면이다.
+    corp: [
+        {label: '내 정보', href: '/corp/mypage/profile'},
+        {label: '대표자 이력', href: '/corp/mypage/representative-history'},
+        {label: '평가결과 조회', href: '/corp/mypage/evaluation-results'},
+        {label: 'K-BIGx 보고서 이력', href: '/corp/mypage/k-bigx-report-history'},
+        {label: '유료 서비스 관리', href: '/corp/mypage/paid-services/payment-history'},
+        {label: '1:1문의', href: '/corp/mypage/inquiry-history'},
+    ],
+    // 기관 "내 정보"는 회원 유형(협약·비협약 은행/기관·하위계정)마다 화면이 갈리므로 대표로 협약은행
+    // 화면을 건다 — 서비스에서는 로그인한 회원의 유형에 맞는 화면으로 바꿔 연결한다.
+    org: [
+        {label: '내 정보', href: '/org/mypage/profile-edit/partner-bank'},
+        {label: '평가결과 조회', href: '/org/mypage/evaluation-history'},
+        {label: '평가검증 신청 조회', href: '/org/mypage/verification-application'},
+        {label: '하위 계정 현황', href: '/org/mypage/sub-account-progress'},
+        {label: '1:1문의', href: '/org/mypage/inquiry-history'},
+    ],
 }
 
 // 알림마당의 공통 메뉴는 userType에 따라 경로만 바뀐다.
@@ -86,7 +129,7 @@ const createNoticeServiceGroup = (userType: UserType): MenuServiceGroup => ({
     label: '알림마당',
     items: [
         {label: '공지사항', href: `/${userType}/notice/announcements`},
-        {label: 'FAQ', href: `/${userType}/notice/faq`},
+        {label: '자주 묻는 질문', href: `/${userType}/notice/faq`},
         {label: '문의하기', href: `/${userType}/notice/inquiry-create`},
         {label: '자료실', href: `/${userType}/notice/resources`},
     ],
