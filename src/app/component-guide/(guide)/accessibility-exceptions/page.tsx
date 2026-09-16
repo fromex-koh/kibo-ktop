@@ -1380,11 +1380,39 @@ type WaveScreenRow = {
     warnings: number
     kinds: readonly WaveScreenRecord['kinds'][number][]
     messages: readonly WaveScreenRecord['messages'][number][]
+    /** 검사 칸에 숫자 대신 적는 말(미실행·없음) — 0건과 구분한다. */
+    note?: string
 }
 
 const WAVE_SCREEN_RECORD_BY_PATH = new Map<string, WaveScreenRecord>(
     WAVE_SCREEN_RECORDS.map((screen) => [screen.path, screen]),
 )
+// 아직 WAVE 를 돌리지 않은 화면 — 퍼블리싱 인덱스에는 있는데 검사 기록이 없어 목록에서 빠지던 줄이다.
+// 0건으로 두면 "검사했는데 깨끗한 화면"과 구분되지 않으므로 [미실행]로 표시한다.
+// 일괄평가 창업 갈래는 일반 갈래와 같은 화면을 모형만 바꿔 쓰는데, 신청 두 화면만 기록이 있었다.
+// note — 검사 칸에 숫자 대신 적을 말이다. '없음' 은 검사를 돌렸고 나온 오류가 없는 화면, '미실행' 은 아직
+// 돌리지 않은 화면이다. 숫자 0 으로 두면 둘을 구분할 수 없어 말로 적는다.
+const WAVE_PENDING_SCREENS = [
+    {
+        path: '/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request/final-review',
+        name: '최종 제출 전 확인',
+        note: '없음',
+    },
+    {
+        path: '/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-complete',
+        name: '(4) [창업] 평가내역조회 완료',
+        note: '없음',
+    },
+    {
+        path: '/org/batch-evaluation/evaluation-history-or-batch/startup/batch-evaluation-complete',
+        name: '(4) [창업] 일괄평가 신청 완료',
+        note: '없음',
+    },
+] as const
+const WAVE_PENDING_NOTE_BY_PATH = new Map<string, string>(
+    WAVE_PENDING_SCREENS.map((screen) => [screen.path, screen.note]),
+)
+
 const waveScreenRow = ({name, path}: {name: string; path: string}): WaveScreenRow => {
     const record = WAVE_SCREEN_RECORD_BY_PATH.get(path)
     return {
@@ -1394,6 +1422,7 @@ const waveScreenRow = ({name, path}: {name: string; path: string}): WaveScreenRo
         warnings: record?.warnings ?? 0,
         kinds: record?.kinds ?? [],
         messages: record?.messages ?? [],
+        ...(record ? {} : {note: WAVE_PENDING_NOTE_BY_PATH.get(path)}),
     }
 }
 const WAVE_RECORD_GROUPS = SCREEN_GROUPS.map((group) => {
@@ -1401,7 +1430,10 @@ const WAVE_RECORD_GROUPS = SCREEN_GROUPS.map((group) => {
     const unauditedRecords = WAVE_SCREEN_RECORDS.filter(
         (screen) => screen.path.startsWith(`/${group.key}/`) && !auditedPaths.has(screen.path),
     )
-    const screens = sortByIndexOrder([...group.screens, ...unauditedRecords]).map(waveScreenRow)
+    const pendingScreens = WAVE_PENDING_SCREENS.filter(
+        (screen) => screen.path.startsWith(`/${group.key}/`) && !auditedPaths.has(screen.path),
+    )
+    const screens = sortByIndexOrder([...group.screens, ...unauditedRecords, ...pendingScreens]).map(waveScreenRow)
     return {
         key: group.key,
         label: group.label,
@@ -3703,7 +3735,7 @@ const AccessibilityExceptionsPage = () => (
 
                 <BaseCard
                     title={cardHeading('화면별 검사 기록')}
-                    subtitle="W3C 마크업 검사와 같은 화면 목록입니다. 수동으로 기록한 WAVE 사례가 없는 화면은 오류·경고 0건으로 표시합니다."
+                    subtitle="퍼블리싱 인덱스의 화면 목록입니다. 수동으로 기록한 WAVE 사례가 없는 화면은 오류·경고 0건으로, 아직 검사를 돌리지 않은 화면은 [미실행], 검사에서 걸릴 것이 없는 화면은 [없음]으로 표시합니다."
                 >
                     <Accordion type="multiple">
                         <AccordionItem value="screens">
@@ -3774,12 +3806,25 @@ const AccessibilityExceptionsPage = () => (
                                                                     {screen.path}
                                                                 </code>
                                                             </TableCell>
-                                                            <TableCell className="text-center align-top font-bold">
-                                                                {screen.errors}
-                                                            </TableCell>
-                                                            <TableCell className="text-center align-top">
-                                                                {screen.warnings}
-                                                            </TableCell>
+                                                            {/* 숫자가 없는 화면은 0건 대신 [미실행]·[없음] 한 칸으로 둔다 —
+                                                                검사해서 깨끗한 화면과 눈으로 갈린다. */}
+                                                            {screen.note ? (
+                                                                <TableCell
+                                                                    colSpan={2}
+                                                                    className="text-foreground-subtle text-center align-top"
+                                                                >
+                                                                    {screen.note}
+                                                                </TableCell>
+                                                            ) : (
+                                                                <>
+                                                                    <TableCell className="text-center align-top font-bold">
+                                                                        {screen.errors}
+                                                                    </TableCell>
+                                                                    <TableCell className="text-center align-top">
+                                                                        {screen.warnings}
+                                                                    </TableCell>
+                                                                </>
+                                                            )}
                                                             <TableCell className="max-w-90 align-top whitespace-normal">
                                                                 {screen.kinds.length ? (
                                                                     <>
