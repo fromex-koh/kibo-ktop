@@ -135,19 +135,16 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 영향 화면: 뱃지를 쓰는 모든 PageTitleBar 화면 — [기관 평가내역조회(구: 대량정보조회) — 창업](/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request) · [기업 Tech-Index 일반 고객정보활용동의](/corp/technology-evaluation/tech-index/general/customer-consent) 등
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/3a0eea2b)
 
-### [문구] 기관 평가내역조회(구: 대량정보조회) — 화면·탭 제목을 새 이름으로 통일
+### [문구] 기관 평가내역조회(구: 대량정보조회) — 탭 제목·완료 안내 문구
 
 - 대상: src/app/(user-type)/org/(service)/(logged-in)/batch-evaluation/evaluation-history-or-batch/general/bulk-data-request/page.tsx
     - src/app/(user-type)/org/(service)/(logged-in)/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request/page.tsx
     - src/app/(user-type)/org/(service)/(logged-in)/batch-evaluation/evaluation-history-or-batch/general/bulk-data-complete/page.tsx
     - src/app/(user-type)/org/(service)/(logged-in)/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-complete/page.tsx
     - src/app/(user-type)/org/(service)/(logged-in)/batch-evaluation/evaluation-history-or-batch/bulk-data-complete-screen.tsx
-- 이전: 브라우저 탭 제목(`metadata.title`)이 "대량정보 조회 신청" · "대량정보 조회 신청 완료" 라, 이미 "평가내역조회" 로 적혀 있던 브레드크럼·단계 제목과 어긋났습니다.
-- 지금: 탭 제목을 신청 화면은 "평가내역조회", 완료 화면은 "평가내역조회 완료" 로 바꿔 화면 글자와 맞췄습니다. 탭 제목은 갈래마다 파일이 달라 네 곳(신청·완료 × 일반·창업)을 함께 고쳤습니다. 브레드크럼·단계 제목은 원래부터 "평가내역조회" 라 화면 파일은 바뀌지 않았습니다.
-- 함께 바뀐 문구: 완료 화면 안내 "신청하신 대량정보 조회는 접수 후 …" → "신청하신 평가내역조회는 접수 후 …"(공용 화면 파일이라 일반·창업 두 완료 화면에 함께 반영).
-- 유지: 큰 제목("일반/창업 Tech-Index")과 카드 안 제목("평가내역조회 목적" · "평가내역조회 필수 양식")은 그대로입니다.
-- 그대로 두는 것: 뱃지 "대량정보 조회" 는 시안 표기라 유지합니다. 완료 화면 안내의 "조회 결과는 '대량정보 조회' 화면에서 확인하실 수 있습니다." 는 아직 만들지 않은 결과 조회 화면의 이름이라 확정 뒤에 맞춥니다("값이 없는 항목은 대량정보의 평균값…" 은 화면 이름이 아니라 업로드한 자료를 가리키는 말이라 그대로입니다). K-BIGx 보고서의 "대량정보조회" 는 다른 메뉴라 대상이 아닙니다.
-- 함께 반영: 아래 [덮어쓰기] 의 퍼블리싱 인덱스 카드에서 같은 화면의 인덱스 이름도 새 이름으로 바꿉니다.
+- 변경: 탭 제목(`metadata.title`) "대량정보 조회 신청" → "평가내역조회" · "대량정보 조회 신청 완료" → "평가내역조회 완료"(일반·창업 네 파일)
+    - 완료 화면 안내 "신청하신 대량정보 조회는 …" → "신청하신 평가내역조회는 …"(공용 셸이라 두 완료 화면 공통)
+- 유지: 큰 제목("일반/창업 Tech-Index") · 브레드크럼 · 단계 제목 · 뱃지("대량정보 조회") · 카드 제목
 - 영향 화면: [기관 평가내역조회(일반)](/org/batch-evaluation/evaluation-history-or-batch/general/bulk-data-request) · [기관 평가내역조회(창업)](/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request) · [평가내역조회 완료(일반)](/org/batch-evaluation/evaluation-history-or-batch/general/bulk-data-complete) · [평가내역조회 완료(창업)](/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-complete)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/dd294151)
 
