@@ -2365,6 +2365,41 @@
             "name": "최종 제출 전 확인"
         },
         {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request",
+            "name": "(3) [창업] 평가내역조회"
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request-final-review",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request/final-review",
+            "name": "최종 제출 전 확인"
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-complete",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-complete",
+            "name": "(4) [창업] 평가내역조회 완료"
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-request",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/batch-evaluation-request",
+            "name": "(3) [창업] 일괄평가 진행 신청"
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-complete",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/batch-evaluation/evaluation-history-or-batch/startup/batch-evaluation-complete",
+            "name": "(4) [창업] 일괄평가 신청 완료"
+        },
+        {
             "key": "org-k-bigx-report-innovation-growth-report-legal-basis",
             "screenId": null,
             "userType": "기관",

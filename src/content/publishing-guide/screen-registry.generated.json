@@ -2270,6 +2270,41 @@
             "isCurrent": false
         },
         {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-request-final-review",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-bulk-data-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-request",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-batch-evaluation-evaluation-history-or-batch-startup-batch-evaluation-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
             "key": "org-k-bigx-report-innovation-growth-report-legal-basis",
             "implemented": false,
             "implementationStatus": "planned",
