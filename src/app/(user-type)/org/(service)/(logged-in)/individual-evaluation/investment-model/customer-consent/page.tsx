@@ -1,5 +1,4 @@
 import type {Metadata} from 'next'
-import Link from 'next/link'
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -16,7 +15,6 @@ import {OrgCustomerConsentForm} from '@/components/composite/org-customer-consen
 
 export const metadata: Metadata = {title: '고객정보활용동의'}
 
-const SELECTION_PATH = '/org/individual-evaluation/investment-model/selection'
 const COMPANY_TECHNOLOGY_INFO_PATH = '/org/individual-evaluation/investment-model/company-technology-info'
 // 폼 바깥(화면 맨 아래)에 있는 [다음] 버튼을 form 속성으로 잇는 이름.
 const FORM_ID = 'org-customer-consent-form'
@@ -64,12 +62,9 @@ const OrgInvestmentModelCustomerConsentPage = () => (
             />
         </div>
 
-        {/* [다음]은 위 폼의 제출 버튼이다(검사 → 다음 단계 이동). */}
-        <StepNavigation
-            appearance="plain"
-            prev={{asChild: true, children: <Link href={SELECTION_PATH}>이전</Link>}}
-            next={{type: 'submit', form: FORM_ID, children: '다음'}}
-        />
+        {/* [다음]은 위 폼의 제출 버튼이다(검사 → 다음 단계 이동).
+            [이전]은 두지 않는다 — 이 화면이 투자모형의 첫 단계라 돌아갈 앞 단계가 없다. */}
+        <StepNavigation appearance="plain" next={{type: 'submit', form: FORM_ID, children: '다음'}} />
     </main>
 )
 
