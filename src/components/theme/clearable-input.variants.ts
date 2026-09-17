@@ -13,6 +13,9 @@ const clearableInputAddonClassName = 'h-full p-0'
 // rounded-full — 아이콘이 원이라 버튼도 같은 모양이어야 포커스링이 각지지 않는다(plain variant 는 rounded-none).
 const clearableInputClearButtonClassName = 'invisible rounded-full group-focus-within/input-group:visible'
 
+// 읽기 전용 칸의 지우기 버튼 — 직접 고칠 수 없는 칸이라 포커스를 기다리지 않고 값이 있는 동안 늘 보인다.
+const clearableInputReadOnlyClearButtonClassName = 'rounded-full'
+
 // 시안 icon/fill-circle-clear-gray — gray.200 원 안에 흰 X. Icon 의 solid 는 gray.700 원(강조용)이라
 // 같은 배지 모양에 옅은 색만 바꿔 쓴다.
 const clearableInputIconClassName = 'bg-icon-solid-subtle text-icon-solid-subtle-foreground size-icon-md'
@@ -21,5 +24,6 @@ export {
     clearableInputGroupClassName,
     clearableInputAddonClassName,
     clearableInputClearButtonClassName,
+    clearableInputReadOnlyClearButtonClassName,
     clearableInputIconClassName,
 }
