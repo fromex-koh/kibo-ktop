@@ -93,10 +93,46 @@ const TECHNOLOGY_CATEGORY_THEMES = [...new Set(TECHNOLOGY_CATEGORY_RANGES.map((r
 
 const TECHNOLOGY_CATEGORY_TOTAL = ITEM_DESCRIPTIONS.length
 
+// 검색 조건 — theme 은 테마 이름 또는 ALL_TECHNOLOGY_CATEGORY_THEMES(전체), keyword 는 검색어.
+type TechnologyCategoryQuery = {theme: string; keyword: string}
+
+const ALL_TECHNOLOGY_CATEGORY_THEMES = 'all'
+
+// 조건에 맞는 묶음만 남긴다. 분야·테마에 검색어가 걸리면 그 묶음의 품목을 모두 보인다.
+// [프론트엔드 연동] 검색 API 를 붙이면 서버가 거른 결과를 쓰고 이 함수는 지운다.
+const filterTechnologyCategoryGroups = ({theme, keyword}: TechnologyCategoryQuery): TechnologyCategoryGroup[] => {
+    const normalized = keyword.trim().toLowerCase()
+    const includesKeyword = (text: string) => text.toLowerCase().includes(normalized)
+
+    return TECHNOLOGY_CATEGORY_GROUPS.filter(
+        (group) => theme === ALL_TECHNOLOGY_CATEGORY_THEMES || group.theme === theme,
+    )
+        .map((group) => ({
+            ...group,
+            items:
+                !normalized || includesKeyword(group.theme) || includesKeyword(group.field)
+                    ? group.items
+                    : group.items.filter((item) => includesKeyword(item.name)),
+        }))
+        .filter((group) => group.items.length > 0)
+}
+
+// 목업 응답 지연 — 서버 조회처럼 잠깐 기다렸다 돌려줘 모달의 로딩 안내("불러오는 중입니다.")를 확인할 수 있게 한다.
+const MOCK_RESPONSE_DELAY_MS = 800
+
+// 모달의 [검색]·[초기화]가 부르는 조회 — 응답을 기다리는 비동기 함수다.
+// [프론트엔드 연동] 검색 API 로 바꿀 때 이 함수 안에서 API 를 await 하고 같은 모양(분야별 품목 목록)으로 돌려준다.
+const fetchTechnologyCategoryGroups = (query: TechnologyCategoryQuery): Promise<TechnologyCategoryGroup[]> =>
+    new Promise((resolve) => {
+        window.setTimeout(() => resolve(filterTechnologyCategoryGroups(query)), MOCK_RESPONSE_DELAY_MS)
+    })
+
 export {
+    ALL_TECHNOLOGY_CATEGORY_THEMES,
+    fetchTechnologyCategoryGroups,
     FIRST_TECHNOLOGY_CATEGORY_ITEM,
     TECHNOLOGY_CATEGORY_GROUPS,
     TECHNOLOGY_CATEGORY_THEMES,
     TECHNOLOGY_CATEGORY_TOTAL,
 }
-export type {TechnologyCategoryGroup}
+export type {TechnologyCategoryGroup, TechnologyCategoryQuery}
