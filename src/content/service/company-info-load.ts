@@ -3,7 +3,8 @@
 // [프론트엔드 연동] 모달(CompanyInfoLoadDialog)은 이 파일이 돌려주는 값만 그린다 — 목업을 조회 API 로
 // 바꿀 때 고칠 곳은 여기뿐이고 모달·화면 컴포넌트는 건드리지 않는다.
 //   1) MOCK_ROWS · MOCK_MODEL_NAMES 를 지우고
-//   2) getCompanyInfoLoadResult 안에서 조회 API 를 부른 뒤(평가모형 · 조회 조건 · 쪽 번호가 인자로 온다)
+//   2) fetchCompanyInfoLoadResult(검색·초기화·페이지 이동)와 getCompanyInfoLoadResult(처음 결과) 안에서
+//      조회 API 를 부른 뒤(평가모형 · 조회 조건 · 쪽 번호가 인자로 온다)
 //   3) 응답을 CompanyInfoLoadResult(모형 이름 · 목록 한 쪽 · 전체 건수 · 전체 쪽수) 모양으로 맞춰 돌려준다.
 // items 가 빈 배열이면 목록 자리에 "이력이 없습니다." 안내가 나온다.
 // 줄을 고르고 [선택]을 누르면 companyInfo 가 기업정보 폼 칸에 그대로 들어간다(org-company-info-form 의 fillCompanyInfo).
@@ -323,24 +324,53 @@ const MOCK_ITEMS: CompanyInfoLoadItem[] = MOCK_ROWS.map(toItem)
 const PAGE_SIZE = 10
 const FIRST_PAGE = 1
 
-// 조회 — 목업에서 쪽 번호에 맞는 줄만 잘라 돌려준다(1쪽 10줄 · 2쪽 5줄). 건수·쪽수는 목업 줄 수로 센다.
-// 모형 이름은 모형 키로 찾는다. 조회 조건(filters)은 목업에서는 거르지 않는다.
+// 조회 조건으로 거른다 — 기업명은 포함 검색(대소문자·앞뒤 공백 무시), 기간은 [전체]가 아닐 때만
+// 시작·종료일 사이의 평가일을 남긴다(날짜 칸이 비면 그쪽 끝은 열어 둔다).
+const ALL_PERIOD = 'all'
+
+const filterItems = (filters: CompanyInfoLoadFilters): CompanyInfoLoadItem[] => {
+    const keyword = (filters.loadCompanyName ?? '').trim().toLowerCase()
+    const isAllPeriod = (filters.loadPeriodPreset ?? ALL_PERIOD) === ALL_PERIOD
+    const from = filters.loadPeriodFrom ?? ''
+    const to = filters.loadPeriodTo ?? ''
+
+    return MOCK_ITEMS.filter((item) => !keyword || item.companyName.toLowerCase().includes(keyword)).filter(
+        (item) => isAllPeriod || ((!from || item.evaluatedAt >= from) && (!to || item.evaluatedAt <= to)),
+    )
+}
+
+// 조회 — 조건으로 거른 뒤 쪽 번호에 맞는 줄만 잘라 돌려준다(한 쪽 10줄). 건수·쪽수는 거른 결과로 센다.
+// 모형 이름은 모형 키로 찾는다. 모달을 처음 열 때 보여 줄 결과(initialResult)에도 쓰므로 바로 돌려준다.
 export const getCompanyInfoLoadResult = (
     model: CompanyInfoLoadModel = 'ktrs-fm',
     // [프론트엔드 연동] 조회 API 로 바꿀 때 모형 · 조회 조건 · 쪽 번호를 요청에 싣는다.
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     filters: CompanyInfoLoadFilters = {},
     page = FIRST_PAGE,
 ): CompanyInfoLoadResult => {
-    const totalCount = MOCK_ITEMS.length
+    const items = filterItems(filters)
+    const totalCount = items.length
     const totalPages = Math.max(FIRST_PAGE, Math.ceil(totalCount / PAGE_SIZE))
     const currentPage = Math.min(Math.max(FIRST_PAGE, page), totalPages)
     const start = (currentPage - FIRST_PAGE) * PAGE_SIZE
 
     return {
         modelName: MOCK_MODEL_NAMES[model],
-        items: MOCK_ITEMS.slice(start, start + PAGE_SIZE),
+        items: items.slice(start, start + PAGE_SIZE),
         totalCount,
         totalPages,
     }
 }
+
+// 목업 응답 지연 — 서버 조회처럼 잠깐 기다렸다 돌려줘 모달의 로딩 안내("불러오는 중입니다.")를 확인할 수 있게 한다.
+const MOCK_RESPONSE_DELAY_MS = 800
+
+// 모달의 [검색]·[초기화]·페이지 이동이 부르는 조회 — 응답을 기다리는 비동기 함수다.
+// [프론트엔드 연동] 조회 API 로 바꿀 때 이 함수 안에서 API 를 await 하고 같은 모양으로 돌려준다.
+export const fetchCompanyInfoLoadResult = (
+    model: CompanyInfoLoadModel,
+    filters: CompanyInfoLoadFilters,
+    page: number,
+): Promise<CompanyInfoLoadResult> =>
+    new Promise((resolve) => {
+        window.setTimeout(() => resolve(getCompanyInfoLoadResult(model, filters, page)), MOCK_RESPONSE_DELAY_MS)
+    })

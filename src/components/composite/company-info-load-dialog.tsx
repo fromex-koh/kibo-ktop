@@ -1,7 +1,8 @@
 'use client'
 
-import {useState, type FormEvent, type ReactNode} from 'react'
+import {useEffect, useRef, useState, type FormEvent, type ReactNode} from 'react'
 import {EmptyState} from '@/components/composite/empty-state'
+import {LoadingState} from '@/components/composite/loading-state'
 import {Pagination} from '@/components/composite/pagination'
 import {CompanyNameField, DateRangeField, SearchFilterFields} from '@/components/composite/search-filter-form'
 import {Button} from '@/components/ui/button'
@@ -17,7 +18,7 @@ import {
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {
-    getCompanyInfoLoadResult,
+    fetchCompanyInfoLoadResult,
     type CompanyInfoLoadFilters,
     type CompanyInfoLoadItem,
     type CompanyInfoLoadModel,
@@ -37,7 +38,13 @@ import {cn} from '@/lib/utils'
 // 부를 뿐이다(페이지 이동 때도 같다). 목업과 조회 API 의 교체 지점은 content/service/company-info-load.ts 한 곳이다.
 //   · model         — 어느 평가모형의 기업정보인지(키). 조회에 함께 싣고, 결과 줄의 모형 이름은 응답의 modelName 이다.
 //   · initialResult — 모달을 처음 열었을 때 보여 줄 결과(쓰는 쪽이 getCompanyInfoLoadResult(model) 로 넘긴다)
-//   · loadResult    — (모형, 조회 조건, 쪽 번호) → 결과. 기본값이 getCompanyInfoLoadResult 이고 Promise 도 받는다.
+//   · loadResult    — (모형, 조회 조건, 쪽 번호) → 결과. 기본값이 fetchCompanyInfoLoadResult(응답을 기다리는
+//                     목업)이고, 바로 결과를 돌려주는 함수도 받는다.
+// 응답이 LOADING_DELAY_MS 넘게 걸리면 목록 자리에 "불러오는 중입니다."(LoadingState)를 둔다 — 그보다 빨리 온
+// 응답에는 안내가 깜빡이지 않는다. 조회 API 를 붙여도 따로 손대지 않고 이 안내가 나온다.
+//
+// 검색·초기화 — [검색]은 조회기간·기업명으로 거른 목록을 1쪽부터 보인다. [초기화]는 검색 결과에서 처음 목록으로
+// 돌아가는 버튼이다 — 조건 칸도 처음 조건(전체 기간 · 기업명 없음)으로 되돌려 목록과 칸이 어긋나지 않게 한다.
 //
 // 고르기 — 시안 메모 "[선택] 버튼 선택 시, 팝업 닫히며, 해당 기업 정보로 입력됨". 줄 어디를 눌러도 라디오가
 // 골라지고, 고른 뒤에야 [선택]이 활성되어 고른 줄을 넘기며 닫는다.
@@ -49,6 +56,8 @@ const DEFAULT_FROM = new Date(2026, 1, 25)
 const DEFAULT_TO = new Date(2026, 4, 25)
 
 const FIRST_PAGE = 1
+// 로딩 안내를 띄우기까지 기다리는 시간 — 이보다 빨리 온 응답에는 안내를 보이지 않는다.
+const LOADING_DELAY_MS = 300
 
 const EMPTY_RESULT: CompanyInfoLoadResult = {modelName: '', items: [], totalCount: 0, totalPages: 0}
 
@@ -88,7 +97,7 @@ const CompanyInfoLoadDialog = ({
     defaultOpen,
     model = 'ktrs-fm',
     initialResult = EMPTY_RESULT,
-    loadResult = getCompanyInfoLoadResult,
+    loadResult = fetchCompanyInfoLoadResult,
     onSelect,
 }: CompanyInfoLoadDialogProps) => {
     const isMobile = useIsMobile()
@@ -103,12 +112,29 @@ const CompanyInfoLoadDialog = ({
     const [filterKey, setFilterKey] = useState(0)
     const selectedItem = result.items.find((item) => item.id === selectedId)
 
+    const [isLoading, setIsLoading] = useState(false)
+    // 조회 번호 — 앞선 조회의 응답이 늦게 와서 나중 조회의 결과를 덮지 않게, 마지막 조회의 응답만 받는다.
+    const requestIdRef = useRef(0)
+    // 로딩 안내 자리 — 모바일은 본문이 짧아 [검색] 아래가 화면 밖이라, 안내가 뜨면 본문을 굴려 보이게 한다.
+    const loadingRef = useRef<HTMLDivElement>(null)
+    useEffect(() => {
+        if (isLoading) loadingRef.current?.scrollIntoView({block: 'nearest'})
+    }, [isLoading])
+
     const load = async (nextFilters: CompanyInfoLoadFilters, nextPage: number) => {
+        requestIdRef.current += 1
+        const requestId = requestIdRef.current
         setFilters(nextFilters)
         setPage(nextPage)
-        const nextResult = await loadResult(model, nextFilters, nextPage)
-        setResult(nextResult)
         setSelectedId('')
+        const loadingTimer = window.setTimeout(() => setIsLoading(true), LOADING_DELAY_MS)
+        try {
+            const nextResult = await loadResult(model, nextFilters, nextPage)
+            if (requestId === requestIdRef.current) setResult(nextResult)
+        } finally {
+            window.clearTimeout(loadingTimer)
+            if (requestId === requestIdRef.current) setIsLoading(false)
+        }
     }
 
     // 이 모달은 기업정보 입력 폼 안에서도 열린다 — 포털로 그려져도 React 이벤트는 바깥 폼으로 올라가므로,
@@ -191,7 +217,12 @@ const CompanyInfoLoadDialog = ({
                         </SearchFilterFields>
                     </form>
 
-                    {result.items.length ? (
+                    {isLoading ? (
+                        // 응답을 기다리는 동안 — 빈 상태와 같은 자리·높이에 로딩 안내를 둔다.
+                        <div ref={loadingRef}>
+                            <LoadingState className="min-h-0 px-0 py-10" />
+                        </div>
+                    ) : result.items.length ? (
                         <div className="flex flex-col gap-4">
                             <p className="typo-body-xl-regular text-foreground flex items-center gap-4">
                                 <span className="typo-body-xl-bold">{result.modelName}</span>
