@@ -183,6 +183,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'SelectableSummaryList', href: '/component-guide/selectable-summary-list'},
                     {label: '목록 패턴 (List)', href: '/component-guide/list-patterns'},
                     {label: 'EmptyState', href: '/component-guide/empty-state'},
+                    {label: 'LoadingState', href: '/component-guide/loading-state'},
                 ],
             },
             {
@@ -200,6 +201,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'ActionCheck', href: '/component-guide/action-check'},
                     {label: 'Alert', href: '/component-guide/alert'},
                     {label: 'InfoBox', href: '/component-guide/info-box'},
+                    {label: 'NoticeAccordion', href: '/component-guide/notice-accordion'},
                     {label: 'Toast', href: '/component-guide/toast'},
                     {label: 'CheckToast', href: '/component-guide/check-toast'},
                     {label: 'Dialog', href: '/component-guide/dialog'},
