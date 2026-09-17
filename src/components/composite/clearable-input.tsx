@@ -9,6 +9,7 @@ import {
     clearableInputClearButtonClassName,
     clearableInputGroupClassName,
     clearableInputIconClassName,
+    clearableInputReadOnlyClearButtonClassName,
 } from '@/components/theme/clearable-input.variants'
 import {Button} from '@/components/ui/button'
 import {cn} from '@/lib/utils'
@@ -26,6 +27,11 @@ type ClearableInputProps = Omit<ComponentProps<'input'>, 'size'> & {
      * 지우기와 달리 값·포커스와 무관하게 항상 보인다.
      */
     endAddon?: ReactNode
+    /**
+     * 읽기 전용이어도 값이 있으면 지우기 버튼을 둔다 — 모달에서 골라 넣고 직접 입력은 막은 칸(기술분류 등)에서
+     * 넣은 값을 뺄 수 있게 한다. 이때 버튼은 포커스와 무관하게 값이 있는 동안 늘 보인다.
+     */
+    clearableWhenReadOnly?: boolean
 }
 
 const ClearableInput = ({
@@ -39,6 +45,7 @@ const ClearableInput = ({
     defaultValue,
     disabled,
     readOnly,
+    clearableWhenReadOnly,
     ...props
 }: ClearableInputProps) => {
     const inputRef = useRef<HTMLInputElement>(null)
@@ -63,7 +70,8 @@ const ClearableInput = ({
         input.focus()
     }
 
-    const canClear = hasValue && !disabled && !readOnly
+    const isReadOnlyClearable = Boolean(readOnly && clearableWhenReadOnly)
+    const canClear = hasValue && !disabled && (!readOnly || isReadOnlyClearable)
 
     return (
         <InputGroup className={cn(clearableInputGroupClassName, className)}>
@@ -87,9 +95,15 @@ const ClearableInput = ({
                 <InputGroupAddon align="inline-end" className={clearableInputAddonClassName}>
                     {canClear ? (
                         <Button
+                            // 폼 안에서 기본값(submit)이면 지우기가 폼 제출로 이어져 전체 검사가 돈다.
+                            type="button"
                             variant="plain"
                             size="icon-sm"
-                            className={clearableInputClearButtonClassName}
+                            className={
+                                isReadOnlyClearable
+                                    ? clearableInputReadOnlyClearButtonClassName
+                                    : clearableInputClearButtonClassName
+                            }
                             aria-label={clearLabel}
                             onClick={handleClear}
                         >
