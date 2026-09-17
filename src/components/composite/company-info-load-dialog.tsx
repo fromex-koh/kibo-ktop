@@ -1,17 +1,20 @@
 'use client'
 
 import {useState, type FormEvent, type ReactNode} from 'react'
-import {RotateCcw, Search} from 'lucide-react'
 import {EmptyState} from '@/components/composite/empty-state'
 import {Pagination} from '@/components/composite/pagination'
-import {
-    CompanyNameField,
-    DateRangeField,
-    SearchFilterActions,
-    SearchFilterFields,
-} from '@/components/composite/search-filter-form'
+import {CompanyNameField, DateRangeField, SearchFilterFields} from '@/components/composite/search-filter-form'
 import {Button} from '@/components/ui/button'
-import {Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger} from '@/components/ui/dialog'
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from '@/components/ui/dialog'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {
     getCompanyInfoLoadResult,
@@ -24,34 +27,37 @@ import {useIsMobile} from '@/hooks/use-mobile'
 import {cn} from '@/lib/utils'
 
 // 기업정보 불러오기 모달 — 기관 개별평가 기업·기술정보 입력 > 기업정보 카드의 [기업정보 관리] 버튼이 연다.
-// Figma "…_기업정보_기업정보 불러오기"(40007505:96135) · "…_내역없음"(40007505:96246).
+// Figma "신속표준모형 [KTRS-FM]_2단계_기업·기술정보 입력_기업정보_기업정보 불러오기"(40007524:123924).
 //
-// 구성 — 조회기간(빠른 기간 + 시작·종료일) · 기업명 · [초기화][조회] → "모형 | 총 N건" → 표 → 페이지 이동.
-// 조회 결과가 없으면 표와 페이지 이동 대신 빈 상태("이력이 없습니다.")를 둔다.
+// 구성 — 조회기간(빠른 기간 / 시작·종료일) · [기업명][초기화][검색] → "모형 | 총 N건" → 라디오 목록 → [선택].
+// 목록은 한 쪽 10줄이고, 다섯 줄 높이의 상자 안에서 스크롤한다. 쪽이 둘 이상이면 아래에 페이지 이동을 둔다. 조회 결과가 없으면 목록 대신
+// 빈 상태("이력이 없습니다.")를 둔다(시안 "…_내역없음" 40007524:124037).
 //
-// [프론트엔드 연동] 이 모달은 데이터를 갖지 않는다 — 받은 결과를 그리고, [조회]·페이지 이동 때 loadResult 를
-// 부를 뿐이다. 목업과 조회 API 의 교체 지점은 content/service/company-info-load.ts 한 곳이다.
+// [프론트엔드 연동] 이 모달은 데이터를 갖지 않는다 — 받은 결과를 그리고, [검색]·[초기화] 때 loadResult 를
+// 부를 뿐이다(페이지 이동 때도 같다). 목업과 조회 API 의 교체 지점은 content/service/company-info-load.ts 한 곳이다.
 //   · model         — 어느 평가모형의 기업정보인지(키). 조회에 함께 싣고, 결과 줄의 모형 이름은 응답의 modelName 이다.
 //   · initialResult — 모달을 처음 열었을 때 보여 줄 결과(쓰는 쪽이 getCompanyInfoLoadResult(model) 로 넘긴다)
 //   · loadResult    — (모형, 조회 조건, 쪽 번호) → 결과. 기본값이 getCompanyInfoLoadResult 이고 Promise 도 받는다.
 //
-// 고르기 — 시안 메모 "[선택] 버튼 선택 시, 팝업 닫히며, 해당 기업 정보로 입력됨". 줄 어디를 눌러도 고른다.
+// 고르기 — 시안 메모 "[선택] 버튼 선택 시, 팝업 닫히며, 해당 기업 정보로 입력됨". 줄 어디를 눌러도 라디오가
+// 골라지고, 고른 뒤에야 [선택]이 활성되어 고른 줄을 넘기며 닫는다.
 // 넘겨받은 줄로 기업정보 칸을 채우는 일은 쓰는 쪽(onSelect)이 맡는다.
 
 // 시안의 조회 조건 — 전체 기간이 골라져 있고 날짜 칸에는 최근 3개월이 채워져 있다.
 const DEFAULT_PRESET = 'all'
 const DEFAULT_FROM = new Date(2026, 1, 25)
 const DEFAULT_TO = new Date(2026, 4, 25)
+
 const FIRST_PAGE = 1
 
 const EMPTY_RESULT: CompanyInfoLoadResult = {modelName: '', items: [], totalCount: 0, totalPages: 0}
 
-// 표 머리·칸 — 이용내역 모달(PaidServiceUsageHistoryDialog)과 같은 모양이다(시안 공통 표).
-const headCellClassName =
-    'bg-primary-subtle border-subtle-3 border-t-foreground-subtle typo-body-l-bold text-foreground border-0 border-y px-4 py-3 text-center'
-// 줄에 올리면 네 칸 글자에 모두 밑줄이 선다 — 줄 전체가 고르는 자리임을 보여 준다.
-const cellClassName =
-    'border-subtle-3 typo-body-l-regular text-foreground border-0 border-b px-4 py-3 text-center group-hover:underline'
+// 줄 아래 보조 정보 — 시안 순서.
+const ITEM_DETAILS = [
+    {key: 'businessNumber', label: '기업 사업자번호'},
+    {key: 'inquiryAgency', label: '조회 기관'},
+    {key: 'evaluatedAt', label: '평가일'},
+] as const
 
 // 폼 값 → 조회 조건. 파일 입력이 없는 폼이라 값은 모두 문자열이지만, 타입을 좁히려고 한 번 거른다.
 const readFilters = (form: HTMLFormElement): CompanyInfoLoadFilters =>
@@ -67,13 +73,13 @@ type CompanyInfoLoadDialogProps = {
     model?: CompanyInfoLoadModel
     /** 처음 열었을 때 보여 줄 결과. */
     initialResult?: CompanyInfoLoadResult
-    /** [조회]·페이지 이동 때 부르는 조회 함수. */
+    /** [검색]·[초기화]·페이지 이동 때 부르는 조회 함수. */
     loadResult?: (
         model: CompanyInfoLoadModel,
         filters: CompanyInfoLoadFilters,
         page: number,
     ) => CompanyInfoLoadResult | Promise<CompanyInfoLoadResult>
-    /** 고른 줄. 모달은 이 값을 넘긴 뒤 닫힌다. */
+    /** [선택]으로 고른 줄. 모달은 이 값을 넘긴 뒤 닫힌다. */
     onSelect?: (item: CompanyInfoLoadItem) => void
 }
 
@@ -87,21 +93,26 @@ const CompanyInfoLoadDialog = ({
 }: CompanyInfoLoadDialogProps) => {
     const isMobile = useIsMobile()
     const [result, setResult] = useState(initialResult)
+    // 페이지 이동 때 다시 실을 조회 조건과 지금 쪽.
     const [filters, setFilters] = useState<CompanyInfoLoadFilters>({})
     const [page, setPage] = useState(FIRST_PAGE)
+    // 고른 줄 — 아무것도 고르지 않은 채로 시작하고, 새로 조회하면 다시 비운다. 고르기 전에는 [선택]이 막힌다.
+    const [selectedId, setSelectedId] = useState('')
     // [초기화] — 필드들이 각자 쥔 값을 시안의 기본 조건으로 되돌린다. 조회 카드(SearchFilterForm)는 카드 면을
     // 함께 그려 모달 안에 쓰지 않으므로, 필드를 다시 그려(key) 기본값으로 돌아가게 한다.
     const [filterKey, setFilterKey] = useState(0)
-    const hasItems = result.items.length > 0
+    const selectedItem = result.items.find((item) => item.id === selectedId)
 
     const load = async (nextFilters: CompanyInfoLoadFilters, nextPage: number) => {
         setFilters(nextFilters)
         setPage(nextPage)
-        setResult(await loadResult(model, nextFilters, nextPage))
+        const nextResult = await loadResult(model, nextFilters, nextPage)
+        setResult(nextResult)
+        setSelectedId('')
     }
 
     // 이 모달은 기업정보 입력 폼 안에서도 열린다 — 포털로 그려져도 React 이벤트는 바깥 폼으로 올라가므로,
-    // 조회·초기화가 입력 폼의 제출·검사를 부르지 않게 여기서 멈춘다.
+    // 검색·초기화가 입력 폼의 제출·검사를 부르지 않게 여기서 멈춘다.
     const handleSearch = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         event.stopPropagation()
@@ -118,8 +129,8 @@ const CompanyInfoLoadDialog = ({
     return (
         <Dialog defaultOpen={defaultOpen}>
             {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
-            {/* 시안 모달 폭 792 — 이용내역 모달과 같은 넓은 모달이다. */}
-            <DialogContent aria-describedby={undefined} style={{maxWidth: 792}}>
+            {/* 시안 모달 폭 588 — 기본 모달 폭(max-w-modal) 그대로다. */}
+            <DialogContent aria-describedby={undefined}>
                 <DialogHeader>
                     <DialogTitle>기업정보 불러오기</DialogTitle>
                 </DialogHeader>
@@ -141,94 +152,98 @@ const CompanyInfoLoadDialog = ({
                                 defaultTo={DEFAULT_TO}
                                 labelHidden
                                 size="lg"
+                                stackedTilde="inline"
                             />
-                            <CompanyNameField
-                                name="loadCompanyName"
-                                label="기업명"
-                                placeholder="기업명 입력"
-                                labelHidden
-                                size="lg"
-                            />
+                            {/* 시안 — 기업명 칸 오른쪽에 [초기화][검색]이 한 줄로 붙는다(간격 8). 버튼은 아이콘 없이
+                                글자 폭만큼만 차지한다(90 · 76) — Button md 의 최소 폭을 이 자리에서 푼다.
+                                모바일 시안 — 기업명 칸이 한 줄을 다 쓰고, 두 버튼은 그 아래(16)에서 폭을 반씩 나눈다. */}
+                            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-2">
+                                <div className="min-w-0 flex-1">
+                                    <CompanyNameField
+                                        name="loadCompanyName"
+                                        label="기업명"
+                                        placeholder="기업명 입력"
+                                        labelHidden
+                                        size="lg"
+                                    />
+                                </div>
+                                {/* 폼 안의 버튼도 id 를 둔다(HTML 검사기 "form field element should have an id or name"). */}
+                                <div className="flex gap-2 max-sm:*:flex-1">
+                                    <Button
+                                        id="company-info-load-reset"
+                                        type="reset"
+                                        variant="tertiary"
+                                        size="md"
+                                        className="min-w-0 shrink-0"
+                                    >
+                                        초기화
+                                    </Button>
+                                    <Button
+                                        id="company-info-load-submit"
+                                        type="submit"
+                                        size="md"
+                                        className="min-w-0 shrink-0"
+                                    >
+                                        검색
+                                    </Button>
+                                </div>
+                            </div>
                         </SearchFilterFields>
-                        {/* 폼 안의 버튼도 id 를 둔다(HTML 검사기 "form field element should have an id or name"). */}
-                        <SearchFilterActions className="gap-2 max-sm:*:min-w-0 max-sm:*:flex-1">
-                            <Button id="company-info-load-reset" type="reset" variant="tertiary" size="md">
-                                초기화
-                                <RotateCcw aria-hidden="true" />
-                            </Button>
-                            <Button id="company-info-load-submit" type="submit" size="md">
-                                조회
-                                <Search aria-hidden="true" />
-                            </Button>
-                        </SearchFilterActions>
                     </form>
 
-                    {hasItems ? (
-                        <div className="flex flex-col gap-10">
-                            {/* 건수와 표는 한 덩어리로 붙고(16), 페이지 이동만 멀리 떨어진다(40) — 시안. */}
-                            <div className="flex flex-col gap-4">
-                                <p className="typo-body-xl-regular text-foreground flex items-center gap-3">
-                                    <span className="typo-body-xl-bold">{result.modelName}</span>
-                                    <span aria-hidden="true" className="border-subtle-3 h-3 border-l" />
-                                    <span>
-                                        총{' '}
-                                        <span className="typo-body-xl-bold text-primary-strong">
-                                            {result.totalCount}
-                                        </span>
-                                        건
-                                    </span>
-                                </p>
-                                <div className="overflow-x-auto">
-                                    <table className="w-full min-w-160 table-fixed border-separate border-spacing-0">
-                                        <caption className="sr-only">
-                                            {result.modelName} 기업정보 불러오기 조회 결과 — 기업명을 누르면 그 기업
-                                            정보가 입력됩니다
-                                        </caption>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col" className={headCellClassName}>
-                                                    기업명
-                                                </th>
-                                                <th scope="col" className={headCellClassName}>
-                                                    기업 사업자번호
-                                                </th>
-                                                <th scope="col" className={headCellClassName}>
-                                                    조회 기관
-                                                </th>
-                                                <th scope="col" className={headCellClassName}>
-                                                    평가일
-                                                </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {result.items.map((item) => (
-                                                // 줄 전체가 고르는 자리다 — 손가락 모양·hover 면(업종코드 조회 모달에서 고른 줄과
-                                                // 같은 색, secondary)·네 칸 밑줄로 보여 준다. 실제로 누르는 것은 기업명 버튼 하나이고,
-                                                // 그 버튼의 누름 영역(after)을 줄 전체로 펼친다 — tr 에 클릭을 달면 키보드로 고를 수
-                                                // 없고, 칸마다 버튼을 두면 스크린리더가 한 줄에서 같은 동작을 네 번 읽는다[6.1.1].
-                                                <tr
-                                                    key={item.id}
-                                                    className="group hover:bg-secondary relative cursor-pointer"
-                                                >
-                                                    <td className={cellClassName}>
-                                                        <DialogClose asChild>
-                                                            <button
-                                                                type="button"
-                                                                className="focus-visible:outline-ring cursor-pointer break-keep group-hover:underline after:absolute after:inset-0 focus-visible:outline-2 focus-visible:outline-offset-2"
-                                                                onClick={() => onSelect?.(item)}
-                                                            >
-                                                                {item.companyName}
-                                                            </button>
-                                                        </DialogClose>
-                                                    </td>
-                                                    <td className={cellClassName}>{item.businessNumber}</td>
-                                                    <td className={cellClassName}>{item.inquiryAgency}</td>
-                                                    <td className={cellClassName}>{item.evaluatedAt}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
+                    {result.items.length ? (
+                        <div className="flex flex-col gap-4">
+                            <p className="typo-body-xl-regular text-foreground flex items-center gap-4">
+                                <span className="typo-body-xl-bold">{result.modelName}</span>
+                                <span aria-hidden="true" className="border-subtle-3 h-3 border-l" />
+                                <span>
+                                    총{' '}
+                                    <span className="typo-body-xl-bold text-primary-strong">{result.totalCount}</span>건
+                                </span>
+                            </p>
+                            {/* 목록 상자 — 시안 높이 551(윗선 1 + 줄 110 × 5)만큼 보이고 넘치면 스크롤한다.
+                                스크롤 막대(8)는 목록과 4 떨어져 상자 오른쪽 끝에 붙는다(pr-1). */}
+                            <div className="max-h-138 overflow-y-auto">
+                                <RadioGroup
+                                    aria-label={`${result.modelName} 기업정보 조회 결과`}
+                                    value={selectedId}
+                                    onValueChange={setSelectedId}
+                                    className="border-t-foreground-subtle flex flex-col gap-0 border-t pr-1"
+                                >
+                                    {result.items.map((item) => (
+                                        // label 이라 줄 어디를 눌러도 라디오가 골라진다. 라디오 버튼 안에는 글이 없으므로
+                                        // 이름은 label 의 글(기업명·보조 정보)에서 얻는다[7.4.1].
+                                        <label
+                                            key={item.id}
+                                            htmlFor={`company-info-load-${item.id}`}
+                                            className="border-subtle-3 has-[:focus-visible]:outline-ring flex cursor-pointer items-center gap-2 border-b py-4 has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-solid"
+                                        >
+                                            <RadioGroupItem
+                                                id={`company-info-load-${item.id}`}
+                                                value={item.id}
+                                                className="focus-visible:outline-none"
+                                            />
+                                            <span className="flex min-w-0 flex-1 flex-col gap-2">
+                                                <span className="typo-body-xl-regular text-label-foreground wrap-break-word break-keep">
+                                                    {item.companyName}
+                                                </span>
+                                                {/* 보조 정보 — 가로로 이어 두고(간격 24), 모바일 시안은 세 항목을 세로로 쌓는다(간격 8). */}
+                                                <span className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:gap-x-6">
+                                                    {ITEM_DETAILS.map((detail) => (
+                                                        <span key={detail.key} className="flex min-w-0 flex-col gap-1">
+                                                            <span className="typo-body-l-regular text-foreground-subtle">
+                                                                {detail.label}
+                                                            </span>
+                                                            <span className="typo-body-l-regular text-foreground wrap-break-word break-keep">
+                                                                {item[detail.key]}
+                                                            </span>
+                                                        </span>
+                                                    ))}
+                                                </span>
+                                            </span>
+                                        </label>
+                                    ))}
+                                </RadioGroup>
                             </div>
                             {result.totalPages > 1 ? (
                                 <Pagination
@@ -241,19 +256,28 @@ const CompanyInfoLoadDialog = ({
                                     maxVisibleItems={isMobile ? 5 : 10}
                                     compact={isMobile}
                                     aria-label="기업정보 조회 결과 페이지 이동"
-                                    className="justify-center"
+                                    className="justify-center pt-6"
                                 />
                             ) : null}
                         </div>
                     ) : (
-                        // 시안 "…_내역없음" — 표 자리를 빈 상태가 대신한다.
+                        // 시안 "…_내역없음" — 목록 자리를 빈 상태가 대신한다.
                         <EmptyState title="이력이 없습니다." className="min-h-0 px-0 py-10" />
                     )}
                 </div>
-                {/* 바닥 여백 — 머리 위 여백(모바일 24 · sm 이상 40)과 같게 둔다. 본문 스크롤 영역 밖(세 행 그리드의
-                    마지막 행)이라 스크롤 도중에도 글이 이 여백 위에서 잘리고, 바닥이 가장자리에 붙지 않는다.
-                    높이는 본문이 이미 가진 아래 py-1(4)을 뺀 값이다(20 + 4 = 24 · 36 + 4 = 40). */}
-                <div aria-hidden="true" className="h-5 sm:h-9" />
+                <DialogFooter>
+                    {/* 라디오로 줄을 골라야 활성된다 — 결과가 없을 때(시안 "…_내역없음")도 고를 줄이 없어 막혀 있다. */}
+                    <DialogClose asChild>
+                        <Button
+                            type="button"
+                            size="xl"
+                            disabled={!selectedItem}
+                            onClick={() => selectedItem && onSelect?.(selectedItem)}
+                        >
+                            선택
+                        </Button>
+                    </DialogClose>
+                </DialogFooter>
             </DialogContent>
         </Dialog>
     )
