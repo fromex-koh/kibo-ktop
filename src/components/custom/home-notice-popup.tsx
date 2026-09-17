@@ -5,7 +5,7 @@ import {ChevronLeft, ChevronRight} from 'lucide-react'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
 import {Checkbox} from '@/components/ui/checkbox'
-import {Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog'
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from '@/components/ui/dialog'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 import {NOTICE_CATEGORY, type HomeNotice} from '@/content/service/home-notices'
 import {cn} from '@/lib/utils'
@@ -151,11 +151,6 @@ const HomeNoticePopup = ({items, detailHref}: HomeNoticePopupProps) => {
                             {TODAY_HIDE_LABEL}
                         </label>
                     </span>
-                    <DialogClose asChild>
-                        <Button type="button" variant="tertiary" size="md" className="sm:flex-none">
-                            닫기
-                        </Button>
-                    </DialogClose>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
