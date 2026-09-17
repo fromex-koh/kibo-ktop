@@ -1,55 +1,38 @@
 'use client'
 
-import {useEffect, useRef, useState, type ReactNode} from 'react'
-import INDUSTRY_CODE_GROUPS from '@/content/technology-evaluation/industry-codes.json'
-import {DialogNotice} from '@/components/composite/dialog-notice'
-import {EmptyState} from '@/components/composite/empty-state'
-import {Button} from '@/components/ui/button'
+import {useEffect, useRef, useState, type FormEvent, type ReactNode} from 'react'
+import {ChevronRight} from 'lucide-react'
 import {ClearableInput} from '@/components/composite/clearable-input'
-import {
-    Dialog,
-    DialogClose,
-    DialogContent,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from '@/components/ui/dialog'
+import {EmptyState} from '@/components/composite/empty-state'
+import {LoadingState} from '@/components/composite/loading-state'
+import {NoticeAccordion, NoticeAccordionItem} from '@/components/composite/notice-accordion'
+import {Button} from '@/components/ui/button'
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from '@/components/ui/dialog'
+import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 import {dialogBodyClassName} from '@/components/theme/dialog.variants'
+import {
+    fetchIndustryCodeGroups,
+    fetchIndustrySubCodes,
+    INDUSTRY_CODE_GROUP_LIST,
+    type IndustryCode,
+} from '@/content/service/industry-codes'
 import {cn} from '@/lib/utils'
 
-// 업종코드 조회 모달 — 자가진단 기업정보의 [조회] 버튼이 연다.
-// Figma "m_업종코드 조회"(40006919:33045) · "…_내역없음"(40006919:33014).
+// 업종코드 조회 모달 — 기업정보의 업종코드 [조회] 버튼이 연다.
+// Figma "SB-FOTA-CP4-0003_업종코드 조회"(40007524:144439) · "…_내역없음"(40007524:144400) · 모바일(40007524:144619).
 //
-// 고르는 순서 — 검색 → 중분류 한 줄 → 그 아래 업종 한 줄 → 선택저장.
-//   1. 검색하면 중분류 표가 뜬다(맞는 것이 없으면 빈 상태).
-//   2. 중분류 한 줄을 고르면 그 줄이 선택 표시되고, 아래에 그 중분류에 속한 업종 표가 열린다.
-//   3. 아래 표에서 한 줄을 고르면 두 줄 모두 선택 표시가 남는다.
-//   4. [선택저장] 을 누르면 고른 값을 onSelect 로 넘기고 닫는다.
+// 고르는 순서 — 두 단계다.
+//   1. 중분류 목록(전체 N건)에서 한 줄을 누르면 그 중분류의 세분류 목록으로 넘어간다.
+//   2. 세분류 목록에서 라디오로 하나를 고르고 [선택]을 누르면 onSelect 로 넘기고 닫는다.
+//   [이전]은 세분류 단계에서 중분류 목록(앞서 검색한 결과 그대로)으로 돌아간다. 중분류 단계에서는 막혀 있다.
 //
-// 연동할 때 — INDUSTRY_CODES(목업)를 API 응답으로 바꾸고, searchIndustryCodes 를 검색 요청으로 바꾼다.
-// 화면 쪽은 손댈 것이 없다.
-
-type IndustrySubCode = {code: string; name: string}
-type IndustryCode = IndustrySubCode & {items: IndustrySubCode[]}
-
-// 목업 — 한국표준산업분류(KSIC)의 중분류와 그 아래 세세분류 전체(중분류 77 · 하위 1205).
-// 실제 목록은 API 가 준다 — 응답이 같은 모양이면 이 import 만 호출로 바꾸면 화면은 그대로다.
-const INDUSTRY_CODES: IndustryCode[] = INDUSTRY_CODE_GROUPS
-
-// 검색 — 중분류나 그 아래 업종 중 하나라도 코드·이름이 맞으면 그 중분류를 결과에 담는다.
-// 검색어가 비면 전체를 보여 준다(무엇이 있는지 훑어볼 수 있어야 한다).
-const matches = (target: IndustrySubCode, keyword: string) =>
-    target.code.startsWith(keyword) || target.name.includes(keyword)
-
-const searchIndustryCodes = (keyword: string) => {
-    const trimmed = keyword.trim()
-    if (!trimmed) return INDUSTRY_CODES
-
-    return INDUSTRY_CODES.filter(
-        (group) => matches(group, trimmed) || group.items.some((item) => matches(item, trimmed)),
-    )
-}
+// 검색·초기화 — 단계마다 그 단계의 목록을 거른다(중분류명·코드 / 세분류명·코드).
+//   [검색]·Enter 는 검색어로 다시 조회하고, [초기화]는 검색 결과에서 그 단계의 처음 목록으로 돌아간다
+//   (검색어 칸도 비워 목록과 칸이 어긋나지 않게 한다).
+//   응답이 LOADING_DELAY_MS 넘게 걸리면 목록 자리에 로딩 안내를, 결과가 없으면 "검색내역이 없습니다." 를 둔다.
+//
+// [프론트엔드 연동] 조회는 content/service/industry-codes.ts 의 두 함수 한 곳이다. 지금은 목업이 0.8초 뒤에
+// 돌려준다 — 그동안 로딩 안내가 보인다.
 
 const NOTICES = [
     '실제 영위중인 업종이 법인등기부등본, 사업자등록증상의 업종과 상이할 경우 실제 영위중인 업종선택',
@@ -57,150 +40,157 @@ const NOTICES = [
     '업종을 전환하는 기업은 현재 실제로 영위중인 업종선택',
 ]
 
-// 표 한 벌 — 생김새는 표지만 하는 일은 "여럿 중 하나 고르기" 라서 라디오 묶음으로 만든다.
-// <table> 대신 라디오를 쓰는 이유 — 줄 전체가 눌리는 표를 <table> 로 만들면 tr 에 클릭을 달아야 하고
-// 키보드 조작을 직접 구현해야 한다. 라벨로 감싼 라디오는 클릭·화살표 이동·읽어 주기가 전부 기본 동작이다
-// [6.1.1 · 8.2.1]. 머리 줄은 각 줄의 이름("01 농업")이 이미 코드와 업종명을 담고 있어 장식으로 둔다.
-//
-// 격자 — 코드 칸 100(=--spacing(25)) 고정, 업종명이 남는 폭. 줄 높이 45 는 py-3 + 본문 21 로 나온다(시안).
-const codeTableRowClassName =
-    'grid grid-cols-[--spacing(25)_1fr] border-subtle-3 cursor-pointer border-b ' +
-    'has-[:focus-visible]:outline-ring has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-2'
+// 로딩 안내를 띄우기까지 기다리는 시간 — 이보다 빨리 온 응답에는 안내를 보이지 않는다.
+const LOADING_DELAY_MS = 300
+const KEYWORD_FIELD_ID = 'industry-code-keyword'
 
-type CodeTableProps = {
-    /** 라디오 묶음 이름 — 두 표가 서로 다른 묶음이어야 각각 하나씩 고를 수 있다. */
-    name: string
-    /** 묶음의 이름. 화면에는 머리 줄로, 스크린리더에는 legend 로 전달한다. */
-    legend: string
-    /** 코드 열 머리 문구(중분류 · 중분류 이하). */
-    codeHeader: string
-    rows: IndustrySubCode[]
-    selectedCode?: string
-    onSelect: (row: IndustrySubCode) => void
+type IndustryCodeStep = 'group' | 'sub'
+
+// 단계별 문구 — 검색 칸 안내와 건수 앞 글자.
+const STEP_TEXT: Record<IndustryCodeStep, {placeholder: string; countLabel: string}> = {
+    group: {placeholder: '중분류명 또는 코드 검색', countLabel: '전체 중분류'},
+    sub: {placeholder: '세분류명 또는 코드 검색', countLabel: '세분류'},
 }
 
-const CodeTable = ({name, legend, codeHeader, rows, selectedCode, onSelect}: CodeTableProps) => (
-    <fieldset className="flex min-w-0 flex-col">
-        <legend className="sr-only">{legend}</legend>
-        {/* 머리 줄 — 시안의 표 위 진한 선(1px gray.500)과 옅은 파랑 배경. */}
-        <div
-            aria-hidden="true"
-            className="border-t-foreground-subtle border-b-subtle-3 bg-primary-subtle typo-body-l-bold text-foreground grid grid-cols-[--spacing(25)_1fr] border-t border-b"
-        >
-            <span className="px-4 py-3 text-center">{codeHeader}</span>
-            <span className="px-4 py-3 text-center">업종명</span>
-        </div>
-        {/* 다섯 줄까지 보이고 그 아래는 이 안에서 스크롤한다 — 시안 225(45×5)를 간격 스케일에 맞춰 224 로 둔다. */}
-        <div className="max-h-56 overflow-y-auto">
-            {rows.map((row) => {
-                const isSelected = row.code === selectedCode
-                // 밑줄은 글자 칸(span)에 직접 준다 — 줄(label)은 grid 라 밑줄을 줄에 주면 칸마다 그어질지가
-                // 브라우저의 상속 규칙에 달린다. 줄에 올리면(group-hover) 코드·업종명에 밑줄이 서고,
-                // 고른 줄은 손을 뗀 뒤에도 밑줄이 남아 어느 줄을 골랐는지 보인다(기업정보 불러오기 모달의 줄과 같다).
-                const cellTextClassName = cn(
-                    'typo-body-l-regular text-label-foreground px-4 py-3 group-hover:underline',
-                    isSelected && 'underline',
-                )
-
-                return (
-                    <label
-                        key={row.code}
-                        className={cn(
-                            codeTableRowClassName,
-                            'group',
-                            // 고른 줄 — 시안은 옅은 파랑 면으로 구분한다(글자색은 그대로).
-                            isSelected ? 'bg-secondary' : 'interactive:hover:bg-surface-subtle',
-                        )}
-                    >
-                        <input
-                            type="radio"
-                            name={name}
-                            value={row.code}
-                            checked={isSelected}
-                            onChange={() => onSelect(row)}
-                            className="sr-only"
-                        />
-                        <span className={cn(cellTextClassName, 'text-center')}>{row.code}</span>
-                        <span className={cellTextClassName}>{row.name}</span>
-                    </label>
-                )
-            })}
-        </div>
-    </fieldset>
+// 줄 한 칸의 글자 — 이름(16) 위, 코드(14) 아래.
+const CodeText = ({code}: {code: IndustryCode}) => (
+    <span className="flex min-w-0 flex-1 flex-col">
+        <span className="typo-body-xl-regular text-label-foreground break-keep">{code.name}</span>
+        <span className="typo-body-l-regular text-foreground-subtle">{code.code}</span>
+    </span>
 )
 
-// 아래 표가 열린 자리로 본문을 내린다 — 새 표는 고른 줄 밑에 생겨 화면 밖에 있을 수 있고,
-// 그러면 사용자는 아무 일도 일어나지 않은 것으로 본다. 표가 통째로 보이도록 최소한만 움직인다.
-//
-// element.scrollIntoView() 를 쓰지 않는 이유 — 그 함수는 스크롤 가능한 조상을 전부 움직인다.
-// 모달 카드는 overflow-hidden 이라 화면에는 스크롤바가 없지만 스크립트로는 스크롤되므로, 카드까지 밀려
-// 올라가 제목이 잘리고 아래에 빈 자리가 생긴다. 그래서 본문 상자 하나만 직접 굴린다.
-//
-// 동작을 줄이도록 설정한 사용자에게는 즉시 이동한다[6.3.1] — 프로젝트의 다른 자동 스크롤과 같은 방식이다.
-// 표 아랫변이 상자 끝에 딱 붙지 않도록 남기는 여백(반복 카드 스크롤과 같은 값).
-const SCROLL_MARGIN_PX = 16
-
-const scrollIntoViewInside = (container: HTMLElement, target: HTMLElement) => {
-    const containerRect = container.getBoundingClientRect()
-    const targetRect = target.getBoundingClientRect()
-    // 아래로 넘친 만큼 내리되, 표의 윗변이 상자 위로 올라가지 않는 선까지만 내린다.
-    const overflow = targetRect.bottom + SCROLL_MARGIN_PX - containerRect.bottom
-    const room = targetRect.top - containerRect.top
-    const delta = Math.max(0, Math.min(overflow, room))
-    if (!delta) return
-
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    container.scrollBy({top: delta, behavior: prefersReducedMotion ? 'auto' : 'smooth'})
-}
+// 목록 줄 — 높이 77(위아래 16 + 이름 24 + 코드 21 + 아래 옅은 선).
+const codeRowClassName = 'border-subtle-3 flex items-center gap-2 border-b py-4'
 
 type IndustryCodeDialogProps = {
     /** 모달을 여는 버튼. Radix 가 이 요소에 열기 동작과 aria 를 얹는다. */
     children?: ReactNode
     /** 트리거 없이 처음부터 열어 둘 때(모달 자체를 확인하는 화면). */
     defaultOpen?: boolean
-    /** [선택저장] 을 눌렀을 때 고른 업종을 넘긴다. 넘기지 않으면 닫히기만 한다. */
+    /** [선택]을 눌렀을 때 고른 세분류를 넘긴다. 넘기지 않으면 닫히기만 한다. */
     onSelect?: (value: {code: string; name: string; label: string}) => void
 }
 
 const IndustryCodeDialog = ({children, defaultOpen, onSelect}: IndustryCodeDialogProps) => {
     const [open, setOpen] = useState(Boolean(defaultOpen))
+    const [step, setStep] = useState<IndustryCodeStep>('group')
     const [keyword, setKeyword] = useState('')
-    // null = 아직 검색하지 않음. 빈 배열 = 검색했지만 결과 없음 — 둘 다 같은 빈 상태를 보여 준다.
-    const [results, setResults] = useState<IndustryCode[] | null>(null)
+    // 중분류 목록 — [이전]으로 돌아왔을 때 앞서 본 목록(검색 결과)을 그대로 보여 주려고 따로 쥔다.
+    const [groups, setGroups] = useState<readonly IndustryCode[]>(INDUSTRY_CODE_GROUP_LIST)
+    const [groupKeyword, setGroupKeyword] = useState('')
     const [selectedGroup, setSelectedGroup] = useState<IndustryCode | null>(null)
-    const [selectedItem, setSelectedItem] = useState<IndustrySubCode | null>(null)
-    const bodyRef = useRef<HTMLDivElement>(null)
-    const subTableRef = useRef<HTMLDivElement>(null)
+    const [subCodes, setSubCodes] = useState<readonly IndustryCode[]>([])
+    const [selectedSub, setSelectedSub] = useState<IndustryCode | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
+    // 조회 번호 — 앞선 조회의 응답이 늦게 와서 나중 조회의 결과를 덮지 않게, 마지막 조회의 응답만 받는다.
+    const requestIdRef = useRef(0)
+    // 단계가 바뀌면 건수 줄로 포커스를 옮긴다 — 누른 줄이 사라져 포커스가 body 로 떨어지지 않게 한다.
+    const countRef = useRef<HTMLParagraphElement>(null)
+    const shouldFocusCountRef = useRef(false)
+    // 로딩 안내 자리 — 모바일은 본문이 짧아 [검색] 아래가 화면 밖이라, 안내가 뜨면 본문을 굴려 보이게 한다.
+    const loadingRef = useRef<HTMLDivElement>(null)
 
-    // 중분류를 고르거나 다른 중분류로 바꿀 때마다 그 아래 표가 보이는 자리로 내린다.
+    const rows = step === 'group' ? groups : subCodes
+
     useEffect(() => {
-        if (!selectedGroup || !bodyRef.current || !subTableRef.current) return
+        if (isLoading) loadingRef.current?.scrollIntoView({block: 'nearest'})
+    }, [isLoading])
 
-        scrollIntoViewInside(bodyRef.current, subTableRef.current)
-    }, [selectedGroup])
+    // 단계가 바뀐 뒤 목록(건수 줄)이 나타나면 그 줄로 포커스를 옮긴다 — 로딩 중에는 기다린다.
+    useEffect(() => {
+        if (!shouldFocusCountRef.current || isLoading || !countRef.current) return
+        shouldFocusCountRef.current = false
+        countRef.current.focus()
+    }, [step, isLoading])
 
-    const search = () => {
-        setResults(searchIndustryCodes(keyword))
-        // 결과가 바뀌면 앞서 고른 줄은 더 이상 화면에 없을 수 있다 — 함께 비운다.
-        setSelectedGroup(null)
-        setSelectedItem(null)
+    // 조회를 보내고 응답을 받는다 — 늦으면 로딩 안내를 띄우고, 마지막 조회의 응답만 반영한다.
+    const request = async <T,>(fetcher: () => Promise<T>, apply: (result: T) => void) => {
+        requestIdRef.current += 1
+        const requestId = requestIdRef.current
+        const loadingTimer = window.setTimeout(() => setIsLoading(true), LOADING_DELAY_MS)
+        try {
+            const result = await fetcher()
+            if (requestId === requestIdRef.current) apply(result)
+        } finally {
+            window.clearTimeout(loadingTimer)
+            if (requestId === requestIdRef.current) setIsLoading(false)
+        }
     }
 
-    // 닫을 때 처음 상태로 되돌린다 — 다음에 열었을 때 지난 검색과 선택이 남아 있으면 혼란스럽다.
+    const searchGroups = (nextKeyword: string) =>
+        request(
+            () => fetchIndustryCodeGroups(nextKeyword),
+            (result) => {
+                setGroups(result)
+                setGroupKeyword(nextKeyword)
+            },
+        )
+
+    const searchSubCodes = (group: IndustryCode, nextKeyword: string) => {
+        setSelectedSub(null)
+        return request(() => fetchIndustrySubCodes(group.code, nextKeyword), setSubCodes)
+    }
+
+    // 중분류 한 줄 — 세분류 단계로 넘어가 그 중분류의 세분류 전체를 부른다.
+    const openGroup = (group: IndustryCode) => {
+        shouldFocusCountRef.current = true
+        setSelectedGroup(group)
+        setSubCodes([])
+        setKeyword('')
+        setStep('sub')
+        // 단계가 바뀐 자리는 비어 있으므로 기다리지 않고 바로 로딩 안내를 둔다(빈 상태가 비치지 않게).
+        setIsLoading(true)
+        void searchSubCodes(group, '')
+    }
+
+    // [이전] — 중분류 목록으로 돌아간다. 검색 칸에는 그 목록을 부른 검색어를 되살린다.
+    const goBack = () => {
+        requestIdRef.current += 1
+        setIsLoading(false)
+        shouldFocusCountRef.current = true
+        setStep('group')
+        setKeyword(groupKeyword)
+        setSelectedSub(null)
+    }
+
+    // 이 모달은 기업정보 입력 폼 안에서도 열린다 — 포털로 그려져도 React 이벤트는 바깥 폼으로 올라가므로,
+    // 검색·초기화가 입력 폼의 제출·검사를 부르지 않게 여기서 멈춘다.
+    const handleSearch = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        event.stopPropagation()
+        if (step === 'group') void searchGroups(keyword)
+        else if (selectedGroup) void searchSubCodes(selectedGroup, keyword)
+    }
+
+    const handleReset = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault()
+        event.stopPropagation()
+        setKeyword('')
+        if (step === 'group') void searchGroups('')
+        else if (selectedGroup) void searchSubCodes(selectedGroup, '')
+    }
+
+    // 닫을 때 처음 상태로 되돌린다 — 다음에 열었을 때 지난 단계·검색·선택이 남아 있으면 혼란스럽다.
     const handleOpenChange = (nextOpen: boolean) => {
         setOpen(nextOpen)
         if (nextOpen) return
 
+        requestIdRef.current += 1
+        setIsLoading(false)
+        setStep('group')
         setKeyword('')
-        setResults(null)
+        setGroups(INDUSTRY_CODE_GROUP_LIST)
+        setGroupKeyword('')
         setSelectedGroup(null)
-        setSelectedItem(null)
+        setSubCodes([])
+        setSelectedSub(null)
     }
 
     const save = () => {
-        if (!selectedItem) return
+        if (!selectedSub) return
 
-        onSelect?.({...selectedItem, label: `${selectedItem.code} ${selectedItem.name}`})
+        onSelect?.({...selectedSub, label: `${selectedSub.code} ${selectedSub.name}`})
         handleOpenChange(false)
     }
 
@@ -211,72 +201,138 @@ const IndustryCodeDialog = ({children, defaultOpen, onSelect}: IndustryCodeDialo
                 <DialogHeader>
                     <DialogTitle>업종코드 조회</DialogTitle>
                 </DialogHeader>
-                <div ref={bodyRef} className={cn(dialogBodyClassName, 'gap-6')}>
-                    <DialogNotice notices={NOTICES} />
-                    {/* 검색 줄 — 입력이 남는 폭을 갖고 버튼은 글자 폭 그대로다(시안 404 + 76).
-                        Enter 로도 검색되게 한다 — 검색창에서 가장 먼저 눌러 보는 키다. */}
-                    <div className="flex items-start gap-2">
+                <div className={cn(dialogBodyClassName, 'gap-6')}>
+                    <NoticeAccordion>
+                        {NOTICES.map((notice) => (
+                            <NoticeAccordionItem key={notice}>{notice}</NoticeAccordionItem>
+                        ))}
+                    </NoticeAccordion>
+
+                    {/* 검색 줄 — PC 는 입력 · [초기화] · [검색] 한 줄(간격 8), 모바일은 입력 아래에 두 버튼이 반씩.
+                        시안에 라벨이 보이지 않아 감추되 스크린리더에는 남긴다[7.4.1]. */}
+                    <form
+                        aria-label="업종코드 검색"
+                        noValidate
+                        onSubmit={handleSearch}
+                        onReset={handleReset}
+                        className="flex flex-col gap-2 sm:flex-row sm:items-start"
+                    >
+                        <label htmlFor={KEYWORD_FIELD_ID} className="sr-only">
+                            {STEP_TEXT[step].placeholder}어
+                        </label>
                         <ClearableInput
-                            id="industry-code-keyword"
+                            id={KEYWORD_FIELD_ID}
                             name="industryCodeKeyword"
                             autoComplete="off"
-                            aria-label="업종명 또는 코드"
-                            placeholder="업종명 또는 코드 입력"
+                            placeholder={STEP_TEXT[step].placeholder}
                             value={keyword}
                             onChange={(event) => setKeyword(event.currentTarget.value)}
-                            onKeyDown={(event) => {
-                                if (event.key !== 'Enter') return
-
-                                event.preventDefault()
-                                search()
-                            }}
-                            className="min-w-0 flex-1"
+                            className="h-control-h-md min-w-0 sm:flex-1"
                         />
-                        <Button type="button" size="md" className="shrink-0" onClick={search}>
-                            검색
-                        </Button>
-                    </div>
-                    {results?.length ? (
-                        <>
-                            <CodeTable
-                                name="industry-code-group"
-                                legend="중분류 선택"
-                                codeHeader="중분류"
-                                rows={results}
-                                selectedCode={selectedGroup?.code}
-                                onSelect={(row) => {
-                                    setSelectedGroup(results.find((group) => group.code === row.code) ?? null)
-                                    // 중분류를 바꾸면 아래 표의 내용이 통째로 바뀐다 — 이전 선택은 버린다.
-                                    setSelectedItem(null)
-                                }}
-                            />
-                            {/* 중분류를 고른 뒤에만 아래 표가 열린다(시안 주석 "selected 시에 하단 테이블 노출"). */}
-                            {selectedGroup ? (
-                                <div ref={subTableRef} className="flex min-w-0 flex-col">
-                                    <CodeTable
-                                        name="industry-code-item"
-                                        legend={`${selectedGroup.name} 아래 업종 선택`}
-                                        codeHeader="중분류 이하"
-                                        rows={selectedGroup.items}
-                                        selectedCode={selectedItem?.code}
-                                        onSelect={setSelectedItem}
-                                    />
-                                </div>
-                            ) : null}
-                        </>
+                        {/* 버튼은 아이콘 없이 글자 폭만큼(90 · 76) — Button md 의 최소 폭을 이 자리에서 푼다. */}
+                        <div className="flex gap-2 max-sm:*:flex-1">
+                            <Button
+                                id="industry-code-reset"
+                                type="reset"
+                                variant="tertiary"
+                                size="md"
+                                className="min-w-0"
+                            >
+                                초기화
+                            </Button>
+                            <Button id="industry-code-submit" type="submit" size="md" className="min-w-0">
+                                검색
+                            </Button>
+                        </div>
+                    </form>
+
+                    {isLoading ? (
+                        <div ref={loadingRef}>
+                            <LoadingState className="min-h-0 px-0 py-10" />
+                        </div>
+                    ) : rows.length ? (
+                        <div className="flex flex-col gap-4">
+                            {/* 건수 — 숫자만 파랗게. 단계가 바뀌면 이 줄로 포커스가 온다. */}
+                            <p
+                                ref={countRef}
+                                tabIndex={-1}
+                                aria-live="polite"
+                                className="typo-body-xl-regular text-foreground outline-none"
+                            >
+                                {step === 'sub' && selectedGroup ? (
+                                    <span className="sr-only">{selectedGroup.name}의 </span>
+                                ) : null}
+                                {STEP_TEXT[step].countLabel}{' '}
+                                <strong className="typo-body-xl-bold text-primary">{rows.length}</strong>건
+                            </p>
+                            {/* 목록 상자 — 시안 높이 771(윗선 1 + 줄 77 × 10)에 가깝게 보이고 넘치면 스크롤한다.
+                                스크롤 막대(8)는 목록과 4 떨어져 상자 오른쪽 끝에 붙는다(pr-1). */}
+                            <div className="max-h-192 overflow-y-auto pr-1">
+                                {step === 'group' ? (
+                                    <ul className="border-t-foreground-subtle list-none border-t">
+                                        {groups.map((group) => (
+                                            <li key={group.code}>
+                                                {/* 줄 전체가 다음 단계로 가는 버튼이다. */}
+                                                <button
+                                                    type="button"
+                                                    onClick={() => openGroup(group)}
+                                                    className={cn(
+                                                        codeRowClassName,
+                                                        'outline-ring w-full cursor-pointer text-left outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-solid',
+                                                    )}
+                                                >
+                                                    <CodeText code={group} />
+                                                    <ChevronRight
+                                                        aria-hidden="true"
+                                                        className="text-foreground size-icon-md shrink-0"
+                                                    />
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <RadioGroup
+                                        aria-label={`${selectedGroup?.name ?? ''} 세분류`}
+                                        value={selectedSub?.code ?? ''}
+                                        onValueChange={(code) =>
+                                            setSelectedSub(subCodes.find((item) => item.code === code) ?? null)
+                                        }
+                                        className="border-t-foreground-subtle flex flex-col gap-0 border-t"
+                                    >
+                                        {subCodes.map((item) => (
+                                            // label 이라 줄 어디를 눌러도 라디오가 골라진다.
+                                            <label
+                                                key={item.code}
+                                                htmlFor={`industry-sub-code-${item.code}`}
+                                                className={cn(
+                                                    codeRowClassName,
+                                                    'has-[:focus-visible]:outline-ring cursor-pointer has-[:focus-visible]:outline-2 has-[:focus-visible]:-outline-offset-2 has-[:focus-visible]:outline-solid',
+                                                )}
+                                            >
+                                                <RadioGroupItem
+                                                    id={`industry-sub-code-${item.code}`}
+                                                    value={item.code}
+                                                    className="focus-visible:outline-none"
+                                                />
+                                                <CodeText code={item} />
+                                            </label>
+                                        ))}
+                                    </RadioGroup>
+                                )}
+                            </div>
+                        </div>
                     ) : (
-                        <EmptyState title="검색내역이 없습니다." className="min-h-36" />
+                        // 시안 "…_내역없음" — 목록 자리를 빈 상태가 대신한다.
+                        <EmptyState title="검색내역이 없습니다." className="min-h-0 px-0 py-10" />
                     )}
                 </div>
                 <DialogFooter>
-                    <DialogClose asChild>
-                        <Button variant="tertiary" size="xl">
-                            닫기
-                        </Button>
-                    </DialogClose>
-                    {/* 업종은 마지막 표까지 골라야 정해진다 — 그 전에는 저장할 값이 없다. */}
-                    <Button size="xl" disabled={!selectedItem} onClick={save}>
-                        선택저장
+                    {/* [이전] — 세분류 단계에서만 쓸 수 있다. [선택] — 세분류를 골라야 활성된다. */}
+                    <Button type="button" variant="tertiary" size="xl" disabled={step === 'group'} onClick={goBack}>
+                        이전
+                    </Button>
+                    <Button type="button" size="xl" disabled={!selectedSub} onClick={save}>
+                        선택
                     </Button>
                 </DialogFooter>
             </DialogContent>

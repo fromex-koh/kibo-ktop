@@ -20,7 +20,10 @@ import {
 } from '@/components/composite/form-values'
 import {IndustryCodeDialog} from '@/components/composite/industry-code-dialog'
 import {PostcodeSearchDialog} from '@/components/composite/postcode-search-dialog'
-import {TechnologyCategoryDialog} from '@/components/composite/technology-category-dialog'
+import {
+    TechnologyCategoryDialog,
+    type TechnologyCategorySelection,
+} from '@/components/composite/technology-category-dialog'
 import {SubSectionHeader, SubSectionHeaderTitle} from '@/components/composite/sub-section-header'
 import {Alert, AlertDescription} from '@/components/ui/alert'
 import {Button} from '@/components/ui/button'
@@ -106,11 +109,43 @@ const INDUSTRY_FIELD_OPTIONS = [
     {value: 'etc', label: '기타'},
 ] as const
 
-// 기술분류는 기획·개발 확정 전 임시 규칙을 쓴다.
-// 1번에는 임시 숫자 코드 0000을 넣고, 모달에서 고른 품목명은 2~4번에 앞에서부터 담는다.
+// 기술분류 — 모달에서 고른 품목 하나의 네 가지 정보를 칸마다 나눠 담는다.
+//   1번 품목코드 · 2번 1depth(테마, 예: ICT·디지털) · 3번 2depth(분야, 예: 디지털전환) · 4번 3depth(품목명)
+// 1번 칸은 Field 의 id(tech-category)를 그대로 쓰고, 2~4번은 번호를 붙인다.
 const TECH_CATEGORY_EXTRA_FIELDS = [2, 3, 4] as const
-const TECH_CATEGORY_TEMP_CODE = '0000'
-const TECH_CATEGORY_LABEL_FIELDS = TECH_CATEGORY_EXTRA_FIELDS.map((order) => `${TECH_CATEGORY_FIELD}-${order}`)
+const TECH_CATEGORY_LABEL_FIELDS = [
+    TECH_CATEGORY_FIELD,
+    ...TECH_CATEGORY_EXTRA_FIELDS.map((order) => `${TECH_CATEGORY_FIELD}-${order}`),
+]
+// 칸 이름(순서대로) — 안내 문구와 스크린리더 이름에 쓴다.
+const TECH_CATEGORY_PART_LABELS = ['품목코드', '품목분류', '품목분야', '품목명'] as const
+
+// 기술분류 한 칸 — 읽기 전용이고, 값이 있으면 지우기(X)가 보인다. 지우면 onClear 가 네 칸을 함께 비운다.
+// 1번 칸은 Field 의 라벨(기술분류)과 이어지고, 2~4번은 칸 이름(품목분류·품목분야·품목명)을 따로 갖는다.
+const TechCategoryInput = ({
+    name,
+    order,
+    onClear,
+    className,
+}: {
+    name: string
+    order: number
+    onClear: (nextValue: string) => void
+    className?: string
+}) => (
+    <ClearableInput
+        id={name}
+        name={name}
+        readOnly
+        clearableWhenReadOnly
+        clearLabel="기술분류 지우기"
+        aria-label={order > 1 ? `기술분류 ${TECH_CATEGORY_PART_LABELS[order - 1]}` : undefined}
+        placeholder={TECH_CATEGORY_PART_LABELS[order - 1]}
+        autoComplete="off"
+        onChange={(event) => onClear(event.currentTarget.value)}
+        className={className}
+    />
+)
 
 // 상세주소의 검사 메시지 — 주소 Field 안에 있지만 id 가 달라 Field 가 대신 그려 주지 못한다.
 const AddressDetailError = () => {
@@ -130,8 +165,10 @@ const AddressDetailError = () => {
 //   spread(양끝 정렬):         항목이 많아 칸 폭(486)을 꽉 채우는 줄(상장구분 5개 · 기업형태 4개).
 //     시안 실측 간격이 19.5·17.3 처럼 딱 떨어지지 않는데, 남는 폭을 항목 수로 나눈 값이라 고정값이 아니다.
 //     그래서 간격을 숫자로 적지 않고 justify-between 으로 같은 결과를 만든다. gap-x 는 줄바꿈됐을 때의 최소값이다.
+//     양끝 정렬은 xl(1280, PC) 이상에서만 건다 — 좁은 화면에서 줄이 바뀌면 둘째 줄 항목까지 양끝으로 벌어져
+//     순서가 흐트러져 보인다(예: 제3시장 … 코스넥). 태블릿·모바일은 앞에서부터 차례로 채운다.
 const optionRowClassName = (spread?: boolean) =>
-    cn('flex min-h-control-h-md flex-wrap items-center gap-y-4', spread ? 'justify-between gap-x-4' : 'gap-x-10')
+    cn('flex min-h-control-h-md flex-wrap items-center gap-y-4', spread ? 'gap-x-4 xl:justify-between' : 'gap-x-10')
 
 // 선택지 묶음의 이름(legend) — 다른 칸의 라벨과 같은 자리·같은 모양으로 보이도록 Field 의 라벨 타이포를
 // 그대로 쓴다. 간격은 fieldset 의 flex gap 이 아니라 legend 의 margin 으로 준다 — legend 는 fieldset 의
@@ -269,20 +306,22 @@ const CheckboxField = ({
 // 기관 개별평가 Tech-Index 기업정보 탭이 KTRS-FM 형 기업정보 카드 아래에 이 구획만 이어 붙여 쓰므로
 // 본문에서 떼어 내 공유한다 — 값은 같은 FormValues 보관소에 담겨 어느 카드에서든 함께 제출된다.
 const TechIndexCompanyDetailSection = () => {
-    const {values, setValue, clearFieldError} = useFormValues()
+    const {setValue, clearFieldError} = useFormValues()
 
-    // 기술분류 — 1번에는 임시 코드, 고른 품목명은 2번부터 담는다(임시 최대 3개).
-    // 이미 담긴 품목은 다시 담지 않는다 — 임시 화면이라 별도 오류 검증은 표시하지 않는다.
-    const handleTechCategorySelect = (item: string) => {
-        if (TECH_CATEGORY_LABEL_FIELDS.some((name) => values[name] === item)) return
+    // 기술분류 — 고른 품목 하나의 코드·테마·분야·품목명을 네 칸에 나눠 담는다(다시 고르면 덮어쓴다).
+    const handleTechCategorySelect = ({code, theme, field, name}: TechnologyCategorySelection) => {
+        const parts = [code, theme, field, name]
+        TECH_CATEGORY_LABEL_FIELDS.forEach((fieldName, index) => {
+            setValue(fieldName, parts[index])
+            clearFieldError(fieldName)
+        })
+    }
 
-        const emptyField = TECH_CATEGORY_LABEL_FIELDS.find((name) => !values[name])
-        if (!emptyField) return
+    // 칸의 지우기(X) — 네 칸이 한 품목의 정보라, 어느 칸을 지워도 네 칸을 함께 비운다.
+    const handleTechCategoryClear = (nextValue: string) => {
+        if (nextValue) return
 
-        setValue(TECH_CATEGORY_FIELD, TECH_CATEGORY_TEMP_CODE)
-        setValue(emptyField, item)
-        clearFieldError(TECH_CATEGORY_FIELD)
-        clearFieldError(emptyField)
+        TECH_CATEGORY_LABEL_FIELDS.forEach((fieldName) => setValue(fieldName, ''))
     }
 
     return (
@@ -322,17 +361,15 @@ const TechIndexCompanyDetailSection = () => {
                         </div>
                     </Field>
                     <CheckboxField name="companyType" label="기업형태" options={COMPANY_TYPE_OPTIONS} spread />
-                    {/* 기술분류 — 기획·개발 확정 전까지 1번은 임시 코드 0000, 선택 품목명은 2~4번에 담는다.
-                        [조회] 는 혁신성장영위기업 분류근거 모달을 열고, 고른 품목명은 2번부터 빈 칸에 담긴다. */}
+                    {/* 기술분류 — [조회] 는 혁신성장영위기업 분류근거 모달을 열고, 고른 품목명은 1번부터 빈 칸에 담긴다. */}
                     <Field id={TECH_CATEGORY_FIELD} label="기술분류" className="md:col-span-2">
+                        {/* 직접 입력은 막고([조회]로만 넣는다), 값이 있는 칸에만 지우기(X)를 둔다. */}
                         <div className="flex flex-col gap-2">
                             <div className="flex items-start gap-2">
-                                <ClearableInput
-                                    id={TECH_CATEGORY_FIELD}
+                                <TechCategoryInput
                                     name={TECH_CATEGORY_FIELD}
-                                    readOnly
-                                    placeholder="기술분류 1"
-                                    autoComplete="off"
+                                    order={1}
+                                    onClear={handleTechCategoryClear}
                                     className="min-w-0 flex-1"
                                 />
                                 <TechnologyCategoryDialog onSelect={handleTechCategorySelect}>
@@ -343,14 +380,11 @@ const TechIndexCompanyDetailSection = () => {
                             </div>
                             <div className="grid grid-cols-1 gap-2 md:grid-cols-3">
                                 {TECH_CATEGORY_EXTRA_FIELDS.map((order) => (
-                                    <ClearableInput
+                                    <TechCategoryInput
                                         key={order}
-                                        id={`${TECH_CATEGORY_FIELD}-${order}`}
                                         name={`${TECH_CATEGORY_FIELD}-${order}`}
-                                        readOnly
-                                        aria-label={`기술분류 ${order}`}
-                                        placeholder={`기술분류 ${order}`}
-                                        autoComplete="off"
+                                        order={order}
+                                        onClear={handleTechCategoryClear}
                                     />
                                 ))}
                             </div>

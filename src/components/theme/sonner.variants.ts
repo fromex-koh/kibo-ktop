@@ -33,7 +33,10 @@ export const sonnerToastClassNames = {
     description: 'typo-body-m-regular text-toast-foreground',
     // PROJECT-STYLE: 시안 아이콘은 20px 흰색이다. 셸이 아이콘에 박아 둔 size-4 를 후손 선택자로 덮는다
     // (셸을 고치지 않기 위한 방법 — [SC-02]).
-    icon: 'text-toast-foreground flex size-icon-md shrink-0 items-center justify-center [&_svg]:size-icon-md',
+    // relative — 로딩 아이콘은 sonner 가 .sonner-loader(절대 위치 · 위·왼쪽 50% · 가운데 이동)로 감싼다.
+    // 그 규칙은 레이어 밖 CSS 라 유틸리티로 덮을 수 없으므로, 아이콘 자리를 기준점으로 삼아 이 20×20 안의
+    // 가운데에 오게 한다. 기준점이 없으면 토스트 전체의 가운데로 가 글자와 겹친다(비동기·수동 제어 토스트).
+    icon: 'text-toast-foreground relative flex size-icon-md shrink-0 items-center justify-center [&_svg]:size-icon-md',
     closeButton:
         'text-toast-foreground interactive:hover:bg-toast-foreground/10 order-last flex size-icon-md shrink-0 items-center justify-center rounded-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 [&_svg]:size-icon-sm',
     actionButton:

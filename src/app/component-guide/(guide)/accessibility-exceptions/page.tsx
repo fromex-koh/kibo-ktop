@@ -574,14 +574,18 @@ const WAVE_SCREEN_ROUTES = [
     '/org/notice/inquiry-create',
     '/org/notice/inquiry-create/privacy-consent-guide',
     '/org/individual-evaluation/verification-progress',
+    '/org/individual-evaluation/ktrs-fm/company-info/company-management',
+    '/org/individual-evaluation/tech-index/general/company-info/company-management',
+    '/org/individual-evaluation/tech-index/startup/company-info/company-management',
+    '/org/individual-evaluation/investment-model/company-info/company-management',
 ] as const
 
 const WAVE_ISSUES = [
     {
         level: 'error',
-        message: 'Missing form label (206)',
-        count: 206,
-        screens: 37,
+        message: 'Missing form label (222)',
+        count: 222,
+        screens: 41,
         owner: 'Radix RadioGroup의 숨은 input',
         verdict: '값을 폼에 담는 input이라 aria-hidden·tabindex="-1"이 붙어 있고 라벨이 없다',
     },
@@ -634,6 +638,10 @@ const WAVE_INVESTMENT_SERVICE_CONTROL_ISSUES = [
     {...WAVE_ISSUES[1], message: 'Missing form label (37)', count: 37, screens: 1},
 ] as const
 const WAVE_EVALUATION_RESULTS_CONTROL_ISSUES = [
+    {...WAVE_ISSUES[0], message: 'Missing form label (4)', count: 4, screens: 1},
+] as const
+// 기업정보 불러오기 모달 — 조회기간 빠른 기간(오늘·1개월·3개월·전체) 네 칸이 폼 안의 RadioGroup 이다.
+const WAVE_COMPANY_INFO_LOAD_CONTROL_ISSUES = [
     {...WAVE_ISSUES[0], message: 'Missing form label (4)', count: 4, screens: 1},
 ] as const
 const WAVE_BATCH_SELECTION_CONTROL_ISSUES = [
@@ -697,6 +705,16 @@ const WAVE_SELECT_SCREEN_ROUTES = [
     '/org/notice/inquiry-create/privacy-consent-guide',
     '/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request',
     '/org/batch-evaluation/evaluation-history-or-batch/startup/batch-evaluation-request',
+    '/corp/technology-evaluation/tech-index/general/company-info/technology-category',
+    '/corp/technology-evaluation/tech-index/general/company-info/item-description',
+    '/org/individual-evaluation/tech-index/general/company-info/technology-category',
+    '/org/individual-evaluation/tech-index/general/company-info/item-description',
+    '/corp/technology-evaluation/tech-index/startup/company-info/technology-category',
+    '/corp/technology-evaluation/tech-index/startup/company-info/item-description',
+    '/org/individual-evaluation/tech-index/startup/company-info/technology-category',
+    '/org/individual-evaluation/tech-index/startup/company-info/item-description',
+    '/org/individual-evaluation/investment-model/company-info/technology-category',
+    '/org/individual-evaluation/investment-model/company-info/item-description',
 ] as const
 
 const WAVE_SELECT_ISSUES = [
@@ -710,12 +728,17 @@ const WAVE_SELECT_ISSUES = [
     },
     {
         level: 'warning',
-        message: 'Select missing label (26)',
-        count: 26,
-        screens: 14,
+        message: 'Select missing label (36)',
+        count: 36,
+        screens: 24,
         owner: 'Radix Select 의 숨은 native select',
         verdict: '같은 기업형태 Select를 WAVE가 경고 항목으로도 탐지한다',
     },
+] as const
+
+// 혁신성장영위기업 분류근거 모달 — 테마 셀렉트 한 칸의 숨은 native select 를 WAVE 가 경고로만 잡는다.
+const WAVE_TECHNOLOGY_CATEGORY_SELECT_ISSUES = [
+    {...WAVE_SELECT_ISSUES[1], message: 'Select missing label (1)', count: 1, screens: 1},
 ] as const
 
 const WAVE_SUB_ACCOUNT_SELECT_ISSUES = [
@@ -1151,6 +1174,94 @@ const WAVE_SCREEN_RESULTS = [
         path: WAVE_SCREEN_ROUTES[39],
         issues: WAVE_TECH_INDEX_SELECTION_ISSUES,
         kinds: [{label: 'Missing form label · RadioGroup 2건', level: 'error', target: 'wave-radio'}],
+    },
+    {
+        // 기업정보 불러오기 모달의 조회기간 빠른 기간 4칸(SegmentedControl — RadioGroup)이 만드는 숨은 input 이다.
+        // 같은 모달을 여는 Tech-Index 일반·창업 · 투자모형 기업정보 관리도 같은 4건이다.
+        name: '기관 개별평가 · KTRS-FM 기업정보 관리',
+        path: WAVE_SCREEN_ROUTES[40],
+        issues: WAVE_COMPANY_INFO_LOAD_CONTROL_ISSUES,
+        kinds: [{label: 'Missing form label · RadioGroup 4건', level: 'error', target: 'wave-radio'}],
+    },
+    {
+        name: '기관 개별평가 · Tech-Index 일반 기업정보 관리',
+        path: WAVE_SCREEN_ROUTES[41],
+        issues: WAVE_COMPANY_INFO_LOAD_CONTROL_ISSUES,
+        kinds: [{label: 'Missing form label · RadioGroup 4건', level: 'error', target: 'wave-radio'}],
+    },
+    {
+        name: '기관 개별평가 · Tech-Index 창업 기업정보 관리',
+        path: WAVE_SCREEN_ROUTES[42],
+        issues: WAVE_COMPANY_INFO_LOAD_CONTROL_ISSUES,
+        kinds: [{label: 'Missing form label · RadioGroup 4건', level: 'error', target: 'wave-radio'}],
+    },
+    {
+        name: '기관 개별평가 · 투자모형 기업정보 관리',
+        path: WAVE_SCREEN_ROUTES[43],
+        issues: WAVE_COMPANY_INFO_LOAD_CONTROL_ISSUES,
+        kinds: [{label: 'Missing form label · RadioGroup 4건', level: 'error', target: 'wave-radio'}],
+    },
+    // 혁신성장영위기업 분류근거 모달(품목설명 화면은 그 위에 설명 모달을 겹친 화면)의 테마 셀렉트다.
+    // 기업·기관 × Tech-Index 일반·창업 · 기관 투자모형이 모두 같은 모달이라 같은 1건이다.
+    {
+        name: '기업 Tech-Index · 기술분류',
+        path: WAVE_SELECT_SCREEN_ROUTES[35],
+        issues: WAVE_TECHNOLOGY_CATEGORY_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 Tech-Index · 품목설명',
+        path: WAVE_SELECT_SCREEN_ROUTES[36],
+        issues: WAVE_TECHNOLOGY_CATEGORY_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 Tech-Index · 기술분류',
+        path: WAVE_SELECT_SCREEN_ROUTES[37],
+        issues: WAVE_TECHNOLOGY_CATEGORY_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 Tech-Index · 품목설명',
+        path: WAVE_SELECT_SCREEN_ROUTES[38],
+        issues: WAVE_TECHNOLOGY_CATEGORY_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 Tech-Index 창업 · 기술분류',
+        path: WAVE_SELECT_SCREEN_ROUTES[39],
+        issues: WAVE_TECHNOLOGY_CATEGORY_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 Tech-Index 창업 · 품목설명',
+        path: WAVE_SELECT_SCREEN_ROUTES[40],
+        issues: WAVE_TECHNOLOGY_CATEGORY_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 Tech-Index 창업 · 기술분류',
+        path: WAVE_SELECT_SCREEN_ROUTES[41],
+        issues: WAVE_TECHNOLOGY_CATEGORY_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 Tech-Index 창업 · 품목설명',
+        path: WAVE_SELECT_SCREEN_ROUTES[42],
+        issues: WAVE_TECHNOLOGY_CATEGORY_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 투자모형 · 기술분류',
+        path: WAVE_SELECT_SCREEN_ROUTES[43],
+        issues: WAVE_TECHNOLOGY_CATEGORY_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 투자모형 · 품목설명',
+        path: WAVE_SELECT_SCREEN_ROUTES[44],
+        issues: WAVE_TECHNOLOGY_CATEGORY_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
     },
     {
         name: '기관 일괄평가 · 대량정보 조회 신청',

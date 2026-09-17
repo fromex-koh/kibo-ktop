@@ -3,10 +3,11 @@
 // [프론트엔드 연동] 모달(CompanyInfoLoadDialog)은 이 파일이 돌려주는 값만 그린다 — 목업을 조회 API 로
 // 바꿀 때 고칠 곳은 여기뿐이고 모달·화면 컴포넌트는 건드리지 않는다.
 //   1) MOCK_ROWS · MOCK_MODEL_NAMES 를 지우고
-//   2) getCompanyInfoLoadResult 안에서 조회 API 를 부른 뒤(평가모형 · 조회 조건 · 쪽 번호가 인자로 온다)
+//   2) fetchCompanyInfoLoadResult(검색·초기화·페이지 이동)와 getCompanyInfoLoadResult(처음 결과) 안에서
+//      조회 API 를 부른 뒤(평가모형 · 조회 조건 · 쪽 번호가 인자로 온다)
 //   3) 응답을 CompanyInfoLoadResult(모형 이름 · 목록 한 쪽 · 전체 건수 · 전체 쪽수) 모양으로 맞춰 돌려준다.
-// items 가 빈 배열이면 표 자리에 "이력이 없습니다." 안내가 나온다.
-// 줄을 고르면 companyInfo 가 기업정보 폼 칸에 그대로 들어간다(org-company-info-form 의 fillCompanyInfo).
+// items 가 빈 배열이면 목록 자리에 "이력이 없습니다." 안내가 나온다.
+// 줄을 고르고 [선택]을 누르면 companyInfo 가 기업정보 폼 칸에 그대로 들어간다(org-company-info-form 의 fillCompanyInfo).
 
 // 평가모형 — 화면이 어느 모형의 기업정보를 불러오는지 알려 주는 키. 표에 보이는 이름은 응답의 modelName 이다.
 export type CompanyInfoLoadModel = 'ktrs-fm' | 'tech-index-general' | 'tech-index-startup' | 'investment-model'
@@ -35,7 +36,7 @@ export type CompanyInfoLoadCompanyInfo = {
     addressDetail: string
 }
 
-// 표 한 줄 — 시안 열 순서(기업명 · 기업 사업자번호 · 조회 기관 · 평가일) + 고르면 채울 기업정보.
+// 목록 한 줄 — 시안 항목 순서(기업명 · 기업 사업자번호 · 조회 기관 · 평가일) + 고르면 채울 기업정보.
 export type CompanyInfoLoadItem = {
     id: string
     companyName: string
@@ -45,7 +46,7 @@ export type CompanyInfoLoadItem = {
     companyInfo: CompanyInfoLoadCompanyInfo
 }
 
-// 조회 조건 — 모달의 필터 폼이 [조회] 때 넘기는 값. 이름은 폼 칸의 name 과 같다.
+// 조회 조건 — 모달의 필터 폼이 [검색] 때 넘기는 값. 이름은 폼 칸의 name 과 같다.
 //   loadPeriodPreset : today · 1month · 3months · all (빠른 기간)
 //   loadPeriodFrom · loadPeriodTo : 시작·종료일(YYYY-MM-DD, 비면 빈 문자열)
 //   loadCompanyName : 기업명 검색어
@@ -103,7 +104,7 @@ const toItem = ({corpNo, foundDate, ceoName, companyTel, industry, address, addr
     return {...row, companyInfo}
 }
 
-// 목업 — 시안의 10줄에 5줄을 더해 두 쪽(10줄 + 5줄)이 나오게 한다. 페이지 이동을 눌러 볼 수 있어야 해서다.
+// 목업 — 한 쪽 10줄에 5줄을 더해 두 쪽(10줄 + 5줄)이 나오게 한다. 페이지 이동을 눌러 볼 수 있어야 해서다.
 const MOCK_ROWS: MockRow[] = [
     {
         id: '1',
@@ -135,7 +136,7 @@ const MOCK_ROWS: MockRow[] = [
     },
     {
         id: '3',
-        companyName: '에코테크솔루션',
+        companyName: '에코테크솔루션글로벌스마트제조혁신연구개발센터',
         businessNumber: '987-65-43210',
         inquiryAgency: '신한은행 대전지점',
         evaluatedAt: '2024-07-20',
@@ -151,7 +152,7 @@ const MOCK_ROWS: MockRow[] = [
         id: '4',
         companyName: '한빛에너지',
         businessNumber: '456-78-90123',
-        inquiryAgency: '우리은행 광주지점',
+        inquiryAgency: '우리은행 광주광역시 첨단산업단지 기업금융센터 영업부',
         evaluatedAt: '2027-03-18',
         corpNo: '',
         foundDate: '2017-11-01',
@@ -163,9 +164,9 @@ const MOCK_ROWS: MockRow[] = [
     },
     {
         id: '5',
-        companyName: '미래소프트',
+        companyName: '미래소프트인공지능빅데이터플랫폼솔루션㈜',
         businessNumber: '321-54-98765',
-        inquiryAgency: '하나은행 대구지점',
+        inquiryAgency: '하나은행 대구광역시 수성구 범어동 중앙기업금융지점',
         evaluatedAt: '2024-11-02',
         corpNo: '',
         foundDate: '2020-02-17',
@@ -319,28 +320,57 @@ const MOCK_ROWS: MockRow[] = [
 
 const MOCK_ITEMS: CompanyInfoLoadItem[] = MOCK_ROWS.map(toItem)
 
-// 한 쪽에 보여 줄 줄 수 — 시안 표가 10줄이다.
+// 한 쪽에 보여 줄 줄 수.
 const PAGE_SIZE = 10
 const FIRST_PAGE = 1
 
-// 조회 — 목업에서 쪽 번호에 맞는 줄만 잘라 돌려준다(1쪽 10줄 · 2쪽 5줄). 건수·쪽수는 목업 줄 수로 센다.
-// 모형 이름은 모형 키로 찾는다. 조회 조건(filters)은 목업에서는 거르지 않는다.
+// 조회 조건으로 거른다 — 기업명은 포함 검색(대소문자·앞뒤 공백 무시), 기간은 [전체]가 아닐 때만
+// 시작·종료일 사이의 평가일을 남긴다(날짜 칸이 비면 그쪽 끝은 열어 둔다).
+const ALL_PERIOD = 'all'
+
+const filterItems = (filters: CompanyInfoLoadFilters): CompanyInfoLoadItem[] => {
+    const keyword = (filters.loadCompanyName ?? '').trim().toLowerCase()
+    const isAllPeriod = (filters.loadPeriodPreset ?? ALL_PERIOD) === ALL_PERIOD
+    const from = filters.loadPeriodFrom ?? ''
+    const to = filters.loadPeriodTo ?? ''
+
+    return MOCK_ITEMS.filter((item) => !keyword || item.companyName.toLowerCase().includes(keyword)).filter(
+        (item) => isAllPeriod || ((!from || item.evaluatedAt >= from) && (!to || item.evaluatedAt <= to)),
+    )
+}
+
+// 조회 — 조건으로 거른 뒤 쪽 번호에 맞는 줄만 잘라 돌려준다(한 쪽 10줄). 건수·쪽수는 거른 결과로 센다.
+// 모형 이름은 모형 키로 찾는다. 모달을 처음 열 때 보여 줄 결과(initialResult)에도 쓰므로 바로 돌려준다.
 export const getCompanyInfoLoadResult = (
     model: CompanyInfoLoadModel = 'ktrs-fm',
     // [프론트엔드 연동] 조회 API 로 바꿀 때 모형 · 조회 조건 · 쪽 번호를 요청에 싣는다.
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     filters: CompanyInfoLoadFilters = {},
     page = FIRST_PAGE,
 ): CompanyInfoLoadResult => {
-    const totalCount = MOCK_ITEMS.length
+    const items = filterItems(filters)
+    const totalCount = items.length
     const totalPages = Math.max(FIRST_PAGE, Math.ceil(totalCount / PAGE_SIZE))
     const currentPage = Math.min(Math.max(FIRST_PAGE, page), totalPages)
     const start = (currentPage - FIRST_PAGE) * PAGE_SIZE
 
     return {
         modelName: MOCK_MODEL_NAMES[model],
-        items: MOCK_ITEMS.slice(start, start + PAGE_SIZE),
+        items: items.slice(start, start + PAGE_SIZE),
         totalCount,
         totalPages,
     }
 }
+
+// 목업 응답 지연 — 서버 조회처럼 잠깐 기다렸다 돌려줘 모달의 로딩 안내("불러오는 중입니다.")를 확인할 수 있게 한다.
+const MOCK_RESPONSE_DELAY_MS = 800
+
+// 모달의 [검색]·[초기화]·페이지 이동이 부르는 조회 — 응답을 기다리는 비동기 함수다.
+// [프론트엔드 연동] 조회 API 로 바꿀 때 이 함수 안에서 API 를 await 하고 같은 모양으로 돌려준다.
+export const fetchCompanyInfoLoadResult = (
+    model: CompanyInfoLoadModel,
+    filters: CompanyInfoLoadFilters,
+    page: number,
+): Promise<CompanyInfoLoadResult> =>
+    new Promise((resolve) => {
+        window.setTimeout(() => resolve(getCompanyInfoLoadResult(model, filters, page)), MOCK_RESPONSE_DELAY_MS)
+    })
