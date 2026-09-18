@@ -8,16 +8,17 @@ import {
 } from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
+import PricingPolicy from '@/components/custom/pricing-policy'
 
-export const metadata: Metadata = {title: '가격 정책'}
+export const metadata: Metadata = {title: '가격정책'}
 
 // SkipNav의 #main 도착 대상이며 tabIndex={-1}로 키보드 포커스를 받을 수 있다.
-// 원고 연동 전까지 표시하는 임시 섹션은 실제 콘텐츠로 교체한다.
+// 무료·유료 서비스와 이용 안내는 PricingPolicy 가 갖는다. 화면 바탕은 시안처럼 옅은 회색(gray.50)이다.
 const CorpPricingPage = () => (
-    <main id="main" tabIndex={-1} className="bg-surface flex-1">
+    <main id="main" tabIndex={-1} className="bg-background flex-1">
         <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
             <PageTitleBar
-                title="가격 정책"
+                title="가격정책"
                 breadcrumb={
                     <Breadcrumb>
                         <BreadcrumbList>
@@ -26,20 +27,13 @@ const CorpPricingPage = () => (
                             </BreadcrumbItem>
                             <BreadcrumbDotSeparator />
                             <BreadcrumbItem>
-                                <BreadcrumbPage>가격 정책</BreadcrumbPage>
+                                <BreadcrumbPage>가격정책</BreadcrumbPage>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
                 }
             />
-            <section
-                className="bg-background grid min-h-100 place-items-center px-6"
-                aria-labelledby="pricing-placeholder-title"
-            >
-                <h2 id="pricing-placeholder-title" className="typo-title-l-bold text-center break-keep">
-                    내용 추후 업데이트
-                </h2>
-            </section>
+            <PricingPolicy paymentHref="/corp/pricing/payment" />
         </div>
     </main>
 )
