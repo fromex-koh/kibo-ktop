@@ -151,7 +151,10 @@ const EvaluationResultList = ({items, modelTabs, defaultPeriod, pageSize = 10}: 
 
     const isMobile = useIsMobile()
 
-    // 페이지를 넘기면 화면 맨 위로 되돌린다 — 목록 화면의 공통 동작이다(공지사항·1:1 문의와 같은 처리).
+    // 페이지를 넘기면 목록의 맨 위로 되돌린다 — 화면 맨 위까지 올라가면 조회 조건을 다시 지나쳐야 해서
+    // 방금 넘긴 목록이 어디서 시작하는지 찾기 어렵다. 목록 머리(총 N건)가 상단 바 아래에 오도록 맞춘다
+    // (자리 확보는 아래 scroll-mt-* 가 한다).
+    const listRef = useRef<HTMLDivElement>(null)
     const isFirstRenderRef = useRef(true)
 
     useEffect(() => {
@@ -162,7 +165,7 @@ const EvaluationResultList = ({items, modelTabs, defaultPeriod, pageSize = 10}: 
         }
 
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        window.scrollTo({top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth'})
+        listRef.current?.scrollIntoView({block: 'start', behavior: prefersReducedMotion ? 'auto' : 'smooth'})
     }, [currentPage])
 
     // [프론트엔드 연동] 조회를 서버로 넘길 자리. 조회기간 값은 폼이 들고 있으므로 FormData 로 받는다
@@ -228,7 +231,11 @@ const EvaluationResultList = ({items, modelTabs, defaultPeriod, pageSize = 10}: 
 
             <div id={panelId} role="tabpanel" className="flex flex-col gap-10">
                 {/* 건수와 목록은 한 덩어리로 붙고(16), 페이지 이동만 멀리 떨어진다(40) — 시안. */}
-                <div className="flex flex-col gap-4">
+                {/* 목록 머리가 상단 바에 가리지 않게 띄우는 거리(바 높이 + 16)
+                    · md 미만 — 헤더(56) 아래에 마이페이지 메뉴 드롭다운 줄(152)까지 붙어 208 → 224(scroll-mt-56)
+                    · md~xl — 드롭다운 줄은 붙지 않고 헤더(100)만 → 112(scroll-mt-28)
+                    · xl 이상 — 헤더(112) → 128(scroll-mt-32) */}
+                <div ref={listRef} className="flex scroll-mt-56 flex-col gap-4 md:scroll-mt-28 xl:scroll-mt-32">
                     {/* 건수만 굵고 브랜드 색이다 — 몇 건인지가 이 줄에서 읽을 값이다. */}
                     <p className="typo-body-xl-regular text-foreground">
                         총 <span className="typo-body-xl-bold text-primary-strong">{filteredItems.length}</span>건

@@ -51,8 +51,10 @@ const InquiryList = ({items, createHref, pageSize = 10}: InquiryListProps) => {
     // 작은 화면에서는 현재 페이지 양옆 번호를 줄이고 이전·다음은 화살표만 남긴다.
     const isMobile = useIsMobile()
 
-    // 페이지를 넘기면 화면 맨 위로 되돌린다 — 아래쪽 페이지네이션을 누른 자리에서 목록이 바뀌면
-    // 새 첫 항목이 화면 위로 벗어나 있어 매번 되돌아 올려야 한다(공지사항 목록과 같은 처리).
+    // 페이지를 넘기면 목록의 맨 위로 되돌린다 — 화면 맨 위까지 올라가면 조회 조건을 다시 지나쳐야 해서
+    // 방금 넘긴 목록이 어디서 시작하는지 찾기 어렵다. 목록 머리(총 N건)가 상단 바 아래에 오도록 맞춘다
+    // (자리 확보는 아래 scroll-mt-* 가 한다).
+    const listRef = useRef<HTMLDivElement>(null)
     const isFirstRenderRef = useRef(true)
 
     useEffect(() => {
@@ -63,12 +65,16 @@ const InquiryList = ({items, createHref, pageSize = 10}: InquiryListProps) => {
         }
 
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        window.scrollTo({top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth'})
+        listRef.current?.scrollIntoView({block: 'start', behavior: prefersReducedMotion ? 'auto' : 'smooth'})
     }, [currentPage])
 
     return (
         <div className="flex flex-col gap-10">
-            <div className="flex flex-col gap-4">
+            {/* 목록 머리가 상단 바에 가리지 않게 띄우는 거리(바 높이 + 16)
+              · md 미만 — 헤더(56) 아래에 마이페이지 메뉴 드롭다운 줄(152)까지 붙어 208 → 224(scroll-mt-56)
+              · md~xl — 드롭다운 줄은 붙지 않고 헤더(100)만 → 112(scroll-mt-28)
+              · xl 이상 — 헤더(112) → 128(scroll-mt-32) */}
+            <div ref={listRef} className="flex scroll-mt-56 flex-col gap-4 md:scroll-mt-28 xl:scroll-mt-32">
                 {/* 건수와 [문의 등록] 이 한 줄에 온다(시안). 좁은 화면에서는 버튼이 아래로 내려간다. */}
                 <div className="flex flex-wrap items-center justify-between gap-2">
                     {/* 건수만 굵고 브랜드 색이다(시안) — 몇 건인지가 이 줄에서 읽을 값이다. */}
