@@ -107,7 +107,9 @@ const FooterContent = ({variant = 'mainpage', userType, portalTheme, className, 
                 )}
             >
                 <div className={cn('flex flex-col', style.topBlock)}>
-                    <div className="flex flex-col items-start gap-6 md:flex-row md:items-center md:justify-between">
+                    {/* 로고와 유틸 링크는 PC(xl)부터 한 줄에 선다 — 태블릿 폭에서 한 줄에 두면 링크 다섯 개가 로고 옆 좁은
+                        칸에서 두 줄로 접혀 [공지사항]만 아래로 떨어진다. 태블릿까지는 링크가 로고 아래 한 줄을 쓴다. */}
+                    <div className="flex flex-col items-start gap-6 xl:flex-row xl:items-center xl:justify-between">
                         {/* 현재 테마에 맞는 KIBO 로고만 표시한다. */}
                         <div className="flex w-fit items-center">
                             <span className="sr-only">기술보증기금</span>
