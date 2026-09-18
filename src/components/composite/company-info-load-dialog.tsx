@@ -178,7 +178,6 @@ const CompanyInfoLoadDialog = ({
                                 defaultTo={DEFAULT_TO}
                                 labelHidden
                                 size="lg"
-                                stackedTilde="inline"
                             />
                             {/* 시안 — 기업명 칸 오른쪽에 [초기화][검색]이 한 줄로 붙는다(간격 8). 버튼은 아이콘 없이
                                 글자 폭만큼만 차지한다(90 · 76) — Button md 의 최소 폭을 이 자리에서 푼다.

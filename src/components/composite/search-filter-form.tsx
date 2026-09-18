@@ -108,11 +108,6 @@ type DateRangeFieldProps = {
     labelHidden?: boolean
     /** 날짜 칸 높이 — 기본은 40(md)이고, 시안이 48 인 화면은 lg 를 준다. */
     size?: 'lg' | 'md'
-    /**
-     * 좁은 화면(sm 미만)에서 두 칸을 쌓을 때 ~ 의 자리. center(기본)는 두 칸 사이 한가운데 줄,
-     * inline 은 시작일 칸 오른쪽에 붙인다(기업정보 불러오기 모달 모바일 시안).
-     */
-    stackedTilde?: 'center' | 'inline'
 }
 
 // 조회기간 — 빠른 기간 선택(SegmentedControl solid) + 시작·종료 DatePicker 범위(컨트롤 그룹).
@@ -125,9 +120,7 @@ const DateRangeField = ({
     action,
     labelHidden,
     size = 'md',
-    stackedTilde = 'center',
 }: DateRangeFieldProps) => {
-    const isTildeInline = stackedTilde === 'inline'
     const labelId = useId()
     // 폼 안의 컨트롤은 모두 id 나 name 을 가져야 한다(HTML 검사기 "A form field element should have an id or
     // name attribute") — 기간 칩과 날짜 칸의 실제 조작 요소는 button 이라 name 이 붙지 않으므로 id 를 준다.
@@ -168,14 +161,9 @@ const DateRangeField = ({
             </SegmentedControl>
             {/* 좁은 화면(sm 미만)에서는 날짜 두 칸을 위아래로 쌓는다 — 360 폭에서 한 줄에 두 칸을 두면
                 한 칸이 120 남짓이라 "연도-월-일" 자리가 모자라 글자가 두 줄로 접힌다.
-                쌓인 뒤에도 사이의 ~ 는 그대로 두 칸 사이 가운데에 둔다(시작~종료 한 쌍임을 보여 준다). */}
-            {/* inline — 좁은 화면에서 2열 격자(시작일 · ~ / 종료일이 두 칸을 다 씀)로 두고, sm 부터는 한 줄로 돌아간다. */}
-            <div
-                className={cn(
-                    'gap-2 sm:flex sm:flex-row sm:flex-wrap sm:items-center',
-                    isTildeInline ? 'grid grid-cols-[minmax(0,1fr)_auto] items-center' : 'flex flex-col',
-                )}
-            >
+                쌓을 때는 2열 격자(시작일 · ~ / 종료일이 두 칸을 다 씀)로 ~ 를 시작일 오른쪽에 붙이고(모바일 시안),
+                sm 부터는 한 줄로 돌아간다. */}
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:flex sm:flex-row sm:flex-wrap">
                 {/* 같은 줄의 기간 칩·[조회] 버튼과 같은 컨트롤 높이(40)를 쓴다 — 한 줄에 선 컨트롤의
                     높이가 다르면 줄이 어긋나 보인다. */}
                 {/* flex-1 은 가로로 나눌 때만 준다 — 세로로 쌓인 상태에서는 flex-basis 가 높이를 0 으로
@@ -190,10 +178,7 @@ const DateRangeField = ({
                     size={size}
                     className="w-full sm:flex-1"
                 />
-                <span
-                    aria-hidden="true"
-                    className={cn('text-foreground shrink-0', !isTildeInline && 'max-sm:self-center')}
-                >
+                <span aria-hidden="true" className="text-foreground shrink-0">
                     ~
                 </span>
                 <DatePicker
@@ -204,7 +189,7 @@ const DateRangeField = ({
                     name={`${name}To`}
                     aria-label="조회 종료일"
                     size={size}
-                    className={cn('w-full sm:flex-1', isTildeInline && 'col-span-2')}
+                    className="col-span-2 w-full sm:flex-1"
                 />
                 {/* 인라인 액션은 글자 폭만큼만 차지한다. Button 의 size 축에는 홀로 서는 CTA 가 너무
                     좁아지지 않도록 최소 폭(sm 90)이 들어 있는데, 입력 옆에 붙는 버튼에서는 그 여백이
