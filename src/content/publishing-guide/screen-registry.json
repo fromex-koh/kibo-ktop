@@ -767,6 +767,13 @@
             "name": "정보 이용 동의"
         },
         {
+            "key": "corp-k-bigx-report-innovation-growth-report-login-guide",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/login-guide",
+            "name": "보고서 이용 안내"
+        },
+        {
             "key": "corp-k-bigx-report-innovation-growth-report-legal-basis",
             "screenId": "SB-FOTA-CP2-0007",
             "userType": "기업",
@@ -778,7 +785,14 @@
             "screenId": "SB-FOTA-CP5-0007",
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/report-search-results/report-create",
-            "name": "보고서 생성"
+            "name": "보고서 생성(특허수 있음)"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create-no-patent",
+            "screenId": "SB-FOTA-CP5-0007",
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/report-search-results/report-create/no-patent",
+            "name": "보고서 생성(특허수 없음)"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-pass-purchase-guide",
@@ -2580,6 +2594,41 @@
             "userType": "기업",
             "path": "/corp/pricing/payment",
             "name": "결제하기"
+        },
+        {
+            "key": "corp-pricing-payment-seller-info",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/pricing/payment/seller-info",
+            "name": "판매자 정보"
+        },
+        {
+            "key": "corp-pricing-payment-complete",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/pricing/payment/complete",
+            "name": "결제 완료"
+        },
+        {
+            "key": "org-pricing-payment",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/pricing/payment",
+            "name": "결제하기"
+        },
+        {
+            "key": "org-pricing-payment-seller-info",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/pricing/payment/seller-info",
+            "name": "판매자 정보"
+        },
+        {
+            "key": "org-pricing-payment-complete",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/pricing/payment/complete",
+            "name": "결제 완료"
         },
         {
             "key": "corp-mypage-paid-services-refund-unavailable",

@@ -319,11 +319,29 @@
                     "children": [
                         {
                             "label": "결제하기",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-pricing-payment",
-                            "iaRow": 14
+                            "screen": {
+                                "screenId": null,
+                                "status": "완료",
+                                "version": "미배포",
+                                "key": "corp-pricing-payment",
+                                "iaRow": 14
+                            },
+                            "children": [
+                                {
+                                    "label": "판매자 정보",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-pricing-payment-seller-info"
+                                },
+                                {
+                                    "label": "결제 완료",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-pricing-payment-complete"
+                                }
+                            ]
                         }
                     ]
                 }
@@ -1297,9 +1315,16 @@
                     },
                     "children": [
                         {
+                            "label": "보고서 이용 안내",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "corp-k-bigx-report-innovation-growth-report-login-guide"
+                        },
+                        {
                             "label": "기업정보 수집제공 근거",
                             "screenId": "SB-FOTA-CP2-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-legal-basis",
                             "iaRow": 99
@@ -1315,7 +1340,7 @@
                         {
                             "label": "이용약관",
                             "screenId": "SB-FOTA-CP3-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service",
                             "iaRow": 101
@@ -1323,23 +1348,37 @@
                         {
                             "label": "마케팅 알림 수신동의",
                             "screenId": "SB-FOTA-CP4-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-marketing-consent",
                             "iaRow": 102
                         },
                         {
                             "label": "보고서 생성",
-                            "screenId": "SB-FOTA-CP5-0007",
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create",
-                            "iaRow": 103
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "특허수 있음",
+                                    "screenId": "SB-FOTA-CP5-0007",
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create",
+                                    "iaRow": 103
+                                },
+                                {
+                                    "label": "특허수 없음",
+                                    "screenId": "SB-FOTA-CP5-0007",
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create-no-patent",
+                                    "iaRow": 103
+                                }
+                            ]
                         },
                         {
                             "label": "이용권구매 안내",
                             "screenId": "SB-FOTA-CP6-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-pass-purchase-guide",
                             "iaRow": 104
@@ -1347,7 +1386,7 @@
                         {
                             "label": "조회횟수 차감안내",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-view-count-deduction",
                             "iaRow": 105
@@ -1440,7 +1479,7 @@
                         {
                             "label": "보고서 출력",
                             "screenId": "SB-FOTA-CP7-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-report-print",
                             "iaRow": 113
@@ -1992,7 +2031,7 @@
                         {
                             "label": "K-BIGx 이용약관",
                             "screenId": "SB-FOTA-CP3-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-terms-k-bigx",
                             "iaRow": 153
@@ -2215,12 +2254,41 @@
             "children": [
                 {
                     "label": "가격 정책",
-                    "screenId": null,
-                    "status": "완료",
-                    "application2Status": "완료",
-                    "version": "미배포",
-                    "key": "org-pricing",
-                    "iaRow": 13
+                    "screen": {
+                        "screenId": null,
+                        "status": "완료",
+                        "application2Status": "완료",
+                        "version": "미배포",
+                        "key": "org-pricing",
+                        "iaRow": 13
+                    },
+                    "children": [
+                        {
+                            "label": "결제하기",
+                            "screen": {
+                                "screenId": null,
+                                "status": "완료",
+                                "version": "미배포",
+                                "key": "org-pricing-payment"
+                            },
+                            "children": [
+                                {
+                                    "label": "판매자 정보",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-pricing-payment-seller-info"
+                                },
+                                {
+                                    "label": "결제 완료",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-pricing-payment-complete"
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -3235,7 +3303,7 @@
                         {
                             "label": "기업정보 제공법적 근거",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-legal-basis",
                             "iaRow": 97
@@ -3243,7 +3311,7 @@
                         {
                             "label": "이용권 구매 안내",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-pass-purchase-guide",
                             "iaRow": 98
@@ -3336,7 +3404,7 @@
                         {
                             "label": "보고서 출력",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-report-print",
                             "iaRow": 106
@@ -4017,7 +4085,7 @@
                         {
                             "label": "K-BIGx 이용약관",
                             "screenId": "SB-FOTA-OM4-0016",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-terms-k-bigx",
                             "iaRow": 148
