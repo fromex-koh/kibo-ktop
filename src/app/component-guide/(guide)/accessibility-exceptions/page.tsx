@@ -53,7 +53,7 @@ const ISSUE_LABEL: Record<MarkupIssueKind, {label: string; isProjectCause: boole
 
 const EMPTY_OPTION_MESSAGE = 'Element “option” without attribute “label” must not be empty.'
 const SELECT_REQUIRED_MESSAGE =
-    'A “select” element with a “required” attribute, and without a “multiple” attribute, and without a “size” attribute whose value is greater than “1”, must have a child “option” element.'
+    'A “select” element with a “required” attribute, and without a “multiple” attribute, and without a “size” attribute whose value is greater than “1”, must have a descendant “option” element.'
 
 const LIBRARY_ISSUE_TARGET: Partial<Record<MarkupIssueKind, string>> = {
     'empty-option': 'library-empty-option',
@@ -166,7 +166,13 @@ const ISSUE_DEFINITIONS: readonly Omit<IssueCatalogEntry, 'count' | 'screens'>[]
 ]
 
 // 저장된 검사 JSON만 집계하며, 미등록 메시지는 기존 원인으로 분류하지 않습니다.
-const normalizeMessage = (message: string) => message.replace('The “heading” “h3”', 'The heading “h3”')
+// 검사기 버전마다 같은 오류의 문구가 조금씩 다르다 — 기록된 문구 한 벌로 맞춰 같은 원인으로 묶는다.
+//   · 제목 건너뜀: "The “heading” “h3”" → "The heading “h3”"
+//   · 필수 select: 이전 검사기의 "must have a child “option”" → 현재(26.x) "must have a descendant “option”" — Radix Select 숨은 select
+const normalizeMessage = (message: string) =>
+    message
+        .replace('The “heading” “h3”', 'The heading “h3”')
+        .replace('must have a child “option” element.', 'must have a descendant “option” element.')
 const kindForMessage = (message: string): MarkupIssueKind =>
     ISSUE_DEFINITIONS.find((issue) => normalizeMessage(issue.message) === normalizeMessage(message))?.kind ?? 'unknown'
 // 이 저장소에서 직접 만드는 기업·기관 화면만 검사 결과에 포함합니다.
