@@ -385,7 +385,8 @@ const PatentEntry = ({id, label, isAdded, focusOnMount, isLastCard, onDelete, ca
                             required={isRegistrationRequired}
                             helper="미등록건 입력생략"
                         >
-                            <div className="flex items-start gap-2">
+                            {/* 모바일(640 미만)은 칸이 좁아 번호가 잘리므로 입력칸 아래에 버튼을 둔다(버튼도 전체 폭). */}
+                            <div className="flex flex-col gap-2 sm:flex-row sm:items-start">
                                 {/* 숫자만 받아 2-4-7 로 하이픈이 붙고, 13자리를 못 채우면 제출 때 걸린다
                                     (PatentNumberInput 이 pattern 과 안내 문구를 함께 들고 있다). */}
                                 <PatentNumberInput
@@ -395,13 +396,13 @@ const PatentEntry = ({id, label, isAdded, focusOnMount, isLastCard, onDelete, ca
                                     autoComplete="off"
                                     placeholder="예: 10-2023-0000001"
                                     aria-describedby={`${field('registrationNumber')}-helper`}
-                                    className="min-w-0 flex-1"
+                                    className="min-w-0 sm:flex-1"
                                 />
                                 <Button
                                     type="button"
                                     variant="tertiary"
                                     size="md"
-                                    className="shrink-0"
+                                    className="w-full shrink-0 sm:w-auto"
                                     onClick={handlePatentLookup}
                                 >
                                     특허정보 조회

@@ -100,8 +100,10 @@ const Section = ({
     children: ReactNode
 }) => (
     <div className="flex flex-col gap-6">
+        {/* 제목 | 버튼 / 설명(전체 폭) — 버튼이 설명 옆 칸까지 차지하면 좁은 화면에서 설명이 몇 글자씩 눌린다.
+            제목·설명은 낱말 사이에서만 줄을 바꾼다. */}
         <SubSectionHeader>
-            <SubSectionHeaderTitle>
+            <SubSectionHeaderTitle className="break-keep">
                 {title}
                 {/* 별표는 장식이라 aria-hidden 이고, 읽어 줄 때는 뒤의 문장으로 대신 읽힌다[5.3.1]
                     — 라벨의 필수 표시(form-fields 의 FieldLabel)와 같은 방식·같은 색이다. */}
@@ -114,8 +116,14 @@ const Section = ({
                     </>
                 ) : null}
             </SubSectionHeaderTitle>
-            {description ? <SubSectionHeaderDescription>{description}</SubSectionHeaderDescription> : null}
-            {action ? <SubSectionHeaderAction>{action}</SubSectionHeaderAction> : null}
+            {description ? (
+                <SubSectionHeaderDescription className="col-span-full break-keep">
+                    {description}
+                </SubSectionHeaderDescription>
+            ) : null}
+            {action ? (
+                <SubSectionHeaderAction className="row-span-1 self-center">{action}</SubSectionHeaderAction>
+            ) : null}
         </SubSectionHeader>
         {children}
     </div>

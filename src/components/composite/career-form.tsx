@@ -190,6 +190,8 @@ const CareerForm = ({title = '대표자 경력사항', leading}: CareerFormProps
     return (
         <FormCard
             title={title}
+            // 제목 옆에 [입력 도움말], 안내는 그 아래 전체 폭 — 모바일도 PC 와 같은 배치다.
+            descriptionFullWidth
             // 시안은 이 줄에 불릿을 두지 않는다(같은 리스트의 다른 줄과 달리 점 레이어가 꺼져 있다).
             subtitle="대표자의 경력사항을 현 직장 근무경력을 포함하여 최근 경력부터 과거순으로 차례대로 입력해주십시오."
             // 버튼 이름은 열리는 모달의 제목과 같게 둔다 — 눌러서 무엇이 나오는지 그대로 읽힌다[6.4.3].
