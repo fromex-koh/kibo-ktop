@@ -412,7 +412,8 @@ const InquiryForm = ({cancelHref, consentDialogDefaultOpen, className, onSubmit,
             </div>
 
             <BaseCard className="py-6 [--card-spacing:--spacing(10)]">
-                <div className="flex items-start gap-8">
+                {/* 모바일(md 미만)은 폭이 좁아 [내용보기]를 동의 문구 아래 줄 오른쪽으로 내린다. */}
+                <div className="flex flex-col items-end gap-4 md:flex-row md:items-start md:gap-8">
                     <Field orientation="horizontal" className="items-start">
                         <Checkbox
                             id="inquiry-consent"
