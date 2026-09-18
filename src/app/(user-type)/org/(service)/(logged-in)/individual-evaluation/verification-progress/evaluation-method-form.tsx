@@ -30,7 +30,7 @@ const EVALUATION_METHODS = [
             '기업이 은행으로 전송한 자가진단 입력정보를 수정하여 평가검증을 진행합니다.',
             '선택 시 평가검증 신청 조회 화면으로 이동합니다.',
         ],
-        illustration: '/images/option-card/ktrs-fm.webp',
+        illustration: '/images/option-card/rating-magnifier.webp',
     },
     {
         value: 'individual',
@@ -41,7 +41,7 @@ const EVALUATION_METHODS = [
             '기업의 자가진단 전송 내역과 관계없이 새로운 KTRS-FM 개별평가를 신청합니다.',
             '선택 시 고객정보활용동의 단계로 이동합니다.',
         ],
-        illustration: '/images/option-card/startup-tech-index.webp',
+        illustration: '/images/option-card/lightbulb-magnifier.webp',
     },
 ] as const
 
