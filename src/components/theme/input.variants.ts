@@ -6,6 +6,10 @@
 // 상자 안쪽에 놓이고 표시는 바깥 상자가 그리기 때문이다. 안쪽에도 그리면 outline 이 두 겹으로 보이고,
 // 안쪽은 rounded-none 이라 모서리까지 어긋난다. 안쪽에서 끄는 방식(focus-visible:outline-none)은
 // Tailwind 정렬 순서상 그리는 규칙보다 앞에 놓여 지지 않는다.
+//
+// PROJECT-STYLE: text-ellipsis — 칸이 좁아 안내 문구(placeholder)가 넘치면 끝을 "…" 로 줄인다(모바일에서
+// "[주소 검색] 버튼으로 지…" 처럼 글자가 잘려 보이던 것). 입력한 값도 포커스가 없을 때는 같은 방식으로 줄여
+// 보이고, 포커스를 주면 전부 보이며 스크롤된다.
 const inputClassName =
-    'h-control-h-md border-control bg-surface text-label-foreground focus-visible:border-primary outline-ring focus-visible:outline-ring w-full min-w-0 rounded-sm border px-4 text-base transition-colors outline-none not-data-[slot=input-group-control]:focus-visible:outline-2 not-data-[slot=input-group-control]:focus-visible:outline-offset-2 not-data-[slot=input-group-control]:focus-visible:outline-solid not-data-[slot=input-group-control]:aria-invalid:focus:outline-2 not-data-[slot=input-group-control]:aria-invalid:focus:outline-offset-2 not-data-[slot=input-group-control]:aria-invalid:focus:outline-solid placeholder:text-placeholder disabled:placeholder:text-disabled aria-invalid:border-destructive read-only:bg-field-disabled disabled:border-control disabled:bg-field-disabled disabled:text-disabled disabled:cursor-not-allowed disabled:opacity-100 file:text-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium'
+    'text-ellipsis h-control-h-md border-control bg-surface text-label-foreground focus-visible:border-primary outline-ring focus-visible:outline-ring w-full min-w-0 rounded-sm border px-4 text-base transition-colors outline-none not-data-[slot=input-group-control]:focus-visible:outline-2 not-data-[slot=input-group-control]:focus-visible:outline-offset-2 not-data-[slot=input-group-control]:focus-visible:outline-solid not-data-[slot=input-group-control]:aria-invalid:focus:outline-2 not-data-[slot=input-group-control]:aria-invalid:focus:outline-offset-2 not-data-[slot=input-group-control]:aria-invalid:focus:outline-solid placeholder:text-placeholder disabled:placeholder:text-disabled aria-invalid:border-destructive read-only:bg-field-disabled disabled:border-control disabled:bg-field-disabled disabled:text-disabled disabled:cursor-not-allowed disabled:opacity-100 file:text-foreground file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium'
 export {inputClassName}
