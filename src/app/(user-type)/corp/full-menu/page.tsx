@@ -9,7 +9,7 @@ export const metadata: Metadata = {title: '전체메뉴'}
 // 공통 컴포넌트는 손대지 않는다.
 const CorpFullMenuPage = () => (
     <>
-        <MainPageScreen logoHref="/" technologyEvaluationHref="/corp/technology-evaluation/tech-index/selection" />
+        <MainPageScreen logoHref="/" technologyEvaluationHref="/corp/home/technology-evaluation-model-selection" />
         <FullMenuAutoOpen />
     </>
 )
