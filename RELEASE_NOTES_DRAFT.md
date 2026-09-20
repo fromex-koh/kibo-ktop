@@ -107,11 +107,7 @@
     - [지식재산권](/corp/technology-evaluation/tech-index/patent)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/95930676)
 
-#
-
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/65e7a2c7)
-
-## [기능] 이용약관 — 기술평가·K-BIGx 탭
+### [기능] 이용약관 — 기술평가·K-BIGx 탭
 
 - 대상:
     - src/app/(user-type)/corp/(service)/(logged-out)/terms/page.tsx
@@ -121,12 +117,9 @@
 - 영향 화면:
     - [기업 이용약관](/corp/terms)
     - [기관 이용약관](/org/terms)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/65e7a2c7)
 
-#
-
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/71335a64)
-
-## [콘텐츠] 신용정보 활용체제 — 공시 본문
+### [콘텐츠] 신용정보 활용체제 — 공시 본문
 
 - 대상:
     - src/app/(user-type)/corp/(service)/(logged-out)/credit-information-policy/page.tsx
@@ -136,12 +129,9 @@
 - 영향 화면:
     - [기업 신용정보 활용체제](/corp/credit-information-policy)
     - [기관 신용정보 활용체제](/org/credit-information-policy)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/71335a64)
 
-#
-
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8c9e44e4)
-
-## [기능] 가격정책 — 요금 안내와 결제하기
+### [기능] 가격정책 — 요금 안내와 결제하기
 
 - 대상:
     - src/app/(user-type)/corp/(service)/(logged-out)/pricing/page.tsx
@@ -151,12 +141,9 @@
 - 영향 화면:
     - [기업 가격정책](/corp/pricing)
     - [기관 가격정책](/org/pricing)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8c9e44e4)
 
-#
-
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b6e20b3e)
-
-## [기능] 메인 기술평가 [시작하기] — 평가모형 선택으로 연결
+### [기능] 메인 기술평가 [시작하기] — 평가모형 선택으로 연결
 
 - 대상:
     - src/app/(user-type)/corp/home/page.tsx
@@ -167,27 +154,21 @@
 - 영향 화면:
     - [기업 홈](/corp/home)
     - [기술평가 평가모형 선택](/corp/home/technology-evaluation-model-selection)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b6e20b3e)
 
-#
-
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/45438700)
-
-## [스타일] Tech-Index 평가모형 선택 — 시안 변경 반영
+### [스타일] Tech-Index 평가모형 선택 — (일반) 카드 일러스트·제목 표기
 
 - 대상:
     - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/selection/tech-index-model-form.tsx
     - src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/tech-index/selection/tech-index-model-form.tsx
 - 변경: (일반) 카드 일러스트를 로켓 그림으로 바꿔 148×100 자리 가운데에 95×92로 놓는다. 제목의 괄호 앞 띄어쓰기를 뺀다(혁신성장역량지수(일반) · (창업)).
-- 결과: 시안 "SB-FOTA-CM0-0103_Tech-Index_평가모형선택"과 같아진다.
+- 결과: (일반) 카드에 로켓 그림이 보이고, 두 카드 제목이 괄호 앞 띄어쓰기 없이 표기된다.
 - 영향 화면:
     - [기업 Tech-Index 선택](/corp/technology-evaluation/tech-index/selection)
     - [기관 Tech-Index 선택](/org/individual-evaluation/tech-index/selection)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/45438700)
 
-#
-
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/87bdf98f)
-
-## [스타일] 옵션카드 일러스트 — 그림 기준 파일명으로 변경
+### [스타일] 옵션카드 일러스트 — 그림 기준 파일명으로 변경
 
 - 대상:
     - src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/tech-index/selection/tech-index-model-form.tsx
@@ -206,12 +187,9 @@
     - [기관 Tech-Index 선택](/org/individual-evaluation/tech-index/selection)
     - [기관 일괄평가](/org/batch-evaluation/evaluation-history-or-batch)
     - [기관 평가진행방식 선택](/org/individual-evaluation/verification-progress)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/87bdf98f)
 
-#
-
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/2a61a7c9)
-
-## [스타일] 푸터 — 태블릿 유틸 링크 배치
+### [스타일] 푸터 — 태블릿 유틸 링크 배치
 
 - 대상: src/components/composite/footer.tsx
 - 변경: 로고와 유틸 링크를 PC(xl)부터 한 줄에 두고, 태블릿까지는 링크를 로고 아래 한 줄로 내린다.
@@ -219,6 +197,7 @@
 - 영향 화면:
     - [기업 홈](/corp/home)
     - [기관 홈](/org/home)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/2a61a7c9)
 
 ## [신규 추가]
 
@@ -352,3 +331,15 @@
 - 영향 화면:
     - [OptionCard 가이드](/component-guide/option-card)
     - [RadioCard 가이드](/component-guide/radio-card)
+
+### [문서] 퍼블리싱 인덱스 — 신규 화면 등록과 상태 갱신
+
+- 대상:
+    - src/content/publishing-guide/publishing-index.json
+    - src/content/publishing-guide/screen-registry.json
+    - src/content/publishing-guide/screen-registry.generated.json
+- 적용: 지정한 파일만 교체
+- 내용: 이번에 만든 화면을 퍼블리싱 인덱스와 화면 레지스트리에 등록하고 상태를 "완료"로 바꾼다.
+    - 평가모형 선택, 결제하기 · 판매자 정보 · 결제 완료, K-BIGx 이용약관, K-BIGx 보고서 모달 단독 화면
+    - IA 밖 행: K-BIGx 보고서 이용 안내(로그인), 보고서 생성 특허수 있음/없음 분리
+- 영향 화면: 퍼블리싱 인덱스(시작 페이지)
