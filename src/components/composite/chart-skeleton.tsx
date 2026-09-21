@@ -7,7 +7,17 @@ import {
 } from '@/components/theme/chart-skeleton.variants'
 
 type ChartSkeletonType =
-    'bar' | 'benchmark' | 'donut' | 'gauge' | 'line' | 'matrix' | 'network' | 'radar' | 'word-cloud'
+    | 'bar'
+    | 'benchmark'
+    | 'donut'
+    | 'gauge'
+    | 'grade-trend'
+    | 'line'
+    | 'matrix'
+    | 'network'
+    | 'radar'
+    | 'triangle-radar'
+    | 'word-cloud'
 type ChartSkeletonNetworkLegend = 'company-relationship' | 'supply-network'
 
 type ChartSkeletonProps = Omit<React.ComponentProps<'div'>, 'children'> & {
@@ -162,6 +172,57 @@ const RadarChartSkeleton = () => (
     </div>
 )
 
+// 세 축 레이더(ComparisonRadarChart 에 축이 셋일 때) — 특허 등급조회 '특허 평가등급' 레이더와 같은 짜임이다.
+// 오른쪽 위 범례 두 개(16 견본 + 이름) · 고리 4겹 삼각 격자와 가운데서 뻗는 축 선 · 평균 면과 평가대상 면 · 꼭짓점 점 셋 ·
+// 축 이름 셋(위 가운데 · 왼쪽 아래 꼭짓점의 왼쪽 · 오른쪽 아래 꼭짓점의 오른쪽).
+// 삼각형은 실제 레이더 크기를 따른다 — PC(md 이상) 폭 192 × 높이 166, 좁은 화면 폭 104.
+const TriangleRadarChartSkeleton = () => (
+    <div className="flex h-full min-h-0 flex-col gap-4" aria-hidden="true">
+        <div className="flex justify-end gap-6">
+            <div className="flex items-center gap-2">
+                <div className={cn(skeletonPartClassName, 'size-4 rounded-none')} />
+                <div className={cn(skeletonPartClassName, 'h-3 w-16')} />
+            </div>
+            <div className="flex items-center gap-2">
+                <div className={cn(skeletonPartClassName, 'size-4 rounded-none')} />
+                <div className={cn(skeletonPartClassName, 'h-3 w-24')} />
+            </div>
+        </div>
+        <div className="flex min-h-0 flex-1 items-end justify-center pb-4">
+            <div className="relative w-26 md:w-48">
+                <svg viewBox="0 0 192 166" className="text-muted block h-auto w-full">
+                    <g fill="none" stroke="currentColor" strokeWidth="1.5">
+                        <polygon points="96,1 191,165 1,165" />
+                        <polygon points="96,29 167,151 25,151" />
+                        <polygon points="96,56 143,137 49,137" />
+                        <polygon points="96,84 120,124 72,124" />
+                        <path d="M96 111V1M96 111 191 165M96 111 1 165" />
+                    </g>
+                    <polygon points="96,40 150,141 42,141" fill="currentColor" opacity="0.4" />
+                    <polygon points="96,62 168,151 36,146" fill="currentColor" opacity="0.7" />
+                    <g fill="currentColor">
+                        <circle cx="96" cy="62" r="5" />
+                        <circle cx="168" cy="151" r="5" />
+                        <circle cx="36" cy="146" r="5" />
+                    </g>
+                </svg>
+                <div
+                    className={cn(
+                        skeletonPartClassName,
+                        'absolute bottom-full left-1/2 mb-2 h-3 w-16 -translate-x-1/2',
+                    )}
+                />
+                <div
+                    className={cn(skeletonPartClassName, 'absolute right-full bottom-0 mr-2 h-3 w-16 translate-y-1/2')}
+                />
+                <div
+                    className={cn(skeletonPartClassName, 'absolute bottom-0 left-full ml-2 h-3 w-20 translate-y-1/2')}
+                />
+            </div>
+        </div>
+    </div>
+)
+
 const ChartGridSkeleton = ({children}: {children: React.ReactNode}) => (
     <div className="flex h-full min-w-0 flex-col gap-3 sm:gap-4" aria-hidden="true">
         <div className="flex min-h-0 flex-1 gap-2 sm:gap-3">
@@ -237,6 +298,75 @@ const LineChartSkeleton = () => (
             />
         ))}
     </ChartGridSkeleton>
+)
+
+// 등급 추이(GradeTrendChart) — 세로축 등급 9단 · 4칸 × 8칸 점선 격자 · 꺾은선과 평가대상 점 · 두 줄 분기 이름.
+// 실제 차트와 같은 높이(h-72)와 격자 짜임을 두어 불러온 뒤 자리가 흔들리지 않게 한다.
+const GRADE_TREND_SKELETON_POINTS = [
+    [12.5, 62.5],
+    [37.5, 62.5],
+    [62.5, 50],
+    [87.5, 50],
+] as const
+// 평가대상 점 — 마지막 분기에서 꺾은선보다 한 칸 아래에 선다(시안의 기술다양성 배치).
+const GRADE_TREND_SKELETON_TARGET = [87.5, 62.5] as const
+
+const GradeTrendChartSkeleton = () => (
+    <div className="flex h-full min-w-0 flex-col gap-3" aria-hidden="true">
+        <div className="flex min-h-0 flex-1 gap-2">
+            <div className="flex w-6 shrink-0 flex-col justify-between">
+                {Array.from({length: 9}, (_, index) => (
+                    <div key={index} className={cn(skeletonPartClassName, 'h-2.5 w-5')} />
+                ))}
+            </div>
+            <div className="border-muted relative grid min-w-0 flex-1 grid-cols-4 grid-rows-8 border">
+                {Array.from({length: 32}, (_, index) => (
+                    <div
+                        key={index}
+                        className={cn(
+                            'border-muted border-dashed',
+                            index % 4 !== 3 && 'border-r',
+                            index < 28 && 'border-b',
+                        )}
+                    />
+                ))}
+                <svg
+                    viewBox="0 0 100 100"
+                    preserveAspectRatio="none"
+                    className="text-muted pointer-events-none absolute inset-0 size-full"
+                >
+                    <polyline
+                        points={GRADE_TREND_SKELETON_POINTS.map(([x, y]) => `${x},${y}`).join(' ')}
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        vectorEffect="non-scaling-stroke"
+                    />
+                </svg>
+                {/* 점은 SVG 가 아니라 원형 칸으로 둔다 — 늘어나는 SVG 좌표(preserveAspectRatio="none") 안에서는
+                    원이 격자 비율대로 찌그러져 타원이 된다. 선 스켈레톤(LineChartSkeleton)과 같은 방식이다. */}
+                {[...GRADE_TREND_SKELETON_POINTS, GRADE_TREND_SKELETON_TARGET].map(([left, top], index) => (
+                    <span
+                        key={`${left}-${top}`}
+                        className={cn(
+                            chartSkeletonPartVariants({shape: 'circle'}),
+                            'absolute size-3 -translate-x-1/2 -translate-y-1/2',
+                            index === GRADE_TREND_SKELETON_POINTS.length && 'opacity-60',
+                        )}
+                        style={{left: `${left}%`, top: `${top}%`}}
+                    />
+                ))}
+            </div>
+        </div>
+        <div className="ms-8 grid grid-cols-4 justify-items-center">
+            {Array.from({length: 4}, (_, index) => (
+                <div key={index} className="flex flex-col items-center gap-1">
+                    <div className={cn(skeletonPartClassName, 'h-3 w-8')} />
+                    <div className={cn(skeletonPartClassName, 'h-3 w-6')} />
+                </div>
+            ))}
+        </div>
+    </div>
 )
 
 const WordCloudSkeleton = () => (
@@ -389,12 +519,16 @@ const renderChartSkeleton = (type: ChartSkeletonType, legend?: ChartSkeletonNetw
             return <DonutChartSkeleton />
         case 'gauge':
             return <GaugeChartSkeleton />
+        case 'grade-trend':
+            return <GradeTrendChartSkeleton />
         case 'line':
             return <LineChartSkeleton />
         case 'matrix':
             return <MatrixChartSkeleton />
         case 'network':
             return <NetworkChartSkeleton legend={legend} />
+        case 'triangle-radar':
+            return <TriangleRadarChartSkeleton />
         case 'radar':
             return <RadarChartSkeleton />
         case 'word-cloud':

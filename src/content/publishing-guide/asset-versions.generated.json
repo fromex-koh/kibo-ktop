@@ -1,9 +1,9 @@
 {
-    "version": "v3.3.0",
+    "version": "v3.3.1",
     "assets": [
         {
             "name": "src/app",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "isCurrent": true
         },
         {
@@ -13,17 +13,17 @@
         },
         {
             "name": "src/components/theme",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "isCurrent": true
         },
         {
             "name": "src/components/composite",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "isCurrent": true
         },
         {
             "name": "src/components/custom",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "isCurrent": true
         },
         {
@@ -33,12 +33,12 @@
         },
         {
             "name": "src/constants",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "isCurrent": true
         },
         {
             "name": "src/content",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "isCurrent": true
         },
         {
@@ -48,8 +48,8 @@
         },
         {
             "name": "src/hooks",
-            "version": "v0.1.7",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "name": "src/types",
@@ -123,7 +123,7 @@
         },
         {
             "name": "public",
-            "version": "v3.3.0",
+            "version": "v3.3.1",
             "isCurrent": true
         },
         {

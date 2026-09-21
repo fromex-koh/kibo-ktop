@@ -11,9 +11,12 @@ import {cn} from '@/lib/utils'
 // shrink-0 — 높이가 제한된 세로 flex(모바일 모달 본문 등) 안에서 눌려 아이콘이 찌그러지지 않게 한다.
 type LoadingStateProps = {
     title?: ReactNode
+    /** 제목 아래 보조 설명(14 Regular). 주면 제목이 16 Bold 본문 색으로 올라간다 — 오래 걸리는 처리 안내용
+        (예: 대량정보조회 "대량 조회 처리 중입니다." / "파일을 분석하여 …"). 주지 않으면 기존 한 줄 모양 그대로다. */
+    description?: ReactNode
 } & Omit<ComponentPropsWithoutRef<'div'>, 'title'>
 
-const LoadingState = ({title = '불러오는 중입니다.', className, ...props}: LoadingStateProps) => (
+const LoadingState = ({title = '불러오는 중입니다.', description, className, ...props}: LoadingStateProps) => (
     <div
         data-slot="loading-state"
         role="status"
@@ -28,7 +31,14 @@ const LoadingState = ({title = '불러오는 중입니다.', className, ...props
             aria-hidden="true"
             className="text-primary size-icon-xl shrink-0 motion-safe:animate-spin motion-reduce:animate-none"
         />
-        <p className="typo-body-xl-regular text-foreground-subtle">{title}</p>
+        {description ? (
+            <div className="flex flex-col gap-1">
+                <p className="typo-body-xl-bold text-label-foreground">{title}</p>
+                <p className="typo-body-l-regular text-foreground-subtle">{description}</p>
+            </div>
+        ) : (
+            <p className="typo-body-xl-regular text-foreground-subtle">{title}</p>
+        )}
     </div>
 )
 

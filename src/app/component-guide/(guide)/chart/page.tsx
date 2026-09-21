@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import {ColumnChart, type ColumnChartItem} from '@/components/custom/column-chart'
 import {ComparisonRadarChart, type ComparisonRadarItem} from '@/components/custom/comparison-radar-chart'
@@ -892,6 +893,62 @@ const PROPS_ITEMS = [
     ['ComparisonRadarChart', 'ringCount', '격자 고리 수를 지정합니다.', '5', 'number'],
     [
         'ComparisonRadarChart',
+        'animate',
+        '다각형이 펼쳐지는 움직임입니다. 처음 한 번만 보이고, 창 폭이 바뀌어도 다시 펼쳐지지 않습니다. 인쇄용 문서에서는 끕니다.',
+        'true',
+        'boolean',
+    ],
+    [
+        'ComparisonRadarChart',
+        'primaryColor · comparisonColor',
+        '주 계열·비교 계열의 색입니다. 차트 토큰(var(--ds-…))을 씁니다.',
+        "'var(--ds-chart-1)' · 'var(--ds-chart-5)'",
+        'string',
+    ],
+    [
+        'ComparisonRadarChart',
+        'legendAppearance · tickColor',
+        "범례 모양('outline' 테두리 칸 · 'swatch' 색 견본)과 축 이름 글자색입니다.",
+        "'outline' · 'var(--ds-foreground)'",
+        "'outline' | 'swatch' · string",
+    ],
+    [
+        'ComparisonRadarChart',
+        'chartClassName',
+        "차트 칸의 크기입니다. 기본은 정사각이며, 세 축 삼각 레이더처럼 위아래가 남으면 높이를 직접 정합니다(예: 'aspect-auto h-44 min-h-0 md:h-56').",
+        '-',
+        'string',
+    ],
+    [
+        'ComparisonRadarChart',
+        'direction',
+        "축이 놓이는 방향입니다. 첫 축은 늘 맨 위이고, 'counterclockwise' 는 두 번째 축이 왼쪽에 옵니다.",
+        "'clockwise'",
+        "'clockwise' | 'counterclockwise'",
+    ],
+    [
+        'ComparisonRadarChart',
+        'dotAppearance · gridColor',
+        "주 계열 꼭짓점 모양('filled' 채운 점 · 'hollow' 흰 면에 테두리)과 격자 색입니다.",
+        "'filled' · 'var(--ds-subtle-2)'",
+        "'filled' | 'hollow' · string",
+    ],
+    [
+        'ComparisonRadarChart',
+        'isLoading · loadingLabel',
+        '값을 불러오는 중입니다. 축이 셋이면 삼각 레이더, 그 밖에는 기본 레이더 스켈레톤을 대신 보입니다. 새로고침 직후(하이드레이션 전)에도 같은 스켈레톤이 자동으로 보입니다.',
+        "false · '레이더 차트를 불러오는 중입니다.'",
+        'boolean · string',
+    ],
+    [
+        'ComparisonRadarChart',
+        'comparisonAppearance',
+        "비교 계열을 그리는 방식입니다. 'dashed' 는 점선 테두리와 점, 'filled' 는 점선 테두리에 옅은 면을 채우고 점을 두지 않습니다.",
+        "'dashed'",
+        "'dashed' | 'filled'",
+    ],
+    [
+        'ComparisonRadarChart',
         'outerRadius',
         '다각형의 반지름입니다. 숫자는 px, 문자열은 그릴 자리 대비 비율입니다.',
         "'72%'",
@@ -1349,6 +1406,16 @@ const ChartGuidePage = () => (
                     language="tsx"
                     copyLabel="ComparisonRadarChart 데이터 연결 코드 복사"
                 />
+                <p className="typo-body-l-regular text-foreground-subtle">
+                    특허 등급조회의 세 축 레이더(평가대상 실선 · 비교 기준 점선 면 · 반시계 축)는 이 컴포넌트를 감싼{' '}
+                    <Link
+                        href="/component-guide/grade-radar-chart"
+                        className="text-primary underline underline-offset-4"
+                    >
+                        GradeRadarChart
+                    </Link>
+                    로 제공합니다. 모양 설정 · 특이 케이스 · 로딩은 그 문서를 봅니다.
+                </p>
                 <LicenseNotice libraries={[RECHARTS_LICENSE]} />
             </section>
         </BaseCard>

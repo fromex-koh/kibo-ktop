@@ -1,7 +1,7 @@
 'use client'
 
 import {useEffect, useId, useRef, useState, type DragEvent, type ReactNode} from 'react'
-import {Upload} from 'lucide-react'
+import {Upload, X} from 'lucide-react'
 import {
     FileUploadError,
     FileUploadSuccess,
@@ -24,6 +24,8 @@ import {cn} from '@/lib/utils'
 // 상태는 셋이다.
 //   · 비어 있음 — 안내 문구 + [파일선택] 버튼(끌어다 놓기도 받는다)
 //   · 성공 — 파일명·용량·[다운로드]·업로드 일시 + [다시 업로드]
+//            attachedView="file" 이면 결과 패널 대신 고른 파일 한 줄(파일명 + 삭제 X)만 둔다 — 올린 뒤 따로
+//            [조회 실행] 같은 버튼을 눌러야 서버 처리가 시작되는 화면용(K-BIGx 대량정보조회 "업로드 후").
 //   · 오류 — 첨부 정책(확장자·용량·개수)에 걸렸거나, 화면이 넘긴 서버 검증 결과가 실패일 때
 // 화면이 result 를 넘기면 그 값이 위 자동 상태보다 우선한다 — 서버 검증 결과를 그대로 보여 주는 자리다.
 //
@@ -100,6 +102,9 @@ type FileUploadFieldProps = {
     // [프론트엔드 연동] 지금은 화면에서 케이스를 확인하기 위한 스위치다. 검증 API 가 붙으면 이 값 대신
     // 실제 검증 결과를 result 로 넘긴다.
     hasFormatError?: boolean
+    // 정책을 통과한 파일을 어떻게 보여 줄지. 'panel'(기본) — 성공 결과 패널 / 'file' — 파일명 + 삭제 한 줄.
+    // 첨부 정책에 걸린 파일과 화면이 넘긴 result 는 어느 쪽이든 결과 패널로 보여 준다.
+    attachedView?: 'panel' | 'file'
     // 서버 검증 결과. 넘기면 위 자동 상태 대신 이 값을 보여 준다.
     result?:
         | ({status: 'success'} & Omit<FileUploadSuccessProps, 'className'>)
@@ -121,6 +126,7 @@ const FileUploadField = ({
     completeDescription,
     completeDetails,
     hasFormatError,
+    attachedView = 'panel',
     onFileChange,
     result,
     error,
@@ -285,7 +291,24 @@ const FileUploadField = ({
 
             {/* 화면이 result 에 onReupload 를 함께 넘겼으면 그쪽을 쓴다 — 서버에 올린 것까지 되돌려야 하는
                 경우가 있어 이 컴포넌트의 기본 동작(첨부 상자로 되돌리기)을 덮을 수 있어야 한다. */}
-            {shownResult?.status === 'success' ? (
+            {/* 파일 한 줄 보기 — 테두리 상자(반경 8 · 여백 24) 안에 파일명(16)과 삭제 버튼(24 · 테두리 · 아이콘 16). */}
+            {attachedView === 'file' && !result && attached?.file && !attached.rejection ? (
+                <div className="border-control bg-surface flex items-center gap-2 rounded-sm border p-6">
+                    <span role="status" className="typo-body-xl-regular text-label-foreground min-w-0 truncate">
+                        {attached.file.name}
+                    </span>
+                    <Button
+                        type="button"
+                        variant="tertiary"
+                        size="icon-xs"
+                        aria-label={`${attached.file.name} 삭제`}
+                        onClick={handleReupload}
+                        className="shrink-0"
+                    >
+                        <X aria-hidden="true" />
+                    </Button>
+                </div>
+            ) : shownResult?.status === 'success' ? (
                 <FileUploadSuccess {...shownResult} onReupload={shownResult.onReupload ?? handleReupload} />
             ) : shownResult?.status === 'error' ? (
                 <FileUploadError {...shownResult} onReupload={shownResult.onReupload ?? handleReupload} />

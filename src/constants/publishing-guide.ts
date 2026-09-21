@@ -111,6 +111,8 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                             {label: 'ConsentList', href: '/component-guide/consent-list'},
                             {label: 'SearchBar', href: '/component-guide/search-bar'},
                             {label: 'SearchFilterForm', href: '/component-guide/search-filter-form'},
+                            {label: 'SelectSearchForm', href: '/component-guide/select-search-form'},
+                            {label: 'SelectableInfoCard', href: '/component-guide/selectable-info-card'},
                         ],
                     },
                 ],
@@ -149,6 +151,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 title: '컨테이너',
                 items: [
                     {label: 'BaseCard', href: '/component-guide/base-card'},
+                    {label: 'ServiceIntroBanner', href: '/component-guide/service-intro-banner'},
                     {label: 'FormCard', href: '/component-guide/form-card'},
                     {label: 'RepeatCard', href: '/component-guide/repeat-card'},
                     {label: 'OptionCard', href: '/component-guide/option-card'},
@@ -174,6 +177,8 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 items: [
                     {label: 'ProgressBar', href: '/component-guide/progress-bar'},
                     {label: 'Chart', href: '/component-guide/chart'},
+                    {label: 'GradeTrendChart', href: '/component-guide/grade-trend-chart'},
+                    {label: 'GradeRadarChart', href: '/component-guide/grade-radar-chart'},
                     {label: 'Skeleton / ChartSkeleton', href: '/component-guide/skeleton'},
                     {label: 'Table', href: '/component-guide/table'},
                     {label: 'ReviewList', href: '/component-guide/review-list'},

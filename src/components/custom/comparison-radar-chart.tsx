@@ -1,7 +1,9 @@
 'use client'
 
-import type {ComponentPropsWithoutRef} from 'react'
+import {useState, type ComponentPropsWithoutRef} from 'react'
 import {PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart} from 'recharts'
+import {ChartSkeleton} from '@/components/composite/chart-skeleton'
+import {useIsHydrated} from '@/hooks/use-is-hydrated'
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
 import {cn} from '@/lib/utils'
 
@@ -44,10 +46,52 @@ type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children
      * 인쇄용 문서처럼 손이 닿지 않는 자리에서는 둘 다 필요 없다.
      */
     showTooltip?: boolean
+    /** 주 계열의 색. 차트 토큰(var(--ds-chart-N))을 쓴다. */
+    primaryColor?: string
+    /** 비교 계열의 색. */
+    comparisonColor?: string
+    /**
+     * 비교 계열을 그리는 방식. 'dashed' 는 점선 테두리만, 'filled' 는 옅은 면으로 채운 실선이다
+     * (특허 등급조회처럼 비교 계열이 배경 면으로 깔리는 시안에서 쓴다).
+     */
+    comparisonAppearance?: 'dashed' | 'filled'
+    /**
+     * 범례 모양. 'outline' 은 테두리 칸(기본), 'swatch' 는 16 칸을 색으로 채운 견본이다 —
+     * 주 계열은 진한 색, 비교 계열은 옅은 면 + 테두리(특허 등급조회 시안).
+     */
+    legendAppearance?: 'outline' | 'swatch'
+    /** 축 이름의 글자색. */
+    tickColor?: string
+    /**
+     * 차트 칸의 크기. 기본은 정사각(aspect-square)이다 — 축이 셋뿐인 삼각 레이더처럼 위아래가 남는 모양은
+     * 높이를 직접 정해 빈 곳을 줄인다(예: 'aspect-auto h-60 md:h-76').
+     */
+    chartClassName?: string
+    /**
+     * 축이 놓이는 방향. 첫 축은 늘 맨 위이고, 'clockwise'(기본)는 두 번째 축이 오른쪽,
+     * 'counterclockwise' 는 왼쪽에 온다(특허 등급조회: 기술다양성 → 시장확장성(왼쪽 아래) → 가치창출가능성(오른쪽 아래)).
+     */
+    direction?: 'clockwise' | 'counterclockwise'
+    /** 주 계열 꼭짓점 점의 모양. 'filled' 는 채운 점, 'hollow' 는 흰 면에 계열 색 테두리다. */
+    dotAppearance?: 'filled' | 'hollow'
+    /** 격자(고리 · 축 선)의 색. */
+    gridColor?: string
+    /**
+     * 값을 불러오는 중. 스켈레톤을 대신 보인다 — 축이 셋이면 삼각 레이더(triangle-radar), 그 밖에는 기본 레이더 모양이다.
+     * 새로고침 직후 차트가 칸의 폭을 재기 전(하이드레이션 전)에도 같은 스켈레톤이 자동으로 보인다.
+     */
+    isLoading?: boolean
+    /** 불러오는 중에 화면 낭독기가 읽을 말. */
+    loadingLabel?: string
 }
 
 const clampScore = (value: number) => Math.min(100, Math.max(0, value))
 const RADAR_DOT_RADIUS = 5
+// 속이 빈 점 — 시안 8px 원(테두리 포함)이라 반지름 4 다.
+const HOLLOW_DOT_RADIUS = 4
+const TRIANGLE_AXIS_COUNT = 3
+// 비교 계열을 면으로 채울 때의 진하기 — 범례 견본(같은 색 25%)과 같게 둔다.
+const COMPARISON_FILL_OPACITY = 0.25
 
 const DEFAULT_RADAR_MARGIN = {top: 20, right: 48, bottom: 20, left: 48}
 
@@ -65,35 +109,87 @@ const ComparisonRadarChart = ({
     showDots = true,
     showLegend = true,
     showTooltip = true,
+    primaryColor = 'var(--ds-chart-1)',
+    comparisonColor = 'var(--ds-chart-5)',
+    comparisonAppearance = 'dashed',
+    legendAppearance = 'outline',
+    tickColor = 'var(--ds-foreground)',
+    chartClassName,
+    direction = 'clockwise',
+    dotAppearance = 'filled',
+    gridColor = 'var(--ds-subtle-2)',
+    isLoading = false,
+    loadingLabel = '레이더 차트를 불러오는 중입니다.',
     ariaLabel,
     className,
     ...props
 }: ComparisonRadarChartProps) => {
+    // 처음 한 번만 펼쳐지는 움직임을 보인다 — recharts 는 폭이 바뀔 때마다 새로 그리며 움직임을 되풀이해
+    // 창 폭을 움직일 때마다 다각형이 다시 펼쳐진다. 첫 움직임이 끝나면 끈다.
+    const [hasAnimated, setHasAnimated] = useState(false)
+    const isAnimationActive = animate && !hasAnimated
+    // 새로고침 직후에는 차트가 칸의 폭을 재기 전이라 빈 칸으로 보인다 — 화면이 붙기 전까지도 같은 스켈레톤을 보인다.
+    const isHydrated = useIsHydrated()
     // 비교 계열은 이름이 있을 때만 그린다 — 값만 있고 이름이 없으면 범례에 쓸 말이 없다.
     const hasComparison = Boolean(comparisonLabel)
+    const isComparisonFilled = comparisonAppearance === 'filled'
     const chartConfig = {
-        primaryValue: {label: primaryLabel, color: 'var(--ds-chart-1)'},
-        comparisonValue: {label: comparisonLabel ?? '', color: 'var(--ds-chart-5)'},
+        primaryValue: {label: primaryLabel, color: primaryColor},
+        comparisonValue: {label: comparisonLabel ?? '', color: comparisonColor},
     } satisfies ChartConfig
     // recharts 는 자료 한 줄의 속성을 그린 도형에 그대로 옮긴다 — id 를 담아 보내면 배경 막대·계열 막대가
     // 모두 같은 id 를 달아 문서에 같은 id 가 여러 번 생긴다[8.1.1]. id 는 아래 숨김 표의 key 로만 쓰므로
     // 차트로는 넘기지 않는다.
-    const chartData = data.map((item) => ({
+    // recharts 는 첫 축을 맨 위에 두고 시계 방향으로 돈다. 반시계로 놓으려면 첫 축은 그대로 두고 나머지 순서를 뒤집는다.
+    const orderedData = direction === 'clockwise' ? data : [...data.slice(0, 1), ...data.slice(1).reverse()]
+    const chartData = orderedData.map((item) => ({
         label: item.label,
         primaryValue: clampScore(item.primaryValue),
         comparisonValue: clampScore(item.comparisonValue ?? 0),
     }))
 
+    if (isLoading || !isHydrated) {
+        return (
+            <ChartSkeleton
+                {...props}
+                type={data.length === TRIANGLE_AXIS_COUNT ? 'triangle-radar' : 'radar'}
+                label={loadingLabel}
+                className={cn('w-full', className)}
+            />
+        )
+    }
+
     return (
         <div {...props} className={cn('flex w-full flex-col gap-4', className)}>
-            {showLegend ? (
+            {showLegend && legendAppearance === 'swatch' ? (
+                <div className="typo-body-l-regular text-label-foreground flex flex-wrap justify-end gap-x-6 gap-y-2">
+                    <span className="flex items-center gap-2">
+                        <span className="size-4" style={{backgroundColor: primaryColor}} aria-hidden="true" />
+                        {primaryLabel}
+                    </span>
+                    {hasComparison ? (
+                        <span className="flex items-center gap-2">
+                            <span
+                                className="size-4 border border-dashed"
+                                style={{
+                                    borderColor: comparisonColor,
+                                    backgroundColor: `color-mix(in srgb, ${comparisonColor} 25%, transparent)`,
+                                }}
+                                aria-hidden="true"
+                            />
+                            {comparisonLabel}
+                        </span>
+                    ) : null}
+                </div>
+            ) : null}
+            {showLegend && legendAppearance === 'outline' ? (
                 <div className="typo-body-s-regular text-foreground-subtle flex flex-wrap justify-end gap-x-4 gap-y-2">
                     <span className="flex items-center gap-1.5">
                         <span
                             className="size-3 border-2"
                             style={{
-                                borderColor: 'var(--ds-chart-1)',
-                                backgroundColor: 'color-mix(in srgb, var(--ds-chart-1) 15%, transparent)',
+                                borderColor: primaryColor,
+                                backgroundColor: `color-mix(in srgb, ${primaryColor} 15%, transparent)`,
                             }}
                             aria-hidden="true"
                         />
@@ -102,8 +198,13 @@ const ComparisonRadarChart = ({
                     {hasComparison ? (
                         <span className="flex items-center gap-1.5">
                             <span
-                                className="size-3 border-2 border-dashed"
-                                style={{borderColor: 'var(--ds-chart-5)'}}
+                                className={cn('size-3 border-2', !isComparisonFilled && 'border-dashed')}
+                                style={{
+                                    borderColor: comparisonColor,
+                                    backgroundColor: isComparisonFilled
+                                        ? `color-mix(in srgb, ${comparisonColor} 15%, transparent)`
+                                        : undefined,
+                                }}
                                 aria-hidden="true"
                             />
                             {comparisonLabel}
@@ -114,16 +215,19 @@ const ComparisonRadarChart = ({
 
             <ChartContainer
                 config={chartConfig}
-                className="mx-auto aspect-square max-h-96 min-h-72 w-full max-w-xl [&_.recharts-polygon]:cursor-pointer"
+                className={cn(
+                    'mx-auto aspect-square max-h-96 min-h-72 w-full max-w-xl [&_.recharts-polygon]:cursor-pointer',
+                    chartClassName,
+                )}
                 role="img"
                 aria-label={ariaLabel}
             >
                 <RadarChart accessibilityLayer data={chartData} cy={centerY} outerRadius={outerRadius} margin={margin}>
-                    <PolarGrid key="grid" gridType="polygon" stroke="var(--ds-subtle-2)" />
+                    <PolarGrid key="grid" gridType="polygon" stroke={gridColor} />
                     <PolarAngleAxis
                         key="angle-axis"
                         dataKey="label"
-                        tick={{fill: 'var(--ds-foreground)', fontSize: tickFontSize, fontWeight: tickFontWeight}}
+                        tick={{fill: tickColor, fontSize: tickFontSize, fontWeight: tickFontWeight}}
                     />
                     <PolarRadiusAxis
                         key="radius-axis"
@@ -174,14 +278,17 @@ const ComparisonRadarChart = ({
                             key="comparison"
                             name="comparisonValue"
                             dataKey="comparisonValue"
-                            isAnimationActive={animate}
+                            isAnimationActive={isAnimationActive}
                             activeDot={showTooltip}
                             stroke="var(--color-comparisonValue)"
                             strokeWidth={2}
                             strokeDasharray="5 4"
-                            fill="transparent"
+                            fill={isComparisonFilled ? 'var(--color-comparisonValue)' : 'transparent'}
+                            fillOpacity={isComparisonFilled ? COMPARISON_FILL_OPACITY : 0}
+                            // 면으로 채운 비교 계열은 배경처럼 깔리므로 꼭짓점 점을 두지 않는다(시안).
                             dot={
-                                showDots && {
+                                showDots &&
+                                !isComparisonFilled && {
                                     r: RADAR_DOT_RADIUS,
                                     fill: 'var(--color-comparisonValue)',
                                     fillOpacity: 1,
@@ -194,43 +301,56 @@ const ComparisonRadarChart = ({
                         key="primary"
                         name="primaryValue"
                         dataKey="primaryValue"
-                        isAnimationActive={animate}
+                        isAnimationActive={isAnimationActive}
+                        onAnimationEnd={() => setHasAnimated(true)}
                         activeDot={showTooltip}
                         stroke="var(--color-primaryValue)"
                         strokeWidth={2.5}
                         fill="var(--color-primaryValue)"
                         fillOpacity={0.16}
                         dot={
-                            showDots && {
-                                r: RADAR_DOT_RADIUS,
-                                fill: 'var(--color-primaryValue)',
-                                fillOpacity: 1,
-                                strokeWidth: 0,
-                            }
+                            showDots &&
+                            (dotAppearance === 'hollow'
+                                ? {
+                                      r: HOLLOW_DOT_RADIUS,
+                                      fill: 'var(--ds-surface)',
+                                      fillOpacity: 1,
+                                      stroke: 'var(--color-primaryValue)',
+                                      strokeWidth: 2,
+                                  }
+                                : {
+                                      r: RADAR_DOT_RADIUS,
+                                      fill: 'var(--color-primaryValue)',
+                                      fillOpacity: 1,
+                                      strokeWidth: 0,
+                                  })
                         }
                     />
                 </RadarChart>
             </ChartContainer>
 
-            <table className="sr-only">
-                <caption>{ariaLabel}</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">평가지표</th>
-                        <th scope="col">{primaryLabel}</th>
-                        {hasComparison ? <th scope="col">{comparisonLabel}</th> : null}
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((item) => (
-                        <tr key={item.id}>
-                            <th scope="row">{item.label}</th>
-                            <td>{clampScore(item.primaryValue)}</td>
-                            {hasComparison ? <td>{clampScore(item.comparisonValue ?? 0)}</td> : null}
+            {/* 감추는 상자를 따로 둔다 — 표에 직접 sr-only 를 걸면 표가 제 크기대로 자리를 차지해 좁은 화면에서 가로로 밀린다. */}
+            <div className="sr-only">
+                <table>
+                    <caption>{ariaLabel}</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">평가지표</th>
+                            <th scope="col">{primaryLabel}</th>
+                            {hasComparison ? <th scope="col">{comparisonLabel}</th> : null}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {data.map((item) => (
+                            <tr key={item.id}>
+                                <th scope="row">{item.label}</th>
+                                <td>{clampScore(item.primaryValue)}</td>
+                                {hasComparison ? <td>{clampScore(item.comparisonValue ?? 0)}</td> : null}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

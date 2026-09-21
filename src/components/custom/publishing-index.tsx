@@ -1121,11 +1121,12 @@ const PublishingIndex = () => {
                                 />
                                 <span>
                                     <strong className="text-foreground font-medium">
-                                        주황색·취소선 6개 행 — IA 삭제 표시
+                                        주황색·취소선 {leaves.filter((leaf) => leaf.isRestored).length}개 행 — IA 삭제
+                                        표시
                                     </strong>
                                     <span className="block">
-                                        Tech-Index 일반용·창업용 및 투자모형의 평가 신청·최종 확인 화면입니다. 응용2
-                                        완료 이력과 링크는 유지하며, 전체 행 수에는 포함하고 진척률 계산에서는
+                                        최신 IA 에서 삭제(취소선)되었지만 작업 이력 확인을 위해 남겨 둔 화면입니다.
+                                        응용2 완료 이력과 링크는 유지하며, 전체 행 수에는 포함하고 진척률 계산에서는
                                         제외합니다.
                                     </span>
                                 </span>

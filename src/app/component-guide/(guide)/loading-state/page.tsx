@@ -20,6 +20,13 @@ const USAGE_CODE = `import {LoadingState} from '@/components/composite/loading-s
 
 const PROPS_ITEMS = [
     ['LoadingState', 'title', '한 줄 안내 문구입니다.', "'불러오는 중입니다.'", 'ReactNode'],
+    [
+        'LoadingState',
+        'description',
+        '제목 아래 보조 설명(14 Regular)입니다. 주면 제목이 16 Bold 본문 색으로 올라갑니다 — 오래 걸리는 처리 안내(대량정보조회 처리 중)에 씁니다.',
+        'undefined',
+        'ReactNode',
+    ],
     ['LoadingState', 'className', '카드 면·모서리·높이처럼 자리에서 정할 값입니다.', 'undefined', 'string'],
 ] as const
 
@@ -43,6 +50,12 @@ const LoadingStateGuidePage = () => (
                 <div className="flex flex-col gap-6">
                     <LoadingState className="bg-card min-h-52 rounded-lg" />
                     <LoadingState title="검색 결과를 불러오는 중입니다." className="bg-card min-h-0 rounded-lg py-10" />
+                    {/* 제목 + 설명 — 대량정보조회 처리 중(카드 전체를 대신함, 높이 360) */}
+                    <LoadingState
+                        title="대량 조회 처리 중입니다."
+                        description="파일을 분석하여 평가 데이터를 조회하고 있습니다."
+                        className="bg-card rounded-lg"
+                    />
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
             </section>

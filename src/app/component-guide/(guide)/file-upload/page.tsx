@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import {FileUpload} from '@/components/composite/file-upload'
 import {FileUploadField} from '@/components/composite/file-upload-field'
@@ -185,6 +186,20 @@ const RESULT_PROPS_ITEMS = [
         'undefined',
         '() => void',
     ],
+    [
+        'FileUploadSuccess · FileUploadError',
+        'reuploadLabel',
+        '되돌리기 버튼 글자입니다. 처리 결과 화면에서는 [새 조회]처럼 바꿔 씁니다.',
+        "'다시 업로드'",
+        'ReactNode',
+    ],
+    [
+        'FileUploadSuccess',
+        'isDetailsCentered',
+        '성공 상세 한 줄을 가운데 둡니다. 파일 줄 없이 건수만 보여 주는 처리 결과(대량정보조회 완료)에 켭니다.',
+        'false',
+        'boolean',
+    ],
 ] as const
 
 const FIELD_PROPS_ITEMS = [
@@ -241,6 +256,13 @@ const FIELD_PROPS_ITEMS = [
     ],
     [
         'FileUploadField',
+        'attachedView',
+        "정책을 통과한 파일을 보여 주는 방식입니다. 'panel' 은 성공 결과 패널, 'file' 은 파일명 + 삭제(X) 한 줄입니다. 올린 뒤 따로 [조회 실행]을 눌러야 처리가 시작되는 화면(대량정보조회)은 'file' 을 씁니다. 정책 위반·result 는 어느 쪽이든 결과 패널입니다.",
+        "'panel'",
+        "'panel' | 'file'",
+    ],
+    [
+        'FileUploadField',
         'result',
         '서버 검증 결과입니다. 넘기면 컴포넌트가 스스로 만든 상태 대신 이 값을 보여 줍니다.',
         'undefined',
@@ -253,6 +275,42 @@ const FIELD_PROPS_ITEMS = [
         'undefined',
         'string',
     ],
+] as const
+
+const BULK_DATA_SEARCH_PATH = '/org/k-bigx-report/bulk-data-search'
+
+// 대량정보조회(K-BIGx 보고서 · 기관) 케이스 큐레이션 — 같은 카드가 상태에 따라 어떤 컴포넌트로 바뀌는지.
+const BULK_DATA_SEARCH_CASES = [
+    {
+        state: '① 업로드 전',
+        component: 'FileUploadField (비어 있음)',
+        cta: '[조회 실행] 꺼짐',
+        href: BULK_DATA_SEARCH_PATH,
+    },
+    {
+        state: '② 업로드 후',
+        component: "FileUploadField attachedView='file' — 파일명 + 삭제(X)",
+        cta: '[조회 실행] 켜짐',
+        href: BULK_DATA_SEARCH_PATH,
+    },
+    {
+        state: '③ 처리 중',
+        component: 'LoadingState title · description (카드 전체를 대신함)',
+        cta: '없음',
+        href: `${BULK_DATA_SEARCH_PATH}?state=processing`,
+    },
+    {
+        state: '④ 완료',
+        component: "FileUploadSuccess isDetailsCentered · reuploadLabel='새 조회'",
+        cta: '[결과 파일 다운로드]',
+        href: `${BULK_DATA_SEARCH_PATH}/complete`,
+    },
+    {
+        state: '⑤ 오류',
+        component: 'FileUploadError — 파일 줄 + 행·열 오류 목록 + [다시 업로드]',
+        cta: '[결과 파일 다운로드]',
+        href: `${BULK_DATA_SEARCH_PATH}/failure`,
+    },
 ] as const
 
 const FileUploadGuidePage = () => (
@@ -416,6 +474,70 @@ const FileUploadGuidePage = () => (
                         <code className="font-mono">FileUpload</code>에 결과 전환 옵션을 추가하지 않습니다.
                     </li>
                 </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="file-upload-bulk-cases" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="file-upload-bulk-cases" className="typo-h4-bold">
+                        케이스 — 대량정보조회
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        올린 뒤 [조회 실행]을 눌러야 처리가 시작되는 화면입니다. ② 는 결과 패널 대신 파일 한 줄을 보여
+                        주고(attachedView=&apos;file&apos;), 처리 결과는 FileUploadSuccess · FileUploadError 를 그대로
+                        씁니다. ② 는 ① 화면에서 파일을 골라 확인합니다.
+                    </p>
+                </div>
+                <FileUploadField
+                    label="대량정보조회 표준양식 업로드"
+                    required
+                    name="guideBulkDataStandardExcel"
+                    accept=".xlsx,.xls,.csv"
+                    maxSizeMb={50}
+                    hint="지원 형식: XLSX, XLS, CSV (최대 50MB)"
+                    attachedView="file"
+                />
+                <div className="overflow-x-auto">
+                    <table className="w-full min-w-max border-collapse text-left">
+                        <caption className="sr-only">대량정보조회 상태별 컴포넌트와 버튼</caption>
+                        <thead>
+                            <tr className="border-subtle-3 border-b">
+                                <th scope="col" className="typo-body-l-bold text-foreground py-3 pr-6">
+                                    상태
+                                </th>
+                                <th scope="col" className="typo-body-l-bold text-foreground py-3 pr-6">
+                                    컴포넌트
+                                </th>
+                                <th scope="col" className="typo-body-l-bold text-foreground py-3 pr-6">
+                                    아래 버튼
+                                </th>
+                                <th scope="col" className="typo-body-l-bold text-foreground py-3">
+                                    화면
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody className="typo-body-l-regular text-muted-foreground">
+                            {BULK_DATA_SEARCH_CASES.map((item) => (
+                                <tr key={item.state} className="border-subtle-3 border-b last:border-b-0">
+                                    <th
+                                        scope="row"
+                                        className="typo-body-l-regular text-foreground py-3 pr-6 font-normal"
+                                    >
+                                        {item.state}
+                                    </th>
+                                    <td className="py-3 pr-6">{item.component}</td>
+                                    <td className="py-3 pr-6">{item.cta}</td>
+                                    <td className="py-3">
+                                        <Link href={item.href} className="text-primary underline">
+                                            {item.state} 화면 열기
+                                        </Link>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </BaseCard>
 

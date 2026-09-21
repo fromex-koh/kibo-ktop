@@ -1,6 +1,253 @@
 {
     "releases": [
         {
+            "version": "v3.3.1",
+            "releasedAt": "2026-09-21",
+            "changes": [
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[기능] 헤더 메뉴 — 특허평가 · K-BIGx 보고서 링크 연결",
+                    "details": [
+                        {"label": "대상", "value": "src/constants/header-navigation.ts"},
+                        {
+                            "label": "변경",
+                            "value": "GNB · 전체메뉴의 특허평가를 하위 메뉴 없이 특허 등급조회로 바로 잇는다(기업 · 기관 각자 경로). K-BIGx 보고서의 기업혁신성장보고서 조회와 기관 대량정보조회에 화면 경로를 건다."
+                        },
+                        {
+                            "label": "결과",
+                            "value": "메뉴에서 특허 등급조회 · 기업혁신성장 · 대량정보조회 화면으로 이동한다. 보고서 이력 조회는 아직 '#' 이다."
+                        },
+                        {"label": "영향 화면", "value": "[기업 홈](/corp/home)\n[기관 홈](/org/home)"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/eea2f32c)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 레이더 차트 — 삼각 레이더 · 표시 옵션 추가",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/comparison-radar-chart.tsx\nsrc/hooks/use-is-hydrated.ts"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "색(primaryColor · comparisonColor · tickColor · gridColor), 비교 계열 모양(comparisonAppearance), 범례 모양(legendAppearance), 축 방향(direction), 꼭짓점 모양(dotAppearance), 차트 칸 크기(chartClassName), 불러오는 중(isLoading) 옵션을 더한다. 새로고침 직후(하이드레이션 전)에는 스켈레톤을 보인다."
+                        },
+                        {
+                            "label": "결과",
+                            "value": "옵션을 넘기지 않으면 기존 모양 그대로이고, 특허 등급조회의 세 축 레이더를 같은 컴포넌트로 그린다."
+                        },
+                        {"label": "영향 화면", "value": "[Chart 가이드](/component-guide/chart)"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/0a774d99)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 차트 스켈레톤 — 등급 추이 · 삼각 레이더 모양 추가",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/chart-skeleton.tsx"},
+                        {
+                            "label": "변경",
+                            "value": "type 에 'grade-trend'(등급 추이 선 차트)와 'triangle-radar'(세 축 레이더)를 더한다."
+                        },
+                        {
+                            "label": "결과",
+                            "value": "특허 등급조회 차트가 불러오는 동안 실제 차트와 같은 짜임의 스켈레톤이 보인다."
+                        },
+                        {"label": "영향 화면", "value": "[Skeleton 가이드](/component-guide/skeleton)"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/5078c996)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] LoadingState — 보조 설명 옵션",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/loading-state.tsx"},
+                        {
+                            "label": "변경",
+                            "value": "description 옵션을 더한다. 주면 제목이 16 Bold 본문 색으로 올라가고 그 아래 14 Regular 설명이 붙는다."
+                        },
+                        {
+                            "label": "결과",
+                            "value": "넘기지 않으면 기존 한 줄 모양 그대로다. 대량정보조회 '처리 중' 안내에 쓴다."
+                        },
+                        {"label": "영향 화면", "value": "[LoadingState 가이드](/component-guide/loading-state)"},
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/0f70e61f)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 파일 업로드 — 파일 한 줄 보기 · 결과 버튼 문구 옵션",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/file-upload-field.tsx\nsrc/components/composite/file-upload-result.tsx\nsrc/components/custom/icon.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "FileUploadField: attachedView='file' 이면 올린 파일을 결과 패널 대신 파일명 + 삭제(X) 한 줄로 보인다.\nFileUploadSuccess · FileUploadError: 되돌리기 버튼 글자(reuploadLabel), 성공 상세 가운데 정렬(isDetailsCentered) 옵션을 더한다. 오류 아이콘 느낌표를 60 배지 크기에 맞게 키운다.\nIcon: 문자형 symbol 의 글자 크기 옵션(symbolClassName)을 더한다."
+                        },
+                        {
+                            "label": "결과",
+                            "value": "옵션을 넘기지 않는 기존 화면은 그대로이고, 오류 결과 패널의 느낌표만 커진다."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기관 일괄평가](/org/batch-evaluation/evaluation-history-or-batch)\n[FileUpload 가이드](/component-guide/file-upload)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/070b2101)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] 특허 등급조회 — 조회 · 결과 (기업 · 기관)",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/patent-evaluation/\nsrc/app/(user-type)/org/(service)/(logged-in)/patent-evaluation/\nsrc/components/custom/patent-grade-lookup.tsx\nsrc/components/custom/patent-grade-report.tsx\nsrc/components/custom/patent-grade-sections.tsx\nsrc/components/custom/grade-trend-chart.tsx\nsrc/components/custom/grade-radar-chart.tsx\nsrc/content/service/patent-grade.ts\npublic/images/service-intro/robot-donut-chart.webp"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "조회 화면은 검색 전 상태로 시작하고, 특허등록번호 · 특허출원번호(하이픈 없이도 가능)로 검색하면 같은 자리에 특허평가 결과 보고서가 나온다. 결과 화면은 목업 보고서가 보이는 상태로 시작한다. [프론트엔드 연동] 위치는 각 page.tsx · patent-grade-lookup.tsx 머리 주석에 있다."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기업 특허 등급조회](/corp/patent-evaluation/patent-grade-list)\n[기업 특허 등급조회 결과](/corp/patent-evaluation/patent-grade-list/patent-grade-result)\n[기관 특허 등급조회](/org/patent-evaluation/patent-grade-list)\n[기관 특허 등급조회 결과](/org/patent-evaluation/patent-grade-list/patent-grade-result)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] K-BIGx 기업혁신성장보고서 조회 — 조회 · 케이스별 결과 (기업 · 기관)",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/k-bigx-report/innovation-growth-report/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-in)/k-bigx-report/innovation-growth-report/search-result/\nsrc/app/(user-type)/org/(service)/(logged-in)/k-bigx-report/innovation-growth-report/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/k-bigx-report/innovation-growth-report/search-result/\nsrc/components/custom/innovation-growth-report-lookup.tsx\nsrc/components/custom/innovation-growth-report-screen.tsx\nsrc/components/custom/k-bigx-report-sections.tsx\nsrc/content/service/innovation-growth-report.ts"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "기업 검색 → 기업 선택 → 그 기업의 특허 선택 → 이용횟수 안내 → [K-BIGx 보고서 출력](보고서 생성 모달). 특허 검색은 특허 목록이 바로 나온다. 특허 카드를 골라야 출력 버튼이 켜지고, 특허가 없는 기업은 기업만 골라도 켜진다. 검색 · 선택 뒤 결과 목록 · 출력 버튼으로 스크롤한다. 목업 함수 세 개(searchInnovationGrowthCompanies · getInnovationGrowthPatents · searchInnovationGrowthPatents)만 API 로 바꾸면 된다."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기업 기업혁신성장](/corp/k-bigx-report/innovation-growth-report)\n[기업 기업 검색 결과](/corp/k-bigx-report/innovation-growth-report/search-result/company)\n[기업 기업 선택(특허 있음)](/corp/k-bigx-report/innovation-growth-report/search-result/company/selected)\n[기업 기업 선택(특허 없음)](/corp/k-bigx-report/innovation-growth-report/search-result/company/no-patent)\n[기업 기업 검색 결과 없음](/corp/k-bigx-report/innovation-growth-report/search-result/company/not-found)\n[기업 특허 검색 결과](/corp/k-bigx-report/innovation-growth-report/search-result/patent)\n[기업 특허 검색 결과 없음](/corp/k-bigx-report/innovation-growth-report/search-result/patent/not-found)\n[기관 기업혁신성장](/org/k-bigx-report/innovation-growth-report)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] K-BIGx 대량정보조회 — 조회 · 실패 · 완료 (기관)",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/org/(service)/(logged-in)/k-bigx-report/bulk-data-search/\nsrc/content/service/bulk-data-search.ts"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "표준양식 업로드 → [조회 실행](업로드 전 · 실패 시 꺼짐) → 처리 중 → 성공이면 완료 화면([새 조회] · [결과 파일 다운로드]), 실패면 실패 화면(오류 목록 · [다시 업로드]). 업로드 · 실행 뒤 버튼 · 결과로 스크롤한다. [프론트엔드 연동] 위치는 bulk-data-search-form.tsx 머리 주석에 있다."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[대량정보조회](/org/k-bigx-report/bulk-data-search)\n[대량정보조회 실패](/org/k-bigx-report/bulk-data-search/failure)\n[대량정보조회 완료](/org/k-bigx-report/bulk-data-search/complete)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[컴포넌트] SelectSearchForm · SelectableInfoCard · ServiceIntroBanner",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/select-search-form.tsx\nsrc/components/composite/selectable-info-card.tsx\nsrc/components/composite/service-intro-banner.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "SelectSearchForm: 검색 기준 셀렉트 + 큰 입력 검색 카드. 기준별 형식 검사 · 안내 문구 · 도움말, 검색 중 표시, 처음 고를 기준(defaultType), 자동완성 끔.\nSelectableInfoCard: 항목 이름 · 값 줄로 된 라디오 카드 목록. 긴 값은 카드 안에서 줄바꿈한다.\nServiceIntroBanner: 서비스 소개 띠(분류어 · 제목 · 설명 · [자세히보기] · 그림)."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[SelectSearchForm 가이드](/component-guide/select-search-form)\n[SelectableInfoCard 가이드](/component-guide/selectable-info-card)\n[ServiceIntroBanner 가이드](/component-guide/service-intro-banner)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[스타일] 차트 스켈레톤 스타일",
+                    "details": [
+                        {"label": "대상", "value": "src/components/theme/chart-skeleton.variants.ts"},
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {"label": "내용", "value": "등급 추이 · 삼각 레이더 스켈레톤이 쓰는 스타일 값을 더한다."}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[문서] 컴포넌트 가이드 — 새 컴포넌트 · 옵션 반영",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/component-guide/(guide)/grade-trend-chart/\nsrc/app/component-guide/(guide)/grade-radar-chart/\nsrc/app/component-guide/(guide)/select-search-form/\nsrc/app/component-guide/(guide)/selectable-info-card/\nsrc/app/component-guide/(guide)/service-intro-banner/\nsrc/app/component-guide/(guide)/chart/page.tsx\nsrc/app/component-guide/(guide)/skeleton/page.tsx\nsrc/app/component-guide/(guide)/loading-state/page.tsx\nsrc/app/component-guide/(guide)/file-upload/page.tsx\nsrc/app/component-guide/(guide)/accessibility-exceptions/page.tsx\nsrc/constants/publishing-guide.ts"
+                        },
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {
+                            "label": "내용",
+                            "value": "새 컴포넌트 가이드 5종을 추가하고 사이드바에 연결한다. 기존 가이드에 새 옵션(차트 · 스켈레톤 · LoadingState · 파일 업로드)과 대량정보조회 케이스 표를 반영한다. 접근성 예외에 셀렉트의 숨은 native select 항목을 더한다."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[GradeTrendChart 가이드](/component-guide/grade-trend-chart)\n[GradeRadarChart 가이드](/component-guide/grade-radar-chart)\n[FileUpload 가이드](/component-guide/file-upload)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[문서] 퍼블리싱 인덱스 — IA V1.24 반영 · 신규 화면 등록",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/publishing-guide/publishing-index.json\nsrc/content/publishing-guide/screen-registry.json\nsrc/content/publishing-guide/screen-registry.generated.json\nsrc/components/custom/publishing-index.tsx"
+                        },
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {
+                            "label": "내용",
+                            "value": "기술평가 기업 · 기관 IA 를 V1.24_260908 로 올리고 IA 행 번호를 새 시트 기준으로 갱신한다. 시트에 없는 행은 민트(최신 IA 미기재), 취소선 행은 번호를 유지한다. key · 경로 · 상태는 바꾸지 않는다.\n신규 화면을 등록하고 완료로 표시한다: 특허 등급조회 · 결과, 기업혁신성장 조회와 조회 결과 6케이스(기업 · 기관), 대량정보조회 · 실패 · 완료.\n행 추가: 기관 결제 불가 팝업, 기업 K-BIGx 보고서 결제(대기중). 기관 '기술평가센터 검색'을 '기술보증기금 지점 선택'으로 바꾼다.\n기업 정보 이용 동의를 IA 삭제 행(주황 · 취소선)으로 표시한다. 삭제 표시 안내의 행 수를 사용자 유형별 실제 개수로 보인다."
+                        },
+                        {"label": "영향 화면", "value": "퍼블리싱 인덱스(시작 페이지)"}
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v3.3.0",
             "releasedAt": "2026-09-21",
             "changes": [
@@ -6077,116 +6324,6 @@
                             "value": "위 [신규 추가] 화면과 함께 반영해야 표의 화면 이동 버튼이 실제 화면으로 갑니다. 화면 없이 인덱스만 반영하면 두 행이 미구현으로 표시됩니다"
                         },
                         {"label": "범위", "value": "투자모형(기업·기관)의 같은 묶음은 종전과 같습니다"}
-                    ]
-                }
-            ]
-        },
-        {
-            "version": "v3.0.1",
-            "releasedAt": "2026-08-21",
-            "changes": [
-                {
-                    "type": "handoff",
-                    "mode": "diff",
-                    "title": "KTRS-FM 2단계 — 체크리스트 이동 경로 되돌림",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/company-technology-info/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/company-technology-info/page.tsx"
-                        },
-                        {
-                            "label": "변경",
-                            "value": "업종코드를 보고 갈 곳을 정하던 얇은 클라이언트 조각(`checklist-step-form`) 사용을 걷어내고, 탭 폼(`SelfDiagnosisTabsForm`)에 체크리스트 경로를 문자열로 다시 넘김. 기관 화면은 기관용 탭 구성(`ORG_SELF_DIAGNOSIS_FORM_TABS`)을 화면에서 직접 넘깁니다"
-                        },
-                        {
-                            "label": "결과",
-                            "value": "[다음]을 누르면 업종코드와 관계없이 `/…/ktrs-fm/checklist` 한 화면으로 갑니다"
-                        },
-                        {
-                            "label": "유지",
-                            "value": "업종코드 공통 상수(`industryCode`·`isManufacturingIndustryCode`), 기업정보 탭의 숨은 입력, 함수형 `nextHref` 는 그대로 둡니다 — 투자모형(기업·기관)이 계속 씁니다"
-                        },
-                        {
-                            "label": "커밋",
-                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e4025236ddb6d49271d917ceb2a85a989b9ce245)"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "diff",
-                    "title": "체크리스트 문항 — 제조·서비스 배지 삭제·보증제한 업종 안내 연결",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/components/composite/checklist-form.tsx\nsrc/content/technology-evaluation/ktrs-fm-checklist.ts\nsrc/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/restricted-industries/page.tsx"
-                        },
-                        {
-                            "label": "변경",
-                            "value": "생산과정·원자재 수급 문항에 붙던 제조·서비스 배지(문항 데이터의 `sector` 와 `SECTOR_BADGE`)를 걷어내고, 여러 줄로 갈리는 문항(`check-list`)이 줄마다 안내 버튼을 가질 수 있도록 문항 유형을 넓혀 창업 경력 (1) 줄에 [보증제한 업종] 모달을 연결. 보증제한 업종 단독 화면은 주석만 갱신"
-                        },
-                        {
-                            "label": "결과",
-                            "value": "한 화면에 제조·서비스 문장이 함께 놓여도 문장이 대상을 밝히므로 배지 없이 읽히고, 퍼블리싱 인덱스에만 있던 보증제한 업종 모달이 체크리스트에서 열립니다. 기존 문항 유형의 렌더는 바뀌지 않습니다"
-                        },
-                        {
-                            "label": "참고",
-                            "value": "투자모형 체크리스트 데이터는 `sector` 를 쓰지 않아 표시 변화가 없습니다"
-                        },
-                        {
-                            "label": "커밋",
-                            "value": "[배지 삭제 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/3785096fbd3d0e1f24a0e5d2fee34b8dcb6ba3d7) [보증제한 업종 연결 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/86e2c53c231226aa71539f721453ba7226ac2b71)"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "new",
-                    "title": "단일 체크리스트 화면 — 기업·기관 KTRS-FM",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/page.tsx"
-                        },
-                        {
-                            "label": "적용",
-                            "value": "업종코드로 갈리기 전의 단일 체크리스트 입력 화면을 다시 추가. 문항은 `KTRS_FM_CHECKLIST` 한 벌이며 제출 검사·제출 전 최종 확인 모달·완료 화면 이동은 종전과 같습니다"
-                        },
-                        {
-                            "label": "삭제",
-                            "value": "업종코드로 갈린 두 화면과 그 갈림을 판단하던 조각이라 진입 경로가 없어졌습니다. src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/manufacturing/page.tsx · src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/checklist/service/page.tsx · src/app/(user-type)/corp/(service)/(logged-in)/technology-evaluation/ktrs-fm/company-technology-info/checklist-step-form.tsx · src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/manufacturing/page.tsx · src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/checklist/service/page.tsx · src/app/(user-type)/org/(service)/(logged-in)/individual-evaluation/ktrs-fm/company-technology-info/checklist-step-form.tsx 여섯 파일을 함께 삭제해야 합니다"
-                        },
-                        {
-                            "label": "주의",
-                            "value": "추가·삭제와 위 [Diff 확인] 변경은 한 번에 반영해야 합니다. 링크 경로가 타입으로 검사되어 한쪽만 반영하면 빌드가 실패합니다"
-                        },
-                        {
-                            "label": "범위",
-                            "value": "투자모형(기업·기관)의 업종코드별 체크리스트 화면은 그대로입니다. 이번 되돌림은 KTRS-FM 두 모형에만 해당합니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "퍼블리싱 인덱스 — KTRS-FM 체크리스트 화면 구성 되돌림",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/content/publishing-guide/publishing-index.json\nsrc/content/publishing-guide/screen-registry.json\nsrc/content/publishing-guide/screen-registry.generated.json"
-                        },
-                        {
-                            "label": "적용",
-                            "value": "지정한 파일만 교체. 세 파일은 반드시 함께 교체해야 합니다 — 콘텐츠 관문이 빌드 시점에 두 JSON 의 화면 key 를 양방향으로 교차검증하므로, 하나만 바꾸면 빌드가 실패합니다"
-                        },
-                        {
-                            "label": "변경",
-                            "value": "기업·기관 KTRS-FM 의 (3) 체크리스트 입력이 다시 자기 화면을 갖고, 그 아래 [선택한 업종코드별 페이지] 묶음(업종코드 제조 선택·업종코드 서비스 선택)을 걷어냅니다. 화면 경로 레지스트리도 모형마다 2건에서 체크리스트 1건으로 되돌립니다"
-                        },
-                        {
-                            "label": "범위",
-                            "value": "투자모형(기업·기관)의 [선택한 업종코드별 페이지] 묶음은 그대로입니다"
-                        }
                     ]
                 }
             ]
