@@ -760,6 +760,48 @@
             "name": "기업혁신성장보고서 조회"
         },
         {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company",
+            "name": "기업 검색 결과"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-selected",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company/selected",
+            "name": "기업 선택(특허 있음)"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company/no-patent",
+            "name": "기업 선택(특허 없음)"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-not-found",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/company/not-found",
+            "name": "기업 검색 결과 없음"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-patent",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/patent",
+            "name": "특허 검색 결과"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-search-result-patent-not-found",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/search-result/patent/not-found",
+            "name": "특허 검색 결과 없음"
+        },
+        {
             "key": "corp-k-bigx-report-innovation-growth-report-information-consent",
             "screenId": "SB-FOTA-CP0-0007",
             "userType": "기업",
@@ -800,6 +842,13 @@
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/pass-purchase-guide",
             "name": "이용권구매 안내"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-payment",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/payment",
+            "name": "K-BIGx 보고서 결제"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
@@ -1806,6 +1855,48 @@
             "name": "기업혁신성장보고서 조회"
         },
         {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company",
+            "name": "기업 검색 결과"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-selected",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company/selected",
+            "name": "기업 선택(특허 있음)"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company/no-patent",
+            "name": "기업 선택(특허 없음)"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-company-not-found",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/company/not-found",
+            "name": "기업 검색 결과 없음"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-patent",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/patent",
+            "name": "특허 검색 결과"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-search-result-patent-not-found",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/search-result/patent/not-found",
+            "name": "특허 검색 결과 없음"
+        },
+        {
             "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing",
             "screenId": null,
             "userType": "기관",
@@ -2054,7 +2145,7 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/evaluation-history/guarantee-recommendation/center-search",
-            "name": "기술평가센터 검색"
+            "name": "기술보증기금 지점 선택"
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation-bank-branch-search",
@@ -2435,6 +2526,13 @@
             "name": "대량정보조회"
         },
         {
+            "key": "org-k-bigx-report-bulk-data-search-failure",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/bulk-data-search/failure",
+            "name": "대량정보조회 실패"
+        },
+        {
             "key": "org-k-bigx-report-bulk-data-search-complete",
             "screenId": null,
             "userType": "기관",
@@ -2629,6 +2727,13 @@
             "userType": "기관",
             "path": "/org/pricing/payment/complete",
             "name": "결제 완료"
+        },
+        {
+            "key": "org-pricing-payment-unavailable",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/pricing/payment-unavailable",
+            "name": "결제 불가 팝업"
         },
         {
             "key": "corp-mypage-paid-services-refund-unavailable",
