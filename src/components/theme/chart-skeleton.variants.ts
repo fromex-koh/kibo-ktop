@@ -7,10 +7,13 @@ const chartSkeletonVariants = cva('min-w-0 animate-pulse', {
             benchmark: 'h-auto',
             donut: 'h-auto',
             gauge: 'h-54',
+            'grade-trend': 'h-72',
             line: 'h-64 sm:h-80',
             matrix: 'h-80',
             network: 'h-72 sm:h-100 xl:h-120',
             radar: 'h-80 sm:h-96',
+            // 범례(21) + 16 + 차트(모바일 176 · md 224) — ComparisonRadarChart 의 세 축 배치와 같은 높이다.
+            'triangle-radar': 'h-52 md:h-68',
             'word-cloud': 'h-72 sm:h-96',
         },
         legend: {
