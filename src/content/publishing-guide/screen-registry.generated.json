@@ -649,15 +649,15 @@
             "key": "corp-patent-evaluation-patent-grade-list",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report",
@@ -670,50 +670,50 @@
             "key": "corp-k-bigx-report-innovation-growth-report",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-selected",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-patent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-patent-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-information-consent",
@@ -1741,15 +1741,15 @@
             "key": "org-patent-evaluation-patent-grade-list",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-patent-evaluation-patent-grade-list-patent-grade-result",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-patent-evaluation-patent-grade-list-patent-grade-result-report",
@@ -1762,50 +1762,50 @@
             "key": "org-k-bigx-report-innovation-growth-report",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company-selected",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-patent",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-patent-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing",
@@ -2427,22 +2427,22 @@
             "key": "org-k-bigx-report-bulk-data-search",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-bulk-data-search-failure",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-bulk-data-search-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.1",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-report-history-report-print",
