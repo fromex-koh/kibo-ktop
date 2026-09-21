@@ -23,6 +23,9 @@ type IconProps =
           symbol: IconSymbol
           variant: 'solid'
           className?: string
+          /** 문자형 symbol 의 글자 크기(typo-*). 기본 20 Bold — 배지가 커지면 함께 키운다
+              (예: 60 배지 = typo-display-m-bold, 시안 icon-60/오류의 느낌표 높이 26 · 두께 6). */
+          symbolClassName?: string
       }
 
 const SYMBOL_CHARACTERS: Record<IconSymbol, string> = {
@@ -36,7 +39,7 @@ const Icon = (props: IconProps) => {
     if ('symbol' in props && props.symbol) {
         return (
             <span aria-hidden="true" className={cn(iconVariants({variant}), className)}>
-                <span className="typo-title-l-bold">{SYMBOL_CHARACTERS[props.symbol]}</span>
+                <span className={props.symbolClassName ?? 'typo-title-l-bold'}>{SYMBOL_CHARACTERS[props.symbol]}</span>
             </span>
         )
     }

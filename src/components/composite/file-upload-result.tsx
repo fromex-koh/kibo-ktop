@@ -40,6 +40,10 @@ type FileUploadResultProps = {
     details?: readonly FileUploadResultDetail[]
     // [다시 업로드] 동작. 없으면 버튼을 두지 않는다.
     onReupload?: () => void
+    // 되돌리기 버튼 글자. 기본은 '다시 업로드' — 처리 결과 화면에서는 '새 조회'처럼 바꿔 쓴다.
+    reuploadLabel?: ReactNode
+    // 성공 상세 한 줄을 가운데에 둔다. 파일 줄 없이 건수만 보여 주는 처리 결과(대량정보조회 완료)에 켠다.
+    isDetailsCentered?: boolean
     className?: string
 }
 
@@ -69,6 +73,8 @@ const UploadResultPanel = ({
     downloadHref,
     details,
     onReupload,
+    reuploadLabel = '다시 업로드',
+    isDetailsCentered = false,
     className,
 }: FileUploadResultProps) => {
     const isError = status === 'error'
@@ -87,7 +93,12 @@ const UploadResultPanel = ({
         >
             <div className="flex flex-col items-center gap-4" role={isError ? 'alert' : 'status'}>
                 {isError ? (
-                    <Icon variant="solid" symbol="alert" className="bg-icon-solid-error size-15" />
+                    <Icon
+                        variant="solid"
+                        symbol="alert"
+                        symbolClassName="typo-display-m-bold"
+                        className="bg-icon-solid-error size-15"
+                    />
                 ) : (
                     <Icon variant="solid" icon={Check} className="bg-primary text-primary-foreground size-15" />
                 )}
@@ -132,7 +143,10 @@ const UploadResultPanel = ({
                             'typo-body-l-regular',
                             isError
                                 ? 'border-subtle-3 flex flex-col gap-2 border-t pt-4'
-                                : 'flex flex-wrap items-center gap-x-4 gap-y-2',
+                                : cn(
+                                      'flex flex-wrap items-center gap-x-4 gap-y-2',
+                                      isDetailsCentered && 'justify-center',
+                                  ),
                         )}
                     >
                         {details.map((detail, index) => (
@@ -157,7 +171,7 @@ const UploadResultPanel = ({
             {onReupload ? (
                 <Button type="button" variant="tertiary" size="sm" onClick={onReupload} className="self-center">
                     <RotateCcw aria-hidden="true" />
-                    다시 업로드
+                    {reuploadLabel}
                 </Button>
             ) : null}
         </div>
