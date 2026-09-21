@@ -5,15 +5,15 @@
             "key": "corp-home",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.4",
-            "isCurrent": false
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-home-technology-evaluation-model-selection",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-home-technology-evaluation-model-selection-tech-index",
@@ -26,8 +26,8 @@
             "key": "corp-full-menu",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-auth",
@@ -47,8 +47,8 @@
             "key": "corp-pricing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-platform",
@@ -681,25 +681,39 @@
             "isCurrent": false
         },
         {
+            "key": "corp-k-bigx-report-innovation-growth-report-login-guide",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
+        },
+        {
             "key": "corp-k-bigx-report-innovation-growth-report-legal-basis",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-report-search-results-report-create-no-patent",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-pass-purchase-guide",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
@@ -773,10 +787,10 @@
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-report-history",
@@ -787,10 +801,10 @@
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-report-history-report-print",
@@ -983,10 +997,10 @@
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-view-count-deduction",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history",
@@ -1095,10 +1109,10 @@
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-marketing-consent",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-payment-complete",
@@ -1132,8 +1146,8 @@
             "key": "corp-terms",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-privacy-policy",
@@ -1216,8 +1230,8 @@
             "key": "org-pricing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "org-platform",
@@ -1774,10 +1788,10 @@
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-report-history",
@@ -2112,8 +2126,8 @@
             "key": "org-terms",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "org-privacy-policy",
@@ -2306,17 +2320,17 @@
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-legal-basis",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-pass-purchase-guide",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-bulk-data-search",
@@ -2432,24 +2446,24 @@
         },
         {
             "key": "corp-terms-k-bigx",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-home-notice-popup",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.2.4",
-            "isCurrent": false
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-credit-information-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.2.4",
-            "isCurrent": false
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "org-auth-org-login",
@@ -2460,10 +2474,10 @@
         },
         {
             "key": "org-terms-k-bigx",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "org-home-notice-popup",
@@ -2476,15 +2490,50 @@
             "key": "org-credit-information-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.2.4",
-            "isCurrent": false
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-pricing-payment",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-pricing-payment-seller-info",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-pricing-payment-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
+        },
+        {
+            "key": "org-pricing-payment",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
+        },
+        {
+            "key": "org-pricing-payment-seller-info",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
+        },
+        {
+            "key": "org-pricing-payment-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.0",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-refund-unavailable",

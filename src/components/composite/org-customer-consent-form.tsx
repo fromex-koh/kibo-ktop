@@ -133,6 +133,9 @@ const OrgCustomerConsentForm = ({
 
             <FormCard
                 title="정보이용동의서 업로드"
+                // 좁은 화면에서는 [동의서 양식 다운로드]가 제목 아래 줄로 내려간다 — 이름이 길어 오른쪽에 두면
+                // 제목 칸이 눌려 "정보이용동의서 / 업로드" 처럼 접힌다.
+                stackActionOnMobile
                 // [프론트엔드 연동] 실제 양식 파일 경로를 연결한다.
                 action={
                     <Button type="button" variant="secondary" size="xs">

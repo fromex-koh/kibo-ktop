@@ -330,6 +330,8 @@ const TechIndexFinanceForm = ({showYearUnit}: TechIndexFinanceFormProps) => {
             title="재무정보"
             // 안내가 세 줄짜리 목록이라 <p> 가 아닌 <ul> 로 그린다.
             subtitleAsChild
+            // 제목 옆에 [재무정보 불러오기], 안내 목록은 그 아래 전체 폭 — 모바일도 PC 와 같은 배치다.
+            descriptionFullWidth
             subtitle={
                 <ul className="flex list-disc flex-col gap-1 pl-5">
                     {NOTICES.map((notice) => (

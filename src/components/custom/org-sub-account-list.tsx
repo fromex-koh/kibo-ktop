@@ -211,9 +211,11 @@ const OrgSubAccountList = ({items, pageSize = 10}: OrgSubAccountListProps) => {
             </SearchFilterForm>
 
             <div className="flex flex-col gap-10">
-                {/* 붙어 있는 상단 바 높이만큼 자리를 비워 둔다 — 페이지를 넘겨 이 자리로 굴러올 때
-                    목록 머리가 바 아래에 가려지지 않는다(좁은 화면 56, xl 최대 112). */}
-                <div ref={listRef} className="flex scroll-mt-20 flex-col gap-4 xl:scroll-mt-32">
+                {/* 목록 머리가 상단 바에 가리지 않게 띄우는 거리(바 높이 + 16)
+                    · md 미만 — 헤더(56) 아래에 마이페이지 메뉴 드롭다운 줄(152)까지 붙어 208 → 224(scroll-mt-56)
+                    · md~xl — 드롭다운 줄은 붙지 않고 헤더(100)만 → 112(scroll-mt-28)
+                    · xl 이상 — 헤더(112) → 128(scroll-mt-32) */}
+                <div ref={listRef} className="flex scroll-mt-56 flex-col gap-4 md:scroll-mt-28 xl:scroll-mt-32">
                     {/* 건수 왼쪽, 정렬·등록 오른쪽(시안). 좁아지면 아래로 내려가 줄을 나눈다. */}
                     <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
                         <p className="typo-body-xl-regular text-foreground">

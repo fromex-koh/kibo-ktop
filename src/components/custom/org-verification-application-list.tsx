@@ -110,7 +110,7 @@ const OrgVerificationApplicationList = ({items, defaultPeriod, pageSize = 10}: O
                 {/* 붙어 있는 상단 바 높이만큼 자리를 비워 둔다 — 페이지를 넘겨 이 자리로 굴러올 때
                     목록 머리가 바 아래에 가려지지 않는다. 바는 좁은 화면에서 56, xl 에서 상단 메뉴 줄까지
                     최대 112 라 각각 여유를 더해 80·128 로 둔다. */}
-                <div ref={listRef} className="flex scroll-mt-20 flex-col gap-4 xl:scroll-mt-32">
+                <div ref={listRef} className="flex scroll-mt-56 flex-col gap-4 md:scroll-mt-28 xl:scroll-mt-32">
                     {/* 건수만 굵고 브랜드 색이다 — 몇 건인지가 이 줄에서 읽을 값이다. */}
                     <p className="typo-body-xl-regular text-foreground">
                         총 <span className="typo-body-xl-bold text-primary-strong">{items.length}</span>건

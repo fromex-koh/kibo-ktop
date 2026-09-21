@@ -234,26 +234,22 @@ const AddressField = () => {
             className="md:col-span-2"
             helper="※ 도로명 건물번호를 모를 경우 도로명주소시스템에서 확인하시기 바랍니다."
         >
-            <div className="flex flex-col gap-2">
-                <div className="flex items-start gap-2">
-                    <Input
-                        id={ADDRESS_FIELD}
-                        name={ADDRESS_FIELD}
-                        readOnly
-                        required
-                        autoComplete="off"
-                        placeholder="[주소 검색] 버튼으로 자동 입력됩니다"
-                        className="min-w-0 flex-1"
-                    />
-                    <PostcodeSearchDialog mockSearch title="주소 검색" onSelect={handleSelect}>
-                        <Button type="button" variant="tertiary" size="md" className="shrink-0">
-                            주소 검색
-                        </Button>
-                    </PostcodeSearchDialog>
-                </div>
+            <div className="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]">
+                {/* 모바일(640 미만)은 주소 · 상세주소 · [주소 검색] 순으로 한 줄씩 쌓는다. PC 는 [주소 검색]을 주소 칸 옆(1행 2열)에
+                    두고 상세주소가 두 칸을 다 쓴다. 코드 순서도 모바일 순서와 같아 읽는 순서가 어긋나지 않는다. */}
+                <Input
+                    id={ADDRESS_FIELD}
+                    name={ADDRESS_FIELD}
+                    readOnly
+                    required
+                    autoComplete="off"
+                    placeholder="[주소 검색] 버튼으로 자동 입력됩니다"
+                    className="min-w-0"
+                />
                 {/* 주소와 라벨을 공유하지만 값은 따로 담기는 칸이라, 검사 메시지도 이 자리에 따로 붙인다. */}
                 <ClearableInput
                     id={ADDRESS_DETAIL_FIELD}
+                    className="sm:col-span-2"
                     name="addressDetail"
                     required
                     aria-label="상세주소"
@@ -262,6 +258,16 @@ const AddressField = () => {
                     autoComplete="off"
                 />
                 <AddressDetailError />
+                <PostcodeSearchDialog mockSearch title="주소 검색" onSelect={handleSelect}>
+                    <Button
+                        type="button"
+                        variant="tertiary"
+                        size="md"
+                        className="w-full sm:col-start-2 sm:row-start-1 sm:w-auto"
+                    >
+                        주소 검색
+                    </Button>
+                </PostcodeSearchDialog>
             </div>
         </Field>
     )

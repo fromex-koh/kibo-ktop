@@ -51,8 +51,10 @@ const InquiryList = ({items, createHref, pageSize = 10}: InquiryListProps) => {
     // 작은 화면에서는 현재 페이지 양옆 번호를 줄이고 이전·다음은 화살표만 남긴다.
     const isMobile = useIsMobile()
 
-    // 페이지를 넘기면 화면 맨 위로 되돌린다 — 아래쪽 페이지네이션을 누른 자리에서 목록이 바뀌면
-    // 새 첫 항목이 화면 위로 벗어나 있어 매번 되돌아 올려야 한다(공지사항 목록과 같은 처리).
+    // 페이지를 넘기면 목록의 맨 위로 되돌린다 — 화면 맨 위까지 올라가면 조회 조건을 다시 지나쳐야 해서
+    // 방금 넘긴 목록이 어디서 시작하는지 찾기 어렵다. 목록 머리(총 N건)가 상단 바 아래에 오도록 맞춘다
+    // (자리 확보는 아래 scroll-mt-* 가 한다).
+    const listRef = useRef<HTMLDivElement>(null)
     const isFirstRenderRef = useRef(true)
 
     useEffect(() => {
@@ -63,12 +65,16 @@ const InquiryList = ({items, createHref, pageSize = 10}: InquiryListProps) => {
         }
 
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-        window.scrollTo({top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth'})
+        listRef.current?.scrollIntoView({block: 'start', behavior: prefersReducedMotion ? 'auto' : 'smooth'})
     }, [currentPage])
 
     return (
         <div className="flex flex-col gap-10">
-            <div className="flex flex-col gap-4">
+            {/* 목록 머리가 상단 바에 가리지 않게 띄우는 거리(바 높이 + 16)
+              · md 미만 — 헤더(56) 아래에 마이페이지 메뉴 드롭다운 줄(152)까지 붙어 208 → 224(scroll-mt-56)
+              · md~xl — 드롭다운 줄은 붙지 않고 헤더(100)만 → 112(scroll-mt-28)
+              · xl 이상 — 헤더(112) → 128(scroll-mt-32) */}
+            <div ref={listRef} className="flex scroll-mt-56 flex-col gap-4 md:scroll-mt-28 xl:scroll-mt-32">
                 {/* 건수와 [문의 등록] 이 한 줄에 온다(시안). 좁은 화면에서는 버튼이 아래로 내려간다. */}
                 <div className="flex flex-wrap items-center justify-between gap-2">
                     {/* 건수만 굵고 브랜드 색이다(시안) — 몇 건인지가 이 줄에서 읽을 값이다. */}
@@ -92,38 +98,41 @@ const InquiryList = ({items, createHref, pageSize = 10}: InquiryListProps) => {
                                         {/* 구분선은 항목 사이에만 둔다 — 마지막 항목 아래 선은 카드 여백이 대신한다. */}
                                         {index > 0 ? <Separator className="my-6" /> : null}
                                         {/* 글 묶음과 화살표 사이 24 — 시안 실측(글 영역 700 · 화살표 724~744).
-                                            제목이 길어 말줄임될 때 상태 배지가 화살표에 붙지 않도록 이 간격은
-                                            줄지 않는다(글 묶음이 대신 좁아진다). */}
+                                            제목이 길어도 이 간격은 줄지 않는다(글 묶음이 대신 좁아진다). */}
                                         <Link
                                             href={item.href}
                                             scroll={false}
                                             className="group/inquiry outline-ring rounded-2xs flex items-center gap-6 outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-solid"
                                         >
                                             <span className="flex min-w-0 flex-1 flex-col gap-2">
-                                                {/* 분류·제목·상태는 늘 한 줄이다. 줄바꿈을 허용하면 제목이 긴 문의에서
-                                                    분류·구분선만 남은 줄이 생기고 상태 배지가 따로 떨어져, 목록의
-                                                    행 높이가 건마다 달라진다. 자리가 모자라면 줄을 늘리는 대신
-                                                    제목을 말줄임한다 — 분류와 상태는 끝까지 보인다. */}
-                                                <span className="flex min-w-0 items-center gap-x-1">
-                                                    <span className="typo-body-xl-regular text-label-foreground shrink-0">
-                                                        {item.category}
+                                                {/* 제목은 말줄임하지 않고 줄바꿈해 모두 보인다. 상태 배지는 제목 글 끝에
+                                                    이어 붙는다(인라인). 분류·구분선은 왼쪽에 고정하고 제목 첫 줄과
+                                                    글자 기준선을 맞춘다(items-baseline).
+                                                    모바일(md 미만)은 폭이 좁아 분류를 제목 위 줄로 올리고 구분선은 감춘다. */}
+                                                <span className="flex min-w-0 flex-col gap-1 md:flex-row md:items-baseline md:gap-0">
+                                                    <span className="flex shrink-0 items-center gap-x-1">
+                                                        <span className="typo-body-xl-regular text-label-foreground">
+                                                            {item.category}
+                                                        </span>
+                                                        {/* 좌우 16 은 이 구분선의 기본 여백 12 와 gap 4 가 합쳐진 값이다. */}
+                                                        <InlineSeparator
+                                                            inline
+                                                            className="mx-3 data-vertical:self-center max-md:hidden"
+                                                        />
                                                     </span>
-                                                    {/* 좌우 16 은 이 구분선의 기본 여백 12 와 줄의 gap 4 가 합쳐진 값이다. */}
-                                                    <InlineSeparator
-                                                        inline
-                                                        className="mx-3 data-vertical:self-center"
-                                                    />
-                                                    <span className="typo-title-m-medium text-foreground min-w-0 truncate group-hover/inquiry:underline">
-                                                        {item.title}
+                                                    <span className="typo-title-m-medium text-foreground min-w-0 flex-1 break-keep">
+                                                        <span className="group-hover/inquiry:underline">
+                                                            {item.title}
+                                                        </span>
+                                                        <Badge
+                                                            variant="solid-pastel"
+                                                            color={status.color}
+                                                            shape="round"
+                                                            className="ml-2 align-middle"
+                                                        >
+                                                            {status.label}
+                                                        </Badge>
                                                     </span>
-                                                    <Badge
-                                                        variant="solid-pastel"
-                                                        color={status.color}
-                                                        shape="round"
-                                                        className="shrink-0"
-                                                    >
-                                                        {status.label}
-                                                    </Badge>
                                                 </span>
                                                 <span className="typo-body-l-regular text-foreground-subtle">
                                                     {item.date}

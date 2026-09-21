@@ -16,7 +16,7 @@ const MODEL_OPTIONS = [
             '일반 혁신성장기업의 미래 성장 가능성을 측정하는 지수형 평가 모형입니다.',
             '기술혁신성, 시장확장성, 성장 잠재력을 중심으로 평가합니다.',
         ],
-        illustration: '/images/option-card/growth-index.webp',
+        illustration: '/images/option-card/shield-certificate.webp',
     },
     {
         badge: 'Tech-Index',
@@ -25,7 +25,7 @@ const MODEL_OPTIONS = [
             '창업 초기 기업의 특성에 맞춰 설계된 평가모형입니다.',
             '보유 기술의 혁신성과 향후 성장 잠재력을 중점적으로 분석합니다.',
         ],
-        illustration: '/images/option-card/startup-tech-index.webp',
+        illustration: '/images/option-card/lightbulb-magnifier.webp',
     },
 ] as const
 
@@ -38,7 +38,7 @@ const USAGE_CODE = `const models = [
       '일반 혁신성장기업의 미래 성장 가능성을 측정하는 지수형 평가 모형입니다.',
       '기술혁신성, 시장확장성, 성장 잠재력을 중심으로 평가합니다.',
     ],
-    illustration: '/images/option-card/growth-index.webp',
+    illustration: '/images/option-card/shield-certificate.webp',
   },
 ]
 

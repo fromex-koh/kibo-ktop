@@ -143,7 +143,12 @@ const KIBO_EXTERNAL_LINK: Pick<HeaderNavLink, 'label' | 'href' | 'external'> = {
 }
 
 const createAuthenticatedUtilityLinks = (userType: UserType) =>
-    [{label: '로그아웃', href: '#'}, {label: '이용안내', href: `/${userType}/guide`}, KIBO_EXTERNAL_LINK] as const
+    [
+        {label: '로그아웃', href: '#'},
+        {label: '가격정책', href: `/${userType}/pricing`},
+        {label: '이용안내', href: `/${userType}/guide`},
+        KIBO_EXTERNAL_LINK,
+    ] as const
 
 const createMenuServiceConfig = (userType: UserType): MenuServiceConfig => ({
     groups: [{label: '마이페이지', items: MY_PAGE_ITEMS[userType]}, createNoticeServiceGroup(userType)],
@@ -159,6 +164,7 @@ export const MENU_SERVICE_GROUPS: Record<UserType, MenuServiceConfig> = {
 // 로그인 전 상단 유틸리티 링크.
 export const UTILITY_LINKS: readonly Pick<HeaderNavLink, 'label' | 'href' | 'external'>[] = [
     {label: '로그인/회원가입', href: '#'},
+    {label: '가격정책', href: '#'},
     {label: '이용안내', href: '#'},
     KIBO_EXTERNAL_LINK,
 ]

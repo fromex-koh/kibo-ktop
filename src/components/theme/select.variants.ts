@@ -46,8 +46,11 @@ const selectContentClassName =
 // 셸이 그리는 인디케이터 칸은 숨기고(구조는 그대로) 좌우 여백을 대칭으로 맞춘다.
 // 셸 기본 cursor-default 대신 cursor-pointer 를 쓴다 — 눌러서 값을 고르는 항목이라 손가락 커서가 맞다.
 // 비활성 항목은 data-disabled:pointer-events-none 이 걸려 있어 이 커서가 적용되지 않는다.
+// 높이는 고정(h)이 아니라 최소값(min-h 48)이다 — 선택지 문장이 길어 여러 줄로 접히면 고정 높이에서는 글자가
+// 아래 항목 위로 넘쳐 겹친다(체크리스트 모바일). 위아래 여백 12 + 줄 24 로 한 줄 항목은 그대로 48 이다.
+// 접힐 때는 낱말 사이에서만 줄을 바꾼다(break-keep).
 const selectItemClassName =
-    "text-label-foreground focus:bg-primary-subtle focus:text-label-foreground not-data-[variant=destructive]:focus:**:text-inherit data-[state=checked]:text-select-selected-foreground data-disabled:text-disabled h-control-h-md rounded-sm relative flex w-full cursor-pointer items-center gap-1.5 px-2 outline-hidden typo-body-xl-regular select-none data-[state=checked]:font-medium data-disabled:pointer-events-none data-disabled:opacity-100 [&>span:first-child]:hidden [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2"
+    "text-label-foreground focus:bg-primary-subtle focus:text-label-foreground not-data-[variant=destructive]:focus:**:text-inherit data-[state=checked]:text-select-selected-foreground data-disabled:text-disabled min-h-control-h-md py-3 break-keep rounded-sm relative flex w-full cursor-pointer items-center gap-1.5 px-2 outline-hidden typo-body-xl-regular select-none data-[state=checked]:font-medium data-disabled:pointer-events-none data-disabled:opacity-100 [&>span:first-child]:hidden [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2"
 
 export {
     selectContentClassName,
