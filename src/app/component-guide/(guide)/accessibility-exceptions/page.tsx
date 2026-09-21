@@ -721,6 +721,8 @@ const WAVE_SELECT_SCREEN_ROUTES = [
     '/org/individual-evaluation/tech-index/startup/company-info/item-description',
     '/org/individual-evaluation/investment-model/company-info/technology-category',
     '/org/individual-evaluation/investment-model/company-info/item-description',
+    '/corp/patent-evaluation/patent-grade-list',
+    '/org/patent-evaluation/patent-grade-list',
 ] as const
 
 const WAVE_SELECT_ISSUES = [
@@ -734,9 +736,9 @@ const WAVE_SELECT_ISSUES = [
     },
     {
         level: 'warning',
-        message: 'Select missing label (36)',
-        count: 36,
-        screens: 24,
+        message: 'Select missing label (38)',
+        count: 38,
+        screens: 26,
         owner: 'Radix Select 의 숨은 native select',
         verdict: '같은 기업형태 Select를 WAVE가 경고 항목으로도 탐지한다',
     },
@@ -834,6 +836,11 @@ const WAVE_SUB_ACCOUNT_CREATE_SELECT_ISSUES = [
     {...WAVE_SELECT_ISSUES[1], message: 'Select missing label (1)', count: 1, screens: 1},
 ] as const
 const WAVE_SUB_ACCOUNT_EDIT_SELECT_ISSUES = [
+    {...WAVE_SELECT_ISSUES[1], message: 'Select missing label (1)', count: 1, screens: 1},
+] as const
+// 특허 등급조회 — 검색 기준 셀렉트(SelectSearchForm) 한 칸의 숨은 native select 를 WAVE 가 경고로만 잡는다.
+// 보이는 셀렉트(트리거)에는 '검색 기준' label 이 연결되어 있다.
+const WAVE_PATENT_GRADE_SELECT_ISSUES = [
     {...WAVE_SELECT_ISSUES[1], message: 'Select missing label (1)', count: 1, screens: 1},
 ] as const
 
@@ -1371,6 +1378,18 @@ const WAVE_SCREEN_RESULTS = [
         path: WAVE_SELECT_SCREEN_ROUTES[8],
         issues: WAVE_REPRESENTATIVE_SELECT_ISSUES,
         kinds: [{label: 'Select missing label 7건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 특허평가 · 특허 등급조회',
+        path: WAVE_SELECT_SCREEN_ROUTES[WAVE_SELECT_SCREEN_ROUTES.length - 2],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 특허평가 · 특허 등급조회',
+        path: WAVE_SELECT_SCREEN_ROUTES[WAVE_SELECT_SCREEN_ROUTES.length - 1],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
     },
 ] as const
 

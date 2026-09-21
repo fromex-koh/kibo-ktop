@@ -86,6 +86,18 @@ const CHART_SKELETON_EXAMPLES: Array<{
         label: '부문별 비교를 불러오는 중입니다.',
     },
     {
+        type: 'triangle-radar',
+        title: '세 축 레이더 (ComparisonRadarChart · 축 3개)',
+        description: '범례 두 개 · 고리 4겹 삼각 격자 · 두 계열 면 · 위와 아래 양쪽 축 이름을 대체합니다.',
+        label: '특허 평가등급을 불러오는 중입니다.',
+    },
+    {
+        type: 'grade-trend',
+        title: '등급 추이 (GradeTrendChart)',
+        description: '세로축 등급 9단 · 4칸 × 8칸 점선 격자 · 꺾은선과 평가대상 점 · 두 줄 분기 이름을 대체합니다.',
+        label: '등급 추이를 불러오는 중입니다.',
+    },
+    {
         type: 'bar',
         title: '막대형 차트 공통',
         description: 'GroupedColumnChart·재무상태표·손익계산서·ColumnChart·인당 매출액에 동일하게 사용합니다.',
@@ -118,7 +130,7 @@ const PROPS_ITEMS = [
         'type',
         '실제 차트 구조와 맞는 스켈레톤 유형을 선택합니다.',
         '-',
-        "'network' | 'donut' | 'benchmark' | 'gauge' | 'matrix' | 'radar' | 'bar' | 'line' | 'word-cloud'",
+        "'network' | 'donut' | 'benchmark' | 'gauge' | 'grade-trend' | 'matrix' | 'radar' | 'triangle-radar' | 'bar' | 'line' | 'word-cloud'",
     ],
     [
         'ChartSkeleton',
