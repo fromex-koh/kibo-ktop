@@ -20,15 +20,16 @@ type MenuServiceConfig = {
     utilityLinks: readonly Pick<HeaderNavLink, 'label' | 'href' | 'external'>[]
 }
 
-// K-BIGx 보고서 하위 메뉴. 기관은 대량정보조회를 추가로 제공한다.
+// K-BIGx 보고서 하위 메뉴. 기관은 대량정보조회를 추가로 제공한다(GNB 드롭다운 · 전체메뉴 공통).
+// 화면이 있는 항목만 경로를 건다 — 보고서 이력 조회는 아직 화면이 없어 '#' 이다.
 const CORP_REPORT_ITEMS: readonly HeaderNavLink[] = [
-    {label: '기업혁신성장보고서 조회', href: '#'},
+    {label: '기업혁신성장보고서 조회', href: '/corp/k-bigx-report/innovation-growth-report'},
     {label: '보고서 이력 조회', href: '#'},
 ]
 
 const ORG_REPORT_ITEMS: readonly HeaderNavLink[] = [
-    {label: '기업혁신성장보고서 조회', href: '#'},
-    {label: '대량정보조회', href: '#'},
+    {label: '기업혁신성장보고서 조회', href: '/org/k-bigx-report/innovation-growth-report'},
+    {label: '대량정보조회', href: '/org/k-bigx-report/bulk-data-search'},
     {label: '보고서 이력 조회', href: '#'},
 ]
 
@@ -76,7 +77,11 @@ const PLATFORM_INTRO_ITEMS: readonly HeaderNavLink[] = [
 ]
 
 const PLATFORM_INTRO_LINK: HeaderNavLink = {label: '플랫폼 소개', href: '#', items: PLATFORM_INTRO_ITEMS}
-const PATENT_EVALUATION_LINK: HeaderNavLink = {label: '특허평가', href: '#'}
+// 특허평가 — 하위 메뉴 없이 특허 등급조회(조회 화면)로 바로 간다(GNB · 전체메뉴 공통).
+const createPatentEvaluationLink = (userType: UserType): HeaderNavLink => ({
+    label: '특허평가',
+    href: `/${userType}/patent-evaluation/patent-grade-list`,
+})
 const CARBON_NEUTRAL_LINK: HeaderNavLink = {
     label: '탄소중립',
     href: 'https://www.kibo.or.kr/carbon/home',
@@ -88,7 +93,7 @@ export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {
     corp: [
         PLATFORM_INTRO_LINK,
         {label: '기술평가', href: '#', items: createEvaluationModelItems('corp')},
-        PATENT_EVALUATION_LINK,
+        createPatentEvaluationLink('corp'),
         {label: 'K-BIGx 보고서', href: '#', items: CORP_REPORT_ITEMS},
         CARBON_NEUTRAL_LINK,
     ],
@@ -97,7 +102,7 @@ export const DEFAULT_HEADER_NAVIGATION: HeaderNavigationByUserType = {
         {label: '개별평가', href: '#', items: createEvaluationModelItems('org')},
         {label: '일괄평가', href: '#'},
         {label: 'K-BIGx 보고서', href: '#', items: ORG_REPORT_ITEMS},
-        PATENT_EVALUATION_LINK,
+        createPatentEvaluationLink('org'),
         CARBON_NEUTRAL_LINK,
     ],
 }
