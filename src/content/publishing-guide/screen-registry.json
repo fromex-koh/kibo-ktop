@@ -844,13 +844,6 @@
             "name": "이용권구매 안내"
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-payment",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/k-bigx-report/innovation-growth-report/payment",
-            "name": "K-BIGx 보고서 결제"
-        },
-        {
             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
             "screenId": "SB-FOTA-CS0-0007",
             "userType": "기업",
@@ -863,6 +856,13 @@
             "userType": "기업",
             "path": "/corp/k-bigx-report/innovation-growth-report/company-overview",
             "name": "기업현황"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info",
+            "screenId": "SB-FOTA-CS2-0007",
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/company-innovation-info",
+            "name": "기업혁신정보"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-technology-overview",
@@ -928,11 +928,25 @@
             "name": "보고서 출력"
         },
         {
+            "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
+            "screenId": "SB-FOTA-CS4-0007",
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing?tab=credit-finance&case=partner-corp",
+            "name": "신용/재무정보 — 타기업·협약기관 법인 열람"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
+            "screenId": "SB-FOTA-CS4-0007",
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing?tab=credit-finance&case=partner-person",
+            "name": "신용/재무정보 — 타기업·협약기관 개인 열람"
+        },
+        {
             "key": "corp-k-bigx-report-report-history",
             "screenId": null,
             "userType": "기업",
             "path": "/corp/k-bigx-report/report-history",
-            "name": "보고서 이력 조회"
+            "name": "보고서 이력 조회 (마이페이지)"
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-terms-of-service",
@@ -1911,6 +1925,13 @@
             "name": "기업현황"
         },
         {
+            "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/company-innovation-info",
+            "name": "기업혁신정보"
+        },
+        {
             "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-technology-overview",
             "screenId": null,
             "userType": "기관",
@@ -1974,11 +1995,25 @@
             "name": "보고서 출력"
         },
         {
+            "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/diagnostic-briefing?tab=credit-finance&case=partner-corp",
+            "name": "신용/재무정보 — 타기업·협약기관 법인 열람"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/diagnostic-briefing?tab=credit-finance&case=partner-person",
+            "name": "신용/재무정보 — 타기업·협약기관 개인 열람"
+        },
+        {
             "key": "org-k-bigx-report-report-history",
             "screenId": null,
             "userType": "기관",
             "path": "/org/k-bigx-report/report-history",
-            "name": "보고서 이력 조회"
+            "name": "보고서 이력 조회 (마이페이지)"
         },
         {
             "key": "org-carbon-neutrality",

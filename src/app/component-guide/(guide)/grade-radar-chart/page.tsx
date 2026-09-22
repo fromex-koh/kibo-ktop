@@ -179,6 +179,17 @@ const RuleList = ({rules}: {rules: readonly string[]}) => (
     </ul>
 )
 
+const DATA_CODE = `// [프론트엔드 연동] 축(지표)마다 평가대상 · 비교 기준 점수(0~100)를 한 항목으로 바꾼다.
+// 비교 기준이 없으면 peerScore 를 비워 둔다 — 비교 계열(점선 · 옅은 면)을 그리지 않는다.
+const data = indicators.map((indicator) => ({
+  id: indicator.code,
+  label: indicator.name, // 예: 기술다양성
+  targetScore: indicator.score,
+  peerScore: indicator.averageScore ?? undefined,
+}))
+
+<GradeRadarChart ariaLabel="특허 등급 지표 — 평가대상과 동일 특허분야 평균" data={data} isLoading={isLoading} />`
+
 const GradeRadarChartGuidePage = () => (
     <GuidePageShell
         title="등급 레이더 차트 (GradeRadarChart)"
@@ -292,6 +303,20 @@ const GradeRadarChartGuidePage = () => (
                     </p>
                 </div>
                 <CaseList cases={SPECIAL_CASES} />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="grc-data" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="grc-data" className="typo-h4-bold">
+                        데이터 연결 (Data)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        축(지표)마다 평가대상 점수와 비교 기준 점수(0~100)를 한 항목으로 바꿔 넘깁니다.
+                    </p>
+                </div>
+                <CodeBlock code={DATA_CODE} language="tsx" copyLabel="GradeRadarChart 데이터 연결 코드 복사" />
             </section>
         </BaseCard>
 

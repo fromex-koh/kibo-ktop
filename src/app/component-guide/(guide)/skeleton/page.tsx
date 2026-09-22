@@ -1,3 +1,5 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import {ChartSkeleton, type ChartSkeletonType} from '@/components/composite/chart-skeleton'
@@ -41,9 +43,10 @@ export default function SupplyNetworkLoading() {
 const CHART_TYPES_CODE = `import {ChartSkeleton} from '@/components/composite/chart-skeleton';
 
 <ChartSkeleton type="donut" label="기업 보유기술을 불러오는 중입니다." />
-<ChartSkeleton type="benchmark" label="혁신성장역량지수를 불러오는 중입니다." />
+<ChartSkeleton type="score-gauge" label="혁신성장역량지수를 불러오는 중입니다." />
+<ChartSkeleton type="rank-pyramid" label="동일업종 순위를 불러오는 중입니다." />
 <ChartSkeleton type="gauge" label="기업신용등급을 불러오는 중입니다." />
-<ChartSkeleton type="matrix" label="경영지표 등급을 불러오는 중입니다." />
+<ChartSkeleton type="matrix" label="재무비율진단을 불러오는 중입니다." />
 <ChartSkeleton type="radar" label="부문별 비교를 불러오는 중입니다." />
 <ChartSkeleton type="bar" label="재무 현황을 불러오는 중입니다." />
 <ChartSkeleton type="line" label="추이 비교를 불러오는 중입니다." />
@@ -58,32 +61,74 @@ const CHART_SKELETON_EXAMPLES: Array<{
     {
         type: 'donut',
         title: '기업 보유기술 (PercentageDonutChart)',
-        description: '도넛·외부 라벨 영역과 기술 분류 범례를 함께 대체합니다.',
+        description: '도넛 링과 사각 칩 범례 8줄을 같은 배치(간격 60 · 좁은 폭에서는 아래로)로 대체합니다.',
         label: '기업 보유기술을 불러오는 중입니다.',
     },
     {
-        type: 'benchmark',
-        title: '혁신성장역량지수 (ScoreBenchmarkChart)',
-        description: '점수 링·평가 요약·동일업종 벤치마크 진행률을 함께 대체합니다.',
+        type: 'score-gauge',
+        title: '혁신성장역량지수 점수 (ScoreGauge)',
+        description: '지름 320 원호와 가운데 점수 · 상태 · 보조 줄을 같은 높이로 대체합니다.',
         label: '혁신성장역량지수를 불러오는 중입니다.',
+    },
+    {
+        type: 'rank-pyramid',
+        title: '동일업종 순위 (RankPyramidChart)',
+        description: '왼쪽 글자 묶음과 4단 피라미드를 같은 배치로 대체합니다.',
+        label: '동일업종 순위를 불러오는 중입니다.',
     },
     {
         type: 'gauge',
         title: '기업신용등급 (SemicircleRatingGauge)',
-        description: '반원형 등급 게이지와 중앙 등급 설명을 대체합니다.',
+        description: '지름 260 원호(실제 게이지와 같은 경로)와 가운데 등급 · 설명, 아래 날짜 목록 두 줄을 대체합니다.',
         label: '기업신용등급을 불러오는 중입니다.',
     },
     {
         type: 'matrix',
-        title: '기업 경영지표 등급 (RatingMatrix)',
-        description: '평가지표 행과 등급 열로 구성된 매트릭스 표를 대체합니다.',
-        label: '기업 경영지표 등급을 불러오는 중입니다.',
+        title: '재무비율진단 (RatingMatrix)',
+        description: '머리 줄 · 항목 줄 5개와 항목마다 한 칸의 원(24)을 같은 높이로 대체합니다.',
+        label: '재무비율진단을 불러오는 중입니다.',
     },
     {
         type: 'radar',
-        title: '부문별 비교 (ComparisonRadarChart)',
+        title: '다각형 레이더 (ComparisonRadarChart)',
         description: '방사형 축·비교 면·조회기업과 업종평균 범례를 함께 대체합니다.',
+        label: '레이더 차트를 불러오는 중입니다.',
+    },
+    {
+        type: 'circle-radar',
+        title: '부문별 비교 (ComparisonRadarChart · 동심원)',
+        description: '동심원 4고리 · 다섯 축 선 · 가운데 면 · 축 이름 다섯을 대체합니다(칸 높이 248).',
         label: '부문별 비교를 불러오는 중입니다.',
+    },
+    {
+        type: 'overlay-column',
+        title: '재무상태 · 손익현황 (OverlayColumnChart)',
+        description: '범례 · 칸 상자 · 옅은 기준 막대와 그 앞 막대 둘 · 항목 이름 자리를 대체합니다.',
+        label: '재무상태를 불러오는 중입니다.',
+    },
+    {
+        type: 'columns-line',
+        title: '주요재무비율 · 현금흐름 (LineChart · columns)',
+        description: '칸 상자 · 칸 가운데를 잇는 선 · 항목 이름 자리 · 아래 범례를 대체합니다.',
+        label: '주요재무비율을 불러오는 중입니다.',
+    },
+    {
+        type: 'cells-line',
+        title: '분기별 종업원수 (LineChart · cells)',
+        description: '점마다 세로 점선 · 바닥선 · 선과 옅은 면 · 항목 이름 자리를 대체합니다.',
+        label: '분기별 종업원수를 불러오는 중입니다.',
+    },
+    {
+        type: 'cells-column',
+        title: '인당 매출액 (ColumnChart · cells)',
+        description: '점선 칸 상자 · 칸마다 막대 하나 · 항목 이름 자리를 대체합니다.',
+        label: '인당 매출액을 불러오는 중입니다.',
+    },
+    {
+        type: 'grouped-column',
+        title: '최근 3개년 재무 현황 (GroupedColumnChart · cells)',
+        description: '오른쪽 위 범례 · 항목 6칸 테두리 상자 · 칸마다 막대 3개 · 항목 이름 자리를 대체합니다.',
+        label: '최근 3개년 재무 현황을 불러오는 중입니다.',
     },
     {
         type: 'triangle-radar',
@@ -130,7 +175,7 @@ const PROPS_ITEMS = [
         'type',
         '실제 차트 구조와 맞는 스켈레톤 유형을 선택합니다.',
         '-',
-        "'network' | 'donut' | 'benchmark' | 'gauge' | 'grade-trend' | 'matrix' | 'radar' | 'triangle-radar' | 'bar' | 'line' | 'word-cloud'",
+        "'network' | 'donut' | 'score-gauge' | 'rank-pyramid' | 'gauge' | 'grade-trend' | 'grouped-column' | 'cells-line' | 'cells-column' | 'overlay-column' | 'columns-line' | 'matrix' | 'radar' | 'circle-radar' | 'triangle-radar' | 'bar' | 'line' | 'word-cloud'",
     ],
     [
         'ChartSkeleton',
@@ -307,7 +352,7 @@ const SkeletonGuidePage = () => (
                     <li>단순 플레이스홀더는 shadcn 원본 Skeleton을 사용합니다.</li>
                     <li>차트 로딩 구조는 composite ChartSkeleton과 실제 구조에 맞는 type을 사용합니다.</li>
                     <li>범례 데이터도 같은 API에서 가져오면 용도에 맞는 legend를 함께 지정합니다.</li>
-                    <li>차트 도형과 범례는 기본 반응형을 사용하며, RatingMatrix는 작은 화면에서 표시 열을 줄입니다.</li>
+                    <li>차트 도형과 범례는 기본 반응형을 사용합니다.</li>
                     <li>label에는 데이터나 업무 대상을 포함한 로딩 문구를 작성합니다.</li>
                     <li>장식용 도형은 보조기기에 숨기고 로딩 상태만 전달합니다.</li>
                 </ul>

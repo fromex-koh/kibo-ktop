@@ -6,6 +6,8 @@ import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import {useIsHydrated} from '@/hooks/use-is-hydrated'
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
 import {cn} from '@/lib/utils'
+import {ChartTooltipRow} from '@/components/composite/chart-tooltip-parts'
+import {chartTooltipClassName, chartTooltipTitleClassName} from '@/components/theme/chart-tooltip.variants'
 
 type ComparisonRadarItem = {
     id: string
@@ -52,12 +54,12 @@ type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children
     comparisonColor?: string
     /**
      * 비교 계열을 그리는 방식. 'dashed' 는 점선 테두리만, 'filled' 는 옅은 면으로 채운 실선이다
-     * (특허 등급조회처럼 비교 계열이 배경 면으로 깔리는 시안에서 쓴다).
+     * (특허 등급조회처럼 비교 계열이 배경 면으로 깔리는 화면에서 쓴다).
      */
     comparisonAppearance?: 'dashed' | 'filled'
     /**
      * 범례 모양. 'outline' 은 테두리 칸(기본), 'swatch' 는 16 칸을 색으로 채운 견본이다 —
-     * 주 계열은 진한 색, 비교 계열은 옅은 면 + 테두리(특허 등급조회 시안).
+     * 주 계열은 진한 색, 비교 계열은 옅은 면 + 테두리(특허 등급조회에서 쓴다).
      */
     legendAppearance?: 'outline' | 'swatch'
     /** 축 이름의 글자색. */
@@ -76,6 +78,14 @@ type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children
     dotAppearance?: 'filled' | 'hollow'
     /** 격자(고리 · 축 선)의 색. */
     gridColor?: string
+    /** 격자 고리 모양. 'polygon'(기본)은 축을 잇는 다각형, 'circle' 은 동심원이다(K-BIGx 보고서 부문별 비교). */
+    gridType?: 'polygon' | 'circle'
+    /**
+     * 주 계열 · 비교 계열 면의 투명도(0~1). 두 면은 모두 반투명이라 겹친 곳이 한 단계 진해진다 —
+     * 비교 계열이 주 계열 아래에 깔려도 비쳐 보인다. 비교 계열 면은 'filled' 일 때만 그린다.
+     */
+    primaryFillOpacity?: number
+    comparisonFillOpacity?: number
     /**
      * 값을 불러오는 중. 스켈레톤을 대신 보인다 — 축이 셋이면 삼각 레이더(triangle-radar), 그 밖에는 기본 레이더 모양이다.
      * 새로고침 직후 차트가 칸의 폭을 재기 전(하이드레이션 전)에도 같은 스켈레톤이 자동으로 보인다.
@@ -87,13 +97,56 @@ type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children
 
 const clampScore = (value: number) => Math.min(100, Math.max(0, value))
 const RADAR_DOT_RADIUS = 5
-// 속이 빈 점 — 시안 8px 원(테두리 포함)이라 반지름 4 다.
+// 속이 빈 점 — 테두리 포함 지름 8 이라 반지름 4 다.
 const HOLLOW_DOT_RADIUS = 4
 const TRIANGLE_AXIS_COUNT = 3
 // 비교 계열을 면으로 채울 때의 진하기 — 범례 견본(같은 색 25%)과 같게 둔다.
 const COMPARISON_FILL_OPACITY = 0.25
+const PRIMARY_FILL_OPACITY = 0.16
 
 const DEFAULT_RADAR_MARGIN = {top: 20, right: 48, bottom: 20, left: 48}
+
+type ComparisonRadarLegendProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> &
+    Pick<
+        ComparisonRadarChartProps,
+        'primaryLabel' | 'comparisonLabel' | 'primaryColor' | 'comparisonColor' | 'comparisonFillOpacity'
+    >
+
+// 색 견본 범례(swatch) — 차트 위에 두거나(showLegend), 카드 머리 줄처럼 다른 자리에 따로 둘 때 쓴다
+// (그때는 차트의 showLegend 를 끈다). 주 계열은 채운 16 칸, 비교 계열은 옅은 면 + 점선 테두리다.
+const ComparisonRadarLegend = ({
+    primaryLabel,
+    comparisonLabel,
+    primaryColor = 'var(--ds-chart-1)',
+    comparisonColor = 'var(--ds-chart-5)',
+    comparisonFillOpacity = COMPARISON_FILL_OPACITY,
+    className,
+    ...props
+}: ComparisonRadarLegendProps) => (
+    <div
+        {...props}
+        className={cn('typo-body-l-regular text-label-foreground flex flex-wrap gap-x-6 gap-y-2', className)}
+    >
+        <span className="flex items-center gap-2">
+            <span className="size-4 shrink-0" style={{backgroundColor: primaryColor}} aria-hidden="true" />
+            {primaryLabel}
+        </span>
+        {comparisonLabel ? (
+            <span className="flex items-center gap-2">
+                <span
+                    className="size-4 shrink-0 border border-dashed"
+                    style={{
+                        borderColor: comparisonColor,
+                        // 차트 면과 같은 진하기(같은 색 × 투명도)로 칠한다.
+                        backgroundColor: `color-mix(in srgb, ${comparisonColor} ${comparisonFillOpacity * 100}%, transparent)`,
+                    }}
+                    aria-hidden="true"
+                />
+                {comparisonLabel}
+            </span>
+        ) : null}
+    </div>
+)
 
 const ComparisonRadarChart = ({
     animate = true,
@@ -118,6 +171,9 @@ const ComparisonRadarChart = ({
     direction = 'clockwise',
     dotAppearance = 'filled',
     gridColor = 'var(--ds-subtle-2)',
+    gridType = 'polygon',
+    primaryFillOpacity = PRIMARY_FILL_OPACITY,
+    comparisonFillOpacity = COMPARISON_FILL_OPACITY,
     isLoading = false,
     loadingLabel = '레이더 차트를 불러오는 중입니다.',
     ariaLabel,
@@ -152,7 +208,13 @@ const ComparisonRadarChart = ({
         return (
             <ChartSkeleton
                 {...props}
-                type={data.length === TRIANGLE_AXIS_COUNT ? 'triangle-radar' : 'radar'}
+                type={
+                    gridType === 'circle'
+                        ? 'circle-radar'
+                        : data.length === TRIANGLE_AXIS_COUNT
+                          ? 'triangle-radar'
+                          : 'radar'
+                }
                 label={loadingLabel}
                 className={cn('w-full', className)}
             />
@@ -162,25 +224,14 @@ const ComparisonRadarChart = ({
     return (
         <div {...props} className={cn('flex w-full flex-col gap-4', className)}>
             {showLegend && legendAppearance === 'swatch' ? (
-                <div className="typo-body-l-regular text-label-foreground flex flex-wrap justify-end gap-x-6 gap-y-2">
-                    <span className="flex items-center gap-2">
-                        <span className="size-4" style={{backgroundColor: primaryColor}} aria-hidden="true" />
-                        {primaryLabel}
-                    </span>
-                    {hasComparison ? (
-                        <span className="flex items-center gap-2">
-                            <span
-                                className="size-4 border border-dashed"
-                                style={{
-                                    borderColor: comparisonColor,
-                                    backgroundColor: `color-mix(in srgb, ${comparisonColor} 25%, transparent)`,
-                                }}
-                                aria-hidden="true"
-                            />
-                            {comparisonLabel}
-                        </span>
-                    ) : null}
-                </div>
+                <ComparisonRadarLegend
+                    primaryLabel={primaryLabel}
+                    comparisonLabel={comparisonLabel}
+                    primaryColor={primaryColor}
+                    comparisonColor={comparisonColor}
+                    comparisonFillOpacity={comparisonFillOpacity}
+                    className="justify-end"
+                />
             ) : null}
             {showLegend && legendAppearance === 'outline' ? (
                 <div className="typo-body-s-regular text-foreground-subtle flex flex-wrap justify-end gap-x-4 gap-y-2">
@@ -223,7 +274,7 @@ const ComparisonRadarChart = ({
                 aria-label={ariaLabel}
             >
                 <RadarChart accessibilityLayer data={chartData} cy={centerY} outerRadius={outerRadius} margin={margin}>
-                    <PolarGrid key="grid" gridType="polygon" stroke={gridColor} />
+                    <PolarGrid key="grid" gridType={gridType} stroke={gridColor} />
                     <PolarAngleAxis
                         key="angle-axis"
                         dataKey="label"
@@ -243,6 +294,8 @@ const ComparisonRadarChart = ({
                             cursor={false}
                             content={
                                 <ChartTooltipContent
+                                    className={chartTooltipClassName}
+                                    labelClassName={chartTooltipTitleClassName}
                                     hideIndicator
                                     labelKey="label"
                                     formatter={(value, name) => {
@@ -254,19 +307,11 @@ const ComparisonRadarChart = ({
                                                   : undefined
 
                                         return (
-                                            <div className="flex w-full items-center justify-between gap-6">
-                                                <span className="flex items-center gap-1.5">
-                                                    <span
-                                                        className="size-2.5 shrink-0 rounded-full"
-                                                        style={{backgroundColor: item?.color}}
-                                                        aria-hidden="true"
-                                                    />
-                                                    {item?.label}
-                                                </span>
-                                                <strong className="text-foreground tabular-nums">
-                                                    {Number(value)}
-                                                </strong>
-                                            </div>
+                                            <ChartTooltipRow
+                                                color={item?.color}
+                                                name={item?.label}
+                                                value={Number(value)}
+                                            />
                                         )
                                     }}
                                 />
@@ -284,8 +329,8 @@ const ComparisonRadarChart = ({
                             strokeWidth={2}
                             strokeDasharray="5 4"
                             fill={isComparisonFilled ? 'var(--color-comparisonValue)' : 'transparent'}
-                            fillOpacity={isComparisonFilled ? COMPARISON_FILL_OPACITY : 0}
-                            // 면으로 채운 비교 계열은 배경처럼 깔리므로 꼭짓점 점을 두지 않는다(시안).
+                            fillOpacity={isComparisonFilled ? comparisonFillOpacity : 0}
+                            // 면으로 채운 비교 계열은 배경처럼 깔리므로 꼭짓점 점을 두지 않는다.
                             dot={
                                 showDots &&
                                 !isComparisonFilled && {
@@ -307,7 +352,7 @@ const ComparisonRadarChart = ({
                         stroke="var(--color-primaryValue)"
                         strokeWidth={2.5}
                         fill="var(--color-primaryValue)"
-                        fillOpacity={0.16}
+                        fillOpacity={primaryFillOpacity}
                         dot={
                             showDots &&
                             (dotAppearance === 'hollow'
@@ -355,5 +400,5 @@ const ComparisonRadarChart = ({
     )
 }
 
-export {ComparisonRadarChart}
-export type {ComparisonRadarChartProps, ComparisonRadarItem}
+export {ComparisonRadarChart, ComparisonRadarLegend}
+export type {ComparisonRadarChartProps, ComparisonRadarItem, ComparisonRadarLegendProps}

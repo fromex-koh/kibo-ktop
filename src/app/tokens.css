@@ -1558,6 +1558,7 @@
   --ds-spacing-modal-max-h: 80dvh;
   /* radius — base ± 오프셋(shadcn 컨벤션: 단일 --radius + calc 파생) */
   --ds-radius-base: 1rem;
+  --ds-radius-3xs: calc(var(--ds-radius-base) + -0.875rem);
   --ds-radius-2xs: calc(var(--ds-radius-base) + -0.75rem);
   --ds-radius-xs: calc(var(--ds-radius-base) + -0.625rem);
   --ds-radius-sm: calc(var(--ds-radius-base) + -0.5rem);
@@ -1660,6 +1661,7 @@
   --spacing-list-dash-h: var(--ds-spacing-list-dash-h);
   --spacing-list-dot-sm: var(--ds-spacing-list-dot-sm);
   --spacing-modal-max-h: var(--ds-spacing-modal-max-h);
+  --radius-3xs: var(--ds-radius-3xs);
   --radius-2xs: var(--ds-radius-2xs);
   --radius-xs: var(--ds-radius-xs);
   --radius-sm: var(--ds-radius-sm);

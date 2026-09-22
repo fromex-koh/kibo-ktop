@@ -196,6 +196,21 @@ const EDGE_CODE = `// 끝 등급도 받은 값을 그대로 넣는다 — 이름
   target={{grade: 'C'}}
 />`
 
+const DATA_CODE = `// [프론트엔드 연동] 비교 기준(동일 특허분야 평균)의 분기별 등급을 시간순(오래된 것부터)으로 바꾼다.
+// 등급은 scale 에 있는 값이어야 한다 — 없는 값이 오면 그 점은 그리지 않는다.
+const data = averageHistory.map((item) => ({
+  label: \`’\${item.year.slice(2)}년\\n\${item.quarter}분기\`, // 두 줄 이름은 \\n 으로 나눈다
+  grade: item.grade,
+}))
+
+<GradeTrendChart
+  ariaLabel={\`\${indicatorName} — 동일 특허분야 평균 추이와 평가대상 등급\`}
+  seriesLabel="동일 특허분야 평균"
+  scale={GRADE_SCALE}
+  data={data}
+  target={{grade: patent.grade, label: '평가대상'}} // 평가대상 등급(선과 다른 값) — 마지막 시점 자리에 선다
+/>`
+
 const GradeTrendChartGuidePage = () => (
     <GuidePageShell
         title="등급 추이 차트 (GradeTrendChart)"
@@ -390,6 +405,20 @@ const GradeTrendChartGuidePage = () => (
                         </li>
                     ))}
                 </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="gtc-data" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="gtc-data" className="typo-h4-bold">
+                        데이터 연결 (Data)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        분기별 등급 목록을 시간순으로 바꾸고, 평가대상 등급은 target 으로 따로 넘깁니다.
+                    </p>
+                </div>
+                <CodeBlock code={DATA_CODE} language="tsx" copyLabel="GradeTrendChart 데이터 연결 코드 복사" />
             </section>
         </BaseCard>
 

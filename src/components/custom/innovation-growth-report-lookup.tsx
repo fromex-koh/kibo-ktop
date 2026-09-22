@@ -4,12 +4,16 @@ import {useRef, useState, type ReactNode} from 'react'
 import {ChevronRight, CircleAlert} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 import {EmptyState} from '@/components/composite/empty-state'
+import {Pagination} from '@/components/composite/pagination'
 import {KbigxLegalBasisDialog} from '@/components/composite/k-bigx-legal-basis-dialog'
 import {KbigxReportCreateDialog} from '@/components/composite/k-bigx-report-create-dialog'
+import {KbigxViewCountDeductionDialog} from '@/components/composite/k-bigx-view-count-deduction-dialog'
 import {LoadingState} from '@/components/composite/loading-state'
 import {SelectSearchForm, type SelectSearchSubmit} from '@/components/composite/select-search-form'
 import {SelectableInfoCard, SelectableInfoCardGroup} from '@/components/composite/selectable-info-card'
 import {ListMarker} from '@/components/custom/list-marker'
+import {useIsMobile} from '@/hooks/use-mobile'
+import {cn} from '@/lib/utils'
 import {
     COMPANY_FIELD_LABELS,
     getInnovationGrowthInvalidError,
@@ -38,17 +42,28 @@ import {
     type InnovationGrowthPatentResult,
     type InnovationGrowthSearchType,
 } from '@/content/service/innovation-growth-report'
+import {
+    INNOVATION_REPORT_WINDOW_HEIGHT,
+    INNOVATION_REPORT_WINDOW_NAME,
+    INNOVATION_REPORT_WINDOW_WIDTH,
+} from '@/content/service/k-bigx-innovation-report'
+import {MOCK_VIEW_COUNT_DEDUCTION} from '@/content/service/k-bigx-view-count-deduction'
 
 // K-BIGx 보고서 · 기업혁신성장 조회.
 //
 // 흐름은 검색 기준에 따라 두 가지다.
 //   · 기업 검색: 검색된 기업 목록 → 기업 카드를 고름 → 그 기업의 특허 목록을 불러옴 → 특허 카드를 고름
 //   · 특허 검색: 기업 목록 없이 특허 목록이 바로 나옴(카드마다 기업명) → 특허 카드를 고름
-//   → 이용횟수 안내 → [K-BIGx 보고서 출력](보고서 생성 모달)
+//   → 이용횟수 안내 → [K-BIGx 보고서 출력] → 보고서 생성 모달 [보고서 생성] → 조회횟수 차감안내 모달 [이용권 사용]
+//   → 보고서 문서(…/diagnostic-briefing — 진단브리핑 탭)가 새 창으로 열린다(?from=use 로 '이용권이 차감되어 보고서를 생성하였습니다.' 알림).
 //   · 출력 버튼은 평소 꺼져 있고, 특허 카드를 골라야 켜진다.
 //   · 기업을 고르기 전에는 특허 목록 · 이용횟수 안내가 없고, 출력 버튼은 꺼져 있다.
 //   · 특허가 없는 기업(특허수 0)은 특허 목록 자리에 '특허 정보가 없습니다.' 빈 상태가 서고, 이용횟수 안내가
 //     '차감되지 않음'으로 바뀌며, 바로 출력할 수 있다(기술혁신정보를 뺀 보고서).
+//   · 검색된 기업이 4건을 넘으면 기업 목록 아래에 페이지 넘김이 서고 한 쪽에 4건(2열 두 줄)씩 보인다.
+//     쪽을 넘겨도 고른 기업 · 특허는 그대로다. [프론트엔드 연동] 지금은 받은 목록을 화면에서 나눈다 — API 가 쪽 단위로
+//     준다면 companyPage 로 요청하고 total 에 전체 쪽 수를 넘긴다.
+//   · 특허 목록도 2건을 넘으면 페이지 넘김이 서고 한 쪽에 2건(2열 한 줄)씩 보인다(patentPage — 같은 방식).
 //   · 검색 결과가 없으면 기업 목록(총 0건) 자리에 '검색된 기업이 없습니다.' 빈 상태가 선다.
 //
 // [프론트엔드 연동] 화면(UI)은 건드리지 않고 content/service/innovation-growth-report.ts 의 목업 함수 두 개만 API 로 바꾼다.
@@ -58,6 +73,11 @@ import {
 //   보고서 생성 요청은 KbigxReportCreateDialog 의 onCreate 에 잇는다.
 
 type SearchStatus = 'idle' | 'loading' | 'done'
+
+// 검색된 기업 목록 한 쪽의 카드 수 — 2열 두 줄. 이보다 많으면 목록 아래에 페이지 넘김을 둔다.
+const COMPANY_PAGE_SIZE = 4
+// 특허 목록 한 쪽의 카드 수 — 2열 한 줄. 이보다 많으면 목록 아래에 페이지 넘김을 둔다.
+const PATENT_PAGE_SIZE = 2
 
 const toCompanyFields = (company: InnovationGrowthCompany) => [
     {label: COMPANY_FIELD_LABELS.name, value: company.name},
@@ -84,12 +104,55 @@ const ListTitle = ({id, title, count}: {id: string; title: string; count: number
     </h2>
 )
 
+// 특허 정보 기준 안내(※ 두 줄, 13 Regular) — 특허 목록 아래에만 둔다.
+const PatentNotes = () => (
+    <ul className="typo-caption-regular text-foreground-subtle flex list-none flex-col">
+        {INNOVATION_GROWTH_PATENT_NOTES.map((note) => (
+            <li key={note} className="flex">
+                <ListMarker type="unordered-small" />
+                <span className="min-w-0 break-keep">{note}</span>
+            </li>
+        ))}
+    </ul>
+)
+
+// 목록 페이지 넘김 — 마이페이지 목록과 같은 공용 Pagination. 모바일은 번호만 좁게, 태블릿 이상은 [이전] · [다음] 글자와 함께.
+type ListPaginationProps = {
+    page: number
+    total: number
+    onPageChange: (page: number) => void
+    /** 페이지 넘김 묶음의 이름(스크린리더) — 어느 목록의 쪽인지 알린다. */
+    label: string
+    className?: string
+}
+
+const ListPagination = ({page, total, onPageChange, label, className}: ListPaginationProps) => {
+    const isMobile = useIsMobile()
+
+    return (
+        <Pagination
+            page={page}
+            total={total}
+            onPageChange={onPageChange}
+            siblingCount={isMobile ? 0 : 1}
+            prevLabel={isMobile ? '' : '이전'}
+            nextLabel={isMobile ? '' : '다음'}
+            maxVisibleItems={isMobile ? 5 : 10}
+            compact={isMobile}
+            aria-label={label}
+            className={cn('justify-center', className)}
+        />
+    )
+}
+
 // 목록 자리의 빈 상태 · 불러오는 중 — 흰 면 · 반경 16 · 높이 208(아이콘 32 + 안내 한 줄이 가운데).
 const LIST_STATE_CLASS_NAME = 'bg-card min-h-52 rounded-lg'
 
 type InnovationGrowthReportLookupProps = {
     /** 화면 제목 · 소개 — 검색 위에 놓인다. */
     intro: ReactNode
+    /** 보고서 문서(보고서 출력) 주소 — 기업 /corp/… · 기관 /org/…. [이용권 사용]이 이 주소를 새 창으로 연다. */
+    reportHref: string
     /**
      * 처음부터 보여 줄 검색 결과 — 주면 검색이 끝난 상태로 시작한다. 비우면 검색 전(조회 화면)이다.
      * [퍼블리싱 확인용] 결과 화면(search-result/…)들이 케이스별 목업을 넘긴다.
@@ -107,7 +170,7 @@ type InnovationGrowthReportLookupProps = {
         | {type: 'patent'; keyword?: string; patents: readonly InnovationGrowthPatentResult[]}
 }
 
-const InnovationGrowthReportLookup = ({intro, initialResult}: InnovationGrowthReportLookupProps) => {
+const InnovationGrowthReportLookup = ({intro, reportHref, initialResult}: InnovationGrowthReportLookupProps) => {
     // 마지막으로 검색한 기준 — 'company' 면 기업 목록부터, 'patent' 면 특허 목록이 바로 나온다.
     const initialCompanyResult = initialResult?.type === 'company' ? initialResult : undefined
     const [searchType, setSearchType] = useState<InnovationGrowthSearchType>(initialResult?.type ?? 'company')
@@ -116,6 +179,11 @@ const InnovationGrowthReportLookup = ({intro, initialResult}: InnovationGrowthRe
         initialCompanyResult?.companies ?? [],
     )
     const [companyId, setCompanyId] = useState(initialCompanyResult?.selection?.companyId ?? '')
+    const [companyPage, setCompanyPage] = useState(1)
+    // 특허 목록의 쪽 — 특허 목록이 바뀌면(기업을 고름 · 특허 검색 · 초기화) 1쪽으로 돌아간다.
+    const [patentPage, setPatentPage] = useState(1)
+    // 조회횟수 차감안내 모달 — 보고서 생성 모달의 [보고서 생성] 뒤에 이어 연다.
+    const [isDeductionOpen, setIsDeductionOpen] = useState(false)
     // 고른 기업의 특허 — null 이면 아직 불러오는 중이다.
     // 특허 검색이면 검색 결과(기업명이 붙은 특허)가 여기 들어간다.
     const [patents, setPatents] = useState<readonly (InnovationGrowthPatent | InnovationGrowthPatentResult)[] | null>(
@@ -157,6 +225,7 @@ const InnovationGrowthReportLookup = ({intro, initialResult}: InnovationGrowthRe
         setCompanyId('')
         setPatents(null)
         setPatentId('')
+        setPatentPage(1)
     }
 
     const selectCompany = async (id: string) => {
@@ -165,6 +234,7 @@ const InnovationGrowthReportLookup = ({intro, initialResult}: InnovationGrowthRe
         setCompanyId(id)
         setPatents(null)
         setPatentId('')
+        setPatentPage(1)
         // 기업을 고르면 그 기업의 특허 목록 섹션으로 내려간다 — 섹션이 그려진 다음 프레임에 옮긴다.
         window.requestAnimationFrame(() =>
             patentSectionRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'}),
@@ -181,11 +251,13 @@ const InnovationGrowthReportLookup = ({intro, initialResult}: InnovationGrowthRe
         setSearchType(type)
         setSearchStatus('loading')
         setCompanies([])
+        setCompanyPage(1)
         scrollToResult()
         if (type === 'patent') {
             const result = await searchInnovationGrowthPatents(value)
             if (requestId !== requestRef.current) return
             setPatents(result)
+            setPatentPage(1)
             setSearchStatus('done')
             scrollToResult()
             return
@@ -197,10 +269,25 @@ const InnovationGrowthReportLookup = ({intro, initialResult}: InnovationGrowthRe
         scrollToResult()
     }
 
+    // 기업 목록 쪽을 넘기면 목록 머리(결과 영역)로 올라간다 — 고른 기업 · 특허는 그대로 둔다.
+    const handleCompanyPageChange = (nextPage: number) => {
+        setCompanyPage(nextPage)
+        scrollToResult()
+    }
+
+    // 특허 목록 쪽을 넘기면 특허 목록 머리로 올라간다 — 고른 특허는 그대로 둔다.
+    const handlePatentPageChange = (nextPage: number) => {
+        setPatentPage(nextPage)
+        window.requestAnimationFrame(() =>
+            patentSectionRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'}),
+        )
+    }
+
     const handleReset = () => {
         clearSelection()
         setSearchStatus('idle')
         setCompanies([])
+        setCompanyPage(1)
     }
 
     // 세로 간격 — 소개 · 검색 · 결과 · 버튼 사이 40, 검색 안내 줄과 결과 사이만 60(결과 영역 mt-5).
@@ -256,13 +343,39 @@ const InnovationGrowthReportLookup = ({intro, initialResult}: InnovationGrowthRe
                                 onValueChange={(id) => void selectCompany(id)}
                                 aria-labelledby="ig-company-title"
                             >
-                                {companies.map((item) => (
-                                    <SelectableInfoCard key={item.id} value={item.id} fields={toCompanyFields(item)} />
-                                ))}
+                                {companies
+                                    .slice((companyPage - 1) * COMPANY_PAGE_SIZE, companyPage * COMPANY_PAGE_SIZE)
+                                    .map((item) => (
+                                        <SelectableInfoCard
+                                            key={item.id}
+                                            value={item.id}
+                                            fields={toCompanyFields(item)}
+                                        />
+                                    ))}
                             </SelectableInfoCardGroup>
-                        ) : (
-                            <EmptyState title={INNOVATION_GROWTH_NOT_FOUND} className={LIST_STATE_CLASS_NAME} />
-                        )}
+                        ) : null}
+                        {/* 4건이 넘으면 페이지 넘김 — 모바일은 번호만 좁게, 태블릿 이상은 [이전] · [다음] 글자와 함께. */}
+                        {companies.length > COMPANY_PAGE_SIZE ? (
+                            <ListPagination
+                                page={companyPage}
+                                total={Math.ceil(companies.length / COMPANY_PAGE_SIZE)}
+                                onPageChange={handleCompanyPageChange}
+                                label="검색된 기업 목록 페이지"
+                            />
+                        ) : null}
+                        {!companies.length ? (
+                            // 검색된 기업 없음 — 흰 면 · 반경 16 · 높이 232 안에 아이콘과 두 줄 안내. 특허 정보 안내(※)는 특허 목록 아래에만 둔다.
+                            <div className="flex flex-col gap-2">
+                                <EmptyState
+                                    title={INNOVATION_GROWTH_NOT_FOUND.map((line) => (
+                                        <span key={line} className="block break-keep">
+                                            {line}
+                                        </span>
+                                    ))}
+                                    className="bg-card min-h-58 rounded-lg"
+                                />
+                            </div>
+                        ) : null}
                     </section>
                 ) : null}
 
@@ -291,21 +404,36 @@ const InnovationGrowthReportLookup = ({intro, initialResult}: InnovationGrowthRe
                                     onValueChange={selectPatent}
                                     aria-labelledby="ig-patent-title"
                                 >
-                                    {patents.map((item) => (
-                                        <SelectableInfoCard
-                                            key={item.id}
-                                            value={item.id}
-                                            fields={
-                                                'companyName' in item
-                                                    ? [
-                                                          {label: COMPANY_FIELD_LABELS.name, value: item.companyName},
-                                                          ...toPatentFields(item),
-                                                      ]
-                                                    : toPatentFields(item)
-                                            }
-                                        />
-                                    ))}
+                                    {patents
+                                        .slice((patentPage - 1) * PATENT_PAGE_SIZE, patentPage * PATENT_PAGE_SIZE)
+                                        .map((item) => (
+                                            <SelectableInfoCard
+                                                key={item.id}
+                                                value={item.id}
+                                                fields={
+                                                    'companyName' in item
+                                                        ? [
+                                                              {
+                                                                  label: COMPANY_FIELD_LABELS.name,
+                                                                  value: item.companyName,
+                                                              },
+                                                              ...toPatentFields(item),
+                                                          ]
+                                                        : toPatentFields(item)
+                                                }
+                                            />
+                                        ))}
                                 </SelectableInfoCardGroup>
+                            ) : null}
+                            {/* 2건이 넘으면 페이지 넘김 — 카드와 안내(※) 사이에 둔다. */}
+                            {patents && patents.length > PATENT_PAGE_SIZE ? (
+                                <ListPagination
+                                    page={patentPage}
+                                    total={Math.ceil(patents.length / PATENT_PAGE_SIZE)}
+                                    onPageChange={handlePatentPageChange}
+                                    label="특허 목록 페이지"
+                                    className="py-2"
+                                />
                             ) : null}
                             {patents?.length === 0 ? (
                                 <EmptyState
@@ -317,14 +445,7 @@ const InnovationGrowthReportLookup = ({intro, initialResult}: InnovationGrowthRe
                                     className={LIST_STATE_CLASS_NAME}
                                 />
                             ) : null}
-                            <ul className="typo-caption-regular text-foreground-subtle flex list-none flex-col">
-                                {INNOVATION_GROWTH_PATENT_NOTES.map((note) => (
-                                    <li key={note} className="flex">
-                                        <ListMarker type="unordered-small" />
-                                        <span className="min-w-0 break-keep">{note}</span>
-                                    </li>
-                                ))}
-                            </ul>
+                            <PatentNotes />
                         </div>
                     </section>
                 ) : null}
@@ -368,12 +489,28 @@ const InnovationGrowthReportLookup = ({intro, initialResult}: InnovationGrowthRe
                 <div ref={printRef} className="flex justify-center">
                     <KbigxReportCreateDialog
                         companyName={reportCompanyName}
+                        onCreate={() => setIsDeductionOpen(true)}
                         patent={patent ? toPatentFields(patent) : undefined}
                     >
                         <Button type="button" size="xl" disabled={!canPrint} aria-haspopup="dialog">
                             {INNOVATION_GROWTH_PRINT_LABEL}
                         </Button>
                     </KbigxReportCreateDialog>
+                    {/* [보고서 생성] → 조회횟수 차감안내. [이용권 사용]은 보고서 문서를 새 창으로 연다.
+                        [프론트엔드 연동] 이용권 현황(MOCK_VIEW_COUNT_DEDUCTION)은 보유 이용권 조회 값으로 바꾼다.
+                        보고서 생성 API 가 돌려준 보고서 id 를 href 에 INNOVATION_REPORT_ID_QUERY(?reportId=)로 함께 싣는다. */}
+                    <KbigxViewCountDeductionDialog
+                        {...MOCK_VIEW_COUNT_DEDUCTION}
+                        companyName={reportCompanyName}
+                        open={isDeductionOpen}
+                        onOpenChange={setIsDeductionOpen}
+                        reportWindow={{
+                            href: `${reportHref}?from=use`,
+                            width: INNOVATION_REPORT_WINDOW_WIDTH,
+                            height: INNOVATION_REPORT_WINDOW_HEIGHT,
+                            windowName: INNOVATION_REPORT_WINDOW_NAME,
+                        }}
+                    />
                 </div>
             ) : null}
         </div>

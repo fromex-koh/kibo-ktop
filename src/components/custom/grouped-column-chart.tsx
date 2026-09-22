@@ -1,13 +1,37 @@
 'use client'
 
 import type {ComponentPropsWithoutRef} from 'react'
-import {Bar, BarChart, CartesianGrid, LabelList, Rectangle, XAxis, YAxis, type RectangleProps} from 'recharts'
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    LabelList,
+    Rectangle,
+    ReferenceLine,
+    XAxis,
+    YAxis,
+    type RectangleProps,
+} from 'recharts'
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
 import {cn} from '@/lib/utils'
+import {
+    CELLS_DIVIDER_DASH,
+    CELLS_GRID_STROKE,
+    CELLS_X_TICK,
+    CELLS_X_TICK_MARGIN,
+    cellsBarDomain,
+    cellsBottomLine,
+    cellsDividerLines,
+    cellsEdgeLines,
+    cellsMinPointSize,
+    renderCellsBarValueLabel,
+} from '@/components/custom/chart-cells'
+import {ChartTooltipRow} from '@/components/composite/chart-tooltip-parts'
+import {chartTooltipClassName, chartTooltipTitleClassName} from '@/components/theme/chart-tooltip.variants'
 
 // 값이 0 인 막대를 그리는 방법.
 // recharts 는 높이 0 인 사각형을 아예 만들지 않고 걸러 내는데(Bar 의 width·height 0 필터), 그때
-// 그 막대 뒤에 깔리는 눈금 배경까지 함께 사라진다 — 시안은 값이 0 이어도 배경 기둥이 서 있다.
+// 그 막대 뒤에 깔리는 눈금 배경까지 함께 사라진다 — 값이 0 이어도 배경 기둥은 남아야 한다.
 // 직접 그리는 모양(shape)을 넘기면 recharts 가 그 거르기를 건너뛰므로, 배경은 남기고 막대만
 // 그리지 않을 수 있다. 배경을 깔 때(showTrack)만 쓴다.
 const BarRectangle = (props: RectangleProps) => (props.height ? <Rectangle {...props} /> : null)
@@ -34,7 +58,7 @@ type GroupedColumnChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'>
     data: GroupedColumnItem[]
     /** 한 묶음 안에서 막대 사이 간격(px). */
     barGap?: number
-    /** 막대 위쪽 모서리 반경(px). 0 이면 각진 막대다. */
+    /** 막대 위쪽 모서리 반경(px). 0 이면 위가 둥근 막대다. */
     barRadius?: number
     /** 막대 하나의 최대 두께(px). 열이 좁은 표 안에 넣을 때 줄인다. */
     maxBarSize?: number
@@ -51,11 +75,23 @@ type GroupedColumnChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'>
     showTrack?: boolean
     showValueLabels?: boolean
     unit?: string
+    /**
+     * 모양. 'default' 는 y축 · 점선 눈금 · 아래 범례다. 'cells' 는 K-BIGx 보고서 "최근 3개년 재무 현황" 카드 모양이다 —
+     * y축 없이 항목마다 테두리 칸(gray.100)을 두고, 칸 가운데에 두께 12 · 간격 20 의 위가 둥근 막대와 값(11 Regular)을 세운다.
+     * 범례는 오른쪽 위 16 사각 견본(14 Regular)이고 항목 이름(12 Regular)은 칸 아래 8 떨어진다.
+     */
+    variant?: 'default' | 'cells'
     valueFractionDigits?: number
     yAxisStep?: number
 }
 
 const numberFormatter = new Intl.NumberFormat('ko-KR')
+// variant 'cells' 막대 치수 — 두께 12 · 막대 사이 20 · 위 끝 반원(반경 6). 선 · 값 글자 · 세로 범위는 chart-cells 공통.
+const CELLS_BAR_SIZE = 12
+const CELLS_BAR_GAP = 20
+const CELLS_BAR_RADIUS = 6
+// 항목 이름 자리 — 이 카드는 그래프 아래 여백을 조금 더 둔다(칸 240 + 32 = 272 · h-68).
+const GROUPED_CELLS_X_AXIS_HEIGHT = 32
 
 const GroupedColumnChart = ({
     animate = true,
@@ -70,6 +106,7 @@ const GroupedColumnChart = ({
     showTrack = false,
     showValueLabels = false,
     unit,
+    variant = 'default',
     valueFractionDigits = 0,
     yAxisStep,
     ariaLabel,
@@ -92,16 +129,36 @@ const GroupedColumnChart = ({
         0,
         ...data.flatMap((item) => series.map(({key}) => Math.max(0, item.values[key] ?? 0))),
     )
+    const minimumValue = Math.min(
+        0,
+        ...data.flatMap((item) => series.map(({key}) => Math.min(0, item.values[key] ?? 0))),
+    )
+    const cellsDomain = cellsBarDomain(minimumValue, maximumValue)
     const normalizedStep = yAxisStep && yAxisStep > 0 ? yAxisStep : undefined
     const yAxisMaximum = normalizedStep
         ? Math.max(normalizedStep, Math.ceil(maximumValue / normalizedStep) * normalizedStep)
         : undefined
+    const isCells = variant === 'cells'
     const yAxisTicks = normalizedStep
         ? Array.from({length: yAxisMaximum! / normalizedStep + 1}, (_, index) => index * normalizedStep)
         : undefined
 
     return (
-        <div {...props} className={cn('flex w-full flex-col gap-4', className)}>
+        <div {...props} className={cn('flex w-full flex-col', isCells ? 'gap-6' : 'gap-4', className)}>
+            {showLegend && isCells ? (
+                <ul className="typo-body-l-regular text-label-foreground flex flex-wrap justify-end gap-x-6 gap-y-2">
+                    {series.map((item) => (
+                        <li key={item.key} className="flex items-center gap-2">
+                            <span
+                                className="size-4 shrink-0"
+                                style={{backgroundColor: item.color}}
+                                aria-hidden="true"
+                            />
+                            {item.label}
+                        </li>
+                    ))}
+                </ul>
+            ) : null}
             <div className="relative w-full overflow-x-auto">
                 {unit ? (
                     <span className="typo-body-s-regular text-foreground absolute top-0 left-3 z-10" aria-hidden="true">
@@ -110,7 +167,15 @@ const GroupedColumnChart = ({
                 ) : null}
                 <ChartContainer
                     config={config}
-                    className="h-80 w-full min-w-160 sm:min-w-0 [&_.recharts-rectangle]:cursor-pointer"
+                    className={cn(
+                        // 좁은 화면에서는 막대 묶음이 겹치지 않게 최소 폭을 지키고 그래프 영역만 가로로 넘긴다
+                        // (cells: 항목 6개 × 칸 96 = 576).
+                        'w-full [&_.recharts-rectangle]:cursor-pointer',
+                        // cells 는 화면 폭과 무관하게 576 을 지킨다 — 옆에 표를 둔 좁은 칸(태블릿)에서도 막대 묶음이 겹치지 않게.
+                        isCells ? 'min-w-144' : 'min-w-160 sm:min-w-0',
+                        // 칸 240 + 항목 이름 자리 32(간격 8 · 글자 18 · 여유) = 272.
+                        isCells ? 'h-68' : 'h-80',
+                    )}
                     role="img"
                     aria-label={ariaLabel}
                 >
@@ -118,12 +183,55 @@ const GroupedColumnChart = ({
                         accessibilityLayer
                         data={chartData}
                         margin={
-                            showAxes ? {top: 40, right: 12, bottom: 8, left: 8} : {top: 0, right: 0, bottom: 0, left: 0}
+                            isCells
+                                ? {top: 0, right: 1, bottom: 0, left: 1}
+                                : showAxes
+                                  ? {top: 40, right: 12, bottom: 8, left: 8}
+                                  : {top: 0, right: 0, bottom: 0, left: 0}
                         }
                         barCategoryGap="24%"
-                        barGap={barGap}
+                        barGap={isCells ? CELLS_BAR_GAP : barGap}
                     >
-                        {showAxes ? (
+                        {isCells ? (
+                            // 칸 테두리 — 위 선 없이 바닥선 · 양 끝 세로선은 실선, 항목 사이 세로선은 점선이다.
+                            // CartesianGrid 는 한 벌에 한 선 모양만 가지므로 실선 · 점선 두 벌로 나눠 긋는다.
+                            <CartesianGrid
+                                key="cells-solid"
+                                stroke={CELLS_GRID_STROKE}
+                                horizontalCoordinatesGenerator={cellsBottomLine}
+                                verticalCoordinatesGenerator={cellsEdgeLines}
+                            />
+                        ) : null}
+                        {isCells ? (
+                            <CartesianGrid
+                                key="cells-dashed"
+                                stroke={CELLS_GRID_STROKE}
+                                strokeDasharray={CELLS_DIVIDER_DASH}
+                                horizontal={false}
+                                verticalCoordinatesGenerator={cellsDividerLines(data.length)}
+                            />
+                        ) : null}
+                        {isCells ? (
+                            <XAxis
+                                key="x-axis"
+                                dataKey="label"
+                                tickLine={false}
+                                axisLine={false}
+                                tick={CELLS_X_TICK}
+                                tickMargin={CELLS_X_TICK_MARGIN}
+                                height={GROUPED_CELLS_X_AXIS_HEIGHT}
+                                interval={0}
+                            />
+                        ) : null}
+                        {isCells ? (
+                            // 가장 큰 막대가 칸 높이의 78% 에 닿게 위를 비워 값 글자 자리를 둔다.
+                            <YAxis key="y-axis" hide domain={cellsDomain} />
+                        ) : null}
+                        {isCells && minimumValue < 0 ? (
+                            // 음수가 있으면 칸 안에 0 기준선을 긋는다 — 막대가 위아래로 갈리는 자리.
+                            <ReferenceLine key="zero" y={0} stroke="var(--ds-foreground-subtle)" />
+                        ) : null}
+                        {showAxes && !isCells ? (
                             <CartesianGrid
                                 key="grid"
                                 vertical={false}
@@ -137,7 +245,7 @@ const GroupedColumnChart = ({
                                 }
                             />
                         ) : null}
-                        {showAxes ? (
+                        {showAxes && !isCells ? (
                             <XAxis
                                 key="x-axis"
                                 dataKey="label"
@@ -148,7 +256,7 @@ const GroupedColumnChart = ({
                                 interval={0}
                             />
                         ) : null}
-                        {showAxes ? (
+                        {isCells ? null : showAxes ? (
                             <YAxis
                                 key="y-axis"
                                 domain={[0, yAxisMaximum ?? (maximumValue === 0 ? 1 : 'auto')]}
@@ -175,23 +283,16 @@ const GroupedColumnChart = ({
                                 cursor={false}
                                 content={
                                     <ChartTooltipContent
+                                        className={chartTooltipClassName}
+                                        labelClassName={chartTooltipTitleClassName}
                                         indicator="dot"
                                         labelKey="label"
                                         formatter={(value, name) => (
-                                            <div className="flex w-full items-center justify-between gap-6">
-                                                <span className="flex items-center gap-1.5">
-                                                    <span
-                                                        className="size-2.5 shrink-0 rounded-full"
-                                                        style={{backgroundColor: config[String(name)]?.color}}
-                                                        aria-hidden="true"
-                                                    />
-                                                    {config[String(name)]?.label}
-                                                </span>
-                                                <strong className="text-foreground tabular-nums">
-                                                    {valueFormatter.format(Number(value))}
-                                                    {unit ? ` ${unit}` : ''}
-                                                </strong>
-                                            </div>
+                                            <ChartTooltipRow
+                                                color={config[String(name)]?.color}
+                                                name={config[String(name)]?.label}
+                                                value={`${valueFormatter.format(Number(value))}${unit ? ` ${unit}` : ''}`}
+                                            />
                                         )}
                                     />
                                 }
@@ -210,11 +311,26 @@ const GroupedColumnChart = ({
                                         fill: `color-mix(in srgb, var(--color-${item.key}) 78%, var(--ds-foreground))`,
                                     }
                                 }
-                                radius={[barRadius, barRadius, 0, 0]}
+                                radius={
+                                    isCells ? [CELLS_BAR_RADIUS, CELLS_BAR_RADIUS, 0, 0] : [barRadius, barRadius, 0, 0]
+                                }
                                 maxBarSize={maxBarSize}
+                                barSize={isCells ? CELLS_BAR_SIZE : undefined}
                                 isAnimationActive={animate}
+                                // cells: 0 · 아주 작은 값도 막대 자리(와 값 글자)를 남긴다(chart-cells).
+                                minPointSize={isCells ? cellsMinPointSize : undefined}
                             >
-                                {showValueLabels ? (
+                                {showValueLabels && isCells ? (
+                                    <LabelList
+                                        dataKey={item.key}
+                                        content={(labelProps) =>
+                                            renderCellsBarValueLabel(labelProps, (value) =>
+                                                valueFormatter.format(value),
+                                            )
+                                        }
+                                    />
+                                ) : null}
+                                {showValueLabels && !isCells ? (
                                     <LabelList
                                         dataKey={item.key}
                                         position="top"
@@ -230,7 +346,7 @@ const GroupedColumnChart = ({
                 </ChartContainer>
             </div>
 
-            {showLegend ? (
+            {showLegend && !isCells ? (
                 <ul className="typo-body-s-regular text-foreground flex flex-wrap justify-center gap-x-5 gap-y-2">
                     {series.map((item) => (
                         <li key={item.key} className="flex items-center gap-1.5">
@@ -245,30 +361,33 @@ const GroupedColumnChart = ({
                 </ul>
             ) : null}
 
-            <table className="sr-only">
-                <caption>{ariaLabel}</caption>
-                <thead>
-                    <tr>
-                        <th scope="col">항목</th>
-                        {series.map((item) => (
-                            <th key={item.key} scope="col">
-                                {item.label}
-                                {unit ? ` (${unit})` : ''}
-                            </th>
-                        ))}
-                    </tr>
-                </thead>
-                <tbody>
-                    {data.map((item) => (
-                        <tr key={item.id}>
-                            <th scope="row">{item.label}</th>
-                            {series.map(({key}) => (
-                                <td key={key}>{valueFormatter.format(item.values[key] ?? 0)}</td>
+            {/* 감추는 상자를 따로 둔다 — 표에 직접 sr-only 를 걸면 표가 제 폭만큼 자리를 차지해 문서가 가로로 넓어진다. */}
+            <div className="sr-only">
+                <table>
+                    <caption>{ariaLabel}</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">항목</th>
+                            {series.map((item) => (
+                                <th key={item.key} scope="col">
+                                    {item.label}
+                                    {unit ? ` (${unit})` : ''}
+                                </th>
                             ))}
                         </tr>
-                    ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {data.map((item) => (
+                            <tr key={item.id}>
+                                <th scope="row">{item.label}</th>
+                                {series.map(({key}) => (
+                                    <td key={key}>{valueFormatter.format(item.values[key] ?? 0)}</td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
         </div>
     )
 }

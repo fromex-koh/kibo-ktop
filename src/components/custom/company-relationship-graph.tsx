@@ -5,6 +5,7 @@ import {useTheme} from 'next-themes'
 import type {Core, ElementDefinition, NodeSingular, StylesheetJson} from 'cytoscape'
 import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import {cn} from '@/lib/utils'
+import {ChartTooltipBox, ChartTooltipDescription, ChartTooltipTitle} from '@/components/composite/chart-tooltip-parts'
 
 type CompanyRiskStatus = 'alert' | 'attention' | 'closed' | 'danger' | 'good' | 'high-risk' | 'normal' | 'poor'
 type SectorIcon =
@@ -639,16 +640,16 @@ const CompanyRelationshipGraph = ({
                 </button>
             ))}
             {tooltip && tooltipParts ? (
-                <div
-                    className="border-border bg-popover text-popover-foreground pointer-events-none absolute z-10 -mt-3 max-w-60 -translate-x-1/2 -translate-y-full rounded-md border px-3 py-2 text-xs font-medium shadow-md"
+                // 설명이 길 수 있어 이 차트만 최대 폭 안에서 줄바꿈을 허용한다(whitespace-normal).
+                <ChartTooltipBox
+                    className="absolute z-10 -mt-3 max-w-60 -translate-x-1/2 -translate-y-full whitespace-normal"
                     style={{left: tooltip.x, top: tooltip.y}}
-                    role="tooltip"
                 >
-                    <p className="typo-body-l-bold">{tooltipParts.title}</p>
+                    <ChartTooltipTitle>{tooltipParts.title}</ChartTooltipTitle>
                     {tooltipParts.description ? (
-                        <p className="typo-body-s-regular mt-1">{tooltipParts.description}</p>
+                        <ChartTooltipDescription>{tooltipParts.description}</ChartTooltipDescription>
                     ) : null}
-                </div>
+                </ChartTooltipBox>
             ) : null}
             <div className="sr-only">
                 <p>{ariaLabel}</p>
