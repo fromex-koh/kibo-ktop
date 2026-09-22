@@ -30,8 +30,9 @@ const findRoutePage = (directory, segments, index) => {
 }
 
 // URL 경로에는 포함되지 않는 Next.js Route Group 폴더를 건너뛰고 page 파일을 찾는다.
+// 경로 뒤 쿼리 · 해시(예: ?tab=credit-finance&case=partner-corp)는 같은 page 파일의 다른 상태라 떼고 찾는다.
 export const findAppPage = (root, routePath) => {
-    const segments = routePath.split('/').filter(Boolean)
+    const segments = routePath.split(/[?#]/)[0].split('/').filter(Boolean)
     const pageFile = findRoutePage(path.join(root, 'src/app'), segments, 0)
     return pageFile ? path.relative(root, pageFile) : undefined
 }
