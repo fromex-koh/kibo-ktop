@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect} from 'react'
+import {Suspense, useEffect} from 'react'
 import Image from 'next/image'
 import {usePathname, useSearchParams} from 'next/navigation'
 import {Award, Building2, Download, ExternalLink, ThumbsUp, TrendingUp, type LucideIcon} from 'lucide-react'
@@ -166,7 +166,7 @@ type InnovationGrowthReportDocumentProps = {
 // 혁신성장역량지수 점수 — 게이지와 같이 소수 첫째 자리까지(73.8).
 const techIndexScoreFormatter = new Intl.NumberFormat('ko-KR', {maximumFractionDigits: 1})
 
-const InnovationGrowthReportDocument = ({report, isJustCreated = false}: InnovationGrowthReportDocumentProps) => {
+const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthReportDocumentProps) => {
     // [이용권 사용]을 거쳐 열렸을 때(?from=use) 차감 알림을 한 번 띄운다 — 확인 토스트(체크 표시 · 머리 아래 가운데 · 4초).
     // 이 문서의 effect 가 루트의 Toaster 보다 먼저 돌아 바로 부르면 아무도 받지 못하므로 한 틱 미룬다.
     // [프론트엔드 연동] 차감 성공 여부는 새 창을 여는 쪽(조회횟수 차감안내 모달)이 알고 있다 — 성공했을 때만 ?from=use 를 붙여 연다.
@@ -1158,11 +1158,16 @@ const CreditTabSkeleton = () => (
 )
 
 // 받는 동안의 문서 — 주소의 ?tab= 을 읽어 그 탭 모양의 스켈레톤을 보인다(loading.tsx 는 주소 쿼리를 모르므로 여기서 고른다).
-const InnovationGrowthReportDocumentSkeleton = () => {
+// 주소의 ?tab= 을 읽어 그 탭 모양의 스켈레톤을 고른다(Suspense 안에서만 쓴다).
+const SkeletonFromQuery = () => {
     const searchParams = useSearchParams()
     const tabParam = searchParams.get(INNOVATION_REPORT_TAB_QUERY)
-    const activeTab: InnovationReportSectionId =
-        tabParam && isReportTab(tabParam) ? tabParam : INNOVATION_REPORT_SECTIONS[0].id
+    return (
+        <ReportSkeleton activeTab={tabParam && isReportTab(tabParam) ? tabParam : INNOVATION_REPORT_SECTIONS[0].id} />
+    )
+}
+
+const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => {
     const isPcOnlyTab = activeTab !== INNOVATION_REPORT_SECTIONS[0].id
     const activeSection =
         INNOVATION_REPORT_SECTIONS.find((section) => section.id === activeTab) ?? INNOVATION_REPORT_SECTIONS[0]
@@ -1370,6 +1375,26 @@ const InnovationGrowthReportDocumentSkeleton = () => {
         </main>
     )
 }
+
+// 문서 · 스켈레톤은 주소의 ?tab= 을 읽는다(useSearchParams) — 정적 생성(빌드) 때는 주소를 알 수 없으므로 Suspense 로 감싸고,
+// 그 동안에는 첫 탭(진단브리핑) 모양의 스켈레톤을 보인다. 감싸지 않으면 빌드가 실패한다(missing-suspense-with-csr-bailout).
+const FIRST_TAB = INNOVATION_REPORT_SECTIONS[0].id
+
+const InnovationGrowthReportDocument = (props: InnovationGrowthReportDocumentProps) => (
+    <Suspense fallback={<ReportSkeleton activeTab={FIRST_TAB} />}>
+        <ReportDocumentBody {...props} />
+    </Suspense>
+)
+
+// 받는 동안의 문서 — 탭을 넘기면 그 탭 모양으로, 넘기지 않으면 주소의 ?tab= 을 읽어 고른다(loading.tsx).
+const InnovationGrowthReportDocumentSkeleton = ({activeTab}: {activeTab?: InnovationReportSectionId}) =>
+    activeTab ? (
+        <ReportSkeleton activeTab={activeTab} />
+    ) : (
+        <Suspense fallback={<ReportSkeleton activeTab={FIRST_TAB} />}>
+            <SkeletonFromQuery />
+        </Suspense>
+    )
 
 export {InnovationGrowthReportDocument, InnovationGrowthReportDocumentSkeleton}
 export type {InnovationGrowthReportDocumentProps}
