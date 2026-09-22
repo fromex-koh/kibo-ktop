@@ -758,21 +758,21 @@
             "isCurrent": false
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-payment",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-company-overview",
+            "implemented": false,
+            "implementationStatus": "planned",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
@@ -829,16 +829,30 @@
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-report-print",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "corp-k-bigx-report-innovation-growth-report-report-print",
+            "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
             "isCurrent": false
         },
         {
@@ -1809,13 +1823,20 @@
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-company-overview",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "org-k-bigx-report-innovation-growth-report-company-overview",
+            "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
@@ -1872,16 +1893,30 @@
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-print-output-selection",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-report-print",
             "implemented": false,
             "implementationStatus": "planned",
             "version": "미배포",
             "isCurrent": false
         },
         {
-            "key": "org-k-bigx-report-innovation-growth-report-report-print",
+            "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
+            "version": "미배포",
+            "isCurrent": false
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "미배포",
             "isCurrent": false
         },
         {

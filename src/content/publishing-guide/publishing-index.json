@@ -1439,25 +1439,23 @@
                             "iaRow": 107
                         },
                         {
-                            "label": "K-BIGx 보고서 결제",
-                            "screenId": null,
-                            "status": "대기중",
-                            "version": "미배포",
-                            "key": "corp-k-bigx-report-innovation-growth-report-payment",
-                            "iaRow": 108
-                        },
-                        {
                             "label": "조회횟수 차감안내",
                             "screenId": null,
                             "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-view-count-deduction",
                             "iaRow": 109
-                        },
+                        }
+                    ]
+                },
+                {
+                    "label": "보고서 결과 (웹뷰)",
+                    "isGroupOnly": true,
+                    "children": [
                         {
                             "label": "진단브리핑",
                             "screenId": "SB-FOTA-CS0-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
                             "iaRow": 110
@@ -1465,18 +1463,25 @@
                         {
                             "label": "기업현황",
                             "screenId": "SB-FOTA-CS1-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-company-overview",
                             "iaRow": 111
                         },
                         {
                             "label": "기업혁신정보",
+                            "screen": {
+                                "screenId": "SB-FOTA-CS2-0007",
+                                "status": "완료",
+                                "version": "미배포",
+                                "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info",
+                                "iaRow": 112
+                            },
                             "children": [
                                 {
                                     "label": "기술분야개요",
                                     "screenId": "SB-FOTA-CS2-0007",
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-technology-overview",
                                     "iaRow": 112
@@ -1484,7 +1489,7 @@
                                 {
                                     "label": "재무정보",
                                     "screenId": "SB-FOTA-CS2-0007",
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-financial-info",
                                     "iaRow": 112
@@ -1492,7 +1497,7 @@
                                 {
                                     "label": "기술부문",
                                     "screenId": "SB-FOTA-CS2-0007",
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-technology",
                                     "iaRow": 112
@@ -1500,7 +1505,7 @@
                                 {
                                     "label": "R&D부문",
                                     "screenId": "SB-FOTA-CS2-0007",
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-k-bigx-report-innovation-growth-report-company-innovation-info-rnd",
                                     "iaRow": 112
@@ -1510,7 +1515,7 @@
                         {
                             "label": "Tech-Index",
                             "screenId": "SB-FOTA-CS3-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-tech-index",
                             "iaRow": 113
@@ -1518,7 +1523,7 @@
                         {
                             "label": "신용/재무정보",
                             "screenId": "SB-FOTA-CS4-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info",
                             "iaRow": 114
@@ -1526,15 +1531,37 @@
                         {
                             "label": "활동성정보",
                             "screenId": "SB-FOTA-CS5-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-activity-info",
                             "iaRow": 115
                         },
                         {
+                            "label": "비공개 케이스",
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "신용/재무정보 — 타기업·협약기관 법인 열람",
+                                    "screenId": "SB-FOTA-CS4-0007",
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
+                                    "iaRow": 117
+                                },
+                                {
+                                    "label": "신용/재무정보 — 타기업·협약기관 개인 열람",
+                                    "screenId": "SB-FOTA-CS4-0007",
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
+                                    "iaRow": 117
+                                }
+                            ]
+                        },
+                        {
                             "label": "인쇄 출력물 선택",
                             "screenId": "SB-FOTA-CP1-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection",
                             "iaRow": 116
@@ -1542,7 +1569,7 @@
                         {
                             "label": "보고서 출력",
                             "screenId": "SB-FOTA-CP7-0007",
-                            "status": "완료",
+                            "status": "대기중",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-report-print",
                             "iaRow": 117
@@ -1550,10 +1577,10 @@
                     ]
                 },
                 {
-                    "label": "보고서 이력 조회",
+                    "label": "보고서 이력 조회 (마이페이지)",
                     "screen": {
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "corp-k-bigx-report-report-history",
                         "iaRow": 118
@@ -3441,11 +3468,17 @@
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-pass-purchase-guide",
                             "iaRow": 99
-                        },
+                        }
+                    ]
+                },
+                {
+                    "label": "보고서 결과 (웹뷰)",
+                    "isGroupOnly": true,
+                    "children": [
                         {
                             "label": "진단브리핑",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing",
                             "iaRow": 100
@@ -3453,18 +3486,25 @@
                         {
                             "label": "기업현황",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-company-overview",
                             "iaRow": 101
                         },
                         {
                             "label": "기업혁신정보",
+                            "screen": {
+                                "screenId": null,
+                                "status": "완료",
+                                "version": "미배포",
+                                "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info",
+                                "iaRow": 102
+                            },
                             "children": [
                                 {
                                     "label": "기술분야개요",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-technology-overview",
                                     "iaRow": 102
@@ -3472,7 +3512,7 @@
                                 {
                                     "label": "재무정보",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-financial-info",
                                     "iaRow": 102
@@ -3480,7 +3520,7 @@
                                 {
                                     "label": "기술부문",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-technology",
                                     "iaRow": 102
@@ -3488,7 +3528,7 @@
                                 {
                                     "label": "R&D부문",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-k-bigx-report-innovation-growth-report-company-innovation-info-rnd",
                                     "iaRow": 102
@@ -3498,7 +3538,7 @@
                         {
                             "label": "Tech-Index",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-tech-index",
                             "iaRow": 103
@@ -3506,7 +3546,7 @@
                         {
                             "label": "신용/재무정보",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info",
                             "iaRow": 104
@@ -3514,15 +3554,37 @@
                         {
                             "label": "활동성정보",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-activity-info",
                             "iaRow": 105
                         },
                         {
+                            "label": "비공개 케이스",
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "신용/재무정보 — 타기업·협약기관 법인 열람",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
+                                    "iaRow": 107
+                                },
+                                {
+                                    "label": "신용/재무정보 — 타기업·협약기관 개인 열람",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
+                                    "iaRow": 107
+                                }
+                            ]
+                        },
+                        {
                             "label": "인쇄 출력물 선택",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-print-output-selection",
                             "iaRow": 106
@@ -3530,7 +3592,7 @@
                         {
                             "label": "보고서 출력",
                             "screenId": null,
-                            "status": "완료",
+                            "status": "대기중",
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-report-print",
                             "iaRow": 107
@@ -3566,10 +3628,10 @@
                     ]
                 },
                 {
-                    "label": "보고서 이력 조회",
+                    "label": "보고서 이력 조회 (마이페이지)",
                     "screen": {
                         "screenId": null,
-                        "status": "대기중",
+                        "status": "완료",
                         "version": "미배포",
                         "key": "org-k-bigx-report-report-history",
                         "iaRow": 110
