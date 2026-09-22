@@ -650,14 +650,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report",
@@ -671,49 +671,49 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-selected",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-company-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-patent",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-search-result-patent-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-information-consent",
@@ -761,8 +761,8 @@
             "key": "corp-k-bigx-report-innovation-growth-report-diagnostic-briefing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.2",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-company-overview",
@@ -831,8 +831,8 @@
             "key": "corp-k-bigx-report-innovation-growth-report-print-output-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.2",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-report-print",
@@ -845,15 +845,15 @@
             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.2",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.2",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-report-history",
@@ -1756,14 +1756,14 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-patent-evaluation-patent-grade-list-patent-grade-result",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-patent-evaluation-patent-grade-list-patent-grade-result-report",
@@ -1777,56 +1777,56 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company-selected",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company-no-patent",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-company-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-patent",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-search-result-patent-not-found",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-diagnostic-briefing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.2",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-company-overview",
@@ -1895,8 +1895,8 @@
             "key": "org-k-bigx-report-innovation-growth-report-print-output-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.2",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-report-print",
@@ -1909,15 +1909,15 @@
             "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.2",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-person",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.2",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-report-history",
@@ -2463,21 +2463,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-bulk-data-search-failure",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-bulk-data-search-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.1",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-report-history-report-print",
