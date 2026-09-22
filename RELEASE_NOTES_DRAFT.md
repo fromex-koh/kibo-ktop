@@ -129,6 +129,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - Tech-Index · 4대 혁신역량의 상태(우수 · 양호 · 보통 · 미흡 · 취약) · 색 · 칸 수는 점수 구간으로 정한다.
     - 신용/재무정보는 열람 케이스(report.viewerCase)에 따라 제공하지 않는 항목을 비공개로 가린다(타기업·협약기관 법인 열람 · 개인 열람).
     - 기술혁신정보 표는 최대 10건만 노출한다(R&D 전문기관은 넘으면 '기타'로 묶음).
+    - 탭 주소(?tab=)를 읽는 문서 · 스켈레톤은 Suspense 로 감싼다 — 빌드가 이 페이지를 미리 만들 때도 오류 없이 첫 탭 모양의 스켈레톤을 보인다.
     - [프론트엔드 연동] 체크리스트는 k-bigx-innovation-report.ts 머리 주석에 있다. 보고서 한 건의 데이터 파일이며, 조회 함수(getInnovationGrowthReport)만 API 로 바꾸면 화면은 고치지 않는다.
 - 영향 화면:
     - [기업 보고서 결과(진단브리핑)](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
