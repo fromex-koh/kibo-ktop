@@ -1,3 +1,5 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
@@ -244,7 +246,8 @@ const TabsGuidePage = () => (
                         1뎁스 탭 안에서 한 단계 더 나누는 2뎁스 탭입니다. 선택 항목은 두 모양 모두 navy 면에 흰 굵은
                         글자이고, 비선택 항목의 표현만 다릅니다 — <code className="font-mono">pill</code>은 회색 면,{' '}
                         <code className="font-mono">pill-outline</code>은 흰 면에 옅은 테두리입니다. 회색 카드 위에서는
-                        pill, 흰 본문이나 카드 목록 위에서는 pill-outline을 씁니다. 항목이 폭을 넘으면 다음 줄로
+                        pill, 흰 본문이나 카드 목록 위에서는 pill-outline을 씁니다(사용처: 자주 묻는 질문 · 알기 쉬운
+                        개인정보 처리방침 · K-BIGx 기업혁신성장 보고서 구성 항목). 항목이 폭을 넘으면 다음 줄로
                         넘어갑니다.
                     </p>
                 </div>
