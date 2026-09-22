@@ -1,9 +1,20 @@
 'use client'
 
 import type {ComponentPropsWithoutRef} from 'react'
-import {PolarAngleAxis, RadialBar, RadialBarChart} from 'recharts'
-import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
+import {ArcGauge} from '@/components/custom/arc-gauge'
 import {cn} from '@/lib/utils'
+
+// 등급 원호 게이지(SemicircleRatingGauge) — 등급을 위가 열린 굵은 원호로 보여 주고, 가운데에 등급 · 설명, 아래에 기준 날짜
+// 목록을 둔다. K-BIGx 기업혁신성장 보고서 "기업신용등급" 카드에서 쓴다.
+//
+// 짜임: 원호는 ArcGauge(size md) — 원 지름 260 · 굵기 37 · 끝 둥글림 · 위 172 만 보임. 트랙 = gray.50,
+//   채움 = 등급과 무관하게 파랑(blue.500) 하나 — 등급은 채움 길이(percentage)로만 달라진다.
+//   가운데 글자: 등급 48 Bold → 설명 16 Bold. 원호 아래 16 간격으로 날짜 목록 — 이름 16 Regular(gray.500) ↔
+//   값 16 Medium(gray.700, 오른쪽 정렬), 줄 간격 12.
+// 등급 · 설명 · 날짜는 role="img" 의 이름과 숨김 목록으로도 읽어 준다.
+
+// 채움 색 — 등급과 무관하게 한 가지(파랑).
+const RATING_GAUGE_COLOR = 'var(--raw-blue-500)'
 
 type RatingGaugeDetail = {
     label: string
@@ -11,129 +22,54 @@ type RatingGaugeDetail = {
 }
 
 type SemicircleRatingData = {
-    description: string
-    details: RatingGaugeDetail[]
+    /** 등급(예: A · BBB+). */
     label: string
+    /** 등급 설명(예: 우량 등급). */
+    description: string
+    /** 채움 비율(0~100). */
     percentage: number
-    tone: RatingGaugeTone
+    /** 원호 아래 날짜 목록(예: 평가일자 · 결산일자). */
+    details: RatingGaugeDetail[]
 }
-
-type RatingGaugeTone = 'caution' | 'danger' | 'excellent' | 'good' | 'normal'
 
 type SemicircleRatingGaugeProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     ariaLabel: string
     data: SemicircleRatingData
+    /** 화면 낭독기용 이름(예: 기업신용등급). */
     title: string
 }
 
-const clampPercentage = (value: number) => Math.min(100, Math.max(0, value))
-
-const RATING_COLORS: Record<RatingGaugeTone, string> = {
-    excellent: 'var(--ds-info)',
-    good: 'var(--ds-primary)',
-    normal: 'var(--ds-success)',
-    caution: 'var(--ds-warning)',
-    danger: 'var(--ds-error)',
-}
-
-const SemicircleRatingGauge = ({data, title, ariaLabel, className, ...props}: SemicircleRatingGaugeProps) => {
-    const percentage = clampPercentage(data.percentage)
-    const keyColor = RATING_COLORS[data.tone]
-    const hasCompactLabel = data.label.length >= 3
-    const hasLongDescription = data.description.length >= 10
-    const chartConfig: ChartConfig = {percentage: {label: title, color: keyColor}}
-    const chartData = [{name: 'percentage', percentage, fill: 'var(--color-percentage)'}]
-
-    return (
-        <div {...props} className={cn('mx-auto flex w-full max-w-md flex-col items-center', className)}>
-            <div className="relative h-52 w-88 max-w-full overflow-visible">
-                <ChartContainer
-                    config={chartConfig}
-                    className="relative h-full w-full overflow-visible [&_.recharts-radial-bar-sector]:cursor-pointer [&_.recharts-tooltip-wrapper]:!z-50"
-                    role="img"
-                    aria-label={ariaLabel}
-                >
-                    <RadialBarChart
-                        accessibilityLayer
-                        data={chartData}
-                        cx="50%"
-                        cy="58%"
-                        startAngle={190}
-                        endAngle={-10}
-                        innerRadius="70%"
-                        outerRadius="92%"
-                    >
-                        <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
-                        <ChartTooltip
-                            cursor={false}
-                            content={
-                                <ChartTooltipContent
-                                    className="relative z-50"
-                                    hideLabel
-                                    hideIndicator
-                                    formatter={() => (
-                                        <div>
-                                            <p className="typo-body-l-bold">
-                                                {title} {data.label}
-                                            </p>
-                                            <p className="typo-body-s-regular mt-1">
-                                                {data.description} · 표시 비율 {percentage}%
-                                            </p>
-                                        </div>
-                                    )}
-                                />
-                            }
-                        />
-                        <RadialBar dataKey="percentage" background={{fill: 'var(--ds-muted)'}} cornerRadius={999} />
-                    </RadialBarChart>
-                </ChartContainer>
-
-                <div
-                    className={cn(
-                        'pointer-events-none absolute inset-x-0 flex flex-col items-center text-center',
-                        hasCompactLabel ? 'top-[34%]' : hasLongDescription ? 'top-[30%]' : 'top-[32%]',
-                    )}
-                >
-                    <strong
-                        className={cn(
-                            'leading-none tabular-nums',
-                            data.label.length >= 4
-                                ? 'text-3xl'
-                                : data.label.length >= 3 || hasLongDescription
-                                  ? 'text-4xl'
-                                  : 'text-5xl',
-                        )}
-                        style={{color: keyColor}}
-                    >
-                        {data.label}
-                    </strong>
-                    <span
-                        className={cn(
-                            'typo-body-m-regular text-foreground-subtle max-w-28 leading-snug text-balance break-keep whitespace-normal',
-                            hasCompactLabel ? 'mt-1' : hasLongDescription ? 'mt-2' : 'mt-3',
-                        )}
-                    >
-                        {data.description}
-                    </span>
-                </div>
-            </div>
-
-            <dl className="typo-body-m-regular -mt-8 grid grid-cols-[auto_auto] gap-x-2 gap-y-2">
+const SemicircleRatingGauge = ({data, title, ariaLabel, className, ...props}: SemicircleRatingGaugeProps) => (
+    <div {...props} className={cn('mx-auto flex w-full flex-col gap-4', className)}>
+        {/* 좌우 여백 40(px-10)은 원호 안쪽 폭(186) 안에 글자를 가두는 자리다 — 긴 설명은 어절 단위로 접힌다. */}
+        <ArcGauge
+            value={data.percentage}
+            color={RATING_GAUGE_COLOR}
+            size="md"
+            ariaLabel={ariaLabel}
+            overlayClassName="px-10"
+        >
+            {/* 글자 묶음은 제목이 아닌 그림 속 글자라 p 대신 div 를 쓴다 — 크고 굵은 p 는 접근성 검사기(WAVE)가 '제목일 수 있음'으로 잡는다. 값은 role="img" 이름으로 읽힌다. */}
+            <div className="typo-display-l-bold text-foreground whitespace-nowrap">{data.label}</div>
+            <div className="typo-body-xl-bold text-foreground break-keep">{data.description}</div>
+        </ArcGauge>
+        {data.details.length ? (
+            <dl className="flex flex-col gap-3">
                 {data.details.map((detail) => (
-                    <div key={detail.label} className="contents">
-                        <dt className="text-foreground-subtle">{detail.label}</dt>
-                        <dd className="text-foreground font-medium tabular-nums">{detail.value}</dd>
+                    <div key={detail.label} className="flex items-center justify-between gap-4">
+                        <dt className="typo-body-xl-regular text-foreground-subtle shrink-0">{detail.label}</dt>
+                        <dd className="typo-body-xl-medium text-label-foreground m-0 text-end tabular-nums">
+                            {detail.value}
+                        </dd>
                     </div>
                 ))}
             </dl>
-
-            <p className="sr-only">
-                {title} {data.label}, {data.description}, 표시 비율 {percentage}%,{' '}
-                {data.details.map(({label, value}) => `${label} ${value}`).join(', ')}
-            </p>
-        </div>
-    )
-}
+        ) : null}
+        <p className="sr-only">
+            {title} {data.label}, {data.description}
+        </p>
+    </div>
+)
 
 export {SemicircleRatingGauge}
-export type {RatingGaugeDetail, RatingGaugeTone, SemicircleRatingData, SemicircleRatingGaugeProps}
+export type {RatingGaugeDetail, SemicircleRatingData, SemicircleRatingGaugeProps}
