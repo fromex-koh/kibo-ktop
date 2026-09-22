@@ -1,0 +1,30 @@
+import type {Metadata} from 'next'
+import {KbigxPrintOutputSelectionDialog} from '@/components/composite/k-bigx-print-output-selection-dialog'
+import {PopupPreviewNote, popupPreviewMainClassName} from '@/components/custom/popup-preview-note'
+import {
+    MOCK_PRINT_OUTPUT_SELECTION_DEFAULT_SELECTED,
+    MOCK_PRINT_OUTPUT_SELECTION_SUMMARY,
+} from '@/content/service/k-bigx-print-output-selection'
+
+export const metadata: Metadata = {title: '인쇄 출력물 선택'}
+
+// K-BIGx 보고서 기업혁신성장의 [인쇄 출력물 선택] 모달 — 화면정의서의 하위 화면이라 경로를 따로 둔다.
+// 이 화면은 모달만 확인하는 자리라 뒤 배경을 비우고 모달을 열어 둔다 — 다른 모달 단독 화면과 같은 방식이다.
+// [퍼블리싱 확인용] PopupPreviewNote 와 defaultOpen 은 단독 확인용이다. 실제 서비스는 [K-BIGx 보고서 출력]에서 모달을 연다.
+// [프론트엔드 연동] summary · defaultSelected 의 MOCK_* 값은 출력할 보고서 값 · 사용자 설정으로 바꾼다.
+const OrgKbigxPrintOutputSelectionPage = () => (
+    <>
+        <main id="main" tabIndex={-1} className={popupPreviewMainClassName}>
+            <PopupPreviewNote title="인쇄 출력물 선택">
+                K-BIGx 보고서 기업혁신성장에서 [K-BIGx 보고서 출력]을 눌렀을 때 호출되는 화면
+            </PopupPreviewNote>
+        </main>
+        <KbigxPrintOutputSelectionDialog
+            summary={MOCK_PRINT_OUTPUT_SELECTION_SUMMARY}
+            defaultSelected={MOCK_PRINT_OUTPUT_SELECTION_DEFAULT_SELECTED}
+            defaultOpen
+        />
+    </>
+)
+
+export default OrgKbigxPrintOutputSelectionPage
