@@ -2,7 +2,7 @@
 
 import type {AnchorHTMLAttributes, MouseEvent, ReactNode} from 'react'
 
-// 새 창 열기 — 시안 크기에 맞춘 창으로 문서를 띄우는 링크.
+// 새 창 열기 — 지정한 크기(width · height)의 창으로 문서를 띄우는 링크.
 //
 // 평가결과 리포트처럼 화면 폭이 정해진 인쇄용 문서는 브라우저 창 자체를 그 폭에 맞춰 연다.
 // 링크(<a>)로 두는 이유는 두 가지다.
@@ -30,15 +30,21 @@ const measureScrollbarWidth = (): number => {
 type NewWindowLinkProps = Omit<AnchorHTMLAttributes<HTMLAnchorElement>, 'target' | 'rel'> & {
     children: ReactNode
     href: string
-    /** 시안 문서 폭. 화면보다 넓으면 화면 크기까지 줄인다. */
+    /** 열 창의 폭(문서 폭). 화면보다 넓으면 화면 크기까지 줄인다(fitToScreen). */
     width: number
-    /** 시안 문서 높이. 문서가 길면 화면 높이까지만 열고 나머지는 창 안에서 스크롤한다. */
+    /** 열 창의 높이. 문서가 길면 화면 높이까지만 열고 나머지는 창 안에서 스크롤한다. */
     height: number
     /**
      * 창 이름. 같은 이름으로 다시 열면 새 창을 만들지 않고 그 창을 다시 쓴다 —
      * 같은 문서를 여러 번 눌러도 창이 쌓이지 않는다.
      */
     windowName?: string
+    /**
+     * 창 폭을 화면 폭까지 줄일지. 기본은 줄인다. 모바일 화면에서 PC 화면을 여는 [더보기]처럼 창 폭 자체가 목적이면 끈다 —
+     * 개발자도구의 기기 모드에서는 화면 폭(screen.availWidth)이 기기 폭(예: 375)으로 잡혀, 줄이면 창도 그 폭으로 열린다.
+     * (실제 휴대폰 브라우저는 창 크기 지정을 무시하고 새 탭으로 연다 — 그때 PC 폭은 열리는 화면의 뷰포트가 맡는다.)
+     */
+    fitToScreen?: boolean
 }
 
 const NewWindowLink = ({
@@ -47,6 +53,7 @@ const NewWindowLink = ({
     width,
     height,
     windowName = '_blank',
+    fitToScreen = true,
     onClick,
     ...props
 }: NewWindowLinkProps) => {
@@ -58,8 +65,9 @@ const NewWindowLink = ({
 
         const screenWidth = window.screen.availWidth
         const screenHeight = window.screen.availHeight
-        const windowWidth = Math.min(width + measureScrollbarWidth(), screenWidth)
-        const windowHeight = Math.min(height, screenHeight)
+        const requestedWidth = width + measureScrollbarWidth()
+        const windowWidth = fitToScreen ? Math.min(requestedWidth, screenWidth) : requestedWidth
+        const windowHeight = fitToScreen ? Math.min(height, screenHeight) : height
         // 가운데는 화면이 아니라 지금 보고 있는 창을 기준으로 잡는다 — 화면 기준으로 계산하면 모니터가
         // 여럿일 때 좌표의 출발점이 주 모니터라, 브라우저가 다른 모니터에 있으면 새 창이 엉뚱한 자리
         // (대개 왼쪽 끝)에 열린다. 창 크기를 알 수 없는 드문 경우에만 화면 기준으로 되돌린다.
@@ -83,6 +91,8 @@ const NewWindowLink = ({
         // 한 번 왼쪽 끝에 열린 창이 계속 그 자리에 뜨는 이유다. 열고 난 뒤 직접 옮겨 가운데로 돌려놓는다.
         // 창을 옮기지 못하게 막아 둔 브라우저도 있으므로 실패해도 열기 자체는 그대로 둔다.
         try {
+            // 다시 쓰는 창은 예전 크기 그대로 뜨므로 크기도 다시 맞춘다(예: 좁게 열렸던 창을 PC 폭으로).
+            opened.resizeTo(windowWidth, windowHeight)
             opened.moveTo(left, top)
         } catch {
             // 자리를 옮기지 못해도 창은 이미 열려 있다.

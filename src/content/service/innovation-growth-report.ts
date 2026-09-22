@@ -69,7 +69,7 @@ const isInnovationGrowthSearchType = (value: string): value is InnovationGrowthS
     INNOVATION_GROWTH_SEARCH_TYPES.some((type) => type.value === value)
 
 const INNOVATION_GROWTH_SEARCH_EMPTY_ERROR = '검색어를 입력해주세요.'
-// 형식 오류 — 고른 기준 이름(label)을 받아 기준별 문구를 돌려준다(기업 검색은 시안 문구).
+// 형식 오류 — 고른 기준 이름(label)을 받아 기준별 문구를 돌려준다.
 const INNOVATION_GROWTH_SEARCH_INVALID_ERRORS: Record<string, string> = {
     '기업 검색': '올바른 사업자 번호가 아닙니다',
     '특허 검색': '올바른 출원번호가 아닙니다',
@@ -83,7 +83,11 @@ const INNOVATION_GROWTH_LEGAL_BASIS_LABEL = '기업정보 제공법적 근거'
 
 const INNOVATION_GROWTH_COMPANY_LIST_TITLE = '검색된 기업 목록'
 const INNOVATION_GROWTH_PATENT_LIST_TITLE = '특허 목록'
-const INNOVATION_GROWTH_NOT_FOUND = '검색된 기업이 없습니다.'
+// 검색된 기업 없음 — 두 줄 안내(기업 검색 결과가 0건일 때 기업 목록 자리).
+const INNOVATION_GROWTH_NOT_FOUND = [
+    '조회된 기업정보가 없습니다.',
+    '입력하신 정보를 다시 확인하여 검색하여주세요.',
+] as const
 const INNOVATION_GROWTH_PATENT_NOT_FOUND = '검색된 특허가 없습니다.'
 const INNOVATION_GROWTH_NO_PATENT = '특허 정보가 없습니다.'
 const INNOVATION_GROWTH_SEARCHING = '기업을 검색하고 있습니다.'
@@ -127,7 +131,7 @@ const INNOVATION_GROWTH_USAGE_NO_PATENT = {
 
 const INNOVATION_GROWTH_PRINT_LABEL = 'K-BIGx 보고서 출력'
 
-// ── 목업(API 연결 시 삭제) ──
+// ── [퍼블리싱 전용] 목업(API 연결 시 삭제) — MOCK_* 데이터와 목업 함수는 API 연동 후 지운다 ──
 const MOCK_DELAY_MS = 800
 
 const MOCK_PATENTS: readonly InnovationGrowthPatent[] = [
@@ -149,6 +153,34 @@ const MOCK_PATENTS: readonly InnovationGrowthPatent[] = [
         subCategoryName: '에너지 플랫폼',
         subCategoryCode: 'EG00111',
     },
+    // 특허 목록이 2건을 넘을 때의 페이지 넘김을 확인하려고 둔 특허들 — 프롬엑스테크(5건)가 세 쪽(2 + 2 + 1)이 된다.
+    {
+        id: 'p-3',
+        name: '태양광 발전량 예측 모델 학습 장치',
+        applicationNumber: '10-2023-0012345',
+        applicationDate: '2023-02-20',
+        infoDate: '2024-09-12',
+        subCategoryName: '에너지 플랫폼',
+        subCategoryCode: 'EG00111',
+    },
+    {
+        id: 'p-4',
+        name: '설비 이상 징후 감지 방법',
+        applicationNumber: '10-2023-0045678',
+        applicationDate: '2023-05-08',
+        infoDate: '2024-10-02',
+        subCategoryName: '스마트 제조',
+        subCategoryCode: 'MF00210',
+    },
+    {
+        id: 'p-5',
+        name: '전력 수요 반응 자동 제어 시스템',
+        applicationNumber: '10-2024-0003456',
+        applicationDate: '2024-01-15',
+        infoDate: '2024-11-20',
+        subCategoryName: '에너지 플랫폼',
+        subCategoryCode: 'EG00112',
+    },
 ]
 
 // '그린카본테크'는 특허가 없는 기업이다 — 고르면 특허 목록 자리에 빈 상태가 선다.
@@ -158,7 +190,7 @@ const MOCK_INNOVATION_GROWTH_COMPANIES: readonly InnovationGrowthCompany[] = [
         name: '프롬엑스테크',
         corporateNumber: '110111-1234567',
         businessNumber: '123-45-67890',
-        patentCount: 2,
+        patentCount: 5,
     },
     {
         id: 'c-2',
@@ -174,6 +206,28 @@ const MOCK_INNOVATION_GROWTH_COMPANIES: readonly InnovationGrowthCompany[] = [
         corporateNumber: '10-2024-0001234',
         businessNumber: '456-78-90123',
         patentCount: 0,
+    },
+    // 4건이 넘을 때의 페이지 넘김을 확인하려고 둔 기업들 — 기업 검색 결과가 두 쪽(4 + 3)이 된다.
+    {
+        id: 'c-5',
+        name: '스마트팩토리랩',
+        corporateNumber: '110111-2345678',
+        businessNumber: '567-89-01234',
+        patentCount: 2,
+    },
+    {
+        id: 'c-6',
+        name: '바이오넥스트',
+        corporateNumber: '110111-3456789',
+        businessNumber: '678-90-12345',
+        patentCount: 1,
+    },
+    {
+        id: 'c-7',
+        name: '퀀텀소프트테크',
+        corporateNumber: '110111-4567890',
+        businessNumber: '789-01-23456',
+        patentCount: 2,
     },
 ]
 

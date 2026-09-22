@@ -1,6 +1,7 @@
 'use client'
 
 import {useId, type ReactNode} from 'react'
+import {NewWindowLink} from '@/components/composite/new-window-link'
 import {Button} from '@/components/ui/button'
 import {
     Dialog,
@@ -21,11 +22,11 @@ import {
 } from '@/content/service/k-bigx-view-count-deduction'
 import {cn} from '@/lib/utils'
 
-// 조회횟수 차감안내 — 시안 "K-BIGx 보고서_K-BIGx 보고서 결제"(40007590:14087).
+// 조회횟수 차감안내 모달.
 // 이용권이 있는 상태에서 다른 기업의 보고서를 조회할 때 뜬다. 확인 질문(기업명만 파란색, 3줄) → 이용권 현황
 // (테두리 상자, 잔여 횟수만 파란색) → [취소] [이용권 사용]. 짜임은 보고서 생성 모달과 같다.
 //
-// 시안 규격: 폭 588 · 반경 24 · 좌우·위 여백 32(판매자 정보 모달과 같다) · 제목과 질문 24 · 질문(20 Bold)과 이용권 현황 24 ·
+// 규격: 폭 588 · 반경 24 · 좌우·위 여백 32(판매자 정보 모달과 같다) · 제목과 질문 24 · 질문(20 Bold)과 이용권 현황 24 ·
 // 현황 제목(18 Bold)과 상자 8 · 상자(테두리 gray.100 · 반경 12 · 여백 24 · 줄 사이 12) · 두 버튼 사이 8.
 // 좁은 화면(sm 미만)은 모든 모달이 쓰는 24 여백을 그대로 둔다.
 
@@ -34,15 +35,23 @@ type KbigxViewCountDeductionDialogProps = {
     companyName: string
     /** 이용중인 플랜 이름. */
     planName: string
-    /** 잔여 이용권(회) · 월 조회한도(회). */
+    /** 잔여 이용권(회) · 월 조회한도(회). [프론트엔드 연동] planName 과 함께 사용자의 이용권 현황으로 채운다. */
     remainingCount: number
     monthlyLimit: number
     /** 모달을 여는 버튼. Radix 가 이 요소에 열기 동작과 aria 를 얹는다. */
     children?: ReactNode
     /** 트리거 없이 처음부터 열어 둘 때(모달 단독 화면). */
     defaultOpen?: boolean
+    /** 바깥에서 열고 닫을 때(보고서 생성 모달의 [보고서 생성] 뒤에 이어 열기). */
+    open?: boolean
+    onOpenChange?: (open: boolean) => void
     /** [이용권 사용]을 눌렀을 때. [프론트엔드 연동] 이용권 1회 차감 후 보고서 조회를 연결한다. */
     onUse?: () => void
+    /**
+     * [이용권 사용]이 새 창으로 열 보고서. 주면 버튼이 새 창 링크가 된다 — 이용권 차감 뒤 보고서 문서(보고서 출력)가
+     * 지정한 크기의 창으로 열린다. 없으면 onUse 만 부른다.
+     */
+    reportWindow?: {href: string; width: number; height: number; windowName?: string}
 }
 
 const KbigxViewCountDeductionDialog = ({
@@ -52,12 +61,15 @@ const KbigxViewCountDeductionDialog = ({
     monthlyLimit,
     children,
     defaultOpen,
+    open,
+    onOpenChange,
     onUse,
+    reportWindow,
 }: KbigxViewCountDeductionDialogProps) => {
     const passTitleId = useId()
 
     return (
-        <Dialog defaultOpen={defaultOpen}>
+        <Dialog defaultOpen={defaultOpen} open={open} onOpenChange={onOpenChange}>
             {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
             {/* 닫기(X)는 셸이 다른 모달의 여백(40)에 맞춰 둔다 — 이 모달은 여백이 32 라 X 도 같은 값으로 옮겨
                 제목 줄과 맞춘다(오른쪽·위 32). */}
@@ -111,9 +123,22 @@ const KbigxViewCountDeductionDialog = ({
                         </Button>
                     </DialogClose>
                     <DialogClose asChild>
-                        <Button type="button" size="xl" onClick={onUse}>
-                            이용권 사용
-                        </Button>
+                        {reportWindow ? (
+                            <Button asChild size="xl" onClick={onUse}>
+                                <NewWindowLink
+                                    href={reportWindow.href}
+                                    width={reportWindow.width}
+                                    height={reportWindow.height}
+                                    windowName={reportWindow.windowName}
+                                >
+                                    이용권 사용
+                                </NewWindowLink>
+                            </Button>
+                        ) : (
+                            <Button type="button" size="xl" onClick={onUse}>
+                                이용권 사용
+                            </Button>
+                        )}
                     </DialogClose>
                 </DialogFooter>
             </DialogContent>

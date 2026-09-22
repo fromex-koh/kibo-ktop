@@ -8,6 +8,7 @@ import {
     findMockInnovationGrowthPatentResults,
     findMockInnovationGrowthPatents,
 } from '@/content/service/innovation-growth-report'
+import {innovationReportPath} from '@/content/service/k-bigx-innovation-report'
 
 // 기업혁신성장보고서 조회 화면 한 장 — 기업 · 기관의 조회 화면과 케이스별 결과 화면이 모두 이 컴포넌트를 쓴다.
 // 화면마다 다른 것은 사용자 유형(홈 · [자세히보기] 주소)과 처음 보여 줄 케이스(preview)뿐이다.
@@ -34,7 +35,7 @@ type InnovationGrowthReportPreview =
     | 'patent'
     | 'patent-not-found'
 
-// 목업 — 케이스마다 검색 칸에 넣어 둘 검색어와 고를 기업.
+// [퍼블리싱 확인용] 목업 — 케이스마다 검색 칸에 넣어 둘 검색어와 고를 기업.
 const MOCK_COMPANY_KEYWORD = ''
 const MOCK_COMPANY_NOT_FOUND_KEYWORD = '없는기업'
 const MOCK_PATENT_KEYWORD = '예측'
@@ -96,6 +97,7 @@ const InnovationGrowthReportScreen = ({userType, preview = 'search'}: Innovation
     <main id="main" tabIndex={-1} className="bg-background flex-1">
         <InnovationGrowthReportLookup
             initialResult={getInitialResult(preview)}
+            reportHref={innovationReportPath(userType)}
             intro={
                 <KbigxReportIntro
                     title="기업혁신성장"
