@@ -24,7 +24,8 @@ import type {Viewport} from 'next'
 // │    - 목업 구역 전체(MOCK_DELAY_MS · TECHNOLOGY_COLORS · MOCK_INNOVATION_GROWTH_REPORT).
 // │ 5. 문구(INNOVATION_REPORT_*) · 점수 구간(TECH_INDEX_GRADES) · 케이스 정의는 그대로 쓴다.
 // │ 참고: 점수에 따른 상태 · 색 · 칸 수, 비율, 합계 같은 파생 값은 화면이 계산한다 — 원래 값만 내려 준다.
-// │       기술혁신정보 표의 최대 10건 · '기타' 묶음 규칙은 innovation-growth-report-tech.tsx 의 [프론트엔드 연동 · 최대 10건] 주석 참고.
+// │       기술혁신정보 표에는 노출 건수 제한이 있다 — 아래 InnovationTechDetail 의 [최대 10건] 주석을 본다
+// │       (표에 그리는 쪽 설명은 innovation-growth-report-tech.tsx 의 [프론트엔드 연동 · 최대 10건] 주석).
 // └────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 // 새 창 크기 — 내용 폭 1200(콘텐츠 상한)에 양 여백을 더한 창으로 연다.
@@ -423,7 +424,10 @@ type InnovationTechDetail = {
         /** 중분류 · 소분류 기준 보유기술 비중. */
         middleCategory: readonly PercentageDonutItem[]
         smallCategory: readonly PercentageDonutItem[]
-        /** 특허 보유현황(최대 10개 · 출원일 최근순). */
+        /**
+         * 특허 보유현황 — 출원일 최근순.
+         * [최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임). 정렬을 맞춘 뒤 넘긴다.
+         */
         patents: readonly (InnovationPatentRow & {field: string})[]
     }
     analysis: {
@@ -454,16 +458,33 @@ type InnovationTechDetail = {
         small: {title: string; items: readonly InnovationRankItem[]}
         large: {title: string; items: readonly InnovationRankItem[]}
     }
-    /** 우수특허 — 피인용 횟수 · 지수. */
+    /**
+     * 우수특허 — 피인용 횟수 · 지수.
+     * [최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임).
+     */
     excellentPatents: readonly (InnovationPatentRow & {citations: number; citationIndex: number})[]
+    /**
+     * 이머징 기술 — 기술분야별 등록건수 · 증가율 · 비중.
+     * [최대 10건 + 기타] 10건까지 보내고, 나머지는 '기타' 한 줄로 합쳐 11번째에 넣는다(총 11줄) — 합치는 일은 API 쪽에서 한다.
+     * 기타 줄의 counts · share 는 합, growthRate 는 합친 등록건수로 다시 계산한 값을 넣는다(분야별 증가율을 더하거나 평균 내지 않는다).
+     */
     emergingTech: {
         periods: readonly string[]
         rows: readonly {field: string; counts: readonly number[]; growthRate: number; share: number}[]
     }
+    /**
+     * R&D 전문기관 현황 — 정부출연연구소 · 산학협력단.
+     * [최대 10건 + 기타] rows 는 그대로 보내면 된다 — 화면이 쪽마다 10건까지 두고 나머지를 '기타' 한 줄로 합친다.
+     * total 은 합치기 전 전체 합계를 넣는다(화면이 그대로 마지막 줄에 적는다).
+     */
     rndInstitutes: {
         government: {share: number; rows: readonly InnovationInstitute[]; total: {patentCount: number; ratio: number}}
         academia: {share: number; rows: readonly InnovationInstitute[]; total: {patentCount: number; ratio: number}}
     }
+    /**
+     * 정부 R&D 사업 현황 — 접수중과제(open) · 접수기간 도래 과제(upcoming).
+     * [최대 10건] 화면이 표마다 앞에서부터 10건만 그린다(11번째부터 안 보임).
+     */
     governmentRnd: {
         baseDate: string
         open: readonly InnovationRndProject[]
