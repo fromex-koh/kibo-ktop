@@ -10,7 +10,7 @@ import {cn} from '@/lib/utils'
 //
 // 짜임: 오른쪽 위 별 범례(★ 고성장 기업, 14 Regular) → 16 → 두 목록 제목(14 Bold, 왼쪽은 가운데 쪽 정렬)
 //   → 16 → 행(높이 24 · 사이 16). 두 목록 사이 24.
-//   막대는 가운데에서 바깥으로 자란다(왼쪽 navy.500 · 오른쪽 blue.500 · 평균 purple.500 · 대상 기업 mint.700).
+//   막대는 가운데에서 바깥으로 자란다(왼쪽 navy.500 · 오른쪽 blue.500 · 평균 purple.600 · 대상 기업 success.500).
 //   기업 이름은 막대 안 가운데 쪽 끝에서 8(11 Medium · 흰색), 값은 막대 바깥 끝에서 4(11 Regular · gray.500).
 //   고성장 기업은 값 바깥에 16 별(warning.300)을 둔다 — 색만으로 알리지 않도록 숨김 표에 "고성장 기업" 열이 있다.
 //
@@ -75,9 +75,11 @@ const DEFAULT_BAR_CLASS_NAME: Record<Direction, string> = {
     left: 'bg-navy-500',
     right: 'bg-blue-500',
 }
+// 평균 · 조회 기업 막대 — 막대 안 이름이 11px 흰 글자라 본문 대비 4.5:1 을 넘는 색만 쓴다[5.3.3]
+// (purple.600 5.25:1 · success.500 4.57:1).
 const TONE_BAR_CLASS_NAME: Record<Exclude<DivergingRankTone, 'default'>, string> = {
-    average: 'bg-purple-500',
-    subject: 'bg-mint-700',
+    average: 'bg-purple-600',
+    subject: 'bg-success-500',
 }
 const TONE_SR_TEXT: Record<DivergingRankTone, string> = {
     default: '',
