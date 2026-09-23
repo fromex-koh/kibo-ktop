@@ -87,17 +87,18 @@ const StatBox = ({
     /** 상자 면 — 기본은 카드 안의 옅은 회색. 카드 없이 문서 바탕에 바로 놓일 때는 bg-card 를 넘긴다. */
     className?: string
 }) => (
-    <div className={cn('bg-surface-subtle flex flex-col rounded-sm px-5 py-4', className)}>
-        <p className={cn('flex items-center gap-2', labelClassName)}>
+    // 이름 · 값 한 쌍이라 dl 로 적는다 — 값만 있는 문단(굵은 20)은 검사 도구가 제목으로 오인한다(WAVE '가능한 제목').
+    <dl className={cn('bg-surface-subtle flex flex-col rounded-sm px-5 py-4', className)}>
+        <dt className={cn('flex items-center gap-2', labelClassName)}>
             {icon}
             {/* 이름이 길면 어절 단위로 접히고, 띄어쓰기 없는 긴 이름은 칸 안에서 끊는다. 아이콘은 이름 옆 세로 가운데. */}
             <span className="min-w-0 wrap-anywhere break-keep">{label}</span>
-        </p>
-        <p className="text-end">
+        </dt>
+        <dd className="m-0 text-end">
             <span className={cn('typo-title-l-bold', valueClassName)}>{value}</span>
             {unit ? <span className="typo-body-xl-regular text-label-foreground ms-1">{unit}</span> : null}
-        </p>
-    </div>
+        </dd>
+    </dl>
 )
 
 // 소제목 묶음(경영진 현황 · 우수특허 …) — 카드 없이 문서 바탕에 놓이는 표 · 그래프 위 제목 줄. 16 Bold 제목 · 오른쪽 14 Regular 보조
