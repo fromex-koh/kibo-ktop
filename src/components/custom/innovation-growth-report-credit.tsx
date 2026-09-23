@@ -38,10 +38,10 @@ const numberFormatter = new Intl.NumberFormat('ko-KR')
 const oneDecimalFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 1, maximumFractionDigits: 1})
 const twoDecimalFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
 
-// 현금흐름등급 척도 — 낮은 등급(CR-6)부터 높은 등급(CR-1). 주황 칸은 밝아 짙은 글자.
+// 현금흐름등급 척도 — 낮은 등급(CR-6)부터 높은 등급(CR-1). 밝은 칸(CR-5 회색 · CR-3 주황)은 흰 글자로는 본문 대비 4.5:1 에 못 미쳐 짙은 글자를 쓴다[5.3.3].
 const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [
     {label: 'CR-6', color: 'var(--raw-gray-700)'},
-    {label: 'CR-5', color: 'var(--raw-gray-300)'},
+    {label: 'CR-5', color: 'var(--raw-gray-200)', isLightColor: true},
     {label: 'CR-4', color: 'var(--raw-error-500)'},
     {label: 'CR-3', color: 'var(--raw-orange-500)', isLightColor: true},
     {label: 'CR-2', color: 'var(--raw-success-500)'},
