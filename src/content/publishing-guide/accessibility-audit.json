@@ -1,7 +1,7 @@
 {
-    "checkedAt": "2026-09-22T23:55:16.437Z",
-    "commit": "d8b7f492fa63b3902e5d7e5db4e1ceec3a0421aa",
-    "sourceHash": "248910685c8c4e2f7a0773da21e7841aebaa54f8b6f2c321a04715a139ddd696",
+    "checkedAt": "2026-09-23T01:33:15.071Z",
+    "commit": "b2db7d3d4992fd6d877cc3b7ac0ce56a98efd185",
+    "sourceHash": "ab1d18e578279e6fd17924d05b29600f5502210f6bc78b46746f88c11439f6a0",
     "validatorVersion": "26.9.16 (29f085e)",
     "screens": [
         {
@@ -32975,81 +32975,81 @@
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 12145
+                    "firstColumn": 12169
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 14384
+                    "firstColumn": 14414
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 16625
+                    "firstColumn": 16661
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 18862
+                    "firstColumn": 18904
                 },
                 {
                     "type": "info",
                     "subType": "warning",
                     "message": "Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections, or else use a “div” element instead for any cases where no heading is needed.",
                     "lastLine": 25,
-                    "firstColumn": 21505
+                    "firstColumn": 21553
                 },
                 {
                     "type": "info",
                     "subType": "warning",
                     "message": "Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections, or else use a “div” element instead for any cases where no heading is needed.",
                     "lastLine": 25,
-                    "firstColumn": 22490
+                    "firstColumn": 22538
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27170
+                    "firstColumn": 27218
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27197
+                    "firstColumn": 27245
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27203
+                    "firstColumn": 27251
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27209
+                    "firstColumn": 27257
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27215
+                    "firstColumn": 27263
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27221
+                    "firstColumn": 27269
                 },
                 {
                     "type": "error",
                     "message": "Element “style” not allowed as child of element “div” in this context. (Suppressing further errors from this subtree.)",
                     "lastLine": 25,
-                    "firstColumn": 41553
+                    "firstColumn": 41601
                 },
                 {
                     "type": "error",
@@ -36349,13 +36349,13 @@
                     "type": "error",
                     "message": "Element “div” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)",
                     "lastLine": 11,
-                    "firstColumn": 20088
+                    "firstColumn": 20093
                 },
                 {
                     "type": "error",
                     "message": "Element “style” not allowed as child of element “div” in this context. (Suppressing further errors from this subtree.)",
                     "lastLine": 11,
-                    "firstColumn": 28037
+                    "firstColumn": 28042
                 },
                 {
                     "type": "error",
@@ -39587,13 +39587,13 @@
                     "type": "error",
                     "message": "Element “div” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)",
                     "lastLine": 11,
-                    "firstColumn": 22780
+                    "firstColumn": 22785
                 },
                 {
                     "type": "error",
                     "message": "Element “style” not allowed as child of element “div” in this context. (Suppressing further errors from this subtree.)",
                     "lastLine": 11,
-                    "firstColumn": 30729
+                    "firstColumn": 30734
                 },
                 {
                     "type": "error",
@@ -77798,81 +77798,81 @@
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 12145
+                    "firstColumn": 12169
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 14384
+                    "firstColumn": 14414
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 16625
+                    "firstColumn": 16661
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 18862
+                    "firstColumn": 18904
                 },
                 {
                     "type": "info",
                     "subType": "warning",
                     "message": "Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections, or else use a “div” element instead for any cases where no heading is needed.",
                     "lastLine": 25,
-                    "firstColumn": 21505
+                    "firstColumn": 21553
                 },
                 {
                     "type": "info",
                     "subType": "warning",
                     "message": "Section lacks heading. Consider using “h2”-“h6” elements to add identifying headings to all sections, or else use a “div” element instead for any cases where no heading is needed.",
                     "lastLine": 25,
-                    "firstColumn": 22490
+                    "firstColumn": 22538
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27170
+                    "firstColumn": 27218
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27197
+                    "firstColumn": 27245
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27203
+                    "firstColumn": 27251
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27209
+                    "firstColumn": 27257
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27215
+                    "firstColumn": 27263
                 },
                 {
                     "type": "info",
                     "message": "Trailing slash on void elements has no effect and interacts badly with unquoted attribute values.",
                     "lastLine": 25,
-                    "firstColumn": 27221
+                    "firstColumn": 27269
                 },
                 {
                     "type": "error",
                     "message": "Element “style” not allowed as child of element “div” in this context. (Suppressing further errors from this subtree.)",
                     "lastLine": 25,
-                    "firstColumn": 41553
+                    "firstColumn": 41601
                 },
                 {
                     "type": "error",
@@ -81172,13 +81172,13 @@
                     "type": "error",
                     "message": "Element “div” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)",
                     "lastLine": 11,
-                    "firstColumn": 20088
+                    "firstColumn": 20093
                 },
                 {
                     "type": "error",
                     "message": "Element “style” not allowed as child of element “div” in this context. (Suppressing further errors from this subtree.)",
                     "lastLine": 11,
-                    "firstColumn": 28037
+                    "firstColumn": 28042
                 },
                 {
                     "type": "error",
@@ -84410,13 +84410,13 @@
                     "type": "error",
                     "message": "Element “div” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)",
                     "lastLine": 11,
-                    "firstColumn": 22780
+                    "firstColumn": 22785
                 },
                 {
                     "type": "error",
                     "message": "Element “style” not allowed as child of element “div” in this context. (Suppressing further errors from this subtree.)",
                     "lastLine": 11,
-                    "firstColumn": 30729
+                    "firstColumn": 30734
                 },
                 {
                     "type": "error",
