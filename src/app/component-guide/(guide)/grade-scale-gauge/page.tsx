@@ -19,7 +19,7 @@ const RECHARTS_LICENSE: LicenseLink = {
 // K-BIGx 보고서 "현금흐름등급" 카드와 같은 척도다(낮은 등급부터).
 const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [
     {label: 'CR-6', color: 'var(--raw-gray-700)'},
-    {label: 'CR-5', color: 'var(--raw-gray-300)'},
+    {label: 'CR-5', color: 'var(--raw-gray-200)', isLightColor: true},
     {label: 'CR-4', color: 'var(--raw-error-500)'},
     {label: 'CR-3', color: 'var(--raw-orange-500)', isLightColor: true},
     {label: 'CR-2', color: 'var(--raw-success-500)'},
@@ -82,7 +82,8 @@ const SPECIAL_CASES: readonly {title: string; description: string; gauge: CasePr
     },
     {
         title: '밝은 칸',
-        description: '주황처럼 밝은 칸은 흰 글자가 잘 보이지 않아 짙은 글자로 적습니다(isLightColor).',
+        description:
+            '주황(CR-3) · 회색(CR-5)처럼 밝은 칸은 흰 글자로 본문 대비 4.5:1 에 못 미쳐 짙은 글자로 적습니다(isLightColor).',
         gauge: {grades: CASH_FLOW_GRADES, current: 'CR-3', ...SCALE_LABELS},
     },
     {
@@ -159,6 +160,36 @@ const GradeScaleGaugeGuidePage = () => (
                     />
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="gsg-grades" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="gsg-grades" className="typo-h4-bold">
+                        등급별 (All grades)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        현금흐름등급 여섯 단계를 차례로 현재 등급으로 둔 모습입니다. 원호의 채움 길이와 색, 가운데 등급
+                        글자가 현재 등급을 따라 바뀝니다.
+                    </p>
+                </div>
+                <ul className="grid list-none gap-6 xl:grid-cols-2">
+                    {CASH_FLOW_GRADES.map((grade) => (
+                        <li key={grade.label} className="flex min-w-0 flex-col gap-2">
+                            <h3 className="typo-body-xl-bold">{grade.label}</h3>
+                            <p className="typo-body-m-regular text-muted-foreground">
+                                {`전체 ${CASH_FLOW_GRADES.length}단계 중 낮은 쪽부터 ${CASH_FLOW_GRADES.indexOf(grade) + 1}번째입니다.`}
+                            </p>
+                            <GradeScaleGauge
+                                ariaLabel={`현금흐름등급 ${grade.label}`}
+                                grades={CASH_FLOW_GRADES}
+                                current={grade.label}
+                                {...SCALE_LABELS}
+                            />
+                        </li>
+                    ))}
+                </ul>
             </section>
         </BaseCard>
 
