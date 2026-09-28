@@ -31,10 +31,24 @@
         },
         {
             "key": "corp-auth",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-auth-find-account",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.4",
+            "isCurrent": true
+        },
+        {
+            "key": "corp-auth-agency-signup-guide",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.4",
+            "isCurrent": true
         },
         {
             "key": "corp-guide",
@@ -1277,10 +1291,24 @@
         },
         {
             "key": "org-auth",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.4",
+            "isCurrent": true
+        },
+        {
+            "key": "org-auth-find-account",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.4",
+            "isCurrent": true
+        },
+        {
+            "key": "org-auth-agency-signup-guide",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.4",
+            "isCurrent": true
         },
         {
             "key": "org-guide",

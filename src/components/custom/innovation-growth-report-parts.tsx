@@ -7,7 +7,9 @@ import {cn} from '@/lib/utils'
 // 구획 제목 줄 — 20 Bold 제목 · 16 Medium 보조(업종) · 오른쪽 14 Regular 날짜. 보조 · 날짜는 제목 높이의 세로 가운데.
 // 보조 · 날짜는 구획마다 있을 때만 넘긴다(기업 정보는 제목만 · 기술혁신정보는 보조까지).
 // 보조가 길면 제목 옆에 남은 폭에서 어절 단위로 접히고, 그래도 모자라면 제목 아래 줄로 내려간다.
-const SectionTitle = ({title, aside, date, id}: {title: string; aside?: string; date?: string; id: string}) => (
+// id 는 구획 제목을 aria-labelledby 로 가리킬 때만 준다 — 같은 화면이 여러 벌 그려질 수 있는 자리
+// (받는 중 스켈레톤)에서는 id 없이 두고 구획에 aria-label 을 준다(id 중복 방지)[8.1.1].
+const SectionTitle = ({title, aside, date, id}: {title: string; aside?: string; date?: string; id?: string}) => (
     <div className="flex break-after-avoid flex-wrap items-center justify-between gap-x-4 gap-y-1">
         <h3
             id={id}

@@ -186,8 +186,9 @@ const MANAGER_ROWS: readonly (readonly [string, string, string])[] = [
     ['연락처', '1544-1120', '051-606-7351'],
 ]
 
-// 시행일 — 시안 문구 그대로(날짜 확정 전).
-const EFFECTIVE_DATE = '시행일 2026년 0월 0일'
+// 시행일 — 이름과 날짜를 나눠 둔다(화면이 dl 로 그린다). 날짜는 확정 전 값이다.
+const EFFECTIVE_DATE_LABEL = '시행일'
+const EFFECTIVE_DATE = '2026년 0월 0일'
 
 export {
     AUTO_COLLECTION_NOTE,
@@ -195,6 +196,7 @@ export {
     BASIC_PLAN,
     CREDIT_INFORMATION_POLICY_NOTICE,
     EFFECTIVE_DATE,
+    EFFECTIVE_DATE_LABEL,
     MANAGED_INFORMATION,
     MANAGER_COLUMNS,
     MANAGER_ROWS,

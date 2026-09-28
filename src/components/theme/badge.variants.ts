@@ -53,7 +53,7 @@ export const badgeVariants = cva(
                 class: 'bg-pastel-navy text-pastel-navy-foreground',
             },
             {variant: 'solid-pastel', color: 'secondary-green', class: 'bg-green-50 text-green-800'},
-            {variant: 'solid-pastel', color: 'secondary-orange', class: 'bg-orange-50 text-orange-700'},
+            {variant: 'solid-pastel', color: 'secondary-orange', class: 'bg-orange-50 text-orange-800'},
             {variant: 'solid-pastel', color: 'secondary-purple', class: 'bg-purple-50 text-purple-600'},
             {variant: 'outline', color: 'info', class: 'border-info-500 text-info-600'},
             {variant: 'outline', color: 'success', class: 'border-success-500 text-success-600'},
@@ -62,7 +62,7 @@ export const badgeVariants = cva(
             {
                 variant: 'outline',
                 color: 'neutral',
-                class: 'border-badge-outline-neutral text-badge-outline-neutral',
+                class: 'border-badge-outline-neutral text-badge-outline-neutral-foreground',
             },
             {variant: 'outline', color: 'navy', class: 'border-navy-500 text-navy-600'},
             {variant: 'outline', color: 'secondary-green', class: 'border-green-800 text-green-800'},

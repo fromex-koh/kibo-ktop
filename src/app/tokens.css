@@ -398,7 +398,7 @@
   --ds-pastel-warning-foreground: var(--raw-warning-600);
   --ds-pastel-warning-foreground-strong: var(--raw-warning-700);
   --ds-pastel-error: var(--raw-error-50);
-  --ds-pastel-error-foreground: var(--raw-error-500);
+  --ds-pastel-error-foreground: var(--raw-error-600);
   --ds-pastel-error-foreground-strong: var(--raw-error-600);
   --ds-pastel-neutral: var(--raw-gray-50);
   --ds-pastel-neutral-foreground: var(--raw-gray-500);
@@ -408,9 +408,10 @@
   --ds-badge-solid-success: var(--raw-success-500);
   --ds-badge-solid-warning: var(--raw-warning-500);
   --ds-badge-solid-error: var(--raw-error-500);
-  --ds-badge-solid-neutral: var(--raw-gray-300);
+  --ds-badge-solid-neutral: var(--raw-gray-500);
   --ds-badge-solid-navy: var(--raw-navy-500);
   --ds-badge-outline-neutral: var(--raw-gray-300);
+  --ds-badge-outline-neutral-foreground: var(--raw-gray-500);
   --ds-alert-info-border: var(--raw-info-100);
   --ds-alert-success-border: var(--raw-success-100);
   --ds-alert-warning-border: var(--raw-warning-100);
@@ -673,7 +674,7 @@
   --ds-pastel-warning-foreground: var(--raw-warning-600);
   --ds-pastel-warning-foreground-strong: var(--raw-warning-700);
   --ds-pastel-error: var(--raw-error-50);
-  --ds-pastel-error-foreground: var(--raw-error-500);
+  --ds-pastel-error-foreground: var(--raw-error-600);
   --ds-pastel-error-foreground-strong: var(--raw-error-600);
   --ds-pastel-neutral: var(--raw-gray-50);
   --ds-pastel-neutral-foreground: var(--raw-gray-500);
@@ -683,9 +684,10 @@
   --ds-badge-solid-success: var(--raw-success-500);
   --ds-badge-solid-warning: var(--raw-warning-500);
   --ds-badge-solid-error: var(--raw-error-500);
-  --ds-badge-solid-neutral: var(--raw-gray-300);
+  --ds-badge-solid-neutral: var(--raw-gray-500);
   --ds-badge-solid-navy: var(--raw-navy-500);
   --ds-badge-outline-neutral: var(--raw-gray-300);
+  --ds-badge-outline-neutral-foreground: var(--raw-gray-500);
   --ds-alert-info-border: var(--raw-info-100);
   --ds-alert-success-border: var(--raw-success-100);
   --ds-alert-warning-border: var(--raw-warning-100);
@@ -961,6 +963,7 @@
   --ds-badge-solid-neutral: var(--raw-gray-10);
   --ds-badge-solid-navy: var(--raw-blue-300);
   --ds-badge-outline-neutral: var(--raw-gray-200);
+  --ds-badge-outline-neutral-foreground: var(--raw-gray-200);
   --ds-alert-info-border: var(--raw-info-400);
   --ds-alert-success-border: var(--raw-success-400);
   --ds-alert-warning-border: var(--raw-warning-400);
@@ -1236,6 +1239,7 @@
   --ds-badge-solid-neutral: var(--raw-gray-10);
   --ds-badge-solid-navy: var(--raw-blue-300);
   --ds-badge-outline-neutral: var(--raw-gray-200);
+  --ds-badge-outline-neutral-foreground: var(--raw-gray-200);
   --ds-alert-info-border: var(--raw-info-400);
   --ds-alert-success-border: var(--raw-success-400);
   --ds-alert-warning-border: var(--raw-warning-400);
@@ -1392,6 +1396,7 @@
   --color-badge-solid-neutral: var(--ds-badge-solid-neutral);
   --color-badge-solid-navy: var(--ds-badge-solid-navy);
   --color-badge-outline-neutral: var(--ds-badge-outline-neutral);
+  --color-badge-outline-neutral-foreground: var(--ds-badge-outline-neutral-foreground);
   --color-alert-info-border: var(--ds-alert-info-border);
   --color-alert-success-border: var(--ds-alert-success-border);
   --color-alert-warning-border: var(--ds-alert-warning-border);

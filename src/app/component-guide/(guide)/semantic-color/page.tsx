@@ -215,6 +215,7 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'badge-solid-neutral': 'bg-badge-solid-neutral',
     'badge-solid-navy': 'bg-badge-solid-navy',
     'badge-outline-neutral': 'bg-badge-outline-neutral',
+    'badge-outline-neutral-foreground': 'bg-badge-outline-neutral-foreground',
     'alert-info-border': 'bg-alert-info-border',
     'alert-success-border': 'bg-alert-success-border',
     'alert-warning-border': 'bg-alert-warning-border',

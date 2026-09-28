@@ -168,7 +168,9 @@ const BulkDataSearchForm = ({
                         <FileUploadError
                             title={
                                 <>
-                                    <span className="text-error-500">
+                                    {/* 건수만 빨강으로 강조 — error.500 은 본문 대비 4.5:1 에 못 미쳐
+                                        한 단계 짙은 destructive(error.600)를 쓴다[5.3.3]. */}
+                                    <span className="text-destructive">
                                         {MOCK_BULK_DATA_SEARCH_ERROR.details.length}건
                                     </span>
                                     의 문제가 발견되었어요
