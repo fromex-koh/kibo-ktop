@@ -99,9 +99,12 @@ const BorrowingTable = ({borrowings}: {borrowings: InnovationCreditDetail['borro
         <div className="border-t-foreground-subtle border-t">
             <table className="w-full table-fixed border-collapse text-center">
                 <caption className="sr-only">차입금 현황(단위: 백만원, %)</caption>
+                {/* 열 수를 실제 셀 수와 맞춘다 — 앞 두 칸만 폭을 고정하고 연도별 금액 · 비중 칸은 span 으로 함께 센다.
+                    선언한 열보다 셀이 많으면 마크업 오류가 된다[8.1.1]. */}
                 <colgroup>
                     <col className="w-51" />
                     <col className="w-51" />
+                    <col span={borrowings.years.length * 2} />
                 </colgroup>
                 <thead>
                     <tr>
