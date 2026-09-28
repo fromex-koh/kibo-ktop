@@ -44,9 +44,9 @@ const StepHeaderCompact = ({title, steps, current, className, ...props}: Omit<St
 
     return (
         <header data-slot="step-header-compact" className={cn('flex flex-col', className)} {...props}>
-            {/* 현재/전체 — 강조 방식은 StepProgress 와 같다(현재 번호만 primary + Bold). */}
+            {/* 현재/전체 — 강조 방식은 StepProgress 와 같다(현재 번호만 primary-strong + Bold). */}
             <p className="text-label-foreground typo-body-l-medium tabular-nums">
-                <span className="typo-body-l-bold text-primary">{safeCurrent}</span> / {count}
+                <span className="typo-body-l-bold text-primary-strong">{safeCurrent}</span> / {count}
             </p>
             <h1 className="typo-h1-bold text-foreground">{title}</h1>
         </header>

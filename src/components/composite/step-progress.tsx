@@ -28,9 +28,11 @@ const StepProgress = ({steps, current, className, ...props}: StepProgressProps) 
         <div data-slot="step-progress" className={cn('flex w-full flex-col gap-3', className)} {...props}>
             <div data-slot="step-progress-header" className="flex items-center justify-between gap-4">
                 <p className="text-label-foreground flex min-w-0 items-center gap-2">
-                    {/* 현재/전체 — 시안은 현재 번호만 primary + Bold 로 강조하고 "/ 전체"는 본문색 Medium 이다. */}
+                    {/* 현재/전체 — 현재 번호만 강조(primary-strong = blue.600 + Bold)하고 "/ 전체"는 본문색 Medium 이다.
+                        번호는 옅은 회색 면 위에 놓여 primary(blue.500)로는 본문 대비 4.5:1 에 못 미쳐
+                        한 단계 짙은 primary-strong(blue.600)을 쓴다[5.3.3]. */}
                     <span className="typo-body-l-medium shrink-0 tabular-nums">
-                        <span className="typo-body-l-bold text-primary">{safeCurrent}</span> / {count}
+                        <span className="typo-body-l-bold text-primary-strong">{safeCurrent}</span> / {count}
                     </span>
                     <span className="typo-body-xl-medium truncate">{title}</span>
                 </p>
