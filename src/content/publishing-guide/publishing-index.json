@@ -272,7 +272,7 @@
                 {
                     "label": "기업 로그인",
                     "screenId": "SB-FOTA-CM1-0001",
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-auth",
                     "iaRow": 10
@@ -280,9 +280,25 @@
                 {
                     "label": "기관 로그인",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "corp-auth-org-login",
+                    "iaRow": 11
+                },
+                {
+                    "label": "아이디 · 비밀번호 찾기 팝업",
+                    "screenId": null,
+                    "status": "완료",
+                    "version": "미배포",
+                    "key": "corp-auth-find-account",
+                    "iaRow": 11
+                },
+                {
+                    "label": "기관회원 가입 안내 팝업",
+                    "screenId": null,
+                    "status": "완료",
+                    "version": "미배포",
+                    "key": "corp-auth-agency-signup-guide",
                     "iaRow": 11
                 }
             ]
@@ -2312,7 +2328,7 @@
                 {
                     "label": "기업 로그인",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-auth",
                     "iaRow": 10
@@ -2320,9 +2336,25 @@
                 {
                     "label": "기관 로그인",
                     "screenId": null,
-                    "status": "대기중",
+                    "status": "완료",
                     "version": "미배포",
                     "key": "org-auth-org-login",
+                    "iaRow": 11
+                },
+                {
+                    "label": "아이디 · 비밀번호 찾기 팝업",
+                    "screenId": null,
+                    "status": "완료",
+                    "version": "미배포",
+                    "key": "org-auth-find-account",
+                    "iaRow": 11
+                },
+                {
+                    "label": "기관회원 가입 안내 팝업",
+                    "screenId": null,
+                    "status": "완료",
+                    "version": "미배포",
+                    "key": "org-auth-agency-signup-guide",
                     "iaRow": 11
                 }
             ]
@@ -4408,10 +4440,32 @@
             "children": [
                 {
                     "label": "로그인",
-                    "screenId": null,
-                    "status": "대기중",
-                    "version": "미배포",
-                    "key": "carbon-login"
+                    "screen": {
+                        "label": "로그인",
+                        "screenId": null,
+                        "status": "완료",
+                        "version": "미배포",
+                        "key": "carbon-login",
+                        "externalHref": "https://fromex-carbon.vercel.app/login"
+                    },
+                    "children": [
+                        {
+                            "label": "기관회원 가입 안내 팝업",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "carbon-login-agency-signup-guide",
+                            "externalHref": "https://fromex-carbon.vercel.app/login/agency-signup-guide"
+                        },
+                        {
+                            "label": "아이디 · 비밀번호 찾기 팝업",
+                            "screenId": null,
+                            "status": "완료",
+                            "version": "미배포",
+                            "key": "carbon-login-find-account",
+                            "externalHref": "https://fromex-carbon.vercel.app/login/find-account"
+                        }
+                    ]
                 },
                 {
                     "label": "탄소중립 선도기업",

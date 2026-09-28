@@ -123,6 +123,20 @@
             "name": "기업 로그인"
         },
         {
+            "key": "corp-auth-find-account",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/auth/find-account",
+            "name": "아이디 · 비밀번호 찾기"
+        },
+        {
+            "key": "corp-auth-agency-signup-guide",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/auth/agency-signup-guide",
+            "name": "기관회원 가입 안내"
+        },
+        {
             "key": "corp-guide",
             "screenId": "SB-FOTA-CM3-0001",
             "userType": "기업",
@@ -1370,6 +1384,20 @@
             "userType": "기관",
             "path": "/org/auth",
             "name": "기업 로그인"
+        },
+        {
+            "key": "org-auth-find-account",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/auth/find-account",
+            "name": "아이디 · 비밀번호 찾기"
+        },
+        {
+            "key": "org-auth-agency-signup-guide",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/auth/agency-signup-guide",
+            "name": "기관회원 가입 안내"
         },
         {
             "key": "org-guide",
