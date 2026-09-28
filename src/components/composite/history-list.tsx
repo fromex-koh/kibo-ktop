@@ -53,10 +53,11 @@ const HistoryItem = ({badge, meta, title, action, children, className, ...props}
                     {meta?.map((value, index) => (
                         // 값 자체가 키가 될 만한 것이 없어(같은 등급이 여러 줄에 나온다) 자리를 키로 쓴다.
                         // 한 항목 안에서 순서가 바뀌거나 중간이 지워지지 않는 고정 목록이라 자리로 충분하다.
-                        <span key={index} className="flex items-center">
+                        // 감싸개는 div 다 — 기본형 InlineSeparator 가 div 라 span 안에 두면 마크업 오류다[8.1.1].
+                        <div key={index} className="flex items-center">
                             {index > 0 ? <InlineSeparator /> : null}
                             {value}
-                        </span>
+                        </div>
                     ))}
                 </div>
             ) : null}
