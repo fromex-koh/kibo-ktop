@@ -12,6 +12,7 @@ import {
     BASIC_PLAN,
     CREDIT_INFORMATION_POLICY_NOTICE,
     EFFECTIVE_DATE,
+    EFFECTIVE_DATE_LABEL,
     MANAGED_INFORMATION,
     MANAGER_COLUMNS,
     MANAGER_ROWS,
@@ -273,7 +274,12 @@ const CreditInformationPolicy = ({userType}: CreditInformationPolicyProps) => (
             </PolicySection>
         </div>
 
-        <p className="typo-title-m-bold text-foreground">{EFFECTIVE_DATE}</p>
+        {/* 시행일 — 이름과 날짜 한 쌍이라 dl 로 적는다. 굵은 한 줄짜리 문단으로 두면 검사 도구가
+            제목으로 오인한다(WAVE '가능한 제목'). 보이는 모습은 "시행일 2026년 0월 0일" 한 줄 그대로다. */}
+        <dl className="typo-title-m-bold text-foreground flex gap-1">
+            <dt>{EFFECTIVE_DATE_LABEL}</dt>
+            <dd className="m-0">{EFFECTIVE_DATE}</dd>
+        </dl>
     </div>
 )
 
