@@ -94,12 +94,14 @@ const toPatentFields = (patent: InnovationGrowthPatent) => [
     {label: PATENT_FIELD_LABELS.subCategoryCode, value: patent.subCategoryCode},
 ]
 
-// 목록 제목 — 20 Bold 제목 뒤에 16 Regular '총 n건'(숫자만 primary).
+// 목록 제목 — 20 Bold 제목 뒤에 16 Regular '총 n건'. 숫자만 같은 크기의 Bold 로 세워 눈에 먼저 들어오게 한다.
 const ListTitle = ({id, title, count}: {id: string; title: string; count: number}) => (
     <h2 id={id} className="typo-title-l-bold text-foreground flex items-baseline gap-2">
         {title}
         <span className="typo-body-xl-regular">
-            총 <span className="text-primary">{count}</span>건
+            {/* 숫자만 강조 — 옅은 회색 면 위라 primary(blue.500)로는 본문 대비 4.5:1 에 못 미쳐
+                한 단계 짙은 primary-strong 을 쓴다[5.3.3]. */}
+            총 <span className="typo-body-xl-bold text-primary-strong">{count}</span>건
         </span>
     </h2>
 )
@@ -471,7 +473,7 @@ const InnovationGrowthReportLookup = ({intro, reportHref, initialResult}: Innova
                                     <dd
                                         className={
                                             row.isHighlighted
-                                                ? 'typo-body-xl-medium text-primary text-end break-keep'
+                                                ? 'typo-body-xl-medium text-primary-strong text-end break-keep'
                                                 : 'typo-body-xl-medium text-label-foreground text-end break-keep'
                                         }
                                     >
