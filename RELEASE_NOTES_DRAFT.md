@@ -148,7 +148,7 @@
 - 영향 화면:
     - [기업 로그인](/corp/auth)
     - [기관 로그인](/org/auth)
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/a3af5ee4)
+- 커밋: [상수 추가](https://github.com/fromex-koh/kibo-ktop/commit/a3af5ee4) [전달 번들 반영](https://github.com/fromex-koh/kibo-ktop/commit/1ac9f5fa)
 
 ## [신규 추가]
 
