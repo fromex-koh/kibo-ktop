@@ -584,6 +584,8 @@ const WAVE_SCREEN_ROUTES = [
     '/org/individual-evaluation/tech-index/general/company-info/company-management',
     '/org/individual-evaluation/tech-index/startup/company-info/company-management',
     '/org/individual-evaluation/investment-model/company-info/company-management',
+    '/corp/auth',
+    '/org/auth',
 ] as const
 
 const WAVE_ISSUES = [
@@ -668,6 +670,11 @@ const WAVE_K_BIGX_CONTROL_ISSUES = [
 const WAVE_INQUIRY_CONTROL_ISSUES = [
     {...WAVE_ISSUES[1], message: 'Missing form label (1)', count: 1, screens: 1},
 ] as const
+// 로그인 — 기관회원 탭의 [아이디 저장] 체크박스 하나다. 기업회원 탭에는 폼이 없어 탭을 바꿔야 나타난다.
+// 모달 단독 화면(찾기 · 가입 안내)은 뒤 배경이 비어 있어 이 폼이 없다 — 오류도 없다.
+const WAVE_LOGIN_CONTROL_ISSUES = [
+    {...WAVE_ISSUES[1], message: 'Missing form label (1)', count: 1, screens: 1},
+] as const
 const WAVE_ORG_CUSTOMER_CONSENT_ISSUES = [
     {...WAVE_ISSUES[0], message: 'Missing form label (2)', count: 2, screens: 1},
 ] as const
@@ -723,6 +730,22 @@ const WAVE_SELECT_SCREEN_ROUTES = [
     '/org/individual-evaluation/investment-model/company-info/item-description',
     '/corp/patent-evaluation/patent-grade-list',
     '/org/patent-evaluation/patent-grade-list',
+    '/corp/patent-evaluation/patent-grade-list/patent-grade-result',
+    '/org/patent-evaluation/patent-grade-list/patent-grade-result',
+    '/corp/k-bigx-report/innovation-growth-report',
+    '/org/k-bigx-report/innovation-growth-report',
+    '/corp/k-bigx-report/innovation-growth-report/search-result/company',
+    '/corp/k-bigx-report/innovation-growth-report/search-result/company/selected',
+    '/corp/k-bigx-report/innovation-growth-report/search-result/company/no-patent',
+    '/corp/k-bigx-report/innovation-growth-report/search-result/company/not-found',
+    '/corp/k-bigx-report/innovation-growth-report/search-result/patent',
+    '/corp/k-bigx-report/innovation-growth-report/search-result/patent/not-found',
+    '/org/k-bigx-report/innovation-growth-report/search-result/company',
+    '/org/k-bigx-report/innovation-growth-report/search-result/company/selected',
+    '/org/k-bigx-report/innovation-growth-report/search-result/company/no-patent',
+    '/org/k-bigx-report/innovation-growth-report/search-result/company/not-found',
+    '/org/k-bigx-report/innovation-growth-report/search-result/patent',
+    '/org/k-bigx-report/innovation-growth-report/search-result/patent/not-found',
 ] as const
 
 const WAVE_SELECT_ISSUES = [
@@ -1214,6 +1237,18 @@ const WAVE_SCREEN_RESULTS = [
         issues: WAVE_COMPANY_INFO_LOAD_CONTROL_ISSUES,
         kinds: [{label: 'Missing form label · RadioGroup 4건', level: 'error', target: 'wave-radio'}],
     },
+    {
+        name: '기업 로그인 · 기관회원 탭',
+        path: WAVE_SCREEN_ROUTES[44],
+        issues: WAVE_LOGIN_CONTROL_ISSUES,
+        kinds: [{label: 'Missing form label · Checkbox 1건', level: 'error', target: 'wave-checkbox'}],
+    },
+    {
+        name: '기관 로그인 · 기관회원 탭',
+        path: WAVE_SCREEN_ROUTES[45],
+        issues: WAVE_LOGIN_CONTROL_ISSUES,
+        kinds: [{label: 'Missing form label · Checkbox 1건', level: 'error', target: 'wave-checkbox'}],
+    },
     // 혁신성장영위기업 분류근거 모달(품목설명 화면은 그 위에 설명 모달을 겹친 화면)의 테마 셀렉트다.
     // 기업·기관 × Tech-Index 일반·창업 · 기관 투자모형이 모두 같은 모달이라 같은 1건이다.
     {
@@ -1381,13 +1416,109 @@ const WAVE_SCREEN_RESULTS = [
     },
     {
         name: '기업 특허평가 · 특허 등급조회',
-        path: WAVE_SELECT_SCREEN_ROUTES[WAVE_SELECT_SCREEN_ROUTES.length - 2],
+        path: WAVE_SELECT_SCREEN_ROUTES[45],
         issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
         kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
     },
     {
         name: '기관 특허평가 · 특허 등급조회',
-        path: WAVE_SELECT_SCREEN_ROUTES[WAVE_SELECT_SCREEN_ROUTES.length - 1],
+        path: WAVE_SELECT_SCREEN_ROUTES[46],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 특허평가 · 특허등급평가 결과',
+        path: WAVE_SELECT_SCREEN_ROUTES[47],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 특허평가 · 특허등급평가 결과',
+        path: WAVE_SELECT_SCREEN_ROUTES[48],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 K-BIGx · 기업혁신성장보고서 조회',
+        path: WAVE_SELECT_SCREEN_ROUTES[49],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 K-BIGx · 기업혁신성장보고서 조회',
+        path: WAVE_SELECT_SCREEN_ROUTES[50],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 K-BIGx · 기업 검색 결과',
+        path: WAVE_SELECT_SCREEN_ROUTES[51],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 K-BIGx · 기업 선택(특허 있음)',
+        path: WAVE_SELECT_SCREEN_ROUTES[52],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 K-BIGx · 기업 선택(특허 없음)',
+        path: WAVE_SELECT_SCREEN_ROUTES[53],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 K-BIGx · 기업 검색 결과 없음',
+        path: WAVE_SELECT_SCREEN_ROUTES[54],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 K-BIGx · 특허 검색 결과',
+        path: WAVE_SELECT_SCREEN_ROUTES[55],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기업 K-BIGx · 특허 검색 결과 없음',
+        path: WAVE_SELECT_SCREEN_ROUTES[56],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 K-BIGx · 기업 검색 결과',
+        path: WAVE_SELECT_SCREEN_ROUTES[57],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 K-BIGx · 기업 선택(특허 있음)',
+        path: WAVE_SELECT_SCREEN_ROUTES[58],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 K-BIGx · 기업 선택(특허 없음)',
+        path: WAVE_SELECT_SCREEN_ROUTES[59],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 K-BIGx · 기업 검색 결과 없음',
+        path: WAVE_SELECT_SCREEN_ROUTES[60],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 K-BIGx · 특허 검색 결과',
+        path: WAVE_SELECT_SCREEN_ROUTES[61],
+        issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
+        kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
+    },
+    {
+        name: '기관 K-BIGx · 특허 검색 결과 없음',
+        path: WAVE_SELECT_SCREEN_ROUTES[62],
         issues: WAVE_PATENT_GRADE_SELECT_ISSUES,
         kinds: [{label: 'Select missing label 1건', level: 'warning', target: 'wave-select-warning'}],
     },
