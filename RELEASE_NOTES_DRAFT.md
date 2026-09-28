@@ -2,18 +2,6 @@
 
 ## [Diff 확인]
 
-### [스타일] 배지 파스텔/오렌지 글자색 교체
-
-- 대상:
-    - src/components/theme/badge.variants.ts
-- 변경:
-    - 파스텔/오렌지 글자를 orange.700 에서 orange.800 으로 바꿨습니다.
-- 결과:
-    - 대비가 4.27:1 에서 6.34:1 로 올랐습니다.
-- 영향 화면:
-    - [Badge 가이드](/component-guide/badge)
-- 커밋: [0ec393e6](https://github.com/fromex-koh/kibo-ktop/commit/0ec393e6)
-
 ### [스타일] 스테퍼 현재 단계 번호 색 교체
 
 - 대상:
@@ -27,7 +15,7 @@
     - [StepProgress 가이드](/component-guide/step-progress)
     - [StepHeader 가이드](/component-guide/step-header)
     - [기업 KTRS-FM 고객정보 활용 동의](/corp/technology-evaluation/ktrs-fm/customer-consent)
-- 커밋: [df815a48](https://github.com/fromex-koh/kibo-ktop/commit/df815a48)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/df815a48)
 
 ### [스타일] 기업혁신성장 조회의 건수 · 이용횟수 강조 색 교체
 
@@ -43,21 +31,7 @@
     - [기관 기업 선택 결과](/org/k-bigx-report/innovation-growth-report/search-result/company/selected)
     - [기업 특허 검색 결과](/corp/k-bigx-report/innovation-growth-report/search-result/patent)
     - [기관 특허 검색 결과](/org/k-bigx-report/innovation-growth-report/search-result/patent)
-- 커밋: [f089e40b](https://github.com/fromex-koh/kibo-ktop/commit/f089e40b)
-
-### [스타일] 입력 탭의 '미작성' 상태 글자색 교체
-
-- 대상:
-    - src/components/theme/form-tab-title.variants.ts
-- 변경:
-    - 미작성 상태 글자를 disabled(gray.300)에서 foreground-subtle(gray.500)로 바꿨습니다.
-    - 세 상태(미작성 · 작성중 · 작성완료)가 같은 색이 되고 굵기로만 갈립니다.
-- 결과:
-    - 자가진단 입력 화면 전체(기업 · 기관)의 미작성 표시가 본문 대비 기준을 충족합니다.
-- 영향 화면:
-    - [FormTabs 가이드](/component-guide/form-tabs)
-    - [기업 기업기술정보](/corp/technology-evaluation/ktrs-fm/company-technology-info)
-- 커밋: [4cb65e16](https://github.com/fromex-koh/kibo-ktop/commit/4cb65e16)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f089e40b)
 
 ### [스타일] 대량정보조회 실패 건수 색 교체
 
@@ -69,7 +43,7 @@
     - 실패 안내의 건수 글자가 본문 대비 기준을 충족합니다.
 - 영향 화면:
     - [기관 대량정보조회 실패](/org/k-bigx-report/bulk-data-search/failure)
-- 커밋: [7823f236](https://github.com/fromex-koh/kibo-ktop/commit/7823f236)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/7823f236)
 
 ### [마크업] 신용정보 활용체제 시행일을 이름 · 값 쌍으로 교체
 
@@ -83,7 +57,7 @@
 - 영향 화면:
     - [기업 신용정보 활용체제](/corp/credit-information-policy)
     - [기관 신용정보 활용체제](/org/credit-information-policy)
-- 커밋: [fdb87dd1](https://github.com/fromex-koh/kibo-ktop/commit/fdb87dd1)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/fdb87dd1)
 
 ### [마크업] 보고서 문서의 본문 상자(main)와 중복 id 정리
 
@@ -100,7 +74,7 @@
     - [기관 기업혁신성장 진단 브리핑](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 참고:
     - main 을 그리는 layout.tsx 는 신규 추가입니다 — "[화면] 보고서 문서의 본문 상자 레이아웃" 카드를 함께 봅니다.
-- 커밋: [a7a28bbc](https://github.com/fromex-koh/kibo-ktop/commit/a7a28bbc)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/a7a28bbc)
 
 ### [마크업] 보고서 탭에 짝이 되는 패널 연결
 
@@ -115,7 +89,7 @@
 - 영향 화면:
     - [기업 기업혁신성장 진단 브리핑](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
     - [기관 기업혁신성장 진단 브리핑](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
-- 커밋: [a7a28bbc](https://github.com/fromex-koh/kibo-ktop/commit/a7a28bbc)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/a7a28bbc)
 
 ### [마크업] 차입금 현황 표의 열 선언 보정
 
@@ -128,7 +102,7 @@
 - 영향 화면:
     - [기업 기업혁신성장 진단 브리핑](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
     - [기관 기업혁신성장 진단 브리핑](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
-- 커밋: [09282068](https://github.com/fromex-koh/kibo-ktop/commit/09282068)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/09282068)
 
 ### [마크업] 칸 막대(SegmentMeter)를 글줄 안에 놓을 수 있는 태그로 교체
 
@@ -143,7 +117,7 @@
     - [SegmentMeter 가이드](/component-guide/segment-meter)
     - [기업 기업혁신성장 진단 브리핑](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
     - [기관 기업혁신성장 진단 브리핑](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
-- 커밋: [febe68b6](https://github.com/fromex-koh/kibo-ktop/commit/febe68b6)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/febe68b6)
 
 ### [마크업] 이력 목록에서 값 사이 세로선을 감싸던 태그 교체
 
@@ -160,7 +134,7 @@
     - [HistoryList 가이드](/component-guide/history-list)
     - [기업 K-BIGx 보고서 발급이력](/corp/mypage/k-bigx-report-history)
     - [기관 평가이력](/org/mypage/evaluation-history)
-- 커밋: [32892d27](https://github.com/fromex-koh/kibo-ktop/commit/32892d27)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/32892d27)
 
 ### [데이터] 기보 ONE 플랫폼 주소 상수 추가
 
@@ -174,7 +148,7 @@
 - 영향 화면:
     - [기업 로그인](/corp/auth)
     - [기관 로그인](/org/auth)
-- 커밋: [a3af5ee4](https://github.com/fromex-koh/kibo-ktop/commit/a3af5ee4)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/a3af5ee4)
 
 ## [신규 추가]
 
@@ -212,6 +186,32 @@
     - 문서와 스켈레톤이 공유하는 main 을 이 자리에서 하나만 그립니다.
 
 ## [덮어쓰기]
+
+### [스타일] 배지 파스텔/오렌지 글자색 교체
+
+- 대상:
+    - src/components/theme/badge.variants.ts
+- 적용: 지정한 파일만 교체
+- 변경:
+    - 파스텔/오렌지 글자를 orange.700 에서 orange.800 으로 바꿨습니다.
+- 결과:
+    - 대비가 4.27:1 에서 6.34:1 로 올랐습니다.
+- 영향 화면:
+    - [Badge 가이드](/component-guide/badge)
+
+### [스타일] 입력 탭의 '미작성' 상태 글자색 교체
+
+- 대상:
+    - src/components/theme/form-tab-title.variants.ts
+- 적용: 지정한 파일만 교체
+- 변경:
+    - 미작성 상태 글자를 disabled(gray.300)에서 foreground-subtle(gray.500)로 바꿨습니다.
+    - 세 상태(미작성 · 작성중 · 작성완료)가 같은 색이 되고 굵기로만 갈립니다.
+- 결과:
+    - 자가진단 입력 화면 전체(기업 · 기관)의 미작성 표시가 본문 대비 기준을 충족합니다.
+- 영향 화면:
+    - [FormTabs 가이드](/component-guide/form-tabs)
+    - [기업 기업기술정보](/corp/technology-evaluation/ktrs-fm/company-technology-info)
 
 ### [문서] 컴포넌트 가이드 — 접근성 검사 예외사항 · 시맨틱 색상
 
