@@ -68,12 +68,14 @@ const formTabTitleIconBoxClassName = 'flex h-6 shrink-0 items-center'
 
 const formTabTitleIconClassName = 'text-label-foreground size-icon-md group-data-active/form-tab:text-foreground'
 
+// 상태 글자는 세 값 모두 같은 색(foreground-subtle · gray.500)이고 굵기만 갈린다 —
+// 미작성에 쓰던 흐린 회색(disabled · gray.300)은 본문 대비 4.5:1 에 못 미친다[5.3.3].
 const formTabTitleStatusVariants = cva('group-data-active/form-tab:text-foreground', {
     variants: {
         status: {
             done: 'typo-body-m-medium text-foreground-subtle',
             writing: 'typo-body-m-medium text-foreground-subtle',
-            todo: 'typo-body-m-regular text-disabled',
+            todo: 'typo-body-m-regular text-foreground-subtle',
         },
     },
     defaultVariants: {status: 'todo'},
