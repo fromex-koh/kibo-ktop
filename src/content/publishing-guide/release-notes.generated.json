@@ -1,6 +1,373 @@
 {
     "releases": [
         {
+            "version": "v3.3.4",
+            "releasedAt": "2026-09-28",
+            "changes": [
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[스타일] 스테퍼 현재 단계 번호 색 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/composite/step-progress.tsx\nsrc/components/composite/step-header.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "현재 번호 강조를 primary(blue.500)에서 primary-strong(blue.600)으로 바꿨습니다."
+                        },
+                        {"label": "결과", "value": "옅은 회색 면 위 대비가 3.59:1 에서 4.69:1 로 올랐습니다."},
+                        {
+                            "label": "영향 화면",
+                            "value": "[StepProgress 가이드](/component-guide/step-progress)\n[StepHeader 가이드](/component-guide/step-header)\n[기업 KTRS-FM 고객정보 활용 동의](/corp/technology-evaluation/ktrs-fm/customer-consent)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/df815a48)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[스타일] 기업혁신성장 조회의 건수 · 이용횟수 강조 색 교체",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/innovation-growth-report-lookup.tsx"},
+                        {
+                            "label": "변경",
+                            "value": "목록 제목의 '총 n건' 숫자와 이용횟수 안내의 강조값을 primary-strong 으로 바꿨습니다.\n숫자는 크기를 그대로 두고 Bold 로 세웠습니다."
+                        },
+                        {"label": "결과", "value": "숫자 대비 4.69:1, 이용횟수 강조값 4.86:1 입니다."},
+                        {
+                            "label": "영향 화면",
+                            "value": "[기업 기업 선택 결과](/corp/k-bigx-report/innovation-growth-report/search-result/company/selected)\n[기관 기업 선택 결과](/org/k-bigx-report/innovation-growth-report/search-result/company/selected)\n[기업 특허 검색 결과](/corp/k-bigx-report/innovation-growth-report/search-result/patent)\n[기관 특허 검색 결과](/org/k-bigx-report/innovation-growth-report/search-result/patent)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f089e40b)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[스타일] 대량정보조회 실패 건수 색 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/org/(service)/(logged-in)/k-bigx-report/bulk-data-search/bulk-data-search-form.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "문제 건수 강조를 error.500 에서 destructive(error.600)로 바꿨습니다."
+                        },
+                        {"label": "결과", "value": "실패 안내의 건수 글자가 본문 대비 기준을 충족합니다."},
+                        {
+                            "label": "영향 화면",
+                            "value": "[기관 대량정보조회 실패](/org/k-bigx-report/bulk-data-search/failure)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/7823f236)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업] 신용정보 활용체제 시행일을 이름 · 값 쌍으로 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/credit-information-policy.tsx\nsrc/content/service/credit-information-policy.ts"
+                        },
+                        {
+                            "label": "전",
+                            "value": "문서 끝 '시행일 2026년 0월 0일' 이 굵은 한 줄 문단이라 검사기가 제목으로 오인했습니다."
+                        },
+                        {
+                            "label": "후",
+                            "value": "이름('시행일')과 값('2026년 0월 0일')으로 나눠 dl · dt · dd 로 바꿨습니다(보이는 한 줄은 그대로)."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기업 신용정보 활용체제](/corp/credit-information-policy)\n[기관 신용정보 활용체제](/org/credit-information-policy)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/fdb87dd1)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업] 보고서 문서의 본문 상자(main)와 중복 id 정리",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/innovation-growth-report-document.tsx\nsrc/components/custom/innovation-growth-report-parts.tsx"
+                        },
+                        {
+                            "label": "전",
+                            "value": "문서(page.tsx)와 스켈레톤(loading.tsx)이 각자 main 을 그려, 내려받는 HTML 한 벌에 main 과 id 가 두 벌씩 담겼습니다."
+                        },
+                        {
+                            "label": "후",
+                            "value": "main 은 layout.tsx 가 하나만 그리고, 문서와 스켈레톤은 안쪽 내용만 그립니다.\n스켈레톤의 구획 id 는 없애고 aria-label 로 대신합니다(SectionTitle 의 id 를 선택 값으로 바꿨습니다)."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기업 기업혁신성장 진단 브리핑](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)\n[기관 기업혁신성장 진단 브리핑](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)"
+                        },
+                        {
+                            "label": "참고",
+                            "value": "main 을 그리는 layout.tsx 는 신규 추가입니다 — \"[화면] 보고서 문서의 본문 상자 레이아웃\" 카드를 함께 봅니다."
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/a7a28bbc)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업] 보고서 탭에 짝이 되는 패널 연결",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/innovation-growth-report-document.tsx"},
+                        {
+                            "label": "전",
+                            "value": "탭 버튼만 있고 짝이 되는 패널이 없었습니다.\n로딩 중 탭 메뉴(모양만 있는 껍데기)도 누를 수 없는데 탭 역할을 달고 있었습니다."
+                        },
+                        {
+                            "label": "후",
+                            "value": "본문을 TabsContent 로 감싸 버튼과 짝을 맞췄습니다.\n로딩 중 탭 메뉴는 탭 역할과 id 를 떼어 단순 표시(span + aria-hidden)로 바꿨습니다."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기업 기업혁신성장 진단 브리핑](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)\n[기관 기업혁신성장 진단 브리핑](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/a7a28bbc)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업] 차입금 현황 표의 열 선언 보정",
+                    "details": [
+                        {"label": "대상", "value": "src/components/custom/innovation-growth-report-credit.tsx"},
+                        {
+                            "label": "전",
+                            "value": "앞 두 칸의 폭만 col 로 선언해, 연도별 금액 · 비중 칸이 선언되지 않은 채 남았습니다(선언한 열보다 셀이 많아 오류)."
+                        },
+                        {
+                            "label": "후",
+                            "value": "col span={연도 수 × 2} 로 나머지 열을 함께 선언합니다(폭은 주지 않아 보이는 모습 동일)."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기업 기업혁신성장 진단 브리핑](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)\n[기관 기업혁신성장 진단 브리핑](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/09282068)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업] 칸 막대(SegmentMeter)를 글줄 안에 놓을 수 있는 태그로 교체",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/segment-meter.tsx\nsrc/components/composite/segment-meter-skeleton.tsx"
+                        },
+                        {
+                            "label": "전",
+                            "value": "글줄 안에 놓이는데 바깥이 div 였습니다(div 는 span 안에 들어갈 수 없습니다)."
+                        },
+                        {"label": "후", "value": "span + inline-flex 로 바꿨습니다(보이는 모습 동일)."},
+                        {
+                            "label": "영향 화면",
+                            "value": "[SegmentMeter 가이드](/component-guide/segment-meter)\n[기업 기업혁신성장 진단 브리핑](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)\n[기관 기업혁신성장 진단 브리핑](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/febe68b6)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[마크업] 이력 목록에서 값 사이 세로선을 감싸던 태그 교체",
+                    "details": [
+                        {"label": "대상", "value": "src/components/composite/history-list.tsx"},
+                        {
+                            "label": "변경",
+                            "value": "이력 한 줄에 값이 여러 개일 때 값과 값 사이에 세로선을 넣습니다. 이 세로선과 값을 함께 감싸던 태그를 span 에서 div 로 바꿨습니다."
+                        },
+                        {
+                            "label": "이유",
+                            "value": "세로선을 그리는 InlineSeparator 가 div 인데, div 는 span 안에 들어갈 수 없습니다."
+                        },
+                        {
+                            "label": "결과",
+                            "value": "값이 둘 이상인 줄마다 나던 마크업 오류가 사라졌습니다.\n화면에 보이는 모습은 그대로입니다(둘 다 flex 로 배치합니다)."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[HistoryList 가이드](/component-guide/history-list)\n[기업 K-BIGx 보고서 발급이력](/corp/mypage/k-bigx-report-history)\n[기관 평가이력](/org/mypage/evaluation-history)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/32892d27)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[데이터] 기보 ONE 플랫폼 주소 상수 추가",
+                    "details": [
+                        {"label": "대상", "value": "src/constants/site.ts"},
+                        {
+                            "label": "변경",
+                            "value": "기업회원 로그인이 나가는 외부 사이트 주소를 상수로 추가했습니다.\n실제 진입 주소는 백엔드에서 받는다는 안내를 주석으로 남겼습니다."
+                        },
+                        {"label": "결과", "value": "로그인 화면이 주소를 직접 쓰지 않고 이 상수를 참조합니다."},
+                        {"label": "영향 화면", "value": "[기업 로그인](/corp/auth)\n[기관 로그인](/org/auth)"},
+                        {
+                            "label": "커밋",
+                            "value": "[상수 추가](https://github.com/fromex-koh/kibo-ktop/commit/a3af5ee4) [전달 번들 반영](https://github.com/fromex-koh/kibo-ktop/commit/1ac9f5fa)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] 로그인",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/components/custom/login-screen.tsx\nsrc/components/theme/member-type-tabs.variants.ts\nsrc/content/service/login.ts\nsrc/components/composite/login-find-account-dialog.tsx\nsrc/components/composite/login-agency-signup-guide-dialog.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/auth/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/auth/find-account/page.tsx\nsrc/app/(user-type)/corp/(service)/(logged-out)/auth/agency-signup-guide/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/auth/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/auth/find-account/page.tsx\nsrc/app/(user-type)/org/(service)/(logged-out)/auth/agency-signup-guide/page.tsx\npublic/images/login/office-building.webp\npublic/images/login/bank-building.webp"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {
+                            "label": "내용",
+                            "value": "기업회원 · 기관회원을 한 화면에서 탭으로 오갑니다.\n기업회원은 기보 ONE 플랫폼으로 나가고, 기관회원은 아이디 · 비밀번호를 입력합니다.\n[아이디 · 비밀번호 찾기]와 [회원가입]이 여는 안내 모달 둘, 그 모달만 확인하는 주소를 함께 둡니다."
+                        },
+                        {
+                            "label": "이어서 할 일",
+                            "value": "빈 값 검사와 로그인 실패 안내는 문구 확인용 목업입니다. 이어서 작업할 자리를 주석으로 표시해 두었습니다."
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "new",
+                    "title": "[화면] 보고서 문서의 본문 상자 레이아웃",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/corp/(report)/k-bigx-report/innovation-growth-report/diagnostic-briefing/layout.tsx\nsrc/app/(user-type)/org/(report)/k-bigx-report/innovation-growth-report/diagnostic-briefing/layout.tsx"
+                        },
+                        {"label": "적용", "value": "신규 파일 추가"},
+                        {"label": "내용", "value": "문서와 스켈레톤이 공유하는 main 을 이 자리에서 하나만 그립니다."}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[스타일] 배지 파스텔/오렌지 글자색 교체",
+                    "details": [
+                        {"label": "대상", "value": "src/components/theme/badge.variants.ts"},
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {"label": "변경", "value": "파스텔/오렌지 글자를 orange.700 에서 orange.800 으로 바꿨습니다."},
+                        {"label": "결과", "value": "대비가 4.27:1 에서 6.34:1 로 올랐습니다."},
+                        {"label": "영향 화면", "value": "[Badge 가이드](/component-guide/badge)"}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[스타일] 입력 탭의 '미작성' 상태 글자색 교체",
+                    "details": [
+                        {"label": "대상", "value": "src/components/theme/form-tab-title.variants.ts"},
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {
+                            "label": "변경",
+                            "value": "미작성 상태 글자를 disabled(gray.300)에서 foreground-subtle(gray.500)로 바꿨습니다.\n세 상태(미작성 · 작성중 · 작성완료)가 같은 색이 되고 굵기로만 갈립니다."
+                        },
+                        {
+                            "label": "결과",
+                            "value": "자가진단 입력 화면 전체(기업 · 기관)의 미작성 표시가 본문 대비 기준을 충족합니다."
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[FormTabs 가이드](/component-guide/form-tabs)\n[기업 기업기술정보](/corp/technology-evaluation/ktrs-fm/company-technology-info)"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[문서] 컴포넌트 가이드 — 접근성 검사 예외사항 · 시맨틱 색상",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/component-guide/(guide)/accessibility-exceptions/page.tsx\nsrc/app/component-guide/(guide)/semantic-color/page.tsx"
+                        },
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {
+                            "label": "내용",
+                            "value": "로그인 화면과 K-BIGx 조회 · 특허등급평가 결과 화면의 WAVE 기록을 추가했습니다.\n새로 나눈 배지 테두리 토큰을 시맨틱 색상 목록에 등록했습니다."
+                        },
+                        {"label": "문서", "value": "[접근성 검사 예외사항](/component-guide/accessibility-exceptions)"}
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[토큰] 디자인 토큰",
+                    "details": [
+                        {"label": "대상", "value": "tokens.json"},
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {
+                            "label": "할 일",
+                            "value": "tokens.json 만 교체하면 됩니다. 생성물 src/app/tokens.css 는 따로 받지 않습니다.\nyarn dev 또는 yarn build 를 실행하면 tokens.css 가 다시 만들어집니다(predev · prebuild 가 yarn tokens 를 돌립니다)."
+                        },
+                        {
+                            "label": "바뀐 값",
+                            "value": "파스텔/빨강 글자 — error.500 에서 error.600 으로\n솔리드/회색 배경 — gray.300 에서 gray.500 으로\n아웃라인/회색 — 테두리(gray.300)와 글자(gray.500)를 서로 다른 토큰으로 분리"
+                        }
+                    ]
+                },
+                {
+                    "type": "handoff",
+                    "mode": "overwrite",
+                    "title": "[문서] 퍼블리싱 인덱스 — 로그인 · 탄소 로그인 행 추가",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/content/publishing-guide/publishing-index.json\nsrc/content/publishing-guide/screen-registry.json"
+                        },
+                        {"label": "적용", "value": "지정한 파일만 교체"},
+                        {
+                            "label": "내용",
+                            "value": "기업 · 기관의 로그인과 모달 두 개를 완료로 등록했습니다.\n탄소 FO 의 로그인 화면과 하위 팝업 두 개를 완료로 추가했습니다."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v3.3.3",
             "releasedAt": "2026-09-23",
             "changes": [
@@ -6078,398 +6445,6 @@
                         {
                             "label": "변경",
                             "value": "유형 필터에 탄소를 더하고, 탄소 탭에서 응용2·공통 레이아웃 표를 감춥니다. 저장소·배포 배지와 `externalHref` 링크·뎁스 배지 키 복사가 함께 동작합니다"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "version": "v3.0.4",
-            "releasedAt": "2026-08-24",
-            "changes": [
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "색·크기 토큰 — Figma 컬러 변수 최신본 반영",
-                    "details": [
-                        {"label": "대상", "value": "tokens.json"},
-                        {
-                            "label": "적용",
-                            "value": "지정한 파일만 교체한 뒤 `yarn tokens` 로 `src/app/tokens.css` 를 다시 생성합니다. 생성물은 저장소에 두지 않으므로 파일만 받으면 됩니다(`predev`·`prebuild` 에 포함돼 있어 dev·build 시 자동 생성)"
-                        },
-                        {
-                            "label": "변경",
-                            "value": "Figma 색 변수 전체(brand 7계열·system 4계열·common)를 대조해 달라진 두 값을 반영 — `blue.500` `#3f7deb → #3172e2`, `info.500` `#3674da → #3172e2`. 나머지 값은 모두 같았고 새로 생긴 색은 없습니다"
-                        },
-                        {
-                            "label": "결과",
-                            "value": "라이트 모드에서 `--ds-primary`·`--ds-ring`·`--ds-secondary-strong`·`--ds-chart-1`·`--ds-sidebar-ring` 과 배지의 `badge-solid-info`·`border-info-500` 이 함께 이동합니다. 다크·메인페이지는 `blue.300`·`info.300` 을 쓰므로 영향 없음"
-                        },
-                        {
-                            "label": "함께",
-                            "value": "아래 ListMarker 가 쓰는 `size.list-dot-sm`(3px)도 이 파일에 함께 들어 있습니다 — 토큰 없이 컴포넌트만 받으면 점 크기가 지정되지 않으므로 이 파일을 먼저 반영합니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "[Badge] xs(24px) 크기 추가",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/components/theme/badge.variants.ts\nsrc/app/component-guide/(guide)/badge/page.tsx"
-                        },
-                        {
-                            "label": "적용",
-                            "value": "`size` 에 `xs` 를 더한 파일로 교체. 기존 `sm`(28px)·`lg`(40px)는 종전과 같아 지금 쓰고 있는 배지는 하나도 변하지 않습니다"
-                        },
-                        {
-                            "label": "변경",
-                            "value": "`xs` 는 높이 24px · 글자 12/18(`typo-caption-medium`) · 라운드 8px · 좌우 여백 round 8px·pill 12px. Figma badge 세트의 `size=small` 이며, Figma 의 `size=large` 가 프로젝트 `sm` 에 해당합니다"
-                        },
-                        {
-                            "label": "참고",
-                            "value": "시안이 이 크기를 round 로만 그려 두어 pill 여백은 다른 크기와 같은 12px 를 따랐고, 최소 너비는 두지 않았습니다(`sm` 의 60px 는 유지)"
-                        },
-                        {
-                            "label": "가이드",
-                            "value": "[Badge](/component-guide/badge) 의 Props 표와 Size 섹션에 xs 행·예시 추가"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "[ListMarker] unordered-small 추가",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/components/custom/list-marker.tsx\nsrc/app/component-guide/(guide)/list-marker/page.tsx"
-                        },
-                        {
-                            "label": "적용",
-                            "value": "`type` 에 `unordered-small` 을 더한 파일로 교체. 기존 `unordered`·`ordered` 는 종전과 같습니다"
-                        },
-                        {
-                            "label": "변경",
-                            "value": "칸 12×20 · 점 3×3 원형 · 색 `foreground-subtle`. Figma `list_atomic_bullet` 의 `type=unordered_small` 이며, 13px 본문 옆에 놓는 작은 불릿입니다(폭은 일반 점과 같은 12px 라 들여쓰기가 어긋나지 않습니다)"
-                        },
-                        {"label": "순서", "value": "위 토큰 파일(`size.list-dot-sm`)을 함께 반영해야 합니다"},
-                        {
-                            "label": "가이드",
-                            "value": "[ListMarker](/component-guide/list-marker) 의 변형 목록·규격 표·Props 에 추가"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "[Pagination] 이전/다음 좌우 여백 8px 교정",
-                    "details": [
-                        {"label": "대상", "value": "src/components/theme/pagination.variants.ts"},
-                        {"label": "적용", "value": "이전/다음 버튼의 좌우 여백을 12px 에서 8px 로 고친 파일로 교체"},
-                        {
-                            "label": "변경",
-                            "value": "Figma `pagination_item` 의 pre/next 폭이 68px(여백 8 + 아이콘 20 + 간격 4 + 글자 28 + 여백 8)인데 76px 로 그려지고 있었습니다. 번호 버튼(40×40)·색·라운드는 시안과 이미 같아 그대로입니다"
-                        },
-                        {
-                            "label": "결과",
-                            "value": "페이지네이션을 쓰는 목록 화면에서 [이전]·[다음] 버튼이 좌우로 4px 씩 좁아집니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "diff",
-                    "title": "메인페이지 1~3섹션 컨테이너 폭을 헤더와 같게 맞춤",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/components/custom/hero-section.tsx\nsrc/components/custom/main-second-section.tsx\nsrc/components/custom/tech-eval-section.tsx"
-                        },
-                        {
-                            "label": "변경",
-                            "value": "세 섹션의 그리드를 헤더와 같은 `grid-layout` 으로 통일. 1280px 미만에서 본문도 792px 로 좁아져 헤더와 좌우 시작선이 맞습니다(1280px 이상은 종전과 같은 1200px)"
-                        },
-                        {
-                            "label": "함께",
-                            "value": "[덮어쓰기] `[히어로] 제목의 태블릿 크기를 1279px 까지 적용` 과 한 벌로 반영합니다"
-                        },
-                        {
-                            "label": "중복",
-                            "value": "`tech-eval-section.tsx`·`main-second-section.tsx` 는 다른 카드에도 나옵니다 — 같은 릴리스의 변경이 모두 담긴 파일 하나를 받으면 됩니다"
-                        },
-                        {
-                            "label": "커밋",
-                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/093086a0a516d7e45db965f5484211767213f5b4)"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "new",
-                    "title": "메인 랜딩 화면 공통 컴포넌트",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/components/custom/main-page-screen.tsx\nsrc/components/custom/main-page-header-state.tsx"
-                        },
-                        {
-                            "label": "적용",
-                            "value": "메인 랜딩 화면 한 벌을 공통 자리에 신규 추가. 기업 홈·기관 홈·컴포넌트 가이드 목업이 같은 화면을 쓰므로, 화면마다 다른 값 두 개(`logoHref` · `technologyEvaluationHref`)만 prop 으로 받습니다"
-                        },
-                        {
-                            "label": "삭제",
-                            "value": "src/app/component-guide/(demo)/main-page/main-page-header-state.tsx 를 함께 삭제해야 합니다. 가이드 폴더 안에 있던 같은 파일을 공통 자리로 옮긴 것이며, 내용은 바뀌지 않았습니다"
-                        },
-                        {
-                            "label": "주의",
-                            "value": "이 컴포넌트가 있어야 [덮어쓰기] `컴포넌트 가이드 메인페이지 목업` 과 [신규 추가] `기업 홈·기관 홈 화면` 이 동작합니다 — 셋을 한 번에 반영합니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "new",
-                    "title": "기업 홈·기관 홈 화면",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/app/(user-type)/corp/home/page.tsx\nsrc/app/(user-type)/org/home/page.tsx"
-                        },
-                        {
-                            "label": "적용",
-                            "value": "위 공통 컴포넌트에 경로 두 개만 넘기는 얇은 화면 신규 추가. 기업 홈은 `/corp/home`, 기관 홈은 `/org/home` 이며 화면정의서에 이미 등록돼 있던 경로입니다"
-                        },
-                        {
-                            "label": "화면",
-                            "value": "로고를 누르면 시작 페이지(`/`)로 가고, 3섹션 [기술평가] 시작하기는 기업 홈이 `/corp/technology-evaluation/tech-index/selection`, 기관 홈이 `/org/individual-evaluation/tech-index/selection` 로 갑니다"
-                        },
-                        {
-                            "label": "위치",
-                            "value": "라우트 그룹 밖(`corp/home`·`org/home`)에 둡니다 — `(logged-in)`·`(logged-out)` 레이아웃 안에 두면 그 레이아웃의 Header 와 메인페이지 Header 가 겹칩니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "new",
-                    "title": "마크업 검증 결과 데이터",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/app/component-guide/(guide)/validation-exceptions/screen-markup-results.ts"
-                        },
-                        {
-                            "label": "적용",
-                            "value": "신규 파일 추가. 아래 [덮어쓰기] `마크업 검증 문서` 가 import 하므로 함께 반영합니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "[히어로] 제목의 태블릿 크기를 1279px 까지 적용",
-                    "details": [
-                        {"label": "대상", "value": "src/components/theme/hero-section.variants.ts"},
-                        {
-                            "label": "적용",
-                            "value": "제목 크기 분기를 `max-lg:` 에서 `max-xl:` 로 넓힌 파일로 교체. 값은 종전과 같은 `clamp(32px, 24px + 2.1vw, 44px)` 이고 여백·간격 등 나머지 구간도 그대로입니다"
-                        },
-                        {
-                            "label": "결과",
-                            "value": "1024~1279px 구간이 PC 크기(48px)를 쓰던 것을 태블릿 크기로 바꿔, 컨테이너 폭이 갈리는 지점(1280px)에서 함께 갈립니다. 1280px 이상 48px 과 1024px 미만은 종전 그대로입니다"
-                        },
-                        {
-                            "label": "함께",
-                            "value": "위 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭` 과 한 벌로 반영합니다 — 폭만 좁히고 제목을 48px 로 두면 카피 칸(384px)에서 글자가 지나치게 접힙니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "메인페이지 3섹션 서비스 CTA 경로를 사용처가 정하도록 변경",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/components/custom/tech-eval-services.tsx\nsrc/components/custom/tech-eval-section.tsx\nsrc/components/custom/mobile-tech-eval-content.tsx"
-                        },
-                        {
-                            "label": "적용",
-                            "value": "`[기술평가]` 카드의 시작하기 경로를 데이터에 박아 두던 것을, 사용처가 넘긴 값으로 갈아끼우는 `buildTechEvalServices(href)` 방식으로 교체. 나머지 세 서비스(특허평가·K-BIGx·탄소중립)는 목업이 없어 종전대로 `#` 입니다"
-                        },
-                        {
-                            "label": "변경",
-                            "value": "섹션 컴포넌트 둘(PC 롤링·모바일 정적)이 `technologyEvaluationHref` 를 받습니다. 두 배치가 같은 경로를 쓰므로 화면마다 한 번만 정하면 됩니다"
-                        },
-                        {
-                            "label": "중복",
-                            "value": "`tech-eval-section.tsx` 는 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭`·[덮어쓰기] `메인페이지 3섹션 — 화면 폭에 맞는 한 벌만 렌더` 에도, `mobile-tech-eval-content.tsx` 는 [덮어쓰기] `제목처럼 읽히던 문단 정리` 에도 나옵니다. 카드마다 다른 버전이 있는 것이 아니라, 변경이 모두 담긴 파일 하나를 받으면 됩니다"
-                        },
-                        {
-                            "label": "순서",
-                            "value": "위 [신규 추가] 공통 컴포넌트와 함께 반영합니다 — `technologyEvaluationHref` 는 필수 값이라 한쪽만 넣으면 타입이 맞지 않습니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "컴포넌트 가이드 메인페이지 목업 — 공통 컴포넌트 사용",
-                    "details": [
-                        {"label": "대상", "value": "src/app/component-guide/(demo)/main-page/page.tsx"},
-                        {
-                            "label": "적용",
-                            "value": "화면을 직접 조립하던 것을 공통 `MainPageScreen` 에 경로 두 개만 넘기는 얇은 page 로 교체"
-                        },
-                        {
-                            "label": "결과",
-                            "value": "**화면에 보이는 것과 동작은 종전과 완전히 같다** — 로고 링크·시작하기 경로·Skip Link·섹션 구성 모두 그대로입니다. 조립 코드를 기업 홈·기관 홈과 공유하려고 옮긴 것뿐입니다"
-                        },
-                        {"label": "순서", "value": "위 [신규 추가] `메인 랜딩 화면 공통 컴포넌트` 와 함께 반영합니다"}
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "mainpage 테마를 적용할 경로 목록",
-                    "details": [
-                        {"label": "대상", "value": "src/components/theme-provider.tsx\nsrc/constants/theme-routes.ts"},
-                        {
-                            "label": "적용",
-                            "value": "메인페이지 경로를 하나만 두고 `===` 로 비교하던 것을, 목록에 있는지 확인하는 방식으로 교체. 상수 이름이 `mainPagePath` 에서 `mainPagePaths` 로 바뀌므로 두 파일을 함께 받아야 합니다"
-                        },
-                        {
-                            "label": "이유",
-                            "value": "같은 메인 랜딩 화면이 기업 홈·기관 홈·가이드 목업 세 경로에 있는데, 경로가 하나뿐이라 기업 홈·기관 홈이 mainpage 스킨을 받지 못하고 기본 테마로 떨어졌습니다"
-                        },
-                        {
-                            "label": "설정",
-                            "value": "목록에 있는 경로만 mainpage 로 고정되고 나머지는 기본 테마를 씁니다. 서비스에서 이 화면을 루트(`/`)에도 두면 `/` 를 목록에 추가합니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "메인페이지 2섹션 — 제목 마크업·진행 레일 정리",
-                    "details": [
-                        {"label": "대상", "value": "src/components/custom/main-second-section.tsx"},
-                        {
-                            "label": "제목",
-                            "value": "대상 머리말(`중소벤쳐기업`·`금융·기관`)을 제목 밖 굵은 문단에서 `<h2>` 안의 줄로 옮깁니다. 크기·굵기·간격은 시안 그대로이고, 제목처럼 보이는데 제목이 아닌 글이 사라져 WAVE `Possible heading` 이 걸리지 않습니다[6.4.2]"
-                        },
-                        {
-                            "label": "레일",
-                            "value": "진행 레일이 세 상태로 갈립니다 — ① 화면에 들어오면 좌→우 계단식으로 채우고 ② 섹션 안에서 좌우로 교차하면 채운 순서를 거꾸로 되감고(1.85초) ③ 섹션을 아예 벗어나면 지연·길이 0 으로 그 자리에서 리셋합니다"
-                        },
-                        {
-                            "label": "이유",
-                            "value": "첫 화면 레일이 교차 진행도를 보지 않아 두 번째 화면에 갔다 돌아와도 다 채워진 채였고, 되감는 1.85초 안에 다시 들어오면 반쯤 지워진 레일에서 이어져 버벅였습니다. 채우는 쪽은 조리개 상태와 무관하게 제 길이를 유지해, 3섹션에서 올라와 두 번째 화면으로 들어올 때도 계단식 재생이 살아 있습니다"
-                        },
-                        {
-                            "label": "중복",
-                            "value": "이 파일은 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭` 카드에도 나옵니다. 카드마다 다른 버전이 있는 것이 아니라, 두 변경이 모두 담긴 파일 하나를 받으면 됩니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "제목처럼 읽히던 문단 정리 — 히어로 지표·모바일 3섹션",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/components/custom/hero-stats-roller.tsx\nsrc/components/custom/mobile-tech-eval-content.tsx"
-                        },
-                        {
-                            "label": "적용",
-                            "value": "본문보다 크거나 굵은 짧은 `<p>` 를 걷어낸 파일로 교체. 보이는 글·크기·굵기는 그대로입니다"
-                        },
-                        {
-                            "label": "변경",
-                            "value": "히어로 지표 줄(`1,350,000 건의 특허분석`)과 기준 문구는 문단이 아니라 수치 한 줄의 이름표라 블록 `<span>` 으로 두고(목록 항목이라는 뜻은 감싸는 `<li>` 가 전합니다), 모바일 3섹션의 서비스 이름은 아래 제목의 머리말이라 `<h2>` 안으로 옮깁니다"
-                        },
-                        {
-                            "label": "이유",
-                            "value": "WAVE 는 본문보다 크거나 굵은 짧은 `<p>` 를 `Possible heading`(제목처럼 보이는데 제목이 아닌 글)으로 짚습니다. 가짜 제목 레벨을 만들지 않아 헤딩 계층(h1 → h2 → h3)은 그대로입니다"
-                        },
-                        {
-                            "label": "중복",
-                            "value": "`mobile-tech-eval-content.tsx` 는 [덮어쓰기] `메인페이지 3섹션 서비스 CTA 경로` 카드에도 나옵니다. 두 변경이 모두 담긴 파일 하나를 받으면 됩니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "메인페이지 3섹션 — 화면 폭에 맞는 한 벌만 렌더",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/components/custom/tech-eval-section.tsx\nscripts/build-tokens.mjs"
-                        },
-                        {
-                            "label": "적용",
-                            "value": "두 파일을 함께 교체합니다 — 새 미디어쿼리 상수와 그 값을 검증하는 생성기가 한 세트입니다"
-                        },
-                        {
-                            "label": "변경",
-                            "value": "PC 목차와 모바일 목록을 둘 다 그린 뒤 CSS 로 한쪽만 감추던 것을, 마운트 후 화면 폭에 맞는 한 벌만 그리도록 바꿉니다. 첫 그림에서는 종전처럼 두 벌을 두어(판정 전) 반대 배치가 한 프레임 보이는 일을 막고, 판정이 끝나면 맞는 쪽만 남습니다"
-                        },
-                        {
-                            "label": "이유",
-                            "value": "같은 주소·같은 이름의 `[기술평가] 시작하기` 링크가 DOM 에 두 벌 있어 WAVE 가 `Redundant link` 로 짚었습니다. 감춰진 쪽까지 링크로 세기 때문입니다"
-                        },
-                        {
-                            "label": "검증",
-                            "value": "`TECH_EVAL_DESKTOP_QUERY` 가 `tokens.json` 의 `breakpoint.md` 와 어긋나면 `yarn tokens` 가 빌드를 세웁니다(`STACK_PAGER_QUERY`·`FORM_TABS_QUERY` 와 같은 방식) — 값이 갈리면 두 벌이 함께 보이거나 둘 다 사라집니다"
-                        },
-                        {
-                            "label": "중복",
-                            "value": "이 파일은 [Diff 확인] `메인페이지 1~3섹션 컨테이너 폭`·[덮어쓰기] `메인페이지 3섹션 서비스 CTA 경로` 카드에도 나옵니다. 세 변경이 모두 담긴 파일 하나를 받으면 됩니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "퍼블리싱 인덱스 — 화면 상태 갱신",
-                    "details": [
-                        {
-                            "label": "대상",
-                            "value": "src/content/publishing-guide/publishing-index.json\nsrc/content/publishing-guide/screen-registry.generated.json"
-                        },
-                        {
-                            "label": "적용",
-                            "value": "지정한 파일만 교체. 화면 경로 정보(`screen-registry.json`)는 이번에 바뀌지 않았습니다 — 여섯 경로 모두 이미 등록돼 있었습니다"
-                        },
-                        {
-                            "label": "변경",
-                            "value": "기업·기관 `홈` 2건과 그 아래 `평가모형 선택`·`Tech-Index 선택 화면` 4건의 퍼블리싱 상태를 대기중에서 완료로 바꿉니다"
-                        },
-                        {
-                            "label": "함께",
-                            "value": "응용2팀이 직접 갱신한 15개 화면의 `application2Status`(약관·개인정보 처리방침·로그인 안내·실명인증·KTRS-FM 하위 화면 등)가 같은 파일에 담겨 있습니다. 퍼블리싱이 손댄 값이 아니라 표의 응용2 열에만 반영됩니다"
-                        },
-                        {
-                            "label": "참고",
-                            "value": "아래 4건은 화면정의서에서 같은 화면을 홈 트리에 한 번 더 적어 둔 행이라 자기 경로의 page 파일이 없습니다. 표에서 이동 버튼 없이 라벨만 나오는 것이 정상이며, 실제 화면은 기술평가 트리의 `Tech-Index > (0) 선택 화면` 에 연결돼 있습니다"
-                        }
-                    ]
-                },
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "마크업 검증 문서",
-                    "details": [
-                        {"label": "대상", "value": "src/app/component-guide/(guide)/validation-exceptions/page.tsx"},
-                        {"label": "적용", "value": "파일 교체. 위 [신규 추가] 데이터 파일과 함께 반영합니다"},
-                        {
-                            "label": "변경",
-                            "value": "서비스 화면 217개 전수 검사 결과로 문서를 다시 작성. 감리 제출용 가이드 페이지라 서비스 화면 동작에는 영향이 없습니다"
                         }
                     ]
                 }
