@@ -10,7 +10,7 @@ import {cn} from '@/lib/utils'
 //
 // [프론트엔드 연동] value 는 도달 단계(정수)다. 점수(0~100)를 넘기지 않는다 — 단계 환산 규칙은 백엔드 값을 따른다.
 
-type SegmentMeterProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
+type SegmentMeterProps = Omit<ComponentPropsWithoutRef<'span'>, 'children'> & {
     /** 도달 단계. 소수는 반올림하고, 0 보다 작거나 total 보다 크면 끝으로 맞춘다. */
     value: number
     /** 전체 단계 수(기본 10). 1 보다 작으면 1 로 맞춘다. */
@@ -33,11 +33,12 @@ const SegmentMeter = ({value, total = DEFAULT_TOTAL, color, ariaLabel, className
     const safeValue = clampInteger(value, 0, safeTotal)
 
     return (
-        <div
+        // span 으로 그린다 — 제목 줄(h3 · p)처럼 글자만 담는 자리에도 들어가기 때문이다[8.1.1].
+        <span
             {...props}
             role="img"
             aria-label={ariaLabel ?? `${safeTotal}단계 중 ${safeValue}단계`}
-            className={cn('flex flex-wrap gap-1', className)}
+            className={cn('inline-flex flex-wrap gap-1', className)}
         >
             {Array.from({length: safeTotal}, (_, index) => (
                 <span
@@ -50,7 +51,7 @@ const SegmentMeter = ({value, total = DEFAULT_TOTAL, color, ariaLabel, className
                     style={index < safeValue ? {backgroundColor: color} : undefined}
                 />
             ))}
-        </div>
+        </span>
     )
 }
 
