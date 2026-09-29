@@ -5,7 +5,7 @@
 ### [화면] 특허평가 결과 보고서 출력 — 미리보기 화면 없이 바로 인쇄
 
 - 대상: src/components/custom/patent-grade-lookup.tsx
-- 변경: [결과 보고서 출력]이 링크에서 버튼으로 바뀌었습니다. 보고서를 보이지 않는 프레임(용지 크기 1360 × 1924)으로 불러오고, 문서가 다 그려지면 그 프레임이 스스로 인쇄 대화상자를 엽니다.
+- 변경: [결과 보고서 출력]을 링크에서 버튼으로 바꿨습니다. 누르면 보고서 화면으로 이동하지 않고, 화면 밖에서 보고서를 한 번 그린 뒤 다 그려지면 인쇄 대화상자를 엽니다. 그리는 자리는 용지 한 장 크기(1360 × 1924)로 두었습니다 — 자리가 좁으면 그래프가 그려질 폭을 알지 못해 빈 칸으로 인쇄됩니다.
 - 결과: 중간 화면을 거치지 않고 인쇄 미리보기가 바로 열립니다. 인쇄가 끝나거나 취소되면 프레임은 사라집니다.
 - 참고: API 연결 시 손봐야 할 두 가지(주소에 조회 조건 담기 · 인쇄 시점 판단)를 버튼 바로 위 [프론트엔드 연동] 주석에 적어 두었습니다.
 - 영향 화면:
@@ -142,7 +142,9 @@
 - 대상:
     - src/app/(user-type)/corp/(report)/patent-evaluation/patent-grade-list/patent-grade-result/report/page.tsx
     - src/app/(user-type)/org/(report)/patent-evaluation/patent-grade-list/patent-grade-result/report/page.tsx
-- 적용: 신규 파일 추가. 헤더 · 푸터가 없는 (report) 레이아웃을 쓰는 A4 다섯 쪽 문서이며, 쪽 차례와 쪽수는 이 파일의 REPORT_PAGES 가 정합니다.
+- 적용:
+    - 신규 파일 추가. 헤더 · 푸터가 없는 (report) 레이아웃을 쓰는 A4 다섯 쪽 문서이며, 쪽 차례와 쪽수는 이 파일의 REPORT_PAGES 가 정합니다.
+    - 파일 맨 위 주석에 API 연결 흐름을 적어 두었습니다 — 버튼이 조회 조건을 붙인 주소를 열면 이 화면이 searchParams 로 그 조건을 읽어 조회하고, 그 결과로 쪽을 만듭니다. 바꿀 자리(MOCK_REPORT)와 코드 모양도 함께 있습니다.
 - 영향 화면:
     - [기업 특허평가 결과 보고서(인쇄용)](/corp/patent-evaluation/patent-grade-list/patent-grade-result/report)
     - [기관 특허평가 결과 보고서(인쇄용)](/org/patent-evaluation/patent-grade-list/patent-grade-result/report)
