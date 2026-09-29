@@ -15,11 +15,20 @@ export const metadata: Metadata = {title: PATENT_GRADE_REPORT_TITLE}
 // 특허평가 결과 보고서 — 인쇄용 문서(org-patent-evaluation-patent-grade-list-patent-grade-result-report ·
 // /org/patent-evaluation/patent-grade-list/patent-grade-result/report)
 //
-// 특허 등급조회 결과의 [결과 보고서 출력]이 이 주소를 새 탭으로 연다. 헤더 · 푸터가 없는 (report) 레이아웃에 둔다.
-// 위 도구 막대의 [인쇄하기]를 누르면 브라우저 인쇄 대화상자가 열리고, 문서는 A4 한 장에 맞춰 나간다.
+// 헤더 · 푸터가 없는 (report) 레이아웃에 둔다. 주소를 그대로 열면 문서가 화면에 보이고, 위 도구 막대의
+// [인쇄하기]를 누르면 인쇄 대화상자가 열린다.
 //
-// [프론트엔드 연동] 지금은 목업 보고서를 그린다 — 주소의 조회 조건(기준 · 번호)이나 보고서 id 로 받은 값을
-// PatentReportDocument 의 report 에 넘기면 된다(화면 보고서와 같은 타입이다).
+// 특허 등급조회 결과의 [결과 보고서 출력]도 결국 이 주소를 연다 — 다만 화면 밖에서 열고(?print=1),
+// 다 그려지면 그 문서가 스스로 대화상자를 연다. 그래서 인쇄물은 이 화면을 직접 열어 인쇄한 것과 같다.
+//
+// [프론트엔드 연동] 인쇄할 보고서는 이 화면이 스스로 조회한다 — 버튼은 주소만 넘기고 값을 들고 오지 않는다.
+// 흐름: 버튼이 조회 조건을 붙인 주소를 연다 → 이 파일이 searchParams 로 그 조건을 읽는다 → 조회한 보고서로
+//       REPORT_PAGES 를 만든다 → 다 그려지면 인쇄 대화상자가 열린다.
+// 지금은 조건 없이 목업을 그리므로, 아래 MOCK_REPORT 자리를 주소로 받은 조건의 조회 결과로 바꾸면 된다.
+//   const {id} = await searchParams            // 이 프로젝트의 Next 버전은 searchParams 를 await 한다
+//   const report = await fetchPatentGradeReport({id})
+// 보고서 타입은 화면 보고서(PatentGradeReport)와 같아 조회 결과를 그대로 넘기면 된다.
+// 조건을 붙이는 쪽은 src/components/custom/patent-grade-lookup.tsx 의 [결과 보고서 출력]이다.
 // ─────────────────────────────────────────────────────────────────────────────────────────────
 
 const MOCK_REPORT = findPatentGradeReport({
