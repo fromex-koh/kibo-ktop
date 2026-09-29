@@ -34,21 +34,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-auth-find-account",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-auth-agency-signup-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-guide",
@@ -675,8 +675,8 @@
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
@@ -1294,21 +1294,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-auth-find-account",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-auth-agency-signup-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.4",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-guide",
@@ -1795,8 +1795,8 @@
         },
         {
             "key": "org-patent-evaluation-patent-grade-list-patent-grade-result-report",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
