@@ -165,6 +165,13 @@ const SPECIAL_CASES = [
     {title: '항목 하나', description: '칸 하나가 전체 폭을 쓰고 막대는 가운데에 섭니다.', data: SINGLE_DATA},
 ] as const
 
+// 특허평가 결과 보고서(인쇄용) 영향요인 비교와 같은 자료다.
+const PLAIN_DATA = [
+    {id: 'ipcGroup', label: 'IPC 그룹', value: 456.1, color: 'var(--raw-navy-500)'},
+    {id: 'top40', label: '그룹 내\n상위40%', value: 452.9, color: 'var(--raw-blue-500)'},
+    {id: 'target', label: '평가대상\n특허', value: 466.5, color: 'var(--raw-purple-500)'},
+]
+
 const ColumnChartGuidePage = () => (
     <GuidePageShell
         title="세로 막대 (ColumnChart)"
@@ -241,6 +248,45 @@ const ColumnChartGuidePage = () => (
                         </li>
                     ))}
                 </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="cc-plain-loading" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="cc-plain-loading" className="typo-h4-bold">
+                        로딩 — plain (Skeleton)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        <code className="font-mono">variant=&quot;plain&quot;</code>은{' '}
+                        <code className="font-mono">isLoading</code>을 켜면{' '}
+                        <code className="font-mono">ChartSkeleton type=&quot;plain-column&quot;</code>으로 바뀝니다. 칸
+                        상자 · 두께 24 막대 셋 · 두 줄짜리 항목 이름 자리가 실제 그래프와 같습니다.
+                    </p>
+                </div>
+                <div className="grid gap-6 md:grid-cols-2">
+                    <div className="flex min-w-0 flex-col gap-2">
+                        <h3 className="typo-body-xl-bold">불러오는 중</h3>
+                        <ColumnChart
+                            variant="plain"
+                            isLoading
+                            loadingLabel="영향요인 값을 불러오는 중입니다."
+                            ariaLabel="영향요인 비교"
+                            data={PLAIN_DATA}
+                        />
+                    </div>
+                    <div className="flex min-w-0 flex-col gap-2">
+                        <h3 className="typo-body-xl-bold">불러온 뒤</h3>
+                        <ColumnChart
+                            variant="plain"
+                            showTooltip={false}
+                            showValueLabels={false}
+                            barWidth={24}
+                            ariaLabel="영향요인 비교 — IPC 그룹 · 그룹 내 상위40% · 평가대상 특허"
+                            data={PLAIN_DATA}
+                        />
+                    </div>
+                </div>
             </section>
         </BaseCard>
 

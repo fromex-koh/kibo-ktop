@@ -125,6 +125,18 @@ const CHART_SKELETON_EXAMPLES: Array<{
         label: '인당 매출액을 불러오는 중입니다.',
     },
     {
+        type: 'grade-distribution',
+        title: '등급 분포 곡선 (GradeDistributionChart)',
+        description: '곡선 자리(높이 144)를 종 모양 면으로 대체합니다. 아래 표는 글자라 그대로 그려집니다.',
+        label: '등급 분포를 불러오는 중입니다.',
+    },
+    {
+        type: 'plain-column',
+        title: '영향요인 비교 (ColumnChart · plain)',
+        description: '칸 상자 · 두께 24 막대 셋 · 두 줄짜리 항목 이름 자리를 대체합니다.',
+        label: '영향요인 값을 불러오는 중입니다.',
+    },
+    {
         type: 'grouped-column',
         title: '최근 3개년 재무 현황 (GroupedColumnChart · cells)',
         description: '오른쪽 위 범례 · 항목 6칸 테두리 상자 · 칸마다 막대 3개 · 항목 이름 자리를 대체합니다.',
@@ -175,7 +187,7 @@ const PROPS_ITEMS = [
         'type',
         '실제 차트 구조와 맞는 스켈레톤 유형을 선택합니다.',
         '-',
-        "'network' | 'donut' | 'score-gauge' | 'rank-pyramid' | 'gauge' | 'grade-trend' | 'grouped-column' | 'cells-line' | 'cells-column' | 'overlay-column' | 'columns-line' | 'matrix' | 'radar' | 'circle-radar' | 'triangle-radar' | 'bar' | 'line' | 'word-cloud'",
+        "'network' | 'donut' | 'score-gauge' | 'rank-pyramid' | 'gauge' | 'grade-distribution' | 'grade-trend' | 'grouped-column' | 'cells-line' | 'cells-column' | 'plain-column' | 'overlay-column' | 'columns-line' | 'matrix' | 'radar' | 'circle-radar' | 'triangle-radar' | 'bar' | 'line' | 'word-cloud'",
     ],
     [
         'ChartSkeleton',
