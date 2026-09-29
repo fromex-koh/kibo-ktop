@@ -4444,6 +4444,7 @@
                         "label": "로그인",
                         "screenId": null,
                         "status": "완료",
+                        "application2Status": "완료",
                         "version": "미배포",
                         "key": "carbon-login",
                         "externalHref": "https://fromex-carbon.vercel.app/login"
@@ -4453,6 +4454,7 @@
                             "label": "기관회원 가입 안내 팝업",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "carbon-login-agency-signup-guide",
                             "externalHref": "https://fromex-carbon.vercel.app/login/agency-signup-guide"
@@ -4461,6 +4463,7 @@
                             "label": "아이디 · 비밀번호 찾기 팝업",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "carbon-login-find-account",
                             "externalHref": "https://fromex-carbon.vercel.app/login/find-account"
