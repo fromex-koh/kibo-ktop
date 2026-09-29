@@ -10,6 +10,7 @@ import {
     Folder,
     GitBranch,
     Globe,
+    History,
     Info,
     LayoutGrid,
     Sparkles,
@@ -33,6 +34,7 @@ import {
     type StructureNode,
 } from '@/content/publishing-guide'
 import {Badge} from '@/components/ui/badge'
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from '@/components/ui/tooltip'
 import {Button} from '@/components/ui/button'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
 import {BaseCard} from '@/components/composite/base-card'
@@ -303,10 +305,45 @@ const StatusTag = ({status, date, note}: {status: Status; date?: string; note?: 
     </Badge>
 )
 
-// 한 화면이 여러 회차에 걸쳐 같은 상태로 손을 타면 회차마다 뱃지를 세운다("보완(09/07)" · "보완(09/10)").
+// 보완은 완료 수에 드는 상태다 — 표에서는 '완료' 뱃지 하나로 두고, 어느 회차에 보완했는지는
+// 옆의 이력 단추에서 본다(마우스는 올리면, 키보드는 탭으로 옮기면 뜬다). 회차 기록을 지우지 않으면서
+// 상태 칸이 뱃지 여러 줄로 길어지지 않게 하기 위함이다.
+const SupplementHistory = ({dates, note}: {dates: readonly string[]; note?: StatusNote}) => {
+    const summary = `보완 ${dates.join(' · ')}${note ? ` (${note})` : ''}`
+
+    return (
+        <TooltipProvider>
+            <Tooltip>
+                <TooltipTrigger
+                    type="button"
+                    // 회차와 꼬리말은 말풍선이 읽어 준다(radix 가 aria-describedby 로 묶는다) — 이름은 짧게 둔다.
+                    aria-label="보완 이력"
+                    className="text-muted-foreground hover:text-foreground focus-visible:ring-ring outline-ring inline-flex shrink-0 items-center rounded-sm focus-visible:ring-2 focus-visible:outline-none"
+                >
+                    <History aria-hidden="true" className="size-icon-sm" />
+                </TooltipTrigger>
+                <TooltipContent>
+                    <span className="flex flex-col items-start gap-0.5">
+                        <span>{summary}</span>
+                        {note ? <span>{STATUS_NOTE_DESCRIPTION[note]}</span> : null}
+                    </span>
+                </TooltipContent>
+            </Tooltip>
+        </TooltipProvider>
+    )
+}
+
+// 한 화면이 여러 회차에 걸쳐 같은 상태로 손을 타면 회차마다 뱃지를 세운다("수정요청(09/07)" · "수정요청(09/10)").
 // 날짜를 하나로 밀면 이전 회차 이력이 사라지므로, 지우지 않고 아래로 쌓는다.
 const StatusTags = ({status, date, note}: {status: Status; date?: string | readonly string[]; note?: StatusNote}) => {
     const dates = date === undefined ? [] : typeof date === 'string' ? [date] : date
+    if (status === '보완')
+        return (
+            <span className="flex items-center gap-1">
+                <StatusTag status="완료" />
+                {dates.length > 0 ? <SupplementHistory dates={dates} note={note} /> : null}
+            </span>
+        )
     if (dates.length <= 1) return <StatusTag status={status} date={dates[0]} note={note} />
 
     return (
@@ -1011,6 +1048,12 @@ const PublishingIndex = () => {
                                 완료·최종완료·보완은 모두 완료 수에 포함하며, 취소선 행은 완료 수와 집계 대상 수에서
                                 제외합니다.
                             </li>
+                            {/* 보완 행은 완료 뱃지로 보이므로, 보완 기록이 사라진 것이 아니라는 점을 범례에서 밝힌다. */}
+                            <li>
+                                <strong className="text-foreground font-medium">보완 표시:</strong> 보완은 완료로 세는
+                                상태라 표에는 완료 뱃지로 보이고, 옆의 시계 아이콘에 마우스를 올리거나 키보드로 이동하면
+                                어느 회차에 보완했는지 볼 수 있습니다. 회차 기록은 그대로 남습니다.
+                            </li>
                             <li>
                                 <strong className="text-foreground font-medium">최종완료 기준:</strong> 더 이상
                                 수정사항이 발생하지 않을 것으로 확정된 화면에만 표시합니다.
@@ -1018,8 +1061,8 @@ const PublishingIndex = () => {
                             {/* 같은 회차의 보완 중에서 프론트엔드가 다시 볼 것이 없는 행을 가려내는 꼬리말이라,
                                 상태 범례와 같은 자리에서 뜻을 밝힌다. */}
                             <li>
-                                <strong className="text-foreground font-medium">개발수정X:</strong> 상태 뱃지에{' '}
-                                <code className="text-foreground font-mono">보완(09/10, 개발수정X)</code>처럼 이
+                                <strong className="text-foreground font-medium">개발수정X:</strong> 보완 이력에{' '}
+                                <code className="text-foreground font-mono">보완 09/10 (개발수정X)</code>처럼 이
                                 꼬리말이 붙은 화면은 모달만 띄워 두는 퍼블리싱 예시 화면이라, 전달본 파일은 바뀌었지만
                                 프론트엔드에서 고칠 것이 없습니다.
                             </li>
