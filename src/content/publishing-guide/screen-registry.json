@@ -739,13 +739,6 @@
             "name": "(5) 완료 화면"
         },
         {
-            "key": "corp-technology-evaluation-results",
-            "screenId": null,
-            "userType": "기업",
-            "path": "/corp/technology-evaluation/results",
-            "name": "결과조회"
-        },
-        {
             "key": "corp-patent-evaluation-patent-grade-list",
             "screenId": "SB-FOTA-CM0-0030",
             "userType": "기업",

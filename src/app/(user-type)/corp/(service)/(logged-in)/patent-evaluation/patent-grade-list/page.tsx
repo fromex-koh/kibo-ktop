@@ -31,6 +31,7 @@ const CorpPatentGradeListPage = async ({searchParams}: CorpPatentGradeListPagePr
     return (
         <main id="main" tabIndex={-1} className="bg-background flex-1">
             <PatentGradeLookup
+                reportHref="/corp/patent-evaluation/patent-grade-list/patent-grade-result/report"
                 isLoadingPreview={isLoadingPreview}
                 intro={<PatentGradeIntro homeHref="/corp/home" />}
                 notice={<PatentGradeNotice />}

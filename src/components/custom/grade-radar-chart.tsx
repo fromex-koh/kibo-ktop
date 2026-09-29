@@ -31,6 +31,8 @@ type GradeRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & 
     peerLabel?: string
     /** 처음 펼쳐질 때의 움직임. 한 번 그린 뒤에는 창 폭이 바뀌어도 다시 펼치지 않는다. 인쇄용 문서에서는 끈다. */
     animate?: boolean
+    /** 값 위에 올렸을 때 뜨는 말풍선. 손이 닿지 않는 인쇄용 문서에서는 끈다(꼭짓점 강조도 함께 사라진다). */
+    showTooltip?: boolean
     /** 값을 불러오는 중. 같은 높이의 삼각 레이더 스켈레톤을 대신 보인다. */
     isLoading?: boolean
     /** 불러오는 중에 화면 낭독기가 읽을 말. */
@@ -52,6 +54,7 @@ const GradeRadarChart = ({
     peerLabel = '비교 기준',
     animate = true,
     isLoading = false,
+    showTooltip = true,
     loadingLabel = '등급 레이더를 불러오는 중입니다.',
     ariaLabel,
     ...props
@@ -86,6 +89,7 @@ const GradeRadarChart = ({
             margin={RADAR_MARGIN}
             chartClassName="aspect-auto h-44 min-h-0 md:h-56"
             animate={animate}
+            showTooltip={showTooltip}
             isLoading={isLoading}
             loadingLabel={loadingLabel}
         />

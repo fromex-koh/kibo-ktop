@@ -1262,14 +1262,6 @@
                             "iaRow": 95
                         }
                     ]
-                },
-                {
-                    "label": "평가결과 조회",
-                    "screenId": null,
-                    "status": "대기중",
-                    "version": "미배포",
-                    "key": "corp-technology-evaluation-results",
-                    "iaRow": 96
                 }
             ]
         },
@@ -1302,7 +1294,7 @@
                                 {
                                     "label": "보고서",
                                     "screenId": "SB-FOTA-CP0-0030",
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report",
                                     "iaRow": 99
@@ -3411,7 +3403,7 @@
                                 {
                                     "label": "보고서",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-patent-evaluation-patent-grade-list-patent-grade-result-report",
                                     "iaRow": 96
@@ -4444,6 +4436,7 @@
                         "label": "로그인",
                         "screenId": null,
                         "status": "완료",
+                        "application2Status": "완료",
                         "version": "미배포",
                         "key": "carbon-login",
                         "externalHref": "https://fromex-carbon.vercel.app/login"
@@ -4453,6 +4446,7 @@
                             "label": "기관회원 가입 안내 팝업",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "carbon-login-agency-signup-guide",
                             "externalHref": "https://fromex-carbon.vercel.app/login/agency-signup-guide"
@@ -4461,6 +4455,7 @@
                             "label": "아이디 · 비밀번호 찾기 팝업",
                             "screenId": null,
                             "status": "완료",
+                            "application2Status": "완료",
                             "version": "미배포",
                             "key": "carbon-login-find-account",
                             "externalHref": "https://fromex-carbon.vercel.app/login/find-account"

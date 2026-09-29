@@ -190,6 +190,8 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                             {label: 'DivergingRankChart', href: '/component-guide/diverging-rank-chart'},
                             {label: 'ComboBarLineChart', href: '/component-guide/combo-bar-line-chart'},
                             {label: 'DistributionCurveChart', href: '/component-guide/distribution-curve-chart'},
+                            {label: 'GradeDistributionChart', href: '/component-guide/grade-distribution-chart'},
+                            {label: 'ProcessFlow', href: '/component-guide/process-flow'},
                             {label: 'SegmentMeter', href: '/component-guide/segment-meter'},
                             {label: 'GradeHistoryChart', href: '/component-guide/grade-history-chart'},
                             {label: 'GradeScaleGauge', href: '/component-guide/grade-scale-gauge'},

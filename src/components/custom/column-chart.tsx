@@ -3,6 +3,8 @@
 import type {ComponentPropsWithoutRef} from 'react'
 import {Bar, BarChart, CartesianGrid, Cell, LabelList, ReferenceLine, XAxis, YAxis} from 'recharts'
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
+import {ChartSkeleton} from '@/components/composite/chart-skeleton'
+import {useIsHydrated} from '@/hooks/use-is-hydrated'
 import {cn} from '@/lib/utils'
 import {
     CELLS_DIVIDER_DASH,
@@ -41,11 +43,13 @@ type ColumnChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     animate?: boolean
     unit?: string
     /**
-     * 모양. 'default' 는 y축 · 점선 눈금 · 위 모서리 12 둥근 막대다. 'cells' 는 K-BIGx 보고서 "인당 매출액" 카드 모양 —
+     * 모양. 'plain' 은 'cells' 와 같은 칸 짜임(바닥 · 양 끝 실선 · 항목 사이 점선)에 막대만 세우고, 항목 이름은
+     * 그림 밖에 글자로 둔다 — 이름에 줄바꿈(\n)을 넣으면 그대로 두 줄로 선다. y축 · 값 글자는 없다.
+     * 'default' 는 y축 · 점선 눈금 · 위 모서리 12 둥근 막대다. 'cells' 는 K-BIGx 보고서 "인당 매출액" 카드 모양 —
      * 높이 200 칸 상자(위 선 없음 · 바닥 · 양 끝 실선 · 항목 사이 점선)에 위 모서리 8 둥근 막대, 값 11 Regular(gray.600),
      * 항목 이름 12 Regular(gray.700)이다. y축 · 가로 눈금 · 단위 글자는 없다(단위는 카드 머리에 둔다).
      */
-    variant?: 'default' | 'cells'
+    variant?: 'default' | 'cells' | 'plain'
     valueFractionDigits?: number
     yAxisStep?: number
     /**
@@ -58,11 +62,17 @@ type ColumnChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
      * (막대 끝 4 + 글자 11) 자리만 남는다. 칸형 막대 공통 비율을 바꾸지 않고 이 차트만 막대를 키울 때 쓴다.
      */
     maxValueRatio?: number
+    /** 값을 불러오는 중. 같은 자리 · 같은 높이의 스켈레톤을 대신 보인다. */
+    isLoading?: boolean
+    /** 불러오는 중에 화면 낭독기가 읽을 말. */
+    loadingLabel?: string
 }
 
 const numberFormatter = new Intl.NumberFormat('ko-KR')
 // variant 'cells' — 막대 위 모서리 반경 8.
 const CELLS_BAR_RADIUS = 8
+// variant 'plain' — 위 모서리만 살짝 둥글다.
+const PLAIN_BAR_RADIUS = 2
 
 const ColumnChart = ({
     data,
@@ -77,10 +87,13 @@ const ColumnChart = ({
     yAxisStep,
     scaleMax,
     maxValueRatio = CELLS_MAX_VALUE_RATIO,
+    isLoading = false,
+    loadingLabel = '그래프를 불러오는 중입니다.',
     ariaLabel,
     className,
     ...props
 }: ColumnChartProps) => {
+    const isHydrated = useIsHydrated()
     const fractionDigits = Math.min(6, Math.max(0, valueFractionDigits))
     const normalizedBarWidth = Math.min(120, Math.max(16, barWidth))
     const valueFormatter = new Intl.NumberFormat('ko-KR', {
@@ -91,6 +104,12 @@ const ColumnChart = ({
         value: {label: '값', color},
     } satisfies ChartConfig
     const isCells = variant === 'cells'
+    // plain — 축 · 눈금 · 값 없이 막대와 이름만. 막대 높이 기준은 cells 와 같다.
+    const isPlain = variant === 'plain'
+    const isBare = isCells || isPlain
+    // recharts 는 자료의 남는 값을 막대 요소의 속성으로 그대로 내보낸다 — id 를 그대로 넘기면 한 화면에
+    // 같은 id 가 여러 번 생겨 마크업 오류가 된다[8.1.1]. 그림에 필요한 값만 넘기고 색은 Cell 이 정한다.
+    const chartData = data.map(({label, value}) => ({label, value}))
     const maximumValue = Math.max(0, ...data.map(({value}) => Math.max(0, value)))
     const minimumValue = Math.min(0, ...data.map(({value}) => Math.min(0, value)))
     const normalizedStep = yAxisStep && yAxisStep > 0 ? yAxisStep : undefined
@@ -100,6 +119,14 @@ const ColumnChart = ({
     const yAxisTicks = normalizedStep
         ? Array.from({length: yAxisMaximum! / normalizedStep + 1}, (_, index) => index * normalizedStep)
         : undefined
+
+    // 서버에서 그린 HTML 에는 막대가 없다(그림 크기를 브라우저에서 재야 한다) — 그 사이 빈칸 대신 스켈레톤을 둔다.
+    if (isLoading || !isHydrated) {
+        // 모양마다 짜임이 달라 스켈레톤도 같은 모양을 쓴다.
+        const skeletonType = isPlain ? 'plain-column' : isCells ? 'cells-column' : 'bar'
+
+        return <ChartSkeleton {...props} type={skeletonType} label={loadingLabel} className={cn('w-full', className)} />
+    }
 
     return (
         <div {...props} className={cn('w-full', className)}>
@@ -114,22 +141,22 @@ const ColumnChart = ({
                     className={cn(
                         'w-full min-w-0',
                         showTooltip && '[&_.recharts-rectangle]:cursor-pointer',
-                        // cells: 칸 200 + 항목 이름 자리 26 = 226.
-                        isCells ? 'h-56.5' : 'h-80',
+                        // cells: 칸 200 + 항목 이름 자리 26 = 226. plain: 막대 자리 200(이름은 그림 밖에 둔다).
+                        isCells ? 'h-56.5' : isPlain ? 'h-50' : 'h-80',
                     )}
                     role="img"
                     aria-label={ariaLabel}
                 >
                     <BarChart
                         accessibilityLayer
-                        data={data}
+                        data={chartData}
                         margin={
-                            isCells ? {top: 0, right: 1, bottom: 0, left: 1} : {top: 40, right: 12, bottom: 8, left: 8}
+                            isBare ? {top: 0, right: 1, bottom: 0, left: 1} : {top: 40, right: 12, bottom: 8, left: 8}
                         }
                         // cells: 막대는 칸 폭의 80% 까지만 — 항목이 많아 칸이 barWidth 보다 좁아져도 옆 막대와 붙지 않는다.
-                        barCategoryGap={isCells ? '20%' : '46%'}
+                        barCategoryGap={isBare ? '20%' : '46%'}
                     >
-                        {isCells ? (
+                        {isBare ? (
                             // 칸 테두리 — 바닥선 · 양 끝 세로선은 실선, 항목 사이 세로선은 점선(위 선 없음).
                             <CartesianGrid
                                 key="cells-solid"
@@ -138,7 +165,7 @@ const ColumnChart = ({
                                 verticalCoordinatesGenerator={cellsEdgeLines}
                             />
                         ) : null}
-                        {isCells ? (
+                        {isBare ? (
                             <CartesianGrid
                                 key="cells-dashed"
                                 stroke={CELLS_GRID_STROKE}
@@ -160,7 +187,7 @@ const ColumnChart = ({
                                 }
                             />
                         )}
-                        {isCells ? (
+                        {isPlain ? null : isCells ? (
                             <XAxis
                                 key="x-axis"
                                 dataKey="label"
@@ -182,7 +209,7 @@ const ColumnChart = ({
                                 interval={0}
                             />
                         )}
-                        {isCells ? (
+                        {isBare ? (
                             <YAxis
                                 key="y-axis"
                                 hide
@@ -240,11 +267,18 @@ const ColumnChart = ({
                             name="value"
                             isAnimationActive={animate}
                             fill="var(--color-value)"
-                            radius={isCells ? [CELLS_BAR_RADIUS, CELLS_BAR_RADIUS, 0, 0] : [12, 12, 0, 0]}
+                            // plain 은 위 끝만 살짝 둥글다(2) — cells 는 반원(6)이다.
+                            radius={
+                                isPlain
+                                    ? [PLAIN_BAR_RADIUS, PLAIN_BAR_RADIUS, 0, 0]
+                                    : isCells
+                                      ? [CELLS_BAR_RADIUS, CELLS_BAR_RADIUS, 0, 0]
+                                      : [12, 12, 0, 0]
+                            }
                             barSize={isCells ? undefined : normalizedBarWidth}
                             maxBarSize={isCells ? normalizedBarWidth : undefined}
                             // cells: 0 · 아주 작은 값도 막대 자리(와 값 글자)를 남긴다(chart-cells).
-                            minPointSize={isCells ? cellsMinPointSize : undefined}
+                            minPointSize={isBare ? cellsMinPointSize : undefined}
                             activeBar={showTooltip && {filter: 'brightness(0.82)'}}
                         >
                             {data.map((item) => (
@@ -274,6 +308,19 @@ const ColumnChart = ({
                         </Bar>
                     </BarChart>
                 </ChartContainer>
+                {/* plain — 항목 이름은 그림 밖에 글자로 둔다. 줄바꿈(\n)이 그대로 두 줄로 서고, 칸 폭이 막대 자리와 같다. */}
+                {isPlain ? (
+                    <ul className="flex list-none pt-2">
+                        {data.map((item) => (
+                            <li
+                                key={item.id}
+                                className="typo-caption-regular text-label-foreground min-w-0 flex-1 text-center break-keep whitespace-pre-line"
+                            >
+                                {item.label}
+                            </li>
+                        ))}
+                    </ul>
+                ) : null}
             </div>
 
             {/* 감추는 상자를 따로 둔다 — 표에 직접 sr-only 를 걸면 표가 제 폭만큼 자리를 차지해 문서가 가로로 넓어진다. */}

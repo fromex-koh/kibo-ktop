@@ -49,6 +49,38 @@ type PatentGradeLookupProps = {
      * 주면 결과 보고서가 보이는 상태로 시작한다. [프론트엔드 연동] 결과 화면은 주소의 검색 조건으로 조회한 보고서를 넘긴다.
      */
     initialReport?: PatentGradeReportData | null
+    /** [결과 보고서 출력]이 인쇄할 보고서 문서의 주소(기업 · 기관이 다르다). */
+    reportHref: string
+}
+
+// [결과 보고서 출력] — 미리보기 화면을 거치지 않고 바로 인쇄 대화상자를 연다.
+// 보고서를 보이지 않는 프레임으로 불러오고(?print=1), 문서가 다 그려지면 그 프레임이 스스로 대화상자를 연다.
+// 인쇄가 끝나거나 취소되면 프레임을 치운다 — 남겨 두면 화면을 옮길 때마다 쌓인다.
+// 프레임을 쓸 수 없는 환경에서는 보고서를 새 탭으로 열어 그 화면의 [인쇄하기]를 쓰게 한다.
+// 숨긴 프레임의 크기 — 용지 한 장(app/globals.css 의 --report-sheet-width · --report-sheet-height)과 같다.
+const REPORT_FRAME_WIDTH = 1360
+const REPORT_FRAME_HEIGHT = 1924
+
+const openReportPrintFrame = (href: string) => {
+    const frame = document.createElement('iframe')
+    frame.setAttribute('aria-hidden', 'true')
+    frame.setAttribute('title', '결과 보고서 인쇄')
+    // 프레임을 화면 밖에 두되 용지 크기(1360 × 1924)로 편다 — 크기가 0 이면 그래프가 잴 폭이 없어
+    // 빈 칸이나 찌그러진 모양으로 인쇄된다(ResponsiveContainer 는 그려진 폭을 재서 그린다).
+    frame.style.cssText = `position:fixed;top:0;left:-20000px;width:${REPORT_FRAME_WIDTH}px;height:${REPORT_FRAME_HEIGHT}px;border:0;opacity:0;pointer-events:none`
+    frame.src = `${href}?print=1`
+    frame.addEventListener('load', () => {
+        const frameWindow = frame.contentWindow
+        if (!frameWindow) {
+            frame.remove()
+            window.open(href, '_blank', 'noopener')
+
+            return
+        }
+
+        frameWindow.addEventListener('afterprint', () => frame.remove(), {once: true})
+    })
+    document.body.append(frame)
 }
 
 const isPatentSearchType = (value: string): value is PatentSearchType =>
@@ -57,6 +89,7 @@ const isPatentSearchType = (value: string): value is PatentSearchType =>
 const PatentGradeLookup = ({
     intro,
     notice,
+    reportHref,
     isLoadingPreview = false,
     searchDefaults,
     initialReport = null,
@@ -70,6 +103,8 @@ const PatentGradeLookup = ({
     const resultRef = useRef<HTMLDivElement>(null)
     // 결과 없음 안내에 넣을 검색 기준 이름(특허등록번호 · 특허출원번호) — 마지막으로 검색한 기준이다.
     const [searchedLabel, setSearchedLabel] = useState<string>(PATENT_SEARCH_TYPES[0].label)
+
+    const openReportPrint = () => openReportPrintFrame(reportHref)
 
     const handleSearch = ({type, value}: SelectSearchSubmit) => {
         if (!isPatentSearchType(type)) return
@@ -154,10 +189,22 @@ const PatentGradeLookup = ({
             </div>
             {/* [결과 보고서 출력] — 보고서가 검색되었을 때만 보인다. 마지막 콘텐츠와 40 · 아래 60 은 StepNavigation(plain)이
                 갖고, 버튼이 없을 때는 같은 아래 여백(60)을 위 그리드가 갖는다. */}
+            {/* [프론트엔드 연동] API 를 붙일 때 이 버튼과 관련해 손봐야 할 두 가지
+                1. 주소에 조회 조건 담기 — 프레임은 값을 넘겨받지 않고 reportHref 를 다시 열어 그 페이지가 스스로 조회한다.
+                   조회한 보고서를 가리킬 값(번호 · 보고서 id)을 주소에 붙이고, 아래 두 파일이 searchParams 로 읽게 한다.
+                   src/app/(user-type)/corp/(report)/patent-evaluation/patent-grade-list/patent-grade-result/report/page.tsx
+                   src/app/(user-type)/org/(report)/patent-evaluation/patent-grade-list/patent-grade-result/report/page.tsx
+                   예) reportHref={`${reportHref}?no=${번호}`} — 지금은 목업이라 조건 없이도 같은 보고서가 나온다.
+                2. 인쇄 시점 — 프레임은 차트 스켈레톤이 모두 사라지면 인쇄 대화상자를 연다(최대 5초).
+                   판단하는 곳: src/components/custom/report-print-shell.tsx 의 useAutoPrint.
+                   서버에서 값을 채워 내려주면 그대로 두면 되고, 보고서를 클라이언트에서 조회하도록 바꾸면 값이 오기 전에
+                   열릴 수 있다 — 그 로딩 표시에도 data-slot="chart-skeleton" 을 주면 같은 기준으로 기다린다. */}
             {status === 'found' ? (
                 <StepNavigation
                     appearance="plain"
                     next={{
+                        type: 'button',
+                        onClick: openReportPrint,
                         children: (
                             <>
                                 <Printer aria-hidden="true" />

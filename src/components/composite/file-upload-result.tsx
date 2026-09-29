@@ -154,11 +154,15 @@ const UploadResultPanel = ({
                                 key={`${index}-${detail.label}`}
                                 className={cn('flex items-center gap-2', isError ? 'items-start' : 'shrink-0')}
                             >
-                                {/* 성공 상세는 항목 사이에 세로 구분선을 둔다 — 첫 항목 앞에는 두지 않는다. */}
-                                {!isError && index > 0 ? (
-                                    <span aria-hidden="true" className="bg-subtle-2 -ml-2 h-3 w-px" />
-                                ) : null}
                                 <dt className={cn('text-foreground-subtle', isError && 'w-20 shrink-0')}>
+                                    {/* 성공 상세는 항목 사이에 세로 구분선을 둔다 — 첫 항목 앞에는 두지 않는다.
+                                        dl 안의 div 는 dt · dd 만 담을 수 있어 구분선을 이름(dt) 안에 둔다[8.1.1]. */}
+                                    {!isError && index > 0 ? (
+                                        <span
+                                            aria-hidden="true"
+                                            className="bg-subtle-2 me-2 -ml-2 inline-block h-3 w-px align-middle"
+                                        />
+                                    ) : null}
                                     {detail.label}
                                 </dt>
                                 <dd className="text-foreground min-w-0">{detail.value}</dd>

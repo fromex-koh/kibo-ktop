@@ -8,11 +8,12 @@ import {
 } from '@/components/composite/breadcrumb'
 import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
+import {ServiceGuide} from '@/components/custom/service-guide'
 
 export const metadata: Metadata = {title: '이용안내'}
 
 // SkipNav의 #main 도착 대상이며 tabIndex={-1}로 키보드 포커스를 받을 수 있다.
-// 원고 연동 전까지 표시하는 임시 섹션은 실제 콘텐츠로 교체한다.
+// 본문(ServiceGuide)은 기업·기관이 같다 — 문구는 content/service/guide.ts 에 있다.
 const CorpGuidePage = () => (
     <main id="main" tabIndex={-1} className="bg-surface flex-1">
         <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
@@ -32,14 +33,7 @@ const CorpGuidePage = () => (
                     </Breadcrumb>
                 }
             />
-            <section
-                className="bg-background grid min-h-100 place-items-center px-6"
-                aria-labelledby="guide-placeholder-title"
-            >
-                <h2 id="guide-placeholder-title" className="typo-title-l-bold text-center break-keep">
-                    내용 추후 업데이트
-                </h2>
-            </section>
+            <ServiceGuide />
         </div>
     </main>
 )

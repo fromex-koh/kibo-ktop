@@ -25,8 +25,8 @@ const tableCellClassName = 'border-subtle-3 border px-4 py-3 align-top'
 const tableHeadCellClassName = `${tableCellClassName} typo-body-l-bold text-foreground bg-blue-50 text-center`
 const tableValueCellClassName = `${tableCellClassName} typo-body-l-regular text-label-foreground wrap-anywhere`
 
-// 항목별 추이 차트의 선 색 — 시안의 파랑 · 초록 · 보라.
-const TREND_COLOR: Record<string, string> = {
+// 항목별 추이 차트의 선 색 — 파랑 · 초록 · 보라. 인쇄용 보고서(patent-report-document.tsx)가 같은 값을 쓴다.
+const PATENT_TREND_COLOR: Record<string, string> = {
     diversity: 'var(--ds-chart-1)',
     market: 'var(--ds-mint-700)',
     value: 'var(--ds-purple-500)',
@@ -216,7 +216,7 @@ const PatentGradeReport = ({report, isLoading = false}: PatentGradeReportProps) 
                                 data={[...(metric.peerTrend ?? [])]}
                                 target={metric.targetGrade ? {grade: metric.targetGrade} : undefined}
                                 scale={PATENT_GRADE_SCALE}
-                                color={TREND_COLOR[metric.id]}
+                                color={PATENT_TREND_COLOR[metric.id]}
                             />
                         </li>
                     ))}
@@ -226,5 +226,5 @@ const PatentGradeReport = ({report, isLoading = false}: PatentGradeReportProps) 
     )
 }
 
-export {PatentGradeReport}
+export {PatentGradeReport, PATENT_TREND_COLOR}
 export type {PatentGradeReportProps}

@@ -25,6 +25,7 @@ const SectionTitle = ({title, aside, date, id}: {title: string; aside?: string; 
 )
 
 // 흰 카드 — 테두리 gray.100 · 반경 8 · 여백 24. 제목(16 Bold)과 오른쪽 보조 문구(14 Regular).
+// 제목이 있을 때만 section 으로 그린다 — 제목 없는 section 은 구획 이름을 알 수 없어 마크업 경고가 된다[8.1.1].
 const Card = ({
     title,
     aside,
@@ -39,30 +40,36 @@ const Card = ({
     description?: ReactNode
     className?: string
     children: ReactNode
-}) => (
-    <section
-        className={cn(
-            'border-subtle-3 bg-card @container flex min-w-0 break-inside-avoid flex-col gap-6 rounded-sm border p-6',
-            className,
-        )}
-    >
-        {/* 제목도 보조 문구도 없으면 제목 줄을 두지 않는다 — 빈 줄과 간격(24)이 내용을 아래로 밀지 않게. */}
-        {title || aside ? (
-            <div className="flex flex-col gap-2">
-                <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                    {title ? <h4 className="typo-body-xl-bold text-foreground break-keep">{title}</h4> : null}
-                    {aside ? (
-                        <div className="typo-body-l-regular text-foreground-subtle ms-auto shrink-0 text-end">
-                            {aside}
-                        </div>
+}) => {
+    const CardTag = title ? 'section' : 'div'
+
+    return (
+        <CardTag
+            className={cn(
+                'border-subtle-3 bg-card @container flex min-w-0 break-inside-avoid flex-col gap-6 rounded-sm border p-6',
+                className,
+            )}
+        >
+            {/* 제목도 보조 문구도 없으면 제목 줄을 두지 않는다 — 빈 줄과 간격(24)이 내용을 아래로 밀지 않게. */}
+            {title || aside ? (
+                <div className="flex flex-col gap-2">
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                        {title ? <h4 className="typo-body-xl-bold text-foreground break-keep">{title}</h4> : null}
+                        {aside ? (
+                            <div className="typo-body-l-regular text-foreground-subtle ms-auto shrink-0 text-end">
+                                {aside}
+                            </div>
+                        ) : null}
+                    </div>
+                    {description ? (
+                        <div className="typo-body-l-regular text-foreground-subtle">{description}</div>
                     ) : null}
                 </div>
-                {description ? <div className="typo-body-l-regular text-foreground-subtle">{description}</div> : null}
-            </div>
-        ) : null}
-        {children}
-    </section>
-)
+            ) : null}
+            {children}
+        </CardTag>
+    )
+}
 
 // 수치 상자 — 옅은 회색 면(gray.10) · 반경 8 · 여백 16/20 · 이름 14(아이콘 16 · 간격 8) 바로 아래 큰 숫자 20 Bold + 단위 16.
 // 이름 줄과 숫자 줄 사이 간격은 없다.
