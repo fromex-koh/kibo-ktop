@@ -15,7 +15,7 @@ const PATENT_GRADE_INTRO = {
     ],
 } as const
 
-// 검색 기준 — 셀렉트에서 고른다. placeholder · note 는 시안(검색 · 기준별)의 입력 안내와 버튼 줄 왼쪽 도움말 그대로다.
+// 검색 기준 — 셀렉트에서 고른다. placeholder 는 입력 칸 안내, note 는 버튼 줄 왼쪽 도움말이다.
 // pattern 은 그 번호의 형식이다(형식이 맞아야 조회한다). 하이픈은 있어도 없어도 된다.
 //   특허등록번호: 13자리(10-1111111-0000) 또는 등록 7자리(1111111)
 //   특허출원번호: 13자리(10-2026-1111111) 또는 9자리
@@ -101,6 +101,124 @@ const PATENT_GRADE_SEARCHING = '특허등급 정보를 검색 중입니다.'
 // 결과 없음 — 검색한 기준 이름을 넣는다(예: '조회된 특허정보가 없습니다. 특허등록번호를 확인해 주세요.').
 const getPatentGradeNotFoundMessage = (label: string) => `조회된 특허정보가 없습니다. ${label}를 확인해 주세요.`
 
+// ── 인쇄용 보고서의 고정 문구 ──
+// [프론트엔드 연동] 인쇄용 보고서에 나오는 글은 값 · 문구 모두 이 파일에만 있다. 화면 파일을 열지 않고 여기서 고친다.
+const PATENT_REPORT_EYEBROW = 'KPAS(Kibo Patent Appraisal System)'
+const PATENT_REPORT_CREATED_AT_LABEL = '보고서 생성일자'
+const PATENT_REPORT_INVENTION_TITLE = '발명의명칭(등록번호)'
+const PATENT_INFLUENCE_TITLE = '영향요인 비교'
+const PATENT_INFLUENCE_FOOTNOTE =
+    '※ 등급평가는 영향요인의 값, 긍정/부정 요인의 개수 및 기여도 등 종합적으로 반영하여 산출되므로, 특정 영향요인의 단일 값만으로 평가되지 않습니다'
+const PATENT_ANALYSIS_TITLE = '평가대상 특허분석'
+const PATENT_ANALYSIS_FOOTNOTE =
+    '※ 상위 40%의 영향요인 값 대비 평가대상 특허의 영향요인 값이 동일하거나 많더라도 다른 영향요인들의 값에 따라 결과가 상이하게 나올 수 있음을 유의하시기 바랍니다.'
+
+// 영향요인 카드의 막대 셋 — 이름과 순서. key 는 PatentInfluenceFactor 의 값 이름과 같다.
+const PATENT_INFLUENCE_BARS = [
+    {key: 'ipcGroup', label: 'IPC 그룹'},
+    {key: 'top40', label: '그룹 내\n상위40%'},
+    {key: 'target', label: '평가대상\n특허'},
+] as const
+
+// 등급 분포 표의 줄 이름.
+const PATENT_DISTRIBUTION_ROW_LABELS = {
+    grade: '등급',
+    percent: '백분율(%)',
+    cumulative: '누적비율(%)',
+} as const
+
+// ── 인쇄용 보고서 마지막 쪽(참고자료) ──
+// [프론트엔드 연동] 제도 설명이라 값이 바뀌지 않는다 — 문구만 고치면 된다. 흐름도 단계를 더하거나 빼면 원도 따라간다.
+const PATENT_REFERENCE_TITLE = '특허평가 참고자료'
+const PATENT_REFERENCE_SECTIONS = [
+    {
+        id: 'kpas',
+        title: 'KPAS I (Kibo Patent Appraisal System)',
+        // 점 목록으로 그린다.
+        items: [
+            'KPAS Ⅰ 은 재산적 가치가 높은 지식재산을 변별하기 위한 기술보증기금 고유의 특허등급산출 시스템입니다.',
+            '본 시스템은 특허 자체의 특성이 반영된 내재적 지표와 특허가 속한 기술 환경의 특성이 반영된 외재적 지표를 활용하여 딥뉴럴네트워크(Deep Neural Network) 기술을 활용하여 특허 등급을 산출합니다',
+        ],
+    },
+] as const
+
+// 특허평가프로세스 — 설명 한 문단과 흐름도 한 줄이 짝을 이룬다.
+const PATENT_PROCESS_TITLE = '특허평가프로세스'
+const PATENT_PROCESS_FLOWS = [
+    {
+        id: 'model',
+        description:
+            'KPAS Ⅰ 은 국내 특허 DB의 특허 데이터를 활용하여 학습 데이터(Training set)와 검증 데이터(Validation set)을 구성한 뒤, 딥뉴럴네트워크(Deep Neural Network) 기술을 기반으로 특허평가 모형을 구축하였습니다.',
+        steps: [
+            {id: 'extract', label: '전체 국내특허\n평가지표추출'},
+            {id: 'compose', label: '학습대상\n특허구성'},
+            {id: 'train', label: '평가모형\n학습'},
+            {id: 'validate', label: '평가모형\n검증'},
+            {id: 'done', label: '특허평가모형\n완료'},
+        ],
+    },
+    {
+        id: 'grade',
+        description:
+            '평가대상 특허의 내재적 지표와 외재적 지표를 요인분석한 후 투입 변수를 산출하고 이를 특허평가 모형에 적용하여 최종 평가등급을 산출합니다',
+        steps: [
+            {id: 'extract', label: '평가대상특허\n평가지표추출'},
+            {id: 'factor', label: '평가지표\n요인분석'},
+            {id: 'preprocess', label: '투입변수\n전처리'},
+            {id: 'apply', label: '투입변수를\n특허평가모형에\n적용'},
+            {id: 'result', label: '평가등급\n산출'},
+        ],
+    },
+] as const
+
+const PATENT_INFLUENCE_GUIDE_TITLE = '주요 영향요인'
+const PATENT_INFLUENCE_GUIDE_TEXT =
+    'KPAS Ⅰ 에서 활용하고 있는 딥뉴럴네트워크는 특성상 블랙박스 모델링(Black-box modeling) 기법으로, 결과를 도출하는 프로세스를 수학적, 구조적으로 정의하여 어려운 특징이 있습니다. 따라서 KPAS Ⅰ 에서는 최종적인 결과 해석에 대한 사용자의 이해를 돕기 위해 평가 결과에 영향을 주는 주요 영향요인들을 제공하고 있습니다'
+
+const PATENT_REPORT_COPYRIGHT = 'COPYRIGHT ⓒ 기술보증기금 KPAS 특허평가시스템 All RIGHTS RESERVED.'
+
+// ── 인쇄용 보고서 2쪽 이후(항목별 상세) ──
+// 항목(기술다양성 · 시장확장성 · 가치창출가능성)마다 한 쪽이다. details 에 넣은 항목 수만큼 쪽이 늘어난다.
+
+/** 등급 분포 한 칸 — 등급 아홉 개(PATENT_GRADE_SCALE)와 같은 순서로 넣는다. */
+type PatentGradeDistributionPoint = {
+    grade: (typeof PATENT_GRADE_SCALE)[number]
+    /** 그 등급에 속한 비율(%). 곡선의 높이가 된다. */
+    percent: number
+    /** 그 등급까지의 누적 비율(%). */
+    cumulative: number
+}
+
+/** 영향요인 카드 한 장 — 막대 셋을 견준다. */
+type PatentInfluenceFactor = {
+    id: string
+    label: string
+    /** 막대 값 — IPC 그룹 · 그룹 내 상위 40% · 평가대상 특허 순으로 그린다. */
+    ipcGroup: number
+    top40: number
+    target: number
+}
+
+/**
+ * 항목 한 개의 상세 — 인쇄용 보고서 한 쪽을 채운다.
+ *
+ * [프론트엔드 연동] 글 안에서 굵게 보일 부분은 **별 두 개**로 감싼다(예: '등급이 **BB** 로').
+ * summaryLines · influenceLines · analysis 모두 같은 규칙을 쓴다.
+ */
+type PatentMetricDetail = {
+    id: (typeof PATENT_GRADE_METRICS)[number]['id']
+    /** 메달 그림과 표에서 강조할 등급. PATENT_GRADE_SCALE 의 값이어야 한다. */
+    grade: (typeof PATENT_GRADE_SCALE)[number]
+    /** 항목 제목 아래 설명 줄 — 문장을 그대로 넣는다(값이 섞인 문장이라 조각내지 않는다). */
+    summaryLines: string[]
+    distribution: PatentGradeDistributionPoint[]
+    /** 영향요인 비교 설명 줄. */
+    influenceLines: string[]
+    influenceFactors: PatentInfluenceFactor[]
+    /** 평가대상 특허분석 상자의 문단. */
+    analysis: string
+}
+
 type PatentGradeTrendPoint = {label: string; grade: string}
 
 type PatentGradeReport = {
@@ -126,6 +244,11 @@ type PatentGradeReport = {
         peerTrend: PatentGradeTrendPoint[]
         targetGrade: string
     }[]
+    /**
+     * 인쇄용 보고서의 항목별 상세(2쪽 이후). 넣은 항목 수만큼 쪽이 늘어나고, 비워 두면 1쪽만 나온다.
+     * 화면 보고서는 쓰지 않는다.
+     */
+    details?: PatentMetricDetail[]
 }
 
 // ── 목업(API 연결 시 삭제) ──
@@ -192,6 +315,110 @@ const MOCK_PATENT_GRADE_REPORT: PatentGradeReport = {
             targetGrade: 'BBB',
         },
     ],
+    // 인쇄용 보고서 2쪽 — 항목마다 한 쪽이다. 지금은 기술다양성 한 쪽만 둔다.
+    // [프론트엔드 연동] 시장확장성 · 가치창출가능성도 같은 모양으로 더하면 3 · 4쪽이 그대로 늘어난다.
+    details: [
+        {
+            id: 'diversity',
+            grade: 'AA',
+            summaryLines: [
+                '평가기준일(2026-05-05) 현재 특허등급산출 결과, 전체대비 46.63% 수준에 해당되어 **BB** 등급으로 평가하였습니다.',
+                '평가대상 특허가 속한 IPC 그룹은 (G06Q) 이며, 해당 그룹에 속한 특허의 수는 총 48,282 건에 해당합니다.',
+                '(G06Q) 그룹에 긍정적으로 영향을 준 평가지표의 수는 13 개이고, 부정적으로 영향을 준 평가지표의 수는 3 개입니다.',
+            ],
+            // 등급 아홉 개의 분포 — percent 가 곡선의 높이, cumulative 가 표의 누적비율이다.
+            distribution: [
+                {grade: 'AAA', percent: 4, cumulative: 4},
+                {grade: 'AA', percent: 7, cumulative: 11},
+                {grade: 'A', percent: 12, cumulative: 23},
+                {grade: 'BBB', percent: 17, cumulative: 40},
+                {grade: 'BB', percent: 20, cumulative: 60},
+                {grade: 'B', percent: 17, cumulative: 77},
+                {grade: 'CCC', percent: 12, cumulative: 89},
+                {grade: 'CC', percent: 7, cumulative: 96},
+                {grade: 'C', percent: 4, cumulative: 100},
+            ],
+            influenceLines: [
+                '[(G06Q) IPC 그룹] 긍정적 영향요인 (상위5개만표기) : 출원인수, 패밀리특허수, 도면수, IPC활동성(등록), IPC활동성평균(등록)',
+                '[(G06Q) 그룹내상위40%] 긍정적 영향요인 (상위5개만표기) : 출원인수, 패밀리특허수, 도면수, IPC활동성(등록), IPC활동성평균(등록)',
+            ],
+            influenceFactors: [
+                {id: 'competition', label: 'IPC경쟁정도(평가)', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'citation', label: '인용특허수', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'expiration', label: '평가만료일까지기간', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'claim', label: '특허청구항지수', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'activity', label: 'IPC활동성평균(등록)', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+            ],
+            analysis:
+                '평가대상 특허의 평가 시점에 경쟁 정도가 적절하여 시장 진입 및 성장에 유리한 환경을 가지고 있는 것으로 평가되었고, 선행 기술 인용을 통해 다양한 기술을 토대로 발명되었다고 평가되었습니다. 또한, 특허의 잔여 권리 유지 기간이 길어 앞으로 오랫동안 독점적 권리를 행사할 수 있어 장기적인 사업적 안정성을 보유하고 있는 것으로 평가되었습니다. 종합적으로 부정적인 영향요인 3 개 대비 긍정적인 영향요인 13 개의 기여도가 높아 **기술 다양성** 등급이 **BB** 로 산출된 것으로 평가하였습니다.',
+        },
+        {
+            id: 'market',
+            grade: 'BBB',
+            summaryLines: [
+                '평가기준일(2026-05-05) 현재 특허등급산출 결과, 전체 대비 46.63% 수준에 해당되어 **BBB** 등급으로 평가하였습니다.',
+                '평가대상 특허가 속한 IPC 그룹은 (G06Q)이며, 해당 그룹에 속한 특허의 수는 총 48,282 건에 해당합니다.',
+                '(G06Q) 그룹에 긍정적으로 영향을 준 평가 지표의 수는 10 개고, 부정적으로 영향을 준 평가 지표의 수는 6 개입니다.',
+            ],
+            distribution: [
+                {grade: 'AAA', percent: 4, cumulative: 4},
+                {grade: 'AA', percent: 7, cumulative: 11},
+                {grade: 'A', percent: 12, cumulative: 23},
+                {grade: 'BBB', percent: 17, cumulative: 40},
+                {grade: 'BB', percent: 20, cumulative: 60},
+                {grade: 'B', percent: 17, cumulative: 77},
+                {grade: 'CCC', percent: 12, cumulative: 89},
+                {grade: 'CC', percent: 7, cumulative: 96},
+                {grade: 'C', percent: 4, cumulative: 100},
+            ],
+            influenceLines: [
+                '[(G06Q) IPC 그룹] 긍정적 영향요인 (상위 5개만 표기) : (독립 청구항 수), (권리이전 횟수), (IPC 활동성(등록)), (IPC 활동성 평균(등록)), (IPC 크기(평가))',
+                '[(G06Q) 그룹 내 상위 40%] 긍정적 영향요인 (상위 5개만 표기) : (독립 청구항 수), (권리이전 횟수), (IPC 활동성(등록)), (IPC 활동성 평균(등록)), (IPC 크기(평가))',
+            ],
+            influenceFactors: [
+                {id: 'competition', label: 'IPC경쟁정도(평가)', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'citation', label: '인용특허수', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'expiration', label: '평가만료일까지기간', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'claim', label: '특허청구항지수', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'activity', label: 'IPC활동성평균(등록)', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+            ],
+            analysis:
+                '평가대상 특허의 전문(명세서)에 포함된 단어 수가 많아 기술 배경 및 발명의 설명이 충분하여 기술 구현의 완성도가 우수한 것으로 평가되었고, 도면의 수가 적정하여 발명의 기술적 구성과 작동원리가 상세하고 시각적으로 명확하여 기술 이해의 용이성이 우수한 것으로 평가되었습니다. 또한, 독립 청구 항의 권리 내에서 다양한 세부 기술과 실시 형태까지 보호받고 있는 것으로 평가되었습니다. 종합적으로 부정적인 영향요인 6 개 대비 긍정적인 영향요인 10 개의 기여도가 높아 **시장 확장성** 등급이 **BBB** 로 산출된 것으로 평가하였습니다.',
+        },
+        {
+            id: 'value',
+            grade: 'BBB',
+            summaryLines: [
+                '평가 기준일 2026-05-05 현재 특허 등급 산출 결과, 전체 대비 25.39% 수준에 해당되어 최종 **BBB** 등급으로 평가하였습니다.',
+                '평가대상 특허가 속한 IPC 그룹은 (G06Q)이며, 해당 그룹에 속한 특허의 수는 총 48,282 건에 해당합니다.',
+                '(G06Q) 그룹에 긍정적으로 영향을 준 평가 지표의 수는 2 개고, 부정적으로 영향을 준 평가 지표의 수는 13 개입니다.',
+            ],
+            distribution: [
+                {grade: 'AAA', percent: 4, cumulative: 4},
+                {grade: 'AA', percent: 7, cumulative: 11},
+                {grade: 'A', percent: 12, cumulative: 23},
+                {grade: 'BBB', percent: 17, cumulative: 40},
+                {grade: 'BB', percent: 20, cumulative: 60},
+                {grade: 'B', percent: 17, cumulative: 77},
+                {grade: 'CCC', percent: 12, cumulative: 89},
+                {grade: 'CC', percent: 7, cumulative: 96},
+                {grade: 'C', percent: 4, cumulative: 100},
+            ],
+            influenceLines: [
+                '[(G06Q) IPC 그룹] 긍정적 영향요인 (상위 5개만 표기) : (IPC 크기(평가)), (IPC 경쟁 정도(평가))',
+                '[(G06Q) 그룹 내 상위 40%] 긍정적 영향요인 (상위 5개만 표기) : (IPC 크기(평가)), (IPC 경쟁 정도(평가))',
+            ],
+            influenceFactors: [
+                {id: 'competition', label: 'IPC경쟁정도(평가)', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'citation', label: '인용특허수', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'expiration', label: '평가만료일까지기간', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'claim', label: '특허청구항지수', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+                {id: 'activity', label: 'IPC활동성평균(등록)', ipcGroup: 456.1, top40: 452.9, target: 466.5},
+            ],
+            analysis:
+                '평가대상 특허의 평가 시점에 경쟁 정도가 적절하여 시장 진입 및 성장에 유리한 환경을 가지고 있고, 평가 시점에 해당 IPC 분야의 시장 잠재력이 매우 커서 미래 성장 가능성이 높게 평가되었습니다. 또한, 특허가 등록되기까지 심사과정에서 취해진 조치의 수가 적절했고, 심사관의 기술적 이견 없이 발명의 신규성 및 진보성이 높은 것으로 평가되었습니다. 종합적으로 부정적인 영향요인 13 개 대비 긍정적인 영향요인 2 개의 기여도가 높아 **가치창출가능성** 등급이 **BBB** 로 산출된 것으로 평가하였습니다.',
+        },
+    ],
 }
 // 목업 특허 — 보고서가 있는 특허의 등록번호 · 출원번호. 목업 보고서의 특허개요(등록번호 · 출원번호)와 같은 값이다.
 const MOCK_PATENT_RECORDS: {registration: string; application: string; report: PatentGradeReport}[] = [
@@ -219,6 +446,22 @@ const MOCK_PATENT_SEARCH_DEFAULTS: Record<PatentSearchType, string> = {
 
 export {
     MOCK_PATENT_SEARCH_DEFAULTS,
+    PATENT_ANALYSIS_FOOTNOTE,
+    PATENT_INFLUENCE_GUIDE_TEXT,
+    PATENT_INFLUENCE_GUIDE_TITLE,
+    PATENT_PROCESS_FLOWS,
+    PATENT_PROCESS_TITLE,
+    PATENT_REFERENCE_SECTIONS,
+    PATENT_REFERENCE_TITLE,
+    PATENT_REPORT_COPYRIGHT,
+    PATENT_ANALYSIS_TITLE,
+    PATENT_DISTRIBUTION_ROW_LABELS,
+    PATENT_INFLUENCE_BARS,
+    PATENT_INFLUENCE_FOOTNOTE,
+    PATENT_INFLUENCE_TITLE,
+    PATENT_REPORT_CREATED_AT_LABEL,
+    PATENT_REPORT_EYEBROW,
+    PATENT_REPORT_INVENTION_TITLE,
     findPatentGradeReport,
     getPatentGradeNotFoundMessage,
     PATENT_GRADE_SEARCHING,
@@ -238,4 +481,12 @@ export {
     PATENT_SEARCH_TYPES,
     PATENT_SUMMARY_TITLE,
 }
-export type {PatentSearchType, PatentGradeReport, PatentGradeTrendPoint, PatentSummaryRow}
+export type {
+    PatentGradeDistributionPoint,
+    PatentGradeReport,
+    PatentGradeTrendPoint,
+    PatentInfluenceFactor,
+    PatentMetricDetail,
+    PatentSearchType,
+    PatentSummaryRow,
+}
