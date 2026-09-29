@@ -16,12 +16,14 @@ type ChartSkeletonType =
     | 'columns-line'
     | 'donut'
     | 'gauge'
+    | 'grade-distribution'
     | 'grade-trend'
     | 'grouped-column'
     | 'line'
     | 'matrix'
     | 'network'
     | 'overlay-column'
+    | 'plain-column'
     | 'radar'
     | 'rank-pyramid'
     | 'score-gauge'
@@ -457,6 +459,58 @@ const CellsColumnChartSkeleton = () => (
     </div>
 )
 
+// GradeDistributionChart(특허평가 결과 보고서 등급 분포)의 곡선 자리와 같은 짜임 — 높이 144 자리에
+// 종 모양 면 하나를 둔다. 아래 표는 글자라 서버에서 그대로 그려지므로 스켈레톤이 필요 없다.
+// 가로 0~100 · 세로 0(위)~100(아래). 가운데가 봉긋한 좌우 대칭 종 모양으로, 꼭대기는 실제 곡선과 같은
+// 위에서 13% 자리다. 모양은 DistributionCurveChartSkeleton 의 곡선과 같은 방식으로 잡는다.
+const GRADE_DISTRIBUTION_SKELETON_CURVE = 'M0,100 C25,100 32,13 50,13 C68,13 75,100 100,100 Z'
+
+// 등급 칸 수 — 실제 그래프의 등급(AAA~C)과 같은 아홉 칸이라 칸을 나누는 점선 자리가 그대로 맞는다.
+const GRADE_DISTRIBUTION_SKELETON_COLUMNS = 9
+
+const GradeDistributionChartSkeleton = () => (
+    <div aria-hidden="true" className="relative h-full">
+        <div className="grid h-full grid-cols-9">
+            {Array.from({length: GRADE_DISTRIBUTION_SKELETON_COLUMNS}, (_, index) => (
+                // 칸을 나누는 선만 필요하므로 첫 칸에는 왼쪽 선을 두지 않는다.
+                <span key={index} className={cn('border-subtle-3 border-dashed', index > 0 && 'border-l')} />
+            ))}
+        </div>
+        {/* 곡선 면은 칸 흐름과 별개로 상자 전체를 덮는 장식이다. */}
+        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="fill-muted absolute inset-0 size-full">
+            <path d={GRADE_DISTRIBUTION_SKELETON_CURVE} />
+        </svg>
+    </div>
+)
+
+// ColumnChart variant="plain"(특허평가 결과 보고서 영향요인 비교)과 같은 짜임 — 높이 200 칸 상자(바닥 · 양 끝 실선,
+// 막대 사이 점선)에 두께 24 막대 셋, 그 아래 두 줄짜리 항목 이름 자리.
+const PLAIN_COLUMN_SKELETON_BARS = [76, 75, 78] as const
+
+const PlainColumnChartSkeleton = () => (
+    <div aria-hidden="true">
+        <div className="border-subtle-3 divide-subtle-3 grid h-50 grid-cols-3 divide-x divide-dashed border-x border-b">
+            {PLAIN_COLUMN_SKELETON_BARS.map((height, index) => (
+                <div key={index} className="flex items-end justify-center">
+                    <div
+                        className={cn(skeletonPartClassName, 'rounded-t-2xs w-6 rounded-b-none')}
+                        style={{height: `${height}%`}}
+                    />
+                </div>
+            ))}
+        </div>
+        {/* 항목 이름 자리 — 실제는 두 줄까지 서므로 같은 높이를 잡아 둔다. */}
+        <div className="grid grid-cols-3 gap-2 pt-2">
+            {PLAIN_COLUMN_SKELETON_BARS.map((_, index) => (
+                <div key={index} className="flex flex-col items-center gap-1">
+                    <div className={cn(skeletonPartClassName, 'h-3 w-12')} />
+                    <div className={cn(skeletonPartClassName, 'h-3 w-10')} />
+                </div>
+            ))}
+        </div>
+    </div>
+)
+
 // LineChart appearance="cells"(K-BIGx 보고서 분기별 종업원수)와 같은 짜임 — 높이 200 자리에 점마다 세로 점선 · 바닥 실선,
 // 양 끝 점은 가장자리에서 24 안쪽 → 가운데를 지나는 선과 아래로 옅어지는 면 → 항목 이름 자리(26). 전체 226.
 // 좁은 화면에서는 실제 그래프처럼 폭 576 을 지키고 넘치는 부분은 가린다(실제는 가로 스크롤).
@@ -775,10 +829,14 @@ const renderChartSkeleton = (type: ChartSkeletonType, legend?: ChartSkeletonNetw
             return <ColumnsLineChartSkeleton />
         case 'cells-column':
             return <CellsColumnChartSkeleton />
+        case 'plain-column':
+            return <PlainColumnChartSkeleton />
         case 'cells-line':
             return <CellsLineChartSkeleton />
         case 'grouped-column':
             return <GroupedColumnChartSkeleton />
+        case 'grade-distribution':
+            return <GradeDistributionChartSkeleton />
         case 'grade-trend':
             return <GradeTrendChartSkeleton />
         case 'line':
