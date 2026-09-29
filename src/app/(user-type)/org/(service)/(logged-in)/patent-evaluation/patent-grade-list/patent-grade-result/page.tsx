@@ -30,6 +30,7 @@ const MOCK_INITIAL_REPORT = findPatentGradeReport({
 const OrgPatentGradeResultPage = () => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
         <PatentGradeLookup
+            reportHref="/org/patent-evaluation/patent-grade-list/patent-grade-result/report"
             intro={<PatentGradeIntro homeHref="/org/home" />}
             notice={<PatentGradeNotice />}
             searchDefaults={MOCK_PATENT_SEARCH_DEFAULTS}
