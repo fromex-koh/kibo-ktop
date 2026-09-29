@@ -226,23 +226,18 @@
     - [ColumnChart 가이드](/component-guide/column-chart)
     - [Skeleton 가이드](/component-guide/skeleton)
 
-### [문서] 퍼블리싱 인덱스 — 화면 상태 갱신
+### [문서] 퍼블리싱 인덱스
 
-- 대상: src/content/publishing-guide/publishing-index.json
+- 대상:
+    - src/content/publishing-guide/publishing-index.json
+    - src/content/publishing-guide/screen-registry.json
+    - src/components/custom/publishing-index.tsx
 - 적용:
     - 지정한 파일만 교체
     - 기업 · 기관 '보고서' 화면(특허평가 결과 보고서)의 퍼블리싱 상태를 대기중에서 완료로 바꿉니다.
     - 탄소 로그인 · 기관회원 가입 안내 팝업 · 아이디 · 비밀번호 찾기 팝업 세 행에 응용2 상태 완료를 넣습니다(응용2팀 반영).
-- 영향 화면:
-    - [퍼블리싱 인덱스](/)
-
-### [문서] 퍼블리싱 인덱스 — 보완 상태 표시 개선
-
-- 대상: src/components/custom/publishing-index.tsx
-- 적용:
-    - 지정한 파일만 교체
-    - 보완 행의 상태 칸을 완료 뱃지 하나로 정리하고, 옆의 시계 아이콘에 마우스를 올리거나 키보드로 이동하면 보완 회차와 꼬리말을 말풍선으로 보여 줍니다.
-    - 회차 기록(statusDate)과 진척률 집계 방식은 그대로입니다 — 화면에서 읽는 방식만 바뀝니다.
+    - 기업 기술평가의 '평가결과 조회'(corp-technology-evaluation-results) 행을 빼고 짝이 되는 화면 경로 키도 지웁니다 — 등록 화면 수가 387건에서 386건으로 줄어듭니다.
+    - 보완 행의 상태 칸을 완료 뱃지 하나로 정리하고, 옆의 시계 아이콘에 마우스를 올리거나 키보드로 이동하면 보완 회차와 꼬리말을 말풍선으로 보여 줍니다. 회차 기록과 진척률 집계 방식은 그대로입니다.
     - 상태 범례에 '보완 표시' 항목을 더하고 개발수정X 설명을 새 표기에 맞췄습니다.
 - 영향 화면:
     - [퍼블리싱 인덱스](/)
