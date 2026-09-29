@@ -1308,7 +1308,7 @@
                                 {
                                     "label": "보고서",
                                     "screenId": "SB-FOTA-CP0-0030",
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report",
                                     "iaRow": 99
@@ -3411,7 +3411,7 @@
                                 {
                                     "label": "보고서",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-patent-evaluation-patent-grade-list-patent-grade-result-report",
                                     "iaRow": 96
