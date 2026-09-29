@@ -54,8 +54,8 @@
             "key": "corp-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.5",
+            "isCurrent": true
         },
         {
             "key": "corp-pricing",
@@ -656,22 +656,22 @@
             "key": "corp-patent-evaluation-patent-grade-list",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.1",
-            "isCurrent": false
+            "version": "v3.3.5",
+            "isCurrent": true
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.1",
-            "isCurrent": false
+            "version": "v3.3.5",
+            "isCurrent": true
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.5",
+            "isCurrent": true
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report",
@@ -1307,8 +1307,8 @@
             "key": "org-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.5",
+            "isCurrent": true
         },
         {
             "key": "org-pricing",
@@ -1776,22 +1776,22 @@
             "key": "org-patent-evaluation-patent-grade-list",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.1",
-            "isCurrent": false
+            "version": "v3.3.5",
+            "isCurrent": true
         },
         {
             "key": "org-patent-evaluation-patent-grade-list-patent-grade-result",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.1",
-            "isCurrent": false
+            "version": "v3.3.5",
+            "isCurrent": true
         },
         {
             "key": "org-patent-evaluation-patent-grade-list-patent-grade-result-report",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "미배포",
-            "isCurrent": false
+            "version": "v3.3.5",
+            "isCurrent": true
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report",
