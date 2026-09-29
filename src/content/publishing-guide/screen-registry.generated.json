@@ -653,13 +653,6 @@
             "isCurrent": false
         },
         {
-            "key": "corp-technology-evaluation-results",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
-        },
-        {
             "key": "corp-patent-evaluation-patent-grade-list",
             "implemented": true,
             "implementationStatus": "in-progress",

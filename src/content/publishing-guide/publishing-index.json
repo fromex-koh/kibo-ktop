@@ -1268,14 +1268,6 @@
                             "iaRow": 95
                         }
                     ]
-                },
-                {
-                    "label": "평가결과 조회",
-                    "screenId": null,
-                    "status": "대기중",
-                    "version": "미배포",
-                    "key": "corp-technology-evaluation-results",
-                    "iaRow": 96
                 }
             ]
         },
