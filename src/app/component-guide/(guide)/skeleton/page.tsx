@@ -44,6 +44,8 @@ const CHART_TYPES_CODE = `import {ChartSkeleton} from '@/components/composite/ch
 
 <ChartSkeleton type="donut" label="기업 보유기술을 불러오는 중입니다." />
 <ChartSkeleton type="score-gauge" label="혁신성장역량지수를 불러오는 중입니다." />
+<ChartSkeleton type="score-ring" label="지수 점수를 불러오는 중입니다." />
+<ChartSkeleton type="grade-arc" label="등급을 불러오는 중입니다." />
 <ChartSkeleton type="rank-pyramid" label="동일업종 순위를 불러오는 중입니다." />
 <ChartSkeleton type="gauge" label="기업신용등급을 불러오는 중입니다." />
 <ChartSkeleton type="matrix" label="재무비율진단을 불러오는 중입니다." />
@@ -69,6 +71,18 @@ const CHART_SKELETON_EXAMPLES: Array<{
         title: '혁신성장역량지수 점수 (ScoreGauge)',
         description: '지름 320 원호와 가운데 점수 · 상태 · 보조 줄을 같은 높이로 대체합니다.',
         label: '혁신성장역량지수를 불러오는 중입니다.',
+    },
+    {
+        type: 'grade-arc',
+        title: '투자용 등급 (GradeArcGauge)',
+        description: '위가 열린 반원 하나와 그 아래 이름 자리를 잡습니다.',
+        label: '등급을 불러오는 중입니다.',
+    },
+    {
+        type: 'score-ring',
+        title: 'Tech-Index 지수 (ScoreRing)',
+        description: '지름 160 원 하나와 가운데 이름 · 점수 · 등급 세 줄의 자리를 잡습니다.',
+        label: '지수 점수를 불러오는 중입니다.',
     },
     {
         type: 'rank-pyramid',
@@ -99,6 +113,13 @@ const CHART_SKELETON_EXAMPLES: Array<{
         title: '부문별 비교 (ComparisonRadarChart · 동심원)',
         description: '동심원 4고리 · 다섯 축 선 · 가운데 면 · 축 이름 다섯을 대체합니다(칸 높이 248).',
         label: '부문별 비교를 불러오는 중입니다.',
+    },
+    {
+        type: 'pentagon-radar',
+        title: '다섯 축 오각 레이더 (ComparisonRadarChart · 인쇄용 리포트)',
+        description:
+            '오각 격자 4겹 · 다섯 축 선 · 가운데 면 · 축 이름 다섯을 대체합니다. 인쇄용 리포트의 레이더는 크기가 정해져 있어(714×200) 스켈레톤도 같은 자리에 같은 크기로 섭니다 — 차트에 skeletonType="pentagon-radar" 를 줘 고릅니다.',
+        label: '기업 대표 5대 역량 환산 점수를 불러오는 중입니다.',
     },
     {
         type: 'overlay-column',
@@ -187,7 +208,7 @@ const PROPS_ITEMS = [
         'type',
         '실제 차트 구조와 맞는 스켈레톤 유형을 선택합니다.',
         '-',
-        "'network' | 'donut' | 'score-gauge' | 'rank-pyramid' | 'gauge' | 'grade-distribution' | 'grade-trend' | 'grouped-column' | 'cells-line' | 'cells-column' | 'plain-column' | 'overlay-column' | 'columns-line' | 'matrix' | 'radar' | 'circle-radar' | 'triangle-radar' | 'bar' | 'line' | 'word-cloud'",
+        "'network' | 'donut' | 'score-gauge' | 'score-ring' | 'grade-arc' | 'rank-pyramid' | 'gauge' | 'grade-distribution' | 'grade-trend' | 'grouped-column' | 'cells-line' | 'cells-column' | 'plain-column' | 'overlay-column' | 'columns-line' | 'matrix' | 'radar' | 'circle-radar' | 'triangle-radar' | 'pentagon-radar' | 'bar' | 'line' | 'word-cloud'",
     ],
     [
         'ChartSkeleton',

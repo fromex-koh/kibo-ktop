@@ -93,7 +93,7 @@ const PROPS_ITEMS = [
     ],
 ] as const
 
-// 데모 무대 — 실제 배치 그대로, 본문 콘텐츠 아래에 내비게이션이 일반 블록으로 붙는다(고정·플로팅 아님).
+// 데모 영역 — 실제 배치 그대로, 본문 콘텐츠 아래에 내비게이션이 일반 블록으로 붙는다(고정·플로팅 아님).
 // 콘텐츠는 장식(aria-hidden)이다.
 const DemoStage = ({children}: {children: ReactNode}) => (
     <div className="border-border flex flex-col overflow-hidden rounded-md border">
