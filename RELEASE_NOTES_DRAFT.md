@@ -56,7 +56,9 @@
     - src/components/custom/report-emphasis.tsx
     - public/images/report/section-mark.webp
 - 적용: 신규 파일 추가
-- 내용: 문서 머리 · 구획 제목 · 이름값 표를 공통으로 제공합니다. 인쇄 규칙(A4 세로 · 여백 0)도 이 파일의 ReportPageStyle 이 담당하며, 각 화면의 main 안에 한 번 둡니다.
+- 내용: 문서 머리 · 구획 제목 · 이름값 표를 공통으로 제공합니다.
+    - 인쇄 규칙도 이 파일의 ReportPageStyle 이 담당합니다 — 각 화면의 main 안에 한 번 두면 그 화면의 인쇄 쪽이 A4 세로 · 여백 0 이 됩니다. 이 문서들은 A4 한 쪽(210 × 297mm) 크기이고 여백도 문서가 직접 그리므로, 기본 여백이 붙거나 용지가 A4 가 아니면 폭이 모자라 브라우저가 문서 전체를 줄입니다.
+    - 여백이 0 이면 브라우저가 그 자리에 찍던 머리글 · 바닥글(날짜 · 주소 · 쪽 번호)도 사라집니다. 쪽 번호가 필요하면 문서 안에 직접 그려야 합니다.
 - 영향 화면: [기업 자가진단 평가결과](/corp/mypage/evaluation-results/general-analysis/ktrs-fm)
     - [기업 Tech-Index 일반분석](/corp/mypage/evaluation-results/general-analysis/tech-index)
     - [기업 창업용 Tech-Index 일반분석](/corp/mypage/evaluation-results/general-analysis/startup-tech-index)
@@ -103,17 +105,6 @@
     - [기관 특허평가 결과 보고서(인쇄용)](/org/patent-evaluation/patent-grade-list/patent-grade-result/report)
 
 ## [Diff 확인]
-
-### [컴포넌트] 보고서 인쇄 — A4 여백과 용지 지정
-
-- 대상: src/components/custom/report-document.tsx
-- 변경: 인쇄 쪽을 A4 세로 · 여백 0 으로 지정했습니다. 창 높이(dvh) 기준 최소 높이는 인쇄에서 해제합니다.
-- 결과: 기본 여백만큼 문서가 축소되던 현상이 없어져 A4 에 꽉 찹니다.
-- 참고: 여백이 0 이면 브라우저가 그 자리에 찍던 머리글 · 바닥글(날짜 · 주소 · 쪽 번호)도 사라집니다. 쪽 번호가 필요하면 문서 안에 직접 그려야 합니다.
-- 영향 화면: [기업 자가진단 평가결과](/corp/mypage/evaluation-results/general-analysis/ktrs-fm)
-    - [기관 자가진단 평가결과](/org/mypage/evaluation-history/general-analysis/ktrs-fm)
-    - [기관 자가진단 심층분석](/org/mypage/evaluation-history/deep-analysis/ktrs-fm)
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/309cca8a04190afa1010a3a3df214c0f225ed141)
 
 ### [컴포넌트] 인쇄 중 차트 크기 고정
 
@@ -197,10 +188,9 @@
 - 영향 화면: [기업 자가진단 평가결과](/corp/mypage/evaluation-results/general-analysis/ktrs-fm)
     - [기관 자가진단 평가결과](/org/mypage/evaluation-history/general-analysis/ktrs-fm)
     - [기관 자가진단 심층분석](/org/mypage/evaluation-history/deep-analysis/ktrs-fm)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/74e67d70e0ee1facbf30577dc21e9b96921d91c7)
 
 ## [덮어쓰기]
-
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/74e67d70e0ee1facbf30577dc21e9b96921d91c7)
 
 ### [문서] 컴포넌트 가이드 — 신규 4종
 
