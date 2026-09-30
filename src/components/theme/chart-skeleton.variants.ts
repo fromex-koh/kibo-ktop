@@ -7,11 +7,16 @@ const chartSkeletonVariants = cva('min-w-0 animate-pulse', {
             'grouped-column': 'h-auto',
             'cells-column': 'h-auto',
             'overlay-column': 'h-auto',
+            // 상자 비율(714×200)이 높이를 정한다 — 실제 차트와 같은 자리에 같은 크기로 선다.
+            'pentagon-radar': 'h-auto',
             'plain-column': 'h-auto',
+            // 상자 비율(714×287)이 높이를 정한다 — 실제 그림과 같은 자리에 선다.
+            'positioning-scatter': 'h-auto',
             'columns-line': 'h-auto',
             'cells-line': 'h-auto',
             donut: 'h-auto',
             gauge: 'h-auto',
+            'grade-arc': 'h-auto',
             'grade-distribution': 'h-36',
             'grade-trend': 'h-72',
             line: 'h-64 sm:h-80',
@@ -21,6 +26,7 @@ const chartSkeletonVariants = cva('min-w-0 animate-pulse', {
             'circle-radar': 'h-62',
             'rank-pyramid': 'h-auto',
             'score-gauge': 'h-auto',
+            'score-ring': 'h-auto',
             // 범례(21) + 16 + 차트(모바일 176 · md 224) — ComparisonRadarChart 의 세 축 배치와 같은 높이다.
             'triangle-radar': 'h-52 md:h-68',
             'word-cloud': 'h-72 sm:h-96',
