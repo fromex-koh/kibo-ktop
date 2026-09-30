@@ -1086,31 +1086,28 @@
             "screenId": "SB-FOTA-CP0-0010",
             "userType": "기업",
             "path": "/corp/mypage/evaluation-results/general-analysis/ktrs-fm",
-            "name": "KTRS-FM 심층분석"
+            "name": "KTRS-FM 일반분석"
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis-tech-index",
             "screenId": "SB-FOTA-CP0-0010",
             "userType": "기업",
             "path": "/corp/mypage/evaluation-results/general-analysis/tech-index",
-            "name": "Tech-Index 심층분석",
-            "placeholder": true
+            "name": "Tech-Index 일반분석"
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis-startup-tech-index",
             "screenId": "SB-FOTA-CP0-0010",
             "userType": "기업",
             "path": "/corp/mypage/evaluation-results/general-analysis/startup-tech-index",
-            "name": "창업용 Tech-Index 심층분석",
-            "placeholder": true
+            "name": "창업용 Tech-Index 일반분석"
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis-investment-model",
             "screenId": "SB-FOTA-CP0-0010",
             "userType": "기업",
             "path": "/corp/mypage/evaluation-results/general-analysis/investment-model",
-            "name": "개방형투자용평가모형평가 일반 평가",
-            "placeholder": true
+            "name": "투자모형 일반분석"
         },
         {
             "key": "corp-mypage-evaluation-results-bank-transfer",
@@ -2132,24 +2129,21 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/evaluation-history/general-analysis/tech-index",
-            "name": "Tech-Index 일반분석",
-            "placeholder": true
+            "name": "Tech-Index 일반분석"
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis-startup-tech-index",
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/evaluation-history/general-analysis/startup-tech-index",
-            "name": "창업용 Tech-Index 일반분석",
-            "placeholder": true
+            "name": "창업용 Tech-Index 일반분석"
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis-investment-model",
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/evaluation-history/general-analysis/investment-model",
-            "name": "투자모형 일반분석",
-            "placeholder": true
+            "name": "투자모형 일반분석"
         },
         {
             "key": "org-mypage-evaluation-history-deep-analysis-ktrs-fm",
@@ -2163,24 +2157,21 @@
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/evaluation-history/deep-analysis/tech-index",
-            "name": "Tech-Index 심층분석",
-            "placeholder": true
+            "name": "Tech-Index 심층분석"
         },
         {
             "key": "org-mypage-evaluation-history-deep-analysis-startup-tech-index",
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/evaluation-history/deep-analysis/startup-tech-index",
-            "name": "창업용 Tech-Index 심층분석",
-            "placeholder": true
+            "name": "창업용 Tech-Index 심층분석"
         },
         {
             "key": "org-mypage-evaluation-history-deep-analysis-investment-model",
             "screenId": null,
             "userType": "기관",
             "path": "/org/mypage/evaluation-history/deep-analysis/investment-model",
-            "name": "개방형투자용평가모형평가 일반 평가",
-            "placeholder": true
+            "name": "개방형투자용평가모형평가 일반 평가"
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation",

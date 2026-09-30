@@ -55,7 +55,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-pricing",
@@ -657,21 +657,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-patent-evaluation-patent-grade-list-patent-grade-result-report",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report",
@@ -1004,23 +1004,23 @@
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis-tech-index",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.1",
             "isCurrent": false
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis-startup-tech-index",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.1",
             "isCurrent": false
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis-investment-model",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.1",
             "isCurrent": false
         },
         {
@@ -1308,7 +1308,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-pricing",
@@ -1777,21 +1777,21 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-patent-evaluation-patent-grade-list-patent-grade-result",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-patent-evaluation-patent-grade-list-patent-grade-result-report",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.5",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report",
@@ -2040,23 +2040,23 @@
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis-tech-index",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.1",
             "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis-startup-tech-index",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.1",
             "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis-investment-model",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.1",
             "isCurrent": false
         },
         {
@@ -2068,23 +2068,23 @@
         },
         {
             "key": "org-mypage-evaluation-history-deep-analysis-tech-index",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.1",
             "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-deep-analysis-startup-tech-index",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.1",
             "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-deep-analysis-investment-model",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.2.1",
             "isCurrent": false
         },
         {

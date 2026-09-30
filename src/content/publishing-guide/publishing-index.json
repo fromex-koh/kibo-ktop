@@ -1788,7 +1788,7 @@
                                 {
                                     "label": "Tech-Index",
                                     "screenId": "SB-FOTA-CP0-0010",
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-evaluation-results-general-analysis-tech-index",
                                     "iaRow": 133
@@ -1796,7 +1796,7 @@
                                 {
                                     "label": "창업용 Tech-Index",
                                     "screenId": "SB-FOTA-CP0-0010",
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-evaluation-results-general-analysis-startup-tech-index",
                                     "iaRow": 133
@@ -1804,7 +1804,7 @@
                                 {
                                     "label": "투자모형",
                                     "screenId": "SB-FOTA-CP0-0010",
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "corp-mypage-evaluation-results-general-analysis-investment-model",
                                     "iaRow": 133
@@ -3817,7 +3817,7 @@
                                 {
                                     "label": "Tech-Index",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-evaluation-history-general-analysis-tech-index",
                                     "iaRow": 120
@@ -3825,7 +3825,7 @@
                                 {
                                     "label": "창업용 Tech-Index",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-evaluation-history-general-analysis-startup-tech-index",
                                     "iaRow": 120
@@ -3833,7 +3833,7 @@
                                 {
                                     "label": "투자모형",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-evaluation-history-general-analysis-investment-model",
                                     "iaRow": 120
@@ -3854,7 +3854,7 @@
                                 {
                                     "label": "Tech-Index",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-evaluation-history-deep-analysis-tech-index",
                                     "iaRow": 121
@@ -3862,7 +3862,7 @@
                                 {
                                     "label": "창업용 Tech-Index",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-evaluation-history-deep-analysis-startup-tech-index",
                                     "iaRow": 121
@@ -3870,7 +3870,7 @@
                                 {
                                     "label": "투자모형",
                                     "screenId": null,
-                                    "status": "대기중",
+                                    "status": "완료",
                                     "version": "미배포",
                                     "key": "org-mypage-evaluation-history-deep-analysis-investment-model",
                                     "iaRow": 121
