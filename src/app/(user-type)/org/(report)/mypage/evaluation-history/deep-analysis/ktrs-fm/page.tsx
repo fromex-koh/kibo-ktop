@@ -4,9 +4,11 @@ import {getEvaluationReport} from '@/content/service/evaluation-report'
 
 export const metadata: Metadata = {title: 'KTRS-FM 심층분석'}
 
-// 기관 평가결과 조회 > 심층분석 > KTRS-FM · 심층분석 — Figma "[KTRS-FM · 개별평가 · 심층분석]".
+// 기관 평가결과 조회 > 심층분석 > KTRS-FM.
 //
-// 평가결과 조회 목록의 [개별평가 심층 결과] 버튼이 이 주소를 시안 폭(595)에 맞춘 새 창으로 연다(composite/new-window-link.tsx).
+// 일반분석(general-analysis/ktrs-fm)과 같은 문서에 기술평가서 · 기술사업평가 세부내역이 더 붙는다.
+//
+// 평가결과 조회 목록의 [개별평가 심층 결과] 버튼이 이 주소를 문서 폭(A4 794)에 맞춘 새 창으로 연다(composite/new-window-link.tsx).
 // 그래서 이 화면만 헤더·푸터가 없는 (report) 레이아웃에 둔다 — 새 창은 문서 한 장만 보여 주는 자리라
 // 사이트 내비게이션이 따라 들어가면 안 된다. 주소를 곧바로 열어도 같은 문서가 나온다.
 //
