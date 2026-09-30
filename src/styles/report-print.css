@@ -1,0 +1,120 @@
+@reference '../app/globals.css';
+
+/* ─── 인쇄용 보고서의 용지 규격 ───────────────────────────────────────────────────────────────
+   사용처: 특허평가 결과 보고서 두 화면(기업 · 기관)의 page.tsx 에서 직접 import.
+   그리는 쪽: components/custom/report-print-shell.tsx · components/custom/patent-report-document.tsx
+
+   한 장(.report-sheet)은 1360 × 1924px(A4 비율)로 그리고 바깥에서 transform 으로만 줄인다.
+   안쪽 값은 늘 같아서 글자 크기 · 간격을 배율마다 다시 잡지 않아도 된다.
+   2쪽 이상이면 .report-sheet 를 그 수만큼 나란히 둔다 — 인쇄 시 장마다 A4 한 쪽으로 나뉜다.
+
+   전역 CSS 가 아니라 화면 CSS 인 이유 — 아래 @page 는 선택자로 좁힐 수 없는 문서 전체 규칙이라,
+   전역에 두면 이 보고서의 '여백 0' 이 다른 모든 인쇄 화면에도 걸린다. */
+
+:root {
+    --report-sheet-width: 1360px;
+    --report-sheet-height: 1924px;
+}
+
+/* 화면 배율의 기본값(1200 ÷ 1360). 좁은 화면에서는 report-print-shell.tsx 가 잰 값으로 덮어쓴다. */
+.report-stage {
+    --report-scale: 0.8824;
+}
+
+.report-sheet-box {
+    width: calc(var(--report-sheet-width) * var(--report-scale));
+    height: calc(var(--report-sheet-height) * var(--report-scale));
+}
+
+.report-sheet {
+    width: var(--report-sheet-width);
+    height: var(--report-sheet-height);
+    transform: scale(var(--report-scale));
+    transform-origin: top left;
+}
+
+@media print {
+    /* A4 세로 · 여백 0 — 여백은 용지 그림이 이미 갖고 있다. */
+    @page {
+        size: A4 portrait;
+        margin: 0;
+    }
+
+    .report-stage {
+        display: block;
+        gap: 0;
+        padding: 0;
+        background: none;
+    }
+
+    .report-sheet-box {
+        /* 장마다 A4 한 쪽. 높이 294mm 는 여유값이다 — 297mm 로 꽉 채우면 넘친 몇 px 이 빈 쪽을 만든다.
+           잘리는 3mm 는 시안의 아래 흰 여백이다. */
+        width: 210mm;
+        height: 294mm;
+        overflow: hidden;
+        break-after: page;
+    }
+
+    .report-sheet-box:last-child {
+        break-after: auto;
+    }
+
+    /* 인쇄 배율 0.5834 — 1360 × 1924 를 A4 한 쪽(209.93 × 296.98mm)에 맞춘 값이다.
+       높이 기준으로 맞춘다. 폭 기준(0.5836)이면 높이가 297.09mm 가 되어 빈 쪽이 하나 더 생긴다.
+       print-color-adjust: exact — 인쇄 설정의 '배경 그래픽'이 꺼져 있어도 면 색을 남긴다(상속된다). */
+    .report-sheet {
+        transform: scale(0.5834);
+        box-shadow: none;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* 도구 막대는 화면에서만 쓴다. */
+    .report-toolbar {
+        display: none;
+    }
+}
+
+/* ─── Safari 보정 ─────────────────────────────────────────────────────────────────────────────
+   @supports (-webkit-hyphens: none) 안은 Safari 에서만 적용된다. 위 규칙은 그대로 둔다.
+
+   Safari 는 쪽을 나눌 때 인쇄 레이아웃이 아니라 화면 레이아웃을 본다. 화면 용지는 창 폭에 맞춰 커져 있고
+   (317 × 449mm) 그 안의 그림도 transform 으로만 줄어 레이아웃 높이는 1924px(509mm) 그대로여서,
+   장마다 두 쪽이 잡힌다(5장 → 10쪽).
+
+   그래서 인쇄 직전에만 화면 레이아웃을 A4 한 쪽으로 접는다. html[data-print-fit] 은
+   report-print-shell.tsx 가 beforeprint 에 붙이고 afterprint 에 뗀다.
+   처음부터 접으면 안 된다 — Safari 는 차트가 폭을 잴 때 줄어든 크기를 돌려주어 그래프만 작게 그려진다.
+
+   값의 근거(모두 Safari 미리보기에서 확인) —
+   · 높이 294mm: 295mm 부터 다시 10쪽이 된다(Safari 의 인쇄 가능 영역이 A4 보다 조금 작다).
+   · position: absolute: transform 은 레이아웃 높이를 줄이지 않아 흐름에서 빼야 한다.
+   · gap · padding 0, min-height 0: 흐름 높이가 늘면 쪽 수가 달라지고 마지막에 빈 쪽이 붙는다.
+
+   파일 끝에 두어야 위 @media print 의 같은 속성을 덮는다. */
+@supports (-webkit-hyphens: none) {
+    html[data-print-fit] div:has(> .report-stage) {
+        min-height: 0;
+    }
+
+    html[data-print-fit] .report-stage {
+        flex: none;
+        gap: 0;
+        padding: 0;
+    }
+
+    html[data-print-fit] .report-sheet-box {
+        position: relative;
+        width: 210mm;
+        height: 294mm;
+        overflow: hidden;
+    }
+
+    html[data-print-fit] .report-sheet {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: scale(0.5834);
+    }
+}

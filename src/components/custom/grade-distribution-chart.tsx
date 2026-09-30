@@ -63,7 +63,8 @@ const GradeDistributionChart = ({
     className,
     ...props
 }: GradeDistributionChartProps) => {
-    const gradientId = useId()
+    // 아이디에 쓸 수 없는 글자를 걸러 url(#...) 참조가 깨지지 않게 한다(다른 차트와 같은 방식).
+    const gradientId = `grade-distribution-${useId().replace(/[^a-zA-Z0-9-]/g, '')}`
     // 서버에서 그린 HTML 에는 곡선이 없다 — 브라우저가 크기를 잰 뒤에 그려진다. 그 사이에는 자리만 비워 둔다.
     const isHydrated = useIsHydrated()
     const activeIndex = data.findIndex((point) => point.grade === activeGrade)
@@ -113,15 +114,31 @@ const GradeDistributionChart = ({
                     {isHydrated ? (
                         <ChartContainer
                             config={CHART_CONFIG}
-                            className="aspect-auto h-36 w-full"
+                            // print-exact — 인쇄 설정의 '배경 그래픽'을 켜지 않아도 곡선 아래 면 색이 그대로
+                            // 나가게 한다. 문서 뿌리에도 걸려 있지만, 이 차트는 문서 밖(특허평가 결과 보고서의
+                            // 용지)에서도 쓰이므로 차트 자신이 갖고 있게 둔다.
+                            className="print-exact aspect-auto h-36 w-full"
                             role="img"
                             aria-label={ariaLabel}
                         >
                             <AreaChart data={data} margin={{top: 0, right: 0, bottom: 0, left: 0}}>
                                 <defs>
+                                    {/* 색은 여기 적힌 값이 기본이다. 인쇄에서는 app/globals.css 의
+                                        .chart-area-* 규칙이 투명도 없는 색으로 덮는다 — 투명도를 쓴 면은
+                                        인쇄 경로에서 제대로 나오지 않는 브라우저가 있다. */}
                                     <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                                        <stop offset="0%" stopColor="var(--ds-primary)" stopOpacity={0.18} />
-                                        <stop offset="100%" stopColor="var(--ds-primary)" stopOpacity={0} />
+                                        <stop
+                                            offset="0%"
+                                            className="chart-area-from"
+                                            stopColor="var(--ds-primary)"
+                                            stopOpacity={0.18}
+                                        />
+                                        <stop
+                                            offset="100%"
+                                            className="chart-area-to"
+                                            stopColor="var(--ds-primary)"
+                                            stopOpacity={0}
+                                        />
                                     </linearGradient>
                                 </defs>
                                 {/* 세로 범위 — 아래는 가장 작은 값(양 끝 꼬리가 바닥선에 닿는다), 위는 꼭대기 위 자리만큼 넓게. */}

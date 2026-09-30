@@ -271,89 +271,42 @@
     }
 }
 
-/* ─── 인쇄용 보고서의 용지 규격 ───────────────────────────────────────────────────────────────
-   사용처: components/custom/report-print-shell.tsx(껍데기) · 그 안에 놓이는 보고서 쪽들.
-   유틸리티로 못 잡는 이유 — @page · 인쇄 전용 분기 · 배율 계산은 클래스로 표현할 수 없다.
-*/
-/* 인쇄용 보고서의 용지 규격 — 유틸리티로 표현할 수 없는 것만 둔다(@page · 인쇄 전용 분기 · 배율 계산).
-   사용처: components/custom/report-print-shell.tsx · components/custom/patent-report-document.tsx
-   (그 화면의 page.tsx 에서 이 파일을 직접 import 한다).
+/* ─── 차트 면 그라데이션의 색 ─────────────────────────────────────────────────────────────────
+   사용처: components/custom/grade-distribution-chart.tsx 의 <linearGradient> 안 <stop> 두 개.
 
-   한 장(.report-sheet)은 A4 비율로 그린다 — 폭 1360px · 높이 1924px(= 1360 × 297/210).
-   화면에서는 창 폭에 맞춰 줄이고, 인쇄할 때는 A4 한 장에 딱 맞게 줄인다. 줄이는 방법은 둘 다 같다:
-   안쪽은 늘 1360px 그대로 그리고 바깥에서 transform: scale 만 바꾼다 — 글자 크기·간격을 배율마다
-   다시 계산하지 않아도 되고, 쪽이 늘어나도 각 장이 독립적이라 쪽 나눔이 어긋나지 않는다.
+   기본값(브랜드색 + 투명도)은 그 컴포넌트가 SVG 속성으로 갖는다. 아래는 투명도를 쓴 면이 인쇄에서
+   제대로 나오지 않는 브라우저를 위한 덮어쓰기이며, 같은 색을 흰 표면에 미리 섞은 불투명한 색으로 바꾼다
+   (결과 색은 화면과 같다 — 흰 바탕 위 브랜드색 18%).
 
-   [프론트엔드 연동] 2쪽 이상이면 .report-sheet 를 그 수만큼 나란히 두면 된다 — 인쇄 시 장마다 A4 한 쪽으로 나뉜다. */
+   · Safari — 화면 · 인쇄 모두 적용. 인쇄 미리보기 썸네일도 인쇄 경로를 타기 때문이다.
+   · 그 밖의 브라우저 — 인쇄에서만. 화면 값은 건드리지 않는다.
 
-:root {
-    --report-sheet-width: 1360px;
-    --report-sheet-height: 1924px;
-}
+   macOS 의 '시스템 대화상자를 사용하여 인쇄'로 PDF 를 저장하면 그라데이션이 단색으로 평평해진다.
+   그 PDF 는 브라우저가 아니라 macOS 인쇄 시스템이 만들어 CSS 로 막을 수 없다(브라우저의 'PDF로 저장'은 정상).
 
-/* 첫 그림에 쓰는 배율 — 화면에서 용지가 커지는 한계(1200 ÷ 1360)다.
-   자바스크립트가 무대 폭을 재기 전에도 이 값으로 그려, 컸다가 줄어드는 깜빡임이 없다.
-   좁은 화면에서는 잰 값이 이 자리를 덮어 더 줄어든다(report-print-shell.tsx). */
-.report-stage {
-    --report-scale: 0.8824;
-}
+   유틸리티로 못 잡는 이유 — SVG 의 stop-color · stop-opacity 는 Tailwind 유틸리티가 없다. */
+@supports (-webkit-hyphens: none) {
+    .chart-area-from {
+        stop-color: color-mix(in srgb, var(--ds-primary) 18%, var(--ds-surface));
+        stop-opacity: 1;
+    }
 
-/* 화면 배율(--report-scale)은 무대 폭에 맞춰 report-print-shell.tsx 가 인라인으로 덮어쓴다 —
-   CSS 만으로는 길이를 길이로 나눠 배율(무단위 수)을 만들 수 없다. */
-.report-sheet-box {
-    width: calc(var(--report-sheet-width) * var(--report-scale));
-    height: calc(var(--report-sheet-height) * var(--report-scale));
-}
-
-.report-sheet {
-    width: var(--report-sheet-width);
-    height: var(--report-sheet-height);
-    transform: scale(var(--report-scale));
-    transform-origin: top left;
+    .chart-area-to {
+        stop-color: var(--ds-surface);
+        stop-opacity: 1;
+    }
 }
 
 @media print {
-    /* A4 세로. 여백은 용지 자체가 갖고 있으므로 0 으로 둔다. */
-    @page {
-        size: A4 portrait;
-        margin: 0;
-    }
+    @supports not (-webkit-hyphens: none) {
+        .chart-area-from {
+            stop-color: color-mix(in srgb, var(--ds-primary) 18%, var(--ds-surface));
+            stop-opacity: 1;
+        }
 
-    .report-stage {
-        display: block;
-        gap: 0;
-        padding: 0;
-        background: none;
-    }
-
-    .report-sheet-box {
-        /* 장마다 A4 한 쪽을 차지한다 — 마지막 장 뒤에는 빈 쪽을 만들지 않는다.
-           0.01mm 라도 넘치면 빈 쪽이 하나 더 생기므로 넘치는 만큼은 잘라 둔다. */
-        width: 210mm;
-        height: 297mm;
-        overflow: hidden;
-        break-after: page;
-    }
-
-    .report-sheet-box:last-child {
-        break-after: auto;
-    }
-
-    /* 인쇄 배율 — 1360 × 1924 를 A4 한 쪽에 맞춘다. 화면 배율(인라인 변수)을 쓰지 않고 transform 을 직접 덮는다.
-       폭 기준(0.5836)으로 맞추면 높이가 297.09mm 가 되어 0.09mm 때문에 빈 쪽이 하나 더 생긴다 —
-       시안 비율(1.4147)이 A4 비율(1.4143)보다 아주 조금 길기 때문이다. 그래서 높이 기준으로 맞춘다.
-       0.5834 → 폭 209.93mm · 높이 296.98mm.
-       print-color-adjust — 인쇄 설정의 '배경 그래픽'을 켜지 않아도 남색 머리글 · 표 머리 색이 그대로 나가게 한다.
-       색은 상속되므로 용지 하나에만 걸면 안쪽 전부에 적용된다. */
-    .report-sheet {
-        transform: scale(0.5834);
-        box-shadow: none;
-        -webkit-print-color-adjust: exact;
-        print-color-adjust: exact;
-    }
-
-    /* 도구 막대는 화면에서만 쓴다. */
-    .report-toolbar {
-        display: none;
+        .chart-area-to {
+            stop-color: var(--ds-surface);
+            stop-opacity: 1;
+        }
     }
 }
