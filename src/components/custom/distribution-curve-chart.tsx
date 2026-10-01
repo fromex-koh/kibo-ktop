@@ -101,6 +101,13 @@ const LABEL_SPAN_SAMPLES = 16
 const LABEL_CHAR_WIDTH = 9
 const LABEL_FONT_SIZE = 12
 const LABEL_FILL = 'var(--raw-blue-600)'
+// 곡선 아래 면 — 위(곡선 색)에서 아래(표면색)로 옅어지는 그라데이션을 면 전체의 투명도 16% 로 깐다.
+// 눈에 보이는 결과는 '곡선 색 16% → 0%' 와 같다(표면 위에서는 두 계산이 같은 색이다).
+// 그라데이션의 색 자리(stop)에 투명도를 직접 주지 않는 이유 — Safari 에서 PDF 로 저장하면 투명도가 있는
+// 색 자리가 무시되어 면이 곡선 색 한 가지로 꽉 채워진다(미리보기는 정상이라 저장해 봐야 드러난다).
+// 색 자리는 불투명하게 두고 투명도를 면(fill-opacity)에 주면 PDF 에서도 화면과 같게 나온다.
+const AREA_FILL_OPACITY = 0.16
+const AREA_FADE_COLOR = 'var(--ds-surface)'
 
 const normalDensity = (x: number, mean: number, deviation: number) =>
     Math.exp(-((x - mean) ** 2) / (2 * deviation ** 2)) / (deviation * Math.sqrt(2 * Math.PI))
@@ -281,8 +288,8 @@ const DistributionCurveChart = ({
             <AreaChart data={chartData} margin={{top: 0, right: 1, bottom: 0, left: 1}}>
                 <defs>
                     <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor={color} stopOpacity={0.16} />
-                        <stop offset="100%" stopColor={color} stopOpacity={0} />
+                        <stop offset="0%" stopColor={color} />
+                        <stop offset="100%" stopColor={AREA_FADE_COLOR} />
                     </linearGradient>
                 </defs>
                 <CartesianGrid
@@ -320,7 +327,7 @@ const DistributionCurveChart = ({
                     stroke={color}
                     strokeWidth={1}
                     fill={`url(#${gradientId})`}
-                    fillOpacity={1}
+                    fillOpacity={AREA_FILL_OPACITY}
                     dot={false}
                     activeDot={false}
                     isAnimationActive={animate}
