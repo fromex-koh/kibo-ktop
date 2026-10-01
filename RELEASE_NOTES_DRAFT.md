@@ -82,5 +82,36 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 대상: src/app/component-guide/(guide)/home-notice-popup
     - src/constants/publishing-guide.ts
 - 적용: 지정한 파일만 교체
-- 내용: 화면 폭별 구성 · 케이스 7개 · 엣지 케이스 8개 · 연동 방법 · 접근성 · Props 를 담았습니다. 케이스마다 [열기]를 누르면 그 구성으로 팝업이 뜹니다. 사이드 메뉴(피드백 / 오버레이)에 HomeNoticePopup 항목을 추가했습니다.
+- 내용: 홈 공지 팝업의 케이스 · 엣지 케이스 · 연동 방법을 담은 가이드를 추가했습니다.
 - 영향 화면: [홈 공지 팝업](/component-guide/home-notice-popup)
+
+### [문서] 컴포넌트 가이드 — 컴포넌트 폴더 배지
+
+- 대상: src/components/custom/component-layer-badge.tsx
+    - src/components/custom/guide-page-shell.tsx
+    - src/app/component-guide/(guide)/page.tsx
+- 적용: 지정한 파일만 교체
+- 내용: 컴포넌트 가이드 제목 옆에 폴더 배지(shadcn/ui · composite · custom)를 붙이고, 가이드 홈에 폴더별 역할을 적었습니다.
+- 영향 화면: [버튼](/component-guide/button)
+    - [셀렉트](/component-guide/select)
+
+### [문서] 컴포넌트 가이드 — 문서 최신화
+
+- 대상: src/app/component-guide/(guide)/semantic-color
+    - src/app/component-guide/(guide)/typography
+    - src/app/component-guide/(guide)/spacing
+    - src/app/component-guide/(guide)/breakpoint
+    - src/app/component-guide/(guide)/z-index
+    - src/app/component-guide/(guide)/label
+    - src/app/component-guide/(guide)/contrast-check
+    - src/app/component-guide/(guide)/accessibility-exceptions
+- 적용: 지정한 파일만 교체
+- 내용: 토큰 원본과 현재 코드에 맞춰 내용을 고치고 설명을 줄였습니다.
+
+### [토큰] 디자인 토큰 — 사용처 없는 table-surface 삭제
+
+- 대상: tokens.json
+- 적용: 지정한 파일만 교체
+- 내용: 시맨틱 색상 table-surface 를 삭제했습니다(140개 → 139개). 저장소 어디에서도 쓰지 않던 토큰입니다.
+- 참고: bg-table-surface 클래스를 쓰고 있었다면 더는 동작하지 않습니다. 교체 후 yarn tokens 로 tokens.css 를 다시 만듭니다.
+- 영향 화면: [색상 (Semantic)](/component-guide/semantic-color)
