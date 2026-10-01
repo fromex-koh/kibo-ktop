@@ -32,6 +32,18 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 릴리스 성공 후 내용은 자동으로 비워집니다.
 -->
 
+## [신규 추가]
+
+### [에셋] 홈 공지 팝업 목업 그림
+
+- 대상: public/images/home-notice/mock-notice-image-4x3.webp
+    - public/images/home-notice/mock-notice-image-3x4.webp
+    - public/images/home-notice/mock-notice-image-wide-16x9.webp
+    - public/images/home-notice/mock-notice-image-tall-9x16.webp
+- 적용: 신규 파일 추가
+- 내용: 실제 서비스 그림이 아니라 공지 그림 칸의 비율을 확인하기 위한 예시입니다. 4x3 · 3x4 는 칸에 맞는 비율(960×720 · 960×1280)이고, wide-16x9 · tall-9x16 은 비율이 맞지 않는 그림이 어떻게 잘리는지 보이기 위한 그림입니다(잘리는 범위가 그림에 표시되어 있습니다).
+- 참고: 실제 공지 그림으로 바꾸면 이 파일들은 지워도 됩니다. 단, 컴포넌트 가이드의 케이스가 이 그림을 쓰므로 가이드를 함께 쓰는 동안에는 남겨 둡니다.
+
 ## [Diff 확인]
 
 ### [컴포넌트] 분포 곡선 차트 — Safari PDF 저장 시 면이 단색으로 채워지던 문제
@@ -46,3 +58,29 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [기업 K-BIGx 기업혁신성장 보고서](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
     - [기관 K-BIGx 기업혁신성장 보고서](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c4a7d90ec62108cab1f0f0b7135ad256938311a4)
+
+### [컴포넌트] 홈 공지 팝업 — 카드형으로 다시 작성
+
+- 대상: src/components/custom/home-notice-popup.tsx
+    - src/content/service/home-notices.ts
+    - src/app/(user-type)/corp/home-notice-popup/page.tsx
+    - src/app/(user-type)/org/home-notice-popup/page.tsx
+- 변경: 공지를 카드로 나란히 띄웁니다(모바일 1장 · 태블릿 2장 · PC 3장). 공지가 그보다 많으면 조작 줄이 나오고 5초마다 순환합니다. 공지는 최대 3건입니다.
+    - 공지 데이터는 {id, title?, body?, image?} 입니다. category · summary · postedAt 은 없어졌습니다.
+    - detailHref prop 이 없어졌습니다(두 page.tsx 에서 삭제). [자세히 보기] 링크와 체크박스도 없어졌습니다.
+    - 그림만 있는 공지는 body 를 비웁니다. 그림의 대체 텍스트는 title 을 씁니다.
+- 결과: [오늘 하루 보지않기]는 지금 창만 닫습니다. 숨김 기록은 onHideToday 에서 처리합니다(함수 prop 이라 클라이언트 컴포넌트로 감싸서 넘깁니다).
+- 가이드: [홈 공지 팝업](/component-guide/home-notice-popup)
+- 영향 화면: [기업 메인 공지사항 팝업](/corp/home-notice-popup)
+    - [기관 메인 공지사항 팝업](/org/home-notice-popup)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/87c329ae44a69b43a8fafb0a29e3d7d71f4f6369)
+
+## [덮어쓰기]
+
+### [문서] 컴포넌트 가이드 — 홈 공지 팝업 신규
+
+- 대상: src/app/component-guide/(guide)/home-notice-popup
+    - src/constants/publishing-guide.ts
+- 적용: 지정한 파일만 교체
+- 내용: 화면 폭별 구성 · 케이스 7개 · 엣지 케이스 8개 · 연동 방법 · 접근성 · Props 를 담았습니다. 케이스마다 [열기]를 누르면 그 구성으로 팝업이 뜹니다. 사이드 메뉴(피드백 / 오버레이)에 HomeNoticePopup 항목을 추가했습니다.
+- 영향 화면: [홈 공지 팝업](/component-guide/home-notice-popup)
