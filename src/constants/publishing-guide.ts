@@ -247,6 +247,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'Toast', href: '/component-guide/toast'},
                     {label: 'CheckToast', href: '/component-guide/check-toast'},
                     {label: 'Dialog', href: '/component-guide/dialog'},
+                    {label: 'HomeNoticePopup', href: '/component-guide/home-notice-popup'},
                 ],
             },
         ],
