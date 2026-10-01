@@ -418,7 +418,6 @@
   --ds-alert-error-border: var(--raw-error-100);
   --ds-file-upload-complete: var(--raw-blue-50);
   --ds-file-upload-complete-border: var(--raw-navy-200);
-  --ds-table-surface: var(--raw-common-white);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
   --ds-toast-icon: var(--raw-success-500);
@@ -694,7 +693,6 @@
   --ds-alert-error-border: var(--raw-error-100);
   --ds-file-upload-complete: var(--raw-blue-50);
   --ds-file-upload-complete-border: var(--raw-navy-200);
-  --ds-table-surface: var(--raw-common-white);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
   --ds-toast-icon: var(--raw-success-500);
@@ -970,7 +968,6 @@
   --ds-alert-error-border: var(--raw-error-400);
   --ds-file-upload-complete: var(--raw-blue-800);
   --ds-file-upload-complete-border: var(--raw-blue-700);
-  --ds-table-surface: var(--raw-gray-900);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
   --ds-toast-icon: var(--raw-success-500);
@@ -1246,7 +1243,6 @@
   --ds-alert-error-border: var(--raw-error-400);
   --ds-file-upload-complete: var(--raw-blue-800);
   --ds-file-upload-complete-border: var(--raw-blue-700);
-  --ds-table-surface: var(--raw-gray-900);
   --ds-toast: var(--raw-black-a75);
   --ds-toast-foreground: var(--raw-common-white);
   --ds-toast-icon: var(--raw-success-500);
@@ -1403,7 +1399,6 @@
   --color-alert-error-border: var(--ds-alert-error-border);
   --color-file-upload-complete: var(--ds-file-upload-complete);
   --color-file-upload-complete-border: var(--ds-file-upload-complete-border);
-  --color-table-surface: var(--ds-table-surface);
   --color-toast: var(--ds-toast);
   --color-toast-foreground: var(--ds-toast-foreground);
   --color-toast-icon: var(--ds-toast-icon);

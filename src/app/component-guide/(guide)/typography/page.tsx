@@ -59,7 +59,16 @@ const tierOfTypo = (name: string): string => {
     const weight = WEIGHT_KEYS.find((key) => name.endsWith(`-${key}`))
     return weight ? name.slice(0, -(weight.length + 1)) : name
 }
-const TYPOGRAPHY_TIER_COUNT = new Set(TYPOGRAPHY_ENTRIES.map(([name]) => tierOfTypo(name))).size
+// 화면 폭에 따라 크기가 달라지는 티어(예: display-l 38 → 48). 문장에 직접 적지 않고 토큰에서 뽑는다 —
+// 값이 바뀌어도 문서가 어긋나지 않는다.
+const RESPONSIVE_TIERS = [
+    ...new Map(
+        TYPOGRAPHY_ENTRIES.filter(([, token]) => new Set(Object.values(token.size)).size > 1).map(([name, token]) => [
+            tierOfTypo(name),
+            `typo-${tierOfTypo(name)}-* (${token.size.mobile} → ${token.size.tablet} → ${token.size.pc})`,
+        ]),
+    ).values(),
+]
 
 const TYPOGRAPHY_SCALE_COLUMNS = [
     {key: 'preview', header: '미리보기', align: 'start'},
@@ -128,7 +137,7 @@ const SANS_STACK = [
     {
         name: 'Pretendard',
         role: '기본',
-        desc: '가변 폰트(weight 100–900). 자체 호스팅 — next/font/local · 변수 --font-pretendard.',
+        desc: '가변 폰트(굵기 100–900). src/app/fonts 의 파일을 직접 제공합니다.',
         isPrimary: true,
         version: '1.309',
         repoUrl: 'https://github.com/orioncactus/pretendard',
@@ -137,25 +146,25 @@ const SANS_STACK = [
     {
         name: 'Apple SD Gothic Neo',
         role: '한글 폴백',
-        desc: 'macOS·iOS 시스템 한글 글꼴.',
+        desc: 'macOS·iOS',
         isPrimary: false,
     },
     {
         name: 'Malgun Gothic',
         role: '한글 폴백',
-        desc: 'Windows 시스템 한글 글꼴.',
+        desc: 'Windows',
         isPrimary: false,
     },
     {
         name: '-apple-system · BlinkMacSystemFont · system-ui',
         role: '시스템',
-        desc: 'OS UI 기본 글꼴로 대체.',
+        desc: 'OS 기본 UI 글꼴',
         isPrimary: false,
     },
     {
         name: 'sans-serif',
         role: '최종',
-        desc: '위가 모두 불가할 때 OS 기본 산세리프.',
+        desc: '위 글꼴이 모두 없을 때',
         isPrimary: false,
     },
 ]
@@ -181,30 +190,26 @@ const TypographyGuidePage = () => (
                     typo-* 적용 방식
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    개별 text·font·leading·tracking 유틸리티를 조합하지 않고, 역할에 맞는 typo-* 클래스 하나를
-                    우선합니다.
+                    글자 크기·굵기·행간·자간은 <code>typo-*</code> 클래스 하나로 지정합니다.
                 </p>
             </div>
-            <div className="border-border bg-card grid gap-4 rounded-xl border p-5 md:grid-cols-3">
-                <div className="flex flex-col gap-1">
-                    <strong className="text-foreground">한 클래스</strong>
-                    <p className="text-foreground-subtle">크기·굵기·행간·자간을 한 클래스에서 함께 적용합니다.</p>
-                </div>
-                <div className="flex flex-col gap-1">
-                    <strong className="text-foreground">3단계 크기</strong>
-                    <p className="text-foreground-subtle">
-                        모바일 기본, <code className="font-mono">{tokens.typographyBreakpoints.tablet}:</code>부터
-                        태블릿, <code className="font-mono">{tokens.typographyBreakpoints.pc}:</code>부터 PC 크기를
-                        적용합니다.
-                    </p>
-                </div>
-                <div className="flex flex-col gap-1">
-                    <strong className="text-foreground">토큰 범위</strong>
-                    <p className="text-foreground-subtle">
-                        크기 tier {TYPOGRAPHY_TIER_COUNT}개와 typo-* 조합 {TYPOGRAPHY_COUNT}개를 제공합니다.
-                    </p>
-                </div>
-            </div>
+            <ul className="text-foreground-subtle flex list-disc flex-col gap-2 pl-5">
+                <li>
+                    같은 요소에 <code className="font-mono">text-*</code>(크기) ·{' '}
+                    <code className="font-mono">font-*</code> · <code className="font-mono">leading-*</code> ·{' '}
+                    <code className="font-mono">tracking-*</code>를 겹쳐 쓰지 않습니다. 색상용{' '}
+                    <code className="font-mono">text-foreground</code> 등은 함께 씁니다.
+                </li>
+                <li>
+                    크기는 클래스 안에서 화면 폭에 따라 바뀝니다(모바일 → <code className="font-mono">md</code> →{' '}
+                    <code className="font-mono">xl</code>). <code className="font-mono">md:typo-*</code>처럼 접두사를
+                    붙여 쓰는 방식은 동작하지 않습니다.
+                </li>
+                <li>
+                    값은 <code className="font-mono">tokens.json</code>의 <code className="font-mono">typography</code>
+                    에서 px 로 관리하고, 생성된 CSS 는 rem 을 씁니다.
+                </li>
+            </ul>
         </TypographySectionCard>
 
         {/* 글꼴 체계 (Font Family) */}
@@ -214,9 +219,8 @@ const TypographyGuidePage = () => (
                     글꼴 (Font Family)
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    본문·제목은 <code>font-sans</code>(<code>--font-sans</code>) 하나로 통일합니다. Pretendard 를
-                    1순위로 쓰고, 로드 실패·미지원 글리프는 아래 순서로 폴백합니다. 코드·수치 등 고정폭이 필요한 곳은{' '}
-                    <code>font-mono</code> 를 씁니다.
+                    기본 글꼴은 <code>font-sans</code>(Pretendard)이고 따로 지정하지 않아도 적용됩니다. 코드·수치처럼
+                    고정폭이 필요한 곳에만 <code>font-mono</code>를 씁니다.
                 </p>
             </div>
 
@@ -226,7 +230,7 @@ const TypographyGuidePage = () => (
                     <div className="flex flex-wrap items-center gap-2">
                         <CopyChip value="font-sans" />
                         <span className="typo-body-l-regular text-muted-foreground">
-                            가변폭 — 글자마다 렌더 너비가 다릅니다
+                            가변폭 — 글자마다 폭이 다릅니다
                         </span>
                     </div>
                     <div className="flex flex-col items-start gap-1.5">
@@ -244,7 +248,7 @@ const TypographyGuidePage = () => (
                     <div className="flex flex-wrap items-center gap-2">
                         <CopyChip value="font-mono" />
                         <span className="typo-body-l-regular text-muted-foreground">
-                            고정폭 — 글자마다 렌더 너비가 같습니다
+                            고정폭 — 글자 폭이 모두 같습니다
                         </span>
                     </div>
                     <div className="flex flex-col items-start gap-1.5">
@@ -260,6 +264,9 @@ const TypographyGuidePage = () => (
                 </div>
             </div>
 
+            <p className="typo-body-l-regular text-muted-foreground">
+                <code>font-sans</code>는 아래 순서로 대체됩니다.
+            </p>
             <ol className="border-border divide-border divide-y rounded-xl border">
                 {SANS_STACK.map((font, i) => (
                     <li key={font.name} className="flex items-start gap-3 px-4 py-3">
@@ -309,19 +316,8 @@ const TypographyGuidePage = () => (
                 ))}
             </ol>
             <p className="typo-body-l-regular text-muted-foreground">
-                고정폭(<code>font-mono</code>): <code>ui-monospace</code> · <code>SFMono-Regular</code> ·{' '}
-                <code>Menlo</code> · <code>Consolas</code> · <code>monospace</code> 순으로 폴백합니다.
-            </p>
-        </TypographySectionCard>
-
-        {/* 크기 단위 안내 — px 입력, rem 출력(접근성) */}
-        <TypographySectionCard aria-labelledby="typo-rem" className="flex flex-col gap-2">
-            <h2 id="typo-rem" className="typo-h4-bold">
-                크기 단위 — px 입력, rem 출력
-            </h2>
-            <p className="typo-body-l-regular text-muted-foreground">
-                <code>tokens.json</code>에는 px 숫자로 입력하고 생성기는 remBase {tokens.remBase}을 기준으로 rem으로
-                변환합니다. 표는 디자인 확인을 위해 px로 표시하지만 실제 CSS는 rem을 사용합니다.
+                <code>font-mono</code>는 <code>ui-monospace</code> · <code>SFMono-Regular</code> · <code>Menlo</code> ·{' '}
+                <code>Consolas</code> · <code>monospace</code> 순입니다.
             </p>
         </TypographySectionCard>
 
@@ -331,8 +327,8 @@ const TypographyGuidePage = () => (
                     프로젝트 특수 타이포 유틸리티
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    대부분의 텍스트는 <code>typo-*</code> 조합을 우선 사용합니다. 다만 Header 유틸 링크처럼 기존
-                    컴포넌트 variant 위에 특정 자간만 덧씌워야 하는 경우, 목적이 드러나는 작은 유틸리티로 분리합니다.
+                    <code>typo-*</code>로 표현할 수 없는 값만 따로 둔 유틸리티입니다. 컴포넌트 안에서 쓰고, 화면에서는
+                    직접 조합하지 않습니다.
                 </p>
             </div>
             <Table
@@ -354,7 +350,7 @@ const TypographyGuidePage = () => (
                                 letter-spacing: -0.035rem (-0.56px)
                             </span>,
                             <span key="usage" className="text-muted-foreground">
-                                Header 상단 유틸 링크와 Segmented Control 항목 등 컨트롤 라벨의 프로젝트 전용 자간.
+                                Header 상단 유틸 링크 · SegmentedControl 항목의 자간
                             </span>,
                         ],
                     },
@@ -369,12 +365,18 @@ const TypographyGuidePage = () => (
                     타이포그래피 스케일
                 </h2>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    {TYPOGRAPHY_COUNT}개 클래스를 Display·Heading·Title·Body·Caption·Micro로 구분합니다. 미리보기에는
-                    해당 클래스가 실제 적용되며 클래스 칩을 선택하면 이름이 복사됩니다.
+                    클래스는 모두 {TYPOGRAPHY_COUNT}개입니다. 미리보기에는 그 클래스가 실제로 적용되어 있고, 클래스 칩을
+                    누르면 이름이 복사됩니다. 크기는 px 로 표시합니다.
                 </p>
                 <p className="typo-body-l-regular text-muted-foreground">
-                    현재 모바일·태블릿·PC 크기는 동일하지만 세 값을 독립적으로 관리합니다. <code>tokens.json</code>의
-                    구간별 값을 변경하면 각 breakpoint부터 자동으로 적용됩니다.
+                    {RESPONSIVE_TIERS.length > 0 ? (
+                        <>
+                            화면 폭에 따라 크기가 달라지는 클래스 — {RESPONSIVE_TIERS.join(' · ')}. 나머지는 세 구간
+                            값이 같습니다.
+                        </>
+                    ) : (
+                        <>지금은 모든 클래스의 세 구간 값이 같습니다.</>
+                    )}
                 </p>
             </div>
             <div className="flex flex-col gap-8">

@@ -1,4 +1,5 @@
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/form'
 import {BaseCard} from '@/components/composite/base-card'
@@ -33,6 +34,11 @@ const REQUIRED_CODE = `<Label htmlFor="name" className="gap-1 font-bold text-for
 </Label>
 <Input id="name" name="name" required placeholder="이름을 입력하세요" />`
 
+const GROUP_TITLE_CODE = `<Label asChild className="text-foreground cursor-auto font-bold">
+  <span id="own-workplace-label">자가사업장 보유</span>
+</Label>
+<RadioGroup aria-labelledby="own-workplace-label">…</RadioGroup>`
+
 const DISABLED_CODE = `<div className="flex items-center gap-2">
   <Checkbox id="marketing" disabled className="peer" />
   <Label htmlFor="marketing">마케팅 정보 수신</Label>
@@ -46,19 +52,29 @@ const USAGE_COLUMNS = [
 
 const USAGE_ROWS = [
     {
-        key: 'standalone',
+        key: 'form-field',
         cells: [
-            '단순한 컨트롤 연결',
-            <code key="component">Label</code>,
-            '설명·오류 메시지 없이 라벨과 컨트롤만 구성할 때 사용합니다.',
+            '서비스 화면의 일반 폼 필드',
+            <Link key="component" href="/component-guide/form-fields" className="text-primary-strong underline">
+                Field (form-fields)
+            </Link>,
+            'label · required 를 prop 으로 넘기면 라벨과 필수 표시가 함께 그려집니다. 대부분의 입력은 이것을 씁니다.',
         ],
     },
     {
         key: 'field',
         cells: [
-            '설명·오류·상태가 있는 폼 필드',
+            '설명·오류를 직접 조합하는 필드',
             <code key="component">FieldLabel</code>,
-            'Field 안에서 FieldDescription·FieldError와 함께 구성합니다.',
+            'ui/field 의 Field 안에서 FieldDescription · FieldError 와 함께 씁니다.',
+        ],
+    },
+    {
+        key: 'standalone',
+        cells: [
+            '라벨만 따로 필요한 자리',
+            <code key="component">Label</code>,
+            '라디오 옵션의 글자, 묶음 제목처럼 필드 틀 없이 라벨만 둘 때 씁니다.',
         ],
     },
 ] as const
@@ -87,6 +103,14 @@ const API_ROWS = [
         ],
     },
     {
+        key: 'asChild',
+        cells: [
+            <code key="prop">asChild</code>,
+            <code key="type">boolean</code>,
+            'label 대신 자식 요소에 라벨 모양을 입힙니다. 묶음 제목처럼 htmlFor 로 이을 컨트롤이 없을 때 씁니다.',
+        ],
+    },
+    {
         key: 'className',
         cells: [
             <code key="prop">className</code>,
@@ -99,7 +123,7 @@ const API_ROWS = [
 const LabelGuidePage = () => (
     <GuidePageShell
         title="라벨 (Label)"
-        description="폼 컨트롤에 보이는 이름을 제공하고 클릭 영역과 접근 가능한 이름을 연결하는 공통 Label 컴포넌트입니다."
+        description="폼 컨트롤의 이름을 보여 주고, 눌렀을 때 그 컨트롤로 이어 주는 라벨입니다."
     >
         <BaseCard variant="outlined">
             <section aria-labelledby="label-basic" className="flex flex-col gap-6">
@@ -108,8 +132,8 @@ const LabelGuidePage = () => (
                         기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        <code>htmlFor</code>와 컨트롤의 <code>id</code>를 같은 값으로 지정합니다. 텍스트 입력 라벨은{' '}
-                        <code>font-bold text-foreground</code>를 적용합니다.
+                        <code>htmlFor</code>와 컨트롤의 <code>id</code>를 같은 값으로 둡니다. 입력 필드의 라벨은{' '}
+                        <code>font-bold text-foreground</code>를 더합니다(기본은 보통 굵기 · 라벨 글자색).
                     </p>
                 </div>
                 <div className="flex max-w-90 flex-col gap-2">
@@ -129,10 +153,15 @@ const LabelGuidePage = () => (
                         컴포넌트 선택
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        폼 구조가 복잡하면 Label에 기능을 추가하지 말고 Field 조합을 사용합니다.
+                        Label을 직접 쓰는 자리는 많지 않습니다. 입력 필드는 먼저 Field로 표현할 수 있는지 봅니다.
                     </p>
                 </div>
-                <Table caption="Label과 FieldLabel 사용 기준" columns={USAGE_COLUMNS} rows={USAGE_ROWS} size="md" />
+                <Table
+                    caption="Field · FieldLabel · Label 사용 기준"
+                    columns={USAGE_COLUMNS}
+                    rows={USAGE_ROWS}
+                    size="md"
+                />
             </section>
         </BaseCard>
 
@@ -143,7 +172,7 @@ const LabelGuidePage = () => (
                         상태와 조합
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        선택형 컨트롤은 기본 굵기를 유지합니다. 필수·비활성 상태는 컨트롤의 실제 상태와 함께 표현합니다.
+                        체크박스 · 라디오 옆의 라벨은 기본 굵기를 유지합니다.
                     </p>
                 </div>
 
@@ -161,8 +190,8 @@ const LabelGuidePage = () => (
                 <div className="flex flex-col gap-4">
                     <h3 className="typo-body-xl-bold">필수 입력</h3>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        컨트롤에 <code>required</code>를 지정하고, 별표는 장식으로 숨긴 뒤 스크린리더용 “필수” 문구를
-                        제공합니다.
+                        별표는 장식으로 숨기고 스크린리더용 “(필수)” 문구를 함께 둡니다. Field 를 쓰면{' '}
+                        <code>required</code> prop 하나로 같은 표시가 그려집니다.
                     </p>
                     <div className="flex max-w-90 flex-col gap-2">
                         <Label htmlFor="label-name" className="text-foreground gap-1 font-bold">
@@ -175,6 +204,15 @@ const LabelGuidePage = () => (
                         <Input id="label-name" name="name" required placeholder="이름을 입력하세요" />
                     </div>
                     <CodeBlock code={REQUIRED_CODE} language="tsx" copyLabel="복사" />
+                </div>
+
+                <div className="flex flex-col gap-4">
+                    <h3 className="typo-body-xl-bold">묶음 제목</h3>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        라디오 묶음처럼 연결할 컨트롤이 하나가 아니면 <code>asChild</code>로 <code>span</code>에 라벨
+                        모양만 입히고, 묶음이 <code>aria-labelledby</code>로 그 <code>id</code>를 가리킵니다.
+                    </p>
+                    <CodeBlock code={GROUP_TITLE_CODE} language="tsx" copyLabel="복사" />
                 </div>
 
                 <div className="flex flex-col gap-4">
@@ -199,7 +237,7 @@ const LabelGuidePage = () => (
                         Props API
                     </h2>
                     <p className="typo-body-l-regular text-muted-foreground">
-                        아래 속성 외에도 Radix Label이 지원하는 표준 HTML label 속성을 전달할 수 있습니다.
+                        그 밖의 표준 label 속성도 그대로 넘길 수 있습니다.
                     </p>
                 </div>
                 <Table caption="Label Props API" columns={API_COLUMNS} rows={API_ROWS} size="md" />

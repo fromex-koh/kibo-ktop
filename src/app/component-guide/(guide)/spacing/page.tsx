@@ -46,6 +46,15 @@ const resolveSizePx = (value: number | string, depth = 0): number | undefined =>
     return referenced === undefined ? undefined : resolveSizePx(referenced, depth + 1)
 }
 
+// 컨트롤 높이 한 줄 요약 — 큰 것부터. 문장에 숫자를 직접 적지 않고 토큰에서 뽑는다(2xs 처럼 단계가 늘어도 따라온다).
+const CONTROL_HEIGHT_PREFIX = 'control-h-'
+const CONTROL_HEIGHTS = Object.entries(SIZE_VALUES)
+    .filter(([name, value]) => name.startsWith(CONTROL_HEIGHT_PREFIX) && typeof value === 'number')
+    .map(([name, value]) => ({step: name.slice(CONTROL_HEIGHT_PREFIX.length), px: Number(value)}))
+    .sort((a, b) => b.px - a.px)
+    .map(({step, px}) => `${step} ${px}`)
+    .join(' · ')
+
 const SpacingGuidePage = () => (
     <GuidePageShell
         title="간격 (Spacing)"
@@ -75,10 +84,10 @@ const SpacingGuidePage = () => (
                         </dd>
                     </div>
                     <div className="border-border flex flex-col gap-2 rounded-md border p-4">
-                        <dt className="typo-body-l-medium text-foreground">CSS 계산</dt>
+                        <dt className="typo-body-l-medium text-foreground">직접 쓰는 CSS</dt>
                         <dd className="typo-body-l-regular text-foreground-subtle">
-                            복합 계산식에서만 <code>var(--ds-spacing-토큰명)</code>을 참조합니다. px 리터럴은 추가하지
-                            않습니다.
+                            간격은 <code>--spacing(4)</code>, 크기 토큰은 <code>var(--ds-spacing-토큰명)</code>으로
+                            적습니다. px · rem 값을 직접 적지 않습니다.
                         </dd>
                     </div>
                 </dl>
@@ -92,7 +101,9 @@ const SpacingGuidePage = () => (
                         간격 유틸리티
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        숫자 하나는 {tokens.spacingBase}px입니다. padding·margin·gap에 같은 배수 규칙을 적용합니다.
+                        숫자 1이 {tokens.spacingBase}px입니다. padding·margin·gap·width·height 모두 같은 규칙이고, 표에
+                        없는
+                        {MAX_MULTIPLE} 초과 숫자도 그대로 씁니다(예: <code>w-96</code> = {96 * tokens.spacingBase}px).
                     </p>
                 </div>
                 <Table
@@ -135,34 +146,29 @@ const SpacingGuidePage = () => (
                         고정 크기 토큰
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        아이콘·컨트롤·레이아웃처럼 의미와 값이 함께 유지돼야 하는 크기입니다. 토큰명 앞에{' '}
-                        <code>size-</code> · <code>h-</code> · <code>w-</code>를 붙여 사용합니다.
+                        아이콘·컨트롤·레이아웃처럼 이름으로 부르는 크기입니다. 토큰명 앞에 <code>size-</code> ·{' '}
+                        <code>h-</code> · <code>w-</code> · <code>min-w-</code> · <code>max-h-</code>를 붙여 씁니다(예:{' '}
+                        <code>h-control-h-md</code>).
                     </p>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        컨트롤 높이는 Figma와 1:1로 <code>xl 60 · lg 52 · md 48 · sm 40 · xs 32px</code>입니다.
+                        컨트롤 높이(px): <code>{CONTROL_HEIGHTS}</code>
                     </p>
                 </div>
-                <h3 className="typo-body-l-medium text-foreground">주요 예외 토큰</h3>
-                <dl className="bg-background border-border grid gap-3 rounded-md border p-4 md:grid-cols-2">
-                    <div className="flex flex-col gap-1">
-                        <dt className="typo-body-l-medium text-foreground font-mono">action-check</dt>
-                        <dd className="typo-body-l-regular text-foreground-subtle">
-                            ActionCheck와 ViewportFitLayout 장식의 최대 크기인 150px입니다.
-                        </dd>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <dt className="typo-body-l-medium text-foreground font-mono">viewport-fit-decorative-min</dt>
-                        <dd className="typo-body-l-regular text-foreground-subtle">
-                            낮은 화면에서 장식 요소가 축소될 수 있는 최소 크기인 96px입니다.
-                        </dd>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <dt className="typo-body-l-medium text-foreground font-mono">modal-max-h</dt>
-                        <dd className="typo-body-l-regular text-foreground-subtle">
-                            다이얼로그 최대 높이 <code>80dvh</code>입니다. 초과 콘텐츠는 내부에서 스크롤됩니다.
-                        </dd>
-                    </div>
-                </dl>
+                <ul className="typo-body-l-regular text-foreground-subtle flex list-disc flex-col gap-1 pl-5">
+                    <li>
+                        <code>action-check</code> — ActionCheck와 ViewportFitLayout 장식의 최대 크기
+                    </li>
+                    <li>
+                        <code>viewport-fit-decorative-min</code> — 낮은 화면에서 그 장식이 줄어드는 최소 크기
+                    </li>
+                    <li>
+                        <code>modal-max-h</code> — 다이얼로그 최대 높이. 넘치는 내용은 안에서 스크롤됩니다
+                    </li>
+                    <li>
+                        <code>header-top</code> · <code>sidebar-pl</code> — 헤더 높이 · 사이드바 폭을 그대로 따라가는
+                        참조 값
+                    </li>
+                </ul>
                 <Table
                     caption="명명 크기 토큰의 미리보기와 값"
                     columns={SIZE_COLUMNS}

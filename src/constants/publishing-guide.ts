@@ -8,7 +8,18 @@ import {Info, LayoutGrid, type LucideIcon} from 'lucide-react'
 // 섹션을 추가·리네임하면 여기 href(#s-*)와 페이지의 aria-labelledby id 를 함께 맞춘다.
 
 // external: true 면 새 창(target=_blank)으로 여는 링크(사이드바 콘텐츠 밖에서 봐야 하는 독립 화면).
-export type GuideNavItem = {label: string; href: string; external?: boolean; assistiveSuffix?: string}
+// layers: 그 가이드가 다루는 컴포넌트가 src/components 의 어느 폴더에 있는지. 가이드 화면 제목 옆 배지로 나온다.
+// 컴포넌트 하나를 다루는 가이드에만 적는다(토큰 · 패턴 문서에는 적지 않는다).
+// shadcn/ui 부품을 감싸거나 조합해 만든 컴포넌트는 composite 하나만 적는다 — composite 의 정의가 곧 '합성'이다.
+// 두 개를 적는 것은 한 가이드가 서로 다른 폴더의 컴포넌트를 함께 다룰 때뿐이다(예: Input = ui 의 Input + composite 의 ClearableInput).
+export type ComponentLayer = 'ui' | 'theme' | 'composite' | 'custom'
+export type GuideNavItem = {
+    label: string
+    href: string
+    external?: boolean
+    assistiveSuffix?: string
+    layers?: readonly ComponentLayer[]
+}
 export type GuideNavItemGroup = {
     title: string
     items?: GuideNavItem[]
@@ -31,8 +42,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
         items: [
             {label: 'Open Graph', href: '/component-guide/open-graph'},
             {label: '명도 대비 확인', href: '/component-guide/contrast-check'},
-            // 접근성 증적 검토 페이지를 외부에 안내할 때 아래 메뉴를 다시 노출한다.
-            // {label: '접근성 검사 예외사항', href: '/component-guide/accessibility-exceptions'},
+            {label: '접근성 검사 예외사항', href: '/component-guide/accessibility-exceptions'},
         ],
     },
     {
@@ -82,37 +92,66 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {
                         title: '공통 폼 컨트롤',
                         items: [
-                            {label: 'Label', href: '/component-guide/label'},
-                            {label: 'FieldLabel', href: '/component-guide/field-label'},
-                            {label: 'Button', href: '/component-guide/button', assistiveSuffix: ' 컴포넌트 가이드'},
-                            {label: 'Input', href: '/component-guide/input'},
-                            {label: 'Textarea', href: '/component-guide/textarea'},
-                            {label: 'Select', href: '/component-guide/select'},
-                            {label: 'Combobox', href: '/component-guide/combobox'},
-                            {label: 'DatePicker', href: '/component-guide/date-picker'},
-                            {label: 'DateField', href: '/component-guide/date-field'},
-                            {label: 'Checkbox', href: '/component-guide/checkbox'},
-                            {label: 'Radio', href: '/component-guide/radio'},
-                            {label: 'Switch', href: '/component-guide/switch'},
+                            {label: 'Label', href: '/component-guide/label', layers: ['ui']},
+                            {label: 'FieldLabel', href: '/component-guide/field-label', layers: ['ui']},
+                            {
+                                label: 'Button',
+                                href: '/component-guide/button',
+                                assistiveSuffix: ' 컴포넌트 가이드',
+                                layers: ['ui'],
+                            },
+                            {label: 'Input', href: '/component-guide/input', layers: ['ui', 'composite']},
+                            {label: 'Textarea', href: '/component-guide/textarea', layers: ['ui']},
+                            {label: 'Select', href: '/component-guide/select', layers: ['composite']},
+                            {label: 'Combobox', href: '/component-guide/combobox', layers: ['composite']},
+                            {label: 'DatePicker', href: '/component-guide/date-picker', layers: ['composite']},
+                            {label: 'DateField', href: '/component-guide/date-field', layers: ['composite']},
+                            {label: 'Checkbox', href: '/component-guide/checkbox', layers: ['ui']},
+                            {label: 'Radio', href: '/component-guide/radio', layers: ['ui']},
+                            {label: 'Switch', href: '/component-guide/switch', layers: ['composite']},
                         ],
                     },
                     {
                         title: '프로젝트 폼 패턴',
                         items: [
-                            {label: 'Field / FieldGrid', href: '/component-guide/form-fields'},
-                            {label: 'Chip', href: '/component-guide/chip'},
-                            {label: 'EmailField', href: '/component-guide/email-field'},
-                            {label: 'FileUpload / Field / Result', href: '/component-guide/file-upload'},
-                            {label: 'AttachField', href: '/component-guide/attach-field'},
-                            {label: 'QuestionGroupHeader', href: '/component-guide/question-group-header'},
-                            {label: 'QuestionList', href: '/component-guide/question-list'},
-                            {label: 'SelectableCard', href: '/component-guide/selectable-card'},
-                            {label: 'Segmented Control', href: '/component-guide/segmented-control'},
-                            {label: 'ConsentList', href: '/component-guide/consent-list'},
-                            {label: 'SearchBar', href: '/component-guide/search-bar'},
-                            {label: 'SearchFilterForm', href: '/component-guide/search-filter-form'},
-                            {label: 'SelectSearchForm', href: '/component-guide/select-search-form'},
-                            {label: 'SelectableInfoCard', href: '/component-guide/selectable-info-card'},
+                            {label: 'Field / FieldGrid', href: '/component-guide/form-fields', layers: ['composite']},
+                            {label: 'Chip', href: '/component-guide/chip', layers: ['composite']},
+                            {label: 'EmailField', href: '/component-guide/email-field', layers: ['composite']},
+                            {
+                                label: 'FileUpload / Field / Result',
+                                href: '/component-guide/file-upload',
+                                layers: ['composite'],
+                            },
+                            {label: 'AttachField', href: '/component-guide/attach-field', layers: ['composite']},
+                            {
+                                label: 'QuestionGroupHeader',
+                                href: '/component-guide/question-group-header',
+                                layers: ['composite'],
+                            },
+                            {label: 'QuestionList', href: '/component-guide/question-list', layers: ['composite']},
+                            {label: 'SelectableCard', href: '/component-guide/selectable-card', layers: ['composite']},
+                            {
+                                label: 'Segmented Control',
+                                href: '/component-guide/segmented-control',
+                                layers: ['composite'],
+                            },
+                            {label: 'ConsentList', href: '/component-guide/consent-list', layers: ['composite']},
+                            {label: 'SearchBar', href: '/component-guide/search-bar', layers: ['composite']},
+                            {
+                                label: 'SearchFilterForm',
+                                href: '/component-guide/search-filter-form',
+                                layers: ['composite'],
+                            },
+                            {
+                                label: 'SelectSearchForm',
+                                href: '/component-guide/select-search-form',
+                                layers: ['composite'],
+                            },
+                            {
+                                label: 'SelectableInfoCard',
+                                href: '/component-guide/selectable-info-card',
+                                layers: ['composite'],
+                            },
                         ],
                     },
                 ],
@@ -120,57 +159,65 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {
                 title: '페이지 구조',
                 items: [
-                    {label: 'SubPageLayout', href: '/component-guide/sub-page-layout'},
-                    {label: 'MainPageLayout', href: '/component-guide/main-page-layout'},
-                    {label: 'Header', href: '/component-guide/header'},
-                    {label: 'FullPageServiceStatus', href: '/component-guide/full-page-service-status'},
-                    {label: 'ViewportFitLayout', href: '/component-guide/viewport-fit-layout'},
-                    {label: 'StickySidebar', href: '/component-guide/sticky-sidebar'},
-                    {label: 'MypageSidebar / FormCard', href: '/component-guide/mypage-shell'},
-                    {label: 'Footer', href: '/component-guide/footer'},
-                    {label: 'PageTitleBar', href: '/component-guide/page-title-bar'},
-                    {label: 'Breadcrumb', href: '/component-guide/breadcrumb'},
-                    {label: 'Pagination', href: '/component-guide/pagination'},
-                    {label: 'SkipNav', href: '/component-guide/skip-nav'},
-                    {label: 'ScrollToTopButton', href: '/component-guide/scroll-to-top-button'},
-                    {label: 'NewWindowLink / PrintButton', href: '/component-guide/new-window-link'},
+                    {label: 'SubPageLayout', href: '/component-guide/sub-page-layout', layers: ['composite']},
+                    {label: 'MainPageLayout', href: '/component-guide/main-page-layout', layers: ['composite']},
+                    {label: 'Header', href: '/component-guide/header', layers: ['composite']},
+                    {
+                        label: 'FullPageServiceStatus',
+                        href: '/component-guide/full-page-service-status',
+                        layers: ['custom'],
+                    },
+                    {label: 'ViewportFitLayout', href: '/component-guide/viewport-fit-layout', layers: ['composite']},
+                    {label: 'StickySidebar', href: '/component-guide/sticky-sidebar', layers: ['composite']},
+                    {label: 'MypageSidebar / FormCard', href: '/component-guide/mypage-shell', layers: ['composite']},
+                    {label: 'Footer', href: '/component-guide/footer', layers: ['composite']},
+                    {label: 'PageTitleBar', href: '/component-guide/page-title-bar', layers: ['composite']},
+                    {label: 'Breadcrumb', href: '/component-guide/breadcrumb', layers: ['composite']},
+                    {label: 'Pagination', href: '/component-guide/pagination', layers: ['composite']},
+                    {label: 'SkipNav', href: '/component-guide/skip-nav', layers: ['composite']},
+                    {label: 'ScrollToTopButton', href: '/component-guide/scroll-to-top-button', layers: ['composite']},
+                    {
+                        label: 'NewWindowLink / PrintButton',
+                        href: '/component-guide/new-window-link',
+                        layers: ['composite'],
+                    },
                 ],
             },
             {
                 title: '섹션 구조',
                 items: [
-                    {label: 'SectionHeader', href: '/component-guide/section-header'},
-                    {label: 'SubSectionHeader', href: '/component-guide/sub-section-header'},
-                    {label: 'StepHeader', href: '/component-guide/step-header'},
-                    {label: 'StepProgress', href: '/component-guide/step-progress'},
-                    {label: 'ActionBar', href: '/component-guide/action-bar'},
-                    {label: 'StepNavigation', href: '/component-guide/step-navigation'},
+                    {label: 'SectionHeader', href: '/component-guide/section-header', layers: ['composite']},
+                    {label: 'SubSectionHeader', href: '/component-guide/sub-section-header', layers: ['composite']},
+                    {label: 'StepHeader', href: '/component-guide/step-header', layers: ['composite']},
+                    {label: 'StepProgress', href: '/component-guide/step-progress', layers: ['composite']},
+                    {label: 'ActionBar', href: '/component-guide/action-bar', layers: ['composite']},
+                    {label: 'StepNavigation', href: '/component-guide/step-navigation', layers: ['composite']},
                 ],
             },
             {
                 title: '컨테이너',
                 items: [
-                    {label: 'BaseCard', href: '/component-guide/base-card'},
-                    {label: 'ServiceIntroBanner', href: '/component-guide/service-intro-banner'},
-                    {label: 'FormCard', href: '/component-guide/form-card'},
-                    {label: 'RepeatCard', href: '/component-guide/repeat-card'},
-                    {label: 'OptionCard', href: '/component-guide/option-card'},
-                    {label: 'RadioCard', href: '/component-guide/radio-card'},
-                    {label: 'RadioChip', href: '/component-guide/radio-chip'},
-                    {label: 'Separator', href: '/component-guide/separator'},
+                    {label: 'BaseCard', href: '/component-guide/base-card', layers: ['composite']},
+                    {label: 'ServiceIntroBanner', href: '/component-guide/service-intro-banner', layers: ['composite']},
+                    {label: 'FormCard', href: '/component-guide/form-card', layers: ['composite']},
+                    {label: 'RepeatCard', href: '/component-guide/repeat-card', layers: ['composite']},
+                    {label: 'OptionCard', href: '/component-guide/option-card', layers: ['composite']},
+                    {label: 'RadioCard', href: '/component-guide/radio-card', layers: ['composite']},
+                    {label: 'RadioChip', href: '/component-guide/radio-chip', layers: ['composite']},
+                    {label: 'Separator', href: '/component-guide/separator', layers: ['ui']},
                 ],
             },
             {
                 title: '탭',
                 items: [
-                    {label: 'FormTabs', href: '/component-guide/form-tabs'},
-                    {label: 'Tabs', href: '/component-guide/tabs'},
-                    {label: 'TextTabs', href: '/component-guide/text-tabs'},
+                    {label: 'FormTabs', href: '/component-guide/form-tabs', layers: ['composite']},
+                    {label: 'Tabs', href: '/component-guide/tabs', layers: ['ui']},
+                    {label: 'TextTabs', href: '/component-guide/text-tabs', layers: ['composite']},
                 ],
             },
             {
                 title: '펼침',
-                items: [{label: 'Accordion', href: '/component-guide/accordion'}],
+                items: [{label: 'Accordion', href: '/component-guide/accordion', layers: ['ui']}],
             },
             {
                 title: '데이터 표시',
@@ -178,52 +225,112 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {
                         title: '차트',
                         items: [
-                            {label: 'NetworkGraph', href: '/component-guide/network-graph'},
-                            {label: 'GradeTrendChart', href: '/component-guide/grade-trend-chart'},
-                            {label: 'GradeRadarChart', href: '/component-guide/grade-radar-chart'},
-                            {label: 'ComparisonRadarChart', href: '/component-guide/comparison-radar-chart'},
-                            {label: 'GroupedColumnChart', href: '/component-guide/grouped-column-chart'},
-                            {label: 'ColumnChart', href: '/component-guide/column-chart'},
-                            {label: 'PeerColumnChart', href: '/component-guide/peer-column-chart'},
-                            {label: 'PositioningScatterChart', href: '/component-guide/positioning-scatter-chart'},
-                            {label: 'LineChart', href: '/component-guide/line-chart'},
-                            {label: 'OverlayColumnChart', href: '/component-guide/overlay-column-chart'},
-                            {label: 'ButterflyBarChart', href: '/component-guide/butterfly-bar-chart'},
-                            {label: 'DivergingRankChart', href: '/component-guide/diverging-rank-chart'},
-                            {label: 'ComboBarLineChart', href: '/component-guide/combo-bar-line-chart'},
-                            {label: 'DistributionCurveChart', href: '/component-guide/distribution-curve-chart'},
-                            {label: 'GradeDistributionChart', href: '/component-guide/grade-distribution-chart'},
-                            {label: 'ProcessFlow', href: '/component-guide/process-flow'},
-                            {label: 'GradeArcGauge', href: '/component-guide/grade-arc-gauge'},
-                            {label: 'ScoreRing', href: '/component-guide/score-ring'},
-                            {label: 'SegmentMeter', href: '/component-guide/segment-meter'},
-                            {label: 'GradeHistoryChart', href: '/component-guide/grade-history-chart'},
-                            {label: 'GradeScaleGauge', href: '/component-guide/grade-scale-gauge'},
-                            {label: 'RatioStackBar', href: '/component-guide/ratio-stack-bar'},
-                            {label: 'WordCloud', href: '/component-guide/word-cloud'},
-                            {label: 'PercentageDonutChart', href: '/component-guide/percentage-donut-chart'},
-                            {label: 'ScoreGauge', href: '/component-guide/score-gauge'},
-                            {label: 'SemicircleRatingGauge', href: '/component-guide/semicircle-rating-gauge'},
-                            {label: 'RatingMatrix', href: '/component-guide/rating-matrix'},
-                            {label: 'RankPyramidChart', href: '/component-guide/rank-pyramid-chart'},
-                            {label: 'Skeleton / ChartSkeleton', href: '/component-guide/skeleton'},
+                            {label: 'NetworkGraph', href: '/component-guide/network-graph', layers: ['custom']},
+                            {label: 'GradeTrendChart', href: '/component-guide/grade-trend-chart', layers: ['custom']},
+                            {label: 'GradeRadarChart', href: '/component-guide/grade-radar-chart', layers: ['custom']},
+                            {
+                                label: 'ComparisonRadarChart',
+                                href: '/component-guide/comparison-radar-chart',
+                                layers: ['custom'],
+                            },
+                            {
+                                label: 'GroupedColumnChart',
+                                href: '/component-guide/grouped-column-chart',
+                                layers: ['custom'],
+                            },
+                            {label: 'ColumnChart', href: '/component-guide/column-chart', layers: ['custom']},
+                            {label: 'PeerColumnChart', href: '/component-guide/peer-column-chart', layers: ['custom']},
+                            {
+                                label: 'PositioningScatterChart',
+                                href: '/component-guide/positioning-scatter-chart',
+                                layers: ['custom'],
+                            },
+                            {label: 'LineChart', href: '/component-guide/line-chart', layers: ['custom']},
+                            {
+                                label: 'OverlayColumnChart',
+                                href: '/component-guide/overlay-column-chart',
+                                layers: ['custom'],
+                            },
+                            {
+                                label: 'ButterflyBarChart',
+                                href: '/component-guide/butterfly-bar-chart',
+                                layers: ['custom'],
+                            },
+                            {
+                                label: 'DivergingRankChart',
+                                href: '/component-guide/diverging-rank-chart',
+                                layers: ['custom'],
+                            },
+                            {
+                                label: 'ComboBarLineChart',
+                                href: '/component-guide/combo-bar-line-chart',
+                                layers: ['custom'],
+                            },
+                            {
+                                label: 'DistributionCurveChart',
+                                href: '/component-guide/distribution-curve-chart',
+                                layers: ['custom'],
+                            },
+                            {
+                                label: 'GradeDistributionChart',
+                                href: '/component-guide/grade-distribution-chart',
+                                layers: ['custom'],
+                            },
+                            {label: 'ProcessFlow', href: '/component-guide/process-flow', layers: ['custom']},
+                            {label: 'GradeArcGauge', href: '/component-guide/grade-arc-gauge', layers: ['custom']},
+                            {label: 'ScoreRing', href: '/component-guide/score-ring', layers: ['custom']},
+                            {label: 'SegmentMeter', href: '/component-guide/segment-meter', layers: ['custom']},
+                            {
+                                label: 'GradeHistoryChart',
+                                href: '/component-guide/grade-history-chart',
+                                layers: ['custom'],
+                            },
+                            {label: 'GradeScaleGauge', href: '/component-guide/grade-scale-gauge', layers: ['custom']},
+                            {label: 'RatioStackBar', href: '/component-guide/ratio-stack-bar', layers: ['custom']},
+                            {label: 'WordCloud', href: '/component-guide/word-cloud', layers: ['custom']},
+                            {
+                                label: 'PercentageDonutChart',
+                                href: '/component-guide/percentage-donut-chart',
+                                layers: ['custom'],
+                            },
+                            {label: 'ScoreGauge', href: '/component-guide/score-gauge', layers: ['custom']},
+                            {
+                                label: 'SemicircleRatingGauge',
+                                href: '/component-guide/semicircle-rating-gauge',
+                                layers: ['custom'],
+                            },
+                            {label: 'RatingMatrix', href: '/component-guide/rating-matrix', layers: ['custom']},
+                            {
+                                label: 'RankPyramidChart',
+                                href: '/component-guide/rank-pyramid-chart',
+                                layers: ['custom'],
+                            },
+                            {
+                                label: 'Skeleton / ChartSkeleton',
+                                href: '/component-guide/skeleton',
+                                layers: ['ui', 'composite'],
+                            },
                         ],
                     },
                     {
                         title: '표 · 목록 · 상태',
                         items: [
-                            {label: 'ProgressBar', href: '/component-guide/progress-bar'},
-                            {label: 'Table', href: '/component-guide/table'},
-                            {label: 'ReviewList', href: '/component-guide/review-list'},
-                            {label: 'HistoryList', href: '/component-guide/history-list'},
-                            {label: 'EvaluationCard', href: '/component-guide/evaluation-card'},
-                            {label: 'SummaryList', href: '/component-guide/summary-list'},
-                            {label: 'InfoTable', href: '/component-guide/info-table'},
-                            {label: 'SelectableSummaryList', href: '/component-guide/selectable-summary-list'},
+                            {label: 'ProgressBar', href: '/component-guide/progress-bar', layers: ['custom']},
+                            {label: 'Table', href: '/component-guide/table', layers: ['custom']},
+                            {label: 'ReviewList', href: '/component-guide/review-list', layers: ['composite']},
+                            {label: 'HistoryList', href: '/component-guide/history-list', layers: ['composite']},
+                            {label: 'EvaluationCard', href: '/component-guide/evaluation-card', layers: ['custom']},
+                            {label: 'SummaryList', href: '/component-guide/summary-list', layers: ['composite']},
+                            {label: 'InfoTable', href: '/component-guide/info-table', layers: ['composite']},
+                            {
+                                label: 'SelectableSummaryList',
+                                href: '/component-guide/selectable-summary-list',
+                                layers: ['composite'],
+                            },
                             {label: '목록 패턴 (List)', href: '/component-guide/list-patterns'},
-                            {label: 'EmptyState', href: '/component-guide/empty-state'},
-                            {label: 'PrivateContent', href: '/component-guide/private-content'},
-                            {label: 'LoadingState', href: '/component-guide/loading-state'},
+                            {label: 'EmptyState', href: '/component-guide/empty-state', layers: ['composite']},
+                            {label: 'PrivateContent', href: '/component-guide/private-content', layers: ['composite']},
+                            {label: 'LoadingState', href: '/component-guide/loading-state', layers: ['composite']},
                         ],
                     },
                 ],
@@ -231,22 +338,23 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
             {
                 title: '디자인 요소',
                 items: [
-                    {label: 'Icon', href: '/component-guide/icon'},
-                    {label: 'ListMarker', href: '/component-guide/list-marker'},
-                    {label: 'Badge', href: '/component-guide/badge'},
-                    {label: 'ThemeToggle', href: '/component-guide/theme-toggle'},
+                    {label: 'Icon', href: '/component-guide/icon', layers: ['custom']},
+                    {label: 'ListMarker', href: '/component-guide/list-marker', layers: ['custom']},
+                    {label: 'Badge', href: '/component-guide/badge', layers: ['ui']},
+                    {label: 'ThemeToggle', href: '/component-guide/theme-toggle', layers: ['composite']},
                 ],
             },
             {
                 title: '피드백 / 오버레이',
                 items: [
-                    {label: 'ActionCheck', href: '/component-guide/action-check'},
-                    {label: 'Alert', href: '/component-guide/alert'},
-                    {label: 'InfoBox', href: '/component-guide/info-box'},
-                    {label: 'NoticeAccordion', href: '/component-guide/notice-accordion'},
-                    {label: 'Toast', href: '/component-guide/toast'},
-                    {label: 'CheckToast', href: '/component-guide/check-toast'},
-                    {label: 'Dialog', href: '/component-guide/dialog'},
+                    {label: 'ActionCheck', href: '/component-guide/action-check', layers: ['custom']},
+                    {label: 'Alert', href: '/component-guide/alert', layers: ['ui']},
+                    {label: 'InfoBox', href: '/component-guide/info-box', layers: ['composite']},
+                    {label: 'NoticeAccordion', href: '/component-guide/notice-accordion', layers: ['composite']},
+                    {label: 'Toast', href: '/component-guide/toast', layers: ['ui', 'custom']},
+                    {label: 'CheckToast', href: '/component-guide/check-toast', layers: ['custom']},
+                    {label: 'Dialog', href: '/component-guide/dialog', layers: ['ui']},
+                    {label: 'HomeNoticePopup', href: '/component-guide/home-notice-popup', layers: ['custom']},
                 ],
             },
         ],
@@ -277,3 +385,43 @@ export {
 } from './site'
 
 export const MAIN_PAGE_PATH = '/component-guide/main-page'
+
+// 컴포넌트 폴더 배지의 모양 — 가이드 홈의 폴더 카드와 각 가이드 화면의 제목 옆이 같은 배지를 쓴다.
+// label 은 배지에 적는 글자다 — ui 폴더는 shadcn/ui 에서 받은 부품이라는 뜻이 드러나게 그 이름으로 적는다.
+// description 은 배지에 마우스를 올리거나 초점을 주면 나오는 툴팁 문구다.
+export const COMPONENT_LAYER_BADGE = {
+    ui: {
+        label: 'shadcn/ui',
+        color: 'neutral',
+        variant: 'solid',
+        description: 'shadcn/ui 에서 받은 기본 부품입니다. 구조와 동작은 고치지 않습니다.',
+    },
+    theme: {
+        label: 'theme',
+        color: 'error',
+        variant: 'solid-pastel',
+        description: 'shadcn/ui 부품에 입히는 프로젝트 스타일입니다. 모양은 여기서만 고칩니다.',
+    },
+    composite: {
+        label: 'composite',
+        color: 'success',
+        variant: 'solid',
+        description: 'shadcn/ui 부품을 감싸거나 합쳐 만든 프로젝트 공통 컴포넌트입니다.',
+    },
+    custom: {
+        label: 'custom',
+        color: 'secondary-purple',
+        variant: 'solid',
+        description: '한 화면 · 한 업무를 위해 프로젝트에서 직접 만든 컴포넌트입니다.',
+    },
+} as const satisfies Record<ComponentLayer, {label: string; color: string; variant: string; description: string}>
+
+const collectNavItems = (group: {items?: GuideNavItem[]; groups?: GuideNavItemGroup[]}): GuideNavItem[] => [
+    ...(group.items ?? []),
+    ...(group.groups ?? []).flatMap(collectNavItems),
+]
+
+// 가이드 주소 → 그 화면이 다루는 컴포넌트의 폴더. 메뉴 목록(GUIDE_NAV_SECTIONS)이 단일 소스다.
+export const GUIDE_LAYERS_BY_HREF = new Map<string, readonly ComponentLayer[]>(
+    GUIDE_NAV_SECTIONS.flatMap(collectNavItems).flatMap((item) => (item.layers ? [[item.href, item.layers]] : [])),
+)
