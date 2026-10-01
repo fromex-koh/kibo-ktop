@@ -39,7 +39,6 @@ const MOCK_EVALUATION_REPORT: Omit<EvaluationReport, 'label'> = {
             label: '종합의견',
             value: '신청기업은 최상위 수준의 기술사업 역량을 확보하고 있으며, 기술의 사업화 과정에서 발생 가능한 사업화 위험을 종합적으로 반영하여 최종 기술사업평가등급은 AA 등급으로 평가되었습니다.',
         },
-        {label: '평가기준일', value: '2026-05-15'},
     ],
     gradeDescriptions: [
         '기술사업평가등급: 기술사업의 성장과 사업화위험 관점에서 기술성과 사업타당성을 종합평가하여 산출한 등급 (AAA–D)',
@@ -122,6 +121,7 @@ const MOCK_EVALUATION_REPORT: Omit<EvaluationReport, 'label'> = {
     ],
     marketSize: {
         rowLabel: '국내시장',
+        industryCode: '58222',
         unit: '억원',
         years: [
             {year: '2020', value: 165948},
@@ -137,33 +137,33 @@ const MOCK_EVALUATION_REPORT: Omit<EvaluationReport, 'label'> = {
             label: '1. 경영주 역량',
             items: [
                 {label: '1.1 기술역량수준', rating: 'A'},
-                {label: '1.2 기술창업역량', rating: 'B'},
+                {label: '1.2 기술창업역량', rating: 'C'},
             ],
         },
         {
             label: '2. 기술성',
             items: [
                 {label: '2.1 기술디자인인력', rating: 'A'},
-                {label: '2.2 기술개발 및 지식재산권', rating: 'A'},
-                {label: '2.3 기술의 차별성', rating: 'A'},
+                {label: '2.2 기술개발 및 지식재산권', rating: 'C'},
+                {label: '2.3 기술의 차별성', rating: 'C'},
             ],
         },
         {
             label: '3. 시장사업성',
             items: [
                 {label: '3.1 동사 시장 규모 및 성장성', rating: 'A'},
-                {label: '3.2 자금조달능력', rating: 'A'},
-                {label: '3.3 생산역량', rating: 'A'},
-                {label: '3.4 판매처의 다양성 및 안정성', rating: 'B'},
-                {label: '3.5 수익창출역량', rating: 'A'},
+                {label: '3.2 자금조달능력', rating: 'C'},
+                {label: '3.3 생산역량', rating: 'C'},
+                {label: '3.4 판매처의 다양성 및 안정성', rating: 'C'},
+                {label: '3.5 수익창출역량', rating: 'C'},
             ],
         },
     ],
 }
 
-// kind 는 리포트를 연 자리다 — 기업 [자가진단 결과]('self-diagnosis')와 기관 [개별평가 일반 결과]
-// ('general')는 자가진단 평가결과 한 벌, 기관 [개별평가 심층 결과]('deep')는 거기에 기술평가서와
-// 세부내역이 더 붙는다. 문서 꼬리표도 이 값에 따라 갈린다.
+// kind 는 리포트를 연 자리다 — 기업 일반분석('tech-general')과 기관 [개별평가 일반 결과]('general')는
+// 자가진단 평가결과 한 벌, 기관 [개별평가 심층 결과]('deep')는 거기에 기술평가서와 세부내역이 더 붙는다.
+// 문서 꼬리표도 이 값에 따라 갈린다.
 const getEvaluationReport = async (model: EvaluationModel, kind: EvaluationReportKind): Promise<EvaluationReport> => ({
     ...MOCK_EVALUATION_REPORT,
     label: getEvaluationReportLabel(model, kind),

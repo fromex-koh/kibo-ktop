@@ -2,8 +2,8 @@ import type {EvaluationModel} from '@/constants/evaluation-result'
 
 // 평가결과 리포트(자가진단 결과) — 새 창으로 여는 인쇄용 문서의 고정값과 자료 모양.
 //
-// Figma "[KTRS-FM · 개별평가 · 심층분석]". 한 장짜리 문서가 아니라 세 개의 문서(자가진단 평가결과 ·
-// 기술평가서 · 기술사업평가 세부내역)가 이어 붙은 형태다.
+// 한 장짜리 문서가 아니라 세 개의 문서(자가진단 평가결과 · 기술평가서 · 기술사업평가 세부내역)가
+// 이어 붙은 형태다 — 일반분석은 첫 문서 하나로 끝난다.
 //
 // 이 파일에는 응답이 바뀌어도 그대로인 값(등급 눈금·수준 범례·TRL 단계·평점 등급)만 둔다.
 // 기업마다 달라지는 값은 content/service/evaluation-report.ts 가 준다.
@@ -14,29 +14,29 @@ import type {EvaluationModel} from '@/constants/evaluation-result'
 const EVALUATION_REPORT_MODEL_NAMES: Record<EvaluationModel, string> = {
     'ktrs-fm': 'KTRS-FM',
     'tech-index': 'Tech-Index',
-    'startup-tech-index': '창업용 Tech-Index',
-    'investment-model': '개방형투자용평가모형평가',
+    // 목록·메뉴에서는 '창업용 Tech-Index' 지만 리포트 꼬리표만 이 표기를 쓴다.
+    'startup-tech-index': 'Tech-Index(창업용)',
+    'investment-model': '투자모형',
 }
 
-/** 리포트를 연 자리 — 기업 평가결과 조회의 자가진단 결과, 기관 평가결과 조회의 일반분석·심층분석. */
-type EvaluationReportKind = 'self-diagnosis' | 'general' | 'deep'
+/**
+ * 리포트를 연 자리 — 기업 평가결과 조회의 기술평가 일반분석, 기관 평가결과 조회의 일반분석·심층분석.
+ * 기업과 기관은 같은 문서를 다른 메뉴에서 열기 때문에 꼬리표의 앞말이 다르다(기술평가 · 개별평가).
+ */
+type EvaluationReportKind = 'self-diagnosis' | 'tech-general' | 'general' | 'deep'
 
 const EVALUATION_REPORT_KIND_NAMES: Record<EvaluationReportKind, string> = {
     'self-diagnosis': '자가진단 결과',
+    'tech-general': '기술평가 · 일반분석',
     general: '개별평가 · 일반분석',
     deep: '개별평가 · 심층분석',
 }
 
-// 개방형투자용평가모형평가는 자가진단·일반분석·심층분석으로 나누지 않고 '일반 평가' 하나다(시안).
-const INVESTMENT_MODEL_REPORT_LABEL = '[개방형투자용평가모형평가 · 일반 평가]'
-
 const getEvaluationReportLabel = (model: EvaluationModel, kind: EvaluationReportKind): string =>
-    model === 'investment-model'
-        ? INVESTMENT_MODEL_REPORT_LABEL
-        : `[${EVALUATION_REPORT_MODEL_NAMES[model]} · ${EVALUATION_REPORT_KIND_NAMES[kind]}]`
+    `[${EVALUATION_REPORT_MODEL_NAMES[model]} · ${EVALUATION_REPORT_KIND_NAMES[kind]}]`
 
 /** 문서 폭에 맞춘 새 창 크기. 높이는 화면보다 클 수 없어 열 때 다시 줄인다(new-window-link). */
-const EVALUATION_REPORT_WINDOW_WIDTH = 595
+const EVALUATION_REPORT_WINDOW_WIDTH = 794
 const EVALUATION_REPORT_WINDOW_HEIGHT = 900
 
 // 등급 눈금 — 세 줄 모두 왼쪽이 가장 높은 등급이다. 받은 등급이 몇 번째 칸인지만 응답이 정한다.
@@ -59,10 +59,8 @@ const EVALUATION_LEVEL_STEP_CLASSNAMES = [
     'bg-blue-100 text-foreground',
 ] as const
 
-// 보증가능등급은 일정 등급(CCC) 이하에서는 내보내지 않는다. 그 경계 칸과, 시안이 그 규칙을 적어 둔
-// 문구다 — 규칙(isGuaranteeGradeVisible)과 문구를 한자리에 두어 한쪽만 바뀌는 일을 막는다.
+// 보증가능등급은 이 칸(CCC)부터 아래로는 내보내지 않는다.
 const GUARANTEE_GRADE_LIMIT_STEP = 'CCC~CC'
-const GUARANTEE_GRADE_RULE_NOTE = '[보증가능등급] 문구는 일정 등급(CCC) 이하에서는 미노출'
 const isGuaranteeGradeVisible = (gradeStepIndex: number): boolean =>
     gradeStepIndex < TECH_BUSINESS_GRADE_STEPS.indexOf(GUARANTEE_GRADE_LIMIT_STEP)
 
@@ -94,7 +92,7 @@ const TRL_STAGE_GROUPS: readonly TrlStageGroup[] = [
     {
         label: '실용화',
         steps: [
-            {step: 7, label: '시제품\n신뢰성\n평가'},
+            {step: 7, label: '시제품\n신뢰성 평가'},
             {step: 8, label: '시제품\n인증'},
         ],
     },
@@ -150,6 +148,8 @@ type EvaluationReportBenchmark = {
 /** 동업종 시장규모 — 연도별 국내시장 규모(억원). */
 type EvaluationReportMarketSize = {
     rowLabel: string
+    /** 제목 옆에 적는 업종코드(예: 58222). */
+    industryCode: string
     unit: string
     years: readonly {year: string; value: number}[]
 }
@@ -198,7 +198,6 @@ export {
     EVALUATION_REPORT_WINDOW_WIDTH,
     getEvaluationReportLabel,
     GUARANTEE_GRADE_LIMIT_STEP,
-    GUARANTEE_GRADE_RULE_NOTE,
     isGuaranteeGradeVisible,
     TECH_BUSINESS_GRADE_STEPS,
     TECH_BUSINESS_GROWTH_STEPS,

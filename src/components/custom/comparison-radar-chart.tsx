@@ -76,6 +76,11 @@ type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children
     direction?: 'clockwise' | 'counterclockwise'
     /** 주 계열 꼭짓점 점의 모양. 'filled' 는 채운 점, 'hollow' 는 흰 면에 계열 색 테두리다. */
     dotAppearance?: 'filled' | 'hollow'
+    /**
+     * 불러오는 중에 보일 스켈레톤 모양. 기본은 격자 모양과 축 수로 고른다 — 실제 차트가 문서용처럼
+     * 크기가 따로 정해진 경우에만 직접 지정한다(오각 레이더: 'pentagon-radar').
+     */
+    skeletonType?: 'radar' | 'circle-radar' | 'triangle-radar' | 'pentagon-radar'
     /** 격자(고리 · 축 선)의 색. */
     gridColor?: string
     /** 격자 고리 모양. 'polygon'(기본)은 축을 잇는 다각형, 'circle' 은 동심원이다(K-BIGx 보고서 부문별 비교). */
@@ -176,6 +181,7 @@ const ComparisonRadarChart = ({
     comparisonFillOpacity = COMPARISON_FILL_OPACITY,
     isLoading = false,
     loadingLabel = '레이더 차트를 불러오는 중입니다.',
+    skeletonType,
     ariaLabel,
     className,
     ...props
@@ -209,11 +215,12 @@ const ComparisonRadarChart = ({
             <ChartSkeleton
                 {...props}
                 type={
-                    gridType === 'circle'
+                    skeletonType ??
+                    (gridType === 'circle'
                         ? 'circle-radar'
                         : data.length === TRIANGLE_AXIS_COUNT
                           ? 'triangle-radar'
-                          : 'radar'
+                          : 'radar')
                 }
                 label={loadingLabel}
                 className={cn('w-full', className)}

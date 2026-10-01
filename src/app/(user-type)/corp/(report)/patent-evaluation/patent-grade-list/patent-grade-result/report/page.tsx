@@ -8,6 +8,8 @@ import {
     MOCK_PATENT_SEARCH_DEFAULTS,
     PATENT_GRADE_REPORT_TITLE,
 } from '@/content/service/patent-grade'
+// 용지 규격과 인쇄 설정(@page) — 이 화면에서만 쓰므로 전역이 아니라 여기서 부른다.
+import '@/styles/report-print.css'
 
 export const metadata: Metadata = {title: PATENT_GRADE_REPORT_TITLE}
 

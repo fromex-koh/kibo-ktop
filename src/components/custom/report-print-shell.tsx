@@ -5,14 +5,14 @@ import {useEffect, useLayoutEffect, useRef, type ReactNode} from 'react'
 import {Info, Printer, X} from 'lucide-react'
 import {Button} from '@/components/ui/button'
 
-// 인쇄용 보고서를 감싸는 껍데기 — 위쪽 도구 막대와 용지를 놓는 무대로 이루어진다.
+// 인쇄용 보고서를 감싸는 껍데기 — 위쪽 도구 막대와 용지를 놓는 보고서 영역으로 이루어진다.
 // 보고서 화면이 모두 같은 껍데기를 쓴다(특허평가 결과 보고서 등).
 //
 // 주소에 ?print=1 이 붙으면 문서가 다 그려진 뒤 스스로 인쇄 대화상자를 연다 —
 // 화면에서 [출력]을 누르면 보고서를 숨긴 프레임으로 불러와 이 값을 붙이므로, 미리보기 화면을 거치지 않는다.
 // 주소를 그대로 열면(퍼블리싱 확인 · 새 탭) 대화상자 없이 문서만 보인다.
 //
-// 도구 막대는 화면에서만 보이고 인쇄물에는 나오지 않는다 — .report-toolbar 규칙은 app/globals.css 에 있다.
+// 도구 막대는 화면에서만 보이고 인쇄물에는 나오지 않는다 — .report-toolbar 규칙은 styles/report-print.css 에 있다.
 // 용지 규격(A4 비율 · 배율)도 같은 CSS 가 갖는다 — 쓰는 쪽은 .report-sheet 안에 내용만 그린다.
 
 const AUTO_PRINT_QUERY = 'print'
@@ -29,17 +29,17 @@ const CLOSE_LABEL = '닫기'
 const TEMPLATE_NOTICE =
     '이 화면은 서비스 화면이 아니라 결과 보고서 템플릿을 확인하는 용도입니다. 서비스에서는 [결과 보고서 출력]을 누르면 이 화면 없이 인쇄 대화상자가 바로 열립니다.'
 
-// 용지 폭(app/globals.css 의 --report-sheet-width)과 무대 좌우 여백(p-10 × 2).
+// 용지 폭(styles/report-print.css 의 --report-sheet-width)과 보고서 영역 좌우 여백(p-10 × 2).
 const SHEET_WIDTH = 1360
 const STAGE_PADDING = 80
 // 화면에서 용지가 커지는 한계 — 다른 화면의 콘텐츠 폭(max-w-content 1200)과 같게 맞춘다.
 const MAX_SHEET_DISPLAY_WIDTH = 1200
 
-// 화면 배율 — 무대가 좁으면 그만큼 용지를 줄이고, 넓어도 콘텐츠 폭(1200)까지만 키운다.
+// 화면 배율 — 보고서 영역이 좁으면 그만큼 용지를 줄이고, 넓어도 콘텐츠 폭(1200)까지만 키운다.
 // CSS 만으로는 길이를 길이로 나눠 배율을 만들 수 없어 여기서 재서 --report-scale 에 넣는다.
 // 첫 그림은 CSS 기본값(1200 ÷ 1360)으로 이미 맞춰져 있고, 여기서는 좁은 화면일 때만 더 줄인다 —
 // 그려진 뒤에 값을 바꾸면 크기가 한 번 튀므로 그리기 전에 재도록 useLayoutEffect 를 쓴다.
-// 인쇄 배율은 app/globals.css 가 따로 정하므로 이 값은 인쇄물에 영향을 주지 않는다.
+// 인쇄 배율은 styles/report-print.css 가 따로 정하므로 이 값은 인쇄물에 영향을 주지 않는다.
 const useSheetScale = () => {
     const stageRef = useRef<HTMLDivElement>(null)
 
@@ -61,6 +61,24 @@ const useSheetScale = () => {
     }, [])
 
     return stageRef
+}
+
+// Safari 전용 — 인쇄 직전에만 용지를 A4 한 쪽으로 접는다(styles/report-print.css 의 data-print-fit).
+// Safari 는 쪽을 나눌 때 화면 레이아웃을 보므로 화면에서도 A4 여야 하는데, 처음부터 접어 두면
+// 차트가 줄어든 폭을 재서 작게 그려진다. 차트가 다 그려진 뒤인 인쇄 직전에 접으면 둘 다 맞는다.
+const usePrintFit = () => {
+    useEffect(() => {
+        const fit = () => document.documentElement.setAttribute('data-print-fit', '')
+        const unfit = () => document.documentElement.removeAttribute('data-print-fit')
+
+        window.addEventListener('beforeprint', fit)
+        window.addEventListener('afterprint', unfit)
+
+        return () => {
+            window.removeEventListener('beforeprint', fit)
+            window.removeEventListener('afterprint', unfit)
+        }
+    }, [])
 }
 
 // 주소에 ?print=1 이 붙었을 때만 — 문서가 다 그려지면 인쇄 대화상자를 연다.
@@ -94,6 +112,7 @@ type ReportPrintShellProps = {
 const ReportPrintShell = ({title, children}: ReportPrintShellProps) => {
     const stageRef = useSheetScale()
 
+    usePrintFit()
     useAutoPrint()
 
     return (
@@ -130,7 +149,7 @@ const ReportPrintShell = ({title, children}: ReportPrintShellProps) => {
                 </p>
             </div>
 
-            {/* 무대 — 회색 바탕 가운데에 흰 용지를 놓는다. */}
+            {/* 보고서 영역 — 회색 바탕 가운데에 흰 용지를 놓는다. */}
             <div ref={stageRef} className="report-stage flex w-full min-w-0 flex-1 flex-col items-center gap-10 p-10">
                 {children}
             </div>

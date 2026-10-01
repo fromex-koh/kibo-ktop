@@ -50,6 +50,10 @@ const SHAPE_RULES = [
     '곡선은 평균 · 표준편차로 계산한 정규분포입니다. 선 1(blue.500) 아래를 위에서 아래로 옅어지는 면으로 채우고, 꼭대기는 칸 높이의 92% 에 닿습니다.',
     '점은 지름 12(blue.500), 점 글자는 12 Bold(blue.600)로 점 아래 12 에 둡니다. 글자가 곡선 · 칸 바닥에 닿으면 점 위(곡선보다 위)로, 그래도 자리가 없으면 점 옆으로 옮깁니다.',
     '그림은 role="img" 이름으로 읽고, 숨김 문단이 평균 · 점수 · 점 글자를 읽어 줍니다.',
+    "variant='plain' 은 바닥 · 양 끝 실선을 없애고 세로 점선만 남깁니다. 점은 지름 8 이고 점 글자는 늘 점 아래에 섭니다(Tech-Index 심층분석 시안).",
+    'yTicks · yAxisLabel · xAxisLabel · legendLabel 을 주면 세로 눈금(12 Regular) · 축 이름(12 Medium) · 오른쪽 위 범례(16 견본 + 12 Regular)가 함께 섭니다.',
+    '세로 눈금을 주면 그 눈금이 세로 축이 됩니다 — 축 끝은 첫 눈금보다 한 칸 위이고, 곡선 꼭대기는 peakValue 입니다. 눈금 글자는 칸을 고르게 나누지 않고 값 그대로의 자리에 서므로 곡선과 눈금이 어긋나지 않습니다.',
+    'heightClassName 으로 칸 높이를 정합니다(가로 눈금 글자 자리 34 포함). 기본은 h-49(196), Tech-Index 심층분석은 h-61.5(246)입니다.',
 ] as const
 
 const PROPS_ITEMS = [
@@ -68,6 +72,18 @@ const PROPS_ITEMS = [
     ['DistributionCurveChart', 'color', '곡선 · 점 색(토큰 변수)입니다.', "'var(--raw-blue-500)'", 'string'],
     ['DistributionCurveChart', 'animate', '곡선이 그려지는 움직임입니다. 인쇄용 문서에서는 끕니다.', 'true', 'boolean'],
     ['DistributionCurveChart', 'ariaLabel', '차트 이름입니다.', '-', 'string'],
+    [
+        'DistributionCurveChart',
+        'variant',
+        "칸 모양입니다. 'plain' 은 세로 점선만 두고 점 글자를 늘 점 아래에 붙입니다.",
+        "'cells'",
+        "'cells' | 'plain'",
+    ],
+    ['DistributionCurveChart', 'yTicks', '세로 눈금 숫자입니다. 큰 값부터 넣습니다.', '-', 'readonly number[]'],
+    ['DistributionCurveChart', 'yAxisLabel', '세로 눈금 위 이름입니다(예: 상대빈도수).', '-', 'string'],
+    ['DistributionCurveChart', 'xAxisLabel', '가로 눈금 아래 이름입니다(예: Tech-Index).', '-', 'string'],
+    ['DistributionCurveChart', 'legendLabel', '오른쪽 위 범례입니다(예: 전체 (평균 50.5점)).', '-', 'string'],
+    ['DistributionCurveChart', 'heightClassName', '칸 높이 유틸리티입니다(가로 눈금 자리 포함).', "'h-49'", 'string'],
     [
         'DistributionCurveChartSkeleton',
         'label',
@@ -182,6 +198,34 @@ const DistributionCurveChartGuidePage = () => (
                         ))}
                     </ul>
                 </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="dcc-plain" className="flex flex-col gap-4">
+                <div>
+                    <h2 id="dcc-plain" className="typo-h4-bold">
+                        인쇄용 모양 (plain)
+                    </h2>
+                    <p className="typo-body-l-regular text-muted-foreground">
+                        Tech-Index 심층분석 리포트의 지수정보입니다. 바닥 · 양 끝 실선을 없애고 세로 눈금 · 축 이름 ·
+                        범례를 함께 둡니다.
+                    </p>
+                </div>
+                <DistributionCurveChart
+                    animate={false}
+                    ariaLabel="전체 중소기업 Tech-Index 분포와 신청기업의 자리"
+                    mean={50.5}
+                    standardDeviation={18}
+                    value={73.7}
+                    markerLabel="상위 2.2%"
+                    variant="plain"
+                    yTicks={[4, 3.5, 3, 2.5, 2, 1.5, 1, 0.5]}
+                    yAxisLabel="상대빈도수"
+                    xAxisLabel="Tech-Index"
+                    legendLabel="전체 (평균 50.5점)"
+                    heightClassName="h-61.5"
+                />
             </section>
         </BaseCard>
 

@@ -1547,6 +1547,8 @@
   --ds-spacing-control-h-lg: 3.25rem;
   --ds-spacing-control-h-xl: 3.75rem;
   --ds-spacing-control-min-w-xs: 3.8125rem;
+  --ds-spacing-grade-gauge-lg: 12.125rem;
+  --ds-spacing-grade-gauge-md: 9.625rem;
   --ds-spacing-control-min-w-sm: 5.625rem;
   --ds-spacing-control-min-w-md: 5.9375rem;
   --ds-spacing-control-min-w-lg: 9.75rem;
@@ -1635,7 +1637,7 @@
   /* container(max-width) — Tailwind 기본 스케일 유지 + 프로젝트 키(content) 추가 */
   --container-content: 75rem;
   --container-modal: 36.75rem;
-  --container-report: 37.1875rem;
+  --container-report: 49.625rem;
 }
 
 @theme inline {
@@ -1652,6 +1654,8 @@
   --spacing-control-h-lg: var(--ds-spacing-control-h-lg);
   --spacing-control-h-xl: var(--ds-spacing-control-h-xl);
   --spacing-control-min-w-xs: var(--ds-spacing-control-min-w-xs);
+  --spacing-grade-gauge-lg: var(--ds-spacing-grade-gauge-lg);
+  --spacing-grade-gauge-md: var(--ds-spacing-grade-gauge-md);
   --spacing-control-min-w-sm: var(--ds-spacing-control-min-w-sm);
   --spacing-control-min-w-md: var(--ds-spacing-control-min-w-md);
   --spacing-control-min-w-lg: var(--ds-spacing-control-min-w-lg);

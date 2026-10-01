@@ -16,6 +16,7 @@ type ChartSkeletonType =
     | 'columns-line'
     | 'donut'
     | 'gauge'
+    | 'grade-arc'
     | 'grade-distribution'
     | 'grade-trend'
     | 'grouped-column'
@@ -23,10 +24,13 @@ type ChartSkeletonType =
     | 'matrix'
     | 'network'
     | 'overlay-column'
+    | 'pentagon-radar'
     | 'plain-column'
+    | 'positioning-scatter'
     | 'radar'
     | 'rank-pyramid'
     | 'score-gauge'
+    | 'score-ring'
     | 'triangle-radar'
     | 'word-cloud'
 type ChartSkeletonNetworkLegend = 'company-relationship' | 'supply-network'
@@ -80,6 +84,51 @@ const ScoreGaugeSkeleton = () => (
             <div className={cn(skeletonPartClassName, 'h-12 w-28')} />
             <div className={cn(skeletonPartClassName, 'h-6 w-12')} />
             <div className={cn(skeletonPartClassName, 'h-4 w-32')} />
+        </div>
+    </div>
+)
+
+// GradeArcGauge 와 같은 짜임 — 위가 열린 원호(200도) 하나와 그 아래 이름 자리.
+// 채움은 등급이 정해져야 그릴 수 있으므로 트랙만 두고, 글자 자리만 잡아 둔다.
+const GradeArcSkeleton = () => (
+    <div className="flex w-full flex-col items-center gap-1" aria-hidden="true">
+        <svg viewBox="0 0 200 130" className="text-muted w-full">
+            <path
+                d="M 15.8 114.85 A 85.5 85.5 0 1 1 184.2 114.85"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={29}
+                strokeLinecap="round"
+            />
+        </svg>
+        <div className={cn(skeletonPartClassName, 'h-4 w-12')} />
+    </div>
+)
+
+// ScoreRing 과 같은 짜임 — 지름 160 · 선 굵기 20 의 원 하나와 가운데 글자 세 줄(이름 · 점수 · 등급).
+// 채움은 값이 정해져야 그릴 수 있으므로 트랙만 두고, 글자 자리만 잡아 둔다.
+const SCORE_RING_SKELETON_SIZE = 160
+const SCORE_RING_SKELETON_STROKE = 20
+
+const ScoreRingSkeleton = () => (
+    <div className="grid size-40 place-items-center" aria-hidden="true">
+        <svg
+            viewBox={`0 0 ${SCORE_RING_SKELETON_SIZE} ${SCORE_RING_SKELETON_SIZE}`}
+            className="text-muted col-start-1 row-start-1 size-full"
+        >
+            <circle
+                cx={SCORE_RING_SKELETON_SIZE / 2}
+                cy={SCORE_RING_SKELETON_SIZE / 2}
+                r={(SCORE_RING_SKELETON_SIZE - SCORE_RING_SKELETON_STROKE) / 2}
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={SCORE_RING_SKELETON_STROKE}
+            />
+        </svg>
+        <div className="col-start-1 row-start-1 flex flex-col items-center gap-1">
+            <div className={cn(skeletonPartClassName, 'h-4 w-20')} />
+            <div className={cn(skeletonPartClassName, 'h-8 w-14')} />
+            <div className={cn(skeletonPartClassName, 'h-4 w-8')} />
         </div>
     </div>
 )
@@ -187,6 +236,70 @@ const RadarChartSkeleton = () => (
 
 // 동심원 레이더(ComparisonRadarChart gridType="circle") — K-BIGx 보고서 부문별 비교와 같은 짜임이다.
 // 칸 334×248 · 가운데 반지름 96 원 4고리 · 다섯 축 선 · 가운데 면 · 축 이름 다섯(위 · 오른쪽 · 오른쪽 아래 · 왼쪽 아래 · 왼쪽).
+// 다섯 축 오각 레이더(ComparisonRadarChart 에 축이 다섯일 때) — 인쇄용 리포트의 '기업 대표 5대 역량
+// 환산 점수' 와 같은 짜임이다. 실제 차트와 같은 자리에 같은 크기로 서야 화면이 덜컹이지 않으므로
+// 상자(714×200) · 중심(357, 114) · 반지름 79 · 고리 4겹을 그대로 옮겼다.
+const PentagonRadarChartSkeleton = () => (
+    <div className="flex h-full min-h-0 items-center justify-center" aria-hidden="true">
+        <svg viewBox="0 0 714 200" className="text-muted block size-full">
+            <g fill="none" stroke="currentColor" strokeWidth="1">
+                <polygon points="357.0,35.0 432.1,89.6 403.4,177.9 310.6,177.9 281.9,89.6" />
+                <polygon points="357.0,54.8 413.4,95.7 391.8,161.9 322.2,161.9 300.6,95.7" />
+                <polygon points="357.0,74.5 394.6,101.8 380.2,146.0 333.8,146.0 319.4,101.8" />
+                <polygon points="357.0,94.2 375.8,107.9 368.6,130.0 345.4,130.0 338.2,107.9" />
+                <path d="M357 114 357.0 35.0M357 114 432.1 89.6M357 114 403.4 177.9M357 114 310.6 177.9M357 114 281.9 89.6" />
+            </g>
+            <polygon
+                points="357.0,57.1 411.1,96.4 390.4,160.0 323.6,160.0 302.9,96.4"
+                fill="currentColor"
+                opacity="0.6"
+            />
+            {/* 축 이름 다섯 — 오각형 꼭짓점 바깥에 선다. */}
+            <g fill="currentColor" opacity="0.4">
+                <rect x="333" y="12" width="48" height="12" rx="2" />
+                <rect x="442" y="82" width="48" height="12" rx="2" />
+                <rect x="412" y="180" width="48" height="12" rx="2" />
+                <rect x="254" y="180" width="48" height="12" rx="2" />
+                <rect x="224" y="82" width="48" height="12" rx="2" />
+            </g>
+        </svg>
+    </div>
+)
+
+// 포지셔닝 산점도(PositioningScatterChart) — 상자 714×287 · 오른쪽 위 구역 · 기준선 점선 십자 ·
+// 표본 점 열넷과 당사 점 하나. 실제 그림과 같은 자리에 같은 크기로 선다.
+const PositioningScatterSkeleton = () => (
+    <div className="flex h-full min-h-0 flex-col gap-1" aria-hidden="true">
+        <div className={cn(skeletonPartClassName, 'h-4 w-12')} />
+        <svg viewBox="0 0 714 287" className="text-muted border-subtle-3 h-auto w-full border">
+            <rect x="357" y="0" width="357" height="143.5" fill="currentColor" opacity="0.25" />
+            <g stroke="currentColor" strokeDasharray="4 4" opacity="0.6">
+                <line x1="0" x2="714" y1="143.5" y2="143.5" />
+                <line x1="357" x2="357" y1="0" y2="287" />
+            </g>
+            <g fill="currentColor">
+                <circle cx="186" cy="109" r="6" />
+                <circle cx="293" cy="86" r="6" />
+                <circle cx="336" cy="129" r="6" />
+                <circle cx="307" cy="158" r="6" />
+                <circle cx="207" cy="184" r="6" />
+                <circle cx="157" cy="201" r="6" />
+                <circle cx="250" cy="192" r="6" />
+                <circle cx="357" cy="195" r="6" />
+                <circle cx="386" cy="218" r="6" />
+                <circle cx="407" cy="181" r="6" />
+                <circle cx="443" cy="207" r="6" />
+                <circle cx="471" cy="164" r="6" />
+                <circle cx="493" cy="152" r="6" />
+                <circle cx="414" cy="115" r="6" />
+                <circle cx="557" cy="52" r="8" />
+            </g>
+            <rect x="537" y="66" width="40" height="12" rx="2" fill="currentColor" opacity="0.5" />
+        </svg>
+        <div className={cn(skeletonPartClassName, 'h-4 w-12 self-end')} />
+    </div>
+)
+
 const CircleRadarChartSkeleton = () => (
     <div className="flex h-full min-h-0 items-center justify-center" aria-hidden="true">
         <div className="relative h-full w-full max-w-84">
@@ -851,10 +964,18 @@ const renderChartSkeleton = (type: ChartSkeletonType, legend?: ChartSkeletonNetw
             return <RadarChartSkeleton />
         case 'circle-radar':
             return <CircleRadarChartSkeleton />
+        case 'positioning-scatter':
+            return <PositioningScatterSkeleton />
+        case 'pentagon-radar':
+            return <PentagonRadarChartSkeleton />
         case 'rank-pyramid':
             return <RankPyramidSkeleton />
         case 'score-gauge':
             return <ScoreGaugeSkeleton />
+        case 'score-ring':
+            return <ScoreRingSkeleton />
+        case 'grade-arc':
+            return <GradeArcSkeleton />
         case 'word-cloud':
             return <WordCloudSkeleton />
     }
