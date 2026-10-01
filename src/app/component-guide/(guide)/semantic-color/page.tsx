@@ -29,8 +29,11 @@ const TEXT_TONE_SLOTS = new Set([
     'calendar-saturday',
     'select-selected-foreground',
 ])
+// 이름은 -border 지만 테두리가 아니라 1px 면(구분선·진행 레일)으로 그리는 슬롯 — 실제 사용처가 bg- 다.
+const LINE_SURFACE_SLOTS = new Set(['main-intro-border', 'menu-overlay-border'])
 const utilClasses = (name: string): string[] => {
     if (name === 'scroll-thumb' || name === 'scroll-track') return [`var(--ds-${name})`]
+    if (LINE_SURFACE_SLOTS.has(name)) return [`bg-${name}`]
     if (TEXT_TONE_SLOTS.has(name)) return [`text-${name}`]
     if (name === 'foreground' || name.endsWith('-foreground') || name.startsWith('foreground-')) return [`text-${name}`]
     if (name === 'border' || name.endsWith('-border') || BORDER_TONE_SLOTS.has(name)) return [`border-${name}`]
@@ -381,10 +384,18 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
     {name: 'main-accent / main-accent-bright', match: (n) => n.startsWith('main-accent')},
     {name: 'main-intro (메인 2섹션)', match: (n) => n.startsWith('main-intro-')},
-    {name: 'menu-overlay (전체 메뉴)', match: (n) => n.startsWith('menu-overlay')},
+    {name: 'menu-overlay (서비스 헤더 전체 메뉴)', match: (n) => n.startsWith('menu-overlay')},
     {name: 'pagination', match: (n) => n.startsWith('pagination-')},
     {name: 'calendar (일요일 / 토요일)', match: (n) => n.startsWith('calendar-')},
     {name: 'select-selected-foreground', match: (n) => n === 'select-selected-foreground'},
+    {name: 'accent-subtle', match: (n) => n === 'accent-subtle'},
+    {name: 'field-error-foreground', match: (n) => n === 'field-error-foreground'},
+    {
+        name: 'tab-pill-active / tab-pill-active-foreground',
+        match: (n) => n === 'tab-pill-active' || n === 'tab-pill-active-foreground',
+    },
+    {name: 'cta-surface', match: (n) => n === 'cta-surface'},
+    {name: 'action-fill-hover', match: (n) => n === 'action-fill-hover'},
     {name: '기타', match: () => true}, // 안전망 — 위에서 안 잡힌 커스텀 슬롯이 있으면 여기로.
 ]
 
@@ -406,6 +417,18 @@ const STANDARD_COUNT = standardEntries.length
 const CUSTOM_COUNT = customEntries.length
 const recipeEntries = Object.entries(semantic).filter(([name]) => isComponentRecipe(name))
 const RECIPE_COUNT = recipeEntries.length
+// 레시피 토큰은 쓰는 컴포넌트별로 표를 나눈다 — 표 제목이 컴포넌트 이름이다.
+const RECIPE_GROUPS: Group[] = [
+    {name: 'Icon', match: (n) => n.startsWith('icon-')},
+    {name: 'Badge', match: (n) => n.startsWith('badge-') || n.startsWith('number-badge-')},
+    {name: 'Alert', match: (n) => n.startsWith('alert-')},
+    {name: 'SegmentedControl', match: (n) => n.startsWith('segmented-')},
+    {name: 'FileUpload', match: (n) => n.startsWith('file-upload-')},
+    {name: 'StepProgress', match: (n) => n.startsWith('step-progress-')},
+    {name: 'ActionCheck', match: (n) => n.startsWith('action-check-')},
+    {name: '기타 컴포넌트', match: () => true}, // 안전망 — 새 접두사의 레시피 토큰이 생기면 여기로.
+]
+const RECIPE_GROUPED = groupBy(RECIPE_GROUPS, recipeEntries)
 
 const SEMANTIC_TABLE_COLUMNS = [
     {key: 'current', header: <span className="text-muted-foreground">현재</span>, align: 'start'},
@@ -526,50 +549,44 @@ const GROUP_USAGE: Record<string, ReactNode> = {
     ),
     'main-accent / main-accent-bright': (
         <>
-            메인페이지(<code className="font-mono">mainpage</code> 스킨)의 포인트 그린입니다. main-accent는 활성
-            메뉴·인디케이터, main-accent-bright는 수치 강조에 사용합니다. main-accent는 스케일 밖 common.mint를,
-            main-accent-bright는 mint.500을 참조하며 모든 테마에서 같은 값입니다.
+            메인페이지의 포인트 그린입니다. main-accent는 활성 메뉴·인디케이터, main-accent-bright는 수치 강조에 씁니다.
         </>
     ),
     'main-intro (메인 2섹션)': (
         <>
-            메인페이지 두 번째 섹션(기업회원 소개)의 색입니다. 시안([메인] 02-1·02-2)이 페이지 테마와 무관하게 한 벌로
-            정의돼 있어, 사용처에서 테마 스코프를 바꾸거나 <code className="font-mono">dark:</code>로 분기하지 않고
-            ([PB-06]) 세 테마에 같은 값을 넣은 전용 슬롯을 씁니다. surface는 섹션 배경, accent는 단계 번호·진행 표식,
-            foreground/foreground-subtle은 제목·레이블/본문, border는 진행 레일입니다. 현재 시안은 다크 면에 흰 텍스트와
-            민트 강조라 foreground와 foreground-subtle이 같은 값이며, 본문 계조가 생기면 subtle만 낮춥니다.
+            메인페이지 두 번째 섹션 전용입니다. surface는 섹션 배경, accent는 단계 번호·진행 표식, foreground는
+            제목·레이블, foreground-subtle은 본문, border는 진행 레일입니다. 세 테마 값이 같습니다.
         </>
     ),
-    'menu-overlay (전체 메뉴)': (
-        <>
-            헤더 햄버거 버튼으로 여는 전체 메뉴의 색입니다. 화면을 통째로 덮는 면이라 페이지 배경과 같은 방향으로
-            뒤집히며, 사용처에서 <code className="font-mono">dark:</code>로 분기하지 않도록([PB-06]) 테마별 값을 이
-            슬롯에 모아 둡니다. 시안([공통] 전체메뉴)이 어두운 면 기준이라 dark와 mainpage가 같은 값이고 light만 밝은
-            면·어두운 글자로 뒤집힙니다. surface 역할의 menu-overlay는 메뉴 배경, foreground는 1뎁스 제목과 그룹 레이블,
-            foreground-subtle은 하위 항목, accent는 링크 hover와 현재 위치 표시, border는 하단 그룹의 항목 구분선입니다.
-            메뉴는 화면을 덮는 최상위 면이라 light 에서는 본문 면과 같은 흰색을 쓴다 — 페이지 배경(gray.50)을 쓰면 덮는
-            면이 덮이는 면보다 어두워진다. accent만 light에서 색상 계열이 바뀝니다 — 민트는 흰 면 위 대비가 1.6:1로 본문
-            기준에 못 미쳐 primary 계열 blue.600(5.1:1)을 씁니다([5.3.3]).
-        </>
+    'menu-overlay (서비스 헤더 전체 메뉴)': (
+        <>서비스 헤더의 햄버거 버튼으로 여는 전체 메뉴 전용입니다. Header 컴포넌트 안에서만 사용합니다.</>
     ),
-    pagination: (
-        <>
-            페이지네이션(Pagination)의 현재 페이지 강조 면(navy)과 그 위 텍스트에 사용합니다. 시안대로 세 테마에서 같은
-            navy 값을 유지합니다.
-        </>
+    pagination: <>Pagination의 현재 페이지 면(navy)과 그 위 글자입니다. 세 테마 값이 같습니다.</>,
+    'select-selected-foreground': <>Select·드롭다운에서 현재 선택된 옵션의 글자색입니다.</>,
+    'popover / popover-foreground': (
+        <>Popover·Dropdown·Select 목록처럼 화면 위에 뜨는 면과 그 안의 텍스트에 사용합니다.</>
     ),
-    'select-selected-foreground': (
-        <>
-            Select·드롭다운에서 현재 선택된 옵션의 텍스트 색입니다. 시안이 선택 상태를 배경 없이 짙은 navy + Medium
-            굵기로만 구분해, 강조 텍스트(primary-strong)와 구분되는 슬롯으로 둡니다.
-        </>
+    'chart-1~5': <>차트의 계열 색입니다. 계열 순서대로 1부터 사용합니다.</>,
+    'sidebar (+ 세부 7)': (
+        <>사이드바의 면·텍스트·활성 항목·테두리·포커스 링입니다. 본문과 다른 색 맥락을 갖도록 따로 둡니다.</>
     ),
+    'surface-subtle': (
+        <>카드 안에서 한 단계 들어간 옅은 면입니다. 첨부파일 줄·모달 안내 상자처럼 흰 카드 위 영역을 구분합니다.</>
+    ),
+    'toast / toast-foreground / toast-icon': (
+        <>토스트의 면·글자·아이콘 원입니다. 테마와 무관하게 한 벌이라 세 테마 값이 같습니다.</>
+    ),
+    'pastel (옅은 채움 배경 / 글자)': <>Badge의 solid-pastel과 등급 표가 공유하는 옅은 채움 면과 그 위 글자입니다.</>,
+    'status-evaluated (평가완료)': <>조회 목록에서 평가완료 상태를 나타내는 글자색입니다.</>,
+    'accent-subtle': <>게이지·비율 막대의 바탕, 옵션의 눌림 상태처럼 accent보다 한 단계 옅은 중립 면에 사용합니다.</>,
+    'field-error-foreground': <>입력 필드 아래 오류 메시지의 글자색입니다.</>,
+    'tab-pill-active / tab-pill-active-foreground': (
+        <>알약 모양 탭(Tabs)의 활성 탭 면과 그 위 글자입니다. 세 테마에서 같은 navy 값을 유지합니다.</>
+    ),
+    'cta-surface': <>화면 아래에 고정되는 CTA 줄(StepNavigation)의 반투명 면입니다.</>,
+    'action-fill-hover': <>메인페이지 서비스 카드의 [시작하기] 버튼에서 hover 때 좌에서 우로 채워지는 면입니다.</>,
     'calendar (일요일 / 토요일)': (
-        <>
-            달력(Calendar)의 요일 헤더에서 일요일·토요일을 구분하는 색입니다. 오류를 뜻하는 destructive·error 와 역할이
-            달라 별도 슬롯으로 둡니다. 라이트는 Figma 원본(error.500 · blue.600)이고, 다크는 어두운 배경에서 명도 대비를
-            확보하도록 밝은 단계(error.300 · blue.200)로 매핑합니다.
-        </>
+        <>달력 요일 헤더의 일요일·토요일 글자색입니다. 오류를 뜻하는 error·destructive와 구분해 씁니다.</>
     ),
 }
 
@@ -616,8 +633,8 @@ const SemanticColorGuidePage = () => (
                         <div className="flex flex-col gap-1">
                             <strong className="text-foreground">테마별 클래스 분기 금지</strong>
                             <p className="text-foreground-subtle">
-                                동일한 시맨틱 클래스가 라이트·다크 값을 자동 전환합니다. 컴포넌트에서 테마별 원시 색상을
-                                직접 지정하지 않습니다.
+                                같은 클래스가 테마에 따라 값을 자동으로 바꿉니다.{' '}
+                                <code className="font-mono">dark:</code>로 분기하지 않습니다.
                             </p>
                         </div>
                     </div>
@@ -626,69 +643,44 @@ const SemanticColorGuidePage = () => (
                         <div className="flex flex-col gap-1">
                             <h3 className="typo-title-l-bold text-foreground">테마별 동일 토큰 세트</h3>
                             <p className="typo-body-l-regular text-foreground-subtle">
-                                세 테마는 이름과 개수가 같은 시맨틱 토큰 한 벌씩을 가집니다. 현재 특정 테마에서 사용하지
-                                않는 토큰도 삭제하지 않으며, 토큰 이름은 동일하고 실제 색상값만 테마에 따라 달라집니다.
+                                light·dark·mainpage 세 테마는 이름과 개수가 같은 토큰 한 벌씩을 갖고, 값만 다릅니다.
                             </p>
                         </div>
-
                         <div className="grid gap-3 md:grid-cols-3">
                             <div className="border-border bg-surface flex flex-col gap-1 rounded-lg border p-4">
                                 <strong className="text-foreground">
                                     <code className="font-mono">:root</code> · light
                                 </strong>
-                                <p className="text-foreground-subtle">별도 테마 클래스가 없을 때 적용되는 기본 세트</p>
+                                <p className="text-foreground-subtle">테마 클래스가 없을 때의 기본값</p>
                             </div>
                             <div className="border-border bg-surface flex flex-col gap-1 rounded-lg border p-4">
                                 <strong className="text-foreground">
                                     <code className="font-mono">.dark</code>
                                 </strong>
-                                <p className="text-foreground-subtle">다크 화면에 적용되는 동일 이름의 전체 세트</p>
+                                <p className="text-foreground-subtle">다크 화면</p>
                             </div>
                             <div className="border-border bg-surface flex flex-col gap-1 rounded-lg border p-4">
                                 <strong className="text-foreground">
                                     <code className="font-mono">.mainpage</code>
                                 </strong>
-                                <p className="text-foreground-subtle">
-                                    메인페이지 전용 스킨에 적용되는 동일 이름의 전체 세트
-                                </p>
+                                <p className="text-foreground-subtle">메인페이지 전용</p>
                             </div>
                         </div>
-
-                        <div className="grid gap-4 md:grid-cols-2">
-                            <div className="flex flex-col gap-2">
-                                <strong className="text-foreground">클래스 하나로 테마 대응</strong>
-                                <p className="text-foreground-subtle">
-                                    예를 들어 <code className="font-mono">bg-primary</code>는 현재 상위 테마의{' '}
-                                    <code className="font-mono">--ds-primary</code> 값을 자동으로 사용합니다.
-                                    컴포넌트에서 light·dark·mainpage 클래스를 조건문으로 나누지 않습니다.
-                                </p>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <strong className="text-foreground">세 테마 값을 원본에 모두 명시</strong>
-                                <p className="text-foreground-subtle">
-                                    모든 토큰은 <code className="font-mono">tokens.json</code>에 light·dark·mainpage
-                                    값을 각각 작성합니다. 값이 같아도 생략하거나 다른 테마에서 자동 상속하지 않습니다.
-                                </p>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <strong className="text-foreground">현재 미사용 토큰도 세 테마 모두 보유</strong>
-                                <p className="text-foreground-subtle">
-                                    light·dark에서 <code className="font-mono">main-accent</code>를 사용하지 않더라도
-                                    세트 구조를 맞추기 위해 동일 토큰을 유지합니다. 이후 테마별 값만 독립적으로 변경할
-                                    수 있습니다.
-                                </p>
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <strong className="text-foreground">부분 테마 덮어쓰기 대신 역할 토큰 확장</strong>
-                                <p className="text-foreground-subtle">
-                                    특정 영역만 항상 다른 표면 색이 필요하면 <code className="font-mono">.light</code>·
-                                    <code className="font-mono">.dark</code>를 부분 적용하지 않고{' '}
-                                    <code className="font-mono">sidebar-*</code>·
-                                    <code className="font-mono">chart-*</code>처럼 독립 색맥락을 갖는 역할 토큰을 새로
-                                    정의해 사용합니다.
-                                </p>
-                            </div>
-                        </div>
+                        <ul className="text-foreground-subtle flex list-disc flex-col gap-2 pl-5">
+                            <li>
+                                토큰을 추가할 때는 <code className="font-mono">tokens.json</code>에 세 테마 값을 모두
+                                적습니다. 값이 같아도 생략하지 않습니다.
+                            </li>
+                            <li>
+                                특정 영역만 다른 색이 필요하면 <code className="font-mono">.light</code>·
+                                <code className="font-mono">.dark</code>를 부분 적용하지 말고{' '}
+                                <code className="font-mono">sidebar-*</code>처럼 전용 토큰을 만듭니다.
+                            </li>
+                            <li>
+                                예외 — 인쇄용 리포트와 메인 공지 팝업처럼 영역 전체가 늘 라이트여야 하면 그 영역 뿌리에{' '}
+                                <code className="font-mono">.light</code>를 한 번 적용합니다.
+                            </li>
+                        </ul>
                     </div>
                 </section>
             </BaseCard>
@@ -762,7 +754,9 @@ const SemanticColorGuidePage = () => (
                             컴포넌트의 variant·prop을 사용합니다.
                         </p>
                     </div>
-                    <SemanticTable title="컴포넌트 전용 색상" tokens={recipeEntries} />
+                    {RECIPE_GROUPED.map((group) => (
+                        <SemanticTable key={group.name} title={group.name} tokens={group.tokens} />
+                    ))}
                 </section>
             </BaseCard>
         </div>

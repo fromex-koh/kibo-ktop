@@ -243,8 +243,11 @@ const PROJECT_ISSUE_SOURCES: readonly ProjectIssueSource[] = [
 ]
 
 // 절마다 자기 줄만 담은 표를 세운다 — 표 하나에 몰아 두면 어느 설명이 어느 줄의 것인지 되짚어야 한다.
-const issuesByKind = (kinds: readonly MarkupIssueKind[]) => ISSUE_CATALOG.filter((issue) => kinds.includes(issue.kind))
-const NAV_ROLE_ISSUES = issuesByKind(['nav-role']).filter((issue) => issue.count > 0)
+// 이번 회차에 한 건도 나오지 않은 정의는 표에 넣지 않는다 — 화면별 검사 기록에 없는 오류가 목록에만 남으면
+// 지금도 발생하는 것으로 읽힌다. 정의(ISSUE_DEFINITIONS)는 지우지 않는다. 다시 나오면 같은 원인으로 분류해야 한다.
+const issuesByKind = (kinds: readonly MarkupIssueKind[]) =>
+    ISSUE_CATALOG.filter((issue) => kinds.includes(issue.kind) && issue.count > 0)
+const NAV_ROLE_ISSUES = issuesByKind(['nav-role'])
 
 const routesWithKind = (kind: MarkupIssueKind) =>
     SCREEN_MARKUP_RESULTS.filter((screen) => screen.kinds.includes(kind)).map((screen) => screen.path)
@@ -3420,12 +3423,14 @@ const AccessibilityExceptionsPage = () => (
                                                                                         asChild={target !== undefined}
                                                                                     >
                                                                                         {target ? (
-                                                                                            <Link href={`#${target}`}>
+                                                                                            // 화면 안 앵커는 next/link 가 아니라 a 로 둔다 — next/link 는 주소가 이미 같은 앵커면 다시 눌러도
+                                                                                            // 스크롤하지 않아, 같은 배지를 두 번째 누를 때 이동하지 않는다. a 는 브라우저가 매번 그 자리로 옮긴다.
+                                                                                            <a href={`#${target}`}>
                                                                                                 {
                                                                                                     ISSUE_LABEL[kind]
                                                                                                         .label
                                                                                                 }
-                                                                                            </Link>
+                                                                                            </a>
                                                                                         ) : (
                                                                                             ISSUE_LABEL[kind].label
                                                                                         )}
@@ -4109,12 +4114,12 @@ const AccessibilityExceptionsPage = () => (
                                                                                         }
                                                                                         asChild
                                                                                     >
-                                                                                        <Link
+                                                                                        <a
                                                                                             href={`#${kind.target}`}
                                                                                             aria-label={`${kind.label} 외부 라이브러리 원인 확인`}
                                                                                         >
                                                                                             {kind.label}
-                                                                                        </Link>
+                                                                                        </a>
                                                                                     </Badge>
                                                                                 </li>
                                                                             ))}

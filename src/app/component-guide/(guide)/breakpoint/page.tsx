@@ -50,26 +50,40 @@ const HEIGHT_VARIANTS = [
     },
 ] as const
 
-// 브레이크포인트 — 모바일 퍼스트. Tailwind 기본 프리픽스를 그대로 쓰고, 프로젝트 주 티어는 md(768)·xl(1280).
+// 브레이크포인트 — Tailwind 기본 프리픽스를 그대로 쓰고, 프로젝트 주 티어는 md(768)·xl(1280).
 const BreakpointGuidePage = () => (
     <GuidePageShell
         title="브레이크포인트 (Breakpoint)"
         description={
             <>
-                모바일 퍼스트 반응형 기준입니다. 주 구간은 <code>md:</code>(≥{tokens.breakpoint.md}px)와{' '}
+                화면 폭에 따라 레이아웃을 바꾸는 기준입니다. 주 구간은 <code>md:</code>(≥{tokens.breakpoint.md}px)와{' '}
                 <code>xl:</code>(≥{tokens.breakpoint.xl}px)입니다.
             </>
         }
     >
         <BaseCard>
-            <section aria-labelledby="s-bp-rule" className="flex flex-col gap-2">
+            <section aria-labelledby="s-bp-rule" className="flex flex-col gap-3">
                 <h2 id="s-bp-rule" className="typo-h4-bold text-foreground">
                     반응형 적용 방식
                 </h2>
-                <p className="typo-body-l-regular text-foreground-subtle">
-                    프리픽스 없는 모바일 스타일을 먼저 작성하고 <code>md:</code>·<code>xl:</code>에서 확장합니다. 공통
-                    레이아웃은 이 두 구간을 우선하며, 임계값은 <code>tokens.json</code>에서만 변경합니다.
-                </p>
+                <ul className="typo-body-l-regular text-foreground-subtle flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        프리픽스 없는 클래스는 모든 폭에 적용되고, <code>md:</code> · <code>xl:</code>은 그 폭 이상에서
+                        덮어씁니다. 레이아웃은 이 두 구간을 기준으로 잡습니다.
+                    </li>
+                    <li>
+                        Tailwind 기본 구간 <code>sm:</code>(640) · <code>lg:</code>(1024) · <code>2xl:</code>(1536)도 쓸
+                        수 있습니다. 두 주 구간만으로 맞추기 어려운 세부 조정에 씁니다.
+                    </li>
+                    <li>
+                        <code>md</code> · <code>xl</code> 값은 <code>tokens.json</code>의 <code>breakpoint</code>에서만
+                        바꿉니다. 타이포그래피와 그리드도 같은 값을 따릅니다.
+                    </li>
+                    <li>
+                        스크립트에서 화면 폭을 볼 때(<code>matchMedia</code>)도 같은 값을 씁니다 — 예:{' '}
+                        <code>(min-width: {tokens.breakpoint.md / tokens.remBase}rem)</code>.
+                    </li>
+                </ul>
             </section>
         </BaseCard>
 
@@ -186,9 +200,8 @@ const BreakpointGuidePage = () => (
                         높이 축 변형
                     </h2>
                     <p className="typo-body-l-regular text-foreground-subtle">
-                        풀스크린 전환 화면에서만 높이 변형을 사용합니다. 임계값은 <code>tokens.json</code>의{' '}
-                        <code>breakpointHeight</code>에서 관리하고 생성기가 <code>@custom-variant</code>를 만듭니다.{' '}
-                        <code>STACK_PAGER_QUERY</code>와 값이 다르면 토큰 생성이 실패합니다.
+                        메인페이지처럼 화면 높이에 맞춰 섹션이 넘어가는 화면에서만 씁니다. 임계값은{' '}
+                        <code>tokens.json</code>의 <code>breakpointHeight</code>에서 바꿉니다.
                     </p>
                 </div>
 
