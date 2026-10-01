@@ -63,6 +63,37 @@ for (const path of ['src/.DS_Store', 'src/app/.DS_Store']) {
     rmSync(resolve(outputDirectory, path), {force: true})
 }
 
+// 퍼블리싱 인덱스의 open-screen 경유(Safari 인쇄 시 탭 종료 방지)는 원본 저장소 전용이라 전달하지 않는다.
+// 경유 주소와 상수 파일을 지우고, 인덱스의 링크를 화면 주소로 되돌린다.
+// 되돌릴 자리를 찾지 못하면 멈춘다 — 조용히 지나가면 지운 파일을 가리키는 코드가 전달본에 남는다.
+const replaceRequired = (source, pattern, replacement, label) => {
+    const replaced = source.replace(pattern, replacement)
+    if (replaced === source) {
+        throw new Error(`handoff 에서 되돌릴 자리를 찾지 못했습니다: ${label}`)
+    }
+    return replaced
+}
+
+rmSync(resolve(outputDirectory, 'src/app/component-guide/open-screen'), {recursive: true, force: true})
+rmSync(resolve(outputDirectory, 'src/constants/screen-open.ts'), {force: true})
+
+const handoffPublishingIndexPath = resolve(outputDirectory, 'src/components/custom/publishing-index.tsx')
+const handoffPublishingIndex = replaceRequired(
+    replaceRequired(
+        readFileSync(handoffPublishingIndexPath, 'utf8'),
+        "import {toScreenOpenHref} from '@/constants/screen-open'\n",
+        '',
+        'screen-open import',
+    ),
+    /\n[ \t]*\/\/ \[원본 전용\][^\n]*\n([ \t]*)href=\{toScreenOpenHref\(registeredScreen\.path\)\}\n[ \t]*prefetch=\{false\}\n/,
+    '\n$1href={registeredScreen.path}\n',
+    'open-screen 경유 링크',
+)
+if (handoffPublishingIndex.includes('toScreenOpenHref')) {
+    throw new Error('handoff 의 퍼블리싱 인덱스에 open-screen 경유 코드가 남아 있습니다.')
+}
+writeFileSync(handoffPublishingIndexPath, handoffPublishingIndex)
+
 // 원본 사이트 정보와 handoff 사이트 정보는 별도로 관리한다.
 copyRequiredHandoffAsset('handoff/site.ts', 'src/constants/site.ts')
 

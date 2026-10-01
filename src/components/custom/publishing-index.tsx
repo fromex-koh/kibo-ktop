@@ -40,6 +40,7 @@ import {SegmentedControl, SegmentedControlItem} from '@/components/composite/seg
 import {BaseCard} from '@/components/composite/base-card'
 import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
 import {ListMarker} from '@/components/custom/list-marker'
+import {toScreenOpenHref} from '@/constants/screen-open'
 
 // isCurrent(이번 릴리스에서 변경됨) 하이라이트는 자산 표·공통 레이아웃 표·화면 표가 모두 같은
 // 방식(배경색 + 아이콘 + sr-only 텍스트)을 쓰므로, 버전 셀 하나를 공용 컴포넌트로 뺀다.
@@ -1351,7 +1352,9 @@ const PublishingIndex = () => {
                                                                 {isScreenLink ? (
                                                                     // 인덱스를 보면서 화면을 하나씩 대조하므로 새 창으로 연다.
                                                                     <Link
-                                                                        href={registeredScreen.path}
+                                                                        // [원본 전용] open-screen 경유 — Safari 인쇄 시 탭 종료 방지(전달본은 화면 주소로 되돌림)
+                                                                        href={toScreenOpenHref(registeredScreen.path)}
+                                                                        prefetch={false}
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         className={`${
