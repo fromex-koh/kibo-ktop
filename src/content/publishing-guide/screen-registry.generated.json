@@ -671,7 +671,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-k-bigx-report-innovation-growth-report",
@@ -1000,28 +1000,28 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis-tech-index",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis-startup-tech-index",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-evaluation-results-general-analysis-investment-model",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-evaluation-results-bank-transfer",
@@ -1791,7 +1791,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report",
@@ -2036,56 +2036,56 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis-tech-index",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis-startup-tech-index",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-general-analysis-investment-model",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-deep-analysis-ktrs-fm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-deep-analysis-tech-index",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-deep-analysis-startup-tech-index",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-deep-analysis-investment-model",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.6",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-mypage-evaluation-history-guarantee-recommendation",
@@ -2609,8 +2609,8 @@
             "key": "corp-home-notice-popup",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.3.7",
+            "isCurrent": true
         },
         {
             "key": "corp-credit-information-policy",
@@ -2637,8 +2637,8 @@
             "key": "org-home-notice-popup",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.2.4",
-            "isCurrent": false
+            "version": "v3.3.7",
+            "isCurrent": true
         },
         {
             "key": "org-credit-information-policy",
