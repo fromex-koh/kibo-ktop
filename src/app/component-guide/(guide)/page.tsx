@@ -3,6 +3,7 @@ import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
 import CodeBlock from '@/components/custom/code-block'
+import {ComponentLayerBadge} from '@/components/custom/component-layer-badge'
 
 export const metadata: Metadata = {
     title: {absolute: '컴포넌트 가이드'},
@@ -31,12 +32,33 @@ const START_LINKS = [
     },
 ]
 
+// 컴포넌트 폴더 네 개 — 무엇이 들어가고, 고쳐도 되는지.
 const ARCHITECTURE = [
-    ['ui', '기본 구조·동작·접근성을 제공하는 shadcn/ui primitive'],
-    ['theme', '프로젝트 variant와 상태별 스타일'],
-    ['composite', 'shadcn/ui primitive를 조합한 공통 UI와 프로젝트 API'],
-    ['custom', '프로젝트 고유 기능을 가진 UI'],
-]
+    {
+        name: 'ui',
+        summary: 'shadcn/ui 에서 받은 기본 부품',
+        examples: 'Button · Input · Select · Dialog',
+        rule: '구조 · 동작 · 접근성은 고치지 않습니다. 업데이트 때 다시 받아 덮어씁니다.',
+    },
+    {
+        name: 'theme',
+        summary: 'ui 부품의 프로젝트 스타일',
+        examples: 'button.variants.ts · dialog.variants.ts',
+        rule: '색 · 크기 · 상태 스타일은 여기서만 고칩니다. 컴포넌트가 아니라 클래스 정의입니다.',
+    },
+    {
+        name: 'composite',
+        summary: 'shadcn/ui 부품을 합성한 공통 부품',
+        examples: 'Select · Field · Header · FormCard',
+        rule: 'shadcn/ui 부품끼리, 또는 shadcn/ui 부품과 직접 만든 요소를 합쳐 만듭니다. 어느 화면에서나 쓰도록 내용은 props 로 받습니다.',
+    },
+    {
+        name: 'custom',
+        summary: '한 화면 · 한 업무를 위한 전용 부품',
+        examples: '평가결과 리포트 · 홈 공지 팝업 · 차트 · 메인페이지 섹션',
+        rule: '그 화면의 내용과 동작을 직접 담습니다. 다른 화면에 그대로 가져다 쓰기 어렵습니다.',
+    },
+] as const
 
 const HANDOFF_TREE = `frontend-handoff/
 ├── package.json                        # 토큰 생성·dev·build·start 실행 환경
@@ -58,11 +80,13 @@ const HANDOFF_TREE = `frontend-handoff/
     ├── app/
     │   ├── layout.tsx                  # 전역 CSS·폰트·ThemeProvider 연결
     │   ├── page.tsx                    # 서비스 화면으로 교체할 최소 시작 화면
+    │   ├── (user-type)/                # 기업(corp)·기관(org) 서비스 화면
     │   ├── publishing-guide/page.tsx   # 퍼블리싱 인덱스
     │   ├── component-guide/            # 토큰·컴포넌트 가이드와 예시 화면
     │   ├── globals.css                 # Tailwind·토큰·전역 스타일 진입점
     │   ├── tokens.css                  # 포함·재생성되는 디자인 토큰 결과물
-    │   ├── manifest.ts                 # 서비스 웹 앱 메타데이터
+    │   ├── manifest.ts · robots.ts     # 서비스 웹 앱 메타데이터·검색 로봇 설정
+    │   ├── icon.svg · apple-icon.png · favicon.ico   # 사이트 아이콘
     │   └── fonts/                      # Pretendard와 폰트 라이선스
     ├── components/
     │   ├── ui/                         # primitive 구조·동작·접근성
@@ -70,30 +94,47 @@ const HANDOFF_TREE = `frontend-handoff/
     │   ├── composite/                  # primitive 조합 공통 컴포넌트
     │   ├── custom/                     # 재사용 가능한 프로젝트 컴포넌트
     │   └── theme-provider.tsx          # 공통 라이트·다크 테마 연결
+    ├── styles/                         # 한 화면에서만 쓰는 CSS (해당 page.tsx 가 직접 import)
     ├── hooks/                          # 컴포넌트 실행에 필요한 hooks
-    ├── constants/                      # 테마·가이드 공통 설정
-    ├── content/publishing-guide/       # 릴리스·인계 자산·화면 현황 스냅샷
-    ├── lib/utils.ts                    # cn 등 공통 유틸리티
+    ├── constants/                      # 사이트·테마·가이드 설정과 화면 공통 상수
+    ├── content/
+    │   ├── service/                    # 서비스 화면 목업 데이터 (API 연동 시 교체 지점)
+    │   ├── technology-evaluation/      # 기술평가 문항 등 화면 콘텐츠
+    │   └── publishing-guide/           # 릴리스·인계 자산·화면 현황 스냅샷
+    ├── lib/                            # cn 과 번호·파일 형식 등 공통 유틸리티
     └── types/                          # 외부 플러그인 타입 선언`
 
 const HANDOFF_EXCLUSIONS = `# 제작·검수 규칙
-.github/  docs/  .husky/
+.github/  docs/  .husky/  CLAUDE.md  AGENTS.md
 eslint.config.mjs  .prettierrc.cjs  .prettierignore
 
 # 릴리스·검사 생성 도구
 scripts/*  (scripts/build-tokens.mjs 제외)
-RELEASE_NOTES_DRAFT.md
+RELEASE_NOTES_DRAFT.md  handoff/  .env.example
+
+# 원본 저장소 전용 (퍼블리싱 인덱스의 새 탭 경유 주소)
+src/app/component-guide/open-screen/
+src/constants/screen-open.ts
 
 # 전달용으로 재구성
 README.md  package.json  .gitignore  src/app/page.tsx
+next.config.ts                   # 접근성 검사용 소스 지문 계산 제거
+src/constants/site.ts            # handoff/site.ts 로 교체
+src/constants/theme-routes.ts    # handoff/theme-routes.ts 로 교체
+public/og-image.png              # 원본 이미지 제거 (handoff/og-image.png 가 있으면 교체)
+src/components/custom/publishing-index.tsx   # 화면 링크를 경유 없이 화면 주소로
 
 # 전달용으로 추가
 src/app/publishing-guide/page.tsx`
 
 const HANDOFF_FLOW = [
-    ['1', '제작 검증', '현재 저장소에서 yarn verify와 yarn build를 통과합니다.'],
+    ['1', '제작 검증', '현재 저장소에서 yarn verify, 전체 화면 마크업 검사와 yarn build를 통과합니다.'],
     ['2', '전달본 생성', '화면·컴포넌트·가이드와 실행 설정을 복사하고 제작·검수 도구를 제외합니다.'],
-    ['3', '토큰·경로 구성', '토큰 생성 환경을 포함하고 루트 화면과 퍼블리싱 인덱스 경로를 분리합니다.'],
+    [
+        '3',
+        '토큰·경로 구성',
+        '토큰 생성 환경을 포함하고 루트 화면과 퍼블리싱 인덱스 경로를 분리하며, 사이트 설정을 전달용으로 바꿉니다.',
+    ],
     ['4', '독립 검증', '전달본에서 의존성 설치, 타입 검사와 프로덕션 빌드를 다시 통과합니다.'],
     ['5', '이력 반영', '기존 handoff 브랜치의 다음 커밋으로 결과를 반영해 버전별 변경 이력을 유지합니다.'],
 ]
@@ -208,22 +249,53 @@ const ComponentGuidePage = () => (
         <section aria-labelledby="architecture-title">
             <BaseCard>
                 <SectionHeader className="mb-6">
-                    <SectionHeaderTitle id="architecture-title">컴포넌트 계층</SectionHeaderTitle>
+                    <SectionHeaderTitle id="architecture-title">컴포넌트 폴더</SectionHeaderTitle>
                     <SectionHeaderDescription>
-                        구조와 접근성은 기반 계층에 두고, 프로젝트 스타일과 조합 책임을 분리합니다.
+                        <code className="text-foreground font-mono">src/components</code> 아래 네 폴더의 역할입니다.
                     </SectionHeaderDescription>
                 </SectionHeader>
-                <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    {ARCHITECTURE.map(([name, description]) => (
-                        <div key={name} className="border-border flex flex-col gap-2 rounded-xl border p-5">
-                            <h3 className="typo-body-l-medium text-foreground font-mono">{name}</h3>
-                            <p className="text-foreground-subtle">{description}</p>
+                <div className="grid gap-4 md:grid-cols-2">
+                    {ARCHITECTURE.map((layer) => (
+                        <div key={layer.name} className="border-border flex flex-col gap-2 rounded-xl border p-5">
+                            <h3 className="text-foreground flex flex-wrap items-center gap-2">
+                                <ComponentLayerBadge layer={layer.name} />
+                                <span className="font-semibold">{layer.summary}</span>
+                            </h3>
+                            <p className="text-foreground-subtle font-mono text-sm">{layer.examples}</p>
+                            <p className="text-foreground-subtle">{layer.rule}</p>
                         </div>
                     ))}
                 </div>
                 <p className="bg-muted text-foreground mt-4 overflow-x-auto rounded-md p-4 text-center font-mono font-semibold">
                     tokens → theme + ui → composite / custom → screen
                 </p>
+                <ul className="text-foreground-subtle mt-5 flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        화면에서는 <code className="text-foreground font-mono">ui</code> ·{' '}
+                        <code className="text-foreground font-mono">composite</code> ·{' '}
+                        <code className="text-foreground font-mono">custom</code>을 직접 불러 씁니다.
+                    </li>
+                    <li>
+                        버튼 · 입력 같은 기본 부품의 모양을 바꾸려면{' '}
+                        <code className="text-foreground font-mono">ui</code>가 아니라{' '}
+                        <code className="text-foreground font-mono">theme</code>의 같은 이름 파일을 고칩니다.
+                    </li>
+                    <li>
+                        기능이 더 필요하면 <code className="text-foreground font-mono">ui</code>를 고치지 않고{' '}
+                        <code className="text-foreground font-mono">composite</code>에서 조합해 만듭니다.
+                    </li>
+                    <li>
+                        새 컴포넌트를 어디에 둘지는 이렇게 가릅니다 — shadcn/ui 부품을 감싸거나 합쳐 만들고 다른 화면에
+                        props 만 바꿔 쓸 수 있으면 <code className="text-foreground font-mono">composite</code>, 그
+                        화면의 문구 · 데이터 · 흐름을 알고 있어야 하면{' '}
+                        <code className="text-foreground font-mono">custom</code>입니다.
+                    </li>
+                    <li>
+                        <code className="text-foreground font-mono">composite</code> ·{' '}
+                        <code className="text-foreground font-mono">custom</code>은 둘 다 프로젝트 코드라 자유롭게
+                        고칩니다.
+                    </li>
+                </ul>
             </BaseCard>
         </section>
 
@@ -257,8 +329,8 @@ const ComponentGuidePage = () => (
                 <div className="mt-8 flex flex-col gap-3">
                     <h3 className="typo-body-l-medium text-foreground">전달에서 제외·교체</h3>
                     <p className="text-foreground-subtle">
-                        제작 저장소의 규칙·검사·릴리스 도구는 제외합니다. 실행 환경, 루트 화면과 README는 전달 목적에
-                        맞게 재구성합니다.
+                        제작 저장소의 규칙·검사·릴리스 도구와 원본 저장소 전용 코드는 제외합니다. 실행 환경, 루트 화면,
+                        README와 사이트 설정은 전달 목적에 맞게 재구성합니다.
                     </p>
                     <CodeBlock code={HANDOFF_EXCLUSIONS} language="bash" />
                 </div>

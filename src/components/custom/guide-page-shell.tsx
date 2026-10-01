@@ -1,4 +1,5 @@
 import type {ReactNode} from 'react'
+import {GuideTitleLayerBadges} from '@/components/custom/component-layer-badge'
 
 // 컴포넌트 가이드 각 섹션 페이지의 공용 틀(래퍼 컴포넌트) — 타이틀 영역과 본문 간격을 통일한다.
 // 라우트 특수파일 page.tsx 와 헷갈리지 않도록 컴포넌트임을 드러내는 'Shell' 이름을 쓴다.
@@ -13,7 +14,11 @@ type GuidePageShellProps = {
 const GuidePageShell = ({title, description, children}: GuidePageShellProps) => (
     <div className="max-w-content mx-auto flex w-full flex-col gap-10 px-6 py-12 md:py-16">
         <header className="flex flex-col gap-y-1">
-            <h1 className="typo-display-s-bold text-foreground">{title}</h1>
+            {/* 제목 옆 배지 — 컴포넌트 가이드일 때 그 컴포넌트의 폴더(ui · composite · custom)를 알린다. */}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                <h1 className="typo-display-s-bold text-foreground">{title}</h1>
+                <GuideTitleLayerBadges />
+            </div>
             <p className="typo-title-l-regular text-foreground-subtle">{description}</p>
         </header>
         {children}
