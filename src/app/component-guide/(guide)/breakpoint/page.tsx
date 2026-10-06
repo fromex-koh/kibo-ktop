@@ -51,6 +51,31 @@ const HEIGHT_VARIANTS = [
 ] as const
 
 // 브레이크포인트 — Tailwind 기본 프리픽스를 그대로 쓰고, 프로젝트 주 티어는 md(768)·xl(1280).
+// 적용 규칙 카드 — 규칙마다 제목 · 핵심 코드 · 설명을 같은 자리에 둔다.
+const BREAKPOINT_RULES = [
+    {
+        title: '주 구간',
+        code: 'md: · xl:',
+        description:
+            '프리픽스 없는 클래스는 모든 폭에 적용되고, md: · xl: 은 그 폭 이상에서 덮어씁니다. 레이아웃은 이 두 구간을 기준으로 잡습니다.',
+    },
+    {
+        title: '보조 구간',
+        code: 'sm: (640) · lg: (1024) · 2xl: (1536)',
+        description: 'Tailwind 기본 구간도 쓸 수 있습니다. 두 주 구간만으로 맞추기 어려운 세부 조정에 씁니다.',
+    },
+    {
+        title: '값 변경',
+        code: 'tokens.json breakpoint',
+        description: 'md · xl 값은 여기에서만 바꿉니다. 타이포그래피와 그리드도 같은 값을 따릅니다.',
+    },
+    {
+        title: '스크립트',
+        code: `(min-width: ${tokens.breakpoint.md / tokens.remBase}rem)`,
+        description: '스크립트에서 화면 폭을 볼 때(matchMedia)도 같은 값을 씁니다.',
+    },
+]
+
 const BreakpointGuidePage = () => (
     <GuidePageShell
         title="브레이크포인트 (Breakpoint)"
@@ -62,66 +87,69 @@ const BreakpointGuidePage = () => (
         }
     >
         <BaseCard>
-            <section aria-labelledby="s-bp-rule" className="flex flex-col gap-3">
+            <section aria-labelledby="s-bp-rule" className="flex flex-col gap-6">
                 <h2 id="s-bp-rule" className="typo-h4-bold text-foreground">
                     반응형 적용 방식
                 </h2>
-                <ul className="typo-body-l-regular text-foreground-subtle flex list-disc flex-col gap-2 pl-5">
-                    <li>
-                        프리픽스 없는 클래스는 모든 폭에 적용되고, <code>md:</code> · <code>xl:</code>은 그 폭 이상에서
-                        덮어씁니다. 레이아웃은 이 두 구간을 기준으로 잡습니다.
-                    </li>
-                    <li>
-                        Tailwind 기본 구간 <code>sm:</code>(640) · <code>lg:</code>(1024) · <code>2xl:</code>(1536)도 쓸
-                        수 있습니다. 두 주 구간만으로 맞추기 어려운 세부 조정에 씁니다.
-                    </li>
-                    <li>
-                        <code>md</code> · <code>xl</code> 값은 <code>tokens.json</code>의 <code>breakpoint</code>에서만
-                        바꿉니다. 타이포그래피와 그리드도 같은 값을 따릅니다.
-                    </li>
-                    <li>
-                        스크립트에서 화면 폭을 볼 때(<code>matchMedia</code>)도 같은 값을 씁니다 — 예:{' '}
-                        <code>(min-width: {tokens.breakpoint.md / tokens.remBase}rem)</code>.
-                    </li>
-                </ul>
+                {/* 규칙마다 같은 자리에 같은 항목(제목 · 핵심 코드 · 설명)을 둔다. */}
+                <div className="grid gap-4 md:grid-cols-2">
+                    {BREAKPOINT_RULES.map((rule) => (
+                        <div
+                            key={rule.title}
+                            className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5"
+                        >
+                            <h3 className="typo-body-xl-bold text-foreground">{rule.title}</h3>
+                            <code className="bg-card text-foreground border-subtle-3 w-fit max-w-full rounded-xs border px-2 py-1 font-mono text-sm break-all">
+                                {rule.code}
+                            </code>
+                            <p className="text-label-foreground">{rule.description}</p>
+                        </div>
+                    ))}
+                </div>
             </section>
         </BaseCard>
 
         {/* 라이브 데모 — 브라우저 폭을 줄였다 늘리면 실제로 재배치된다. 프리픽스 동작을 그대로 보여주려
             grid-cols-* 를 직접 조합했다(실제 콘텐츠 그리드는 PB-15 대로 .grid-layout 사용). */}
         <BaseCard>
-            <section aria-labelledby="s-bp-demo" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
+            <section aria-labelledby="s-bp-demo" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
                     <h2 id="s-bp-demo" className="typo-h4-bold">
                         라이브 데모
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        브라우저 폭을 줄였다 늘리면 아래 카드가 <code>1 → 2 → 3</code>열로 재배치되고, 현재 구간 표시도
+                    <p className="typo-body-l-regular text-label-foreground">
+                        브라우저 폭을 줄였다 늘리면 아래 카드가{' '}
+                        <code className="text-foreground font-mono">1 → 2 → 3</code>열로 재배치되고, 현재 구간 표시도
                         함께 바뀝니다.
                     </p>
                 </div>
 
-                {/* 현재 구간 — CSS 프리픽스만으로 구간별 하나만 보이게 토글(그 자체가 프리픽스 동작 예시). */}
-                <p className="typo-body-l-regular">
-                    현재 활성 구간:{' '}
-                    <span className="text-primary-strong font-semibold">
-                        <span className="md:hidden">mobile (기본)</span>
-                        <span className="hidden md:inline xl:hidden">md (≥768px)</span>
-                        <span className="hidden xl:inline">xl (≥1280px)</span>
-                    </span>
-                </p>
-
-                <code className="typo-body-l-regular text-muted-foreground bg-card border-border w-fit rounded-md border px-3 py-1 font-mono">
-                    grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3
-                </code>
+                {/* 현재 구간 — CSS 프리픽스만으로 구간별 하나만 보이게 토글(그 자체가 프리픽스 동작 예시).
+                    데모에서 가장 먼저 봐야 할 값이라 포인트 띠로 세우고, 적용한 클래스를 옆에 둔다. */}
+                <div className="border-primary/30 bg-primary-subtle flex flex-wrap items-center justify-between gap-x-6 gap-y-2 rounded-sm border p-5">
+                    <p className="typo-body-l-regular text-foreground">
+                        현재 활성 구간:{' '}
+                        <strong className="typo-body-xl-bold text-primary-strong">
+                            <span className="md:hidden">mobile (기본)</span>
+                            <span className="hidden md:inline xl:hidden">md (≥768px)</span>
+                            <span className="hidden xl:inline">xl (≥1280px)</span>
+                        </strong>
+                    </p>
+                    <code className="text-foreground font-mono text-sm font-semibold">
+                        grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3
+                    </code>
+                </div>
 
                 <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
                     {Array.from({length: 6}, (_, i) => i + 1).map((n) => (
+                        // 레이아웃 그리드 가이드의 컬럼 칸과 같은 스타일(옅은 빨강 칸 + 번호 원)이다.
                         <li
                             key={n}
-                            className="bg-card border-border text-foreground typo-body-l-medium flex min-h-24 items-center justify-center rounded-lg border"
+                            className="bg-destructive/15 border-destructive/40 flex h-20 items-center justify-center rounded-md border"
                         >
-                            카드 {n}
+                            <span className="bg-card border-destructive text-destructive typo-body-l-medium flex size-7 items-center justify-center rounded-full border-2">
+                                {n}
+                            </span>
                         </li>
                     ))}
                 </ul>
@@ -194,20 +222,25 @@ const BreakpointGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="s-bp-height" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
+            <section aria-labelledby="s-bp-height" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
                     <h2 id="s-bp-height" className="typo-h4-bold text-foreground">
                         높이 축 변형
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
+                    <p className="typo-body-l-regular text-label-foreground">
                         메인페이지처럼 화면 높이에 맞춰 섹션이 넘어가는 화면에서만 씁니다. 임계값은{' '}
-                        <code>tokens.json</code>의 <code>breakpointHeight</code>에서 바꿉니다.
+                        <code className="text-foreground font-mono">tokens.json</code>의{' '}
+                        <code className="text-foreground font-mono">breakpointHeight</code>에서 바꿉니다.
                     </p>
                 </div>
 
-                <code className="typo-body-l-regular text-muted-foreground bg-card border-border w-fit rounded-md border px-3 py-1 font-mono">
-                    pager-off:h-dvh landscape:pt-13
-                </code>
+                {/* 코드만 덩그러니 있으면 무엇인지 알 수 없어 이름표(사용 예)를 붙인 포인트 띠로 세운다. */}
+                <div className="border-primary/30 bg-primary-subtle flex flex-wrap items-center gap-x-4 gap-y-2 rounded-sm border p-5">
+                    <strong className="typo-body-l-bold text-foreground">사용 예</strong>
+                    <code className="text-foreground font-mono text-sm font-semibold">
+                        pager-off:h-dvh landscape:pt-13
+                    </code>
+                </div>
 
                 <Table
                     caption="높이 기준 반응형 변형과 적용 조건"

@@ -1,3 +1,5 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 'use client'
 
 import {useRef} from 'react'

@@ -1,8 +1,13 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import type {ReactNode} from 'react'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import PropsTable from '@/components/custom/props-table'
+import {Table} from '@/components/custom/table'
 import {
     CheckboxBadgeDemo,
     CheckboxBasicDemo,
@@ -14,6 +19,17 @@ import {
 } from './selectable-card-demo'
 
 export const metadata: Metadata = {title: '선택 카드 (SelectableCard)'}
+
+const USAGE_CODE = `import {SelectableCard, SelectableCardGroup} from '@/components/composite/selectable-card'
+
+{/* 단일 선택 — 그룹 안에서 하나만 */}
+<SelectableCardGroup name="agreement" aria-label="동의 범위" defaultValue="required">
+  <SelectableCard control="radio" value="required">필수항목만 동의</SelectableCard>
+  <SelectableCard control="radio" value="all">전체 항목 동의</SelectableCard>
+</SelectableCardGroup>
+
+{/* 독립 선택 — 카드마다 따로 (control 기본값) */}
+<SelectableCard checked={agreed} onCheckedChange={setAgreed}>내용을 확인하였습니다.</SelectableCard>`
 
 const RADIO_BASIC_CODE = `import {SelectableCard, SelectableCardGroup} from '@/components/composite/selectable-card'
 
@@ -148,141 +164,187 @@ const FORM_CODE = `<form onSubmit={handleSubmit}>
   <Button type="submit" variant="default" size="sm">신청 내용 확인</Button>
 </form>`
 
-const PROPS = [
-    {
-        component: 'SelectableCardGroup',
-        name: 'name',
-        description: '폼 제출 시 사용할 필드 이름입니다. 화면 상태 선택에만 사용한다면 생략할 수 있습니다.',
-        defaultValue: '-',
-        control: 'string',
-    },
-    {
-        component: 'SelectableCardGroup',
-        name: 'aria-label / aria-labelledby',
-        description: '라디오 그룹의 목적을 보조기기에 전달합니다. 사용 시 두 속성 중 하나를 제공합니다.',
-        defaultValue: '-',
-        control: 'string',
-    },
-    {
-        component: 'SelectableCardGroup',
-        name: 'value / defaultValue',
-        description:
-            '라디오 카드 그룹의 현재 선택값 또는 초기 선택값입니다. controlled와 uncontrolled 방식을 모두 지원합니다.',
-        defaultValue: '-',
-        control: 'string',
-    },
-    {
-        component: 'SelectableCardGroup',
-        name: 'onValueChange',
-        description: '라디오 카드의 선택값이 바뀔 때 호출됩니다.',
-        defaultValue: '-',
-        control: '(value) => void',
-    },
-    {
-        component: 'SelectableCardGroup',
-        name: 'required / form',
-        description: '네이티브 필수 선택 검증과 외부 form 연결에 사용합니다.',
-        defaultValue: 'false / -',
-        control: 'boolean / string',
-    },
-    {
-        component: 'SelectableCardGroup',
-        name: 'className',
-        description: '그룹의 열 수, 간격과 폭 등 레이아웃 스타일을 확장합니다.',
-        defaultValue: '""',
-        control: 'string',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'control',
-        description:
-            '내장 선택 컨트롤입니다. radio는 단일 선택, checkbox는 독립 선택에 사용하며 라벨 타이포도 함께 결정됩니다.',
-        defaultValue: '"checkbox"',
-        control: '"radio" | "checkbox"',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'value',
-        description: '폼 제출 값입니다. radio 카드에는 각 항목을 구분하는 고유한 값을 지정합니다.',
-        defaultValue: '-',
-        control: 'string',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'checked / onCheckedChange',
-        description: 'checkbox 카드의 제어 선택 상태와 변경 콜백입니다.',
-        defaultValue: 'false',
-        control: 'boolean / (checked) => void',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'name',
-        description: 'checkbox 값을 폼으로 제출할 때 사용할 필드 이름입니다.',
-        defaultValue: '-',
-        control: 'string',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'required / form',
-        description: 'checkbox 카드의 네이티브 필수 검증과 외부 form 연결에 사용합니다.',
-        defaultValue: 'false / -',
-        control: 'boolean / string',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'disabled',
-        description: '상호작용을 막고 공통 비활성 배경·텍스트·테두리 토큰을 적용합니다.',
-        defaultValue: 'false',
-        control: 'boolean',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'badges',
-        description:
-            '카드 오른쪽 끝에 Badge 등 보조 요소를 표시하는 슬롯입니다. 뱃지 텍스트도 컨트롤의 접근 가능한 이름에 포함됩니다.',
-        defaultValue: '-',
-        control: 'ReactNode',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'labelClassName',
-        description: 'control이 정한 기본 라벨 타이포를 확장하거나 덮어씁니다.',
-        defaultValue: '""',
-        control: 'string',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'id',
-        description: '내부 RadioGroupItem 또는 Checkbox에 전달할 식별자입니다.',
-        defaultValue: '-',
-        control: 'string',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'className',
-        description: '카드의 폭과 레이아웃 스타일을 확장합니다.',
-        defaultValue: '""',
-        control: 'string',
-    },
-    {
-        component: 'SelectableCard',
-        name: 'children',
-        description: '카드의 기본 라벨 콘텐츠입니다.',
-        defaultValue: '-',
-        control: 'ReactNode',
-    },
-]
+const PROPS_ITEMS = [
+    ['SelectableCardGroup', 'name', '폼 제출 시 필드 이름.', 'undefined', 'string'],
+    ['SelectableCardGroup', 'aria-label · aria-labelledby', '그룹의 이름. 둘 중 하나를 줍니다.', '—', 'string'],
+    [
+        'SelectableCardGroup',
+        'value · onValueChange',
+        '선택값을 바깥에서 관리할 때 씁니다.',
+        'undefined',
+        'string · (value: string) => void',
+    ],
+    ['SelectableCardGroup', 'defaultValue', '초기 선택값(비제어).', 'undefined', 'string'],
+    ['SelectableCardGroup', 'required', '필수 선택 여부.', 'false', 'boolean'],
+    [
+        'SelectableCardGroup',
+        'disabled',
+        '그룹 안의 카드를 모두 비활성으로 둡니다(Radix RadioGroup 속성).',
+        'false',
+        'boolean',
+    ],
+    ['SelectableCardGroup', 'form', '연결할 form 의 id.', 'undefined', 'string'],
+    ['SelectableCardGroup', 'className', '열 수 · 간격 등 배치. 기본은 1단 grid 입니다.', 'undefined', 'string'],
+    [
+        'SelectableCard',
+        'control',
+        '선택 방식. radio 는 SelectableCardGroup 안에서만 씁니다.',
+        "'checkbox'",
+        "'radio' | 'checkbox'",
+    ],
+    ['SelectableCard', 'children', '카드의 라벨.', '—', 'ReactNode'],
+    ['SelectableCard', 'value', 'radio 는 필수이며 항목을 구분하는 값. checkbox 는 폼 제출값입니다.', '—', 'string'],
+    [
+        'SelectableCard',
+        'checked · onCheckedChange',
+        'checkbox 의 선택 상태를 바깥에서 관리할 때 씁니다.',
+        'undefined',
+        'boolean · (checked: boolean) => void',
+    ],
+    ['SelectableCard', 'defaultChecked', 'checkbox 의 초기 선택 상태(비제어).', 'undefined', 'boolean'],
+    ['SelectableCard', 'name', 'checkbox 의 폼 제출 필드 이름.', 'undefined', 'string'],
+    [
+        'SelectableCard',
+        'required · form',
+        'checkbox 의 필수 여부 · 연결할 form 의 id.',
+        'undefined',
+        'boolean · string',
+    ],
+    ['SelectableCard', 'disabled', '선택할 수 없고 폼 제출에서 빠집니다.', 'undefined', 'boolean'],
+    ['SelectableCard', 'badges', '카드 오른쪽 끝에 놓을 Badge. 여러 개면 나란히 나열됩니다.', 'undefined', 'ReactNode'],
+    [
+        'SelectableCard',
+        'onClick',
+        '카드를 누를 때마다 호출됩니다. 이미 선택된 카드를 다시 눌러도 호출됩니다.',
+        'undefined',
+        '() => void',
+    ],
+    ['SelectableCard', 'id', '내부 컨트롤의 id. 생략하면 자동으로 만들어집니다.', '자동 생성', 'string'],
+    ['SelectableCard', 'labelClassName', '라벨에 덧붙일 클래스.', 'undefined', 'string'],
+    ['SelectableCard', 'className', '카드에 덧붙일 클래스.', 'undefined', 'string'],
+] as const
 
-// 케이스 한 칸 — 제목·설명·미리보기·코드를 한 묶음으로 보여준다. 개발자가 화면에서 본 상태의
-// 코드를 바로 아래에서 확인할 수 있게 짝을 고정한다.
+// control 별 차이 — 어느 쪽을 쓸지와 넘길 값을 먼저 보여 준다.
+const CONTROL_COLUMNS = [
+    {key: 'control', header: 'control', align: 'start', rowHeader: true},
+    {key: 'use', header: '쓰는 곳', align: 'start', wrap: true},
+    {key: 'state', header: '선택 상태', align: 'start', wrap: true},
+    {key: 'label', header: '라벨', align: 'start', wrap: true},
+] as const
+
+const CONTROL_ROWS = [
+    {
+        key: 'radio',
+        cells: [
+            <code key="control">radio</code>,
+            '여러 카드 중 하나만 고름',
+            <span key="state">
+                <code>SelectableCardGroup</code> 의 <code>value</code> · <code>onValueChange</code>
+            </span>,
+            <code key="label">typo-title-l-bold</code>,
+        ],
+    },
+    {
+        key: 'checkbox',
+        cells: [
+            <span key="control">
+                <code>checkbox</code> (기본값)
+            </span>,
+            '카드마다 따로 켜고 끔',
+            <span key="state">
+                카드의 <code>checked</code> · <code>onCheckedChange</code>
+            </span>,
+            <span key="label">
+                <code>typo-body-xl-regular</code>, 선택하면 Bold
+            </span>,
+        ],
+    },
+] as const
+
+const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
+
+const CHOICE_COLUMNS = [
+    {key: 'case', header: '사용 상황', align: 'start', rowHeader: true},
+    {key: 'component', header: '선택', align: 'start'},
+    {key: 'note', header: '기준', align: 'start', wrap: true},
+] as const
+
+const CHOICE_ROWS = [
+    {
+        key: 'selectable-card',
+        cells: [
+            '한 줄 라벨(+ 배지)을 카드째 눌러 선택',
+            <code key="component">SelectableCard</code>,
+            '동의 범위, 확인 동의처럼 문장 하나가 선택지입니다. 컨트롤 표시(동그라미·체크)가 있습니다.',
+        ],
+    },
+    {
+        key: 'info-card',
+        cells: [
+            '이름·값 여러 줄을 담은 카드 중 하나 선택',
+            <Link key="component" href="/component-guide/selectable-info-card" className={LINK_CLASS}>
+                SelectableInfoCard
+            </Link>,
+            '검색된 기업·특허처럼 정보 카드입니다. 컨트롤 표시 없이 테두리로 선택을 보입니다.',
+        ],
+    },
+    {
+        key: 'radio-card',
+        cells: [
+            '일러스트·부가 정보가 있는 큰 선택지',
+            <span key="component">
+                <Link href="/component-guide/radio-card" className={LINK_CLASS}>
+                    RadioCard
+                </Link>
+                {' · '}
+                <Link href="/component-guide/option-card" className={LINK_CLASS}>
+                    OptionCard
+                </Link>
+            </span>,
+            '라벨 한 줄보다 많은 내용을 담을 때 씁니다.',
+        ],
+    },
+    {
+        key: 'chip',
+        cells: [
+            '짧은 값을 작게 고름',
+            <span key="component">
+                <Link href="/component-guide/chip" className={LINK_CLASS}>
+                    Chip
+                </Link>
+                {' · '}
+                <Link href="/component-guide/radio-chip" className={LINK_CLASS}>
+                    RadioChip
+                </Link>
+            </span>,
+            '카드보다 작은 칩 모양입니다.',
+        ],
+    },
+    {
+        key: 'radio-checkbox',
+        cells: [
+            '카드 모양이 필요 없는 일반 폼 항목',
+            <span key="component">
+                <Link href="/component-guide/radio" className={LINK_CLASS}>
+                    Radio
+                </Link>
+                {' · '}
+                <Link href="/component-guide/checkbox" className={LINK_CLASS}>
+                    Checkbox
+                </Link>
+            </span>,
+            '기본 컨트롤입니다.',
+        ],
+    },
+] as const
+
+// 소제목 블록 — 설명 · 미리보기 · 코드를 한 묶음으로 둔다.
 type GuideCaseProps = {title: string; description: ReactNode; code: string; children: ReactNode}
 
 const GuideCase = ({title, description, code, children}: GuideCaseProps) => (
-    <div className="flex flex-col gap-3">
-        <div>
-            <h3 className="typo-title-l-medium text-foreground">{title}</h3>
-            <p className="typo-body-l-regular text-muted-foreground">{description}</p>
-        </div>
+    <div className="flex flex-col gap-4 py-8 last:pb-0">
+        <h3 className="typo-title-m-bold text-foreground">{title}</h3>
+        <p className="typo-body-l-regular text-label-foreground">{description}</p>
         {children}
         <CodeBlock code={code} language="tsx" copyLabel="복사" />
     </div>
@@ -291,127 +353,136 @@ const GuideCase = ({title, description, code, children}: GuideCaseProps) => (
 const SelectableCardGuidePage = () => (
     <GuidePageShell
         title="선택 카드 (SelectableCard)"
-        description="카드 전체가 하나의 선택 대상인 컨트롤입니다. 카드 어디를 눌러도 선택되고, 선택 컨트롤과 라벨이 왼쪽, 뱃지가 오른쪽 끝에 붙습니다. control 로 단일 선택(radio)과 독립 선택(checkbox)을 정하며 라벨 타이포도 함께 결정됩니다."
+        description="카드 전체를 눌러 선택하는 컨트롤입니다. control 로 단일 선택(radio)과 독립 선택(checkbox)을 정합니다."
     >
         <BaseCard>
-            <section aria-labelledby="sc-radio" className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
-                    <h2 id="sc-radio" className="typo-h4-bold">
-                        control=&quot;radio&quot; — 단일 선택
+            <section aria-labelledby="sc-usage" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="sc-usage" className="typo-h4-bold">
+                        기본 사용
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        동의 범위처럼 <strong className="font-medium">여러 선택지 중 하나만</strong> 고르는 화면에
-                        씁니다. 반드시 <code className="font-mono">SelectableCardGroup</code>으로 감싸고, 선택값은
-                        그룹이 관리하므로 카드에는 <code className="font-mono">value</code>만 넘깁니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        라벨은 children, 오른쪽 끝 뱃지는 <code>badges</code> 로 넘깁니다. 카드의 빈 영역을 누르면
+                        컨트롤이 눌리고, 카드 안의 링크 · 버튼은 자체 동작만 합니다. 라디오와 체크박스는{' '}
+                        <code>control</code> 로 고릅니다.
                     </p>
-                    <ul className="typo-body-l-regular text-muted-foreground list-disc space-y-1 pl-5">
-                        <li>
-                            라벨은 <code className="font-mono">typo-title-l-bold</code>(20px Bold) 고정입니다 — 선택
-                            여부와 무관합니다.
-                        </li>
-                        <li>
-                            <strong className="font-medium">열 수와 반응형 분기는 화면이 정합니다.</strong> 그룹은 1단
-                            grid만 갖고 있으므로, 2단이 필요한 화면에서 <code className="font-mono">className</code>에{' '}
-                            <code className="font-mono">gap-4 xl:grid-cols-2</code>처럼 배치를 얹습니다. 아래 예시는
-                            태블릿까지 1단으로 쌓고 데스크톱(xl)에서 2단이 됩니다.
-                        </li>
-                    </ul>
+                </div>
+                <Table caption="control 별 사용 기준" columns={CONTROL_COLUMNS} rows={CONTROL_ROWS} size="md" />
+                <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="sc-radio" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="sc-radio" className="typo-h4-bold">
+                        단일 선택 (radio)
+                    </h2>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        반드시 <code>SelectableCardGroup</code> 으로 감싸고 카드에는 <code>value</code> 를 넘깁니다. 열
+                        수와 간격은 그룹 <code>className</code> 에 줍니다(예: <code>gap-4 xl:grid-cols-2</code>).
+                    </p>
                 </div>
 
-                <GuideCase
-                    title="기본 (뱃지 없음)"
-                    description="라벨만 있는 기본 형태입니다. 선택하면 primary 테두리와 배경이 적용됩니다."
-                    code={RADIO_BASIC_CODE}
-                >
-                    <RadioBasicDemo />
-                </GuideCase>
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    <GuideCase
+                        title="기본"
+                        description={
+                            <>
+                                선택값은 <code>value</code> · <code>onValueChange</code>(제어) 또는{' '}
+                                <code>defaultValue</code>(비제어)로 관리합니다.
+                            </>
+                        }
+                        code={RADIO_BASIC_CODE}
+                    >
+                        <RadioBasicDemo />
+                    </GuideCase>
 
-                <GuideCase
-                    title="뱃지"
-                    description={
-                        <>
-                            항목의 성격을 알리는 뱃지를 카드 오른쪽 끝에 1개 또는 2개 붙입니다.{' '}
-                            <code className="font-mono">badges</code> 슬롯으로 넘기며, 뱃지 텍스트도 라디오의 접근
-                            가능한 이름에 포함됩니다.
-                        </>
-                    }
-                    code={RADIO_BADGE_CODE}
-                >
-                    <RadioBadgeDemo />
-                </GuideCase>
+                    <GuideCase
+                        title="뱃지"
+                        description={
+                            <>
+                                <code>badges</code> 에 Badge 를 하나 또는 여러 개 넘깁니다.
+                            </>
+                        }
+                        code={RADIO_BADGE_CODE}
+                    >
+                        <RadioBadgeDemo />
+                    </GuideCase>
 
-                <GuideCase
-                    title="비활성 (disabled)"
-                    description="상호작용을 막고 공통 disabled 토큰을 적용합니다. 선택된 항목도 primary 강조 대신 비활성 표시를 따르며 폼 제출에서 제외됩니다."
-                    code={RADIO_DISABLED_CODE}
-                >
-                    <RadioDisabledDemo />
-                </GuideCase>
+                    <GuideCase
+                        title="비활성"
+                        description={
+                            <>
+                                <code>disabled</code> 카드는 선택할 수 없고 폼 제출에서 빠집니다.
+                            </>
+                        }
+                        code={RADIO_DISABLED_CODE}
+                    >
+                        <RadioDisabledDemo />
+                    </GuideCase>
+                </div>
             </section>
         </BaseCard>
 
         <BaseCard>
             <section aria-labelledby="sc-checkbox" className="flex flex-col gap-6">
-                <div className="flex flex-col gap-2">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="sc-checkbox" className="typo-h4-bold">
-                        control=&quot;checkbox&quot; — 독립 선택
+                        독립 선택 (checkbox)
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        확인 동의처럼 <strong className="font-medium">항목마다 따로</strong> 켜고 끄는 화면에 씁니다.
-                        그룹으로 감싸지 않고 카드마다 <code className="font-mono">checked</code>와{' '}
-                        <code className="font-mono">onCheckedChange</code>로 상태를 관리합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        그룹으로 감싸지 않고 카드마다 상태를 관리합니다. 여러 장은 <code>flex flex-col gap-4</code> 로
+                        쌓습니다.
                     </p>
-                    <ul className="typo-body-l-regular text-muted-foreground list-disc space-y-1 pl-5">
-                        <li>
-                            라벨은 <code className="font-mono">typo-body-xl-regular</code>(16px)이고 선택했을 때만
-                            Bold로 강조됩니다 — 긴 동의 문장을 읽는 화면이라 본문 크기를 씁니다.
-                        </li>
-                        <li>
-                            배치는 <code className="font-mono">flex flex-col gap-4</code> 세로 스택입니다.
-                        </li>
-                    </ul>
                 </div>
 
-                <GuideCase
-                    title="기본 (체크전 · 체크후)"
-                    description="첫 번째는 체크전, 두 번째는 체크후 상태입니다. 카드를 클릭하면 각각 독립적으로 토글됩니다."
-                    code={CHECKBOX_BASIC_CODE}
-                >
-                    <CheckboxBasicDemo />
-                </GuideCase>
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    <GuideCase
+                        title="기본"
+                        description={
+                            <>
+                                <code>checked</code> · <code>onCheckedChange</code>(제어) 또는{' '}
+                                <code>defaultChecked</code>(비제어)로 관리합니다.
+                            </>
+                        }
+                        code={CHECKBOX_BASIC_CODE}
+                    >
+                        <CheckboxBasicDemo />
+                    </GuideCase>
 
-                <GuideCase
-                    title="뱃지"
-                    description="checkbox 카드도 radio와 같은 badges 슬롯을 사용합니다. 항목마다 필수·선택이 갈리므로 뱃지로 구분합니다."
-                    code={CHECKBOX_BADGE_CODE}
-                >
-                    <CheckboxBadgeDemo />
-                </GuideCase>
+                    <GuideCase
+                        title="뱃지"
+                        description="radio 카드와 같은 <code>badges</code> 를 씁니다."
+                        code={CHECKBOX_BADGE_CODE}
+                    >
+                        <CheckboxBadgeDemo />
+                    </GuideCase>
 
-                <GuideCase
-                    title="비활성 (disabled)"
-                    description="미선택·선택 두 경우 모두 공통 disabled 토큰으로 표시되고 폼 제출에서 제외됩니다."
-                    code={CHECKBOX_DISABLED_CODE}
-                >
-                    <CheckboxDisabledDemo />
-                </GuideCase>
+                    <GuideCase
+                        title="비활성"
+                        description={
+                            <>
+                                <code>disabled</code> 카드는 선택할 수 없고 폼 제출에서 빠집니다.
+                            </>
+                        }
+                        code={CHECKBOX_DISABLED_CODE}
+                    >
+                        <CheckboxDisabledDemo />
+                    </GuideCase>
+                </div>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="sc-form" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="sc-form" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="sc-form" className="typo-h4-bold">
-                        신청 Form 제출
+                        폼 제출
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        실제 신청 화면을 가정해 두 control을 함께 구성했습니다. 라디오는 그룹에{' '}
-                        <code className="font-mono">name</code>, 각 항목에 <code className="font-mono">value</code>를
-                        지정하고, 체크박스는 카드에 <code className="font-mono">name</code>과{' '}
-                        <code className="font-mono">value</code>를 지정하면 선택값이 제출됩니다. 컴포넌트가 실제{' '}
-                        <code className="font-mono">form</code> 안에 있어야 하며,{' '}
-                        <code className="font-mono">disabled</code> 값은 제출에서 제외됩니다. 아래 버튼으로 실제{' '}
-                        <code className="font-mono">FormData</code> 결과를 확인할 수 있습니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        radio 는 그룹에 <code>name</code>, 카드에 <code>value</code> 를 줍니다. checkbox 는 카드에{' '}
+                        <code>name</code> 과 <code>value</code> 를 줍니다.
                     </p>
                 </div>
                 <SelectableCardFormDemo />
@@ -420,78 +491,52 @@ const SelectableCardGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="sc-props" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="sc-props" className="typo-h4-bold">
-                        Props
+            <section aria-labelledby="sc-choice" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="sc-choice" className="typo-h4-bold">
+                        컴포넌트 선택
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        SelectableCard와 SelectableCardGroup에서 주로 사용하는 프로젝트 API입니다.
-                    </p>
+                    <p className="typo-body-l-regular text-label-foreground">선택 컴포넌트는 담는 내용으로 고릅니다.</p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">SelectableCard Props 목록</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Component
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Description
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Default
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Control
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {PROPS.map((prop, index) => {
-                                const firstComponentIndex = PROPS.findIndex((item) => item.component === prop.component)
-                                const componentRowSpan = PROPS.filter(
-                                    (item) => item.component === prop.component,
-                                ).length
+                <Table caption="선택 컴포넌트 사용 기준" columns={CHOICE_COLUMNS} rows={CHOICE_ROWS} size="md" />
+            </section>
+        </BaseCard>
 
-                                return (
-                                    <tr
-                                        key={`${prop.component}-${prop.name}`}
-                                        className="border-border bg-background border-b last:border-b-0"
-                                    >
-                                        {index === firstComponentIndex ? (
-                                            <th
-                                                scope="rowgroup"
-                                                rowSpan={componentRowSpan}
-                                                className="typo-caption-regular border-border text-primary border-r px-4 py-3 align-top font-mono font-normal whitespace-nowrap"
-                                            >
-                                                {prop.component}
-                                            </th>
-                                        ) : null}
-                                        <td className="typo-caption-regular text-primary px-4 py-3 align-top font-mono whitespace-nowrap">
-                                            {prop.name}
-                                        </td>
-                                        <td className="typo-body-l-regular text-muted-foreground px-4 py-3 align-top">
-                                            {prop.description}
-                                        </td>
-                                        <td className="typo-caption-regular text-muted-foreground px-4 py-3 align-top font-mono whitespace-nowrap">
-                                            {prop.defaultValue}
-                                        </td>
-                                        <td className="px-4 py-3 align-top">
-                                            <span className="text-primary inline-block w-fit rounded bg-gray-100 px-2 py-1 font-mono text-xs whitespace-nowrap">
-                                                {prop.control}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
+        <BaseCard>
+            <section aria-labelledby="sc-accessibility" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="sc-accessibility" className="typo-h4-bold">
+                        접근성
+                    </h2>
                 </div>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        라벨과 뱃지 글자는 <code>aria-labelledby</code> 로 컨트롤의 이름에 연결되므로 따로 넣지
+                        않습니다[7.4.1].
+                    </li>
+                    <li>선택 상태는 테두리 · 배경과 함께 컨트롤 표시로도 전달합니다[5.3.1].</li>
+                    <li>카드 어디에 포커스가 가도 카드 외곽선이 표시됩니다[6.1.2].</li>
+                    <li>
+                        <code className="text-foreground font-mono">SelectableCardGroup</code> 에는{' '}
+                        <code className="text-foreground font-mono">aria-label</code> 또는{' '}
+                        <code className="text-foreground font-mono">aria-labelledby</code> 로 그룹 이름을 줍니다[7.4.1].
+                    </li>
+                    <li>
+                        checkbox 카드를 여러 장 묶을 때는 <code className="text-foreground font-mono">fieldset</code> ·{' '}
+                        <code className="text-foreground font-mono">legend</code> 로 묶음 이름을 줍니다.
+                    </li>
+                </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="sc-props" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="sc-props" className="typo-h4-bold">
+                        Props API
+                    </h2>
+                </div>
+                <PropsTable items={PROPS_ITEMS} caption="SelectableCard Props 목록" />
             </section>
         </BaseCard>
     </GuidePageShell>

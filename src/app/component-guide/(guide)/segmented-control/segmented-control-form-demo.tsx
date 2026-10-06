@@ -1,5 +1,12 @@
 'use client'
 
+import {
+    FormResetButton,
+    FormSubmitResult,
+    formatSubmitResult,
+    withFormReset,
+    type FormResetProps,
+} from '@/components/custom/form-submit-result'
 import {useState} from 'react'
 import {Button} from '@/components/ui/button'
 import {Field, FieldLabel} from '@/components/ui/field'
@@ -7,19 +14,20 @@ import {SegmentedControl, SegmentedControlItem} from '@/components/composite/seg
 
 // 세그먼티드 컨트롤은 토글 성격이라 보통 한 항목이 기본 선택된 상태로 제공된다.
 // 따라서 '필수/미선택 오류'보다는 기본값이 있는 컨트롤의 선택값이 name 에 맞춰 FormData 로 제출되는 흐름을 보여준다.
-const SegmentedControlFormDemo = () => {
+const SegmentedControlFormDemoBody = ({onReset}: FormResetProps) => {
     const [userType, setUserType] = useState('corp')
     const [period, setPeriod] = useState('3months')
-    const [result, setResult] = useState('')
+    const [result, setResult] = useState<string | null>(null)
 
     return (
         <form
+            onReset={onReset}
             className="border-border flex flex-col items-start gap-6 rounded-md border p-6"
             autoComplete="off"
             onSubmit={(event) => {
                 event.preventDefault()
                 const formData = new FormData(event.currentTarget)
-                setResult(JSON.stringify(Object.fromEntries(formData.entries())))
+                setResult(formatSubmitResult(Object.fromEntries(formData.entries())))
             }}
         >
             <Field className="items-start">
@@ -67,17 +75,18 @@ const SegmentedControlFormDemo = () => {
                 </div>
             </Field>
 
-            <Button type="submit" variant="default" size="sm">
-                선택 내용 확인
-            </Button>
+            <div className="flex items-center gap-3">
+                <Button type="submit" variant="default" size="sm">
+                    선택 내용 확인
+                </Button>
+                <FormResetButton />
+            </div>
 
-            {result ? (
-                <output className="typo-body-l-regular bg-background border-border rounded-sm border px-4 py-3 font-mono">
-                    {result}
-                </output>
-            ) : null}
+            <FormSubmitResult data={result} />
         </form>
     )
 }
+
+const SegmentedControlFormDemo = withFormReset(SegmentedControlFormDemoBody)
 
 export default SegmentedControlFormDemo

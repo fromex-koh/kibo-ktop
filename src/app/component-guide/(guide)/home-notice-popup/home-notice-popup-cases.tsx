@@ -224,15 +224,15 @@ const HomeNoticePopupCases = ({group}: {group: keyof typeof NOTICE_CASE_GROUPS})
 
     return (
         <>
-            <ul className="border-border flex flex-col border-t">
+            <ul className="border-subtle-3 flex flex-col border-t">
                 {cases.map((noticeCase) => (
                     <li
                         key={noticeCase.key}
-                        className="border-border flex items-center justify-between gap-4 border-b py-4"
+                        className="border-subtle-3 flex items-center justify-between gap-4 border-b py-4"
                     >
                         <div className="flex min-w-0 flex-col gap-1">
                             <h3 className="typo-body-xl-bold text-foreground">{noticeCase.title}</h3>
-                            <p className="typo-body-l-regular text-muted-foreground break-keep">
+                            <p className="typo-body-l-regular text-label-foreground break-keep">
                                 {noticeCase.description}
                             </p>
                         </div>

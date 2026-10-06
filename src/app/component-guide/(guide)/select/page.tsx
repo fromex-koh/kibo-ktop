@@ -1,9 +1,13 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
 import {SelectText} from '@/components/composite/select-text'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
 import {Field, FieldDescription, FieldError, FieldLabel} from '@/components/ui/field'
 import SelectFormDemo from './select-form-demo'
@@ -35,6 +39,8 @@ const FruitOptions = () =>
         </SelectItem>
     ))
 
+const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
+
 const BASIC_CODE = `import {
   Select,
   SelectContent,
@@ -42,13 +48,12 @@ const BASIC_CODE = `import {
   SelectTrigger,
   SelectValue,
 } from '@/components/composite/select-field'
+import {Field, FieldDescription, FieldLabel} from '@/components/ui/field'
 
 <Field className="max-w-90">
-  <FieldLabel htmlFor="fruit" className="font-bold text-foreground">
-    좋아하는 과일
-  </FieldLabel>
+  <FieldLabel htmlFor="fruit">좋아하는 과일</FieldLabel>
   <Select name="fruit">
-    <SelectTrigger id="fruit" className="w-full">
+    <SelectTrigger id="fruit" className="w-full" aria-describedby="fruit-description">
       <SelectValue placeholder="선택해 주세요" />
     </SelectTrigger>
     <SelectContent>
@@ -56,7 +61,26 @@ const BASIC_CODE = `import {
       <SelectItem value="banana">바나나</SelectItem>
     </SelectContent>
   </Select>
+  <FieldDescription id="fruit-description">한 가지 과일을 선택해 주세요.</FieldDescription>
 </Field>`
+
+const SIZE_CODE = `{/* lg 48px(기본) · md 40px — size 는 SelectTrigger 에 준다 */}
+<SelectTrigger size="md" />`
+
+const STATE_CODE = `{/* 오류 — Field 와 SelectTrigger 에 함께 */}
+<Field data-invalid>
+  <Select>
+    <SelectTrigger aria-invalid="true" aria-describedby="fruit-error">…</SelectTrigger>
+    <SelectContent>{/* SelectItem */}</SelectContent>
+  </Select>
+  <FieldError id="fruit-error">과일을 선택해 주세요.</FieldError>
+</Field>
+
+{/* 읽기전용: 목록은 열리지 않고 값은 제출됨 */}
+<Select name="channel" defaultValue="online" readOnly>…</Select>
+
+{/* 비활성: 포커스 불가, 제출 제외 */}
+<Select defaultValue="online" disabled>…</Select>`
 
 const TEXT_CODE = `import {SelectText} from '@/components/composite/select-text'
 
@@ -71,251 +95,159 @@ const TEXT_CODE = `import {SelectText} from '@/components/composite/select-text'
   onChange={(event) => setMonth(event.currentTarget.value)}
 />`
 
-const SIZE_CODE = `{/* Select: 일반 폼 48px */}
-<SelectTrigger size="lg" />
-
-{/* Select: 밀도 높은 영역 40px */}
-<SelectTrigger size="md" />
-
-{/* SelectText: 글자 크기 기반 3단계 */}
-<SelectText size="lg" options={options} />
-<SelectText size="md" options={options} />
-<SelectText size="sm" options={options} />`
-
-const STATE_CODE = `{/* 오류 */}
-<Field data-invalid>
-  <Select>
-    <SelectTrigger aria-invalid="true" aria-describedby="fruit-error">
-      <SelectValue placeholder="선택해 주세요" />
-    </SelectTrigger>
-    <SelectContent>{/* SelectItem */}</SelectContent>
-  </Select>
-  <FieldError id="fruit-error">과일을 선택해 주세요.</FieldError>
-</Field>
-
-{/* 읽기전용: 값 제출 유지 */}
-<Select name="channel" defaultValue="online" readOnly>{/* ... */}</Select>
-
-{/* 비활성: 제출에서 제외 */}
-<Select defaultValue="online" disabled>{/* ... */}</Select>`
-
 const FORM_CODE = `const [applicationType, setApplicationType] = useState('')
-const [error, setError] = useState(false)
+const [hasError, setHasError] = useState(false)
 
 <form noValidate onSubmit={handleSubmit}>
-  <Field data-invalid={error || undefined}>
+  <Field data-invalid={hasError || undefined}>
     <FieldLabel htmlFor="application-type">신청 유형</FieldLabel>
     <Select
       name="applicationType"
+      required
       value={applicationType}
       onValueChange={(value) => {
         setApplicationType(value)
-        setError(false)
+        setHasError(false)
       }}
     >
       <SelectTrigger
         id="application-type"
-        aria-invalid={error || undefined}
-        aria-describedby={error ? 'application-type-error' : undefined}
+        aria-invalid={hasError || undefined}
+        aria-describedby={hasError ? 'application-type-error' : undefined}
       >
         <SelectValue placeholder="신청 유형을 선택하세요" />
       </SelectTrigger>
       <SelectContent>{/* SelectItem */}</SelectContent>
     </Select>
-    {error ? (
-      <FieldError id="application-type-error">
-        신청 유형을 선택해 주세요.
-      </FieldError>
-    ) : null}
+    {hasError ? <FieldError id="application-type-error">신청 유형을 선택해 주세요.</FieldError> : null}
   </Field>
-
   <Button type="submit">선택 내용 확인</Button>
 </form>`
 
-const COMPONENT_COLUMNS = [
+const CHOICE_COLUMNS = [
     {key: 'component', header: '컴포넌트', align: 'start', rowHeader: true},
-    {key: 'implementation', header: '구현', align: 'start'},
     {key: 'use', header: '사용 기준', align: 'start', wrap: true},
-    {key: 'menu', header: '열린 목록', align: 'start', wrap: true},
+    {key: 'note', header: '특징', align: 'start', wrap: true},
 ] as const
 
-const COMPONENT_ROWS = [
+const CHOICE_ROWS = [
     {
         key: 'select',
         cells: [
             <code key="component">Select</code>,
-            'Radix UI',
-            '라벨이 있는 일반 폼의 단일 선택 입력',
-            '프로젝트 스타일의 커스텀 목록',
+            '라벨이 있는 폼의 단일 선택.',
+            'Radix 기반. 프로젝트 스타일 목록이 트리거 아래에 열립니다.',
         ],
     },
     {
         key: 'select-text',
         cells: [
             <code key="component">SelectText</code>,
-            'native select',
-            '달력 월·연도, 제목 옆 필터처럼 면 없는 짧은 선택',
-            '운영체제가 표시하는 시스템 목록',
+            '제목 옆 필터, 달력 월 · 연도처럼 상자 없는 짧은 선택',
+            '네이티브 select. 열린 목록은 운영체제 모양입니다.',
+        ],
+    },
+    {
+        key: 'combobox',
+        cells: [
+            <Link key="component" href="/component-guide/combobox" className={LINK_CLASS}>
+                Combobox
+            </Link>,
+            '선택지가 많아 입력으로 검색해야 할 때',
+            '입력창 + 목록. 입력한 글자로 선택지를 거릅니다(단일 선택).',
+        ],
+    },
+    {
+        key: 'date-picker',
+        cells: [
+            <Link key="component" href="/component-guide/date-picker" className={LINK_CLASS}>
+                DatePicker
+            </Link>,
+            '날짜 선택',
+            '달력 팝오버. 월 · 연도 선택에 SelectText 를 씁니다.',
         ],
     },
 ] as const
 
 const SIZE_COLUMNS = [
     {key: 'component', header: '컴포넌트', align: 'start', rowHeader: true},
-    {key: 'size', header: 'Size', align: 'start'},
-    {key: 'spec', header: '높이 / 타이포', align: 'start'},
+    {key: 'size', header: 'size', align: 'start'},
+    {key: 'spec', header: '높이 / 글자', align: 'start'},
     {key: 'use', header: '사용 기준', align: 'start', wrap: true},
 ] as const
 
 const SIZE_ROWS = [
-    {key: 'select-lg', cells: ['Select', <code key="size">lg</code>, '48px', '일반 폼 — 기본값']},
-    {key: 'select-md', cells: ['Select', <code key="size">md</code>, '40px', '표·필터 등 밀도 높은 영역']},
-    {key: 'text-lg', cells: ['SelectText', <code key="size">lg</code>, '24px / 36px', '큰 제목과 함께 쓰는 선택']},
-    {key: 'text-md', cells: ['SelectText', <code key="size">md</code>, '20px / 30px', '중간 제목과 함께 쓰는 선택']},
-    {key: 'text-sm', cells: ['SelectText', <code key="size">sm</code>, '16px / 24px', 'DatePicker 월·연도 선택']},
+    {key: 'select-lg', cells: ['Select', <code key="size">lg</code>, '48px', '일반 폼 (기본값)']},
+    {key: 'select-md', cells: ['Select', <code key="size">md</code>, '40px', '표 · 필터처럼 촘촘한 영역']},
+    {key: 'text-lg', cells: ['SelectText', <code key="size">lg</code>, '24px / 36px Bold', '큰 제목 옆 (기본값)']},
+    {key: 'text-md', cells: ['SelectText', <code key="size">md</code>, '20px / 30px Medium', '중간 제목 옆']},
+    {key: 'text-sm', cells: ['SelectText', <code key="size">sm</code>, '16px / 24px Medium', 'DatePicker 월 · 연도']},
 ] as const
 
-const STATE_COLUMNS = [
-    {key: 'state', header: '상태', align: 'start', rowHeader: true},
-    {key: 'prop', header: '지정 방법', align: 'start'},
-    {key: 'behavior', header: '동작', align: 'start', wrap: true},
-] as const
-
-const STATE_ROWS = [
-    {
-        key: 'invalid',
-        cells: [
-            '오류',
-            <code key="prop">aria-invalid</code>,
-            'Field에도 data-invalid를 지정하고 메시지를 aria-describedby로 연결합니다.',
-        ],
-    },
-    {
-        key: 'readonly',
-        cells: ['읽기전용', <code key="prop">readOnly</code>, '목록은 열리지 않지만 선택값과 폼 제출은 유지됩니다.'],
-    },
-    {
-        key: 'disabled',
-        cells: ['비활성', <code key="prop">disabled</code>, '포커스·목록 열기·폼 제출에서 제외됩니다.'],
-    },
-] as const
-
-const API_COLUMNS = [
-    {key: 'scope', header: '대상', align: 'start', rowHeader: true},
-    {key: 'prop', header: 'Prop', align: 'start'},
-    {key: 'type', header: '값', align: 'start', wrap: true},
-    {key: 'note', header: '설명', align: 'start', wrap: true},
-] as const
-
-const API_ROWS = [
-    {
-        key: 'select-value',
-        cells: [
-            'Select',
-            <code key="prop">value / defaultValue / onValueChange</code>,
-            <code key="type">Radix Select props</code>,
-            '제어 또는 비제어 선택값을 관리합니다.',
-        ],
-    },
-    {
-        key: 'select-form',
-        cells: [
-            'Select',
-            <code key="prop">name / required / disabled</code>,
-            <code key="type">string / boolean</code>,
-            '폼 필드 이름, 필수 조건, 비활성 상태를 지정합니다.',
-        ],
-    },
-    {
-        key: 'select-readonly',
-        cells: [
-            'Select',
-            <code key="prop">readOnly</code>,
-            <code key="type">boolean</code>,
-            '프로젝트 확장 속성으로 목록 열기와 값 변경을 막습니다.',
-        ],
-    },
-    {
-        key: 'trigger-size',
-        cells: [
-            'SelectTrigger',
-            <code key="prop">size</code>,
-            <code key="type">lg | md</code>,
-            '상자형 트리거 높이를 선택합니다.',
-        ],
-    },
-    {
-        key: 'trigger-a11y',
-        cells: [
-            'SelectTrigger',
-            <code key="prop">id / aria-invalid / aria-describedby</code>,
-            <code key="type">HTML attributes</code>,
-            'FieldLabel과 오류 또는 설명 메시지를 연결합니다.',
-        ],
-    },
-    {
-        key: 'text-options',
-        cells: [
-            'SelectText',
-            <code key="prop">options</code>,
-            <code key="type">&#123;value, label, disabled?&#125;[]</code>,
-            '네이티브 option 목록입니다.',
-        ],
-    },
-    {
-        key: 'text-size',
-        cells: [
-            'SelectText',
-            <code key="prop">size</code>,
-            <code key="type">lg | md | sm</code>,
-            '텍스트와 화살표 크기를 선택합니다.',
-        ],
-    },
-    {
-        key: 'text-native',
-        cells: [
-            'SelectText',
-            <code key="prop">value / defaultValue / onChange / name</code>,
-            <code key="type">native select attributes</code>,
-            '네이티브 select 방식으로 값과 폼 제출을 관리합니다.',
-        ],
-    },
+const PROPS_ITEMS = [
+    [
+        'Select',
+        'value / defaultValue / onValueChange',
+        '선택값입니다. 제어 · 비제어 모두 지원합니다.',
+        '-',
+        'string / (value: string) => void',
+    ],
+    ['Select', 'name / required / disabled', '폼 필드 이름, 필수, 비활성입니다.', 'undefined', 'string / boolean'],
+    ['Select', 'readOnly', '목록 열기와 값 변경을 막습니다. 값은 계속 제출됩니다.', 'false', 'boolean'],
+    ['SelectTrigger', 'size', '트리거 높이입니다. lg 48px, md 40px.', "'lg'", "'lg' | 'md'"],
+    [
+        'SelectTrigger',
+        'id / aria-invalid / aria-describedby',
+        'FieldLabel, 설명 · 오류 메시지와 연결합니다.',
+        'undefined',
+        'HTML attributes',
+    ],
+    [
+        'SelectContent',
+        'position',
+        '목록 위치 방식입니다. 트리거 아래에 같은 폭으로 열립니다.',
+        "'popper'",
+        "'popper' | 'item-aligned'",
+    ],
+    ['SelectText', 'options', '선택지 목록입니다.', '-', '{value: string; label: string; disabled?: boolean}[]'],
+    ['SelectText', 'size', '글자와 화살표 크기입니다.', "'lg'", "'lg' | 'md' | 'sm'"],
+    [
+        'SelectText',
+        'placeholder',
+        '값이 없을 때 첫 항목으로 보이는 안내 문구입니다. 다시 선택할 수 없습니다.',
+        'undefined',
+        'string',
+    ],
+    [
+        'SelectText',
+        'className / selectClassName',
+        '바깥 상자 / select 요소에 덧붙일 클래스입니다.',
+        'undefined',
+        'string',
+    ],
+    [
+        'SelectText',
+        'value / defaultValue / onChange / name / disabled',
+        '네이티브 select 속성 그대로입니다. 라벨이 없으므로 aria-label 을 줍니다.',
+        '-',
+        'select attributes',
+    ],
 ] as const
 
 const SelectGuidePage = () => (
     <GuidePageShell
         title="셀렉트 (Select)"
-        description="상자형 Select와 텍스트형 SelectText는 목적과 구현이 다른 별도 컴포넌트입니다."
+        description="목록에서 값 하나를 고르는 컴포넌트입니다. 상자형 Select 와 글자형 SelectText 가 있습니다."
     >
-        <BaseCard variant="outlined">
-            <section aria-labelledby="select-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
-                    <h2 id="select-choice" className="typo-h4-bold">
-                        컴포넌트 선택
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        <code>Select</code>는 Radix 기반의 일반 폼 입력이고, <code>SelectText</code>는 네이티브 select를
-                        사용하는 면 없는 선택입니다. 서로 variant 관계가 아니므로 각각 import합니다.
-                    </p>
-                </div>
-                <Table
-                    caption="Select와 SelectText 선택 기준"
-                    columns={COMPONENT_COLUMNS}
-                    rows={COMPONENT_ROWS}
-                    size="md"
-                />
-            </section>
-        </BaseCard>
-
         <BaseCard>
             <section aria-labelledby="select-basic" className="flex flex-col gap-6">
                 <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="select-basic" className="typo-h4-bold">
-                        Select 기본 사용
+                        기본 사용
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        Field 안에서 Trigger의 <code>id</code>를 FieldLabel의 <code>htmlFor</code>와 연결합니다. 목록의
-                        모양과 키보드 탐색은 프로젝트 Radix Select가 담당합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code>SelectTrigger</code> 의 <code>id</code> 를 <code>FieldLabel</code> 의 <code>htmlFor</code>{' '}
+                        와 연결합니다. <code>Select</code> 는 <code>SelectField</code> 의 별칭입니다.
                     </p>
                 </div>
                 <Field className="max-w-90">
@@ -341,65 +273,116 @@ const SelectGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="select-text" className="flex flex-col gap-6">
+            <section aria-labelledby="select-variants" className="flex flex-col gap-6">
                 <div className="flex max-w-4xl flex-col gap-2">
-                    <h2 id="select-text" className="typo-h4-bold">
-                        SelectText 사용
+                    <h2 id="select-variants" className="typo-h4-bold">
+                        크기와 상태
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        짧은 값 전환에 사용하는 별도 네이티브 컴포넌트입니다. DatePicker 달력의 월·연도 선택은{' '}
-                        <code>SelectText size=&quot;sm&quot;</code>을 사용합니다. 열린 목록은 운영체제에 따라 다르게
-                        보입니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        크기는 <code>SelectTrigger</code> 의 <code>size</code>, 상태는 <code>Select</code> ·{' '}
+                        <code>SelectTrigger</code> 속성과 <code>Field</code> 로 지정합니다.
                     </p>
                 </div>
-                <SelectText size="sm" options={MONTH_OPTIONS} defaultValue="07" aria-label="월 선택" />
-                <CodeBlock code={TEXT_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="select-size" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
-                    <h2 id="select-size" className="typo-h4-bold">
-                        Size 선택
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        <code>Select</code>의 size는 <code>SelectTrigger</code>에 지정하며 기본값은 <code>lg</code>
-                        입니다. <code>SelectText</code>는 별도 컴포넌트로 글자 크기와 행간이 함께 바뀝니다.
-                    </p>
-                </div>
-                <div className="grid gap-8 lg:grid-cols-2">
-                    <div className="flex max-w-90 flex-col gap-5">
-                        <h3 className="typo-body-xl-bold">Select 크기</h3>
-                        <Field>
-                            <FieldLabel htmlFor="select-size-lg" className="text-foreground font-bold">
-                                lg · 48px · 기본값
-                            </FieldLabel>
-                            <Select>
-                                <SelectTrigger id="select-size-lg" size="lg" className="w-full">
-                                    <SelectValue placeholder="선택해 주세요" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <FruitOptions />
-                                </SelectContent>
-                            </Select>
-                        </Field>
-                        <Field>
-                            <FieldLabel htmlFor="select-size-md" className="text-foreground font-bold">
-                                md · 40px
-                            </FieldLabel>
-                            <Select>
-                                <SelectTrigger id="select-size-md" size="md" className="w-full">
-                                    <SelectValue placeholder="선택해 주세요" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <FruitOptions />
-                                </SelectContent>
-                            </Select>
-                        </Field>
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">크기</h3>
+                        <div className="grid max-w-3xl gap-5 md:grid-cols-2">
+                            <Field>
+                                <FieldLabel htmlFor="select-size-lg" className="text-foreground font-bold">
+                                    lg · 48px · 기본값
+                                </FieldLabel>
+                                <Select>
+                                    <SelectTrigger id="select-size-lg" size="lg" className="w-full">
+                                        <SelectValue placeholder="선택해 주세요" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <FruitOptions />
+                                    </SelectContent>
+                                </Select>
+                            </Field>
+                            <Field>
+                                <FieldLabel htmlFor="select-size-md" className="text-foreground font-bold">
+                                    md · 40px
+                                </FieldLabel>
+                                <Select>
+                                    <SelectTrigger id="select-size-md" size="md" className="w-full">
+                                        <SelectValue placeholder="선택해 주세요" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <FruitOptions />
+                                    </SelectContent>
+                                </Select>
+                            </Field>
+                        </div>
+                        <CodeBlock code={SIZE_CODE} language="tsx" copyLabel="복사" />
                     </div>
-                    <div className="flex flex-col gap-5">
-                        <h3 className="typo-body-xl-bold">SelectText 크기</h3>
+
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">상태</h3>
+                        <div className="grid max-w-3xl gap-6 md:grid-cols-2">
+                            <Field data-invalid className="max-w-90">
+                                <FieldLabel htmlFor="select-state-error" className="text-foreground font-bold">
+                                    오류
+                                </FieldLabel>
+                                <Select>
+                                    <SelectTrigger
+                                        id="select-state-error"
+                                        className="w-full"
+                                        aria-invalid="true"
+                                        aria-describedby="select-state-error-message"
+                                    >
+                                        <SelectValue placeholder="선택해 주세요" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <FruitOptions />
+                                    </SelectContent>
+                                </Select>
+                                <FieldError id="select-state-error-message">과일을 선택해 주세요.</FieldError>
+                            </Field>
+                            <Field className="max-w-90">
+                                <FieldLabel htmlFor="select-state-readonly" className="text-foreground font-bold">
+                                    읽기전용
+                                </FieldLabel>
+                                <Select defaultValue="apple" readOnly>
+                                    <SelectTrigger id="select-state-readonly" className="w-full">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <FruitOptions />
+                                    </SelectContent>
+                                </Select>
+                            </Field>
+                            <Field data-disabled="true" className="max-w-90">
+                                <FieldLabel htmlFor="select-state-disabled" className="text-foreground font-bold">
+                                    비활성
+                                </FieldLabel>
+                                <Select defaultValue="apple" disabled>
+                                    <SelectTrigger id="select-state-disabled" className="w-full">
+                                        <SelectValue />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <FruitOptions />
+                                    </SelectContent>
+                                </Select>
+                            </Field>
+                        </div>
+                        <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                            <li>
+                                오류: <code>SelectTrigger</code> 에 <code>aria-invalid</code>, <code>Field</code> 에{' '}
+                                <code>data-invalid</code>, 메시지는 <code>aria-describedby</code> 로 연결합니다.
+                            </li>
+                            <li>읽기전용: 목록이 열리지 않고 값은 폼 제출에 포함됩니다.</li>
+                            <li>비활성: 포커스와 목록 열기가 막히고 폼 제출에서 빠집니다.</li>
+                        </ul>
+                        <CodeBlock code={STATE_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">SelectText</h3>
+                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                            면과 테두리 없이 글자와 화살표만 둡니다. 네이티브 select 라 열린 목록은 운영체제 모양으로
+                            나오고, 라벨이 없으므로 <code>aria-label</code> 을 줍니다.
+                        </p>
                         <div className="flex flex-wrap items-start gap-8">
                             <SelectText
                                 size="lg"
@@ -413,122 +396,73 @@ const SelectGuidePage = () => (
                                 defaultValue="all"
                                 aria-label="기간 선택 md"
                             />
-                            <SelectText
-                                size="sm"
-                                options={PERIOD_OPTIONS}
-                                defaultValue="all"
-                                aria-label="기간 선택 sm"
-                            />
+                            <SelectText size="sm" options={MONTH_OPTIONS} defaultValue="07" aria-label="월 선택 sm" />
                         </div>
+                        <Table caption="Select 계열 size 기준" columns={SIZE_COLUMNS} rows={SIZE_ROWS} size="md" />
+                        <CodeBlock code={TEXT_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">폼 제출</h3>
+                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                            <code>name</code> 을 주면 선택값이 제출됩니다. 읽기전용 값은 제출되고 비활성 값은
+                            제외됩니다. 값은 <code>value</code> · <code>onValueChange</code> 로 제어하거나{' '}
+                            <code>defaultValue</code> 로 비제어로 씁니다.
+                        </p>
+                        <SelectFormDemo />
+                        <CodeBlock code={FORM_CODE} language="tsx" copyLabel="복사" />
                     </div>
                 </div>
-                <Table caption="Select 계열 size 사용 기준" columns={SIZE_COLUMNS} rows={SIZE_ROWS} size="md" />
-                <CodeBlock code={SIZE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="select-state" className="flex flex-col gap-6">
+            <section aria-labelledby="select-choice" className="flex flex-col gap-6">
                 <div className="flex max-w-4xl flex-col gap-2">
-                    <h2 id="select-state" className="typo-h4-bold">
-                        Select 상태와 오류
+                    <h2 id="select-choice" className="typo-h4-bold">
+                        컴포넌트 선택
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        기본·값 선택됨·오류·읽기전용·비활성 상태를 비교합니다. 포커스링은 라벨을 제외한 Trigger에만
-                        표시됩니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        값을 고르는 컴포넌트는 선택지 수와 입력 방식으로 구분합니다.
                     </p>
                 </div>
-                <Table caption="Select 상태 처리 기준" columns={STATE_COLUMNS} rows={STATE_ROWS} size="md" />
-                <div className="grid gap-6 lg:grid-cols-2">
-                    <Field className="max-w-90">
-                        <FieldLabel htmlFor="select-state-default" className="text-foreground font-bold">
-                            기본
-                        </FieldLabel>
-                        <Select>
-                            <SelectTrigger id="select-state-default" className="w-full">
-                                <SelectValue placeholder="선택해 주세요" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <FruitOptions />
-                            </SelectContent>
-                        </Select>
-                    </Field>
-                    <Field className="max-w-90">
-                        <FieldLabel htmlFor="select-state-filled" className="text-foreground font-bold">
-                            값 선택됨
-                        </FieldLabel>
-                        <Select defaultValue="apple">
-                            <SelectTrigger id="select-state-filled" className="w-full">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <FruitOptions />
-                            </SelectContent>
-                        </Select>
-                    </Field>
-                    <Field data-invalid className="max-w-90">
-                        <FieldLabel htmlFor="select-state-error" className="text-foreground font-bold">
-                            오류
-                        </FieldLabel>
-                        <Select>
-                            <SelectTrigger
-                                id="select-state-error"
-                                className="w-full"
-                                aria-invalid="true"
-                                aria-describedby="select-state-error-message"
-                            >
-                                <SelectValue placeholder="선택해 주세요" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <FruitOptions />
-                            </SelectContent>
-                        </Select>
-                        <FieldError id="select-state-error-message">과일을 선택해 주세요.</FieldError>
-                    </Field>
-                    <Field className="max-w-90">
-                        <FieldLabel htmlFor="select-state-readonly" className="text-foreground font-bold">
-                            읽기전용
-                        </FieldLabel>
-                        <Select defaultValue="apple" readOnly>
-                            <SelectTrigger id="select-state-readonly" className="w-full">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <FruitOptions />
-                            </SelectContent>
-                        </Select>
-                    </Field>
-                    <Field data-disabled="true" className="max-w-90">
-                        <FieldLabel htmlFor="select-state-disabled" className="text-foreground font-bold">
-                            비활성
-                        </FieldLabel>
-                        <Select defaultValue="apple" disabled>
-                            <SelectTrigger id="select-state-disabled" className="w-full">
-                                <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <FruitOptions />
-                            </SelectContent>
-                        </Select>
-                    </Field>
-                </div>
-                <CodeBlock code={STATE_CODE} language="tsx" copyLabel="복사" />
+                <Table
+                    caption="Select · SelectText · Combobox · DatePicker 사용 기준"
+                    columns={CHOICE_COLUMNS}
+                    rows={CHOICE_ROWS}
+                    size="md"
+                />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="select-form" className="flex flex-col gap-6">
+            <section aria-labelledby="select-a11y" className="flex flex-col gap-6">
                 <div className="flex max-w-4xl flex-col gap-2">
-                    <h2 id="select-form" className="typo-h4-bold">
-                        폼 제출
+                    <h2 id="select-a11y" className="typo-h4-bold">
+                        접근성
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        <code>name</code>을 지정하면 선택값이 FormData에 포함됩니다. 읽기전용 값은 제출되고 비활성 값은
-                        제외됩니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        목록의 역할과 키보드 조작은 Radix 가 처리합니다. 사용처는 라벨과 오류 연결을 책임집니다.
                     </p>
                 </div>
-                <SelectFormDemo />
-                <CodeBlock code={FORM_CODE} language="tsx" copyLabel="복사" />
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        <code>FieldLabel htmlFor</code> 와 <code>SelectTrigger id</code> 를 연결합니다[7.4.1]. 라벨을 둘
+                        수 없는 <code>SelectText</code> 는 <code>aria-label</code> 을 줍니다.
+                    </li>
+                    <li>
+                        오류는 <code>aria-invalid</code> + <code>aria-describedby</code> + <code>FieldError</code> 로
+                        알립니다. 색만으로 오류를 전하지 않도록 메시지를 함께 둡니다[7.4.2][5.3.1].
+                    </li>
+                    <li>
+                        <kbd>Enter</kbd> · <kbd>Space</kbd> · <kbd>↓</kbd> 로 목록을 열고, 방향키로 항목을 옮기고{' '}
+                        <kbd>Enter</kbd> 로 고르며 <kbd>Esc</kbd> 로 닫습니다[6.1.1].
+                    </li>
+                    <li>
+                        포커스는 외곽선으로 표시됩니다. 오류 칸은 마우스로 제출한 뒤 포커스가 옮겨져도
+                        표시됩니다[6.1.2].
+                    </li>
+                </ul>
             </section>
         </BaseCard>
 
@@ -538,11 +472,11 @@ const SelectGuidePage = () => (
                     <h2 id="select-api" className="typo-h4-bold">
                         Props API
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        대상 컬럼에서 Select·SelectTrigger·SelectText의 서로 다른 API를 구분합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        그 외 속성은 Radix Select · 네이티브 select 와 같습니다.
                     </p>
                 </div>
-                <Table caption="Select와 SelectText Props API" columns={API_COLUMNS} rows={API_ROWS} size="md" />
+                <PropsTable items={PROPS_ITEMS} caption="Select 계열 Props 목록" />
             </section>
         </BaseCard>
     </GuidePageShell>

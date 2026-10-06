@@ -7,7 +7,7 @@ import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
 
 // 반복 카드 목록 예시 — 추가·삭제·최소 개수·포커스 이동을 실제로 확인할 수 있는 데모.
-// 목록 상태는 useRepeatCards 가 들고 있는다(카드 하나의 생김새와 접기만 RepeatCard 몫).
+// 목록 상태는 useRepeatCards 가 관리한다(카드 하나의 생김새와 접기만 RepeatCard 몫).
 const RepeatCardListDemo = () => {
     const {ids, addedId, addCard, removeCard, setCardRef, addButtonRef, isDeleteDisabled} = useRepeatCards()
 
@@ -18,7 +18,7 @@ const RepeatCardListDemo = () => {
                     key={id}
                     ref={setCardRef(id)}
                     title={`경력${index + 1}`}
-                    // 가이드는 h2 섹션 바로 아래에 카드를 두므로 카드 제목이 h3 다[6.4.2].
+                    // 가이드는 h2 섹션 바로 아래에 카드를 두므로 카드 제목이 h3 다.
                     headingLevel={3}
                     focusOnMount={id === addedId}
                     deleteDisabled={isDeleteDisabled}

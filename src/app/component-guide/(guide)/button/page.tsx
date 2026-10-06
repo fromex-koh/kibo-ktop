@@ -1,3 +1,5 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
 import Link from 'next/link'
 import {ChevronRight, Download, LoaderCircle, Search, X} from 'lucide-react'
@@ -54,14 +56,14 @@ const STATE_CODE = `<Button type="button" size="md" disabled>
 
 const VARIANTS = [
     {key: 'default', use: '화면의 주요 액션', label: 'Primary'},
-    {key: 'secondary', use: '주요 액션과 나란히 쓰는 보조 액션', label: 'Secondary'},
-    {key: 'tertiary', use: '취소·더보기 등 낮은 강조의 액션', label: 'Tertiary'},
+    {key: 'secondary', use: '주요 액션 옆의 보조 액션', label: 'Secondary'},
+    {key: 'tertiary', use: '취소 · 더보기처럼 강조가 낮은 액션', label: 'Tertiary'},
     {key: 'text', use: '밑줄 없는 인라인 동작', label: 'Text'},
-    {key: 'text-underline', use: '밑줄이 필요한 인라인 동작 또는 링크', label: 'Text underline'},
-    {key: 'plain', use: '배경과 여백이 없는 아이콘 액션', label: 'Plain'},
-    {key: 'destructive', use: '삭제 등 되돌리기 어려운 액션', label: 'Destructive'},
-    {key: 'outline', use: '다이얼로그·시트 등 내부 UI', label: 'Outline'},
-    {key: 'ghost', use: '사이드바 등 내부 UI', label: 'Ghost'},
+    {key: 'text-underline', use: '밑줄 있는 인라인 동작 · 링크', label: 'Text underline'},
+    {key: 'plain', use: '배경 · 여백 없는 아이콘 액션', label: 'Plain'},
+    {key: 'destructive', use: '삭제처럼 되돌리기 어려운 액션', label: 'Destructive'},
+    {key: 'outline', use: '다이얼로그 · 시트 내부', label: 'Outline'},
+    {key: 'ghost', use: '사이드바 내부', label: 'Ghost'},
 ] as const
 
 const SIZES = [
@@ -102,84 +104,24 @@ const VARIANT_ROWS = VARIANTS.map((variant) => ({
     ],
 }))
 
-// 비활성(disabled) 스타일 — 시안 button 컴포넌트 세트(40007392:152457)의 state=disabled 열이다.
-// variant 마다 잠긴 모습이 다르다: 면을 채우는 것(primary·secondary)과 면을 그대로 두는 것(tertiary·text).
-// 색은 모두 잠김 전용 시맨틱 토큰이라 사용처에서 따로 줄 것이 없다 — disabled 속성만 켜면 된다.
+// 비활성(disabled) 스타일 — 잠긴 모습은 variant 마다 정해져 있어 사용처에서는 disabled 속성만 켠다.
+// 색 토큰은 theme/button.variants.ts 가 원본이므로 여기에는 눈으로 구분할 만큼만 적는다.
 const DISABLED_VARIANTS = [
-    {
-        key: 'default',
-        label: 'Primary',
-        surface: 'bg-control-disabled (gray.100 · #e6e8ea)',
-        border: '면과 같은 색 — 테두리가 보이지 않는다',
-        label2: 'text-disabled (gray.300 · #848b94)',
-        note: '시안 정의',
-    },
-    {
-        key: 'secondary',
-        label: 'Secondary',
-        surface: 'bg-control-disabled (gray.100 · #e6e8ea)',
-        border: 'border-disabled-subtle (gray.200 · #b7bbbf)',
-        label2: 'text-disabled (gray.300 · #848b94)',
-        note: '시안 정의',
-    },
-    {
-        key: 'tertiary',
-        label: 'Tertiary',
-        surface: 'bg-control-disabled-subtle (흰 면 그대로)',
-        border: 'border-disabled-subtle (gray.200 · #b7bbbf)',
-        label2: 'text-disabled-subtle (gray.200 · #b7bbbf)',
-        note: '시안 정의 — 면이 흰색이라 글자를 한 단계 더 옅게 둔다',
-    },
-    {
-        key: 'text-underline',
-        label: 'Text underline',
-        surface: '없음',
-        border: '없음',
-        label2: 'text-disabled-subtle (gray.200 · #b7bbbf)',
-        note: '시안 정의(button_text) — 밑줄도 글자색을 따라 함께 옅어진다',
-    },
-    {
-        key: 'text',
-        label: 'Text',
-        surface: '없음',
-        border: '없음',
-        label2: 'text-disabled-subtle (gray.200 · #b7bbbf)',
-        note: '프로젝트 확장 — 밑줄만 없는 같은 규칙',
-    },
-    {
-        key: 'destructive',
-        label: 'Destructive',
-        surface: 'bg-control-disabled (gray.100 · #e6e8ea)',
-        border: 'border-disabled-subtle (gray.200 · #b7bbbf)',
-        label2: 'text-disabled (gray.300 · #848b94)',
-        note: '프로젝트 확장 — primary 와 같은 잠김 모습',
-    },
-    {
-        key: 'outline',
-        label: 'Outline',
-        surface: 'bg-control-disabled (gray.100 · #e6e8ea)',
-        border: 'border-disabled-subtle (gray.200 · #b7bbbf)',
-        label2: 'text-disabled (gray.300 · #848b94)',
-        note: '프로젝트 확장 — 다이얼로그·시트 내부 UI',
-    },
-    {
-        key: 'ghost',
-        label: 'Ghost',
-        surface: 'bg-control-disabled (gray.100 · #e6e8ea)',
-        border: '없음',
-        label2: 'text-disabled (gray.300 · #848b94)',
-        note: '프로젝트 확장 — 사이드바 등 내부 UI',
-    },
+    {key: 'default', label: 'Primary', summary: '회색 면 · 테두리 안 보임'},
+    {key: 'secondary', label: 'Secondary', summary: '회색 면 · 옅은 테두리'},
+    {key: 'tertiary', label: 'Tertiary', summary: '흰 면 그대로 · 글자를 한 단계 더 옅게'},
+    {key: 'text-underline', label: 'Text underline', summary: '글자와 밑줄만 옅게'},
+    {key: 'text', label: 'Text', summary: '글자만 옅게'},
+    {key: 'destructive', label: 'Destructive', summary: '회색 면 · 옅은 테두리'},
+    {key: 'outline', label: 'Outline', summary: '회색 면 · 옅은 테두리'},
+    {key: 'ghost', label: 'Ghost', summary: '회색 면 · 테두리 없음'},
 ] as const
 
 const DISABLED_COLUMNS = [
     {key: 'variant', header: 'Variant', align: 'start', rowHeader: true},
     {key: 'default', header: '기본', align: 'start'},
     {key: 'disabled', header: '비활성', align: 'start'},
-    {key: 'surface', header: '면', align: 'start', wrap: true},
-    {key: 'border', header: '테두리', align: 'start', wrap: true},
-    {key: 'label', header: '글자', align: 'start', wrap: true},
-    {key: 'note', header: '비고', align: 'start', wrap: true},
+    {key: 'summary', header: '잠긴 모습', align: 'start', wrap: true},
 ] as const
 
 const DISABLED_ROWS = DISABLED_VARIANTS.map((variant) => ({
@@ -192,10 +134,7 @@ const DISABLED_ROWS = DISABLED_VARIANTS.map((variant) => ({
         <Button key="disabled" type="button" variant={variant.key} size="md" disabled>
             {variant.label}
         </Button>,
-        variant.surface,
-        variant.border,
-        variant.label2,
-        variant.note,
+        variant.summary,
     ],
 }))
 
@@ -283,9 +222,11 @@ const API_ROWS = [
         key: 'size',
         cells: [
             <code key="prop">size</code>,
-            <code key="type">xl | lg | md | sm | xs | icon-xl | icon-lg | icon-md | icon-sm | icon-xs | icon</code>,
+            <code key="type">
+                default | xl | lg | md | sm | xs | icon | icon-xl | icon-lg | icon-md | icon-sm | icon-xs
+            </code>,
             <code key="default">default</code>,
-            '일반 버튼 또는 아이콘 전용 버튼의 크기를 선택합니다.',
+            '일반 버튼 또는 아이콘 전용 버튼의 크기를 선택합니다. <code>default</code> · <code>icon</code> 은 높이 40px 에 최소 높이 44px(<code>min-h-11</code>)이 걸려 실제로는 44px 입니다.',
         ],
     },
     {
@@ -318,19 +259,16 @@ const API_ROWS = [
 ] as const
 
 const ButtonGuidePage = () => (
-    <GuidePageShell
-        title="버튼 (Button)"
-        description="액션의 강조 단계, 크기, 아이콘과 상태를 일관되게 구현하는 공통 Button 컴포넌트입니다."
-    >
-        <BaseCard variant="outlined">
+    <GuidePageShell title="버튼 (Button)" description="강조 단계(variant)와 크기(size)를 고르는 공통 버튼입니다.">
+        <BaseCard>
             <section aria-labelledby="button-basic" className="flex flex-col gap-6">
                 <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        <code>variant</code>로 강조 단계를, <code>size</code>로 크기를 정합니다. 일반적인 폼 액션은{' '}
-                        <code>md</code>부터 사용하고 <code>type</code>을 항상 명시합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code>variant</code>로 강조 단계를, <code>size</code>로 크기를 정합니다. 폼 액션은{' '}
+                        <code>md</code> 이상을 쓰고 <code>type</code>을 항상 적습니다.
                     </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
@@ -354,9 +292,8 @@ const ButtonGuidePage = () => (
                     <h2 id="button-variant" className="typo-h4-bold">
                         Variant 선택
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        화면의 일반 액션은 <code>default</code> · <code>secondary</code> · <code>tertiary</code>를 우선
-                        사용합니다. 나머지는 아래 용도에 맞을 때 선택합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        일반 액션은 <code>default</code> · <code>secondary</code> · <code>tertiary</code>를 먼저 씁니다.
                     </p>
                 </div>
                 <Table caption="Button variant와 사용 기준" columns={VARIANT_COLUMNS} rows={VARIANT_ROWS} size="md" />
@@ -369,11 +306,8 @@ const ButtonGuidePage = () => (
                     <h2 id="button-disabled" className="typo-h4-bold">
                         비활성(disabled) 스타일
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        잠긴 모습은 variant 마다 다릅니다. 면을 채워 잠그는 것(<code>default</code> ·{' '}
-                        <code>secondary</code>)과 면을 그대로 두고 색만 옅게 하는 것(<code>tertiary</code> ·{' '}
-                        <code>text</code>)으로 나뉩니다. 색은 모두 잠김 전용 시맨틱 토큰이라 사용처에서는{' '}
-                        <code>disabled</code> 속성만 켜면 됩니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        잠긴 모습은 variant 마다 정해져 있습니다. 사용처에서는 <code>disabled</code> 속성만 켭니다.
                     </p>
                 </div>
                 <Table
@@ -382,23 +316,12 @@ const ButtonGuidePage = () => (
                     rows={DISABLED_ROWS}
                     size="md"
                 />
-                <ul className="typo-body-l-regular text-muted-foreground flex max-w-4xl list-disc flex-col gap-2 pl-5">
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>잠긴 버튼은 클릭과 키보드 포커스를 모두 받지 않습니다.</li>
                     <li>
-                        투명도로 흐리게 만들지 않습니다(<code>disabled:opacity-100</code>) — 겹친 배경에 따라 색이
-                        달라지지 않도록 잠김 색을 직접 지정합니다.
+                        링크를 잠가야 하면 <code>asChild</code> 대신 <code>button</code>으로 그립니다.
                     </li>
-                    <li>
-                        잠긴 버튼은 <code>cursor-not-allowed</code>이며 키보드 포커스도 받지 않습니다. 링크를 잠가야
-                        하면 <code>asChild</code> 대신 <code>button</code>으로 그립니다.
-                    </li>
-                    <li>
-                        <code>default</code>의 <code>md</code>는 기본이 굵은 글자라 잠김에서는 보통 굵기로 돌아갑니다(
-                        <code>disabled:font-medium</code>).
-                    </li>
-                    <li>
-                        진행 중을 알릴 때는 <code>disabled</code>에 <code>aria-busy</code>를 함께 둡니다 — 아래
-                        &quot;상태 표현&quot; 참고.
-                    </li>
+                    <li>진행 중 표시는 아래 &quot;비활성과 진행 중&quot; 패턴을 따릅니다.</li>
                 </ul>
             </section>
         </BaseCard>
@@ -409,17 +332,15 @@ const ButtonGuidePage = () => (
                     <h2 id="button-size" className="typo-h4-bold">
                         Size 선택
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        텍스트 버튼과 아이콘 버튼은 같은 5단계 높이를 공유합니다. 아이콘만 표시할 때는 대응하는{' '}
-                        <code>icon-*</code> 값을 사용합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        높이는 5단계입니다. 아이콘만 있는 버튼은 같은 단계의 <code>icon-*</code>를 씁니다.
                     </p>
                 </div>
                 <Table caption="Button size와 높이" columns={SIZE_COLUMNS} rows={SIZE_ROWS} size="md" />
-                <div className="flex max-w-4xl flex-col gap-2 pt-2">
-                    <h3 className="typo-body-xl-bold">Text Button</h3>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        <code>text</code>와 <code>text-underline</code>은 컨트롤 높이 대신 전용 글자 크기와 행간을
-                        사용합니다.
+                <div className="border-subtle-3 flex flex-col gap-2 border-t pt-8">
+                    <h3 className="typo-title-m-bold text-foreground">Text Button</h3>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code>text</code> · <code>text-underline</code>은 높이 없이 글자 크기와 행간만 바뀝니다.
                     </p>
                 </div>
                 <Table
@@ -432,74 +353,105 @@ const ButtonGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="button-patterns" className="flex flex-col gap-8">
+            <section aria-labelledby="button-patterns" className="flex flex-col gap-6">
                 <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="button-patterns" className="typo-h4-bold">
                         구현 패턴
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        아이콘, 링크, 진행 상태는 의미와 상호작용 방식이 유지되도록 구현합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        아이콘 · 링크 · 진행 상태를 넣을 때의 마크업입니다.
                     </p>
                 </div>
 
-                <div className="flex flex-col gap-4">
-                    <h3 className="typo-body-xl-bold">아이콘</h3>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        장식 아이콘은 <code>aria-hidden</code>으로 숨깁니다. 아이콘 전용 버튼은 동작을 설명하는{' '}
-                        <code>aria-label</code>이 필요합니다.
-                    </p>
-                    <div className="flex flex-wrap items-center gap-4">
-                        <Button type="button" size="md">
-                            <Download aria-hidden="true" />
-                            다운로드
-                        </Button>
-                        <Button type="button" size="icon-md" aria-label="검색">
-                            <Search aria-hidden="true" />
-                        </Button>
-                        <Button type="button" variant="plain" size="icon-md" aria-label="닫기">
-                            <X aria-hidden="true" />
-                        </Button>
+                {/* 소제목 블록마다 가로선과 같은 여백으로 갈라, 섹션 제목(24) → 소제목(18) → 본문(14) 순서가 보이게 한다. */}
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">아이콘</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            아이콘에는 <code>aria-hidden</code>을, 아이콘만 있는 버튼에는 <code>aria-label</code>을
+                            줍니다.
+                        </p>
+                        <div className="flex flex-wrap items-center gap-4">
+                            <Button type="button" size="md">
+                                <Download aria-hidden="true" />
+                                다운로드
+                            </Button>
+                            <Button type="button" size="icon-md" aria-label="검색">
+                                <Search aria-hidden="true" />
+                            </Button>
+                            <Button type="button" variant="plain" size="icon-md" aria-label="닫기">
+                                <X aria-hidden="true" />
+                            </Button>
+                        </div>
+                        <CodeBlock code={ICON_CODE} language="tsx" copyLabel="복사" />
                     </div>
-                    <CodeBlock code={ICON_CODE} language="tsx" copyLabel="복사" />
-                </div>
 
-                <div className="flex flex-col gap-4">
-                    <h3 className="typo-body-xl-bold">동작과 링크</h3>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        현재 화면에서 실행하는 기능은 button으로, 주소 이동은 <code>asChild</code>와{' '}
-                        <code>next/link</code>로 구현합니다.
-                    </p>
-                    <div className="flex flex-wrap items-center gap-6">
-                        <Button type="button" variant="text" size="md">
-                            내용보기
-                        </Button>
-                        <Button variant="text-underline" size="md" asChild>
-                            <Link href="#button-api">
-                                Props 보기
-                                <ChevronRight aria-hidden="true" />
-                            </Link>
-                        </Button>
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">동작과 링크</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            화면 안에서 실행하는 동작은 button, 주소 이동은 <code>asChild</code> +{' '}
+                            <code>next/link</code>로 만듭니다.
+                        </p>
+                        <div className="flex flex-wrap items-center gap-6">
+                            <Button type="button" variant="text" size="md">
+                                내용보기
+                            </Button>
+                            <Button variant="text-underline" size="md" asChild>
+                                <Link href="#button-api">
+                                    Props 보기
+                                    <ChevronRight aria-hidden="true" />
+                                </Link>
+                            </Button>
+                        </div>
+                        <CodeBlock code={LINK_CODE} language="tsx" copyLabel="복사" />
                     </div>
-                    <CodeBlock code={LINK_CODE} language="tsx" copyLabel="복사" />
-                </div>
 
-                <div className="flex flex-col gap-4">
-                    <h3 className="typo-body-xl-bold">비활성과 진행 중</h3>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        실행할 수 없으면 <code>disabled</code>를 사용합니다. 진행 중에는 <code>aria-busy</code>를
-                        추가하고 <code>disabled</code>로 중복 실행을 차단합니다.
-                    </p>
-                    <div className="flex flex-wrap items-center gap-3">
-                        <Button type="button" size="md" disabled>
-                            저장
-                        </Button>
-                        <Button type="button" size="md" disabled aria-busy="true">
-                            <LoaderCircle aria-hidden="true" className="animate-spin" />
-                            저장 중
-                        </Button>
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">비활성과 진행 중</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            실행할 수 없으면 <code>disabled</code>, 진행 중이면 <code>disabled</code>에{' '}
+                            <code>aria-busy</code>를 더해 중복 실행을 막습니다.
+                        </p>
+                        <div className="flex flex-wrap items-center gap-3">
+                            <Button type="button" size="md" disabled>
+                                저장
+                            </Button>
+                            <Button type="button" size="md" disabled aria-busy="true">
+                                <LoaderCircle aria-hidden="true" className="animate-spin" />
+                                저장 중
+                            </Button>
+                        </div>
+                        <CodeBlock code={STATE_CODE} language="tsx" copyLabel="복사" />
                     </div>
-                    <CodeBlock code={STATE_CODE} language="tsx" copyLabel="복사" />
                 </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="button-a11y" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="button-a11y" className="typo-h4-bold">
+                        접근성
+                    </h2>
+                </div>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        동작은 <code>button</code>, 이동은 <code>asChild</code> + <code>next/link</code> 로 만들어
+                        키보드(Enter · Space)로 실행됩니다[6.1.1, 8.1.1].
+                    </li>
+                    <li>
+                        포커스는 <code>focus-visible</code> 외곽선으로 표시되며 평상시에도 외곽선 색이 지정되어
+                        있습니다[6.1.2].
+                    </li>
+                    <li>
+                        아이콘만 있는 버튼은 <code>aria-label</code>, 내부 아이콘은 <code>aria-hidden</code> 을
+                        둡니다[5.1.1]. 링크 텍스트는 목적을 알 수 있게 씁니다[6.4.3].
+                    </li>
+                    <li>
+                        인접한 버튼은 간격을 두어 겹치지 않게 합니다[6.1.3]. 상태는 색뿐 아니라 글자로도
+                        전합니다[5.3.1].
+                    </li>
+                </ul>
             </section>
         </BaseCard>
 
@@ -509,7 +461,7 @@ const ButtonGuidePage = () => (
                     <h2 id="button-api-title" className="typo-h4-bold">
                         Props API
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
+                    <p className="typo-body-l-regular text-label-foreground">
                         기본 HTML button 속성과 아래 프로젝트 속성을 함께 사용할 수 있습니다.
                     </p>
                 </div>

@@ -5,14 +5,13 @@ import {SummaryListItem} from '@/components/composite/summary-list'
 import {FormCard} from '@/components/composite/form-card'
 import {SelectableSummaryList, SelectableSummaryListGroup} from '@/components/composite/selectable-summary-list'
 
-// 기업 선택 후보 2건 — Figma "리스트"(기업 선택) 반영.
+// 기업 선택 후보 2건.
 const COMPANIES = [
     {value: 'promx', name: '프롬엑스테크', corpNumber: '110111-1234567', patentCount: '12건'},
     {value: 'neo-energy', name: '네오에너지솔루션', corpNumber: '220222-9876543', patentCount: '7건'},
 ] as const
 
-// 카드 선택은 controlled value 로만 강조가 반영된다(SelectableCard 와 동일 이유) — 그래서 데모는
-// 'use client' + useState 로 value/onValueChange 를 직접 들고 있다(defaultValue 로는 강조가 안 됨).
+// 카드 강조는 controlled value 로만 반영되므로 데모는 useState 로 value/onValueChange 를 들고 있다.
 
 // 사용 예시 — 하나 선택, 직접 눌러 바꿔볼 수 있다.
 export const SelectableSummaryListUsageDemo = () => {

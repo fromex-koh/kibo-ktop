@@ -1,14 +1,22 @@
 'use client'
 
+import {
+    FormResetButton,
+    FormSubmitResult,
+    formatSubmitResult,
+    withFormReset,
+    type FormResetProps,
+} from '@/components/custom/form-submit-result'
 import {useState} from 'react'
 import {ChipCheckbox, ChipCheckboxGroup, ChipRadio, ChipRadioGroup} from '@/components/composite/chip'
 import {Button} from '@/components/ui/button'
 
-const ChipFormDemo = () => {
-    const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+const ChipFormDemoBody = ({onReset}: FormResetProps) => {
+    const [submittedData, setSubmittedData] = useState<string | null>(null)
 
     return (
         <form
+            onReset={onReset}
             className="flex flex-col gap-5"
             autoComplete="off"
             onSubmit={(event) => {
@@ -18,7 +26,7 @@ const ChipFormDemo = () => {
                     plan: formData.get('plan'),
                     interest: formData.getAll('interest'),
                 }
-                setSubmittedData(JSON.stringify(result))
+                setSubmittedData(formatSubmitResult(result))
             }}
         >
             <fieldset className="flex flex-col gap-3">
@@ -53,20 +61,20 @@ const ChipFormDemo = () => {
 
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                    <Button type="submit">선택 내용 확인</Button>
+                    <div className="flex items-center gap-3">
+                        <Button type="submit">선택 내용 확인</Button>
+                        <FormResetButton />
+                    </div>
                     <span className="typo-body-l-regular text-muted-foreground">
                         라디오는 단일 값, 체크박스는 선택된 값 배열로 확인합니다.
                     </span>
                 </div>
-                <output
-                    className="typo-body-l-regular bg-surface border-border text-muted-foreground min-h-10 rounded-md border px-3 py-2 break-all"
-                    aria-live="polite"
-                >
-                    {submittedData}
-                </output>
+                <FormSubmitResult data={submittedData} />
             </div>
         </form>
     )
 }
+
+const ChipFormDemo = withFormReset(ChipFormDemoBody)
 
 export default ChipFormDemo

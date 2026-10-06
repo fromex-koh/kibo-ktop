@@ -1,7 +1,10 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
 import {TriangleAlert} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/custom/copy-chip'
+import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
 import {Alert, AlertDescription, AlertTitle} from '@/components/ui/alert'
@@ -9,8 +12,9 @@ import MotionPreview, {type MotionPreviewKind} from './motion-preview'
 
 export const metadata: Metadata = {title: '모션 (Motion)'}
 
-// 모션 값의 단일 소스는 src/app/globals.css 의 @theme 이다(색·간격과 달리 tokens.json 이 다루지 않는다 —
-// @keyframes 와 한 몸이라 CSS 에 둔다). 여기 목록이 그 @theme 과 어긋나면 check:conventions 가 빌드를 세운다.
+// 모션 값의 단일 소스는 src/app/globals.css 의 @theme 이다(다른 토큰과 달리 tokens.json 이 다루지 않는다 —
+// @keyframes 와 한 몸이라 CSS 에 둔다). 이름 목록이 그 @theme 과 어긋나면 check:conventions 가 빌드를 세운다.
+// 값(value)은 @theme 을 읽어 오지 않고 여기 옮겨 적으므로 globals.css 를 고치면 함께 고친다.
 //
 // value 는 @theme 에 적힌 값 그대로, usage 는 그 유틸리티를 실제로 붙이는 파일이다.
 
@@ -49,8 +53,8 @@ const ANIMATIONS = [
     {
         name: 'animate-scroll-line',
         value: 'main-scroll-line-fill 1.5s ease-in-out infinite',
-        usage: '히어로 하단 SCROLL 표시의 세로선이 위에서 아래로 차오른다.',
-        source: 'custom/hero-section.tsx',
+        usage: '히어로 하단 SCROLL 표시의 세로선이 위에서 아래로 차오른다. 현재 hero-section 은 같은 keyframes 를 쓰는 .main-scroll-line-fill 클래스를 쓰며, 이 유틸리티를 직접 쓰는 곳은 없다.',
+        source: 'app/globals.css',
         preview: 'line',
     },
     {
@@ -138,66 +142,57 @@ const EasingCurve = ({points}: {points: readonly [number, number, number, number
     )
 }
 
-// 모션 — 가속도(ease-*)와 애니메이션(animate-*) 유틸리티. 값의 단일 소스는 globals.css 의 @theme 이다.
+const BASIC_CODE = `<div className="transition-transform duration-300 ease-roll motion-reduce:transition-none">…</div>
+<span className="animate-tech-enter motion-reduce:animate-none">…</span>`
+
+// 적용 규칙 카드 — 규칙마다 제목 · 핵심 코드 · 설명을 같은 자리에 둔다.
+const MOTION_RULES = [
+    {
+        title: '재사용',
+        code: 'ease-* · animate-*',
+        description: '기존 유틸리티를 쓰고 같은 값을 컴포넌트에 다시 작성하지 않습니다.',
+    },
+    {
+        title: '값 변경',
+        code: 'src/app/globals.css @theme',
+        description:
+            '값과 keyframes 는 tokens.json 이 아니라 여기서 관리하며 yarn tokens 대상이 아닙니다. 수정한 뒤 이 페이지의 목록도 고치고 yarn verify 로 이름 동기화를 확인합니다.',
+    },
+    {
+        title: '동작 줄이기',
+        code: 'motion-reduce:animate-none',
+        description:
+            '사용처에 이 클래스를 적용해 OS 의 동작 줄이기 설정을 따르고, 반복되는 모션에는 정지 수단을 제공합니다. [KWCAG 6.2.2 · 6.3.1]',
+    },
+] as const
+
 const MotionGuidePage = () => (
     <GuidePageShell
         title="모션 (Motion)"
         description="프로젝트에서 재사용하는 ease-* 가속도와 animate-* 애니메이션입니다."
     >
         <BaseCard>
-            <section aria-labelledby="motion-rule" className="flex flex-col gap-5">
-                <div className="flex flex-col gap-1">
-                    <h2 id="motion-rule" className="typo-h4-bold text-foreground">
-                        모션 적용 방식
+            <section aria-labelledby="motion-basic" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="motion-basic" className="typo-h4-bold">
+                        기본 사용
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        기존 <code className="font-mono">ease-*</code>·<code className="font-mono">animate-*</code>를
-                        재사용하고, 같은 값을 컴포넌트에 다시 작성하지 않습니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        가속도는 <code>ease-*</code>, 이름·시간·가속도가 묶인 애니메이션은 <code>animate-*</code>{' '}
+                        유틸리티로 적용합니다.
                     </p>
                 </div>
-                <div className="grid gap-5 md:grid-cols-3">
-                    <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">원본</strong>
-                        <p className="text-foreground-subtle">
-                            값과 keyframes는 <code className="font-mono">src/app/globals.css</code>의{' '}
-                            <code className="font-mono">@theme</code>에서 관리합니다.
-                        </p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">접근성</strong>
-                        <p className="text-foreground-subtle">
-                            기본은 사용처에 <code className="font-mono">motion-reduce:animate-none</code>을 적용해 PC
-                            설정의 동작 줄이기 혹은 애니메이션 줄이기를 따르고, 반복 모션은 정지 수단을 제공합니다.
-                        </p>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                        <strong className="text-foreground">변경</strong>
-                        <p className="text-foreground-subtle">
-                            CSS와 이 목록을 함께 수정한 뒤 <code className="font-mono">yarn verify</code>로 동기화를
-                            확인합니다.
-                        </p>
-                    </div>
-                </div>
-                {/* 기본 규칙에서 벗어나는 자리라 표 위 설명에 묻히지 않게 따로 띄운다. 페이지를 열 때마다
-                    읽어 주는 알림이 아니라 늘 놓여 있는 안내라 role 을 note 로 둔다. */}
-                <Alert color="warning" role="note">
-                    <TriangleAlert aria-hidden="true" />
-                    <AlertTitle>예외 — 메인페이지는 동작 줄이기를 적용하지 않습니다</AlertTitle>
-                    <AlertDescription>
-                        메인페이지는 PC 설정의 동작 줄이기 혹은 애니메이션 줄이기를 켜면 화면에 내용이 아예 노출되지
-                        않는 경우가 있어 동작 줄이기에서 제외했고, 설정과 관계없이 원본 모션을 그대로 재생합니다.
-                    </AlertDescription>
-                </Alert>
+                <CodeBlock code={BASIC_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="motion-easing" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                    <h2 id="motion-easing" className="typo-h4-bold text-foreground">
+            <section aria-labelledby="motion-easing" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="motion-easing" className="typo-h4-bold">
                         가속도 (Easing)
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
+                    <p className="typo-body-l-regular text-label-foreground">
                         <code>transition-*</code>·<code>duration-*</code>과 함께 씁니다. 미리보기는 곡선 자체로, 가로가
                         시간·세로가 진행률이며 가파른 구간이 빠르게 움직이는 구간입니다.
                     </p>
@@ -210,11 +205,11 @@ const MotionGuidePage = () => (
                         cells: [
                             <EasingCurve key="preview" points={easing.points} />,
                             <CopyChip key="class" value={easing.name} />,
-                            <span key="value" className="text-muted-foreground font-mono whitespace-nowrap">
+                            <span key="value" className="text-foreground-subtle font-mono whitespace-nowrap">
                                 {easing.value}
                             </span>,
                             <span key="usage">
-                                {easing.usage} <span className="text-muted-foreground font-mono">{easing.source}</span>
+                                {easing.usage} <span className="text-foreground-subtle font-mono">{easing.source}</span>
                             </span>,
                         ],
                     }))}
@@ -223,12 +218,12 @@ const MotionGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="motion-animation" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                    <h2 id="motion-animation" className="typo-h4-bold text-foreground">
+            <section aria-labelledby="motion-animation" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="motion-animation" className="typo-h4-bold">
                         애니메이션 (Animation)
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
+                    <p className="typo-body-l-regular text-label-foreground">
                         이름·시간·가속도가 한 값에 묶여 있어 클래스 하나로 적용합니다. 미리보기는 실제 유틸리티를 그대로
                         붙인 것이라 원본과 같은 속도로 움직입니다.
                     </p>
@@ -246,16 +241,50 @@ const MotionGuidePage = () => (
                                 label={animation.name}
                             />,
                             <CopyChip key="class" value={animation.name} />,
-                            <span key="value" className="text-muted-foreground font-mono">
+                            <span key="value" className="text-foreground-subtle font-mono">
                                 {animation.value}
                             </span>,
                             <span key="usage">
                                 {animation.usage}{' '}
-                                <span className="text-muted-foreground font-mono">{animation.source}</span>
+                                <span className="text-foreground-subtle font-mono">{animation.source}</span>
                             </span>,
                         ],
                     }))}
                 />
+            </section>
+        </BaseCard>
+        <BaseCard>
+            <section aria-labelledby="motion-rule" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="motion-rule" className="typo-h4-bold">
+                        사용 규칙
+                    </h2>
+                </div>
+                {/* 규칙마다 같은 자리에 같은 항목(제목 · 핵심 코드 · 설명)을 둔다. */}
+                <div className="grid gap-4 md:grid-cols-3">
+                    {MOTION_RULES.map((rule) => (
+                        <div
+                            key={rule.title}
+                            className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5"
+                        >
+                            <h3 className="typo-body-xl-bold text-foreground">{rule.title}</h3>
+                            <code className="bg-card text-foreground border-subtle-3 w-fit max-w-full rounded-xs border px-2 py-1 font-mono text-sm break-all">
+                                {rule.code}
+                            </code>
+                            <p className="text-label-foreground">{rule.description}</p>
+                        </div>
+                    ))}
+                </div>
+                {/* 기본 규칙에서 벗어나는 자리라 표 위 설명에 묻히지 않게 따로 띄운다. 페이지를 열 때마다
+                    읽어 주는 알림이 아니라 늘 놓여 있는 안내라 role 을 note 로 둔다. */}
+                <Alert color="warning" role="note">
+                    <TriangleAlert aria-hidden="true" />
+                    <AlertTitle>예외 — 메인페이지는 동작 줄이기를 적용하지 않습니다</AlertTitle>
+                    <AlertDescription>
+                        메인페이지는 PC 설정의 동작 줄이기 혹은 애니메이션 줄이기를 켜면 화면에 내용이 아예 노출되지
+                        않는 경우가 있어 동작 줄이기에서 제외했고, 설정과 관계없이 원본 모션을 그대로 재생합니다.
+                    </AlertDescription>
+                </Alert>
             </section>
         </BaseCard>
     </GuidePageShell>

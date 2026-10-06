@@ -1,5 +1,12 @@
 'use client'
 
+import {
+    FormResetButton,
+    FormSubmitResult,
+    formatSubmitResult,
+    withFormReset,
+    type FormResetProps,
+} from '@/components/custom/form-submit-result'
 import {useState} from 'react'
 import {cn} from '@/lib/utils'
 import {Button} from '@/components/ui/button'
@@ -7,19 +14,20 @@ import {Switch} from '@/components/composite/control-switch'
 import {FIELD_FOCUS_RING} from '@/constants/form'
 import {Field, FieldDescription, FieldLabel} from '@/components/ui/field'
 
-const SwitchFormDemo = () => {
+const SwitchFormDemoBody = ({onReset}: FormResetProps) => {
     const [pushEnabled, setPushEnabled] = useState(true)
     const [marketingEnabled, setMarketingEnabled] = useState(false)
-    const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+    const [submittedData, setSubmittedData] = useState<string | null>(null)
 
     return (
         <form
+            onReset={onReset}
             className="flex flex-col gap-5"
             onSubmit={(event) => {
                 event.preventDefault()
                 const formData = new FormData(event.currentTarget)
                 setSubmittedData(
-                    JSON.stringify({
+                    formatSubmitResult({
                         pushNotification: formData.has('pushNotification'),
                         marketingNotification: formData.has('marketingNotification'),
                     }),
@@ -50,18 +58,18 @@ const SwitchFormDemo = () => {
                 켜진 Switch만 FormData에 포함되므로 FormData.has()로 true·false 값으로 변환합니다.
             </FieldDescription>
             <div className="flex flex-col gap-2">
-                <Button type="submit" size="sm" className="w-fit">
-                    설정 내용 확인
-                </Button>
-                <output
-                    className="typo-body-l-regular bg-surface border-border text-muted-foreground min-h-10 rounded-md border px-3 py-2 break-all"
-                    aria-live="polite"
-                >
-                    {submittedData}
-                </output>
+                <div className="flex items-center gap-3">
+                    <Button type="submit" size="sm" className="w-fit">
+                        설정 내용 확인
+                    </Button>
+                    <FormResetButton />
+                </div>
+                <FormSubmitResult data={submittedData} />
             </div>
         </form>
     )
 }
+
+const SwitchFormDemo = withFormReset(SwitchFormDemoBody)
 
 export default SwitchFormDemo

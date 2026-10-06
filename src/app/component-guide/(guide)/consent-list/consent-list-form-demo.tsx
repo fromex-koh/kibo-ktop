@@ -1,5 +1,12 @@
 'use client'
 
+import {
+    FormResetButton,
+    FormSubmitResult,
+    formatSubmitResult,
+    withFormReset,
+    type FormResetProps,
+} from '@/components/custom/form-submit-result'
 import {useRef, useState} from 'react'
 import {ChevronRight} from 'lucide-react'
 import {ConsentItem, ConsentList} from '@/components/composite/consent-list'
@@ -39,15 +46,16 @@ const CONSENT_ITEMS = [
 const getErrorMessage = (value: string) =>
     value ? '필수 항목입니다. 동의를 선택해 주세요.' : '동의 여부를 선택해 주세요.'
 
-const ConsentListFormDemo = () => {
+const ConsentListFormDemoBody = ({onReset}: FormResetProps) => {
     const [values, setValues] = useState<Record<string, string>>({})
     const [invalidNames, setInvalidNames] = useState<readonly string[]>([])
-    const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+    const [submittedData, setSubmittedData] = useState<string | null>(null)
     // 오류가 있는 첫 항목의 "동의" 라디오로 포커스를 옮기기 위한 참조.
     const agreeRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
     return (
         <form
+            onReset={onReset}
             className="flex flex-col gap-6"
             autoComplete="off"
             noValidate
@@ -66,7 +74,7 @@ const ConsentListFormDemo = () => {
                 }
 
                 const entries = Array.from(new FormData(event.currentTarget).entries())
-                setSubmittedData(JSON.stringify(Object.fromEntries(entries)))
+                setSubmittedData(formatSubmitResult(Object.fromEntries(entries)))
             }}
         >
             <ConsentList>
@@ -144,22 +152,22 @@ const ConsentListFormDemo = () => {
 
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                    <Button type="submit" variant="default" size="sm">
-                        동의하고 다음 단계
-                    </Button>
+                    <div className="flex items-center gap-3">
+                        <Button type="submit" variant="default" size="sm">
+                            동의하고 다음 단계
+                        </Button>
+                        <FormResetButton />
+                    </div>
                     <span className="typo-body-l-regular text-muted-foreground">
                         항목별 name 과 선택값(agree·disagree)이 하나의 FormData 로 제출됩니다.
                     </span>
                 </div>
-                <output
-                    className="typo-body-l-regular bg-surface border-border text-muted-foreground min-h-10 rounded-md border px-3 py-2 break-all"
-                    aria-live="polite"
-                >
-                    {submittedData}
-                </output>
+                <FormSubmitResult data={submittedData} />
             </div>
         </form>
     )
 }
+
+const ConsentListFormDemo = withFormReset(ConsentListFormDemoBody)
 
 export default ConsentListFormDemo

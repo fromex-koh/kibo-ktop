@@ -1,9 +1,12 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
 import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable, {type PropsTableItem} from '@/components/custom/props-table'
+import {Table} from '@/components/custom/table'
 import ToastDemo, {
     ToastActionDemo,
     ToastCompositionDemo,
@@ -13,6 +16,11 @@ import ToastDemo, {
 } from './toast-demo'
 
 export const metadata: Metadata = {title: '토스트 (Toast) (작업중)'}
+
+const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
+const H3_CLASS = 'typo-title-m-bold text-foreground'
+const DESC_CLASS = 'typo-body-l-regular text-label-foreground'
+const BLOCK_CLASS = 'flex flex-col gap-4 py-8 last:pb-0'
 
 const SETUP_CODE = `import {Toaster} from '@/components/ui/sonner'
 
@@ -46,18 +54,6 @@ toast('왼쪽 위에 표시됩니다.', {
 
 // 모든 토스트의 기본 위치를 지정하려면 Toaster에 전달합니다.
 <Toaster position="bottom-center" />`
-
-const AUTOSAVE_CODE = `// 자동저장 안내 — 문구·위치·아이콘·노출 시간은 컴포넌트가 갖고 있다.
-// 저장 요청이 끝날 때마다 저장된 시각만 넘기면 된다.
-import {showAutosaveToast} from '@/components/custom/autosave-toast'
-
-const saveDraft = async () => {
-  await api.saveCompanyTechnologyInfo(values)
-  showAutosaveToast(new Date())        // "오전 11:20 자동저장"
-}
-
-// 저장 기능이 붙기 전 화면 확인용 — 진입 시 한 번 띄운다.
-<AutosaveToast />`
 
 const COMPOSITION_CODE = `toast('새로운 알림이 있습니다.', {
   icon: <Bell aria-hidden="true" />,
@@ -120,240 +116,254 @@ toast.info('첫 번째 알림입니다.')
 toast.success('두 번째 알림입니다.')
 toast.warning('세 번째 알림입니다.')`
 
+const CHOICE_COLUMNS = [
+    {key: 'case', header: '사용 상황', align: 'start', rowHeader: true},
+    {key: 'component', header: '선택', align: 'start'},
+    {key: 'note', header: '기준', align: 'start', wrap: true},
+] as const
+
+const CHOICE_ROWS = [
+    {
+        key: 'toast',
+        cells: [
+            '저장·제출 결과 같은 짧은 상태 변화',
+            <code key="c">toast()</code>,
+            '흐름을 막지 않고 자동으로 사라집니다. 알약 한 벌이며 위치·유지 시간을 호출마다 바꿀 수 있습니다.',
+        ],
+    },
+    {
+        key: 'check-toast',
+        cells: [
+            '완료를 체크 표식과 함께 화면 위 가운데에 알림(자동저장 등)',
+            <Link key="c" href="/component-guide/check-toast" className={LINK_CLASS}>
+                CheckToast
+            </Link>,
+            '문구·위치·아이콘이 고정된 완료 토스트입니다. 부르는 쪽은 문구만 넘깁니다.',
+        ],
+    },
+    {
+        key: 'dialog',
+        cells: [
+            '사용자의 결정이나 긴 설명이 필요함',
+            <Link key="c" href="/component-guide/dialog" className={LINK_CLASS}>
+                Dialog
+            </Link>,
+            '답을 해야 닫히는 모달입니다. 토스트만으로 중요한 확인이나 필수 입력을 전달하지 않습니다.',
+        ],
+    },
+    {
+        key: 'alert',
+        cells: [
+            '화면에 계속 남아야 하는 안내',
+            <Link key="c" href="/component-guide/alert" className={LINK_CLASS}>
+                Alert
+            </Link>,
+            '본문에 인라인으로 놓이고 닫히지 않습니다.',
+        ],
+    },
+] as const
+
 const PROPS = [
+    ['Toaster', 'position', '토스트가 표시될 기본 위치입니다.', "'bottom-right'", 'ToasterProps[position]'],
+    ['Toaster', 'closeButton', '모든 토스트에 닫기 버튼을 표시합니다.', 'false', 'boolean'],
+    ['Toaster', 'duration', '자동으로 닫히기까지의 시간(ms)입니다.', '4000', 'number'],
     [
         'Toaster',
         'theme',
-        '현재 앱 테마에 맞춰 토스트 색상 체계를 전환합니다.',
+        '색상 체계입니다. 기본은 앱 테마(next-themes)를 따릅니다.',
         '현재 테마',
         "'light' | 'dark' | 'system'",
     ],
-    ['Toaster', 'position', '토스트가 표시될 화면 위치입니다.', "'bottom-right'", 'ToasterProps[position]'],
-    ['Toaster', 'closeButton', '각 토스트에 닫기 버튼을 표시합니다.', 'false', 'boolean'],
-    ['Toaster', 'duration', '자동으로 닫히기까지의 시간(ms)입니다.', '4000', 'number'],
-    ['toast', 'message', '사용자에게 전달할 짧은 상태 메시지입니다.', '—', 'ReactNode'],
-    ['toast', 'position', '해당 토스트만 표시 위치를 변경합니다.', 'Toaster 위치', 'ToasterProps[position]'],
-    ['toast', 'description', '메시지를 보충하는 선택적 설명입니다.', 'undefined', 'ReactNode'],
-    ['toast', 'action', '토스트 안에서 즉시 실행할 수 있는 선택적 액션입니다.', 'undefined', 'Action'],
-    ['toast', 'cancel', '실행한 변경을 취소하는 선택적 버튼입니다.', 'undefined', 'Action'],
-    ['toast', 'duration', '해당 토스트가 유지되는 시간(ms)입니다.', 'Toaster 설정', 'number'],
-    ['toast', 'id', '중복 방지·내용 갱신·수동 종료에 사용하는 식별자입니다.', '자동 생성', 'string | number'],
+    ['toast', 'message', '사용자에게 전달할 짧은 메시지입니다.', '-', 'ReactNode'],
+    ['toast', 'description', '메시지를 보충하는 설명입니다.', 'undefined', 'ReactNode'],
+    ['toast', 'icon', '메시지 앞 아이콘입니다. 장식이면 aria-hidden 을 줍니다.', 'undefined', 'ReactNode'],
+    ['toast', 'action', '토스트 안에서 즉시 실행할 수 있는 버튼입니다.', 'undefined', 'Action'],
+    ['toast', 'cancel', '실행한 변경을 취소하는 버튼입니다.', 'undefined', 'Action'],
+    ['toast', 'closeButton', '이 토스트에만 닫기 버튼을 표시합니다.', 'Toaster 설정', 'boolean'],
+    ['toast', 'position', '이 토스트만 표시 위치를 바꿉니다.', 'Toaster 설정', 'ToasterProps[position]'],
+    ['toast', 'duration', '이 토스트의 유지 시간(ms)입니다. Infinity 면 사라지지 않습니다.', 'Toaster 설정', 'number'],
+    ['toast', 'id', '중복 방지 · 내용 갱신 · 수동 종료에 쓰는 식별자입니다.', '자동 생성', 'string | number'],
 ] satisfies readonly PropsTableItem[]
+
+const SectionHead = ({id, title, description}: {id: string; title: string; description: string}) => (
+    <div className="flex max-w-4xl flex-col gap-2">
+        <h2 id={id} className="typo-h4-bold">
+            {title}
+        </h2>
+        <p className="typo-body-l-regular text-label-foreground">{description}</p>
+    </div>
+)
 
 const ToastGuidePage = () => (
     <GuidePageShell
         title="토스트 (Toast) (작업중)"
-        description="작업 결과나 짧은 상태 변화를 화면 흐름을 막지 않고 알리는 shadcn/ui 기반 피드백 컴포넌트입니다."
+        description="작업 결과나 짧은 상태 변화를 화면 흐름을 막지 않고 알리는 sonner 기반 피드백 컴포넌트입니다."
     >
         <BaseCard>
-            <section aria-labelledby="toast-preview" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="toast-preview" className="typo-h4-bold">
-                        Preview
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        버튼을 선택하면 화면 우측 하단에 해당 상태의 토스트가 표시됩니다.
-                    </p>
-                </div>
+            <section aria-labelledby="toast-basic" className="flex flex-col gap-6">
+                <SectionHead
+                    id="toast-basic"
+                    title="기본 사용"
+                    description="Toaster 는 앱 공통 레이아웃에 한 번만 두고, 각 화면에서는 toast() 를 호출합니다. 버튼을 누르면 기본 위치인 화면 오른쪽 아래에 표시됩니다."
+                />
                 <ToastDemo />
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="toast-lifecycle" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="toast-lifecycle" className="typo-h4-bold">
-                        비동기 상태와 수동 제어
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        요청 상태를 하나의 토스트에서 갱신하거나, 자동 종료 시간을 해제하고 반환된 ID로 직접 닫을 수
-                        있습니다. 같은 ID를 다시 사용하면 새 토스트를 쌓지 않고 기존 내용을 갱신합니다.
-                    </p>
-                </div>
-                <ToastLifecycleDemo />
-                <CodeBlock code={LIFECYCLE_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="toast-edge-cases" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="toast-edge-cases" className="typo-h4-bold">
-                        추가 검증 사례
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        취소 동작, 긴 문구의 줄바꿈, 여러 알림이 연속으로 발생할 때의 쌓임 순서를 확인합니다.
-                    </p>
-                </div>
-                <ToastEdgeCaseDemo />
-                <CodeBlock code={EDGE_CASE_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="toast-composition" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="toast-composition" className="typo-h4-bold">
-                        콘텐츠 배치
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        메시지의 중요도와 보충 설명 유무에 맞춰 아이콘·타이틀·서브텍스트를 조합합니다.
-                    </p>
-                </div>
-                <ToastCompositionDemo />
-                <CodeBlock code={COMPOSITION_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="toast-action" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="toast-action" className="typo-h4-bold">
-                        액션과 닫기
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        단순 결과 안내에는 액션을 두지 않고, 즉시 되돌릴 수 있는 안전한 작업에만 액션 버튼을 제공합니다.
-                        사용자가 직접 닫아야 하는 안내에는 닫기 버튼을 선택적으로 표시할 수 있습니다.
-                    </p>
-                </div>
-                <ToastActionDemo />
-                <CodeBlock code={ACTION_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="toast-position" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="toast-position" className="typo-h4-bold">
-                        렌더링 위치
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        개별 호출의 <code className="font-mono">position</code>으로 여섯 위치를 선택할 수 있습니다. 앱
-                        전체의 기본 위치를 바꾸려면 <code className="font-mono">Toaster</code>에 같은 prop을 전달합니다.
-                    </p>
-                </div>
-                <ToastPositionDemo />
-                <CodeBlock code={POSITION_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="toast-autosave" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="toast-autosave" className="typo-h4-bold">
-                        화면에서 쓰는 예 — 자동저장 안내
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        자가진단 2단계(기업·기술정보 입력)의 자동저장 토스트입니다. 같은 모양을 여러 곳에서 쓰게 되므로{' '}
-                        <code className="font-mono">toast()</code> 를 화면마다 다시 조합하지 않고{' '}
-                        <code className="font-mono">showAutosaveToast()</code> 한 곳에 모아 두었습니다 — 문구 형식(오전
-                        11:20 자동저장) · 위치(상단 가운데, 헤더 아래 40) · 아이콘 · 노출 시간(1.5초)이 그 안에
-                        있습니다. 부르는 쪽은 저장이 끝난 시각만 넘깁니다.
-                    </p>
-                </div>
-                <CodeBlock code={AUTOSAVE_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="toast-setup" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="toast-setup" className="typo-h4-bold">
-                        설치 위치
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">Toaster</code>는 앱 공통 레이아웃에 한 번만 배치합니다. 각
-                        화면에서는 <code className="font-mono">toast()</code> 함수로 메시지를 호출합니다. 알림은
-                        <code className="font-mono"> z-toast</code> 위계로 모달·팝오버·전체 메뉴보다 앞에 표시됩니다.
-                    </p>
-                </div>
                 <CodeBlock code={SETUP_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
 
-        <BaseCard>
-            <section aria-labelledby="toast-guideline" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="toast-guideline" className="typo-h4-bold">
-                        사용 기준
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        저장·제출처럼 즉시 확인이 필요한 짧은 결과에 사용합니다. 사용자의 결정이나 긴 설명이 필요하면
-                        Dialog 또는 Alert를 사용합니다.
-                    </p>
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    <div className={BLOCK_CLASS}>
+                        <h3 className={H3_CLASS}>면과 색</h3>
+                        <p className={DESC_CLASS}>
+                            값은 <code>theme/sonner.variants.ts</code> 에서 관리하며 종류와 관계없이 알약 한 벌입니다.
+                        </p>
+                        <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                            <li>
+                                면은 <code>bg-toast</code>, 글자·아이콘은 <code>text-toast-foreground</code> 이며 테마와
+                                무관하게 같은 값입니다.
+                            </li>
+                            <li>
+                                폭은 내용만큼 늘어나고 긴 문구는 토스터 폭에서 줄바꿈합니다. 모서리는{' '}
+                                <code>rounded-full</code> 입니다.
+                            </li>
+                            <li>
+                                종류(success · info · warning · error)는 색이 아니라 아이콘 모양으로 구분합니다 [5.3.1].
+                            </li>
+                            <li>
+                                <code>z-toast</code> 위계라 모달·팝오버·전체 메뉴보다 앞에 표시됩니다.
+                            </li>
+                        </ul>
+                    </div>
                 </div>
-                <ul className="typo-body-l-regular text-foreground-subtle list-disc space-y-2 pl-6">
-                    <li>메시지는 한 문장으로 간결하게 작성합니다.</li>
-                    <li>오류 해결에 추가 설명이 필요하면 description을 함께 제공합니다.</li>
-                    <li>중요한 확인이나 필수 입력을 토스트만으로 전달하지 않습니다.</li>
-                    <li>되돌리기처럼 짧고 안전한 후속 동작만 action으로 제공합니다.</li>
-                </ul>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="toast-validator" className="flex flex-col gap-2">
-                <h2 id="toast-validator" className="typo-h4-bold">
-                    W3C 검사기 메시지 (감리 참고)
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    렌더된 DOM을 직렬화해 검사하면 sonner가 런타임에 주입하는 스타일시트 때문에{' '}
-                    <code className="font-mono">CSS: Parse Error</code>와 charset 1024바이트 초과 메시지가 나타날 수
-                    있습니다. 서버 전송 HTML에는 없는 오탐이며, 실측 근거와 판정은{' '}
-                    <Link
-                        href="/component-guide/accessibility-exceptions"
-                        className="text-primary underline underline-offset-4"
-                    >
-                        접근성 검사 예외사항
+            <section aria-labelledby="toast-variants" className="flex flex-col gap-6">
+                <SectionHead
+                    id="toast-variants"
+                    title="변형 예시"
+                    description="내용 구성, 액션, 위치, 비동기 상태를 호출 옵션으로 바꿉니다."
+                />
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    <div className={BLOCK_CLASS}>
+                        <h3 className={H3_CLASS}>콘텐츠 배치</h3>
+                        <p className={DESC_CLASS}>
+                            메시지 · <code>icon</code> · <code>description</code> 을 조합합니다.
+                        </p>
+                        <ToastCompositionDemo />
+                        <CodeBlock code={COMPOSITION_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+                    <div className={BLOCK_CLASS}>
+                        <h3 className={H3_CLASS}>액션과 닫기</h3>
+                        <p className={DESC_CLASS}>
+                            단순 결과 안내에는 액션을 두지 않고, 즉시 되돌릴 수 있는 안전한 작업에만 <code>action</code>{' '}
+                            을 둡니다. 직접 닫아야 하는 안내에는 <code>closeButton</code> 을 표시합니다.
+                        </p>
+                        <ToastActionDemo />
+                        <CodeBlock code={ACTION_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+                    <div className={BLOCK_CLASS}>
+                        <h3 className={H3_CLASS}>렌더링 위치</h3>
+                        <p className={DESC_CLASS}>
+                            호출의 <code>position</code> 으로 여섯 위치 중 하나를 고릅니다. 앱 전체 기본값은{' '}
+                            <code>Toaster</code> 에 같은 prop 을 줍니다.
+                        </p>
+                        <ToastPositionDemo />
+                        <CodeBlock code={POSITION_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+                    <div className={BLOCK_CLASS}>
+                        <h3 className={H3_CLASS}>비동기 상태와 수동 제어</h3>
+                        <p className={DESC_CLASS}>
+                            <code>toast.promise</code> 로 요청 상태를 한 토스트에서 갱신합니다. 같은 <code>id</code> 를
+                            다시 쓰면 새로 쌓지 않고 내용을 갱신하고, <code>duration: Infinity</code> 토스트는{' '}
+                            <code>toast.dismiss(id)</code> 로 닫습니다.
+                        </p>
+                        <ToastLifecycleDemo />
+                        <CodeBlock code={LIFECYCLE_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+                    <div className={BLOCK_CLASS}>
+                        <h3 className={H3_CLASS}>취소 버튼 · 긴 문구 · 연속 발생</h3>
+                        <p className={DESC_CLASS}>
+                            <code>cancel</code> 버튼, 긴 문구의 줄바꿈, 여러 알림이 연속으로 뜰 때의 쌓임 순서를
+                            확인합니다.
+                        </p>
+                        <ToastEdgeCaseDemo />
+                        <CodeBlock code={EDGE_CASE_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+                </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="toast-choice" className="flex flex-col gap-6">
+                <SectionHead
+                    id="toast-choice"
+                    title="컴포넌트 선택"
+                    description="사용자의 결정이 필요한지, 화면에 얼마나 남아야 하는지로 고릅니다."
+                />
+                <Table
+                    caption="Toast · CheckToast · Dialog · Alert 사용 기준"
+                    columns={CHOICE_COLUMNS}
+                    rows={CHOICE_ROWS}
+                    size="md"
+                />
+                <p className={DESC_CLASS}>
+                    자동저장처럼 반복되는 완료 안내는 <code>toast()</code> 를 화면마다 조합하지 않고{' '}
+                    <Link href="/component-guide/check-toast" className={LINK_CLASS}>
+                        CheckToast
                     </Link>{' '}
-                    페이지의 &ldquo;렌더된 DOM 직렬화 검사에서만 나타나는 메시지 판정&rdquo; 항목에 기록되어 있습니다.
+                    의 <code>showCheckToast</code> 를 씁니다.
                 </p>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="toast-spec" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="toast-spec" className="typo-h4-bold">
-                        면과 색
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        시안([자가진단] 2단계 자동저장 토스트)의 알약 한 벌을 그대로 쓰며, 값은
-                        <code className="font-mono"> theme/sonner.variants.ts</code>에서 관리합니다.
-                    </p>
-                </div>
-                <ul className="typo-body-l-regular text-foreground-subtle list-disc space-y-2 pl-6">
+            <section aria-labelledby="toast-a11y" className="flex flex-col gap-6">
+                <SectionHead
+                    id="toast-a11y"
+                    title="접근성"
+                    description="알림 영역의 읽어 주기와 표시·닫기 동작은 sonner 가 처리하고, 사용처는 문구와 유지 시간을 정합니다."
+                />
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        면은 <code className="font-mono">bg-toast</code>(반투명 검정 75%), 글자·아이콘은
-                        <code className="font-mono"> text-toast-foreground</code>(흰색)입니다. 시안이 테마와 무관하게 한
-                        벌이라 라이트·다크·메인 세 테마에서 같은 값입니다.
+                        토스트는 <code>aria-live</code> 영역으로 렌더되어 스크린리더가 포커스 이동 없이 읽습니다
+                        [8.2.1]. 포커스를 가져오거나 입력을 막지 않습니다.
                     </li>
                     <li>
-                        시안 치수는 1920 기준 높이 45(위아래 여백 12) · 좌우 여백 24 · 아이콘 20 · 아이콘과 글자 간격 8
-                        · 글자 14px Medium 이고, 모서리는 알약(<code className="font-mono">rounded-full</code>)입니다.
+                        자동으로 사라지는 안내는 시간 제한이 있는 콘텐츠입니다. 중요한 확인이나 필수 입력을 토스트만으로
+                        전달하지 않고, 오래 읽어야 하면 <code>duration: Infinity</code> + <code>closeButton</code> 을
+                        씁니다[6.2.1].
                     </li>
                     <li>
-                        폭은 내용만큼 늘어나고 긴 문구는 토스터 폭에서 줄바꿈합니다. 시안의 자동저장 토스트는 189px
-                        입니다.
+                        닫기 버튼과 액션은 키보드로 조작되고 포커스 링이 표시됩니다. 닫기 버튼의 이름은 &quot;토스트
+                        닫기&quot; 입니다[6.1.1 · 6.1.2].
                     </li>
                     <li>
-                        상태별 아이콘 색은 두지 않습니다 — 면이 어두워 라이트 테마용 상태색은 대비가 모자라고, 종류는
-                        색이 아니라 아이콘 모양이 전합니다. [KWCAG 5.3.1]
+                        <code>icon</code> 은 장식이므로 <code>aria-hidden=&quot;true&quot;</code> 를 줍니다. 상태는
+                        색만이 아니라 문구로도 전합니다[5.1.1 · 5.3.1].
                     </li>
                     <li>
-                        실제 화면 적용 예시는 <code className="font-mono">자가진단 2단계(기업·기술정보 입력)</code>{' '}
-                        화면에서 진입 시 뜨는 자동저장 토스트로 확인할 수 있습니다.
+                        되돌리기처럼 짧고 안전한 후속 동작만 <code>action</code> 으로 제공합니다.
+                    </li>
+                    <li>
+                        W3C 검사기의 <code>CSS: Parse Error</code> · charset 메시지는 sonner 가 런타임에 넣는 스타일
+                        때문에 렌더된 DOM 검사에서만 나오는 오탐입니다.{' '}
+                        <Link href="/component-guide/accessibility-exceptions" className={LINK_CLASS}>
+                            접근성 검사 예외사항
+                        </Link>
+                        에 판정이 기록되어 있습니다.
                     </li>
                 </ul>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="toast-props" className="flex flex-col gap-4">
-                <h2 id="toast-props" className="typo-h4-bold">
-                    Props
-                </h2>
+            <section aria-labelledby="toast-props" className="flex flex-col gap-6">
+                <SectionHead
+                    id="toast-props"
+                    title="Props API"
+                    description="주요 속성입니다. 나머지는 sonner 의 Toaster · toast 옵션을 따릅니다."
+                />
                 <PropsTable items={PROPS} caption="Toast 주요 속성" />
             </section>
         </BaseCard>

@@ -1,5 +1,12 @@
 'use client'
 
+import {
+    FormResetButton,
+    FormSubmitResult,
+    formatSubmitResult,
+    withFormReset,
+    type FormResetProps,
+} from '@/components/custom/form-submit-result'
 import {useRef, useState} from 'react'
 import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/form'
@@ -16,8 +23,8 @@ import {
 } from '@/components/ui/field'
 import {RadioGroup, RadioGroupItem} from '@/components/ui/radio-group'
 
-const RadioFormDemo = () => {
-    const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+const RadioFormDemoBody = ({onReset}: FormResetProps) => {
+    const [submittedData, setSubmittedData] = useState<string | null>(null)
     const [paymentMethod, setPaymentMethod] = useState('')
     const [receiptChannel, setReceiptChannel] = useState('')
     const [paymentError, setPaymentError] = useState(false)
@@ -27,6 +34,7 @@ const RadioFormDemo = () => {
 
     return (
         <form
+            onReset={onReset}
             className="flex flex-col gap-6"
             autoComplete="off"
             noValidate
@@ -46,7 +54,7 @@ const RadioFormDemo = () => {
 
                 const formData = new FormData(event.currentTarget)
                 setSubmittedData(
-                    JSON.stringify({
+                    formatSubmitResult({
                         paymentMethod: formData.get('paymentMethod'),
                         receiptChannel: formData.get('receiptChannel'),
                     }),
@@ -139,22 +147,22 @@ const RadioFormDemo = () => {
 
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                    <Button type="submit" variant="default" size="sm">
-                        선택 내용 확인
-                    </Button>
+                    <div className="flex items-center gap-3">
+                        <Button type="submit" variant="default" size="sm">
+                            선택 내용 확인
+                        </Button>
+                        <FormResetButton />
+                    </div>
                     <span className="typo-body-l-regular text-muted-foreground">
                         그룹별로 선택된 value 하나가 제출됩니다.
                     </span>
                 </div>
-                <output
-                    className="typo-body-l-regular bg-surface border-border text-muted-foreground min-h-10 rounded-md border px-3 py-2 break-all"
-                    aria-live="polite"
-                >
-                    {submittedData}
-                </output>
+                <FormSubmitResult data={submittedData} />
             </div>
         </form>
     )
 }
+
+const RadioFormDemo = withFormReset(RadioFormDemoBody)
 
 export default RadioFormDemo
