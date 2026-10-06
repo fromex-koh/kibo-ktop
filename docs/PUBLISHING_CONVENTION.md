@@ -39,7 +39,7 @@ tokens.json(px 입력) → yarn tokens → src/app/tokens.css(rem·CSS 변수·�
     - 텍스트: `text-foreground`, `text-foreground-subtle`, `text-label-foreground`, `text-primary-foreground`
     - 테두리·포커스: `border-input`, `border-control`, `border-subtle-2`, `ring-ring`
     - 상태: `text-success`, `text-warning`, `text-error`, `text-info`
-- **[PB-05] Primitive 팔레트는 보조 수단(MUST)** — 프로젝트 팔레트는 `blue·navy·green·orange·grape·gray·success·warning·error·info`와 `tokens.json`에 정의된 단계만 사용한다. 같은 값이더라도 의미를 표현할 시맨틱 토큰이 있으면 팔레트 유틸리티보다 시맨틱 유틸리티를 우선한다.
+- **[PB-05] Primitive 팔레트는 보조 수단(MUST)** — 프로젝트 팔레트는 `blue·navy·green·orange·purple·mint·gray·success·warning·error·info`와 `tokens.json`의 `primitive`에 정의된 단계만 사용한다. 목록이 바뀌면 `tokens.json`이 기준이다. 같은 값이더라도 의미를 표현할 시맨틱 토큰이 있으면 팔레트 유틸리티보다 시맨틱 유틸리티를 우선한다.
     - Tailwind 기본 팔레트(`slate`, `red`, `amber`, `purple` 등)는 생성 단계에서 제거되며 `check:conventions`가 사용을 차단한다.
     - `transparent`, `current`, `inherit`, 구조색 `black`, `white`는 유지한다.
 - **[PB-06] 색상 모드를 사용처에서 재정의하지 않음(MUST)** — 시맨틱 토큰의 light/dark 매핑을 사용한다. 컴포넌트에서 `dark:bg-*`로 같은 의미의 색을 다시 분기하지 않는다. 필요한 매핑은 `tokens.json`의 semantic에 `{ "light": ..., "dark": ... }`로 정의한다.
