@@ -6,6 +6,7 @@ import {ChartSkeleton, type ChartSkeletonType} from '@/components/composite/char
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
+import {Table} from '@/components/custom/table'
 import {Skeleton} from '@/components/ui/skeleton'
 
 export const metadata: Metadata = {title: '스켈레톤 (Skeleton · ChartSkeleton)'}
@@ -45,7 +46,7 @@ const CHART_TYPES_CODE = `import {ChartSkeleton} from '@/components/composite/ch
 <ChartSkeleton type="donut" label="기업 보유기술을 불러오는 중입니다." />
 <ChartSkeleton type="score-gauge" label="혁신성장역량지수를 불러오는 중입니다." />
 <ChartSkeleton type="score-ring" label="지수 점수를 불러오는 중입니다." />
-<ChartSkeleton type="grade-arc" label="등급을 불러오는 중입니다." />
+<ChartSkeleton type="grade-arc" label="등급을 불러오는 중입니다." className="w-grade-gauge-md" />
 <ChartSkeleton type="rank-pyramid" label="동일업종 순위를 불러오는 중입니다." />
 <ChartSkeleton type="gauge" label="기업신용등급을 불러오는 중입니다." />
 <ChartSkeleton type="matrix" label="재무비율진단을 불러오는 중입니다." />
@@ -59,6 +60,8 @@ const CHART_SKELETON_EXAMPLES: Array<{
     title: string
     description: string
     label: string
+    // 실제 차트가 폭을 스스로 정하는 경우(고정 폭 게이지)만 그 폭을 그대로 넘긴다.
+    className?: string
 }> = [
     {
         type: 'donut',
@@ -75,8 +78,10 @@ const CHART_SKELETON_EXAMPLES: Array<{
     {
         type: 'grade-arc',
         title: '투자용 등급 (GradeArcGauge)',
-        description: '위가 열린 반원 하나와 그 아래 이름 자리를 잡습니다.',
+        description:
+            '위가 열린 반원 하나와 그 아래 이름 자리를 잡습니다. 폭은 실제 게이지(md)와 같게 className 으로 넘깁니다.',
         label: '등급을 불러오는 중입니다.',
+        className: 'w-grade-gauge-md',
     },
     {
         type: 'score-ring',
@@ -118,7 +123,7 @@ const CHART_SKELETON_EXAMPLES: Array<{
         type: 'pentagon-radar',
         title: '다섯 축 오각 레이더 (ComparisonRadarChart · 인쇄용 리포트)',
         description:
-            '오각 격자 4겹 · 다섯 축 선 · 가운데 면 · 축 이름 다섯을 대체합니다. 인쇄용 리포트의 레이더는 크기가 정해져 있어(714×200) 스켈레톤도 같은 자리에 같은 크기로 섭니다 — 차트에 skeletonType="pentagon-radar" 를 줘 고릅니다.',
+            '오각 격자 4겹 · 다섯 축 선 · 가운데 면 · 축 이름 다섯을 대체합니다. 인쇄용 리포트의 레이더는 크기가 정해져 있어 같은 자리에 같은 크기로 섭니다.',
         label: '기업 대표 5대 역량 환산 점수를 불러오는 중입니다.',
     },
     {
@@ -176,15 +181,21 @@ const CHART_SKELETON_EXAMPLES: Array<{
         label: '등급 추이를 불러오는 중입니다.',
     },
     {
+        type: 'positioning-scatter',
+        title: '포지셔닝 산점도 (positioning-scatter)',
+        description: '산점도 상자를 실제 그림과 같은 비율로 대체합니다.',
+        label: '포지셔닝 맵을 불러오는 중입니다.',
+    },
+    {
         type: 'bar',
-        title: '막대형 차트 공통',
-        description: 'GroupedColumnChart·재무상태표·손익계산서·ColumnChart·인당 매출액에 동일하게 사용합니다.',
+        title: '막대형 차트 공통 (bar)',
+        description: '막대형 차트 전반에 쓰는 공통 유형입니다.',
         label: '막대형 재무 차트를 불러오는 중입니다.',
     },
     {
         type: 'line',
-        title: '추이 차트 공통',
-        description: 'LineChart·현금흐름 추이·분기별 종업원 수의 선형·영역형 차트에 동일하게 사용합니다.',
+        title: '추이 차트 공통 (line)',
+        description: '선형·영역형 추이 차트 전반에 쓰는 공통 유형입니다.',
         label: '추이 차트를 불러오는 중입니다.',
     },
     {
@@ -195,76 +206,106 @@ const CHART_SKELETON_EXAMPLES: Array<{
     },
 ]
 
+const TYPE_UNION = [
+    'network',
+    'donut',
+    'score-gauge',
+    'score-ring',
+    'grade-arc',
+    'rank-pyramid',
+    'gauge',
+    'grade-distribution',
+    'grade-trend',
+    'grouped-column',
+    'cells-line',
+    'cells-column',
+    'plain-column',
+    'overlay-column',
+    'columns-line',
+    'matrix',
+    'radar',
+    'circle-radar',
+    'triangle-radar',
+    'pentagon-radar',
+    'positioning-scatter',
+    'bar',
+    'line',
+    'word-cloud',
+]
+    .map((type) => `'${type}'`)
+    .join(' | ')
+
+const CHOICE_COLUMNS = [
+    {key: 'case', header: '사용 상황', align: 'start', rowHeader: true},
+    {key: 'component', header: '선택', align: 'start'},
+    {key: 'note', header: '기준', align: 'start', wrap: true},
+] as const
+
+const CHOICE_ROWS = [
+    {
+        key: 'skeleton',
+        cells: [
+            '텍스트 · 이미지 같은 단순한 영역',
+            <code key="component">Skeleton</code>,
+            '크기를 className 으로 지정하는 shadcn 원본 플레이스홀더입니다. 로딩 안내 문구는 없습니다.',
+        ],
+    },
+    {
+        key: 'chart-skeleton',
+        cells: [
+            '차트 · 네트워크 · 표 영역',
+            <code key="component">ChartSkeleton</code>,
+            '실제 차트와 같은 구조로 자리를 잡고 로딩 상태를 스크린리더에 알립니다. 모양은 type 으로 고릅니다.',
+        ],
+    },
+] as const
+
 const PROPS_ITEMS = [
     [
         'Skeleton',
         'className · div props',
-        'shadcn 기본 플레이스홀더의 크기와 네이티브 div 속성을 전달합니다.',
+        '크기와 네이티브 div 속성을 전달합니다.',
         'undefined',
         "ComponentProps<'div'>",
     ],
-    [
-        'ChartSkeleton',
-        'type',
-        '실제 차트 구조와 맞는 스켈레톤 유형을 선택합니다.',
-        '-',
-        "'network' | 'donut' | 'score-gauge' | 'score-ring' | 'grade-arc' | 'rank-pyramid' | 'gauge' | 'grade-distribution' | 'grade-trend' | 'grouped-column' | 'cells-line' | 'cells-column' | 'plain-column' | 'overlay-column' | 'columns-line' | 'matrix' | 'radar' | 'circle-radar' | 'triangle-radar' | 'pentagon-radar' | 'bar' | 'line' | 'word-cloud'",
-    ],
+    ['ChartSkeleton', 'type', '실제 차트 구조에 맞는 스켈레톤 유형입니다.', '-', TYPE_UNION],
     [
         'ChartSkeleton',
         'legend',
-        '네트워크 차트와 함께 표시할 API 기반 범례 구조를 선택합니다.',
+        'network 유형에서 함께 그릴 범례 구조입니다.',
         'undefined',
         "'company-relationship' | 'supply-network'",
     ],
     [
         'ChartSkeleton',
         'label',
-        '차트 로딩 상태를 스크린리더에 전달합니다.',
+        '로딩 상태를 스크린리더에 전하는 문구입니다.',
         '차트 데이터를 불러오는 중입니다.',
         'string',
     ],
     [
         'ChartSkeleton',
         'className · div props',
-        '크기·배치 스타일과 네이티브 div 속성을 전달합니다.',
+        '크기·배치와 네이티브 div 속성을 전달합니다. children 은 받지 않습니다.',
         'undefined',
-        "ComponentProps<'div'>",
+        "Omit<ComponentProps<'div'>, 'children'>",
     ],
 ] as const
 
 const SkeletonGuidePage = () => (
     <GuidePageShell
         title="스켈레톤 (Skeleton · ChartSkeleton)"
-        description="shadcn 기본 플레이스홀더인 Skeleton과 차트 로딩 구조를 제공하는 composite ChartSkeleton을 함께 안내합니다."
+        description="로딩 중 자리를 잡는 플레이스홀더입니다. 단순 영역은 Skeleton, 차트 영역은 ChartSkeleton 을 씁니다."
     >
         <BaseCard>
-            <section aria-labelledby="skeleton-architecture" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                    <h2 id="skeleton-architecture" className="typo-h4-bold">
-                        레이어 및 API
-                    </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        기본 primitive와 프로젝트 확장 컴포넌트의 책임을 분리합니다.
-                    </p>
-                </div>
-                <ul className="typo-body-l-regular text-foreground-subtle list-disc space-y-2 pl-5">
-                    <li>Skeleton은 ui의 shadcn 원본을 유지하며 단순 플레이스홀더에 사용합니다.</li>
-                    <li>ChartSkeleton은 composite에서 차트 구조·로딩 상태·접근성 문구를 조합합니다.</li>
-                    <li>차트 모양은 Skeleton의 variant가 아니라 ChartSkeleton의 type으로 선택합니다.</li>
-                    <li>유형별 크기·반응형·도형 스타일은 theme/chart-skeleton.variants.ts에서 관리합니다.</li>
-                </ul>
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="skeleton-basic" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
+            <section aria-labelledby="skeleton-basic" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="skeleton-basic" className="typo-h4-bold">
-                        Primitive · Skeleton
+                        기본 사용
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        텍스트와 이미지 등 단순한 콘텐츠 영역은 크기를 className으로 지정합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code>Skeleton</code> 은 pulse 애니메이션이 붙은 빈 상자입니다. 크기와 모양은{' '}
+                        <code>className</code> 으로 지정합니다. 로딩이 끝나면 같은 자리의 실제 콘텐츠로 교체합니다.
                     </p>
                 </div>
                 <div className="border-border bg-surface flex flex-col gap-3 rounded-xl border p-6">
@@ -272,132 +313,152 @@ const SkeletonGuidePage = () => (
                     <Skeleton className="h-4 w-full" />
                     <Skeleton className="h-4 w-2/3" />
                 </div>
-                <CodeBlock code={BASIC_CODE} language="tsx" copyLabel="기본 Skeleton 사용 코드 복사" />
+                <CodeBlock code={BASIC_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="skeleton-chart-types" className="flex flex-col gap-6">
-                <div className="flex flex-col gap-1">
-                    <h2 id="skeleton-chart-types" className="typo-h4-bold">
-                        Composite · ChartSkeleton Types
+            <section aria-labelledby="skeleton-choice" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="skeleton-choice" className="typo-h4-bold">
+                        컴포넌트 선택
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        실제 차트의 축·범례·보조 정보를 포함하며 화면 너비에 따라 크기와 배치가 조정됩니다. 유사한
-                        차트는 같은 type을 공유합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        차트 모양은 <code>Skeleton</code> 의 variant 가 아니라 <code>ChartSkeleton</code> 의{' '}
+                        <code>type</code> 으로 고릅니다.
                     </p>
                 </div>
-
-                <div className="grid min-w-0 gap-6">
-                    {CHART_SKELETON_EXAMPLES.map((example) => (
-                        <section
-                            key={example.type}
-                            aria-labelledby={`skeleton-chart-${example.type}`}
-                            className="flex min-w-0 flex-col gap-3"
-                        >
-                            <div className="flex flex-col gap-1">
-                                <h3 id={`skeleton-chart-${example.type}`} className="typo-body-xl-bold">
-                                    {example.title}
-                                </h3>
-                                <p className="typo-body-l-regular text-foreground-subtle">{example.description}</p>
-                            </div>
-                            <div className="bg-card border-border min-w-0 overflow-hidden rounded-xl border p-4 sm:p-6">
-                                <ChartSkeleton type={example.type} label={example.label} />
-                            </div>
-                        </section>
-                    ))}
-                </div>
-
-                <CodeBlock
-                    code={CHART_TYPES_CODE}
-                    language="tsx"
-                    copyLabel="차트 타입별 ChartSkeleton 사용 코드 복사"
+                <Table
+                    caption="Skeleton · ChartSkeleton 사용 기준"
+                    columns={CHOICE_COLUMNS}
+                    rows={CHOICE_ROWS}
+                    size="md"
                 />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="skeleton-network" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                    <h2 id="skeleton-network" className="typo-h4-bold">
-                        Composite · ChartSkeleton Network
+            <section aria-labelledby="skeleton-chart-types" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="skeleton-chart-types" className="typo-h4-bold">
+                        차트 유형
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        실제 네트워크 영역과 같은 구조로 범례와 차트를 함께 대체합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        실제 차트의 축·범례·보조 정보 자리를 잡고 화면 폭에 따라 크기와 배치가 바뀝니다. 비슷한 차트는
+                        같은 <code>type</code> 을 공유하며, 유형별 스타일은 <code>chart-skeleton.variants.ts</code> 에서
+                        관리합니다.
                     </p>
                 </div>
-
-                <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1">
-                        <h3 className="typo-body-xl-bold">연계기업 네트워크 (CompanyRelationshipGraph)</h3>
-                        <p className="typo-body-l-regular text-foreground-subtle">
-                            연계유형·EW등급 범례와 네트워크 그래프를 함께 표시합니다.
-                        </p>
-                    </div>
-                    <div className="bg-card border-border overflow-hidden rounded-xl border p-4">
-                        <ChartSkeleton
-                            type="network"
-                            legend="company-relationship"
-                            label="연계기업 네트워크를 불러오는 중입니다."
-                        />
-                    </div>
-                    <CodeBlock
-                        code={COMPANY_NETWORK_CODE}
-                        language="tsx"
-                        copyLabel="연계기업 Network Skeleton 사용 코드 복사"
-                    />
-                </div>
-
-                <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1">
-                        <h3 className="typo-body-xl-bold">산업별 공급망 분포 (NetworkGraph)</h3>
-                        <p className="typo-body-l-regular text-foreground-subtle">
-                            상태 범례·연결선 안내·읽는 방법과 네트워크 그래프를 함께 표시합니다.
-                        </p>
-                    </div>
-                    <div className="bg-card border-border overflow-hidden rounded-xl border p-4">
-                        <ChartSkeleton
-                            type="network"
-                            legend="supply-network"
-                            label="공급망 네트워크를 불러오는 중입니다."
-                        />
-                    </div>
-                    <CodeBlock
-                        code={SUPPLY_NETWORK_CODE}
-                        language="tsx"
-                        copyLabel="공급망 Network Skeleton 사용 코드 복사"
-                    />
+                <CodeBlock code={CHART_TYPES_CODE} language="tsx" copyLabel="복사" />
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    {CHART_SKELETON_EXAMPLES.map((example) => (
+                        <div key={example.type} className="flex min-w-0 flex-col gap-4 py-8 last:pb-0">
+                            <div className="flex flex-col gap-2">
+                                <h3 className="typo-title-m-bold text-foreground">{example.title}</h3>
+                                <p className="typo-body-l-regular text-label-foreground">{example.description}</p>
+                            </div>
+                            <div className="bg-card border-border min-w-0 overflow-hidden rounded-xl border p-4 sm:p-6">
+                                <ChartSkeleton
+                                    type={example.type}
+                                    label={example.label}
+                                    className={example.className}
+                                />
+                            </div>
+                        </div>
+                    ))}
                 </div>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="skeleton-usage" className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                    <h2 id="skeleton-usage" className="typo-h4-bold">
-                        적용 기준
+            <section aria-labelledby="skeleton-network" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="skeleton-network" className="typo-h4-bold">
+                        네트워크 (legend)
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        로딩이 끝나면 같은 영역의 실제 콘텐츠 또는 차트로 교체합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code>type=&quot;network&quot;</code> 에 <code>legend</code> 를 주면 범례까지 함께 대체합니다.
                     </p>
                 </div>
-                <ul className="typo-body-l-regular text-foreground-subtle list-disc space-y-2 pl-5">
-                    <li>단순 플레이스홀더는 shadcn 원본 Skeleton을 사용합니다.</li>
-                    <li>차트 로딩 구조는 composite ChartSkeleton과 실제 구조에 맞는 type을 사용합니다.</li>
-                    <li>범례 데이터도 같은 API에서 가져오면 용도에 맞는 legend를 함께 지정합니다.</li>
-                    <li>차트 도형과 범례는 기본 반응형을 사용합니다.</li>
-                    <li>label에는 데이터나 업무 대상을 포함한 로딩 문구를 작성합니다.</li>
-                    <li>장식용 도형은 보조기기에 숨기고 로딩 상태만 전달합니다.</li>
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">
+                            연계기업 네트워크 (legend=&quot;company-relationship&quot;)
+                        </h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            연계유형 · EW등급 범례와 그래프를 함께 대체합니다.
+                        </p>
+                        <div className="bg-card border-border overflow-hidden rounded-xl border p-4">
+                            <ChartSkeleton
+                                type="network"
+                                legend="company-relationship"
+                                label="연계기업 네트워크를 불러오는 중입니다."
+                            />
+                        </div>
+                        <CodeBlock code={COMPANY_NETWORK_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">
+                            공급망 네트워크 (legend=&quot;supply-network&quot;)
+                        </h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            상태 범례 · 연결선 안내 · 읽는 방법과 그래프를 함께 대체합니다.
+                        </p>
+                        <div className="bg-card border-border overflow-hidden rounded-xl border p-4">
+                            <ChartSkeleton
+                                type="network"
+                                legend="supply-network"
+                                label="공급망 네트워크를 불러오는 중입니다."
+                            />
+                        </div>
+                        <CodeBlock code={SUPPLY_NETWORK_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+                </div>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="skeleton-a11y" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="skeleton-a11y" className="typo-h4-bold">
+                        접근성
+                    </h2>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code>ChartSkeleton</code> 은 로딩 상태 전달을 처리합니다. 사용처는 <code>label</code> 만 알맞게
+                        씁니다.
+                    </p>
+                </div>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        <code>role=&quot;status&quot;</code> · <code>aria-live=&quot;polite&quot;</code> 영역에{' '}
+                        <code>label</code> 문구를 스크린리더 전용으로 넣어 로딩을 알립니다[8.2.1].
+                    </li>
+                    <li>
+                        장식 도형은 <code>aria-hidden</code> 으로 숨깁니다.
+                    </li>
+                    <li>
+                        <code>label</code> 에는 &quot;재무비율진단을 불러오는 중입니다.&quot;처럼 대상을 포함합니다.
+                        생략하면 &quot;차트 데이터를 불러오는 중입니다.&quot;가 쓰입니다.
+                    </li>
+                    <li>
+                        <code>Skeleton</code> 은 안내 문구가 없으므로 단독으로 쓸 때는 주변 영역에{' '}
+                        <code>aria-busy</code> 등으로 로딩을 알립니다.
+                    </li>
                 </ul>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="skeleton-props" className="flex flex-col gap-4">
-                <h2 id="skeleton-props" className="typo-h4-bold">
-                    Props
-                </h2>
-                <PropsTable items={PROPS_ITEMS} caption="Skeleton과 ChartSkeleton Props 목록" />
+            <section aria-labelledby="skeleton-props" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="skeleton-props" className="typo-h4-bold">
+                        Props API
+                    </h2>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code>ChartSkeleton</code> 은 <code>type</code> 만 필수입니다.
+                    </p>
+                </div>
+                <PropsTable items={PROPS_ITEMS} caption="Skeleton · ChartSkeleton Props 목록" />
             </section>
         </BaseCard>
     </GuidePageShell>

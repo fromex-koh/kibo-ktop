@@ -1,7 +1,11 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
 import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
+import {Badge} from '@/components/ui/badge'
+import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
 import tokens from '@tokens'
@@ -41,12 +45,14 @@ const PRIMITIVE_TABLE_COLUMNS = [
 ] as const
 
 // 한 원시 그룹 = 독립 테이블(변수·값·미리보기).
-const PrimitiveTable = ({title, hint, rows}: {title: string; hint: string; rows: PrimitiveRow[]}) => (
+const PrimitiveTable = ({id, title, hint, rows}: {id: string; title: string; hint: string; rows: PrimitiveRow[]}) => (
     <BaseCard>
-        <section className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
-                <h2 className="typo-h4-bold">{title}</h2>
-                <p className="typo-body-l-regular text-muted-foreground">{hint}</p>
+        <section aria-labelledby={`font-${id}`} className="flex flex-col gap-6">
+            <div className="flex max-w-4xl flex-col gap-2">
+                <h2 id={`font-${id}`} className="typo-h4-bold">
+                    {title}
+                </h2>
+                <p className="typo-body-l-regular text-label-foreground">{hint}</p>
             </div>
             <Table
                 size="md"
@@ -71,6 +77,11 @@ const PrimitiveTable = ({title, hint, rows}: {title: string; hint: string; rows:
     </BaseCard>
 )
 
+const TRACKING_COLUMNS = [
+    {key: 'class', header: '클래스 (클릭 복사)', align: 'start', rowHeader: true},
+    {key: 'value', header: '값', align: 'start'},
+] as const
+
 const FONT_SIZE_TABLE_COLUMNS = [
     {key: 'tier', header: 'Tier', align: 'start', rowHeader: true},
     {key: 'mobile', header: '모바일 변수·값', align: 'start'},
@@ -82,10 +93,12 @@ const FONT_SIZE_TABLE_COLUMNS = [
 // font-size는 모바일·태블릿·PC 변수를 한 세트로 생성한다. 인접 구간 값이 같으면 앞 구간 변수를 참조한다.
 const FontSizeTable = () => (
     <BaseCard>
-        <section className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
-                <h2 className="typo-h4-bold">크기 (font-size)</h2>
-                <p className="typo-body-l-regular text-muted-foreground">
+        <section aria-labelledby="font-size" className="flex flex-col gap-6">
+            <div className="flex max-w-4xl flex-col gap-2">
+                <h2 id="font-size" className="typo-h4-bold">
+                    크기 (font-size)
+                </h2>
+                <p className="typo-body-l-regular text-label-foreground">
                     tier별 모바일·태블릿·PC 원시 변수를 생성합니다. px 숫자로 입력하고 CSS에는 rem으로 출력합니다.
                 </p>
             </div>
@@ -125,6 +138,34 @@ const FontSizeTable = () => (
 )
 
 // 폰트 (Primitive) — Tier 1 원시 하위값(굵기·행간·자간·크기). typo-* 가 이들을 묶어 참조한다.
+// 두 계층 비교 카드 — 색상 (Primitive) 가이드와 같은 짜임이다.
+const FONT_LAYERS = [
+    {
+        name: 'Primitive',
+        usage: '직접 쓰지 않음',
+        isUsable: false,
+        summary: '크기 · 굵기 · 행간 · 자간의 원시값입니다. typo-* 의 재료입니다.',
+        pattern: '--raw-font-* · --raw-line-height-* · --raw-letter-spacing-*',
+        example: '--raw-font-size-body-xl · --raw-font-weight-bold',
+        where: 'typo-* 정의 · 토큰 문서처럼 원시값 자체가 필요한 코드',
+    },
+    {
+        name: 'typo-*',
+        usage: '화면 · 컴포넌트에서 사용',
+        isUsable: true,
+        summary: '크기 · 굵기 · 행간 · 자간을 한 번에 적용하는 클래스입니다.',
+        pattern: 'typo-<단계>-<굵기>',
+        example: 'typo-body-xl-regular · typo-h4-bold',
+        where: '모든 화면과 컴포넌트의 className',
+    },
+] as const
+
+const FONT_CHANGE_STEPS = [
+    {command: 'tokens.json', description: '원본 값을 바꿉니다.'},
+    {command: 'yarn tokens', description: 'CSS 를 다시 생성합니다.'},
+    {command: 'yarn verify', description: '참조 · 타입을 검증합니다.'},
+] as const
+
 const FontPrimitiveGuidePage = () => (
     <GuidePageShell
         title="폰트 (Primitive)"
@@ -132,66 +173,109 @@ const FontPrimitiveGuidePage = () => (
     >
         <div className="flex flex-col gap-12">
             <BaseCard>
-                <section aria-labelledby="font-primitive-rule" className="flex flex-col gap-5">
+                <section aria-labelledby="font-primitive-rule" className="flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
                         <h2 id="font-primitive-rule" className="typo-h4-bold text-foreground">
                             Primitive와 typo-*의 관계
                         </h2>
-                        <p className="typo-body-l-regular text-foreground-subtle">
-                            크기·굵기·행간·자간은 <code className="font-mono">typo-body-xl-regular</code>처럼 하나의{' '}
-                            <code className="font-mono">typo-*</code> 클래스로 적용합니다.
+                        <p className="typo-body-l-regular text-label-foreground">
+                            글자 값은 두 계층으로 관리합니다. 화면과 컴포넌트에는{' '}
+                            <code className="text-foreground font-mono">typo-*</code> 클래스만 씁니다.
                         </p>
-                        <Link
-                            href="/component-guide/typography"
-                            className="text-primary focus-visible:ring-ring w-fit rounded-sm underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
-                        >
-                            타이포그래피 클래스와 실제 미리보기 보기
-                        </Link>
                     </div>
 
-                    <div className="border-border grid gap-5 border-t pt-5 md:grid-cols-2">
-                        <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">사용</strong>
-                            <p className="text-foreground-subtle">
-                                역할에 맞는 <code className="font-mono">typo-*</code>를 선택합니다. 필요한 조합이 없으면{' '}
-                                <code className="font-mono">tokens.json</code>에 새 토큰을 추가합니다.
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">금지</strong>
-                            <p className="text-foreground-subtle">
-                                컴포넌트에서 <code className="font-mono">--raw-font-*</code>, px/rem 리터럴을 직접
-                                쓰거나 <code className="font-mono">src/app/tokens.css</code>를 수정하지 않습니다.
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">반응형</strong>
-                            <p className="text-foreground-subtle">
-                                <code className="font-mono">mobile</code> 기본,{' '}
-                                <code className="font-mono">
-                                    {TYPO_TABLET_BREAKPOINT} ({BREAKPOINTS[TYPO_TABLET_BREAKPOINT]}px)
-                                </code>{' '}
-                                태블릿,{' '}
-                                <code className="font-mono">
-                                    {TYPO_PC_BREAKPOINT} ({BREAKPOINTS[TYPO_PC_BREAKPOINT]}px)
-                                </code>{' '}
-                                PC 값을 각각 명시합니다.
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-2">
-                            <strong className="text-foreground">변경</strong>
-                            <p className="text-foreground-subtle">
-                                <code className="font-mono">tokens.json</code> 수정 →{' '}
-                                <code className="font-mono">yarn tokens</code> 생성 →{' '}
-                                <code className="font-mono">yarn verify</code> 검증 순서로 진행합니다.
-                            </p>
-                        </div>
+                    {/* 두 계층을 같은 자리에 같은 항목(이름 · 예 · 쓰는 곳)으로 나란히 둔다. */}
+                    <div className="grid gap-4 md:grid-cols-2">
+                        {FONT_LAYERS.map((layer) => (
+                            <div
+                                key={layer.name}
+                                className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5"
+                            >
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                    <h3 className="typo-title-m-bold text-foreground">{layer.name}</h3>
+                                    <Badge variant="outline" color={layer.isUsable ? 'info' : 'neutral'} size="sm">
+                                        {layer.usage}
+                                    </Badge>
+                                </div>
+                                <p className="text-label-foreground">{layer.summary}</p>
+                                <dl className="border-subtle-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 border-t pt-3">
+                                    <dt className="typo-body-l-bold text-foreground-subtle">이름</dt>
+                                    <dd className="text-label-foreground font-mono text-sm">{layer.pattern}</dd>
+                                    <dt className="typo-body-l-bold text-foreground-subtle">예</dt>
+                                    <dd className="text-label-foreground font-mono text-sm">{layer.example}</dd>
+                                    <dt className="typo-body-l-bold text-foreground-subtle">쓰는 곳</dt>
+                                    <dd className="text-label-foreground">{layer.where}</dd>
+                                </dl>
+                            </div>
+                        ))}
+                    </div>
+                    <p className="border-primary/30 bg-primary-subtle text-foreground overflow-x-auto rounded-sm border p-5 text-center font-mono text-sm font-semibold">
+                        tokens.json → Primitive (--raw-font-*) → typo-* (typo-body-xl-regular)
+                    </p>
+                    <Link
+                        href="/component-guide/typography"
+                        className="text-primary focus-visible:ring-ring w-fit rounded-sm underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                    >
+                        타이포그래피 클래스와 실제 미리보기 보기
+                    </Link>
+
+                    <div className="border-subtle-3 flex flex-col gap-4 border-t pt-6">
+                        <h3 className="typo-title-m-bold text-foreground">사용 규칙</h3>
+                        <ul className="text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                            <li>
+                                역할에 맞는 <code className="text-foreground font-mono">typo-*</code>를 고릅니다. 필요한
+                                조합이 없으면 <code className="text-foreground font-mono">tokens.json</code>에 새 토큰을
+                                추가합니다.
+                            </li>
+                            <li>
+                                <code className="text-foreground font-mono">--raw-font-*</code> 변수와 px · rem 리터럴을
+                                컴포넌트에 직접 쓰지 않습니다.
+                            </li>
+                            <li>
+                                <code className="text-foreground font-mono">src/app/tokens.css</code>는 자동 생성
+                                파일이라 직접 고치지 않습니다.
+                            </li>
+                            <li>
+                                크기는 mobile(기본) · 태블릿(
+                                <code className="text-foreground font-mono">
+                                    {TYPO_TABLET_BREAKPOINT} {BREAKPOINTS[TYPO_TABLET_BREAKPOINT]}px
+                                </code>
+                                ) · PC(
+                                <code className="text-foreground font-mono">
+                                    {TYPO_PC_BREAKPOINT} {BREAKPOINTS[TYPO_PC_BREAKPOINT]}px
+                                </code>
+                                ) 값을 각각 명시합니다.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div className="border-subtle-3 flex flex-col gap-4 border-t pt-6">
+                        <h3 className="typo-title-m-bold text-foreground">값을 바꿀 때</h3>
+                        <ol className="grid gap-4 md:grid-cols-3">
+                            {FONT_CHANGE_STEPS.map((step, index) => (
+                                <li
+                                    key={step.command}
+                                    className="border-foreground-subtle/30 bg-pastel-neutral/40 flex items-start gap-3 rounded-sm border p-5"
+                                >
+                                    <span className="bg-primary text-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-full text-sm font-bold">
+                                        {index + 1}
+                                    </span>
+                                    <div className="flex min-w-0 flex-col gap-1">
+                                        <code className="typo-body-xl-bold text-foreground font-mono">
+                                            {step.command}
+                                        </code>
+                                        <p className="text-label-foreground">{step.description}</p>
+                                    </div>
+                                </li>
+                            ))}
+                        </ol>
                     </div>
                 </section>
             </BaseCard>
 
             <FontSizeTable />
             <PrimitiveTable
+                id="weight"
                 title="굵기 (font-weight)"
                 hint="typo-* 이름의 regular·medium·bold·black 접미사와 연결됩니다."
                 rows={Object.entries(tokens.fontWeight).map(([name, weight]) => ({
@@ -201,6 +285,7 @@ const FontPrimitiveGuidePage = () => (
                 }))}
             />
             <PrimitiveTable
+                id="line-height"
                 title="행간 (line-height)"
                 hint="여러 typo-* 조합이 같은 행간 값을 이름으로 공유합니다."
                 rows={Object.entries(tokens.lineHeight).map(([name, value]) => ({
@@ -209,6 +294,7 @@ const FontPrimitiveGuidePage = () => (
                 }))}
             />
             <PrimitiveTable
+                id="letter-spacing"
                 title="자간 (letter-spacing)"
                 hint="여러 typo-* 조합이 같은 자간 값을 이름으로 공유합니다."
                 rows={Object.entries(tokens.letterSpacing).map(([name, value]) => ({
@@ -216,6 +302,33 @@ const FontPrimitiveGuidePage = () => (
                     value,
                 }))}
             />
+            <BaseCard>
+                <section aria-labelledby="font-tracking" className="flex flex-col gap-6">
+                    <div className="flex max-w-4xl flex-col gap-2">
+                        <h2 id="font-tracking" className="typo-h4-bold">
+                            역할 기반 자간 (tracking)
+                        </h2>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            <code>typo-*</code> 와 별개로 특정 역할에만 붙이는 <code>tracking-*</code> 유틸리티입니다.
+                            <code>tokens.json</code> 의 <code>tracking</code> 값을 px 로 입력하고 rem 으로 생성합니다.
+                        </p>
+                    </div>
+                    <Table
+                        size="md"
+                        caption="tracking-* 유틸리티와 값"
+                        columns={TRACKING_COLUMNS}
+                        rows={Object.entries(tokens.tracking).map(([name, px]) => ({
+                            key: name,
+                            cells: [
+                                <CopyChip key="class" value={`tracking-${name}`} />,
+                                <span key="value" className="text-foreground-subtle font-mono whitespace-nowrap">
+                                    {formatFontSize(px)}
+                                </span>,
+                            ],
+                        }))}
+                    />
+                </section>
+            </BaseCard>
         </div>
     </GuidePageShell>
 )

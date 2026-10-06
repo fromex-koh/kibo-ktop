@@ -1,3 +1,5 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
@@ -10,26 +12,21 @@ import {Button} from '@/components/ui/button'
 export const metadata: Metadata = {title: '테이블 (Table)'}
 
 const USAGE_CODE = `import {Table} from '@/components/custom/table'
-import {Badge} from '@/components/ui/badge'
 
 <Table
-  size="lg"
   caption="이용권 사용 이력"
   columns={[
-    {key: 'name', header: '상품명', align: 'start'},
+    {key: 'name', header: '상품명', align: 'start', rowHeader: true},
     {key: 'date', header: '사용일시'},
-    {key: 'used', header: '차감 횟수'},
-    {key: 'left', header: '남은 횟수'},
     {key: 'status', header: '상태'},
-    {key: 'detail', header: '상세'},
   ]}
   rows={[
     {
       key: 'r1',
       cells: [
-        'K-BIGx 보고서 이용권', '2024.05.18 14:23', '-1회', '15회',
+        'K-BIGx 보고서 이용권',
+        '2024.05.18 14:23',
         <Badge variant="solid-pastel" color="info" shape="round" size="sm">차감완료</Badge>,
-        <Button variant="tertiary" size="xs">상세</Button>,
       ],
     },
   ]}
@@ -39,15 +36,19 @@ const SIZE_CODE = `<Table size="lg" caption="큰 크기" columns={columns} rows=
 <Table size="md" caption="중간 크기" columns={columns} rows={rows} />
 <Table size="sm" caption="작은 크기" columns={columns} rows={rows} />`
 
+const TEXT_CODE = `const columns = [
+  {key: 'name', header: '항목', align: 'start', rowHeader: true},
+  {key: 'desc', header: '설명', align: 'start', wrap: true},
+]`
+
 const detailButton = (
     <Button variant="tertiary" size="xs">
         상세
     </Button>
 )
 
-// 데이터 표 컬럼(Figma "이용권 이력") — 상품명만 좌측, 나머지는 중앙.
 const LEDGER_COLUMNS = [
-    {key: 'name', header: '상품명', align: 'start'},
+    {key: 'name', header: '상품명', align: 'start', rowHeader: true},
     {key: 'date', header: '사용일시'},
     {key: 'used', header: '차감 횟수'},
     {key: 'left', header: '남은 횟수'},
@@ -97,9 +98,8 @@ const LEDGER_ROWS = [
     },
 ]
 
-// 좌측 정렬 텍스트 표 예시 — 긴 설명엔 align:'start' 를 쓴다.
 const NOTE_COLUMNS = [
-    {key: 'name', header: '항목', align: 'start'},
+    {key: 'name', header: '항목', align: 'start', rowHeader: true},
     {key: 'desc', header: '설명', align: 'start', wrap: true},
 ] as const
 
@@ -109,94 +109,47 @@ const NOTE_ROWS = [
 ]
 
 const PROPS_ITEMS = [
-    ['Table', 'caption', '표의 접근 가능한 이름입니다(sr-only caption).', '-', 'string'],
+    ['Table', 'caption', '표의 이름입니다. 화면에는 보이지 않고 스크린리더가 읽습니다.', '-', 'string'],
+    ['Table', 'columns', '열 정의 목록입니다.', '-', 'readonly TableColumn[]'],
+    ['Table', 'rows', '행 목록입니다.', '-', 'readonly TableRowData[]'],
+    ['Table', 'variant', '표 스타일입니다. 현재 상단 굵은 선 · 하단 얇은 선의 line 하나뿐입니다.', "'line'", "'line'"],
+    ['Table', 'size', '글자 크기와 셀 여백입니다. sm 12px · md 14px · lg 16px.', "'lg'", "'sm' | 'md' | 'lg'"],
+    ['Table', 'className', '바깥 스크롤 컨테이너에 덧붙일 클래스입니다.', 'undefined', 'string'],
+    ['TableColumn', 'key', '열 식별 키입니다.', '-', 'string'],
+    ['TableColumn', 'header', '열 제목입니다.', '-', 'ReactNode'],
+    ['TableColumn', 'align', '헤더와 본문 셀의 정렬입니다.', "'center'", "'start' | 'center' | 'end'"],
     [
-        'Table',
-        'columns',
-        '열 정의 배열. { key, header, align, wrap }. align 은 정렬(기본 center), wrap 은 셀 줄바꿈 허용(기본 false — 한 줄 고정, 넘치면 가로 스크롤).',
+        'TableColumn',
+        'wrap',
+        '셀 줄바꿈 허용 여부입니다. false 면 한 줄로 고정되고 넘치면 가로 스크롤됩니다.',
+        'false',
+        'boolean',
+    ],
+    ['TableColumn', 'rowHeader', '이 열의 본문 셀을 행 머리글(th scope="row")로 렌더합니다.', 'false', 'boolean'],
+    ['TableRowData', 'key', '행 식별 키입니다.', '-', 'string'],
+    [
+        'TableRowData',
+        'cells',
+        '열 순서대로의 셀입니다. 배지·버튼 등 ReactNode 를 넣을 수 있습니다.',
         '-',
-        'TableColumn[]',
+        'readonly ReactNode[]',
     ],
-    [
-        'Table',
-        'rows',
-        '행 배열. { key, cells, className? }. cells 는 열 순서대로의 ReactNode(배지·버튼 등 가능)이고, className 은 강조 등 행 단위 스타일입니다.',
-        '-',
-        'TableRowData[]',
-    ],
-    [
-        'Table',
-        'variant',
-        '표 스타일 변형. 현재 line(상·하단 굵은 라인) 하나이며, 추후 다른 표 스타일이 생기면 확장됩니다.',
-        "'line'",
-        "'line'",
-    ],
-    [
-        'Table',
-        'size',
-        '표의 타이포와 셀 여백 크기입니다. sm은 12px, md는 14px, lg는 16px이며 크기에 맞춰 셀 여백도 조정됩니다.',
-        "'lg'",
-        "'sm' | 'md' | 'lg'",
-    ],
-    ['Table', 'className', '컨테이너에 추가할 클래스입니다.', 'undefined', 'string'],
+    ['TableRowData', 'className', '행 단위로 덧붙일 클래스입니다.', 'undefined', 'string'],
 ] as const
 
-// 테이블 — 컴포넌트 가이드 문서 전용 데이터 표(데이터 주도 columns·rows). Figma "이용권 이력 표" 반영.
 const TableGuidePage = () => (
     <GuidePageShell
         title="테이블 (Table)"
-        description="컴포넌트 가이드 등 문서 화면에서 데이터를 행/열로 보여주는 표입니다. columns·rows 로 데이터를 넘기고, 셀은 ReactNode라 배지·버튼도 그대로 넣습니다."
+        description="columns · rows 로 데이터를 넘겨 그리는 표입니다. 셀에는 배지·버튼 같은 ReactNode 를 그대로 넣습니다."
     >
         <BaseCard>
-            <section aria-labelledby="tb-scope" className="flex flex-col gap-2">
-                <h2 id="tb-scope" className="typo-h4-bold">
-                    사용 범위
-                </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    이 표 스타일은 <strong className="text-foreground">컴포넌트 가이드 문서 페이지 전용</strong>입니다.
-                    실제 프로젝트 화면에는 사용하지 않으며, 프로젝트에서 쓰는 표는 별도 스타일로 정의합니다.
-                </p>
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="tb-size" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="tb-size" className="typo-h4-bold">
-                        크기 (size)
+            <section aria-labelledby="table-basic" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="table-basic" className="typo-h4-bold">
+                        기본 사용
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        sm(12px)·md(14px)·lg(16px) 세 단계입니다. 기본값인 lg는 기존 데이터 표 크기를 유지하고, 크기가
-                        작을수록 셀 여백도 줄어 더 많은 데이터를 조밀하게 보여줍니다.
-                    </p>
-                </div>
-                <div className="flex flex-col gap-6">
-                    <div className="flex flex-col gap-2">
-                        <h3 className="typo-body-l-medium">lg (기본) · 16px</h3>
-                        <Table caption="큰 크기 표" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <h3 className="typo-body-l-medium">md · 14px</h3>
-                        <Table size="md" caption="중간 크기 표" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <h3 className="typo-body-l-medium">sm · 12px</h3>
-                        <Table size="sm" caption="작은 크기 표" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
-                    </div>
-                </div>
-                <CodeBlock code={SIZE_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="tb-data" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="tb-data" className="typo-h4-bold">
-                        데이터 표
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        헤더는 옅은 회색 배경 + 굵은 제목, 본문은 회색 텍스트로 표시되고 행 사이에 옅은 구분선이
-                        들어갑니다. 상태·상세처럼 셀에 배지·버튼 컴포넌트를 그대로 넣을 수 있습니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        컴포넌트 가이드 같은 문서 화면 전용 표입니다. 서비스 화면의 표는 별도로 정의합니다.
                     </p>
                 </div>
                 <Table caption="이용권 사용 이력" columns={LEDGER_COLUMNS} rows={LEDGER_ROWS} />
@@ -205,31 +158,66 @@ const TableGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="tb-align" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="tb-align" className="typo-h4-bold">
-                        정렬 (align)
+            <section aria-labelledby="table-variants" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="table-variants" className="typo-h4-bold">
+                        크기와 열 설정
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        셀은 기본 가운데 정렬이고 한 줄로 고정(넘치면 가로 스크롤)됩니다. 긴 설명 텍스트처럼 왼쪽
-                        정렬·줄바꿈이 자연스러운 열은 열 정의에{' '}
-                        <code className="font-mono">align: &apos;start&apos;</code>와{' '}
-                        <code className="font-mono">wrap: true</code>를 줍니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        크기는 <code>size</code>, 정렬·줄바꿈·행 머리글은 열 정의에서 정합니다.
                     </p>
                 </div>
-                <Table caption="정렬 예시" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">크기 (size)</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            크기가 작을수록 셀 여백도 함께 줄어듭니다.
+                        </p>
+                        <Table caption="큰 크기 표(lg, 기본)" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
+                        <Table size="md" caption="중간 크기 표(md)" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
+                        <Table size="sm" caption="작은 크기 표(sm)" columns={NOTE_COLUMNS} rows={NOTE_ROWS} />
+                        <CodeBlock code={SIZE_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">정렬 · 줄바꿈 (align · wrap)</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            기본은 가운데 정렬 · 한 줄 고정입니다. 긴 설명 열에는 <code>align: &apos;start&apos;</code>{' '}
+                            와 <code>wrap: true</code> 를 줍니다.
+                        </p>
+                        <CodeBlock code={TEXT_CODE} language="tsx" copyLabel="복사" />
+                    </div>
+                </div>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="tb-props" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="tb-props" className="typo-h4-bold">
-                        Props
+            <section aria-labelledby="table-a11y" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="table-a11y" className="typo-h4-bold">
+                        접근성
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">Table 에 넘기는 속성입니다.</p>
                 </div>
-                <PropsTable items={PROPS_ITEMS} caption="Table 컴포넌트 Props 목록" />
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        <code>caption</code> 은 필수이며 sr-only 캡션으로 렌더됩니다[7.3.2].
+                    </li>
+                    <li>
+                        열 제목은 <code>th scope=&quot;col&quot;</code> 입니다. 행을 대표하는 열에{' '}
+                        <code>rowHeader</code> 를 주면 <code>th scope=&quot;row&quot;</code> 가 됩니다[7.3.2].
+                    </li>
+                    <li>한 줄 고정 열이 넘치면 표 컨테이너가 가로 스크롤됩니다.</li>
+                </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="table-props" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="table-props" className="typo-h4-bold">
+                        Props API
+                    </h2>
+                </div>
+                <PropsTable items={PROPS_ITEMS} caption="Table Props 목록" />
             </section>
         </BaseCard>
     </GuidePageShell>

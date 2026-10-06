@@ -1,14 +1,19 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
 import SearchFilterFormDemo from './search-filter-form-demo'
 import {MinimalFilterCaseDemo, TwoColumnFilterCaseDemo} from './search-filter-form-cases-demo'
 
 export const metadata: Metadata = {title: '조회 필터 폼 (SearchFilterForm)'}
 
-// 조립 API — 사용자가 화면에서 그대로 쓰는 형태.
+const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
+
 const USAGE_CODE = `import {Button} from '@/components/ui/button'
 import {
   CompanyNameField,
@@ -42,8 +47,7 @@ import {
   </SearchFilterActions>
 </SearchFilterForm>`
 
-// 케이스 A — 최소 구성(조회기간 + 단일 Select).
-const USAGE_MINIMAL = `{/* 화면에 필요한 필드만 골라 넣는다. 순서도 자유. */}
+const USAGE_MINIMAL = `{/* 필요한 필드만 골라 넣는다. 순서도 자유. */}
 <SearchFilterForm onSubmit={handleSubmit}>
   <SearchFilterFields>
     <DateRangeField />
@@ -54,7 +58,6 @@ const USAGE_MINIMAL = `{/* 화면에 필요한 필드만 골라 넣는다. 순�
   </SearchFilterActions>
 </SearchFilterForm>`
 
-// 케이스 B — 입력 + 한 줄 2열 Select(placeholder).
 const USAGE_TWO_COLUMN = `{/* SearchFilterRow 로 두 필드를 md 이상에서 나란히 두고,
     defaultValue="" 로 "선택해 주세요" placeholder 를 노출한다. */}
 <SearchFilterForm onSubmit={handleSubmit}>
@@ -72,9 +75,7 @@ const USAGE_TWO_COLUMN = `{/* SearchFilterRow 로 두 필드를 md 이상에서 
   </SearchFilterActions>
 </SearchFilterForm>`
 
-// 케이스 — 레이아웃 래퍼 없이 인라인(한 화면에서만 쓸 때).
-const USAGE_INLINE = `{/* SearchFilterFields·SearchFilterActions 는 얇은 레이아웃 래퍼일 뿐이다.
-    한 화면에서만 쓴다면 아래처럼 직접 div 로 배치해도 된다. */}
+const USAGE_INLINE = `{/* SearchFilterFields·SearchFilterActions 대신 div 로 직접 배치해도 된다. */}
 <SearchFilterForm onSubmit={handleSubmit}>
   <div className="flex flex-col gap-6">
     <DateRangeField />
@@ -87,113 +88,199 @@ const USAGE_INLINE = `{/* SearchFilterFields·SearchFilterActions 는 얇은 레
 </SearchFilterForm>`
 
 const COMPOSITION_COLUMNS = [
-    {key: 'name', header: 'Name', align: 'start', rowHeader: true},
-    {key: 'desc', header: 'Description', align: 'start', wrap: true},
+    {key: 'name', header: '이름', align: 'start', rowHeader: true},
+    {key: 'desc', header: '설명', align: 'start', wrap: true},
 ] as const
 
 const SUBMIT_COLUMNS = [
-    {key: 'field', header: 'Field', align: 'start', rowHeader: true},
-    {key: 'keys', header: 'FormData key', align: 'start'},
+    {key: 'field', header: '필드', align: 'start', rowHeader: true},
+    {key: 'keys', header: 'FormData 키', align: 'start'},
     {key: 'desc', header: '값', align: 'start', wrap: true},
 ] as const
 
 const COMPOSITION = [
-    {
-        name: 'SearchFilterForm',
-        desc: 'form 컨테이너. 회색 카드(bg-background·rounded-md·p-10)와 reset 신호를 제공한다. onSubmit·onReset·기타 form 속성을 그대로 받는다.',
-    },
-    {
-        name: 'SearchFilterFields',
-        desc: '필드 세로 묶음(gap-6) 레이아웃 래퍼. 한 화면에서만 쓰면 생략하고 div 로 대체할 수 있다.',
-    },
-    {
-        name: 'SearchFilterActions',
-        desc: '액션(초기화·조회) 우측 하단 정렬 래퍼. 마찬가지로 생략 가능하다.',
-    },
-    {
-        name: 'SearchFilterRow',
-        desc: '필드 2개를 md 이상에서 나란히(2열) 두는 레이아웃. 조회유형·유/무료처럼 짧은 필드에 쓴다.',
-    },
-    {name: 'DateRangeField', desc: '조회기간 — 빠른 기간 SegmentedControl(solid) + 시작·종료 DatePicker 범위.'},
-    {name: 'CompanyNameField', desc: '회사명 — 텍스트 Input.'},
-    {name: 'SearchTypeField', desc: '검색유형 — Select 드롭다운(전체·기술평가·특허평가·K-BIGx 보고서).'},
-    {name: 'PaymentTypeField', desc: '유/무료 — Select 드롭다운(전체·유료·무료).'},
-    {name: 'Button (reset/submit)', desc: '프로젝트 Button 컴포넌트. type="reset"이 필드를 기본값으로 되돌린다.'},
+    {name: 'SearchFilterForm', desc: 'form 컨테이너. 카드 면과 초기화 신호를 맡고, form 속성을 그대로 받습니다.'},
+    {name: 'SearchFilterFields', desc: '필드를 세로로 묶습니다.'},
+    {name: 'SearchFilterActions', desc: '초기화 · 조회 버튼을 오른쪽에 정렬합니다.'},
+    {name: 'SearchFilterRow', desc: '필드 2개를 md 이상에서 2열로 나란히 둡니다.'},
+    {name: 'DateRangeField', desc: '조회기간. 기간 칩(오늘 · 1개월 · 3개월 · 전체)과 시작 · 종료 날짜 칸입니다.'},
+    {name: 'KeywordSearchField', desc: '검색 대상 셀렉트와 검색어 입력 한 쌍입니다.'},
+    {name: 'CompanyNameField', desc: '회사명 텍스트 입력입니다(지우기 버튼 포함).'},
+    {name: 'SelectFilterField', desc: '옵션을 직접 넘기는 셀렉트 필드입니다.'},
+    {name: 'SearchTypeField', desc: '검색유형 셀렉트(전체 · 기술평가 · 특허평가 · K-BIGx 보고서)입니다.'},
+    {name: 'PaymentTypeField', desc: '유/무료 셀렉트(전체 · 유료 · 무료)입니다.'},
 ] as const
 
-// Props — [컴포넌트, 이름, 설명, 기본값, 타입]
 const PROPS_ITEMS = [
-    ['SearchFilterForm', 'onSubmit', '조회 제출 핸들러. FormData 로 필드 값을 읽는다.', '-', 'FormEventHandler'],
-    ['SearchFilterForm', 'onReset', '초기화 콜백. 각 필드는 자동으로 기본값 복귀한다.', 'undefined', '() => void'],
     [
         'SearchFilterForm',
-        'className · form props',
-        '카드 클래스와 네이티브 form 속성을 전달한다.',
-        'undefined',
+        'onSubmit',
+        '조회 제출 핸들러입니다. FormData 로 필드 값을 읽습니다.',
+        '-',
+        'FormEventHandler',
+    ],
+    ['SearchFilterForm', 'onReset', '필드가 기본값으로 돌아갈 때 함께 호출됩니다.', '-', '() => void'],
+    [
+        'SearchFilterForm',
+        'layout',
+        '라벨 자리입니다. row 는 md 이상에서 라벨이 왼쪽, stack 은 늘 위입니다. 폭이 좁은 자리에는 stack 을 씁니다.',
+        "'row'",
+        "'row' | 'stack'",
+    ],
+    [
+        'SearchFilterForm',
+        'surface',
+        '카드 면입니다. muted 는 회색, card 는 흰 면입니다.',
+        "'muted'",
+        "'muted' | 'card'",
+    ],
+    [
+        'SearchFilterForm',
+        'className · form 속성',
+        'aria-label 등 네이티브 form 속성을 그대로 전달합니다. className 은 form(display: contents)에 붙어 카드 모양에는 영향이 없습니다.',
+        '-',
         "ComponentProps<'form'>",
     ],
     [
-        'DateRangeField',
-        'name',
-        '제출 시 프리셋(`${name}Preset`)·시작(`${name}From`)·종료(`${name}To`) 키의 접두사.',
-        "'dateRange'",
-        'string',
+        'SearchFilterFields / SearchFilterActions / SearchFilterRow',
+        'children · className',
+        '배치만 하는 div 입니다. div 속성을 그대로 받습니다.',
+        '-',
+        "ComponentProps<'div'>",
     ],
+    ['DateRangeField', 'name', '제출 키의 접두사입니다(Preset · From · To 가 붙습니다).', "'dateRange'", 'string'],
+    ['DateRangeField', 'label', '라벨 문구입니다.', "'조회기간'", 'string'],
     [
         'DateRangeField',
-        'label · defaultPreset',
-        '라벨과 기본 프리셋(today·1month·3months·all).',
-        "'조회기간' · '3months'",
+        'defaultPreset',
+        '처음 고른 기간 칩입니다(today · 1month · 3months · all).',
+        "'3months'",
         'string',
     ],
+    ['DateRangeField', 'defaultFrom · defaultTo', '처음 채워 둘 시작 · 종료일입니다.', '-', 'Date'],
     [
-        'CompanyNameField',
-        'name · label · placeholder',
-        '제출 키·라벨·입력 placeholder.',
-        "'companyName' · '회사명'",
-        'string',
+        'DateRangeField',
+        'action',
+        '날짜 줄 오른쪽에 붙이는 버튼입니다. 액션 줄 대신 [조회]를 여기에 둘 때 씁니다.',
+        '-',
+        'ReactNode',
     ],
+    ['DateRangeField', 'labelHidden', '라벨을 화면에서 감춥니다(스크린리더에는 남습니다).', '-', 'boolean'],
+    ['DateRangeField', 'size', '날짜 칸 높이입니다. md 는 40, lg 는 48 입니다.', "'md'", "'lg' | 'md'"],
     [
-        'SearchTypeField / PaymentTypeField',
-        'name · label · defaultValue · placeholder',
-        '제출 키·라벨·기본 선택값·미선택 placeholder. defaultValue=""면 placeholder 노출.',
+        'KeywordSearchField',
+        'options',
+        '검색 대상 목록입니다(필수). 첫 항목이 기본값입니다.',
+        '-',
+        'readonly {value; label}[]',
+    ],
+    ['KeywordSearchField', 'name', '제출 키의 접두사입니다(Type · Keyword 가 붙습니다).', "'search'", 'string'],
+    ['KeywordSearchField', 'label', '라벨 문구입니다. 검색어 입력의 접근성 이름으로도 쓰입니다.', "'검색어'", 'string'],
+    ['KeywordSearchField', 'placeholder', '검색어 입력 안내입니다.', '`${고른 대상 이름} 입력`', 'string'],
+    ['KeywordSearchField', 'labelHidden', '라벨을 화면에서 감춥니다(스크린리더에는 남습니다).', '-', 'boolean'],
+    ['KeywordSearchField', 'size', '셀렉트 높이입니다. lg 는 48, md 는 40 입니다.', "'lg'", "'lg' | 'md'"],
+    ['CompanyNameField', 'name', '제출 키입니다.', "'companyName'", 'string'],
+    ['CompanyNameField', 'label', '라벨 문구입니다.', "'회사명'", 'string'],
+    ['CompanyNameField', 'placeholder', '입력 안내입니다.', "'회사명을 입력하세요'", 'string'],
+    ['CompanyNameField', 'labelHidden', '라벨을 화면에서 감춥니다(스크린리더에는 남습니다).', '-', 'boolean'],
+    ['CompanyNameField', 'size', '칸 높이입니다. lg 는 48 이고, 생략하면 입력 기본 높이입니다.', '-', "'lg' | 'md'"],
+    ['SelectFilterField', 'label · name', '라벨 문구와 제출 키입니다(필수).', '-', 'string'],
+    ['SelectFilterField', 'options', '옵션 목록입니다(필수).', '-', 'readonly {value; label}[]'],
+    ['SelectFilterField', 'defaultValue', '처음 고른 값입니다. 비우면 placeholder 가 보입니다.', "''", 'string'],
+    ['SelectFilterField', 'placeholder', '고른 값이 없을 때의 안내입니다.', '-', 'string'],
+    ['SelectFilterField', 'labelHidden', '라벨을 화면에서 감춥니다(스크린리더에는 남습니다).', '-', 'boolean'],
+    [
+        'SelectFilterField',
+        'size',
+        '칸 높이입니다. lg 는 48, md 는 40 이고, 생략하면 셀렉트 기본 높이입니다.',
+        '-',
+        "'lg' | 'md'",
+    ],
+    ['SearchTypeField', 'name · label', '제출 키와 라벨 문구입니다.', "'searchType' · '검색유형'", 'string'],
+    [
+        'SearchTypeField',
+        'defaultValue · placeholder',
+        '처음 고른 값과 미선택 안내입니다. defaultValue="" 면 placeholder 가 보입니다.',
         "'all' · '선택해 주세요'",
         'string',
     ],
-    ['SearchFilterRow', 'children · className', '필드 2개를 md 이상 2열로 나란히 배치.', '-', "ComponentProps<'div'>"],
+    ['PaymentTypeField', 'name · label', '제출 키와 라벨 문구입니다.', "'paymentType' · '유/무료'", 'string'],
+    [
+        'PaymentTypeField',
+        'defaultValue · placeholder',
+        '처음 고른 값과 미선택 안내입니다. defaultValue="" 면 placeholder 가 보입니다.',
+        "'all' · '선택해 주세요'",
+        'string',
+    ],
 ] as const
 
-// 폼 제출 — 각 필드가 name 으로 FormData 에 담는 키(기본 name 기준).
 const SUBMIT_KEYS = [
     {
         field: 'DateRangeField',
         keys: 'dateRangePreset · dateRangeFrom · dateRangeTo',
-        desc: '프리셋 값과 시작·종료일(YYYY-MM-DD).',
+        desc: '기간 칩 값과 시작 · 종료일(yyyy-MM-dd). 날짜를 비우면 빈 문자열입니다.',
     },
-    {field: 'CompanyNameField', keys: 'companyName', desc: '입력한 회사명 문자열.'},
-    {field: 'SearchTypeField', keys: 'searchType', desc: '선택한 검색유형 값.'},
-    {field: 'PaymentTypeField', keys: 'paymentType', desc: '선택한 유/무료 값.'},
+    {field: 'KeywordSearchField', keys: 'searchType · searchKeyword', desc: '고른 검색 대상 값과 입력한 검색어.'},
+    {field: 'CompanyNameField', keys: 'companyName', desc: '입력한 문자열.'},
+    {field: 'SelectFilterField', keys: 'name 으로 넘긴 값', desc: '고른 옵션의 value.'},
+    {field: 'SearchTypeField', keys: 'searchType', desc: '고른 검색유형 값(all · tech · patent · k-bigx).'},
+    {field: 'PaymentTypeField', keys: 'paymentType', desc: '고른 유/무료 값(all · paid · free).'},
+] as const
+
+const CHOICE_COLUMNS = [
+    {key: 'case', header: '사용 상황', align: 'start', rowHeader: true},
+    {key: 'component', header: '선택', align: 'start'},
+    {key: 'note', header: '기준', align: 'start', wrap: true},
+] as const
+
+const CHOICE_ROWS = [
+    {
+        key: 'search-bar',
+        cells: [
+            '검색어 하나를 입력해 바로 검색',
+            <Link key="component" href="/component-guide/search-bar" className={LINK_CLASS}>
+                SearchBar
+            </Link>,
+            '입력 · 지우기 · 검색 버튼이 한 상자입니다. 통합 검색처럼 조건이 검색어뿐인 자리에 씁니다.',
+        ],
+    },
+    {
+        key: 'search-filter-form',
+        cells: [
+            '목록 화면 상단에서 조회 조건 여러 개를 조합',
+            <Link key="component" href="/component-guide/search-filter-form" className={LINK_CLASS}>
+                SearchFilterForm
+            </Link>,
+            '기간 · 기업명 · 셀렉트 같은 필드를 골라 조립하고 [초기화] · [조회]로 제출합니다.',
+        ],
+    },
+    {
+        key: 'select-search-form',
+        cells: [
+            '검색 기준을 고르고 번호 하나를 입력해 조회',
+            <Link key="component" href="/component-guide/select-search-form" className={LINK_CLASS}>
+                SelectSearchForm
+            </Link>,
+            '특허등록번호 · 특허출원번호처럼 기준마다 형식이 다른 값을 검사한 뒤 onSearch 로 넘깁니다.',
+        ],
+    },
 ] as const
 
 const SearchFilterFormGuidePage = () => (
     <GuidePageShell
         title="조회 필터 폼 (SearchFilterForm)"
-        description="목록 화면 상단의 조회(검색) 필터를 조립하는 합성 컴포넌트입니다. 왼쪽 라벨 + 오른쪽 컨트롤을 회색 카드에 담고, 우측 하단에 초기화·조회 액션을 둡니다."
+        description="목록 화면 상단의 조회(검색) 필터를 조립하는 컴포넌트입니다."
     >
         <BaseCard>
-            <section aria-labelledby="sff-preview" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="sff-preview" className="typo-h4-bold">
-                        Preview
+            <section aria-labelledby="sff-basic" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="sff-basic" className="typo-h4-bold">
+                        기본 사용
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        조회기간(빠른 기간 토글 + 기간 선택)·기업명 입력과, 짧은 Select 두 개(조회유형·유/무료)를{' '}
-                        <code className="font-mono">SearchFilterRow</code>로 md 이상 2열 배치한 대표 예시입니다.
-                        Select은 <code className="font-mono">defaultValue=&quot;&quot;</code>로{' '}
-                        <strong className="text-foreground">선택해 주세요</strong> placeholder를 노출합니다.{' '}
-                        <strong className="text-foreground">조회</strong>를 누르면 각 필드 값이 name에 맞춰 FormData로
-                        제출되고, <strong className="text-foreground">초기화</strong>는 모든 필드를 기본값으로
-                        되돌립니다. md 미만에서는 라벨이 컨트롤 위로 쌓입니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code>SearchFilterForm</code> 안에 필요한 필드와 초기화 · 조회 버튼을 넣습니다. 필드 값은 필드가
+                        관리하므로 사용처는 <code>name</code> 과 기본값만 정합니다. 버튼은 프로젝트 <code>Button</code>{' '}
+                        을 씁니다.
                     </p>
                 </div>
                 <SearchFilterFormDemo showResult={false} />
@@ -202,223 +289,150 @@ const SearchFilterFormGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="sff-composition" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="sff-composition" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="sff-composition" className="typo-h4-bold">
-                        Composition
+                        구성 요소
                     </h2>
-                    <p className="text-foreground-muted text-sm">폼이 조립하는 요소들입니다.</p>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        모두 <code>@/components/composite/search-filter-form</code> 에서 가져옵니다.
+                    </p>
                 </div>
                 <Table
-                    caption="Composition 목록"
+                    caption="조회 필터 폼 구성 요소 목록"
                     columns={COMPOSITION_COLUMNS}
                     rows={COMPOSITION.map((row) => ({
                         key: row.name,
-                        cells: [
-                            <span key="name" className="font-mono">
-                                {row.name}
-                            </span>,
-                            row.desc,
-                        ],
+                        cells: [<code key="name">{row.name}</code>, row.desc],
                     }))}
+                    size="md"
                 />
             </section>
         </BaseCard>
 
         <BaseCard>
             <section aria-labelledby="sff-cases" className="flex flex-col gap-6">
-                <div>
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="sff-cases" className="typo-h4-bold">
-                        케이스
+                        조합 예시
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        같은 컴포넌트로 화면마다 다른 조합을 만듭니다. 아래는 Figma 시안의 조회 폼 변형들입니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        화면에 필요한 필드만 골라 원하는 순서로 넣습니다.
                     </p>
                 </div>
-
-                <section aria-labelledby="sff-case-minimal" className="flex flex-col gap-3">
-                    <h3 id="sff-case-minimal" className="typo-title-l-bold">
-                        최소 구성
-                    </h3>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        조회기간과 단일 Select만 두는 간단한 필터입니다. 필요한 필드만 골라 순서대로 배치하고, 액션도
-                        조회 하나만 둘 수 있습니다.
-                    </p>
-                    <MinimalFilterCaseDemo />
-                    <CodeBlock code={USAGE_MINIMAL} language="tsx" copyLabel="복사" />
-                </section>
-
-                <section aria-labelledby="sff-case-two-column" className="flex flex-col gap-3">
-                    <h3 id="sff-case-two-column" className="typo-title-l-bold">
-                        입력 + 한 줄 2열 Select (placeholder)
-                    </h3>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        기업명 입력과 함께 짧은 Select 두 개를 <code className="font-mono">SearchFilterRow</code>로 md
-                        이상 나란히 둡니다. <code className="font-mono">defaultValue=&quot;&quot;</code>로 기본값을
-                        비우면 <strong className="text-foreground">선택해 주세요</strong> placeholder가
-                        노출됩니다(기본값을 주면 해당 옵션이 선택된 상태로 시작).
-                    </p>
-                    <TwoColumnFilterCaseDemo />
-                    <CodeBlock code={USAGE_TWO_COLUMN} language="tsx" copyLabel="복사" />
-                </section>
-
-                <section aria-labelledby="sff-case-inline" className="flex flex-col gap-3">
-                    <h3 id="sff-case-inline" className="typo-title-l-bold">
-                        레이아웃 래퍼 분리 기준
-                    </h3>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">SearchFilterFields</code>·
-                        <code className="font-mono">SearchFilterActions</code>는 세로 묶음·우측 정렬만 하는 얇은
-                        레이아웃 래퍼입니다.{' '}
-                        <strong className="text-foreground">여러 화면에서 같은 레이아웃을 반복</strong>할 때 쓰고, 한
-                        화면에서만 쓴다면 아래처럼 <code className="font-mono">div</code>로 직접 배치하는 편이
-                        단순합니다.
-                    </p>
-                    <CodeBlock code={USAGE_INLINE} language="tsx" copyLabel="복사" />
-                </section>
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">최소 구성</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            조회기간과 셀렉트 하나만 둡니다. 버튼도 조회 하나만 둘 수 있습니다.
+                        </p>
+                        <MinimalFilterCaseDemo />
+                        <CodeBlock code={USAGE_MINIMAL} language="tsx" copyLabel="복사" />
+                    </div>
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">입력 + 2열 셀렉트</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            짧은 셀렉트 두 개는 <code>SearchFilterRow</code> 로 묶어 md 이상에서 나란히 둡니다.{' '}
+                            <code>defaultValue=&quot;&quot;</code> 면 placeholder 가 보이고, 값을 주면 그 옵션이 선택된
+                            채 시작합니다.
+                        </p>
+                        <TwoColumnFilterCaseDemo />
+                        <CodeBlock code={USAGE_TWO_COLUMN} language="tsx" copyLabel="복사" />
+                    </div>
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">레이아웃 래퍼 없이 배치</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            <code>SearchFilterFields</code> · <code>SearchFilterActions</code> 는 배치만 하므로 한
+                            화면에서만 쓰는 배치라면 <code>div</code> 로 직접 배치해도 됩니다.
+                        </p>
+                        <CodeBlock code={USAGE_INLINE} language="tsx" copyLabel="복사" />
+                    </div>
+                </div>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="sff-submit" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="sff-submit" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="sff-submit" className="typo-h4-bold">
                         폼 제출
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        <strong className="text-foreground">조회</strong>를 누르면 각 필드가 자신의{' '}
-                        <code className="font-mono">name</code>으로 FormData에 값을 담습니다. 값 상태는 필드가 자체
-                        관리하므로 폼 쪽에서 <code className="font-mono">new FormData(event.currentTarget)</code>로 한
-                        번에 읽으면 됩니다. 실제 결과는 위 Preview에서 확인할 수 있고,{' '}
-                        <strong className="text-foreground">초기화</strong>(type=&quot;reset&quot;)는 모든 필드를
-                        기본값으로 되돌린 뒤 <code className="font-mono">onReset</code> 콜백을 호출합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code>onSubmit</code> 에서 <code>new FormData(event.currentTarget)</code> 로 값을 한 번에
+                        읽습니다. <code>type=&quot;reset&quot;</code> 버튼은 모든 필드를 기본값으로 되돌리고{' '}
+                        <code>onReset</code> 을 호출합니다.
                     </p>
                 </div>
-                <SearchFilterFormDemo />
                 <Table
                     caption="필드별 제출 키 목록"
                     columns={SUBMIT_COLUMNS}
                     rows={SUBMIT_KEYS.map((row) => ({
                         key: row.field,
-                        cells: [
-                            <span key="field" className="font-mono">
-                                {row.field}
-                            </span>,
-                            <span key="keys" className="font-mono">
-                                {row.keys}
-                            </span>,
-                            row.desc,
-                        ],
+                        cells: [<code key="field">{row.field}</code>, <code key="keys">{row.keys}</code>, row.desc],
                     }))}
+                    size="md"
                 />
-                <div className="bg-surface border-border flex flex-col gap-2 rounded-md border p-4">
-                    <h3 className="typo-body-l-medium text-foreground">WAVE 검사 예외 — Missing form label (Select)</h3>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        shadcn/Radix Select은 폼 안에 놓이면 값 전달용 hidden native{' '}
-                        <code className="font-mono">&lt;select aria-hidden tabindex=&quot;-1&quot;&gt;</code>를 내부에서
-                        자동 생성합니다. 이 요소는 라벨을 붙일 방법이 없어(트리거 버튼에만 라벨을 연결할 수 있음) WAVE가{' '}
-                        <em>Missing form label</em>로 잡습니다.
-                    </p>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        이 hidden select은 <strong className="text-foreground">Radix 프리미티브가 만드는 구조</strong>라
-                        프로젝트에서 고칠 수 없습니다 — 라벨을 달려면 <code className="font-mono">ui/select</code> 셸의
-                        내부 동작을 수정해야 하는데, 셸의 구조·동작 수정은 금지되어 있습니다(
-                        <code className="font-mono">SHADCN.md · SC-02</code>). 실제로는{' '}
-                        <code className="font-mono">aria-hidden</code>·
-                        <code className="font-mono">tabindex=&quot;-1&quot;</code>로 접근성 트리·키보드 탐색에서
-                        제외되고, 조작 요소인 트리거 버튼이 라벨과 연결돼 있어 실사용 접근성에는 영향이 없는{' '}
-                        <strong className="text-foreground">구조적 오탐</strong>이므로 예외로 둡니다.
-                        (SegmentedControl의 RadioGroup도 같은 이유로 hidden radio input을 만듭니다.)
-                    </p>
-                </div>
+                <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                    <code>KeywordSearchField</code> 와 <code>SearchTypeField</code> 는 기본 제출 키가 둘 다{' '}
+                    <code>searchType</code> 입니다. 한 폼에 함께 두면 한쪽의 <code>name</code> 을 바꿉니다.
+                </p>
+                <SearchFilterFormDemo />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="sff-props" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="sff-props" className="typo-h4-bold">
-                        Props
+            <section aria-labelledby="sff-choice" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="sff-choice" className="typo-h4-bold">
+                        컴포넌트 선택
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        각 컴포넌트에 넘기는 속성입니다. 필드는 name·기본값만 조정하면 되고, 값 상태는 필드가 자체
-                        관리합니다.
-                    </p>
+                    <p className="typo-body-l-regular text-label-foreground">검색 조건의 수로 고릅니다.</p>
                 </div>
-                <div className="border-border overflow-x-auto rounded-xl border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">Props 목록</caption>
-                        <thead>
-                            <tr className="border-border bg-card border-b">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Component
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Description
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Default
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Type
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {PROPS_ITEMS.map(([component, name, description, defaultValue, type]) => (
-                                <tr key={`${component}-${name}`} className="border-border border-b last:border-b-0">
-                                    <td className="typo-body-l-regular text-foreground px-4 py-3 font-mono">
-                                        {component}
-                                    </td>
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-medium text-primary-strong px-4 py-3 font-mono"
-                                    >
-                                        {name}
-                                    </th>
-                                    <td className="typo-body-l-regular text-foreground-subtle px-4 py-3">
-                                        {description}
-                                    </td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {defaultValue}
-                                    </td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {type}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table
+                    caption="SearchBar · SearchFilterForm · SelectSearchForm 사용 기준"
+                    columns={CHOICE_COLUMNS}
+                    rows={CHOICE_ROWS}
+                    size="md"
+                />
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="sff-a11y" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="sff-a11y" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="sff-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
-                    <p className="text-foreground-muted text-sm">조회 필터 폼이 지키는 KWCAG 2.1 요건입니다.</p>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        아래는 컴포넌트가 처리하므로 사용처에서 따로 넣지 않습니다.
+                    </p>
                 </div>
-                <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-2 pl-5">
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        각 필드는 라벨과 컨트롤을 연결합니다 — 단일 컨트롤은 label htmlFor↔id, 컨트롤이 여러 개인
-                        조회기간은 role=&quot;group&quot;+aria-labelledby로 묶습니다. [7.4.1/8.2.1]
+                        필드마다 라벨과 컨트롤이 연결되고 여러 컨트롤이 한 줄이면 <code>role=&quot;group&quot;</code>{' '}
+                        으로 묶입니다. <code>labelHidden</code> 으로 감춘 라벨도 스크린리더에는 읽힙니다[7.4.1].
+                    </li>
+                    <li>필드의 id 는 자동으로 만들어져 같은 필드를 여러 번 넣어도 겹치지 않습니다[8.1.1].</li>
+                    <li>
+                        사용처는 폼에 <code>aria-label</code> 로 이름을 주고, 조회는 버튼으로만 실행합니다(값이 바뀔 때
+                        바로 조회하지 않습니다)[7.2.1].
                     </li>
                     <li>
-                        SegmentedControl·DatePicker·Select·Input 은 각 컴포넌트의 키보드·포커스 동작을 그대로 씁니다.
-                        [6.1.1/6.1.2]
+                        WAVE 가 셀렉트 필드에서 보고하는 <em>Missing form label</em> 은 Radix Select 의 숨은 select
+                        때문에 생기는 예외 항목이므로 사용처에서 고치지 않습니다.
                     </li>
-                    <li>
-                        제출은 명시적인 조회 버튼으로만 일어나고, onChange가 곧바로 조회를 실행하지 않습니다. [7.2.1]
-                    </li>
-                    <li>초기화(type=&quot;reset&quot;)는 값 상태와 결과 표시를 모두 기본값으로 되돌립니다.</li>
-                    <li>md 미만에서 라벨이 컨트롤 위로 쌓여도 DOM 순서(라벨→컨트롤)는 유지됩니다. [7.3.1]</li>
                 </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="sff-props" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="sff-props" className="typo-h4-bold">
+                        Props API
+                    </h2>
+                </div>
+                <PropsTable items={PROPS_ITEMS} caption="조회 필터 폼 Props 목록" />
             </section>
         </BaseCard>
     </GuidePageShell>

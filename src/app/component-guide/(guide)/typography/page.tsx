@@ -1,6 +1,8 @@
 import type {ComponentPropsWithoutRef} from 'react'
 import type {Metadata} from 'next'
+import {Check, X} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
+import {Badge} from '@/components/ui/badge'
 import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
@@ -179,57 +181,93 @@ const TypographySectionCard = ({children, className, ...props}: ComponentPropsWi
 )
 
 // 타이포그래피 — typo-* 복합 유틸리티. 스케일 표 각 행에 실제 렌더 미리보기를 함께 담는다.
+// 적용 규칙 카드 — 규칙마다 설명 · 사용 · 금지를 같은 자리에 둔다.
+const TYPO_RULES = [
+    {
+        title: '같은 속성을 겹쳐 쓰지 않습니다',
+        description:
+            '같은 요소에 text-*(크기) · font-* · leading-* · tracking-* 를 겹쳐 쓰지 않습니다. 색상용 text-foreground 등은 함께 씁니다.',
+        use: 'typo-h4-bold text-foreground',
+        avoid: 'typo-h4-bold text-3xl font-bold',
+    },
+    {
+        title: '반응형은 클래스 안에서 바뀝니다',
+        description:
+            '크기는 클래스 안에서 화면 폭에 따라 바뀝니다(모바일 → md → xl). 접두사를 붙여 쓰는 방식은 동작하지 않습니다.',
+        use: 'typo-h4-bold',
+        avoid: 'md:typo-h4-bold',
+    },
+] as const
+
 const TypographyGuidePage = () => (
     <GuidePageShell
         title="타이포그래피 (Typography)"
         description="프로젝트의 제목·본문·라벨·캡션에 사용하는 typo-* 복합 유틸리티와 글꼴 체계입니다."
     >
-        <TypographySectionCard aria-labelledby="typo-overview" className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
+        <TypographySectionCard aria-labelledby="typo-overview" className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
                 <h2 id="typo-overview" className="typo-h4-bold">
                     typo-* 적용 방식
                 </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    글자 크기·굵기·행간·자간은 <code>typo-*</code> 클래스 하나로 지정합니다.
+                <p className="typo-body-l-regular text-label-foreground">
+                    글자 크기 · 굵기 · 행간 · 자간은 <code className="text-foreground font-mono">typo-*</code> 클래스
+                    하나로 지정합니다.
                 </p>
             </div>
-            <ul className="text-foreground-subtle flex list-disc flex-col gap-2 pl-5">
-                <li>
-                    같은 요소에 <code className="font-mono">text-*</code>(크기) ·{' '}
-                    <code className="font-mono">font-*</code> · <code className="font-mono">leading-*</code> ·{' '}
-                    <code className="font-mono">tracking-*</code>를 겹쳐 쓰지 않습니다. 색상용{' '}
-                    <code className="font-mono">text-foreground</code> 등은 함께 씁니다.
-                </li>
-                <li>
-                    크기는 클래스 안에서 화면 폭에 따라 바뀝니다(모바일 → <code className="font-mono">md</code> →{' '}
-                    <code className="font-mono">xl</code>). <code className="font-mono">md:typo-*</code>처럼 접두사를
-                    붙여 쓰는 방식은 동작하지 않습니다.
-                </li>
-                <li>
-                    값은 <code className="font-mono">tokens.json</code>의 <code className="font-mono">typography</code>
-                    에서 px 로 관리하고, 생성된 CSS 는 rem 을 씁니다.
-                </li>
-            </ul>
+
+            {/* 규칙마다 같은 자리에 같은 항목(설명 · 사용 · 금지)을 둔다 — 시맨틱 색상 가이드와 같은 짜임이다. */}
+            <div className="grid gap-4 md:grid-cols-2">
+                {TYPO_RULES.map((rule) => (
+                    <div
+                        key={rule.title}
+                        className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5"
+                    >
+                        <h3 className="typo-body-xl-bold text-foreground">{rule.title}</h3>
+                        <p className="text-label-foreground">{rule.description}</p>
+                        <dl className="border-subtle-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 border-t pt-3">
+                            {/* 색만으로 가르지 않도록 글자(사용 · 금지)와 아이콘을 함께 둔다[5.3.1]. */}
+                            <dt>
+                                <Badge variant="solid-pastel" color="success" size="sm">
+                                    <Check aria-hidden="true" />
+                                    사용
+                                </Badge>
+                            </dt>
+                            <dd className="text-label-foreground self-center font-mono text-sm">{rule.use}</dd>
+                            <dt>
+                                <Badge variant="solid-pastel" color="error" size="sm">
+                                    <X aria-hidden="true" />
+                                    금지
+                                </Badge>
+                            </dt>
+                            <dd className="text-label-foreground self-center font-mono text-sm">{rule.avoid}</dd>
+                        </dl>
+                    </div>
+                ))}
+            </div>
+            <p className="border-primary/30 bg-primary-subtle text-foreground overflow-x-auto rounded-sm border p-5 text-center font-mono text-sm font-semibold">
+                tokens.json typography (px) → yarn tokens → typo-* (rem)
+            </p>
         </TypographySectionCard>
 
         {/* 글꼴 체계 (Font Family) */}
-        <TypographySectionCard aria-labelledby="typo-font" className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
+        <TypographySectionCard aria-labelledby="typo-font" className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
                 <h2 id="typo-font" className="typo-h4-bold">
                     글꼴 (Font Family)
                 </h2>
-                <p className="typo-body-l-regular text-muted-foreground">
-                    기본 글꼴은 <code>font-sans</code>(Pretendard)이고 따로 지정하지 않아도 적용됩니다. 코드·수치처럼
-                    고정폭이 필요한 곳에만 <code>font-mono</code>를 씁니다.
+                <p className="typo-body-l-regular text-label-foreground">
+                    기본 글꼴은 <code className="text-foreground font-mono">font-sans</code>(Pretendard)이고 따로
+                    지정하지 않아도 적용됩니다. 코드 · 수치처럼 고정폭이 필요한 곳에만{' '}
+                    <code className="text-foreground font-mono">font-mono</code>를 씁니다.
                 </p>
             </div>
 
             {/* font-sans(가변폭) vs font-mono(고정폭) 미리보기 — 같은 5글자 두 줄의 렌더 너비를 나란히 비교 */}
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="border-border flex flex-col gap-3 rounded-xl border p-4">
+                <div className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5">
                     <div className="flex flex-wrap items-center gap-2">
                         <CopyChip value="font-sans" />
-                        <span className="typo-body-l-regular text-muted-foreground">
+                        <span className="typo-body-l-regular text-label-foreground">
                             가변폭 — 글자마다 폭이 다릅니다
                         </span>
                     </div>
@@ -244,10 +282,10 @@ const TypographyGuidePage = () => (
                         ))}
                     </div>
                 </div>
-                <div className="border-border flex flex-col gap-3 rounded-xl border p-4">
+                <div className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5">
                     <div className="flex flex-wrap items-center gap-2">
                         <CopyChip value="font-mono" />
-                        <span className="typo-body-l-regular text-muted-foreground">
+                        <span className="typo-body-l-regular text-label-foreground">
                             고정폭 — 글자 폭이 모두 같습니다
                         </span>
                     </div>
@@ -264,61 +302,70 @@ const TypographyGuidePage = () => (
                 </div>
             </div>
 
-            <p className="typo-body-l-regular text-muted-foreground">
-                <code>font-sans</code>는 아래 순서로 대체됩니다.
-            </p>
-            <ol className="border-border divide-border divide-y rounded-xl border">
-                {SANS_STACK.map((font, i) => (
-                    <li key={font.name} className="flex items-start gap-3 px-4 py-3">
-                        <span
-                            aria-hidden="true"
-                            className={`typo-body-l-bold flex size-6 shrink-0 items-center justify-center rounded-full font-mono ${
-                                font.isPrimary ? 'bg-primary text-primary-foreground' : 'text-muted-foreground bg-muted'
-                            }`}
-                        >
-                            {i + 1}
-                        </span>
-                        <div className="flex flex-col gap-0.5">
-                            <span className="inline-flex flex-wrap items-center gap-2">
-                                <span className="typo-body-l-medium text-foreground">{font.name}</span>
-                                <span
-                                    className={`typo-body-l-medium rounded-full px-2 py-0.5 ${
-                                        font.isPrimary
-                                            ? 'bg-primary-subtle text-primary-strong'
-                                            : 'text-muted-foreground bg-muted'
-                                    }`}
-                                >
-                                    {font.role}
-                                </span>
+            <div className="border-subtle-3 flex flex-col gap-4 border-t pt-6">
+                <div className="flex flex-col gap-2">
+                    <h3 className="typo-title-m-bold text-foreground">글꼴 대체 순서</h3>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code className="text-foreground font-mono">font-sans</code>는 아래 순서로 대체됩니다.
+                    </p>
+                </div>
+                <ol className="border-foreground-subtle/30 divide-subtle-3 divide-y rounded-sm border">
+                    {SANS_STACK.map((font, i) => (
+                        <li key={font.name} className="flex items-start gap-3 px-5 py-4">
+                            <span
+                                aria-hidden="true"
+                                className={`typo-body-l-bold flex size-6 shrink-0 items-center justify-center rounded-full font-mono ${
+                                    font.isPrimary
+                                        ? 'bg-primary text-primary-foreground'
+                                        : 'text-muted-foreground bg-muted'
+                                }`}
+                            >
+                                {i + 1}
                             </span>
-                            <span className="typo-body-l-regular text-muted-foreground">{font.desc}</span>
-                            {font.version && (
-                                <span className="typo-body-l-regular text-muted-foreground">
-                                    v{font.version} · {font.license}
-                                    {font.repoUrl && (
-                                        <>
-                                            {' · '}
-                                            <a
-                                                href={font.repoUrl}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="text-primary-strong focus-visible:ring-ring focus-visible:ring-offset-background rounded-sm underline decoration-1 underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
-                                            >
-                                                저장소
-                                                <span className="sr-only"> (새 창에서 열림)</span>
-                                            </a>
-                                        </>
-                                    )}
+                            <div className="flex flex-col gap-0.5">
+                                <span className="inline-flex flex-wrap items-center gap-2">
+                                    <span className="typo-body-xl-bold text-foreground">{font.name}</span>
+                                    <span
+                                        className={`typo-body-l-medium rounded-full px-2 py-0.5 ${
+                                            font.isPrimary
+                                                ? 'bg-primary-subtle text-primary-strong'
+                                                : 'text-muted-foreground bg-muted'
+                                        }`}
+                                    >
+                                        {font.role}
+                                    </span>
                                 </span>
-                            )}
-                        </div>
-                    </li>
-                ))}
-            </ol>
-            <p className="typo-body-l-regular text-muted-foreground">
-                <code>font-mono</code>는 <code>ui-monospace</code> · <code>SFMono-Regular</code> · <code>Menlo</code> ·{' '}
-                <code>Consolas</code> · <code>monospace</code> 순입니다.
-            </p>
+                                <span className="typo-body-l-regular text-label-foreground">{font.desc}</span>
+                                {font.version && (
+                                    <span className="typo-body-l-regular text-label-foreground">
+                                        v{font.version} · {font.license}
+                                        {font.repoUrl && (
+                                            <>
+                                                {' · '}
+                                                <a
+                                                    href={font.repoUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-primary-strong focus-visible:ring-ring focus-visible:ring-offset-background rounded-sm underline decoration-1 underline-offset-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
+                                                >
+                                                    저장소
+                                                    <span className="sr-only"> (새 창에서 열림)</span>
+                                                </a>
+                                            </>
+                                        )}
+                                    </span>
+                                )}
+                            </div>
+                        </li>
+                    ))}
+                </ol>
+                <p className="typo-body-l-regular text-label-foreground">
+                    <code className="text-foreground font-mono">font-mono</code>는{' '}
+                    <code className="font-mono">ui-monospace</code> · <code className="font-mono">SFMono-Regular</code>{' '}
+                    · <code className="font-mono">Menlo</code> · <code className="font-mono">Consolas</code> ·{' '}
+                    <code className="font-mono">monospace</code> 순입니다.
+                </p>
+            </div>
         </TypographySectionCard>
 
         <TypographySectionCard aria-labelledby="typo-project-utilities" className="flex flex-col gap-4">

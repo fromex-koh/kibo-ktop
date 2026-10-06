@@ -5,6 +5,7 @@
 
 import {isIconName, type IconName} from '@/constants/publishing-guide'
 import assetVersionsGenerated from './asset-versions.generated.json'
+import releaseNotesArchiveGenerated from './release-notes-archive.generated.json'
 import releaseNotesGenerated from './release-notes.generated.json'
 import homeJson from './home.json'
 import publishingIndexJson from './publishing-index.json'
@@ -372,14 +373,20 @@ const parseReleaseNoteChange = (value: unknown, where: string): ReleaseNoteChang
     }
 }
 
-const parsePublishingIndexContent = (raw: typeof publishingIndexJson): PublishingIndexContent => ({
-    releaseNotes: releaseNotesGenerated.releases.map((release): ReleaseNote => ({
+const parseReleaseNotes = (
+    releases: readonly {version: string; releasedAt: string; changes: readonly unknown[]}[],
+    where: string,
+): ReleaseNote[] =>
+    releases.map((release) => ({
         version: release.version,
         releasedAt: release.releasedAt,
         changes: release.changes.map((change, index) =>
-            parseReleaseNoteChange(change, `releaseNotes > ${release.version} > changes[${index}]`),
+            parseReleaseNoteChange(change, `${where} > ${release.version} > changes[${index}]`),
         ),
-    })),
+    }))
+
+const parsePublishingIndexContent = (raw: typeof publishingIndexJson): PublishingIndexContent => ({
+    releaseNotes: parseReleaseNotes(releaseNotesGenerated.releases, 'releaseNotes'),
     assetVersions: raw.assetVersions.map((asset): AssetVersion => {
         const {version, isCurrent} = findGeneratedVersion(asset.name)
         return {
@@ -411,6 +418,13 @@ const parsePublishingIndexContent = (raw: typeof publishingIndexJson): Publishin
 export const HOME_CONTENT: HomeContent = parseHomeContent(homeJson)
 
 export const PUBLISHING_INDEX_CONTENT: PublishingIndexContent = parsePublishingIndexContent(publishingIndexJson)
+
+// 버전 업데이트 아카이브 — 첫 버전(v0.1.0)부터 모든 릴리스. 퍼블리싱 인덱스의 releaseNotes 는 최근 30개만 싣는다.
+// 릴리스 때 scripts/compute-asset-versions.mjs 가 두 파일에 새 버전을 함께 넣어 동기화한다.
+export const RELEASE_NOTES_ARCHIVE: readonly ReleaseNote[] = parseReleaseNotes(
+    releaseNotesArchiveGenerated.releases,
+    'releaseNotesArchive',
+)
 
 const SCREEN_REGISTRY_SOURCE = screenRegistryJson.screens.map(parseScreenRegistryItem)
 
@@ -517,6 +531,7 @@ export type {
     UserType,
     CommonLayout,
     ExternalProject,
+    ReleaseNote,
     ReleaseNoteChange,
     ReleaseNoteHandoff,
     ScreenImplementationStatus,

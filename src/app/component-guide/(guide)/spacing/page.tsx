@@ -52,8 +52,34 @@ const CONTROL_HEIGHTS = Object.entries(SIZE_VALUES)
     .filter(([name, value]) => name.startsWith(CONTROL_HEIGHT_PREFIX) && typeof value === 'number')
     .map(([name, value]) => ({step: name.slice(CONTROL_HEIGHT_PREFIX.length), px: Number(value)}))
     .sort((a, b) => b.px - a.px)
-    .map(({step, px}) => `${step} ${px}`)
-    .join(' · ')
+
+// 이름만으로 쓰임을 알기 어려운 토큰 — 표에서 찾기 전에 먼저 읽도록 따로 풀어 둔다.
+const SPECIAL_SIZE_TOKENS = [
+    {name: 'action-check', description: 'ActionCheck와 ViewportFitLayout 장식의 최대 크기'},
+    {name: 'viewport-fit-decorative-min', description: '낮은 화면에서 그 장식이 줄어드는 최소 크기'},
+    {name: 'modal-max-h', description: '다이얼로그 최대 높이. 넘치는 내용은 안에서 스크롤됩니다'},
+    {name: 'header-top · sidebar-pl', description: '헤더 높이 · 사이드바 폭을 그대로 따라가는 참조 값'},
+] as const
+
+// 적용 규칙 카드 — 규칙마다 제목 · 핵심 코드 · 설명을 같은 자리에 둔다.
+const SPACING_RULES = [
+    {
+        title: '여백과 요소 간격',
+        code: 'p-4 · mx-6 · gap-8',
+        description: '숫자 유틸리티를 사용합니다.',
+    },
+    {
+        title: '컴포넌트 고정 크기',
+        code: 'h-control-h-md · size-icon-md',
+        description: '의미가 있는 토큰을 사용합니다.',
+    },
+    {
+        title: '직접 쓰는 CSS',
+        code: '--spacing(4) · var(--ds-spacing-토큰명)',
+        description:
+            '간격은 --spacing(n), 크기 토큰은 var(--ds-spacing-토큰명)으로 적습니다. px · rem 값을 직접 적지 않습니다.',
+    },
+] as const
 
 const SpacingGuidePage = () => (
     <GuidePageShell
@@ -61,36 +87,30 @@ const SpacingGuidePage = () => (
         description={<>{tokens.spacingBase}px 배수 간격과 의미가 있는 고정 크기 토큰입니다.</>}
     >
         <BaseCard variant="outlined">
-            <section aria-labelledby="spacing-usage" className="flex flex-col gap-4">
-                <div className="flex max-w-4xl flex-col gap-2">
+            <section aria-labelledby="spacing-usage" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
                     <h2 id="spacing-usage" className="typo-h4-bold text-foreground">
                         간격과 크기 구분
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
+                    <p className="typo-body-l-regular text-label-foreground">
                         여백은 숫자 유틸리티, 컴포넌트 크기는 이름이 있는 토큰을 사용합니다.
                     </p>
                 </div>
-                <dl className="grid gap-3 md:grid-cols-3">
-                    <div className="border-border flex flex-col gap-2 rounded-md border p-4">
-                        <dt className="typo-body-l-medium text-foreground">여백과 요소 간격</dt>
-                        <dd className="typo-body-l-regular text-foreground-subtle">
-                            <code>p-4</code> · <code>mx-6</code> · <code>gap-8</code>처럼 숫자 유틸리티를 사용합니다.
-                        </dd>
-                    </div>
-                    <div className="border-border flex flex-col gap-2 rounded-md border p-4">
-                        <dt className="typo-body-l-medium text-foreground">컴포넌트 고정 크기</dt>
-                        <dd className="typo-body-l-regular text-foreground-subtle">
-                            <code>h-control-h-md</code> · <code>size-icon-md</code>처럼 의미가 있는 토큰을 사용합니다.
-                        </dd>
-                    </div>
-                    <div className="border-border flex flex-col gap-2 rounded-md border p-4">
-                        <dt className="typo-body-l-medium text-foreground">직접 쓰는 CSS</dt>
-                        <dd className="typo-body-l-regular text-foreground-subtle">
-                            간격은 <code>--spacing(4)</code>, 크기 토큰은 <code>var(--ds-spacing-토큰명)</code>으로
-                            적습니다. px · rem 값을 직접 적지 않습니다.
-                        </dd>
-                    </div>
-                </dl>
+                {/* 규칙마다 같은 자리에 같은 항목(제목 · 핵심 코드 · 설명)을 둔다. */}
+                <div className="grid gap-4 md:grid-cols-3">
+                    {SPACING_RULES.map((rule) => (
+                        <div
+                            key={rule.title}
+                            className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5"
+                        >
+                            <h3 className="typo-body-xl-bold text-foreground">{rule.title}</h3>
+                            <code className="bg-card text-foreground border-subtle-3 w-fit max-w-full rounded-xs border px-2 py-1 font-mono text-sm break-all">
+                                {rule.code}
+                            </code>
+                            <p className="text-label-foreground">{rule.description}</p>
+                        </div>
+                    ))}
+                </div>
             </section>
         </BaseCard>
 
@@ -140,35 +160,49 @@ const SpacingGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="size-scale" className="flex flex-col gap-4">
-                <div className="flex max-w-4xl flex-col gap-2">
+            <section aria-labelledby="size-scale" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
                     <h2 id="size-scale" className="typo-h4-bold text-foreground">
                         고정 크기 토큰
                     </h2>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        아이콘·컨트롤·레이아웃처럼 이름으로 부르는 크기입니다. 토큰명 앞에 <code>size-</code> ·{' '}
-                        <code>h-</code> · <code>w-</code> · <code>min-w-</code> · <code>max-h-</code>를 붙여 씁니다(예:{' '}
-                        <code>h-control-h-md</code>).
-                    </p>
-                    <p className="typo-body-l-regular text-foreground-subtle">
-                        컨트롤 높이(px): <code>{CONTROL_HEIGHTS}</code>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        아이콘 · 컨트롤 · 레이아웃처럼 이름으로 부르는 크기입니다. 토큰명 앞에 접두사를 붙여 씁니다.
                     </p>
                 </div>
-                <ul className="typo-body-l-regular text-foreground-subtle flex list-disc flex-col gap-1 pl-5">
-                    <li>
-                        <code>action-check</code> — ActionCheck와 ViewportFitLayout 장식의 최대 크기
-                    </li>
-                    <li>
-                        <code>viewport-fit-decorative-min</code> — 낮은 화면에서 그 장식이 줄어드는 최소 크기
-                    </li>
-                    <li>
-                        <code>modal-max-h</code> — 다이얼로그 최대 높이. 넘치는 내용은 안에서 스크롤됩니다
-                    </li>
-                    <li>
-                        <code>header-top</code> · <code>sidebar-pl</code> — 헤더 높이 · 사이드바 폭을 그대로 따라가는
-                        참조 값
-                    </li>
-                </ul>
+
+                {/* 쓰는 법 한 줄 — 접두사와 토큰명이 어떻게 합쳐지는지 먼저 보여 준다. */}
+                <p className="border-primary/30 bg-primary-subtle text-foreground overflow-x-auto rounded-sm border p-5 text-center font-mono text-sm font-semibold">
+                    size- · h- · w- · min-w- · max-h- + 토큰명 → h-control-h-md
+                </p>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                    <div className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5">
+                        <h3 className="typo-body-xl-bold text-foreground">컨트롤 높이</h3>
+                        <dl className="border-subtle-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 border-t pt-3">
+                            {CONTROL_HEIGHTS.map(({step, px}) => (
+                                <div key={step} className="contents">
+                                    <dt className="text-foreground font-mono text-sm font-semibold">
+                                        {CONTROL_HEIGHT_PREFIX}
+                                        {step}
+                                    </dt>
+                                    <dd className="text-label-foreground font-mono text-sm">{px}px</dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
+                    <div className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5">
+                        <h3 className="typo-body-xl-bold text-foreground">쓰임이 정해진 토큰</h3>
+                        <dl className="border-subtle-3 flex flex-col gap-3 border-t pt-3">
+                            {SPECIAL_SIZE_TOKENS.map((token) => (
+                                <div key={token.name} className="flex flex-col gap-0.5">
+                                    <dt className="text-foreground font-mono text-sm font-semibold">{token.name}</dt>
+                                    <dd className="text-label-foreground">{token.description}</dd>
+                                </div>
+                            ))}
+                        </dl>
+                    </div>
+                </div>
+
                 <Table
                     caption="명명 크기 토큰의 미리보기와 값"
                     columns={SIZE_COLUMNS}

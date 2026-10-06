@@ -1,5 +1,12 @@
 'use client'
 
+import {
+    FormResetButton,
+    FormSubmitResult,
+    formatSubmitResult,
+    withFormReset,
+    type FormResetProps,
+} from '@/components/custom/form-submit-result'
 import {useState} from 'react'
 import {Combobox, type ComboboxOption} from '@/components/composite/combobox'
 import {Button} from '@/components/ui/button'
@@ -17,15 +24,16 @@ const SUPPORT_PROGRAMS: ComboboxOption[] = [
     {value: 'technology-evaluation', label: '기술평가'},
 ]
 
-const ComboboxFormDemo = () => {
+const ComboboxFormDemoBody = ({onReset}: FormResetProps) => {
     const [organization, setOrganization] = useState('')
     const [supportProgram, setSupportProgram] = useState('')
     const [organizationError, setOrganizationError] = useState(false)
     const [supportProgramError, setSupportProgramError] = useState(false)
-    const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+    const [submittedData, setSubmittedData] = useState<string | null>(null)
 
     return (
         <form
+            onReset={onReset}
             className="flex flex-col gap-4"
             autoComplete="off"
             noValidate
@@ -47,7 +55,7 @@ const ComboboxFormDemo = () => {
 
                 const formData = new FormData(event.currentTarget)
                 setSubmittedData(
-                    JSON.stringify({
+                    formatSubmitResult({
                         organization: formData.get('organization'),
                         supportProgram: formData.get('supportProgram'),
                         receptionOffice: formData.get('receptionOffice'),
@@ -126,22 +134,22 @@ const ComboboxFormDemo = () => {
 
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                    <Button type="submit" variant="default" size="sm">
-                        선택 내용 확인
-                    </Button>
-                    <span className="typo-body-l-regular text-muted-foreground">
+                    <div className="flex items-center gap-3">
+                        <Button type="submit" variant="default" size="sm">
+                            선택 내용 확인
+                        </Button>
+                        <FormResetButton />
+                    </div>
+                    <span className="typo-body-l-regular text-label-foreground">
                         입력형·드롭다운 검색형·readOnly 값이 각 Combobox의 name으로 제출됩니다.
                     </span>
                 </div>
-                <output
-                    className="typo-body-l-regular bg-surface border-border text-muted-foreground min-h-10 rounded-md border px-3 py-2 break-all"
-                    aria-live="polite"
-                >
-                    {submittedData}
-                </output>
+                <FormSubmitResult data={submittedData} />
             </div>
         </form>
     )
 }
+
+const ComboboxFormDemo = withFormReset(ComboboxFormDemoBody)
 
 export default ComboboxFormDemo

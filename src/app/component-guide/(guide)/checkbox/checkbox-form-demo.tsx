@@ -1,5 +1,12 @@
 'use client'
 
+import {
+    FormResetButton,
+    FormSubmitResult,
+    formatSubmitResult,
+    withFormReset,
+    type FormResetProps,
+} from '@/components/custom/form-submit-result'
 import {useRef, useState, type ComponentProps} from 'react'
 import {cn} from '@/lib/utils'
 import {FIELD_FOCUS_RING} from '@/constants/form'
@@ -22,8 +29,8 @@ const INTEREST_OPTIONS = [
     {value: 'security', label: '보안'},
 ] as const
 
-const CheckboxFormDemo = () => {
-    const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+const CheckboxFormDemoBody = ({onReset}: FormResetProps) => {
+    const [submittedData, setSubmittedData] = useState<string | null>(null)
     const [selectedInterests, setSelectedInterests] = useState(() => new Set<string>(['ai']))
     const [privacyChecked, setPrivacyChecked] = useState(false)
     const [privacyError, setPrivacyError] = useState(false)
@@ -40,6 +47,7 @@ const CheckboxFormDemo = () => {
 
     return (
         <form
+            onReset={onReset}
             className="flex flex-col gap-4"
             autoComplete="off"
             noValidate
@@ -64,7 +72,7 @@ const CheckboxFormDemo = () => {
                     privacy: formData.get('privacy'),
                     terms: formData.get('terms'),
                 }
-                setSubmittedData(JSON.stringify(result))
+                setSubmittedData(formatSubmitResult(result))
             }}
         >
             <FieldSet>
@@ -191,22 +199,22 @@ const CheckboxFormDemo = () => {
 
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                    <Button type="submit" variant="default" size="sm">
-                        선택 내용 확인
-                    </Button>
-                    <span className="typo-body-l-regular text-muted-foreground">
+                    <div className="flex items-center gap-3">
+                        <Button type="submit" variant="default" size="sm">
+                            선택 내용 확인
+                        </Button>
+                        <FormResetButton />
+                    </div>
+                    <span className="typo-body-l-regular text-label-foreground">
                         Indeterminate는 요약 상태이며, 하위 선택값은 FormData.getAll()로 확인합니다.
                     </span>
                 </div>
-                <output
-                    className="typo-body-l-regular bg-surface border-border text-muted-foreground min-h-10 rounded-md border px-3 py-2 break-all"
-                    aria-live="polite"
-                >
-                    {submittedData}
-                </output>
+                <FormSubmitResult data={submittedData} />
             </div>
         </form>
     )
 }
+
+const CheckboxFormDemo = withFormReset(CheckboxFormDemoBody)
 
 export default CheckboxFormDemo

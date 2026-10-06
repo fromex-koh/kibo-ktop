@@ -3,13 +3,13 @@
 import {useState} from 'react'
 import {Pagination} from '@/components/composite/pagination'
 
-// 기본 데모 — 9페이지가 모두 보이는 시안 구성. PC 페이지 영역은 번호·말줄임표 최대 10개까지 노출된다.
+// 기본 데모 — 9페이지가 모두 보인다(maxVisibleItems 기본 10 이하).
 export const PaginationBasicDemo = () => {
     const [page, setPage] = useState(1)
     return (
         <div className="flex flex-col items-center gap-3">
             <Pagination page={page} total={9} onPageChange={setPage} siblingCount={2} />
-            <p className="typo-body-l-regular text-muted-foreground">현재 {page} 페이지</p>
+            <p className="typo-body-l-regular text-label-foreground">현재 {page} 페이지</p>
         </div>
     )
 }
@@ -20,7 +20,7 @@ export const PaginationEllipsisDemo = () => {
     return (
         <div className="flex flex-col items-center gap-3">
             <Pagination page={page} total={24} onPageChange={setPage} />
-            <p className="typo-body-l-regular text-muted-foreground">현재 {page} / 24 페이지</p>
+            <p className="typo-body-l-regular text-label-foreground">현재 {page} / 24 페이지</p>
         </div>
     )
 }

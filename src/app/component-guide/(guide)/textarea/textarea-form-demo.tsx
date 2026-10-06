@@ -1,19 +1,27 @@
 'use client'
 
+import {
+    FormResetButton,
+    FormSubmitResult,
+    formatSubmitResult,
+    withFormReset,
+    type FormResetProps,
+} from '@/components/custom/form-submit-result'
 import {useRef, useState} from 'react'
 import {TextareaCounter} from '@/components/composite/textarea-counter'
 import {Button} from '@/components/ui/button'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 import {Textarea} from '@/components/ui/textarea'
 
-const TextareaFormDemo = () => {
+const TextareaFormDemoBody = ({onReset}: FormResetProps) => {
     const [inquiry, setInquiry] = useState('')
     const [inquiryError, setInquiryError] = useState(false)
-    const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+    const [submittedData, setSubmittedData] = useState<string | null>(null)
     const inquiryRef = useRef<HTMLTextAreaElement>(null)
 
     return (
         <form
+            onReset={onReset}
             className="flex flex-col gap-4"
             autoComplete="off"
             noValidate
@@ -29,7 +37,7 @@ const TextareaFormDemo = () => {
 
                 const formData = new FormData(event.currentTarget)
                 setSubmittedData(
-                    JSON.stringify({
+                    formatSubmitResult({
                         inquiry: formData.get('inquiry'),
                         processingNote: formData.get('processingNote'),
                     }),
@@ -75,22 +83,22 @@ const TextareaFormDemo = () => {
 
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                    <Button type="submit" variant="default" size="sm">
-                        입력 내용 확인
-                    </Button>
+                    <div className="flex items-center gap-3">
+                        <Button type="submit" variant="default" size="sm">
+                            입력 내용 확인
+                        </Button>
+                        <FormResetButton />
+                    </div>
                     <span className="typo-body-l-regular text-muted-foreground">
                         일반 입력값과 readOnly 값 모두 각 Textarea의 name으로 제출됩니다.
                     </span>
                 </div>
-                <output
-                    className="typo-body-l-regular bg-surface border-border text-muted-foreground min-h-10 rounded-md border px-3 py-2 break-all"
-                    aria-live="polite"
-                >
-                    {submittedData}
-                </output>
+                <FormSubmitResult data={submittedData} />
             </div>
         </form>
     )
 }
+
+const TextareaFormDemo = withFormReset(TextareaFormDemoBody)
 
 export default TextareaFormDemo

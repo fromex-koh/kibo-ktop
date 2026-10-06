@@ -1,195 +1,94 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import PropsTable from '@/components/custom/props-table'
 
 export const metadata: Metadata = {title: '맨 위로 버튼 (ScrollToTopButton)'}
 
-const USAGE_CODE = `{/* 컴포넌트 가이드 셸(component-guide/(guide)/layout.tsx)에 한 번만 마운트되어 있다 */}
+const SECTION_HEADER = 'flex max-w-4xl flex-col gap-2'
+const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
+
+const USAGE_CODE = `import {ScrollToTopButton} from '@/components/composite/scroll-to-top-button'
+
+{/* 레이아웃에 한 번만 둔다 — 컴포넌트 가이드는 component-guide/(guide)/layout.tsx 에 있다 */}
 <ScrollToTopButton />`
 
 const CUSTOM_LABEL_CODE = `<ScrollToTopButton label="맨 위로 스크롤" />`
 
-const STYLE_CODE = `<Button
-  variant="default"
-  size="icon"
-  onClick={handleClick}
-  aria-label={label}
-  className={cn(
-    'z-sticky shadow-1 fixed right-6 bottom-6 rounded-full',
-    'motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-bottom-2 motion-safe:duration-300',
-    className,
-  )}
->
-  <ChevronUp aria-hidden="true" />
-</Button>`
-
 const PROPS_ITEMS = [
-    {
-        name: 'label',
-        type: 'string',
-        defaultValue: "'맨 위로 이동'",
-        description: '아이콘 전용 버튼의 접근 가능한 이름으로 사용할 텍스트입니다.',
-    },
-    {
-        name: 'className',
-        type: 'string',
-        defaultValue: '-',
-        description: 'Button에 병합할 추가 클래스입니다. 위치나 스타일을 확장할 때 사용합니다.',
-    },
+    ['ScrollToTopButton', 'label', '스크린리더가 읽는 버튼 이름입니다.', "'맨 위로 이동'", 'string'],
+    ['ScrollToTopButton', 'className', '버튼에 덧붙일 클래스입니다. 위치를 바꿀 때 씁니다.', '-', 'string'],
 ] as const
 
-// 맨 위로 버튼 — 스크롤이 SCROLL_THRESHOLD_PX(400px)를 넘으면 우측 하단에 나타나는 플로팅 버튼.
-// 화면마다 각자 두지 않고 컴포넌트 가이드 셸(layout.tsx)에 한 번만 마운트해 모든 가이드 페이지가 공유한다 —
-// 지금 이 페이지도 아래로 스크롤하면 우측 하단에서 실제 동작을 확인할 수 있다.
 const ScrollToTopButtonGuidePage = () => (
     <GuidePageShell
         title="맨 위로 버튼 (ScrollToTopButton)"
         description="일정 높이 이상 스크롤하면 우측 하단에 나타나는 플로팅 버튼입니다. 누르면 문서 맨 위로 스크롤합니다."
     >
         <BaseCard>
-            <section aria-labelledby="sttb-usage" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="sttb-usage" className="flex flex-col gap-6">
+                <div className={SECTION_HEADER}>
                     <h2 id="sttb-usage" className="typo-h4-bold">
-                        사용 예시
+                        기본 사용
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        이 페이지를 <code className="font-mono">400px</code> 이상 아래로 스크롤해 보세요 — 우측 하단에
-                        버튼이 나타납니다. 개별 화면마다 넣지 않고, 컴포넌트 가이드 셸에 한 번만 마운트해 모든 페이지가
-                        공유합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        화면마다 넣지 않고 레이아웃에 한 번만 둡니다. props 없이 그대로 씁니다.
                     </p>
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="sttb-behavior" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="sttb-behavior" className="typo-h4-bold">
-                        동작
-                    </h2>
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    <div className={BLOCK}>
+                        <h3 className="typo-title-m-bold text-foreground">동작</h3>
+                        <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                            <li>
+                                문서(<code>window</code>) 스크롤이 400px 를 넘으면 나타납니다. 별도 스크롤 컨테이너 안의
+                                스크롤에는 반응하지 않습니다.
+                            </li>
+                            <li>
+                                화면 오른쪽 아래에 고정되는 원형 아이콘 버튼입니다. 누르면 문서 맨 위로 스크롤합니다.
+                            </li>
+                            <li>이 가이드 화면에도 들어 있습니다. 아래로 스크롤하면 오른쪽 아래에 나타납니다.</li>
+                        </ul>
+                    </div>
+                    <div className={BLOCK}>
+                        <h3 className="typo-title-m-bold text-foreground">라벨 바꾸기</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            버튼 이름의 기본값은 &quot;맨 위로 이동&quot;입니다. 다른 이름이 필요하면 <code>label</code>{' '}
+                            로 바꿉니다.
+                        </p>
+                        <CodeBlock code={CUSTOM_LABEL_CODE} language="tsx" copyLabel="복사" />
+                    </div>
                 </div>
-                <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-2 pl-5">
-                    <li>
-                        스크롤 리스너는 <code className="font-mono">window</code> 기준입니다. 프로젝트 레이아웃은 별도
-                        스크롤 컨테이너 없이 문서 자체가 스크롤됩니다.
-                    </li>
-                    <li>
-                        최초 렌더링과 스크롤할 때 <code className="font-mono">window.scrollY</code>를 확인하며,{' '}
-                        <code className="font-mono">400px</code>를 초과할 때만 버튼을 렌더링합니다.
-                    </li>
-                    <li>
-                        클릭하면 맨 위로 스크롤합니다. <code className="font-mono">prefers-reduced-motion</code> 을
-                        존중해 이 설정이 켜져 있으면 부드러운 스크롤 대신 즉시 이동합니다.
-                    </li>
-                </ul>
             </section>
         </BaseCard>
-
         <BaseCard>
-            <section aria-labelledby="sttb-label" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="sttb-label" className="typo-h4-bold">
-                        라벨 커스텀
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        기본 라벨은 &quot;맨 위로 이동&quot;입니다. 문맥에 맞게 바꿀 수 있습니다.
-                    </p>
-                </div>
-                <CodeBlock code={CUSTOM_LABEL_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="sttb-style" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="sttb-style" className="typo-h4-bold">
-                        스타일
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        프로젝트 Button의 default/icon 조합을 재사용합니다. 위치는 sticky 레이어 토큰으로 고정하고,
-                        그림자는 shadow-1 토큰을 사용하며 완전한 원형으로 표현합니다.
-                    </p>
-                </div>
-                <CodeBlock code={STYLE_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="sttb-accessibility" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="sttb-accessibility" className="typo-h4-bold">
+            <section aria-labelledby="sttb-a11y" className="flex flex-col gap-6">
+                <div className={SECTION_HEADER}>
+                    <h2 id="sttb-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        키보드 탐색과 모션 감소 설정을 모두 고려합니다.
-                    </p>
                 </div>
-                <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-2 pl-5">
-                    <li>보이지 않을 때는 DOM에서 제거되어 숨겨진 버튼이 Tab 순서에 포함되지 않습니다.</li>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        아이콘 전용 버튼은 <code>aria-label</code>로 접근 가능한 이름을 제공하고, 장식용 아이콘은{' '}
-                        <code>aria-hidden=&quot;true&quot;</code>로 제외합니다.
+                        아이콘만 있는 버튼이라 <code>label</code> 이 <code>aria-label</code> 로 들어가고 아이콘은{' '}
+                        <code>aria-hidden</code> 입니다[5.1.1].
                     </li>
-                    <li>
-                        진입 애니메이션은 <code>motion-safe:</code> 조건에서만 실행됩니다.
-                    </li>
-                    <li>프로젝트 Button의 공통 포커스 링을 그대로 사용합니다.</li>
+                    <li>보이지 않을 때는 렌더링되지 않아 화면 밖 버튼이 Tab 순서에 남지 않습니다[6.1.2].</li>
+                    <li>모션 감소 설정에서는 나타나는 효과가 꺼지고 맨 위로 즉시 이동합니다[6.3.1].</li>
                 </ul>
             </section>
         </BaseCard>
-
         <BaseCard>
-            <section aria-labelledby="sttb-props" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="sttb-props" className="flex flex-col gap-6">
+                <div className={SECTION_HEADER}>
                     <h2 id="sttb-props" className="typo-h4-bold">
-                        Props
+                        Props API
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">ScrollToTopButton 에 넘기는 속성입니다.</p>
                 </div>
-                <div className="bg-background border-border overflow-x-auto rounded-md border">
-                    <table className="w-full text-left">
-                        <caption className="sr-only">Props 목록</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Type
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Default
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Description
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {PROPS_ITEMS.map(({name, type, defaultValue, description}) => (
-                                <tr key={name} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular text-primary px-4 py-3 text-left font-mono font-normal whitespace-nowrap"
-                                    >
-                                        {name}
-                                    </th>
-                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
-                                        {type}
-                                    </td>
-                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {defaultValue}
-                                    </td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                        {description}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <PropsTable items={PROPS_ITEMS} caption="ScrollToTopButton Props 목록" />
             </section>
         </BaseCard>
     </GuidePageShell>

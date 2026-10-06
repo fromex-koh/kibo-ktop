@@ -18,7 +18,7 @@ export const SearchBarUsageDemo = () => {
         >
             <SearchBar name="keyword" label="사업자번호 검색" placeholder="사업자번호 또는 법인등록번호를 입력하세요" />
             {result !== null ? (
-                <p className="typo-body-l-regular text-muted-foreground">
+                <p className="typo-body-l-regular text-label-foreground">
                     검색어: <span className="text-foreground font-medium">{result || '(빈 값)'}</span>
                 </p>
             ) : null}

@@ -1173,6 +1173,90 @@
             "name": "이용내역"
         },
         {
+            "key": "corp-mypage-paid-services-payment-history-suspend",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/suspend",
+            "name": "이용중지 신청"
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-confirm",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/suspend-confirm",
+            "name": "이용중지 신청 확인"
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-change-confirm",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/suspend-change-confirm",
+            "name": "이용중지 변경 확인"
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-complete",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/suspend-complete",
+            "name": "이용중지 신청 완료"
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-change-complete",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/suspend-change-complete",
+            "name": "이용중지 변경 완료"
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-release-complete",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/suspend-release-complete",
+            "name": "이용중지 해제 완료"
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspending",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/suspending",
+            "name": "이용중지 중 case"
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspension-history",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/suspension-history",
+            "name": "이용중지 이력 있음 case"
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-refundable",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/refundable",
+            "name": "환불 가능 case"
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-change",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/suspend-change",
+            "name": "이용중지 변경"
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-unavailable-remaining-day",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/suspend-unavailable-remaining-day",
+            "name": "이용중지불가(잔여기간 1일)"
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-unavailable-free-pass",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/paid-services/payment-history/suspend-unavailable-free-pass",
+            "name": "이용중지불가(무료이용권)"
+        },
+        {
             "key": "corp-mypage-paid-services-refund-reason",
             "screenId": null,
             "userType": "기업",

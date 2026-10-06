@@ -2,13 +2,20 @@
 
 import {useRef, useState} from 'react'
 import {Lock} from 'lucide-react'
+import {
+    FormResetButton,
+    FormSubmitResult,
+    formatSubmitResult,
+    withFormReset,
+    type FormResetProps,
+} from '@/components/custom/form-submit-result'
 import {Button} from '@/components/ui/button'
 import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 import {ClearableInput} from '@/components/composite/clearable-input'
 import {InputGroup, InputGroupAddon, InputGroupInput} from '@/components/ui/input-group'
 
-const InputFormDemo = () => {
-    const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+const InputFormDemoBody = ({onReset}: FormResetProps) => {
+    const [submittedData, setSubmittedData] = useState<string | null>(null)
     const [nameError, setNameError] = useState(false)
     const [emailError, setEmailError] = useState(false)
     const [applicantCountError, setApplicantCountError] = useState(false)
@@ -21,6 +28,7 @@ const InputFormDemo = () => {
             className="flex flex-col gap-4"
             autoComplete="off"
             noValidate
+            onReset={onReset}
             onSubmit={(event) => {
                 event.preventDefault()
 
@@ -40,7 +48,7 @@ const InputFormDemo = () => {
                 }
 
                 setSubmittedData(
-                    JSON.stringify({
+                    formatSubmitResult({
                         applicantName: formData.get('applicantName'),
                         email: formData.get('email'),
                         applicantCount: formData.get('applicantCount'),
@@ -98,8 +106,9 @@ const InputFormDemo = () => {
                 <FieldLabel htmlFor="form-applicant-count" className="text-foreground font-bold">
                     신청 인원
                 </FieldLabel>
-                <div className="flex items-center gap-2">
-                    <ClearableInput
+                {/* 단위는 서비스 폼과 같은 방식으로 상자 안 오른쪽에 두고 값은 오른쪽 정렬한다. */}
+                <InputGroup>
+                    <InputGroupInput
                         ref={applicantCountRef}
                         id="form-applicant-count"
                         placeholder="0"
@@ -110,10 +119,12 @@ const InputFormDemo = () => {
                         aria-invalid={applicantCountError || undefined}
                         aria-describedby={applicantCountError ? 'form-applicant-count-error' : undefined}
                         onChange={() => setApplicantCountError(false)}
-                        className="flex-1 md:min-w-0"
+                        className="text-right"
                     />
-                    <span className="typo-body-xl-regular text-foreground shrink-0">명</span>
-                </div>
+                    <InputGroupAddon align="inline-end" className="text-foreground">
+                        명
+                    </InputGroupAddon>
+                </InputGroup>
                 {applicantCountError ? (
                     <FieldError id="form-applicant-count-error">신청 인원은 1명 이상 입력해 주세요.</FieldError>
                 ) : null}
@@ -142,19 +153,17 @@ const InputFormDemo = () => {
                     <Button type="submit" variant="default" size="sm">
                         입력 내용 확인
                     </Button>
+                    <FormResetButton />
                     <span className="typo-body-l-regular text-muted-foreground">
                         일반 입력값과 readOnly 값 모두 각 Input의 name으로 제출됩니다.
                     </span>
                 </div>
-                <output
-                    className="typo-body-l-regular bg-surface border-border text-muted-foreground min-h-10 rounded-md border px-3 py-2 break-all"
-                    aria-live="polite"
-                >
-                    {submittedData}
-                </output>
+                <FormSubmitResult data={submittedData} />
             </div>
         </form>
     )
 }
+
+const InputFormDemo = withFormReset(InputFormDemoBody)
 
 export default InputFormDemo

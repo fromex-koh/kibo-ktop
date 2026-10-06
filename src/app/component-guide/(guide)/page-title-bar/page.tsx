@@ -1,7 +1,10 @@
+// [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
+
 import type {Metadata} from 'next'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
+import PropsTable from '@/components/custom/props-table'
 import {PageTitleBar} from '@/components/composite/page-title-bar'
 import {Badge} from '@/components/ui/badge'
 import {
@@ -15,7 +18,18 @@ import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-sepa
 
 export const metadata: Metadata = {title: '페이지 타이틀 바 (PageTitleBar)'}
 
-const USAGE_CODE = `<PageTitleBar
+const USAGE_CODE = `import {PageTitleBar} from '@/components/composite/page-title-bar'
+import {Badge} from '@/components/ui/badge'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+} from '@/components/composite/breadcrumb'
+import {BreadcrumbDotSeparator} from '@/components/composite/breadcrumb-dot-separator'
+
+<PageTitleBar
   title="자가진단"
   badge={
     <Badge variant="solid" color="navy" shape="round" size="lg">
@@ -43,61 +57,24 @@ const USAGE_CODE = `<PageTitleBar
   }
 />`
 
-const STYLE_CODE = `<header
-  data-slot="page-title-bar"
-  className={cn('flex flex-wrap items-center justify-between gap-4', className)}
-  {...props}
->
-  <div data-slot="page-title-bar-heading" className="flex items-center gap-4">
-    <h1 className="typo-display-l-bold text-foreground">{title}</h1>
-    {badge}
-  </div>
-  {breadcrumb ? (
-    <div
-      data-slot="page-title-bar-nav"
-      className="inline-flex items-center rounded-full bg-surface px-6 py-3 shadow-1"
-    >
-      {breadcrumb}
-    </div>
-  ) : null}
-</header>`
-
 const PROPS_ITEMS = [
-    {
-        name: 'title',
-        type: 'ReactNode',
-        defaultValue: '-',
-        required: true,
-        description: '페이지 제목입니다. 내부 h1 요소의 콘텐츠로 렌더링됩니다.',
-    },
-    {
-        name: 'badge',
-        type: 'ReactNode',
-        defaultValue: '-',
-        required: false,
-        description: '제목 오른쪽에 배치할 선택 슬롯입니다. 일반적으로 Badge를 조합합니다.',
-    },
-    {
-        name: 'breadcrumb',
-        type: 'ReactNode',
-        defaultValue: '-',
-        required: false,
-        description: '오른쪽 알약 컨테이너에 배치할 선택 슬롯입니다. 일반적으로 Breadcrumb를 조합합니다.',
-    },
-    {
-        name: 'className',
-        type: 'string',
-        defaultValue: '-',
-        required: false,
-        description: '최상위 header 요소에 병합할 추가 클래스입니다.',
-    },
-    {
-        name: '...props',
-        type: "Omit<ComponentPropsWithoutRef<'header'>, 'title'>",
-        defaultValue: '-',
-        required: false,
-        description: 'title 충돌을 제외한 header 네이티브 속성을 최상위 요소에 전달합니다.',
-    },
+    ['PageTitleBar', 'title', '페이지 제목입니다(필수). h1 으로 렌더링됩니다.', '-', 'ReactNode'],
+    ['PageTitleBar', 'badge', '제목 옆에 붙는 배지 자리입니다. 보통 Badge 를 넣습니다.', 'undefined', 'ReactNode'],
+    [
+        'PageTitleBar',
+        'breadcrumb',
+        '알약 컨테이너 안에 놓이는 자리입니다. Breadcrumb 를 넣습니다.',
+        'undefined',
+        'ReactNode',
+    ],
+    ['PageTitleBar', 'className', '최상위 header 요소에 덧붙일 클래스입니다.', 'undefined', 'string'],
+    [
+        'PageTitleBar',
+        'header 속성',
+        'id · aria-label 등 네이티브 header 속성을 전달합니다(title 제외).',
+        '-',
+        "Omit<ComponentPropsWithoutRef<'header'>, 'title'>",
+    ],
 ] as const
 
 type DemoBreadcrumbProps = {
@@ -133,19 +110,22 @@ const DemoBreadcrumb = ({current, parent}: DemoBreadcrumbProps) => (
 const PageTitleBarGuidePage = () => (
     <GuidePageShell
         title="페이지 타이틀 바 (PageTitleBar)"
-        description="페이지 최상단의 가로 스트립입니다. 큰 페이지 제목과 분류 배지를 좌측에, 현재 위치를 알려주는 브레드크럼을 우측에 배치합니다."
+        description="서비스 페이지 맨 위에 페이지 제목 · 분류 배지 · 브레드크럼을 한 줄로 놓는 컴포넌트입니다."
     >
         <BaseCard>
-            <section aria-labelledby="ptb-usage" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="ptb-usage" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="ptb-usage" className="typo-h4-bold">
-                        사용 예시
+                        기본 사용
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        <code className="font-mono">title</code> 옆에 <code className="font-mono">Badge</code> 를,{' '}
-                        <code className="font-mono">breadcrumb</code> 슬롯에{' '}
-                        <code className="font-mono">Breadcrumb</code> 를 꽂아 조합합니다. 브레드크럼은 bg-surface +
-                        shadow-1 알약 컨테이너로 감싸 렌더됩니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code className="text-foreground font-mono">title</code>에 제목을,{' '}
+                        <code className="text-foreground font-mono">badge</code>에{' '}
+                        <code className="text-foreground font-mono">Badge</code>를,{' '}
+                        <code className="text-foreground font-mono">breadcrumb</code>에{' '}
+                        <code className="text-foreground font-mono">Breadcrumb</code>를 넘깁니다. 브레드크럼의 알약
+                        컨테이너는 자동으로 감싸집니다. 반응형은 <code>md</code>(768) 기준입니다. <code>md</code> 이상은
+                        제목과 배지가 왼쪽, 브레드크럼이 오른쪽이고 미만은 배지 · 제목 · 브레드크럼이 세로로 쌓입니다.
                     </p>
                 </div>
                 <div className="border-border rounded-md border p-6">
@@ -172,14 +152,15 @@ const PageTitleBarGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="ptb-compose" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="ptb-compose" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="ptb-compose" className="typo-h4-bold">
-                        조합 (Composition)
+                        조합 예시
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        슬롯에 넣는 컴포넌트를 바꿔 다양하게 구성합니다. 예: 동일한{' '}
-                        <code className="font-mono">Badge</code> 조합 + 배지 없는 페이지.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code className="text-foreground font-mono">badge</code>와{' '}
+                        <code className="text-foreground font-mono">breadcrumb</code>는 선택입니다. 넘기지 않으면 그
+                        자리는 렌더링되지 않습니다.
                     </p>
                 </div>
                 <div className="border-border rounded-md border p-6">
@@ -208,109 +189,37 @@ const PageTitleBarGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="ptb-style" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="ptb-style" className="typo-h4-bold">
-                        스타일
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        최상위 영역은 줄바꿈 가능한 flex 레이아웃이며, 제목은 프로젝트 타이포그래피와 표준 foreground
-                        슬롯을 사용합니다. 브레드크럼이 있을 때만 surface·shadow 토큰 기반의 알약 컨테이너를
-                        렌더링합니다.
-                    </p>
-                </div>
-                <CodeBlock code={STYLE_CODE} language="tsx" copyLabel="복사" />
-            </section>
-        </BaseCard>
-
-        <BaseCard>
-            <section aria-labelledby="ptb-accessibility" className="flex flex-col gap-4">
-                <div>
+            <section aria-labelledby="ptb-accessibility" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
                     <h2 id="ptb-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">
-                        페이지 제목과 현재 위치 정보를 문서 구조에 맞게 조합합니다.
+                    <p className="typo-body-l-regular text-label-foreground">
+                        제목 레벨과 읽는 순서는 컴포넌트가 처리합니다.
                     </p>
                 </div>
-                <ul className="typo-body-l-regular text-muted-foreground flex list-disc flex-col gap-2 pl-5">
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        <code>title</code>은 <code>h1</code>으로 렌더링되므로 페이지의 대표 제목을 전달합니다.
-                    </li>
-                    <li>한 페이지에서 PageTitleBar를 여러 개 사용해 h1이 중복되지 않도록 합니다.</li>
-                    <li>
-                        <code>breadcrumb</code> 슬롯에는 현재 위치를 알리는 <code>Breadcrumb</code>를 조합합니다.
+                        <code>title</code>은 <code>h1</code>으로, 전체는 <code>header</code> 요소로 렌더링됩니다
+                        [6.4.2]. 한 페이지에 하나만 두어 <code>h1</code>이 겹치지 않게 합니다.
                     </li>
                     <li>
-                        장식용 아이콘은 예시처럼 <code>aria-hidden=&quot;true&quot;</code>로 접근성 트리에서 제외합니다.
+                        좁은 화면에서 배지가 제목 위에 보여도 DOM 순서는 제목 → 배지라 읽는 순서가 유지됩니다[7.3.1].
                     </li>
                     <li>
-                        최상위 요소는 <code>header</code> 네이티브 속성을 전달받으므로 필요한 경우{' '}
-                        <code>aria-label</code>
-                        이나 <code>id</code>를 지정할 수 있습니다.
+                        브레드크럼의 접근성(<code>nav</code> 이름 · 현재 페이지 표시)은 Breadcrumb 컴포넌트가
+                        처리합니다. 배지에는 색만으로 뜻을 전하지 않도록 글자를 넣습니다[5.3.1].
                     </li>
                 </ul>
             </section>
         </BaseCard>
 
         <BaseCard>
-            <section aria-labelledby="ptb-props" className="flex flex-col gap-4">
-                <div>
-                    <h2 id="ptb-props" className="typo-h4-bold">
-                        Props
-                    </h2>
-                    <p className="typo-body-l-regular text-muted-foreground">PageTitleBar 에 넘기는 속성입니다.</p>
-                </div>
-                <div className="border-border overflow-x-auto rounded-md border">
-                    <table className="w-full border-collapse text-left">
-                        <caption className="sr-only">PageTitleBar Props 목록</caption>
-                        <thead>
-                            <tr className="border-border border-b bg-gray-100/25">
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Name
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Type
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Default
-                                </th>
-                                <th scope="col" className="typo-body-l-medium px-4 py-3">
-                                    Description
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {PROPS_ITEMS.map(({name, type, defaultValue, required, description}) => (
-                                <tr key={name} className="border-border bg-background border-b last:border-b-0">
-                                    <th
-                                        scope="row"
-                                        className="typo-body-l-regular text-primary px-4 py-3 text-left font-mono font-normal whitespace-nowrap"
-                                    >
-                                        {name}
-                                        {required ? (
-                                            <>
-                                                <span aria-hidden="true" className="text-destructive">
-                                                    *
-                                                </span>
-                                                <span className="sr-only"> (필수)</span>
-                                            </>
-                                        ) : null}
-                                    </th>
-                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono whitespace-nowrap">
-                                        {type}
-                                    </td>
-                                    <td className="typo-caption-regular text-muted-foreground px-4 py-3 font-mono">
-                                        {defaultValue}
-                                    </td>
-                                    <td className="typo-body-l-regular text-muted-foreground px-4 py-3">
-                                        {description}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+            <section aria-labelledby="ptb-props" className="flex flex-col gap-6">
+                <h2 id="ptb-props" className="typo-h4-bold">
+                    Props API
+                </h2>
+                <PropsTable items={PROPS_ITEMS} caption="PageTitleBar Props 목록" />
             </section>
         </BaseCard>
     </GuidePageShell>

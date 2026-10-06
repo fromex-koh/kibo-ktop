@@ -40,6 +40,7 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from '@/components/ui/sidebar'
+import {cn} from '@/lib/utils'
 
 // 공용 사이드 레이아웃 셸 — shadcn 공식 Sidebar(문서형: 브랜드 헤더 + submenu 나비 + 상단 브레드크럼).
 // 섹션 = 접히는 상위 메뉴(Collapsible), 항목 = 하위메뉴(SidebarMenuSub). md(≥768px)↑ 상시 레일 / 미만
@@ -83,10 +84,7 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
                 section.groups?.flatMap((group) => [
                     ...(group.items?.map((item) => ({categories: [section.title, group.title], ...item})) ?? []),
                     ...(group.groups?.flatMap((subgroup) =>
-                        (subgroup.items ?? []).map((item) => ({
-                            categories: [section.title, group.title, subgroup.title],
-                            ...item,
-                        })),
+                        collectNestedCrumbs(subgroup, [section.title, group.title]),
                     ) ?? []),
                 ]) ?? []
             return [...sectionItems, ...groupItems]
@@ -229,12 +227,27 @@ const SidebarLayout = ({title, navRootItem, navSections, navLabel, children}: Si
     )
 }
 
-const GuideNavNestedGroup = ({group}: {group: GuideNavItemGroup}) => (
-    <SidebarMenuSubItem className="mt-3 first:mt-1">
-        <p className="typo-caption-medium text-primary px-2 py-1">{group.title}</p>
+// 하위 묶음은 몇 단계든 내려갈 수 있다 — 묶음 안에 또 묶음(groups)이 있으면 한 단계 들여 같은 방식으로 그린다.
+// 첫 단계 묶음 제목은 파란 글자, 그 아래 단계는 옅은 글자와 왼쪽 선으로 위계를 가른다.
+const collectNestedCrumbs = (
+    group: GuideNavItemGroup,
+    categories: string[],
+): (GuideNavItem & {categories: string[]})[] => [
+    ...(group.items?.map((item) => ({categories: [...categories, group.title], ...item})) ?? []),
+    ...(group.groups?.flatMap((subgroup) => collectNestedCrumbs(subgroup, [...categories, group.title])) ?? []),
+]
+
+const GuideNavNestedGroup = ({group, isDeep = false}: {group: GuideNavItemGroup; isDeep?: boolean}) => (
+    <SidebarMenuSubItem className={isDeep ? 'border-subtle-3 mt-2 ml-2 border-l pl-1 first:mt-1' : 'mt-3 first:mt-1'}>
+        <p className={cn('typo-caption-medium px-2 py-1', isDeep ? 'text-foreground-subtle' : 'text-primary')}>
+            {group.title}
+        </p>
         <SidebarMenuSub className="mx-0 border-l-0 px-0">
             {group.items?.map((item) => (
                 <GuideNavSubItem key={item.href} item={item} />
+            ))}
+            {group.groups?.map((subgroup) => (
+                <GuideNavNestedGroup key={subgroup.title} group={subgroup} isDeep />
             ))}
         </SidebarMenuSub>
     </SidebarMenuSubItem>

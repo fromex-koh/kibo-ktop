@@ -1,7 +1,7 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
 import Link from 'next/link'
-import {ExternalLink, Info, TriangleAlert} from 'lucide-react'
+import {Bot, CircleAlert, ExternalLink, Info, MousePointerClick, TriangleAlert} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
 import {EmptyState} from '@/components/composite/empty-state'
 import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
@@ -22,11 +22,14 @@ import {
     type StructureNode,
     type UserType,
 } from '@/content/publishing-guide'
+import {cn} from '@/lib/utils'
 import IssueBadge from './issue-badge'
 import type {Audit} from './latest-audit'
 import auditData from '@/content/publishing-guide/accessibility-audit.json'
 import type {MarkupIssueKind} from './screen-markup-results'
 import AuditSummaryMetadata from './audit-summary-metadata'
+import QuickMenu from './quick-menu'
+import RecordFilter from './record-filter'
 
 const audit: Audit = auditData
 
@@ -260,8 +263,6 @@ const screenTotals = (screens: typeof SCREEN_MARKUP_RESULTS) => ({
     warnings: screens.reduce((sum, screen) => sum + screen.warnings, 0),
 })
 
-const SCREEN_TOTALS = screenTotals(SCREEN_MARKUP_RESULTS)
-
 type IndexedAuditScreen = {
     registryKey?: string
     path: string[]
@@ -383,12 +384,32 @@ const auditScopeDescription = (note: (typeof AUDIT_SCOPE_NOTES)[number]) => {
     return `${audited}${crossedOut}`
 }
 
+// 페이지가 없는 화면 목록은 모노톤으로 두고, 취소선 화면 목록만 색으로 구분한다.
+const AUDIT_SCOPE_MISSING_TONE_CLASS = 'border-foreground-subtle/30 bg-pastel-neutral/40'
+
+// 취소선 화면 목록은 퍼블리싱 인덱스의 강조 행과 같은 warning-50 배경을 쓴다(pastel-warning 은 light 에서 같은 값이고 dark 대응이 있다).
+const AUDIT_SCOPE_CROSSED_OUT_TONE_CLASS = 'border-warning/30 bg-pastel-warning'
+
 const AUDIT_SCOPE_ACCORDIONS = AUDIT_SCOPE_NOTES.flatMap((note) => [
     ...(note.missingScreens.length > 0
-        ? [{key: `${note.key}-missing`, label: note.label, screens: note.missingScreens}]
+        ? [
+              {
+                  key: `${note.key}-missing`,
+                  label: `[${note.label}] 페이지가 없는 화면`,
+                  screens: note.missingScreens,
+                  toneClassName: AUDIT_SCOPE_MISSING_TONE_CLASS,
+              },
+          ]
         : []),
     ...(note.crossedOutScreens.length > 0
-        ? [{key: `${note.key}-crossed-out`, label: `${note.label} 취소선`, screens: note.crossedOutScreens}]
+        ? [
+              {
+                  key: `${note.key}-crossed-out`,
+                  label: `[${note.label}] 취소선 화면`,
+                  screens: note.crossedOutScreens,
+                  toneClassName: AUDIT_SCOPE_CROSSED_OUT_TONE_CLASS,
+              },
+          ]
         : []),
 ])
 
@@ -480,30 +501,39 @@ const SUMMARY_GROUPS = SCREEN_GROUPS.map((group) => {
                 label: '외부 라이브러리 원인',
                 badge: '예외 검토',
                 color: 'success' as const,
-                value: `${libraryTotal}건`,
-                reasons: libraryIssues.map((issue) => ({
-                    head: `${ISSUE_LABEL[issue.kind].label} ${issue.count}건`,
-                    detail: `${issue.screens}개 화면 · ${issue.owner}`,
-                })),
+                total: libraryTotal,
+                reasons: libraryIssues.map((issue) => {
+                    const target = LIBRARY_ISSUE_TARGET[issue.kind]
+                    return {
+                        name: ISSUE_LABEL[issue.kind].label,
+                        count: issue.count,
+                        screens: issue.screens,
+                        note: issue.owner,
+                        href: target ? `#${target}` : undefined,
+                    }
+                }),
             },
             {
                 label: '프로젝트 수정 대상',
                 badge: projectTotal ? '수정 대상' : '발생 없음',
                 color: projectTotal ? ('error' as const) : ('neutral' as const),
-                value: `${projectTotal}건`,
+                total: projectTotal,
                 reasons: projectIssues.map((issue) => ({
-                    head: `${issue.title} ${issue.count}건`,
-                    detail: `${issue.screens}개 화면`,
+                    name: issue.title,
+                    count: issue.count,
+                    screens: issue.screens,
+                    href: `#project-issue-${issue.kind}`,
                 })),
             },
             {
                 label: '원인 확인 필요',
                 badge: '미분류',
-                color: 'warning' as const,
-                value: `${unknownTotal}건`,
+                color: 'secondary-purple' as const,
+                total: unknownTotal,
                 reasons: [...unknownGroups].map(([message, unknown]) => ({
-                    head: `${message} · ${unknown.count}건`,
-                    detail: `${unknown.paths.size}개 화면`,
+                    name: message,
+                    count: unknown.count,
+                    screens: unknown.paths.size,
                 })),
             },
         ],
@@ -1537,6 +1567,9 @@ const waveIssueControl = (owner: string) => {
     return owner
 }
 
+// 종류 배지에는 이름만 쓴다 — 기록의 라벨 끝 'N건' 은 오류·경고 상세에 건수가 따로 나오므로 뗀다.
+const waveKindName = (label: string) => label.replace(/\s\d+건$/, '')
+
 const WAVE_SCREEN_RECORDS = WAVE_SCREEN_RESULTS.map((screen) => ({
     ...screen,
     errors: countWaveIssues(screen.issues, 'error'),
@@ -1714,11 +1747,6 @@ const WAVE_RECORD_GROUPS = SCREEN_GROUPS.map((group) => {
         },
     }
 })
-const WAVE_RECORD_TOTALS = {
-    screens: WAVE_RECORD_GROUPS.reduce((sum, group) => sum + group.screens.length, 0),
-    errors: WAVE_RECORD_GROUPS.reduce((sum, group) => sum + group.totals.errors, 0),
-    warnings: WAVE_RECORD_GROUPS.reduce((sum, group) => sum + group.totals.warnings, 0),
-}
 // 최근 검사 요약의 화면 수도 화면별 검사 기록과 같은 전체 화면 수를 쓴다. 오류·경고 건수는 기록 그대로다.
 const WAVE_SCREEN_COUNT_BY_GROUP = new Map<string, number>(
     WAVE_RECORD_GROUPS.map((group) => [group.key, group.screens.length]),
@@ -1856,18 +1884,19 @@ const IssueTable = ({
     /** 화면 수를 셀 수 없는 표에서는 그 열을 뺀다. */
     showScreens?: boolean
 }) => (
-    <Table className="min-w-320 table-fixed">
+    <Table className="border-t-foreground-subtle border-b-subtle-3 min-w-240 table-fixed border-t border-b">
+        {/* 비고(판정 근거)까지 가로 스크롤 없이 보이도록 고정 폭은 좁은 열에만 주고 나머지는 비율로 나눈다. */}
         <colgroup>
-            <col className="w-36" />
-            <col className="w-112" />
-            <col className="w-24" />
-            {showScreens ? <col className="w-20" /> : null}
-            <col className="w-56" />
-            <col className="w-72" />
+            <col className="w-32" />
+            <col />
+            <col className="w-20" />
+            {showScreens ? <col className="w-16" /> : null}
+            <col className="w-1/5" />
+            <col className="w-1/4" />
         </colgroup>
         <TableCaption className="sr-only">{caption}</TableCaption>
         <TableHeader>
-            <TableRow className="bg-muted hover:bg-muted">
+            <TableRow className="border-subtle-3 bg-primary-subtle hover:bg-primary-subtle [&_th]:text-foreground [&_th]:font-bold">
                 <TableHead scope="col">등급</TableHead>
                 <TableHead scope="col">검사기 메시지</TableHead>
                 <TableHead scope="col" className="text-center">
@@ -1884,7 +1913,7 @@ const IssueTable = ({
         </TableHeader>
         <TableBody>
             {issues.map((issue) => (
-                <TableRow key={issue.message}>
+                <TableRow key={issue.message} className="border-subtle-3">
                     <TableCell className="align-top">
                         <IssueBadge level={issue.level} />
                     </TableCell>
@@ -1901,6 +1930,7 @@ const IssueTable = ({
     </Table>
 )
 
+// 글자 위계: 카드 제목 24 > 절 제목 20 > 카드 설명 · 아코디언 제목 · 항목 이름 16 > 표 · 본문 14 > 코드 12.
 // 절 본문 — 항목마다 가로선으로 갈라 둔다. 여러 항목을 간격만으로 띄우면 어디까지가 한 항목인지
 // 흐려지고, 라벨이 본문에 묻힌다.
 type DetailRow = {term: string; body: ReactNode}
@@ -1909,7 +1939,7 @@ const DetailList = ({rows}: {rows: readonly DetailRow[]}) => (
     <dl className="divide-subtle-3 flex flex-col divide-y">
         {rows.map((row) => (
             <div key={row.term} className="grid gap-x-3 gap-y-1 py-4 first:pt-0 last:pb-0 md:grid-cols-[7rem_1fr]">
-                <dt className="font-bold">{row.term}</dt>
+                <dt className="typo-body-xl-bold">{row.term}</dt>
                 <dd className="min-w-0">{row.body}</dd>
             </div>
         ))}
@@ -1918,11 +1948,16 @@ const DetailList = ({rows}: {rows: readonly DetailRow[]}) => (
 
 // 라이브러리별 검사 표는 바로 비교할 수 있게 두고, 긴 원인·조치·근거만 필요할 때 펼쳐 본다.
 const LibraryDetailAccordion = ({rows}: {rows: readonly DetailRow[]}) => (
+    // 겉은 근거를 여는 자리임이 눈에 띄도록 표 머리글(옅은 파랑)과도, 성공·오류·경고 같은 상태 색과도 겹치지 않는 옅은 살구색(orange 팔레트) 면과 테두리를 쓰고, 펼친 본문은 흰 면에 올려 긴 글이 배경색에 묻히지 않게 한다.
     <Accordion type="single" collapsible className="gap-0">
-        <AccordionItem value="details" className="border-subtle-3 rounded-sm border bg-transparent px-4 py-3">
-            <AccordionTrigger className="text-sm! leading-5! font-bold!">발생 이유 · 조치 및 근거</AccordionTrigger>
-            <AccordionContent className="mt-3 pt-3 text-sm! leading-5!">
-                <DetailList rows={rows} />
+        <AccordionItem value="details" className="rounded-sm border border-orange-600/40 bg-orange-500/10 px-4 py-1">
+            <AccordionTrigger className="text-foreground py-2 text-base! leading-6! font-bold!">
+                발생 이유 · 조치 및 근거
+            </AccordionTrigger>
+            <AccordionContent className="mt-0 border-0 pt-1 pb-3 text-sm! leading-6!">
+                <div className="bg-card rounded-sm p-5">
+                    <DetailList rows={rows} />
+                </div>
             </AccordionContent>
         </AccordionItem>
     </Accordion>
@@ -1978,74 +2013,325 @@ const ReferenceLink = ({href, children}: {href: string; children: string}) => (
     </a>
 )
 
+// 화면별 검사 기록의 행 — 보일 행은 RecordFilter 가 조건·페이지에 맞춰 고른다.
+const RECORD_ROW_CLASS = 'border-subtle-3'
+
+// 플로팅 퀵메뉴 항목 — 검수자는 화면별 기록과 원인 절을 오가며 대조하므로 긴 문서를 훑지 않고 건너뛰게 한다.
+type SectionNavGroup = {label: string; links: readonly {href: string; label: string}[]}
+
+const W3C_NAV_GROUPS: readonly SectionNavGroup[] = [
+    {
+        label: '검사 결과',
+        links: [
+            {href: '#w3c-summary', label: '최근 검사 요약'},
+            {href: '#w3c-records', label: '화면별 검사 기록'},
+        ],
+    },
+    {
+        label: '외부 라이브러리 원인',
+        links: [
+            {href: '#library-empty-option', label: '[Radix UI Select] 빈 option'},
+            {href: '#library-select-required', label: '[Radix UI Select] required select'},
+            ...(NAV_ROLE_ISSUES.length > 0
+                ? [{href: '#library-nav-role', label: '[shadcn Pagination] nav role 경고'}]
+                : []),
+            {href: '#library-sonner', label: '[sonner] CSS Parse Error · style type 경고'},
+            {href: '#library-dialog', label: '[Radix 모달] 배경 감춤 · 스크롤 잠금 스타일'},
+            {href: '#library-chart', label: '[recharts · shadcn chart] SVG 속성 · div 안의 style'},
+        ],
+    },
+    {label: '프로젝트 원인', links: [{href: '#w3c-project', label: '프로젝트 원인'}]},
+]
+
+const WAVE_NAV_GROUPS: readonly SectionNavGroup[] = [
+    {
+        label: '검사 결과',
+        links: [
+            {href: '#wave-summary', label: '최근 검사 요약'},
+            {href: '#wave-records', label: '화면별 검사 기록'},
+        ],
+    },
+    {
+        label: '외부 라이브러리 원인',
+        links: [
+            {href: '#wave-radio', label: '[Radix RadioGroup] Missing form label'},
+            {href: '#wave-checkbox', label: '[Radix Checkbox] Missing form label'},
+            {href: '#wave-select-error', label: '[Radix Select] Missing form label'},
+            {href: '#wave-select-warning', label: '[Radix Select] Select missing label'},
+        ],
+    },
+]
+
+const FRONTEND_VERSIONS: readonly {name: string; note?: string}[] = [
+    {name: 'Next.js 16.2.9'},
+    {name: 'React 19.2.4'},
+    {name: 'radix-ui 1.6.2', note: 'shadcn/ui 기반 UI 라이브러리'},
+    {name: 'Recharts 3.8.0', note: 'shadcn/ui 차트에서 사용하는 그래프 라이브러리'},
+]
+
+// 최근 검사 요약 — 위 줄은 전체 수치, 아래는 원인별 분류다. 0건인 분류는 배지와 건수 한 줄로만 두고,
+// 건수가 있는 분류만 종류별 표를 펼친다(종류 이름을 누르면 그 원인의 근거 절로 이동).
+type SummaryReason = {name: string; count: number; screens: number; note?: string; href?: string}
+type SummaryCause = {
+    label: string
+    badge: string
+    color: 'success' | 'error' | 'neutral' | 'secondary-purple'
+    total: number
+    reasons: readonly SummaryReason[]
+}
+
+// 전체 수치 카드의 배색 — 검사한 화면(모노톤) · 오류(빨강) · 경고(주황) 순서다. 뜻은 라벨 글자로도 드러난다[5.3.1].
+const SUMMARY_TOTAL_TONE_CLASS = [
+    'border-foreground bg-pastel-neutral/40',
+    'border-error/30 bg-pastel-error/40',
+    'border-warning/30 bg-pastel-warning/40',
+]
+
+// 전체 수치 카드 — 최근 검사 요약과 화면별 검사 기록의 합계가 같은 모양을 쓴다.
+const TotalTiles = ({totals}: {totals: readonly {label: string; value: string}[]}) => (
+    <dl className="grid grid-cols-3 gap-3">
+        {totals.map((total, index) => (
+            <div
+                key={total.label}
+                className={cn(
+                    'flex min-w-0 flex-col gap-1 rounded-sm border p-4',
+                    SUMMARY_TOTAL_TONE_CLASS[index % SUMMARY_TOTAL_TONE_CLASS.length],
+                )}
+            >
+                <dt className="typo-body-s-regular text-foreground-subtle">{total.label}</dt>
+                <dd className="typo-title-l-bold text-foreground">{total.value}</dd>
+            </div>
+        ))}
+    </dl>
+)
+
+const AuditSummary = ({
+    caption,
+    noteHeader,
+    totals,
+    causes,
+}: {
+    caption: string
+    noteHeader: string
+    totals: readonly {label: string; value: string}[]
+    causes: readonly SummaryCause[]
+}) => (
+    <div className="flex flex-col gap-4">
+        <TotalTiles totals={totals} />
+        <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y rounded-sm border">
+            {causes.map((cause) => (
+                <section key={cause.label} className="flex flex-col gap-3 p-5">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <Badge color={cause.color}>{cause.badge}</Badge>
+                        <h4 className="font-bold">{cause.label}</h4>
+                        <p className="typo-title-m-bold ml-auto">{cause.total}건</p>
+                    </div>
+                    {cause.reasons.length > 0 ? (
+                        // InfoTable 은 이름 칸이 왼쪽에 서는 '항목: 값' 표라 열 머리글을 둘 수 없다 —
+                        // 같은 배색(위 진한 선 · 옅은 파란 머리글 · 흰 값 칸 · subtle-3 줄)을 열 머리글 표에 입힌다.
+                        <Table className="border-t-foreground-subtle border-b-subtle-3 table-fixed border-t border-b">
+                            <colgroup>
+                                <col />
+                                <col className="w-20" />
+                                <col className="w-20" />
+                                <col className="w-2/5" />
+                            </colgroup>
+                            <TableCaption className="sr-only">
+                                {caption} — {cause.label}
+                            </TableCaption>
+                            <TableHeader>
+                                <TableRow className="border-subtle-3 bg-primary-subtle hover:bg-primary-subtle">
+                                    {['종류', '건수', '화면', noteHeader].map((header) => (
+                                        <TableHead
+                                            key={header}
+                                            scope="col"
+                                            className="text-foreground text-center font-bold"
+                                        >
+                                            {header}
+                                        </TableHead>
+                                    ))}
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {cause.reasons.map((reason) => (
+                                    <TableRow key={reason.name} className="border-subtle-3 hover:bg-transparent">
+                                        <TableCell className="text-center font-bold break-words whitespace-normal">
+                                            {reason.href ? (
+                                                <a
+                                                    href={reason.href}
+                                                    className="text-primary focus-visible:ring-ring rounded-xs underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                                                >
+                                                    {reason.name}
+                                                </a>
+                                            ) : (
+                                                reason.name
+                                            )}
+                                        </TableCell>
+                                        <TableCell className="text-center font-bold tabular-nums">
+                                            {reason.count}
+                                        </TableCell>
+                                        <TableCell className="text-center tabular-nums">{reason.screens}</TableCell>
+                                        <TableCell className="text-label-foreground text-center break-words whitespace-normal">
+                                            {reason.note ?? '-'}
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
+                    ) : null}
+                </section>
+            ))}
+        </div>
+    </div>
+)
+
+// 종류 배지 앞 아이콘 — 색만으로 오류·경고를 가르지 않도록 모양과 [오류]·[경고] 글자를 함께 둔다[5.3.1].
+const KindLevelIcon = ({level}: {level: 'error' | 'warning'}) => {
+    const Icon = level === 'error' ? CircleAlert : TriangleAlert
+    return (
+        <>
+            <Icon aria-hidden="true" />
+            <span>[{level === 'error' ? '오류' : '경고'}]</span>
+        </>
+    )
+}
+
 const AccessibilityExceptionsPage = () => (
     <GuidePageShell
         title="접근성 검사 예외사항"
         description="접근성 증적 작성 시 WAVE·W3C 검사 메시지의 발생 원인과 예외 검토 근거를 확인하는 안내입니다."
     >
         <BaseCard title={cardHeading('검사 방법')}>
-            <div className="flex flex-col gap-4">
-                <dl className="grid gap-3 md:grid-cols-[10rem_1fr]">
+            <dl className="flex flex-col gap-6">
+                <div className="grid gap-x-4 gap-y-2 md:grid-cols-[10rem_1fr]">
                     <dt className="font-bold">검사 대상</dt>
                     <dd>
                         탄소를 제외한 기업·기관 화면을 <code className="font-mono">next build</code> 후 운영 모드로
                         실행하여, 서버가 응답한 초기 HTML을 검사합니다
                     </dd>
+                </div>
+                <div className="grid gap-x-4 gap-y-2 md:grid-cols-[10rem_1fr]">
                     <dt className="font-bold">검사 도구</dt>
-                    <dd className="flex flex-col gap-2">
-                        <p>
-                            <strong>W3C 마크업 검사:</strong>{' '}
-                            <ReferenceLink href="https://validator.github.io/validator/">Nu Html Checker</ReferenceLink>{' '}
-                            {NU_VERSION}로 자동 검사합니다.{' '}
-                            <ReferenceLink href="https://validator.w3.org/">
-                                W3C Markup Validation Service
-                            </ReferenceLink>
-                            와 같은 엔진을 사용합니다
-                        </p>
-                        <p>
-                            <strong>WAVE 웹 접근성 검사:</strong> 자동 수집하지 않고 브라우저에서 수동으로 검사해
-                            기록합니다
-                        </p>
+                    <dd className="grid gap-3 xl:grid-cols-2">
+                        {/* 가이드 홈·버전 아카이브의 카드와 같은 옅은 뉴트럴 카드를 쓴다. 자동·수동은 제목의 [자동]·[수동] 과 아이콘으로 구분한다. */}
+                        <div className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="bg-card text-foreground flex size-8 items-center justify-center rounded-sm">
+                                    <Bot aria-hidden="true" className="size-icon-sm" />
+                                </span>
+                                <strong className="typo-body-xl-bold">[자동] W3C 마크업 검사</strong>
+                            </div>
+                            <ul className="flex flex-col gap-2">
+                                <li className="flex">
+                                    <ListMarker type="unordered-small" />
+                                    <span className="min-w-0">
+                                        <ReferenceLink href="https://validator.github.io/validator/">
+                                            Nu Html Checker
+                                        </ReferenceLink>{' '}
+                                        {NU_VERSION}로 자동 검사합니다.{' '}
+                                        <ReferenceLink href="https://validator.w3.org/">
+                                            W3C Markup Validation Service
+                                        </ReferenceLink>
+                                        와 같은 엔진을 사용합니다
+                                    </span>
+                                </li>
+                                <li className="typo-body-s-regular text-foreground-subtle flex">
+                                    <ListMarker type="unordered-small" />
+                                    <span className="min-w-0">
+                                        Nu Html Checker는 MIT 라이선스로 사용·수정·배포·상업적 이용이 허용됩니다. 검사기
+                                        복사본이나 주요 소스를 재배포할 때는 저작권 및 라이선스 고지를 포함해야 합니다.{' '}
+                                        <ReferenceLink href="https://github.com/validator/validator/blob/main/LICENSE">
+                                            공식 LICENSE
+                                        </ReferenceLink>
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="bg-card text-foreground flex size-8 items-center justify-center rounded-sm">
+                                    <MousePointerClick aria-hidden="true" className="size-icon-sm" />
+                                </span>
+                                <strong className="typo-body-xl-bold">[수동] WAVE 웹 접근성 검사</strong>
+                            </div>
+                            <ul className="flex flex-col gap-2">
+                                <li className="flex">
+                                    <ListMarker type="unordered-small" />
+                                    <span className="min-w-0">
+                                        <ReferenceLink href="https://wave.webaim.org/">
+                                            WAVE Web Accessibility Evaluation Tools
+                                        </ReferenceLink>
+                                        로 검사합니다.
+                                    </span>
+                                </li>
+                                <li className="flex">
+                                    <ListMarker type="unordered-small" />
+                                    <span className="min-w-0">
+                                        자동 수집하지 않고 브라우저에서 수동으로 검사해 기록합니다
+                                    </span>
+                                </li>
+                            </ul>
+                        </div>
                     </dd>
+                </div>
+                <div className="grid gap-x-4 gap-y-2 md:grid-cols-[10rem_1fr]">
                     <dt className="font-bold">주요 프론트엔드 버전</dt>
                     <dd>
-                        Next.js 16.2.9 · React 19.2.4 · radix-ui 1.6.2 (shadcn/ui 기반 UI 라이브러리) · Recharts 3.8.0
-                        (shadcn/ui 차트에서 사용하는 그래프 라이브러리)
+                        {/* 위에서 아래로 먼저 채워 Next.js·React, radix-ui·Recharts 가 각각 한 열에 서게 한다. */}
+                        <ul className="grid gap-x-6 gap-y-1 md:grid-flow-col md:grid-cols-2 md:grid-rows-2">
+                            {FRONTEND_VERSIONS.map((item) => (
+                                <li key={item.name} className="flex">
+                                    <ListMarker type="unordered-small" />
+                                    <span className="min-w-0">
+                                        <strong>{item.name}</strong>
+                                        {item.note ? (
+                                            <span className="text-foreground-subtle"> ({item.note})</span>
+                                        ) : null}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
                     </dd>
-                </dl>
-                <Alert variant="outline" color="info">
-                    <Info aria-hidden="true" />
-                    <AlertDescription>
-                        Nu Html Checker는 MIT 라이선스로 사용·수정·배포·상업적 이용이 허용됩니다. 검사기 복사본이나 주요
-                        소스를 재배포할 때는 저작권 및 라이선스 고지를 포함해야 합니다.{' '}
-                        <ReferenceLink href="https://github.com/validator/validator/blob/main/LICENSE">
-                            공식 LICENSE
-                        </ReferenceLink>
-                    </AlertDescription>
-                </Alert>
-            </div>
+                </div>
+            </dl>
         </BaseCard>
 
-        <Alert variant="outline" color="info">
-            <Info aria-hidden="true" />
-            <AlertDescription className="flex flex-col gap-0.5">
-                <strong className="block">현재 회차 화면 수 메모</strong>
-                <div className="leading-5">
+        <BaseCard title={cardHeading('검사 대상 화면 수와 제외 화면')}>
+            <div className="flex flex-col gap-4">
+                <div>
                     {AUDIT_SCOPE_NOTES.map((note) => (
                         <span key={note.key} className="block">
-                            {auditScopeDescription(note)}
+                            {/* 화면 수(숫자+개)만 굵게 — 문장 속에서 개수가 먼저 읽히게 한다. 결론인 검사 화면 수에는 밑줄도 긋는다. */}
+                            {auditScopeDescription(note)
+                                .split(/(\d+개)/)
+                                .map((part, index) =>
+                                    /^\d+개$/.test(part) ? (
+                                        <strong
+                                            key={index}
+                                            className={
+                                                part === `${note.screens.length}개`
+                                                    ? 'underline underline-offset-4'
+                                                    : undefined
+                                            }
+                                        >
+                                            {part}
+                                        </strong>
+                                    ) : (
+                                        part
+                                    ),
+                                )}
                         </span>
                     ))}
                 </div>
-                <Accordion type="multiple" className="mt-1 gap-0">
+                <Accordion type="multiple" className="gap-2">
                     {AUDIT_SCOPE_ACCORDIONS.map((item) => (
                         <AccordionItem
                             key={item.key}
                             value={item.key}
-                            className="rounded-none bg-transparent px-0 py-0"
+                            className={cn('rounded-sm border px-4 py-1', item.toneClassName)}
                         >
                             <AccordionTrigger className="py-2 text-sm! leading-5! font-bold!">
-                                {item.label}({item.screens.length})
+                                {item.label} ({item.screens.length})
                             </AccordionTrigger>
                             <AccordionContent className="mt-0 border-0 pt-0 pb-2 text-sm! leading-5!">
                                 <ul className="list-disc space-y-1 pl-5">
@@ -2059,8 +2345,8 @@ const AccessibilityExceptionsPage = () => (
                         </AccordionItem>
                     ))}
                 </Accordion>
-            </AlertDescription>
-        </Alert>
+            </div>
+        </BaseCard>
 
         {/* W3C 마크업 검사와 WAVE 를 갈라 둔다 — 검사 도구가 다르고 회차도 따로 돈다.
             탭 밖의 판정 원칙은 두 검사에 함께 적용된다. */}
@@ -2070,7 +2356,8 @@ const AccessibilityExceptionsPage = () => (
                 <TabsTrigger value="wave">WAVE 웹 접근성 검사</TabsTrigger>
             </TabsList>
             <TabsContent value="w3c" className="flex flex-col gap-10">
-                <div className="flex flex-col gap-5">
+                <QuickMenu title="W3C 마크업 검사" groups={W3C_NAV_GROUPS} />
+                <div id="w3c-summary" className="flex scroll-mt-24 flex-col gap-5">
                     <Alert variant="outline" color="info">
                         <Info aria-hidden="true" />
                         <AlertDescription>
@@ -2093,64 +2380,18 @@ const AccessibilityExceptionsPage = () => (
                                 <TabsList variant="pill" aria-label="검사 대상 구분">
                                     {SUMMARY_GROUPS.map((group) => (
                                         <TabsTrigger key={group.key} value={group.key}>
-                                            {group.label} {group.screens.length}개
+                                            {group.label}
                                         </TabsTrigger>
                                     ))}
                                 </TabsList>
                                 {SUMMARY_GROUPS.map((group) => (
                                     <TabsContent key={group.key} value={group.key}>
-                                        <section className="border-subtle-3 rounded-sm border p-5 md:p-6">
-                                            <dl className="border-subtle-3 grid grid-cols-2 gap-x-5 gap-y-4 border-b pb-5 sm:grid-cols-3">
-                                                {group.totals.map((total) => (
-                                                    <div key={total.label} className="flex min-w-0 flex-col gap-1">
-                                                        <dt className="typo-body-s-regular text-foreground-subtle">
-                                                            {total.label}
-                                                        </dt>
-                                                        <dd className="typo-title-l-bold text-foreground">
-                                                            {total.value}
-                                                        </dd>
-                                                    </div>
-                                                ))}
-                                            </dl>
-                                            <div className="divide-subtle-3 mt-1 flex flex-col divide-y">
-                                                {group.causes.map((cause) => (
-                                                    <section
-                                                        key={cause.label}
-                                                        className="grid gap-3 py-5 md:grid-cols-[14rem_1fr]"
-                                                    >
-                                                        <div className="flex flex-col items-start gap-2">
-                                                            <div className="flex flex-wrap items-center gap-2">
-                                                                <Badge color={cause.color}>{cause.badge}</Badge>
-                                                                <h4 className="font-bold">{cause.label}</h4>
-                                                            </div>
-                                                            <p className="typo-title-l-bold">{cause.value}</p>
-                                                        </div>
-                                                        <div className="self-center">
-                                                            {cause.reasons.length === 0 ? (
-                                                                <EmptyState
-                                                                    title="발생한 오류가 없습니다."
-                                                                    className="min-h-0 px-0 py-2"
-                                                                />
-                                                            ) : (
-                                                                <ul className="text-foreground-subtle flex list-none flex-col gap-2">
-                                                                    {cause.reasons.map((reason) => (
-                                                                        <li key={reason.head} className="flex">
-                                                                            <ListMarker type="unordered-small" />
-                                                                            <span className="min-w-0 break-keep">
-                                                                                <strong className="text-foreground">
-                                                                                    {reason.head}
-                                                                                </strong>{' '}
-                                                                                · {reason.detail}
-                                                                            </span>
-                                                                        </li>
-                                                                    ))}
-                                                                </ul>
-                                                            )}
-                                                        </div>
-                                                    </section>
-                                                ))}
-                                            </div>
-                                        </section>
+                                        <AuditSummary
+                                            caption={`W3C ${group.label} 원인별 오류`}
+                                            noteHeader="생성 주체"
+                                            totals={group.totals}
+                                            causes={group.causes}
+                                        />
                                     </TabsContent>
                                 ))}
                             </Tabs>
@@ -2158,1183 +2399,33 @@ const AccessibilityExceptionsPage = () => (
                     </BaseCard>
                 </div>
 
-                <BaseCard
-                    title={cardHeading('외부 라이브러리 원인')}
-                    subtitle="검사 당시 라이브러리 생성 DOM에서 확인한 항목입니다. 현재 화면의 발생 요소와 대조합니다."
-                    action={<Badge color="success">예외 검토</Badge>}
-                >
-                    {/* 원인이 여럿이라 간격만으로는 경계가 흐려진다 — 절마다 구분선과 40px 여백을 둔다. */}
-                    <div className="divide-subtle-3 flex flex-col divide-y">
-                        <section
-                            aria-labelledby="library-empty-option"
-                            className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                        >
-                            <SectionHeader>
-                                <SectionHeaderTitle
-                                    className="typo-title-l-bold scroll-mt-24"
-                                    id="library-empty-option"
-                                >
-                                    {sectionHeading('Radix UI Select', '빈 option')}
-                                </SectionHeaderTitle>
-                            </SectionHeader>
-                            <IssueTable
-                                caption="빈 option 오류의 건수와 판정"
-                                issues={issuesByKind(['empty-option'])}
-                            />
-                            <LibraryDetailAccordion
-                                rows={[
-                                    {
-                                        term: '한눈에 보기',
-                                        body: (
-                                            <Alert variant="outline" color="info">
-                                                <Info aria-hidden="true" />
-                                                <AlertDescription>
-                                                    프로젝트가 일반적인 placeholder 방식을 사용했을 때, Radix UI가 폼
-                                                    연동용으로 자동 생성한 숨은 옵션에서 발생합니다. 사용자가 조작하는
-                                                    선택 버튼에는 이름이 제공되어 있으며, 현재 확인 범위에서 이용에는
-                                                    영향이 없습니다.
-                                                </AlertDescription>
-                                            </Alert>
-                                        ),
-                                    },
-                                    {
-                                        term: '오류의 뜻',
-                                        body: (
-                                            <div className="flex flex-col gap-2">
-                                                <p>
-                                                    검사기는 이름이 없는 빈 선택지를 발견했다는 뜻으로 이 오류를
-                                                    표시합니다.
-                                                </p>
-                                                <CodeBlock code={'<option value=""></option>'} language="html" />
-                                                <p className="text-foreground-subtle">
-                                                    HTML 규칙상 <code className="font-mono">&lt;option&gt;</code>에는
-                                                    태그 안의 글자나 <code className="font-mono">label</code> 속성 중
-                                                    하나가 있어야 합니다. 여기서 label은 별도의{' '}
-                                                    <code className="font-mono">&lt;label&gt;</code> 태그가 아니라
-                                                    선택지 자체의 이름입니다.
-                                                </p>
-                                            </div>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 과정',
-                                        body: (
-                                            <div className="flex flex-col gap-2">
-                                                <ul className="flex list-none flex-col gap-1">
-                                                    <li className="flex">
-                                                        <ListMarker type="unordered-small" />
-                                                        <span className="min-w-0">
-                                                            선택 전에는 값이 비어 있어 “관련사이트” placeholder가
-                                                            보입니다. 일반적인 Select 사용 방식입니다.
-                                                        </span>
-                                                    </li>
-                                                    <li className="flex">
-                                                        <ListMarker type="unordered-small" />
-                                                        <span className="min-w-0">
-                                                            shadcn/ui Select가 사용하는 Radix UI는 보이는 선택 버튼과
-                                                            별도로, 폼에 값을 전달할 숨은{' '}
-                                                            <code className="font-mono">&lt;select&gt;</code>를
-                                                            만듭니다.
-                                                        </span>
-                                                    </li>
-                                                    <li className="flex">
-                                                        <ListMarker type="unordered-small" />
-                                                        <span className="min-w-0">
-                                                            아직 선택한 값이 없다는 상태를 표현하려고 Radix UI가 그
-                                                            select 안에 이름 없는 빈 option을 자동으로 넣습니다.
-                                                        </span>
-                                                    </li>
-                                                    <li className="flex">
-                                                        <ListMarker type="unordered-small" />
-                                                        <span className="min-w-0">
-                                                            Nu Html Checker는 화면에 보이는지와 관계없이 이 빈 option을
-                                                            HTML 문법 오류로 보고합니다.
-                                                        </span>
-                                                    </li>
-                                                </ul>
-                                                <CodeBlock
-                                                    code={
-                                                        '<!-- 프로젝트가 작성한 보이는 선택 버튼 -->\n<button role="combobox" aria-label="관련 사이트">관련사이트</button>\n\n<!-- Radix UI가 자동 생성한 폼 연동용 요소 -->\n<select aria-hidden="true" tabindex="-1" name="familySite">\n  <option value="" selected></option>\n</select>'
-                                                    }
-                                                    language="html"
-                                                />
-                                            </div>
-                                        ),
-                                    },
-                                    {
-                                        term: '책임 구분',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>프로젝트 코드:</strong> placeholder와 빈 초기값을
-                                                        사용합니다. 선택 항목에는 모두 화면에 표시할 이름이 있고, 실제
-                                                        선택 버튼에도 <code className="font-mono">aria-label</code>이
-                                                        있습니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>라이브러리 코드:</strong> 오류 대상인 빈 option을 직접
-                                                        생성합니다. 프로젝트의 Select 래퍼와 사용 화면에는 해당 option이
-                                                        작성되어 있지 않습니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        따라서 오류가 발견된 곳은 우리 화면이지만, 오류 마크업의 생성
-                                                        주체는 Radix UI로 분류합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '영향과 조치',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>HTML 적합성 오류는 맞습니다.</strong> 다만 오류가 난
-                                                        select는 값 전달을 위한 숨은 요소이며 스크린리더와 키보드
-                                                        탐색에서 제외되어 있습니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>사용자 이용에는 결함이 없습니다.</strong> 실제로
-                                                        조작하는 버튼에는 “관련 사이트”라는 접근 가능한 이름이 있고,
-                                                        키보드 선택과 새 창 열기 동작도 정상임을 확인했습니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        근본 수정은 Radix UI가 빈 option에 이름을 제공하도록 변경해야
-                                                        합니다.{' '}
-                                                        <strong>
-                                                            라이브러리 원본 수정이나 가짜 선택값을 사용하는 우회는
-                                                            업데이트 및 동작에 영향을 줄 수 있어 적용하지 않습니다.
-                                                        </strong>{' '}
-                                                        따라서 외부 라이브러리 예외 검토 항목으로 관리합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '반복 이유',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        모든 화면의 Footer에 “관련 사이트” Select가 있어 기본적으로
-                                                        화면당 1건이 발생합니다. 총{' '}
-                                                        {ISSUE_SCREENS_BY_KIND['empty-option']}개 화면에 같은 원인이
-                                                        반복된 결과입니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>
-                                                            2건 이상도 Footer와 동일한 Radix UI의 빈 option 오류입니다.
-                                                        </strong>{' '}
-                                                        화면 본문에 같은 방식의 Select가 있어 발생 건수가 추가됩니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '여러 건 화면',
-                                        body: (
-                                            <Accordion type="single" collapsible className="gap-0">
-                                                <AccordionItem
-                                                    value="multiple-empty-options"
-                                                    className="border-subtle-3 rounded-sm border bg-transparent px-4 py-3"
-                                                >
-                                                    <AccordionTrigger className="text-sm! leading-5! font-bold!">
-                                                        2건 이상 발생한 {MULTIPLE_EMPTY_OPTION_SCREENS.length}개 화면
-                                                        보기
-                                                    </AccordionTrigger>
-                                                    <AccordionContent className="mt-3 pt-3 text-sm! leading-5!">
-                                                        <p className="text-foreground-subtle mb-3">
-                                                            건수 구성은 공통 Footer 1건과 해당 화면 본문의 Select 건수로
-                                                            나눠 표시합니다.
-                                                        </p>
-                                                        <Table className="min-w-220 table-fixed">
-                                                            <colgroup>
-                                                                <col className="w-16" />
-                                                                <col className="w-56" />
-                                                                <col />
-                                                                <col className="w-28" />
-                                                            </colgroup>
-                                                            <TableCaption className="sr-only">
-                                                                빈 option 오류가 2건 이상 발생한 화면과 건수 구성
-                                                            </TableCaption>
-                                                            <TableHeader>
-                                                                <TableRow className="bg-muted hover:bg-muted">
-                                                                    <TableHead scope="col">구분</TableHead>
-                                                                    <TableHead scope="col">화면명</TableHead>
-                                                                    <TableHead scope="col">경로</TableHead>
-                                                                    <TableHead scope="col" className="text-center">
-                                                                        건수 구성
-                                                                    </TableHead>
-                                                                </TableRow>
-                                                            </TableHeader>
-                                                            <TableBody>
-                                                                {MULTIPLE_EMPTY_OPTION_SCREENS.map((screen) => (
-                                                                    <TableRow key={screen.path}>
-                                                                        <TableCell className="align-top">
-                                                                            {screen.userType}
-                                                                        </TableCell>
-                                                                        <TableCell className="align-top whitespace-normal">
-                                                                            <Link
-                                                                                {...NEW_WINDOW_LINK_PROPS}
-                                                                                href={screen.path}
-                                                                                className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
-                                                                            >
-                                                                                {screen.name}
-                                                                                <span className="sr-only">
-                                                                                    {NEW_WINDOW_LABEL}
-                                                                                </span>
-                                                                            </Link>
-                                                                        </TableCell>
-                                                                        <TableCell className="align-top whitespace-normal">
-                                                                            <code className="font-mono break-all">
-                                                                                {screen.path}
-                                                                            </code>
-                                                                        </TableCell>
-                                                                        <TableCell className="text-center align-top font-bold tabular-nums">
-                                                                            1 + {screen.emptyOptionCount - 1} ={' '}
-                                                                            {screen.emptyOptionCount}
-                                                                        </TableCell>
-                                                                    </TableRow>
-                                                                ))}
-                                                            </TableBody>
-                                                        </Table>
-                                                    </AccordionContent>
-                                                </AccordionItem>
-                                            </Accordion>
-                                        ),
-                                    },
-                                    {
-                                        term: '근거',
-                                        body: (
-                                            <div className="flex flex-col gap-1">
-                                                <ReferenceLink href="https://github.com/radix-ui/primitives/blob/a06624085504a13d9c21c04d238cf4c4f6905de1/packages/react/select/src/select.tsx#L1825-L1841">
-                                                    Radix Select 소스 — 숨은 select 와 빈 option 을 만드는
-                                                    곳(L1825~1841)
-                                                </ReferenceLink>
-                                                <ul className="text-foreground-subtle flex list-none flex-col gap-1">
-                                                    <li className="flex">
-                                                        <ListMarker type="unordered-small" />
-                                                        <span className="min-w-0">
-                                                            Radix 는 따로 들여온 라이브러리가 아니라 shadcn/ui 가 쓰는
-                                                            엔진입니다.
-                                                        </span>
-                                                    </li>
-                                                    <li className="flex">
-                                                        <ListMarker type="unordered-small" />
-                                                        <span className="min-w-0">
-                                                            shadcn 이 준 Select 소스 첫머리에{' '}
-                                                            <code className="font-mono">
-                                                                import {'{'} Select {'}'} from &quot;radix-ui&quot;
-                                                            </code>{' '}
-                                                            가 있습니다.
-                                                        </span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </section>
-
-                        <section
-                            aria-labelledby="library-select-required"
-                            className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                        >
-                            <SectionHeader>
-                                <SectionHeaderTitle
-                                    className="typo-title-l-bold scroll-mt-24"
-                                    id="library-select-required"
-                                >
-                                    {sectionHeading('Radix UI Select', 'required select')}
-                                </SectionHeaderTitle>
-                            </SectionHeader>
-                            <IssueTable
-                                caption="required select 오류의 건수와 판정"
-                                issues={issuesByKind(['select-required'])}
-                            />
-                            <LibraryDetailAccordion
-                                rows={[
-                                    {
-                                        term: '한눈에 보기',
-                                        body: (
-                                            <Alert variant="outline" color="info">
-                                                <Info aria-hidden="true" />
-                                                <AlertDescription>
-                                                    필수 Select의 값이나 동작 문제가 아니라, 초기 HTML에서 Radix UI가
-                                                    만든 숨은 select에 option이 아직 채워지지 않아 발생합니다. 브라우저
-                                                    실행 후에는 선택지가 채워지고 필수 검증도 정상 동작합니다.
-                                                </AlertDescription>
-                                            </Alert>
-                                        ),
-                                    },
-                                    {
-                                        term: '오류의 뜻',
-                                        body: (
-                                            <div className="flex flex-col gap-2">
-                                                <p>
-                                                    검사기가 “필수 선택 상자인데 선택 항목이 하나도 없다”고 판단한
-                                                    오류입니다.
-                                                </p>
-                                                <CodeBlock code={'<select required></select>'} language="html" />
-                                                <p className="text-foreground-subtle">
-                                                    HTML 규칙상 <code className="font-mono">required</code>가 붙은{' '}
-                                                    <code className="font-mono">&lt;select&gt;</code>에는 최소 한 개의{' '}
-                                                    <code className="font-mono">&lt;option&gt;</code>이 있어야 합니다.
-                                                </p>
-                                            </div>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 과정',
-                                        body: (
-                                            <div className="flex flex-col gap-2">
-                                                <ul className="flex list-none flex-col gap-2">
-                                                    <li className="flex">
-                                                        <ListMarker type="unordered-small" />
-                                                        <span className="min-w-0">
-                                                            프로젝트에서 필수 입력으로 지정하면 Radix UI가 만든 숨은{' '}
-                                                            <code className="font-mono">&lt;select&gt;</code>에도{' '}
-                                                            <code className="font-mono">required</code>가 붙습니다.
-                                                        </span>
-                                                    </li>
-                                                    <li className="flex">
-                                                        <ListMarker type="unordered-small" />
-                                                        <span className="min-w-0">
-                                                            초기 HTML에서는 실제 선택 항목이 숨은 select에 아직 복사되지
-                                                            않아 빈 상태로 검사됩니다.
-                                                        </span>
-                                                    </li>
-                                                </ul>
-                                                <CodeBlock
-                                                    code={
-                                                        '<!-- 사용자가 조작하는 선택 버튼 -->\n<button role="combobox" id="corpType">기업형태</button>\n\n<!-- Radix UI가 초기 HTML에 생성한 폼 연동용 요소 -->\n<select aria-hidden="true" required tabindex="-1" name="corpType"></select>'
-                                                    }
-                                                    language="html"
-                                                />
-                                            </div>
-                                        ),
-                                    },
-                                    {
-                                        term: '책임 구분',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>프로젝트 코드:</strong> 업무상 필요한 필수 입력과 실제
-                                                        선택 항목을 정상적으로 제공합니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>라이브러리 코드:</strong> 초기 HTML에 option이 없는 숨은
-                                                        필수 select를 생성합니다. 따라서 생성 주체는 Radix UI로
-                                                        분류합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '영향과 조치',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>HTML 적합성 오류는 맞습니다.</strong> 다만 브라우저가
-                                                        실행되면 숨은 select에 option이 채워집니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>사용자 이용에는 결함이 없습니다.</strong> 사용자가
-                                                        조작하는 Select의 선택지와 필수 입력 검증은 정상 동작합니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        필수 검증에 필요한 <code className="font-mono">required</code>를
-                                                        제거하거나 라이브러리 원본을 수정하면 동작과 업데이트에 영향을
-                                                        줄 수 있어 적용하지 않습니다. 따라서 외부 라이브러리 예외 검토
-                                                        항목으로 관리합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 화면',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                {REQUIRED_SELECT_SCREENS.map((screen) => (
-                                                    <li key={screen.path} className="flex">
-                                                        <ListMarker type="unordered-small" />
-                                                        <span className="min-w-0">
-                                                            <Link
-                                                                {...NEW_WINDOW_LINK_PROPS}
-                                                                href={screen.path}
-                                                                className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
-                                                            >
-                                                                {screen.name}
-                                                                <span className="sr-only">{NEW_WINDOW_LABEL}</span>
-                                                            </Link>{' '}
-                                                            · {screen.userType} · {screen.requiredSelectCount}건
-                                                        </span>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '근거',
-                                        body: (
-                                            <div className="flex flex-col gap-1">
-                                                <ReferenceLink href="https://github.com/radix-ui/primitives/blob/a06624085504a13d9c21c04d238cf4c4f6905de1/packages/react/select/src/select.tsx#L1828">
-                                                    Radix Select 소스 — required 를 숨은 select 로 넘기는 곳(L1828)
-                                                </ReferenceLink>
-                                            </div>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </section>
-
-                        {NAV_ROLE_ISSUES.length > 0 ? (
-                            <section
-                                aria-labelledby="library-nav-role"
-                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                            >
-                                <SectionHeader>
-                                    <SectionHeaderTitle
-                                        className="typo-title-l-bold scroll-mt-24"
-                                        id="library-nav-role"
-                                    >
-                                        {sectionHeading('shadcn Pagination', 'nav role 경고')}
-                                    </SectionHeaderTitle>
-                                </SectionHeader>
-                                <IssueTable caption="nav role 경고의 건수와 판정" issues={NAV_ROLE_ISSUES} />
-                                <LibraryDetailAccordion
-                                    rows={[
-                                        {
-                                            term: '발생 이유',
-                                            body: (
-                                                <p>
-                                                    shadcn Pagination 순정 셸이{' '}
-                                                    <code className="font-mono">
-                                                        &lt;nav role=&quot;navigation&quot;&gt;
-                                                    </code>{' '}
-                                                    을 출력합니다. <code className="font-mono">nav</code> 의 기본 역할과
-                                                    겹쳐 불필요하다는 안내이며 오류가 아닙니다.
-                                                </p>
-                                            ),
-                                        },
-                                        {
-                                            term: '조치',
-                                            body: <p>shadcn/ui가 관리하는 primitive 셸 구조이므로 그대로 둡니다.</p>,
-                                        },
-                                    ]}
-                                />
-                            </section>
-                        ) : null}
-
-                        <section
-                            aria-labelledby="library-sonner"
-                            className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                        >
-                            <SectionHeader>
-                                <SectionHeaderTitle className="typo-title-l-bold" id="library-sonner">
-                                    {sectionHeading('sonner', 'CSS Parse Error · style type 경고')}
-                                </SectionHeaderTitle>
-                            </SectionHeader>
-                            <IssueTable
-                                caption="sonner 가 만든 DOM 직렬화본에서 나오는 메시지와 화면당 건수"
-                                issues={SONNER_ISSUES}
-                                countHeader="화면당 건수"
-                                showScreens={false}
-                            />
-                            <LibraryDetailAccordion
-                                rows={[
-                                    {
-                                        term: '한눈에 보기',
-                                        body: (
-                                            <Alert variant="outline" color="info">
-                                                <Info aria-hidden="true" />
-                                                <AlertDescription>
-                                                    sonner가 토스트 디자인을 위해 브라우저 실행 후 추가한 스타일에서
-                                                    발생합니다. 프로젝트가 작성한 CSS 오류가 아니며, 스타일과 토스트
-                                                    동작은 브라우저에서 정상 작동합니다.
-                                                </AlertDescription>
-                                            </Alert>
-                                        ),
-                                    },
-                                    {
-                                        term: '오류의 뜻',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>CSS Parse Error:</strong> Nu Html Checker가 sonner
-                                                        스타일 일부를 CSS 문법으로 해석하지 못했다는 뜻입니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>style type 경고:</strong>{' '}
-                                                        <code className="font-mono">type=&quot;text/css&quot;</code>는
-                                                        HTML5에서 기본값이므로 생략해도 된다는 안내입니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 과정',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        sonner는 알림 토스트를 표시하는 외부 라이브러리입니다. 화면이
-                                                        실행되면 자체 CSS를{' '}
-                                                        <code className="font-mono">
-                                                            &lt;style type=&quot;text/css&quot;&gt;
-                                                        </code>
-                                                        로 문서에 추가합니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        이 스타일이 포함된 브라우저 DOM을 검사하면 두 메시지가
-                                                        발생합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '책임 구분',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>프로젝트 코드:</strong> 공통 레이아웃에 토스트 영역만
-                                                        배치하며, 오류가 표시된 style과 CSS를 직접 작성하지 않습니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>라이브러리 코드:</strong> sonner가 style 요소와 CSS를
-                                                        실행 중에 직접 생성합니다. 따라서 생성 주체는 sonner로
-                                                        분류합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '영향과 조치',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>사용자 이용에는 결함이 없습니다.</strong> sonner의
-                                                        스타일과 토스트 표시·닫기 동작은 브라우저에서 정상 작동합니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        제거하려면 sonner 원본을 수정하거나 토스트 라이브러리를 교체해야
-                                                        하며, 업데이트와 공통 알림 기능에 영향을 줄 수 있어 적용하지
-                                                        않습니다. 따라서 외부 라이브러리 예외 검토 항목으로 관리합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 조건',
-                                        body: (
-                                            <p>
-                                                서버가 처음 전송한 HTML에는 sonner 스타일이 없습니다. 브라우저 실행 후의
-                                                DOM을 복사하거나 직렬화해 검사할 때만 나타나며, 검사 방식에 따라 CSS
-                                                Parse Error 건수는 달라질 수 있습니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '근거',
-                                        body: (
-                                            <div className="flex flex-col gap-2">
-                                                <p>
-                                                    sonner 2.0.7 배포 코드에서{' '}
-                                                    <code className="font-mono">style.type = &apos;text/css&apos;</code>
-                                                    와 자체 CSS를 문서에 삽입하는 동작을 확인했습니다.
-                                                </p>
-                                                <div className="flex flex-col items-start gap-1">
-                                                    <ReferenceLink href="https://app.unpkg.com/sonner@2.0.7/files/dist/index.mjs">
-                                                        sonner 2.0.7 배포 코드 — style 요소와 CSS 삽입 구현
-                                                    </ReferenceLink>
-                                                    <ReferenceLink href="https://github.com/emilkowalski/sonner/releases/tag/v2.0.7">
-                                                        sonner 공식 GitHub — v2.0.7 릴리스
-                                                    </ReferenceLink>
-                                                </div>
-                                            </div>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </section>
-
-                        <section
-                            aria-labelledby="library-dialog"
-                            className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                        >
-                            <SectionHeader>
-                                <SectionHeaderTitle className="typo-title-l-bold" id="library-dialog">
-                                    {sectionHeading('Radix 모달', '배경 감춤 · 스크롤 잠금 스타일')}
-                                </SectionHeaderTitle>
-                                <SectionHeaderDescription>
-                                    퍼블리싱 확인용 화면과 실제 서비스 화면 모두 모달을 연 상태에서 발생할 수 있습니다
-                                </SectionHeaderDescription>
-                            </SectionHeader>
-                            <IssueTable
-                                caption="모달이 열렸을 때 생기는 메시지와 화면당 건수"
-                                issues={DIALOG_ISSUES}
-                                countHeader="화면당 건수"
-                                showScreens={false}
-                            />
-                            <LibraryDetailAccordion
-                                rows={[
-                                    {
-                                        term: '한눈에 보기',
-                                        body: (
-                                            <Alert variant="outline" color="info">
-                                                <Info aria-hidden="true" />
-                                                <AlertDescription>
-                                                    모달이 열릴 때 Radix UI가 배경을 숨기고 스크롤을 막는 과정에서
-                                                    발생합니다. 모달 단독 확인 화면만의 문제가 아니며, 실제 서비스
-                                                    모달을 연 상태에서도 같은 원인으로 나타날 수 있습니다.
-                                                </AlertDescription>
-                                            </Alert>
-                                        ),
-                                    },
-                                    {
-                                        term: '오류의 뜻',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>배경 감춤 경고:</strong> 이미{' '}
-                                                        <code className="font-mono">hidden</code>인 요소에 같은 의미의{' '}
-                                                        <code className="font-mono">aria-hidden</code>이 추가돼
-                                                        불필요하다는 안내입니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>style type 경고:</strong> 스크롤 잠금용 style의{' '}
-                                                        <code className="font-mono">type=&quot;text/css&quot;</code>는
-                                                        HTML5에서 기본값이므로 생략해도 된다는 안내입니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 과정',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        모달이 열리면 배경을 스크린리더에서 제외하기 위해 Radix UI가{' '}
-                                                        <code className="font-mono">aria-hidden</code>을 추가합니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        동시에 react-remove-scroll이 배경 스크롤을 막는 style을 문서에
-                                                        추가합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '책임 구분',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>프로젝트 코드:</strong> Radix 모달을 정상적인 방법으로
-                                                        열고 닫습니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>라이브러리 코드:</strong> 경고 대상인 aria-hidden과
-                                                        스크롤 잠금 style을 실행 중에 생성합니다. 따라서 외부 라이브러리
-                                                        원인으로 분류합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '영향과 조치',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>사용자 이용에는 결함이 없습니다.</strong> 배경 감춤은
-                                                        모달에 집중하도록 돕고, 스크롤 잠금도 정상 작동합니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        제거하려면 라이브러리의 모달 접근성 및 스크롤 제어를 수정해야
-                                                        하므로 적용하지 않습니다. 따라서 외부 라이브러리 예외 검토
-                                                        항목으로 관리합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 조건',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        서버의 초기 HTML이나 모달이 닫힌 상태에서는 발생하지 않습니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        퍼블리싱 확인용 화면과 실제 서비스 화면 모두 모달을 연 뒤의
-                                                        DOM을 검사하면 발생할 수 있습니다. 모달을 닫으면 추가된 속성과
-                                                        style도 제거됩니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '대표 확인 경로',
-                                        body: (
-                                            <ul className="flex flex-wrap gap-2">
-                                                {DIALOG_SCREEN_ROUTES.map((route) => (
-                                                    <li key={route}>
-                                                        <Badge variant="solid-pastel" color="success" size="xs" asChild>
-                                                            <Link {...NEW_WINDOW_LINK_PROPS} href={route}>
-                                                                <code className="font-mono">{route}</code>
-                                                                <span className="sr-only">{NEW_WINDOW_LABEL}</span>
-                                                            </Link>
-                                                        </Badge>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '근거',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-                                                        <span>
-                                                            Radix Dialog가 모달 바깥 영역을 숨기고 RemoveScroll을
-                                                            실행합니다.
-                                                        </span>
-                                                        <ReferenceLink href="https://github.com/radix-ui/primitives/blob/main/packages/react/dialog/src/dialog.tsx#L198-L232">
-                                                            스크롤 잠금 공식 소스
-                                                        </ReferenceLink>
-                                                        <ReferenceLink href="https://github.com/radix-ui/primitives/blob/main/packages/react/dialog/src/dialog.tsx#L272-L285">
-                                                            배경 감춤 공식 소스
-                                                        </ReferenceLink>
-                                                    </div>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-                                                        <span>
-                                                            react-style-singleton 2.2.3이 스크롤 잠금용 style에{' '}
-                                                            <code className="font-mono">type=&quot;text/css&quot;</code>
-                                                            를 지정합니다.
-                                                        </span>
-                                                        <ReferenceLink href="https://unpkg.com/react-style-singleton@2.2.3/dist/es2019/singleton.js">
-                                                            배포 코드 확인
-                                                        </ReferenceLink>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </section>
-
-                        <section
-                            aria-labelledby="library-chart"
-                            className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                        >
-                            <SectionHeader>
-                                <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="library-chart">
-                                    {sectionHeading('recharts · shadcn chart', 'SVG 속성 · div 안의 style')}
-                                </SectionHeaderTitle>
-                                <SectionHeaderDescription>
-                                    차트가 있는 평가결과 화면에서 shadcn Chart와 Recharts가 생성한 요소에 발생합니다
-                                </SectionHeaderDescription>
-                            </SectionHeader>
-                            <div className="flex flex-col gap-2">
-                                <h4 className="font-bold">운영 HTML 자동 검사</h4>
-                                <IssueTable
-                                    caption="최근 운영 HTML 검사 — 차트 셸과 Recharts 생성 요소"
-                                    issues={issuesByKind(['chart-style', 'chart-width', 'chart-height'])}
-                                />
-                            </div>
-                            <div className="flex flex-col gap-2">
-                                <h4 className="font-bold">브라우저 렌더링 후 DOM 검사 사례</h4>
-                                <p className="text-foreground-subtle">
-                                    차트가 완성된 뒤 SVG 도형에 추가되는 항목입니다. 현재 운영 HTML 자동 집계와
-                                    구분합니다.
-                                </p>
-                                <IssueTable
-                                    caption="과거 브라우저 DOM 검사 사례 — 현재 운영 HTML 집계와 별개"
-                                    issues={CHART_ISSUES}
-                                    countHeader="화면당 건수"
-                                    showScreens={false}
-                                />
-                            </div>
-                            <LibraryDetailAccordion
-                                rows={[
-                                    {
-                                        term: '한눈에 보기',
-                                        body: (
-                                            <Alert variant="outline" color="info">
-                                                <Info aria-hidden="true" />
-                                                <AlertDescription>
-                                                    shadcn Chart와 Recharts가 차트를 그리며 자동 생성한 HTML·SVG에서
-                                                    발생합니다. 프로젝트가 입력한 차트 데이터의 오류가 아니며, 차트
-                                                    표시와 이용은 정상입니다.
-                                                </AlertDescription>
-                                            </Alert>
-                                        ),
-                                    },
-                                    {
-                                        term: '오류의 뜻',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>div 안의 style:</strong> shadcn Chart가 차트 색상을
-                                                        적용하려고 div 내부에 style 요소를 만들어 발생합니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>div의 width·height:</strong> Recharts가 div에 허용되지
-                                                        않는 크기 속성을 직접 붙여 발생합니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>SVG 속성:</strong> 차트 계산에 쓴 좌표·크기·이름이
-                                                        허용되지 않는 SVG 요소에 남아 브라우저 DOM 검사에서 추가로
-                                                        발생합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 과정',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        shadcn Chart가 색상용 style을 만들고, Recharts가 차트 크기를
-                                                        계산해 바깥 div를 생성합니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        브라우저에서 차트가 완성되면 Recharts가 막대·선·점·레이더를 SVG
-                                                        요소로 그리며 관련 속성이 추가됩니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '책임 구분',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>프로젝트 코드:</strong> 차트 데이터와 접근 가능한 이름을
-                                                        제공하고, 동일한 값을 확인할 수 있는 숨김 데이터 표를 함께
-                                                        제공합니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>라이브러리 코드:</strong> 오류 대상인 style, div 속성,
-                                                        SVG 요소와 속성을 직접 생성합니다. 따라서 shadcn Chart와
-                                                        Recharts 원인으로 분류합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '영향과 조치',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>HTML·SVG 적합성 오류는 맞습니다.</strong> 브라우저는
-                                                        허용되지 않는 추가 속성을 무시하고 차트를 정상적으로 그립니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        <strong>사용자 이용에는 결함이 없습니다.</strong> 차트에는 접근
-                                                        가능한 이름이 있고, 같은 정보를 제공하는 숨김 데이터 표도
-                                                        있습니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        제거하려면 shadcn Chart 구조와 Recharts 내부 출력을 수정하거나
-                                                        차트를 직접 다시 구현해야 하므로 적용하지 않습니다. 따라서 외부
-                                                        라이브러리 예외 검토 항목으로 관리합니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '검사 범위',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        운영 HTML 자동 검사에는 style과 바깥 div의 width·height가
-                                                        포함됩니다.
-                                                    </span>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <span className="min-w-0">
-                                                        브라우저 실행 후 DOM 검사에는 차트가 그려지며 생성된 SVG 속성
-                                                        오류가 추가됩니다. 두 표의 건수는 서로 합산하지 않습니다.
-                                                    </span>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '대표 확인 경로',
-                                        body: (
-                                            <ul className="flex flex-wrap gap-2">
-                                                {CHART_SCREEN_ROUTES.map((route) => (
-                                                    <li key={route}>
-                                                        <Badge variant="solid-pastel" color="success" size="xs" asChild>
-                                                            <Link {...NEW_WINDOW_LINK_PROPS} href={route}>
-                                                                <code className="font-mono">{route}</code>
-                                                                <span className="sr-only">{NEW_WINDOW_LABEL}</span>
-                                                            </Link>
-                                                        </Badge>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        ),
-                                    },
-                                    {
-                                        term: '근거',
-                                        body: (
-                                            <ul className="flex list-none flex-col gap-2">
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-                                                        <span>
-                                                            shadcn ChartStyle 생성 위치:{' '}
-                                                            <code className="font-mono">
-                                                                src/components/ui/chart.tsx
-                                                            </code>
-                                                        </span>
-                                                        <ReferenceLink href="https://github.com/shadcn-ui/ui/blob/main/apps/v4/registry/new-york-v4/ui/chart.tsx#L77-L107">
-                                                            shadcn/ui 공식 ChartStyle 소스
-                                                        </ReferenceLink>
-                                                    </div>
-                                                </li>
-                                                <li className="flex">
-                                                    <ListMarker type="unordered-small" />
-                                                    <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
-                                                        <span>
-                                                            Recharts 3.8.0 생성 위치: RechartsWrapper·StaticDiv 및 SVG
-                                                            도형 컴포넌트
-                                                        </span>
-                                                        <ReferenceLink href="https://github.com/recharts/recharts/blob/v3.8.0/src/chart/RechartsWrapper.tsx#L170-L193">
-                                                            div 크기 속성 생성 코드
-                                                        </ReferenceLink>
-                                                        <ReferenceLink href="https://github.com/recharts/recharts/blob/v3.8.0/src/shape/Rectangle.tsx#L212-L225">
-                                                            SVG 도형 속성 생성 코드
-                                                        </ReferenceLink>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </section>
-                    </div>
-                </BaseCard>
-
-                <BaseCard
-                    title={cardHeading('프로젝트 원인')}
-                    subtitle={`오류 ${PROJECT_ERROR_TOTAL}건 · 화면 ${PROJECT_ISSUE_SCREENS}개 — 우리 마크업에서 나옵니다`}
-                    action={
-                        <Badge color={PROJECT_ERROR_TOTAL ? 'error' : 'neutral'}>
-                            {PROJECT_ERROR_TOTAL ? '수정 대상' : '발생 없음'}
-                        </Badge>
-                    }
-                >
-                    {ACTIVE_PROJECT_ISSUES.length === 0 ? (
-                        <EmptyState title="발생한 프로젝트 오류가 없습니다." className="min-h-52" />
-                    ) : null}
-                    {/* 원인이 여럿이라 간격만으로는 경계가 흐려진다 — 절마다 구분선과 40px 여백을 둔다. */}
-                    <div className="divide-subtle-3 flex flex-col divide-y">
-                        {ACTIVE_PROJECT_ISSUES.map((issue, index) => (
-                            <section
-                                key={issue.kind}
-                                aria-labelledby={`project-issue-${issue.kind}`}
-                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                            >
-                                <SectionHeader>
-                                    <SectionHeaderTitle
-                                        className="typo-title-l-bold"
-                                        id={`project-issue-${issue.kind}`}
-                                    >
-                                        {index + 1}. {issue.title}
-                                    </SectionHeaderTitle>
-                                    <SectionHeaderDescription>
-                                        {issue.routes.length}개 화면에서 재현
-                                    </SectionHeaderDescription>
-                                </SectionHeader>
-                                <IssueTable
-                                    caption={`${issue.title} 의 건수와 판정`}
-                                    issues={issuesByKind(issue.kinds)}
-                                />
-                                <DetailList
-                                    rows={[
-                                        {term: '발생 이유', body: <p>{issue.reason}</p>},
-                                        {
-                                            term: '원인 파일',
-                                            body: <code className="font-mono break-all">{issue.source}</code>,
-                                        },
-                                        {term: '조치', body: <p>{issue.fix}</p>},
-                                        {
-                                            term: '해당 화면',
-                                            body: (
-                                                <ul className="flex flex-col gap-2 break-all">
-                                                    {issue.routes.map((route) => (
-                                                        <li key={route}>
-                                                            <ReferenceLink href={route}>{route}</ReferenceLink>
-                                                        </li>
-                                                    ))}
-                                                </ul>
-                                            ),
-                                        },
-                                    ]}
-                                />
-                            </section>
-                        ))}
-                    </div>
-                </BaseCard>
-
-                <BaseCard
-                    title={cardHeading('화면별 검사 기록')}
-                    subtitle="최근 저장된 전수검사 결과입니다. 소스가 변경되었다면 재검사합니다."
-                >
-                    <Accordion type="multiple">
-                        <AccordionItem value="screens">
-                            <AccordionTrigger>
-                                서비스 화면 {SCREEN_TOTALS.screens}개 — 오류 {SCREEN_TOTALS.errors}건 · 경고{' '}
-                                {SCREEN_TOTALS.warnings}건
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                <div className="flex flex-col gap-4">
-                                    {/* 기업·기관은 서로 다른 화면 묶음이라 한 표에 붙여 두면 200줄을 훑어야 한다.
+                <div id="w3c-records" className="scroll-mt-24">
+                    <BaseCard
+                        title={cardHeading('화면별 검사 기록')}
+                        subtitle="최근 저장된 전수검사 결과입니다. 소스가 변경되었다면 재검사합니다."
+                    >
+                        <div className="flex flex-col gap-4">
+                            <div className="flex flex-col gap-4">
+                                {/* 기업·기관은 서로 다른 화면 묶음이라 한 표에 붙여 두면 200줄을 훑어야 한다.
                                         1뎁스가 검사 도구 탭이므로 여기는 2뎁스인 pill 을 쓴다. */}
-                                    <Tabs defaultValue={SCREEN_GROUPS[0].key}>
-                                        <TabsList variant="pill" aria-label="이용자 구분">
-                                            {SCREEN_GROUPS.map((group) => (
-                                                <TabsTrigger key={group.key} value={group.key}>
-                                                    {group.label} {group.screens.length}개
-                                                </TabsTrigger>
-                                            ))}
-                                        </TabsList>
+                                <Tabs defaultValue={SCREEN_GROUPS[0].key}>
+                                    <TabsList variant="pill" aria-label="이용자 구분">
                                         {SCREEN_GROUPS.map((group) => (
-                                            <TabsContent key={group.key} value={group.key}>
-                                                <Table className="min-w-240 table-fixed">
+                                            <TabsTrigger key={group.key} value={group.key}>
+                                                {group.label}
+                                            </TabsTrigger>
+                                        ))}
+                                    </TabsList>
+                                    {SCREEN_GROUPS.map((group) => (
+                                        <TabsContent key={group.key} value={group.key}>
+                                            <RecordFilter
+                                                label={`W3C ${group.label} 화면 목록`}
+                                                rows={group.screens.map(
+                                                    (screen) =>
+                                                        screen.kinds.length > 0 || screen.errors + screen.warnings > 0,
+                                                )}
+                                            >
+                                                <Table className="border-t-foreground-subtle border-b-subtle-3 min-w-240 table-fixed border-t border-b">
                                                     <colgroup>
                                                         <col className="w-14" />
                                                         <col className="w-1/5" />
@@ -3350,7 +2441,7 @@ const AccessibilityExceptionsPage = () => (
                                                         {/* 행 선은 색을 주지 않으면 글자색(currentColor)을 따라 아코디언 본문의
                                                             label-foreground 로 진하게 그려진다 — 페이지의 다른 구분선과 같은
                                                             border-subtle-3 로 맞춘다. */}
-                                                        <TableRow className="border-subtle-3 bg-muted hover:bg-muted">
+                                                        <TableRow className="border-subtle-3 bg-primary-subtle hover:bg-primary-subtle [&_th]:text-foreground [&_th]:font-bold">
                                                             <TableHead scope="col" className="text-center">
                                                                 번호
                                                             </TableHead>
@@ -3371,7 +2462,14 @@ const AccessibilityExceptionsPage = () => (
                                                     </TableHeader>
                                                     <TableBody>
                                                         {group.screens.map((screen, index) => (
-                                                            <TableRow key={screen.path} className="border-subtle-3">
+                                                            <TableRow
+                                                                key={screen.path}
+                                                                data-has-issue={
+                                                                    screen.kinds.length > 0 ||
+                                                                    screen.errors + screen.warnings > 0
+                                                                }
+                                                                className={RECORD_ROW_CLASS}
+                                                            >
                                                                 <TableCell className="text-foreground-subtle text-center align-top tabular-nums">
                                                                     {index + 1}
                                                                 </TableCell>
@@ -3415,6 +2513,7 @@ const AccessibilityExceptionsPage = () => (
                                                                                 const badge = (
                                                                                     <Badge
                                                                                         size="xs"
+                                                                                        variant="outline"
                                                                                         color={
                                                                                             hasError
                                                                                                 ? 'error'
@@ -3426,13 +2525,32 @@ const AccessibilityExceptionsPage = () => (
                                                                                             // 화면 안 앵커는 next/link 가 아니라 a 로 둔다 — next/link 는 주소가 이미 같은 앵커면 다시 눌러도
                                                                                             // 스크롤하지 않아, 같은 배지를 두 번째 누를 때 이동하지 않는다. a 는 브라우저가 매번 그 자리로 옮긴다.
                                                                                             <a href={`#${target}`}>
+                                                                                                <KindLevelIcon
+                                                                                                    level={
+                                                                                                        hasError
+                                                                                                            ? 'error'
+                                                                                                            : 'warning'
+                                                                                                    }
+                                                                                                />
                                                                                                 {
                                                                                                     ISSUE_LABEL[kind]
                                                                                                         .label
                                                                                                 }
                                                                                             </a>
                                                                                         ) : (
-                                                                                            ISSUE_LABEL[kind].label
+                                                                                            <>
+                                                                                                <KindLevelIcon
+                                                                                                    level={
+                                                                                                        hasError
+                                                                                                            ? 'error'
+                                                                                                            : 'warning'
+                                                                                                    }
+                                                                                                />
+                                                                                                {
+                                                                                                    ISSUE_LABEL[kind]
+                                                                                                        .label
+                                                                                                }
+                                                                                            </>
                                                                                         )}
                                                                                     </Badge>
                                                                                 )
@@ -3441,7 +2559,11 @@ const AccessibilityExceptionsPage = () => (
                                                                             })}
                                                                         </span>
                                                                     ) : (
-                                                                        <Badge size="xs" color="success">
+                                                                        <Badge
+                                                                            size="xs"
+                                                                            variant="outline"
+                                                                            color="neutral"
+                                                                        >
                                                                             없음
                                                                         </Badge>
                                                                     )}
@@ -3480,12 +2602,6 @@ const AccessibilityExceptionsPage = () => (
                                                                                                     key={index}
                                                                                                     className="flex flex-col items-start gap-1"
                                                                                                 >
-                                                                                                    <IssueBadge
-                                                                                                        level={
-                                                                                                            message.subType ||
-                                                                                                            message.type
-                                                                                                        }
-                                                                                                    />
                                                                                                     <p className="break-words">
                                                                                                         {
                                                                                                             message.message
@@ -3512,17 +2628,1209 @@ const AccessibilityExceptionsPage = () => (
                                                         ))}
                                                     </TableBody>
                                                 </Table>
-                                            </TabsContent>
-                                        ))}
-                                    </Tabs>
+                                            </RecordFilter>
+                                        </TabsContent>
+                                    ))}
+                                </Tabs>
+                            </div>
+                        </div>
+                    </BaseCard>
+                </div>
+                <div id="w3c-library" className="scroll-mt-24">
+                    <BaseCard
+                        title={cardHeading('외부 라이브러리 원인')}
+                        subtitle={
+                            <span className="typo-body-xl-regular">
+                                검사 당시 라이브러리 생성 DOM에서 확인한 항목입니다. 현재 화면의 발생 요소와 대조합니다.
+                            </span>
+                        }
+                        action={<Badge color="success">예외 검토</Badge>}
+                    >
+                        {/* 원인이 여럿이라 간격만으로는 경계가 흐려진다 — 절마다 구분선과 40px 여백을 둔다. */}
+                        <div className="divide-subtle-3 flex flex-col divide-y">
+                            <section
+                                aria-labelledby="library-empty-option"
+                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                            >
+                                <SectionHeader>
+                                    <SectionHeaderTitle
+                                        className="typo-title-l-bold scroll-mt-24"
+                                        id="library-empty-option"
+                                    >
+                                        {sectionHeading('Radix UI Select', '빈 option')}
+                                    </SectionHeaderTitle>
+                                </SectionHeader>
+                                <IssueTable
+                                    caption="빈 option 오류의 건수와 판정"
+                                    issues={issuesByKind(['empty-option'])}
+                                />
+                                <LibraryDetailAccordion
+                                    rows={[
+                                        {
+                                            term: '한눈에 보기',
+                                            body: (
+                                                <Alert variant="outline" color="info">
+                                                    <Info aria-hidden="true" />
+                                                    <AlertDescription>
+                                                        프로젝트가 일반적인 placeholder 방식을 사용했을 때, Radix UI가
+                                                        폼 연동용으로 자동 생성한 숨은 옵션에서 발생합니다. 사용자가
+                                                        조작하는 선택 버튼에는 이름이 제공되어 있으며, 현재 확인
+                                                        범위에서 이용에는 영향이 없습니다.
+                                                    </AlertDescription>
+                                                </Alert>
+                                            ),
+                                        },
+                                        {
+                                            term: '오류의 뜻',
+                                            body: (
+                                                <div className="flex flex-col gap-2">
+                                                    <p>
+                                                        검사기는 이름이 없는 빈 선택지를 발견했다는 뜻으로 이 오류를
+                                                        표시합니다.
+                                                    </p>
+                                                    <CodeBlock code={'<option value=""></option>'} language="html" />
+                                                    <p className="text-foreground-subtle">
+                                                        HTML 규칙상 <code className="font-mono">&lt;option&gt;</code>
+                                                        에는 태그 안의 글자나 <code className="font-mono">
+                                                            label
+                                                        </code>{' '}
+                                                        속성 중 하나가 있어야 합니다. 여기서 label은 별도의{' '}
+                                                        <code className="font-mono">&lt;label&gt;</code> 태그가 아니라
+                                                        선택지 자체의 이름입니다.
+                                                    </p>
+                                                </div>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 과정',
+                                            body: (
+                                                <div className="flex flex-col gap-2">
+                                                    <ul className="flex list-none flex-col gap-1">
+                                                        <li className="flex">
+                                                            <ListMarker type="unordered-small" />
+                                                            <span className="min-w-0">
+                                                                선택 전에는 값이 비어 있어 “관련사이트” placeholder가
+                                                                보입니다. 일반적인 Select 사용 방식입니다.
+                                                            </span>
+                                                        </li>
+                                                        <li className="flex">
+                                                            <ListMarker type="unordered-small" />
+                                                            <span className="min-w-0">
+                                                                shadcn/ui Select가 사용하는 Radix UI는 보이는 선택
+                                                                버튼과 별도로, 폼에 값을 전달할 숨은{' '}
+                                                                <code className="font-mono">&lt;select&gt;</code>를
+                                                                만듭니다.
+                                                            </span>
+                                                        </li>
+                                                        <li className="flex">
+                                                            <ListMarker type="unordered-small" />
+                                                            <span className="min-w-0">
+                                                                아직 선택한 값이 없다는 상태를 표현하려고 Radix UI가 그
+                                                                select 안에 이름 없는 빈 option을 자동으로 넣습니다.
+                                                            </span>
+                                                        </li>
+                                                        <li className="flex">
+                                                            <ListMarker type="unordered-small" />
+                                                            <span className="min-w-0">
+                                                                Nu Html Checker는 화면에 보이는지와 관계없이 이 빈
+                                                                option을 HTML 문법 오류로 보고합니다.
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                    <CodeBlock
+                                                        code={
+                                                            '<!-- 프로젝트가 작성한 보이는 선택 버튼 -->\n<button role="combobox" aria-label="관련 사이트">관련사이트</button>\n\n<!-- Radix UI가 자동 생성한 폼 연동용 요소 -->\n<select aria-hidden="true" tabindex="-1" name="familySite">\n  <option value="" selected></option>\n</select>'
+                                                        }
+                                                        language="html"
+                                                    />
+                                                </div>
+                                            ),
+                                        },
+                                        {
+                                            term: '책임 구분',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>프로젝트 코드:</strong> placeholder와 빈 초기값을
+                                                            사용합니다. 선택 항목에는 모두 화면에 표시할 이름이 있고,
+                                                            실제 선택 버튼에도{' '}
+                                                            <code className="font-mono">aria-label</code>이 있습니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>라이브러리 코드:</strong> 오류 대상인 빈 option을
+                                                            직접 생성합니다. 프로젝트의 Select 래퍼와 사용 화면에는 해당
+                                                            option이 작성되어 있지 않습니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            따라서 오류가 발견된 곳은 우리 화면이지만, 오류 마크업의
+                                                            생성 주체는 Radix UI로 분류합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '영향과 조치',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>HTML 적합성 오류는 맞습니다.</strong> 다만 오류가 난
+                                                            select는 값 전달을 위한 숨은 요소이며 스크린리더와 키보드
+                                                            탐색에서 제외되어 있습니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>사용자 이용에는 결함이 없습니다.</strong> 실제로
+                                                            조작하는 버튼에는 “관련 사이트”라는 접근 가능한 이름이 있고,
+                                                            키보드 선택과 새 창 열기 동작도 정상임을 확인했습니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            근본 수정은 Radix UI가 빈 option에 이름을 제공하도록
+                                                            변경해야 합니다.{' '}
+                                                            <strong>
+                                                                라이브러리 원본 수정이나 가짜 선택값을 사용하는 우회는
+                                                                업데이트 및 동작에 영향을 줄 수 있어 적용하지 않습니다.
+                                                            </strong>{' '}
+                                                            따라서 외부 라이브러리 예외 검토 항목으로 관리합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '반복 이유',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            모든 화면의 Footer에 “관련 사이트” Select가 있어 기본적으로
+                                                            화면당 1건이 발생합니다. 총{' '}
+                                                            {ISSUE_SCREENS_BY_KIND['empty-option']}개 화면에 같은 원인이
+                                                            반복된 결과입니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>
+                                                                2건 이상도 Footer와 동일한 Radix UI의 빈 option
+                                                                오류입니다.
+                                                            </strong>{' '}
+                                                            화면 본문에 같은 방식의 Select가 있어 발생 건수가
+                                                            추가됩니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '여러 건 화면',
+                                            body: (
+                                                <Accordion type="single" collapsible className="gap-0">
+                                                    <AccordionItem
+                                                        value="multiple-empty-options"
+                                                        className="border-subtle-3 rounded-sm border bg-transparent px-4 py-3"
+                                                    >
+                                                        <AccordionTrigger className="text-sm! leading-5! font-bold!">
+                                                            2건 이상 발생한 {MULTIPLE_EMPTY_OPTION_SCREENS.length}개
+                                                            화면 보기
+                                                        </AccordionTrigger>
+                                                        <AccordionContent className="mt-3 pt-3 text-sm! leading-5!">
+                                                            <p className="text-foreground-subtle mb-3">
+                                                                건수 구성은 공통 Footer 1건과 해당 화면 본문의 Select
+                                                                건수로 나눠 표시합니다.
+                                                            </p>
+                                                            <Table className="border-t-foreground-subtle border-b-subtle-3 min-w-220 table-fixed border-t border-b">
+                                                                <colgroup>
+                                                                    <col className="w-16" />
+                                                                    <col className="w-56" />
+                                                                    <col />
+                                                                    <col className="w-28" />
+                                                                </colgroup>
+                                                                <TableCaption className="sr-only">
+                                                                    빈 option 오류가 2건 이상 발생한 화면과 건수 구성
+                                                                </TableCaption>
+                                                                <TableHeader>
+                                                                    <TableRow className="border-subtle-3 bg-primary-subtle hover:bg-primary-subtle [&_th]:text-foreground [&_th]:font-bold">
+                                                                        <TableHead scope="col">구분</TableHead>
+                                                                        <TableHead scope="col">화면명</TableHead>
+                                                                        <TableHead scope="col">경로</TableHead>
+                                                                        <TableHead scope="col" className="text-center">
+                                                                            건수 구성
+                                                                        </TableHead>
+                                                                    </TableRow>
+                                                                </TableHeader>
+                                                                <TableBody>
+                                                                    {MULTIPLE_EMPTY_OPTION_SCREENS.map((screen) => (
+                                                                        <TableRow key={screen.path}>
+                                                                            <TableCell className="align-top">
+                                                                                {screen.userType}
+                                                                            </TableCell>
+                                                                            <TableCell className="align-top whitespace-normal">
+                                                                                <Link
+                                                                                    {...NEW_WINDOW_LINK_PROPS}
+                                                                                    href={screen.path}
+                                                                                    className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                                                                                >
+                                                                                    {screen.name}
+                                                                                    <span className="sr-only">
+                                                                                        {NEW_WINDOW_LABEL}
+                                                                                    </span>
+                                                                                </Link>
+                                                                            </TableCell>
+                                                                            <TableCell className="align-top whitespace-normal">
+                                                                                <code className="font-mono break-all">
+                                                                                    {screen.path}
+                                                                                </code>
+                                                                            </TableCell>
+                                                                            <TableCell className="text-center align-top font-bold tabular-nums">
+                                                                                1 + {screen.emptyOptionCount - 1} ={' '}
+                                                                                {screen.emptyOptionCount}
+                                                                            </TableCell>
+                                                                        </TableRow>
+                                                                    ))}
+                                                                </TableBody>
+                                                            </Table>
+                                                        </AccordionContent>
+                                                    </AccordionItem>
+                                                </Accordion>
+                                            ),
+                                        },
+                                        {
+                                            term: '근거',
+                                            body: (
+                                                <div className="flex flex-col gap-1">
+                                                    <ReferenceLink href="https://github.com/radix-ui/primitives/blob/a06624085504a13d9c21c04d238cf4c4f6905de1/packages/react/select/src/select.tsx#L1825-L1841">
+                                                        Radix Select 소스 — 숨은 select 와 빈 option 을 만드는
+                                                        곳(L1825~1841)
+                                                    </ReferenceLink>
+                                                    <ul className="text-foreground-subtle flex list-none flex-col gap-1">
+                                                        <li className="flex">
+                                                            <ListMarker type="unordered-small" />
+                                                            <span className="min-w-0">
+                                                                Radix 는 따로 들여온 라이브러리가 아니라 shadcn/ui 가
+                                                                쓰는 엔진입니다.
+                                                            </span>
+                                                        </li>
+                                                        <li className="flex">
+                                                            <ListMarker type="unordered-small" />
+                                                            <span className="min-w-0">
+                                                                shadcn 이 준 Select 소스 첫머리에{' '}
+                                                                <code className="font-mono">
+                                                                    import {'{'} Select {'}'} from &quot;radix-ui&quot;
+                                                                </code>{' '}
+                                                                가 있습니다.
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </section>
+
+                            <section
+                                aria-labelledby="library-select-required"
+                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                            >
+                                <SectionHeader>
+                                    <SectionHeaderTitle
+                                        className="typo-title-l-bold scroll-mt-24"
+                                        id="library-select-required"
+                                    >
+                                        {sectionHeading('Radix UI Select', 'required select')}
+                                    </SectionHeaderTitle>
+                                </SectionHeader>
+                                <IssueTable
+                                    caption="required select 오류의 건수와 판정"
+                                    issues={issuesByKind(['select-required'])}
+                                />
+                                <LibraryDetailAccordion
+                                    rows={[
+                                        {
+                                            term: '한눈에 보기',
+                                            body: (
+                                                <Alert variant="outline" color="info">
+                                                    <Info aria-hidden="true" />
+                                                    <AlertDescription>
+                                                        필수 Select의 값이나 동작 문제가 아니라, 초기 HTML에서 Radix
+                                                        UI가 만든 숨은 select에 option이 아직 채워지지 않아 발생합니다.
+                                                        브라우저 실행 후에는 선택지가 채워지고 필수 검증도 정상
+                                                        동작합니다.
+                                                    </AlertDescription>
+                                                </Alert>
+                                            ),
+                                        },
+                                        {
+                                            term: '오류의 뜻',
+                                            body: (
+                                                <div className="flex flex-col gap-2">
+                                                    <p>
+                                                        검사기가 “필수 선택 상자인데 선택 항목이 하나도 없다”고 판단한
+                                                        오류입니다.
+                                                    </p>
+                                                    <CodeBlock code={'<select required></select>'} language="html" />
+                                                    <p className="text-foreground-subtle">
+                                                        HTML 규칙상 <code className="font-mono">required</code>가 붙은{' '}
+                                                        <code className="font-mono">&lt;select&gt;</code>에는 최소 한
+                                                        개의 <code className="font-mono">&lt;option&gt;</code>이 있어야
+                                                        합니다.
+                                                    </p>
+                                                </div>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 과정',
+                                            body: (
+                                                <div className="flex flex-col gap-2">
+                                                    <ul className="flex list-none flex-col gap-2">
+                                                        <li className="flex">
+                                                            <ListMarker type="unordered-small" />
+                                                            <span className="min-w-0">
+                                                                프로젝트에서 필수 입력으로 지정하면 Radix UI가 만든 숨은{' '}
+                                                                <code className="font-mono">&lt;select&gt;</code>에도{' '}
+                                                                <code className="font-mono">required</code>가 붙습니다.
+                                                            </span>
+                                                        </li>
+                                                        <li className="flex">
+                                                            <ListMarker type="unordered-small" />
+                                                            <span className="min-w-0">
+                                                                초기 HTML에서는 실제 선택 항목이 숨은 select에 아직
+                                                                복사되지 않아 빈 상태로 검사됩니다.
+                                                            </span>
+                                                        </li>
+                                                    </ul>
+                                                    <CodeBlock
+                                                        code={
+                                                            '<!-- 사용자가 조작하는 선택 버튼 -->\n<button role="combobox" id="corpType">기업형태</button>\n\n<!-- Radix UI가 초기 HTML에 생성한 폼 연동용 요소 -->\n<select aria-hidden="true" required tabindex="-1" name="corpType"></select>'
+                                                        }
+                                                        language="html"
+                                                    />
+                                                </div>
+                                            ),
+                                        },
+                                        {
+                                            term: '책임 구분',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>프로젝트 코드:</strong> 업무상 필요한 필수 입력과
+                                                            실제 선택 항목을 정상적으로 제공합니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>라이브러리 코드:</strong> 초기 HTML에 option이 없는
+                                                            숨은 필수 select를 생성합니다. 따라서 생성 주체는 Radix UI로
+                                                            분류합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '영향과 조치',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>HTML 적합성 오류는 맞습니다.</strong> 다만
+                                                            브라우저가 실행되면 숨은 select에 option이 채워집니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>사용자 이용에는 결함이 없습니다.</strong> 사용자가
+                                                            조작하는 Select의 선택지와 필수 입력 검증은 정상 동작합니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            필수 검증에 필요한{' '}
+                                                            <code className="font-mono">required</code>를 제거하거나
+                                                            라이브러리 원본을 수정하면 동작과 업데이트에 영향을 줄 수
+                                                            있어 적용하지 않습니다. 따라서 외부 라이브러리 예외 검토
+                                                            항목으로 관리합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 화면',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    {REQUIRED_SELECT_SCREENS.map((screen) => (
+                                                        <li key={screen.path} className="flex">
+                                                            <ListMarker type="unordered-small" />
+                                                            <span className="min-w-0">
+                                                                <Link
+                                                                    {...NEW_WINDOW_LINK_PROPS}
+                                                                    href={screen.path}
+                                                                    className="text-primary focus-visible:ring-ring rounded-xs font-medium underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
+                                                                >
+                                                                    {screen.name}
+                                                                    <span className="sr-only">{NEW_WINDOW_LABEL}</span>
+                                                                </Link>{' '}
+                                                                · {screen.userType} · {screen.requiredSelectCount}건
+                                                            </span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '근거',
+                                            body: (
+                                                <div className="flex flex-col gap-1">
+                                                    <ReferenceLink href="https://github.com/radix-ui/primitives/blob/a06624085504a13d9c21c04d238cf4c4f6905de1/packages/react/select/src/select.tsx#L1828">
+                                                        Radix Select 소스 — required 를 숨은 select 로 넘기는 곳(L1828)
+                                                    </ReferenceLink>
+                                                </div>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </section>
+
+                            {NAV_ROLE_ISSUES.length > 0 ? (
+                                <section
+                                    aria-labelledby="library-nav-role"
+                                    className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                                >
+                                    <SectionHeader>
+                                        <SectionHeaderTitle
+                                            className="typo-title-l-bold scroll-mt-24"
+                                            id="library-nav-role"
+                                        >
+                                            {sectionHeading('shadcn Pagination', 'nav role 경고')}
+                                        </SectionHeaderTitle>
+                                    </SectionHeader>
+                                    <IssueTable caption="nav role 경고의 건수와 판정" issues={NAV_ROLE_ISSUES} />
+                                    <LibraryDetailAccordion
+                                        rows={[
+                                            {
+                                                term: '발생 이유',
+                                                body: (
+                                                    <p>
+                                                        shadcn Pagination 순정 셸이{' '}
+                                                        <code className="font-mono">
+                                                            &lt;nav role=&quot;navigation&quot;&gt;
+                                                        </code>{' '}
+                                                        을 출력합니다. <code className="font-mono">nav</code> 의 기본
+                                                        역할과 겹쳐 불필요하다는 안내이며 오류가 아닙니다.
+                                                    </p>
+                                                ),
+                                            },
+                                            {
+                                                term: '조치',
+                                                body: (
+                                                    <p>shadcn/ui가 관리하는 primitive 셸 구조이므로 그대로 둡니다.</p>
+                                                ),
+                                            },
+                                        ]}
+                                    />
+                                </section>
+                            ) : null}
+
+                            <section
+                                aria-labelledby="library-sonner"
+                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                            >
+                                <SectionHeader>
+                                    <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="library-sonner">
+                                        {sectionHeading('sonner', 'CSS Parse Error · style type 경고')}
+                                    </SectionHeaderTitle>
+                                </SectionHeader>
+                                <IssueTable
+                                    caption="sonner 가 만든 DOM 직렬화본에서 나오는 메시지와 화면당 건수"
+                                    issues={SONNER_ISSUES}
+                                    countHeader="화면당 건수"
+                                    showScreens={false}
+                                />
+                                <LibraryDetailAccordion
+                                    rows={[
+                                        {
+                                            term: '한눈에 보기',
+                                            body: (
+                                                <Alert variant="outline" color="info">
+                                                    <Info aria-hidden="true" />
+                                                    <AlertDescription>
+                                                        sonner가 토스트 디자인을 위해 브라우저 실행 후 추가한 스타일에서
+                                                        발생합니다. 프로젝트가 작성한 CSS 오류가 아니며, 스타일과 토스트
+                                                        동작은 브라우저에서 정상 작동합니다.
+                                                    </AlertDescription>
+                                                </Alert>
+                                            ),
+                                        },
+                                        {
+                                            term: '오류의 뜻',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>CSS Parse Error:</strong> Nu Html Checker가 sonner
+                                                            스타일 일부를 CSS 문법으로 해석하지 못했다는 뜻입니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>style type 경고:</strong>{' '}
+                                                            <code className="font-mono">type=&quot;text/css&quot;</code>
+                                                            는 HTML5에서 기본값이므로 생략해도 된다는 안내입니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 과정',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            sonner는 알림 토스트를 표시하는 외부 라이브러리입니다.
+                                                            화면이 실행되면 자체 CSS를{' '}
+                                                            <code className="font-mono">
+                                                                &lt;style type=&quot;text/css&quot;&gt;
+                                                            </code>
+                                                            로 문서에 추가합니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            이 스타일이 포함된 브라우저 DOM을 검사하면 두 메시지가
+                                                            발생합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '책임 구분',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>프로젝트 코드:</strong> 공통 레이아웃에 토스트
+                                                            영역만 배치하며, 오류가 표시된 style과 CSS를 직접 작성하지
+                                                            않습니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>라이브러리 코드:</strong> sonner가 style 요소와
+                                                            CSS를 실행 중에 직접 생성합니다. 따라서 생성 주체는 sonner로
+                                                            분류합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '영향과 조치',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>사용자 이용에는 결함이 없습니다.</strong> sonner의
+                                                            스타일과 토스트 표시·닫기 동작은 브라우저에서 정상
+                                                            작동합니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            제거하려면 sonner 원본을 수정하거나 토스트 라이브러리를
+                                                            교체해야 하며, 업데이트와 공통 알림 기능에 영향을 줄 수 있어
+                                                            적용하지 않습니다. 따라서 외부 라이브러리 예외 검토 항목으로
+                                                            관리합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 조건',
+                                            body: (
+                                                <p>
+                                                    서버가 처음 전송한 HTML에는 sonner 스타일이 없습니다. 브라우저 실행
+                                                    후의 DOM을 복사하거나 직렬화해 검사할 때만 나타나며, 검사 방식에
+                                                    따라 CSS Parse Error 건수는 달라질 수 있습니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '근거',
+                                            body: (
+                                                <div className="flex flex-col gap-2">
+                                                    <p>
+                                                        sonner 2.0.7 배포 코드에서{' '}
+                                                        <code className="font-mono">
+                                                            style.type = &apos;text/css&apos;
+                                                        </code>
+                                                        와 자체 CSS를 문서에 삽입하는 동작을 확인했습니다.
+                                                    </p>
+                                                    <div className="flex flex-col items-start gap-1">
+                                                        <ReferenceLink href="https://app.unpkg.com/sonner@2.0.7/files/dist/index.mjs">
+                                                            sonner 2.0.7 배포 코드 — style 요소와 CSS 삽입 구현
+                                                        </ReferenceLink>
+                                                        <ReferenceLink href="https://github.com/emilkowalski/sonner/releases/tag/v2.0.7">
+                                                            sonner 공식 GitHub — v2.0.7 릴리스
+                                                        </ReferenceLink>
+                                                    </div>
+                                                </div>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </section>
+
+                            <section
+                                aria-labelledby="library-dialog"
+                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                            >
+                                <SectionHeader>
+                                    <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="library-dialog">
+                                        {sectionHeading('Radix 모달', '배경 감춤 · 스크롤 잠금 스타일')}
+                                    </SectionHeaderTitle>
+                                    <SectionHeaderDescription>
+                                        퍼블리싱 확인용 화면과 실제 서비스 화면 모두 모달을 연 상태에서 발생할 수
+                                        있습니다
+                                    </SectionHeaderDescription>
+                                </SectionHeader>
+                                <IssueTable
+                                    caption="모달이 열렸을 때 생기는 메시지와 화면당 건수"
+                                    issues={DIALOG_ISSUES}
+                                    countHeader="화면당 건수"
+                                    showScreens={false}
+                                />
+                                <LibraryDetailAccordion
+                                    rows={[
+                                        {
+                                            term: '한눈에 보기',
+                                            body: (
+                                                <Alert variant="outline" color="info">
+                                                    <Info aria-hidden="true" />
+                                                    <AlertDescription>
+                                                        모달이 열릴 때 Radix UI가 배경을 숨기고 스크롤을 막는 과정에서
+                                                        발생합니다. 모달 단독 확인 화면만의 문제가 아니며, 실제 서비스
+                                                        모달을 연 상태에서도 같은 원인으로 나타날 수 있습니다.
+                                                    </AlertDescription>
+                                                </Alert>
+                                            ),
+                                        },
+                                        {
+                                            term: '오류의 뜻',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>배경 감춤 경고:</strong> 이미{' '}
+                                                            <code className="font-mono">hidden</code>인 요소에 같은
+                                                            의미의 <code className="font-mono">aria-hidden</code>이
+                                                            추가돼 불필요하다는 안내입니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>style type 경고:</strong> 스크롤 잠금용 style의{' '}
+                                                            <code className="font-mono">type=&quot;text/css&quot;</code>
+                                                            는 HTML5에서 기본값이므로 생략해도 된다는 안내입니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 과정',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            모달이 열리면 배경을 스크린리더에서 제외하기 위해 Radix UI가{' '}
+                                                            <code className="font-mono">aria-hidden</code>을 추가합니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            동시에 react-remove-scroll이 배경 스크롤을 막는 style을
+                                                            문서에 추가합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '책임 구분',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>프로젝트 코드:</strong> Radix 모달을 정상적인
+                                                            방법으로 열고 닫습니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>라이브러리 코드:</strong> 경고 대상인 aria-hidden과
+                                                            스크롤 잠금 style을 실행 중에 생성합니다. 따라서 외부
+                                                            라이브러리 원인으로 분류합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '영향과 조치',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>사용자 이용에는 결함이 없습니다.</strong> 배경
+                                                            감춤은 모달에 집중하도록 돕고, 스크롤 잠금도 정상
+                                                            작동합니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            제거하려면 라이브러리의 모달 접근성 및 스크롤 제어를
+                                                            수정해야 하므로 적용하지 않습니다. 따라서 외부 라이브러리
+                                                            예외 검토 항목으로 관리합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 조건',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            서버의 초기 HTML이나 모달이 닫힌 상태에서는 발생하지
+                                                            않습니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            퍼블리싱 확인용 화면과 실제 서비스 화면 모두 모달을 연 뒤의
+                                                            DOM을 검사하면 발생할 수 있습니다. 모달을 닫으면 추가된
+                                                            속성과 style도 제거됩니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '대표 확인 경로',
+                                            body: (
+                                                <ul className="flex flex-wrap gap-2">
+                                                    {DIALOG_SCREEN_ROUTES.map((route) => (
+                                                        <li key={route}>
+                                                            <Badge
+                                                                variant="solid-pastel"
+                                                                color="success"
+                                                                size="xs"
+                                                                asChild
+                                                            >
+                                                                <Link {...NEW_WINDOW_LINK_PROPS} href={route}>
+                                                                    <code className="font-mono">{route}</code>
+                                                                    <span className="sr-only">{NEW_WINDOW_LABEL}</span>
+                                                                </Link>
+                                                            </Badge>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '근거',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                                                            <span>
+                                                                Radix Dialog가 모달 바깥 영역을 숨기고 RemoveScroll을
+                                                                실행합니다.
+                                                            </span>
+                                                            <ReferenceLink href="https://github.com/radix-ui/primitives/blob/main/packages/react/dialog/src/dialog.tsx#L198-L232">
+                                                                스크롤 잠금 공식 소스
+                                                            </ReferenceLink>
+                                                            <ReferenceLink href="https://github.com/radix-ui/primitives/blob/main/packages/react/dialog/src/dialog.tsx#L272-L285">
+                                                                배경 감춤 공식 소스
+                                                            </ReferenceLink>
+                                                        </div>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                                                            <span>
+                                                                react-style-singleton 2.2.3이 스크롤 잠금용 style에{' '}
+                                                                <code className="font-mono">
+                                                                    type=&quot;text/css&quot;
+                                                                </code>
+                                                                를 지정합니다.
+                                                            </span>
+                                                            <ReferenceLink href="https://unpkg.com/react-style-singleton@2.2.3/dist/es2019/singleton.js">
+                                                                배포 코드 확인
+                                                            </ReferenceLink>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </section>
+
+                            <section
+                                aria-labelledby="library-chart"
+                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                            >
+                                <SectionHeader>
+                                    <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="library-chart">
+                                        {sectionHeading('recharts · shadcn chart', 'SVG 속성 · div 안의 style')}
+                                    </SectionHeaderTitle>
+                                    <SectionHeaderDescription>
+                                        차트가 있는 평가결과 화면에서 shadcn Chart와 Recharts가 생성한 요소에 발생합니다
+                                    </SectionHeaderDescription>
+                                </SectionHeader>
+                                <div className="flex flex-col gap-2">
+                                    <h4 className="font-bold">운영 HTML 자동 검사</h4>
+                                    <IssueTable
+                                        caption="최근 운영 HTML 검사 — 차트 셸과 Recharts 생성 요소"
+                                        issues={issuesByKind(['chart-style', 'chart-width', 'chart-height'])}
+                                    />
                                 </div>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                </BaseCard>
+                                <div className="flex flex-col gap-2">
+                                    <h4 className="font-bold">브라우저 렌더링 후 DOM 검사 사례</h4>
+                                    <p className="text-foreground-subtle">
+                                        차트가 완성된 뒤 SVG 도형에 추가되는 항목입니다. 현재 운영 HTML 자동 집계와
+                                        구분합니다.
+                                    </p>
+                                    <IssueTable
+                                        caption="과거 브라우저 DOM 검사 사례 — 현재 운영 HTML 집계와 별개"
+                                        issues={CHART_ISSUES}
+                                        countHeader="화면당 건수"
+                                        showScreens={false}
+                                    />
+                                </div>
+                                <LibraryDetailAccordion
+                                    rows={[
+                                        {
+                                            term: '한눈에 보기',
+                                            body: (
+                                                <Alert variant="outline" color="info">
+                                                    <Info aria-hidden="true" />
+                                                    <AlertDescription>
+                                                        shadcn Chart와 Recharts가 차트를 그리며 자동 생성한 HTML·SVG에서
+                                                        발생합니다. 프로젝트가 입력한 차트 데이터의 오류가 아니며, 차트
+                                                        표시와 이용은 정상입니다.
+                                                    </AlertDescription>
+                                                </Alert>
+                                            ),
+                                        },
+                                        {
+                                            term: '오류의 뜻',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>div 안의 style:</strong> shadcn Chart가 차트 색상을
+                                                            적용하려고 div 내부에 style 요소를 만들어 발생합니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>div의 width·height:</strong> Recharts가 div에
+                                                            허용되지 않는 크기 속성을 직접 붙여 발생합니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>SVG 속성:</strong> 차트 계산에 쓴 좌표·크기·이름이
+                                                            허용되지 않는 SVG 요소에 남아 브라우저 DOM 검사에서 추가로
+                                                            발생합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 과정',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            shadcn Chart가 색상용 style을 만들고, Recharts가 차트 크기를
+                                                            계산해 바깥 div를 생성합니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            브라우저에서 차트가 완성되면 Recharts가 막대·선·점·레이더를
+                                                            SVG 요소로 그리며 관련 속성이 추가됩니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '책임 구분',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>프로젝트 코드:</strong> 차트 데이터와 접근 가능한
+                                                            이름을 제공하고, 동일한 값을 확인할 수 있는 숨김 데이터 표를
+                                                            함께 제공합니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>라이브러리 코드:</strong> 오류 대상인 style, div
+                                                            속성, SVG 요소와 속성을 직접 생성합니다. 따라서 shadcn
+                                                            Chart와 Recharts 원인으로 분류합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '영향과 조치',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>HTML·SVG 적합성 오류는 맞습니다.</strong> 브라우저는
+                                                            허용되지 않는 추가 속성을 무시하고 차트를 정상적으로
+                                                            그립니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>사용자 이용에는 결함이 없습니다.</strong> 차트에는
+                                                            접근 가능한 이름이 있고, 같은 정보를 제공하는 숨김 데이터
+                                                            표도 있습니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            제거하려면 shadcn Chart 구조와 Recharts 내부 출력을
+                                                            수정하거나 차트를 직접 다시 구현해야 하므로 적용하지
+                                                            않습니다. 따라서 외부 라이브러리 예외 검토 항목으로
+                                                            관리합니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '검사 범위',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            운영 HTML 자동 검사에는 style과 바깥 div의 width·height가
+                                                            포함됩니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            브라우저 실행 후 DOM 검사에는 차트가 그려지며 생성된 SVG
+                                                            속성 오류가 추가됩니다. 두 표의 건수는 서로 합산하지
+                                                            않습니다.
+                                                        </span>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '대표 확인 경로',
+                                            body: (
+                                                <ul className="flex flex-wrap gap-2">
+                                                    {CHART_SCREEN_ROUTES.map((route) => (
+                                                        <li key={route}>
+                                                            <Badge
+                                                                variant="solid-pastel"
+                                                                color="success"
+                                                                size="xs"
+                                                                asChild
+                                                            >
+                                                                <Link {...NEW_WINDOW_LINK_PROPS} href={route}>
+                                                                    <code className="font-mono">{route}</code>
+                                                                    <span className="sr-only">{NEW_WINDOW_LABEL}</span>
+                                                                </Link>
+                                                            </Badge>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ),
+                                        },
+                                        {
+                                            term: '근거',
+                                            body: (
+                                                <ul className="flex list-none flex-col gap-2">
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                                                            <span>
+                                                                shadcn ChartStyle 생성 위치:{' '}
+                                                                <code className="font-mono">
+                                                                    src/components/ui/chart.tsx
+                                                                </code>
+                                                            </span>
+                                                            <ReferenceLink href="https://github.com/shadcn-ui/ui/blob/main/apps/v4/registry/new-york-v4/ui/chart.tsx#L77-L107">
+                                                                shadcn/ui 공식 ChartStyle 소스
+                                                            </ReferenceLink>
+                                                        </div>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <div className="flex min-w-0 flex-wrap items-center gap-x-2 gap-y-1">
+                                                            <span>
+                                                                Recharts 3.8.0 생성 위치: RechartsWrapper·StaticDiv 및
+                                                                SVG 도형 컴포넌트
+                                                            </span>
+                                                            <ReferenceLink href="https://github.com/recharts/recharts/blob/v3.8.0/src/chart/RechartsWrapper.tsx#L170-L193">
+                                                                div 크기 속성 생성 코드
+                                                            </ReferenceLink>
+                                                            <ReferenceLink href="https://github.com/recharts/recharts/blob/v3.8.0/src/shape/Rectangle.tsx#L212-L225">
+                                                                SVG 도형 속성 생성 코드
+                                                            </ReferenceLink>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </section>
+                        </div>
+                    </BaseCard>
+                </div>
+
+                <div id="w3c-project" className="scroll-mt-24">
+                    <BaseCard
+                        title={cardHeading('프로젝트 원인')}
+                        subtitle={`오류 ${PROJECT_ERROR_TOTAL}건 · 화면 ${PROJECT_ISSUE_SCREENS}개 — 우리 마크업에서 나옵니다`}
+                        action={
+                            <Badge color={PROJECT_ERROR_TOTAL ? 'error' : 'neutral'}>
+                                {PROJECT_ERROR_TOTAL ? '수정 대상' : '발생 없음'}
+                            </Badge>
+                        }
+                    >
+                        {ACTIVE_PROJECT_ISSUES.length === 0 ? (
+                            <EmptyState title="발생한 프로젝트 오류가 없습니다." className="min-h-52" />
+                        ) : null}
+                        {/* 원인이 여럿이라 간격만으로는 경계가 흐려진다 — 절마다 구분선과 40px 여백을 둔다. */}
+                        <div className="divide-subtle-3 flex flex-col divide-y">
+                            {ACTIVE_PROJECT_ISSUES.map((issue, index) => (
+                                <section
+                                    key={issue.kind}
+                                    aria-labelledby={`project-issue-${issue.kind}`}
+                                    className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                                >
+                                    <SectionHeader>
+                                        <SectionHeaderTitle
+                                            className="typo-title-l-bold scroll-mt-24"
+                                            id={`project-issue-${issue.kind}`}
+                                        >
+                                            {index + 1}. {issue.title}
+                                        </SectionHeaderTitle>
+                                        <SectionHeaderDescription>
+                                            {issue.routes.length}개 화면에서 재현
+                                        </SectionHeaderDescription>
+                                    </SectionHeader>
+                                    <IssueTable
+                                        caption={`${issue.title} 의 건수와 판정`}
+                                        issues={issuesByKind(issue.kinds)}
+                                    />
+                                    <DetailList
+                                        rows={[
+                                            {term: '발생 이유', body: <p>{issue.reason}</p>},
+                                            {
+                                                term: '원인 파일',
+                                                body: <code className="font-mono break-all">{issue.source}</code>,
+                                            },
+                                            {term: '조치', body: <p>{issue.fix}</p>},
+                                            {
+                                                term: '해당 화면',
+                                                body: (
+                                                    <ul className="flex flex-col gap-2 break-all">
+                                                        {issue.routes.map((route) => (
+                                                            <li key={route}>
+                                                                <ReferenceLink href={route}>{route}</ReferenceLink>
+                                                            </li>
+                                                        ))}
+                                                    </ul>
+                                                ),
+                                            },
+                                        ]}
+                                    />
+                                </section>
+                            ))}
+                        </div>
+                    </BaseCard>
+                </div>
             </TabsContent>
             <TabsContent value="wave" className="flex flex-col gap-10">
-                <div className="flex flex-col gap-5">
+                <QuickMenu title="WAVE 웹 접근성 검사" groups={WAVE_NAV_GROUPS} />
+                <div id="wave-summary" className="flex scroll-mt-24 flex-col gap-5">
                     <Alert variant="outline" color="warning">
                         <TriangleAlert aria-hidden="true" />
                         <AlertDescription>
@@ -3538,495 +3846,102 @@ const AccessibilityExceptionsPage = () => (
                             <TabsList variant="pill" aria-label="검사 대상 구분">
                                 {WAVE_SUMMARY_GROUPS.map((group) => (
                                     <TabsTrigger key={group.key} value={`wave-${group.key}`}>
-                                        {group.label} {WAVE_SCREEN_COUNT_BY_GROUP.get(group.key) ?? 0}개
+                                        {group.label}
                                     </TabsTrigger>
                                 ))}
                             </TabsList>
                             {WAVE_SUMMARY_GROUPS.map((group) => (
                                 <TabsContent key={group.key} value={`wave-${group.key}`}>
-                                    <section className="border-subtle-3 rounded-sm border p-5 md:p-6">
-                                        <dl className="border-subtle-3 grid grid-cols-2 gap-x-5 gap-y-4 border-b pb-5 sm:grid-cols-3">
-                                            <div className="flex min-w-0 flex-col gap-1">
-                                                <dt className="typo-body-s-regular text-foreground-subtle">
-                                                    검사한 화면
-                                                </dt>
-                                                <dd className="typo-title-l-bold text-foreground">
-                                                    {WAVE_SCREEN_COUNT_BY_GROUP.get(group.key) ?? 0}개
-                                                </dd>
-                                            </div>
-                                            <div className="flex min-w-0 flex-col gap-1">
-                                                <dt className="typo-body-s-regular text-foreground-subtle">오류</dt>
-                                                <dd className="typo-title-l-bold text-foreground">
-                                                    {group.totals.errors}건
-                                                </dd>
-                                            </div>
-                                            <div className="flex min-w-0 flex-col gap-1">
-                                                <dt className="typo-body-s-regular text-foreground-subtle">경고</dt>
-                                                <dd className="typo-title-l-bold text-foreground">
-                                                    {group.totals.warnings}건
-                                                </dd>
-                                            </div>
-                                        </dl>
-                                        <div className="divide-subtle-3 mt-1 flex flex-col divide-y">
-                                            <section className="grid gap-3 py-5 md:grid-cols-[14rem_1fr]">
-                                                <div className="flex flex-col items-start gap-2">
-                                                    <div className="flex flex-wrap items-center gap-2">
-                                                        <Badge color="success">예외 검토</Badge>
-                                                        <h4 className="font-bold">외부 라이브러리 원인</h4>
-                                                    </div>
-                                                    <p className="typo-title-l-bold">
-                                                        {group.totals.errors + group.totals.warnings}건
-                                                    </p>
-                                                </div>
-                                                <div className="self-center">
-                                                    <ul className="text-foreground-subtle flex list-none flex-col gap-2">
-                                                        <li className="flex">
-                                                            <ListMarker type="unordered-small" />
-                                                            <span className="min-w-0 break-keep">
-                                                                <strong className="text-foreground">
-                                                                    Radix RadioGroup {group.radio.count}건
-                                                                </strong>{' '}
-                                                                · {group.radio.screens}개 화면 · 숨은 input
-                                                            </span>
-                                                        </li>
-                                                        <li className="flex">
-                                                            <ListMarker type="unordered-small" />
-                                                            <span className="min-w-0 break-keep">
-                                                                <strong className="text-foreground">
-                                                                    Radix Checkbox {group.checkbox.count}건
-                                                                </strong>{' '}
-                                                                · {group.checkbox.screens}개 화면 · 숨은 input
-                                                            </span>
-                                                        </li>
-                                                        <li className="flex">
-                                                            <ListMarker type="unordered-small" />
-                                                            <span className="min-w-0 break-keep">
-                                                                <strong className="text-foreground">
-                                                                    Radix Select · Missing form label{' '}
-                                                                    {group.selectError.count}건
-                                                                </strong>{' '}
-                                                                · {group.selectError.screens}개 화면 · 숨은 select
-                                                            </span>
-                                                        </li>
-                                                        <li className="flex">
-                                                            <ListMarker type="unordered-small" />
-                                                            <span className="min-w-0 break-keep">
-                                                                <strong className="text-foreground">
-                                                                    Radix Select · Select missing label{' '}
-                                                                    {group.selectWarning.count}건
-                                                                </strong>{' '}
-                                                                · {group.selectWarning.screens}개 화면 · 숨은 select
-                                                            </span>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </section>
-                                            <section className="grid gap-3 py-5 md:grid-cols-[14rem_1fr]">
-                                                <div className="flex flex-col items-start gap-2">
-                                                    <div className="flex flex-wrap items-center gap-2">
-                                                        <Badge color="neutral">발생 없음</Badge>
-                                                        <h4 className="font-bold">프로젝트 수정 대상</h4>
-                                                    </div>
-                                                    <p className="typo-title-l-bold">0건</p>
-                                                </div>
-                                                <div className="self-center">
-                                                    <EmptyState
-                                                        title="발생한 오류가 없습니다."
-                                                        className="min-h-0 px-0 py-2"
-                                                    />
-                                                </div>
-                                            </section>
-                                            <section className="grid gap-3 py-5 md:grid-cols-[14rem_1fr]">
-                                                <div className="flex flex-col items-start gap-2">
-                                                    <div className="flex flex-wrap items-center gap-2">
-                                                        <Badge color="warning">미분류</Badge>
-                                                        <h4 className="font-bold">원인 확인 필요</h4>
-                                                    </div>
-                                                    <p className="typo-title-l-bold">0건</p>
-                                                </div>
-                                                <div className="self-center">
-                                                    <EmptyState
-                                                        title="발생한 오류가 없습니다."
-                                                        className="min-h-0 px-0 py-2"
-                                                    />
-                                                </div>
-                                            </section>
-                                        </div>
-                                    </section>
+                                    <AuditSummary
+                                        caption={`WAVE ${group.label} 원인별 오류·경고`}
+                                        noteHeader="발생 요소"
+                                        totals={[
+                                            {
+                                                label: '검사한 화면',
+                                                value: `${WAVE_SCREEN_COUNT_BY_GROUP.get(group.key) ?? 0}개`,
+                                            },
+                                            {label: '오류', value: `${group.totals.errors}건`},
+                                            {label: '경고', value: `${group.totals.warnings}건`},
+                                        ]}
+                                        causes={[
+                                            {
+                                                label: '외부 라이브러리 원인',
+                                                badge: '예외 검토',
+                                                color: 'success',
+                                                total: group.totals.errors + group.totals.warnings,
+                                                reasons: [
+                                                    {
+                                                        name: 'Radix RadioGroup',
+                                                        count: group.radio.count,
+                                                        screens: group.radio.screens,
+                                                        note: '숨은 input',
+                                                        href: '#wave-radio',
+                                                    },
+                                                    {
+                                                        name: 'Radix Checkbox',
+                                                        count: group.checkbox.count,
+                                                        screens: group.checkbox.screens,
+                                                        note: '숨은 input',
+                                                        href: '#wave-checkbox',
+                                                    },
+                                                    {
+                                                        name: 'Radix Select · Missing form label',
+                                                        count: group.selectError.count,
+                                                        screens: group.selectError.screens,
+                                                        note: '숨은 select',
+                                                        href: '#wave-select-error',
+                                                    },
+                                                    {
+                                                        name: 'Radix Select · Select missing label',
+                                                        count: group.selectWarning.count,
+                                                        screens: group.selectWarning.screens,
+                                                        note: '숨은 select',
+                                                        href: '#wave-select-warning',
+                                                    },
+                                                ],
+                                            },
+                                            {
+                                                label: '프로젝트 수정 대상',
+                                                badge: '발생 없음',
+                                                color: 'neutral',
+                                                total: 0,
+                                                reasons: [],
+                                            },
+                                            {
+                                                label: '원인 확인 필요',
+                                                badge: '미분류',
+                                                color: 'secondary-purple',
+                                                total: 0,
+                                                reasons: [],
+                                            },
+                                        ]}
+                                    />
                                 </TabsContent>
                             ))}
                         </Tabs>
                     </BaseCard>
                 </div>
-                <BaseCard
-                    title={cardHeading('외부 라이브러리 원인')}
-                    subtitle="라이브러리가 생성한 숨김 요소의 검사 사례입니다. 사용자 조작 요소의 라벨 연결은 별도로 확인합니다."
-                    action={<Badge color="success">예외 검토</Badge>}
-                >
-                    <div className="divide-subtle-3 flex flex-col divide-y">
-                        <section
-                            aria-labelledby="wave-radio"
-                            className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                        >
-                            <SectionHeader>
-                                <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="wave-radio">
-                                    {sectionHeading('Radix RadioGroup', 'Missing form label')}
-                                </SectionHeaderTitle>
-                                <SectionHeaderDescription>
-                                    라디오의 숨은 폼 전송용 input 수만큼 나옵니다
-                                </SectionHeaderDescription>
-                            </SectionHeader>
-                            <IssueTable caption="WAVE 가 보고한 RadioGroup 메시지와 건수" issues={[WAVE_ISSUES[0]]} />
-                            <LibraryDetailAccordion
-                                rows={[
-                                    {
-                                        term: '한눈에 보기',
-                                        body: (
-                                            <Alert variant="outline" color="info">
-                                                <Info aria-hidden="true" />
-                                                <AlertDescription>
-                                                    WAVE가 Radix RadioGroup의 숨은 폼 전송용 input을 라벨 없는 입력으로
-                                                    감지한 사례입니다.{' '}
-                                                    <strong>
-                                                        사용자가 조작하는 컨트롤에는 질문과 보기 이름이 정상적으로
-                                                        연결되어 있습니다.
-                                                    </strong>
-                                                </AlertDescription>
-                                            </Alert>
-                                        ),
-                                    },
-                                    {
-                                        term: '오류의 뜻',
-                                        body: (
-                                            <p>
-                                                사용자가 조작하는 Radix 컨트롤과 함께 생성된 숨은 input에서 라벨을 찾지
-                                                못했다는 의미입니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 과정',
-                                        body: (
-                                            <p>
-                                                Radix UI가 화면에 <code className="font-mono">button[role=radio]</code>
-                                                를 표시하고, 선택값을 폼에 전달하기 위해 라디오마다 숨은 input을
-                                                추가합니다. WAVE는 이 숨은 input도 폼 컨트롤로 검사합니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '책임 구분',
-                                        body: (
-                                            <p>
-                                                프로젝트는 질문과 각 보기의 이름을 사용자가 조작하는 컨트롤에
-                                                연결합니다. 라벨 없는 숨은 input은 Radix UI가 내부에서 생성하므로 외부
-                                                라이브러리 원인으로 분류합니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '영향과 조치',
-                                        body: (
-                                            <p>
-                                                숨은 input은 <code className="font-mono">aria-hidden</code>과{' '}
-                                                <code className="font-mono">tabindex=&quot;-1&quot;</code>로 사용자
-                                                탐색에서 제외됩니다.{' '}
-                                                <strong>실제 컨트롤의 읽기와 키보드 조작에는 결함이 없습니다.</strong>{' '}
-                                                라이브러리 원본 수정은 업데이트와 폼 동작에 영향을 줄 수 있어 적용하지
-                                                않고 예외 검토 항목으로 관리합니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 화면',
-                                        body: <OccurrenceScreensAccordion routes={WAVE_RADIO_SCREEN_ROUTES} />,
-                                    },
-                                    {
-                                        term: '근거',
-                                        body: (
-                                            <div className="flex flex-col items-start gap-1">
-                                                <ReferenceLink href="https://unpkg.com/@radix-ui/react-radio-group@1.4.3/dist/index.mjs">
-                                                    Radix RadioGroup 1.4.3 배포 코드
-                                                </ReferenceLink>
-                                                <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#label_missing">
-                                                    WAVE Missing form label 설명
-                                                </ReferenceLink>
-                                            </div>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </section>
-
-                        <section
-                            aria-labelledby="wave-checkbox"
-                            className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                        >
-                            <SectionHeader>
-                                <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="wave-checkbox">
-                                    {sectionHeading('Radix Checkbox', 'Missing form label')}
-                                </SectionHeaderTitle>
-                                <SectionHeaderDescription>
-                                    체크박스의 숨은 폼 전송용 input 수만큼 나옵니다
-                                </SectionHeaderDescription>
-                            </SectionHeader>
-                            <IssueTable caption="WAVE 가 보고한 Checkbox 메시지와 건수" issues={[WAVE_ISSUES[1]]} />
-                            <LibraryDetailAccordion
-                                rows={[
-                                    {
-                                        term: '한눈에 보기',
-                                        body: (
-                                            <Alert variant="outline" color="info">
-                                                <Info aria-hidden="true" />
-                                                <AlertDescription>
-                                                    WAVE가 Radix Checkbox의 숨은 폼 전송용 input을 라벨 없는 입력으로
-                                                    감지한 사례입니다.{' '}
-                                                    <strong>
-                                                        사용자가 조작하는 체크박스에는 질문과 보기 이름이 정상적으로
-                                                        연결되어 있습니다.
-                                                    </strong>
-                                                </AlertDescription>
-                                            </Alert>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 과정',
-                                        body: (
-                                            <p>
-                                                Radix UI가 화면에{' '}
-                                                <code className="font-mono">button[role=checkbox]</code>를 표시하고,
-                                                선택값을 폼에 전달하기 위해 체크박스마다 숨은 input을 추가합니다. WAVE는
-                                                이 숨은 input도 폼 컨트롤로 검사합니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '책임 구분과 조치',
-                                        body: (
-                                            <p>
-                                                라벨 없는 숨은 input은 Radix UI가 내부에서 생성하며{' '}
-                                                <code className="font-mono">aria-hidden</code>과{' '}
-                                                <code className="font-mono">tabindex=&quot;-1&quot;</code>로 사용자
-                                                탐색에서 제외됩니다. 실제 체크박스의 읽기와 키보드 조작을 확인한 뒤 외부
-                                                라이브러리 예외 검토 항목으로 관리합니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 화면',
-                                        body: <OccurrenceScreensAccordion routes={WAVE_CHECKBOX_SCREEN_ROUTES} />,
-                                    },
-                                    {
-                                        term: '근거',
-                                        body: (
-                                            <div className="flex flex-col items-start gap-1">
-                                                <ReferenceLink href="https://unpkg.com/@radix-ui/react-checkbox@1.3.7/dist/index.mjs">
-                                                    Radix Checkbox 1.3.7 배포 코드
-                                                </ReferenceLink>
-                                                <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#label_missing">
-                                                    WAVE Missing form label 설명
-                                                </ReferenceLink>
-                                            </div>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </section>
-
-                        <section
-                            aria-labelledby="wave-select-error"
-                            className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                        >
-                            <SectionHeader>
-                                <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="wave-select-error">
-                                    {sectionHeading('Radix Select', 'Missing form label')}
-                                </SectionHeaderTitle>
-                                <SectionHeaderDescription>
-                                    조회 필터의 셀렉트 한 칸마다 하나씩 나옵니다
-                                </SectionHeaderDescription>
-                            </SectionHeader>
-                            <IssueTable
-                                caption="WAVE 가 보고한 Select Missing form label 오류와 건수"
-                                issues={[WAVE_SELECT_ISSUES[0]]}
-                            />
-                            <LibraryDetailAccordion
-                                rows={[
-                                    {
-                                        term: '한눈에 보기',
-                                        body: (
-                                            <Alert variant="outline" color="info">
-                                                <Info aria-hidden="true" />
-                                                <AlertDescription>
-                                                    WAVE가 Radix UI의 숨은 폼 전송용 select를 라벨 없는 입력으로 감지한
-                                                    사례입니다.{' '}
-                                                    <strong>
-                                                        사용자가 조작하는 Select에는 접근 가능한 이름이 정상적으로
-                                                        제공됩니다.
-                                                    </strong>
-                                                </AlertDescription>
-                                            </Alert>
-                                        ),
-                                    },
-                                    {
-                                        term: '오류의 뜻',
-                                        body: <p>조회 필터의 숨은 select에서 라벨을 찾지 못했다는 의미입니다.</p>,
-                                    },
-                                    {
-                                        term: '발생 과정',
-                                        body: (
-                                            <p>
-                                                Radix UI가 화면에{' '}
-                                                <code className="font-mono">button[role=combobox]</code>를 표시하고,
-                                                선택값을 폼에 전달하기 위해 각 항목에 숨은 select를 추가합니다. WAVE는
-                                                이 숨은 select도 폼 컨트롤로 검사합니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '책임 구분',
-                                        body: (
-                                            <p>
-                                                프로젝트는 사용자가 조작하는 Select에{' '}
-                                                <code className="font-mono">label</code> 또는{' '}
-                                                <code className="font-mono">aria-label</code>을 제공합니다. 라벨 없는
-                                                숨은 select는 Radix UI가 내부에서 생성하므로 외부 라이브러리 원인으로
-                                                분류합니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '영향과 조치',
-                                        body: (
-                                            <p>
-                                                숨은 select는 <code className="font-mono">aria-hidden</code>과{' '}
-                                                <code className="font-mono">tabindex=&quot;-1&quot;</code>로 사용자
-                                                탐색에서 제외됩니다.{' '}
-                                                <strong>실제 Select의 읽기와 키보드 조작에는 결함이 없습니다.</strong>{' '}
-                                                라이브러리 원본 수정은 업데이트와 폼 동작에 영향을 줄 수 있어 적용하지
-                                                않고 예외 검토 항목으로 관리합니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 화면',
-                                        body: <OccurrenceScreensAccordion routes={WAVE_SELECT_ERROR_SCREEN_ROUTES} />,
-                                    },
-                                    {
-                                        term: '근거',
-                                        body: (
-                                            <div className="flex flex-col items-start gap-1">
-                                                <ReferenceLink href="https://unpkg.com/@radix-ui/react-select@2.3.3/dist/index.mjs">
-                                                    Radix Select 2.3.3 배포 코드
-                                                </ReferenceLink>
-                                                <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#label_missing">
-                                                    WAVE Missing form label 설명
-                                                </ReferenceLink>
-                                            </div>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </section>
-
-                        <section
-                            aria-labelledby="wave-select-warning"
-                            className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
-                        >
-                            <SectionHeader>
-                                <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="wave-select-warning">
-                                    {sectionHeading('Radix Select', 'Select missing label')}
-                                </SectionHeaderTitle>
-                                <SectionHeaderDescription>
-                                    숨은 native select의 접근 가능한 이름을 확인하라는 경고입니다
-                                </SectionHeaderDescription>
-                            </SectionHeader>
-                            <IssueTable
-                                caption="WAVE 가 보고한 Select missing label 경고와 건수"
-                                issues={[WAVE_SELECT_ISSUES[1]]}
-                            />
-                            <LibraryDetailAccordion
-                                rows={[
-                                    {
-                                        term: '한눈에 보기',
-                                        body: (
-                                            <Alert variant="outline" color="info">
-                                                <Info aria-hidden="true" />
-                                                <AlertDescription>
-                                                    WAVE가 Radix Select의 숨은 native select에서 접근 가능한 이름을 찾지
-                                                    못해 표시한 경고입니다.{' '}
-                                                    <strong>
-                                                        사용자가 조작하는 Select 버튼에는 접근 가능한 이름이 제공됩니다.
-                                                    </strong>
-                                                </AlertDescription>
-                                            </Alert>
-                                        ),
-                                    },
-                                    {
-                                        term: '경고의 뜻',
-                                        body: (
-                                            <p>
-                                                값 전달용으로 생성된 숨은 native select에 연결된 label이 없다는
-                                                의미입니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '책임 구분과 조치',
-                                        body: (
-                                            <p>
-                                                숨은 select는 Radix UI가 내부에서 생성하며{' '}
-                                                <code className="font-mono">aria-hidden</code>과{' '}
-                                                <code className="font-mono">tabindex=&quot;-1&quot;</code>로 사용자
-                                                탐색에서 제외됩니다. 실제 Select의 이름과 키보드 조작을 확인한 뒤 외부
-                                                라이브러리 예외 검토 항목으로 관리합니다.
-                                            </p>
-                                        ),
-                                    },
-                                    {
-                                        term: '발생 화면',
-                                        body: <OccurrenceScreensAccordion routes={WAVE_SELECT_WARNING_SCREEN_ROUTES} />,
-                                    },
-                                    {
-                                        term: '근거',
-                                        body: (
-                                            <div className="flex flex-col items-start gap-1">
-                                                <ReferenceLink href="https://unpkg.com/@radix-ui/react-select@2.3.3/dist/index.mjs">
-                                                    Radix Select 2.3.3 배포 코드
-                                                </ReferenceLink>
-                                                <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#select_missing_label">
-                                                    WAVE Select missing label 설명
-                                                </ReferenceLink>
-                                            </div>
-                                        ),
-                                    },
-                                ]}
-                            />
-                        </section>
-                    </div>
-                </BaseCard>
-
-                <BaseCard
-                    title={cardHeading('화면별 검사 기록')}
-                    subtitle="퍼블리싱 인덱스의 화면 목록입니다. 수동으로 기록한 WAVE 사례가 없는 화면은 오류·경고 0건으로, 아직 검사를 돌리지 않은 화면은 [미실행], 검사에서 걸릴 것이 없는 화면은 [없음]으로 표시합니다."
-                >
-                    <Accordion type="multiple">
-                        <AccordionItem value="screens">
-                            <AccordionTrigger>
-                                서비스 화면 {WAVE_RECORD_TOTALS.screens}개 — 오류 {WAVE_RECORD_TOTALS.errors}건 · 경고{' '}
-                                {WAVE_RECORD_TOTALS.warnings}건
-                            </AccordionTrigger>
-                            <AccordionContent>
-                                <Tabs defaultValue="wave-records-corp">
-                                    <TabsList variant="pill" aria-label="WAVE 화면별 검사 대상 구분">
-                                        {WAVE_RECORD_GROUPS.map((group) => (
-                                            <TabsTrigger key={group.key} value={`wave-records-${group.key}`}>
-                                                {group.label} {group.screens.length}개
-                                            </TabsTrigger>
-                                        ))}
-                                    </TabsList>
+                <div id="wave-records" className="scroll-mt-24">
+                    <BaseCard
+                        title={cardHeading('화면별 검사 기록')}
+                        subtitle="퍼블리싱 인덱스의 화면 목록입니다. 수동으로 기록한 WAVE 사례가 없는 화면은 오류·경고 0건으로, 아직 검사를 돌리지 않은 화면은 [미실행], 검사에서 걸릴 것이 없는 화면은 [없음]으로 표시합니다."
+                    >
+                        <div className="flex flex-col gap-4">
+                            <Tabs defaultValue="wave-records-corp">
+                                <TabsList variant="pill" aria-label="WAVE 화면별 검사 대상 구분">
                                     {WAVE_RECORD_GROUPS.map((group) => (
-                                        <TabsContent key={group.key} value={`wave-records-${group.key}`}>
-                                            <Table className="min-w-240 table-fixed">
+                                        <TabsTrigger key={group.key} value={`wave-records-${group.key}`}>
+                                            {group.label}
+                                        </TabsTrigger>
+                                    ))}
+                                </TabsList>
+                                {WAVE_RECORD_GROUPS.map((group) => (
+                                    <TabsContent key={group.key} value={`wave-records-${group.key}`}>
+                                        <RecordFilter
+                                            label={`WAVE ${group.label} 화면 목록`}
+                                            rows={group.screens.map((screen) => screen.kinds.length > 0)}
+                                        >
+                                            <Table className="border-t-foreground-subtle border-b-subtle-3 min-w-240 table-fixed border-t border-b">
                                                 <colgroup>
                                                     <col className="w-14" />
                                                     <col className="w-1/5" />
@@ -4040,7 +3955,7 @@ const AccessibilityExceptionsPage = () => (
                                                 </TableCaption>
                                                 <TableHeader>
                                                     {/* 행 선 색은 W3C 화면별 검사 기록 표와 같이 border-subtle-3 로 맞춘다. */}
-                                                    <TableRow className="border-subtle-3 bg-muted hover:bg-muted">
+                                                    <TableRow className="border-subtle-3 bg-primary-subtle hover:bg-primary-subtle [&_th]:text-foreground [&_th]:font-bold">
                                                         <TableHead scope="col" className="text-center">
                                                             번호
                                                         </TableHead>
@@ -4059,7 +3974,11 @@ const AccessibilityExceptionsPage = () => (
                                                 </TableHeader>
                                                 <TableBody>
                                                     {group.screens.map((screen, index) => (
-                                                        <TableRow key={screen.path} className="border-subtle-3">
+                                                        <TableRow
+                                                            key={screen.path}
+                                                            data-has-issue={screen.kinds.length > 0}
+                                                            className={RECORD_ROW_CLASS}
+                                                        >
                                                             <TableCell className="text-foreground-subtle text-center align-top tabular-nums">
                                                                 {index + 1}
                                                             </TableCell>
@@ -4107,6 +4026,7 @@ const AccessibilityExceptionsPage = () => (
                                                                                 >
                                                                                     <Badge
                                                                                         size="xs"
+                                                                                        variant="outline"
                                                                                         color={
                                                                                             kind.level === 'error'
                                                                                                 ? 'error'
@@ -4116,9 +4036,12 @@ const AccessibilityExceptionsPage = () => (
                                                                                     >
                                                                                         <a
                                                                                             href={`#${kind.target}`}
-                                                                                            aria-label={`${kind.label} 외부 라이브러리 원인 확인`}
+                                                                                            aria-label={`${kind.level === 'error' ? '오류' : '경고'} · ${waveKindName(kind.label)} 외부 라이브러리 원인 확인`}
                                                                                         >
-                                                                                            {kind.label}
+                                                                                            <KindLevelIcon
+                                                                                                level={kind.level}
+                                                                                            />
+                                                                                            {waveKindName(kind.label)}
                                                                                         </a>
                                                                                     </Badge>
                                                                                 </li>
@@ -4147,11 +4070,6 @@ const AccessibilityExceptionsPage = () => (
                                                                                                     key={`${message.level}-${message.control}-${message.message}`}
                                                                                                     className="flex flex-col items-start gap-1"
                                                                                                 >
-                                                                                                    <IssueBadge
-                                                                                                        level={
-                                                                                                            message.level
-                                                                                                        }
-                                                                                                    />
                                                                                                     <p className="font-bold break-words">
                                                                                                         <span lang="en">
                                                                                                             {
@@ -4192,7 +4110,7 @@ const AccessibilityExceptionsPage = () => (
                                                                         </Accordion>
                                                                     </>
                                                                 ) : (
-                                                                    <Badge size="xs" color="success">
+                                                                    <Badge size="xs" variant="outline" color="neutral">
                                                                         없음
                                                                     </Badge>
                                                                 )}
@@ -4201,13 +4119,387 @@ const AccessibilityExceptionsPage = () => (
                                                     ))}
                                                 </TableBody>
                                             </Table>
-                                        </TabsContent>
-                                    ))}
-                                </Tabs>
-                            </AccordionContent>
-                        </AccordionItem>
-                    </Accordion>
-                </BaseCard>
+                                        </RecordFilter>
+                                    </TabsContent>
+                                ))}
+                            </Tabs>
+                        </div>
+                    </BaseCard>
+                </div>
+                <div id="wave-library" className="scroll-mt-24">
+                    <BaseCard
+                        title={cardHeading('외부 라이브러리 원인')}
+                        subtitle={
+                            <span className="typo-body-xl-regular">
+                                라이브러리가 생성한 숨김 요소의 검사 사례입니다. 사용자 조작 요소의 라벨 연결은 별도로
+                                확인합니다.
+                            </span>
+                        }
+                        action={<Badge color="success">예외 검토</Badge>}
+                    >
+                        <div className="divide-subtle-3 flex flex-col divide-y">
+                            <section
+                                aria-labelledby="wave-radio"
+                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                            >
+                                <SectionHeader>
+                                    <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="wave-radio">
+                                        {sectionHeading('Radix RadioGroup', 'Missing form label')}
+                                    </SectionHeaderTitle>
+                                    <SectionHeaderDescription>
+                                        라디오의 숨은 폼 전송용 input 수만큼 나옵니다
+                                    </SectionHeaderDescription>
+                                </SectionHeader>
+                                <IssueTable
+                                    caption="WAVE 가 보고한 RadioGroup 메시지와 건수"
+                                    issues={[WAVE_ISSUES[0]]}
+                                />
+                                <LibraryDetailAccordion
+                                    rows={[
+                                        {
+                                            term: '한눈에 보기',
+                                            body: (
+                                                <Alert variant="outline" color="info">
+                                                    <Info aria-hidden="true" />
+                                                    <AlertDescription>
+                                                        WAVE가 Radix RadioGroup의 숨은 폼 전송용 input을 라벨 없는
+                                                        입력으로 감지한 사례입니다.{' '}
+                                                        <strong>
+                                                            사용자가 조작하는 컨트롤에는 질문과 보기 이름이 정상적으로
+                                                            연결되어 있습니다.
+                                                        </strong>
+                                                    </AlertDescription>
+                                                </Alert>
+                                            ),
+                                        },
+                                        {
+                                            term: '오류의 뜻',
+                                            body: (
+                                                <p>
+                                                    사용자가 조작하는 Radix 컨트롤과 함께 생성된 숨은 input에서 라벨을
+                                                    찾지 못했다는 의미입니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 과정',
+                                            body: (
+                                                <p>
+                                                    Radix UI가 화면에{' '}
+                                                    <code className="font-mono">button[role=radio]</code>를 표시하고,
+                                                    선택값을 폼에 전달하기 위해 라디오마다 숨은 input을 추가합니다.
+                                                    WAVE는 이 숨은 input도 폼 컨트롤로 검사합니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '책임 구분',
+                                            body: (
+                                                <p>
+                                                    프로젝트는 질문과 각 보기의 이름을 사용자가 조작하는 컨트롤에
+                                                    연결합니다. 라벨 없는 숨은 input은 Radix UI가 내부에서 생성하므로
+                                                    외부 라이브러리 원인으로 분류합니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '영향과 조치',
+                                            body: (
+                                                <p>
+                                                    숨은 input은 <code className="font-mono">aria-hidden</code>과{' '}
+                                                    <code className="font-mono">tabindex=&quot;-1&quot;</code>로 사용자
+                                                    탐색에서 제외됩니다.{' '}
+                                                    <strong>
+                                                        실제 컨트롤의 읽기와 키보드 조작에는 결함이 없습니다.
+                                                    </strong>{' '}
+                                                    라이브러리 원본 수정은 업데이트와 폼 동작에 영향을 줄 수 있어
+                                                    적용하지 않고 예외 검토 항목으로 관리합니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 화면',
+                                            body: <OccurrenceScreensAccordion routes={WAVE_RADIO_SCREEN_ROUTES} />,
+                                        },
+                                        {
+                                            term: '근거',
+                                            body: (
+                                                <div className="flex flex-col items-start gap-1">
+                                                    <ReferenceLink href="https://unpkg.com/@radix-ui/react-radio-group@1.4.3/dist/index.mjs">
+                                                        Radix RadioGroup 1.4.3 배포 코드
+                                                    </ReferenceLink>
+                                                    <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#label_missing">
+                                                        WAVE Missing form label 설명
+                                                    </ReferenceLink>
+                                                </div>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </section>
+
+                            <section
+                                aria-labelledby="wave-checkbox"
+                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                            >
+                                <SectionHeader>
+                                    <SectionHeaderTitle className="typo-title-l-bold scroll-mt-24" id="wave-checkbox">
+                                        {sectionHeading('Radix Checkbox', 'Missing form label')}
+                                    </SectionHeaderTitle>
+                                    <SectionHeaderDescription>
+                                        체크박스의 숨은 폼 전송용 input 수만큼 나옵니다
+                                    </SectionHeaderDescription>
+                                </SectionHeader>
+                                <IssueTable caption="WAVE 가 보고한 Checkbox 메시지와 건수" issues={[WAVE_ISSUES[1]]} />
+                                <LibraryDetailAccordion
+                                    rows={[
+                                        {
+                                            term: '한눈에 보기',
+                                            body: (
+                                                <Alert variant="outline" color="info">
+                                                    <Info aria-hidden="true" />
+                                                    <AlertDescription>
+                                                        WAVE가 Radix Checkbox의 숨은 폼 전송용 input을 라벨 없는
+                                                        입력으로 감지한 사례입니다.{' '}
+                                                        <strong>
+                                                            사용자가 조작하는 체크박스에는 질문과 보기 이름이 정상적으로
+                                                            연결되어 있습니다.
+                                                        </strong>
+                                                    </AlertDescription>
+                                                </Alert>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 과정',
+                                            body: (
+                                                <p>
+                                                    Radix UI가 화면에{' '}
+                                                    <code className="font-mono">button[role=checkbox]</code>를 표시하고,
+                                                    선택값을 폼에 전달하기 위해 체크박스마다 숨은 input을 추가합니다.
+                                                    WAVE는 이 숨은 input도 폼 컨트롤로 검사합니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '책임 구분과 조치',
+                                            body: (
+                                                <p>
+                                                    라벨 없는 숨은 input은 Radix UI가 내부에서 생성하며{' '}
+                                                    <code className="font-mono">aria-hidden</code>과{' '}
+                                                    <code className="font-mono">tabindex=&quot;-1&quot;</code>로 사용자
+                                                    탐색에서 제외됩니다. 실제 체크박스의 읽기와 키보드 조작을 확인한 뒤
+                                                    외부 라이브러리 예외 검토 항목으로 관리합니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 화면',
+                                            body: <OccurrenceScreensAccordion routes={WAVE_CHECKBOX_SCREEN_ROUTES} />,
+                                        },
+                                        {
+                                            term: '근거',
+                                            body: (
+                                                <div className="flex flex-col items-start gap-1">
+                                                    <ReferenceLink href="https://unpkg.com/@radix-ui/react-checkbox@1.3.7/dist/index.mjs">
+                                                        Radix Checkbox 1.3.7 배포 코드
+                                                    </ReferenceLink>
+                                                    <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#label_missing">
+                                                        WAVE Missing form label 설명
+                                                    </ReferenceLink>
+                                                </div>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </section>
+
+                            <section
+                                aria-labelledby="wave-select-error"
+                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                            >
+                                <SectionHeader>
+                                    <SectionHeaderTitle
+                                        className="typo-title-l-bold scroll-mt-24"
+                                        id="wave-select-error"
+                                    >
+                                        {sectionHeading('Radix Select', 'Missing form label')}
+                                    </SectionHeaderTitle>
+                                    <SectionHeaderDescription>
+                                        조회 필터의 셀렉트 한 칸마다 하나씩 나옵니다
+                                    </SectionHeaderDescription>
+                                </SectionHeader>
+                                <IssueTable
+                                    caption="WAVE 가 보고한 Select Missing form label 오류와 건수"
+                                    issues={[WAVE_SELECT_ISSUES[0]]}
+                                />
+                                <LibraryDetailAccordion
+                                    rows={[
+                                        {
+                                            term: '한눈에 보기',
+                                            body: (
+                                                <Alert variant="outline" color="info">
+                                                    <Info aria-hidden="true" />
+                                                    <AlertDescription>
+                                                        WAVE가 Radix UI의 숨은 폼 전송용 select를 라벨 없는 입력으로
+                                                        감지한 사례입니다.{' '}
+                                                        <strong>
+                                                            사용자가 조작하는 Select에는 접근 가능한 이름이 정상적으로
+                                                            제공됩니다.
+                                                        </strong>
+                                                    </AlertDescription>
+                                                </Alert>
+                                            ),
+                                        },
+                                        {
+                                            term: '오류의 뜻',
+                                            body: <p>조회 필터의 숨은 select에서 라벨을 찾지 못했다는 의미입니다.</p>,
+                                        },
+                                        {
+                                            term: '발생 과정',
+                                            body: (
+                                                <p>
+                                                    Radix UI가 화면에{' '}
+                                                    <code className="font-mono">button[role=combobox]</code>를 표시하고,
+                                                    선택값을 폼에 전달하기 위해 각 항목에 숨은 select를 추가합니다.
+                                                    WAVE는 이 숨은 select도 폼 컨트롤로 검사합니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '책임 구분',
+                                            body: (
+                                                <p>
+                                                    프로젝트는 사용자가 조작하는 Select에{' '}
+                                                    <code className="font-mono">label</code> 또는{' '}
+                                                    <code className="font-mono">aria-label</code>을 제공합니다. 라벨
+                                                    없는 숨은 select는 Radix UI가 내부에서 생성하므로 외부 라이브러리
+                                                    원인으로 분류합니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '영향과 조치',
+                                            body: (
+                                                <p>
+                                                    숨은 select는 <code className="font-mono">aria-hidden</code>과{' '}
+                                                    <code className="font-mono">tabindex=&quot;-1&quot;</code>로 사용자
+                                                    탐색에서 제외됩니다.{' '}
+                                                    <strong>
+                                                        실제 Select의 읽기와 키보드 조작에는 결함이 없습니다.
+                                                    </strong>{' '}
+                                                    라이브러리 원본 수정은 업데이트와 폼 동작에 영향을 줄 수 있어
+                                                    적용하지 않고 예외 검토 항목으로 관리합니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 화면',
+                                            body: (
+                                                <OccurrenceScreensAccordion routes={WAVE_SELECT_ERROR_SCREEN_ROUTES} />
+                                            ),
+                                        },
+                                        {
+                                            term: '근거',
+                                            body: (
+                                                <div className="flex flex-col items-start gap-1">
+                                                    <ReferenceLink href="https://unpkg.com/@radix-ui/react-select@2.3.3/dist/index.mjs">
+                                                        Radix Select 2.3.3 배포 코드
+                                                    </ReferenceLink>
+                                                    <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#label_missing">
+                                                        WAVE Missing form label 설명
+                                                    </ReferenceLink>
+                                                </div>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </section>
+
+                            <section
+                                aria-labelledby="wave-select-warning"
+                                className="flex flex-col gap-3 py-10 first:pt-0 last:pb-0"
+                            >
+                                <SectionHeader>
+                                    <SectionHeaderTitle
+                                        className="typo-title-l-bold scroll-mt-24"
+                                        id="wave-select-warning"
+                                    >
+                                        {sectionHeading('Radix Select', 'Select missing label')}
+                                    </SectionHeaderTitle>
+                                    <SectionHeaderDescription>
+                                        숨은 native select의 접근 가능한 이름을 확인하라는 경고입니다
+                                    </SectionHeaderDescription>
+                                </SectionHeader>
+                                <IssueTable
+                                    caption="WAVE 가 보고한 Select missing label 경고와 건수"
+                                    issues={[WAVE_SELECT_ISSUES[1]]}
+                                />
+                                <LibraryDetailAccordion
+                                    rows={[
+                                        {
+                                            term: '한눈에 보기',
+                                            body: (
+                                                <Alert variant="outline" color="info">
+                                                    <Info aria-hidden="true" />
+                                                    <AlertDescription>
+                                                        WAVE가 Radix Select의 숨은 native select에서 접근 가능한 이름을
+                                                        찾지 못해 표시한 경고입니다.{' '}
+                                                        <strong>
+                                                            사용자가 조작하는 Select 버튼에는 접근 가능한 이름이
+                                                            제공됩니다.
+                                                        </strong>
+                                                    </AlertDescription>
+                                                </Alert>
+                                            ),
+                                        },
+                                        {
+                                            term: '경고의 뜻',
+                                            body: (
+                                                <p>
+                                                    값 전달용으로 생성된 숨은 native select에 연결된 label이 없다는
+                                                    의미입니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '책임 구분과 조치',
+                                            body: (
+                                                <p>
+                                                    숨은 select는 Radix UI가 내부에서 생성하며{' '}
+                                                    <code className="font-mono">aria-hidden</code>과{' '}
+                                                    <code className="font-mono">tabindex=&quot;-1&quot;</code>로 사용자
+                                                    탐색에서 제외됩니다. 실제 Select의 이름과 키보드 조작을 확인한 뒤
+                                                    외부 라이브러리 예외 검토 항목으로 관리합니다.
+                                                </p>
+                                            ),
+                                        },
+                                        {
+                                            term: '발생 화면',
+                                            body: (
+                                                <OccurrenceScreensAccordion
+                                                    routes={WAVE_SELECT_WARNING_SCREEN_ROUTES}
+                                                />
+                                            ),
+                                        },
+                                        {
+                                            term: '근거',
+                                            body: (
+                                                <div className="flex flex-col items-start gap-1">
+                                                    <ReferenceLink href="https://unpkg.com/@radix-ui/react-select@2.3.3/dist/index.mjs">
+                                                        Radix Select 2.3.3 배포 코드
+                                                    </ReferenceLink>
+                                                    <ReferenceLink href="https://wave.webaim.org/api/docs?format=html#select_missing_label">
+                                                        WAVE Select missing label 설명
+                                                    </ReferenceLink>
+                                                </div>
+                                            ),
+                                        },
+                                    ]}
+                                />
+                            </section>
+                        </div>
+                    </BaseCard>
+                </div>
             </TabsContent>
         </Tabs>
     </GuidePageShell>

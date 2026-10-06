@@ -1,5 +1,12 @@
 'use client'
 
+import {
+    FormResetButton,
+    FormSubmitResult,
+    formatSubmitResult,
+    withFormReset,
+    type FormResetProps,
+} from '@/components/custom/form-submit-result'
 import {useState} from 'react'
 import {DatePicker} from '@/components/composite/date-picker'
 import {Button} from '@/components/ui/button'
@@ -7,21 +14,22 @@ import {Field, FieldError, FieldLabel} from '@/components/ui/field'
 
 const READONLY_DATE = new Date(2026, 6, 13)
 
-const DatePickerFormDemo = () => {
+const DatePickerFormDemoBody = ({onReset}: FormResetProps) => {
     const [visitDate, setVisitDate] = useState<Date>()
     const [visitDateError, setVisitDateError] = useState(false)
     const [startMonth, setStartMonth] = useState<Date>()
-    const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+    const [submittedData, setSubmittedData] = useState<string | null>(null)
 
     return (
         <form
+            onReset={onReset}
             className="flex flex-col gap-4"
             autoComplete="off"
             onSubmit={(event) => {
                 event.preventDefault()
                 const formData = new FormData(event.currentTarget)
                 setSubmittedData(
-                    JSON.stringify({
+                    formatSubmitResult({
                         visitDate: formData.get('visitDate'),
                         applicationDate: formData.get('applicationDate'),
                         startMonth: formData.get('startMonth'),
@@ -78,22 +86,22 @@ const DatePickerFormDemo = () => {
 
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                    <Button type="submit" variant="default" size="sm">
-                        날짜 선택 확인
-                    </Button>
-                    <span className="typo-body-l-regular text-muted-foreground">
+                    <div className="flex items-center gap-3">
+                        <Button type="submit" variant="default" size="sm">
+                            날짜 선택 확인
+                        </Button>
+                        <FormResetButton />
+                    </div>
+                    <span className="typo-body-l-regular text-label-foreground">
                         날짜 칸은 yyyy-MM-dd, 연-월 칸은 yyyy-MM 형식으로 제출됩니다.
                     </span>
                 </div>
-                <output
-                    className="typo-body-l-regular bg-surface border-border text-muted-foreground min-h-10 rounded-md border px-3 py-2 break-all"
-                    aria-live="polite"
-                >
-                    {submittedData}
-                </output>
+                <FormSubmitResult data={submittedData} />
             </div>
         </form>
     )
 }
+
+const DatePickerFormDemo = withFormReset(DatePickerFormDemoBody)
 
 export default DatePickerFormDemo

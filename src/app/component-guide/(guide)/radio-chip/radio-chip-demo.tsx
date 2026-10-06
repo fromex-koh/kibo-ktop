@@ -41,7 +41,7 @@ const RadioChipDemo = ({labelledBy}: {labelledBy: string}) => {
                     />
                 ))}
             </RadioChipGroup>
-            <p className="typo-body-l-regular text-muted-foreground" role="status">
+            <p className="typo-body-l-regular text-label-foreground" role="status">
                 {selected ? `선택한 값: ${selected.title} (${selected.value})` : '아직 고른 값이 없습니다.'}
             </p>
         </div>

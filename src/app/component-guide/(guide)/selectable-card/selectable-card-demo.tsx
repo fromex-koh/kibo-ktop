@@ -1,5 +1,12 @@
 'use client'
 
+import {
+    FormResetButton,
+    FormSubmitResult,
+    formatSubmitResult,
+    withFormReset,
+    type FormResetProps,
+} from '@/components/custom/form-submit-result'
 import {useState} from 'react'
 import {SelectableCard, SelectableCardGroup} from '@/components/composite/selectable-card'
 import {Badge} from '@/components/ui/badge'
@@ -19,10 +26,7 @@ const OptionalBadge = () => (
 
 // ── control="radio" ──────────────────────────────────────────────────────────
 //
-// 열 수와 반응형 분기는 컴포넌트가 아니라 이 화면이 정한다. SelectableCardGroup 은 1단 grid 라는
-// 고유 스타일만 갖고, 화면마다 필요한 배치를 className 으로 얹는다 — 같은 컴포넌트를 쓰는 다른
-// 화면이 2단을 강제로 물려받지 않게 하려는 것이다. 아래 동의 화면들은 Figma 기준(카드 592px 2개
-// + 간격 16px = 콘텐츠 폭 1200px)에 맞춰 데스크톱에서만 2단으로 나눈다.
+// 열 수와 반응형 분기는 컴포넌트가 아니라 사용처가 className 으로 정한다.
 
 // 기본 — 뱃지 없이 라벨만. 그룹 안에서 하나만 선택된다.
 export const RadioBasicDemo = () => {
@@ -151,12 +155,13 @@ export const CheckboxDisabledDemo = () => (
 
 // ── 폼 제출 ──────────────────────────────────────────────────────────────────
 
-export const SelectableCardFormDemo = () => {
+const SelectableCardFormDemoBody = ({onReset}: FormResetProps) => {
     const [consent, setConsent] = useState(false)
-    const [submittedData, setSubmittedData] = useState('아직 제출하지 않았습니다.')
+    const [submittedData, setSubmittedData] = useState<string | null>(null)
 
     return (
         <form
+            onReset={onReset}
             className="flex flex-col gap-4"
             autoComplete="off"
             onSubmit={(event) => {
@@ -165,7 +170,7 @@ export const SelectableCardFormDemo = () => {
                     key,
                     String(value),
                 ])
-                setSubmittedData(JSON.stringify(entries))
+                setSubmittedData(formatSubmitResult(entries))
             }}
         >
             <fieldset className="flex flex-col gap-3">
@@ -208,20 +213,20 @@ export const SelectableCardFormDemo = () => {
 
             <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-3">
-                    <Button type="submit" variant="default" size="sm">
-                        신청 내용 확인
-                    </Button>
+                    <div className="flex items-center gap-3">
+                        <Button type="submit" variant="default" size="sm">
+                            신청 내용 확인
+                        </Button>
+                        <FormResetButton />
+                    </div>
                     <span className="typo-body-l-regular text-muted-foreground">
                         name과 value를 지정한 선택값이 FormData에 포함되는지 확인합니다.
                     </span>
                 </div>
-                <output
-                    className="typo-body-l-regular bg-surface border-border text-muted-foreground min-h-10 rounded-md border px-3 py-2 break-all"
-                    aria-live="polite"
-                >
-                    {submittedData}
-                </output>
+                <FormSubmitResult data={submittedData} />
             </div>
         </form>
     )
 }
+
+export const SelectableCardFormDemo = withFormReset(SelectableCardFormDemoBody)

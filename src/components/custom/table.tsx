@@ -12,7 +12,7 @@ import {cn} from '@/lib/utils'
 // 전부 기존 토큰이라 커스텀 색이 없다([PB-04]).
 //
 // 스타일 분기(variant): 표 외곽 등 변형별로 달라지는 부분만 아래 TABLE_VARIANT_OVERRIDES 에 슬롯 단위로 둔다.
-//   - line(현재 유일): 표 상·하단 굵은 진한 라인(border-foreground 2px) + 라운드 없음(Figma).
+//   - line(현재 유일): 표 상단 굵은 진한 라인(border-foreground 2px) · 하단은 행 구분선과 같은 옅은 1px(subtle-3) + 라운드 없음.
 // 추후 다른 표 스타일이 생기면 TableVariant 에 키를 추가하고, 달라지는 슬롯만 오버라이드에 채우면 된다(나머지는 공통값).
 //
 // 접근성: 표 이름은 <caption>(sr-only)으로, 열 제목은 <th scope="col"> 로 준다([7.3.2]). 셀 정렬은 열 정의의 align 을 따른다.
@@ -55,7 +55,7 @@ const SHARED_SLOTS: TableSlots = {
 // 변형별 오버라이드 — 지정한 슬롯만 SHARED_SLOTS 를 대체한다.
 const TABLE_VARIANT_OVERRIDES: Record<TableVariant, Partial<TableSlots>> = {
     // 상·하단 굵은 진한 라인 + 라운드 없음(Figma 데이터 표 기본).
-    line: {container: 'border-foreground border-y-2'},
+    line: {container: 'border-t-foreground border-b-subtle-3 border-t-2 border-b'},
 }
 
 const TABLE_SIZE_SLOTS: Record<TableSize, Pick<TableSlots, 'th' | 'td'>> = {

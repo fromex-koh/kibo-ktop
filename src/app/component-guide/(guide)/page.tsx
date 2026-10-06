@@ -166,7 +166,7 @@ const ComponentGuidePage = () => (
     <div className="max-w-content mx-auto flex w-full flex-col gap-10 px-6 py-12 md:py-16">
         <header className="flex flex-col gap-3">
             <h1 className="typo-display-s-bold text-foreground">컴포넌트 가이드</h1>
-            <p className="typo-body-xl-regular text-foreground-subtle max-w-3xl text-pretty">
+            <p className="typo-body-xl-regular text-foreground-subtle">
                 디자인 토큰과 공통 컴포넌트의 실제 구현 기준을 확인합니다. 필요한 항목을 찾고, 적용 가능한 API와 상태를
                 검증하는 문서입니다.
             </p>
@@ -186,10 +186,10 @@ const ComponentGuidePage = () => (
                         <Link
                             key={item.href}
                             href={item.href}
-                            className="border-border hover:border-primary focus-visible:ring-ring flex flex-col gap-2 rounded-xl border p-5 transition-colors outline-none focus-visible:ring-2"
+                            className="border-foreground-subtle/30 bg-pastel-neutral/40 hover:border-primary focus-visible:ring-ring flex flex-col gap-2 rounded-sm border p-5 transition-colors outline-none focus-visible:ring-2"
                         >
-                            <h3 className="typo-body-l-medium text-primary">{item.title}</h3>
-                            <p className="text-foreground-subtle">{item.description}</p>
+                            <h3 className="typo-body-xl-bold text-foreground">{item.title}</h3>
+                            <p className="text-label-foreground">{item.description}</p>
                         </Link>
                     ))}
                 </div>
@@ -206,13 +206,16 @@ const ComponentGuidePage = () => (
                 </SectionHeader>
                 <ol className="grid gap-4 md:grid-cols-2">
                     {WORKFLOW.map((item) => (
-                        <li key={item.number} className="border-border flex items-start gap-3 rounded-xl border p-5">
+                        <li
+                            key={item.number}
+                            className="border-foreground-subtle/30 bg-pastel-neutral/40 flex items-start gap-3 rounded-sm border p-5"
+                        >
                             <span className="bg-primary text-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-full text-sm font-bold">
                                 {item.number}
                             </span>
                             <div className="flex flex-col gap-1">
-                                <h3 className="text-foreground font-semibold">{item.title}</h3>
-                                <p className="text-foreground-subtle">{item.description}</p>
+                                <h3 className="typo-body-xl-bold text-foreground">{item.title}</h3>
+                                <p className="text-label-foreground">{item.description}</p>
                             </div>
                         </li>
                     ))}
@@ -228,7 +231,7 @@ const ComponentGuidePage = () => (
                         <code className="text-foreground font-mono">tokens.json</code>이 디자인 값의 단일 원본입니다.
                     </SectionHeaderDescription>
                 </SectionHeader>
-                <div className="bg-muted text-foreground overflow-x-auto rounded-md p-4 text-center font-mono text-sm font-semibold">
+                <div className="border-primary/30 bg-primary-subtle text-foreground overflow-x-auto rounded-sm border p-5 text-center font-mono text-sm font-semibold">
                     tokens.json → scripts/build-tokens.mjs → src/app/tokens.css → globals.css
                 </div>
                 <ul className="text-foreground-subtle mt-5 flex list-disc flex-col gap-2 pl-5">
@@ -256,17 +259,28 @@ const ComponentGuidePage = () => (
                 </SectionHeader>
                 <div className="grid gap-4 md:grid-cols-2">
                     {ARCHITECTURE.map((layer) => (
-                        <div key={layer.name} className="border-border flex flex-col gap-2 rounded-xl border p-5">
-                            <h3 className="text-foreground flex flex-wrap items-center gap-2">
+                        // 카드마다 같은 자리에 같은 종류의 정보가 오게 한다 — 폴더(배지 · 경로) → 한 줄 정의 → 예시 · 규칙.
+                        <div
+                            key={layer.name}
+                            className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5"
+                        >
+                            <div className="flex flex-wrap items-center justify-between gap-2">
                                 <ComponentLayerBadge layer={layer.name} />
-                                <span className="font-semibold">{layer.summary}</span>
-                            </h3>
-                            <p className="text-foreground-subtle font-mono text-sm">{layer.examples}</p>
-                            <p className="text-foreground-subtle">{layer.rule}</p>
+                                <code className="text-foreground-subtle font-mono text-xs">
+                                    src/components/{layer.name}
+                                </code>
+                            </div>
+                            <h3 className="typo-title-m-bold text-foreground">{layer.summary}</h3>
+                            <dl className="border-subtle-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 border-t pt-3">
+                                <dt className="typo-body-l-bold text-foreground-subtle">예시</dt>
+                                <dd className="text-label-foreground font-mono text-sm">{layer.examples}</dd>
+                                <dt className="typo-body-l-bold text-foreground-subtle">규칙</dt>
+                                <dd className="text-label-foreground">{layer.rule}</dd>
+                            </dl>
                         </div>
                     ))}
                 </div>
-                <p className="bg-muted text-foreground mt-4 overflow-x-auto rounded-md p-4 text-center font-mono font-semibold">
+                <p className="border-primary/30 bg-primary-subtle text-foreground mt-4 overflow-x-auto rounded-sm border p-5 text-center font-mono text-sm font-semibold">
                     tokens → theme + ui → composite / custom → screen
                 </p>
                 <ul className="text-foreground-subtle mt-5 flex list-disc flex-col gap-2 pl-5">
@@ -274,21 +288,6 @@ const ComponentGuidePage = () => (
                         화면에서는 <code className="text-foreground font-mono">ui</code> ·{' '}
                         <code className="text-foreground font-mono">composite</code> ·{' '}
                         <code className="text-foreground font-mono">custom</code>을 직접 불러 씁니다.
-                    </li>
-                    <li>
-                        버튼 · 입력 같은 기본 부품의 모양을 바꾸려면{' '}
-                        <code className="text-foreground font-mono">ui</code>가 아니라{' '}
-                        <code className="text-foreground font-mono">theme</code>의 같은 이름 파일을 고칩니다.
-                    </li>
-                    <li>
-                        기능이 더 필요하면 <code className="text-foreground font-mono">ui</code>를 고치지 않고{' '}
-                        <code className="text-foreground font-mono">composite</code>에서 조합해 만듭니다.
-                    </li>
-                    <li>
-                        새 컴포넌트를 어디에 둘지는 이렇게 가릅니다 — shadcn/ui 부품을 감싸거나 합쳐 만들고 다른 화면에
-                        props 만 바꿔 쓸 수 있으면 <code className="text-foreground font-mono">composite</code>, 그
-                        화면의 문구 · 데이터 · 흐름을 알고 있어야 하면{' '}
-                        <code className="text-foreground font-mono">custom</code>입니다.
                     </li>
                     <li>
                         <code className="text-foreground font-mono">composite</code> ·{' '}
@@ -318,52 +317,63 @@ const ComponentGuidePage = () => (
                     </SectionHeaderDescription>
                 </SectionHeader>
 
-                <div className="flex flex-col gap-3">
-                    <h3 className="typo-body-l-medium text-foreground">전달 결과물</h3>
-                    <p className="text-foreground-subtle">
-                        프로젝트 화면, 퍼블리싱 인덱스, 컴포넌트 가이드와 shadcn 원본 비교 기준을 함께 제공합니다.
-                    </p>
-                    <CodeBlock code={HANDOFF_TREE} language="bash" />
-                </div>
-
-                <div className="mt-8 flex flex-col gap-3">
-                    <h3 className="typo-body-l-medium text-foreground">전달에서 제외·교체</h3>
-                    <p className="text-foreground-subtle">
-                        제작 저장소의 규칙·검사·릴리스 도구와 원본 저장소 전용 코드는 제외합니다. 실행 환경, 루트 화면,
-                        README와 사이트 설정은 전달 목적에 맞게 재구성합니다.
-                    </p>
-                    <CodeBlock code={HANDOFF_EXCLUSIONS} language="bash" />
-                </div>
-
-                <div className="mt-8 flex flex-col gap-4">
-                    <h3 className="typo-body-l-medium text-foreground">생성·검증 흐름</h3>
-                    <ol className="grid gap-4 md:grid-cols-2">
-                        {HANDOFF_FLOW.map(([number, title, description]) => (
-                            <li key={number} className="border-border flex items-start gap-3 rounded-xl border p-5">
-                                <span className="bg-primary text-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-full text-sm font-bold">
-                                    {number}
-                                </span>
-                                <div className="flex flex-col gap-1">
-                                    <h4 className="text-foreground font-semibold">{title}</h4>
-                                    <p className="text-foreground-subtle">{description}</p>
-                                </div>
-                            </li>
-                        ))}
-                    </ol>
-                </div>
-
-                <div className="mt-8 grid gap-4 md:grid-cols-2">
-                    <div className="border-border rounded-xl border p-5">
-                        <h3 className="text-foreground font-semibold">제작 품질</h3>
-                        <p className="text-foreground-subtle mt-2">
-                            토큰, 컴포넌트, 페이지와 빌드 품질은 현재 퍼블리싱 저장소가 검증하고 책임합니다.
+                {/* 소제목 블록마다 가로선과 같은 여백으로 갈라, 섹션 제목 → 소제목 → 카드 제목 순서가 눈에 보이게 한다. */}
+                <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
+                    <div className="flex flex-col gap-3 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">전달 결과물</h3>
+                        <p className="text-label-foreground">
+                            프로젝트 화면, 퍼블리싱 인덱스, 컴포넌트 가이드와 shadcn 원본 비교 기준을 함께 제공합니다.
                         </p>
+                        <CodeBlock code={HANDOFF_TREE} language="bash" />
                     </div>
-                    <div className="border-border rounded-xl border p-5">
-                        <h3 className="text-foreground font-semibold">전달 이후 개발</h3>
-                        <p className="text-foreground-subtle mt-2">
-                            전달 이후의 개발 규칙과 서비스 운영 정책은 프론트엔드 저장소에서 구성하고 관리합니다.
+
+                    <div className="flex flex-col gap-3 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">전달에서 제외·교체</h3>
+                        <p className="text-label-foreground">
+                            제작 저장소의 규칙·검사·릴리스 도구와 원본 저장소 전용 코드는 제외합니다. 실행 환경, 루트
+                            화면, README와 사이트 설정은 전달 목적에 맞게 재구성합니다.
                         </p>
+                        <CodeBlock code={HANDOFF_EXCLUSIONS} language="bash" />
+                    </div>
+
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">생성·검증 흐름</h3>
+                        <ol className="grid gap-4 md:grid-cols-2">
+                            {HANDOFF_FLOW.map(([number, title, description]) => (
+                                <li
+                                    key={number}
+                                    className="border-foreground-subtle/30 bg-pastel-neutral/40 flex items-start gap-3 rounded-sm border p-5"
+                                >
+                                    <span className="bg-primary text-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-full text-sm font-bold">
+                                        {number}
+                                    </span>
+                                    <div className="flex flex-col gap-1">
+                                        <h4 className="typo-body-xl-bold text-foreground">{title}</h4>
+                                        <p className="text-label-foreground">{description}</p>
+                                    </div>
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
+
+                    {/* 흐름(순서)과 책임 범위(누가 맡는가)는 다른 이야기라 소제목으로 가른다. */}
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">책임 범위</h3>
+                        <div className="grid gap-4 md:grid-cols-2">
+                            <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
+                                <h4 className="typo-body-xl-bold text-foreground">제작 품질</h4>
+                                <p className="text-label-foreground mt-2">
+                                    토큰, 컴포넌트, 페이지와 빌드 품질은 현재 퍼블리싱 저장소가 검증하고 책임합니다.
+                                </p>
+                            </div>
+                            <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
+                                <h4 className="typo-body-xl-bold text-foreground">전달 이후 개발</h4>
+                                <p className="text-label-foreground mt-2">
+                                    전달 이후의 개발 규칙과 서비스 운영 정책은 프론트엔드 저장소에서 구성하고
+                                    관리합니다.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </BaseCard>
@@ -378,32 +388,32 @@ const ComponentGuidePage = () => (
                     </SectionHeaderDescription>
                 </SectionHeader>
                 <div className="grid gap-4 md:grid-cols-2">
-                    <div className="border-border rounded-xl border p-5">
-                        <h3 className="text-foreground font-semibold">제작 저장소 검증</h3>
-                        <p className="text-foreground-subtle mt-2">
+                    <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
+                        <h3 className="typo-body-xl-bold text-foreground">제작 저장소 검증</h3>
+                        <p className="text-label-foreground mt-2">
                             <code className="text-foreground font-mono">yarn verify</code>와{' '}
                             <code className="text-foreground font-mono">yarn build</code>로 토큰, 규칙, 타입과 전체
                             페이지 빌드를 확인합니다.
                         </p>
                     </div>
-                    <div className="border-border rounded-xl border p-5">
-                        <h3 className="text-foreground font-semibold">가이드·사용처 동기화</h3>
-                        <p className="text-foreground-subtle mt-2">
+                    <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
+                        <h3 className="typo-body-xl-bold text-foreground">가이드·사용처 동기화</h3>
+                        <p className="text-label-foreground mt-2">
                             변경된 API, 토큰, 상태 예시와 실제 사용처를 함께 갱신하고 mobile·tablet·PC에서 확인합니다.
                         </p>
                     </div>
-                    <div className="border-border rounded-xl border p-5">
-                        <h3 className="text-foreground font-semibold">전달 경계 확인</h3>
-                        <p className="text-foreground-subtle mt-2">
+                    <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
+                        <h3 className="typo-body-xl-bold text-foreground">전달 경계 확인</h3>
+                        <p className="text-label-foreground mt-2">
                             <code className="text-foreground font-mono">/</code>,{' '}
                             <code className="text-foreground font-mono">/publishing-guide</code>와{' '}
                             <code className="text-foreground font-mono">/component-guide</code> 경로, 토큰 생성 환경과
                             정적 에셋을 확인합니다.
                         </p>
                     </div>
-                    <div className="border-border rounded-xl border p-5">
-                        <h3 className="text-foreground font-semibold">전달본 최종 빌드</h3>
-                        <p className="text-foreground-subtle mt-2">
+                    <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
+                        <h3 className="typo-body-xl-bold text-foreground">전달본 최종 빌드</h3>
+                        <p className="text-label-foreground mt-2">
                             전달본에서 <code className="text-foreground font-mono">yarn build</code>를 통과한 뒤 기존{' '}
                             <code className="text-foreground font-mono">frontend-handoff</code> 이력의 다음 커밋으로
                             반영됐는지 확인합니다.

@@ -1,6 +1,9 @@
 import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
+import {Check, TriangleAlert, X} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
+import {Alert, AlertDescription} from '@/components/ui/alert'
+import {Badge} from '@/components/ui/badge'
 import CopyChip from '@/components/custom/copy-chip'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {Table} from '@/components/custom/table'
@@ -591,6 +594,34 @@ const GROUP_USAGE: Record<string, ReactNode> = {
 }
 
 // 색상(Semantic) — 프로젝트가 실제로 쓰는 시맨틱 토큰(--ds). Figma 02 Semantic 그룹별로 표를 나눈다.
+// 적용 규칙 카드 — 규칙마다 설명 · 사용 · 금지를 같은 자리에 둔다.
+const SEMANTIC_RULES = [
+    {
+        title: '역할 기반 클래스 사용',
+        description: '역할이 드러나는 클래스를 씁니다.',
+        use: 'bg-primary · bg-info',
+        avoid: 'bg-blue-500 · bg-info-500',
+    },
+    {
+        title: '배경과 전경 함께 적용',
+        description: '배경에 대응하는 전경색을 함께 써 대비를 유지합니다.',
+        use: 'bg-primary + text-primary-foreground',
+        avoid: '배경만 바꾸고 글자색은 그대로 두기',
+    },
+    {
+        title: '테마별 클래스 분기 금지',
+        description: '같은 클래스가 테마에 따라 값을 자동으로 바꿉니다.',
+        use: 'bg-surface (테마 공통)',
+        avoid: 'dark: 로 분기',
+    },
+] as const
+
+const SEMANTIC_THEMES = [
+    {selector: ':root · light', description: '테마 클래스가 없을 때의 기본값'},
+    {selector: '.dark', description: '다크 화면'},
+    {selector: '.mainpage', description: '메인페이지 전용'},
+] as const
+
 const SemanticColorGuidePage = () => (
     <GuidePageShell
         title="색상 (Semantic)"
@@ -603,84 +634,88 @@ const SemanticColorGuidePage = () => (
     >
         <div className="flex flex-col gap-12">
             <BaseCard>
-                <section aria-labelledby="semantic-rule" className="flex flex-col gap-8">
-                    <div className="flex flex-col gap-1">
+                <section aria-labelledby="semantic-rule" className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
                         <h2 id="semantic-rule" className="typo-h4-bold text-foreground">
                             시맨틱 색상 적용 방식
                         </h2>
-                        <p className="typo-body-l-regular text-foreground-subtle">
-                            색상값이나 단계가 아니라 UI에서 맡는 역할을 기준으로 클래스를 선택합니다.
+                        <p className="typo-body-l-regular text-label-foreground">
+                            색 값이나 단계가 아니라 UI 에서 맡는 역할로 클래스를 고릅니다.
                         </p>
                     </div>
+
+                    {/* 규칙마다 같은 자리에 같은 항목(설명 · 사용 · 금지)을 둔다. */}
                     <div className="grid gap-4 md:grid-cols-3">
-                        <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">역할 기반 클래스 사용</strong>
-                            <p className="text-foreground-subtle">
-                                <code className="font-mono">bg-blue-500</code>·
-                                <code className="font-mono">bg-info-500</code> 대신{' '}
-                                <code className="font-mono">bg-primary</code>·<code className="font-mono">bg-info</code>
-                                처럼 역할이 드러나는 클래스를 사용합니다.
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">배경과 전경 함께 적용</strong>
-                            <p className="text-foreground-subtle">
-                                <code className="font-mono">bg-primary</code>에는{' '}
-                                <code className="font-mono">text-primary-foreground</code>처럼 대응하는 전경색을 함께
-                                사용해 대비를 유지합니다.
-                            </p>
-                        </div>
-                        <div className="flex flex-col gap-1">
-                            <strong className="text-foreground">테마별 클래스 분기 금지</strong>
-                            <p className="text-foreground-subtle">
-                                같은 클래스가 테마에 따라 값을 자동으로 바꿉니다.{' '}
-                                <code className="font-mono">dark:</code>로 분기하지 않습니다.
-                            </p>
-                        </div>
+                        {SEMANTIC_RULES.map((rule) => (
+                            <div
+                                key={rule.title}
+                                className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5"
+                            >
+                                <h3 className="typo-body-xl-bold text-foreground">{rule.title}</h3>
+                                <p className="text-label-foreground">{rule.description}</p>
+                                <dl className="border-subtle-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 border-t pt-3">
+                                    {/* 색만으로 가르지 않도록 글자(사용 · 금지)와 아이콘을 함께 둔다[5.3.1]. */}
+                                    <dt>
+                                        <Badge variant="solid-pastel" color="success" size="sm">
+                                            <Check aria-hidden="true" />
+                                            사용
+                                        </Badge>
+                                    </dt>
+                                    <dd className="text-label-foreground self-center font-mono text-sm">{rule.use}</dd>
+                                    <dt>
+                                        <Badge variant="solid-pastel" color="error" size="sm">
+                                            <X aria-hidden="true" />
+                                            금지
+                                        </Badge>
+                                    </dt>
+                                    <dd className="text-label-foreground self-center font-mono text-sm">
+                                        {rule.avoid}
+                                    </dd>
+                                </dl>
+                            </div>
+                        ))}
                     </div>
 
-                    <div className="border-border flex flex-col gap-5 border-t pt-8">
-                        <div className="flex flex-col gap-1">
-                            <h3 className="typo-title-l-bold text-foreground">테마별 동일 토큰 세트</h3>
-                            <p className="typo-body-l-regular text-foreground-subtle">
-                                light·dark·mainpage 세 테마는 이름과 개수가 같은 토큰 한 벌씩을 갖고, 값만 다릅니다.
+                    <div className="border-subtle-3 flex flex-col gap-4 border-t pt-6">
+                        <div className="flex flex-col gap-2">
+                            <h3 className="typo-title-m-bold text-foreground">테마별 동일 토큰 세트</h3>
+                            <p className="typo-body-l-regular text-label-foreground">
+                                light · dark · mainpage 세 테마는 이름과 개수가 같은 토큰 한 벌씩을 갖고, 값만 다릅니다.
                             </p>
                         </div>
-                        <div className="grid gap-3 md:grid-cols-3">
-                            <div className="border-border bg-surface flex flex-col gap-1 rounded-lg border p-4">
-                                <strong className="text-foreground">
-                                    <code className="font-mono">:root</code> · light
-                                </strong>
-                                <p className="text-foreground-subtle">테마 클래스가 없을 때의 기본값</p>
-                            </div>
-                            <div className="border-border bg-surface flex flex-col gap-1 rounded-lg border p-4">
-                                <strong className="text-foreground">
-                                    <code className="font-mono">.dark</code>
-                                </strong>
-                                <p className="text-foreground-subtle">다크 화면</p>
-                            </div>
-                            <div className="border-border bg-surface flex flex-col gap-1 rounded-lg border p-4">
-                                <strong className="text-foreground">
-                                    <code className="font-mono">.mainpage</code>
-                                </strong>
-                                <p className="text-foreground-subtle">메인페이지 전용</p>
-                            </div>
+                        <div className="grid gap-4 md:grid-cols-3">
+                            {SEMANTIC_THEMES.map((theme) => (
+                                <div
+                                    key={theme.selector}
+                                    className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-1 rounded-sm border p-5"
+                                >
+                                    <code className="typo-body-xl-bold text-foreground font-mono">
+                                        {theme.selector}
+                                    </code>
+                                    <p className="text-label-foreground">{theme.description}</p>
+                                </div>
+                            ))}
                         </div>
-                        <ul className="text-foreground-subtle flex list-disc flex-col gap-2 pl-5">
+                        <ul className="text-label-foreground flex list-disc flex-col gap-2 pl-5">
                             <li>
-                                토큰을 추가할 때는 <code className="font-mono">tokens.json</code>에 세 테마 값을 모두
-                                적습니다. 값이 같아도 생략하지 않습니다.
+                                토큰을 추가할 때는 <code className="text-foreground font-mono">tokens.json</code>에 세
+                                테마 값을 모두 적습니다. 값이 같아도 생략하지 않습니다.
                             </li>
                             <li>
-                                특정 영역만 다른 색이 필요하면 <code className="font-mono">.light</code>·
-                                <code className="font-mono">.dark</code>를 부분 적용하지 말고{' '}
-                                <code className="font-mono">sidebar-*</code>처럼 전용 토큰을 만듭니다.
-                            </li>
-                            <li>
-                                예외 — 인쇄용 리포트와 메인 공지 팝업처럼 영역 전체가 늘 라이트여야 하면 그 영역 뿌리에{' '}
-                                <code className="font-mono">.light</code>를 한 번 적용합니다.
+                                특정 영역만 다른 색이 필요하면 <code className="text-foreground font-mono">.light</code>
+                                ·<code className="text-foreground font-mono">.dark</code>를 부분 적용하지 말고{' '}
+                                <code className="text-foreground font-mono">sidebar-*</code>처럼 전용 토큰을 만듭니다.
                             </li>
                         </ul>
+                        {/* 예외는 목록 끝에 묻히지 않게 따로 떼어 경고 상자로 세운다. */}
+                        <Alert variant="outline" color="warning">
+                            <TriangleAlert aria-hidden="true" />
+                            <AlertDescription>
+                                <strong>예외</strong> — 인쇄용 리포트와 메인 공지 팝업처럼 영역 전체가 늘 라이트여야
+                                하면 그 영역 뿌리에 <code className="font-mono font-bold">.light</code>를 한 번
+                                적용합니다.
+                            </AlertDescription>
+                        </Alert>
                     </div>
                 </section>
             </BaseCard>
