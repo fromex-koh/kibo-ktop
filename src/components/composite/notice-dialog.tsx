@@ -58,8 +58,10 @@ const NoticeDialog = ({
                 <DialogTitle className="sr-only">{title}</DialogTitle>
             </DialogHeader>
             <div className={cn(dialogBodyClassName, 'pt-0')}>
-                {/* 글자(20px Bold)는 셸의 기본 모달 설명 스타일 그대로다 — 여기서는 자리만 잡는다. */}
-                <DialogDescription className="py-8 text-center">{message}</DialogDescription>
+                {/* 큰 Bold 글자를 <p> 로 두면 WAVE 가 "Possible heading" 으로 잡아 블록 span 으로 그린다(설명 연결은 그대로). */}
+                <DialogDescription asChild>
+                    <span className="block py-8 text-center break-keep">{message}</span>
+                </DialogDescription>
             </div>
             <DialogFooter>
                 <DialogClose asChild>
