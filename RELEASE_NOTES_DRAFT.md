@@ -76,6 +76,30 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 영향 화면: [표](/component-guide/table)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/fea596dd38ad81c352110bf4b6456ae2a4550172)
 
+### [컴포넌트] 리포트 문서 — 인쇄 규칙 스타일 위치
+
+- 대상: src/components/custom/report-document.tsx
+- 변경:
+    - ReportPageStyle 을 report-page-style.tsx 로 옮겼습니다. report-document.tsx 가 그대로 다시 내보내므로 쓰는 쪽 코드(import)는 바꾸지 않습니다.
+    - 인쇄 규칙(A4 세로 · 여백 0)의 내용은 같습니다.
+    - 새 파일은 [신규 추가]의 "리포트 인쇄 규칙 스타일" 카드와 함께 적용합니다.
+- 결과:
+    - 보고서 화면 안의 main 에 style 이 들어가 W3C 검사에서 나던 오류가 없어집니다.
+    - 인쇄 규칙은 화면이 떠 있는 동안에만 head 에 들어가고, 화면을 떠나면 지워집니다.
+- 영향 화면: [기업 일반분석 KTRS-FM](/corp/mypage/evaluation-results/general-analysis/ktrs-fm)
+    - [기업 일반분석 Tech-Index](/corp/mypage/evaluation-results/general-analysis/tech-index)
+    - [기업 일반분석 창업용 Tech-Index](/corp/mypage/evaluation-results/general-analysis/startup-tech-index)
+    - [기업 일반분석 투자모형](/corp/mypage/evaluation-results/general-analysis/investment-model)
+    - [기관 일반분석 KTRS-FM](/org/mypage/evaluation-history/general-analysis/ktrs-fm)
+    - [기관 일반분석 Tech-Index](/org/mypage/evaluation-history/general-analysis/tech-index)
+    - [기관 일반분석 창업용 Tech-Index](/org/mypage/evaluation-history/general-analysis/startup-tech-index)
+    - [기관 일반분석 투자모형](/org/mypage/evaluation-history/general-analysis/investment-model)
+    - [기관 심층분석 KTRS-FM](/org/mypage/evaluation-history/deep-analysis/ktrs-fm)
+    - [기관 심층분석 Tech-Index](/org/mypage/evaluation-history/deep-analysis/tech-index)
+    - [기관 심층분석 창업용 Tech-Index](/org/mypage/evaluation-history/deep-analysis/startup-tech-index)
+    - [기관 심층분석 투자모형](/org/mypage/evaluation-history/deep-analysis/investment-model)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/06a73ce8a6b6ac6dd6e0174d14b1f87681b63fe8)
+
 ## [신규 추가]
 
 ### [컴포넌트] 이용중지 신청 · 변경 팝업
@@ -128,6 +152,15 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 내용:
     - 결제정보의 케이스 3개와 팝업 9개를 따로 열어 보는 미리보기 전용 화면입니다.
     - [결제정보 화면](/corp/mypage/paid-services/payment-history)에서 모두 확인할 수 있어 연동할 때 지워도 됩니다.
+
+### [컴포넌트] 리포트 인쇄 규칙 스타일
+
+- 대상: src/components/custom/report-page-style.tsx
+- 적용: 신규 파일 추가
+- 내용:
+    - 보고서 화면의 main 안에 ReportPageStyle 을 한 번 둡니다(기존과 같은 사용법).
+    - 화면이 뜨면 인쇄 규칙을 head 에 넣고, 떠나면 지웁니다.
+    - [Diff 확인]의 "리포트 문서 — 인쇄 규칙 스타일 위치" 카드와 함께 적용합니다.
 
 ## [덮어쓰기]
 
