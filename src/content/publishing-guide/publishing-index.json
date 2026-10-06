@@ -1886,7 +1886,8 @@
                             "label": "결제정보",
                             "screen": {
                                 "screenId": "SB-FOTA-CM2-0011",
-                                "status": "완료",
+                                "status": "보완",
+                                "statusDate": "10/07",
                                 "version": "미배포",
                                 "key": "corp-mypage-paid-services-payment-history",
                                 "iaRow": 140
@@ -1933,6 +1934,90 @@
                                     "version": "미배포",
                                     "key": "corp-mypage-paid-services-refund-reason-refund-complete",
                                     "iaRow": 145
+                                },
+                                {
+                                    "label": "이용중지 중 case",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-suspending"
+                                },
+                                {
+                                    "label": "이용중지 이력 있음 case",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-suspension-history"
+                                },
+                                {
+                                    "label": "환불 가능 case",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-refundable"
+                                },
+                                {
+                                    "label": "이용중지 신청",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-suspend"
+                                },
+                                {
+                                    "label": "이용중지 신청 확인",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-suspend-confirm"
+                                },
+                                {
+                                    "label": "이용중지 신청 완료",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-suspend-complete"
+                                },
+                                {
+                                    "label": "이용중지 변경",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-suspend-change"
+                                },
+                                {
+                                    "label": "이용중지 변경 확인",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-suspend-change-confirm"
+                                },
+                                {
+                                    "label": "이용중지 변경 완료",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-suspend-change-complete"
+                                },
+                                {
+                                    "label": "이용중지 해제 완료",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-suspend-release-complete"
+                                },
+                                {
+                                    "label": "이용중지불가(잔여기간 1일)",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-suspend-unavailable-remaining-day"
+                                },
+                                {
+                                    "label": "이용중지불가(무료이용권)",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-mypage-paid-services-payment-history-suspend-unavailable-free-pass"
                                 }
                             ]
                         }

@@ -1087,6 +1087,90 @@
             "isCurrent": false
         },
         {
+            "key": "corp-mypage-paid-services-payment-history-suspend",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-confirm",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-change-confirm",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-change-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-release-complete",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspending",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspension-history",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-refundable",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-change",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-unavailable-remaining-day",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
+            "key": "corp-mypage-paid-services-payment-history-suspend-unavailable-free-pass",
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "-",
+            "isCurrent": false
+        },
+        {
             "key": "corp-mypage-paid-services-refund-reason",
             "implemented": true,
             "implementationStatus": "in-progress",
@@ -2610,7 +2694,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-credit-information-policy",
@@ -2638,7 +2722,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.7",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "org-credit-information-policy",
