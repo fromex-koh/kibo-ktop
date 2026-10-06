@@ -1076,8 +1076,8 @@
             "key": "corp-mypage-paid-services-payment-history",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.2.6",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-usage-history",
@@ -1090,85 +1090,85 @@
             "key": "corp-mypage-paid-services-payment-history-suspend",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-change-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-change-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-release-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspending",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspension-history",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-refundable",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-change",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-unavailable-remaining-day",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-unavailable-free-pass",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "-",
-            "isCurrent": false
+            "version": "v3.3.8",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-refund-reason",
