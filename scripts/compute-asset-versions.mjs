@@ -11,6 +11,8 @@ import {findAppPage} from './find-app-page.mjs'
 const SOURCE = 'src/content/publishing-guide/publishing-index.json'
 const OUTPUT = 'src/content/publishing-guide/asset-versions.generated.json'
 const RELEASE_NOTES_OUTPUT = 'src/content/publishing-guide/release-notes.generated.json'
+// 퍼블리싱 인덱스 표는 최근 30개만 싣고, 아카이브에는 첫 버전부터 모든 릴리스를 빠짐없이 쌓는다.
+const RELEASE_NOTES_ARCHIVE_OUTPUT = 'src/content/publishing-guide/release-notes-archive.generated.json'
 const SCREEN_REGISTRY_SOURCE = 'src/content/publishing-guide/screen-registry.json'
 const SCREEN_REGISTRY_OUTPUT = 'src/content/publishing-guide/screen-registry.generated.json'
 const SCREEN_REGISTRY_GENERATED_NOTICE =
@@ -225,7 +227,16 @@ const releases = [
     },
     ...previousReleaseNotes.filter((release) => release.version !== releaseVersion),
 ].slice(0, 30)
+const currentRelease = releases[0]
 writeFileSync(RELEASE_NOTES_OUTPUT, await formatJson({releases}, RELEASE_NOTES_OUTPUT))
+const archivedReleases = JSON.parse(readFileSync(RELEASE_NOTES_ARCHIVE_OUTPUT, 'utf8')).releases
+writeFileSync(
+    RELEASE_NOTES_ARCHIVE_OUTPUT,
+    await formatJson(
+        {releases: [currentRelease, ...archivedReleases.filter((release) => release.version !== releaseVersion)]},
+        RELEASE_NOTES_ARCHIVE_OUTPUT,
+    ),
+)
 if (process.env.PRESERVE_RELEASE_NOTES_DRAFT !== 'true') {
     writeFileSync(RELEASE_NOTES_DRAFT, EMPTY_RELEASE_NOTES_DRAFT)
 }
