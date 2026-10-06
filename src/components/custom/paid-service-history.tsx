@@ -11,9 +11,20 @@ import {
     type PaidServiceUsageHistoryItem,
 } from '@/components/composite/paid-service-usage-history-dialog'
 import {PaidServiceRefundDialog} from '@/components/composite/paid-service-refund-dialog'
+import {NoticeDialog} from '@/components/composite/notice-dialog'
+import {PaidServiceSuspendAction} from '@/components/composite/paid-service-suspend-action'
 import {Pagination} from '@/components/composite/pagination'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
+import {applyPassSuspension} from '@/content/service/paid-service-current-pass'
+import {
+    SUSPEND_COMPLETE_MESSAGE,
+    SUSPEND_COMPLETE_TITLE,
+    type PaidServiceSuspendOutcome,
+    type PaidServiceSuspension,
+} from '@/content/service/paid-service-suspend'
 import {useIsMobile} from '@/hooks/use-mobile'
+import {cn} from '@/lib/utils'
+import {getServiceToday} from '@/lib/service-today'
 
 export type PassStatus = 'waiting' | 'expired' | 'refunded'
 export type PassFilter = 'all' | PassStatus
@@ -28,18 +39,45 @@ const PASS_SORT_ORDER_LABEL = {
 const nextPassSortOrder = (order: PassSortOrder): PassSortOrder =>
     PASS_SORT_ORDERS[(PASS_SORT_ORDERS.indexOf(order) + 1) % PASS_SORT_ORDERS.length]
 
+export type PaidServiceSuspensionRecord = {
+    startDate: string
+    endDate: string
+    /** 이용중지 일수(종료일 − 시작일). */
+    days: number
+    /** 종료일 다음 날. 변경에서 종료일을 오늘로 고르면(즉시 해제) 오늘. */
+    resumeDate: string
+}
+
 export type CurrentPaidServicePass = {
     id: string
     grade: string
     remaining: number
     used: number
     total: number
+    /** 이용기간 시작일 · 만료일(yyyy-MM-dd). 이용중지가 있으면 만료일 = 원래 만료일 + 이용중지 일수. */
+    startDate: string
+    endDate: string
+    /** 이용기간 항목 이름. 이용중지 기록이 있으면 '변경된 이용기간'(재개일 ~ 변경 만료일). */
+    periodLabel?: string
     period: string
     periodAccent: string
+    /** 남은 이용 일수 — 이용중지 중에도 줄지 않는다. 1일 이하면 이용중지를 신청할 수 없다. */
+    remainingDays: number
     purchasedAt: string
+    purchasedLabel?: '구매일' | '지급일'
     composition: string
     price: string
-    gradeImage: string
+    gradeImage?: string
+    /** 무료 지급 이용권 — 이용중지를 신청할 수 없다. */
+    isFree?: boolean
+    /** 이용중지 중인 기간. 종료일이 오늘보다 뒤일 때만 채운다 — 있으면 [이용중지] 대신 [이용중지 변경]. */
+    suspension?: PaidServiceSuspension
+    /** 이용중지 기록 블록. 중지 중(분홍)과 재개 뒤(중립 톤) 모두 보인다. */
+    suspensionRecord?: PaidServiceSuspensionRecord
+    /** 구매 7일 이내 · 사용 이력 없음 — [환불하기] 를 보인다(이용중지를 하면 false). */
+    isRefundable?: boolean
+    /** 이용중지를 한 번이라도 했는지 — 이용권당 1회라 재개 뒤에는 이용중지 버튼이 없다. */
+    hasSuspendedBefore?: boolean
     usageHistory?: readonly PaidServiceUsageHistoryItem[]
     usageHistoryTotalPages?: number
 }
@@ -118,15 +156,20 @@ const createUsageHistory = ({
     })
 }
 
+// currentPass 를 넘기지 않을 때의 기본값(스탠다드 · 이용중, 기준일 2026-10-06 고정). 케이스별 목업은
+// content/service/paid-service-current-pass.ts 가 오늘 기준으로 만든다.
 const CURRENT_PASS: CurrentPaidServicePass = {
     id: 'standard-current',
     grade: '스탠다드',
     remaining: 61,
     used: 89,
     total: 150,
-    period: '2026-08-15 ~ 2026-09-13',
-    periodAccent: '0일 남음',
-    purchasedAt: '2026-08-12',
+    startDate: '2026-09-14',
+    endDate: '2026-10-13',
+    period: '2026-09-14 ~ 2026-10-13',
+    periodAccent: '8일 남음',
+    remainingDays: 8,
+    purchasedAt: '2026-09-11',
     composition: '150건 / 30일',
     price: '1,000,000원',
     gradeImage: '/images/ticket-grade/ticket-grade-standard.webp',
@@ -401,14 +444,45 @@ const PassMeta = ({label, children}: {label: string; children: React.ReactNode})
     </span>
 )
 
+// 이용중지 기록 블록 — 이용중지 중이면 분홍, 재개한 뒤(이력)면 중립 톤. 자리가 모자라면 항목 단위로 줄을 바꾼다.
+const SuspensionRecord = ({record, isActive}: {record: PaidServiceSuspensionRecord; isActive: boolean}) => (
+    <div
+        role="group"
+        aria-label={isActive ? '이용중지' : '이용중지 이력'}
+        className={cn(
+            'typo-body-l-regular flex flex-wrap gap-x-6 gap-y-1 rounded-sm px-4 py-4',
+            isActive ? 'bg-pastel-error' : 'bg-surface-subtle',
+        )}
+    >
+        <span className="flex flex-wrap gap-x-2">
+            <span className={isActive ? 'text-pastel-error-foreground' : 'text-foreground-subtle'}>이용중지 기간</span>
+            <span className="text-foreground">
+                <span className="whitespace-nowrap">{record.startDate}</span>{' '}
+                <span className="whitespace-nowrap">~ {record.endDate}</span>
+            </span>
+            <strong className="text-foreground whitespace-nowrap">{record.days}일</strong>
+        </span>
+        <span className="flex gap-x-2">
+            <span className={isActive ? 'text-pastel-error-foreground' : 'text-foreground-subtle'}>
+                {isActive ? '이용 재개 예정일' : '이용 재개일'}
+            </span>
+            <span className="text-foreground whitespace-nowrap">{record.resumeDate}</span>
+        </span>
+    </div>
+)
+
 const CurrentPass = ({
     item,
     usageHistoryDefaultOpen,
+    onSuspend,
+    onRefund,
     onViewHistory,
     onUsageHistoryPageChange,
 }: {
     item: CurrentPaidServicePass
     usageHistoryDefaultOpen?: boolean
+    onRefund?: (id: string) => void | Promise<unknown>
+    onSuspend?: (id: string, values: Record<string, string>, outcome: PaidServiceSuspendOutcome) => void
     onViewHistory?: (id: string) => void
     onUsageHistoryPageChange?: (id: string, page: number) => void
 }) => (
@@ -419,14 +493,22 @@ const CurrentPass = ({
         <article className="border-primary bg-card overflow-hidden rounded-lg border">
             <div className="flex flex-col gap-6 px-6 pt-8 md:px-8">
                 <div className="flex items-center gap-4">
-                    <PassGradeImage src={item.gradeImage} alt={`${item.grade} 이용권 등급`} />
+                    {item.gradeImage ? (
+                        <PassGradeImage src={item.gradeImage} alt={`${item.grade} 이용권 등급`} />
+                    ) : null}
                     <div className="min-w-0 flex-1">
                         <p className="typo-body-m-medium text-foreground-subtle">K-BIGx 보고서 이용권</p>
                         <h3 className="typo-h4-bold text-foreground">{item.grade}</h3>
                     </div>
-                    <Badge color="info" shape="round">
-                        사용중
-                    </Badge>
+                    {item.suspension ? (
+                        <Badge color="error" shape="round">
+                            이용중지
+                        </Badge>
+                    ) : (
+                        <Badge color="info" shape="round">
+                            사용중
+                        </Badge>
+                    )}
                 </div>
                 <div className="flex flex-col gap-4">
                     <div>
@@ -434,10 +516,13 @@ const CurrentPass = ({
                             잔여 <strong className="typo-title-l-bold">{item.remaining}</strong>건
                         </p>
                         <div className="typo-body-l-regular mt-1 flex flex-wrap gap-x-2">
-                            <PassMeta label="이용기간">{item.period}</PassMeta>
+                            <PassMeta label={item.periodLabel ?? '이용기간'}>{item.period}</PassMeta>
                             <strong className="text-primary">{item.periodAccent}</strong>
                         </div>
                     </div>
+                    {item.suspensionRecord ? (
+                        <SuspensionRecord record={item.suspensionRecord} isActive={Boolean(item.suspension)} />
+                    ) : null}
                     <div className="flex flex-col gap-2">
                         <div className="bg-background h-2 overflow-hidden rounded-full">
                             <div
@@ -453,7 +538,7 @@ const CurrentPass = ({
                         </div>
                     </div>
                     <div className="typo-body-l-regular flex flex-wrap gap-x-6 gap-y-1 pb-6">
-                        <PassMeta label="구매일">{item.purchasedAt}</PassMeta>
+                        <PassMeta label={item.purchasedLabel ?? '구매일'}>{item.purchasedAt}</PassMeta>
                         <PassMeta label="상품 구성">{item.composition}</PassMeta>
                         <PassMeta label="금액">{item.price}</PassMeta>
                     </div>
@@ -461,19 +546,37 @@ const CurrentPass = ({
             </div>
             <div className="border-subtle-3 bg-secondary flex flex-col gap-3 border-t border-dashed px-6 py-4 sm:flex-row sm:items-center sm:justify-between md:px-8">
                 <p className="typo-body-m-regular text-foreground-subtle">
-                    사용 이력이 있는 이용권은 환불할 수 없습니다.
+                    {item.suspension
+                        ? '이용중지 기간에는 이용권이 차감되는 서비스를 이용할 수 없습니다.'
+                        : item.hasSuspendedBefore
+                          ? '이용중지는 이용권당 1회만 신청할 수 있습니다.'
+                          : item.isRefundable
+                            ? '구매일로부터 7일 이내의 미사용 이용권은 환불할 수 있습니다.'
+                            : '사용 이력이 있는 이용권은 환불할 수 없습니다.'}
                 </p>
-                <PaidServiceUsageHistoryDialog
-                    defaultOpen={usageHistoryDefaultOpen}
-                    pass={{grade: item.grade, remaining: item.remaining}}
-                    items={item.usageHistory}
-                    totalPages={item.usageHistoryTotalPages}
-                    onPageChange={(page) => onUsageHistoryPageChange?.(item.id, page)}
-                >
-                    <Button type="button" variant="tertiary" size="sm" onClick={() => onViewHistory?.(item.id)}>
-                        이용내역
-                    </Button>
-                </PaidServiceUsageHistoryDialog>
+                {/* [이용중지] · [이용중지 변경] 은 이용권 상태에 따라 Action 이 고르고, 이력이 있으면 렌더하지 않는다. */}
+                {/* 버튼이 셋(환불하기 · 이용중지 · 이용내역)이면 좁은 화면에서 줄을 바꾼다. */}
+                <div className="flex flex-wrap justify-end gap-2">
+                    {item.isRefundable ? (
+                        <PaidServiceRefundDialog grade={item.grade} onConfirm={() => onRefund?.(item.id)}>
+                            <Button type="button" variant="tertiary" size="sm">
+                                환불하기
+                            </Button>
+                        </PaidServiceRefundDialog>
+                    ) : null}
+                    <PaidServiceSuspendAction pass={item} onSubmit={onSuspend} />
+                    <PaidServiceUsageHistoryDialog
+                        defaultOpen={usageHistoryDefaultOpen}
+                        pass={{grade: item.grade, remaining: item.remaining}}
+                        items={item.usageHistory}
+                        totalPages={item.usageHistoryTotalPages}
+                        onPageChange={(page) => onUsageHistoryPageChange?.(item.id, page)}
+                    >
+                        <Button type="button" variant="tertiary" size="sm" onClick={() => onViewHistory?.(item.id)}>
+                            이용내역
+                        </Button>
+                    </PaidServiceUsageHistoryDialog>
+                </div>
             </div>
         </article>
     </section>
@@ -583,7 +686,10 @@ export type PaidServiceHistoryProps = {
     onFilterChange?: (filter: PassFilter) => void
     onSortChange?: (sortOrder: PassSortOrder) => void
     onPageChange?: (page: number) => void
+    /** [프론트엔드 연동] 환불 요청(구매 이용권 · 현재 이용권 공통). Promise 를 돌려주면 처리중 → 완료 팝업이 요청에 맞춰 전환된다. */
     onRefund?: (id: string) => void | Promise<unknown>
+    /** [프론트엔드 연동] 이용중지 신청·변경 요청. 값: suspendStartDate · suspendEndDate, outcome: apply | change | release. */
+    onSuspend?: (id: string, values: Record<string, string>, outcome: PaidServiceSuspendOutcome) => void
     onViewHistory?: (id: string) => void
     onUsageHistoryPageChange?: (id: string, page: number) => void
     defaultOpenUsageHistoryId?: string
@@ -600,11 +706,24 @@ const PaidServiceHistory = ({
     onSortChange,
     onPageChange,
     onRefund,
+    onSuspend,
     onViewHistory,
     onUsageHistoryPageChange,
     defaultOpenUsageHistoryId,
     defaultOpenRefundId,
 }: PaidServiceHistoryProps) => {
+    const today = getServiceToday()
+    // 이용중지 완료 알림(이유: paid-service-suspend-dialog.tsx 주석).
+    const [completeMessage, setCompleteMessage] = useState<string | null>(null)
+    // [프론트엔드 연동] 목업 — 신청·변경이 성공하면 서버가 내려 준 현재 이용권을 currentPass 로 다시 받는다.
+    // 아래 suspendedPass 와 handleSuspend 의 applyPassSuspension 은 그때 삭제한다(지금은 확인 뒤 카드를 직접 갱신한다).
+    const [suspendedPass, setSuspendedPass] = useState<CurrentPaidServicePass | null>(null)
+    const displayedPass = currentPass && suspendedPass?.id === currentPass.id ? suspendedPass : currentPass
+    const handleSuspend = (id: string, values: Record<string, string>, outcome: PaidServiceSuspendOutcome) => {
+        if (currentPass) setSuspendedPass(applyPassSuspension(displayedPass ?? currentPass, values, today))
+        onSuspend?.(id, values, outcome)
+        setCompleteMessage(SUSPEND_COMPLETE_MESSAGE[outcome])
+    }
     const [filter, setFilter] = useState<PassFilter>('all')
     const [sortOrder, setSortOrder] = useState<PassSortOrder>('desc')
     const [page, setPage] = useState(1)
@@ -671,10 +790,17 @@ const PaidServiceHistory = ({
 
     return (
         <div className="flex flex-col gap-10">
-            {currentPass ? (
+            {displayedPass ? (
                 <CurrentPass
-                    item={currentPass}
-                    usageHistoryDefaultOpen={defaultOpenUsageHistoryId === currentPass.id}
+                    // [프론트엔드 연동] 목업 — 케이스 이용권은 이용내역을 들고 오지 않아 기본 이용내역으로 채운다.
+                    item={
+                        displayedPass.usageHistory || displayedPass.used === 0
+                            ? displayedPass
+                            : {...displayedPass, usageHistory: CURRENT_PASS.usageHistory}
+                    }
+                    usageHistoryDefaultOpen={defaultOpenUsageHistoryId === displayedPass.id}
+                    onSuspend={handleSuspend}
+                    onRefund={onRefund}
                     onViewHistory={onViewHistory}
                     onUsageHistoryPageChange={onUsageHistoryPageChange}
                 />
@@ -758,6 +884,14 @@ const PaidServiceHistory = ({
                     />
                 ) : null}
             </section>
+            <NoticeDialog
+                title={SUSPEND_COMPLETE_TITLE}
+                message={completeMessage}
+                open={completeMessage !== null}
+                onOpenChange={(open) => {
+                    if (!open) setCompleteMessage(null)
+                }}
+            />
         </div>
     )
 }
