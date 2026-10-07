@@ -221,84 +221,96 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
                 isPcOnlyTab && 'min-w-320',
             )}
         >
-            {/* 머리 — 남색 면 전체 폭, 안쪽은 콘텐츠 폭 1200. 모바일은 버튼을 제목 아래로 내린다. */}
-            <header className="bg-tab-pill-active text-tab-pill-active-foreground break-after-avoid">
+            <Tabs value={activeTab} onValueChange={selectTab} className="gap-0 print:block">
+                {/* 머리 + 구성 항목 탭 줄을 한 덩이로 묶어 PC(768 이상)에서 스크롤해도 화면 위에 붙는다(sticky).
+                    인쇄에서는 붙이지 않는다. 겹치는 차트보다 위에 오도록 z-sticky 토큰을 쓴다. */}
+                <div className="md:z-sticky md:sticky md:top-0 print:static">
+                    {/* 머리 — 남색 면 전체 폭, 안쪽은 콘텐츠 폭 1200. 모바일은 버튼을 제목 아래로 내린다. */}
+                    <header className="bg-tab-pill-active text-tab-pill-active-foreground break-after-avoid">
+                        <div
+                            className={cn(
+                                'max-w-content mx-auto flex flex-col items-start gap-6 px-4 py-6 md:flex-row md:justify-between md:gap-12 md:px-6 xl:px-0',
+                                isPcOnlyTab && 'px-0 md:px-0',
+                            )}
+                        >
+                            <div className="flex min-w-0 flex-1 flex-col gap-4">
+                                <p className="bg-info-50 text-info-600 typo-body-l-medium flex min-h-7 w-fit items-center rounded-full px-4">
+                                    {INNOVATION_REPORT_BADGE}
+                                </p>
+                                <div className="flex flex-col">
+                                    <h1 className="typo-h1-bold wrap-break-word break-keep">{report.title}</h1>
+                                    <p className="typo-body-l-regular flex flex-wrap items-center gap-x-4">
+                                        <span>{report.companyName}</span>
+                                        <span
+                                            aria-hidden="true"
+                                            className="bg-tab-pill-active-foreground/40 h-3 w-px"
+                                        />
+                                        <span>발급일 {report.issuedAt}</span>
+                                    </p>
+                                </div>
+                            </div>
+                            {/* 인쇄물에서는 스스로 사라진다 — 종이에 남아도 누를 수 없다. 모바일(768 미만)은 진단브리핑만 보이므로 출력 대신
+                        [더보기]를 둔다 — 모든 탭이 있는 PC 화면(?view=pc, 뷰포트 1280)을 새 창으로 열어 확대 · 축소하며 본다.
+                        [퍼블리싱 전용] [보고서 출력]은 아직 동작이 없는 버튼이다 — 출력 범위 · 방식이 정해지면 onClick 을 연결한다. */}
+                            <Button
+                                type="button"
+                                variant="tertiary"
+                                size="md"
+                                className="bg-card shrink-0 gap-1 max-md:hidden md:self-center print:hidden"
+                            >
+                                <Download aria-hidden="true" />
+                                {INNOVATION_REPORT_PRINT_LABEL}
+                            </Button>
+                            <Button
+                                asChild
+                                variant="tertiary"
+                                size="md"
+                                className="bg-card shrink-0 gap-1 md:hidden print:hidden"
+                            >
+                                <NewWindowLink
+                                    href={pcViewHref}
+                                    width={INNOVATION_REPORT_WINDOW_WIDTH}
+                                    height={INNOVATION_REPORT_WINDOW_HEIGHT}
+                                    windowName="k-bigx-innovation-report-pc"
+                                    // 창 폭이 곧 PC 화면이라 화면 폭으로 줄이지 않는다.
+                                    fitToScreen={false}
+                                >
+                                    {INNOVATION_REPORT_MORE_LABEL}
+                                    <ExternalLink aria-hidden="true" />
+                                </NewWindowLink>
+                            </Button>
+                        </div>
+                    </header>
+                    {/* 구성 항목 탭 — 주소의 ?tab= 으로 고른다(없으면 진단브리핑). 탭을 바꾸면 주소만 바꾸고 서버에 다시 묻지 않는다 —
+                        한 보고서의 모든 탭 데이터가 report 하나에 들어 있다.
+                        모바일(768 미만)은 진단브리핑만 보여 주므로 탭 줄을 통째로 숨긴다 — 다른 항목은 [더보기](PC 화면)에서 본다. */}
+                    <div className="bg-background max-md:hidden print:hidden">
+                        <div
+                            className={cn(
+                                'max-w-content mx-auto px-4 pt-10 pb-4 md:px-6 xl:px-0',
+                                isPcOnlyTab && 'px-0 md:px-0',
+                            )}
+                        >
+                            <TabsList variant="pill-outline" aria-label="보고서 구성 항목">
+                                {INNOVATION_REPORT_SECTIONS.map((section) => (
+                                    <TabsTrigger key={section.id} value={section.id}>
+                                        {section.label}
+                                    </TabsTrigger>
+                                ))}
+                            </TabsList>
+                        </div>
+                    </div>
+                </div>
+
+                {/* 본문은 TabsContent 안에 둔다 — 탭(role=tab)에는 짝이 되는 패널(role=tabpanel)이 있어야 한다[8.1.1].
+                    지금 고른 탭 하나만 그리므로 value 는 늘 activeTab 이다. 탭 줄과의 간격: 탭 아래 16 + 24 = 40(모바일은 머리 아래 40). */}
                 <div
                     className={cn(
-                        'max-w-content mx-auto flex flex-col items-start gap-6 px-4 py-6 md:flex-row md:justify-between md:gap-12 md:px-6 xl:px-0',
+                        'max-w-content mx-auto flex w-full flex-col px-4 pt-10 pb-10 md:px-6 md:pt-6 xl:px-0 print:block print:pt-10',
+                        // PC 전용 탭은 창 폭과 무관하게 콘텐츠 폭 1200 을 쓴다(좌우 여백은 문서 폭 1280 이 만든다).
                         isPcOnlyTab && 'px-0 md:px-0',
                     )}
                 >
-                    <div className="flex min-w-0 flex-1 flex-col gap-4">
-                        <p className="bg-info-50 text-info-600 typo-body-l-medium flex min-h-7 w-fit items-center rounded-full px-4">
-                            {INNOVATION_REPORT_BADGE}
-                        </p>
-                        <div className="flex flex-col">
-                            <h1 className="typo-h1-bold wrap-break-word break-keep">{report.title}</h1>
-                            <p className="typo-body-l-regular flex flex-wrap items-center gap-x-4">
-                                <span>{report.companyName}</span>
-                                <span aria-hidden="true" className="bg-tab-pill-active-foreground/40 h-3 w-px" />
-                                <span>발급일 {report.issuedAt}</span>
-                            </p>
-                        </div>
-                    </div>
-                    {/* 인쇄물에서는 스스로 사라진다 — 종이에 남아도 누를 수 없다. 모바일(768 미만)은 진단브리핑만 보이므로 출력 대신
-                        [더보기]를 둔다 — 모든 탭이 있는 PC 화면(?view=pc, 뷰포트 1280)을 새 창으로 열어 확대 · 축소하며 본다.
-                        [퍼블리싱 전용] [보고서 출력]은 아직 동작이 없는 버튼이다 — 출력 범위 · 방식이 정해지면 onClick 을 연결한다. */}
-                    <Button
-                        type="button"
-                        variant="tertiary"
-                        size="md"
-                        className="bg-card shrink-0 gap-1 max-md:hidden md:self-center print:hidden"
-                    >
-                        <Download aria-hidden="true" />
-                        {INNOVATION_REPORT_PRINT_LABEL}
-                    </Button>
-                    <Button
-                        asChild
-                        variant="tertiary"
-                        size="md"
-                        className="bg-card shrink-0 gap-1 md:hidden print:hidden"
-                    >
-                        <NewWindowLink
-                            href={pcViewHref}
-                            width={INNOVATION_REPORT_WINDOW_WIDTH}
-                            height={INNOVATION_REPORT_WINDOW_HEIGHT}
-                            windowName="k-bigx-innovation-report-pc"
-                            // 창 폭이 곧 PC 화면이라 화면 폭으로 줄이지 않는다.
-                            fitToScreen={false}
-                        >
-                            {INNOVATION_REPORT_MORE_LABEL}
-                            <ExternalLink aria-hidden="true" />
-                        </NewWindowLink>
-                    </Button>
-                </div>
-            </header>
-
-            <div
-                className={cn(
-                    'max-w-content mx-auto flex flex-col gap-10 px-4 py-10 md:px-6 xl:px-0 print:block print:space-y-10',
-                    // PC 전용 탭은 창 폭과 무관하게 콘텐츠 폭 1200 을 쓴다(좌우 여백은 문서 폭 1280 이 만든다).
-                    isPcOnlyTab && 'px-0 md:px-0',
-                )}
-            >
-                {/* 구성 항목 탭 — 주소의 ?tab= 으로 고른다(없으면 진단브리핑). 탭을 바꾸면 주소만 바꾸고 서버에 다시 묻지 않는다 —
-                    한 보고서의 모든 탭 데이터가 report 하나에 들어 있다.
-                    모바일(768 미만)은 진단브리핑만 보여 주므로 탭을 숨긴다 — 다른 항목은 [더보기](PC 화면)에서 본다. */}
-                {/* 본문은 TabsContent 안에 둔다 — 탭(role=tab)에는 짝이 되는 패널(role=tabpanel)이 있어야 한다[8.1.1].
-                    지금 고른 탭 하나만 그리므로 value 는 늘 activeTab 이다. */}
-                <Tabs value={activeTab} onValueChange={selectTab} className="gap-10 print:block print:space-y-10">
-                    <TabsList
-                        variant="pill-outline"
-                        aria-label="보고서 구성 항목"
-                        className="max-md:hidden print:hidden"
-                    >
-                        {INNOVATION_REPORT_SECTIONS.map((section) => (
-                            <TabsTrigger key={section.id} value={section.id}>
-                                {section.label}
-                            </TabsTrigger>
-                        ))}
-                    </TabsList>
                     <TabsContent value={activeTab} className="flex flex-col gap-10 print:block print:space-y-10">
                         {/* 탭 제목 줄 — 탭과는 60 을 띄우므로 문서 간격(40)에 20(pt-5)을 더한다(탭이 없는 모바일은 더하지 않는다). 날짜는 제목 높이의 세로 가운데. */}
                         <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 md:pt-5">
@@ -617,8 +629,8 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
                             </>
                         )}
                     </TabsContent>
-                </Tabs>
-            </div>
+                </div>
+            </Tabs>
         </div>
     )
 }
