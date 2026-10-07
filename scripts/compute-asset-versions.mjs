@@ -217,7 +217,8 @@ const parseDraftChanges = (draft) => {
 const draftChanges = parseDraftChanges(readFileSync(RELEASE_NOTES_DRAFT, 'utf8'))
 const automaticChanges = [...new Set(commitSubjects.map(summarizeSubject).filter(Boolean))].slice(0, 8)
 const changes = draftChanges.length > 0 ? draftChanges : automaticChanges
-const releasedAt = git('log', '-1', '--format=%cs', 'HEAD')
+// 릴리스 날짜 — 릴리스를 만드는 날(한국 날짜)이다. 마지막 커밋 날짜(%cs)는 릴리스 하루 전일 수 있어 쓰지 않는다.
+const releasedAt = new Intl.DateTimeFormat('sv-SE', {timeZone: 'Asia/Seoul'}).format(new Date())
 const previousReleaseNotes = JSON.parse(readFileSync(RELEASE_NOTES_OUTPUT, 'utf8')).releases
 const releases = [
     {

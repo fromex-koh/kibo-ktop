@@ -2,7 +2,7 @@
     "releases": [
         {
             "version": "v3.3.8",
-            "releasedAt": "2026-10-06",
+            "releasedAt": "2026-10-07",
             "changes": [
                 {
                     "type": "handoff",
@@ -237,7 +237,7 @@
         },
         {
             "version": "v3.3.7",
-            "releasedAt": "2026-10-01",
+            "releasedAt": "2026-10-02",
             "changes": [
                 {
                     "type": "handoff",
@@ -1148,7 +1148,7 @@
         },
         {
             "version": "v3.3.4",
-            "releasedAt": "2026-09-28",
+            "releasedAt": "2026-09-29",
             "changes": [
                 {
                     "type": "handoff",
@@ -1870,7 +1870,7 @@
         },
         {
             "version": "v3.3.1",
-            "releasedAt": "2026-09-21",
+            "releasedAt": "2026-09-22",
             "changes": [
                 {
                     "type": "handoff",
@@ -2671,7 +2671,7 @@
         },
         {
             "version": "v3.2.9",
-            "releasedAt": "2026-09-17",
+            "releasedAt": "2026-09-18",
             "changes": [
                 {
                     "type": "handoff",
@@ -3006,7 +3006,7 @@
         },
         {
             "version": "v3.2.8",
-            "releasedAt": "2026-09-16",
+            "releasedAt": "2026-09-17",
             "changes": [
                 {
                     "type": "handoff",
@@ -3409,7 +3409,7 @@
         },
         {
             "version": "v3.2.7",
-            "releasedAt": "2026-09-15",
+            "releasedAt": "2026-09-16",
             "changes": [
                 {
                     "type": "handoff",
@@ -3790,7 +3790,7 @@
         },
         {
             "version": "v3.2.6",
-            "releasedAt": "2026-09-14",
+            "releasedAt": "2026-09-15",
             "changes": [
                 {
                     "type": "handoff",
@@ -4191,7 +4191,7 @@
         },
         {
             "version": "v3.2.5",
-            "releasedAt": "2026-09-13",
+            "releasedAt": "2026-09-14",
             "changes": [
                 {
                     "type": "handoff",
@@ -4554,7 +4554,7 @@
         },
         {
             "version": "v3.2.4",
-            "releasedAt": "2026-09-10",
+            "releasedAt": "2026-09-11",
             "changes": [
                 {
                     "type": "handoff",
@@ -6126,7 +6126,7 @@
         },
         {
             "version": "v3.1.8",
-            "releasedAt": "2026-09-07",
+            "releasedAt": "2026-09-08",
             "changes": [
                 {
                     "type": "handoff",
@@ -6680,7 +6680,7 @@
         },
         {
             "version": "v3.1.7",
-            "releasedAt": "2026-09-06",
+            "releasedAt": "2026-09-07",
             "changes": [
                 {
                     "type": "handoff",
@@ -7363,7 +7363,7 @@
         },
         {
             "version": "v3.1.0",
-            "releasedAt": "2026-09-01",
+            "releasedAt": "2026-09-02",
             "changes": [
                 {
                     "type": "handoff",
@@ -7390,7 +7390,7 @@
         },
         {
             "version": "v3.0.9",
-            "releasedAt": "2026-08-31",
+            "releasedAt": "2026-09-01",
             "changes": [
                 {
                     "type": "handoff",
@@ -7417,7 +7417,7 @@
         },
         {
             "version": "v3.0.8",
-            "releasedAt": "2026-08-30",
+            "releasedAt": "2026-08-31",
             "changes": [
                 {
                     "type": "handoff",
@@ -7598,7 +7598,7 @@
         },
         {
             "version": "v3.0.4",
-            "releasedAt": "2026-08-24",
+            "releasedAt": "2026-08-25",
             "changes": [
                 {
                     "type": "handoff",
@@ -8308,7 +8308,7 @@
         },
         {
             "version": "v3.0.0",
-            "releasedAt": "2026-08-20",
+            "releasedAt": "2026-08-21",
             "changes": [
                 {
                     "type": "handoff",
