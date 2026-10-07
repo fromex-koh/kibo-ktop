@@ -28,6 +28,7 @@ import type {Audit} from './latest-audit'
 import auditData from '@/content/publishing-guide/accessibility-audit.json'
 import type {MarkupIssueKind} from './screen-markup-results'
 import AuditSummaryMetadata from './audit-summary-metadata'
+import {W3cMessageList, WaveMessageList} from './screen-message-list'
 import QuickMenu from './quick-menu'
 import RecordFilter from './record-filter'
 
@@ -87,7 +88,8 @@ const ISSUE_DEFINITIONS: readonly Omit<IssueCatalogEntry, 'count' | 'screens'>[]
             'Element “style” not allowed as child of element “div” in this context. (Suppressing further errors from this subtree.)',
         owner: 'shadcn/ui ChartStyle (src/components/ui/chart.tsx)',
         isProjectCause: false,
-        verdict: 'ChartContainer의 div 내부에 ChartStyle이 style 요소를 생성합니다. 차트 셸의 스타일 주입 구조입니다.',
+        verdict:
+            'ChartContainer의 div 내부에 ChartStyle이 style 요소를 생성합니다. 차트 셸의 스타일 주입 구조입니다. 최신 검사기는 같은 style 을 “@scope 밖의 style 규칙”이라는 문구로 알리며, 같은 오류로 묶어 셉니다.',
     },
     {
         kind: 'chart-width',
@@ -172,8 +174,13 @@ const ISSUE_DEFINITIONS: readonly Omit<IssueCatalogEntry, 'count' | 'screens'>[]
 // 검사기 버전마다 같은 오류의 문구가 조금씩 다르다 — 기록된 문구 한 벌로 맞춰 같은 원인으로 묶는다.
 //   · 제목 건너뜀: "The “heading” “h3”" → "The heading “h3”"
 //   · 필수 select: 이전 검사기의 "must have a child “option”" → 현재(26.x) "must have a descendant “option”" — Radix Select 숨은 select
+//   · 차트 style: 최신 검사기의 "Style rule “[data-chart=…]” not allowed outside an “@scope” rule …" → 기록된 문구 "Element “style” not allowed as child of element “div” …"
+const CHART_STYLE_RULE_PATTERN =
+    /^Style rule “[^”]*\[data-chart=[^\]]*\]” not allowed outside an “@scope” rule in a “style” element in “body”\.$/
+const CHART_STYLE_MESSAGE =
+    'Element “style” not allowed as child of element “div” in this context. (Suppressing further errors from this subtree.)'
 const normalizeMessage = (message: string) =>
-    message
+    (CHART_STYLE_RULE_PATTERN.test(message) ? CHART_STYLE_MESSAGE : message)
         .replace('The “heading” “h3”', 'The heading “h3”')
         .replace('must have a child “option” element.', 'must have a descendant “option” element.')
 const kindForMessage = (message: string): MarkupIssueKind =>
@@ -1777,10 +1784,47 @@ const DIALOG_ISSUES = [
     },
 ] as const
 
+// 차트 style 은 K-BIGx 진단브리핑과 기관 심층분석에서 나오고, 브라우저 DOM 검사 사례(SVG 속성)는 심층분석에서 쟀다.
 const CHART_SCREEN_ROUTES = [
+    '/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing',
+    '/org/k-bigx-report/innovation-growth-report/diagnostic-briefing',
     '/org/mypage/evaluation-history/deep-analysis/ktrs-fm',
-    '/corp/mypage/evaluation-results/general-analysis/ktrs-fm',
 ] as const
+
+// 최신 검사기는 차트 style 하나를 규칙마다(라이트 · 다크) 따로 보고한다 — 위 "차트 style 중첩"과 같은 원인이다.
+// 건수는 위 표의 "차트 style 중첩" 합계에 이미 들어 있어서 여기서는 문구와 규칙별 건수만 보여 준다(합계에 더하지 않는다).
+// 문구 속 차트 아이디(chart-_R_…)는 화면마다 달라 "chart-…" 로 줄여 적는다.
+const CHART_STYLE_SCOPE_RULES = [
+    {
+        message:
+            'Style rule “[data-chart=chart-…]” not allowed outside an “@scope” rule in a “style” element in “body”.',
+        isMatch: (message: string) => message.startsWith('Style rule “[data-chart='),
+        verdict: '차트 색을 정하는 style 규칙 중 라이트 모드용에 대한 오류입니다',
+    },
+    {
+        message:
+            'Style rule “.dark [data-chart=chart-…]” not allowed outside an “@scope” rule in a “style” element in “body”.',
+        isMatch: (message: string) => message.startsWith('Style rule “.dark [data-chart='),
+        verdict: '같은 style 의 다크 모드용 규칙에 대한 오류입니다',
+    },
+] as const
+
+const CHART_STYLE_SCOPE_ISSUES: readonly IssueTableRow[] = CHART_STYLE_SCOPE_RULES.map((rule) => {
+    const paths = AUDITED_SCREENS.flatMap((screen) =>
+        screen.messages
+            .filter((message) => message.type === 'error' && rule.isMatch(message.message))
+            .map(() => screen.path),
+    )
+
+    return {
+        level: 'error',
+        message: rule.message,
+        count: paths.length,
+        screens: new Set(paths).size,
+        owner: 'shadcn/ui ChartStyle (src/components/ui/chart.tsx)',
+        verdict: rule.verdict,
+    }
+})
 
 const CHART_ISSUES = [
     {
@@ -2211,6 +2255,27 @@ const AccessibilityExceptionsPage = () => (
                     </dd>
                 </div>
                 <div className="grid gap-x-4 gap-y-2 md:grid-cols-[10rem_1fr]">
+                    <dt className="font-bold">검사 방식</dt>
+                    <dd>
+                        <ul className="flex flex-col gap-2">
+                            <li className="flex">
+                                <ListMarker type="unordered-small" />
+                                <span className="min-w-0">
+                                    W3C 마크업 검사는 <strong>Check by address / Validate by URI (주소로 검사)</strong>
+                                    로 합니다. 운영 서버 주소를 입력하면 검사기가 직접 접속해 받은 HTML을 검사합니다.
+                                </span>
+                            </li>
+                            <li className="flex">
+                                <ListMarker type="unordered-small" />
+                                <span className="min-w-0">
+                                    <strong>이유:</strong> 검사하는 사람의 브라우저 환경(확장 프로그램 등)에 영향받지
+                                    않아, 누가 검사해도 같은 결과가 나옵니다.
+                                </span>
+                            </li>
+                        </ul>
+                    </dd>
+                </div>
+                <div className="grid gap-x-4 gap-y-2 md:grid-cols-[10rem_1fr]">
                     <dt className="font-bold">검사 도구</dt>
                     <dd className="grid gap-3 xl:grid-cols-2">
                         {/* 가이드 홈·버전 아카이브의 카드와 같은 옅은 뉴트럴 카드를 쓴다. 자동·수동은 제목의 [자동]·[수동] 과 아이콘으로 구분한다. */}
@@ -2588,37 +2653,14 @@ const AccessibilityExceptionsPage = () => (
                                                                                     오류·경고 상세
                                                                                 </AccordionTrigger>
                                                                                 <AccordionContent className="pt-2 text-xs! leading-5! font-normal!">
-                                                                                    <ul className="flex flex-col gap-3">
-                                                                                        {screen.messages
-                                                                                            .filter(
-                                                                                                (message) =>
-                                                                                                    message.type ===
-                                                                                                        'error' ||
-                                                                                                    message.subType ===
-                                                                                                        'warning',
-                                                                                            )
-                                                                                            .map((message, index) => (
-                                                                                                <li
-                                                                                                    key={index}
-                                                                                                    className="flex flex-col items-start gap-1"
-                                                                                                >
-                                                                                                    <p className="break-words">
-                                                                                                        {
-                                                                                                            message.message
-                                                                                                        }
-                                                                                                    </p>
-                                                                                                    {message.lastLine ? (
-                                                                                                        <span className="text-foreground-subtle">
-                                                                                                            HTML{' '}
-                                                                                                            {
-                                                                                                                message.lastLine
-                                                                                                            }
-                                                                                                            행
-                                                                                                        </span>
-                                                                                                    ) : null}
-                                                                                                </li>
-                                                                                            ))}
-                                                                                    </ul>
+                                                                                    <W3cMessageList
+                                                                                        messages={screen.messages}
+                                                                                        getKindLabel={(message) =>
+                                                                                            ISSUE_LABEL[
+                                                                                                kindForMessage(message)
+                                                                                            ].label
+                                                                                        }
+                                                                                    />
                                                                                 </AccordionContent>
                                                                             </AccordionItem>
                                                                         </Accordion>
@@ -3534,21 +3576,39 @@ const AccessibilityExceptionsPage = () => (
                                         {sectionHeading('recharts · shadcn chart', 'SVG 속성 · div 안의 style')}
                                     </SectionHeaderTitle>
                                     <SectionHeaderDescription>
-                                        차트가 있는 평가결과 화면에서 shadcn Chart와 Recharts가 생성한 요소에 발생합니다
+                                        차트가 있는 평가결과 · K-BIGx 보고서 화면에서 shadcn Chart와 Recharts가 생성한
+                                        요소에 발생합니다
                                     </SectionHeaderDescription>
                                 </SectionHeader>
                                 <div className="flex flex-col gap-2">
                                     <h4 className="font-bold">운영 HTML 자동 검사</h4>
+                                    <p className="text-foreground-subtle">
+                                        운영 화면의 HTML을 W3C 검사기로 돌린 최근 결과입니다. 아래 @scope 문구 건수도 이
+                                        표의 “차트 style 중첩”에 포함됩니다.
+                                    </p>
                                     <IssueTable
                                         caption="최근 운영 HTML 검사 — 차트 셸과 Recharts 생성 요소"
                                         issues={issuesByKind(['chart-style', 'chart-width', 'chart-height'])}
                                     />
                                 </div>
                                 <div className="flex flex-col gap-2">
+                                    <h4 className="font-bold">운영 HTML 자동 검사 — style @scope 문구</h4>
+                                    <p className="text-foreground-subtle">
+                                        같은 오류를 최신 검사기가 다른 문구로 알려 준 건수입니다. 라이트 모드와 다크
+                                        모드 규칙이 각각 한 건씩이며, 위 표의 “차트 style 중첩”에 이미 포함되어
+                                        있습니다. 문구 속 차트 번호는 화면마다 달라 <code>chart-…</code> 로 줄여
+                                        적었습니다.
+                                    </p>
+                                    <IssueTable
+                                        caption="최신 검사기의 차트 style @scope 문구 — 라이트·다크 규칙별 건수"
+                                        issues={CHART_STYLE_SCOPE_ISSUES}
+                                    />
+                                </div>
+                                <div className="flex flex-col gap-2">
                                     <h4 className="font-bold">브라우저 렌더링 후 DOM 검사 사례</h4>
                                     <p className="text-foreground-subtle">
-                                        차트가 완성된 뒤 SVG 도형에 추가되는 항목입니다. 현재 운영 HTML 자동 집계와
-                                        구분합니다.
+                                        차트가 화면에 그려진 뒤 SVG 도형을 검사해 나온 과거 기록입니다. 위 운영 HTML
+                                        검사 건수와는 따로 봅니다.
                                     </p>
                                     <IssueTable
                                         caption="과거 브라우저 DOM 검사 사례 — 현재 운영 HTML 집계와 별개"
@@ -3581,6 +3641,15 @@ const AccessibilityExceptionsPage = () => (
                                                         <span className="min-w-0">
                                                             <strong>div 안의 style:</strong> shadcn Chart가 차트 색상을
                                                             적용하려고 div 내부에 style 요소를 만들어 발생합니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            <strong>style 규칙(@scope 문구):</strong> 같은 style 오류를
+                                                            최신 검사기가 다르게 표현한 것입니다. “본문에 style 을
+                                                            두려면 @scope 안에 써야 하는데, 차트의 style 규칙이 @scope
+                                                            밖에 있다”는 뜻이며, 위 “div 안의 style”과 원인이 같습니다.
                                                         </span>
                                                     </li>
                                                     <li className="flex">
@@ -3686,6 +3755,14 @@ const AccessibilityExceptionsPage = () => (
                                                         <span className="min-w-0">
                                                             운영 HTML 자동 검사에는 style과 바깥 div의 width·height가
                                                             포함됩니다.
+                                                        </span>
+                                                    </li>
+                                                    <li className="flex">
+                                                        <ListMarker type="unordered-small" />
+                                                        <span className="min-w-0">
+                                                            최신 검사기는 같은 차트 style 을 라이트·다크 모드 규칙으로
+                                                            나눠 두 건으로 셉니다. 그래서 건수는 늘어 보여도 원인은
+                                                            하나(shadcn 차트)입니다.
                                                         </span>
                                                     </li>
                                                     <li className="flex">
@@ -4063,48 +4140,9 @@ const AccessibilityExceptionsPage = () => (
                                                                                     오류·경고 상세
                                                                                 </AccordionTrigger>
                                                                                 <AccordionContent className="pt-2 text-xs! leading-5! font-normal!">
-                                                                                    <ul className="flex flex-col gap-3">
-                                                                                        {screen.messages.map(
-                                                                                            (message) => (
-                                                                                                <li
-                                                                                                    key={`${message.level}-${message.control}-${message.message}`}
-                                                                                                    className="flex flex-col items-start gap-1"
-                                                                                                >
-                                                                                                    <p className="font-bold break-words">
-                                                                                                        <span lang="en">
-                                                                                                            {
-                                                                                                                message.message
-                                                                                                            }
-                                                                                                        </span>{' '}
-                                                                                                        ·{' '}
-                                                                                                        {
-                                                                                                            message.control
-                                                                                                        }{' '}
-                                                                                                        {message.count}
-                                                                                                        건
-                                                                                                    </p>
-                                                                                                    <dl className="text-foreground-subtle grid gap-x-2 gap-y-0.5 sm:grid-cols-[4rem_1fr]">
-                                                                                                        <dt className="font-bold">
-                                                                                                            발생 요소
-                                                                                                        </dt>
-                                                                                                        <dd>
-                                                                                                            {
-                                                                                                                message.owner
-                                                                                                            }
-                                                                                                        </dd>
-                                                                                                        <dt className="font-bold">
-                                                                                                            상세
-                                                                                                        </dt>
-                                                                                                        <dd>
-                                                                                                            {
-                                                                                                                message.verdict
-                                                                                                            }
-                                                                                                        </dd>
-                                                                                                    </dl>
-                                                                                                </li>
-                                                                                            ),
-                                                                                        )}
-                                                                                    </ul>
+                                                                                    <WaveMessageList
+                                                                                        messages={screen.messages}
+                                                                                    />
                                                                                 </AccordionContent>
                                                                             </AccordionItem>
                                                                         </Accordion>
