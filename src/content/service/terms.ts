@@ -1,9 +1,11 @@
 // 이용약관 화면(TermsTabs)의 본문 데이터.
 //
 // [프론트엔드 연동] 약관 원문을 API·CMS 에서 받게 되면 이 파일의 KBIGX_TERMS 를 같은 모양(TermsDocument)으로
-// 바꿔 넣는다. 개정 이력이 생기면 TERMS_VERSIONS 에 항목을 더하고 버전별 원문을 연결한다.
-// 원문 출처: 설계 참고 화면(https://1-fo.vercel.app/terms) — 'K-BIGx 이용약관' 초안(9/15 수급).
-// '기술평가 이용약관'은 아직 자료가 없어 화면에 '내용 추후 업데이트'를 보여 준다.
+// 바꿔 넣는다. 개정 이력이 생기면 버전 목록(TERMS_VERSIONS · TECH_TERMS_VERSIONS)과 버전별 본문 표
+// (KBIGX_TERMS_BY_VERSION · TECH_TERMS_BY_VERSION)에 같은 value 로 항목을 함께 더한다 — 드롭다운에서 고른 버전의 본문이 보인다.
+// 본문 표에 없는 버전은 '추후 업데이트'가 보인다.
+// K-BIGx 이용약관 본문은 임시 초안이다 — 확정 원문으로 교체한다.
+// '기술평가 이용약관'은 아직 자료가 없어 버전 셀렉트는 두고 본문에 '추후 업데이트'를 보여 준다.
 
 // 호(1. 2. …) — 항이나 본문 아래에 붙는 번호 목록.
 type TermsItem = {no: string; text: string}
@@ -26,8 +28,12 @@ type TermsView = (typeof TERMS_VIEW_VALUES)[number]
 // 주소에서 읽은 값이 아는 탭일 때만 그 탭을 쓰고, 아니면 첫 탭(기술평가)을 연다.
 const isTermsView = (value: unknown): value is TermsView => TERMS_VIEW_VALUES.some((view) => view === value)
 
-// 약관 버전 — 시안은 '현재 (시행일)' 하나다. 개정되면 이전 버전을 뒤에 더한다.
+// 약관 버전 — 지금은 '현재 (시행일)' 하나다. 개정되면 이전 버전을 뒤에 더한다.
 const TERMS_VERSIONS = [{value: '2026-06-19', label: '현재 (2026-06-19)'}] as const
+
+// 기술평가 이용약관 — 원문이 없어 버전은 '현재' 하나이고 본문은 안내 문구다.
+const TECH_TERMS_VERSIONS = [{value: 'current', label: '현재'}] as const
+const TERMS_PLACEHOLDER = '추후 업데이트'
 
 const KBIGX_TERMS: TermsDocument = {
     title: 'K-BIGx(기업혁신성장보고서) 서비스 이용약관',
@@ -736,5 +742,23 @@ const KBIGX_TERMS: TermsDocument = {
     },
 }
 
-export {isTermsView, KBIGX_TERMS, TERMS_TAB_QUERY_KEY, TERMS_VERSIONS, TERMS_VIEW_VALUES}
+// 버전별 본문 — 키는 버전 목록의 value 와 같다. 드롭다운에서 고른 버전의 본문을 여기서 꺼내 보여 준다.
+const KBIGX_TERMS_BY_VERSION: Readonly<Record<string, TermsDocument | undefined>> = {
+    [TERMS_VERSIONS[0].value]: KBIGX_TERMS,
+}
+const TECH_TERMS_BY_VERSION: Readonly<Record<string, string | undefined>> = {
+    [TECH_TERMS_VERSIONS[0].value]: TERMS_PLACEHOLDER,
+}
+
+export {
+    isTermsView,
+    KBIGX_TERMS,
+    KBIGX_TERMS_BY_VERSION,
+    TECH_TERMS_BY_VERSION,
+    TECH_TERMS_VERSIONS,
+    TERMS_PLACEHOLDER,
+    TERMS_TAB_QUERY_KEY,
+    TERMS_VERSIONS,
+    TERMS_VIEW_VALUES,
+}
 export type {TermsArticle, TermsChapter, TermsDocument, TermsItem, TermsParagraph, TermsView}
