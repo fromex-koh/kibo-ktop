@@ -77,6 +77,17 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [기관 이용약관](/org/terms)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/8b7aa9f1cee65b6208d42cf94fff22ea92227cde)
 
+### [컴포넌트] K-BIGx 보고서 문서 — 머리와 탭 줄 고정
+
+- 대상: src/components/custom/innovation-growth-report-document.tsx
+- 변경:
+    - 머리(제목 · [보고서 출력])와 구성 항목 탭 줄을 한 덩이로 묶어, PC(768px 이상)에서 스크롤해도 화면 위에 붙게 했습니다(sticky).
+    - 모바일과 인쇄에서는 붙지 않습니다.
+    - 본문 폭과 간격은 그대로입니다.
+- 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
+    - [기관 K-BIGx 보고서 결과](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/771397961006d32dd3ec887836e6bd6e53bbf8c7)
+
 ## [신규 추가]
 
 ### [컴포넌트] 결제 불가 안내 모달
