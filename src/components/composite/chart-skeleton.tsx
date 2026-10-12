@@ -1,5 +1,5 @@
 import {ARC_GAUGE_SIZES, arcGaugeTrackPath} from '@/components/custom/arc-gauge-shape'
-import {RANK_PYRAMID_TIER_PATHS, RANK_PYRAMID_VIEW_BOX} from '@/components/custom/rank-pyramid-chart'
+import {RANK_PYRAMID_TIER_PATHS, RANK_PYRAMID_VIEW_BOX} from '@/components/custom/rank-pyramid-shape'
 import {cn} from '@/lib/utils'
 import {
     chartSkeletonNetworkGraphicVariants,
