@@ -5,6 +5,7 @@ import {Area, AreaChart, CartesianGrid, XAxis, YAxis, usePlotArea} from 'rechart
 import {DistributionCurveChartSkeleton} from '@/components/composite/distribution-curve-chart-skeleton'
 import {useIsHydrated} from '@/hooks/use-is-hydrated'
 import {ChartContainer, type ChartConfig} from '@/components/ui/chart'
+import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
 import {
     CELLS_DIVIDER_DASH,
@@ -22,8 +23,9 @@ import {
 // 짜임: 높이 162 칸 상자(chart-cells 공통 — 위 선 없음 · 바닥 · 양 끝 실선 · 눈금 사이 점선) → 8 → 눈금 숫자 12 Regular.
 //   눈금은 min~max 를 tickStep 으로 나눈 자리이며, 처음 숫자는 왼쪽 끝 · 마지막 숫자는 오른쪽 끝에 붙는다.
 //   곡선: 선 1 + 위에서 아래로 옅어지는 면. 곡선 꼭대기는 칸 높이의 92% 에 닿는다.
-//   점: 지름 12(color). 점 글자 12 Bold(blue.600)는 점 아래 12 에 둔다 — 곡선 비탈 · 분포 꼬리라 곡선이나 칸 바닥에 닿으면
-//   점 위로 올리고(곡선보다 위), 좌우 끝에 가까우면 칸 밖으로 나가지 않게 글자 정렬을 끝 쪽으로 바꾼다(DistributionMarker).
+//   점: 지름 12(color). 점 글자 12 Bold(LABEL_FILL)는 점 아래 12 에 둔다 — 곡선 비탈 · 분포 꼬리라 곡선이나 칸 바닥에 닿으면
+//   점 위로 올리고(곡선보다 위), 위도 막히면 점 옆에 둔다. 좌우 끝에 가까우면 칸 밖으로 나가지 않게 글자 정렬을 끝 쪽으로 바꾼다
+//   (DistributionMarker). markerLabelBelow 이면 비키지 않고 늘 점 아래다.
 // 그림은 role="img" 이름으로 읽고, 숨김 문단이 평균 · 점수 · 점 글자를 읽어 준다.
 //
 // [프론트엔드 연동] mean · standardDeviation 은 전체 분포 값, value 는 조회 대상 점수, markerLabel 은 백엔드가 준 순위 문구를 그대로 넘긴다.
@@ -39,6 +41,11 @@ type DistributionCurveChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'childr
     value?: number
     /** 점 글자(예: '상위 2.2%'). */
     markerLabel?: string
+    /**
+     * 점 글자를 늘 점 아래에 둔다(곡선과 겹쳐도). 기본은 아래에 자리가 없으면 점 위 · 옆으로 비킨다.
+     * variant 'plain' 은 기본이 true 다.
+     */
+    markerLabelBelow?: boolean
     /** 가로 범위(기본 0~100). */
     min?: number
     max?: number
@@ -46,7 +53,7 @@ type DistributionCurveChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'childr
     tickStep?: number
     /** 곡선 · 점 색(토큰 변수). */
     color?: string
-    /** 곡선이 그려지는 움직임. 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 끈다. */
+    /** 곡선이 그려지는 움직임. 안 주면 useChartAnimation() 값을 따른다(chart-reveal.tsx). 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 끈다. */
     animate?: boolean
     /**
      * 세로 눈금 숫자(예: [4.0, 3.5, … 0.5]). 큰 값부터 넣는다 — 눈금을 주면 곡선도 이 눈금 위에서
@@ -67,8 +74,8 @@ type DistributionCurveChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'childr
      */
     heightClassName?: string
     /**
-     * 칸 모양. 'cells'(기본)는 바닥·양 끝 실선에 세로 점선, 'plain' 은 세로 점선만 두고 점 글자를
-     * 늘 점 아래에 붙인다(Tech-Index 심층분석 시안).
+     * 칸 모양. 'cells'(기본)는 바닥·양 끝 실선에 세로 점선, 'plain' 은 세로 점선만 둔다(Tech-Index 심층분석 보고서).
+     * 'plain' 은 markerLabelBelow 기본값이 true 라 점 글자가 늘 점 아래에 붙는다.
      */
     variant?: 'cells' | 'plain'
     /** 값을 불러오는 중. 같은 짜임의 스켈레톤을 대신 보인다. */
@@ -84,7 +91,7 @@ const PEAK_RATIO = 0.92
 const MAX_TICK_COUNT = 20
 // 칸 높이 162 + 눈금 자리 34(8 + 글자 18 + 여유 8) = 196(h-49).
 const X_AXIS_HEIGHT = 34
-// 'plain' 은 눈금 글자 아래 여백이 4 다(시안) — 그만큼 축 이름이 위로 붙는다.
+// 'plain' 은 눈금 글자 아래 여백이 4 다 — 그만큼 축 이름이 위로 붙는다.
 const PLAIN_X_AXIS_HEIGHT = 30
 // 점 지름 12.
 const DOT_RADIUS = 6
@@ -100,7 +107,8 @@ const LABEL_SPAN_SAMPLES = 16
 // 점 글자 폭 어림(12 Bold 한 글자 ≈ 11 · 숫자 ≈ 7 의 평균) — 끝 쪽 정렬 판단에만 쓴다.
 const LABEL_CHAR_WIDTH = 9
 const LABEL_FONT_SIZE = 12
-const LABEL_FILL = 'var(--raw-blue-600)'
+// 점 글자 · 기본 곡선 색은 --ds-blue-* 라 다크에서 밝은 단계로 바뀌어 어두운 카드 위에서도 읽힌다.
+const LABEL_FILL = 'var(--ds-blue-600)'
 // 곡선 아래 면 — 위(곡선 색)에서 아래(표면색)로 옅어지는 그라데이션을 면 전체의 투명도 16% 로 깐다.
 // 눈에 보이는 결과는 '곡선 색 16% → 0%' 와 같다(표면 위에서는 두 계산이 같은 색이다).
 // 그라데이션의 색 자리(stop)에 투명도를 직접 주지 않는 이유 — Safari 에서 PDF 로 저장하면 투명도가 있는
@@ -135,7 +143,7 @@ const DistributionMarker = ({
     heightRatioAt: (ratio: number) => number
     label?: string
     color: string
-    /** 글자를 늘 점 아래에 둔다 — 곡선과 겹치는지 따지지 않는다(시안). */
+    /** 글자를 늘 점 아래에 둔다 — 곡선과 겹치는지 따지지 않는다. */
     keepLabelBelow?: boolean
     dotRadius?: number
 }) => {
@@ -207,12 +215,13 @@ const DistributionCurveChart = ({
     min = 0,
     max = 100,
     tickStep = 10,
-    color = 'var(--raw-blue-500)',
-    animate = true,
+    color = 'var(--ds-blue-500)',
+    animate: animateProp,
     yTicks,
     peakValue,
     heightClassName = 'h-49',
     variant = 'cells',
+    markerLabelBelow = variant === 'plain',
     isLoading = false,
     loadingLabel = '그래프를 불러오는 중입니다.',
     yAxisLabel,
@@ -221,6 +230,9 @@ const DistributionCurveChart = ({
     className,
     ...props
 }: DistributionCurveChartProps) => {
+    // animate 를 안 주면 문서 설정을 따른다(chart-reveal.tsx) — 보고서는 스크롤해서 보일 때, 그 밖에는 바로 움직인다.
+    const revealAnimate = useChartAnimation()
+    const animate = animateProp ?? revealAnimate
     const gradientId = `distribution-${useId().replace(/:/g, '')}`
     // 새로고침 직후에는 차트가 칸의 폭을 재기 전이라 빈 칸으로 보인다 — 붙기 전까지 같은 스켈레톤을 보인다.
     const isHydrated = useIsHydrated()
@@ -243,7 +255,7 @@ const DistributionCurveChart = ({
     // 꼭대기는 평균 자리의 높이다 — 평균이 범위 밖이면 범위 안에서 가장 높은 곳을 쓴다.
     const peak = Math.max(...curve.map((point) => point.density)) || 1
     // 세로 눈금을 주면 그 눈금이 세로 축이 된다 — 축 끝은 첫 눈금보다 한 칸 위,
-    // 곡선 꼭대기는 peakValue 다. 눈금이 없으면 지금까지처럼 칸 높이의 92% 를 꼭대기로 둔다.
+    // 곡선 꼭대기는 peakValue 다. 눈금이 없으면 칸 높이의 92% 를 꼭대기로 둔다.
     const tickStepY = yTicks && yTicks.length > 1 ? Math.abs(yTicks[0] - yTicks[1]) : 0
     const axisMaximum = yTicks?.length ? Math.max(...yTicks) + tickStepY : 0
     const curvePeakValue = peakValue ?? Math.max(...(yTicks ?? [0])) - tickStepY / 2
@@ -285,7 +297,8 @@ const DistributionCurveChart = ({
             role="img"
             aria-label={ariaLabel}
         >
-            <AreaChart data={chartData} margin={{top: 0, right: 1, bottom: 0, left: 1}}>
+            {/* recharts 키보드 탐색 층은 끈다 — 값은 숨김 문단(sr-only)이 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
+            <AreaChart accessibilityLayer={false} data={chartData} margin={{top: 0, right: 1, bottom: 0, left: 1}}>
                 <defs>
                     <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor={color} />
@@ -331,6 +344,7 @@ const DistributionCurveChart = ({
                     dot={false}
                     activeDot={false}
                     isAnimationActive={animate}
+                    animationDuration={CHART_ANIMATION_MS}
                 />
                 {hasMarker ? (
                     <DistributionMarker
@@ -342,6 +356,7 @@ const DistributionCurveChart = ({
                         }
                         label={markerLabel}
                         color={color}
+                        keepLabelBelow={markerLabelBelow}
                     />
                 ) : null}
             </AreaChart>

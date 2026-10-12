@@ -1,5 +1,6 @@
 'use client'
 
+import {useChartAnimation} from '@/components/custom/chart-reveal'
 import {useLayoutEffect, useRef, useState, type ComponentPropsWithoutRef} from 'react'
 import {Star} from 'lucide-react'
 import {cn} from '@/lib/utils'
@@ -10,15 +11,16 @@ import {cn} from '@/lib/utils'
 //
 // 짜임: 오른쪽 위 별 범례(★ 고성장 기업, 14 Regular) → 16 → 두 목록 제목(14 Bold, 왼쪽은 가운데 쪽 정렬)
 //   → 16 → 행(높이 24 · 사이 16). 두 목록 사이 24.
-//   막대는 가운데에서 바깥으로 자란다(왼쪽 navy.500 · 오른쪽 blue.500 · 평균 purple.600 · 대상 기업 success.500).
-//   기업 이름은 막대 안 가운데 쪽 끝에서 8(11 Medium · 흰색), 값은 막대 바깥 끝에서 4(11 Regular · gray.500).
-//   고성장 기업은 값 바깥에 16 별(warning.300)을 둔다 — 색만으로 알리지 않도록 숨김 표에 "고성장 기업" 열이 있다.
+//   막대는 가운데에서 바깥으로 자란다(rank-bar-* — 왼쪽 navy.500 · 오른쪽 blue.500 · 평균 purple.600 · 대상 기업 success.500).
+//   보고서에서는 막대가 다 자란 뒤 막대 밖 글자(이름 · 값 · 별)가 나타난다(animate-chart-label).
+//   기업 이름은 막대 안 가운데 쪽 끝에서 8(11 Medium · 흰색), 값은 막대 바깥 끝에서 4(11 Regular · foreground-subtle).
+//   고성장 기업은 값 바깥에 16 별(rank-bar-highlight)을 둔다 — 색만으로 알리지 않도록 숨김 표에 "고성장 기업" 열이 있다.
 //
 // 막대 길이 = 값 / 그 목록의 최댓값 × (칸 폭 − 값 자리 60). 값 자리를 늘 남겨 가장 긴 막대의 값 글자도 칸 안에 들어온다.
 // 값 글자가 값 자리보다 길면(긴 숫자) 막대가 줄어들어 값 글자는 칸 밖으로 나가지 않는다.
 //
 // 특이 케이스:
-//   - 이름이 막대보다 길면 이름을 막대 밖(막대와 값 사이, gray.700)으로 뺀다. 막대 폭은 화면 폭에 따라 달라서
+//   - 이름이 막대보다 길면 이름을 막대 밖(막대와 값 사이, label-foreground)으로 뺀다. 막대 폭은 화면 폭에 따라 달라서
 //     그릴 때 · 크기가 바뀔 때마다 글자 폭을 재어 정한다. 밖으로 뺀 이름도 자리가 모자라면 말줄임(…)하고 title 에 전체 이름을 둔다.
 //   - 0 · 음수는 막대를 그리지 않고(길이 0) 값만 "-3.2%" 처럼 적는다. 막대를 반대쪽으로 뻗으면 옆 목록을 침범하고
 //     두 목록의 방향 뜻이 섞여서다. 이름은 막대가 없으니 밖으로 나간다.
@@ -72,14 +74,16 @@ const NAME_INSET_PX = 16
 const MAX_FRACTION_DIGITS = 6
 
 const DEFAULT_BAR_CLASS_NAME: Record<Direction, string> = {
-    left: 'bg-navy-500',
-    right: 'bg-blue-500',
+    left: 'bg-rank-bar-left',
+    right: 'bg-rank-bar-right',
 }
 // 평균 · 조회 기업 막대 — 막대 안 이름이 11px 흰 글자라 본문 대비 4.5:1 을 넘는 색만 쓴다[5.3.3]
 // (purple.600 5.25:1 · success.500 4.57:1).
+// 막대 · 고성장 별 색은 시맨틱 토큰 rank-bar-*(tokens.json)로, 라이트 · 다크 모두 같은 색이다 — 막대 안 흰 글자 대비를
+// 다크에서도 지키기 위해서다(원시 팔레트 유틸리티는 다크에서 밝은 단계로 뒤집혀 흰 글자가 묻힌다).
 const TONE_BAR_CLASS_NAME: Record<Exclude<DivergingRankTone, 'default'>, string> = {
-    average: 'bg-purple-600',
-    subject: 'bg-success-500',
+    average: 'bg-rank-bar-average',
+    subject: 'bg-rank-bar-subject',
 }
 const TONE_SR_TEXT: Record<DivergingRankTone, string> = {
     default: '',
@@ -129,7 +133,10 @@ const DivergingRankLegend = ({label = '고성장 기업', className}: {label?: s
     // 글자는 기준선(items-baseline), 별은 세로 가운데(self-center) — 카드 제목 줄(items-baseline)이 이 범례의 글자 기준선에
     // 맞춰 서도록 한다(별이 먼저 오면 별 아래 끝이 기준선이 되어 제목 줄이 2 높아진다).
     <p className={cn('typo-body-l-regular text-foreground-subtle flex items-baseline gap-1', className)}>
-        <Star className="fill-warning-300 text-warning-300 size-4 shrink-0 self-center" aria-hidden="true" />
+        <Star
+            className="fill-rank-bar-highlight text-rank-bar-highlight size-4 shrink-0 self-center"
+            aria-hidden="true"
+        />
         {label}
     </p>
 )
@@ -159,6 +166,9 @@ const DivergingRankChart = ({
         {direction: 'right', side: right},
     ] as const satisfies readonly {direction: Direction; side: DivergingRankSide}[]
 
+    const animate = useChartAnimation()
+    // 막대 밖 글자(이름 · 값 · 별)는 막대가 다 자란 뒤 나타난다(보이기 전에는 막대와 함께 숨는다 — data-chart-reveal).
+    const labelRevealClassName = animate ? 'motion-safe:animate-chart-label' : undefined
     const renderRow = (direction: Direction, item: DivergingRankItem, maximumValue: number) => {
         const ratio = maximumValue > 0 ? Math.max(0, item.value) / maximumValue : 0
         const barKey = `${direction}-${item.id}`
@@ -167,12 +177,16 @@ const DivergingRankChart = ({
         const bar = (
             <div
                 key="bar"
+                data-chart-reveal=""
                 data-bar-id={barKey}
                 data-bar-name={item.name}
                 className={cn(
                     'typo-micro-medium flex h-full min-w-0 shrink items-center overflow-hidden px-2 text-white',
                     isLeft && 'justify-end',
                     barClassName(direction, item.tone),
+                    // 막대는 가운데 축에서 바깥으로 자란다.
+                    animate &&
+                        (isLeft ? 'motion-safe:animate-chart-wipe-left' : 'motion-safe:animate-chart-wipe-right'),
                 )}
                 style={{width: `calc((100% - ${VALUE_RESERVE}) * ${ratio})`}}
             >
@@ -180,20 +194,33 @@ const DivergingRankChart = ({
             </div>
         )
         const outsideName = isNameOutside ? (
-            <span key="name" className="typo-micro-medium text-label-foreground min-w-0 truncate" title={item.name}>
+            <span
+                key="name"
+                data-chart-reveal=""
+                className={cn('typo-micro-medium text-label-foreground min-w-0 truncate', labelRevealClassName)}
+                title={item.name}
+            >
                 {item.name}
             </span>
         ) : null
         const value = (
             <span
                 key="value"
-                className="typo-micro-regular text-foreground-subtle shrink-0 whitespace-nowrap tabular-nums"
+                data-chart-reveal=""
+                className={cn(
+                    'typo-micro-regular text-foreground-subtle shrink-0 whitespace-nowrap tabular-nums',
+                    labelRevealClassName,
+                )}
             >
                 {formatValue(item.value)}
             </span>
         )
         const star = item.isHighlighted ? (
-            <Star key="star" className="fill-warning-300 text-warning-300 size-4 shrink-0" />
+            <Star
+                key="star"
+                data-chart-reveal=""
+                className={cn('fill-rank-bar-highlight text-rank-bar-highlight size-4 shrink-0', labelRevealClassName)}
+            />
         ) : null
         // 가운데 → 바깥 순서(막대 · 밖 이름 · 값 · 별)를 왼쪽 목록에서는 DOM 에서 뒤집어 놓는다 —
         // flex-row-reverse 로 화면만 뒤집지 않아 DOM 순서와 보이는 순서가 같다[7.3.1].

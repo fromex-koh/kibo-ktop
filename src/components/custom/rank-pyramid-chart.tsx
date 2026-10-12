@@ -1,3 +1,7 @@
+'use client'
+
+// 'use client' — 단이 떠오르는 움직임 여부를 문서 설정(chart-reveal.tsx)에서 읽는다.
+import {useChartAnimation} from '@/components/custom/chart-reveal'
 import type {ComponentPropsWithoutRef} from 'react'
 import {cn} from '@/lib/utils'
 import crownPurpleImage from '@public/images/rank-pyramid/crown-purple.webp'
@@ -6,14 +10,17 @@ import crownImage from '@public/images/rank-pyramid/crown.webp'
 // 순위 피라미드(RankPyramidChart) — 동일 집단 안에서의 상위 % 를 4단 피라미드(0~25 · 25~50 · 50~75 · 75~100%)로 보여 준다.
 // K-BIGx 기업혁신성장 보고서 "혁신성장역량지수" 오른쪽 카드.
 //
-// 짜임: 왼쪽 글자 묶음 — 제목 14 Bold · 상위 % 32 Bold · 집단 이름 14 Regular(gray.500).
+// 짜임: 왼쪽 글자 묶음 — 제목 14 Bold · 상위 % 32 Bold · 집단 이름 14 Regular(foreground-subtle).
 //   오른쪽 피라미드 — 폭 258 · 높이 220 의 한 삼각형 윤곽(옆변 기울기 0.589)을 4단으로 자른다(단 사이 4).
 //   꼭짓점은 반경 12, 밑변 양 끝은 반경 10 으로 둥글리고 가운데 모서리는 각지다.
 //   맨 위 단 = 최상위 표시 왕관(crown.webp 에셋 · 20×18) — 현재 구간과 무관하게 늘 둔다.
-//   현재 구간 = 보라 면(purple.500)으로만 표시하고, 그 위 구간 글자는 흰색이 된다. 왕관은 현재 구간이면 흰색, 아니면 보라색 에셋이다.
+//   현재 구간 = 보라 면(purple.500) + 흰 구간 글자로만 표시한다. 왕관은 현재 구간이면 흰색, 아니면 보라색 에셋이다.
 //   나머지 단 = 옅은 보라 면(purple.50) + 구간 글자 12(gray.700).
 //   맨 위 단 오른쪽으로 지시선 · 점 · 구간 글자(0~25%) 13 Bold(purple.600) — 왕관이 가린 구간 이름을 밖에 적는다.
+// 색: 현재 구간 면은 흰 글자 · 흰 왕관이 올라가므로 고정 색(--raw-purple-500)이고, 나머지는 --ds-<색>-<단계>라
+//   다크에서 단계가 뒤집혀 어두운 면 위에서도 읽힌다.
 // 폭이 좁으면 글자 묶음이 위, 피라미드가 아래로 내려가고 피라미드는 폭에 맞춰 줄어든다(SVG viewBox).
+// 보고서 안에서는 카드가 보일 때 아래 단부터 차례로 떠오른다(chart-reveal.tsx · animate-chart-rise).
 
 type RankPyramidChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     /** 상위 % (0~100). 이 값이 속한 단이 강조된다. */
@@ -144,6 +151,9 @@ const Crown = ({cx, cy, isOnActive}: {cx: number; cy: number; isOnActive: boolea
     )
 }
 
+// 단이 차례로 떠오르는 간격(ms).
+const RISE_STAGGER_MS = 120
+
 const RankPyramidChart = ({
     percentile,
     title = '동일업종 기준',
@@ -152,6 +162,7 @@ const RankPyramidChart = ({
     className,
     ...props
 }: RankPyramidChartProps) => {
+    const animate = useChartAnimation()
     const clamped = Math.min(100, Math.max(0, percentile))
     const activeIndex = Math.min(TIER_COUNT - 1, Math.max(0, Math.ceil(clamped / TIER_RANGE) - 1))
     // 맨 위 삼각형은 아래가 넓어 가운데가 아래로 치우친다 — 글자 · 왕관은 높이의 60% 지점.
@@ -180,19 +191,24 @@ const RankPyramidChart = ({
             <svg
                 viewBox={`0 0 ${VIEW_WIDTH} ${PYRAMID_HEIGHT}`}
                 className="h-auto w-full max-w-80 min-w-0 flex-1 basis-60 overflow-visible"
+                data-chart-reveal=""
                 aria-hidden="true"
             >
                 {TIERS.map((tier, index) => {
                     const isActive = index === activeIndex
                     const y = labelY(tier)
                     return (
-                        <g key={tier.top}>
+                        // 아래 단부터 차례로 떠오른다. SVG 의 g 에도 CSS 애니메이션(opacity · transform)이 걸린다.
+                        <g
+                            key={tier.top}
+                            className={cn(animate && 'motion-safe:animate-chart-rise')}
+                            style={{animationDelay: `${(TIERS.length - 1 - index) * RISE_STAGGER_MS}ms`}}
+                        >
                             <path
                                 d={tierPath(tier)}
-                                fill={isActive ? 'var(--raw-purple-500)' : 'var(--raw-purple-50)'}
+                                fill={isActive ? 'var(--raw-purple-500)' : 'var(--ds-purple-50)'}
                             />
-                            {/* 왕관은 최상위(맨 위 단)의 표시다 — 현재 구간과 무관하게 늘 맨 위에 둔다.
-                                현재 구간은 보라 면으로만 표시하고, 그 위 구간 글자는 흰색으로 바꾼다. 왕관은 현재 구간이면 흰색, 아니면 보라색 에셋이다. */}
+                            {/* 맨 위 단은 구간 글자 대신 왕관을 둔다(현재 구간이면 흰 왕관). 현재 구간의 글자는 흰색. */}
                             {index === 0 ? (
                                 <Crown cx={APEX_X} cy={y} isOnActive={isActive} />
                             ) : (
@@ -202,7 +218,7 @@ const RankPyramidChart = ({
                                     textAnchor="middle"
                                     dominantBaseline="central"
                                     fontSize={12}
-                                    fill={isActive ? 'white' : 'var(--raw-gray-700)'}
+                                    fill={isActive ? 'white' : 'var(--ds-gray-700)'}
                                 >
                                     {tierLabel(index)}
                                 </text>
@@ -213,17 +229,17 @@ const RankPyramidChart = ({
                 <polyline
                     points={`${leaderStartX},${leaderStartY} ${leaderStartX + LEADER_RISE_X},${leaderY} ${LEADER_DOT_X},${leaderY}`}
                     fill="none"
-                    stroke="var(--raw-purple-600)"
+                    stroke="var(--ds-purple-600)"
                     strokeWidth={1}
                 />
-                <circle cx={LEADER_DOT_X} cy={leaderY} r={LEADER_DOT_RADIUS} fill="var(--raw-purple-600)" />
+                <circle cx={LEADER_DOT_X} cy={leaderY} r={LEADER_DOT_RADIUS} fill="var(--ds-purple-600)" />
                 <text
                     x={LEADER_TEXT_X}
                     y={leaderY}
                     dominantBaseline="central"
                     fontSize={13}
                     fontWeight={700}
-                    fill="var(--raw-purple-600)"
+                    fill="var(--ds-purple-600)"
                 >
                     {tierLabel(0)}
                 </text>

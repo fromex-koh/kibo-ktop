@@ -2,21 +2,22 @@
 import type {ComparisonRadarChartProps} from '@/components/custom/comparison-radar-chart'
 
 // K-BIGx 기업혁신성장 보고서 "부문별 비교" 카드(차트 칸 334×248) 모양 묶음 — 보고서와 가이드가 같이 쓴다.
-//   동심원 격자 4고리(gray.100) · 반지름 96 · 축 이름 14 Regular(gray.700)
+//   동심원 격자 4고리(subtle-3) · 반지름 96 · 축 이름 14 Regular(label-foreground)
 //   조회기업: blue.500 실선 + 반투명 면(10%) + 속이 빈 점 8 / 업종평균: blue.200 반투명 면(50%) + 점선, 점 없음
+//   색은 모두 --ds-* 라 화면 테마(다크)를 따른다 — 격자 · 축 이름은 시맨틱, 계열 색은 단계 스케일(--ds-blue-*).
 //   범례는 카드 머리 줄에 ComparisonRadarLegend 로 따로 둔다(showLegend 끔).
 const SECTOR_COMPARISON_RADAR_STYLE = {
     gridType: 'circle',
-    gridColor: 'var(--raw-gray-100)',
+    gridColor: 'var(--ds-subtle-3)',
     outerRadius: 96,
     // 원 중심은 칸(248) 가운데보다 10 아래(134)다 — 위쪽 축 이름(매출액증가율) 자리를 남긴다.
     centerY: 134,
     margin: {top: 0, right: 0, bottom: 0, left: 0},
     tickFontSize: 14,
     tickFontWeight: 400,
-    tickColor: 'var(--raw-gray-700)',
-    primaryColor: 'var(--raw-blue-500)',
-    comparisonColor: 'var(--raw-blue-200)',
+    tickColor: 'var(--ds-label-foreground)',
+    primaryColor: 'var(--ds-blue-500)',
+    comparisonColor: 'var(--ds-blue-200)',
     // 두 면 모두 반투명 — 업종평균 면이 조회기업 면 아래에 비쳐 겹친 곳이 한 단계 진해진다.
     primaryFillOpacity: 0.1,
     comparisonFillOpacity: 0.5,
