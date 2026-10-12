@@ -7,6 +7,7 @@ import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
+import {GaugeToneTable} from '@/components/custom/gauge-tone-table'
 import {Table} from '@/components/custom/table'
 import {SemicircleRatingGauge, type SemicircleRatingData} from '@/components/custom/semicircle-rating-gauge'
 import {CRI_GRADES, criGradePercentage, toCriRatingData} from '@/content/service/cri-grades'
@@ -72,7 +73,7 @@ const SPECIAL_CASES: Array<{title: string; description: string; data: Semicircle
     },
     {
         title: '최하위 평가 등급 (D)',
-        description: '등급명 "위험". 채움 없이 트랙만 보입니다.',
+        description: '등급명 "위험". 맨 아래 등급도 한 단계(약 5%)만큼은 차서 원호 끝이 보입니다.',
         data: toCriRatingData('D', DETAILS),
     },
     {
@@ -108,6 +109,16 @@ const SPECIAL_CASES: Array<{title: string; description: string; data: Semicircle
     },
 ]
 
+// 색 단계표(GaugeToneTable) — 등급명 ↔ CR 단계 ↔ gauge-<상태> 토큰.
+const TONE_CASES = [
+    {label: 'CR-1', detail: '최우량 · 우량', name: 'excellent'},
+    {label: 'CR-2', detail: '양호', name: 'good'},
+    {label: 'CR-3', detail: '보통', name: 'normal'},
+    {label: 'CR-4', detail: '보통 이하', name: 'poor'},
+    {label: 'CR-5', detail: '낮음 · 매우 낮음', name: 'low'},
+    {label: 'CR-6', detail: '위험', name: 'weak'},
+] as const
+
 const CHOICE_COLUMNS = [
     {key: 'component', header: '컴포넌트', align: 'start', rowHeader: true},
     {key: 'shows', header: '보여 주는 값', align: 'start'},
@@ -120,7 +131,7 @@ const CHOICE_ROWS = [
         cells: [
             <code key="component">SemicircleRatingGauge</code>,
             '등급 + 채움 비율 + 날짜 목록',
-            '채움 비율(percentage)을 직접 넘기고 색은 파랑 하나입니다. 원호 아래에 기준일 목록이 붙습니다.',
+            '채움 비율(percentage)과 색 단계(tone · CR-1~6)를 넘기면 단계별 그라데이션으로 칠합니다. 원호 아래에 기준일 목록이 붙습니다.',
         ],
     },
     {
@@ -183,6 +194,13 @@ const PROPS_ITEMS = [
     ],
     [
         'SemicircleRatingData',
+        'tone',
+        "색 단계입니다(CR-1 ~ CR-6 · 'cr1'~'cr6'). toCriRatingData 가 등급명으로 정해 줍니다.",
+        "'cr1'",
+        'SemicircleRatingTone',
+    ],
+    [
+        'SemicircleRatingData',
         'details',
         '원호 아래 목록입니다. 비우면 목록을 두지 않습니다.',
         '-',
@@ -203,10 +221,16 @@ const SemicircleRatingGaugeGuidePage = () => (
                         기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        <code>data.percentage</code> 만큼 원호를 채웁니다. 색은 등급과 무관하게 파랑 하나이고 등급은
-                        채움 길이로만 달라집니다. 폭이 260 보다 좁으면 원호와 글자가 같은 비율로 줄어듭니다.
+                        채움은 <code>data.percentage</code>, 색은 <code>data.tone</code>(CR-1 ~ CR-6)이 정합니다. 둘 다{' '}
+                        <code>toCriRatingData</code> 가 등급 코드로 만들어 줍니다.
                     </p>
+                    <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-1 pl-5">
+                        <li>색은 시작 색 → 끝 색 그라데이션(채워진 끝에서 원호 시작 쪽으로).</li>
+                        <li>날짜 목록은 원호 아래 8 간격, 가운데 정렬 한 줄.</li>
+                        <li>폭 260 미만이면 원호와 글자가 같은 비율로 축소.</li>
+                    </ul>
                 </div>
+                <GaugeToneTable caption="등급 단계별 색" labelHeader="단계" detailHeader="등급명" cases={TONE_CASES} />
                 <div className="border-subtle-3 bg-card max-w-96 rounded-sm border p-6">
                     <SemicircleRatingGauge
                         data={REPORT_DATA}
@@ -243,8 +267,9 @@ const SemicircleRatingGaugeGuidePage = () => (
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">CRI 등급표</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            가운데 설명은 &apos;등급명 + 등급&apos;입니다. 평가 등급 22개(AAA+ ~ D)는 위에서부터 100 → 0
-                            으로 고르게 나눈 비율로 채우고, R(유보) · NR(평가 제외)은 채움 없이 등급명만 보입니다.
+                            가운데 설명은 &apos;등급명 + 등급&apos;입니다. 평가 등급 22개(AAA+ ~ D)는 위에서부터 100 →
+                            약 5 로 고르게 나눈 비율로 채우고(맨 아래 D 도 한 단계만큼 차서 원호 끝이 보입니다), R(유보)
+                            · NR(평가 제외)은 채움 없이 등급명만 보입니다.
                         </p>
                         <div className="border-border overflow-x-auto rounded-xl border">
                             <table className="w-full min-w-160 text-left">
@@ -385,6 +410,17 @@ const SemicircleRatingGaugeGuidePage = () => (
                         날짜 목록은 <code>dl</code> 로 이름과 값이 짝지어 읽힙니다[7.3.1].
                     </li>
                     <li>등급이 글자로도 있어 색만으로 뜻을 전하지 않습니다[5.3.1].</li>
+                    <li>
+                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
+                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
+                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
+                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                    </li>
+                    <li>
+                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
+                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
+                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                    </li>
                 </ul>
             </section>
         </BaseCard>

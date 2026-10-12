@@ -16,8 +16,8 @@ const SECTION_HEAD = 'flex max-w-4xl flex-col gap-2'
 const BLOCKS = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t'
 const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 
-const CREDIT_COLOR = 'var(--raw-blue-500)'
-const COLLATERAL_COLOR = 'var(--raw-mint-700)'
+const CREDIT_COLOR = 'var(--ds-report-series-1)'
+const COLLATERAL_COLOR = 'var(--ds-report-series-4)'
 
 const pair = (credit: number, collateral: number): RatioStackItem[] => [
     {id: 'credit', label: '신용', value: credit, color: CREDIT_COLOR},
@@ -30,16 +30,16 @@ const USAGE_CODE = `import {RatioStackBar} from '@/components/custom/ratio-stack
 
 <RatioStackBar
   data={[
-    {id: 'credit', label: '신용', value: 43.8, color: 'var(--raw-blue-500)'},
-    {id: 'collateral', label: '담보', value: 56.2, color: 'var(--raw-mint-700)'},
+    {id: 'credit', label: '신용', value: 43.8, color: 'var(--ds-report-series-1)'},
+    {id: 'collateral', label: '담보', value: 56.2, color: 'var(--ds-report-series-4)'},
   ]}
 />`
 
 const DATA_CODE = `// 비율(%)이든 금액이든 넘긴다. 범례 비율은 합계 대비로 다시 계산한다.
 <RatioStackBar
   data={[
-    {id: 'credit', label: '신용', value: current.creditRatio, color: 'var(--raw-blue-500)'},
-    {id: 'collateral', label: '담보', value: current.collateralRatio, color: 'var(--raw-mint-700)'},
+    {id: 'credit', label: '신용', value: current.creditRatio, color: 'var(--ds-report-series-1)'},
+    {id: 'collateral', label: '담보', value: current.collateralRatio, color: 'var(--ds-report-series-4)'},
   ]}
 />`
 
@@ -74,7 +74,13 @@ const PROPS_ITEMS = [
     ['RatioStackItem', 'id', '항목을 구분하는 고유 값입니다.', '-', 'string'],
     ['RatioStackItem', 'label', '범례 이름입니다.', '-', 'string'],
     ['RatioStackItem', 'value', '값입니다. 0 이하 · 숫자가 아닌 값은 막대에서 뺍니다.', '-', 'number'],
-    ['RatioStackItem', 'color', '막대 · 칩 색(토큰 변수)입니다.', '-', 'string'],
+    [
+        'RatioStackItem',
+        'color',
+        '막대 · 칩 색(토큰 변수)입니다. K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>) — 다크에서 밝은 단계로 바뀐다.',
+        '-',
+        'string',
+    ],
 ] as const
 
 const SPECIAL_CASES: readonly {title: string; description: string; data: RatioStackItem[]}[] = [
@@ -107,11 +113,11 @@ const SPECIAL_CASES: readonly {title: string; description: string; data: RatioSt
         title: '항목이 많을 때',
         description: '범례가 한 줄을 넘으면 오른쪽 정렬을 지키며 다음 줄로 접힙니다.',
         data: [
-            {id: 'a', label: '은행업권', value: 50.5, color: 'var(--raw-navy-500)'},
-            {id: 'b', label: '상호금융업권', value: 9.3, color: 'var(--raw-blue-500)'},
+            {id: 'a', label: '은행업권', value: 50.5, color: 'var(--ds-report-series-1)'},
+            {id: 'b', label: '상호금융업권', value: 9.3, color: 'var(--ds-report-series-2)'},
             {id: 'c', label: '저축은행업권', value: 10, color: 'var(--raw-blue-300)'},
-            {id: 'd', label: '카드/캐피탈업권', value: 20, color: 'var(--raw-purple-500)'},
-            {id: 'e', label: '대부업권', value: 10.2, color: 'var(--raw-mint-700)'},
+            {id: 'd', label: '카드/캐피탈업권', value: 20, color: 'var(--ds-report-series-3)'},
+            {id: 'e', label: '대부업권', value: 10.2, color: 'var(--ds-report-series-4)'},
         ],
     },
 ]
@@ -203,6 +209,11 @@ const RatioStackBarGuidePage = () => (
                         <code>ariaLabel</code> 은 없으므로 앞뒤 제목으로 맥락을 줍니다[5.1.1].
                     </li>
                     <li>항목은 색 칩과 함께 이름과 비율 글자로 구분합니다. 색만으로 전하지 않습니다[5.3.1].</li>
+                    <li>
+                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 막대가
+                        왼쪽에서 오른쪽으로 차오릅니다(<code>--animate-chart-*</code> · 0.6초). <code>motion-safe</code>{' '}
+                        라 동작 줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
+                    </li>
                 </ul>
             </section>
         </BaseCard>

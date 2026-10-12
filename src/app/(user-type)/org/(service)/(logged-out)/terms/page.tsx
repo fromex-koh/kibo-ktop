@@ -22,7 +22,7 @@ const OrgTermsPage = async ({searchParams}: TermsPageProps) => {
     const tab = (await searchParams)[TERMS_TAB_QUERY_KEY]
 
     return (
-        <main id="main" tabIndex={-1} className="bg-surface flex-1">
+        <main id="main" tabIndex={-1} className="bg-page flex-1">
             <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
                 <PageTitleBar
                     title="이용약관"

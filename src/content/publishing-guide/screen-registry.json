@@ -2839,27 +2839,6 @@
             "name": "결제 완료"
         },
         {
-            "key": "org-pricing-payment",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/pricing/payment",
-            "name": "결제하기"
-        },
-        {
-            "key": "org-pricing-payment-seller-info",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/pricing/payment/seller-info",
-            "name": "판매자 정보"
-        },
-        {
-            "key": "org-pricing-payment-complete",
-            "screenId": null,
-            "userType": "기관",
-            "path": "/org/pricing/payment/complete",
-            "name": "결제 완료"
-        },
-        {
             "key": "org-pricing-payment-unavailable",
             "screenId": null,
             "userType": "기관",

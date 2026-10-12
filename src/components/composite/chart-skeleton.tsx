@@ -1,5 +1,5 @@
 import {ARC_GAUGE_SIZES, arcGaugeTrackPath} from '@/components/custom/arc-gauge-shape'
-import {RANK_PYRAMID_TIER_PATHS, RANK_PYRAMID_VIEW_BOX} from '@/components/custom/rank-pyramid-chart'
+import {RANK_PYRAMID_TIER_PATHS, RANK_PYRAMID_VIEW_BOX} from '@/components/custom/rank-pyramid-shape'
 import {cn} from '@/lib/utils'
 import {
     chartSkeletonNetworkGraphicVariants,
@@ -68,7 +68,7 @@ const DonutChartSkeleton = () => (
     </div>
 )
 
-// ScoreGauge 와 같은 짜임 — ArcGauge(lg · 지름 320 · 굵기 46 · 위 208) 원호와 가운데 점수 · 상태 · 보조 줄.
+// ScoreGauge 와 같은 짜임 — ArcGauge(lg · 지름 320 · 굵기 46 · 위 208) 원호와 가운데 점수 · 상태 줄(아래 여백 32).
 const ScoreGaugeSkeleton = () => (
     <div className="mx-auto grid w-full max-w-80" aria-hidden="true">
         <svg viewBox="0 0 320 208" className="text-muted col-start-1 row-start-1 h-auto w-full">
@@ -80,10 +80,9 @@ const ScoreGaugeSkeleton = () => (
                 strokeLinecap="round"
             />
         </svg>
-        <div className="col-start-1 row-start-1 flex flex-col items-center justify-end gap-2 pb-3">
+        <div className="col-start-1 row-start-1 flex flex-col items-center justify-end gap-2 pb-8">
             <div className={cn(skeletonPartClassName, 'h-12 w-28')} />
             <div className={cn(skeletonPartClassName, 'h-6 w-12')} />
-            <div className={cn(skeletonPartClassName, 'h-4 w-32')} />
         </div>
     </div>
 )
@@ -151,9 +150,9 @@ const RankPyramidSkeleton = () => (
 )
 
 // SemicircleRatingGauge 와 같은 짜임 — ArcGauge(md · 지름 260 · 굵기 37 · 위 172) 원호, 가운데 등급 · 설명 줄,
-// 아래 16 간격으로 날짜 목록 두 줄(간격 12).
+// 아래 8 간격으로 날짜 목록 두 줄(가운데 정렬 · 간격 8 · 줄 높이는 실제 글자 줄 h-lh).
 const GaugeChartSkeleton = () => (
-    <div className="mx-auto flex w-full flex-col gap-4" aria-hidden="true">
+    <div className="mx-auto flex w-full flex-col gap-2" aria-hidden="true">
         <div className="mx-auto grid w-full max-w-65">
             <svg viewBox="0 0 260 172" className="text-muted col-start-1 row-start-1 h-auto w-full">
                 <path
@@ -169,9 +168,9 @@ const GaugeChartSkeleton = () => (
                 <div className={cn(skeletonPartClassName, 'h-5 w-20')} />
             </div>
         </div>
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col items-center gap-2">
             {Array.from({length: 2}, (_, index) => (
-                <div key={index} className="flex h-6 items-center justify-between gap-4">
+                <div key={index} className="typo-body-xl-regular flex h-lh items-center justify-center gap-2">
                     <div className={cn(skeletonPartClassName, 'h-4 w-16')} />
                     <div className={cn(skeletonPartClassName, 'h-4 w-24')} />
                 </div>

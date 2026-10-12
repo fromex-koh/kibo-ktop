@@ -85,6 +85,41 @@ const ANIMATIONS = [
         source: 'custom/tech-eval-section.tsx',
         preview: 'enter',
     },
+    {
+        name: 'animate-chart-wipe-right',
+        value: 'chart-wipe-right 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        usage: '보고서 가로 막대(성장률 우수기업 · 매출 규모별 현황 오른쪽)가 왼쪽에서 오른쪽으로 자란다. 차트가 화면에 들어올 때 한 번.',
+        source: 'custom/diverging-rank-chart.tsx · custom/butterfly-bar-chart.tsx',
+        preview: 'wipe-right',
+    },
+    {
+        name: 'animate-chart-wipe-left',
+        value: 'chart-wipe-left 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        usage: '보고서 가로 막대의 왼쪽(가운데 축에서 왼쪽으로 뻗는 막대)이 오른쪽에서 왼쪽으로 자란다.',
+        source: 'custom/diverging-rank-chart.tsx · custom/butterfly-bar-chart.tsx',
+        preview: 'wipe-left',
+    },
+    {
+        name: 'animate-chart-label',
+        value: 'chart-label 300ms ease-out 600ms both',
+        usage: '가로 막대 차트(매출 규모별 현황 · 성장률 우수기업)의 값 · 이름 글자가 막대가 다 자란 뒤(600ms 지연) 옅게 나타난다.',
+        source: 'custom/butterfly-bar-chart.tsx · custom/diverging-rank-chart.tsx',
+        preview: 'label',
+    },
+    {
+        name: 'animate-chart-pop',
+        value: 'chart-pop 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        usage: '칸 · 점 표시(단계 칸 · 등급 칩 · 등급 매트릭스 표시)가 작게 시작해 커지며 나타난다. 조각마다 지연을 주어 차례로.',
+        source: 'custom/segment-meter.tsx · custom/grade-scale-gauge.tsx · custom/rating-matrix.tsx',
+        preview: 'pop',
+    },
+    {
+        name: 'animate-chart-rise',
+        value: 'chart-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
+        usage: '순위 피라미드의 단과 R&D 이슈 글자 구름이 아래에서 떠오르며 나타난다.',
+        source: 'custom/rank-pyramid-chart.tsx · custom/word-cloud.tsx',
+        preview: 'enter',
+    },
 ] as const satisfies readonly {
     name: string
     value: string

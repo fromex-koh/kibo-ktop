@@ -1,23 +1,25 @@
 'use client'
 
-import {Badge} from '@/components/ui/badge'
-import {ARC_GAUGE_TONE_COLORS} from '@/components/custom/arc-gauge-shape'
 import {GradeHistoryChart} from '@/components/custom/grade-history-chart'
 import {GradeScaleGauge, type GradeScaleItem} from '@/components/custom/grade-scale-gauge'
-import {Card, NoticeBox, ReportTable, SectionTitle, SubBlock} from '@/components/custom/innovation-growth-report-parts'
+import {
+    Card,
+    NoticeBox,
+    REPORT_LINE_STYLES,
+    ReportTable,
+    SectionTitle,
+    SubBlock,
+    WithUnit,
+} from '@/components/custom/innovation-growth-report-parts'
 import {LineChart} from '@/components/custom/line-chart'
 import {PercentageDonutChart} from '@/components/custom/percentage-donut-chart'
 import {RatioStackBar} from '@/components/custom/ratio-stack-bar'
-import {SegmentMeter} from '@/components/custom/segment-meter'
 import {PRIVATE_SHORT_LABEL, PrivateCell, PrivateContent} from '@/components/composite/private-content'
 import {SemicircleRatingGauge, type SemicircleRatingData} from '@/components/custom/semicircle-rating-gauge'
 import {cn} from '@/lib/utils'
 import {criGradePercentage, findCriGrade} from '@/content/service/cri-grades'
 import {
-    getTechIndexGrade,
-    getTechIndexLevel,
     INNOVATION_CREDIT_VISIBILITY,
-    TECH_INDEX_LEVEL_COUNT,
     type InnovationBorrowingRow,
     type InnovationCreditInfoTable,
     type InnovationCreditVisibility,
@@ -27,7 +29,7 @@ import {
 // K-BIGx 기업혁신성장 보고서 · 신용/재무정보 탭 본문 — 기업신용등급(게이지 · 이전평가이력) → 현금흐름등급(등급 척도 · 기업신용정보 표)
 // → 재무비율진단(성장성 · 수익성 · 안정성 · 활동성) → 차입금 분석(변동률 · 현황 표 · 변동현황 표) → 차입금 현황(기관별 비중 · 신용/담보 비중 · 담보 현황).
 // 보고서 머리 · 탭 줄 · 탭 제목 줄은 innovation-growth-report-document.tsx 가 그린다.
-// 반응형 없음 — PC 폭(1280)만 그린다(좁으면 문서가 가로로 넘친다).
+// 반응형 없음 — PC 화면만 그린다(문서 최소 폭 1200, 그보다 좁은 창에서만 가로 스크롤).
 //
 // [프론트엔드 연동] 값은 detail(report.creditDetail)과 기업신용등급 게이지 데이터(rating — 진단브리핑과 같은 toCriRatingData 결과)로
 // 받는다 — 형태는 content/service/k-bigx-innovation-report.ts 의 InnovationCreditDetail.
@@ -39,6 +41,7 @@ const oneDecimalFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigit
 const twoDecimalFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
 
 // 현금흐름등급 척도 — 낮은 등급(CR-6)부터 높은 등급(CR-1). 밝은 칸(CR-5 회색 · CR-3 주황)은 흰 글자로는 본문 대비 4.5:1 에 못 미쳐 짙은 글자를 쓴다[5.3.3].
+// 칸 글자 색(흰색 · grade-scale-chip-foreground)이 테마와 무관하게 고정이라 칸 색도 고정 색(--raw-*)을 쓴다.
 const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [
     {label: 'CR-6', color: 'var(--raw-gray-700)'},
     {label: 'CR-5', color: 'var(--raw-gray-200)', isLightColor: true},
@@ -48,25 +51,14 @@ const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [
     {label: 'CR-1', color: 'var(--raw-blue-500)'},
 ]
 
-// 재무비율진단 선 색 — 표의 줄 순서대로 navy.500 · blue.500 · purple.500 · mint.700.
-const RATIO_COLORS = [
-    'var(--raw-navy-500)',
-    'var(--raw-blue-500)',
-    'var(--raw-purple-500)',
-    'var(--raw-mint-700)',
-] as const
-const BORROWING_TREND_COLOR = 'var(--raw-purple-500)'
-const CREDIT_COLOR = 'var(--raw-blue-500)'
-const COLLATERAL_COLOR = 'var(--raw-mint-700)'
+const BORROWING_TREND_COLOR = 'var(--ds-report-series-3)'
+// 신용/담보 비중 — 선 모양은 보고서 공통(REPORT_LINE_STYLES)의 1번 · 4번을 쓰고, 아래 비율 막대(RatioStackBar)도 같은 색을 쓴다.
+const CREDIT_LINE_STYLE = REPORT_LINE_STYLES[0]
+const COLLATERAL_LINE_STYLE = REPORT_LINE_STYLES[3]
 
-// 상태 뱃지 색 — 우수 info · 양호 success · 보통 orange · 미흡 error · 취약 neutral(Tech-Index 탭과 같다).
-const TONE_BADGE_COLORS = {
-    excellent: 'info',
-    good: 'success',
-    normal: 'secondary-orange',
-    poor: 'error',
-    weak: 'neutral',
-} as const
+// [프론트엔드 연동 · 정렬] 기획 메모 '최신순으로 정렬' — 이전평가이력 · 현금흐름등급 표는 평가일자 최근 것부터 그린다.
+// 받은 순서와 무관하게 화면이 날짜(YYYY-MM-DD 문자열)로 정렬한다.
+const byLatestDate = (a: {date: string}, b: {date: string}) => b.date.localeCompare(a.date)
 
 // 이전평가이력 원 높이 — CRI 등급표의 채움 비율(등급이 높을수록 큼). 표에 없는 등급은 0(맨 아래).
 const toGradeValue = (grade: string) => {
@@ -79,7 +71,8 @@ const formatBorrowingCell = (cell: InnovationBorrowingRow['cells'][number], key:
     return key === 'amount' ? numberFormatter.format(cell.amount) : oneDecimalFormatter.format(cell.ratio)
 }
 
-// 차입금 현황 표 — 두 단 머리(항목 · 연도별 금액/비중) · 구분(단기 · 장기)을 세로로 합친 칸 · 소계 줄(gray.10 — 문서 바탕 gray.50 보다 옅다) · 합계 줄(파란 면 굵게).
+// 차입금 현황 표 — 두 단 머리(항목 · 연도별 금액/비중) · 묶음(group.label)을 세로로 합친 칸 · 묶음마다 소계 줄 · 맨 아래 합계 줄.
+// ReportTable 로는 묶음 칸 세로 합치기(rowgroup)를 표현할 수 없어 따로 그린다. 값이 null 인 칸은 '-'.
 const BorrowingTable = ({borrowings}: {borrowings: InnovationCreditDetail['borrowings']}) => {
     const headClassName =
         'border-subtle-3 bg-primary-subtle typo-body-l-bold text-foreground border-b px-4 pt-3 pb-2.75'
@@ -248,36 +241,36 @@ const CreditInfoTable = ({
 type BorrowingStatusSource = Pick<InnovationCreditDetail, 'institutions' | 'creditCollateral' | 'collaterals'>
 
 const InstitutionShareCard = ({source}: {source: BorrowingStatusSource}) => (
-    <Card className="h-full" title="기관별 비중" aside="단위 : %">
+    <Card className="h-full gap-4" title="기관별 비중">
         <div className="grid grid-cols-2 items-center gap-12">
-            <ReportTable
-                caption="기관별 차입금 비중(단위: %)"
-                minWidthClassName="min-w-0"
-                columns={[
-                    {key: 'label', label: '구분', isRowHeader: true, isNoWrap: true},
-                    ...source.institutions.years.map((year) => ({key: year, label: year})),
-                ]}
-                rows={source.institutions.rows.map((row) => ({
-                    id: row.key,
-                    cells: {
-                        label: row.label,
-                        ...Object.fromEntries(
-                            source.institutions.years.map((year, index) => {
-                                const value = row.values[index]
-                                return [
-                                    year,
-                                    value === null || value === undefined
-                                        ? EMPTY_VALUE
-                                        : oneDecimalFormatter.format(value),
-                                ]
-                            }),
-                        ),
-                    },
-                }))}
-            />
+            <WithUnit unit="단위: %">
+                <ReportTable
+                    caption="기관별 차입금 비중(단위: %)"
+                    minWidthClassName="min-w-0"
+                    columns={[
+                        {key: 'label', label: '구분', isRowHeader: true, isNoWrap: true},
+                        ...source.institutions.years.map((year) => ({key: year, label: year})),
+                    ]}
+                    rows={source.institutions.rows.map((row) => ({
+                        id: row.key,
+                        cells: {
+                            label: row.label,
+                            ...Object.fromEntries(
+                                source.institutions.years.map((year, index) => {
+                                    const value = row.values[index]
+                                    return [
+                                        year,
+                                        value === null || value === undefined
+                                            ? EMPTY_VALUE
+                                            : oneDecimalFormatter.format(value),
+                                    ]
+                                }),
+                            ),
+                        },
+                    }))}
+                />
+            </WithUnit>
             <PercentageDonutChart
-                animate={false}
-                showTooltip={false}
                 data={source.institutions.share.map((item) => ({...item}))}
                 ariaLabel="최근 연도 기관별 차입금 비중"
             />
@@ -286,40 +279,42 @@ const InstitutionShareCard = ({source}: {source: BorrowingStatusSource}) => (
 )
 
 const CreditCollateralCard = ({source}: {source: BorrowingStatusSource}) => (
-    <Card className="h-full" title="신용/담보 비중" aside="단위 : %">
-        <LineChart
-            animate={false}
-            appearance="columns"
-            legendPlacement="top-end"
-            plotHeight={180}
-            showTooltip={false}
-            showValueLabels
-            valueFractionDigits={1}
-            ariaLabel="시점별 신용 · 담보 비중"
-            unit="%"
-            data={source.creditCollateral.points.map((point) => ({
-                id: point.label,
-                label: point.label,
-                values: {credit: point.credit, collateral: point.collateral},
-            }))}
-            series={[
-                {key: 'credit', label: '신용', color: CREDIT_COLOR},
-                {key: 'collateral', label: '담보', color: COLLATERAL_COLOR},
-            ]}
-        />
+    <Card className="h-full gap-4" title="신용/담보 비중">
+        <WithUnit unit="단위: %">
+            <LineChart
+                appearance="columns"
+                legendPlacement="bottom-center"
+                showTooltip={false}
+                showValueLabels
+                valueFractionDigits={1}
+                isValueFractionFixed={false}
+                ariaLabel="시점별 신용 · 담보 비중"
+                unit="%"
+                showUnitLabel={false}
+                data={source.creditCollateral.points.map((point) => ({
+                    id: point.label,
+                    label: point.label,
+                    values: {credit: point.credit, collateral: point.collateral},
+                }))}
+                series={[
+                    {key: 'credit', label: '신용', ...CREDIT_LINE_STYLE},
+                    {key: 'collateral', label: '담보', ...COLLATERAL_LINE_STYLE},
+                ]}
+            />
+        </WithUnit>
         <RatioStackBar
             data={[
                 {
                     id: 'credit',
                     label: '신용',
                     value: source.creditCollateral.current.credit,
-                    color: CREDIT_COLOR,
+                    color: CREDIT_LINE_STYLE.color,
                 },
                 {
                     id: 'collateral',
                     label: '담보',
                     value: source.creditCollateral.current.collateral,
-                    color: COLLATERAL_COLOR,
+                    color: COLLATERAL_LINE_STYLE.color,
                 },
             ]}
         />
@@ -329,26 +324,26 @@ const CreditCollateralCard = ({source}: {source: BorrowingStatusSource}) => (
 const CollateralCard = ({source}: {source: BorrowingStatusSource}) => {
     const total = source.collaterals.reduce((sum, item) => sum + Math.max(0, item.amount), 0)
     return (
-        <Card className="h-full" title="담보 현황" aside="단위 : 백만원">
-            <PercentageDonutChart
-                animate={false}
-                showTooltip={false}
-                data={source.collaterals.map((item) => ({
-                    id: item.id,
-                    label: item.label,
-                    color: item.color,
-                    percentage: total ? Math.round((Math.max(0, item.amount) / total) * 1000) / 10 : 0,
-                    valueLabel: numberFormatter.format(item.amount),
-                }))}
-                ariaLabel="담보 종류별 금액"
-            />
+        <Card className="h-full gap-4" title="담보 현황">
+            <WithUnit unit="단위: 백만원">
+                <PercentageDonutChart
+                    data={source.collaterals.map((item) => ({
+                        id: item.id,
+                        label: item.label,
+                        color: item.color,
+                        percentage: total ? Math.round((Math.max(0, item.amount) / total) * 1000) / 10 : 0,
+                        valueLabel: numberFormatter.format(item.amount),
+                    }))}
+                    ariaLabel="담보 종류별 금액"
+                />
+            </WithUnit>
         </Card>
     )
 }
 
-// [퍼블리싱 확인용] 비공개 케이스의 자리 표시 값 — 실제 값이 아닌 임의 값이다(흐리게 깔려 모양만 남긴다).
-// 연도 · 시점 이름은 React key 로도 쓰이므로 서로 다르게 둔다.
-// [프론트엔드 연동] 미노출 케이스에서는 API 가 실제 값을 주지 않으므로 이 자리 표시 값으로 카드를 그린다.
+// 비공개 케이스의 자리 표시 값 — 실제 값이 아닌 임의 값이다(흐리게 깔려 모양만 남긴다).
+// [프론트엔드 연동] 연동 후에도 그대로 쓴다 — 미노출 케이스에서는 API 가 실제 값을 주지 않으므로 이 값으로 카드 모양을 그린다.
+// 연도 · 시점 이름은 React key 로도 쓰이므로 서로 다르게 둔다. 도넛 조각 색은 percentage-donut-colors.ts 와 같은 고정 색(--raw-*)이다.
 const PLACEHOLDER_BORROWING_STATUS: BorrowingStatusSource = {
     institutions: {
         years: ['0000년', '0001년', '0002년'],
@@ -392,8 +387,10 @@ const InnovationGrowthReportCredit = ({
     visibility = INNOVATION_CREDIT_VISIBILITY.self,
 }: InnovationGrowthReportCreditProps) => {
     const {ratingHistory, cashFlow, borrowings, borrowingChanges} = detail
-    // 이전평가이력 표 — 가장 최근(현재 등급)을 뺀 지난 평가를 최근 것부터.
-    const previousRatings = [...ratingHistory.slice(0, -1)].reverse()
+    // 이전평가이력 표 — 최신순으로 정렬한 뒤 가장 최근(현재 등급 — 왼쪽 게이지)을 뺀 지난 평가만.
+    const previousRatings = [...ratingHistory].sort(byLatestDate).slice(1)
+    // 현금흐름등급 표 — 최신순.
+    const cashFlowHistory = [...cashFlow.history].sort(byLatestDate)
     return (
         <>
             {/* 기업신용등급 */}
@@ -419,7 +416,6 @@ const InnovationGrowthReportCredit = ({
                     </Card>
                     <Card title="이전평가이력">
                         <GradeHistoryChart
-                            animate={false}
                             data={ratingHistory.map((item) => ({
                                 id: item.date,
                                 label: item.chartLabel,
@@ -432,8 +428,8 @@ const InnovationGrowthReportCredit = ({
                             caption="기업신용등급 이전평가이력"
                             minWidthClassName="min-w-0"
                             columns={[
-                                {key: 'date', label: '평가일자'},
                                 {key: 'grade', label: '신용등급'},
+                                {key: 'date', label: '평가일자'},
                             ]}
                             rows={previousRatings.map((item) => ({
                                 id: item.date,
@@ -453,21 +449,23 @@ const InnovationGrowthReportCredit = ({
                         <GradeScaleGauge
                             grades={CASH_FLOW_GRADES}
                             current={cashFlow.grade}
-                            lowLabel="미흡"
-                            highLabel="양호"
+                            // 원호 안에는 등급만 둔다(설명 글자 없음).
+                            description=""
+                            lowLabel="취약"
+                            highLabel="우수"
                             scaleLabel="현금흐름 창출 능력"
                             ariaLabel={`현금흐름등급 ${cashFlow.grade}`}
                         />
                         <ReportTable
-                            caption="연도별 현금흐름등급"
+                            caption="현금흐름등급 평가이력"
                             minWidthClassName="min-w-0"
                             columns={[
-                                {key: 'year', label: '평가년도'},
                                 {key: 'grade', label: '현금흐름등급'},
+                                {key: 'date', label: '평가일자'},
                             ]}
-                            rows={cashFlow.history.map((item) => ({
-                                id: item.year,
-                                cells: {year: item.year, grade: item.grade},
+                            rows={cashFlowHistory.map((item) => ({
+                                id: item.date,
+                                cells: {grade: item.grade, date: item.date},
                             }))}
                             emptyText={EMPTY_TABLE_TEXT}
                         />
@@ -491,41 +489,16 @@ const InnovationGrowthReportCredit = ({
                 </Card>
             </section>
 
-            {/* 재무비율진단 — 묶음마다 표 · 선 그래프, 머리 줄 오른쪽에 상태 칸 · 뱃지(점수 구간은 Tech-Index 와 같다). */}
+            {/* 재무비율진단 — 묶음마다 표(위에 단위) · 선 그래프(아래 가운데 범례). 선은 줄 순서대로 색 · 선 · 점 모양이 함께 바뀐다. */}
             <section aria-labelledby="ig-credit-ratios" className="flex flex-col gap-4">
                 <SectionTitle id="ig-credit-ratios" title="재무비율진단" />
                 <div className="flex flex-col gap-6">
-                    {detail.ratios.map((group) => {
-                        const grade = getTechIndexGrade(group.score)
-                        const level = getTechIndexLevel(group.score)
-                        return (
-                            <Card
-                                key={group.id}
-                                title={group.title}
-                                aside={
-                                    // 한 줄 높이(h-lh · 21)에 가둬 제목 줄이 뱃지(24) 때문에 높아지지 않게 한다.
-                                    <span className="flex h-lh items-center gap-2">
-                                        <SegmentMeter
-                                            value={level}
-                                            total={TECH_INDEX_LEVEL_COUNT}
-                                            color={ARC_GAUGE_TONE_COLORS[grade.tone]}
-                                            ariaLabel={`${group.title} ${TECH_INDEX_LEVEL_COUNT}단계 중 ${level}단계`}
-                                        />
-                                        {/* self-baseline — 제목 줄(items-baseline)이 뱃지 글자 기준선에 맞춰 줄을 세운다(칸 막대는 글자가 없어 기준선이 없다). */}
-                                        <Badge
-                                            size="xs"
-                                            shape="round"
-                                            color={TONE_BADGE_COLORS[grade.tone]}
-                                            className="self-baseline"
-                                        >
-                                            {grade.label}
-                                        </Badge>
-                                    </span>
-                                }
-                            >
-                                <div className="grid grid-cols-2 gap-6">
+                    {detail.ratios.map((group) => (
+                        <Card key={group.id} title={group.title} className="gap-4">
+                            <div className="grid grid-cols-2 gap-6">
+                                <WithUnit unit={`단위: ${group.unit}`}>
                                     <ReportTable
-                                        caption={`${group.title} 재무비율(단위: %)`}
+                                        caption={`${group.title} 재무비율(단위: ${group.unit})`}
                                         minWidthClassName="min-w-0"
                                         columns={[
                                             {key: 'label', label: '재무비율', isNoWrap: true},
@@ -546,62 +519,65 @@ const InnovationGrowthReportCredit = ({
                                             },
                                         }))}
                                     />
-                                    <LineChart
-                                        animate={false}
-                                        appearance="columns"
-                                        legendPlacement="top-end"
-                                        plotHeight={170}
-                                        showTooltip={false}
-                                        ariaLabel={`연도별 ${group.title} 재무비율`}
-                                        unit="%"
-                                        valueFractionDigits={2}
-                                        data={detail.ratioYears.map((year, index) => ({
-                                            id: year,
-                                            label: year,
-                                            values: Object.fromEntries(
-                                                group.rows.map((row) => [row.key, row.values[index] ?? 0]),
-                                            ),
-                                        }))}
-                                        series={group.rows.map((row, index) => ({
-                                            key: row.key,
-                                            label: row.label,
-                                            color: RATIO_COLORS[index % RATIO_COLORS.length],
-                                        }))}
-                                    />
-                                </div>
-                            </Card>
-                        )
-                    })}
+                                </WithUnit>
+                                <LineChart
+                                    appearance="columns"
+                                    legendPlacement="bottom-center"
+                                    showTooltip={false}
+                                    ariaLabel={`연도별 ${group.title} 재무비율`}
+                                    unit={group.unit}
+                                    showUnitLabel={false}
+                                    valueFractionDigits={2}
+                                    data={detail.ratioYears.map((year, index) => ({
+                                        id: year,
+                                        label: year,
+                                        values: Object.fromEntries(
+                                            group.rows.map((row) => [row.key, row.values[index] ?? 0]),
+                                        ),
+                                    }))}
+                                    series={group.rows.map((row, index) => ({
+                                        key: row.key,
+                                        label: row.label,
+                                        ...REPORT_LINE_STYLES[index % REPORT_LINE_STYLES.length],
+                                    }))}
+                                />
+                            </div>
+                        </Card>
+                    ))}
                 </div>
             </section>
 
-            {/* 차입금 분석 */}
+            {/* 차입금 분석 — 변동률(선 그래프) · 현황 · 변동현황 카드. 단위는 그래프 · 표 위 오른쪽 줄. */}
             <section aria-labelledby="ig-credit-borrowing" className="flex flex-col gap-4">
                 <SectionTitle id="ig-credit-borrowing" title="차입금 분석" />
                 <div className="flex flex-col gap-6">
-                    <Card title="차입금 변동률" aside="단위 : %">
-                        <LineChart
-                            animate={false}
-                            data={detail.borrowingTrend.map((item) => ({
-                                id: item.label,
-                                label: item.label,
-                                values: {rate: item.value},
-                            }))}
-                            series={[{key: 'rate', label: '차입금 변동률', color: BORROWING_TREND_COLOR}]}
-                            variant="area"
-                            appearance="cells"
-                            showLegend={false}
-                            showValueLabels
-                            showTooltip={false}
-                            ariaLabel="월별 차입금 변동률"
-                        />
+                    <Card title="차입금 변동률" className="gap-4">
+                        <WithUnit unit="단위: %">
+                            <LineChart
+                                data={detail.borrowingTrend.map((item) => ({
+                                    id: item.label,
+                                    label: item.label,
+                                    values: {rate: item.value},
+                                }))}
+                                series={[{key: 'rate', label: '차입금 변동률', color: BORROWING_TREND_COLOR}]}
+                                variant="area"
+                                appearance="cells"
+                                showLegend={false}
+                                showValueLabels
+                                showTooltip={false}
+                                ariaLabel="월별 차입금 변동률"
+                            />
+                        </WithUnit>
                     </Card>
-                    <SubBlock title="차입금 현황" aside="단위 : 백만원, %">
-                        <BorrowingTable borrowings={borrowings} />
-                    </SubBlock>
-                    <SubBlock title="차입금 변동현황" aside="단위 : 백만원, %">
+                    <Card title="차입금 현황" className="gap-4">
+                        <WithUnit unit="단위: 백만원, %">
+                            <BorrowingTable borrowings={borrowings} />
+                        </WithUnit>
+                    </Card>
+                    {/* 단위는 줄 이름에 붙어 있다(차입금(백만원) 등) — 표 위 단위 줄이 없다. */}
+                    <Card title="차입금 변동현황" className="gap-4">
                         <ReportTable
-                            caption="차입금 변동현황(단위: 백만원, %)"
+                            caption="차입금 변동현황"
                             columns={[
                                 {key: 'label', label: '구분'},
                                 ...borrowingChanges.years.map((year) => ({key: year, label: year})),
@@ -619,7 +595,7 @@ const InnovationGrowthReportCredit = ({
                                 },
                             }))}
                         />
-                    </SubBlock>
+                    </Card>
                 </div>
             </section>
 

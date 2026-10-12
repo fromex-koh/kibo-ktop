@@ -15,7 +15,7 @@ export const metadata: Metadata = {title: '이용안내'}
 // SkipNav의 #main 도착 대상이며 tabIndex={-1}로 키보드 포커스를 받을 수 있다.
 // 본문(ServiceGuide)은 기업·기관이 같다 — 문구는 content/service/guide.ts 에 있다.
 const OrgGuidePage = () => (
-    <main id="main" tabIndex={-1} className="bg-surface flex-1">
+    <main id="main" tabIndex={-1} className="bg-page flex-1">
         <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
             <PageTitleBar
                 title="이용안내"

@@ -2467,34 +2467,9 @@
                     },
                     "children": [
                         {
-                            "label": "결제하기",
-                            "screen": {
-                                "screenId": null,
-                                "status": "완료",
-                                "version": "미배포",
-                                "key": "org-pricing-payment"
-                            },
-                            "children": [
-                                {
-                                    "label": "판매자 정보",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "org-pricing-payment-seller-info"
-                                },
-                                {
-                                    "label": "결제 완료",
-                                    "screenId": null,
-                                    "status": "완료",
-                                    "version": "미배포",
-                                    "key": "org-pricing-payment-complete"
-                                }
-                            ]
-                        },
-                        {
                             "label": "결제 불가 팝업",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-pricing-payment-unavailable",
                             "iaRow": 14

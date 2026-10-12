@@ -1,5 +1,6 @@
 'use client'
 
+import {useChartAnimation} from '@/components/custom/chart-reveal'
 import type {ComponentPropsWithoutRef} from 'react'
 import {ArcGauge} from '@/components/custom/arc-gauge'
 import {cn} from '@/lib/utils'
@@ -10,9 +11,11 @@ import {cn} from '@/lib/utils'
 // 짜임: 원호는 ArcGauge(size md) — 지름 260 · 굵기 37 · 위 172 만 보임. 채움 길이 = (현재 등급 순번 ÷ 등급 수), 채움 색 =
 //   현재 등급 칸의 색. 가운데 글자: 등급 40 Bold → 설명 16 Bold(예: 현재 등급).
 //   → 16 → 등급 칸 줄: 높이 32 · 모서리 8 · 간격 8 · 14 Bold, 칸 폭은 똑같이 나눈다.
-//   → 8 → 척도 줄(높이 26 · 12 Regular): 첫 칸 아래 낮은 쪽 이름 · 가운데 칸들 아래 회색 띠(gray.50)에 척도 이름 · 끝 칸 아래 높은 쪽 이름.
-// 칸 색은 데이터가 넘긴다. 칸 글자는 흰색이 기본이고, 밝은 칸은 isLightColor 로 짙은 글자를 쓴다.
+//   → 8 → 척도 줄(높이 26 · 12 Regular): 첫 칸 아래 낮은 쪽 이름 · 가운데 칸들 아래 옅은 띠(accent-subtle)에 척도 이름 · 끝 칸 아래 높은 쪽 이름.
+// 칸 색은 데이터가 넘긴다(테마와 무관한 고정 색). 칸 글자는 흰색이 기본이고, 밝은 칸은 isLightColor 로 짙은 글자
+// (grade-scale-chip-foreground — 다크에서도 짙은 색 고정)를 쓴다. text-foreground 는 다크에서 밝아져 밝은 칸 위에서 묻힌다.
 // 현재 등급은 role="img" 이름과 숨김 문단으로 읽는다 — 칸 색만으로 구분하지 않는다[5.3.1].
+// 등급 칸 줄은 data-chart-reveal 이라 보고서에서 카드가 보이기 전에는 숨는다(chart-reveal.tsx).
 //
 // [프론트엔드 연동] grades 는 낮은 등급부터(왼쪽) 높은 등급(오른쪽) 순서다. current 는 grades 의 label 중 하나를 넘긴다.
 
@@ -31,7 +34,7 @@ type GradeScaleGaugeProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & 
     grades: readonly GradeScaleItem[]
     /** 현재 등급(grades 의 label). 목록에 없으면 원호를 비우고 글자만 보인다. */
     current: string
-    /** 가운데 등급 아래 설명(기본 '현재 등급'). */
+    /** 가운데 등급 아래 설명(기본 '현재 등급'). 빈 문자열이면 등급만 보인다(보고서 신용/재무정보 현금흐름등급). */
     description?: string
     /** 척도 줄 — 낮은 쪽 · 높은 쪽 이름과 가운데 척도 이름. */
     lowLabel?: string
@@ -39,8 +42,11 @@ type GradeScaleGaugeProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & 
     scaleLabel?: string
 }
 
-// 목록에 없는 등급일 때 원호 · 칸 대신 쓰는 색.
+// 목록에 없는 등급일 때 원호 · 칸 대신 쓰는 색(고정 색 — 등급 칸 색과 같이 테마와 무관).
 const FALLBACK_COLOR = 'var(--raw-gray-300)'
+
+// 등급 칸이 왼쪽부터 차례로 튀어나오는 간격(ms) — animate 일 때만(보고서에서 카드가 보일 때).
+const POP_STAGGER_MS = 60
 
 const GradeScaleGauge = ({
     ariaLabel,
@@ -53,6 +59,7 @@ const GradeScaleGauge = ({
     className,
     ...props
 }: GradeScaleGaugeProps) => {
+    const animate = useChartAnimation()
     const currentIndex = grades.findIndex((grade) => grade.label === current)
     const currentGrade = grades[currentIndex]
     const percentage = currentGrade ? ((currentIndex + 1) / grades.length) * 100 : 0
@@ -67,25 +74,27 @@ const GradeScaleGauge = ({
                 color={currentGrade?.color ?? FALLBACK_COLOR}
                 size="md"
                 ariaLabel={ariaLabel}
-                overlayClassName="px-10"
+                // 설명이 없으면 아래 여백을 12 → 32(pb-8)로 늘려, 등급 글자가 설명이 있을 때와 비슷한 높이에 오게 한다.
+                overlayClassName={cn('px-10', !description && 'pb-8')}
             >
                 {/* 그림 속 글자라 p 대신 div — 값은 role="img" 이름으로 읽힌다. */}
                 <div className="typo-display-m-bold text-foreground whitespace-nowrap">{current}</div>
-                <div className="typo-body-xl-bold text-foreground break-keep">{description}</div>
+                {description ? <div className="typo-body-xl-bold text-foreground break-keep">{description}</div> : null}
             </ArcGauge>
 
             {grades.length ? (
                 <div className="flex flex-col gap-2" aria-hidden="true">
                     {/* 칸 줄 · 척도 줄은 같은 격자(칸 수만큼 똑같이 나눔 · 간격 8)를 써서 이름이 칸 아래에 정확히 선다. */}
-                    <ul className="grid gap-2" style={gridStyle}>
-                        {grades.map((grade) => (
+                    <ul className="grid gap-2" style={gridStyle} data-chart-reveal="">
+                        {grades.map((grade, index) => (
                             <li
                                 key={grade.label}
                                 className={cn(
                                     'typo-body-l-bold flex h-8 min-w-0 items-center justify-center rounded-sm px-1',
-                                    grade.isLightColor ? 'text-foreground' : 'text-white',
+                                    grade.isLightColor ? 'text-grade-scale-chip-foreground' : 'text-white',
+                                    animate && 'motion-safe:animate-chart-pop',
                                 )}
-                                style={{backgroundColor: grade.color}}
+                                style={{backgroundColor: grade.color, animationDelay: `${index * POP_STAGGER_MS}ms`}}
                             >
                                 <span className="truncate">{grade.label}</span>
                             </li>

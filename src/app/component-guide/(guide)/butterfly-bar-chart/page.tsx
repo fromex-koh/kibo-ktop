@@ -16,8 +16,8 @@ const SECTION_HEAD = 'flex max-w-4xl flex-col gap-2'
 const BLOCKS = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t'
 const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 
-const COMPANY_SIDE: ButterflyBarSide = {title: '기업수(개)', color: 'var(--raw-purple-500)'}
-const PATENT_SIDE: ButterflyBarSide = {title: '특허수(건)', color: 'var(--raw-blue-500)'}
+const COMPANY_SIDE: ButterflyBarSide = {title: '기업수(개)', color: 'var(--ds-report-series-3)'}
+const PATENT_SIDE: ButterflyBarSide = {title: '특허수(건)', color: 'var(--ds-report-series-2)'}
 
 const toItems = (rows: readonly (readonly [string, number, number])[]): ButterflyBarItem[] =>
     rows.map(([label, left, right]) => ({id: label, label, left, right}))
@@ -76,8 +76,8 @@ const USAGE_CODE = `import {ButterflyBarChart} from '@/components/custom/butterf
   ariaLabel="매출 규모별 기업 및 특허 현황"
   categoryTitle="매출 규모"
   data={data}
-  left={{title: '기업수(개)', color: 'var(--raw-purple-500)'}}
-  right={{title: '특허수(건)', color: 'var(--raw-blue-500)'}}
+  left={{title: '기업수(개)', color: 'var(--ds-report-series-3)'}}
+  right={{title: '특허수(건)', color: 'var(--ds-report-series-2)'}}
 />`
 
 const DATA_CODE = `// 값은 원래 개수를 넘긴다. 막대 길이와 줄임 표기('1.2만')는 컴포넌트가 계산한다.
@@ -146,7 +146,13 @@ const PROPS_ITEMS = [
     ],
     ['ButterflyBarChart', 'className', '바깥 div 에 덧붙일 클래스입니다. 그 밖의 div 속성도 받습니다.', '-', 'string'],
     ['ButterflyBarSide', 'title', '머리 줄에 쓰는 제목입니다.', '-', 'string'],
-    ['ButterflyBarSide', 'color', '막대 색입니다.', '-', 'string'],
+    [
+        'ButterflyBarSide',
+        'color',
+        '막대 색입니다. K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>) — 다크에서 밝은 단계로 바뀐다.',
+        '-',
+        'string',
+    ],
     ['ButterflyBarItem', 'id', '항목을 구분하는 고유 값입니다.', '-', 'string'],
     ['ButterflyBarItem', 'label', '가운데 칸에 쓰는 항목 이름입니다.', '-', 'string'],
     ['ButterflyBarItem', 'left', '왼쪽 값입니다.', '-', 'number'],
@@ -318,6 +324,12 @@ const ButterflyBarChartGuidePage = () => (
                         값이 막대 옆에 글자로 적혀 있고 양쪽은 제목으로 구분합니다. 색만으로 전하지 않습니다[5.3.1].
                     </li>
                     <li>긴 숫자를 줄여 적어도 숨김 표에는 원래 값이 있습니다.</li>
+                    <li>
+                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 막대가
+                        가운데에서 양쪽으로 자라고(<code>--animate-chart-*</code> · 0.6초), 다 자란 뒤 값 글자가 옅게
+                        나타납니다(<code>--animate-chart-label</code> · 0.3초). <code>motion-safe</code> 라 동작 줄이기
+                        설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
+                    </li>
                 </ul>
             </section>
         </BaseCard>

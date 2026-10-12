@@ -237,6 +237,11 @@ const SegmentMeterGuidePage = () => (
                         <code>SegmentMeterSkeleton</code> 은 <code>aria-hidden</code> 이라 불러오는 중 안내는 감싸는
                         쪽에서 둡니다.
                     </li>
+                    <li>
+                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 칸이 차례로
+                        커지며 나타납니다(<code>--animate-chart-*</code> · 0.6초). <code>motion-safe</code> 라 동작
+                        줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
+                    </li>
                 </ul>
             </section>
         </BaseCard>

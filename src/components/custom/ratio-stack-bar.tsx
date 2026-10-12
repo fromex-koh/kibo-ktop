@@ -1,4 +1,8 @@
+'use client'
+
+// 'use client' — 막대가 움직이는지를 문서 설정(chart-reveal.tsx)에서 읽는다.
 import type {ComponentPropsWithoutRef} from 'react'
+import {useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
 
 // 비율 막대(RatioStackBar) — 전체를 100 으로 보고 항목별 비율을 한 줄 가로 막대에 이어 칠하고, 아래 오른쪽에 범례(이름 + 비율)를 둔다.
@@ -9,7 +13,7 @@ import {cn} from '@/lib/utils'
 // 비율은 값 합계로 나눠 계산한다 — 합이 100 이 아니어도(예: 반올림 오차 99.9) 막대는 끝까지 찬다. 0 이하 · 숫자가 아닌 값은
 //   막대에서 빼고(범례에는 0% 로 남김), 0 보다 크면 최소 4 는 칠해 보이게 한다. 합이 0 이면 빈 회색 막대만 둔다.
 // 막대는 장식이라 숨기고, 범례 글자가 비율을 읽어 준다[5.3.1].
-// 서버 · 클라이언트 어디서나 쓸 수 있게 'use client' 없이 둔다(상태 · 이벤트가 없다).
+// 보고서 안에서는 카드가 화면에 들어올 때 막대가 왼쪽에서 오른쪽으로 차오른다(chart-reveal.tsx · --animate-chart-wipe-right).
 //
 // [프론트엔드 연동] value 는 비율(%) 또는 금액 어느 쪽이든 된다 — 범례 비율은 합계 대비로 다시 계산해 적는다.
 
@@ -28,6 +32,7 @@ type RatioStackBarProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
 }
 
 const RatioStackBar = ({data, fractionDigits = 1, className, ...props}: RatioStackBarProps) => {
+    const animate = useChartAnimation()
     const digits = Math.min(4, Math.max(0, Number.isFinite(fractionDigits) ? fractionDigits : 1))
     const percentFormatter = new Intl.NumberFormat('ko-KR', {
         minimumFractionDigits: digits,
@@ -43,12 +48,15 @@ const RatioStackBar = ({data, fractionDigits = 1, className, ...props}: RatioSta
     return (
         <div {...props} className={cn('flex w-full flex-col gap-2', className)}>
             {/* 항목 사이 틈은 카드 면(bg-card)이 비쳐 흰 선으로 보인다. 합이 0 이면 빈 회색 막대. */}
+            {/* data-chart-reveal — 보이기 전에는 막대만 숨긴다(범례는 보인다). */}
             <div
                 className={cn(
                     'flex h-4 w-full gap-0.5 overflow-hidden rounded-full',
                     total ? 'bg-card' : 'bg-accent-subtle',
+                    animate && 'motion-safe:animate-chart-wipe-right',
                 )}
                 aria-hidden="true"
+                data-chart-reveal=""
             >
                 {items
                     .filter((item) => item.percentage > 0)

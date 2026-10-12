@@ -19,10 +19,17 @@ const RECHARTS_LICENSE: LicenseLink = {
 
 type CaseProps = Pick<
     DistributionCurveChartProps,
-    'mean' | 'standardDeviation' | 'value' | 'markerLabel' | 'min' | 'max' | 'tickStep'
+    'mean' | 'standardDeviation' | 'value' | 'markerLabel' | 'markerLabelBelow' | 'min' | 'max' | 'tickStep'
 >
 
-const REPORT_CASE: CaseProps = {mean: 50.5, standardDeviation: 21.5, value: 73.8, markerLabel: '상위 2.2%'}
+// 보고서(Tech-Index 탭)와 같은 값 — 점 글자는 늘 점 아래(시안).
+const REPORT_CASE: CaseProps = {
+    mean: 50.5,
+    standardDeviation: 21.5,
+    value: 73.8,
+    markerLabel: '상위 2.2%',
+    markerLabelBelow: true,
+}
 
 const USAGE_CODE = `import {DistributionCurveChart} from '@/components/custom/distribution-curve-chart'
 
@@ -32,6 +39,7 @@ const USAGE_CODE = `import {DistributionCurveChart} from '@/components/custom/di
   standardDeviation={21.5}
   value={73.8}
   markerLabel="상위 2.2%"
+  markerLabelBelow
 />`
 
 const PLAIN_CODE = `<DistributionCurveChart
@@ -183,6 +191,12 @@ const DATA_ROWS = toRows([
     ['standardDeviation', '분포 표준편차입니다. 0 이하 · 숫자가 아니면 가로 범위의 5% 로 맞춥니다.', '-', 'number'],
     ['value', '조회 대상 점수입니다. 없으면 점을 찍지 않고, 범위를 벗어나면 끝으로 맞춥니다.', 'undefined', 'number'],
     ['markerLabel', '점 글자입니다. 예: 상위 2.2%', 'undefined', 'string'],
+    [
+        'markerLabelBelow',
+        '점 글자를 늘 점 아래에 둡니다(곡선과 겹쳐도). 끄면 아래에 자리가 없을 때 점 위 · 옆으로 비킵니다.',
+        "false (variant 'plain' 은 true)",
+        'boolean',
+    ],
     ['min · max', '가로 범위입니다.', '0 · 100', 'number'],
     ['tickStep', '가로 눈금 간격입니다. 칸이 20개를 넘지 않게 넓혀집니다.', '10', 'number'],
 ])
@@ -204,7 +218,12 @@ const FRAME_ROWS = toRows([
 ])
 
 const STATE_ROWS = toRows([
-    ['animate', '곡선이 그려지는 움직임입니다. 인쇄용 문서에서는 끕니다.', 'true', 'boolean'],
+    [
+        'animate',
+        '그리는 움직임입니다. 안 주면 문서 설정을 따르고(접근성 항목 참고), 인쇄용 문서처럼 즉시 찍혀야 하면 끕니다.',
+        '문서 설정',
+        'boolean',
+    ],
     ['isLoading', '스켈레톤을 대신 보입니다. 하이드레이션 전에는 자동으로 보입니다.', 'false', 'boolean'],
     ['loadingLabel', '불러오는 중에 화면 낭독기가 읽을 문구입니다.', "'그래프를 불러오는 중입니다.'", 'string'],
 ])
@@ -372,6 +391,17 @@ const DistributionCurveChartGuidePage = () => (
                     <li>순위는 점 위치뿐 아니라 점 글자로도 전달됩니다[5.3.1].</li>
                     <li>
                         <code>animate</code> 로 움직임을 끌 수 있습니다[6.3.1].
+                    </li>
+                    <li>
+                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
+                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
+                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
+                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                    </li>
+                    <li>
+                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
+                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
+                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
                     </li>
                 </ul>
             </section>

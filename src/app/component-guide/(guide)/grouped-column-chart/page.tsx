@@ -25,17 +25,17 @@ const RECHARTS_LICENSE: LicenseLink = {
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 
 const REPORT_SERIES: GroupedColumnSeries[] = [
-    {key: '2022', label: '2022년', color: 'var(--raw-navy-500)'},
-    {key: '2023', label: '2023년', color: 'var(--raw-blue-500)'},
-    {key: '2024', label: '2024년', color: 'var(--raw-purple-500)'},
+    {key: '2022', label: '2022년', color: 'var(--ds-report-series-1)'},
+    {key: '2023', label: '2023년', color: 'var(--ds-report-series-2)'},
+    {key: '2024', label: '2024년', color: 'var(--ds-report-series-3)'},
 ]
 
 const REPORT_CODE = `import {GroupedColumnChart, type GroupedColumnItem, type GroupedColumnSeries} from '@/components/custom/grouped-column-chart'
 
 const series: GroupedColumnSeries[] = [
-  {key: '2022', label: '2022년', color: 'var(--raw-navy-500)'},
-  {key: '2023', label: '2023년', color: 'var(--raw-blue-500)'},
-  {key: '2024', label: '2024년', color: 'var(--raw-purple-500)'},
+  {key: '2022', label: '2022년', color: 'var(--ds-report-series-1)'},
+  {key: '2023', label: '2023년', color: 'var(--ds-report-series-2)'},
+  {key: '2024', label: '2024년', color: 'var(--ds-report-series-3)'},
 ]
 
 <GroupedColumnChart
@@ -318,7 +318,13 @@ const PROPS_ITEMS = [
         'true',
         'boolean',
     ],
-    ['GroupedColumnChart', 'animate', '막대가 자라는 움직임입니다. 인쇄용 문서에서는 끕니다.', 'true', 'boolean'],
+    [
+        'GroupedColumnChart',
+        'animate',
+        '그리는 움직임입니다. 안 주면 문서 설정을 따르고(접근성 항목 참고), 인쇄용 문서처럼 즉시 찍혀야 하면 끕니다.',
+        '문서 설정',
+        'boolean',
+    ],
     ['GroupedColumnChart', 'unit', '단위입니다. 그림 위 "단위: …" 글자와 말풍선 · 숨김 표에 붙습니다.', '-', 'string'],
     [
         'GroupedColumnChart',
@@ -360,7 +366,13 @@ const PROPS_ITEMS = [
     ['GroupedColumnChart', 'className', '바깥 div 에 덧붙일 클래스입니다. 그 밖의 div 속성도 받습니다.', '-', 'string'],
     ['GroupedColumnSeries', 'key', 'data 의 values 키와 같아야 막대가 그려집니다.', '-', 'string'],
     ['GroupedColumnSeries', 'label', '범례 · 말풍선에 보이는 이름입니다.', '-', 'string'],
-    ['GroupedColumnSeries', 'color', '막대 색입니다.', '-', 'string'],
+    [
+        'GroupedColumnSeries',
+        'color',
+        '막대 색입니다. K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>) — 다크에서 밝은 단계로 바뀐다.',
+        '-',
+        'string',
+    ],
     ['GroupedColumnItem', 'id', '항목을 구분하는 고유 값입니다.', '-', 'string'],
     ['GroupedColumnItem', 'label', '항목 이름입니다.', '-', 'string'],
     ['GroupedColumnItem', 'values', '계열 key 별 값입니다.', '-', 'Record<string, number>'],
@@ -553,6 +565,17 @@ const GroupedColumnChartGuidePage = () => (
                         값이 말풍선에만 있지 않도록 <code>showValueLabels</code> 를 켭니다. 말풍선은 마우스 보조입니다.
                     </li>
                     <li>계열은 색과 함께 범례 이름으로 구분합니다[5.3.1]. 범례를 끄면 다른 곳에 이름을 둡니다.</li>
+                    <li>
+                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
+                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
+                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
+                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                    </li>
+                    <li>
+                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
+                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
+                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                    </li>
                 </ul>
             </section>
         </BaseCard>

@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import {Check, CircleAlert} from 'lucide-react'
 import {InfoBox, InfoBoxItem} from '@/components/composite/info-box'
+import {PaymentUnavailableDialog} from '@/components/composite/payment-unavailable-dialog'
 import {ListMarker} from '@/components/custom/list-marker'
 import {Badge} from '@/components/ui/badge'
 import {Button} from '@/components/ui/button'
@@ -58,7 +59,15 @@ const Feature = ({
 )
 
 // 유료 이용권 카드. 강조 카드(스탠다드)는 옅은 파란 면·파란 테두리이고 [구매하기]가 채운 버튼이다.
-const PlanCard = ({plan, paymentHref}: {plan: PricingPlan; paymentHref?: string}) => {
+const PlanCard = ({
+    plan,
+    paymentHref,
+    isPurchaseUnavailable,
+}: {
+    plan: PricingPlan
+    paymentHref?: string
+    isPurchaseUnavailable?: boolean
+}) => {
     const titleId = `pricing-plan-${plan.id}`
 
     return (
@@ -110,23 +119,40 @@ const PlanCard = ({plan, paymentHref}: {plan: PricingPlan; paymentHref?: string}
                     </ul>
                 </div>
             </div>
-            {/* 고른 이용권을 결제 화면에 ?plan= 으로 넘긴다. */}
-            <Button asChild variant={plan.isRecommended ? 'default' : 'secondary'} size="sm" className="w-full">
-                <Link href={paymentHref ? `${paymentHref}?${PLAN_QUERY_KEY}=${plan.id}` : '#'}>
-                    구매하기
-                    <span className="sr-only"> ({plan.name})</span>
-                </Link>
-            </Button>
+            {isPurchaseUnavailable ? (
+                // 기관회원은 이용권을 직접 구매할 수 없다 — 결제 화면으로 가지 않고 결제 불가 안내 모달을 연다.
+                <PaymentUnavailableDialog>
+                    <Button
+                        type="button"
+                        variant={plan.isRecommended ? 'default' : 'secondary'}
+                        size="sm"
+                        className="w-full"
+                    >
+                        구매하기
+                        <span className="sr-only"> ({plan.name})</span>
+                    </Button>
+                </PaymentUnavailableDialog>
+            ) : (
+                // 고른 이용권을 결제 화면에 ?plan= 으로 넘긴다.
+                <Button asChild variant={plan.isRecommended ? 'default' : 'secondary'} size="sm" className="w-full">
+                    <Link href={paymentHref ? `${paymentHref}?${PLAN_QUERY_KEY}=${plan.id}` : '#'}>
+                        구매하기
+                        <span className="sr-only"> ({plan.name})</span>
+                    </Link>
+                </Button>
+            )}
         </li>
     )
 }
 
 type PricingPolicyProps = {
-    /** [구매하기]가 향할 결제 화면. 결제 화면이 없는 서비스(기관)는 주지 않는다 — 버튼이 제자리(#)를 가리킨다. */
+    /** [구매하기]가 향할 결제 화면(기업). */
     paymentHref?: string
+    /** 구매할 수 없는 회원(기관) — [구매하기]가 결제 화면 대신 결제 불가 안내 모달을 연다. */
+    isPurchaseUnavailable?: boolean
 }
 
-const PricingPolicy = ({paymentHref}: PricingPolicyProps) => (
+const PricingPolicy = ({paymentHref, isPurchaseUnavailable}: PricingPolicyProps) => (
     <div className="flex flex-col gap-10">
         <section aria-labelledby="pricing-free-title" className="flex flex-col gap-6">
             <SectionHeading id="pricing-free-title" title={FREE_SERVICE.title} description={FREE_SERVICE.description} />
@@ -157,7 +183,12 @@ const PricingPolicy = ({paymentHref}: PricingPolicyProps) => (
                 {/* 이용권 카드 — PC 4열 · 태블릿 2열 · 모바일 1열. */}
                 <ul className="grid list-none gap-6 md:grid-cols-2 xl:grid-cols-4">
                     {PAID_PLANS.map((plan) => (
-                        <PlanCard key={plan.id} plan={plan} paymentHref={paymentHref} />
+                        <PlanCard
+                            key={plan.id}
+                            plan={plan}
+                            paymentHref={paymentHref}
+                            isPurchaseUnavailable={isPurchaseUnavailable}
+                        />
                     ))}
                 </ul>
                 {/* 차감 예외 안내 — 채운 알림 아이콘(16) + 14 Bold 제목, 작은 점 목록(14). 아이콘은 EmptyState 와 같은

@@ -346,6 +346,11 @@ const PositioningScatterChartGuidePage = () => (
                     <li>
                         축 이름은 SVG 밖 글자(<code>figure</code> · <code>figcaption</code>)로 놓입니다.
                     </li>
+                    <li>
+                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
+                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
+                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                    </li>
                 </ul>
             </section>
         </BaseCard>

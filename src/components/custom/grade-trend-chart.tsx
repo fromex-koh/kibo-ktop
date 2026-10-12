@@ -3,6 +3,7 @@
 import {useState, type ComponentPropsWithoutRef} from 'react'
 import {LabelList, Line, LineChart as RechartsLineChart, ReferenceDot, usePlotArea, XAxis, YAxis} from 'recharts'
 import {ChartSkeleton} from '@/components/composite/chart-skeleton'
+import {CHART_ANIMATION_MS} from '@/components/custom/chart-reveal'
 import {useIsHydrated} from '@/hooks/use-is-hydrated'
 import {ChartContainer, type ChartConfig} from '@/components/ui/chart'
 import {cn} from '@/lib/utils'
@@ -11,7 +12,7 @@ import {cn} from '@/lib/utils'
 // 꺾은선은 비교 기준(특허 등급조회에서는 '동일 특허분야 평균')의 분기별 등급이고,
 // 진하게 채운 점 하나는 그 기준과 견주는 주인공(평가대상)이다 — 선과 다른 값이며 마지막 분기 자리에 선다.
 //
-// 시안 규격(특허 등급조회 '동일 특허분야 평균(등급)' 카드): 격자 4칸 × 8칸(칸 59.5×29) ·
+// 짜임(특허 등급조회 '동일 특허분야 평균(등급)' 카드 기준): 격자 = 시점 수 × (등급 수 − 1)칸(예: 4 × 8, 칸 59.5×29) ·
 // 세로축 등급 9단(11 Regular gray.700) · 가로축 분기 두 줄(12 Regular gray.700) · 격자 안쪽 점선 · 바깥 실선 · 꼭짓점 원 12(흰 면 · 선 색 테두리) ·
 // 꼭짓점 위 등급(11 Regular gray.600) · 평가대상 점 12(navy.500 채움) · 점 아래 "등급 평가대상"(11 Bold navy.600).
 
@@ -44,8 +45,8 @@ type GradeTrendChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & 
     /** 비교 대상인 주인공. 없으면 꺾은선만 그린다. */
     target?: GradeTrendTarget
     /**
-     * 처음 그릴 때의 움직임. 한 번 그린 뒤에는 창 폭이 바뀌어도 다시 그리지 않는다.
-     * 인쇄용 문서에서는 끈다.
+     * 처음 그릴 때의 움직임(기본 true). 한 번 그린 뒤에는 창 폭이 바뀌어도 다시 그리지 않는다.
+     * 다른 차트와 달리 chart-reveal 의 문서 설정을 읽지 않는다. 인쇄용 문서에서는 끈다.
      */
     animate?: boolean
     /**
@@ -60,7 +61,7 @@ type GradeTrendChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & 
 const AXIS_FONT_SIZE = 11
 const TICK_FONT_SIZE = 12
 const DOT_RADIUS = 6
-// 점 위 등급은 점에서 6, 평가대상 이름표는 점에서 5 떨어진다(시안).
+// 점 위 등급은 점에서 6, 평가대상 이름표는 점에서 5 떨어진다.
 const VALUE_LABEL_GAP = 6
 const TARGET_LABEL_GAP = 5
 const TARGET_LINE_HEIGHT = 16.5
@@ -68,7 +69,7 @@ const TARGET_LINE_HEIGHT = 16.5
 // 가장 낮은 두 등급(C · CC)에서 아래로 두면 가로축 이름과, 가장 높은 두 등급(AAA · AA)에서 위로 두면 격자 밖과 부딪친다.
 const TARGET_LABEL_ROWS = 2
 // 세로축 이름 칸 31 · 격자 위아래로 등급 글자가 반씩 넘치므로 위 8 을 둔다. 오른쪽 1 은 격자 테두리 선의 두께다.
-// 차트 높이는 시안의 그래프 영역(격자 234 + 가로축 44 + 위 여백 8 = 286)에 가장 가까운 h-72(288)다.
+// 차트 높이 h-72(288) — 격자 234 + 가로축 44 + 위 여백 8 = 286 에 가장 가까운 높이다.
 const Y_AXIS_WIDTH = 31
 const X_AXIS_HEIGHT = 44
 const CHART_MARGIN = {top: 8, right: 1, bottom: 0, left: 0}
@@ -76,7 +77,7 @@ const GRID_DASH = '4 4'
 // recharts 기본 층 — 선 400 · 점 600 · 이름표 2000. 평가대상은 그 위(2100)에 둔다.
 const TARGET_Z_INDEX = 2100
 
-// 격자 — 시안은 바깥 테두리가 실선이고 안쪽 칸 경계가 점선이다. 세로 경계는 분기 칸 사이(점이 칸 가운데 선다)라
+// 격자 — 바깥 테두리는 실선, 안쪽 칸 경계는 점선이다. 세로 경계는 분기 칸 사이(점이 칸 가운데 선다)라
 // 눈금 위치에 선을 긋는 CartesianGrid 로는 그릴 수 없어, 그릴 자리(plot area)를 받아 직접 긋는다.
 type GridFrameProps = {columns: number; rows: number}
 
@@ -117,7 +118,7 @@ const GridFrame = ({columns, rows}: GridFrameProps) => {
     )
 }
 
-// 세로축 등급 — 시안은 이름 칸 왼쪽 끝에 붙여 쓰고(왼쪽 정렬), 격자 가로선 높이에 가운데를 맞춘다.
+// 세로축 등급 — 이름 칸 왼쪽 끝에 붙여 쓰고(왼쪽 정렬), 격자 가로선 높이에 가운데를 맞춘다.
 type GradeTickProps = {y?: number; payload?: {value?: string | number}; scale: readonly string[]}
 
 const GradeTick = ({y = 0, payload, scale}: GradeTickProps) => (
@@ -177,7 +178,7 @@ const MultilineTick = ({x = 0, y = 0, payload}: AxisTickProps) => (
     </text>
 )
 
-// 꺾은선 꼭짓점 — 시안은 속이 빈 원(흰 면 · 선 색 테두리)이다.
+// 꺾은선 꼭짓점 — 속이 빈 원(흰 면 · 선 색 테두리).
 type GradeDotProps = {cx?: number; cy?: number; color: string}
 
 const GradeDot = ({cx, cy, color}: GradeDotProps) =>
@@ -254,7 +255,7 @@ const GradeTrendChart = ({
     const overlapIndex = targetValue !== null && chartData[targetIndex]?.value === targetValue ? targetIndex : -1
 
     // 평가대상 이름표의 위아래 — 같은 분기의 평균 점과 부딪치지 않는 쪽, 격자 끝에서 잘리지 않는 쪽을 고른다.
-    // 기본은 시안대로 점 아래다. 아래가 막혔으면 위로, 위아래가 모두 막혔으면(평균 점이 바로 아래에 붙은 C 근처 등)
+    // 기본은 점 아래다. 아래가 막혔으면 위로, 위아래가 모두 막혔으면(평균 점이 바로 아래에 붙은 C 근처 등)
     // 평균 점과 떨어진 위쪽을 쓴다.
     const lineValue = overlapIndex === targetIndex ? null : (chartData[targetIndex]?.value ?? null)
     const topValue = scale.length - 1
@@ -303,7 +304,8 @@ const GradeTrendChart = ({
     return (
         <div {...props} className={cn('w-full', className)}>
             <ChartContainer config={chartConfig} className="h-72 w-full" role="img" aria-label={ariaLabel}>
-                <RechartsLineChart data={chartData} margin={CHART_MARGIN}>
+                {/* recharts 키보드 탐색 층은 끈다 — 값은 숨김 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
+                <RechartsLineChart accessibilityLayer={false} data={chartData} margin={CHART_MARGIN}>
                     <GridFrame columns={data.length} rows={scale.length - 1} />
                     <XAxis
                         dataKey="label"
@@ -330,6 +332,7 @@ const GradeTrendChart = ({
                         stroke={color}
                         strokeWidth={2}
                         isAnimationActive={isAnimationActive}
+                        animationDuration={CHART_ANIMATION_MS}
                         onAnimationEnd={() => setHasAnimated(true)}
                         activeDot={false}
                         dot={(dotProps: {cx?: number; cy?: number; index?: number}) =>

@@ -59,6 +59,7 @@ const USAGE_MARKS: Record<string, Record<string, string>> = {
 }
 
 // background·surface 구간은 common.white 에서 시작하므로 common 표에도 같은 표식을 단다.
+// 표식이 없는 색은 semanticUsersOf 가 tokens.json 시맨틱 참조에서 용도를 찾는다.
 const COMMON_USAGE_MARKS: Record<string, string> = {white: 'background, surface'}
 
 type SwatchRow = {name: string; cssVar: string; value: string; usage?: string}
@@ -108,9 +109,17 @@ const ColorTable = ({title, caption, rows}: {title: ReactNode; caption: string; 
 const primitive: Record<string, Record<string, string>> = tokens.primitive
 const primitiveGroups: Record<string, string[]> = tokens.primitiveGroups
 const common: Record<string, string> = tokens.common
+const extra: Record<string, string> = tokens.extra
 const alpha: Record<string, number[]> = tokens.alpha
 
-// 색상 — Tier 1 프리미티브 팔레트를 그룹별 표로 보여준다.
+// 용도 = 이 색('common.white' · 'extra.cyan')을 참조하는 시맨틱 토큰 이름. 단일 색은 색 이름만 갖고 쓰임새는 시맨틱이 갖는다.
+const semanticUsersOf = (reference: string) => {
+    const users = Object.entries(tokens.semantic)
+        .filter(([, modes]) => typeof modes === 'object' && Object.values(modes).includes(reference))
+        .map(([semanticName]) => semanticName)
+    return users.length ? users.join(', ') : undefined
+}
+
 // 두 계층 비교 카드 — 같은 항목을 같은 순서로 둔다.
 const COLOR_LAYERS = [
     {
@@ -286,6 +295,46 @@ const ColorGuidePage = () => (
             ))}
 
             <BaseCard>
+                <section aria-labelledby="primitive-extra" className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-2">
+                        <h2 id="primitive-extra" className="typo-h4-bold text-foreground">
+                            Extra
+                        </h2>
+                        <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-1 pl-5">
+                            <li>
+                                <strong className="text-foreground">단계 없는 단일 색</strong> — brand · system 은
+                                10~900 단계(예: <code className="text-foreground font-mono">blue-500</code>)로 관리하고,
+                                단계가 필요 없는 색은 여기에 숫자 없이 둡니다(예:{' '}
+                                <code className="text-foreground font-mono">cyan</code>).
+                            </li>
+                            <li>
+                                <strong className="text-foreground">화면에서는 시맨틱 토큰</strong> — 이 색을 직접 쓰지
+                                않고 용도 칸의 토큰을 씁니다(예: <code className="text-foreground font-mono">cyan</code>{' '}
+                                → <code className="text-foreground font-mono">gauge-excellent-to</code>).
+                            </li>
+                            <li>
+                                <strong className="text-foreground">밝기 단계가 필요해지면 팔레트로</strong> —{' '}
+                                <code className="text-foreground font-mono">cyan-light</code> 처럼 이름을 늘리지 않고,
+                                cyan 10~900 단계 팔레트를 만들어 옮긴 뒤 여기서 지웁니다.
+                            </li>
+                        </ul>
+                    </div>
+                    <div className="grid gap-8 xl:grid-cols-2">
+                        <ColorTable
+                            caption="extra"
+                            title={<span className="text-foreground font-semibold">extra</span>}
+                            rows={Object.entries(extra).map(([name, value]) => ({
+                                name,
+                                cssVar: `var(--raw-extra-${name})`,
+                                value: display(value),
+                                usage: semanticUsersOf(`extra.${name}`),
+                            }))}
+                        />
+                    </div>
+                </section>
+            </BaseCard>
+
+            <BaseCard>
                 <section aria-labelledby="primitive-common" className="flex flex-col gap-6">
                     <div className="flex max-w-4xl flex-col gap-2">
                         <h2 id="primitive-common" className="typo-h4-bold text-foreground">
@@ -303,7 +352,7 @@ const ColorGuidePage = () => (
                                 name,
                                 cssVar: `var(--raw-common-${name})`,
                                 value: display(value),
-                                usage: COMMON_USAGE_MARKS[name],
+                                usage: COMMON_USAGE_MARKS[name] ?? semanticUsersOf(`common.${name}`),
                             }))}
                         />
                         <ColorTable

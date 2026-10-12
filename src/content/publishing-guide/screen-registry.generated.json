@@ -12,8 +12,8 @@
             "key": "corp-home-technology-evaluation-model-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-home-technology-evaluation-model-selection-tech-index",
@@ -54,8 +54,8 @@
             "key": "corp-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.5",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-pricing",
@@ -68,36 +68,36 @@
             "key": "corp-platform",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-technology-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-patent-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-k-bigx-report",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-platform-carbon-neutrality",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-ktrs-fm-customer-consent",
@@ -285,8 +285,8 @@
             "key": "corp-technology-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.2.8",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-technology-evaluation-tech-index-general-customer-consent",
@@ -1077,7 +1077,7 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-usage-history",
@@ -1091,84 +1091,84 @@
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-change-confirm",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-change-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-release-complete",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspending",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspension-history",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-refundable",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-change",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-unavailable-remaining-day",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-payment-history-suspend-unavailable-free-pass",
             "implemented": true,
             "implementationStatus": "in-progress",
             "version": "v3.3.8",
-            "isCurrent": true
+            "isCurrent": false
         },
         {
             "key": "corp-mypage-paid-services-refund-reason",
@@ -1300,22 +1300,22 @@
             "key": "corp-terms",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-privacy-policy-easy-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-login-guide",
@@ -1391,57 +1391,57 @@
             "key": "org-guide",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.5",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-pricing",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-platform",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-platform-technology-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-platform-patent-evaluation",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-platform-k-bigx-report",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-platform-carbon-neutrality",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.0.7",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-verification-progress",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.2.7",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-ktrs-fm-customer-consent",
@@ -1566,8 +1566,8 @@
             "key": "org-individual-evaluation-tech-index-selection",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.2.8",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-individual-evaluation-tech-index-general-customer-consent",
@@ -1818,8 +1818,8 @@
             "key": "org-batch-evaluation-evaluation-history-or-batch",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v2.0.6",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-batch-evaluation-evaluation-history-or-batch-general-bulk-data-request",
@@ -2357,22 +2357,22 @@
             "key": "org-terms",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-privacy-policy-easy-privacy-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v1.0.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-initial-password-change",
@@ -2686,8 +2686,8 @@
             "key": "corp-terms-k-bigx",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-home-notice-popup",
@@ -2700,8 +2700,8 @@
             "key": "corp-credit-information-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-auth-org-login",
@@ -2714,8 +2714,8 @@
             "key": "org-terms-k-bigx",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "org-home-notice-popup",
@@ -2728,8 +2728,8 @@
             "key": "org-credit-information-policy",
             "implemented": true,
             "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-pricing-payment",
@@ -2753,32 +2753,11 @@
             "isCurrent": false
         },
         {
-            "key": "org-pricing-payment",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
-        },
-        {
-            "key": "org-pricing-payment-seller-info",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
-        },
-        {
-            "key": "org-pricing-payment-complete",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
-        },
-        {
             "key": "org-pricing-payment-unavailable",
-            "implemented": false,
-            "implementationStatus": "planned",
-            "version": "미배포",
-            "isCurrent": false
+            "implemented": true,
+            "implementationStatus": "in-progress",
+            "version": "v3.3.9",
+            "isCurrent": true
         },
         {
             "key": "corp-mypage-paid-services-refund-unavailable",

@@ -1,5 +1,6 @@
 import type {RatingMatrixRow} from '@/components/custom/rating-matrix'
 import type {PercentageDonutItem} from '@/components/custom/percentage-donut-chart'
+import {donutColorsFor} from '@/components/custom/percentage-donut-colors'
 import type {ScoreGaugeTone} from '@/components/custom/score-gauge'
 import type {RatingGaugeDetail} from '@/components/custom/semicircle-rating-gauge'
 import type {WordCloudItem} from '@/components/custom/word-cloud'
@@ -21,11 +22,13 @@ import type {Viewport} from 'next'
 // │    실제 값을 내려 주면 가려도 페이지 데이터에 남아 개발자 도구로 읽힌다. 뺄 범위는 redactForViewerCase 가 참고 구현이다.
 // │ 4. [퍼블리싱 확인용] 코드를 지운다.
 // │    - withPreviewCase · redactForViewerCase 함수(이 파일)와 그 호출(components/custom/innovation-growth-report-page.tsx).
-// │    - 목업 구역 전체(MOCK_DELAY_MS · TECHNOLOGY_COLORS · MOCK_INNOVATION_GROWTH_REPORT).
+// │    - 목업 구역 전체(MOCK_DELAY_MS · MOCK_INNOVATION_GROWTH_REPORT).
 // │ 5. 문구(INNOVATION_REPORT_*) · 점수 구간(TECH_INDEX_GRADES) · 케이스 정의는 그대로 쓴다.
 // │ 참고: 점수에 따른 상태 · 색 · 칸 수, 비율, 합계 같은 파생 값은 화면이 계산한다 — 원래 값만 내려 준다.
-// │       기술혁신정보 표에는 노출 건수 제한이 있다 — 아래 InnovationTechDetail 의 [최대 10건] 주석을 본다
-// │       (표에 그리는 쪽 설명은 innovation-growth-report-tech.tsx 의 [프론트엔드 연동 · 최대 10건] 주석).
+// │       기업현황(주주 · 관계기업) · 기술혁신정보 표는 노출 건수 제한이 있다 — 최대 10줄, 또는 10건 + '기타' 1줄 = 최대 11줄.
+// │       목록은 자르지 말고 그대로 보낸다(이머징 기술만 API 가 '기타' 줄을 만든다).
+// │       표별 규칙은 '[프론트엔드 연동 · 최대' 로 검색 — innovation-growth-report-tech.tsx 의 [표 노출 건수 규칙] 표.
+// │       순서가 정해진 목록은 '[프론트엔드 연동 · 정렬]' 로 검색한다(화면이 정렬하는 목록과 받은 순서대로 그리는 목록이 섞여 있다).
 // └────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
 // 새 창 크기 — 내용 폭 1200(콘텐츠 상한)에 양 여백을 더한 창으로 연다.
@@ -36,14 +39,14 @@ const INNOVATION_REPORT_WINDOW_NAME = 'k-bigx-innovation-report'
 // 보고서 id 를 싣는 쿼리 이름 — 보고서 문서는 …/diagnostic-briefing?reportId=<id> 로 연다.
 const INNOVATION_REPORT_ID_QUERY = 'reportId'
 
-// R&D 이슈 워드클라우드 순서 팔레트(범례 1st~5th) — 단어를 중요도순으로 이 다섯 색에 돌아가며 칠한다.
-// 보고서는 라이트 고정이라 palette 변수를 그대로 쓴다.
+// R&D 이슈 워드클라우드 순서 색(범례 1st~5th) — 단어를 중요도순으로 이 다섯 색에 돌아가며 칠한다.
+// 보고서는 화면 테마(다크 포함)를 따르므로 테마에 맞춰 바뀌는 --ds-* 를 쓴다 — 계열 색 report-series-*, 다섯째는 단계 스케일.
 const INNOVATION_ISSUE_COLORS = [
-    'var(--raw-blue-500)',
-    'var(--raw-mint-700)',
-    'var(--raw-orange-500)',
-    'var(--raw-purple-500)',
-    'var(--raw-blue-800)',
+    'var(--ds-report-series-2)',
+    'var(--ds-report-series-4)',
+    'var(--ds-report-series-5)',
+    'var(--ds-report-series-3)',
+    'var(--ds-blue-800)',
 ] as const
 
 const INNOVATION_REPORT_BADGE = 'K-BIGx - 기업혁신성장 보고서'
@@ -79,11 +82,12 @@ const getInnovationReportViewport = async (searchParams: Promise<SearchParams>):
 const INNOVATION_REPORT_CREATED_TOAST = '이용권이 차감되어 보고서를 생성하였습니다.'
 
 // 보고서 구성 항목(탭). 첫 항목(진단브리핑)이 기본이고, 주소의 ?tab=<id> 로 다른 탭을 연다.
+// title 은 탭 본문 제목 띠에 적는 긴 이름 — 없으면 label 을 그대로 쓴다.
 const INNOVATION_REPORT_SECTIONS = [
     {id: 'briefing', label: '진단브리핑'},
     {id: 'company', label: '기업현황'},
     {id: 'innovation', label: '기술혁신정보'},
-    {id: 'tech-index', label: 'Tech-Index'},
+    {id: 'tech-index', label: 'Tech-Index', title: 'Tech-Index (혁신성장 역량지수)'},
     {id: 'credit-finance', label: '신용/재무정보'},
     {id: 'activity', label: '활동성정보'},
 ] as const
@@ -146,11 +150,11 @@ type InnovationCreditInfoTable = {
     columns: readonly string[]
     rows: readonly (readonly string[])[]
 }
-// 재무비율진단 한 묶음(성장성 · 수익성 · 안정성 · 활동성) — 점수(0~100)로 상태 · 칸 수를 정한다(Tech-Index 와 같은 구간).
+// 재무비율진단 한 묶음(성장성 · 수익성 · 안정성 · 활동성) — 표 · 선 그래프가 같은 줄을 쓴다. unit 은 표 위 '단위: …' 글자.
 type InnovationFinancialRatioGroup = {
     id: string
     title: string
-    score: number
+    unit: string
     rows: readonly {key: string; label: string; values: readonly number[]; comparison: string}[]
 }
 // 차입금 현황 한 칸 — 금액(백만원) · 비중(%). 없으면 null(화면에 '-').
@@ -159,12 +163,17 @@ type InnovationBorrowingRow = {key: string; label: string; cells: readonly Innov
 type InnovationCreditDetail = {
     /** 기업신용등급 요약 상자 — 줄바꿈 자리마다 한 줄. */
     ratingSummary: readonly string[]
-    /** 이전평가이력 — 시간순. 등급은 CRI 코드. chartLabel 은 그래프 아래 시점(예: 23.09월). */
+    /**
+     * 이전평가이력. 등급은 CRI 코드, chartLabel 은 그래프 아래 시점(예: 23.09월).
+     * [프론트엔드 연동 · 정렬] 그래프는 받은 순서대로 그리므로 시간순(오래된 것부터)으로 보낸다.
+     * 아래 표는 화면이 평가일자 최신순으로 정렬하고 가장 최근(현재 등급 — 게이지)을 뺀다(기획: 최신순으로 정렬).
+     */
     ratingHistory: readonly {date: string; chartLabel: string; grade: string}[]
     cashFlow: {
         /** 현재 현금흐름등급(CR-1 ~ CR-6). */
         grade: string
-        history: readonly {year: string; grade: string}[]
+        /** 현금흐름등급 평가이력. [프론트엔드 연동 · 정렬] 화면이 평가일자 최신순으로 정렬해 그리므로 보내는 순서는 상관없다. */
+        history: readonly {date: string; grade: string}[]
         summary: string
     }
     creditInfo: readonly InnovationCreditInfoTable[]
@@ -189,7 +198,7 @@ type InnovationCreditDetail = {
     institutions: {
         years: readonly string[]
         rows: readonly {key: string; label: string; values: readonly (number | null)[]}[]
-        /** 도넛 — 최근 연도 비중(%). */
+        /** 도넛 — 최근 연도 비중(%). color 는 도넛 조각 색(percentage-donut-colors.ts 의 고정 색 --raw-*, 비중 큰 순으로 진한 색). */
         share: readonly {id: string; label: string; percentage: number; color: string}[]
     }
     /** 신용/담보 비중(%) — 시점별 두 값과, 막대에 쓸 최근 값. */
@@ -197,23 +206,23 @@ type InnovationCreditDetail = {
         points: readonly {label: string; credit: number; collateral: number}[]
         current: {credit: number; collateral: number}
     }
-    /** 담보 현황(백만원). */
+    /** 담보 현황(백만원) — 도넛으로 그린다. color 는 share 와 같은 고정 색(--raw-*). */
     collaterals: readonly {id: string; label: string; amount: number; color: string}[]
 }
 
-// Tech-Index 탭 데이터 — 점수 구간표 · 표준분포 비교 · 기업 유형별 비교 · 4대 혁신역량 · 세부지표.
+// Tech-Index 탭 데이터 — 지수설명 · 표준분포 비교 · 기업 유형별 비교 · 4대 혁신역량 · 세부지표(점수 게이지는 techIndex 를 쓴다).
 // 값의 범위는 0~100 점이다. isSubject 는 조회 기업(신청기업) 항목이다 — 막대 색을 달리한다.
 type InnovationTechIndexScoreItem = {id: string; label: string; value: number; isSubject?: boolean}
 type InnovationTechIndexCapability = {
     id: string
     /** 역량 이름(인프라 · 투입 · 활동 · 성과). */
     label: string
-    /** 신청기업 점수 · 전체기업 점수(0~100). 상태 · 단계는 신청기업 점수로 화면이 정한다(getTechIndexGrade · getTechIndexLevel). */
+    /** 신청기업 점수 · 전체기업 점수(0~100). */
     score: number
     average: number
 }
 
-// Tech-Index 점수 구간 — 점수표 · 4대 혁신역량 상태(뱃지 · 막대 색)의 단일 소스. max 이하이면 그 구간이다(20.5 는 미흡).
+// Tech-Index 점수 구간 — 점수 게이지의 상태 이름 · 색과 요약 문장 끝말(진단브리핑)의 단일 소스. max 이하이면 그 구간이다(20.5 는 미흡).
 const TECH_INDEX_GRADES = [
     {range: '0-20', max: 20, label: '취약', summaryLabel: '취약함', tone: 'weak'},
     {range: '21-40', max: 40, label: '미흡', summaryLabel: '미흡함', tone: 'poor'},
@@ -235,13 +244,6 @@ const getTechIndexGrade = (score: number): TechIndexGrade =>
     TECH_INDEX_GRADES.find((grade) => Number.isFinite(score) && score <= grade.max) ??
     (Number.isFinite(score) && score > 0 ? TECH_INDEX_GRADES[TECH_INDEX_GRADES.length - 1] : TECH_INDEX_GRADES[0])
 
-// 점수 → 10단계 칸 수. 10점마다 한 칸이며 내림한다(63.7 → 6) — 도달하지 않은 칸을 채우지 않는다.
-const TECH_INDEX_LEVEL_STEP = 10
-const TECH_INDEX_LEVEL_COUNT = 10
-const getTechIndexLevel = (score: number) =>
-    Number.isFinite(score)
-        ? Math.min(TECH_INDEX_LEVEL_COUNT, Math.max(0, Math.floor(score / TECH_INDEX_LEVEL_STEP)))
-        : 0
 type InnovationTechIndexDetail = {
     /** 기술보증기금 Tech-Index 표준분포(평균 · 표준편차)와 조회 기업의 순위 문구(예: 상위 2.2%). */
     standard: {
@@ -271,18 +273,25 @@ type InnovationGrowthReport = {
     title: string
     companyName: string
     issuedAt: string
-    /** 보고서 생성일자 · 조회일 전일자 · 기준일자 — 구획마다 오른쪽 위에 붙는 날짜.
-     *  lookupBaseDate(조회일 전일자)는 현재 화면에 표시하지 않는다(필드만 유지). */
+    /** 보고서 생성일자 — 진단브리핑 정부 R&D사업 접수현황의 '기준일자'로 보인다. */
     createdAt: string
+    /** 조회일 전일자 — 현재 화면에 표시하지 않는다(필드만 유지). */
     lookupBaseDate: string
     /** 기업의 소분류(업종) 이름 — 구획 제목 옆 보조 문구. */
     subCategoryName: string
     company: {rows: readonly LabelValue[]}
     innovation: {
+        /** 기업 보유기술 도넛. [프론트엔드 연동 · 정렬] 비중 큰 순으로 보낸다 — 12시부터 시계 방향, 첫 조각이 가장 진한 색. */
         technologies: readonly PercentageDonutItem[]
         /** 관련 기업 · 특허 수치 4개. id 로 화면이 아이콘을 고른다(문서의 INNOVATION_STAT_ICONS). */
         stats: readonly {id: InnovationStatId; label: string; value: number; unit: string}[]
+        /** 평균 특허수 줄 — value 는 화면이 그대로 적는 글자(예: '1.6'). */
         averages: readonly {label: string; value: string; unit: string}[]
+        /**
+         * R&D 이슈 키워드(워드클라우드 — 진단브리핑 R&D 이슈 카드 · 기술혁신정보 탭 맞춤형 기술정보-R&D 공용).
+         * [프론트엔드 연동 · 정렬] 중요도(weight) 높은 순으로 보낸다 — 색이 목록 순서대로 칠해진다.
+         * text 는 중복 없이, weight 는 양수. 개수 제한 없음 — 받은 키워드를 모두 그린다.
+         */
         issues: readonly WordCloudItem[]
         /** 정부 R&D사업 부처별 접수 건수(상위 4개). 건수가 없으면 value 를 null 로 — 화면이 '-' 로 표시한다. */
         rnd: readonly {label: string; value: number | null; unit: string}[]
@@ -297,6 +306,8 @@ type InnovationGrowthReport = {
         industryLabel: string
         /** 점수 카드 오른쪽 위 안내. */
         scoreNote: string
+        /** 지수의 바탕인 기술신용평가(TCB) 평가일자 — 게이지 아래에 '평가일자 · YYYY-MM-DD' 로 보인다. */
+        evaluationDate: string
     }
     creditFinance: {
         /** 기업신용등급 — CRI 등급 코드와 날짜 목록. 등급명 · 게이지 채움 비율은 화면이 CRI 등급표(cri-grades)에서 찾는다. */
@@ -334,12 +345,15 @@ type InnovationTradePartner = {
     shares: readonly number[]
     /** 신용등급(CRI 코드). 없으면 빈 문자열 → '-' 로 보인다. */
     grade: string
-    baseYear: string
+    /** 신용등급 평가일자(YYYY-MM-DD). */
+    evaluationDate: string
 }
 type InnovationCompanyStatus = {
     overview: readonly LabelValue[]
     executives: readonly {role: string; name: string; birthDate: string}[]
+    /** 주주 현황. [프론트엔드 연동 · 최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임). 지분율 높은 순으로 보낸다. */
     shareholders: readonly {name: string; shares: number; ratio: number; relation: string}[]
+    /** 관계기업 현황. [프론트엔드 연동 · 최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임). */
     affiliates: readonly {
         name: string
         ceo: string
@@ -425,8 +439,9 @@ type InnovationTechDetail = {
         middleCategory: readonly PercentageDonutItem[]
         smallCategory: readonly PercentageDonutItem[]
         /**
-         * 특허 보유현황 — 출원일 최근순.
-         * [최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임). 정렬을 맞춘 뒤 넘긴다.
+         * 특허 보유현황.
+         * [프론트엔드 연동 · 정렬] 출원일 최근순으로 보낸다 — 화면은 받은 순서대로 그린다.
+         * [프론트엔드 연동 · 최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임).
          */
         patents: readonly (InnovationPatentRow & {field: string})[]
     }
@@ -442,10 +457,14 @@ type InnovationTechDetail = {
     marketScale: {
         /** 매출 규모 구간별 기업수(개) · 특허수(건). */
         rows: readonly {id: string; label: string; companies: number; patents: number}[]
+        /** 기업수 · 특허수 비중 도넛. [프론트엔드 연동 · 정렬] 매출 규모 순(10억원 이하 → 300억원 초과)으로 보낸다 — 비중순이 아니다. */
         companyShare: readonly PercentageDonutItem[]
         patentShare: readonly PercentageDonutItem[]
     }
-    /** 경쟁기업 사업실적 — 막대(매출액) + 선(성장률). tone 이 조회기업 · 평균을 가른다. */
+    /**
+     * 경쟁기업 사업실적 — 막대(sales: 매출액, 백만원) + 선(growthRate: 화면에서는 '영업이익률(%)'로 표시 — 필드명과 다르다).
+     * tone 이 조회기업 · 평균을 가른다. 화면은 받은 순서대로 그린다. growthRate 가 null 이면 그 점을 비우고 선도 끊는다.
+     */
     competitors: readonly {
         id: string
         label: string
@@ -453,19 +472,25 @@ type InnovationTechDetail = {
         growthRate: number | null
         tone?: 'subject' | 'average'
     }[]
-    /** 성장률 우수기업 — 매출 100억원 이하 · 초과 두 목록. */
+    /**
+     * 성장률 우수기업 — 매출 100억원 이하 · 초과 두 목록. 화면은 정렬하지 않고 받은 순서대로 그린다
+     * (목업: 성장률 높은 순 10건 뒤에 평균 · 조회기업 줄).
+     */
     growthLeaders: {
         small: {title: string; items: readonly InnovationRankItem[]}
         large: {title: string; items: readonly InnovationRankItem[]}
     }
     /**
      * 우수특허 — 피인용 횟수 · 지수.
-     * [최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임).
+     * [프론트엔드 연동 · 정렬] 화면이 피인용 지수 높은 순으로 정렬한다 — 보내는 순서는 상관없다.
+     * [프론트엔드 연동 · 최대 10건 + 기타 = 최대 11줄] 전체를 그대로 보낸다 — 화면이 정렬 뒤 10건까지 두고 나머지를 11번째 줄
+     * '기타' 하나로 합친다(피인용 횟수는 합, 나머지 칸은 '-').
      */
     excellentPatents: readonly (InnovationPatentRow & {citations: number; citationIndex: number})[]
     /**
      * 이머징 기술 — 기술분야별 등록건수 · 증가율 · 비중.
-     * [최대 10건 + 기타] 10건까지 보내고, 나머지는 '기타' 한 줄로 합쳐 11번째에 넣는다(총 11줄) — 합치는 일은 API 쪽에서 한다.
+     * [프론트엔드 연동 · 최대 10건 + 기타 = 최대 11줄] 10건까지 보내고, 나머지는 '기타' 한 줄로 합쳐 11번째에 넣는다 —
+     * 합치는 일은 API 쪽에서 한다(화면은 받은 줄을 그대로 그린다).
      * 기타 줄의 counts · share 는 합, growthRate 는 합친 등록건수로 다시 계산한 값을 넣는다(분야별 증가율을 더하거나 평균 내지 않는다).
      */
     emergingTech: {
@@ -474,7 +499,8 @@ type InnovationTechDetail = {
     }
     /**
      * R&D 전문기관 현황 — 정부출연연구소 · 산학협력단.
-     * [최대 10건 + 기타] rows 는 그대로 보내면 된다 — 화면이 쪽마다 10건까지 두고 나머지를 '기타' 한 줄로 합친다.
+     * [프론트엔드 연동 · 최대 10건 + 기타 = 최대 11줄] rows 는 그대로 보낸다 — 화면이 쪽마다 10건까지 두고 나머지를 11번째 줄
+     * '기타 연구소' · '기타 산학협력단' 하나로 합친다(특허보유수 · 비중 합).
      * total 은 합치기 전 전체 합계를 넣는다(화면이 그대로 마지막 줄에 적는다).
      */
     rndInstitutes: {
@@ -483,7 +509,7 @@ type InnovationTechDetail = {
     }
     /**
      * 정부 R&D 사업 현황 — 접수중과제(open) · 접수기간 도래 과제(upcoming).
-     * [최대 10건] 화면이 표마다 앞에서부터 10건만 그린다(11번째부터 안 보임).
+     * [프론트엔드 연동 · 최대 10건] 화면이 표마다 앞에서부터 10건만 그린다(11번째부터 안 보임).
      */
     governmentRnd: {
         baseDate: string
@@ -495,18 +521,6 @@ type InnovationCertificationId = 'venture' | 'innobiz' | 'mainbiz' | 'research-l
 
 // ── [퍼블리싱 전용] 목업(API 연결 시 삭제) ──
 const MOCK_DELAY_MS = 300
-
-// [퍼블리싱 전용] 목업 도넛 색 — 기업 보유기술 도넛 8단계(navy.700 → blue.50). 보고서는 라이트 고정이라 palette 변수를 그대로 쓴다.
-const TECHNOLOGY_COLORS = [
-    'var(--raw-navy-700)',
-    'var(--raw-navy-500)',
-    'var(--raw-blue-700)',
-    'var(--raw-blue-500)',
-    'var(--raw-blue-400)',
-    'var(--raw-blue-300)',
-    'var(--raw-blue-200)',
-    'var(--raw-blue-50)',
-]
 
 const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
     title: 'AI 기반 의료 영상 분석 시스템',
@@ -526,6 +540,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         ],
     },
     innovation: {
+        // [프론트엔드 연동 · 정렬] 비중 큰 순 — 12시부터 시계 방향으로 이어지고 첫 조각이 가장 진한 색(기획: 진한 색부터 시계 방향).
         technologies: [
             {id: 't1', label: '무선 통신·네트워크', percentage: 50, count: 24},
             {id: 't2', label: '이동통신 서비스', percentage: 14, count: 7},
@@ -535,7 +550,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {id: 't6', label: '광통신 부품', percentage: 5, count: 2},
             {id: 't7', label: '전파 계측', percentage: 4, count: 2},
             {id: 't8', label: '기타', percentage: 3, count: 1},
-        ].map((item, index) => ({...item, color: TECHNOLOGY_COLORS[index]})),
+        ].map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]})),
         stats: [
             {id: 'companies', label: '총 기업수', value: 83960, unit: '개'},
             {id: 'patents', label: '총 특허수', value: 135230, unit: '건'},
@@ -581,6 +596,8 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         industryPercentile: 25,
         industryLabel: '그 외 기타 전자부품 제조업',
         scoreNote: '* 기술신용평가 이력이 없는 경우에는 산출 불가',
+        // 기업신용등급 카드의 평가일자와 같은 날(같은 TCB 평가).
+        evaluationDate: '2022-06-15',
     },
     creditFinance: {
         rating: {
@@ -649,7 +666,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 {id: 'm6', label: '전자 부품', percentage: 5, count: 2},
                 {id: 'm7', label: '광 · 전파', percentage: 4, count: 2},
                 {id: 'm8', label: '기타', percentage: 2, count: 1},
-            ].map((item, index) => ({...item, color: TECHNOLOGY_COLORS[index]})),
+            ].map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]})),
             smallCategory: [
                 {id: 's1', label: '무선·이동통신 서비스', percentage: 50, count: 22},
                 {id: 's2', label: '이동통신 네트워크', percentage: 14, count: 6},
@@ -659,7 +676,8 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 {id: 's6', label: '광통신 부품', percentage: 5, count: 2},
                 {id: 's7', label: '전파 계측', percentage: 4, count: 2},
                 {id: 's8', label: '기타', percentage: 3, count: 1},
-            ].map((item, index) => ({...item, color: TECHNOLOGY_COLORS[index]})),
+            ].map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]})),
+            // [프론트엔드 연동 · 최대 10건] 특허 보유현황 — 목업은 최대치 10건(출원일 최근순).
             patents: [
                 [
                     '무선 통신 시스템에서 데이터 및 제어 정보 송수신 방법',
@@ -669,7 +687,8 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                     '무선·이동통신 서비스',
                 ],
                 [
-                    '차세대 네트워크에서 인공지능 기반 트래픽 관리 시스템',
+                    // [퍼블리싱 확인용] 두 줄을 넘는 특허명 — 화면이 두 줄까지 보이고 말줄임(…) 한다(서버 처리 불필요).
+                    '차세대 이동통신 네트워크 환경에서 인공지능 기반 트래픽 예측 모델을 이용하여 기지국 간 부하를 분산하고 전송 품질을 유지하는 트래픽 관리 시스템 및 방법',
                     '10-2023-0184165',
                     '10-2712346',
                     '글로벌테크(주)',
@@ -697,7 +716,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                     '저전력 통신 기술',
                 ],
                 [
-                    '5G 무선통신에서 다중 안테나 시스템을 이용한 데이터 전송 방법',
+                    '5G 무선통신 시스템에서 다중 입출력 안테나 배열과 빔포밍 가중치 갱신을 이용하여 셀 경계 단말의 데이터 전송률을 높이는 방법 및 그 장치',
                     '10-2023-0184169',
                     '10-2712350',
                     '넥스트무브(주)',
@@ -766,20 +785,22 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 {id: 'under-30b', label: '300억원 이하', companies: 2657, patents: 6578},
                 {id: 'over-30b', label: '300억원 초과', companies: 800, patents: 3957},
             ],
+            // [프론트엔드 연동 · 정렬] 두 도넛은 비중순이 아니라 매출 규모 순(10억원 이하 → 30억원 → 100억원 → 300억원 이하 → 300억원 초과)으로
+            // 보낸다(기획: 금액순 배치). 색은 순서대로 진한 것부터 입힌다.
             companyShare: [
                 {id: 'c1', label: '10억원 이하', percentage: 56, count: 13547},
                 {id: 'c2', label: '30억원 이하', percentage: 24, count: 5678},
-                {id: 'c3', label: '300억원 이하', percentage: 11, count: 2657},
-                {id: 'c4', label: '100억원 이하', percentage: 6, count: 1532},
+                {id: 'c3', label: '100억원 이하', percentage: 6, count: 1532},
+                {id: 'c4', label: '300억원 이하', percentage: 11, count: 2657},
                 {id: 'c5', label: '300억원 초과', percentage: 3, count: 800},
-            ].map((item, index) => ({...item, color: TECHNOLOGY_COLORS[index]})),
+            ].map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]})),
             patentShare: [
-                {id: 'p1', label: '30억원 이하', percentage: 33, count: 8536},
-                {id: 'p2', label: '300억원 이하', percentage: 26, count: 6578},
-                {id: 'p3', label: '300억원 초과', percentage: 16, count: 3957},
-                {id: 'p4', label: '10억원 이하', percentage: 14, count: 3547},
-                {id: 'p5', label: '100억원 이하', percentage: 11, count: 2987},
-            ].map((item, index) => ({...item, color: TECHNOLOGY_COLORS[index]})),
+                {id: 'p1', label: '10억원 이하', percentage: 14, count: 3547},
+                {id: 'p2', label: '30억원 이하', percentage: 33, count: 8536},
+                {id: 'p3', label: '100억원 이하', percentage: 11, count: 2987},
+                {id: 'p4', label: '300억원 이하', percentage: 26, count: 6578},
+                {id: 'p5', label: '300억원 초과', percentage: 16, count: 3957},
+            ].map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]})),
         },
         competitors: [
             {id: 'c1', label: '기업1', sales: 32.8, growthRate: 2.3},
@@ -830,17 +851,36 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 ],
             },
         },
+        // [프론트엔드 연동 · 최대 10건 + 기타 = 최대 11줄] 우수특허 — 목업은 12건을 보내 화면이 10건 + '기타' 1줄로 합치는 최대치를 보여 준다.
+        // [프론트엔드 연동 · 정렬] 화면이 피인용 지수 높은 순으로 정렬하므로 보내는 순서는 상관없다(목업도 섞어 둠).
         excellentPatents: [
             ['탈부착 가능한 턴시그널 램프 모듈', '10-2023-0184164', '10-2712345', '한국기업(주)', 6, 2.5],
             ['자율 주행 차량용 고성능 레이더 센서', '10-2023-0198745', '10-2712356', '스마트모빌리티(주)', 8, 3.1],
             ['무선 충전 지원 스마트폰 케이스', '10-2023-0201123', '10-2712399', '글로벌테크(주)', 4, 1.8],
-            ['친환경 바이오 플라스틱 제조공정', '10-2023-0210567', '10-2712408', '에코솔루션(주)', 12, 4.2],
+            // [퍼블리싱 확인용] 두 줄을 넘는 특허명 — 화면이 두 줄까지 보이고 말줄임(…) 한다(서버 처리 불필요).
+            [
+                '식물성 원료를 이용한 친환경 생분해성 바이오 플라스틱 조성물과 그 제조공정 및 이를 적용한 일회용 포장재의 성형 방법',
+                '10-2023-0210567',
+                '10-2712408',
+                '에코솔루션(주)',
+                12,
+                4.2,
+            ],
             ['스마트 홈용 음성 인식 모듈', '10-2023-0223456', '10-2712450', '네오테크(주)', 7, 2.9],
             ['고효율 태양광 패널 접합 기술', '10-2023-0236789', '10-2712489', '그린에너지(주)', 9, 3.5],
             ['웨어러블 건강 모니터링 센서', '10-2024-0001234', '10-2712501', '헬스테크(주)', 5, 2.0],
             ['자동차용 내비게이션 소프트웨어', '10-2024-0012345', '10-2712550', '모빌리티소프트(주)', 11, 3.8],
-            ['인공지능 기반 영상 분석 시스템', '10-2024-0023456', '10-2712600', '비전테크(주)', 10, 3.3],
+            [
+                '딥러닝 기반 객체 인식 모델을 이용하여 다중 카메라 영상에서 이상 행동을 실시간으로 탐지하고 관제 요원에게 알리는 인공지능 영상 분석 시스템',
+                '10-2024-0023456',
+                '10-2712600',
+                '비전테크(주)',
+                10,
+                3.3,
+            ],
             ['차세대 무선 통신 모듈 설계', '10-2024-0034567', '10-2712650', '텔레콤솔루션(주)', 6, 2.7],
+            ['저전력 블루투스 센서 노드 설계', '10-2024-0045678', '10-2712700', '센서랩(주)', 3, 1.4],
+            ['스마트 팩토리용 설비 예지보전 알고리즘', '10-2024-0056789', '10-2712750', '팩토리에이아이(주)', 2, 1.1],
         ].map(([title, applicationNumber, registrationNumber, company, citations, citationIndex]) => ({
             title: String(title),
             applicationNumber: String(applicationNumber),
@@ -852,6 +892,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             citations: Number(citations),
             citationIndex: Number(citationIndex),
         })),
+        // [프론트엔드 연동 · 최대 10건 + 기타 = 최대 11줄] 이머징 기술 — API 가 '기타' 줄까지 만들어 보낸다. 목업은 최대치 11줄.
         emergingTech: {
             periods: ['2015~2016년', '2017~2018년', '2019~2020년', '2021~2022년', '2023~2024년'],
             rows: [
@@ -868,6 +909,8 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 {field: '기타', counts: [27, 43, 44, 67, 140], growthRate: 48.5, share: 2.3},
             ],
         },
+        // [프론트엔드 연동 · 최대 10건 + 기타 = 최대 11줄] R&D 전문기관 현황 — 목업은 쪽마다 12건을 보내 화면이 10건 + '기타 …' 1줄로
+        // 합치는 최대치를 보여 준다.
         rndInstitutes: {
             government: {
                 share: 56.6,
@@ -882,7 +925,8 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                     {name: 'SK하이닉스', patentCount: 1150, ratio: 38.3},
                     {name: '대한항공', patentCount: 500, ratio: 16.7},
                     {name: 'KT', patentCount: 480, ratio: 16.0},
-                    {name: '기타 연구소', patentCount: 520, ratio: 17.3},
+                    {name: '한국기계연구원', patentCount: 300, ratio: 10.0},
+                    {name: '한국화학연구원', patentCount: 220, ratio: 7.3},
                 ],
                 total: {patentCount: 3000, ratio: 100},
             },
@@ -899,13 +943,15 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                     {name: '한국과학기술원', patentCount: 750, ratio: 32.5},
                     {name: '중앙대학교', patentCount: 300, ratio: 13.0},
                     {name: '경희대학교', patentCount: 320, ratio: 13.5},
-                    {name: '기타 산학협력단', patentCount: 280, ratio: 12.0},
+                    {name: '부산대학교', patentCount: 150, ratio: 6.5},
+                    {name: '경북대학교', patentCount: 130, ratio: 5.5},
                 ],
                 total: {patentCount: 2300, ratio: 100},
             },
         },
         governmentRnd: {
             baseDate: '2025-12-04',
+            // [프론트엔드 연동 · 최대 10건] 접수중과제 · 접수기간 도래 과제 — 목업은 두 표 모두 최대치 10건.
             open: [
                 [
                     '중소벤처기업부',
@@ -927,6 +973,31 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 ],
                 ['환경부', '친환경 에너지 기술개발 지원사업 공고', '한국환경산업기술원', '정미영 (044-321-9876)'],
                 ['교육부', '디지털 교육 콘텐츠 개발 지원사업 공고', '한국교육학술정보원', '한승우 (02-3668-4321)'],
+                ['문화체육관광부', '문화콘텐츠 융복합 기술개발 지원사업', '한국콘텐츠진흥원', '윤지혜 (02-3456-7890)'],
+                [
+                    '해양수산부',
+                    '해양 장비 국산화 기술개발 지원사업 공고',
+                    '해양수산과학기술진흥원',
+                    '강도현 (02-3460-4021)',
+                ],
+                [
+                    '보건복지부',
+                    '디지털 헬스케어 기기 개발 지원사업 공고',
+                    '한국보건산업진흥원',
+                    '서지연 (043-713-8456)',
+                ],
+                [
+                    '국토교통부',
+                    '건설 자동화 기술 개발사업 신규과제 모집',
+                    '국토교통과학기술진흥원',
+                    '임하늘 (031-389-6512)',
+                ],
+                [
+                    '중소벤처기업부',
+                    '창업성장기술개발사업 디딤돌 과제 공고',
+                    '중소기업기술정보진흥원',
+                    '오세훈 (042-388-0115)',
+                ],
             ].map(([ministry, title, agency, manager]) => ({
                 ministry,
                 title,
@@ -985,6 +1056,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             '현재시점에서 채무상환 능력에 대한 당면 문제는 없으나,',
             '장래의 경제여건 및 시장환경 변화에 따라 안정성 면에서는 불안한 요소가 있음',
         ],
+        // [프론트엔드 연동 · 정렬] 시간순(오래된 것부터) — 그래프 순서. 표는 화면이 최신순으로 정렬한다.
         ratingHistory: [
             {date: '2023-09-03', chartLabel: '23.09월', grade: 'A-'},
             {date: '2024-11-04', chartLabel: '24.11월', grade: 'BBB+'},
@@ -992,10 +1064,11 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         ],
         cashFlow: {
             grade: 'CR-4',
+            // [프론트엔드 연동 · 정렬] 순서 상관없음 — 화면이 평가일자 최신순으로 정렬한다.
             history: [
-                {year: '2022년', grade: 'CR-3'},
-                {year: '2023년', grade: 'CR-4'},
-                {year: '2024년', grade: 'CR-5'},
+                {date: '2024-11-04', grade: 'CR-3'},
+                {date: '2023-09-03', grade: 'CR-4'},
+                {date: '2022-09-03', grade: 'CR-5'},
             ],
             summary:
                 '현금흐름 창출능력이 보통이상이나 장래 경제 여건 및 환경악화에 따라 다소나마 현금흐름 저하 가능성이 존재함',
@@ -1049,7 +1122,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {
                 id: 'growth',
                 title: '성장성',
-                score: 50.5,
+                unit: '%',
                 rows: [
                     {key: 'growth-0', label: '매출액증가율', values: [7.15, 5.84, 7.42], comparison: '보통'},
                     {key: 'growth-1', label: '총자산증가율', values: [12.36, 13.1, 12.52], comparison: '양호'},
@@ -1060,7 +1133,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {
                 id: 'profitability',
                 title: '수익성',
-                score: 37.1,
+                unit: '%',
                 rows: [
                     {key: 'profitability-0', label: '영업이익률', values: [7.15, 5.84, 7.42], comparison: '보통'},
                     {key: 'profitability-1', label: '당기순이익률', values: [12.36, 13.1, 12.52], comparison: '양호'},
@@ -1081,23 +1154,23 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {
                 id: 'stability',
                 title: '안정성',
-                score: 88.2,
+                unit: '%, 배',
                 rows: [
-                    {key: 'stability-0', label: '부채비율', values: [7.15, 5.84, 7.42], comparison: '보통'},
-                    {key: 'stability-1', label: '이자보상비율', values: [12.36, 13.1, 12.52], comparison: '양호'},
-                    {key: 'stability-2', label: '차입금의존도', values: [15.02, 10.74, 16.37], comparison: '취약'},
-                    {key: 'stability-3', label: '자기자본비율', values: [3.2, 4.1, 2.85], comparison: '취약'},
+                    {key: 'stability-0', label: '자기자본비율', values: [7.15, 5.84, 7.42], comparison: '취약'},
+                    {key: 'stability-1', label: '부채비율', values: [12.36, 13.1, 12.52], comparison: '보통'},
+                    {key: 'stability-2', label: '이자보상비율 (배)', values: [15.02, 10.74, 16.37], comparison: '양호'},
+                    {key: 'stability-3', label: '차입금의존도', values: [3.2, 4.1, 2.85], comparison: '취약'},
                 ],
             },
             {
                 id: 'activity',
                 title: '활동성',
-                score: 73.7,
+                unit: '회',
                 rows: [
-                    {key: 'activity-0', label: '매출채권회전율', values: [7.15, 5.84, 7.42], comparison: '보통'},
-                    {key: 'activity-1', label: '재고자산회전율', values: [12.36, 13.1, 12.52], comparison: '양호'},
-                    {key: 'activity-2', label: '순운전자본회전율', values: [15.02, 10.74, 16.37], comparison: '취약'},
-                    {key: 'activity-3', label: '총자본회전율', values: [3.2, 4.1, 2.85], comparison: '취약'},
+                    {key: 'activity-0', label: '총자본회전율', values: [7.15, 5.84, 7.42], comparison: '취약'},
+                    {key: 'activity-1', label: '매출채권회전율', values: [12.36, 13.1, 12.52], comparison: '보통'},
+                    {key: 'activity-2', label: '재고자산회전율', values: [15.02, 10.74, 16.37], comparison: '양호'},
+                    {key: 'activity-3', label: '순운전자본회전율', values: [3.2, 4.1, 2.85], comparison: '취약'},
                 ],
             },
         ],
@@ -1123,9 +1196,9 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                     label: '단기',
                     rows: [
                         {key: 'short-loan', label: '단기차입금', cells: [null, null, {amount: 6081, ratio: 100.0}]},
-                        {key: 'foreign-short', label: '외화단기차입금', cells: [null, null, null]},
                         {key: 'current-long', label: '유동성장기부채', cells: [null, null, null]},
-                        {key: 'current-foreign', label: '유동성외화장기차입금', cells: [null, null, null]},
+                        {key: 'short-bond', label: '단기사채', cells: [null, null, null]},
+                        {key: 'securitized', label: '유동화채무', cells: [null, null, null]},
                     ],
                     subtotal: {key: 'short-subtotal', label: '소계', cells: [null, null, {amount: 6081, ratio: 100.0}]},
                 },
@@ -1133,13 +1206,12 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                     key: 'long',
                     label: '장기',
                     rows: [
-                        {key: 'bond', label: '사채', cells: [null, null, {amount: 6081, ratio: 100.0}]},
+                        {key: 'long-loan', label: '장기차입금', cells: [null, null, {amount: 6081, ratio: 100.0}]},
                         {
-                            key: 'long-loan',
-                            label: '장기차입금',
+                            key: 'long-bond',
+                            label: '장기사채',
                             cells: [{amount: 4500, ratio: 100.0}, {amount: 4690, ratio: 100.0}, null],
                         },
-                        {key: 'foreign-long', label: '외화장기차입금', cells: [null, null, null]},
                     ],
                     subtotal: {
                         key: 'long-subtotal',
@@ -1164,7 +1236,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 {key: 'amount', label: '차입금(백만원)', values: [7.15, 16.74, 6.37]},
                 {key: 'to-sales', label: '차입금/매출액(%)', values: [7.15, 16.74, 6.37]},
                 {key: 'repayment', label: '차입금상환계수', values: [7.15, 16.74, 6.37]},
-                {key: 'change', label: '총차입금변동률', values: [7.15, 16.74, 6.37]},
+                {key: 'change', label: '총차입금변동률(%)', values: [7.15, 16.74, 6.37]},
             ],
         },
         institutions: {
@@ -1359,12 +1431,20 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {role: '감사', name: '이감사', birthDate: '69.11.28'},
             {role: '사외이사', name: '박이사', birthDate: '77.08.09'},
         ],
+        // [프론트엔드 연동 · 최대 10건] 기획: 주주 현황 목록은 10개까지만 보인다 — 화면이 앞에서부터 10건만 그린다(COMPANY_LIST_LIMIT).
         shareholders: [
-            {name: '홍길동', shares: 10000, ratio: 40, relation: '본인'},
-            {name: '김이사', shares: 7500, ratio: 30, relation: '가족'},
-            {name: '이감사', shares: 5000, ratio: 20, relation: '친척'},
-            {name: '박이사', shares: 2500, ratio: 10, relation: '타인'},
+            {name: '홍길동', shares: 10000, ratio: 25, relation: '본인'},
+            {name: '김이사', shares: 6000, ratio: 15, relation: '가족'},
+            {name: '이감사', shares: 4800, ratio: 12, relation: '친척'},
+            {name: '박이사', shares: 4000, ratio: 10, relation: '타인'},
+            {name: '최부장', shares: 3600, ratio: 9, relation: '타인'},
+            {name: '정과장', shares: 3200, ratio: 8, relation: '타인'},
+            {name: '강대리', shares: 2800, ratio: 7, relation: '가족'},
+            {name: '조사원', shares: 2400, ratio: 6, relation: '타인'},
+            {name: '윤주주', shares: 2000, ratio: 5, relation: '친척'},
+            {name: '(주)투자파트너스', shares: 1200, ratio: 3, relation: '타인'},
         ],
+        // [프론트엔드 연동 · 최대 10건] 기획: 관계기업 현황 목록은 10개까지만 보인다 — 화면이 앞에서부터 10건만 그린다(COMPANY_LIST_LIMIT).
         affiliates: [
             {
                 name: '(주)한국상사',
@@ -1389,6 +1469,62 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 fiscalYear: '2024',
                 totalAssets: 7850,
                 sales: 180,
+            },
+            {
+                name: '(주)네오로직스',
+                ceo: '최준호',
+                industry: '소프트웨어 개발',
+                fiscalYear: '2024',
+                totalAssets: 5420,
+                sales: 310,
+            },
+            {
+                name: '(주)한빛물류',
+                ceo: '정은지',
+                industry: '운수 및 창고업',
+                fiscalYear: '2023',
+                totalAssets: 12300,
+                sales: 640,
+            },
+            {
+                name: '(주)블루오션',
+                ceo: '강민수',
+                industry: '해양 장비 제조업',
+                fiscalYear: '2024',
+                totalAssets: 9870,
+                sales: 295,
+            },
+            {
+                name: '(주)스마트팜',
+                ceo: '조하늘',
+                industry: '농업 기술 서비스',
+                fiscalYear: '2023',
+                totalAssets: 4310,
+                sales: 150,
+            },
+            {
+                name: '(주)바이오셀',
+                ceo: '윤서연',
+                industry: '생명공학 연구',
+                fiscalYear: '2024',
+                totalAssets: 15600,
+                sales: 420,
+            },
+            {
+                name: '(주)미래건설',
+                ceo: '임도현',
+                industry: '종합 건설업',
+                fiscalYear: '2024',
+                totalAssets: 22100,
+                sales: 980,
+            },
+            {
+                name: '(주)퍼스트모빌리티',
+                ceo: '한지우',
+                industry: '자동차 부품 제조업',
+                fiscalYear: '2023',
+                totalAssets: 8750,
+                sales: 365,
             },
         ],
         intellectualProperty: [
@@ -1431,18 +1567,18 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             ],
         },
         customers: [
-            {name: '○○기업(주)', shares: [55.11, 56.12, 56.12], grade: 'BBB+', baseYear: '2024'},
-            {name: '△△테크(주)', shares: [52.34, 53.45, 53.45], grade: 'A0', baseYear: '2023'},
-            {name: '◇◇솔루션', shares: [58.22, 59.33, 59.33], grade: 'BBB0', baseYear: '2025'},
-            {name: '□□산업(주)', shares: [41.05, 43.2, 44.9], grade: 'B-', baseYear: '2025'},
-            {name: '☆☆네트웍스', shares: [12.4, 11.87, 10.02], grade: 'CCC0', baseYear: '2025'},
+            {name: '○○기업(주)', shares: [55.11, 56.12, 56.12], grade: 'BBB+', evaluationDate: '2024-01-02'},
+            {name: '△△테크(주)', shares: [52.34, 53.45, 53.45], grade: 'A0', evaluationDate: '2023-01-02'},
+            {name: '◇◇솔루션', shares: [58.22, 59.33, 59.33], grade: 'BBB0', evaluationDate: '2025-01-02'},
+            {name: '□□산업(주)', shares: [41.05, 43.2, 44.9], grade: 'B-', evaluationDate: '2025-01-02'},
+            {name: '☆☆네트웍스', shares: [12.4, 11.87, 10.02], grade: 'CCC0', evaluationDate: '2025-01-02'},
         ],
         suppliers: [
-            {name: '○○부품(주)', shares: [35.11, 36.12, 36.12], grade: 'BBB+', baseYear: '2024'},
-            {name: '△△소재(주)', shares: [22.34, 23.45, 26.12], grade: 'A0', baseYear: '2023'},
-            {name: '◇◇전자', shares: [18.22, 19.33, 16.12], grade: 'BBB0', baseYear: '2025'},
-            {name: '□□물산', shares: [9.4, 8.7, 8.1], grade: 'B-', baseYear: '2025'},
-            {name: '☆☆로지스', shares: [5.02, 4.8, 4.35], grade: '', baseYear: '2025'},
+            {name: '○○부품(주)', shares: [35.11, 36.12, 36.12], grade: 'BBB+', evaluationDate: '2024-01-02'},
+            {name: '△△소재(주)', shares: [22.34, 23.45, 26.12], grade: 'A0', evaluationDate: '2023-01-02'},
+            {name: '◇◇전자', shares: [18.22, 19.33, 16.12], grade: 'BBB0', evaluationDate: '2025-01-02'},
+            {name: '□□물산', shares: [9.4, 8.7, 8.1], grade: 'B-', evaluationDate: '2025-01-02'},
+            {name: '☆☆로지스', shares: [5.02, 4.8, 4.35], grade: '', evaluationDate: '2025-01-02'},
         ],
     },
 }
@@ -1499,9 +1635,7 @@ export {
     INNOVATION_REPORT_CASE_QUERY,
     INNOVATION_REPORT_CASES,
     getTechIndexGrade,
-    getTechIndexLevel,
     TECH_INDEX_GRADES,
-    TECH_INDEX_LEVEL_COUNT,
     getInnovationReportViewport,
     isReportTab,
     INNOVATION_REPORT_BADGE,

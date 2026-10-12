@@ -13,6 +13,7 @@ import {
     type RectangleProps,
 } from 'recharts'
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
+import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
 import {
     CELLS_DIVIDER_DASH,
@@ -51,14 +52,15 @@ type GroupedColumnItem = {
 type GroupedColumnChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     ariaLabel: string
     /**
-     * 막대가 자라나는 움직임. 인쇄용 문서처럼 그린 즉시 그대로 찍혀야 하는 곳에서는 끈다 —
+     * 막대가 자라나는 움직임. 안 주면 useChartAnimation() 값을 따른다(chart-reveal.tsx).
+     * 인쇄용 문서처럼 그린 즉시 그대로 찍혀야 하는 곳에서는 끈다 —
      * 켜 두면 움직이는 도중에 인쇄돼 막대가 덜 자란 채로 남을 수 있다.
      */
     animate?: boolean
     data: GroupedColumnItem[]
     /** 한 묶음 안에서 막대 사이 간격(px). */
     barGap?: number
-    /** 막대 위쪽 모서리 반경(px). 0 이면 위가 둥근 막대다. */
+    /** 막대 위 두 모서리 반경(px, 기본 4). 0 이면 각진 막대다. variant 'cells' 는 반경 6 으로 고정이라 쓰지 않는다. */
     barRadius?: number
     /** 막대 하나의 최대 두께(px). 열이 좁은 표 안에 넣을 때 줄인다. */
     maxBarSize?: number
@@ -94,7 +96,7 @@ const CELLS_BAR_RADIUS = 6
 const GROUPED_CELLS_X_AXIS_HEIGHT = 32
 
 const GroupedColumnChart = ({
-    animate = true,
+    animate: animateProp,
     data,
     barGap = 4,
     barRadius = 4,
@@ -113,6 +115,9 @@ const GroupedColumnChart = ({
     className,
     ...props
 }: GroupedColumnChartProps) => {
+    // animate 를 안 주면 문서 설정을 따른다(chart-reveal.tsx) — 보고서는 스크롤해서 보일 때, 그 밖에는 바로 움직인다.
+    const revealAnimate = useChartAnimation()
+    const animate = animateProp ?? revealAnimate
     const fractionDigits = Math.min(6, Math.max(0, valueFractionDigits))
     const valueFormatter = new Intl.NumberFormat('ko-KR', {
         minimumFractionDigits: fractionDigits,
@@ -179,8 +184,9 @@ const GroupedColumnChart = ({
                     role="img"
                     aria-label={ariaLabel}
                 >
+                    {/* recharts 키보드 탐색 층은 끈다 — 값은 숨김 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
                     <BarChart
-                        accessibilityLayer
+                        accessibilityLayer={false}
                         data={chartData}
                         margin={
                             isCells
@@ -317,6 +323,7 @@ const GroupedColumnChart = ({
                                 maxBarSize={maxBarSize}
                                 barSize={isCells ? CELLS_BAR_SIZE : undefined}
                                 isAnimationActive={animate}
+                                animationDuration={CHART_ANIMATION_MS}
                                 // cells: 0 · 아주 작은 값도 막대 자리(와 값 글자)를 남긴다(chart-cells).
                                 minPointSize={isCells ? cellsMinPointSize : undefined}
                             >

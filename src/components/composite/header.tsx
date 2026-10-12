@@ -598,11 +598,11 @@ const HeaderContent = ({
                     menuOpen ? 'max-h-dvh opacity-100' : 'max-h-0 opacity-0 md:max-h-14 md:opacity-100',
                 )}
             >
-                {/* 묶음 사이 간격은 시안 40(xl)이다. 좁아질수록 줄이되 묶음 안쪽 간격(16)보다는 항상 크게 두어
+                {/* 묶음 사이 간격은 40(xl)이다. 좁아질수록 줄이되 묶음 안쪽 간격(16)보다는 항상 크게 두어
                     [배지+이름·남은 시간]과 [링크]가 서로 다른 묶음으로 읽히게 한다. */}
                 <div className="flex flex-wrap items-center justify-end gap-4 py-2 md:gap-8 xl:gap-10">
                     {user ? (
-                        // 시안에서 [배지+이름]과 [남은 시간+연장]은 한 묶음(간격 16)이고, 그 묶음과 링크 사이가 40 이다.
+                        // [배지+이름]과 [남은 시간+연장]은 한 묶음(간격 16)이고, 그 묶음과 링크 사이가 40 이다.
                         // 부모 간격(xl 40)을 그대로 받으면 이름과 시간이 링크만큼 벌어져 두 묶음이 구분되지 않는다.
                         <div className="flex min-w-0 flex-wrap items-center justify-end gap-4">
                             <div className="grid w-fit max-w-full min-w-0 grid-cols-[auto_minmax(0,1fr)] items-center">
@@ -826,7 +826,9 @@ const Header = ({
                 'z-header has-[[data-header-menu-trigger][data-menu-visible]]:z-popover inset-x-0 top-0',
                 // 헤더 배경은 메뉴 열림 상태와 함께 전환한다.
                 'transition-colors duration-200 ease-in-out has-[[data-header-menu-trigger][aria-expanded=true]]:bg-transparent! motion-reduce:transition-none',
-                overlay ? 'fixed' : 'bg-card sticky',
+                // 평소 면은 bg-page(서비스 페이지 본문 면 — 라이트 흰색 · 다크 gray.900)라 본문과 한 면으로 이어진다.
+                // overlay 는 콘텐츠 위에 띄우는(fixed) 헤더라 면을 두지 않는다.
+                overlay ? 'fixed' : 'bg-page sticky',
             )}
         >
             {/* 본문과 같은 content-layout으로 정렬선을 맞춘다. */}

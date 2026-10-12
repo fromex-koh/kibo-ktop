@@ -1,9 +1,14 @@
-import type {RatingGaugeDetail, SemicircleRatingData} from '@/components/custom/semicircle-rating-gauge'
+import type {
+    RatingGaugeDetail,
+    SemicircleRatingData,
+    SemicircleRatingTone,
+} from '@/components/custom/semicircle-rating-gauge'
 
 // CRI(기업신용등급) 등급 정의 · 등급명 — 기업신용등급 게이지(SemicircleRatingGauge)가 쓰는 단일 소스.
 // 출처: CRI 등급 정의 및 등급명 표(24개 — 평가 등급 22개 + 평가 유보 R · 평가 제외 NR).
 //
-// 게이지 채움 비율 — 평가 등급 22개(AAA+ ~ D)를 위에서부터 100 → 0 으로 고르게 나눈다(한 단계 약 4.8).
+// 게이지 채움 비율 — 평가 등급 22개(AAA+ ~ D)를 위에서부터 100 → 한 단계(100 ÷ 22, 반올림해 D = 5)까지 고르게 나눈다.
+//   맨 아래 D 도 0 이 아니라 한 단계만큼 차서 원호 끝이 보인다 — 등급이 있는데 빈 트랙만 보이면 평가가 없는 것처럼 보이기 때문이다.
 //   R(유보) · NR(평가 제외)은 등급이 매겨지지 않았으므로 채움 없이(0) 등급명만 보인다.
 // 게이지 가운데 설명은 '{등급명} 등급'(예: 우량 등급)이다. R · NR 은 등급이 아니므로 등급명만(유보 · 평가 제외) 둔다.
 // 표에 없는 코드(예: 끝의 0 · + · - 가 빠진 'A', 오타)는 채움 없이 받은 코드를 그대로 두고, 설명 자리에
@@ -19,6 +24,20 @@ type CriGrade = {
     name: string
     /** 평가 등급인지 — false 면 R(유보) · NR(평가 제외). */
     isRated: boolean
+}
+
+// 게이지 색 단계(CR-1 ~ CR-6) — 등급명으로 정한다: 최우량 · 우량 → CR-1(우수) / 양호 → CR-2 / 보통 → CR-3 /
+// 보통 이하 → CR-4(미흡) / 낮음 · 매우 낮음 → CR-5 / 위험 → CR-6(취약). 유보 · 평가 제외는 표에 없어 tone 이 비고, 채움도 0 이라 색이 안 보인다.
+// [프론트엔드 연동] 등급명 ↔ CR 단계 짝이 기획과 다르면 이 표만 고친다.
+const CRI_TONE_BY_NAME: Record<string, SemicircleRatingTone> = {
+    최우량: 'cr1',
+    우량: 'cr1',
+    양호: 'cr2',
+    보통: 'cr3',
+    '보통 이하': 'cr4',
+    낮음: 'cr5',
+    '매우 낮음': 'cr5',
+    위험: 'cr6',
 }
 
 const DEFINITIONS = {
@@ -69,11 +88,11 @@ const CRI_GRADES: readonly CriGrade[] = [
 const RATED_GRADES = CRI_GRADES.filter((item) => item.isRated)
 const MAX_PERCENTAGE = 100
 
-// 게이지 채움 비율 — 평가 등급은 순서대로 100 → 0, 유보 · 평가 제외는 0.
+// 게이지 채움 비율 — 평가 등급은 순서대로 100 → 5(100 ÷ 22 반올림), 유보 · 평가 제외는 0. 이전평가이력 원 높이도 이 값을 쓴다.
 const criGradePercentage = (item: CriGrade) => {
     if (!item.isRated) return 0
     const index = RATED_GRADES.indexOf(item)
-    return Math.round((MAX_PERCENTAGE * (RATED_GRADES.length - 1 - index)) / (RATED_GRADES.length - 1))
+    return Math.round((MAX_PERCENTAGE * (RATED_GRADES.length - index)) / RATED_GRADES.length)
 }
 
 const findCriGrade = (grade: string) => CRI_GRADES.find((item) => item.grade === grade)
@@ -107,6 +126,7 @@ const toCriRatingData = (grade: string, details: RatingGaugeDetail[] = []): Semi
         label: item.grade,
         description: item.isRated ? `${item.name} 등급` : item.name,
         percentage: criGradePercentage(item),
+        tone: CRI_TONE_BY_NAME[item.name],
         details,
     }
 }

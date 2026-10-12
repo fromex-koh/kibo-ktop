@@ -50,6 +50,13 @@ const SELLER_INFO: readonly {label: string; value: string}[] = [
     {label: '이메일', value: '추후 확정'},
 ]
 
+// 결제 불가 안내 모달(PaymentUnavailableDialog) — 기관회원은 이용권을 직접 구매할 수 없어 담당자와 협의하도록 안내한다.
+// [프론트엔드 연동] 문의전화는 확정된 번호로 바꾼다(아래는 임시 번호).
+const PAYMENT_UNAVAILABLE_TITLE = '결제 불가 안내'
+const PAYMENT_UNAVAILABLE_MESSAGE = '기관회원은 이용권을 직접 구매할 수 없습니다. 유료서비스 이용을 원하시는 경우,'
+const PAYMENT_UNAVAILABLE_GUIDE = '담당자와 협의를 통해 신청해 주시기 바랍니다.'
+const PAYMENT_UNAVAILABLE_CONTACT = '문의전화: 111-1111-1111'
+
 const PAYMENT_AGREEMENT = '주문 내용을 확인하였으며, 이용 안내 및 환불 안내에 동의합니다.(필수)'
 const PAYMENT_AGREEMENT_HINT = '필수 동의 항목에 체크하시면 결제하실 수 있습니다.'
 
@@ -58,6 +65,10 @@ export {
     PAYMENT_AGREEMENT_HINT,
     PAYMENT_COMPLETE_TITLE,
     PAYMENT_METHOD,
+    PAYMENT_UNAVAILABLE_CONTACT,
+    PAYMENT_UNAVAILABLE_GUIDE,
+    PAYMENT_UNAVAILABLE_MESSAGE,
+    PAYMENT_UNAVAILABLE_TITLE,
     PAYMENT_USAGE_GUIDE,
     REFUND_GUIDE,
     SELLER_INFO,

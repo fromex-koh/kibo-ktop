@@ -14,7 +14,7 @@ export const metadata: Metadata = {title: 'K-BIGx 보고서 소개'}
 // SkipNav의 #main 도착 대상이며 tabIndex={-1}로 키보드 포커스를 받을 수 있다.
 // 원고 연동 전까지 표시하는 임시 섹션은 실제 콘텐츠로 교체한다.
 const CorpPlatformKBigxReportPage = () => (
-    <main id="main" tabIndex={-1} className="bg-surface flex-1">
+    <main id="main" tabIndex={-1} className="bg-page flex-1">
         <div className="grid-layout gap-10 pt-10 pb-25 *:col-span-full">
             <PageTitleBar
                 title="K-BIGx 보고서 소개"

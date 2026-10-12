@@ -3,6 +3,7 @@
 import type {ComponentPropsWithoutRef} from 'react'
 import {Bar, BarChart, CartesianGrid, LabelList, ReferenceLine, XAxis, YAxis, type LabelProps} from 'recharts'
 import {ChartContainer, type ChartConfig} from '@/components/ui/chart'
+import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
 import {
     CELLS_DIVIDER_DASH,
@@ -54,7 +55,7 @@ type OverlayColumnChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'>
     showLegend?: boolean
     valueFractionDigits?: number
     unit?: string
-    /** 막대가 자라는 움직임. 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 끈다. */
+    /** 막대가 자라는 움직임. 안 주면 useChartAnimation() 값을 따른다(chart-reveal.tsx). 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 끈다. */
     animate?: boolean
 }
 
@@ -80,10 +81,13 @@ const OverlayColumnChart = ({
     showLegend = true,
     valueFractionDigits = 0,
     unit,
-    animate = true,
+    animate: animateProp,
     className,
     ...props
 }: OverlayColumnChartProps) => {
+    // animate 를 안 주면 문서 설정을 따른다(chart-reveal.tsx) — 보고서는 스크롤해서 보일 때, 그 밖에는 바로 움직인다.
+    const revealAnimate = useChartAnimation()
+    const animate = animateProp ?? revealAnimate
     const fractionDigits = Math.min(6, Math.max(0, valueFractionDigits))
     const valueFormatter = new Intl.NumberFormat('ko-KR', {
         minimumFractionDigits: fractionDigits,
@@ -177,8 +181,9 @@ const OverlayColumnChart = ({
                     role="img"
                     aria-label={ariaLabel}
                 >
+                    {/* recharts 키보드 탐색 층은 끈다 — 값은 숨김 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
                     <BarChart
-                        accessibilityLayer
+                        accessibilityLayer={false}
                         data={chartData}
                         margin={{top: 0, right: 1, bottom: 0, left: 1}}
                         barGap={SERIES_BAR_GAP}
@@ -228,6 +233,7 @@ const OverlayColumnChart = ({
                             barSize={BASE_BAR_SIZE}
                             radius={[BASE_BAR_RADIUS, BASE_BAR_RADIUS, 0, 0]}
                             isAnimationActive={animate}
+                            animationDuration={CHART_ANIMATION_MS}
                             minPointSize={cellsMinPointSize}
                         >
                             <LabelList dataKey={base.key} content={renderBaseLabel} />
@@ -241,6 +247,7 @@ const OverlayColumnChart = ({
                                 barSize={SERIES_BAR_SIZE}
                                 radius={[SERIES_BAR_RADIUS, SERIES_BAR_RADIUS, 0, 0]}
                                 isAnimationActive={animate}
+                                animationDuration={CHART_ANIMATION_MS}
                                 minPointSize={cellsMinPointSize}
                             >
                                 <LabelList

@@ -14,32 +14,33 @@ import {
 } from '@/content/service/evaluation-model-selection'
 import {cn} from '@/lib/utils'
 
-// 평가모형 선택 — 시안 "SB-FOTA-CM5-0001_메인_평가모형 선택"(40007595:14880).
+// 평가모형 선택(화면 ID SB-FOTA-CM5-0001).
 // 모형 카드 3장(KTRS-FM · Tech-Index · 투자모형) → 알려드려요 안내 → [다음].
 // 카드는 링크가 아니라 라디오다(Tech-Index 평가모형 선택과 같은 방식) — 고르는 것만으로는 넘어가지 않고 [다음]을
 // 눌러야 고른 모형의 평가 신청 첫 화면으로 간다. 필수값이라 고르기 전에는 [다음]이 비활성이다.
 //
-// 카드 규격(시안): 반경 16 · 여백 위·좌우 32, 아래 24 · 약칭(14 Bold)과 제목(28 Bold) 8 · 제목과 설명(14) 16 ·
+// 카드 규격: 반경 16 · 여백 위·좌우 32, 아래 24 · 약칭(14 Bold)과 제목(28 Bold) 8 · 제목과 설명(14) 16 ·
 // 설명과 일러스트 자리(높이 144) 32 · 오른쪽 아래 짙은 원형 화살표(48) · 카드 사이 24.
-// 마우스를 올리거나 키보드로 포커스하면 테두리가 그라데이션(시안 첫 카드의 표시)으로 바뀌고, 고른 카드는 그대로 남는다.
+// 마우스를 올리거나 키보드로 포커스하면 테두리가 그라데이션으로 바뀌고, 고른 카드는 그대로 남는다.
 
-// 모형별 카드 면 · 약칭 색 — 시안 blue.100/blue.700 · mint.100/mint.800 · orange.100.
-// hover — hover·포커스·선택 때의 그라데이션 테두리도 카드 면과 같은 색 계열로 맞춘다(진한 단계 → 옅은 단계).
+// 모형별 카드 면 · 약칭 · 그라데이션 테두리 색 — 시맨틱 토큰 model-card-<색>-*(tokens.json)이 라이트 · 다크 값을 함께 정한다.
+// 원시 팔레트 유틸리티는 다크에서 단계가 뒤집혀 글자 대비가 무너지므로 쓰지 않는다.
+// hover — hover·포커스·선택 때의 그라데이션 테두리(border-from 진한 쪽 → border-to 옅은 쪽).
 const TONE_CLASS: Record<EvaluationModelTone, {surface: string; label: string; hover: string}> = {
     blue: {
-        surface: 'bg-blue-100',
-        label: 'text-blue-700',
-        hover: 'hover:from-blue-500 hover:to-blue-300 has-checked:from-blue-500 has-checked:to-blue-300 has-focus-visible:from-blue-500 has-focus-visible:to-blue-300',
+        surface: 'bg-model-card-blue',
+        label: 'text-model-card-blue-foreground',
+        hover: 'hover:from-model-card-blue-border-from hover:to-model-card-blue-border-to has-checked:from-model-card-blue-border-from has-checked:to-model-card-blue-border-to has-focus-visible:from-model-card-blue-border-from has-focus-visible:to-model-card-blue-border-to',
     },
     mint: {
-        surface: 'bg-mint-100',
-        label: 'text-mint-800',
-        hover: 'hover:from-mint-700 hover:to-mint-400 has-checked:from-mint-700 has-checked:to-mint-400 has-focus-visible:from-mint-700 has-focus-visible:to-mint-400',
+        surface: 'bg-model-card-mint',
+        label: 'text-model-card-mint-foreground',
+        hover: 'hover:from-model-card-mint-border-from hover:to-model-card-mint-border-to has-checked:from-model-card-mint-border-from has-checked:to-model-card-mint-border-to has-focus-visible:from-model-card-mint-border-from has-focus-visible:to-model-card-mint-border-to',
     },
     orange: {
-        surface: 'bg-orange-100',
-        label: 'text-orange-700',
-        hover: 'hover:from-orange-600 hover:to-orange-300 has-checked:from-orange-600 has-checked:to-orange-300 has-focus-visible:from-orange-600 has-focus-visible:to-orange-300',
+        surface: 'bg-model-card-orange',
+        label: 'text-model-card-orange-foreground',
+        hover: 'hover:from-model-card-orange-border-from hover:to-model-card-orange-border-to has-checked:from-model-card-orange-border-from has-checked:to-model-card-orange-border-to has-focus-visible:from-model-card-orange-border-from has-focus-visible:to-model-card-orange-border-to',
     },
 }
 
@@ -82,7 +83,7 @@ const ModelCard = ({model, name, isChecked, onSelect}: ModelCardProps) => {
                     )}
                 >
                     <span className="flex flex-col gap-2">
-                        {/* 약칭이 없는 카드(투자모형)도 그 줄을 비워 두어 세 카드의 제목 높이를 맞춘다(시안). */}
+                        {/* 약칭이 없는 카드(투자모형)도 그 줄을 비워 두어 세 카드의 제목 높이를 맞춘다. */}
                         <span
                             aria-hidden={model.label ? undefined : true}
                             className={cn('typo-body-l-bold', tone.label)}
@@ -94,8 +95,8 @@ const ModelCard = ({model, name, isChecked, onSelect}: ModelCardProps) => {
                     <span className="typo-body-l-regular text-label-foreground mt-4 break-keep">
                         {model.description}
                     </span>
-                    {/* 일러스트 자리(높이 144) — 그림은 시안의 표시 크기로 자리의 가운데(가로·세로)에 놓는다. 시안도 세 그림 모두
-                        자리 가운데 기준이며, 투자모형(188)은 자리보다 커서 위아래로 조금씩 넘친다. 좁은 카드에서는 폭에 맞춰
+                    {/* 일러스트 자리(높이 144) — 그림은 정해진 표시 크기로 자리의 가운데(가로·세로)에 놓는다.
+                        투자모형(188)은 자리보다 커서 위아래로 조금씩 넘친다. 좁은 카드에서는 폭에 맞춰
                         줄어든다. 에셋이 없으면 빈 자리로 둔다. 제목이 같은 뜻을 전하므로 그림은 꾸밈이다[5.1.1]. */}
                     <span className="mt-8 flex h-36 items-center justify-center">
                         {model.image ? (
@@ -173,7 +174,7 @@ const EvaluationModelSelection = ({basePath}: EvaluationModelSelectionProps) => 
                     </ul>
                 </fieldset>
             </form>
-            {/* 안내 상자 — InfoBox(반경 16 · 여백 40·32 · 제목 20 Bold · 목록 16)와 같은 규격이고, 면만 시안의 gray.10 이다. */}
+            {/* 안내 상자 — InfoBox(반경 16 · 여백 40·32 · 제목 20 Bold · 목록 16)와 같은 규격이고, 면만 bg-surface-subtle 로 바꾼다. */}
             <InfoBox title={EVALUATION_MODEL_NOTICE.title} headingLevel={2} className="bg-surface-subtle">
                 {EVALUATION_MODEL_NOTICE.items.map((item) => (
                     <InfoBoxItem key={item}>
@@ -182,7 +183,7 @@ const EvaluationModelSelection = ({basePath}: EvaluationModelSelectionProps) => 
                 ))}
             </InfoBox>
             {/* [다음]은 위 폼의 제출 버튼이다. 평가모형이 필수값이라 고르기 전에는 비활성이다.
-                안내 상자와 [다음] 사이는 시안 72(여기 40 + StepNavigation 위 32). */}
+                안내 상자와 [다음] 사이는 72(부모 간격 40 + StepNavigation 위 여백 32). */}
             <StepNavigation
                 appearance="plain"
                 // 그리드 안에 놓이므로 바깥 여백은 그리드에 맡긴다.

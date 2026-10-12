@@ -11,6 +11,8 @@ type GradeScaleGaugeSkeletonProps = Omit<ComponentPropsWithoutRef<'div'>, 'child
     label?: string
     /** 등급 칸 수(기본 6). GradeScaleGauge 의 grades 수와 같게 둔다. */
     count?: number
+    /** 원호 안 설명 자리(기본 true). GradeScaleGauge 에 description="" 을 주는 곳은 끈다 — 등급 자리만 같은 높이에 남는다. */
+    hasDescription?: boolean
 }
 
 const DEFAULT_COUNT = 6
@@ -21,6 +23,7 @@ const skeletonPartClassName = chartSkeletonPartVariants()
 const GradeScaleGaugeSkeleton = ({
     label = '등급을 불러오는 중입니다.',
     count = DEFAULT_COUNT,
+    hasDescription = true,
     className,
     ...props
 }: GradeScaleGaugeSkeletonProps) => {
@@ -39,9 +42,14 @@ const GradeScaleGaugeSkeleton = ({
                         strokeLinecap="round"
                     />
                 </svg>
-                <div className="col-start-1 row-start-1 flex flex-col items-center justify-end gap-2 pb-3">
+                <div
+                    className={cn(
+                        'col-start-1 row-start-1 flex flex-col items-center justify-end gap-2',
+                        hasDescription ? 'pb-3' : 'pb-8',
+                    )}
+                >
                     <div className={cn(skeletonPartClassName, 'h-10 w-24')} />
-                    <div className={cn(skeletonPartClassName, 'h-5 w-16')} />
+                    {hasDescription ? <div className={cn(skeletonPartClassName, 'h-5 w-16')} /> : null}
                 </div>
             </div>
             <div className="flex flex-col gap-2" aria-hidden="true">

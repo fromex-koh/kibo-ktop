@@ -49,6 +49,7 @@ const utilClasses = (name: string): string[] => {
 // 인덱싱 타입 오류를 피하려고 Record 로 받는다(값 형태는 build-tokens 검증이 보장).
 const primitive: Record<string, Record<string, string>> = tokens.primitive
 const common: Record<string, string> = tokens.common
+const extra: Record<string, string> = tokens.extra
 type SemanticValue = {light: string; dark: string; mainpage: string}
 const semantic: Record<string, SemanticValue> = tokens.semantic
 
@@ -57,14 +58,15 @@ const semantic: Record<string, SemanticValue> = tokens.semantic
 const CHECKERBOARD =
     'repeating-conic-gradient(var(--raw-gray-300) 0% 25%, var(--raw-common-white) 0% 50%) 0 0 / 8px 8px'
 
-// 참조("gray.900"·"common.white"·"black.75") → CSS 색. alpha(black/white)는 rgba, 그 외는 hex.
+// 참조("gray.900"·"common.white"·"extra.cyan"·"black.75") → CSS 색. alpha(black/white)는 rgba, 그 외는 hex.
 const rawColor = (ref: string): string => {
     if (ref === 'transparent' || ref === 'currentColor') return ref
     const [hue, step] = ref.split('.')
     if (hue === 'black' || hue === 'white') {
         return `rgba(${hue === 'black' ? '0, 0, 0' : '255, 255, 255'}, ${Number(step) / 100})`
     }
-    return hue === 'common' ? common[step] : primitive[hue][step]
+    if (hue === 'common') return common[step]
+    return hue === 'extra' ? extra[step] : primitive[hue][step]
 }
 
 // tokens.json 에 명시된 테마별 참조를 색상값으로 해석한다.
@@ -94,6 +96,8 @@ const toRgbaText = (color: string): string => {
 const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     background: 'bg-background',
     surface: 'bg-surface',
+    page: 'bg-page',
+    field: 'bg-field',
     foreground: 'bg-foreground',
     'foreground-subtle': 'bg-foreground-subtle',
     'label-foreground': 'bg-label-foreground',
@@ -148,6 +152,24 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'chart-3': 'bg-chart-3',
     'chart-4': 'bg-chart-4',
     'chart-5': 'bg-chart-5',
+    'report-series-1': 'bg-report-series-1',
+    'report-series-2': 'bg-report-series-2',
+    'report-series-3': 'bg-report-series-3',
+    'report-series-4': 'bg-report-series-4',
+    'report-series-5': 'bg-report-series-5',
+    'report-series-6': 'bg-report-series-6',
+    'gauge-excellent-from': 'bg-gauge-excellent-from',
+    'gauge-excellent-to': 'bg-gauge-excellent-to',
+    'gauge-good-from': 'bg-gauge-good-from',
+    'gauge-good-to': 'bg-gauge-good-to',
+    'gauge-normal-from': 'bg-gauge-normal-from',
+    'gauge-normal-to': 'bg-gauge-normal-to',
+    'gauge-poor-from': 'bg-gauge-poor-from',
+    'gauge-poor-to': 'bg-gauge-poor-to',
+    'gauge-low-from': 'bg-gauge-low-from',
+    'gauge-low-to': 'bg-gauge-low-to',
+    'gauge-weak-from': 'bg-gauge-weak-from',
+    'gauge-weak-to': 'bg-gauge-weak-to',
     sidebar: 'bg-sidebar',
     'sidebar-foreground': 'bg-sidebar-foreground',
     'sidebar-primary': 'bg-sidebar-primary',
@@ -228,6 +250,30 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'alert-error-border': 'bg-alert-error-border',
     'file-upload-complete': 'bg-file-upload-complete',
     'file-upload-complete-border': 'bg-file-upload-complete-border',
+    'gauge-track': 'bg-gauge-track',
+    'rating-marker-weak': 'bg-rating-marker-weak',
+    'rating-marker-poor': 'bg-rating-marker-poor',
+    'rating-marker-normal': 'bg-rating-marker-normal',
+    'rating-marker-good': 'bg-rating-marker-good',
+    'rating-marker-excellent': 'bg-rating-marker-excellent',
+    'rank-bar-left': 'bg-rank-bar-left',
+    'rank-bar-right': 'bg-rank-bar-right',
+    'rank-bar-average': 'bg-rank-bar-average',
+    'rank-bar-subject': 'bg-rank-bar-subject',
+    'rank-bar-highlight': 'bg-rank-bar-highlight',
+    'grade-scale-chip-foreground': 'bg-grade-scale-chip-foreground',
+    'model-card-blue': 'bg-model-card-blue',
+    'model-card-blue-foreground': 'bg-model-card-blue-foreground',
+    'model-card-blue-border-from': 'bg-model-card-blue-border-from',
+    'model-card-blue-border-to': 'bg-model-card-blue-border-to',
+    'model-card-mint': 'bg-model-card-mint',
+    'model-card-mint-foreground': 'bg-model-card-mint-foreground',
+    'model-card-mint-border-from': 'bg-model-card-mint-border-from',
+    'model-card-mint-border-to': 'bg-model-card-mint-border-to',
+    'model-card-orange': 'bg-model-card-orange',
+    'model-card-orange-foreground': 'bg-model-card-orange-foreground',
+    'model-card-orange-border-from': 'bg-model-card-orange-border-from',
+    'model-card-orange-border-to': 'bg-model-card-orange-border-to',
     toast: 'bg-toast',
     'toast-foreground': 'bg-toast-foreground',
     'toast-icon': 'bg-toast-icon',
@@ -303,7 +349,7 @@ const STANDARD_SLOTS = new Set([
 // 컴포넌트 전용 레시피 토큰은 일반 색 슬롯이 아니라 특정 컴포넌트 내부에서만 쓰는 값이라
 // 표준·커스텀 슬롯 표에서 제외하고 하단의 레시피 표에 모아 노출한다.
 const isComponentRecipe = (n: string): boolean =>
-    /^(action-check|alert|button|checkbox|radio|badge|number-badge|chip|file-upload|icon|selectable-card|step-progress|segmented)-/.test(
+    /^(action-check|alert|button|checkbox|radio|badge|number-badge|chip|file-upload|icon|grade-scale|model-card|rank-bar|rating-marker|selectable-card|step-progress|segmented)-/.test(
         n,
     )
 
@@ -329,9 +375,11 @@ const STANDARD_GROUPS: Group[] = [
 ]
 const CUSTOM_GROUPS: Group[] = [
     {name: 'surface', match: (n) => n === 'surface'},
+    {name: 'page (서비스 페이지 본문 바탕)', match: (n) => n === 'page'},
+    {name: 'field (입력 칸 바탕)', match: (n) => n === 'field'},
     // 카드 안에 한 단계 들어간 옅은 면 — 공지 상세의 첨부파일 줄처럼 흰 카드 위 영역을 구분한다.
     {name: 'surface-subtle', match: (n) => n === 'surface-subtle'},
-    // 토스트 면은 시안이 테마와 무관하게 한 벌(반투명 검정 + 흰 글자 + 초록 체크 원)이라 세 테마 값이 모두 같다.
+    // 토스트 면은 디자인이 테마와 무관하게 한 벌(반투명 검정 + 흰 글자 + 초록 체크 원)이라 세 테마 값이 모두 같다.
     {
         name: 'toast / toast-foreground / toast-icon',
         match: (n) => n === 'toast' || n === 'toast-foreground' || n === 'toast-icon',
@@ -382,7 +430,9 @@ const CUSTOM_GROUPS: Group[] = [
         name: '상태 (success / warning / error / info)',
         match: (n) => ['success', 'warning', 'error', 'info'].some((s) => n === s || n === `${s}-foreground`),
     },
-    // 조회 목록의 진행 상태 글자색 — 팔레트 밖 값이라 common 앵커(status-blue)를 가리킨다.
+    // K-BIGx 보고서 차트 계열 색 — 다른 화면이 쓰는 chart-1~5 와 분리한 보고서 전용 슬롯(다크는 각 색의 400).
+    {name: 'report-series-1~6 (K-BIGx 보고서 계열 색)', match: (n) => n.startsWith('report-series-')},
+    // 조회 목록의 진행 상태 글자색 — 라이트는 단계 팔레트 밖 값이라 extra.azure, 다크는 blue.300 을 가리킨다.
     {name: 'status-evaluated (평가완료)', match: (n) => n === 'status-evaluated'},
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
     {name: 'main-accent / main-accent-bright', match: (n) => n.startsWith('main-accent')},
@@ -427,6 +477,10 @@ const RECIPE_GROUPS: Group[] = [
     {name: 'Alert', match: (n) => n.startsWith('alert-')},
     {name: 'SegmentedControl', match: (n) => n.startsWith('segmented-')},
     {name: 'FileUpload', match: (n) => n.startsWith('file-upload-')},
+    {name: 'EvaluationModelSelection (평가모형 카드)', match: (n) => n.startsWith('model-card-')},
+    {name: 'DivergingRankChart (성장률 막대)', match: (n) => n.startsWith('rank-bar-')},
+    {name: 'RatingMatrix (등급 표시 원)', match: (n) => n.startsWith('rating-marker-')},
+    {name: 'GradeScaleGauge (등급 칸 글자)', match: (n) => n.startsWith('grade-scale-')},
     {name: 'StepProgress', match: (n) => n.startsWith('step-progress-')},
     {name: 'ActionCheck', match: (n) => n.startsWith('action-check-')},
     {name: '기타 컴포넌트', match: () => true}, // 안전망 — 새 접두사의 레시피 토큰이 생기면 여기로.
@@ -570,6 +624,24 @@ const GROUP_USAGE: Record<string, ReactNode> = {
         <>Popover·Dropdown·Select 목록처럼 화면 위에 뜨는 면과 그 안의 텍스트에 사용합니다.</>
     ),
     'chart-1~5': <>차트의 계열 색입니다. 계열 순서대로 1부터 사용합니다.</>,
+    'page (서비스 페이지 본문 바탕)': (
+        <>
+            서비스 페이지 본문(main)과 헤더의 바탕입니다. 라이트는 흰색, 다크는 gray.900 이라 그 위의 카드(gray.800)와
+            구분됩니다.
+        </>
+    ),
+    'field (입력 칸 바탕)': (
+        <>
+            Input · Textarea · Select · InputGroup · 첨부 파일 칸처럼 값을 입력하거나 고르는 칸의 바탕입니다. 다크는
+            gray.900 입니다.
+        </>
+    ),
+    'report-series-1~6 (K-BIGx 보고서 계열 색)': (
+        <>
+            K-BIGx 보고서 차트의 계열 색입니다(남색 · 파랑 · 보라 · 민트 · 주황 · 빨강). 다크는 각 색의 400 이라 다크
+            카드 위에서도 보입니다. 다른 화면의 차트는 chart-1~5 를 쓰므로 이 값을 바꿔도 영향이 없습니다.
+        </>
+    ),
     'sidebar (+ 세부 7)': (
         <>사이드바의 면·텍스트·활성 항목·테두리·포커스 링입니다. 본문과 다른 색 맥락을 갖도록 따로 둡니다.</>
     ),

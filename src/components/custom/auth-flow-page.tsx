@@ -23,7 +23,7 @@ import {cn} from '@/lib/utils'
 
 // 로그인 흐름 화면의 콘텐츠 영역만 비워 둔다. 실제 화면 내용은 서비스 연동 시 추가한다.
 const AuthFlowPage = ({children}: {children?: ReactNode}) => (
-    <main id="main" tabIndex={-1} className="bg-surface flex-1">
+    <main id="main" tabIndex={-1} className="bg-page flex-1">
         <div className="grid-layout *:col-span-full">{children}</div>
     </main>
 )

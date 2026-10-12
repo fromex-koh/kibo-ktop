@@ -14,11 +14,11 @@ import {
 import {InfoTable} from '@/components/composite/info-table'
 import {
     Card,
-    GradeBadge,
+    REPORT_LINE_STYLES,
     ReportTable,
     SectionTitle,
     StatBox,
-    SubBlock,
+    WithUnit,
 } from '@/components/custom/innovation-growth-report-parts'
 import {LineChart} from '@/components/custom/line-chart'
 import {OverlayColumnChart} from '@/components/custom/overlay-column-chart'
@@ -31,9 +31,8 @@ import type {
 } from '@/content/service/k-bigx-innovation-report'
 
 // K-BIGx 기업혁신성장 보고서 · 기업현황 탭 본문 — 개요 → 경영진 및 주주현황 → 관계기업 현황 → 특허 및 인증현황 → 재무현황 → 거래처현황.
-// 보고서 머리 · 탭 줄 · 탭 제목 줄은 innovation-growth-report-document.tsx 가 그리고, 이 컴포넌트는 탭 본문만 그린다.
-//
-// 반응형 없음 — 이 탭은 PC 폭(1280)만 그린다. 창이 그보다 좁으면 문서(main)가 폭을 지키고 가로 스크롤이 생긴다(document 의 min-w-320).
+// 보고서 머리 · 탭 줄 · 탭 제목 줄은 innovation-growth-report-document.tsx 가 그린다.
+// 반응형 없음 — PC 화면만 그린다(문서 최소 폭 1200, 그보다 좁은 창에서만 가로 스크롤).
 //
 // [프론트엔드 연동] 모든 값은 status(report.companyStatus) 하나로 받는다 — 형태는 content/service/k-bigx-innovation-report.ts 의
 // InnovationCompanyStatus. 재무 행의 values 는 finance.years 와 같은 순서 · 길이여야 표와 그래프가 맞는다.
@@ -43,8 +42,11 @@ const numberFormatter = new Intl.NumberFormat('ko-KR')
 const ratioFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
 // 신용등급이 없는 거래처의 표시.
 const EMPTY_VALUE = '-'
+// [프론트엔드 연동 · 최대 10건] 주주 현황 · 관계기업 현황은 기획 메모 '목록 개수 최대 10개 노출' — 받은 순서대로 앞에서부터
+// 10건만 그린다(11번째부터 안 보임). API 는 목록을 자르지 말고 그대로 보낸다.
+const COMPANY_LIST_LIMIT = 10
 
-// 특허 · 인증 상자의 선 아이콘(16) — 데이터의 id 로 고른다.
+// 특허 · 인증 상자의 아이콘 — 데이터의 id 로 고른다.
 const IP_ICONS: Record<InnovationIpId, LucideIcon> = {
     patent: Award,
     'utility-model': ScrollText,
@@ -61,17 +63,10 @@ const CERTIFIED_LABEL = '인증'
 const NOT_CERTIFIED_LABEL = '미인증'
 const COUNT_UNIT = '건'
 
-// 재무 그래프 색 — 겹친 막대: 기준(총자산 · 매출액) gray.100, 앞 막대 blue.500 · purple.500.
-// 선 그래프: 행 순서대로 navy.500 · blue.500 · purple.500 · mint.700 · orange.500.
-const OVERLAY_BASE_COLOR = 'var(--raw-gray-100)'
-const OVERLAY_SERIES_COLORS = ['var(--raw-blue-500)', 'var(--raw-purple-500)'] as const
-const LINE_COLORS = [
-    'var(--raw-navy-500)',
-    'var(--raw-blue-500)',
-    'var(--raw-purple-500)',
-    'var(--raw-mint-700)',
-    'var(--raw-orange-500)',
-] as const
+// 재무 그래프(겹친 막대) 색 — 기준 막대(첫 행: 총자산 · 매출액)는 구조색 muted, 앞 막대(나머지 행, 순서대로)는
+// --ds-blue-400 · report-series-1. 모두 --ds-* 라 다크에서 함께 바뀐다.
+const OVERLAY_BASE_COLOR = 'var(--ds-muted)'
+const OVERLAY_SERIES_COLORS = ['var(--ds-blue-400)', 'var(--ds-report-series-1)'] as const
 
 // 재무 행 → 표(구분 + 연도 열).
 const financeTable = (
@@ -102,7 +97,7 @@ const financeChartData = (years: readonly string[], rows: readonly InnovationFin
         values: Object.fromEntries(rows.map((row) => [row.key, row.values[index] ?? 0])),
     }))
 
-// 거래처 표 — 기업명 · 연도별 비중(두 단 머리) · 신용등급 뱃지 · 기준일.
+// 거래처 표 — 기업명 · 연도별 비중(두 단 머리) · 신용등급(CRI 코드, 없으면 '-') · 평가일자.
 const tradeTable = (
     years: readonly string[],
     partners: readonly InnovationTradePartner[],
@@ -112,7 +107,7 @@ const tradeTable = (
         {key: 'name', label: '기업명'},
         ...years.map((year) => ({key: `share-${year}`, label: year, group: shareGroupLabel})),
         {key: 'grade', label: '신용등급'},
-        {key: 'baseYear', label: '기준일'},
+        {key: 'evaluationDate', label: '평가일자'},
     ],
     rows: partners.map((partner, rowIndex) => ({
         id: `${partner.name}-${rowIndex}`,
@@ -121,13 +116,13 @@ const tradeTable = (
             ...Object.fromEntries(
                 years.map((year, index) => [`share-${year}`, ratioFormatter.format(partner.shares[index] ?? 0)]),
             ),
-            // 등급이 없는 줄도 뱃지(28) 높이를 지켜 줄 높이(52)가 다른 줄과 같다.
-            grade: partner.grade ? (
-                <GradeBadge grade={partner.grade} />
-            ) : (
-                <span className="inline-flex h-7 items-center">{EMPTY_VALUE}</span>
+            // 등급 칸 높이를 고정해 등급이 없는('-') 줄도 다른 줄과 높이가 같다.
+            grade: (
+                <span className="typo-body-m-bold text-navy-600 inline-flex h-7 items-center">
+                    {partner.grade || EMPTY_VALUE}
+                </span>
             ),
-            baseYear: partner.baseYear,
+            evaluationDate: partner.evaluationDate,
         },
     })),
 })
@@ -157,18 +152,20 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
             {/* 개요 */}
             <section aria-labelledby="ig-company-overview" className="flex flex-col gap-4">
                 <SectionTitle id="ig-company-overview" title="개요" />
-                <InfoTable
-                    layout="pairs"
-                    aria-label="기업 개요"
-                    items={status.overview.map((row) => ({key: row.label, ...row}))}
-                />
+                <Card>
+                    <InfoTable
+                        layout="pairs"
+                        aria-label="기업 개요"
+                        items={status.overview.map((row) => ({key: row.label, ...row}))}
+                    />
+                </Card>
             </section>
 
             {/* 경영진 및 주주현황 */}
             <section aria-labelledby="ig-company-management" className="flex flex-col gap-4">
                 <SectionTitle id="ig-company-management" title="경영진 및 주주현황" />
                 <div className="grid grid-cols-2 gap-6">
-                    <SubBlock title="경영진 현황">
+                    <Card title="경영진 현황" className="gap-4">
                         <ReportTable
                             caption="경영진 현황"
                             minWidthClassName="min-w-90"
@@ -182,101 +179,114 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                                 cells: {role: executive.role, name: executive.name, birthDate: executive.birthDate},
                             }))}
                         />
-                    </SubBlock>
-                    <SubBlock title="주주 현황" aside="단위 : 주, %">
+                    </Card>
+                    <Card title="주주 현황" className="gap-4">
+                        <WithUnit unit="단위: 주, %">
+                            <ReportTable
+                                caption="주주 현황(단위: 주, %)"
+                                columns={[
+                                    {key: 'name', label: '주주명'},
+                                    {key: 'shares', label: '소유주식수'},
+                                    {key: 'ratio', label: '지분율'},
+                                    {key: 'relation', label: '최대주주와의 관계'},
+                                ]}
+                                rows={status.shareholders.slice(0, COMPANY_LIST_LIMIT).map((shareholder, index) => ({
+                                    id: `${shareholder.name}-${index}`,
+                                    cells: {
+                                        name: shareholder.name,
+                                        shares: numberFormatter.format(shareholder.shares),
+                                        ratio: ratioFormatter.format(shareholder.ratio),
+                                        relation: shareholder.relation,
+                                    },
+                                }))}
+                            />
+                        </WithUnit>
+                    </Card>
+                </div>
+            </section>
+
+            {/* 관계기업 현황 — 제목 없는 카드 안에 단위 줄 + 표. */}
+            <section aria-labelledby="ig-company-affiliates" className="flex flex-col gap-4">
+                <SectionTitle id="ig-company-affiliates" title="관계기업 현황" />
+                <Card>
+                    <WithUnit unit="단위: 백만원">
                         <ReportTable
-                            caption="주주 현황(단위: 주, %)"
+                            caption="관계기업 현황(단위: 백만원)"
+                            minWidthClassName="min-w-160"
                             columns={[
-                                {key: 'name', label: '주주명'},
-                                {key: 'shares', label: '소유주식수'},
-                                {key: 'ratio', label: '지분율'},
-                                {key: 'relation', label: '최대주주와의 관계'},
+                                {key: 'name', label: '기업명'},
+                                {key: 'ceo', label: '대표자'},
+                                {key: 'industry', label: '업종'},
+                                {key: 'fiscalYear', label: '결산년도'},
+                                {key: 'totalAssets', label: '총자산'},
+                                {key: 'sales', label: '매출액'},
                             ]}
-                            rows={status.shareholders.map((shareholder, index) => ({
-                                id: `${shareholder.name}-${index}`,
+                            rows={status.affiliates.slice(0, COMPANY_LIST_LIMIT).map((affiliate, index) => ({
+                                id: `${affiliate.name}-${index}`,
                                 cells: {
-                                    name: shareholder.name,
-                                    shares: numberFormatter.format(shareholder.shares),
-                                    ratio: ratioFormatter.format(shareholder.ratio),
-                                    relation: shareholder.relation,
+                                    name: affiliate.name,
+                                    ceo: affiliate.ceo,
+                                    industry: affiliate.industry,
+                                    fiscalYear: affiliate.fiscalYear,
+                                    totalAssets: numberFormatter.format(affiliate.totalAssets),
+                                    sales: numberFormatter.format(affiliate.sales),
                                 },
                             }))}
                         />
-                    </SubBlock>
-                </div>
+                    </WithUnit>
+                </Card>
             </section>
 
-            {/* 관계기업 현황 */}
-            <section aria-labelledby="ig-company-affiliates" className="flex flex-col gap-4">
-                <SectionTitle id="ig-company-affiliates" title="관계기업 현황" date="단위 : 백만원" />
-                <ReportTable
-                    caption="관계기업 현황(단위: 백만원)"
-                    minWidthClassName="min-w-160"
-                    columns={[
-                        {key: 'name', label: '기업명'},
-                        {key: 'ceo', label: '대표자'},
-                        {key: 'industry', label: '업종'},
-                        {key: 'fiscalYear', label: '결산년도'},
-                        {key: 'totalAssets', label: '총자산'},
-                        {key: 'sales', label: '매출액'},
-                    ]}
-                    rows={status.affiliates.map((affiliate, index) => ({
-                        id: `${affiliate.name}-${index}`,
-                        cells: {
-                            name: affiliate.name,
-                            ceo: affiliate.ceo,
-                            industry: affiliate.industry,
-                            fiscalYear: affiliate.fiscalYear,
-                            totalAssets: numberFormatter.format(affiliate.totalAssets),
-                            sales: numberFormatter.format(affiliate.sales),
-                        },
-                    }))}
-                />
-            </section>
-
-            {/* 특허 및 인증현황 — 카드 없이 문서 바탕에 흰 상자로 놓인다. 윗줄 건수 · 아랫줄 인증 여부. */}
+            {/* 특허 및 인증현황 — 지식재산 건수 상자(intellectualProperty) 뒤에 인증 여부 상자(certifications)를 4열로 잇는다. */}
             <section aria-labelledby="ig-company-ip" className="flex flex-col gap-4">
                 <SectionTitle id="ig-company-ip" title="특허 및 인증현황" />
-                <div className="grid grid-cols-4 gap-6">
-                    {status.intellectualProperty.map((item) => {
-                        const Icon = IP_ICONS[item.id]
-                        return (
-                            <StatBox
-                                key={item.id}
-                                label={item.label}
-                                value={numberFormatter.format(item.count)}
-                                unit={COUNT_UNIT}
-                                icon={<Icon aria-hidden="true" className="size-icon-sm shrink-0" />}
-                                className="bg-card"
-                            />
-                        )
-                    })}
-                    {status.certifications.map((item) => {
-                        const Icon = CERTIFICATION_ICONS[item.id]
-                        return (
-                            <StatBox
-                                key={item.id}
-                                label={item.label}
-                                value={item.isCertified ? CERTIFIED_LABEL : NOT_CERTIFIED_LABEL}
-                                icon={<Icon aria-hidden="true" className="size-icon-sm shrink-0" />}
-                                // 미인증은 흐린 글자로 — 글자(미인증)가 뜻을 전하므로 색에만 기대지 않는다[5.3.1].
-                                valueClassName={item.isCertified ? 'text-foreground' : 'text-foreground-subtle'}
-                                className="bg-card"
-                            />
-                        )
-                    })}
-                </div>
+                <Card>
+                    <div className="grid grid-cols-4 gap-6">
+                        {status.intellectualProperty.map((item) => {
+                            const Icon = IP_ICONS[item.id]
+                            return (
+                                <StatBox
+                                    key={item.id}
+                                    label={item.label}
+                                    value={numberFormatter.format(item.count)}
+                                    unit={COUNT_UNIT}
+                                    icon={<Icon aria-hidden="true" className="size-icon-sm shrink-0" />}
+                                    className="border-subtle-3 border"
+                                />
+                            )
+                        })}
+                        {status.certifications.map((item) => {
+                            const Icon = CERTIFICATION_ICONS[item.id]
+                            return (
+                                <StatBox
+                                    key={item.id}
+                                    label={item.label}
+                                    value={item.isCertified ? CERTIFIED_LABEL : NOT_CERTIFIED_LABEL}
+                                    icon={<Icon aria-hidden="true" className="size-icon-sm shrink-0" />}
+                                    // 미인증은 흐린 글자로 — 글자(미인증)가 뜻을 전하므로 색에만 기대지 않는다[5.3.1].
+                                    valueClassName={item.isCertified ? 'text-foreground' : 'text-foreground-subtle'}
+                                    className="border-subtle-3 border"
+                                />
+                            )
+                        })}
+                    </div>
+                </Card>
             </section>
 
             {/* 재무현황 — 카드마다 표(위) + 그래프(아래). 재무상태 · 손익은 겹친 막대, 비율 · 현금흐름은 여러 선. */}
             <section aria-labelledby="ig-company-finance" className="flex flex-col gap-4">
                 <SectionTitle id="ig-company-finance" title="재무현황" />
                 <div className="grid grid-cols-2 gap-6">
-                    <Card title="재무상태" aside="단위 : 백만원">
-                        <ReportTable caption="재무상태(단위: 백만원)" minWidthClassName="min-w-90" {...balanceTable} />
+                    <Card title="재무상태" className="gap-4">
+                        <WithUnit unit="단위: 백만원">
+                            <ReportTable
+                                caption="재무상태(단위: 백만원)"
+                                minWidthClassName="min-w-90"
+                                {...balanceTable}
+                            />
+                        </WithUnit>
                         {balanceBase ? (
                             <OverlayColumnChart
-                                animate={false}
                                 ariaLabel="연도별 재무상태 — 총자산 대비 부채총계 · 자본총계"
                                 unit="백만원"
                                 data={financeChartData(finance.years, finance.balance)}
@@ -289,11 +299,16 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                             />
                         ) : null}
                     </Card>
-                    <Card title="손익현황" aside="단위 : 백만원">
-                        <ReportTable caption="손익현황(단위: 백만원)" minWidthClassName="min-w-90" {...incomeTable} />
+                    <Card title="손익현황" className="gap-4">
+                        <WithUnit unit="단위: 백만원">
+                            <ReportTable
+                                caption="손익현황(단위: 백만원)"
+                                minWidthClassName="min-w-90"
+                                {...incomeTable}
+                            />
+                        </WithUnit>
                         {incomeBase ? (
                             <OverlayColumnChart
-                                animate={false}
                                 ariaLabel="연도별 손익현황 — 매출액 대비 영업이익 · 당기순이익"
                                 unit="백만원"
                                 data={financeChartData(finance.years, finance.income)}
@@ -306,10 +321,11 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                             />
                         ) : null}
                     </Card>
-                    <Card title="주요재무비율" aside="단위 : %">
-                        <ReportTable caption="주요재무비율(단위: %)" minWidthClassName="min-w-90" {...ratioTable} />
+                    <Card title="주요재무비율" className="gap-4">
+                        <WithUnit unit="단위: %">
+                            <ReportTable caption="주요재무비율(단위: %)" minWidthClassName="min-w-90" {...ratioTable} />
+                        </WithUnit>
                         <LineChart
-                            animate={false}
                             appearance="columns"
                             showTooltip={false}
                             ariaLabel="연도별 주요재무비율"
@@ -319,18 +335,19 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                             series={finance.ratios.map((row, index) => ({
                                 key: row.key,
                                 label: row.label,
-                                color: LINE_COLORS[index % LINE_COLORS.length],
+                                ...REPORT_LINE_STYLES[index % REPORT_LINE_STYLES.length],
                             }))}
                         />
                     </Card>
-                    <Card title="현금흐름" aside="단위 : 백만원">
-                        <ReportTable
-                            caption="현금흐름(단위: 백만원)"
-                            minWidthClassName="min-w-100"
-                            {...cashFlowTable}
-                        />
+                    <Card title="현금흐름" className="gap-4">
+                        <WithUnit unit="단위: 백만원">
+                            <ReportTable
+                                caption="현금흐름(단위: 백만원)"
+                                minWidthClassName="min-w-100"
+                                {...cashFlowTable}
+                            />
+                        </WithUnit>
                         <LineChart
-                            animate={false}
                             appearance="columns"
                             showTooltip={false}
                             ariaLabel="연도별 현금흐름"
@@ -339,23 +356,27 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                             series={finance.cashFlows.map((row, index) => ({
                                 key: row.key,
                                 label: row.label,
-                                color: LINE_COLORS[index % LINE_COLORS.length],
+                                ...REPORT_LINE_STYLES[index % REPORT_LINE_STYLES.length],
                             }))}
                         />
                     </Card>
                 </div>
             </section>
 
-            {/* 거래처현황 — 매출처 · 매입처. 비중은 연도별 두 단 머리, 신용등급은 뱃지(CRI 코드). */}
+            {/* 거래처현황 — 매출처 · 매입처 카드. 비중 열은 finance.years 를 쓴다(shares 도 같은 순서). */}
             <section aria-labelledby="ig-company-trade" className="flex flex-col gap-4">
                 <SectionTitle id="ig-company-trade" title="거래처현황" />
                 <div className="flex flex-col gap-6">
-                    <SubBlock title="매출처" aside="단위 : %, 백만원">
-                        <ReportTable caption="매출처(단위: %)" minWidthClassName="min-w-160" {...customerTable} />
-                    </SubBlock>
-                    <SubBlock title="매입처" aside="단위 : %, 백만원">
-                        <ReportTable caption="매입처(단위: %)" minWidthClassName="min-w-160" {...supplierTable} />
-                    </SubBlock>
+                    <Card title="매출처" className="gap-4">
+                        <WithUnit unit="단위: %">
+                            <ReportTable caption="매출처(단위: %)" minWidthClassName="min-w-160" {...customerTable} />
+                        </WithUnit>
+                    </Card>
+                    <Card title="매입처" className="gap-4">
+                        <WithUnit unit="단위: %">
+                            <ReportTable caption="매입처(단위: %)" minWidthClassName="min-w-160" {...supplierTable} />
+                        </WithUnit>
+                    </Card>
                 </div>
             </section>
         </>

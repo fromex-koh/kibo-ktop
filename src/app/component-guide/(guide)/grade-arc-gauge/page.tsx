@@ -246,6 +246,17 @@ const GradeArcGaugeGuidePage = () => (
                         &apos;최종등급 TI3&apos; 처럼 전달됩니다[5.1.1].
                     </li>
                     <li>등급이 글자로도 있어 색만으로 뜻을 전하지 않습니다[5.3.1].</li>
+                    <li>
+                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
+                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
+                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
+                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                    </li>
+                    <li>
+                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
+                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
+                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                    </li>
                 </ul>
             </section>
         </BaseCard>

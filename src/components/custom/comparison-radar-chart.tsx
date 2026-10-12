@@ -1,10 +1,11 @@
 'use client'
 
-import {useState, type ComponentPropsWithoutRef} from 'react'
+import {useEffect, useState, type ComponentPropsWithoutRef} from 'react'
 import {PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart} from 'recharts'
 import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import {useIsHydrated} from '@/hooks/use-is-hydrated'
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
+import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
 import {ChartTooltipRow} from '@/components/composite/chart-tooltip-parts'
 import {chartTooltipClassName, chartTooltipTitleClassName} from '@/components/theme/chart-tooltip.variants'
@@ -19,7 +20,8 @@ type ComparisonRadarItem = {
 
 type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     /**
-     * 다각형이 가운데에서 펼쳐지는 움직임. 인쇄용 문서처럼 그린 즉시 그대로 찍혀야 하는 곳에서는 끈다 —
+     * 다각형이 가운데에서 펼쳐지는 움직임(처음 한 번). 안 주면 useChartAnimation() 값을 따른다(chart-reveal.tsx).
+     * 인쇄용 문서처럼 그린 즉시 그대로 찍혀야 하는 곳에서는 끈다 —
      * 켜 두면 펼쳐지는 도중에 인쇄돼 다각형이 덜 자란 채로 남을 수 있다.
      */
     animate?: boolean
@@ -154,7 +156,7 @@ const ComparisonRadarLegend = ({
 )
 
 const ComparisonRadarChart = ({
-    animate = true,
+    animate: animateProp,
     data,
     primaryLabel,
     comparisonLabel,
@@ -186,10 +188,19 @@ const ComparisonRadarChart = ({
     className,
     ...props
 }: ComparisonRadarChartProps) => {
-    // 처음 한 번만 펼쳐지는 움직임을 보인다 — recharts 는 폭이 바뀔 때마다 새로 그리며 움직임을 되풀이해
-    // 창 폭을 움직일 때마다 다각형이 다시 펼쳐진다. 첫 움직임이 끝나면 끈다.
+    // animate 를 안 주면 문서 설정을 따른다(chart-reveal.tsx) — 보고서는 스크롤해서 보일 때, 그 밖에는 바로 움직인다.
+    const revealAnimate = useChartAnimation()
+    const animate = animateProp ?? revealAnimate
+    // 처음 한 번만 가운데에서 펼쳐진다 — recharts 는 폭이 바뀔 때마다 다시 펼치므로 움직임 길이가 지나면 끈다.
+    // Radar 의 onAnimationEnd 로 끄면 안 된다 — 폭을 재기 전 빈 상태로 그렸다가 다시 그릴 때도 불려 움직이기 전에 꺼진다.
     const [hasAnimated, setHasAnimated] = useState(false)
     const isAnimationActive = animate && !hasAnimated
+    useEffect(() => {
+        if (!animate) return
+        const timer = window.setTimeout(() => setHasAnimated(true), CHART_ANIMATION_MS)
+
+        return () => window.clearTimeout(timer)
+    }, [animate])
     // 새로고침 직후에는 차트가 칸의 폭을 재기 전이라 빈 칸으로 보인다 — 화면이 붙기 전까지도 같은 스켈레톤을 보인다.
     const isHydrated = useIsHydrated()
     // 비교 계열은 이름이 있을 때만 그린다 — 값만 있고 이름이 없으면 범례에 쓸 말이 없다.
@@ -199,7 +210,7 @@ const ComparisonRadarChart = ({
         primaryValue: {label: primaryLabel, color: primaryColor},
         comparisonValue: {label: comparisonLabel ?? '', color: comparisonColor},
     } satisfies ChartConfig
-    // recharts 는 자료 한 줄의 속성을 그린 도형에 그대로 옮긴다 — id 를 담아 보내면 배경 막대·계열 막대가
+    // recharts 는 자료 한 줄의 속성을 그린 도형에 그대로 옮긴다 — id 를 담아 보내면 다각형 · 점 등이
     // 모두 같은 id 를 달아 문서에 같은 id 가 여러 번 생긴다[8.1.1]. id 는 아래 숨김 표의 key 로만 쓰므로
     // 차트로는 넘기지 않는다.
     // recharts 는 첫 축을 맨 위에 두고 시계 방향으로 돈다. 반시계로 놓으려면 첫 축은 그대로 두고 나머지 순서를 뒤집는다.
@@ -280,7 +291,14 @@ const ComparisonRadarChart = ({
                 role="img"
                 aria-label={ariaLabel}
             >
-                <RadarChart accessibilityLayer data={chartData} cy={centerY} outerRadius={outerRadius} margin={margin}>
+                {/* recharts 키보드 탐색 층은 끈다 — 값은 숨김 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
+                <RadarChart
+                    accessibilityLayer={false}
+                    data={chartData}
+                    cy={centerY}
+                    outerRadius={outerRadius}
+                    margin={margin}
+                >
                     <PolarGrid key="grid" gridType={gridType} stroke={gridColor} />
                     <PolarAngleAxis
                         key="angle-axis"
@@ -331,6 +349,7 @@ const ComparisonRadarChart = ({
                             name="comparisonValue"
                             dataKey="comparisonValue"
                             isAnimationActive={isAnimationActive}
+                            animationDuration={CHART_ANIMATION_MS}
                             activeDot={showTooltip}
                             stroke="var(--color-comparisonValue)"
                             strokeWidth={2}
@@ -354,7 +373,7 @@ const ComparisonRadarChart = ({
                         name="primaryValue"
                         dataKey="primaryValue"
                         isAnimationActive={isAnimationActive}
-                        onAnimationEnd={() => setHasAnimated(true)}
+                        animationDuration={CHART_ANIMATION_MS}
                         activeDot={showTooltip}
                         stroke="var(--color-primaryValue)"
                         strokeWidth={2.5}

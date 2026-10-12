@@ -18,9 +18,18 @@ const USAGE_CODE = `import {ScrollToTopButton} from '@/components/composite/scro
 
 const CUSTOM_LABEL_CODE = `<ScrollToTopButton label="맨 위로 스크롤" />`
 
+const POSITION_CODE = `{/* K-BIGx 보고서(custom/innovation-growth-report-document.tsx) — 모바일은 가장자리 16, PC 는 24. 인쇄에는 안 찍힌다. */}
+<ScrollToTopButton className="right-4 bottom-4 md:right-6 md:bottom-6 print:hidden" />`
+
 const PROPS_ITEMS = [
     ['ScrollToTopButton', 'label', '스크린리더가 읽는 버튼 이름입니다.', "'맨 위로 이동'", 'string'],
-    ['ScrollToTopButton', 'className', '버튼에 덧붙일 클래스입니다. 위치를 바꿀 때 씁니다.', '-', 'string'],
+    [
+        'ScrollToTopButton',
+        'className',
+        '버튼에 덧붙일 클래스입니다. 가장자리 간격(right-* · bottom-*)을 바꾸거나 print:hidden 을 줄 때 씁니다.',
+        '-',
+        'string',
+    ],
 ] as const
 
 const ScrollToTopButtonGuidePage = () => (
@@ -50,8 +59,22 @@ const ScrollToTopButtonGuidePage = () => (
                             <li>
                                 화면 오른쪽 아래에 고정되는 원형 아이콘 버튼입니다. 누르면 문서 맨 위로 스크롤합니다.
                             </li>
+                            <li>
+                                나타날 때는 아래에서 살짝 떠오르며(<code>animate-in</code>), 보이지 않을 때는 DOM 에서
+                                빠집니다.
+                            </li>
                             <li>이 가이드 화면에도 들어 있습니다. 아래로 스크롤하면 오른쪽 아래에 나타납니다.</li>
                         </ul>
+                    </div>
+                    <div className={BLOCK}>
+                        <h3 className="typo-title-m-bold text-foreground">위치 바꾸기 · 긴 화면에 두기</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            기본 위치는 오른쪽 · 아래 24(<code>right-6 bottom-6</code>)입니다. 가장자리 간격은{' '}
+                            <code>className</code> 으로 덮어씁니다. 레이아웃에 없고 한 화면만 긴 경우(K-BIGx 보고서처럼
+                            탭 하나가 길 때)에는 그 화면의 맨 아래에 한 번 둡니다. 인쇄에 찍히지 않도록{' '}
+                            <code>print:hidden</code> 을 함께 줍니다.
+                        </p>
+                        <CodeBlock code={POSITION_CODE} language="tsx" copyLabel="복사" />
                     </div>
                     <div className={BLOCK}>
                         <h3 className="typo-title-m-bold text-foreground">라벨 바꾸기</h3>

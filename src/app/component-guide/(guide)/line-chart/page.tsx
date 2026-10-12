@@ -97,7 +97,8 @@ const COLUMNS_USAGE_CODE = `<LineChart
   unit="%"
   valueFractionDigits={2}
   data={data}     // [{id: '2022년', label: '2022년', values: {operatingMargin: 7.84, …}}, …]
-  series={series} // [{key: 'operatingMargin', label: '영업이익률', color: 'var(--raw-navy-500)'}, …]
+  series={series} // [{key: 'operatingMargin', label: '영업이익률', color: 'var(--ds-report-series-1)', marker: 'circle'},
+                  //  {key: 'debtRatio', label: '부채비율', color: 'var(--ds-report-series-2)', dash: '2 4', marker: 'circle-filled'}, …]
 />`
 
 const DEFAULT_USAGE_CODE = `<LineChart
@@ -190,11 +191,11 @@ const SPECIAL_CASES = [
 ] as const
 
 const PALETTE = [
-    'var(--raw-navy-500)',
-    'var(--raw-blue-500)',
-    'var(--raw-purple-500)',
-    'var(--raw-mint-700)',
-    'var(--raw-orange-500)',
+    'var(--ds-report-series-1)',
+    'var(--ds-report-series-2)',
+    'var(--ds-report-series-3)',
+    'var(--ds-report-series-4)',
+    'var(--ds-report-series-5)',
 ] as const
 const RATIO_ROWS = [
     ['operatingMargin', '영업이익률', [7.84, 8.52, 8.39]],
@@ -206,8 +207,22 @@ const RATIO_ROWS = [
 const YEARS = ['2022년', '2023년', '2024년'] as const
 
 type ColumnsRow = readonly [string, string, readonly number[]]
+// columns 계열의 선 · 점 모양(순서대로) — 색만으로 다섯 선을 가르기 어려워 함께 다르게 둔다. 보고서 기업현황과 같은 조합.
+const COLUMNS_LINE_STYLES: readonly Pick<LineChartSeries, 'dash' | 'marker'>[] = [
+    {marker: 'circle'},
+    {dash: '2 4', marker: 'circle-filled'},
+    {dash: '8 4 2 4', marker: 'square'},
+    {dash: '6 4', marker: 'diamond'},
+    {marker: 'triangle'},
+]
+
 const toColumnsChart = (rows: readonly ColumnsRow[], years: readonly string[] = YEARS) => ({
-    series: rows.map(([key, label], index) => ({key, label, color: PALETTE[index % PALETTE.length]})),
+    series: rows.map(([key, label], index) => ({
+        key,
+        label,
+        color: PALETTE[index % PALETTE.length],
+        ...COLUMNS_LINE_STYLES[index % COLUMNS_LINE_STYLES.length],
+    })),
     data: years.map((year, yearIndex) => ({
         id: year,
         label: year,
@@ -288,7 +303,27 @@ const PROPS_COLUMNS = [
 
 const PROPS_ITEMS = [
     ['LineChart', 'data', '기간별 고유 id · 표시명과 series key 에 대응하는 값입니다.', '-', 'LineChartItem[]'],
-    ['LineChart', 'series', '선마다 key · 표시명 · 색입니다. 색은 토큰 변수를 씁니다.', '-', 'LineChartSeries[]'],
+    [
+        'LineChart',
+        'series',
+        '선마다 key · 표시명 · 색입니다. 색은 토큰 변수를 씁니다 — K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>) — 다크에서 밝은 단계로 바뀐다.',
+        '-',
+        'LineChartSeries[]',
+    ],
+    [
+        'LineChartSeries',
+        'dash',
+        "이 선의 모양(SVG stroke-dasharray)입니다. 예: '2 4' 점선 · '8 4 2 4' 일점쇄선 · '6 4' 파선. 안 주면 실선.",
+        'undefined',
+        'string',
+    ],
+    [
+        'LineChartSeries',
+        'marker',
+        "이 선의 점 모양입니다. 'circle' 은 흰 속의 원, 나머지는 계열 색으로 채웁니다. cells · columns 에서 쓰입니다.",
+        "'circle'",
+        "'circle' | 'circle-filled' | 'square' | 'diamond' | 'triangle'",
+    ],
     ['LineChart', 'ariaLabel', '차트 이름입니다. 숨김 표의 캡션으로도 쓰입니다.', '-', 'string'],
     [
         'LineChart',
@@ -309,15 +344,35 @@ const PROPS_ITEMS = [
     ],
     ['LineChart', 'showTooltip', '값 위에 올렸을 때의 말풍선과 강조 점입니다.', 'true', 'boolean'],
     ['LineChart', 'showLegend', '범례 표시 여부입니다.', 'true', 'boolean'],
-    ['LineChart', 'animate', '그리는 움직임입니다. 인쇄용 문서에서는 끕니다.', 'true', 'boolean'],
+    [
+        'LineChart',
+        'animate',
+        '그리는 움직임입니다. 안 주면 문서 설정을 따르고(접근성 항목 참고), 인쇄용 문서처럼 즉시 찍혀야 하면 끕니다.',
+        '문서 설정',
+        'boolean',
+    ],
     [
         'LineChart',
         'unit',
-        '툴팁과 숨김 표 머리글에 붙는 단위입니다. default 모양은 차트 왼쪽 위에도 표시합니다.',
+        "툴팁과 숨김 표 머리글에 붙는 단위입니다. 'cells' 가 아니면 차트 왼쪽 위에도 '단위: …' 로 표시합니다.",
         'undefined',
         'string',
     ],
+    [
+        'LineChart',
+        'showUnitLabel',
+        '차트 왼쪽 위 단위 글자 표시 여부입니다. 단위를 그래프 밖(표 위 · 카드 머리)에 따로 적으면 끕니다.',
+        'true',
+        'boolean',
+    ],
     ['LineChart', 'valueFractionDigits', '값의 소수 자릿수입니다. 0~6 으로 맞춥니다.', '0', 'number'],
+    [
+        'LineChart',
+        'isValueFractionFixed',
+        '소수 자리를 늘 채울지 정합니다. false 면 끝의 0 을 뺍니다(70 · 43.8).',
+        'true',
+        'boolean',
+    ],
     ['LineChart', 'showAxes', "축과 눈금선 표시 여부입니다('default' 전용).", 'true', 'boolean'],
     ['LineChart', 'yAxisDomain', "y축 범위입니다('default' 전용).", '데이터 범위', '[number, number]'],
     ['LineChart', 'yAxisStep', "y축 눈금 간격입니다('default' 전용).", 'undefined', 'number'],
@@ -325,16 +380,16 @@ const PROPS_ITEMS = [
     [
         'LineChart',
         'legendPlacement',
-        "columns 범례 자리입니다. 'top-end' 는 그래프 위 오른쪽입니다.",
+        "columns 범례 자리입니다. 'bottom' 은 그래프 아래 왼쪽, 'bottom-center' 는 아래 가운데, 'top-end' 는 그래프 위 오른쪽입니다.",
         "'bottom'",
-        "'bottom' | 'top-end'",
+        "'bottom' | 'bottom-center' | 'top-end'",
     ],
     [
         'LineChart',
         'plotHeight',
-        'columns 그릴 자리 높이(px)입니다. 항목 이름 자리(26)는 따로 더해집니다.',
+        'columns 그릴 자리 높이(px)입니다. 항목 이름 자리(26)는 따로 더해집니다. 보고서 에너지 사용량은 160 입니다.',
         '200',
-        '140 | 170 | 180 | 200',
+        '140 | 160 | 170 | 180 | 200',
     ],
 ] as const
 
@@ -438,8 +493,13 @@ const LineChartGuidePage = () => (
                     <div className={BLOCK_CLASS}>
                         <h3 className="typo-title-m-bold text-foreground">columns</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            항목마다 칸을 나누고 점을 칸 가운데에 세워 여러 선을 겹쳐 보입니다. 범례는 사각 견본이고, 값
-                            글자는 쓰지 않고 별도 표로 읽게 합니다. 칸 최소 폭은 80px 입니다. 로딩에는{' '}
+                            항목마다 칸을 나누고 점을 칸 가운데에 세워 여러 선을 겹쳐 보입니다. 계열마다{' '}
+                            <code>dash</code>(선 모양) · <code>marker</code>(점 모양)를 주면 색과 함께 선을 가를 수
+                            있고, 범례도 선 + 점 견본으로 바뀝니다(안 주면 실선 · 흰 원 · 사각 견본). 값 글자는 쓰지
+                            않고 별도 표로 읽게 합니다. 칸 최소 폭은 80px 입니다. 표와 나란히 놓고 단위를 표 위에 적는
+                            카드(보고서 신용/재무정보 재무비율진단 · 활동성정보 에너지 사용량)는{' '}
+                            <code>legendPlacement=&quot;bottom-center&quot;</code> ·{' '}
+                            <code>showUnitLabel={'{false}'}</code> 로 씁니다. 로딩에는{' '}
                             <code>ChartSkeleton type=&quot;columns-line&quot;</code> 를 씁니다.
                         </p>
                         <div className={cn(FRAME_CLASS, 'max-w-150')}>
@@ -573,6 +633,17 @@ const LineChartGuidePage = () => (
                     </li>
                     <li>
                         <code>animate</code> 로 움직임을 끌 수 있습니다[6.3.1].
+                    </li>
+                    <li>
+                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
+                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
+                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
+                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                    </li>
+                    <li>
+                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
+                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
+                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
                     </li>
                 </ul>
             </section>

@@ -18,7 +18,7 @@ type FullPageServiceStatusProps = {
 // 공통 일러스트·레이아웃·홈 이동 버튼은 이 컴포넌트에서 관리하고, 화면별 콘텐츠만 props로 받는다.
 // min-h-dvh와 flex 정렬로 화면 높이에 맞춰 중앙 배치하며, 콘텐츠가 길어지면 페이지가 자연스럽게 스크롤된다.
 const FullPageServiceStatus = ({titleId, title, description, panel}: FullPageServiceStatusProps) => (
-    <main className="bg-surface text-foreground flex min-h-dvh items-center justify-center px-6 py-16">
+    <main className="bg-page text-foreground flex min-h-dvh items-center justify-center px-6 py-16">
         <section
             className="max-w-content flex w-full flex-col items-center gap-10 text-center md:gap-15"
             aria-labelledby={titleId}
