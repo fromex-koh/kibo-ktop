@@ -8,6 +8,7 @@ const OUT = resolve(ROOT, 'src/app/tokens.css')
 const tokens = JSON.parse(readFileSync(resolve(ROOT, 'tokens.json'), 'utf8'))
 const {scale, primitive, semantic} = tokens
 const common = tokens.common ?? {} // 스케일 밖 경계값 앵커 (불투명색/transparent) → --raw-common-white 등
+const extra = tokens.extra ?? {} // 단계 팔레트에 없는 단일 색 → --raw-extra-cyan 등
 const alpha = tokens.alpha ?? {} // 실제 반투명 프리미티브 (white/black × 1~99%) → --raw-white-a5 등
 
 // 디자인 토큰 (px 숫자로 입력 → rem 출력)
@@ -68,13 +69,19 @@ for (const hue of hues) {
 for (const [k, v] of Object.entries(common))
     if (!HEX.test(v) && v !== 'transparent' && v !== 'currentColor')
         errors.push(`common.${k}="${v}" 는 #RRGGBB 또는 transparent/currentColor 여야 함`)
-// 참조 파싱: primitive("gray.900") 는 [hue, 숫자스텝], common("common.white") 은 [hue, 문자키].
+// extra: 단계 팔레트에 없는 단일 색 — hex 만 허용한다.
+for (const [k, v] of Object.entries(extra)) if (!HEX.test(v)) errors.push(`extra.${k}="${v}" 는 #RRGGBB 형식 아님`)
+// 참조 파싱: primitive("gray.900") 는 [hue, 숫자스텝], common("common.white") · extra("extra.cyan") 는 [그룹, 문자키].
 const parseRef = (ref) => {
     // 구조 키워드(투명/현재색) — 팔레트 밖 리터럴이라 검증/참조 대상이 아니다(예: 고스트 버튼 fill).
     if (ref === 'transparent' || ref === 'currentColor') return [ref, null]
     const [hue, step] = String(ref).split('.')
     if (hue === 'common') {
         if (!common[step]) errors.push(`참조 "${ref}" — common '${step}' 없음`)
+        return [hue, step]
+    }
+    if (hue === 'extra') {
+        if (!extra[step]) errors.push(`참조 "${ref}" — extra '${step}' 없음`)
         return [hue, step]
     }
     // alpha 참조("black.75"·"white.50") — 반투명 시맨틱(스크림 등)에서 primitive 대신 alpha 를 가리킨다.
@@ -284,10 +291,11 @@ if (errors.length) {
 }
 
 // ── 2) 대비(WCAG) 검증 — 텍스트 4.5:1 / 큰텍스트·아이콘·그래픽 3:1 ──
-// 디자이너 확정 전 임시 dark 컬러의 핵심 시맨틱 조합만 빌드에서 검증한다.
-// light 원본은 현재 그대로 보존하고 별도 디자인 검수 후 조정한다. disabled·장식 요소는 대비 예외다.
+// dark 값(02 Semantic Color Dark 기준)의 핵심 시맨틱 조합만 빌드에서 검증한다(아래 CHECKS · mode 'dark').
+// light 는 디자인 원본을 보존하고 별도 접근성 검수로 확인한다. disabled·장식 요소는 대비 예외다.
 const ENABLE_CONTRAST_CHECK = true
-const rawHex = (hue, step) => (hue === 'common' ? common[step] : primitive[hue][String(step)])
+const rawHex = (hue, step) =>
+    hue === 'common' ? common[step] : hue === 'extra' ? extra[step] : primitive[hue][String(step)]
 const resolveHex = (name, mode) => {
     const val = semantic[name]
     const [hue, step] = parseRef(val[mode])
@@ -379,12 +387,17 @@ if (Object.keys(common).length) {
     L.push('', '  /* raw common (스케일 밖 불투명색/transparent 앵커) */')
     for (const [k, v] of Object.entries(common)) L.push(`  --raw-common-${k}: ${v};`)
 }
+// raw extra (단계 팔레트에 없는 단일 색 — 모드 무관 고정) → --raw-extra-cyan 등
+if (Object.keys(extra).length) {
+    L.push('', '  /* raw extra (단계 팔레트에 없는 단일 색) */')
+    for (const [k, v] of Object.entries(extra)) L.push(`  --raw-extra-${k}: ${v};`)
+}
 // alpha 참조("black.5") → var(--raw-black-a5)
 const resolveAlpha = (ref) => {
     const [name, step] = String(ref).split('.')
     return `var(--raw-${name}-a${step})`
 }
-// semantic {light,dark} 값 → raw var. black/white 는 alpha(반투명), 그 외는 primitive/common.
+// semantic {light,dark} 값 → raw var. black/white 는 alpha(반투명), 그 외는 primitive/common/extra.
 const rawVarRef = (ref) => {
     if (ref === 'transparent' || ref === 'currentColor') return ref
     const [hue] = String(ref).split('.')
@@ -478,7 +491,7 @@ const SHADCN_SLOTS = new Set([
 ])
 
 // @theme inline — 색상 브리지 (런타임 --ds 참조)
-// Tailwind 기본 색 팔레트(red/slate/… 50~950)를 제거 → 프로젝트 8색·시맨틱만 유효(오사용은 무효 유틸이 되어 드러남).
+// Tailwind 기본 색 팔레트(red/slate/… 50~950)를 제거 → 프로젝트 팔레트(tokens.json primitive)·시맨틱만 유효(오사용은 무효 유틸이 되어 드러남).
 // breakpoint·container 를 initial 로 지우는 것과 같은 방식. 단 구조 키워드(투명/현재색/상속)는 되살린다.
 L.push('@theme inline {')
 L.push('  --color-*: initial;')
@@ -590,12 +603,23 @@ for (const [key, px] of gridEntries) {
     L.push('  }', '}', '')
 }
 
-// shadow 다크 오버라이드 — 색만 흰색 primitive 로 전환 (지오메트리는 동일). plain .dark
+// shadow 다크 오버라이드 — 색만 shadow.<키>.color.dark 로 바꾼다(지오메트리는 동일). plain .dark
+// 다크 색은 키마다 tokens.json 이 정한다(예: shadow-1 은 라이트와 같은 black.5, sm·md 는 흰색 alpha).
 if (Object.keys(shadow).length) {
-    L.push('.dark {', '  /* shadow (다크 = 흰색 primitive) */')
+    L.push('.dark {', '  /* shadow (다크 = tokens.json color.dark) */')
     for (const [k, v] of Object.entries(shadow)) L.push(`  --ds-shadow-${k}: ${shadowCss(v, 'dark')};`)
     L.push('}', '')
 }
+
+// 인쇄 전용 라이트 — .print-light 를 단 영역은 화면 테마(다크 포함)와 관계없이 인쇄할 때만 라이트 값으로 찍힌다.
+// 종이에 어두운 면을 찍지 않기 위해서다. .light 와 같은 scale · purpose · overlay 에 라이트 그림자까지 다시 선언한다.
+// 사용처: components/custom/report-theme-scope.tsx(K-BIGx 보고서)
+L.push('/* 인쇄 전용 라이트(.print-light) */', '@media print {', '  .print-light {', '    color-scheme: light;')
+for (const hue of hues) for (const s of scale) L.push(`    --ds-${hue}-${s}: var(--raw-${hue}-${s});`)
+for (const [name, val] of Object.entries(semantic)) L.push(`    --ds-${name}: ${rawVarRef(val.light)};`)
+for (const [k, v] of Object.entries(overlay)) L.push(`    --ds-overlay-${k}: ${resolveAlpha(v.light)};`)
+for (const [k, v] of Object.entries(shadow)) L.push(`    --ds-shadow-${k}: ${shadowCss(v, 'light')};`)
+L.push('  }', '}', '')
 
 // @theme — spacing base 하나로 숫자 스케일 전체 지배: p-N = calc(var(--spacing) * N), 무한.
 L.push('@theme {', `  --spacing: ${toRem(spacingBase)};`)
