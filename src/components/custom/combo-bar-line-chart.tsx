@@ -14,6 +14,7 @@ import {
     type LabelProps,
 } from 'recharts'
 import {ChartContainer, type ChartConfig} from '@/components/ui/chart'
+import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
 import {
     CELLS_DIVIDER_DASH,
@@ -77,7 +78,7 @@ type ComboBarLineChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> 
     baseline?: number
     valueFractionDigits?: number
     lineFractionDigits?: number
-    /** 막대 · 선이 자라는 움직임. 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 끈다. */
+    /** 막대 · 선이 자라는 움직임. 안 주면 useChartAnimation() 값을 따른다(chart-reveal.tsx). 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 끈다. */
     animate?: boolean
     /**
      * 가장 큰 막대가 닿는 칸 높이 비율. 기본 0.78, 0.78~0.9 로 맞춘다 — 0.9 면 위에 막대 값 글자 한 줄 자리만 남는다.
@@ -176,11 +177,14 @@ const ComboBarLineChart = ({
     baseline,
     valueFractionDigits = 1,
     lineFractionDigits = 1,
-    animate = true,
+    animate: animateProp,
     maxValueRatio = CELLS_MAX_VALUE_RATIO,
     className,
     ...props
 }: ComboBarLineChartProps) => {
+    // animate 를 안 주면 문서 설정을 따른다(chart-reveal.tsx) — 보고서는 스크롤해서 보일 때, 그 밖에는 바로 움직인다.
+    const revealAnimate = useChartAnimation()
+    const animate = animateProp ?? revealAnimate
     const toFormatter = (digits: number) => {
         const fractionDigits = Math.min(6, Math.max(0, digits))
         return new Intl.NumberFormat('ko-KR', {
@@ -330,7 +334,12 @@ const ComboBarLineChart = ({
                     role="img"
                     aria-label={ariaLabel}
                 >
-                    <ComposedChart accessibilityLayer data={chartData} margin={{top: 0, right: 1, bottom: 0, left: 1}}>
+                    {/* recharts 키보드 탐색 층은 끈다 — 값은 숨김 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
+                    <ComposedChart
+                        accessibilityLayer={false}
+                        data={chartData}
+                        margin={{top: 0, right: 1, bottom: 0, left: 1}}
+                    >
                         <CartesianGrid
                             key="cells-solid"
                             yAxisId={BAR_AXIS_ID}
@@ -366,6 +375,7 @@ const ComboBarLineChart = ({
                             radius={[BAR_RADIUS, BAR_RADIUS, 0, 0]}
                             shape={renderBarShape}
                             isAnimationActive={animate}
+                            animationDuration={CHART_ANIMATION_MS}
                             // 0 · 아주 작은 값도 막대 자리(와 값 글자)를 남긴다(chart-cells).
                             minPointSize={cellsMinPointSize}
                         >
@@ -382,6 +392,7 @@ const ComboBarLineChart = ({
                             activeDot={false}
                             connectNulls={false}
                             isAnimationActive={animate}
+                            animationDuration={CHART_ANIMATION_MS}
                         />
                     </ComposedChart>
                 </ChartContainer>

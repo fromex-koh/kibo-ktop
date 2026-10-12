@@ -5,6 +5,7 @@ import {Bar, BarChart, CartesianGrid, Cell, LabelList, ReferenceLine, XAxis, YAx
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
 import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import {useIsHydrated} from '@/hooks/use-is-hydrated'
+import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
 import {
     CELLS_DIVIDER_DASH,
@@ -39,7 +40,7 @@ type ColumnChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     showValueLabels?: boolean
     /** 값 위에 올렸을 때 뜨는 말풍선. 값이 막대 위에 모두 적혀 있는 보고서에서는 끈다. */
     showTooltip?: boolean
-    /** 그리는 움직임. 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 끈다. */
+    /** 그리는 움직임. 안 주면 useChartAnimation() 값을 따른다(chart-reveal.tsx). 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 끈다. */
     animate?: boolean
     unit?: string
     /**
@@ -80,7 +81,7 @@ const ColumnChart = ({
     color = 'var(--ds-chart-1)',
     showValueLabels = true,
     showTooltip = true,
-    animate = true,
+    animate: animateProp,
     unit,
     variant = 'default',
     valueFractionDigits = 0,
@@ -93,6 +94,9 @@ const ColumnChart = ({
     className,
     ...props
 }: ColumnChartProps) => {
+    // animate 를 안 주면 문서 설정을 따른다(chart-reveal.tsx) — 보고서는 스크롤해서 보일 때, 그 밖에는 바로 움직인다.
+    const revealAnimate = useChartAnimation()
+    const animate = animateProp ?? revealAnimate
     const isHydrated = useIsHydrated()
     const fractionDigits = Math.min(6, Math.max(0, valueFractionDigits))
     const normalizedBarWidth = Math.min(120, Math.max(16, barWidth))
@@ -147,8 +151,9 @@ const ColumnChart = ({
                     role="img"
                     aria-label={ariaLabel}
                 >
+                    {/* recharts 키보드 탐색 층은 끈다 — 값은 숨김 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
                     <BarChart
-                        accessibilityLayer
+                        accessibilityLayer={false}
                         data={chartData}
                         margin={
                             isBare ? {top: 0, right: 1, bottom: 0, left: 1} : {top: 40, right: 12, bottom: 8, left: 8}
@@ -266,8 +271,9 @@ const ColumnChart = ({
                             dataKey="value"
                             name="value"
                             isAnimationActive={animate}
+                            animationDuration={CHART_ANIMATION_MS}
                             fill="var(--color-value)"
-                            // plain 은 위 끝만 살짝 둥글다(2) — cells 는 반원(6)이다.
+                            // 위 두 모서리만 둥글린다 — plain 2 · cells 8 · default 12.
                             radius={
                                 isPlain
                                     ? [PLAIN_BAR_RADIUS, PLAIN_BAR_RADIUS, 0, 0]
@@ -277,7 +283,7 @@ const ColumnChart = ({
                             }
                             barSize={isCells ? undefined : normalizedBarWidth}
                             maxBarSize={isCells ? normalizedBarWidth : undefined}
-                            // cells: 0 · 아주 작은 값도 막대 자리(와 값 글자)를 남긴다(chart-cells).
+                            // cells · plain: 0 · 아주 작은 값도 막대 자리(와 값 글자)를 남긴다(chart-cells).
                             minPointSize={isBare ? cellsMinPointSize : undefined}
                             activeBar={showTooltip && {filter: 'brightness(0.82)'}}
                         >

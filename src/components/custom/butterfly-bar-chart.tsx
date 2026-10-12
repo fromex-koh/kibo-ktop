@@ -1,3 +1,7 @@
+'use client'
+
+// 'use client' — 막대가 자라는 움직임 여부를 문서 설정(chart-reveal.tsx)에서 읽는다.
+import {useChartAnimation} from '@/components/custom/chart-reveal'
 import type {ComponentPropsWithoutRef} from 'react'
 import {cn} from '@/lib/utils'
 import {formatCellsValue} from '@/components/custom/chart-cells'
@@ -7,7 +11,7 @@ import {formatCellsValue} from '@/components/custom/chart-cells'
 //
 // 짜임: 머리 줄(양쪽 제목 14 Bold, 가운데 칸 쪽에 붙음) → 16 → 항목 줄(높이 24 막대 · 줄 사이 16).
 //   가운데 칸 폭 120(글자 자리 80 · 양옆 20), 항목 이름 12 Regular 가운데 맞춤.
-//   값 글자 11 Regular 는 막대 바깥 끝에서 4 떨어져 붙는다.
+//   값 글자 11 Regular 는 막대 바깥 끝에서 4 떨어져 붙는다. 보고서에서는 막대가 다 자란 뒤 값 글자가 나타난다(animate-chart-label).
 // 막대 길이는 쪽마다 따로 잰다 — 그 쪽 가장 큰 값이 (쪽 폭 − 값 글자 자리 48)를 다 채운다. 두 쪽은 단위가 달라 서로 견주지 않는다.
 // 값을 늘 적어 두므로 풍선 도움말은 없다. 그림은 aria-hidden 으로 감추고 화면 낭독기는 숨김 표를 읽는다.
 //
@@ -76,12 +80,23 @@ const ButterflyBarChart = ({
     const leftMaximum = Math.max(0, ...data.map((item) => item.left))
     const rightMaximum = Math.max(0, ...data.map((item) => item.right))
 
-    const renderBar = (value: number, maximum: number, color: string) => {
+    const animate = useChartAnimation()
+    // 값 글자는 막대가 다 자란 뒤 나타난다(보이기 전에는 막대와 함께 숨는다 — data-chart-reveal).
+    const valueRevealClassName = cn(valueClassName, animate && 'motion-safe:animate-chart-label')
+    // 막대는 가운데 축에서 바깥으로 자란다 — 왼쪽 막대는 오른쪽에서 왼쪽으로, 오른쪽 막대는 왼쪽에서 오른쪽으로.
+    const renderBar = (value: number, maximum: number, color: string, side: 'left' | 'right') => {
         const ratio = barRatio(value, maximum)
         if (!ratio) return null
         return (
             <span
-                className="h-6 shrink-0"
+                data-chart-reveal=""
+                className={cn(
+                    'h-6 shrink-0',
+                    animate &&
+                        (side === 'left'
+                            ? 'motion-safe:animate-chart-wipe-left'
+                            : 'motion-safe:animate-chart-wipe-right'),
+                )}
                 style={{width: `${ratio * PERCENT}%`, minWidth: MIN_BAR_WIDTH_PX, backgroundColor: color}}
             />
         )
@@ -99,15 +114,19 @@ const ButterflyBarChart = ({
                     {data.map((item) => (
                         <li key={item.id} className={rowClassName}>
                             <span className={leftSideClassName}>
-                                <span className={valueClassName}>{formatCellsValue(item.left, format)}</span>
-                                {renderBar(item.left, leftMaximum, left.color)}
+                                <span data-chart-reveal="" className={valueRevealClassName}>
+                                    {formatCellsValue(item.left, format)}
+                                </span>
+                                {renderBar(item.left, leftMaximum, left.color, 'left')}
                             </span>
                             <span className="typo-caption-regular text-label-foreground px-5 text-center break-keep">
                                 {item.label}
                             </span>
                             <span className={rightSideClassName}>
-                                {renderBar(item.right, rightMaximum, right.color)}
-                                <span className={valueClassName}>{formatCellsValue(item.right, format)}</span>
+                                {renderBar(item.right, rightMaximum, right.color, 'right')}
+                                <span data-chart-reveal="" className={valueRevealClassName}>
+                                    {formatCellsValue(item.right, format)}
+                                </span>
                             </span>
                         </li>
                     ))}

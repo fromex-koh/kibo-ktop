@@ -121,7 +121,12 @@ const GradeDistributionChart = ({
                             role="img"
                             aria-label={ariaLabel}
                         >
-                            <AreaChart data={data} margin={{top: 0, right: 0, bottom: 0, left: 0}}>
+                            {/* recharts 키보드 탐색 층은 끈다 — 값은 아래 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
+                            <AreaChart
+                                accessibilityLayer={false}
+                                data={data}
+                                margin={{top: 0, right: 0, bottom: 0, left: 0}}
+                            >
                                 <defs>
                                     {/* 색은 여기 적힌 값이 기본이다. 인쇄에서는 app/globals.css 의
                                         .chart-area-* 규칙이 투명도 없는 색으로 덮는다 — 투명도를 쓴 면은

@@ -3,6 +3,7 @@
 import {useId, type ComponentPropsWithoutRef} from 'react'
 import {Area, CartesianGrid, ComposedChart, Line, XAxis, YAxis} from 'recharts'
 import {ChartContainer, type ChartConfig} from '@/components/ui/chart'
+import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
 import {CELLS_GRID_STROKE, CELLS_DIVIDER_DASH, CELLS_X_TICK, CELLS_X_TICK_MARGIN} from '@/components/custom/chart-cells'
 
@@ -34,7 +35,7 @@ type GradeHistoryChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> 
     data: GradeHistoryItem[]
     /** 원 · 선 색(토큰 변수). */
     color?: string
-    /** 원이 그려지는 움직임. 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 끈다. */
+    /** 선과 그 아래 면이 그려지는 움직임. 안 주면 useChartAnimation() 값을 따른다(chart-reveal.tsx). 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 끈다. */
     animate?: boolean
 }
 
@@ -63,10 +64,13 @@ const GradeHistoryChart = ({
     ariaLabel,
     data,
     color = 'var(--raw-blue-500)',
-    animate = true,
+    animate: animateProp,
     className,
     ...props
 }: GradeHistoryChartProps) => {
+    // animate 를 안 주면 문서 설정을 따른다(chart-reveal.tsx) — 보고서는 스크롤해서 보일 때, 그 밖에는 바로 움직인다.
+    const revealAnimate = useChartAnimation()
+    const animate = animateProp ?? revealAnimate
     const gradientId = `grade-history-${useId().replace(/:/g, '')}`
     const values = data.map((item) => clampValue(item.value))
     const minimumValue = values.length ? Math.min(...values) : 0
@@ -117,7 +121,12 @@ const GradeHistoryChart = ({
                     role="img"
                     aria-label={ariaLabel}
                 >
-                    <ComposedChart data={chartData} margin={{top: 0, right: 0, bottom: 0, left: 0}}>
+                    {/* recharts 키보드 탐색 층은 끈다 — 값은 숨김 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
+                    <ComposedChart
+                        accessibilityLayer={false}
+                        data={chartData}
+                        margin={{top: 0, right: 0, bottom: 0, left: 0}}
+                    >
                         <defs>
                             <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
                                 <stop offset="0%" stopColor={color} stopOpacity={0.16} />
@@ -163,6 +172,7 @@ const GradeHistoryChart = ({
                                 fillOpacity={1}
                                 baseValue={lower}
                                 isAnimationActive={animate}
+                                animationDuration={CHART_ANIMATION_MS}
                                 activeDot={false}
                                 dot={false}
                             />
@@ -176,6 +186,7 @@ const GradeHistoryChart = ({
                             dot={renderDot}
                             activeDot={false}
                             isAnimationActive={animate}
+                            animationDuration={CHART_ANIMATION_MS}
                         />
                     </ComposedChart>
                 </ChartContainer>

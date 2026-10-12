@@ -8,13 +8,13 @@ import {ChartContainer, type ChartConfig} from '@/components/ui/chart'
 import {cn} from '@/lib/utils'
 
 // 포지셔닝 산점도(PositioningScatterChart) — 가로·세로 두 축 위에 당사와 견줄 기업들을 점으로 흩어 놓고,
-// 두 축이 모두 높은 오른쪽 위 구역을 옅게 칠한다.
+// 기준선 십자가 나눈 네 구역 중 당사 점이 든 구역을 옅게 칠한다(당사 점이 없으면 오른쪽 위).
 // 투자모형 심층분석 리포트의 '성장·밸류업포지셔닝'에서 쓴다. 문서: /component-guide/positioning-scatter-chart
 //
 // [프론트엔드 연동] 점 하나는 {id, x, y} 다 — 당사 점에만 isPrimary 를 준다. 값의 범위는 xDomain·yDomain
-// 으로 정하고(기본 0~100), 기준선(threshold)을 넘는 오른쪽 위가 옅게 칠해진다.
+// 으로 정하고(기본 0~100), 기준선(threshold)은 두 축에 같은 값으로 적용된다(기본 각 범위의 한가운데).
 //
-// 눈금·축선·말풍선은 두지 않는다(시안) — 값이 몇인지는 표가 따로 알리고, 여기서는 자리만 본다.
+// 눈금·축선·말풍선은 두지 않는다 — 값이 몇인지는 화면의 표가 따로 알리고, 여기서는 자리만 본다.
 
 type PositioningScatterPoint = {
     id: string
@@ -36,7 +36,7 @@ type PositioningScatterChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'child
     /** 값의 범위. 점수가 아닌 값(금액 · 증감률)을 그대로 넘길 때 바꾼다. */
     xDomain?: [number, number]
     yDomain?: [number, number]
-    /** 기준선 자리. 두 축 모두 이 값을 넘는 구역이 칠해진다. 주지 않으면 범위의 한가운데다. */
+    /** 기준선 자리(두 축 공통). 기준선 십자가 나눈 구역 중 당사 점이 든 곳이 칠해진다. 주지 않으면 각 축 범위의 한가운데다. */
     threshold?: number
     /** 칸 높이 유틸리티. 종이에서도 같은 높이로 찍히도록 값으로 정해 둔다. */
     heightClassName?: string
@@ -46,7 +46,7 @@ type PositioningScatterChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'child
 
 // 표본 점 반지름(지름 12).
 const PEER_DOT_RADIUS = 6
-// 당사 점 반지름(지름 16) · 이름표 자리 — 시안은 점 바로 아래 2 에 12 글자다.
+// 당사 점 반지름(지름 16) · 이름표 자리 — 점 바로 아래 2 에 12 글자.
 const PRIMARY_DOT_RADIUS = 8
 const LABEL_GAP = 2
 // 12 글자의 기준선 위 높이와 아래 높이(어림값) · 한 글자 폭.
@@ -195,7 +195,7 @@ const PositioningScatterChart = ({
             <ChartContainer
                 config={config}
                 // 이름표가 칸 끝에 닿아도 잘리지 않게 한다 — 귀퉁이에 붙은 점에서 생긴다.
-                // 테두리는 좌 · 우 · 아래만 그린다(시안) — 위는 열어 둔다.
+                // 테두리는 좌 · 우 · 아래만 그린다 — 위는 열어 둔다.
                 className={cn(
                     'border-subtle-3 w-full border-x border-b [&_.recharts-surface]:overflow-visible',
                     heightClassName,
@@ -203,8 +203,9 @@ const PositioningScatterChart = ({
                 role="img"
                 aria-label={ariaLabel}
             >
-                {/* 여백을 두지 않는다(시안) — 사분면 음영과 기준선이 상자 가장자리까지 닿아야 한다. */}
-                <ScatterChart margin={{top: 0, right: 0, bottom: 0, left: 0}}>
+                {/* 여백을 두지 않는다 — 사분면 음영과 기준선이 상자 가장자리까지 닿아야 한다. */}
+                {/* recharts 키보드 탐색 층은 끈다 — 값은 차트 밖 표가 따로 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
+                <ScatterChart accessibilityLayer={false} margin={{top: 0, right: 0, bottom: 0, left: 0}}>
                     {/* 눈금과 축선은 그리지 않는다 — 자리 계산에만 쓴다. 축 이름은 상자 밖에 글자로 둔다. */}
                     <XAxis type="number" dataKey="x" domain={xDomain} hide allowDataOverflow />
                     <YAxis type="number" dataKey="y" domain={yDomain} hide allowDataOverflow />
