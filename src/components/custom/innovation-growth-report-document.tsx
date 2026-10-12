@@ -1,14 +1,13 @@
 'use client'
 
-import {Suspense, useEffect} from 'react'
-import Image from 'next/image'
+import {Suspense, useEffect, type ReactNode} from 'react'
+import Image, {type StaticImageData} from 'next/image'
 import {usePathname, useSearchParams} from 'next/navigation'
 import {Award, Building2, Download, ExternalLink, ThumbsUp, TrendingUp, type LucideIcon} from 'lucide-react'
 import {ButterflyBarChartSkeleton} from '@/components/composite/butterfly-bar-chart-skeleton'
 import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import {ComboBarLineChartSkeleton} from '@/components/composite/combo-bar-line-chart-skeleton'
 import {DistributionCurveChartSkeleton} from '@/components/composite/distribution-curve-chart-skeleton'
-import {SegmentMeterSkeleton} from '@/components/composite/segment-meter-skeleton'
 import {GradeHistoryChartSkeleton} from '@/components/composite/grade-history-chart-skeleton'
 import {GradeScaleGaugeSkeleton} from '@/components/composite/grade-scale-gauge-skeleton'
 import {DivergingRankChartSkeleton} from '@/components/composite/diverging-rank-chart-skeleton'
@@ -16,8 +15,10 @@ import {showCheckToast} from '@/components/custom/check-toast'
 import {NewWindowLink} from '@/components/composite/new-window-link'
 import {InfoTable} from '@/components/composite/info-table'
 import {Button} from '@/components/ui/button'
+import {ScrollToTopButton} from '@/components/composite/scroll-to-top-button'
 import {Skeleton} from '@/components/ui/skeleton'
 import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
+import {ChartRevealProvider} from '@/components/custom/chart-reveal'
 import {ColumnChart} from '@/components/custom/column-chart'
 import {ComparisonRadarChart, ComparisonRadarLegend} from '@/components/custom/comparison-radar-chart'
 import {SECTOR_COMPARISON_RADAR_STYLE} from '@/components/custom/comparison-radar-style'
@@ -58,6 +59,12 @@ import {InnovationGrowthReportActivity} from '@/components/custom/innovation-gro
 import {InnovationGrowthReportTechIndex} from '@/components/custom/innovation-growth-report-tech-index'
 import {InnovationGrowthReportCredit} from '@/components/custom/innovation-growth-report-credit'
 import emblemGovernmentImage from '@public/images/emblem-government.webp'
+import barChartIcon from '@public/images/icons/bar-chart.webp'
+import buildingIcon from '@public/images/icons/building.webp'
+import coinsIcon from '@public/images/icons/coins.webp'
+import documentCheckIcon from '@public/images/icons/document-check.webp'
+import gaugeIcon from '@public/images/icons/gauge.webp'
+import lightbulbIcon from '@public/images/icons/lightbulb.webp'
 
 // K-BIGx 기업혁신성장 보고서 — 새 창으로 여는 문서(보고서 출력 · 진단브리핑).
 // 조회 화면의 [K-BIGx 보고서 출력] → 보고서 생성 모달 [보고서 생성] → 조회횟수 차감안내 모달 [이용권 사용]을 거쳐 열린다.
@@ -66,8 +73,12 @@ import emblemGovernmentImage from '@public/images/emblem-government.webp'
 //   기업 정보(표) → 기술혁신정보(보유기술 도넛 · 관련 기업/특허 현황 · R&D 이슈 워드클라우드 · 정부 R&D 접수현황)
 //   → 혁신성장역량지수(점수 게이지 · 동일업종 상위 %) → 신용/재무 현황(신용등급 게이지 · 재무비율진단 · 부문별 비교 레이더 ·
 //   최근 3개년 재무 표 + 묶음 막대) → 활동성 정보(분기별 종업원수 선 · 인당 매출액 막대).
-// 문서 폭은 콘텐츠 상한 1200 이고, 좁은 창에서는 구획이 1열(모바일) · 2열(태블릿)로 내려앉는다. 표만 칸이 찌그러지지 않게
-// 제 상자 안에서 가로 스크롤한다.
+// 다른 탭(기업현황 · 기술혁신정보 · Tech-Index · 신용/재무정보 · 활동성정보)은 탭마다 파일(innovation-growth-report-*.tsx)이 본문을 그린다.
+//
+// 반응형 — 진단브리핑만 반응형이다(모바일 1열 · 태블릿 2열 · PC). 모바일(768 미만)은 진단브리핑만 보여 주고 탭 줄을 숨긴다.
+//   나머지 탭은 PC 전용으로 문서 최소 폭을 콘텐츠 폭 1200(min-w-content)으로 지킨다 — 1280 창(세로 스크롤바 포함)에서는
+//   가로 스크롤이 없고, 1200 보다 좁은 창에서만 생긴다.
+// PC(768 이상)에서는 머리 + 탭 줄이 스크롤해도 화면 위에 붙는다(sticky).
 // 인쇄물에서는 머리의 버튼 · 탭이 사라지고 구획 카드가 쪽 경계에서 나뉘지 않는다.
 //
 // 차트는 모두 프로젝트 공통 차트 컴포넌트다 — 여기서는 데이터를 넘기고 카드 안에 놓기만 한다.
@@ -82,12 +93,27 @@ const INNOVATION_REPORT_CREATED_TOAST_ID = 'k-bigx-innovation-report-created'
 // [퍼블리싱 확인용] 토스트를 보려고 ?from=use 없이도 화면을 열면 차감 알림을 띄운다.
 // 연동할 때는 false 로 바꾸거나 이 상수를 지운다 — 그러면 [이용권 사용]을 거쳐 열렸을 때(?from=use)만 뜬다.
 const PUBLISHING_ALWAYS_SHOW_CREATED_TOAST = true
-// 최근 3개년 재무 현황 막대 색 — 오래된 해부터 navy.500 · blue.500 · purple.500.
-const STATEMENT_YEAR_COLORS = ['var(--raw-navy-500)', 'var(--raw-blue-500)', 'var(--raw-purple-500)'] as const
+// 최근 3개년 재무 현황 막대 색 — years 순서(오래된 해부터)대로 입힌다.
+const STATEMENT_YEAR_COLORS = [
+    'var(--ds-report-series-1)',
+    'var(--ds-report-series-2)',
+    'var(--ds-report-series-3)',
+] as const
 
 // ── 조각 ─────────────────────────────────────────────────────────────────────────
 
-// 관련 기업 및 특허현황 수치별 선 아이콘(16) — 데이터의 stat.id 로 고른다.
+// 탭 제목 띠 아이콘 — 흰 그림 에셋(public/images/icons)을 파란 칸 가운데에 둔다. 높이를 맞추고 폭은 그림 비율대로.
+// 계기판(활동성정보)은 그림의 아래쪽이 비어 있어 가운데 맞춤이면 위로 떠 보이므로 조금 키우고 아래로 내린다.
+const TAB_BANNER_ICONS: Record<InnovationReportSectionId, {src: StaticImageData; className: string}> = {
+    briefing: {src: documentCheckIcon, className: 'h-5.5 w-auto'},
+    company: {src: buildingIcon, className: 'h-5.5 w-auto'},
+    innovation: {src: lightbulbIcon, className: 'h-5.5 w-auto'},
+    'tech-index': {src: barChartIcon, className: 'h-5.5 w-auto'},
+    'credit-finance': {src: coinsIcon, className: 'h-5.5 w-auto'},
+    activity: {src: gaugeIcon, className: 'mt-1.5 size-6.5'},
+}
+
+// 관련 기업 및 특허현황 수치별 아이콘 — 데이터의 stat.id 로 고른다.
 const INNOVATION_STAT_ICONS: Record<InnovationStatId, LucideIcon> = {
     companies: Building2,
     patents: Award,
@@ -95,17 +121,16 @@ const INNOVATION_STAT_ICONS: Record<InnovationStatId, LucideIcon> = {
     'high-growth-patents': ThumbsUp,
 }
 
-// 최근 3개년 재무 표 — 4칸 균등 · 맨 위 선 gray.600 · 줄마다 아래 선(gray.100) · 줄 높이 45(여백 12/16 + 글자 21).
-// 세로선은 이름 칸(구분) 오른쪽 하나뿐이고 바깥 좌우 선은 없다.
-// 머리 줄과 이름 칸은 옅은 파란 면(primary-subtle)에 14 Bold · 14 Medium, 값은 14 Regular(gray.700) 가운데 정렬이다.
-// 칸이 좁을 때(모바일 · lg 에서 표가 그래프 옆에 설 때 4칸 ≈ 74)는 좌우 여백을 8 로 줄여 '2022년' · '18,768' 이 한 줄에 들어가게 한다.
+// 최근 3개년 재무 표 — 구분 + 연도 열(균등 폭). 줄 이름 칸이 머리 줄과 같은 면이고 그 오른쪽에만 세로선을 둔다.
+// ReportTable 과 칸 모양이 달라(줄 머리 면 · 세로선) 따로 그린다. statements[].values 는 years 와 같은 순서 · 길이다.
+// 칸이 좁아지는 폭(모바일 · lg 에서 표가 그래프 옆에 설 때)은 좌우 여백을 줄여 연도 · 금액이 한 줄에 들어가게 한다.
 const STATEMENT_CELL_CLASS_NAME = 'border-subtle-3 border-b px-2 pt-3 pb-2.75 text-center md:px-4 lg:px-2 xl:px-4'
 const STATEMENT_NAME_COLUMN_CLASS_NAME = 'border-subtle-3 border-r'
 const STATEMENT_HEAD_CLASS_NAME = cn(STATEMENT_CELL_CLASS_NAME, 'bg-primary-subtle text-foreground whitespace-nowrap')
 
 const StatementTable = ({years, statements}: Pick<InnovationGrowthReport['creditFinance'], 'years' | 'statements'>) => (
-    // 맨 위 선(gray.600)은 표가 아니라 감싸는 상자에 긋는다 — 표(border-collapse)에 그으면 구분 칸의 세로선(gray.100)이
-    // 위 선과 만나는 모서리를 덮어 위 선이 끊겨 보인다. 상자 선 아래에서 세로선이 시작되게 한다.
+    // 맨 위 선은 표가 아니라 감싸는 상자에 긋는다 — 표(border-collapse)에 그으면 구분 칸의 세로선이
+    // 위 선과 만나는 모서리를 덮어 위 선이 끊겨 보인다.
     <div className="border-t-foreground-subtle overflow-x-auto border-t contain-inline-size">
         <table className="w-full table-fixed border-collapse">
             <caption className="sr-only">최근 3개년 재무 현황(단위: 백만원)</caption>
@@ -179,7 +204,6 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
         return () => window.clearTimeout(timer)
     }, [isJustCreated])
 
-    // 기업신용등급 — 등급 코드를 CRI 등급표로 풀어 게이지 데이터(등급명 · 채움 비율)를 만든다.
     // 모바일 [더보기]가 여는 PC 화면 주소 — 지금 주소에 ?view=pc 를 붙인다. 차감 알림 표시(?from=use)는 새 창에서 다시 뜨지 않게 뺀다.
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -191,7 +215,7 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
     const tabParam = searchParams.get(INNOVATION_REPORT_TAB_QUERY)
     const activeTab: InnovationReportSectionId =
         tabParam && isReportTab(tabParam) ? tabParam : INNOVATION_REPORT_SECTIONS[0].id
-    // 진단브리핑만 반응형이고, 나머지 탭은 PC 폭(1280)만 그린다 — 창이 좁으면 가로 스크롤.
+    // 진단브리핑만 반응형이고, 나머지 탭은 PC 화면만 그린다(문서 최소 폭 — 아래 min-w-content).
     const isPcOnlyTab = activeTab !== INNOVATION_REPORT_SECTIONS[0].id
     // 혁신성장역량지수 게이지 색 · 상태 이름 · 요약 문장은 점수 하나로 정한다(Tech-Index 탭과 같은 점수 구간).
     const techIndexGrade = getTechIndexGrade(report.techIndex.score)
@@ -208,7 +232,10 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
         nextParams.delete(INNOVATION_REPORT_CREATED_QUERY)
         const query = nextParams.toString()
         window.history.pushState(null, '', query ? `${pathname}?${query}` : pathname)
+        // 탭을 옮기면 새 탭의 맨 위에서 시작한다 — 주소만 바꾸면 스크롤 위치가 그대로 남아 새 탭의 중간이 먼저 보인다.
+        window.scrollTo(0, 0)
     }
+    // 기업신용등급 — 등급 코드를 CRI 등급표로 풀어 게이지 데이터(등급명 · 채움 비율 · 색 단계)를 만든다(진단브리핑 · 신용/재무정보 탭 공용).
     const creditRating = toCriRatingData(report.creditFinance.rating.grade, [...report.creditFinance.rating.details])
 
     return (
@@ -217,420 +244,497 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
         <div
             className={cn(
                 'print-exact',
-                // 진단브리핑 외 탭은 PC 폭(1280)만 그린다 — 창이 좁으면 문서 폭을 지키고 가로로 넘긴다.
-                isPcOnlyTab && 'min-w-320',
+                // 진단브리핑 외 탭은 최소 폭 1200(콘텐츠 폭)을 지킨다. 1280(최소 PC 해상도)을 기준으로 잡으면 세로 스크롤바 폭만큼
+                // 창 안쪽이 1280 보다 좁아져 가로 스크롤이 생기므로, 기준을 콘텐츠 폭으로 둔다 — 1200 보다 좁은 창에서만 가로 스크롤.
+                isPcOnlyTab && 'min-w-content',
             )}
         >
-            <Tabs value={activeTab} onValueChange={selectTab} className="gap-0 print:block">
-                {/* 머리 + 구성 항목 탭 줄을 한 덩이로 묶어 PC(768 이상)에서 스크롤해도 화면 위에 붙는다(sticky).
+            {/* 보고서 안 차트는 카드가 화면에 들어올 때 하나씩 움직인다(custom/chart-reveal.tsx). */}
+            <ChartRevealProvider mode="reveal">
+                <Tabs value={activeTab} onValueChange={selectTab} className="gap-0 print:block">
+                    {/* 머리 + 구성 항목 탭 줄을 한 덩이로 묶어 PC(768 이상)에서 스크롤해도 화면 위에 붙는다(sticky).
                     인쇄에서는 붙이지 않는다. 겹치는 차트보다 위에 오도록 z-sticky 토큰을 쓴다. */}
-                <div className="md:z-sticky md:sticky md:top-0 print:static">
-                    {/* 머리 — 남색 면 전체 폭, 안쪽은 콘텐츠 폭 1200. 모바일은 버튼을 제목 아래로 내린다. */}
-                    <header className="bg-tab-pill-active text-tab-pill-active-foreground break-after-avoid">
-                        <div
-                            className={cn(
-                                'max-w-content mx-auto flex flex-col items-start gap-6 px-4 py-6 md:flex-row md:justify-between md:gap-12 md:px-6 xl:px-0',
-                                isPcOnlyTab && 'px-0 md:px-0',
-                            )}
-                        >
-                            <div className="flex min-w-0 flex-1 flex-col gap-4">
-                                <p className="bg-info-50 text-info-600 typo-body-l-medium flex min-h-7 w-fit items-center rounded-full px-4">
-                                    {INNOVATION_REPORT_BADGE}
-                                </p>
-                                <div className="flex flex-col">
-                                    <h1 className="typo-h1-bold wrap-break-word break-keep">{report.title}</h1>
-                                    <p className="typo-body-l-regular flex flex-wrap items-center gap-x-4">
-                                        <span>{report.companyName}</span>
-                                        <span
-                                            aria-hidden="true"
-                                            className="bg-tab-pill-active-foreground/40 h-3 w-px"
-                                        />
-                                        <span>발급일 {report.issuedAt}</span>
+                    <div className="md:z-sticky md:sticky md:top-0 print:static">
+                        {/* 머리 — 남색 면 전체 폭, 안쪽은 콘텐츠 폭 1200. 모바일은 버튼을 제목 아래로 내린다. */}
+                        <header className="bg-tab-pill-active text-tab-pill-active-foreground break-after-avoid">
+                            <div
+                                className={cn(
+                                    'max-w-content mx-auto flex flex-col items-start gap-6 px-4 py-6 md:flex-row md:justify-between md:gap-12 md:px-6 xl:px-0',
+                                    isPcOnlyTab && 'px-0 md:px-0',
+                                )}
+                            >
+                                <div className="flex min-w-0 flex-1 flex-col gap-4">
+                                    <p className="bg-info-50 text-info-600 typo-body-l-medium flex min-h-7 w-fit items-center rounded-full px-4">
+                                        {INNOVATION_REPORT_BADGE}
                                     </p>
+                                    <div className="flex flex-col">
+                                        <h1 className="typo-h1-bold wrap-break-word break-keep">{report.title}</h1>
+                                        <p className="typo-body-l-regular flex flex-wrap items-center gap-x-4">
+                                            <span>{report.companyName}</span>
+                                            <span
+                                                aria-hidden="true"
+                                                className="bg-tab-pill-active-foreground/40 h-3 w-px"
+                                            />
+                                            <span>발급일 {report.issuedAt}</span>
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                            {/* 인쇄물에서는 스스로 사라진다 — 종이에 남아도 누를 수 없다. 모바일(768 미만)은 진단브리핑만 보이므로 출력 대신
-                        [더보기]를 둔다 — 모든 탭이 있는 PC 화면(?view=pc, 뷰포트 1280)을 새 창으로 열어 확대 · 축소하며 본다.
-                        [퍼블리싱 전용] [보고서 출력]은 아직 동작이 없는 버튼이다 — 출력 범위 · 방식이 정해지면 onClick 을 연결한다. */}
-                            <Button
-                                type="button"
-                                variant="tertiary"
-                                size="md"
-                                className="bg-card shrink-0 gap-1 max-md:hidden md:self-center print:hidden"
-                            >
-                                <Download aria-hidden="true" />
-                                {INNOVATION_REPORT_PRINT_LABEL}
-                            </Button>
-                            <Button
-                                asChild
-                                variant="tertiary"
-                                size="md"
-                                className="bg-card shrink-0 gap-1 md:hidden print:hidden"
-                            >
-                                <NewWindowLink
-                                    href={pcViewHref}
-                                    width={INNOVATION_REPORT_WINDOW_WIDTH}
-                                    height={INNOVATION_REPORT_WINDOW_HEIGHT}
-                                    windowName="k-bigx-innovation-report-pc"
-                                    // 창 폭이 곧 PC 화면이라 화면 폭으로 줄이지 않는다.
-                                    fitToScreen={false}
+                                {/* 버튼은 인쇄물에서 사라진다(종이에서는 누를 수 없다). 모바일(768 미만)은 진단브리핑만 보이므로 출력 대신
+                                    [더보기]를 둔다 — 모든 탭이 있는 PC 화면(?view=pc, 뷰포트 1280)을 새 창으로 열어 확대 · 축소하며 본다.
+                                    [프론트엔드 연동] [보고서 출력]은 아직 동작이 없는 버튼이다 — 출력용 리포트 템플릿이 정해지면 onClick 을 연결한다.
+                                    인쇄 색은 준비돼 있다: 화면이 다크여도 인쇄는 라이트로 찍힌다(바깥 상자의 .print-light — report-theme-scope.tsx). */}
+                                <Button
+                                    type="button"
+                                    variant="tertiary"
+                                    size="md"
+                                    className="bg-card shrink-0 gap-1 max-md:hidden md:self-center print:hidden"
                                 >
-                                    {INNOVATION_REPORT_MORE_LABEL}
-                                    <ExternalLink aria-hidden="true" />
-                                </NewWindowLink>
-                            </Button>
-                        </div>
-                    </header>
-                    {/* 구성 항목 탭 — 주소의 ?tab= 으로 고른다(없으면 진단브리핑). 탭을 바꾸면 주소만 바꾸고 서버에 다시 묻지 않는다 —
+                                    <Download aria-hidden="true" />
+                                    {INNOVATION_REPORT_PRINT_LABEL}
+                                </Button>
+                                <Button
+                                    asChild
+                                    variant="tertiary"
+                                    size="md"
+                                    className="bg-card shrink-0 gap-1 md:hidden print:hidden"
+                                >
+                                    <NewWindowLink
+                                        href={pcViewHref}
+                                        width={INNOVATION_REPORT_WINDOW_WIDTH}
+                                        height={INNOVATION_REPORT_WINDOW_HEIGHT}
+                                        windowName="k-bigx-innovation-report-pc"
+                                        // 창 폭이 곧 PC 화면이라 화면 폭으로 줄이지 않는다.
+                                        fitToScreen={false}
+                                    >
+                                        {INNOVATION_REPORT_MORE_LABEL}
+                                        <ExternalLink aria-hidden="true" />
+                                    </NewWindowLink>
+                                </Button>
+                            </div>
+                        </header>
+                        {/* 구성 항목 탭 — 주소의 ?tab= 으로 고른다(없으면 진단브리핑). 탭을 바꾸면 주소만 바꾸고 서버에 다시 묻지 않는다 —
                         한 보고서의 모든 탭 데이터가 report 하나에 들어 있다.
                         모바일(768 미만)은 진단브리핑만 보여 주므로 탭 줄을 통째로 숨긴다 — 다른 항목은 [더보기](PC 화면)에서 본다. */}
-                    <div className="bg-background max-md:hidden print:hidden">
-                        <div
-                            className={cn(
-                                'max-w-content mx-auto px-4 pt-10 pb-4 md:px-6 xl:px-0',
-                                isPcOnlyTab && 'px-0 md:px-0',
-                            )}
-                        >
-                            <TabsList variant="pill-outline" aria-label="보고서 구성 항목">
-                                {INNOVATION_REPORT_SECTIONS.map((section) => (
-                                    <TabsTrigger key={section.id} value={section.id}>
-                                        {section.label}
-                                    </TabsTrigger>
-                                ))}
-                            </TabsList>
+                        <div className="bg-background max-md:hidden print:hidden">
+                            <div
+                                className={cn(
+                                    'max-w-content mx-auto px-4 pt-10 pb-4 md:px-6 xl:px-0',
+                                    isPcOnlyTab && 'px-0 md:px-0',
+                                )}
+                            >
+                                <TabsList variant="pill-outline" aria-label="보고서 구성 항목">
+                                    {INNOVATION_REPORT_SECTIONS.map((section) => (
+                                        <TabsTrigger key={section.id} value={section.id}>
+                                            {section.label}
+                                        </TabsTrigger>
+                                    ))}
+                                </TabsList>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* 본문은 TabsContent 안에 둔다 — 탭(role=tab)에는 짝이 되는 패널(role=tabpanel)이 있어야 한다[8.1.1].
-                    지금 고른 탭 하나만 그리므로 value 는 늘 activeTab 이다. 탭 줄과의 간격: 탭 아래 16 + 24 = 40(모바일은 머리 아래 40). */}
-                <div
-                    className={cn(
-                        'max-w-content mx-auto flex w-full flex-col px-4 pt-10 pb-10 md:px-6 md:pt-6 xl:px-0 print:block print:pt-10',
-                        // PC 전용 탭은 창 폭과 무관하게 콘텐츠 폭 1200 을 쓴다(좌우 여백은 문서 폭 1280 이 만든다).
-                        isPcOnlyTab && 'px-0 md:px-0',
-                    )}
-                >
-                    <TabsContent value={activeTab} className="flex flex-col gap-10 print:block print:space-y-10">
-                        {/* 탭 제목 줄 — 탭과는 60 을 띄우므로 문서 간격(40)에 20(pt-5)을 더한다(탭이 없는 모바일은 더하지 않는다). 날짜는 제목 높이의 세로 가운데. */}
-                        <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 md:pt-5">
-                            <h2 className="typo-h4-bold text-foreground">{activeSection.label}</h2>
-                            <p className="typo-body-l-regular text-foreground-subtle">
-                                보고서 생성일자 · {report.createdAt}
-                            </p>
-                        </div>
-
-                        {activeTab === 'company' ? (
-                            <InnovationGrowthReportCompany status={report.companyStatus} />
-                        ) : activeTab === 'activity' ? (
-                            <InnovationGrowthReportActivity
-                                detail={report.activityDetail}
-                                employees={report.activity.employees}
-                                salesPerEmployee={report.activity.salesPerEmployee}
-                            />
-                        ) : activeTab === 'credit-finance' ? (
-                            <InnovationGrowthReportCredit
-                                detail={report.creditDetail}
-                                rating={creditRating}
-                                visibility={INNOVATION_CREDIT_VISIBILITY[report.viewerCase]}
-                            />
-                        ) : activeTab === 'tech-index' ? (
-                            <InnovationGrowthReportTechIndex
-                                detail={report.techIndexDetail}
-                                score={report.techIndex.score}
-                                companyName={report.companyName}
-                                baseDate={report.createdAt}
-                            />
-                        ) : activeTab === 'innovation' ? (
-                            <InnovationGrowthReportTech
-                                detail={report.techInnovation}
-                                issues={report.innovation.issues}
-                                issueColors={INNOVATION_ISSUE_COLORS}
-                            />
-                        ) : (
-                            <>
-                                {/* 기업 정보 */}
-                                <section aria-labelledby="ig-report-company" className="flex flex-col gap-4">
-                                    <SectionTitle id="ig-report-company" title="기업 정보" />
-                                    <InfoTable
-                                        aria-label="기업 정보"
-                                        items={report.company.rows.map((row) => ({key: row.label, ...row}))}
-                                    />
-                                </section>
-
-                                {/* 기술혁신정보 */}
-                                <section aria-labelledby="ig-report-innovation" className="flex flex-col gap-4">
-                                    <SectionTitle
-                                        id="ig-report-innovation"
-                                        title="기술혁신정보"
-                                        aside={report.subCategoryName}
-                                    />
-                                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                        <Card title="기업 보유기술" aside="소분류 기준">
-                                            <PercentageDonutChart
-                                                animate={false}
-                                                data={[...report.innovation.technologies]}
-                                                // 비중 · 건수가 범례에 모두 적혀 있어 hover 말풍선은 두지 않는다.
-                                                showTooltip={false}
-                                                ariaLabel="기업 보유기술 소분류별 비중과 건수"
-                                            />
-                                        </Card>
-                                        <Card title="관련 기업 및 특허현황">
-                                            <div className="grid grid-cols-1 gap-6 @sm:grid-cols-2">
-                                                {report.innovation.stats.map((stat) => {
-                                                    const StatIcon = INNOVATION_STAT_ICONS[stat.id]
-                                                    return (
-                                                        <StatBox
-                                                            key={stat.id}
-                                                            label={stat.label}
-                                                            value={numberFormatter.format(stat.value)}
-                                                            unit={stat.unit}
-                                                            icon={
-                                                                <StatIcon
-                                                                    aria-hidden="true"
-                                                                    className="size-icon-sm shrink-0"
-                                                                />
-                                                            }
-                                                        />
-                                                    )
-                                                })}
-                                            </div>
-                                            <dl className="flex flex-col gap-2">
-                                                {report.innovation.averages.map((row) => (
-                                                    <div
-                                                        key={row.label}
-                                                        className="flex items-center justify-between gap-4"
-                                                    >
-                                                        <dt className="typo-body-l-regular text-label-foreground">
-                                                            {row.label}
-                                                        </dt>
-                                                        <dd className="m-0">
-                                                            <span className="typo-body-xl-bold text-foreground">
-                                                                {row.value}
-                                                            </span>
-                                                            <span className="typo-body-xl-regular text-label-foreground ms-1">
-                                                                {row.unit}
-                                                            </span>
-                                                        </dd>
-                                                    </div>
-                                                ))}
-                                            </dl>
-                                        </Card>
-                                        <Card title="R&D 이슈">
-                                            <WordCloud
-                                                words={[...report.innovation.issues]}
-                                                colors={INNOVATION_ISSUE_COLORS}
-                                                ariaLabel="최근 연구개발 이슈 키워드"
-                                                // PC(xl)는 높이 216 고정. 그 아래(태블릿 2열)는 옆 카드(정부 R&D)가 더 높아 아래가 비므로
-                                                // 216 을 최소로 두고 카드 높이를 채운다. 단어 크기는 자리 높이에 맞춰 다시 그려진다.
-                                                className="h-auto min-h-54 flex-1 xl:h-54 xl:flex-none"
-                                            />
-                                        </Card>
-                                        <Card title="정부 R&D사업 접수현황" aside={`기준일자 · ${report.createdAt}`}>
-                                            {/* 부처 목록과 안내문은 8 간격으로 붙는다(카드 기본 간격 24 와 다르다). */}
-                                            <div className="flex flex-col gap-2">
-                                                <div className="grid grid-cols-1 gap-6 @sm:grid-cols-2">
-                                                    {report.innovation.rnd.map((item) => (
-                                                        <StatBox
-                                                            key={item.label}
-                                                            label={item.label}
-                                                            value={
-                                                                item.value === null
-                                                                    ? EMPTY_VALUE
-                                                                    : numberFormatter.format(item.value)
-                                                            }
-                                                            unit={item.value === null ? undefined : item.unit}
-                                                            labelClassName="typo-body-m-regular text-foreground-subtle"
-                                                            icon={
-                                                                // 정부 상징 문양 — 옆에 부처명이 있어 장식이다(alt="")[5.1.1].
-                                                                <Image
-                                                                    src={emblemGovernmentImage}
-                                                                    alt=""
-                                                                    sizes="24px"
-                                                                    className="size-icon-lg shrink-0"
-                                                                />
-                                                            }
-                                                        />
-                                                    ))}
-                                                </div>
-                                                <p className="typo-caption-regular text-foreground-subtle break-keep">
-                                                    {report.innovation.rndNote}
-                                                </p>
-                                            </div>
-                                        </Card>
-                                    </div>
-                                </section>
-
-                                {/* 혁신성장역량지수 — 점수 게이지 카드 · 동일업종 순위 피라미드 카드 · 요약 상자. */}
-                                <section aria-labelledby="ig-report-tech-index" className="flex flex-col gap-4">
-                                    <SectionTitle id="ig-report-tech-index" title="혁신성장역량지수" />
-                                    {/* 두 카드는 lg(1024) 이상에서만 나란히 둔다 — 태블릿에서 나란히 두면 피라미드 카드가 글자 · 피라미드를
-                        위아래로 쌓아 높아지고, 옆 게이지 카드가 같은 높이로 늘어나 아래가 크게 빈다. */}
-                                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-                                        <Card aside={report.techIndex.scoreNote}>
-                                            <ScoreGauge
-                                                score={report.techIndex.score}
-                                                statusLabel={techIndexGrade.label}
-                                                tone={techIndexGrade.tone}
-                                                caption={`기준일자 · ${report.createdAt}`}
-                                                ariaLabel={`혁신성장역량지수 ${techIndexScoreText}, ${techIndexGrade.label}`}
-                                            />
-                                        </Card>
-                                        {/* 태블릿(카드가 한 줄을 다 씀)에서는 글자 · 피라미드 묶음을 가운데로, lg 이상은 왼쪽 기준. */}
-                                        <Card className="justify-center">
-                                            <RankPyramidChart
-                                                percentile={report.techIndex.industryPercentile}
-                                                groupLabel={report.techIndex.industryLabel}
-                                                ariaLabel={`동일업종(${report.techIndex.industryLabel}) 기준 상위 ${report.techIndex.industryPercentile}%`}
-                                                className="pl-5 md:justify-center lg:justify-start"
-                                            />
-                                        </Card>
-                                    </div>
-                                    {/* 카드와 요약 상자 사이는 24 — 구획 간격(16)에 8(mt-2)을 더한다. */}
-                                    {/* 모바일에서는 여러 줄로 접히므로 왼쪽 정렬, 태블릿 이상(한두 줄)은 가운데 정렬. */}
-                                    <p className="bg-navy-100 border-navy-200 text-navy-600 typo-body-xl-regular mt-2 rounded-sm border px-5 py-5 text-start break-keep md:text-center">
-                                        기술신용평가(TCB) 시 제출한 정보를 기반으로 평가한
-                                        혁신성장역량지수(Tech-Index)는{' '}
-                                        <strong className="typo-body-xl-bold">{techIndexScoreText}</strong>으로{' '}
-                                        <strong className="typo-body-xl-bold">{techIndexGrade.summaryLabel}</strong>
-                                    </p>
-                                </section>
-
-                                {/* 신용/재무 현황 */}
-                                <section aria-labelledby="ig-report-finance" className="flex flex-col gap-4">
-                                    <SectionTitle id="ig-report-finance" title="신용/재무 현황" />
-                                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                                        <Card title="기업신용등급">
-                                            <SemicircleRatingGauge
-                                                data={creditRating}
-                                                title="기업신용등급"
-                                                ariaLabel={`기업신용등급 ${creditRating.label}, ${creditRating.description}`}
-                                            />
-                                        </Card>
-                                        <Card title="재무비율진단">
-                                            <RatingMatrix
-                                                ariaLabel="재무비율진단 — 항목별 수준"
-                                                rows={report.creditFinance.ratios}
-                                            />
-                                        </Card>
-                                        {/* 태블릿(md 2열)에서 홀로 남는 셋째 카드는 한 줄을 다 쓴다 — 오른쪽 빈 칸이 생기지 않게. */}
-                                        <Card
-                                            className="md:col-span-2 xl:col-span-1"
-                                            title="부문별 비교"
-                                            aside={
-                                                <ComparisonRadarLegend
-                                                    primaryLabel="조회기업"
-                                                    comparisonLabel="업종평균"
-                                                    primaryColor={SECTOR_COMPARISON_RADAR_STYLE.primaryColor}
-                                                    comparisonColor={SECTOR_COMPARISON_RADAR_STYLE.comparisonColor}
-                                                    comparisonFillOpacity={
-                                                        SECTOR_COMPARISON_RADAR_STYLE.comparisonFillOpacity
-                                                    }
-                                                    className="justify-end"
-                                                />
-                                            }
-                                        >
-                                            <ComparisonRadarChart
-                                                animate={false}
-                                                data={report.creditFinance.comparison.map((item) => ({
-                                                    id: item.label,
-                                                    label: item.label,
-                                                    primaryValue: item.company,
-                                                    comparisonValue: item.industry,
-                                                }))}
-                                                {...SECTOR_COMPARISON_RADAR_STYLE}
-                                                primaryLabel="조회기업"
-                                                comparisonLabel="업종평균"
-                                                ariaLabel="부문별 비교 — 조회기업과 업종평균"
-                                            />
-                                        </Card>
-                                    </div>
-                                    <Card title="최근 3개년 재무 현황" aside="단위 : 백만원">
-                                        {/* 표 359 : 그래프 767 비율 · 간격 24. lg(1024) 부터 나란히 — 그래프 칸이 576 이상이 되는 폭이다. 그 아래는 표 위 · 그래프 아래로 쌓인다. */}
-                                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,359fr)_minmax(0,767fr)]">
-                                            <StatementTable
-                                                years={report.creditFinance.years}
-                                                statements={report.creditFinance.statements}
-                                            />
-                                            <GroupedColumnChart
-                                                animate={false}
-                                                data={report.creditFinance.statements.map((row) => ({
-                                                    id: row.label,
-                                                    label: row.label,
-                                                    values: Object.fromEntries(
-                                                        report.creditFinance.years.map((year, index) => [
-                                                            year,
-                                                            row.values[index],
-                                                        ]),
-                                                    ),
-                                                }))}
-                                                series={report.creditFinance.years.map((year, index) => ({
-                                                    key: year,
-                                                    label: year,
-                                                    color: STATEMENT_YEAR_COLORS[index % STATEMENT_YEAR_COLORS.length],
-                                                }))}
-                                                ariaLabel="최근 3개년 재무 현황 항목별 연도 비교"
-                                                variant="cells"
-                                                showValueLabels
-                                                // 값이 막대 위에 모두 적혀 있어 hover 말풍선은 두지 않는다.
-                                                showTooltip={false}
-                                            />
-                                        </div>
-                                    </Card>
-                                </section>
-
-                                {/* 활동성 정보 */}
-                                <section aria-labelledby="ig-report-activity" className="flex flex-col gap-4">
-                                    <SectionTitle id="ig-report-activity" title="활동성 정보" />
-                                    {/* 선 카드 792 : 막대 카드 384 비율. lg(1024) 부터 나란히 — 선 그래프 자리가 576 이상이 되는 폭이다. */}
-                                    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,792fr)_minmax(0,384fr)]">
-                                        <Card title="분기별 종업원수" aside="단위 : 명">
-                                            <LineChart
-                                                animate={false}
-                                                data={report.activity.employees.map((item) => ({
-                                                    id: item.label,
-                                                    label: item.label,
-                                                    values: {employees: item.value},
-                                                }))}
-                                                series={[
-                                                    {
-                                                        key: 'employees',
-                                                        label: '종업원수',
-                                                        color: 'var(--raw-purple-600)',
-                                                    },
-                                                ]}
-                                                variant="area"
-                                                appearance="cells"
-                                                showLegend={false}
-                                                showValueLabels
-                                                // 값이 점 위에 모두 적혀 있어 hover 말풍선은 두지 않는다.
-                                                showTooltip={false}
-                                                ariaLabel="분기별 종업원수 추이"
-                                            />
-                                        </Card>
-                                        <Card title="인당 매출액" aside="단위 : 백만원">
-                                            <ColumnChart
-                                                animate={false}
-                                                data={report.activity.salesPerEmployee.map((item) => ({
-                                                    id: item.label,
-                                                    label: item.label,
-                                                    value: item.value,
-                                                }))}
-                                                valueFractionDigits={1}
-                                                barWidth={48}
-                                                color="var(--raw-blue-500)"
-                                                variant="cells"
-                                                showTooltip={false}
-                                                ariaLabel="연도별 인당 매출액"
-                                            />
-                                        </Card>
-                                    </div>
-                                </section>
-                            </>
+                    {/* 본문은 TabsContent 안에 둔다 — 탭(role=tab)에는 짝이 되는 패널(role=tabpanel)이 있어야 한다[8.1.1].
+                    지금 고른 탭 하나만 그리므로 value 는 늘 activeTab 이다. */}
+                    <div
+                        className={cn(
+                            'max-w-content mx-auto flex w-full flex-col px-4 pt-10 pb-10 md:px-6 md:pt-6 xl:px-0 print:block print:pt-10',
+                            // PC 전용 탭은 좌우 여백 없이 콘텐츠 폭 1200 을 쓴다(창이 넓으면 mx-auto 로 가운데).
+                            isPcOnlyTab && 'px-0 md:px-0',
                         )}
-                    </TabsContent>
-                </div>
-            </Tabs>
+                    >
+                        <TabsContent value={activeTab} className="flex flex-col gap-10 print:block print:space-y-10">
+                            {/* 탭 제목 띠 — 아이콘 칸 + 탭 제목(section.title ?? label). 탭 줄이 있는 PC 에서만 위 간격을 더 띄운다(md:mt-5).
+                                아이콘은 제목이 옆에 있어 장식이다(alt="")[5.1.1].
+                                띠는 탭을 열면 바로 보이므로 지연 로딩을 끈다(eager) — 폭이 w-auto 라 lazy 면 "크기 미지정 지연 이미지" 로 검출된다. */}
+                            <div className="border-navy-200 flex items-center gap-3 rounded-md border bg-blue-50 p-4 md:mt-5">
+                                <span className="text-primary-foreground flex size-10 shrink-0 items-center justify-center rounded-sm bg-blue-500">
+                                    <Image
+                                        src={TAB_BANNER_ICONS[activeTab].src}
+                                        alt=""
+                                        loading="eager"
+                                        className={TAB_BANNER_ICONS[activeTab].className}
+                                    />
+                                </span>
+                                <h2 className="typo-h2-bold text-navy-600 break-keep">
+                                    {'title' in activeSection ? activeSection.title : activeSection.label}
+                                </h2>
+                            </div>
+
+                            {activeTab === 'company' ? (
+                                <InnovationGrowthReportCompany status={report.companyStatus} />
+                            ) : activeTab === 'activity' ? (
+                                <InnovationGrowthReportActivity
+                                    detail={report.activityDetail}
+                                    employees={report.activity.employees}
+                                    salesPerEmployee={report.activity.salesPerEmployee}
+                                />
+                            ) : activeTab === 'credit-finance' ? (
+                                <InnovationGrowthReportCredit
+                                    detail={report.creditDetail}
+                                    rating={creditRating}
+                                    visibility={INNOVATION_CREDIT_VISIBILITY[report.viewerCase]}
+                                />
+                            ) : activeTab === 'tech-index' ? (
+                                <InnovationGrowthReportTechIndex
+                                    detail={report.techIndexDetail}
+                                    score={report.techIndex.score}
+                                    companyName={report.companyName}
+                                    evaluationDate={report.techIndex.evaluationDate}
+                                />
+                            ) : activeTab === 'innovation' ? (
+                                <InnovationGrowthReportTech
+                                    detail={report.techInnovation}
+                                    issues={report.innovation.issues}
+                                    issueColors={INNOVATION_ISSUE_COLORS}
+                                />
+                            ) : (
+                                <>
+                                    {/* 기업 정보 */}
+                                    <section aria-labelledby="ig-report-company" className="flex flex-col gap-4">
+                                        <SectionTitle id="ig-report-company" title="기업 정보" />
+                                        <Card>
+                                            <InfoTable
+                                                aria-label="기업 정보"
+                                                items={report.company.rows.map((row) => ({key: row.label, ...row}))}
+                                            />
+                                        </Card>
+                                    </section>
+
+                                    {/* 기술혁신정보 */}
+                                    <section aria-labelledby="ig-report-innovation" className="flex flex-col gap-4">
+                                        <SectionTitle
+                                            id="ig-report-innovation"
+                                            title="기술혁신정보"
+                                            aside={report.subCategoryName}
+                                        />
+                                        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                            <Card title="기업 보유기술" aside="소분류 기준" className="gap-4">
+                                                <PercentageDonutChart
+                                                    data={[...report.innovation.technologies]}
+                                                    // [프론트엔드 연동 · 정렬] 비중 큰 순으로 받아 12시부터 시계 방향(첫 조각이 가장 진한 색).
+                                                    // 조각에 올리면 분류명 툴팁이 뜬다(비중 · 건수는 범례).
+                                                    ariaLabel="기업 보유기술 소분류별 비중과 건수"
+                                                    // 그래프 자리 최소 높이를 두고 세로 가운데 정렬 — 옆 카드(관련 기업 및 특허현황)와 높이를 맞춘다.
+                                                    className="flex min-h-77.5 flex-col justify-center"
+                                                />
+                                            </Card>
+                                            <Card title="관련 기업 및 특허현황" className="gap-4">
+                                                <div className="grid grid-cols-1 gap-6 @sm:grid-cols-2">
+                                                    {report.innovation.stats.map((stat) => {
+                                                        const StatIcon = INNOVATION_STAT_ICONS[stat.id]
+                                                        return (
+                                                            <StatBox
+                                                                key={stat.id}
+                                                                label={stat.label}
+                                                                value={numberFormatter.format(stat.value)}
+                                                                unit={stat.unit}
+                                                                icon={
+                                                                    <StatIcon
+                                                                        aria-hidden="true"
+                                                                        className="size-icon-sm shrink-0"
+                                                                    />
+                                                                }
+                                                            />
+                                                        )
+                                                    })}
+                                                </div>
+                                                <dl className="flex flex-col gap-2">
+                                                    {report.innovation.averages.map((row) => (
+                                                        <div
+                                                            key={row.label}
+                                                            className="flex items-center justify-between gap-4"
+                                                        >
+                                                            <dt className="typo-body-l-regular text-label-foreground">
+                                                                {row.label}
+                                                            </dt>
+                                                            <dd className="m-0">
+                                                                <span className="typo-body-xl-bold text-foreground">
+                                                                    {row.value}
+                                                                </span>
+                                                                <span className="typo-body-xl-regular text-label-foreground ms-1">
+                                                                    {row.unit}
+                                                                </span>
+                                                            </dd>
+                                                        </div>
+                                                    ))}
+                                                </dl>
+                                            </Card>
+                                            <Card title="R&D 이슈" className="gap-4">
+                                                <WordCloud
+                                                    words={[...report.innovation.issues]}
+                                                    colors={INNOVATION_ISSUE_COLORS}
+                                                    ariaLabel="최근 연구개발 이슈 키워드"
+                                                    // PC(xl)는 높이 고정. 그 아래(태블릿 2열)는 옆 카드(정부 R&D)가 더 높아 아래가 비므로
+                                                    // 같은 높이를 최소로 두고 카드 높이를 채운다. 단어 크기는 자리 높이에 맞춰 다시 그려진다.
+                                                    className="h-auto min-h-54 flex-1 xl:h-54 xl:flex-none"
+                                                />
+                                            </Card>
+                                            <Card
+                                                title="정부 R&D사업 접수현황"
+                                                aside={`기준일자 · ${report.createdAt}`}
+                                                className="gap-4"
+                                            >
+                                                {/* 부처 목록과 안내문은 한 묶음으로 붙인다(카드 간격보다 좁게). 건수가 null 이면 '-' 만 적고 단위는 뺀다. */}
+                                                <div className="flex flex-col gap-2">
+                                                    <div className="grid grid-cols-1 gap-6 @sm:grid-cols-2">
+                                                        {report.innovation.rnd.map((item) => (
+                                                            <StatBox
+                                                                key={item.label}
+                                                                label={item.label}
+                                                                value={
+                                                                    item.value === null
+                                                                        ? EMPTY_VALUE
+                                                                        : numberFormatter.format(item.value)
+                                                                }
+                                                                unit={item.value === null ? undefined : item.unit}
+                                                                labelClassName="typo-body-m-regular text-foreground-subtle"
+                                                                icon={
+                                                                    // 정부 상징 문양 — 옆에 부처명이 있어 장식이다(alt="")[5.1.1].
+                                                                    <Image
+                                                                        src={emblemGovernmentImage}
+                                                                        alt=""
+                                                                        sizes="24px"
+                                                                        className="size-icon-lg shrink-0"
+                                                                    />
+                                                                }
+                                                            />
+                                                        ))}
+                                                    </div>
+                                                    <p className="typo-caption-regular text-foreground-subtle break-keep">
+                                                        {report.innovation.rndNote}
+                                                    </p>
+                                                </div>
+                                            </Card>
+                                        </div>
+                                    </section>
+
+                                    {/* 혁신성장역량지수 — 카드 하나에 점수 게이지(왼쪽) · 동일업종 순위 피라미드(오른쪽) · 아래 요약 상자. */}
+                                    <section aria-labelledby="ig-report-tech-index" className="flex flex-col gap-4">
+                                        <SectionTitle id="ig-report-tech-index" title="혁신성장역량지수" />
+                                        <Card>
+                                            {/* 두 칸은 lg(1024) 이상에서만 나란히 둔다 — 태블릿에서 나란히 두면 피라미드 칸이 글자 · 피라미드를
+                                                위아래로 쌓아 높아진다. 안내 문구는 게이지 칸의 오른쪽 위. */}
+                                            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+                                                <div className="flex flex-col gap-6">
+                                                    <p className="typo-body-l-regular text-foreground-subtle text-end">
+                                                        {report.techIndex.scoreNote}
+                                                    </p>
+                                                    {/* 평가일자는 게이지 안이 아니라 원호 아래 8 간격에 가운데 정렬로 둔다(기업신용등급 카드와 같은 모양). */}
+                                                    <div className="flex flex-col gap-2">
+                                                        <ScoreGauge
+                                                            score={report.techIndex.score}
+                                                            statusLabel={techIndexGrade.label}
+                                                            tone={techIndexGrade.tone}
+                                                            ariaLabel={`혁신성장역량지수 ${techIndexScoreText}, ${techIndexGrade.label}`}
+                                                        />
+                                                        <dl className="flex flex-wrap items-center justify-center gap-x-2">
+                                                            <dt className="typo-body-xl-regular text-foreground-subtle">
+                                                                평가일자
+                                                            </dt>
+                                                            <dd className="typo-body-xl-medium text-label-foreground m-0 tabular-nums">
+                                                                {report.techIndex.evaluationDate}
+                                                            </dd>
+                                                        </dl>
+                                                    </div>
+                                                </div>
+                                                {/* 태블릿(칸이 한 줄을 다 씀)에서는 글자 · 피라미드 묶음을 가운데로, lg 이상은 왼쪽 기준. */}
+                                                <div className="flex flex-col justify-center">
+                                                    <RankPyramidChart
+                                                        percentile={report.techIndex.industryPercentile}
+                                                        groupLabel={report.techIndex.industryLabel}
+                                                        ariaLabel={`동일업종(${report.techIndex.industryLabel}) 기준 상위 ${report.techIndex.industryPercentile}%`}
+                                                        className="pl-5 md:justify-center lg:justify-start"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </Card>
+                                        {/* 요약 상자 — 문구 끝말(양호함 등)은 점수 구간(TECH_INDEX_GRADES.summaryLabel)에서 온다.
+                                            모바일에서는 여러 줄로 접히므로 왼쪽 정렬, 태블릿 이상은 가운데 정렬. */}
+                                        <p className="bg-navy-100 border-navy-200 text-navy-600 typo-body-xl-regular mt-2 rounded-sm border px-5 py-5 text-start break-keep md:text-center">
+                                            기술신용평가(TCB) 시 제출한 정보를 기반으로 평가한
+                                            혁신성장역량지수(Tech-Index)는{' '}
+                                            <strong className="typo-body-xl-bold">{techIndexScoreText}</strong>으로{' '}
+                                            <strong className="typo-body-xl-bold">{techIndexGrade.summaryLabel}</strong>
+                                        </p>
+                                    </section>
+
+                                    {/* 신용/재무 현황 */}
+                                    <section aria-labelledby="ig-report-finance" className="flex flex-col gap-4">
+                                        <SectionTitle id="ig-report-finance" title="신용/재무 현황" />
+                                        {/* 기업신용등급 카드 : 진단 카드 ≈ 1 : 2. xl(1280) 부터 나란히, 그 아래는 위아래로 쌓인다. */}
+                                        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,384fr)_minmax(0,792fr)]">
+                                            <Card title="기업신용등급" className="gap-4">
+                                                <SemicircleRatingGauge
+                                                    data={creditRating}
+                                                    title="기업신용등급"
+                                                    ariaLabel={`기업신용등급 ${creditRating.label}, ${creditRating.description}`}
+                                                />
+                                            </Card>
+                                            {/* 재무비율진단과 부문별 비교는 카드 하나를 반씩 나눠 쓴다(md 미만은 위아래). 각 칸의 제목 줄은 카드 제목과 같은 모양. */}
+                                            <Card>
+                                                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                                                    <section
+                                                        aria-labelledby="ig-report-ratio-diagnosis"
+                                                        className="flex min-w-0 flex-col gap-4"
+                                                    >
+                                                        <h4
+                                                            id="ig-report-ratio-diagnosis"
+                                                            className="typo-body-xl-bold text-foreground break-keep"
+                                                        >
+                                                            재무비율진단
+                                                        </h4>
+                                                        <RatingMatrix
+                                                            ariaLabel="재무비율진단 — 항목별 수준"
+                                                            rows={report.creditFinance.ratios}
+                                                        />
+                                                    </section>
+                                                    <section
+                                                        aria-labelledby="ig-report-sector-comparison"
+                                                        className="flex min-w-0 flex-col gap-4"
+                                                    >
+                                                        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                                                            <h4
+                                                                id="ig-report-sector-comparison"
+                                                                className="typo-body-xl-bold text-foreground break-keep"
+                                                            >
+                                                                부문별 비교
+                                                            </h4>
+                                                            <ComparisonRadarLegend
+                                                                primaryLabel="조회기업"
+                                                                comparisonLabel="업종평균"
+                                                                primaryColor={
+                                                                    SECTOR_COMPARISON_RADAR_STYLE.primaryColor
+                                                                }
+                                                                comparisonColor={
+                                                                    SECTOR_COMPARISON_RADAR_STYLE.comparisonColor
+                                                                }
+                                                                comparisonFillOpacity={
+                                                                    SECTOR_COMPARISON_RADAR_STYLE.comparisonFillOpacity
+                                                                }
+                                                                className="ms-auto justify-end"
+                                                            />
+                                                        </div>
+                                                        <ComparisonRadarChart
+                                                            data={report.creditFinance.comparison.map((item) => ({
+                                                                id: item.label,
+                                                                label: item.label,
+                                                                primaryValue: item.company,
+                                                                comparisonValue: item.industry,
+                                                            }))}
+                                                            {...SECTOR_COMPARISON_RADAR_STYLE}
+                                                            primaryLabel="조회기업"
+                                                            comparisonLabel="업종평균"
+                                                            ariaLabel="부문별 비교 — 조회기업과 업종평균"
+                                                        />
+                                                    </section>
+                                                </div>
+                                            </Card>
+                                        </div>
+                                        <Card title="최근 3개년 재무 현황" className="gap-4">
+                                            {/* 표 : 그래프 ≈ 1 : 2. lg(1024) 부터 나란히, 그 아래는 표 위 · 그래프 아래로 쌓인다. */}
+                                            <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,359fr)_minmax(0,767fr)]">
+                                                {/* 단위는 카드 제목 줄이 아니라 표 바로 위 오른쪽에 둔다. */}
+                                                <div className="flex min-w-0 flex-col gap-1">
+                                                    <p className="typo-body-l-regular text-foreground-subtle text-end">
+                                                        단위: 백만원
+                                                    </p>
+                                                    <StatementTable
+                                                        years={report.creditFinance.years}
+                                                        statements={report.creditFinance.statements}
+                                                    />
+                                                </div>
+                                                <GroupedColumnChart
+                                                    data={report.creditFinance.statements.map((row) => ({
+                                                        id: row.label,
+                                                        label: row.label,
+                                                        values: Object.fromEntries(
+                                                            report.creditFinance.years.map((year, index) => [
+                                                                year,
+                                                                row.values[index],
+                                                            ]),
+                                                        ),
+                                                    }))}
+                                                    series={report.creditFinance.years.map((year, index) => ({
+                                                        key: year,
+                                                        label: year,
+                                                        color: STATEMENT_YEAR_COLORS[
+                                                            index % STATEMENT_YEAR_COLORS.length
+                                                        ],
+                                                    }))}
+                                                    ariaLabel="최근 3개년 재무 현황 항목별 연도 비교"
+                                                    variant="cells"
+                                                    showValueLabels
+                                                    // 값이 막대 위에 모두 적혀 있어 hover 말풍선은 두지 않는다.
+                                                    showTooltip={false}
+                                                />
+                                            </div>
+                                        </Card>
+                                    </section>
+
+                                    {/* 활동성 정보 */}
+                                    <section aria-labelledby="ig-report-activity" className="flex flex-col gap-4">
+                                        <SectionTitle id="ig-report-activity" title="활동성 정보" />
+                                        {/* 선 카드 : 막대 카드 ≈ 2 : 1. lg(1024) 부터 나란히, 그 아래는 위아래로 쌓인다. */}
+                                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,792fr)_minmax(0,384fr)]">
+                                            {/* 활동성 카드 둘은 단위를 제목 줄이 아니라 그래프 바로 위 오른쪽에 둔다. */}
+                                            <Card title="분기별 종업원수" className="gap-4">
+                                                <div className="flex min-w-0 flex-col gap-1">
+                                                    <p className="typo-body-l-regular text-foreground-subtle text-end">
+                                                        단위: 명
+                                                    </p>
+                                                    <LineChart
+                                                        data={report.activity.employees.map((item) => ({
+                                                            id: item.label,
+                                                            label: item.label,
+                                                            values: {employees: item.value},
+                                                        }))}
+                                                        series={[
+                                                            {
+                                                                key: 'employees',
+                                                                label: '종업원수',
+                                                                color: 'var(--ds-purple-600)',
+                                                            },
+                                                        ]}
+                                                        variant="area"
+                                                        appearance="cells"
+                                                        showLegend={false}
+                                                        showValueLabels
+                                                        // 값이 점 위에 모두 적혀 있어 hover 말풍선은 두지 않는다.
+                                                        showTooltip={false}
+                                                        ariaLabel="분기별 종업원수 추이"
+                                                    />
+                                                </div>
+                                            </Card>
+                                            <Card title="인당 매출액" className="gap-4">
+                                                <div className="flex min-w-0 flex-col gap-1">
+                                                    <p className="typo-body-l-regular text-foreground-subtle text-end">
+                                                        단위: 천원
+                                                    </p>
+                                                    <ColumnChart
+                                                        data={report.activity.salesPerEmployee.map((item) => ({
+                                                            id: item.label,
+                                                            label: item.label,
+                                                            value: item.value,
+                                                        }))}
+                                                        valueFractionDigits={1}
+                                                        barWidth={48}
+                                                        color="var(--ds-report-series-2)"
+                                                        variant="cells"
+                                                        showTooltip={false}
+                                                        ariaLabel="연도별 인당 매출액"
+                                                    />
+                                                </div>
+                                            </Card>
+                                        </div>
+                                    </section>
+                                </>
+                            )}
+                        </TabsContent>
+                    </div>
+                </Tabs>
+            </ChartRevealProvider>
+            {/* 맨 위로 — 400px 넘게 내려가면 오른쪽 아래에 뜬다(scroll-to-top-button.tsx). 인쇄에는 안 찍힌다. */}
+            <ScrollToTopButton className="right-4 bottom-4 md:right-6 md:bottom-6 print:hidden" />
         </div>
     )
 }
@@ -646,9 +750,9 @@ const SKELETON_AVERAGE_COUNT = 3
 
 const SkeletonBar = ({className}: {className?: string}) => <Skeleton className={cn('h-4 rounded-sm', className)} />
 
-// 카드 머리 줄 범례 자리 — 16 견본 + 이름(14 Regular 한 줄 높이).
-const SkeletonLegend = ({count}: {count: number}) => (
-    <div className="flex justify-end gap-6">
+// 범례 자리 — 색 견본 + 이름 한 줄. 기본은 오른쪽 정렬(카드 머리 줄), 그래프 아래 범례는 className 으로 가운데.
+const SkeletonLegend = ({count, className}: {count: number; className?: string}) => (
+    <div className={cn('flex justify-end gap-6', className)}>
         {Array.from({length: count}, (_, index) => (
             <div key={index} className="flex h-lh items-center gap-2">
                 <Skeleton className="size-4 rounded-none" />
@@ -658,7 +762,8 @@ const SkeletonLegend = ({count}: {count: number}) => (
     </div>
 )
 
-// 최근 3개년 재무 표 자리 — 실제 표와 같은 칸 클래스(테두리 · 여백 · 파란 머리 면)에 글자 대신 막대를 둬 줄 높이(46)가 같다.
+// 최근 3개년 재무 표 자리 — 실제 표와 같은 칸 클래스에 글자 대신 막대를 둬 줄 높이가 같다.
+// 줄 수는 머리 1 + 재무 항목 6(목업 statements 와 같은 수 — SKELETON_COMPANY_ROW_COUNT 를 빌려 쓴다).
 const SKELETON_STATEMENT_COLUMN_COUNT = 4
 // 혁신성장역량지수 안내 문구가 모바일에서 더 접히는 줄 수(한 줄 + 3).
 const SKELETON_NOTE_MOBILE_EXTRA_LINES = 3
@@ -701,8 +806,8 @@ const SkeletonStatGrid = () => (
     </div>
 )
 
-// 표 자리 — 실제 보고서 표(ReportTable)와 같은 머리 면 · 줄 선 · 줄 높이(여백 12 + 글자 21)에 글자 대신 막대를 둔다.
-// headRows 2 는 두 단 머리(거래처 표), isBadgeRow 는 뱃지가 있어 줄이 더 높은 표에 쓴다.
+// 표 자리 — 실제 보고서 표(ReportTable)와 같은 머리 면 · 줄 선 · 칸 여백에 글자 대신 막대를 둔다.
+// headRows 2 는 두 단 머리(거래처 표), isBadgeRow 는 값 칸 높이가 고정돼 줄이 더 높은 표(거래처 표의 신용등급 칸)에 쓴다.
 const ReportTableSkeleton = ({
     columns,
     rows,
@@ -712,7 +817,7 @@ const ReportTableSkeleton = ({
     columns: number
     rows: number
     headRows?: number
-    /** 값 줄에 뱃지(높이 28)가 있는 표 — 거래처 표처럼 줄이 더 높다. */
+    /** 값 칸 높이가 고정된 표(거래처 표의 신용등급 칸, h-7) — 줄이 더 높다. */
     isBadgeRow?: boolean
 }) => (
     <div className="border-t-foreground-subtle border-t" aria-hidden="true">
@@ -775,7 +880,7 @@ const CompanyTabSkeleton = () => (
             </div>
         </section>
         <section aria-labelledby="ig-company-skeleton-affiliates" className="flex flex-col gap-4">
-            <SectionTitle id="ig-company-skeleton-affiliates" title="관계기업 현황" date="단위 : 백만원" />
+            <SectionTitle id="ig-company-skeleton-affiliates" title="관계기업 현황" date="단위: 백만원" />
             <ReportTableSkeleton columns={6} rows={3} />
         </section>
         <section aria-labelledby="ig-company-skeleton-ip" className="flex flex-col gap-4">
@@ -800,7 +905,7 @@ const CompanyTabSkeleton = () => (
                     <ReportTableSkeleton columns={4} rows={3} />
                     <ChartSkeleton type="overlay-column" label="손익현황을 불러오는 중입니다." />
                 </Card>
-                <Card title="주요재무비율" aside="단위 : %">
+                <Card title="주요재무비율" aside="단위: %">
                     <ReportTableSkeleton columns={4} rows={5} />
                     <ChartSkeleton type="columns-line" label="주요재무비율을 불러오는 중입니다." />
                 </Card>
@@ -817,7 +922,7 @@ const CompanyTabSkeleton = () => (
                     <div key={title} className="flex flex-col gap-2">
                         <div className="flex items-baseline justify-between gap-4">
                             <h4 className="typo-body-xl-bold text-foreground">{title}</h4>
-                            <p className="typo-body-l-regular text-foreground-subtle">단위 : %, 백만원</p>
+                            <p className="typo-body-l-regular text-foreground-subtle">단위: %, 백만원</p>
                         </div>
                         <ReportTableSkeleton columns={6} rows={5} headRows={2} isBadgeRow />
                     </div>
@@ -921,18 +1026,32 @@ const TechTabSkeleton = () => (
     </>
 )
 
+// 단위 줄 자리 — 실제 WithUnit 과 같은 높이.
+const SkeletonWithUnit = ({children}: {children: ReactNode}) => (
+    <div className="flex min-w-0 flex-col gap-1">
+        <div className="typo-body-l-regular flex h-lh items-center justify-end" aria-hidden="true">
+            <SkeletonBar className="w-20" />
+        </div>
+        {children}
+    </div>
+)
+
 // 활동성정보 탭 스켈레톤 — 실제 탭(innovation-growth-report-activity.tsx)과 같은 구획 · 카드 짜임(PC 폭 전용).
 const ActivityTabSkeleton = () => (
     <>
         <section aria-labelledby="ig-activity-skeleton-hr" className="flex flex-col gap-4">
-            <SectionTitle id="ig-activity-skeleton-hr" title="인적자원 현황" date="단위 : 명, 천원" />
+            <SectionTitle id="ig-activity-skeleton-hr" title="인적자원 현황" />
             <div className="flex flex-col gap-6">
-                <ReportTableSkeleton columns={6} rows={3} />
+                <Card>
+                    <SkeletonWithUnit>
+                        <ReportTableSkeleton columns={6} rows={3} />
+                    </SkeletonWithUnit>
+                </Card>
                 <div className="grid grid-cols-[minmax(0,792fr)_minmax(0,384fr)] gap-6">
-                    <Card title="분기별 종업원수" aside="단위 : 명">
+                    <Card title="분기별 종업원수" aside="단위: 명">
                         <ChartSkeleton type="cells-line" label="분기별 종업원수를 불러오는 중입니다." />
                     </Card>
-                    <Card title="인당 매출액" aside="단위 : 천원">
+                    <Card title="인당 매출액" aside="단위: 천원">
                         <ChartSkeleton type="cells-column" label="인당 매출액을 불러오는 중입니다." />
                     </Card>
                 </div>
@@ -942,10 +1061,15 @@ const ActivityTabSkeleton = () => (
             <SectionTitle id="ig-activity-skeleton-energy" title="에너지 사용 현황" />
             <div className="flex flex-col gap-6">
                 {['전기 사용량', '가스 사용량'].map((title) => (
-                    <Card key={title} title={title}>
+                    <Card key={title} title={title} className="gap-4">
                         <div className="grid grid-cols-2 items-center gap-6">
-                            <ReportTableSkeleton columns={4} rows={3} />
-                            <ChartSkeleton type="columns-line" label={`${title}을 불러오는 중입니다.`} />
+                            <SkeletonWithUnit>
+                                <ReportTableSkeleton columns={4} rows={3} />
+                            </SkeletonWithUnit>
+                            <div className="flex flex-col gap-2">
+                                <ChartSkeleton type="columns-line" label={`${title}을 불러오는 중입니다.`} />
+                                <SkeletonLegend count={3} className="justify-center" />
+                            </div>
                         </div>
                     </Card>
                 ))}
@@ -955,12 +1079,11 @@ const ActivityTabSkeleton = () => (
 )
 
 // Tech-Index 탭 스켈레톤 — 실제 탭(innovation-growth-report-tech-index.tsx)과 같은 구획 · 카드 짜임(PC 폭 전용).
-const SKELETON_GRADE_ROW_COUNT = 5
 const SKELETON_DESCRIPTION_COUNT = 3
 const SKELETON_CAPABILITIES = ['인프라', '투입', '활동', '성과'] as const
 const SKELETON_INDICATORS = ['역량·투자 지표', '특허·기술 지표'] as const
 
-// 안내 상자 자리 — 실제 NoticeBox(여백 16/20 · 16 Regular 줄 높이)와 같은 짜임에 줄 수만큼 막대를 둔다.
+// 안내 상자 자리 — 실제 NoticeBox 와 같은 여백 · 줄 높이에 줄 수만큼 막대를 둔다.
 const SkeletonNoticeBox = ({lines}: {lines: number}) => (
     <div className="border-subtle-3 typo-body-xl-regular flex flex-col items-center rounded-sm border px-5 py-4">
         {Array.from({length: lines}, (_, index) => (
@@ -973,55 +1096,49 @@ const SkeletonNoticeBox = ({lines}: {lines: number}) => (
 
 const TechIndexTabSkeleton = () => (
     <>
-        <section aria-labelledby="ig-tech-index-skeleton-score" className="flex flex-col gap-4">
-            <SectionTitle id="ig-tech-index-skeleton-score" title="혁신성장역량지수" />
-            <div className="flex flex-col gap-6">
-                <div className="grid grid-cols-2 gap-6">
-                    <Card className="justify-center">
-                        <div className="flex items-center gap-6">
-                            <ChartSkeleton
-                                type="score-gauge"
-                                label="Tech-Index 점수를 불러오는 중입니다."
-                                className="w-80 shrink-0"
-                            />
-                            {/* 점수 구간표 자리 — 머리 1줄 + 구간 5줄(줄 높이 34). */}
-                            <div className="border-t-foreground-subtle min-w-0 flex-1 border-t" aria-hidden="true">
-                                {Array.from({length: SKELETON_GRADE_ROW_COUNT + 1}, (_, row) => (
-                                    <div
-                                        key={row}
-                                        className={cn(
-                                            'border-subtle-3 flex h-8.5 items-center justify-center border-b',
-                                            row === 0 && 'bg-primary-subtle',
-                                        )}
-                                    >
-                                        <SkeletonBar className="h-3 w-12" />
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <SkeletonNoticeBox lines={1} />
-                    </Card>
-                    <Card title="Tech-Index 표준정보 비교" aside={<SkeletonBar className="w-24" />}>
-                        <DistributionCurveChartSkeleton label="Tech-Index 표준정보를 불러오는 중입니다." />
-                        <SkeletonNoticeBox lines={2} />
-                    </Card>
-                </div>
-                <Card title="기업 유형별 Tech-Index 비교">
-                    <ChartSkeleton type="cells-column" label="기업 유형별 Tech-Index 를 불러오는 중입니다." />
-                    <div className="flex flex-col gap-2">
-                        <h5 className="typo-body-xl-bold text-foreground">지수설명</h5>
-                        <div className="typo-body-xl-regular flex flex-col gap-1">
-                            {Array.from({length: SKELETON_DESCRIPTION_COUNT}, (_, index) => (
-                                <div key={index} className="flex h-lh items-center">
-                                    <SkeletonBar
-                                        className={index === SKELETON_DESCRIPTION_COUNT - 1 ? 'w-2/3' : 'w-full'}
-                                    />
-                                </div>
-                            ))}
+        {/* 지수설명 — 실제 탭과 같은 상자에 설명 줄 자리. */}
+        <section
+            aria-labelledby="ig-tech-index-skeleton-description"
+            className="border-subtle-3 bg-card -mt-4 flex flex-col gap-4 rounded-lg border px-10 py-8"
+        >
+            <h3 id="ig-tech-index-skeleton-description" className="typo-h4-bold text-foreground">
+                지수설명
+            </h3>
+            <div className="typo-body-xl-regular flex flex-col gap-2" aria-hidden="true">
+                {Array.from({length: SKELETON_DESCRIPTION_COUNT}, (_, index) => (
+                    <div key={index} className="flex h-lh items-center">
+                        <SkeletonBar className={index === SKELETON_DESCRIPTION_COUNT - 1 ? 'w-2/3' : 'w-full'} />
+                    </div>
+                ))}
+            </div>
+        </section>
+        <section aria-labelledby="ig-tech-index-skeleton-score" className="flex flex-col gap-6">
+            <h3 id="ig-tech-index-skeleton-score" className="sr-only">
+                혁신성장역량지수
+            </h3>
+            <div className="grid grid-cols-2 gap-6">
+                <Card className="justify-center gap-4">
+                    {/* 게이지 → 평가일자 줄. */}
+                    <div className="flex flex-col items-center gap-2">
+                        <ChartSkeleton
+                            type="score-gauge"
+                            label="Tech-Index 점수를 불러오는 중입니다."
+                            className="w-80"
+                        />
+                        <div className="typo-body-xl-regular flex h-lh items-center" aria-hidden="true">
+                            <SkeletonBar className="w-40" />
                         </div>
                     </div>
+                    <SkeletonNoticeBox lines={1} />
+                </Card>
+                <Card title="Tech-Index 표준정보 비교" aside={<SkeletonBar className="w-24" />} className="gap-4">
+                    <DistributionCurveChartSkeleton label="Tech-Index 표준정보를 불러오는 중입니다." />
+                    <SkeletonNoticeBox lines={2} />
                 </Card>
             </div>
+            <Card title="기업 유형별 Tech-Index 비교" className="gap-4">
+                <ChartSkeleton type="cells-column" label="기업 유형별 Tech-Index 를 불러오는 중입니다." />
+            </Card>
         </section>
         <section aria-labelledby="ig-tech-index-skeleton-capability" className="flex flex-col gap-4">
             <SectionTitle id="ig-tech-index-skeleton-capability" title="4대 혁신역량 점수" />
@@ -1032,14 +1149,7 @@ const TechIndexTabSkeleton = () => (
                         className="border-subtle-3 bg-card flex min-w-0 flex-col gap-4 rounded-sm border p-6"
                     >
                         <ChartSkeleton type="cells-column" label={`${label} 점수를 불러오는 중입니다.`} />
-                        {/* 역량 이름 · 뱃지 줄(24) → 8 → 단계 칸 줄(16). */}
-                        <div className="flex flex-col items-center gap-2" aria-hidden="true">
-                            <span className="typo-body-xl-bold text-foreground flex h-6 items-center gap-2">
-                                {label}
-                                <SkeletonBar className="h-6 w-10" />
-                            </span>
-                            <SegmentMeterSkeleton />
-                        </div>
+                        <p className="typo-body-xl-bold text-foreground text-center">{label}</p>
                     </div>
                 ))}
             </div>
@@ -1048,7 +1158,7 @@ const TechIndexTabSkeleton = () => (
             <SectionTitle id="ig-tech-index-skeleton-by-type" title="기업 유형별 4대 혁신역량 비교" />
             <div className="grid grid-cols-2 gap-6">
                 {SKELETON_CAPABILITIES.map((label) => (
-                    <Card key={label} title={label}>
+                    <Card key={label} title={label} className="gap-4">
                         <ChartSkeleton type="cells-column" label={`기업 유형별 ${label} 점수를 불러오는 중입니다.`} />
                     </Card>
                 ))}
@@ -1061,7 +1171,7 @@ const TechIndexTabSkeleton = () => (
             </div>
             <div className="grid grid-cols-2 gap-6">
                 {SKELETON_INDICATORS.map((title) => (
-                    <Card key={title} title={title}>
+                    <Card key={title} title={title} className="gap-4">
                         <ChartSkeleton type="circle-radar" label={`${title}를 불러오는 중입니다.`} className="h-54" />
                     </Card>
                 ))}
@@ -1098,7 +1208,7 @@ const CreditTabSkeleton = () => (
             <SectionTitle id="ig-credit-skeleton-cash-flow" title="현금흐름등급" />
             <Card>
                 <div className="grid grid-cols-2 items-center gap-6">
-                    <GradeScaleGaugeSkeleton label="현금흐름등급을 불러오는 중입니다." />
+                    <GradeScaleGaugeSkeleton label="현금흐름등급을 불러오는 중입니다." hasDescription={false} />
                     <ReportTableSkeleton columns={2} rows={3} />
                 </div>
                 <SkeletonNoticeBox lines={1} />
@@ -1121,21 +1231,14 @@ const CreditTabSkeleton = () => (
             <SectionTitle id="ig-credit-skeleton-ratios" title="재무비율진단" />
             <div className="flex flex-col gap-6">
                 {SKELETON_RATIO_GROUPS.map((title) => (
-                    <Card
-                        key={title}
-                        title={title}
-                        aside={
-                            <div className="flex h-lh items-center gap-2">
-                                <SegmentMeterSkeleton />
-                                <SkeletonBar className="h-6 w-10" />
-                            </div>
-                        }
-                    >
+                    <Card key={title} title={title} className="gap-4">
                         <div className="grid grid-cols-2 gap-6">
-                            <ReportTableSkeleton columns={5} rows={4} />
+                            <SkeletonWithUnit>
+                                <ReportTableSkeleton columns={5} rows={4} />
+                            </SkeletonWithUnit>
                             <div className="flex flex-col gap-2">
-                                <SkeletonLegend count={4} />
                                 <ChartSkeleton type="columns-line" label={`${title} 재무비율을 불러오는 중입니다.`} />
+                                <SkeletonLegend count={4} className="justify-center" />
                             </div>
                         </div>
                     </Card>
@@ -1145,44 +1248,46 @@ const CreditTabSkeleton = () => (
         <section aria-labelledby="ig-credit-skeleton-borrowing" className="flex flex-col gap-4">
             <SectionTitle id="ig-credit-skeleton-borrowing" title="차입금 분석" />
             <div className="flex flex-col gap-6">
-                <Card title="차입금 변동률" aside="단위 : %">
-                    <ChartSkeleton type="cells-line" label="차입금 변동률을 불러오는 중입니다." />
+                <Card title="차입금 변동률" className="gap-4">
+                    <SkeletonWithUnit>
+                        <ChartSkeleton type="cells-line" label="차입금 변동률을 불러오는 중입니다." />
+                    </SkeletonWithUnit>
                 </Card>
-                <div className="flex flex-col gap-2">
-                    <div className="flex items-baseline justify-between gap-4">
-                        <h4 className="typo-body-xl-bold text-foreground">차입금 현황</h4>
-                        <p className="typo-body-l-regular text-foreground-subtle">단위 : 백만원, %</p>
-                    </div>
-                    <ReportTableSkeleton columns={8} rows={SKELETON_BORROWING_ROWS} headRows={2} />
-                </div>
-                <div className="flex flex-col gap-2">
-                    <div className="flex items-baseline justify-between gap-4">
-                        <h4 className="typo-body-xl-bold text-foreground">차입금 변동현황</h4>
-                        <p className="typo-body-l-regular text-foreground-subtle">단위 : 백만원, %</p>
-                    </div>
+                <Card title="차입금 현황" className="gap-4">
+                    <SkeletonWithUnit>
+                        <ReportTableSkeleton columns={8} rows={SKELETON_BORROWING_ROWS} headRows={2} />
+                    </SkeletonWithUnit>
+                </Card>
+                <Card title="차입금 변동현황" className="gap-4">
                     <ReportTableSkeleton columns={4} rows={4} />
-                </div>
+                </Card>
             </div>
         </section>
         <section aria-labelledby="ig-credit-skeleton-borrowing-status" className="flex flex-col gap-4">
             <SectionTitle id="ig-credit-skeleton-borrowing-status" title="차입금 현황" />
             <div className="flex flex-col gap-6">
-                <Card title="기관별 비중" aside="단위 : %">
+                <Card title="기관별 비중" className="gap-4">
                     <div className="grid grid-cols-2 items-center gap-12">
-                        <ReportTableSkeleton columns={4} rows={5} />
+                        <SkeletonWithUnit>
+                            <ReportTableSkeleton columns={4} rows={5} />
+                        </SkeletonWithUnit>
                         <ChartSkeleton type="donut" label="기관별 비중을 불러오는 중입니다." />
                     </div>
                 </Card>
                 <div className="grid grid-cols-2 gap-6">
-                    <Card title="신용/담보 비중" aside="단위 : %">
-                        <div className="flex flex-col gap-2">
-                            <SkeletonLegend count={2} />
-                            <ChartSkeleton type="columns-line" label="신용/담보 비중을 불러오는 중입니다." />
-                        </div>
+                    <Card title="신용/담보 비중" className="gap-4">
+                        <SkeletonWithUnit>
+                            <div className="flex flex-col gap-2">
+                                <ChartSkeleton type="columns-line" label="신용/담보 비중을 불러오는 중입니다." />
+                                <SkeletonLegend count={2} className="justify-center" />
+                            </div>
+                        </SkeletonWithUnit>
                         <SkeletonBar className="h-4 w-full rounded-full" />
                     </Card>
-                    <Card title="담보 현황" aside="단위 : 백만원">
-                        <ChartSkeleton type="donut" label="담보 현황을 불러오는 중입니다." />
+                    <Card title="담보 현황" className="gap-4">
+                        <SkeletonWithUnit>
+                            <ChartSkeleton type="donut" label="담보 현황을 불러오는 중입니다." />
+                        </SkeletonWithUnit>
                     </Card>
                 </div>
             </div>
@@ -1190,8 +1295,7 @@ const CreditTabSkeleton = () => (
     </>
 )
 
-// 받는 동안의 문서 — 주소의 ?tab= 을 읽어 그 탭 모양의 스켈레톤을 보인다(loading.tsx 는 주소 쿼리를 모르므로 여기서 고른다).
-// 주소의 ?tab= 을 읽어 그 탭 모양의 스켈레톤을 고른다(Suspense 안에서만 쓴다).
+// 주소의 ?tab= 을 읽어 그 탭 모양의 스켈레톤을 고른다 — loading.tsx 는 주소 쿼리를 모르므로 여기서 고른다(Suspense 안에서만 쓴다).
 const SkeletonFromQuery = () => {
     const searchParams = useSearchParams()
     const tabParam = searchParams.get(INNOVATION_REPORT_TAB_QUERY)
@@ -1207,7 +1311,7 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
 
     return (
         // main 은 layout.tsx 가 하나만 그린다(문서와 같은 이유).
-        <div aria-busy="true" className={cn(isPcOnlyTab && 'min-w-320')}>
+        <div aria-busy="true" className={cn(isPcOnlyTab && 'min-w-content')}>
             <p role="status" className="sr-only">
                 보고서를 불러오는 중입니다.
             </p>
@@ -1287,7 +1391,7 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
                                 aria-label="기업 정보"
                                 items={Array.from({length: SKELETON_COMPANY_ROW_COUNT}, (_, index) => ({
                                     key: String(index),
-                                    // 막대는 글자 한 줄 높이(h-lh) 안에 둔다 — 실제 칸(14 · 줄 21)과 줄 높이가 같게.
+                                    // 막대는 글자 한 줄 높이(h-lh) 안에 둔다 — 실제 칸과 줄 높이가 같게.
                                     label: (
                                         <div className="typo-body-l-regular flex h-lh items-center justify-center">
                                             <SkeletonBar className="w-16" />
@@ -1343,7 +1447,7 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
                                     <ChartSkeleton type="rank-pyramid" label="동일업종 순위를 불러오는 중입니다." />
                                 </Card>
                             </div>
-                            {/* 안내 문구 자리 — 실제 상자(여백 20 · 18 줄 높이)와 같은 짜임. PC 는 한 줄, 모바일은 네 줄로 접힌다. */}
+                            {/* 안내 문구 자리 — 실제 요약 상자와 같은 짜임. PC 는 한 줄, 모바일은 네 줄로 접힌다. */}
                             <div className="border-subtle-3 typo-body-xl-regular mt-2 flex flex-col items-start rounded-sm border px-5 py-5 md:items-center">
                                 <div className="flex h-lh w-full items-center md:justify-center">
                                     <SkeletonBar className="w-full max-w-160" />
@@ -1363,7 +1467,7 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
                         <section aria-label="신용/재무 현황" className="flex flex-col gap-4">
                             <SectionTitle title="신용/재무 현황" />
                             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-                                <Card title="기업신용등급">
+                                <Card title="기업신용등급" className="gap-4">
                                     <ChartSkeleton type="gauge" label="기업신용등급을 불러오는 중입니다." />
                                 </Card>
                                 <Card title="재무비율진단">
@@ -1377,9 +1481,14 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
                                     <ChartSkeleton type="circle-radar" label="부문별 비교를 불러오는 중입니다." />
                                 </Card>
                             </div>
-                            <Card title="최근 3개년 재무 현황" aside="단위 : 백만원">
+                            <Card title="최근 3개년 재무 현황" className="gap-4">
                                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,359fr)_minmax(0,767fr)]">
-                                    <StatementTableSkeleton />
+                                    <div className="flex min-w-0 flex-col gap-1">
+                                        <p className="typo-body-l-regular text-foreground-subtle text-end">
+                                            단위: 백만원
+                                        </p>
+                                        <StatementTableSkeleton />
+                                    </div>
                                     <ChartSkeleton
                                         type="grouped-column"
                                         label="최근 3개년 재무 현황을 불러오는 중입니다."
@@ -1391,11 +1500,19 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
                         <section aria-label="활동성 정보" className="flex flex-col gap-4">
                             <SectionTitle title="활동성 정보" />
                             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,792fr)_minmax(0,384fr)]">
-                                <Card title="분기별 종업원수" aside="단위 : 명">
-                                    <ChartSkeleton type="cells-line" label="분기별 종업원수를 불러오는 중입니다." />
+                                <Card title="분기별 종업원수" className="gap-4">
+                                    <div className="flex min-w-0 flex-col gap-1">
+                                        <p className="typo-body-l-regular text-foreground-subtle text-end">단위: 명</p>
+                                        <ChartSkeleton type="cells-line" label="분기별 종업원수를 불러오는 중입니다." />
+                                    </div>
                                 </Card>
-                                <Card title="인당 매출액" aside="단위 : 백만원">
-                                    <ChartSkeleton type="cells-column" label="인당 매출액을 불러오는 중입니다." />
+                                <Card title="인당 매출액" className="gap-4">
+                                    <div className="flex min-w-0 flex-col gap-1">
+                                        <p className="typo-body-l-regular text-foreground-subtle text-end">
+                                            단위: 천원
+                                        </p>
+                                        <ChartSkeleton type="cells-column" label="인당 매출액을 불러오는 중입니다." />
+                                    </div>
                                 </Card>
                             </div>
                         </section>
