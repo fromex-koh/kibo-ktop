@@ -3,6 +3,7 @@
 import {useId, type ComponentPropsWithoutRef} from 'react'
 import {Area, CartesianGrid, ComposedChart, LabelList, Line, XAxis, YAxis} from 'recharts'
 import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
+import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
 import {
     CELLS_DIVIDER_DASH,
@@ -19,13 +20,52 @@ import {ChartTooltipRow} from '@/components/composite/chart-tooltip-parts'
 import {chartTooltipClassName, chartTooltipTitleClassName} from '@/components/theme/chart-tooltip.variants'
 
 // columns 전체 높이(그릴 자리 + 항목 이름 자리 26) — 클래스는 정적 문자열이어야 생성된다.
-const COLUMNS_HEIGHT_CLASS_NAMES = {140: 'h-41.5', 170: 'h-49', 180: 'h-51.5', 200: 'h-56.5'} as const
+const COLUMNS_HEIGHT_CLASS_NAMES = {140: 'h-41.5', 160: 'h-46.5', 170: 'h-49', 180: 'h-51.5', 200: 'h-56.5'} as const
 type LineChartPlotHeight = keyof typeof COLUMNS_HEIGHT_CLASS_NAMES
+
+// 점(마커) 모양 — 선이 여럿 겹치는 columns 그래프에서 색과 함께 계열을 구분한다[5.3.1]. 'circle' 은 흰 속의 원, 나머지는 계열 색으로 채운다.
+type LineMarker = 'circle' | 'circle-filled' | 'square' | 'diamond' | 'triangle'
 
 type LineChartSeries = {
     color: string
     key: string
     label: string
+    /** 선 모양(SVG stroke-dasharray, 예: '2 4' 점선 · '8 4 2 4' 일점쇄선). 안 주면 실선. */
+    dash?: string
+    /** 점 모양. 안 주면 흰 속의 원(circle). */
+    marker?: LineMarker
+}
+
+// 마커 크기 — 원 반지름 5(테두리 2 포함 지름 12) · 사각 11 · 마름모 · 삼각은 14 안에 그린다.
+const MARKER_SQUARE = 11
+const MARKER_POLYGON = 14
+// 범례 견본 — 32 × 14 상자 가운데에 선과 마커를 겹쳐 그린다.
+const LEGEND_SAMPLE_WIDTH = 32
+const LEGEND_SAMPLE_HEIGHT = 14
+
+// 마커 한 개를 (cx, cy) 에 그린다 — 선 위의 점과 범례 견본이 같은 그림을 쓴다.
+const renderMarker = (
+    marker: LineMarker,
+    color: string,
+    cx: number,
+    cy: number,
+    radius: number,
+    strokeWidth: number,
+) => {
+    if (marker === 'circle') {
+        return <circle cx={cx} cy={cy} r={radius} fill="var(--ds-surface)" stroke={color} strokeWidth={strokeWidth} />
+    }
+    if (marker === 'circle-filled') return <circle cx={cx} cy={cy} r={radius} fill={color} />
+    if (marker === 'square') {
+        const half = MARKER_SQUARE / 2
+        return <rect x={cx - half} y={cy - half} width={MARKER_SQUARE} height={MARKER_SQUARE} fill={color} />
+    }
+    const half = MARKER_POLYGON / 2
+    const points =
+        marker === 'diamond'
+            ? `${cx},${cy - half} ${cx + half},${cy} ${cx},${cy + half} ${cx - half},${cy}`
+            : `${cx},${cy - half} ${cx + half},${cy + half} ${cx - half},${cy + half}`
+    return <polygon points={points} fill={color} />
 }
 
 type LineChartItem = {
@@ -40,19 +80,21 @@ type LineChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
      * 높이 200 자리에 점마다 세로 점선 · 바닥 실선(gray.100)만 두고, 양 끝 점은 가장자리에서 24 안쪽에 선다.
      * 선 두께 2 · 점 지름 12(흰 면 + 계열 색 테두리) · 면은 위에서 아래로 옅어지는 계열 색 · 값 11 Regular(gray.600)는 점 바로 위,
      * 항목 이름 12 Regular(gray.700)는 바닥 아래 8 이다. 가장 큰 값은 위에서 29%, 가장 작은 값은 위에서 80% 에 선다.
-     * 'columns' 는 K-BIGx 보고서 기업현황 "주요재무비율 · 현금흐름" 카드 모양 — 항목마다 칸(양 끝 · 바닥 실선, 사이 점선)을 두고
-     * 점은 칸 가운데에 선다. 여러 선을 겹쳐 보이는 용도라 값 글자 · 면 없이 쓰고, 범례는 아래 16 사각 견본(왼쪽 정렬)이다.
-     * 값 폭이 높이의 80% 를 쓰고 위 · 아래 10% 씩 비운다.
+     * 'columns' 는 K-BIGx 보고서 여러 선 카드 모양(기업현황 주요재무비율 · 신용/재무정보 재무비율진단 등) — 항목마다 칸(양 끝 ·
+     * 바닥 실선, 사이 점선)을 두고 점은 칸 가운데에 선다. 보통 값 글자 · 면 없이(showValueLabels false · variant 'line') 쓴다. 범례 자리는 legendPlacement, 견본은 계열에
+     * dash · marker 가 있으면 선 + 점, 없으면 16 사각이다.
+     * columns 는 값 폭이 높이의 80% 를 쓰고 위 · 아래 10% 씩 비운다.
      */
     appearance?: 'default' | 'cells' | 'columns'
     /**
-     * columns 범례 자리 — 'bottom'(기본, 왼쪽 정렬로 그래프 아래) · 'top-end'(그래프 위 오른쪽, 간격 8).
-     * 표와 나란히 놓여 높이가 낮은 카드(보고서 활동성정보 에너지 사용량)는 'top-end' 다.
+     * columns 범례 자리 — 'bottom'(기본, 왼쪽 정렬로 그래프 아래) · 'bottom-center'(그래프 아래 가운데) ·
+     * 'top-end'(그래프 위 오른쪽, 간격 8). 보고서에서 표와 나란히 놓는 카드(신용/재무정보 재무비율진단 · 신용/담보 비중 ·
+     * 활동성정보 에너지 사용량)는 'bottom-center' 다.
      */
-    legendPlacement?: 'bottom' | 'top-end'
+    legendPlacement?: 'bottom' | 'bottom-center' | 'top-end'
     /**
-     * columns 그릴 자리 높이(px) — 200(기본) · 180(신용/담보 비중) · 170(표 옆 카드 — 재무비율진단) · 140(표 옆 낮은 카드 —
-     * 에너지 사용량). 항목 이름 자리(26)는 같다.
+     * columns 그릴 자리 높이(px) — 200(기본 — 보고서 재무비율진단 · 신용/담보 비중) · 160(표 옆 낮은 카드 — 활동성정보 에너지
+     * 사용량). 140 · 170 · 180 도 쓸 수 있다. 항목 이름 자리(26)는 같다.
      */
     plotHeight?: LineChartPlotHeight
     ariaLabel: string
@@ -67,14 +109,24 @@ type LineChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
      * 인쇄용 문서처럼 손이 닿지 않는 자리에서는 둘 다 필요 없다.
      */
     showTooltip?: boolean
-    /** 그리는 움직임. 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 끈다. */
+    /** 그리는 움직임. 안 주면 useChartAnimation() 값을 따른다(chart-reveal.tsx). 인쇄용 문서처럼 그린 즉시 찍혀야 하는 곳에서는 false. */
     animate?: boolean
     showLegend?: boolean
     /** 선을 점선으로 그린다(예: '4 4'). 실제 측정값이 아니라 흐름을 보이는 선일 때 쓴다. */
     strokeDasharray?: string
     showValueLabels?: boolean
     unit?: string
+    /**
+     * 그래프 왼쪽 위에 '단위: …' 글자를 둔다(cells 모양은 늘 감춘다). 단위를 그래프 밖(카드 머리 · 표 위)에 따로 적는 화면은 끈다 —
+     * unit 은 그대로 숨김 표 머리 · 말풍선 값에 쓰인다.
+     */
+    showUnitLabel?: boolean
     valueFractionDigits?: number
+    /**
+     * 값 글자 소수 자리를 늘 채운다(기본 true — 7.10). false 면 valueFractionDigits 까지만 쓰고 끝의 0 은 뺀다
+     * (70 · 43.8 — 보고서 신용/담보 비중).
+     */
+    isValueFractionFixed?: boolean
     variant?: 'area' | 'line'
     yAxisDomain?: [number, number]
     yAxisStep?: number
@@ -122,13 +174,15 @@ const LineChart = ({
     showAxes = true,
     showLegend = true,
     showTooltip = true,
-    animate = true,
+    animate: animateProp,
     strokeDasharray,
     showValueLabels = false,
     unit,
+    showUnitLabel = true,
     axisValueSuffix = '',
     curveType = 'linear',
     valueFractionDigits = 0,
+    isValueFractionFixed = true,
     variant = 'line',
     yAxisDomain,
     yAxisStep,
@@ -136,15 +190,18 @@ const LineChart = ({
     className,
     ...props
 }: LineChartProps) => {
+    // animate 를 안 주면 문서 설정을 따른다(chart-reveal.tsx) — 보고서는 스크롤해서 보일 때, 그 밖에는 바로 움직인다.
+    const revealAnimate = useChartAnimation()
+    const animate = animateProp ?? revealAnimate
     const fractionDigits = Math.min(6, Math.max(0, valueFractionDigits))
     const valueFormatter = new Intl.NumberFormat('ko-KR', {
-        minimumFractionDigits: fractionDigits,
+        minimumFractionDigits: isValueFractionFixed ? fractionDigits : 0,
         maximumFractionDigits: fractionDigits,
     })
     const config = Object.fromEntries(
         series.map((item) => [item.key, {label: item.label, color: item.color}]),
     ) satisfies ChartConfig
-    // recharts 는 자료 한 줄의 속성을 그린 도형에 그대로 옮긴다 — id 를 담아 보내면 배경 막대·계열 막대가
+    // recharts 는 자료 한 줄의 속성을 그린 도형에 그대로 옮긴다 — id 를 담아 보내면 점 · 선 등이
     // 모두 같은 id 를 달아 문서에 같은 id 가 여러 번 생긴다[8.1.1]. id 는 아래 숨김 표의 key 로만 쓰므로
     // 차트로는 넘기지 않는다.
     const chartData = data.map((item) => ({label: item.label, ...item.values}))
@@ -180,11 +237,41 @@ const LineChart = ({
             className={cn(
                 'typo-body-l-regular text-label-foreground flex flex-wrap gap-x-6 gap-y-2',
                 legendPlacement === 'top-end' && 'justify-end',
+                legendPlacement === 'bottom-center' && 'justify-center',
             )}
         >
             {series.map((item) => (
                 <li key={item.key} className="flex items-center gap-2">
-                    <span className="size-4 shrink-0" style={{backgroundColor: item.color}} aria-hidden="true" />
+                    {item.marker || item.dash ? (
+                        // 선 모양 · 마커로 구분하는 계열은 견본도 선 + 마커로 그린다(사각 칩은 색만 보인다).
+                        <svg
+                            width={LEGEND_SAMPLE_WIDTH}
+                            height={LEGEND_SAMPLE_HEIGHT}
+                            viewBox={`0 0 ${LEGEND_SAMPLE_WIDTH} ${LEGEND_SAMPLE_HEIGHT}`}
+                            className="shrink-0"
+                            aria-hidden="true"
+                        >
+                            <line
+                                x1={0}
+                                y1={LEGEND_SAMPLE_HEIGHT / 2}
+                                x2={LEGEND_SAMPLE_WIDTH}
+                                y2={LEGEND_SAMPLE_HEIGHT / 2}
+                                stroke={item.color}
+                                strokeWidth={CELLS_STROKE_WIDTH}
+                                strokeDasharray={item.dash}
+                            />
+                            {renderMarker(
+                                item.marker ?? 'circle',
+                                item.color,
+                                LEGEND_SAMPLE_WIDTH / 2,
+                                LEGEND_SAMPLE_HEIGHT / 2,
+                                CELLS_DOT_RADIUS,
+                                CELLS_STROKE_WIDTH,
+                            )}
+                        </svg>
+                    ) : (
+                        <span className="size-4 shrink-0" style={{backgroundColor: item.color}} aria-hidden="true" />
+                    )}
                     {item.label}
                 </li>
             ))}
@@ -195,7 +282,7 @@ const LineChart = ({
         <div {...props} className={cn('flex w-full flex-col', isColumns ? 'gap-2' : 'gap-4', className)}>
             {showLegend && isColumns && legendPlacement === 'top-end' ? columnsLegend : null}
             <div className="relative w-full overflow-x-auto">
-                {unit && !isCells ? (
+                {unit && showUnitLabel && !isCells ? (
                     <span className="typo-body-s-regular text-foreground absolute top-0 left-3 z-10" aria-hidden="true">
                         단위: {unit}
                     </span>
@@ -219,8 +306,9 @@ const LineChart = ({
                     role="img"
                     aria-label={ariaLabel}
                 >
+                    {/* recharts 키보드 탐색 층은 끈다 — 값은 숨김 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
                     <ComposedChart
-                        accessibilityLayer
+                        accessibilityLayer={false}
                         data={chartData}
                         margin={
                             isCells
@@ -417,14 +505,31 @@ const LineChart = ({
                                     formatter={(value) => valueFormatter.format(Number(value ?? 0))}
                                 />
                             )
+                            // 점 — 마커를 준 계열은 모양대로 그리고(recharts 가 좌표를 넘겨 준다), 아니면 흰 속의 원.
                             const dot = isCells
-                                ? {
-                                      r: CELLS_DOT_RADIUS,
-                                      fill: 'var(--ds-surface)',
-                                      fillOpacity: 1,
-                                      stroke: `var(--color-${item.key})`,
-                                      strokeWidth: CELLS_STROKE_WIDTH,
-                                  }
+                                ? item.marker
+                                    ? ({cx, cy}: {cx?: number; cy?: number}) =>
+                                          typeof cx === 'number' && typeof cy === 'number' ? (
+                                              <g key={`${item.key}-${cx}-${cy}`}>
+                                                  {renderMarker(
+                                                      item.marker ?? 'circle',
+                                                      item.color,
+                                                      cx,
+                                                      cy,
+                                                      CELLS_DOT_RADIUS,
+                                                      CELLS_STROKE_WIDTH,
+                                                  )}
+                                              </g>
+                                          ) : (
+                                              <g key={`${item.key}-empty`} />
+                                          )
+                                    : {
+                                          r: CELLS_DOT_RADIUS,
+                                          fill: 'var(--ds-surface)',
+                                          fillOpacity: 1,
+                                          stroke: `var(--color-${item.key})`,
+                                          strokeWidth: CELLS_STROKE_WIDTH,
+                                      }
                                 : {
                                       r: 6,
                                       fill: 'var(--ds-background)',
@@ -440,9 +545,10 @@ const LineChart = ({
                                     dataKey={item.key}
                                     name={item.key}
                                     isAnimationActive={animate}
+                                    animationDuration={CHART_ANIMATION_MS}
                                     stroke={`var(--color-${item.key})`}
                                     strokeWidth={isCells ? CELLS_STROKE_WIDTH : 2.5}
-                                    strokeDasharray={strokeDasharray}
+                                    strokeDasharray={item.dash ?? strokeDasharray}
                                     fill={
                                         isCells ? `url(#${gradientIdPrefix}-${item.key})` : `var(--color-${item.key})`
                                     }
@@ -466,9 +572,10 @@ const LineChart = ({
                                     dataKey={item.key}
                                     name={item.key}
                                     isAnimationActive={animate}
+                                    animationDuration={CHART_ANIMATION_MS}
                                     stroke={`var(--color-${item.key})`}
                                     strokeWidth={isCells ? CELLS_STROKE_WIDTH : 2.5}
-                                    strokeDasharray={strokeDasharray}
+                                    strokeDasharray={item.dash ?? strokeDasharray}
                                     dot={dot}
                                     activeDot={
                                         showTooltip && {
@@ -487,7 +594,7 @@ const LineChart = ({
                 </ChartContainer>
             </div>
 
-            {showLegend && isColumns && legendPlacement === 'bottom' ? columnsLegend : null}
+            {showLegend && isColumns && legendPlacement !== 'top-end' ? columnsLegend : null}
             {showLegend && !isColumns ? (
                 <ul className="typo-body-s-regular text-foreground flex flex-wrap justify-center gap-x-5 gap-y-2">
                     {series.map((item) => (
@@ -535,4 +642,4 @@ const LineChart = ({
 }
 
 export {LineChart}
-export type {LineChartItem, LineChartProps, LineChartSeries}
+export type {LineChartItem, LineChartProps, LineChartSeries, LineMarker}
