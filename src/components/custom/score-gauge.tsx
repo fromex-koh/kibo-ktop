@@ -2,18 +2,19 @@
 
 import type {ComponentPropsWithoutRef} from 'react'
 import {ArcGauge} from '@/components/custom/arc-gauge'
-import {ARC_GAUGE_TONE_COLORS, type ArcGaugeTone} from '@/components/custom/arc-gauge-shape'
+import {ARC_GAUGE_TONE_COLORS, ARC_GAUGE_TONE_GRADIENTS, type ArcGaugeTone} from '@/components/custom/arc-gauge-shape'
 import {cn} from '@/lib/utils'
 
 // 점수 원호 게이지(ScoreGauge) — 0~100 점수를 위가 열린 굵은 원호로 보여 주고, 가운데에 점수 · 상태 · 보조 문구를 둔다.
 // K-BIGx 기업혁신성장 보고서 "혁신성장역량지수" 카드에서 쓴다. 원호는 ArcGauge(size lg)가 그린다.
 //
 // 짜임: 원 지름 320 · 선 굵기 46 · 끝 둥글림 · 위 208 만 보임. 트랙 = gray.50, 점수 구간 = 상태(tone) 색 —
-//   우수 blue.500 · 양호 mint.700 · 보통 orange.500 · 미흡 error.500 · 취약 gray.700.
-//   가운데 글자: 점수 40 Bold + 단위 24 Bold → 상태 20 Bold → 보조 14 Regular(gray.500).
+//   상태별 gauge-<상태>-from 에서 시작해 왼쪽 아래로 갈수록 gauge-<상태>-to 로 번지는 그라데이션(tokens.json)이다.
+//   가운데 글자: 점수 40 Bold + 단위 24 Bold → 상태 20 Bold → 보조 14 Regular(gray.500). 글자 묶음의 아래는 원호 바닥에서 32 위.
 // 수치는 role="img" 의 이름으로도 읽어 준다.
 
 type ScoreGaugeTone = ArcGaugeTone
+// 상태별 대표 색 — 요약 문장 등 게이지 밖에서 같은 상태 색을 쓰는 곳을 위해 그대로 내보낸다.
 const SCORE_GAUGE_TONE_COLORS = ARC_GAUGE_TONE_COLORS
 
 type ScoreGaugeProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
@@ -27,8 +28,10 @@ type ScoreGaugeProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     caption?: string
     /** 상태 — 점수 구간 색을 정한다(우수 · 양호 · 보통 · 미흡 · 취약). */
     tone?: ScoreGaugeTone
-    /** 상태 색 대신 쓸 색(토큰 변수). 주면 tone 보다 우선한다. */
+    /** 상태별 시작 색 대신 쓸 색(토큰 변수). 주면 tone 보다 우선한다. */
     color?: string
+    /** 그라데이션 끝 색(토큰 변수). 주면 상태별 기본 끝 색보다 우선한다. */
+    gradientTo?: string
     ariaLabel: string
 }
 
@@ -43,6 +46,7 @@ const ScoreGauge = ({
     caption,
     tone = 'good',
     color,
+    gradientTo,
     ariaLabel,
     className,
     ...props
@@ -52,13 +56,15 @@ const ScoreGauge = ({
 
     return (
         <div {...props} className={cn('mx-auto w-full', className)}>
-            {/* 좌우 여백 48(px-12)은 원호 안쪽 폭(224) 안에 글자를 가두는 자리다 — 긴 상태 · 보조 문구는 어절 단위로 접힌다. */}
+            {/* 좌우 여백 48(px-12)은 원호 안쪽 폭(224) 안에 글자를 가두는 자리다 — 긴 상태 · 보조 문구는 어절 단위로 접힌다.
+                아래 여백 32(pb-8) — 글자 묶음의 아래가 원호 바닥에서 32 위에 오도록(ArcGauge 기본 12 보다 올린다). */}
             <ArcGauge
                 value={safeScore}
-                color={color ?? SCORE_GAUGE_TONE_COLORS[tone]}
+                color={color ?? ARC_GAUGE_TONE_GRADIENTS[tone].from}
+                gradientTo={gradientTo ?? ARC_GAUGE_TONE_GRADIENTS[tone].to}
                 size="lg"
                 ariaLabel={ariaLabel}
-                overlayClassName="px-12"
+                overlayClassName="px-12 pb-8"
             >
                 {/* 글자 묶음은 제목이 아닌 그림 속 글자라 p 대신 div 를 쓴다 — 크고 굵은 p 는 접근성 검사기(WAVE)가 '제목일 수 있음'으로 잡는다. 값은 role="img" 이름으로 읽힌다. */}
                 <div className="flex items-baseline gap-1 whitespace-nowrap">

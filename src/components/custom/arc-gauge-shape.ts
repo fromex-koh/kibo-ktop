@@ -1,17 +1,32 @@
-// 원호 게이지의 모양 값(ArcGauge 공통) — 크기별 치수 · 상태 색 · 원호 기하 · 스켈레톤 경로.
+// 원호 게이지의 모양 값(ArcGauge 공통) — 크기별 치수 · 상태 색 · 상태별 그라데이션 · 원호 기하 · 스켈레톤 경로.
 // 'use client' 가 없는 순수 계산 파일이다 — 서버 컴포넌트(ChartSkeleton)와 클라이언트 컴포넌트(ArcGauge)가 함께 쓴다.
 // (클라이언트 파일의 함수는 서버에서 부를 수 없다.)
 
 type ArcGaugeTone = 'excellent' | 'good' | 'normal' | 'poor' | 'weak'
 type ArcGaugeSize = 'lg' | 'md'
 
-// 상태별 채움 색(우수 · 양호 · 보통 · 미흡 · 취약).
+// 상태별 대표 색(우수 · 양호 · 보통 · 미흡 · 취약) — 원호 밖에서 같은 상태를 나타낼 때 쓴다(ScoreRing · SegmentMeter 예시 등).
+// 원호 게이지 자체는 아래 그라데이션을 쓴다.
 const ARC_GAUGE_TONE_COLORS: Record<ArcGaugeTone, string> = {
     excellent: 'var(--raw-blue-500)',
     good: 'var(--raw-mint-700)',
     normal: 'var(--raw-orange-500)',
     poor: 'var(--raw-error-500)',
     weak: 'var(--raw-gray-700)',
+}
+// 원호 게이지의 상태별 그라데이션 — from: 오른쪽 위 · to: 왼쪽 아래(ArcGauge 의 color · gradientTo 로 넘긴다).
+// 값은 tokens.json 의 gauge-<name>-from/-to. gaugeGradient(name) 는 상태 5개 밖의 단계(예: 신용등급 CR-5 의 'low')에도 쓴다.
+type ArcGaugeGradient = {from: string; to: string}
+const gaugeGradient = (name: string): ArcGaugeGradient => ({
+    from: `var(--ds-gauge-${name}-from)`,
+    to: `var(--ds-gauge-${name}-to)`,
+})
+const ARC_GAUGE_TONE_GRADIENTS: Record<ArcGaugeTone, ArcGaugeGradient> = {
+    excellent: gaugeGradient('excellent'),
+    good: gaugeGradient('good'),
+    normal: gaugeGradient('normal'),
+    poor: gaugeGradient('poor'),
+    weak: gaugeGradient('weak'),
 }
 
 // 크기별 치수와 Tailwind 클래스 — 클래스는 정적 문자열이어야 생성된다.
@@ -75,5 +90,5 @@ const arcGaugeTrackPath = (size: ArcGaugeSize) => {
     return `M ${round(outer - x)} ${round(y)} A ${round(center)} ${round(center)} 0 1 1 ${round(outer + x)} ${round(y)}`
 }
 
-export {ARC_GAUGE_SIZES, ARC_GAUGE_TONE_COLORS, arcGaugeTrackPath, arcGeometry}
-export type {ArcGaugeSize, ArcGaugeTone}
+export {ARC_GAUGE_SIZES, ARC_GAUGE_TONE_COLORS, ARC_GAUGE_TONE_GRADIENTS, arcGaugeTrackPath, arcGeometry, gaugeGradient}
+export type {ArcGaugeGradient, ArcGaugeSize, ArcGaugeTone}

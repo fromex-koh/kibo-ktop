@@ -1,6 +1,7 @@
 'use client'
 
-import type {ReactNode} from 'react'
+import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
+import {useId, type ReactNode} from 'react'
 import {PolarAngleAxis, RadialBar, RadialBarChart} from 'recharts'
 import {ChartContainer, type ChartConfig} from '@/components/ui/chart'
 import {ARC_GAUGE_SIZES, arcGaugeTrackPath, arcGeometry, type ArcGaugeSize} from '@/components/custom/arc-gauge-shape'
@@ -15,7 +16,7 @@ const CHART_MARGIN = {top: 0, right: 0, bottom: 0, left: 0}
 // ScoreGauge(혁신성장역량지수) · SemicircleRatingGauge(기업신용등급)가 함께 쓴다 — 같은 모양을 크기만 달리한다.
 //
 // 짜임: 끝이 둥근 원호. 양 끝이 수평선 아래로 조금 내려가(왼쪽 아래 → 위 → 오른쪽 아래) 둥근 끝의 바닥이 보이는 높이에 닿는다.
-//   트랙 = gray.50, 채움 = color. 크기(size)
+//   트랙 = gauge-track(시맨틱 — 다크에서 어두운 회색), 채움 = color(gradientTo 를 주면 color → gradientTo 그라데이션). 크기(size)
 //     lg — 원 지름 320 · 굵기 46 · 보이는 높이 208(혁신성장역량지수)
 //     md — 원 지름 260 · 굵기 37 · 보이는 높이 172(기업신용등급)
 // Recharts RadialBarChart 로 그린다 — 트랙은 막대의 background, 끝은 cornerRadius 로 둥글린다.
@@ -24,17 +25,34 @@ const CHART_MARGIN = {top: 0, right: 0, bottom: 0, left: 0}
 type ArcGaugeProps = {
     /** 0~100. 범위 밖 · 숫자가 아닌 값은 0 · 100 으로 맞춘다. 0 보다 크면 최소 둥근 끝 두 개만큼은 그린다. */
     value: number
+    /** 채움 색(CSS 색 · 토큰 변수). gradientTo 를 주면 그라데이션의 시작 색(오른쪽 위)이 된다. */
     color: string
+    /** 주면 원호를 color → gradientTo 그라데이션(오른쪽 위 → 왼쪽 아래)으로 칠한다. 색 짝은 arc-gauge-shape 의 gaugeGradient 참고. */
+    gradientTo?: string
     size?: ArcGaugeSize
     ariaLabel: string
+    /** 원호가 차오르는 움직임. 안 주면 useChartAnimation() 값을 따른다(chart-reveal.tsx). */
+    animate?: boolean
     className?: string
     /** 원호 위에 겹칠 가운데 글자 — 아래를 기준으로 쌓인다. */
     children?: ReactNode
-    /** 가운데 글자 묶음의 여백 등(기본: 아래 여백 12). */
+    /** 가운데 글자 묶음에 더할 클래스 — 기본 아래 여백은 12(pb-3)이고, 더 올리려면 pb-* 를 준다. */
     overlayClassName?: string
 }
 
-const ArcGauge = ({value, color, size = 'lg', ariaLabel, className, children, overlayClassName}: ArcGaugeProps) => {
+const ArcGauge = ({
+    value,
+    color,
+    gradientTo,
+    size = 'lg',
+    ariaLabel,
+    className,
+    children,
+    overlayClassName,
+    animate: animateProp,
+}: ArcGaugeProps) => {
+    const revealAnimate = useChartAnimation()
+    const animate = animateProp ?? revealAnimate
     const {
         width,
         height,
@@ -44,6 +62,7 @@ const ArcGauge = ({value, color, size = 'lg', ariaLabel, className, children, ov
         overlayClassName: scaleClassName,
     } = ARC_GAUGE_SIZES[size]
     const geometry = arcGeometry(size)
+    const gradientId = useId()
     const safeValue = Number.isFinite(value) ? Math.min(MAX_VALUE, Math.max(0, value)) : 0
     const ratio = safeValue > 0 ? Math.max(geometry.minFillRatio, safeValue / MAX_VALUE) : 0
     const config: ChartConfig = {value: {label: ariaLabel, color}}
@@ -94,16 +113,24 @@ const ArcGauge = ({value, color, size = 'lg', ariaLabel, className, children, ov
             <ChartContainer
                 config={config}
                 initialDimension={{width, height}}
-                // 트랙 색 — ChartContainer(shadcn 원본)가 원호 배경에 fill-muted(gray.100)를 입히므로 같은 선택자로
-                // gray.50 을 덮는다(원본 셸은 고치지 않는다).
+                // 트랙 색 — ChartContainer(shadcn 원본)가 원호 배경에 fill-muted 를 입히므로 같은 선택자로
+                // fill-gauge-track 으로 덮는다(원본 셸은 고치지 않는다).
                 className={cn(
-                    'col-start-1 row-start-1 w-full [&_.recharts-radial-bar-background-sector]:fill-gray-50',
+                    '[&_.recharts-radial-bar-background-sector]:fill-gauge-track col-start-1 row-start-1 w-full',
                     chartClassName,
                 )}
                 aria-hidden="true"
             >
+                {/* recharts 키보드 탐색 층은 끈다 — 값은 바깥 role="img" 의 이름이 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
                 <RadialBarChart
-                    data={[{name: 'value', value: ratio * MAX_VALUE, fill: 'var(--color-value)'}]}
+                    accessibilityLayer={false}
+                    data={[
+                        {
+                            name: 'value',
+                            value: ratio * MAX_VALUE,
+                            fill: gradientTo ? `url(#${gradientId})` : 'var(--color-value)',
+                        },
+                    ]}
                     cx="50%"
                     cy={geometry.cy}
                     innerRadius={geometry.innerRadius}
@@ -116,8 +143,23 @@ const ArcGauge = ({value, color, size = 'lg', ariaLabel, className, children, ov
                     barGap={0}
                     margin={CHART_MARGIN}
                 >
+                    {gradientTo ? (
+                        // 그라데이션 — 오른쪽 위 → 왼쪽 아래. id 는 한 화면에 게이지가 여럿이라 useId 로 고유하게 둔다.
+                        <defs>
+                            <linearGradient id={gradientId} x1="100%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stopColor={color} />
+                                <stop offset="100%" stopColor={gradientTo} />
+                            </linearGradient>
+                        </defs>
+                    ) : null}
                     <PolarAngleAxis type="number" domain={[0, MAX_VALUE]} tick={false} axisLine={false} />
-                    <RadialBar dataKey="value" background cornerRadius={stroke / 2} isAnimationActive={false} />
+                    <RadialBar
+                        dataKey="value"
+                        background
+                        cornerRadius={stroke / 2}
+                        isAnimationActive={animate}
+                        animationDuration={CHART_ANIMATION_MS}
+                    />
                 </RadialBarChart>
             </ChartContainer>
             <div
