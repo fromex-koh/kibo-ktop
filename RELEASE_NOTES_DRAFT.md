@@ -198,8 +198,10 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - globals.css: 차트 등장 움직임(wipe · pop · rise · label) · 대기 중 숨김 규칙 추가
     - 막대 위 값 글자: 막대가 다 그려진 뒤 나타남
     - recharts 키보드 탐색 층: 끔(값은 숨김 표 · role="img" 이름이 읽음)
+    - ChartSkeleton 피라미드 모양: rank-pyramid-chart 가 아니라 rank-pyramid-shape.ts 에서 가져옴 · [신규 추가] "순위 피라미드 모양" 카드와 함께 적용
 - 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e4bccd336964b969913dd9d31666c7f87fc641d8)
+    - [빌드 에러 수정 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/ecc97ff730c041e991b8efe0a5d04d2e4e53138b)
 
 ### [컴포넌트] 라인 차트 · 도넛 차트
 
@@ -263,10 +265,12 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 등급 표시 원은 rating-marker-_, 성장률 막대 · 별은 rank-bar-_ 시맨틱 토큰입니다(흰 글자 · 체크가 있어 다크에서도 짙은 색).
     - 레이더 눈금은 subtle-3, 축 글자는 label-foreground, 계열 · 피라미드 지시선 · 분포 글자는 var(--ds-<색>-<단계>) 입니다.
     - 등장 애니메이션: 성장률 막대 · 피라미드도 useChartAnimation() 연결(보고서 차트 공통 카드와 같은 방식)
+    - RankPyramidChart 모양 계산: rank-pyramid-shape.ts 로 옮김 · 차트 파일은 RankPyramidChart 만 export · [신규 추가] "순위 피라미드 모양" 카드와 함께 적용
 - 결과: 라이트는 그대로이고 다크에서 체크 · 글자 · 선이 보입니다.
 - 영향 화면: [등급 매트릭스](/component-guide/rating-matrix)
     - [성장률 막대](/component-guide/diverging-rank-chart)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/4e2b7ae6045db4256cd4c28f6a62ee2d6c16a00e)
+    - [빌드 에러 수정 변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/635a251e0b6f502c398ffd07ee03ce6598b07fa6)
 
 ### [컴포넌트] 평가모형 선택 카드 — 다크 색
 
@@ -340,6 +344,18 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 적용: 신규 파일 추가
 - 내용: K-BIGx 보고서 탭 제목 띠 · 지표 카드에서 쓰는 이미지 아이콘입니다. 쓰는 법은 아이콘 가이드의 이미지 아이콘 절에 있습니다.
 - 영향 화면: [아이콘](/component-guide/icon)
+
+### [컴포넌트] 순위 피라미드 모양 — 서버 · 클라이언트 공용 파일
+
+- 대상: src/components/custom/rank-pyramid-shape.ts
+- 적용: 신규 파일 추가
+- 내용:
+    - 피라미드 단 경로 · 치수 · 지시선 위치 계산을 rank-pyramid-chart.tsx 에서 이 파일로 옮겼습니다(계산은 그대로).
+    - 이유: 차트 파일에 'use client' 가 붙으면서, 서버 컴포넌트(ChartSkeleton)가 거기서 가져온 단 경로 배열이 서버에서는 값이 아닌 참조가 되어 운영 빌드(프리렌더)가 멈췄습니다. 개발 서버에서는 드러나지 않습니다.
+    - 함께 적용: [Diff 확인]의 "등급 매트릭스 · 성장률 막대 · 피라미드 · 레이더 · 분포 곡선"(차트) · "보고서 차트 공통"(스켈레톤) 카드
+    - 규칙: 'use client' 파일에서는 컴포넌트만 가져다 쓰고, 서버에서도 쓰는 상수 · 계산은 이런 공용 파일에 둡니다(arc-gauge-shape.ts 와 같은 방식).
+- 영향 화면: [순위 피라미드](/component-guide/rank-pyramid-chart)
+    - [스켈레톤](/component-guide/skeleton)
 
 ## [덮어쓰기]
 
