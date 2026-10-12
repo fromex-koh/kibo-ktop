@@ -1,11 +1,12 @@
+import {ChartReveal} from '@/components/custom/chart-reveal'
 import type {ReactNode} from 'react'
 import {cn} from '@/lib/utils'
+import type {LineChartSeries} from '@/components/custom/line-chart'
 
 // K-BIGx 기업혁신성장 보고서의 탭 화면(진단브리핑 · 기업현황 …)이 함께 쓰는 조각 — 구획 제목 · 카드 · 수치 상자 · 표 · 등급 뱃지.
 // 서버 · 클라이언트 어디서나 쓸 수 있게 'use client' 없이 둔다(상태 · 이벤트가 없다).
 
-// 구획 제목 줄 — 20 Bold 제목 · 16 Medium 보조(업종) · 오른쪽 14 Regular 날짜. 보조 · 날짜는 제목 높이의 세로 가운데.
-// 보조 · 날짜는 구획마다 있을 때만 넘긴다(기업 정보는 제목만 · 기술혁신정보는 보조까지).
+// 구획 제목 줄 — 제목 · 제목 옆 보조 문구(aside, 예: 업종) · 오른쪽 날짜(date). aside · date 는 필요한 구획에서만 넘긴다.
 // 보조가 길면 제목 옆에 남은 폭에서 어절 단위로 접히고, 그래도 모자라면 제목 아래 줄로 내려간다.
 // id 는 구획 제목을 aria-labelledby 로 가리킬 때만 준다 — 같은 화면이 여러 벌 그려질 수 있는 자리
 // (받는 중 스켈레톤)에서는 id 없이 두고 구획에 aria-label 을 준다(id 중복 방지)[8.1.1].
@@ -24,7 +25,7 @@ const SectionTitle = ({title, aside, date, id}: {title: string; aside?: string; 
     </div>
 )
 
-// 흰 카드 — 테두리 gray.100 · 반경 8 · 여백 24. 제목(16 Bold)과 오른쪽 보조 문구(14 Regular).
+// 흰 카드 — 제목(title) · 제목 줄 오른쪽 보조(aside: 단위 · 범례 등) · 제목 아래 설명(description).
 // 제목이 있을 때만 section 으로 그린다 — 제목 없는 section 은 구획 이름을 알 수 없어 마크업 경고가 된다[8.1.1].
 const Card = ({
     title,
@@ -33,10 +34,10 @@ const Card = ({
     className,
     children,
 }: {
-    /** 없으면 제목 줄에 보조 문구만 오른쪽에 둔다(혁신성장역량지수 점수 카드). */
+    /** 없으면 div 로 그린다. aside 만 있으면 제목 줄에 보조 문구만 오른쪽에 둔다. */
     title?: string
     aside?: ReactNode
-    /** 제목 아래 설명 한 줄(14 Regular, 간격 8). */
+    /** 제목 아래 설명 글. */
     description?: ReactNode
     className?: string
     children: ReactNode
@@ -50,32 +51,35 @@ const Card = ({
                 className,
             )}
         >
-            {/* 제목도 보조 문구도 없으면 제목 줄을 두지 않는다 — 빈 줄과 간격(24)이 내용을 아래로 밀지 않게. */}
-            {title || aside ? (
-                <div className="flex flex-col gap-2">
-                    <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                        {title ? <h4 className="typo-body-xl-bold text-foreground break-keep">{title}</h4> : null}
-                        {aside ? (
-                            <div className="typo-body-l-regular text-foreground-subtle ms-auto shrink-0 text-end">
-                                {aside}
-                            </div>
+            {/* 카드 안 차트는 카드가 화면에 들어올 때 움직인다(chart-reveal.tsx). 제목 줄의 보조 요소(범례 등)도 함께 감싼다.
+                표만 있는 카드에는 아무 영향이 없다. */}
+            <ChartReveal>
+                {/* 제목도 보조 문구도 없으면 제목 줄을 두지 않는다 — 빈 줄과 간격(24)이 내용을 아래로 밀지 않게. */}
+                {title || aside ? (
+                    <div className="flex flex-col gap-2">
+                        <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                            {title ? <h4 className="typo-body-xl-bold text-foreground break-keep">{title}</h4> : null}
+                            {aside ? (
+                                <div className="typo-body-l-regular text-foreground-subtle ms-auto shrink-0 text-end">
+                                    {aside}
+                                </div>
+                            ) : null}
+                        </div>
+                        {description ? (
+                            <div className="typo-body-l-regular text-foreground-subtle">{description}</div>
                         ) : null}
                     </div>
-                    {description ? (
-                        <div className="typo-body-l-regular text-foreground-subtle">{description}</div>
-                    ) : null}
-                </div>
-            ) : null}
-            {children}
+                ) : null}
+                {children}
+            </ChartReveal>
         </CardTag>
     )
 }
 
-// 수치 상자 — 옅은 회색 면(gray.10) · 반경 8 · 여백 16/20 · 이름 14(아이콘 16 · 간격 8) 바로 아래 큰 숫자 20 Bold + 단위 16.
-// 이름 줄과 숫자 줄 사이 간격은 없다.
-// 상자 묶음은 카드 안쪽 폭이 384(@sm) 미만이면 1열로 쌓는다 — 화면 폭이 아니라 카드 폭 기준이라, 태블릿처럼 카드가
-// 둘씩 놓여 좁아질 때도 2열로 끼지 않는다(2열이면 상자 폭이 135 안팎이라 이름 · 숫자가 한 글자씩 접힌다).
-// labelClassName — 이름 줄 글자를 바꿀 때(정부 R&D 부처명은 13 · gray.500).
+// 수치 상자 — 이름(아이콘 선택) 줄 아래 큰 숫자 + 단위.
+// 상자를 묶는 쪽(진단브리핑)은 화면 폭이 아니라 카드 폭 기준(@sm:grid-cols-2)으로 2열을 연다 — 카드가 좁을 때 2열로 끼면
+// 이름 · 숫자가 한 글자씩 접히기 때문이다.
+// labelClassName — 이름 줄 글자를 바꿀 때(예: 진단브리핑 정부 R&D 부처명).
 const StatBox = ({
     label,
     value,
@@ -110,8 +114,8 @@ const StatBox = ({
     </dl>
 )
 
-// 소제목 묶음(경영진 현황 · 우수특허 …) — 카드 없이 문서 바탕에 놓이는 표 · 그래프 위 제목 줄. 16 Bold 제목 · 오른쪽 14 Regular 보조
-// (단위 · 기준일), 필요하면 아래 설명 한 줄(14 Regular, 간격 8). 제목 줄과 내용 사이 간격은 8.
+// 소제목 묶음 — 카드 안(또는 문서 바탕)의 표 · 그래프 위 소제목 줄. 제목 · 제목 옆 상태(status) · 오른쪽 보조(aside: 단위 ·
+// 기준일) · 아래 설명(description).
 const SubBlock = ({
     title,
     aside,
@@ -121,7 +125,7 @@ const SubBlock = ({
     children,
 }: {
     title: string
-    /** 제목 바로 옆 상태 글(14 Regular · gray.500, 간격 4) — 기업신용정보 표의 '해당없음' 등. */
+    /** 제목 바로 옆 상태 글 — 기업신용정보 표의 '해당없음' 등. */
     status?: string
     aside?: ReactNode
     description?: ReactNode
@@ -144,7 +148,30 @@ const SubBlock = ({
     </div>
 )
 
-// 안내 상자 — 옅은 남색 면(navy.100) · 테두리 navy.200 · 반경 8 · 여백 16/20 · 16 Regular(navy.600).
+// 여러 선을 겹쳐 보이는 보고서 선 그래프(기업현황 주요재무비율 · 신용/재무정보 재무비율진단 · 신용/담보 비중)의 계열 모양 —
+// 줄 순서대로 색 + 선 모양 + 점 모양을 함께 바꿔 색만으로 구분하지 않는다[5.3.1].
+// 색은 보고서 계열 색 토큰 report-series-1~5(tokens.json) — 라이트 navy.500 · blue.500 · purple.500 · mint.700 · orange.500,
+// 다크는 각 색의 400(어두운 카드 위에서 읽히게). 다른 화면이 쓰는 chart-1~5 는 건드리지 않도록 보고서 전용으로 둔다.
+const REPORT_LINE_STYLES: readonly Pick<LineChartSeries, 'color' | 'dash' | 'marker'>[] = [
+    {color: 'var(--ds-report-series-1)', marker: 'circle'},
+    {color: 'var(--ds-report-series-2)', dash: '2 4', marker: 'circle-filled'},
+    {color: 'var(--ds-report-series-3)', dash: '8 4 2 4', marker: 'square'},
+    {color: 'var(--ds-report-series-4)', dash: '6 4', marker: 'diamond'},
+    {color: 'var(--ds-report-series-5)', marker: 'triangle'},
+]
+
+// 단위 줄 — 표(그래프) 바로 위에 오른쪽 정렬로 둔다. WithUnit 은 단위 줄 + 내용을 한 묶음으로 감싼다.
+const UnitLine = ({children}: {children: ReactNode}) => (
+    <p className="typo-body-l-regular text-foreground-subtle text-end">{children}</p>
+)
+const WithUnit = ({unit, children}: {unit: ReactNode; children: ReactNode}) => (
+    <div className="flex min-w-0 flex-col gap-1">
+        <UnitLine>{unit}</UnitLine>
+        {children}
+    </div>
+)
+
+// 안내 상자 — 요약 문장 · 분석 특허명처럼 카드 안에서 강조해 보이는 안내 글.
 const NoticeBox = ({children, className}: {children: ReactNode; className?: string}) => (
     <div
         className={cn(
@@ -156,15 +183,14 @@ const NoticeBox = ({children, className}: {children: ReactNode; className?: stri
     </div>
 )
 
-// 표 아래 주석(* …) — 12 Regular, 표와 간격 8.
+// 표 아래 주석(* …).
 const TableNote = ({children}: {children: ReactNode}) => (
     <p className="typo-caption-regular text-foreground-subtle break-keep">{children}</p>
 )
 
-// 보고서 표 — 맨 위 선 gray.600 · 줄마다 아래 선(gray.100) · 머리 줄은 옅은 파란 면에 14 Bold · 값 칸은 흰 면에 14 Regular(gray.700) 가운데 정렬.
-// 줄 높이는 칸 여백 12 + 글자 21(뱃지가 있는 줄은 뱃지 높이만큼 늘어난다).
+// 보고서 표 — 머리 줄 · 값 줄 · 합계 줄(footerCells). 값 칸은 기본 가운데 정렬.
 // 두 단 머리 — 열에 group 을 주면 같은 group 이 이어진 열 위에 묶음 칸(예: 매출비중)을 한 줄 더 두고, 나머지 열은 두 줄을 합친다.
-// 묶음 칸과 그 아래 칸에는 세로선(gray.100)을 두어 묶음 범위를 보인다 — 머리에만 있고 값 줄에는 없다.
+// 두 단 머리에서는 머리 칸 사이마다 세로선을 둔다(묶음 아래 칸 사이도) — 머리에만 있고 값 줄 · 표 바깥 가장자리에는 없다.
 // 좁은 화면에서는 열이 찌그러지지 않게 표 상자 안에서 가로로 넘긴다(minWidthClassName).
 type ReportTableColumn = {
     key: string
@@ -181,7 +207,7 @@ type ReportTableColumn = {
      * 좌우 여백을 4 로 줄이고 줄바꿈을 막는다. 칸보다 긴 값이 들어올 수 있는 열에는 쓰지 않는다.
      */
     isNoWrap?: boolean
-    /** 줄 이름 열 — 값 칸 대신 줄 머리(th scope=row)로 그리고 머리 줄과 같은 옅은 파랑 면 · 14 Medium(gray.900)으로 적는다(예: 기관별 비중의 구분). */
+    /** 줄 이름 열 — 값 칸 대신 줄 머리(th scope=row)로 그리고 머리 줄과 같은 면으로 칠한다(예: 기관별 비중의 구분). */
     isRowHeader?: boolean
 }
 
@@ -197,7 +223,7 @@ type ReportTableRow = {
     cells: Record<string, ReactNode>
 }
 
-// 줄 높이 45(글자 줄 21 + 위 12 · 아래 11 + 아래 선 1) — 위아래 여백을 12 · 11 로 나눠 선까지 합친 한 줄이 45 가 되게 한다.
+// 아래 여백을 위보다 1 작게(pb-2.75) 둬 아래 선까지 합친 한 줄 높이를 맞춘다.
 const REPORT_TABLE_CELL_CLASS_NAME = 'border-subtle-3 border-b px-2 pt-3 pb-2.75 text-center md:px-4'
 const REPORT_TABLE_HEAD_CLASS_NAME = cn(
     REPORT_TABLE_CELL_CLASS_NAME,
@@ -255,14 +281,17 @@ const ReportTable = ({
                 ) : null}
                 <thead>
                     <tr>
-                        {topRow.map((cell) => (
+                        {topRow.map((cell, index) => (
                             <th
                                 key={cell.key}
                                 scope={cell.colSpan > 1 ? 'colgroup' : 'col'}
                                 colSpan={cell.colSpan}
                                 rowSpan={cell.rowSpan}
-                                // 묶음 칸은 양옆에 세로선을 둔다 — 아래 연도 칸들과 함께 묶음 범위가 보이게(값 줄에는 세로선이 없다).
-                                className={cn(REPORT_TABLE_HEAD_CLASS_NAME, cell.colSpan > 1 && 'border-x')}
+                                // 두 단 머리는 칸 사이마다 세로선 — 마지막 칸 오른쪽(표 가장자리)에는 긋지 않는다.
+                                className={cn(
+                                    REPORT_TABLE_HEAD_CLASS_NAME,
+                                    hasGroup && index < topRow.length - 1 && 'border-r',
+                                )}
                             >
                                 {cell.label}
                             </th>
@@ -274,8 +303,8 @@ const ReportTable = ({
                                 <th
                                     key={column.key}
                                     scope="col"
-                                    // 묶음 아래 칸끼리는 세로선으로 나눈다.
-                                    className={cn(REPORT_TABLE_HEAD_CLASS_NAME, 'typo-body-l-medium border-x')}
+                                    // 묶음 아래 칸끼리도 세로선으로 나눈다(왼쪽 선은 앞 칸의 오른쪽 선과 겹친다).
+                                    className={cn(REPORT_TABLE_HEAD_CLASS_NAME, 'typo-body-l-medium border-r')}
                                 >
                                     {column.label}
                                 </th>
@@ -339,12 +368,24 @@ const ReportTable = ({
     )
 }
 
-// 신용등급 뱃지 — 옅은 남색 면(navy.100) · 테두리 navy.200 · 반경 8 · 높이 28 · 13 Bold(navy.600).
+// 신용등급 뱃지 — CRI 등급 코드를 적는다. 현재 보고서 탭에서 쓰는 곳은 없다(export 만 남아 있음).
 const GradeBadge = ({grade}: {grade: string}) => (
     <span className="border-navy-200 bg-navy-100 text-navy-600 typo-body-m-bold inline-flex h-7 items-center rounded-sm border px-3">
         {grade}
     </span>
 )
 
-export {Card, GradeBadge, NoticeBox, ReportTable, SectionTitle, StatBox, SubBlock, TableNote}
+export {
+    Card,
+    GradeBadge,
+    NoticeBox,
+    REPORT_LINE_STYLES,
+    ReportTable,
+    SectionTitle,
+    StatBox,
+    SubBlock,
+    TableNote,
+    UnitLine,
+    WithUnit,
+}
 export type {ReportTableColumn, ReportTableFooterCell, ReportTableRow}
