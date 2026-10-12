@@ -7,6 +7,7 @@ import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
+import {GaugeToneTable} from '@/components/custom/gauge-tone-table'
 import {ScoreGauge} from '@/components/custom/score-gauge'
 import {Table} from '@/components/custom/table'
 
@@ -19,20 +20,26 @@ const USAGE_CODE = `import {ScoreGauge} from '@/components/custom/score-gauge'
 <ScoreGauge
   score={73.8}
   statusLabel="양호"
-  caption="기준일자 · 2025-12-04"
   ariaLabel="혁신성장역량지수 73.8점, 양호"
 />`
 
-const DATA_CODE = `// 점수(0~100)만 받고, 상태 이름 · tone 은 점수 구간으로 정해 게이지 · 구간표 · 요약 문장이 어긋나지 않게 합니다.
+const DATA_CODE = `// 점수(0~100)만 받고, 상태 이름 · tone 은 점수 구간으로 정해 게이지 · 요약 문장이 어긋나지 않게 합니다.
 const grade = getTechIndexGrade(techIndex.score) // {label: '양호', tone: 'good', …}
 
-<ScoreGauge
-  score={techIndex.score}
-  statusLabel={grade.label}
-  tone={grade.tone}
-  caption={\`기준일자 · \${report.createdAt}\`}
-  ariaLabel={\`Tech-Index \${techIndex.score}점, \${grade.label}\`}
-/>`
+// 보고서(Tech-Index 탭)는 평가일자를 caption 대신 원호 아래 8 간격 줄로 둡니다.
+<div className="flex flex-col items-center gap-2">
+  <ScoreGauge
+    score={techIndex.score}
+    statusLabel={grade.label}
+    tone={grade.tone}
+    ariaLabel={\`Tech-Index \${techIndex.score}점, \${grade.label}\`}
+    className="w-80"
+  />
+  <dl className="flex items-center gap-x-2">
+    <dt>평가일자</dt>
+    <dd>{techIndex.evaluationDate}</dd>
+  </dl>
+</div>`
 
 const COLOR_CODE = `// 상태(tone)가 점수 구간 색을 정합니다.
 <ScoreGauge score={55.1} statusLabel="보통" tone="normal" ariaLabel="…" />
@@ -45,11 +52,16 @@ const LOADING_CODE = `import {ChartSkeleton} from '@/components/composite/chart-
 <ChartSkeleton type="score-gauge" label="혁신성장역량지수를 불러오는 중입니다." />`
 
 const TONES = [
-    {title: '우수 (excellent · blue.500)', score: 92.5, statusLabel: '우수', tone: 'excellent'},
-    {title: '양호 (good · mint.700)', score: 73.8, statusLabel: '양호', tone: 'good'},
-    {title: '보통 (normal · orange.500)', score: 55.1, statusLabel: '보통', tone: 'normal'},
-    {title: '미흡 (poor · error.500)', score: 38.4, statusLabel: '미흡', tone: 'poor'},
-    {title: '취약 (weak · gray.700)', score: 21.6, statusLabel: '취약', tone: 'weak'},
+    {
+        title: '우수 (excellent · gauge-excellent-from → gauge-excellent-to)',
+        score: 92.5,
+        statusLabel: '우수',
+        tone: 'excellent',
+    },
+    {title: '양호 (good · gauge-good-from → gauge-good-to)', score: 73.8, statusLabel: '양호', tone: 'good'},
+    {title: '보통 (normal · gauge-normal-from → gauge-normal-to)', score: 55.1, statusLabel: '보통', tone: 'normal'},
+    {title: '미흡 (poor · gauge-poor-from → gauge-poor-to)', score: 38.4, statusLabel: '미흡', tone: 'poor'},
+    {title: '취약 (weak · gauge-weak-from → gauge-weak-to)', score: 21.6, statusLabel: '취약', tone: 'weak'},
 ] as const
 
 // 자릿수 · 범위 · 문구 길이 · 폭이 달라 배치가 흔들릴 수 있는 경우. 모두 컴포넌트가 처리하므로 받은 값을 그대로 넣는다.
@@ -60,7 +72,6 @@ const SPECIAL_CASES = [
         score: 100,
         statusLabel: '우수',
         tone: 'excellent',
-        caption: '기준일자 · 2025-12-04',
     },
     {
         title: '한 자리 점수',
@@ -68,7 +79,6 @@ const SPECIAL_CASES = [
         score: 7.5,
         statusLabel: '취약',
         tone: 'weak',
-        caption: '기준일자 · 2025-12-04',
     },
     {
         title: '0점',
@@ -76,7 +86,6 @@ const SPECIAL_CASES = [
         score: 0,
         statusLabel: '취약',
         tone: 'weak',
-        caption: '기준일자 · 2025-12-04',
     },
     {
         title: '범위를 벗어난 값 (120)',
@@ -84,7 +93,6 @@ const SPECIAL_CASES = [
         score: 120,
         statusLabel: '우수',
         tone: 'excellent',
-        caption: '기준일자 · 2025-12-04',
     },
     {
         title: '소수가 긴 값 (73.856)',
@@ -92,11 +100,11 @@ const SPECIAL_CASES = [
         score: 73.856,
         statusLabel: '양호',
         tone: 'good',
-        caption: '기준일자 · 2025-12-04',
     },
     {
-        title: '긴 상태 · 보조 문구',
-        description: '원호 안쪽 폭 안에서 어절 단위로 접힙니다. 문구는 짧게 유지하길 권장합니다.',
+        title: '긴 상태 · 보조 문구(caption)',
+        description:
+            'caption 은 선택이며 주면 상태 아래에 붙고 글자 묶음이 그만큼 위로 올라갑니다. 원호 안쪽 폭 안에서 어절 단위로 접히니 문구는 짧게 유지합니다.',
         score: 48.2,
         statusLabel: '보통 (업종 평균 이하)',
         tone: 'normal',
@@ -153,6 +161,15 @@ const CHOICE_ROWS = [
     },
 ] as const
 
+// 색 단계표(GaugeToneTable) — 상태 ↔ 점수 구간 ↔ gauge-<상태> 토큰. 구간은 TECH_INDEX_GRADES(k-bigx-innovation-report.ts)와 같다.
+const SCORE_TONE_CASES = [
+    {label: '우수', detail: '81 ~ 100점', name: 'excellent'},
+    {label: '양호', detail: '61 ~ 80점', name: 'good'},
+    {label: '보통', detail: '41 ~ 60점', name: 'normal'},
+    {label: '미흡', detail: '21 ~ 40점', name: 'poor'},
+    {label: '취약', detail: '0 ~ 20점', name: 'weak'},
+] as const
+
 const PROPS_ITEMS = [
     [
         'ScoreGauge',
@@ -164,7 +181,13 @@ const PROPS_ITEMS = [
     ['ScoreGauge', 'statusLabel', '점수 아래 상태 이름입니다(예: 양호).', '-', 'string'],
     ['ScoreGauge', 'ariaLabel', '점수와 상태를 한 문장으로 읽어 줍니다.', '-', 'string'],
     ['ScoreGauge', 'unit', '점수 뒤 단위입니다.', "'점'", 'string'],
-    ['ScoreGauge', 'caption', '맨 아래 보조 문구입니다(예: 기준일자).', 'undefined', 'string'],
+    [
+        'ScoreGauge',
+        'caption',
+        '맨 아래 보조 문구입니다(선택). 주면 상태 아래에 붙고 글자 묶음이 그만큼 위로 올라갑니다.',
+        'undefined',
+        'string',
+    ],
     [
         'ScoreGauge',
         'tone',
@@ -172,7 +195,20 @@ const PROPS_ITEMS = [
         "'good'",
         "'excellent' | 'good' | 'normal' | 'poor' | 'weak'",
     ],
-    ['ScoreGauge', 'color', '상태 색 대신 쓸 색(토큰 변수)입니다. 주면 tone 보다 우선합니다.', 'undefined', 'string'],
+    [
+        'ScoreGauge',
+        'color',
+        '상태별 시작 색(gauge-<상태>-from) 대신 쓸 색(토큰 변수)입니다. 주면 tone 보다 우선합니다.',
+        'undefined',
+        'string',
+    ],
+    [
+        'ScoreGauge',
+        'gradientTo',
+        '그라데이션 끝 색(토큰 변수)입니다. 주면 상태별 기본 끝 색(gauge-<상태>-to 토큰)보다 우선합니다.',
+        'undefined',
+        'string',
+    ],
     [
         'ScoreGauge',
         'className · div props',
@@ -199,12 +235,7 @@ const ScoreGaugeGuidePage = () => (
                     </p>
                 </div>
                 <div className="border-subtle-3 bg-card max-w-147 rounded-sm border p-6">
-                    <ScoreGauge
-                        score={73.8}
-                        statusLabel="양호"
-                        caption="기준일자 · 2025-12-04"
-                        ariaLabel="혁신성장역량지수 73.8점, 양호"
-                    />
+                    <ScoreGauge score={73.8} statusLabel="양호" ariaLabel="혁신성장역량지수 73.8점, 양호" />
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
                 <CodeBlock code={DATA_CODE} language="tsx" copyLabel="데이터 연결 코드 복사" />
@@ -222,8 +253,15 @@ const ScoreGaugeGuidePage = () => (
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">상태 색 (tone)</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            다섯 상태가 각각 다른 색으로 찹니다. 트랙은 항상 같은 옅은 회색입니다.
+                            다섯 상태가 각각 다른 그라데이션으로 찹니다(채워진 끝의 시작 색 → 원호 시작의 끝 색). 트랙은
+                            항상 같은 옅은 회색입니다.
                         </p>
+                        <GaugeToneTable
+                            caption="상태별 색"
+                            labelHeader="상태"
+                            detailHeader="점수 구간"
+                            cases={SCORE_TONE_CASES}
+                        />
                         <ul className="grid list-none gap-6 md:grid-cols-2 xl:grid-cols-3">
                             {TONES.map((tone) => (
                                 <li key={tone.title} className="flex flex-col gap-2">
@@ -254,7 +292,7 @@ const ScoreGaugeGuidePage = () => (
                                         score={item.score}
                                         statusLabel={item.statusLabel}
                                         tone={item.tone}
-                                        caption={item.caption}
+                                        caption={'caption' in item ? item.caption : undefined}
                                         ariaLabel={`${item.score}점, ${item.statusLabel}`}
                                     />
                                 </li>
@@ -266,7 +304,6 @@ const ScoreGaugeGuidePage = () => (
                                     score={100}
                                     statusLabel="우수"
                                     tone="excellent"
-                                    caption="기준일자 · 2025-12-04"
                                     ariaLabel="100점, 우수"
                                     className="max-w-60"
                                 />
@@ -287,12 +324,7 @@ const ScoreGaugeGuidePage = () => (
                             </div>
                             <div className="flex flex-col gap-2">
                                 <p className="typo-body-xl-bold text-foreground">불러온 뒤</p>
-                                <ScoreGauge
-                                    score={73.8}
-                                    statusLabel="양호"
-                                    caption="기준일자 · 2025-12-04"
-                                    ariaLabel="혁신성장역량지수 73.8점, 양호"
-                                />
+                                <ScoreGauge score={73.8} statusLabel="양호" ariaLabel="혁신성장역량지수 73.8점, 양호" />
                             </div>
                         </div>
                         <CodeBlock code={LOADING_CODE} language="tsx" copyLabel="로딩 코드 복사" />
@@ -334,6 +366,17 @@ const ScoreGaugeGuidePage = () => (
                     </li>
                     <li>
                         상태가 글자(<code>statusLabel</code>)로도 있어 색만으로 뜻을 전하지 않습니다[5.3.1].
+                    </li>
+                    <li>
+                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
+                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
+                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
+                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                    </li>
+                    <li>
+                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
+                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
+                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
                     </li>
                 </ul>
             </section>

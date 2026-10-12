@@ -179,7 +179,12 @@ const PROPS_ITEMS = [
     ['data', '시점별 id · 이름 · 등급 · 높이입니다. 시간순으로 넘깁니다.', '-', 'GradeHistoryItem[]'],
     ['ariaLabel', '차트 이름입니다. 숨김 표의 캡션으로도 쓰입니다.', '-', 'string'],
     ['color', '원과 선 색입니다. 토큰 변수를 씁니다.', "'var(--raw-blue-500)'", 'string'],
-    ['animate', '그려지는 움직임입니다. 인쇄용 문서에서는 끕니다.', 'true', 'boolean'],
+    [
+        'animate',
+        '그리는 움직임입니다. 안 주면 문서 설정을 따르고(접근성 항목 참고), 인쇄용 문서처럼 즉시 찍혀야 하면 끕니다.',
+        '문서 설정',
+        'boolean',
+    ],
 ] as const
 
 const PROPS_ROWS = PROPS_ITEMS.map(([name, note, defaultValue, type]) => ({
@@ -330,6 +335,17 @@ const GradeHistoryChartGuidePage = () => (
                     <li>등급은 원 높이뿐 아니라 원 안의 글자로도 전달되어 색에만 의존하지 않습니다[5.3.1].</li>
                     <li>
                         <code>animate</code> 로 움직임을 끌 수 있습니다[6.3.1].
+                    </li>
+                    <li>
+                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
+                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
+                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
+                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                    </li>
+                    <li>
+                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
+                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
+                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
                     </li>
                 </ul>
             </section>

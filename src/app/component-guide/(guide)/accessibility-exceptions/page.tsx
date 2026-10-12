@@ -26,6 +26,7 @@ import {cn} from '@/lib/utils'
 import IssueBadge from './issue-badge'
 import type {Audit} from './latest-audit'
 import auditData from '@/content/publishing-guide/accessibility-audit.json'
+import screenRegistry from '@/content/publishing-guide/screen-registry.json'
 import type {MarkupIssueKind} from './screen-markup-results'
 import AuditSummaryMetadata from './audit-summary-metadata'
 import {W3cMessageList, WaveMessageList} from './screen-message-list'
@@ -187,8 +188,12 @@ const kindForMessage = (message: string): MarkupIssueKind =>
     ISSUE_DEFINITIONS.find((issue) => normalizeMessage(issue.message) === normalizeMessage(message))?.kind ?? 'unknown'
 // 이 저장소에서 직접 만드는 기업·기관 화면만 검사 결과에 포함합니다.
 // 외부 프로젝트인 탄소 화면을 비롯한 다른 경로는 저장된 JSON에 섞여 있어도 모든 집계에서 제외합니다.
+// 검사 뒤에 삭제된 화면(예: 기관 결제하기 · 판매자 정보 · 결제 완료)도 현행 화면 목록(screen-registry.json)에 없으면 뺍니다.
+// 남겨 두면 없는 경로로 링크가 걸립니다. 검사를 다시 돌리면 결과 JSON 에서도 빠집니다.
+const REGISTERED_PATHS = new Set(screenRegistry.screens.map((screen) => screen.path))
 const AUDITED_SCREENS = audit.screens.filter(
-    (screen) => screen.path.startsWith('/corp/') || screen.path.startsWith('/org/'),
+    (screen) =>
+        (screen.path.startsWith('/corp/') || screen.path.startsWith('/org/')) && REGISTERED_PATHS.has(screen.path),
 )
 const SCREEN_MARKUP_RESULTS = AUDITED_SCREENS.map((screen) => ({
     ...screen,
@@ -1703,6 +1708,8 @@ const WAVE_SCREEN_RECORD_BY_PATH = new Map<string, WaveScreenRecord>(
 // note — 검사 칸에 숫자 대신 적을 말이다. '없음' 은 검사를 돌렸고 나온 오류가 없는 화면, '미실행' 은 아직
 // 돌리지 않은 화면이다. 숫자 0 으로 두면 둘을 구분할 수 없어 말로 적는다.
 const WAVE_PENDING_SCREENS = [
+    // 기관은 결제하기 화면 대신 이 팝업을 띄운다(삭제된 기관 결제하기 · 판매자 정보 · 결제 완료를 대신하는 현행 화면).
+    {path: '/org/pricing/payment-unavailable', name: '결제 불가 팝업', note: '미실행'},
     {
         path: '/org/batch-evaluation/evaluation-history-or-batch/startup/bulk-data-request/final-review',
         name: '최종 제출 전 확인',
@@ -1827,6 +1834,16 @@ const CHART_STYLE_SCOPE_ISSUES: readonly IssueTableRow[] = CHART_STYLE_SCOPE_RUL
 })
 
 const CHART_ISSUES = [
+    {
+        level: 'warning',
+        message:
+            'An element with the attribute “tabindex” should not appear as a descendant of an element with the attribute “role=img”.',
+        count: 12,
+        screens: 0,
+        owner: 'recharts 3.8 zIndex 층(g.recharts-zIndex-layer_*)',
+        verdict:
+            '차트를 role="img" 상자로 감싸고 값은 숨긴 표가 읽어 주는 구조다. recharts 가 svg 에 넣던 tabindex="0" 은 accessibilityLayer={false} 로 없앴고(프로젝트 처리), 남는 것은 recharts 가 그리기 순서를 나누는 g 층 12개마다 붙이는 tabindex="-1" 이다 — props 로 끌 수 없어 라이브러리 몫이다',
+    },
     {
         level: 'error',
         message: 'Attribute “x” / “y” / “width” / “height” not allowed on element “path”.',

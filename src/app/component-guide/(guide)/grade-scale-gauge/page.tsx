@@ -29,9 +29,13 @@ const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [
     {label: 'CR-2', color: 'var(--raw-success-500)'},
     {label: 'CR-1', color: 'var(--raw-blue-500)'},
 ]
-const SCALE_LABELS = {lowLabel: '미흡', highLabel: '양호', scaleLabel: '현금흐름 창출 능력'} as const
+// 보고서(신용/재무정보 현금흐름등급)와 같은 모양 — 원호 안에는 등급만 둔다(description="").
+const SCALE_LABELS = {description: '', lowLabel: '취약', highLabel: '우수', scaleLabel: '현금흐름 창출 능력'} as const
 
-type CaseProps = Pick<GradeScaleGaugeProps, 'grades' | 'current' | 'lowLabel' | 'highLabel' | 'scaleLabel'>
+type CaseProps = Pick<
+    GradeScaleGaugeProps,
+    'grades' | 'current' | 'description' | 'lowLabel' | 'highLabel' | 'scaleLabel'
+>
 
 const USAGE_CODE = `import {GradeScaleGauge, type GradeScaleItem} from '@/components/custom/grade-scale-gauge'
 
@@ -46,8 +50,9 @@ const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [
   ariaLabel="현금흐름등급 CR-4"
   grades={CASH_FLOW_GRADES}
   current="CR-4"
-  lowLabel="미흡"
-  highLabel="양호"
+  description=""   // 원호 안에는 등급만(기본은 '현재 등급' 설명을 함께 적는다)
+  lowLabel="취약"
+  highLabel="우수"
   scaleLabel="현금흐름 창출 능력"
 />`
 
@@ -56,14 +61,16 @@ const DATA_CODE = `// 척도(grades)는 화면이 고정으로 두고 현재 등
   ariaLabel={\`현금흐름등급 \${cashFlow.grade}\`}
   grades={CASH_FLOW_GRADES}
   current={cashFlow.grade}
-  lowLabel="미흡"
-  highLabel="양호"
+  description=""
+  lowLabel="취약"
+  highLabel="우수"
   scaleLabel="현금흐름 창출 능력"
 />`
 
 const LOADING_CODE = `import {GradeScaleGaugeSkeleton} from '@/components/composite/grade-scale-gauge-skeleton'
 
-<GradeScaleGaugeSkeleton label="현금흐름등급을 불러오는 중입니다." count={6} />`
+// 원호 안 설명을 뺀 게이지(description="")는 스켈레톤도 설명 자리를 뺀다.
+<GradeScaleGaugeSkeleton label="현금흐름등급을 불러오는 중입니다." count={6} hasDescription={false} />`
 
 const CHOICE_COLUMNS = [
     {key: 'component', header: '컴포넌트', align: 'start', rowHeader: true},
@@ -112,7 +119,13 @@ const PROPS_ITEMS = [
         'string',
     ],
     ['GradeScaleGauge', 'ariaLabel', '그림 전체를 읽어 줄 이름입니다.', '-', 'string'],
-    ['GradeScaleGauge', 'description', '가운데 등급 아래 설명입니다.', "'현재 등급'", 'string'],
+    [
+        'GradeScaleGauge',
+        'description',
+        "가운데 등급 아래 설명입니다. 빈 문자열('')이면 등급만 보이고 등급 글자는 설명이 있을 때와 같은 높이에 남습니다. 보고서 현금흐름등급은 '' 입니다.",
+        "'현재 등급'",
+        'string',
+    ],
     ['GradeScaleGauge', 'lowLabel', '척도 줄의 낮은 쪽(첫 칸 아래) 이름입니다.', 'undefined', 'string'],
     ['GradeScaleGauge', 'highLabel', '척도 줄의 높은 쪽(끝 칸 아래) 이름입니다.', 'undefined', 'string'],
     [
@@ -131,7 +144,13 @@ const PROPS_ITEMS = [
     ],
     ['GradeScaleItem', 'label', '등급 이름입니다(예: CR-4).', '-', 'string'],
     ['GradeScaleItem', 'color', '칸과 원호 채움에 쓰는 색(토큰 변수)입니다.', '-', 'string'],
-    ['GradeScaleItem', 'isLightColor', '밝은 칸이면 흰 글자 대신 짙은 글자를 씁니다.', 'false', 'boolean'],
+    [
+        'GradeScaleItem',
+        'isLightColor',
+        '밝은 칸이면 흰 글자 대신 짙은 글자(grade-scale-chip-foreground)를 씁니다. 칸 색이 고정이라 글자도 라이트 · 다크 모두 같은 색입니다.',
+        'false',
+        'boolean',
+    ],
     [
         'GradeScaleGaugeSkeleton',
         'label',
@@ -140,9 +159,22 @@ const PROPS_ITEMS = [
         'string',
     ],
     ['GradeScaleGaugeSkeleton', 'count', '자리 표시 칸 수입니다. grades 수와 같게 둡니다.', '6', 'number'],
+    [
+        'GradeScaleGaugeSkeleton',
+        'hasDescription',
+        '원호 안 설명 자리입니다. 게이지에 description="" 을 주면 false 로 둡니다.',
+        'true',
+        'boolean',
+    ],
 ] as const
 
 const SPECIAL_CASES: readonly {title: string; description: string; gauge: CaseProps}[] = [
+    {
+        title: '설명 글자 함께 (description)',
+        description:
+            "description 을 주지 않으면 등급 아래에 '현재 등급'을 적습니다. 다른 글자를 주면 그 글자를 적습니다. 등급 글자 높이는 같습니다.",
+        gauge: {grades: CASH_FLOW_GRADES, current: 'CR-4', ...SCALE_LABELS, description: '현재 등급'},
+    },
     {
         title: '가장 낮은 등급',
         description: '원호는 한 칸 몫(1/6)만 채우고 첫 칸의 색을 씁니다.',
@@ -156,7 +188,7 @@ const SPECIAL_CASES: readonly {title: string; description: string; gauge: CasePr
     {
         title: '밝은 칸',
         description:
-            '주황(CR-3) · 회색(CR-5)처럼 밝은 칸은 흰 글자로 본문 대비 4.5:1 에 못 미쳐 짙은 글자로 적습니다(isLightColor).',
+            '주황(CR-3) · 회색(CR-5)처럼 밝은 칸은 흰 글자로 본문 대비 4.5:1 에 못 미쳐 짙은 글자로 적습니다(isLightColor). 다크에서도 같은 짙은 글자입니다.',
         gauge: {grades: CASH_FLOW_GRADES, current: 'CR-3', ...SCALE_LABELS},
     },
     {
@@ -187,6 +219,7 @@ const SPECIAL_CASES: readonly {title: string; description: string; gauge: CasePr
                 {label: '양호', color: 'var(--raw-blue-500)'},
             ],
             current: '양호',
+            description: '',
             lowLabel: '낮음',
             highLabel: '높음',
         },
@@ -194,7 +227,7 @@ const SPECIAL_CASES: readonly {title: string; description: string; gauge: CasePr
     {
         title: '척도 이름 없음',
         description: 'lowLabel · highLabel · scaleLabel 을 모두 비우면 척도 줄을 그리지 않습니다.',
-        gauge: {grades: CASH_FLOW_GRADES, current: 'CR-2'},
+        gauge: {grades: CASH_FLOW_GRADES, current: 'CR-2', description: ''},
     },
     {
         title: '긴 척도 이름',
@@ -202,6 +235,7 @@ const SPECIAL_CASES: readonly {title: string; description: string; gauge: CasePr
         gauge: {
             grades: CASH_FLOW_GRADES,
             current: 'CR-4',
+            description: '',
             lowLabel: '매우 미흡',
             highLabel: '매우 양호',
             scaleLabel: '영업활동 현금흐름 기반의 현금흐름 창출 능력과 채무 상환 여력 종합',
@@ -223,7 +257,8 @@ const GradeScaleGaugeGuidePage = () => (
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>grades</code> 는 낮은 등급부터 순서대로 넘기고 <code>current</code> 에 그중 하나의{' '}
                         <code>label</code> 을 줍니다. 원호의 채움 색은 현재 등급 칸의 색이며, 칸 폭은 등급 수만큼 똑같이
-                        나뉩니다.
+                        나뉩니다. 보고서 현금흐름등급처럼 원호 안에 등급만 둘 때는 <code>description=&quot;&quot;</code>{' '}
+                        를 줍니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 bg-card flex max-w-147 min-w-0 flex-col gap-6 rounded-sm border p-6">
@@ -295,7 +330,10 @@ const GradeScaleGaugeGuidePage = () => (
                         <div className="grid gap-6 xl:grid-cols-2">
                             <div className="flex min-w-0 flex-col gap-2">
                                 <p className="typo-body-xl-bold text-foreground">불러오는 중</p>
-                                <GradeScaleGaugeSkeleton label="현금흐름등급을 불러오는 중입니다." />
+                                <GradeScaleGaugeSkeleton
+                                    label="현금흐름등급을 불러오는 중입니다."
+                                    hasDescription={false}
+                                />
                             </div>
                             <div className="flex min-w-0 flex-col gap-2">
                                 <p className="typo-body-xl-bold text-foreground">불러온 뒤</p>
@@ -345,6 +383,11 @@ const GradeScaleGaugeGuidePage = () => (
                     </li>
                     <li>
                         밝은 칸은 <code>isLightColor</code> 로 짙은 글자를 써 본문 대비 4.5:1 을 지킵니다[5.3.3].
+                    </li>
+                    <li>
+                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 단계 칩이
+                        차례로 커지며 나타납니다(<code>--animate-chart-*</code> · 0.6초). <code>motion-safe</code> 라
+                        동작 줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
                     </li>
                 </ul>
             </section>

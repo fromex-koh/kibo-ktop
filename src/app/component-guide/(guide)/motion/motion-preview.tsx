@@ -6,7 +6,18 @@ import AnimatedCounter from '@/components/custom/animated-counter'
 import {Button} from '@/components/ui/button'
 
 // 미리보기 도형 종류 — 실제 유틸리티를 그대로 붙여 원본과 같은 시간·가속도로 움직인다.
-export type MotionPreviewKind = 'scale' | 'line' | 'progress' | 'enter' | 'counter' | 'menu-close' | 'menu-return'
+export type MotionPreviewKind =
+    | 'scale'
+    | 'line'
+    | 'progress'
+    | 'enter'
+    | 'counter'
+    | 'menu-close'
+    | 'menu-return'
+    | 'wipe-right'
+    | 'wipe-left'
+    | 'pop'
+    | 'label'
 
 // 정지 조작이 필요한 이유
 //  · 한 번만 도는 애니메이션(7s·5s·600ms)은 페이지를 연 순간 끝나 버려, 표까지 내려오면 이미 멈춰 있다.
@@ -52,6 +63,43 @@ const PreviewShape = ({kind, isPaused}: {kind: MotionPreviewKind; isPaused: bool
                     className={`bg-primary animate-tech-progress absolute inset-0 origin-top ${PAUSABLE}`}
                 />
             </span>
+        )
+    }
+    if (kind === 'wipe-right' || kind === 'wipe-left') {
+        return (
+            <span className="bg-muted block h-4 w-24 overflow-hidden rounded-sm">
+                <span
+                    data-paused={isPaused}
+                    className={`bg-primary block size-full ${kind === 'wipe-right' ? 'animate-chart-wipe-right' : 'animate-chart-wipe-left'} ${PAUSABLE}`}
+                />
+            </span>
+        )
+    }
+    if (kind === 'label') {
+        // 막대(wipe-right)가 다 자란 뒤 값 글자가 나타나는 실제 조합.
+        return (
+            <span className="flex items-center gap-2">
+                <span className="bg-muted block h-4 w-20 overflow-hidden rounded-sm">
+                    <span
+                        data-paused={isPaused}
+                        className={`bg-primary animate-chart-wipe-right block size-full ${PAUSABLE}`}
+                    />
+                </span>
+                <span
+                    data-paused={isPaused}
+                    className={`typo-body-m-bold text-foreground animate-chart-label tabular-nums ${PAUSABLE}`}
+                >
+                    13,547
+                </span>
+            </span>
+        )
+    }
+    if (kind === 'pop') {
+        return (
+            <span
+                data-paused={isPaused}
+                className={`bg-primary animate-chart-pop block size-6 rounded-full ${PAUSABLE}`}
+            />
         )
     }
     if (kind === 'enter') {

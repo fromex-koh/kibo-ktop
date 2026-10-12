@@ -226,7 +226,12 @@ const BEHAVIOR_PROP_ROWS = toRows([
         "'outline' | 'swatch'",
     ],
     ['showTooltip', '값 위에 올렸을 때의 말풍선과 강조 점입니다.', 'true', 'boolean'],
-    ['animate', '처음 한 번 펼쳐지는 움직임입니다. 인쇄용 문서에서는 끕니다.', 'true', 'boolean'],
+    [
+        'animate',
+        '그리는 움직임입니다. 안 주면 문서 설정을 따르고(접근성 항목 참고), 인쇄용 문서처럼 즉시 찍혀야 하면 끕니다.',
+        '문서 설정',
+        'boolean',
+    ],
     ['isLoading', '스켈레톤을 대신 보입니다. 하이드레이션 전에는 자동으로 보입니다.', 'false', 'boolean'],
     ['loadingLabel', '불러오는 중에 화면 낭독기가 읽을 문구입니다.', "'레이더 차트를 불러오는 중입니다.'", 'string'],
     [
@@ -477,6 +482,17 @@ const ComparisonRadarChartGuidePage = () => (
                     <li>두 계열은 색뿐 아니라 실선과 점선, 점 유무로도 구분하고 범례 텍스트를 함께 둡니다[5.3.1].</li>
                     <li>
                         <code>animate</code> 로 움직임을 끌 수 있습니다[6.3.1].
+                    </li>
+                    <li>
+                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
+                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
+                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
+                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                    </li>
+                    <li>
+                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
+                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
+                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
                     </li>
                 </ul>
             </section>

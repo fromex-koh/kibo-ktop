@@ -249,7 +249,7 @@ const PROPS_ITEMS = [
     [
         'DivergingRankItem',
         'tone',
-        '막대 색입니다. average 는 평균, subject 는 조회 기업, default 는 목록 색입니다.',
+        '막대 색입니다. average 는 평균, subject 는 조회 기업, default 는 목록 색입니다(시맨틱 토큰 rank-bar-* — 라이트 · 다크 같은 색).',
         "'default'",
         "'default' | 'average' | 'subject'",
     ],
@@ -413,7 +413,16 @@ const DivergingRankChartGuidePage = () => (
                         <code>highlightLabel</code> 열로 읽힙니다. 색만으로 전하지 않습니다[5.3.1].
                     </li>
                     <li>왼쪽 목록은 DOM 에서도 가운데 → 바깥 순서를 맞춰 화면 순서와 읽기 순서가 같습니다[7.3.1].</li>
-                    <li>막대 안 흰 글자는 본문 대비 4.5:1 을 넘는 색 위에만 놓입니다[5.3.3].</li>
+                    <li>
+                        막대 안 흰 글자는 본문 대비 4.5:1 을 넘는 색 위에만 놓입니다[5.3.3]. 막대 색은 다크에서도 바뀌지
+                        않아 대비가 유지됩니다.
+                    </li>
+                    <li>
+                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 막대가
+                        가운데에서 양쪽으로 자라고(<code>--animate-chart-*</code> · 0.6초), 다 자란 뒤 값 글자가 옅게
+                        나타납니다(<code>--animate-chart-label</code> · 0.3초). <code>motion-safe</code> 라 동작 줄이기
+                        설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
+                    </li>
                 </ul>
             </section>
         </BaseCard>

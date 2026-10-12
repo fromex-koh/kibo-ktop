@@ -7,6 +7,7 @@ import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import {LicenseNotice} from '@/components/custom/license-notice'
 import {PercentageDonutChart, type PercentageDonutItem} from '@/components/custom/percentage-donut-chart'
+import {DONUT_COLOR_RAMPS, donutColorsFor} from '@/components/custom/percentage-donut-colors'
 import PropsTable from '@/components/custom/props-table'
 import {DonutDistributionDemo} from './percentage-donut-chart-demo'
 
@@ -14,15 +15,15 @@ export const metadata: Metadata = {title: '기업 보유기술 도넛 (Percentag
 
 // 비중이 큰 분류부터 진한 색에서 옅은 색 순으로 칠한 8분류 예시.
 const REPORT_DATA: PercentageDonutItem[] = [
-    {id: 't1', label: '무선 통신·네트워크', percentage: 50, count: 24, color: 'var(--raw-navy-700)'},
-    {id: 't2', label: '이동통신 서비스', percentage: 14, count: 7, color: 'var(--raw-navy-500)'},
-    {id: 't3', label: 'IoT 플랫폼', percentage: 10, count: 5, color: 'var(--raw-blue-700)'},
-    {id: 't4', label: '네트워크 보안', percentage: 8, count: 4, color: 'var(--raw-blue-500)'},
-    {id: 't5', label: '위성 통신', percentage: 6, count: 3, color: 'var(--raw-blue-400)'},
-    {id: 't6', label: '광통신 부품', percentage: 5, count: 2, color: 'var(--raw-blue-300)'},
-    {id: 't7', label: '전파 계측', percentage: 4, count: 2, color: 'var(--raw-blue-200)'},
-    {id: 't8', label: '기타', percentage: 3, count: 1, color: 'var(--raw-blue-50)'},
-]
+    {id: 't1', label: '무선 통신·네트워크', percentage: 50, count: 24},
+    {id: 't2', label: '이동통신 서비스', percentage: 14, count: 7},
+    {id: 't3', label: 'IoT 플랫폼', percentage: 10, count: 5},
+    {id: 't4', label: '네트워크 보안', percentage: 8, count: 4},
+    {id: 't5', label: '위성 통신', percentage: 6, count: 3},
+    {id: 't6', label: '광통신 부품', percentage: 5, count: 2},
+    {id: 't7', label: '전파 계측', percentage: 4, count: 2},
+    {id: 't8', label: '기타', percentage: 3, count: 1},
+].map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]}))
 
 // 건수 없이 금액을 범례에 적는 예(비중은 금액 합계 대비).
 const COLLATERAL_DATA: PercentageDonutItem[] = [
@@ -30,7 +31,7 @@ const COLLATERAL_DATA: PercentageDonutItem[] = [
     {id: 'special-mortgage', label: '특수저당', percentage: 44.3, valueLabel: '3,862', color: 'var(--raw-blue-500)'},
     {id: 'guarantee', label: '보증', percentage: 32.7, valueLabel: '2,850', color: 'var(--raw-blue-300)'},
 ]
-// 강조 글자 예 — 범례에는 비중만 적는다.
+// 툴팁 예 — 범례에는 비중만 적는다(툴팁은 분류명만).
 const COLLATERAL_PERCENT_DATA: PercentageDonutItem[] = COLLATERAL_DATA.map((item) => ({
     ...item,
     valueLabel: `${item.percentage}%`,
@@ -46,13 +47,12 @@ const LONG_LABEL_DATA: PercentageDonutItem[] = REPORT_DATA.map((item, index) =>
 
 const USAGE_CODE = `import {PercentageDonutChart} from '@/components/custom/percentage-donut-chart'
 
-// 비중이 큰 분류부터 넘기면 12시에서 반시계 방향으로 이어집니다.
+// 비중이 큰 분류부터 넘기면 12시에서 시계 방향으로 이어집니다.
 <PercentageDonutChart
-  showTooltip={false} // 비중 · 건수가 범례에 모두 적혀 있어 말풍선은 끕니다
   ariaLabel="기업 보유기술 소분류별 비중과 건수"
   data={[
-    {id: 't1', label: '무선 통신·네트워크', percentage: 50, count: 24, color: 'var(--raw-navy-700)'},
-    {id: 't2', label: '이동통신 서비스', percentage: 14, count: 7, color: 'var(--raw-navy-500)'},
+    {id: 't1', label: '무선 통신·네트워크', percentage: 50, count: 24, color: donutColorsFor(8)[0]},
+    {id: 't2', label: '이동통신 서비스', percentage: 14, count: 7, color: donutColorsFor(8)[1]},
     // …
   ]}
 />`
@@ -80,11 +80,28 @@ const toChartData = (apiData: ApiTechnologyHolding[]): PercentageDonutItem[] =>
 const OPTION_CODE = `// 범례 값을 바꿉니다 — 항목의 valueLabel 이 '비중%·건수개' 를 대신합니다.
 <PercentageDonutChart data={[{id: 'real-estate', label: '부동산', percentage: 23, valueLabel: '2,000', color: '…'}]} ariaLabel="…" />
 
-// 가장 큰 조각의 비중을 도넛 바깥에 적습니다.
-<PercentageDonutChart data={data} calloutId="special-mortgage" ariaLabel="…" />
-
 // 도넛 아래 이름 · 그리는 움직임 끄기
 <PercentageDonutChart data={data} caption="중분류 기준 · 기업수 비중" animate={false} ariaLabel="…" />`
+
+// 항목 수별 색 단계 — 비중 내림차순 데이터에 donutColorsFor(항목 수) 를 차례로 입힌다(2 ~ 8개).
+const RAMP_CASES = Object.keys(DONUT_COLOR_RAMPS)
+    .map(Number)
+    .map((count) => ({
+        count,
+        colors: DONUT_COLOR_RAMPS[count],
+        data: Array.from({length: count}, (_, index) => ({
+            id: `item-${index + 1}`,
+            label: `분류 ${index + 1}`,
+            percentage: Math.round(100 / count),
+            count: count - index,
+            color: DONUT_COLOR_RAMPS[count][index],
+        })),
+    }))
+
+const RAMP_CODE = `import {donutColorsFor} from '@/components/custom/percentage-donut-colors'
+
+// 비중 내림차순으로 정렬한 뒤 항목 수에 맞는 색 단계를 차례로 입힙니다 — 첫 항목이 가장 진한 색.
+const data = sorted.map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]}))`
 
 const LOADING_CODE = `import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 
@@ -96,15 +113,15 @@ const PROPS_ITEMS = [
     [
         'PercentageDonutChart',
         'showTooltip',
-        '조각 위에 올렸을 때 뜨는 말풍선입니다. 비중 · 건수가 범례에 모두 적혀 있으면 끕니다.',
+        '조각 위에 올렸을 때 그 조각의 분류명(범례 이름)만 보이는 툴팁입니다. 상자 폭은 이름 글자만큼입니다. 비중 · 값은 범례로 읽습니다.',
         'true',
         'boolean',
     ],
     [
         'PercentageDonutChart',
         'animate',
-        '그리는 움직임입니다. 인쇄용 문서처럼 그린 즉시 찍혀야 하면 끕니다.',
-        'true',
+        '그리는 움직임입니다. 안 주면 문서 설정을 따르고(접근성 항목 참고), 인쇄용 문서처럼 즉시 찍혀야 하면 끕니다.',
+        '문서 설정',
         'boolean',
     ],
     [
@@ -116,29 +133,16 @@ const PROPS_ITEMS = [
     ],
     [
         'PercentageDonutChart',
-        'calloutId',
-        '조각 바깥에 비중(%)을 굵게 적을 항목의 id 입니다. 비중이 0 이하면 적지 않습니다.',
-        'undefined',
-        'string',
-    ],
-    [
-        'PercentageDonutChart',
         'className · div props',
         '바깥 div 에 전달됩니다. children 은 받지 않습니다.',
         '-',
         'HTMLAttributes',
     ],
     ['PercentageDonutItem', 'id', '분류의 고유 값입니다. 조각 색 변수 이름에도 쓰입니다.', '-', 'string'],
-    ['PercentageDonutItem', 'label', '범례와 툴팁에 보이는 분류명입니다.', '-', 'string'],
+    ['PercentageDonutItem', 'label', '범례와 툴팁에 보이는 분류명입니다. 툴팁에는 이 이름만 보입니다.', '-', 'string'],
     ['PercentageDonutItem', 'percentage', '비중(%)입니다. 조각 크기를 정합니다.', '-', 'number'],
     ['PercentageDonutItem', 'color', '조각과 범례 칩의 색(토큰 변수)입니다.', '-', 'string'],
-    [
-        'PercentageDonutItem',
-        'count',
-        '건수입니다. 범례에 \u2018비중%·건수개\u2019로, 말풍선에 비중과 함께 보입니다.',
-        'undefined',
-        'number',
-    ],
+    ['PercentageDonutItem', 'count', '건수입니다. 범례에 \u2018비중%·건수개\u2019로 보입니다.', 'undefined', 'number'],
     [
         'PercentageDonutItem',
         'valueLabel',
@@ -160,16 +164,13 @@ const PercentageDonutChartGuidePage = () => (
                         기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        도넛은 12시에서 반시계 방향으로 <code>data</code> 순서대로 이어지며, 도넛 위에는 라벨이 없고
-                        비중은 범례와 툴팁으로 읽습니다. 색은 항목마다 <code>color</code> 로 넘깁니다.
+                        도넛은 12시에서 시계 방향으로 <code>data</code> 순서대로 이어지며, 도넛 위에는 라벨이 없고
+                        비중은 범례로 읽고, 조각에 올리면 툴팁이 분류명만 보입니다. 색은 항목마다 <code>color</code> 로
+                        넘깁니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 bg-card max-w-147 rounded-sm border p-6">
-                    <PercentageDonutChart
-                        data={REPORT_DATA}
-                        showTooltip={false}
-                        ariaLabel="기업 보유기술 소분류별 비중과 건수"
-                    />
+                    <PercentageDonutChart data={REPORT_DATA} ariaLabel="기업 보유기술 소분류별 비중과 건수" />
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
                 <CodeBlock code={DATA_CODE} language="tsx" copyLabel="데이터 연결 코드 복사" />
@@ -185,10 +186,11 @@ const PercentageDonutChartGuidePage = () => (
                 </div>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">범례 값 · 강조 · 툴팁</h3>
+                        <h3 className="typo-title-m-bold text-foreground">범례 값 · 툴팁</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            <code>valueLabel</code> 로 금액 같은 값을 적고, <code>calloutId</code> 로 가장 큰 조각의
-                            비중을 바깥에 적습니다. 툴팁(기본 켬)은 조각 위에서 분류명과 비중 · 건수를 보입니다.
+                            <code>valueLabel</code> 로 금액 같은 값을 적습니다. 비중은 도넛 위에 적지 않고, 조각에
+                            마우스를 올리면 툴팁(기본 켬)이 그 조각의 분류명(범례 이름)만 보입니다 — 비중 · 값은 범례에
+                            있어 툴팁에 다시 적지 않습니다.
                         </p>
                         <div className="grid gap-6 md:grid-cols-2">
                             <div className="flex flex-col gap-2">
@@ -198,13 +200,9 @@ const PercentageDonutChartGuidePage = () => (
                                 </div>
                             </div>
                             <div className="flex flex-col gap-2">
-                                <p className="typo-body-xl-bold text-foreground">조각 바깥 강조 (calloutId)</p>
+                                <p className="typo-body-xl-bold text-foreground">툴팁 (조각에 올렸을 때)</p>
                                 <div className="border-subtle-3 bg-card rounded-sm border p-6">
-                                    <PercentageDonutChart
-                                        data={COLLATERAL_PERCENT_DATA}
-                                        calloutId="special-mortgage"
-                                        ariaLabel="담보 종류별 비중 — 가장 큰 조각 강조"
-                                    />
+                                    <PercentageDonutChart data={COLLATERAL_PERCENT_DATA} ariaLabel="담보 종류별 비중" />
                                 </div>
                             </div>
                         </div>
@@ -244,6 +242,38 @@ const PercentageDonutChartGuidePage = () => (
                         <div className="bg-surface border-border overflow-hidden rounded-xl border p-4 sm:p-6">
                             <DonutDistributionDemo />
                         </div>
+                    </div>
+
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">항목 수별 색 단계</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            색은 항목 수(2 ~ 8개)에 따라 정해진 단계를 쓰고, 비중이 큰 항목부터 진한 색을 받습니다. 첫
+                            항목은 12시 오른쪽 조각입니다. 9개 이상은 색이 반복되므로 8개까지만 보입니다.
+                        </p>
+                        <ul className="grid list-none gap-6 md:grid-cols-2 xl:grid-cols-3">
+                            {RAMP_CASES.map((item) => (
+                                <li key={item.count} className="flex flex-col gap-2">
+                                    <p className="typo-body-xl-bold text-foreground">{item.count}개</p>
+                                    <ul className="flex list-none gap-1" aria-label={`${item.count}개 색 단계`}>
+                                        {item.colors.map((color) => (
+                                            <li
+                                                key={color}
+                                                className="border-subtle-3 size-4 rounded-xs border"
+                                                style={{backgroundColor: color}}
+                                                title={color}
+                                            />
+                                        ))}
+                                    </ul>
+                                    <div className="border-subtle-3 bg-card rounded-sm border p-6">
+                                        <PercentageDonutChart
+                                            data={item.data}
+                                            ariaLabel={`${item.count}개 항목 색 단계`}
+                                        />
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                        <CodeBlock code={RAMP_CODE} language="tsx" copyLabel="색 단계 코드 복사" />
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
@@ -292,6 +322,17 @@ const PercentageDonutChartGuidePage = () => (
                         읽힙니다[5.1.1].
                     </li>
                     <li>범례에 분류명과 값이 글자로 있어 색만으로 분류를 구분하지 않습니다[5.3.1].</li>
+                    <li>
+                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
+                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
+                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
+                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                    </li>
+                    <li>
+                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
+                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
+                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                    </li>
                 </ul>
             </section>
         </BaseCard>

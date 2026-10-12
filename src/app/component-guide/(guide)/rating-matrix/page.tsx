@@ -112,7 +112,11 @@ const RatingMatrixGuidePage = () => (
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">모든 등급</h3>
-                        <p className="typo-body-l-regular text-label-foreground">다섯 등급의 원 색입니다.</p>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            다섯 등급의 원 색입니다(시맨틱 토큰 <code>rating-marker-*</code>). 흰 체크가 올라가므로
+                            다크에서도 짙은 색을 유지하고, 다크에서만 취약은 gray.500 · 보통은 orange.600 으로 한 단계
+                            조정합니다.
+                        </p>
                         <RatingMatrix ariaLabel="모든 등급" rows={ALL_LEVEL_ROWS} className="max-w-96" />
                     </div>
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
@@ -191,6 +195,11 @@ const RatingMatrixGuidePage = () => (
                     <li>
                         색 원은 장식이라 숨기고 표시 칸마다 &quot;항목: 등급&quot; 글자를 스크린리더용으로 둡니다.
                         색만으로 등급을 전하지 않습니다[5.3.1].
+                    </li>
+                    <li>
+                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 표시가
+                        차례로 커지며 나타납니다(<code>--animate-chart-*</code> · 0.6초). <code>motion-safe</code> 라
+                        동작 줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
                     </li>
                 </ul>
             </section>

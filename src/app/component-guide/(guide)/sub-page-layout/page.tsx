@@ -41,7 +41,7 @@ const PAGE_USAGE_CODE = `import {PageTitleBar} from '@/components/composite/page
 export const metadata = {title: '이용약관'}
 
 const TermsPage = () => (
-  <main id="main" tabIndex={-1} className="bg-surface flex-1">
+  <main id="main" tabIndex={-1} className="bg-page flex-1">
     <div className="content-layout">
       <PageTitleBar title="이용약관" />
       {/* 화면별 콘텐츠 */}

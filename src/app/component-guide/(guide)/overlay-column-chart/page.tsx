@@ -170,7 +170,13 @@ const PROPS_ITEMS = [
         'number',
     ],
     ['OverlayColumnChart', 'unit', '숨김 표 머리의 단위입니다. 화면 단위는 카드 머리에 둡니다.', '-', 'string'],
-    ['OverlayColumnChart', 'animate', '막대가 자라는 움직임입니다. 인쇄용 문서에서는 끕니다.', 'true', 'boolean'],
+    [
+        'OverlayColumnChart',
+        'animate',
+        '그리는 움직임입니다. 안 주면 문서 설정을 따르고(접근성 항목 참고), 인쇄용 문서처럼 즉시 찍혀야 하면 끕니다.',
+        '문서 설정',
+        'boolean',
+    ],
     ['OverlayColumnChart', 'className', '바깥 div 에 덧붙일 클래스입니다. 그 밖의 div 속성도 받습니다.', '-', 'string'],
     ['OverlayColumnSeries', 'key', 'data 의 values 키와 같아야 막대가 그려집니다.', '-', 'string'],
     ['OverlayColumnSeries', 'label', '범례 · 숨김 표에 쓰는 이름입니다.', '-', 'string'],
@@ -362,6 +368,17 @@ const OverlayColumnChartGuidePage = () => (
                         않습니다[5.3.1].
                     </li>
                     <li>말풍선은 없습니다.</li>
+                    <li>
+                        움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
+                        <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
+                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
+                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                    </li>
+                    <li>
+                        recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}
+                        <code>role=&quot;img&quot;</code> 안에 <code>tabindex</code> 가 들어가는 마크업 경고를
+                        피합니다(접근성 검사 예외사항 참고)[8.1.1].
+                    </li>
                 </ul>
             </section>
         </BaseCard>
