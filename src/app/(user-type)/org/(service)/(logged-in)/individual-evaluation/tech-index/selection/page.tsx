@@ -31,7 +31,7 @@ const MODELS_TITLE_ID = 'evaluation-models-title'
 // 시안 문구는 기업 화면에서 옮겨온 표기로 보이고, 브레드크럼은 실제 이동 경로를 가리켜야 한다.
 const OrgTechIndexSelectionPage = () => (
     // 시안의 화면 배경은 흰색(카드 면)이고, 그 위에서 안내 상자만 회색으로 떠 있다.
-    <main id="main" tabIndex={-1} className="bg-card flex-1">
+    <main id="main" tabIndex={-1} className="bg-page flex-1">
         {/* 콘텐츠 폭은 공통 grid-layout을 따른다. 하단 여백은 StepNavigation 이 담당한다. */}
         <div className="grid-layout gap-y-10 pt-7 *:col-span-full md:pt-10">
             <div className="flex flex-col gap-2">

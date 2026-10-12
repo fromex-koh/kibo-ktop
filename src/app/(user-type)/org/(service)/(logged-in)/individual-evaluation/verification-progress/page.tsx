@@ -28,7 +28,7 @@ const METHODS_TITLE_ID = 'evaluation-methods-title'
 // (Tech-Index 평가모형 선택 화면과 같은 구성).
 const OrgVerificationProgressPage = () => (
     // 시안의 화면 배경은 흰색(카드 면)이고, 그 위에서 안내 상자만 회색으로 떠 있다.
-    <main id="main" tabIndex={-1} className="bg-card flex-1">
+    <main id="main" tabIndex={-1} className="bg-page flex-1">
         {/* 콘텐츠 폭은 공통 grid-layout을 따른다. 하단 여백은 StepNavigation 이 담당한다. */}
         <div className="grid-layout gap-y-10 pt-7 *:col-span-full md:pt-10">
             <div className="flex flex-col gap-2">

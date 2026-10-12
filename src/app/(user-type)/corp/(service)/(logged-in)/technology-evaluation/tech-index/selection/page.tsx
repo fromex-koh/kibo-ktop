@@ -27,7 +27,7 @@ const MODELS_TITLE_ID = 'evaluation-models-title'
 // 카드는 링크가 아니라 라디오이고, 고르는 것과 이동은 TechIndexModelForm 이 갖는다(기관 화면과 같은 구성).
 const CorpTechIndexSelectionPage = () => (
     // 시안의 화면 배경은 흰색(카드 면)이고, 그 위에서 안내 상자만 회색으로 떠 있다.
-    <main id="main" tabIndex={-1} className="bg-card flex-1">
+    <main id="main" tabIndex={-1} className="bg-page flex-1">
         {/* 콘텐츠 폭은 공통 grid-layout을 따른다. 하단 여백은 StepNavigation 이 담당한다. */}
         <div className="grid-layout gap-y-10 pt-7 *:col-span-full md:pt-10">
             <div className="flex flex-col gap-2">
