@@ -11,9 +11,9 @@ import {cn} from '@/lib/utils'
 // 기준 선택 검색 — 검색 기준(셀렉트)을 고르고 번호 · 검색어를 한 줄에 크게 입력해 조회하는 검색 카드다.
 // 특허 등급조회의 '특허등록번호 / 특허출원번호' 검색이 이 형태다.
 //
-// 시안 규격(특허 등급조회 검색): 카드 흰 면 · 반경 24 · 그림자(shadow-1) · 여백 40 ·
-// 입력 줄 높이 40 — 기준 셀렉트(20 Medium gray.900, 안쪽 여백 4, 글자와 아래 화살표(20) 사이 4)와
-// 입력(24 Regular gray.700)이 24 떨어져 한 줄 · 입력 줄 아래 24 에 구분선(gray.100) ·
+// 규격: 카드 면(bg-card) · 반경 24 · 그림자(shadow-1) · 여백 40(모바일 24) ·
+// 입력 줄 높이 40 — 기준 셀렉트(20 Medium foreground, 안쪽 여백 4, 글자와 아래 화살표(20) 사이 4)와
+// 입력(24 Regular label-foreground)이 24 떨어져 한 줄 · 입력 줄 아래 24 에 구분선(subtle-3) ·
 // 구분선 아래 24 에 오른쪽 정렬 [초기화](16 Regular 밑줄 + 새로고침 16) · 20 · [검색하기](최소 128 × 48 · 돋보기 20 ·
 // 16 Medium · 아이콘과 글자 사이 4).
 // 오류 상태: 입력 줄 아래 4 에 빨간 안내(16 Regular · field-error-foreground)가 입력과 같은 왼쪽 선에 선다.
@@ -153,13 +153,15 @@ const SelectSearchForm = ({
                         {typeLabel}
                     </label>
                     {/* 목록은 프로젝트 공통 드롭다운(SelectField)과 같다 — 트리거 아래 4 에 열리고, 항목 높이 · hover 면 ·
-                        선택 표시가 다른 셀렉트와 같다. 트리거만 시안대로 테두리 없는 글자형(20 Medium + 화살표 20)이다.
-                        md 이상에서 트리거 자리는 최소 136(시안 select_text) — 기준 이름이 짧아도('기업 검색') 입력 글자와
-                        오류 문구가 같은 160 선에서 시작한다. 화살표는 글자 바로 뒤에 붙는다(justify-start). */}
+                        선택 표시가 다른 셀렉트와 같다. 트리거만 테두리 없는 글자형(20 Medium + 화살표 20)이다.
+                        md 이상에서 트리거 자리는 최소 136 — 기준 이름이 짧아도('기업 검색') 입력 글자와
+                        오류 문구가 같은 160 선에서 시작한다. 화살표는 글자 바로 뒤에 붙는다(justify-start).
+                        바탕은 비운다(라이트 · 다크 공통). theme 의 bg-field 와 셸 · theme 의 다크 전용 규칙(dark:bg-input/30 · dark:bg-field 등)까지
+                        이기도록 data-[slot=select-trigger]: 로 우선순위를 한 단계 올린다 — 사용처에서 dark: 로 다시 분기하지 않는다[PB-06]. */}
                     <SelectField name="searchType" value={searchType} onValueChange={handleTypeChange}>
                         <SelectTrigger
                             id={selectId}
-                            className="typo-title-l-medium text-foreground [&_svg]:text-foreground h-auto w-fit shrink-0 justify-start gap-1 border-0 px-1 shadow-none md:min-w-34 [&_svg]:size-5 [&_svg]:opacity-100"
+                            className="typo-title-l-medium text-foreground [&_svg]:text-foreground h-auto w-fit shrink-0 justify-start gap-1 border-0 px-1 shadow-none data-[slot=select-trigger]:bg-transparent data-[slot=select-trigger]:hover:bg-transparent md:min-w-34 [&_svg]:size-5 [&_svg]:opacity-100"
                         >
                             <SelectValue />
                         </SelectTrigger>
@@ -175,12 +177,12 @@ const SelectSearchForm = ({
                         {selectedLabel}
                     </label>
                     {/* 값이 있고 칸에 포커스가 있으면 오른쪽에 지우기(X) 버튼이 뜬다 — 프로젝트 ClearableInput 과 같다.
-                        바깥 상자는 시안대로 테두리 없이 두고, 포커스 링은 입력 칸의 기본 포커스 링을 쓴다.
-                        상자의 안쪽 여백(16)만큼 왼쪽으로 당겨(-ms-4) 글자가 시안 자리(셀렉트에서 24)에 오게 하고,
+                        바깥 상자는 테두리 없이 두고, 포커스 링은 입력 칸의 기본 포커스 링을 쓴다.
+                        상자의 안쪽 여백(16)만큼 왼쪽으로 당겨(-ms-4) 글자가 셀렉트에서 24 떨어진 자리에 오게 하고,
                         포커스 링은 글자 둘레에 여유를 두고 그려지게 한다. 좁은 화면(768 미만)은 입력이 한 줄을 다 쓰므로
                         오른쪽도 같은 만큼 늘려(-me-4) 상자가 카드 폭에 꽉 차게 한다. */}
                     {/* autoComplete="off" — 브라우저 자동완성 목록과 자동완성 배경색(파란 면)을 끈다. 검색어는 매번 새로
-                        입력하는 값이고, 자동완성 면이 테두리 없는 시안 입력에 박스처럼 떠 보이기 때문이다. */}
+                        입력하는 값이고, 자동완성 면이 테두리 없는 입력에 박스처럼 떠 보이기 때문이다. */}
                     <ClearableInput
                         id={inputId}
                         name="keyword"

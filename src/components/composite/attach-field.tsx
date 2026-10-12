@@ -6,7 +6,7 @@ import {Button} from '@/components/ui/button'
 import {FieldDescription, FieldError} from '@/components/ui/field'
 import {cn} from '@/lib/utils'
 
-// 첨부 필드(AttachField) — 시안 "평가 신청하기"의 한 줄짜리 파일 첨부 칸.
+// 첨부 필드(AttachField) — 평가 신청 화면 등에서 쓰는 한 줄짜리 파일 첨부 칸.
 // [레이블] 아래 상자 한 줄에 [선택된 파일 없음(또는 파일명 + 삭제)]과 [파일선택] 버튼이 놓인다.
 // 끌어다 놓는 큰 첨부 상자(FileUpload)와 달리, 서류 여러 개를 나란히 받는 화면에서 낮게 쌓는 용도다.
 //
@@ -149,19 +149,19 @@ const AttachField = ({
                 onChange={(event) => applyFile(event.target.files?.[0] ?? null)}
             />
 
-            {/* 상자 한 줄 — 왼쪽은 상태(파일명·자리 문구), 오른쪽은 [파일선택]. */}
+            {/* 상자 한 줄 — 왼쪽은 상태(파일명·자리 문구), 오른쪽은 [파일선택]. 면은 Input 과 같은 bg-field(입력형 컨트롤 면)다. */}
             <div
                 data-slot="attach-field-box"
                 className={cn(
-                    'border-control bg-surface min-h-control-h-xl flex items-center justify-between gap-4 rounded-sm border px-4',
+                    'border-control bg-field min-h-control-h-xl flex items-center justify-between gap-4 rounded-sm border px-4',
                     message && 'border-destructive',
                 )}
             >
                 {fileName ? (
                     <span role="status" className="flex min-w-0 items-center gap-2">
                         <span className="typo-body-xl-regular text-label-foreground min-w-0 truncate">{fileName}</span>
-                        {/* PROJECT-STYLE: 시안의 삭제 버튼은 24 정사각 + subtle-3 테두리 + radius 4 상자에
-                            16 아이콘이 담긴다 — plain 의 아이콘-만 상자(16)를 시안 상자로 덮는다. */}
+                        {/* PROJECT-STYLE: Button plain · icon-xs 는 아이콘만 있는 16 상자이지만, 첨부 칸의 삭제 버튼은
+                            24 정사각 + subtle-3 테두리 + radius 4 상자에 16 아이콘이 담기므로 사용처 className 으로 덮는다. */}
                         <Button
                             type="button"
                             variant="plain"
