@@ -2753,30 +2753,9 @@
             "isCurrent": false
         },
         {
-            "key": "org-pricing-payment",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
-        },
-        {
-            "key": "org-pricing-payment-seller-info",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
-        },
-        {
-            "key": "org-pricing-payment-complete",
-            "implemented": true,
-            "implementationStatus": "in-progress",
-            "version": "v3.3.0",
-            "isCurrent": false
-        },
-        {
             "key": "org-pricing-payment-unavailable",
-            "implemented": false,
-            "implementationStatus": "planned",
+            "implemented": true,
+            "implementationStatus": "in-progress",
             "version": "미배포",
             "isCurrent": false
         },
