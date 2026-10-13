@@ -170,7 +170,7 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                         </div>
                     </Card>
                     {/* [프론트엔드 연동 · 정렬] 출원일 최근순으로 받아 그 순서대로 그린다. 최대 10건 — 규칙은 파일 위 [표 노출 건수 규칙]. */}
-                    <Card title="특허 보유현황" className="gap-4">
+                    <Card title="특허 보유현황" className="gap-0">
                         <WithUnit unit="최대 10개 · 출원일 최근순">
                             <ReportTable
                                 caption="특허 보유현황(최대 10개, 출원일 최근순)"
@@ -271,7 +271,7 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
             <section aria-labelledby="ig-tech-competitors" className="flex flex-col gap-4">
                 <SectionTitle id="ig-tech-competitors" title="맞춤형 기술정보-경쟁기업 및 우수기업" />
                 <div className="flex flex-col gap-6">
-                    <Card title="경쟁기업 사업실적 (매출액, 영업이익률)" className="gap-4">
+                    <Card title="경쟁기업 사업실적 (매출액, 영업이익률)" className="gap-0">
                         {/* 막대 = 매출액(조회기업 · 평균 강조), 선 = 영업이익률(데이터 필드명은 growthRate · 막대와 따로 된 눈금). 받은 순서대로 그린다. */}
                         <WithUnit unit="단위: 백만원, %">
                             <ComboBarLineChart

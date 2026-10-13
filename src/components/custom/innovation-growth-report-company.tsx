@@ -42,8 +42,8 @@ const numberFormatter = new Intl.NumberFormat('ko-KR')
 const ratioFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
 // 신용등급이 없는 거래처의 표시.
 const EMPTY_VALUE = '-'
-// [프론트엔드 연동 · 최대 10건] 주주 현황 · 관계기업 현황은 기획 메모 '목록 개수 최대 10개 노출' — 받은 순서대로 앞에서부터
-// 10건만 그린다(11번째부터 안 보임). API 는 목록을 자르지 말고 그대로 보낸다.
+// [프론트엔드 연동] 경영진 현황 · 주주 현황 · 관계기업 현황 표의 최대 줄 수(기획: 최대 10개 노출).
+// 받은 순서대로 앞에서부터 10건만 그리고 11번째부터는 그리지 않는다 — API 는 목록을 자르지 않고 그대로 보낸다.
 const COMPANY_LIST_LIMIT = 10
 
 // 특허 · 인증 상자의 아이콘 — 데이터의 id 로 고른다.
@@ -174,14 +174,14 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                                 {key: 'name', label: '성명'},
                                 {key: 'birthDate', label: '생년월일'},
                             ]}
-                            rows={status.executives.map((executive, index) => ({
+                            rows={status.executives.slice(0, COMPANY_LIST_LIMIT).map((executive, index) => ({
                                 id: `${executive.role}-${index}`,
                                 cells: {role: executive.role, name: executive.name, birthDate: executive.birthDate},
                             }))}
                         />
                     </Card>
-                    <Card title="주주 현황" className="gap-4">
-                        <WithUnit unit="단위: 주, %">
+                    <Card title="주주 현황" className="gap-0">
+                        <WithUnit unit="단위:주, %">
                             <ReportTable
                                 caption="주주 현황(단위: 주, %)"
                                 columns={[
@@ -273,92 +273,105 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
                 </Card>
             </section>
 
-            {/* 재무현황 — 카드마다 표(위) + 그래프(아래). 재무상태 · 손익은 겹친 막대, 비율 · 현금흐름은 여러 선. */}
+            {/* 재무현황 — 카드마다 표(위) + 그래프(아래). 재무상태 · 손익은 겹친 막대, 비율 · 현금흐름은 여러 선.
+                단위는 WithUnit 규칙, 표 → 그래프 간격 24. */}
             <section aria-labelledby="ig-company-finance" className="flex flex-col gap-4">
                 <SectionTitle id="ig-company-finance" title="재무현황" />
                 <div className="grid grid-cols-2 gap-6">
-                    <Card title="재무상태" className="gap-4">
-                        <WithUnit unit="단위: 백만원">
-                            <ReportTable
-                                caption="재무상태(단위: 백만원)"
-                                minWidthClassName="min-w-90"
-                                {...balanceTable}
-                            />
-                        </WithUnit>
-                        {balanceBase ? (
-                            <OverlayColumnChart
-                                ariaLabel="연도별 재무상태 — 총자산 대비 부채총계 · 자본총계"
-                                unit="백만원"
-                                data={financeChartData(finance.years, finance.balance)}
-                                base={{key: balanceBase.key, label: balanceBase.label, color: OVERLAY_BASE_COLOR}}
-                                series={balanceSeries.map((row, index) => ({
+                    <Card title="재무상태" className="gap-0">
+                        <div className="flex min-w-0 flex-col gap-6">
+                            <WithUnit unit="단위: 백만원">
+                                <ReportTable
+                                    caption="재무상태(단위: 백만원)"
+                                    minWidthClassName="min-w-90"
+                                    {...balanceTable}
+                                />
+                            </WithUnit>
+                            {balanceBase ? (
+                                <OverlayColumnChart
+                                    ariaLabel="연도별 재무상태 — 총자산 대비 부채총계 · 자본총계"
+                                    unit="백만원"
+                                    data={financeChartData(finance.years, finance.balance)}
+                                    base={{key: balanceBase.key, label: balanceBase.label, color: OVERLAY_BASE_COLOR}}
+                                    series={balanceSeries.map((row, index) => ({
+                                        key: row.key,
+                                        label: row.label,
+                                        color: OVERLAY_SERIES_COLORS[index % OVERLAY_SERIES_COLORS.length],
+                                    }))}
+                                />
+                            ) : null}
+                        </div>
+                    </Card>
+                    <Card title="손익현황" className="gap-0">
+                        <div className="flex min-w-0 flex-col gap-6">
+                            <WithUnit unit="단위: 백만원">
+                                <ReportTable
+                                    caption="손익현황(단위: 백만원)"
+                                    minWidthClassName="min-w-90"
+                                    {...incomeTable}
+                                />
+                            </WithUnit>
+                            {incomeBase ? (
+                                <OverlayColumnChart
+                                    ariaLabel="연도별 손익현황 — 매출액 대비 영업이익 · 당기순이익"
+                                    unit="백만원"
+                                    data={financeChartData(finance.years, finance.income)}
+                                    base={{key: incomeBase.key, label: incomeBase.label, color: OVERLAY_BASE_COLOR}}
+                                    series={incomeSeries.map((row, index) => ({
+                                        key: row.key,
+                                        label: row.label,
+                                        color: OVERLAY_SERIES_COLORS[index % OVERLAY_SERIES_COLORS.length],
+                                    }))}
+                                />
+                            ) : null}
+                        </div>
+                    </Card>
+                    <Card title="주요재무비율" className="gap-0">
+                        <div className="flex min-w-0 flex-col gap-6">
+                            <WithUnit unit="단위: %">
+                                <ReportTable
+                                    caption="주요재무비율(단위: %)"
+                                    minWidthClassName="min-w-90"
+                                    {...ratioTable}
+                                />
+                            </WithUnit>
+                            <LineChart
+                                appearance="columns"
+                                showTooltip={false}
+                                ariaLabel="연도별 주요재무비율"
+                                unit="%"
+                                valueFractionDigits={2}
+                                data={financeChartData(finance.years, finance.ratios)}
+                                series={finance.ratios.map((row, index) => ({
                                     key: row.key,
                                     label: row.label,
-                                    color: OVERLAY_SERIES_COLORS[index % OVERLAY_SERIES_COLORS.length],
+                                    ...REPORT_LINE_STYLES[index % REPORT_LINE_STYLES.length],
                                 }))}
                             />
-                        ) : null}
+                        </div>
                     </Card>
-                    <Card title="손익현황" className="gap-4">
-                        <WithUnit unit="단위: 백만원">
-                            <ReportTable
-                                caption="손익현황(단위: 백만원)"
-                                minWidthClassName="min-w-90"
-                                {...incomeTable}
-                            />
-                        </WithUnit>
-                        {incomeBase ? (
-                            <OverlayColumnChart
-                                ariaLabel="연도별 손익현황 — 매출액 대비 영업이익 · 당기순이익"
+                    <Card title="현금흐름" className="gap-0">
+                        <div className="flex min-w-0 flex-col gap-6">
+                            <WithUnit unit="단위: 백만원">
+                                <ReportTable
+                                    caption="현금흐름(단위: 백만원)"
+                                    minWidthClassName="min-w-100"
+                                    {...cashFlowTable}
+                                />
+                            </WithUnit>
+                            <LineChart
+                                appearance="columns"
+                                showTooltip={false}
+                                ariaLabel="연도별 현금흐름"
                                 unit="백만원"
-                                data={financeChartData(finance.years, finance.income)}
-                                base={{key: incomeBase.key, label: incomeBase.label, color: OVERLAY_BASE_COLOR}}
-                                series={incomeSeries.map((row, index) => ({
+                                data={financeChartData(finance.years, finance.cashFlows)}
+                                series={finance.cashFlows.map((row, index) => ({
                                     key: row.key,
                                     label: row.label,
-                                    color: OVERLAY_SERIES_COLORS[index % OVERLAY_SERIES_COLORS.length],
+                                    ...REPORT_LINE_STYLES[index % REPORT_LINE_STYLES.length],
                                 }))}
                             />
-                        ) : null}
-                    </Card>
-                    <Card title="주요재무비율" className="gap-4">
-                        <WithUnit unit="단위: %">
-                            <ReportTable caption="주요재무비율(단위: %)" minWidthClassName="min-w-90" {...ratioTable} />
-                        </WithUnit>
-                        <LineChart
-                            appearance="columns"
-                            showTooltip={false}
-                            ariaLabel="연도별 주요재무비율"
-                            unit="%"
-                            valueFractionDigits={2}
-                            data={financeChartData(finance.years, finance.ratios)}
-                            series={finance.ratios.map((row, index) => ({
-                                key: row.key,
-                                label: row.label,
-                                ...REPORT_LINE_STYLES[index % REPORT_LINE_STYLES.length],
-                            }))}
-                        />
-                    </Card>
-                    <Card title="현금흐름" className="gap-4">
-                        <WithUnit unit="단위: 백만원">
-                            <ReportTable
-                                caption="현금흐름(단위: 백만원)"
-                                minWidthClassName="min-w-100"
-                                {...cashFlowTable}
-                            />
-                        </WithUnit>
-                        <LineChart
-                            appearance="columns"
-                            showTooltip={false}
-                            ariaLabel="연도별 현금흐름"
-                            unit="백만원"
-                            data={financeChartData(finance.years, finance.cashFlows)}
-                            series={finance.cashFlows.map((row, index) => ({
-                                key: row.key,
-                                label: row.label,
-                                ...REPORT_LINE_STYLES[index % REPORT_LINE_STYLES.length],
-                            }))}
-                        />
+                        </div>
                     </Card>
                 </div>
             </section>
@@ -367,12 +380,12 @@ const InnovationGrowthReportCompany = ({status}: InnovationGrowthReportCompanyPr
             <section aria-labelledby="ig-company-trade" className="flex flex-col gap-4">
                 <SectionTitle id="ig-company-trade" title="거래처현황" />
                 <div className="flex flex-col gap-6">
-                    <Card title="매출처" className="gap-4">
+                    <Card title="매출처" className="gap-0">
                         <WithUnit unit="단위: %">
                             <ReportTable caption="매출처(단위: %)" minWidthClassName="min-w-160" {...customerTable} />
                         </WithUnit>
                     </Card>
-                    <Card title="매입처" className="gap-4">
+                    <Card title="매입처" className="gap-0">
                         <WithUnit unit="단위: %">
                             <ReportTable caption="매입처(단위: %)" minWidthClassName="min-w-160" {...supplierTable} />
                         </WithUnit>

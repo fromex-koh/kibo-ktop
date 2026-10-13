@@ -58,7 +58,7 @@ const EnergyCard = ({
     years: readonly string[]
     rows: readonly InnovationEnergyRow[]
 }) => (
-    <Card title={title} className="gap-4">
+    <Card title={title} className="gap-0">
         <div className="grid grid-cols-2 items-center gap-6">
             <WithUnit unit={`단위: ${ENERGY_UNIT}`}>
                 <ReportTable
@@ -138,38 +138,43 @@ const InnovationGrowthReportActivity = ({detail, employees, salesPerEmployee}: I
                         />
                     </WithUnit>
                 </Card>
-                {/* 분기별 종업원수(선) : 인당 매출액(막대) 카드 폭 비율 ≈ 2 : 1. */}
+                {/* 분기별 종업원수(선) : 인당 매출액(막대) 카드 폭 비율 ≈ 2 : 1.
+                    단위는 WithUnit 규칙(innovation-growth-report-parts.tsx). */}
                 <div className="grid grid-cols-[minmax(0,792fr)_minmax(0,384fr)] gap-6">
-                    <Card title="분기별 종업원수" aside="단위: 명">
-                        <LineChart
-                            data={employees.map((item) => ({
-                                id: item.label,
-                                label: item.label,
-                                values: {employees: item.value},
-                            }))}
-                            series={[{key: 'employees', label: '종업원수', color: 'var(--ds-purple-600)'}]}
-                            variant="area"
-                            appearance="cells"
-                            showLegend={false}
-                            showValueLabels
-                            showTooltip={false}
-                            ariaLabel="분기별 종업원수 추이"
-                        />
+                    <Card title="분기별 종업원수" className="gap-0">
+                        <WithUnit unit="단위 : 명">
+                            <LineChart
+                                data={employees.map((item) => ({
+                                    id: item.label,
+                                    label: item.label,
+                                    values: {employees: item.value},
+                                }))}
+                                series={[{key: 'employees', label: '종업원수', color: 'var(--ds-purple-600)'}]}
+                                variant="area"
+                                appearance="cells"
+                                showLegend={false}
+                                showValueLabels
+                                showTooltip={false}
+                                ariaLabel="분기별 종업원수 추이"
+                            />
+                        </WithUnit>
                     </Card>
-                    <Card title="인당 매출액" aside="단위: 천원">
-                        <ColumnChart
-                            data={salesPerEmployee.map((item) => ({
-                                id: item.label,
-                                label: item.label,
-                                value: item.value,
-                            }))}
-                            valueFractionDigits={1}
-                            barWidth={48}
-                            color="var(--ds-report-series-2)"
-                            variant="cells"
-                            showTooltip={false}
-                            ariaLabel="연도별 인당 매출액"
-                        />
+                    <Card title="인당 매출액" className="gap-0">
+                        <WithUnit unit="단위 : 천원">
+                            <ColumnChart
+                                data={salesPerEmployee.map((item) => ({
+                                    id: item.label,
+                                    label: item.label,
+                                    value: item.value,
+                                }))}
+                                valueFractionDigits={1}
+                                barWidth={48}
+                                color="var(--ds-report-series-2)"
+                                variant="cells"
+                                showTooltip={false}
+                                ariaLabel="연도별 인당 매출액"
+                            />
+                        </WithUnit>
                     </Card>
                 </div>
             </div>

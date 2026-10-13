@@ -1,6 +1,6 @@
 'use client'
 
-import {Suspense, useEffect, type ReactNode} from 'react'
+import {Suspense, useEffect, useState, type ReactNode} from 'react'
 import Image, {type StaticImageData} from 'next/image'
 import {usePathname, useSearchParams} from 'next/navigation'
 import {Award, Building2, Download, ExternalLink, ThumbsUp, TrendingUp, type LucideIcon} from 'lucide-react'
@@ -52,7 +52,7 @@ import {
 } from '@/content/service/k-bigx-innovation-report'
 import {toCriRatingData} from '@/content/service/cri-grades'
 import {cn} from '@/lib/utils'
-import {Card, SectionTitle, StatBox} from '@/components/custom/innovation-growth-report-parts'
+import {Card, SectionTitle, StatBox, WithUnit} from '@/components/custom/innovation-growth-report-parts'
 import {InnovationGrowthReportCompany} from '@/components/custom/innovation-growth-report-company'
 import {InnovationGrowthReportTech} from '@/components/custom/innovation-growth-report-tech'
 import {InnovationGrowthReportActivity} from '@/components/custom/innovation-growth-report-activity'
@@ -215,6 +215,22 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
     const tabParam = searchParams.get(INNOVATION_REPORT_TAB_QUERY)
     const activeTab: InnovationReportSectionId =
         tabParam && isReportTab(tabParam) ? tabParam : INNOVATION_REPORT_SECTIONS[0].id
+    // 차트 등장 움직임 — 처음 보는 탭에서만 움직이고, 이미 본 탭에 다시 들어가면(탭 · 뒤로 가기) 움직임 없이 바로 그린다.
+    // 정보를 다시 보려고 탭을 자주 오가므로 같은 움직임을 반복하지 않는다. 모드는 탭에 들어갈 때 한 번 정하고 머무는 동안 그대로다
+    // (머무는 중 바뀌면 아직 화면 밖이던 차트가 숨은 채 남는다). 새로고침하면 다시 처음 보는 것으로 친다.
+    const [chartVisit, setChartVisit] = useState<{tab: InnovationReportSectionId; isRevisit: boolean; seen: string[]}>({
+        tab: activeTab,
+        isRevisit: false,
+        seen: [activeTab],
+    })
+    if (chartVisit.tab !== activeTab) {
+        setChartVisit({
+            tab: activeTab,
+            isRevisit: chartVisit.seen.includes(activeTab),
+            seen: chartVisit.seen.includes(activeTab) ? chartVisit.seen : [...chartVisit.seen, activeTab],
+        })
+    }
+    const chartRevealMode = chartVisit.tab === activeTab && chartVisit.isRevisit ? 'off' : 'reveal'
     // 진단브리핑만 반응형이고, 나머지 탭은 PC 화면만 그린다(문서 최소 폭 — 아래 min-w-content).
     const isPcOnlyTab = activeTab !== INNOVATION_REPORT_SECTIONS[0].id
     // 혁신성장역량지수 게이지 색 · 상태 이름 · 요약 문장은 점수 하나로 정한다(Tech-Index 탭과 같은 점수 구간).
@@ -249,8 +265,8 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
                 isPcOnlyTab && 'min-w-content',
             )}
         >
-            {/* 보고서 안 차트는 카드가 화면에 들어올 때 하나씩 움직인다(custom/chart-reveal.tsx). */}
-            <ChartRevealProvider mode="reveal">
+            {/* 보고서 안 차트는 화면에 절반 이상 보일 때 움직인다(custom/chart-reveal.tsx) — 다시 들어간 탭은 움직이지 않는다. */}
+            <ChartRevealProvider mode={chartRevealMode} scope={activeTab}>
                 <Tabs value={activeTab} onValueChange={selectTab} className="gap-0 print:block">
                     {/* 머리 + 구성 항목 탭 줄을 한 덩이로 묶어 PC(768 이상)에서 스크롤해도 화면 위에 붙는다(sticky).
                     인쇄에서는 붙이지 않는다. 겹치는 차트보다 위에 오도록 z-sticky 토큰을 쓴다. */}
@@ -630,19 +646,15 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
                                                 </div>
                                             </Card>
                                         </div>
-                                        <Card title="최근 3개년 재무 현황" className="gap-4">
+                                        <Card title="최근 3개년 재무 현황" className="gap-0">
                                             {/* 표 : 그래프 ≈ 1 : 2. lg(1024) 부터 나란히, 그 아래는 표 위 · 그래프 아래로 쌓인다. */}
                                             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,359fr)_minmax(0,767fr)]">
-                                                {/* 단위는 카드 제목 줄이 아니라 표 바로 위 오른쪽에 둔다. */}
-                                                <div className="flex min-w-0 flex-col gap-1">
-                                                    <p className="typo-body-l-regular text-foreground-subtle text-end">
-                                                        단위: 백만원
-                                                    </p>
+                                                <WithUnit unit="단위: 백만원">
                                                     <StatementTable
                                                         years={report.creditFinance.years}
                                                         statements={report.creditFinance.statements}
                                                     />
-                                                </div>
+                                                </WithUnit>
                                                 <GroupedColumnChart
                                                     data={report.creditFinance.statements.map((row) => ({
                                                         id: row.label,
@@ -676,12 +688,8 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
                                         <SectionTitle id="ig-report-activity" title="활동성 정보" />
                                         {/* 선 카드 : 막대 카드 ≈ 2 : 1. lg(1024) 부터 나란히, 그 아래는 위아래로 쌓인다. */}
                                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,792fr)_minmax(0,384fr)]">
-                                            {/* 활동성 카드 둘은 단위를 제목 줄이 아니라 그래프 바로 위 오른쪽에 둔다. */}
-                                            <Card title="분기별 종업원수" className="gap-4">
-                                                <div className="flex min-w-0 flex-col gap-1">
-                                                    <p className="typo-body-l-regular text-foreground-subtle text-end">
-                                                        단위: 명
-                                                    </p>
+                                            <Card title="분기별 종업원수" className="gap-0">
+                                                <WithUnit unit="단위: 명">
                                                     <LineChart
                                                         data={report.activity.employees.map((item) => ({
                                                             id: item.label,
@@ -703,13 +711,10 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
                                                         showTooltip={false}
                                                         ariaLabel="분기별 종업원수 추이"
                                                     />
-                                                </div>
+                                                </WithUnit>
                                             </Card>
-                                            <Card title="인당 매출액" className="gap-4">
-                                                <div className="flex min-w-0 flex-col gap-1">
-                                                    <p className="typo-body-l-regular text-foreground-subtle text-end">
-                                                        단위: 천원
-                                                    </p>
+                                            <Card title="인당 매출액" className="gap-0">
+                                                <WithUnit unit="단위: 천원">
                                                     <ColumnChart
                                                         data={report.activity.salesPerEmployee.map((item) => ({
                                                             id: item.label,
@@ -723,7 +728,7 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
                                                         showTooltip={false}
                                                         ariaLabel="연도별 인당 매출액"
                                                     />
-                                                </div>
+                                                </WithUnit>
                                             </Card>
                                         </div>
                                     </section>
@@ -871,12 +876,14 @@ const CompanyTabSkeleton = () => (
         <section aria-labelledby="ig-company-skeleton-management" className="flex flex-col gap-4">
             <SectionTitle id="ig-company-skeleton-management" title="경영진 및 주주현황" />
             <div className="grid grid-cols-2 gap-6">
-                {['경영진 현황', '주주 현황'].map((title, index) => (
-                    <div key={title} className="flex flex-col gap-2">
-                        <h4 className="typo-body-xl-bold text-foreground">{title}</h4>
-                        <ReportTableSkeleton columns={index === 0 ? 3 : 4} rows={4} />
-                    </div>
-                ))}
+                <Card title="경영진 현황" className="gap-4">
+                    <ReportTableSkeleton columns={3} rows={4} />
+                </Card>
+                <Card title="주주 현황" className="gap-0">
+                    <SkeletonWithUnit>
+                        <ReportTableSkeleton columns={4} rows={4} />
+                    </SkeletonWithUnit>
+                </Card>
             </div>
         </section>
         <section aria-labelledby="ig-company-skeleton-affiliates" className="flex flex-col gap-4">
@@ -897,21 +904,37 @@ const CompanyTabSkeleton = () => (
         <section aria-labelledby="ig-company-skeleton-finance" className="flex flex-col gap-4">
             <SectionTitle id="ig-company-skeleton-finance" title="재무현황" />
             <div className="grid grid-cols-2 gap-6">
-                <Card title="재무상태">
-                    <ReportTableSkeleton columns={4} rows={3} />
-                    <ChartSkeleton type="overlay-column" label="재무상태를 불러오는 중입니다." />
+                <Card title="재무상태" className="gap-0">
+                    <div className="flex min-w-0 flex-col gap-6">
+                        <SkeletonWithUnit>
+                            <ReportTableSkeleton columns={4} rows={3} />
+                        </SkeletonWithUnit>
+                        <ChartSkeleton type="overlay-column" label="재무상태를 불러오는 중입니다." />
+                    </div>
                 </Card>
-                <Card title="손익현황">
-                    <ReportTableSkeleton columns={4} rows={3} />
-                    <ChartSkeleton type="overlay-column" label="손익현황을 불러오는 중입니다." />
+                <Card title="손익현황" className="gap-0">
+                    <div className="flex min-w-0 flex-col gap-6">
+                        <SkeletonWithUnit>
+                            <ReportTableSkeleton columns={4} rows={3} />
+                        </SkeletonWithUnit>
+                        <ChartSkeleton type="overlay-column" label="손익현황을 불러오는 중입니다." />
+                    </div>
                 </Card>
-                <Card title="주요재무비율" aside="단위: %">
-                    <ReportTableSkeleton columns={4} rows={5} />
-                    <ChartSkeleton type="columns-line" label="주요재무비율을 불러오는 중입니다." />
+                <Card title="주요재무비율" className="gap-0">
+                    <div className="flex min-w-0 flex-col gap-6">
+                        <SkeletonWithUnit>
+                            <ReportTableSkeleton columns={4} rows={5} />
+                        </SkeletonWithUnit>
+                        <ChartSkeleton type="columns-line" label="주요재무비율을 불러오는 중입니다." />
+                    </div>
                 </Card>
-                <Card title="현금흐름">
-                    <ReportTableSkeleton columns={4} rows={5} />
-                    <ChartSkeleton type="columns-line" label="현금흐름을 불러오는 중입니다." />
+                <Card title="현금흐름" className="gap-0">
+                    <div className="flex min-w-0 flex-col gap-6">
+                        <SkeletonWithUnit>
+                            <ReportTableSkeleton columns={4} rows={5} />
+                        </SkeletonWithUnit>
+                        <ChartSkeleton type="columns-line" label="현금흐름을 불러오는 중입니다." />
+                    </div>
                 </Card>
             </div>
         </section>
@@ -919,13 +942,11 @@ const CompanyTabSkeleton = () => (
             <SectionTitle id="ig-company-skeleton-trade" title="거래처현황" />
             <div className="flex flex-col gap-6">
                 {['매출처', '매입처'].map((title) => (
-                    <div key={title} className="flex flex-col gap-2">
-                        <div className="flex items-baseline justify-between gap-4">
-                            <h4 className="typo-body-xl-bold text-foreground">{title}</h4>
-                            <p className="typo-body-l-regular text-foreground-subtle">단위: %, 백만원</p>
-                        </div>
-                        <ReportTableSkeleton columns={6} rows={5} headRows={2} isBadgeRow />
-                    </div>
+                    <Card key={title} title={title} className="gap-0">
+                        <SkeletonWithUnit>
+                            <ReportTableSkeleton columns={6} rows={5} headRows={2} isBadgeRow />
+                        </SkeletonWithUnit>
+                    </Card>
                 ))}
             </div>
         </section>
@@ -952,8 +973,10 @@ const TechTabSkeleton = () => (
                         <ChartSkeleton type="donut" label="소분류 기준 보유기술을 불러오는 중입니다." />
                     </div>
                 </Card>
-                <Card title="특허 보유현황" aside="최대 10개 · 출원일 최근순">
-                    <ReportTableSkeleton columns={6} rows={10} isBadgeRow />
+                <Card title="특허 보유현황" className="gap-0">
+                    <SkeletonWithUnit>
+                        <ReportTableSkeleton columns={6} rows={10} isBadgeRow />
+                    </SkeletonWithUnit>
                 </Card>
             </div>
         </section>
@@ -985,8 +1008,10 @@ const TechTabSkeleton = () => (
         <section aria-labelledby="ig-tech-skeleton-competitors" className="flex flex-col gap-4">
             <SectionTitle id="ig-tech-skeleton-competitors" title="맞춤형 기술정보-경쟁기업 및 우수기업" />
             <div className="flex flex-col gap-6">
-                <Card title="경쟁기업 사업실적">
-                    <ComboBarLineChartSkeleton />
+                <Card title="경쟁기업 사업실적 (매출액, 영업이익률)" className="gap-0">
+                    <SkeletonWithUnit>
+                        <ComboBarLineChartSkeleton />
+                    </SkeletonWithUnit>
                 </Card>
                 <Card title="성장률 우수기업">
                     <DivergingRankChartSkeleton label="성장률 우수기업을 불러오는 중입니다." />
@@ -1048,11 +1073,15 @@ const ActivityTabSkeleton = () => (
                     </SkeletonWithUnit>
                 </Card>
                 <div className="grid grid-cols-[minmax(0,792fr)_minmax(0,384fr)] gap-6">
-                    <Card title="분기별 종업원수" aside="단위: 명">
-                        <ChartSkeleton type="cells-line" label="분기별 종업원수를 불러오는 중입니다." />
+                    <Card title="분기별 종업원수" className="gap-0">
+                        <SkeletonWithUnit>
+                            <ChartSkeleton type="cells-line" label="분기별 종업원수를 불러오는 중입니다." />
+                        </SkeletonWithUnit>
                     </Card>
-                    <Card title="인당 매출액" aside="단위: 천원">
-                        <ChartSkeleton type="cells-column" label="인당 매출액을 불러오는 중입니다." />
+                    <Card title="인당 매출액" className="gap-0">
+                        <SkeletonWithUnit>
+                            <ChartSkeleton type="cells-column" label="인당 매출액을 불러오는 중입니다." />
+                        </SkeletonWithUnit>
                     </Card>
                 </div>
             </div>
@@ -1061,7 +1090,7 @@ const ActivityTabSkeleton = () => (
             <SectionTitle id="ig-activity-skeleton-energy" title="에너지 사용 현황" />
             <div className="flex flex-col gap-6">
                 {['전기 사용량', '가스 사용량'].map((title) => (
-                    <Card key={title} title={title} className="gap-4">
+                    <Card key={title} title={title} className="gap-0">
                         <div className="grid grid-cols-2 items-center gap-6">
                             <SkeletonWithUnit>
                                 <ReportTableSkeleton columns={4} rows={3} />
@@ -1231,7 +1260,7 @@ const CreditTabSkeleton = () => (
             <SectionTitle id="ig-credit-skeleton-ratios" title="재무비율진단" />
             <div className="flex flex-col gap-6">
                 {SKELETON_RATIO_GROUPS.map((title) => (
-                    <Card key={title} title={title} className="gap-4">
+                    <Card key={title} title={title} className="gap-0">
                         <div className="grid grid-cols-2 gap-6">
                             <SkeletonWithUnit>
                                 <ReportTableSkeleton columns={5} rows={4} />
@@ -1248,12 +1277,12 @@ const CreditTabSkeleton = () => (
         <section aria-labelledby="ig-credit-skeleton-borrowing" className="flex flex-col gap-4">
             <SectionTitle id="ig-credit-skeleton-borrowing" title="차입금 분석" />
             <div className="flex flex-col gap-6">
-                <Card title="차입금 변동률" className="gap-4">
+                <Card title="차입금 변동률" className="gap-0">
                     <SkeletonWithUnit>
                         <ChartSkeleton type="cells-line" label="차입금 변동률을 불러오는 중입니다." />
                     </SkeletonWithUnit>
                 </Card>
-                <Card title="차입금 현황" className="gap-4">
+                <Card title="차입금 현황" className="gap-0">
                     <SkeletonWithUnit>
                         <ReportTableSkeleton columns={8} rows={SKELETON_BORROWING_ROWS} headRows={2} />
                     </SkeletonWithUnit>
@@ -1266,8 +1295,8 @@ const CreditTabSkeleton = () => (
         <section aria-labelledby="ig-credit-skeleton-borrowing-status" className="flex flex-col gap-4">
             <SectionTitle id="ig-credit-skeleton-borrowing-status" title="차입금 현황" />
             <div className="flex flex-col gap-6">
-                <Card title="기관별 비중" className="gap-4">
-                    <div className="grid grid-cols-2 items-center gap-12">
+                <Card title="기관별 비중" className="gap-0">
+                    <div className="grid grid-cols-2 items-center gap-6">
                         <SkeletonWithUnit>
                             <ReportTableSkeleton columns={4} rows={5} />
                         </SkeletonWithUnit>
@@ -1275,16 +1304,18 @@ const CreditTabSkeleton = () => (
                     </div>
                 </Card>
                 <div className="grid grid-cols-2 gap-6">
-                    <Card title="신용/담보 비중" className="gap-4">
-                        <SkeletonWithUnit>
-                            <div className="flex flex-col gap-2">
-                                <ChartSkeleton type="columns-line" label="신용/담보 비중을 불러오는 중입니다." />
-                                <SkeletonLegend count={2} className="justify-center" />
-                            </div>
-                        </SkeletonWithUnit>
-                        <SkeletonBar className="h-4 w-full rounded-full" />
+                    <Card title="신용/담보 비중" className="gap-0">
+                        <div className="flex min-w-0 flex-col gap-6">
+                            <SkeletonWithUnit>
+                                <div className="flex flex-col gap-2">
+                                    <ChartSkeleton type="columns-line" label="신용/담보 비중을 불러오는 중입니다." />
+                                    <SkeletonLegend count={2} className="justify-center" />
+                                </div>
+                            </SkeletonWithUnit>
+                            <SkeletonBar className="h-4 w-full rounded-full" />
+                        </div>
                     </Card>
-                    <Card title="담보 현황" className="gap-4">
+                    <Card title="담보 현황" className="gap-0">
                         <SkeletonWithUnit>
                             <ChartSkeleton type="donut" label="담보 현황을 불러오는 중입니다." />
                         </SkeletonWithUnit>
@@ -1481,7 +1512,7 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
                                     <ChartSkeleton type="circle-radar" label="부문별 비교를 불러오는 중입니다." />
                                 </Card>
                             </div>
-                            <Card title="최근 3개년 재무 현황" className="gap-4">
+                            <Card title="최근 3개년 재무 현황" className="gap-0">
                                 <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,359fr)_minmax(0,767fr)]">
                                     <div className="flex min-w-0 flex-col gap-1">
                                         <p className="typo-body-l-regular text-foreground-subtle text-end">
@@ -1500,13 +1531,13 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
                         <section aria-label="활동성 정보" className="flex flex-col gap-4">
                             <SectionTitle title="활동성 정보" />
                             <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,792fr)_minmax(0,384fr)]">
-                                <Card title="분기별 종업원수" className="gap-4">
+                                <Card title="분기별 종업원수" className="gap-0">
                                     <div className="flex min-w-0 flex-col gap-1">
                                         <p className="typo-body-l-regular text-foreground-subtle text-end">단위: 명</p>
                                         <ChartSkeleton type="cells-line" label="분기별 종업원수를 불러오는 중입니다." />
                                     </div>
                                 </Card>
-                                <Card title="인당 매출액" className="gap-4">
+                                <Card title="인당 매출액" className="gap-0">
                                     <div className="flex min-w-0 flex-col gap-1">
                                         <p className="typo-body-l-regular text-foreground-subtle text-end">
                                             단위: 천원
