@@ -12,8 +12,10 @@ import {cn} from '@/lib/utils'
 //   현재 등급 칸의 색. 가운데 글자: 등급 40 Bold → 설명 16 Bold(예: 현재 등급).
 //   → 16 → 등급 칸 줄: 높이 32 · 모서리 8 · 간격 8 · 14 Bold, 칸 폭은 똑같이 나눈다.
 //   → 8 → 척도 줄(높이 26 · 12 Regular): 첫 칸 아래 낮은 쪽 이름 · 가운데 칸들 아래 옅은 띠(accent-subtle)에 척도 이름 · 끝 칸 아래 높은 쪽 이름.
-// 칸 색은 데이터가 넘긴다(테마와 무관한 고정 색). 칸 글자는 흰색이 기본이고, 밝은 칸은 isLightColor 로 짙은 글자
-// (grade-scale-chip-foreground — 다크에서도 짙은 색 고정)를 쓴다. text-foreground 는 다크에서 밝아져 밝은 칸 위에서 묻힌다.
+// 칸 색 · 칸 글자 색은 데이터가 넘긴다(color · foreground). 다크에서 칸 색이 바뀌면 글자 색도 함께 바뀌어야 하므로
+// 둘 다 토큰으로 넘긴다(보고서 현금흐름등급 — cash-flow-cr-<n> · cash-flow-cr-<n>-foreground).
+// foreground 를 안 주면 흰 글자, isLightColor 면 짙은 글자(grade-scale-chip-foreground)다.
+// 원호 트랙은 grade-scale-track — 다크에서 어두운 칸 색(CR-5 등)이 트랙에 묻히지 않게 다른 게이지보다 밝다.
 // 현재 등급은 role="img" 이름과 숨김 문단으로 읽는다 — 칸 색만으로 구분하지 않는다[5.3.1].
 // 등급 칸 줄은 data-chart-reveal 이라 보고서에서 카드가 보이기 전에는 숨는다(chart-reveal.tsx).
 //
@@ -24,7 +26,9 @@ type GradeScaleItem = {
     label: string
     /** 칸 · 원호 색(토큰 변수). */
     color: string
-    /** 밝은 칸이면 짙은 글자로 적는다(예: 주황). */
+    /** 칸 글자 색(토큰 변수). 주면 isLightColor 보다 우선한다 — 테마마다 칸 색이 바뀌면 이것으로 글자 색도 바꾼다. */
+    foreground?: string
+    /** 밝은 칸이면 짙은 글자로 적는다(예: 주황). foreground 가 없을 때만 쓴다. */
     isLightColor?: boolean
 }
 
@@ -73,6 +77,7 @@ const GradeScaleGauge = ({
                 value={percentage}
                 color={currentGrade?.color ?? FALLBACK_COLOR}
                 size="md"
+                trackColor="var(--ds-grade-scale-track)"
                 ariaLabel={ariaLabel}
                 // 설명이 없으면 아래 여백을 12 → 32(pb-8)로 늘려, 등급 글자가 설명이 있을 때와 비슷한 높이에 오게 한다.
                 overlayClassName={cn('px-10', !description && 'pb-8')}
@@ -91,10 +96,15 @@ const GradeScaleGauge = ({
                                 key={grade.label}
                                 className={cn(
                                     'typo-body-l-bold flex h-8 min-w-0 items-center justify-center rounded-sm px-1',
-                                    grade.isLightColor ? 'text-grade-scale-chip-foreground' : 'text-white',
+                                    !grade.foreground &&
+                                        (grade.isLightColor ? 'text-grade-scale-chip-foreground' : 'text-white'),
                                     animate && 'motion-safe:animate-chart-pop',
                                 )}
-                                style={{backgroundColor: grade.color, animationDelay: `${index * POP_STAGGER_MS}ms`}}
+                                style={{
+                                    backgroundColor: grade.color,
+                                    color: grade.foreground,
+                                    animationDelay: `${index * POP_STAGGER_MS}ms`,
+                                }}
                             >
                                 <span className="truncate">{grade.label}</span>
                             </li>
