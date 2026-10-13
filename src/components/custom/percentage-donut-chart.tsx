@@ -110,6 +110,8 @@ const PercentageDonutChart = ({
                                 dataKey="percentage"
                                 nameKey="id"
                                 isAnimationActive={animate}
+                                // recharts Pie 는 기본으로 0.4초 기다렸다 그린다(다른 차트는 0) — 나타난 뒤 빈 원으로 머물지 않게 바로 시작한다.
+                                animationBegin={0}
                                 animationDuration={CHART_ANIMATION_MS}
                                 startAngle={START_ANGLE}
                                 endAngle={END_ANGLE}
