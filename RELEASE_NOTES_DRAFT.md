@@ -34,7 +34,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 
 ## [Diff 확인]
 
-### [컴포넌트] K-BIGx 보고서 — 카드 제목 · 단위 위치 (모든 탭)
+### [컴포넌트] K-BIGx 보고서 — 카드 단위 텍스트를 제목 옆에서 제목 아래 줄로
 
 - 대상: src/components/custom/innovation-growth-report-parts.tsx
     - src/components/custom/innovation-growth-report-company.tsx
@@ -42,31 +42,35 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/components/custom/innovation-growth-report-activity.tsx
     - src/components/custom/innovation-growth-report-document.tsx
 - 변경:
-    - 단위 위치: 제목 줄 오른쪽 → 제목 바로 아래 줄
-    - 적용 방법: Card 에 className="gap-0" · 표 · 그래프를 WithUnit 으로 감쌈(규칙 설명은 parts.tsx 의 WithUnit 주석)
+    - AS-IS: 단위 텍스트(예: 단위: 백만원)가 카드 제목과 같은 줄 오른쪽 끝(활동성정보) · 다른 탭은 제목에서 16px 떨어진 줄
+    - TO-BE: 모든 카드에서 단위 텍스트가 제목 바로 아래 줄 오른쪽(간격 0) — 그 아래 4px 뒤에 표 · 그래프
     - 적용 카드: 진단브리핑 3 · 기업현황 7 · 기술혁신정보 2 · 활동성정보 4
-    - 경영진 현황: 최대 10건까지만 표시(주주 · 관계기업과 같음)
-    - 탭 다시 열기: 이미 본 탭은 차트 애니메이션 없이 바로 표시
-    - Card revealGroup prop 추가: 같은 값을 준 카드끼리 차트가 동시에 움직임
-    - 로딩 스켈레톤: 실제 카드와 같은 배치
-- 결과: 모든 탭의 단위가 같은 자리(제목 아래)에 보임
+    - 적용 방법: Card 에 className="gap-0" · 표 · 그래프를 WithUnit 으로 감쌈(규칙 설명은 parts.tsx 의 WithUnit 주석)
+    - 함께 바뀐 것: 경영진 현황 최대 10건 표시 · 이미 본 탭은 차트 애니메이션 없이 바로 표시 · Card revealGroup prop 추가(같은 값끼리 차트 동시 등장) · 로딩 스켈레톤도 같은 배치
+- 결과: 모든 탭에서 단위 텍스트가 제목 아래 줄에 보임
 - 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
     - [기관 K-BIGx 보고서 결과](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f4fc70022297f80ecc4032b2b1c9077472b54ef1)
 
-### [컴포넌트] K-BIGx 보고서 — 신용/재무정보 탭
+### [컴포넌트] K-BIGx 보고서 — 신용/재무정보 탭: 단위 위치 · 등급 설명 문구 · 다크 모드 색
 
 - 대상: src/components/custom/innovation-growth-report-credit.tsx
 - 변경:
-    - 단위 위치: 제목 줄 오른쪽 → 제목 바로 아래 줄(재무비율진단 4 · 차입금 2 · 차입금 현황 3)
-    - 기관별 비중: 표 ↔ 도넛 간격 48 → 24
-    - 기업신용등급 설명 상자: 고정 문구 → 지금 등급의 정의(cri-grades.ts 에서 찾음)
-    - 현금흐름등급 색: 칸 · 원호 · 칸 글자 색을 토큰으로(cash-flow-cr-<n>) — 다크 모드 대응
-    - 신용/담보 비중 · 담보 현황: 두 차트가 동시에 움직임
-    - 신용/담보 비중: 그래프 ↔ 비율 막대 간격 24
+    - 단위 텍스트 위치
+        - AS-IS: 제목에서 16px 떨어진 줄에 단위(예: 단위: %)
+        - TO-BE: 제목 바로 아래 줄에 단위 — 첫 번째 카드와 같은 규칙(재무비율진단 4 · 차입금 2 · 차입금 현황 3)
+    - 기업신용등급 아래 설명 상자
+        - AS-IS: 목업에 적어 둔 고정 문구(ratingSummary)를 그대로 표시 — 등급이 바뀌어도 문구는 그대로
+        - TO-BE: 지금 등급 코드로 등급 정의표(cri-grades.ts)를 찾아 그 정의를 표시 — 표에 없는 코드면 상자를 숨김
+    - 현금흐름등급 게이지 색
+        - AS-IS: 칸 · 원호 색이 고정 색(--raw-*)이라 다크 모드에서도 라이트 색 그대로
+        - TO-BE: cash-flow-cr-1~~6 토큰(칸 · 원호) + cash-flow-cr-1~~6-foreground(칸 글자) — 다크 모드에서 다크 전용 색
+    - 비공개 자리 표시 도넛 색: 고정 색(--raw-*) → donut-<n> 토큰(다크 모드 대응)
+    - 간격: 기관별 비중 표 ↔ 도넛 48 → 24px · 신용/담보 비중 그래프 ↔ 비율 막대 16 → 24px
+    - 차트 애니메이션: 신용/담보 비중 · 담보 현황(같은 줄 두 카드)이 따로 → 동시에 움직임
 - 결과:
-    - 신용등급이 바뀌면 설명 상자 문구도 같이 바뀜(연동 시 등급 코드만 넘김)
-    - 정의표에 없는 등급 코드면 설명 상자는 숨김
+    - 연동 시 등급 코드만 넘기면 설명 상자 문구가 등급에 맞게 자동으로 바뀜
+    - 다크 모드에서 현금흐름등급 게이지가 카드 바탕 위에서도 또렷이 보임
 - 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
     - [기관 K-BIGx 보고서 결과](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/69d0ca8ce7ec314b92c477e8feb5dc0711d26477)
@@ -78,7 +82,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 애니메이션 순서: 카드 한 장씩 차례로 → 같은 줄 카드가 동시에
     - 4대 혁신역량 점수: 4장이 동시에 움직임
     - 기업 유형별 4대 혁신역량 비교 · 세부지표별 상대비교분석: 2장씩(한 줄) 동시에 움직임
-- 결과: 줄과 줄 사이는 스크롤해 보이는 순서대로 이어짐 · 카드 수가 늘어도 2장씩 자동으로 묶임(열 수는 GRID_COLUMNS)
+- 결과: 카드 1장씩 차례로 움직이던 차트 애니메이션이, 같은 줄에 있는 카드끼리 동시에 움직임
 - 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/99c835dd15a5e57750e1b383b52778ea686462be)
 
@@ -94,40 +98,37 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/531ebaf9da37de92ba41efddd67c4deed5f70e86)
 
-### [컴포넌트] 도넛 조각 색 — 다크
+### [컴포넌트] 도넛 차트 — 다크 모드 색 추가
 
 - 대상: src/components/custom/percentage-donut-colors.ts
-- 변경: 고정 색(--raw-*) → donut-1 ~ 8 토큰. 항목 수별 단계는 8색의 부분집합
-- 결과:
-    - 라이트: 변화 없음
-    - 다크: navy · blue 의 밝은 단계로 바뀌어 어두운 카드 위에서 조각이 구분됨
-    - 색을 직접 적어야 하면 var(--ds-donut-<n>) 을 씀
+- 변경:
+    - AS-IS: 조각 색이 고정 색이라 다크 모드에서도 라이트 색 그대로 → 어두운 카드 위에서 조각이 잘 구분되지 않음
+    - TO-BE: 다크 모드 전용 색 추가(donut-1 ~ 8 토큰) — 라이트 색은 그대로
+- 결과: 다크 모드에서 도넛 조각이 밝은 색으로 바뀌어 또렷이 구분됨 · 색을 직접 적어야 하면 var(--ds-donut-<n>) 사용
 - 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/71b52db7ffdb8d9082127ae32c2d6268d68fb606)
 
-### [컴포넌트] 기업신용등급 게이지 — 등급과 관계없이 한 가지 색
+### [컴포넌트] 기업신용등급 게이지 — 등급별 색 → 한 가지 색
 
 - 대상: src/components/custom/semicircle-rating-gauge.tsx
 - 변경:
-    - 원호 색: 등급마다 다른 6가지 색(CR-1 ~ CR-6) → 우수 색 하나(파랑 → 하늘색 그라데이션)
-    - 라이트 · 다크: 같은 색(gauge-excellent 토큰)
-    - tone prop 삭제: 넘기던 곳이 있으면 타입 오류 — 지우면 됨
-- 결과: 등급은 원호 채움 길이와 가운데 등급 글자로 구분
+    - AS-IS: 등급마다 게이지 색이 달랐음(6가지 색)
+    - TO-BE: 등급과 관계없이 파랑 그라데이션 한 가지 색(라이트 · 다크 동일)
+    - tone prop 삭제 — 넘기던 곳이 있으면 지우면 됨
+- 결과: 등급 차이는 색이 아니라 게이지가 채워진 길이와 가운데 등급 글자로 보여 줌
 - 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b8a10c7c405a214e3ddadc867f6b2883c5eae0fc)
 
-### [컴포넌트] 현금흐름등급 게이지 — 다크 모드 색
+### [컴포넌트] 현금흐름등급 게이지 차트 — 다크 모드 색 추가
 
 - 대상: src/components/custom/grade-scale-gauge.tsx
     - src/components/custom/arc-gauge.tsx
 - 변경:
-    - 다크 등급 칸 · 원호 색: 라이트와 같은 색 → 다크 전용 밝은 색(CR-6 회색 · CR-4 빨강 · CR-3 주황 · CR-2 초록 · CR-1 파랑)
-    - 다크 칸 글자: 칸 색에 맞춰 짙은 글자(CR-5 만 밝은 글자)
-    - 원호 빈 트랙: 다른 게이지보다 밝게 — 어두운 CR-5 채움이 트랙에 묻히지 않게
-    - 새 prop: 등급 칸 foreground(칸 글자 색 · isLightColor 보다 우선) · ArcGauge trackColor(트랙 색 · 안 주면 기존 그대로)
-- 결과:
-    - 라이트: 변화 없음
-    - 다른 원호 게이지(점수 · 기업신용등급): 변화 없음
+    - AS-IS: 다크 모드에서도 라이트 색 그대로 → 어두운 카드 위에서 등급 칸 · 게이지가 잘 안 보임
+    - TO-BE: 다크 모드 전용 색 추가 — 등급 칸 · 게이지는 밝은 색, 칸 글자는 칸 색에 맞춰 짙은 색
+    - 게이지 빈 부분(트랙)도 다크에서 조금 밝게 — 어두운 등급(CR-5) 색이 묻히지 않게
+    - 새 prop(선택): 등급 칸 foreground(칸 글자 색) · ArcGauge trackColor(빈 부분 색) — 안 넘기면 기존 그대로
+- 결과: 다크 모드에서 현금흐름등급 칸과 게이지가 또렷이 보임 · 라이트 모드와 다른 게이지는 변화 없음
 - 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e5f2d70258632fa3c46aa2e03989fa714ecc6195)
 
@@ -144,57 +145,49 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 
 - 대상: src/content/service/k-bigx-innovation-report.ts
 - 변경:
-    - 주주 현황 목업: 10건 → 4건 — 보고용 화면이 깔끔하게 보이도록 데이터만 줄임
-    - 경영진 현황 목업: 4건 그대로 · 최대 10건 연동 주석 추가
-    - 기업신용등급 목업: AA0 → BBB0(이전평가이력 마지막 등급도 BBB0)
-    - 기업신용등급 설명 상자의 고정 문구(ratingSummary) 삭제 — 등급 정의로 대체(신용/재무정보 탭 카드)
-    - 3색 도넛(기관별 비중 · 담보 현황) 색: donut 토큰으로
-- 결과:
-    - 화면이 그리는 최대 건수는 그대로: 경영진 · 주주 · 관계기업 최대 10건(COMPANY_LIST_LIMIT)
-    - 연동 시 목록은 자르지 않고 그대로 보냄 · ratingSummary 는 보내지 않음
-    - 이전평가이력의 마지막 등급 = 현재 등급
+    - 주주 현황: 목업 10건 → 4건 — 보고용 화면이 깔끔해 보이도록 목업만 줄임
+    - 기업신용등급: 목업 등급 AA0 → BBB0 — 보고용 화면이 깔끔해 보이도록 목업만 바꿈
+    - 기업신용등급 설명 문구(ratingSummary) 삭제 — 이제 등급 정의표에서 자동으로 가져옴
+    - 기관별 비중 · 담보 현황 도넛 색: 다크 모드 색이 있는 donut 토큰으로
+- 결과: 화면에 보이는 최대 건수는 그대로(경영진 · 주주 · 관계기업 최대 10건) · 연동 시 목록은 자르지 않고 그대로 보내면 됨
 - 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c86a0bb696fa20aeffbf1581ef82da46ce662c1b)
 
-### [컴포넌트] 가격정책 — 이용권 카드 hover
+### [컴포넌트] 가격정책 — 스탠다드 상시 강조 → 카드 hover 강조
 
 - 대상: src/components/custom/pricing-policy.tsx
     - src/content/service/pricing.ts
 - 변경:
-    - 스탠다드 상시 강조 삭제(isRecommended 삭제)
-    - 네 카드 모두 hover · 카드 안 버튼 포커스 때 옅은 파란 면 · 파란 테두리 · 채운 [구매하기]
+    - AS-IS: 스탠다드 카드만 항상 강조(파란 테두리 · 채운 [구매하기])
+    - TO-BE: 상시 강조 해제 → 네 카드 모두 마우스를 올리거나 키보드로 버튼에 포커스하면 같은 강조 스타일
+    - isRecommended(강조 표시 데이터) 삭제
 - 영향 화면: [기업 가격정책](/corp/pricing)
     - [기관 가격정책](/org/pricing)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/fad31f044c3e357d28c60584e9f79aa37666b1ac)
 
-### [컴포넌트] 이용약관 · 개인정보 처리방침 — 선택 탭에 밑줄
+### [컴포넌트] 이용약관 · 개인정보 처리방침 — 탭 모양 교체(글자색 탭 → 밑줄 탭)
 
 - 대상: src/components/custom/terms-tabs.tsx
     - src/components/custom/privacy-policy-tabs.tsx
     - src/components/composite/tabs-scroll-area.tsx
 - 변경:
-    - 1뎁스 탭 모양: 글자색만 다른 탭(text) → 선택한 탭 글자 아래 밑줄 2px(underline)
-    - 이유: 글자색 차이만으로는 어느 탭이 선택됐는지 잘 보이지 않음
-    - 쓰는 법: TabsScrollArea(또는 TabsList)의 variant="text" → variant="underline"
-    - 좌우 스크롤 가장자리 흐림: 흰색 덮개 → 글자 자체를 흐리게(마스크)
-- 결과:
-    - 선택한 탭이 밑줄로 바로 구분됨
-    - 회색 · 다크 배경 위에서도 가장자리에 흰 띠가 생기지 않음
+    - AS-IS: TabsScrollArea variant="text" — 선택한 탭이 글자색만 달라 잘 안 보임
+    - TO-BE: TabsScrollArea variant="underline" — 선택한 탭 아래에 밑줄(컴포넌트는 그대로, variant 값만 교체)
+    - 탭이 많아 좌우로 넘길 때 가장자리 흐림 효과: 흰색 덮개 → 탭 글자 자체를 흐리게
+- 결과: 선택한 탭이 바로 구분됨
 - 영향 화면: [기업 이용약관](/corp/terms)
     - [기업 개인정보 처리방침](/corp/privacy-policy)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/5e664f0bacffb9a0370349699992036ecc846d96)
 
-### [컴포넌트] 평가결과 조회 — 선택 탭에 밑줄
+### [컴포넌트] 평가결과 조회 — 탭 컴포넌트 교체(TextTabs → Tabs 밑줄 탭)
 
 - 대상: src/components/custom/evaluation-result-list.tsx
     - src/components/custom/org-evaluation-history-list.tsx
 - 변경:
-    - 모형 탭 모양: 글자색만 다른 탭(TextTabs) → 선택한 탭 글자 아래 밑줄 2px(Tabs underline)
-    - 이유: 글자색 차이만으로는 어느 탭이 선택됐는지 잘 보이지 않음
-    - 쓰는 법: TextTabs 대신 Tabs + TabsScrollArea variant="underline" · 목록은 지금 고른 값의 TabsContent 하나로 감쌈
-- 결과:
-    - 선택한 탭이 밑줄로 바로 구분됨(이용약관 · 개인정보 처리방침과 같은 탭)
-    - 좁은 화면에서는 탭이 줄바꿈 대신 좌우로 스크롤됨
+    - AS-IS: TextTabs(composite/text-tabs) — 선택한 탭이 글자색만 달라 잘 안 보임
+    - TO-BE: Tabs(ui/tabs) + TabsScrollArea variant="underline" — 선택한 탭 아래에 밑줄
+    - TextTabs 컴포넌트 자체는 그대로 남아 있음(지금은 쓰는 화면 없음)
+- 결과: 선택한 탭이 바로 구분됨 · 이용약관 · 개인정보 처리방침과 같은 탭 · 좁은 화면에서는 좌우로 넘어감
 - 영향 화면: [기업 평가결과 조회](/corp/mypage/evaluation-results)
     - [기관 평가결과 조회](/org/mypage/evaluation-history)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/0c83fdb34abf2f6277f1e711a6642fc6901ce35d)
@@ -206,22 +199,25 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/components/composite/evaluation-application-form.tsx
     - src/app/(user-type)/org/(service)/(logged-in)/batch-evaluation/evaluation-history-or-batch/bulk-data-request-form.tsx
 - 변경:
-    - 제출 확인: 제목 "제출 전 최종 확인" + 닫기(X) · 물음 "최종 제출하시겠습니까?" · 안내 문구 · [제출하기] 하나
-    - 작성 종료: 제목 "작성 종료" + 닫기(X) · 물음 "입력 화면을 나가시겠습니까?" · 안내 문구 · [계속 작성] [저장 후 나가기]
-    - 입력 폼 두 곳: 모달 이름 주석만 수정
+    - 제출 확인 모달
+        - AS-IS: 가운데 물음 "제출하시겠습니까?" + [취소] [제출] (제목 · 닫기(X) · 안내 문구 없음)
+        - TO-BE: 제목 "제출 전 최종 확인" + 닫기(X) → 물음 "최종 제출하시겠습니까?" → 안내 "입력한 내용을 최종 제출합니다. 제출 전 입력한 정보가 정확한지 다시 한번 확인해 주세요. 제출 후에는 수정이 불가합니다." → [제출하기] 하나(취소는 닫기(X) · Esc)
+    - 작성 종료 모달
+        - AS-IS: 가운데 물음 "평가 진행을 중단하시겠습니까?" + [계속작성] [저장하고 나가기] (제목 · 닫기(X) · 안내 문구 없음)
+        - TO-BE: 제목 "작성 종료" + 닫기(X) → 물음 "입력 화면을 나가시겠습니까?" → 안내 "현재까지 작성한 내용은 자동으로 저장되었습니다. 입력 화면을 나가도 나중에 이어서 작성할 수 있습니다." → [계속 작성] [저장 후 나가기]
+    - 입력 폼 두 곳(evaluation-application-form · bulk-data-request-form): 모달 이름 주석만 수정
 - 결과: props(open · onOpenChange · onSubmit · onSaveAndExit · defaultOpen)는 그대로라 쓰는 곳은 고칠 것 없음
 - 영향 화면: [최종 확인 (KTRS-FM)](/corp/technology-evaluation/ktrs-fm/final-review)
     - [작성 취소 (KTRS-FM)](/corp/technology-evaluation/ktrs-fm/checklist/cancel-confirm)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/f21461cacf6ef43650732be25f39d4ce44840e6f)
 
-### [컴포넌트] 라디오 카드 — 설명을 그림 옆에 두는 배치 추가
+### [컴포넌트] 라디오 카드 — prop 추가: descriptionPlacement(설명 위치)
 
 - 대상: src/components/composite/radio-card.tsx
-- 변경:
-    - 새 prop descriptionPlacement: below(기본) · beside
-    - below: 설명이 제목 · 그림 줄 아래 전체 폭 — 기존 화면은 그대로
-    - beside: 설명이 제목 바로 아래, 그림 왼쪽 칸 — 카드 높이가 낮아짐
-- 결과: 지금 beside 를 쓰는 화면은 평가진행방식 선택 하나 · 모바일은 두 배치 모두 세로로 쌓임
+- 변경: descriptionPlacement prop 추가 — 설명 문구 위치를 고를 수 있음
+    - "below"(기본값): 설명이 제목 · 그림 아래 — 지금까지와 같음
+    - "beside": 설명이 제목 바로 아래(그림 왼쪽) — 카드 높이가 낮아짐
+- 결과: prop 을 안 넘기면 기존과 같아 쓰는 곳은 고칠 것 없음 · 지금 "beside" 를 쓰는 화면은 평가진행방식 선택 하나
 - 영향 화면: [라디오 카드](/component-guide/radio-card)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/3ae01dfe09dfefc8e113d1e72238f02a4b5adb9b)
 
