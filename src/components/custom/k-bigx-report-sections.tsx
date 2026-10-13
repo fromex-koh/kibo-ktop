@@ -63,10 +63,10 @@ const KbigxReportIntro = ({title, homeHref, moreHref}: KbigxReportIntroProps) =>
             }
             illustration={
                 <Image
-                    src="/images/service-intro/robot-donut-chart.webp"
+                    src="/images/service-intro/ai-robot-donut-chart.webp"
                     alt=""
-                    width={1338}
-                    height={726}
+                    width={1320}
+                    height={720}
                     sizes="440px"
                     draggable={false}
                     priority
