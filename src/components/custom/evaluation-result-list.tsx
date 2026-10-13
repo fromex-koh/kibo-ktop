@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useId, useRef, useState, type FormEvent} from 'react'
+import {useEffect, useRef, useState, type FormEvent} from 'react'
 import Link from 'next/link'
 import {RotateCcw, Search} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
@@ -13,8 +13,9 @@ import {
     SearchFilterForm,
 } from '@/components/composite/search-filter-form'
 import {NewWindowLink} from '@/components/composite/new-window-link'
-import {TextTabs} from '@/components/composite/text-tabs'
+import {TabsScrollArea} from '@/components/composite/tabs-scroll-area'
 import {Button} from '@/components/ui/button'
+import {Tabs, TabsContent, TabsTrigger} from '@/components/ui/tabs'
 import {EVALUATION_REPORT_WINDOW_HEIGHT, EVALUATION_REPORT_WINDOW_WIDTH} from '@/constants/evaluation-report'
 import type {EvaluationGradeUnit, EvaluationModelTab, EvaluationResultItem} from '@/constants/evaluation-result'
 import {useIsMobile} from '@/hooks/use-mobile'
@@ -138,7 +139,6 @@ type EvaluationResultListProps = {
 const EvaluationResultList = ({items, modelTabs, defaultPeriod, pageSize = 10}: EvaluationResultListProps) => {
     const [model, setModel] = useState<string>(modelTabs[0].value)
     const [page, setPage] = useState(1)
-    const panelId = useId()
 
     // 고른 모형의 건만 남긴다 — 건수·페이지 수도 이 결과를 따른다.
     const filteredItems = items.filter((item) => item.model === model)
@@ -188,15 +188,16 @@ const EvaluationResultList = ({items, modelTabs, defaultPeriod, pageSize = 10}: 
 
     return (
         // 세로 간격은 시안 기준이다 — 탭·조회 카드·리스트 사이가 40, 리스트 안은 아래에서 따로 잡는다.
-        <div className="flex flex-col gap-10">
+        <Tabs value={model} onValueChange={handleModelChange} className="gap-10">
             {/* 모형은 셀렉트가 아니라 탭으로 고른다(시안) — 네 가지뿐이라 펼치지 않고 바로 보여 준다. */}
-            <TextTabs
-                items={modelTabs}
-                value={model}
-                onValueChange={handleModelChange}
-                label="평가 모형"
-                panelId={panelId}
-            />
+            {/* 고른 모형으로 아래 목록 하나를 바꾼다 — 패널은 하나라 지금 고른 값의 TabsContent 만 둔다. */}
+            <TabsScrollArea variant="underline" aria-label="평가 모형">
+                {modelTabs.map((tab) => (
+                    <TabsTrigger key={tab.value} value={tab.value}>
+                        {tab.label}
+                    </TabsTrigger>
+                ))}
+            </TabsScrollArea>
 
             {/* 조회 필터 — 공통 SearchFilterForm 을 쓴다.
                 layout="stack" : 사이드바 옆 폭(792)이라 라벨을 위에 둔다.
@@ -229,7 +230,7 @@ const EvaluationResultList = ({items, modelTabs, defaultPeriod, pageSize = 10}: 
                 </SearchFilterActions>
             </SearchFilterForm>
 
-            <div id={panelId} role="tabpanel" className="flex flex-col gap-10">
+            <TabsContent value={model} className="flex flex-col gap-10">
                 {/* 건수와 목록은 한 덩어리로 붙고(16), 페이지 이동만 멀리 떨어진다(40) — 시안. */}
                 {/* 목록 머리가 상단 바에 가리지 않게 띄우는 거리(바 높이 + 16)
                     · md 미만 — 헤더(56) 아래에 마이페이지 메뉴 드롭다운 줄(152)까지 붙어 208 → 224(scroll-mt-56)
@@ -272,8 +273,8 @@ const EvaluationResultList = ({items, modelTabs, defaultPeriod, pageSize = 10}: 
                         className="justify-center"
                     />
                 ) : null}
-            </div>
-        </div>
+            </TabsContent>
+        </Tabs>
     )
 }
 
