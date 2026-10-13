@@ -8,7 +8,7 @@ import {TabsList} from '@/components/ui/tabs'
 import {cn} from '@/lib/utils'
 
 // 좌우 스크롤 탭(TabsScrollArea) — 탭이 많아 폭을 넘칠 때, 좌우 화살표 버튼으로 넘겨보는 1뎁스 TabsList
-// (variant="line" 또는 "text") 래퍼. radix/shadcn 어디에도 없는 동작(스크롤 위치 추적·화살표 활성/비활성·활성 탭
+// (variant="line" · "underline" · "text") 래퍼. radix/shadcn 어디에도 없는 동작(스크롤 위치 추적·화살표 활성/비활성·활성 탭
 // 중앙정렬)이라 kit 셸을 건드리지 않고 composite 에서 kit 프리미티브(TabsList·Button)를 조합해 만든다
 // ([SC-04] 기능은 composite 레이어에서).
 //
@@ -27,9 +27,9 @@ import {cn} from '@/lib/utils'
 //
 // 중앙정렬: 키보드로 활성 탭을 옮길 때 해당 탭을 스크롤 영역 중앙에 배치한다. 화살표는 탭 너비만큼만 이동한다.
 //
-// 페이드: 스크롤 가능한 쪽만 카드 표면색→투명 그라데이션 오버레이(토큰·유틸: from-surface + w-8)로 가장자리를
-// 부드럽게 가려 하드컷을 없앤다. 순수 장식이라 aria-hidden·pointer-events-none. 클릭·중앙정렬 스크롤은
-// prefers-reduced-motion 을 존중한다([6.3.1]).
+// 페이드: 스크롤 가능한 쪽 가장자리(폭의 10%)를 마스크(mask-l/r-from-90%)로 투명하게 지운다 — 덮개 색을 칠하는 방식이
+// 아니라 탭 글자 자체가 흐려지므로 배경이 흰색 · 회색 · 다크 어디에 놓여도 경계가 보이지 않는다. 클릭 · 중앙정렬
+// 스크롤은 prefers-reduced-motion 을 존중한다([6.3.1]).
 
 const KEYBOARD_NAV_KEYS = ['ArrowLeft', 'ArrowRight', 'Home', 'End']
 // 더 못 가는 방향 버튼의 흐림 처리. 클릭은 onClick 가드로 막고(아래), aria-disabled 커서(cursor-not-allowed)와
@@ -121,27 +121,25 @@ const TabsScrollArea = ({className, children, variant = 'line', ...props}: TabsS
                 </Button>
             ) : null}
             <div className="relative min-w-0 flex-1">
-                <div ref={scrollRef} className="scrollbar-hidden overflow-x-auto">
+                <div
+                    ref={scrollRef}
+                    className={cn(
+                        'scrollbar-hidden overflow-x-auto',
+                        canScrollLeft && 'mask-l-from-90%',
+                        canScrollRight && 'mask-r-from-90%',
+                    )}
+                >
                     <TabsList
                         variant={variant}
-                        className={cn('min-w-full data-[variant=line]:w-max data-[variant=text]:w-max', className)}
+                        className={cn(
+                            'min-w-full data-[variant=line]:w-max data-[variant=text]:w-max data-[variant=underline]:w-max',
+                            className,
+                        )}
                         {...props}
                     >
                         {children}
                     </TabsList>
                 </div>
-                {canScrollLeft ? (
-                    <div
-                        aria-hidden="true"
-                        className="from-surface pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r to-transparent"
-                    />
-                ) : null}
-                {canScrollRight ? (
-                    <div
-                        aria-hidden="true"
-                        className="from-surface pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l to-transparent"
-                    />
-                ) : null}
             </div>
             {isOverflowing ? (
                 <Button
