@@ -58,7 +58,14 @@ const Feature = ({
     </li>
 )
 
-// 유료 이용권 카드. 강조 카드(스탠다드)는 옅은 파란 면·파란 테두리이고 [구매하기]가 채운 버튼이다.
+// 유료 이용권 카드 — 평소에는 흰 카드 + 회색 [구매하기](secondary).
+// 카드에 마우스를 올리거나 카드 안 버튼에 키보드 포커스가 가면 옅은 파란 면 · 파란 테두리, [구매하기]는 채운 파란 버튼이 된다.
+// 특정 이용권을 늘 강조하지 않는다 — 네 카드 모두 같은 규칙이다.
+const planCardClassName =
+    'group/plan transition-colors hover:border-primary hover:bg-primary-subtle has-[:focus-visible]:border-primary has-[:focus-visible]:bg-primary-subtle'
+// [구매하기] — 카드 hover · 포커스 때 채운 버튼(default)과 같은 색. 버튼 자체 hover · 눌림도 default 색을 따른다.
+const planButtonClassName =
+    'w-full group-hover/plan:border-primary group-hover/plan:bg-primary group-hover/plan:text-primary-foreground group-has-[:focus-visible]/plan:border-primary group-has-[:focus-visible]/plan:bg-primary group-has-[:focus-visible]/plan:text-primary-foreground interactive:hover:bg-primary-hover interactive:hover:text-primary-foreground interactive:active:bg-primary-pressed interactive:active:text-primary-foreground'
 const PlanCard = ({
     plan,
     paymentHref,
@@ -77,7 +84,7 @@ const PlanCard = ({
                 cardClassName,
                 // 시안 — 아래 여백만 24 다(위 32).
                 'flex flex-col gap-6 pb-6',
-                plan.isRecommended && 'bg-primary-subtle border-primary',
+                planCardClassName,
             )}
         >
             <div className="flex flex-col gap-8">
@@ -122,19 +129,14 @@ const PlanCard = ({
             {isPurchaseUnavailable ? (
                 // 기관회원은 이용권을 직접 구매할 수 없다 — 결제 화면으로 가지 않고 결제 불가 안내 모달을 연다.
                 <PaymentUnavailableDialog>
-                    <Button
-                        type="button"
-                        variant={plan.isRecommended ? 'default' : 'secondary'}
-                        size="sm"
-                        className="w-full"
-                    >
+                    <Button type="button" variant="secondary" size="sm" className={planButtonClassName}>
                         구매하기
                         <span className="sr-only"> ({plan.name})</span>
                     </Button>
                 </PaymentUnavailableDialog>
             ) : (
                 // 고른 이용권을 결제 화면에 ?plan= 으로 넘긴다.
-                <Button asChild variant={plan.isRecommended ? 'default' : 'secondary'} size="sm" className="w-full">
+                <Button asChild variant="secondary" size="sm" className={planButtonClassName}>
                     <Link href={paymentHref ? `${paymentHref}?${PLAN_QUERY_KEY}=${plan.id}` : '#'}>
                         구매하기
                         <span className="sr-only"> ({plan.name})</span>
