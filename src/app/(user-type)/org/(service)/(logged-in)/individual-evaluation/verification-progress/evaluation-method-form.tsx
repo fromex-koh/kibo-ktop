@@ -14,8 +14,8 @@ import {StepNavigation} from '@/components/composite/step-navigation'
 
 const METHOD_FIELD = 'evaluationMethod'
 
-// 시안 이미지 영역은 148×100 고정이다. preflight 의 img { height: auto } 가 높이만 덮어써
-// next/image 비율 경고가 뜨므로 style 로 두 값을 함께 잠근다.
+// 시안 이미지 영역은 148×100 고정이다. 그림은 그 자리 가운데에 원본 비율대로(illustrationSize) 놓는다.
+// preflight 의 img { height: auto } 가 높이만 덮어써 next/image 비율 경고가 뜨므로 style 로 두 값을 함께 잠근다.
 const ILLUSTRATION_SIZE = {width: 148, height: 100} as const
 
 // description 을 문장 단위 배열로 두는 이유 — 시안은 두 문장을 각자 한 줄에 놓는다(문장 사이 줄바꿈).
@@ -30,7 +30,9 @@ const EVALUATION_METHODS = [
             '기업이 은행으로 전송한 자가진단 입력정보를 수정하여 평가검증을 진행합니다.',
             '선택 시 평가검증 신청 조회 화면으로 이동합니다.',
         ],
-        illustration: '/images/option-card/rating-magnifier.webp',
+        // 문서 + 차트 + 돋보기 그림 — 148×100 자리 가운데 92×82(시안).
+        illustration: '/images/option-card/document-chart-magnifier.webp',
+        illustrationSize: {width: 92, height: 82},
     },
     {
         value: 'individual',
@@ -41,7 +43,9 @@ const EVALUATION_METHODS = [
             '기업의 자가진단 전송 내역과 관계없이 새로운 KTRS-FM 개별평가를 신청합니다.',
             '선택 시 고객정보활용동의 단계로 이동합니다.',
         ],
-        illustration: '/images/option-card/lightbulb-magnifier.webp',
+        // 체크 클립보드 + 차트 그림 — 148×100 자리 가운데 92×92(시안).
+        illustration: '/images/option-card/clipboard-check-chart.webp',
+        illustrationSize: {width: 92, height: 92},
     },
 ] as const
 
@@ -93,6 +97,8 @@ const EvaluationMethodForm = ({labelledBy, children}: EvaluationMethodFormProps)
                         <RadioCard
                             key={evaluationMethod.value}
                             value={evaluationMethod.value}
+                            // 시안은 설명이 제목 바로 아래(그림 왼쪽 칸)에 있어 카드가 낮다(174).
+                            descriptionPlacement="beside"
                             title={evaluationMethod.title}
                             description={
                                 <>
@@ -103,14 +109,16 @@ const EvaluationMethodForm = ({labelledBy, children}: EvaluationMethodFormProps)
                             }
                             // 제목·설명이 정보를 전달하므로 일러스트는 장식이다([5.1.1]).
                             illustration={
-                                <Image
-                                    src={evaluationMethod.illustration}
-                                    alt=""
-                                    draggable={false}
-                                    {...ILLUSTRATION_SIZE}
-                                    priority
-                                    style={ILLUSTRATION_SIZE}
-                                />
+                                <span className="flex items-center justify-center" style={ILLUSTRATION_SIZE}>
+                                    <Image
+                                        src={evaluationMethod.illustration}
+                                        alt=""
+                                        draggable={false}
+                                        {...evaluationMethod.illustrationSize}
+                                        priority
+                                        style={evaluationMethod.illustrationSize}
+                                    />
+                                </span>
                             }
                         />
                     ))}
