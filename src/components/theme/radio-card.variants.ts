@@ -29,6 +29,11 @@ const radioCardTitleClassName = 'typo-h2-bold text-foreground block'
 const radioCardDescriptionClassName = 'typo-body-l-regular text-foreground-subtle block break-keep'
 const radioCardIllustrationClassName = 'flex shrink-0 items-center justify-center'
 
+// descriptionPlacement="beside" — 설명을 제목 바로 아래(일러스트 왼쪽 칸)에 둔다(Figma "개별평가_평가진행방식 선택").
+// 제목 → 설명 16, 글 칸과 일러스트 사이 48(md 이상 — 글 칸 312 · 일러스트 148). 모바일은 기본과 같이 세로로 쌓인다.
+const radioCardHeaderBesideClassName = 'md:gap-12'
+const radioCardTextGroupBesideClassName = 'flex min-w-0 flex-1 flex-col gap-4'
+
 export {
     radioCardGroupClassName,
     radioCardClassName,
@@ -38,4 +43,6 @@ export {
     radioCardTitleClassName,
     radioCardDescriptionClassName,
     radioCardIllustrationClassName,
+    radioCardHeaderBesideClassName,
+    radioCardTextGroupBesideClassName,
 }
