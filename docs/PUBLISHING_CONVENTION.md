@@ -43,7 +43,7 @@ tokens.json(px 입력) → yarn tokens → src/app/tokens.css(rem·CSS 변수·�
     - Tailwind 기본 팔레트(`slate`, `red`, `amber`, `purple` 등)는 생성 단계에서 제거되며 `check:conventions`가 사용을 차단한다.
     - `transparent`, `current`, `inherit`, 구조색 `black`, `white`는 유지한다.
 - **[PB-06] 색상 모드를 사용처에서 재정의하지 않음(MUST)** — 시맨틱 토큰의 light/dark 매핑을 사용한다. 컴포넌트에서 `dark:bg-*`로 같은 의미의 색을 다시 분기하지 않는다. 필요한 매핑은 `tokens.json`의 semantic에 `{ "light": ..., "dark": ... }`로 정의한다.
-- **[PB-20] 차트처럼 색을 값으로 넘길 때는 단계 변수(MUST)** — 차트 계열 색 · 범례 색처럼 클래스가 아니라 색 값을 props 로 넘겨야 하면 `var(--raw-<색>-<단계>)` 대신 `var(--ds-<색>-<단계>)` 를 쓴다. 라이트는 같은 색이고 다크에서는 단계가 반사돼(50↔900 · 400↔500) 다크 카드 위에서도 보인다. 반사하면 카드 바탕과 같아지는 옅은 회색(gray.50~100 · 막대 바탕 · 눈금선)은 시맨틱 토큰(`--ds-muted` · `--ds-subtle-3` · `--ds-gauge-track`)을, 축 글자는 `--ds-label-foreground` 를 쓴다. 색 위에 흰 글자 · 짙은 글자가 고정된 칸(등급 칸 등)과 도넛 조각 색(`percentage-donut-colors.ts` — 라이트 · 다크 같은 색)은 `--raw-*` 로 고정한다. 계열 색의 다크 값을 직접 정해야 하면 화면 전용 시맨틱 토큰을 둔다(예: K-BIGx 보고서 `--ds-report-series-1~6`). 공용 `chart-1~5` 는 여러 화면이 함께 쓰므로 한 화면을 위해 값을 바꾸지 않는다.
+- **[PB-20] 차트처럼 색을 값으로 넘길 때는 단계 변수(MUST)** — 차트 계열 색 · 범례 색처럼 클래스가 아니라 색 값을 props 로 넘겨야 하면 `var(--raw-<색>-<단계>)` 대신 `var(--ds-<색>-<단계>)` 를 쓴다. 라이트는 같은 색이고 다크에서는 단계가 반사돼(50↔900 · 400↔500) 다크 카드 위에서도 보인다. 반사하면 카드 바탕과 같아지는 옅은 회색(gray.50~100 · 막대 바탕 · 눈금선)은 시맨틱 토큰(`--ds-muted` · `--ds-subtle-3` · `--ds-gauge-track`)을, 축 글자는 `--ds-label-foreground` 를 쓴다. 색 위에 흰 글자 · 짙은 글자가 고정된 칸(등급 칸 등)은 `--raw-*` 로 고정한다. 계열 색의 다크 값을 직접 정해야 하면 전용 시맨틱 토큰을 둔다(예: K-BIGx 보고서 `--ds-report-series-1~6`, 비중 도넛 조각 `--ds-donut-1~8`). 공용 `chart-1~5` 는 여러 화면이 함께 쓰므로 한 화면을 위해 값을 바꾸지 않는다.
 
 shadcn 표준 슬롯과 프로젝트 상태 토큰의 선택 기준은 [SHADCN.md](SHADCN.md)의 "테마 모델"을 따른다.
 
