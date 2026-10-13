@@ -48,8 +48,9 @@ const EVALUATION_MODELS = [
             '창업 초기 기업의 특성에 맞춰 설계된 평가모형입니다.',
             '보유 기술의 혁신성과 향후 성장 잠재력을 중점적으로 분석합니다.',
         ],
-        illustration: '/images/option-card/lightbulb-magnifier.webp',
-        illustrationSize: ILLUSTRATION_SIZE,
+        // 건물 + 전구 그림(444×327)을 148×100 자리에 비율대로 136×100 으로 놓는다.
+        illustration: '/images/option-card/building-lightbulb.webp',
+        illustrationSize: {width: 136, height: 100},
     },
 ] as const
 
