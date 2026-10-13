@@ -20,15 +20,12 @@ const RECHARTS_LICENSE: LicenseLink = {
     href: 'https://github.com/recharts/recharts/blob/main/LICENSE',
 }
 
-// 현금흐름등급 척도(낮은 등급부터).
-const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [
-    {label: 'CR-6', color: 'var(--raw-gray-700)'},
-    {label: 'CR-5', color: 'var(--raw-gray-200)', isLightColor: true},
-    {label: 'CR-4', color: 'var(--raw-error-500)'},
-    {label: 'CR-3', color: 'var(--raw-orange-500)', isLightColor: true},
-    {label: 'CR-2', color: 'var(--raw-success-500)'},
-    {label: 'CR-1', color: 'var(--raw-blue-500)'},
-]
+// 현금흐름등급 척도(낮은 등급부터) — 보고서와 같은 cash-flow-cr-<n> 토큰(칸 색 · 칸 글자 색, 다크에서 함께 바뀜).
+const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [6, 5, 4, 3, 2, 1].map((level) => ({
+    label: `CR-${level}`,
+    color: `var(--ds-cash-flow-cr-${level})`,
+    foreground: `var(--ds-cash-flow-cr-${level}-foreground)`,
+}))
 // 보고서(신용/재무정보 현금흐름등급)와 같은 모양 — 원호 안에는 등급만 둔다(description="").
 const SCALE_LABELS = {description: '', lowLabel: '취약', highLabel: '우수', scaleLabel: '현금흐름 창출 능력'} as const
 
@@ -39,12 +36,12 @@ type CaseProps = Pick<
 
 const USAGE_CODE = `import {GradeScaleGauge, type GradeScaleItem} from '@/components/custom/grade-scale-gauge'
 
-// 낮은 등급부터 높은 등급 순서입니다. 칸 색은 데이터가 넘깁니다.
-const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [
-  {label: 'CR-6', color: 'var(--raw-gray-700)'},
-  {label: 'CR-5', color: 'var(--raw-gray-200)', isLightColor: true},
-  // …
-]
+// 낮은 등급부터 높은 등급 순서입니다. 칸 색 · 칸 글자 색은 데이터가 넘깁니다(토큰 — 다크에서 함께 바뀜).
+const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [6, 5, 4, 3, 2, 1].map((level) => ({
+  label: \`CR-\${level}\`,
+  color: \`var(--ds-cash-flow-cr-\${level})\`,
+  foreground: \`var(--ds-cash-flow-cr-\${level}-foreground)\`,
+}))
 
 <GradeScaleGauge
   ariaLabel="현금흐름등급 CR-4"
@@ -146,8 +143,15 @@ const PROPS_ITEMS = [
     ['GradeScaleItem', 'color', '칸과 원호 채움에 쓰는 색(토큰 변수)입니다.', '-', 'string'],
     [
         'GradeScaleItem',
+        'foreground',
+        '칸 글자 색(토큰 변수)입니다. 테마마다 칸 색이 바뀌면 글자 색도 함께 넘깁니다(예: var(--ds-cash-flow-cr-4-foreground)). isLightColor 보다 우선합니다.',
+        '-',
+        'string',
+    ],
+    [
+        'GradeScaleItem',
         'isLightColor',
-        '밝은 칸이면 흰 글자 대신 짙은 글자(grade-scale-chip-foreground)를 씁니다. 칸 색이 고정이라 글자도 라이트 · 다크 모두 같은 색입니다.',
+        'foreground 가 없을 때 — 밝은 칸이면 흰 글자 대신 짙은 글자(grade-scale-chip-foreground)를 씁니다.',
         'false',
         'boolean',
     ],
@@ -188,7 +192,7 @@ const SPECIAL_CASES: readonly {title: string; description: string; gauge: CasePr
     {
         title: '밝은 칸',
         description:
-            '주황(CR-3) · 회색(CR-5)처럼 밝은 칸은 흰 글자로 본문 대비 4.5:1 에 못 미쳐 짙은 글자로 적습니다(isLightColor). 다크에서도 같은 짙은 글자입니다.',
+            '주황(CR-3) · 회색(CR-5)처럼 밝은 칸은 흰 글자로 본문 대비 4.5:1 에 못 미쳐 짙은 글자로 적습니다. 다크에서는 칸이 밝은 단계로 바뀌어 대부분 짙은 글자, 어두워지는 CR-5 만 밝은 글자입니다(foreground 토큰).',
         gauge: {grades: CASH_FLOW_GRADES, current: 'CR-3', ...SCALE_LABELS},
     },
     {
@@ -382,12 +386,14 @@ const GradeScaleGaugeGuidePage = () => (
                         구분하지 않습니다[5.3.1].
                     </li>
                     <li>
-                        밝은 칸은 <code>isLightColor</code> 로 짙은 글자를 써 본문 대비 4.5:1 을 지킵니다[5.3.3].
+                        칸 글자 색은 칸 색과 짝인 <code>foreground</code> 토큰으로 넘겨 라이트 · 다크 모두 본문 대비
+                        4.5:1 을 지킵니다[5.3.3]. 원호 트랙은 <code>grade-scale-track</code> 이라 다크에서 어두운 칸
+                        색도 묻히지 않습니다.
                     </li>
                     <li>
-                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 단계 칩이
-                        차례로 커지며 나타납니다(<code>--animate-chart-*</code> · 0.6초). <code>motion-safe</code> 라
-                        동작 줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
+                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 단계
+                        칩이 차례로 커지며 나타납니다(<code>--animate-chart-*</code> · 0.6초). <code>motion-safe</code>{' '}
+                        라 동작 줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
                     </li>
                 </ul>
             </section>

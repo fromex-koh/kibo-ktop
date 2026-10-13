@@ -7,7 +7,7 @@ import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
-import {RadioCardDemo} from './radio-card-demo'
+import {RadioCardBesideDemo, RadioCardDemo} from './radio-card-demo'
 
 export const metadata: Metadata = {title: '라디오 카드 (RadioCard)'}
 
@@ -40,6 +40,15 @@ const [model, setModel] = useState('')
 
 {/* 필수값이면 고르기 전까지 다음 버튼을 잠근다 */}
 <StepNavigation appearance="plain" next={{type: 'submit', disabled: !model, children: '다음'}} />`
+
+const BESIDE_CODE = `// 설명을 제목 바로 아래(일러스트 왼쪽 칸)에 두면 카드가 낮아진다 — 설명이 긴 선택지에 쓴다.
+<RadioCard
+  value="verification"
+  descriptionPlacement="beside"
+  title="평가검증 하기"
+  description={<>문장 1<br />문장 2</>}
+  illustration={…}
+/>`
 
 const CHOICE_COLUMNS = [
     {key: 'case', header: '사용 상황', align: 'start', rowHeader: true},
@@ -117,6 +126,13 @@ const PROPS_ITEMS = [
     ],
     ['RadioCard', 'description', '제목 아래 설명입니다. 줄바꿈이 필요하면 요소로 넘깁니다.', '-', 'ReactNode'],
     ['RadioCard', 'illustration', '제목 오른쪽 일러스트 자리입니다.', '-', 'ReactNode'],
+    [
+        'RadioCard',
+        'descriptionPlacement',
+        "설명 자리입니다. 'below' 는 제목 · 일러스트 줄 아래 전체 폭, 'beside' 는 제목 바로 아래(일러스트 왼쪽 칸)라 카드가 낮아집니다(평가진행방식 선택). 모바일은 둘 다 세로로 쌓입니다.",
+        "'below'",
+        "'below' | 'beside'",
+    ],
     ['RadioCard', 'disabled', '이 카드만 비활성으로 만듭니다.', '-', 'boolean'],
     ['RadioCard', 'className', '카드에 추가할 클래스입니다.', '-', 'string'],
 ] as const
@@ -154,6 +170,28 @@ const RadioCardGuidePage = () => (
                         필수값이면 고르기 전까지 다음 버튼을 <code>disabled</code>로 둡니다.
                     </li>
                 </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="radio-card-beside" className="flex flex-col gap-6">
+                <div className="flex max-w-4xl flex-col gap-2">
+                    <h2 id="radio-card-beside" className="typo-h4-bold">
+                        설명 옆 배치 (descriptionPlacement=&quot;beside&quot;)
+                    </h2>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        기본(<code>below</code>)은 설명이 제목 · 일러스트 줄 아래 전체 폭에 놓입니다.{' '}
+                        <code>beside</code> 는 설명을 제목 바로 아래(일러스트 왼쪽 칸)에 두어 카드가 낮아집니다 — 기관
+                        평가진행방식 선택 화면이 씁니다. 모바일은 두 배치 모두 세로로 쌓입니다.
+                    </p>
+                </div>
+                <div className="flex flex-col gap-4">
+                    <p id="radio-card-beside-label" className="typo-body-l-medium text-foreground">
+                        평가를 진행할 방식을 선택해주세요.
+                    </p>
+                    <RadioCardBesideDemo labelledBy="radio-card-beside-label" />
+                </div>
+                <CodeBlock code={BESIDE_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 

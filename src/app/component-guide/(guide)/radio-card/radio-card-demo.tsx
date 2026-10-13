@@ -70,4 +70,64 @@ const RadioCardDemo = ({labelledBy}: {labelledBy: string}) => {
     )
 }
 
-export {RadioCardDemo}
+// 설명 옆 배치(descriptionPlacement="beside") 데모 — 기관 평가진행방식 선택 화면과 같은 카드다.
+// 그림은 148×100 자리 가운데에 원본 비율대로 놓는다.
+const BESIDE_METHODS = [
+    {
+        value: 'verification',
+        title: '평가검증 하기',
+        description: [
+            '기업이 은행으로 전송한 자가진단 입력정보를 수정하여 평가검증을 진행합니다.',
+            '선택 시 평가검증 신청 조회 화면으로 이동합니다.',
+        ],
+        illustration: '/images/option-card/document-chart-magnifier.webp',
+        illustrationSize: {width: 92, height: 82},
+    },
+    {
+        value: 'individual',
+        title: '개별평가 하기',
+        description: [
+            '기업의 자가진단 전송 내역과 관계없이 새로운 KTRS-FM 개별평가를 신청합니다.',
+            '선택 시 고객정보활용동의 단계로 이동합니다.',
+        ],
+        illustration: '/images/option-card/clipboard-check-chart.webp',
+        illustrationSize: {width: 92, height: 92},
+    },
+] as const
+
+const RadioCardBesideDemo = ({labelledBy}: {labelledBy: string}) => {
+    const [method, setMethod] = useState('')
+
+    return (
+        <RadioCardGroup value={method} onValueChange={setMethod} aria-labelledby={labelledBy}>
+            {BESIDE_METHODS.map((item) => (
+                <RadioCard
+                    key={item.value}
+                    value={item.value}
+                    descriptionPlacement="beside"
+                    title={item.title}
+                    description={
+                        <>
+                            {item.description[0]}
+                            <br />
+                            {item.description[1]}
+                        </>
+                    }
+                    illustration={
+                        <span className="flex items-center justify-center" style={ILLUSTRATION_SIZE}>
+                            <Image
+                                src={item.illustration}
+                                alt=""
+                                draggable={false}
+                                {...item.illustrationSize}
+                                style={item.illustrationSize}
+                            />
+                        </span>
+                    }
+                />
+            ))}
+        </RadioCardGroup>
+    )
+}
+
+export {RadioCardBesideDemo, RadioCardDemo}

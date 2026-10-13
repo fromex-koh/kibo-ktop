@@ -186,7 +186,7 @@ const RankPyramidChartGuidePage = () => (
                     </li>
                     <li>현재 구간은 보라 면뿐 아니라 왼쪽 “상위 N%” 글자로도 전달됩니다[5.3.1].</li>
                     <li>
-                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 단이
+                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 단이
                         아래부터 차례로 떠오릅니다(<code>--animate-chart-*</code> · 0.6초). <code>motion-safe</code> 라
                         동작 줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
                     </li>

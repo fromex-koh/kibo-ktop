@@ -6,7 +6,7 @@ import {BaseCard} from '@/components/composite/base-card'
 import {PRIVATE_SHORT_LABEL, PrivateCell, PrivateContent} from '@/components/composite/private-content'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
-import {Card, ReportTable} from '@/components/custom/innovation-growth-report-parts'
+import {Card, ReportTable, WithUnit} from '@/components/custom/innovation-growth-report-parts'
 import {PercentageDonutChart} from '@/components/custom/percentage-donut-chart'
 import PropsTable from '@/components/custom/props-table'
 import {RatioStackBar} from '@/components/custom/ratio-stack-bar'
@@ -28,9 +28,9 @@ const PLACEHOLDER_INSTITUTION_ROWS = ['은행업권', '상호금융업권', '저
     (label, index) => ({id: label, cells: {label, y1: '00.0', y2: '00.0', y3: index % 2 ? '-' : '00.0'}}),
 )
 const PLACEHOLDER_DONUT = [
-    {id: 'a', label: '구분 1', percentage: 50, valueLabel: '00%', color: 'var(--raw-navy-500)'},
-    {id: 'b', label: '구분 2', percentage: 25, valueLabel: '00%', color: 'var(--raw-blue-500)'},
-    {id: 'c', label: '구분 3', percentage: 25, valueLabel: '00%', color: 'var(--raw-blue-300)'},
+    {id: 'a', label: '구분 1', percentage: 50, valueLabel: '00%', color: 'var(--ds-donut-2)'},
+    {id: 'b', label: '구분 2', percentage: 25, valueLabel: '00%', color: 'var(--ds-donut-4)'},
+    {id: 'c', label: '구분 3', percentage: 25, valueLabel: '00%', color: 'var(--ds-donut-6)'},
 ]
 
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
@@ -38,8 +38,10 @@ const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 const USAGE_CODE = `import {PrivateContent} from '@/components/composite/private-content'
 
 <PrivateContent>
-  <Card title="기관별 비중" aside="단위 : %">
-    {/* 실제 값이 아닌, 모양만 비슷한 임의 값의 표 · 그래프 */}
+  <Card title="기관별 비중" className="gap-0">
+    <WithUnit unit="단위: %">
+      {/* 실제 값이 아닌, 모양만 비슷한 임의 값의 표 · 그래프 */}
+    </WithUnit>
   </Card>
 </PrivateContent>`
 
@@ -155,19 +157,21 @@ const PrivateContentGuidePage = () => (
                     </p>
                 </div>
                 <PrivateContent>
-                    <Card title="기관별 비중" aside="단위 : %">
-                        <div className="grid gap-12 xl:grid-cols-2">
-                            <ReportTable
-                                caption="자리 표시"
-                                minWidthClassName="min-w-0"
-                                columns={[
-                                    {key: 'label', label: '구분', isRowHeader: true},
-                                    {key: 'y1', label: '2022년'},
-                                    {key: 'y2', label: '2023년'},
-                                    {key: 'y3', label: '2024년'},
-                                ]}
-                                rows={PLACEHOLDER_INSTITUTION_ROWS}
-                            />
+                    <Card title="기관별 비중" className="gap-0">
+                        <div className="grid gap-6 xl:grid-cols-2">
+                            <WithUnit unit="단위: %">
+                                <ReportTable
+                                    caption="자리 표시"
+                                    minWidthClassName="min-w-0"
+                                    columns={[
+                                        {key: 'label', label: '구분', isRowHeader: true},
+                                        {key: 'y1', label: '2022년'},
+                                        {key: 'y2', label: '2023년'},
+                                        {key: 'y3', label: '2024년'},
+                                    ]}
+                                    rows={PLACEHOLDER_INSTITUTION_ROWS}
+                                />
+                            </WithUnit>
                             <PercentageDonutChart
                                 animate={false}
                                 showTooltip={false}
@@ -198,14 +202,18 @@ const PrivateContentGuidePage = () => (
                             카드가 좁아 긴 안내가 접히면 어절 단위로 두 줄이 됩니다.
                         </p>
                         <PrivateContent className="max-w-147">
-                            <Card title="신용/담보 비중" aside="단위 : %">
-                                <div className="bg-surface-subtle h-49 rounded-sm" />
-                                <RatioStackBar
-                                    data={[
-                                        {id: 'a', label: '신용', value: 50, color: 'var(--raw-blue-500)'},
-                                        {id: 'b', label: '담보', value: 50, color: 'var(--raw-mint-700)'},
-                                    ]}
-                                />
+                            <Card title="신용/담보 비중" className="gap-0">
+                                <div className="flex min-w-0 flex-col gap-6">
+                                    <WithUnit unit="단위: %">
+                                        <div className="bg-surface-subtle h-49 rounded-sm" />
+                                    </WithUnit>
+                                    <RatioStackBar
+                                        data={[
+                                            {id: 'a', label: '신용', value: 50, color: 'var(--raw-blue-500)'},
+                                            {id: 'b', label: '담보', value: 50, color: 'var(--raw-mint-700)'},
+                                        ]}
+                                    />
+                                </div>
                             </Card>
                         </PrivateContent>
                     </div>

@@ -21,7 +21,7 @@ const USAGE_CODE = `import {ServiceIntroBanner} from '@/components/composite/ser
     '특허출원번호 또는 특허등록번호를 입력 후 찾고자 하는 특허결과를 검색합니다.',
   ]}
   illustration={
-    <Image src="/images/service-intro/robot-donut-chart.webp" alt="" width={1338} height={726} sizes="440px" className="h-auto w-full" />
+    <Image src="/images/service-intro/ai-robot-donut-chart.webp" alt="" width={1320} height={720} sizes="440px" className="h-auto w-full" />
   }
 />`
 
@@ -82,11 +82,11 @@ const ServiceIntroBannerGuidePage = () => (
                     ]}
                     illustration={
                         <Image
-                            src="/images/service-intro/robot-donut-chart.webp"
+                            src="/images/service-intro/ai-robot-donut-chart.webp"
                             alt=""
                             loading="eager"
-                            width={1338}
-                            height={726}
+                            width={1320}
+                            height={720}
                             sizes="440px"
                             className="h-auto w-full"
                         />

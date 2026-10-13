@@ -27,9 +27,9 @@ const REPORT_DATA: PercentageDonutItem[] = [
 
 // 건수 없이 금액을 범례에 적는 예(비중은 금액 합계 대비).
 const COLLATERAL_DATA: PercentageDonutItem[] = [
-    {id: 'real-estate', label: '부동산', percentage: 23, valueLabel: '2,000', color: 'var(--raw-navy-500)'},
-    {id: 'special-mortgage', label: '특수저당', percentage: 44.3, valueLabel: '3,862', color: 'var(--raw-blue-500)'},
-    {id: 'guarantee', label: '보증', percentage: 32.7, valueLabel: '2,850', color: 'var(--raw-blue-300)'},
+    {id: 'real-estate', label: '부동산', percentage: 23, valueLabel: '2,000', color: 'var(--ds-donut-2)'},
+    {id: 'special-mortgage', label: '특수저당', percentage: 44.3, valueLabel: '3,862', color: 'var(--ds-donut-4)'},
+    {id: 'guarantee', label: '보증', percentage: 32.7, valueLabel: '2,850', color: 'var(--ds-donut-6)'},
 ]
 // 툴팁 예 — 범례에는 비중만 적는다(툴팁은 분류명만).
 const COLLATERAL_PERCENT_DATA: PercentageDonutItem[] = COLLATERAL_DATA.map((item) => ({
@@ -250,6 +250,11 @@ const PercentageDonutChartGuidePage = () => (
                             색은 항목 수(2 ~ 8개)에 따라 정해진 단계를 쓰고, 비중이 큰 항목부터 진한 색을 받습니다. 첫
                             항목은 12시 오른쪽 조각입니다. 9개 이상은 색이 반복되므로 8개까지만 보입니다.
                         </p>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            색은 시맨틱 토큰 <code>donut-1</code> ~ <code>donut-8</code>(진한 순)이고 단계마다 이 중 몇
+                            개를 고릅니다. 다크 모드에서는 navy · blue 의 밝은 단계로 바뀌어 어두운 카드 위에서도 조각이
+                            구분됩니다. 색을 직접 적어야 하면 <code>var(--ds-donut-&lt;n&gt;)</code> 를 씁니다.
+                        </p>
                         <ul className="grid list-none gap-6 md:grid-cols-2 xl:grid-cols-3">
                             {RAMP_CASES.map((item) => (
                                 <li key={item.count} className="flex flex-col gap-2">
@@ -325,8 +330,8 @@ const PercentageDonutChartGuidePage = () => (
                     <li>
                         움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
                         <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
-                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
+                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
                     </li>
                     <li>
                         recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}

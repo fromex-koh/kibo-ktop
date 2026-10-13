@@ -49,7 +49,7 @@ import {TabsScrollArea} from '@/components/composite/tabs-scroll-area'
 </Tabs>`
 
 const TEXT_CODE = `<Tabs defaultValue="full" className="gap-0">
-  <TabsScrollArea variant="text" aria-label="보기 방식">
+  <TabsScrollArea variant="underline" aria-label="보기 방식">
     <TabsTrigger value="full">개인정보 처리방침</TabsTrigger>
     <TabsTrigger value="easy">알기 쉬운 개인정보 처리방침</TabsTrigger>
   </TabsScrollArea>
@@ -95,11 +95,19 @@ const VARIANT_ROWS = [
         ],
     },
     {
+        key: 'underline',
+        cells: [
+            <code key="v">underline</code>,
+            '1뎁스. 바닥 트랙 없이 선택한 탭 글자 아래에만 밑줄(2px)이 붙습니다. 글자는 항상 굵어 탭을 옮겨도 폭이 변하지 않습니다.',
+            '개인정보 처리방침 · 이용약관 · 평가결과 조회(평가 모형). TabsScrollArea 로 감쌉니다.',
+        ],
+    },
+    {
         key: 'text',
         cells: [
             <code key="v">text</code>,
-            '1뎁스. 트랙과 밑줄 없이 글자색만으로 활성 탭을 구분합니다. 글자는 항상 굵어 탭을 옮겨도 폭이 변하지 않습니다.',
-            '개인정보 처리방침 · 이용약관의 보기 방식 전환. TabsScrollArea 로 감쌉니다.',
+            '1뎁스. underline 과 같은 크기 · 간격이지만 밑줄 없이 글자색만으로 활성 탭을 구분합니다.',
+            '지금 화면에서는 쓰지 않습니다(이전 사양 · TextTabs 와 같은 모양).',
         ],
     },
     {
@@ -152,7 +160,7 @@ const PROPS_ITEMS = [
         'variant',
         '탭 모양입니다. 위 종류 선택 표를 따릅니다.',
         "'default'",
-        "'default' | 'line' | 'text' | 'pill' | 'pill-outline' | 'plain'",
+        "'default' | 'line' | 'underline' | 'text' | 'pill' | 'pill-outline' | 'plain'",
     ],
     ['TabsList', 'aria-label', '탭 목록의 이름입니다. 스크린리더가 읽으므로 항상 넘깁니다.', 'undefined', 'string'],
     ['TabsTrigger', 'value', '같은 값을 가진 TabsContent 와 연결되는 고유 값입니다.', '-', 'string'],
@@ -163,7 +171,7 @@ const PROPS_ITEMS = [
         'variant',
         '감쌀 1뎁스 탭의 모양입니다. TabsList 의 variant 로 그대로 넘어갑니다.',
         "'line'",
-        "'line' | 'text'",
+        "'line' | 'underline' | 'text'",
     ],
     [
         'TabsScrollArea',
@@ -177,7 +185,7 @@ const PROPS_ITEMS = [
 const TabsGuidePage = () => (
     <GuidePageShell
         title="탭 (Tabs)"
-        description="한 화면 안에서 콘텐츠 영역을 전환하는 shadcn 기반 탭입니다. 1뎁스(line · text)와 2뎁스(pill · pill-outline) 모양을 variant 로 고릅니다."
+        description="한 화면 안에서 콘텐츠 영역을 전환하는 shadcn 기반 탭입니다. 1뎁스(line · underline · text)와 2뎁스(pill · pill-outline) 모양을 variant 로 고릅니다."
     >
         <BaseCard>
             <section aria-labelledby="tabs-basic" className="flex flex-col gap-6">
@@ -220,8 +228,8 @@ const TabsGuidePage = () => (
                         종류 선택
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        화면의 큰 구분은 1뎁스(line · text), 그 안에서 한 번 더 나누는 자리는 2뎁스(pill · pill-outline)
-                        입니다. 본문 패널 없이 값만 고르는 글자 탭은{' '}
+                        화면의 큰 구분은 1뎁스(line · underline), 그 안에서 한 번 더 나누는 자리는 2뎁스(pill ·
+                        pill-outline) 입니다. 본문 패널 없이 값만 고르는 글자 탭은{' '}
                         <Link href="/component-guide/text-tabs" className={LINK_CLASS}>
                             텍스트 탭 (TextTabs)
                         </Link>
@@ -255,13 +263,13 @@ const TabsGuidePage = () => (
                 {/* 소제목 블록마다 가로선과 같은 여백으로 갈라, 섹션 제목(24) → 소제목(18) → 본문(14) 순서가 보이게 한다. */}
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">글자만 (text)</h3>
+                        <h3 className="typo-title-m-bold text-foreground">밑줄 (underline)</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            트랙과 밑줄이 없어 항목 간격이 24로 넓고 좌우 여백은 0입니다. 첫 항목이 콘텐츠 왼쪽 끝에
-                            맞습니다.
+                            바닥 트랙이 없고 선택한 탭 글자 아래에만 밑줄(2px)이 붙습니다. 항목 간격 24, 좌우 여백 0이라
+                            첫 항목이 콘텐츠 왼쪽 끝에 맞고 밑줄 폭은 글자 폭과 같습니다.
                         </p>
                         <Tabs defaultValue="full" className="gap-0">
-                            <TabsScrollArea variant="text" aria-label="보기 방식">
+                            <TabsScrollArea variant="underline" aria-label="보기 방식">
                                 <TabsTrigger value="full">개인정보 처리방침</TabsTrigger>
                                 <TabsTrigger value="easy">알기 쉬운 개인정보 처리방침</TabsTrigger>
                             </TabsScrollArea>
@@ -282,7 +290,7 @@ const TabsGuidePage = () => (
                             글자이고 비선택 항목의 면만 다릅니다. 항목이 폭을 넘으면 다음 줄로 넘어갑니다.
                         </p>
                         <Tabs defaultValue="easy" className="gap-0">
-                            <TabsScrollArea variant="text" aria-label="보기 방식 (알약 예시)">
+                            <TabsScrollArea variant="underline" aria-label="보기 방식 (알약 예시)">
                                 <TabsTrigger value="full">개인정보 처리방침</TabsTrigger>
                                 <TabsTrigger value="easy">알기 쉬운 개인정보 처리방침</TabsTrigger>
                             </TabsScrollArea>
@@ -340,7 +348,8 @@ const TabsGuidePage = () => (
                         <p className="typo-body-l-regular text-label-foreground">
                             400px 영역에 탭 여덟 개를 넣은 예시입니다. 화살표는 탭을 선택하지 않고 목록만 탭 하나
                             너비만큼 옮기며, 더 갈 수 없는 쪽은 흐리게 표시됩니다. 키보드로 탭을 옮기면 포커스된 탭이
-                            영역 가운데에 오고, 스크롤할 수 있는 가장자리는 페이드로 표시됩니다.
+                            영역 가운데에 오고, 스크롤할 수 있는 가장자리는 탭 글자가 투명하게 흐려집니다(마스크 —
+                            배경색과 무관).
                         </p>
                         <div className="bg-surface border-border max-w-100 rounded-md border p-4">
                             <Tabs defaultValue={MYPAGE_TABS[0][0]}>

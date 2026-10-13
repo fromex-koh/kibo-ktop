@@ -40,17 +40,17 @@ const CHOICE_ROWS = [
         cells: [
             '고른 값으로 아래 영역 하나의 내용이 바뀜',
             <code key="component">TextTabs</code>,
-            '조회 목록의 평가 모형 선택처럼 패널은 하나이고 값만 달라집니다. 선택값은 사용처가 state 로 관리합니다.',
+            '밑줄 없는 글자 탭이 필요할 때. 패널은 하나이고 값만 달라지며, 선택값은 사용처가 state 로 관리합니다. 지금 서비스 화면에서 쓰는 곳은 없습니다.',
         ],
     },
     {
-        key: 'tabs-text',
+        key: 'tabs-underline',
         cells: [
-            '탭마다 본문 패널이 따로 있음',
+            '서비스 화면의 1뎁스 탭(선택한 탭에 밑줄)',
             <Link key="component" href="/component-guide/tabs" className={LINK_CLASS}>
-                Tabs variant=&quot;text&quot;
+                Tabs variant=&quot;underline&quot;
             </Link>,
-            '개인정보 처리방침 · 이용약관처럼 탭별 TabsContent 를 둡니다. 모양은 같고 선택값을 직접 관리하지 않아도 됩니다.',
+            '평가결과 조회 · 이용약관 · 개인정보 처리방침이 씁니다. 패널이 하나뿐이어도(평가결과 조회) 지금 고른 값의 TabsContent 하나만 두면 됩니다.',
         ],
     },
     {
@@ -79,7 +79,7 @@ const PROPS_ITEMS = [
 const TextTabsGuidePage = () => (
     <GuidePageShell
         title="텍스트 탭 (TextTabs)"
-        description="면이나 밑줄 없이 글자만으로 고르는 탭입니다. 고른 값으로 아래 영역 하나의 내용을 바꾸는 자리에 씁니다."
+        description='면이나 밑줄 없이 글자만으로 고르는 탭입니다. 지금 서비스 화면에서는 쓰지 않습니다 — 평가결과 조회 · 이용약관 · 개인정보 처리방침의 1뎁스 탭은 Tabs variant="underline"(선택한 탭에 밑줄)을 씁니다.'
     >
         <BaseCard>
             <section aria-labelledby="text-tabs-basic" className="flex flex-col gap-6">
