@@ -25,13 +25,14 @@ const SectionTitle = ({title, aside, date, id}: {title: string; aside?: string; 
     </div>
 )
 
-// 흰 카드 — 제목(title) · 제목 줄 오른쪽 보조(aside: 단위 · 범례 등) · 제목 아래 설명(description).
+// 흰 카드 — 제목(title) · 제목 줄 오른쪽 보조(aside: 범례 · 기준 문구 등 — 단위는 아래 WithUnit) · 제목 아래 설명(description).
 // 제목이 있을 때만 section 으로 그린다 — 제목 없는 section 은 구획 이름을 알 수 없어 마크업 경고가 된다[8.1.1].
 const Card = ({
     title,
     aside,
     description,
     className,
+    revealGroup,
     children,
 }: {
     /** 없으면 div 로 그린다. aside 만 있으면 제목 줄에 보조 문구만 오른쪽에 둔다. */
@@ -40,6 +41,8 @@ const Card = ({
     /** 제목 아래 설명 글. */
     description?: ReactNode
     className?: string
+    /** 차트 등장 묶음 — 같은 이름의 카드끼리 차례 없이 동시에 움직인다(chart-reveal.tsx 의 group). */
+    revealGroup?: string
     children: ReactNode
 }) => {
     const CardTag = title ? 'section' : 'div'
@@ -53,7 +56,7 @@ const Card = ({
         >
             {/* 카드 안 차트는 카드가 화면에 들어올 때 움직인다(chart-reveal.tsx). 제목 줄의 보조 요소(범례 등)도 함께 감싼다.
                 표만 있는 카드에는 아무 영향이 없다. */}
-            <ChartReveal>
+            <ChartReveal group={revealGroup}>
                 {/* 제목도 보조 문구도 없으면 제목 줄을 두지 않는다 — 빈 줄과 간격(24)이 내용을 아래로 밀지 않게. */}
                 {title || aside ? (
                     <div className="flex flex-col gap-2">
@@ -160,7 +163,12 @@ const REPORT_LINE_STYLES: readonly Pick<LineChartSeries, 'color' | 'dash' | 'mar
     {color: 'var(--ds-report-series-5)', marker: 'triangle'},
 ]
 
-// 단위 줄 — 표(그래프) 바로 위에 오른쪽 정렬로 둔다. WithUnit 은 단위 줄 + 내용을 한 묶음으로 감싼다.
+// 단위 줄 — 표 · 그래프 바로 위 오른쪽. WithUnit 이 단위 줄 + 내용을 한 묶음으로 감싼다(단위 → 내용 간격 4).
+// [단위 위치 규칙 — 보고서 모든 탭 공통] 단위는 카드 제목 바로 아래 줄에 둔다. 제목 줄 오른쪽(aside)에 두지 않는다.
+//   <Card title="…" className="gap-0"><WithUnit unit="단위: 백만원">…</WithUnit></Card>
+//   · Card 의 제목 → 내용 간격을 0 으로 해야 단위가 제목에 붙는다(className="gap-0").
+//   · 단위가 한 열에만 해당하면(표 + 그래프 2열) 그 열만 WithUnit 으로 감싼다.
+//   · 카드 안에 표 아래 그래프가 더 있으면 WithUnit 과 그래프를 flex-col gap-6 으로 한 번 더 묶는다(기업현황 재무현황).
 const UnitLine = ({children}: {children: ReactNode}) => (
     <p className="typo-body-l-regular text-foreground-subtle text-end">{children}</p>
 )

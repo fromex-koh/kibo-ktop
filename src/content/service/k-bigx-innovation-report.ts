@@ -25,7 +25,7 @@ import type {Viewport} from 'next'
 // │    - 목업 구역 전체(MOCK_DELAY_MS · MOCK_INNOVATION_GROWTH_REPORT).
 // │ 5. 문구(INNOVATION_REPORT_*) · 점수 구간(TECH_INDEX_GRADES) · 케이스 정의는 그대로 쓴다.
 // │ 참고: 점수에 따른 상태 · 색 · 칸 수, 비율, 합계 같은 파생 값은 화면이 계산한다 — 원래 값만 내려 준다.
-// │       기업현황(주주 · 관계기업) · 기술혁신정보 표는 노출 건수 제한이 있다 — 최대 10줄, 또는 10건 + '기타' 1줄 = 최대 11줄.
+// │       기업현황(경영진 · 주주 · 관계기업) · 기술혁신정보 표는 노출 건수 제한이 있다 — 최대 10줄, 또는 10건 + '기타' 1줄 = 최대 11줄.
 // │       목록은 자르지 말고 그대로 보낸다(이머징 기술만 API 가 '기타' 줄을 만든다).
 // │       표별 규칙은 '[프론트엔드 연동 · 최대' 로 검색 — innovation-growth-report-tech.tsx 의 [표 노출 건수 규칙] 표.
 // │       순서가 정해진 목록은 '[프론트엔드 연동 · 정렬]' 로 검색한다(화면이 정렬하는 목록과 받은 순서대로 그리는 목록이 섞여 있다).
@@ -161,8 +161,6 @@ type InnovationFinancialRatioGroup = {
 type InnovationBorrowingCell = {amount: number; ratio: number} | null
 type InnovationBorrowingRow = {key: string; label: string; cells: readonly InnovationBorrowingCell[]}
 type InnovationCreditDetail = {
-    /** 기업신용등급 요약 상자 — 줄바꿈 자리마다 한 줄. */
-    ratingSummary: readonly string[]
     /**
      * 이전평가이력. 등급은 CRI 코드, chartLabel 은 그래프 아래 시점(예: 23.09월).
      * [프론트엔드 연동 · 정렬] 그래프는 받은 순서대로 그리므로 시간순(오래된 것부터)으로 보낸다.
@@ -350,8 +348,15 @@ type InnovationTradePartner = {
 }
 type InnovationCompanyStatus = {
     overview: readonly LabelValue[]
+    /**
+     * 경영진 현황 — 목록 수는 기업마다 다르다(가변).
+     * [프론트엔드 연동] 화면은 앞에서부터 최대 10건만 그린다(COMPANY_LIST_LIMIT). 목록은 자르지 않고 그대로 보낸다.
+     */
     executives: readonly {role: string; name: string; birthDate: string}[]
-    /** 주주 현황. [프론트엔드 연동 · 최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임). 지분율 높은 순으로 보낸다. */
+    /**
+     * 주주 현황 — 지분율 높은 순으로 보낸다.
+     * [프론트엔드 연동] 화면은 앞에서부터 최대 10건만 그린다(COMPANY_LIST_LIMIT). 목록은 자르지 않고 그대로 보낸다.
+     */
     shareholders: readonly {name: string; shares: number; ratio: number; relation: string}[]
     /** 관계기업 현황. [프론트엔드 연동 · 최대 10건] 화면이 앞에서부터 10건만 그린다(11번째부터 안 보임). */
     affiliates: readonly {
@@ -601,8 +606,8 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
     },
     creditFinance: {
         rating: {
-            // 목업 CRI 코드 — '우량 등급'으로 표시된다(AA+ · AA0 · AA- 중 가운데).
-            grade: 'AA0',
+            // 목업 CRI 코드 — '양호'로 표시된다(BBB+ · BBB0 · BBB- 중 가운데).
+            grade: 'BBB0',
             details: [
                 {label: '평가일자', value: '2022-06-15'},
                 {label: '결산일자', value: '2024-08-04'},
@@ -1052,18 +1057,15 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
     },
     viewerCase: 'self',
     creditDetail: {
-        ratingSummary: [
-            '현재시점에서 채무상환 능력에 대한 당면 문제는 없으나,',
-            '장래의 경제여건 및 시장환경 변화에 따라 안정성 면에서는 불안한 요소가 있음',
-        ],
         // [프론트엔드 연동 · 정렬] 시간순(오래된 것부터) — 그래프 순서. 표는 화면이 최신순으로 정렬한다.
+        // 마지막(가장 최근) 등급 = 현재 등급(creditFinance.rating.grade)과 같아야 한다 — 표는 이 줄을 빼고 그린다.
         ratingHistory: [
             {date: '2023-09-03', chartLabel: '23.09월', grade: 'A-'},
             {date: '2024-11-04', chartLabel: '24.11월', grade: 'BBB+'},
-            {date: '2025-10-15', chartLabel: '25.10월', grade: 'AA0'},
+            {date: '2025-10-15', chartLabel: '25.10월', grade: 'BBB0'},
         ],
         cashFlow: {
-            grade: 'CR-4',
+            grade: 'CR-6',
             // [프론트엔드 연동 · 정렬] 순서 상관없음 — 화면이 평가일자 최신순으로 정렬한다.
             history: [
                 {date: '2024-11-04', grade: 'CR-3'},
@@ -1249,9 +1251,9 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
                 {key: 'lending', label: '대부업권', values: [10.0, 10.0, null]},
             ],
             share: [
-                {id: 'bank', label: '은행업권', percentage: 76, color: 'var(--raw-navy-500)'},
-                {id: 'mutual', label: '상호금융업권', percentage: 18.4, color: 'var(--raw-blue-500)'},
-                {id: 'card', label: '카드/캐피탈업권', percentage: 5.6, color: 'var(--raw-blue-300)'},
+                {id: 'bank', label: '은행업권', percentage: 76, color: 'var(--ds-donut-2)'},
+                {id: 'mutual', label: '상호금융업권', percentage: 18.4, color: 'var(--ds-donut-4)'},
+                {id: 'card', label: '카드/캐피탈업권', percentage: 5.6, color: 'var(--ds-donut-6)'},
             ],
         },
         creditCollateral: {
@@ -1263,9 +1265,9 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             current: {credit: 43.8, collateral: 56.2},
         },
         collaterals: [
-            {id: 'real-estate', label: '부동산', amount: 2000, color: 'var(--raw-navy-500)'},
-            {id: 'special-mortgage', label: '특수저당', amount: 3862, color: 'var(--raw-blue-500)'},
-            {id: 'guarantee', label: '보증', amount: 2850, color: 'var(--raw-blue-300)'},
+            {id: 'real-estate', label: '부동산', amount: 2000, color: 'var(--ds-donut-2)'},
+            {id: 'special-mortgage', label: '특수저당', amount: 3862, color: 'var(--ds-donut-4)'},
+            {id: 'guarantee', label: '보증', amount: 2850, color: 'var(--ds-donut-6)'},
         ],
     },
     techIndexDetail: {
@@ -1425,24 +1427,19 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {label: '대표기술분야', value: '무선·이동통신 서비스'},
             {label: '주요제품', value: '5G통신 및 IoT 관련 서비스'},
         ],
+        // 경영진 현황 — 목업은 4건. 실제 연동 시 최대 10건까지 그려진다(타입 주석 참고).
         executives: [
             {role: '대표이사', name: '홍길동', birthDate: '71.02.03'},
             {role: '사내이사', name: '김이사', birthDate: '74.05.12'},
             {role: '감사', name: '이감사', birthDate: '69.11.28'},
             {role: '사외이사', name: '박이사', birthDate: '77.08.09'},
         ],
-        // [프론트엔드 연동 · 최대 10건] 기획: 주주 현황 목록은 10개까지만 보인다 — 화면이 앞에서부터 10건만 그린다(COMPANY_LIST_LIMIT).
+        // 주주 현황 — 목업은 컨펌 화면이 깔끔하게 보이도록 4건만 둔다. 실제 연동 시 최대 10건까지 그려진다(타입 주석 참고).
         shareholders: [
             {name: '홍길동', shares: 10000, ratio: 25, relation: '본인'},
             {name: '김이사', shares: 6000, ratio: 15, relation: '가족'},
             {name: '이감사', shares: 4800, ratio: 12, relation: '친척'},
             {name: '박이사', shares: 4000, ratio: 10, relation: '타인'},
-            {name: '최부장', shares: 3600, ratio: 9, relation: '타인'},
-            {name: '정과장', shares: 3200, ratio: 8, relation: '타인'},
-            {name: '강대리', shares: 2800, ratio: 7, relation: '가족'},
-            {name: '조사원', shares: 2400, ratio: 6, relation: '타인'},
-            {name: '윤주주', shares: 2000, ratio: 5, relation: '친척'},
-            {name: '(주)투자파트너스', shares: 1200, ratio: 3, relation: '타인'},
         ],
         // [프론트엔드 연동 · 최대 10건] 기획: 관계기업 현황 목록은 10개까지만 보인다 — 화면이 앞에서부터 10건만 그린다(COMPANY_LIST_LIMIT).
         affiliates: [

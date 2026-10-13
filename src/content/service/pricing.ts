@@ -13,8 +13,6 @@ type PricingPlan = {
     period: string
     /** 조회 가능 건수 — 카드에는 "조회 N건", 결제하기의 제공횟수에는 "N건"으로 쓴다. */
     quota: number
-    /** 강조 카드(시안 "스탠다드") — 옅은 파란 면·파란 테두리·채운 [구매하기]. */
-    isRecommended?: boolean
 }
 
 const FREE_SERVICE = {
@@ -56,7 +54,6 @@ const PAID_PLANS: readonly PricingPlan[] = [
         price: 330000,
         period: '1개월',
         quota: 100,
-        isRecommended: true,
     },
     {
         id: 'premium',

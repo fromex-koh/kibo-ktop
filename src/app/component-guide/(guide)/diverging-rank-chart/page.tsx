@@ -418,10 +418,10 @@ const DivergingRankChartGuidePage = () => (
                         않아 대비가 유지됩니다.
                     </li>
                     <li>
-                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 막대가
-                        가운데에서 양쪽으로 자라고(<code>--animate-chart-*</code> · 0.6초), 다 자란 뒤 값 글자가 옅게
-                        나타납니다(<code>--animate-chart-label</code> · 0.3초). <code>motion-safe</code> 라 동작 줄이기
-                        설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
+                        K-BIGx 보고서처럼 <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때
+                        막대가 가운데에서 양쪽으로 자라고(<code>--animate-chart-*</code> · 0.6초), 다 자란 뒤 값 글자가
+                        옅게 나타납니다(<code>--animate-chart-label</code> · 0.3초). <code>motion-safe</code> 라 동작
+                        줄이기 설정이면 움직이지 않습니다[6.3.1]. 그 밖에서는 그려질 때 바로 움직입니다.
                     </li>
                 </ul>
             </section>

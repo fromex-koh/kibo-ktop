@@ -16,7 +16,7 @@ import {
 } from '@/content/service/terms'
 
 // 이용약관 — 탭(기술평가 · K-BIGx) 아래에 약관 버전 셀렉트와 본문이 온다. 데이터는 content/service/terms.ts.
-// 탭은 개인정보 처리방침과 같은 text 탭이다.
+// 탭은 개인정보 처리방침과 같은 underline 탭이다(선택한 탭 아래에만 밑줄).
 // 탭 이동, roving tabindex, aria-controls는 Tabs 내부의 Radix 동작을 따른다.
 
 const TECH_VIEW = {value: 'tech', label: '기술평가 이용약관'} as const satisfies {value: TermsView; label: string}
@@ -140,7 +140,7 @@ const TechTermsPanel = () => (
 const TermsTabs = ({defaultView = TECH_VIEW.value}: {defaultView?: TermsView}) => (
     <Tabs defaultValue={defaultView} className="gap-10">
         {/* 1뎁스 제목이 긴 모바일 화면은 TabsScrollArea로 가로 스크롤을 제공한다. */}
-        <TabsScrollArea variant="text" aria-label="이용약관 구분">
+        <TabsScrollArea variant="underline" aria-label="이용약관 구분">
             {TERMS_VIEWS.map((view) => (
                 <TabsTrigger key={view.value} value={view.value}>
                     {view.label}

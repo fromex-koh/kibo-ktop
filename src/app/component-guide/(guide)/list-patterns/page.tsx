@@ -56,7 +56,7 @@ const CHOICE_ROWS = [
         cells: [
             '기업 평가결과 조회 (모형명 · 등급/점수 · 평가일 · 결과 버튼)',
             <code key="c">EvaluationResultList</code>,
-            '모형 탭(TextTabs)과 조회 필터로 거릅니다.',
+            '모형 탭(Tabs variant="underline")과 조회 필터로 거릅니다.',
         ],
     },
     {
@@ -239,7 +239,7 @@ const ListPatternsGuidePage = () => (
                         <h3 className="typo-title-m-bold text-foreground">공통 골격</h3>
                         <ol className="typo-body-l-regular text-label-foreground flex list-decimal flex-col gap-2 pl-5">
                             <li>
-                                <strong className="text-foreground">고르는 자리</strong> — 탭(Tabs · TextTabs) 또는 조회
+                                <strong className="text-foreground">고르는 자리</strong> — 탭(Tabs) 또는 조회
                                 필터(SearchFilterForm). 없는 목록도 있습니다.
                             </li>
                             <li>

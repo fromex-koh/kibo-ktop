@@ -40,16 +40,13 @@ const numberFormatter = new Intl.NumberFormat('ko-KR')
 const oneDecimalFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 1, maximumFractionDigits: 1})
 const twoDecimalFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
 
-// 현금흐름등급 척도 — 낮은 등급(CR-6)부터 높은 등급(CR-1). 밝은 칸(CR-5 회색 · CR-3 주황)은 흰 글자로는 본문 대비 4.5:1 에 못 미쳐 짙은 글자를 쓴다[5.3.3].
-// 칸 글자 색(흰색 · grade-scale-chip-foreground)이 테마와 무관하게 고정이라 칸 색도 고정 색(--raw-*)을 쓴다.
-const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [
-    {label: 'CR-6', color: 'var(--raw-gray-700)'},
-    {label: 'CR-5', color: 'var(--raw-gray-200)', isLightColor: true},
-    {label: 'CR-4', color: 'var(--raw-error-500)'},
-    {label: 'CR-3', color: 'var(--raw-orange-500)', isLightColor: true},
-    {label: 'CR-2', color: 'var(--raw-success-500)'},
-    {label: 'CR-1', color: 'var(--raw-blue-500)'},
-]
+// 현금흐름등급 척도 — 낮은 등급(CR-6)부터 높은 등급(CR-1). 칸 · 원호 색과 칸 글자 색은 cash-flow-cr-<n> 토큰(tokens.json)이다.
+// 다크에서는 칸 색이 밝은 단계로 바뀌고 글자도 짙은 색으로 바뀐다(CR-5 만 어두운 칸 + 밝은 글자).
+const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [6, 5, 4, 3, 2, 1].map((level) => ({
+    label: `CR-${level}`,
+    color: `var(--ds-cash-flow-cr-${level})`,
+    foreground: `var(--ds-cash-flow-cr-${level}-foreground)`,
+}))
 
 const BORROWING_TREND_COLOR = 'var(--ds-report-series-3)'
 // 신용/담보 비중 — 선 모양은 보고서 공통(REPORT_LINE_STYLES)의 1번 · 4번을 쓰고, 아래 비율 막대(RatioStackBar)도 같은 색을 쓴다.
@@ -241,8 +238,8 @@ const CreditInfoTable = ({
 type BorrowingStatusSource = Pick<InnovationCreditDetail, 'institutions' | 'creditCollateral' | 'collaterals'>
 
 const InstitutionShareCard = ({source}: {source: BorrowingStatusSource}) => (
-    <Card className="h-full gap-4" title="기관별 비중">
-        <div className="grid grid-cols-2 items-center gap-12">
+    <Card className="h-full gap-0" title="기관별 비중">
+        <div className="grid grid-cols-2 items-center gap-6">
             <WithUnit unit="단위: %">
                 <ReportTable
                     caption="기관별 차입금 비중(단위: %)"
@@ -278,53 +275,59 @@ const InstitutionShareCard = ({source}: {source: BorrowingStatusSource}) => (
     </Card>
 )
 
+// 신용/담보 비중 · 담보 현황 — 나란한 두 카드라 차트가 차례 없이 동시에 움직인다(같은 revealGroup).
+const BORROWING_PAIR_REVEAL_GROUP = 'borrowing-credit-collateral'
+
 const CreditCollateralCard = ({source}: {source: BorrowingStatusSource}) => (
-    <Card className="h-full gap-4" title="신용/담보 비중">
-        <WithUnit unit="단위: %">
-            <LineChart
-                appearance="columns"
-                legendPlacement="bottom-center"
-                showTooltip={false}
-                showValueLabels
-                valueFractionDigits={1}
-                isValueFractionFixed={false}
-                ariaLabel="시점별 신용 · 담보 비중"
-                unit="%"
-                showUnitLabel={false}
-                data={source.creditCollateral.points.map((point) => ({
-                    id: point.label,
-                    label: point.label,
-                    values: {credit: point.credit, collateral: point.collateral},
-                }))}
-                series={[
-                    {key: 'credit', label: '신용', ...CREDIT_LINE_STYLE},
-                    {key: 'collateral', label: '담보', ...COLLATERAL_LINE_STYLE},
+    <Card className="h-full gap-0" title="신용/담보 비중" revealGroup={BORROWING_PAIR_REVEAL_GROUP}>
+        {/* 그래프(범례 포함) → 아래 비율 막대 간격 24. */}
+        <div className="flex min-w-0 flex-col gap-6">
+            <WithUnit unit="단위: %">
+                <LineChart
+                    appearance="columns"
+                    legendPlacement="bottom-center"
+                    showTooltip={false}
+                    showValueLabels
+                    valueFractionDigits={1}
+                    isValueFractionFixed={false}
+                    ariaLabel="시점별 신용 · 담보 비중"
+                    unit="%"
+                    showUnitLabel={false}
+                    data={source.creditCollateral.points.map((point) => ({
+                        id: point.label,
+                        label: point.label,
+                        values: {credit: point.credit, collateral: point.collateral},
+                    }))}
+                    series={[
+                        {key: 'credit', label: '신용', ...CREDIT_LINE_STYLE},
+                        {key: 'collateral', label: '담보', ...COLLATERAL_LINE_STYLE},
+                    ]}
+                />
+            </WithUnit>
+            <RatioStackBar
+                data={[
+                    {
+                        id: 'credit',
+                        label: '신용',
+                        value: source.creditCollateral.current.credit,
+                        color: CREDIT_LINE_STYLE.color,
+                    },
+                    {
+                        id: 'collateral',
+                        label: '담보',
+                        value: source.creditCollateral.current.collateral,
+                        color: COLLATERAL_LINE_STYLE.color,
+                    },
                 ]}
             />
-        </WithUnit>
-        <RatioStackBar
-            data={[
-                {
-                    id: 'credit',
-                    label: '신용',
-                    value: source.creditCollateral.current.credit,
-                    color: CREDIT_LINE_STYLE.color,
-                },
-                {
-                    id: 'collateral',
-                    label: '담보',
-                    value: source.creditCollateral.current.collateral,
-                    color: COLLATERAL_LINE_STYLE.color,
-                },
-            ]}
-        />
+        </div>
     </Card>
 )
 
 const CollateralCard = ({source}: {source: BorrowingStatusSource}) => {
     const total = source.collaterals.reduce((sum, item) => sum + Math.max(0, item.amount), 0)
     return (
-        <Card className="h-full gap-4" title="담보 현황">
+        <Card className="h-full gap-0" title="담보 현황" revealGroup={BORROWING_PAIR_REVEAL_GROUP}>
             <WithUnit unit="단위: 백만원">
                 <PercentageDonutChart
                     data={source.collaterals.map((item) => ({
@@ -343,7 +346,7 @@ const CollateralCard = ({source}: {source: BorrowingStatusSource}) => {
 
 // 비공개 케이스의 자리 표시 값 — 실제 값이 아닌 임의 값이다(흐리게 깔려 모양만 남긴다).
 // [프론트엔드 연동] 연동 후에도 그대로 쓴다 — 미노출 케이스에서는 API 가 실제 값을 주지 않으므로 이 값으로 카드 모양을 그린다.
-// 연도 · 시점 이름은 React key 로도 쓰이므로 서로 다르게 둔다. 도넛 조각 색은 percentage-donut-colors.ts 와 같은 고정 색(--raw-*)이다.
+// 연도 · 시점 이름은 React key 로도 쓰이므로 서로 다르게 둔다. 도넛 조각 색은 percentage-donut-colors.ts 와 같은 donut-<n> 토큰이다(다크에서 밝은 색으로 바뀐다).
 const PLACEHOLDER_BORROWING_STATUS: BorrowingStatusSource = {
     institutions: {
         years: ['0000년', '0001년', '0002년'],
@@ -353,9 +356,9 @@ const PLACEHOLDER_BORROWING_STATUS: BorrowingStatusSource = {
             values: [40, 30, 20],
         })),
         share: [
-            {id: 'placeholder-a', label: '구분 1', percentage: 50, color: 'var(--raw-navy-500)'},
-            {id: 'placeholder-b', label: '구분 2', percentage: 30, color: 'var(--raw-blue-500)'},
-            {id: 'placeholder-c', label: '구분 3', percentage: 20, color: 'var(--raw-blue-300)'},
+            {id: 'placeholder-a', label: '구분 1', percentage: 50, color: 'var(--ds-donut-2)'},
+            {id: 'placeholder-b', label: '구분 2', percentage: 30, color: 'var(--ds-donut-4)'},
+            {id: 'placeholder-c', label: '구분 3', percentage: 20, color: 'var(--ds-donut-6)'},
         ],
     },
     creditCollateral: {
@@ -367,9 +370,9 @@ const PLACEHOLDER_BORROWING_STATUS: BorrowingStatusSource = {
         current: {credit: 50, collateral: 50},
     },
     collaterals: [
-        {id: 'placeholder-a', label: '구분 1', amount: 5000, color: 'var(--raw-navy-500)'},
-        {id: 'placeholder-b', label: '구분 2', amount: 3000, color: 'var(--raw-blue-500)'},
-        {id: 'placeholder-c', label: '구분 3', amount: 2000, color: 'var(--raw-blue-300)'},
+        {id: 'placeholder-a', label: '구분 1', amount: 5000, color: 'var(--ds-donut-2)'},
+        {id: 'placeholder-b', label: '구분 2', amount: 3000, color: 'var(--ds-donut-4)'},
+        {id: 'placeholder-c', label: '구분 3', amount: 2000, color: 'var(--ds-donut-6)'},
     ],
 }
 
@@ -387,6 +390,7 @@ const InnovationGrowthReportCredit = ({
     visibility = INNOVATION_CREDIT_VISIBILITY.self,
 }: InnovationGrowthReportCreditProps) => {
     const {ratingHistory, cashFlow, borrowings, borrowingChanges} = detail
+    const ratingDefinition = findCriGrade(rating.label)?.definition
     // 이전평가이력 표 — 최신순으로 정렬한 뒤 가장 최근(현재 등급 — 왼쪽 게이지)을 뺀 지난 평가만.
     const previousRatings = [...ratingHistory].sort(byLatestDate).slice(1)
     // 현금흐름등급 표 — 최신순.
@@ -405,14 +409,8 @@ const InnovationGrowthReportCredit = ({
                             ariaLabel={`기업신용등급 ${rating.label}, ${rating.description}`}
                             className="max-w-65"
                         />
-                        <NoticeBox className="text-center">
-                            {detail.ratingSummary.map((line, index) => (
-                                <span key={line}>
-                                    {index > 0 ? <br /> : null}
-                                    {line}
-                                </span>
-                            ))}
-                        </NoticeBox>
+                        {/* 등급 정의 — 등급 코드로 CRI 등급표(cri-grades.ts)에서 찾는다. 표에 없는 코드면 상자를 숨긴다(게이지가 '등급 코드 확인 필요' 표시). */}
+                        {ratingDefinition ? <NoticeBox className="text-center">{ratingDefinition}</NoticeBox> : null}
                     </Card>
                     <Card title="이전평가이력">
                         <GradeHistoryChart
@@ -494,7 +492,7 @@ const InnovationGrowthReportCredit = ({
                 <SectionTitle id="ig-credit-ratios" title="재무비율진단" />
                 <div className="flex flex-col gap-6">
                     {detail.ratios.map((group) => (
-                        <Card key={group.id} title={group.title} className="gap-4">
+                        <Card key={group.id} title={group.title} className="gap-0">
                             <div className="grid grid-cols-2 gap-6">
                                 <WithUnit unit={`단위: ${group.unit}`}>
                                     <ReportTable
@@ -547,11 +545,11 @@ const InnovationGrowthReportCredit = ({
                 </div>
             </section>
 
-            {/* 차입금 분석 — 변동률(선 그래프) · 현황 · 변동현황 카드. 단위는 그래프 · 표 위 오른쪽 줄. */}
+            {/* 차입금 분석 — 변동률(선 그래프) · 현황 · 변동현황 카드. 단위는 WithUnit 규칙(innovation-growth-report-parts.tsx). */}
             <section aria-labelledby="ig-credit-borrowing" className="flex flex-col gap-4">
                 <SectionTitle id="ig-credit-borrowing" title="차입금 분석" />
                 <div className="flex flex-col gap-6">
-                    <Card title="차입금 변동률" className="gap-4">
+                    <Card title="차입금 변동률" className="gap-0">
                         <WithUnit unit="단위: %">
                             <LineChart
                                 data={detail.borrowingTrend.map((item) => ({
@@ -569,7 +567,7 @@ const InnovationGrowthReportCredit = ({
                             />
                         </WithUnit>
                     </Card>
-                    <Card title="차입금 현황" className="gap-4">
+                    <Card title="차입금 현황" className="gap-0">
                         <WithUnit unit="단위: 백만원, %">
                             <BorrowingTable borrowings={borrowings} />
                         </WithUnit>

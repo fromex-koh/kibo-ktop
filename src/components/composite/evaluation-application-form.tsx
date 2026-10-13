@@ -9,7 +9,7 @@ import {SubmitConfirmDialog} from '@/components/composite/submit-confirm-dialog'
 // 기관 개별평가 Tech-Index 3단계 평가 신청하기 입력 묶음 — Figma "4단계_평가 신청하기".
 // 첨부 서류 세 개가 한 폼이고, 화면 하단의 [제출]이 form 속성으로 이 폼을 제출한다.
 //
-// 검사를 모두 통과하면 이 화면 위에 제출 전 확인 모달("제출하시겠습니까?")을 띄우고,
+// 검사를 모두 통과하면 이 화면 위에 제출 전 최종 확인 모달(SubmitConfirmDialog — "최종 제출하시겠습니까?")을 띄우고,
 // 모달의 [제출]이 (5) 완료 화면으로 넘어간다 — 별도 화면으로 이동하지 않는다.
 // 완료 화면 경로는 갈래(일반/창업)마다 달라 completePath 로 받는다.
 // 기관 개별평가 [평가 신청하기] 입력 묶음 — Tech-Index·투자모형이 같은 첨부 서류를 받는다.

@@ -158,6 +158,27 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'report-series-4': 'bg-report-series-4',
     'report-series-5': 'bg-report-series-5',
     'report-series-6': 'bg-report-series-6',
+    'donut-1': 'bg-donut-1',
+    'donut-2': 'bg-donut-2',
+    'donut-3': 'bg-donut-3',
+    'donut-4': 'bg-donut-4',
+    'donut-5': 'bg-donut-5',
+    'donut-6': 'bg-donut-6',
+    'donut-7': 'bg-donut-7',
+    'donut-8': 'bg-donut-8',
+    'cash-flow-cr-1': 'bg-cash-flow-cr-1',
+    'cash-flow-cr-1-foreground': 'bg-cash-flow-cr-1-foreground',
+    'cash-flow-cr-2': 'bg-cash-flow-cr-2',
+    'cash-flow-cr-2-foreground': 'bg-cash-flow-cr-2-foreground',
+    'cash-flow-cr-3': 'bg-cash-flow-cr-3',
+    'cash-flow-cr-3-foreground': 'bg-cash-flow-cr-3-foreground',
+    'cash-flow-cr-4': 'bg-cash-flow-cr-4',
+    'cash-flow-cr-4-foreground': 'bg-cash-flow-cr-4-foreground',
+    'cash-flow-cr-5': 'bg-cash-flow-cr-5',
+    'cash-flow-cr-5-foreground': 'bg-cash-flow-cr-5-foreground',
+    'cash-flow-cr-6': 'bg-cash-flow-cr-6',
+    'cash-flow-cr-6-foreground': 'bg-cash-flow-cr-6-foreground',
+    'grade-scale-track': 'bg-grade-scale-track',
     'gauge-excellent-from': 'bg-gauge-excellent-from',
     'gauge-excellent-to': 'bg-gauge-excellent-to',
     'gauge-good-from': 'bg-gauge-good-from',
@@ -432,6 +453,13 @@ const CUSTOM_GROUPS: Group[] = [
     },
     // K-BIGx 보고서 차트 계열 색 — 다른 화면이 쓰는 chart-1~5 와 분리한 보고서 전용 슬롯(다크는 각 색의 400).
     {name: 'report-series-1~6 (K-BIGx 보고서 계열 색)', match: (n) => n.startsWith('report-series-')},
+    // 비중 도넛(PercentageDonutChart) 조각 색 — 다크는 어두운 카드 위에서 보이게 밝힌 값.
+    {name: 'donut-1~8 (비중 도넛 조각 색)', match: (n) => n.startsWith('donut-')},
+    // 현금흐름등급 게이지(GradeScaleGauge) — 등급 칸 · 원호 색과 칸 글자 색, 원호 트랙.
+    {
+        name: 'cash-flow-cr-1~6 · grade-scale-track (현금흐름등급 게이지)',
+        match: (n) => n.startsWith('cash-flow-cr-') || n === 'grade-scale-track',
+    },
     // 조회 목록의 진행 상태 글자색 — 라이트는 단계 팔레트 밖 값이라 extra.azure, 다크는 blue.300 을 가리킨다.
     {name: 'status-evaluated (평가완료)', match: (n) => n === 'status-evaluated'},
     {name: 'scroll-thumb / scroll-track', match: (n) => n === 'scroll-thumb' || n === 'scroll-track'},
@@ -640,6 +668,20 @@ const GROUP_USAGE: Record<string, ReactNode> = {
         <>
             K-BIGx 보고서 차트의 계열 색입니다(남색 · 파랑 · 보라 · 민트 · 주황 · 빨강). 다크는 각 색의 400 이라 다크
             카드 위에서도 보입니다. 다른 화면의 차트는 chart-1~5 를 쓰므로 이 값을 바꿔도 영향이 없습니다.
+        </>
+    ),
+    'cash-flow-cr-1~6 · grade-scale-track (현금흐름등급 게이지)': (
+        <>
+            현금흐름등급 게이지의 등급 칸 · 원호 색(cash-flow-cr-n)과 칸 글자 색(-foreground)입니다. 다크는 칸이 밝은
+            단계로 바뀌고 글자는 짙은 색이 됩니다(CR-5 만 어두운 칸 + 밝은 글자). grade-scale-track 은 원호의 빈
+            트랙으로, 다크에서 어두운 칸 색이 묻히지 않게 다른 게이지 트랙(gauge-track)보다 밝습니다.
+        </>
+    ),
+    'donut-1~8 (비중 도넛 조각 색)': (
+        <>
+            비중 도넛(PercentageDonutChart)의 조각 · 범례 칩 색입니다. 진한 색부터 donut-1 ~ 8 이고, 항목 수가 적으면 이
+            중 몇 개만 씁니다(percentage-donut-colors.ts). 다크는 navy · blue 의 밝은 단계로 바뀌어 어두운 카드 위에서도
+            조각이 구분됩니다.
         </>
     ),
     'sidebar (+ 세부 7)': (

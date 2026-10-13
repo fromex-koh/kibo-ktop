@@ -1,7 +1,7 @@
 'use client'
 
 import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
-import {useId, type ReactNode} from 'react'
+import {useId, type CSSProperties, type ReactNode} from 'react'
 import {PolarAngleAxis, RadialBar, RadialBarChart} from 'recharts'
 import {ChartContainer, type ChartConfig} from '@/components/ui/chart'
 import {ARC_GAUGE_SIZES, arcGaugeTrackPath, arcGeometry, type ArcGaugeSize} from '@/components/custom/arc-gauge-shape'
@@ -38,7 +38,12 @@ type ArcGaugeProps = {
     children?: ReactNode
     /** 가운데 글자 묶음에 더할 클래스 — 기본 아래 여백은 12(pb-3)이고, 더 올리려면 pb-* 를 준다. */
     overlayClassName?: string
+    /** 트랙(빈 원호) 색(토큰 변수). 안 주면 gauge-track. 채움 색이 트랙과 비슷해지는 게이지만 따로 준다(GradeScaleGauge). */
+    trackColor?: string
 }
+
+// 트랙 색을 바꿀 때 원호 배경에 넘기는 CSS 변수.
+type TrackStyle = CSSProperties & {'--arc-gauge-track': string}
 
 const ArcGauge = ({
     value,
@@ -50,6 +55,7 @@ const ArcGauge = ({
     children,
     overlayClassName,
     animate: animateProp,
+    trackColor,
 }: ArcGaugeProps) => {
     const revealAnimate = useChartAnimation()
     const animate = animateProp ?? revealAnimate
@@ -67,6 +73,7 @@ const ArcGauge = ({
     const ratio = safeValue > 0 ? Math.max(geometry.minFillRatio, safeValue / MAX_VALUE) : 0
     const config: ChartConfig = {value: {label: ariaLabel, color}}
     const isHydrated = useIsHydrated()
+    const trackStyle: TrackStyle | undefined = trackColor ? {'--arc-gauge-track': trackColor} : undefined
 
     // 새로고침 직후(하이드레이션 전)에는 Recharts 가 칸의 폭을 재기 전이라 원호가 비어 보인다 — 그동안 같은 자리 · 같은 크기의
     // 스켈레톤(회색 원호 + 가운데 막대 두 줄)을 보이고, 붙은 뒤 실제 원호로 바꾼다.
@@ -115,10 +122,15 @@ const ArcGauge = ({
                 initialDimension={{width, height}}
                 // 트랙 색 — ChartContainer(shadcn 원본)가 원호 배경에 fill-muted 를 입히므로 같은 선택자로
                 // fill-gauge-track 으로 덮는다(원본 셸은 고치지 않는다).
+                // trackColor 를 주면 CSS 변수(--arc-gauge-track)로 넘겨 그 색으로 칠한다.
                 className={cn(
-                    '[&_.recharts-radial-bar-background-sector]:fill-gauge-track col-start-1 row-start-1 w-full',
+                    'col-start-1 row-start-1 w-full',
+                    trackColor
+                        ? '[&_.recharts-radial-bar-background-sector]:fill-(--arc-gauge-track)'
+                        : '[&_.recharts-radial-bar-background-sector]:fill-gauge-track',
                     chartClassName,
                 )}
+                style={trackStyle}
                 aria-hidden="true"
             >
                 {/* recharts 키보드 탐색 층은 끈다 — 값은 바깥 role="img" 의 이름이 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}

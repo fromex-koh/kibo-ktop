@@ -71,12 +71,18 @@ const SummaryText = ({parts}: {parts: readonly {text: string; isStrong?: boolean
 )
 
 // 4대 혁신역량 점수 카드 — 신청기업(역량 색) · 전체기업 막대 아래에 역량 이름. 이름(h4)이 카드 section 의 이름이 된다.
+// 차트 등장 묶음(chart-reveal.tsx) — 같은 줄의 카드는 차례 없이 동시에 움직인다. 2열 그리드는 줄 번호로 묶는다.
+const CAPABILITY_REVEAL_GROUP = 'tech-index-capability'
+const GRID_COLUMNS = 2
+const rowRevealGroup = (prefix: string, index: number) => `${prefix}-row-${Math.floor(index / GRID_COLUMNS)}`
+
 const CapabilityScoreCard = ({capability}: {capability: InnovationTechIndexCapability}) => (
     <section
         aria-labelledby={`ig-tech-index-capability-${capability.id}`}
         className="border-subtle-3 bg-card flex min-w-0 flex-col gap-4 rounded-sm border p-6"
     >
-        <ChartReveal>
+        {/* 네 카드는 한 줄이라 차례 없이 동시에 움직인다(같은 group). */}
+        <ChartReveal group={CAPABILITY_REVEAL_GROUP}>
             <ColumnChart
                 data={[
                     {
@@ -220,8 +226,13 @@ const InnovationGrowthReportTechIndex = ({
             <section aria-labelledby="ig-tech-index-by-type" className="flex flex-col gap-4">
                 <SectionTitle id="ig-tech-index-by-type" title="기업 유형별 4대 혁신역량 비교" />
                 <div className="grid grid-cols-2 gap-6">
-                    {detail.capabilityByType.map((capability) => (
-                        <Card key={capability.id} title={capability.label} className="gap-4">
+                    {detail.capabilityByType.map((capability, index) => (
+                        <Card
+                            key={capability.id}
+                            title={capability.label}
+                            className="gap-4"
+                            revealGroup={rowRevealGroup('tech-index-by-type', index)}
+                        >
                             <ColumnChart
                                 data={toColumnData(capability.items)}
                                 valueFractionDigits={1}
@@ -252,8 +263,13 @@ const InnovationGrowthReportTechIndex = ({
                     />
                 </div>
                 <div className="grid grid-cols-2 gap-6">
-                    {detail.indicators.map((indicator) => (
-                        <Card key={indicator.id} title={indicator.title} className="gap-4">
+                    {detail.indicators.map((indicator, index) => (
+                        <Card
+                            key={indicator.id}
+                            title={indicator.title}
+                            className="gap-4"
+                            revealGroup={rowRevealGroup('tech-index-indicators', index)}
+                        >
                             <ComparisonRadarChart
                                 data={indicator.items.map((item) => ({
                                     id: item.label,

@@ -6,18 +6,23 @@ import {
     Dialog,
     DialogClose,
     DialogContent,
+    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
 } from '@/components/ui/dialog'
+import {dialogBodyClassName} from '@/components/theme/dialog.variants'
 
-// 작성 취소 모달 — 평가 진행을 중단할지 되묻는다. 체크리스트·기업정보 작성 화면에서 벗어날 때 연다.
-//
-// CTA 는 [계속작성] + [저장하고 나가기] 두 개다. 시안에는 전체폭 [닫기] 한 개로 그려져 있으나 물음에 "예"로
-// 답할 버튼이 없어 중단할 방법이 없어서 두 개로 정했다 — 시안대로 되돌리지 않는다.
+// 작성 종료 모달 — 체크리스트 · 기업정보 입력 화면에서 벗어나려 할 때 연다.
+// 제목(24 Bold) + 닫기(X) → 24 → 물음(20 Bold) → 16 → 안내(16 · label-foreground) → 24 → [계속 작성] [저장 후 나가기].
+// 간격 · 여백(위 · 좌우 40, 아래 24)은 모달 기본 틀(theme/dialog.variants)이 그대로 맞는다.
+// 제출 전 최종 확인 모달(SubmitConfirmDialog)과 같은 짜임이다.
 
-const CANCEL_QUESTION = '평가 진행을 중단하시겠습니까?'
+const EXIT_TITLE = '작성 종료'
+const EXIT_QUESTION = '입력 화면을 나가시겠습니까?'
+const EXIT_NOTICE =
+    '현재까지 작성한 내용은 자동으로 저장되었습니다. 입력 화면을 나가도 나중에 이어서 작성할 수 있습니다.'
 
 type CancelConfirmDialogProps = {
     /** 모달을 여는 버튼. Radix 가 이 요소에 열기 동작과 aria 를 얹는다. */
@@ -27,30 +32,36 @@ type CancelConfirmDialogProps = {
     /** 여는 시점을 바깥에서 정할 때. open 과 onOpenChange 를 함께 넘긴다. */
     open?: boolean
     onOpenChange?: (open: boolean) => void
-    /** [저장하고 나가기] 를 눌렀을 때. 넘기지 않으면 아무 일도 하지 않는다(저장·이동 흐름 연동 전). */
+    /** [저장 후 나가기] 를 눌렀을 때. 넘기지 않으면 아무 일도 하지 않는다(저장 · 이동 흐름 연동 전). */
     onSaveAndExit?: () => void
 }
 
 const CancelConfirmDialog = ({children, defaultOpen, open, onOpenChange, onSaveAndExit}: CancelConfirmDialogProps) => (
     <Dialog defaultOpen={defaultOpen} open={open} onOpenChange={onOpenChange}>
         {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
-        {/* 설명 없이 물음과 버튼뿐이라 aria-describedby 를 비운다 — 넘기지 않으면 Radix 가 경고한다. */}
-        <DialogContent showCloseButton={false} aria-describedby={undefined}>
-            <DialogHeader className="px-6 py-8 sm:px-10 sm:pt-18">
-                {/* 이 물음이 곧 모달의 이름이라 DialogTitle 로 둔다 — 문단으로 바꾸면 대화상자에 이름이 없어진다. */}
-                <DialogTitle className="typo-title-l-bold text-foreground pe-0 text-center">
-                    {CANCEL_QUESTION}
-                </DialogTitle>
+        <DialogContent>
+            <DialogHeader>
+                <DialogTitle>{EXIT_TITLE}</DialogTitle>
             </DialogHeader>
-            <DialogFooter className="pt-6">
+            <div className={dialogBodyClassName}>
+                <div className="flex flex-col gap-4 break-keep">
+                    {/* 물음은 모달 설명(DialogDescription)이다 — 20 Bold 라 <p> 로 두면 WAVE 가 "Possible heading" 으로
+                        잡아 블록 span 으로 그린다(설명 연결은 그대로). */}
+                    <DialogDescription asChild>
+                        <span className="block">{EXIT_QUESTION}</span>
+                    </DialogDescription>
+                    <p className="typo-body-xl-regular text-label-foreground">{EXIT_NOTICE}</p>
+                </div>
+            </div>
+            <DialogFooter>
                 <DialogClose asChild>
-                    <Button variant="tertiary" size="xl">
-                        계속작성
+                    <Button type="button" variant="tertiary" size="xl">
+                        계속 작성
                     </Button>
                 </DialogClose>
-                {/* 저장 API·이동할 화면은 아직 없다 — 붙일 때 onSaveAndExit 을 넘긴다. */}
-                <Button size="xl" onClick={onSaveAndExit}>
-                    저장하고 나가기
+                {/* 저장 API · 이동할 화면은 아직 없다 — 붙일 때 onSaveAndExit 을 넘긴다. */}
+                <Button type="button" size="xl" onClick={onSaveAndExit}>
+                    저장 후 나가기
                 </Button>
             </DialogFooter>
         </DialogContent>

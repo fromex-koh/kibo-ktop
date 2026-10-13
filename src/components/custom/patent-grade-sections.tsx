@@ -42,17 +42,17 @@ const PatentGradeIntro = ({homeHref}: PatentGradeIntroProps) => (
             }
         />
 
-        {/* 그림은 시안의 440×240 자리에 놓이고 좁은 화면에서는 폭에 맞춰 줄어든다. 제목·설명이 뜻을 전하므로 꾸밈이다[5.1.1]. */}
+        {/* 그림(검색 창 + 돋보기 + 등급 배지)은 시안의 440×240 자리에 놓이고 좁은 화면에서는 폭에 맞춰 줄어든다. 제목·설명이 뜻을 전하므로 꾸밈이다[5.1.1]. */}
         <ServiceIntroBanner
             eyebrow={PATENT_GRADE_INTRO.eyebrow}
             title={PATENT_GRADE_INTRO.title}
             descriptions={PATENT_GRADE_INTRO.descriptions}
             illustration={
                 <Image
-                    src="/images/service-intro/robot-donut-chart.webp"
+                    src="/images/service-intro/search-window-grade-badge.webp"
                     alt=""
-                    width={1338}
-                    height={726}
+                    width={1320}
+                    height={720}
                     sizes="440px"
                     draggable={false}
                     priority

@@ -14,8 +14,9 @@ import {
     SearchFilterForm,
 } from '@/components/composite/search-filter-form'
 import {SegmentedControl, SegmentedControlItem} from '@/components/composite/segmented-control'
-import {TextTabs} from '@/components/composite/text-tabs'
+import {TabsScrollArea} from '@/components/composite/tabs-scroll-area'
 import {Button} from '@/components/ui/button'
+import {Tabs, TabsContent, TabsTrigger} from '@/components/ui/tabs'
 import {Badge} from '@/components/ui/badge'
 import {
     getOrgEvaluationRequestActions,
@@ -166,7 +167,6 @@ const OrgEvaluationHistoryList = ({items, modelTabs, defaultPeriod, pageSize = 1
     // 보증추천을 마친 건 — 그 카드의 버튼이 [보증이력] 으로 바뀐다(시안 주석).
     // [프론트엔드 연동] 연동 후에는 조회 응답이 알려 주므로 이 상태 없이 item 의 값으로 판단하면 된다.
     const [recommendedIds, setRecommendedIds] = useState<readonly string[]>([])
-    const panelId = useId()
     const typeLabelId = useId()
 
     // 2depth 는 Tech-Index 계열에만 있다 — 없는 모형의 결과는 모두 개별평가라 방식으로 거르지 않는다.
@@ -226,16 +226,17 @@ const OrgEvaluationHistoryList = ({items, modelTabs, defaultPeriod, pageSize = 1
 
     return (
         // 세로 간격은 시안 기준이다 — 탭·조회 카드·리스트 사이가 40.
-        <div className="flex flex-col gap-10">
+        <Tabs value={model} onValueChange={handleModelChange} className="gap-10">
             {/* 모형(1depth)과 평가 방식(2depth) 사이는 32(시안). */}
             <div className="flex flex-col gap-8">
-                <TextTabs
-                    items={modelTabs}
-                    value={model}
-                    onValueChange={handleModelChange}
-                    label="평가 모형"
-                    panelId={panelId}
-                />
+                {/* 고른 모형으로 아래 목록 하나를 바꾼다 — 패널은 하나라 지금 고른 값의 TabsContent 만 둔다. */}
+                <TabsScrollArea variant="underline" aria-label="평가 모형">
+                    {modelTabs.map((tab) => (
+                        <TabsTrigger key={tab.value} value={tab.value}>
+                            {tab.label}
+                        </TabsTrigger>
+                    ))}
+                </TabsScrollArea>
 
                 {/* 2depth 는 이 모형에 평가 방식이 여럿일 때만 나온다(시안 "2depth 미노출"). */}
                 {hasEvaluationTypes ? (
@@ -299,7 +300,7 @@ const OrgEvaluationHistoryList = ({items, modelTabs, defaultPeriod, pageSize = 1
                 </SearchFilterActions>
             </SearchFilterForm>
 
-            <div id={panelId} role="tabpanel" className="flex flex-col gap-10">
+            <TabsContent value={model} className="flex flex-col gap-10">
                 {/* 건수와 목록은 한 덩어리로 붙고(16), 페이지 이동만 멀리 떨어진다(40) — 시안. */}
                 {/* 화면 위에 붙어 있는 것들의 높이만큼 자리를 비워 둔다 — 페이지를 넘겨 이 자리로 굴러올 때
                     목록 머리가 그 아래에 가려지지 않는다. 붙어 있는 높이는 폭마다 다르다(K-BIGx 보고서 이력 목록과 같은 값).
@@ -349,8 +350,8 @@ const OrgEvaluationHistoryList = ({items, modelTabs, defaultPeriod, pageSize = 1
                         className="justify-center"
                     />
                 ) : null}
-            </div>
-        </div>
+            </TabsContent>
+        </Tabs>
     )
 }
 

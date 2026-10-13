@@ -191,6 +191,28 @@ const CHOICE_ROWS = [
         ],
     },
     {
+        key: 'submit-confirm-dialog',
+        cells: [
+            '평가 · 신청을 최종 제출하기 전',
+            <code key="c">SubmitConfirmDialog</code>,
+            <>
+                <code>composite/submit-confirm-dialog</code> — 제출 전 최종 확인(제목 + 물음 + 안내 + [제출하기]).
+                제출할 때 할 일은 <code>onSubmit</code> 으로 넘깁니다. 최종 확인 화면 · 입력 폼의 [제출] 이 엽니다.
+            </>,
+        ],
+    },
+    {
+        key: 'cancel-confirm-dialog',
+        cells: [
+            '작성 중인 입력 화면을 나갈 때',
+            <code key="c">CancelConfirmDialog</code>,
+            <>
+                <code>composite/cancel-confirm-dialog</code> — 아래 ‘작성 종료 확인’ 예시와 같은 모양([계속 작성] [저장
+                후 나가기])입니다. 저장 후 나갈 때 할 일은 <code>onSaveAndExit</code> 으로 넘깁니다.
+            </>,
+        ],
+    },
+    {
         key: 'toast',
         cells: [
             '저장·제출 같은 짧은 결과를 흐름 끊지 않고 알림',

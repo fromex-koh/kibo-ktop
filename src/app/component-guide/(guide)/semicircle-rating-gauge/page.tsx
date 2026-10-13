@@ -24,7 +24,7 @@ const DETAILS = [
 
 const REPORT_DATA: SemicircleRatingData = {
     label: 'A',
-    description: '우량 등급',
+    description: '우량',
     percentage: 82,
     details: DETAILS,
 }
@@ -33,10 +33,10 @@ const USAGE_CODE = `import {SemicircleRatingGauge} from '@/components/custom/sem
 
 <SemicircleRatingGauge
   title="기업신용등급"
-  ariaLabel="기업신용등급 A, 우량 등급"
+  ariaLabel="기업신용등급 A, 우량"
   data={{
     label: 'A',
-    description: '우량 등급',
+    description: '우량',
     percentage: 82,
     details: [
       {label: '평가일자', value: '2022-06-15'},
@@ -52,7 +52,7 @@ const data = toCriRatingData(creditRating.gradeCode, [
   {label: '평가일자', value: creditRating.evaluationDate},
   {label: '결산일자', value: creditRating.settlementDate},
 ])
-// → {label: 'BBB+', description: '양호 등급', percentage: 67, details: [...]}
+// → {label: 'BBB+', description: '양호', percentage: 67, details: [...]}
 
 <SemicircleRatingGauge
   data={data}
@@ -83,12 +83,12 @@ const SPECIAL_CASES: Array<{title: string; description: string; data: Semicircle
     },
     {
         title: '긴 등급명 (CCC0 · 보통 이하)',
-        description: '가장 긴 등급명 "보통 이하 등급"도 원호 안쪽 폭 안에 들어갑니다.',
+        description: '가장 긴 등급명 "보통 이하"도 원호 안쪽 폭 안에 들어갑니다.',
         data: toCriRatingData('CCC0', DETAILS),
     },
     {
         title: '평가 유보 (R)',
-        description: '등급이 매겨지지 않아 채움 없이 등급명 "유보"만 보입니다("등급"을 붙이지 않습니다).',
+        description: '등급이 매겨지지 않아 채움 없이 등급명 "유보"만 보입니다.',
         data: toCriRatingData('R', DETAILS),
     },
     {
@@ -109,15 +109,8 @@ const SPECIAL_CASES: Array<{title: string; description: string; data: Semicircle
     },
 ]
 
-// 색 단계표(GaugeToneTable) — 등급명 ↔ CR 단계 ↔ gauge-<상태> 토큰.
-const TONE_CASES = [
-    {label: 'CR-1', detail: '최우량 · 우량', name: 'excellent'},
-    {label: 'CR-2', detail: '양호', name: 'good'},
-    {label: 'CR-3', detail: '보통', name: 'normal'},
-    {label: 'CR-4', detail: '보통 이하', name: 'poor'},
-    {label: 'CR-5', detail: '낮음 · 매우 낮음', name: 'low'},
-    {label: 'CR-6', detail: '위험', name: 'weak'},
-] as const
+// 색표(GaugeToneTable) — 모든 등급이 gauge-excellent 한 가지 색을 쓴다.
+const TONE_CASES = [{label: '모든 등급', detail: 'AAA+ ~ D', name: 'excellent'}] as const
 
 const CHOICE_COLUMNS = [
     {key: 'component', header: '컴포넌트', align: 'start', rowHeader: true},
@@ -131,7 +124,7 @@ const CHOICE_ROWS = [
         cells: [
             <code key="component">SemicircleRatingGauge</code>,
             '등급 + 채움 비율 + 날짜 목록',
-            '채움 비율(percentage)과 색 단계(tone · CR-1~6)를 넘기면 단계별 그라데이션으로 칠합니다. 원호 아래에 기준일 목록이 붙습니다.',
+            '채움 비율(percentage)만 넘기고 색은 우수 그라데이션 한 가지입니다. 원호 아래에 기준일 목록이 붙습니다.',
         ],
     },
     {
@@ -184,20 +177,13 @@ const PROPS_ITEMS = [
         'HTMLAttributes',
     ],
     ['SemicircleRatingData', 'label', '가운데에 크게 서는 등급입니다(예: A · BBB+).', '-', 'string'],
-    ['SemicircleRatingData', 'description', '등급 아래 설명입니다(예: 우량 등급).', '-', 'string'],
+    ['SemicircleRatingData', 'description', '등급 아래 설명입니다(예: 우량).', '-', 'string'],
     [
         'SemicircleRatingData',
         'percentage',
         '채움 비율(0~100)입니다. 범위 밖 값은 끝으로 맞추고, 0 보다 크면 최소 둥근 끝 두 개만큼은 그립니다.',
         '-',
         'number',
-    ],
-    [
-        'SemicircleRatingData',
-        'tone',
-        "색 단계입니다(CR-1 ~ CR-6 · 'cr1'~'cr6'). toCriRatingData 가 등급명으로 정해 줍니다.",
-        "'cr1'",
-        'SemicircleRatingTone',
     ],
     [
         'SemicircleRatingData',
@@ -221,8 +207,9 @@ const SemicircleRatingGaugeGuidePage = () => (
                         기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        채움은 <code>data.percentage</code>, 색은 <code>data.tone</code>(CR-1 ~ CR-6)이 정합니다. 둘 다{' '}
-                        <code>toCriRatingData</code> 가 등급 코드로 만들어 줍니다.
+                        채움은 <code>data.percentage</code> 가 정하고, <code>toCriRatingData</code> 가 등급 코드로
+                        만들어 줍니다. 색은 등급과 관계없이 우수(excellent) 그라데이션 한 가지라 등급은 채움 길이와
+                        글자로 읽습니다.
                     </p>
                     <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-1 pl-5">
                         <li>색은 시작 색 → 끝 색 그라데이션(채워진 끝에서 원호 시작 쪽으로).</li>
@@ -230,13 +217,9 @@ const SemicircleRatingGaugeGuidePage = () => (
                         <li>폭 260 미만이면 원호와 글자가 같은 비율로 축소.</li>
                     </ul>
                 </div>
-                <GaugeToneTable caption="등급 단계별 색" labelHeader="단계" detailHeader="등급명" cases={TONE_CASES} />
+                <GaugeToneTable caption="게이지 색" labelHeader="대상" detailHeader="등급" cases={TONE_CASES} />
                 <div className="border-subtle-3 bg-card max-w-96 rounded-sm border p-6">
-                    <SemicircleRatingGauge
-                        data={REPORT_DATA}
-                        title="기업신용등급"
-                        ariaLabel="기업신용등급 A, 우량 등급"
-                    />
+                    <SemicircleRatingGauge data={REPORT_DATA} title="기업신용등급" ariaLabel="기업신용등급 A, 우량" />
                 </div>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
                 <CodeBlock code={DATA_CODE} language="tsx" copyLabel="데이터 연결 코드 복사" />
@@ -276,17 +259,15 @@ const SemicircleRatingGaugeGuidePage = () => (
                                 <caption className="sr-only">CRI 등급 정의 및 등급명</caption>
                                 <thead>
                                     <tr className="border-border bg-card border-b">
-                                        {['CRI 등급', '등급명', '게이지 설명', '채움 비율', '등급정의'].map(
-                                            (heading) => (
-                                                <th
-                                                    key={heading}
-                                                    scope="col"
-                                                    className="typo-body-l-medium px-4 py-3 whitespace-nowrap"
-                                                >
-                                                    {heading}
-                                                </th>
-                                            ),
-                                        )}
+                                        {['CRI 등급', '등급명(게이지 설명)', '채움 비율', '등급정의'].map((heading) => (
+                                            <th
+                                                key={heading}
+                                                scope="col"
+                                                className="typo-body-l-medium px-4 py-3 whitespace-nowrap"
+                                            >
+                                                {heading}
+                                            </th>
+                                        ))}
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -300,9 +281,6 @@ const SemicircleRatingGaugeGuidePage = () => (
                                             </th>
                                             <td className="typo-body-l-regular text-foreground px-4 py-3 whitespace-nowrap">
                                                 {item.name}
-                                            </td>
-                                            <td className="typo-body-l-regular text-foreground-subtle px-4 py-3 whitespace-nowrap">
-                                                {toCriRatingData(item.grade).description}
                                             </td>
                                             <td className="typo-body-l-regular text-foreground-subtle px-4 py-3 tabular-nums">
                                                 {criGradePercentage(item)}%
@@ -342,7 +320,7 @@ const SemicircleRatingGaugeGuidePage = () => (
                                 <SemicircleRatingGauge
                                     data={toCriRatingData('AA0', DETAILS)}
                                     title="기업신용등급"
-                                    ariaLabel="기업신용등급 AA0, 우량 등급"
+                                    ariaLabel="기업신용등급 AA0, 우량"
                                     className="max-w-50"
                                 />
                             </li>
@@ -365,7 +343,7 @@ const SemicircleRatingGaugeGuidePage = () => (
                                 <SemicircleRatingGauge
                                     data={REPORT_DATA}
                                     title="기업신용등급"
-                                    ariaLabel="기업신용등급 A, 우량 등급"
+                                    ariaLabel="기업신용등급 A, 우량"
                                 />
                             </div>
                         </div>
@@ -413,8 +391,8 @@ const SemicircleRatingGaugeGuidePage = () => (
                     <li>
                         움직임은 0.6초(<code>CHART_ANIMATION_MS</code> · custom/chart-reveal.tsx)이고,{' '}
                         <code>animate</code> 를 안 주면 문서 설정을 따릅니다 — K-BIGx 보고서처럼{' '}
-                        <code>ChartRevealProvider</code> 안에서는 카드가 화면에 들어올 때 한 번 움직이고 동작 줄이기
-                        설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
+                        <code>ChartRevealProvider</code> 안에서는 차트가 화면에 절반 이상 보일 때 한 번 움직이고 동작
+                        줄이기 설정이면 움직이지 않으며, 그 밖에서는 그려질 때 바로 움직입니다[6.3.1].
                     </li>
                     <li>
                         recharts 의 키보드 탐색 층(<code>accessibilityLayer</code>)은 끕니다 — 값은 숨김 표가 읽어 주고,{' '}

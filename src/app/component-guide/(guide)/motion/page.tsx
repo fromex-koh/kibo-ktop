@@ -194,6 +194,12 @@ const MOTION_RULES = [
             '값과 keyframes 는 tokens.json 이 아니라 여기서 관리하며 yarn tokens 대상이 아닙니다. 수정한 뒤 이 페이지의 목록도 고치고 yarn verify 로 이름 동기화를 확인합니다.',
     },
     {
+        title: '차트 등장',
+        code: 'ChartRevealProvider · ChartReveal',
+        description:
+            '보고서 차트는 화면에 절반 이상 보일 때 문서 순서대로(0.12초 간격) 한 번 움직이고, 같은 묶음(revealGroup)으로 지정한 나란한 카드는 동시에 움직입니다. 탭을 처음 열면 절반 이상 보이는 차트부터 바로 시작하고, 이미 본 탭에 다시 들어가면 움직이지 않습니다(custom/chart-reveal.tsx).',
+    },
+    {
         title: '동작 줄이기',
         code: 'motion-reduce:animate-none',
         description:

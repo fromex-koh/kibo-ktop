@@ -5,7 +5,7 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from '@/components/ui/tabs'
 
 // 개인정보 처리방침 — 시안 "[공통] 개인정보 처리방침"(40006812:26471)·"[공통] 알기 쉬운 개인정보 처리방침"
 // (40006812:26580).
-// 1뎁스는 글자만으로 갈리는 text 탭이고, 2뎁스(항목) 탭은 '알기 쉬운 개인정보 처리방침' 아래에만 있다 —
+// 1뎁스는 선택한 탭 아래에만 밑줄이 붙는 underline 탭이고, 2뎁스(항목) 탭은 '알기 쉬운 개인정보 처리방침' 아래에만 있다 —
 // 원문 처리방침은 항목을 나누지 않고 전문을 그대로 싣는 화면이기 때문이다.
 // 탭 이동, roving tabindex, aria-controls는 Tabs 내부의 Radix 동작을 따른다.
 // 현재 본문은 원문 연동 전 임시 내용이며, PlaceholderPanel을 실제 콘텐츠로 교체한다.
@@ -60,7 +60,7 @@ const PolicySectionTabs = () => (
 const PrivacyPolicyTabs = ({defaultView = FULL_VIEW.value}: {defaultView?: PrivacyPolicyView}) => (
     <Tabs defaultValue={defaultView} className="gap-0">
         {/* 1뎁스 제목이 긴 모바일 화면은 TabsScrollArea로 가로 스크롤을 제공한다. */}
-        <TabsScrollArea variant="text" aria-label="개인정보 처리방침 보기 방식">
+        <TabsScrollArea variant="underline" aria-label="개인정보 처리방침 보기 방식">
             {POLICY_VIEWS.map((view) => (
                 <TabsTrigger key={view.value} value={view.value}>
                     {view.label}
