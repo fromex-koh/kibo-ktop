@@ -9,8 +9,10 @@ import {
     radioCardDescriptionClassName,
     radioCardGroupClassName,
     radioCardHeaderClassName,
+    radioCardHeaderBesideClassName,
     radioCardHeadingGroupClassName,
     radioCardIllustrationClassName,
+    radioCardTextGroupBesideClassName,
     radioCardTitleClassName,
 } from '@/components/theme/radio-card.variants'
 import {cn} from '@/lib/utils'
@@ -54,32 +56,59 @@ type RadioCardProps = {
     description?: ReactNode
     // 우측 일러스트/아이콘 슬롯. 장식이면 aria-hidden/alt="" 요소를 넘긴다.
     illustration?: ReactNode
+    // 설명 자리 — below(기본): 제목 · 일러스트 줄 아래 전체 폭. beside: 제목 바로 아래, 일러스트 왼쪽 칸
+    // (평가진행방식 선택처럼 설명이 길어 카드를 낮게 두는 시안).
+    descriptionPlacement?: 'below' | 'beside'
 } & ComponentProps<typeof RadioGroupPrimitive.Item>
 
-const RadioCard = ({badge, title, description, illustration, className, ...props}: RadioCardProps) => (
-    <RadioGroupPrimitive.Item data-slot="radio-card" className={cn(radioCardClassName, className)} {...props}>
-        <span className={radioCardBodyClassName}>
-            <span className={radioCardHeaderClassName}>
-                <span className={radioCardHeadingGroupClassName}>
-                    {badge != null ? <span data-slot="radio-card-badge">{renderCardBadge(badge)}</span> : null}
-                    <span data-slot="radio-card-title" className={radioCardTitleClassName}>
-                        {title}
-                    </span>
-                </span>
-                {illustration != null ? (
-                    <span data-slot="radio-card-illustration" className={radioCardIllustrationClassName}>
-                        {illustration}
-                    </span>
-                ) : null}
+const RadioCard = ({
+    badge,
+    title,
+    description,
+    illustration,
+    descriptionPlacement = 'below',
+    className,
+    ...props
+}: RadioCardProps) => {
+    const isBeside = descriptionPlacement === 'beside'
+    const descriptionNode =
+        description != null ? (
+            <span data-slot="radio-card-description" className={radioCardDescriptionClassName}>
+                {description}
             </span>
-            {description != null ? (
-                <span data-slot="radio-card-description" className={radioCardDescriptionClassName}>
-                    {description}
-                </span>
-            ) : null}
+        ) : null
+    const headingGroup = (
+        <span className={radioCardHeadingGroupClassName}>
+            {badge != null ? <span data-slot="radio-card-badge">{renderCardBadge(badge)}</span> : null}
+            <span data-slot="radio-card-title" className={radioCardTitleClassName}>
+                {title}
+            </span>
         </span>
-    </RadioGroupPrimitive.Item>
-)
+    )
+
+    return (
+        <RadioGroupPrimitive.Item data-slot="radio-card" className={cn(radioCardClassName, className)} {...props}>
+            <span className={radioCardBodyClassName}>
+                <span className={cn(radioCardHeaderClassName, isBeside && radioCardHeaderBesideClassName)}>
+                    {isBeside ? (
+                        <span className={radioCardTextGroupBesideClassName}>
+                            {headingGroup}
+                            {descriptionNode}
+                        </span>
+                    ) : (
+                        headingGroup
+                    )}
+                    {illustration != null ? (
+                        <span data-slot="radio-card-illustration" className={radioCardIllustrationClassName}>
+                            {illustration}
+                        </span>
+                    ) : null}
+                </span>
+                {isBeside ? null : descriptionNode}
+            </span>
+        </RadioGroupPrimitive.Item>
+    )
+}
 
 export {RadioCard, RadioCardGroup}
 export type {RadioCardProps}
