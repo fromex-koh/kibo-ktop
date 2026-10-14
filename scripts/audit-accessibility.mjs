@@ -52,6 +52,18 @@ let serverError = ''
 server.stderr.on('data', (chunk) => {
     serverError += chunk
 })
+// 화면 요청 — 앞 화면 검사가 서버의 연결 유지 시간(Node 기본 5초)보다 오래 걸리면 서버가 쉬던 연결을 닫는데,
+// fetch 가 그 연결을 다시 쓰다 'other side closed'(UND_ERR_SOCKET)로 끊긴다. 이 끊김만 새 연결로 다시 요청한다.
+const FETCH_RETRY_COUNT = 2
+const isSocketClosed = (error) => error?.cause?.code === 'UND_ERR_SOCKET'
+const fetchScreen = async (url, retriesLeft = FETCH_RETRY_COUNT) => {
+    try {
+        return await fetch(url, {redirect: 'manual', signal: AbortSignal.timeout(60000)})
+    } catch (error) {
+        if (!retriesLeft || !isSocketClosed(error)) throw error
+        return fetchScreen(url, retriesLeft - 1)
+    }
+}
 let ready = false
 server.stdout.on('data', (chunk) => {
     if (String(chunk).includes('Ready')) ready = true
@@ -64,10 +76,7 @@ try {
     if (!ready) throw new Error('검사 서버 준비 시간 초과')
     const results = []
     for (const screen of screens) {
-        const response = await fetch(`http://127.0.0.1:${port}${screen.path}`, {
-            redirect: 'manual',
-            signal: AbortSignal.timeout(60000),
-        })
+        const response = await fetchScreen(`http://127.0.0.1:${port}${screen.path}`)
         if (response.status !== 200)
             throw new Error(`${screen.path}: HTTP ${response.status} — 결과를 저장하지 않습니다.`)
         const html = path.join(temp, 'screen.html')
