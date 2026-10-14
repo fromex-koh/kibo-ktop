@@ -1,6 +1,39 @@
 {
     "releases": [
         {
+            "version": "v3.4.1",
+            "releasedAt": "2026-10-14",
+            "changes": [
+                {
+                    "type": "handoff",
+                    "mode": "diff",
+                    "title": "[컴포넌트] 기관 K-BIGx 보고서 — 다크 모드에서 본문이 라이트로 보이던 문제 수정",
+                    "details": [
+                        {
+                            "label": "대상",
+                            "value": "src/app/(user-type)/org/(report)/layout.tsx\nsrc/components/custom/report-theme-scope.tsx"
+                        },
+                        {
+                            "label": "변경",
+                            "value": "AS-IS: 기관 리포트 공통 틀이 모든 리포트를 라이트로 고정 → 기관 K-BIGx 보고서는 테마가 다크여도 본문이 라이트\nTO-BE: 기관 리포트 틀도 기업과 같은 ReportThemeScope 사용 — K-BIGx 보고서만 화면 테마를 따르고, 나머지 기관 리포트는 라이트 고정 그대로"
+                        },
+                        {
+                            "label": "결과",
+                            "value": "기업 · 기관 K-BIGx 보고서 모두 화면 테마(라이트 · 다크)를 따름 · 인쇄는 지금처럼 라이트"
+                        },
+                        {
+                            "label": "영향 화면",
+                            "value": "[기관 K-BIGx 보고서 결과](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)"
+                        },
+                        {
+                            "label": "커밋",
+                            "value": "[변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/bcf05274ce3218daf31794787f37f414a28a24d8)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
             "version": "v3.4.0",
             "releasedAt": "2026-10-14",
             "changes": [
@@ -8468,37 +8501,6 @@
                         {
                             "label": "결과",
                             "value": "탄소 UIUX 진척률이 82% → 86%(63/73)로 오르고 화면 주소가 54건에서 57건이 됩니다. 응용2는 아직 값이 없어 0%(0/73)에서 시작합니다"
-                        }
-                    ]
-                }
-            ]
-        },
-        {
-            "version": "v3.1.1",
-            "releasedAt": "2026-09-03",
-            "changes": [
-                {
-                    "type": "handoff",
-                    "mode": "overwrite",
-                    "title": "퍼블리싱 인덱스 — 탄소 FO IA 현행 반영 (73건)",
-                    "details": [
-                        {"label": "대상", "value": "src/content/publishing-guide/publishing-index.json"},
-                        {"label": "적용", "value": "지정한 파일만 교체"},
-                        {
-                            "label": "변경",
-                            "value": "탄소 FO 저장소의 퍼블리싱 인덱스를 다시 맞췄습니다. 선도기업 신청 3차 `목표달성 평가` 갈래가 4건 늘고(일반기업 미달성, 목표관리업체 달성·절대배출량 달성·전 기준 미달) `일반기업 · 달성` 1건이 완료로 올라갔습니다. 삭제된 화면은 없습니다"
-                        },
-                        {
-                            "label": "상태",
-                            "value": "탄소 FO 의 `개발 수정완료` 는 우리 상태 집합에 없는 값이라 완료로 옮겨 셉니다 — 이번에는 `자가진단 > 평가지표 작성` 1건이 해당합니다"
-                        },
-                        {
-                            "label": "링크",
-                            "value": "완료된 화면 중 탄소 FO 에 실제로 화면이 있는 54건에만 주소를 답니다. 완료 60건 가운데 다운로드용 `Link` 5건과 하위 화면만 있는 `마이페이지` 는 그쪽에도 화면이 없어 링크를 두지 않습니다"
-                        },
-                        {
-                            "label": "결과",
-                            "value": "탄소가 69건에서 73건이 되고 UIUX 진척률이 80% → 82%(60/73)로 오릅니다"
                         }
                     ]
                 }

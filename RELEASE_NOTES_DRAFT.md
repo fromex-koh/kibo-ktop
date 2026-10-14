@@ -31,16 +31,3 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 컴포넌트 가이드 페이지는 `[페이지 제목](/component-guide/경로)` 형식으로 작성하면 새 창 링크로 표시됩니다.
 릴리스 성공 후 내용은 자동으로 비워집니다.
 -->
-
-## [Diff 확인]
-
-### [컴포넌트] 기관 K-BIGx 보고서 — 다크 모드에서 본문이 라이트로 보이던 문제 수정
-
-- 대상: src/app/(user-type)/org/(report)/layout.tsx
-    - src/components/custom/report-theme-scope.tsx
-- 변경:
-    - AS-IS: 기관 리포트 공통 틀이 모든 리포트를 라이트로 고정 → 기관 K-BIGx 보고서는 테마가 다크여도 본문이 라이트
-    - TO-BE: 기관 리포트 틀도 기업과 같은 ReportThemeScope 사용 — K-BIGx 보고서만 화면 테마를 따르고, 나머지 기관 리포트는 라이트 고정 그대로
-- 결과: 기업 · 기관 K-BIGx 보고서 모두 화면 테마(라이트 · 다크)를 따름 · 인쇄는 지금처럼 라이트
-- 영향 화면: [기관 K-BIGx 보고서 결과](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
-- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/bcf05274ce3218daf31794787f37f414a28a24d8)
