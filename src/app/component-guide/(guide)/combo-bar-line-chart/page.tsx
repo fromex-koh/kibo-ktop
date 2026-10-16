@@ -18,7 +18,7 @@ const RECHARTS_LICENSE: LicenseLink = {
 }
 
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
-const SECTION_HEAD = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEAD = 'flex flex-col gap-2'
 const BLOCKS = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t'
 const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 

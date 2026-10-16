@@ -107,7 +107,7 @@ const NoticeAccordionGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="na-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="na-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -129,7 +129,7 @@ const NoticeAccordionGuidePage = () => (
         </BaseCard>
         <BaseCard>
             <section aria-labelledby="na-states" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="na-states" className="typo-h4-bold">
                         처음 상태
                     </h2>
@@ -161,7 +161,7 @@ const NoticeAccordionGuidePage = () => (
         </BaseCard>
         <BaseCard>
             <section aria-labelledby="na-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="na-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -171,7 +171,7 @@ const NoticeAccordionGuidePage = () => (
         </BaseCard>
         <BaseCard>
             <section aria-labelledby="na-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="na-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -194,7 +194,7 @@ const NoticeAccordionGuidePage = () => (
         </BaseCard>
         <BaseCard>
             <section aria-labelledby="na-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="na-props" className="typo-h4-bold">
                         Props API
                     </h2>

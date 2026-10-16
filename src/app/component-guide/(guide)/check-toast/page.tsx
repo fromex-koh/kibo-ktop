@@ -116,7 +116,7 @@ const CheckToastGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="check-toast-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="check-toast-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -135,7 +135,7 @@ const CheckToastGuidePage = () => (
         </BaseCard>
         <BaseCard>
             <section aria-labelledby="check-toast-behavior" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="check-toast-behavior" className="typo-h4-bold">
                         동작
                     </h2>
@@ -157,7 +157,7 @@ const CheckToastGuidePage = () => (
         </BaseCard>
         <BaseCard>
             <section aria-labelledby="check-toast-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="check-toast-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -174,7 +174,7 @@ const CheckToastGuidePage = () => (
         </BaseCard>
         <BaseCard>
             <section aria-labelledby="check-toast-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="check-toast-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -194,7 +194,7 @@ const CheckToastGuidePage = () => (
         </BaseCard>
         <BaseCard>
             <section aria-labelledby="check-toast-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="check-toast-props" className="typo-h4-bold">
                         Props API
                     </h2>

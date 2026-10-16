@@ -160,7 +160,7 @@ const ComboboxGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="combobox-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="combobox-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -176,7 +176,7 @@ const ComboboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="combobox-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="combobox-variants" className="typo-h4-bold">
                         타입과 상태
                     </h2>
@@ -205,7 +205,7 @@ const ComboboxGuidePage = () => (
                     </div>
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">폼 제출</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             <code>name</code> 을 주면 선택값이 제출됩니다. 필수 검증과 오류 연결은 사용처가 합니다.
                         </p>
                         <ComboboxFormDemo />
@@ -217,7 +217,7 @@ const ComboboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="combobox-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="combobox-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -234,7 +234,7 @@ const ComboboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="combobox-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="combobox-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -262,7 +262,7 @@ const ComboboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="combobox-api" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="combobox-api" className="typo-h4-bold">
                         Props API
                     </h2>

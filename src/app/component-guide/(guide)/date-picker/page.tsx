@@ -236,7 +236,7 @@ const DatePickerGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="date-picker-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="date-picker-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -253,7 +253,7 @@ const DatePickerGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="date-picker-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="date-picker-variants" className="typo-h4-bold">
                         변형과 상태
                     </h2>
@@ -264,7 +264,7 @@ const DatePickerGuidePage = () => (
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">연-월 단위</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             일까지 고를 필요가 없는 칸은 <code>granularity=&quot;month&quot;</code> 를 줍니다. 값은 그
                             달의 1일 <code>Date</code> 로 담깁니다.
                         </p>
@@ -290,7 +290,7 @@ const DatePickerGuidePage = () => (
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">크기</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             <code>lg</code>(48px, 기본)와 <code>md</code>(40px) 중 같은 줄의 Select 와 맞춥니다.
                         </p>
                         <DatePickerSizesDemo />
@@ -313,7 +313,7 @@ const DatePickerGuidePage = () => (
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">폼 제출</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             <code>name</code> 을 주면 <code>yyyy-MM-dd</code>(연-월 단위는 <code>yyyy-MM</code>)로
                             제출됩니다. <code>required</code> 검사에 걸리면 <code>onInvalid</code> 가 호출되고 포커스가
                             입력 상자로 갑니다.
@@ -324,7 +324,7 @@ const DatePickerGuidePage = () => (
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">반응형</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             화면 폭에 따라 여는 방식만 바뀌고 사용 코드는 같습니다. 모달 제목은 단위에 따라{' '}
                             <q>날짜 선택</q> 또는 <q>연월 선택</q> 으로 붙습니다.
                         </p>
@@ -342,7 +342,7 @@ const DatePickerGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="date-picker-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="date-picker-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -361,7 +361,7 @@ const DatePickerGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="date-picker-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="date-picker-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -393,7 +393,7 @@ const DatePickerGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="date-picker-api" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="date-picker-api" className="typo-h4-bold">
                         Props API
                     </h2>

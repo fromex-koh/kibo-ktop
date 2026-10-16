@@ -184,7 +184,7 @@ const CheckboxGuidePage = () => (
     <GuidePageShell title="체크박스 (Checkbox)" description="여러 개를 고르거나 동의 여부를 받는 입력입니다.">
         <BaseCard>
             <section aria-labelledby="checkbox-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="checkbox-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -204,7 +204,7 @@ const CheckboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="checkbox-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="checkbox-variants" className="typo-h4-bold">
                         상태와 조합
                     </h2>
@@ -221,7 +221,7 @@ const CheckboxGuidePage = () => (
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">라벨과 설명</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             설명이 있으면 <code>FieldContent</code> 안에 <code>FieldLabel</code> ·{' '}
                             <code>FieldDescription</code> 을 두고 <code>aria-describedby</code> 로 연결합니다.
                         </p>
@@ -241,7 +241,7 @@ const CheckboxGuidePage = () => (
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">전체 선택</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             하위 항목이 일부만 선택되면 요약 Checkbox 를 <code>indeterminate</code> 로 둡니다. 요약
                             Checkbox 에는 <code>name</code> 을 주지 않아 제출에는 하위 값만 포함됩니다.
                         </p>
@@ -252,7 +252,7 @@ const CheckboxGuidePage = () => (
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">폼 제출과 오류</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             체크된 항목의 <code>name</code> · <code>value</code> 만 제출됩니다. 같은 <code>name</code>{' '}
                             의 여러 값은 <code>FormData.getAll()</code> 로 읽습니다. 필수 동의 오류는 <code>Field</code>{' '}
                             의 <code>data-invalid</code>, <code>aria-invalid</code>, <code>FieldError</code> 로 알리고
@@ -267,7 +267,7 @@ const CheckboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="checkbox-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="checkbox-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -286,7 +286,7 @@ const CheckboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="checkbox-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="checkbox-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -318,7 +318,7 @@ const CheckboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="checkbox-api" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="checkbox-api" className="typo-h4-bold">
                         Props API
                     </h2>

@@ -214,6 +214,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                 href: '/component-guide/full-page-service-status',
                                 layers: ['custom'],
                             },
+                            {label: '리포트 공통 (Report)', href: '/component-guide/report-shell', layers: ['custom']},
                         ],
                     },
                     {
@@ -460,6 +461,11 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                             {label: 'SummaryList', href: '/component-guide/summary-list', layers: ['composite']},
                             {label: 'InfoTable', href: '/component-guide/info-table', layers: ['composite']},
                             {
+                                label: 'TitleDetailTable',
+                                href: '/component-guide/title-detail-table',
+                                layers: ['composite'],
+                            },
+                            {
                                 label: 'SelectableSummaryList',
                                 href: '/component-guide/selectable-summary-list',
                                 layers: ['composite'],
@@ -476,6 +482,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 title: '디자인 요소',
                 items: [
                     {label: 'Icon', href: '/component-guide/icon', layers: ['custom']},
+                    {label: 'Image', href: '/component-guide/image'},
                     {label: 'ListMarker', href: '/component-guide/list-marker', layers: ['custom']},
                     {label: 'Badge', href: '/component-guide/badge', layers: ['ui']},
                     {label: 'ThemeToggle', href: '/component-guide/theme-toggle', layers: ['composite']},
@@ -491,6 +498,16 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'Toast', href: '/component-guide/toast', layers: ['ui', 'custom']},
                     {label: 'CheckToast', href: '/component-guide/check-toast', layers: ['custom']},
                     {label: 'Dialog', href: '/component-guide/dialog', layers: ['ui']},
+                    {
+                        label: 'PostcodeSearchDialog',
+                        href: '/component-guide/postcode-search-dialog',
+                        layers: ['composite'],
+                    },
+                    {
+                        label: 'SearchSelectDialog',
+                        href: '/component-guide/search-select-dialog',
+                        layers: ['composite'],
+                    },
                     {label: 'HomeNoticePopup', href: '/component-guide/home-notice-popup', layers: ['custom']},
                 ],
             },

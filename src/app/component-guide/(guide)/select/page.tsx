@@ -241,7 +241,7 @@ const SelectGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="select-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="select-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -274,7 +274,7 @@ const SelectGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="select-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="select-variants" className="typo-h4-bold">
                         크기와 상태
                     </h2>
@@ -379,7 +379,7 @@ const SelectGuidePage = () => (
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">SelectText</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             면과 테두리 없이 글자와 화살표만 둡니다. 네이티브 select 라 열린 목록은 운영체제 모양으로
                             나오고, 라벨이 없으므로 <code>aria-label</code> 을 줍니다.
                         </p>
@@ -404,7 +404,7 @@ const SelectGuidePage = () => (
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">폼 제출</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             <code>name</code> 을 주면 선택값이 제출됩니다. 읽기전용 값은 제출되고 비활성 값은
                             제외됩니다. 값은 <code>value</code> · <code>onValueChange</code> 로 제어하거나{' '}
                             <code>defaultValue</code> 로 비제어로 씁니다.
@@ -418,7 +418,7 @@ const SelectGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="select-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="select-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -437,7 +437,7 @@ const SelectGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="select-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="select-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -468,7 +468,7 @@ const SelectGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="select-api" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="select-api" className="typo-h4-bold">
                         Props API
                     </h2>

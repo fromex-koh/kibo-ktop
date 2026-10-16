@@ -325,7 +325,7 @@ const InputGuidePage = () => (
     <GuidePageShell title="인풋 (Input)" description="한 줄 값을 입력받는 Input 과 목적별 입력 컴포넌트입니다.">
         <BaseCard>
             <section aria-labelledby="input-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="input-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -363,7 +363,7 @@ const InputGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="input-component" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="input-component" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -416,7 +416,7 @@ const InputGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="input-state" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="input-state" className="typo-h4-bold">
                         상태와 오류
                     </h2>
@@ -479,7 +479,7 @@ const InputGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="input-addon" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="input-addon" className="typo-h4-bold">
                         아이콘과 단위
                     </h2>
@@ -531,7 +531,7 @@ const InputGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="input-form" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="input-form" className="typo-h4-bold">
                         폼 제출
                     </h2>
@@ -547,7 +547,7 @@ const InputGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="input-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="input-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -578,7 +578,7 @@ const InputGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="input-api" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="input-api" className="typo-h4-bold">
                         Props API
                     </h2>

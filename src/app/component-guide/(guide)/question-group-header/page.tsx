@@ -52,7 +52,7 @@ const QuestionGroupHeaderGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="question-group-header-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="question-group-header-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>

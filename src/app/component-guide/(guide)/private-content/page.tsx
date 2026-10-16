@@ -146,7 +146,7 @@ const PrivateContentGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="pc-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -187,7 +187,7 @@ const PrivateContentGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pc-cases" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-cases" className="typo-h4-bold">
                         범위별 예시
                     </h2>
@@ -298,7 +298,7 @@ const PrivateContentGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pc-data" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-data" className="typo-h4-bold">
                         데이터 연결
                     </h2>
@@ -313,7 +313,7 @@ const PrivateContentGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pc-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -330,7 +330,7 @@ const PrivateContentGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pc-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -353,7 +353,7 @@ const PrivateContentGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pc-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-props" className="typo-h4-bold">
                         Props API
                     </h2>

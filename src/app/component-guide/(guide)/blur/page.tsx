@@ -21,7 +21,7 @@ const BlurGuidePage = () => (
     <GuidePageShell title="흐림 (Blur)" description="요소 자체를 흐리게 만드는 blur-* 효과 토큰입니다.">
         <BaseCard>
             <section aria-labelledby="blur-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="blur-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -36,7 +36,7 @@ const BlurGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="blur-scale" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="blur-scale" className="typo-h4-bold">
                         흐림 목록
                     </h2>
@@ -71,7 +71,7 @@ const BlurGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="blur-rules" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="blur-rules" className="typo-h4-bold">
                         사용 규칙
                     </h2>

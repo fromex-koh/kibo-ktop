@@ -260,7 +260,7 @@ const ColorGuidePage = () => (
             {Object.entries(primitiveGroups).map(([group, hues]) => (
                 <BaseCard key={group}>
                     <section aria-labelledby={`primitive-${group}`} className="flex flex-col gap-6">
-                        <div className="flex max-w-4xl flex-col gap-2">
+                        <div className="flex flex-col gap-2">
                             <h2 id={`primitive-${group}`} className="typo-h4-bold text-foreground capitalize">
                                 {group}
                             </h2>
@@ -336,7 +336,7 @@ const ColorGuidePage = () => (
 
             <BaseCard>
                 <section aria-labelledby="primitive-common" className="flex flex-col gap-6">
-                    <div className="flex max-w-4xl flex-col gap-2">
+                    <div className="flex flex-col gap-2">
                         <h2 id="primitive-common" className="typo-h4-bold text-foreground">
                             Common · Alpha
                         </h2>

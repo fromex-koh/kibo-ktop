@@ -133,7 +133,7 @@ const ScoreRingGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="sr-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sr-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -155,7 +155,7 @@ const ScoreRingGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sr-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sr-variants" className="typo-h4-bold">
                         등급 색과 상태
                     </h2>
@@ -218,7 +218,7 @@ const ScoreRingGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sr-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sr-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -237,7 +237,7 @@ const ScoreRingGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sr-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sr-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -256,7 +256,7 @@ const ScoreRingGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sr-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sr-props" className="typo-h4-bold">
                         Props API
                     </h2>

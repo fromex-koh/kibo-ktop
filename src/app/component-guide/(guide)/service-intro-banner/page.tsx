@@ -21,7 +21,7 @@ const USAGE_CODE = `import {ServiceIntroBanner} from '@/components/composite/ser
     '특허출원번호 또는 특허등록번호를 입력 후 찾고자 하는 특허결과를 검색합니다.',
   ]}
   illustration={
-    <Image src="/images/service-intro/ai-robot-donut-chart.webp" alt="" width={1320} height={720} sizes="440px" className="h-auto w-full" />
+    <Image src="/images/service-intro/search-window-grade-badge.webp" alt="" width={1320} height={720} sizes="440px" className="h-auto w-full" />
   }
 />`
 
@@ -64,7 +64,7 @@ const ServiceIntroBannerGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="sib-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sib-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -82,7 +82,7 @@ const ServiceIntroBannerGuidePage = () => (
                     ]}
                     illustration={
                         <Image
-                            src="/images/service-intro/ai-robot-donut-chart.webp"
+                            src="/images/service-intro/search-window-grade-badge.webp"
                             alt=""
                             loading="eager"
                             width={1320}
@@ -109,7 +109,7 @@ const ServiceIntroBannerGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sib-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sib-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>

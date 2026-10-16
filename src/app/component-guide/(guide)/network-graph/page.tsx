@@ -266,7 +266,7 @@ const NetworkGraphGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="ng-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ng-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -279,7 +279,7 @@ const NetworkGraphGuidePage = () => (
                 </div>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex min-w-0 flex-col gap-4 py-8 last:pb-0">
-                        <div className="flex max-w-4xl flex-col gap-2">
+                        <div className="flex flex-col gap-2">
                             <h3 className="typo-title-m-bold text-foreground">
                                 연계기업 네트워크 (CompanyRelationshipGraph)
                             </h3>
@@ -296,7 +296,7 @@ const NetworkGraphGuidePage = () => (
                         <LicenseNotice libraries={[CYTOSCAPE_LICENSE, FCOSE_LICENSE]} />
                     </div>
                     <div className="flex min-w-0 flex-col gap-4 py-8 last:pb-0">
-                        <div className="flex max-w-4xl flex-col gap-2">
+                        <div className="flex flex-col gap-2">
                             <h3 className="typo-title-m-bold text-foreground">공급망 네트워크 (NetworkGraph)</h3>
                             <p className="typo-body-l-regular text-label-foreground">
                                 분석기업 - 업종 - 거래기업으로 이어지는 비중(%)을 보여 줍니다. 업종 정보가 없는 기업은
@@ -315,7 +315,7 @@ const NetworkGraphGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ng-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ng-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -334,7 +334,7 @@ const NetworkGraphGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ng-loading" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ng-loading" className="typo-h4-bold">
                         로딩
                     </h2>
@@ -351,7 +351,7 @@ const NetworkGraphGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ng-data" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ng-data" className="typo-h4-bold">
                         데이터 연결
                     </h2>
@@ -365,7 +365,7 @@ const NetworkGraphGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ng-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ng-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -395,7 +395,7 @@ const NetworkGraphGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ng-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ng-props" className="typo-h4-bold">
                         Props API
                     </h2>

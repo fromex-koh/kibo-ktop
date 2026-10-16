@@ -12,7 +12,7 @@ import {Table} from '@/components/custom/table'
 
 export const metadata: Metadata = {title: '스텝 내비게이션 (StepNavigation)'}
 
-const SECTION_HEADER = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEADER = 'flex flex-col gap-2'
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 
 const USAGE_CODE = `import {StepNavigation} from '@/components/composite/step-navigation'

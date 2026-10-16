@@ -137,7 +137,7 @@ const RadioGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="radio-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -174,7 +174,7 @@ const RadioGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="radio-description" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-description" className="typo-h4-bold">
                         설명과 비활성
                     </h2>
@@ -207,7 +207,7 @@ const RadioGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="radio-form" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-form" className="typo-h4-bold">
                         폼 제출
                     </h2>
@@ -224,7 +224,7 @@ const RadioGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="radio-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -251,7 +251,7 @@ const RadioGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="radio-api" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-api" className="typo-h4-bold">
                         Props API
                     </h2>

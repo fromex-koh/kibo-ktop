@@ -1,6 +1,7 @@
 // [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
 
 import type {Metadata} from 'next'
+import type {ReactNode} from 'react'
 import {TriangleAlert} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/custom/copy-chip'
@@ -15,22 +16,21 @@ export const metadata: Metadata = {title: '모션 (Motion)'}
 // 모션 값의 단일 소스는 src/app/globals.css 의 @theme 이다(다른 토큰과 달리 tokens.json 이 다루지 않는다 —
 // @keyframes 와 한 몸이라 CSS 에 둔다). 이름 목록이 그 @theme 과 어긋나면 check:conventions 가 빌드를 세운다.
 // 값(value)은 @theme 을 읽어 오지 않고 여기 옮겨 적으므로 globals.css 를 고치면 함께 고친다.
-//
-// value 는 @theme 에 적힌 값 그대로, usage 는 그 유틸리티를 실제로 붙이는 파일이다.
+// usage 는 한 줄 쓰임, source 는 그 유틸리티를 실제로 붙이는 파일이다.
 
 const EASINGS = [
     {
         name: 'ease-stack',
         value: 'cubic-bezier(0.5, 0, 0, 1)',
         points: [0.5, 0, 0, 1],
-        usage: '스택 페이저의 섹션 전환 — 초반에 빠르게 밀고 끝에서 길게 감속한다.',
+        usage: '메인 섹션 전환(빠르게 밀고 길게 감속)',
         source: 'theme/stack-pager.variants.ts',
     },
     {
         name: 'ease-roll',
         value: 'cubic-bezier(0.22, 1, 0.36, 1)',
         points: [0.22, 1, 0.36, 1],
-        usage: '지표 롤러의 행 이동과 숫자 크기 전환.',
+        usage: '메인 지표 롤러의 행 이동 · 숫자 크기 전환',
         source: 'theme/hero-stats-roller.variants.ts',
     },
 ] as const
@@ -39,84 +39,84 @@ const ANIMATIONS = [
     {
         name: 'animate-hero-zoom-out',
         value: 'main-hero-zoom-out 7s ease both',
-        usage: '히어로 배경 슬라이드가 1.2배에서 원래 크기로 천천히 물러난다.',
+        usage: '메인 배경이 1.2배에서 원래 크기로 물러남',
         source: 'custom/hero-background.tsx',
         preview: 'scale',
     },
     {
         name: 'animate-counter-roll',
         value: 'animated-counter-roll ease both',
-        usage: '숫자 카운터의 자릿수 릴 회전. 시간은 사용처가 인라인으로 주입한다(자릿수마다 지연이 달라서).',
+        usage: '숫자 카운터 자릿수 회전(시간은 사용처가 인라인으로 줌)',
         source: 'custom/animated-counter.tsx',
         preview: 'counter',
     },
     {
         name: 'animate-scroll-line',
         value: 'main-scroll-line-fill 1.5s ease-in-out infinite',
-        usage: '히어로 하단 SCROLL 표시의 세로선이 위에서 아래로 차오른다. 현재 hero-section 은 같은 keyframes 를 쓰는 .main-scroll-line-fill 클래스를 쓰며, 이 유틸리티를 직접 쓰는 곳은 없다.',
+        usage: 'SCROLL 표시 세로선이 차오름(지금 직접 쓰는 곳 없음)',
         source: 'app/globals.css',
         preview: 'line',
     },
     {
         name: 'animate-header-menu-close-enter',
         value: 'header-menu-close-enter 420ms cubic-bezier(0.22, 1, 0.36, 1) both',
-        usage: '전체 메뉴가 열릴 때 닫기 아이콘이 회전·확대된 뒤 제자리에서 안정된다.',
+        usage: '전체 메뉴 열 때 닫기 아이콘 회전 · 확대',
         source: 'composite/header.tsx',
         preview: 'menu-close',
     },
     {
         name: 'animate-header-menu-trigger-return',
         value: 'header-menu-trigger-return 340ms cubic-bezier(0.22, 1, 0.36, 1) both',
-        usage: '전체 메뉴가 닫힐 때 메뉴 아이콘이 짧게 회전·확대된 뒤 원래 상태로 복귀한다.',
+        usage: '전체 메뉴 닫을 때 메뉴 아이콘 복귀',
         source: 'composite/header.tsx',
         preview: 'menu-return',
     },
     {
         name: 'animate-tech-progress',
         value: 'tech-service-progress 5s linear forwards',
-        usage: '2섹션 서비스 목차의 진행 바. 끝나면 다음 서비스로 넘어간다.',
+        usage: '메인 2섹션 서비스 목차 진행 바',
         source: 'custom/tech-eval-section.tsx',
         preview: 'progress',
     },
     {
         name: 'animate-tech-enter',
         value: 'tech-service-content-enter 600ms ease both',
-        usage: '2섹션에서 서비스가 바뀔 때 본문이 아래에서 떠오르며 나타난다.',
+        usage: '메인 2섹션 본문이 아래에서 떠오름',
         source: 'custom/tech-eval-section.tsx',
         preview: 'enter',
     },
     {
         name: 'animate-chart-wipe-right',
         value: 'chart-wipe-right 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
-        usage: '보고서 가로 막대(성장률 우수기업 · 매출 규모별 현황 오른쪽)가 왼쪽에서 오른쪽으로 자란다. 차트가 화면에 들어올 때 한 번.',
+        usage: '가로 막대가 왼쪽 → 오른쪽으로 자람',
         source: 'custom/diverging-rank-chart.tsx · custom/butterfly-bar-chart.tsx',
         preview: 'wipe-right',
     },
     {
         name: 'animate-chart-wipe-left',
         value: 'chart-wipe-left 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
-        usage: '보고서 가로 막대의 왼쪽(가운데 축에서 왼쪽으로 뻗는 막대)이 오른쪽에서 왼쪽으로 자란다.',
+        usage: '가로 막대가 오른쪽 → 왼쪽으로 자람(가운데 축 왼쪽)',
         source: 'custom/diverging-rank-chart.tsx · custom/butterfly-bar-chart.tsx',
         preview: 'wipe-left',
     },
     {
         name: 'animate-chart-label',
         value: 'chart-label 300ms ease-out 600ms both',
-        usage: '가로 막대 차트(매출 규모별 현황 · 성장률 우수기업)의 값 · 이름 글자가 막대가 다 자란 뒤(600ms 지연) 옅게 나타난다.',
+        usage: '막대가 다 자란 뒤 값 · 이름 글자가 나타남',
         source: 'custom/butterfly-bar-chart.tsx · custom/diverging-rank-chart.tsx',
         preview: 'label',
     },
     {
         name: 'animate-chart-pop',
         value: 'chart-pop 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
-        usage: '칸 · 점 표시(단계 칸 · 등급 칩 · 등급 매트릭스 표시)가 작게 시작해 커지며 나타난다. 조각마다 지연을 주어 차례로.',
+        usage: '칸 · 점 표시가 작게 시작해 커짐(조각마다 지연)',
         source: 'custom/segment-meter.tsx · custom/grade-scale-gauge.tsx · custom/rating-matrix.tsx',
         preview: 'pop',
     },
     {
         name: 'animate-chart-rise',
         value: 'chart-rise 600ms cubic-bezier(0.22, 1, 0.36, 1) both',
-        usage: '순위 피라미드의 단과 R&D 이슈 글자 구름이 아래에서 떠오르며 나타난다.',
+        usage: '순위 피라미드 단 · 워드 클라우드 글자가 떠오름',
         source: 'custom/rank-pyramid-chart.tsx · custom/word-cloud.tsx',
         preview: 'enter',
     },
@@ -128,20 +128,11 @@ const ANIMATIONS = [
     preview: MotionPreviewKind
 }[]
 
-const EASING_COLUMNS = [
+const TOKEN_COLUMNS = [
     {key: 'preview', header: '미리보기', align: 'start'},
     {key: 'class', header: '클래스', align: 'start', rowHeader: true},
-    {key: 'value', header: '값', align: 'start'},
-    {key: 'usage', header: '쓰임', align: 'start', wrap: true},
-] as const
-
-// 사용처는 별도 컬럼으로 두지 않고 쓰임 끝에 붙인다 — 컬럼이 늘면 좁은 폭에서 모든 칸이 줄바꿈돼 행이 과하게 높아진다.
-const ANIMATION_COLUMNS = [
-    {key: 'preview', header: '미리보기', align: 'start'},
-    {key: 'class', header: '클래스', align: 'start', rowHeader: true},
-    // Table 은 기본이 nowrap 이라, 이름·시간·가속도가 붙은 긴 값은 wrap 을 켜야 표가 넘치지 않는다.
-    {key: 'value', header: '값', align: 'start', wrap: true},
-    {key: 'usage', header: '쓰임', align: 'start', wrap: true},
+    // 값 · 사용 파일은 쓰임 칸 아래에 작게 둔다 — 칸이 늘면 좁은 폭에서 표가 옆으로 넘친다.
+    {key: 'usage', header: '쓰임 · 값', align: 'start', wrap: true},
 ] as const
 
 // 가속도 미리보기 — 곡선 자체를 그린다. 움직이는 데모로 보여주려면 가이드 전용 @keyframes 를 새로
@@ -177,81 +168,174 @@ const EasingCurve = ({points}: {points: readonly [number, number, number, number
     )
 }
 
-const BASIC_CODE = `<div className="transition-transform duration-300 ease-roll motion-reduce:transition-none">…</div>
+// 쓰임 칸 — 한 줄 쓰임 아래에 값과 사용 파일을 작게 둔다.
+const UsageCell = ({usage, value, source}: {usage: string; value: string; source: string}) => (
+    <span className="flex flex-col gap-1">
+        <span>{usage}</span>
+        <span className="text-foreground-subtle font-mono text-xs">{value}</span>
+        <span className="text-foreground-subtle font-mono text-xs">{source}</span>
+    </span>
+)
+
+const BASIC_CODE = `{/* 가속도 — transition · duration 과 함께 */}
+<div className="transition-transform duration-300 ease-roll motion-reduce:transition-none">…</div>
+
+{/* 애니메이션 — 클래스 하나(이름 · 시간 · 가속도가 묶여 있다) */}
 <span className="animate-tech-enter motion-reduce:animate-none">…</span>`
 
-// 적용 규칙 카드 — 규칙마다 제목 · 핵심 코드 · 설명을 같은 자리에 둔다.
-const MOTION_RULES = [
+// 1-2. 규칙
+const RULE_COLUMNS = [
+    {key: 'rule', header: '항목', align: 'start', rowHeader: true},
+    {key: 'note', header: '규칙', align: 'start', wrap: true},
+] as const
+
+const RULE_ROWS = [
     {
-        title: '재사용',
-        code: 'ease-* · animate-*',
-        description: '기존 유틸리티를 쓰고 같은 값을 컴포넌트에 다시 작성하지 않습니다.',
+        key: 'reuse',
+        cells: [
+            '재사용',
+            <span key="n">아래 목록의 ease-* · animate-* 를 씁니다. 같은 값을 컴포넌트에 다시 적지 않습니다.</span>,
+        ],
     },
     {
-        title: '값 변경',
-        code: 'src/app/globals.css @theme',
-        description:
-            '값과 keyframes 는 tokens.json 이 아니라 여기서 관리하며 yarn tokens 대상이 아닙니다. 수정한 뒤 이 페이지의 목록도 고치고 yarn verify 로 이름 동기화를 확인합니다.',
+        key: 'edit',
+        cells: [
+            '값 바꾸기',
+            <span key="n">
+                <code>src/app/globals.css</code> 의 @theme 에서 고칩니다(tokens.json · yarn tokens 대상 아님). 이 페이지
+                목록도 함께 고치고, <code>yarn verify</code> 가 이름이 맞는지 확인합니다.
+            </span>,
+        ],
     },
     {
-        title: '차트 등장',
-        code: 'ChartRevealProvider · ChartReveal',
-        description:
-            '보고서 차트는 화면에 절반 이상 보일 때 문서 순서대로(0.12초 간격) 한 번 움직이고, 같은 묶음(revealGroup)으로 지정한 나란한 카드는 동시에 움직입니다. 탭을 처음 열면 절반 이상 보이는 차트부터 바로 시작하고, 이미 본 탭에 다시 들어가면 움직이지 않습니다(custom/chart-reveal.tsx).',
-    },
-    {
-        title: '동작 줄이기',
-        code: 'motion-reduce:animate-none',
-        description:
-            '사용처에 이 클래스를 적용해 OS 의 동작 줄이기 설정을 따르고, 반복되는 모션에는 정지 수단을 제공합니다. [KWCAG 6.2.2 · 6.3.1]',
+        key: 'reduce',
+        cells: [
+            '동작 줄이기',
+            <span key="n">
+                움직이는 클래스에는 <code>motion-reduce:animate-none</code>(또는 <code>motion-safe:</code>)를 붙여 OS
+                설정을 따릅니다. 반복되는 모션에는 정지 버튼을 둡니다[6.2.2 · 6.3.1].
+            </span>,
+        ],
     },
 ] as const
+
+// 3. 컴포넌트 모션
+const COMPONENT_COLUMNS = [
+    {key: 'component', header: '컴포넌트', align: 'start', rowHeader: true},
+    {key: 'how', header: '동작', align: 'start', wrap: true},
+    {key: 'where', header: '쓰는 곳', align: 'start', wrap: true},
+] as const
+
+const COMPONENT_ROWS = [
+    {
+        key: 'chart-reveal',
+        cells: [
+            <code key="c">ChartRevealProvider · ChartReveal</code>,
+            <ul key="h" className="flex list-disc flex-col gap-1 pl-5">
+                <li>차트가 화면에 절반 이상 보이면 한 번 움직입니다.</li>
+                <li>여러 장은 문서 순서로 0.12초 간격, 같은 revealGroup 은 동시에.</li>
+                <li>이미 본 탭에 다시 들어가면 움직이지 않습니다.</li>
+            </ul>,
+            'K-BIGx 보고서(custom/chart-reveal.tsx)',
+        ],
+    },
+    {
+        key: 'reveal',
+        cells: [
+            <code key="c">Reveal</code>,
+            <ul key="h" className="flex list-disc flex-col gap-1 pl-5">
+                <li>화면에 30% 이상 들어오면 아래에서 떠오르며 나타납니다(0.7초).</li>
+                <li>벗어났다 다시 들어오면 반복됩니다.</li>
+            </ul>,
+            '메인 기술평가 섹션(custom/reveal.tsx)',
+        ],
+    },
+] as const
+
+const JUMP_LINK_CLASS =
+    'border-border bg-card typo-body-l-bold text-foreground hover:bg-muted focus-visible:ring-ring rounded-md border px-4 py-2 outline-ring focus:outline-none focus-visible:ring-2'
+
+// 섹션 묶음 제목 — 아래 카드들이 이 묶음에 속한다.
+const GroupHeading = ({id, title, children}: {id: string; title: string; children: ReactNode}) => (
+    <div className="flex scroll-mt-24 flex-col gap-2 pt-4" id={id}>
+        <h2 className="typo-h3-bold text-foreground">{title}</h2>
+        <p className="typo-body-l-regular text-label-foreground">{children}</p>
+    </div>
+)
 
 const MotionGuidePage = () => (
     <GuidePageShell
         title="모션 (Motion)"
-        description="프로젝트에서 재사용하는 ease-* 가속도와 animate-* 애니메이션입니다."
+        description="프로젝트에서 재사용하는 가속도(ease-*)와 애니메이션(animate-*)입니다."
     >
         <BaseCard>
+            <nav aria-label="모션 문서 구성" className="flex flex-wrap gap-3">
+                <a href="#motion-rule-group" className={JUMP_LINK_CLASS}>
+                    1. 쓰는 법 · 규칙
+                </a>
+                <a href="#motion-token-group" className={JUMP_LINK_CLASS}>
+                    2. 목록 ({EASINGS.length + ANIMATIONS.length}개)
+                </a>
+                <a href="#motion-component-group" className={JUMP_LINK_CLASS}>
+                    3. 컴포넌트 모션
+                </a>
+            </nav>
+        </BaseCard>
+
+        <GroupHeading id="motion-rule-group" title="1. 쓰는 법 · 규칙">
+            새 값을 만들기 전에 목록에 있는 클래스를 먼저 찾습니다.
+        </GroupHeading>
+
+        <BaseCard>
             <section aria-labelledby="motion-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
-                    <h2 id="motion-basic" className="typo-h4-bold">
-                        기본 사용
-                    </h2>
-                    <p className="typo-body-l-regular text-label-foreground">
-                        가속도는 <code>ease-*</code>, 이름·시간·가속도가 묶인 애니메이션은 <code>animate-*</code>{' '}
-                        유틸리티로 적용합니다.
-                    </p>
-                </div>
+                <h3 id="motion-basic" className="typo-h4-bold">
+                    1-1. 쓰는 법
+                </h3>
                 <CodeBlock code={BASIC_CODE} language="tsx" copyLabel="복사" />
             </section>
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="motion-rule" className="flex flex-col gap-6">
+                <h3 id="motion-rule" className="typo-h4-bold">
+                    1-2. 규칙
+                </h3>
+                <Table caption="모션 사용 규칙" columns={RULE_COLUMNS} rows={RULE_ROWS} size="md" />
+                {/* 기본 규칙에서 벗어나는 자리라 표에 묻히지 않게 따로 띄운다. 늘 놓여 있는 안내라 role 을 note 로 둔다. */}
+                <Alert color="warning" role="note">
+                    <TriangleAlert aria-hidden="true" />
+                    <AlertTitle>예외: 메인페이지는 동작 줄이기를 적용하지 않습니다</AlertTitle>
+                    <AlertDescription>
+                        동작 줄이기를 켜면 내용이 아예 보이지 않는 경우가 있어, 메인페이지는 설정과 관계없이 원래 모션을
+                        재생합니다.
+                    </AlertDescription>
+                </Alert>
+            </section>
+        </BaseCard>
+
+        <GroupHeading id="motion-token-group" title="2. 목록">
+            미리보기는 실제 클래스를 그대로 붙인 것이라 원본과 같은 속도로 움직입니다.
+        </GroupHeading>
+
+        <BaseCard>
             <section aria-labelledby="motion-easing" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
-                    <h2 id="motion-easing" className="typo-h4-bold">
-                        가속도 (Easing)
-                    </h2>
+                <div className="flex flex-col gap-2">
+                    <h3 id="motion-easing" className="typo-h4-bold">
+                        2-1. 가속도 (ease-*)
+                    </h3>
                     <p className="typo-body-l-regular text-label-foreground">
-                        <code>transition-*</code>·<code>duration-*</code>과 함께 씁니다. 미리보기는 곡선 자체로, 가로가
-                        시간·세로가 진행률이며 가파른 구간이 빠르게 움직이는 구간입니다.
+                        곡선의 가로는 시간, 세로는 진행률입니다. 가파른 구간이 빠르게 움직입니다.
                     </p>
                 </div>
                 <Table
-                    caption="ease-* 가속도 토큰의 값과 쓰임"
-                    columns={EASING_COLUMNS}
+                    caption="ease-* 가속도 목록"
+                    columns={TOKEN_COLUMNS}
                     rows={EASINGS.map((easing) => ({
                         key: easing.name,
                         cells: [
                             <EasingCurve key="preview" points={easing.points} />,
                             <CopyChip key="class" value={easing.name} />,
-                            <span key="value" className="text-foreground-subtle font-mono whitespace-nowrap">
-                                {easing.value}
-                            </span>,
-                            <span key="usage">
-                                {easing.usage} <span className="text-foreground-subtle font-mono">{easing.source}</span>
-                            </span>,
+                            <UsageCell key="usage" usage={easing.usage} value={easing.value} source={easing.source} />,
                         ],
                     }))}
                 />
@@ -260,18 +344,12 @@ const MotionGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="motion-animation" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
-                    <h2 id="motion-animation" className="typo-h4-bold">
-                        애니메이션 (Animation)
-                    </h2>
-                    <p className="typo-body-l-regular text-label-foreground">
-                        이름·시간·가속도가 한 값에 묶여 있어 클래스 하나로 적용합니다. 미리보기는 실제 유틸리티를 그대로
-                        붙인 것이라 원본과 같은 속도로 움직입니다.
-                    </p>
-                </div>
+                <h3 id="motion-animation" className="typo-h4-bold">
+                    2-2. 애니메이션 (animate-*)
+                </h3>
                 <Table
-                    caption="animate-* 애니메이션 토큰의 값과 쓰임"
-                    columns={ANIMATION_COLUMNS}
+                    caption="animate-* 애니메이션 목록"
+                    columns={TOKEN_COLUMNS}
                     rows={ANIMATIONS.map((animation) => ({
                         key: animation.name,
                         cells: [
@@ -282,50 +360,28 @@ const MotionGuidePage = () => (
                                 label={animation.name}
                             />,
                             <CopyChip key="class" value={animation.name} />,
-                            <span key="value" className="text-foreground-subtle font-mono">
-                                {animation.value}
-                            </span>,
-                            <span key="usage">
-                                {animation.usage}{' '}
-                                <span className="text-foreground-subtle font-mono">{animation.source}</span>
-                            </span>,
+                            <UsageCell
+                                key="usage"
+                                usage={animation.usage}
+                                value={animation.value}
+                                source={animation.source}
+                            />,
                         ],
                     }))}
                 />
             </section>
         </BaseCard>
+
+        <GroupHeading id="motion-component-group" title="3. 컴포넌트 모션">
+            화면에 들어올 때 움직이는 래퍼 컴포넌트입니다. 감싸기만 하면 됩니다.
+        </GroupHeading>
+
         <BaseCard>
-            <section aria-labelledby="motion-rule" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
-                    <h2 id="motion-rule" className="typo-h4-bold">
-                        사용 규칙
-                    </h2>
-                </div>
-                {/* 규칙마다 같은 자리에 같은 항목(제목 · 핵심 코드 · 설명)을 둔다. */}
-                <div className="grid gap-4 md:grid-cols-3">
-                    {MOTION_RULES.map((rule) => (
-                        <div
-                            key={rule.title}
-                            className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-3 rounded-sm border p-5"
-                        >
-                            <h3 className="typo-body-xl-bold text-foreground">{rule.title}</h3>
-                            <code className="bg-card text-foreground border-subtle-3 w-fit max-w-full rounded-xs border px-2 py-1 font-mono text-sm break-all">
-                                {rule.code}
-                            </code>
-                            <p className="text-label-foreground">{rule.description}</p>
-                        </div>
-                    ))}
-                </div>
-                {/* 기본 규칙에서 벗어나는 자리라 표 위 설명에 묻히지 않게 따로 띄운다. 페이지를 열 때마다
-                    읽어 주는 알림이 아니라 늘 놓여 있는 안내라 role 을 note 로 둔다. */}
-                <Alert color="warning" role="note">
-                    <TriangleAlert aria-hidden="true" />
-                    <AlertTitle>예외 — 메인페이지는 동작 줄이기를 적용하지 않습니다</AlertTitle>
-                    <AlertDescription>
-                        메인페이지는 PC 설정의 동작 줄이기 혹은 애니메이션 줄이기를 켜면 화면에 내용이 아예 노출되지
-                        않는 경우가 있어 동작 줄이기에서 제외했고, 설정과 관계없이 원본 모션을 그대로 재생합니다.
-                    </AlertDescription>
-                </Alert>
+            <section aria-labelledby="motion-component" className="flex flex-col gap-6">
+                <h3 id="motion-component" className="typo-h4-bold">
+                    3-1. 등장 모션
+                </h3>
+                <Table caption="컴포넌트 등장 모션" columns={COMPONENT_COLUMNS} rows={COMPONENT_ROWS} size="md" />
             </section>
         </BaseCard>
     </GuidePageShell>

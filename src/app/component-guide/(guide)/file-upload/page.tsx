@@ -17,7 +17,7 @@ import {FileUploadResultDemo} from './file-upload-result-demo'
 export const metadata: Metadata = {title: '파일 업로드 (FileUpload)'}
 
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
-const SECTION_HEAD = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEAD = 'flex flex-col gap-2'
 const SUB_LIST = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t'
 const SUB_BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 const LIST_CLASS = 'typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5'

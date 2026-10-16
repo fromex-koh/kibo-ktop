@@ -134,7 +134,7 @@ const SelectableSummaryListGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="ssl-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ssl-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -151,7 +151,7 @@ const SelectableSummaryListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ssl-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ssl-variants" className="typo-h4-bold">
                         상태·배치 예시
                     </h2>
@@ -179,7 +179,7 @@ const SelectableSummaryListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ssl-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ssl-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -196,7 +196,7 @@ const SelectableSummaryListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ssl-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ssl-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -221,7 +221,7 @@ const SelectableSummaryListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ssl-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ssl-props" className="typo-h4-bold">
                         Props API
                     </h2>

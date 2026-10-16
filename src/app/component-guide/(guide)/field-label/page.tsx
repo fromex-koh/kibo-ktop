@@ -139,7 +139,7 @@ const FieldLabelGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="field-label-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="field-label-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -173,7 +173,7 @@ const FieldLabelGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="field-label-layout" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="field-label-layout" className="typo-h4-bold">
                         배치와 포커스
                     </h2>
@@ -204,7 +204,7 @@ const FieldLabelGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="field-label-state" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="field-label-state" className="typo-h4-bold">
                         오류와 비활성
                     </h2>
@@ -269,7 +269,7 @@ const FieldLabelGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="field-label-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="field-label-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -297,7 +297,7 @@ const FieldLabelGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="field-label-api" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="field-label-api" className="typo-h4-bold">
                         Props API
                     </h2>

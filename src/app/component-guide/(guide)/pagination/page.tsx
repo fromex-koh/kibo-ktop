@@ -10,7 +10,7 @@ import {PaginationBasicDemo, PaginationEllipsisDemo} from './pagination-demo'
 
 export const metadata: Metadata = {title: '페이지네이션 (Pagination)'}
 
-const SECTION_HEADER = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEADER = 'flex flex-col gap-2'
 const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 
 const USAGE_CODE = `'use client'

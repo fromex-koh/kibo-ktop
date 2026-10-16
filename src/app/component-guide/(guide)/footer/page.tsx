@@ -106,7 +106,7 @@ const FooterGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="footer-variant" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="footer-variant" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -140,7 +140,7 @@ const FooterGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="footer-theme" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="footer-theme" className="typo-h4-bold">
                         테마별 미리보기
                     </h2>
@@ -174,7 +174,7 @@ const FooterGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="footer-composition" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="footer-composition" className="typo-h4-bold">
                         구성 요소
                     </h2>
@@ -197,7 +197,7 @@ const FooterGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="footer-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="footer-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>

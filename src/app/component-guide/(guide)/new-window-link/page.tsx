@@ -12,7 +12,7 @@ import {EVALUATION_REPORT_WINDOW_HEIGHT, EVALUATION_REPORT_WINDOW_WIDTH} from '@
 
 export const metadata: Metadata = {title: '새 창 열기 (NewWindowLink)'}
 
-const SECTION_HEADER = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEADER = 'flex flex-col gap-2'
 const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 

@@ -35,7 +35,8 @@ const EVALUATION_MODELS = [
             '일반 혁신성장기업의 미래 성장 가능성을 측정하는 지수형 평가 모형입니다.',
             '기술혁신성, 시장확장성, 성장 잠재력을 중심으로 평가합니다.',
         ],
-        illustration: '/images/option-card/shield-certificate.webp',
+        illustration: '/images/option-card/speed-gauge.webp',
+        illustrationSize: {width: 144, height: 96},
     },
     {
         // Tech-Index 모형 화면은 아직 시안이 없어 같은 1단계로 연결한다.
@@ -46,7 +47,8 @@ const EVALUATION_MODELS = [
             '창업 초기 기업의 특성에 맞춰 설계된 평가모형입니다.',
             '보유 기술의 혁신성과 향후 성장 잠재력을 중점적으로 분석합니다.',
         ],
-        illustration: '/images/option-card/lightbulb-magnifier.webp',
+        illustration: '/images/option-card/rocket-growth.webp',
+        illustrationSize: {width: 95, height: 92},
     },
 ] as const
 
@@ -114,17 +116,18 @@ const EvaluationModelPage = () => (
                             }
                             // 제목·설명이 정보를 전달하므로 일러스트는 장식이다([5.1.1]).
                             illustration={
-                                // preflight 의 img { height: auto } 가 높이만 덮어써 next/image 비율 경고가 뜬다.
-                                // 시안 이미지 영역은 148×100 고정이라 style 로 두 값을 함께 잠근다(가이드와 동일).
-                                <Image
-                                    src={model.illustration}
-                                    alt=""
-                                    draggable={false}
-                                    width={148}
-                                    height={100}
-                                    priority
-                                    style={{width: 148, height: 100}}
-                                />
+                                // 시안 이미지 영역(148×100) 가운데에 그림을 원본 비율대로 놓는다. preflight 의 img { height: auto } 가
+                                // 높이만 덮어써 next/image 비율 경고가 뜨므로 style 로 두 값을 함께 잠근다(가이드와 동일).
+                                <span className="flex items-center justify-center" style={{width: 148, height: 100}}>
+                                    <Image
+                                        src={model.illustration}
+                                        alt=""
+                                        draggable={false}
+                                        {...model.illustrationSize}
+                                        priority
+                                        style={model.illustrationSize}
+                                    />
+                                </span>
                             }
                         />
                     ))}

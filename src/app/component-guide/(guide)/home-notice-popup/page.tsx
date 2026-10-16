@@ -135,7 +135,7 @@ const PROPS_ITEMS = [
 ] as const
 
 const SectionHead = ({id, title, description}: {id: string; title: string; description: string}) => (
-    <div className="flex max-w-4xl flex-col gap-2">
+    <div className="flex flex-col gap-2">
         <h2 id={id} className="typo-h4-bold">
             {title}
         </h2>

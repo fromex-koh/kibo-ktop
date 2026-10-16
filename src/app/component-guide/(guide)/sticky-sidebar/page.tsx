@@ -195,7 +195,7 @@ const StickySidebarGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="sticky-sidebar-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sticky-sidebar-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -218,7 +218,7 @@ const StickySidebarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sticky-sidebar-composition" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sticky-sidebar-composition" className="typo-h4-bold">
                         구성 요소
                     </h2>
@@ -243,7 +243,7 @@ const StickySidebarGuidePage = () => (
 
         <BaseCard className="overflow-visible">
             <section aria-labelledby="sticky-sidebar-layout" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sticky-sidebar-layout" className="typo-h4-bold">
                         페이지 배치
                     </h2>
@@ -294,7 +294,7 @@ const StickySidebarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sticky-sidebar-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sticky-sidebar-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>

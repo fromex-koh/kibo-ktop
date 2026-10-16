@@ -33,7 +33,7 @@ const ShadowGuidePage = () => (
     <GuidePageShell title="그림자 (Shadow)" description="표면의 높이와 구분을 표현하는 shadow-* 토큰입니다.">
         <BaseCard>
             <section aria-labelledby="shadow-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="shadow-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -49,7 +49,7 @@ const ShadowGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="shadow-list" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="shadow-list" className="typo-h4-bold">
                         그림자 목록
                     </h2>
@@ -87,7 +87,7 @@ const ShadowGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="shadow-rules" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="shadow-rules" className="typo-h4-bold">
                         사용 규칙
                     </h2>

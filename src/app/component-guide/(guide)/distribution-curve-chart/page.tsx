@@ -238,7 +238,7 @@ const DistributionCurveChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="dcc-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dcc-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -256,7 +256,7 @@ const DistributionCurveChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dcc-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dcc-variants" className="typo-h4-bold">
                         칸 모양
                     </h2>
@@ -301,7 +301,7 @@ const DistributionCurveChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dcc-states" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dcc-states" className="typo-h4-bold">
                         상태와 특이한 값
                     </h2>
@@ -340,7 +340,7 @@ const DistributionCurveChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dcc-data" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dcc-data" className="typo-h4-bold">
                         데이터 연결
                     </h2>
@@ -354,7 +354,7 @@ const DistributionCurveChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dcc-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dcc-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -373,7 +373,7 @@ const DistributionCurveChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dcc-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dcc-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -409,7 +409,7 @@ const DistributionCurveChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dcc-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dcc-props" className="typo-h4-bold">
                         Props API
                     </h2>

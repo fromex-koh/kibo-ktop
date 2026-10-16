@@ -361,7 +361,7 @@ const FormTabsGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="ft-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ft-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -381,7 +381,7 @@ const FormTabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ft-parts" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ft-parts" className="typo-h4-bold">
                         구성 요소
                     </h2>
@@ -396,7 +396,7 @@ const FormTabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ft-values" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ft-values" className="typo-h4-bold">
                         값 관리
                     </h2>
@@ -445,7 +445,7 @@ const FormTabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ft-submit" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ft-submit" className="typo-h4-bold">
                         폼 제출
                     </h2>
@@ -463,7 +463,7 @@ const FormTabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ft-validation" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ft-validation" className="typo-h4-bold">
                         유효성 검사
                     </h2>
@@ -499,7 +499,7 @@ const FormTabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ft-status" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ft-status" className="typo-h4-bold">
                         작성 상태
                     </h2>
@@ -529,7 +529,7 @@ const FormTabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ft-responsive" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ft-responsive" className="typo-h4-bold">
                         반응형
                     </h2>
@@ -625,7 +625,7 @@ const FormTabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ft-title" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ft-title" className="typo-h4-bold">
                         탭 타이틀 (FormTabTitle)
                     </h2>
@@ -711,7 +711,7 @@ const FormTabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ft-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ft-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -740,7 +740,7 @@ const FormTabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ft-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ft-props" className="typo-h4-bold">
                         Props API
                     </h2>

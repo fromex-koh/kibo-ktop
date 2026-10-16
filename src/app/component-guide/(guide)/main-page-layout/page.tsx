@@ -127,7 +127,7 @@ const MainPageLayoutGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="main-page-layout-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="main-page-layout-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -192,7 +192,7 @@ const MainPageLayoutGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="main-page-layout-parts" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="main-page-layout-parts" className="typo-h4-bold">
                         구성 요소
                     </h2>
@@ -215,7 +215,7 @@ const MainPageLayoutGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="main-page-layout-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="main-page-layout-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -229,7 +229,7 @@ const MainPageLayoutGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="main-page-layout-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="main-page-layout-a11y" className="typo-h4-bold">
                         접근성
                     </h2>

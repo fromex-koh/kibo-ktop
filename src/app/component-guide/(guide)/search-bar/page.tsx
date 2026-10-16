@@ -161,7 +161,7 @@ const SearchBarGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="sb-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sb-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -178,7 +178,7 @@ const SearchBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sb-state" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sb-state" className="typo-h4-bold">
                         상태와 오류
                     </h2>
@@ -212,7 +212,7 @@ const SearchBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sb-form" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sb-form" className="typo-h4-bold">
                         폼 제출
                     </h2>
@@ -228,7 +228,7 @@ const SearchBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sb-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sb-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -247,7 +247,7 @@ const SearchBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sb-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sb-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -274,7 +274,7 @@ const SearchBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sb-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sb-props" className="typo-h4-bold">
                         Props API
                     </h2>

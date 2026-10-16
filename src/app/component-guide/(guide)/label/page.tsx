@@ -127,7 +127,7 @@ const LabelGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="label-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="label-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -148,7 +148,7 @@ const LabelGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="label-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="label-usage" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -167,7 +167,7 @@ const LabelGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="label-patterns" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="label-patterns" className="typo-h4-bold">
                         상태와 조합
                     </h2>
@@ -240,7 +240,7 @@ const LabelGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="label-api" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="label-api" className="typo-h4-bold">
                         Props API
                     </h2>

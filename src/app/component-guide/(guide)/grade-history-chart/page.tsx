@@ -225,7 +225,7 @@ const GradeHistoryChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="ghc-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ghc-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -243,7 +243,7 @@ const GradeHistoryChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ghc-states" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ghc-states" className="typo-h4-bold">
                         상태와 특이한 값
                     </h2>
@@ -283,7 +283,7 @@ const GradeHistoryChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ghc-data" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ghc-data" className="typo-h4-bold">
                         데이터 연결
                     </h2>
@@ -297,7 +297,7 @@ const GradeHistoryChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ghc-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ghc-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -316,7 +316,7 @@ const GradeHistoryChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ghc-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ghc-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -353,7 +353,7 @@ const GradeHistoryChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ghc-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ghc-props" className="typo-h4-bold">
                         Props API
                     </h2>

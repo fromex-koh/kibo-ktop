@@ -257,7 +257,7 @@ const QuestionListGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="question-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="question-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -300,7 +300,7 @@ const QuestionListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="question-patterns" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="question-patterns" className="typo-h4-bold">
                         문항 구성
                     </h2>
@@ -458,7 +458,7 @@ const QuestionListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="question-group" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="question-group" className="typo-h4-bold">
                         그룹 헤더와 조합
                     </h2>
@@ -518,7 +518,7 @@ const QuestionListGuidePage = () => (
 
         <BaseCard>
             <section id="question-form" aria-labelledby="question-form-title" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="question-form-title" className="typo-h4-bold">
                         폼 제출
                     </h2>
@@ -536,7 +536,7 @@ const QuestionListGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="question-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="question-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -566,7 +566,7 @@ const QuestionListGuidePage = () => (
 
         <BaseCard>
             <section id="question-props" aria-labelledby="question-props-title" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="question-props-title" className="typo-h4-bold">
                         Props API
                     </h2>

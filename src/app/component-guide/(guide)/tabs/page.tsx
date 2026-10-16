@@ -69,6 +69,32 @@ const PILL_CODE = `<Tabs defaultValue="collection" className="gap-10">
   <TabsContent value="provision">개인정보 제공 내용</TabsContent>
 </Tabs>`
 
+// 탭마다 주소가 있을 때 — 기관 K-BIGx 보고서(org/…/k-bigx-report/org-kbigx-report-tabs.tsx)와 같은 방식.
+const ROUTE_TABS_CODE = `'use client'
+import {usePathname} from 'next/navigation'
+
+const TABS = [
+  {value: 'innovation-growth', label: '기업혁신성장', path: '/org/k-bigx-report/innovation-growth-report'},
+  {value: 'bulk-data-search', label: '대량정보조회', path: '/org/k-bigx-report/bulk-data-search'},
+] as const
+
+const pathname = usePathname()
+// 켜진 탭 = 지금 주소(하위 주소도 그 탭)
+const activeTab = TABS.find((tab) => pathname.startsWith(tab.path))?.value ?? TABS[0].value
+
+<Tabs
+  value={activeTab}
+  // 주소만 바꾼다 — 화면을 다시 불러오지 않아 포커스가 탭에 남는다
+  onValueChange={(value) => {
+    const next = TABS.find((tab) => tab.value === value)
+    if (next) window.history.pushState(null, '', next.path)
+  }}
+  // 화살표는 포커스만 옮기고 Enter · Space 로 고른다 — 포커스만으로 주소가 바뀌지 않게[7.2.1]
+  activationMode="manual"
+>
+  …
+</Tabs>`
+
 const SCROLL_CODE = `<Tabs defaultValue="info">
   <TabsScrollArea aria-label="마이페이지 메뉴">
     <TabsTrigger value="info">내 정보 확인</TabsTrigger>
@@ -115,7 +141,7 @@ const VARIANT_ROWS = [
         cells: [
             <code key="v">pill-outline</code>,
             '2뎁스. 알약 버튼이 늘어서고 폭을 넘으면 다음 줄로 넘어갑니다. 비선택은 흰 면에 옅은 테두리입니다.',
-            '흰 본문이나 카드 목록 위. 자주 묻는 질문 · 알기 쉬운 개인정보 처리방침 · K-BIGx 보고서 구성 항목.',
+            '흰 본문 · 카드 목록 · 회색 화면 바탕 위. 자주 묻는 질문 · 알기 쉬운 개인정보 처리방침 · K-BIGx 보고서 구성 항목 · 기관 K-BIGx 보고서(기업혁신성장 · 대량정보조회).',
         ],
     },
     {
@@ -189,7 +215,7 @@ const TabsGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="tabs-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tabs-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -223,7 +249,7 @@ const TabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="tabs-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tabs-variants" className="typo-h4-bold">
                         종류 선택
                     </h2>
@@ -251,7 +277,7 @@ const TabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="tabs-examples" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tabs-examples" className="typo-h4-bold">
                         변형 예시
                     </h2>
@@ -373,13 +399,24 @@ const TabsGuidePage = () => (
                         </div>
                         <CodeBlock code={SCROLL_CODE} language="tsx" copyLabel="복사" />
                     </div>
+
+                    <div className="flex flex-col gap-4 py-8 last:pb-0">
+                        <h3 className="typo-title-m-bold text-foreground">탭마다 주소가 있을 때</h3>
+                        <p className="typo-body-l-regular text-label-foreground">
+                            기관 K-BIGx 보고서처럼 탭마다 주소가 있으면(헤더 메뉴 · 퍼블리싱 인덱스) 켜진 탭을 주소로
+                            정합니다. 그 주소로 들어오거나 뒤로 가기 · 헤더 메뉴로 주소가 바뀌면 탭이 따라 켜지고, 탭을
+                            누르면 주소도 그 탭 주소로 바뀝니다. 이 가이드에서 주소가 바뀌지 않도록 예시는 코드로만
+                            둡니다.
+                        </p>
+                        <CodeBlock code={ROUTE_TABS_CODE} language="tsx" copyLabel="복사" />
+                    </div>
                 </div>
             </section>
         </BaseCard>
 
         <BaseCard>
             <section aria-labelledby="tabs-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tabs-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -400,6 +437,10 @@ const TabsGuidePage = () => (
                         본문 패널(<code>TabsContent</code>)도 Tab 키 순서에 들어가며 포커스 링이 표시됩니다[6.1.2].
                     </li>
                     <li>
+                        탭을 고르면 주소가 바뀌는 탭은 <code>activationMode=&quot;manual&quot;</code> 로 둡니다 —
+                        화살표로 포커스만 옮겨도 주소가 바뀌지 않게 합니다[7.2.1].
+                    </li>
+                    <li>
                         스크롤 화살표는 더 갈 수 없을 때 <code>disabled</code> 대신 <code>aria-disabled</code> 로 두어
                         포커스가 사라지지 않고, 스크롤 이동은 <code>prefers-reduced-motion</code> 을 존중합니다[6.3.1].
                     </li>
@@ -409,7 +450,7 @@ const TabsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="tabs-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tabs-props" className="typo-h4-bold">
                         Props API
                     </h2>

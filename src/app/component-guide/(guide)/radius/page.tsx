@@ -48,7 +48,7 @@ const RadiusGuidePage = () => (
     <GuidePageShell title="모서리 반경 (Radius)" description="컴포넌트 형태에 적용하는 rounded-* 반경 토큰입니다.">
         <BaseCard>
             <section aria-labelledby="radius-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radius-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -63,7 +63,7 @@ const RadiusGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="radius-scale" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radius-scale" className="typo-h4-bold">
                         반경 목록
                     </h2>
@@ -97,7 +97,7 @@ const RadiusGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="radius-rules" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radius-rules" className="typo-h4-bold">
                         사용 규칙
                     </h2>

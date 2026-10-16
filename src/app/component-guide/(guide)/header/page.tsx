@@ -155,7 +155,7 @@ const HeaderGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="header-preview" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="header-preview" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -175,7 +175,7 @@ const HeaderGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="header-user-type" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="header-user-type" className="typo-h4-bold">
                         기업 · 기관 메뉴
                     </h2>
@@ -206,7 +206,7 @@ const HeaderGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="header-authenticated" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="header-authenticated" className="typo-h4-bold">
                         로그인 전 · 후 상태
                     </h2>
@@ -242,7 +242,7 @@ const HeaderGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="header-theme" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="header-theme" className="typo-h4-bold">
                         화면 유형별 설정
                     </h2>
@@ -288,7 +288,7 @@ const HeaderGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="header-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="header-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -302,7 +302,7 @@ const HeaderGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="header-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="header-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>

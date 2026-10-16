@@ -34,7 +34,7 @@ const OverlayGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="overlay-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="overlay-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -49,7 +49,7 @@ const OverlayGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="overlay-scale" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="overlay-scale" className="typo-h4-bold">
                         오버레이 목록
                     </h2>
@@ -91,7 +91,7 @@ const OverlayGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="overlay-rules" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="overlay-rules" className="typo-h4-bold">
                         사용 규칙
                     </h2>

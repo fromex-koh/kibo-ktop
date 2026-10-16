@@ -50,6 +50,16 @@ const CHOICE_ROWS = [
         ],
     },
     {
+        key: 'title-detail-table',
+        cells: [
+            '여러 건 × 여러 열, 제목이 길다',
+            <Link key="component" href="/component-guide/title-detail-table" className={LINK_CLASS}>
+                TitleDetailTable
+            </Link>,
+            '한 건을 제목 줄 + 상세 줄 두 줄로 보입니다(특허 목록).',
+        ],
+    },
+    {
         key: 'summary-list',
         cells: [
             '카드형 목록으로 보임',
@@ -93,7 +103,7 @@ const InfoTableGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="info-table-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="info-table-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -109,7 +119,7 @@ const InfoTableGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="info-table-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="info-table-variants" className="typo-h4-bold">
                         배치 (layout)
                     </h2>
@@ -125,13 +135,13 @@ const InfoTableGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="info-table-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="info-table-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
                 </div>
                 <Table
-                    caption="InfoTable · SummaryList 사용 기준"
+                    caption="InfoTable · TitleDetailTable · SummaryList 사용 기준"
                     columns={CHOICE_COLUMNS}
                     rows={CHOICE_ROWS}
                     size="md"
@@ -141,7 +151,7 @@ const InfoTableGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="info-table-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="info-table-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -160,7 +170,7 @@ const InfoTableGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="info-table-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="info-table-props" className="typo-h4-bold">
                         Props API
                     </h2>

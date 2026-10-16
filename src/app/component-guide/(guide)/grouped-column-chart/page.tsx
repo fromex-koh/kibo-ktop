@@ -193,7 +193,7 @@ const INCOME_STATEMENT_DATA: GroupedColumnItem[] = [
     {id: '2024', label: '2024', values: {sales: 267.4, operatingProfit: 38.2, netIncome: 28.6}},
 ]
 
-const SECTION_HEAD = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEAD = 'flex flex-col gap-2'
 const BLOCKS = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t'
 const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 const CARD = 'border-subtle-3 bg-card rounded-sm border p-6'

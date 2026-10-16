@@ -114,7 +114,7 @@ const PageTitleBarGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="ptb-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ptb-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -153,7 +153,7 @@ const PageTitleBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ptb-compose" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ptb-compose" className="typo-h4-bold">
                         조합 예시
                     </h2>
@@ -190,7 +190,7 @@ const PageTitleBarGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="ptb-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="ptb-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>

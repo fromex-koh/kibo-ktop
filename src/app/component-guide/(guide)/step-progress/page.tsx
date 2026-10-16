@@ -12,7 +12,7 @@ import {SELF_DIAGNOSIS_STEPS} from '@/constants/technology-evaluation'
 
 export const metadata: Metadata = {title: '스텝 진행바 (StepProgress)'}
 
-const SECTION_HEADER = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEADER = 'flex flex-col gap-2'
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 
 const USAGE_CODE = `import {StepProgress} from '@/components/composite/step-progress'

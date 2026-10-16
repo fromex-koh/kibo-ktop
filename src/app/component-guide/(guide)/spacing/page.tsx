@@ -116,7 +116,7 @@ const SpacingGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="spacing-scale" className="flex flex-col gap-4">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="spacing-scale" className="typo-h4-bold text-foreground">
                         간격 유틸리티
                     </h2>

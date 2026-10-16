@@ -111,7 +111,7 @@ const SwitchGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="switch-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="switch-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -139,7 +139,7 @@ const SwitchGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="switch-form" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="switch-form" className="typo-h4-bold">
                         폼 제출
                     </h2>
@@ -155,7 +155,7 @@ const SwitchGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="switch-size" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="switch-size" className="typo-h4-bold">
                         Size 와 상태
                     </h2>
@@ -184,7 +184,7 @@ const SwitchGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="switch-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="switch-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -212,7 +212,7 @@ const SwitchGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="switch-api" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="switch-api" className="typo-h4-bold">
                         Props API
                     </h2>

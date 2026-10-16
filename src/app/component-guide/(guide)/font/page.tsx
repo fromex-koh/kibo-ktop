@@ -48,7 +48,7 @@ const PRIMITIVE_TABLE_COLUMNS = [
 const PrimitiveTable = ({id, title, hint, rows}: {id: string; title: string; hint: string; rows: PrimitiveRow[]}) => (
     <BaseCard>
         <section aria-labelledby={`font-${id}`} className="flex flex-col gap-6">
-            <div className="flex max-w-4xl flex-col gap-2">
+            <div className="flex flex-col gap-2">
                 <h2 id={`font-${id}`} className="typo-h4-bold">
                     {title}
                 </h2>
@@ -94,7 +94,7 @@ const FONT_SIZE_TABLE_COLUMNS = [
 const FontSizeTable = () => (
     <BaseCard>
         <section aria-labelledby="font-size" className="flex flex-col gap-6">
-            <div className="flex max-w-4xl flex-col gap-2">
+            <div className="flex flex-col gap-2">
                 <h2 id="font-size" className="typo-h4-bold">
                     크기 (font-size)
                 </h2>
@@ -304,7 +304,7 @@ const FontPrimitiveGuidePage = () => (
             />
             <BaseCard>
                 <section aria-labelledby="font-tracking" className="flex flex-col gap-6">
-                    <div className="flex max-w-4xl flex-col gap-2">
+                    <div className="flex flex-col gap-2">
                         <h2 id="font-tracking" className="typo-h4-bold">
                             역할 기반 자간 (tracking)
                         </h2>

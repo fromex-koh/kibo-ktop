@@ -254,7 +254,7 @@ const GradeScaleGaugeGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="gsg-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="gsg-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -280,7 +280,7 @@ const GradeScaleGaugeGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="gsg-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="gsg-variants" className="typo-h4-bold">
                         등급과 상태 예시
                     </h2>
@@ -357,7 +357,7 @@ const GradeScaleGaugeGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="gsg-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="gsg-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -371,7 +371,7 @@ const GradeScaleGaugeGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="gsg-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="gsg-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -401,7 +401,7 @@ const GradeScaleGaugeGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="gsg-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="gsg-props" className="typo-h4-bold">
                         Props API
                     </h2>

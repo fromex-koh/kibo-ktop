@@ -175,7 +175,7 @@ const PROPS_ITEMS = [
     ],
 ] as const
 
-const SECTION_HEAD = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEAD = 'flex flex-col gap-2'
 const SUB_BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 const DEMO_FRAME = 'bg-surface border-border overflow-hidden rounded-xl border p-4'
 

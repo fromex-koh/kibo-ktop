@@ -329,7 +329,7 @@ const SegmentedControlGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="tg-type" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tg-type" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -370,7 +370,7 @@ const SegmentedControlGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="tg-variant" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tg-variant" className="typo-h4-bold">
                         외형
                     </h2>
@@ -440,7 +440,7 @@ const SegmentedControlGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="tg-size" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tg-size" className="typo-h4-bold">
                         크기
                     </h2>
@@ -491,7 +491,7 @@ const SegmentedControlGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="tg-disabled" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tg-disabled" className="typo-h4-bold">
                         비활성 상태
                     </h2>
@@ -557,7 +557,7 @@ const SegmentedControlGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="tg-form" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tg-form" className="typo-h4-bold">
                         폼 제출
                     </h2>
@@ -592,7 +592,7 @@ const SegmentedControlGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="tg-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tg-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -606,7 +606,7 @@ const SegmentedControlGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="tg-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tg-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -632,7 +632,7 @@ const SegmentedControlGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="tg-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="tg-props" className="typo-h4-bold">
                         Props API
                     </h2>
