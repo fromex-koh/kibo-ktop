@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import kiboLogo from '@public/images/logo-kibo-on-dark.webp'
+import kiboLogo from '@public/images/logo-kibo-on-dark.svg'
 import {ListMarker} from '@/components/custom/list-marker'
 import {GradeRadarChart} from '@/components/custom/grade-radar-chart'
 import {GradeTrendChart} from '@/components/custom/grade-trend-chart'
