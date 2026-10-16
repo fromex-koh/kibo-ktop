@@ -151,8 +151,11 @@ const ListPagination = ({page, total, onPageChange, label, className}: ListPagin
 const LIST_STATE_CLASS_NAME = 'bg-card min-h-52 rounded-lg'
 
 type InnovationGrowthReportLookupProps = {
-    /** 화면 제목 · 소개 — 검색 위에 놓인다. */
-    intro: ReactNode
+    /**
+     * 화면 제목 · 소개 — 검색 위에 놓인다. 주면 화면 틀(grid-layout)까지 이 컴포넌트가 그린다.
+     * 비우면 본문만 그린다 — 기관 화면처럼 제목 · 소개 아래 탭 안에 넣을 때다(org-kbigx-report-screen.tsx).
+     */
+    intro?: ReactNode
     /** 보고서 문서(보고서 출력) 주소 — 기업 /corp/… · 기관 /org/…. [이용권 사용]이 이 주소를 새 창으로 연다. */
     reportHref: string
     /**
@@ -293,8 +296,9 @@ const InnovationGrowthReportLookup = ({intro, reportHref, initialResult}: Innova
     }
 
     // 세로 간격 — 소개 · 검색 · 결과 · 버튼 사이 40, 검색 안내 줄과 결과 사이만 60(결과 영역 mt-5).
+    // 소개(intro)가 없으면 탭 안에 들어가는 본문이라 화면 틀 없이 같은 간격으로만 쌓는다.
     return (
-        <div className="grid-layout gap-y-10 pt-10 pb-15 *:col-span-full">
+        <div className={intro ? 'grid-layout gap-y-10 pt-10 pb-15 *:col-span-full' : 'flex flex-col gap-y-10'}>
             {intro}
             <div className="flex flex-col gap-4">
                 <SelectSearchForm
