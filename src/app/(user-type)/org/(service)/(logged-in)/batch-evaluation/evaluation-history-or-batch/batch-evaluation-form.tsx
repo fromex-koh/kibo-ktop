@@ -16,8 +16,8 @@ import {BATCH_MODEL_META} from './batch-model-meta'
 const MODEL_FIELD = 'evaluationModel'
 const TASK_FIELD = 'nextTask'
 
-// 시안 이미지 영역은 148×100 고정이다. preflight 의 img { height: auto } 가 높이만 덮어써
-// next/image 비율 경고가 뜨므로 style 로 두 값을 함께 잠근다.
+// 시안 이미지 영역은 148×100 고정이다. 그림은 그 자리 가운데에 원본 비율대로(illustrationSize) 놓는다.
+// preflight 의 img { height: auto } 가 높이만 덮어써 next/image 비율 경고가 뜨므로 style 로 두 값을 함께 잠근다.
 const ILLUSTRATION_SIZE = {width: 148, height: 100} as const
 
 // description 을 문장 단위 배열로 두는 이유 — 시안은 두 문장을 각자 한 줄에 놓는다(문장 사이 줄바꿈).
@@ -33,7 +33,9 @@ const EVALUATION_MODELS = [
             '일반 혁신성장기업의 미래 성장 가능성을 측정하는 지수형 평가 모형입니다.',
             '기술혁신성, 시장확장성, 성장 잠재력을 중심으로 평가합니다.',
         ],
-        illustration: '/images/option-card/shield-certificate.webp',
+        // Tech-Index 선택 화면과 같은 그림을 148×100 자리 가운데에 95×92 로 놓는다.
+        illustration: '/images/option-card/rocket-growth.webp',
+        illustrationSize: {width: 95, height: 92},
     },
     {
         value: 'startup',
@@ -43,7 +45,9 @@ const EVALUATION_MODELS = [
             '창업 초기 기업의 특성에 맞춰 설계된 평가모형입니다.',
             '보유 기술의 혁신성과 향후 성장 잠재력을 중점적으로 분석합니다.',
         ],
-        illustration: '/images/option-card/lightbulb-magnifier.webp',
+        // 건물 + 전구 그림(444×327)을 148×100 자리에 비율대로 136×100 으로 놓는다(Tech-Index 선택 화면과 같다).
+        illustration: '/images/option-card/building-lightbulb.webp',
+        illustrationSize: {width: 136, height: 100},
     },
 ] as const
 
@@ -143,14 +147,16 @@ const BatchEvaluationForm = ({modelsLabelledBy, tasksLabelledBy, tasksTitle, chi
                             }
                             // 제목·설명이 정보를 전달하므로 일러스트는 장식이다([5.1.1]).
                             illustration={
-                                <Image
-                                    src={evaluationModel.illustration}
-                                    alt=""
-                                    draggable={false}
-                                    {...ILLUSTRATION_SIZE}
-                                    priority
-                                    style={ILLUSTRATION_SIZE}
-                                />
+                                <span className="flex items-center justify-center" style={ILLUSTRATION_SIZE}>
+                                    <Image
+                                        src={evaluationModel.illustration}
+                                        alt=""
+                                        draggable={false}
+                                        {...evaluationModel.illustrationSize}
+                                        priority
+                                        style={evaluationModel.illustrationSize}
+                                    />
+                                </span>
                             }
                         />
                     ))}
