@@ -242,6 +242,31 @@ const BaseCardGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="base-card-a11y" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="base-card-a11y" className="typo-h4-bold">
+                        접근성
+                    </h2>
+                </div>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        바깥은 <code>div</code> 이고 랜드마크나 <code>role</code> 을 붙이지 않습니다. 카드는 시각적
+                        묶음일 뿐이라 영역의 의미는 안쪽 마크업이 정합니다.
+                    </li>
+                    <li>
+                        <code>title</code> 과 <code>subtitle</code> 도 <code>div</code> 로 그려져 헤딩이 아닙니다. 문서
+                        구조에 들어가야 하는 제목은 본문에 <code>h2</code> · <code>h3</code> 같은 헤딩으로 두고, 페이지
+                        계층에 맞춰 단계를 건너뛰지 않습니다[6.4.2].
+                    </li>
+                    <li>
+                        본문 안에 <code>section</code> 을 둘 때는 <code>aria-labelledby</code> 로 그 섹션의 헤딩{' '}
+                        <code>id</code> 를 가리킵니다. 이 가이드의 섹션 카드가 그 방식입니다.
+                    </li>
+                </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="base-card-props" className="flex flex-col gap-6">
                 <h2 id="base-card-props" className="typo-h4-bold">
                     Props API

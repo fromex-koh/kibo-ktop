@@ -355,15 +355,12 @@ const API_ROWS = [
 ] as const
 
 const FormTabsGuidePage = () => (
-    <GuidePageShell
-        title="폼 탭 (FormTabs)"
-        description="긴 입력 폼을 섹션 단위로 나눠 보여주는 카드형 탭입니다. 각 탭에 섹션 제목과 작성 상태를 함께 표시하고, 선택된 탭 아래에 그 섹션의 폼(FormCard)이 이어집니다."
-    >
+    <GuidePageShell title="폼 탭 (FormTabs)" description="긴 입력 폼을 섹션 단위로 나눠 보여주는 카드형 탭입니다.">
         <BaseCard>
             <section aria-labelledby="ft-basic" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ft-basic" className="typo-h4-bold">
-                        기본 사용
+                        1. 기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>items</code> 에 탭별 식별자 · 제목 · 본문을 넘기면 탭 전환과 본문 표시, 화면 폭에 따른
@@ -383,7 +380,7 @@ const FormTabsGuidePage = () => (
             <section aria-labelledby="ft-parts" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ft-parts" className="typo-h4-bold">
-                        구성 요소
+                        2. 구성 요소
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         폼 탭 화면은 네 가지를 조합합니다. 실제 화면(자가진단 &gt; 기업·기술정보 입력)도 같은
@@ -398,7 +395,7 @@ const FormTabsGuidePage = () => (
             <section aria-labelledby="ft-values" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ft-values" className="typo-h4-bold">
-                        값 관리
+                        3. 값 관리
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         입력값은 <code>FormValuesProvider</code> 가 <code>name</code> 을 키로 한 객체 하나에 모읍니다.
@@ -410,7 +407,7 @@ const FormTabsGuidePage = () => (
 
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">값이 모이는 입력</h3>
+                        <h3 className="typo-title-m-bold text-foreground">3-1. 값이 모이는 입력</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             아래 컴포넌트를 <code>@/components/composite/form-values</code> 에서 가져오면 값이 자동으로
                             모입니다. 같은 이름을 <code>ui/</code> 에서 직접 가져오면 보관소에 연결되지 않으니 import
@@ -447,7 +444,7 @@ const FormTabsGuidePage = () => (
             <section aria-labelledby="ft-submit" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ft-submit" className="typo-h4-bold">
-                        폼 제출
+                        4. 폼 제출
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>useFormTabsSubmit</code> 이 검사 · 메시지 표시 · 걸린 칸의 탭 열기와 포커스 이동을 맡고,
@@ -465,7 +462,7 @@ const FormTabsGuidePage = () => (
             <section aria-labelledby="ft-validation" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ft-validation" className="typo-h4-bold">
-                        유효성 검사
+                        5. 유효성 검사
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         검사 규칙을 따로 만들지 않고 브라우저 기본 제약 검사(<code>required</code> ·{' '}
@@ -501,7 +498,7 @@ const FormTabsGuidePage = () => (
             <section aria-labelledby="ft-status" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ft-status" className="typo-h4-bold">
-                        작성 상태
+                        6. 작성 상태
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         상태는 손으로 적지 않고 그 탭에 입력한 값에서 계산합니다. 값이 바뀌면 문구와 아이콘이 함께
@@ -531,7 +528,7 @@ const FormTabsGuidePage = () => (
             <section aria-labelledby="ft-responsive" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ft-responsive" className="typo-h4-bold">
-                        반응형
+                        7. 반응형
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         화면 폭에 따라 두 가지 모양이 됩니다. <code>items</code> 는 같아 화면 코드는 그대로입니다.
@@ -543,7 +540,7 @@ const FormTabsGuidePage = () => (
 
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">태블릿 (md~xl)</h3>
+                        <h3 className="typo-title-m-bold text-foreground">7-1. 태블릿 (md~xl)</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             현재 섹션 한 줄만 콘텐츠 열 안의 카드로 놓이고 본문은 그 섹션만 보입니다. 줄의 아래 여백
                             20px 을 폼 카드가 덮고 올라와 한 덩어리로 읽힙니다. 목록은 제목 바로 아래(4px)에서 열리고
@@ -582,7 +579,7 @@ const FormTabsGuidePage = () => (
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">모바일 (md 미만)</h3>
+                        <h3 className="typo-title-m-bold text-foreground">7-2. 모바일 (md 미만)</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             현재 섹션 한 줄이 사이트 헤더 아래에 고정됩니다. 줄은 화면 폭을 채우고 아래 두 모서리만
                             둥글어 폼 카드와 한 덩어리로 읽힙니다. 목록은 고정 줄 아래 4px 에서 같은 폭으로 열리며, 아래
@@ -627,7 +624,7 @@ const FormTabsGuidePage = () => (
             <section aria-labelledby="ft-title" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ft-title" className="typo-h4-bold">
-                        탭 타이틀 (FormTabTitle)
+                        8. 탭 타이틀 (FormTabTitle)
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         탭 한 칸의 생김새를 담당합니다. FormTabs 는 이 컴포넌트를 <code>asChild</code> 로{' '}
@@ -639,7 +636,7 @@ const FormTabsGuidePage = () => (
 
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">상태별 모양</h3>
+                        <h3 className="typo-title-m-bold text-foreground">8-1. 상태별 모양</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             작성완료 · 작성중 · 미작성 순서입니다. 첫 줄은 비선택, 둘째 줄은 선택 상태입니다.
                         </p>
@@ -656,7 +653,7 @@ const FormTabsGuidePage = () => (
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">제목이 길 때</h3>
+                        <h3 className="typo-title-m-bold text-foreground">8-2. 제목이 길 때</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             제목은 띄어쓰기 단위로 줄바꿈되고, 띄어쓰기가 없어 한 줄에 담기지 않는 말만 글자 단위로
                             넘어갑니다. 칸 높이는 가장 긴 제목에 맞춰 함께 늘어나며 문구는 모두 위에서부터 정렬됩니다.
@@ -674,7 +671,7 @@ const FormTabsGuidePage = () => (
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">탭 개수</h3>
+                        <h3 className="typo-title-m-bold text-foreground">8-3. 탭 개수</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             칸은 남는 폭을 똑같이 나눠 가집니다. 개수가 늘수록 칸이 좁아져 제목이 두 줄로 넘어가고, 시안
                             기준 최대 {MAX_TAB_COUNT}개까지 한 줄에 놓입니다.
@@ -697,7 +694,7 @@ const FormTabsGuidePage = () => (
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">FormTabTitle Props</h3>
+                        <h3 className="typo-title-m-bold text-foreground">8-4. FormTabTitle Props</h3>
                         <Table
                             size="md"
                             caption="FormTabTitle Props 목록"
@@ -713,7 +710,7 @@ const FormTabsGuidePage = () => (
             <section aria-labelledby="ft-a11y" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ft-a11y" className="typo-h4-bold">
-                        접근성
+                        9. 접근성
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         탭 동작은 shadcn Tabs(Radix), 좁은 화면의 목록은 Popover(Radix)를 그대로 써서 역할과 키보드
@@ -742,7 +739,7 @@ const FormTabsGuidePage = () => (
             <section aria-labelledby="ft-props" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ft-props" className="typo-h4-bold">
-                        Props API
+                        10. Props API
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         FormTabs 에 넘기는 속성입니다. 그 밖의 Radix Tabs 속성도 그대로 넘길 수 있습니다.

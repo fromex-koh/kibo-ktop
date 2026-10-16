@@ -331,7 +331,7 @@ const SegmentedControlGuidePage = () => (
             <section aria-labelledby="tg-type" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="tg-type" className="typo-h4-bold">
-                        기본 사용
+                        1. 기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code className="text-foreground font-mono">type</code>은 필수입니다. 그룹에는{' '}
@@ -343,7 +343,7 @@ const SegmentedControlGuidePage = () => (
 
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">Radio</h3>
+                        <h3 className="typo-title-m-bold text-foreground">1-1. Radio</h3>
                         <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">
                             <SegmentedControl type="radio" defaultValue="corp" aria-label="회원 유형 (2개)">
                                 <SegmentedControlItem value="corp">기업</SegmentedControlItem>
@@ -358,7 +358,7 @@ const SegmentedControlGuidePage = () => (
                         <CodeBlock code={USAGE_RADIO_TYPE} language="tsx" copyLabel="복사" />
                     </div>
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">Link</h3>
+                        <h3 className="typo-title-m-bold text-foreground">1-2. Link</h3>
                         <Suspense fallback={null}>
                             <UserTypeSwitchDemo ariaLabel="사용자 유형 — Link 예시" />
                         </Suspense>
@@ -372,7 +372,7 @@ const SegmentedControlGuidePage = () => (
             <section aria-labelledby="tg-variant" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="tg-variant" className="typo-h4-bold">
-                        외형
+                        2. 외형
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code className="text-foreground font-mono">variant</code>로 고릅니다. radio · link 타입 모두에
@@ -383,7 +383,7 @@ const SegmentedControlGuidePage = () => (
 
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">Subtle</h3>
+                        <h3 className="typo-title-m-bold text-foreground">2-1. Subtle</h3>
                         <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">
                             <SegmentedControl
                                 type="radio"
@@ -398,7 +398,7 @@ const SegmentedControlGuidePage = () => (
                         </div>
                     </div>
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">Solid</h3>
+                        <h3 className="typo-title-m-bold text-foreground">2-2. Solid</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             조회 기간처럼 카드 위에 바로 놓이는 필터에 씁니다.
                         </p>
@@ -442,7 +442,7 @@ const SegmentedControlGuidePage = () => (
             <section aria-labelledby="tg-size" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="tg-size" className="typo-h4-bold">
-                        크기
+                        3. 크기
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code className="text-foreground font-mono">size</code>는{' '}
@@ -454,7 +454,7 @@ const SegmentedControlGuidePage = () => (
                 </div>
                 <Table caption="size · variant 별 항목 치수" columns={SIZE_COLUMNS} rows={SIZE_ROWS} size="md" />
                 <div className="border-subtle-3 flex flex-col gap-4 border-t pt-8">
-                    <h3 className="typo-title-m-bold text-foreground">미리보기</h3>
+                    <h3 className="typo-title-m-bold text-foreground">3-1. 미리보기</h3>
                     {SIZES.map((size) => (
                         <div
                             key={size}
@@ -493,7 +493,7 @@ const SegmentedControlGuidePage = () => (
             <section aria-labelledby="tg-disabled" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="tg-disabled" className="typo-h4-bold">
-                        비활성 상태
+                        4. 비활성 상태
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         radio 타입에서 <code className="text-foreground font-mono">disabled</code>를{' '}
@@ -504,7 +504,7 @@ const SegmentedControlGuidePage = () => (
                 </div>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">Subtle</h3>
+                        <h3 className="typo-title-m-bold text-foreground">4-1. Subtle</h3>
                         <div className="border-border flex flex-wrap items-center gap-6 rounded-md border p-6">
                             <SegmentedControl type="radio" defaultValue="corp" disabled aria-label="비활성 회원 유형">
                                 <SegmentedControlItem value="corp">기업</SegmentedControlItem>
@@ -519,7 +519,7 @@ const SegmentedControlGuidePage = () => (
                         </div>
                     </div>
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">Solid</h3>
+                        <h3 className="typo-title-m-bold text-foreground">4-2. Solid</h3>
                         <div className="bg-muted flex flex-wrap items-center gap-6 rounded-md p-6">
                             <SegmentedControl
                                 type="radio"
@@ -559,7 +559,7 @@ const SegmentedControlGuidePage = () => (
             <section aria-labelledby="tg-form" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="tg-form" className="typo-h4-bold">
-                        폼 제출
+                        5. 폼 제출
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         radio 타입에 <code className="text-foreground font-mono">name</code>을 주면 선택값이 그 이름으로
@@ -568,7 +568,7 @@ const SegmentedControlGuidePage = () => (
                     </p>
                 </div>
                 <div className="border-foreground-subtle/30 bg-pastel-neutral/40 flex flex-col gap-1 rounded-sm border p-5">
-                    <h3 className="typo-title-m-bold text-foreground">WAVE 검사 예외 — Missing form label</h3>
+                    <h3 className="typo-title-m-bold text-foreground">5-1. WAVE 검사 예외: Missing form label</h3>
                     <p className="typo-body-l-regular text-label-foreground">
                         <a
                             href="https://www.radix-ui.com/primitives/docs/components/radio-group"
@@ -594,7 +594,7 @@ const SegmentedControlGuidePage = () => (
             <section aria-labelledby="tg-choice" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="tg-choice" className="typo-h4-bold">
-                        컴포넌트 선택
+                        6. 컴포넌트 선택
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         선택 컴포넌트는 선택지의 개수와 담는 내용으로 고릅니다.
@@ -608,7 +608,7 @@ const SegmentedControlGuidePage = () => (
             <section aria-labelledby="tg-a11y" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="tg-a11y" className="typo-h4-bold">
-                        접근성
+                        7. 접근성
                     </h2>
                 </div>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
@@ -634,7 +634,7 @@ const SegmentedControlGuidePage = () => (
             <section aria-labelledby="tg-props" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="tg-props" className="typo-h4-bold">
-                        Props API
+                        8. Props API
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         radio 타입은 RadioGroup, link 타입은 nav 의 나머지 속성도 그대로 받습니다.

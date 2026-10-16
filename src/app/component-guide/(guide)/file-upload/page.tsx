@@ -427,7 +427,7 @@ const FileUploadGuidePage = () => (
             <section aria-labelledby="file-upload-demo" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="file-upload-demo" className="typo-h4-bold">
-                        기본 사용
+                        1. 기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         파일을 끌어다 놓거나 [파일선택]을 누르면 완료 상태로 바뀌고, 삭제 버튼으로 되돌립니다. 파일은 한
@@ -450,12 +450,12 @@ const FileUploadGuidePage = () => (
             <section aria-labelledby="file-upload-variants" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="file-upload-variants" className="typo-h4-bold">
-                        상태와 예시
+                        2. 상태와 예시
                     </h2>
                 </div>
                 <div className={SUB_LIST}>
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">FileUpload 상태</h3>
+                        <h3 className="typo-title-m-bold text-foreground">2-1. FileUpload 상태</h3>
                         <Table
                             caption="파일 선택 여부에 따른 상자의 상태"
                             columns={STATE_COLUMNS}
@@ -464,7 +464,7 @@ const FileUploadGuidePage = () => (
                         />
                     </div>
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">첨부 정책</h3>
+                        <h3 className="typo-title-m-bold text-foreground">2-2. 첨부 정책</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             <code>accept</code> 는 파일 선택창의 필터일 뿐이라 고른 뒤 한 번 더 검사합니다. 걸린 파일은
                             첨부하지 않고 상자 아래에 이유를 띄웁니다.
@@ -484,7 +484,7 @@ const FileUploadGuidePage = () => (
                         </ul>
                     </div>
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">폼 제출과 서버 전송</h3>
+                        <h3 className="typo-title-m-bold text-foreground">2-3. 폼 제출과 서버 전송</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             파일은 <code>name</code> 으로 제출되며 끌어다 놓은 파일도 같습니다. 비어 있으면{' '}
                             <code>error</code> 로 넘긴 안내가 상자 아래에 붙습니다.
@@ -497,7 +497,7 @@ const FileUploadGuidePage = () => (
                         </ul>
                     </div>
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">FileUploadField</h3>
+                        <h3 className="typo-title-m-bold text-foreground">2-4. FileUploadField</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             레이블 · 보조 액션(양식 다운로드 등) 아래에 첨부 상자를 두고, 파일을 고르면 성공 · 오류 결과
                             패널로 바뀝니다. 정책에 걸린 파일도 상자 아래 문구가 아니라 오류 결과 패널로 알립니다.
@@ -535,7 +535,7 @@ const FileUploadGuidePage = () => (
                         <CodeBlock code={FIELD_CODE} language="tsx" copyLabel="복사" />
                     </div>
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">업로드 결과 패널</h3>
+                        <h3 className="typo-title-m-bold text-foreground">2-5. 업로드 결과 패널</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             서버 검증 결과(용량 · 건수 · 오류 상세)는 화면이 <code>result</code> 로 넘깁니다. 넘기면
                             컴포넌트가 만든 상태보다 우선합니다.
@@ -564,7 +564,7 @@ const FileUploadGuidePage = () => (
                         </ul>
                     </div>
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">대량정보조회 상태별 구성</h3>
+                        <h3 className="typo-title-m-bold text-foreground">2-6. 대량정보조회 상태별 구성</h3>
                         <p className="typo-body-l-regular text-label-foreground">
                             올린 뒤 [조회 실행]을 눌러야 처리가 시작되는 화면입니다. ② 는 아래 상자에 파일을 골라
                             확인합니다.
@@ -603,7 +603,7 @@ const FileUploadGuidePage = () => (
             <section aria-labelledby="file-upload-choice" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="file-upload-choice" className="typo-h4-bold">
-                        컴포넌트 선택
+                        3. 컴포넌트 선택
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         파일 첨부 컴포넌트가 여럿이라 화면 구성으로 고릅니다. 일반 화면은 FileUpload 를 씁니다.
@@ -617,7 +617,7 @@ const FileUploadGuidePage = () => (
             <section aria-labelledby="file-upload-a11y" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="file-upload-a11y" className="typo-h4-bold">
-                        접근성
+                        4. 접근성
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         아래는 컴포넌트가 처리하므로 사용처에서 따로 넣지 않습니다.
@@ -647,20 +647,20 @@ const FileUploadGuidePage = () => (
             <section aria-labelledby="file-upload-props" className="flex flex-col gap-6">
                 <div className={SECTION_HEAD}>
                     <h2 id="file-upload-props" className="typo-h4-bold">
-                        Props API
+                        5. Props API
                     </h2>
                 </div>
                 <div className={SUB_LIST}>
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">FileUpload</h3>
+                        <h3 className="typo-title-m-bold text-foreground">5-1. FileUpload</h3>
                         <PropsTable items={PROPS_ITEMS} caption="FileUpload Props 목록" />
                     </div>
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">FileUploadField</h3>
+                        <h3 className="typo-title-m-bold text-foreground">5-2. FileUploadField</h3>
                         <PropsTable items={FIELD_PROPS_ITEMS} caption="FileUploadField Props 목록" />
                     </div>
                     <div className={SUB_BLOCK}>
-                        <h3 className="typo-title-m-bold text-foreground">FileUploadSuccess · FileUploadError</h3>
+                        <h3 className="typo-title-m-bold text-foreground">5-3. FileUploadSuccess · FileUploadError</h3>
                         <PropsTable
                             items={RESULT_PROPS_ITEMS}
                             caption="FileUploadSuccess / FileUploadError Props 목록"

@@ -92,6 +92,27 @@ const QuestionGroupHeaderGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="question-group-header-a11y" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="question-group-header-a11y" className="typo-h4-bold">
+                        접근성
+                    </h2>
+                </div>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        바깥은 <code>div</code>, 제목과 설명은 <code>p</code> 로 그려집니다. 헤딩이나 <code>role</code>{' '}
+                        이 없어 문서 구조에 들어가지 않고 읽는 순서대로 안내 문장으로 읽힙니다.
+                    </li>
+                    <li>DOM 순서가 제목, 설명 순이라 화면에 보이는 순서와 읽는 순서가 같습니다[7.3.1].</li>
+                    <li>
+                        설명에 적힌 분기 조건은 문장으로 전달됩니다. 아래 문항이 바뀐다는 안내를 색이나 위치에만 맡기지
+                        않습니다[5.3.2].
+                    </li>
+                </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="question-group-header-props" className="flex flex-col gap-6">
                 <h2 id="question-group-header-props" className="typo-h4-bold">
                     Props API

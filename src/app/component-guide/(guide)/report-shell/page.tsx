@@ -173,6 +173,36 @@ const ReportShellGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="report-shell-a11y" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="report-shell-a11y" className="typo-h4-bold">
+                        접근성
+                    </h2>
+                </div>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        도구 막대의 [인쇄하기] · [닫기] 는 <code>button type=&quot;button&quot;</code> 이고 글자 이름이
+                        보입니다. 함께 놓인 Printer · X 아이콘과 안내 문구의 Info 아이콘은{' '}
+                        <code>aria-hidden=&quot;true&quot;</code> 로 숨깁니다[5.1.1].
+                    </li>
+                    <li>
+                        도구 막대와 템플릿 안내는 <code>.report-toolbar</code> 로 화면에서만 보이고 인쇄물에는 빠집니다.
+                        문서 이름은 <code>p</code> 로 그려 헤딩이 아니므로, 보고서의 제목 계층은 용지 안 내용에서
+                        정합니다[6.4.2].
+                    </li>
+                    <li>
+                        <code>renderReportEmphasis</code> 는 <code>**강조**</code> 부분을 <code>strong</code> 으로
+                        감쌉니다. 굵기만 바꾸는 것이 아니라 강조 의미가 마크업에 남습니다.
+                    </li>
+                    <li>
+                        <code>ReportThemeScope</code> 는 경로에 따라 <code>light</code> 또는 <code>print-light</code>{' '}
+                        클래스만 붙이는 바탕 상자입니다. 인쇄는 테마와 관계없이 라이트로 찍힙니다.
+                    </li>
+                </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="report-props" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="report-props" className="typo-h4-bold">

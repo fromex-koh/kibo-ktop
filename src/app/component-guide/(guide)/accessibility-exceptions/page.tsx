@@ -123,7 +123,7 @@ const ISSUE_DEFINITIONS: readonly Omit<IssueCatalogEntry, 'count' | 'screens'>[]
         level: 'error',
         message:
             'Element “div” not allowed as child of element “span” in this context. (Suppressing further errors from this subtree.)',
-        owner: '프로젝트 — 목록 한 줄의 구분선 배치',
+        owner: '프로젝트: 목록 한 줄의 구분선 배치',
         isProjectCause: true,
         verdict: '우리 마크업이 원인이다',
     },
@@ -131,7 +131,7 @@ const ISSUE_DEFINITIONS: readonly Omit<IssueCatalogEntry, 'count' | 'screens'>[]
         kind: 'span-type',
         level: 'error',
         message: 'Attribute “type” not allowed on element “span” at this point.',
-        owner: '프로젝트 — 모달 단독 화면의 숨은 트리거',
+        owner: '프로젝트: 모달 단독 화면의 숨은 트리거',
         isProjectCause: true,
         verdict: '아래 span 의 role 과 원인이 하나다',
     },
@@ -140,7 +140,7 @@ const ISSUE_DEFINITIONS: readonly Omit<IssueCatalogEntry, 'count' | 'screens'>[]
         level: 'error',
         message:
             'Element “span” is missing one or more of the following attributes: “aria-checked”, “aria-level”, “role”.',
-        owner: '프로젝트 — 모달 단독 화면의 숨은 트리거',
+        owner: '프로젝트: 모달 단독 화면의 숨은 트리거',
         isProjectCause: true,
         verdict: '같은 span 하나에서 위 오류와 함께 나온다',
     },
@@ -157,7 +157,7 @@ const ISSUE_DEFINITIONS: readonly Omit<IssueCatalogEntry, 'count' | 'screens'>[]
         level: 'error',
         message:
             'The “heading” “h3” (with computed level 3) follows the heading “h1” (with computed level 1), skipping 1 heading level.',
-        owner: '프로젝트 — 안내 상자의 제목 레벨',
+        owner: '프로젝트: 안내 상자의 제목 레벨',
         isProjectCause: true,
         verdict: '웹 접근성 [6.4.2] 와 직접 맞닿은 항목이다',
     },
@@ -237,7 +237,7 @@ const PROJECT_ISSUE_SOURCES: readonly ProjectIssueSource[] = [
         kinds: ['div-in-span'],
         reason: '목록 한 줄을 span 으로 감싸고 그 안에 InlineSeparator 를 기본형으로 넣었습니다. 기본형은 div 로 그려지는데 div 는 span 안에 올 수 없습니다. 검사기가 이 지점에서 아래 트리 검사를 멈추므로, 고치면 가려져 있던 오류가 더 드러날 수 있습니다.',
         source: 'src/components/composite/history-list.tsx · src/components/custom/inquiry-list.tsx',
-        fix: 'InlineSeparator 에 이미 있는 inline 옵션을 켭니다 — 같은 모양을 span 으로 그립니다. 감싼 span 을 div 로 바꾸는 방법도 있지만 목록 한 줄이 통째로 링크 안이라 inline 쪽이 맞습니다.',
+        fix: 'InlineSeparator 에 이미 있는 inline 옵션을 켭니다. 같은 모양을 span 으로 그립니다. 감싼 span 을 div 로 바꾸는 방법도 있지만 목록 한 줄이 통째로 링크 안이라 inline 쪽이 맞습니다.',
     },
     {
         kind: 'span-type',
@@ -560,7 +560,7 @@ const SUMMARY_GROUPS = SCREEN_GROUPS.map((group) => {
 const SONNER_ISSUES = [
     {
         level: 'error',
-        message: 'Error: CSS: Parse Error. — “onner-toast]>*{transition:n”',
+        message: 'Error: CSS: Parse Error. (“onner-toast]>*{transition:n”)',
         count: 3,
         screens: 0,
         owner: 'sonner 주입 스타일시트',
@@ -1787,7 +1787,7 @@ const DIALOG_ISSUES = [
         count: 1,
         screens: 0,
         owner: 'react-style-singleton(react-remove-scroll)',
-        verdict: '모달이 배경 스크롤을 잠그며 넣는 스타일에 type="text/css" 가 붙는다 — sonner 와 같은 종류다',
+        verdict: '모달이 배경 스크롤을 잠그며 넣는 스타일에 type="text/css" 가 붙는다. sonner 와 같은 종류다',
     },
 ] as const
 
@@ -1842,7 +1842,7 @@ const CHART_ISSUES = [
         screens: 0,
         owner: 'recharts 3.8 zIndex 층(g.recharts-zIndex-layer_*)',
         verdict:
-            '차트를 role="img" 상자로 감싸고 값은 숨긴 표가 읽어 주는 구조다. recharts 가 svg 에 넣던 tabindex="0" 은 accessibilityLayer={false} 로 없앴고(프로젝트 처리), 남는 것은 recharts 가 그리기 순서를 나누는 g 층 12개마다 붙이는 tabindex="-1" 이다 — props 로 끌 수 없어 라이브러리 몫이다',
+            '차트를 role="img" 상자로 감싸고 값은 숨긴 표가 읽어 주는 구조다. recharts 가 svg 에 넣던 tabindex="0" 은 accessibilityLayer={false} 로 없앴고(프로젝트 처리), 남는 것은 recharts 가 그리기 순서를 나누는 g 층 12개마다 붙이는 tabindex="-1" 이다. props 로 끌 수 없어 라이브러리 몫이다',
     },
     {
         level: 'error',
@@ -2198,7 +2198,7 @@ const AuditSummary = ({
                                 <col className="w-2/5" />
                             </colgroup>
                             <TableCaption className="sr-only">
-                                {caption} — {cause.label}
+                                {caption}: {cause.label}
                             </TableCaption>
                             <TableHeader>
                                 <TableRow className="border-subtle-3 bg-primary-subtle hover:bg-primary-subtle">
@@ -2443,7 +2443,7 @@ const AccessibilityExceptionsPage = () => (
                     <Alert variant="outline" color="info">
                         <Info aria-hidden="true" />
                         <AlertDescription>
-                            <strong>자동 검사 결과</strong> — Nu Html Checker로 검사한 결과를 이 페이지의 요약과 화면별
+                            <strong>자동 검사 결과:</strong> Nu Html Checker로 검사한 결과를 이 페이지의 요약과 화면별
                             기록에 제공합니다.
                         </AlertDescription>
                     </Alert>
@@ -2976,7 +2976,7 @@ const AccessibilityExceptionsPage = () => (
                                             body: (
                                                 <div className="flex flex-col gap-1">
                                                     <ReferenceLink href="https://github.com/radix-ui/primitives/blob/a06624085504a13d9c21c04d238cf4c4f6905de1/packages/react/select/src/select.tsx#L1825-L1841">
-                                                        Radix Select 소스 — 숨은 select 와 빈 option 을 만드는
+                                                        Radix Select 소스: 숨은 select 와 빈 option 을 만드는
                                                         곳(L1825~1841)
                                                     </ReferenceLink>
                                                     <ul className="text-foreground-subtle flex list-none flex-col gap-1">
@@ -3166,7 +3166,7 @@ const AccessibilityExceptionsPage = () => (
                                             body: (
                                                 <div className="flex flex-col gap-1">
                                                     <ReferenceLink href="https://github.com/radix-ui/primitives/blob/a06624085504a13d9c21c04d238cf4c4f6905de1/packages/react/select/src/select.tsx#L1828">
-                                                        Radix Select 소스 — required 를 숨은 select 로 넘기는 곳(L1828)
+                                                        Radix Select 소스: required 를 숨은 select 로 넘기는 곳(L1828)
                                                     </ReferenceLink>
                                                 </div>
                                             ),
@@ -3362,10 +3362,10 @@ const AccessibilityExceptionsPage = () => (
                                                     </p>
                                                     <div className="flex flex-col items-start gap-1">
                                                         <ReferenceLink href="https://app.unpkg.com/sonner@2.0.7/files/dist/index.mjs">
-                                                            sonner 2.0.7 배포 코드 — style 요소와 CSS 삽입 구현
+                                                            sonner 2.0.7 배포 코드: style 요소와 CSS 삽입 구현
                                                         </ReferenceLink>
                                                         <ReferenceLink href="https://github.com/emilkowalski/sonner/releases/tag/v2.0.7">
-                                                            sonner 공식 GitHub — v2.0.7 릴리스
+                                                            sonner 공식 GitHub: v2.0.7 릴리스
                                                         </ReferenceLink>
                                                     </div>
                                                 </div>
@@ -3604,12 +3604,12 @@ const AccessibilityExceptionsPage = () => (
                                         표의 “차트 style 중첩”에 포함됩니다.
                                     </p>
                                     <IssueTable
-                                        caption="최근 운영 HTML 검사 — 차트 셸과 Recharts 생성 요소"
+                                        caption="최근 운영 HTML 검사: 차트 셸과 Recharts 생성 요소"
                                         issues={issuesByKind(['chart-style', 'chart-width', 'chart-height'])}
                                     />
                                 </div>
                                 <div className="flex flex-col gap-2">
-                                    <h4 className="font-bold">운영 HTML 자동 검사 — style @scope 문구</h4>
+                                    <h4 className="font-bold">운영 HTML 자동 검사: style @scope 문구</h4>
                                     <p className="text-foreground-subtle">
                                         같은 오류를 최신 검사기가 다른 문구로 알려 준 건수입니다. 라이트 모드와 다크
                                         모드 규칙이 각각 한 건씩이며, 위 표의 “차트 style 중첩”에 이미 포함되어
@@ -3617,7 +3617,7 @@ const AccessibilityExceptionsPage = () => (
                                         적었습니다.
                                     </p>
                                     <IssueTable
-                                        caption="최신 검사기의 차트 style @scope 문구 — 라이트·다크 규칙별 건수"
+                                        caption="최신 검사기의 차트 style @scope 문구(라이트·다크 규칙별 건수)"
                                         issues={CHART_STYLE_SCOPE_ISSUES}
                                     />
                                 </div>
@@ -3628,7 +3628,7 @@ const AccessibilityExceptionsPage = () => (
                                         검사 건수와는 따로 봅니다.
                                     </p>
                                     <IssueTable
-                                        caption="과거 브라우저 DOM 검사 사례 — 현재 운영 HTML 집계와 별개"
+                                        caption="과거 브라우저 DOM 검사 사례(현재 운영 HTML 집계와 별개)"
                                         issues={CHART_ISSUES}
                                         countHeader="화면당 건수"
                                         showScreens={false}
@@ -3861,7 +3861,7 @@ const AccessibilityExceptionsPage = () => (
                 <div id="w3c-project" className="scroll-mt-24">
                     <BaseCard
                         title={cardHeading('프로젝트 원인')}
-                        subtitle={`오류 ${PROJECT_ERROR_TOTAL}건 · 화면 ${PROJECT_ISSUE_SCREENS}개 — 우리 마크업에서 나옵니다`}
+                        subtitle={`오류 ${PROJECT_ERROR_TOTAL}건 · 화면 ${PROJECT_ISSUE_SCREENS}개. 우리 마크업에서 나옵니다`}
                         action={
                             <Badge color={PROJECT_ERROR_TOTAL ? 'error' : 'neutral'}>
                                 {PROJECT_ERROR_TOTAL ? '수정 대상' : '발생 없음'}
@@ -3928,7 +3928,7 @@ const AccessibilityExceptionsPage = () => (
                     <Alert variant="outline" color="warning">
                         <TriangleAlert aria-hidden="true" />
                         <AlertDescription>
-                            <strong>수동 검사 결과</strong> — WAVE는 자동 수집하지 않으며, 브라우저에서 화면별로 검사한
+                            <strong>수동 검사 결과:</strong> WAVE는 자동 수집하지 않으며, 브라우저에서 화면별로 검사한
                             사례를 수동으로 기록합니다.
                         </AlertDescription>
                     </Alert>

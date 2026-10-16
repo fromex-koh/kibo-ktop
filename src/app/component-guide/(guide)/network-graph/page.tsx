@@ -262,13 +262,13 @@ const PROPS_ITEMS = [
 const NetworkGraphGuidePage = () => (
     <GuidePageShell
         title="네트워크 그래프 (NetworkGraph)"
-        description="기업 사이의 연결을 점과 선으로 보여 주는 관계망 그래프입니다. 연계기업은 CompanyRelationshipGraph, 공급망은 NetworkGraph 를 씁니다."
+        description="기업 사이의 연결을 점과 선으로 보여 주는 관계망 그래프입니다."
     >
         <BaseCard>
             <section aria-labelledby="ng-usage" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ng-usage" className="typo-h4-bold">
-                        기본 사용
+                        1. 기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         두 그래프 모두 분석기업을 중심에 두고 노드 수에 맞춰 반경 · 각도 · 라벨 위치를 자동으로
@@ -281,7 +281,7 @@ const NetworkGraphGuidePage = () => (
                     <div className="flex min-w-0 flex-col gap-4 py-8 last:pb-0">
                         <div className="flex flex-col gap-2">
                             <h3 className="typo-title-m-bold text-foreground">
-                                연계기업 네트워크 (CompanyRelationshipGraph)
+                                1-1. 연계기업 네트워크 (CompanyRelationshipGraph)
                             </h3>
                             <p className="typo-body-l-regular text-label-foreground">
                                 분석기업 - 섹터 - 연계기업 구조입니다. 연결선 숫자는 연계유형, 기업 노드 색은
@@ -297,7 +297,7 @@ const NetworkGraphGuidePage = () => (
                     </div>
                     <div className="flex min-w-0 flex-col gap-4 py-8 last:pb-0">
                         <div className="flex flex-col gap-2">
-                            <h3 className="typo-title-m-bold text-foreground">공급망 네트워크 (NetworkGraph)</h3>
+                            <h3 className="typo-title-m-bold text-foreground">1-2. 공급망 네트워크 (NetworkGraph)</h3>
                             <p className="typo-body-l-regular text-label-foreground">
                                 분석기업 - 업종 - 거래기업으로 이어지는 비중(%)을 보여 줍니다. 업종 정보가 없는 기업은
                                 분석기업에 바로 연결합니다.
@@ -317,7 +317,7 @@ const NetworkGraphGuidePage = () => (
             <section aria-labelledby="ng-choice" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ng-choice" className="typo-h4-bold">
-                        컴포넌트 선택
+                        2. 컴포넌트 선택
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         표현할 관계에 따라 입력 구조와 색 기준이 다릅니다.
@@ -336,7 +336,7 @@ const NetworkGraphGuidePage = () => (
             <section aria-labelledby="ng-loading" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ng-loading" className="typo-h4-bold">
-                        로딩
+                        3. 로딩
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         그래프 모듈과 배치가 준비되는 동안 컴포넌트가{' '}
@@ -353,7 +353,7 @@ const NetworkGraphGuidePage = () => (
             <section aria-labelledby="ng-data" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ng-data" className="typo-h4-bold">
-                        데이터 연결
+                        4. 데이터 연결
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         API 응답을 그래프가 받는 모양(섹터 → 기업, 점 · 선)으로 바꿔 넘깁니다.
@@ -367,7 +367,7 @@ const NetworkGraphGuidePage = () => (
             <section aria-labelledby="ng-a11y" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ng-a11y" className="typo-h4-bold">
-                        접근성
+                        5. 접근성
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         그림 대신 읽을 수 있는 목록과 키보드 이동을 컴포넌트가 제공합니다. 사용처는{' '}
@@ -397,7 +397,7 @@ const NetworkGraphGuidePage = () => (
             <section aria-labelledby="ng-props" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">
                     <h2 id="ng-props" className="typo-h4-bold">
-                        Props API
+                        6. Props API
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>onLoadingChange</code> · <code>className</code> 을 제외한 모든 속성이 필수입니다. 단,{' '}

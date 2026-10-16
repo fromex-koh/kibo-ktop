@@ -537,18 +537,22 @@ const SEMANTIC_TABLE_COLUMNS = [
 // usage: 이 슬롯(그룹)이 화면 어디에 쓰이는 색인지 간결한 사용처 설명(제목 아래 서브텍스트).
 // note: 특수 동작 부연(예: scroll 은 유틸리티가 아닌 이유).
 const SemanticTable = ({
+    number,
     title,
     tokens,
     usage,
     note,
 }: {
+    number: string
     title: string
     tokens: SemanticEntry[]
     usage?: ReactNode
     note?: ReactNode
 }) => (
     <section className="border-border flex flex-col gap-4 border-b pb-8 last:border-b-0 last:pb-0">
-        <h3 className="typo-title-m-bold text-foreground">{title}</h3>
+        <h3 className="typo-title-m-bold text-foreground">
+            {number}. {title}
+        </h3>
         {usage && <p className="typo-body-l-regular text-muted-foreground">{usage}</p>}
         {note && <p className="typo-body-l-regular text-muted-foreground">{note}</p>}
         <Table
@@ -751,7 +755,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="semantic-rule" className="flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
                         <h2 id="semantic-rule" className="typo-h4-bold text-foreground">
-                            시맨틱 색상 적용 방식
+                            1. 시맨틱 색상 적용 방식
                         </h2>
                         <p className="typo-body-l-regular text-label-foreground">
                             색 값이나 단계가 아니라 UI 에서 맡는 역할로 클래스를 고릅니다.
@@ -792,7 +796,7 @@ const SemanticColorGuidePage = () => (
 
                     <div className="border-subtle-3 flex flex-col gap-4 border-t pt-6">
                         <div className="flex flex-col gap-2">
-                            <h3 className="typo-title-m-bold text-foreground">테마별 동일 토큰 세트</h3>
+                            <h3 className="typo-title-m-bold text-foreground">1-1. 테마별 동일 토큰 세트</h3>
                             <p className="typo-body-l-regular text-label-foreground">
                                 light · dark · mainpage 세 테마는 이름과 개수가 같은 토큰 한 벌씩을 갖고, 값만 다릅니다.
                             </p>
@@ -839,7 +843,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="std-slots" className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h2 id="std-slots" className="typo-h4-bold text-foreground">
-                            shadcn 표준 슬롯{' '}
+                            2. shadcn 표준 슬롯{' '}
                             <span className="text-muted-foreground font-normal">({STANDARD_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
@@ -856,9 +860,10 @@ const SemanticColorGuidePage = () => (
                             를 따릅니다.
                         </p>
                     </div>
-                    {STANDARD_GROUPED.map((group) => (
+                    {STANDARD_GROUPED.map((group, index) => (
                         <SemanticTable
                             key={group.name}
+                            number={`2-${index + 1}`}
                             title={group.name}
                             tokens={group.tokens}
                             usage={GROUP_USAGE[group.name]}
@@ -872,7 +877,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="custom-slots" className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h2 id="custom-slots" className="typo-h4-bold text-foreground">
-                            프로젝트 커스텀 슬롯{' '}
+                            3. 프로젝트 커스텀 슬롯{' '}
                             <span className="text-muted-foreground font-normal">({CUSTOM_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
@@ -880,9 +885,10 @@ const SemanticColorGuidePage = () => (
                             의미를 표현할 수 없을 때만 사용합니다.
                         </p>
                     </div>
-                    {CUSTOM_GROUPED.map((group) => (
+                    {CUSTOM_GROUPED.map((group, index) => (
                         <SemanticTable
                             key={group.name}
+                            number={`3-${index + 1}`}
                             title={group.name}
                             tokens={group.tokens}
                             usage={GROUP_USAGE[group.name]}
@@ -895,7 +901,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="component-recipes" className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h2 id="component-recipes" className="typo-h4-bold text-foreground">
-                            컴포넌트 전용 레시피 토큰{' '}
+                            4. 컴포넌트 전용 레시피 토큰{' '}
                             <span className="text-muted-foreground font-normal">({RECIPE_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
@@ -903,8 +909,13 @@ const SemanticColorGuidePage = () => (
                             컴포넌트의 variant·prop을 사용합니다.
                         </p>
                     </div>
-                    {RECIPE_GROUPED.map((group) => (
-                        <SemanticTable key={group.name} title={group.name} tokens={group.tokens} />
+                    {RECIPE_GROUPED.map((group, index) => (
+                        <SemanticTable
+                            key={group.name}
+                            number={`4-${index + 1}`}
+                            title={group.name}
+                            tokens={group.tokens}
+                        />
                     ))}
                 </section>
             </BaseCard>

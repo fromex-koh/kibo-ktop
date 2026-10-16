@@ -209,10 +209,7 @@ const PROPS_ITEMS = [
 ] as const
 
 const TabsGuidePage = () => (
-    <GuidePageShell
-        title="탭 (Tabs)"
-        description="한 화면 안에서 콘텐츠 영역을 전환하는 shadcn 기반 탭입니다. 1뎁스(line · underline · text)와 2뎁스(pill · pill-outline) 모양을 variant 로 고릅니다."
-    >
+    <GuidePageShell title="탭 (Tabs)" description="한 화면 안에서 콘텐츠 영역을 전환하는 shadcn 기반 탭입니다.">
         <BaseCard>
             <section aria-labelledby="tabs-basic" className="flex flex-col gap-6">
                 <div className="flex flex-col gap-2">

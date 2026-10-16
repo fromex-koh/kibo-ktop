@@ -216,9 +216,9 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
         key: 'qa-mark',
         title: '질문 · 답변 표시 (QaMark)',
         description:
-            "FAQ · 문의 답변의 'Q' · 'A' 그림입니다. 라이트 · 다크 두 장을 dark: 로 바꿔 보입니다 — 컴포넌트 QaMark 를 씁니다.",
+            "FAQ · 문의 답변의 'Q' · 'A' 그림입니다. 라이트 · 다크 두 장을 dark: 로 바꿔 보입니다. 컴포넌트 QaMark 를 씁니다.",
         folder: 'public/images/faq/',
-        usedIn: 'custom/qa-mark.tsx (QaMark — 아코디언 FAQ · 문의 상세)',
+        usedIn: 'custom/qa-mark.tsx (QaMark: 아코디언 FAQ · 문의 상세)',
         size: 'size-icon-lg',
         items: [
             {
@@ -399,7 +399,7 @@ const IMAGE_USAGE_ROWS = [
             </span>,
             '② 비율이 다른 그림',
             <span key="how">
-                높이만 주고 폭은 <code>w-auto</code> — 원본 비율을 지킵니다.
+                높이만 주고 폭은 <code>w-auto</code> 로 두어 원본 비율을 지킵니다.
             </span>,
         ],
     },
@@ -463,7 +463,7 @@ const IMAGE_RULE_ROWS = [
         key: 'where',
         cells: [
             '파일 위치 · 이름',
-            'public/images/<묶음>/ 에 kebab-case 로 둡니다. 이름은 쓰는 곳이 아니라 그림 모양으로 짓습니다(예: building.webp — 다른 화면에서도 다시 쓸 수 있게).',
+            'public/images/<묶음>/ 에 kebab-case 로 둡니다. 이름은 쓰는 곳이 아니라 그림 모양으로 짓습니다(예: building.webp). 그래야 다른 화면에서도 다시 쓸 수 있습니다.',
         ],
     },
     {
@@ -720,7 +720,7 @@ const FORM_ROWS = [
         cells: [
             <Icon key="preview" icon={X} variant="solid" className="size-icon-xl" />,
             <code key="form">solid</code>,
-            '원형 배지 안 글리프 — X(닫기)만.',
+            '원형 배지 안 글리프: X(닫기)만.',
         ],
     },
     {
@@ -731,7 +731,7 @@ const FORM_ROWS = [
                 <Icon symbol="alert" variant="solid" className="size-icon-xl" />
             </span>,
             <code key="form">symbol</code>,
-            '문자형 배지 i · ! — lucide 에 채운 글리프가 없는 안내 · 경고.',
+            'lucide 에 채운 글리프가 없는 안내 · 경고용 문자형 배지(i · !).',
         ],
     },
 ] as const
@@ -750,7 +750,7 @@ const GroupHeading = ({id, title, children}: {id: string; title: string; childre
 const IconGuidePage = () => (
     <GuidePageShell
         title="아이콘 (Icon)"
-        description="아이콘은 두 가지입니다 — lucide 아이콘(기본)과, lucide 에 없는 그림을 담은 이미지 아이콘(webp)."
+        description="아이콘은 lucide 아이콘(기본)과 lucide 에 없는 그림을 담은 이미지 아이콘(webp) 두 가지입니다."
     >
         <BaseCard>
             <section aria-labelledby="icon-choice" className="flex flex-col gap-6">
@@ -899,7 +899,7 @@ const IconGuidePage = () => (
                 </div>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        아이콘은 장식입니다 — <code>Icon</code> 은 늘 <code>aria-hidden</code>, lucide 를 직접 쓰면{' '}
+                        아이콘은 장식입니다. <code>Icon</code> 은 늘 <code>aria-hidden</code>, lucide 를 직접 쓰면{' '}
                         <code>aria-hidden=&quot;true&quot;</code> 를 직접 붙입니다.
                     </li>
                     <li>

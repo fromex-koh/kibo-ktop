@@ -37,7 +37,7 @@ type HomeNotice = {
 // 그림(4:3) + 글
 {id: 'notice-002', title: '...', body: '...', image}
 // 그림만(3:4) — body 를 비운다. title 은 보이지 않고 대체 텍스트가 된다
-{id: 'notice-003', title: '자가진단 서비스 안내 — ...', image}`
+{id: 'notice-003', title: '자가진단 서비스 안내: ...', image}`
 
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 const H3_CLASS = 'typo-title-m-bold text-foreground'

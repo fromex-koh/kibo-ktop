@@ -47,7 +47,7 @@ const IMAGE_TEXT: HomeNotice = {
 // 본문을 비우면 그림만 보인다 — 제목은 화면에 나오지 않고 그림의 대체 텍스트가 된다.
 const IMAGE_ONLY: HomeNotice = {
     id: 'image-only',
-    title: '자가진단 서비스 안내 — 우리 기업 기술력, 자가진단으로 확인하세요',
+    title: '자가진단 서비스 안내: 우리 기업 기술력, 자가진단으로 확인하세요',
     image: mockNoticeImage3x4,
 }
 
@@ -64,13 +64,13 @@ type NoticeCase = {
 const BASIC_CASES: readonly NoticeCase[] = [
     {
         key: 'mixed',
-        title: '기본 — 글만 · 그림+글 · 그림만',
+        title: '기본: 글만 · 그림+글 · 그림만',
         description: '세 가지 카드 모양이 한 번에 뜨는 기본 구성입니다(메인 화면의 목업과 같습니다).',
         items: [TEXT_LONG, IMAGE_TEXT, IMAGE_ONLY],
     },
     {
         key: 'text-only',
-        title: '글만 3건 — 긴 글 · 중간 · 짧은 글',
+        title: '글만 3건: 긴 글 · 중간 · 짧은 글',
         description:
             '카드 높이는 글 길이와 무관하게 같습니다. 긴 글은 카드 안에서 스크롤되고, 짧은 글은 아래가 빈 채로 남습니다.',
         items: [TEXT_LONG, TEXT_MEDIUM, TEXT_SHORT],
@@ -101,13 +101,13 @@ const BASIC_CASES: readonly NoticeCase[] = [
     },
     {
         key: 'one-text',
-        title: '1건 — 글만',
+        title: '1건: 글만',
         description: '모든 화면 폭에서 조작 줄 없이 한 장만 가운데에 놓입니다.',
         items: [TEXT_MEDIUM],
     },
     {
         key: 'one-image',
-        title: '1건 — 그림만',
+        title: '1건: 그림만',
         description: '그림 한 장만 띄우는 포스터형 공지입니다.',
         items: [IMAGE_ONLY],
     },
@@ -166,7 +166,7 @@ const EDGE_CASES: readonly NoticeCase[] = [
     // 비율 확인용 그림에는 칸마다 보이는 범위(점선)와 잘리는 범위(빗금)가 그려져 있다.
     {
         key: 'image-wide',
-        title: '비율이 맞지 않는 그림 — 가로로 긴 그림(16:9)',
+        title: '비율이 맞지 않는 그림: 가로로 긴 그림(16:9)',
         description:
             '그림은 찌그러지지 않고 가운데를 기준으로 좌우가 잘립니다. 4:3 칸(본문과 함께)에서는 양쪽 빨간 빗금만, 3:4 칸(그림만)에서는 주황 빗금까지 잘려 가운데 파란 범위만 남습니다.',
         items: [
@@ -181,7 +181,7 @@ const EDGE_CASES: readonly NoticeCase[] = [
     },
     {
         key: 'image-tall',
-        title: '비율이 맞지 않는 그림 — 세로로 긴 그림(9:16)',
+        title: '비율이 맞지 않는 그림: 세로로 긴 그림(9:16)',
         description:
             '가운데를 기준으로 위아래가 잘립니다. 3:4 칸(그림만)에서는 위아래 빨간 빗금만, 4:3 칸(본문과 함께)에서는 주황 빗금까지 잘려 가운데 파란 범위만 남습니다.',
         items: [

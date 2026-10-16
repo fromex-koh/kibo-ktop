@@ -152,12 +152,7 @@ const COLOR_CHANGE_STEPS = [
 const ColorGuidePage = () => (
     <GuidePageShell
         title="색상 (Primitive)"
-        description={
-            <>
-                시맨틱 색상의 기반이 되는 고정 팔레트입니다. 화면과 컴포넌트에서는 역할 기반 시맨틱 유틸리티를 먼저
-                쓰고, 팔레트는 시맨틱으로 표현할 수 없을 때의 보조 수단으로만 씁니다.
-            </>
-        }
+        description="시맨틱 색상의 바탕이 되는 고정 팔레트입니다. 화면에서는 시맨틱 색상을 먼저 씁니다."
     >
         <div className="flex flex-col gap-12">
             <BaseCard>
