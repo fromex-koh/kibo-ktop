@@ -156,7 +156,7 @@ const PricingPayment = ({plan, userType}: PricingPaymentProps) => {
                 ))}
             </div>
 
-            {/* 필수 동의 — 체크박스 줄 오른쪽에 [판매자 정보] [이용약관 ↗]. 좁아지면 버튼이 아래로 내려간다. */}
+            {/* 필수 동의 — 체크박스 줄 오른쪽에 [판매자 정보] [이용약관 ↗](K-BIGx 이용약관 탭으로 열림). 좁아지면 버튼이 아래로 내려간다. */}
             <div className="bg-card flex flex-col gap-4 rounded-lg px-5 py-7 md:flex-row md:items-center md:justify-between md:px-10">
                 <Field orientation="horizontal" className="items-start">
                     <Checkbox
@@ -181,7 +181,7 @@ const PricingPayment = ({plan, userType}: PricingPaymentProps) => {
                         </Button>
                     </SellerInfoDialog>
                     <Button asChild variant="tertiary" size="xs">
-                        <Link href={`/${userType}/terms`} target="_blank" rel="noopener noreferrer">
+                        <Link href={`/${userType}/terms/k-bigx`} target="_blank" rel="noopener noreferrer">
                             이용약관
                             <ArrowUpRight aria-hidden="true" />
                             <span className="sr-only"> (새 창)</span>
