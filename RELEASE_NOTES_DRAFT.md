@@ -69,6 +69,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 결과: 기관은 한 화면에서 탭으로 두 기능을 오감
 - 영향 화면: [기관 기업혁신성장](/org/k-bigx-report/innovation-growth-report)
     - [기관 대량정보조회](/org/k-bigx-report/bulk-data-search)
+- 함께 작업: [신규 추가] 기관 K-BIGx 보고서 탭 화면 (먼저 추가)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e3d6b6fccf147322f9138071af4f6666f64aa873)
 
 ### [이미지교체] 특허 보고서 머리글 로고 — webp → svg
@@ -78,6 +79,8 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 결과: 인쇄 · 확대해도 로고가 선명함
 - 영향 화면: [기업 특허평가 결과 보고서](/corp/patent-evaluation/patent-grade-list/patent-grade-result/report)
     - [기관 특허평가 결과 보고서](/org/patent-evaluation/patent-grade-list/patent-grade-result/report)
+- 함께 작업: [신규 추가] 특허 보고서 머리글 로고(svg) (먼저 추가)
+    - [삭제] logo-kibo-on-dark.webp (적용 후 삭제)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/afb6e64879a23b73a6bc2e708182800ab3f13951)
 
 ### [이미지교체] 일괄평가 Tech-Index 선택 — 카드 그림
@@ -89,6 +92,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 그림 크기: 148×100 에 늘려 넣음 → 148×100 자리 가운데에 원본 비율대로
 - 결과: 기업 · 기관 Tech-Index 선택 화면과 같은 그림 · 배치
 - 영향 화면: [기관 Tech-Index 선택](/org/batch-evaluation/tech-index-selection)
+- 함께 작업: [삭제] shield-certificate.webp · lightbulb-magnifier.webp (적용 후 삭제)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/480ac4489003b7a1189f8871eab345c8b00e8d51)
 
 ### [컴포넌트] 결제하기 — [이용약관] 버튼이 K-BIGx 이용약관으로 열리도록 수정
@@ -109,21 +113,24 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 적용: 신규 파일 추가
 - 내용: 한 건을 제목 줄(전체 폭) + 상세 줄(들여 쓴 칸 뒤 열마다 값)로 보이는 표. 특허 목록처럼 제목이 길고 상세 값이 여럿일 때 씁니다(한 대상의 항목: 값이면 InfoTable).
 - 영향 화면: [제목 · 상세 표](/component-guide/title-detail-table)
+- 함께 작업: [덮어쓰기] 컴포넌트 가이드 (제목 · 상세 표 가이드가 사용)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/2b4b8c25ccb52371e449c9432ef1e676ad901990)
 
 ### [화면] 기관 K-BIGx 보고서 탭 화면
 
 - 대상: src/app/(user-type)/org/(service)/(logged-in)/k-bigx-report/org-kbigx-report-screen.tsx
     - src/app/(user-type)/org/(service)/(logged-in)/k-bigx-report/org-kbigx-report-tabs.tsx
-- 적용: 신규 파일 추가 — 위 "기업혁신성장 · 대량정보조회를 한 화면 탭으로" 카드보다 먼저 추가합니다.
+- 적용: 신규 파일 추가
 - 내용: 합쳐진 화면 틀(OrgKbigxReportScreen)과 주소와 연결된 탭(OrgKbigxReportTabs)
+- 함께 작업: [Diff 확인] 기관 K-BIGx 보고서 한 화면 탭 (이어서 적용)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/9fe3e3515b46879c98faf134c5798897be1a8a0f)
 
 ### [에셋] 특허 보고서 머리글 로고(svg)
 
 - 대상: public/images/logo-kibo-on-dark.svg
-- 적용: 신규 파일 추가 — 위 머리글 로고 카드보다 먼저 추가합니다.
+- 적용: 신규 파일 추가
 - 내용: 남색 머리글 전용 로고(연두 상자)
+- 함께 작업: [Diff 확인] 특허 보고서 머리글 로고 (이어서 적용)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/90632dd1da587b79175c5691efd4afb1eb51a22e)
 
 ## [덮어쓰기]
@@ -161,6 +168,8 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 전체: 섹션 설명이 카드 폭을 끝까지 쓰도록 폭 제한 해제
 - 영향 화면: [컴포넌트 가이드 홈](/component-guide)
     - [이미지](/component-guide/image)
+- 함께 작업: [신규 추가] TitleDetailTable · 특허 보고서 머리글 로고(svg) (먼저 추가)
+    - [삭제] 쓰지 않는 그림 (적용 후 삭제)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/628359f74f6aba6951cdc4c9c83ae8041bb71b17)
 
 ## [삭제]
@@ -172,5 +181,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - public/images/option-card/lightbulb-magnifier.webp
     - public/images/logo-kibo-on-dark.webp
 - 적용: 파일을 삭제합니다.
-- 내용: 새 그림 · svg 로 바꾼 뒤 쓰는 곳이 없습니다. 위 카드들을 적용한 뒤 삭제합니다.
+- 내용: 새 그림 · svg 로 바꾼 뒤 쓰는 곳이 없습니다.
+- 함께 작업: [Diff 확인] 특허 보고서 머리글 로고 · 일괄평가 카드 그림 (먼저 적용)
+    - [덮어쓰기] 컴포넌트 가이드 (먼저 적용)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/aca9d53c10168416704bec77b584a4c8827f8bd9)
