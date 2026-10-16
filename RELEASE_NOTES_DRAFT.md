@@ -34,6 +34,17 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 
 ## [Diff 확인]
 
+### [컴포넌트] 판매자 정보 모달 — [닫기] 버튼을 기본(파란) 버튼으로
+
+- 대상: src/components/composite/seller-info-dialog.tsx
+- 변경:
+    - AS-IS: [닫기] 가 보조 버튼(tertiary · 회색 테두리)
+    - TO-BE: [닫기] 가 기본 버튼(primary · 파란 면) — 크기 · 폭은 그대로
+- 결과: 이 모달의 유일한 버튼이 주 버튼 모양으로 보임
+- 영향 화면: [기업 결제하기](/corp/pricing/payment)
+    - [판매자 정보](/corp/pricing/payment/seller-info)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/a35a6084d45c201db38c9989aa466fc7e6bfde90)
+
 ### [컴포넌트] 이용안내 — 브라우저 확대 메뉴 캡처를 화면 크기에 맞게 받기
 
 - 대상: src/components/custom/service-guide.tsx
@@ -166,11 +177,15 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 탭: 주소와 연결된 탭 예시 · pill-outline 쓰는 곳
     - 아이콘 · 옵션 카드 · 라디오 카드 · 자가진단 목업 · 서비스 소개 띠: 서비스에서 쓰는 그림으로 교체
     - 전체: 섹션 설명이 카드 폭을 끝까지 쓰도록 폭 제한 해제
+    - 다이얼로그 · 폼 탭 · 파일 업로드 · 시맨틱 색상 · 세그먼트 컨트롤 · 문항 목록 · 네트워크 그래프: 번호 단계(1. / 1-1.) 적용
+    - 접근성 섹션 추가: 기본 카드 · 라벨 · 문항 그룹 헤더 · 리포트 공통
+    - 설명 문장 정리: 대시(—) 문장을 일반 문장 · 목록으로(접근성 검사 예외사항 · 워드 클라우드 · z-index · 아이콘 · 홈 공지 팝업) · 첫 설명이 긴 5개 한 문장으로
 - 영향 화면: [컴포넌트 가이드 홈](/component-guide)
     - [이미지](/component-guide/image)
 - 함께 작업: [신규 추가] TitleDetailTable · 특허 보고서 머리글 로고(svg) (먼저 추가)
     - [삭제] 쓰지 않는 그림 (적용 후 삭제)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/628359f74f6aba6951cdc4c9c83ae8041bb71b17)
+    - [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/44aef3ebc927557db7c81c0a0cedb2da43fc0cbd)
 
 ## [삭제]
 
