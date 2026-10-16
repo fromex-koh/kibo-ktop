@@ -131,10 +131,12 @@ const ServiceGuide = () => (
             <ul className="grid list-none gap-6 md:grid-cols-2">
                 {GUIDE_ZOOM_EXAMPLES.map((example) => (
                     <li key={example.label} className="flex flex-col items-center gap-4">
-                        {/* 높이를 고정하지 않고 7:8 비율로 폭을 따라가게 한다[ST-004]. */}
+                        {/* 높이를 고정하지 않고 7:8 비율로 폭을 따라가게 한다[ST-004].
+                            sizes — 실제 표시 폭(모바일 전체 · md 두 칸 · xl 최대 588)을 알려 원본(1764) 대신 맞는 크기를 받는다. */}
                         <Image
                             src={GUIDE_ZOOM_SCREENSHOTS[example.label]}
                             alt={example.caption}
+                            sizes="(min-width: 80rem) 588px, (min-width: 48rem) 50vw, 100vw"
                             className="border-subtle-3 aspect-[7/8] w-full rounded-lg border object-cover"
                         />
                         <span className="bg-badge-solid-navy text-badge-solid-fg typo-body-xl-bold rounded-sm px-4 py-1">
