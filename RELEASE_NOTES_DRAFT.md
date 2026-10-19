@@ -34,6 +34,27 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 
 ## [Diff 확인]
 
+### [컴포넌트] 정보 표(InfoTable) — 스타일 값을 공용 theme 파일에서 가져오기
+
+- 대상: src/components/composite/info-table.tsx
+- 변경:
+    - AS-IS: 선 · 여백 · 면 · 글자 클래스가 컴포넌트 파일 안에 직접 적혀 있음
+    - TO-BE: 같은 값을 theme/info-table.variants.ts 에서 가져옴(화면 모양 그대로) · 주석을 쓰는 법 위주로 정리
+- 결과: 표 모양을 바꿀 때 theme 파일 한 곳만 고치면 InfoTable 과 정보 표 유형이 함께 바뀜
+- 영향 화면: [기업 K-BIGx 기업혁신성장 보고서](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
+    - [정보 표](/component-guide/info-table)
+- 함께 작업: [신규 추가] theme 스타일 — 정보 표 (먼저 추가)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c5c6b2dc5d2300717b691fe7ba18ddc61e277282)
+
+### [컴포넌트] 라디오 칩(RadioChip) — 주석 정리
+
+- 대상: src/components/composite/radio-chip.tsx
+- 변경: 주석만 정리(언제 쓰나 · 상태 지정 방법 · 접근성 · 주의) — 코드 · 화면 그대로
+- 결과: 선택 · 비활성을 어떻게 지정하는지 파일에서 바로 보임
+- 영향 화면: [라디오 칩](/component-guide/radio-chip)
+- 함께 작업: [덮어쓰기] theme 스타일 — 라디오 칩 비활성
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/222b696fbcea02db962da0e5f2362efaded30271)
+
 ### [컴포넌트] 판매자 정보 모달 — [닫기] 버튼을 기본(파란) 버튼으로
 
 - 대상: src/components/composite/seller-info-dialog.tsx
@@ -118,6 +139,15 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 
 ## [신규 추가]
 
+### theme 스타일 — 정보 표
+
+- 대상: src/components/theme/info-table.variants.ts
+- 적용: 신규 파일 추가
+- 내용: 정보 표의 선 · 여백 · 면 · 글자 값. InfoTable 이 가져다 쓰고, ui/table 로 가로형 · 세로형 · 행/열 머리 · 값 칸 나눔 표를 그릴 때도 씁니다.
+- 영향 화면: [정보 표](/component-guide/info-table)
+- 함께 작업: [Diff 확인] 정보 표(InfoTable) (이어서 적용 · 함께 넘겨야 빌드됨)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/71775c54b5c39d411d40b3018c4502d7feea920b)
+
 ### [컴포넌트] TitleDetailTable — 제목 · 상세 두 줄 목록 표
 
 - 대상: src/components/composite/title-detail-table.tsx
@@ -145,6 +175,18 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/90632dd1da587b79175c5691efd4afb1eb51a22e)
 
 ## [덮어쓰기]
+
+### theme 스타일 — 라디오 칩 비활성
+
+- 대상: src/components/theme/radio-chip.variants.ts
+- 적용: 지정한 파일만 교체
+- 내용:
+    - AS-IS: 비활성(disabled) 모양이 없어 미선택과 똑같이 보임
+    - TO-BE: 비활성 = 회색 면 · 회색 테두리 · 흐린 글자 · 마우스를 올려도 그대로 / 선택 · 비활성 = 테두리 한 단계 진하게 + 제목 굵게
+    - 지금 쓰는 화면(기관 일괄평가 진행할 업무 선택)은 비활성 칩이 없어 모양이 바뀌지 않음
+- 영향 화면: [라디오 칩](/component-guide/radio-chip)
+- 함께 작업: [Diff 확인] 라디오 칩(RadioChip) 주석 정리
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/5db5e3bd573c4f9383d9788b451ac3eac5cfcb23)
 
 ### theme 스타일 — 스위치 켜짐 간격
 
@@ -180,12 +222,20 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 다이얼로그 · 폼 탭 · 파일 업로드 · 시맨틱 색상 · 세그먼트 컨트롤 · 문항 목록 · 네트워크 그래프: 번호 단계(1. / 1-1.) 적용
     - 접근성 섹션 추가: 기본 카드 · 라벨 · 문항 그룹 헤더 · 리포트 공통
     - 설명 문장 정리: 대시(—) 문장을 일반 문장 · 목록으로(접근성 검사 예외사항 · 워드 클라우드 · z-index · 아이콘 · 홈 공지 팝업) · 첫 설명이 긴 5개 한 문장으로
+    - 정보 표: 표 유형 4가지(가로형 · 세로형 · 행/열 머리 · 값 칸 나눔) 데모 · 코드 · 스타일 상수 표 추가
+    - 체크박스 · 라디오: 상태 표에 비활성 열 추가(미선택 · 선택 · 부분 선택 각각) · 표에 생기던 스크롤 제거
+    - 라디오 칩: 상태 섹션 추가(미선택 · 선택 × 기본 · 비활성)
 - 영향 화면: [컴포넌트 가이드 홈](/component-guide)
     - [이미지](/component-guide/image)
-- 함께 작업: [신규 추가] TitleDetailTable · 특허 보고서 머리글 로고(svg) (먼저 추가)
+    - [정보 표](/component-guide/info-table)
+    - [체크박스](/component-guide/checkbox)
+    - [라디오](/component-guide/radio)
+    - [라디오 칩](/component-guide/radio-chip)
+- 함께 작업: [신규 추가] TitleDetailTable · 특허 보고서 머리글 로고(svg) · theme 스타일 — 정보 표 (먼저 추가)
     - [삭제] 쓰지 않는 그림 (적용 후 삭제)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/628359f74f6aba6951cdc4c9c83ae8041bb71b17)
     - [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/44aef3ebc927557db7c81c0a0cedb2da43fc0cbd)
+    - [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b3f1f0028922704f0db1a8ac8b7ac5a55a48ed55)
 
 ## [삭제]
 
