@@ -1,5 +1,6 @@
 // [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
 
+import type {ReactNode} from 'react'
 import type {Metadata} from 'next'
 import Link from 'next/link'
 import {cn} from '@/lib/utils'
@@ -26,6 +27,60 @@ const USAGE_CODE = `import {RadioGroup, RadioGroupItem} from '@/components/ui/ra
     <FieldLabel htmlFor="payment-transfer">계좌이체</FieldLabel>
   </Field>
 </RadioGroup>`
+
+const STATE_COLUMNS = [
+    {key: 'state', header: '상태', align: 'start', rowHeader: true},
+    {key: 'preview', header: '기본', align: 'start'},
+    {key: 'disabled', header: '비활성 (disabled)', align: 'start'},
+    {key: 'prop', header: '지정 방법', align: 'start', wrap: true},
+] as const
+
+// 표 칸 안의 미리보기 — Radix 가 항목 옆에 두는 숨은 input 이 칸 밖으로 나가지 않게 기준 상자를 둔다.
+// 항목의 눌리는 영역(::after)이 칸 여백보다 커서 마지막 줄에서 표 아래로 넘치지 않도록
+// 위아래 2 를 더 두고 세로 가운데에 놓는다.
+const StatePreview = ({children}: {children: ReactNode}) => (
+    <span className="relative inline-flex py-0.5 align-middle">{children}</span>
+)
+
+// 미리보기마다 항목 하나짜리 그룹 — 선택 여부는 그룹의 defaultValue 로 정한다.
+const STATE_VALUE = 'preview'
+
+const STATE_ROWS = [
+    {
+        key: 'unchecked',
+        cells: [
+            '미선택',
+            <StatePreview key="preview">
+                <RadioGroup aria-label="미선택">
+                    <RadioGroupItem value={STATE_VALUE} aria-label="미선택" />
+                </RadioGroup>
+            </StatePreview>,
+            <StatePreview key="disabled">
+                <RadioGroup aria-label="미선택 비활성">
+                    <RadioGroupItem value={STATE_VALUE} disabled aria-label="미선택 비활성" />
+                </RadioGroup>
+            </StatePreview>,
+            '기본',
+        ],
+    },
+    {
+        key: 'checked',
+        cells: [
+            '선택',
+            <StatePreview key="preview">
+                <RadioGroup defaultValue={STATE_VALUE} aria-label="선택">
+                    <RadioGroupItem value={STATE_VALUE} aria-label="선택" />
+                </RadioGroup>
+            </StatePreview>,
+            <StatePreview key="disabled">
+                <RadioGroup defaultValue={STATE_VALUE} aria-label="선택 비활성">
+                    <RadioGroupItem value={STATE_VALUE} disabled aria-label="선택 비활성" />
+                </RadioGroup>
+            </StatePreview>,
+            <code key="prop">RadioGroup 의 value / defaultValue</code>,
+        ],
+    },
+] as const
 
 const FORM_CODE = `<form onSubmit={handleSubmit}>
   <FieldSet data-invalid={error || undefined}>
@@ -169,6 +224,20 @@ const RadioGuidePage = () => (
                     </Field>
                 </RadioGroup>
                 <CodeBlock code={USAGE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
+            <section aria-labelledby="radio-states" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="radio-states" className="typo-h4-bold">
+                        상태
+                    </h2>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        상태는 미선택 · 선택 두 가지이고, 각 상태에 <code>disabled</code> 를 더하면 비활성이 됩니다.
+                    </p>
+                </div>
+                <Table caption="Radio 상태 지정 방법" columns={STATE_COLUMNS} rows={STATE_ROWS} size="md" />
             </section>
         </BaseCard>
 

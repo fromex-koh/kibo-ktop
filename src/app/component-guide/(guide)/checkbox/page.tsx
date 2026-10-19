@@ -56,12 +56,17 @@ formData.getAll('interest') // 선택된 값 배열`
 
 const STATE_COLUMNS = [
     {key: 'state', header: '상태', align: 'start', rowHeader: true},
-    {key: 'preview', header: '미리보기', align: 'start'},
+    {key: 'preview', header: '기본', align: 'start'},
+    {key: 'disabled', header: '비활성 (disabled)', align: 'start'},
     {key: 'prop', header: '지정 방법', align: 'start', wrap: true},
 ] as const
 
 // 표 칸 안의 미리보기 — Radix 가 Checkbox 옆에 두는 숨은 input 이 칸 밖으로 나가 표에 스크롤이 생기지 않게 기준 상자를 둔다.
-const StatePreview = ({children}: {children: ReactNode}) => <span className="relative inline-flex">{children}</span>
+// Checkbox 의 눌리는 영역(::after, 위아래 12)이 칸 여백(10)보다 커서 마지막 줄에서 표 아래로 넘치므로
+// 위아래 2 를 더 두고 세로 가운데에 놓는다.
+const StatePreview = ({children}: {children: ReactNode}) => (
+    <span className="relative inline-flex py-0.5 align-middle">{children}</span>
+)
 
 const STATE_ROWS = [
     {
@@ -70,6 +75,9 @@ const STATE_ROWS = [
             '미선택',
             <StatePreview key="preview">
                 <Checkbox aria-label="미선택" />
+            </StatePreview>,
+            <StatePreview key="disabled">
+                <Checkbox disabled aria-label="미선택 비활성" />
             </StatePreview>,
             '기본',
         ],
@@ -81,6 +89,9 @@ const STATE_ROWS = [
             <StatePreview key="preview">
                 <Checkbox defaultChecked aria-label="선택" />
             </StatePreview>,
+            <StatePreview key="disabled">
+                <Checkbox defaultChecked disabled aria-label="선택 비활성" />
+            </StatePreview>,
             <code key="prop">checked / defaultChecked</code>,
         ],
     },
@@ -91,17 +102,10 @@ const STATE_ROWS = [
             <StatePreview key="preview">
                 <Checkbox defaultChecked="indeterminate" aria-label="부분 선택" />
             </StatePreview>,
-            <code key="prop">checked=&quot;indeterminate&quot;</code>,
-        ],
-    },
-    {
-        key: 'disabled',
-        cells: [
-            '비활성',
-            <StatePreview key="preview">
-                <Checkbox disabled aria-label="비활성" />
+            <StatePreview key="disabled">
+                <Checkbox defaultChecked="indeterminate" disabled aria-label="부분 선택 비활성" />
             </StatePreview>,
-            <code key="prop">disabled</code>,
+            <code key="prop">checked=&quot;indeterminate&quot;</code>,
         ],
     },
 ] as const
@@ -209,8 +213,8 @@ const CheckboxGuidePage = () => (
                         상태와 조합
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        상태는 선택 · 부분 선택 · 비활성 세 가지입니다. 제어(<code>checked</code>)와 비제어(
-                        <code>defaultChecked</code>) 모두 지원합니다.
+                        상태는 미선택 · 선택 · 부분 선택 세 가지이고, 각 상태에 <code>disabled</code> 를 더하면 비활성이
+                        됩니다. 제어(<code>checked</code>)와 비제어(<code>defaultChecked</code>) 모두 지원합니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
