@@ -4,18 +4,18 @@
 import {useEffect, useLayoutEffect, useRef, type ReactNode} from 'react'
 import {Info, Printer, X} from 'lucide-react'
 import {Button} from '@/components/ui/button'
+import {REPORT_AUTO_PRINT_QUERY} from '@/lib/open-report-print-tab'
 
 // 인쇄용 보고서를 감싸는 껍데기 — 위쪽 도구 막대와 용지를 놓는 보고서 영역으로 이루어진다.
 // 보고서 화면이 모두 같은 껍데기를 쓴다(특허평가 결과 보고서 등).
 //
-// 주소에 ?print=1 이 붙으면 문서가 다 그려진 뒤 스스로 인쇄 대화상자를 연다 —
-// 화면에서 [출력]을 누르면 보고서를 숨긴 프레임으로 불러와 이 값을 붙이므로, 미리보기 화면을 거치지 않는다.
-// 주소를 그대로 열면(퍼블리싱 확인 · 새 탭) 대화상자 없이 문서만 보인다.
+// 주소에 ?print=1 이 붙으면 문서가 다 그려진 뒤 스스로 인쇄 대화상자를 연다 — 화면의 [출력] 버튼이 이 값을 붙여 열므로
+// 미리보기 화면을 거치지 않는다. 특허평가 보고서는 숨긴 프레임으로(patent-grade-lookup.tsx), K-BIGx 보고서는 새 탭으로
+// 연다(lib/open-report-print-tab.ts — 새 탭은 인쇄가 끝나면 스스로 닫힌다). 주소를 그대로 열면 대화상자 없이 문서만 보인다.
 //
 // 도구 막대는 화면에서만 보이고 인쇄물에는 나오지 않는다 — .report-toolbar 규칙은 styles/report-print.css 에 있다.
 // 용지 규격(A4 비율 · 배율)도 같은 CSS 가 갖는다 — 쓰는 쪽은 .report-sheet 안에 내용만 그린다.
 
-const AUTO_PRINT_QUERY = 'print'
 // 차트는 브라우저가 크기를 잰 뒤에 그려진다 — 스켈레톤이 남아 있으면 그 상태로 인쇄된다.
 // 다 그려질 때까지 짧게 기다렸다가 열고, 그래도 안 끝나면 더 기다리지 않는다(문서가 없는 화면도 있다).
 const PRINT_READY_INTERVAL_MS = 100
@@ -25,8 +25,8 @@ const PRINT_LABEL = '인쇄하기'
 const CLOSE_LABEL = '닫기'
 
 // 이 주소는 서비스 흐름에 들어가지 않는다 — 보고서 템플릿을 눈으로 확인하는 자리다.
-// 서비스에서는 [결과 보고서 출력]이 이 문서를 숨긴 프레임으로 불러와 인쇄 대화상자만 연다.
-const TEMPLATE_NOTICE =
+// 기본 문구는 특허평가 결과 보고서 흐름이다. 흐름이 다른 보고서는 notice 로 문구를 넘긴다.
+const DEFAULT_TEMPLATE_NOTICE =
     '이 화면은 서비스 화면이 아니라 결과 보고서 템플릿을 확인하는 용도입니다. 서비스에서는 [결과 보고서 출력]을 누르면 이 화면 없이 인쇄 대화상자가 바로 열립니다.'
 
 // 용지 폭(styles/report-print.css 의 --report-sheet-width)과 보고서 영역 좌우 여백(p-10 × 2).
@@ -85,7 +85,7 @@ const usePrintFit = () => {
 const useAutoPrint = () => {
     useEffect(() => {
         const params = new URLSearchParams(window.location.search)
-        if (params.get(AUTO_PRINT_QUERY) !== '1') return
+        if (params.get(REPORT_AUTO_PRINT_QUERY) !== '1') return
 
         const startedAt = Date.now()
         const isReady = () =>
@@ -95,6 +95,9 @@ const useAutoPrint = () => {
             if (!isReady()) return
 
             window.clearInterval(timer)
+            // 새 탭으로 열린 문서(openReportPrintTab)는 인쇄가 끝나거나 취소되면 스스로 닫는다. 숨긴 프레임 · 직접 연 주소는
+            // 여는 창(opener)이 없어 그대로 둔다.
+            if (window.opener) window.addEventListener('afterprint', () => window.close(), {once: true})
             window.print()
         }, PRINT_READY_INTERVAL_MS)
 
@@ -107,9 +110,11 @@ type ReportPrintShellProps = {
     title: string
     /** 용지(.report-sheet) 안에 그릴 내용. 장이 여럿이면 장마다 하나씩 넘긴다. */
     children: ReactNode
+    /** 도구 막대 아래 안내 문구(화면에서만 보인다). 없으면 특허평가 결과 보고서 문구, null 이면 안내 줄을 뺀다. */
+    notice?: string | null
 }
 
-const ReportPrintShell = ({title, children}: ReportPrintShellProps) => {
+const ReportPrintShell = ({title, children, notice = DEFAULT_TEMPLATE_NOTICE}: ReportPrintShellProps) => {
     const stageRef = useSheetScale()
 
     usePrintFit()
@@ -117,10 +122,10 @@ const ReportPrintShell = ({title, children}: ReportPrintShellProps) => {
 
     return (
         <div className="bg-background flex min-h-dvh w-full flex-col">
-            {/* 도구 막대 — 화면 위에 고정해 긴 문서에서도 [인쇄하기]가 늘 보인다. */}
-            <div className="report-toolbar border-subtle-3 bg-card sticky top-0 z-10 border-b">
+            {/* 도구 막대 — 화면 위에 고정해 긴 문서에서도 [인쇄하기]가 늘 보인다. header · main 은 화면 낭독기의 영역 이동용 랜드마크다. */}
+            <header className="report-toolbar border-subtle-3 bg-card sticky top-0 z-10 border-b">
                 <div className="max-w-content mx-auto flex items-center justify-between gap-4 px-6 py-3">
-                    <p className="typo-body-xl-bold text-foreground min-w-0 truncate">{title}</p>
+                    <div className="typo-body-xl-bold text-foreground min-w-0 truncate">{title}</div>
                     {/* [인쇄하기]가 이 화면의 주된 행동이라 primary 로 둔다. [닫기]는 보조라 tertiary 다. */}
                     <div className="flex shrink-0 items-center gap-2">
                         <Button type="button" size="md" className="gap-1" onClick={() => window.print()}>
@@ -139,20 +144,22 @@ const ReportPrintShell = ({title, children}: ReportPrintShellProps) => {
                         </Button>
                     </div>
                 </div>
-            </div>
+            </header>
 
             {/* 안내 — 화면에서만 보인다(.report-toolbar 규칙으로 인쇄물에서는 빠진다). */}
-            <div className="report-toolbar border-subtle-3 bg-background border-b">
-                <p className="max-w-content typo-body-l-regular text-foreground-subtle mx-auto flex items-start gap-2 px-6 py-3 break-keep">
-                    <Info aria-hidden="true" className="size-icon-sm mt-0.5 shrink-0" />
-                    <span className="min-w-0">{TEMPLATE_NOTICE}</span>
-                </p>
-            </div>
+            {notice === null ? null : (
+                <div className="report-toolbar border-subtle-3 bg-background border-b">
+                    <p className="max-w-content typo-body-l-regular text-foreground-subtle mx-auto flex items-start gap-2 px-6 py-3 break-keep">
+                        <Info aria-hidden="true" className="size-icon-sm mt-0.5 shrink-0" />
+                        <span className="min-w-0">{notice}</span>
+                    </p>
+                </div>
+            )}
 
             {/* 보고서 영역 — 회색 바탕 가운데에 흰 용지를 놓는다. */}
-            <div ref={stageRef} className="report-stage flex w-full min-w-0 flex-1 flex-col items-center gap-10 p-10">
+            <main ref={stageRef} className="report-stage flex w-full min-w-0 flex-1 flex-col items-center gap-10 p-10">
                 {children}
-            </div>
+            </main>
         </div>
     )
 }
@@ -167,9 +174,9 @@ const ReportSheet = ({page, total, children}: {page?: number; total?: number; ch
         <div className="report-sheet bg-surface flex flex-col shadow-lg">
             <div className="min-h-0 flex-1">{children}</div>
             {page && total ? (
-                <p className="typo-body-l-regular text-foreground-subtle shrink-0 pb-10 text-center">
+                <div className="typo-body-l-regular text-foreground-subtle shrink-0 pb-10 text-center">
                     {page} / {total}
-                </p>
+                </div>
             ) : null}
         </div>
     </div>
