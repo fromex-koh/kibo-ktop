@@ -14,9 +14,15 @@ import {
 import {LineChart} from '@/components/custom/line-chart'
 import {PercentageDonutChart} from '@/components/custom/percentage-donut-chart'
 import {RatioStackBar} from '@/components/custom/ratio-stack-bar'
-import {PRIVATE_SHORT_LABEL, PrivateCell, PrivateContent} from '@/components/composite/private-content'
+import {
+    PRIVATE_PLACEHOLDER,
+    PRIVATE_SHORT_LABEL,
+    PrivateCell,
+    PrivateContent,
+} from '@/components/composite/private-content'
 import {SemicircleRatingGauge, type SemicircleRatingData} from '@/components/custom/semicircle-rating-gauge'
 import {cn} from '@/lib/utils'
+import {CASH_FLOW_GRADES_LOW_FIRST, cashFlowLevel, findCashFlowGrade} from '@/content/service/cash-flow-grades'
 import {criGradePercentage, findCriGrade} from '@/content/service/cri-grades'
 import {
     INNOVATION_CREDIT_VISIBILITY,
@@ -40,13 +46,16 @@ const numberFormatter = new Intl.NumberFormat('ko-KR')
 const oneDecimalFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 1, maximumFractionDigits: 1})
 const twoDecimalFormatter = new Intl.NumberFormat('ko-KR', {minimumFractionDigits: 2, maximumFractionDigits: 2})
 
-// 현금흐름등급 척도 — 낮은 등급(CR-6)부터 높은 등급(CR-1). 칸 · 원호 색과 칸 글자 색은 cash-flow-cr-<n> 토큰(tokens.json)이다.
-// 다크에서는 칸 색이 밝은 단계로 바뀌고 글자도 짙은 색으로 바뀐다(CR-5 만 어두운 칸 + 밝은 글자).
-const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [6, 5, 4, 3, 2, 1].map((level) => ({
-    label: `CR-${level}`,
-    color: `var(--ds-cash-flow-cr-${level})`,
-    foreground: `var(--ds-cash-flow-cr-${level}-foreground)`,
+// 현금흐름등급 척도 — 현금흐름등급표(cash-flow-grades.ts)의 낮은 등급(CF6)부터 높은 등급(CF1). 칸 · 원호 색과 칸 글자 색은
+// cash-flow-cf-<n> 토큰(tokens.json, n = 등급 숫자)이다. 다크에서는 칸 색이 밝은 단계로 바뀌고 글자도 짙은 색으로 바뀐다
+// (CF5 만 어두운 칸 + 밝은 글자). 척도 양 끝 이름도 같은 표의 등급내용(CF6 부실 · CF1 우수)이다.
+const CASH_FLOW_SCALE: readonly GradeScaleItem[] = CASH_FLOW_GRADES_LOW_FIRST.map((item) => ({
+    label: item.grade,
+    color: `var(--ds-cash-flow-cf-${cashFlowLevel(item.grade)})`,
+    foreground: `var(--ds-cash-flow-cf-${cashFlowLevel(item.grade)}-foreground)`,
 }))
+const CASH_FLOW_LOW_LABEL = CASH_FLOW_GRADES_LOW_FIRST[0].name
+const CASH_FLOW_HIGH_LABEL = CASH_FLOW_GRADES_LOW_FIRST[CASH_FLOW_GRADES_LOW_FIRST.length - 1].name
 
 const BORROWING_TREND_COLOR = 'var(--ds-report-series-3)'
 // 신용/담보 비중 — 선 모양은 보고서 공통(REPORT_LINE_STYLES)의 1번 · 4번을 쓰고, 아래 비율 막대(RatioStackBar)도 같은 색을 쓴다.
@@ -168,8 +177,6 @@ const BorrowingTable = ({borrowings}: {borrowings: InnovationCreditDetail['borro
 
 // 기업신용정보 표 하나 — 케이스에 따라 표 전체(비공개 · 자리 표시 값) 또는 연체금액 열만 가린다.
 const OVERDUE_AMOUNT_COLUMN = '연체금액'
-const PLACEHOLDER_CELL = '0000-00-00'
-const PLACEHOLDER_AMOUNT = '000,000'
 const CreditInfoTable = ({
     table,
     visibility,
@@ -193,7 +200,7 @@ const CreditInfoTable = ({
                         {
                             id: `${table.id}-placeholder`,
                             cells: Object.fromEntries(
-                                table.columns.map((_, index) => [String(index), PLACEHOLDER_CELL]),
+                                table.columns.map((_, index) => [String(index), PRIVATE_PLACEHOLDER.cell]),
                             ),
                         },
                     ]}
@@ -221,7 +228,7 @@ const CreditInfoTable = ({
                         String(index),
                         index === hiddenColumnIndex ? (
                             <PrivateCell label={rowIndex === 0 ? PRIVATE_SHORT_LABEL : undefined}>
-                                {PLACEHOLDER_AMOUNT}
+                                {PRIVATE_PLACEHOLDER.amount}
                             </PrivateCell>
                         ) : (
                             value || EMPTY_VALUE
@@ -344,36 +351,33 @@ const CollateralCard = ({source}: {source: BorrowingStatusSource}) => {
     )
 }
 
-// 비공개 케이스의 자리 표시 값 — 실제 값이 아닌 임의 값이다(흐리게 깔려 모양만 남긴다).
-// [프론트엔드 연동] 연동 후에도 그대로 쓴다 — 미노출 케이스에서는 API 가 실제 값을 주지 않으므로 이 값으로 카드 모양을 그린다.
-// 연도 · 시점 이름은 React key 로도 쓰이므로 서로 다르게 둔다. 도넛 조각 색은 percentage-donut-colors.ts 와 같은 donut-<n> 토큰이다(다크에서 밝은 색으로 바뀐다).
+// 비공개 케이스의 차입금 현황 자리 표시 — 숫자는 공용 가짜 값(PRIVATE_PLACEHOLDER, composite/private-content.tsx)이고,
+// 이름('구분 n')과 도넛 조각 색만 여기서 붙인다. 색은 percentage-donut-colors.ts 와 같은 donut-<n> 토큰이다(다크에서 밝은 색).
+const PLACEHOLDER_LABELS = ['구분 1', '구분 2', '구분 3', '구분 4', '구분 5'] as const
+const PLACEHOLDER_SLICE_COLORS = ['var(--ds-donut-2)', 'var(--ds-donut-4)', 'var(--ds-donut-6)'] as const
+const PLACEHOLDER_SLICE_IDS = ['placeholder-a', 'placeholder-b', 'placeholder-c'] as const
 const PLACEHOLDER_BORROWING_STATUS: BorrowingStatusSource = {
     institutions: {
-        years: ['0000년', '0001년', '0002년'],
-        rows: ['구분 1', '구분 2', '구분 3', '구분 4', '구분 5'].map((label, index) => ({
+        years: PRIVATE_PLACEHOLDER.years,
+        rows: PLACEHOLDER_LABELS.map((label, index) => ({
             key: `placeholder-${index}`,
             label,
-            values: [40, 30, 20],
+            values: PRIVATE_PLACEHOLDER.yearValues,
         })),
-        share: [
-            {id: 'placeholder-a', label: '구분 1', percentage: 50, color: 'var(--ds-donut-2)'},
-            {id: 'placeholder-b', label: '구분 2', percentage: 30, color: 'var(--ds-donut-4)'},
-            {id: 'placeholder-c', label: '구분 3', percentage: 20, color: 'var(--ds-donut-6)'},
-        ],
+        share: PRIVATE_PLACEHOLDER.shares.map((percentage, index) => ({
+            id: PLACEHOLDER_SLICE_IDS[index],
+            label: PLACEHOLDER_LABELS[index],
+            percentage,
+            color: PLACEHOLDER_SLICE_COLORS[index],
+        })),
     },
-    creditCollateral: {
-        points: [
-            {label: '00.01월', credit: 40, collateral: 60},
-            {label: '00.02월', credit: 45, collateral: 55},
-            {label: '00.03월', credit: 50, collateral: 50},
-        ],
-        current: {credit: 50, collateral: 50},
-    },
-    collaterals: [
-        {id: 'placeholder-a', label: '구분 1', amount: 5000, color: 'var(--ds-donut-2)'},
-        {id: 'placeholder-b', label: '구분 2', amount: 3000, color: 'var(--ds-donut-4)'},
-        {id: 'placeholder-c', label: '구분 3', amount: 2000, color: 'var(--ds-donut-6)'},
-    ],
+    creditCollateral: PRIVATE_PLACEHOLDER.creditCollateral,
+    collaterals: PRIVATE_PLACEHOLDER.amounts.map((amount, index) => ({
+        id: PLACEHOLDER_SLICE_IDS[index],
+        label: PLACEHOLDER_LABELS[index],
+        amount,
+        color: PLACEHOLDER_SLICE_COLORS[index],
+    })),
 }
 
 type InnovationGrowthReportCreditProps = {
@@ -395,6 +399,9 @@ const InnovationGrowthReportCredit = ({
     const previousRatings = [...ratingHistory].sort(byLatestDate).slice(1)
     // 현금흐름등급 표 — 최신순.
     const cashFlowHistory = [...cashFlow.history].sort(byLatestDate)
+    const cashFlowGrade = findCashFlowGrade(cashFlow.grade)
+    const cashFlowName = cashFlowGrade?.name
+    const cashFlowDefinition = cashFlowGrade?.definition
     return (
         <>
             {/* 기업신용등급 */}
@@ -445,14 +452,14 @@ const InnovationGrowthReportCredit = ({
                 <Card>
                     <div className="grid grid-cols-2 items-center gap-6">
                         <GradeScaleGauge
-                            grades={CASH_FLOW_GRADES}
+                            grades={CASH_FLOW_SCALE}
                             current={cashFlow.grade}
                             // 원호 안에는 등급만 둔다(설명 글자 없음).
                             description=""
-                            lowLabel="취약"
-                            highLabel="우수"
+                            lowLabel={CASH_FLOW_LOW_LABEL}
+                            highLabel={CASH_FLOW_HIGH_LABEL}
                             scaleLabel="현금흐름 창출 능력"
-                            ariaLabel={`현금흐름등급 ${cashFlow.grade}`}
+                            ariaLabel={`현금흐름등급 ${cashFlow.grade}${cashFlowName ? `(${cashFlowName})` : ''}`}
                         />
                         <ReportTable
                             caption="현금흐름등급 평가이력"
@@ -468,7 +475,8 @@ const InnovationGrowthReportCredit = ({
                             emptyText={EMPTY_TABLE_TEXT}
                         />
                     </div>
-                    <NoticeBox className="text-center">{cashFlow.summary}</NoticeBox>
+                    {/* 등급 정의 — 등급 코드로 현금흐름등급표(cash-flow-grades.ts)에서 찾는다. 표에 없는 코드면 상자를 숨긴다. */}
+                    {cashFlowDefinition ? <NoticeBox className="text-center">{cashFlowDefinition}</NoticeBox> : null}
                     <div className="flex flex-col gap-4">
                         <h4 className="typo-body-xl-bold text-foreground">기업신용정보</h4>
                         <div className="grid grid-cols-2 gap-x-12 gap-y-4">

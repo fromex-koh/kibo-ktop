@@ -4,7 +4,7 @@
 import {Table} from '@/components/custom/table'
 
 type GaugeToneCase = {
-    /** 첫 열(예: 우수 · CR-1). */
+    /** 첫 열(예: 우수 · CF1). */
     label: string
     /** 둘째 열(예: 점수 구간 · 등급명). */
     detail: string

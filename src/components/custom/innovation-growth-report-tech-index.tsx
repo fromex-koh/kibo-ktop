@@ -23,6 +23,9 @@ import {
 // [프론트엔드 연동] 값은 detail(report.techIndexDetail)과 점수(score, report.techIndex.score) · 평가일자(evaluationDate) ·
 // 기업명(companyName)으로 받는다 — 형태는 content/service/k-bigx-innovation-report.ts 의 InnovationTechIndexDetail.
 
+// 점수가 없을 때 요약 문장.
+const NO_SCORE_TEXT = '평가 점수가 없습니다.'
+
 // 막대 색 — 신청기업(isSubject) · 비교 유형 · 4대 역량 카드의 전체기업 막대. 계열은 report-series-*, 전체기업은 구조색 muted.
 const SUBJECT_BAR_COLOR = 'var(--ds-report-series-3)'
 const TYPE_BAR_COLOR = 'var(--ds-report-series-2)'
@@ -174,9 +177,16 @@ const InnovationGrowthReportTechIndex = ({
                                 </dd>
                             </dl>
                         </div>
+                        {/* 점수가 없으면(숫자가 아니면) 문장 대신 '평가 점수가 없습니다.' */}
                         <NoticeBox className="text-center">
-                            {companyName}의 Tech-Index는 <strong className="typo-body-xl-bold">{scoreText}</strong>
-                            으로 평가되었습니다.
+                            {Number.isFinite(score) ? (
+                                <>
+                                    {companyName}의 Tech-Index는{' '}
+                                    <strong className="typo-body-xl-bold">{scoreText}</strong>으로 평가되었습니다.
+                                </>
+                            ) : (
+                                NO_SCORE_TEXT
+                            )}
                         </NoticeBox>
                     </Card>
                     <Card

@@ -13,16 +13,16 @@ import {cn} from '@/lib/utils'
 //   → 16 → 등급 칸 줄: 높이 32 · 모서리 8 · 간격 8 · 14 Bold, 칸 폭은 똑같이 나눈다.
 //   → 8 → 척도 줄(높이 26 · 12 Regular): 첫 칸 아래 낮은 쪽 이름 · 가운데 칸들 아래 옅은 띠(accent-subtle)에 척도 이름 · 끝 칸 아래 높은 쪽 이름.
 // 칸 색 · 칸 글자 색은 데이터가 넘긴다(color · foreground). 다크에서 칸 색이 바뀌면 글자 색도 함께 바뀌어야 하므로
-// 둘 다 토큰으로 넘긴다(보고서 현금흐름등급 — cash-flow-cr-<n> · cash-flow-cr-<n>-foreground).
+// 둘 다 토큰으로 넘긴다(보고서 현금흐름등급 — cash-flow-cf-<n> · cash-flow-cf-<n>-foreground).
 // foreground 를 안 주면 흰 글자, isLightColor 면 짙은 글자(grade-scale-chip-foreground)다.
-// 원호 트랙은 grade-scale-track — 다크에서 어두운 칸 색(CR-5 등)이 트랙에 묻히지 않게 다른 게이지보다 밝다.
+// 원호 트랙은 grade-scale-track — 다크에서 어두운 칸 색(CF5 등)이 트랙에 묻히지 않게 다른 게이지보다 밝다.
 // 현재 등급은 role="img" 이름과 숨김 문단으로 읽는다 — 칸 색만으로 구분하지 않는다[5.3.1].
 // 등급 칸 줄은 data-chart-reveal 이라 보고서에서 카드가 보이기 전에는 숨는다(chart-reveal.tsx).
 //
 // [프론트엔드 연동] grades 는 낮은 등급부터(왼쪽) 높은 등급(오른쪽) 순서다. current 는 grades 의 label 중 하나를 넘긴다.
 
 type GradeScaleItem = {
-    /** 등급 이름(예: CR-4). */
+    /** 등급 이름(예: CF4). */
     label: string
     /** 칸 · 원호 색(토큰 변수). */
     color: string
