@@ -60,6 +60,8 @@ const COLUMN_CODE = `import {PRIVATE_SHORT_LABEL, PrivateCell} from '@/component
 />`
 
 const DATA_CODE = `// 비공개 여부는 API 가 준다. 비공개면 실제 값 대신 임의의 자리 표시 값을 넘긴다
+// 가짜 값(칸 '0000-00-00' · 금액 '000,000' · 연도 · 비중 · 금액)은 PRIVATE_PLACEHOLDER 한 곳에서 관리한다
+// — K-BIGx 웹 보고서 · 인쇄본이 함께 쓴다. 이름 · 색만 쓰는 쪽에서 붙인다.
 {institution.isPrivate ? (
   <PrivateContent>
     <InstitutionCard data={INSTITUTION_PLACEHOLDER} />
@@ -154,6 +156,11 @@ const PrivateContentGuidePage = () => (
                         가릴 덩어리를 <code>PrivateContent</code> 로 감쌉니다. 흐린 자리 표시 위에 흰 면(
                         <code>bg-card/80</code>)이 덮이고 가운데에 안내가 놓입니다. 안내 기본값은 “정책에 따라 비공개
                         처리된 정보입니다.”입니다.
+                    </p>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        K-BIGx 인쇄본은 같은 모양 · 같은 안내 문구를 kbx 값으로 그린 <code>KbxPrivateContent</code> ·{' '}
+                        <code>KbxPrivateCell</code>(kbigx-print-parts.tsx)을 씁니다. 열람 케이스별 가림 범위도 웹
+                        보고서와 같습니다.
                     </p>
                 </div>
                 <PrivateContent>

@@ -3,7 +3,8 @@ import type {ReactNode} from 'react'
 import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
-import {ComponentLayerBadge} from '@/components/custom/component-layer-badge'
+import {ComponentLayerBadge, KbigxPrintBadge} from '@/components/custom/component-layer-badge'
+import {GUIDE_KBIGX_PRINT_ITEMS} from '@/constants/publishing-guide'
 
 export const metadata: Metadata = {
     title: {absolute: '컴포넌트 가이드'},
@@ -328,6 +329,43 @@ const ComponentGuidePage = () => (
                         </div>
                     ))}
                 </div>
+                {/* K-BIGx 인쇄 템플릿 표시 — 각 가이드 제목 옆 배지와 같은 배지 · 툴팁. 목록은 메뉴(isKbigxPrint)에서 만든다. */}
+                <section
+                    aria-labelledby="kbigx-print-guides-title"
+                    className="border-subtle-2 bg-surface mt-4 flex flex-col gap-3 rounded-sm border p-5"
+                >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                        <KbigxPrintBadge />
+                        <code className="text-foreground-subtle font-mono text-xs">
+                            /corp/k-bigx-report/innovation-growth-report/report-print
+                        </code>
+                    </div>
+                    <h4 id="kbigx-print-guides-title" className="typo-title-m-bold text-foreground">
+                        K-BIGx 보고서 인쇄 템플릿에서 쓰는 컴포넌트
+                    </h4>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        이 배지가 붙은 가이드의 컴포넌트를 고치면 인쇄본도 함께 확인합니다. 인쇄본 전용 부품 · 규칙은{' '}
+                        <Link
+                            href="/component-guide/report-shell"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            리포트 공통 (Report)
+                        </Link>{' '}
+                        가이드에 있습니다.
+                    </p>
+                    <ul className="border-subtle-3 flex flex-wrap gap-x-4 gap-y-2 border-t pt-3">
+                        {GUIDE_KBIGX_PRINT_ITEMS.map((item) => (
+                            <li key={item.href}>
+                                <Link
+                                    href={item.href}
+                                    className="text-primary-strong font-mono text-sm underline underline-offset-4"
+                                >
+                                    {item.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
                 <p className="border-primary/30 bg-primary-subtle text-foreground mt-4 overflow-x-auto rounded-sm border p-5 text-center font-mono text-sm font-semibold">
                     tokens → theme + ui → composite / custom → screen
                 </p>

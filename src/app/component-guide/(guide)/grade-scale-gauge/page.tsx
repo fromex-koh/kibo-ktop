@@ -10,6 +10,7 @@ import GuidePageShell from '@/components/custom/guide-page-shell'
 import {LicenseNotice, type LicenseLink} from '@/components/custom/license-notice'
 import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
+import {CASH_FLOW_GRADES_LOW_FIRST, cashFlowLevel} from '@/content/service/cash-flow-grades'
 
 export const metadata: Metadata = {title: '등급 척도 게이지 (GradeScaleGauge)'}
 
@@ -20,14 +21,21 @@ const RECHARTS_LICENSE: LicenseLink = {
     href: 'https://github.com/recharts/recharts/blob/main/LICENSE',
 }
 
-// 현금흐름등급 척도(낮은 등급부터) — 보고서와 같은 cash-flow-cr-<n> 토큰(칸 색 · 칸 글자 색, 다크에서 함께 바뀜).
-const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [6, 5, 4, 3, 2, 1].map((level) => ({
-    label: `CR-${level}`,
-    color: `var(--ds-cash-flow-cr-${level})`,
-    foreground: `var(--ds-cash-flow-cr-${level}-foreground)`,
+// 현금흐름등급 척도(낮은 등급부터 CF6 → CF1) — 보고서와 같은 현금흐름등급표(cash-flow-grades.ts)와
+// cash-flow-cf-<n> 토큰(칸 색 · 칸 글자 색, 다크에서 함께 바뀜).
+const CASH_FLOW_GRADES: readonly GradeScaleItem[] = CASH_FLOW_GRADES_LOW_FIRST.map((item) => ({
+    label: item.grade,
+    color: `var(--ds-cash-flow-cf-${cashFlowLevel(item.grade)})`,
+    foreground: `var(--ds-cash-flow-cf-${cashFlowLevel(item.grade)}-foreground)`,
 }))
 // 보고서(신용/재무정보 현금흐름등급)와 같은 모양 — 원호 안에는 등급만 둔다(description="").
-const SCALE_LABELS = {description: '', lowLabel: '취약', highLabel: '우수', scaleLabel: '현금흐름 창출 능력'} as const
+// 양 끝 이름은 등급표의 가장 낮은 · 높은 등급내용(CF6 부실 · CF1 우수)이다.
+const SCALE_LABELS = {
+    description: '',
+    lowLabel: CASH_FLOW_GRADES_LOW_FIRST[0].name,
+    highLabel: CASH_FLOW_GRADES_LOW_FIRST[CASH_FLOW_GRADES_LOW_FIRST.length - 1].name,
+    scaleLabel: '현금흐름 창출 능력',
+} as const
 
 type CaseProps = Pick<
     GradeScaleGaugeProps,
@@ -36,31 +44,35 @@ type CaseProps = Pick<
 
 const USAGE_CODE = `import {GradeScaleGauge, type GradeScaleItem} from '@/components/custom/grade-scale-gauge'
 
-// 낮은 등급부터 높은 등급 순서입니다. 칸 색 · 칸 글자 색은 데이터가 넘깁니다(토큰 — 다크에서 함께 바뀜).
-const CASH_FLOW_GRADES: readonly GradeScaleItem[] = [6, 5, 4, 3, 2, 1].map((level) => ({
-  label: \`CR-\${level}\`,
-  color: \`var(--ds-cash-flow-cr-\${level})\`,
-  foreground: \`var(--ds-cash-flow-cr-\${level}-foreground)\`,
+import {CASH_FLOW_GRADES_LOW_FIRST, cashFlowLevel} from '@/content/service/cash-flow-grades'
+
+// 낮은 등급부터 높은 등급 순서입니다(CF6 → CF1 — 현금흐름등급표 = 참고자료 등급 정의).
+// 칸 색 · 칸 글자 색은 데이터가 넘깁니다(토큰 — 다크에서 함께 바뀜).
+const CASH_FLOW_SCALE: readonly GradeScaleItem[] = CASH_FLOW_GRADES_LOW_FIRST.map((item) => ({
+  label: item.grade,
+  color: \`var(--ds-cash-flow-cf-\${cashFlowLevel(item.grade)})\`,
+  foreground: \`var(--ds-cash-flow-cf-\${cashFlowLevel(item.grade)}-foreground)\`,
 }))
 
 <GradeScaleGauge
-  ariaLabel="현금흐름등급 CR-4"
-  grades={CASH_FLOW_GRADES}
-  current="CR-4"
+  ariaLabel="현금흐름등급 CF4(열위)"
+  grades={CASH_FLOW_SCALE}
+  current="CF4"
   description=""   // 원호 안에는 등급만(기본은 '현재 등급' 설명을 함께 적는다)
-  lowLabel="취약"
-  highLabel="우수"
+  lowLabel="부실"  // 등급표 CF6 등급내용
+  highLabel="우수" // 등급표 CF1 등급내용
   scaleLabel="현금흐름 창출 능력"
 />`
 
-const DATA_CODE = `// 척도(grades)는 화면이 고정으로 두고 현재 등급 코드만 받습니다.
+const DATA_CODE = `// 척도(grades) · 양 끝 이름은 등급표에서 만들고, 현재 등급 코드(CF1 ~ CF6)만 받습니다.
+// 등급 정의(아래 설명 상자)도 같은 표에서 찾습니다 — findCashFlowGrade(cashFlow.grade)?.definition.
 <GradeScaleGauge
   ariaLabel={\`현금흐름등급 \${cashFlow.grade}\`}
-  grades={CASH_FLOW_GRADES}
+  grades={CASH_FLOW_SCALE}
   current={cashFlow.grade}
   description=""
-  lowLabel="취약"
-  highLabel="우수"
+  lowLabel={CASH_FLOW_GRADES_LOW_FIRST[0].name}
+  highLabel={CASH_FLOW_GRADES_LOW_FIRST.at(-1)?.name}
   scaleLabel="현금흐름 창출 능력"
 />`
 
@@ -139,12 +151,12 @@ const PROPS_ITEMS = [
         '-',
         'HTMLAttributes',
     ],
-    ['GradeScaleItem', 'label', '등급 이름입니다(예: CR-4).', '-', 'string'],
+    ['GradeScaleItem', 'label', '등급 이름입니다(예: CF4).', '-', 'string'],
     ['GradeScaleItem', 'color', '칸과 원호 채움에 쓰는 색(토큰 변수)입니다.', '-', 'string'],
     [
         'GradeScaleItem',
         'foreground',
-        '칸 글자 색(토큰 변수)입니다. 테마마다 칸 색이 바뀌면 글자 색도 함께 넘깁니다(예: var(--ds-cash-flow-cr-4-foreground)). isLightColor 보다 우선합니다.',
+        '칸 글자 색(토큰 변수)입니다. 테마마다 칸 색이 바뀌면 글자 색도 함께 넘깁니다(예: var(--ds-cash-flow-cf-4-foreground)). isLightColor 보다 우선합니다.',
         '-',
         'string',
     ],
@@ -177,29 +189,29 @@ const SPECIAL_CASES: readonly {title: string; description: string; gauge: CasePr
         title: '설명 글자 함께 (description)',
         description:
             "description 을 주지 않으면 등급 아래에 '현재 등급'을 적습니다. 다른 글자를 주면 그 글자를 적습니다. 등급 글자 높이는 같습니다.",
-        gauge: {grades: CASH_FLOW_GRADES, current: 'CR-4', ...SCALE_LABELS, description: '현재 등급'},
+        gauge: {grades: CASH_FLOW_GRADES, current: 'CF4', ...SCALE_LABELS, description: '현재 등급'},
     },
     {
         title: '가장 낮은 등급',
         description: '원호는 한 칸 몫(1/6)만 채우고 첫 칸의 색을 씁니다.',
-        gauge: {grades: CASH_FLOW_GRADES, current: 'CR-6', ...SCALE_LABELS},
+        gauge: {grades: CASH_FLOW_GRADES, current: 'CF6', ...SCALE_LABELS},
     },
     {
         title: '가장 높은 등급',
         description: '원호를 끝까지 채우고 끝 칸의 색을 씁니다.',
-        gauge: {grades: CASH_FLOW_GRADES, current: 'CR-1', ...SCALE_LABELS},
+        gauge: {grades: CASH_FLOW_GRADES, current: 'CF1', ...SCALE_LABELS},
     },
     {
         title: '밝은 칸',
         description:
-            '주황(CR-3) · 회색(CR-5)처럼 밝은 칸은 흰 글자로 본문 대비 4.5:1 에 못 미쳐 짙은 글자로 적습니다. 다크에서는 칸이 밝은 단계로 바뀌어 대부분 짙은 글자, 어두워지는 CR-5 만 밝은 글자입니다(foreground 토큰).',
-        gauge: {grades: CASH_FLOW_GRADES, current: 'CR-3', ...SCALE_LABELS},
+            '주황(CF3) · 회색(CF5)처럼 밝은 칸은 흰 글자로 본문 대비 4.5:1 에 못 미쳐 짙은 글자로 적습니다. 다크에서는 칸이 밝은 단계로 바뀌어 대부분 짙은 글자, 어두워지는 CF5 만 밝은 글자입니다(foreground 토큰).',
+        gauge: {grades: CASH_FLOW_GRADES, current: 'CF3', ...SCALE_LABELS},
     },
     {
         title: '척도에 없는 등급 (잘못된 자료)',
         description:
             '원호를 비우고 받은 등급을 그대로 적어 잘못된 자료가 드러나게 합니다. 숨김 문단은 “척도에 없는 등급”으로 읽습니다.',
-        gauge: {grades: CASH_FLOW_GRADES, current: 'CR-9', ...SCALE_LABELS},
+        gauge: {grades: CASH_FLOW_GRADES, current: 'CF9', ...SCALE_LABELS},
     },
     {
         title: '등급이 많을 때 (10단계)',
@@ -231,14 +243,14 @@ const SPECIAL_CASES: readonly {title: string; description: string; gauge: CasePr
     {
         title: '척도 이름 없음',
         description: 'lowLabel · highLabel · scaleLabel 을 모두 비우면 척도 줄을 그리지 않습니다.',
-        gauge: {grades: CASH_FLOW_GRADES, current: 'CR-2', description: ''},
+        gauge: {grades: CASH_FLOW_GRADES, current: 'CF2', description: ''},
     },
     {
         title: '긴 척도 이름',
         description: '가운데 띠보다 긴 이름은 말줄임표로 잘라 한 줄을 지킵니다.',
         gauge: {
             grades: CASH_FLOW_GRADES,
-            current: 'CR-4',
+            current: 'CF4',
             description: '',
             lowLabel: '매우 미흡',
             highLabel: '매우 양호',
@@ -267,9 +279,9 @@ const GradeScaleGaugeGuidePage = () => (
                 </div>
                 <div className="border-subtle-3 bg-card flex max-w-147 min-w-0 flex-col gap-6 rounded-sm border p-6">
                     <GradeScaleGauge
-                        ariaLabel="현금흐름등급 CR-4"
+                        ariaLabel="현금흐름등급 CF4"
                         grades={CASH_FLOW_GRADES}
-                        current="CR-4"
+                        current="CF4"
                         {...SCALE_LABELS}
                     />
                 </div>
@@ -342,9 +354,9 @@ const GradeScaleGaugeGuidePage = () => (
                             <div className="flex min-w-0 flex-col gap-2">
                                 <p className="typo-body-xl-bold text-foreground">불러온 뒤</p>
                                 <GradeScaleGauge
-                                    ariaLabel="현금흐름등급 CR-4"
+                                    ariaLabel="현금흐름등급 CF4"
                                     grades={CASH_FLOW_GRADES}
-                                    current="CR-4"
+                                    current="CF4"
                                     {...SCALE_LABELS}
                                 />
                             </div>

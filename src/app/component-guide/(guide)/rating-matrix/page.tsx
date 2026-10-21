@@ -12,7 +12,7 @@ export const metadata: Metadata = {title: '등급 매트릭스 (RatingMatrix)'}
 
 const REPORT_ROWS: RatingMatrixRow[] = [
     {id: 'sales-growth', label: '매출액증가율', rating: 'poor'},
-    {id: 'operating-margin', label: '영업이익율', rating: 'normal'},
+    {id: 'operating-margin', label: '영업이익률', rating: 'normal'},
     {id: 'equity-ratio', label: '자기자본비율', rating: 'good'},
     {id: 'asset-turnover', label: '총자본회전율', rating: 'excellent'},
     {id: 'cash-flow', label: '현금흐름', rating: 'weak'},
@@ -37,7 +37,7 @@ const USAGE_CODE = `import {RatingMatrix, type RatingMatrixRow} from '@/componen
 // rating: weak(취약) · poor(미흡) · normal(보통) · good(양호) · excellent(우수)
 const rows: RatingMatrixRow[] = [
   {id: 'sales-growth', label: '매출액증가율', rating: 'poor'},
-  {id: 'operating-margin', label: '영업이익율', rating: 'normal'},
+  {id: 'operating-margin', label: '영업이익률', rating: 'normal'},
 ]
 
 <RatingMatrix ariaLabel="재무비율진단 — 항목별 수준" rows={rows} />`

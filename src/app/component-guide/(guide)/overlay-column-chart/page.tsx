@@ -250,7 +250,7 @@ const SPECIAL_CASES = [
 const OverlayColumnChartGuidePage = () => (
     <GuidePageShell
         title="겹친 막대 (OverlayColumnChart)"
-        description="기준 값(예: 총자산)을 넓고 옅은 막대로 깔고 그 앞에 세부 값(예: 부채 · 자본)을 좁은 막대로 세워 한 칸에서 견줍니다."
+        description="기준 값(예: 총자산)을 넓고 옅은 막대로 깔고 그 앞에 세부 값(예: 부채 · 자본)을 좁은 막대로 세워 한 칸에서 견줍니다. 세로축 없이 막대마다 값을 바로 적는 인쇄본용 겹친 막대는 NestedColumnChart 입니다."
     >
         <BaseCard>
             <section aria-labelledby="occ-basic" className="flex flex-col gap-6">

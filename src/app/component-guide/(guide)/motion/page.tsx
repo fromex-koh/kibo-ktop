@@ -2,6 +2,7 @@
 
 import type {Metadata} from 'next'
 import type {ReactNode} from 'react'
+import Link from 'next/link'
 import {TriangleAlert} from 'lucide-react'
 import {BaseCard} from '@/components/composite/base-card'
 import CopyChip from '@/components/custom/copy-chip'
@@ -236,7 +237,13 @@ const COMPONENT_ROWS = [
                 <li>여러 장은 문서 순서로 0.12초 간격, 같은 revealGroup 은 동시에.</li>
                 <li>이미 본 탭에 다시 들어가면 움직이지 않습니다.</li>
             </ul>,
-            'K-BIGx 보고서(custom/chart-reveal.tsx)',
+            <Link
+                key="w"
+                href="/component-guide/chart-reveal"
+                className="text-primary-strong underline underline-offset-4"
+            >
+                K-BIGx 보고서 · 인쇄본(ChartReveal 가이드)
+            </Link>,
         ],
     },
     {

@@ -161,6 +161,15 @@ const CHOICE_ROWS = [
             </Link>,
         ],
     },
+    {
+        key: 'value',
+        cells: [
+            '축 없이 막대 위 값 글자로(인쇄본)',
+            <Link key="c" href="/component-guide/value-column-chart" className={LINK_CLASS}>
+                ValueColumnChart
+            </Link>,
+        ],
+    },
 ] as const
 
 const PROPS_ITEMS = [

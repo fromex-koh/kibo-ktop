@@ -166,18 +166,18 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'donut-6': 'bg-donut-6',
     'donut-7': 'bg-donut-7',
     'donut-8': 'bg-donut-8',
-    'cash-flow-cr-1': 'bg-cash-flow-cr-1',
-    'cash-flow-cr-1-foreground': 'bg-cash-flow-cr-1-foreground',
-    'cash-flow-cr-2': 'bg-cash-flow-cr-2',
-    'cash-flow-cr-2-foreground': 'bg-cash-flow-cr-2-foreground',
-    'cash-flow-cr-3': 'bg-cash-flow-cr-3',
-    'cash-flow-cr-3-foreground': 'bg-cash-flow-cr-3-foreground',
-    'cash-flow-cr-4': 'bg-cash-flow-cr-4',
-    'cash-flow-cr-4-foreground': 'bg-cash-flow-cr-4-foreground',
-    'cash-flow-cr-5': 'bg-cash-flow-cr-5',
-    'cash-flow-cr-5-foreground': 'bg-cash-flow-cr-5-foreground',
-    'cash-flow-cr-6': 'bg-cash-flow-cr-6',
-    'cash-flow-cr-6-foreground': 'bg-cash-flow-cr-6-foreground',
+    'cash-flow-cf-1': 'bg-cash-flow-cf-1',
+    'cash-flow-cf-1-foreground': 'bg-cash-flow-cf-1-foreground',
+    'cash-flow-cf-2': 'bg-cash-flow-cf-2',
+    'cash-flow-cf-2-foreground': 'bg-cash-flow-cf-2-foreground',
+    'cash-flow-cf-3': 'bg-cash-flow-cf-3',
+    'cash-flow-cf-3-foreground': 'bg-cash-flow-cf-3-foreground',
+    'cash-flow-cf-4': 'bg-cash-flow-cf-4',
+    'cash-flow-cf-4-foreground': 'bg-cash-flow-cf-4-foreground',
+    'cash-flow-cf-5': 'bg-cash-flow-cf-5',
+    'cash-flow-cf-5-foreground': 'bg-cash-flow-cf-5-foreground',
+    'cash-flow-cf-6': 'bg-cash-flow-cf-6',
+    'cash-flow-cf-6-foreground': 'bg-cash-flow-cf-6-foreground',
     'grade-scale-track': 'bg-grade-scale-track',
     'gauge-excellent-from': 'bg-gauge-excellent-from',
     'gauge-excellent-to': 'bg-gauge-excellent-to',
@@ -457,8 +457,8 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'donut-1~8 (비중 도넛 조각 색)', match: (n) => n.startsWith('donut-')},
     // 현금흐름등급 게이지(GradeScaleGauge) — 등급 칸 · 원호 색과 칸 글자 색, 원호 트랙.
     {
-        name: 'cash-flow-cr-1~6 · grade-scale-track (현금흐름등급 게이지)',
-        match: (n) => n.startsWith('cash-flow-cr-') || n === 'grade-scale-track',
+        name: 'cash-flow-cf-1~6 · grade-scale-track (현금흐름등급 게이지)',
+        match: (n) => n.startsWith('cash-flow-cf-') || n === 'grade-scale-track',
     },
     // 조회 목록의 진행 상태 글자색 — 라이트는 단계 팔레트 밖 값이라 extra.azure, 다크는 blue.300 을 가리킨다.
     {name: 'status-evaluated (평가완료)', match: (n) => n === 'status-evaluated'},
@@ -674,10 +674,10 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             카드 위에서도 보입니다. 다른 화면의 차트는 chart-1~5 를 쓰므로 이 값을 바꿔도 영향이 없습니다.
         </>
     ),
-    'cash-flow-cr-1~6 · grade-scale-track (현금흐름등급 게이지)': (
+    'cash-flow-cf-1~6 · grade-scale-track (현금흐름등급 게이지)': (
         <>
-            현금흐름등급 게이지의 등급 칸 · 원호 색(cash-flow-cr-n)과 칸 글자 색(-foreground)입니다. 다크는 칸이 밝은
-            단계로 바뀌고 글자는 짙은 색이 됩니다(CR-5 만 어두운 칸 + 밝은 글자). grade-scale-track 은 원호의 빈
+            현금흐름등급 게이지의 등급 칸 · 원호 색(cash-flow-cf-n)과 칸 글자 색(-foreground)입니다. 다크는 칸이 밝은
+            단계로 바뀌고 글자는 짙은 색이 됩니다(CF5 만 어두운 칸 + 밝은 글자). grade-scale-track 은 원호의 빈
             트랙으로, 다크에서 어두운 칸 색이 묻히지 않게 다른 게이지 트랙(gauge-track)보다 밝습니다.
         </>
     ),

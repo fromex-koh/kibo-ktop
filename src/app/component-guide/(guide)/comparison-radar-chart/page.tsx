@@ -24,7 +24,7 @@ const RECHARTS_LICENSE: LicenseLink = {
 
 const REPORT_DATA: ComparisonRadarItem[] = [
     {id: 'sales-growth', label: '매출액증가율', primaryValue: 80, comparisonValue: 60},
-    {id: 'operating-margin', label: '영업이익율', primaryValue: 65, comparisonValue: 55},
+    {id: 'operating-margin', label: '영업이익률', primaryValue: 65, comparisonValue: 55},
     {id: 'equity-ratio', label: '자기자본비율', primaryValue: 70, comparisonValue: 60},
     {id: 'asset-turnover', label: '총자본회전율', primaryValue: 55, comparisonValue: 50},
     {id: 'cash-flow', label: '현금흐름', primaryValue: 60, comparisonValue: 45},
@@ -41,7 +41,7 @@ const SIX_AXIS_DATA: ComparisonRadarItem[] = [
 
 const EDGE_DATA: ComparisonRadarItem[] = [
     {id: 'max', label: '매출액증가율', primaryValue: 100, comparisonValue: 100},
-    {id: 'zero', label: '영업이익율', primaryValue: 0, comparisonValue: 30},
+    {id: 'zero', label: '영업이익률', primaryValue: 0, comparisonValue: 30},
     {id: 'over', label: '자기자본비율', primaryValue: 140, comparisonValue: 60},
     {id: 'minus', label: '총자본회전율', primaryValue: -20, comparisonValue: 50},
     {id: 'normal', label: '현금흐름', primaryValue: 60, comparisonValue: 45},
@@ -154,7 +154,12 @@ const toRows = (items: readonly PropRow[]) =>
     }))
 
 const DATA_ROWS = toRows([
-    ['data', '지표별 고유 id · 표시명과 두 계열의 0~100 값입니다.', '-', 'ComparisonRadarItem[]'],
+    [
+        'data',
+        "지표별 고유 id · 표시명과 두 계열의 0~100 값입니다. 항목의 primaryValueText 를 주면 축 이름 옆 값 대신 그 글자를 적습니다(값이 없는 지표의 '-' 등).",
+        '-',
+        'ComparisonRadarItem[]',
+    ],
     ['primaryLabel', '주 계열 이름입니다. 범례 · 툴팁 · 숨김 표에 쓰입니다.', '-', 'string'],
     ['comparisonLabel', '비교 계열 이름입니다. 주지 않으면 주 계열만 그립니다.', 'undefined', 'string'],
     ['ariaLabel', '차트 이름입니다. 숨김 표의 캡션으로도 쓰입니다.', '-', 'string'],
@@ -173,6 +178,14 @@ const STYLE_PROP_ROWS = toRows([
         '0.16 · 0.25',
         'number',
     ],
+    ['primaryStrokeWidth · comparisonStrokeWidth', '두 계열 선 굵기입니다.', '2.5 · 2', 'number'],
+    ['comparisonDashArray', '비교 계열 점선 간격입니다(SVG stroke-dasharray).', "'5 4'", 'string'],
+    [
+        'comparisonFillColor',
+        "비교 계열 면 색입니다('filled' 일 때). 없으면 comparisonColor 와 같고, 면은 옅게 · 테두리는 진하게 나눌 때 줍니다.",
+        'comparisonColor',
+        'string',
+    ],
     [
         'comparisonAppearance',
         "'dashed' 는 점선 테두리와 점, 'filled' 는 점선 테두리에 면을 채우고 점을 두지 않습니다.",
@@ -184,6 +197,12 @@ const STYLE_PROP_ROWS = toRows([
         "주 계열 꼭짓점 모양입니다. 'hollow' 는 흰 면에 계열 색 테두리입니다.",
         "'filled'",
         "'filled' | 'hollow'",
+    ],
+    [
+        'dotRadius · dotStrokeWidth · dotFillColor',
+        "주 계열 꼭짓점 점의 반지름 · 'hollow' 테두리 굵기 · 'hollow' 안 색입니다(인쇄본은 6.5 · 3 · var(--kbx-color-paper)).",
+        "filled 5 · hollow 4 · 2 · 'var(--ds-surface)'",
+        'number · number · string',
     ],
     ['showDots', '꼭짓점 점 표시 여부입니다.', 'true', 'boolean'],
     [
@@ -206,6 +225,18 @@ const STYLE_PROP_ROWS = toRows([
         "12 · 600 · 'var(--ds-foreground)'",
         'number · number · string',
     ],
+    [
+        'tickGap',
+        '축 끝 ↔ 축 이름 거리입니다. 꼭짓점 점이 크면 값이 100 일 때 이름과 겹치지 않게 늘립니다(K-BIGx 인쇄본 진단브리핑 14).',
+        '8',
+        'number',
+    ],
+    [
+        'tickValueColor',
+        "축 이름 뒤에 한 칸 띄고 주 계열 값을 이 색 · 굵게 붙입니다(예: '기술인력역량 94.3' — K-BIGx 인쇄본 Tech-Index 세부지표). 없으면 축 이름만.",
+        'undefined',
+        'string',
+    ],
     ['outerRadius', '반지름입니다. 숫자는 px, 문자열은 그릴 자리 대비 비율입니다.', "'72%'", 'number | string'],
     ['centerY', '중심 세로 위치입니다. 숫자는 px, 문자열은 비율입니다.', '가운데', 'number | string'],
     ['margin', '차트 여백입니다.', '{top: 20, right: 48, bottom: 20, left: 48}', '{top?; right?; bottom?; left?}'],
@@ -214,6 +245,12 @@ const STYLE_PROP_ROWS = toRows([
         '차트 칸 크기 클래스입니다. 축이 적어 위아래가 남는 모양은 높이를 직접 정합니다.',
         '정사각(aspect-square)',
         'string',
+    ],
+    [
+        'fixedSize',
+        '칸 폭을 재지 않고 이 크기(px)로 그립니다. 용지를 축소해 보여 주는 인쇄본(K-BIGx 진단브리핑 420 × 312 · Tech-Index 509 × 416)에서 처음에 줄어든 크기로 그려지는 것을 막습니다. 주면 말풍선은 그리지 않습니다. 없으면 칸 폭에 맞춥니다(웹 화면).',
+        'undefined',
+        '{width: number; height: number}',
     ],
 ])
 

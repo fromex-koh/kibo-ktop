@@ -31,6 +31,10 @@ import zoomMenuChrome from '@public/images/browser/zoom-menu-chrome.webp'
 import citationStep1 from '@public/images/citation-manual/step-1-kipris-search-menu.webp'
 import citationStep2 from '@public/images/citation-manual/step-2-patent-number-search.webp'
 import citationStep3 from '@public/images/citation-manual/step-3-citation-count.webp'
+import kbigxCover from '@public/images/report/kbigx-cover.webp'
+import kbigxToc from '@public/images/report/kbigx-toc.webp'
+import kbigxTocStarLarge from '@public/images/report/kbigx-toc-star-large.svg'
+import kbigxTocStarSmall from '@public/images/report/kbigx-toc-star-small.svg'
 import heroBg1 from '@public/images/main-hero/hero-bg-1.webp'
 import heroBg2 from '@public/images/main-hero/hero-bg-2.webp'
 import techEvaluation from '@public/images/main-hero/tech-evaluation.webp'
@@ -137,7 +141,7 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
                 description:
                     '푸터는 테마에 맞는 한 장이 보입니다. 특허 보고서는 남색 머리글 전용(연두 상자) 한 장으로, 테마 · 인쇄와 관계없이 같습니다.',
                 folder: 'public/images/',
-                usedIn: 'composite/footer.tsx · custom/patent-report-document.tsx',
+                usedIn: 'composite/footer.tsx · custom/patent-report-document.tsx · custom/kbigx-print-cover.tsx',
                 size: '푸터 w-45 md:w-60 · 보고서 h-8 w-auto',
                 grid: 'narrow',
                 items: [
@@ -172,6 +176,42 @@ const IMAGE_SECTIONS: readonly ImageSection[] = [
         title: '일러스트',
         description: '제목 · 설명이 뜻을 전하므로 모두 alt="" 입니다.',
         groups: [
+            {
+                key: 'kbigx-print',
+                title: 'K-BIGx 보고서 인쇄본',
+                description:
+                    '표지 · 목차 그림입니다. 목차 그림은 템플릿의 잘린 영역과 두 겹 효과를 이미지에 미리 반영해 한 장으로 둡니다.',
+                folder: 'public/images/report/',
+                usedIn: 'custom/kbigx-print-cover.tsx',
+                size: '표지 1028×771 · 목차 493×349 · 별 28 · 22 (용지 1360 기준)',
+                grid: 'narrow',
+                items: [
+                    {
+                        file: 'kbigx-cover.webp',
+                        label: '표지 일러스트',
+                        src: kbigxCover,
+                        className: 'h-20 w-auto',
+                    },
+                    {
+                        file: 'kbigx-toc.webp',
+                        label: '목차 일러스트',
+                        src: kbigxToc,
+                        className: 'h-20 w-auto',
+                    },
+                    {
+                        file: 'kbigx-toc-star-large.svg',
+                        label: '목차 제목 별 (큰)',
+                        src: kbigxTocStarLarge,
+                        className: 'size-7',
+                    },
+                    {
+                        file: 'kbigx-toc-star-small.svg',
+                        label: '목차 제목 별 (작은)',
+                        src: kbigxTocStarSmall,
+                        className: 'size-6',
+                    },
+                ],
+            },
             {
                 key: 'option-card',
                 title: '선택 카드',

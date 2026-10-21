@@ -163,6 +163,16 @@ const CHOICE_ROWS = [
             '곡선과 등급 · 백분율 · 누적비율 표를 한 격자에 맞춰 그리고 평가대상 등급 칸을 강조합니다.',
         ],
     },
+    {
+        key: 'print',
+        cells: [
+            '같은 분포 곡선을 고정 크기 · 큰 글자로(인쇄본)',
+            <Link key="component" href="/component-guide/distribution-value-chart" className={LINK_CLASS}>
+                DistributionValueChart
+            </Link>,
+            '서버에서 바로 그리는 SVG 입니다. K-BIGx 인쇄본 Tech-Index 표준정보 비교에 씁니다.',
+        ],
+    },
 ] as const
 
 const PROPS_COLUMNS = [

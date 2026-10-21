@@ -145,6 +145,15 @@ const CHOICE_COLUMNS = [
 const CHOICE_ROWS = [
     {key: 'combo', cells: ['항목마다 막대 하나와 단위가 다른 선 값 하나', <code key="c">ComboBarLineChart</code>]},
     {
+        key: 'combo-value',
+        cells: [
+            '같은 막대 + 선을 축 없이 값 글자로(인쇄본)',
+            <Link key="c" href="/component-guide/combo-value-chart" className={LINK_CLASS}>
+                ComboValueChart
+            </Link>,
+        ],
+    },
+    {
         key: 'column',
         cells: [
             '항목마다 값 하나',

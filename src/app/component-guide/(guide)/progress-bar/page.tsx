@@ -1,6 +1,7 @@
 // [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
 
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
@@ -50,6 +51,16 @@ const ProgressBarGuidePage = () => (
                         <code>value</code> 와 <code>max</code> 로 비율을 계산해 텍스트와 스크린리더 값을 함께
                         갱신합니다. 막대는 기본 <code>bg-primary</code> 이고 <code>indicatorClassName</code> 으로 시맨틱
                         배경색을 바꿉니다.
+                    </p>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        눈금(0 · 25 · 50 · 75 · 100)과 점수 자리 표시선이 있는 점수 막대(혁신성장역량지수 등)는{' '}
+                        <Link
+                            href="/component-guide/score-scale-bar"
+                            className="text-primary underline underline-offset-4"
+                        >
+                            ScoreScaleBar
+                        </Link>
+                        를 씁니다.
                     </p>
                 </div>
                 <div className="bg-background border-border flex justify-center rounded-xl border p-6">
