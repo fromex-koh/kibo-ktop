@@ -113,5 +113,24 @@ const toCriRatingData = (grade: string, details: RatingGaugeDetail[] = []): Semi
     }
 }
 
-export {CRI_GRADES, CRI_UNKNOWN_GRADE_DESCRIPTION, criGradePercentage, findCriGrade, toCriRatingData}
-export type {CriGrade}
+// 등급명 → 상태 단계(우수 · 양호 · 보통 · 미흡 · 취약) — 등급 뱃지 색을 혁신성장역량지수(TECH_INDEX_GRADES)와 같은
+// 5단계 색으로 맞출 때 쓴다(K-BIGx 인쇄본 진단브리핑 기업신용등급 뱃지). 웹 게이지는 등급과 관계없이 한 색이라 쓰지 않는다.
+// 유보 · 평가 제외 · 표에 없는 코드는 단계가 없다(undefined) — 사용처가 중립 모양으로 그린다.
+type CriGradeTone = 'excellent' | 'good' | 'normal' | 'poor' | 'weak'
+const CRI_GRADE_NAME_TONES: Record<string, CriGradeTone> = {
+    최우량: 'excellent',
+    우량: 'excellent',
+    양호: 'good',
+    보통: 'normal',
+    '보통 이하': 'poor',
+    낮음: 'poor',
+    '매우 낮음': 'weak',
+    위험: 'weak',
+}
+const getCriGradeTone = (grade: string): CriGradeTone | undefined => {
+    const item = findCriGrade(grade)
+    return item?.isRated ? CRI_GRADE_NAME_TONES[item.name] : undefined
+}
+
+export {CRI_GRADES, CRI_UNKNOWN_GRADE_DESCRIPTION, criGradePercentage, findCriGrade, getCriGradeTone, toCriRatingData}
+export type {CriGrade, CriGradeTone}
