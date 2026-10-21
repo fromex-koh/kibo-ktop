@@ -1577,10 +1577,32 @@
                         {
                             "label": "보고서 출력",
                             "screenId": "SB-FOTA-CP7-0007",
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "corp-k-bigx-report-innovation-growth-report-report-print",
                             "iaRow": 117
+                        },
+                        {
+                            "label": "보고서 출력 비공개 케이스",
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "신용/재무정보 — 타기업·협약기관 법인 열람",
+                                    "screenId": "SB-FOTA-CP7-0007",
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
+                                    "iaRow": 117
+                                },
+                                {
+                                    "label": "신용/재무정보 — 타기업·협약기관 개인 열람",
+                                    "screenId": "SB-FOTA-CP7-0007",
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "corp-k-bigx-report-innovation-growth-report-report-print-case-partner-person",
+                                    "iaRow": 117
+                                }
+                            ]
                         }
                     ]
                 },
@@ -3676,10 +3698,32 @@
                         {
                             "label": "보고서 출력",
                             "screenId": null,
-                            "status": "대기중",
+                            "status": "완료",
                             "version": "미배포",
                             "key": "org-k-bigx-report-innovation-growth-report-report-print",
                             "iaRow": 107
+                        },
+                        {
+                            "label": "보고서 출력 비공개 케이스",
+                            "isGroupOnly": true,
+                            "children": [
+                                {
+                                    "label": "신용/재무정보 — 타기업·협약기관 법인 열람",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
+                                    "iaRow": 107
+                                },
+                                {
+                                    "label": "신용/재무정보 — 타기업·협약기관 개인 열람",
+                                    "screenId": null,
+                                    "status": "완료",
+                                    "version": "미배포",
+                                    "key": "org-k-bigx-report-innovation-growth-report-report-print-case-partner-person",
+                                    "iaRow": 107
+                                }
+                            ]
                         }
                     ]
                 },
