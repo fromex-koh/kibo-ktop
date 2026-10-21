@@ -19,6 +19,33 @@ import {cn} from '@/lib/utils'
 const PRIVATE_CARD_LABEL = '정책에 따라 비공개 처리된 정보입니다.'
 const PRIVATE_SHORT_LABEL = '비공개'
 
+// 비공개 자리 표시 값 — 실제 값이 아닌 가짜 값이다(흐리게 깔려 모양만 남긴다). 웹 보고서 · K-BIGx 인쇄본이 함께 쓴다.
+// 이름(구분 · 업권 · 담보 종류)과 색은 화면마다 달라 쓰는 쪽이 붙인다 — 여기에는 숫자 · 글자 모양만 둔다.
+// [프론트엔드 연동] 연동 후에도 그대로 쓴다 — 비공개 케이스에서는 API 가 실제 값을 주지 않으므로 이 값으로 모양을 그린다.
+const PRIVATE_PLACEHOLDER = {
+    /** 표 전체 비공개 — 가짜 한 줄의 칸마다. */
+    cell: '0000-00-00',
+    /** 금액 열만 비공개 — 그 칸마다. */
+    amount: '000,000',
+    /** 연도 이름 — React key 로도 쓰이므로 서로 다르다. */
+    years: ['0000년', '0001년', '0002년'],
+    /** 기관별 비중 표 — 줄마다 연도별 값. */
+    yearValues: [40, 30, 20],
+    /** 비중 도넛 조각(%). */
+    shares: [50, 30, 20],
+    /** 담보 금액. */
+    amounts: [5000, 3000, 2000],
+    /** 신용/담보 비중 — 시점별 꺾은선 · 최근 비중. */
+    creditCollateral: {
+        points: [
+            {label: '00.01월', credit: 40, collateral: 60},
+            {label: '00.02월', credit: 45, collateral: 55},
+            {label: '00.03월', credit: 50, collateral: 50},
+        ],
+        current: {credit: 50, collateral: 50},
+    },
+} as const
+
 type PrivateContentProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
     /** 흐리게 깔 자리 표시(임의 값). 원래 자리의 모양을 남기는 용도다. */
     children?: ReactNode
@@ -62,5 +89,5 @@ const PrivateCell = ({children, label, className}: PrivateCellProps) => (
     </span>
 )
 
-export {PRIVATE_CARD_LABEL, PRIVATE_SHORT_LABEL, PrivateCell, PrivateContent}
+export {PRIVATE_CARD_LABEL, PRIVATE_PLACEHOLDER, PRIVATE_SHORT_LABEL, PrivateCell, PrivateContent}
 export type {PrivateCellProps, PrivateContentProps}
