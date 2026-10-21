@@ -202,24 +202,10 @@ const normalizeReleaseNoteChange = (change: ReleaseNoteChangeValue): ReleaseNote
     return [createOverwriteChange('변경사항 반영 대상', targets)]
 }
 
-// 릴리즈 초안의 섹션 작성 순서와 관계없이 인계 카드는 개발자가 적용 방식을 빠르게 훑을 수 있도록
-// Diff 확인 → 덮어쓰기 → 신규 추가 → 삭제 순으로 고정한다. 같은 분류 안에서는 초안 작성 순서를 유지한다.
-// 삭제는 맨 뒤에 둔다 — 더하고 바꾼 뒤 마지막에 지우는 것이 순서상 안전하다.
-const RELEASE_NOTE_HANDOFF_ORDER = {diff: 0, overwrite: 1, new: 2, delete: 3} as const
-const sortReleaseNoteChanges = (changes: readonly ReleaseNoteChangeValue[]) =>
-    changes
-        .map((change, index) => ({change, index}))
-        .sort((left, right) => {
-            const leftOrder = isReleaseNoteHandoff(left.change) ? RELEASE_NOTE_HANDOFF_ORDER[left.change.mode] : -1
-            const rightOrder = isReleaseNoteHandoff(right.change) ? RELEASE_NOTE_HANDOFF_ORDER[right.change.mode] : -1
-
-            return leftOrder - rightOrder || left.index - right.index
-        })
-        .map(({change}) => change)
-
 const ReleaseNoteChangeList = ({changes}: {changes: readonly ReleaseNoteChangeValue[]}) => (
     <ul className="flex list-none flex-col gap-2">
-        {sortReleaseNoteChanges(changes.flatMap(normalizeReleaseNoteChange)).map((displayChange, changeIndex) => {
+        {/* 카드는 초안에 적은 순서 그대로 보인다 — 초안은 프론트엔드가 위에서부터 차례로 적용할 작업 순서로 쓴다. */}
+        {changes.flatMap(normalizeReleaseNoteChange).map((displayChange, changeIndex) => {
             const key =
                 typeof displayChange === 'string' ? displayChange : `${displayChange.mode}-${displayChange.title}`
 
