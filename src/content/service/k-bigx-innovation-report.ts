@@ -168,11 +168,21 @@ type InnovationCreditDetail = {
      */
     ratingHistory: readonly {date: string; chartLabel: string; grade: string}[]
     cashFlow: {
-        /** 현재 현금흐름등급(CR-1 ~ CR-6). */
+        /**
+         * 현재 현금흐름등급(CF1 ~ CF6). 등급 이름(배지) · 정의(설명 상자)는 화면이 현금흐름등급표(cash-flow-grades.ts —
+         * 참고자료 등급 정의와 같은 표)에서 코드로 찾는다. 표에 없는 코드면 배지 · 설명 상자를 숨긴다.
+         */
         grade: string
-        /** 현금흐름등급 평가이력. [프론트엔드 연동 · 정렬] 화면이 평가일자 최신순으로 정렬해 그리므로 보내는 순서는 상관없다. */
-        history: readonly {date: string; grade: string}[]
-        summary: string
+        /**
+         * 현재 현금흐름등급의 평가일자 · 결산일자 — 인쇄본 진단브리핑 현금흐름등급 박스(등급 코드 아래 목록).
+         * 값이 비면 화면이 '-' 로 적는다.
+         */
+        details: readonly RatingGaugeDetail[]
+        /**
+         * 현금흐름등급 평가이력. chartLabel 은 인쇄본 평가이력 그래프 아래 시점(예: 24.11월).
+         * [프론트엔드 연동 · 정렬] 화면이 평가일자로 정렬해 그리므로(표는 최신순, 그래프는 시간순) 보내는 순서는 상관없다.
+         */
+        history: readonly {date: string; chartLabel: string; grade: string}[]
     }
     creditInfo: readonly InnovationCreditInfoTable[]
     ratioYears: readonly string[]
@@ -206,6 +216,8 @@ type InnovationCreditDetail = {
     }
     /** 담보 현황(백만원) — 도넛으로 그린다. color 는 share 와 같은 고정 색(--raw-*). */
     collaterals: readonly {id: string; label: string; amount: number; color: string}[]
+    /** 담보 현황 기준 연도(예: 2024년) — 인쇄본 도넛 아래 '2024년 기준'. 기관별 비중 도넛은 institutions.years 의 마지막 연도를 쓴다. */
+    collateralYear: string
 }
 
 // Tech-Index 탭 데이터 — 지수설명 · 표준분포 비교 · 기업 유형별 비교 · 4대 혁신역량 · 세부지표(점수 게이지는 techIndex 를 쓴다).
@@ -281,10 +293,13 @@ type InnovationGrowthReport = {
     innovation: {
         /** 기업 보유기술 도넛. [프론트엔드 연동 · 정렬] 비중 큰 순으로 보낸다 — 12시부터 시계 방향, 첫 조각이 가장 진한 색. */
         technologies: readonly PercentageDonutItem[]
-        /** 관련 기업 · 특허 수치 4개. id 로 화면이 아이콘을 고른다(문서의 INNOVATION_STAT_ICONS). */
-        stats: readonly {id: InnovationStatId; label: string; value: number; unit: string}[]
-        /** 평균 특허수 줄 — value 는 화면이 그대로 적는 글자(예: '1.6'). */
-        averages: readonly {label: string; value: string; unit: string}[]
+        /**
+         * 관련 기업 · 특허 수치 4개. id 로 화면이 아이콘을 고른다(문서의 INNOVATION_STAT_ICONS).
+         * [프론트엔드 연동] 실제 0건은 0, 값을 받지 못한 경우는 null 로 보낸다 — 화면이 '-'(단위 없음)로 구분해 적는다.
+         */
+        stats: readonly {id: InnovationStatId; label: string; value: number | null; unit: string}[]
+        /** 평균 특허수 줄 — value 는 화면이 그대로 적는 글자(예: '1.6'). 값이 없으면 null(또는 빈 글자) — 화면이 '-' 로 적는다. */
+        averages: readonly {label: string; value: string | null; unit: string}[]
         /**
          * R&D 이슈 키워드(워드클라우드 — 진단브리핑 R&D 이슈 카드 · 기술혁신정보 탭 맞춤형 기술정보-R&D 공용).
          * [프론트엔드 연동 · 정렬] 중요도(weight) 높은 순으로 보낸다 — 색이 목록 순서대로 칠해진다.
@@ -310,10 +325,19 @@ type InnovationGrowthReport = {
     creditFinance: {
         /** 기업신용등급 — CRI 등급 코드와 날짜 목록. 등급명 · 게이지 채움 비율은 화면이 CRI 등급표(cri-grades)에서 찾는다. */
         rating: {grade: string; details: readonly RatingGaugeDetail[]}
-        /** 재무비율진단 — 항목마다 다섯 단계 중 하나(weak 취약 · poor 미흡 · normal 보통 · good 양호 · excellent 우수). */
+        /**
+         * 재무비율진단 — 항목마다 다섯 단계 중 하나(weak 취약 · poor 미흡 · normal 보통 · good 양호 · excellent 우수).
+         * [프론트엔드 연동] 5항목 고정(매출액증가율 · 영업이익률 · 자기자본비율 · 총자본회전율 · 현금흐름 — 부문별 비교 축과 같다).
+         * 인쇄본은 이 다섯 지표 이름을 고정 문구로 늘 그리고 label 로 값을 찾는다 — 없는 지표는 단계 칸에 '-'.
+         */
         ratios: readonly RatingMatrixRow[]
         comparison: readonly {label: string; company: number; industry: number}[]
         years: readonly string[]
+        /**
+         * 최근 3개년 재무 현황 — values 는 years 와 같은 순서(백만원). 값이 없거나 0 이면 화면이 '-' 로 적는다.
+         * [프론트엔드 연동] 6항목 고정(총자산 · 자본총계 · 부채총계 · 매출액 · 영업이익 · 순이익). 인쇄본은 이 여섯 이름을
+         * 고정 문구로 늘 그리고 label 로 값을 찾는다 — 없는 항목 · 없는 연도 값은 '-'.
+         */
         statements: readonly {label: string; values: readonly number[]}[]
     }
     activity: {
@@ -593,8 +617,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {label: '산업통상부', value: 1, unit: '건'},
             {label: '보건복지부', value: 2, unit: '건'},
         ],
-        rndNote:
-            '* 상위 4개만 있으므로 상세 내용은 ‘기술혁신 > 정부 R&D 사업’ 페이지 참조 해주세요. (정보가 없을 경우 ‘-’ 표시)',
+        rndNote: '* 상위 4개만 있으므로 상세 내용은 ‘기술혁신 > 정부 R&D 사업’ 페이지 참조 해주세요.',
     },
     techIndex: {
         score: 73.8,
@@ -615,14 +638,14 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         },
         ratios: [
             {id: 'sales-growth', label: '매출액증가율', rating: 'poor'},
-            {id: 'operating-margin', label: '영업이익율', rating: 'normal'},
+            {id: 'operating-margin', label: '영업이익률', rating: 'normal'},
             {id: 'equity-ratio', label: '자기자본비율', rating: 'good'},
             {id: 'asset-turnover', label: '총자본회전율', rating: 'excellent'},
             {id: 'cash-flow', label: '현금흐름', rating: 'weak'},
         ],
         comparison: [
             {label: '매출액증가율', company: 80, industry: 60},
-            {label: '영업이익율', company: 65, industry: 55},
+            {label: '영업이익률', company: 65, industry: 55},
             {label: '자기자본비율', company: 70, industry: 60},
             {label: '총자본회전율', company: 55, industry: 50},
             {label: '현금흐름', company: 60, industry: 45},
@@ -661,7 +684,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         notice: '기술혁신정보는 국내 등록특허에 대한 AI 분석 결과에 기반하고 있습니다. 기술보증기금은 AI를 통해 귀사가 보유하고 있는 특허를 분석하여 ‘국가과학기술표준분류체계’에 따른 기술분야로 분류하고, 분류된 기술분야를 기준으로 다양한 기술혁신정보를 맞춤형으로 제공하고 있습니다. 기술혁신정보의 내용은 AI 기반으로 자동 생성된 것으로, AI 특성상 분석 결과 등에 일부 오류 또는 불완전한 정보가 포함될 수 있음을 유의하여 주시기 바랍니다.',
         holdings: {
             description:
-                '기술 보유현황은 귀사의 특허(기술)를 AI로 분석하고, 분석결과에 따라 보유 기술을 국가과학기술표준분류체계(중분류, 소분류)로 분류한 것입니다.',
+                '기술 보유현황은 귀사의 특허(기술)를 AI로 분석하고, 분석결과에 따라 보유 기술을 국가과학기술표준분류체계(중분류, 세부분야)로 분류한 것입니다.',
             middleCategory: [
                 {id: 'm1', label: '무선 통신·네트워크', percentage: 55, count: 24},
                 {id: 'm2', label: '정보 보호', percentage: 12, count: 5},
@@ -808,17 +831,17 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             ].map((item, index, items) => ({...item, color: donutColorsFor(items.length)[index]})),
         },
         competitors: [
-            {id: 'c1', label: '기업1', sales: 32.8, growthRate: 2.3},
-            {id: 'c2', label: '기업2', sales: 32.7, growthRate: -1.2},
-            {id: 'c3', label: '기업3', sales: 32.6, growthRate: 0.8},
-            {id: 'c4', label: '기업4', sales: 32.5, growthRate: 7.4},
-            {id: 'c5', label: '기업5', sales: 32.4, growthRate: 2.7},
+            {id: 'c1', label: '(주)비상', sales: 32.8, growthRate: 2.3},
+            {id: 'c2', label: '(주)이음', sales: 32.7, growthRate: -1.2},
+            {id: 'c3', label: '(주)하늘', sales: 32.6, growthRate: 0.8},
+            {id: 'c4', label: '(주)새론', sales: 32.5, growthRate: 7.4},
+            {id: 'c5', label: '(주)드림', sales: 32.4, growthRate: 2.7},
             {id: 'subject', label: '조회기업', sales: 32.3, growthRate: 5.2, tone: 'subject'},
-            {id: 'c6', label: '기업6', sales: 32.2, growthRate: 0.5},
-            {id: 'c7', label: '기업7', sales: 32.1, growthRate: 3.6},
-            {id: 'c8', label: '기업8', sales: 31.9, growthRate: 3.1},
-            {id: 'c9', label: '기업9', sales: 31.5, growthRate: -2.3},
-            {id: 'c10', label: '기업10', sales: 31.2, growthRate: -0.2},
+            {id: 'c6', label: '(주)아라', sales: 32.2, growthRate: 0.5},
+            {id: 'c7', label: '(주)온새미로', sales: 32.1, growthRate: 3.6},
+            {id: 'c8', label: '(주)누리', sales: 31.9, growthRate: 3.1},
+            {id: 'c9', label: '(주)솔빛', sales: 31.5, growthRate: -2.3},
+            {id: 'c10', label: '(주)바른', sales: 31.2, growthRate: -0.2},
             {id: 'average', label: '평균', sales: 32.2, growthRate: 2.1, tone: 'average'},
         ],
         growthLeaders: {
@@ -1065,15 +1088,17 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {date: '2025-10-15', chartLabel: '25.10월', grade: 'BBB0'},
         ],
         cashFlow: {
-            grade: 'CR-6',
+            grade: 'CF6',
+            details: [
+                {label: '평가일자', value: '2022-06-15'},
+                {label: '결산일자', value: '2024-08-04'},
+            ],
             // [프론트엔드 연동 · 정렬] 순서 상관없음 — 화면이 평가일자 최신순으로 정렬한다.
             history: [
-                {date: '2024-11-04', grade: 'CR-3'},
-                {date: '2023-09-03', grade: 'CR-4'},
-                {date: '2022-09-03', grade: 'CR-5'},
+                {date: '2024-11-04', chartLabel: '24.11월', grade: 'CF3'},
+                {date: '2023-09-03', chartLabel: '23.09월', grade: 'CF4'},
+                {date: '2022-09-03', chartLabel: '22.09월', grade: 'CF5'},
             ],
-            summary:
-                '현금흐름 창출능력이 보통이상이나 장래 경제 여건 및 환경악화에 따라 다소나마 현금흐름 저하 가능성이 존재함',
         },
         creditInfo: [
             {
@@ -1093,9 +1118,10 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {
                 id: 'suspension',
                 title: '당좌거래정지정보',
-                status: '해당없음',
+                // [케이스 확인용 값] 비공개 열람 케이스(?case=)에서 가림이 보이도록 넣은 행 — 연동 후 API 값으로 바뀐다.
+                status: '정지',
                 columns: ['발생일자', '종료일자', '취소일자'],
-                rows: [],
+                rows: [['2023-03-15', '2023-09-15', '-']],
             },
             {
                 id: 'short-overdue',
@@ -1107,16 +1133,18 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {
                 id: 'trade-overdue',
                 title: '상거래연체정보',
-                status: '해당없음',
+                // [케이스 확인용 값] 비공개 열람 케이스(?case=)에서 가림이 보이도록 넣은 행 — 연동 후 API 값으로 바뀐다.
+                status: '등록',
                 columns: ['등록정보', '등록사유', '발생일자', '해제일자', '연체금액', '등록기관'],
-                rows: [],
+                rows: [['등록', '대금 미지급', '2024-02-10', '-', '3,500,000', '한국신용정보원']],
             },
             {
                 id: 'public-arrears',
                 title: '공공체납정보',
-                status: '해당없음',
+                // [케이스 확인용 값] 비공개 열람 케이스(?case=)에서 가림이 보이도록 넣은 행 — 연동 후 API 값으로 바뀐다.
+                status: '등록',
                 columns: ['등록정보', '등록사유', '발생일자', '해제일자', '연체금액', '등록기관'],
-                rows: [],
+                rows: [['등록', '국세 체납', '2024-05-20', '-', '850,000', '국세청']],
             },
         ],
         ratioYears: ['2022년', '2023년', '2024년'],
@@ -1269,6 +1297,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {id: 'special-mortgage', label: '특수저당', amount: 3862, color: 'var(--ds-donut-4)'},
             {id: 'guarantee', label: '보증', amount: 2850, color: 'var(--ds-donut-6)'},
         ],
+        collateralYear: '2024년',
     },
     techIndexDetail: {
         standard: {
@@ -1569,6 +1598,11 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {name: '◇◇솔루션', shares: [58.22, 59.33, 59.33], grade: 'BBB0', evaluationDate: '2025-01-02'},
             {name: '□□산업(주)', shares: [41.05, 43.2, 44.9], grade: 'B-', evaluationDate: '2025-01-02'},
             {name: '☆☆네트웍스', shares: [12.4, 11.87, 10.02], grade: 'CCC0', evaluationDate: '2025-01-02'},
+            {name: '▽▽전자(주)', shares: [9.85, 9.4, 9.12], grade: 'BB+', evaluationDate: '2024-06-10'},
+            {name: '◎◎시스템', shares: [8.3, 8.95, 8.47], grade: 'BBB-', evaluationDate: '2024-09-02'},
+            {name: '◁◁정밀(주)', shares: [6.72, 6.1, 6.85], grade: 'BB0', evaluationDate: '2025-01-02'},
+            {name: '▷▷에너지', shares: [5.4, 5.88, 5.21], grade: 'A-', evaluationDate: '2024-03-15'},
+            {name: '◆◆물산(주)', shares: [3.15, 3.62, 3.94], grade: 'B+', evaluationDate: '2025-01-02'},
         ],
         suppliers: [
             {name: '○○부품(주)', shares: [35.11, 36.12, 36.12], grade: 'BBB+', evaluationDate: '2024-01-02'},
@@ -1576,9 +1610,39 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             {name: '◇◇전자', shares: [18.22, 19.33, 16.12], grade: 'BBB0', evaluationDate: '2025-01-02'},
             {name: '□□물산', shares: [9.4, 8.7, 8.1], grade: 'B-', evaluationDate: '2025-01-02'},
             {name: '☆☆로지스', shares: [5.02, 4.8, 4.35], grade: '', evaluationDate: '2025-01-02'},
+            {name: '▽▽케미칼', shares: [3.88, 3.65, 3.92], grade: 'BB+', evaluationDate: '2024-06-10'},
+            {name: '◎◎금속(주)', shares: [3.2, 3.41, 3.18], grade: 'BBB-', evaluationDate: '2024-09-02'},
+            {name: '◁◁기계', shares: [2.75, 2.9, 3.04], grade: 'BB0', evaluationDate: '2025-01-02'},
+            {name: '▷▷포장(주)', shares: [2.1, 2.32, 2.27], grade: 'A-', evaluationDate: '2024-03-15'},
+            {name: '◆◆상사', shares: [1.45, 1.38, 1.52], grade: '', evaluationDate: '2025-01-02'},
         ],
     },
 }
+
+// 기준년도 — 늘 3개년. 받은 연도 중 가장 최근 연도에서 거슬러 3개년(받은 연도가 없으면 fallbackYears 의 마지막 3개).
+// 인적자원 현황 · 에너지 사용 현황이 쓴다 — 받지 못한 연도는 화면 · 인쇄본이 값을 '-' 로 적는다.
+// [프론트엔드 연동] 연도는 '2024년' 처럼 숫자 + '년' 으로 보낸다.
+const RECENT_YEAR_COUNT = 3
+// 연도 글자의 숫자 — '2024년' · '2024' 모두 2024. 같은 연도인지 견줄 때 쓴다.
+const yearNumber = (year: string) => Number.parseInt(year, 10)
+const isSameYear = (a: string, b: string) => yearNumber(a) === yearNumber(b)
+const getRecentYears = (years: readonly string[], fallbackYears: readonly string[] = []): string[] => {
+    const latest = Math.max(...years.map(yearNumber).filter(Number.isFinite))
+    return Number.isFinite(latest)
+        ? Array.from({length: RECENT_YEAR_COUNT}, (_, index) => `${latest - (RECENT_YEAR_COUNT - 1 - index)}년`)
+        : fallbackYears.slice(-RECENT_YEAR_COUNT)
+}
+
+// 인적자원 현황 — 기준년도 3개년 줄. 받지 못한 연도는 row 가 null 이다.
+type HumanResourceRow = InnovationActivityDetail['humanResources'][number]
+const getHumanResourceYearRows = (
+    rows: readonly HumanResourceRow[],
+    fallbackYears: readonly string[],
+): {year: string; row: HumanResourceRow | null}[] =>
+    getRecentYears(
+        rows.map((row) => row.year),
+        fallbackYears,
+    ).map((year) => ({year, row: rows.find((row) => isSameYear(row.year, year)) ?? null}))
 
 // [퍼블리싱 전용] 보고서 조회(목업) — 어느 보고서 id 로 열어도 같은 목업을 돌려준다.
 // [프론트엔드 연동] reportId 로 보고서를 조회하는 API 로 바꾼다. 없는 보고서면 null 을 돌려주면 화면이 404(notFound)로 넘긴다.
@@ -1625,6 +1689,9 @@ const redactForViewerCase = (report: InnovationGrowthReport): InnovationGrowthRe
 // ── 목업 끝 ──
 
 export {
+    getHumanResourceYearRows,
+    getRecentYears,
+    isSameYear,
     getInnovationGrowthReport,
     innovationReportPath,
     withPreviewCase,
