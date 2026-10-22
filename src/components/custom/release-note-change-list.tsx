@@ -1,6 +1,7 @@
 import {ExternalLink} from 'lucide-react'
 import type {
     ReleaseNoteChange as ReleaseNoteChangeValue,
+    ReleaseNoteGroup as ReleaseNoteGroupValue,
     ReleaseNoteHandoff as ReleaseNoteHandoffValue,
 } from '@/content/publishing-guide'
 import {Badge} from '@/components/ui/badge'
@@ -158,7 +159,9 @@ const ReleaseNoteHandoff = ({change}: {change: ReleaseNoteHandoffValue}) => {
 }
 
 const isReleaseNoteHandoff = (change: ReleaseNoteChangeValue): change is ReleaseNoteHandoffValue =>
-    typeof change !== 'string'
+    typeof change !== 'string' && change.type === 'handoff'
+const isReleaseNoteGroup = (change: ReleaseNoteChangeValue): change is ReleaseNoteGroupValue =>
+    typeof change !== 'string' && change.type === 'group'
 
 const createOverwriteChange = (title: string, targets: string[]): ReleaseNoteHandoffValue => ({
     type: 'handoff',
@@ -202,27 +205,69 @@ const normalizeReleaseNoteChange = (change: ReleaseNoteChangeValue): ReleaseNote
     return [createOverwriteChange('변경사항 반영 대상', targets)]
 }
 
-const ReleaseNoteChangeList = ({changes}: {changes: readonly ReleaseNoteChangeValue[]}) => (
+// 변경 목록 — 일반 문장 · 전달 카드를 초안에 적은 순서대로 그린다(묶음 머리는 바깥에서 이미 걸러 낸다).
+const ReleaseNoteItems = ({changes}: {changes: readonly ReleaseNoteChangeValue[]}) => (
     <ul className="flex list-none flex-col gap-2">
-        {/* 카드는 초안에 적은 순서 그대로 보인다 — 초안은 프론트엔드가 위에서부터 차례로 적용할 작업 순서로 쓴다. */}
-        {changes.flatMap(normalizeReleaseNoteChange).map((displayChange, changeIndex) => {
-            const key =
-                typeof displayChange === 'string' ? displayChange : `${displayChange.mode}-${displayChange.title}`
+        {changes.map((displayChange, changeIndex) => {
+            if (typeof displayChange === 'string') {
+                return (
+                    <li key={`${displayChange}-${changeIndex}`} className="flex">
+                        <ListMarker />
+                        <ReleaseNoteChange change={displayChange} />
+                    </li>
+                )
+            }
+            if (!isReleaseNoteHandoff(displayChange)) return null
 
             return (
-                <li key={`${key}-${changeIndex}`} className={isReleaseNoteHandoff(displayChange) ? '' : 'flex'}>
-                    {isReleaseNoteHandoff(displayChange) ? (
-                        <ReleaseNoteHandoff change={displayChange} />
-                    ) : (
-                        <>
-                            <ListMarker />
-                            <ReleaseNoteChange change={displayChange} />
-                        </>
-                    )}
+                <li key={`${displayChange.mode}-${displayChange.title}-${changeIndex}`}>
+                    <ReleaseNoteHandoff change={displayChange} />
                 </li>
             )
         })}
     </ul>
 )
+
+// 작업 묶음으로 나눈다 — 묶음 머리(group) 뒤로 다음 머리 전까지가 한 작업이다. 첫 머리 앞 항목은 제목 없는 묶음.
+const toReleaseNoteSections = (changes: readonly ReleaseNoteChangeValue[]) =>
+    changes.reduce<{title?: string; items: ReleaseNoteChangeValue[]}[]>((sections, change) => {
+        if (isReleaseNoteGroup(change)) return [...sections, {title: change.title, items: []}]
+        const last = sections[sections.length - 1]
+        if (!last) return [{items: [change]}]
+        return [...sections.slice(0, -1), {...last, items: [...last.items, change]}]
+    }, [])
+
+const ReleaseNoteChangeList = ({changes}: {changes: readonly ReleaseNoteChangeValue[]}) => {
+    // 카드는 초안에 적은 순서 그대로 보인다 — 초안은 프론트엔드가 위에서부터 차례로 적용할 작업 순서로 쓴다.
+    const sections = toReleaseNoteSections(changes.flatMap(normalizeReleaseNoteChange))
+
+    return (
+        <div className="flex flex-col gap-5">
+            {sections.map((section, sectionIndex) =>
+                section.title ? (
+                    // 작업 묶음 — 테두리 상자 하나에 작업 이름(머리) + 그 작업의 카드들. 머리 아래 선으로 이름과 카드를 가른다.
+                    <section
+                        key={`${section.title}-${sectionIndex}`}
+                        aria-label={section.title}
+                        className="border-border bg-card/40 flex min-w-0 flex-col gap-3 rounded-md border p-3 sm:p-4"
+                    >
+                        <header className="border-border flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1 border-b pb-3">
+                            <Badge variant="outline" color="info" shape="round" size="sm">
+                                작업
+                            </Badge>
+                            <h4 className="typo-title-m-bold text-foreground min-w-0 break-keep">{section.title}</h4>
+                            <span className="typo-body-m-regular text-foreground-subtle">
+                                카드 {section.items.length}개
+                            </span>
+                        </header>
+                        <ReleaseNoteItems changes={section.items} />
+                    </section>
+                ) : (
+                    <ReleaseNoteItems key={`intro-${sectionIndex}`} changes={section.items} />
+                ),
+            )}
+        </div>
+    )
+}
 
 export {ReleaseNoteChangeList}

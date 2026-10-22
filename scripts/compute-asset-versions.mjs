@@ -27,6 +27,7 @@ const EMPTY_RELEASE_NOTES_DRAFT = `# 다음 릴리스 변경사항
 frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 프로젝트 서비스 페이지가 아닌 퍼블리싱 가이드 관련 파일은 [덮어쓰기]로 분류하세요.
 지워야 하는 파일·화면은 [삭제]로 따로 적으세요.
+같은 작업의 카드는 # 작업: 작업 이름 아래에 모으고, 그 아래에서 ## 구분자부터 다시 씁니다.
 
 ## [Diff 확인]
 
@@ -166,6 +167,15 @@ const parseDraftChanges = (draft) => {
     }
 
     for (const line of lines) {
+        // 작업 묶음 — '# 작업: 이름' 아래 카드들을 한 작업으로 묶어 보인다. 묶음마다 '## [종류]' 로 다시 시작한다.
+        const groupMatch = /^#\s+작업:\s*(.+)$/.exec(line.trim())
+        if (groupMatch) {
+            flushHandoff()
+            handoffMode = undefined
+            changes.push({type: 'group', title: groupMatch[1].trim()})
+            continue
+        }
+
         const modeMatch = /^##\s+\[(Diff 확인|신규 추가|덮어쓰기|삭제)\]\s*$/.exec(line.trim())
         if (modeMatch) {
             flushHandoff()
