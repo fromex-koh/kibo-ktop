@@ -1149,7 +1149,7 @@ const ActivityTabSkeleton = () => (
 // Tech-Index 탭 스켈레톤 — 실제 탭(innovation-growth-report-tech-index.tsx)과 같은 구획 · 카드 짜임(PC 폭 전용).
 const SKELETON_DESCRIPTION_COUNT = 3
 const SKELETON_CAPABILITIES = ['인프라', '투입', '활동', '성과'] as const
-const SKELETON_INDICATORS = ['역량·투자 지표', '특허·기술 지표'] as const
+const SKELETON_INDICATORS = ['인프라·투입 부문', '활동·성과 부문'] as const
 
 // 안내 상자 자리 — 실제 NoticeBox 와 같은 여백 · 줄 높이에 줄 수만큼 막대를 둔다.
 const SkeletonNoticeBox = ({lines}: {lines: number}) => (
@@ -1209,7 +1209,7 @@ const TechIndexTabSkeleton = () => (
             </Card>
         </section>
         <section aria-labelledby="ig-tech-index-skeleton-capability" className="flex flex-col gap-4">
-            <SectionTitle id="ig-tech-index-skeleton-capability" title="4대 혁신역량 점수" />
+            <SectionTitle id="ig-tech-index-skeleton-capability" title="4대 혁신역량 부분별 비교" />
             <div className="grid grid-cols-4 gap-6">
                 {SKELETON_CAPABILITIES.map((label) => (
                     <div

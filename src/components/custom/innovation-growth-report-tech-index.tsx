@@ -16,7 +16,7 @@ import {
 } from '@/content/service/k-bigx-innovation-report'
 
 // K-BIGx 기업혁신성장 보고서 · Tech-Index 탭 본문 — 지수설명 → 혁신성장역량지수(점수 게이지 · 표준분포 비교 · 기업 유형별 비교) →
-// 4대 혁신역량 점수 → 기업 유형별 4대 혁신역량 비교 → 세부지표별 상대비교분석.
+// 4대 혁신역량 부분별 비교 → 기업 유형별 4대 혁신역량 비교 → 세부지표별 상대비교분석.
 // 보고서 머리 · 탭 줄 · 탭 제목 띠는 innovation-growth-report-document.tsx 가 그린다.
 // 반응형 없음 — PC 화면만 그린다(문서 최소 폭 1200, 그보다 좁은 창에서만 가로 스크롤).
 //
@@ -30,7 +30,7 @@ const NO_SCORE_TEXT = '평가 점수가 없습니다.'
 const SUBJECT_BAR_COLOR = 'var(--ds-report-series-3)'
 const TYPE_BAR_COLOR = 'var(--ds-report-series-2)'
 const AVERAGE_BAR_COLOR = 'var(--ds-muted)'
-// 4대 혁신역량 점수 카드의 신청기업 막대 색 — 역량마다 고정(점수 상태와는 무관하다). [프론트엔드 연동] 역량 id 는 infra · input · activity · output 으로 보낸다 — 다른 id 면 TYPE_BAR_COLOR(report-series-2).
+// 4대 혁신역량 부분별 비교 카드의 신청기업 막대 색 — 역량마다 고정(점수 상태와는 무관하다). [프론트엔드 연동] 역량 id 는 infra · input · activity · output 으로 보낸다 — 다른 id 면 TYPE_BAR_COLOR(report-series-2).
 const CAPABILITY_BAR_COLORS: Record<string, string> = {
     infra: 'var(--ds-report-series-4)',
     input: 'var(--ds-report-series-2)',
@@ -38,7 +38,7 @@ const CAPABILITY_BAR_COLORS: Record<string, string> = {
     output: 'var(--ds-report-series-6)',
 }
 
-// 점수 만점 — 이 탭의 점수 막대(기업 유형별 비교 · 4대 혁신역량 점수 · 기업 유형별 4대 혁신역량 비교) 공통 눈금.
+// 점수 만점 — 이 탭의 점수 막대(기업 유형별 비교 · 4대 혁신역량 부분별 비교 · 기업 유형별 4대 혁신역량 비교) 공통 눈금.
 const SCORE_MAX = 100
 // 만점 막대가 닿는 칸 높이 비율 — 값 글자가 한 줄뿐이라 ColumnChart 기본 비율보다 높인다.
 const SCORE_MAX_VALUE_RATIO = 0.9
@@ -73,7 +73,7 @@ const SummaryText = ({parts}: {parts: readonly {text: string; isStrong?: boolean
     </>
 )
 
-// 4대 혁신역량 점수 카드 — 신청기업(역량 색) · 전체기업 막대 아래에 역량 이름. 이름(h4)이 카드 section 의 이름이 된다.
+// 4대 혁신역량 부분별 비교 카드 — 신청기업(역량 색) · 전체기업 막대 아래에 역량 이름. 이름(h4)이 카드 section 의 이름이 된다.
 // 차트 등장 묶음(chart-reveal.tsx) — 같은 줄의 카드는 차례 없이 동시에 움직인다. 2열 그리드는 줄 번호로 묶는다.
 const CAPABILITY_REVEAL_GROUP = 'tech-index-capability'
 const GRID_COLUMNS = 2
@@ -222,9 +222,9 @@ const InnovationGrowthReportTechIndex = ({
                 </Card>
             </section>
 
-            {/* 4대 혁신역량 점수 */}
+            {/* 4대 혁신역량 부분별 비교 */}
             <section aria-labelledby="ig-tech-index-capability" className="flex flex-col gap-4">
-                <SectionTitle id="ig-tech-index-capability" title="4대 혁신역량 점수" />
+                <SectionTitle id="ig-tech-index-capability" title="4대 혁신역량 부분별 비교" />
                 <div className="grid grid-cols-4 gap-6">
                     {detail.capabilities.map((capability) => (
                         <CapabilityScoreCard key={capability.id} capability={capability} />

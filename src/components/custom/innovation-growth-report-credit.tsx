@@ -14,12 +14,7 @@ import {
 import {LineChart} from '@/components/custom/line-chart'
 import {PercentageDonutChart} from '@/components/custom/percentage-donut-chart'
 import {RatioStackBar} from '@/components/custom/ratio-stack-bar'
-import {
-    PRIVATE_PLACEHOLDER,
-    PRIVATE_SHORT_LABEL,
-    PrivateCell,
-    PrivateContent,
-} from '@/components/composite/private-content'
+import {PRIVATE_PLACEHOLDER, PRIVATE_SHORT_LABEL, PrivateContent} from '@/components/composite/private-content'
 import {SemicircleRatingGauge, type SemicircleRatingData} from '@/components/custom/semicircle-rating-gauge'
 import {cn} from '@/lib/utils'
 import {CASH_FLOW_GRADES_LOW_FIRST, cashFlowLevel, findCashFlowGrade} from '@/content/service/cash-flow-grades'
@@ -62,7 +57,7 @@ const BORROWING_TREND_COLOR = 'var(--ds-report-series-3)'
 const CREDIT_LINE_STYLE = REPORT_LINE_STYLES[0]
 const COLLATERAL_LINE_STYLE = REPORT_LINE_STYLES[3]
 
-// [프론트엔드 연동 · 정렬] 기획 메모 '최신순으로 정렬' — 이전평가이력 · 현금흐름등급 표는 평가일자 최근 것부터 그린다.
+// [프론트엔드 연동 · 정렬] 기획 메모 '최신순으로 정렬' — 이전평가이력(평가일자) · 현금흐름등급(결산일자) 표는 날짜 최근 것부터 그린다.
 // 받은 순서와 무관하게 화면이 날짜(YYYY-MM-DD 문자열)로 정렬한다.
 const byLatestDate = (a: {date: string}, b: {date: string}) => b.date.localeCompare(a.date)
 
@@ -175,8 +170,12 @@ const BorrowingTable = ({borrowings}: {borrowings: InnovationCreditDetail['borro
     )
 }
 
-// 기업신용정보 표 하나 — 케이스에 따라 표 전체(비공개 · 자리 표시 값) 또는 연체금액 열만 가린다.
-const OVERDUE_AMOUNT_COLUMN = '연체금액'
+// 기업신용정보 표 하나 — 인쇄본(kbigx-print-credit.tsx CreditInfoBlock)과 같은 규칙.
+//   · 비공개 표(케이스의 hiddenInfoTables): 표 머리는 그대로, 값 줄은 '비공개' 한 줄, 제목 옆 상태 글은 뺀다.
+//   · 상태가 '해당없음' 인 표: 비공개 케이스여도 상태 글 + '해당사항 없음' 줄을 그대로 보인다.
+const CREDIT_STATUS_NONE = '해당없음'
+const isCreditRowPrivate = (table: InnovationCreditInfoTable, visibility: InnovationCreditVisibility) =>
+    table.status !== CREDIT_STATUS_NONE && visibility.hiddenInfoTables.includes(table.id)
 const CreditInfoTable = ({
     table,
     visibility,
@@ -184,59 +183,25 @@ const CreditInfoTable = ({
     table: InnovationCreditInfoTable
     visibility: InnovationCreditVisibility
 }) => {
-    // 표 전체 비공개 — 실제 줄 대신 자리 표시 한 줄을 흐리게 깔고 '비공개' 를 띄운다.
-    if (visibility.hiddenInfoTables.includes(table.id)) {
-        return (
-            <PrivateContent label={PRIVATE_SHORT_LABEL} className="min-h-0">
-                <ReportTable
-                    caption={`${table.title} — 비공개`}
-                    minWidthClassName="min-w-0"
-                    columns={table.columns.map((column, index) => ({
-                        key: String(index),
-                        label: column,
-                        isNoWrap: true,
-                    }))}
-                    rows={[
-                        {
-                            id: `${table.id}-placeholder`,
-                            cells: Object.fromEntries(
-                                table.columns.map((_, index) => [String(index), PRIVATE_PLACEHOLDER.cell]),
-                            ),
-                        },
-                    ]}
-                />
-            </PrivateContent>
-        )
-    }
-    // 연체금액 열만 비공개 — 그 열의 머리 · 값 칸을 PrivateCell 로 가린다(값은 자리 표시). 안내는 첫 값 칸에만.
-    const hiddenColumnIndex = visibility.hiddenAmountTables.includes(table.id)
-        ? table.columns.indexOf(OVERDUE_AMOUNT_COLUMN)
-        : -1
+    const isRowPrivate = isCreditRowPrivate(table, visibility)
     return (
         <ReportTable
-            caption={`${table.title} — ${table.status}`}
+            caption={`${table.title} — ${isRowPrivate ? PRIVATE_SHORT_LABEL : table.status}`}
             minWidthClassName="min-w-0"
             columns={table.columns.map((column, index) => ({
                 key: String(index),
-                label: index === hiddenColumnIndex ? <PrivateCell>{column}</PrivateCell> : column,
+                label: column,
                 isNoWrap: true,
             }))}
-            rows={table.rows.map((row, rowIndex) => ({
-                id: `${table.id}-${rowIndex}`,
-                cells: Object.fromEntries(
-                    row.map((value, index) => [
-                        String(index),
-                        index === hiddenColumnIndex ? (
-                            <PrivateCell label={rowIndex === 0 ? PRIVATE_SHORT_LABEL : undefined}>
-                                {PRIVATE_PLACEHOLDER.amount}
-                            </PrivateCell>
-                        ) : (
-                            value || EMPTY_VALUE
-                        ),
-                    ]),
-                ),
-            }))}
-            emptyText={EMPTY_TABLE_TEXT}
+            rows={
+                isRowPrivate || table.status === CREDIT_STATUS_NONE
+                    ? []
+                    : table.rows.map((row, rowIndex) => ({
+                          id: `${table.id}-${rowIndex}`,
+                          cells: Object.fromEntries(row.map((value, index) => [String(index), value || EMPTY_VALUE])),
+                      }))
+            }
+            emptyText={isRowPrivate ? PRIVATE_SHORT_LABEL : EMPTY_TABLE_TEXT}
         />
     )
 }
@@ -466,7 +431,7 @@ const InnovationGrowthReportCredit = ({
                             minWidthClassName="min-w-0"
                             columns={[
                                 {key: 'grade', label: '현금흐름등급'},
-                                {key: 'date', label: '평가일자'},
+                                {key: 'date', label: '결산일자'},
                             ]}
                             rows={cashFlowHistory.map((item) => ({
                                 id: item.date,
@@ -485,7 +450,8 @@ const InnovationGrowthReportCredit = ({
                                     key={table.id}
                                     title={table.title}
                                     titleClassName="typo-body-l-medium"
-                                    status={table.status}
+                                    // 비공개 표는 상태 글을 뺀다(값 줄과 함께 가린다).
+                                    status={isCreditRowPrivate(table, visibility) ? undefined : table.status}
                                 >
                                     <CreditInfoTable table={table} visibility={visibility} />
                                 </SubBlock>
