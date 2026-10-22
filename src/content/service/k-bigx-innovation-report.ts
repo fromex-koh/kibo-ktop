@@ -21,7 +21,7 @@ import type {Viewport} from 'next'
 // │ 3. 케이스에서 제공하지 않는 값은 응답에서 뺀다(빈 배열 · 빈 칸) — 화면은 그 자리를 자리 표시 값으로 가린다.
 // │    실제 값을 내려 주면 가려도 페이지 데이터에 남아 개발자 도구로 읽힌다. 뺄 범위는 redactForViewerCase 가 참고 구현이다.
 // │ 4. [퍼블리싱 확인용] 코드를 지운다.
-// │    - withPreviewCase · redactForViewerCase 함수(이 파일)와 그 호출(components/custom/innovation-growth-report-page.tsx).
+// │    - withPreviewCase · withPreviewCaseSample · redactForViewerCase 함수(이 파일)와 그 호출(components/custom/innovation-growth-report-page.tsx · kbigx-print-page.tsx).
 // │    - 목업 구역 전체(MOCK_DELAY_MS · MOCK_INNOVATION_GROWTH_REPORT).
 // │ 5. 문구(INNOVATION_REPORT_*) · 점수 구간(TECH_INDEX_GRADES) · 케이스 정의는 그대로 쓴다.
 // │ 참고: 점수에 따른 상태 · 색 · 칸 수, 비율, 합계 같은 파생 값은 화면이 계산한다 — 원래 값만 내려 준다.
@@ -101,14 +101,16 @@ const innovationReportPath = (userType: InnovationReportUserType) =>
 
 // 탭 쿼리 이름 — 보고서 주소의 ?tab=<id> 로 연다(없으면 진단브리핑).
 const INNOVATION_REPORT_TAB_QUERY = 'tab'
-// 보고서 열람 케이스 — 신용/재무정보 탭에서 케이스마다 제공되지 않는 항목을 비공개(PrivateContent)로 가린다.
+// 보고서 열람 케이스 — 신용/재무정보 탭에서 케이스마다 제공되지 않는 항목을 비공개로 가린다(기업신용정보 표는 값 줄을 '비공개' 한 줄,
+// 차입금 현황 카드는 흐림(PrivateContent)).
 // 근거: 260921 신용재무정보 기관별 노출 여부_FN.xlsx.
 // [프론트엔드 연동] 케이스는 보고서 데이터(report.viewerCase)로 내려 준다 — 로그인 사용자 · 조회 대상 관계로 백엔드가 정한다.
-// 화면은 이 값만 읽으므로 고칠 필요가 없다. 미노출 항목의 실제 값은 API 가 내려 주지 않는다(화면은 자리 표시 값으로 가린다).
+// 화면은 이 값만 읽으므로 고칠 필요가 없다. 미노출 항목의 실제 값은 API 가 내려 주지 않는다 — 기업신용정보 표는 rows 를 빈 배열로,
+// status 는 그대로 보낸다(status 가 '해당없음' 이면 가리지 않고 '해당사항 없음' 으로 보인다).
 // [퍼블리싱 확인용] 주소의 ?case=<id> 가 있으면 viewerCase 를 덮어써 케이스를 바꿔 본다(withPreviewCase) — 연동 후 지운다.
 //   self           ① 자기기업 / 금융기관 — 전 항목 노출
-//   partner-corp   ② 타기업 · 협약기관(법인) — 단기연체 · 상거래연체 · 공공체납의 연체금액 열, 차입금 현황 카드 3개 미노출
-//   partner-person ③ 타기업 · 협약기관(개인) — 법인등기 · 당좌거래정지 · 단기연체 · 상거래연체 · 공공체납 표 전체, 차입금 현황 카드 3개 미노출
+//   partner-corp   ② 타기업 · 협약기관(법인) — 단기연체 · 상거래연체 · 공공체납 표, 차입금 현황 카드 3개 미노출
+//   partner-person ③ 타기업 · 협약기관(개인) — 법인등기 · 당좌거래정지 · 단기연체 · 상거래연체 · 공공체납 표, 차입금 현황 카드 3개 미노출
 const INNOVATION_REPORT_CASE_QUERY = 'case'
 const INNOVATION_REPORT_CASES = ['self', 'partner-corp', 'partner-person'] as const
 type InnovationReportCase = (typeof INNOVATION_REPORT_CASES)[number]
@@ -117,20 +119,17 @@ const isInnovationReportCase = (value: unknown): value is InnovationReportCase =
 
 // 케이스별 신용/재무정보 미노출 범위.
 type InnovationCreditVisibility = {
-    /** 표 전체를 가릴 기업신용정보 표 id. */
+    /** 가릴 기업신용정보 표 id — 표 머리만 남기고 값 줄을 '비공개' 한 줄로, 제목 옆 상태는 뺀다. */
     hiddenInfoTables: readonly string[]
-    /** 연체금액 열만 가릴 기업신용정보 표 id. */
-    hiddenAmountTables: readonly string[]
     /** 차입금 현황(기관별 비중 · 신용/담보 비중 · 담보 현황) 카드를 가린다. */
     isBorrowingStatusHidden: boolean
 }
 const OVERDUE_INFO_TABLES = ['short-overdue', 'trade-overdue', 'public-arrears'] as const
 const INNOVATION_CREDIT_VISIBILITY: Record<InnovationReportCase, InnovationCreditVisibility> = {
-    self: {hiddenInfoTables: [], hiddenAmountTables: [], isBorrowingStatusHidden: false},
-    'partner-corp': {hiddenInfoTables: [], hiddenAmountTables: OVERDUE_INFO_TABLES, isBorrowingStatusHidden: true},
+    self: {hiddenInfoTables: [], isBorrowingStatusHidden: false},
+    'partner-corp': {hiddenInfoTables: OVERDUE_INFO_TABLES, isBorrowingStatusHidden: true},
     'partner-person': {
         hiddenInfoTables: ['registry', 'suspension', ...OVERDUE_INFO_TABLES],
-        hiddenAmountTables: [],
         isBorrowingStatusHidden: true,
     },
 }
@@ -174,13 +173,13 @@ type InnovationCreditDetail = {
          */
         grade: string
         /**
-         * 현재 현금흐름등급의 평가일자 · 결산일자 — 인쇄본 진단브리핑 현금흐름등급 박스(등급 코드 아래 목록).
-         * 값이 비면 화면이 '-' 로 적는다.
+         * 현재 현금흐름등급의 결산일자 — 인쇄본의 진단브리핑 현금흐름등급 박스 · 신용/재무정보 현금흐름등급(등급 코드 아래)에 보인다.
+         * 평가일자는 보이지 않으므로 넣지 않는다(기업신용등급은 평가일자 · 결산일자 둘 다). 값이 비면 '-'.
          */
         details: readonly RatingGaugeDetail[]
         /**
-         * 현금흐름등급 평가이력. chartLabel 은 인쇄본 평가이력 그래프 아래 시점(예: 24.11월).
-         * [프론트엔드 연동 · 정렬] 화면이 평가일자로 정렬해 그리므로(표는 최신순, 그래프는 시간순) 보내는 순서는 상관없다.
+         * 현금흐름등급 평가이력. date 는 결산일자(표 열 이름 '결산일자'), chartLabel 은 인쇄본 평가이력 그래프 아래 시점(예: 24.11월).
+         * [프론트엔드 연동 · 정렬] 화면이 date 로 정렬해 그리므로(표는 최신순, 그래프는 시간순) 보내는 순서는 상관없다.
          */
         history: readonly {date: string; chartLabel: string; grade: string}[]
     }
@@ -1089,10 +1088,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         ],
         cashFlow: {
             grade: 'CF6',
-            details: [
-                {label: '평가일자', value: '2022-06-15'},
-                {label: '결산일자', value: '2024-08-04'},
-            ],
+            details: [{label: '결산일자', value: '2024-08-04'}],
             // [프론트엔드 연동 · 정렬] 순서 상관없음 — 화면이 평가일자 최신순으로 정렬한다.
             history: [
                 {date: '2024-11-04', chartLabel: '24.11월', grade: 'CF3'},
@@ -1379,7 +1375,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
         indicators: [
             {
                 id: 'capability-investment',
-                title: '역량·투자 지표',
+                title: '인프라·투입 부문',
                 items: [
                     {label: '기술인력역량', company: 94.3, average: 43},
                     {label: '무형자산', company: 85.8, average: 43},
@@ -1391,7 +1387,7 @@ const MOCK_INNOVATION_GROWTH_REPORT: InnovationGrowthReport = {
             },
             {
                 id: 'patent-technology',
-                title: '특허·기술 지표',
+                title: '활동·성과 부문',
                 items: [
                     {label: '기술개발상용화', company: 80, average: 43},
                     {label: '특허등록', company: 66.7, average: 43},
@@ -1656,7 +1652,29 @@ const getInnovationGrowthReport = async (reportId?: string): Promise<InnovationG
 
 // [퍼블리싱 확인용] 주소의 ?case= 로 열람 케이스를 덮어써 본다. 값이 케이스가 아니면 받은 그대로 둔다. 연동 후 이 함수와 호출을 지운다.
 const withPreviewCase = (report: InnovationGrowthReport, previewCase: unknown): InnovationGrowthReport =>
-    isInnovationReportCase(previewCase) ? redactForViewerCase({...report, viewerCase: previewCase}) : report
+    isInnovationReportCase(previewCase)
+        ? withPreviewCaseSample(redactForViewerCase({...report, viewerCase: previewCase}))
+        : report
+
+// [퍼블리싱 확인용] 케이스별 확인 화면의 기업신용정보 표 상태 — 케이스마다 보여 줄 모양을 고정한다(목업 값만 바꾼다).
+//   partner-corp: 당좌거래정지정보를 '해당없음'(배지 [해당없음] + '해당사항 없음' 줄)으로 둬 비공개 표와 나란히 본다.
+//   partner-person: 법인등기정보를 '해당없음' 으로 둬 같은 방식으로 본다.
+const PREVIEW_CASE_NONE_TABLES: Partial<Record<InnovationReportCase, readonly string[]>> = {
+    'partner-corp': ['suspension'],
+    'partner-person': ['registry'],
+}
+const withPreviewCaseSample = (report: InnovationGrowthReport): InnovationGrowthReport => {
+    const noneTables = PREVIEW_CASE_NONE_TABLES[report.viewerCase] ?? []
+    return {
+        ...report,
+        creditDetail: {
+            ...report.creditDetail,
+            creditInfo: report.creditDetail.creditInfo.map((table) =>
+                noneTables.includes(table.id) ? {...table, status: '해당없음', rows: []} : table,
+            ),
+        },
+    }
+}
 
 // [퍼블리싱 확인용] 케이스에서 제공하지 않는 값을 목업에서 뺀다 — 실서비스에서 백엔드가 하는 일을 흉내 낸다.
 // 화면은 가린 자리에 자리 표시 값을 그리므로, 여기서 뺀 값은 페이지 데이터(DOM · RSC 페이로드)에 남지 않는다.
@@ -1667,15 +1685,9 @@ const redactForViewerCase = (report: InnovationGrowthReport): InnovationGrowthRe
         ...report,
         creditDetail: {
             ...creditDetail,
-            creditInfo: creditDetail.creditInfo.map((table) => {
-                if (visibility.hiddenInfoTables.includes(table.id)) return {...table, rows: []}
-                if (!visibility.hiddenAmountTables.includes(table.id)) return table
-                const amountIndex = table.columns.indexOf('연체금액')
-                return {
-                    ...table,
-                    rows: table.rows.map((row) => row.map((value, index) => (index === amountIndex ? '' : value))),
-                }
-            }),
+            creditInfo: creditDetail.creditInfo.map((table) =>
+                visibility.hiddenInfoTables.includes(table.id) ? {...table, rows: []} : table,
+            ),
             ...(visibility.isBorrowingStatusHidden
                 ? {
                       institutions: {years: [], rows: [], share: []},
