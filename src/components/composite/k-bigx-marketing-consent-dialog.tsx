@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/dialog'
 import {dialogInfoBodyClassName} from '@/components/theme/dialog.variants'
 import {
+    MARKETING_CONSENT_ACTIONS,
     MARKETING_CONSENT_FOOTNOTES,
     MARKETING_CONSENT_NOTICE,
     MARKETING_CONSENT_SECTIONS,
@@ -40,9 +41,20 @@ type KbigxMarketingConsentDialogProps = {
     /** [동의안함] · [동의 후 이용]을 눌렀을 때. [프론트엔드 연동] 동의 여부를 저장하고 다음 단계로 넘긴다. */
     onDecline?: () => void
     onAgree?: () => void
+    /** 제목 — 없으면 K-BIGx 서비스 문구. 마이페이지 내 정보는 MYPAGE_MARKETING_CONSENT_TITLE 을 넘긴다. */
+    title?: string
+    /** 버튼 문구 — 없으면 [동의안함] · [동의 후 이용]. 마이페이지 내 정보는 MYPAGE_MARKETING_CONSENT_ACTIONS 를 넘긴다. */
+    actions?: {decline: string; agree: string}
 }
 
-const KbigxMarketingConsentDialog = ({children, defaultOpen, onDecline, onAgree}: KbigxMarketingConsentDialogProps) => (
+const KbigxMarketingConsentDialog = ({
+    children,
+    defaultOpen,
+    onDecline,
+    onAgree,
+    title = MARKETING_CONSENT_TITLE,
+    actions = MARKETING_CONSENT_ACTIONS,
+}: KbigxMarketingConsentDialogProps) => (
     <Dialog defaultOpen={defaultOpen}>
         {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
         {/* 닫기(X)는 셸이 다른 모달의 여백(40)에 맞춰 둔다 — 이 모달은 여백이 32 라 X 도 같은 값으로 옮겨
@@ -55,7 +67,7 @@ const KbigxMarketingConsentDialog = ({children, defaultOpen, onDecline, onAgree}
                 {/* 좁은 화면에서는 "K-BIGx(기업혁신성장보고서)" 처럼 긴 낱말이 한 줄을 넘는다 — break-keep 은 두되
                     넘칠 때만 낱말 안에서 끊는다. wrap-break-word 는 최소 폭 계산에 들어가지 않아 모달 격자가 그 낱말
                     폭만큼 넓어지므로(360 화면에서 모달 밖으로 넘침) wrap-anywhere 를 쓴다. */}
-                <DialogTitle className="wrap-anywhere break-keep">{MARKETING_CONSENT_TITLE}</DialogTitle>
+                <DialogTitle className="wrap-anywhere break-keep">{title}</DialogTitle>
             </DialogHeader>
             <div className={cn(dialogInfoBodyClassName, 'gap-6 break-keep sm:px-8')}>
                 <section className="flex flex-col gap-2">
@@ -91,12 +103,12 @@ const KbigxMarketingConsentDialog = ({children, defaultOpen, onDecline, onAgree}
             <DialogFooter className="sm:gap-2 sm:px-8">
                 <DialogClose asChild>
                     <Button type="button" variant="tertiary" size="xl" onClick={onDecline}>
-                        동의안함
+                        {actions.decline}
                     </Button>
                 </DialogClose>
                 <DialogClose asChild>
                     <Button type="button" size="xl" onClick={onAgree}>
-                        동의 후 이용
+                        {actions.agree}
                     </Button>
                 </DialogClose>
             </DialogFooter>

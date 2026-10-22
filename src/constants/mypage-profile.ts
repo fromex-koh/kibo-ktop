@@ -22,6 +22,9 @@ export const CORP_NO_FIELD = 'corpNo'
 export const INDUSTRY_CODE_FIELD = 'industry-code'
 export const ADDRESS_FIELD = 'address'
 export const ADDRESS_DETAIL_FIELD = 'address-detail'
+// 마케팅 알림 수신 동의(선택) — 체크하면 MARKETING_CONSENT_AGREED, 안 하면 빈 글자로 담긴다.
+export const MARKETING_CONSENT_FIELD = 'marketingConsent'
+export const MARKETING_CONSENT_AGREED = 'Y'
 
 export const CORP_TYPE_CORPORATION = 'corporation'
 
@@ -70,6 +73,8 @@ export const MYPAGE_MEMBER_PROFILE: Record<string, string> = {
     [INDUSTRY_CODE_FIELD]: '26299 그 외 기타 전자부품 제조업',
     [ADDRESS_FIELD]: '(48400) 부산광역시 남구 문현금융로 33',
     addressDetail: '기술보증기금 5층',
+    // 마케팅 알림 수신 동의 — 가입할 때 받아 둔 값. 동의했으면 MARKETING_CONSENT_AGREED, 아니면 빈 글자.
+    [MARKETING_CONSENT_FIELD]: '',
     // 담당자 정보도 가입할 때 받아 둔 값이라 처음부터 들어 있다.
     // 시안의 예시 글자(담당자명·직위·example@email.com)를 값으로 쓰지 않는다 — 같은 칸의 안내 문구
     // (placeholder)와 글자가 같아, 채워진 칸인지 빈 칸인지 화면에서 구별되지 않는다.
