@@ -1,3 +1,4 @@
+import {Fragment} from 'react'
 import {ComparisonRadarChart} from '@/components/custom/comparison-radar-chart'
 import {DistributionValueChart} from '@/components/custom/distribution-value-chart'
 import {
@@ -25,7 +26,7 @@ type PageProps = {report: InnovationGrowthReport}
 const PRIMARY_LABEL = '신청기업'
 const COMPARISON_LABEL = '전체평균'
 const AVERAGE_COMPANY_LABEL = '전체기업'
-// 점수 만점 — 4대 혁신역량 점수 카드 · 유형별 4대 혁신역량 막대 공통 눈금.
+// 점수 만점 — 4대 혁신역량 부분별 비교 카드 · 유형별 4대 혁신역량 막대 공통 눈금.
 const SCORE_MAX = 100
 // 값이 없을 때 적는 글자 · 점수가 없을 때 요약 문장.
 const NO_SCORE_TEXT = '평가 점수가 없습니다.'
@@ -98,7 +99,7 @@ const LEGEND = (
     />
 )
 
-// ── Tech-Index 1(tech-index-1) — 장 안내문 · 혁신성장역량지수(점수 · 표준정보 비교) · 투입지표별 비교 ──
+// ── Tech-Index 1(tech-index-1) — 장 안내문 · 혁신성장역량지수(점수 · 표준정보 비교) · 부문별 지표 비교 ──
 
 // 굵게 적을 말을 찾아 나눈다 — 없으면 그대로.
 const withStrongPhrase = (text: string) => {
@@ -160,14 +161,15 @@ const KbigxPrintTechIndexOverview = ({report}: PageProps) => {
 
     return (
         <>
-            {/* 장 안내문 — 제목 없이 위아래 선 사이에 문단 목록. */}
-            <ul className="border-kbx-border kbx-border-t-regular kbx-border-b-regular kbx-text-22 leading-kbx-160 text-kbx-label flex flex-col gap-2.5 py-5">
-                {descriptions.map((description) => (
-                    <li key={description} className="break-keep">
+            {/* 장 안내문 — 제목 없이 위아래 선 사이. 받은 문장들을 줄을 바꾸지 않고 한 문단으로 이어 적고, 양쪽 정렬한다(마지막 줄은 왼쪽). */}
+            <p className="border-kbx-border kbx-border-t-regular kbx-border-b-regular kbx-text-22 leading-kbx-160 text-kbx-label py-5 text-justify break-keep">
+                {descriptions.map((description, index) => (
+                    <Fragment key={description}>
+                        {index ? ' ' : null}
                         {withStrongPhrase(description)}
-                    </li>
+                    </Fragment>
                 ))}
-            </ul>
+            </p>
             <KbxBlock title="혁신성장역량지수">
                 {/* 점수 칸은 최소 440 — 100.0 처럼 길면 알약까지 들어가도록 넓어지고 그만큼 요약 문장이 좁아진다. */}
                 <div className="flex items-center gap-14">
@@ -235,7 +237,7 @@ const KbigxPrintTechIndexOverview = ({report}: PageProps) => {
                     </p>
                 </KbxSubBlock>
             </KbxBlock>
-            <KbxBlock title="Tech-Index 투입지표별 비교" unit={LEGEND}>
+            <KbxBlock title="혁신성장역량지수 부문별 지표 비교" unit={LEGEND}>
                 <div className="grid grid-cols-2 gap-14">
                     {indicators.map((indicator) => (
                         <KbxSubBlock
@@ -266,14 +268,14 @@ const KbigxPrintTechIndexOverview = ({report}: PageProps) => {
     )
 }
 
-// ── Tech-Index 2(tech-index-2) — 기업 유형별 Tech-Index 비교 · 4대 혁신역량 점수 · 기업 유형별 4대 혁신역량 비교 ──
+// ── Tech-Index 2(tech-index-2) — 혁신성장역량지수 비교(기업 유형별 Tech-Index 비교 · 4대 혁신역량 부분별 비교 · 기업 유형별 4대 혁신역량 비교) ──
 
 const KbigxPrintTechIndexComparison = ({report}: PageProps) => {
     const {companyTypes, capabilities, capabilityByType} = report.techIndexDetail
 
     return (
         <>
-            <KbxBlock title="혁신성장역량지수">
+            <KbxBlock title="혁신성장역량지수 비교">
                 <KbxSubBlock title="기업 유형별 Tech-Index 비교">
                     {/* 0~100 눈금, isSubject 인 유형(신청기업)은 보라. 빈 상태 높이(h-84)는 그래프 높이와 같게 둔다. */}
                     <KbxChartBox isEmpty={!companyTypes.length} emptyClassName="h-84">
@@ -297,8 +299,8 @@ const KbigxPrintTechIndexComparison = ({report}: PageProps) => {
                         />
                     </KbxChartBox>
                 </KbxSubBlock>
-                {/* 그래프 → 4대 혁신역량 소제목 40(블록 안 간격 32 + mt-2). */}
-                <KbxSubBlock title="4대 혁신역량 점수" className="mt-2">
+                {/* 소제목 사이 64(블록 안 간격 32 + mt-8) — 소제목이 셋이라 구획이 잘 갈리게 넉넉히 띄운다(블록 사이 80 보다는 좁게). */}
+                <KbxSubBlock title="4대 혁신역량 부분별 비교" className="mt-8">
                     {/* 역량마다 카드 하나(4열). 역량이 없으면 카드 높이(373 = h-93.25)의 빈 상태. */}
                     <KbxChartBox isEmpty={!capabilities.length} emptyClassName="h-93.25">
                         <div className="grid grid-cols-4 gap-5">
@@ -343,25 +345,26 @@ const KbigxPrintTechIndexComparison = ({report}: PageProps) => {
                         </div>
                     </KbxChartBox>
                 </KbxSubBlock>
-            </KbxBlock>
-            <KbxBlock title="기업 유형별 4대 혁신역량 비교">
-                <div className="grid grid-cols-2 items-start gap-x-12 gap-y-6">
-                    {capabilityByType.map((capability) => (
-                        <RankBarList
-                            key={capability.id}
-                            {...CAPABILITY_LIST_PROPS}
-                            emptyText={KBX_CHART_EMPTY_TEXT}
-                            emptyClassName={cn(KBX_CHART_EMPTY_CLASS, 'h-45')}
-                            title={capability.label}
-                            items={capability.items.map((item) => ({
-                                id: item.id,
-                                name: item.label,
-                                value: item.value,
-                                tone: item.isSubject ? 'subject' : 'default',
-                            }))}
-                        />
-                    ))}
-                </div>
+                {/* 소제목 사이 64(블록 안 간격 32 + mt-8). */}
+                <KbxSubBlock title="기업 유형별 4대 혁신역량 비교" className="mt-8">
+                    <div className="grid grid-cols-2 items-start gap-x-12 gap-y-6">
+                        {capabilityByType.map((capability) => (
+                            <RankBarList
+                                key={capability.id}
+                                {...CAPABILITY_LIST_PROPS}
+                                emptyText={KBX_CHART_EMPTY_TEXT}
+                                emptyClassName={cn(KBX_CHART_EMPTY_CLASS, 'h-45')}
+                                title={capability.label}
+                                items={capability.items.map((item) => ({
+                                    id: item.id,
+                                    name: item.label,
+                                    value: item.value,
+                                    tone: item.isSubject ? 'subject' : 'default',
+                                }))}
+                            />
+                        ))}
+                    </div>
+                </KbxSubBlock>
             </KbxBlock>
         </>
     )

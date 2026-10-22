@@ -179,7 +179,8 @@ const KbigxPrintToc = ({pages}: {pages: readonly KbigxPrintPage[]}) => (
 
         <section className="border-kbx-divider kbx-border-thin rounded-kbx-16 bg-kbx-paper absolute inset-x-35 top-404 flex flex-col gap-2 px-10 py-8">
             <h3 className="kbx-text-24 font-kbx-bold leading-kbx-150">{KBIGX_PRINT_NOTICE_TITLE}</h3>
-            <p className="kbx-text-20 leading-kbx-150 text-kbx-body break-keep">{KBIGX_PRINT_NOTICE}</p>
+            {/* 양쪽 정렬 — 박스 안에서 문단 오른쪽 끝을 맞춘다(마지막 줄은 왼쪽 정렬). */}
+            <p className="kbx-text-20 leading-kbx-150 text-kbx-body text-justify break-keep">{KBIGX_PRINT_NOTICE}</p>
         </section>
     </div>
 )

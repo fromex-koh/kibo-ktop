@@ -250,7 +250,7 @@ const KbigxPrintBriefingOverview = ({report}: PageProps) => {
 
 // ── 진단브리핑 2(briefing-2) — 혁신성장역량지수 · 신용/재무 현황 ──
 
-// 등급 박스 — 큰 등급 코드 + 등급 알약, 아래에 평가일자 · 결산일자 등 details(값이 비면 '-').
+// 등급 박스 — 큰 등급 코드 + 등급 알약, 아래에 details 목록(기업신용등급: 평가일자 · 결산일자, 현금흐름등급: 결산일자. 값이 비면 '-').
 // 옆 박스와 높이를 맞춰 늘어난다(flex-1).
 const KbxGradeBox = ({
     code,

@@ -9,7 +9,6 @@ import {
     KbxBlock,
     KbxChartBox,
     KbxFitName,
-    KbxPrivateCell,
     KbxPrivateContent,
     KbxSubBlock,
     KbxTable,
@@ -43,16 +42,18 @@ import {
 // (innovation-growth-report-credit.tsx)과 같은 값 · 정렬 · 비공개 규칙(INNOVATION_CREDIT_VISIBILITY)을 쓴다.
 // 공통 규칙: 값이 없거나 숫자가 아니면 '-', 0 은 현행 포맷(0 · 0.0 · 0.00)으로 적는다.
 // 비공개 케이스: 가린 자리는 실제 값 대신 가짜 값(PRIVATE_PLACEHOLDER — composite/private-content.tsx, 웹 보고서와 공용)으로
-//   그려 흐리게 덮는다(KbxPrivateContent · KbxPrivateCell).
+//   그려 흐리게 덮는다(KbxPrivateContent — 차입금 현황). 기업신용정보 표는 흐리지 않고 값 줄을 '비공개' 한 줄로 바꾼다(CreditInfoBlock).
 
 type PageProps = {report: InnovationGrowthReport}
 
 // 기업신용정보 표는 표마다 값 한 줄 — 받은 줄 중 첫 줄만 그린다.
 // k-bigx-print-report.ts 의 CREDIT_INFO_PAGE.blockHeight 가 '값 한 줄'로 어림하므로 이 값을 바꾸면 그쪽도 고친다.
 const CREDIT_INFO_ROW_LIMIT = 1
-const OVERDUE_AMOUNT_COLUMN = '연체금액'
+// 기업신용정보 표 상태 '해당없음' — 값 줄을 '해당사항 없음' 으로 두고, 비공개 케이스에서도 가리지 않는다.
+const CREDIT_STATUS_NONE = '해당없음'
 // 기업신용등급 아래 줄 — rating.details 에서 이 label 로 찾아 적는다. 없으면 '-'.
 const RATING_DETAIL_LABELS = ['평가일자', '결산일자'] as const
+const CASH_FLOW_DETAIL_LABELS = ['결산일자'] as const
 
 // [프론트엔드 연동] 이력은 평가일자 최근 것부터(화면과 같다). date 문자열 비교라 'YYYY-MM-DD' 처럼 자릿수가 고정된 형식이어야 한다.
 const byLatestDate = (a: {date: string}, b: {date: string}) => b.date.localeCompare(a.date)
@@ -78,8 +79,6 @@ const GradePill = ({className, children}: {className?: string; children: string}
 
 // 등급표에 없는 코드를 받으면 정의 상자에 이 문구를 적는다(기업신용등급 · 현금흐름등급 공통). 빈 값이면 정의 상자 없음.
 const UNKNOWN_GRADE_TEXT = '존재하지 않는 등급입니다.'
-const CASH_FLOW_LOWEST = CASH_FLOW_GRADES_LOW_FIRST[0].grade
-const CASH_FLOW_HIGHEST = CASH_FLOW_GRADES_LOW_FIRST[CASH_FLOW_GRADES_LOW_FIRST.length - 1].grade
 
 // 이력 그래프 · 정의 상자 색 · 모양 — 기업신용등급 · 현금흐름등급이 같이 쓴다.
 const TREND_CHART_COLORS = {
@@ -90,12 +89,32 @@ const TREND_CHART_COLORS = {
     label: 'var(--kbx-color-foreground-subtle)',
     dotFill: 'var(--kbx-color-paper)',
 }
-// 정의 상자 — 옅은 면 · 왼쪽 남색 굵은 선(Tech-Index 요약 상자와 같은 모양).
+// 정의 상자 — 옅은 면 · 왼쪽 남색 굵은 선(Tech-Index 요약 상자와 같은 모양). 본문은 양쪽 정렬.
 const DEFINITION_BOX_CLASS =
-    'bg-kbx-surface border-kbx-primary kbx-border-l-heavy kbx-text-22 font-kbx-semibold leading-kbx-155 min-w-0 flex-1 px-6 py-kbx-18 break-keep'
+    'bg-kbx-surface border-kbx-primary kbx-border-l-heavy kbx-text-22 font-kbx-semibold leading-kbx-155 min-w-0 flex-1 px-6 py-kbx-18 text-justify break-keep'
 
-// 등급 머리 — 왼쪽(폭 440): 큰 등급 코드 + 알약(등급 이름) → children(평가일자 · 안내 문장).
+// 등급 머리 — 왼쪽(폭 440): 큰 등급 코드 + 알약(등급 이름) → children(평가일자 · 결산일자 줄).
 // 오른쪽: 등급 정의 상자(남은 폭). 사이 56, 세로 가운데.
+// 등급 코드 아래 날짜 줄 — 이름(옅게) + 값(굵게)을 가로로. labels 순서대로 details 에서 찾아 그리고, 없거나 비면 '-'.
+const GradeDetails = ({
+    details,
+    labels,
+}: {
+    details: readonly {label: string; value: string}[]
+    labels: readonly string[]
+}) => (
+    <dl className="kbx-text-21 text-kbx-foreground-subtle flex gap-7 whitespace-nowrap">
+        {labels.map((label) => (
+            <div key={label} className="flex gap-1.5">
+                <dt>{label}</dt>
+                <dd className="text-kbx-foreground font-kbx-bold">
+                    {details.find((item) => item.label === label)?.value || KBX_EMPTY_VALUE}
+                </dd>
+            </div>
+        ))}
+    </dl>
+)
+
 const GradeHeader = ({
     grade,
     name,
@@ -130,12 +149,15 @@ const HISTORY_ROW_COUNT = 3
 const GradeHistory = ({
     title,
     gradeHeader,
+    dateHeader = '평가일자',
     chart,
     rows,
     emptyText,
 }: {
     title: string
     gradeHeader: string
+    /** 표의 날짜 열 이름 — 기업신용등급은 평가일자, 현금흐름등급은 결산일자. */
+    dateHeader?: string
     chart: {id: string; label: string; grade: string; rank: number}[]
     rows: {date: string; grade: string}[]
     emptyText: string
@@ -150,7 +172,7 @@ const GradeHistory = ({
                 caption={title}
                 columns={[
                     {key: 'grade', header: gradeHeader, isRowHeader: true},
-                    {key: 'date', header: '평가일자'},
+                    {key: 'date', header: dateHeader},
                 ]}
                 emptyText={emptyText}
                 rows={Array.from({length: HISTORY_ROW_COUNT}, (_, index) => {
@@ -175,10 +197,8 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
     const previousRatings = [...ratingHistory].sort(byLatestDate).slice(0, HISTORY_ROW_COUNT)
     const cashFlowHistory = [...cashFlow.history].sort(byLatestDate).slice(0, HISTORY_ROW_COUNT)
     const cashFlowGrade = findCashFlowGrade(cashFlow.grade)
-    // level 은 CF1 = 1 … CF6 = 6(클수록 낮은 등급). 안내 문장 · 그래프 높낮이는 낮은 쪽부터 센 순번으로 뒤집어 쓴다.
-    // 등급표에 없는 코드 · 빈 값이면 0.
+    // level 은 CF1 = 1 … CF6 = 6(클수록 낮은 등급) — 배지 색 단계. 등급표에 없는 코드 · 빈 값이면 0.
     const level = cashFlowLevel(cashFlow.grade)
-    const levelFromLow = level ? CASH_FLOW_GRADES_LOW_FIRST.length - level + 1 : 0
 
     return (
         <>
@@ -189,16 +209,7 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
                     tagClassName={tone ? GRADE_TAG_CLASS[tone] : undefined}
                     definition={rating.grade && !criGrade ? UNKNOWN_GRADE_TEXT : criGrade?.definition}
                 >
-                    <dl className="kbx-text-21 text-kbx-foreground-subtle flex gap-7 whitespace-nowrap">
-                        {RATING_DETAIL_LABELS.map((label) => (
-                            <div key={label} className="flex gap-1.5">
-                                <dt>{label}</dt>
-                                <dd className="text-kbx-foreground font-kbx-bold">
-                                    {rating.details.find((item) => item.label === label)?.value || KBX_EMPTY_VALUE}
-                                </dd>
-                            </div>
-                        ))}
-                    </dl>
+                    <GradeDetails details={rating.details} labels={RATING_DETAIL_LABELS} />
                 </GradeHeader>
                 <GradeHistory
                     title="이전평가이력"
@@ -225,17 +236,13 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
                     tagClassName={KBX_CASH_FLOW_TAG_CLASS[level]}
                     definition={cashFlow.grade && !cashFlowGrade ? UNKNOWN_GRADE_TEXT : cashFlowGrade?.definition}
                 >
-                    {/* 단계 안내 문장 — 등급표에 있는 코드일 때만. 없는 코드 · 빈 값이면 생략한다. */}
-                    {levelFromLow ? (
-                        <p className="kbx-text-20 leading-kbx-155 text-kbx-foreground-subtle break-keep">
-                            현금흐름등급 {cashFlow.grade}. 전체 {CASH_FLOW_GRADES_LOW_FIRST.length}단계(
-                            {CASH_FLOW_LOWEST} ~ {CASH_FLOW_HIGHEST}) 중 낮은 쪽부터 {levelFromLow}번째 등급입니다.
-                        </p>
-                    ) : null}
+                    {/* 결산일자 — 기업신용등급의 평가일자 · 결산일자 줄과 같은 모양. 값이 없으면 '-'. */}
+                    <GradeDetails details={cashFlow.details} labels={CASH_FLOW_DETAIL_LABELS} />
                 </GradeHeader>
                 <GradeHistory
                     title="평가이력"
                     gradeHeader="현금흐름등급"
+                    dateHeader="결산일자"
                     chart={[...cashFlowHistory].reverse().map((item) => ({
                         id: item.date,
                         label: item.chartLabel,
@@ -255,9 +262,10 @@ const KbigxPrintCreditRating = ({report}: PageProps) => {
 
 // ── 신용/재무정보 2 — 기업신용정보(표 여섯) ──
 
-// 표 하나 — 제목 + 상태 알약 → 표(값 한 줄). 열람 케이스(report.viewerCase)에 따라 표 전체 또는 '연체금액' 열을
-// 비공개로 가린다 — 웹 보고서와 같은 규칙 · 같은 모양(가짜 값을 흐리게 깔고 '비공개' 를 얹는다, KbxPrivateContent · KbxPrivateCell).
-// 열 이름 '연체금액'이 정확히 같아야 그 열을 찾는다.
+// 표 하나 — 제목 + 상태 알약 → 표(값 한 줄). 웹 보고서(innovation-growth-report-credit.tsx CreditInfoTable)와 같은 규칙.
+//   · 비공개 표(열람 케이스의 hiddenInfoTables): 표 머리는 그대로, 값 줄은 '비공개' 한 줄('해당사항 없음' 줄과 같은 모양),
+//     상태 알약은 뺀다(알약으로 내용을 짐작할 수 없게).
+//   · 상태가 '해당없음' 인 표: 비공개 케이스여도 알약 + '해당사항 없음' 줄을 그대로 보인다.
 // [주의] 제목 줄 · 간격을 바꾸면 k-bigx-print-report.ts 의 CREDIT_INFO_PAGE.blockHeight 도 고친다.
 const CreditInfoBlock = ({
     table,
@@ -266,13 +274,11 @@ const CreditInfoBlock = ({
     table: InnovationGrowthReport['creditDetail']['creditInfo'][number]
     visibility: (typeof INNOVATION_CREDIT_VISIBILITY)[keyof typeof INNOVATION_CREDIT_VISIBILITY]
 }) => {
-    const isHidden = visibility.hiddenInfoTables.includes(table.id)
-    const hiddenColumn = visibility.hiddenAmountTables.includes(table.id)
-        ? table.columns.indexOf(OVERDUE_AMOUNT_COLUMN)
-        : -1
+    const isNone = table.status === CREDIT_STATUS_NONE
+    const isRowPrivate = !isNone && visibility.hiddenInfoTables.includes(table.id)
     const columns = table.columns.map((column, index) => ({
         key: `${table.id}-${index}`,
-        header: index === hiddenColumn ? <KbxPrivateCell>{column}</KbxPrivateCell> : column,
+        header: column,
         isRowHeader: index === 0,
     }))
 
@@ -280,46 +286,27 @@ const CreditInfoBlock = ({
         <section aria-label={table.title} className="flex flex-col gap-2.5">
             <div className="flex items-center gap-3">
                 <h4 className="kbx-text-23 font-kbx-extrabold">{table.title}</h4>
-                <span className="kbx-text-18 font-kbx-extrabold kbx-border-regular border-kbx-primary text-kbx-primary rounded-full px-3 py-0.5">
-                    {table.status}
-                </span>
+                {isRowPrivate ? null : (
+                    <span className="kbx-text-18 font-kbx-extrabold kbx-border-regular border-kbx-primary text-kbx-primary rounded-full px-3 py-0.5">
+                        {table.status}
+                    </span>
+                )}
             </div>
-            {isHidden ? (
-                // 표 전체 비공개 — 가짜 값 한 줄로 표 모양을 남기고 '비공개' 를 얹는다(값 한 줄 표와 높이가 같다).
-                <KbxPrivateContent label={PRIVATE_SHORT_LABEL}>
-                    <KbxTable
-                        caption={`${table.title} — ${PRIVATE_SHORT_LABEL}`}
-                        columns={columns}
-                        rows={[
-                            {key: `${table.id}-placeholder`, cells: table.columns.map(() => PRIVATE_PLACEHOLDER.cell)},
-                        ]}
-                    />
-                </KbxPrivateContent>
-            ) : (
-                <KbxTable
-                    caption={`${table.title} — ${table.status}`}
-                    columns={columns}
-                    emptyText={KBX_NOT_APPLICABLE_TEXT}
-                    // 빈 칸 — 옅은 면 · 옅은 글자 · 굵게(행 머리 칸과 같은 굵기).
-                    emptyClassName="bg-kbx-surface-subtle font-kbx-bold py-kbx-10"
-                    rows={table.rows.slice(0, CREDIT_INFO_ROW_LIMIT).map((row, rowIndex) => ({
-                        key: `${table.id}-${rowIndex}`,
-                        cells: row.map((value, index) =>
-                            // 연체금액 열만 비공개 — 가짜 금액을 흐리게 깔고, 안내는 첫 값 칸에만.
-                            index === hiddenColumn ? (
-                                <KbxPrivateCell
-                                    key={`${table.id}-${rowIndex}-${index}`}
-                                    label={rowIndex === 0 ? PRIVATE_SHORT_LABEL : undefined}
-                                >
-                                    {PRIVATE_PLACEHOLDER.amount}
-                                </KbxPrivateCell>
-                            ) : (
-                                value || KBX_EMPTY_VALUE
-                            ),
-                        ),
-                    }))}
-                />
-            )}
+            <KbxTable
+                caption={`${table.title} — ${isRowPrivate ? PRIVATE_SHORT_LABEL : table.status}`}
+                columns={columns}
+                emptyText={isRowPrivate ? PRIVATE_SHORT_LABEL : KBX_NOT_APPLICABLE_TEXT}
+                // 빈 칸('해당사항 없음' · '비공개') — 옅은 면 · 옅은 글자 · 굵게(행 머리 칸과 같은 굵기).
+                emptyClassName="bg-kbx-surface-subtle font-kbx-bold py-kbx-10"
+                rows={
+                    isRowPrivate || isNone
+                        ? []
+                        : table.rows.slice(0, CREDIT_INFO_ROW_LIMIT).map((row, rowIndex) => ({
+                              key: `${table.id}-${rowIndex}`,
+                              cells: row.map((value) => value || KBX_EMPTY_VALUE),
+                          }))
+                }
+            />
         </section>
     )
 }

@@ -10,7 +10,7 @@ import {
     type KbigxPrintPage,
 } from '@/content/service/k-bigx-print-report'
 import {cn} from '@/lib/utils'
-import {PRIVATE_CARD_LABEL, PRIVATE_SHORT_LABEL} from '@/components/composite/private-content'
+import {PRIVATE_CARD_LABEL} from '@/components/composite/private-content'
 import {isKbxNumber, KBX_EMPTY_VALUE, kbxFixed1Format} from '@/components/custom/kbigx-print-format'
 import {estimateTextEm} from '@/content/service/k-bigx-print-measure'
 
@@ -457,11 +457,10 @@ const KbxChartBox = ({
     children: ReactNode
 }) => (isEmpty ? <KbxChartEmpty className={emptyClassName} /> : children)
 
-// 비공개 — 웹 보고서의 PrivateContent · PrivateCell(composite/private-content.tsx)과 같은 모양을 인쇄본 값으로 그린다.
+// 비공개 — 웹 보고서의 PrivateContent(composite/private-content.tsx)와 같은 모양을 인쇄본 값으로 그린다.
 // 흐린 자리 표시(가짜 값) 위에 흰 면 80% 를 덮고 가운데에 안내를 둔다. 자리 표시는 낭독기 · 키보드에서 빠진다.
 // [프론트엔드 연동] children 에는 실제 값이 아니라 모양이 비슷한 가짜 값을 넣는다 — 흐려도 실제 값이 문서에 남으면 읽힌다.
 //   KbxPrivateContent — 표 · 차트 덩어리 하나를 통째로 가린다(안내 기본 '정책에 따라 비공개 처리된 정보입니다.').
-//   KbxPrivateCell    — 표의 한 칸만 가린다(열 하나를 가릴 때 그 열의 머리 · 값 칸마다). 안내는 label 을 준 칸에만.
 const KbxPrivateContent = ({
     children,
     label = PRIVATE_CARD_LABEL,
@@ -482,25 +481,9 @@ const KbxPrivateContent = ({
     </div>
 )
 
-const KbxPrivateCell = ({children, label}: {children: ReactNode; label?: string}) => (
-    <span className="relative isolate block">
-        <span aria-hidden="true" inert className="pointer-events-none block blur-sm select-none">
-            {children}
-        </span>
-        {/* 칸 여백까지 덮는다(KbxTable 칸 좌우 14 · 위아래 10). */}
-        <span className="bg-kbx-paper/80 -inset-x-kbx-14 -inset-y-kbx-10 absolute flex items-center justify-center">
-            {label ? (
-                <span className="kbx-text-22 font-kbx-medium text-kbx-foreground whitespace-nowrap">{label}</span>
-            ) : (
-                <span className="sr-only">{PRIVATE_SHORT_LABEL}</span>
-            )}
-        </span>
-    </span>
-)
-
-// 장 첫머리 안내문 — 위아래 선 사이 22px 글(기술혁신정보 등).
+// 장 첫머리 안내문 — 위아래 선 사이 22px 글(기술혁신정보 등). 양쪽 정렬(마지막 줄은 왼쪽).
 const KbxChapterNotice = ({children}: {children: ReactNode}) => (
-    <p className="border-kbx-border kbx-border-t-regular kbx-border-b-regular kbx-text-22 leading-kbx-165 text-kbx-label py-5 break-keep">
+    <p className="border-kbx-border kbx-border-t-regular kbx-border-b-regular kbx-text-22 leading-kbx-165 text-kbx-label py-5 text-justify break-keep">
         {children}
     </p>
 )
@@ -962,7 +945,6 @@ export {
     KbxPage,
     KbxPageFooter,
     KbxPageHeader,
-    KbxPrivateCell,
     KbxPrivateContent,
     KbxSalesBarList,
     KbxStairTable,

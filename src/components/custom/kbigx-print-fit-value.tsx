@@ -152,12 +152,14 @@ const KbxClampArea = ({children, className}: {children: ReactNode; className?: s
     }, [])
 
     // 넘치면 두 줄 이상인 묶음 중 줄 수가 가장 많은 것 하나를 한 줄 줄인다 — 다시 그려지면 또 불려 맞을 때까지 이어진다.
+    // 줄 수는 이미 정한 말줄임 줄 수를 넘지 않게 센다 — 말줄임으로 높이가 줄지 않을 때(접근성 검사 확장 프로그램이
+    // 아이콘 요소를 끼워 넣는 경우 등) 같은 줄 수를 되풀이해 정하며 끝없이 다시 그리지 않고, 늘 줄어들다 1줄에서 멈춘다.
     const fit = useCallback(() => {
         const element = ref.current
         if (!element || element.scrollHeight <= element.clientHeight) return
         const groups = Map.groupBy(items.current.values(), (item) => item.id)
         const longest = [...groups]
-            .map(([id, group]) => ({id, lines: clampLines(group)}))
+            .map(([id, group]) => ({id, lines: Math.min(clampLines(group), clamps[id] ?? Infinity)}))
             .filter((candidate) => candidate.lines > 1)
             .reduce<{id: string; lines: number} | null>(
                 (best, candidate) => (!best || candidate.lines > best.lines ? candidate : best),
@@ -173,7 +175,8 @@ const KbxClampArea = ({children, className}: {children: ReactNode; className?: s
         const element = ref.current
         const parent = element?.parentElement
         if (!element || !parent) return
-        const reset = () => setClamps({})
+        // 이미 비어 있으면 그대로 둔다(같은 값으로 다시 그리지 않게).
+        const reset = () => setClamps((current) => (Object.keys(current).length ? {} : current))
         const observer = new ResizeObserver(reset)
         observer.observe(parent)
         Array.from(parent.children)

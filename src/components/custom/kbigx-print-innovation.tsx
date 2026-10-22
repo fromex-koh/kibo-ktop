@@ -107,13 +107,13 @@ const KbigxPrintInnovationHoldings = ({report}: {report: InnovationGrowthReport}
     return (
         <>
             <KbxChapterNotice>{notice}</KbxChapterNotice>
-            {/* 안내문 → 보유기술 80(쪽 기본 간격) · 설명 → 분류 기준 16(소블록 간격). */}
+            {/* 안내문 → 보유기술 80(쪽 기본 간격) · 설명 → 중분류 기준 40(소블록 간격 16 + mt-6 24). */}
             <KbxBlock title="보유기술">
                 <KbxSubBlock title="기술 보유현황">
                     <p className="kbx-text-21 leading-kbx-160 text-kbx-foreground-subtle break-keep">
                         {holdings.description}
                     </p>
-                    <div className="flex flex-col gap-14">
+                    <div className="mt-6 flex flex-col gap-14">
                         <HoldingGroup title="중분류 기준" items={holdings.middleCategory} />
                         <HoldingGroup title="세부분야 기준" items={holdings.smallCategory} />
                     </div>
@@ -356,8 +356,8 @@ const MarketScaleBlock = ({
                 barClassName="h-4.5"
                 valueClassName="w-22.5"
             />
-            {/* 표 → 비중 도넛 16(소블록 간격). */}
-            <div className="grid grid-cols-2 gap-14">
+            {/* 표 → 비중 도넛 제목 40(소블록 간격 16 + mt-6 24). */}
+            <div className="mt-6 grid grid-cols-2 gap-14">
                 <ShareDonut title="기업수 비중" countUnit="개" items={marketScale.companyShare} />
                 <ShareDonut title="특허수 비중" countUnit="건" items={marketScale.patentShare} />
             </div>
@@ -379,7 +379,7 @@ const KbigxPrintInnovationAnalysis = ({report}: {report: InnovationGrowthReport}
 
 // 특허기술 분석 — 분석특허 · 맞춤형 기술분야. 값이 비면 '-'.
 // 글자 줄임 규칙: 특허명 · 기술분야 단계는 한 줄, 기술분야 설명은 2줄에서 말줄임.
-// 특허 개요 · 판단 근거(KbxClampText)는 다 보이다가 쪽이 모자랄 때만 둘 중 줄 수가 많은 쪽부터 한 줄씩 말줄임한다
+// 특허 개요 · 판단 근거(KbxClampText)는 양쪽 정렬이다. 다 보이다가 쪽이 모자랄 때만 둘 중 줄 수가 많은 쪽부터 한 줄씩 말줄임한다
 // (문단이 여럿이면 이어서 센다). 높이 기준은 KbigxPrintInnovationAnalysis 의 KbxClampArea.
 const PatentAnalysisBlock = ({
     analysis,
@@ -406,7 +406,7 @@ const PatentAnalysisBlock = ({
                 </SurfaceBox>
                 <div className="kbx-text-22 leading-kbx-155">
                     <LabeledRow icon={Award} label="특허 개요">
-                        <KbxClampText id="summary" className="space-y-2">
+                        <KbxClampText id="summary" className="space-y-2 text-justify">
                             <Paragraphs items={analysis.summary.length ? analysis.summary : [KBX_EMPTY_VALUE]} />
                         </KbxClampText>
                     </LabeledRow>
@@ -452,7 +452,7 @@ const PatentAnalysisBlock = ({
                     </SurfaceBox>
                     <div className="border-kbx-border kbx-border-t-regular">
                         <LabeledRow icon={Lightbulb} label="판단 근거">
-                            <KbxClampText id="reasons" className="space-y-2">
+                            <KbxClampText id="reasons" className="space-y-2 text-justify">
                                 <Paragraphs items={analysis.reasons.length ? analysis.reasons : [KBX_EMPTY_VALUE]} />
                             </KbxClampText>
                         </LabeledRow>
