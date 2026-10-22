@@ -484,7 +484,7 @@ const SECTION_PAGES: Record<PrintOutputSectionId, (report: InnovationGrowthRepor
         page('innovation-8', 'innovation', '정부 R&D 접수중과제 · 접수기간 도래 과제'),
     ],
     'tech-index': () => [
-        page('tech-index-1', 'tech-index', '지수설명 · 혁신성장역량지수 · 투입지표별 비교'),
+        page('tech-index-1', 'tech-index', '지수설명 · 혁신성장역량지수 · 부문별 지표 비교'),
         page('tech-index-2', 'tech-index', '유형별 비교 · 4대 혁신역량'),
     ],
     'credit-finance': (report) => [
