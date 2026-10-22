@@ -3,8 +3,8 @@ import {cn} from '@/lib/utils'
 
 // 비공개 정보(PrivateContent · PrivateCell) — 정책상 보여 줄 수 없는 값을 가린다. EmptyState 처럼 "값 대신 안내"를 보이되,
 // 뒤에 흐린 자리 표시 값(임의 값)을 깔아 원래 자리의 모양(표 · 그래프 · 카드)은 그대로 남긴다.
-// K-BIGx 기업혁신성장 보고서 신용/재무정보 탭에서 열람 케이스(report.viewerCase)별 비공개 정보(기업신용정보 표 · 연체금액 열 ·
-// 차입금 현황 카드)를 가린다(innovation-growth-report-credit.tsx).
+// K-BIGx 기업혁신성장 보고서 신용/재무정보 탭에서 열람 케이스(report.viewerCase)별 비공개 정보 중 차입금 현황 카드를 가린다
+// (innovation-growth-report-credit.tsx). 기업신용정보 표는 흐리지 않고 값 줄을 '비공개' 한 줄로 바꾼다(CreditInfoTable).
 //
 // 짜임: 흐린 자리 표시(blur-sm) 위에 흰 면 80%(bg-card/80)를 덮고, 가운데에 안내 20 Medium(gray.900)을 둔다.
 //   PrivateContent — 표 · 카드 같은 덩어리 하나를 통째로 가린다(카드 제목까지 가리려면 카드째 감싼다).
