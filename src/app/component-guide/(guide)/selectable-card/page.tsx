@@ -357,7 +357,7 @@ const SelectableCardGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="sc-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sc-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -374,7 +374,7 @@ const SelectableCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sc-radio" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sc-radio" className="typo-h4-bold">
                         단일 선택 (radio)
                     </h2>
@@ -427,7 +427,7 @@ const SelectableCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sc-checkbox" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sc-checkbox" className="typo-h4-bold">
                         독립 선택 (checkbox)
                     </h2>
@@ -476,7 +476,7 @@ const SelectableCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sc-form" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sc-form" className="typo-h4-bold">
                         폼 제출
                     </h2>
@@ -492,7 +492,7 @@ const SelectableCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sc-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sc-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -504,7 +504,7 @@ const SelectableCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sc-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sc-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -531,7 +531,7 @@ const SelectableCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sc-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sc-props" className="typo-h4-bold">
                         Props API
                     </h2>

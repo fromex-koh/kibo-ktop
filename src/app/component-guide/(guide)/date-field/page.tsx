@@ -94,7 +94,7 @@ const DateFieldGuidePage = () => (
     <GuidePageShell title="날짜 칸 (DateField)" description="라벨 · 달력 · 검사 메시지를 묶은 날짜 입력 한 칸입니다.">
         <BaseCard>
             <section aria-labelledby="date-field-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="date-field-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -114,7 +114,7 @@ const DateFieldGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="date-field-rule" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="date-field-rule" className="typo-h4-bold">
                         검사 규칙
                     </h2>
@@ -149,7 +149,7 @@ const DateFieldGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="date-field-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="date-field-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -178,7 +178,7 @@ const DateFieldGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="date-field-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="date-field-props" className="typo-h4-bold">
                         Props API
                     </h2>

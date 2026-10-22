@@ -18,7 +18,7 @@ const RECHARTS_LICENSE: LicenseLink = {
 }
 
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
-const SECTION_HEAD = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEAD = 'flex flex-col gap-2'
 const BLOCKS = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t'
 const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 
@@ -144,6 +144,15 @@ const CHOICE_COLUMNS = [
 
 const CHOICE_ROWS = [
     {key: 'combo', cells: ['항목마다 막대 하나와 단위가 다른 선 값 하나', <code key="c">ComboBarLineChart</code>]},
+    {
+        key: 'combo-value',
+        cells: [
+            '같은 막대 + 선을 축 없이 값 글자로(인쇄본)',
+            <Link key="c" href="/component-guide/combo-value-chart" className={LINK_CLASS}>
+                ComboValueChart
+            </Link>,
+        ],
+    },
     {
         key: 'column',
         cells: [

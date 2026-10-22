@@ -15,7 +15,8 @@ const DEMO_MODELS = [
             '일반 혁신성장기업의 미래 성장 가능성을 측정하는 지수형 평가 모형입니다.',
             '기술혁신성, 시장확장성, 성장 잠재력을 중심으로 평가합니다.',
         ],
-        illustration: '/images/option-card/shield-certificate.webp',
+        illustration: '/images/option-card/rocket-growth.webp',
+        illustrationSize: {width: 95, height: 92},
     },
     {
         value: 'startup',
@@ -25,10 +26,12 @@ const DEMO_MODELS = [
             '창업 초기 기업의 특성에 맞춰 설계된 평가모형입니다.',
             '보유 기술의 혁신성과 향후 성장 잠재력을 중점적으로 분석합니다.',
         ],
-        illustration: '/images/option-card/lightbulb-magnifier.webp',
+        illustration: '/images/option-card/building-lightbulb.webp',
+        illustrationSize: {width: 136, height: 100},
     },
 ] as const
 
+// 그림은 148×100 자리 가운데에 원본 비율대로(illustrationSize) 놓는다 — 실제 선택 화면과 같다.
 const ILLUSTRATION_SIZE = {width: 148, height: 100} as const
 
 const RadioCardDemo = ({labelledBy}: {labelledBy: string}) => {
@@ -52,13 +55,15 @@ const RadioCardDemo = ({labelledBy}: {labelledBy: string}) => {
                             </>
                         }
                         illustration={
-                            <Image
-                                src={demoModel.illustration}
-                                alt=""
-                                draggable={false}
-                                {...ILLUSTRATION_SIZE}
-                                style={ILLUSTRATION_SIZE}
-                            />
+                            <span className="flex items-center justify-center" style={ILLUSTRATION_SIZE}>
+                                <Image
+                                    src={demoModel.illustration}
+                                    alt=""
+                                    draggable={false}
+                                    {...demoModel.illustrationSize}
+                                    style={demoModel.illustrationSize}
+                                />
+                            </span>
                         }
                     />
                 ))}

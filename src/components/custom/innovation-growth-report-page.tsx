@@ -28,9 +28,11 @@ type InnovationReportSearchParams = Promise<Record<string, string | string[] | u
 
 type InnovationGrowthReportPageProps = {
     searchParams: InnovationReportSearchParams
+    /** 인쇄본 화면 주소(KBIGX_PRINT_CORP_PATH · KBIGX_PRINT_ORG_PATH) — 주면 [보고서 출력]이 동작한다. */
+    printPath?: string
 }
 
-const InnovationGrowthReportPage = async ({searchParams}: InnovationGrowthReportPageProps) => {
+const InnovationGrowthReportPage = async ({searchParams, printPath}: InnovationGrowthReportPageProps) => {
     const params = await searchParams
     const reportIdParam = params[INNOVATION_REPORT_ID_QUERY]
     const reportId = typeof reportIdParam === 'string' ? reportIdParam : undefined
@@ -43,6 +45,7 @@ const InnovationGrowthReportPage = async ({searchParams}: InnovationGrowthReport
         <InnovationGrowthReportDocument
             report={report}
             isJustCreated={params[INNOVATION_REPORT_CREATED_QUERY] === INNOVATION_REPORT_CREATED_QUERY_VALUE}
+            printPath={printPath}
         />
     )
 }

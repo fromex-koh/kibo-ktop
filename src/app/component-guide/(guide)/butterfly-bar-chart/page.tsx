@@ -12,7 +12,7 @@ import {Table} from '@/components/custom/table'
 export const metadata: Metadata = {title: '나비 막대 (ButterflyBarChart)'}
 
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
-const SECTION_HEAD = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEAD = 'flex flex-col gap-2'
 const BLOCKS = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t'
 const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 
@@ -121,6 +121,16 @@ const CHOICE_ROWS = [
                 RankPyramidChart
             </Link>,
             '값 한 개의 위치를 보여 주는 차트라 항목별 두 값 비교에는 쓰지 않습니다.',
+        ],
+    },
+    {
+        key: 'dual-bar-table',
+        cells: [
+            '같은 두 값을 표 칸 안 막대 + 숫자로(인쇄본)',
+            <Link key="c" href="/component-guide/dual-bar-table" className={LINK_CLASS}>
+                DualBarTable
+            </Link>,
+            '표 짜임이라 숫자를 표처럼 읽습니다. K-BIGx 인쇄본 매출 규모별 기업 및 특허 현황에 씁니다.',
         ],
     },
 ] as const

@@ -59,7 +59,7 @@ const SellerInfoDialog = ({children, defaultOpen}: SellerInfoDialogProps) => (
             </div>
             <DialogFooter className="sm:px-8">
                 <DialogClose asChild>
-                    <Button type="button" variant="tertiary" size="xl">
+                    <Button type="button" size="xl">
                         닫기
                     </Button>
                 </DialogClose>

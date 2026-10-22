@@ -19,6 +19,8 @@ export type GuideNavItem = {
     external?: boolean
     assistiveSuffix?: string
     layers?: readonly ComponentLayer[]
+    /** K-BIGx 보고서 인쇄 템플릿에서 쓰는 컴포넌트 — 제목 옆에 'bigx print template' 배지가 붙는다. */
+    isKbigxPrint?: boolean
 }
 export type GuideNavItemGroup = {
     title: string
@@ -214,6 +216,12 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                 href: '/component-guide/full-page-service-status',
                                 layers: ['custom'],
                             },
+                            {
+                                label: '리포트 공통 (Report)',
+                                href: '/component-guide/report-shell',
+                                layers: ['custom'],
+                                isKbigxPrint: true,
+                            },
                         ],
                     },
                     {
@@ -304,9 +312,25 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                         // 항목이 많아 차트 종류별로 한 번 더 묶는다.
                         groups: [
                             {
+                                title: '공통',
+                                items: [
+                                    {
+                                        label: 'ChartReveal',
+                                        href: '/component-guide/chart-reveal',
+                                        layers: ['custom'],
+                                    },
+                                ],
+                            },
+                            {
                                 title: '막대',
                                 items: [
                                     {label: 'ColumnChart', href: '/component-guide/column-chart', layers: ['custom']},
+                                    {
+                                        label: 'ValueColumnChart',
+                                        href: '/component-guide/value-column-chart',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
                                     {
                                         label: 'GroupedColumnChart',
                                         href: '/component-guide/grouped-column-chart',
@@ -323,9 +347,21 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                         layers: ['custom'],
                                     },
                                     {
+                                        label: 'NestedColumnChart',
+                                        href: '/component-guide/nested-column-chart',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
+                                    {
                                         label: 'ComboBarLineChart',
                                         href: '/component-guide/combo-bar-line-chart',
                                         layers: ['custom'],
+                                    },
+                                    {
+                                        label: 'ComboValueChart',
+                                        href: '/component-guide/combo-value-chart',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
                                     },
                                     {
                                         label: 'ButterflyBarChart',
@@ -333,9 +369,21 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                         layers: ['custom'],
                                     },
                                     {
+                                        label: 'DualBarTable',
+                                        href: '/component-guide/dual-bar-table',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
+                                    {
                                         label: 'DivergingRankChart',
                                         href: '/component-guide/diverging-rank-chart',
                                         layers: ['custom'],
+                                    },
+                                    {
+                                        label: 'RankBarList',
+                                        href: '/component-guide/rank-bar-list',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
                                     },
                                     {
                                         label: 'RatioStackBar',
@@ -349,6 +397,24 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                 items: [
                                     {label: 'LineChart', href: '/component-guide/line-chart', layers: ['custom']},
                                     {
+                                        label: 'MarkerLineChart',
+                                        href: '/component-guide/marker-line-chart',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
+                                    {
+                                        label: 'ValueLineChart',
+                                        href: '/component-guide/value-line-chart',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
+                                    {
+                                        label: 'DualLineChart',
+                                        href: '/component-guide/dual-line-chart',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
+                                    {
                                         label: 'GradeTrendChart',
                                         href: '/component-guide/grade-trend-chart',
                                         layers: ['custom'],
@@ -357,6 +423,12 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                         label: 'GradeHistoryChart',
                                         href: '/component-guide/grade-history-chart',
                                         layers: ['custom'],
+                                    },
+                                    {
+                                        label: 'RatingTrendChart',
+                                        href: '/component-guide/rating-trend-chart',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
                                     },
                                 ],
                             },
@@ -372,6 +444,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                         label: 'ComparisonRadarChart',
                                         href: '/component-guide/comparison-radar-chart',
                                         layers: ['custom'],
+                                        isKbigxPrint: true,
                                     },
                                 ],
                             },
@@ -382,6 +455,12 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                         label: 'DistributionCurveChart',
                                         href: '/component-guide/distribution-curve-chart',
                                         layers: ['custom'],
+                                    },
+                                    {
+                                        label: 'DistributionValueChart',
+                                        href: '/component-guide/distribution-value-chart',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
                                     },
                                     {
                                         label: 'GradeDistributionChart',
@@ -415,6 +494,12 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                     },
                                     {label: 'ScoreGauge', href: '/component-guide/score-gauge', layers: ['custom']},
                                     {
+                                        label: 'ScoreScaleBar',
+                                        href: '/component-guide/score-scale-bar',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
+                                    {
                                         label: 'SemicircleRatingGauge',
                                         href: '/component-guide/semicircle-rating-gauge',
                                         layers: ['custom'],
@@ -426,6 +511,24 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                         href: '/component-guide/percentage-donut-chart',
                                         layers: ['custom'],
                                     },
+                                    {
+                                        label: 'DonutListChart',
+                                        href: '/component-guide/donut-list-chart',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
+                                    {
+                                        label: 'CalloutPieChart',
+                                        href: '/component-guide/callout-pie-chart',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
+                                    {
+                                        label: 'InsideLabelPieChart',
+                                        href: '/component-guide/inside-label-pie-chart',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
                                 ],
                             },
                             {
@@ -433,7 +536,12 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                                 items: [
                                     {label: 'NetworkGraph', href: '/component-guide/network-graph', layers: ['custom']},
                                     {label: 'ProcessFlow', href: '/component-guide/process-flow', layers: ['custom']},
-                                    {label: 'WordCloud', href: '/component-guide/word-cloud', layers: ['custom']},
+                                    {
+                                        label: 'WordCloud',
+                                        href: '/component-guide/word-cloud',
+                                        layers: ['custom'],
+                                        isKbigxPrint: true,
+                                    },
                                     {label: 'RatingMatrix', href: '/component-guide/rating-matrix', layers: ['custom']},
                                 ],
                             },
@@ -460,14 +568,29 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                             {label: 'SummaryList', href: '/component-guide/summary-list', layers: ['composite']},
                             {label: 'InfoTable', href: '/component-guide/info-table', layers: ['composite']},
                             {
+                                label: 'TitleDetailTable',
+                                href: '/component-guide/title-detail-table',
+                                layers: ['composite'],
+                            },
+                            {
                                 label: 'SelectableSummaryList',
                                 href: '/component-guide/selectable-summary-list',
                                 layers: ['composite'],
                             },
                             {label: '목록 패턴 (List)', href: '/component-guide/list-patterns'},
                             {label: 'EmptyState', href: '/component-guide/empty-state', layers: ['composite']},
-                            {label: 'PrivateContent', href: '/component-guide/private-content', layers: ['composite']},
-                            {label: 'LoadingState', href: '/component-guide/loading-state', layers: ['composite']},
+                            {
+                                label: 'PrivateContent',
+                                href: '/component-guide/private-content',
+                                layers: ['composite'],
+                                isKbigxPrint: true,
+                            },
+                            {
+                                label: 'LoadingState',
+                                href: '/component-guide/loading-state',
+                                layers: ['composite'],
+                                isKbigxPrint: true,
+                            },
                         ],
                     },
                 ],
@@ -476,6 +599,7 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                 title: '디자인 요소',
                 items: [
                     {label: 'Icon', href: '/component-guide/icon', layers: ['custom']},
+                    {label: 'Image', href: '/component-guide/image'},
                     {label: 'ListMarker', href: '/component-guide/list-marker', layers: ['custom']},
                     {label: 'Badge', href: '/component-guide/badge', layers: ['ui']},
                     {label: 'ThemeToggle', href: '/component-guide/theme-toggle', layers: ['composite']},
@@ -491,6 +615,16 @@ export const GUIDE_NAV_SECTIONS: readonly GuideNavSection[] = [
                     {label: 'Toast', href: '/component-guide/toast', layers: ['ui', 'custom']},
                     {label: 'CheckToast', href: '/component-guide/check-toast', layers: ['custom']},
                     {label: 'Dialog', href: '/component-guide/dialog', layers: ['ui']},
+                    {
+                        label: 'PostcodeSearchDialog',
+                        href: '/component-guide/postcode-search-dialog',
+                        layers: ['composite'],
+                    },
+                    {
+                        label: 'SearchSelectDialog',
+                        href: '/component-guide/search-select-dialog',
+                        layers: ['composite'],
+                    },
                     {label: 'HomeNoticePopup', href: '/component-guide/home-notice-popup', layers: ['custom']},
                 ],
             },
@@ -553,10 +687,22 @@ export const COMPONENT_LAYER_BADGE = {
     },
 } as const satisfies Record<ComponentLayer, {label: string; color: string; variant: string; description: string}>
 
+// K-BIGx 보고서 인쇄 템플릿 배지 — 그 가이드의 컴포넌트를 인쇄본(report-print)이 쓴다는 표시. 메뉴 항목의 isKbigxPrint 로 붙는다.
+export const KBIGX_PRINT_BADGE = {
+    label: 'bigx print template',
+    color: 'navy',
+    variant: 'solid',
+    description: 'K-BIGx 기업혁신성장 보고서 인쇄 템플릿에서 쓰는 컴포넌트입니다. 고치면 인쇄본도 함께 확인합니다.',
+} as const
+
 const collectNavItems = (group: {items?: GuideNavItem[]; groups?: GuideNavItemGroup[]}): GuideNavItem[] => [
     ...(group.items ?? []),
     ...(group.groups ?? []).flatMap(collectNavItems),
 ]
+
+// K-BIGx 인쇄 템플릿에서 쓰는 컴포넌트의 가이드 — 메뉴 목록(isKbigxPrint)이 단일 소스다. 가이드 홈 목록 · 제목 옆 배지가 쓴다.
+export const GUIDE_KBIGX_PRINT_ITEMS = GUIDE_NAV_SECTIONS.flatMap(collectNavItems).filter((item) => item.isKbigxPrint)
+export const GUIDE_KBIGX_PRINT_HREFS = new Set<string>(GUIDE_KBIGX_PRINT_ITEMS.map((item) => item.href))
 
 // 가이드 주소 → 그 화면이 다루는 컴포넌트의 폴더. 메뉴 목록(GUIDE_NAV_SECTIONS)이 단일 소스다.
 export const GUIDE_LAYERS_BY_HREF = new Map<string, readonly ComponentLayer[]>(

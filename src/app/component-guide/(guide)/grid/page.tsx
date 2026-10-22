@@ -86,7 +86,7 @@ const GridPreviewPage = () => (
                     <h1 id="grid-title" className="typo-display-s-bold">
                         레이아웃 그리드 (Grid)
                     </h1>
-                    <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                    <p className="typo-body-l-regular text-label-foreground">
                         페이지의 컬럼·거터·가장자리 여백을 구간별로 맞추는 레이아웃 유틸리티입니다. 아래 미리보기는 현재
                         화면 폭에서 실제로 보이는 컬럼 수를 그립니다.
                     </p>
@@ -94,7 +94,7 @@ const GridPreviewPage = () => (
             </BaseCard>
             <BaseCard>
                 <section aria-labelledby="grid-basic" className="flex flex-col gap-6">
-                    <div className="flex max-w-4xl flex-col gap-2">
+                    <div className="flex flex-col gap-2">
                         <h2 id="grid-basic" className="typo-h4-bold">
                             기본 사용
                         </h2>
@@ -128,7 +128,7 @@ const GridPreviewPage = () => (
         <div className="max-w-content mx-auto w-full px-6">
             <BaseCard>
                 <section aria-labelledby="grid-reference" className="flex flex-col gap-6">
-                    <div className="flex max-w-4xl flex-col gap-2">
+                    <div className="flex flex-col gap-2">
                         <h2 id="grid-reference" className="typo-h4-bold">
                             구간별 설정
                         </h2>
@@ -179,7 +179,7 @@ const GridPreviewPage = () => (
             </BaseCard>
             <BaseCard>
                 <section aria-labelledby="grid-rules" className="flex flex-col gap-6">
-                    <div className="flex max-w-4xl flex-col gap-2">
+                    <div className="flex flex-col gap-2">
                         <h2 id="grid-rules" className="typo-h4-bold">
                             사용 규칙
                         </h2>

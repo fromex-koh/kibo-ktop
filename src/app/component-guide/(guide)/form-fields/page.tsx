@@ -142,7 +142,7 @@ const PART_ROWS = [
     },
 ] as const
 
-const SECTION_HEAD = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEAD = 'flex flex-col gap-2'
 const SUB_LIST = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t'
 const SUB_BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 

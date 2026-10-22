@@ -19,7 +19,7 @@ const ThemeToggleGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="theme-toggle-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="theme-toggle-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -39,7 +39,7 @@ const ThemeToggleGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="theme-toggle-behavior" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="theme-toggle-behavior" className="typo-h4-bold">
                         동작
                     </h2>
@@ -58,7 +58,7 @@ const ThemeToggleGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="theme-toggle-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="theme-toggle-a11y" className="typo-h4-bold">
                         접근성
                     </h2>

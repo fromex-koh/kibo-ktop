@@ -1,8 +1,8 @@
 @reference '../app/globals.css';
 
 /* ─── 인쇄용 보고서의 용지 규격 ───────────────────────────────────────────────────────────────
-   사용처: 특허평가 결과 보고서 두 화면(기업 · 기관)의 page.tsx 에서 직접 import.
-   그리는 쪽: components/custom/report-print-shell.tsx · components/custom/patent-report-document.tsx
+   사용처: 특허평가 결과 보고서 두 화면(기업 · 기관) · K-BIGx 보고서 인쇄본(기업 · 기관 report-print) · 리포트 공통 가이드의 page.tsx 에서 직접 import.
+   그리는 쪽: components/custom/report-print-shell.tsx · patent-report-document.tsx · kbigx-print-document.tsx
 
    한 장(.report-sheet)은 1360 × 1924px(A4 비율)로 그리고 바깥에서 transform 으로만 줄인다.
    안쪽 값은 늘 같아서 글자 크기 · 간격을 배율마다 다시 잡지 않아도 된다.
@@ -116,5 +116,12 @@
         top: 0;
         left: 0;
         transform: scale(0.5834);
+    }
+
+    /* K-BIGx 인쇄본 — 용지 안을 쪽 나눔에서 떼어 낸다(contain: strict).
+       Safari 는 줄어들기 전 높이(1924px)로 용지 안까지 쪽을 나눠, 쪽 경계(294mm)에 걸친 덩어리를 경계 아래로 민다.
+       목차 목록이 아래로 밀려 마지막 줄(참고자료)이 유의사항 상자에 가려졌다. 용지는 크기가 정해져 있어 내용은 그대로다. */
+    html[data-print-fit] .kbigx-print .report-sheet {
+        contain: strict;
     }
 }

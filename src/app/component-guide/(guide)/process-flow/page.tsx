@@ -70,7 +70,7 @@ const ProcessFlowGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="pf-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pf-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -88,7 +88,7 @@ const ProcessFlowGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pf-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pf-variants" className="typo-h4-bold">
                         단계 수와 글자 줄 수
                     </h2>
@@ -112,7 +112,7 @@ const ProcessFlowGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pf-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pf-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -135,7 +135,7 @@ const ProcessFlowGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pf-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pf-props" className="typo-h4-bold">
                         Props API
                     </h2>

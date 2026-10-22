@@ -10,7 +10,7 @@ import PropsTable from '@/components/custom/props-table'
 
 export const metadata: Metadata = {title: '인쇄 버튼 (PrintButton)'}
 
-const SECTION_HEADER = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEADER = 'flex flex-col gap-2'
 const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 

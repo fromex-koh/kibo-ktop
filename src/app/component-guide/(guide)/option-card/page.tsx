@@ -12,6 +12,9 @@ import {Table} from '@/components/custom/table'
 
 export const metadata: Metadata = {title: '옵션 카드 (OptionCard)'}
 
+// 그림은 148×100 자리 가운데에 원본 비율대로(illustrationSize) 놓는다 — 실제 선택 화면과 같다.
+const ILLUSTRATION_SIZE = {width: 148, height: 100} as const
+
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 
 const MODEL_OPTIONS = [
@@ -22,7 +25,8 @@ const MODEL_OPTIONS = [
             '일반 혁신성장기업의 미래 성장 가능성을 측정하는 지수형 평가 모형입니다.',
             '기술혁신성, 시장확장성, 성장 잠재력을 중심으로 평가합니다.',
         ],
-        illustration: '/images/option-card/shield-certificate.webp',
+        illustration: '/images/option-card/speed-gauge.webp',
+        illustrationSize: {width: 144, height: 96},
     },
     {
         badge: 'Tech-Index',
@@ -31,7 +35,8 @@ const MODEL_OPTIONS = [
             '창업 초기 기업의 특성에 맞춰 설계된 평가모형입니다.',
             '보유 기술의 혁신성과 향후 성장 잠재력을 중점적으로 분석합니다.',
         ],
-        illustration: '/images/option-card/lightbulb-magnifier.webp',
+        illustration: '/images/option-card/rocket-growth.webp',
+        illustrationSize: {width: 95, height: 92},
     },
 ] as const
 
@@ -46,7 +51,8 @@ const models = [
       '일반 혁신성장기업의 미래 성장 가능성을 측정하는 지수형 평가 모형입니다.',
       '기술혁신성, 시장확장성, 성장 잠재력을 중심으로 평가합니다.',
     ],
-    illustration: '/images/option-card/shield-certificate.webp',
+    illustration: '/images/option-card/speed-gauge.webp',
+    illustrationSize: {width: 144, height: 96},
   },
 ]
 
@@ -61,14 +67,16 @@ const models = [
         title={model.title}
         description={<>{model.description[0]}<br />{model.description[1]}</>}
         illustration={
-          <Image
-            src={model.illustration}
-            alt=""
-            draggable={false}
-            width={148}
-            height={100}
-            style={{width: 148, height: 100}}
-          />
+          // 148×100 자리 가운데에 그림을 원본 비율대로 놓는다
+          <span className="flex items-center justify-center" style={{width: 148, height: 100}}>
+            <Image
+              src={model.illustration}
+              alt=""
+              draggable={false}
+              {...model.illustrationSize}
+              style={model.illustrationSize}
+            />
+          </span>
         }
       />
     ))}
@@ -157,7 +165,7 @@ const OptionCardGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="option-card-preview" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="option-card-preview" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -181,14 +189,15 @@ const OptionCardGuidePage = () => (
                                 </>
                             }
                             illustration={
-                                <Image
-                                    src={model.illustration}
-                                    alt=""
-                                    draggable={false}
-                                    width={148}
-                                    height={100}
-                                    style={{width: 148, height: 100}}
-                                />
+                                <span className="flex items-center justify-center" style={ILLUSTRATION_SIZE}>
+                                    <Image
+                                        src={model.illustration}
+                                        alt=""
+                                        draggable={false}
+                                        {...model.illustrationSize}
+                                        style={model.illustrationSize}
+                                    />
+                                </span>
                             }
                         />
                     ))}
@@ -199,7 +208,7 @@ const OptionCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="option-card-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="option-card-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -218,7 +227,7 @@ const OptionCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="option-card-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="option-card-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>

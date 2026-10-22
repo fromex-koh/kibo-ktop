@@ -7,6 +7,7 @@ import CodeBlock from '@/components/custom/code-block'
 import GuidePageShell from '@/components/custom/guide-page-shell'
 import PropsTable from '@/components/custom/props-table'
 import {Table} from '@/components/custom/table'
+import {RadioChip, RadioChipGroup} from '@/components/composite/radio-chip'
 import {RadioChipDemo} from './radio-chip-demo'
 
 export const metadata: Metadata = {title: '라디오 칩 (RadioChip)'}
@@ -36,6 +37,61 @@ const [task, setTask] = useState('')
       ))}
     />
   ))}
+</RadioChipGroup>`
+
+// 상태 미리보기 — 상태마다 칩 하나짜리 묶음. 선택은 묶음의 defaultValue, 비활성은 칩의 disabled 로 만든다.
+const STATE_VALUE = 'preview'
+const STATE_DESCRIPTION = '부가 설명이 들어가면 제목 아래에 놓입니다.'
+
+const STATE_PREVIEWS = [
+    {key: 'unchecked', label: '미선택', checked: false, disabled: false},
+    {key: 'checked', label: '선택', checked: true, disabled: false},
+    {key: 'unchecked-disabled', label: '미선택 · 비활성', checked: false, disabled: true},
+    {key: 'checked-disabled', label: '선택 · 비활성', checked: true, disabled: true},
+] as const
+
+const STATE_STYLE_COLUMNS = [
+    {key: 'state', header: '상태', align: 'start', rowHeader: true},
+    {key: 'look', header: '모양', align: 'start', wrap: true},
+    {key: 'prop', header: '지정 방법', align: 'start', wrap: true},
+] as const
+
+const STATE_STYLE_ROWS = [
+    {
+        key: 'unchecked',
+        cells: ['미선택', '옅은 회색 테두리 · 흰 면 · 회색 제목(Regular) · 연한 회색 설명', '기본'],
+    },
+    {
+        key: 'checked',
+        cells: [
+            '선택',
+            '파란 테두리 · 옅은 파란 면 · 파란 제목(Bold) · 파란 설명. 마우스를 올렸을 때도 같은 모양입니다.',
+            <code key="prop">RadioChipGroup 의 value / defaultValue</code>,
+        ],
+    },
+    {
+        key: 'unchecked-disabled',
+        cells: [
+            '미선택 · 비활성',
+            '회색 면 · 회색 테두리 · 제목과 설명 모두 흐린 회색. 고를 수 없고 마우스를 올려도 바뀌지 않습니다.',
+            <code key="prop">RadioChip 의 disabled</code>,
+        ],
+    },
+    {
+        key: 'checked-disabled',
+        cells: [
+            '선택 · 비활성',
+            '미선택 · 비활성과 같은 면 · 글자색에 한 단계 진한 테두리와 굵은 제목(Bold)을 남겨 고른 칩이 보입니다.',
+            <code key="prop">value 가 같은 칩에 disabled (묶음 전체는 RadioChipGroup 의 disabled)</code>,
+        ],
+    },
+] as const
+
+const STATE_CODE = `// 선택 — 묶음의 값이 칩의 value 와 같으면 선택으로 보입니다.
+<RadioChipGroup defaultValue="bulk-data" aria-label="진행할 업무 선택">
+  <RadioChip value="bulk-data" title="평가내역조회" />
+  {/* 비활성 — 이 칩만 고를 수 없습니다. */}
+  <RadioChip value="batch-evaluation" title="일괄평가 진행" disabled />
 </RadioChipGroup>`
 
 const PROPS_ITEMS = [
@@ -117,7 +173,7 @@ const RadioChipGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="radio-chip-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-chip-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -147,8 +203,55 @@ const RadioChipGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="radio-chip-states" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="radio-chip-states" className="typo-h4-bold">
+                        상태
+                    </h2>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        상태는 미선택 · 선택 두 가지이고, 각 상태에 <code>disabled</code> 를 더하면 비활성이 됩니다.
+                        설명(<code>description</code>)이 있든 없든 같은 규칙으로 바뀝니다.
+                    </p>
+                </div>
+                <div className="grid gap-6 md:grid-cols-2">
+                    {STATE_PREVIEWS.map((state) => (
+                        <div key={state.key} className="flex flex-col gap-3">
+                            <h3 className="typo-title-m-bold text-foreground">{state.label}</h3>
+                            <RadioChipGroup
+                                defaultValue={state.checked ? STATE_VALUE : undefined}
+                                aria-label={`${state.label} 상태 예시`}
+                                className="md:grid-cols-1"
+                            >
+                                <RadioChip value={STATE_VALUE} title="제목" disabled={state.disabled} />
+                            </RadioChipGroup>
+                            <RadioChipGroup
+                                defaultValue={state.checked ? STATE_VALUE : undefined}
+                                aria-label={`${state.label} 상태 예시(설명 포함)`}
+                                className="md:grid-cols-1"
+                            >
+                                <RadioChip
+                                    value={STATE_VALUE}
+                                    title="제목"
+                                    description={STATE_DESCRIPTION}
+                                    disabled={state.disabled}
+                                />
+                            </RadioChipGroup>
+                        </div>
+                    ))}
+                </div>
+                <Table
+                    caption="RadioChip 상태별 모양과 지정 방법"
+                    columns={STATE_STYLE_COLUMNS}
+                    rows={STATE_STYLE_ROWS}
+                    size="md"
+                />
+                <CodeBlock code={STATE_CODE} language="tsx" copyLabel="복사" />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="radio-chip-choose" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-chip-choose" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -167,7 +270,7 @@ const RadioChipGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="radio-chip-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-chip-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -188,13 +291,17 @@ const RadioChipGuidePage = () => (
                         <code>p</code> · <code>div</code>를 넣지 않고 <code>span</code>을 씁니다[8.1.1].
                     </li>
                     <li>선택은 테두리 색 · 면 · 제목 굵기로 함께 표시해 색에만 의존하지 않습니다[5.3.1].</li>
+                    <li>
+                        비활성 칩은 <code>disabled</code> 가 붙은 버튼이라 Tab · 화살표 키로 가지 않고, 스크린리더가
+                        흐리게(사용 불가) 읽습니다.
+                    </li>
                 </ul>
             </section>
         </BaseCard>
 
         <BaseCard>
             <section aria-labelledby="radio-chip-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-chip-props" className="typo-h4-bold">
                         Props API
                     </h2>

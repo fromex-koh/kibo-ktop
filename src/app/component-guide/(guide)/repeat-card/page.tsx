@@ -163,7 +163,7 @@ const RepeatCardGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="repeat-card-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="repeat-card-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -196,7 +196,7 @@ const RepeatCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="repeat-card-list" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="repeat-card-list" className="typo-h4-bold">
                         목록으로 쓰기
                     </h2>
@@ -241,7 +241,7 @@ const RepeatCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="repeat-card-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="repeat-card-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -258,7 +258,7 @@ const RepeatCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="repeat-card-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="repeat-card-a11y" className="typo-h4-bold">
                         접근성
                     </h2>

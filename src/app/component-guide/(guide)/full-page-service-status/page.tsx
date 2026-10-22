@@ -84,7 +84,7 @@ const FullPageServiceStatusGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="full-page-service-status-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="full-page-service-status-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -134,7 +134,7 @@ const FullPageServiceStatusGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="full-page-service-status-custom" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="full-page-service-status-custom" className="typo-h4-bold">
                         직접 구성
                     </h2>
@@ -163,7 +163,7 @@ const FullPageServiceStatusGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="full-page-service-status-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="full-page-service-status-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -188,7 +188,7 @@ const FullPageServiceStatusGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="full-page-service-status-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="full-page-service-status-a11y" className="typo-h4-bold">
                         접근성
                     </h2>

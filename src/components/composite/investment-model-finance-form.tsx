@@ -1,6 +1,6 @@
 'use client'
 
-import {FieldGrid, FieldRow3} from '@/components/composite/form-fields'
+import {FieldRow3} from '@/components/composite/form-fields'
 import {FormCard} from '@/components/composite/form-card'
 import {UnitField} from '@/components/composite/company-etc-form'
 import {
@@ -11,7 +11,7 @@ import {
 // 투자모형 [재무정보] 탭 본문 — Figma "투자모형_2단계_기업·기술정보 입력_재무정보".
 //
 // Tech-Index 의 같은 이름 탭(tech-index-finance-form)과 전혀 다르다 — 그쪽은 재무기준일과 과거 3개년
-// 계정 묶음이고, 이 모형은 당기·전기의 금액 다섯 칸뿐이라 모형 전용 조각으로 둔다.
+// 계정 묶음이고, 이 모형은 당기·전기의 금액 일곱 칸뿐이라 모형 전용 조각으로 둔다.
 // 금액 칸의 생김새(값 오른쪽 정렬 · 단위를 상자 안에)와 처리(숫자만·앞자리 0 정리·비우면 0 으로 복원)는
 // [기업 기타 정보] 탭과 같아 그쪽 조각(UnitField)을 그대로 가져다 쓴다.
 //
@@ -26,13 +26,14 @@ const AMOUNT_UNIT = '원'
 const InvestmentModelFinanceForm = () => (
     <FormCard title="재무정보">
         <div className="flex flex-col gap-4">
-            {/* 시안 배치 — 1줄 [당기 매출액 · 당기 영업이익] 2열, 2줄 [당기 순이익 · 당기 자본총계 · 전기 순이익] 3열. */}
-            <FieldGrid>
+            {/* 배치 — 1줄 [당기 매출액 · 당기 영업이익 · 당기 순이익] 3열,
+                2줄 [당기 자본총계 · 당기 자산총계 · 전기 순이익 · 전기 자본총계] 4열. 2줄은 태블릿(md)에서 2열로 접는다. */}
+            <FieldRow3>
                 {INVESTMENT_MODEL_FINANCE_ROW1_FIELDS.map((field) => (
                     <UnitField key={field.id} id={field.id} label={field.label} unit={AMOUNT_UNIT} required={false} />
                 ))}
-            </FieldGrid>
-            <FieldRow3>
+            </FieldRow3>
+            <FieldRow3 className="md:grid-cols-2 xl:grid-cols-4">
                 {INVESTMENT_MODEL_FINANCE_ROW2_FIELDS.map((field) => (
                     <UnitField key={field.id} id={field.id} label={field.label} unit={AMOUNT_UNIT} required={false} />
                 ))}

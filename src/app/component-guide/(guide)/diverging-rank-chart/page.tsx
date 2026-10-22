@@ -17,7 +17,7 @@ import {Table} from '@/components/custom/table'
 export const metadata: Metadata = {title: '양쪽 순위 막대 (DivergingRankChart)'}
 
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
-const SECTION_HEAD = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEAD = 'flex flex-col gap-2'
 const BLOCKS = 'border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t'
 const BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 
@@ -207,6 +207,16 @@ const CHOICE_ROWS = [
                 ButterflyBarChart
             </Link>,
             '가운데 항목 이름을 공유하고 한 줄이 한 항목의 두 값입니다.',
+        ],
+    },
+    {
+        key: 'rank-bar-list',
+        cells: [
+            '순위 목록을 따로 세워 나란히(인쇄본)',
+            <Link key="c" href="/component-guide/rank-bar-list" className={LINK_CLASS}>
+                RankBarList
+            </Link>,
+            '목록 하나가 컴포넌트 하나 — 두 목록을 나란히 놓고 막대 끝 값을 같게 넘깁니다. K-BIGx 인쇄본 성장률 우수기업에 씁니다.',
         ],
     },
 ] as const

@@ -136,16 +136,18 @@ export const INVESTMENT_MODEL_COMPANY_ETC_DEFAULT_VALUES: Record<string, string>
 )
 
 // 투자모형 [재무정보] 탭의 금액 칸 — 화면(investment-model-finance-form)과 탭 구성이 함께 봐야 해서
-// 여기 둔다(위 기업 기타 정보 기본값과 같은 이유). 시안 배치대로 1줄 2칸 · 2줄 3칸으로 나눠 적는다.
+// 여기 둔다(위 기업 기타 정보 기본값과 같은 이유). 화면 배치대로 1줄 3칸 · 2줄 4칸으로 나눠 적는다.
 export const INVESTMENT_MODEL_FINANCE_ROW1_FIELDS = [
     {id: 'currentSales', label: '당기 매출액'},
     {id: 'currentOperatingProfit', label: '당기 영업이익'},
+    {id: 'currentNetProfit', label: '당기 순이익'},
 ] as const
 
 export const INVESTMENT_MODEL_FINANCE_ROW2_FIELDS = [
-    {id: 'currentNetProfit', label: '당기 순이익'},
     {id: 'currentTotalEquity', label: '당기 자본총계'},
+    {id: 'currentTotalAssets', label: '당기 자산총계'},
     {id: 'previousNetProfit', label: '전기 순이익'},
+    {id: 'previousTotalEquity', label: '전기 자본총계'},
 ] as const
 
 // 업종코드로 갈리는 체크리스트(투자모형·KTRS-FM) — 화면(기업정보 탭)과 이동 경로(2단계 page)가 같은

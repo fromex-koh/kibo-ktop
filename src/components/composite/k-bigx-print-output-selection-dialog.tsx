@@ -15,26 +15,23 @@ import {
 } from '@/content/service/k-bigx-print-output-selection'
 import {cn} from '@/lib/utils'
 
-// 인쇄 출력물 선택 — 인쇄할 보고서 구성 항목을 고르는 모달(화면정의서의 "인쇄 출력물 선택").
-// 출력 대상 요약(기업명 · 조회기준일) → 출력 항목 고르기[전체선택 / 구분선 / 항목 6개] → [출력하기].
-// 전체선택은 항목을 모두 켜고 끄며, 일부만 골라지면 '일부'(indeterminate) 상태가 된다.
-// 아무 항목도 고르지 않으면 [출력하기]는 눌리지 않는다.
-//
-// 규격: 폭 588 · 반경 24 · 좌우·위 여백 32(판매자 정보 모달과 같다) · 제목과 요약 24 · 요약과 항목 상자 24 ·
-// 요약 상자(테두리 gray.100 · 반경 12 · 여백 24 · 줄 사이 12) · 항목 상자(테두리 gray.100 · 반경 16 · 여백 24) ·
-// 전체선택과 구분선 16 · 구분선과 항목 16 · 항목 사이 16 · [출력하기] 전체 폭.
-// 좁은 화면(sm 미만)은 모든 모달이 쓰는 24 여백을 그대로 둔다.
+// 인쇄 출력물 선택 — 인쇄할 보고서 구성 항목을 고르는 모달.
+// 출력 대상 요약(기업명 · 조회기준일) → 항목 고르기[전체선택 / 항목 6개] → [출력하기].
+//   · 전체선택은 항목을 모두 켜고 끈다. 일부만 골라지면 '일부'(indeterminate) 상태다.
+//   · 아무 항목도 고르지 않으면 [출력하기]가 눌리지 않는다.
+//   · 열 때마다 defaultSelected 로 되돌린다 — 지난번 출력 · 취소 때 고른 항목은 남기지 않는다.
+// 쓰는 곳: 웹 보고서 [보고서 출력](innovation-growth-report-document.tsx) · 모달 단독 확인 화면(print-output-selection).
 
 type KbigxPrintOutputSelectionDialogProps = {
     /** 출력 대상 요약 — 기업명 · 조회기준일 등(항목명 · 값). [프론트엔드 연동] 조회 중인 보고서 정보로 채운다. */
     summary: readonly {label: string; value: string}[]
-    /** 처음에 골라 둘 항목. */
+    /** 열 때마다 골라 둘 항목. 기본은 아무것도 고르지 않음. */
     defaultSelected?: readonly PrintOutputSectionId[]
     /** 모달을 여는 버튼. Radix 가 이 요소에 열기 동작과 aria 를 얹는다. */
     children?: ReactNode
     /** 트리거 없이 처음부터 열어 둘 때(모달 단독 화면). */
     defaultOpen?: boolean
-    /** [출력하기]를 눌렀을 때. [프론트엔드 연동] 고른 항목으로 보고서 출력(인쇄 미리보기)을 연결한다. */
+    /** [출력하기]를 눌렀을 때 — 고른 항목을 넘기고 모달을 닫는다. 없으면 모달만 열려 있다(모달 단독 확인 화면). */
     onPrint?: (selected: PrintOutputSectionId[]) => void
 }
 
@@ -46,17 +43,28 @@ const KbigxPrintOutputSelectionDialog = ({
     onPrint,
 }: KbigxPrintOutputSelectionDialogProps) => {
     const [selected, setSelected] = useState<PrintOutputSectionId[]>([...defaultSelected])
+    const [isOpen, setIsOpen] = useState(defaultOpen ?? false)
     const idPrefix = useId()
     const isAllSelected = selected.length === PRINT_OUTPUT_SELECTION_SECTIONS.length
     const isSomeSelected = selected.length > 0
 
+    const print = () => {
+        if (!onPrint) return
+        onPrint(selected)
+        setIsOpen(false)
+    }
+    // 여는 순간에 되돌린다 — 닫을 때 되돌리면 닫히는 애니메이션 동안 체크가 바뀌는 게 보인다.
+    const changeOpen = (nextIsOpen: boolean) => {
+        if (nextIsOpen) setSelected([...defaultSelected])
+        setIsOpen(nextIsOpen)
+    }
     const toggleAll = (checked: boolean) =>
         setSelected(checked ? PRINT_OUTPUT_SELECTION_SECTIONS.map((section) => section.id) : [])
     const toggleSection = (id: PrintOutputSectionId, checked: boolean) =>
         setSelected((current) => (checked ? [...current, id] : current.filter((selectedId) => selectedId !== id)))
 
     return (
-        <Dialog defaultOpen={defaultOpen}>
+        <Dialog open={isOpen} onOpenChange={changeOpen}>
             {children ? <DialogTrigger asChild>{children}</DialogTrigger> : null}
             {/* 닫기(X)는 셸이 다른 모달의 여백(40)에 맞춰 둔다 — 이 모달은 여백이 32 라 X 도 같은 값으로 옮겨
                 제목 줄과 맞춘다(오른쪽·위 32). */}
@@ -127,7 +135,7 @@ const KbigxPrintOutputSelectionDialog = ({
                     </fieldset>
                 </div>
                 <DialogFooter className="sm:px-8">
-                    <Button type="button" size="xl" disabled={!isSomeSelected} onClick={() => onPrint?.(selected)}>
+                    <Button type="button" size="xl" disabled={!isSomeSelected} onClick={print}>
                         <Printer aria-hidden="true" />
                         출력하기
                     </Button>

@@ -39,4 +39,20 @@ const MARKETING_CONSENT_FOOTNOTES = [
     '※ 서비스 이용에 필요한 안내(보고서 발급, 결제, 약관 개정 등)는 본 동의 여부와 관계없이 전송됩니다.',
 ] as const
 
-export {MARKETING_CONSENT_FOOTNOTES, MARKETING_CONSENT_NOTICE, MARKETING_CONSENT_SECTIONS, MARKETING_CONSENT_TITLE}
+// 버튼 문구 — K-BIGx 이용약관 동의 흐름(기본)
+const MARKETING_CONSENT_ACTIONS = {decline: '동의안함', agree: '동의 후 이용'} as const
+
+// 마이페이지 내 정보의 [자세히]로 열 때 — 본문은 같고 제목 · 버튼 문구만 다르다.
+// 버튼 문구는 짧게 둔다 — 360 폭에서도 두 버튼이 나란히 들어간다.
+const MYPAGE_MARKETING_CONSENT_TITLE = '기술평가 서비스 마케팅 정보 수신 동의'
+const MYPAGE_MARKETING_CONSENT_ACTIONS = {decline: '비동의', agree: '동의'} as const
+
+export {
+    MARKETING_CONSENT_ACTIONS,
+    MARKETING_CONSENT_FOOTNOTES,
+    MARKETING_CONSENT_NOTICE,
+    MARKETING_CONSENT_SECTIONS,
+    MARKETING_CONSENT_TITLE,
+    MYPAGE_MARKETING_CONSENT_ACTIONS,
+    MYPAGE_MARKETING_CONSENT_TITLE,
+}

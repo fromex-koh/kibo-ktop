@@ -56,12 +56,17 @@ formData.getAll('interest') // 선택된 값 배열`
 
 const STATE_COLUMNS = [
     {key: 'state', header: '상태', align: 'start', rowHeader: true},
-    {key: 'preview', header: '미리보기', align: 'start'},
+    {key: 'preview', header: '기본', align: 'start'},
+    {key: 'disabled', header: '비활성 (disabled)', align: 'start'},
     {key: 'prop', header: '지정 방법', align: 'start', wrap: true},
 ] as const
 
 // 표 칸 안의 미리보기 — Radix 가 Checkbox 옆에 두는 숨은 input 이 칸 밖으로 나가 표에 스크롤이 생기지 않게 기준 상자를 둔다.
-const StatePreview = ({children}: {children: ReactNode}) => <span className="relative inline-flex">{children}</span>
+// Checkbox 의 눌리는 영역(::after, 위아래 12)이 칸 여백(10)보다 커서 마지막 줄에서 표 아래로 넘치므로
+// 위아래 2 를 더 두고 세로 가운데에 놓는다.
+const StatePreview = ({children}: {children: ReactNode}) => (
+    <span className="relative inline-flex py-0.5 align-middle">{children}</span>
+)
 
 const STATE_ROWS = [
     {
@@ -70,6 +75,9 @@ const STATE_ROWS = [
             '미선택',
             <StatePreview key="preview">
                 <Checkbox aria-label="미선택" />
+            </StatePreview>,
+            <StatePreview key="disabled">
+                <Checkbox disabled aria-label="미선택 비활성" />
             </StatePreview>,
             '기본',
         ],
@@ -81,6 +89,9 @@ const STATE_ROWS = [
             <StatePreview key="preview">
                 <Checkbox defaultChecked aria-label="선택" />
             </StatePreview>,
+            <StatePreview key="disabled">
+                <Checkbox defaultChecked disabled aria-label="선택 비활성" />
+            </StatePreview>,
             <code key="prop">checked / defaultChecked</code>,
         ],
     },
@@ -91,17 +102,10 @@ const STATE_ROWS = [
             <StatePreview key="preview">
                 <Checkbox defaultChecked="indeterminate" aria-label="부분 선택" />
             </StatePreview>,
-            <code key="prop">checked=&quot;indeterminate&quot;</code>,
-        ],
-    },
-    {
-        key: 'disabled',
-        cells: [
-            '비활성',
-            <StatePreview key="preview">
-                <Checkbox disabled aria-label="비활성" />
+            <StatePreview key="disabled">
+                <Checkbox defaultChecked="indeterminate" disabled aria-label="부분 선택 비활성" />
             </StatePreview>,
-            <code key="prop">disabled</code>,
+            <code key="prop">checked=&quot;indeterminate&quot;</code>,
         ],
     },
 ] as const
@@ -184,7 +188,7 @@ const CheckboxGuidePage = () => (
     <GuidePageShell title="체크박스 (Checkbox)" description="여러 개를 고르거나 동의 여부를 받는 입력입니다.">
         <BaseCard>
             <section aria-labelledby="checkbox-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="checkbox-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -204,13 +208,13 @@ const CheckboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="checkbox-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="checkbox-variants" className="typo-h4-bold">
                         상태와 조합
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
-                        상태는 선택 · 부분 선택 · 비활성 세 가지입니다. 제어(<code>checked</code>)와 비제어(
-                        <code>defaultChecked</code>) 모두 지원합니다.
+                        상태는 미선택 · 선택 · 부분 선택 세 가지이고, 각 상태에 <code>disabled</code> 를 더하면 비활성이
+                        됩니다. 제어(<code>checked</code>)와 비제어(<code>defaultChecked</code>) 모두 지원합니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
@@ -221,7 +225,7 @@ const CheckboxGuidePage = () => (
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">라벨과 설명</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             설명이 있으면 <code>FieldContent</code> 안에 <code>FieldLabel</code> ·{' '}
                             <code>FieldDescription</code> 을 두고 <code>aria-describedby</code> 로 연결합니다.
                         </p>
@@ -241,7 +245,7 @@ const CheckboxGuidePage = () => (
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">전체 선택</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             하위 항목이 일부만 선택되면 요약 Checkbox 를 <code>indeterminate</code> 로 둡니다. 요약
                             Checkbox 에는 <code>name</code> 을 주지 않아 제출에는 하위 값만 포함됩니다.
                         </p>
@@ -252,7 +256,7 @@ const CheckboxGuidePage = () => (
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
                         <h3 className="typo-title-m-bold text-foreground">폼 제출과 오류</h3>
-                        <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                        <p className="typo-body-l-regular text-label-foreground">
                             체크된 항목의 <code>name</code> · <code>value</code> 만 제출됩니다. 같은 <code>name</code>{' '}
                             의 여러 값은 <code>FormData.getAll()</code> 로 읽습니다. 필수 동의 오류는 <code>Field</code>{' '}
                             의 <code>data-invalid</code>, <code>aria-invalid</code>, <code>FieldError</code> 로 알리고
@@ -267,7 +271,7 @@ const CheckboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="checkbox-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="checkbox-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -286,7 +290,7 @@ const CheckboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="checkbox-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="checkbox-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -318,7 +322,7 @@ const CheckboxGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="checkbox-api" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="checkbox-api" className="typo-h4-bold">
                         Props API
                     </h2>

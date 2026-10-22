@@ -12,7 +12,7 @@ export const metadata: Metadata = {title: '등급 매트릭스 (RatingMatrix)'}
 
 const REPORT_ROWS: RatingMatrixRow[] = [
     {id: 'sales-growth', label: '매출액증가율', rating: 'poor'},
-    {id: 'operating-margin', label: '영업이익율', rating: 'normal'},
+    {id: 'operating-margin', label: '영업이익률', rating: 'normal'},
     {id: 'equity-ratio', label: '자기자본비율', rating: 'good'},
     {id: 'asset-turnover', label: '총자본회전율', rating: 'excellent'},
     {id: 'cash-flow', label: '현금흐름', rating: 'weak'},
@@ -37,7 +37,7 @@ const USAGE_CODE = `import {RatingMatrix, type RatingMatrixRow} from '@/componen
 // rating: weak(취약) · poor(미흡) · normal(보통) · good(양호) · excellent(우수)
 const rows: RatingMatrixRow[] = [
   {id: 'sales-growth', label: '매출액증가율', rating: 'poor'},
-  {id: 'operating-margin', label: '영업이익율', rating: 'normal'},
+  {id: 'operating-margin', label: '영업이익률', rating: 'normal'},
 ]
 
 <RatingMatrix ariaLabel="재무비율진단 — 항목별 수준" rows={rows} />`
@@ -83,7 +83,7 @@ const RatingMatrixGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="rm-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="rm-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -101,7 +101,7 @@ const RatingMatrixGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rm-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="rm-variants" className="typo-h4-bold">
                         상태 예시
                     </h2>
@@ -139,7 +139,7 @@ const RatingMatrixGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rm-loading" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="rm-loading" className="typo-h4-bold">
                         로딩
                     </h2>
@@ -164,7 +164,7 @@ const RatingMatrixGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rm-data" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="rm-data" className="typo-h4-bold">
                         데이터 연결
                     </h2>
@@ -178,7 +178,7 @@ const RatingMatrixGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rm-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="rm-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -208,7 +208,7 @@ const RatingMatrixGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="rm-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="rm-props" className="typo-h4-bold">
                         Props API
                     </h2>

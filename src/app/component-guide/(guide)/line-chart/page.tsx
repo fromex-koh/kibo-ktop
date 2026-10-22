@@ -410,11 +410,11 @@ const FRAME_CLASS = 'border-subtle-3 bg-card rounded-sm border p-6'
 const LineChartGuidePage = () => (
     <GuidePageShell
         title="선 그래프 (LineChart)"
-        description="기간에 따라 값이 바뀌는 흐름을 점과 선(필요하면 면)으로 보여 주는 그래프입니다."
+        description="기간에 따라 값이 바뀌는 흐름을 점과 선(필요하면 면)으로 보여 주는 그래프입니다. 세로축 없이 점마다 값을 바로 적는 인쇄본용 한 계열 선 그래프는 ValueLineChart 입니다. 계열마다 선 · 점 모양을 바꾸는 인쇄본용 여러 계열 선 그래프는 MarkerLineChart 입니다."
     >
         <BaseCard>
             <section aria-labelledby="lc-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="lc-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -441,7 +441,7 @@ const LineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="lc-appearance" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="lc-appearance" className="typo-h4-bold">
                         틀 모양
                     </h2>
@@ -524,7 +524,7 @@ const LineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="lc-special" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="lc-special" className="typo-h4-bold">
                         특이한 값
                     </h2>
@@ -578,7 +578,7 @@ const LineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="lc-data" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="lc-data" className="typo-h4-bold">
                         데이터 연결
                     </h2>
@@ -592,7 +592,7 @@ const LineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="lc-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="lc-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -611,7 +611,7 @@ const LineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="lc-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="lc-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -651,7 +651,7 @@ const LineChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="lc-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="lc-props" className="typo-h4-bold">
                         Props API
                     </h2>

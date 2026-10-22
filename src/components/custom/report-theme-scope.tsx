@@ -10,10 +10,14 @@ import {cn} from '@/lib/utils'
 // usePathname 은 서버 렌더링에서도 값이 있어 첫 화면부터 맞는 테마로 그려진다(깜빡임 없음).
 // 인쇄는 테마와 관계없이 라이트로 찍는다(.print-light — tokens.css 의 @media print 블록). 종이에 어두운 면을 찍지 않는다.
 const THEME_FOLLOWING_REPORT_PREFIXES = ['/corp/k-bigx-report/', '/org/k-bigx-report/'] as const
+// 인쇄 템플릿 확인 화면(…/report-print)은 K-BIGx 경로라도 라이트로 고정한다 — 종이에 찍히는 모습 그대로 본다.
+const PRINT_TEMPLATE_SUFFIX = '/report-print'
 
 const ReportThemeScope = ({children}: {children: ReactNode}) => {
     const pathname = usePathname()
-    const isThemeFollowing = THEME_FOLLOWING_REPORT_PREFIXES.some((prefix) => pathname.startsWith(prefix))
+    const isThemeFollowing =
+        THEME_FOLLOWING_REPORT_PREFIXES.some((prefix) => pathname.startsWith(prefix)) &&
+        !pathname.endsWith(PRINT_TEMPLATE_SUFFIX)
 
     return (
         <div

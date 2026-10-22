@@ -935,6 +935,20 @@
             "name": "보고서 출력"
         },
         {
+            "key": "corp-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
+            "screenId": "SB-FOTA-CP7-0007",
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/report-print?sections=credit-finance&case=partner-corp",
+            "name": "신용/재무정보 — 타기업·협약기관 법인 열람"
+        },
+        {
+            "key": "corp-k-bigx-report-innovation-growth-report-report-print-case-partner-person",
+            "screenId": "SB-FOTA-CP7-0007",
+            "userType": "기업",
+            "path": "/corp/k-bigx-report/innovation-growth-report/report-print?sections=credit-finance&case=partner-person",
+            "name": "신용/재무정보 — 타기업·협약기관 개인 열람"
+        },
+        {
             "key": "corp-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",
             "screenId": "SB-FOTA-CS4-0007",
             "userType": "기업",
@@ -1017,6 +1031,13 @@
             "userType": "기업",
             "path": "/corp/mypage/profile/save-confirm",
             "name": "저장 전 최종 확인"
+        },
+        {
+            "key": "corp-mypage-profile-marketing-consent",
+            "screenId": null,
+            "userType": "기업",
+            "path": "/corp/mypage/profile/marketing-consent",
+            "name": "마케팅 정보 수신 동의"
         },
         {
             "key": "corp-mypage-representative-history-customer-consent-consent-popup",
@@ -2095,6 +2116,20 @@
             "userType": "기관",
             "path": "/org/k-bigx-report/innovation-growth-report/report-print",
             "name": "보고서 출력"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-report-print-case-partner-corp",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/report-print?sections=credit-finance&case=partner-corp",
+            "name": "신용/재무정보 — 타기업·협약기관 법인 열람"
+        },
+        {
+            "key": "org-k-bigx-report-innovation-growth-report-report-print-case-partner-person",
+            "screenId": null,
+            "userType": "기관",
+            "path": "/org/k-bigx-report/innovation-growth-report/report-print?sections=credit-finance&case=partner-person",
+            "name": "신용/재무정보 — 타기업·협약기관 개인 열람"
         },
         {
             "key": "org-k-bigx-report-innovation-growth-report-credit-finance-info-case-partner-corp",

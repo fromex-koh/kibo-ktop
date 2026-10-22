@@ -273,7 +273,7 @@ const SearchFilterFormGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="sff-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sff-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -290,7 +290,7 @@ const SearchFilterFormGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sff-composition" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sff-composition" className="typo-h4-bold">
                         구성 요소
                     </h2>
@@ -312,7 +312,7 @@ const SearchFilterFormGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sff-cases" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sff-cases" className="typo-h4-bold">
                         조합 예시
                     </h2>
@@ -353,7 +353,7 @@ const SearchFilterFormGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sff-submit" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sff-submit" className="typo-h4-bold">
                         폼 제출
                     </h2>
@@ -372,7 +372,7 @@ const SearchFilterFormGuidePage = () => (
                     }))}
                     size="md"
                 />
-                <p className="typo-body-l-regular text-label-foreground max-w-4xl">
+                <p className="typo-body-l-regular text-label-foreground">
                     <code>KeywordSearchField</code> 와 <code>SearchTypeField</code> 는 기본 제출 키가 둘 다{' '}
                     <code>searchType</code> 입니다. 한 폼에 함께 두면 한쪽의 <code>name</code> 을 바꿉니다.
                 </p>
@@ -382,7 +382,7 @@ const SearchFilterFormGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sff-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sff-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -399,7 +399,7 @@ const SearchFilterFormGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sff-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sff-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -427,7 +427,7 @@ const SearchFilterFormGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="sff-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="sff-props" className="typo-h4-bold">
                         Props API
                     </h2>

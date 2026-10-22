@@ -118,7 +118,7 @@ const RULE_ROWS = [
         key: 'long',
         cells: [
             '긴 단어',
-            '한 단어가 영역 폭의 92% 를 넘지 않게 그 단어만 줄이고, 12px 로도 넘치면 말줄임(…) — 전체 단어는 툴팁 · 숨김 목록.',
+            '한 단어가 영역 폭의 92% 를 넘지 않게 그 단어만 줄이고, 12px 로도 넘치면 말줄임(…). 전체 단어는 툴팁 · 숨김 목록에서 봅니다.',
         ],
     },
     {
@@ -137,7 +137,7 @@ const RULE_ROWS = [
     },
     {
         key: 'qa',
-        cells: ['QA 확인', '캔버스의 data-drawn-words 가 그려진 단어 수입니다(예: 18/18 — 받은 수와 같아야 함).'],
+        cells: ['QA 확인', '캔버스의 data-drawn-words 가 그려진 단어 수입니다(예: 18/18). 받은 수와 같아야 합니다.'],
     },
 ] as const
 
@@ -169,13 +169,13 @@ const PROPS_ITEMS = [
     [
         'WordCloudItem',
         'color',
-        '이 단어만 다른 색(colors 보다 우선). 토큰 변수입니다 — K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>) — 다크에서 밝은 단계로 바뀐다.',
+        '이 단어만 다른 색(colors 보다 우선). 토큰 변수입니다. K-BIGx 보고서는 var(--ds-report-series-N), 그 밖은 var(--ds-<색>-<단계>)를 쓰며 다크에서 밝은 단계로 바뀝니다.',
         '-',
         'string',
     ],
 ] as const
 
-const SECTION_HEAD = 'flex max-w-4xl flex-col gap-2'
+const SECTION_HEAD = 'flex flex-col gap-2'
 const SUB_BLOCK = 'flex flex-col gap-4 py-8 last:pb-0'
 const DEMO_FRAME = 'bg-surface border-border overflow-hidden rounded-xl border p-4'
 
@@ -259,7 +259,8 @@ const WordCloudGuidePage = () => (
                     <div className={SUB_BLOCK}>
                         <h3 className="typo-title-m-bold text-foreground">3-2. 단어 수</h3>
                         <p className="typo-body-l-regular text-label-foreground">
-                            같은 틀(높이 216)에 단어 수만 다르게 — 적으면 크게, 많으면 작게 그려 늘 틀을 채웁니다.
+                            같은 틀(높이 216)에 단어 수만 다르게 했습니다. 적으면 크게, 많으면 작게 그려 늘 틀을
+                            채웁니다.
                         </p>
                         <div className={DEMO_FRAME}>
                             <WordCloudCountDemo />
@@ -317,8 +318,8 @@ const WordCloudGuidePage = () => (
                         <li>
                             API 점수를 <code>weight</code>(1~100, 가장 큰 값 = 100)로 바꾸고 중요도순으로 정렬합니다.
                         </li>
-                        <li>같은 키워드는 먼저 합칩니다 — 색 · 숨김 목록이 중복되지 않게.</li>
-                        <li>키워드는 자르지 말고 전부 넘깁니다 — 컴포넌트가 모두 그립니다.</li>
+                        <li>같은 키워드는 먼저 합쳐 색 · 숨김 목록이 중복되지 않게 합니다.</li>
+                        <li>키워드는 자르지 말고 전부 넘깁니다. 컴포넌트가 모두 그립니다.</li>
                     </ul>
                 </div>
                 <CodeBlock code={DATA_CODE} language="tsx" copyLabel="복사" />
@@ -343,10 +344,10 @@ const WordCloudGuidePage = () => (
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
                         캔버스는 <code>role=&quot;img&quot;</code> + <code>ariaLabel</code>, 숨김 목록(&quot;단어:
-                        중요도 n&quot;)이 모든 단어를 읽습니다 — 말줄임한 단어도 전체 이름으로[5.1.1].
+                        중요도 n&quot;)이 모든 단어를 읽습니다. 말줄임한 단어도 전체 이름으로 읽습니다[5.1.1].
                     </li>
                     <li>색은 뜻을 전하지 않고, 크기와 목록 순서가 중요도를 전합니다[5.3.1].</li>
-                    <li>툴팁은 보조 정보입니다 — 같은 내용을 숨김 목록에서 읽습니다.</li>
+                    <li>툴팁은 보조 정보입니다. 같은 내용을 숨김 목록에서 읽습니다.</li>
                     <li>
                         보고서(<code>ChartRevealProvider</code>)에서는 차트가 화면에 절반 이상 보일 때 아래에서
                         떠오르고(0.6초), 동작 줄이기 설정이면 움직이지 않습니다[6.3.1].

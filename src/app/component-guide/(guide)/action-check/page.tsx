@@ -61,7 +61,7 @@ const ActionCheckGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="action-check-default" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="action-check-default" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -79,7 +79,7 @@ const ActionCheckGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="action-check-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="action-check-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -105,7 +105,7 @@ const ActionCheckGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="action-check-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="action-check-props" className="typo-h4-bold">
                         Props API
                     </h2>

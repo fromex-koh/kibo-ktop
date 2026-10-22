@@ -60,6 +60,8 @@ const COLUMN_CODE = `import {PRIVATE_SHORT_LABEL, PrivateCell} from '@/component
 />`
 
 const DATA_CODE = `// 비공개 여부는 API 가 준다. 비공개면 실제 값 대신 임의의 자리 표시 값을 넘긴다
+// 가짜 값(칸 '0000-00-00' · 금액 '000,000' · 연도 · 비중 · 금액)은 PRIVATE_PLACEHOLDER 한 곳에서 관리한다
+// — K-BIGx 웹 보고서 · 인쇄본이 함께 쓴다. 이름 · 색만 쓰는 쪽에서 붙인다.
 {institution.isPrivate ? (
   <PrivateContent>
     <InstitutionCard data={INSTITUTION_PLACEHOLDER} />
@@ -146,7 +148,7 @@ const PrivateContentGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="pc-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -154,6 +156,12 @@ const PrivateContentGuidePage = () => (
                         가릴 덩어리를 <code>PrivateContent</code> 로 감쌉니다. 흐린 자리 표시 위에 흰 면(
                         <code>bg-card/80</code>)이 덮이고 가운데에 안내가 놓입니다. 안내 기본값은 “정책에 따라 비공개
                         처리된 정보입니다.”입니다.
+                    </p>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        K-BIGx 인쇄본은 같은 모양 · 같은 안내 문구를 kbx 값으로 그린 <code>KbxPrivateContent</code>
+                        (kbigx-print-parts.tsx)를 씁니다. 열람 케이스별 가림 범위도 웹 보고서와 같습니다. 기업신용정보
+                        표는 흐리지 않고(법인열람 · 개인열람 공통) 값 줄을 “비공개” 한 줄로 바꾸고 제목 옆 상태를
+                        뺍니다(웹 · 인쇄본 공통). 상태가 ‘해당없음’ 인 표는 그대로 ‘해당사항 없음’ 입니다.
                     </p>
                 </div>
                 <PrivateContent>
@@ -187,7 +195,7 @@ const PrivateContentGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pc-cases" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-cases" className="typo-h4-bold">
                         범위별 예시
                     </h2>
@@ -298,7 +306,7 @@ const PrivateContentGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pc-data" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-data" className="typo-h4-bold">
                         데이터 연결
                     </h2>
@@ -313,7 +321,7 @@ const PrivateContentGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pc-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -330,7 +338,7 @@ const PrivateContentGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pc-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -353,7 +361,7 @@ const PrivateContentGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pc-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pc-props" className="typo-h4-bold">
                         Props API
                     </h2>

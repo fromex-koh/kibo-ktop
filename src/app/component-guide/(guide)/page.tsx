@@ -1,9 +1,10 @@
 import type {Metadata} from 'next'
+import type {ReactNode} from 'react'
 import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
-import {SectionHeader, SectionHeaderDescription, SectionHeaderTitle} from '@/components/composite/section-header'
 import CodeBlock from '@/components/custom/code-block'
-import {ComponentLayerBadge} from '@/components/custom/component-layer-badge'
+import {ComponentLayerBadge, KbigxPrintBadge} from '@/components/custom/component-layer-badge'
+import {GUIDE_KBIGX_PRINT_ITEMS} from '@/constants/publishing-guide'
 
 export const metadata: Metadata = {
     title: {absolute: '컴포넌트 가이드'},
@@ -162,6 +163,31 @@ const WORKFLOW = [
     },
 ]
 
+const JUMP_LINK_CLASS =
+    'border-border bg-card typo-body-l-bold text-foreground hover:bg-muted focus-visible:ring-ring rounded-md border px-4 py-2 outline-ring focus:outline-none focus-visible:ring-2'
+
+const GROUPS = [
+    {id: 'guide-start-group', title: '1. 시작하기', description: '필요한 가이드를 찾고, 화면에 적용하는 순서입니다.'},
+    {
+        id: 'guide-structure-group',
+        title: '2. 구조',
+        description: '디자인 값과 컴포넌트가 어디에 있고 어떻게 이어지는지입니다.',
+    },
+    {
+        id: 'guide-handoff-group',
+        title: '3. 전달 · 검증',
+        description: '프론트엔드 저장소로 넘기는 방법과 바꾼 뒤 확인할 것입니다.',
+    },
+] as const
+
+// 섹션 묶음 제목 — 아래 카드들이 이 묶음에 속한다.
+const GroupHeading = ({id, title, children}: {id: string; title: string; children: ReactNode}) => (
+    <div className="flex scroll-mt-24 flex-col gap-2 pt-4" id={id}>
+        <h2 className="typo-h3-bold text-foreground">{title}</h2>
+        <p className="typo-body-l-regular text-label-foreground">{children}</p>
+    </div>
+)
+
 const ComponentGuidePage = () => (
     <div className="max-w-content mx-auto flex w-full flex-col gap-10 px-6 py-12 md:py-16">
         <header className="flex flex-col gap-3">
@@ -170,17 +196,30 @@ const ComponentGuidePage = () => (
                 디자인 토큰과 공통 컴포넌트의 실제 구현 기준을 확인합니다. 필요한 항목을 찾고, 적용 가능한 API와 상태를
                 검증하는 문서입니다.
             </p>
+            <nav aria-label="컴포넌트 가이드 홈 구성" className="flex flex-wrap gap-3 pt-3">
+                {GROUPS.map((group) => (
+                    <a key={group.id} href={`#${group.id}`} className={JUMP_LINK_CLASS}>
+                        {group.title}
+                    </a>
+                ))}
+            </nav>
         </header>
+
+        <GroupHeading id={GROUPS[0].id} title={GROUPS[0].title}>
+            {GROUPS[0].description}
+        </GroupHeading>
 
         <section aria-labelledby="guide-map-title">
             <BaseCard>
-                <SectionHeader className="mb-6">
-                    <SectionHeaderTitle id="guide-map-title">가이드 탐색</SectionHeaderTitle>
-                    <SectionHeaderDescription>
+                <div className="mb-6 flex flex-col gap-2">
+                    <h3 id="guide-map-title" className="typo-h4-bold text-foreground">
+                        1-1. 가이드 탐색
+                    </h3>
+                    <p className="typo-body-l-regular text-label-foreground">
                         기초 값에서 화면 구현으로 이어지는 순서입니다. 전체 문서는 사이드바에서 항목별로 이동할 수
                         있습니다.
-                    </SectionHeaderDescription>
-                </SectionHeader>
+                    </p>
+                </div>
                 <div className="grid gap-4 md:grid-cols-2">
                     {START_LINKS.map((item) => (
                         <Link
@@ -188,7 +227,7 @@ const ComponentGuidePage = () => (
                             href={item.href}
                             className="border-foreground-subtle/30 bg-pastel-neutral/40 hover:border-primary focus-visible:ring-ring flex flex-col gap-2 rounded-sm border p-5 transition-colors outline-none focus-visible:ring-2"
                         >
-                            <h3 className="typo-body-xl-bold text-foreground">{item.title}</h3>
+                            <h4 className="typo-body-xl-bold text-foreground">{item.title}</h4>
                             <p className="text-label-foreground">{item.description}</p>
                         </Link>
                     ))}
@@ -198,12 +237,14 @@ const ComponentGuidePage = () => (
 
         <section aria-labelledby="application-flow-title">
             <BaseCard>
-                <SectionHeader className="mb-6">
-                    <SectionHeaderTitle id="application-flow-title">화면 적용 흐름</SectionHeaderTitle>
-                    <SectionHeaderDescription>
+                <div className="mb-6 flex flex-col gap-2">
+                    <h3 id="application-flow-title" className="typo-h4-bold text-foreground">
+                        1-2. 화면 적용 흐름
+                    </h3>
+                    <p className="typo-body-l-regular text-label-foreground">
                         새로운 값을 바로 추가하기 전에 기존 토큰과 컴포넌트로 표현할 수 있는지 확인합니다.
-                    </SectionHeaderDescription>
-                </SectionHeader>
+                    </p>
+                </div>
                 <ol className="grid gap-4 md:grid-cols-2">
                     {WORKFLOW.map((item) => (
                         <li
@@ -214,7 +255,7 @@ const ComponentGuidePage = () => (
                                 {item.number}
                             </span>
                             <div className="flex flex-col gap-1">
-                                <h3 className="typo-body-xl-bold text-foreground">{item.title}</h3>
+                                <h4 className="typo-body-xl-bold text-foreground">{item.title}</h4>
                                 <p className="text-label-foreground">{item.description}</p>
                             </div>
                         </li>
@@ -223,14 +264,20 @@ const ComponentGuidePage = () => (
             </BaseCard>
         </section>
 
+        <GroupHeading id={GROUPS[1].id} title={GROUPS[1].title}>
+            {GROUPS[1].description}
+        </GroupHeading>
+
         <section aria-labelledby="token-source-title">
             <BaseCard>
-                <SectionHeader className="mb-6">
-                    <SectionHeaderTitle id="token-source-title">토큰 변경 흐름</SectionHeaderTitle>
-                    <SectionHeaderDescription>
+                <div className="mb-6 flex flex-col gap-2">
+                    <h3 id="token-source-title" className="typo-h4-bold text-foreground">
+                        2-1. 토큰 변경 흐름
+                    </h3>
+                    <p className="typo-body-l-regular text-label-foreground">
                         <code className="text-foreground font-mono">tokens.json</code>이 디자인 값의 단일 원본입니다.
-                    </SectionHeaderDescription>
-                </SectionHeader>
+                    </p>
+                </div>
                 <div className="border-primary/30 bg-primary-subtle text-foreground overflow-x-auto rounded-sm border p-5 text-center font-mono text-sm font-semibold">
                     tokens.json → scripts/build-tokens.mjs → src/app/tokens.css → globals.css
                 </div>
@@ -251,12 +298,14 @@ const ComponentGuidePage = () => (
 
         <section aria-labelledby="architecture-title">
             <BaseCard>
-                <SectionHeader className="mb-6">
-                    <SectionHeaderTitle id="architecture-title">컴포넌트 폴더</SectionHeaderTitle>
-                    <SectionHeaderDescription>
+                <div className="mb-6 flex flex-col gap-2">
+                    <h3 id="architecture-title" className="typo-h4-bold text-foreground">
+                        2-2. 컴포넌트 폴더
+                    </h3>
+                    <p className="typo-body-l-regular text-label-foreground">
                         <code className="text-foreground font-mono">src/components</code> 아래 네 폴더의 역할입니다.
-                    </SectionHeaderDescription>
-                </SectionHeader>
+                    </p>
+                </div>
                 <div className="grid gap-4 md:grid-cols-2">
                     {ARCHITECTURE.map((layer) => (
                         // 카드마다 같은 자리에 같은 종류의 정보가 오게 한다 — 폴더(배지 · 경로) → 한 줄 정의 → 예시 · 규칙.
@@ -270,7 +319,7 @@ const ComponentGuidePage = () => (
                                     src/components/{layer.name}
                                 </code>
                             </div>
-                            <h3 className="typo-title-m-bold text-foreground">{layer.summary}</h3>
+                            <h4 className="typo-title-m-bold text-foreground">{layer.summary}</h4>
                             <dl className="border-subtle-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 border-t pt-3">
                                 <dt className="typo-body-l-bold text-foreground-subtle">예시</dt>
                                 <dd className="text-label-foreground font-mono text-sm">{layer.examples}</dd>
@@ -280,6 +329,43 @@ const ComponentGuidePage = () => (
                         </div>
                     ))}
                 </div>
+                {/* K-BIGx 인쇄 템플릿 표시 — 각 가이드 제목 옆 배지와 같은 배지 · 툴팁. 목록은 메뉴(isKbigxPrint)에서 만든다. */}
+                <section
+                    aria-labelledby="kbigx-print-guides-title"
+                    className="border-subtle-2 bg-surface mt-4 flex flex-col gap-3 rounded-sm border p-5"
+                >
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                        <KbigxPrintBadge />
+                        <code className="text-foreground-subtle font-mono text-xs">
+                            /corp/k-bigx-report/innovation-growth-report/report-print
+                        </code>
+                    </div>
+                    <h4 id="kbigx-print-guides-title" className="typo-title-m-bold text-foreground">
+                        K-BIGx 보고서 인쇄 템플릿에서 쓰는 컴포넌트
+                    </h4>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        이 배지가 붙은 가이드의 컴포넌트를 고치면 인쇄본도 함께 확인합니다. 인쇄본 전용 부품 · 규칙은{' '}
+                        <Link
+                            href="/component-guide/report-shell"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            리포트 공통 (Report)
+                        </Link>{' '}
+                        가이드에 있습니다.
+                    </p>
+                    <ul className="border-subtle-3 flex flex-wrap gap-x-4 gap-y-2 border-t pt-3">
+                        {GUIDE_KBIGX_PRINT_ITEMS.map((item) => (
+                            <li key={item.href}>
+                                <Link
+                                    href={item.href}
+                                    className="text-primary-strong font-mono text-sm underline underline-offset-4"
+                                >
+                                    {item.label}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
                 <p className="border-primary/30 bg-primary-subtle text-foreground mt-4 overflow-x-auto rounded-sm border p-5 text-center font-mono text-sm font-semibold">
                     tokens → theme + ui → composite / custom → screen
                 </p>
@@ -298,11 +384,17 @@ const ComponentGuidePage = () => (
             </BaseCard>
         </section>
 
+        <GroupHeading id={GROUPS[2].id} title={GROUPS[2].title}>
+            {GROUPS[2].description}
+        </GroupHeading>
+
         <section aria-labelledby="transfer-title">
             <BaseCard>
-                <SectionHeader className="mb-6">
-                    <SectionHeaderTitle id="transfer-title">다른 저장소로 이식</SectionHeaderTitle>
-                    <SectionHeaderDescription asChild>
+                <div className="mb-6 flex flex-col gap-2">
+                    <h3 id="transfer-title" className="typo-h4-bold text-foreground">
+                        3-1. 다른 저장소로 이식
+                    </h3>
+                    <div className="typo-body-l-regular text-label-foreground">
                         <ul className="flex list-disc flex-col gap-1 pl-5">
                             <li>
                                 <code className="text-foreground font-mono">frontend-handoff</code>는 프론트엔드 개발
@@ -314,13 +406,13 @@ const ComponentGuidePage = () => (
                                 관리합니다.
                             </li>
                         </ul>
-                    </SectionHeaderDescription>
-                </SectionHeader>
+                    </div>
+                </div>
 
                 {/* 소제목 블록마다 가로선과 같은 여백으로 갈라, 섹션 제목 → 소제목 → 카드 제목 순서가 눈에 보이게 한다. */}
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className="flex flex-col gap-3 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">전달 결과물</h3>
+                        <h4 className="typo-title-m-bold text-foreground">전달 결과물</h4>
                         <p className="text-label-foreground">
                             프로젝트 화면, 퍼블리싱 인덱스, 컴포넌트 가이드와 shadcn 원본 비교 기준을 함께 제공합니다.
                         </p>
@@ -328,7 +420,7 @@ const ComponentGuidePage = () => (
                     </div>
 
                     <div className="flex flex-col gap-3 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">전달에서 제외·교체</h3>
+                        <h4 className="typo-title-m-bold text-foreground">전달에서 제외·교체</h4>
                         <p className="text-label-foreground">
                             제작 저장소의 규칙·검사·릴리스 도구와 원본 저장소 전용 코드는 제외합니다. 실행 환경, 루트
                             화면, README와 사이트 설정은 전달 목적에 맞게 재구성합니다.
@@ -337,7 +429,7 @@ const ComponentGuidePage = () => (
                     </div>
 
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">생성·검증 흐름</h3>
+                        <h4 className="typo-title-m-bold text-foreground">생성·검증 흐름</h4>
                         <ol className="grid gap-4 md:grid-cols-2">
                             {HANDOFF_FLOW.map(([number, title, description]) => (
                                 <li
@@ -348,7 +440,7 @@ const ComponentGuidePage = () => (
                                         {number}
                                     </span>
                                     <div className="flex flex-col gap-1">
-                                        <h4 className="typo-body-xl-bold text-foreground">{title}</h4>
+                                        <h5 className="typo-body-xl-bold text-foreground">{title}</h5>
                                         <p className="text-label-foreground">{description}</p>
                                     </div>
                                 </li>
@@ -358,16 +450,16 @@ const ComponentGuidePage = () => (
 
                     {/* 흐름(순서)과 책임 범위(누가 맡는가)는 다른 이야기라 소제목으로 가른다. */}
                     <div className="flex flex-col gap-4 py-8 last:pb-0">
-                        <h3 className="typo-title-m-bold text-foreground">책임 범위</h3>
+                        <h4 className="typo-title-m-bold text-foreground">책임 범위</h4>
                         <div className="grid gap-4 md:grid-cols-2">
                             <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
-                                <h4 className="typo-body-xl-bold text-foreground">제작 품질</h4>
+                                <h5 className="typo-body-xl-bold text-foreground">제작 품질</h5>
                                 <p className="text-label-foreground mt-2">
                                     토큰, 컴포넌트, 페이지와 빌드 품질은 현재 퍼블리싱 저장소가 검증하고 책임합니다.
                                 </p>
                             </div>
                             <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
-                                <h4 className="typo-body-xl-bold text-foreground">전달 이후 개발</h4>
+                                <h5 className="typo-body-xl-bold text-foreground">전달 이후 개발</h5>
                                 <p className="text-label-foreground mt-2">
                                     전달 이후의 개발 규칙과 서비스 운영 정책은 프론트엔드 저장소에서 구성하고
                                     관리합니다.
@@ -381,15 +473,17 @@ const ComponentGuidePage = () => (
 
         <section aria-labelledby="verification-title">
             <BaseCard>
-                <SectionHeader className="mb-6">
-                    <SectionHeaderTitle id="verification-title">변경 후 확인</SectionHeaderTitle>
-                    <SectionHeaderDescription>
+                <div className="mb-6 flex flex-col gap-2">
+                    <h3 id="verification-title" className="typo-h4-bold text-foreground">
+                        3-2. 변경 후 확인
+                    </h3>
+                    <p className="typo-body-l-regular text-label-foreground">
                         토큰이나 컴포넌트를 변경하면 원본 검증부터 전달본 재생성·독립 빌드·이력 반영까지 확인합니다.
-                    </SectionHeaderDescription>
-                </SectionHeader>
+                    </p>
+                </div>
                 <div className="grid gap-4 md:grid-cols-2">
                     <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
-                        <h3 className="typo-body-xl-bold text-foreground">제작 저장소 검증</h3>
+                        <h4 className="typo-body-xl-bold text-foreground">제작 저장소 검증</h4>
                         <p className="text-label-foreground mt-2">
                             <code className="text-foreground font-mono">yarn verify</code>와{' '}
                             <code className="text-foreground font-mono">yarn build</code>로 토큰, 규칙, 타입과 전체
@@ -397,13 +491,13 @@ const ComponentGuidePage = () => (
                         </p>
                     </div>
                     <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
-                        <h3 className="typo-body-xl-bold text-foreground">가이드·사용처 동기화</h3>
+                        <h4 className="typo-body-xl-bold text-foreground">가이드·사용처 동기화</h4>
                         <p className="text-label-foreground mt-2">
                             변경된 API, 토큰, 상태 예시와 실제 사용처를 함께 갱신하고 mobile·tablet·PC에서 확인합니다.
                         </p>
                     </div>
                     <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
-                        <h3 className="typo-body-xl-bold text-foreground">전달 경계 확인</h3>
+                        <h4 className="typo-body-xl-bold text-foreground">전달 경계 확인</h4>
                         <p className="text-label-foreground mt-2">
                             <code className="text-foreground font-mono">/</code>,{' '}
                             <code className="text-foreground font-mono">/publishing-guide</code>와{' '}
@@ -412,7 +506,7 @@ const ComponentGuidePage = () => (
                         </p>
                     </div>
                     <div className="border-foreground-subtle/30 bg-pastel-neutral/40 rounded-sm border p-5">
-                        <h3 className="typo-body-xl-bold text-foreground">전달본 최종 빌드</h3>
+                        <h4 className="typo-body-xl-bold text-foreground">전달본 최종 빌드</h4>
                         <p className="text-label-foreground mt-2">
                             전달본에서 <code className="text-foreground font-mono">yarn build</code>를 통과한 뒤 기존{' '}
                             <code className="text-foreground font-mono">frontend-handoff</code> 이력의 다음 커밋으로

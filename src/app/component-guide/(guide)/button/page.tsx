@@ -262,7 +262,7 @@ const ButtonGuidePage = () => (
     <GuidePageShell title="버튼 (Button)" description="강조 단계(variant)와 크기(size)를 고르는 공통 버튼입니다.">
         <BaseCard>
             <section aria-labelledby="button-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="button-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -288,7 +288,7 @@ const ButtonGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="button-variant" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="button-variant" className="typo-h4-bold">
                         Variant 선택
                     </h2>
@@ -302,7 +302,7 @@ const ButtonGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="button-disabled" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="button-disabled" className="typo-h4-bold">
                         비활성(disabled) 스타일
                     </h2>
@@ -328,7 +328,7 @@ const ButtonGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="button-size" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="button-size" className="typo-h4-bold">
                         Size 선택
                     </h2>
@@ -354,7 +354,7 @@ const ButtonGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="button-patterns" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="button-patterns" className="typo-h4-bold">
                         구현 패턴
                     </h2>
@@ -429,7 +429,7 @@ const ButtonGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="button-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="button-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -457,7 +457,7 @@ const ButtonGuidePage = () => (
 
         <BaseCard>
             <section id="button-api" aria-labelledby="button-api-title" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="button-api-title" className="typo-h4-bold">
                         Props API
                     </h2>

@@ -104,7 +104,13 @@ export type ReleaseNoteHandoff = {
     details: {label: string; value: string}[]
 }
 
-export type ReleaseNoteChange = string | ReleaseNoteHandoff
+// 작업 묶음 머리 — 이 뒤로 다음 묶음 전까지의 카드가 한 작업이다(초안의 '# 작업: 이름').
+export type ReleaseNoteGroup = {
+    type: 'group'
+    title: string
+}
+
+export type ReleaseNoteChange = string | ReleaseNoteHandoff | ReleaseNoteGroup
 
 // main 릴리스마다 GitHub Actions가 누적하는 변경 내역.
 export type ReleaseNote = {

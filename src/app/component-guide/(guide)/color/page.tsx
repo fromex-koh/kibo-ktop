@@ -11,6 +11,9 @@ import tokens from '@tokens'
 
 export const metadata: Metadata = {title: '색상 (Primitive)'}
 
+const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
+const CODE_CLASS = 'text-foreground font-mono'
+
 // tokens.json 은 hex 로 저장하지만 이 화면에는 rgba 문자열로 보여준다(값은 동일).
 const hexToRgba = (hex: string): string => {
     const r = parseInt(hex.slice(1, 3), 16)
@@ -30,7 +33,7 @@ const alphaRgba = (color: string, step: number): string =>
 const CHECKERBOARD =
     'repeating-conic-gradient(var(--raw-gray-300) 0% 25%, var(--raw-common-white) 0% 50%) 0 0 / 8px 8px'
 
-// hue가 속한 그룹(brand/system) 라벨 — Figma의 "brand / blue" 표기를 재현한다. 미정의면 hue명으로 대체.
+// hue가 속한 그룹(brand/system) 라벨 — "brand / blue" 표기. 미정의면 hue명으로 대체.
 const groupOf = (hue: string): string =>
     Object.entries(tokens.primitiveGroups).find(([, hues]) => hues.includes(hue))?.[0] ?? hue
 
@@ -59,7 +62,6 @@ const USAGE_MARKS: Record<string, Record<string, string>> = {
 }
 
 // background·surface 구간은 common.white 에서 시작하므로 common 표에도 같은 표식을 단다.
-// 표식이 없는 색은 semanticUsersOf 가 tokens.json 시맨틱 참조에서 용도를 찾는다.
 const COMMON_USAGE_MARKS: Record<string, string> = {white: 'background, surface'}
 
 type SwatchRow = {name: string; cssVar: string; value: string; usage?: string}
@@ -71,48 +73,64 @@ const COLOR_TABLE_COLUMNS = [
 ] as const
 
 // 팔레트 하나 = 공용 Table의 sm 크기. 투명 값도 보이도록 스와치 뒤에 체커보드를 둔다.
-const ColorTable = ({title, caption, rows}: {title: ReactNode; caption: string; rows: SwatchRow[]}) => (
-    <section className="flex flex-col gap-2">
-        <h3 className="typo-body-l-medium">{title}</h3>
-        <Table
-            size="sm"
-            caption={`${caption} 원시 색상 변수와 값`}
-            columns={COLOR_TABLE_COLUMNS}
-            rows={rows.map((row) => ({
-                key: row.name,
-                // 용도가 있는 행만 옅은 포인트 면으로 표시한다 — primary-subtle 은 light 에서 blue.50,
-                // dark 에서 반사값이라 본문 대비를 해치지 않는다([PB-06]).
-                className: row.usage ? 'bg-primary-subtle/60' : undefined,
-                cells: [
-                    <span key="variable" className="text-foreground font-mono">
-                        {row.cssVar.slice(4, -1)}
-                    </span>,
-                    <span key="value" className="flex items-center gap-3">
-                        <span
-                            aria-hidden="true"
-                            className="border-border size-icon-md relative shrink-0 overflow-hidden rounded border"
-                            style={{background: CHECKERBOARD}}
-                        >
-                            <span className="absolute inset-0" style={{background: row.cssVar}} />
-                        </span>
-                        <span className="text-muted-foreground font-mono whitespace-nowrap">{row.value}</span>
-                    </span>,
-                    <span key="usage" className="text-muted-foreground whitespace-nowrap">
-                        {row.usage}
-                    </span>,
-                ],
-            }))}
-        />
-    </section>
-)
+// 제목 단계는 놓이는 자리에 맞춘다 — 섹션(h2) 바로 아래면 h3, 소제목(h3) 아래면 h4.
+const ColorTable = ({
+    title,
+    caption,
+    rows,
+    headingLevel = 3,
+}: {
+    title: ReactNode
+    caption: string
+    rows: SwatchRow[]
+    headingLevel?: 3 | 4
+}) => {
+    const Heading = headingLevel === 3 ? 'h3' : 'h4'
+
+    return (
+        <section className="flex flex-col gap-2">
+            <Heading className="typo-body-l-medium">{title}</Heading>
+            <Table
+                size="sm"
+                caption={`${caption} 원시 색상 변수와 값`}
+                columns={COLOR_TABLE_COLUMNS}
+                rows={rows.map((row) => ({
+                    key: row.name,
+                    // 용도가 있는 행만 옅은 포인트 면으로 표시한다([PB-06]).
+                    className: row.usage ? 'bg-primary-subtle/60' : undefined,
+                    cells: [
+                        <span key="variable" className="text-foreground font-mono">
+                            {row.cssVar.slice(4, -1)}
+                        </span>,
+                        <span key="value" className="flex items-center gap-3">
+                            <span
+                                aria-hidden="true"
+                                className="border-border size-icon-md relative shrink-0 overflow-hidden rounded border"
+                                style={{background: CHECKERBOARD}}
+                            >
+                                <span className="absolute inset-0" style={{background: row.cssVar}} />
+                            </span>
+                            <span className="text-muted-foreground font-mono whitespace-nowrap">{row.value}</span>
+                        </span>,
+                        <span key="usage" className="text-muted-foreground whitespace-nowrap">
+                            {row.usage}
+                        </span>,
+                    ],
+                }))}
+            />
+        </section>
+    )
+}
 
 const primitive: Record<string, Record<string, string>> = tokens.primitive
 const primitiveGroups: Record<string, string[]> = tokens.primitiveGroups
 const common: Record<string, string> = tokens.common
 const extra: Record<string, string> = tokens.extra
 const alpha: Record<string, number[]> = tokens.alpha
+// 인쇄본 역할 색 — 값은 참조('blue.500') 또는 섞은 색({mix, amount, base}).
+const kbxColor: Record<string, string | {mix: string; amount: number; base: string}> = tokens.kbigxPrint.color
 
-// 용도 = 이 색('common.white' · 'extra.cyan')을 참조하는 시맨틱 토큰 이름. 단일 색은 색 이름만 갖고 쓰임새는 시맨틱이 갖는다.
+// 용도 = 이 색('common.white' · 'extra.cyan')을 참조하는 시맨틱 토큰 이름.
 const semanticUsersOf = (reference: string) => {
     const users = Object.entries(tokens.semantic)
         .filter(([, modes]) => typeof modes === 'object' && Object.values(modes).includes(reference))
@@ -120,58 +138,166 @@ const semanticUsersOf = (reference: string) => {
     return users.length ? users.join(', ') : undefined
 }
 
-// 두 계층 비교 카드 — 같은 항목을 같은 순서로 둔다.
+// K-BIGx 인쇄본 역할 색(kbigxPrint.color) 중 이 색을 참조하는 것 → kbx-primary 처럼 보인다.
+const kbxUsersOf = (reference: string) => {
+    const users = Object.entries(kbxColor)
+        .filter(([, value]) => (typeof value === 'string' ? [value] : [value.mix, value.base]).includes(reference))
+        .map(([role]) => `kbx-${role}`)
+    return users.length ? users.join(', ') : undefined
+}
+
+// extra 를 웹 화면용과 K-BIGx 인쇄본 전용으로 나눈다 — 인쇄본 역할 색만 참조하면 인쇄본 전용이다.
+const extraEntries = Object.entries(extra)
+const reportExtra = extraEntries.filter(([name]) => kbxUsersOf(`extra.${name}`) && !semanticUsersOf(`extra.${name}`))
+const webExtra = extraEntries.filter(([name]) => !reportExtra.some(([reportName]) => reportName === name))
+
+// 1. 한눈에 보기 — 색이 화면까지 오는 길.
+const FLOW_STEPS = [
+    {label: 'tokens.json', note: '원본 값'},
+    {label: 'Primitive', note: '--raw-*'},
+    {label: '시맨틱', note: '--ds-*'},
+    {label: '유틸리티', note: 'bg-primary'},
+] as const
+
 const COLOR_LAYERS = [
     {
         name: 'Primitive',
-        usage: '보조 수단',
+        usage: '재료',
         isUsable: false,
-        summary:
-            '색 이름과 단계로 정의한 고정 팔레트입니다. 시맨틱의 재료입니다. --raw-* 는 모드와 무관한 고정값이고, 팔레트 유틸리티는 다크에서 단계가 반사됩니다.',
+        summary: '색 이름과 단계로 정한 고정 팔레트입니다. 화면에 직접 쓰지 않고 시맨틱이 가져다 씁니다.',
         variable: '--raw-*',
-        example: 'bg-blue-500 · text-gray-700',
-        where: '시맨틱 매핑 · 토큰 문서 · 시맨틱으로 표현할 수 없는 예외 색',
+        example: 'blue.500 · extra.cyan',
     },
     {
         name: '시맨틱 (Semantic)',
-        usage: '화면 · 컴포넌트에서 사용',
+        usage: '화면에서 사용',
         isUsable: true,
-        summary: '용도에 이름을 붙인 색입니다. Primitive 를 참조합니다.',
+        summary: '용도에 이름을 붙인 색입니다. 라이트 · 다크 값이 자동으로 바뀝니다.',
         variable: '--ds-*',
         example: 'bg-primary · text-foreground',
-        where: '모든 화면과 컴포넌트의 className',
     },
 ] as const
 
-const COLOR_CHANGE_STEPS = [
-    {command: 'tokens.json', description: '원본 값을 바꿉니다.'},
-    {command: 'yarn tokens', description: 'CSS 를 다시 생성합니다.'},
-    {command: 'yarn verify', description: '참조 · 타입을 검증합니다.'},
+// 2. 사용 규칙
+const DO_RULES = [
+    <>
+        역할이 드러나는 시맨틱 유틸리티를 씁니다(<code className={CODE_CLASS}>bg-surface</code> ·{' '}
+        <code className={CODE_CLASS}>text-foreground</code> · <code className={CODE_CLASS}>border-border</code>).
+    </>,
+    <>
+        반투명은 <code className={CODE_CLASS}>alpha</code>(1~99%), 완전 투명 · 불투명은{' '}
+        <code className={CODE_CLASS}>common</code> 을 참조합니다.
+    </>,
 ] as const
+
+const DONT_RULES = [
+    <>
+        hex 값이나 <code className={CODE_CLASS}>--raw-*</code> 변수를 컴포넌트에 직접 넣지 않습니다.
+    </>,
+    <>
+        <code className={CODE_CLASS}>dark:</code> 로 색을 다시 나누지 않습니다. 시맨틱이 모드마다 값을 바꿉니다.
+    </>,
+    <>
+        생성 파일 <code className={CODE_CLASS}>src/app/tokens.css</code> 를 직접 고치지 않습니다.
+    </>,
+] as const
+
+// 3. 새 색을 넣을 때 — 어디에 넣을지 고르는 기준.
+const PLACE_COLUMNS = [
+    {key: 'case', header: '이런 색이면', align: 'start', rowHeader: true},
+    {key: 'where', header: '넣는 곳', align: 'start'},
+    {key: 'example', header: '예', align: 'start', wrap: true},
+] as const
+
+const PLACE_ROWS = [
+    {
+        key: 'scale',
+        cells: [
+            '밝기 단계가 여럿 필요한 색',
+            <code key="w">primitive</code>,
+            '50~900 단계 팔레트 하나를 만듭니다(blue.50 ~ blue.900).',
+        ],
+    },
+    {
+        key: 'extra',
+        cells: [
+            '단계 없이 한 가지 값만 필요한 색',
+            <code key="w">extra</code>,
+            '숫자 없는 색 이름으로 둡니다(cyan). 밝기 버전이 더 필요해지면 단계 팔레트로 옮깁니다.',
+        ],
+    },
+    {
+        key: 'alpha',
+        cells: ['반투명 흰색 · 검정', <code key="w">alpha</code>, 'white.50 = 흰색 50%'],
+    },
+    {
+        key: 'semantic',
+        cells: [
+            '화면에서 쓸 용도',
+            <code key="w">semantic</code>,
+            '위 색을 참조해 light · dark 값을 정합니다(primary = blue.500).',
+        ],
+    },
+    {
+        key: 'kbx',
+        cells: [
+            'K-BIGx 보고서 인쇄본의 역할 색',
+            <code key="w">kbigxPrint.color</code>,
+            '위 색만 참조합니다(kbx-primary = extra.indigo). 인쇄본 밖에서는 값이 없습니다.',
+        ],
+    },
+] as const
+
+const CHANGE_STEPS = [
+    {command: 'tokens.json', description: '원본 값을 고칩니다.'},
+    {command: 'yarn tokens', description: 'CSS 를 다시 만듭니다. 잘못된 참조는 여기서 멈춥니다.'},
+    {command: 'yarn verify', description: '전체 검사를 통과시킵니다.'},
+] as const
+
+const SectionHeading = ({id, title, children}: {id: string; title: string; children?: ReactNode}) => (
+    <div className="flex flex-col gap-2">
+        <h2 id={id} className="typo-h4-bold text-foreground">
+            {title}
+        </h2>
+        {children ? <div className="typo-body-l-regular text-label-foreground">{children}</div> : null}
+    </div>
+)
 
 const ColorGuidePage = () => (
     <GuidePageShell
         title="색상 (Primitive)"
-        description={
-            <>
-                시맨틱 색상의 기반이 되는 고정 팔레트입니다. 화면과 컴포넌트에서는 역할 기반 시맨틱 유틸리티를 먼저
-                쓰고, 팔레트는 시맨틱으로 표현할 수 없을 때의 보조 수단으로만 씁니다.
-            </>
-        }
+        description="시맨틱 색상의 재료가 되는 고정 팔레트입니다. 화면에는 시맨틱 색상을 씁니다."
     >
         <div className="flex flex-col gap-12">
             <BaseCard>
-                <section aria-labelledby="primitive-rule-title" className="flex flex-col gap-6">
-                    <div className="flex flex-col gap-2">
-                        <h2 id="primitive-rule-title" className="typo-h4-bold text-foreground">
-                            Primitive와 시맨틱의 역할
-                        </h2>
-                        <p className="typo-body-l-regular text-label-foreground">
-                            색은 두 계층으로 관리합니다. 화면과 컴포넌트에는 시맨틱을 먼저 씁니다.
-                        </p>
-                    </div>
+                <section aria-labelledby="color-overview" className="flex flex-col gap-6">
+                    <SectionHeading id="color-overview" title="1. 한눈에 보기">
+                        색은 Primitive(재료)와 시맨틱(용도) 두 층으로 관리합니다.{' '}
+                        <Link href="/component-guide/semantic-color" className={LINK_CLASS}>
+                            시맨틱 색상
+                        </Link>{' '}
+                        에서 화면에 쓰는 유틸리티를 고릅니다.
+                    </SectionHeading>
 
-                    {/* 두 계층을 같은 자리에 같은 항목(변수 · 예 · 쓰는 곳)으로 나란히 둔다. */}
+                    <ol className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+                        {FLOW_STEPS.map((step, index) => (
+                            <li
+                                key={step.label}
+                                className="border-subtle-3 bg-surface flex items-center gap-3 rounded-sm border px-4 py-3"
+                            >
+                                <span className="bg-primary text-primary-foreground typo-caption-bold flex size-6 shrink-0 items-center justify-center rounded-full">
+                                    {index + 1}
+                                </span>
+                                <span className="flex min-w-0 flex-col">
+                                    <span className="typo-body-l-bold text-foreground">{step.label}</span>
+                                    <code className="typo-caption-regular text-foreground-subtle font-mono">
+                                        {step.note}
+                                    </code>
+                                </span>
+                            </li>
+                        ))}
+                    </ol>
+
                     <div className="grid gap-4 md:grid-cols-2">
                         {COLOR_LAYERS.map((layer) => (
                             <div
@@ -184,71 +310,68 @@ const ColorGuidePage = () => (
                                         {layer.usage}
                                     </Badge>
                                 </div>
-                                <p className="text-label-foreground">{layer.summary}</p>
+                                <p className="typo-body-l-regular text-label-foreground">{layer.summary}</p>
                                 <dl className="border-subtle-3 grid grid-cols-[auto_minmax(0,1fr)] gap-x-4 gap-y-2 border-t pt-3">
                                     <dt className="typo-body-l-bold text-foreground-subtle">변수</dt>
                                     <dd className="text-label-foreground font-mono text-sm">{layer.variable}</dd>
                                     <dt className="typo-body-l-bold text-foreground-subtle">예</dt>
                                     <dd className="text-label-foreground font-mono text-sm">{layer.example}</dd>
-                                    <dt className="typo-body-l-bold text-foreground-subtle">쓰는 곳</dt>
-                                    <dd className="text-label-foreground">{layer.where}</dd>
                                 </dl>
                             </div>
                         ))}
                     </div>
-                    <p className="border-primary/30 bg-primary-subtle text-foreground overflow-x-auto rounded-sm border p-5 text-center font-mono text-sm font-semibold">
-                        tokens.json → Primitive (--raw-*) → 시맨틱 (--ds-*) → 유틸리티 (bg-primary)
-                    </p>
-                    <Link
-                        href="/component-guide/semantic-color"
-                        className="text-primary focus-visible:ring-ring w-fit rounded-sm underline underline-offset-4 focus-visible:ring-2 focus-visible:outline-none"
-                    >
-                        시맨틱 색상과 사용 가능한 유틸리티 보기
-                    </Link>
+                </section>
+            </BaseCard>
 
-                    <div className="border-subtle-3 flex flex-col gap-4 border-t pt-6">
-                        <h3 className="typo-title-m-bold text-foreground">사용 규칙</h3>
-                        <ul className="text-label-foreground flex list-disc flex-col gap-2 pl-5">
-                            <li>
-                                <code className="text-foreground font-mono">bg-surface</code> ·{' '}
-                                <code className="text-foreground font-mono">text-foreground</code> ·{' '}
-                                <code className="text-foreground font-mono">border-border</code>처럼 역할이 드러나는
-                                시맨틱 유틸리티를 씁니다. light · dark 값은 자동으로 바뀌므로 dark: 접두사로 다시
-                                분기하지 않습니다.
-                            </li>
-                            <li>
-                                색상 리터럴(Hex)과 <code className="text-foreground font-mono">--raw-*</code> 변수를
-                                컴포넌트에 직접 넣지 않습니다.
-                            </li>
-                            <li>
-                                <code className="text-foreground font-mono">src/app/tokens.css</code>는 자동 생성
-                                파일이라 직접 고치지 않습니다.
-                            </li>
-                            <li>
-                                투명도는 <code className="text-foreground font-mono">alpha</code>(1~99%)에서, 완전 투명
-                                · 불투명은 <code className="text-foreground font-mono">common</code>에서 관리합니다.{' '}
-                                <code className="text-foreground font-mono">a0</code> ·{' '}
-                                <code className="text-foreground font-mono">a100</code> 토큰은 만들지 않습니다.
-                            </li>
-                        </ul>
+            <BaseCard>
+                <section aria-labelledby="color-rules" className="flex flex-col gap-6">
+                    <SectionHeading id="color-rules" title="2. 사용 규칙" />
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <div className="border-subtle-3 flex flex-col gap-3 rounded-sm border p-5">
+                            <h3 className="typo-title-m-bold text-foreground">이렇게 씁니다</h3>
+                            <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                                {DO_RULES.map((rule, index) => (
+                                    <li key={index}>{rule}</li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div className="border-subtle-3 flex flex-col gap-3 rounded-sm border p-5">
+                            <h3 className="typo-title-m-bold text-foreground">하지 않습니다</h3>
+                            <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                                {DONT_RULES.map((rule, index) => (
+                                    <li key={index}>{rule}</li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
+                </section>
+            </BaseCard>
 
-                    <div className="border-subtle-3 flex flex-col gap-4 border-t pt-6">
-                        <h3 className="typo-title-m-bold text-foreground">색을 바꿀 때</h3>
+            <BaseCard>
+                <section aria-labelledby="color-add" className="flex flex-col gap-6">
+                    <SectionHeading id="color-add" title="3. 색을 더하거나 바꿀 때">
+                        먼저 어디에 넣을지 고르고, 세 단계로 반영합니다.
+                    </SectionHeading>
+                    <div className="flex flex-col gap-3">
+                        <h3 className="typo-title-m-bold text-foreground">3-1. 넣는 곳 고르기</h3>
+                        <Table caption="새 색을 넣는 곳" columns={PLACE_COLUMNS} rows={PLACE_ROWS} size="md" />
+                    </div>
+                    <div className="flex flex-col gap-3">
+                        <h3 className="typo-title-m-bold text-foreground">3-2. 반영하기</h3>
                         <ol className="grid gap-4 md:grid-cols-3">
-                            {COLOR_CHANGE_STEPS.map((step, index) => (
+                            {CHANGE_STEPS.map((step, index) => (
                                 <li
                                     key={step.command}
                                     className="border-foreground-subtle/30 bg-pastel-neutral/40 flex items-start gap-3 rounded-sm border p-5"
                                 >
-                                    <span className="bg-primary text-primary-foreground flex size-6 shrink-0 items-center justify-center rounded-full text-sm font-bold">
+                                    <span className="bg-primary text-primary-foreground typo-caption-bold flex size-6 shrink-0 items-center justify-center rounded-full">
                                         {index + 1}
                                     </span>
                                     <div className="flex min-w-0 flex-col gap-1">
                                         <code className="typo-body-xl-bold text-foreground font-mono">
                                             {step.command}
                                         </code>
-                                        <p className="text-label-foreground">{step.description}</p>
+                                        <p className="typo-body-l-regular text-label-foreground">{step.description}</p>
                                     </div>
                                 </li>
                             ))}
@@ -257,19 +380,17 @@ const ColorGuidePage = () => (
                 </section>
             </BaseCard>
 
-            {Object.entries(primitiveGroups).map(([group, hues]) => (
+            {Object.entries(primitiveGroups).map(([group, hues], groupIndex) => (
                 <BaseCard key={group}>
                     <section aria-labelledby={`primitive-${group}`} className="flex flex-col gap-6">
-                        <div className="flex max-w-4xl flex-col gap-2">
-                            <h2 id={`primitive-${group}`} className="typo-h4-bold text-foreground capitalize">
-                                {group}
-                            </h2>
-                            <p className="typo-body-l-regular text-label-foreground">
-                                {group === 'brand'
-                                    ? '브랜드와 중립 UI에 사용하는 원시 팔레트입니다.'
-                                    : '성공·경고·오류·정보 상태의 기반 원시 팔레트입니다.'}
-                            </p>
-                        </div>
+                        <SectionHeading
+                            id={`primitive-${group}`}
+                            title={`${groupIndex + 4}. ${group === 'brand' ? 'Brand 팔레트' : 'System 팔레트'}`}
+                        >
+                            {group === 'brand'
+                                ? '브랜드와 중립 UI 의 바탕 팔레트입니다. 용도 칸이 있는 단계가 시맨틱이 주로 쓰는 값입니다.'
+                                : '성공 · 경고 · 오류 · 정보 상태의 바탕 팔레트입니다.'}
+                        </SectionHeading>
                         <div className="grid gap-8 xl:grid-cols-2">
                             {hues.map((hue) => (
                                 <ColorTable
@@ -296,54 +417,61 @@ const ColorGuidePage = () => (
 
             <BaseCard>
                 <section aria-labelledby="primitive-extra" className="flex flex-col gap-6">
-                    <div className="flex flex-col gap-2">
-                        <h2 id="primitive-extra" className="typo-h4-bold text-foreground">
-                            Extra
-                        </h2>
-                        <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-1 pl-5">
-                            <li>
-                                <strong className="text-foreground">단계 없는 단일 색</strong> — brand · system 은
-                                10~900 단계(예: <code className="text-foreground font-mono">blue-500</code>)로 관리하고,
-                                단계가 필요 없는 색은 여기에 숫자 없이 둡니다(예:{' '}
-                                <code className="text-foreground font-mono">cyan</code>).
-                            </li>
-                            <li>
-                                <strong className="text-foreground">화면에서는 시맨틱 토큰</strong> — 이 색을 직접 쓰지
-                                않고 용도 칸의 토큰을 씁니다(예: <code className="text-foreground font-mono">cyan</code>{' '}
-                                → <code className="text-foreground font-mono">gauge-excellent-to</code>).
-                            </li>
-                            <li>
-                                <strong className="text-foreground">밝기 단계가 필요해지면 팔레트로</strong> —{' '}
-                                <code className="text-foreground font-mono">cyan-light</code> 처럼 이름을 늘리지 않고,
-                                cyan 10~900 단계 팔레트를 만들어 옮긴 뒤 여기서 지웁니다.
-                            </li>
-                        </ul>
-                    </div>
+                    <SectionHeading id="primitive-extra" title="6. Extra (단계 없는 단일 색)">
+                        단계 팔레트에 없는 색을 숫자 없이 둡니다. 용도 칸이 이 색을 참조하는 토큰입니다.
+                    </SectionHeading>
                     <div className="grid gap-8 xl:grid-cols-2">
-                        <ColorTable
-                            caption="extra"
-                            title={<span className="text-foreground font-semibold">extra</span>}
-                            rows={Object.entries(extra).map(([name, value]) => ({
-                                name,
-                                cssVar: `var(--raw-extra-${name})`,
-                                value: display(value),
-                                usage: semanticUsersOf(`extra.${name}`),
-                            }))}
-                        />
+                        <div className="flex flex-col gap-3">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <h3 className="typo-title-m-bold text-foreground">6-1. 웹 화면</h3>
+                                <Badge variant="outline" color="info" size="sm">
+                                    semantic 이 참조
+                                </Badge>
+                            </div>
+                            <ColorTable
+                                headingLevel={4}
+                                caption="extra 웹 화면"
+                                title={<span className="text-foreground font-semibold">extra</span>}
+                                rows={webExtra.map(([name, value]) => ({
+                                    name,
+                                    cssVar: `var(--raw-extra-${name})`,
+                                    value: display(value),
+                                    usage: semanticUsersOf(`extra.${name}`),
+                                }))}
+                            />
+                        </div>
+                        <div className="flex flex-col gap-3">
+                            <div className="flex flex-wrap items-center gap-2">
+                                <h3 className="typo-title-m-bold text-foreground">6-2. K-BIGx 인쇄본 전용</h3>
+                                <Badge variant="outline" color="neutral" size="sm">
+                                    kbigxPrint.color 만 참조
+                                </Badge>
+                            </div>
+                            <ColorTable
+                                headingLevel={4}
+                                caption="extra K-BIGx 인쇄본 전용"
+                                title={
+                                    <Link href="/component-guide/report-shell" className={LINK_CLASS}>
+                                        리포트 공통 · kbx 토큰
+                                    </Link>
+                                }
+                                rows={reportExtra.map(([name, value]) => ({
+                                    name,
+                                    cssVar: `var(--raw-extra-${name})`,
+                                    value: display(value),
+                                    usage: kbxUsersOf(`extra.${name}`),
+                                }))}
+                            />
+                        </div>
                     </div>
                 </section>
             </BaseCard>
 
             <BaseCard>
                 <section aria-labelledby="primitive-common" className="flex flex-col gap-6">
-                    <div className="flex max-w-4xl flex-col gap-2">
-                        <h2 id="primitive-common" className="typo-h4-bold text-foreground">
-                            Common · Alpha
-                        </h2>
-                        <p className="typo-body-l-regular text-label-foreground">
-                            Common은 불투명·완전 투명 앵커, Alpha는 오버레이·그림자용 1~99% 반투명 값입니다.
-                        </p>
-                    </div>
+                    <SectionHeading id="primitive-common" title="7. Common · Alpha">
+                        Common 은 불투명 · 완전 투명 값, Alpha 는 오버레이 · 그림자용 1~99% 반투명 값입니다.
+                    </SectionHeading>
                     <div className="grid gap-8 xl:grid-cols-2">
                         <ColorTable
                             caption="common"

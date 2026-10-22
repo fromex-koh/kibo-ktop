@@ -10,8 +10,9 @@ import {
 } from '@/content/service/innovation-growth-report'
 import {innovationReportPath} from '@/content/service/k-bigx-innovation-report'
 
-// 기업혁신성장보고서 조회 화면 한 장 — 기업 · 기관의 조회 화면과 케이스별 결과 화면이 모두 이 컴포넌트를 쓴다.
-// 화면마다 다른 것은 사용자 유형(홈 · [자세히보기] 주소)과 처음 보여 줄 케이스(preview)뿐이다.
+// 기업혁신성장보고서 조회 화면 한 장 — 기업의 조회 화면과 케이스별 결과 화면이 이 컴포넌트를 쓴다.
+// 기관은 대량정보조회와 한 화면의 탭으로 합쳐져 있어 OrgKbigxReportScreen(org/…/k-bigx-report/org-kbigx-report-screen.tsx)이
+// 같은 케이스(preview)를 getInnovationGrowthInitialResult 로 받아 탭 안에 그린다.
 //
 // 케이스(preview)와 주소 — innovation-growth-report/ 아래
 //   search            (조회 화면 page.tsx)              검색 전 — 검색 칸 아래에 아무것도 없다
@@ -50,7 +51,7 @@ const selectMockCompany = (companyId: string) => ({
     selection: {companyId, patents: findMockInnovationGrowthPatents(companyId)},
 })
 
-const getInitialResult = (
+const getInnovationGrowthInitialResult = (
     preview: InnovationGrowthReportPreview,
 ): InnovationGrowthReportLookupProps['initialResult'] => {
     switch (preview) {
@@ -96,7 +97,7 @@ type InnovationGrowthReportScreenProps = {
 const InnovationGrowthReportScreen = ({userType, preview = 'search'}: InnovationGrowthReportScreenProps) => (
     <main id="main" tabIndex={-1} className="bg-background flex-1">
         <InnovationGrowthReportLookup
-            initialResult={getInitialResult(preview)}
+            initialResult={getInnovationGrowthInitialResult(preview)}
             reportHref={innovationReportPath(userType)}
             intro={
                 <KbigxReportIntro
@@ -109,5 +110,5 @@ const InnovationGrowthReportScreen = ({userType, preview = 'search'}: Innovation
     </main>
 )
 
-export {InnovationGrowthReportScreen}
+export {getInnovationGrowthInitialResult, InnovationGrowthReportScreen}
 export type {InnovationGrowthReportPreview, InnovationGrowthReportScreenProps}

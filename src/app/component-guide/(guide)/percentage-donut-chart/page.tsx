@@ -1,6 +1,7 @@
 // [퍼블리싱 가이드 전용] 이 파일은 /component-guide 문서 화면이다. 서비스 화면과 무관하며 이식하지 않아도 된다.
 
 import type {Metadata} from 'next'
+import Link from 'next/link'
 import {BaseCard} from '@/components/composite/base-card'
 import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import CodeBlock from '@/components/custom/code-block'
@@ -155,11 +156,11 @@ const PROPS_ITEMS = [
 const PercentageDonutChartGuidePage = () => (
     <GuidePageShell
         title="기업 보유기술 도넛 (PercentageDonutChart)"
-        description="분류별 비중을 도넛과 범례로 함께 보여 주는 차트입니다."
+        description="분류별 비중을 도넛과 범례로 함께 보여 주는 차트입니다. 도넛 옆에 구분선이 있는 줄 목록을 두는 인쇄본용은 DonutListChart 입니다."
     >
         <BaseCard>
             <section aria-labelledby="pdc-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pdc-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -167,6 +168,16 @@ const PercentageDonutChartGuidePage = () => (
                         도넛은 12시에서 시계 방향으로 <code>data</code> 순서대로 이어지며, 도넛 위에는 라벨이 없고
                         비중은 범례로 읽고, 조각에 올리면 툴팁이 분류명만 보입니다. 색은 항목마다 <code>color</code> 로
                         넘깁니다.
+                    </p>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        범례 없이 꽉 찬 원형에 지시선 라벨을 다는 모양(K-BIGx 보고서 인쇄본)은{' '}
+                        <Link
+                            href="/component-guide/callout-pie-chart"
+                            className="text-primary-strong underline underline-offset-4"
+                        >
+                            CalloutPieChart
+                        </Link>
+                        를 씁니다.
                     </p>
                 </div>
                 <div className="border-subtle-3 bg-card max-w-147 rounded-sm border p-6">
@@ -179,7 +190,7 @@ const PercentageDonutChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pdc-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pdc-variants" className="typo-h4-bold">
                         변형과 상태 예시
                     </h2>
@@ -312,7 +323,7 @@ const PercentageDonutChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pdc-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pdc-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -344,7 +355,7 @@ const PercentageDonutChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="pdc-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="pdc-props" className="typo-h4-bold">
                         Props API
                     </h2>

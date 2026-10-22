@@ -792,6 +792,108 @@ if (Object.keys(breakpointHeight).length) {
     L.push('')
 }
 
+// ── K-BIGx 보고서 인쇄본 전용(tokens.json kbigxPrint) ──
+// 다른 화면에 섞이지 않게 두 겹으로 막는다.
+//   1) 값(--kbx-*)은 .kbigx-print 상자 안에서만 정의한다. 바깥에서 kbx 클래스를 써도 값이 없어 효과가 없다.
+//   2) 클래스 이름에 모두 kbx 가 붙어 기존 색 · 간격 · 글자 이름과 겹치지 않는다.
+// 글자 크기만 text-kbx-26 이 아니라 kbx-text-26 이다. text- 로 두면 cn(twMerge)이 색(text-kbx-foreground)과
+//   같은 종류로 보고 둘 중 하나를 지운다.
+// 주의: p-kbx-* · rounded-kbx-* · leading-kbx-* 는 twMerge 에 등록돼 있지 않아 cn() 이 기본 클래스(p-4 등)와
+//   겹침을 정리하지 않는다. 한 요소에 같은 속성을 두 번 주지 않는다.
+const kbigxPrint = tokens.kbigxPrint
+if (kbigxPrint) {
+    const scope = kbigxPrint.scope ?? 'kbigx-print'
+    const kbxColor = Object.entries(kbigxPrint.color ?? {})
+    const kbxFontSize = kbigxPrint.fontSize ?? []
+    const kbxSpacing = kbigxPrint.spacing ?? []
+    const kbxRadius = kbigxPrint.radius ?? []
+    const kbxLineHeight = Object.entries(kbigxPrint.lineHeight ?? {})
+    const kbxLetterSpacing = Object.entries(kbigxPrint.letterSpacing ?? {})
+    const kbxBorderWidth = Object.entries(kbigxPrint.borderWidth ?? {})
+    const kbxFontWeight = Object.entries(kbigxPrint.fontWeight ?? {})
+
+    // 역할 색은 semantic 과 같은 규칙 — primitive("blue.500") 나 extra("extra.indigo")만 참조한다. hex 는 막는다.
+    // 섞은 색 — {"mix": "mint.700", "amount": 45, "base": "common.white"} 는 두 색을 미리 섞은 불투명 색이다.
+    //   투명도(/45)로 겹치면 Safari 가 PDF 로 만들 때 Chrome 과 다른 색을 칠해서, 인쇄본은 섞은 색을 쓴다.
+    const kbxRefValue = (group, step) =>
+        group === 'extra' ? `var(--raw-extra-${step})` : `var(--raw-${group}-${step})`
+    const kbxColorValue = (name, v) => {
+        if (v && typeof v === 'object') {
+            const isValidMix =
+                typeof v.amount === 'number' &&
+                v.amount > 0 &&
+                v.amount < 100 &&
+                [v.mix, v.base].every((ref) => String(ref).includes('.'))
+            if (!isValidMix) {
+                errors.push(`kbigxPrint.color.${name}: 섞은 색은 {"mix": 참조, "amount": 1~99, "base": 참조} 로 쓴다`)
+                return 'transparent'
+            }
+            return `color-mix(in srgb, ${kbxRefValue(...parseRef(v.mix))} ${v.amount}%, ${kbxRefValue(...parseRef(v.base))})`
+        }
+        if (HEX.test(v) || !String(v).includes('.')) {
+            errors.push(
+                `kbigxPrint.color.${name}: "${v}" — hex 대신 primitive(blue.500) 또는 extra(extra.이름)를 참조한다`,
+            )
+            return v
+        }
+        return kbxRefValue(...parseRef(v))
+    }
+    for (const [list, key] of [
+        [kbxFontSize, 'fontSize'],
+        [kbxSpacing, 'spacing'],
+        [kbxRadius, 'radius'],
+    ]) {
+        for (const v of list) if (typeof v !== 'number') errors.push(`kbigxPrint.${key}: ${v} 는 px 숫자여야 한다`)
+    }
+    for (const v of kbxSpacing) {
+        if (v % spacingBase === 0)
+            errors.push(`kbigxPrint.spacing: ${v} 는 ${spacingBase}의 배수라 기본 간격(p-${v / spacingBase})을 쓴다`)
+    }
+
+    L.push(`/* K-BIGx 보고서 인쇄본 전용 — .${scope} 안에서만 값이 있다(tokens.json kbigxPrint) */`)
+    L.push(`.${scope} {`)
+    for (const [k, v] of kbxColor) L.push(`  --kbx-color-${k}: ${kbxColorValue(k, v)};`)
+    for (const v of kbxFontSize) L.push(`  --kbx-text-${v}: ${toRem(v)};`)
+    for (const v of kbxSpacing) L.push(`  --kbx-spacing-${v}: ${toRem(v)};`)
+    for (const v of kbxRadius) L.push(`  --kbx-radius-${v}: ${toRem(v)};`)
+    for (const [k, v] of kbxLineHeight) L.push(`  --kbx-leading-${k}: ${v};`)
+    for (const [k, v] of kbxLetterSpacing) L.push(`  --kbx-tracking-${k}: ${typeof v === 'number' ? toRem(v) : v};`)
+    for (const [k, v] of kbxBorderWidth) L.push(`  --kbx-border-${k}: ${v}px;`)
+    for (const [k, v] of kbxFontWeight) L.push(`  --kbx-font-weight-${k}: ${v};`)
+    L.push('}', '')
+
+    L.push('@theme inline {')
+    for (const [k] of kbxColor) L.push(`  --color-kbx-${k}: var(--kbx-color-${k});`)
+    for (const v of kbxSpacing) L.push(`  --spacing-kbx-${v}: var(--kbx-spacing-${v});`)
+    for (const v of kbxRadius) L.push(`  --radius-kbx-${v}: var(--kbx-radius-${v});`)
+    for (const [k] of kbxLineHeight) L.push(`  --leading-kbx-${k}: var(--kbx-leading-${k});`)
+    for (const [k] of kbxLetterSpacing) L.push(`  --tracking-kbx-${k}: var(--kbx-tracking-${k});`)
+    for (const [k] of kbxFontWeight) L.push(`  --font-weight-kbx-${k}: var(--kbx-font-weight-${k});`)
+    L.push('}', '')
+
+    L.push('@layer utilities {')
+    for (const v of kbxFontSize) L.push(`  .kbx-text-${v} {`, `    font-size: var(--kbx-text-${v});`, '  }')
+    // 선 두께 — 기본 border-* 는 정수 px 만 있어 1.5px 같은 두께를 따로 낸다. 선 모양 · 색은 기본 유틸(border-kbx-*)이 맡는다.
+    const BORDER_SIDES = {
+        '': 'border-width',
+        t: 'border-top-width',
+        r: 'border-right-width',
+        b: 'border-bottom-width',
+        l: 'border-left-width',
+    }
+    for (const [k] of kbxBorderWidth) {
+        for (const [side, property] of Object.entries(BORDER_SIDES)) {
+            L.push(`  .kbx-border-${side ? `${side}-` : ''}${k} {`, `    ${property}: var(--kbx-border-${k});`, '  }')
+        }
+    }
+    L.push('}', '')
+}
+
+if (errors.length) {
+    console.error(`❌ kbigxPrint 토큰 오류:\n  ${errors.join('\n  ')}`)
+    process.exit(1)
+}
+
 writeFileSync(OUT, L.join('\n'))
 console.log(
     `✅ tokens.css 생성 — color(hue ${hues.length}·semantic ${Object.keys(semantic).length}·alpha ${Object.keys(alpha).length}), ` +
@@ -800,5 +902,9 @@ console.log(
         `blur ${Object.keys(effect.blur ?? {}).length}, overlay ${Object.keys(overlay).length}, ` +
         `breakpoint ${Object.keys(breakpoint).length}(+높이 ${Object.keys(breakpointHeight).length}), ` +
         `container ${Object.keys(container).length}, ` +
-        `grid ${Object.keys(grid).length}, z ${Object.keys(z).length}, typography ${typoNames.length}`,
+        `grid ${Object.keys(grid).length}, z ${Object.keys(z).length}, typography ${typoNames.length}` +
+        (kbigxPrint
+            ? `, kbigxPrint(color ${Object.keys(kbigxPrint.color ?? {}).length}·text ${(kbigxPrint.fontSize ?? []).length}` +
+              `·spacing ${(kbigxPrint.spacing ?? []).length}·radius ${(kbigxPrint.radius ?? []).length})`
+            : ''),
 )

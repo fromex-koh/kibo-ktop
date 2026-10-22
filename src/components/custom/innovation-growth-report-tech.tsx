@@ -170,7 +170,7 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                         </div>
                     </Card>
                     {/* [프론트엔드 연동 · 정렬] 출원일 최근순으로 받아 그 순서대로 그린다. 최대 10건 — 규칙은 파일 위 [표 노출 건수 규칙]. */}
-                    <Card title="특허 보유현황" className="gap-4">
+                    <Card title="특허 보유현황" className="gap-0">
                         <WithUnit unit="최대 10개 · 출원일 최근순">
                             <ReportTable
                                 caption="특허 보유현황(최대 10개, 출원일 최근순)"
@@ -271,7 +271,7 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
             <section aria-labelledby="ig-tech-competitors" className="flex flex-col gap-4">
                 <SectionTitle id="ig-tech-competitors" title="맞춤형 기술정보-경쟁기업 및 우수기업" />
                 <div className="flex flex-col gap-6">
-                    <Card title="경쟁기업 사업실적 (매출액, 영업이익률)" className="gap-4">
+                    <Card title="경쟁기업 사업실적 (매출액, 영업이익률)" className="gap-0">
                         {/* 막대 = 매출액(조회기업 · 평균 강조), 선 = 영업이익률(데이터 필드명은 growthRate · 막대와 따로 된 눈금). 받은 순서대로 그린다. */}
                         <WithUnit unit="단위: 백만원, %">
                             <ComboBarLineChart
@@ -378,7 +378,7 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                         (기타 줄 값 규칙은 InnovationTechDetail.emergingTech 타입 주석). 규칙은 파일 위 [표 노출 건수 규칙]. */}
                     <Card
                         title="이머징 기술"
-                        description="귀사의 기술과 유사한 기술분야(소분류)에 대한 최근 10년간 등록특허 증가율을 확인하여 각 기술분야의 발전정도를 확인할 수 있는 정보입니다."
+                        description="귀사의 기술과 유사한 기술분야(세부분야)에 대한 최근 10년간 등록특허 증가율을 확인하여 각 기술분야의 발전정도를 확인할 수 있는 정보입니다."
                         className="gap-4"
                     >
                         <ReportTable
@@ -422,7 +422,7 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                 <div className="flex flex-col gap-6">
                     <Card
                         title="R&D 이슈"
-                        description="R&D 이슈는 귀사의 기술이 속한 기술분야(소분류)를 기준으로, 최근 3년 이내에 등록된 특허를 분석하여 제공되는 정보입니다."
+                        description="R&D 이슈는 귀사의 기술이 속한 기술분야(세부분야)를 기준으로, 최근 3년 이내에 등록된 특허를 분석하여 제공되는 정보입니다."
                     >
                         <WordCloud
                             words={[...issues]}
@@ -496,7 +496,9 @@ const InnovationGrowthReportTech = ({detail, issues, issueColors}: InnovationGro
                                 },
                             ]}
                         />
-                        <TableNote>* 소분류 전체 특허건수 기준 정부출연연구소와 산학협력단의 특허건수 비중임</TableNote>
+                        <TableNote>
+                            * 세부분야 전체 특허건수 기준 정부출연연구소와 산학협력단의 특허건수 비중임
+                        </TableNote>
                     </Card>
                     {/* 정부 R&D 사업 현황 카드 — 기준일자는 첫 소제목(접수중과제) 줄 오른쪽에 둔다. */}
                     <Card title="정부 R&D 사업 현황" className="gap-4">

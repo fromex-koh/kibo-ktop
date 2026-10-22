@@ -24,6 +24,7 @@ import {
 import {Input} from '@/components/ui/input'
 import {Label} from '@/components/ui/label'
 import {cn} from '@/lib/utils'
+import {ReadyMadeDialogsDemo} from './ready-made-dialogs-demo'
 
 export const metadata: Metadata = {title: '다이얼로그 (Dialog)'}
 
@@ -180,36 +181,13 @@ const CHOICE_ROWS = [
         ],
     },
     {
-        key: 'confirm-dialog',
+        key: 'ready-made',
         cells: [
-            '삭제·초기화 전에 한 번 더 물음',
-            <code key="c">ConfirmDialog</code>,
-            <>
-                <code>composite/confirm-dialog</code> 에 제목·물음·덧붙임·<code>onConfirm</code> 만 넘기는 확인
-                모달입니다. 같은 모양으로 반복되는 확인은 Dialog 를 조합하지 말고 이걸 씁니다.
-            </>,
-        ],
-    },
-    {
-        key: 'submit-confirm-dialog',
-        cells: [
-            '평가 · 신청을 최종 제출하기 전',
-            <code key="c">SubmitConfirmDialog</code>,
-            <>
-                <code>composite/submit-confirm-dialog</code> — 제출 전 최종 확인(제목 + 물음 + 안내 + [제출하기]).
-                제출할 때 할 일은 <code>onSubmit</code> 으로 넘깁니다. 최종 확인 화면 · 입력 폼의 [제출] 이 엽니다.
-            </>,
-        ],
-    },
-    {
-        key: 'cancel-confirm-dialog',
-        cells: [
-            '작성 중인 입력 화면을 나갈 때',
-            <code key="c">CancelConfirmDialog</code>,
-            <>
-                <code>composite/cancel-confirm-dialog</code> — 아래 ‘작성 종료 확인’ 예시와 같은 모양([계속 작성] [저장
-                후 나가기])입니다. 저장 후 나갈 때 할 일은 <code>onSaveAndExit</code> 으로 넘깁니다.
-            </>,
+            '확인 · 저장 · 삭제 · 제출 · 안내 · 처리 중처럼 자주 쓰는 모달',
+            <a key="c" href="#dialog-ready-made" className={LINK_CLASS}>
+                완성된 모달
+            </a>,
+            'Dialog 를 매번 조합하지 말고 아래 표의 완성된 모달을 씁니다. 같은 자리에 같은 모양으로 떠야 사용자가 매번 새로 읽지 않습니다.',
         ],
     },
     {
@@ -240,6 +218,89 @@ const CHOICE_ROWS = [
                 Alert
             </Link>,
             '본문 안에 인라인으로 놓이고 닫히지 않습니다. 흐름을 막지 않습니다.',
+        ],
+    },
+] as const
+
+// 완성된 모달 — composite/ 에 있는, 내용만 넘기면 되는 모달.
+const READY_MADE_COLUMNS = [
+    {key: 'component', header: '컴포넌트', align: 'start', rowHeader: true},
+    {key: 'when', header: '언제', align: 'start', wrap: true},
+    {key: 'shape', header: '구성', align: 'start', wrap: true},
+    {key: 'props', header: '넘기는 값', align: 'start', wrap: true},
+] as const
+
+const READY_MADE_ROWS = [
+    {
+        key: 'confirm',
+        cells: [
+            <code key="c">ConfirmDialog</code>,
+            '되돌리기 어려운 일(초기화 · 상태 변경)을 하기 전',
+            '제목 + 물음 + 덧붙임 · [취소] [확인]',
+            'title · question · notice · onConfirm (대상은 ConfirmTarget 으로 굵게)',
+        ],
+    },
+    {
+        key: 'delete',
+        cells: [
+            <code key="c">DeleteConfirmDialog</code>,
+            '삭제하기 전',
+            'ConfirmDialog 와 같음 · 덧붙임 기본값 "삭제한 내용은 되돌릴 수 없습니다."',
+            'title · question · onConfirm',
+        ],
+    },
+    {
+        key: 'save',
+        cells: [
+            <code key="c">SaveConfirmDialog</code>,
+            '고친 내용을 저장하기 전(검사를 통과한 뒤)',
+            '물음 "저장하시겠습니까?" · [취소] [저장]',
+            'onSave',
+        ],
+    },
+    {
+        key: 'edit-cancel',
+        cells: [
+            <code key="c">EditCancelConfirmDialog</code>,
+            '고치던 입력을 처음 값으로 되돌리기 전',
+            '물음 "수정을 취소하시겠습니까?" + 안내 · [취소] [확인]',
+            'onConfirm',
+        ],
+    },
+    {
+        key: 'submit',
+        cells: [
+            <code key="c">SubmitConfirmDialog</code>,
+            '평가 · 신청을 최종 제출하기 전',
+            '제목 "제출 전 최종 확인" + 물음 + 안내 · [제출하기]',
+            'onSubmit',
+        ],
+    },
+    {
+        key: 'cancel',
+        cells: [
+            <code key="c">CancelConfirmDialog</code>,
+            '작성 중인 입력 화면을 나갈 때',
+            '제목 "작성 종료" + 물음 + 안내 · [계속 작성] [저장 후 나가기]',
+            'onSaveAndExit',
+        ],
+    },
+    {
+        key: 'notice',
+        cells: [
+            <code key="c">NoticeDialog</code>,
+            '알려 주기만 하고 고를 것이 없을 때(완료 · 불가 안내)',
+            '가운데 안내 한 덩이 · [확인] 하나 (제목은 화면에 숨김)',
+            'title(스크린리더용) · message · confirmLabel · onConfirm',
+        ],
+    },
+    {
+        key: 'processing',
+        cells: [
+            <code key="c">ProcessingDialog</code>,
+            '끝나는 시점을 알 수 없는 처리(API 요청)를 기다릴 때',
+            '스피너 + 문구 · 버튼 없음 · Esc · 바깥 누르기로 닫히지 않음',
+            'title · open (처리 상태와 연결해 끝나면 닫는다)',
         ],
     },
 ] as const
@@ -312,9 +373,9 @@ const DialogGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="dialog-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dialog-basic" className="typo-h4-bold">
-                        기본 사용
+                        1. 기본 사용
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         <code>Dialog</code> 안에 <code>DialogTrigger</code> 와 <code>DialogContent</code> 를 둡니다.
@@ -326,7 +387,7 @@ const DialogGuidePage = () => (
 
                 <div className="border-subtle-3 divide-subtle-3 flex flex-col divide-y border-t">
                     <div className={BLOCK_CLASS}>
-                        <h3 className={H3_CLASS}>구획과 스크롤</h3>
+                        <h3 className={H3_CLASS}>1-1. 구획과 스크롤</h3>
                         <p className={DESC_CLASS}>
                             여백은 카드가 통째로 갖지 않고 구획이 각자 갖습니다. 그래야 본문이 스크롤될 때 글이 머리·CTA
                             여백 아래로 들어가며 잘립니다. 카드 높이는 화면의 80%(<code>size.modal-max-h</code>
@@ -345,9 +406,9 @@ const DialogGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dialog-cases" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dialog-cases" className="typo-h4-bold">
-                        케이스 예시
+                        2. 케이스 예시
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         자주 쓰는 구성입니다. 표에서 슬롯 조합을 확인하고, 버튼을 눌러 실제 동작을 확인합니다.
@@ -572,10 +633,27 @@ const DialogGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="dialog-ready-made" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="dialog-ready-made" className="typo-h4-bold">
+                        3. 완성된 모달
+                    </h2>
+                    <p className="typo-body-l-regular text-label-foreground">
+                        <code>composite/</code> 에 있는 모달입니다. 문구 · 버튼 · 여백이 정해져 있어 넘기는 값만
+                        다릅니다. 모두 <code>children</code>(여는 버튼) · <code>defaultOpen</code> · <code>open</code> ·{' '}
+                        <code>onOpenChange</code> 로 여는 방식을 고릅니다.
+                    </p>
+                </div>
+                <Table caption="완성된 모달 목록" columns={READY_MADE_COLUMNS} rows={READY_MADE_ROWS} size="md" />
+                <ReadyMadeDialogsDemo />
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="dialog-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dialog-choice" className="typo-h4-bold">
-                        컴포넌트 선택
+                        4. 컴포넌트 선택
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         사용자의 답이 필요한지, 화면에 얼마나 남아야 하는지로 고릅니다.
@@ -592,9 +670,9 @@ const DialogGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dialog-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dialog-a11y" className="typo-h4-bold">
-                        접근성
+                        5. 접근성
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         동작은 업스트림(Radix)이 처리하므로 사용처는 구조만 맞춥니다. theme 는 스타일만 담당합니다.
@@ -623,9 +701,9 @@ const DialogGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="dialog-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="dialog-props" className="typo-h4-bold">
-                        Props API
+                        6. Props API
                     </h2>
                     <p className="typo-body-l-regular text-label-foreground">
                         주요 속성입니다. 표에 없는 속성은 Radix Dialog 의 같은 이름 컴포넌트 props 를 따릅니다.

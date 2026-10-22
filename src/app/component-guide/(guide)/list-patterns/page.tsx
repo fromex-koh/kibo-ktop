@@ -117,6 +117,16 @@ const CHOICE_ROWS = [
             '이름 칸과 값 칸이 있는 조회용 표입니다. 카드형이면 SummaryList 입니다.',
         ],
     },
+    {
+        key: 'title-detail-table',
+        cells: [
+            '여러 건을 제목 줄 + 상세 줄로',
+            <Link key="c" href="/component-guide/title-detail-table" className={LINK_CLASS}>
+                TitleDetailTable
+            </Link>,
+            '한 건을 두 줄로 보이는 목록 표입니다(특허 목록). 한 대상의 항목 : 값이면 InfoTable 입니다.',
+        ],
+    },
 ] as const
 
 const SCREEN_COLUMNS = [
@@ -211,7 +221,7 @@ const ListPatternsGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="list-patterns-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="list-patterns-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -226,7 +236,7 @@ const ListPatternsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="list-patterns-shape" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="list-patterns-shape" className="typo-h4-bold">
                         화면 목록 6종
                     </h2>
@@ -310,7 +320,7 @@ const ListPatternsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="list-patterns-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="list-patterns-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -339,7 +349,7 @@ const ListPatternsGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="list-patterns-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="list-patterns-props" className="typo-h4-bold">
                         Props API
                     </h2>

@@ -126,7 +126,7 @@ const FormCardGuidePage = () => (
     <GuidePageShell title="폼 카드 (FormCard)" description="폼 섹션의 제목·설명·액션과 본문을 하나로 묶는 카드입니다.">
         <BaseCard>
             <section aria-labelledby="form-card-demo" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="form-card-demo" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -207,7 +207,7 @@ const FormCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="form-card-padding" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="form-card-padding" className="typo-h4-bold">
                         여백
                     </h2>
@@ -221,7 +221,7 @@ const FormCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="form-card-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="form-card-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -238,7 +238,7 @@ const FormCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="form-card-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="form-card-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>

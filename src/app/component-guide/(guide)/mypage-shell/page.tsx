@@ -115,7 +115,7 @@ const MypageShellGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="mypage-shell-layout" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="mypage-shell-layout" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -134,7 +134,7 @@ const MypageShellGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="mypage-shell-responsive" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="mypage-shell-responsive" className="typo-h4-bold">
                         화면 폭에 따른 모습
                     </h2>
@@ -154,7 +154,7 @@ const MypageShellGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="mypage-shell-menu" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="mypage-shell-menu" className="typo-h4-bold">
                         메뉴 목록
                     </h2>
@@ -170,7 +170,7 @@ const MypageShellGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="mypage-shell-card" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="mypage-shell-card" className="typo-h4-bold">
                         본문 카드 (MypageFormCard)
                     </h2>
@@ -198,7 +198,7 @@ const MypageShellGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="mypage-shell-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="mypage-shell-a11y" className="typo-h4-bold">
                         접근성
                     </h2>

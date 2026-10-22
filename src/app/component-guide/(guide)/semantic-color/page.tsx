@@ -166,18 +166,18 @@ const LIVE_SWATCH_CLASS: Record<keyof typeof tokens.semantic, string> = {
     'donut-6': 'bg-donut-6',
     'donut-7': 'bg-donut-7',
     'donut-8': 'bg-donut-8',
-    'cash-flow-cr-1': 'bg-cash-flow-cr-1',
-    'cash-flow-cr-1-foreground': 'bg-cash-flow-cr-1-foreground',
-    'cash-flow-cr-2': 'bg-cash-flow-cr-2',
-    'cash-flow-cr-2-foreground': 'bg-cash-flow-cr-2-foreground',
-    'cash-flow-cr-3': 'bg-cash-flow-cr-3',
-    'cash-flow-cr-3-foreground': 'bg-cash-flow-cr-3-foreground',
-    'cash-flow-cr-4': 'bg-cash-flow-cr-4',
-    'cash-flow-cr-4-foreground': 'bg-cash-flow-cr-4-foreground',
-    'cash-flow-cr-5': 'bg-cash-flow-cr-5',
-    'cash-flow-cr-5-foreground': 'bg-cash-flow-cr-5-foreground',
-    'cash-flow-cr-6': 'bg-cash-flow-cr-6',
-    'cash-flow-cr-6-foreground': 'bg-cash-flow-cr-6-foreground',
+    'cash-flow-cf-1': 'bg-cash-flow-cf-1',
+    'cash-flow-cf-1-foreground': 'bg-cash-flow-cf-1-foreground',
+    'cash-flow-cf-2': 'bg-cash-flow-cf-2',
+    'cash-flow-cf-2-foreground': 'bg-cash-flow-cf-2-foreground',
+    'cash-flow-cf-3': 'bg-cash-flow-cf-3',
+    'cash-flow-cf-3-foreground': 'bg-cash-flow-cf-3-foreground',
+    'cash-flow-cf-4': 'bg-cash-flow-cf-4',
+    'cash-flow-cf-4-foreground': 'bg-cash-flow-cf-4-foreground',
+    'cash-flow-cf-5': 'bg-cash-flow-cf-5',
+    'cash-flow-cf-5-foreground': 'bg-cash-flow-cf-5-foreground',
+    'cash-flow-cf-6': 'bg-cash-flow-cf-6',
+    'cash-flow-cf-6-foreground': 'bg-cash-flow-cf-6-foreground',
     'grade-scale-track': 'bg-grade-scale-track',
     'gauge-excellent-from': 'bg-gauge-excellent-from',
     'gauge-excellent-to': 'bg-gauge-excellent-to',
@@ -457,8 +457,8 @@ const CUSTOM_GROUPS: Group[] = [
     {name: 'donut-1~8 (비중 도넛 조각 색)', match: (n) => n.startsWith('donut-')},
     // 현금흐름등급 게이지(GradeScaleGauge) — 등급 칸 · 원호 색과 칸 글자 색, 원호 트랙.
     {
-        name: 'cash-flow-cr-1~6 · grade-scale-track (현금흐름등급 게이지)',
-        match: (n) => n.startsWith('cash-flow-cr-') || n === 'grade-scale-track',
+        name: 'cash-flow-cf-1~6 · grade-scale-track (현금흐름등급 게이지)',
+        match: (n) => n.startsWith('cash-flow-cf-') || n === 'grade-scale-track',
     },
     // 조회 목록의 진행 상태 글자색 — 라이트는 단계 팔레트 밖 값이라 extra.azure, 다크는 blue.300 을 가리킨다.
     {name: 'status-evaluated (평가완료)', match: (n) => n === 'status-evaluated'},
@@ -537,18 +537,22 @@ const SEMANTIC_TABLE_COLUMNS = [
 // usage: 이 슬롯(그룹)이 화면 어디에 쓰이는 색인지 간결한 사용처 설명(제목 아래 서브텍스트).
 // note: 특수 동작 부연(예: scroll 은 유틸리티가 아닌 이유).
 const SemanticTable = ({
+    number,
     title,
     tokens,
     usage,
     note,
 }: {
+    number: string
     title: string
     tokens: SemanticEntry[]
     usage?: ReactNode
     note?: ReactNode
 }) => (
     <section className="border-border flex flex-col gap-4 border-b pb-8 last:border-b-0 last:pb-0">
-        <h3 className="typo-title-m-bold text-foreground">{title}</h3>
+        <h3 className="typo-title-m-bold text-foreground">
+            {number}. {title}
+        </h3>
         {usage && <p className="typo-body-l-regular text-muted-foreground">{usage}</p>}
         {note && <p className="typo-body-l-regular text-muted-foreground">{note}</p>}
         <Table
@@ -670,10 +674,10 @@ const GROUP_USAGE: Record<string, ReactNode> = {
             카드 위에서도 보입니다. 다른 화면의 차트는 chart-1~5 를 쓰므로 이 값을 바꿔도 영향이 없습니다.
         </>
     ),
-    'cash-flow-cr-1~6 · grade-scale-track (현금흐름등급 게이지)': (
+    'cash-flow-cf-1~6 · grade-scale-track (현금흐름등급 게이지)': (
         <>
-            현금흐름등급 게이지의 등급 칸 · 원호 색(cash-flow-cr-n)과 칸 글자 색(-foreground)입니다. 다크는 칸이 밝은
-            단계로 바뀌고 글자는 짙은 색이 됩니다(CR-5 만 어두운 칸 + 밝은 글자). grade-scale-track 은 원호의 빈
+            현금흐름등급 게이지의 등급 칸 · 원호 색(cash-flow-cf-n)과 칸 글자 색(-foreground)입니다. 다크는 칸이 밝은
+            단계로 바뀌고 글자는 짙은 색이 됩니다(CF5 만 어두운 칸 + 밝은 글자). grade-scale-track 은 원호의 빈
             트랙으로, 다크에서 어두운 칸 색이 묻히지 않게 다른 게이지 트랙(gauge-track)보다 밝습니다.
         </>
     ),
@@ -751,7 +755,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="semantic-rule" className="flex flex-col gap-6">
                     <div className="flex flex-col gap-2">
                         <h2 id="semantic-rule" className="typo-h4-bold text-foreground">
-                            시맨틱 색상 적용 방식
+                            1. 시맨틱 색상 적용 방식
                         </h2>
                         <p className="typo-body-l-regular text-label-foreground">
                             색 값이나 단계가 아니라 UI 에서 맡는 역할로 클래스를 고릅니다.
@@ -792,7 +796,7 @@ const SemanticColorGuidePage = () => (
 
                     <div className="border-subtle-3 flex flex-col gap-4 border-t pt-6">
                         <div className="flex flex-col gap-2">
-                            <h3 className="typo-title-m-bold text-foreground">테마별 동일 토큰 세트</h3>
+                            <h3 className="typo-title-m-bold text-foreground">1-1. 테마별 동일 토큰 세트</h3>
                             <p className="typo-body-l-regular text-label-foreground">
                                 light · dark · mainpage 세 테마는 이름과 개수가 같은 토큰 한 벌씩을 갖고, 값만 다릅니다.
                             </p>
@@ -839,7 +843,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="std-slots" className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h2 id="std-slots" className="typo-h4-bold text-foreground">
-                            shadcn 표준 슬롯{' '}
+                            2. shadcn 표준 슬롯{' '}
                             <span className="text-muted-foreground font-normal">({STANDARD_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
@@ -856,9 +860,10 @@ const SemanticColorGuidePage = () => (
                             를 따릅니다.
                         </p>
                     </div>
-                    {STANDARD_GROUPED.map((group) => (
+                    {STANDARD_GROUPED.map((group, index) => (
                         <SemanticTable
                             key={group.name}
+                            number={`2-${index + 1}`}
                             title={group.name}
                             tokens={group.tokens}
                             usage={GROUP_USAGE[group.name]}
@@ -872,7 +877,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="custom-slots" className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h2 id="custom-slots" className="typo-h4-bold text-foreground">
-                            프로젝트 커스텀 슬롯{' '}
+                            3. 프로젝트 커스텀 슬롯{' '}
                             <span className="text-muted-foreground font-normal">({CUSTOM_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
@@ -880,9 +885,10 @@ const SemanticColorGuidePage = () => (
                             의미를 표현할 수 없을 때만 사용합니다.
                         </p>
                     </div>
-                    {CUSTOM_GROUPED.map((group) => (
+                    {CUSTOM_GROUPED.map((group, index) => (
                         <SemanticTable
                             key={group.name}
+                            number={`3-${index + 1}`}
                             title={group.name}
                             tokens={group.tokens}
                             usage={GROUP_USAGE[group.name]}
@@ -895,7 +901,7 @@ const SemanticColorGuidePage = () => (
                 <section aria-labelledby="component-recipes" className="flex flex-col gap-8">
                     <div className="flex flex-col gap-1">
                         <h2 id="component-recipes" className="typo-h4-bold text-foreground">
-                            컴포넌트 전용 레시피 토큰{' '}
+                            4. 컴포넌트 전용 레시피 토큰{' '}
                             <span className="text-muted-foreground font-normal">({RECIPE_COUNT}개)</span>
                         </h2>
                         <p className="typo-body-l-regular text-muted-foreground">
@@ -903,8 +909,13 @@ const SemanticColorGuidePage = () => (
                             컴포넌트의 variant·prop을 사용합니다.
                         </p>
                     </div>
-                    {RECIPE_GROUPED.map((group) => (
-                        <SemanticTable key={group.name} title={group.name} tokens={group.tokens} />
+                    {RECIPE_GROUPED.map((group, index) => (
+                        <SemanticTable
+                            key={group.name}
+                            number={`4-${index + 1}`}
+                            title={group.name}
+                            tokens={group.tokens}
+                        />
                     ))}
                 </section>
             </BaseCard>

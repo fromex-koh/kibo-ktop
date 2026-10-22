@@ -3,6 +3,7 @@
 import type {Metadata} from 'next'
 import type {ReactNode} from 'react'
 import Image, {type StaticImageData} from 'next/image'
+import Link from 'next/link'
 import type {LucideIcon} from 'lucide-react'
 import {
     ArrowDown,
@@ -124,6 +125,7 @@ export const metadata: Metadata = {title: '아이콘 (Icon)'}
 
 // ── 이미지 아이콘 ───────────────────────────────────────────────────────────────────────────────────
 // lucide 에 없는 그림(브랜드 · 상징 · 등급 그림)만 webp 로 둔다. 새 이미지 아이콘을 쓰면 이 목록에 묶음째 추가한다.
+// 아이콘이 아닌 큰 그림(로고 · 일러스트 · 스크린샷 · 배경)은 이미지 가이드(/component-guide/image)에서 다룬다.
 // className 은 Tailwind 가 읽도록 리터럴로 적는다(조합하면 스타일이 생성되지 않는다).
 
 // 미리보기 바탕 — 흰 그림 · 라이트/다크 짝 그림은 실제로 놓이는 면 위에 보여야 정확하다.
@@ -214,9 +216,9 @@ const IMAGE_ICON_GROUPS: readonly ImageIconGroup[] = [
         key: 'qa-mark',
         title: '질문 · 답변 표시 (QaMark)',
         description:
-            "FAQ · 문의 답변의 'Q' · 'A' 그림입니다. 라이트 · 다크 두 장을 dark: 로 바꿔 보입니다 — 컴포넌트 QaMark 를 씁니다.",
+            "FAQ · 문의 답변의 'Q' · 'A' 그림입니다. 라이트 · 다크 두 장을 dark: 로 바꿔 보입니다. 컴포넌트 QaMark 를 씁니다.",
         folder: 'public/images/faq/',
-        usedIn: 'custom/qa-mark.tsx (QaMark — 아코디언 FAQ · 문의 상세)',
+        usedIn: 'custom/qa-mark.tsx (QaMark: 아코디언 FAQ · 문의 상세)',
         size: 'size-icon-lg',
         items: [
             {
@@ -397,7 +399,7 @@ const IMAGE_USAGE_ROWS = [
             </span>,
             '② 비율이 다른 그림',
             <span key="how">
-                높이만 주고 폭은 <code>w-auto</code> — 원본 비율을 지킵니다.
+                높이만 주고 폭은 <code>w-auto</code> 로 두어 원본 비율을 지킵니다.
             </span>,
         ],
     },
@@ -461,10 +463,24 @@ const IMAGE_RULE_ROWS = [
         key: 'where',
         cells: [
             '파일 위치 · 이름',
-            'public/images/<묶음>/ 에 kebab-case 로 둡니다. 이름은 쓰는 곳이 아니라 그림 모양으로 짓습니다(예: building.webp — 다른 화면에서도 다시 쓸 수 있게).',
+            'public/images/<묶음>/ 에 kebab-case 로 둡니다. 이름은 쓰는 곳이 아니라 그림 모양으로 짓습니다(예: building.webp). 그래야 다른 화면에서도 다시 쓸 수 있습니다.',
         ],
     },
-    {key: 'format', cells: ['형식 · 해상도', 'webp 를 쓰고 표시 크기의 2~3배로 만듭니다(예: 22 표시 → 66).']},
+    {
+        key: 'format',
+        cells: [
+            '형식 · 해상도',
+            <span key="note">
+                <Link
+                    href="/component-guide/image#image-rule"
+                    className="text-primary-strong focus-visible:ring-ring outline-ring rounded underline underline-offset-4 focus:outline-none focus-visible:ring-2"
+                >
+                    이미지 가이드 1-2
+                </Link>{' '}
+                와 같습니다(예: 22 표시 → 66).
+            </span>,
+        ],
+    },
     {
         key: 'import',
         cells: [
@@ -490,33 +506,6 @@ const IMAGE_RULE_ROWS = [
             '옆에 같은 뜻의 글자가 있으면 alt="" (장식), 그림만으로 뜻을 전하면 alt 에 그 뜻을 적습니다[5.1.1].',
         ],
     },
-] as const
-
-// 아이콘이 아닌 이미지 — 이 문서에서 다루지 않고, 쓰는 컴포넌트 가이드에서 본다.
-const NOT_ICON_ROWS = [
-    {
-        key: 'illustration',
-        cells: [
-            '일러스트',
-            'option-card/ · login/ · service-intro/ · service-status/',
-            '선택 카드 · 로그인 · 서비스 소개 화면의 큰 그림',
-        ],
-    },
-    {
-        key: 'screenshot',
-        cells: ['스크린샷', 'browser/zoom-menu-* · citation-manual/', '이용 안내 · 피인용 확인 방법의 화면 캡처'],
-    },
-    {key: 'logo', cells: ['로고', 'logo-kibo* · logo-ktop*', '헤더 · 푸터 로고(헤더 · 푸터 가이드)']},
-    {
-        key: 'background',
-        cells: ['배경 · 목업', 'main-hero/ · home-notice/ · og-sample/', '메인 배경 · 공지 팝업 목업 · OG 견본'],
-    },
-] as const
-
-const NOT_ICON_COLUMNS = [
-    {key: 'kind', header: '종류', align: 'start', rowHeader: true},
-    {key: 'folder', header: '위치(public/images/)', align: 'start'},
-    {key: 'use', header: '쓰는 곳', align: 'start', wrap: true},
 ] as const
 
 const ICON_SIZE_COLUMNS = [
@@ -731,7 +720,7 @@ const FORM_ROWS = [
         cells: [
             <Icon key="preview" icon={X} variant="solid" className="size-icon-xl" />,
             <code key="form">solid</code>,
-            '원형 배지 안 글리프 — X(닫기)만.',
+            '원형 배지 안 글리프: X(닫기)만.',
         ],
     },
     {
@@ -742,7 +731,7 @@ const FORM_ROWS = [
                 <Icon symbol="alert" variant="solid" className="size-icon-xl" />
             </span>,
             <code key="form">symbol</code>,
-            '문자형 배지 i · ! — lucide 에 채운 글리프가 없는 안내 · 경고.',
+            'lucide 에 채운 글리프가 없는 안내 · 경고용 문자형 배지(i · !).',
         ],
     },
 ] as const
@@ -754,18 +743,18 @@ const JUMP_LINK_CLASS =
 const GroupHeading = ({id, title, children}: {id: string; title: string; children: ReactNode}) => (
     <div className="flex scroll-mt-24 flex-col gap-2 pt-4" id={id}>
         <h2 className="typo-h3-bold text-foreground">{title}</h2>
-        <p className="typo-body-l-regular text-label-foreground max-w-4xl">{children}</p>
+        <p className="typo-body-l-regular text-label-foreground">{children}</p>
     </div>
 )
 
 const IconGuidePage = () => (
     <GuidePageShell
         title="아이콘 (Icon)"
-        description="아이콘은 두 가지입니다 — lucide 아이콘(기본)과, lucide 에 없는 그림을 담은 이미지 아이콘(webp)."
+        description="아이콘은 lucide 아이콘(기본)과 lucide 에 없는 그림을 담은 이미지 아이콘(webp) 두 가지입니다."
     >
         <BaseCard>
             <section aria-labelledby="icon-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="icon-choice" className="typo-h4-bold">
                         어떤 아이콘을 쓰나
                     </h2>
@@ -788,7 +777,7 @@ const IconGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="icon-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h3 id="icon-usage" className="typo-h4-bold">
                         1-1. 쓰는 법
                     </h3>
@@ -816,7 +805,7 @@ const IconGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="icon-size" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h3 id="icon-size" className="typo-h4-bold">
                         1-2. 크기 · 색
                     </h3>
@@ -855,7 +844,7 @@ const IconGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="icon-list" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h3 id="icon-list" className="typo-h4-bold">
                         1-3. 목록
                     </h3>
@@ -903,14 +892,14 @@ const IconGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="icon-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h3 id="icon-accessibility" className="typo-h4-bold">
                         1-4. 접근성
                     </h3>
                 </div>
                 <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
                     <li>
-                        아이콘은 장식입니다 — <code>Icon</code> 은 늘 <code>aria-hidden</code>, lucide 를 직접 쓰면{' '}
+                        아이콘은 장식입니다. <code>Icon</code> 은 늘 <code>aria-hidden</code>, lucide 를 직접 쓰면{' '}
                         <code>aria-hidden=&quot;true&quot;</code> 를 직접 붙입니다.
                     </li>
                     <li>
@@ -925,7 +914,7 @@ const IconGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="icon-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h3 id="icon-props" className="typo-h4-bold">
                         1-5. Icon Props
                     </h3>
@@ -940,7 +929,7 @@ const IconGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="icon-image-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h3 id="icon-image-usage" className="typo-h4-bold">
                         2-1. 쓰는 법
                     </h3>
@@ -961,7 +950,7 @@ const IconGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="icon-image-rule" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h3 id="icon-image-rule" className="typo-h4-bold">
                         2-2. 규칙
                     </h3>
@@ -972,7 +961,7 @@ const IconGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="icon-image-list" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h3 id="icon-image-list" className="typo-h4-bold">
                         2-3. 목록
                     </h3>
@@ -1034,16 +1023,21 @@ const IconGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="icon-image-not" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h3 id="icon-image-not" className="typo-h4-bold">
                         2-4. 아이콘이 아닌 이미지
                     </h3>
                     <p className="typo-body-l-regular text-label-foreground">
-                        public/images 에 있지만 아이콘으로 다루지 않습니다. 새 그림이 작은 상징이면 2-3 목록에, 아니면
-                        여기 종류에 맞춰 둡니다.
+                        로고 · 일러스트 · 스크린샷 · 배경처럼 작은 상징이 아닌 그림은{' '}
+                        <Link
+                            href="/component-guide/image"
+                            className="text-primary-strong focus-visible:ring-ring outline-ring rounded underline underline-offset-4 focus:outline-none focus-visible:ring-2"
+                        >
+                            이미지 가이드
+                        </Link>
+                        에서 다룹니다. 새 그림이 작은 상징이면 2-3 목록에, 아니면 이미지 가이드 목록에 추가합니다.
                     </p>
                 </div>
-                <Table caption="아이콘이 아닌 이미지" columns={NOT_ICON_COLUMNS} rows={NOT_ICON_ROWS} size="md" />
             </section>
         </BaseCard>
     </GuidePageShell>

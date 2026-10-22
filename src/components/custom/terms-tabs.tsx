@@ -1,8 +1,7 @@
 'use client'
 
-import {useState, type ReactNode} from 'react'
 import {TabsScrollArea} from '@/components/composite/tabs-scroll-area'
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/composite/select-field'
+import {VersionSelectPanel} from '@/components/composite/version-select-panel'
 import {Tabs, TabsContent, TabsTrigger} from '@/components/ui/tabs'
 import {
     KBIGX_TERMS_BY_VERSION,
@@ -15,7 +14,7 @@ import {
     type TermsView,
 } from '@/content/service/terms'
 
-// 이용약관 — 탭(기술평가 · K-BIGx) 아래에 약관 버전 셀렉트와 본문이 온다. 데이터는 content/service/terms.ts.
+// 이용약관 — 탭(기술평가 · K-BIGx) 아래에 약관 버전 셀렉트와 본문이 온다(VersionSelectPanel). 데이터는 content/service/terms.ts.
 // 탭은 개인정보 처리방침과 같은 underline 탭이다(선택한 탭 아래에만 밑줄).
 // 탭 이동, roving tabindex, aria-controls는 Tabs 내부의 Radix 동작을 따른다.
 
@@ -78,46 +77,10 @@ const TermsDocumentView = ({document}: {document: TermsDocument}) => (
     </article>
 )
 
-// 약관 버전 셀렉트와 본문 — 셀렉트에서 고른 버전의 본문이 아래에 보인다.
-// 버전은 비어 있지 않은 목록이라 첫 항목이 처음 값이다.
-type TermsVersionOption = {value: string; label: string}
-
-const TermsVersionPanel = ({
-    name,
-    versions,
-    renderContent,
-}: {
-    /** 셀렉트의 이름표에 쓰는 약관 이름(예: K-BIGx 이용약관). */
-    name: string
-    versions: readonly [TermsVersionOption, ...TermsVersionOption[]]
-    /** 고른 버전의 본문. */
-    renderContent: (version: string) => ReactNode
-}) => {
-    const [version, setVersion] = useState(versions[0].value)
-
-    return (
-        <div className="flex flex-col gap-6">
-            <Select value={version} onValueChange={setVersion}>
-                <SelectTrigger aria-label={`${name} 버전`} className="w-full sm:w-60">
-                    <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                    {versions.map((item) => (
-                        <SelectItem key={item.value} value={item.value}>
-                            {item.label}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
-            {renderContent(version)}
-        </div>
-    )
-}
-
 // 고른 버전의 본문 — content/service/terms.ts 의 버전별 표에서 꺼낸다. 표에 없는 버전은 안내 문구가 보인다.
 // [프론트엔드 연동] 개정본 원문을 API·CMS 에서 받게 되면 이 표 조회를 요청으로 바꾼다.
 const KbigxTermsPanel = () => (
-    <TermsVersionPanel
+    <VersionSelectPanel
         name={KBIGX_VIEW.label}
         versions={TERMS_VERSIONS}
         renderContent={(version) => {
@@ -129,7 +92,7 @@ const KbigxTermsPanel = () => (
 )
 
 const TechTermsPanel = () => (
-    <TermsVersionPanel
+    <VersionSelectPanel
         name={TECH_VIEW.label}
         versions={TECH_TERMS_VERSIONS}
         renderContent={(version) => <TermsPlaceholder title={TECH_VIEW.label} text={TECH_TERMS_BY_VERSION[version]} />}

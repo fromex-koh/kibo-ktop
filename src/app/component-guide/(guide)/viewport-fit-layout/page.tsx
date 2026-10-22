@@ -111,7 +111,7 @@ const ViewportFitLayoutGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="viewport-fit-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="viewport-fit-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -181,7 +181,7 @@ const ViewportFitLayoutGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="viewport-fit-behavior" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="viewport-fit-behavior" className="typo-h4-bold">
                         높이에 따른 동작
                     </h2>
@@ -216,7 +216,7 @@ const ViewportFitLayoutGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="viewport-fit-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="viewport-fit-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -235,7 +235,7 @@ const ViewportFitLayoutGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="viewport-fit-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="viewport-fit-a11y" className="typo-h4-bold">
                         접근성
                     </h2>

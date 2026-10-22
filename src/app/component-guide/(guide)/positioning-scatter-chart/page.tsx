@@ -214,7 +214,7 @@ const PositioningScatterChartGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="psc-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="psc-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -237,7 +237,7 @@ const PositioningScatterChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="psc-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="psc-variants" className="typo-h4-bold">
                         기준선과 상태
                     </h2>
@@ -284,7 +284,7 @@ const PositioningScatterChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="psc-cases" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="psc-cases" className="typo-h4-bold">
                         특이한 값
                     </h2>
@@ -314,7 +314,7 @@ const PositioningScatterChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="psc-data" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="psc-data" className="typo-h4-bold">
                         데이터 연결
                     </h2>
@@ -328,7 +328,7 @@ const PositioningScatterChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="psc-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="psc-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -357,7 +357,7 @@ const PositioningScatterChartGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="psc-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="psc-props" className="typo-h4-bold">
                         Props API
                     </h2>

@@ -156,7 +156,7 @@ const BadgeGuidePage = () => (
     <GuidePageShell title="배지 (Badge)" description="상태 · 분류를 알려 주는 라벨과 건수를 알려 주는 숫자 배지입니다.">
         <BaseCard>
             <section aria-labelledby="badge-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="badge-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -184,7 +184,7 @@ const BadgeGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="badge-variants" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="badge-variants" className="typo-h4-bold">
                         변형
                     </h2>
@@ -258,7 +258,7 @@ const BadgeGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="badge-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="badge-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -269,7 +269,7 @@ const BadgeGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="badge-a11y" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="badge-a11y" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -291,7 +291,7 @@ const BadgeGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="badge-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="badge-props" className="typo-h4-bold">
                         Props API
                     </h2>

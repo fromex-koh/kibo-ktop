@@ -12,6 +12,7 @@ import {GradeHistoryChartSkeleton} from '@/components/composite/grade-history-ch
 import {GradeScaleGaugeSkeleton} from '@/components/composite/grade-scale-gauge-skeleton'
 import {DivergingRankChartSkeleton} from '@/components/composite/diverging-rank-chart-skeleton'
 import {showCheckToast} from '@/components/custom/check-toast'
+import {KbigxPrintOutputSelectionDialog} from '@/components/composite/k-bigx-print-output-selection-dialog'
 import {NewWindowLink} from '@/components/composite/new-window-link'
 import {InfoTable} from '@/components/composite/info-table'
 import {Button} from '@/components/ui/button'
@@ -34,7 +35,9 @@ import {
     INNOVATION_ISSUE_COLORS,
     INNOVATION_REPORT_BADGE,
     INNOVATION_REPORT_CREATED_TOAST,
+    INNOVATION_REPORT_CASE_QUERY,
     INNOVATION_REPORT_CREATED_QUERY,
+    INNOVATION_REPORT_ID_QUERY,
     INNOVATION_REPORT_MORE_LABEL,
     INNOVATION_REPORT_PC_VIEW,
     INNOVATION_REPORT_PRINT_LABEL,
@@ -51,6 +54,9 @@ import {
     type InnovationStatId,
 } from '@/content/service/k-bigx-innovation-report'
 import {toCriRatingData} from '@/content/service/cri-grades'
+import {toPrintOutputSummary, type PrintOutputSectionId} from '@/content/service/k-bigx-print-output-selection'
+import {getKbigxPrintHref} from '@/content/service/k-bigx-print-report'
+import {openReportPrintTab} from '@/lib/open-report-print-tab'
 import {cn} from '@/lib/utils'
 import {Card, SectionTitle, StatBox, WithUnit} from '@/components/custom/innovation-growth-report-parts'
 import {InnovationGrowthReportCompany} from '@/components/custom/innovation-growth-report-company'
@@ -186,12 +192,14 @@ type InnovationGrowthReportDocumentProps = {
     report: InnovationGrowthReport
     /** [이용권 사용]을 거쳐 열렸는지 — true 면 '이용권이 차감되어 보고서를 생성하였습니다.' 알림을 띄운다. */
     isJustCreated?: boolean
+    /** 인쇄본 화면 주소(KBIGX_PRINT_CORP_PATH · KBIGX_PRINT_ORG_PATH). 주면 [보고서 출력]이 인쇄 출력물 선택 모달을 연다. 없으면 동작 없는 버튼이다. */
+    printPath?: string
 }
 
 // 혁신성장역량지수 점수 — 게이지와 같이 소수 첫째 자리까지(73.8).
 const techIndexScoreFormatter = new Intl.NumberFormat('ko-KR', {maximumFractionDigits: 1})
 
-const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthReportDocumentProps) => {
+const ReportDocumentBody = ({report, isJustCreated = false, printPath}: InnovationGrowthReportDocumentProps) => {
     // [이용권 사용]을 거쳐 열렸을 때(?from=use) 차감 알림을 한 번 띄운다 — 확인 토스트(체크 표시 · 머리 아래 가운데 · 4초).
     // 이 문서의 effect 가 루트의 Toaster 보다 먼저 돌아 바로 부르면 아무도 받지 못하므로 한 틱 미룬다.
     // [프론트엔드 연동] 차감 성공 여부는 새 창을 여는 쪽(조회횟수 차감안내 모달)이 알고 있다 — 성공했을 때만 ?from=use 를 붙여 연다.
@@ -211,6 +219,29 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
     pcViewParams.set(INNOVATION_REPORT_VIEW_QUERY, INNOVATION_REPORT_PC_VIEW)
     pcViewParams.delete(INNOVATION_REPORT_CREATED_QUERY)
     const pcViewHref = `${pathname}?${pcViewParams.toString()}`
+    // 인쇄본은 이 화면을 찍지 않는다 — 인쇄본 화면이 같은 보고서(reportId)를 다시 조회해 고른 장만 그린다.
+    // ?case= 는 퍼블리싱 확인용 열람 케이스라 인쇄본에도 그대로 넘긴다(연동 후 지운다).
+    const printSections = (sections: PrintOutputSectionId[]) => {
+        if (!printPath) return
+        openReportPrintTab(
+            getKbigxPrintHref(printPath, {
+                reportId: searchParams.get(INNOVATION_REPORT_ID_QUERY),
+                sections,
+                previewCase: searchParams.get(INNOVATION_REPORT_CASE_QUERY),
+            }),
+        )
+    }
+    const printButton = (
+        <Button
+            type="button"
+            variant="tertiary"
+            size="md"
+            className="bg-card shrink-0 gap-1 max-md:hidden md:self-center print:hidden"
+        >
+            <Download aria-hidden="true" />
+            {INNOVATION_REPORT_PRINT_LABEL}
+        </Button>
+    )
     // 지금 탭 — ?tab= 값이 화면이 있는 탭이면 그 탭, 아니면 첫 탭(진단브리핑). 보고서는 한 페이지이고 탭은 주소 쿼리로만 바뀐다.
     const tabParam = searchParams.get(INNOVATION_REPORT_TAB_QUERY)
     const activeTab: InnovationReportSectionId =
@@ -297,17 +328,18 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
                                 </div>
                                 {/* 버튼은 인쇄물에서 사라진다(종이에서는 누를 수 없다). 모바일(768 미만)은 진단브리핑만 보이므로 출력 대신
                                     [더보기]를 둔다 — 모든 탭이 있는 PC 화면(?view=pc, 뷰포트 1280)을 새 창으로 열어 확대 · 축소하며 본다.
-                                    [프론트엔드 연동] [보고서 출력]은 아직 동작이 없는 버튼이다 — 출력용 리포트 템플릿이 정해지면 onClick 을 연결한다.
-                                    인쇄 색은 준비돼 있다: 화면이 다크여도 인쇄는 라이트로 찍힌다(바깥 상자의 .print-light — report-theme-scope.tsx). */}
-                                <Button
-                                    type="button"
-                                    variant="tertiary"
-                                    size="md"
-                                    className="bg-card shrink-0 gap-1 max-md:hidden md:self-center print:hidden"
-                                >
-                                    <Download aria-hidden="true" />
-                                    {INNOVATION_REPORT_PRINT_LABEL}
-                                </Button>
+                                    [보고서 출력] → 인쇄 출력물 선택 모달 → [출력하기] → 고른 장만 담은 인쇄본을 새 탭에서 인쇄한다
+                                    (printSections). 인쇄본 주소(printPath)를 넘기지 않으면 동작 없는 버튼이다. */}
+                                {printPath ? (
+                                    <KbigxPrintOutputSelectionDialog
+                                        summary={toPrintOutputSummary(report)}
+                                        onPrint={printSections}
+                                    >
+                                        {printButton}
+                                    </KbigxPrintOutputSelectionDialog>
+                                ) : (
+                                    printButton
+                                )}
                                 <Button
                                     asChild
                                     variant="tertiary"
@@ -424,12 +456,12 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
                                             aside={report.subCategoryName}
                                         />
                                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                            <Card title="기업 보유기술" aside="소분류 기준" className="gap-4">
+                                            <Card title="기업 보유기술" aside="세부분야 기준" className="gap-4">
                                                 <PercentageDonutChart
                                                     data={[...report.innovation.technologies]}
                                                     // [프론트엔드 연동 · 정렬] 비중 큰 순으로 받아 12시부터 시계 방향(첫 조각이 가장 진한 색).
                                                     // 조각에 올리면 분류명 툴팁이 뜬다(비중 · 건수는 범례).
-                                                    ariaLabel="기업 보유기술 소분류별 비중과 건수"
+                                                    ariaLabel="기업 보유기술 세부분야별 비중과 건수"
                                                     // 그래프 자리 최소 높이를 두고 세로 가운데 정렬 — 옆 카드(관련 기업 및 특허현황)와 높이를 맞춘다.
                                                     className="flex min-h-77.5 flex-col justify-center"
                                                 />
@@ -442,8 +474,12 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
                                                             <StatBox
                                                                 key={stat.id}
                                                                 label={stat.label}
-                                                                value={numberFormatter.format(stat.value)}
-                                                                unit={stat.unit}
+                                                                value={
+                                                                    stat.value === null
+                                                                        ? '-'
+                                                                        : numberFormatter.format(stat.value)
+                                                                }
+                                                                unit={stat.value === null ? undefined : stat.unit}
                                                                 icon={
                                                                     <StatIcon
                                                                         aria-hidden="true"
@@ -465,11 +501,14 @@ const ReportDocumentBody = ({report, isJustCreated = false}: InnovationGrowthRep
                                                             </dt>
                                                             <dd className="m-0">
                                                                 <span className="typo-body-xl-bold text-foreground">
-                                                                    {row.value}
+                                                                    {row.value || '-'}
                                                                 </span>
-                                                                <span className="typo-body-xl-regular text-label-foreground ms-1">
-                                                                    {row.unit}
-                                                                </span>
+                                                                {/* 값이 없으면 단위 없이 '-' 만 — 실제 0건과 구분한다. */}
+                                                                {row.value ? (
+                                                                    <span className="typo-body-xl-regular text-label-foreground ms-1">
+                                                                        {row.unit}
+                                                                    </span>
+                                                                ) : null}
                                                             </dd>
                                                         </div>
                                                     ))}
@@ -970,7 +1009,7 @@ const TechTabSkeleton = () => (
                 <Card title="기술 보유현황" description={<SkeletonBar className="w-160" />}>
                     <div className="grid grid-cols-2 gap-12">
                         <ChartSkeleton type="donut" label="중분류 기준 보유기술을 불러오는 중입니다." />
-                        <ChartSkeleton type="donut" label="소분류 기준 보유기술을 불러오는 중입니다." />
+                        <ChartSkeleton type="donut" label="세부분야 기준 보유기술을 불러오는 중입니다." />
                     </div>
                 </Card>
                 <Card title="특허 보유현황" className="gap-0">
@@ -1110,7 +1149,7 @@ const ActivityTabSkeleton = () => (
 // Tech-Index 탭 스켈레톤 — 실제 탭(innovation-growth-report-tech-index.tsx)과 같은 구획 · 카드 짜임(PC 폭 전용).
 const SKELETON_DESCRIPTION_COUNT = 3
 const SKELETON_CAPABILITIES = ['인프라', '투입', '활동', '성과'] as const
-const SKELETON_INDICATORS = ['역량·투자 지표', '특허·기술 지표'] as const
+const SKELETON_INDICATORS = ['인프라·투입 부문', '활동·성과 부문'] as const
 
 // 안내 상자 자리 — 실제 NoticeBox 와 같은 여백 · 줄 높이에 줄 수만큼 막대를 둔다.
 const SkeletonNoticeBox = ({lines}: {lines: number}) => (
@@ -1170,7 +1209,7 @@ const TechIndexTabSkeleton = () => (
             </Card>
         </section>
         <section aria-labelledby="ig-tech-index-skeleton-capability" className="flex flex-col gap-4">
-            <SectionTitle id="ig-tech-index-skeleton-capability" title="4대 혁신역량 점수" />
+            <SectionTitle id="ig-tech-index-skeleton-capability" title="4대 혁신역량 부분별 비교" />
             <div className="grid grid-cols-4 gap-6">
                 {SKELETON_CAPABILITIES.map((label) => (
                     <div
@@ -1440,7 +1479,7 @@ const ReportSkeleton = ({activeTab}: {activeTab: InnovationReportSectionId}) => 
                         <section aria-label="기술혁신정보" className="flex flex-col gap-4">
                             <SectionTitle title="기술혁신정보" />
                             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                <Card title="기업 보유기술" aside="소분류 기준" className="xl:min-h-100">
+                                <Card title="기업 보유기술" aside="세부분야 기준" className="xl:min-h-100">
                                     <ChartSkeleton type="donut" label="기업 보유기술을 불러오는 중입니다." />
                                 </Card>
                                 <Card title="관련 기업 및 특허현황" className="xl:min-h-100">

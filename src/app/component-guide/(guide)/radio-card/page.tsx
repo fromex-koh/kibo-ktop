@@ -144,7 +144,7 @@ const RadioCardGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="radio-card-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-card-usage" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -175,7 +175,7 @@ const RadioCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="radio-card-beside" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-card-beside" className="typo-h4-bold">
                         설명 옆 배치 (descriptionPlacement=&quot;beside&quot;)
                     </h2>
@@ -197,7 +197,7 @@ const RadioCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="radio-card-choice" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-card-choice" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -216,7 +216,7 @@ const RadioCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="radio-card-accessibility" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-card-accessibility" className="typo-h4-bold">
                         접근성
                     </h2>
@@ -247,7 +247,7 @@ const RadioCardGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="radio-card-props" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="radio-card-props" className="typo-h4-bold">
                         Props API
                     </h2>

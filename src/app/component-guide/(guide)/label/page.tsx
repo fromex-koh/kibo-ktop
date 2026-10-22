@@ -127,7 +127,7 @@ const LabelGuidePage = () => (
     >
         <BaseCard>
             <section aria-labelledby="label-basic" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="label-basic" className="typo-h4-bold">
                         기본 사용
                     </h2>
@@ -148,7 +148,7 @@ const LabelGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="label-usage" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="label-usage" className="typo-h4-bold">
                         컴포넌트 선택
                     </h2>
@@ -167,7 +167,7 @@ const LabelGuidePage = () => (
 
         <BaseCard>
             <section aria-labelledby="label-patterns" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="label-patterns" className="typo-h4-bold">
                         상태와 조합
                     </h2>
@@ -239,8 +239,35 @@ const LabelGuidePage = () => (
         </BaseCard>
 
         <BaseCard>
+            <section aria-labelledby="label-a11y" className="flex flex-col gap-6">
+                <div className="flex flex-col gap-2">
+                    <h2 id="label-a11y" className="typo-h4-bold">
+                        접근성
+                    </h2>
+                </div>
+                <ul className="typo-body-l-regular text-label-foreground flex list-disc flex-col gap-2 pl-5">
+                    <li>
+                        Radix Label 이 실제 <code>label</code> 요소를 그립니다. <code>htmlFor</code> 를 컨트롤의{' '}
+                        <code>id</code> 와 같게 두면 스크린리더가 이름을 읽고, 라벨을 눌러도 컨트롤로 이어집니다[7.4.1].
+                    </li>
+                    <li>
+                        <code>placeholder</code> 는 라벨을 대신하지 못합니다. 입력 칸마다 보이는 Label 을 둡니다[7.4.1].
+                    </li>
+                    <li>
+                        필수 별표는 <code>aria-hidden=&quot;true&quot;</code> 로 숨기고 <code>sr-only</code> 로
+                        &quot;(필수)&quot; 문구를 함께 둡니다. 색만으로 필수를 알리지 않습니다[5.3.1].
+                    </li>
+                    <li>
+                        라디오 묶음처럼 연결할 컨트롤이 하나가 아니면 <code>asChild</code> 로 <code>span</code> 에 라벨
+                        모양만 입히고, 묶음이 <code>aria-labelledby</code> 로 그 <code>id</code> 를 가리킵니다.
+                    </li>
+                </ul>
+            </section>
+        </BaseCard>
+
+        <BaseCard>
             <section aria-labelledby="label-api" className="flex flex-col gap-6">
-                <div className="flex max-w-4xl flex-col gap-2">
+                <div className="flex flex-col gap-2">
                     <h2 id="label-api" className="typo-h4-bold">
                         Props API
                     </h2>

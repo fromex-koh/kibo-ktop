@@ -37,7 +37,7 @@ type HomeNotice = {
 // 그림(4:3) + 글
 {id: 'notice-002', title: '...', body: '...', image}
 // 그림만(3:4) — body 를 비운다. title 은 보이지 않고 대체 텍스트가 된다
-{id: 'notice-003', title: '자가진단 서비스 안내 — ...', image}`
+{id: 'notice-003', title: '자가진단 서비스 안내: ...', image}`
 
 const LINK_CLASS = 'text-primary-strong underline underline-offset-4'
 const H3_CLASS = 'typo-title-m-bold text-foreground'
@@ -135,7 +135,7 @@ const PROPS_ITEMS = [
 ] as const
 
 const SectionHead = ({id, title, description}: {id: string; title: string; description: string}) => (
-    <div className="flex max-w-4xl flex-col gap-2">
+    <div className="flex flex-col gap-2">
         <h2 id={id} className="typo-h4-bold">
             {title}
         </h2>

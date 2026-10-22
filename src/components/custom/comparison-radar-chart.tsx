@@ -1,10 +1,10 @@
 'use client'
 
-import {useEffect, useState, type ComponentPropsWithoutRef} from 'react'
+import {useEffect, useId, useState, type ComponentPropsWithoutRef} from 'react'
 import {PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart} from 'recharts'
 import {ChartSkeleton} from '@/components/composite/chart-skeleton'
 import {useIsHydrated} from '@/hooks/use-is-hydrated'
-import {ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
+import {ChartContainer, ChartStyle, ChartTooltip, ChartTooltipContent, type ChartConfig} from '@/components/ui/chart'
 import {CHART_ANIMATION_MS, useChartAnimation} from '@/components/custom/chart-reveal'
 import {cn} from '@/lib/utils'
 import {ChartTooltipRow} from '@/components/composite/chart-tooltip-parts'
@@ -16,6 +16,8 @@ type ComparisonRadarItem = {
     primaryValue: number
     /** 비교 대상 값. 비교 없이 한 계열만 그릴 때는 비운다. */
     comparisonValue?: number
+    /** 축 이름 옆 값 글자 — 주면 primaryValue 대신 이 글자를 적는다(예: 값이 없는 고정 지표의 '-'). */
+    primaryValueText?: string
 }
 
 type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> & {
@@ -26,6 +28,12 @@ type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children
      */
     animate?: boolean
     ariaLabel: string
+    /**
+     * 고정 크기(px)로 그린다 — 칸 폭을 재지 않는다. 인쇄본처럼 용지를 축소해 보여 주는 화면에서는 폭을 잴 때
+     * 줄어든 크기가 잡혀 잠깐 작게 그려지므로 크기를 직접 준다. 이때는 말풍선을 그리지 않는다(인쇄용).
+     * 주지 않으면 지금처럼 칸 폭에 맞춰 그린다(웹 화면).
+     */
+    fixedSize?: {width: number; height: number}
     /** 비교 계열의 이름. 주면 점선 계열이 함께 그려지고, 주지 않으면 주 계열만 그린다. */
     comparisonLabel?: string
     data: ComparisonRadarItem[]
@@ -38,6 +46,8 @@ type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children
     primaryLabel: string
     /** 격자 고리 수. */
     ringCount?: number
+    /** 축 끝 ↔ 축 이름 거리(기본 8). 꼭짓점 점이 크면 값이 100 일 때 이름과 겹치지 않게 늘린다(인쇄본 14). */
+    tickGap?: number
     /** 축 이름의 글자 크기·굵기. */
     tickFontSize?: number
     tickFontWeight?: number
@@ -67,6 +77,11 @@ type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children
     /** 축 이름의 글자색. */
     tickColor?: string
     /**
+     * 축 이름 뒤에 한 칸 띄고 주 계열 값을 이 색 · 굵게 붙인다(예: '기술인력역량 94.3' — K-BIGx 인쇄본 세부지표).
+     * 없으면 축 이름만 적는다.
+     */
+    tickValueColor?: string
+    /**
      * 차트 칸의 크기. 기본은 정사각(aspect-square)이다 — 축이 셋뿐인 삼각 레이더처럼 위아래가 남는 모양은
      * 높이를 직접 정해 빈 곳을 줄인다(예: 'aspect-auto h-60 md:h-76').
      */
@@ -93,6 +108,17 @@ type ComparisonRadarChartProps = Omit<ComponentPropsWithoutRef<'div'>, 'children
      */
     primaryFillOpacity?: number
     comparisonFillOpacity?: number
+    /** 비교 계열 면 색('filled' 일 때). 없으면 comparisonColor(테두리와 같은 색)다 — 면은 옅게 · 테두리는 진하게 나눌 때 쓴다. */
+    comparisonFillColor?: string
+    /** 선 굵기 — 주 계열(기본 2.5) · 비교 계열(기본 2). */
+    primaryStrokeWidth?: number
+    comparisonStrokeWidth?: number
+    /** 비교 계열 점선 간격(SVG stroke-dasharray, 기본 '5 4'). */
+    comparisonDashArray?: string
+    /** 주 계열 꼭짓점 점 — 반지름(기본 filled 5 · hollow 4) · hollow 테두리 굵기(기본 2) · hollow 안 색(기본 var(--ds-surface)). */
+    dotRadius?: number
+    dotStrokeWidth?: number
+    dotFillColor?: string
     /**
      * 값을 불러오는 중. 스켈레톤을 대신 보인다 — 축이 셋이면 삼각 레이더(triangle-radar), 그 밖에는 기본 레이더 모양이다.
      * 새로고침 직후 차트가 칸의 폭을 재기 전(하이드레이션 전)에도 같은 스켈레톤이 자동으로 보인다.
@@ -110,8 +136,38 @@ const TRIANGLE_AXIS_COUNT = 3
 // 비교 계열을 면으로 채울 때의 진하기 — 범례 견본(같은 색 25%)과 같게 둔다.
 const COMPARISON_FILL_OPACITY = 0.25
 const PRIMARY_FILL_OPACITY = 0.16
+const PRIMARY_STROKE_WIDTH = 2.5
+const COMPARISON_STROKE_WIDTH = 2
+const COMPARISON_DASH_ARRAY = '5 4'
+const HOLLOW_DOT_STROKE_WIDTH = 2
 
 const DEFAULT_RADAR_MARGIN = {top: 20, right: 48, bottom: 20, left: 48}
+
+// 축 이름 글자(tickValueColor 일 때) — recharts 가 넘기는 자리 · 정렬 · 축 이름을 받아 '이름 + 값' 으로 그린다.
+type AngleTickProps = {
+    x?: number | string
+    y?: number | string
+    cx?: number | string
+    cy?: number | string
+    textAnchor?: string
+    payload?: {value?: unknown}
+}
+const TICK_VALUE_WEIGHT = 800
+const tickValueFormat = new Intl.NumberFormat('ko-KR', {maximumFractionDigits: 1})
+const toTickAnchor = (anchor?: string) => (anchor === 'start' || anchor === 'end' ? anchor : 'middle')
+// 세로 축(맨 위 · 맨 아래) 이름은 글자 전체를 축 끝 바깥에 둔다 — 값이 100 이라 꼭짓점 점이 축 끝에 닿아도 겹치지 않게.
+// 그 밖의 축은 축 끝 높이의 가운데에 둔다.
+const VERTICAL_AXIS_TOLERANCE = 1
+// 축 끝 ↔ 축 이름 기본 거리(recharts 기본값과 같다).
+const DEFAULT_TICK_GAP = 8
+// 세로 축 이름을 축 끝에서 더 띄우는 거리 — 꼭짓점 점(반지름 4 + 테두리)보다 바깥.
+const VERTICAL_TICK_GAP = 6
+const toTickBaseline = ({x, y, cx, cy}: AngleTickProps) => {
+    const [tickX, tickY, centerX, centerY] = [x, y, cx, cy].map(Number)
+    if (![tickX, tickY, centerX, centerY].every(Number.isFinite)) return 'central'
+    if (Math.abs(tickX - centerX) > VERTICAL_AXIS_TOLERANCE) return 'central'
+    return tickY < centerY ? 'auto' : 'hanging'
+}
 
 type ComparisonRadarLegendProps = Omit<ComponentPropsWithoutRef<'div'>, 'children'> &
     Pick<
@@ -164,6 +220,8 @@ const ComparisonRadarChart = ({
     margin = DEFAULT_RADAR_MARGIN,
     outerRadius = '72%',
     ringCount = 5,
+    fixedSize,
+    tickGap = DEFAULT_TICK_GAP,
     tickFontSize = 12,
     tickFontWeight = 600,
     showDots = true,
@@ -174,6 +232,7 @@ const ComparisonRadarChart = ({
     comparisonAppearance = 'dashed',
     legendAppearance = 'outline',
     tickColor = 'var(--ds-foreground)',
+    tickValueColor,
     chartClassName,
     direction = 'clockwise',
     dotAppearance = 'filled',
@@ -181,6 +240,13 @@ const ComparisonRadarChart = ({
     gridType = 'polygon',
     primaryFillOpacity = PRIMARY_FILL_OPACITY,
     comparisonFillOpacity = COMPARISON_FILL_OPACITY,
+    comparisonFillColor,
+    primaryStrokeWidth = PRIMARY_STROKE_WIDTH,
+    comparisonStrokeWidth = COMPARISON_STROKE_WIDTH,
+    comparisonDashArray = COMPARISON_DASH_ARRAY,
+    dotRadius,
+    dotStrokeWidth = HOLLOW_DOT_STROKE_WIDTH,
+    dotFillColor = 'var(--ds-surface)',
     isLoading = false,
     loadingLabel = '레이더 차트를 불러오는 중입니다.',
     skeletonType,
@@ -203,6 +269,8 @@ const ComparisonRadarChart = ({
     }, [animate])
     // 새로고침 직후에는 차트가 칸의 폭을 재기 전이라 빈 칸으로 보인다 — 화면이 붙기 전까지도 같은 스켈레톤을 보인다.
     const isHydrated = useIsHydrated()
+    // 고정 크기로 그릴 때 색 변수(--color-*)를 붙일 이름 — ChartContainer 와 같은 방식(콜론은 선택자에 못 쓴다).
+    const chartId = `chart-${useId().replace(/:/g, '')}`
     // 비교 계열은 이름이 있을 때만 그린다 — 값만 있고 이름이 없으면 범례에 쓸 말이 없다.
     const hasComparison = Boolean(comparisonLabel)
     const isComparisonFilled = comparisonAppearance === 'filled'
@@ -238,6 +306,148 @@ const ComparisonRadarChart = ({
             />
         )
     }
+
+    // 차트 본체 — 웹 화면은 ChartContainer(칸 폭에 맞춤), fixedSize 는 그 크기 그대로 그린다.
+    // recharts 키보드 탐색 층은 끈다 — 값은 숨김 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1].
+    const radarChart = (
+        <RadarChart
+            accessibilityLayer={false}
+            width={fixedSize?.width}
+            height={fixedSize?.height}
+            data={chartData}
+            cy={centerY}
+            outerRadius={outerRadius}
+            margin={margin}
+        >
+            <PolarGrid key="grid" gridType={gridType} stroke={gridColor} />
+            <PolarAngleAxis
+                key="angle-axis"
+                dataKey="label"
+                tickSize={tickGap}
+                tick={
+                    tickValueColor
+                        ? ({x, y, cx, cy, textAnchor, payload}: AngleTickProps) => {
+                              const label = String(payload?.value ?? '')
+                              const item = orderedData.find((entry) => entry.label === label)
+                              const baseline = toTickBaseline({x, y, cx, cy})
+                              return (
+                                  <text
+                                      x={x}
+                                      y={y}
+                                      textAnchor={toTickAnchor(textAnchor)}
+                                      dominantBaseline={baseline}
+                                      dy={
+                                          baseline === 'auto'
+                                              ? -VERTICAL_TICK_GAP
+                                              : baseline === 'hanging'
+                                                ? VERTICAL_TICK_GAP
+                                                : 0
+                                      }
+                                      fill={tickColor}
+                                      fontSize={tickFontSize}
+                                      fontWeight={tickFontWeight}
+                                  >
+                                      {label}
+                                      {item ? (
+                                          <tspan fill={tickValueColor} fontWeight={TICK_VALUE_WEIGHT}>
+                                              {' '}
+                                              {item.primaryValueText ?? tickValueFormat.format(item.primaryValue)}
+                                          </tspan>
+                                      ) : null}
+                                  </text>
+                              )
+                          }
+                        : {fill: tickColor, fontSize: tickFontSize, fontWeight: tickFontWeight}
+                }
+            />
+            <PolarRadiusAxis
+                key="radius-axis"
+                angle={90}
+                domain={[0, 100]}
+                tick={false}
+                axisLine={false}
+                tickCount={ringCount}
+            />
+            {showTooltip && !fixedSize ? (
+                <ChartTooltip
+                    key="tooltip"
+                    cursor={false}
+                    content={
+                        <ChartTooltipContent
+                            className={chartTooltipClassName}
+                            labelClassName={chartTooltipTitleClassName}
+                            hideIndicator
+                            labelKey="label"
+                            formatter={(value, name) => {
+                                const item =
+                                    name === 'primaryValue'
+                                        ? chartConfig.primaryValue
+                                        : name === 'comparisonValue'
+                                          ? chartConfig.comparisonValue
+                                          : undefined
+
+                                return <ChartTooltipRow color={item?.color} name={item?.label} value={Number(value)} />
+                            }}
+                        />
+                    }
+                />
+            ) : null}
+            {hasComparison ? (
+                <Radar
+                    key="comparison"
+                    name="comparisonValue"
+                    dataKey="comparisonValue"
+                    isAnimationActive={isAnimationActive}
+                    animationDuration={CHART_ANIMATION_MS}
+                    activeDot={showTooltip}
+                    stroke="var(--color-comparisonValue)"
+                    strokeWidth={comparisonStrokeWidth}
+                    strokeDasharray={comparisonDashArray}
+                    fill={isComparisonFilled ? (comparisonFillColor ?? 'var(--color-comparisonValue)') : 'transparent'}
+                    fillOpacity={isComparisonFilled ? comparisonFillOpacity : 0}
+                    // 면으로 채운 비교 계열은 배경처럼 깔리므로 꼭짓점 점을 두지 않는다.
+                    dot={
+                        showDots &&
+                        !isComparisonFilled && {
+                            r: RADAR_DOT_RADIUS,
+                            fill: 'var(--color-comparisonValue)',
+                            fillOpacity: 1,
+                            strokeWidth: 0,
+                        }
+                    }
+                />
+            ) : null}
+            <Radar
+                key="primary"
+                name="primaryValue"
+                dataKey="primaryValue"
+                isAnimationActive={isAnimationActive}
+                animationDuration={CHART_ANIMATION_MS}
+                activeDot={showTooltip}
+                stroke="var(--color-primaryValue)"
+                strokeWidth={primaryStrokeWidth}
+                fill="var(--color-primaryValue)"
+                fillOpacity={primaryFillOpacity}
+                dot={
+                    showDots &&
+                    (dotAppearance === 'hollow'
+                        ? {
+                              r: dotRadius ?? HOLLOW_DOT_RADIUS,
+                              fill: dotFillColor,
+                              fillOpacity: 1,
+                              stroke: 'var(--color-primaryValue)',
+                              strokeWidth: dotStrokeWidth,
+                          }
+                        : {
+                              r: dotRadius ?? RADAR_DOT_RADIUS,
+                              fill: 'var(--color-primaryValue)',
+                              fillOpacity: 1,
+                              strokeWidth: 0,
+                          })
+                }
+            />
+        </RadarChart>
+    )
 
     return (
         <div {...props} className={cn('flex w-full flex-col gap-4', className)}>
@@ -282,123 +492,30 @@ const ComparisonRadarChart = ({
                 </div>
             ) : null}
 
-            <ChartContainer
-                config={chartConfig}
-                className={cn(
-                    'mx-auto aspect-square max-h-96 min-h-72 w-full max-w-xl [&_.recharts-polygon]:cursor-pointer',
-                    chartClassName,
-                )}
-                role="img"
-                aria-label={ariaLabel}
-            >
-                {/* recharts 키보드 탐색 층은 끈다 — 값은 숨김 표가 읽어 주고, role="img" 안의 svg 에 tabindex 가 들어가면 마크업 경고다[8.1.1]. */}
-                <RadarChart
-                    accessibilityLayer={false}
-                    data={chartData}
-                    cy={centerY}
-                    outerRadius={outerRadius}
-                    margin={margin}
+            {fixedSize ? (
+                <div
+                    data-slot="chart"
+                    data-chart={chartId}
+                    className={cn('mx-auto flex justify-center', chartClassName)}
+                    role="img"
+                    aria-label={ariaLabel}
                 >
-                    <PolarGrid key="grid" gridType={gridType} stroke={gridColor} />
-                    <PolarAngleAxis
-                        key="angle-axis"
-                        dataKey="label"
-                        tick={{fill: tickColor, fontSize: tickFontSize, fontWeight: tickFontWeight}}
-                    />
-                    <PolarRadiusAxis
-                        key="radius-axis"
-                        angle={90}
-                        domain={[0, 100]}
-                        tick={false}
-                        axisLine={false}
-                        tickCount={ringCount}
-                    />
-                    {showTooltip ? (
-                        <ChartTooltip
-                            key="tooltip"
-                            cursor={false}
-                            content={
-                                <ChartTooltipContent
-                                    className={chartTooltipClassName}
-                                    labelClassName={chartTooltipTitleClassName}
-                                    hideIndicator
-                                    labelKey="label"
-                                    formatter={(value, name) => {
-                                        const item =
-                                            name === 'primaryValue'
-                                                ? chartConfig.primaryValue
-                                                : name === 'comparisonValue'
-                                                  ? chartConfig.comparisonValue
-                                                  : undefined
-
-                                        return (
-                                            <ChartTooltipRow
-                                                color={item?.color}
-                                                name={item?.label}
-                                                value={Number(value)}
-                                            />
-                                        )
-                                    }}
-                                />
-                            }
-                        />
-                    ) : null}
-                    {hasComparison ? (
-                        <Radar
-                            key="comparison"
-                            name="comparisonValue"
-                            dataKey="comparisonValue"
-                            isAnimationActive={isAnimationActive}
-                            animationDuration={CHART_ANIMATION_MS}
-                            activeDot={showTooltip}
-                            stroke="var(--color-comparisonValue)"
-                            strokeWidth={2}
-                            strokeDasharray="5 4"
-                            fill={isComparisonFilled ? 'var(--color-comparisonValue)' : 'transparent'}
-                            fillOpacity={isComparisonFilled ? comparisonFillOpacity : 0}
-                            // 면으로 채운 비교 계열은 배경처럼 깔리므로 꼭짓점 점을 두지 않는다.
-                            dot={
-                                showDots &&
-                                !isComparisonFilled && {
-                                    r: RADAR_DOT_RADIUS,
-                                    fill: 'var(--color-comparisonValue)',
-                                    fillOpacity: 1,
-                                    strokeWidth: 0,
-                                }
-                            }
-                        />
-                    ) : null}
-                    <Radar
-                        key="primary"
-                        name="primaryValue"
-                        dataKey="primaryValue"
-                        isAnimationActive={isAnimationActive}
-                        animationDuration={CHART_ANIMATION_MS}
-                        activeDot={showTooltip}
-                        stroke="var(--color-primaryValue)"
-                        strokeWidth={2.5}
-                        fill="var(--color-primaryValue)"
-                        fillOpacity={primaryFillOpacity}
-                        dot={
-                            showDots &&
-                            (dotAppearance === 'hollow'
-                                ? {
-                                      r: HOLLOW_DOT_RADIUS,
-                                      fill: 'var(--ds-surface)',
-                                      fillOpacity: 1,
-                                      stroke: 'var(--color-primaryValue)',
-                                      strokeWidth: 2,
-                                  }
-                                : {
-                                      r: RADAR_DOT_RADIUS,
-                                      fill: 'var(--color-primaryValue)',
-                                      fillOpacity: 1,
-                                      strokeWidth: 0,
-                                  })
-                        }
-                    />
-                </RadarChart>
-            </ChartContainer>
+                    <ChartStyle id={chartId} config={chartConfig} />
+                    {radarChart}
+                </div>
+            ) : (
+                <ChartContainer
+                    config={chartConfig}
+                    className={cn(
+                        'mx-auto aspect-square max-h-96 min-h-72 w-full max-w-xl [&_.recharts-polygon]:cursor-pointer',
+                        chartClassName,
+                    )}
+                    role="img"
+                    aria-label={ariaLabel}
+                >
+                    {radarChart}
+                </ChartContainer>
+            )}
 
             {/* 감추는 상자를 따로 둔다 — 표에 직접 sr-only 를 걸면 표가 제 크기대로 자리를 차지해 좁은 화면에서 가로로 밀린다. */}
             <div className="sr-only">
@@ -415,7 +532,7 @@ const ComparisonRadarChart = ({
                         {data.map((item) => (
                             <tr key={item.id}>
                                 <th scope="row">{item.label}</th>
-                                <td>{clampScore(item.primaryValue)}</td>
+                                <td>{item.primaryValueText ?? clampScore(item.primaryValue)}</td>
                                 {hasComparison ? <td>{clampScore(item.comparisonValue ?? 0)}</td> : null}
                             </tr>
                         ))}

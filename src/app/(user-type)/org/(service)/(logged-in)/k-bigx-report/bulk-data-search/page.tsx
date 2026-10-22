@@ -1,14 +1,14 @@
 import type {Metadata} from 'next'
-import {KbigxReportIntro} from '@/components/custom/k-bigx-report-sections'
+import {OrgKbigxReportScreen} from '@/app/(user-type)/org/(service)/(logged-in)/k-bigx-report/org-kbigx-report-screen'
 import {isBulkDataSearchStatus} from '@/content/service/bulk-data-search'
-import {BulkDataSearchForm} from './bulk-data-search-form'
 
 export const metadata: Metadata = {title: '대량정보조회'}
 
 // ─────────────────────────────────────────────────────────────────────────────────────────────
 // K-BIGx 보고서 · 대량정보조회 (org-k-bigx-report-bulk-data-search ·
 // /org/k-bigx-report/bulk-data-search) — 기관 전용.
-// 제목 · 브레드크럼 · K-BIGx 소개 → 대량정보조회 카드 → 버튼. 시안의 기업혁신성장 / 대량정보조회 탭은 두지 않는다.
+// 기업혁신성장 조회와 한 화면의 탭이다 — 이 주소는 [대량정보조회] 탭이 켜진 채로 연다(OrgKbigxReportScreen 머리 주석).
+// 탭 안은 대량정보조회 카드 → 버튼이다.
 // 상태 흐름은 BulkDataSearchForm 머리 주석(① 업로드 전 → ② 업로드 후 → ③ 처리 중 → ④ 완료 / ⑤ 오류)을 본다.
 //
 // [퍼블리싱 확인용] 주소 값으로 케이스를 바로 볼 수 있다.
@@ -36,20 +36,7 @@ const OrgBulkDataSearchPage = async ({searchParams}: OrgBulkDataSearchPageProps)
             ? previewState
             : undefined
 
-    // 세로 간격은 소개 · 카드 · 버튼 사이 40, 아래 60 이다(기업혁신성장 조회와 같은 틀).
-    return (
-        <main id="main" tabIndex={-1} className="bg-background flex-1">
-            <div className="grid-layout gap-y-10 pt-10 pb-15 *:col-span-full">
-                <KbigxReportIntro title="대량정보조회" homeHref="/org/home" />
-                <BulkDataSearchForm
-                    // 주소로 상태를 바꾸면 처음 상태부터 다시 그린다.
-                    key={initialStatus ?? 'idle'}
-                    initialStatus={initialStatus}
-                    isErrorPreview={params[PREVIEW_ERROR_QUERY] === '1'}
-                />
-            </div>
-        </main>
-    )
+    return <OrgKbigxReportScreen bulk={{initialStatus, isErrorPreview: params[PREVIEW_ERROR_QUERY] === '1'}} />
 }
 
 export default OrgBulkDataSearchPage
