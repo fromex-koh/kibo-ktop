@@ -7,6 +7,7 @@
 frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 프로젝트 서비스 페이지가 아닌 퍼블리싱 가이드 관련 파일은 [덮어쓰기]로 분류하세요.
 지워야 하는 파일·화면은 [삭제]로 따로 적으세요.
+같은 작업의 카드는 # 작업: 작업 이름 아래에 모으고, 그 아래에서 ## 구분자부터 다시 씁니다.
 
 ## [Diff 확인]
 
@@ -33,6 +34,10 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 -->
 
 - 카드는 위에서부터 작업할 순서대로 나열했습니다. '한 번에 적용'이 적힌 카드는 함께 넣어야 빌드됩니다.
+- 한 파일은 한 카드에서만 확인합니다. 같은 파일을 여러 번 고쳐 커밋이 여러 개면, 그 카드에 '(추가 수정)' 항목과 커밋 링크가 함께 붙어 있습니다.
+    - [Diff 확인] 카드는 커밋 링크를 위에서부터 차례로 보며 반영합니다.
+
+# 작업: 정보 표 — 스타일 값을 theme 파일로 분리
 
 ## [신규 추가]
 
@@ -59,6 +64,8 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 함께 작업: [신규 추가] theme 스타일 — 정보 표 스타일 파일 (바로 위 카드, 먼저 추가)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c5c6b2dc5d2300717b691fe7ba18ddc61e277282)
 
+# 작업: 라디오 칩 — 비활성 상태 추가
+
 ## [덮어쓰기]
 
 ### theme 스타일 — 라디오 칩 비활성
@@ -84,6 +91,10 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 함께 작업: [덮어쓰기] theme 스타일 — 라디오 칩 비활성
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/222b696fbcea02db962da0e5f2362efaded30271)
 
+# 작업: 판매자 정보 모달 · 이용안내 화면 수정
+
+## [Diff 확인]
+
 ### [컴포넌트] 판매자 정보 모달 — [닫기] 버튼을 primary 스타일(파랑)로 변경
 
 - 대상: src/components/composite/seller-info-dialog.tsx
@@ -105,6 +116,8 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 영향 화면: [기업 이용안내](/corp/guide)
     - [기관 이용안내](/org/guide)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/7010121d09c5a72cb6ff45c18fdc92fc7048bbe2)
+
+# 작업: 기관 K-BIGx 보고서 — 기업혁신성장 · 대량정보조회 2개 화면을 탭이 있는 1개 화면으로 합치기
 
 ## [신규 추가]
 
@@ -152,6 +165,8 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 함께 작업: [신규 추가] 기업혁신성장 · 대량정보조회를 합칠 틀 · 탭 (바로 위 카드, 먼저 추가)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e3d6b6fccf147322f9138071af4f6666f64aa873)
 
+# 작업: 특허 보고서 로고 · 일괄평가 카드 그림 교체
+
 ## [신규 추가]
 
 ### [에셋] 특허 보고서 머리글 로고(svg)
@@ -187,6 +202,10 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 함께 작업: [삭제] shield-certificate.webp · lightbulb-magnifier.webp (적용 후 삭제)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/480ac4489003b7a1189f8871eab345c8b00e8d51)
 
+# 작업: 결제하기 — [이용약관]을 K-BIGx 이용약관으로 연결
+
+## [Diff 확인]
+
 ### [컴포넌트] 결제하기 — [이용약관] 버튼이 K-BIGx 이용약관으로 열리도록 수정
 
 - 대상: src/components/custom/pricing-payment.tsx
@@ -196,6 +215,8 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 결과: 결제 화면에서 이용권(K-BIGx)에 맞는 약관이 바로 보임
 - 영향 화면: [기업 결제하기](/corp/pricing/payment)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/176f3f221f1dab44d30e367aca807dce040f56ed)
+
+# 작업: 제목 · 상세 표 추가 · 스위치 간격 · 메인 첫 화면 배경 교체
 
 ## [신규 추가]
 
@@ -227,6 +248,8 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 영향 화면: [기업 홈](/corp/home)
     - [기관 홈](/org/home)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/bce589519b43ceb354e8696632ee7628ed35547a)
+
+# 작업: K-BIGx 보고서 출력(인쇄본) 추가 — 기업 · 기관
 
 ## [신규 추가]
 
@@ -282,9 +305,11 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/components/composite/value-line-chart-skeleton.tsx
 - 적용: 신규 파일 추가
 - 내용: K-BIGx 인쇄본에 들어가는 차트 14종과, 차트마다 같은 크기로 보이는 불러오는 중 모양(스켈레톤)이 든 새 파일들입니다. 색 · 크기를 props 로 받아 웹 화면에서도 쓸 수 있고, 사용법은 차트마다 가이드에 있습니다.
+    - (추가 수정) 주석만 변경(value-column-chart): 사용처 이름 '4대 혁신역량 부분별 비교'
 - 영향 화면: 각 차트 가이드(컴포넌트 가이드 > 차트)
 - 함께 작업: 아래 인쇄본 쪽 · 부품 · 컴포넌트 가이드가 이 차트를 씀
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/07956a64df2ea45d774e47c4e60d8dcaea42e6e3)
+    - [추가 수정 보기](https://github.com/fromex-koh/kibo-ktop/commit/351bab7c40d06fdc50cf665463e3d861644d4bce)
 
 ### [유틸] 인쇄본을 새 탭으로 열어 바로 인쇄하는 함수 추가
 
@@ -300,8 +325,10 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - src/content/service/k-bigx-print-measure.ts
 - 적용: 신규 파일 추가
 - 내용: 모달에서 고른 장으로 몇 쪽을 어떤 순서로 찍을지 · 쪽 번호 · 목차 번호를 정하는 새 파일입니다(표지 · 목차 · 참고자료 · 뒷표지는 늘 들어감). 긴 표가 한 쪽에 몇 줄 들어가는지는 글자 수로 미리 계산합니다. 기업 · 기관 인쇄본 주소와 주소 만드는 함수(getKbigxPrintHref)도 여기 있습니다.
+    - (추가 수정) 쪽 이름: Tech-Index 1쪽 '투입지표별 비교' → '부문별 지표 비교'
 - 함께 작업: 아래 K-BIGx 웹 보고서 · 인쇄본 쪽 · 부품 카드가 이 파일을 씀
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/99af92f39aa800ca8d7a5191535ce0df2ba6c7c3)
+    - [추가 수정 보기](https://github.com/fromex-koh/kibo-ktop/commit/6dedf3c82f72e284d120ecd3bf4c5ac6091ce359)
 
 ## [Diff 확인]
 
@@ -322,11 +349,13 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 변경:
     - 상수 추가(PRIVATE_PLACEHOLDER): 비공개 칸 뒤에 흐리게 깔리는 가짜 값(0000-00-00 · 000,000 · 연도 · 비중 · 금액 등)을 한 곳에 모아 내보냄
     - 기존 PrivateContent · PrivateCell: 바뀐 것 없음
+    - (추가 수정) 주석만 변경: 사용처 설명 — 기업신용정보 표는 이제 흐리지 않고, 차입금 현황 카드만 이 컴포넌트로 가림
 - 결과: 웹 보고서와 인쇄본이 같은 가짜 값을 씀 → 가짜 값을 바꿀 때 이 파일 하나만 고치면 됨(화면 모양 그대로)
 - 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
     - [기관 K-BIGx 보고서 결과](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
     - [비공개 가림](/component-guide/private-content)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c7cdea6cfd2c1d79a25b6397b62834ad7f4e8d01)
+    - [추가 수정 보기](https://github.com/fromex-koh/kibo-ktop/commit/2d707a37e25a6bc379d179f7faf48f37494d58dd)
 
 ### [컴포넌트] 레이더 차트(ComparisonRadarChart) — 인쇄본용 옵션 추가(웹 모양 그대로)
 
@@ -375,7 +404,11 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 변경:
     - 표기 변경: 현금흐름등급 코드 'CR-6' → 'CF6'(평가이력 포함) — 인쇄본 참고자료 등급 정의와 같은 표기
     - 항목 삭제: 현금흐름등급 설명 문장(summary) → 이제 등급 코드만 받으면 화면이 현금흐름등급표에서 설명을 찾아 보여 줌
-    - 항목 추가: 현금흐름등급 평가일자 · 결산일자(details — 인쇄본 등급 박스) · 이력마다 그래프 아래 시점 글자(chartLabel, 예: 24.11월)
+    - 항목 추가: 현금흐름등급 결산일자(details — 인쇄본 등급 박스 · 등급 아래 줄) · 이력마다 그래프 아래 시점 글자(chartLabel, 예: 24.11월) — 이력의 date 는 결산일자
+    - (추가 수정) 항목 변경: 현금흐름등급 details 에서 평가일자 삭제 → 결산일자만 보냄
+    - (추가 수정) 문구 변경: 세부지표 비교 카드 제목 '역량·투자 지표' → '인프라·투입 부문' · '특허·기술 지표' → '활동·성과 부문'(웹 · 인쇄본 공통)
+    - (추가 수정) 타입 변경(케이스별 가림 설정): hiddenAmountTables(연체금액 열만 가림) 삭제 → 법인열람의 연체 표 3개를 hiddenInfoTables 로 옮김 · 가린 표는 rows 를 빈 배열로, status 는 그대로 보냄(status 가 '해당없음' 이면 가리지 않음)
+    - (추가 수정) 확인용 코드 추가(withPreviewCaseSample): ?case= 확인 화면에서 법인열람은 당좌거래정지, 개인열람은 법인등기를 '해당없음' 으로 고정해 보여 줌 — 연동 후 withPreviewCase 와 함께 삭제
     - 항목 추가: 담보 현황 기준 연도(collateralYear — 인쇄본 도넛 아래 '2024년 기준')
     - 함수 추가: 최근 3개년 연도 만들기(getRecentYears 등) — 받지 못한 연도는 화면이 '-' 로 그림(인적자원 · 에너지 사용 현황)
     - 타입 변경: 관련 기업 · 특허 수치와 평균 특허수는 값을 못 받으면 null — 화면이 '-' 로 적어 실제 0건과 구분
@@ -386,8 +419,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [기관 K-BIGx 보고서 결과](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
     - [기업 K-BIGx 보고서 출력](/corp/k-bigx-report/innovation-growth-report/report-print)
     - [기관 K-BIGx 보고서 출력](/org/k-bigx-report/innovation-growth-report/report-print)
-- 함께 작업: 한 번에 적용: 바로 아래 K-BIGx 웹 보고서 카드 — 이 파일만 먼저 넣으면 웹 보고서가 지운 설명 문장(summary)을 찾다가 빌드 오류가 남
+- 함께 작업: 한 번에 적용: 바로 아래 K-BIGx 웹 보고서 카드 — 이 파일만 먼저 넣으면 웹 보고서가 지운 설명 문장(summary) · hiddenAmountTables 를 찾다가 빌드 오류가 남
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/0dde24040ff7f027ebac381698da360532444a9e)
+    - [추가 수정 보기](https://github.com/fromex-koh/kibo-ktop/commit/f83062a61de24f5ff96e75a6871c17ba1ad296a7)
 
 ### [컴포넌트] K-BIGx 웹 보고서 — 현금흐름등급 · 세부분야 · 빈 값 표시 변경 · [보고서 출력] 버튼 동작 추가
 
@@ -412,6 +446,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 빈 값 표시 추가(Tech-Index): 점수가 없으면 요약 문장 대신 '평가 점수가 없습니다.'
     - 가져오는 곳만 변경: 신용/재무정보 비공개 가짜 값을 공용 PRIVATE_PLACEHOLDER 에서 가져옴(화면 모양 그대로)
     - 주석만 변경: 게이지 · 등급표 파일의 등급 예시 CR → CF
+    - (추가 수정) 표시 방법 변경(기업신용정보 비공개 — 법인열람 · 개인열람): 가린 표의 연체금액 칸 · 표 전체를 흐리던 방식 → 표 머리는 그대로, 값 줄은 '비공개' 한 줄('해당사항 없음' 줄과 같은 모양), 제목 옆 상태 글은 숨김 · 상태가 '해당없음' 이면 그대로 보임(차입금 현황 카드 흐림은 그대로)
+    - (추가 수정) 문구 변경(Tech-Index): '4대 혁신역량 점수' → '4대 혁신역량 부분별 비교'(제목 · 불러오는 중 화면) · 불러오는 중 세부지표 이름 '인프라·투입 부문' · '활동·성과 부문'
+    - (추가 수정) 문구 변경(신용/재무정보): 현금흐름등급 평가이력 표 열 '평가일자' → '결산일자'(기업신용등급 표는 '평가일자' 그대로)
 - 결과: 기업 · 기관 모두 웹 보고서에서 원하는 장만 골라 인쇄 · 현금흐름등급 이름 · 설명이 인쇄본 참고자료와 같은 표에서 나옴 · 값이 없을 때 '-' 로 보임
 - 영향 화면: [기업 K-BIGx 보고서 결과](/corp/k-bigx-report/innovation-growth-report/diagnostic-briefing)
     - [기관 K-BIGx 보고서 결과](/org/k-bigx-report/innovation-growth-report/diagnostic-briefing)
@@ -421,6 +458,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 현금흐름등급 칸 색(cash-flow-cf)은 아래 디자인 토큰을 넣어야 보임(빌드는 됨)
     - [출력하기]로 열리는 인쇄본 화면은 아래 '보고서 출력 화면' 카드에서 추가됨(빌드는 됨)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b40e51fd1f023c8fa5635e9e9e15a13cde586f37)
+    - [추가 수정 보기](https://github.com/fromex-koh/kibo-ktop/commit/4bea34711ebe4adbae0fba3c4026b7952436ff8d)
 
 ## [신규 추가]
 
@@ -449,11 +487,19 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 장별 쪽(cover · briefing · company · innovation · tech-index · credit · activity · reference): 표지 · 목차 · 진단브리핑 ~ 활동성정보 · 참고자료 · 뒷표지
     - 인쇄 준비 안내(kbigx-print-preparing): 인쇄 창이 뜰 때까지 화면을 덮는 안내
     - 색 · 글자 · 간격은 인쇄본 전용 kbx 토큰만 씀(아래 디자인 토큰 카드)
+    - (추가 수정) 양쪽 정렬: 목차 안내 · 장 안내문 · 특허 개요와 판단 근거(p.9) · 지수 설명(p.15) · 등급 설명 상자(p.17)
+    - (추가 수정) 간격: 보유기술 설명 → 중분류(p.7) · 표 → 비중 도넛(p.9) 각 40 · 소제목 사이(p.16) 64
+    - (추가 수정) 제목: p.15 '혁신성장역량지수 부문별 지표 비교' · p.16 '혁신성장역량지수 비교' 아래 소제목 3개(기업 유형별 Tech-Index 비교 · 4대 혁신역량 부분별 비교 · 기업 유형별 4대 혁신역량 비교)
+    - (추가 수정) 현금흐름등급(p.17): 등급 아래 안내 문장 → 결산일자 · 평가이력 표 열 '결산일자'
+    - (추가 수정) 기업신용정보 비공개: 웹 보고서와 같은 방식(값 줄 '비공개' · 상태 알약 숨김) — 한 칸만 흐리던 KbxPrivateCell 삭제
+    - (추가 수정) 말줄임 영역(kbigx-print-fit-value): 접근성 검사 확장 프로그램(WAVE)을 켜면 나던 'Maximum update depth exceeded' 오류 수정 · 평소 말줄임 결과는 그대로
+    - (추가 수정) 내용은 모두 기업 · 기관 공통이며, 전달받은 최종 파일에 들어 있음
 - 영향 화면: [기업 K-BIGx 보고서 출력](/corp/k-bigx-report/innovation-growth-report/report-print)
     - [기관 K-BIGx 보고서 출력](/org/k-bigx-report/innovation-growth-report/report-print)
     - [리포트 공통](/component-guide/report-shell)
 - 함께 작업: 인쇄본 색 · 글자 크기는 아래 디자인 토큰을 넣어야 제대로 보임(빌드는 됨)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/c18f0260672ee1460ee070e9e0bc183cd4261fa9)
+    - [추가 수정 보기](https://github.com/fromex-koh/kibo-ktop/commit/bc3b9d50bd7a9022e4a1b97fb62587d5a59c2fba)
 
 ### [화면] K-BIGx 보고서 출력 화면(기업 · 기관) 추가
 
@@ -482,6 +528,10 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 넣은 뒤 yarn tokens 실행 — 인쇄본 · 현금흐름등급 색이 이때부터 보임
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/afdbd653ca08837a51fe1a2a2399dff56f662687)
 
+# 작업: 컴포넌트 가이드 · 퍼블리싱 인덱스 정리
+
+## [덮어쓰기]
+
 ### [문서] 컴포넌트 가이드 — 새 가이드 추가(차트 14종 · 차트 등장 · 이미지 등) · 기존 가이드 내용 정리
 
 - 대상: src/app/component-guide/(guide) 폴더 전체
@@ -508,6 +558,7 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - 색상 · 시맨틱 색상: 인쇄본 전용 색 · 섞은 색 · cash-flow-cf 이름
     - 기존 차트 가이드(막대 · 선 · 도넛 · 진행 막대 등): 비슷한 인쇄본 차트 안내 링크
     - 등급 척도 게이지 · 비공개 가림 · 이미지 · 모션 · 등급 매트릭스: 현금흐름 CF · 인쇄본 사용처 · 영업이익률
+    - (추가 수정) 비공개 가림 · 리포트 공통 · 막대 값 차트: 기업신용정보 비공개 방식 · 인쇄본 제목 변경 반영
 - 영향 화면: [컴포넌트 가이드 홈](/component-guide)
     - [이미지](/component-guide/image)
     - [정보 표](/component-guide/info-table)
@@ -522,8 +573,9 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/44aef3ebc927557db7c81c0a0cedb2da43fc0cbd)
     - [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/b3f1f0028922704f0db1a8ac8b7ac5a55a48ed55)
     - [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/9864ed9ad3a5ea74a7f2a458841f1f0fbf1e6f65)
+    - [추가 수정 보기](https://github.com/fromex-koh/kibo-ktop/commit/ffabcef183ae4d474ac2f92a206e0e4801b60e73)
 
-### [문서] 퍼블리싱 인덱스 — 보고서 출력(기업 · 기관) 완료 · 기관 비공개 케이스 행 추가
+### [문서] 퍼블리싱 인덱스 — 보고서 출력(기업 · 기관) 완료 · 기관 비공개 케이스 · 마케팅 정보 수신 동의 행 추가
 
 - 대상: src/content/publishing-guide/publishing-index.json
     - src/content/publishing-guide/screen-registry.json
@@ -532,19 +584,27 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
 - 내용:
     - 상태 변경: 기업 · 기관 '보고서 출력'과 비공개 케이스(법인 · 개인 열람) → 완료
     - 행 추가: 기관 '보고서 출력 비공개 케이스' 2행(기업과 같은 이름)
+    - (추가 수정) 행 추가: 기업 마이페이지 내 정보 '마케팅 정보 수신 동의' 모달(완료)
 - 영향 화면: [시작 페이지](/)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/a752e02136b2cb4d5deb4ceffcabb97b42ee16fa)
+    - [추가 수정 보기](https://github.com/fromex-koh/kibo-ktop/commit/f3e2177fd48a96f0f924e4552781cbc6b45ca943)
 
-### [문서] 퍼블리싱 인덱스 — 버전 업데이트 카드를 초안에 적은 순서대로 보이기
+### [문서] 퍼블리싱 인덱스 — 버전 업데이트 카드를 초안에 적은 순서대로 · 작업별로 묶어 보이기
 
 - 대상: src/components/custom/release-note-change-list.tsx
+    - src/content/publishing-guide/types.ts
+    - src/content/publishing-guide/index.ts
 - 적용: 지정한 파일만 교체
 - 내용:
     - 정렬 삭제: 지금은 카드를 종류별(Diff → 덮어쓰기 → 신규 추가 → 삭제)로 다시 묶어 보여 줌 → 릴리즈 노트 초안에 적은 순서 그대로 보임
     - 이번 릴리스부터 카드를 작업할 순서대로 적으므로, 위에서부터 차례로 적용하면 됨 · 지난 릴리스 카드도 그때 적은 순서로 보임
+    - (추가 수정) 작업 묶음: 같은 작업의 카드들을 작업 이름 아래에 묶어 보임(예: 기관 K-BIGx 보고서 2개 화면 → 1개 화면) · 지난 릴리스는 묶음 없이 그대로
 - 영향 화면: [시작 페이지](/)
     - [버전 업데이트 아카이브](/component-guide/release-archive)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/92e89a962b14a396b601609fc2b25b3fc6aa8641)
+    - [추가 수정 보기](https://github.com/fromex-koh/kibo-ktop/commit/efa32c12a64ed1033d9512776b20192beae53400)
+
+# 작업: 개인정보 처리방침 — 이용약관처럼 날짜 셀렉트로 내용 보기
 
 ## [신규 추가]
 
@@ -596,6 +656,75 @@ frontend-handoff에 실제 전달되는 파일의 변경만 작성하세요.
     - [기관 개인정보 처리방침](/org/privacy-policy)
     - [기관 알기 쉬운 개인정보 처리방침](/org/privacy-policy/easy-privacy-policy)
 - 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/e27351c0fdb923b700a036b2024be7c0c5b479d5)
+
+# 작업: KTRS-FM 체크리스트 — 수익창출역량 보기 조건 · 문구 수정
+
+## [Diff 확인]
+
+### [컴포넌트] KTRS-FM 체크리스트 — 수익창출역량 보기를 응답에 따라 줄이기 · 문구 오타 수정
+
+- 대상: src/components/composite/checklist-form.tsx
+    - src/content/technology-evaluation/ktrs-fm-checklist.ts
+- 변경:
+    - 기능 추가(checklist-form): 선택 상자 보기를 다른 문항 응답에 따라 빼는 규칙(optionExclusions) — 데이터에 조건(기술 구분 · 선택 상자 값 · 체크 여부)과 뺄 보기만 적음
+    - 동작 변경(checklist-form): 보기에서 빠진 값은 바로 비움(빈칸인데 이전 값이 제출되지 않게) · 체크박스 체크를 폼이 들고 있어 기술 구분을 바꿨다 돌아와도 체크가 남음
+    - 규칙 추가(ktrs-fm-checklist): 전문기술 + 기술 수명주기 성숙기 · 쇠퇴기 → 수익창출역량 ④ 제외, 기술의 차별성(q10) 미체크면 ①도 제외 · 그 밖은 ①~⑤ 그대로
+    - 문구 변경: 보기 오타(경쟁사간 · 영업 기반을 위한 · 새로운 시장을 형성할) · 안내 '기술 구분과 위 기술의 차별성 · 기술 수명주기 응답에 따라 아래 보기가 달라집니다.'
+- 결과: 수명주기 · 차별성 응답에 맞지 않는 보기가 선택 상자에 나오지 않음 · 숙련기술은 지금처럼 ②③⑤
+- 영향 화면: [기업 KTRS-FM 체크리스트(제조업)](/corp/technology-evaluation/ktrs-fm/checklist/manufacturing)
+    - [기업 KTRS-FM 체크리스트(서비스업)](/corp/technology-evaluation/ktrs-fm/checklist/service)
+    - [기관 KTRS-FM 체크리스트(제조업)](/org/individual-evaluation/ktrs-fm/checklist/manufacturing)
+- 함께 작업: 한 번에 적용: 두 파일 — 데이터의 optionExclusions 는 checklist-form 의 새 타입을 씀
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/94080a91ecea6ee79bd2f1a627c433db08087bb8)
+
+# 작업: 투자모형 재무정보 — 금액 칸 추가
+
+## [Diff 확인]
+
+### [화면] 투자모형 재무정보 — 금액 칸 5개 → 7개(당기 자산총계 · 전기 자본총계 추가)
+
+- 대상: src/components/composite/investment-model-finance-form.tsx
+    - src/constants/technology-evaluation.ts
+- 변경:
+    - 칸 추가: 당기 자산총계(currentTotalAssets) · 전기 자본총계(previousTotalEquity)
+    - 배치 변경: 1줄 [당기 매출액 · 당기 영업이익 · 당기 순이익] 3열 · 2줄 [당기 자본총계 · 당기 자산총계 · 전기 순이익 · 전기 자본총계] 4열(태블릿 2열)
+- 결과: 재무정보 탭에서 금액 7칸을 입력함 · 칸 모양 · 숫자 처리는 그대로
+- 영향 화면: [기업 투자모형 추가 기업정보](/corp/technology-evaluation/investment-model/additional-company-info)
+- 함께 작업: 한 번에 적용: 두 파일
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/2259a8e24d94757fc4bf3e2131d680c76b75fe6d)
+
+# 작업: 마이페이지 내 정보 — 마케팅 알림 수신 동의 추가
+
+## [Diff 확인]
+
+### [컴포넌트] 마이페이지 내 정보 — 마케팅 알림 수신 동의(선택) 추가
+
+- 대상: src/components/composite/mypage-profile-form.tsx
+    - src/constants/mypage-profile.ts
+    - src/content/service/k-bigx-marketing-consent.ts
+    - src/components/composite/k-bigx-marketing-consent-dialog.tsx
+- 변경:
+    - 항목 추가(기업정보 카드 주소 아래): 체크박스 · '마케팅 알림 수신 동의 (선택)' · [자세히 ›] · 안내 한 줄
+    - 동작: [자세히]가 마케팅 정보 수신 동의 모달을 열고, 모달의 [동의] · [비동의]가 체크를 켜고 끔 · 값은 폼 값(marketingConsent — 동의 'Y' · 미동의 빈 글자)이라 [취소]로 되돌아가고 [저장] 때 함께 넘어감
+    - 옵션 추가(모달): 제목(title) · 버튼 문구(actions) — 안 넘기면 지금 K-BIGx 문구 그대로 · 내 정보는 '기술평가 서비스 마케팅 정보 수신 동의' · [비동의] · [동의]
+- 결과: 내 정보에서 마케팅 알림 수신 동의를 켜고 끔 · K-BIGx 이용약관 동의 흐름의 모달은 그대로
+- 영향 화면: [기업 내 정보](/corp/mypage/profile)
+- 함께 작업: 한 번에 적용: 네 파일
+    - [연동] 처음 값은 회원 정보(MYPAGE_MEMBER_PROFILE 의 marketingConsent)로 받음
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/5819eece5d1f063a1ce76eb7c6007f87695d1116)
+
+## [신규 추가]
+
+### [화면] 마이페이지 내 정보 — 마케팅 정보 수신 동의 모달 확인 화면 추가
+
+- 대상: src/app/(user-type)/corp/(service)/(logged-in)/mypage/profile/marketing-consent/page.tsx
+- 적용: 신규 파일 추가
+- 내용: 내 정보의 [자세히]로 여는 모달만 띄워 보는 확인 화면입니다(퍼블리싱 인덱스 행).
+- 영향 화면: [기업 마케팅 정보 수신 동의](/corp/mypage/profile/marketing-consent)
+- 함께 작업: 바로 위 마이페이지 카드 먼저(모달의 title · actions 옵션을 씀)
+- 커밋: [변경사항 보기](https://github.com/fromex-koh/kibo-ktop/commit/206770ff2dc76fda5d81b682eb10d21c6f2ef96a)
+
+# 작업: 쓰지 않는 그림 삭제
 
 ## [삭제]
 
