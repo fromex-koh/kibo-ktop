@@ -158,9 +158,10 @@ const PrivateContentGuidePage = () => (
                         처리된 정보입니다.”입니다.
                     </p>
                     <p className="typo-body-l-regular text-label-foreground">
-                        K-BIGx 인쇄본은 같은 모양 · 같은 안내 문구를 kbx 값으로 그린 <code>KbxPrivateContent</code> ·{' '}
-                        <code>KbxPrivateCell</code>(kbigx-print-parts.tsx)을 씁니다. 열람 케이스별 가림 범위도 웹
-                        보고서와 같습니다.
+                        K-BIGx 인쇄본은 같은 모양 · 같은 안내 문구를 kbx 값으로 그린 <code>KbxPrivateContent</code>
+                        (kbigx-print-parts.tsx)를 씁니다. 열람 케이스별 가림 범위도 웹 보고서와 같습니다. 기업신용정보
+                        표는 흐리지 않고(법인열람 · 개인열람 공통) 값 줄을 “비공개” 한 줄로 바꾸고 제목 옆 상태를
+                        뺍니다(웹 · 인쇄본 공통). 상태가 ‘해당없음’ 인 표는 그대로 ‘해당사항 없음’ 입니다.
                     </p>
                 </div>
                 <PrivateContent>

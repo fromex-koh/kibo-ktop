@@ -338,7 +338,8 @@ const ValueColumnChartGuidePage = () => (
         <BaseCard>
             <section aria-labelledby="vcc-print" className="flex flex-col gap-6">
                 <SectionHeading id="vcc-print" title="5. K-BIGx 인쇄본에서">
-                    Tech-Index 2쪽 — 기업 유형별 Tech-Index 비교(wide)와 4대 혁신역량 점수 카드 넷(compact). 확인 화면:{' '}
+                    Tech-Index 2쪽 — 기업 유형별 Tech-Index 비교(wide)와 4대 혁신역량 부분별 비교 카드 넷(compact). 확인
+                    화면:{' '}
                     <Link
                         href="/corp/k-bigx-report/innovation-growth-report/report-print?sections=tech-index"
                         target="_blank"

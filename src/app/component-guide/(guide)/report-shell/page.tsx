@@ -308,8 +308,8 @@ const KBX_PART_ROWS = [
     {
         key: 'private',
         cells: [
-            <code key="p">KbxPrivateContent · KbxPrivateCell</code>,
-            '비공개 — 웹 PrivateContent · PrivateCell 과 같은 모양(흐린 가짜 값 + 흰 면 80% + 안내). 신용/재무정보의 열람 케이스(?case=)별 가림에 씁니다.',
+            <code key="p">KbxPrivateContent</code>,
+            "비공개 — 웹 PrivateContent 와 같은 모양(흐린 가짜 값 + 흰 면 80% + 안내). 신용/재무정보의 열람 케이스(?case=)별 가림에 씁니다. 기업신용정보 표는 흐리지 않고(법인열람 · 개인열람) 값 줄을 '비공개' 한 줄로 바꾸고 상태 알약을 뺍니다(상태가 '해당없음' 이면 그대로).",
         ],
     },
     {
@@ -397,7 +397,7 @@ const KBX_FILE_ROWS = [
         key: 'tech-index',
         cells: [
             <code key="f">kbigx-print-tech-index.tsx</code>,
-            'Tech-Index 2쪽 — 지수 · 표준정보 분포 · 투입지표별 비교 / 유형별 비교 · 4대 혁신역량',
+            'Tech-Index 2쪽 — 지수 · 표준정보 분포 · 부문별 지표 비교 / 유형별 비교 · 4대 혁신역량',
             joinNodes([
                 chartLink('DistributionValueChart', '/component-guide/distribution-value-chart'),
                 chartLink('ValueColumnChart', '/component-guide/value-column-chart'),
